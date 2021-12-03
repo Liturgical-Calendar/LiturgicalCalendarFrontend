@@ -332,22 +332,23 @@ if ($YEAR >= 1970) {
     //  Initiate curl for communication with the LitCal server
     $ch = curl_init();
 
+    /*
     $prefix = $_SERVER['HTTPS'] ? 'https://' : 'http://';
     $domain = $_SERVER['HTTP_HOST'];
     $query = $_SERVER['PHP_SELF'];
     $path_info = pathinfo($query);
     $dir_level = explode("/",dirname($path_info['dirname']));
-    $URL =  $prefix . $domain . "/" . $dir_level[1] . "/LitCalEngine.php";
+    $URL =  $prefix . $domain . "/" . $dir_level[1] . "/LitCalEngine.php";*/
 
     // Will return the response, if false it print the response
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
     // Set the url
-    curl_setopt($ch, CURLOPT_URL, $URL);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/json']);
+    curl_setopt( $ch, CURLOPT_URL, 'https://litcal.johnromanodorazio.com/api/v3/LitCalEngine.php' );
+    curl_setopt( $ch, CURLOPT_HTTPHEADER, ['Accept: application/json'] );
     // Set request method to POST
-    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt( $ch, CURLOPT_POST, 1 );
     // Define the POST field data
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(["year" => $YEAR, "epiphany" => $EPIPHANY, "ascension" => $ASCENSION, "corpuschristi" => $CORPUSCHRISTI, "locale" => $LOCALE]));
+    curl_setopt( $ch, CURLOPT_POSTFIELDS, http_build_query(["year" => $YEAR, "epiphany" => $EPIPHANY, "ascension" => $ASCENSION, "corpuschristi" => $CORPUSCHRISTI, "locale" => $LOCALE]) );
     // Execute
     $result = curl_exec($ch);
 
@@ -753,7 +754,7 @@ $months = [
  * BEGIN DISPLAY LOGIC
  * 
  *************************/
-$isStaging = (strpos(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH),"-staging") !== false);
+$isStaging = ( strpos( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_HOST ), "-staging" ) !== false );
 
 ?>
 <!doctype html>
@@ -776,12 +777,12 @@ $isStaging = (strpos(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH),"-staging"
 </head>
 
 <body>
-    <div><a class="backNav" href="/LiturgicalCalendar<?php echo $isStaging ? "-staging" : "" ?>/usage.php">↩      Go back      ↩</a></div>
+    <div><a class="backNav" href="https://litcal<?php echo $isStaging ? "-staging" : "" ?>.johnromanodorazio.com/usage.php">↩      Go back      ↩</a></div>
 
     <?php
 
     echo '<h1 style="text-align:center;">' . __("Liturgical Calendar Calculation for a Given Year", $LOCALE) . ' (' . $YEAR . ')</h1>';
-    echo '<h2 style="text-align:center;">' . sprintf(__("HTML presentation elaborated by PHP using a CURL request to a %s", $LOCALE), '<a href="../../LitCalEngine.php">PHP engine</a>') . '</h2>';
+    echo '<h2 style="text-align:center;">' . sprintf(__("HTML presentation elaborated by PHP using a CURL request to a %s", $LOCALE), '<a href="https://litcal.johnromanodorazio.com/api/v3/LitCalEngine.php">PHP engine</a>') . '</h2>';
 
     if($YEAR > 9999){
         $YEAR = 9999;
