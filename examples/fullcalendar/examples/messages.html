@@ -271,6 +271,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script>
         "use strict";
+        const thirdLevelDomain = window.location.hostname.split('.')[0];
         const isStaging = ( thirdLevelDomain === 'litcal' || thirdLevelDomain === 'litcal-staging' || window.location.pathname.includes( '-staging' ) );
         const stagingURL = isStaging ? '-staging' : '';
         const endpointV = isStaging ? 'dev' : 'v3';
