@@ -1,3 +1,10 @@
+const thirdLevelDomain = window.location.hostname.split('.')[0];
+const isStaging = ( thirdLevelDomain === 'litcal' || thirdLevelDomain === 'litcal-staging' || window.location.pathname.includes( '-staging' ) );
+const stagingURL = isStaging ? '-staging' : '';
+const endpointV = isStaging ? 'dev' : 'v3';
+const endpointURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalEngine.php`;
+const metadataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalMetadata.php`;
+
 let today = new Date(),
     $Settings = {
         "year": today.getUTCFullYear(),
@@ -18,7 +25,7 @@ let today = new Date(),
         month: 'long',
         timeZone: 'UTC'
     },
-    countSameDayEvents = function($currentKeyIndex, $EventsArray, $cc) {
+    countSameDayEvents = ($currentKeyIndex, $EventsArray, $cc) => {
         let $Keys = Object.keys($EventsArray);
         let $currentFestivity = $EventsArray[$Keys[$currentKeyIndex]];
         //console.log("currentFestivity: " + $currentFestivity.name + " | " + $currentFestivity.date);
@@ -32,7 +39,7 @@ let today = new Date(),
             }
         }
     },
-    countSameMonthEvents = function($currentKeyIndex, $EventsArray, $cm) {
+    countSameMonthEvents = ($currentKeyIndex, $EventsArray, $cm) => {
         let $Keys = Object.keys($EventsArray);
         let $currentFestivity = $EventsArray[$Keys[$currentKeyIndex]];
         if ($currentKeyIndex < $Keys.length - 1) {
@@ -43,7 +50,7 @@ let today = new Date(),
             }
         }
     },
-    /*ordSuffix = function(ord) {
+    /*ordSuffix = ord => {
         var ord_suffix = ''; //st, nd, rd, th
         if (ord === 1 || (ord % 10 === 1 && ord != 11)) {
             ord_suffix = 'st';
@@ -56,12 +63,12 @@ let today = new Date(),
         }
         return ord_suffix;
     },*/
-    genLitCal = function() {
+    genLitCal = () => {
         $.ajax({
             method: 'POST',
             data: $Settings,
-            url: '../../LitCalEngine.php',
-            success: function(LitCalData) {
+            url: endpointURL,
+            success: LitCalData => {
                 console.log(LitCalData);
 
                 let strHTML = '';
@@ -119,7 +126,7 @@ let today = new Date(),
                                 // LET'S DO SOME MORE MANIPULATION ON THE FESTIVITY->COMMON STRINGS AND THE FESTIVITY->COLOR...
                                 if ($festivity.common !== "" && $festivity.common !== "Proper") {
                                     $commons = $festivity.common.split(",");
-                                    $commons = $commons.map(function($txt) {
+                                    $commons = $commons.map($txt => {
                                         let $common = $txt.split(":");
                                         let $commonGeneral = __($common[0]);
                                         let $commonSpecific = (typeof $common[1] !== 'undefined' && $common[1] != "") ? __($common[1]) : "";
@@ -167,9 +174,7 @@ let today = new Date(),
                                 if($possibleColors.length === 1){
                                     $festivityColorString = __($possibleColors[0]);
                                 } else if ($possibleColors.length > 1){
-                                    $possibleColors = $possibleColors.map(function($txt) {
-                                        return __($txt);
-                                    });
+                                    $possibleColors = $possibleColors.map($txt => __($txt) });
                                     $festivityColorString = $possibleColors.join("</i> " + __("or") + " <i>");
                                 }
                                 */
@@ -205,7 +210,7 @@ let today = new Date(),
                             // LET'S DO SOME MORE MANIPULATION ON THE FESTIVITY->COMMON STRINGS AND THE FESTIVITY->COLOR...
                             if ($festivity.common !== "" && $festivity.common !== "Proper") {
                                 $commons = $festivity.common.split(",");
-                                $commons = $commons.map(function($txt) {
+                                $commons = $commons.map($txt => {
                                     let $common = $txt.split(":");
                                     let $commonGeneral = __($common[0]);
                                     let $commonSpecific = (typeof $common[1] !== 'undefined' && $common[1] != "") ? __($common[1]) : "";
@@ -253,9 +258,7 @@ let today = new Date(),
                             if($possibleColors.length === 1){
                                 $festivityColorString = __($possibleColors[0]);
                             } else if ($possibleColors.length > 1){
-                                $possibleColors = $possibleColors.map(function($txt) {
-                                    return __($txt);
-                                });
+                                $possibleColors = $possibleColors.map($txt => __($txt) });
                                 $festivityColorString = $possibleColors.join("</i> " + __("or") + " <i>");
                             }
                             */
@@ -294,13 +297,13 @@ let today = new Date(),
                 }
                 if(LitCalData.hasOwnProperty('Messages')){
                     $('#LitCalMessages tbody').empty();
-                    LitCalData.Messages.forEach(function(message,idx){
+                    LitCalData.Messages.forEach((message,idx) => {
                         $('#LitCalMessages tbody').append(`<tr><td>${idx}</td><td>${message}</td></tr>`);
                     });
                 }
 
             },
-            error: function (jqXHR, textStatus, errorThrown) {
+            error: (jqXHR, textStatus, errorThrown) => {
                 console.log('(' + textStatus + ') ' + errorThrown);
                 console.log(jqXHR.getAllResponseHeaders);
                 console.log(jqXHR.responseText);
@@ -634,7 +637,7 @@ let today = new Date(),
         "December"
     ],
     $GRADE = [],
-    __ = function($key) {
+    __ = $key => {
         $lcl = $Settings.locale.toLowerCase();
         if ($messages !== null && typeof $messages == 'object') {
             if ($messages.hasOwnProperty($key) && typeof $messages[$key] == 'object') {
@@ -650,7 +653,7 @@ let today = new Date(),
             return $key;
         }
     },
-    getLatinDateStr = function($date) {
+    getLatinDateStr = $date => {
         $festivity_date_str = $daysOfTheWeek[$date.getUTCDay()];
         $festivity_date_str += ', ';
         $festivity_date_str += $date.getUTCDate();
@@ -660,7 +663,7 @@ let today = new Date(),
         $festivity_date_str += $date.getUTCFullYear();
         return $festivity_date_str;
     },
-    createHeader = function(){
+    createHeader = () => {
         document.title = __("Generate Roman Calendar");
         $('#settingsWrapper').dialog("destroy").remove();
         $('header').empty();
@@ -725,18 +728,15 @@ let today = new Date(),
     },
     $index = {},
     $DiocesesUSA,
-    $DiocesesItaly,
-    isStaging = window.location.pathname.includes('-staging');
+    $DiocesesItaly;
 
     jQuery.ajax({
-        url: "../../nations/index.json",
+        url: metadataURL,
         dataType: 'json',
         statusCode: {
-            404: function() {
-                console.log('The JSON definition "nations/index.json" does not exist yet.');
-            }
+            404: () => { console.log('The JSON definition "nations/index.json" does not exist yet.'); }
         },
-        success: function(data){
+        success: data => {
             console.log('retrieved data from index file:');
             console.log(data);
             $index = data;
@@ -746,17 +746,15 @@ let today = new Date(),
     });
 
 
-$(document).ready(function() {
+$(document).ready(() => {
     document.title = __("Generate Roman Calendar");
-    if(isStaging){ $('.backNav').attr('href','/LiturgicalCalendar-staging/usage.php'); }
+    $('.backNav').attr('href',`https://litcal${stagingURL}.johnromanodorazio.com/usage.php`);
     createHeader();
-    $(document).on('click', '#openSettings', function() {
-        $('#settingsWrapper').dialog("open");
-    });
+    $(document).on('click', '#openSettings', () => { $('#settingsWrapper').dialog("open"); });
     $('#generateLitCal').button();
-    $(document).on("submit", "#calSettingsForm", function( event ) {
+    $(document).on("submit", "#calSettingsForm", event => {
         event.preventDefault();
-        let formValues = $(this).serializeArray();
+        let formValues = $(event.currentTarget).serializeArray();
         for(const obj of formValues){
             $Settings[obj.name] = obj.value;
         }
@@ -783,8 +781,8 @@ $(document).ready(function() {
         $('#diocesanPreset').prop('disabled',true);
     }
 
-    $(document).on('change','#nationalPreset',function(){
-        switch($(this).val()){
+    $(document).on('change','#nationalPreset', ev => {
+        switch( $(ev.currentTarget).val() ){
           case "VATICAN":
             $('#locale').val('LA');
             $('#epiphany').val('JAN6');
@@ -861,8 +859,8 @@ $(document).ready(function() {
         }
     });
 
-    $(document).on('change', '#diocesanPreset', function () {
-        $Settings.diocesanPreset = $(this).val();
+    $(document).on('change', '#diocesanPreset', ev => {
+        $Settings.diocesanPreset = $(ev.currentTarget).val();
     });
 
     $('#settingsWrapper').dialog("open");

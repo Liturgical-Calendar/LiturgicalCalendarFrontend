@@ -979,13 +979,11 @@
       $('.backNav').attr('href',`https://litcal${stagingURL}.johnromanodorazio.com/usage.php`);
       createHeader();
       genLitCal();
-      $(document).on('click', '#openSettings', () => {
-        $('#settingsWrapper').dialog("open");
-      });
+      $(document).on('click', '#openSettings', ev => { $('#settingsWrapper').dialog("open"); });
 
       $(document).on("submit", '#calSettingsForm', event => {
         event.preventDefault();
-        let formValues = $(this).serializeArray();
+        let formValues = $(event.currentTarget).serializeArray();
         for (let obj of formValues) {
           $Settings[obj.name] = obj.value;
         }
@@ -998,7 +996,7 @@
         return false;
       });
 
-      $(document).on('change', '#nationalpreset', () => {
+      $(document).on('change', '#nationalpreset', ev => {
         /*
         $('#diocesanpreset').empty();
         if(Object.keys($index).length > 0){
@@ -1013,7 +1011,7 @@
           $('#diocesanpreset').prop('disabled', true);
         }
         */
-        switch ($(this).val()) {
+        switch( $(ev.currentTarget).val() ) {
           case "VATICAN":
             $('#locale').val('LA');
             $('#epiphany').val('JAN6');
@@ -1090,17 +1088,17 @@
         }
       });
 
-      $(document).on('change', '#diocesanpreset', () => { $Settings.diocesanpreset = $(this).val(); });
+      $(document).on('change', '#diocesanpreset', ev => { $Settings.diocesanpreset = $(ev.currentTarget).val(); });
 
       $(document).tooltip({
         items: "[data-tooltip",
-        content: () => decodeURI( $(this).attr('data-tooltip') )
+        content: el => decodeURI( $(el).attr('data-tooltip') )
       });
 
       if ($Settings.locale.toLowerCase() === 'la') {
-        $('.fc-day').each(idx => {
-          $(this).find('a.fc-col-header-cell-cushion').text(dayNamesShort[idx]);
-          console.log($(this).find('a.fc-col-header-cell-cushion').text());
+        $('.fc-day').each((idx, el) => {
+          $(el).find('a.fc-col-header-cell-cushion').text(dayNamesShort[idx]);
+          console.log($(el).find('a.fc-col-header-cell-cushion').text());
         });
       }
 

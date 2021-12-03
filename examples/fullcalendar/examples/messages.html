@@ -287,13 +287,13 @@
                 "returntype": "JSON"
             },
             $events = [],
-            pad = function (n) { return n < 10 ? '0' + n : n },
-            genLitCal = function () {
+            pad = n => n < 10 ? '0' + n : n,
+            genLitCal = () => {
                 $.ajax({
                     method: 'POST',
                     data: $Settings,
                     url: endpointURL,
-                    success: function (LitCalData) {
+                    success: LitCalData => {
                         console.log(LitCalData);
                         if (LitCalData.hasOwnProperty("LitCal")) {
                             createHeader();
@@ -344,9 +344,7 @@
                                     events: $events,
                                     firstDay: 0,
                                     eventOrder: 'idx',
-                                    eventDidMount: function (info) {
-                                        $(info.el).attr('data-tooltip', encodeURI(info.event.extendedProps.description));
-                                    }
+                                    eventDidMount: info => { $(info.el).attr('data-tooltip', encodeURI(info.event.extendedProps.description)); }
                                 };
                             if ($Settings.locale.toLowerCase() !== 'en') {
                                 fullCalendarSettings.locale = $Settings.locale.toLowerCase();
@@ -360,20 +358,20 @@
                         }
                         if (LitCalData.hasOwnProperty('Messages')) {
                             $('#LitCalMessages tbody').empty();
-                            LitCalData.Messages.forEach(function (message, idx) {
+                            LitCalData.Messages.forEach((message, idx) => {
                                 $('#LitCalMessages tbody').append(`<tr><td>${idx}</td><td>${message}</td></tr>`);
                             });
                         }
 
                     },
-                    error: function (jqXHR, textStatus, errorThrown) {
+                    error: (jqXHR, textStatus, errorThrown) => {
                         console.log('(' + textStatus + ') ' + errorThrown);
                         console.log(jqXHR.getAllResponseHeaders);
                         console.log(jqXHR.responseText);
                     }
                 });
             },
-            createHeader = function () {
+            createHeader = () => {
                 document.title = __("Generate Roman Calendar");
                 $('#settingsWrapper').dialog("destroy").remove();
                 $('header').empty();
@@ -438,7 +436,7 @@
                 }
 
             },
-            __ = function ($key) {
+            __ = $key => {
                 let $lcl = $Settings.locale.toLowerCase();
                 if ($messages !== null && typeof $messages == 'object') {
                     if ($messages.hasOwnProperty($key) && typeof $messages[$key] == 'object') {
@@ -454,7 +452,7 @@
                     return $key;
                 }
             },
-            _G = function ($key, $html = true) {
+            _G = ($key, $html = true) => {
                 $key = parseInt($key);
                 let $grade = __("FERIA");
                 switch ($key) {
@@ -485,10 +483,10 @@
                 }
                 return $html === true ? $grade : strip_tags($grade);
             },
-            _C = function ($common) {
+            _C = $common => {
                 if ($common !== "" && $common !== "Proper") {
                     let $commons = $common.split(",");
-                    $commons = $commons.map(function ($txt) {
+                    $commons = $commons.map($txt => {
                         let $commonArr = $txt.split(":");
                         let $commonGeneral = __($commonArr[0]);
                         let $commonSpecific = $commonArr.length > 1 && $commonArr[1] != "" ? __($commonArr[1]) : "";
@@ -521,12 +519,12 @@
                 }
                 return $common;
             },
-            _CC = function ($colorstr, html) {
+            _CC = ($colorstr, html) => {
                 if (html === true) {
                     if ($colorstr.indexOf(',') !== -1) {
                         console.log($colorstr);
                         let $colors = $colorstr.split(",");
-                        $colors = $colors.map(function ($txt) {
+                        $colors = $colors.map($txt => {
                             let $clr = $txt === 'white' ? 'gray' : $txt;
                             return '<span style="color:' + $clr + ';">' + __($txt) + '</span>';
                         });
@@ -541,9 +539,7 @@
                     if ($colorstr.indexOf(',') !== -1) {
                         console.log($colorstr);
                         let $colors = $colorstr.split(",");
-                        $colors = $colors.map(function ($txt) {
-                            return __($txt);
-                        });
+                        $colors = $colors.map( $txt => __($txt) );
                         return $colors.join(" " + __("or") + " ");
                     }
                     else {
@@ -919,11 +915,9 @@
             url: metadataURL,
             dataType: 'json',
             statusCode: {
-                404: function() {
-                    console.log('The JSON definition "nations/index.json" does not exist yet.');
-                }
+                404: () => { console.log('The JSON definition "nations/index.json" does not exist yet.'); }
             },
-            success: function(data){
+            success: data => {
                 console.log('retrieved data from index file:');
                 console.log(data);
                 $index = data;
@@ -933,19 +927,17 @@
         });
 
 
-        $(document).ready(function () {
+        $(document).ready(() => {
             document.title = __("Generate Roman Calendar");
             $('.backNav').attr('href',`https://litcal${stagingURL}.johnromanodorazio.com/usage.php`);
             createHeader();
             genLitCal();
 
-            $(document).on('click', '#openSettings', function () {
-                $('#settingsWrapper').dialog("open");
-            });
+            $(document).on('click', '#openSettings', ev => { $('#settingsWrapper').dialog("open"); });
 
-            $(document).on("submit", '#calSettingsForm', function (event) {
+            $(document).on("submit", '#calSettingsForm', event => {
                 event.preventDefault();
-                let formValues = $(this).serializeArray();
+                let formValues = $(event.currentTarget).serializeArray();
                 for (let obj of formValues) {
                     $Settings[obj.name] = obj.value;
                 }
@@ -962,7 +954,7 @@
                 $('#diocesanpreset').prop('disabled', true);
             }
 
-            $(document).on('change', '#nationalpreset', function () {
+            $(document).on('change', '#nationalpreset', ev => {
                 /*
                 $('#diocesanpreset').empty();
                 if(Object.keys($index).length > 0){
@@ -977,8 +969,7 @@
                 $('#diocesanpreset').prop('disabled', true);
                 }
                 */
-                $Settings.nationalpreset = $(this).val();
-                switch ($(this).val()) {
+                switch( $(ev.currentTarget).val() ) {
                     case "VATICAN":
                         $('#locale').val('LA');
                         $('#epiphany').val('JAN6');
@@ -1056,21 +1047,17 @@
                 }
             });
 
-            $(document).on('change', '#diocesanpreset', function () {
-                $Settings.diocesanpreset = $(this).val();
-            });
+            $(document).on('change', '#diocesanpreset', ev => { $Settings.diocesanpreset = $(ev.currentTarget).val(); });
 
             $(document).tooltip({
                 items: "[data-tooltip",
-                content: function () {
-                    return decodeURI($(this).attr('data-tooltip'))
-                }
+                content: el => decodeURI($(el).attr('data-tooltip'))
             });
 
             if ($Settings.locale.toLowerCase() === 'la') {
-                $('.fc-day').each(function (idx) {
-                    $(this).find('a.fc-col-header-cell-cushion').text(dayNamesShort[idx]);
-                    console.log($(this).find('a.fc-col-header-cell-cushion').text());
+                $('.fc-day').each((idx, el) => {
+                    $(el).find('a.fc-col-header-cell-cushion').text(dayNamesShort[idx]);
+                    console.log($(el).find('a.fc-col-header-cell-cushion').text());
                 });
             }
 

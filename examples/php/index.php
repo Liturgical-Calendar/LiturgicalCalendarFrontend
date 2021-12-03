@@ -12,6 +12,12 @@
 ini_set('error_reporting', E_ALL);
 ini_set("display_errors", 1);
 
+$isStaging = ( strpos( $_SERVER['HTTP_HOST'], "-staging" ) !== false );
+$stagingURL = $isStaging ? "-staging" : "";
+$endpointV = $isStaging ? "dev" : "v3";
+$endpointURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalEngine.php";
+$metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMetadata.php";
+
 /**************************
  * DEFINE USEFUL FUNCTIONS
  * AND ARRAYS
@@ -253,13 +259,86 @@ class StatusCodes
     }
 }
 
+$MetaData = null;
+$ch = curl_init();
+curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+curl_setopt( $ch, CURLOPT_URL, $metadataURL );
+curl_setopt( $ch, CURLOPT_HTTPHEADER, ['Accept: application/json'] );
+$metadataRaw = curl_exec( $ch );
+if( $metadataRaw !== false ){
+    $MetaData = json_decode( $metadataRaw, true );
+}
+curl_close( $ch );
+
 
 $YEAR = (isset($_GET["year"]) && is_numeric($_GET["year"]) && ctype_digit($_GET["year"]) && strlen($_GET["year"]) === 4) ? (int)$_GET["year"] : (int)date("Y");
 
 $EPIPHANY = (isset($_GET["epiphany"]) && ($_GET["epiphany"] === "JAN6" || $_GET["epiphany"] === "SUNDAY_JAN2_JAN8")) ? $_GET["epiphany"] : "JAN6";
-$ASCENSION = (isset($_GET["ascension"]) && ($_GET["ascension"] === "THURSDAY" || $_GET["ascension"] === "SUNDAY")) ? $_GET["ascension"] : "SUNDAY";
-$CORPUSCHRISTI = (isset($_GET["corpuschristi"]) && ($_GET["corpuschristi"] === "THURSDAY" || $_GET["corpuschristi"] === "SUNDAY")) ? $_GET["corpuschristi"] : "SUNDAY";
+$ASCENSION = (isset($_GET["ascension"]) && ($_GET["ascension"] === "THURSDAY" || $_GET["ascension"] === "SUNDAY")) ? $_GET["ascension"] : "THURSDAY";
+$CORPUSCHRISTI = (isset($_GET["corpuschristi"]) && ($_GET["corpuschristi"] === "THURSDAY" || $_GET["corpuschristi"] === "SUNDAY")) ? $_GET["corpuschristi"] : "THURSDAY";
 $LOCALE = isset($_GET["locale"]) ? strtoupper($_GET["locale"]) : "LA"; //default to latin
+
+$NATION = isset($_GET["nationalPreset"]) ? strtoupper($_GET["nationalPreset"]) : "";
+
+$DIOCESE = "";
+if( isset( $_GET["diocesanPreset"] ) && $_GET["diocesanPreset"] !== "" ) {
+    $DIOCESE = strtoupper( $_GET["diocesanPreset"] );
+    if( $MetaData !== null ) {
+        $NATION = $MetaData[$DIOCESE]["nation"];
+    }
+}
+
+$nations = [];
+$diocesanPresetOptions = '<option value=""></option>';
+if( $MetaData !== null ) {
+    foreach( $MetaData as $key => $value ){
+        if( $value['nation'] === $NATION ) {
+            $diocesanPresetOptions .= "<option value='{$key}'" . ( $DIOCESE === $key ? ' SELECTED' : '' ) . ">{$value['diocese']}</option>";
+        }
+    }
+    $nations = array_column($MetaData, "nation");
+}
+
+if( !in_array( "VATICAN", $nations ) ) {
+    array_push( $nations, "VATICAN" );
+}
+if( !in_array( "ITALY", $nations ) ) {
+    array_push( $nations, "ITALY" );
+}
+if( !in_array( "USA", $nations ) ) {
+    array_push( $nations, "USA" );
+}
+
+$nations = array_unique( $nations, SORT_STRING );
+$nationalPresetOptions = '<option value=""></option>';
+foreach( $nations as $nationVal ) {
+    $nationalPresetOptions .= "<option value='{$nationVal}'" . ($nationVal === $NATION ? ' SELECTED' : '') . ">$nationVal</option>";
+}
+
+
+switch( $NATION ) {
+    case "VATICAN":
+        $EPIPHANY = "JAN6";
+        $ASCENSION = "THURSDAY";
+        $CORPUSCHRISTI = "THURSDAY";
+        $LOCALE = "LA";
+        break;
+    case "ITALY":
+        $EPIPHANY = "JAN6";
+        $ASCENSION = "SUNDAY";
+        $CORPUSCHRISTI = "SUNDAY";
+        $LOCALE = "IT";
+        break;
+    case "USA":
+        $EPIPHANY = "SUNDAY_JAN2_JAN8";
+        $ASCENSION = "SUNDAY";
+        $CORPUSCHRISTI = "SUNDAY";
+        $LOCALE = "EN";
+        break;
+    default:
+        //do nothing
+}
+
 ini_set('date.timezone', 'Europe/Vatican');
 //ini_set('intl.default_locale', strtolower($LOCALE) . '_' . $LOCALE);
 setlocale(LC_TIME, strtolower($LOCALE) . '_' . $LOCALE);
@@ -343,12 +422,12 @@ if ($YEAR >= 1970) {
     // Will return the response, if false it print the response
     curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
     // Set the url
-    curl_setopt( $ch, CURLOPT_URL, 'https://litcal.johnromanodorazio.com/api/v3/LitCalEngine.php' );
+    curl_setopt( $ch, CURLOPT_URL, $endpointURL );
     curl_setopt( $ch, CURLOPT_HTTPHEADER, ['Accept: application/json'] );
     // Set request method to POST
     curl_setopt( $ch, CURLOPT_POST, 1 );
     // Define the POST field data
-    curl_setopt( $ch, CURLOPT_POSTFIELDS, http_build_query(["year" => $YEAR, "epiphany" => $EPIPHANY, "ascension" => $ASCENSION, "corpuschristi" => $CORPUSCHRISTI, "locale" => $LOCALE]) );
+    curl_setopt( $ch, CURLOPT_POSTFIELDS, http_build_query(["year" => $YEAR, "epiphany" => $EPIPHANY, "ascension" => $ASCENSION, "corpuschristi" => $CORPUSCHRISTI, "locale" => $LOCALE, "nationalpreset" => $NATION, "diocesanPreset" => $DIOCESE]) );
     // Execute
     $result = curl_exec($ch);
 
@@ -362,8 +441,8 @@ if ($YEAR >= 1970) {
             // the request did not complete as expected. common errors are 4xx
             // (not found, bad request, etc.) and 5xx (usually concerning
             // errors/exceptions in the remote script execution)
-            header('Content-Type: text/plain');
-            die("Request failed. HTTP status code: " . StatusCodes::getMessageForCode($resultStatus) . "\r\n\r\n$result");
+            header('Content-Type: text/html');
+            die("<body style=\"background-color:pink;color:darkred;\"><div style=\"text-align:center;padding: 20px;margin: 20px auto;\"><h1>Request failed.</h1><h2>" . StatusCodes::getMessageForCode($resultStatus) . "</h2><p>$result</p></div></body>");
         }
     }
 
@@ -754,7 +833,6 @@ $months = [
  * BEGIN DISPLAY LOGIC
  * 
  *************************/
-$isStaging = ( strpos( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_HOST ), "-staging" ) !== false );
 
 ?>
 <!doctype html>
@@ -777,12 +855,12 @@ $isStaging = ( strpos( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_HOST ), "-sta
 </head>
 
 <body>
-    <div><a class="backNav" href="https://litcal<?php echo $isStaging ? "-staging" : "" ?>.johnromanodorazio.com/usage.php">↩      Go back      ↩</a></div>
+    <div><a class="backNav" href="https://litcal<?php echo $stagingURL; ?>.johnromanodorazio.com/usage.php">↩      Go back      ↩</a></div>
 
     <?php
 
     echo '<h1 style="text-align:center;">' . __("Liturgical Calendar Calculation for a Given Year", $LOCALE) . ' (' . $YEAR . ')</h1>';
-    echo '<h2 style="text-align:center;">' . sprintf(__("HTML presentation elaborated by PHP using a CURL request to a %s", $LOCALE), '<a href="https://litcal.johnromanodorazio.com/api/v3/LitCalEngine.php">PHP engine</a>') . '</h2>';
+    echo '<h2 style="text-align:center;">' . sprintf(__("HTML presentation elaborated by PHP using a CURL request to a %s", $LOCALE), "<a href=\"{$endpointURL}\">PHP engine</a>") . '</h2>';
 
     if($YEAR > 9999){
         $YEAR = 9999;
@@ -804,6 +882,11 @@ $isStaging = ( strpos( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_HOST ), "-sta
     echo '<td><label>CORPUS CHRISTI (CORPUS DOMINI): <select name="corpuschristi" id="corpuschristi"><option value="THURSDAY" ' . (CORPUSCHRISTI === "THURSDAY" ? " SELECTED" : "") . '>Thursday</option><option value="SUNDAY" ' . (CORPUSCHRISTI === "SUNDAY" ? " SELECTED" : "") . '>Sunday</option></select></label></td>';
     echo '<td><label>LOCALE: <select name="locale" id="locale"><option value="EN" ' . ($LOCALE === "EN" ? " SELECTED" : "") . '>EN</option><option value="IT" ' . ($LOCALE === "IT" ? " SELECTED" : "") . '>IT</option><option value="LA" ' . ($LOCALE === "LA" ? " SELECTED" : "") . '>LA</option></select></label></td>';
     echo '</tr><tr>';
+    echo '<td colspan="5" style="text-align:center;padding:18px;"><i>' . __('or', $LOCALE) . '</i><br /><i>Scegli il Calendario desiderato dall\'elenco</i></td>';
+    echo '</tr><tr>';
+    echo '<td colspan="5" style="text-align:center;"><label>NATION: <select id="nationalPreset" name="nationalPreset">' . $nationalPresetOptions . '</select></label>';
+    echo '<label style="margin-left: 18px;">DIOCESE: <select id="diocesanPreset" name="diocesanPreset"' . ($NATION === '' ? ' DISABLED' : '') . '>' . $diocesanPresetOptions . '</select></label></td>';
+    echo '</tr><tr>';
     echo '<td colspan="5" style="text-align:center;padding:15px;"><input type="SUBMIT" value="' . strtoupper(__("Generate Roman Calendar", $LOCALE)) . '" /></td>';
     echo '</tr></table>';
     echo '</form>';
@@ -813,12 +896,12 @@ $isStaging = ( strpos( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_HOST ), "-sta
 
     echo '<h3>' . __('Configurations being used to generate this calendar:', $LOCALE) . '</h3>';
     echo '<span>' . __('YEAR', $LOCALE) . ' = ' . $YEAR . ', ' . __('EPIPHANY', $LOCALE) . ' = ' . EPIPHANY . ', ' . __('ASCENSION', $LOCALE) . ' = ' . ASCENSION . ', CORPUS CHRISTI = ' . CORPUSCHRISTI . ', LOCALE = ' . $LOCALE . '</span>';
-
+    echo '<br /><span>' . __('NATION', $LOCALE) . ' = ' . $NATION . ', ' . __('DIOCESE', $LOCALE) . ' = ' . $DIOCESE . '</span>';
     echo '</div>';
 
     if ($YEAR >= 1970) {
         echo '<table id="LitCalTable">';
-        echo '<thead><tr><th>' . __("Month",$LOCALE) . '</th><th>' . __("Date in Gregorian Calendar", $LOCALE) . '</th><th>' . __("General Roman Calendar Festivity", $LOCALE) . '</th><th>' . __("Grade of the Festivity", $LOCALE) . '</th></tr></thead>';
+        echo '<thead><tr><th>' . __("Month", $LOCALE) . '</th><th>' . __("Date in Gregorian Calendar", $LOCALE) . '</th><th>' . __("General Roman Calendar Festivity", $LOCALE) . '</th><th>' . __("Grade of the Festivity", $LOCALE) . '</th></tr></thead>';
         echo '<tbody>';
 
 
