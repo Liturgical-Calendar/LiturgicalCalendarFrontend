@@ -3,7 +3,7 @@ let CalendarNations = [];
 let selectOptions = {};
 const { COUNTRIES, LITCAL_LOCALE, __ } = i18n;
 let countryNames = new Intl.DisplayNames([LITCAL_LOCALE], {type: 'region'});
-const RequestURLBase = "LitCalEngine.php";
+const RequestURLBase = "https://litcal.johnromanodorazio.com/api/v3/LitCalEngine.php";
 let requestURL = {
     year: null,
     corpuschristi: null,
@@ -26,7 +26,7 @@ let serializeRequestURL = function(obj){
 };
 
 (function ($) {
-    $.getJSON('nations/index.json',function(data){
+    $.getJSON( 'https://litcal.johnromanodorazio.com/api/v3/nations/index.json', data => {
         CalendarIndex = data;
         for(const [key,value] of Object.entries(CalendarIndex)){
             if(CalendarNations.indexOf(value.nation) === -1){
