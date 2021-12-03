@@ -256,7 +256,7 @@
       <div></div>
     </div>
   </div>
-  <div><a class="backNav" href="/LiturgicalCalendar/usage.php">↩ Go back ↩</a></div>
+  <div><a class="backNav" href="https://litcal.johnromanodorazio.com/usage.php">↩ Go back ↩</a></div>
   <span class="material-icons" id="openSettings">settings</span>
   <header></header>
 
@@ -275,8 +275,11 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
   <script>
     "use strict";
-    const metadataURL = 'https://litcal.johnromanodorazio.com/api/v3/LitCalMetadata.php';
-    const endpointURL = 'https://litcal.johnromanodorazio.com/api/v3/LitCalEngine.php';
+    const isStaging = ( thirdLevelDomain === 'litcal' || thirdLevelDomain === 'litcal-staging' || window.location.pathname.includes( '-staging' ) );
+    const stagingURL = isStaging ? '-staging' : '';
+    const endpointV = isStaging ? 'dev' : 'v3';
+    const endpointURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalEngine.php`;
+    const metadataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalMetadata.php`;
     let noticeShown = false;
     let today = new Date(),
       $Settings = {
@@ -288,13 +291,13 @@
         "returntype": "JSON"
       },
       $events = [],
-      pad = function (n) { return n < 10 ? '0' + n : n },
-      genLitCal = function () {
+      pad = n => (n < 10 ? '0' + n : n),
+      genLitCal = () => {
         $.ajax({
           method: 'POST',
           data: $Settings,
           url: endpointURL,
-          success: function (LitCalData) {
+          success: LitCalData => {
             console.log(LitCalData);
             if (LitCalData.hasOwnProperty("LitCal")) {
               createHeader();
@@ -348,9 +351,7 @@
                   firstDay: 0,
                   eventOrder: 'idx',
                   aspectRatio: 2,
-                  eventDidMount: function (info) {
-                    $(info.el).attr('data-tooltip', encodeURI(info.event.extendedProps.description));
-                  }//,
+                  eventDidMount: info => { $(info.el).attr('data-tooltip', encodeURI(info.event.extendedProps.description)); }
                   //monthNames: ["januari", "februari", "maart", "april", "mei", "juni","juli", "augustus", "september", "oktober", "november", "december"],
                   //monthNamesShort: ["jan", "feb", "maa", "apr", "mei", "jun", "jul", "aug","sep", "okt", "nov", "dec"],
                   //dayNames: ['zondag', 'maandag', 'dinsdag', 'woensdag','donderdag', 'vrijdag', 'zaterdag'],
@@ -369,9 +370,7 @@
 
             if (LitCalData.hasOwnProperty('Messages')) {
               $('#LitCalMessages tbody').empty();
-              LitCalData.Messages.forEach(function (message, idx) {
-                $('#LitCalMessages tbody').append(`<tr><td>${idx}</td><td>${message}</td></tr>`);
-              });
+              LitCalData.Messages.forEach((message, idx) => { $('#LitCalMessages tbody').append(`<tr><td>${idx}</td><td>${message}</td></tr>`); });
             }
 
             if(LitCalData.hasOwnProperty('Metadata')) {
@@ -383,7 +382,7 @@
                   headers: { 
                       Accept : "application/vnd.github.v3+json"
                   },
-                  success: function(MetaData){
+                  success: MetaData => {
                     console.log('data received from github:');
                     console.log(MetaData);
                     if(typeof MetaData ==='object' && MetaData.hasOwnProperty('tag_name')){
@@ -403,14 +402,14 @@
             }
 
           },
-          error: function (jqXHR, textStatus, errorThrown) {
+          error: (jqXHR, textStatus, errorThrown) => {
             console.log('(' + textStatus + ') ' + errorThrown);
             console.log(jqXHR.getAllResponseHeaders);
             console.log(jqXHR.responseText);
           }
         });
       },
-      createHeader = function () {
+      createHeader = () => {
         document.title = __("Generate Roman Calendar");
         $('#settingsWrapper').dialog("destroy").remove();
         $('header').empty();
@@ -476,7 +475,7 @@
         }
 
       },
-      __ = function ($key) {
+      __ = $key => {
         let $lcl = $Settings.locale.toLowerCase();
         if ($messages !== null && typeof $messages == 'object') {
           if ($messages.hasOwnProperty($key) && typeof $messages[$key] == 'object') {
@@ -492,7 +491,7 @@
           return $key;
         }
       },
-      _G = function ($key, $html = true) {
+      _G = ($key, $html = true) => {
         $key = parseInt($key);
         let $grade = __("FERIA");
         switch ($key) {
@@ -523,10 +522,10 @@
         }
         return $html === true ? $grade : strip_tags($grade);
       },
-      _C = function ($common) {
+      _C = $common => {
         if ($common !== "" && $common !== "Proper") {
           let $commons = $common.split(",");
-          $commons = $commons.map(function ($txt) {
+          $commons = $commons.map($txt => {
             let $commonArr = $txt.split(":");
             let $commonGeneral = __($commonArr[0]);
             let $commonSpecific = $commonArr.length > 1 && $commonArr[1] != "" ? __($commonArr[1]) : "";
@@ -559,12 +558,12 @@
         }
         return $common;
       },
-      _CC = function ($colorstr, html) {
+      _CC = ($colorstr, html) => {
         if (html === true) {
           if ($colorstr.indexOf(',') !== -1) {
             console.log($colorstr);
             let $colors = $colorstr.split(",");
-            $colors = $colors.map(function ($txt) {
+            $colors = $colors.map($txt => {
               let $clr = $txt === 'white' ? 'gray' : $txt;
               return '<span style="color:' + $clr + ';">' + __($txt) + '</span>';
             });
@@ -579,7 +578,7 @@
           if ($colorstr.indexOf(',') !== -1) {
             console.log($colorstr);
             let $colors = $colorstr.split(",");
-            $colors = $colors.map(function ($txt) {
+            $colors = $colors.map($txt => {
               return __($txt);
             });
             return $colors.join(" " + __("or") + " ");
@@ -957,18 +956,15 @@
       $index = {},
       $DiocesesUSA,
       $DiocesesItaly,
-      $DiocesesList,
-      isStaging = window.location.pathname.includes('-staging');
+      $DiocesesList;
 
     jQuery.ajax({
         url: metadataURL,
         dataType: 'json',
         statusCode: {
-            404: function() {
-                console.log('The JSON definition "nations/index.json" does not exist yet.');
-            }
+            404: () => { console.log('The JSON definition "nations/index.json" does not exist yet.'); }
         },
-        success: function(data){
+        success: data => {
             console.log('retrieved data from index file:');
             console.log(data);
             $index = data;
@@ -977,16 +973,16 @@
         }
     });
 
-    $(document).ready(function () {
+    $(document).ready(() => {
       document.title = __("Generate Roman Calendar");
-      if(isStaging){ $('.backNav').attr('href','/LiturgicalCalendar-staging/usage.php'); }
+      $('.backNav').attr('href',`https://litcal${stagingURL}.johnromanodorazio.com/usage.php`);
       createHeader();
       genLitCal();
-      $(document).on('click', '#openSettings', function () {
+      $(document).on('click', '#openSettings', () => {
         $('#settingsWrapper').dialog("open");
       });
 
-      $(document).on("submit", '#calSettingsForm', function (event) {
+      $(document).on("submit", '#calSettingsForm', event => {
         event.preventDefault();
         let formValues = $(this).serializeArray();
         for (let obj of formValues) {
@@ -1001,7 +997,7 @@
         return false;
       });
 
-      $(document).on('change', '#nationalpreset', function () {
+      $(document).on('change', '#nationalpreset', () => {
         /*
         $('#diocesanpreset').empty();
         if(Object.keys($index).length > 0){
@@ -1093,19 +1089,15 @@
         }
       });
 
-      $(document).on('change', '#diocesanpreset', function () {
-        $Settings.diocesanpreset = $(this).val();
-      });
+      $(document).on('change', '#diocesanpreset', () => { $Settings.diocesanpreset = $(this).val(); });
 
       $(document).tooltip({
         items: "[data-tooltip",
-        content: function () {
-          return decodeURI($(this).attr('data-tooltip'))
-        }
+        content: () => decodeURI( $(this).attr('data-tooltip') )
       });
 
       if ($Settings.locale.toLowerCase() === 'la') {
-        $('.fc-day').each(function (idx) {
+        $('.fc-day').each(idx => {
           $(this).find('a.fc-col-header-cell-cushion').text(dayNamesShort[idx]);
           console.log($(this).find('a.fc-col-header-cell-cushion').text());
         });
@@ -1115,9 +1107,9 @@
 
   // First, checks if it isn't implemented yet.
   if (!String.prototype.format) {
-    String.prototype.format = function() {
+    String.prototype.format = () => {
       var args = arguments;
-      return this.replace(/{(\d+)}/g, function(match, number) { 
+      return this.replace(/{(\d+)}/g, (match, number) => { 
         return typeof args[number] != 'undefined'
           ? args[number]
           : match

@@ -252,7 +252,7 @@
             <div></div>
         </div>
     </div>
-    <div><a class="backNav" href="/LiturgicalCalendar/usage.php">↩ Go back ↩</a></div>
+    <div><a class="backNav" href="https://litcal.johnromanodorazio.com/usage.php">↩ Go back ↩</a></div>
     <span class="material-icons" id="openSettings">settings</span>
     <header>
     </header>
@@ -271,8 +271,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script>
         "use strict";
-        const endpointURL = 'https://litcal.johnromanodorazio.com/api/v3/LitCalEngine.php';
-        const metadataURL = 'https://litcal.johnromanodorazio.com/api/v3/LitCalMetadata.php';
+        const isStaging = ( thirdLevelDomain === 'litcal' || thirdLevelDomain === 'litcal-staging' || window.location.pathname.includes( '-staging' ) );
+        const stagingURL = isStaging ? '-staging' : '';
+        const endpointV = isStaging ? 'dev' : 'v3';
+        const endpointURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalEngine.php`;
+        const metadataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalMetadata.php`;
         let today = new Date(),
             $Settings = {
                 "year": today.getFullYear(),
@@ -909,8 +912,7 @@
             dayNamesShort = ['Sol', 'Lun', 'Mart', 'Merc', 'Iov', 'Ven', 'Sat'],
             $index = {},
             $DiocesesUSA,
-            $DiocesesItaly,
-            isStaging = window.location.pathname.includes('-staging');
+            $DiocesesItaly;
 
         jQuery.ajax({
             url: metadataURL,
@@ -932,7 +934,7 @@
 
         $(document).ready(function () {
             document.title = __("Generate Roman Calendar");
-            if(isStaging){ $('.backNav').attr('href','/LiturgicalCalendar-staging/usage.php'); }
+            $('.backNav').attr('href',`https://litcal${stagingURL}.johnromanodorazio.com/usage.php`);
             createHeader();
             genLitCal();
 
