@@ -26,7 +26,7 @@ let serializeRequestURL = function(obj){
 };
 
 (function ($) {
-    $.getJSON( 'https://litcal.johnromanodorazio.com/api/v3/nations/index.json', data => {
+    $.getJSON( 'https://litcal.johnromanodorazio.com/api/v3/LitCalMetadata.php', data => {
         CalendarIndex = data;
         for(const [key,value] of Object.entries(CalendarIndex)){
             if(CalendarNations.indexOf(value.nation) === -1){
