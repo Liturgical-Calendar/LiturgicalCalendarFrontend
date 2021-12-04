@@ -114,6 +114,14 @@ $messages = array_merge($messages, [
     ]
 ]);
 
+$isStaging = ( strpos( $_SERVER['HTTP_HOST'], "-staging" ) !== false );
+$stagingURL = $isStaging ? "-staging" : "";
+$endpointV = $isStaging ? "dev" : "v3";
+$endpointURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalEngine.php";
+$metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMetadata.php";
+$dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/dateOfEaster.php";
+
+
 ?>
 
 <!doctype html>
@@ -159,7 +167,7 @@ $messages = array_merge($messages, [
                                 </select>
                             </div>
                         </div>
-                        <div class="text-center"><a id="RequestURLButton" href="https://litcal.johnromanodorazio.com/api/v3/LitCalEngine.php" class="btn btn-primary m-2"><?php _e("Liturgical Calendar API endpoint"); ?></a></div>
+                        <div class="text-center"><a id="RequestURLButton" href="<?php echo $endpointURL; ?>" class="btn btn-primary m-2"><?php _e("Liturgical Calendar API endpoint"); ?></a></div>
                         <p>If a national or diocesan calendar is requested, these calendars will automatically set the specific options in the API request. 
                             If instead no national or diocesan calendar is requested (i.e. the Universal Calendar is requested) then the more specific options can be requested:</p>
                         <div class="form-row">
@@ -170,7 +178,7 @@ $messages = array_merge($messages, [
                         </div>
                         <small class="text-muted">
                             <p><i>URL for the API request based on selected options (the above button is set to this URL):</i></p>
-                            <div id="RequestURLExampleWrapper"><code id="RequestURLExample">https://litcal.johnromanodorazio.com/api/v3/LitCalEngine.php</code></div>
+                            <div id="RequestURLExampleWrapper"><code id="RequestURLExample"><?php echo $endpointURL; ?></code></div>
                         </small>
                     </div>
                 </div>
@@ -183,13 +191,13 @@ $messages = array_merge($messages, [
                     </div>
                     <div class="card-body">
                         <p><?php _e("EASTER_CALCULATOR_API"); ?></p>
-                        <div class="text-center"><a href="dateOfEaster.php" class="btn btn-primary m-2"><?php _e("Date of Easter API endpoint"); ?></a></div>
+                        <div class="text-center"><a href="<?php echo $dateOfEasterURL ?>" class="btn btn-primary m-2"><?php _e("Date of Easter API endpoint"); ?></a></div>
                         <small class="text-muted">
                             <i>Currently the data can be requested with the following localizations:</i>
                             <ul>
-                                <li><b>English</b>: <code>/dateOfEaster.php?locale=EN</code></li>
-                                <li><b>Italian</b>: <code>/dateOfEaster.php?locale=IT</code></li>
-                                <li><b>Latin</b>: <code>/dateOfEaster.php?locale=LA</code></li>
+                                <li><b>English</b>: <code><?php echo $dateOfEasterURL ?>?locale=EN</code></li>
+                                <li><b>Italian</b>: <code><?php echo $dateOfEasterURL ?>?locale=IT</code></li>
+                                <li><b>Latin</b>: <code><?php echo $dateOfEasterURL ?>?locale=LA</code></li>
                             </ul>
                             <i>In any case, since the API returns a UNIX timestamp for each date of Easter, localizations can be done in a client application just as well.</i>
                         </small>

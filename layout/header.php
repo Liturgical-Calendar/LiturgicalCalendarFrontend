@@ -1,6 +1,12 @@
 <?php 
 $currentPage = basename($_SERVER["SCRIPT_FILENAME"], '.php');
-$isStaging = (strpos(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH),"-staging") !== false);
+
+$isStaging = ( strpos( $_SERVER['HTTP_HOST'], "-staging" ) !== false );
+$stagingURL = $isStaging ? "-staging" : "";
+$endpointV = $isStaging ? "dev" : "v3";
+$endpointURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalEngine.php";
+$metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMetadata.php";
+
 ?>
 
 <!-- Page Wrapper -->
@@ -11,7 +17,7 @@ $isStaging = (strpos(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH),"-staging"
 
         <!-- Sidebar - Brand -->
         <li>
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/LiturgicalCalendar<?php echo $isStaging ? "-staging" : "" ?>">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
                 <div class="sidebar-brand-text mx-3">Catholic Liturgical Calendar</div>
             </a>
         </li>
@@ -23,7 +29,7 @@ $isStaging = (strpos(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH),"-staging"
 
         <!-- Nav Item - Dashboard -->
         <li class="nav-item active">
-            <a class="nav-link" href="/LiturgicalCalendar<?php echo $isStaging ? "-staging" : "" ?>">
+            <a class="nav-link" href="/">
                 <i class="fas fa-fw fa-cross"></i>
                 <span>Home</span>
             </a>
@@ -42,19 +48,19 @@ $isStaging = (strpos(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH),"-staging"
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" href="/LiturgicalCalendar<?php echo $isStaging ? "-staging" : "" ?>/LitCalEngine.php">
+            <a class="nav-link" href="<?php echo $endpointURL ?>">
                 <i class="fas fa-fw fa-folder"></i>
                 <span>API endpoint</span></a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" href="/LiturgicalCalendar<?php echo $isStaging ? "-staging" : "" ?>/dist/">
+            <a class="nav-link" href="/dist/">
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Swagger / Open API Docs</span></a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" href="/LiturgicalCalendar<?php echo $isStaging ? "-staging" : "" ?>/easter.php">
+            <a class="nav-link" href="/easter.php">
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Date of Easter</span></a>
         </li>
@@ -72,22 +78,22 @@ $isStaging = (strpos(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH),"-staging"
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" href="/LiturgicalCalendar<?php echo $isStaging ? "-staging" : "" ?>/examples/php/">
+            <a class="nav-link" href="/examples/php/">
                 <i class="fas fa-fw fa-folder"></i>
                 <span>PHP + cURL</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/LiturgicalCalendar<?php echo $isStaging ? "-staging" : "" ?>/examples/javascript/">
+            <a class="nav-link" href="/examples/javascript/">
                 <i class="fas fa-fw fa-folder"></i>
                 <span>HTML + AJAX</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/LiturgicalCalendar<?php echo $isStaging ? "-staging" : "" ?>/examples/fullcalendar/examples/month-view.html">
+            <a class="nav-link" href="/examples/fullcalendar/examples/month-view.html">
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Full Calendar</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/LiturgicalCalendar<?php echo $isStaging ? "-staging" : "" ?>/examples/fullcalendar/examples/messages.html">
+            <a class="nav-link" href="/examples/fullcalendar/examples/messages.html">
                 <i class="fas fa-fw fa-folder"></i>
                 <span>Full Calendar (messages first)</span></a>
         </li>
@@ -151,8 +157,8 @@ $isStaging = (strpos(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH),"-staging"
                 </ul>
 
                 <a class="btn btn-transparent-dark mr-2"
-                    href="https://github.com/JohnRDOrazio/LiturgicalCalendar" target="_blank"
-                    title="Fork me on GitHub">
+                    href="https://github.com/Liturgical-Calendar/" target="_blank"
+                    title="See the project repositories on GitHub">
                     <i class="fab fa-github"></i>
                 </a>
             </nav>
