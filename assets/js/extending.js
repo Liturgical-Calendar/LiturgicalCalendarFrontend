@@ -338,14 +338,17 @@ jQuery.ajax({
     url: MetaDataURL,
     dataType: 'json',
     statusCode: {
-        404: function () {
+        404: (xhr, textStatus, errorThrown) => {
             console.log('The JSON definition "nations/index.json" does not exist yet.');
+            console.log( xhr.responseText );
+            toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />' + xhr.responseText, "Error");
         }
     },
-    success: function (data) {
+    success: data => {
         console.log('retrieved data from index file:');
         console.log(data);
         $index = data;
+        toastr["success"]('Successfully retrieved data from index file', "Success");
     }
 });
 
@@ -468,49 +471,39 @@ class FormControls {
     }
 }
 
-$(document).on('click', '#diocesanCalendarDefinitionCardLinks a.page-link', function (event) {
-    event.preventDefault();
+$(document).on('click', '#diocesanCalendarDefinitionCardLinks a.page-link', ev => {
+    ev.preventDefault();
     $('#diocesanCalendarDefinitionCardLinks li').removeClass('active');
-    //console.log("you clicked " + $(this).text());
-    if ($(this).hasClass('diocesan-carousel-next')) {
+    //console.log("you clicked " + $(ev.currentTarget).text());
+    if ($(ev.currentTarget).hasClass('diocesan-carousel-next')) {
         $('.carousel').carousel('next');
-    } else if ($(this).hasClass('diocesan-carousel-prev')) {
+    } else if ($(ev.currentTarget).hasClass('diocesan-carousel-prev')) {
         $('.carousel').carousel('prev');
     } else {
-        $(this).parent('li').addClass('active');
-        $('.carousel').carousel(parseInt($(this).attr('data-slide-to')));
+        $(ev.currentTarget).parent('li').addClass('active');
+        $('.carousel').carousel(parseInt($(ev.currentTarget).attr('data-slide-to')));
     }
 });
 
-$(document).on('change', '.litEvent', function (event) {
-    $row = $(this).closest('.form-row');
-    $card = $(this).closest('.card-body');
-    if ($(this).hasClass('litEventName')) {
+$(document).on('change', '.litEvent', ev => {
+    $row = $(ev.currentTarget).closest('.form-row');
+    $card = $(ev.currentTarget).closest('.card-body');
+    if ($(ev.currentTarget).hasClass('litEventName')) {
         console.log('LitEvent name has changed');
-        if ($(this).val() == '') {
+        if ($(ev.currentTarget).val() == '') {
             //empty value probably means we are trying to delete an already defined event
             //so let's find the key and remove it
-            oldEventKey = $(this).attr('data-valuewas');
+            oldEventKey = $(ev.currentTarget).attr('data-valuewas');
             if ($CALENDAR.LitCal.hasOwnProperty(oldEventKey)) {
                 delete $CALENDAR.LitCal[oldEventKey];
             }
-            /*
-            //so let's go back over all the name fields and recreate a clean LitCal object
-            $CALENDAR = {LitCal:{}};
-            $('#carouselItemSolemnities .form-row').each(function(idx,el){
-                if($(el).find('.litEventName').val() != ''){
-                    eventKey = $(el).find('.litEventName').val().replace(/[^a-zA-Z]/gi, '');
-
-                }
-            });
-            */
         } else {
-            eventKey = $(this).val().replace(/[^a-zA-Z]/gi, '');
+            eventKey = $(ev.currentTarget).val().replace(/[^a-zA-Z]/gi, '');
             console.log('new LitEvent name identifier is ' + eventKey);
-            if ($(this).attr('data-valuewas') == '' && $CALENDAR.LitCal.hasOwnProperty(eventKey) === false) {
+            if ($(ev.currentTarget).attr('data-valuewas') == '' && $CALENDAR.LitCal.hasOwnProperty(eventKey) === false) {
                 console.log('there was no data-valuewas attribute or it was empty, so we are creating ex-novo a new LitEvent');
                 $CALENDAR.LitCal[eventKey] = new litEvent();
-                $CALENDAR.LitCal[eventKey].name = $(this).val();
+                $CALENDAR.LitCal[eventKey].name = $(ev.currentTarget).val();
                 //let's initialize defaults just in case the default input values happen to be correct, so no change events are fired
                 $CALENDAR.LitCal[eventKey].day = parseInt($row.find('.litEventDay').val());
                 $CALENDAR.LitCal[eventKey].month = parseInt($row.find('.litEventMonth').val());
@@ -518,31 +511,31 @@ $(document).on('change', '.litEvent', function (event) {
                 $CALENDAR.LitCal[eventKey].common = $row.find('.litEventProper').val().join(',');
                 $CALENDAR.LitCal[eventKey].sinceYear = $row.find('.litEventFromYear').val();
                 $CALENDAR.LitCal[eventKey].formRowNum = $card.find('.form-row').index($row);
-                $(this).attr('data-valuewas', eventKey);
-                $(this).removeClass('is-invalid');
-            } else if ($(this).attr('data-valuewas') != '') {
-                oldEventKey = $(this).attr('data-valuewas');
+                $(ev.currentTarget).attr('data-valuewas', eventKey);
+                $(ev.currentTarget).removeClass('is-invalid');
+            } else if ($(ev.currentTarget).attr('data-valuewas') != '') {
+                oldEventKey = $(ev.currentTarget).attr('data-valuewas');
                 console.log('the preceding value here was ' + oldEventKey);
                 if ($CALENDAR.LitCal.hasOwnProperty(oldEventKey)) {
                     if (oldEventKey !== eventKey) {
                         console.log('will now attempt to copy the values from <' + oldEventKey + '> to <' + eventKey + '> and then remove <' + oldEventKey + '>');
                         Object.defineProperty($CALENDAR.LitCal, eventKey,
                             Object.getOwnPropertyDescriptor($CALENDAR.LitCal, oldEventKey));
-                        $CALENDAR.LitCal[eventKey].name = $(this).val();
+                        $CALENDAR.LitCal[eventKey].name = $(ev.currentTarget).val();
                         delete $CALENDAR.LitCal[oldEventKey];
-                        $(this).attr('data-valuewas', eventKey);
-                        $(this).removeClass('is-invalid');
+                        $(ev.currentTarget).attr('data-valuewas', eventKey);
+                        $(ev.currentTarget).removeClass('is-invalid');
                     }
                 }
             } else if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
-                //this exact same festivity name was already defined elsewhere!
-                $(this).val('');
-                $(this).addClass('is-invalid');
+                //ev.currentTarget exact same festivity name was already defined elsewhere!
+                $(ev.currentTarget).val('');
+                $(ev.currentTarget).addClass('is-invalid');
             }
-            switch ($(this).closest('.carousel-item').attr('id')) {
+            switch ($(ev.currentTarget).closest('.carousel-item').attr('id')) {
                 case 'carouselItemSolemnities':
                     $CALENDAR.LitCal[eventKey].grade = 6;
-                    if ($(this).val().match(/(martyr|martir|mártir|märtyr)/i) !== null) {
+                    if ($(ev.currentTarget).val().match(/(martyr|martir|mártir|märtyr)/i) !== null) {
                         $row.find('.litEventColor').multiselect('deselectAll', false).multiselect('select', 'red');
                         $CALENDAR.LitCal[eventKey].color = 'red';
                     } else {
@@ -561,15 +554,15 @@ $(document).on('change', '.litEvent', function (event) {
                     break;
             }
         }
-    } else if ($(this).hasClass('litEventDay')) {
+    } else if ($(ev.currentTarget).hasClass('litEventDay')) {
         if ($row.find('.litEventName').val() != "") {
             eventKey = $row.find('.litEventName').val().replace(/[^a-zA-Z]/gi, '');
             if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
-                $CALENDAR.LitCal[eventKey].day = parseInt($(this).val());
+                $CALENDAR.LitCal[eventKey].day = parseInt($(ev.currentTarget).val());
             }
         }
-    } else if ($(this).hasClass('litEventMonth')) {
-        let selcdMonth = parseInt($(this).val());
+    } else if ($(ev.currentTarget).hasClass('litEventMonth')) {
+        let selcdMonth = parseInt($(ev.currentTarget).val());
         if ($row.find('.litEventName').val() != "") {
             eventKey = $row.find('.litEventName').val().replace(/[^a-zA-Z]/gi, '');
             if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
@@ -580,14 +573,14 @@ $(document).on('change', '.litEvent', function (event) {
         if (parseInt($row.find('.litEventDay').val()) > parseInt($row.find('.litEventDay').attr('max'))) {
             $row.find('.litEventDay').val($row.find('.litEventDay').attr('max'));
         }
-    } else if ($(this).hasClass('litEventProper')) {
+    } else if ($(ev.currentTarget).hasClass('litEventProper')) {
         if ($row.find('.litEventName').val() != "") {
             eventKey = $row.find('.litEventName').val().replace(/[^a-zA-Z]/gi, '');
             if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
-                if (typeof $(this).val() === 'object') {
-                    $CALENDAR.LitCal[eventKey].common = $(this).val().join();
+                if (typeof $(ev.currentTarget).val() === 'object') {
+                    $CALENDAR.LitCal[eventKey].common = $(ev.currentTarget).val().join();
                 } else {
-                    $CALENDAR.LitCal[eventKey].common = $(this).val();
+                    $CALENDAR.LitCal[eventKey].common = $(ev.currentTarget).val();
                 }
                 switch ($row.closest('.carousel-item').attr('id')) {
                     case 'carouselItemSolemnities':
@@ -615,18 +608,18 @@ $(document).on('change', '.litEvent', function (event) {
                 }
             }
         }
-    } else if ($(this).hasClass('litEventColor')) {
+    } else if ($(ev.currentTarget).hasClass('litEventColor')) {
         if ($row.find('.litEventName').val() != "") {
             eventKey = $row.find('.litEventName').val().replace(/[^a-zA-Z]/gi, '');
             if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
-                $CALENDAR.LitCal[eventKey].color = $(this).val();
+                $CALENDAR.LitCal[eventKey].color = $(ev.currentTarget).val();
             }
         }
-    } else if ($(this).hasClass('litEventFromYear')) {
+    } else if ($(ev.currentTarget).hasClass('litEventFromYear')) {
         if ($row.find('.litEventName').val() != "") {
             eventKey = $row.find('.litEventName').val().replace(/[^a-zA-Z]/gi, '');
             if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
-                $CALENDAR.LitCal[eventKey].sinceYear = $(this).val();
+                $CALENDAR.LitCal[eventKey].sinceYear = $(ev.currentTarget).val();
             }
         }
     }
@@ -642,7 +635,7 @@ toastr.options = {
     "onclick": null,
     "showDuration": "300",
     "hideDuration": "1000",
-    "timeOut": "5000",
+    "timeOut": "2000",
     "extendedTimeOut": "1000",
     "showEasing": "swing",
     "hideEasing": "linear",
@@ -650,24 +643,24 @@ toastr.options = {
     "hideMethod": "fadeOut"
 }
 
-$(document).on('click', '#saveDiocesanCalendar_btn', function () {
+$(document).on('click', '#saveDiocesanCalendar_btn', ev => {
     $data = JSON.stringify($CALENDAR);
     $nation = $('#diocesanCalendarNationalDependency').val();
     $diocese = $('#diocesanCalendarDioceseName').val();
     console.log('save button was clicked for NATION = ' + $nation + ', DIOCESE = ' + $diocese);
-    let saveObj = {calendar: $data, diocese: $diocese, nation: $nation};
+    let saveObj = { calendar: $data, diocese: $diocese, nation: $nation };
     if($('#diocesanCalendarGroup').val() != ''){
         saveObj.group = $('#diocesanCalendarGroup').val();
     }
 
     let formsValid = true;
-    $('form').each(function () {
-        if (this.checkValidity() === false) {
+    $('form').each((idx, el) => {
+        if (el.checkValidity() === false) {
             formsValid = false;
         }
-        $(this).addClass('was-validated');
+        $(el).addClass('was-validated');
     });
-    if (formsValid) {
+    if ( formsValid ) {
         $.ajax({
             url: DiocesaDataURL,
             method: 'put',
@@ -675,12 +668,12 @@ $(document).on('click', '#saveDiocesanCalendar_btn', function () {
             contentType: 'application/json',
             crossDomain: false,
             data: JSON.stringify( saveObj ),
-            success: function (data, textStatus, xhr) {
+            success: (data, textStatus, xhr) => {
                 console.log(xhr.status + ' ' + textStatus + ': data returned from save action: ');
                 console.log(data);
                 toastr["success"]("Diocesan Calendar was created or updated successfully", "Success");
             },
-            error: function (xhr, textStatus, errorThrown) {
+            error: (xhr, textStatus, errorThrown) => {
                 console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown);
                 toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown, "Error");
             }
@@ -690,7 +683,7 @@ $(document).on('click', '#saveDiocesanCalendar_btn', function () {
     }
 });
 
-$(document).on('click', '#retrieveExistingDiocesanData', function (evt) {
+$(document).on('click', '#retrieveExistingDiocesanData', evt => {
     evt.preventDefault();
     let diocese = $('#diocesanCalendarDioceseName').val();
     let dioceseKey = $('#DiocesesList').find('option[value="' + diocese + '"]').attr('data-value').toUpperCase();
@@ -701,12 +694,12 @@ $(document).on('click', '#retrieveExistingDiocesanData', function (evt) {
         dataType: 'json',
         data: { "key" : dioceseKey },
         statusCode: {
-            404: function () {
-                toastr["error"]('The Diocesan Calendar for ' + diocese + ' does not exist yet.', "Error");
-                console.log('The Diocesan Calendar for ' + diocese + ' does not exist yet.');
+            404: (xhr, textStatus, errorThrown) => {
+                toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />The Diocesan Calendar for ' + diocese + ' does not exist yet.', "Error");
+                console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown + 'The Diocesan Calendar for ' + diocese + ' does not exist yet.');
             }
         },
-        success: function (data) {
+        success: data => {
             console.log('retrieved diocesan data:');
             console.log(data);
             toastr["success"]("Diocesan Calendar was retrieved successfully", "Success");
@@ -769,7 +762,7 @@ $(document).on('click', '#retrieveExistingDiocesanData', function (evt) {
                     buttonWidth: '100%',
                     maxHeight: 200,
                     enableCaseInsensitiveFiltering: true,
-                    onChange: function (option, checked, select) {
+                    onChange: (option, checked, select) => {
                         if ($(option).val() != 'Proper' && checked === true && $(option).parent().val().includes('Proper')) {
                             $(option).parent().multiselect('deselect', 'Proper');
                         } else if ($(option).val() == 'Proper' && checked === true) {
@@ -784,19 +777,21 @@ $(document).on('click', '#retrieveExistingDiocesanData', function (evt) {
                 $row.find('.litEventFromYear').val(litevent.sinceYear);
             };
         },
-        error: function() {}
+        error: (xhr, textStatus, errorThrown) => {
+            toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown, "Error");
+        }
     });
 });
 
-$(document).on('click', '#removeExistingDiocesanData', function (evt) {
+$(document).on('click', '#removeExistingDiocesanData', evt => {
     evt.preventDefault();
     let diocese = $('#diocesanCalendarDioceseName').val();
     let dioceseKey = $('#DiocesesList').find('option[value="' + diocese + '"]').attr('data-value').toUpperCase();
 });
 
-$(document).on('click', '.onTheFlyEventRow', function () {
+$(document).on('click', '.onTheFlyEventRow', ev => {
     let $row;
-    switch (this.id) {
+    switch (ev.currentTarget.id) {
         case "addSolemnity":
             $row = $(FormControls.CreateFestivityRow('Other Solemnity'));
             $('.carousel-item').first().find('form').append($row);
@@ -821,7 +816,7 @@ $(document).on('click', '.onTheFlyEventRow', function () {
         //enableCollapsibleOptGroups: true,
         //collapseOptGroupsByDefault: true,
         enableCaseInsensitiveFiltering: true,
-        onChange: function (option, checked, select) {
+        onChange: (option, checked, select) => {
             if ($(option).val() != 'Proper' && checked === true && $(option).parent().val().includes('Proper')) {
                 $(option).parent().multiselect('deselect', 'Proper');
             } else if ($(option).val() == 'Proper' && checked === true) {
@@ -835,7 +830,7 @@ $(document).on('click', '.onTheFlyEventRow', function () {
     });
 });
 
-let removeDiocesanCalendarModal = function(diocese){
+let removeDiocesanCalendarModal = diocese => {
     return `
 <div class="modal fade" id="removeDiocesanCalendarPrompt" tabindex="-1" role="dialog" aria-labelledby="removeDiocesanCalendarModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -855,26 +850,26 @@ let removeDiocesanCalendarModal = function(diocese){
 </div>`;
 };
 
-$(document).on('change', '#diocesanCalendarDioceseName', function () {
+$(document).on('change', '#diocesanCalendarDioceseName', ev => {
     $CALENDAR = { LitCal: {} };
-    $('.carousel-item form').each(function () {
-        this.reset();
-        $(this).find('.form-row').slice(3).remove();
-        $(this).find('h4').slice(3).remove();
-        $(this).find('.litEventProper').multiselect('deselectAll', false).multiselect('select', 'Proper');
-        $(this).find('.litEventColor').multiselect('deselectAll', false).multiselect('select', 'white');
-        $(this).find('.litEventName').attr('data-valuewas', '');
+    $('.carousel-item form').each((idx, el) => {
+        el.reset();
+        $(el).find('.form-row').slice(3).remove();
+        $(el).find('h4').slice(3).remove();
+        $(el).find('.litEventProper').multiselect('deselectAll', false).multiselect('select', 'Proper');
+        $(el).find('.litEventColor').multiselect('deselectAll', false).multiselect('select', 'white');
+        $(el).find('.litEventName').attr('data-valuewas', '');
     });
-    $('form').each(function () { $(this).removeClass('was-validated') });
+    $('form').each((idx, el) => { $(el).removeClass('was-validated') });
     //first we'll enforce only values from the current datalist
-    if ($('#DiocesesList').find('option[value="' + $(this).val() + '"]').length > 0) {
-        $(this).removeClass('is-invalid');
-        $key = $('#DiocesesList').find('option[value="' + $(this).val() + '"]').attr('data-value').toUpperCase();
+    if ($('#DiocesesList').find('option[value="' + $(ev.currentTarget).val() + '"]').length > 0) {
+        $(ev.currentTarget).removeClass('is-invalid');
+        $key = $('#DiocesesList').find('option[value="' + $(ev.currentTarget).val() + '"]').attr('data-value').toUpperCase();
         console.log('selected diocese with key = ' + $key);
         if ($index.hasOwnProperty($key)) {
             $('#retrieveExistingDiocesanData').prop('disabled', false);
             $('#removeExistingDiocesanData').prop('disabled', false);
-            $('body').append(removeDiocesanCalendarModal($(this).val()));
+            $('body').append(removeDiocesanCalendarModal($(ev.currentTarget).val()));
             if($index[$key].hasOwnProperty('group')){
                 $('#diocesanCalendarGroup').val($index[$key].group);
             }
@@ -886,11 +881,11 @@ $(document).on('change', '#diocesanCalendarDioceseName', function () {
             console.log('no existing entry for this diocese');
         }
     } else {
-        $(this).addClass('is-invalid');
+        $(ev.currentTarget).addClass('is-invalid');
     }
 });
 
-$(document).on('click', '#deleteDiocesanCalendarButton', function(){
+$(document).on('click', '#deleteDiocesanCalendarButton', ev => {
     $('#removeDiocesanCalendarPrompt').modal('toggle');
     let $diocese = $('#diocesanCalendarDioceseName').val();
     let $key = $('#DiocesesList').find('option[value="' + $diocese + '"]').attr('data-value').toUpperCase();
@@ -904,7 +899,7 @@ $(document).on('click', '#deleteDiocesanCalendarButton', function(){
         contentType: 'application/json',
         crossDomain: false,
         data: JSON.stringify( deleteKey ),
-        success: function (data) {
+        success: data => {
             $('#retrieveExistingDiocesanData').prop('disabled', true);
             $('#removeExistingDiocesanData').prop('disabled', true);
             $('body').find('#removeDiocesanCalendarPrompt').remove();
@@ -914,7 +909,7 @@ $(document).on('click', '#deleteDiocesanCalendarButton', function(){
             console.log(data);
             toastr["success"]("Diocesan Calendar was deleted successfully", "Success");
         },
-        error: function (xhr, textStatus, errorThrown) {
+        error: (xhr, textStatus, errorThrown) => {
             console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown);
             toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown, "Error");
         }
@@ -922,12 +917,12 @@ $(document).on('click', '#deleteDiocesanCalendarButton', function(){
 });
 
 
-$(document).on('change', '#diocesanCalendarNationalDependency', function () {
+$(document).on('change', '#diocesanCalendarNationalDependency', ev => {
     $('#diocesanCalendarDioceseName').val('');
     $('#retrieveExistingDiocesanData').prop('disabled', true);
     $('#removeExistingDiocesanData').prop('disabled', true);
     $('body').find('#removeDiocesanCalendarPrompt').remove();
-    switch ($(this).val()) {
+    switch ($(ev.currentTarget).val()) {
         case "ITALY":
             $('#DiocesesList').empty();
             $ITALYDiocesesArr.forEach(diocese => $('#DiocesesList').append('<option data-value="' + diocese.replace(/[^a-zA-Z]/gi, '').toUpperCase() + '" value="' + diocese + '">'));
@@ -941,10 +936,10 @@ $(document).on('change', '#diocesanCalendarNationalDependency', function () {
     }
 });
 
-jQuery(document).ready(function () {
+jQuery(document).ready(() => {
     let $carousel = $('.carousel').carousel();
 
-    $carousel.on('slide.bs.carousel', function (event) {
+    $carousel.on('slide.bs.carousel', event => {
         $('#diocesanCalendarDefinitionCardLinks li').removeClass('active');
         if (event.to == 0) {
             $('#diocesanCalendarDefinitionCardLinks li:first-child').addClass('disabled');
@@ -965,7 +960,7 @@ jQuery(document).ready(function () {
         //enableCollapsibleOptGroups: true,
         //collapseOptGroupsByDefault: true,
         enableCaseInsensitiveFiltering: true,
-        onChange: function (option, checked, select) {
+        onChange: (option, checked, select) => {
             if ($(option).val() != 'Proper' && checked === true && $(option).parent().val().includes('Proper')) {
                 $(option).parent().multiselect('deselect', 'Proper');
             } else if ($(option).val() == 'Proper' && checked === true) {
