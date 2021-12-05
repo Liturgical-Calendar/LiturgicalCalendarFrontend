@@ -290,7 +290,7 @@ Object.freeze(i18n);
       $('#langChoiceLatin').text( languageNames.of('lat') );
       $(document).on('click','#langChoicesDropdownItems .dropdown-item',function(event){
         event.preventDefault();
-        let oldLocale = Cookies.get('currentLocale');
+        //let oldLocale = Cookies.get('currentLocale');
         switch( $(this).attr('id') ){
             case 'langChoiceEnglish':
                 Cookies.set('currentLocale','en');

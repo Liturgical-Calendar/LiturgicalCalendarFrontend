@@ -37,7 +37,7 @@ $messages = array_merge($messages, [
 <!doctype html>
 <html lang="<?php echo LITCAL_LOCALE; ?>">
 <head>
-    <title><?php _e("General Roman Calendar") ?></title>
+    <title><?php _e("General Roman Calendar") . ' - Examples ' ?></title>
     <?php include_once('./layout/head.php'); ?>
 </head>
 <body>

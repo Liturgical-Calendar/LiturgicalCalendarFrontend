@@ -1,4 +1,9 @@
 
+const isStaging = location.hostname.includes( '-staging' );
+const endpointV = isStaging ? 'dev' : 'v3';
+const MetaDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalMetadata.php`;
+const DiocesaDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalDiocesanData.php`;
+
 let $USDiocesesByState = {
     "Alabama": ["Archdiocese of Mobile", "Diocese of Birmingham"],
     "Alaska": ["Archdiocese of Anchorage-Juneau", "Diocese of Fairbanks"],
@@ -330,7 +335,7 @@ let $CALENDAR = { LitCal: {} };
 let $index = {};
 
 jQuery.ajax({
-    url: "nations/index.json",
+    url: MetaDataURL,
     dataType: 'json',
     statusCode: {
         404: function () {
@@ -627,6 +632,24 @@ $(document).on('change', '.litEvent', function (event) {
     }
 });
 
+toastr.options = {
+    "closeButton": true,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": true,
+    "positionClass": "toast-bottom-center",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+}
+
 $(document).on('click', '#saveDiocesanCalendar_btn', function () {
     $data = JSON.stringify($CALENDAR);
     $nation = $('#diocesanCalendarNationalDependency').val();
@@ -646,18 +669,20 @@ $(document).on('click', '#saveDiocesanCalendar_btn', function () {
     });
     if (formsValid) {
         $.ajax({
-            url: './writeDiocesanCalendar.php',
-            method: 'post',
+            url: DiocesaDataURL,
+            method: 'put',
             dataType: 'json',
-            data: saveObj,
-            success: function (data) {
-                console.log('data returned from save action: ');
+            contentType: 'application/json',
+            crossDomain: false,
+            data: JSON.stringify( saveObj ),
+            success: function (data, textStatus, xhr) {
+                console.log(xhr.status + ' ' + textStatus + ': data returned from save action: ');
                 console.log(data);
-                $('<div class="toast" role="alert" aria-live="assertive" aria-atomic="true"><div class="toast-header"><img src="..." class="rounded mr-2" alt="..."><strong class="mr-auto">Bootstrap</strong><small class="text-muted">just now</small><button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="toast-body">See? Just like this.</div></div>').toast('show');
+                toastr["success"]("Diocesan Calendar was created or updated successfully", "Success");
             },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(textStatus + ': ' + errorThrown);
-                alert('there was an error!');
+            error: function (xhr, textStatus, errorThrown) {
+                console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown);
+                toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown, "Error");
             }
         });
     } else {
@@ -669,18 +694,22 @@ $(document).on('click', '#retrieveExistingDiocesanData', function (evt) {
     evt.preventDefault();
     let diocese = $('#diocesanCalendarDioceseName').val();
     let dioceseKey = $('#DiocesesList').find('option[value="' + diocese + '"]').attr('data-value').toUpperCase();
-    let $diocesanCalendar;
+    //let $diocesanCalendar;
     jQuery.ajax({
-        url: $index[dioceseKey].path,
+        url: DiocesaDataURL,
+        method: 'GET',
         dataType: 'json',
+        data: { "key" : dioceseKey },
         statusCode: {
             404: function () {
-                console.log('The JSON definition ' + $index[dioceseKey].path + ' does not exist yet.');
+                toastr["error"]('The Diocesan Calendar for ' + diocese + ' does not exist yet.', "Error");
+                console.log('The Diocesan Calendar for ' + diocese + ' does not exist yet.');
             }
         },
         success: function (data) {
             console.log('retrieved diocesan data:');
             console.log(data);
+            toastr["success"]("Diocesan Calendar was retrieved successfully", "Success");
             $CALENDAR = data;
             //TODO: instead of creating / appending a single row, we have to check how many rows are missing
             //      between the last existing row and the rowNum for the current item
@@ -754,7 +783,8 @@ $(document).on('click', '#retrieveExistingDiocesanData', function (evt) {
                 $row.find('.litEventColor').multiselect({ buttonWidth: '100%' }).multiselect('deselectAll', false).multiselect('select', litevent.color.toString().split(','));
                 $row.find('.litEventFromYear').val(litevent.sinceYear);
             };
-        }
+        },
+        error: function() {}
     });
 });
 
@@ -868,10 +898,12 @@ $(document).on('click', '#deleteDiocesanCalendarButton', function(){
     delete $index[$key];
     let deleteKey = { calendar: $key, diocese: $diocese, nation: $nation};
     $.ajax({
-        url: './deleteDiocesanCalendar.php',
-        method: 'post',
+        url: DiocesaDataURL,
+        method: 'delete',
         dataType: 'json',
-        data: deleteKey,
+        contentType: 'application/json',
+        crossDomain: false,
+        data: JSON.stringify( deleteKey ),
         success: function (data) {
             $('#retrieveExistingDiocesanData').prop('disabled', true);
             $('#removeExistingDiocesanData').prop('disabled', true);
@@ -880,11 +912,12 @@ $(document).on('click', '#deleteDiocesanCalendarButton', function(){
             $('#diocesanCalendarNationalDependency').val('');
             console.log('data returned from delete action: ');
             console.log(data);
+            toastr["success"]("Diocesan Calendar was deleted successfully", "Success");
             $('<div class="toast" role="alert" aria-live="assertive" aria-atomic="true"><div class="toast-header"><img src="..." class="rounded mr-2" alt="..."><strong class="mr-auto">Bootstrap</strong><small class="text-muted">just now</small><button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close"><span aria-hidden="true">&times;</span></button></div><div class="toast-body">See? Just like this.</div></div>').toast('show');
         },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.log(textStatus + ': ' + errorThrown);
-            alert('there was an error!');
+        error: function (xhr, textStatus, errorThrown) {
+            console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown);
+            toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown, "Error");
         }
     });
 });

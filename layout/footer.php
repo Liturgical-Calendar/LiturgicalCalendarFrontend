@@ -20,27 +20,30 @@
 </div>
 <!-- End of Page Wrapper -->
 
-<!-- Bootstrap core JavaScript-->
-<script src="assets/vendor/jquery/jquery.min.js"></script>
-<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- jQuery-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
 
-<!-- Core plugin JavaScript-->
-<script src="assets/vendor/jquery-easing/jquery.easing.min.js"></script>
+<!-- Bootstrap / sb-admin JavaScript-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/4.1.4/js/sb-admin-2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap4-toggle/3.6.1/bootstrap4-toggle.min.js"></script>
 
 <!-- Custom scripts for all pages-->
-<script src="assets/js/sb-admin-2.min.js"></script>
-<script src="assets/js/bootstrap4-toggle.min.js"></script>
-<script src="assets/vendor/jscookie/v3.0.0-rc.1/js.cookie.min.js"></script>
 <script src="assets/js/i18n.js"></script>
 
 <?php 
     //some assets are only needed on certain pages
-    switch(basename($_SERVER["SCRIPT_FILENAME"], '.php')){
-        case 'extending':
-            echo '<script src="assets/js/bootstrap-multiselect.js"></script>';
-            echo '<script src="assets/js/extending.js"></script>';
-        break;
-        default:
-            echo '<script src="assets/js/homepage.js"></script>';
+    $pageName = basename( $_SERVER["SCRIPT_FILENAME"], '.php' );
+    if( $pageName === "index" ){
+        echo '<script src="assets/js/homepage.js"></script>';
+    }
+    if( $pageName === "extending" ) {
+        echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.1/js/bootstrap-multiselect.min.js"></script>';
+        echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
+    }
+    if( file_exists( "assets/js/{$pageName}.js" ) ) {
+        echo "<script src=\"assets/js/{$pageName}.js\"></script>";
     }
 ?>

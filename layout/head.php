@@ -13,20 +13,24 @@
 <link rel="icon" href="img/easter-egg-5-32-279148.png" sizes="32x32">
 
 <!-- Custom fonts for this template-->
-<link href="assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" type="text/css">
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
 <!-- Custom styles for this template-->
-<link href="assets/css/sb-admin-2.min.css" rel="stylesheet">
-<link href="assets/css/bootstrap4-toggle.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/4.1.4/css/sb-admin-2.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap4-toggle/3.6.1/bootstrap4-toggle.min.css" rel="stylesheet">
 <link href="assets/css/liturgicalcalendar.css" rel="stylesheet">
 <?php 
     //some assets are only needed on certain pages
-    switch(basename($_SERVER["SCRIPT_FILENAME"], '.php')){
-        case 'extending':
-            ?><link href="assets/css/bootstrap-multiselect.css" rel="stylesheet"><?php
-        break;
-        default:
-            ?><link href="assets/css/homepage.css" rel="stylesheet"><?php
+    $pageName = basename($_SERVER["SCRIPT_FILENAME"], '.php');
+    if( file_exists( "assets/css/{$pageName}.css" ) ) {
+        echo "<link href=\"assets/css/{$pageName}.css\" rel=\"stylesheet\">";
+    }
+    if($pageName === "index"){
+        echo '<link href="assets/css/homepage.css">';
+    }
+    if( $pageName === 'extending' ) {
+        echo '<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.1/css/bootstrap-multiselect.min.css" rel="stylesheet">';
+        echo '<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">';
     }
 ?>
