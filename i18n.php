@@ -8,7 +8,7 @@ $LOCALE = null;
 if( isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ) {
     $LOCALE = Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);
 }
-$LOCALE = !empty($_COOKIE["currentLocale"]) ?? $_COOKIE["currentLocale"];
+$LOCALE = !empty( $_COOKIE["currentLocale"] ) ? $_COOKIE["currentLocale"] : $LOCALE;
 if($LOCALE !== null){
     //we only need the two letter ISO code, not the national extension
     if(strpos($LOCALE,"_")){

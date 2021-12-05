@@ -4,8 +4,7 @@ if(Cookies.get("currentLocale") === undefined){
 
 var i18n = {
     LITCAL_LOCALE : Cookies.get("currentLocale").substring(0,2),
-    __ : function(key, locale = LITCAL_LOCALE)
-    {
+    __ : function(key, locale = LITCAL_LOCALE) {
         lcl = locale.toLowerCase();
         if (typeof messages !== 'undefined' && messages !== null && typeof messages === 'object') {
             if (messages.hasOwnProperty(key)) {
@@ -288,10 +287,10 @@ Object.freeze(i18n);
       $('#langChoiceSpanish').text( languageNames.of('es') );
       $('#langChoicePortuguese').text( languageNames.of('pt') );
       $('#langChoiceLatin').text( languageNames.of('lat') );
-      $(document).on('click','#langChoicesDropdownItems .dropdown-item',function(event){
-        event.preventDefault();
+      $(document).on( 'click', '#langChoicesDropdownItems .dropdown-item', ev => {
+        ev.preventDefault();
         //let oldLocale = Cookies.get('currentLocale');
-        switch( $(this).attr('id') ){
+        switch( $(ev.currentTarget).attr('id') ){
             case 'langChoiceEnglish':
                 Cookies.set('currentLocale','en');
                 break;
