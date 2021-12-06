@@ -278,7 +278,10 @@ $ASCENSION = (isset($_GET["ascension"]) && ($_GET["ascension"] === "THURSDAY" ||
 $CORPUSCHRISTI = (isset($_GET["corpuschristi"]) && ($_GET["corpuschristi"] === "THURSDAY" || $_GET["corpuschristi"] === "SUNDAY")) ? $_GET["corpuschristi"] : "THURSDAY";
 $LOCALE = isset($_GET["locale"]) ? strtoupper($_GET["locale"]) : "LA"; //default to latin
 
-$NATION = isset($_GET["nationalPreset"]) ? strtoupper($_GET["nationalPreset"]) : "";
+$NATION = "";
+if( isset( $_GET["nationalPreset"] ) && $_GET["nationalPreset"] != "" ) {
+    $NATION = strtoupper( $_GET["nationalPreset"] );
+}
 
 $DIOCESE = "";
 if( isset( $_GET["diocesanPreset"] ) && $_GET["diocesanPreset"] !== "" ) {
@@ -310,7 +313,7 @@ if( !in_array( "USA", $nations ) ) {
 }
 
 $nations = array_unique( $nations, SORT_STRING );
-$nationalPresetOptions = '<option value=""></option>';
+$nationalPresetOptions = '<option value="">---</option>';
 foreach( $nations as $nationVal ) {
     $nationalPresetOptions .= "<option value='{$nationVal}'" . ($nationVal === $NATION ? ' SELECTED' : '') . ">$nationVal</option>";
 }
@@ -427,7 +430,14 @@ if ($YEAR >= 1970) {
     // Set request method to POST
     curl_setopt( $ch, CURLOPT_POST, 1 );
     // Define the POST field data
-    curl_setopt( $ch, CURLOPT_POSTFIELDS, http_build_query(["year" => $YEAR, "epiphany" => $EPIPHANY, "ascension" => $ASCENSION, "corpuschristi" => $CORPUSCHRISTI, "locale" => $LOCALE, "nationalpreset" => $NATION, "diocesanPreset" => $DIOCESE]) );
+    $queryData = ["year" => $YEAR, "epiphany" => $EPIPHANY, "ascension" => $ASCENSION, "corpuschristi" => $CORPUSCHRISTI, "locale" => $LOCALE ];
+    if( $NATION !== "" ) {
+        $queryData["nationalpreset"] = $NATION;
+    }
+    if( $DIOCESE !== "" ) {
+        $queryData["diocesanpreset"] = $DIOCESE;
+    }
+    curl_setopt( $ch, CURLOPT_POSTFIELDS, http_build_query( $queryData ) );
     // Execute
     $result = curl_exec($ch);
 
@@ -454,13 +464,23 @@ if ($YEAR >= 1970) {
     $LitCal = array();
 
     $LitCalData = json_decode($result, true); // decode as associative array rather than stdClass object
+    if( json_last_error() !== JSON_ERROR_NONE ) {
+        echo "There was an error decoding the JSON data: " . json_last_error_msg() . PHP_EOL;
+        echo "<pre>";
+        var_dump($result);
+        echo "</pre>";
+    }
     if (isset($LitCalData["Settings"])) {
         $YEAR = $LitCalData["Settings"]["YEAR"];
     }
     if (isset($LitCalData["LitCal"])) {
         $LitCal = $LitCalData["LitCal"];
     } else {
-        die("We do not have enough information. Returned data has no LitCal property:" . var_dump($LitCalData));
+        echo "We do not have enough information. Returned data has no LitCal property:" . PHP_EOL;
+        echo "<pre>";
+        var_dump($LitCalData);
+        echo "</pre>";
+        die();
     }
 
     foreach ($LitCal as $key => $value) {
@@ -873,8 +893,8 @@ $months = [
     }
 
 
-    echo '<fieldset style="margin-bottom:6px;"><legend>' . __('Customize options for generating the Roman Calendar',$LOCALE) . '</legend>';
     echo '<form method="GET">';
+    echo '<fieldset style="margin-bottom:6px;"><legend>' . __('Customize options for generating the Roman Calendar',$LOCALE) . '</legend>';
     echo '<table style="width:100%;"><tr>';
     echo '<td><label>' . __('YEAR', $LOCALE) . ': <input type="number" name="year" id="year" min="1969" max="9999" value="' . $YEAR . '" /></label></td>';
     echo '<td><label>' . __('EPIPHANY', $LOCALE) . ': <select name="epiphany" id="epiphany"><option value="JAN6" ' . (EPIPHANY === "JAN6" ? " SELECTED" : "") . '>January 6</option><option value="SUNDAY_JAN2_JAN8" ' . (EPIPHANY === "SUNDAY_JAN2_JAN8" ? " SELECTED" : "") . '>Sunday between January 2 and January 8</option></select></label></td>';
@@ -889,8 +909,8 @@ $months = [
     echo '</tr><tr>';
     echo '<td colspan="5" style="text-align:center;padding:15px;"><input type="SUBMIT" value="' . strtoupper(__("Generate Roman Calendar", $LOCALE)) . '" /></td>';
     echo '</tr></table>';
-    echo '</form>';
     echo '</fieldset>';
+    echo '</form>';
 
     echo '<div style="text-align:center;border:2px groove White;border-radius:6px;width:60%;margin:0px auto;padding-bottom:6px;">';
 
