@@ -1,11 +1,9 @@
 <?php
 
-include_once("includes/i18n.php");
-
 /**
  * Define our translation strings
 */
-$messages = array_merge($messages, [
+$messages = [
     "General Roman Calendar" => [
         "de" => "Allgemeiner Römischer Kalender",
         "en" => "General Roman Calendar",
@@ -112,7 +110,10 @@ $messages = array_merge($messages, [
         "it" => "Definizione",
         "pt" => "Definição"
     ]
-]);
+];
+
+include_once("includes/i18n.php");
+$i18n = new i18n( $messages );
 
 $isStaging = ( strpos( $_SERVER['HTTP_HOST'], "-staging" ) !== false );
 $stagingURL = $isStaging ? "-staging" : "";
@@ -125,9 +126,9 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/dateOf
 ?>
 
 <!doctype html>
-<html lang="<?php echo LITCAL_LOCALE; ?>">
+<html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
-    <title><?php _e("General Roman Calendar") ?></title>
+    <title><?php $i18n->_e("General Roman Calendar") ?></title>
     <?php include_once('layout/head.php'); ?>
 </head>
 <body>
@@ -135,20 +136,20 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/dateOf
     <?php include_once('layout/header.php'); ?>
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800"><?php _e("Catholic Liturgical Calendar"); ?></h1>
+        <h1 class="h3 mb-2 text-gray-800"><?php $i18n->_e("Catholic Liturgical Calendar"); ?></h1>
 
         <!-- Content Row -->
         <div class="row">
             <div class="col-md-6">
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php _e("Data Generation Endpoint"); ?><i class="fas fa-code float-right fa-2x text-gray-300"></i></h6>
+                        <h6 class="m-0 font-weight-bold text-primary"><?php $i18n->_e("Data Generation Endpoint"); ?><i class="fas fa-code float-right fa-2x text-gray-300"></i></h6>
                     </div>
                     <div class="card-body">
-                        <p class="mb-4"><?php _e("API_DESCRIPTION") ?></p>
+                        <p class="mb-4"><?php $i18n->_e("API_DESCRIPTION") ?></p>
                         <div class="form-row">
                             <div class="form-group col-sm-7">
-                                <label for="APICalendarSelect"><?php _e("Calendar to retrieve from the API"); ?>:</label>
+                                <label for="APICalendarSelect"><?php $i18n->_e("Calendar to retrieve from the API"); ?>:</label>
                                 <select id="APICalendarSelect" class="form-control">
                                     <option value="">---</option>
                                     <option value="VATICAN">Vatican (Universal Roman Calendar)</option>
@@ -167,7 +168,7 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/dateOf
                                 </select>
                             </div>
                         </div>
-                        <div class="text-center"><a id="RequestURLButton" href="<?php echo $endpointURL; ?>" class="btn btn-primary m-2"><?php _e("Liturgical Calendar API endpoint"); ?></a></div>
+                        <div class="text-center"><a id="RequestURLButton" href="<?php echo $endpointURL; ?>" class="btn btn-primary m-2"><?php $i18n->_e("Liturgical Calendar API endpoint"); ?></a></div>
                         <p>If a national or diocesan calendar is requested, these calendars will automatically set the specific options in the API request. 
                             If instead no national or diocesan calendar is requested (i.e. the Universal Calendar is requested) then the more specific options can be requested:</p>
                         <div class="form-row">
@@ -187,11 +188,11 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/dateOf
             <div class="col-md-6">
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php _e("Calculation of the Date of Easter"); ?><i class="fas fa-code float-right fa-2x text-gray-300"></i></h6>
+                        <h6 class="m-0 font-weight-bold text-primary"><?php $i18n->_e("Calculation of the Date of Easter"); ?><i class="fas fa-code float-right fa-2x text-gray-300"></i></h6>
                     </div>
                     <div class="card-body">
-                        <p><?php _e("EASTER_CALCULATOR_API"); ?></p>
-                        <div class="text-center"><a href="<?php echo $dateOfEasterURL ?>" class="btn btn-primary m-2"><?php _e("Date of Easter API endpoint"); ?></a></div>
+                        <p><?php $i18n->_e("EASTER_CALCULATOR_API"); ?></p>
+                        <div class="text-center"><a href="<?php echo $dateOfEasterURL ?>" class="btn btn-primary m-2"><?php $i18n->_e("Date of Easter API endpoint"); ?></a></div>
                         <small class="text-muted">
                             <i>Currently the data can be requested with the following localizations:</i>
                             <ul>
@@ -210,7 +211,7 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/dateOf
             <div class="col-md-6">
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php _e("Data Generation Endpoint"); ?>: <?php  _e("DEFINITION") ?><i class="fas fa-file-code float-right fa-2x text-gray-300"></i></h6>
+                        <h6 class="m-0 font-weight-bold text-primary"><?php $i18n->_e("Data Generation Endpoint"); ?>: <?php  $i18n->_e("DEFINITION") ?><i class="fas fa-file-code float-right fa-2x text-gray-300"></i></h6>
                     </div>
                     <div class="card-body">
                         <div class="text-center"><a href="dist/" class="btn btn-primary mt-2">Swagger / Open API Documentation</a></div>
@@ -221,18 +222,18 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/dateOf
             <div class="col-md-6">
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php _e("Calculation of the Date of Easter"); ?><i class="fas fa-poll-h float-right fa-2x text-gray-300"></i></h6>
+                        <h6 class="m-0 font-weight-bold text-primary"><?php $i18n->_e("Calculation of the Date of Easter"); ?><i class="fas fa-poll-h float-right fa-2x text-gray-300"></i></h6>
                     </div>
                     <div class="card-body">
-                        <p><?php _e("EASTER_CALCULATOR_EXAMPLE"); ?></p>
-                        <div class="text-center"><a href="easter.php" class="btn btn-primary m-2"><?php _e("Calculate the Date of Easter"); ?></a></div>
+                        <p><?php $i18n->_e("EASTER_CALCULATOR_EXAMPLE"); ?></p>
+                        <div class="text-center"><a href="easter.php" class="btn btn-primary m-2"><?php $i18n->_e("Calculate the Date of Easter"); ?></a></div>
                     </div>
                 </div>
             </div>
         </div>
 
 <script>
-const messages = <?php echo json_encode($messages); ?>;
+const messages = <?php echo json_encode($i18n->messages); ?>;
 </script>
 
 <?php include_once('layout/footer.php'); ?>

@@ -1,11 +1,9 @@
 <?php
 
-include_once("includes/i18n.php");
-
 /**
  * Define our translation strings
 */
-$messages = array_merge($messages, [
+$messages = [
     "Liturgical Calendar - About us" => [
         "de" => "Liturgischer Kalender - Über uns",
         "en" => "Liturgical Calendar - About us",
@@ -46,14 +44,15 @@ $messages = array_merge($messages, [
         "it" => "Il progetto del Calendario liturgico è curato da un gruppo di programmatori cattolici volontari, che cercano di servire la Chiesa.",
         "pt" => "O projeto do Calendário Litúrgico é organizado por um grupo de programadores católicos voluntários, que buscam servir a Igreja."
     ]
-]);
-
+];
+include_once("includes/i18n.php");
+$i18n = new i18n( $messages );
 ?>
 
 <!doctype html>
-<html lang="<?php echo LITCAL_LOCALE; ?>">
+<html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
-    <title><?php _e("Liturgical Calendar - About us") ?></title>
+    <title><?php $i18n->_e("Liturgical Calendar - About us") ?></title>
     <?php include_once('./layout/head.php'); ?>
 </head>
 <body>
@@ -61,8 +60,8 @@ $messages = array_merge($messages, [
     <?php include_once('./layout/header.php'); ?>
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800"><?php _e("Liturgical Calendar - About us"); ?></h1>
-        <p><?php _e("ABOUT_US"); ?></p>
+        <h1 class="h3 mb-2 text-gray-800"><?php $i18n->_e("Liturgical Calendar - About us"); ?></h1>
+        <p><?php $i18n->_e("ABOUT_US"); ?></p>
 
         <div class="row">
             <div class="col-md-6">
@@ -72,7 +71,7 @@ $messages = array_merge($messages, [
                             <div class="col mr-2">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col-auto mr-2"><img class="img-profile rounded-circle mx-auto img-fluid" src="./assets/img/donjohn_125x125.jpg"></div>
-                                    <div class="col"><?php _e("DONJOHN") ?></div>
+                                    <div class="col"><?php $i18n->_e("DONJOHN") ?></div>
                                 </div>
                             </div>
                             <div class="col-auto">
@@ -89,7 +88,7 @@ $messages = array_merge($messages, [
                             <div class="col mr-2">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col-auto mr-2"><img class="img-profile rounded-circle mx-auto img-fluid" src="./assets/img/miketruso_125x125.jpg"></div>
-                                    <div class="col"><?php _e("MIKETRUSO") ?></div>
+                                    <div class="col"><?php $i18n->_e("MIKETRUSO") ?></div>
                                 </div>
                             </div>
                             <div class="col-auto">
@@ -110,7 +109,7 @@ $messages = array_merge($messages, [
                             <div class="col mr-2">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col-auto mr-2"><img class="img-profile rounded-circle mx-auto img-fluid" src="./assets/img/michaelshelton_125x125.jpg"></div>
-                                    <div class="col"><?php _e("MICHAELSHELTON") ?></div>
+                                    <div class="col"><?php $i18n->_e("MICHAELSHELTON") ?></div>
                                 </div>
                             </div>
                             <div class="col-auto">
@@ -127,7 +126,7 @@ $messages = array_merge($messages, [
                             <div class="col mr-2">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col-auto mr-2"><img class="img-profile rounded-circle mx-auto img-fluid" src="./assets/img/easter-egg-5-120-279148.png"></div>
-                                    <div class="col"><?php _e("ANOTHERVOLUNTEER") ?></div>
+                                    <div class="col"><?php $i18n->_e("ANOTHERVOLUNTEER") ?></div>
                                 </div>
                             </div>
                             <div class="col-auto">
