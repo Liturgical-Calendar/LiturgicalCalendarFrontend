@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-19 16:38+0100\n"
+"POT-Creation-Date: 2021-12-19 19:11+0100\n"
 "PO-Revision-Date: 2021-12-19 15:39+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
@@ -329,7 +329,7 @@ msgstr ""
 msgid "Dedication of the Cathedral"
 msgstr "Dedicação da Catedral"
 
-#: extending.php:130
+#: extending.php:130 extending.php:244
 msgid "Other Solemnity"
 msgstr "Outra Solenidade"
 
@@ -341,7 +341,7 @@ msgstr "Defina as Festas"
 msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr "Patrono(s) do Lugar, Diocese, Região, Província ou Território"
 
-#: extending.php:151
+#: extending.php:151 extending.php:245
 msgid "Other Feast"
 msgstr "Outra Festa"
 
@@ -355,7 +355,7 @@ msgid ""
 msgstr ""
 "Patrono(s) secundário(s) do Lugar, Diocese, Região, Província ou Território"
 
-#: extending.php:171 extending.php:172
+#: extending.php:171 extending.php:172 extending.php:246
 msgid "Other Memorial"
 msgstr "Outro Memorial"
 
@@ -371,13 +371,66 @@ msgstr ""
 "Santos cuja veneração é local no lugar, diocese, região, província ou "
 "território"
 
-#: extending.php:192 extending.php:193
+#: extending.php:192 extending.php:193 extending.php:247
 msgid "Other Optional Memorial"
 msgstr "Outro Memorial Opcional"
 
 #: extending.php:215
 msgid "SAVE DIOCESAN CALENDAR"
 msgstr "SALVAR CALENDÁRIO DIOCESANO"
+
+#: extending.php:241 layout/formcontrols.php:38
+msgid "Name"
+msgstr "Nome"
+
+#: extending.php:242 layout/formcontrols.php:45
+msgid "Day"
+msgstr "Dia"
+
+#: extending.php:243 layout/formcontrols.php:51
+msgid "Month"
+msgstr "Mês"
+
+#: extending.php:249
+#, fuzzy
+#| msgid "Generate Diocesan Calendar"
+msgid "Delete diocesan calendar"
+msgstr "Gera calendário diocesano"
+
+#: extending.php:250
+msgid ""
+"If you choose to delete this diocesan calendar, the liturgical events "
+"defined for the calendar and the corresponding index entry will be removed "
+"and no longer available in the client applications."
+msgstr ""
+
+#: extending.php:251 layout/formcontrols.php:112
+msgid "Liturgical color"
+msgstr "Cor litúrgica"
+
+#. translators: context = liturgical color
+#: extending.php:252 includes/LitColor.php:29 layout/formcontrols.php:114
+msgid "white"
+msgstr ""
+
+#. translators: context = liturgical color
+#: extending.php:253 includes/LitColor.php:32 layout/formcontrols.php:115
+msgid "red"
+msgstr ""
+
+#. translators: context = liturgical color
+#: extending.php:254 includes/LitColor.php:23 layout/formcontrols.php:117
+msgid "green"
+msgstr ""
+
+#. translators: context = liturgical color
+#: extending.php:255 includes/LitColor.php:26 layout/formcontrols.php:116
+msgid "purple"
+msgstr ""
+
+#: extending.php:256 layout/formcontrols.php:124
+msgid "Since"
+msgstr "Do ano"
 
 #: includes/LitCommon.php:56
 msgid "Proper"
@@ -582,26 +635,6 @@ msgid "or"
 msgstr ""
 
 #. translators: context = liturgical color
-#: includes/LitColor.php:23 layout/formcontrols.php:117
-msgid "green"
-msgstr ""
-
-#. translators: context = liturgical color
-#: includes/LitColor.php:26 layout/formcontrols.php:116
-msgid "purple"
-msgstr ""
-
-#. translators: context = liturgical color
-#: includes/LitColor.php:29 layout/formcontrols.php:114
-msgid "white"
-msgstr ""
-
-#. translators: context = liturgical color
-#: includes/LitColor.php:32 layout/formcontrols.php:115
-msgid "red"
-msgstr ""
-
-#. translators: context = liturgical color
 #: includes/LitColor.php:35
 msgid "pink"
 msgstr ""
@@ -650,26 +683,6 @@ msgstr "Crie um calendário diocesano"
 msgid "About us"
 msgstr "Sobre nós"
 
-#: layout/formcontrols.php:38
-msgid "Name"
-msgstr "Nome"
-
-#: layout/formcontrols.php:45
-msgid "Day"
-msgstr "Dia"
-
-#: layout/formcontrols.php:51
-msgid "Month"
-msgstr "Mês"
-
-#: layout/formcontrols.php:66
+#: layout/formcontrols.php:66 layout/formcontrols.php:136
 msgid "Common (or Proper)"
 msgstr "Comum (ou Próprio)"
-
-#: layout/formcontrols.php:112
-msgid "Liturgical color"
-msgstr "Cor litúrgica"
-
-#: layout/formcontrols.php:124
-msgid "Since"
-msgstr "Do ano"
