@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-19 05:46+0100\n"
+"POT-Creation-Date: 2021-12-19 13:05+0100\n"
 "PO-Revision-Date: 2021-12-19 05:28+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
@@ -51,6 +51,23 @@ msgstr "Pasqua Giuliana"
 msgid "Julian Easter in Gregorian Calendar"
 msgstr "Pasqua Giuliana nel Calendario Gregoriano"
 
+#: index.php:125
+#, fuzzy
+#| msgid ""
+#| "A Liturgical Calendar API from which you can retrieve data for the "
+#| "Liturgical events of any given year from 1970 onwards, whether for the "
+#| "Universal or General Roman Calendar or for derived National and Diocesan "
+#| "calendars"
+msgid ""
+"A Liturgical Calendar API from which you can retrieve data for the "
+"Liturgical events of any given year from 1970 to 9999, whether for the "
+"Universal or General Roman Calendar or for derived National and Diocesan "
+"calendars"
+msgstr ""
+"Una API per il Calendario Liturgico, da cui estrarre i dati degli eventi "
+"liturgici di un qualsiasi anno dal 1970 fino al 9999, sia per il Calendario "
+"Romano Universale che per i calendari nazionali e diocesani derivati"
+
 #: index.php:131 usage.php:44
 msgid "General Roman Calendar"
 msgstr "Calendario Romano Generale"
@@ -63,10 +80,6 @@ msgstr "Calendario Liturgico Cattolico"
 msgid "API Endpoint"
 msgstr "API endpoint"
 
-#: index.php:149
-msgid "API_DESCRIPTION"
-msgstr ""
-
 #: index.php:152
 msgid "Calendar to retrieve from the API"
 msgstr "Calendario da reperire dall'API"
@@ -74,6 +87,20 @@ msgstr "Calendario da reperire dall'API"
 #: index.php:171
 msgid "Liturgical Calendar API endpoint"
 msgstr "API del Calendario Liturgico"
+
+#: index.php:172
+msgid ""
+"If a national or diocesan calendar is requested, these calendars will "
+"automatically set the specific options in the API request. If instead no "
+"national or diocesan calendar is requested (i.e. the Universal Calendar is "
+"requested) then the more specific options can be requested:"
+msgstr ""
+
+#: index.php:181
+msgid ""
+"URL for the API request based on selected options (the above button is set "
+"to this URL)"
+msgstr ""
 
 #: index.php:191 index.php:224
 msgid "Calculation of the Date of Easter"
@@ -99,9 +126,22 @@ msgstr ""
 msgid "Date of Easter API endpoint"
 msgstr "API per la Data della Pasqua"
 
+#: index.php:201
+msgid ""
+"Currently the data can be requested with almost any localization. In any "
+"case, since the API returns a UNIX timestamp for each date of Easter, "
+"localizations can be done in a client application just as well."
+msgstr ""
+
 #: index.php:213
 msgid "Definition"
 msgstr "Definizione"
+
+#: index.php:216
+#, fuzzy
+#| msgid "Swagger / Open API Docs"
+msgid "Swagger / Open API Documentation"
+msgstr "Documentazione Swagger / OpenAPI"
 
 #: index.php:227
 msgid "Example display of the date of Easter from 1583 to 9999"
@@ -584,6 +624,16 @@ msgstr "Documentazione Swagger / OpenAPI"
 #: layout/header.php:65
 msgid "Date of Easter"
 msgstr "Data della Pasqua"
+
+#: layout/header.php:76
+msgid "Examples"
+msgstr ""
+
+#: layout/header.php:98
+#, fuzzy
+#| msgid "View Full Calendar (messages first)"
+msgid "Full Calendar (messages first)"
+msgstr "Visualizza l'esempio Fullcalendar (messaggi in alto)"
 
 #: layout/header.php:131
 msgid "Usage"
