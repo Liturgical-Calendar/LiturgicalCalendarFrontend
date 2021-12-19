@@ -101,7 +101,7 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                         <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "API Endpoint" ); ?>: <?php  echo _( "Definition" ) ?><i class="fas fa-file-code float-right fa-2x text-gray-300"></i></h6>
                     </div>
                     <div class="card-body">
-                        <div class="text-center"><a href="dist/" class="btn btn-primary mt-2"><?php _( "Swagger / Open API Documentation" ); ?></a></div>
+                        <div class="text-center"><a href="dist/" class="btn btn-primary mt-2"><?php echo _( "Swagger / Open API Documentation" ); ?></a></div>
                     </div>
                 </div>
             </div>
