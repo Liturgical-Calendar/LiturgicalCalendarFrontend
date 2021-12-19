@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-19 14:38+0100\n"
-"PO-Revision-Date: 2021-12-19 14:47+0000\n"
+"PO-Revision-Date: 2021-12-19 15:11+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pt/>\n"
@@ -56,18 +56,22 @@ msgid ""
 "Universal or General Roman Calendar or for derived National and Diocesan "
 "calendars"
 msgstr ""
+"Uma API para o calendário litúrgico do qual você pode recuperar dados para "
+"os eventos litúrgicos de qualquer ano a partir de 1970 até 9999, seja para o "
+"calendário romano universal ou geral ou para calendários nacionais e "
+"diocesanos derivados"
 
 #: index.php:131 usage.php:44
 msgid "General Roman Calendar"
-msgstr ""
+msgstr "Calendário Romano Geral"
 
 #: index.php:139 layout/header.php:21
 msgid "Catholic Liturgical Calendar"
-msgstr ""
+msgstr "Calendário Litúrgico Católico"
 
 #: index.php:146 index.php:213
 msgid "API Endpoint"
-msgstr ""
+msgstr "Endpoint de API"
 
 #: index.php:152
 msgid "Calendar to retrieve from the API"
@@ -75,7 +79,7 @@ msgstr ""
 
 #: index.php:171
 msgid "Liturgical Calendar API endpoint"
-msgstr ""
+msgstr "Endpoint da API do Calendário Litúrgico"
 
 #: index.php:172
 msgid ""
@@ -93,7 +97,7 @@ msgstr ""
 
 #: index.php:191 index.php:224
 msgid "Calculation of the Date of Easter"
-msgstr ""
+msgstr "Cálculo da Data da Páscoa"
 
 #: index.php:194
 msgid ""
@@ -107,7 +111,7 @@ msgstr ""
 
 #: index.php:199
 msgid "Date of Easter API endpoint"
-msgstr ""
+msgstr "Data da Páscoa API"
 
 #: index.php:201
 msgid ""
@@ -118,7 +122,7 @@ msgstr ""
 
 #: index.php:213
 msgid "Definition"
-msgstr ""
+msgstr "Definição"
 
 #: index.php:216
 msgid "Swagger / Open API Documentation"
@@ -130,7 +134,7 @@ msgstr ""
 
 #: index.php:228
 msgid "Calculate the Date of Easter"
-msgstr ""
+msgstr "Calcule a data da Páscoa"
 
 #: about.php:13
 msgid ""
