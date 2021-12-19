@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-19 14:14+0100\n"
-"PO-Revision-Date: 2021-12-19 13:29+0000\n"
+"PO-Revision-Date: 2021-12-19 13:39+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -223,6 +223,12 @@ msgid ""
 "defined using data from the translation of the Roman Missal used in the "
 "Region or in any case from decrees of the Episcopal Conference of the Region."
 msgstr ""
+"Der Allgemeine Römische Kalender kann erweitert werden, um einen Nationalen "
+"oder Diözesankalender zu erstellen. Diözesankalender hängen von nationalen "
+"Kalendern ab, daher muss zuerst der nationale Kalender erstellt werden.</"
+"p><p>Nationale Kalender müssen anhand von Daten aus der Übersetzung des in "
+"der Region verwendeten römischen Messbuchs oder in jedem Fall aus Dekreten "
+"der Bischofskonferenz der Region definiert werden."
 
 #: extending.php:262
 msgid ""
@@ -233,11 +239,13 @@ msgstr ""
 
 #: extending.php:268
 msgid "General Roman Calendar - Extending"
-msgstr ""
+msgstr "Allgemeiner Römischer Kalender - Erweiterung"
 
 #: extending.php:276
 msgid "Extend the General Roman Calendar with National or Diocesan data"
 msgstr ""
+"Erweitern Sie den Allgemeinen Römischen Kalender um nationale oder diözesane "
+"Daten"
 
 #: extending.php:286
 msgid "Generate National Calendar"
@@ -613,7 +621,7 @@ msgstr ""
 
 #: layout/header.php:133
 msgid "Extending the API"
-msgstr ""
+msgstr "Erweiterung der API"
 
 #: layout/header.php:135
 msgid "Create a National Calendar"
