@@ -8,46 +8,6 @@ function ordinal($number) {
         return $number. $ends[$number % 10];
 }
 
-function __($key)
-{
-    global $messages;
-    global $LOCALE;
-    $lcl = strtolower($LOCALE);
-    if (isset($messages)) {
-        if (isset($messages[$key])) {
-            if (isset($messages[$key][$lcl])) {
-                return $messages[$key][$lcl];
-            } else {
-                return $messages[$key]["en"];
-            }
-        } else {
-            return $key;
-        }
-    } else {
-        return $key;
-    }
-}
-
-function _e($key)
-{
-    global $messages;
-    global $LOCALE;
-    $lcl = strtolower($LOCALE);
-    if (isset($messages)) {
-        if (isset($messages[$key])) {
-            if (isset($messages[$key][$lcl])) {
-                echo $messages[$key][$lcl];
-            } else {
-                echo $messages[$key]["en"];
-            }
-        } else {
-            echo $key;
-        }
-    } else {
-        echo $key;
-    }
-}
-
 $messages = [
     'Date of Easter from 1583 to 9999' => [
         "en" => "Date of Easter from 1583 to 9999",

@@ -258,14 +258,14 @@ sort($USDioceses);
 
 $ITALYDioceses = ["Acerenza","Acerra","Acireale","Acqui","Adria - Rovigo","Agrigento","Alba","Albano","Albenga - Imperia","Ales - Terralba","Alessandria","Alghero - Bosa","Alife - Caiazzo","Altamura - Gravina - Acquaviva delle Fonti","Amalfi - Cava de' Tirreni","Anagni - Alatri","Ancona - Osimo","Andria","Aosta","Arezzo - Cortona - Sansepolcro","Ariano Irpino - Lacedonia","Ascoli Piceno","Assisi - Nocera Umbra - Gualdo Tadino","Asti","Avellino","Aversa","Avezzano","Bari - Bitonto","Belluno - Feltre","Benevento","Bergamo","Biella","Bologna","Bolzano - Bressanone, Bozen - Brixen","Brescia","Brindisi - Ostuni","Cagliari","Caltagirone","Caltanissetta","Camerino - San Severino Marche","Campobasso - Boiano","Capua","Carpi","Casale Monferrato","Caserta","Cassano all'Jonio","Castellaneta","Catania","Catanzaro - Squillace","Cefalù","Cerignola - Ascoli Satriano","Cerreto Sannita - Telese - Sant'Agata de' Goti","Cesena - Sarsina","Chiavari","Chieti - Vasto","Chioggia","Città di Castello","Civita Castellana","Civitavecchia - Tarquinia","Como","Concordia - Pordenone","Conversano - Monopoli","Cosenza - Bisignano","Crema","Cremona","Crotone - Santa Severina","Cuneo","Esarcato Apostolico per i fedeli cattolici ucraini di rito bizantino residenti in ITALY","Fabriano - Matelica","Faenza - Modigliana","Fano - Fossombrone - Cagli - Pergola","Fermo","Ferrara - Comacchio","Fidenza","Fiesole","Firenze","Foggia - Bovino","Foligno","Forlì - Bertinoro","Fossano","Frascati","Frosinone - Veroli - Ferentino","Gaeta","Genova","Gorizia","Grosseto","Gubbio","Iglesias","Imola","Ischia","Isernia - Venafro","Ivrea","Jesi","La Spezia - Sarzana - Brugnato","Lamezia Terme","Lanciano - Ortona","Lanusei","L'Aquila","Latina - Terracina - Sezze - Priverno","Lecce","Livorno","Locri - Gerace","Lodi","Loreto","Lucca","Lucera - Troia","Lungro","Macerata - Tolentino - Recanati - Cingoli - Treia","Manfredonia - Vieste - San Giovanni Rotondo","Mantova","Massa Carrara - Pontremoli","Massa Marittima - Piombino","Matera - Irsina","Mazara del Vallo","Melfi - Rapolla - Venosa","Messina - Lipari - Santa Lucia del Mela","Milano","Mileto - Nicotera - Tropea","Modena - Nonantola","Molfetta - Ruvo - Giovinazzo - Terlizzi","Mondovì","Monreale","Monte Oliveto Maggiore","Montecassino","Montepulciano - Chiusi - Pienza","Montevergine","Napoli","Nardò - Gallipoli","Nicosia","Nocera Inferiore - Sarno","Nola","Noto","Novara","Nuoro","Oppido Mamertina - Palmi","Ordinariato Militare","Oria","Oristano","Orvieto - Todi","Ostia","Otranto","Ozieri","Padova","Palermo","Palestrina","Parma","Patti","Pavia","Perugia - Città della Pieve","Pesaro","Pescara - Penne","Pescia","Piacenza - Bobbio","Piana degli Albanesi","Piazza Armerina","Pinerolo","Pisa","Pistoia","Pitigliano - Sovana - Orbetello","Pompei","Porto - Santa Rufina","Potenza - Muro Lucano - Marsico Nuovo","Pozzuoli","Prato","Ragusa","Ravenna - Cervia","Reggio Calabria - Bova","Reggio Emilia - Guastalla","Rieti","Rimini","Roma","Rossano - Cariati","Sabina - Poggio Mirteto","Salerno - Campagna - Acerno","Saluzzo","San Benedetto del Tronto - Ripatransone - Montalto","San Marco Argentano - Scalea","San Marino - Montefeltro","San Miniato","San Severo","Santa Maria di Grottaferrata","Sant'Angelo dei Lombardi - Conza - Nusco - Bisaccia","Santissima Trinità di Cava de' Tirreni","Sassari","Savona - Noli","Senigallia","Sessa Aurunca","Siena - Colle di Val d'Elsa - Montalcino","Siracusa","Sora - Cassino - Aquino - Pontecorvo","Sorrento - Castellammare di Stabia","Spoleto - Norcia","Subiaco","Sulmona - Valva","Susa","Taranto","Teano - Calvi","Teggiano - Policastro","Tempio - Ampurias","Teramo - Atri","Termoli - Larino","Terni - Narni - Amelia","Tivoli","Torino","Tortona","Trani - Barletta - Bisceglie","Trapani","Trento","Treviso","Tricarico","Trieste","Trivento","Tursi - Lagonegro","Udine","Ugento - Santa Maria di Leuca","Urbino - Urbania - Sant'Angelo in Vado","Vallo della Lucania","Velletri - Segni","Venezia","Ventimiglia - San Remo","Vercelli","Verona","Vicenza","Vigevano","Viterbo","Vittorio Veneto","Volterra"];
 
-
+$API_EXTEND_HOWTO = _( "The General Roman Calendar can be extended so as to create a National or Diocesan calendar. Diocesan calendars depend on National calendars, so the National calendar must first be created.</p><p>National calendars must be defined using data from the translation of the Roman Missal used in the Region or in any case from decrees of the Episcopal Conference of the Region." );
 
 ?>
 
 <!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
-    <title><?php $i18n->_e("General Roman Calendar - Extending") ?></title>
+    <title><?php echo _( "General Roman Calendar - Extending") ?></title>
     <?php include_once('./layout/head.php'); ?>
 </head>
 <body>
@@ -273,8 +273,8 @@ $ITALYDioceses = ["Acerenza","Acerra","Acireale","Acqui","Adria - Rovigo","Agrig
     <?php include_once('./layout/header.php'); ?>
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800"><?php $i18n->_e("Extend the General Roman Calendar with National or Diocesan data"); ?></h1>
-        <p class="mb-4"><?php $i18n->_e("API_EXTEND_HOWTO") ?></p>
+        <h1 class="h3 mb-2 text-gray-800"><?php echo _( "Extend the General Roman Calendar with National or Diocesan data"); ?></h1>
+        <p class="mb-4"><?php echo $API_EXTEND_HOWTO; ?></p>
 <?php
     if(isset($_GET["choice"])){
         switch($_GET["choice"]){
@@ -283,7 +283,7 @@ $ITALYDioceses = ["Acerenza","Acerra","Acireale","Acqui","Adria - Rovigo","Agrig
                 <div class="col-md-6">
                     <div class="card border-left-primary shadow m-2">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary"><?php $i18n->_e("Generate National Calendar"); ?></h6>
+                            <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Generate National Calendar"); ?></h6>
                         </div>
                         <div class="card-body">
                             <div class="row no-gutters align-items-center"></div>
@@ -300,7 +300,7 @@ $ITALYDioceses = ["Acerenza","Acerra","Acireale","Acqui","Adria - Rovigo","Agrig
                 <div class="container">
                     <form class="row justify-content-center needs-validation" novalidate>
                         <div class="form-group col col-md-3">
-                            <label for="diocesanCalendarNationalDependency" class="font-weight-bold"><?php $i18n->_e("Depends on national calendar"); ?>:</label>
+                            <label for="diocesanCalendarNationalDependency" class="font-weight-bold"><?php echo _( "Depends on national calendar"); ?>:</label>
                             <select class="form-control" id="diocesanCalendarNationalDependency" required>
                                 <option value=""></option>
                                 <option value="ITALY">Italy</option>
@@ -308,22 +308,22 @@ $ITALYDioceses = ["Acerenza","Acerra","Acireale","Acqui","Adria - Rovigo","Agrig
                             </select>
                         </div>
                         <div class="form-group col col-md-3">
-                            <label for="diocesanCalendarDioceseName" class="font-weight-bold"><?php $i18n->_e("Diocese"); ?>:</label>
+                            <label for="diocesanCalendarDioceseName" class="font-weight-bold"><?php echo _( "Diocese"); ?>:</label>
                             <input list="DiocesesList" class="form-control" id="diocesanCalendarDioceseName" required>
-                            <div class="invalid-feedback"><?php $i18n->_e("This diocese does not seem to exist? Please choose from a value in the list."); ?></div>
+                            <div class="invalid-feedback"><?php echo _( "This diocese does not seem to exist? Please choose from a value in the list."); ?></div>
                             <datalist id="DiocesesList">
                                 <option value=""></option>
                             </datalist>
-                            <div class="col text-center"><button class="btn btn-primary m-2" id="retrieveExistingDiocesanData" disabled><?php $i18n->_e("Retrieve existing data"); ?></button></div>
-                            <div class="col text-center"><button class="btn btn-danger m-2" id="removeExistingDiocesanData" disabled data-toggle="modal" data-target="#removeDiocesanCalendarPrompt"><?php $i18n->_e("Remove existing data"); ?></button></div>
+                            <div class="col text-center"><button class="btn btn-primary m-2" id="retrieveExistingDiocesanData" disabled><?php echo _( "Retrieve existing data"); ?></button></div>
+                            <div class="col text-center"><button class="btn btn-danger m-2" id="removeExistingDiocesanData" disabled data-toggle="modal" data-target="#removeDiocesanCalendarPrompt"><?php echo _( "Remove existing data"); ?></button></div>
                         </div>
                         <div class="form-group col col-md-3">
-                            <label for="diocesanCalendarGroup" class="font-weight-bold"><?php $i18n->_e("Diocesan group"); ?>:</label>
+                            <label for="diocesanCalendarGroup" class="font-weight-bold"><?php echo _( "Diocesan group"); ?>:</label>
                             <input type="text" class="form-control" id="diocesanCalendarGroup" aria-describedby="diocesanCalendarGroupHelp">
-                            <small id="diocesanCalendarGroupHelp" class="form-text text-muted"><?php $i18n->_e("DioceseGroupHelp"); ?></small>
+                            <small id="diocesanCalendarGroupHelp" class="form-text text-muted"><?php echo _( "DioceseGroupHelp"); ?></small>
                         </div>
                         <!-- <div class="form-group col col-md-4">
-                            <label for="diocesanCalendarBehaviour" class="font-weight-bold"><?php $i18n->_e("Overwrites universal / national calendar"); ?></label>
+                            <label for="diocesanCalendarBehaviour" class="font-weight-bold"><?php echo _( "Overwrites universal / national calendar"); ?></label>
                             <input type="checkbox" class="form-control" data-toggle="toggle" id="diocesanCalendarBehaviour" aria-describedby="diocesanCalendarBehaviourHelp">
                             <small id="diocesanCalendarBehaviourHelp" class="form-text text-muted">The default behaviour for a diocesan calendar is to juxtapose the local celebrations alongside those of the universal and the national calendar. If instead the diocesan calendar should override the universal calendar, turn this option on.</small>
                         </div> -->
@@ -334,10 +334,10 @@ $ITALYDioceses = ["Acerenza","Acerra","Acireale","Acqui","Adria - Rovigo","Agrig
                         <li class="page-item disabled">
                             <a class="page-link diocesan-carousel-prev" href="#" tabindex="-1" aria-disabled="true" aria-labeled="Previous"><span aria-hidden="true">&laquo;</span></a>
                         </li>
-                        <li class="page-item active"><a class="page-link" href="#" data-slide-to="0"><?php $i18n->_e("Solemnities"); ?></a></li>
-                        <li class="page-item"><a class="page-link" href="#" data-slide-to="1"><?php $i18n->_e("Feasts"); ?></a></li>
-                        <li class="page-item"><a class="page-link" href="#" data-slide-to="2"><?php $i18n->_e("Memorials"); ?></a></li>
-                        <li class="page-item"><a class="page-link" href="#" data-slide-to="3"><?php $i18n->_e("Optional memorials"); ?></a></li>
+                        <li class="page-item active"><a class="page-link" href="#" data-slide-to="0"><?php echo _( "Solemnities" ); ?></a></li>
+                        <li class="page-item"><a class="page-link" href="#" data-slide-to="1"><?php echo _( "Feasts" ); ?></a></li>
+                        <li class="page-item"><a class="page-link" href="#" data-slide-to="2"><?php echo _( "Memorials" ); ?></a></li>
+                        <li class="page-item"><a class="page-link" href="#" data-slide-to="3"><?php echo _( "Optional memorials" ); ?></a></li>
                         <li class="page-item">
                             <a class="page-link diocesan-carousel-next" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
                         </li>
@@ -356,15 +356,15 @@ $ITALYDioceses = ["Acerenza","Acerra","Acireale","Acqui","Adria - Rovigo","Agrig
                             <div class="container-fluid">
                                 <div class="card border-left-primary mr-5 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php $i18n->_e("Generate Diocesan Calendar"); ?>: <?php $i18n->_e("Define the Solemnities"); ?></h4>
+                                        <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Generate Diocesan Calendar"); ?>: <?php echo _( "Define the Solemnities"); ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
                                             <div class="col mr-2">-->
                                                 <form class="needs-validation" novalidate>
-                                                    <?php $FormControls->CreateFestivityRow($i18n->__("Principal Patron(s) of the Place, Diocese, Region, Province or Territory")) ?>
-                                                    <?php $FormControls->CreateFestivityRow($i18n->__("Dedication of the Cathedral")) ?>
-                                                    <?php $FormControls->CreateFestivityRow($i18n->__("Other Solemnity")) ?>
+                                                    <?php $FormControls->CreateFestivityRow( _( "Principal Patron(s) of the Place, Diocese, Region, Province or Territory")) ?>
+                                                    <?php $FormControls->CreateFestivityRow( _( "Dedication of the Cathedral")) ?>
+                                                    <?php $FormControls->CreateFestivityRow( _( "Other Solemnity")) ?>
                                                 </form>
                                                 <div class="text-center"><button class="btn btn-lg btn-primary m-3 onTheFlyEventRow" id="addSolemnity">+</button></div>
                                             <!--</div>
@@ -377,15 +377,15 @@ $ITALYDioceses = ["Acerenza","Acerra","Acireale","Acqui","Adria - Rovigo","Agrig
                             <div class="container-fluid">
                                 <div class="card border-left-primary mr-5 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php $i18n->_e("Generate Diocesan Calendar"); ?>: <?php $i18n->_e("Define the Feasts"); ?></h4>
+                                        <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Generate Diocesan Calendar"); ?>: <?php echo _( "Define the Feasts"); ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
                                             <div class="col mr-2">-->
                                                 <form class="needs-validation" novalidate>
-                                                    <?php $FormControls->CreateFestivityRow($i18n->__("Patron(s) of the Place, Diocese, Region, Province or Territory")) ?>
-                                                    <?php $FormControls->CreateFestivityRow($i18n->__("Dedication of the Cathedral")) ?>
-                                                    <?php $FormControls->CreateFestivityRow($i18n->__("Other Feast")) ?>
+                                                    <?php $FormControls->CreateFestivityRow( _( "Patron(s) of the Place, Diocese, Region, Province or Territory")) ?>
+                                                    <?php $FormControls->CreateFestivityRow( _( "Dedication of the Cathedral")) ?>
+                                                    <?php $FormControls->CreateFestivityRow( _( "Other Feast")) ?>
                                                 </form>
                                                 <div class="text-center"><button class="btn btn-lg btn-primary m-3 onTheFlyEventRow" id="addFeast">+</button></div>
                                             <!--</div>
@@ -398,15 +398,15 @@ $ITALYDioceses = ["Acerenza","Acerra","Acireale","Acqui","Adria - Rovigo","Agrig
                             <div class="container-fluid">
                                 <div class="card border-left-primary mr-5 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php $i18n->_e("Generate Diocesan Calendar"); ?>: <?php $i18n->_e("Define the Memorials"); ?></h4>
+                                        <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Generate Diocesan Calendar"); ?>: <?php echo _( "Define the Memorials"); ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
                                             <div class="col mr-2">-->
                                                 <form class="needs-validation" novalidate>
-                                                    <?php $FormControls->CreateFestivityRow($i18n->__("Secondary Patron(s) of the Place, Diocese, Region, Province or Territory")) ?>
-                                                    <?php $FormControls->CreateFestivityRow($i18n->__("Other Memorial")) ?>
-                                                    <?php $FormControls->CreateFestivityRow($i18n->__("Other Memorial")) ?>
+                                                    <?php $FormControls->CreateFestivityRow( _( "Secondary Patron(s) of the Place, Diocese, Region, Province or Territory")) ?>
+                                                    <?php $FormControls->CreateFestivityRow( _( "Other Memorial")) ?>
+                                                    <?php $FormControls->CreateFestivityRow( _( "Other Memorial")) ?>
                                                 </form>
                                                 <div class="text-center"><button class="btn btn-lg btn-primary m-3 onTheFlyEventRow" id="addMemorial">+</button></div>
                                             <!--</div>
@@ -419,15 +419,15 @@ $ITALYDioceses = ["Acerenza","Acerra","Acireale","Acqui","Adria - Rovigo","Agrig
                             <div class="container-fluid">
                                 <div class="card border-left-primary mr-5 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php $i18n->_e("Generate Diocesan Calendar"); ?>: <?php $i18n->_e("Define the Optional Memorials"); ?></h4>
+                                        <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Generate Diocesan Calendar"); ?>: <?php echo _( "Define the Optional Memorials"); ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
                                             <div class="col mr-2">-->
                                                 <form class="needs-validation" novalidate>
-                                                    <?php $FormControls->CreateFestivityRow($i18n->__("Saints whos veneration is local to the Place, Diocese, Region, Province or Territory")) ?>
-                                                    <?php $FormControls->CreateFestivityRow($i18n->__("Other Optional Memorial")) ?>
-                                                    <?php $FormControls->CreateFestivityRow($i18n->__("Other Optional Memorial")) ?>
+                                                    <?php $FormControls->CreateFestivityRow( _( "Saints whos veneration is local to the Place, Diocese, Region, Province or Territory")) ?>
+                                                    <?php $FormControls->CreateFestivityRow( _( "Other Optional Memorial")) ?>
+                                                    <?php $FormControls->CreateFestivityRow( _( "Other Optional Memorial")) ?>
                                                 </form>
                                                 <div class="text-center"><button class="btn btn-lg btn-primary m-3 onTheFlyEventRow" id="addOptionalMemorial">+</button></div>
                                             <!--</div>
@@ -449,7 +449,7 @@ $ITALYDioceses = ["Acerenza","Acerra","Acireale","Acqui","Adria - Rovigo","Agrig
                 <div class="container">
                     <div class="row">
                         <div class="col text-center">
-                            <button class="btn btn-lg btn-primary m-1" id="saveDiocesanCalendar_btn"><?php $i18n->_e("SAVE DIOCESAN CALENDAR") ?></button>
+                            <button class="btn btn-lg btn-primary m-1" id="saveDiocesanCalendar_btn"><?php echo _( "SAVE DIOCESAN CALENDAR") ?></button>
                         </div>
                     </div>
                 </div>

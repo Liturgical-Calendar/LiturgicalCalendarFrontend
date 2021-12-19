@@ -7,10 +7,10 @@ include_once( 'enums/LitLocale.php' );
 
 class LITSETTINGS {
     public int $YEAR;
-    public string $EPIPHANY         = EPIPHANY::JAN6;
-    public string $ASCENSION        = ASCENSION::THURSDAY;
-    public string $CORPUSCHRISTI    = CORPUSCHRISTI::THURSDAY;
-    public string $LOCALE           = LIT_LOCALE::LA;
+    public string $Epiphany         = Epiphany::JAN6;
+    public string $Ascension        = Ascension::THURSDAY;
+    public string $CorpusChristi    = CorpusChristi::THURSDAY;
+    public string $LOCALE           = LitLocale::LA;
     public ?string $NATIONAL        = null;
     public ?string $DIOCESAN        = null;
     private array $MetaData         = [];
@@ -57,16 +57,16 @@ class LITSETTINGS {
                         }
                         break;
                     case "EPIPHANY":
-                        $this->EPIPHANY         = EPIPHANY::isValid( strtoupper( $value ) )         ? strtoupper( $value ) : EPIPHANY::JAN6;
+                        $this->Epiphany         = Epiphany::isValid( strtoupper( $value ) )         ? strtoupper( $value ) : Epiphany::JAN6;
                         break;
                     case "ASCENSION":
-                        $this->ASCENSION        = ASCENSION::isValid( strtoupper( $value ) )        ? strtoupper( $value ) : ASCENSION::THURSDAY;
+                        $this->Ascension        = Ascension::isValid( strtoupper( $value ) )        ? strtoupper( $value ) : Ascension::THURSDAY;
                         break;
                     case "CORPUSCHRISTI":
-                        $this->CORPUSCHRISTI    = CORPUSCHRISTI::isValid( strtoupper( $value ) )    ? strtoupper( $value ) : CORPUSCHRISTI::THURSDAY;
+                        $this->CorpusChristi    = CorpusChristi::isValid( strtoupper( $value ) )    ? strtoupper( $value ) : CorpusChristi::THURSDAY;
                         break;
                     case "LOCALE":
-                        $this->LOCALE           = LIT_LOCALE::isValid( strtoupper( $value ) )       ? strtoupper( $value ) : LIT_LOCALE::LA;
+                        $this->LOCALE           = LitLocale::isValid( strtoupper( $value ) )       ? strtoupper( $value ) : LitLocale::LA;
                         break;
                     case "NATIONALPRESET":
                         $this->NATIONAL         = in_array( strtoupper( $value ), self::SUPPORTED_NATIONAL_PRESETS ) ? strtoupper( $value ) : null;
@@ -86,22 +86,22 @@ class LITSETTINGS {
     private function updateSettingsByNation() {
         switch( $this->NATIONAL ) {
             case "VATICAN":
-                $this->EPIPHANY         = EPIPHANY::JAN6;
-                $this->ASCENSION        = ASCENSION::THURSDAY;
-                $this->CORPUSCHRISTI    = CORPUSCHRISTI::THURSDAY;
-                $this->LOCALE           = LIT_LOCALE::LA;
+                $this->Epiphany         = Epiphany::JAN6;
+                $this->Ascension        = Ascension::THURSDAY;
+                $this->CorpusChristi    = CorpusChristi::THURSDAY;
+                $this->LOCALE           = LitLocale::LA;
                 break;
             case "ITALY":
-                $this->EPIPHANY         = EPIPHANY::JAN6;
-                $this->ASCENSION        = ASCENSION::SUNDAY;
-                $this->CORPUSCHRISTI    = CORPUSCHRISTI::SUNDAY;
-                $this->LOCALE           = LIT_LOCALE::IT;
+                $this->Epiphany         = Epiphany::JAN6;
+                $this->Ascension        = Ascension::SUNDAY;
+                $this->CorpusChristi    = CorpusChristi::SUNDAY;
+                $this->LOCALE           = LitLocale::IT;
                 break;
             case "USA":
-                $this->EPIPHANY         = EPIPHANY::SUNDAY_JAN2_JAN8;
-                $this->ASCENSION        = ASCENSION::SUNDAY;
-                $this->CORPUSCHRISTI    = CORPUSCHRISTI::SUNDAY;
-                $this->LOCALE           = LIT_LOCALE::EN;
+                $this->Epiphany         = Epiphany::SUNDAY_JAN2_JAN8;
+                $this->Ascension        = Ascension::SUNDAY;
+                $this->CorpusChristi    = CorpusChristi::SUNDAY;
+                $this->LOCALE           = LitLocale::EN;
                 break;
         }
     }

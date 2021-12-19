@@ -119,10 +119,10 @@ function prepareQueryData( $litSettings ) {
         "locale"        => $litSettings->LOCALE
     ];
     if( $litSettings->NATIONAL !== null ) {
-        $queryData["nationalpreset"] = $litSettings->NATIONAL;
+        $queryData["nationalcalendar"] = $litSettings->NATIONAL;
     }
     if( $litSettings->DIOCESAN !== null ) {
-        $queryData["diocesanpreset"] = $litSettings->DIOCESAN;
+        $queryData["diocesancalendar"] = $litSettings->DIOCESAN;
     }
     return $queryData;
 }
