@@ -7,15 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-19 13:49+0100\n"
-"PO-Revision-Date: 2021-12-19 05:53+0100\n"
-"Last-Translator: Ubuntu <priest@johnromanodorazio.com>\n"
-"Language-Team: French\n"
+"POT-Creation-Date: 2021-12-19 14:14+0100\n"
+"PO-Revision-Date: 2021-12-19 13:29+0000\n"
+"Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
+"Language-Team: French <https://translate.johnromanodorazio.com/projects/"
+"liturgical-calendar/frontend/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ASCII\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.9.1\n"
 
 #: easter.php:58
 msgid "Date of Easter from 1583 to 9999"
@@ -130,21 +132,38 @@ msgstr ""
 msgid "Calculate the Date of Easter"
 msgstr ""
 
-#: about.php:55 about.php:62 about.php:69
+#: about.php:55
 msgid ""
 "Priest in the Diocese of Rome, self-taught programmer, author of the "
 "BibleGet Project"
 msgstr ""
+"Prêtre du diocèse de Rome, programmeur autodidacte, auteur du projet BibleGet"
+
+#: about.php:62
+msgid ""
+"Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, "
+"Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
+"for Catholic IT Professionals"
+msgstr ""
+"Développeur logiciel basé à St.Paul, MN (USA), Co-Fondateur chez JobPost, "
+"Software Engineer chez Agile Orbit, Fondateur de la Guilde de Saint Isidore "
+"pour les Professionnels Informatiques Catholiques"
+
+#: about.php:69
+msgid "Full stack web developer"
+msgstr "Développeur web full stack"
 
 #: about.php:73
 msgid ""
 "The Liturgical Calendar project is curated by a group of volunteer catholic "
 "programmers, seeking to serve the Church."
 msgstr ""
+"Le projet du calendrier liturgique est organisé par un groupe de "
+"programmeurs catholiques bénévoles, cherchant à servir l'Église."
 
 #: about.php:79 about.php:87
 msgid "Liturgical Calendar - About us"
-msgstr ""
+msgstr "Calendrier liturgique - À propos de nous"
 
 #: about.php:153
 msgid "ANOTHERVOLUNTEER"
@@ -605,7 +624,7 @@ msgstr ""
 
 #: layout/header.php:139
 msgid "About us"
-msgstr ""
+msgstr "À propos de nous"
 
 #: layout/formcontrols.php:38
 msgid "Name"
