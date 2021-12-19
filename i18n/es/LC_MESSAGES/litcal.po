@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-19 14:38+0100\n"
-"PO-Revision-Date: 2021-12-19 14:47+0000\n"
+"PO-Revision-Date: 2021-12-19 15:11+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
@@ -56,18 +56,22 @@ msgid ""
 "Universal or General Roman Calendar or for derived National and Diocesan "
 "calendars"
 msgstr ""
+"Una API para el Calendario Litúrgico del cual puede recuperar datos para los "
+"eventos litúrgicos de cualquier año a partir de 1970 hasta 9999, ya sea para "
+"el Calendario Romano General o Universal o para los calendarios nacionales y "
+"diocesanos derivados"
 
 #: index.php:131 usage.php:44
 msgid "General Roman Calendar"
-msgstr ""
+msgstr "Calendario Romano General"
 
 #: index.php:139 layout/header.php:21
 msgid "Catholic Liturgical Calendar"
-msgstr ""
+msgstr "Calendario Litúrgico Católico"
 
 #: index.php:146 index.php:213
 msgid "API Endpoint"
-msgstr ""
+msgstr "Punto final de la API"
 
 #: index.php:152
 msgid "Calendar to retrieve from the API"
@@ -75,7 +79,7 @@ msgstr ""
 
 #: index.php:171
 msgid "Liturgical Calendar API endpoint"
-msgstr ""
+msgstr "API del Calendario litúrgico"
 
 #: index.php:172
 msgid ""
@@ -93,7 +97,7 @@ msgstr ""
 
 #: index.php:191 index.php:224
 msgid "Calculation of the Date of Easter"
-msgstr ""
+msgstr "Cálculo de la fecha de Pascua"
 
 #: index.php:194
 msgid ""
@@ -104,10 +108,16 @@ msgid ""
 "(observed by the Roman Catholic church) and of the Meeus algorithm for "
 "Julian easter (observed by orthodox churches)"
 msgstr ""
+"Un punto final de API simple que devuelve datos sobre la fecha de Pascua, "
+"tanto gregoriana como juliana, desde 1583 (año de la adopción del calendario "
+"gregoriano) hasta 9999 (cálculo de la fecha máxima posible en PHP de 64 bits)"
+", utilizando una adaptación PHP del algoritmo Meeus / Jones / Butcher para "
+"la Pascua gregoriana (observado por la iglesia católica romana) y del "
+"algoritmo Meeus para la Pascua juliana (observado por las iglesias ortodoxas)"
 
 #: index.php:199
 msgid "Date of Easter API endpoint"
-msgstr ""
+msgstr "Fecha de Pascua API"
 
 #: index.php:201
 msgid ""
@@ -118,7 +128,7 @@ msgstr ""
 
 #: index.php:213
 msgid "Definition"
-msgstr ""
+msgstr "Definición"
 
 #: index.php:216
 msgid "Swagger / Open API Documentation"
@@ -130,7 +140,7 @@ msgstr ""
 
 #: index.php:228
 msgid "Calculate the Date of Easter"
-msgstr ""
+msgstr "Calcula la fecha de Pascua"
 
 #: about.php:13
 msgid ""
