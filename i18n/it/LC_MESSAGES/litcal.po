@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-19 14:14+0100\n"
-"PO-Revision-Date: 2021-12-19 13:29+0000\n"
+"POT-Creation-Date: 2021-12-19 14:38+0100\n"
+"PO-Revision-Date: 2021-12-19 14:03+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
@@ -156,7 +156,7 @@ msgstr ""
 msgid "Calculate the Date of Easter"
 msgstr "Calcola la Data della Pasqua"
 
-#: about.php:55
+#: about.php:13
 msgid ""
 "Priest in the Diocese of Rome, self-taught programmer, author of the "
 "BibleGet Project"
@@ -164,7 +164,7 @@ msgstr ""
 "Sacerdote della Diocesi di Roma, programmatore autodidatta, autore del "
 "Progetto BibleGet"
 
-#: about.php:62
+#: about.php:20
 msgid ""
 "Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, "
 "Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
@@ -174,11 +174,11 @@ msgstr ""
 "JobPost, Ingegnere Informatico presso Agile Orbit, Fondatore della Gilda di "
 "Sant'Isidoro per Professionisti IT Cattolici"
 
-#: about.php:69
+#: about.php:27
 msgid "Full stack web developer"
 msgstr "Sviluppatore web full stack"
 
-#: about.php:73
+#: about.php:31
 msgid ""
 "The Liturgical Calendar project is curated by a group of volunteer catholic "
 "programmers, seeking to serve the Church."
@@ -187,11 +187,11 @@ msgstr ""
 "programmatori cattolici volontari, che cercano di rendere un servizio per la "
 "Chiesa."
 
-#: about.php:79 about.php:87
+#: about.php:37 about.php:45
 msgid "Liturgical Calendar - About us"
 msgstr "Calendario Liturgico - Chi siamo"
 
-#: about.php:153
+#: about.php:111
 msgid "ANOTHERVOLUNTEER"
 msgstr "ALTRO VOLONTARIO"
 
@@ -247,22 +247,28 @@ msgstr "Visualizza l'esempio Fullcalendar"
 msgid "View Full Calendar (messages first)"
 msgstr "Visualizza l'esempio Fullcalendar (messaggi in alto)"
 
-#: extending.php:261
+#: extending.php:241
 msgid ""
 "The General Roman Calendar can be extended so as to create a National or "
 "Diocesan calendar. Diocesan calendars depend on National calendars, so the "
-"National calendar must first be created.</p><p>National calendars must be "
-"defined using data from the translation of the Roman Missal used in the "
-"Region or in any case from decrees of the Episcopal Conference of the Region."
+"National calendar must first be created."
 msgstr ""
 "Il Calendario Romano Generale può essere esteso in modo da creare un "
 "calendario nazionale o diocesano. I calendari diocesani dipendono dai "
 "calendari nazionali, quindi è necessario prima creare il calendario "
-"nazionale.</p><p>I calendari nazionali devono essere definiti utilizzando i "
-"dati della traduzione del Messale Romano utilizzata nella Regione o comunque "
-"da decreti della Conferenza Episcopale della Regione."
+"nazionale."
 
-#: extending.php:262
+#: extending.php:242
+msgid ""
+"National calendars must be defined using data from the translation of the "
+"Roman Missal used in the Region or in any case from decrees of the Episcopal "
+"Conference of the Region."
+msgstr ""
+"I calendari nazionali devono essere definiti utilizzando i dati della "
+"traduzione del Messale Romano utilizzata nella Regione o comunque da decreti "
+"della Conferenza Episcopale della Regione."
+
+#: extending.php:243
 msgid ""
 "If a group of dioceses decides to pool their Liturgical Calendar data, for "
 "example to print out one single yearly calendar with the data for all the "
@@ -273,121 +279,121 @@ msgstr ""
 "di tutte le diocesi nel gruppo, tale gruppo può essere definito o impostato "
 "qui."
 
-#: extending.php:268
+#: extending.php:249
 msgid "General Roman Calendar - Extending"
 msgstr "Calendario Romano Generale - Estensione"
 
-#: extending.php:276
+#: extending.php:257
 msgid "Extend the General Roman Calendar with National or Diocesan data"
 msgstr "Estendi il Calendario Romano Generale con dati Nazionali o Diocesani"
 
-#: extending.php:286
+#: extending.php:270
 msgid "Generate National Calendar"
 msgstr "Genera un Calendario Nazionale"
 
-#: extending.php:303
+#: extending.php:287
 msgid "Depends on national calendar"
 msgstr "Dipende da calendario nazionale"
 
-#: extending.php:311
+#: extending.php:295
 msgid "Diocese"
 msgstr "Diocesi"
 
-#: extending.php:313
+#: extending.php:297
 msgid ""
 "This diocese does not seem to exist? Please choose from a value in the list."
 msgstr ""
 "Questa diocesi non sembra esistere? Si prega scegliere da un valore "
 "nell'elenco."
 
-#: extending.php:317
+#: extending.php:301
 msgid "Retrieve existing data"
 msgstr "Recupera dati esistenti"
 
-#: extending.php:318
+#: extending.php:302
 msgid "Remove existing data"
 msgstr "Rimuovi dati esistenti"
 
-#: extending.php:321
+#: extending.php:305
 msgid "Diocesan group"
 msgstr "Gruppo di Diocesi"
 
-#: extending.php:326
+#: extending.php:310
 msgid "Overwrites universal / national calendar"
 msgstr "Sovrascrive il calendario universale / nazionale"
 
-#: extending.php:337
+#: extending.php:321
 msgid "Solemnities"
 msgstr "Solennità"
 
-#: extending.php:338
+#: extending.php:322
 msgid "Feasts"
 msgstr "Feste"
 
-#: extending.php:339
+#: extending.php:323
 msgid "Memorials"
 msgstr "Memorie"
 
-#: extending.php:340
+#: extending.php:324
 msgid "Optional memorials"
 msgstr "Memorie facoltative"
 
-#: extending.php:359 extending.php:380 extending.php:401 extending.php:422
+#: extending.php:343 extending.php:364 extending.php:385 extending.php:406
 msgid "Generate Diocesan Calendar"
 msgstr "Genera un Calendario Diocesano"
 
-#: extending.php:359
+#: extending.php:343
 msgid "Define the Solemnities"
 msgstr "Definisci le Solennità"
 
-#: extending.php:365
+#: extending.php:349
 msgid ""
 "Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
 "Principale/i Patrono/i del Luogo, la Diocesi, la Regione, la Provincia o il "
 "Territorio"
 
-#: extending.php:366 extending.php:387
+#: extending.php:350 extending.php:371
 msgid "Dedication of the Cathedral"
 msgstr "Dedicazione della Cattedrale"
 
-#: extending.php:367
+#: extending.php:351
 msgid "Other Solemnity"
 msgstr "Altra Solennità"
 
-#: extending.php:380
+#: extending.php:364
 msgid "Define the Feasts"
 msgstr "Definisci le Feste"
 
-#: extending.php:386
+#: extending.php:370
 msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
 "Patrono/i del Luogo, la Diocesi, la Regione, la Provincia o il Territorio"
 
-#: extending.php:388
+#: extending.php:372
 msgid "Other Feast"
 msgstr "Altra Festa"
 
-#: extending.php:401
+#: extending.php:385
 msgid "Define the Memorials"
 msgstr "Definisci le Memorie"
 
-#: extending.php:407
+#: extending.php:391
 msgid ""
 "Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
 "Patrono/i Secondario/i del Luogo, la Diocesi, la Regione, la Provincia o il "
 "Territorio"
 
-#: extending.php:408 extending.php:409
+#: extending.php:392 extending.php:393
 msgid "Other Memorial"
 msgstr "Altra Memoria"
 
-#: extending.php:422
+#: extending.php:406
 msgid "Define the Optional Memorials"
 msgstr "Definisci le Memorie Facoltative"
 
-#: extending.php:428
+#: extending.php:412
 msgid ""
 "Saints whos veneration is local to the Place, Diocese, Region, Province or "
 "Territory"
@@ -395,11 +401,11 @@ msgstr ""
 "Santi la cui venerazione è locale al Luogo, la Diocesi, la Regione, la "
 "Provincia o il Territorio"
 
-#: extending.php:429 extending.php:430
+#: extending.php:413 extending.php:414
 msgid "Other Optional Memorial"
 msgstr "Altra Memoria Facoltativa"
 
-#: extending.php:452
+#: extending.php:436
 msgid "SAVE DIOCESAN CALENDAR"
 msgstr "SALVA CALENDARIO DIOCESANO"
 
