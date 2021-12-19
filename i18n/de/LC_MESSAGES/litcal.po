@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-19 14:38+0100\n"
-"PO-Revision-Date: 2021-12-19 15:11+0000\n"
+"PO-Revision-Date: 2021-12-19 15:39+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -188,6 +188,10 @@ msgid ""
 "Universal or General Roman Calendar or for derived National and Diocesan "
 "calendars"
 msgstr ""
+"Eine API für den liturgischen Kalender, aus der Sie Daten für die "
+"liturgischen Ereignisse eines bestimmten Jahres ab 1970 abrufen können, sei "
+"es für den universellen oder allgemeinen römischen Kalender oder für "
+"abgeleitete nationale und diözesane Kalender"
 
 #: usage.php:52
 msgid "EXAMPLE USAGE OF THE API"
@@ -300,19 +304,19 @@ msgstr "Überschreibt den universellen / nationalen Kalender"
 
 #: extending.php:321
 msgid "Solemnities"
-msgstr ""
+msgstr "Hochfeste"
 
 #: extending.php:322
 msgid "Feasts"
-msgstr ""
+msgstr "Feste"
 
 #: extending.php:323
 msgid "Memorials"
-msgstr ""
+msgstr "Gedenkstätten"
 
 #: extending.php:324
 msgid "Optional memorials"
-msgstr ""
+msgstr "Optionale Gedenkstätten"
 
 #: extending.php:343 extending.php:364 extending.php:385 extending.php:406
 msgid "Generate Diocesan Calendar"
@@ -642,7 +646,7 @@ msgstr ""
 
 #: layout/header.php:131
 msgid "Usage"
-msgstr ""
+msgstr "Verwendung"
 
 #: layout/header.php:133
 msgid "Extending the API"
@@ -650,11 +654,11 @@ msgstr "Erweiterung der API"
 
 #: layout/header.php:135
 msgid "Create a National Calendar"
-msgstr ""
+msgstr "Erstellen Sie einen nationalen Kalender"
 
 #: layout/header.php:136
 msgid "Create a Diocesan Calendar"
-msgstr ""
+msgstr "Erstellen Sie einen Diözesankalender"
 
 #: layout/header.php:139
 msgid "About us"
@@ -662,15 +666,15 @@ msgstr "Über uns"
 
 #: layout/formcontrols.php:38
 msgid "Name"
-msgstr ""
+msgstr "Name"
 
 #: layout/formcontrols.php:45
 msgid "Day"
-msgstr ""
+msgstr "Tag"
 
 #: layout/formcontrols.php:51
 msgid "Month"
-msgstr ""
+msgstr "Monat"
 
 #: layout/formcontrols.php:66
 msgid "Common (or Proper)"
@@ -678,8 +682,8 @@ msgstr "Common (oder Proper)"
 
 #: layout/formcontrols.php:112
 msgid "Liturgical color"
-msgstr ""
+msgstr "Liturgische Farbe"
 
 #: layout/formcontrols.php:124
 msgid "Since"
-msgstr ""
+msgstr "Aus dem Jahr"
