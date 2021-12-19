@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-19 14:38+0100\n"
-"PO-Revision-Date: 2021-12-19 15:11+0000\n"
+"POT-Creation-Date: 2021-12-19 16:38+0100\n"
+"PO-Revision-Date: 2021-12-19 15:39+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
@@ -49,7 +49,7 @@ msgstr ""
 msgid "Julian Easter in Gregorian Calendar"
 msgstr ""
 
-#: index.php:125
+#: index.php:13
 msgid ""
 "A Liturgical Calendar API from which you can retrieve data for the "
 "Liturgical events of any given year from 1970 to 9999, whether for the "
@@ -61,27 +61,27 @@ msgstr ""
 "el Calendario Romano General o Universal o para los calendarios nacionales y "
 "diocesanos derivados"
 
-#: index.php:131 usage.php:44
+#: index.php:19 usage.php:14
 msgid "General Roman Calendar"
 msgstr "Calendario Romano General"
 
-#: index.php:139 layout/header.php:21
+#: index.php:27 layout/header.php:21
 msgid "Catholic Liturgical Calendar"
 msgstr "Calendario Litúrgico Católico"
 
-#: index.php:146 index.php:213
+#: index.php:34 index.php:101
 msgid "API Endpoint"
 msgstr "Punto final de la API"
 
-#: index.php:152
+#: index.php:40
 msgid "Calendar to retrieve from the API"
 msgstr ""
 
-#: index.php:171
+#: index.php:59
 msgid "Liturgical Calendar API endpoint"
 msgstr "API del Calendario litúrgico"
 
-#: index.php:172
+#: index.php:60
 msgid ""
 "If a national or diocesan calendar is requested, these calendars will "
 "automatically set the specific options in the API request. If instead no "
@@ -89,17 +89,17 @@ msgid ""
 "requested) then the more specific options can be requested:"
 msgstr ""
 
-#: index.php:181
+#: index.php:69
 msgid ""
 "URL for the API request based on selected options (the above button is set "
 "to this URL)"
 msgstr ""
 
-#: index.php:191 index.php:224
+#: index.php:79 index.php:112
 msgid "Calculation of the Date of Easter"
 msgstr "Cálculo de la fecha de Pascua"
 
-#: index.php:194
+#: index.php:82
 msgid ""
 "A simple API endpoint that returns data about the Date of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -110,35 +110,35 @@ msgid ""
 msgstr ""
 "Un punto final de API simple que devuelve datos sobre la fecha de Pascua, "
 "tanto gregoriana como juliana, desde 1583 (año de la adopción del calendario "
-"gregoriano) hasta 9999 (cálculo de la fecha máxima posible en PHP de 64 bits)"
-", utilizando una adaptación PHP del algoritmo Meeus / Jones / Butcher para "
-"la Pascua gregoriana (observado por la iglesia católica romana) y del "
+"gregoriano) hasta 9999 (cálculo de la fecha máxima posible en PHP de 64 "
+"bits), utilizando una adaptación PHP del algoritmo Meeus / Jones / Butcher "
+"para la Pascua gregoriana (observado por la iglesia católica romana) y del "
 "algoritmo Meeus para la Pascua juliana (observado por las iglesias ortodoxas)"
 
-#: index.php:199
+#: index.php:87
 msgid "Date of Easter API endpoint"
 msgstr "Fecha de Pascua API"
 
-#: index.php:201
+#: index.php:89
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
 "localizations can be done in a client application just as well."
 msgstr ""
 
-#: index.php:213
+#: index.php:101
 msgid "Definition"
 msgstr "Definición"
 
-#: index.php:216
+#: index.php:104
 msgid "Swagger / Open API Documentation"
 msgstr ""
 
-#: index.php:227
+#: index.php:115
 msgid "Example display of the date of Easter from 1583 to 9999"
 msgstr ""
 
-#: index.php:228
+#: index.php:116
 msgid "Calculate the Date of Easter"
 msgstr "Calcula la fecha de Pascua"
 
@@ -180,52 +180,60 @@ msgstr "Calendario litúrgico - Sobre nosotros"
 msgid "ANOTHERVOLUNTEER"
 msgstr ""
 
-#: usage.php:37
+#: usage.php:7
 msgid ""
 "A Liturgical Calendar API from which you can retrieve data for the "
 "Liturgical events of any given year from 1970 onwards, whether for the "
 "Universal or General Roman Calendar or for derived National and Diocesan "
 "calendars"
 msgstr ""
+"Una API para el Calendario Litúrgico del cual puede recuperar datos para los "
+"eventos litúrgicos de cualquier año desde 1970 en adelante, ya sea para el "
+"Calendario Romano General o Universal o para los calendarios nacionales y "
+"diocesanos derivados"
 
-#: usage.php:52
+#: usage.php:14 layout/header.php:76
+msgid "Examples"
+msgstr ""
+
+#: usage.php:22
 msgid "EXAMPLE USAGE OF THE API"
 msgstr ""
 
-#: usage.php:62
+#: usage.php:32
 msgid "HTML presentation elaborated by PHP using a CURL request"
 msgstr ""
 
-#: usage.php:63
+#: usage.php:33
 msgid "View PHP Example"
 msgstr ""
 
-#: usage.php:74
+#: usage.php:44
 msgid "HTML presentation elaborated by JAVASCRIPT using an AJAX request"
 msgstr ""
 
-#: usage.php:75
+#: usage.php:45
 msgid "View JavaScript Example"
 msgstr ""
 
-#: usage.php:83
+#: usage.php:53
 msgid "Calendar"
 msgstr ""
 
-#: usage.php:86
+#: usage.php:56
 msgid ""
 "Fullcalendar representation elaborated by JAVASCRIPT using an AJAX request"
 msgstr ""
 
-#: usage.php:87
+#: usage.php:57
 msgid "View Full Calendar"
 msgstr ""
 
-#: usage.php:88
+#: usage.php:58
 msgid "View Full Calendar (messages first)"
 msgstr ""
 
-#: extending.php:241
+#: extending.php:20
 #, fuzzy
 #| msgid ""
 #| "The General Roman Calendar can be extended so as to create a National or "
@@ -246,7 +254,7 @@ msgstr ""
 "Misal Romano utilizado en la Región o en cualquier caso de los decretos de "
 "la Conferencia Episcopal de la Región."
 
-#: extending.php:242
+#: extending.php:21
 #, fuzzy
 #| msgid ""
 #| "The General Roman Calendar can be extended so as to create a National or "
@@ -267,123 +275,123 @@ msgstr ""
 "Misal Romano utilizado en la Región o en cualquier caso de los decretos de "
 "la Conferencia Episcopal de la Región."
 
-#: extending.php:243
+#: extending.php:22
 msgid ""
 "If a group of dioceses decides to pool their Liturgical Calendar data, for "
 "example to print out one single yearly calendar with the data for all the "
 "dioceses in the group, the group can be defined or set here."
 msgstr ""
 
-#: extending.php:249
+#: extending.php:28
 msgid "General Roman Calendar - Extending"
 msgstr "Calendario Romano General - Extensión"
 
-#: extending.php:257
+#: extending.php:36
 msgid "Extend the General Roman Calendar with National or Diocesan data"
 msgstr "Ampliar el Calendario Romano General con datos nacionales o diocesanos"
 
-#: extending.php:270
+#: extending.php:49
 msgid "Generate National Calendar"
 msgstr "Genera Calendario Nacional"
 
-#: extending.php:287
+#: extending.php:66
 msgid "Depends on national calendar"
 msgstr "Depende del calendario nacional"
 
-#: extending.php:295
+#: extending.php:74
 msgid "Diocese"
 msgstr "Diócesis"
 
-#: extending.php:297
+#: extending.php:76
 msgid ""
 "This diocese does not seem to exist? Please choose from a value in the list."
 msgstr "¿Esta diócesis no parece existir? Elija un valor de la lista."
 
-#: extending.php:301
+#: extending.php:80
 msgid "Retrieve existing data"
 msgstr "Carga datos existentes"
 
-#: extending.php:302
+#: extending.php:81
 msgid "Remove existing data"
 msgstr "Quita datos existentes"
 
-#: extending.php:305
+#: extending.php:84
 msgid "Diocesan group"
 msgstr "Grupo de diócesis"
 
-#: extending.php:310
+#: extending.php:89
 msgid "Overwrites universal / national calendar"
 msgstr "Sobrescribe el calendario nacional / universal"
 
-#: extending.php:321
+#: extending.php:100
 msgid "Solemnities"
-msgstr ""
+msgstr "Solemnidades"
 
-#: extending.php:322
+#: extending.php:101
 msgid "Feasts"
-msgstr ""
+msgstr "Fiestas"
 
-#: extending.php:323
+#: extending.php:102
 msgid "Memorials"
-msgstr ""
+msgstr "Memorias"
 
-#: extending.php:324
+#: extending.php:103
 msgid "Optional memorials"
-msgstr ""
+msgstr "Memorias opcionales"
 
-#: extending.php:343 extending.php:364 extending.php:385 extending.php:406
+#: extending.php:122 extending.php:143 extending.php:164 extending.php:185
 msgid "Generate Diocesan Calendar"
 msgstr "Genera calendario diocesano"
 
-#: extending.php:343
+#: extending.php:122
 msgid "Define the Solemnities"
 msgstr "Definir las Solemnidades"
 
-#: extending.php:349
+#: extending.php:128
 msgid ""
 "Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
 "Patrono(s) principal(es) del lugar, diócesis, región, provincia o territorio"
 
-#: extending.php:350 extending.php:371
+#: extending.php:129 extending.php:150
 msgid "Dedication of the Cathedral"
 msgstr "Dedicación de la Catedral"
 
-#: extending.php:351
+#: extending.php:130
 msgid "Other Solemnity"
 msgstr "Otra solemnidad"
 
-#: extending.php:364
+#: extending.php:143
 msgid "Define the Feasts"
 msgstr "Definir las Fiestas"
 
-#: extending.php:370
+#: extending.php:149
 msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr "Patrono(s) del lugar, diócesis, región, provincia o territorio"
 
-#: extending.php:372
+#: extending.php:151
 msgid "Other Feast"
 msgstr "Otra fiesta"
 
-#: extending.php:385
+#: extending.php:164
 msgid "Define the Memorials"
 msgstr "Definir las Memoriales"
 
-#: extending.php:391
+#: extending.php:170
 msgid ""
 "Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
 "Patrono(s) secundario(s) del lugar, diócesis, región, provincia o territorio"
 
-#: extending.php:392 extending.php:393
+#: extending.php:171 extending.php:172
 msgid "Other Memorial"
 msgstr "Otro Memorial"
 
-#: extending.php:406
+#: extending.php:185
 msgid "Define the Optional Memorials"
 msgstr "Definir las Memoriales opcionales"
 
-#: extending.php:412
+#: extending.php:191
 msgid ""
 "Saints whos veneration is local to the Place, Diocese, Region, Province or "
 "Territory"
@@ -391,11 +399,11 @@ msgstr ""
 "Santos cuya veneración es local del lugar, diócesis, región, provincia o "
 "territorio"
 
-#: extending.php:413 extending.php:414
+#: extending.php:192 extending.php:193
 msgid "Other Optional Memorial"
 msgstr "Otro Memorial Opcional"
 
-#: extending.php:436
+#: extending.php:215
 msgid "SAVE DIOCESAN CALENDAR"
 msgstr "GUARDAR CALENDARIO DIOCESANO"
 
@@ -646,17 +654,13 @@ msgstr ""
 msgid "Date of Easter"
 msgstr ""
 
-#: layout/header.php:76
-msgid "Examples"
-msgstr ""
-
 #: layout/header.php:98
 msgid "Full Calendar (messages first)"
 msgstr ""
 
 #: layout/header.php:131
 msgid "Usage"
-msgstr ""
+msgstr "Uso"
 
 #: layout/header.php:133
 msgid "Extending the API"
@@ -664,11 +668,11 @@ msgstr "Extensión de la API"
 
 #: layout/header.php:135
 msgid "Create a National Calendar"
-msgstr ""
+msgstr "Crea un calendario nacional"
 
 #: layout/header.php:136
 msgid "Create a Diocesan Calendar"
-msgstr ""
+msgstr "Crea un calendario diocesano"
 
 #: layout/header.php:139
 msgid "About us"
@@ -676,15 +680,15 @@ msgstr "Sobre nosotros"
 
 #: layout/formcontrols.php:38
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 #: layout/formcontrols.php:45
 msgid "Day"
-msgstr ""
+msgstr "Día"
 
 #: layout/formcontrols.php:51
 msgid "Month"
-msgstr ""
+msgstr "Mes"
 
 #: layout/formcontrols.php:66
 msgid "Common (or Proper)"
@@ -692,8 +696,8 @@ msgstr "Común (o Propio)"
 
 #: layout/formcontrols.php:112
 msgid "Liturgical color"
-msgstr ""
+msgstr "Color litúrgico"
 
 #: layout/formcontrols.php:124
 msgid "Since"
-msgstr ""
+msgstr "Desde el año"
