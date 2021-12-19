@@ -1,4 +1,9 @@
 # Liturgical Calendar Frontend
+
+| Code quality: |
+|:-------------:|
+| [![CodeFactor](https://www.codefactor.io/repository/github/liturgical-calendar/liturgicalcalendarfrontend/badge)](https://www.codefactor.io/repository/github/liturgical-calendar/liturgicalcalendarfrontend) |
+
 Presentation of the Liturgical Calendar Project, using bootstrap theming.
 
 The Liturgical Calendar project offers an API that generates data for the liturgical events in the General Roman Calendar. The data can be requested in JSON or XML format such that it can be consumed by any kind of application. It can also be requested in ICS format, so as to be consumed by any kind of iCal or Calendar application.
