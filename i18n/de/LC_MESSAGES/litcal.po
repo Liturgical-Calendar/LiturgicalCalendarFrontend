@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-19 14:38+0100\n"
-"PO-Revision-Date: 2021-12-19 14:03+0000\n"
+"PO-Revision-Date: 2021-12-19 14:47+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -262,28 +262,30 @@ msgstr "Abhängig vom nationalen Kalender"
 
 #: extending.php:295
 msgid "Diocese"
-msgstr ""
+msgstr "Diözese"
 
 #: extending.php:297
 msgid ""
 "This diocese does not seem to exist? Please choose from a value in the list."
 msgstr ""
+"Diese Diözese scheint nicht zu existieren? Bitte wählen Sie aus einem Wert "
+"in der Liste."
 
 #: extending.php:301
 msgid "Retrieve existing data"
-msgstr ""
+msgstr "Laden Sie vorhandene Daten"
 
 #: extending.php:302
 msgid "Remove existing data"
-msgstr ""
+msgstr "Vorhandene Daten entfernen"
 
 #: extending.php:305
 msgid "Diocesan group"
-msgstr ""
+msgstr "Gruppe von Diözesen"
 
 #: extending.php:310
 msgid "Overwrites universal / national calendar"
-msgstr ""
+msgstr "Überschreibt den universellen / nationalen Kalender"
 
 #: extending.php:321
 msgid "Solemnities"
@@ -307,63 +309,70 @@ msgstr "Diözesankalender erstellen"
 
 #: extending.php:343
 msgid "Define the Solemnities"
-msgstr ""
+msgstr "Definieren die Hochfeste"
 
 #: extending.php:349
 msgid ""
 "Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
+"Hauptpatron des Ortes, der Diözese, der Region, der Provinz oder des "
+"Territoriums"
 
 #: extending.php:350 extending.php:371
 msgid "Dedication of the Cathedral"
-msgstr ""
+msgstr "Einweihung der Kathedrale"
 
 #: extending.php:351
 msgid "Other Solemnity"
-msgstr ""
+msgstr "Anderes Hochfest"
 
 #: extending.php:364
 msgid "Define the Feasts"
-msgstr ""
+msgstr "Definieren die Feste"
 
 #: extending.php:370
 msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
+"Patron des Ortes, der Diözese, der Region, der Provinz oder des Territoriums"
 
 #: extending.php:372
 msgid "Other Feast"
-msgstr ""
+msgstr "Anderes Fest"
 
 #: extending.php:385
 msgid "Define the Memorials"
-msgstr ""
+msgstr "Definieren die Gedenkstätten"
 
 #: extending.php:391
 msgid ""
 "Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
+"Sekundärpatron des Ortes, der Diözese, der Region, der Provinz oder des "
+"Territoriums"
 
 #: extending.php:392 extending.php:393
 msgid "Other Memorial"
-msgstr ""
+msgstr "Andere Gedenkstätte"
 
 #: extending.php:406
 msgid "Define the Optional Memorials"
-msgstr ""
+msgstr "Definieren die Optionalen Gedenkstätten"
 
 #: extending.php:412
 msgid ""
 "Saints whos veneration is local to the Place, Diocese, Region, Province or "
 "Territory"
 msgstr ""
+"Heilige, deren Verehrung für den Ort, die Diözese, die Region, die Provinz "
+"oder das Territorium gilt"
 
 #: extending.php:413 extending.php:414
 msgid "Other Optional Memorial"
-msgstr ""
+msgstr "Andere Optionale Gedenkstätte"
 
 #: extending.php:436
 msgid "SAVE DIOCESAN CALENDAR"
-msgstr ""
+msgstr "DIÖZESAN-KALENDER SPEICHERN"
 
 #: includes/LitCommon.php:56
 msgid "Proper"
@@ -654,7 +663,7 @@ msgstr ""
 
 #: layout/formcontrols.php:66
 msgid "Common (or Proper)"
-msgstr ""
+msgstr "Common (oder Proper)"
 
 #: layout/formcontrols.php:112
 msgid "Liturgical color"
