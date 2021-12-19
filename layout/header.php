@@ -73,7 +73,7 @@ $metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMeta
         <!-- Heading -->
         <li>
             <div class="sidebar-heading">
-                Examples
+                <?php echo _( "Examples" ); ?>
             </div>
         </li>
 
@@ -95,7 +95,7 @@ $metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMeta
         <li class="nav-item">
             <a class="nav-link" href="/examples/fullcalendar/examples/messages.html">
                 <i class="fas fa-fw fa-folder"></i>
-                <span>Full Calendar (messages first)</span></a>
+                <span><?php echo _( "Full Calendar (messages first)" ); ?></span></a>
         </li>
 
         <!-- Divider -->
