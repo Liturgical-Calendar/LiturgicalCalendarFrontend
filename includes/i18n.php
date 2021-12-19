@@ -385,7 +385,7 @@ class i18n {
 
     
 
-    private array $messages;
+    public array $messages;
 
     public string $LOCALE;
 

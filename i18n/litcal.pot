@@ -1,0 +1,48 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-12-19 04:43+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: easter.php:58
+msgid "Date of Easter from 1583 to 9999"
+msgstr ""
+
+#: easter.php:75
+msgid "Go back"
+msgstr ""
+
+#: easter.php:89
+msgid "Century"
+msgstr ""
+
+#: easter.php:96
+msgid ""
+"Easter Day Calculation in PHP (Years in which Julian and Gregorian easter "
+"coincide are marked in yellow)"
+msgstr ""
+
+#: easter.php:100
+msgid "Gregorian Easter"
+msgstr ""
+
+#: easter.php:100
+msgid "Julian Easter"
+msgstr ""
+
+#: easter.php:100
+msgid "Julian Easter in Gregorian Calendar"
+msgstr ""

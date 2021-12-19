@@ -1,0 +1,118 @@
+.backNav {
+    background-color:yellow;
+    font-size:1.1em;
+    text-align:center;
+    cursor:pointer;
+    text-decoration:none;
+    width:95%;
+    margin:0px auto;
+    border-bottom:2px outset LightBlue;
+    display:block;
+    padding: 12px 24px;
+    font-weight: bold;
+}
+.backNav:hover {
+    background-color: gold;
+    color: DarkBlue;
+}
+thead {
+    display:block;position:sticky;top:40px;
+}
+tbody {
+    display:block;
+}
+thead th {
+    border-left: 1px groove White;
+    border-right:1px ridge White;
+    padding: 6px 0px;
+    background-color:grey;
+}
+tbody td {
+    padding-left: 1em;
+}
+#HistoryNavigationLeftSidebar {
+    position: fixed;
+    top: 100px;
+    right: 25px;
+    width: 150px;
+    height: 80vh;
+    border: 1px groove White;
+    text-align: center;
+    padding-top: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+#slider-vertical {
+    height:76vh;
+    float:left;
+    font-size: 1em;
+}
+#TimelineCenturiesContainer {
+    height:77vh;
+    float:right;
+    overflow-y:hidden;
+    position:relative;
+    top:-8px;
+}
+#TimelineCenturiesContainer:after {
+    content  : "";
+    position : fixed;
+    z-index  : 1;
+    bottom   : 50px;
+    right    : 35px;
+    pointer-events   : none;
+    background-image : linear-gradient(to bottom, 
+                        rgba(255,255,255, 0), 
+                        rgba(255,255,255, 1) 90%);
+    width    : 50px;
+    height   : 4em;
+    transition: height 0.25s ease-out;
+}
+#TimelineCenturiesContainer.scrollBottom:after {
+    content  : "";
+    position : fixed;
+    z-index  : 1;
+    bottom   : 50px;
+    right    : 35px;
+    pointer-events   : none;
+    background-image : linear-gradient(to bottom, 
+                        rgba(255,255,255, 0), 
+                        rgba(255,255,255, 1) 90%);
+    width    : 50px;
+    height   : 0em;
+    transition: height 0.25s ease-in;
+}
+#EasterTableContainer:after {
+    content  : "";
+    position : absolute;
+    z-index  : 1;
+    bottom   : 30px;
+    left     : 0;
+    pointer-events   : none;
+    background-image : linear-gradient(to bottom, 
+                        rgba(255,255,255, 0), 
+                        rgba(255,255,255, 1) 90%);
+    width    : 80%;
+    height   : 4em;
+}
+
+.TimelineCenturyMarker {
+    color: DarkBlue;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size:.5em;
+}
+
+#EasterTableContainer {
+    height: 76vh;
+    overflow-y:hidden;
+}
+
+.highlight {
+    background-color: yellow;
+}
+
+#langSelect {
+    position: fixed;
+    top: 75px;
+    left: 30px;
+}

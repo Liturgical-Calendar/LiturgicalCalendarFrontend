@@ -120,7 +120,7 @@ $stagingURL = $isStaging ? "-staging" : "";
 $endpointV = $isStaging ? "dev" : "v3";
 $endpointURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalEngine.php";
 $metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMetadata.php";
-$dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/dateOfEaster.php";
+$dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOfEaster.php";
 
 
 ?>
