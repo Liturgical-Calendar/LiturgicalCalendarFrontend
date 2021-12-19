@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-19 13:05+0100\n"
+"POT-Creation-Date: 2021-12-19 13:49+0100\n"
 "PO-Revision-Date: 2021-12-19 12:50+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
@@ -90,8 +90,8 @@ msgid ""
 "requested) then the more specific options can be requested:"
 msgstr ""
 "Se viene richiesto un calendario nazionale o diocesano, questi stessi "
-"calendari imposteranno in automatico vari parameteri della richiesta ("
-"locale, epifania, corpuschristi, ascensione). Se invece non viene richiesto "
+"calendari imposteranno in automatico vari parameteri della richiesta "
+"(locale, epifania, corpuschristi, ascensione). Se invece non viene richiesto "
 "alcun calendario nazionale o diocesano (ossia, viene richiesto semplicemente "
 "il Calendario Universale), allora in quel caso è possibile impostare i "
 "parametri più specificamente:"
@@ -248,6 +248,13 @@ msgstr ""
 "dati della traduzione del Messale Romano utilizzata nella Regione o comunque "
 "da decreti della Conferenza Episcopale della Regione."
 
+#: extending.php:262
+msgid ""
+"If a group of dioceses decides to pool their Liturgical Calendar data, for "
+"example to print out one single yearly calendar with the data for all the "
+"dioceses in the group, the group can be defined or set here."
+msgstr ""
+
 #: extending.php:268
 msgid "General Roman Calendar - Extending"
 msgstr "Calendario Romano Generale - Estensione"
@@ -286,10 +293,6 @@ msgstr "Rimuovi dati esistenti"
 #: extending.php:321
 msgid "Diocesan group"
 msgstr "Gruppo di Diocesi"
-
-#: extending.php:323
-msgid "DioceseGroupHelp"
-msgstr ""
 
 #: extending.php:326
 msgid "Overwrites universal / national calendar"
