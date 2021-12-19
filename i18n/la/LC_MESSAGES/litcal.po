@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-19 16:38+0100\n"
+"POT-Creation-Date: 2021-12-19 19:11+0100\n"
 "PO-Revision-Date: 2021-12-19 15:39+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
@@ -307,7 +307,7 @@ msgstr ""
 msgid "Dedication of the Cathedral"
 msgstr ""
 
-#: extending.php:130
+#: extending.php:130 extending.php:244
 msgid "Other Solemnity"
 msgstr ""
 
@@ -319,7 +319,7 @@ msgstr ""
 msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
 
-#: extending.php:151
+#: extending.php:151 extending.php:245
 msgid "Other Feast"
 msgstr ""
 
@@ -332,7 +332,7 @@ msgid ""
 "Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
 
-#: extending.php:171 extending.php:172
+#: extending.php:171 extending.php:172 extending.php:246
 msgid "Other Memorial"
 msgstr ""
 
@@ -346,13 +346,64 @@ msgid ""
 "Territory"
 msgstr ""
 
-#: extending.php:192 extending.php:193
+#: extending.php:192 extending.php:193 extending.php:247
 msgid "Other Optional Memorial"
 msgstr ""
 
 #: extending.php:215
 msgid "SAVE DIOCESAN CALENDAR"
 msgstr ""
+
+#: extending.php:241 layout/formcontrols.php:38
+msgid "Name"
+msgstr "Nomen"
+
+#: extending.php:242 layout/formcontrols.php:45
+msgid "Day"
+msgstr "Dies"
+
+#: extending.php:243 layout/formcontrols.php:51
+msgid "Month"
+msgstr "Mensis"
+
+#: extending.php:249
+msgid "Delete diocesan calendar"
+msgstr ""
+
+#: extending.php:250
+msgid ""
+"If you choose to delete this diocesan calendar, the liturgical events "
+"defined for the calendar and the corresponding index entry will be removed "
+"and no longer available in the client applications."
+msgstr ""
+
+#: extending.php:251 layout/formcontrols.php:112
+msgid "Liturgical color"
+msgstr "Color liturgicum"
+
+#. translators: context = liturgical color
+#: extending.php:252 includes/LitColor.php:29 layout/formcontrols.php:114
+msgid "white"
+msgstr "albus"
+
+#. translators: context = liturgical color
+#: extending.php:253 includes/LitColor.php:32 layout/formcontrols.php:115
+msgid "red"
+msgstr "ruber"
+
+#. translators: context = liturgical color
+#: extending.php:254 includes/LitColor.php:23 layout/formcontrols.php:117
+msgid "green"
+msgstr "viridis"
+
+#. translators: context = liturgical color
+#: extending.php:255 includes/LitColor.php:26 layout/formcontrols.php:116
+msgid "purple"
+msgstr "purpura"
+
+#: extending.php:256 layout/formcontrols.php:124
+msgid "Since"
+msgstr "Ab anno"
 
 #: includes/LitCommon.php:56
 msgid "Proper"
@@ -557,26 +608,6 @@ msgid "or"
 msgstr "vel"
 
 #. translators: context = liturgical color
-#: includes/LitColor.php:23 layout/formcontrols.php:117
-msgid "green"
-msgstr "viridis"
-
-#. translators: context = liturgical color
-#: includes/LitColor.php:26 layout/formcontrols.php:116
-msgid "purple"
-msgstr "purpura"
-
-#. translators: context = liturgical color
-#: includes/LitColor.php:29 layout/formcontrols.php:114
-msgid "white"
-msgstr "albus"
-
-#. translators: context = liturgical color
-#: includes/LitColor.php:32 layout/formcontrols.php:115
-msgid "red"
-msgstr "ruber"
-
-#. translators: context = liturgical color
 #: includes/LitColor.php:35
 msgid "pink"
 msgstr "rosea"
@@ -625,26 +656,6 @@ msgstr ""
 msgid "About us"
 msgstr ""
 
-#: layout/formcontrols.php:38
-msgid "Name"
-msgstr "Nomen"
-
-#: layout/formcontrols.php:45
-msgid "Day"
-msgstr "Dies"
-
-#: layout/formcontrols.php:51
-msgid "Month"
-msgstr "Mensis"
-
-#: layout/formcontrols.php:66
+#: layout/formcontrols.php:66 layout/formcontrols.php:136
 msgid "Common (or Proper)"
 msgstr "Communis (vel Proprium)"
-
-#: layout/formcontrols.php:112
-msgid "Liturgical color"
-msgstr "Color liturgicum"
-
-#: layout/formcontrols.php:124
-msgid "Since"
-msgstr "Ab anno"
