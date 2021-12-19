@@ -113,16 +113,16 @@ function buildNationOptions( $nations, $NATION ) {
 function prepareQueryData( $litSettings ) {
     $queryData = [
         "year"          => $litSettings->YEAR,
-        "epiphany"      => $litSettings->EPIPHANY,
-        "ascension"     => $litSettings->ASCENSION,
-        "corpuschristi" => $litSettings->CORPUSCHRISTI,
+        "epiphany"      => $litSettings->Epiphany,
+        "ascension"     => $litSettings->Ascension,
+        "corpuschristi" => $litSettings->CorpusChristi,
         "locale"        => $litSettings->LOCALE
     ];
-    if( $litSettings->NATIONAL !== null ) {
-        $queryData["nationalcalendar"] = $litSettings->NATIONAL;
+    if( $litSettings->NationalCalendar !== null ) {
+        $queryData["nationalcalendar"] = $litSettings->NationalCalendar;
     }
-    if( $litSettings->DIOCESAN !== null ) {
-        $queryData["diocesancalendar"] = $litSettings->DIOCESAN;
+    if( $litSettings->DiocesanCalendar !== null ) {
+        $queryData["diocesancalendar"] = $litSettings->DiocesanCalendar;
     }
     return $queryData;
 }

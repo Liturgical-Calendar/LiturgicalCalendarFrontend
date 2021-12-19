@@ -5,14 +5,14 @@ include_once( 'enums/Ascension.php' );
 include_once( 'enums/CorpusChristi.php' );
 include_once( 'enums/LitLocale.php' );
 
-class LITSETTINGS {
+class LitSettings {
     public int $YEAR;
     public string $Epiphany         = Epiphany::JAN6;
     public string $Ascension        = Ascension::THURSDAY;
     public string $CorpusChristi    = CorpusChristi::THURSDAY;
-    public string $LOCALE           = LitLocale::LA;
-    public ?string $NATIONAL        = null;
-    public ?string $DIOCESAN        = null;
+    public string $LOCALE           = LitLocale::LATIN;
+    public ?string $NationalCalendar = null;
+    public ?string $DiocesanCalendar = null;
     private array $MetaData         = [];
 
     const ALLOWED_PARAMS  = [
@@ -21,8 +21,8 @@ class LITSETTINGS {
         "ASCENSION",
         "CORPUSCHRISTI",
         "LOCALE",
-        "NATIONALPRESET",
-        "DIOCESANPRESET"
+        "NATIONALCALENDAR",
+        "DIOCESANCALENDAR"
     ];
 
     const SUPPORTED_NATIONAL_PRESETS = [ "ITALY", "USA", "VATICAN" ];
@@ -66,50 +66,50 @@ class LITSETTINGS {
                         $this->CorpusChristi    = CorpusChristi::isValid( strtoupper( $value ) )    ? strtoupper( $value ) : CorpusChristi::THURSDAY;
                         break;
                     case "LOCALE":
-                        $this->LOCALE           = LitLocale::isValid( strtoupper( $value ) )       ? strtoupper( $value ) : LitLocale::LA;
+                        $this->LOCALE           = LitLocale::isValid( strtoupper( $value ) )       ? strtoupper( $value ) : LitLocale::LATIN;
                         break;
-                    case "NATIONALPRESET":
-                        $this->NATIONAL         = in_array( strtoupper( $value ), self::SUPPORTED_NATIONAL_PRESETS ) ? strtoupper( $value ) : null;
+                    case "NATIONALCALENDAR":
+                        $this->NationalCalendar         = in_array( strtoupper( $value ), self::SUPPORTED_NATIONAL_PRESETS ) ? strtoupper( $value ) : null;
                         break;
-                    case "DIOCESANPRESET":
-                        $this->DIOCESAN         = $value !== "" ? strtoupper( $value ) : null;
+                    case "DIOCESANCALENDAR":
+                        $this->DiocesanCalendar         = $value !== "" ? strtoupper( $value ) : null;
                 }
             }
         }
 
-        if( $this->NATIONAL !== null ) {
+        if( $this->NationalCalendar !== null ) {
             $this->updateSettingsByNation();
         }
 
     }
 
     private function updateSettingsByNation() {
-        switch( $this->NATIONAL ) {
+        switch( $this->NationalCalendar ) {
             case "VATICAN":
                 $this->Epiphany         = Epiphany::JAN6;
                 $this->Ascension        = Ascension::THURSDAY;
                 $this->CorpusChristi    = CorpusChristi::THURSDAY;
-                $this->LOCALE           = LitLocale::LA;
+                $this->LOCALE           = LitLocale::LATIN;
                 break;
             case "ITALY":
                 $this->Epiphany         = Epiphany::JAN6;
                 $this->Ascension        = Ascension::SUNDAY;
                 $this->CorpusChristi    = CorpusChristi::SUNDAY;
-                $this->LOCALE           = LitLocale::IT;
+                $this->LOCALE           = LitLocale::ITALIAN;
                 break;
             case "USA":
                 $this->Epiphany         = Epiphany::SUNDAY_JAN2_JAN8;
                 $this->Ascension        = Ascension::SUNDAY;
                 $this->CorpusChristi    = CorpusChristi::SUNDAY;
-                $this->LOCALE           = LitLocale::EN;
+                $this->LOCALE           = LitLocale::ENGLISH;
                 break;
         }
     }
 
     public function setMetaData( array $MetaData ) {
         $this->MetaData = $MetaData;
-        if( $this->DIOCESAN !== null ) {
-            $this->NATIONAL = $this->MetaData[$this->DIOCESAN]["nation"];
+        if( $this->DiocesanCalendar !== null ) {
+            $this->NationalCalendar = $this->MetaData[$this->DiocesanCalendar]["nation"];
             $this->updateSettingsByNation();
         }
     }
