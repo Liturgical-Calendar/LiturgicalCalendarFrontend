@@ -236,6 +236,26 @@ $DioceseGroupHelp = _( "If a group of dioceses decides to pool their Liturgical 
             break;
         }
     }
+
+$messages = [
+    "Name"              => _( "Name" ),
+    "Day"               => _( "Day" ),
+    "Month"             => _( "Month" ),
+    "Other Solemnity"   => _( "Other Solemnity" ),
+    "Other Feast"       => _( "Other Feast" ),
+    "Other Memorial"    => _( "Other Memorial" ),
+    "Other Optional Memorial"   => _( "Other Optional Memorial" ),
+    "commonsTemplate"   => $FormControls->getCommonsTemplate(),
+    "Delete diocesan calendar" => _( "Delete diocesan calendar" ),
+    "If you choose"     => _( "If you choose to delete this diocesan calendar, the liturgical events defined for the calendar and the corresponding index entry will be removed and no longer available in the client applications." ),
+    "Liturgical color"  => _( "Liturgical color" ),
+    "white"             => _( "white" ),
+    "red"               => _( "red" ),
+    "green"             => _( "green" ),
+    "purple"            => _( "purple" ),
+    "Since"             => _( "Since" ),
+    "LOCALE"            => $i18n->LOCALE
+];
 ?>
 <script>
 const messages = <?php echo json_encode($messages); ?>;

@@ -119,10 +119,6 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
             </div>
         </div>
 
-<script>
-const messages = <?php echo json_encode($i18n->messages); ?>;
-</script>
-
 <?php include_once('layout/footer.php'); ?>
 
 </body>

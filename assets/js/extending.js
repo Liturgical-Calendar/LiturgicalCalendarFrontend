@@ -1,3 +1,21 @@
+String.prototype.formatUnicorn = String.prototype.formatUnicorn ||
+function () {
+    "use strict";
+    var str = this.toString();
+    if (arguments.length) {
+        let t = typeof arguments[0];
+        let key;
+        let args = ("string" === t || "number" === t) ?
+            Array.prototype.slice.call(arguments)
+            : arguments[0];
+
+        for (const key in args) {
+            str = str.replace(new RegExp("\\{" + key + "\\}", "gi"), args[key]);
+        }
+    }
+
+    return str;
+};
 
 const isStaging = location.hostname.includes( '-staging' );
 const endpointV = isStaging ? 'dev' : 'v3';
@@ -352,7 +370,7 @@ jQuery.ajax({
     }
 });
 
-const { LITCAL_LOCALE, __, COUNTRIES } = i18n;
+const {LOCALE } = messages;
 
 class FormControls {
     static uniqid = 0;
@@ -369,30 +387,30 @@ class FormControls {
         let formRow = '';
 
         if (title !== null) {
-            formRow += `<h4>${__(title)}</h4>`;
+            formRow += `<h4>${title}</h4>`;
         }
 
         formRow += `<div class="form-row">`;
 
         if (FormControls.settings.nameField) {
             formRow += `<div class="form-group col-sm-3">
-            <label for="onTheFly${FormControls.uniqid}Name">${__("Name")}</label><input type="text" class="form-control litEvent litEventName" id="onTheFly${FormControls.uniqid}Name" data-valuewas="" />
+            <label for="onTheFly${FormControls.uniqid}Name">${messages[ "Name" ]}</label><input type="text" class="form-control litEvent litEventName" id="onTheFly${FormControls.uniqid}Name" data-valuewas="" />
             <div class="invalid-feedback">This same celebration was already defined elsewhere. Please remove it first where it is defined, then you can define it here.</div>
             </div>`;
         }
 
         if (FormControls.settings.dayField) {
             formRow += `<div class="form-group col-sm-1">
-            <label for="onTheFly${FormControls.uniqid}Day">${__("Day")}</label><input type="number" min="1" max="31" value="1" class="form-control litEvent litEventDay" id="onTheFly${FormControls.uniqid}Day" />
+            <label for="onTheFly${FormControls.uniqid}Day">${messages[ "Day" ]}</label><input type="number" min="1" max="31" value="1" class="form-control litEvent litEventDay" id="onTheFly${FormControls.uniqid}Day" />
             </div>`;
         }
 
         if (FormControls.settings.monthField) {
             formRow += `<div class="form-group col-sm-2">
-            <label for="onTheFly${FormControls.uniqid}Month">${__("Month")}</label>
+            <label for="onTheFly${FormControls.uniqid}Month">${messages[ "Month" ]}</label>
             <select class="form-control litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month">`;
 
-            let formatter = new Intl.DateTimeFormat(LITCAL_LOCALE, { month: 'long' });
+            let formatter = new Intl.DateTimeFormat(LOCALE, { month: 'long' });
             for (let i = 0; i < 12; i++) {
                 let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
                 formRow += `<option value=${i + 1}>${formatter.format(month)}</option>`;
@@ -403,62 +421,24 @@ class FormControls {
         }
 
         if (FormControls.settings.properField) {
-            formRow += `<div class="form-group col-sm-3">
-            <label style="display:block;" for="onTheFly${FormControls.uniqid}Proper">${__("Common (or Proper)")}</label>
-            <select class="form-control litEvent litEventProper" id="{$uniqid}Proper" multiple="multiple" />
-            <option value="Proper" selected>${__("Proper")}</option>
-            <option value="Blessed Virgin Mary">${__("Common of the Blessed Virgin Mary")}</option>
-            <option value="Martyrs">${__("Common of Martyrs")}</option>
-            <option value="Martyrs:For One Martyr">${__("Common of Martyrs: For One Martyr")}</option>
-            <option value="Martyrs:For Several Martyrs">${__("Common of Martyrs: For Several Martyrs")}</option>
-            <option value="Martyrs:For Missionary Martyrs">${__("Common of Martyrs: For Missionary Martyrs")}</option>
-            <option value="Martyrs:For One Missionary Martyr">${__("Common of Martyrs: For One Missionary Martyr")}</option>
-            <option value="Martyrs:For Several Missionary Martyrs">${__("Common of Martyrs: For Several Missionary Martyrs")}</option>
-            <option value="Martyrs:For a Virgin Martyr">${__("Common of Martyrs: For a Virgin Martyr")}</option>
-            <option value="Martyrs:For a Holy Woman Martyr">${__("Common of Martyrs: For a Holy Woman Martyr")}</option>
-            <option value="Pastors">${__("Common of Pastors")}</option>
-            <option value="Pastors:For a Pope">${__("Common of Pastors: For a Pope")}</option>
-            <option value="Pastors:For a Bishop">${__("Common of Pastors: For a Bishop")}</option>
-            <option value="Pastors:For One Pastor">${__("Common of Pastors: For One Pastor")}</option>
-            <option value="Pastors:For Several Pastors">${__("Common of Pastors: For Several Pastors")}</option>
-            <option value="Pastors:Missionaries">${__("Common of Pastors: For Missionaries")}</option>
-            <option value="Pastors:For Founders of a Church">${__("Common of Pastors: For Founders of a Church")}</option>
-            <option value="Pastors:For Several Founders">${__("Common of Pastors: For Several Founders")}</option>
-            <option value="Pastors:For One Founder">${__("Common of Pastors: For One Founder")}</option>
-            <option value="Doctors">${__("Common of Doctors")}</option>
-            <option value="Virgins">${__("Common of Virgins")}</option>
-            <option value="Virgins:For One Virgin">${__("Common of Virgins: For One Virgin")}</option>
-            <option value="Virgins:For Several Virgins">${__("Common of Virgins: For Several Virgins")}</option>
-            <option value="Holy Men and Women">${__("Common of Holy Men and Women")}</option>
-            <option value="Holy Men and Women:For One Saint">${__("Common of Holy Men and Women: For One Saint")}</option>
-            <option value="Holy Men and Women:For Several Saints">${__("Common of Holy Men and Women: For Several Saints")}</option>
-            <option value="Holy Men and Women:For Religious">${__("Common of Holy Men and Women: For Religious")}</option>
-            <option value="Holy Men and Women:For an Abbot">${__("Common of Holy Men and Women: For an Abbot")}</option>
-            <option value="Holy Men and Women:For a Monk">${__("Common of Holy Men and Women: For a Monk")}</option>
-            <option value="Holy Men and Women:For a Nun">${__("Common of Holy Men and Women: For a Nun")}</option>
-            <option value="Holy Men and Women:For Educators">${__("Common of Holy Men and Women: For Educators")}</option>
-            <option value="Holy Men and Women:For Holy Women">${__("Common of Holy Men and Women: For Holy Women")}</option>
-            <option value="Holy Men and Women:For Those Who Practiced Works of Mercy">${__("Common of Holy Men and Women: For Those Who Practiced Works of Mercy")}</option>
-            <option value="Dedication of a Church">${__("Common of the Dedication of a Church")}</option>
-            </select>
-            </div>`;
+            formRow += messages.commonsTemplate.formatUnicorn({uniqid:FormControls.uniqid});
         }
 
         if (FormControls.settings.colorField) {
             formRow += `<div class="form-group col-sm-2">
-            <label for="onTheFly${FormControls.uniqid}Color">${__("Liturgical color")}</label>
+            <label for="onTheFly${FormControls.uniqid}Color">${messages[ "Liturgical color" ]}</label>
             <select class="form-control litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple" />
-            <option value="white" selected>${__("white").toUpperCase()}</option>
-            <option value="red">${__("red").toUpperCase()}</option>
-            <option value="purple">${__("purple").toUpperCase()}</option>
-            <option value="green">${__("green").toUpperCase()}</option>
+            <option value="white" selected>${messages[ "white" ].toUpperCase()}</option>
+            <option value="red">${messages[ "red" ].toUpperCase()}</option>
+            <option value="purple">${messages[ "purple" ].toUpperCase()}</option>
+            <option value="green">${messages[ "green" ].toUpperCase()}</option>
             </select>
             </div>`;
         }
 
         if (FormControls.settings.fromYearField) {
             formRow += `<div class="form-group col-sm-1">
-            <label for="onTheFly${FormControls.uniqid}FromYear">${__("Since")}</label>
+            <label for="onTheFly${FormControls.uniqid}FromYear">${messages[ "Since" ]}</label>
             <input type="number" min="1970" max="9999" class="form-control litEvent litEventFromYear" id="onTheFly${FormControls.uniqid}FromYear" value="1970" />
             </div>`;
         }
@@ -719,7 +699,7 @@ $(document).on('click', '#retrieveExistingDiocesanData', evt => {
                         if (litevent.formRowNum > numLastRow) {
                             numMissingRows = litevent.formRowNum - numLastRow;
                             while (numMissingRows-- > 0) {
-                                $form.append($(FormControls.CreateFestivityRow('Other Solemnity')));
+                                $form.append($(FormControls.CreateFestivityRow(messages['Other Solemnity'])));
                             }
                         }
                         $row = $('#carouselItemSolemnities form .form-row').eq(litevent.formRowNum);
@@ -729,7 +709,7 @@ $(document).on('click', '#retrieveExistingDiocesanData', evt => {
                         if (litevent.formRowNum > numLastRow) {
                             numMissingRows = litevent.formRowNum - numLastRow;
                             while (numMissingRows-- > 0) {
-                                $('.carousel-item').eq(1).find('form').append($(FormControls.CreateFestivityRow('Other Feast')));
+                                $('.carousel-item').eq(1).find('form').append($(FormControls.CreateFestivityRow(messages['Other Feast'])));
                             }
                         }
                         $row = $('#carouselItemFeasts form .form-row').eq(litevent.formRowNum);
@@ -739,7 +719,7 @@ $(document).on('click', '#retrieveExistingDiocesanData', evt => {
                         if (litevent.formRowNum > numLastRow) {
                             numMissingRows = litevent.formRowNum - numLastRow;
                             while (numMissingRows-- > 0) {
-                                $('.carousel-item').eq(2).find('form').append($(FormControls.CreateFestivityRow('Other Memorial')));
+                                $('.carousel-item').eq(2).find('form').append($(FormControls.CreateFestivityRow(messages['Other Memorial'])));
                             }
                         }
                         $row = $('#carouselItemMemorials form .form-row').eq(litevent.formRowNum);
@@ -749,7 +729,7 @@ $(document).on('click', '#retrieveExistingDiocesanData', evt => {
                         if (litevent.formRowNum > numLastRow) {
                             numMissingRows = litevent.formRowNum - numLastRow;
                             while (numMissingRows-- > 0) {
-                                $('.carousel-item').eq(3).find('form').append($(FormControls.CreateFestivityRow('Other Optional Memorial')));
+                                $('.carousel-item').eq(3).find('form').append($(FormControls.CreateFestivityRow(messages['Other Optional Memorial'])));
                             }
                         }
                         $row = $('#carouselItemOptionalMemorials form .form-row').eq(litevent.formRowNum);
@@ -793,19 +773,19 @@ $(document).on('click', '.onTheFlyEventRow', ev => {
     let $row;
     switch (ev.currentTarget.id) {
         case "addSolemnity":
-            $row = $(FormControls.CreateFestivityRow('Other Solemnity'));
+            $row = $(FormControls.CreateFestivityRow(messages['Other Solemnity']));
             $('.carousel-item').first().find('form').append($row);
             break;
         case "addFeast":
-            $row = $(FormControls.CreateFestivityRow('Other Feast'));
+            $row = $(FormControls.CreateFestivityRow(messages['Other Feast']));
             $('.carousel-item').eq(1).find('form').append($row);
             break;
         case "addMemorial":
-            $row = $(FormControls.CreateFestivityRow('Other Memorial'));
+            $row = $(FormControls.CreateFestivityRow(messages['Other Memorial']));
             $('.carousel-item').eq(2).find('form').append($row);
             break;
         case "addOptionalMemorial":
-            $row = $(FormControls.CreateFestivityRow('Other Optional Memorial'));
+            $row = $(FormControls.CreateFestivityRow(messages['Other Optional Memorial']));
             $('.carousel-item').eq(3).find('form').append($row);
             break;
     }
@@ -836,10 +816,10 @@ let removeDiocesanCalendarModal = diocese => {
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="removeDiocesanCalendarModalLabel">${__("Delete diocesan calendar")} ${diocese}?</h5>
+        <h5 class="modal-title" id="removeDiocesanCalendarModalLabel">${messages[ "Delete diocesan calendar" ]} ${diocese}?</h5>
       </div>
       <div class="modal-body">
-        ${__("If you choose to delete this diocesan calendar, the liturgical events defined for the calendar and the corresponding index entry will be removed and no longer available in the client applications.")}
+        ${messages[ "If you choose" ]}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
