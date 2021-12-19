@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-19 14:38+0100\n"
-"PO-Revision-Date: 2021-12-19 13:39+0000\n"
+"PO-Revision-Date: 2021-12-19 14:03+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pt/>\n"
@@ -221,6 +221,9 @@ msgid ""
 "Diocesan calendar. Diocesan calendars depend on National calendars, so the "
 "National calendar must first be created."
 msgstr ""
+"O calendário romano geral pode ser ampliado para criar um calendário "
+"nacional ou diocesano. Os calendários diocesanos dependem dos calendários "
+"nacionais, portanto, o calendário nacional deve primeiro ser criado."
 
 #: extending.php:242
 msgid ""
@@ -228,6 +231,9 @@ msgid ""
 "Roman Missal used in the Region or in any case from decrees of the Episcopal "
 "Conference of the Region."
 msgstr ""
+"Os calendários nacionais devem ser definidos a partir de dados da tradução "
+"do Missal Romano usado na Região ou em qualquer caso de decretos da "
+"Conferência Episcopal da Região."
 
 #: extending.php:243
 msgid ""
@@ -246,11 +252,11 @@ msgstr "Amplie o calendário romano geral com dados nacionais ou diocesanos"
 
 #: extending.php:270
 msgid "Generate National Calendar"
-msgstr ""
+msgstr "Gera calendário nacional"
 
 #: extending.php:287
 msgid "Depends on national calendar"
-msgstr ""
+msgstr "Depende do calendário nacional"
 
 #: extending.php:295
 msgid "Diocese"
@@ -295,7 +301,7 @@ msgstr ""
 
 #: extending.php:343 extending.php:364 extending.php:385 extending.php:406
 msgid "Generate Diocesan Calendar"
-msgstr ""
+msgstr "Gera calendário diocesano"
 
 #: extending.php:343
 msgid "Define the Solemnities"
