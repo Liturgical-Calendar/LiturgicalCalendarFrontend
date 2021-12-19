@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-19 14:14+0100\n"
-"PO-Revision-Date: 2021-12-19 12:56+0000\n"
+"PO-Revision-Date: 2021-12-19 13:29+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
@@ -170,10 +170,13 @@ msgid ""
 "Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
 "for Catholic IT Professionals"
 msgstr ""
+"Sviluppatore software con sede a St. Paul, MN (USA), Co-Fondatore presso "
+"JobPost, Ingegnere Informatico presso Agile Orbit, Fondatore della Gilda di "
+"Sant'Isidoro per Professionisti IT Cattolici"
 
 #: about.php:69
 msgid "Full stack web developer"
-msgstr ""
+msgstr "Sviluppatore web full stack"
 
 #: about.php:73
 msgid ""
