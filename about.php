@@ -56,17 +56,17 @@ $DONJOHN_B = _( 'Priest in the Diocese of Rome, self-taught programmer, author o
 $DONJOHN = $DONJOHN_A . $DONJOHN_B;
 
 $MIKETRUSO_A = sprintf( $formatStr,
-    'https://www.johnromanodorazio.com',
-    'John Romano D\'Orazio'
+    'https://www.miketruso.com/',
+    'Mike Truso'
 );
-$MIKETRUSO_B = _( 'Priest in the Diocese of Rome, self-taught programmer, author of the BibleGet Project' );
+$MIKETRUSO_B = _( 'Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild for Catholic IT Professionals' );
 $MIKETRUSO = $MIKETRUSO_A . $MIKETRUSO_B;
 
 $MICHAELSHELTON_A = sprintf( $formatStr,
-    'https://www.johnromanodorazio.com',
-    'John Romano D\'Orazio'
+    'https://www.linkedin.com/in/michaelrshelton/',
+    'Michael Shelton'
 );
-$MICHAELSHELTON_B = _( 'Priest in the Diocese of Rome, self-taught programmer, author of the BibleGet Project' );
+$MICHAELSHELTON_B = _( 'Full stack web developer' );
 $MICHAELSHELTON = $MICHAELSHELTON_A . $MICHAELSHELTON_B;
 
 
