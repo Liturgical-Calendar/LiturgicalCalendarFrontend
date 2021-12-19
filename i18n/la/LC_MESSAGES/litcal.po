@@ -1,0 +1,591 @@
+# Latin translations for PACKAGE package.
+# Copyright (C) 2021 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Ubuntu <priest@johnromanodorazio.com>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-12-19 05:46+0100\n"
+"PO-Revision-Date: 2021-12-19 05:52+0100\n"
+"Last-Translator: Ubuntu <priest@johnromanodorazio.com>\n"
+"Language-Team: Latin\n"
+"Language: la\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ASCII\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: easter.php:58
+msgid "Date of Easter from 1583 to 9999"
+msgstr ""
+
+#: easter.php:75
+msgid "Go back"
+msgstr ""
+
+#: easter.php:89
+msgid "Century"
+msgstr ""
+
+#: easter.php:96
+msgid ""
+"Easter Day Calculation in PHP (Years in which Julian and Gregorian easter "
+"coincide are marked in yellow)"
+msgstr ""
+
+#: easter.php:100
+msgid "Gregorian Easter"
+msgstr ""
+
+#: easter.php:100
+msgid "Julian Easter"
+msgstr ""
+
+#: easter.php:100
+msgid "Julian Easter in Gregorian Calendar"
+msgstr ""
+
+#: index.php:131 usage.php:44
+msgid "General Roman Calendar"
+msgstr ""
+
+#: index.php:139 layout/header.php:21
+msgid "Catholic Liturgical Calendar"
+msgstr ""
+
+#: index.php:146 index.php:213
+msgid "API Endpoint"
+msgstr ""
+
+#: index.php:149
+msgid "API_DESCRIPTION"
+msgstr ""
+
+#: index.php:152
+msgid "Calendar to retrieve from the API"
+msgstr ""
+
+#: index.php:171
+msgid "Liturgical Calendar API endpoint"
+msgstr ""
+
+#: index.php:191 index.php:224
+msgid "Calculation of the Date of Easter"
+msgstr ""
+
+#: index.php:194
+msgid ""
+"A simple API endpoint that returns data about the Date of Easter, both "
+"Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
+"Calendar) to 9999 (maximum possible date calculation in 64bit PHP), using a "
+"PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian easter "
+"(observed by the Roman Catholic church) and of the Meeus algorithm for "
+"Julian easter (observed by orthodox churches)"
+msgstr ""
+
+#: index.php:199
+msgid "Date of Easter API endpoint"
+msgstr ""
+
+#: index.php:213
+msgid "Definition"
+msgstr ""
+
+#: index.php:227
+msgid "Example display of the date of Easter from 1583 to 9999"
+msgstr ""
+
+#: index.php:228
+msgid "Calculate the Date of Easter"
+msgstr ""
+
+#: about.php:55 about.php:62 about.php:69
+msgid ""
+"Priest in the Diocese of Rome, self-taught programmer, author of the "
+"BibleGet Project"
+msgstr ""
+
+#: about.php:73
+msgid ""
+"The Liturgical Calendar project is curated by a group of volunteer catholic "
+"programmers, seeking to serve the Church."
+msgstr ""
+
+#: about.php:79 about.php:87
+msgid "Liturgical Calendar - About us"
+msgstr ""
+
+#: about.php:153
+msgid "ANOTHERVOLUNTEER"
+msgstr ""
+
+#: usage.php:37
+msgid ""
+"A Liturgical Calendar API from which you can retrieve data for the "
+"Liturgical events of any given year from 1970 onwards, whether for the "
+"Universal or General Roman Calendar or for derived National and Diocesan "
+"calendars"
+msgstr ""
+
+#: usage.php:52
+msgid "EXAMPLE USAGE OF THE API"
+msgstr ""
+
+#: usage.php:62
+msgid "HTML presentation elaborated by PHP using a CURL request"
+msgstr ""
+
+#: usage.php:63
+msgid "View PHP Example"
+msgstr ""
+
+#: usage.php:74
+msgid "HTML presentation elaborated by JAVASCRIPT using an AJAX request"
+msgstr ""
+
+#: usage.php:75
+msgid "View JavaScript Example"
+msgstr ""
+
+#: usage.php:83
+msgid "Calendar"
+msgstr ""
+
+#: usage.php:86
+msgid ""
+"Fullcalendar representation elaborated by JAVASCRIPT using an AJAX request"
+msgstr ""
+
+#: usage.php:87
+msgid "View Full Calendar"
+msgstr ""
+
+#: usage.php:88
+msgid "View Full Calendar (messages first)"
+msgstr ""
+
+#: extending.php:261
+msgid ""
+"The General Roman Calendar can be extended so as to create a National or "
+"Diocesan calendar. Diocesan calendars depend on National calendars, so the "
+"National calendar must first be created.</p><p>National calendars must be "
+"defined using data from the translation of the Roman Missal used in the "
+"Region or in any case from decrees of the Episcopal Conference of the Region."
+msgstr ""
+
+#: extending.php:268
+msgid "General Roman Calendar - Extending"
+msgstr ""
+
+#: extending.php:276
+msgid "Extend the General Roman Calendar with National or Diocesan data"
+msgstr ""
+
+#: extending.php:286
+msgid "Generate National Calendar"
+msgstr ""
+
+#: extending.php:303
+msgid "Depends on national calendar"
+msgstr ""
+
+#: extending.php:311
+msgid "Diocese"
+msgstr ""
+
+#: extending.php:313
+msgid ""
+"This diocese does not seem to exist? Please choose from a value in the list."
+msgstr ""
+
+#: extending.php:317
+msgid "Retrieve existing data"
+msgstr ""
+
+#: extending.php:318
+msgid "Remove existing data"
+msgstr ""
+
+#: extending.php:321
+msgid "Diocesan group"
+msgstr ""
+
+#: extending.php:323
+msgid "DioceseGroupHelp"
+msgstr ""
+
+#: extending.php:326
+msgid "Overwrites universal / national calendar"
+msgstr ""
+
+#: extending.php:337
+msgid "Solemnities"
+msgstr ""
+
+#: extending.php:338
+msgid "Feasts"
+msgstr ""
+
+#: extending.php:339
+msgid "Memorials"
+msgstr ""
+
+#: extending.php:340
+msgid "Optional memorials"
+msgstr ""
+
+#: extending.php:359 extending.php:380 extending.php:401 extending.php:422
+msgid "Generate Diocesan Calendar"
+msgstr ""
+
+#: extending.php:359
+msgid "Define the Solemnities"
+msgstr ""
+
+#: extending.php:365
+msgid ""
+"Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
+msgstr ""
+
+#: extending.php:366 extending.php:387
+msgid "Dedication of the Cathedral"
+msgstr ""
+
+#: extending.php:367
+msgid "Other Solemnity"
+msgstr ""
+
+#: extending.php:380
+msgid "Define the Feasts"
+msgstr ""
+
+#: extending.php:386
+msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
+msgstr ""
+
+#: extending.php:388
+msgid "Other Feast"
+msgstr ""
+
+#: extending.php:401
+msgid "Define the Memorials"
+msgstr ""
+
+#: extending.php:407
+msgid ""
+"Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
+msgstr ""
+
+#: extending.php:408 extending.php:409
+msgid "Other Memorial"
+msgstr ""
+
+#: extending.php:422
+msgid "Define the Optional Memorials"
+msgstr ""
+
+#: extending.php:428
+msgid ""
+"Saints whos veneration is local to the Place, Diocese, Region, Province or "
+"Territory"
+msgstr ""
+
+#: extending.php:429 extending.php:430
+msgid "Other Optional Memorial"
+msgstr ""
+
+#: extending.php:452
+msgid "SAVE DIOCESAN CALENDAR"
+msgstr ""
+
+#: includes/LitCommon.php:56
+msgid "Proper"
+msgstr ""
+
+#. translators: context = from the Common of nn
+#: includes/LitCommon.php:58
+msgid "Dedication of a Church"
+msgstr ""
+
+#. translators: context = from the Common of nn
+#: includes/LitCommon.php:60
+msgid "Blessed Virgin Mary"
+msgstr ""
+
+#. translators: context = from the Common of nn
+#: includes/LitCommon.php:62
+msgid "Martyrs"
+msgstr ""
+
+#. translators: context = from the Common of nn
+#: includes/LitCommon.php:64
+msgid "Pastors"
+msgstr ""
+
+#. translators: context = from the Common of nn
+#: includes/LitCommon.php:66
+msgid "Doctors"
+msgstr ""
+
+#. translators: context = from the Common of nn
+#: includes/LitCommon.php:68
+msgid "Virgins"
+msgstr ""
+
+#. translators: context = from the Common of nn
+#: includes/LitCommon.php:70
+msgid "Holy Men and Women"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:73
+msgid "For One Martyr"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:75
+msgid "For Several Martyrs"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:77
+msgid "For Missionary Martyrs"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:79
+msgid "For One Missionary Martyr"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:81
+msgid "For Several Missionary Martyrs"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:83
+msgid "For a Virgin Martyr"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:85
+msgid "For a Holy Woman Martyr"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:87
+msgid "For a Pope"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:89
+msgid "For a Bishop"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:91
+msgid "For One Pastor"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:93
+msgid "For Several Pastors"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:95
+msgid "For Founders of a Church"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:97
+msgid "For One Founder"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:99
+msgid "For Several Founders"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:101
+msgid "For Missionaries"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:103
+msgid "For One Virgin"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:105
+msgid "For Several Virgins"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:107
+msgid "For Several Saints"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:109
+msgid "For One Saint"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:111
+msgid "For an Abbot"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:113
+msgid "For a Monk"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:115
+msgid "For a Nun"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:117
+msgid "For Religious"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:119
+msgid "For Those Who Practiced Works of Mercy"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:121
+msgid "For Educators"
+msgstr ""
+
+#. translators: context = from the Common of nn: nn
+#: includes/LitCommon.php:123
+msgid "For Holy Women"
+msgstr ""
+
+#. translators: (singular feminine) glue between "From the Common" and the actual common. Latin: leave empty!
+#: includes/LitCommon.php:170 includes/LitCommon.php:182
+msgctxt "(SING_FEMM)"
+msgid "of"
+msgstr ""
+
+#. translators: (plural feminine) glue between "From the Common" and the actual common. Latin: leave empty!
+#: includes/LitCommon.php:173
+msgctxt "(PLUR_FEMM)"
+msgid "of"
+msgstr ""
+
+#. translators: (plural masculine) glue between "From the Common" and the actual common. Latin: leave empty!
+#: includes/LitCommon.php:179
+msgctxt "(PLUR_MASC)"
+msgid "of"
+msgstr ""
+
+#. translators: (singular masculine) glue between "From the Common" and the actual common. Latin: leave empty!
+#: includes/LitCommon.php:185
+msgctxt "(SING_MASC)"
+msgid "of"
+msgstr ""
+
+#: includes/LitCommon.php:266
+msgid "From the Common"
+msgstr ""
+
+#. translators: when there are multiple possible commons, this will be the glue "or from the common of..."
+#: includes/LitCommon.php:270
+msgid "or"
+msgstr ""
+
+#. translators: context = liturgical color
+#: includes/LitColor.php:23 layout/formcontrols.php:117
+msgid "green"
+msgstr ""
+
+#. translators: context = liturgical color
+#: includes/LitColor.php:26 layout/formcontrols.php:116
+msgid "purple"
+msgstr ""
+
+#. translators: context = liturgical color
+#: includes/LitColor.php:29 layout/formcontrols.php:114
+msgid "white"
+msgstr ""
+
+#. translators: context = liturgical color
+#: includes/LitColor.php:32 layout/formcontrols.php:115
+msgid "red"
+msgstr ""
+
+#. translators: context = liturgical color
+#: includes/LitColor.php:35
+msgid "pink"
+msgstr ""
+
+#: layout/header.php:34
+msgid "Home"
+msgstr ""
+
+#: layout/header.php:46
+msgid "Scripts"
+msgstr ""
+
+#: layout/header.php:53
+msgid "API endpoint"
+msgstr ""
+
+#: layout/header.php:59
+msgid "Swagger / Open API Docs"
+msgstr ""
+
+#: layout/header.php:65
+msgid "Date of Easter"
+msgstr ""
+
+#: layout/header.php:131
+msgid "Usage"
+msgstr ""
+
+#: layout/header.php:133
+msgid "Extending the API"
+msgstr ""
+
+#: layout/header.php:135
+msgid "Create a National Calendar"
+msgstr ""
+
+#: layout/header.php:136
+msgid "Create a Diocesan Calendar"
+msgstr ""
+
+#: layout/header.php:139
+msgid "About us"
+msgstr ""
+
+#: layout/formcontrols.php:38
+msgid "Name"
+msgstr ""
+
+#: layout/formcontrols.php:45
+msgid "Day"
+msgstr ""
+
+#: layout/formcontrols.php:51
+msgid "Month"
+msgstr ""
+
+#: layout/formcontrols.php:66
+msgid "Common (or Proper)"
+msgstr ""
+
+#: layout/formcontrols.php:112
+msgid "Liturgical color"
+msgstr ""
+
+#: layout/formcontrols.php:124
+msgid "Since"
+msgstr ""
