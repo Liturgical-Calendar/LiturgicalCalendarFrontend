@@ -57,7 +57,7 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                             </div>
                         </div>
                         <div class="text-center"><a id="RequestURLButton" href="<?php echo $endpointURL; ?>" class="btn btn-primary m-2"><?php echo _( "Liturgical Calendar API endpoint"); ?></a></div>
-                        <p><?php _( "If a national or diocesan calendar is requested, these calendars will automatically set the specific options in the API request. " .
+                        <p><?php echo _( "If a national or diocesan calendar is requested, these calendars will automatically set the specific options in the API request. " .
                             "If instead no national or diocesan calendar is requested (i.e. the Universal Calendar is requested) then the more specific options can be requested:" ); ?></p>
                         <div class="form-row">
                             <div class="form-group col-sm-3"><label>epiphany</label><select id="RequestOptionEpiphany" class="form-control requestOption"><option value="">--</option><option value="SUNDAY_JAN2_JAN8">SUNDAY_JAN2_JAN8</option><option value="JAN6">JAN6</option></select></div>
@@ -66,7 +66,7 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                             <div class="form-group col-sm-3"><label>locale</label><select id="RequestOptionLocale" class="form-control requestOption"><option value="">--</option><option value="EN">English</option><option value="IT">Italian</option><option value="LA">Latin</option></select></div>
                         </div>
                         <small class="text-muted">
-                            <p><i><?php _( "URL for the API request based on selected options (the above button is set to this URL)" ); ?>:</i></p>
+                            <p><i><?php echo _( "URL for the API request based on selected options (the above button is set to this URL)" ); ?>:</i></p>
                             <div id="RequestURLExampleWrapper"><code id="RequestURLExample"><?php echo $endpointURL; ?></code></div>
                         </small>
                     </div>
@@ -86,7 +86,7 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                         <p><?php echo $EASTER_CALCULATOR_API; ?></p>
                         <div class="text-center"><a href="<?php echo $dateOfEasterURL ?>" class="btn btn-primary m-2"><?php echo _( "Date of Easter API endpoint"); ?></a></div>
                         <small class="text-muted">
-                            <i><?php _( "Currently the data can be requested with almost any localization. " .
+                            <i><?php echo _( "Currently the data can be requested with almost any localization. " .
                             "In any case, since the API returns a UNIX timestamp for each date of Easter, localizations can be done in a client application just as well." ); ?></i>
                         </small>
                     </div>
