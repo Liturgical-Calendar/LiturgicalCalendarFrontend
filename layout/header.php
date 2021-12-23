@@ -6,6 +6,7 @@ $stagingURL = $isStaging ? "-staging" : "";
 $endpointV = $isStaging ? "dev" : "v3";
 $endpointURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalEngine.php";
 $metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMetadata.php";
+$dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOfEaster.php";
 
 ?>
 
@@ -28,7 +29,7 @@ $metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMeta
         </li>
 
         <!-- Nav Item - Dashboard -->
-        <li class="nav-item active">
+        <li class="nav-item<?php echo $currentPage === "index" || $currentPage === "" ? " active" : "" ?>">
             <a class="nav-link" href="/">
                 <i class="fas fa-fw fa-cross"></i>
                 <span><?php echo _( "Home" ); ?></span>
@@ -42,7 +43,7 @@ $metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMeta
 
         <!-- Heading -->
         <li>
-            <div class="sidebar-heading">
+            <div class="sidebar-heading<?php echo $currentPage === "index" || $currentPage === "" ? " text-white" : "" ?>">
             <?php echo _( "Scripts" ); ?>
             </div>
         </li>
@@ -60,9 +61,9 @@ $metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMeta
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" href="/easter.php">
+            <a class="nav-link" href="<?php echo $dateOfEasterURL ?>">
                 <i class="fas fa-fw fa-folder"></i>
-                <span><?php echo _( "Date of Easter" ); ?></span></a>
+                <span><?php echo _( "Date of Easter API" ); ?></span></a>
         </li>
 
         <!-- Divider -->
@@ -72,7 +73,7 @@ $metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMeta
 
         <!-- Heading -->
         <li>
-            <div class="sidebar-heading">
+            <div class="sidebar-heading<?php echo $currentPage === "usage" ? " text-white" : "" ?>">
                 <?php echo _( "Examples" ); ?>
             </div>
         </li>
@@ -96,6 +97,34 @@ $metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMeta
             <a class="nav-link" href="/examples/fullcalendar/examples/messages.html">
                 <i class="fas fa-fw fa-folder"></i>
                 <span><?php echo _( "Full Calendar (messages first)" ); ?></span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/easter.php">
+                <i class="fas fa-fw fa-folder"></i>
+                <span><?php echo _( "Dates of Easter" ); ?></span></a>
+        </li>
+
+        <!-- Divider -->
+        <li>
+            <hr class="sidebar-divider d-none d-md-block" />
+        </li>
+
+        <!-- Heading -->
+        <li>
+            <div class="sidebar-heading<?php echo $currentPage === "extending" ? " text-white" : "" ?>">
+                <?php echo _( "Extending the API" ); ?>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/extending.php?choice=national">
+                <i class="fas fa-fw fa-folder<?php echo $currentPage === "extending" && $_GET["choice"] === "national" ? " text-white" : "" ?>"></i>
+                <span class="<?php echo $currentPage === "extending" && $_GET["choice"] === "national" ? "text-white" : "" ?>"><?php echo _("National Calendar") ?></span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/extending.php?choice=diocesan">
+                <i class="fas fa-fw fa-folder<?php echo $currentPage === "extending" && $_GET["choice"] === "diocesan" ? " text-white" : "" ?>"></i>
+                <span class="<?php echo $currentPage === "extending" && $_GET["choice"] === "diocesan" ? "text-white" : "" ?>"><?php echo _("Diocesan Calendar") ?></span></a>
         </li>
 
         <!-- Divider -->
@@ -132,8 +161,8 @@ $metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMeta
                     <li class="nav-item dropdown<?php echo $currentPage=="extending" ? " active" : ""; ?>" id="topNavBar_Extending">
                         <a class="nav-link dropdown-toggle<?php echo $currentPage=="extending" ? " font-weight-bold" : ""; ?>" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="extendingChoicesDropdown"><?php echo _( "Extending the API" ); ?></a>
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="extendingChoicesDropdown" id="extendingChoicesDropdownItems">
-                            <a class="dropdown-item<?php echo isset($_GET["choice"]) && $_GET["choice"]=="national"?" active":"" ?>" id="extendingChoiceNationalCalendar" href="./extending.php?choice=national"><?php echo _( "Create a National Calendar" ); ?></a>
-                            <a class="dropdown-item<?php echo isset($_GET["choice"]) && $_GET["choice"]=="diocesan"?" active":"" ?>" id="extendingChoiceDiocesanCalendar" href="./extending.php?choice=diocesan"><?php echo _( "Create a Diocesan Calendar" ); ?></a>
+                            <a class="dropdown-item<?php echo isset($_GET["choice"]) && $_GET["choice"]==="national"?" active":"" ?>" id="extendingChoiceNationalCalendar" href="./extending.php?choice=national"><?php echo _( "Create a National Calendar" ); ?></a>
+                            <a class="dropdown-item<?php echo isset($_GET["choice"]) && $_GET["choice"]==="diocesan"?" active":"" ?>" id="extendingChoiceDiocesanCalendar" href="./extending.php?choice=diocesan"><?php echo _( "Create a Diocesan Calendar" ); ?></a>
                         </div>
                     </li>
                     <li class="nav-item<?php echo $currentPage=="about" ? " active" : ""; ?>" id="topNavBar_AboutUs"><a class="nav-link<?php echo $currentPage=="about" ? " font-weight-bold" : ""; ?>" href="./about.php"><?php echo _( "About us" ); ?></a></li>
@@ -145,13 +174,13 @@ $metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMeta
                           English
                         </a>
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="langChoicesDropdown" id="langChoicesDropdownItems">
-                          <a class="dropdown-item<?php echo $i18n->LOCALE=="en" ? " active" : "" ?>" id="langChoiceEnglish" href="#">English</a>
-                          <a class="dropdown-item<?php echo $i18n->LOCALE=="fr" ? " active" : "" ?>" id="langChoiceFrench" href="#">French</a>
-                          <a class="dropdown-item<?php echo $i18n->LOCALE=="de" ? " active" : "" ?>" id="langChoiceGerman" href="#">German</a>
-                          <a class="dropdown-item<?php echo $i18n->LOCALE=="it" ? " active" : "" ?>" id="langChoiceItalian" href="#">Italian</a>
-                          <a class="dropdown-item<?php echo $i18n->LOCALE=="la" ? " active" : "" ?>" id="langChoiceLatin" href="#">Latin</a>
-                          <a class="dropdown-item<?php echo $i18n->LOCALE=="pt" ? " active" : "" ?>" id="langChoicePortuguese" href="#">Portuguese</a>
-                          <a class="dropdown-item<?php echo $i18n->LOCALE=="es" ? " active" : "" ?>" id="langChoiceSpanish" href="#">Spanish</a>
+                          <a class="dropdown-item<?php echo $i18n->LOCALE==="en" ? " active" : "" ?>" id="langChoiceEnglish" href="#">English</a>
+                          <a class="dropdown-item<?php echo $i18n->LOCALE==="fr" ? " active" : "" ?>" id="langChoiceFrench" href="#">French</a>
+                          <a class="dropdown-item<?php echo $i18n->LOCALE==="de" ? " active" : "" ?>" id="langChoiceGerman" href="#">German</a>
+                          <a class="dropdown-item<?php echo $i18n->LOCALE==="it" ? " active" : "" ?>" id="langChoiceItalian" href="#">Italian</a>
+                          <a class="dropdown-item<?php echo $i18n->LOCALE==="la" ? " active" : "" ?>" id="langChoiceLatin" href="#">Latin</a>
+                          <a class="dropdown-item<?php echo $i18n->LOCALE==="pt" ? " active" : "" ?>" id="langChoicePortuguese" href="#">Portuguese</a>
+                          <a class="dropdown-item<?php echo $i18n->LOCALE==="es" ? " active" : "" ?>" id="langChoiceSpanish" href="#">Spanish</a>
                         </div>
                       </li>
                 </ul>

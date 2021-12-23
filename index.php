@@ -76,7 +76,7 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
             <div class="col-md-6">
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Calculation of the Date of Easter" ); ?><i class="fas fa-code float-right fa-2x text-gray-300"></i></h6>
+                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Calculation of the Date of Easter" ); ?>: API<i class="fas fa-code float-right fa-2x text-gray-300"></i></h6>
                     </div>
                     <div class="card-body">
                         <?php $EASTER_CALCULATOR_API = _( "A simple API endpoint that returns data about the Date of Easter, both Gregorian and Julian, " .
@@ -91,11 +91,6 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                         </small>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6">
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "API Endpoint" ); ?>: <?php  echo _( "Definition" ) ?><i class="fas fa-file-code float-right fa-2x text-gray-300"></i></h6>
@@ -105,19 +100,8 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                     </div>
                 </div>
             </div>
-            
-            <div class="col-md-6">
-                <div class="card shadow m-2">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Calculation of the Date of Easter" ); ?><i class="fas fa-poll-h float-right fa-2x text-gray-300"></i></h6>
-                    </div>
-                    <div class="card-body">
-                        <p><?php echo _( "Example display of the date of Easter from 1583 to 9999" ); ?></p>
-                        <div class="text-center"><a href="easter.php" class="btn btn-primary m-2"><?php echo _( "Calculate the Date of Easter" ); ?></a></div>
-                    </div>
-                </div>
-            </div>
         </div>
+
 
 <?php include_once('layout/footer.php'); ?>
 

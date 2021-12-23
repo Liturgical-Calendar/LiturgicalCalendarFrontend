@@ -33,9 +33,6 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                         <div class="text-center"><a href="examples/php/" class="btn btn-primary"><?php echo _( "View PHP Example" ); ?></a></div>
                     </div>
                 </div>
-            </div>
-
-            <div class="col-md-6">
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary">JavaScript<i class="fab fa-js float-right text-gray-600"></i></h6>
@@ -45,9 +42,6 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                         <div class="text-center"><a href="examples/javascript/" class="btn btn-primary"><?php echo _( "View JavaScript Example" ); ?></a></div>
                     </div>
                 </div>
-            </div>
-
-            <div class="col-md-6">
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Calendar" ); ?><i class="far fa-calendar float-right text-gray-600"></i></h6>
@@ -59,6 +53,20 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                     </div>
                 </div>
             </div>
+
+            <div class="col-md-6">
+                <div class="card shadow m-2">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Calculation of the Date of Easter" ); ?>: Example interface<i class="fas fa-poll-h float-right fa-2x text-gray-300"></i></h6>
+                    </div>
+                    <div class="card-body">
+                        <p><?php echo _( "Example display of the date of Easter from 1583 to 9999" ); ?></p>
+                        <div class="text-center"><a href="easter.php" class="btn btn-primary m-2"><?php echo _( "Calculate the Date of Easter" ); ?></a></div>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
         <!-- /.row -->
 
