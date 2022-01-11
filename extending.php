@@ -20,6 +20,12 @@ $ITALYDioceses = ["Acerenza","Acerra","Acireale","Acqui","Adria - Rovigo","Agrig
 $API_EXTEND_HOWTO_A = _( "The General Roman Calendar can be extended so as to create a National or Diocesan calendar. Diocesan calendars depend on National calendars, so the National calendar must first be created." );
 $API_EXTEND_HOWTO_B = _( "National calendars must be defined using data from the translation of the Roman Missal used in the Region or in any case from decrees of the Episcopal Conference of the Region." );
 $DioceseGroupHelp = _( "If a group of dioceses decides to pool their Liturgical Calendar data, for example to print out one single yearly calendar with the data for all the dioceses in the group, the group can be defined or set here." );
+
+$availableNationalCalendars = [
+    "ITALY" => Locale::getDisplayRegion('-IT', $i18n->LOCALE),
+    "USA"   => Locale::getDisplayRegion('-US', $i18n->LOCALE)
+];
+asort($availableNationalCalendars, SORT_LOCALE_STRING);
 ?>
 
 <!doctype html>
@@ -66,8 +72,11 @@ $DioceseGroupHelp = _( "If a group of dioceses decides to pool their Liturgical 
                             <label for="diocesanCalendarNationalDependency" class="font-weight-bold"><?php echo _( "Depends on national calendar"); ?>:</label>
                             <select class="form-control" id="diocesanCalendarNationalDependency" required>
                                 <option value=""></option>
-                                <option value="ITALY">Italy</option>
-                                <option value="USA">USA</option>
+                                <?php
+                                    foreach( $availableNationalCalendars as $nation => $displayName ) {
+                                        echo "<option value=\"{$nation}\">$displayName</option>";
+                                    }
+                                ?>
                             </select>
                         </div>
                         <div class="form-group col col-md-3">

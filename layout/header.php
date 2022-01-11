@@ -79,34 +79,31 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOf
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" href="/examples/php/">
+            <a class="nav-link" href="usage.php#webCalendar">
                 <i class="fas fa-fw fa-folder"></i>
-                <span>PHP + cURL</span></a>
+                <span><?php echo _( "Web calendar" ); ?></span>
+            </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/examples/javascript/">
+            <a class="nav-link" href="usage.php#calSubscription">
                 <i class="fas fa-fw fa-folder"></i>
-                <span>HTML + AJAX</span></a>
+                <span><?php echo _( "Calendar subscription" ); ?></span>
+            </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/examples/fullcalendar/examples/month-view.html">
-                <i class="fas fa-fw fa-folder"></i>
-                <span>Full Calendar</span></a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/examples/fullcalendar/examples/messages.html">
-                <i class="fas fa-fw fa-folder"></i>
-                <span><?php echo _( "Full Calendar (messages first)" ); ?></span></a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="/easter.php">
+            <a class="nav-link" href="usage.php#datesOfEaster">
                 <i class="fas fa-fw fa-folder"></i>
                 <span><?php echo _( "Dates of Easter" ); ?></span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="usage.php#liturgyOfTheDay">
+                <i class="fas fa-fw fa-folder"></i>
+                <span><?php echo _( "Liturgy of the Day" ); ?></span></a>
         </li>
 
         <!-- Divider -->
         <li>
-            <hr class="sidebar-divider d-none d-md-block" />
+            <hr class="sidebar-divider" />
         </li>
 
         <!-- Heading -->
@@ -129,7 +126,7 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOf
 
         <!-- Divider -->
         <li>
-            <hr class="sidebar-divider d-none d-md-block" />
+            <hr class="sidebar-divider" />
         </li>
 
         <!-- Sidebar Toggler (Sidebar) -->
