@@ -15,14 +15,15 @@ $(document).on('change', '#jsonFileSelect', () => {
     }
     $.getJSON(jsonFile, data => {
         console.log(data);
+        const $theadRow = $('#jsonDataTbl thead tr');
         $('#jsonDataTbl tbody').empty();
-        $('#jsonDataTbl thead tr').empty();
+        $theadRow.empty();
         const keys = Object.keys( data[0] );
         keys.forEach(el => {
-            $('#jsonDataTbl thead tr').append(`<th>${el}</th>`);
+            $theadRow.append(`<th>${el}</th>`);
         });
         data.forEach(row => {
-            let $tr = $('tr');
+            let $tr = $('<tr>');
             keys.forEach(prop => {
                 $tr.append(`<td contenteditable="false">${row[prop]}</td>`);
             });
