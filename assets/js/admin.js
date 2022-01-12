@@ -7,13 +7,27 @@ $(document).on('change', '#jsonFileSelect', () => {
     let JSON;
     let jsonFile = $('#jsonFileSelect').val();
     if( isStaging ) {
-        //console.log('we cannot actually manage the JSON files in the staging environment');
+        console.log('we cannot actually manage the JSON files in the staging environment, because of CORS issues');
         jsonFile = 'https://litcal.johnromanodorazio.com/' + jsonFile;
+        return false;
     } else {
         jsonFile = './' + jsonFile;
     }
     $.getJSON(jsonFile, data => {
         console.log(data);
+        $('#jsonDataTbl tbody').empty();
+        $('#jsonDataTbl thead tr').empty();
+        const keys = Object.keys( data[0] );
+        keys.forEach(el => {
+            $('#jsonDataTbl thead tr').append(`<th>${el}</th>`);
+        });
+        data.forEach(row => {
+            let $tr = $('tr');
+            keys.forEach(prop => {
+                $tr.append(`<td contenteditable="false">${row[prop]}</td>`);
+            });
+            $('#jsonDataTbl tbody').append($tr);
+        });
     });
 });
 
