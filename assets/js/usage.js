@@ -1,4 +1,4 @@
-let toast = `<div aria-live="polite" aria-atomic="true" style="position: absolute; min-height: 50vh; min-width: 300px; top: 10px; right: 10px;">
+let toast = `<div aria-live="polite" aria-atomic="true" style="position: absolute; min-height: 50vh; min-width: 300px; top: 10px; right: -500px;" id="toast-wrapper">
 <div style="position: sticky; top: 0; right: 0;">
 <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
 <div class="toast-header bg-success text-white">
@@ -47,6 +47,12 @@ $(document).ready(() => {
     }
     updateSubscriptionURL();
     $('body').append(toast);
+    $('.toast').on('show.bs.toast', () => {
+        $('#toast-wrapper').css({"right":"10px"});
+    });
+    $('.toast').on('hidden.bs.toast', () => {
+        $('#toast-wrapper').css({"right":"-500px"});
+    });
 });
 
 $(document).on('click', '#calSubscriptionURLWrapper', () => {
