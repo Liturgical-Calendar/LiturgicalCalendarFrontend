@@ -7,9 +7,7 @@ function authenticated() {
     if ($_SERVER['PHP_AUTH_USER'] === AUTH_USERNAME && password_verify($_SERVER['PHP_AUTH_PW'], AUTH_PASSWORD)) return true;
     return false;
 }
- ?>
 
-<?php
 if(!authenticated()) {
     header("WWW-Authenticate: Basic realm=\"Please insert your credentials\"");
     header($_SERVER["SERVER_PROTOCOL"]." 401 Unauthorized");
@@ -20,11 +18,13 @@ if(!authenticated()) {
 $isStaging = ( strpos( $_SERVER['HTTP_HOST'], "-staging" ) !== false );
 
 if($isStaging) {
-    die('Administration tools will not work correctly in the staging environment.');
+    $JSON = json_decode( file_get_contents( 'https://litcal.johnromanodorazio.com/api/dev/data/propriumdesanctis_1970/propriumdesanctis_1970.json' ), true );
+    $thh = array_keys( $JSON[0] );
+} else {
+    $JSON = json_decode( file_get_contents( 'api/dev/data/propriumdesanctis_1970/propriumdesanctis_1970.json' ), true );
+    $thh = array_keys( $JSON[0] );
+    //$months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
 }
-$JSON = json_decode( file_get_contents( 'api/dev/data/propriumdesanctis_1970/propriumdesanctis_1970.json' ), true );
-$thh = array_keys( $JSON[0] );
-
 ?>
 <!DOCTYPE html>
 <head>
@@ -45,8 +45,12 @@ $thh = array_keys( $JSON[0] );
             <option value="api/dev/data/propriumdetempore.json">propriumdetempore.json</option>
         </select>
     </div>
-    <table class="table">
-        <thead>
+    <div class="row m-2 justify-content-end">
+        <button class="btn btn-primary mr-2" id="addColumnBtn"><i class="fas fa-plus-square mr-2"></i>Add Column<i class="fas fa-columns ml-2"></i></button>
+        <button class="btn btn-primary mr-2" id="saveDataBtn"><i class="fas fa-save mr-2"></i>Save data</button>
+    </div>
+    <table class="table" id="jsonDataTbl">
+        <thead class="position-sticky bg-secondary text-white">
             <tr>
                 <?php
                     foreach( $thh as $th ) {
@@ -60,7 +64,7 @@ $thh = array_keys( $JSON[0] );
                 foreach( $JSON as $row ) {
                     echo "<tr>";
                     foreach( $row as $value ) {
-                        echo "<td>$value</td>";
+                        echo "<td contenteditable='false'>$value</td>";
                     }
                     echo "</tr>";
                 }
