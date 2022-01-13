@@ -61,11 +61,45 @@ let getLiturgyOfADay = () => {
     }
 }
 
+const translCommon = common => {
+    if( common === 'Proper' ) {
+        return i18next.t('Proper');
+    } else {
+        $commons = common.split(",");
+        $commons = $commons.map($txt => {
+            let $common = $txt.split(":");
+            let $commonGeneral = i18next.t($common[0].replaceAll(' ', '-'));
+            let $commonSpecific = (typeof $common[1] !== 'undefined' && $common[1] != "") ? i18next.t($common[1].replaceAll(' ', '-')) : "";
+            let $commonKey = '';
+            //$txt = str_replace(":", ": ", $txt);
+            switch ($commonGeneral) {
+                case i18next.t("Blessed-Virgin-Mary"):
+                    $commonKey = i18next.t("of", {context: "(SING_FEMM)"});
+                    break;
+                case i18next.t("Virgins"):
+                    $commonKey = i18next.t("of", {context: "(PLUR_FEMM)"});
+                    break;
+                case i18next.t("Martyrs"):
+                case i18next.t("Pastors"):
+                case i18next.t("Doctors"):
+                case i18next.t("Holy-Men-and-Women"):
+                    $commonKey = i18next.t("of", {context: "(PLUR_MASC)"});
+                    break;
+                default:
+                    $commonKey = i18next.t("of", {context: "(SING_MASC)"});
+            }
+            return i18next.t("From-the-Common") + " " + $commonKey + " " + $commonGeneral + ($commonSpecific != "" ? ": " + $commonSpecific : "");
+        });
+        return $commons.join("; " + i18next.t("or") + " ");
+    }
+}
+
 let updateResults = liturgyOfADay => {
     $('#dateOfLiturgy').text( dtFormat.format(newDate) );
     $('#liturgyResults').empty();
     liturgyOfADay.forEach(el => {
         let eventData = el[1];
-        $('#liturgyResults').append(`<div class="p-4 m-4 border rounded" style="background-color:${eventData.color};color:${highContrast.includes(eventData.color) ? "white" : "black"};"><h3>${eventData.name}</h3>${eventData.common !== '' ? '<div>COMMON: ' + eventData.common + '</div>' : ''}${eventData.hasOwnProperty('liturgicalYear') ? '<div>' + eventData.liturgicalYear + '</div>' : ''}</div>`);
+        let eventDataCommon = eventData.common !== '' ? translCommon(eventData.common) : '';
+        $('#liturgyResults').append(`<div class="p-4 m-4 border rounded" style="background-color:${eventData.color};color:${highContrast.includes(eventData.color) ? "white" : "black"};"><h3>${eventData.name}</h3>${'<div>' + eventDataCommon + '</div>'}${eventData.hasOwnProperty('liturgicalYear') ? '<div>' + eventData.liturgicalYear + '</div>' : ''}</div>`);
     });
 }

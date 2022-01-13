@@ -2,6 +2,23 @@ if(Cookies.get("currentLocale") === undefined){
     Cookies.set("currentLocale", navigator.language );
 }
 
+i18next.use(i18nextHttpBackend).init({
+    debug: true,
+    lng: Cookies.get("currentLocale").substring(0,2),
+    backend: {
+        loadPath: '/assets/locales/{{lng}}/translation.json'
+    }
+  }, function(err, t) {
+    // for options see
+    // https://github.com/i18next/jquery-i18next#initialize-the-plugin
+    jqueryI18next.init(i18next, $);
+
+    // start localizing, details:
+    // https://github.com/i18next/jquery-i18next#usage-of-selector-function
+    //$('.nav').localize();
+    //$('.content').localize();
+  });
+
 var i18n = {
     LITCAL_LOCALE : Cookies.get("currentLocale").substring(0,2),
     __ : function(key, locale = LITCAL_LOCALE) {
