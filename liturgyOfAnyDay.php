@@ -72,7 +72,7 @@ sort( $CalendarNations );
                     <label><?php echo _("Month"); ?></label>
                     <select class="form-control" id="monthControl">
                         <?php foreach( range(1,12) as $monthNumber ) {
-                            $monthDate->setDate($dateToday->format('Y'), $monthNumber, 1);
+                            $monthDate->setDate($dateToday->format('Y'), $monthNumber, 15);
                             echo "<option value=\"{$monthNumber}\">{$fmt->format($monthDate)}</option>";
                         }
                         ?>
