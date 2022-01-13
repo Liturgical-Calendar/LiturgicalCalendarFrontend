@@ -1,10 +1,38 @@
 const isStaging = location.href.includes('-staging');
 
+const createPropriumDeTemporeTable = ( data ) => {
+    const $theadRow = $('#jsonDataTbl thead tr');
+    const keys = Object.keys( data );
+    const thh = Object.keys( data[keys[0]] );
+    $theadRow.append(`<th>TAG</th>`);
+    thh.forEach(el => {
+        $theadRow.append(`<th>${el}</th>`);
+    });
+    let tbodyHtmlStrr = '';
+    keys.forEach(tag => {
+        //let $tr = $('<tr>');
+        let dataTag = data[tag];
+        let trHtmlStr = '';
+        thh.forEach(el => {
+            let tbodyHtmlStr = '';
+            let dataTagEl = dataTag[el];
+            const readingsProps = Object.keys( dataTagEl );
+            readingsProps.forEach(prop => {
+                tbodyHtmlStr += `<tr><td>${prop}</td><td>${dataTagEl[prop]}</td></tr>`;
+            });
+            trHtmlStr += `<td contenteditable="false"><table><tbody>${tbodyHtmlStr}</tbody></table></td>`;
+        });
+        //$('#jsonDataTbl tbody').append( `<tr><td contenteditable="false">${tag}</td>${trHtmlStr}</tr>` );
+        tbodyHtmlStrr += `<tr><td contenteditable="false">${tag}</td>${trHtmlStr}</tr>`;
+    });
+    $('#jsonDataTbl tbody').append( tbodyHtmlStrr );
+}
+/*
 $(document).ready(() => {
 
 });
+*/
 $(document).on('change', '#jsonFileSelect', () => {
-    let JSON;
     let jsonFile = $('#jsonFileSelect').val();
     if( isStaging ) {
         console.log('we cannot actually manage the JSON files in the staging environment, because of CORS issues');
@@ -18,17 +46,21 @@ $(document).on('change', '#jsonFileSelect', () => {
         const $theadRow = $('#jsonDataTbl thead tr');
         $('#jsonDataTbl tbody').empty();
         $theadRow.empty();
-        const keys = Object.keys( data[0] );
-        keys.forEach(el => {
-            $theadRow.append(`<th>${el}</th>`);
-        });
-        data.forEach(row => {
-            let $tr = $('<tr>');
-            keys.forEach(prop => {
-                $tr.append(`<td contenteditable="false">${row[prop]}</td>`);
+        if( Array.isArray(data) ) {
+            const keys = Object.keys( data[0] );
+            keys.forEach(el => {
+                $theadRow.append(`<th>${el}</th>`);
             });
-            $('#jsonDataTbl tbody').append($tr);
-        });
+            data.forEach(row => {
+                let $tr = $('<tr>');
+                keys.forEach(prop => {
+                    $tr.append(`<td contenteditable="false">${row[prop]}</td>`);
+                });
+                $('#jsonDataTbl tbody').append($tr);
+            });
+        } else {
+            createPropriumDeTemporeTable( data );
+        }
     });
 });
 
