@@ -1,7 +1,7 @@
 let CalendarIndex = {};
 let CalendarNations = [];
 let selectOptions = {};
-const { COUNTRIES, LITCAL_LOCALE, __ } = i18n;
+const { COUNTRIES, LITCAL_LOCALE } = i18n;
 let countryNames = new Intl.DisplayNames([LITCAL_LOCALE], {type: 'region'});
 const RequestURLBase = "https://litcal.johnromanodorazio.com/api/v3/LitCalEngine.php";
 let requestURL = {

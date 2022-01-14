@@ -21,22 +21,6 @@ i18next.use(i18nextHttpBackend).init({
 
 var i18n = {
     LITCAL_LOCALE : Cookies.get("currentLocale").substring(0,2),
-    __ : function(key, locale = LITCAL_LOCALE) {
-        lcl = locale.toLowerCase();
-        if (typeof messages !== 'undefined' && messages !== null && typeof messages === 'object') {
-            if (messages.hasOwnProperty(key)) {
-                if (messages[key].hasOwnProperty(lcl)) {
-                    return messages[key][lcl];
-                } else {
-                    return messages[key]["en"];
-                }
-            } else {
-                return key;
-            }
-        } else {
-            return key;
-        }
-    },
     COUNTRIES : {
         "ÅLAND ISLANDS": "AX",
         "AFGHANISTAN": "AF",
