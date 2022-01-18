@@ -64,7 +64,8 @@ $(document).on('change', '#jsonFileSelect', () => {
     });
 });
 
-$(document).on('dblclick', '#jsonDataTbl th,#jsonDataTbl td', ev => {
+//$(document).on('dblclick', '#jsonDataTbl th,#jsonDataTbl td', ev => {
+    $(document).on('dblclick', '#jsonDataTbl table tr td:last-child', ev => {
     $(ev.currentTarget).attr('contenteditable',true).addClass('bg-white').focus();
 });
 
@@ -89,17 +90,27 @@ $(document).on('click', '#saveDataBtn', () => {
     $('#jsonDataTbl th').each((i,el) => {
         props.push($(el).text());
     });
-    $('#jsonDataTbl tbody tr').each((i,el) => {
+    $('#jsonDataTbl > tbody > tr').each((i,el) => {
         let newRow = {};
-        $(el).find('td').each((i,el) => {
-            newRow[props[i]] = $(el).text();
+        $(el).find('> td').each((i,el) => {
+            if( $(el).find('table').length ) {
+                let subJson = {};
+                $(el).find('table tr').each((j,em) => {
+                    let prop    = $(em).find('td:first-child').text();
+                    let val     = $(em).find('td:last-child').text();
+                    subJson[prop] = val;
+                });
+                newRow[props[i]] = subJson;
+            } else {
+                newRow[props[i]] = $(el).text();
+            }
         });
         jsonData.push(newRow);
     });
     //navigator.clipboard.writeText( JSON.stringify(jsonData) );
     //alert('JSON data copied to clipboard');
     let filename = $('#jsonFileSelect').val();
-    let jsonstring = JSON.stringify(jsonData);
+    let jsonstring = JSON.stringify(jsonData, null, 4);
     console.log('now writing jsonData to file ' + filename);
     console.log(jsonData);
     $.ajax({

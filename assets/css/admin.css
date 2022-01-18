@@ -1,0 +1,25 @@
+#tableContainer {
+    overflow: auto;
+    height: 55vh;
+}
+
+#jsonDataTbl {
+    table-layout: fixed;
+}
+
+#jsonDataTbl > thead > tr > th:first-child,
+#jsonDataTbl > thead > tr > th:nth-child(7),
+#jsonDataTbl > tbody > tr > td:first-child,
+#jsonDataTbl > tbody > tr > td:nth-child(7) {
+    visibility: hidden;
+}
+
+#jsonDataTbl table tr:first-child td {
+    border-top: 0;
+}
+
+#jsonDataTbl table tr td:last-child {
+    width: 50%;
+    border: 1px dashed gray;
+    border-radius: 3px;
+}

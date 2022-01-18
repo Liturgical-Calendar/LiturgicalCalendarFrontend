@@ -49,27 +49,41 @@ if($isStaging) {
         <button class="btn btn-primary mr-2" id="addColumnBtn"><i class="fas fa-plus-square mr-2"></i>Add Column<i class="fas fa-columns ml-2"></i></button>
         <button class="btn btn-primary mr-2" id="saveDataBtn"><i class="fas fa-save mr-2"></i>Save data</button>
     </div>
-    <table class="table" id="jsonDataTbl">
-        <thead class="position-sticky bg-secondary text-white">
-            <tr>
+    <div id="tableContainer">
+        <table class="table" id="jsonDataTbl">
+            <thead class="bg-secondary text-white sticky-top">
+                <tr>
+                    <?php
+                        $i = 0;
+                        $n = [0, 10, 10, 14, 5, 25, 0, 6, 30 ];
+                        foreach( $thh as $th ) {
+                            echo "<th class=\"sticky-top\" style=\"width: {$n[$i++]}%;\" scope=\"col\">$th</th>";
+                        }
+                    ?>
+                </tr>
+            </thead>
+            <tbody>
                 <?php
-                    foreach( $thh as $th ) {
-                        echo "<th>$th</th>";
+                    foreach( $JSON as $row ) {
+                        echo "<tr>";
+                        foreach( $row as $value ) {
+                            if( is_array( $value ) ) {
+                                echo "<td contenteditable='false'>";
+                                echo "<table><tbody>";
+                                foreach( $value as $title => $val ) {
+                                    echo "<tr><td>$title</td><td contenteditable='false'>$val</td></tr>";
+                                }
+                                echo "</tbody></table>";
+                                echo "</td>";
+                            } else {
+                                echo "<td contenteditable='false'>$value</td>";
+                            }
+                        }
+                        echo "</tr>";
                     }
                 ?>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-                foreach( $JSON as $row ) {
-                    echo "<tr>";
-                    foreach( $row as $value ) {
-                        echo "<td contenteditable='false'>$value</td>";
-                    }
-                    echo "</tr>";
-                }
-            ?>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
     <?php include_once('./layout/footer.php'); ?>
 </body>
