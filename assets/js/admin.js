@@ -97,7 +97,7 @@ $(document).on('click', '#saveDataBtn', () => {
                 let subJson = {};
                 $(el).find('table tr').each((j,em) => {
                     let prop    = $(em).find('td:first-child').text();
-                    let val     = $(em).find('td:last-child').text();
+                    let val     = $(em).find('td:last-child').text().replaceAll(' ',' ');
                     subJson[prop] = val;
                 });
                 newRow[props[i]] = subJson;
@@ -120,6 +120,7 @@ $(document).on('click', '#saveDataBtn', () => {
         success: data => {
             //if( data === 'SUCCESS' )
             console.log(data);
+            alert('Data was written with ' + data);
         }
     });
 });
