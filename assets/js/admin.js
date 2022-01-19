@@ -52,7 +52,7 @@ $(document).on('change', '#jsonFileSelect', () => {
             let n;
             if( jsonFile.includes('USA') || jsonFile.includes('ITALY') ) {
                 $('#jsonDataTbl').addClass('nationalCalendar');
-                n = [0, 10, 10, 0, 14, 0, 5, 25, 0, 6, 30];
+                n = [0, 10, 10, 14, 0, 5, 0, 25, 0, 6, 30];
             } else {
                 $('#jsonDataTbl').removeClass('nationalCalendar');
                 n = [0, 10, 10, 14, 5, 25, 0, 6, 30];
