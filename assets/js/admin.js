@@ -49,12 +49,13 @@ $(document).on('change', '#jsonFileSelect', () => {
         $theadRow.empty();
         if( Array.isArray(data) ) {
             $('#jsonDataTbl').removeClass('propriumDeTempore');
+            let n;
             if( jsonFile.includes('USA') || jsonFile.includes('ITALY') ) {
                 $('#jsonDataTbl').addClass('nationalCalendar');
-                const n = [0, 5, 5, 5, 15, 5, 5, 25, 0, 5, 30];
+                n = [0, 5, 5, 5, 15, 5, 5, 25, 0, 5, 30];
             } else {
                 $('#jsonDataTbl').removeClass('nationalCalendar');
-                const n = [0, 10, 10, 14, 5, 25, 0, 6, 30];
+                n = [0, 10, 10, 14, 5, 25, 0, 6, 30];
             }
             const keys = Object.keys( data[0] );
             keys.forEach((el,i) => {
