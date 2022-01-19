@@ -25,6 +25,7 @@ const createPropriumDeTemporeTable = ( data ) => {
         //$('#jsonDataTbl tbody').append( `<tr><td contenteditable="false">${tag}</td>${trHtmlStr}</tr>` );
         tbodyHtmlStrr += `<tr><td contenteditable="false">${tag}</td>${trHtmlStr}</tr>`;
     });
+    $('#jsonDataTbl').addClass('propriumDeTempore');
     $('#jsonDataTbl tbody').append( tbodyHtmlStrr );
 }
 /*
