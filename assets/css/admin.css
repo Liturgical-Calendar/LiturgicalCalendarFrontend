@@ -11,10 +11,10 @@
 #jsonDataTbl:not(.propriumDeTempore) > tbody > tr > td:first-child,
 #jsonDataTbl:not(.propriumDeTempore,.nationalCalendar) > thead > tr > th:nth-child(7),
 #jsonDataTbl:not(.propriumDeTempore,.nationalCalendar) > tbody > tr > td:nth-child(7),
-#jsonDataTbl.nationalCalendar > thead > tr > th:nth-child(4),
-#jsonDataTbl.nationalCalendar > tbody > tr > td:nth-child(4),
-#jsonDataTbl.nationalCalendar > thead > tr > th:nth-child(6),
-#jsonDataTbl.nationalCalendar > tbody > tr > td:nth-child(6),
+#jsonDataTbl.nationalCalendar > thead > tr > th:nth-child(5),
+#jsonDataTbl.nationalCalendar > tbody > tr > td:nth-child(5),
+#jsonDataTbl.nationalCalendar > thead > tr > th:nth-child(7),
+#jsonDataTbl.nationalCalendar > tbody > tr > td:nth-child(7),
 #jsonDataTbl.nationalCalendar > thead > tr > th:nth-child(9),
 #jsonDataTbl.nationalCalendar > tbody > tr > td:nth-child(9) {
     visibility: hidden;
