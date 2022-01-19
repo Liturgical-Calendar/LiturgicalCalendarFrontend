@@ -48,6 +48,7 @@ $(document).on('change', '#jsonFileSelect', () => {
         $('#jsonDataTbl tbody').empty();
         $theadRow.empty();
         if( Array.isArray(data) ) {
+            $('#jsonDataTbl').removeClass('propriumDeTempore');
             const n = [0, 10, 10, 14, 5, 25, 0, 6, 30];
             const keys = Object.keys( data[0] );
             keys.forEach((el,i) => {
@@ -89,7 +90,7 @@ $(document).on('change', '#jsonFileSelect', () => {
 });
 
 //$(document).on('dblclick', '#jsonDataTbl th,#jsonDataTbl td', ev => {
-    $(document).on('dblclick', '#jsonDataTbl table tr td:last-child', ev => {
+    $(document).on('dblclick', '#jsonDataTbl table tr td:nth-child(2)', ev => {
     $(ev.currentTarget).attr('contenteditable',true).addClass('bg-white').focus();
 });
 
@@ -119,11 +120,30 @@ $(document).on('click', '#saveDataBtn', () => {
         $(el).find('> td').each((i,el) => {
             if( $(el).find('table').length ) {
                 let subJson = {};
-                $(el).find('table tr').each((j,em) => {
-                    let prop    = $(em).find('td:first-child').text();
-                    let val     = $(em).find('td:last-child').text().replaceAll(' ',' ');
-                    subJson[prop] = val;
-                });
+                let tdCount = $(el).find('table tr:first-child td').length;
+                if( tdCount > 1 ) {
+                    $(el).find('table tr').each((j,em) => {
+                        let prop    = $(em).find('td:first-child').text();
+                        let val     = $(em).find('td:last-child').text().replaceAll(' ',' ');
+                        val = val.replaceAll('\r','');
+                        subJson[prop] = val;
+                    });
+                }
+                else if( tdCount === 1 ) {
+                    let currentProperty;
+                    $(el).find('table tr').each((j,em) => {
+                        if( $(em).find('td').length === 1 ) {
+                            currentProperty = $(em).find('td').text();
+                            subJson[currentProperty] = {};
+                        }
+                        else {
+                            let prop    = $(em).find('td:first-child').text();
+                            let val     = $(em).find('td:last-child').text().replaceAll(' ',' ');
+                            val = val.replaceAll('\r','');
+                            subJson[currentProperty][prop] = val;
+                        }
+                    });
+                }
                 newRow[props[i]] = subJson;
             } else {
                 newRow[props[i]] = $(el).text();
