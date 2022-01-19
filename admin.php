@@ -71,7 +71,14 @@ if($isStaging) {
                                 echo "<td contenteditable='false'>";
                                 echo "<table><tbody>";
                                 foreach( $value as $title => $val ) {
-                                    echo "<tr><td>$title</td><td contenteditable='false'>$val</td></tr>";
+                                    if( is_array($val) ) {
+                                        echo "<tr><td colspan=\"2\" style=\"text-align:center;font-weight:bold;border:0;background-color:lightgray;\">$title</td></tr>";
+                                        foreach( $val as $title2 => $val2 ) {
+                                            echo "<tr><td>$title2</td><td contenteditable='false'>$val2</td></tr>";
+                                        }
+                                    } else {
+                                        echo "<tr><td>$title</td><td contenteditable='false'>$val</td></tr>";
+                                    }
                                 }
                                 echo "</tbody></table>";
                                 echo "</td>";
