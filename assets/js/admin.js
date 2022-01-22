@@ -119,6 +119,8 @@ $(document).on('click', '#addColumnBtn', () => {
 $(document).on('click', '#saveDataBtn', () => {
     const jsonData = [];
     const props = [];
+    const intProps = ["RECURRENCE_ID","MONTH","DAY","GRADE"];
+
     $('#jsonDataTbl th').each((i,el) => {
         props.push($(el).text());
     });
@@ -153,15 +155,22 @@ $(document).on('click', '#saveDataBtn', () => {
                 }
                 newRow[props[i]] = subJson;
             } else {
-                newRow[props[i]] = $(el).text();
-            }
+                if(intProps.includes(props[i])) {
+                        newRow[props[i]] = parseInt($(el).text());
+                    } else{
+                        newRow[props[i]] = $(el).text();
+                    }
+                }
         });
         jsonData.push(newRow);
     });
     //navigator.clipboard.writeText( JSON.stringify(jsonData) );
     //alert('JSON data copied to clipboard');
     let filename = $('#jsonFileSelect').val();
-    let jsonstring = JSON.stringify(jsonData, null, 4);
+    //JSON.stringify will automatically use DOS/Windows syntax \r\n
+    //which git will see as a change in the code from what was previously just \n
+    //so let's make sure we get rid of all \r's
+    let jsonstring = JSON.stringify(jsonData, null, 4).replace(/[\r]/g, '');
     console.log('now writing jsonData to file ' + filename);
     console.log(jsonData);
     $.ajax({

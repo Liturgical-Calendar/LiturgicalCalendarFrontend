@@ -8,6 +8,10 @@ $FormControls = new FormControls( $i18n );
 $isStaging = ( strpos( $_SERVER['HTTP_HOST'], "-staging" ) !== false );
 $versionAPI = $isStaging ? "dev" : "v3";
 
+$dayOfWeekFmt = IntlDateFormatter::create($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'UTC', IntlDateFormatter::GREGORIAN, 'EEEE' );
+$thursday   = $dayOfWeekFmt->format( DateTime::createFromFormat( '!j-n-Y', '1-1-2022', new DateTimeZone( 'UTC' ) )->modify( 'next Thursday' ) );
+$sunday     = $dayOfWeekFmt->format( DateTime::createFromFormat( '!j-n-Y', '1-1-2022', new DateTimeZone( 'UTC' ) )->modify( 'next Sunday' ) );
+
 $countryISOCodes = json_decode( file_get_contents("./assets/data/CountryToISO.json"), true );
 
 $ITALYDioceses = json_decode( file_get_contents("./assets/data/ItalyDioceses.json"), true );
@@ -109,6 +113,7 @@ $DioceseGroupHelp = _( "If a group of dioceses decides to pool their Liturgical 
                         </div> -->
                     </form>
                 </div>
+
                 <nav aria-label="Diocesan calendar definition" id="diocesanCalendarDefinitionCardLinks">
                     <ul class="pagination pagination-lg justify-content-center m-1">
                         <li class="page-item disabled">
@@ -226,6 +231,37 @@ $DioceseGroupHelp = _( "If a group of dioceses decides to pool their Liturgical 
                         <span class="sr-only">Next</span>
                     </a>
                 </div>
+
+                <div id="diocesanOverridesContainer" class="container">
+                    <h3 id="diocesanOverridesTitle" class="text-center"><?php echo _("Diocesan overrides to the national calendar for ...") ?></h3>
+                    <form id="diocesanOverridesForm" class="row justify-content-center needs-validation" novalidate>
+                        <div class="form-group col col-md-3">
+                            <label><?php echo _( 'EPIPHANY' ) ?></label>
+                            <select class="form-control" id="diocesanCalendarOverrideEpiphany">
+                                <option value=""></option>
+                                <option value="JAN6"><?php echo _("January 6") ?></option>
+                                <option value="SUNDAY_JAN2_JAN8"><?php echo _("Sunday between January 2 and January 8") ?></option>
+                            </select>
+                        </div>
+                        <div class="form-group col col-md-3">
+                            <label><?php echo _( 'ASCENSION' ) ?></label>
+                            <select class="form-control" id="diocesanCalendarOverrideAscension">
+                                <option value=""></option>
+                                <option value="THURSDAY"><?php echo $thursday ?></option>
+                                <option value="SUNDAY"><?php echo $sunday ?></option>
+                            </select>
+                        </div>
+                        <div class="form-group col col-md-3">
+                            <label><?php echo _( 'CORPUS CHRISTI' ) ?></label>
+                            <select class="form-control" id="diocesanCalendarOverrideCorpusDomini">
+                                <option value=""></option>
+                                <option value="THURSDAY"><?php echo $thursday ?></option>
+                                <option value="SUNDAY"><?php echo $sunday ?></option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+
                 <div class="container">
                     <div class="row">
                         <div class="col text-center">
@@ -262,15 +298,16 @@ $messages = [
     "Other Feast"       => _( "Other Feast" ),
     "Other Memorial"    => _( "Other Memorial" ),
     "Other Optional Memorial"   => _( "Other Optional Memorial" ),
-    "commonsTemplate"   => $FormControls->getCommonsTemplate(),
-    "Delete diocesan calendar" => _( "Delete diocesan calendar" ),
+    "Delete diocesan calendar"  => _( "Delete diocesan calendar" ),
     "If you choose"     => _( "If you choose to delete this diocesan calendar, the liturgical events defined for the calendar and the corresponding index entry will be removed and no longer available in the client applications." ),
     "Liturgical color"  => _( "Liturgical color" ),
     "white"             => _( "white" ),
     "red"               => _( "red" ),
     "green"             => _( "green" ),
     "purple"            => _( "purple" ),
+    /**translators: in reference to the first year from which this festivity takes place */
     "Since"             => _( "Since" ),
+    "commonsTemplate"   => $FormControls->getCommonsTemplate(),
     "LOCALE"            => $i18n->LOCALE
 ];
 ?>

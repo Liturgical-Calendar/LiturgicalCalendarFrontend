@@ -19,7 +19,7 @@ function () {
 const isStaging = location.hostname.includes( '-staging' );
 const endpointV = isStaging ? 'dev' : 'v3';
 const MetaDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalMetadata.php`;
-const DiocesaDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalDiocesanData.php`;
+const DiocesanDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalDiocesanData.php`;
 
 let $USDiocesesByState = {
     "Alabama": ["Archdiocese of Mobile", "Diocese of Birmingham"],
@@ -364,7 +364,7 @@ jQuery.ajax({
     success: data => {
         console.log('retrieved data from index file:');
         console.log(data);
-        $index = data;
+        $index = data.LitCalMetadata;
         toastr["success"]('Successfully retrieved data from index file', "Success");
     }
 });
@@ -622,6 +622,10 @@ toastr.options = {
     "hideMethod": "fadeOut"
 }
 
+const diocesanOvveridesDefined = () => {
+    return ( $('#diocesanCalendarOverrideEpiphany').val() !== "" || $('#diocesanCalendarOverrideAscension').val() !== "" || $('#diocesanCalendarOverrideCorpusDomini').val() !== "" );
+}
+
 $(document).on('click', '#saveDiocesanCalendar_btn', ev => {
     $data = JSON.stringify($CALENDAR);
     $nation = $('#diocesanCalendarNationalDependency').val();
@@ -630,6 +634,22 @@ $(document).on('click', '#saveDiocesanCalendar_btn', ev => {
     let saveObj = { calendar: $data, diocese: $diocese, nation: $nation };
     if($('#diocesanCalendarGroup').val() != ''){
         saveObj.group = $('#diocesanCalendarGroup').val();
+    }
+    if( diocesanOvveridesDefined() ) {
+        console.log( 'This diocesan calendar has defined some options that will override the national calendar.' );
+        saveObj.overrides = {};
+        if( $('#diocesanCalendarOverrideEpiphany').val() !== "" ) {
+            saveObj.overrides.EPIPHANY = $('#diocesanCalendarOverrideEpiphany').val();
+            console.log( 'Epiphany in this diocese will override Epiphany in the national calendar.' );
+        }
+        if( $('#diocesanCalendarOverrideAscension').val() !== "" ) {
+            saveObj.overrides.ASCENSION = $('#diocesanCalendarOverrideAscension').val();
+            console.log( 'Ascension in this diocese will override Ascension in the national calendar.' );
+        }
+        if( $('#diocesanCalendarOverrideCorpusDomini').val() !== "" ) {
+            saveObj.overrides.CORPUSDOMINI = $('#diocesanCalendarOverrideCorpusDomini').val();
+            console.log( 'Corpus Domini in this diocese will override Corpus Domini in the national calendar.' );
+        }
     }
 
     let formsValid = true;
@@ -641,7 +661,7 @@ $(document).on('click', '#saveDiocesanCalendar_btn', ev => {
     });
     if ( formsValid ) {
         $.ajax({
-            url: DiocesaDataURL,
+            url: DiocesanDataURL,
             method: 'put',
             dataType: 'json',
             contentType: 'application/json',
@@ -668,7 +688,7 @@ $(document).on('click', '#retrieveExistingDiocesanData', evt => {
     let dioceseKey = $('#DiocesesList').find('option[value="' + diocese + '"]').attr('data-value').toUpperCase();
     //let $diocesanCalendar;
     jQuery.ajax({
-        url: DiocesaDataURL,
+        url: DiocesanDataURL,
         method: 'GET',
         dataType: 'json',
         data: { "key" : dioceseKey },
@@ -683,6 +703,17 @@ $(document).on('click', '#retrieveExistingDiocesanData', evt => {
             console.log(data);
             toastr["success"]("Diocesan Calendar was retrieved successfully", "Success");
             $CALENDAR = data;
+            if( data.hasOwnProperty('Overrides') ) {
+                if( data.Overrides.hasOwnProperty('EPIPHANY') ) {
+                    $('#diocesanCalendarOverrideEpiphany').val( data.Overrides.EPIPHANY );
+                }
+                if( data.Overrides.hasOwnProperty('ASCENSION') ) {
+                    $('#diocesanCalendarOverrideAscension').val( data.Overrides.ASCENSION );
+                }
+                if( data.Overrides.hasOwnProperty('CORPUSDOMINI') ) {
+                    $('#diocesanCalendarOverrideCorpusDomini').val( data.Overrides.CORPUSDOMINI );
+                }
+            }
             //TODO: instead of creating / appending a single row, we have to check how many rows are missing
             //      between the last existing row and the rowNum for the current item
             //      and create all of the missing rows
@@ -845,12 +876,12 @@ $(document).on('change', '#diocesanCalendarDioceseName', ev => {
         $(ev.currentTarget).removeClass('is-invalid');
         $key = $('#DiocesesList').find('option[value="' + $(ev.currentTarget).val() + '"]').attr('data-value').toUpperCase();
         console.log('selected diocese with key = ' + $key);
-        if ($index.hasOwnProperty($key)) {
+        if ($index.DiocesanCalendars.hasOwnProperty($key)) {
             $('#retrieveExistingDiocesanData').prop('disabled', false);
             $('#removeExistingDiocesanData').prop('disabled', false);
             $('body').append(removeDiocesanCalendarModal($(ev.currentTarget).val()));
-            if($index[$key].hasOwnProperty('group')){
-                $('#diocesanCalendarGroup').val($index[$key].group);
+            if($index.DiocesanCalendars[$key].hasOwnProperty('group')){
+                $('#diocesanCalendarGroup').val($index.DiocesanCalendars[$key].group);
             }
             console.log('we have an existing entry for this diocese!');
         } else {
@@ -869,10 +900,10 @@ $(document).on('click', '#deleteDiocesanCalendarButton', ev => {
     let $diocese = $('#diocesanCalendarDioceseName').val();
     let $key = $('#DiocesesList').find('option[value="' + $diocese + '"]').attr('data-value').toUpperCase();
     let $nation = $('#diocesanCalendarNationalDependency').val();
-    delete $index[$key];
+    delete $index.DiocesanCalendars[$key];
     let deleteKey = { calendar: $key, diocese: $diocese, nation: $nation};
     $.ajax({
-        url: DiocesaDataURL,
+        url: DiocesanDataURL,
         method: 'delete',
         dataType: 'json',
         contentType: 'application/json',
