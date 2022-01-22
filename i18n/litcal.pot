@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-22 13:04+0000\n"
+"POT-Creation-Date: 2022-01-22 13:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -466,11 +466,11 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: extending.php:250 liturgyOfAnyDay.php:79
+#: extending.php:250 liturgyOfAnyDay.php:80
 msgid "Day"
 msgstr ""
 
-#: extending.php:251 liturgyOfAnyDay.php:83
+#: extending.php:251 liturgyOfAnyDay.php:84
 msgid "Month"
 msgstr ""
 
@@ -574,12 +574,12 @@ msgstr ""
 msgid "ANOTHERVOLUNTEER"
 msgstr ""
 
-#: liturgyOfAnyDay.php:93
+#: liturgyOfAnyDay.php:94
 msgid "Year"
 msgstr ""
 
 #. translators: %s = current selected date
-#: liturgyOfAnyDay.php:100
+#: liturgyOfAnyDay.php:101
 #, php-format
 msgid "Liturgy of %s"
 msgstr ""
