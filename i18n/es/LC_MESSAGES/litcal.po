@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-22 13:04+0000\n"
+"POT-Creation-Date: 2022-01-22 13:26+0000\n"
 "PO-Revision-Date: 2021-12-19 15:39+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
@@ -518,11 +518,11 @@ msgstr "GUARDAR CALENDARIO DIOCESANO"
 msgid "Name"
 msgstr "Nombre"
 
-#: extending.php:250 liturgyOfAnyDay.php:79
+#: extending.php:250 liturgyOfAnyDay.php:80
 msgid "Day"
 msgstr "Día"
 
-#: extending.php:251 liturgyOfAnyDay.php:83
+#: extending.php:251 liturgyOfAnyDay.php:84
 msgid "Month"
 msgstr "Mes"
 
@@ -635,12 +635,12 @@ msgstr "Calendario litúrgico - Sobre nosotros"
 msgid "ANOTHERVOLUNTEER"
 msgstr ""
 
-#: liturgyOfAnyDay.php:93
+#: liturgyOfAnyDay.php:94
 msgid "Year"
 msgstr ""
 
 #. translators: %s = current selected date
-#: liturgyOfAnyDay.php:100
+#: liturgyOfAnyDay.php:101
 #, php-format
 msgid "Liturgy of %s"
 msgstr ""
