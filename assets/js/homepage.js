@@ -1,4 +1,3 @@
-let CalendarIndex = {};
 let CalendarNations = [];
 let selectOptions = {};
 const { COUNTRIES, LITCAL_LOCALE } = i18n;
@@ -27,8 +26,9 @@ let serializeRequestURL = function(obj){
 
 (function ($) {
     $.getJSON( 'https://litcal.johnromanodorazio.com/api/v3/LitCalMetadata.php', data => {
-        CalendarIndex = data;
-        for(const [key,value] of Object.entries(CalendarIndex)){
+        const { LitCalMetadata } = data;
+        const { NationalCalendars, DiocesanCalendars } = LitCalMetadata;
+        for(const [key,value] of Object.entries(DiocesanCalendars)){
             if(CalendarNations.indexOf(value.nation) === -1){
                 CalendarNations.push(value.nation);
                 selectOptions[value.nation] = [];
@@ -36,18 +36,17 @@ let serializeRequestURL = function(obj){
             CalendarNations.sort();
             selectOptions[value.nation].push(`<option data-calendartype="diocesancalendar" value="${key}">${value.diocese}</option>`);
         }
-        //CalendarNations = nationsTmp.filter(onlyUnique);
-        CalendarNations.forEach(item => $('#APICalendarSelect').append(`<option data-calendartype="nationalcalendar" value="${item}">${countryNames.of(COUNTRIES[item])}</option>`));
-        if(CalendarNations.indexOf("ITALY") === -1){
-            $('#APICalendarSelect').append(`<option data-calendartype="nationalcalendar" value="ITALY">${countryNames.of(COUNTRIES["ITALY"])}</option>`);
-        }
-        if(CalendarNations.indexOf("USA") === -1){
-            $('#APICalendarSelect').append(`<option data-calendartype="nationalcalendar" value="USA">${countryNames.of(COUNTRIES["USA"])}</option>`);
-        }
         CalendarNations.forEach(item => {
+            $('#APICalendarSelect').append(`<option data-calendartype="nationalcalendar" value="${item}">${countryNames.of(COUNTRIES[item])}</option>`);
             let $optGroup = $(`<optgroup label="${countryNames.of(COUNTRIES[item])}">`);
             $('#APICalendarSelect').append($optGroup);
             selectOptions[item].forEach(groupItem => $optGroup.append(groupItem));
+        });
+        let nations = Object.keys( NationalCalendars );
+        nations.forEach(item => {
+            if( false === CalendarNations.includes(item) ){
+                $('#APICalendarSelect').append(`<option data-calendartype="nationalcalendar" value="${item}">${countryNames.of(COUNTRIES[item])}</option>`);
+            }
         });
     });
 
