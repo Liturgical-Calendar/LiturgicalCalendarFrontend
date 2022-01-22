@@ -8,26 +8,37 @@ $fmt = new IntlDateFormatter( $i18n->LOCALE,IntlDateFormatter::FULL, IntlDateFor
 $fmtFull = new IntlDateFormatter( $i18n->LOCALE,IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'UTC', IntlDateFormatter::GREGORIAN );
 $monthDate = new DateTime();
 
+function verifyCalendarIndexJson( $JSON ) {
+    return (
+        array_key_exists( "LitCalMetadata", $JSON ) &&
+        is_array( $JSON["LitCalMetadata"] ) &&
+        array_key_exists( "NationalCalendars", $JSON["LitCalMetadata"] ) &&
+        is_array( $JSON["LitCalMetadata"]["NationalCalendars"] ) &&
+        array_key_exists( "DiocesanCalendars", $JSON["LitCalMetadata"] ) &&
+        is_array( $JSON["LitCalMetadata"]["DiocesanCalendars"] )
+    );
+}
+
 $CalendarNations = [];
 $SelectOptions = [];
-$CalendarIndex = json_decode( file_get_contents( 'https://litcal.johnromanodorazio.com/api/v3/LitCalMetadata.php' ), true );
-foreach( $CalendarIndex as $key => $value ) {
-    if( !in_array( $value["nation"], $CalendarNations ) ) {
-        array_push( $CalendarNations, $value["nation"] );
-        $SelectOptions[$value["nation"]] = [];
+$JSON = json_decode( file_get_contents( 'https://litcal.johnromanodorazio.com/api/v3/LitCalMetadata.php' ), true );
+if( verifyCalendarIndexJson( $JSON ) ) {
+    $NationalCalendars = $JSON["LitCalMetadata"]["NationalCalendars"]
+    $DiocesanCalendars = $JSON["LitCalMetadata"]["DiocesanCalendars"];
+    foreach( $DiocesanCalendars as $key => $value ) {
+        if( !in_array( $value["nation"], $CalendarNations ) ) {
+            array_push( $CalendarNations, $value["nation"] );
+            $SelectOptions[$value["nation"]] = [];
+        }
+        array_push( $SelectOptions[$value["nation"]], "<option data-calendartype=\"diocesancalendar\" value=\"{$key}\">{$value["diocese"]}</option>" );
     }
-    array_push( $SelectOptions[$value["nation"]], "<option data-calendartype=\"diocesancalendar\" value=\"{$key}\">{$value["diocese"]}</option>" );
+    foreach( array_keys( $NationalCalendars as $key => $value ) ) {
+        if( !in_array( $key, $CalendarNations ) ) {
+            array_push( $CalendarNations, $key );
+        }
+    }
+    sort( $CalendarNations );
 }
-if( !in_array( "USA", $CalendarNations ) ) {
-    array_push( $CalendarNations, "USA" );
-}
-if( !in_array( "Italy", $CalendarNations ) ) {
-    array_push( $CalendarNations, "Italy" );
-}
-if( !in_array( "Vatican", $CalendarNations ) ) {
-    array_push( $CalendarNations, "Vatican" );
-}
-sort( $CalendarNations );
 
 ?>
 
