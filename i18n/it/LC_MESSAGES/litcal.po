@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-19 14:55+0000\n"
+"POT-Creation-Date: 2022-01-22 13:01+0000\n"
 "PO-Revision-Date: 2022-01-12 09:23+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
@@ -30,7 +30,7 @@ msgstr ""
 "liturgici di un qualsiasi anno dal 1970 fino al 9999, sia per il Calendario "
 "Romano Universale che per i calendari nazionali e diocesani derivati"
 
-#: index.php:19 usage.php:40 liturgyOfAnyDay.php:37
+#: index.php:19 usage.php:40 liturgyOfAnyDay.php:48
 msgid "General Roman Calendar"
 msgstr "Calendario Romano Generale"
 
@@ -179,7 +179,7 @@ msgstr "Visualizza l'esempio Fullcalendar (messaggi in alto)"
 msgid "Calendar subscription"
 msgstr "Sottoscrizione calendario"
 
-#: usage.php:114 liturgyOfAnyDay.php:49
+#: usage.php:114 liturgyOfAnyDay.php:60
 msgid "Select calendar"
 msgstr "Seleziona calendario"
 
@@ -382,7 +382,7 @@ msgstr ""
 msgid "In development"
 msgstr "Sotto sviluppo"
 
-#: usage.php:283 usage.php:287 liturgyOfAnyDay.php:37 liturgyOfAnyDay.php:45
+#: usage.php:283 usage.php:287 liturgyOfAnyDay.php:48 liturgyOfAnyDay.php:56
 msgid "Liturgy of any day"
 msgstr "Liturgia di un qualsiasi giorno"
 
@@ -560,11 +560,11 @@ msgstr "SALVA CALENDARIO DIOCESANO"
 msgid "Name"
 msgstr "Nome"
 
-#: extending.php:251 liturgyOfAnyDay.php:68
+#: extending.php:251 liturgyOfAnyDay.php:79
 msgid "Day"
 msgstr "Giorno"
 
-#: extending.php:252 liturgyOfAnyDay.php:72
+#: extending.php:252 liturgyOfAnyDay.php:83
 msgid "Month"
 msgstr "Mese"
 
@@ -682,12 +682,12 @@ msgstr "Calendario Liturgico - Chi siamo"
 msgid "ANOTHERVOLUNTEER"
 msgstr "ALTRO VOLONTARIO"
 
-#: liturgyOfAnyDay.php:82
+#: liturgyOfAnyDay.php:93
 msgid "Year"
 msgstr "Anno"
 
 #. translators: %s = current selected date
-#: liturgyOfAnyDay.php:89
+#: liturgyOfAnyDay.php:100
 #, php-format
 msgid "Liturgy of %s"
 msgstr "Liturgia di %s"

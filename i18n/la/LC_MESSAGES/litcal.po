@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-19 14:55+0000\n"
+"POT-Creation-Date: 2022-01-22 13:01+0000\n"
 "PO-Revision-Date: 2021-12-26 16:12+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
@@ -27,7 +27,7 @@ msgid ""
 "calendars"
 msgstr ""
 
-#: index.php:19 usage.php:40 liturgyOfAnyDay.php:37
+#: index.php:19 usage.php:40 liturgyOfAnyDay.php:48
 msgid "General Roman Calendar"
 msgstr ""
 
@@ -151,7 +151,7 @@ msgstr ""
 msgid "Calendar subscription"
 msgstr ""
 
-#: usage.php:114 liturgyOfAnyDay.php:49
+#: usage.php:114 liturgyOfAnyDay.php:60
 msgid "Select calendar"
 msgstr ""
 
@@ -312,7 +312,7 @@ msgstr ""
 msgid "In development"
 msgstr ""
 
-#: usage.php:283 usage.php:287 liturgyOfAnyDay.php:37 liturgyOfAnyDay.php:45
+#: usage.php:283 usage.php:287 liturgyOfAnyDay.php:48 liturgyOfAnyDay.php:56
 msgid "Liturgy of any day"
 msgstr ""
 
@@ -468,11 +468,11 @@ msgstr ""
 msgid "Name"
 msgstr "Nomen"
 
-#: extending.php:251 liturgyOfAnyDay.php:68
+#: extending.php:251 liturgyOfAnyDay.php:79
 msgid "Day"
 msgstr "Dies"
 
-#: extending.php:252 liturgyOfAnyDay.php:72
+#: extending.php:252 liturgyOfAnyDay.php:83
 msgid "Month"
 msgstr "Mensis"
 
@@ -576,12 +576,12 @@ msgstr ""
 msgid "ANOTHERVOLUNTEER"
 msgstr ""
 
-#: liturgyOfAnyDay.php:82
+#: liturgyOfAnyDay.php:93
 msgid "Year"
 msgstr ""
 
 #. translators: %s = current selected date
-#: liturgyOfAnyDay.php:89
+#: liturgyOfAnyDay.php:100
 #, php-format
 msgid "Liturgy of %s"
 msgstr ""
