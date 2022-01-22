@@ -8,7 +8,7 @@ let dtFormat = new Intl.DateTimeFormat((Cookies.get('currentLocale') || 'en'), {
 let newDate = new Date();
 let highContrast = [ "green", "red", "purple" ];
 
-$(document).on("change", "#monthControl,#yearControl", ev => {
+$(document).on("change", "#monthControl,#yearControl", () => {
     let year =  $('#yearControl').val();
     let month = $('#monthControl').val();
     let daysInMonth = new Date(year, month, 0).getDate();
