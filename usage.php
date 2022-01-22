@@ -13,22 +13,18 @@ $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/Lit
 
 $CalendarNations = [];
 $SelectOptions = [];
-$CalendarIndex = json_decode( file_get_contents( 'https://litcal.johnromanodorazio.com/api/v3/LitCalMetadata.php' ), true );
-foreach( $CalendarIndex as $key => $value ) {
+[ 'LitCalMetadata' => $CalendarIndex ] = json_decode( file_get_contents( 'https://litcal.johnromanodorazio.com/api/v3/LitCalMetadata.php' ), true );
+foreach( $CalendarIndex["DiocesanCalendars"] as $key => $value ) {
     if( !in_array( $value["nation"], $CalendarNations ) ) {
         array_push( $CalendarNations, $value["nation"] );
         $SelectOptions[$value["nation"]] = [];
     }
     array_push( $SelectOptions[$value["nation"]], "<option data-calendartype=\"diocesancalendar\" value=\"{$key}\">{$value["diocese"]}</option>" );
 }
-if( !in_array( "USA", $CalendarNations ) ) {
-    array_push( $CalendarNations, "USA" );
-}
-if( !in_array( "Italy", $CalendarNations ) ) {
-    array_push( $CalendarNations, "Italy" );
-}
-if( !in_array( "Vatican", $CalendarNations ) ) {
-    array_push( $CalendarNations, "Vatican" );
+foreach( array_keys($CalendarIndex["NationalCalendars"]) as $key ) {
+    if( !in_array( $key, $CalendarNations ) ) {
+        array_push( $CalendarNations, $key );
+    }
 }
 sort( $CalendarNations );
 
@@ -115,6 +111,7 @@ sort( $CalendarNations );
                                         <select class="form-control" id="calendarSelect">
                                             <?php foreach( $CalendarNations as $nation ) {
                                                 if( is_array( $SelectOptions[ $nation ] ) ) {
+                                                    echo "<option data-calendartype=\"nationalcalendar\" value=\"{$nation}\">$nation</option>";
                                                     echo "<optgroup label=\"$nation\">" . PHP_EOL;
                                                     foreach( $SelectOptions[$nation] as $option ) {
                                                         echo $option . PHP_EOL;
