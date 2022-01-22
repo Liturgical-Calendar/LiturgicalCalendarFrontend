@@ -23,7 +23,7 @@ $CalendarNations = [];
 $SelectOptions = [];
 $JSON = json_decode( file_get_contents( 'https://litcal.johnromanodorazio.com/api/v3/LitCalMetadata.php' ), true );
 if( verifyCalendarIndexJson( $JSON ) ) {
-    $NationalCalendars = $JSON["LitCalMetadata"]["NationalCalendars"]
+    $NationalCalendars = $JSON["LitCalMetadata"]["NationalCalendars"];
     $DiocesanCalendars = $JSON["LitCalMetadata"]["DiocesanCalendars"];
     foreach( $DiocesanCalendars as $key => $value ) {
         if( !in_array( $value["nation"], $CalendarNations ) ) {
@@ -32,7 +32,7 @@ if( verifyCalendarIndexJson( $JSON ) ) {
         }
         array_push( $SelectOptions[$value["nation"]], "<option data-calendartype=\"diocesancalendar\" value=\"{$key}\">{$value["diocese"]}</option>" );
     }
-    foreach( array_keys( $NationalCalendars as $key => $value ) ) {
+    foreach( array_keys( $NationalCalendars ) as $key ) {
         if( !in_array( $key, $CalendarNations ) ) {
             array_push( $CalendarNations, $key );
         }
@@ -60,7 +60,8 @@ if( verifyCalendarIndexJson( $JSON ) ) {
                     <label><?php echo _("Select calendar"); ?></label>
                     <select class="form-control" id="calendarSelect">
                         <?php foreach( $CalendarNations as $nation ) {
-                            if( is_array( $SelectOptions[ $nation ] ) ) {
+                            if( array_key_exists( $nation, $SelectOptions ) && is_array( $SelectOptions[ $nation ] ) ) {
+                                echo "<option data-calendartype=\"nationalcalendar\" value=\"{$nation}\">$nation</option>";
                                 echo "<optgroup label=\"$nation\">" . PHP_EOL;
                                 foreach( $SelectOptions[$nation] as $option ) {
                                     echo $option . PHP_EOL;
