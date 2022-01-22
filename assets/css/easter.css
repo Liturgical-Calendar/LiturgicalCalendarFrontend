@@ -5,7 +5,7 @@
     cursor:pointer;
     text-decoration:none;
     width:95%;
-    margin:0px auto;
+    margin:0 auto;
     border-bottom:2px outset LightBlue;
     display:block;
     padding: 12px 24px;
@@ -24,7 +24,7 @@ tbody {
 thead th {
     border-left: 1px groove White;
     border-right:1px ridge White;
-    padding: 6px 0px;
+    padding: 6px 0;
     background-color:grey;
 }
 tbody td {
@@ -79,7 +79,7 @@ tbody td {
                         rgba(255,255,255, 0), 
                         rgba(255,255,255, 1) 90%);
     width    : 50px;
-    height   : 0em;
+    height   : 0;
     transition: height 0.25s ease-in;
 }
 #EasterTableContainer:after {

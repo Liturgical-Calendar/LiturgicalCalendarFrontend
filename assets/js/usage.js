@@ -33,7 +33,7 @@ const updateSubscriptionURL = () => {
 }
 
 let isStaging = location.href.includes( "-staging" );
-let stagingURL = isStaging ? "-staging" : "";
+//let stagingURL = isStaging ? "-staging" : "";
 let endpointV = isStaging ? "dev" : "v3";
 let calSubscriptionURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalEngine.php?`;
 
@@ -64,7 +64,7 @@ $(document).on('click', '#examplesOfUsage > .card > .card-header button', ev => 
     window.location = ev.currentTarget.dataset.target;
 });
 
-$(document).on('mouseup', '#calSubscriptionURLWrapper', ev => {
+$(document).on('mouseup', '#calSubscriptionURLWrapper', () => {
     var sel, range;
     if (window.getSelection && document.createRange) { //Browser compatibility
         sel = window.getSelection();

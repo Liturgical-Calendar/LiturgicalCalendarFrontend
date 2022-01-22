@@ -8,7 +8,7 @@ i18next.use(i18nextHttpBackend).init({
     backend: {
         loadPath: '/assets/locales/{{lng}}/translation.json'
     }
-  }, function(err, t) {
+  }, () => { //(err, t)
     // for options see
     // https://github.com/i18next/jquery-i18next#initialize-the-plugin
     jqueryI18next.init(i18next, $);
