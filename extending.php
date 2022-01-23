@@ -14,16 +14,6 @@ $sunday     = $dayOfWeekFmt->format( DateTime::createFromFormat( '!j-n-Y', '1-1-
 
 $countryISOCodes = json_decode( file_get_contents("./assets/data/CountryToISO.json"), true );
 
-$ITALYDioceses = json_decode( file_get_contents("./assets/data/ItalyDioceses.json"), true );
-$USStates = json_decode( file_get_contents("./assets/data/USDiocesesByState.json"), true );
-$USDioceses = [];
-foreach($USStates as $state => $arr){
-    foreach($arr as $idx => $diocese){
-        $USDioceses[] = $diocese . " (" . $state . ")";
-    }
-}
-sort($USDioceses);
-
 [ "LitCalMetadata" => $LitCalMetadata ] = json_decode( file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/LitCalMetadata.php"), true );
 $NationalCalendars = $LitCalMetadata["NationalCalendars"];
 unset($NationalCalendars["VATICAN"]);
