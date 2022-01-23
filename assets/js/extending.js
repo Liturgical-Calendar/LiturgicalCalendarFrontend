@@ -347,7 +347,7 @@ toastr.options = {
 }
 
 const diocesanOvveridesDefined = () => {
-    return ( $('#diocesanCalendarOverrideEpiphany').val() !== "" || $('#diocesanCalendarOverrideAscension').val() !== "" || $('#diocesanCalendarOverrideCorpusDomini').val() !== "" );
+    return ( $('#diocesanCalendarOverrideEpiphany').val() !== "" || $('#diocesanCalendarOverrideAscension').val() !== "" || $('#diocesanCalendarOverrideCorpusChristi').val() !== "" );
 }
 
 $(document).on('click', '#saveDiocesanCalendar_btn', ev => {
@@ -363,16 +363,16 @@ $(document).on('click', '#saveDiocesanCalendar_btn', ev => {
         console.log( 'This diocesan calendar has defined some options that will override the national calendar.' );
         saveObj.overrides = {};
         if( $('#diocesanCalendarOverrideEpiphany').val() !== "" ) {
-            saveObj.overrides.EPIPHANY = $('#diocesanCalendarOverrideEpiphany').val();
+            saveObj.overrides.Epiphany = $('#diocesanCalendarOverrideEpiphany').val();
             console.log( 'Epiphany in this diocese will override Epiphany in the national calendar.' );
         }
         if( $('#diocesanCalendarOverrideAscension').val() !== "" ) {
-            saveObj.overrides.ASCENSION = $('#diocesanCalendarOverrideAscension').val();
+            saveObj.overrides.Ascension = $('#diocesanCalendarOverrideAscension').val();
             console.log( 'Ascension in this diocese will override Ascension in the national calendar.' );
         }
-        if( $('#diocesanCalendarOverrideCorpusDomini').val() !== "" ) {
-            saveObj.overrides.CORPUSDOMINI = $('#diocesanCalendarOverrideCorpusDomini').val();
-            console.log( 'Corpus Domini in this diocese will override Corpus Domini in the national calendar.' );
+        if( $('#diocesanCalendarOverrideCorpusChristi').val() !== "" ) {
+            saveObj.overrides.CorpusChristi = $('#diocesanCalendarOverrideCorpusChristi').val();
+            console.log( 'Corpus Christi in this diocese will override Corpus Christi in the national calendar.' );
         }
     }
 
@@ -442,14 +442,14 @@ $(document).on('click', '#retrieveExistingDiocesanData', evt => {
             toastr["success"]("Diocesan Calendar was retrieved successfully", "Success");
             $CALENDAR = data;
             if( data.hasOwnProperty('Overrides') ) {
-                if( data.Overrides.hasOwnProperty('EPIPHANY') ) {
-                    $('#diocesanCalendarOverrideEpiphany').val( data.Overrides.EPIPHANY );
+                if( data.Overrides.hasOwnProperty('Epiphany') ) {
+                    $('#diocesanCalendarOverrideEpiphany').val( data.Overrides.Epiphany );
                 }
-                if( data.Overrides.hasOwnProperty('ASCENSION') ) {
-                    $('#diocesanCalendarOverrideAscension').val( data.Overrides.ASCENSION );
+                if( data.Overrides.hasOwnProperty('Ascension') ) {
+                    $('#diocesanCalendarOverrideAscension').val( data.Overrides.Ascension );
                 }
-                if( data.Overrides.hasOwnProperty('CORPUSDOMINI') ) {
-                    $('#diocesanCalendarOverrideCorpusDomini').val( data.Overrides.CORPUSDOMINI );
+                if( data.Overrides.hasOwnProperty('CorpusChristi') ) {
+                    $('#diocesanCalendarOverrideCorpusChristi').val( data.Overrides.CorpusChristi );
                 }
             }
             for (const [key, litevent] of Object.entries(data.LitCal)) {
