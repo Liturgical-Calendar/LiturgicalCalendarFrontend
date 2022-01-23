@@ -243,7 +243,7 @@ $DioceseGroupHelp = _( "If a group of dioceses decides to pool their Liturgical 
                         </div>
                         <div class="form-group col col-md-3">
                             <label><?php echo _( 'CORPUS CHRISTI' ) ?></label>
-                            <select class="form-control" id="diocesanCalendarOverrideCorpusDomini">
+                            <select class="form-control" id="diocesanCalendarOverrideCorpusChristi">
                                 <option value=""></option>
                                 <option value="THURSDAY"><?php echo $thursday ?></option>
                                 <option value="SUNDAY"><?php echo $sunday ?></option>
