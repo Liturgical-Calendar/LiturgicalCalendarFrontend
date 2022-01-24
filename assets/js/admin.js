@@ -52,10 +52,10 @@ $(document).on('change', '#jsonFileSelect', () => {
             let n;
             if( jsonFile.includes('USA') || jsonFile.includes('ITALY') ) {
                 $('#jsonDataTbl').addClass('nationalCalendar');
-                n = [0, 10, 10, 14, 0, 5, 0, 25, 0, 6, 30];
+                n = [10, 10, 14, 0, 5, 0, 25, 0, 6, 30];
             } else {
                 $('#jsonDataTbl').removeClass('nationalCalendar');
-                n = [0, 10, 10, 14, 5, 25, 0, 6, 30];
+                n = [10, 10, 14, 5, 25, 0, 6, 30];
             }
             const keys = Object.keys( data[0] );
             keys.forEach((el,i) => {
@@ -119,7 +119,7 @@ $(document).on('click', '#addColumnBtn', () => {
 $(document).on('click', '#saveDataBtn', () => {
     const jsonData = [];
     const props = [];
-    const intProps = ["RECURRENCE_ID","MONTH","DAY","GRADE"];
+    const intProps = [ "MONTH", "DAY", "GRADE" ];
 
     $('#jsonDataTbl th').each((i,el) => {
         props.push($(el).text());

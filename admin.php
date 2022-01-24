@@ -55,7 +55,7 @@ if($isStaging) {
                 <tr>
                     <?php
                         $i = 0;
-                        $n = [0, 10, 10, 14, 5, 25, 0, 6, 30 ];
+                        $n = [ 10, 10, 14, 5, 25, 0, 6, 30 ];
                         foreach( $thh as $th ) {
                             echo "<th class=\"sticky-top\" style=\"width: {$n[$i++]}%;\" scope=\"col\">$th</th>";
                         }

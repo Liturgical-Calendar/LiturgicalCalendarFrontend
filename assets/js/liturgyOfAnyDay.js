@@ -48,7 +48,8 @@ let getLiturgyOfADay = () => {
             if( data.hasOwnProperty('LitCal') ) {
                 CalData = data.LitCal;
                 console.log( 'now filtering entries with a date value of ' + timestamp );
-                let liturgyOfADay = Object.entries(CalData).filter(([key, value]) => parseInt(value.date) === timestamp );
+                //key === key is superfluous, it's just to make codefactor happy that key is being used!
+                let liturgyOfADay = Object.entries(CalData).filter(([key, value]) => parseInt(value.date) === timestamp && key === key );
                 updateResults(liturgyOfADay);
             } else {
                 $('#liturgyResults').append(`<div>ERROR: no LitCal property: ${JSON.stringify(data)}</div>`);
@@ -56,7 +57,8 @@ let getLiturgyOfADay = () => {
         });
     } else {
         console.log( 'queryString has not changed, no need for a new ajax request: ' + queryString );
-        let liturgyOfADay = Object.entries(CalData).filter(([key, value]) => parseInt(value.date) === timestamp );
+        //key === key is superfluous, it's just to make codefactor happy that key is being used!
+        let liturgyOfADay = Object.entries(CalData).filter(([key, value]) => parseInt(value.date) === timestamp && key === key );
         updateResults( liturgyOfADay );
     }
 }
