@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-23 15:20+0000\n"
-"PO-Revision-Date: 2022-01-12 09:23+0000\n"
+"PO-Revision-Date: 2022-01-30 15:15+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
@@ -553,30 +553,28 @@ msgid "Other Optional Memorial"
 msgstr "Altra Memoria Facoltativa"
 
 #: extending.php:226
-#, fuzzy
-#| msgid "Depends on national calendar"
 msgid "Diocesan overrides to the national calendar for ..."
-msgstr "Dipende da calendario nazionale"
+msgstr "Customizzazione diocesana rispetto al calendario nazionale per …"
 
 #: extending.php:229
 msgid "EPIPHANY"
-msgstr ""
+msgstr "EPIFANIA"
 
 #: extending.php:232
 msgid "January 6"
-msgstr ""
+msgstr "6 Gennaio"
 
 #: extending.php:233
 msgid "Sunday between January 2 and January 8"
-msgstr ""
+msgstr "Domenica tra il 2 gennaio e l'8 gennaio"
 
 #: extending.php:237
 msgid "ASCENSION"
-msgstr ""
+msgstr "ASCENSIONE"
 
 #: extending.php:245
 msgid "CORPUS CHRISTI"
-msgstr ""
+msgstr "CORPUS DOMINI"
 
 #: extending.php:258
 msgid "SAVE DIOCESAN CALENDAR"
@@ -801,12 +799,12 @@ msgstr "Per una santa martire"
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:87
 msgid "For a Pope"
-msgstr "Per i papi"
+msgstr "Per un papa"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:89
 msgid "For a Bishop"
-msgstr "Per i vescovi"
+msgstr "Per un vescovo"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:91
@@ -816,7 +814,7 @@ msgstr "Per un pastore"
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:93
 msgid "For Several Pastors"
-msgstr "Per i pastori"
+msgstr "Per più pastori"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:95
@@ -856,7 +854,7 @@ msgstr "Per più santi"
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:109
 msgid "For One Saint"
-msgstr "Per un Santo"
+msgstr "Per un santo"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:111
@@ -871,7 +869,7 @@ msgstr "Per un monaco"
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:115
 msgid "For a Nun"
-msgstr "Per i religiosi"
+msgstr "Per una monaca"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:117
