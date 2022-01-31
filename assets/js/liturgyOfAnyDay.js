@@ -1,3 +1,7 @@
+const isStaging = location.href.includes( "-staging" );
+const endpointV = isStaging ? "dev" : "v3";
+const endpointURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalEngine.php?`;
+
 jQuery(() => {
     getLiturgyOfADay();
 });
@@ -44,7 +48,7 @@ let getLiturgyOfADay = () => {
     if( newQueryString !== queryString ) {
         console.log( 'queryString has changed. queryString = ' + queryString + ', newQueryString = ' + newQueryString );
         queryString = newQueryString;
-        $.getJSON( `https://litcal.johnromanodorazio.com/api/v3/LitCalEngine.php?${queryString}`, data => {
+        $.getJSON( `${endpointURL}${queryString}`, data => {
             if( data.hasOwnProperty('LitCal') ) {
                 CalData = data.LitCal;
                 console.log( 'now filtering entries with a date value of ' + timestamp );
@@ -170,7 +174,7 @@ let updateResults = liturgyOfADay => {
         const eventDataColor = eventData.color.split(',');
         let finalHTML = `<div class="p-4 m-4 border rounded" style="background-color:${eventDataColor[0]};color:${highContrast.includes(eventDataColor[0]) ? "white" : "black"};">`;
         finalHTML += `<h3>${eventData.name}</h3>`;
-        finalHTML += (eventDataGrade !== '' ? `<div>${eventDataGrade}</div>` : '';
+        finalHTML += (eventDataGrade !== '' ? `<div>${eventDataGrade}</div>` : '');
         finalHTML += `<div>${eventDataCommon }</div>`;
         finalHTML += (eventData.hasOwnProperty('liturgicalYear') ? `<div>${eventData.liturgicalYear}</div>` : '');
         finalHTML += `</div>`;
