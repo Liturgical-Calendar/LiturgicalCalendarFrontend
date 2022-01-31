@@ -63,6 +63,13 @@ let getLiturgyOfADay = () => {
     }
 }
 
+const filterTagsDisplayGrade = [
+    /OrdSunday[0-9]{1,2}(_vigil){0,1}/,
+    /Advent[1-4](_vigil){0,1}/,
+    /Lent[1-5](_vigil){0,1}/,
+    /Easter[1-7](_vigil){0,1}/
+];
+
 const universalCommons = [
     "Blessed Virgin Mary",
     "Virgins",
@@ -141,12 +148,31 @@ const translCommon = common => {
     }
 }
 
+const translGrade = [
+    i18next.t( "weekday" ),
+    i18next.t( "Commemoration" ),
+    i18next.t( "Optional-memorial" ),
+    i18next.t( "Memorial" ),
+    i18next.t( "FEAST" ),
+    i18next.t( "FEAST-OF-THE-LORD" ),
+    i18next.t( "SOLEMNITY" )
+];
+
 let updateResults = liturgyOfADay => {
     $('#dateOfLiturgy').text( dtFormat.format(newDate) );
     $('#liturgyResults').empty();
-    liturgyOfADay.forEach(el => {
-        let eventData = el[1];
-        let eventDataCommon = eventData.common !== '' ? translCommon(eventData.common) : '';
-        $('#liturgyResults').append(`<div class="p-4 m-4 border rounded" style="background-color:${eventData.color};color:${highContrast.includes(eventData.color) ? "white" : "black"};"><h3>${eventData.name}</h3>${'<div>' + eventDataCommon + '</div>'}${eventData.hasOwnProperty('liturgicalYear') ? '<div>' + eventData.liturgicalYear + '</div>' : ''}</div>`);
+    liturgyOfADay.forEach(([tag,eventData]) => {
+        const lclzdGrade = eventData.grade < 7 ? translGrade[eventData.grade] : '';
+        const isSundayOrdAdvLentEaster = filterTagsDisplayGrade.some(pattern => pattern.test(tag));
+        const eventDataGrade = eventData.displayGrade !== '' ? 
+          eventData.displayGrade : (!isSundayOrdAdvLentEaster ? lclzdGrade : '');
+        const eventDataCommon = eventData.common !== '' ? translCommon(eventData.common) : '';
+        let finalHTML = `<div class="p-4 m-4 border rounded" style="background-color:${eventData.color};color:${highContrast.includes(eventData.color) ? "white" : "black"};">`;
+        finalHTML += `<h3>${eventData.name}</h3>`;
+        finalHTML += (eventDataGrade !== '' ? `<div>${eventDataGrade}</div>` : '';
+        finalHTML += `<div>${eventDataCommon }</div>`;
+        finalHTML += (eventData.hasOwnProperty('liturgicalYear') ? `<div>${eventData.liturgicalYear}</div>` : '');
+        finalHTML += `</div>`;
+        $('#liturgyResults').append(finalHTML);
     });
 }
