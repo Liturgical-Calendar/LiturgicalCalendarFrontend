@@ -167,7 +167,8 @@ let updateResults = liturgyOfADay => {
         const eventDataGrade = eventData.displayGrade !== '' ? 
           eventData.displayGrade : (!isSundayOrdAdvLentEaster ? lclzdGrade : '');
         const eventDataCommon = eventData.common !== '' ? translCommon(eventData.common) : '';
-        let finalHTML = `<div class="p-4 m-4 border rounded" style="background-color:${eventData.color};color:${highContrast.includes(eventData.color) ? "white" : "black"};">`;
+        const eventDataColor = eventData.color.split(',');
+        let finalHTML = `<div class="p-4 m-4 border rounded" style="background-color:${eventDataColor[0]};color:${highContrast.includes(eventDataColor[0]) ? "white" : "black"};">`;
         finalHTML += `<h3>${eventData.name}</h3>`;
         finalHTML += (eventDataGrade !== '' ? `<div>${eventDataGrade}</div>` : '';
         finalHTML += `<div>${eventDataCommon }</div>`;
