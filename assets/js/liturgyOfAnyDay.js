@@ -63,36 +63,52 @@ let getLiturgyOfADay = () => {
     }
 }
 
+const universalCommons = [
+    "Blessed Virgin Mary",
+    "Virgins",
+    "Martyrs",
+    "Pastors",
+    "Doctors",
+    "Holy Men and Women",
+    "Dedication of a Church"
+];
+
 const translCommon = common => {
     if( common === 'Proper' ) {
         return i18next.t('Proper');
     } else {
-        $commons = common.split(",");
-        $commons = $commons.map($txt => {
-            let $common = $txt.split(":");
-            let $commonGeneral = i18next.t($common[0].replaceAll(' ', '-'));
-            let $commonSpecific = (typeof $common[1] !== 'undefined' && $common[1] != "") ? i18next.t($common[1].replaceAll(' ', '-')) : "";
-            let $commonKey = '';
-            //$txt = str_replace(":", ": ", $txt);
-            switch ($commonGeneral) {
-                case i18next.t("Blessed-Virgin-Mary"):
-                    $commonKey = i18next.t("of", {context: "(SING_FEMM)"});
-                    break;
-                case i18next.t("Virgins"):
-                    $commonKey = i18next.t("of", {context: "(PLUR_FEMM)"});
-                    break;
-                case i18next.t("Martyrs"):
-                case i18next.t("Pastors"):
-                case i18next.t("Doctors"):
-                case i18next.t("Holy-Men-and-Women"):
-                    $commonKey = i18next.t("of", {context: "(PLUR_MASC)"});
-                    break;
-                default:
-                    $commonKey = i18next.t("of", {context: "(SING_MASC)"});
+        commons = common.split(",");
+        commons = commons.map(txt => {
+            let common = txt.split(":");
+            if( universalCommons.includes(common[0]) ) {
+                let commonGeneral = i18next.t(common[0].replaceAll(' ', '-'));
+                let commonSpecific = (typeof common[1] !== 'undefined' && common[1] != "") ? i18next.t(common[1].replaceAll(' ', '-')) : "";
+                let commonKey = '';
+                switch (commonGeneral) {
+                    case i18next.t("Blessed-Virgin-Mary"):
+                        commonKey = i18next.t("of-the", {context: "(SING_FEMM)"});
+                        break;
+                    case i18next.t("Virgins"):
+                        commonKey = i18next.t("of", {context: "(PLUR_FEMM)"});
+                        break;
+                    case i18next.t("Martyrs"):
+                    case i18next.t("Pastors"):
+                    case i18next.t("Doctors"):
+                    case i18next.t("Holy-Men-and-Women"):
+                        commonKey = i18next.t("of", {context: "(PLUR_MASC)"});
+                        break;
+                    case i18next.t("Dedication-of-a-Church"):
+                        commonKey = i18next.t("of-the", {context: "(SING_FEMM)"});
+                        break;
+                    default:
+                        commonKey = i18next.t("of", {context: "(SING_MASC)"});
+                }
+                return i18next.t("From-the-Common") + " " + commonKey + " " + commonGeneral + (commonSpecific != "" ? ": " + commonSpecific : "");
+            } else {
+                return i18next.t("From-the-Common") + " " + i18next.t("of") + " " + txt.split(':').join(': ');
             }
-            return i18next.t("From-the-Common") + " " + $commonKey + " " + $commonGeneral + ($commonSpecific != "" ? ": " + $commonSpecific : "");
         });
-        return $commons.join("; " + i18next.t("or") + " ");
+        return commons.join("; " + i18next.t("or") + " ");
     }
 }
 
