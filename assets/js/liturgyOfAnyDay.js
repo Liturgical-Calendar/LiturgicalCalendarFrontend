@@ -73,6 +73,35 @@ const universalCommons = [
     "Dedication of a Church"
 ];
 
+const commonsMap = {
+    "For-One-Martyr"                          : i18next.t( "For-One-Martyr" ),
+    "For-Several-Martyrs"                     : i18next.t( "For-Several-Martyrs" ),
+    "For-Missionary-Martyrs"                  : i18next.t( "For-Missionary-Martyrs" ),
+    "For-One-Missionary-Martyr"               : i18next.t( "For-One-Missionary-Martyr" ),
+    "For-Several-Missionary-Martyrs"          : i18next.t( "For-Several-Missionary-Martyrs" ),
+    "For-a-Virgin-Martyr"                     : i18next.t( "For-a-Virgin-Martyr" ),
+    "For-a-Holy-Woman-Martyr"                 : i18next.t( "For-a-Holy-Woman-Martyr" ),
+    "For-a-Pope"                              : i18next.t( "For-a-Pope" ),
+    "For-a-Bishop"                            : i18next.t( "For-a-Bishop" ),
+    "For-One-Pastor"                          : i18next.t( "For-One-Pastor" ),
+    "For-Several-Pastors"                     : i18next.t( "For-Several-Pastors" ),
+    "For-Founders-of-a-Church"                : i18next.t( "For-Founders-of-a-Church" ),
+    "For-One-Founder"                         : i18next.t( "For-One-Founder" ),
+    "For-Several-Founders"                    : i18next.t( "For-Several-Founders" ),
+    "For-Missionaries"                        : i18next.t( "For-Missionaries" ),
+    "For-One-Virgin"                          : i18next.t( "For-One-Virgin" ),
+    "For-Several-Virgins"                     : i18next.t( "For-Several-Virgins" ),
+    "For-Several-Saints"                      : i18next.t( "For-Several-Saints" ),
+    "For-One-Saint"                           : i18next.t( "For-One-Saint" ),
+    "For-an-Abbot"                            : i18next.t( "For-an-Abbot" ),
+    "For-a-Monk"                              : i18next.t( "For-a-Monk" ),
+    "For-a-Nun"                               : i18next.t( "For-a-Nun" ),
+    "For-Religious"                           : i18next.t( "For-Religious" ),
+    "For-Those-Who-Practiced-Works-of-Mercy"  : i18next.t( "For-Those-Who-Practiced-Works-of-Mercy" ),
+    "For-Educators"                           : i18next.t( "For-Educators" ),
+    "For-Holy-Women"                          : i18next.t( "For-Holy-Women" )
+};
+
 const translCommon = common => {
     if( common === 'Proper' ) {
         return i18next.t('Proper');
@@ -103,7 +132,7 @@ const translCommon = common => {
                     default:
                         commonKey = i18next.t("of", {context: "(SING_MASC)"});
                 }
-                return i18next.t("From-the-Common") + " " + commonKey + " " + commonGeneral + (commonSpecific != "" ? ": " + commonSpecific : "");
+                return i18next.t("From-the-Common") + " " + commonKey + " " + commonGeneral + (commonSpecific != "" ? ": " + commonsMap[(common[1].replaceAll(' ', '-'))] : "");
             } else {
                 return i18next.t("From-the-Common") + " " + i18next.t("of") + " " + txt.split(':').join(': ');
             }
