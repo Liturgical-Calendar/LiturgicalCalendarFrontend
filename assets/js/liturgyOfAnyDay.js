@@ -1,3 +1,7 @@
+const isStaging = location.href.includes( "-staging" );
+const endpointV = isStaging ? "dev" : "v3";
+const endpointURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalEngine.php?`;
+
 jQuery(() => {
     getLiturgyOfADay();
 });
@@ -44,7 +48,7 @@ let getLiturgyOfADay = () => {
     if( newQueryString !== queryString ) {
         console.log( 'queryString has changed. queryString = ' + queryString + ', newQueryString = ' + newQueryString );
         queryString = newQueryString;
-        $.getJSON( `https://litcal.johnromanodorazio.com/api/v3/LitCalEngine.php?${queryString}`, data => {
+        $.getJSON( `${endpointURL}${queryString}`, data => {
             if( data.hasOwnProperty('LitCal') ) {
                 CalData = data.LitCal;
                 console.log( 'now filtering entries with a date value of ' + timestamp );
@@ -63,45 +67,117 @@ let getLiturgyOfADay = () => {
     }
 }
 
+const filterTagsDisplayGrade = [
+    /OrdSunday[0-9]{1,2}(_vigil){0,1}/,
+    /Advent[1-4](_vigil){0,1}/,
+    /Lent[1-5](_vigil){0,1}/,
+    /Easter[1-7](_vigil){0,1}/
+];
+
+const universalCommons = [
+    "Blessed Virgin Mary",
+    "Virgins",
+    "Martyrs",
+    "Pastors",
+    "Doctors",
+    "Holy Men and Women",
+    "Dedication of a Church"
+];
+
+const commonsMap = {
+    "For-One-Martyr"                          : i18next.t( "For-One-Martyr" ),
+    "For-Several-Martyrs"                     : i18next.t( "For-Several-Martyrs" ),
+    "For-Missionary-Martyrs"                  : i18next.t( "For-Missionary-Martyrs" ),
+    "For-One-Missionary-Martyr"               : i18next.t( "For-One-Missionary-Martyr" ),
+    "For-Several-Missionary-Martyrs"          : i18next.t( "For-Several-Missionary-Martyrs" ),
+    "For-a-Virgin-Martyr"                     : i18next.t( "For-a-Virgin-Martyr" ),
+    "For-a-Holy-Woman-Martyr"                 : i18next.t( "For-a-Holy-Woman-Martyr" ),
+    "For-a-Pope"                              : i18next.t( "For-a-Pope" ),
+    "For-a-Bishop"                            : i18next.t( "For-a-Bishop" ),
+    "For-One-Pastor"                          : i18next.t( "For-One-Pastor" ),
+    "For-Several-Pastors"                     : i18next.t( "For-Several-Pastors" ),
+    "For-Founders-of-a-Church"                : i18next.t( "For-Founders-of-a-Church" ),
+    "For-One-Founder"                         : i18next.t( "For-One-Founder" ),
+    "For-Several-Founders"                    : i18next.t( "For-Several-Founders" ),
+    "For-Missionaries"                        : i18next.t( "For-Missionaries" ),
+    "For-One-Virgin"                          : i18next.t( "For-One-Virgin" ),
+    "For-Several-Virgins"                     : i18next.t( "For-Several-Virgins" ),
+    "For-Several-Saints"                      : i18next.t( "For-Several-Saints" ),
+    "For-One-Saint"                           : i18next.t( "For-One-Saint" ),
+    "For-an-Abbot"                            : i18next.t( "For-an-Abbot" ),
+    "For-a-Monk"                              : i18next.t( "For-a-Monk" ),
+    "For-a-Nun"                               : i18next.t( "For-a-Nun" ),
+    "For-Religious"                           : i18next.t( "For-Religious" ),
+    "For-Those-Who-Practiced-Works-of-Mercy"  : i18next.t( "For-Those-Who-Practiced-Works-of-Mercy" ),
+    "For-Educators"                           : i18next.t( "For-Educators" ),
+    "For-Holy-Women"                          : i18next.t( "For-Holy-Women" )
+};
+
 const translCommon = common => {
     if( common === 'Proper' ) {
         return i18next.t('Proper');
     } else {
-        $commons = common.split(",");
-        $commons = $commons.map($txt => {
-            let $common = $txt.split(":");
-            let $commonGeneral = i18next.t($common[0].replaceAll(' ', '-'));
-            let $commonSpecific = (typeof $common[1] !== 'undefined' && $common[1] != "") ? i18next.t($common[1].replaceAll(' ', '-')) : "";
-            let $commonKey = '';
-            //$txt = str_replace(":", ": ", $txt);
-            switch ($commonGeneral) {
-                case i18next.t("Blessed-Virgin-Mary"):
-                    $commonKey = i18next.t("of", {context: "(SING_FEMM)"});
-                    break;
-                case i18next.t("Virgins"):
-                    $commonKey = i18next.t("of", {context: "(PLUR_FEMM)"});
-                    break;
-                case i18next.t("Martyrs"):
-                case i18next.t("Pastors"):
-                case i18next.t("Doctors"):
-                case i18next.t("Holy-Men-and-Women"):
-                    $commonKey = i18next.t("of", {context: "(PLUR_MASC)"});
-                    break;
-                default:
-                    $commonKey = i18next.t("of", {context: "(SING_MASC)"});
+        commons = common.split(",");
+        commons = commons.map(txt => {
+            let common = txt.split(":");
+            if( universalCommons.includes(common[0]) ) {
+                let commonGeneral = i18next.t(common[0].replaceAll(' ', '-'));
+                let commonSpecific = (typeof common[1] !== 'undefined' && common[1] != "") ? i18next.t(common[1].replaceAll(' ', '-')) : "";
+                let commonKey = '';
+                switch (commonGeneral) {
+                    case i18next.t("Blessed-Virgin-Mary"):
+                        commonKey = i18next.t("of-the", {context: "(SING_FEMM)"});
+                        break;
+                    case i18next.t("Virgins"):
+                        commonKey = i18next.t("of", {context: "(PLUR_FEMM)"});
+                        break;
+                    case i18next.t("Martyrs"):
+                    case i18next.t("Pastors"):
+                    case i18next.t("Doctors"):
+                    case i18next.t("Holy-Men-and-Women"):
+                        commonKey = i18next.t("of", {context: "(PLUR_MASC)"});
+                        break;
+                    case i18next.t("Dedication-of-a-Church"):
+                        commonKey = i18next.t("of-the", {context: "(SING_FEMM)"});
+                        break;
+                    default:
+                        commonKey = i18next.t("of", {context: "(SING_MASC)"});
+                }
+                return i18next.t("From-the-Common") + " " + commonKey + " " + commonGeneral + (commonSpecific != "" ? ": " + commonsMap[(common[1].replaceAll(' ', '-'))] : "");
+            } else {
+                return i18next.t("From-the-Common") + " " + i18next.t("of") + " " + txt.split(':').join(': ');
             }
-            return i18next.t("From-the-Common") + " " + $commonKey + " " + $commonGeneral + ($commonSpecific != "" ? ": " + $commonSpecific : "");
         });
-        return $commons.join("; " + i18next.t("or") + " ");
+        return commons.join("; " + i18next.t("or") + " ");
     }
 }
+
+const translGrade = [
+    i18next.t( "weekday" ),
+    i18next.t( "Commemoration" ),
+    i18next.t( "Optional-memorial" ),
+    i18next.t( "Memorial" ),
+    i18next.t( "FEAST" ),
+    i18next.t( "FEAST-OF-THE-LORD" ),
+    i18next.t( "SOLEMNITY" )
+];
 
 let updateResults = liturgyOfADay => {
     $('#dateOfLiturgy').text( dtFormat.format(newDate) );
     $('#liturgyResults').empty();
-    liturgyOfADay.forEach(el => {
-        let eventData = el[1];
-        let eventDataCommon = eventData.common !== '' ? translCommon(eventData.common) : '';
-        $('#liturgyResults').append(`<div class="p-4 m-4 border rounded" style="background-color:${eventData.color};color:${highContrast.includes(eventData.color) ? "white" : "black"};"><h3>${eventData.name}</h3>${'<div>' + eventDataCommon + '</div>'}${eventData.hasOwnProperty('liturgicalYear') ? '<div>' + eventData.liturgicalYear + '</div>' : ''}</div>`);
+    liturgyOfADay.forEach(([tag,eventData]) => {
+        const lclzdGrade = eventData.grade < 7 ? translGrade[eventData.grade] : '';
+        const isSundayOrdAdvLentEaster = filterTagsDisplayGrade.some(pattern => pattern.test(tag));
+        const eventDataGrade = eventData.displayGrade !== '' ? 
+          eventData.displayGrade : (!isSundayOrdAdvLentEaster ? lclzdGrade : '');
+        const eventDataCommon = eventData.common !== '' ? translCommon(eventData.common) : '';
+        const eventDataColor = eventData.color.split(',');
+        let finalHTML = `<div class="p-4 m-4 border rounded" style="background-color:${eventDataColor[0]};color:${highContrast.includes(eventDataColor[0]) ? "white" : "black"};">`;
+        finalHTML += `<h3>${eventData.name}</h3>`;
+        finalHTML += (eventDataGrade !== '' ? `<div>${eventDataGrade}</div>` : '');
+        finalHTML += `<div>${eventDataCommon }</div>`;
+        finalHTML += (eventData.hasOwnProperty('liturgicalYear') ? `<div>${eventData.liturgicalYear}</div>` : '');
+        finalHTML += `</div>`;
+        $('#liturgyResults').append(finalHTML);
     });
 }
