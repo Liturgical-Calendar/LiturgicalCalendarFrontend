@@ -4,13 +4,14 @@ include_once( 'includes/LitCommon.php' );
 
 class FormControls {
 
-    private static $settings = [
+    public static $settings = [
         "nameField"     => true,
         "dayField"      => true,
         "monthField"    => true,
         "colorField"    => true,
         "properField"   => true,
-        "fromYearField" => true
+        "fromYearField" => true,
+        "toYearField"   => false
     ];
 
     private i18n $i18n;
@@ -126,13 +127,20 @@ class FormControls {
             "</div>";
         }
 
+        if(self::$settings["toYearField"]){
+            $formRow .= "<div class=\"form-group col-sm-1\">" .
+            "<label for=\"{$uniqid}ToYear\">" . _( "Until" ) . "</label>" .
+            "<input type=\"number\" min=1900 max=9999 class=\"form-control litEvent litEventToYear\" id=\"{$uniqid}ToYear\" value=1970 />" .
+            "</div>";
+        }
+
         $formRow .= "</div>";
 
         echo $formRow;
     }
 
     public function getCommonsTemplate() {
-        return "<div class=\"form-group col-sm-3\">" .
+        return "<div class=\"form-group col-sm-{colWidth}\">" .
         "<label style=\"display:block;\" for=\"{uniqid}Proper\">" . _( "Common (or Proper)") . "</label>" .
         "<select class=\"form-control litEvent litEventProper\" id=\"{uniqid}Proper\" multiple=\"multiple\" />" .
         "<option value=\"Proper\" selected>" . $this->LitCommon->C("Proper") . "</option>" .

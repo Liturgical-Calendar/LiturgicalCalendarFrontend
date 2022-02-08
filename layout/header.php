@@ -44,7 +44,7 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOf
         <!-- Heading -->
         <li>
             <div class="sidebar-heading<?php echo $currentPage === "index" || $currentPage === "" ? " text-white" : "" ?>">
-            <?php echo"API"; ?>
+            <?php echo "API"; ?>
             </div>
         </li>
 
@@ -132,7 +132,8 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOf
                             <?php echo _( "Extending the API" ); ?>
                         </a>
                         <div class="dropdown-menu dropdown-menu-left shadow animated--grow-in" aria-labelledby="extendingChoicesDropdown" id="extendingChoicesDropdownItems">
-                            <a class="dropdown-item<?php echo isset($_GET["choice"]) && $_GET["choice"]==="national"?" active":"" ?> disabled" id="extendingChoiceNationalCalendar" href="./extending.php?choice=national"><?php echo _( "Create a National Calendar" ); ?></a>
+                            <a class="dropdown-item<?php echo isset($_GET["choice"]) && $_GET["choice"]==="widerRegion"?" active":"" ?>" id="extendingChoiceWiderRegion" href="./extending.php?choice=widerRegion"><?php echo _( "Create a Calendar for a Wider Region" ); ?></a>
+                            <a class="dropdown-item<?php echo isset($_GET["choice"]) && $_GET["choice"]==="national"?" active":"" ?>" id="extendingChoiceNationalCalendar" href="./extending.php?choice=national"><?php echo _( "Create a National Calendar" ); ?></a>
                             <a class="dropdown-item<?php echo isset($_GET["choice"]) && $_GET["choice"]==="diocesan"?" active":"" ?>" id="extendingChoiceDiocesanCalendar" href="./extending.php?choice=diocesan"><?php echo _( "Create a Diocesan Calendar" ); ?></a>
                         </div>
                     </li>

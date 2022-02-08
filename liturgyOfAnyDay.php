@@ -2,6 +2,12 @@
 
 include_once("includes/i18n.php");
 
+$isStaging = ( strpos( $_SERVER['HTTP_HOST'], "-staging" ) !== false );
+$stagingURL = $isStaging ? "-staging" : "";
+$endpointV = $isStaging ? "dev" : "v3";
+define("LITCAL_API_URL", "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalEngine.php");
+define("METADATA_URL", "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMetadata.php");
+
 $i18n = new i18n();
 $dateToday = new DateTime();
 $fmt = new IntlDateFormatter( $i18n->LOCALE,IntlDateFormatter::FULL, IntlDateFormatter::FULL, 'UTC', IntlDateFormatter::GREGORIAN, "MMMM" );
@@ -21,7 +27,7 @@ function verifyCalendarIndexJson( $JSON ) {
 
 $CalendarNations = [];
 $SelectOptions = [];
-$JSON = json_decode( file_get_contents( 'https://litcal.johnromanodorazio.com/api/v3/LitCalMetadata.php' ), true );
+$JSON = json_decode( file_get_contents( METADATA_URL ), true );
 if( verifyCalendarIndexJson( $JSON ) ) {
     $NationalCalendars = $JSON["LitCalMetadata"]["NationalCalendars"];
     $DiocesanCalendars = $JSON["LitCalMetadata"]["DiocesanCalendars"];
@@ -85,7 +91,7 @@ if( verifyCalendarIndexJson( $JSON ) ) {
                     <select class="form-control" id="monthControl">
                         <?php foreach( range(1,12) as $monthNumber ) {
                             $monthDate->setDate($dateToday->format('Y'), $monthNumber, 15);
-                            echo "<option value=\"{$monthNumber}\">{$fmt->format($monthDate)}</option>";
+                            echo "<option value=\"{$monthNumber}\" " . (intval($dateToday->format('n')) === $monthNumber ? "selected" : "") . ">{$fmt->format($monthDate)}</option>";
                         }
                         ?>
                     </select>
