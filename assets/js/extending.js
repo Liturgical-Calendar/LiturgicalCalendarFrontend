@@ -170,11 +170,12 @@ class FormControls {
                 festivity.sinceYear = 1970;
                 festivity.untilYear = 0;
                 festivity.decreeURL = '';
+                festivity.decreeLangs = {};
             }
             if( typeof element === 'object' ) {
                 festivity = element.Festivity;
                 festivity.sinceYear = element.Metadata.sinceYear;
-                festivity.untilYear = element.Metadata.untilYear;
+                festivity.untilYear = element.Metadata.untilYear || 0;
                 festivity.decreeURL = element.Metadata.decreeURL;
                 festivity.decreeLangs = element.Metadata.decreeLangs;
             }
@@ -205,7 +206,7 @@ class FormControls {
         if (FormControls.settings.untilYearField) {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}UntilYear">${messages[ "Until" ]}</label>
-            <input type="number" min="0" max="9999" class="form-control litEvent litEventUntilYear" id="onTheFly${FormControls.uniqid}UntilYear" value="${festivity.untilYear||0}" />
+            <input type="number" min="0" max="9999" class="form-control litEvent litEventUntilYear" id="onTheFly${FormControls.uniqid}UntilYear" value="${festivity.untilYear}" />
             </div>`;
         }
 
