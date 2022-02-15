@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-08 06:27+0000\n"
-"PO-Revision-Date: 2022-01-23 12:48+0000\n"
+"PO-Revision-Date: 2022-02-16 09:56+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
@@ -507,11 +507,11 @@ msgstr ""
 
 #: extending.php:296
 msgid "EPIPHANY"
-msgstr ""
+msgstr "EPIPHANIA"
 
 #: extending.php:299
 msgid "January 6"
-msgstr ""
+msgstr "6 Ianuarii"
 
 #: extending.php:300
 msgid "Sunday between January 2 and January 8"
@@ -519,7 +519,7 @@ msgstr ""
 
 #: extending.php:304
 msgid "ASCENSION"
-msgstr ""
+msgstr "ASCENSIO"
 
 #: extending.php:312
 msgid "CORPUS CHRISTI"
@@ -711,7 +711,7 @@ msgstr "Pastorum"
 #. translators: context = from the Common of nn
 #: includes/LitCommon.php:66
 msgid "Doctors"
-msgstr "Doctorum"
+msgstr "Doctorum Ecclesiæ"
 
 #. translators: context = from the Common of nn
 #: includes/LitCommon.php:68
@@ -841,7 +841,7 @@ msgstr "Pro religiosis"
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:119
 msgid "For Those Who Practiced Works of Mercy"
-msgstr "Pro iis qui opera misericordiae exercuerunt"
+msgstr "Pro iis qui opera misericordiæ exercuerunt"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:121
