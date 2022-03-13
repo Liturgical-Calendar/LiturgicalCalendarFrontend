@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-23 15:20+0000\n"
-"PO-Revision-Date: 2022-01-23 12:48+0000\n"
+"POT-Creation-Date: 2022-03-13 17:30+0000\n"
+"PO-Revision-Date: 2022-02-16 09:56+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
@@ -27,7 +27,7 @@ msgid ""
 "calendars"
 msgstr ""
 
-#: index.php:19 usage.php:36 liturgyOfAnyDay.php:48
+#: index.php:19 usage.php:36 liturgyOfAnyDay.php:54
 msgid "General Roman Calendar"
 msgstr ""
 
@@ -151,7 +151,7 @@ msgstr ""
 msgid "Calendar subscription"
 msgstr ""
 
-#: usage.php:110 liturgyOfAnyDay.php:60
+#: usage.php:110 liturgyOfAnyDay.php:66
 msgid "Select calendar"
 msgstr ""
 
@@ -312,7 +312,7 @@ msgstr ""
 msgid "In development"
 msgstr ""
 
-#: usage.php:280 usage.php:284 liturgyOfAnyDay.php:48 liturgyOfAnyDay.php:56
+#: usage.php:280 usage.php:284 liturgyOfAnyDay.php:54 liturgyOfAnyDay.php:62
 msgid "Liturgy of any day"
 msgstr ""
 
@@ -322,21 +322,34 @@ msgid ""
 "baptism."
 msgstr ""
 
-#: extending.php:27
+#: extending.php:29
 msgid ""
 "The General Roman Calendar can be extended so as to create a National or "
 "Diocesan calendar. Diocesan calendars depend on National calendars, so the "
 "National calendar must first be created."
 msgstr ""
 
-#: extending.php:28
+#: extending.php:30
+msgid ""
+"A National calendar may have some festivities in common with other National "
+"calendars, for example the patron of a wider region."
+msgstr ""
+
+#: extending.php:31
+msgid ""
+"In this case, the festivities for the Wider region should be defined "
+"separately, and if applicable should be made translatable, then the Wider "
+"region should be applied to the National Calendar."
+msgstr ""
+
+#: extending.php:32
 msgid ""
 "National calendars must be defined using data from the translation of the "
 "Roman Missal used in the Region or in any case from decrees of the Episcopal "
 "Conference of the Region."
 msgstr ""
 
-#: extending.php:29
+#: extending.php:33
 msgid ""
 "If a group of dioceses decides to pool their Liturgical Calendar data, for "
 "example to print out one single yearly calendar with the data for all the "
@@ -344,201 +357,296 @@ msgid ""
 msgstr ""
 
 #: extending.php:36
-msgid "General Roman Calendar - Extending"
+msgid "Tag"
 msgstr ""
 
-#: extending.php:44
-msgid "Extend the General Roman Calendar with National or Diocesan data"
-msgstr ""
-
-#: extending.php:57
-msgid "Generate National Calendar"
-msgstr ""
-
-#: extending.php:74
-msgid "Depends on national calendar"
-msgstr ""
-
-#: extending.php:85
-msgid "Diocese"
-msgstr ""
-
-#: extending.php:87
-msgid ""
-"This diocese does not seem to exist? Please choose from a value in the list."
-msgstr ""
-
-#: extending.php:91
-msgid "Retrieve existing data"
-msgstr ""
-
-#: extending.php:92
-msgid "Remove existing data"
-msgstr ""
-
-#: extending.php:95
-msgid "Diocesan group"
-msgstr ""
-
-#: extending.php:100
-msgid "Overwrites universal / national calendar"
-msgstr ""
-
-#: extending.php:112
-msgid "Solemnities"
-msgstr "Sollemnitates"
-
-#: extending.php:113
-msgid "Feasts"
-msgstr "Festuum"
-
-#: extending.php:114
-msgid "Memorials"
-msgstr "Memoriæ"
-
-#: extending.php:115
-msgid "Optional memorials"
-msgstr "Memoriæ ad libitum"
-
-#: extending.php:134 extending.php:155 extending.php:176 extending.php:197
-msgid "Generate Diocesan Calendar"
-msgstr ""
-
-#: extending.php:134
-msgid "Define the Solemnities"
-msgstr ""
-
-#: extending.php:140
-msgid ""
-"Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
-msgstr ""
-
-#: extending.php:141 extending.php:162
-msgid "Dedication of the Cathedral"
-msgstr ""
-
-#: extending.php:142 extending.php:287
-msgid "Other Solemnity"
-msgstr ""
-
-#: extending.php:155
-msgid "Define the Feasts"
-msgstr ""
-
-#: extending.php:161
-msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
-msgstr ""
-
-#: extending.php:163 extending.php:288
-msgid "Other Feast"
-msgstr ""
-
-#: extending.php:176
-msgid "Define the Memorials"
-msgstr ""
-
-#: extending.php:182
-msgid ""
-"Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
-msgstr ""
-
-#: extending.php:183 extending.php:184 extending.php:289
-msgid "Other Memorial"
-msgstr ""
-
-#: extending.php:197
-msgid "Define the Optional Memorials"
-msgstr ""
-
-#: extending.php:203
-msgid ""
-"Saints whos veneration is local to the Place, Diocese, Region, Province or "
-"Territory"
-msgstr ""
-
-#: extending.php:204 extending.php:205 extending.php:290
-msgid "Other Optional Memorial"
-msgstr ""
-
-#: extending.php:226
-msgid "Diocesan overrides to the national calendar for ..."
-msgstr ""
-
-#: extending.php:229
-msgid "EPIPHANY"
-msgstr ""
-
-#: extending.php:232
-msgid "January 6"
-msgstr ""
-
-#: extending.php:233
-msgid "Sunday between January 2 and January 8"
-msgstr ""
-
-#: extending.php:237
-msgid "ASCENSION"
-msgstr ""
-
-#: extending.php:245
-msgid "CORPUS CHRISTI"
-msgstr ""
-
-#: extending.php:258
-msgid "SAVE DIOCESAN CALENDAR"
-msgstr ""
-
-#: extending.php:284
+#: extending.php:37 extending.php:442
 msgid "Name"
 msgstr "Nomen"
 
-#: extending.php:285 liturgyOfAnyDay.php:80
+#: extending.php:38 liturgyOfAnyDay.php:86
 msgid "Day"
 msgstr "Dies"
 
-#: extending.php:286 liturgyOfAnyDay.php:84
+#: extending.php:39 liturgyOfAnyDay.php:90
 msgid "Month"
 msgstr "Mensis"
 
-#: extending.php:291
+#: extending.php:40 extending.php:270
+msgid "Other Solemnity"
+msgstr ""
+
+#: extending.php:41 extending.php:291
+msgid "Other Feast"
+msgstr ""
+
+#: extending.php:42 extending.php:311 extending.php:312
+msgid "Other Memorial"
+msgstr ""
+
+#: extending.php:43 extending.php:332 extending.php:333
+msgid "Other Optional Memorial"
+msgstr ""
+
+#: extending.php:44
 msgid "Delete diocesan calendar"
 msgstr ""
 
-#: extending.php:292
+#: extending.php:45
 msgid ""
 "If you choose to delete this diocesan calendar, the liturgical events "
 "defined for the calendar and the corresponding index entry will be removed "
 "and no longer available in the client applications."
 msgstr ""
 
-#: extending.php:293
+#: extending.php:46
 msgid "Liturgical color"
 msgstr "Color liturgicum"
 
 #. translators: context = liturgical color
-#: extending.php:294 includes/LitColor.php:29
+#: extending.php:47 includes/LitColor.php:29
 msgid "white"
 msgstr "albus"
 
 #. translators: context = liturgical color
-#: extending.php:295 includes/LitColor.php:32
+#: extending.php:48 includes/LitColor.php:32
 msgid "red"
 msgstr "ruber"
 
 #. translators: context = liturgical color
-#: extending.php:296 includes/LitColor.php:23
+#: extending.php:49 includes/LitColor.php:23
 msgid "green"
 msgstr "viridis"
 
 #. translators: context = liturgical color
-#: extending.php:297 includes/LitColor.php:26
+#: extending.php:50 includes/LitColor.php:26
 msgid "purple"
 msgstr "purpura"
 
 #. translators: in reference to the first year from which this festivity takes place
-#: extending.php:299
+#: extending.php:52
 msgid "Since"
 msgstr "Ab anno"
+
+#. translators: in reference to the year from which this festivity no longer needs to be dealt with
+#: extending.php:54
+msgid "Until"
+msgstr ""
+
+#. translators: label of the form row
+#: extending.php:56
+msgid "Patron or Patrons of the Wider Region"
+msgstr ""
+
+#. translators: label of the form row
+#: extending.php:58
+msgid "New festivity"
+msgstr ""
+
+#. translators: label of the form row
+#: extending.php:60
+msgid "Change name or grade"
+msgstr ""
+
+#. translators: label of the form row
+#: extending.php:62
+msgid "Move festivity"
+msgstr ""
+
+#: extending.php:63
+msgid "Decree URL"
+msgstr ""
+
+#: extending.php:64
+msgid "Decree Language mappings"
+msgstr ""
+
+#: extending.php:75
+msgid "General Roman Calendar - Extending"
+msgstr ""
+
+#: extending.php:83
+msgid "Extend the General Roman Calendar with National or Diocesan data"
+msgstr ""
+
+#: extending.php:97
+msgid "Wider Region"
+msgstr ""
+
+#: extending.php:99 extending.php:153
+msgid "This value cannot be empty."
+msgstr ""
+
+#: extending.php:113
+msgid "Wider Region is multilingual"
+msgstr ""
+
+#: extending.php:120 extending.php:167 extending.php:217
+msgid "Remove existing data"
+msgstr ""
+
+#: extending.php:126
+msgid "Create a Calendar for a Wider Region"
+msgstr ""
+
+#: extending.php:130 extending.php:177 extending.php:406
+msgid "Designate patron from existing festivity"
+msgstr ""
+
+#: extending.php:131 extending.php:178 extending.php:430
+msgid "Change name or grade of existing festivity"
+msgstr ""
+
+#: extending.php:132 extending.php:179 extending.php:461
+msgid "Move festivity to new date"
+msgstr ""
+
+#: extending.php:133 extending.php:180 extending.php:485
+msgid "Create a new festivity"
+msgstr ""
+
+#: extending.php:140
+msgid "Save Wider Region Calendar Data"
+msgstr ""
+
+#: extending.php:151
+msgid "National Calendar"
+msgstr ""
+
+#: extending.php:173
+msgid "Create a National Calendar"
+msgstr ""
+
+#: extending.php:187
+msgid "Save National Calendar Data"
+msgstr ""
+
+#: extending.php:199
+msgid "Depends on national calendar"
+msgstr ""
+
+#: extending.php:210
+msgid "Diocese"
+msgstr ""
+
+#: extending.php:212
+msgid ""
+"This diocese does not seem to exist? Please choose from a value in the list."
+msgstr ""
+
+#: extending.php:216
+msgid "Retrieve existing data"
+msgstr ""
+
+#: extending.php:220
+msgid "Diocesan group"
+msgstr ""
+
+#: extending.php:240
+msgid "Solemnities"
+msgstr "Sollemnitates"
+
+#: extending.php:241
+msgid "Feasts"
+msgstr "Festuum"
+
+#: extending.php:242
+msgid "Memorials"
+msgstr "Memoriæ"
+
+#: extending.php:243
+msgid "Optional memorials"
+msgstr "Memoriæ ad libitum"
+
+#: extending.php:262 extending.php:283 extending.php:304 extending.php:325
+msgid "Create a Diocesan Calendar"
+msgstr ""
+
+#: extending.php:262
+msgid "Define the Solemnities"
+msgstr ""
+
+#: extending.php:268
+msgid ""
+"Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
+msgstr ""
+
+#: extending.php:269 extending.php:290
+msgid "Dedication of the Cathedral"
+msgstr ""
+
+#: extending.php:283
+msgid "Define the Feasts"
+msgstr ""
+
+#: extending.php:289
+msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
+msgstr ""
+
+#: extending.php:304
+msgid "Define the Memorials"
+msgstr ""
+
+#: extending.php:310
+msgid ""
+"Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
+msgstr ""
+
+#: extending.php:325
+msgid "Define the Optional Memorials"
+msgstr ""
+
+#: extending.php:331
+msgid ""
+"Saints whos veneration is local to the Place, Diocese, Region, Province or "
+"Territory"
+msgstr ""
+
+#: extending.php:354
+msgid "Diocesan overrides to the national calendar for ..."
+msgstr ""
+
+#: extending.php:357
+msgid "EPIPHANY"
+msgstr "EPIPHANIA"
+
+#: extending.php:360
+msgid "January 6"
+msgstr "6 Ianuarii"
+
+#: extending.php:361
+msgid "Sunday between January 2 and January 8"
+msgstr ""
+
+#: extending.php:365
+msgid "ASCENSION"
+msgstr "ASCENSIO"
+
+#: extending.php:373
+msgid "CORPUS CHRISTI"
+msgstr ""
+
+#: extending.php:386
+msgid "SAVE DIOCESAN CALENDAR"
+msgstr ""
+
+#: extending.php:411 extending.php:435 extending.php:466 extending.php:490
+msgid "Choose from existing festivities"
+msgstr ""
+
+#: extending.php:413 extending.php:437 extending.php:468 extending.php:492
+msgid ""
+"This festivity does not seem to exist? Please choose from a value in the "
+"list."
+msgstr ""
+
+#: extending.php:440
+msgid "Property to change"
+msgstr ""
+
+#: extending.php:443
+msgid "Grade"
+msgstr ""
 
 #: easter.php:58
 msgid "Date of Easter from 1583 to 9999"
@@ -601,12 +709,12 @@ msgstr ""
 msgid "ANOTHERVOLUNTEER"
 msgstr ""
 
-#: liturgyOfAnyDay.php:94
+#: liturgyOfAnyDay.php:100
 msgid "Year"
 msgstr "Annum"
 
 #. translators: %s = current selected date
-#: liturgyOfAnyDay.php:101
+#: liturgyOfAnyDay.php:107
 #, php-format
 msgid "Liturgy of %s"
 msgstr ""
@@ -643,7 +751,7 @@ msgstr "Pastorum"
 #. translators: context = from the Common of nn
 #: includes/LitCommon.php:66
 msgid "Doctors"
-msgstr "Doctorum"
+msgstr "Doctorum Ecclesiæ"
 
 #. translators: context = from the Common of nn
 #: includes/LitCommon.php:68
@@ -773,7 +881,7 @@ msgstr "Pro religiosis"
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:119
 msgid "For Those Who Practiced Works of Mercy"
-msgstr "Pro iis qui opera misericordiae exercuerunt"
+msgstr "Pro iis qui opera misericordiæ exercuerunt"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:121
@@ -817,6 +925,50 @@ msgstr "De Commune"
 #: includes/LitCommon.php:270
 msgid "or"
 msgstr "vel"
+
+#. translators: liturgical rank. Keep lowercase
+#: includes/LitGrade.php:88 includes/LitGrade.php:127
+msgid "weekday"
+msgstr ""
+
+#. translators: liturgical rank. Keep Capitalized
+#: includes/LitGrade.php:93
+msgid "Commemoration"
+msgstr ""
+
+#. translators: liturgical rank. Keep Capitalized
+#: includes/LitGrade.php:98
+#, fuzzy
+#| msgid "Optional memorials"
+msgid "Optional memorial"
+msgstr "Memoriæ ad libitum"
+
+#. translators: liturgical rank. Keep Capitalized
+#: includes/LitGrade.php:103
+#, fuzzy
+#| msgid "Memorials"
+msgid "Memorial"
+msgstr "Memoriæ"
+
+#. translators: liturgical rank. Keep UPPERCASE
+#: includes/LitGrade.php:108
+msgid "FEAST"
+msgstr ""
+
+#. translators: liturgical rank. Keep UPPERCASE
+#: includes/LitGrade.php:113
+msgid "FEAST OF THE LORD"
+msgstr ""
+
+#. translators: liturgical rank. Keep UPPERCASE
+#: includes/LitGrade.php:118
+msgid "SOLEMNITY"
+msgstr ""
+
+#. translators: liturgical rank. Keep lowercase
+#: includes/LitGrade.php:123
+msgid "celebration with precedence over solemnities"
+msgstr ""
 
 #~ msgid "Common (or Proper)"
 #~ msgstr "Communis (vel Proprium)"
