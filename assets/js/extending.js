@@ -88,9 +88,15 @@ class FormControls {
         dayField: true,
         monthField: true,
         colorField: true,
-        properField: true,
+        gradeField: false,
+        properField: false,
+        gradeFieldShow: false,
+        properFieldShow: false,
         fromYearField: true,
-        untilYearField: false
+        untilYearField: false,
+        tagField: false,
+        decreeURLField: false,
+        decreeLangMapField: false
     }
 
     static CreateFestivityRow(title = null) {
@@ -162,20 +168,20 @@ class FormControls {
 
     static CreatePatronRow(title = null, element = null) {
         let formRow = '';
-        let festivity;
+        let festivity = null;
         if( element !== null ) {
             if( typeof element === 'string' ) {
                 festivity = lowercaseKeys( FestivityCollection[element] );
                 festivity.tag = element;
                 festivity.sinceYear = 1970;
-                festivity.untilYear = 0;
+                festivity.untilYear = '';
                 festivity.decreeURL = '';
                 festivity.decreeLangs = {};
             }
             if( typeof element === 'object' ) {
                 festivity = element.Festivity;
                 festivity.sinceYear = element.Metadata.sinceYear;
-                festivity.untilYear = element.Metadata.untilYear || 0;
+                festivity.untilYear = element.Metadata.untilYear || '';
                 festivity.decreeURL = element.Metadata.decreeURL;
                 festivity.decreeLangs = element.Metadata.decreeLangs;
             }
@@ -188,73 +194,87 @@ class FormControls {
 
         formRow += `<div class="form-row">`;
 
-        if (element !== null) {
-            formRow += `<div class="form-group col-sm-6">
-            <input type="hidden" id="onTheFly${FormControls.uniqid}Tag" value="${festivity.tag}" />
-            <label for="onTheFly${FormControls.uniqid}Name">${messages[ "Name" ]}</label>
-            <input type="text" class="form-control litEvent litEventName" id="onTheFly${FormControls.uniqid}Name" value="${festivity.name}" />
-            </div>`;
+        formRow += `<div class="form-group col-sm-6">`;
+        if(FormControls.settings.tagField === false){
+            formRow += `<input type="hidden" id="onTheFly${FormControls.uniqid}Tag" value="${festivity !== null ? festivity.tag : ''}" />`;
         }
+        formRow += `<label for="onTheFly${FormControls.uniqid}Name">${messages[ "Name" ]}</label>
+        <input type="text" class="form-control litEvent litEventName${festivity !== null && typeof festivity.name==='undefined' ? ` is-invalid` : ``}" id="onTheFly${FormControls.uniqid}Name" value="${festivity !== null ? festivity.name : ''}"${FormControls.settings.nameField === false ? ' readonly' : ''} />
+        <div class="invalid-feedback">There is no locale data for this celebration in the current locale. Perhaps try a different locale?.</div>
+        </div>`;
 
         if (FormControls.settings.fromYearField) {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}FromYear">${messages[ "Since" ]}</label>
-            <input type="number" min="1970" max="9999" class="form-control litEvent litEventFromYear" id="onTheFly${FormControls.uniqid}FromYear" value="${festivity.sinceYear}" />
+            <input type="number" min="1970" max="9999" class="form-control litEvent litEventFromYear" id="onTheFly${FormControls.uniqid}FromYear" value="${festivity !== null ? festivity.sinceYear : ''}" />
             </div>`;
         }
 
         if (FormControls.settings.untilYearField) {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}UntilYear">${messages[ "Until" ]}</label>
-            <input type="number" min="0" max="9999" class="form-control litEvent litEventUntilYear" id="onTheFly${FormControls.uniqid}UntilYear" value="${festivity.untilYear}" />
+            <input type="number" min="1970" max="9999" class="form-control litEvent litEventUntilYear" id="onTheFly${FormControls.uniqid}UntilYear" value="${festivity !== null ? festivity.untilYear : ''}" />
             </div>`;
         }
 
-        if (FormControls.settings.colorField) {
-            let selectedColors = festivity.color.split(',');
+        let selectedColors = festivity !== null ? festivity.color.split(',') : null;
+        formRow += `<div class="form-group col-sm-2">
+        <label for="onTheFly${FormControls.uniqid}Color">${messages[ "Liturgical color" ]}</label>
+        <select class="form-control litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple"${FormControls.settings.colorField === false ? ' readonly' : ''} />
+        <option value="white"${festivity !== null && selectedColors.includes("white") ? ' selected' : '' }>${messages[ "white" ].toUpperCase()}</option>
+        <option value="red"${festivity !== null && selectedColors.includes("red") ? ' selected' : '' }>${messages[ "red" ].toUpperCase()}</option>
+        <option value="purple"${festivity !== null && selectedColors.includes("purple") ? ' selected' : '' }>${messages[ "purple" ].toUpperCase()}</option>
+        <option value="green"${festivity !== null && selectedColors.includes("green") ? ' selected' : '' }>${messages[ "green" ].toUpperCase()}</option>
+        </select>
+        </div>`;
+
+        formRow += `<div class="form-group col-sm-1">
+        <label for="onTheFly${FormControls.uniqid}Day">${messages[ "Day" ]}</label>
+        <input type="number" min="1" max="31" value="${festivity !== null && festivity.day}" class="form-control litEvent litEventDay" id="onTheFly${FormControls.uniqid}Day"${FormControls.settings.dayField === false ?  'readonly' : '' } />
+        </div>`;
+
+        formRow += `<div class="form-group col-sm-1">
+        <label for="onTheFly${FormControls.uniqid}Month">${messages[ "Month" ]}</label>
+        <select class="form-control litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month"${FormControls.settings.monthField === false ?  'readonly' : '' } >`;
+
+        let formatter = new Intl.DateTimeFormat(LOCALE, { month: 'long' });
+        for (let i = 0; i < 12; i++) {
+            let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
+            formRow += `<option value=${i + 1}${festivity !== null && festivity.month === i+1 ? ' selected' : '' }>${formatter.format(month)}</option>`;
+        }
+
+        formRow += `</select>
+        </div>`;
+
+        if (FormControls.settings.tagField) {
             formRow += `<div class="form-group col-sm-2">
-            <label for="onTheFly${FormControls.uniqid}Color">${messages[ "Liturgical color" ]}</label>
-            <select class="form-control litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple" readonly />
-            <option value="white"${selectedColors.includes("white") ? ' selected' : '' }>${messages[ "white" ].toUpperCase()}</option>
-            <option value="red"${selectedColors.includes("red") ? ' selected' : '' }>${messages[ "red" ].toUpperCase()}</option>
-            <option value="purple"${selectedColors.includes("purple") ? ' selected' : '' }>${messages[ "purple" ].toUpperCase()}</option>
-            <option value="green"${selectedColors.includes("green") ? ' selected' : '' }>${messages[ "green" ].toUpperCase()}</option>
-            </select>
+            <label for="onTheFly${FormControls.uniqid}Tag">${messages[ "Tag" ]}</label>
+            <input type="text" value="${festivity !== null ? festivity.tag : ''}" class="form-control litEvent litEventTag" id="onTheFly${FormControls.uniqid}Tag" />
+            </div>`;
+        }
+        
+        if (FormControls.settings.gradeFieldShow) {
+            formRow +=  messages.gradeTemplate.formatUnicorn({uniqid:FormControls.uniqid,colWidth:4});
+        }
+
+        if (FormControls.settings.properFieldShow) {
+            formRow += messages.commonsTemplate.formatUnicorn({uniqid:FormControls.uniqid,colWidth:6});
+        }
+
+        if(FormControls.settings.decreeURLField) {
+            formRow += `<div class="form-group col-sm-6">
+            <label for="onTheFly${FormControls.uniqid}DecreeURL">${messages[ "Decree URL" ]}</label>
+            <input type="text" class="form-control litEvent litEventDecreeURL" value="${festivity !== null && typeof festivity.decreeURL !== 'undefined' ? festivity.decreeURL : ''}" />
             </div>`;
         }
 
-        if (FormControls.settings.dayField) {
-            formRow += `<div class="form-group col-sm-1">
-            <label for="onTheFly${FormControls.uniqid}Day">${messages[ "Day" ]}</label>
-            <input type="number" min="1" max="31" value="${festivity.day}" class="form-control litEvent litEventDay" id="onTheFly${FormControls.uniqid}Day" readonly />
+        if(FormControls.settings.decreeLangMapField) {
+            let decreeLangs = festivity !== null && typeof festivity.decreeLangs !== 'undefined' ? Object.keys(festivity.decreeLangs).map(key => key+'='+festivity.decreeLangs[key] ) : null;
+            formRow += `<div class="form-group col-sm-6">
+            <label for="onTheFly${FormControls.uniqid}DecreeLangs">${messages[ "Decree Langs" ]}</label>
+            <input type="text" class="form-control litEvent litEventDecreeLangs" value="${festivity !== null && typeof festivity.decreeLangs !== 'undefined' ? decreeLangs.join(',') : ''}" />
             </div>`;
         }
-
-        if (FormControls.settings.monthField) {
-            formRow += `<div class="form-group col-sm-1">
-            <label for="onTheFly${FormControls.uniqid}Month">${messages[ "Month" ]}</label>
-            <select class="form-control litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month" readonly >`;
-
-            let formatter = new Intl.DateTimeFormat(LOCALE, { month: 'long' });
-            for (let i = 0; i < 12; i++) {
-                let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
-                formRow += `<option value=${i + 1}${festivity.month === i+1 ? ' selected' : '' }>${formatter.format(month)}</option>`;
-            }
-
-            formRow += `</select>
-            </div>`;
-        }
-
-        formRow += `<div class="form-group col-sm-6">
-        <label for="onTheFly${FormControls.uniqid}DecreeURL">${messages[ "Decree URL" ]}</label>
-        <input type="text" class="form-control litEvent litEventDecreeURL" value="${festivity.decreeURL}" />
-        </div>`;
-
-        let decreeLangs = Object.keys(festivity.decreeLangs).map(key => key+'='+festivity.decreeLangs[key] );
-        formRow += `<div class="form-group col-sm-6">
-        <label for="onTheFly${FormControls.uniqid}DecreeLangs">${messages[ "Decree Langs" ]}</label>
-        <input type="text" class="form-control litEvent litEventDecreeLangs" value="${decreeLangs.join(',')}" />
-        </div>`;
 
         formRow += `</div>`;
         ++FormControls.uniqid;
@@ -688,47 +708,246 @@ $(document).on('click', '.onTheFlyEventRow', ev => {
     });
 });
 
-$(document).on('click', '#designatePatronButton', ev => {
-    let existingFestivityTag = $('#existingFestivityName').val();
-    litevent = FestivityCollection[existingFestivityTag];
-    FormControls.settings.untilYearField = true;
-    $row = $(FormControls.CreatePatronRow( messages['Designate patron'], existingFestivityTag ));
+$(document).on('click', '.actionPromptButton', ev => {
+    let currentUniqid = FormControls.uniqid;
+    let $modal = $(ev.currentTarget).closest('.actionPromptModal');
+    let $modalForm = $modal.find('form');
+    let existingFestivityTag = $modalForm.find('.existingFestivityName').val();
+    let title = '';
+    FormControls.settings.decreeURLField = true;
+    FormControls.settings.decreeLangMapField = $('.regionalNationalCalendarName').attr('id') === 'widerRegionCalendarName';
+    switch( ev.currentTarget.id ) {
+        case 'designatePatronButton':
+            FormControls.settings.tagField = false;
+            FormControls.settings.gradeFieldShow = false;
+            FormControls.settings.properFieldShow = false;
+            FormControls.settings.dayField = false;
+            FormControls.settings.monthField = false;
+            FormControls.settings.untilYearField = true;
+            FormControls.settings.colorField = false;
+            title =  messages[ 'Designate patron' ];
+            break;
+        case 'setPropertyButton':
+            let propertyToChange = $('#propertyToChange').val();
+            switch(propertyToChange) {
+                case 'name':
+                    FormControls.settings.nameField = true;
+                    FormControls.settings.gradeFieldShow = false;
+                    break;
+                case 'grade':
+                    FormControls.settings.nameField = false;
+                    FormControls.settings.gradeFieldShow = true;
+                    FormControls.settings.gradeField = true;
+                    break;
+            }
+            FormControls.settings.tagField = false;
+            FormControls.settings.properFieldShow = false;
+            FormControls.settings.dayField = false;
+            FormControls.settings.monthField = false;
+            FormControls.settings.untilYearField = true;
+            FormControls.settings.colorField = false;
+            title = messages[ 'Change name or grade' ];
+            break;
+        case 'moveFestivityButton':
+            FormControls.settings.tagField = false;
+            FormControls.settings.nameField = false;
+            FormControls.settings.gradeFieldShow = false;
+            FormControls.settings.properFieldShow = false;
+            FormControls.settings.dayField = true;
+            FormControls.settings.monthField = true;
+            FormControls.settings.untilYearField = true;
+            FormControls.settings.colorField = false;
+            title = messages[ 'Move festivity' ];
+            break;
+        case 'newFestivityFromExistingButton':
+            FormControls.settings.tagField = false;
+            FormControls.settings.nameField = false;
+            FormControls.settings.gradeFieldShow = true;
+            FormControls.settings.properFieldShow = true;
+            FormControls.settings.gradeField = false;
+            FormControls.settings.properField = false;
+            FormControls.settings.dayField = false;
+            FormControls.settings.monthField = false;
+            FormControls.settings.untilYearField = true;
+            FormControls.settings.colorField = false;
+            title = messages[ 'New festivity' ];
+            break;
+        case 'newFestivityExNovoButton':
+            FormControls.settings.tagField = true;
+            FormControls.settings.nameField = true;
+            FormControls.settings.gradeFieldShow = true;
+            FormControls.settings.properFieldShow = true;
+            FormControls.settings.gradeField = true;
+            FormControls.settings.properField = true;
+            FormControls.settings.dayField = true;
+            FormControls.settings.monthField = true;
+            FormControls.settings.untilYearField = true;
+            FormControls.settings.colorField = true;
+            title = messages[ 'New festivity' ];
+            break;
+    }
+
+    if( existingFestivityTag !== '' ) {
+        $row = $(FormControls.CreatePatronRow(title, existingFestivityTag ));
+    } else {
+        $row = $(FormControls.CreatePatronRow(title, null ));
+    }
     $('#widerRegionForm').append($row);
-    $('#makePatronActionPrompt').modal('hide');
+    $modal.modal('hide');
     $row.find('.litEventColor').multiselect({
         buttonWidth: '100%'
-    }).multiselect('deselectAll', false).multiselect('select', litevent.COLOR.split(','));
+    }).multiselect('deselectAll', false);
+
+    if(FormControls.settings.colorField === false) {
+        $row.find('.litEventColor').multiselect('disable');
+    }
+
+    if(FormControls.settings.properFieldShow) {
+        $row.find(`#onTheFly${currentUniqid}Proper`).multiselect({
+            buttonWidth: '100%'
+        }).multiselect('deselectAll', false);
+        if(FormControls.settings.properField === false) {
+            $row.find(`#onTheFly${currentUniqid}Proper`).multiselect('disable');
+        }
+    }
+
+    if(FormControls.settings.gradeFieldShow && FormControls.settings.gradeField === false) {
+        $row.find(`#onTheFly${currentUniqid}Grade`).prop('disabled', true);
+    }
+
+    if( existingFestivityTag !== '' ) {
+        litevent = FestivityCollection[existingFestivityTag];
+
+        $row.find(`#onTheFly${currentUniqid}Grade`).val(litevent.GRADE);
+        $row.find(`#onTheFly${currentUniqid}Proper`).multiselect('select', litevent.COMMON.split(','))
+        $row.find(`.litEventColor`).multiselect('select', litevent.COLOR.split(','));
+
+        if(FormControls.settings.monthField === false) {
+            $row.find(`#onTheFly${currentUniqid}Month > option[value]:not([value=${litevent.MONTH}])`).prop('disabled',true);
+        }
+    }
 });
 
-$(document).on('change', '#widerRegionCalendarName', ev => {
+$(document).on('change', '.regionalNationalCalendarName', ev => {
     const key = $(ev.currentTarget).val();
+    const category = $(ev.currentTarget).data('category');
+    console.log('category: ' + category);
     jQuery.ajax({
         url: NationalDataURL,
         method: 'GET',
         dataType: 'json',
-        data: { "key" : key, "category": "widerRegionCalendar", "locale": LOCALE },
+        data: { "key" : key, "category": category, "locale": LOCALE },
         statusCode: {
             404: (xhr, textStatus, errorThrown) => {
-                toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />The Data File for the Wider Region ' + diocese + ' does not exist yet.', "Error");
-                console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown + 'The Data File for the Wider Region ' + diocese + ' does not exist yet.');
+                toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />The Data File for the ' + category + ' ' + key + ' does not exist yet.', "Error");
+                console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown + 'The Data File for the ' + category + ' ' + key + ' does not exist yet.');
             }
         },
         success: data => {
-            console.log( 'retrieved data file for wider region:' );
+            console.log( `successfully retrieved the data file for the ${category} ${key}` );
             console.log(data);
-            $('#widerRegionIsMultilingual').prop('checked',data.isMultilingual);
+            switch(category) {
+                case 'widerRegionCalendar':
+                    $('#widerRegionIsMultilingual').prop('checked', data.isMultilingual);
+                    FormControls.settings.decreeURLField = true;
+                    FormControls.settings.decreeLangMapField = true;
+                    break;
+                case 'nationalCalendar':
+                    FormControls.settings.decreeURLField = true;
+                    FormControls.settings.decreeLangMapField = false;
+            }
             data.LitCal.forEach((el) => {
+                let currentUniqid = FormControls.uniqid;
+                let title;
                 switch(el.Metadata.action) {
                     case 'makePatron':
+                        FormControls.settings.tagField = false;
+                        FormControls.settings.gradeFieldShow = false;
+                        FormControls.settings.properFieldShow = false;
+                        FormControls.settings.dayField = false;
+                        FormControls.settings.monthField = false;
                         FormControls.settings.untilYearField = true;
-                        $row = $(FormControls.CreatePatronRow( messages['Designate patron'], el ));
-                        $('#widerRegionForm').append($row);
-
-                        $row.find('.litEventColor').multiselect({
-                            buttonWidth: '100%'
-                        }).multiselect('deselectAll', false).multiselect('select', el.Festivity.color.split(','));
+                        FormControls.settings.colorField = false;
+                        title =  messages[ 'Designate patron' ];
                         break;
-                }
+                    case 'setProperty':
+                        let propertyToChange = $('#propertyToChange').val();
+                        switch(propertyToChange) {
+                            case 'name':
+                                FormControls.settings.nameField = true;
+                                FormControls.settings.gradeFieldShow = false;
+                                break;
+                            case 'grade':
+                                FormControls.settings.nameField = false;
+                                FormControls.settings.gradeFieldShow = true;
+                                FormControls.settings.gradeField = true;
+                                break;
+                        }
+                        FormControls.settings.tagField = false;
+                        FormControls.settings.properFieldShow = false;
+                        FormControls.settings.dayField = false;
+                        FormControls.settings.monthField = false;
+                        FormControls.settings.untilYearField = true;
+                        FormControls.settings.colorField = false;
+                        title = messages[ 'Change name or grade' ];
+                        break;
+                    case 'moveFestivity':
+                        FormControls.settings.tagField = false;
+                        FormControls.settings.nameField = false;
+                        FormControls.settings.gradeFieldShow = false;
+                        FormControls.settings.properFieldShow = false;
+                        FormControls.settings.dayField = true;
+                        FormControls.settings.monthField = true;
+                        FormControls.settings.untilYearField = true;
+                        FormControls.settings.colorField = false;
+                        title = messages[ 'Move festivity' ];
+                        break;
+                    case 'createNew':
+                        FormControls.settings.tagField = false;
+                        FormControls.settings.nameField = false;
+                        FormControls.settings.gradeFieldShow = true;
+                        FormControls.settings.properFieldShow = true;
+                        FormControls.settings.gradeField = false;
+                        FormControls.settings.properField = false;
+                        FormControls.settings.dayField = false;
+                        FormControls.settings.monthField = false;
+                        FormControls.settings.untilYearField = true;
+                        FormControls.settings.colorField = false;
+                        title = messages[ 'New festivity' ];
+                        break;
+                    }
+
+                    $row = $(FormControls.CreatePatronRow(title, el ));
+                    $('.regionalNationalDataForm').append($row);
+                    $row.find('.litEventColor').multiselect({
+                        buttonWidth: '100%'
+                    }).multiselect('deselectAll', false);
+
+                    $row.find(`.litEventColor`).multiselect('select', el.Festivity.color.split(','));
+                    if(FormControls.settings.colorField === false) {
+                        $row.find('.litEventColor').multiselect('disable');
+                    }
+
+                    if(FormControls.settings.properFieldShow) {
+                        $row.find(`#onTheFly${currentUniqid}Proper`).multiselect({
+                            buttonWidth: '100%'
+                        }).multiselect('deselectAll', false).multiselect('select', el.Festivity.common.split(','))
+                        if(FormControls.settings.properField === false) {
+                            $row.find(`#onTheFly${currentUniqid}Proper`).multiselect('disable');
+                        }
+                    }
+
+                    if(FormControls.settings.gradeFieldShow) {
+                        $row.find(`#onTheFly${currentUniqid}Grade`).val(el.Festivity.grade);
+                        if(FormControls.settings.gradeField === false) {
+                            $row.find(`#onTheFly${currentUniqid}Grade`).prop('disabled', true);
+                        }
+                    }
+
+                    if(FormControls.settings.monthField === false) {
+                        $row.find(`#onTheFly${currentUniqid}Month > option[value]:not([value=${el.Festivity.month}])`).prop('disabled',true);
+                    }
+
             });
         },
         error: (xhr, textStatus, errorThrown) => {
@@ -792,14 +1011,35 @@ $(document).on('change', '#diocesanCalendarDioceseName', ev => {
     }
 });
 
-$(document).on('change', '#existingFestivityName', ev => {
-    $('form').each((idx, el) => { $(el).removeClass('was-validated') });
+$(document).on('change', '.existingFestivityName', ev => {
+    $modal = $(ev.currentTarget).closest('.actionPromptModal');
+    $form = $modal.find('form');
+    $form.each((idx, el) => { $(el).removeClass('was-validated') });
+    let disabledState;
     if ($('#existingFestivitiesList').find('option[value="' + $(ev.currentTarget).val() + '"]').length > 0) {
-        $(ev.currentTarget).removeClass('is-invalid');
-        $('#designatePatronButton').prop('disabled',false);
+        disabledState = false;
+        if( $(ev.currentTarget).prop('required') ) {
+            $(ev.currentTarget).removeClass('is-invalid');
+        }
     } else {
-        $(ev.currentTarget).addClass('is-invalid');
-        $('#designatePatronButton').prop('disabled',true);
+        disabledState = true;
+        if( $(ev.currentTarget).prop('required') ) {
+            $(ev.currentTarget).addClass('is-invalid');
+        }
+    }
+    switch( $modal.attr("id") ) {
+        case 'makePatronActionPrompt':
+            $('#designatePatronButton').prop('disabled', disabledState);
+            break;
+        case 'setPropertyActionPrompt':
+            $('#setPropertyButton').prop('disabled', disabledState);
+            break;
+        case 'moveFestivityActionPrompt':
+            $('#moveFestivityButton').prop('disabled', disabledState);
+        case 'newFestivityActionPrompt':
+            $('#newFestivityFromExistingButton').prop('disabled', disabledState);
+            $('#newFestivityExNovoButton').prop('disabled', !disabledState);
+            break;
     }
 });
 
