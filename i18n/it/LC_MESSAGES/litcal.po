@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-13 17:30+0000\n"
-"PO-Revision-Date: 2022-01-30 15:15+0000\n"
+"PO-Revision-Date: 2022-03-13 17:43+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
@@ -410,6 +410,8 @@ msgid ""
 "A National calendar may have some festivities in common with other National "
 "calendars, for example the patron of a wider region."
 msgstr ""
+"Un Calendario nazionale può avere alcune festività in comune con altri "
+"calendari nazionale, per esempio il patrono di una regione più ampia."
 
 #: extending.php:31
 msgid ""
@@ -417,6 +419,9 @@ msgid ""
 "separately, and if applicable should be made translatable, then the Wider "
 "region should be applied to the National Calendar."
 msgstr ""
+"In tal caso, le festività della Regione più ampia dovrebbero essere definite "
+"separatamente, e nel caso dovrebbero essere traducibili, poi il calendario "
+"della Regione più ampia dovrebbe essere applicata al Calendario Nazionale."
 
 #: extending.php:32
 msgid ""
@@ -441,7 +446,7 @@ msgstr ""
 
 #: extending.php:36
 msgid "Tag"
-msgstr ""
+msgstr "Etichetta"
 
 #: extending.php:37 extending.php:442
 msgid "Name"
@@ -518,35 +523,35 @@ msgstr "Dall'anno"
 #. translators: in reference to the year from which this festivity no longer needs to be dealt with
 #: extending.php:54
 msgid "Until"
-msgstr ""
+msgstr "All'anno"
 
 #. translators: label of the form row
 #: extending.php:56
 msgid "Patron or Patrons of the Wider Region"
-msgstr ""
+msgstr "Patrono o Patroni della Regione più ampia"
 
 #. translators: label of the form row
 #: extending.php:58
 msgid "New festivity"
-msgstr ""
+msgstr "Nuova festività"
 
 #. translators: label of the form row
 #: extending.php:60
 msgid "Change name or grade"
-msgstr ""
+msgstr "Cambia nome o grado"
 
 #. translators: label of the form row
 #: extending.php:62
 msgid "Move festivity"
-msgstr ""
+msgstr "Sposta festività"
 
 #: extending.php:63
 msgid "Decree URL"
-msgstr ""
+msgstr "URL del Decreto"
 
 #: extending.php:64
 msgid "Decree Language mappings"
-msgstr ""
+msgstr "Mappatura delle lingue del Decreto"
 
 #: extending.php:75
 msgid "General Roman Calendar - Extending"
@@ -558,15 +563,15 @@ msgstr "Estendi il Calendario Romano Generale con dati Nazionali o Diocesani"
 
 #: extending.php:97
 msgid "Wider Region"
-msgstr ""
+msgstr "Regione più ampia"
 
 #: extending.php:99 extending.php:153
 msgid "This value cannot be empty."
-msgstr ""
+msgstr "Questo valore non può essere vuoto."
 
 #: extending.php:113
 msgid "Wider Region is multilingual"
-msgstr ""
+msgstr "La Regione più ampia è multilingue"
 
 #: extending.php:120 extending.php:167 extending.php:217
 msgid "Remove existing data"
@@ -574,45 +579,39 @@ msgstr "Rimuovi dati esistenti"
 
 #: extending.php:126
 msgid "Create a Calendar for a Wider Region"
-msgstr ""
+msgstr "Crea il Calendario di una Regione più ampia"
 
 #: extending.php:130 extending.php:177 extending.php:406
 msgid "Designate patron from existing festivity"
-msgstr ""
+msgstr "Designa il patrono partendo da una festività esistente"
 
 #: extending.php:131 extending.php:178 extending.php:430
 msgid "Change name or grade of existing festivity"
-msgstr ""
+msgstr "Cambia nome o grado di una festività esistente"
 
 #: extending.php:132 extending.php:179 extending.php:461
 msgid "Move festivity to new date"
-msgstr ""
+msgstr "Sposta una festività ad altra data"
 
 #: extending.php:133 extending.php:180 extending.php:485
 msgid "Create a new festivity"
-msgstr ""
+msgstr "Crea una nuova festività"
 
 #: extending.php:140
-#, fuzzy
-#| msgid "General Roman Calendar"
 msgid "Save Wider Region Calendar Data"
-msgstr "Calendario Romano Generale"
+msgstr "Salva Dati Calendario della Regione più ampia"
 
 #: extending.php:151
-#, fuzzy
-#| msgid "Create a National Calendar"
 msgid "National Calendar"
-msgstr "Crea un Calendario Nazionale"
+msgstr "Calendario Nazionale"
 
 #: extending.php:173
 msgid "Create a National Calendar"
 msgstr "Crea un Calendario Nazionale"
 
 #: extending.php:187
-#, fuzzy
-#| msgid "Generate National Calendar"
 msgid "Save National Calendar Data"
-msgstr "Genera un Calendario Nazionale"
+msgstr "Salve i Dati del Calendario Nazionale"
 
 #: extending.php:199
 msgid "Depends on national calendar"
@@ -734,27 +733,23 @@ msgstr "SALVA CALENDARIO DIOCESANO"
 
 #: extending.php:411 extending.php:435 extending.php:466 extending.php:490
 msgid "Choose from existing festivities"
-msgstr ""
+msgstr "Scegli dalle festività esistenti"
 
 #: extending.php:413 extending.php:437 extending.php:468 extending.php:492
-#, fuzzy
-#| msgid ""
-#| "This diocese does not seem to exist? Please choose from a value in the "
-#| "list."
 msgid ""
 "This festivity does not seem to exist? Please choose from a value in the "
 "list."
 msgstr ""
-"Questa diocesi non sembra esistere? Si prega scegliere da un valore "
+"Questa festività non sembra esistere? Si prega scegliere da un valore "
 "nell'elenco."
 
 #: extending.php:440
 msgid "Property to change"
-msgstr ""
+msgstr "Proprietà da modificare"
 
 #: extending.php:443
 msgid "Grade"
-msgstr ""
+msgstr "Grado"
 
 #: easter.php:58
 msgid "Date of Easter from 1583 to 9999"
@@ -1047,46 +1042,42 @@ msgstr "oppure"
 #. translators: liturgical rank. Keep lowercase
 #: includes/LitGrade.php:88 includes/LitGrade.php:127
 msgid "weekday"
-msgstr ""
+msgstr "feria"
 
 #. translators: liturgical rank. Keep Capitalized
 #: includes/LitGrade.php:93
 msgid "Commemoration"
-msgstr ""
+msgstr "Commemorazione"
 
 #. translators: liturgical rank. Keep Capitalized
 #: includes/LitGrade.php:98
-#, fuzzy
-#| msgid "Optional memorials"
 msgid "Optional memorial"
-msgstr "Memorie facoltative"
+msgstr "Memoria facoltativa"
 
 #. translators: liturgical rank. Keep Capitalized
 #: includes/LitGrade.php:103
-#, fuzzy
-#| msgid "Memorials"
 msgid "Memorial"
-msgstr "Memorie"
+msgstr "Memoria"
 
 #. translators: liturgical rank. Keep UPPERCASE
 #: includes/LitGrade.php:108
 msgid "FEAST"
-msgstr ""
+msgstr "FESTA"
 
 #. translators: liturgical rank. Keep UPPERCASE
 #: includes/LitGrade.php:113
 msgid "FEAST OF THE LORD"
-msgstr ""
+msgstr "FESTA DEL SIGNORE"
 
 #. translators: liturgical rank. Keep UPPERCASE
 #: includes/LitGrade.php:118
 msgid "SOLEMNITY"
-msgstr ""
+msgstr "SOLENNITÀ"
 
 #. translators: liturgical rank. Keep lowercase
 #: includes/LitGrade.php:123
 msgid "celebration with precedence over solemnities"
-msgstr ""
+msgstr "celebrazione con precedenza sulle solennità"
 
 #~ msgid "Overwrites universal / national calendar"
 #~ msgstr "Sovrascrive il calendario universale / nazionale"
