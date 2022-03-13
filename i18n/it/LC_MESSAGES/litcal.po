@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-13 17:30+0000\n"
-"PO-Revision-Date: 2022-03-13 17:43+0000\n"
+"PO-Revision-Date: 2022-03-13 17:53+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
@@ -611,7 +611,7 @@ msgstr "Crea un Calendario Nazionale"
 
 #: extending.php:187
 msgid "Save National Calendar Data"
-msgstr "Salve i Dati del Calendario Nazionale"
+msgstr "Salva i Dati del Calendario Nazionale"
 
 #: extending.php:199
 msgid "Depends on national calendar"
