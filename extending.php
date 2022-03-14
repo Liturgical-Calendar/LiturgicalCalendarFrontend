@@ -32,6 +32,28 @@ $API_EXTEND_HOWTO_A3 = _( "In this case, the festivities for the Wider region sh
 $API_EXTEND_HOWTO_B = _( "National calendars must be defined using data from the translation of the Roman Missal used in the Region or in any case from decrees of the Episcopal Conference of the Region." );
 $DioceseGroupHelp = _( "If a group of dioceses decides to pool their Liturgical Calendar data, for example to print out one single yearly calendar with the data for all the dioceses in the group, the group can be defined or set here." );
 
+$c = new Collator($i18n->LOCALE);
+
+$AvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($value) {
+    return strpos($value, '_') === false;
+});
+$AvailableLocales = array_reduce($AvailableLocales, function($carry, $item) use($i18n){
+    $carry[$item] = Locale::getDisplayLanguage($item, $i18n->LOCALE);
+    return $carry;
+},[]);
+$c->asort($AvailableLocales);
+
+$AvailableCountries = array_filter(ResourceBundle::getLocales(''), function ($value) {
+    return strpos($value, '_');
+});
+$AvailableCountries = array_reduce($AvailableCountries, function($carry, $item) use($i18n) {
+    if( !array_key_exists( Locale::getDisplayRegion($item, 'en'), $carry ) ) {
+        $carry[Locale::getDisplayRegion($item, 'en')] = Locale::getDisplayRegion($item, $i18n->LOCALE);
+    }
+    return $carry;
+},[]);
+$c->asort($AvailableCountries);
+
 $messages = [
     "Tag"               => _( "Tag" ),
     "Name"              => _( "Name" ),
@@ -64,7 +86,10 @@ $messages = [
     "Decree Langs"      => _( "Decree Language mappings" ),
     "commonsTemplate"   => $FormControls->getCommonsTemplate(),
     "gradeTemplate"     => $FormControls->getGradeTemplate(),
-    "LOCALE"            => $i18n->LOCALE
+    "LOCALE"            => $i18n->LOCALE,
+    "AvailableLocales"  => $AvailableLocales,
+    "AvailableCountries"=> $AvailableCountries,
+    "countryISOCodes"   => $countryISOCodes
 ];
 
 ?>
@@ -137,7 +162,7 @@ $messages = [
                             </form>
                         </div>
                         <div class="card-footer text-center">
-                            <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeWiderRegionData" disabled><i class="fas fa-save mr-2"></i><?php echo _("Save Wider Region Calendar Data") ?></button>
+                            <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeWiderRegionData" data-category="widerRegionCalendar" disabled><i class="fas fa-save mr-2"></i><?php echo _("Save Wider Region Calendar Data") ?></button>
                         </div>
                     </div>
                 </div>
@@ -152,10 +177,12 @@ $messages = [
                             <input list="nationalCalendarsList" class="form-control regionalNationalCalendarName" id="nationalCalendarName" data-category="nationalCalendar" required>
                             <div class="invalid-feedback"><?php echo _( "This value cannot be empty."); ?></div>
                             <datalist id="nationalCalendarsList">
-                                <option value=""></option>
                                 <?php
-                                    foreach( $NationalCalendars as $nationalCalendar => $dioceseArray ) {
+                                    /*foreach( $NationalCalendars as $nationalCalendar => $dioceseArray ) {
                                         echo "<option value=\"{$nationalCalendar}\">{$nationalCalendar}</option>";
+                                    }*/
+                                    foreach( $AvailableCountries as $countryEnglish => $countryLocalized ) {
+                                        echo "<option value=\"{$countryEnglish}\">{$countryLocalized}</option>";
                                     }
                                 ?>
                             </datalist>
@@ -173,6 +200,63 @@ $messages = [
                             <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Create a National Calendar"); ?></h4>
                         </div>
                         <div class="card-body">
+
+                            <div id="nationalCalendarSettingsContainer" class="container">
+                                <h3 id="nationalCalendarSettingsTitle" class="text-center"><?php echo _("National calendar settings") ?></h3>
+                                <form id="nationalCalendarSettingsForm" class="row justify-content-center needs-validation" novalidate>
+                                    <div class="form-group col col-md-3">
+                                        <label><?php echo _( 'EPIPHANY' ) ?></label>
+                                        <select class="form-control" id="nationalCalendarSettingEpiphany">
+                                            <option value=""></option>
+                                            <option value="JAN6"><?php echo _("January 6") ?></option>
+                                            <option value="SUNDAY_JAN2_JAN8"><?php echo _("Sunday between January 2 and January 8") ?></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col col-md-3">
+                                        <label><?php echo _( 'ASCENSION' ) ?></label>
+                                        <select class="form-control" id="nationalCalendarSettingAscension">
+                                            <option value=""></option>
+                                            <option value="THURSDAY"><?php echo $thursday ?></option>
+                                            <option value="SUNDAY"><?php echo $sunday ?></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col col-md-3">
+                                        <label><?php echo _( 'CORPUS CHRISTI' ) ?></label>
+                                        <select class="form-control" id="nationalCalendarSettingCorpusChristi">
+                                            <option value=""></option>
+                                            <option value="THURSDAY"><?php echo $thursday ?></option>
+                                            <option value="SUNDAY"><?php echo $sunday ?></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col col-md-3">
+                                        <label><?php echo _( 'LOCALE' ) ?></label>
+                                        <select class="form-control" id="nationalCalendarSettingLocale">
+                                            <?php
+                                                foreach( $AvailableLocales as $AvlLOCALE => $AvlLANGUAGE ) {
+                                                    echo "<option value=\"{$AvlLOCALE}\"" . ($i18n->LOCALE === $AvlLOCALE ? ' selected' : '') . ">{$AvlLANGUAGE}</option>";
+                                                }
+                                            ?>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-inline col col-md-6">
+                                        <label class="row"><?php echo _( 'Published Roman Missals' ) ?></label>
+                                        <div class="row">
+                                            <input type="text" class="form-control" id="publishedRomanMissal" style="width: 250px;" />
+                                            <button class="btn btn-md btn-primary ml-2 inline"><i class="fas fa-plus mr-2"></i><?php echo _( 'Add Missal' ) ?></button>
+                                        </div>
+                                        <div class="row">
+                                            <ul class="list-group" id="publishedRomanMissalList" style="width: 250px;">
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col col-md-3">
+                                        <label><?php echo _( 'Wider Region' ) ?></label>
+                                        <input class="form-control" type="text" id="associatedWiderRegion" />
+                                    </div>
+                                </form>
+                            </div>
+
                             <div class="d-flex justify-content-around">
                                 <button class="btn btn-sm btn-primary m-2" id="makePatronAction" data-toggle="modal" data-target="#makePatronActionPrompt"><i class="fas fa-user-graduate mr-2"></i><?php echo _( "Designate patron from existing festivity" ) ?></button>
                                 <button class="btn btn-sm btn-primary m-2" id="setPropertyAction" data-toggle="modal" data-target="#setPropertyActionPrompt"><i class="fas fa-edit mr-2"></i><?php echo _( "Change name or grade of existing festivity" ) ?></button>
@@ -184,7 +268,7 @@ $messages = [
                             </form>
                         </div>
                         <div class="card-footer text-center">
-                            <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeNationalCalendarData" disabled><i class="fas fa-save mr-2"></i><?php echo _("Save National Calendar Data") ?></button>
+                            <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeNationalCalendarData" data-category="nationalCalendar" disabled><i class="fas fa-save mr-2"></i><?php echo _("Save National Calendar Data") ?></button>
                         </div>
                     </div>
                 </div>

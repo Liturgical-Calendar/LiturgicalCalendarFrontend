@@ -96,7 +96,9 @@ class FormControls {
         untilYearField: false,
         tagField: false,
         decreeURLField: false,
-        decreeLangMapField: false
+        decreeLangMapField: false,
+        reasonField: false,
+        missalField: false
     }
 
     static CreateFestivityRow(title = null) {
@@ -259,6 +261,24 @@ class FormControls {
 
         if (FormControls.settings.properFieldShow) {
             formRow += messages.commonsTemplate.formatUnicorn({uniqid:FormControls.uniqid,colWidth:6});
+        }
+
+        if (FormControls.settings.reasonField) {
+            formRow += `<div class="form-group col-sm-6">
+            <label for="onTheFly${FormControls.uniqid}Reason">${messages[ "Reason" ]}</label>
+            <input type="text" value="${festivity !== null ? element.Metadata.reason : ''}" class="form-control litEvent litEventReason" id="onTheFly${FormControls.uniqid}Reason" />
+            </div>`;
+        }
+
+        if (FormControls.settings.missalField) {
+            formRow += `<div class="form-group col-sm-6">
+            <label for="onTheFly${FormControls.uniqid}Missal">${messages[ "Missal" ]}</label>
+            <input type="text" value="${festivity !== null ? element.Metadata.missal : ''}" class="form-control litEvent litEventMissal" id="onTheFly${FormControls.uniqid}Missal" />
+            <select class="form-control litEvent litEventMissal" id="onTheFly${FormControls.uniqid}Missal">`;
+            //TODO: loop and fill with all available defined missals. This will require making the data from the RomanMissal class available to this script
+            //      perhaps we need to create a new metadata backend that gives us all data for all Roman Missals defined in the API?
+            formRow += `</select>
+            </div>`;
         }
 
         if(FormControls.settings.decreeURLField) {
@@ -714,6 +734,7 @@ $(document).on('click', '.actionPromptButton', ev => {
     let $modalForm = $modal.find('form');
     let existingFestivityTag = $modalForm.find('.existingFestivityName').val();
     let title = '';
+    let action;
     FormControls.settings.decreeURLField = true;
     FormControls.settings.decreeLangMapField = $('.regionalNationalCalendarName').attr('id') === 'widerRegionCalendarName';
     switch( ev.currentTarget.id ) {
@@ -726,6 +747,7 @@ $(document).on('click', '.actionPromptButton', ev => {
             FormControls.settings.untilYearField = true;
             FormControls.settings.colorField = false;
             title =  messages[ 'Designate patron' ];
+            action = 'makePatron';
             break;
         case 'setPropertyButton':
             let propertyToChange = $('#propertyToChange').val();
@@ -747,6 +769,7 @@ $(document).on('click', '.actionPromptButton', ev => {
             FormControls.settings.untilYearField = true;
             FormControls.settings.colorField = false;
             title = messages[ 'Change name or grade' ];
+            action = 'setProperty';
             break;
         case 'moveFestivityButton':
             FormControls.settings.tagField = false;
@@ -758,6 +781,7 @@ $(document).on('click', '.actionPromptButton', ev => {
             FormControls.settings.untilYearField = true;
             FormControls.settings.colorField = false;
             title = messages[ 'Move festivity' ];
+            action = 'moveFestivity';
             break;
         case 'newFestivityFromExistingButton':
             FormControls.settings.tagField = false;
@@ -771,6 +795,7 @@ $(document).on('click', '.actionPromptButton', ev => {
             FormControls.settings.untilYearField = true;
             FormControls.settings.colorField = false;
             title = messages[ 'New festivity' ];
+            action = 'createNew';
             break;
         case 'newFestivityExNovoButton':
             FormControls.settings.tagField = true;
@@ -784,6 +809,7 @@ $(document).on('click', '.actionPromptButton', ev => {
             FormControls.settings.untilYearField = true;
             FormControls.settings.colorField = true;
             title = messages[ 'New festivity' ];
+            action = 'createNew';
             break;
     }
 
@@ -794,6 +820,7 @@ $(document).on('click', '.actionPromptButton', ev => {
     }
     $('#widerRegionForm').append($row);
     $modal.modal('hide');
+    $row.find('.form-group').closest('.form-row').data('action', action).attr('data-action', action);
     $row.find('.litEventColor').multiselect({
         buttonWidth: '100%'
     }).multiselect('deselectAll', false);
@@ -829,9 +856,9 @@ $(document).on('click', '.actionPromptButton', ev => {
 });
 
 $(document).on('change', '.regionalNationalCalendarName', ev => {
-    const key = $(ev.currentTarget).val();
     const category = $(ev.currentTarget).data('category');
-    console.log('category: ' + category);
+    const key = ( category === 'widerRegionCalendar' ? $(ev.currentTarget).val() : ($(ev.currentTarget).val().toUpperCase() === 'UNITED STATES' ? 'USA' : $(ev.currentTarget).val().toUpperCase()) );
+    console.log('category: ' + category + ', key = ' + key);
     jQuery.ajax({
         url: NationalDataURL,
         method: 'GET',
@@ -855,6 +882,13 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                 case 'nationalCalendar':
                     FormControls.settings.decreeURLField = true;
                     FormControls.settings.decreeLangMapField = false;
+                    const { Settings, Metadata } = data;
+                    $('#nationalCalendarSettingEpiphany').val( Settings.Epiphany );
+                    $('#nationalCalendarSettingAscension').val( Settings.Ascension );
+                    $('#nationalCalendarSettingCorpusChristi').val( Settings.CorpusChristi );
+                    $('#nationalCalendarSettingLocale').val( Settings.Locale.toLowerCase() );
+                    $('#publishedRomanMissalList').append( '<li class="list-group-item">' + Metadata.Missals.join('</li><li class="list-group-item">') + '</li>' );
+                    $('#associatedWiderRegion').val( Metadata.WiderRegion.name );
             }
             data.LitCal.forEach((el) => {
                 let currentUniqid = FormControls.uniqid;
@@ -919,6 +953,8 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
 
                     $row = $(FormControls.CreatePatronRow(title, el ));
                     $('.regionalNationalDataForm').append($row);
+                    console.log('now settings data-action attribute to ' + el.Metadata.action );
+                    $row.find('.form-group').closest('.form-row').data('action', el.Metadata.action).attr('data-action', el.Metadata.action);
                     $row.find('.litEventColor').multiselect({
                         buttonWidth: '100%'
                     }).multiselect('deselectAll', false);
@@ -949,6 +985,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                     }
 
             });
+            $('.serializeRegionalNationalData').prop('disabled', false);
         },
         error: (xhr, textStatus, errorThrown) => {
             toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown, "Error");
@@ -1074,6 +1111,90 @@ $(document).on('click', '#deleteDiocesanCalendarButton', ev => {
     });
 });
 
+$(document).on('click', '.serializeRegionalNationalData', ev => {
+    const category = $(ev.currentTarget).data('category');
+    let finalObj = {};
+    switch(category) {
+        case 'nationalCalendar':
+            const regionNamesLocalized = new Intl.DisplayNames([$('#nationalCalendarSettingLocale').val()], { type: 'region' });
+            finalObj = {
+                "LitCal": [],
+                "Metadata": {
+                    "Missals": $.map( $('#publishedRomanMissalList li'), el => { return $(el).text() }),
+                    "Region": regionNamesLocalized.of( messages.countryISOCodes[$('.regionalNationalCalendarName').val().toUpperCase()] ).toUpperCase(),
+                    "WiderRegion": {
+                        "name": $('#associatedWiderRegion').val()
+                    }
+                },
+                "Settings": {
+                    "Epiphany": $('#nationalCalendarSettingEpiphany').val(),
+                    "Ascension": $('#nationalCalendarSettingAscension').val(),
+                    "CorpusChristi": $('#nationalCalendarSettingCorpusChristi').val(),
+                    "Locale": $('#nationalCalendarSettingLocale').val().toUpperCase()
+                }
+            }
+            break;
+        case 'widerRegionCalendar':
+            finalObj = {
+                "LitCal": {},
+                "NationalCalendars": {},
+                "isMultilingual": $('#widerRegionIsMultilingual').prop('checked')
+            }
+            break;
+    }
+
+    $('.regionalNationalDataForm .form-row').each((idx, el) => {
+        let rowData = {
+            "Festivity": {},
+            "Metadata": {
+                "action": $(el).data('action')
+            }
+        }
+        let expectedJSONProperties;
+        switch( $(el).data('action') ) {
+            case 'makePatron':
+                expectedJSONProperties = [ 'tag', 'name', 'color', 'grade', 'day', 'month' ];
+                break;
+            case 'setProperty':
+                expectedJSONProperties = [ 'tag', 'name', 'grade', 'day', 'month' ];
+                break;
+            case 'moveFestivity':
+                expectedJSONProperties = [ 'tag', 'name', 'day', 'month' ];
+                break;
+            case 'createNew':
+                expectedJSONProperties = [ 'tag', 'name', 'color', 'grade', 'day', 'month', 'common', 'readings' ];
+                break;
+        }
+
+        if( $(el).find('.litEventFromYear').length ) {
+            let sinceYear = $(el).find('.litEventFromYear').val();
+            if( sinceYear >= 1970 && sinceYear <= 9999 ) {
+                rowData.Metadata.sinceYear = sinceYear;
+            }
+        }
+        if( $(el).find('.litEventUntilYear').length ) {
+            let untilYear = $(el).find('.litEventUntilYear').val();
+            if( untilYear >= 1970 && untilYear <= 9999 ) {
+                rowData.Metadata.untilYear = untilYear;
+            }
+        }
+        if( $(el).find('.litEventDecreeURL').length ) {
+            let decreeURL = $(el).find('.litEventDecreeURL').val();
+            if( decreeURL !== '' ) {
+                rowData.Metadata.decreeURL = decreeURL;
+            }
+        }
+        if( $(el).find('.litEventDecreeLangs').length ) {
+            let decreeLangs = $(el).find('.litEventDecreeLangs').val();
+            if( decreeLangs !== '' ) {
+                rowData.Metadata.decreeLangs = decreeLangs.split(',').reduce((prevVal, curVal) => { let assoc = curVal.split('='); prevVal[assoc[0]] = assoc[1]; return prevVal; }, {}) ;
+            }
+        }
+        finalObj.LitCal.push(rowData);
+    });
+
+    console.log(finalObj);
+});
 
 $(document).on('change', '#diocesanCalendarNationalDependency', ev => {
     $('#diocesanCalendarDioceseName').val('');
