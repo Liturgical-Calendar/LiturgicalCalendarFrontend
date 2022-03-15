@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-14 06:33+0000\n"
+"POT-Creation-Date: 2022-03-15 07:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -459,95 +459,103 @@ msgstr ""
 msgid "Decree Language mappings"
 msgstr ""
 
-#: extending.php:100
+#: extending.php:87
+msgid "Missal"
+msgstr ""
+
+#: extending.php:88
+msgid "Reason (in favor of festivity)"
+msgstr ""
+
+#: extending.php:102
 msgid "General Roman Calendar - Extending"
 msgstr ""
 
-#: extending.php:108
+#: extending.php:110
 msgid "Extend the General Roman Calendar with National or Diocesan data"
 msgstr ""
 
-#: extending.php:122 extending.php:254
+#: extending.php:124 extending.php:254
 msgid "Wider Region"
 msgstr ""
 
-#: extending.php:124 extending.php:178
+#: extending.php:126 extending.php:180
 msgid "This value cannot be empty."
 msgstr ""
 
-#: extending.php:138
+#: extending.php:140
 msgid "Wider Region is multilingual"
 msgstr ""
 
-#: extending.php:145 extending.php:194 extending.php:301
+#: extending.php:147 extending.php:196 extending.php:301
 msgid "Remove existing data"
 msgstr ""
 
-#: extending.php:151
+#: extending.php:153
 msgid "Create a Calendar for a Wider Region"
 msgstr ""
 
-#: extending.php:155 extending.php:261 extending.php:490
+#: extending.php:157 extending.php:261 extending.php:490
 msgid "Designate patron from existing festivity"
 msgstr ""
 
-#: extending.php:156 extending.php:262 extending.php:514
+#: extending.php:158 extending.php:262 extending.php:514
 msgid "Change name or grade of existing festivity"
 msgstr ""
 
-#: extending.php:157 extending.php:263 extending.php:545
+#: extending.php:159 extending.php:263 extending.php:545
 msgid "Move festivity to new date"
 msgstr ""
 
-#: extending.php:158 extending.php:264 extending.php:569
+#: extending.php:160 extending.php:264 extending.php:569
 msgid "Create a new festivity"
 msgstr ""
 
-#: extending.php:165
+#: extending.php:167
 msgid "Save Wider Region Calendar Data"
 msgstr ""
 
-#: extending.php:176
+#: extending.php:178
 msgid "National Calendar"
 msgstr ""
 
-#: extending.php:200
+#: extending.php:202
 msgid "Create a National Calendar"
 msgstr ""
 
-#: extending.php:205
+#: extending.php:207
 msgid "National calendar settings"
 msgstr ""
 
-#: extending.php:208 extending.php:441
+#: extending.php:210 extending.php:441
 msgid "EPIPHANY"
 msgstr ""
 
-#: extending.php:211 extending.php:444
+#: extending.php:213 extending.php:444
 msgid "January 6"
 msgstr ""
 
-#: extending.php:212 extending.php:445
+#: extending.php:214 extending.php:445
 msgid "Sunday between January 2 and January 8"
 msgstr ""
 
-#: extending.php:216 extending.php:449
+#: extending.php:218 extending.php:449
 msgid "ASCENSION"
 msgstr ""
 
-#: extending.php:224 extending.php:457
+#: extending.php:226 extending.php:457
 msgid "CORPUS CHRISTI"
 msgstr ""
 
-#: extending.php:232
+#: extending.php:234
 msgid "LOCALE"
 msgstr ""
 
-#: extending.php:243
+#: extending.php:246
 msgid "Published Roman Missals"
 msgstr ""
 
-#: extending.php:246
+#: extending.php:246 extending.php:594
 msgid "Add Missal"
 msgstr ""
 
@@ -660,6 +668,25 @@ msgstr ""
 
 #: extending.php:527
 msgid "Grade"
+msgstr ""
+
+#: extending.php:599
+msgid "Choose from known Roman Missal language editions"
+msgstr ""
+
+#: extending.php:601
+msgid ""
+"This Missal is unknown to the Liturgical Calendar API. Please choose from a "
+"value in the list, or contact the curator of the API to have the Missal "
+"added to known language edition Missals."
+msgstr ""
+
+#: extending.php:606
+msgid "Add language edition Roman Missal"
+msgstr ""
+
+#: extending.php:607
+msgid "Cancel"
 msgstr ""
 
 #: easter.php:58
