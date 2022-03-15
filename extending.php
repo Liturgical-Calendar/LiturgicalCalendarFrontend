@@ -84,6 +84,8 @@ $messages = [
     "Move festivity" => _( "Move festivity" ),
     "Decree URL"        => _( "Decree URL" ),
     "Decree Langs"      => _( "Decree Language mappings" ),
+    "Missal"            => _( "Missal" ),
+    "Reason"            => _( "Reason (in favor of festivity)" ),
     "commonsTemplate"   => $FormControls->getCommonsTemplate(),
     "gradeTemplate"     => $FormControls->getGradeTemplate(),
     "LOCALE"            => $i18n->LOCALE,
@@ -239,11 +241,9 @@ $messages = [
                                         </select>
                                     </div>
 
-                                    <div class="form-inline col col-md-6">
-                                        <label class="row"><?php echo _( 'Published Roman Missals' ) ?></label>
+                                    <div class="form col col-md-6">
                                         <div class="row">
-                                            <input type="text" class="form-control" id="publishedRomanMissal" style="width: 250px;" />
-                                            <button class="btn btn-md btn-primary ml-2 inline"><i class="fas fa-plus mr-2"></i><?php echo _( 'Add Missal' ) ?></button>
+                                            <label><?php echo _( 'Published Roman Missals' ) ?></label><button class="btn btn-sm btn-primary ml-2 mb-2" id="addPublishedRomanMissal" data-toggle="modal" data-target="#addPublishedRomanMissalPrompt" type="button"><i class="fas fa-plus mr-2"></i><?php echo _( 'Add Missal' ) ?></button>
                                         </div>
                                         <div class="row">
                                             <ul class="list-group" id="publishedRomanMissalList" style="width: 250px;">
@@ -500,7 +500,7 @@ const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
             </div>
             <div class="modal-footer">
                 <button type="button" id="designatePatronButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-user-graduate mr-2"></i>Designate patron</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i>Cancel</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i>?php echo _( "Cancel" ) ?></button>
             </div>
         </div>
     </div>
@@ -531,7 +531,7 @@ const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
             </div>
             <div class="modal-footer">
                 <button type="button" id="setPropertyButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-edit mr-2"></i>Set Property</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i>Cancel</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i>?php echo _( "Cancel" ) ?></button>
             </div>
         </div>
     </div>
@@ -555,7 +555,7 @@ const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
             </div>
             <div class="modal-footer">
                 <button type="button" id="moveFestivityButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-day mr-2"></i>Move Festivity</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i>Cancel</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i>?php echo _( "Cancel" ) ?></button>
             </div>
         </div>
     </div>
@@ -580,7 +580,31 @@ const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
             <div class="modal-footer">
                 <button type="button" id="newFestivityFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus mr-2"></i>New Festivity from existing</button>
                 <button type="button" id="newFestivityExNovoButton" class="btn btn-primary actionPromptButton"><i class="fas fa-calendar-plus mr-2"></i>New Festivity ex novo</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i>Cancel</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i>?php echo _( "Cancel" ) ?></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- addPublishedRomanMissalPrompt -->
+<div class="modal fade" id="addPublishedRomanMissalPrompt" tabindex="-1" role="dialog" aria-labelledby="addPublishedRomanMissalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPublishedRomanMissalLabel"><?php echo _( 'Add Missal' ) ?></h5>
+            </div>
+            <div class="modal-body">
+                <form class="row justify-content-center needs-validation" novalidate>
+                    <div class="form-group col col-md-10">
+                        <label for="languageEditionRomanMissalName" class="font-weight-bold"><?php echo _( "Choose from known Roman Missal language editions"); ?>:</label>
+                        <input list="languageEditionRomanMissalList" class="form-control" id="languageEditionRomanMissalName">
+                        <div class="invalid-feedback"><?php echo _( "This Missal is unknown to the Liturgical Calendar API. Please choose from a value in the list, or contact the curator of the API to have the Missal added to known language edition Missals."); ?></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="addLanguageEditionRomanMissal" class="btn btn-primary" disabled><i class="fas fa-calendar-plus mr-2"></i><?php echo _( "Add language edition Roman Missal" ) ?></button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i><?php echo _( "Cancel" ) ?></button>
             </div>
         </div>
     </div>
@@ -594,6 +618,7 @@ const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
 ?>
 </datalist>
 
+<datalist id="languageEditionRomanMissalList"></datalist>
 
 </body>
 </html>

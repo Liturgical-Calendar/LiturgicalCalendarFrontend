@@ -266,17 +266,16 @@ class FormControls {
         if (FormControls.settings.reasonField) {
             formRow += `<div class="form-group col-sm-6">
             <label for="onTheFly${FormControls.uniqid}Reason">${messages[ "Reason" ]}</label>
-            <input type="text" value="${festivity !== null ? element.Metadata.reason : ''}" class="form-control litEvent litEventReason" id="onTheFly${FormControls.uniqid}Reason" />
+            <input type="text" value="${festivity !== null ? element.Metadata?.reason : ''}" class="form-control litEvent litEventReason" id="onTheFly${FormControls.uniqid}Reason" />
             </div>`;
         }
 
         if (FormControls.settings.missalField) {
             formRow += `<div class="form-group col-sm-6">
             <label for="onTheFly${FormControls.uniqid}Missal">${messages[ "Missal" ]}</label>
-            <input type="text" value="${festivity !== null ? element.Metadata.missal : ''}" class="form-control litEvent litEventMissal" id="onTheFly${FormControls.uniqid}Missal" />
             <select class="form-control litEvent litEventMissal" id="onTheFly${FormControls.uniqid}Missal">`;
-            //TODO: loop and fill with all available defined missals. This will require making the data from the RomanMissal class available to this script
-            //      perhaps we need to create a new metadata backend that gives us all data for all Roman Missals defined in the API?
+            //console.log(Object.values( $index.RomanMissals ).map(({value,name}) => `<option class="list-group-item" value="${value}">${name}</option>`));
+            formRow += Object.values( $index.RomanMissals ).map(({value,name}) => `<option class="list-group-item" value="${value}">${name}</option>`).join('');
             formRow += `</select>
             </div>`;
         }
@@ -323,6 +322,8 @@ jQuery.ajax({
         console.log('retrieved data from index file:');
         console.log(data);
         $index = data.LitCalMetadata;
+        let publishedRomanMissalsStr = Object.values( $index.RomanMissals ).map(({value,name}) => !value.startsWith('VATICAN_') ? `<option class="list-group-item" value="${value}">${name}</option>` : null).join('')
+        $('#languageEditionRomanMissalList').append(publishedRomanMissalsStr);
         toastr["success"]('Successfully retrieved data from index file', "Success");
     }
 });
@@ -735,12 +736,15 @@ $(document).on('click', '.actionPromptButton', ev => {
     let existingFestivityTag = $modalForm.find('.existingFestivityName').val();
     let title = '';
     let action;
+    let buttonId = ev.currentTarget.id;
+    console.log(buttonId + ' button was clicked');
     FormControls.settings.decreeURLField = true;
     FormControls.settings.decreeLangMapField = $('.regionalNationalCalendarName').attr('id') === 'widerRegionCalendarName';
     switch( ev.currentTarget.id ) {
         case 'designatePatronButton':
             FormControls.settings.tagField = false;
-            FormControls.settings.gradeFieldShow = false;
+            FormControls.settings.gradeFieldShow = true;
+            FormControls.settings.gradeField = true;
             FormControls.settings.properFieldShow = false;
             FormControls.settings.dayField = false;
             FormControls.settings.monthField = false;
@@ -772,6 +776,7 @@ $(document).on('click', '.actionPromptButton', ev => {
             action = 'setProperty';
             break;
         case 'moveFestivityButton':
+            console.log('I know that it was moveFestivityButton that was clicked');
             FormControls.settings.tagField = false;
             FormControls.settings.nameField = false;
             FormControls.settings.gradeFieldShow = false;
@@ -780,6 +785,7 @@ $(document).on('click', '.actionPromptButton', ev => {
             FormControls.settings.monthField = true;
             FormControls.settings.untilYearField = true;
             FormControls.settings.colorField = false;
+            FormControls.settings.missalField = true;
             title = messages[ 'Move festivity' ];
             action = 'moveFestivity';
             break;
@@ -818,7 +824,7 @@ $(document).on('click', '.actionPromptButton', ev => {
     } else {
         $row = $(FormControls.CreatePatronRow(title, null ));
     }
-    $('#widerRegionForm').append($row);
+    $('.regionalNationalDataForm').append($row);
     $modal.modal('hide');
     $row.find('.form-group').closest('.form-row').data('action', action).attr('data-action', action);
     $row.find('.litEventColor').multiselect({
@@ -1213,6 +1219,17 @@ $(document).on('change', '#diocesanCalendarNationalDependency', ev => {
         default:
             $('#DiocesesList').empty();
     }
+});
+
+$(document).on('change', '#languageEditionRomanMissalName', ev => {
+    $('#addLanguageEditionRomanMissal').prop('disabled', false);
+});
+
+$(document).on('click', '#addLanguageEditionRomanMissal', ev => {
+    let languageEditionRomanMissal = $('#languageEditionRomanMissalName').val();
+    $('#publishedRomanMissalList').append(`<li class="list-group-item">${languageEditionRomanMissal}</li>`);
+    let $modal = $(ev.currentTarget).closest('.modal');
+    $modal.modal('hide');
 });
 
 jQuery(document).ready(() => {
