@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-15 07:01+0000\n"
-"PO-Revision-Date: 2022-03-14 06:33+0000\n"
+"PO-Revision-Date: 2022-03-15 18:21+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
@@ -555,11 +555,11 @@ msgstr "Mappatura delle lingue del Decreto"
 
 #: extending.php:87
 msgid "Missal"
-msgstr ""
+msgstr "Messale"
 
 #: extending.php:88
 msgid "Reason (in favor of festivity)"
-msgstr ""
+msgstr "Motivo (a favore di festività)"
 
 #: extending.php:102
 msgid "General Roman Calendar - Extending"
@@ -618,10 +618,8 @@ msgid "Create a National Calendar"
 msgstr "Crea un Calendario Nazionale"
 
 #: extending.php:207
-#, fuzzy
-#| msgid "National Calendar"
 msgid "National calendar settings"
-msgstr "Calendario Nazionale"
+msgstr "Impostazioni del Calendario Nazionale"
 
 #: extending.php:210 extending.php:441
 msgid "EPIPHANY"
@@ -645,15 +643,15 @@ msgstr "CORPUS DOMINI"
 
 #: extending.php:234
 msgid "LOCALE"
-msgstr ""
+msgstr "LINGUA"
 
 #: extending.php:246
 msgid "Published Roman Missals"
-msgstr ""
+msgstr "Messali Romani pubblicati"
 
 #: extending.php:246 extending.php:594
 msgid "Add Missal"
-msgstr ""
+msgstr "Aggiungi Messale"
 
 #: extending.php:271
 msgid "Save National Calendar Data"
@@ -779,7 +777,7 @@ msgstr "Grado"
 
 #: extending.php:599
 msgid "Choose from known Roman Missal language editions"
-msgstr ""
+msgstr "Scegli dalle edizioni in lingue del Messale Romano note all'API"
 
 #: extending.php:601
 msgid ""
@@ -787,14 +785,17 @@ msgid ""
 "value in the list, or contact the curator of the API to have the Missal "
 "added to known language edition Missals."
 msgstr ""
+"Questo Messale non è noto all'API del Calendario Liturgico. Si prega "
+"scegliere da un valore nella lista, oppure contattare il curatore dell'API "
+"in modo che il Messale venga aggiunto alle edizioni in lingua note."
 
 #: extending.php:606
 msgid "Add language edition Roman Missal"
-msgstr ""
+msgstr "Aggiungi edizione in lingua del Messale Romano"
 
 #: extending.php:607
 msgid "Cancel"
-msgstr ""
+msgstr "Annulla"
 
 #: easter.php:58
 msgid "Date of Easter from 1583 to 9999"
