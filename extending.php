@@ -499,8 +499,8 @@ const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="designatePatronButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-user-graduate mr-2"></i>Designate patron</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i>?php echo _( "Cancel" ) ?></button>
+                <button type="button" id="designatePatronButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-user-graduate mr-2"></i><?php echo _( "Designate patron" ) ?></button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i><?php echo _( "Cancel" ) ?></button>
             </div>
         </div>
     </div>
@@ -531,7 +531,7 @@ const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
             </div>
             <div class="modal-footer">
                 <button type="button" id="setPropertyButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-edit mr-2"></i>Set Property</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i>?php echo _( "Cancel" ) ?></button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i><?php echo _( "Cancel" ) ?></button>
             </div>
         </div>
     </div>
@@ -549,13 +549,13 @@ const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
                     <div class="form-group col col-md-10">
                         <label for="existingFestivityName" class="font-weight-bold"><?php echo _( "Choose from existing festivities"); ?>:</label>
                         <input list="existingFestivitiesList" class="form-control existingFestivityName" required>
-                        <div class="invalid-feedback"><?php echo _( "This festivity does not seem to exist? Please choose from a value in the list."); ?></div>
+                        <div class="invalid-feedback"><?php echo _( "This festivity does not seem to exist? Please choose from a value in the list." ); ?></div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="moveFestivityButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-day mr-2"></i>Move Festivity</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i>?php echo _( "Cancel" ) ?></button>
+                <button type="button" id="moveFestivityButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-day mr-2"></i><?php echo _( "Move Festivity" ) ?></button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i><?php echo _( "Cancel" ) ?></button>
             </div>
         </div>
     </div>
@@ -578,9 +578,9 @@ const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="newFestivityFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus mr-2"></i>New Festivity from existing</button>
-                <button type="button" id="newFestivityExNovoButton" class="btn btn-primary actionPromptButton"><i class="fas fa-calendar-plus mr-2"></i>New Festivity ex novo</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i>?php echo _( "Cancel" ) ?></button>
+                <button type="button" id="newFestivityFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus mr-2"></i><?php echo _( "New Festivity from existing" ) ?></button>
+                <button type="button" id="newFestivityExNovoButton" class="btn btn-primary actionPromptButton"><i class="fas fa-calendar-plus mr-2"></i><?php echo _( "New Festivity ex novo" ) ?></button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i><?php echo _( "Cancel" ) ?></button>
             </div>
         </div>
     </div>

@@ -104,8 +104,8 @@ class FormControls {
 
     public function getCommonsTemplate() {
         return "<div class=\"form-group col-sm-{colWidth}\">" .
-        "<label style=\"display:block;\" for=\"onTheFly{uniqid}Proper\">" . _( "Common (or Proper)") . "</label>" .
-        "<select class=\"form-control litEvent litEventProper\" id=\"onTheFly{uniqid}Proper\" multiple=\"multiple\" />" .
+        "<label style=\"display:block;\" for=\"onTheFly{uniqid}Common\">" . _( "Common (or Proper)") . "</label>" .
+        "<select class=\"form-control litEvent litEventCommon\" id=\"onTheFly{uniqid}Common\" multiple=\"multiple\" />" .
         "<option value=\"Proper\" selected>" . $this->LitCommon->C("Proper") . "</option>" .
         "<option value=\"Blessed Virgin Mary\">" . $this->LitCommon->C("Blessed Virgin Mary") . "</option>" .
         //"<optgroup label=\"" . $this->LitCommon->C("Common of Martyrs") . "\">" .
