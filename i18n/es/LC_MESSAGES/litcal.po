@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-15 07:01+0000\n"
+"POT-Creation-Date: 2022-03-21 00:18+0000\n"
 "PO-Revision-Date: 2022-03-15 18:21+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
@@ -730,12 +730,33 @@ msgid ""
 "list."
 msgstr "¿Esta diócesis no parece existir? Elija un valor de la lista."
 
+#: extending.php:502
+msgid "Designate patron"
+msgstr ""
+
+#: extending.php:503 extending.php:534 extending.php:558 extending.php:583
+#: extending.php:607
+msgid "Cancel"
+msgstr ""
+
 #: extending.php:524
 msgid "Property to change"
 msgstr ""
 
 #: extending.php:527
 msgid "Grade"
+msgstr ""
+
+#: extending.php:557
+msgid "Move Festivity"
+msgstr ""
+
+#: extending.php:581
+msgid "New Festivity from existing"
+msgstr ""
+
+#: extending.php:582
+msgid "New Festivity ex novo"
 msgstr ""
 
 #: extending.php:599
@@ -751,10 +772,6 @@ msgstr ""
 
 #: extending.php:606
 msgid "Add language edition Roman Missal"
-msgstr ""
-
-#: extending.php:607
-msgid "Cancel"
 msgstr ""
 
 #: easter.php:58

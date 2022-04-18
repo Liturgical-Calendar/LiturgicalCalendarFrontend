@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-15 07:01+0000\n"
+"POT-Creation-Date: 2022-03-21 00:18+0000\n"
 "PO-Revision-Date: 2022-03-15 18:23+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
@@ -767,6 +767,15 @@ msgstr ""
 "Questa festività non sembra esistere? Si prega scegliere da un valore "
 "nell'elenco."
 
+#: extending.php:502
+msgid "Designate patron"
+msgstr ""
+
+#: extending.php:503 extending.php:534 extending.php:558 extending.php:583
+#: extending.php:607
+msgid "Cancel"
+msgstr "Annulla"
+
 #: extending.php:524
 msgid "Property to change"
 msgstr "Proprietà da modificare"
@@ -774,6 +783,24 @@ msgstr "Proprietà da modificare"
 #: extending.php:527
 msgid "Grade"
 msgstr "Grado"
+
+#: extending.php:557
+#, fuzzy
+#| msgid "Move festivity"
+msgid "Move Festivity"
+msgstr "Sposta festività"
+
+#: extending.php:581
+#, fuzzy
+#| msgid "New festivity"
+msgid "New Festivity from existing"
+msgstr "Nuova festività"
+
+#: extending.php:582
+#, fuzzy
+#| msgid "New festivity"
+msgid "New Festivity ex novo"
+msgstr "Nuova festività"
 
 #: extending.php:599
 msgid "Choose from known Roman Missal language editions"
@@ -792,10 +819,6 @@ msgstr ""
 #: extending.php:606
 msgid "Add language edition Roman Missal"
 msgstr "Aggiungi edizione in lingua del Messale Romano"
-
-#: extending.php:607
-msgid "Cancel"
-msgstr "Annulla"
 
 #: easter.php:58
 msgid "Date of Easter from 1583 to 9999"
