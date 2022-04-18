@@ -22,12 +22,11 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Check-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Update source file translation strings
         id: update_pot
         run: |
-          git config --global --add safe.directory /github/workspace
           sudo apt-get install -y gettext
           xgettext --from-code=UTF-8 --add-comments='translators:' --keyword="pgettext:1c,2" -o i18n/litcal.pot index.php usage.php extending.php easter.php about.php liturgyOfAnyDay.php includes/LitColor.php includes/LitCommon.php includes/LitGrade.php
           echo "::set-output name=POT_LINES_CHANGED::$(git diff -U0 | grep '^[+|-][^+|-]' | grep -Ev '^[+-]"POT-Creation-Date' | wc -l)"
@@ -35,7 +34,7 @@ jobs:
       # push the output folder to your repo
       - name: Push changes
         if: ${{ steps.update_pot.outputs.POT_LINES_CHANGED > 0 }}
-        uses: actions-x/commit@v4
+        uses: actions-x/commit@v5
         with:
           # The committer's email address
           email: 41898282+github-actions[bot]@users.noreply.github.com
