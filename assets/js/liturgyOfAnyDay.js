@@ -2,8 +2,28 @@ const isStaging = location.href.includes( "-staging" );
 const endpointV = isStaging ? "dev" : "v3";
 const endpointURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalEngine.php?`;
 
+i18next.use(i18nextHttpBackend).init({
+    debug: true,
+    lng: Cookies.get("currentLocale").substring(0,2),
+    backend: {
+        loadPath: '/assets/locales/{{lng}}/{{ns}}.json'
+    }
+  }, () => { //(err, t)
+    // for options see
+    // https://github.com/i18next/jquery-i18next#initialize-the-plugin
+    jqueryI18next.init(i18next, $);
+
+    // start localizing, details:
+    // https://github.com/i18next/jquery-i18next#usage-of-selector-function
+    //$('.nav').localize();
+    //$('.content').localize();
+  });
+
 jQuery(() => {
-    getLiturgyOfADay();
+    i18next.on('initialized', () => {
+        setTranslations();
+        getLiturgyOfADay();
+    });
 });
 
 let queryString = '';
@@ -11,6 +31,51 @@ let CalData = {};
 let dtFormat = new Intl.DateTimeFormat((Cookies.get('currentLocale') || 'en'), { dateStyle: 'full' });
 let newDate = new Date();
 let highContrast = [ "green", "red", "purple" ];
+let commonsMap = {};
+let translGrade = [];
+
+const setTranslations = () => {
+
+    commonsMap = {
+        "For-One-Martyr"                          : i18next.t( "For-One-Martyr" ),
+        "For-Several-Martyrs"                     : i18next.t( "For-Several-Martyrs" ),
+        "For-Missionary-Martyrs"                  : i18next.t( "For-Missionary-Martyrs" ),
+        "For-One-Missionary-Martyr"               : i18next.t( "For-One-Missionary-Martyr" ),
+        "For-Several-Missionary-Martyrs"          : i18next.t( "For-Several-Missionary-Martyrs" ),
+        "For-a-Virgin-Martyr"                     : i18next.t( "For-a-Virgin-Martyr" ),
+        "For-a-Holy-Woman-Martyr"                 : i18next.t( "For-a-Holy-Woman-Martyr" ),
+        "For-a-Pope"                              : i18next.t( "For-a-Pope" ),
+        "For-a-Bishop"                            : i18next.t( "For-a-Bishop" ),
+        "For-One-Pastor"                          : i18next.t( "For-One-Pastor" ),
+        "For-Several-Pastors"                     : i18next.t( "For-Several-Pastors" ),
+        "For-Founders-of-a-Church"                : i18next.t( "For-Founders-of-a-Church" ),
+        "For-One-Founder"                         : i18next.t( "For-One-Founder" ),
+        "For-Several-Founders"                    : i18next.t( "For-Several-Founders" ),
+        "For-Missionaries"                        : i18next.t( "For-Missionaries" ),
+        "For-One-Virgin"                          : i18next.t( "For-One-Virgin" ),
+        "For-Several-Virgins"                     : i18next.t( "For-Several-Virgins" ),
+        "For-Several-Saints"                      : i18next.t( "For-Several-Saints" ),
+        "For-One-Saint"                           : i18next.t( "For-One-Saint" ),
+        "For-an-Abbot"                            : i18next.t( "For-an-Abbot" ),
+        "For-a-Monk"                              : i18next.t( "For-a-Monk" ),
+        "For-a-Nun"                               : i18next.t( "For-a-Nun" ),
+        "For-Religious"                           : i18next.t( "For-Religious" ),
+        "For-Those-Who-Practiced-Works-of-Mercy"  : i18next.t( "For-Those-Who-Practiced-Works-of-Mercy" ),
+        "For-Educators"                           : i18next.t( "For-Educators" ),
+        "For-Holy-Women"                          : i18next.t( "For-Holy-Women" )
+    };
+
+    translGrade = [
+        i18next.t( "weekday" ),
+        i18next.t( "Commemoration" ),
+        i18next.t( "Optional-memorial" ),
+        i18next.t( "Memorial" ),
+        i18next.t( "FEAST" ),
+        i18next.t( "FEAST-OF-THE-LORD" ),
+        i18next.t( "SOLEMNITY" )
+    ];
+
+};
 
 $(document).on("change", "#monthControl,#yearControl", () => {
     let year =  $('#yearControl').val();
@@ -28,7 +93,7 @@ let getLiturgyOfADay = () => {
     let year =  $('#yearControl').val();
     let month = $('#monthControl').val();
     let day = $('#dayControl').val();
-    newDate = new Date(Date.UTC(year, month - 1, day, 0, 0, 0) );
+    newDate = new Date(Date.UTC(year, month - 1, day, 0, 0, 0));
     let timestamp = newDate.getTime() / 1000;
     
     let params = {
@@ -84,35 +149,6 @@ const universalCommons = [
     "Dedication of a Church"
 ];
 
-const commonsMap = {
-    "For-One-Martyr"                          : i18next.t( "For-One-Martyr" ),
-    "For-Several-Martyrs"                     : i18next.t( "For-Several-Martyrs" ),
-    "For-Missionary-Martyrs"                  : i18next.t( "For-Missionary-Martyrs" ),
-    "For-One-Missionary-Martyr"               : i18next.t( "For-One-Missionary-Martyr" ),
-    "For-Several-Missionary-Martyrs"          : i18next.t( "For-Several-Missionary-Martyrs" ),
-    "For-a-Virgin-Martyr"                     : i18next.t( "For-a-Virgin-Martyr" ),
-    "For-a-Holy-Woman-Martyr"                 : i18next.t( "For-a-Holy-Woman-Martyr" ),
-    "For-a-Pope"                              : i18next.t( "For-a-Pope" ),
-    "For-a-Bishop"                            : i18next.t( "For-a-Bishop" ),
-    "For-One-Pastor"                          : i18next.t( "For-One-Pastor" ),
-    "For-Several-Pastors"                     : i18next.t( "For-Several-Pastors" ),
-    "For-Founders-of-a-Church"                : i18next.t( "For-Founders-of-a-Church" ),
-    "For-One-Founder"                         : i18next.t( "For-One-Founder" ),
-    "For-Several-Founders"                    : i18next.t( "For-Several-Founders" ),
-    "For-Missionaries"                        : i18next.t( "For-Missionaries" ),
-    "For-One-Virgin"                          : i18next.t( "For-One-Virgin" ),
-    "For-Several-Virgins"                     : i18next.t( "For-Several-Virgins" ),
-    "For-Several-Saints"                      : i18next.t( "For-Several-Saints" ),
-    "For-One-Saint"                           : i18next.t( "For-One-Saint" ),
-    "For-an-Abbot"                            : i18next.t( "For-an-Abbot" ),
-    "For-a-Monk"                              : i18next.t( "For-a-Monk" ),
-    "For-a-Nun"                               : i18next.t( "For-a-Nun" ),
-    "For-Religious"                           : i18next.t( "For-Religious" ),
-    "For-Those-Who-Practiced-Works-of-Mercy"  : i18next.t( "For-Those-Who-Practiced-Works-of-Mercy" ),
-    "For-Educators"                           : i18next.t( "For-Educators" ),
-    "For-Holy-Women"                          : i18next.t( "For-Holy-Women" )
-};
-
 const translCommon = common => {
     if( common === 'Proper' ) {
         return i18next.t('Proper');
@@ -151,16 +187,6 @@ const translCommon = common => {
         return commons.join("; " + i18next.t("or") + " ");
     }
 }
-
-const translGrade = [
-    i18next.t( "weekday" ),
-    i18next.t( "Commemoration" ),
-    i18next.t( "Optional-memorial" ),
-    i18next.t( "Memorial" ),
-    i18next.t( "FEAST" ),
-    i18next.t( "FEAST-OF-THE-LORD" ),
-    i18next.t( "SOLEMNITY" )
-];
 
 let updateResults = liturgyOfADay => {
     $('#dateOfLiturgy').text( dtFormat.format(newDate) );

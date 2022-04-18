@@ -15,8 +15,10 @@ $sunday     = $dayOfWeekFmt->format( DateTime::createFromFormat( '!j-n-Y', '1-1-
 $countryISOCodes = json_decode( file_get_contents("./assets/data/CountryToISO.json"), true );
 
 [ "LitCalMetadata" => $LitCalMetadata ] = json_decode( file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/LitCalMetadata.php"), true );
+[ "LitCalAllFestivities" => $FestivityCollection ] = json_decode( file_get_contents( "https://litcal.johnromanodorazio.com/api/{$versionAPI}/LitCalAllFestivities.php?locale=" . $i18n->LOCALE ), true );
 $NationalCalendars = $LitCalMetadata["NationalCalendars"];
 unset($NationalCalendars["VATICAN"]);
+$DiocesanGroups = array_keys( $LitCalMetadata["DiocesanGroups"] );
 
 $availableNationalCalendars = [];
 foreach( array_keys($NationalCalendars) as $country_name ) {
@@ -25,8 +27,72 @@ foreach( array_keys($NationalCalendars) as $country_name ) {
 asort($availableNationalCalendars, SORT_LOCALE_STRING);
 
 $API_EXTEND_HOWTO_A = _( "The General Roman Calendar can be extended so as to create a National or Diocesan calendar. Diocesan calendars depend on National calendars, so the National calendar must first be created." );
+$API_EXTEND_HOWTO_A2 = _( "A National calendar may have some festivities in common with other National calendars, for example the patron of a wider region." );
+$API_EXTEND_HOWTO_A3 = _( "In this case, the festivities for the Wider region should be defined separately, and if applicable should be made translatable, then the Wider region should be applied to the National Calendar." );
 $API_EXTEND_HOWTO_B = _( "National calendars must be defined using data from the translation of the Roman Missal used in the Region or in any case from decrees of the Episcopal Conference of the Region." );
 $DioceseGroupHelp = _( "If a group of dioceses decides to pool their Liturgical Calendar data, for example to print out one single yearly calendar with the data for all the dioceses in the group, the group can be defined or set here." );
+
+$c = new Collator($i18n->LOCALE);
+
+$AvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($value) {
+    return strpos($value, '_') === false;
+});
+$AvailableLocales = array_reduce($AvailableLocales, function($carry, $item) use($i18n){
+    $carry[$item] = Locale::getDisplayLanguage($item, $i18n->LOCALE);
+    return $carry;
+},[]);
+$c->asort($AvailableLocales);
+
+$AvailableCountries = array_filter(ResourceBundle::getLocales(''), function ($value) {
+    return strpos($value, '_');
+});
+$AvailableCountries = array_reduce($AvailableCountries, function($carry, $item) use($i18n) {
+    if( !array_key_exists( Locale::getDisplayRegion($item, 'en'), $carry ) ) {
+        $carry[Locale::getDisplayRegion($item, 'en')] = Locale::getDisplayRegion($item, $i18n->LOCALE);
+    }
+    return $carry;
+},[]);
+$c->asort($AvailableCountries);
+
+$messages = [
+    "Tag"               => _( "Tag" ),
+    "Name"              => _( "Name" ),
+    "Day"               => _( "Day" ),
+    "Month"             => _( "Month" ),
+    "Other Solemnity"   => _( "Other Solemnity" ),
+    "Other Feast"       => _( "Other Feast" ),
+    "Other Memorial"    => _( "Other Memorial" ),
+    "Other Optional Memorial"   => _( "Other Optional Memorial" ),
+    "Delete diocesan calendar"  => _( "Delete diocesan calendar" ),
+    "If you choose"     => _( "If you choose to delete this diocesan calendar, the liturgical events defined for the calendar and the corresponding index entry will be removed and no longer available in the client applications." ),
+    "Liturgical color"  => _( "Liturgical color" ),
+    "white"             => _( "white" ),
+    "red"               => _( "red" ),
+    "green"             => _( "green" ),
+    "purple"            => _( "purple" ),
+    /**translators: in reference to the first year from which this festivity takes place */
+    "Since"             => _( "Since" ),
+    /**translators: in reference to the year from which this festivity no longer needs to be dealt with */
+    "Until"             => _( "Until" ),
+    /**translators: label of the form row */
+    "Designate patron"  => _( "Patron or Patrons of the Wider Region"),
+    /**translators: label of the form row */
+    "New festivity"     => _( "New festivity" ),
+    /**translators: label of the form row */
+    "Change name or grade" => _( "Change name or grade" ),
+    /**translators: label of the form row */
+    "Move festivity" => _( "Move festivity" ),
+    "Decree URL"        => _( "Decree URL" ),
+    "Decree Langs"      => _( "Decree Language mappings" ),
+    "Missal"            => _( "Missal" ),
+    "Reason"            => _( "Reason (in favor of festivity)" ),
+    "commonsTemplate"   => $FormControls->getCommonsTemplate(),
+    "gradeTemplate"     => $FormControls->getGradeTemplate(),
+    "LOCALE"            => $i18n->LOCALE,
+    "AvailableLocales"  => $AvailableLocales,
+    "AvailableCountries"=> $AvailableCountries,
+    "countryISOCodes"   => $countryISOCodes
+];
 
 ?>
 
@@ -36,37 +102,180 @@ $DioceseGroupHelp = _( "If a group of dioceses decides to pool their Liturgical 
     <title><?php echo _( "General Roman Calendar - Extending") ?></title>
     <?php include_once('./layout/head.php'); ?>
 </head>
-<body>
+<body class="sb-nav-fixed">
 
     <?php include_once('./layout/header.php'); ?>
 
         <!-- Page Heading -->
         <h1 class="h3 mb-2 text-gray-800"><?php echo _( "Extend the General Roman Calendar with National or Diocesan data"); ?></h1>
         <p class="mb-4">
-            <p><?php echo $API_EXTEND_HOWTO_A; ?></p>
+            <p><?php echo $API_EXTEND_HOWTO_A . " " . $API_EXTEND_HOWTO_A2 . " " . $API_EXTEND_HOWTO_A3; ?></p>
             <p><?php echo $API_EXTEND_HOWTO_B; ?></p>
         </p>
 <?php
     if(isset($_GET["choice"])){
         switch($_GET["choice"]){
-            case "national":
+            case "widerRegion":
+                //FormControls::$settings["toYearField"] = true;
                 ?>
-                <div class="col-md-6">
-                    <div class="card border-left-primary shadow m-2">
+                <div class="container-fluid">
+                    <form class="row justify-content-center needs-validation" novalidate>
+                        <div class="form-group col col-md-3">
+                            <label for="widerRegionCalendarName" class="font-weight-bold"><?php echo _( "Wider Region"); ?></label>
+                            <input list="WiderRegionsList" class="form-control regionalNationalCalendarName" id="widerRegionCalendarName" data-category="widerRegionCalendar" required>
+                            <div class="invalid-feedback"><?php echo _( "This value cannot be empty."); ?></div>
+                            <datalist id="WiderRegionsList">
+                                <option value=""></option>
+                                <?php
+                                    foreach( $LitCalMetadata["WiderRegions"] as $widerRegion ) {
+                                        echo "<option value=\"{$widerRegion}\">{$widerRegion}</option>";
+                                    }
+                                ?>
+                            </datalist>
+                        </div>
+                        <div class="form-group col col-md-3">
+                            <label>:</label>
+                            <div class="form-check form-switch">
+                                <input type="checkbox" class="form-check-input" id="widerRegionIsMultilingual" />
+                                <label for="widerRegionIsMultilingual" class="form-check-label font-weight-bold"><?php echo _( "Wider Region is multilingual" ) ?></label>
+                            </div>
+                        </div>
+                        <div class="form-group col col-md-3">
+                            <label for="removeExistingWiderRegionData" class="font-weight-bold"></label>
+                            <button class="btn btn-danger m-2 form-control" id="removeExistingWiderRegionData" disabled data-toggle="modal" data-target="#removeWiderRegionDataPrompt">
+                                <i class="far fa-trash-alt mr-2"></i>
+                                <?php echo _( "Remove existing data"); ?>
+                            </button>
+                        </div>
+                    </form>
+                    <div class="card border-left-primary mr-5 mx-5">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Generate National Calendar"); ?></h6>
+                            <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Create a Calendar for a Wider Region"); ?></h4>
                         </div>
                         <div class="card-body">
-                            <div class="row no-gutters align-items-center"></div>
-                            <div class="col-auto">
-                                <i class="fas fa-flag fa-2x text-gray-300"></i>
+                            <div class="d-flex justify-content-around">
+                                <button class="btn btn-sm btn-primary m-2" id="makePatronAction" data-toggle="modal" data-target="#makePatronActionPrompt"><i class="fas fa-user-graduate mr-2"></i><?php echo _( "Designate patron from existing festivity" ) ?></button>
+                                <button class="btn btn-sm btn-primary m-2" id="setPropertyAction" data-toggle="modal" data-target="#setPropertyActionPrompt"><i class="fas fa-edit mr-2"></i><?php echo _( "Change name or grade of existing festivity" ) ?></button>
+                                <button class="btn btn-sm btn-primary m-2" id="moveFestivityAction" data-toggle="modal" data-target="#moveFestivityActionPrompt"><i class="fas fa-calendar-day mr-2"></i><?php echo _( "Move festivity to new date" ) ?></button>
+                                <button class="btn btn-sm btn-primary m-2" id="newFestivityAction" data-toggle="modal" data-target="#newFestivityActionPrompt"><i class="far fa-calendar-plus mr-2"></i><?php echo _( "Create a new festivity" ) ?></button>
                             </div>
+                            <hr>
+                            <form class="needs-validation regionalNationalDataForm" id="widerRegionForm" novalidate>
+                            </form>
+                        </div>
+                        <div class="card-footer text-center">
+                            <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeWiderRegionData" data-category="widerRegionCalendar" disabled><i class="fas fa-save mr-2"></i><?php echo _("Save Wider Region Calendar Data") ?></button>
+                        </div>
+                    </div>
+                </div>
+                <?php
+                break;
+            case "national":
+                ?>
+                <div class="container-fluid">
+                    <form class="row justify-content-center needs-validation" novalidate>
+                        <div class="form-group col col-md-3">
+                            <label for="nationalCalendarName" class="font-weight-bold"><?php echo _( "National Calendar"); ?></label>
+                            <input list="nationalCalendarsList" class="form-control regionalNationalCalendarName" id="nationalCalendarName" data-category="nationalCalendar" required>
+                            <div class="invalid-feedback"><?php echo _( "This value cannot be empty."); ?></div>
+                            <datalist id="nationalCalendarsList">
+                                <?php
+                                    /*foreach( $NationalCalendars as $nationalCalendar => $dioceseArray ) {
+                                        echo "<option value=\"{$nationalCalendar}\">{$nationalCalendar}</option>";
+                                    }*/
+                                    foreach( $AvailableCountries as $countryEnglish => $countryLocalized ) {
+                                        echo "<option value=\"{$countryEnglish}\">{$countryLocalized}</option>";
+                                    }
+                                ?>
+                            </datalist>
+                        </div>
+                        <div class="form-group col col-md-3">
+                            <label for="removeExistingNationalData" class="font-weight-bold"></label>
+                            <button class="btn btn-danger m-2 form-control" id="removeExistingNationalData" disabled data-toggle="modal" data-target="#removeNationalDataPrompt">
+                                <i class="far fa-trash-alt mr-2"></i>
+                                <?php echo _( "Remove existing data"); ?>
+                            </button>
+                        </div>
+                    </form>
+                    <div class="card border-left-primary mr-5 mx-5">
+                        <div class="card-header py-3">
+                            <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Create a National Calendar"); ?></h4>
+                        </div>
+                        <div class="card-body">
+
+                            <div id="nationalCalendarSettingsContainer" class="container">
+                                <h3 id="nationalCalendarSettingsTitle" class="text-center"><?php echo _("National calendar settings") ?></h3>
+                                <form id="nationalCalendarSettingsForm" class="row justify-content-center needs-validation" novalidate>
+                                    <div class="form-group col col-md-3">
+                                        <label><?php echo _( 'EPIPHANY' ) ?></label>
+                                        <select class="form-control" id="nationalCalendarSettingEpiphany">
+                                            <option value=""></option>
+                                            <option value="JAN6"><?php echo _("January 6") ?></option>
+                                            <option value="SUNDAY_JAN2_JAN8"><?php echo _("Sunday between January 2 and January 8") ?></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col col-md-3">
+                                        <label><?php echo _( 'ASCENSION' ) ?></label>
+                                        <select class="form-control" id="nationalCalendarSettingAscension">
+                                            <option value=""></option>
+                                            <option value="THURSDAY"><?php echo $thursday ?></option>
+                                            <option value="SUNDAY"><?php echo $sunday ?></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col col-md-3">
+                                        <label><?php echo _( 'CORPUS CHRISTI' ) ?></label>
+                                        <select class="form-control" id="nationalCalendarSettingCorpusChristi">
+                                            <option value=""></option>
+                                            <option value="THURSDAY"><?php echo $thursday ?></option>
+                                            <option value="SUNDAY"><?php echo $sunday ?></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col col-md-3">
+                                        <label><?php echo _( 'LOCALE' ) ?></label>
+                                        <select class="form-control" id="nationalCalendarSettingLocale">
+                                            <?php
+                                                foreach( $AvailableLocales as $AvlLOCALE => $AvlLANGUAGE ) {
+                                                    echo "<option value=\"{$AvlLOCALE}\"" . ($i18n->LOCALE === $AvlLOCALE ? ' selected' : '') . ">{$AvlLANGUAGE}</option>";
+                                                }
+                                            ?>
+                                        </select>
+                                    </div>
+
+                                    <div class="form col col-md-6">
+                                        <div class="row">
+                                            <label><?php echo _( 'Published Roman Missals' ) ?></label><button class="btn btn-sm btn-primary ml-2 mb-2" id="addPublishedRomanMissal" data-toggle="modal" data-target="#addPublishedRomanMissalPrompt" type="button"><i class="fas fa-plus mr-2"></i><?php echo _( 'Add Missal' ) ?></button>
+                                        </div>
+                                        <div class="row">
+                                            <ul class="list-group" id="publishedRomanMissalList" style="width: 250px;">
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col col-md-3">
+                                        <label><?php echo _( 'Wider Region' ) ?></label>
+                                        <input class="form-control" type="text" id="associatedWiderRegion" />
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="d-flex justify-content-around">
+                                <button class="btn btn-sm btn-primary m-2" id="makePatronAction" data-toggle="modal" data-target="#makePatronActionPrompt"><i class="fas fa-user-graduate mr-2"></i><?php echo _( "Designate patron from existing festivity" ) ?></button>
+                                <button class="btn btn-sm btn-primary m-2" id="setPropertyAction" data-toggle="modal" data-target="#setPropertyActionPrompt"><i class="fas fa-edit mr-2"></i><?php echo _( "Change name or grade of existing festivity" ) ?></button>
+                                <button class="btn btn-sm btn-primary m-2" id="moveFestivityAction" data-toggle="modal" data-target="#moveFestivityActionPrompt"><i class="fas fa-calendar-day mr-2"></i><?php echo _( "Move festivity to new date" ) ?></button>
+                                <button class="btn btn-sm btn-primary m-2" id="newFestivityAction" data-toggle="modal" data-target="#newFestivityActionPrompt"><i class="far fa-calendar-plus mr-2"></i><?php echo _( "Create a new festivity" ) ?></button>
+                            </div>
+                            <hr>
+                            <form class="needs-validation regionalNationalDataForm" id="nationalCalendarForm" novalidate>
+                            </form>
+                        </div>
+                        <div class="card-footer text-center">
+                            <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeNationalCalendarData" data-category="nationalCalendar" disabled><i class="fas fa-save mr-2"></i><?php echo _("Save National Calendar Data") ?></button>
                         </div>
                     </div>
                 </div>
                 <?php
             break;
             case "diocesan":
+                FormControls::$settings["toYearField"] = false;
                 ?>
                 <div class="container">
                     <form class="row justify-content-center needs-validation" novalidate>
@@ -93,14 +302,17 @@ $DioceseGroupHelp = _( "If a group of dioceses decides to pool their Liturgical 
                         </div>
                         <div class="form-group col col-md-3">
                             <label for="diocesanCalendarGroup" class="font-weight-bold"><?php echo _( "Diocesan group"); ?>:</label>
-                            <input type="text" class="form-control" id="diocesanCalendarGroup" aria-describedby="diocesanCalendarGroupHelp">
+                            <input list="DiocesanGroupsList" class="form-control" id="diocesanCalendarGroup" aria-describedby="diocesanCalendarGroupHelp">
+                            <datalist id="DiocesanGroupsList">
+                                <option value=""></option>
+                                <?php
+                                    foreach( $DiocesanGroups as $diocesanGroup ) {
+                                        echo "<option value=\"$diocesanGroup\">$diocesanGroup</option>";
+                                    }
+                                ?>
+                            </datalist>
                             <small id="diocesanCalendarGroupHelp" class="form-text text-muted"><?php echo $DioceseGroupHelp; ?></small>
                         </div>
-                        <!-- <div class="form-group col col-md-4">
-                            <label for="diocesanCalendarBehaviour" class="font-weight-bold"><?php echo _( "Overwrites universal / national calendar"); ?></label>
-                            <input type="checkbox" class="form-control" data-toggle="toggle" id="diocesanCalendarBehaviour" aria-describedby="diocesanCalendarBehaviourHelp">
-                            <small id="diocesanCalendarBehaviourHelp" class="form-text text-muted">The default behaviour for a diocesan calendar is to juxtapose the local celebrations alongside those of the universal and the national calendar. If instead the diocesan calendar should override the universal calendar, turn this option on.</small>
-                        </div> -->
                     </form>
                 </div>
 
@@ -131,7 +343,7 @@ $DioceseGroupHelp = _( "If a group of dioceses decides to pool their Liturgical 
                             <div class="container-fluid">
                                 <div class="card border-left-primary mr-5 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Generate Diocesan Calendar"); ?>: <?php echo _( "Define the Solemnities"); ?></h4>
+                                        <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Solemnities"); ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
@@ -152,7 +364,7 @@ $DioceseGroupHelp = _( "If a group of dioceses decides to pool their Liturgical 
                             <div class="container-fluid">
                                 <div class="card border-left-primary mr-5 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Generate Diocesan Calendar"); ?>: <?php echo _( "Define the Feasts"); ?></h4>
+                                        <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Feasts"); ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
@@ -173,7 +385,7 @@ $DioceseGroupHelp = _( "If a group of dioceses decides to pool their Liturgical 
                             <div class="container-fluid">
                                 <div class="card border-left-primary mr-5 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Generate Diocesan Calendar"); ?>: <?php echo _( "Define the Memorials"); ?></h4>
+                                        <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Memorials"); ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
@@ -194,7 +406,7 @@ $DioceseGroupHelp = _( "If a group of dioceses decides to pool their Liturgical 
                             <div class="container-fluid">
                                 <div class="card border-left-primary mr-5 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Generate Diocesan Calendar"); ?>: <?php echo _( "Define the Optional Memorials"); ?></h4>
+                                        <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Optional Memorials"); ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
@@ -259,51 +471,154 @@ $DioceseGroupHelp = _( "If a group of dioceses decides to pool their Liturgical 
                         </div>
                     </div>
                 </div>
-                <!--<form>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                    </div>
-                    <div class="form-group form-check">
-                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                        <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>-->
                 <?php
             break;
         }
     }
-
-$messages = [
-    "Name"              => _( "Name" ),
-    "Day"               => _( "Day" ),
-    "Month"             => _( "Month" ),
-    "Other Solemnity"   => _( "Other Solemnity" ),
-    "Other Feast"       => _( "Other Feast" ),
-    "Other Memorial"    => _( "Other Memorial" ),
-    "Other Optional Memorial"   => _( "Other Optional Memorial" ),
-    "Delete diocesan calendar"  => _( "Delete diocesan calendar" ),
-    "If you choose"     => _( "If you choose to delete this diocesan calendar, the liturgical events defined for the calendar and the corresponding index entry will be removed and no longer available in the client applications." ),
-    "Liturgical color"  => _( "Liturgical color" ),
-    "white"             => _( "white" ),
-    "red"               => _( "red" ),
-    "green"             => _( "green" ),
-    "purple"            => _( "purple" ),
-    /**translators: in reference to the first year from which this festivity takes place */
-    "Since"             => _( "Since" ),
-    "commonsTemplate"   => $FormControls->getCommonsTemplate(),
-    "LOCALE"            => $i18n->LOCALE
-];
 ?>
 <script>
 const messages = <?php echo json_encode($messages); ?>;
+const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
 </script>
 <?php include_once('./layout/footer.php'); ?>
+
+<!-- DEFINE MAKE PATRON MODAL  -->
+<div class="modal fade actionPromptModal" id="makePatronActionPrompt" tabindex="-1" role="dialog" aria-labelledby="makePatronActionModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="makePatronActionModalLabel"><?php echo _( "Designate patron from existing festivity" ) ?></h5>
+            </div>
+            <div class="modal-body">
+                <form class="row justify-content-center needs-validation" novalidate>
+                    <div class="form-group col col-md-10">
+                        <label for="existingFestivityName" class="font-weight-bold"><?php echo _( "Choose from existing festivities"); ?>:</label>
+                        <input list="existingFestivitiesList" class="form-control existingFestivityName" required>
+                        <div class="invalid-feedback"><?php echo _( "This festivity does not seem to exist? Please choose from a value in the list."); ?></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="designatePatronButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-user-graduate mr-2"></i><?php echo _( "Designate patron" ) ?></button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i><?php echo _( "Cancel" ) ?></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DEFINE SET PROPERTY MODAL  -->
+<div class="modal fade actionPromptModal" id="setPropertyActionPrompt" tabindex="-1" role="dialog" aria-labelledby="setPropertyActionModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="setPropertyActionModalLabel"><?php echo _( "Change name or grade of existing festivity" ) ?></h5>
+            </div>
+            <div class="modal-body">
+                <form class="row justify-content-left needs-validation" novalidate>
+                    <div class="form-group col col-md-10">
+                        <label for="existingFestivityName" class="font-weight-bold"><?php echo _( "Choose from existing festivities"); ?>:</label>
+                        <input list="existingFestivitiesList" class="form-control existingFestivityName" required>
+                        <div class="invalid-feedback"><?php echo _( "This festivity does not seem to exist? Please choose from a value in the list."); ?></div>
+                    </div>
+                    <div class="form-group col col-md-6">
+                        <label for="propertyToChange" class="font-weight-bold"><?php echo _( "Property to change" ); ?>:</label>
+                        <select class="form-control" id="propertyToChange" name="propertyToChange">
+                            <option value="name"><?php echo _( "Name" ); ?></option>
+                            <option value="grade"><?php echo _( "Grade" ); ?></option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="setPropertyButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-edit mr-2"></i>Set Property</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i><?php echo _( "Cancel" ) ?></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DEFINE MOVE FESTIVITY MODAL  -->
+<div class="modal fade actionPromptModal" id="moveFestivityActionPrompt" tabindex="-1" role="dialog" aria-labelledby="moveFestivityActionModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="moveFestivityActionModalLabel"><?php echo _( "Move festivity to new date" ) ?></h5>
+            </div>
+            <div class="modal-body">
+                <form class="row justify-content-center needs-validation" novalidate>
+                    <div class="form-group col col-md-10">
+                        <label for="existingFestivityName" class="font-weight-bold"><?php echo _( "Choose from existing festivities"); ?>:</label>
+                        <input list="existingFestivitiesList" class="form-control existingFestivityName" required>
+                        <div class="invalid-feedback"><?php echo _( "This festivity does not seem to exist? Please choose from a value in the list." ); ?></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="moveFestivityButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-day mr-2"></i><?php echo _( "Move Festivity" ) ?></button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i><?php echo _( "Cancel" ) ?></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DEFINE NEW FESTIVITY MODAL  -->
+<div class="modal fade actionPromptModal" id="newFestivityActionPrompt" tabindex="-1" role="dialog" aria-labelledby="newFestivityActionModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newFestivityActionModalLabel"><?php echo _( "Create a new festivity" ) ?></h5>
+            </div>
+            <div class="modal-body">
+                <form class="row justify-content-center needs-validation" novalidate>
+                    <div class="form-group col col-md-10">
+                        <label for="existingFestivityName" class="font-weight-bold"><?php echo _( "Choose from existing festivities"); ?>:</label>
+                        <input list="existingFestivitiesList" class="form-control existingFestivityName">
+                        <div class="invalid-feedback"><?php echo _( "This festivity does not seem to exist? Please choose from a value in the list."); ?></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="newFestivityFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus mr-2"></i><?php echo _( "New Festivity from existing" ) ?></button>
+                <button type="button" id="newFestivityExNovoButton" class="btn btn-primary actionPromptButton"><i class="fas fa-calendar-plus mr-2"></i><?php echo _( "New Festivity ex novo" ) ?></button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i><?php echo _( "Cancel" ) ?></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- addPublishedRomanMissalPrompt -->
+<div class="modal fade" id="addPublishedRomanMissalPrompt" tabindex="-1" role="dialog" aria-labelledby="addPublishedRomanMissalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPublishedRomanMissalLabel"><?php echo _( 'Add Missal' ) ?></h5>
+            </div>
+            <div class="modal-body">
+                <form class="row justify-content-center needs-validation" novalidate>
+                    <div class="form-group col col-md-10">
+                        <label for="languageEditionRomanMissalName" class="font-weight-bold"><?php echo _( "Choose from known Roman Missal language editions"); ?>:</label>
+                        <input list="languageEditionRomanMissalList" class="form-control" id="languageEditionRomanMissalName">
+                        <div class="invalid-feedback"><?php echo _( "This Missal is unknown to the Liturgical Calendar API. Please choose from a value in the list, or contact the curator of the API to have the Missal added to known language edition Missals."); ?></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="addLanguageEditionRomanMissal" class="btn btn-primary" disabled><i class="fas fa-calendar-plus mr-2"></i><?php echo _( "Add language edition Roman Missal" ) ?></button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i><?php echo _( "Cancel" ) ?></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<datalist id="existingFestivitiesList">
+<?php
+    foreach( $FestivityCollection as $key => $festivity ) {
+        echo "<option value=\"{$key}\">{$festivity["NAME"]}</option>";
+    }
+?>
+</datalist>
+
+<datalist id="languageEditionRomanMissalList"></datalist>
+
 </body>
 </html>

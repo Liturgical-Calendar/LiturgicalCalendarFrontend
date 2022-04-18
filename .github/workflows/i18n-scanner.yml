@@ -24,6 +24,7 @@ jobs:
 
     - name: Build
       run: |
+        git config --global --add safe.directory /github/workspace
         npm install --save-dev gulp i18next-scanner
         gulp --gulpfile 'gulpfile.js' i18next
 
