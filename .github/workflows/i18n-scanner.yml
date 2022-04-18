@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
 
@@ -24,12 +24,11 @@ jobs:
 
     - name: Build
       run: |
-        git config --global --add safe.directory /github/workspace
         npm install --save-dev gulp i18next-scanner
         gulp --gulpfile 'gulpfile.js' i18next
 
     - name: Push changes  # push the output folder to your repo
-      uses: actions-x/commit@v4
+      uses: actions-x/commit@v5
       with:
         # The committer's email address
         email: 41898282+github-actions[bot]@users.noreply.github.com
