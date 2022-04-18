@@ -28,7 +28,7 @@ jQuery(() => {
 
 let queryString = '';
 let CalData = {};
-let dtFormat = new Intl.DateTimeFormat((Cookies.get('currentLocale') || 'en'), { dateStyle: 'full' });
+let dtFormat = new Intl.DateTimeFormat((Cookies.get('currentLocale') || 'en'), { dateStyle: 'full', timeZone: 'UTC' });
 let newDate = new Date();
 let highContrast = [ "green", "red", "purple" ];
 let commonsMap = {};
@@ -95,7 +95,7 @@ let getLiturgyOfADay = () => {
     let day = $('#dayControl').val();
     newDate = new Date(Date.UTC(year, month - 1, day, 0, 0, 0));
     let timestamp = newDate.getTime() / 1000;
-    
+
     let params = {
         year: year
     };
