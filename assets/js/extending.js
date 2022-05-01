@@ -767,6 +767,7 @@ $(document).on('click', '.actionPromptButton', ev => {
     let existingFestivityTag = $modalForm.find('.existingFestivityName').val();
     let title = '';
     let action;
+    let propertyToChange;
     //let buttonId = ev.currentTarget.id;
     //console.log(buttonId + ' button was clicked');
     FormControls.settings.decreeURLField = true;
@@ -790,7 +791,7 @@ $(document).on('click', '.actionPromptButton', ev => {
             break;
         case 'setPropertyButton':
             FormControls.settings.tagField = false;
-            let propertyToChange = $('#propertyToChange').val();
+            propertyToChange = $('#propertyToChange').val();
             switch(propertyToChange) {
                 case 'name':
                     FormControls.settings.nameField = true;
@@ -868,7 +869,7 @@ $(document).on('click', '.actionPromptButton', ev => {
         $row = $(FormControls.CreatePatronRow(title, existingFestivityTag ));
         if( FormControls.settings.missalField ) {
             const { MISSAL } = FestivityCollection[existingFestivityTag];
-            $row.find(`#onTheFly${currentUniqid}Missal`).val(MISSAL).prop('disabled', true);
+            $row.find(`#onTheFly${currentUniqid}Missal`).val(MISSAL); //.prop('disabled', true);
         }
     } else {
         $row = $(FormControls.CreatePatronRow(title, null ));
@@ -876,6 +877,10 @@ $(document).on('click', '.actionPromptButton', ev => {
     $('.regionalNationalDataForm').append($row);
     $modal.modal('hide');
     $row.find('.form-group').closest('.form-row').data('action', action).attr('data-action', action);
+    if( action === 'setProperty' ) {
+        console.log('propertyToChange is of type ' + typeof propertyToChange + ' and has a value of ' + propertyToChange);
+        $row.find('.form-group').closest('.form-row').data('prop', propertyToChange).attr('data-prop', propertyToChange);
+    }
     $row.find('.litEventColor').multiselect({
         buttonWidth: '100%'
     }).multiselect('deselectAll', false);
@@ -1058,7 +1063,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                     $row.find('.form-group').closest('.form-row').data('action', el.Metadata.action).attr('data-action', el.Metadata.action);
                     if( FormControls.settings.missalField ) {
                         const { MISSAL } = FestivityCollection[existingFestivityTag];
-                        $row.find(`#onTheFly${currentUniqid}Missal`).val(MISSAL).prop('disabled', true);
+                        $row.find(`#onTheFly${currentUniqid}Missal`).val(MISSAL); //.prop('disabled', true);
                     }
                     $row.find('.litEventColor').multiselect({
                         buttonWidth: '100%'
@@ -1270,6 +1275,9 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
             "Metadata": {
                 "action": action
             }
+        }
+        if( action === 'setProperty' ) {
+            rowData.Metadata.property = $(el).data('prop');
         }
         expectedJSONProperties[action].forEach(prop => {
             let propClass = '.litEvent' + prop.charAt(0).toUpperCase() + prop.substring(1).toLowerCase();
