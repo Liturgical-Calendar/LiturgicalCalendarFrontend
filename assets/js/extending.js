@@ -598,7 +598,7 @@ $(document).on('click', '#retrieveExistingDiocesanData', evt => {
         data: { "key" : dioceseKey },
         statusCode: {
             404: (xhr, textStatus, errorThrown) => {
-                toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />The Diocesan Calendar for ' + diocese + ' does not exist yet.', "Error");
+                toastr["warning"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />The Diocesan Calendar for ' + diocese + ' does not exist yet.', "Warning");
                 console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown + 'The Diocesan Calendar for ' + diocese + ' does not exist yet.');
             }
         },
@@ -698,7 +698,9 @@ $(document).on('click', '#retrieveExistingDiocesanData', evt => {
             setFocusFirstTabWithData();
         },
         error: (xhr, textStatus, errorThrown) => {
-            toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown, "Error");
+            if( xhr.status !== 404 ) { //we have already handled 404 Not Found above
+                toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown, "Error");
+            }
         }
     });
 });
@@ -942,8 +944,18 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
         data: { "key" : key, "category": category, "locale": LOCALE },
         statusCode: {
             404: (xhr, textStatus, errorThrown) => {
-                toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />The Data File for the ' + category + ' ' + key + ' does not exist yet.', "Error");
-                console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown + 'The Data File for the ' + category + ' ' + key + ' does not exist yet.');
+                toastr["warning"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />The Data File for the ' + category + ' ' + key + ' does not exist yet. Not that it\'s a big deal, just go ahead and create it now!', "Warning");
+                console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown + 'The Data File for the ' + category + ' ' + key + ' does not exist yet (just saying, not that it is really a big deal. Just go ahead and create it now!)');
+                switch(category) {
+                    case 'widerRegionCalendar':
+                        $('#widerRegionIsMultilingual').prop('checked', false);
+                        break;
+                    case 'nationalCalendar':
+                        $('form#nationalCalendarSettingsForm')[0].reset();
+                        $('#publishedRomanMissalList').empty();
+                        break;
+                }
+                $('form.regionalNationalDataForm').empty();
             }
         },
         success: data => {
@@ -1082,7 +1094,9 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
             $('.serializeRegionalNationalData').prop('disabled', false);
         },
         error: (xhr, textStatus, errorThrown) => {
-            toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown, "Error");
+            if( xhr.status !== 404 ) { //we have already handled 404 Not Found above
+                toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown, "Error");
+            }
         }
     });
 });
@@ -1206,27 +1220,37 @@ $(document).on('click', '#deleteDiocesanCalendarButton', ev => {
 });
 
 const integerVals = [ 'day', 'month', 'grade', 'sinceYear', 'untilYear' ];
+const expectedJSONProperties = {
+    'makePatron': [ 'tag', 'name', 'color', 'grade', 'day', 'month' ],
+    'setProperty': [ 'tag', 'name', 'grade', 'day', 'month' ],
+    'moveFestivity': [ 'tag', 'name', 'day', 'month', 'missal', 'reason' ],
+    'createNew': [ 'tag', 'name', 'color', 'grade', 'day', 'month', 'common', 'readings' ]
+}
 
 $(document).on('click', '.serializeRegionalNationalData', ev => {
     const category = $(ev.currentTarget).data('category');
+    const lcl = $('#nationalCalendarSettingLocale').val();
     let finalObj = {};
     switch(category) {
         case 'nationalCalendar':
-            const regionNamesLocalized = new Intl.DisplayNames([$('#nationalCalendarSettingLocale').val()], { type: 'region' });
+            const regionNamesLocalized = new Intl.DisplayNames([lcl], { type: 'region' });
+            const widerRegion = $('#associatedWiderRegion').val();
             finalObj = {
                 "LitCal": [],
-                "Metadata": {
-                    "Missals": $.map( $('#publishedRomanMissalList li'), el => { return $(el).text() }),
-                    "Region": regionNamesLocalized.of( messages.countryISOCodes[$('.regionalNationalCalendarName').val().toUpperCase()] ).toUpperCase(),
-                    "WiderRegion": {
-                        "name": $('#associatedWiderRegion').val()
-                    }
-                },
                 "Settings": {
                     "Epiphany": $('#nationalCalendarSettingEpiphany').val(),
                     "Ascension": $('#nationalCalendarSettingAscension').val(),
                     "CorpusChristi": $('#nationalCalendarSettingCorpusChristi').val(),
-                    "Locale": $('#nationalCalendarSettingLocale').val().toUpperCase()
+                    "Locale": lcl.toUpperCase()
+                },
+                "Metadata": {
+                    "Region": regionNamesLocalized.of( messages.countryISOCodes[$('.regionalNationalCalendarName').val().toUpperCase()] ).toUpperCase(),
+                    "WiderRegion": {
+                        "name": widerRegion,
+                        "jsonFile": `nations/${widerRegion}.json`,
+                        "i18nFile": `nations/${widerRegion.toUpperCase()}/${lcl.toLowerCase()}.json`
+                    },
+                    "Missals": $.map( $('#publishedRomanMissalList li'), el => { return $(el).text() })
                 }
             }
             break;
@@ -1240,29 +1264,14 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
     }
 
     $('.regionalNationalDataForm .form-row').each((idx, el) => {
+        const action = $(el).data('action');
         let rowData = {
             "Festivity": {},
             "Metadata": {
-                "action": $(el).data('action')
+                "action": action
             }
         }
-        let expectedJSONProperties;
-        switch( $(el).data('action') ) {
-            case 'makePatron':
-                expectedJSONProperties = [ 'tag', 'name', 'color', 'grade', 'day', 'month' ];
-                break;
-            case 'setProperty':
-                expectedJSONProperties = [ 'tag', 'name', 'grade', 'day', 'month' ];
-                break;
-            case 'moveFestivity':
-                expectedJSONProperties = [ 'tag', 'name', 'day', 'month', 'missal', 'reason' ];
-                break;
-            case 'createNew':
-                expectedJSONProperties = [ 'tag', 'name', 'color', 'grade', 'day', 'month', 'common', 'readings' ];
-                break;
-        }
-
-        expectedJSONProperties.forEach(prop => {
+        expectedJSONProperties[action].forEach(prop => {
             let propClass = '.litEvent' + prop.charAt(0).toUpperCase() + prop.substring(1).toLowerCase();
             if( $(el).find(propClass).length ) {
                 let val = $(el).find(propClass).val();
@@ -1301,6 +1310,7 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
     });
 
     console.log(finalObj);
+    console.log(JSON.stringify(finalObj));
 });
 
 $(document).on('change', '#diocesanCalendarNationalDependency', ev => {
