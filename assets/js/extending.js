@@ -16,24 +16,43 @@ function () {
     return str;
 };
 
+class RowAction {
+    static MakePatron       = Symbol('makePatron');
+    static SetProperty      = Symbol('setProperty');
+    static MoveFestivity    = Symbol('moveFestivity');
+    static CreateNew        = Symbol('createNew');
+    constructor(name) {
+        this.name = name;
+    }
+}
+
 const isStaging = location.hostname.includes( '-staging' );
 const endpointV = isStaging ? 'dev' : 'v3';
 const MetaDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalMetadata.php`;
 const DiocesanDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalDiocesanData.php`;
 const NationalDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalNationalAndRegionalData.php`;
 
-let ITALYDiocesesArr;
-let USDiocesesByState;
-let USDiocesesArr = [];
+const diocesanOvveridesDefined = () => {
+    return ( $('#diocesanCalendarOverrideEpiphany').val() !== "" || $('#diocesanCalendarOverrideAscension').val() !== "" || $('#diocesanCalendarOverrideCorpusChristi').val() !== "" );
+}
 
-$.getJSON( './assets/data/ItalyDioceses.json', data => { ITALYDiocesesArr = data; } );
-$.getJSON( './assets/data/USDiocesesByState.json', data => {
-    USDiocesesByState = data;
-    let c = 0;
-    for (const [state, arr] of Object.entries(USDiocesesByState)) {
-        arr.forEach(diocese => USDiocesesArr[c++] = diocese + " (" + state + ")");
-    }
-});
+toastr.options = {
+    "closeButton": true,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": true,
+    "positionClass": "toast-bottom-center",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "2000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+}
 
 const JANUARY = 1;
 const FEBRUARY = 2;
@@ -81,13 +100,54 @@ const lowercaseKeys = obj =>
     return acc;
   }, {});
 
-  const READINGS_PROPERTIES = [
+const READINGS_PROPERTIES = [
     "FIRST_READING",
     "RESPONSORIAL_PSALM",
     "SECOND_READING",
     "ALLELUIA_VERSE",
     "GOSPEL"
 ];
+
+const integerVals = [ 'day', 'month', 'grade', 'sinceYear', 'untilYear' ];
+const expectedJSONProperties = {
+    'makePatron': [ 'tag', 'name', 'color', 'grade', 'day', 'month' ],
+    'setProperty': [ 'tag', 'name', 'grade', 'day', 'month' ],
+    'moveFestivity': [ 'tag', 'name', 'day', 'month', 'missal', 'reason' ],
+    'createNew': [ 'tag', 'name', 'color', 'grade', 'day', 'month', 'common', 'readings' ]
+}
+
+const setFocusFirstTabWithData = () => {
+    let $firstInputWithNonEmptyValue = $('.carousel-item form .litEventName')
+        .filter(function(idx) {
+            return $(this).val() !== "";
+        })
+        .first();
+    let $parentCarouselItem = $firstInputWithNonEmptyValue.parents('.carousel-item');
+    let itemIndex = $('.carousel-item').index( $parentCarouselItem );
+    $('#diocesanCalendarDefinitionCardLinks li').removeClass('active');
+    $('.carousel').carousel(itemIndex);
+    $(`#diocesanCalendarDefinitionCardLinks li:nth-child(${itemIndex+2})`).addClass('active');
+};
+
+const removeDiocesanCalendarModal = diocese => {
+    return `
+<div class="modal fade" id="removeDiocesanCalendarPrompt" tabindex="-1" role="dialog" aria-labelledby="removeDiocesanCalendarModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="removeDiocesanCalendarModalLabel">${messages[ "Delete diocesan calendar" ]} ${diocese}?</h5>
+      </div>
+      <div class="modal-body">
+        ${messages[ "If you choose" ]}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-backspace mr-2">Cancel</button>
+        <button type="button" id="deleteDiocesanCalendarButton" class="btn btn-danger"><i class="far fa-trash-alt mr-2"></i>Delete calendar</button>
+      </div>
+    </div>
+  </div>
+</div>`;
+};
 
 class FormControls {
     static uniqid = 0;
@@ -108,12 +168,14 @@ class FormControls {
         reasonField: false,
         missalField: false
     }
+    static action = null;
+    static title = null;
 
-    static CreateFestivityRow(title = null) {
+    static CreateFestivityRow() {
         let formRow = '';
 
-        if (title !== null) {
-            formRow += `<h4>${title}</h4>`;
+        if (FormControls.title !== null) {
+            formRow += `<div class="d-flex justify-content-left"><h4 class="data-group-title">${FormControls.title}</h4></div>`;
         }
 
         formRow += `<div class="form-row">`;
@@ -175,7 +237,7 @@ class FormControls {
         return formRow;
     }
 
-    static CreatePatronRow(title = null, element = null) {
+    static CreatePatronRow(element = null) {
         let formRow = '';
         let festivity = null;
         if( element !== null ) {
@@ -197,8 +259,12 @@ class FormControls {
             //console.log(festivity);
         }
 
-        if (title !== null) {
-            formRow += `<h4>${title}</h4>`;
+        if (FormControls.title !== null) {
+            formRow += `<div class="d-flex justify-content-left"><h4 class="data-group-title">${FormControls.title}</h4>`;
+            if(FormControls.action.description === RowAction.CreateNew.description) {
+                formRow += `<button type="button" class="ml-auto btn btn-info strtotime-toggle-btn" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="false" autocomplete="off"><i class="fas fa-comment-slash mr-2"></i>explicatory date</button>`;
+            }
+            formRow += `</div>`;
         }
 
         formRow += `<div class="form-row">`;
@@ -316,6 +382,19 @@ class FormControls {
 
 }
 
+let ITALYDiocesesArr;
+let USDiocesesByState;
+let USDiocesesArr = [];
+
+$.getJSON( './assets/data/ItalyDioceses.json', data => { ITALYDiocesesArr = data; } );
+$.getJSON( './assets/data/USDiocesesByState.json', data => {
+    USDiocesesByState = data;
+    let c = 0;
+    for (const [state, arr] of Object.entries(USDiocesesByState)) {
+        arr.forEach(diocese => USDiocesesArr[c++] = diocese + " (" + state + ")");
+    }
+});
+
 let $CALENDAR = { LitCal: {} };
 let $index = {};
 
@@ -338,6 +417,31 @@ jQuery.ajax({
         let publishedRomanMissalsStr = Object.values( $index.RomanMissals ).map(({value,name}) => !value.startsWith('VATICAN_') ? `<option class="list-group-item" value="${value}">${name}</option>` : null).join('')
         $('#languageEditionRomanMissalList').append(publishedRomanMissalsStr);
         toastr["success"]('Successfully retrieved data from index file', "Success");
+    }
+});
+
+$(document).on('click', '.strtotime-toggle-btn', ev => {
+    let uniqid = $(ev.currentTarget).attr('data-row-uniqid');
+    if( $(ev.currentTarget).attr('aria-pressed') === 'true' ) {
+        $(ev.currentTarget).find('i').removeClass('fa-comment-slash').addClass('fa-comment');
+        $(`#onTheFly${uniqid}Month`).closest('.form-group').remove();
+        let $dayFormGroup = $(`#onTheFly${uniqid}Day`).closest('.form-group');
+        $dayFormGroup.empty().removeClass('col-sm-1').addClass('col-sm-2').append(`<label for="onTheFly${uniqid}StrToTime">Explicatory date</label><input type="text" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november" class="form-control litEvent litEventStrToTime" id="onTheFly${uniqid}StrToTime" />`);
+    } else {
+        $(ev.currentTarget).find('i').removeClass('fa-comment').addClass('fa-comment-slash');
+        let $strToTimeFormGroup = $(`#onTheFly${uniqid}StrToTime`).closest('.form-group');
+        $strToTimeFormGroup.empty().removeClass('col-sm-2').addClass('col-sm-1').append(`<label for="onTheFly${uniqid}Day">Day</label><input type="number" min="1" max="31" value="false" class="form-control litEvent litEventDay" id="onTheFly${uniqid}Day" />`);
+        let formRow = `<div class="form-group col-sm-1">
+        <label for="onTheFly${uniqid}Month">${messages[ "Month" ]}</label>
+        <select class="form-control litEvent litEventMonth" id="onTheFly${uniqid}Month" >`;
+        let formatter = new Intl.DateTimeFormat(LOCALE, { month: 'long' });
+        for (let i = 0; i < 12; i++) {
+            let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
+            formRow += `<option value=${i + 1}>${formatter.format(month)}</option>`;
+        }
+        formRow += `</select>
+        </div>`;
+        $strToTimeFormGroup.after(formRow);
     }
 });
 
@@ -495,28 +599,6 @@ $(document).on('change', '.litEvent', ev => {
     }
 });
 
-toastr.options = {
-    "closeButton": true,
-    "debug": false,
-    "newestOnTop": false,
-    "progressBar": true,
-    "positionClass": "toast-bottom-center",
-    "preventDuplicates": false,
-    "onclick": null,
-    "showDuration": "300",
-    "hideDuration": "1000",
-    "timeOut": "2000",
-    "extendedTimeOut": "1000",
-    "showEasing": "swing",
-    "hideEasing": "linear",
-    "showMethod": "fadeIn",
-    "hideMethod": "fadeOut"
-}
-
-const diocesanOvveridesDefined = () => {
-    return ( $('#diocesanCalendarOverrideEpiphany').val() !== "" || $('#diocesanCalendarOverrideAscension').val() !== "" || $('#diocesanCalendarOverrideCorpusChristi').val() !== "" );
-}
-
 $(document).on('click', '#saveDiocesanCalendar_btn', ev => {
     $data = JSON.stringify($CALENDAR);
     $nation = $('#diocesanCalendarNationalDependency').val();
@@ -573,19 +655,6 @@ $(document).on('click', '#saveDiocesanCalendar_btn', ev => {
     }
 });
 
-const setFocusFirstTabWithData = () => {
-    let $firstInputWithNonEmptyValue = $('.carousel-item form .litEventName')
-        .filter(function(idx) {
-            return $(this).val() !== "";
-        })
-        .first();
-    let $parentCarouselItem = $firstInputWithNonEmptyValue.parents('.carousel-item');
-    let itemIndex = $('.carousel-item').index( $parentCarouselItem );
-    $('#diocesanCalendarDefinitionCardLinks li').removeClass('active');
-    $('.carousel').carousel(itemIndex);
-    $(`#diocesanCalendarDefinitionCardLinks li:nth-child(${itemIndex+2})`).addClass('active');
-};
-
 $(document).on('click', '#retrieveExistingDiocesanData', evt => {
     evt.preventDefault();
     let diocese = $('#diocesanCalendarDioceseName').val();
@@ -629,8 +698,9 @@ $(document).on('click', '#retrieveExistingDiocesanData', evt => {
                         numLastRow = $form.find('.form-row').length - 1;
                         if (litevent.formRowNum > numLastRow) {
                             numMissingRows = litevent.formRowNum - numLastRow;
+                            FormControls.title = messages['Other Solemnity'];
                             while (numMissingRows-- > 0) {
-                                $form.append($(FormControls.CreateFestivityRow(messages['Other Solemnity'])));
+                                $form.append($(FormControls.CreateFestivityRow()));
                             }
                         }
                         $row = $('#carouselItemSolemnities form .form-row').eq(litevent.formRowNum);
@@ -639,8 +709,9 @@ $(document).on('click', '#retrieveExistingDiocesanData', evt => {
                         numLastRow = $('#carouselItemFeasts form .form-row').length - 1;
                         if (litevent.formRowNum > numLastRow) {
                             numMissingRows = litevent.formRowNum - numLastRow;
+                            FormControls.title = messages['Other Feast'];
                             while (numMissingRows-- > 0) {
-                                $('.carousel-item').eq(1).find('form').append($(FormControls.CreateFestivityRow(messages['Other Feast'])));
+                                $('.carousel-item').eq(1).find('form').append($(FormControls.CreateFestivityRow()));
                             }
                         }
                         $row = $('#carouselItemFeasts form .form-row').eq(litevent.formRowNum);
@@ -649,8 +720,9 @@ $(document).on('click', '#retrieveExistingDiocesanData', evt => {
                         numLastRow = $('#carouselItemMemorials form .form-row').length - 1;
                         if (litevent.formRowNum > numLastRow) {
                             numMissingRows = litevent.formRowNum - numLastRow;
+                            FormControls.title = messages['Other Memorial'];
                             while (numMissingRows-- > 0) {
-                                $('.carousel-item').eq(2).find('form').append($(FormControls.CreateFestivityRow(messages['Other Memorial'])));
+                                $('.carousel-item').eq(2).find('form').append($(FormControls.CreateFestivityRow()));
                             }
                         }
                         $row = $('#carouselItemMemorials form .form-row').eq(litevent.formRowNum);
@@ -659,8 +731,9 @@ $(document).on('click', '#retrieveExistingDiocesanData', evt => {
                         numLastRow = $('#carouselItemOptionalMemorials form .form-row').length - 1;
                         if (litevent.formRowNum > numLastRow) {
                             numMissingRows = litevent.formRowNum - numLastRow;
+                            FormControls.title = messages['Other Optional Memorial'];
                             while (numMissingRows-- > 0) {
-                                $('.carousel-item').eq(3).find('form').append($(FormControls.CreateFestivityRow(messages['Other Optional Memorial'])));
+                                $('.carousel-item').eq(3).find('form').append($(FormControls.CreateFestivityRow()));
                             }
                         }
                         $row = $('#carouselItemOptionalMemorials form .form-row').eq(litevent.formRowNum);
@@ -715,19 +788,23 @@ $(document).on('click', '.onTheFlyEventRow', ev => {
     let $row;
     switch (ev.currentTarget.id) {
         case "addSolemnity":
-            $row = $(FormControls.CreateFestivityRow(messages['Other Solemnity']));
+            FormControls.title = messages['Other Solemnity'];
+            $row = $(FormControls.CreateFestivityRow());
             $('.carousel-item').first().find('form').append($row);
             break;
         case "addFeast":
-            $row = $(FormControls.CreateFestivityRow(messages['Other Feast']));
+            FormControls.title = messages['Other Feast'];
+            $row = $(FormControls.CreateFestivityRow());
             $('.carousel-item').eq(1).find('form').append($row);
             break;
         case "addMemorial":
-            $row = $(FormControls.CreateFestivityRow(messages['Other Memorial']));
+            FormControls.title = messages['Other Memorial'];
+            $row = $(FormControls.CreateFestivityRow());
             $('.carousel-item').eq(2).find('form').append($row);
             break;
         case "addOptionalMemorial":
-            $row = $(FormControls.CreateFestivityRow(messages['Other Optional Memorial']));
+            FormControls.title = messages['Other Optional Memorial'];
+            $row = $(FormControls.CreateFestivityRow());
             $('.carousel-item').eq(3).find('form').append($row);
             break;
     }
@@ -765,8 +842,6 @@ $(document).on('click', '.actionPromptButton', ev => {
     let $modal = $(ev.currentTarget).closest('.actionPromptModal');
     let $modalForm = $modal.find('form');
     let existingFestivityTag = $modalForm.find('.existingFestivityName').val();
-    let title = '';
-    let action;
     let propertyToChange;
     //let buttonId = ev.currentTarget.id;
     //console.log(buttonId + ' button was clicked');
@@ -786,8 +861,8 @@ $(document).on('click', '.actionPromptButton', ev => {
             FormControls.settings.missalField = false;
             FormControls.settings.readingsField = false;
             FormControls.settings.reasonField = false;
-            title =  messages[ 'Designate patron' ];
-            action = 'makePatron';
+            FormControls.title =  messages[ 'Designate patron' ];
+            FormControls.action = RowAction.MakePatron;
             break;
         case 'setPropertyButton':
             FormControls.settings.tagField = false;
@@ -811,8 +886,8 @@ $(document).on('click', '.actionPromptButton', ev => {
             FormControls.settings.missalField = false;
             FormControls.settings.readingsField = false;
             FormControls.settings.reasonField = false;
-            title = messages[ 'Change name or grade' ];
-            action = 'setProperty';
+            FormControls.title = messages[ 'Change name or grade' ];
+            FormControls.action = RowAction.SetProperty;
             break;
         case 'moveFestivityButton':
             FormControls.settings.tagField = false;
@@ -826,8 +901,8 @@ $(document).on('click', '.actionPromptButton', ev => {
             FormControls.settings.missalField = true;
             FormControls.settings.readingsField = false;
             FormControls.settings.reasonField = true;
-            title = messages[ 'Move festivity' ];
-            action = 'moveFestivity';
+            FormControls.title = messages[ 'Move festivity' ];
+            FormControls.action = RowAction.MoveFestivity;
             break;
         case 'newFestivityFromExistingButton':
             FormControls.settings.tagField = false;
@@ -843,8 +918,8 @@ $(document).on('click', '.actionPromptButton', ev => {
             FormControls.settings.missalField = false;
             FormControls.settings.readingsField = true;
             FormControls.settings.reasonField = false;
-            title = messages[ 'New festivity' ];
-            action = 'createNew';
+            FormControls.title = messages[ 'New festivity' ];
+            FormControls.action = RowAction.CreateNew;
             break;
         case 'newFestivityExNovoButton':
             FormControls.settings.tagField = true;
@@ -860,24 +935,24 @@ $(document).on('click', '.actionPromptButton', ev => {
             FormControls.settings.missalField = false;
             FormControls.settings.readingsField = true;
             FormControls.settings.reasonField = false;
-            title = messages[ 'New festivity' ];
-            action = 'createNew';
+            FormControls.title = messages[ 'New festivity' ];
+            FormControls.action = RowAction.CreateNew;
             break;
     }
 
     if( existingFestivityTag !== '' ) {
-        $row = $(FormControls.CreatePatronRow(title, existingFestivityTag ));
+        $row = $(FormControls.CreatePatronRow( existingFestivityTag ));
         if( FormControls.settings.missalField ) {
             const { MISSAL } = FestivityCollection[existingFestivityTag];
             $row.find(`#onTheFly${currentUniqid}Missal`).val(MISSAL); //.prop('disabled', true);
         }
     } else {
-        $row = $(FormControls.CreatePatronRow(title, null ));
+        $row = $(FormControls.CreatePatronRow());
     }
     $('.regionalNationalDataForm').append($row);
     $modal.modal('hide');
-    $row.find('.form-group').closest('.form-row').data('action', action).attr('data-action', action);
-    if( action === 'setProperty' ) {
+    $row.find('.form-group').closest('.form-row').data('action', FormControls.action.description).attr('data-action', FormControls.action.description);
+    if( FormControls.action.description === RowAction.SetProperty.description ) {
         console.log('propertyToChange is of type ' + typeof propertyToChange + ' and has a value of ' + propertyToChange);
         $row.find('.form-group').closest('.form-row').data('prop', propertyToChange).attr('data-prop', propertyToChange);
     }
@@ -985,9 +1060,9 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
             }
             data.LitCal.forEach((el) => {
                 let currentUniqid = FormControls.uniqid;
-                let title;
+                FormControls.action = el.Metadata.action;
                 switch(el.Metadata.action) {
-                    case 'makePatron':
+                    case RowAction.MakePatron:
                         FormControls.settings.tagField = false;
                         FormControls.settings.nameField = true;
                         FormControls.settings.gradeFieldShow = true;
@@ -1000,9 +1075,9 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                         FormControls.settings.missalField = false;
                         FormControls.settings.readingsField = false;
                         FormControls.settings.reasonField = false;
-                        title =  messages[ 'Designate patron' ];
+                        FormControls.title =  messages[ 'Designate patron' ];
                         break;
-                    case 'setProperty':
+                    case RowAction.SetProperty:
                         FormControls.settings.tagField = false;
                         let propertyToChange = $('#propertyToChange').val();
                         switch(propertyToChange) {
@@ -1024,9 +1099,9 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                         FormControls.settings.missalField = false;
                         FormControls.settings.readingsField = false;
                         FormControls.settings.reasonField = false;
-                        title = messages[ 'Change name or grade' ];
+                        FormControls.title = messages[ 'Change name or grade' ];
                         break;
-                    case 'moveFestivity':
+                    case RowAction.MoveFestivity:
                         FormControls.settings.tagField = false;
                         FormControls.settings.nameField = false;
                         FormControls.settings.gradeFieldShow = false;
@@ -1038,9 +1113,9 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                         FormControls.settings.missalField = true;
                         FormControls.settings.readingsField = false;
                         FormControls.settings.reasonField = true;
-                        title = messages[ 'Move festivity' ];
+                        FormControls.title = messages[ 'Move festivity' ];
                         break;
-                    case 'createNew':
+                    case RowAction.CreateNew:
                         FormControls.settings.tagField = false;
                         FormControls.settings.nameField = false;
                         FormControls.settings.gradeFieldShow = true;
@@ -1054,11 +1129,11 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                         FormControls.settings.missalField = false;
                         FormControls.settings.readingsField = true;
                         FormControls.settings.reasonField = false;
-                        title = messages[ 'New festivity' ];
+                        FormControls.title = messages[ 'New festivity' ];
                         break;
                     }
 
-                    $row = $(FormControls.CreatePatronRow(title, el ));
+                    $row = $(FormControls.CreatePatronRow( el ));
                     $('.regionalNationalDataForm').append($row);
                     $row.find('.form-group').closest('.form-row').data('action', el.Metadata.action).attr('data-action', el.Metadata.action);
                     if( FormControls.settings.missalField ) {
@@ -1106,32 +1181,12 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
     });
 });
 
-let removeDiocesanCalendarModal = diocese => {
-    return `
-<div class="modal fade" id="removeDiocesanCalendarPrompt" tabindex="-1" role="dialog" aria-labelledby="removeDiocesanCalendarModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="removeDiocesanCalendarModalLabel">${messages[ "Delete diocesan calendar" ]} ${diocese}?</h5>
-      </div>
-      <div class="modal-body">
-        ${messages[ "If you choose" ]}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-backspace mr-2">Cancel</button>
-        <button type="button" id="deleteDiocesanCalendarButton" class="btn btn-danger"><i class="far fa-trash-alt mr-2"></i>Delete calendar</button>
-      </div>
-    </div>
-  </div>
-</div>`;
-};
-
 $(document).on('change', '#diocesanCalendarDioceseName', ev => {
     $CALENDAR = { LitCal: {} };
     $('.carousel-item form').each((idx, el) => {
         el.reset();
         $(el).find('.form-row').slice(3).remove();
-        $(el).find('h4').slice(3).remove();
+        $(el).find('h4.data-group-title').slice(3).remove();
         $(el).find('.litEventCommon').multiselect('deselectAll', false).multiselect('select', 'Proper');
         $(el).find('.litEventColor').multiselect('deselectAll', false).multiselect('select', 'white');
         $(el).find('.litEventName').attr('data-valuewas', '');
@@ -1224,14 +1279,6 @@ $(document).on('click', '#deleteDiocesanCalendarButton', ev => {
     });
 });
 
-const integerVals = [ 'day', 'month', 'grade', 'sinceYear', 'untilYear' ];
-const expectedJSONProperties = {
-    'makePatron': [ 'tag', 'name', 'color', 'grade', 'day', 'month' ],
-    'setProperty': [ 'tag', 'name', 'grade', 'day', 'month' ],
-    'moveFestivity': [ 'tag', 'name', 'day', 'month', 'missal', 'reason' ],
-    'createNew': [ 'tag', 'name', 'color', 'grade', 'day', 'month', 'common', 'readings' ]
-}
-
 $(document).on('click', '.serializeRegionalNationalData', ev => {
     const category = $(ev.currentTarget).data('category');
     const lcl = $('#nationalCalendarSettingLocale').val();
@@ -1276,7 +1323,7 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
                 "action": action
             }
         }
-        if( action === 'setProperty' ) {
+        if( action === RowAction.SetProperty.description ) {
             rowData.Metadata.property = $(el).data('prop');
         }
         expectedJSONProperties[action].forEach(prop => {
