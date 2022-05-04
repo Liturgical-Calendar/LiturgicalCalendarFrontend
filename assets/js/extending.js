@@ -113,7 +113,7 @@ const expectedJSONProperties = {
     'makePatron': [ 'tag', 'name', 'color', 'grade', 'day', 'month' ],
     'setProperty': [ 'tag', 'name', 'grade', 'day', 'month' ],
     'moveFestivity': [ 'tag', 'name', 'day', 'month', 'missal', 'reason' ],
-    'createNew': [ 'tag', 'name', 'color', 'grade', 'day', 'month', 'common', 'readings' ]
+    'createNew': [ 'tag', 'name', 'color', 'grade', 'day', 'month', 'strtotime', 'common', 'readings' ]
 }
 
 const setFocusFirstTabWithData = () => {
@@ -426,7 +426,7 @@ $(document).on('click', '.strtotime-toggle-btn', ev => {
         $(ev.currentTarget).find('i').removeClass('fa-comment-slash').addClass('fa-comment');
         $(`#onTheFly${uniqid}Month`).closest('.form-group').remove();
         let $dayFormGroup = $(`#onTheFly${uniqid}Day`).closest('.form-group');
-        $dayFormGroup.empty().removeClass('col-sm-1').addClass('col-sm-2').append(`<label for="onTheFly${uniqid}StrToTime">Explicatory date</label><input type="text" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november" class="form-control litEvent litEventStrToTime" id="onTheFly${uniqid}StrToTime" />`);
+        $dayFormGroup.empty().removeClass('col-sm-1').addClass('col-sm-2').append(`<label for="onTheFly${uniqid}StrToTime">Explicatory date</label><input type="text" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" class="form-control litEvent litEventStrtotime" id="onTheFly${uniqid}StrToTime" />`);
     } else {
         $(ev.currentTarget).find('i').removeClass('fa-comment').addClass('fa-comment-slash');
         let $strToTimeFormGroup = $(`#onTheFly${uniqid}StrToTime`).closest('.form-group');
