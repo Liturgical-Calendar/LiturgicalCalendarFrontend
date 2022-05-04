@@ -1241,6 +1241,7 @@ $(document).on('change', '.existingFestivityName', ev => {
             break;
         case 'moveFestivityActionPrompt':
             $('#moveFestivityButton').prop('disabled', disabledState);
+            break;
         case 'newFestivityActionPrompt':
             $('#newFestivityFromExistingButton').prop('disabled', disabledState);
             $('#newFestivityExNovoButton').prop('disabled', !disabledState);
