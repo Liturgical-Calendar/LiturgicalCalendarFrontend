@@ -1365,8 +1365,26 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
         finalObj.LitCal.push(rowData);
     });
 
-    console.log(finalObj);
-    console.log(JSON.stringify(finalObj));
+    //console.log(finalObj);
+    //console.log(JSON.stringify(finalObj));
+    $.ajax({
+        url: NationalDataURL,
+        method: 'put',
+        dataType: 'json',
+        contentType: 'application/json',
+        crossDomain: false,
+        data: JSON.stringify( finalObj ),
+        success: (data, textStatus, xhr) => {
+            console.log(xhr.status + ' ' + textStatus + ': data returned from save action: ');
+            console.log(data);
+            toastr["success"]("National Calendar was created or updated successfully", "Success");
+        },
+        error: (xhr, textStatus, errorThrown) => {
+            console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown);
+            toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown, "Error");
+        }
+    });
+
 });
 
 $(document).on('change', '#diocesanCalendarNationalDependency', ev => {
