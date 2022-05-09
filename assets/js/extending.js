@@ -500,7 +500,7 @@ $(document).on('change', '.litEvent', ev => {
                 $CALENDAR.LitCal[eventKey].month = parseInt($row.find('.litEventMonth').val());
                 $CALENDAR.LitCal[eventKey].color = $row.find('.litEventColor').val().join(',');
                 $CALENDAR.LitCal[eventKey].common = $row.find('.litEventCommon').val().join(',');
-                $CALENDAR.LitCal[eventKey].sinceYear = $row.find('.litEventFromYear').val();
+                $CALENDAR.LitCal[eventKey].sinceYear = parseInt($row.find('.litEventFromYear').val());
                 $CALENDAR.LitCal[eventKey].formRowNum = $card.find('.form-row').index($row);
                 $(ev.currentTarget).attr('data-valuewas', eventKey);
                 $(ev.currentTarget).removeClass('is-invalid');
@@ -610,7 +610,7 @@ $(document).on('change', '.litEvent', ev => {
         if ($row.find('.litEventName').val() != "") {
             eventKey = $row.find('.litEventName').val().replace(/[^a-zA-Z]/gi, '');
             if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
-                $CALENDAR.LitCal[eventKey].sinceYear = $(ev.currentTarget).val();
+                $CALENDAR.LitCal[eventKey].sinceYear = parseInt($(ev.currentTarget).val());
             }
         }
     }
