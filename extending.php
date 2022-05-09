@@ -134,10 +134,17 @@ $messages = [
                             </datalist>
                         </div>
                         <div class="form-group col col-md-3">
-                            <label>:</label>
                             <div class="form-check form-switch">
                                 <input type="checkbox" class="form-check-input" id="widerRegionIsMultilingual" />
                                 <label for="widerRegionIsMultilingual" class="form-check-label font-weight-bold"><?php echo _( "Wider Region is multilingual" ) ?></label>
+                            </div>
+                            <div class="form-group">
+                                <label for="widerRegionLanguages"></label>
+                                <select class="form-control" id="widerRegionLanguages" multiple="multiple">
+                                    <?php foreach( $AvailableLocales as $iso => $lang ){
+                                        echo "<option value='$iso'>$lang</option>";
+                                    } ?>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group col col-md-3">
