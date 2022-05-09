@@ -34,6 +34,15 @@ $DioceseGroupHelp = _( "If a group of dioceses decides to pool their Liturgical 
 
 $c = new Collator($i18n->LOCALE);
 
+$AllAvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($value) {
+    return strpos($value, 'POSIX') === false;
+});
+$AllAvailableLocales = array_reduce($AllAvailableLocales, function($carry, $item) use($i18n) {
+    $carry[$item] = Locale::getDisplayLanguage($item, $i18n->LOCALE) . (Locale::getDisplayRegion($item, $i18n->LOCALE) !== "" ? " (" . Locale::getDisplayRegion($item, $i18n->LOCALE) . ")" : "");
+    return $carry;
+},[]);
+$c->asort($AllAvailableLocales);
+
 $AvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($value) {
     return strpos($value, '_') === false;
 });
@@ -141,8 +150,8 @@ $messages = [
                             <div class="form-group">
                                 <label for="widerRegionLanguages"></label>
                                 <select class="form-control" id="widerRegionLanguages" multiple="multiple">
-                                    <?php foreach( $AvailableLocales as $iso => $lang ){
-                                        echo "<option value='$iso'>$lang</option>";
+                                    <?php foreach( $AllAvailableLocales as $locale => $lang_region ){
+                                        echo "<option value='$locale'>$lang_region</option>";
                                     } ?>
                                 </select>
                             </div>

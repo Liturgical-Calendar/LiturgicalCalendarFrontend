@@ -1346,9 +1346,20 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
             }
             break;
         case 'widerRegionCalendar':
+            const regionNamesLocalizedEng = new Intl.DisplayNames(['en'], { type: 'region' });
+            let nationalCalendars = $('#widerRegionLanguages').val().reduce((prev, curr) => {
+                curr = curr.replaceAll('_', '-');
+                if( curr.includes('-') === false ) {
+                    curr += '-' + curr.toUpperCase();
+                }
+                let locale = new Intl.Locale( curr );
+                console.log( 'curr = ' + curr + ', nation = ' + locale.region );
+                prev[ regionNamesLocalizedEng.of( locale.region ) ] = locale.region;
+                return prev;
+            }, {});
             finalObj = {
                 "LitCal": [],
-                "NationalCalendars": {},
+                "NationalCalendars": nationalCalendars,
                 "Metadata": {
                     "IsMultilingual": $('#widerRegionIsMultilingual').prop('checked'),
                     "Languages": $('#widerRegionLanguages').val(),
