@@ -378,7 +378,7 @@ class FormControls {
 
         if(FormControls.settings.decreeURLField) {
             formRow += `<div class="form-group col-sm-6">
-            <label for="onTheFly${FormControls.uniqid}DecreeURL">${messages[ "Decree URL" ]}</label>
+            <label for="onTheFly${FormControls.uniqid}DecreeURL">${messages[ "Decree URL" ]}<i class="ml-2 fas fa-info-circle" title="Use %s in place of the language code if using a language mapping"></i></label>
             <input type="text" class="form-control litEvent litEventDecreeURL" value="${festivity !== null && typeof festivity.decreeURL !== 'undefined' ? festivity.decreeURL : ''}" />
             </div>`;
         }
@@ -386,7 +386,7 @@ class FormControls {
         if(FormControls.settings.decreeLangMapField) {
             let decreeLangs = festivity !== null && typeof festivity.decreeLangs !== 'undefined' ? Object.keys(festivity.decreeLangs).map(key => key+'='+festivity.decreeLangs[key] ) : null;
             formRow += `<div class="form-group col-sm-6">
-            <label for="onTheFly${FormControls.uniqid}DecreeLangs">${messages[ "Decree Langs" ]}</label>
+            <label for="onTheFly${FormControls.uniqid}DecreeLangs">${messages[ "Decree Langs" ]}<i class="ml-2 fas fa-info-circle" title="Use a comma separated list of key=value pairings, e.g. DE=ge,EN=en. Key is uppercased two letter ISO code, value is (generally lowercased) two letter representation used within the actual URL"></i></label>
             <input type="text" class="form-control litEvent litEventDecreeLangs" value="${festivity !== null && typeof festivity.decreeLangs !== 'undefined' ? decreeLangs.join(',') : ''}" />
             </div>`;
         }
@@ -424,7 +424,7 @@ jQuery.ajax({
         404: (xhr, textStatus, errorThrown) => {
             console.log('The JSON definition "nations/index.json" does not exist yet.');
             console.log( xhr.responseText );
-            toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />' + xhr.responseText, "Error");
+            toastr["warning"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />' + xhr.responseText, "Warning");
         }
     },
     success: data => {
@@ -1060,9 +1060,10 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
             console.log(data);
             switch(category) {
                 case 'widerRegionCalendar':
-                    $('#widerRegionIsMultilingual').prop('checked', data.isMultilingual);
+                    $('#widerRegionIsMultilingual').prop('checked', data.Metadata.IsMultilingual);
                     FormControls.settings.decreeURLField = true;
                     FormControls.settings.decreeLangMapField = true;
+                    $('#widerRegionLanguages').multiselect('deselectAll', false).multiselect('select', data.Metadata.Languages);
                     break;
                 case 'nationalCalendar':
                     FormControls.settings.decreeURLField = true;
@@ -1075,6 +1076,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                     $('#publishedRomanMissalList').append( '<li class="list-group-item">' + Metadata.Missals.join('</li><li class="list-group-item">') + '</li>' );
                     $('#associatedWiderRegion').val( Metadata.WiderRegion.name );
             }
+            $('.regionalNationalDataForm').empty();
             data.LitCal.forEach((el) => {
                 let currentUniqid = FormControls.uniqid;
                 let existingFestivityTag = el.Festivity.hasOwnProperty( 'tag' ) ? el.Festivity.tag : null;
@@ -1347,7 +1349,11 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
             finalObj = {
                 "LitCal": [],
                 "NationalCalendars": {},
-                "isMultilingual": $('#widerRegionIsMultilingual').prop('checked')
+                "Metadata": {
+                    "IsMultilingual": $('#widerRegionIsMultilingual').prop('checked'),
+                    "Languages": $('#widerRegionLanguages').val(),
+                    "WiderRegion": $('#widerRegionCalendarName').val()
+                }
             }
             break;
     }
@@ -1473,6 +1479,12 @@ jQuery(document).ready(() => {
             $('#diocesanCalendarDefinitionCardLinks li:last-child').removeClass('disabled');
         }
         $('#diocesanCalendarDefinitionCardLinks li').find('[data-slide-to=' + event.to + ']').parent('li').addClass('active');
+    });
+
+    $('#widerRegionLanguages').multiselect({
+        buttonWidth: '100%',
+        maxHeight: 200,
+        enableCaseInsensitiveFiltering: true
     });
 
     $('.litEventCommon').multiselect({
