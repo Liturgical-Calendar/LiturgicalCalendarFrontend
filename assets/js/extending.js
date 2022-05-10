@@ -497,8 +497,8 @@ $(document).on('change', '.litEvent', ev => {
                 //let's initialize defaults just in case the default input values happen to be correct, so no change events are fired
                 $CALENDAR.LitCal[eventKey].day = parseInt($row.find('.litEventDay').val());
                 $CALENDAR.LitCal[eventKey].month = parseInt($row.find('.litEventMonth').val());
-                $CALENDAR.LitCal[eventKey].color = $row.find('.litEventColor').val().join(',');
-                $CALENDAR.LitCal[eventKey].common = $row.find('.litEventCommon').val().join(',');
+                $CALENDAR.LitCal[eventKey].color = $row.find('.litEventColor').val();
+                $CALENDAR.LitCal[eventKey].common = $row.find('.litEventCommon').val();
                 $CALENDAR.LitCal[eventKey].sinceYear = parseInt($row.find('.litEventFromYear').val());
                 $CALENDAR.LitCal[eventKey].formRowNum = $card.find('.form-row').index($row);
                 $(ev.currentTarget).attr('data-valuewas', eventKey);
@@ -527,10 +527,10 @@ $(document).on('change', '.litEvent', ev => {
                     $CALENDAR.LitCal[eventKey].grade = 6;
                     if ($(ev.currentTarget).val().match(/(martyr|martir|mártir|märtyr)/i) !== null) {
                         $row.find('.litEventColor').multiselect('deselectAll', false).multiselect('select', 'red');
-                        $CALENDAR.LitCal[eventKey].color = 'red';
+                        $CALENDAR.LitCal[eventKey].color = [ 'red' ];
                     } else {
                         $row.find('.litEventColor').multiselect('deselectAll', false).multiselect('select', 'white');
-                        $CALENDAR.LitCal[eventKey].color = 'white';
+                        $CALENDAR.LitCal[eventKey].color = [ 'white' ];
                     }
                     break;
                 case 'carouselItemFeasts':
@@ -567,35 +567,16 @@ $(document).on('change', '.litEvent', ev => {
         if ($row.find('.litEventName').val() !== "") {
             eventKey = $row.find('.litEventName').val().replace(/[^a-zA-Z]/gi, '');
             if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
-                if (typeof $(ev.currentTarget).val() === 'object') {
-                    $CALENDAR.LitCal[eventKey].common = $(ev.currentTarget).val().join();
-                } else {
-                    $CALENDAR.LitCal[eventKey].common = $(ev.currentTarget).val();
+                $CALENDAR.LitCal[eventKey].common = $(ev.currentTarget).val();
+                let eventColors = [];
+                if ($CALENDAR.LitCal[eventKey].common.includes('Martyrs')) {
+                    eventColors.push('red');
                 }
-                switch ($row.closest('.carousel-item').attr('id')) {
-                    case 'carouselItemSolemnities':
-                        /* we actually check this on name change
-                        if($row.find('.litEventName').match(/(martyr|martir|mártir|märtyr)/i) !== null){
-                            $row.find('.litEventColor').multiselect('deselectAll',false).multiselect('select','red');
-                        } else {
-                            $row.find('.litEventColor').multiselect('deselectAll',false).multiselect('select','white');
-                        }
-                        */
-                        break;
-                    case 'carouselItemFeasts':
-                    case 'carouselItemMemorials':
-                    case 'carouselItemOptionalMemorials':
-                        let eventColors = [];
-                        if ($CALENDAR.LitCal[eventKey].common.includes('Martyrs')) {
-                            eventColors.push('red');
-                        }
-                        if ($CALENDAR.LitCal[eventKey].common.match(/(Blessed Virgin Mary|Pastors|Doctors|Virgins|Holy Men and Women|Dedication of a Church)/) !== null) {
-                            eventColors.push('white');
-                        }
-                        $row.find('.litEventColor').multiselect('deselectAll', false).multiselect('select', eventColors);
-                        $CALENDAR.LitCal[eventKey].color = eventColors.join(',');
-                        break;
+                if ($CALENDAR.LitCal[eventKey].common.match(/(Blessed Virgin Mary|Pastors|Doctors|Virgins|Holy Men and Women|Dedication of a Church)/) !== null) {
+                    eventColors.push('white');
                 }
+                $row.find('.litEventColor').multiselect('deselectAll', false).multiselect('select', eventColors);
+                $CALENDAR.LitCal[eventKey].color = eventColors;
             }
         }
     } else if ($(ev.currentTarget).hasClass('litEventColor')) {
@@ -777,11 +758,8 @@ $(document).on('click', '#retrieveExistingDiocesanData', evt => {
                             }
                         }
                     }
-                }).multiselect('deselectAll', false).multiselect('select', litevent.common.toString().split(','));
-                if (typeof litevent.color !== 'string') {
-                    litevent.color = litevent.color.join(',');
-                }
-                $row.find('.litEventColor').multiselect({ buttonWidth: '100%' }).multiselect('deselectAll', false).multiselect('select', litevent.color.toString().split(','));
+                }).multiselect('deselectAll', false).multiselect('select', litevent.common);
+                $row.find('.litEventColor').multiselect({ buttonWidth: '100%' }).multiselect('deselectAll', false).multiselect('select', litevent.color);
                 $row.find('.litEventFromYear').val(litevent.sinceYear);
             };
             setFocusFirstTabWithData();
