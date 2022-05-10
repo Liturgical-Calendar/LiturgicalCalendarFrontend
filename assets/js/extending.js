@@ -1072,7 +1072,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                     $('#nationalCalendarSettingAscension').val( Settings.Ascension );
                     $('#nationalCalendarSettingCorpusChristi').val( Settings.CorpusChristi );
                     $('#nationalCalendarSettingLocale').val( Settings.Locale.toLowerCase() );
-                    $('#publishedRomanMissalList').append( '<li class="list-group-item">' + Metadata.Missals.join('</li><li class="list-group-item">') + '</li>' );
+                    $('#publishedRomanMissalList').empty().append( '<li class="list-group-item">' + Metadata.Missals.join('</li><li class="list-group-item">') + '</li>' );
                     $('#associatedWiderRegion').val( Metadata.WiderRegion.name );
             }
             $('.regionalNationalDataForm').empty();
