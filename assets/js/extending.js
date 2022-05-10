@@ -29,8 +29,7 @@ class RowAction {
 const isStaging = location.hostname.includes( '-staging' );
 const endpointV = isStaging ? 'dev' : 'v3';
 const MetaDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalMetadata.php`;
-const DiocesanDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalDiocesanData.php`;
-const NationalDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalNationalAndRegionalData.php`;
+const RegionalDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalRegionalData.php`;
 
 const diocesanOvveridesDefined = () => {
     return ( $('#diocesanCalendarOverrideEpiphany').val() !== "" || $('#diocesanCalendarOverrideAscension').val() !== "" || $('#diocesanCalendarOverrideCorpusChristi').val() !== "" );
@@ -621,23 +620,23 @@ $(document).on('click', '#saveDiocesanCalendar_btn', ev => {
     $nation = $('#diocesanCalendarNationalDependency').val();
     $diocese = $('#diocesanCalendarDioceseName').val();
     //console.log('save button was clicked for NATION = ' + $nation + ', DIOCESE = ' + $diocese);
-    let saveObj = { calendar: $data, diocese: $diocese, nation: $nation };
+    let saveObj = { LitCal: $data, Diocese: $diocese, Nation: $nation, category: 'diocesanCalendar' };
     if($('#diocesanCalendarGroup').val() != ''){
         saveObj.group = $('#diocesanCalendarGroup').val();
     }
     if( diocesanOvveridesDefined() ) {
         //console.log( 'This diocesan calendar has defined some options that will override the national calendar.' );
-        saveObj.overrides = {};
+        saveObj.Overrides = {};
         if( $('#diocesanCalendarOverrideEpiphany').val() !== "" ) {
-            saveObj.overrides.Epiphany = $('#diocesanCalendarOverrideEpiphany').val();
+            saveObj.Overrides.Epiphany = $('#diocesanCalendarOverrideEpiphany').val();
             //console.log( 'Epiphany in this diocese will override Epiphany in the national calendar.' );
         }
         if( $('#diocesanCalendarOverrideAscension').val() !== "" ) {
-            saveObj.overrides.Ascension = $('#diocesanCalendarOverrideAscension').val();
+            saveObj.Overrides.Ascension = $('#diocesanCalendarOverrideAscension').val();
             //console.log( 'Ascension in this diocese will override Ascension in the national calendar.' );
         }
         if( $('#diocesanCalendarOverrideCorpusChristi').val() !== "" ) {
-            saveObj.overrides.CorpusChristi = $('#diocesanCalendarOverrideCorpusChristi').val();
+            saveObj.Overrides.CorpusChristi = $('#diocesanCalendarOverrideCorpusChristi').val();
             //console.log( 'Corpus Christi in this diocese will override Corpus Christi in the national calendar.' );
         }
     }
@@ -651,7 +650,7 @@ $(document).on('click', '#saveDiocesanCalendar_btn', ev => {
     });
     if ( formsValid ) {
         $.ajax({
-            url: DiocesanDataURL,
+            url: RegionalDataURL,
             method: 'put',
             dataType: 'json',
             contentType: 'application/json',
@@ -678,10 +677,10 @@ $(document).on('click', '#retrieveExistingDiocesanData', evt => {
     let dioceseKey = $('#DiocesesList').find('option[value="' + diocese + '"]').attr('data-value').toUpperCase();
     //let $diocesanCalendar;
     jQuery.ajax({
-        url: DiocesanDataURL,
+        url: RegionalDataURL,
         method: 'GET',
         dataType: 'json',
-        data: { "key" : dioceseKey },
+        data: { "key" : dioceseKey, "category": "diocesanCalendar" },
         statusCode: {
             404: (xhr, textStatus, errorThrown) => {
                 toastr["warning"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />The Diocesan Calendar for ' + diocese + ' does not exist yet.', "Warning");
@@ -1035,7 +1034,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
     const key = ( category === 'widerRegionCalendar' ? $(ev.currentTarget).val() : ($(ev.currentTarget).val().toUpperCase() === 'UNITED STATES' ? 'USA' : $(ev.currentTarget).val().toUpperCase()) );
     //console.log('category: ' + category + ', key = ' + key);
     jQuery.ajax({
-        url: NationalDataURL,
+        url: RegionalDataURL,
         method: 'GET',
         dataType: 'json',
         data: { "key" : key, "category": category, "locale": LOCALE },
@@ -1293,9 +1292,9 @@ $(document).on('click', '#deleteDiocesanCalendarButton', ev => {
     let $key = $('#DiocesesList').find('option[value="' + $diocese + '"]').attr('data-value').toUpperCase();
     let $nation = $('#diocesanCalendarNationalDependency').val();
     delete $index.DiocesanCalendars[$key];
-    let deleteKey = { calendar: $key, diocese: $diocese, nation: $nation};
+    let deleteKey = { LitCal: $key, Diocese: $diocese, Nation: $nation, category: 'diocesanCalendar' };
     $.ajax({
-        url: DiocesanDataURL,
+        url: RegionalDataURL,
         method: 'delete',
         dataType: 'json',
         contentType: 'application/json',
@@ -1425,7 +1424,7 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
     //console.log(finalObj);
     //console.log(JSON.stringify(finalObj));
     $.ajax({
-        url: NationalDataURL,
+        url: RegionalDataURL,
         method: 'put',
         dataType: 'json',
         contentType: 'application/json',
