@@ -2,13 +2,13 @@
 # Copyright (C) 2021 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # Ubuntu <priest@johnromanodorazio.com>, 2021.
-#
+# John R. D'Orazio <priest@johnromanodorazio.com>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-09 18:55+0000\n"
-"PO-Revision-Date: 2022-02-16 09:56+0000\n"
+"PO-Revision-Date: 2022-05-10 20:08+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.12.1\n"
 
 #: index.php:13
 msgid ""
@@ -519,7 +519,7 @@ msgstr ""
 
 #: extending.php:195
 msgid "National Calendar"
-msgstr ""
+msgstr "Calendarium Nationalis"
 
 #: extending.php:219
 msgid "Create a National Calendar"
@@ -551,7 +551,7 @@ msgstr ""
 
 #: extending.php:251
 msgid "LOCALE"
-msgstr ""
+msgstr "LINGUA"
 
 #: extending.php:263
 msgid "Published Roman Missals"
@@ -988,39 +988,35 @@ msgstr "vel"
 
 #: includes/LitGrade.php:98
 msgid "weekday"
-msgstr ""
+msgstr "feria"
 
 #: includes/LitGrade.php:101
 msgid "Commemoration"
-msgstr ""
+msgstr "Commemoratio"
 
 #: includes/LitGrade.php:104
-#, fuzzy
-#| msgid "Optional memorials"
 msgid "Optional memorial"
-msgstr "Memoriæ ad libitum"
+msgstr "Memoria ad libitum"
 
 #: includes/LitGrade.php:107
-#, fuzzy
-#| msgid "Memorials"
 msgid "Memorial"
-msgstr "Memoriæ"
+msgstr "Memoria obligatoria"
 
 #: includes/LitGrade.php:110
 msgid "FEAST"
-msgstr ""
+msgstr "FESTUM"
 
 #: includes/LitGrade.php:113
 msgid "FEAST OF THE LORD"
-msgstr ""
+msgstr "FESTUM DOMINI"
 
 #: includes/LitGrade.php:116
 msgid "SOLEMNITY"
-msgstr ""
+msgstr "SOLLEMNITAS"
 
 #: includes/LitGrade.php:119
 msgid "celebration with precedence over solemnities"
-msgstr ""
+msgstr "celebratio altioris ordinis quam sollemnitatis"
 
 #~ msgid "Common (or Proper)"
 #~ msgstr "Communis (vel Proprium)"
