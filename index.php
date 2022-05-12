@@ -40,7 +40,6 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                                 <label for="APICalendarSelect"><?php echo _( "Calendar to retrieve from the API" ); ?>:</label>
                                 <select id="APICalendarSelect" class="form-control">
                                     <option value="">---</option>
-                                    <option value="VATICAN">Vatican (Universal Roman Calendar)</option>
                                 </select>
                             </div>
                             <div class="form-group col-sm-3">

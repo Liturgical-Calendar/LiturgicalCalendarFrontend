@@ -1,6 +1,6 @@
 let CalendarNations = [];
 let selectOptions = {};
-const { COUNTRIES, LITCAL_LOCALE } = i18n;
+const { COUNTRIES, LITCAL_LOCALE } = ISO_3166_1_alpha_2;
 let countryNames = new Intl.DisplayNames([LITCAL_LOCALE], {type: 'region'});
 const RequestURLBase = "https://litcal.johnromanodorazio.com/api/v3/LitCalEngine.php";
 let requestURL = {
@@ -33,20 +33,23 @@ let serializeRequestURL = function(obj){
                 CalendarNations.push(value.nation);
                 selectOptions[value.nation] = [];
             }
-            CalendarNations.sort();
             selectOptions[value.nation].push(`<option data-calendartype="diocesancalendar" value="${key}">${value.diocese}</option>`);
         }
+
+        let nations = Object.keys( NationalCalendars );
+        nations.sort((a, b) => countryNames.of(COUNTRIES[a]).localeCompare(countryNames.of(COUNTRIES[b])))
+        nations.forEach(item => {
+            if( false === CalendarNations.includes(item) ) {
+                $('#APICalendarSelect').append(`<option data-calendartype="nationalcalendar" value="${item}">${countryNames.of(COUNTRIES[item])}</option>`);
+            }
+        });
+
+        CalendarNations.sort((a, b) => countryNames.of(COUNTRIES[a]).localeCompare(countryNames.of(COUNTRIES[b])));
         CalendarNations.forEach(item => {
             $('#APICalendarSelect').append(`<option data-calendartype="nationalcalendar" value="${item}">${countryNames.of(COUNTRIES[item])}</option>`);
             let $optGroup = $(`<optgroup label="${countryNames.of(COUNTRIES[item])}">`);
             $('#APICalendarSelect').append($optGroup);
             selectOptions[item].forEach(groupItem => $optGroup.append(groupItem));
-        });
-        let nations = Object.keys( NationalCalendars );
-        nations.forEach(item => {
-            if( false === CalendarNations.includes(item) ){
-                $('#APICalendarSelect').append(`<option data-calendartype="nationalcalendar" value="${item}">${countryNames.of(COUNTRIES[item])}</option>`);
-            }
         });
     });
 
