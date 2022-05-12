@@ -992,7 +992,7 @@ $(document).on('click', '.actionPromptButton', ev => {
         litevent = FestivityCollection[existingFestivityTag];
 
         $row.find(`#onTheFly${currentUniqid}Grade`).val(litevent.GRADE);
-        $row.find(`#onTheFly${currentUniqid}Common`).multiselect('select', litevent.COMMON.split(','))
+        $row.find(`#onTheFly${currentUniqid}Common`).multiselect('select', litevent.COMMON)
         let colorVal = Array.isArray( litevent.COLOR ) ? litevent.COLOR : litevent.COLOR.split(',');
         $row.find(`.litEventColor`).multiselect('select', colorVal);
 
