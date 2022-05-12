@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-09 18:55+0000\n"
+"POT-Creation-Date: 2022-05-12 15:22+0000\n"
 "PO-Revision-Date: 2022-03-15 18:21+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
@@ -39,7 +39,7 @@ msgstr "Calendário Romano Geral"
 msgid "Catholic Liturgical Calendar"
 msgstr "Calendário Litúrgico Católico"
 
-#: index.php:34 index.php:96
+#: index.php:34 index.php:95
 msgid "API Endpoint"
 msgstr "Endpoint de API"
 
@@ -47,11 +47,11 @@ msgstr "Endpoint de API"
 msgid "Calendar to retrieve from the API"
 msgstr ""
 
-#: index.php:59
+#: index.php:58
 msgid "Liturgical Calendar API endpoint"
 msgstr "Endpoint da API do Calendário Litúrgico"
 
-#: index.php:60
+#: index.php:59
 msgid ""
 "If a national or diocesan calendar is requested, these calendars will "
 "automatically set the specific options in the API request. If instead no "
@@ -59,17 +59,17 @@ msgid ""
 "requested) then the more specific options can be requested:"
 msgstr ""
 
-#: index.php:69
+#: index.php:68
 msgid ""
 "URL for the API request based on selected options (the above button is set "
 "to this URL)"
 msgstr ""
 
-#: index.php:79 usage.php:218
+#: index.php:78 usage.php:218
 msgid "Calculation of the Date of Easter"
 msgstr "Cálculo da Data da Páscoa"
 
-#: index.php:82
+#: index.php:81
 msgid ""
 "A simple API endpoint that returns data about the Date of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -79,22 +79,22 @@ msgid ""
 "Julian easter (observed by orthodox churches)"
 msgstr ""
 
-#: index.php:87
+#: index.php:86
 msgid "Date of Easter API endpoint"
 msgstr "Data da Páscoa API"
 
-#: index.php:89
+#: index.php:88
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
 "localizations can be done in a client application just as well."
 msgstr ""
 
-#: index.php:96
+#: index.php:95
 msgid "Definition"
 msgstr "Definição"
 
-#: index.php:99
+#: index.php:98
 msgid "Swagger / Open API Documentation"
 msgstr ""
 

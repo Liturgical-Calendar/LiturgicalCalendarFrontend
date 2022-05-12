@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-09 18:55+0000\n"
+"POT-Creation-Date: 2022-05-12 15:22+0000\n"
 "PO-Revision-Date: 2022-03-15 18:23+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
@@ -38,7 +38,7 @@ msgstr "Calendario Romano Generale"
 msgid "Catholic Liturgical Calendar"
 msgstr "Calendario Liturgico Cattolico"
 
-#: index.php:34 index.php:96
+#: index.php:34 index.php:95
 msgid "API Endpoint"
 msgstr "API endpoint"
 
@@ -46,11 +46,11 @@ msgstr "API endpoint"
 msgid "Calendar to retrieve from the API"
 msgstr "Calendario da reperire dall'API"
 
-#: index.php:59
+#: index.php:58
 msgid "Liturgical Calendar API endpoint"
 msgstr "API del Calendario Liturgico"
 
-#: index.php:60
+#: index.php:59
 msgid ""
 "If a national or diocesan calendar is requested, these calendars will "
 "automatically set the specific options in the API request. If instead no "
@@ -64,7 +64,7 @@ msgstr ""
 "il Calendario Universale), allora in quel caso è possibile impostare i "
 "parametri più specificamente:"
 
-#: index.php:69
+#: index.php:68
 msgid ""
 "URL for the API request based on selected options (the above button is set "
 "to this URL)"
@@ -72,11 +72,11 @@ msgstr ""
 "URL per la richiesta all'API formulata in base alle opzioni selezionate (il "
 "pulsante sopra è impostato a questo URL)"
 
-#: index.php:79 usage.php:218
+#: index.php:78 usage.php:218
 msgid "Calculation of the Date of Easter"
 msgstr "Calcolo della Data della Pasqua"
 
-#: index.php:82
+#: index.php:81
 msgid ""
 "A simple API endpoint that returns data about the Date of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -92,11 +92,11 @@ msgstr ""
 "Pasqua Gregoriana (celebrata dalla Chiesa Romana) e dell'algoritmo di Meeus "
 "per il calcolo della Pasqua Giuliana (celebrata dalle chiese ortodosse)"
 
-#: index.php:87
+#: index.php:86
 msgid "Date of Easter API endpoint"
 msgstr "API per la Data della Pasqua"
 
-#: index.php:89
+#: index.php:88
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
@@ -107,11 +107,11 @@ msgstr ""
 "ogni data della Pasqua, la localizzazione può essere effettuata anche "
 "dall'applicazione cliente."
 
-#: index.php:96
+#: index.php:95
 msgid "Definition"
 msgstr "Definizione"
 
-#: index.php:99
+#: index.php:98
 msgid "Swagger / Open API Documentation"
 msgstr "Documentazione Swagger / OpenAPI"
 
