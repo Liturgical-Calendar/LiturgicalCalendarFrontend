@@ -103,6 +103,7 @@ var ISO_3166_1_alpha_2 = {
         "HAITI": "HT",
         "HEARD ISLAND AND MCDONALD ISLANDS": "HM",
         "HOLY SEE (VATICAN CITY STATE)": "VA",
+        "VATICAN": "VA",
         "HONDURAS": "HN",
         "HONG KONG": "HK",
         "HUNGARY": "HU",
