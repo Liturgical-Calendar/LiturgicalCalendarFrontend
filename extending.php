@@ -38,7 +38,8 @@ $AllAvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($v
     return strpos($value, 'POSIX') === false;
 });
 $AllAvailableLocales = array_reduce($AllAvailableLocales, function($carry, $item) use($i18n) {
-    $carry[$item] = Locale::getDisplayLanguage($item, $i18n->LOCALE) . (Locale::getDisplayRegion($item, $i18n->LOCALE) !== "" ? " (" . Locale::getDisplayRegion($item, $i18n->LOCALE) . ")" : "");
+    //$carry[$item] = Locale::getDisplayLanguage($item, $i18n->LOCALE) . (Locale::getDisplayRegion($item, $i18n->LOCALE) !== "" ? " (" . Locale::getDisplayRegion($item, $i18n->LOCALE) . ")" : "");
+    $carry[$item] = Locale::getDisplayName($item, $i18n->LOCALE);
     return $carry;
 },[]);
 $c->asort($AllAvailableLocales);

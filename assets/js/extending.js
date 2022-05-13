@@ -1023,6 +1023,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                 switch(category) {
                     case 'widerRegionCalendar':
                         $('#widerRegionIsMultilingual').prop('checked', false);
+                        $('#widerRegionLanguages').multiselect('deselectAll', false);
                         break;
                     case 'nationalCalendar':
                         $('form#nationalCalendarSettingsForm')[0].reset();
@@ -1190,7 +1191,14 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
         },
         error: (xhr, textStatus, errorThrown) => {
             if( xhr.status !== 404 ) { //we have already handled 404 Not Found above
-                toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown, "Error");
+                let errorBody = '';
+                if( xhr.responseText !== '' ) {
+                    let responseObj = JSON.parse(xhr.responseText);
+                    if( responseObj.hasOwnProperty( 'error' ) ) {
+                        errorBody = responseObj.error;
+                    }
+                }
+                toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<hr>' + errorBody, "Error");
             }
         }
     });
