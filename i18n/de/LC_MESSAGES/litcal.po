@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-14 22:10+0000\n"
+"POT-Creation-Date: 2022-05-14 22:34+0000\n"
 "PO-Revision-Date: 2022-03-15 18:21+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
@@ -800,7 +800,7 @@ msgstr ""
 "Priester in der Diözese Rom, Autodidakt Programmierer, Autor des BibleGet-"
 "Projekts"
 
-#: about.php:20
+#: about.php:19
 msgid ""
 "Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, "
 "Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
@@ -810,11 +810,15 @@ msgstr ""
 "Computeringenieur bei Agile Orbit, Gründer der Guild of Saint Isidore für "
 "katholische IT-Profis"
 
-#: about.php:27
+#: about.php:25
 msgid "Full stack web developer"
 msgstr "Full-Stack-Webentwickler"
 
 #: about.php:31
+msgid "ANOTHERVOLUNTEER"
+msgstr ""
+
+#: about.php:60
 msgid ""
 "The Liturgical Calendar project is curated by a group of volunteer catholic "
 "programmers, seeking to serve the Church."
@@ -822,13 +826,9 @@ msgstr ""
 "Das liturgische Kalenderprojekt wird von einer Gruppe freiwilliger "
 "katholischer Programmierer kuratiert, die der Kirche dienen möchten."
 
-#: about.php:37 about.php:45
+#: about.php:66 about.php:74
 msgid "Liturgical Calendar - About us"
 msgstr "Liturgischer Kalender - Über uns"
-
-#: about.php:111
-msgid "ANOTHERVOLUNTEER"
-msgstr ""
 
 #: liturgyOfAnyDay.php:100
 msgid "Year"
