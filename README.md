@@ -1,8 +1,9 @@
 # Liturgical Calendar Frontend
 
-| Code quality: |
-|:-------------:|
-| [![CodeFactor](https://www.codefactor.io/repository/github/liturgical-calendar/liturgicalcalendarfrontend/badge)](https://www.codefactor.io/repository/github/liturgical-calendar/liturgicalcalendarfrontend) |
+**Code quality**
+| MAIN | DEVELOPMENT |
+|:----:|:-----------:|
+| [![CodeFactor](https://www.codefactor.io/repository/github/liturgical-calendar/liturgicalcalendarfrontend/badge/main)](https://www.codefactor.io/repository/github/liturgical-calendar/liturgicalcalendarfrontend/overview/main) | [![CodeFactor](https://www.codefactor.io/repository/github/liturgical-calendar/liturgicalcalendarfrontend/badge/development)](https://www.codefactor.io/repository/github/liturgical-calendar/liturgicalcalendarfrontend/overview/development) |
 
 Presentation of the Liturgical Calendar Project, using bootstrap theming. See https://litcal.johnromanodorazio.com/. Development is done initially on the development branch with a frontend at https://litcal-staging.johnromanodorazio.com/.
 
