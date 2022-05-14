@@ -21,6 +21,7 @@ class RowAction {
     static SetProperty      = Symbol('setProperty');
     static MoveFestivity    = Symbol('moveFestivity');
     static CreateNew        = Symbol('createNew');
+    static CreateNewFromExisting = Symbol('createNewFromExisting');
     constructor(name) {
         this.name = name;
     }
@@ -397,6 +398,115 @@ class FormControls {
     }
 
 }
+
+
+const setFormSettings = action => {
+    switch( action ) {
+        case 'designatePatronButton':
+            //nobreak
+        case RowAction.MakePatron.description:
+            FormControls.settings.tagField = false;
+            FormControls.settings.nameField = true;
+            FormControls.settings.gradeFieldShow = true;
+            FormControls.settings.gradeField = true;
+            FormControls.settings.commonFieldShow = false;
+            FormControls.settings.dayField = false;
+            FormControls.settings.monthField = false;
+            FormControls.settings.untilYearField = true;
+            FormControls.settings.colorField = false;
+            FormControls.settings.missalField = false;
+            FormControls.settings.reasonField = false;
+            FormControls.settings.readingsField = false;
+            FormControls.title =  messages[ 'Designate patron' ];
+            FormControls.action = RowAction.MakePatron;
+            break;
+        case 'setPropertyButton':
+            //nobreak
+        case RowAction.SetProperty.description:
+            FormControls.settings.tagField = false;
+            FormControls.settings.commonFieldShow = false;
+            FormControls.settings.dayField = false;
+            FormControls.settings.monthField = false;
+            FormControls.settings.untilYearField = true;
+            FormControls.settings.colorField = false;
+            FormControls.settings.missalField = false;
+            FormControls.settings.reasonField = false;
+            FormControls.settings.readingsField = false;
+            FormControls.title = messages[ 'Change name or grade' ];
+            FormControls.action = RowAction.SetProperty;
+            break;
+        case 'moveFestivityButton':
+            //nobreak
+        case RowAction.MoveFestivity.description:
+            FormControls.settings.tagField = false;
+            FormControls.settings.nameField = false;
+            FormControls.settings.gradeFieldShow = false;
+            FormControls.settings.commonFieldShow = false;
+            FormControls.settings.dayField = true;
+            FormControls.settings.monthField = true;
+            FormControls.settings.untilYearField = true;
+            FormControls.settings.colorField = false;
+            FormControls.settings.missalField = true;
+            FormControls.settings.reasonField = true;
+            FormControls.settings.readingsField = false;
+            FormControls.title = messages[ 'Move festivity' ];
+            FormControls.action = RowAction.MoveFestivity;
+            break;
+        case 'newFestivityFromExistingButton':
+            //nobreak
+        case RowAction.CreateNewFromExisting.description:
+            FormControls.settings.tagField = false;
+            FormControls.settings.nameField = false;
+            FormControls.settings.gradeFieldShow = true;
+            FormControls.settings.commonFieldShow = true;
+            FormControls.settings.gradeField = false;
+            FormControls.settings.commonField = false;
+            FormControls.settings.dayField = false;
+            FormControls.settings.monthField = false;
+            FormControls.settings.untilYearField = true;
+            FormControls.settings.colorField = false;
+            FormControls.settings.missalField = false;
+            FormControls.settings.reasonField = false;
+            FormControls.settings.readingsField = true;
+            FormControls.title = messages[ 'New festivity' ];
+            FormControls.action = RowAction.CreateNew;
+            break;
+        case 'newFestivityExNovoButton':
+            //nobreak
+        case RowAction.CreateNew.description:
+            FormControls.settings.tagField = true;
+            FormControls.settings.nameField = true;
+            FormControls.settings.gradeFieldShow = true;
+            FormControls.settings.commonFieldShow = true;
+            FormControls.settings.gradeField = true;
+            FormControls.settings.commonField = true;
+            FormControls.settings.dayField = true;
+            FormControls.settings.monthField = true;
+            FormControls.settings.untilYearField = true;
+            FormControls.settings.colorField = true;
+            FormControls.settings.missalField = false;
+            FormControls.settings.reasonField = false;
+            FormControls.settings.readingsField = true;
+            FormControls.title = messages[ 'New festivity' ];
+            FormControls.action = RowAction.CreateNew;
+            break;
+    }
+}
+
+const setFormSettingsForProperty = property => {
+    switch(property) {
+        case 'name':
+            FormControls.settings.nameField = true;
+            FormControls.settings.gradeFieldShow = false;
+            break;
+        case 'grade':
+            FormControls.settings.nameField = false;
+            FormControls.settings.gradeFieldShow = true;
+            FormControls.settings.gradeField = true;
+            break;
+    }
+}
+
 
 let ITALYDiocesesArr;
 let USDiocesesByState;
@@ -841,97 +951,10 @@ $(document).on('click', '.actionPromptButton', ev => {
     //console.log(buttonId + ' button was clicked');
     FormControls.settings.decreeURLField = true;
     FormControls.settings.decreeLangMapField = $('.regionalNationalCalendarName').attr('id') === 'widerRegionCalendarName';
-    switch( ev.currentTarget.id ) {
-        case 'designatePatronButton':
-            FormControls.settings.tagField = false;
-            FormControls.settings.nameField = true;
-            FormControls.settings.gradeFieldShow = true;
-            FormControls.settings.gradeField = true;
-            FormControls.settings.commonFieldShow = false;
-            FormControls.settings.dayField = false;
-            FormControls.settings.monthField = false;
-            FormControls.settings.untilYearField = true;
-            FormControls.settings.colorField = false;
-            FormControls.settings.missalField = false;
-            FormControls.settings.readingsField = false;
-            FormControls.settings.reasonField = false;
-            FormControls.title =  messages[ 'Designate patron' ];
-            FormControls.action = RowAction.MakePatron;
-            break;
-        case 'setPropertyButton':
-            FormControls.settings.tagField = false;
-            propertyToChange = $('#propertyToChange').val();
-            switch(propertyToChange) {
-                case 'name':
-                    FormControls.settings.nameField = true;
-                    FormControls.settings.gradeFieldShow = false;
-                    break;
-                case 'grade':
-                    FormControls.settings.nameField = false;
-                    FormControls.settings.gradeFieldShow = true;
-                    FormControls.settings.gradeField = true;
-                    break;
-            }
-            FormControls.settings.commonFieldShow = false;
-            FormControls.settings.dayField = false;
-            FormControls.settings.monthField = false;
-            FormControls.settings.untilYearField = true;
-            FormControls.settings.colorField = false;
-            FormControls.settings.missalField = false;
-            FormControls.settings.readingsField = false;
-            FormControls.settings.reasonField = false;
-            FormControls.title = messages[ 'Change name or grade' ];
-            FormControls.action = RowAction.SetProperty;
-            break;
-        case 'moveFestivityButton':
-            FormControls.settings.tagField = false;
-            FormControls.settings.nameField = false;
-            FormControls.settings.gradeFieldShow = false;
-            FormControls.settings.commonFieldShow = false;
-            FormControls.settings.dayField = true;
-            FormControls.settings.monthField = true;
-            FormControls.settings.untilYearField = true;
-            FormControls.settings.colorField = false;
-            FormControls.settings.missalField = true;
-            FormControls.settings.readingsField = false;
-            FormControls.settings.reasonField = true;
-            FormControls.title = messages[ 'Move festivity' ];
-            FormControls.action = RowAction.MoveFestivity;
-            break;
-        case 'newFestivityFromExistingButton':
-            FormControls.settings.tagField = false;
-            FormControls.settings.nameField = false;
-            FormControls.settings.gradeFieldShow = true;
-            FormControls.settings.commonFieldShow = true;
-            FormControls.settings.gradeField = false;
-            FormControls.settings.commonField = false;
-            FormControls.settings.dayField = false;
-            FormControls.settings.monthField = false;
-            FormControls.settings.untilYearField = true;
-            FormControls.settings.colorField = false;
-            FormControls.settings.missalField = false;
-            FormControls.settings.readingsField = true;
-            FormControls.settings.reasonField = false;
-            FormControls.title = messages[ 'New festivity' ];
-            FormControls.action = RowAction.CreateNew;
-            break;
-        case 'newFestivityExNovoButton':
-            FormControls.settings.tagField = true;
-            FormControls.settings.nameField = true;
-            FormControls.settings.gradeFieldShow = true;
-            FormControls.settings.commonFieldShow = true;
-            FormControls.settings.gradeField = true;
-            FormControls.settings.commonField = true;
-            FormControls.settings.dayField = true;
-            FormControls.settings.monthField = true;
-            FormControls.settings.untilYearField = true;
-            FormControls.settings.colorField = true;
-            FormControls.settings.missalField = false;
-            FormControls.settings.readingsField = true;
-            FormControls.settings.reasonField = false;
-            FormControls.title = messages[ 'New festivity' ];
-            FormControls.action = RowAction.CreateNew;
-            break;
+    setFormSettings( ev.currentTarget.id );
+    if( ev.currentTarget.id === 'setPropertyButton' ) {
+        propertyToChange = $('#propertyToChange').val();
+        setFormSettingsForProperty( propertyToChange );
     }
 
     if( existingFestivityTag !== '' ) {
@@ -1058,79 +1081,12 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
             data.LitCal.forEach((el) => {
                 let currentUniqid = FormControls.uniqid;
                 let existingFestivityTag = el.Festivity.hasOwnProperty( 'tag' ) ? el.Festivity.tag : null;
-                switch(el.Metadata.action) {
-                    case RowAction.MakePatron.description:
-                        FormControls.action = RowAction.MakePatron;
-                        FormControls.settings.tagField = false;
-                        FormControls.settings.nameField = true;
-                        FormControls.settings.gradeFieldShow = true;
-                        FormControls.settings.gradeField = true;
-                        FormControls.settings.commonFieldShow = false;
-                        FormControls.settings.dayField = false;
-                        FormControls.settings.monthField = false;
-                        FormControls.settings.untilYearField = true;
-                        FormControls.settings.colorField = false;
-                        FormControls.settings.missalField = false;
-                        FormControls.settings.readingsField = false;
-                        FormControls.settings.reasonField = false;
-                        FormControls.title =  messages[ 'Designate patron' ];
-                        break;
-                    case RowAction.SetProperty.description:
-                        FormControls.action = RowAction.SetProperty;
-                        FormControls.settings.tagField = false;
-                        switch(el.Metadata.property) {
-                            case 'name':
-                                FormControls.settings.nameField = true;
-                                FormControls.settings.gradeFieldShow = false;
-                                break;
-                            case 'grade':
-                                FormControls.settings.nameField = false;
-                                FormControls.settings.gradeFieldShow = true;
-                                FormControls.settings.gradeField = true;
-                                break;
-                        }
-                        FormControls.settings.commonFieldShow = false;
-                        FormControls.settings.dayField = false;
-                        FormControls.settings.monthField = false;
-                        FormControls.settings.untilYearField = true;
-                        FormControls.settings.colorField = false;
-                        FormControls.settings.missalField = false;
-                        FormControls.settings.readingsField = false;
-                        FormControls.settings.reasonField = false;
-                        FormControls.title = messages[ 'Change name or grade' ];
-                        break;
-                    case RowAction.MoveFestivity.description:
-                        FormControls.action = RowAction.MoveFestivity;
-                        FormControls.settings.tagField = false;
-                        FormControls.settings.nameField = false;
-                        FormControls.settings.gradeFieldShow = false;
-                        FormControls.settings.commonFieldShow = false;
-                        FormControls.settings.dayField = true;
-                        FormControls.settings.monthField = true;
-                        FormControls.settings.untilYearField = true;
-                        FormControls.settings.colorField = false;
-                        FormControls.settings.missalField = true;
-                        FormControls.settings.readingsField = false;
-                        FormControls.settings.reasonField = true;
-                        FormControls.title = messages[ 'Move festivity' ];
-                        break;
-                    case RowAction.CreateNew.description:
-                        FormControls.action = RowAction.CreateNew;
-                        FormControls.settings.tagField = FestivityCollection.hasOwnProperty( existingFestivityTag ) ? false : true;
-                        FormControls.settings.nameField = FestivityCollection.hasOwnProperty( existingFestivityTag ) ? false : true;
-                        FormControls.settings.gradeFieldShow = true;
-                        FormControls.settings.commonFieldShow = true;
-                        FormControls.settings.gradeField = FestivityCollection.hasOwnProperty( existingFestivityTag ) ? false : true;
-                        FormControls.settings.commonField = FestivityCollection.hasOwnProperty( existingFestivityTag ) ? false : true;
-                        FormControls.settings.dayField = false;
-                        FormControls.settings.monthField = false;
-                        FormControls.settings.untilYearField = true;
-                        FormControls.settings.colorField = FestivityCollection.hasOwnProperty( existingFestivityTag ) ? false : true;
-                        FormControls.settings.missalField = false;
-                        FormControls.settings.readingsField = true;
-                        FormControls.settings.reasonField = false;
-                        FormControls.title = messages[ 'New festivity' ];
-                        break;
+                if( el.Metadata.action === RowAction.CreateNew.description && FestivityCollection.hasOwnProperty( existingFestivityTag ) ) {
+                    el.Metadata.action = RowAction.CreateNewFromExisting.description;
+                }
+                setFormSettings( el.Metadata.action );
+                if( el.Metadata.action === RowAction.SetProperty.description ) {
+                    setFormSettingsForProperty( el.Metadata.property );
                 }
 
                 $row = $(FormControls.CreatePatronRow( el ));
@@ -1141,6 +1097,10 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                 if( el.Metadata.action === RowAction.SetProperty.description ) {
                     $formrow.data('prop', el.Metadata.property).attr('data-prop', el.Metadata.property);
                 }
+                if( el.Festivity.hasOwnProperty('common') && el.Festivity.common.includes('Proper') ) {
+                    $formrow.find('.litEventReadings').prop('disabled',false);
+                }
+
                 if( FormControls.settings.missalField && existingFestivityTag !== null ) {
                     const { MISSAL } = FestivityCollection[existingFestivityTag];
                     $row.find(`#onTheFly${currentUniqid}Missal`).val(MISSAL); //.prop('disabled', true);
@@ -1164,7 +1124,24 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                     let common = Array.isArray( el.Festivity.common ) ? el.Festivity.common : el.Festivity.common.split(',');
                     if(FormControls.settings.commonFieldShow) {
                         $row.find(`#onTheFly${currentUniqid}Common`).multiselect({
-                            buttonWidth: '100%'
+                            buttonWidth: '100%',
+                            maxHeight: 200,
+                            enableCaseInsensitiveFiltering: true,
+                            onChange: (option, checked, select) => {
+                                if ($(option).val() === 'Proper' && checked === true) {
+                                    $(option).parent().multiselect('deselectAll', false).multiselect('select', 'Proper');
+                                    $row = $(option).closest('.form-row');
+                                    if( $row.find('.litEventReadings').length ) {
+                                        $row.find('.litEventReadings').prop('disabled',false);
+                                    }
+                                } else if ( ($(option).val() !== 'Proper' && checked === true && $(option).parent().val().includes('Proper')) || checked === false) {
+                                    $row = $(option).closest('.form-row');
+                                    $(option).parent().multiselect('deselect', 'Proper');
+                                    if( $row.find('.litEventReadings').length ) {
+                                        $row.find('.litEventReadings').prop('disabled',true);
+                                    }
+                                }
+                            }
                         }).multiselect('deselectAll', false).multiselect('select', common)
                         if(FormControls.settings.commonField === false) {
                             $row.find(`#onTheFly${currentUniqid}Common`).multiselect('disable');
@@ -1334,6 +1311,10 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
             const regionNamesLocalizedEng = new Intl.DisplayNames(['en'], { type: 'region' });
             let nationalCalendars = $('#widerRegionLanguages').val().reduce((prev, curr) => {
                 curr = curr.replaceAll('_', '-');
+                //this should never be the case, if we are careful to select only languages associated with a specific territory...
+                //might be even better to exclude non-regional languages from the select list, so that regions will have to be associated
+                //and perhaps the language-region locale should be define in the RomanMissal enum itself;
+                //we should try to get an exhaustive list of all printed Roman Missals since Vatican II!
                 if( curr.includes('-') === false ) {
                     curr += '-' + curr.toUpperCase();
                 }
@@ -1513,17 +1494,17 @@ jQuery(document).ready(() => {
         //collapseOptGroupsByDefault: true,
         enableCaseInsensitiveFiltering: true,
         onChange: (option, checked, select) => {
-            if ($(option).val() !== 'Proper' && checked === true && $(option).parent().val().includes('Proper')) {
-                $row = $(option).closest('.form-row');
-                $(option).parent().multiselect('deselect', 'Proper');
-                if( $row.find('.litEventReadings').length ) {
-                    $row.find('.litEventReadings').prop('disabled',true);
-                }
-            } else if ($(option).val() === 'Proper' && checked === true) {
+            if ( $(option).val() === 'Proper' && checked === true ) {
                 $(option).parent().multiselect('deselectAll', false).multiselect('select', 'Proper');
                 $row = $(option).closest('.form-row');
                 if( $row.find('.litEventReadings').length ) {
                     $row.find('.litEventReadings').prop('disabled',false);
+                }
+            } else if ($(option).val() !== 'Proper' && checked === true && $(option).parent().val().includes('Proper')) {
+                $row = $(option).closest('.form-row');
+                $(option).parent().multiselect('deselect', 'Proper');
+                if( $row.find('.litEventReadings').length ) {
+                    $row.find('.litEventReadings').prop('disabled',true);
                 }
             }
         }
