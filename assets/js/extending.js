@@ -112,7 +112,7 @@ const expectedJSONProperties = {
     'makePatron': [ 'tag', 'name', 'color', 'grade', 'day', 'month' ],
     'setProperty': [ 'tag', 'name', 'grade', 'day', 'month' ],
     'moveFestivity': [ 'tag', 'name', 'day', 'month', 'missal', 'reason' ],
-    'createNew': [ 'tag', 'name', 'color', 'grade', 'day', 'month', 'strtotime', 'common', 'readings' ]
+    'createNew': [ 'tag', 'name', 'color', 'grade', 'day', 'month', 'strtotime', 'common' ] //'readings' is only expected for createNew when common=Proper
 };
 const metadataProps = [ 'missal', 'reason' ];
 
@@ -1309,7 +1309,7 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
     let finalObj = {};
     switch(category) {
         case 'nationalCalendar':
-            const regionNamesLocalized = new Intl.DisplayNames([lcl], { type: 'region' });
+            const regionNamesLocalized = new Intl.DisplayNames(['en'], { type: 'region' });
             const widerRegion = $('#associatedWiderRegion').val();
             finalObj = {
                 "LitCal": [],
@@ -1320,7 +1320,7 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
                     "Locale": lcl.toUpperCase()
                 },
                 "Metadata": {
-                    "Region": regionNamesLocalized.of( messages.countryISOCodes[$('.regionalNationalCalendarName').val().toUpperCase()] ).toUpperCase(),
+                    "Region": regionNamesLocalized.of( messages.countryISOCodes[$('.regionalNationalCalendarName').val().toUpperCase()] ).toUpperCase().replace(/[.]/g,'_'),
                     "WiderRegion": {
                         "name": widerRegion,
                         "jsonFile": `nations/${widerRegion}.json`,
@@ -1379,6 +1379,17 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
                 }
             }
         });
+        if( action === 'createNew' && rowData.Festivity.common.includes( 'Proper' ) ) {
+            rowData.Festivity.readings = {
+                FIRST_READING: $(el).find('.litEventReadings_FIRST_READING').val(),
+                RESPONSORIAL_PSALM: $(el).find('.litEventReadings_RESPONSORIAL_PSALM').val(),
+                ALLELUIA_VERSE: $(el).find('.litEventReadings_ALLELUIA_VERSE').val(),
+                GOSPEL: $(el).find('.litEventReadings_GOSPEL').val()
+            };
+            if( $(el).find('.litEventReadings_SECOND_READING').val() !== "" ) {
+                rowData.Festivity.readings.SECOND_READING = $(el).find('.litEventReadings_SECOND_READING').val();
+            }
+        }
 
         if( $(el).find('.litEventFromYear').length ) {
             let sinceYear = parseInt($(el).find('.litEventFromYear').val());
@@ -1422,8 +1433,20 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
             toastr["success"]("National Calendar was created or updated successfully", "Success");
         },
         error: (xhr, textStatus, errorThrown) => {
-            console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown);
-            toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown, "Error");
+            let errorBody = '';
+            if( xhr.responseText !== '' ) {
+                let responseObj = JSON.parse(xhr.responseText);
+                if( responseObj.hasOwnProperty( 'error' ) ) {
+                    errorBody = responseObj.error;
+                    toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<hr>' + errorBody, "Error");
+                } else {
+                    toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<hr>' + xhr.responseText, "Error");
+                }
+            } else {
+                console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown);
+                toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown, "Error");
+            }
+
         }
     });
 
