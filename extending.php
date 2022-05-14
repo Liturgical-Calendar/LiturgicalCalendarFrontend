@@ -104,6 +104,13 @@ $messages = [
     "countryISOCodes"   => $countryISOCodes
 ];
 
+$buttonGroup = "<hr><div class=\"d-flex justify-content-around\">
+<button class=\"btn btn-sm btn-primary m-2\" id=\"makePatronAction\" data-toggle=\"modal\" data-target=\"#makePatronActionPrompt\"><i class=\"fas fa-user-graduate mr-2\"></i>" . _( "Designate patron from existing festivity" ) . "</button>
+<button class=\"btn btn-sm btn-primary m-2\" id=\"setPropertyAction\" data-toggle=\"modal\" data-target=\"#setPropertyActionPrompt\"><i class=\"fas fa-edit mr-2\"></i>" . _( "Change name or grade of existing festivity" ) . "</button>
+<button class=\"btn btn-sm btn-primary m-2\" id=\"moveFestivityAction\" data-toggle=\"modal\" data-target=\"#moveFestivityActionPrompt\"><i class=\"fas fa-calendar-day mr-2\"></i>" . _( "Move festivity to new date" ) . "</button>
+<button class=\"btn btn-sm btn-primary m-2\" id=\"newFestivityAction\" data-toggle=\"modal\" data-target=\"#newFestivityActionPrompt\"><i class=\"far fa-calendar-plus mr-2\"></i>" . _( "Create a new festivity" ) . "</button>
+</div>";
+
 ?>
 
 <!doctype html>
@@ -173,13 +180,7 @@ $messages = [
                             <hr>
                             <form class="needs-validation regionalNationalDataForm" id="widerRegionForm" novalidate>
                             </form>
-                            <hr>
-                            <div class="d-flex justify-content-around">
-                                <button class="btn btn-sm btn-primary m-2" id="makePatronAction" data-toggle="modal" data-target="#makePatronActionPrompt"><i class="fas fa-user-graduate mr-2"></i><?php echo _( "Designate patron from existing festivity" ) ?></button>
-                                <button class="btn btn-sm btn-primary m-2" id="setPropertyAction" data-toggle="modal" data-target="#setPropertyActionPrompt"><i class="fas fa-edit mr-2"></i><?php echo _( "Change name or grade of existing festivity" ) ?></button>
-                                <button class="btn btn-sm btn-primary m-2" id="moveFestivityAction" data-toggle="modal" data-target="#moveFestivityActionPrompt"><i class="fas fa-calendar-day mr-2"></i><?php echo _( "Move festivity to new date" ) ?></button>
-                                <button class="btn btn-sm btn-primary m-2" id="newFestivityAction" data-toggle="modal" data-target="#newFestivityActionPrompt"><i class="far fa-calendar-plus mr-2"></i><?php echo _( "Create a new festivity" ) ?></button>
-                            </div>
+                            <?php echo $buttonGroup ?>
                         </div>
                         <div class="card-footer text-center">
                             <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeWiderRegionData" data-category="widerRegionCalendar" disabled><i class="fas fa-save mr-2"></i><?php echo _("Save Wider Region Calendar Data") ?></button>
@@ -277,13 +278,7 @@ $messages = [
                             <hr>
                             <form class="needs-validation regionalNationalDataForm" id="nationalCalendarForm" novalidate>
                             </form>
-                            <hr>
-                            <div class="d-flex justify-content-around">
-                                <button class="btn btn-sm btn-primary m-2" id="makePatronAction" data-toggle="modal" data-target="#makePatronActionPrompt"><i class="fas fa-user-graduate mr-2"></i><?php echo _( "Designate patron from existing festivity" ) ?></button>
-                                <button class="btn btn-sm btn-primary m-2" id="setPropertyAction" data-toggle="modal" data-target="#setPropertyActionPrompt"><i class="fas fa-edit mr-2"></i><?php echo _( "Change name or grade of existing festivity" ) ?></button>
-                                <button class="btn btn-sm btn-primary m-2" id="moveFestivityAction" data-toggle="modal" data-target="#moveFestivityActionPrompt"><i class="fas fa-calendar-day mr-2"></i><?php echo _( "Move festivity to new date" ) ?></button>
-                                <button class="btn btn-sm btn-primary m-2" id="newFestivityAction" data-toggle="modal" data-target="#newFestivityActionPrompt"><i class="far fa-calendar-plus mr-2"></i><?php echo _( "Create a new festivity" ) ?></button>
-                            </div>
+                            <?php echo $buttonGroup ?>
                         </div>
                         <div class="card-footer text-center">
                             <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeNationalCalendarData" data-category="nationalCalendar" disabled><i class="fas fa-save mr-2"></i><?php echo _("Save National Calendar Data") ?></button>
