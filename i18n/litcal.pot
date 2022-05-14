@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-14 22:10+0000\n"
+"POT-Creation-Date: 2022-05-14 22:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -742,29 +742,29 @@ msgid ""
 "BibleGet Project"
 msgstr ""
 
-#: about.php:20
+#: about.php:19
 msgid ""
 "Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, "
 "Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
 "for Catholic IT Professionals"
 msgstr ""
 
-#: about.php:27
+#: about.php:25
 msgid "Full stack web developer"
 msgstr ""
 
 #: about.php:31
+msgid "ANOTHERVOLUNTEER"
+msgstr ""
+
+#: about.php:60
 msgid ""
 "The Liturgical Calendar project is curated by a group of volunteer catholic "
 "programmers, seeking to serve the Church."
 msgstr ""
 
-#: about.php:37 about.php:45
+#: about.php:66 about.php:74
 msgid "Liturgical Calendar - About us"
-msgstr ""
-
-#: about.php:111
-msgid "ANOTHERVOLUNTEER"
 msgstr ""
 
 #: liturgyOfAnyDay.php:100
