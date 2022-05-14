@@ -708,10 +708,10 @@ $(document).on('change', '.litEvent', ev => {
             if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
                 $CALENDAR.LitCal[eventKey].common = $(ev.currentTarget).val();
                 let eventColors = [];
-                if ($CALENDAR.LitCal[eventKey].common.includes('Martyrs')) {
+                if ($CALENDAR.LitCal[eventKey].common.some( m => /Martyrs/.test(m) )) {
                     eventColors.push('red');
                 }
-                if ($CALENDAR.LitCal[eventKey].common.match(/(Blessed Virgin Mary|Pastors|Doctors|Virgins|Holy Men and Women|Dedication of a Church)/) !== null) {
+                if ($CALENDAR.LitCal[eventKey].common.some( m => /(Blessed Virgin Mary|Pastors|Doctors|Virgins|Holy Men and Women|Dedication of a Church)/.test(m) ) ) {
                     eventColors.push('white');
                 }
                 $row.find('.litEventColor').multiselect('deselectAll', false).multiselect('select', eventColors);
