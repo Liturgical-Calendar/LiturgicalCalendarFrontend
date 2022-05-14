@@ -399,7 +399,6 @@ class FormControls {
 
 }
 
-
 const setFormSettings = action => {
     switch( action ) {
         case 'designatePatronButton':
@@ -507,6 +506,36 @@ const setFormSettingsForProperty = property => {
     }
 }
 
+const setCommonMultiselect = ($row=null,common=null) => {
+    if( $row !== null ) {
+        $litEventCommon = $row.find('.litEventCommon');
+    } else {
+        $litEventCommon = $('.litEventCommon');
+    }
+    $litEventCommon.multiselect({
+        buttonWidth: '100%',
+        maxHeight: 200,
+        enableCaseInsensitiveFiltering: true,
+        onChange: (option, checked, select) => {
+            if (($(option).val() !== 'Proper' && checked === true && $(option).parent().val().includes('Proper')) || checked === false ) {
+                $(option).parent().multiselect('deselect', 'Proper');
+                $row = $(option).closest('.form-row');
+                if( $row.find('.litEventReadings').length ) {
+                    $row.find('.litEventReadings').prop('disabled',true);
+                }
+            } else if ($(option).val() === 'Proper' && checked === true) {
+                $(option).parent().multiselect('deselectAll', false).multiselect('select', 'Proper');
+                $row = $(option).closest('.form-row');
+                if( $row.find('.litEventReadings').length ) {
+                    $row.find('.litEventReadings').prop('disabled',false);
+                }
+            }
+        }
+    }).multiselect('deselectAll', false);
+    if( common !== null ) {
+        $litEventCommon.multiselect('select', common);
+    }
+}
 
 let ITALYDiocesesArr;
 let USDiocesesByState;
@@ -849,26 +878,7 @@ $(document).on('click', '#retrieveExistingDiocesanData', evt => {
                 $row.find('.litEventName').val(litevent.name).attr('data-valuewas', litevent.name.replace(/[^a-zA-Z]/gi, ''));
                 $row.find('.litEventDay').val(litevent.day);
                 $row.find('.litEventMonth').val(litevent.month);
-                $row.find('.litEventCommon').multiselect({
-                    buttonWidth: '100%',
-                    maxHeight: 200,
-                    enableCaseInsensitiveFiltering: true,
-                    onChange: (option, checked, select) => {
-                        if ($(option).val() !== 'Proper' && checked === true && $(option).parent().val().includes('Proper')) {
-                            $(option).parent().multiselect('deselect', 'Proper');
-                            $row = $(option).closest('.form-row');
-                            if( $row.find('.litEventReadings').length ) {
-                                $row.find('.litEventReadings').prop('disabled',true);
-                            }
-                        } else if ($(option).val() === 'Proper' && checked === true) {
-                            $(option).parent().multiselect('deselectAll', false).multiselect('select', 'Proper');
-                            $row = $(option).closest('.form-row');
-                            if( $row.find('.litEventReadings').length ) {
-                                $row.find('.litEventReadings').prop('disabled',false);
-                            }
-                        }
-                    }
-                }).multiselect('deselectAll', false).multiselect('select', litevent.common);
+                setCommonMultiselect( $row, litevent.common );
                 $row.find('.litEventColor').multiselect({ buttonWidth: '100%' }).multiselect('deselectAll', false).multiselect('select', litevent.color);
                 $row.find('.litEventFromYear').val(litevent.sinceYear);
             };
@@ -913,29 +923,7 @@ $(document).on('click', '.onTheFlyEventRow', ev => {
             break;
     }
 
-    $row.find('.litEventCommon').multiselect({
-        buttonWidth: '100%',
-        maxHeight: 200,
-        //enableCollapsibleOptGroups: true,
-        //collapseOptGroupsByDefault: true,
-        enableCaseInsensitiveFiltering: true,
-        onChange: (option, checked, select) => {
-            if ($(option).val() !== 'Proper' && checked === true && $(option).parent().val().includes('Proper')) {
-                $(option).parent().multiselect('deselect', 'Proper');
-                $row = $(option).closest('.form-row');
-                if( $row.find('.litEventReadings').length ) {
-                    $row.find('.litEventReadings').prop('disabled',true);
-                }
-            } else if ($(option).val() === 'Proper' && checked === true) {
-                $(option).parent().multiselect('deselectAll', false).multiselect('select', 'Proper');
-                $row = $(option).closest('.form-row');
-                if( $row.find('.litEventReadings').length ) {
-                    $row.find('.litEventReadings').prop('disabled',false);
-                }
-            }
-        }
-    });
-
+    setCommonMultiselect( $row, null );
     $row.find('.litEventColor').multiselect({
         buttonWidth: '100%'
     });
@@ -982,26 +970,7 @@ $(document).on('click', '.actionPromptButton', ev => {
     }
 
     if(FormControls.settings.commonFieldShow) {
-        $row.find(`#onTheFly${currentUniqid}Common`).multiselect({
-            buttonWidth: '100%',
-            maxHeight: 200,
-            enableCaseInsensitiveFiltering: true,
-            onChange: (option, checked, select) => {
-                if ($(option).val() !== 'Proper' && checked === true && $(option).parent().val().includes('Proper')) {
-                    $(option).parent().multiselect('deselect', 'Proper');
-                    $row = $(option).closest('.form-row');
-                    if( $row.find('.litEventReadings').length ) {
-                        $row.find('.litEventReadings').prop('disabled',true);
-                    }
-                } else if ($(option).val() === 'Proper' && checked === true) {
-                    $(option).parent().multiselect('deselectAll', false).multiselect('select', 'Proper');
-                    $row = $(option).closest('.form-row');
-                    if( $row.find('.litEventReadings').length ) {
-                        $row.find('.litEventReadings').prop('disabled',false);
-                    }
-                }
-            }
-        }).multiselect('deselectAll', false);
+        setCommonMultiselect( $row, null );
         if(FormControls.settings.commonField === false) {
             $row.find(`#onTheFly${currentUniqid}Common`).multiselect('disable');
         }
@@ -1123,26 +1092,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                 if( el.Festivity.hasOwnProperty( 'common' ) ) {
                     let common = Array.isArray( el.Festivity.common ) ? el.Festivity.common : el.Festivity.common.split(',');
                     if(FormControls.settings.commonFieldShow) {
-                        $row.find(`#onTheFly${currentUniqid}Common`).multiselect({
-                            buttonWidth: '100%',
-                            maxHeight: 200,
-                            enableCaseInsensitiveFiltering: true,
-                            onChange: (option, checked, select) => {
-                                if ($(option).val() === 'Proper' && checked === true) {
-                                    $(option).parent().multiselect('deselectAll', false).multiselect('select', 'Proper');
-                                    $row = $(option).closest('.form-row');
-                                    if( $row.find('.litEventReadings').length ) {
-                                        $row.find('.litEventReadings').prop('disabled',false);
-                                    }
-                                } else if ( ($(option).val() !== 'Proper' && checked === true && $(option).parent().val().includes('Proper')) || checked === false) {
-                                    $row = $(option).closest('.form-row');
-                                    $(option).parent().multiselect('deselect', 'Proper');
-                                    if( $row.find('.litEventReadings').length ) {
-                                        $row.find('.litEventReadings').prop('disabled',true);
-                                    }
-                                }
-                            }
-                        }).multiselect('deselectAll', false).multiselect('select', common)
+                        setCommonMultiselect( $row, common );
                         if(FormControls.settings.commonField === false) {
                             $row.find(`#onTheFly${currentUniqid}Common`).multiselect('disable');
                         }
@@ -1487,28 +1437,7 @@ jQuery(document).ready(() => {
         enableCaseInsensitiveFiltering: true
     });
 
-    $('.litEventCommon').multiselect({
-        buttonWidth: '100%',
-        maxHeight: 200,
-        //enableCollapsibleOptGroups: true,
-        //collapseOptGroupsByDefault: true,
-        enableCaseInsensitiveFiltering: true,
-        onChange: (option, checked, select) => {
-            if ( $(option).val() === 'Proper' && checked === true ) {
-                $(option).parent().multiselect('deselectAll', false).multiselect('select', 'Proper');
-                $row = $(option).closest('.form-row');
-                if( $row.find('.litEventReadings').length ) {
-                    $row.find('.litEventReadings').prop('disabled',false);
-                }
-            } else if ($(option).val() !== 'Proper' && checked === true && $(option).parent().val().includes('Proper')) {
-                $row = $(option).closest('.form-row');
-                $(option).parent().multiselect('deselect', 'Proper');
-                if( $row.find('.litEventReadings').length ) {
-                    $row.find('.litEventReadings').prop('disabled',true);
-                }
-            }
-        }
-    });
+    setCommonMultiselect(null, null);
 
     $('.litEventColor').multiselect({
         buttonWidth: '100%'
