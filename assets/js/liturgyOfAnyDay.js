@@ -150,11 +150,10 @@ const universalCommons = [
 ];
 
 const translCommon = common => {
-    if( common === 'Proper' ) {
+    if( common.includes( 'Proper' ) ) {
         return i18next.t('Proper');
     } else {
-        commons = common.split(",");
-        commons = commons.map(txt => {
+        commons = common.map(txt => {
             let common = txt.split(":");
             if( universalCommons.includes(common[0]) ) {
                 let commonGeneral = i18next.t(common[0].replaceAll(' ', '-'));
@@ -196,8 +195,8 @@ let updateResults = liturgyOfADay => {
         const isSundayOrdAdvLentEaster = filterTagsDisplayGrade.some(pattern => pattern.test(tag));
         const eventDataGrade = eventData.displayGrade !== '' ? 
           eventData.displayGrade : (!isSundayOrdAdvLentEaster ? lclzdGrade : '');
-        const eventDataCommon = eventData.common !== '' ? translCommon(eventData.common) : '';
-        const eventDataColor = eventData.color.split(',');
+        const eventDataCommon = eventData.common.length ? translCommon(eventData.common) : '';
+        const eventDataColor = eventData.color;
         let finalHTML = `<div class="p-4 m-4 border rounded" style="background-color:${eventDataColor[0]};color:${highContrast.includes(eventDataColor[0]) ? "white" : "black"};">`;
         finalHTML += `<h3>${eventData.name}</h3>`;
         finalHTML += (eventDataGrade !== '' ? `<div>${eventDataGrade}</div>` : '');

@@ -11,23 +11,6 @@ $stagingURL = $isStaging ? "-staging" : "";
 $endpointV = $isStaging ? "dev" : "v3";
 $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalEngine.php?returntype=ICS";
 
-$CalendarNations = [];
-$SelectOptions = [];
-[ 'LitCalMetadata' => $CalendarIndex ] = json_decode( file_get_contents( 'https://litcal.johnromanodorazio.com/api/v3/LitCalMetadata.php' ), true );
-foreach( $CalendarIndex["DiocesanCalendars"] as $key => $value ) {
-    if( !in_array( $value["nation"], $CalendarNations ) ) {
-        array_push( $CalendarNations, $value["nation"] );
-        $SelectOptions[$value["nation"]] = [];
-    }
-    array_push( $SelectOptions[$value["nation"]], "<option data-calendartype=\"diocesancalendar\" value=\"{$key}\">{$value["diocese"]}</option>" );
-}
-foreach( array_keys($CalendarIndex["NationalCalendars"]) as $key ) {
-    if( !in_array( $key, $CalendarNations ) ) {
-        array_push( $CalendarNations, $key );
-    }
-}
-sort( $CalendarNations );
-
 ?>
 
 <!doctype html>
@@ -105,26 +88,7 @@ sort( $CalendarNations );
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg">
-                                <div class="row">
-                                    <div class="form-group col-md">
-                                        <label><?php echo _("Select calendar"); ?></label>
-                                        <select class="form-control" id="calendarSelect">
-                                            <?php foreach( $CalendarNations as $nation ) {
-                                                if( is_array( $SelectOptions[ $nation ] ) ) {
-                                                    echo "<option data-calendartype=\"nationalcalendar\" value=\"{$nation}\">$nation</option>";
-                                                    echo "<optgroup label=\"$nation\">" . PHP_EOL;
-                                                    foreach( $SelectOptions[$nation] as $option ) {
-                                                        echo $option . PHP_EOL;
-                                                    }
-                                                    echo "</optgroup>";
-                                                } else {
-                                                    echo "<option data-calendartype=\"nationalcalendar\" value=\"{$nation}\">$nation</option>";
-                                                }
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
+                                <?php include_once('./layout/calendarselect.php') ?>
                                 <p><?php echo _( "Calendar subscription URL" ); ?></p>
                                 <div class="text-center bg-light border border-info rounded p-2" role="button" title="Click to copy to the clipboard!" id="calSubscriptionURLWrapper"><code id="calSubscriptionURL"><?php echo $calSubscriptionURL; ?></code><i class="fas fa-clipboard float-right text-info"></i></div>
                                 <ul class="nav nav-tabs mt-4" role="tablist">

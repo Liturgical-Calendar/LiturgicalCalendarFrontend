@@ -34,6 +34,16 @@ $DioceseGroupHelp = _( "If a group of dioceses decides to pool their Liturgical 
 
 $c = new Collator($i18n->LOCALE);
 
+$AllAvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($value) {
+    return strpos($value, 'POSIX') === false;
+});
+$AllAvailableLocales = array_reduce($AllAvailableLocales, function($carry, $item) use($i18n) {
+    //$carry[$item] = Locale::getDisplayLanguage($item, $i18n->LOCALE) . (Locale::getDisplayRegion($item, $i18n->LOCALE) !== "" ? " (" . Locale::getDisplayRegion($item, $i18n->LOCALE) . ")" : "");
+    $carry[$item] = Locale::getDisplayName($item, $i18n->LOCALE);
+    return $carry;
+},[]);
+$c->asort($AllAvailableLocales);
+
 $AvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($value) {
     return strpos($value, '_') === false;
 });
@@ -94,6 +104,34 @@ $messages = [
     "countryISOCodes"   => $countryISOCodes
 ];
 
+$buttonGroup = "<hr><div class=\"d-flex justify-content-around\">
+<button class=\"btn btn-sm btn-primary m-2\" id=\"makePatronAction\" data-toggle=\"modal\" data-target=\"#makePatronActionPrompt\"><i class=\"fas fa-user-graduate mr-2\"></i>" . _( "Designate patron from existing festivity" ) . "</button>
+<button class=\"btn btn-sm btn-primary m-2\" id=\"setPropertyAction\" data-toggle=\"modal\" data-target=\"#setPropertyActionPrompt\"><i class=\"fas fa-edit mr-2\"></i>" . _( "Change name or grade of existing festivity" ) . "</button>
+<button class=\"btn btn-sm btn-primary m-2\" id=\"moveFestivityAction\" data-toggle=\"modal\" data-target=\"#moveFestivityActionPrompt\"><i class=\"fas fa-calendar-day mr-2\"></i>" . _( "Move festivity to new date" ) . "</button>
+<button class=\"btn btn-sm btn-primary m-2\" id=\"newFestivityAction\" data-toggle=\"modal\" data-target=\"#newFestivityActionPrompt\"><i class=\"far fa-calendar-plus mr-2\"></i>" . _( "Create a new festivity" ) . "</button>
+</div>";
+
+function generateModalBody( bool $hasPropertyChange = false ) : void {
+    $modalBody = "<div class=\"modal-body\">
+    <form class=\"row justify-content-left needs-validation\" novalidate>
+        <div class=\"form-group col col-md-10\">
+            <label for=\"existingFestivityName\" class=\"font-weight-bold\">" . _( "Choose from existing festivities") . ":</label>
+            <input list=\"existingFestivitiesList\" class=\"form-control existingFestivityName\" required>
+            <div class=\"invalid-feedback\">" . _( "This festivity does not seem to exist? Please choose from a value in the list.") . "</div>
+        </div>";
+    if( $hasPropertyChange ) {
+        $modalBody .= "<div class=\"form-group col col-md-6\">
+            <label for=\"propertyToChange\" class=\"font-weight-bold\">" . _( "Property to change" ) . ":</label>
+            <select class=\"form-control\" id=\"propertyToChange\" name=\"propertyToChange\">
+                <option value=\"name\">" . _( "Name" ) . "</option>
+                <option value=\"grade\">" . _( "Grade" ) . "</option>
+            </select>
+        </div>";
+    }
+    $modalBody .= "</form></div>";
+    echo $modalBody;
+}
+
 ?>
 
 <!doctype html>
@@ -134,10 +172,17 @@ $messages = [
                             </datalist>
                         </div>
                         <div class="form-group col col-md-3">
-                            <label>:</label>
                             <div class="form-check form-switch">
                                 <input type="checkbox" class="form-check-input" id="widerRegionIsMultilingual" />
                                 <label for="widerRegionIsMultilingual" class="form-check-label font-weight-bold"><?php echo _( "Wider Region is multilingual" ) ?></label>
+                            </div>
+                            <div class="form-group">
+                                <label for="widerRegionLanguages"></label>
+                                <select class="form-control" id="widerRegionLanguages" multiple="multiple">
+                                    <?php foreach( $AllAvailableLocales as $locale => $lang_region ){
+                                        echo "<option value='$locale'>$lang_region</option>";
+                                    } ?>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group col col-md-3">
@@ -153,15 +198,10 @@ $messages = [
                             <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Create a Calendar for a Wider Region"); ?></h4>
                         </div>
                         <div class="card-body">
-                            <div class="d-flex justify-content-around">
-                                <button class="btn btn-sm btn-primary m-2" id="makePatronAction" data-toggle="modal" data-target="#makePatronActionPrompt"><i class="fas fa-user-graduate mr-2"></i><?php echo _( "Designate patron from existing festivity" ) ?></button>
-                                <button class="btn btn-sm btn-primary m-2" id="setPropertyAction" data-toggle="modal" data-target="#setPropertyActionPrompt"><i class="fas fa-edit mr-2"></i><?php echo _( "Change name or grade of existing festivity" ) ?></button>
-                                <button class="btn btn-sm btn-primary m-2" id="moveFestivityAction" data-toggle="modal" data-target="#moveFestivityActionPrompt"><i class="fas fa-calendar-day mr-2"></i><?php echo _( "Move festivity to new date" ) ?></button>
-                                <button class="btn btn-sm btn-primary m-2" id="newFestivityAction" data-toggle="modal" data-target="#newFestivityActionPrompt"><i class="far fa-calendar-plus mr-2"></i><?php echo _( "Create a new festivity" ) ?></button>
-                            </div>
                             <hr>
                             <form class="needs-validation regionalNationalDataForm" id="widerRegionForm" novalidate>
                             </form>
+                            <?php echo $buttonGroup ?>
                         </div>
                         <div class="card-footer text-center">
                             <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeWiderRegionData" data-category="widerRegionCalendar" disabled><i class="fas fa-save mr-2"></i><?php echo _("Save Wider Region Calendar Data") ?></button>
@@ -256,16 +296,10 @@ $messages = [
                                     </div>
                                 </form>
                             </div>
-
-                            <div class="d-flex justify-content-around">
-                                <button class="btn btn-sm btn-primary m-2" id="makePatronAction" data-toggle="modal" data-target="#makePatronActionPrompt"><i class="fas fa-user-graduate mr-2"></i><?php echo _( "Designate patron from existing festivity" ) ?></button>
-                                <button class="btn btn-sm btn-primary m-2" id="setPropertyAction" data-toggle="modal" data-target="#setPropertyActionPrompt"><i class="fas fa-edit mr-2"></i><?php echo _( "Change name or grade of existing festivity" ) ?></button>
-                                <button class="btn btn-sm btn-primary m-2" id="moveFestivityAction" data-toggle="modal" data-target="#moveFestivityActionPrompt"><i class="fas fa-calendar-day mr-2"></i><?php echo _( "Move festivity to new date" ) ?></button>
-                                <button class="btn btn-sm btn-primary m-2" id="newFestivityAction" data-toggle="modal" data-target="#newFestivityActionPrompt"><i class="far fa-calendar-plus mr-2"></i><?php echo _( "Create a new festivity" ) ?></button>
-                            </div>
                             <hr>
                             <form class="needs-validation regionalNationalDataForm" id="nationalCalendarForm" novalidate>
                             </form>
+                            <?php echo $buttonGroup ?>
                         </div>
                         <div class="card-footer text-center">
                             <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeNationalCalendarData" data-category="nationalCalendar" disabled><i class="fas fa-save mr-2"></i><?php echo _("Save National Calendar Data") ?></button>
@@ -489,15 +523,7 @@ const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
             <div class="modal-header">
                 <h5 class="modal-title" id="makePatronActionModalLabel"><?php echo _( "Designate patron from existing festivity" ) ?></h5>
             </div>
-            <div class="modal-body">
-                <form class="row justify-content-center needs-validation" novalidate>
-                    <div class="form-group col col-md-10">
-                        <label for="existingFestivityName" class="font-weight-bold"><?php echo _( "Choose from existing festivities"); ?>:</label>
-                        <input list="existingFestivitiesList" class="form-control existingFestivityName" required>
-                        <div class="invalid-feedback"><?php echo _( "This festivity does not seem to exist? Please choose from a value in the list."); ?></div>
-                    </div>
-                </form>
-            </div>
+            <?php generateModalBody(false); ?>
             <div class="modal-footer">
                 <button type="button" id="designatePatronButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-user-graduate mr-2"></i><?php echo _( "Designate patron" ) ?></button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i><?php echo _( "Cancel" ) ?></button>
@@ -513,22 +539,7 @@ const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
             <div class="modal-header">
                 <h5 class="modal-title" id="setPropertyActionModalLabel"><?php echo _( "Change name or grade of existing festivity" ) ?></h5>
             </div>
-            <div class="modal-body">
-                <form class="row justify-content-left needs-validation" novalidate>
-                    <div class="form-group col col-md-10">
-                        <label for="existingFestivityName" class="font-weight-bold"><?php echo _( "Choose from existing festivities"); ?>:</label>
-                        <input list="existingFestivitiesList" class="form-control existingFestivityName" required>
-                        <div class="invalid-feedback"><?php echo _( "This festivity does not seem to exist? Please choose from a value in the list."); ?></div>
-                    </div>
-                    <div class="form-group col col-md-6">
-                        <label for="propertyToChange" class="font-weight-bold"><?php echo _( "Property to change" ); ?>:</label>
-                        <select class="form-control" id="propertyToChange" name="propertyToChange">
-                            <option value="name"><?php echo _( "Name" ); ?></option>
-                            <option value="grade"><?php echo _( "Grade" ); ?></option>
-                        </select>
-                    </div>
-                </form>
-            </div>
+            <?php generateModalBody(true); ?>
             <div class="modal-footer">
                 <button type="button" id="setPropertyButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-edit mr-2"></i>Set Property</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i><?php echo _( "Cancel" ) ?></button>
@@ -544,15 +555,7 @@ const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
             <div class="modal-header">
                 <h5 class="modal-title" id="moveFestivityActionModalLabel"><?php echo _( "Move festivity to new date" ) ?></h5>
             </div>
-            <div class="modal-body">
-                <form class="row justify-content-center needs-validation" novalidate>
-                    <div class="form-group col col-md-10">
-                        <label for="existingFestivityName" class="font-weight-bold"><?php echo _( "Choose from existing festivities"); ?>:</label>
-                        <input list="existingFestivitiesList" class="form-control existingFestivityName" required>
-                        <div class="invalid-feedback"><?php echo _( "This festivity does not seem to exist? Please choose from a value in the list." ); ?></div>
-                    </div>
-                </form>
-            </div>
+            <?php generateModalBody(false); ?>
             <div class="modal-footer">
                 <button type="button" id="moveFestivityButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-day mr-2"></i><?php echo _( "Move Festivity" ) ?></button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i><?php echo _( "Cancel" ) ?></button>
@@ -568,15 +571,7 @@ const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
             <div class="modal-header">
                 <h5 class="modal-title" id="newFestivityActionModalLabel"><?php echo _( "Create a new festivity" ) ?></h5>
             </div>
-            <div class="modal-body">
-                <form class="row justify-content-center needs-validation" novalidate>
-                    <div class="form-group col col-md-10">
-                        <label for="existingFestivityName" class="font-weight-bold"><?php echo _( "Choose from existing festivities"); ?>:</label>
-                        <input list="existingFestivitiesList" class="form-control existingFestivityName">
-                        <div class="invalid-feedback"><?php echo _( "This festivity does not seem to exist? Please choose from a value in the list."); ?></div>
-                    </div>
-                </form>
-            </div>
+            <?php generateModalBody(false); ?>
             <div class="modal-footer">
                 <button type="button" id="newFestivityFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus mr-2"></i><?php echo _( "New Festivity from existing" ) ?></button>
                 <button type="button" id="newFestivityExNovoButton" class="btn btn-primary actionPromptButton"><i class="fas fa-calendar-plus mr-2"></i><?php echo _( "New Festivity ex novo" ) ?></button>

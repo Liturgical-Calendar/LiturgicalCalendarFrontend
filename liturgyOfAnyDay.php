@@ -61,26 +61,7 @@ if( verifyCalendarIndexJson( $JSON ) ) {
         <!-- Page Heading -->
         <h3 class="h3 mb-2 text-gray-800"><?php echo _( "Liturgy of any day" ); ?></h3>
         <div class="container">
-            <div class="row">
-                <div class="form-group col-md">
-                    <label><?php echo _("Select calendar"); ?></label>
-                    <select class="form-control" id="calendarSelect">
-                        <?php foreach( $CalendarNations as $nation ) {
-                            if( array_key_exists( $nation, $SelectOptions ) && is_array( $SelectOptions[ $nation ] ) ) {
-                                echo "<option data-calendartype=\"nationalcalendar\" value=\"{$nation}\">$nation</option>";
-                                echo "<optgroup label=\"$nation\">" . PHP_EOL;
-                                foreach( $SelectOptions[$nation] as $option ) {
-                                    echo $option . PHP_EOL;
-                                }
-                                echo "</optgroup>";
-                            } else {
-                                echo "<option data-calendartype=\"nationalcalendar\" value=\"{$nation}\">$nation</option>";
-                            }
-                        }
-                        ?>
-                    </select>
-                </div>
-            </div>
+        <?php include_once('./layout/calendarselect.php') ?>
             <div class="row">
                 <div class="form-group col-md">
                     <label><?php echo _("Day"); ?></label>

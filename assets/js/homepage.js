@@ -1,8 +1,11 @@
+const isStaging = location.hostname.includes( '-staging' );
+const endpointV = isStaging ? 'dev' : 'v3';
+const MetaDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalMetadata.php`;
+const RequestURLBase = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalEngine.php`;
+const { COUNTRIES, LITCAL_LOCALE } = ISO_3166_1_alpha_2;
+let countryNames = new Intl.DisplayNames([LITCAL_LOCALE], {type: 'region'});
 let CalendarNations = [];
 let selectOptions = {};
-const { COUNTRIES, LITCAL_LOCALE } = i18n;
-let countryNames = new Intl.DisplayNames([LITCAL_LOCALE], {type: 'region'});
-const RequestURLBase = "https://litcal.johnromanodorazio.com/api/v3/LitCalEngine.php";
 let requestURL = {
     year: null,
     corpuschristi: null,
@@ -13,7 +16,6 @@ let requestURL = {
     nationalcalendar: null,
     diocesancalendar: null
 };
-
 let serializeRequestURL = function(obj){
     let parameters = [];
     for (const key in obj) {
@@ -25,7 +27,7 @@ let serializeRequestURL = function(obj){
 };
 
 (function ($) {
-    $.getJSON( 'https://litcal.johnromanodorazio.com/api/v3/LitCalMetadata.php', data => {
+    $.getJSON( MetaDataURL, data => {
         const { LitCalMetadata } = data;
         const { NationalCalendars, DiocesanCalendars } = LitCalMetadata;
         for(const [key,value] of Object.entries(DiocesanCalendars)){
@@ -33,20 +35,23 @@ let serializeRequestURL = function(obj){
                 CalendarNations.push(value.nation);
                 selectOptions[value.nation] = [];
             }
-            CalendarNations.sort();
             selectOptions[value.nation].push(`<option data-calendartype="diocesancalendar" value="${key}">${value.diocese}</option>`);
         }
+
+        let nations = Object.keys( NationalCalendars );
+        nations.sort((a, b) => countryNames.of(COUNTRIES[a]).localeCompare(countryNames.of(COUNTRIES[b])))
+        nations.forEach(item => {
+            if( false === CalendarNations.includes(item) ) {
+                $('#APICalendarSelect').append(`<option data-calendartype="nationalcalendar" value="${item}">${countryNames.of(COUNTRIES[item])}</option>`);
+            }
+        });
+
+        CalendarNations.sort((a, b) => countryNames.of(COUNTRIES[a]).localeCompare(countryNames.of(COUNTRIES[b])));
         CalendarNations.forEach(item => {
             $('#APICalendarSelect').append(`<option data-calendartype="nationalcalendar" value="${item}">${countryNames.of(COUNTRIES[item])}</option>`);
             let $optGroup = $(`<optgroup label="${countryNames.of(COUNTRIES[item])}">`);
             $('#APICalendarSelect').append($optGroup);
             selectOptions[item].forEach(groupItem => $optGroup.append(groupItem));
-        });
-        let nations = Object.keys( NationalCalendars );
-        nations.forEach(item => {
-            if( false === CalendarNations.includes(item) ){
-                $('#APICalendarSelect').append(`<option data-calendartype="nationalcalendar" value="${item}">${countryNames.of(COUNTRIES[item])}</option>`);
-            }
         });
     });
 
