@@ -331,7 +331,6 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                             <datalist id="DiocesesList">
                                 <option value=""></option>
                             </datalist>
-                            <div class="col text-center"><button class="btn btn-primary m-2" id="retrieveExistingDiocesanData" disabled><?php echo _( "Retrieve existing data"); ?></button></div>
                             <div class="col text-center"><button class="btn btn-danger m-2" id="removeExistingDiocesanData" disabled data-toggle="modal" data-target="#removeDiocesanCalendarPrompt"><?php echo _( "Remove existing data"); ?></button></div>
                         </div>
                         <div class="form-group col col-md-3">
