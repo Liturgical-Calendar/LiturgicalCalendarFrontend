@@ -67,7 +67,7 @@ if($isStaging) {
                     foreach( $JSON as $row ) {
                         echo "<tr>";
                         foreach( $row as $value ) {
-                            if( is_array( $value ) ) {
+                            if( is_array( $value ) && is_string( array_keys( $value )[0] ) ) {
                                 echo "<td contenteditable='false'>";
                                 echo "<table><tbody>";
                                 foreach( $value as $title => $val ) {
@@ -82,7 +82,11 @@ if($isStaging) {
                                 }
                                 echo "</tbody></table>";
                                 echo "</td>";
-                            } else {
+                            }
+                            else if( is_array( $value ) ) {
+                                echo "<td contenteditable='false'>" . implode(",", $value) . "</td>";
+                            }
+                            else {
                                 echo "<td contenteditable='false'>$value</td>";
                             }
                         }

@@ -36,9 +36,9 @@ $(document).ready(() => {
 $(document).on('change', '#jsonFileSelect', () => {
     let jsonFile = $('#jsonFileSelect').val();
     if( isStaging ) {
-        console.log('we cannot actually manage the JSON files in the staging environment, because of CORS issues');
-        jsonFile = 'https://litcal.johnromanodorazio.com/' + jsonFile;
-        return false;
+        //console.log('we cannot actually manage the JSON files in the staging environment, because of CORS issues');
+        jsonFile = 'includes/readJSONFile.php?filename=https://litcal.johnromanodorazio.com/' + jsonFile;
+        //return false;
     } else {
         jsonFile = './' + jsonFile;
     }
@@ -66,7 +66,14 @@ $(document).on('change', '#jsonFileSelect', () => {
                 //let $tr = $('<tr>');
                 let trHtmlStr = '<tr>';
                 keys.forEach(prop => {
-                    if( typeof row[prop] === 'object' ){
+                    if( Array.isArray( row[prop] ) ) {
+                        console.log(`we have an array in key ${prop}:`);
+                        console.log( row[prop] );
+                        trHtmlStr += `<td contenteditable="false">${row[prop].join(',')}</td>`;
+                    }
+                    else if( typeof row[prop] === 'object' ) {
+                        console.log(`we have an object in key ${prop}:`);
+                        console.log( row[prop] );
                         let htmlStr = '<table><tbody>';
                         Object.keys( row[prop] ).forEach(title => {
                             let val = row[prop][title];
@@ -97,7 +104,7 @@ $(document).on('change', '#jsonFileSelect', () => {
 });
 
 //$(document).on('dblclick', '#jsonDataTbl th,#jsonDataTbl td', ev => {
-    $(document).on('dblclick', '#jsonDataTbl table tr td:nth-child(2)', ev => {
+$(document).on('dblclick', '#jsonDataTbl table tr td:nth-child(2)', ev => {
     $(ev.currentTarget).attr('contenteditable',true).addClass('bg-white').focus();
 });
 
