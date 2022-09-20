@@ -27,9 +27,22 @@ foreach( array_keys($NationalCalendars) as $country_name ) {
 asort($availableNationalCalendars, SORT_LOCALE_STRING);
 
 $API_EXTEND_HOWTO_A = _( "The General Roman Calendar can be extended so as to create a National or Diocesan calendar. Diocesan calendars depend on National calendars, so the National calendar must first be created." );
+$API_EXTEND_HOWTO_A1 = _( "The first step in creating a National calendar, is to translate the already existing calendar data into the language for that nation." );
+$API_EXTEND_HOWTO_A1a = sprintf(
+    _( 'This can be done on the <a href="%1$s">LitCal translation server</a>.' ),
+    'https://translate.johnromanodorazio.com/projects/liturgical-calendar/'
+);
+$API_EXTEND_HOWTO_A1b = sprintf(
+    _( 'Specifically, the components which will require translation are: 1. <a href="%1$s">Proprium de Sanctis 1970</a>, 2. <a href="%2$s">Proprium de Sanctis 2002</a>, 3. <a href="%3$s">Proprium de Sanctis 2008</a>, 4. <a href="%4$s">Proprium de Tempore</a>, and 5. <a href="%5$s">Memorials from Decrees</a>.' ),
+    'https://translate.johnromanodorazio.com/projects/liturgical-calendar/proprium-de-sanctis-1970/',
+    'https://translate.johnromanodorazio.com/projects/liturgical-calendar/proprium-de-sanctis-2002/',
+    'https://translate.johnromanodorazio.com/projects/liturgical-calendar/proprium-de-sanctis-2008/',
+    'https://translate.johnromanodorazio.com/projects/liturgical-calendar/proprium-de-tempore/',
+    'https://translate.johnromanodorazio.com/projects/liturgical-calendar/memorials-from-decrees/'
+);
 $API_EXTEND_HOWTO_A2 = _( "A National calendar may have some festivities in common with other National calendars, for example the patron of a wider region." );
 $API_EXTEND_HOWTO_A3 = _( "In this case, the festivities for the Wider region should be defined separately, and if applicable should be made translatable, then the Wider region should be applied to the National Calendar." );
-$API_EXTEND_HOWTO_B = _( "National calendars must be defined using data from the translation of the Roman Missal used in the Region or in any case from decrees of the Episcopal Conference of the Region." );
+$API_EXTEND_HOWTO_B = _( "National calendars and their relative translations must be defined using data from the translation of the Roman Missal used in the Region or in any case from decrees of the Episcopal Conference of the Region." );
 $DioceseGroupHelp = _( "If a group of dioceses decides to pool their Liturgical Calendar data, for example to print out one single yearly calendar with the data for all the dioceses in the group, the group can be defined or set here." );
 
 $c = new Collator($i18n->LOCALE);
@@ -147,7 +160,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
         <!-- Page Heading -->
         <h1 class="h3 mb-2 text-gray-800"><?php echo _( "Extend the General Roman Calendar with National or Diocesan data"); ?></h1>
         <p class="mb-4">
-            <p><?php echo $API_EXTEND_HOWTO_A . " " . $API_EXTEND_HOWTO_A2 . " " . $API_EXTEND_HOWTO_A3; ?></p>
+            <p><?php echo $API_EXTEND_HOWTO_A . " " . $API_EXTEND_HOWTO_A1 . " " . $API_EXTEND_HOWTO_A1a . " " . $API_EXTEND_HOWTO_A1b . " " . $API_EXTEND_HOWTO_A2 . " " . $API_EXTEND_HOWTO_A3; ?></p>
             <p><?php echo $API_EXTEND_HOWTO_B; ?></p>
         </p>
 <?php
@@ -244,7 +257,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                         <div class="card-body">
 
                             <div id="nationalCalendarSettingsContainer" class="container">
-                                <h3 id="nationalCalendarSettingsTitle" class="text-center"><?php echo _("National calendar settings") ?></h3>
+                                <h3 id="nationalCalendarSettingsTitle" class="text-center"><?php echo _("National calendar settings") ?><i class="fas fa-info-circle ml-4" role="button" title="please keep in mind that the first step to creating a national calendar, is to translate the already existing calendar data into the correct language. This can be done on the LitCal translation server (see above for details)"></i></h3>
                                 <form id="nationalCalendarSettingsForm" class="row justify-content-center needs-validation" novalidate>
                                     <div class="form-group col col-md-3">
                                         <label><?php echo _( 'EPIPHANY' ) ?></label>
@@ -283,7 +296,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
 
                                     <div class="form col col-md-6">
                                         <div class="row">
-                                            <label><?php echo _( 'Published Roman Missals' ) ?></label><button class="btn btn-sm btn-primary ml-2 mb-2" id="addPublishedRomanMissal" data-toggle="modal" data-target="#addPublishedRomanMissalPrompt" type="button"><i class="fas fa-plus mr-2"></i><?php echo _( 'Add Missal' ) ?></button>
+                                            <label><i class="fas fa-info-circle mr-2" role="button" title="if data from the Proper of Saints of a given Missal for this nation has already been incorporated into the main LitCal engine, you can choose the Missal from this list to associate it with this National Calendar (if the Missal is not in the list, it has not been incorporated into the LitCal engine)"></i><?php echo _( 'Published Roman Missals' ) ?></label><button class="btn btn-sm btn-primary ml-2 mb-2" id="addPublishedRomanMissal" data-toggle="modal" data-target="#addPublishedRomanMissalPrompt" type="button"><i class="fas fa-plus mr-2"></i><?php echo _( 'Add Missal' ) ?></button>
                                         </div>
                                         <div class="row">
                                             <ul class="list-group" id="publishedRomanMissalList" style="width: 250px;">
@@ -291,7 +304,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                                         </div>
                                     </div>
                                     <div class="form-group col col-md-3">
-                                        <label><?php echo _( 'Wider Region' ) ?></label>
+                                        <label><?php echo _( 'Wider Region' ) ?><i class="fas fa-info-circle ml-2" role="button" title="if data for a Wider Region that regards this National Calendar has already been defined, you can associate the Wider Region data with the National Calendar here"></i></label>
                                         <input class="form-control" type="text" id="associatedWiderRegion" />
                                     </div>
                                 </form>
