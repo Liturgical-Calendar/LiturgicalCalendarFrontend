@@ -80,15 +80,13 @@ const RANK = {
 }
 
 class litEvent {
-    constructor(name = "", color = "", grade = 0, common = "", day = 1, month = 1, formRowNum = -1, sinceYear = 1970) {
+    constructor(name = "", color = "", grade = 0, common = "", day = 1, month = 1 ) {
         this.name = name;
         this.color = color;
         this.grade = grade;
         this.common = common;
         this.day = day;
         this.month = month;
-        this.formRowNum = formRowNum;
-        this.sinceYear = sinceYear;
     }
 }
 
@@ -555,6 +553,110 @@ let $index = {};
 
 let WiderRegionData = {};
 
+const loadDiocesanCalendarData = () => {
+    let diocese = $('#diocesanCalendarDioceseName').val();
+    let dioceseKey = $('#DiocesesList').find('option[value="' + diocese + '"]').attr('data-value').toUpperCase();
+    jQuery.ajax({
+        url: RegionalDataURL,
+        method: 'GET',
+        dataType: 'json',
+        data: { "key" : dioceseKey, "category": "diocesanCalendar" },
+        statusCode: {
+            404: (xhr, textStatus, errorThrown) => {
+                toastr["warning"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />The Diocesan Calendar for ' + diocese + ' does not exist yet.', "Warning");
+                console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown + 'The Diocesan Calendar for ' + diocese + ' does not exist yet.');
+            }
+        },
+        success: data => {
+            console.log('retrieved diocesan data:');
+            console.log(data);
+            toastr["success"]("Diocesan Calendar was retrieved successfully", "Success");
+            $CALENDAR = data;
+            if( data.hasOwnProperty('Overrides') ) {
+                if( data.Overrides.hasOwnProperty('Epiphany') ) {
+                    $('#diocesanCalendarOverrideEpiphany').val( data.Overrides.Epiphany );
+                }
+                if( data.Overrides.hasOwnProperty('Ascension') ) {
+                    $('#diocesanCalendarOverrideAscension').val( data.Overrides.Ascension );
+                }
+                if( data.Overrides.hasOwnProperty('CorpusChristi') ) {
+                    $('#diocesanCalendarOverrideCorpusChristi').val( data.Overrides.CorpusChristi );
+                }
+            }
+            for (const obj of Object.values(data.LitCal)) {
+                const { Festivity, Metadata } = obj;
+                let $form;
+                let $row;
+                let numLastRow;
+                let numMissingRows;
+                switch (Festivity.grade) {
+                    case RANK.SOLEMNITY:
+                        $form = $('#carouselItemSolemnities form');
+                        numLastRow = $form.find('.form-row').length - 1;
+                        if (Metadata.formRowNum > numLastRow) {
+                            numMissingRows = Metadata.formRowNum - numLastRow;
+                            FormControls.title = messages['Other Solemnity'];
+                            FormControls.settings.commonField = true;
+                            while (numMissingRows-- > 0) {
+                                $form.append($(FormControls.CreateFestivityRow()));
+                            }
+                        }
+                        $row = $('#carouselItemSolemnities form .form-row').eq(Metadata.formRowNum);
+                        break;
+                    case RANK.FEAST:
+                        numLastRow = $('#carouselItemFeasts form .form-row').length - 1;
+                        if (Metadata.formRowNum > numLastRow) {
+                            numMissingRows = Metadata.formRowNum - numLastRow;
+                            FormControls.title = messages['Other Feast'];
+                            FormControls.settings.commonField = true;
+                            while (numMissingRows-- > 0) {
+                                $('.carousel-item').eq(1).find('form').append($(FormControls.CreateFestivityRow()));
+                            }
+                        }
+                        $row = $('#carouselItemFeasts form .form-row').eq(Metadata.formRowNum);
+                        break;
+                    case RANK.MEMORIAL:
+                        numLastRow = $('#carouselItemMemorials form .form-row').length - 1;
+                        if (Metadata.formRowNum > numLastRow) {
+                            numMissingRows = Metadata.formRowNum - numLastRow;
+                            FormControls.title = messages['Other Memorial'];
+                            FormControls.settings.commonField = true;
+                            while (numMissingRows-- > 0) {
+                                $('.carousel-item').eq(2).find('form').append($(FormControls.CreateFestivityRow()));
+                            }
+                        }
+                        $row = $('#carouselItemMemorials form .form-row').eq(Metadata.formRowNum);
+                        break;
+                    case RANK.OPTIONALMEMORIAL:
+                        numLastRow = $('#carouselItemOptionalMemorials form .form-row').length - 1;
+                        if (Metadata.formRowNum > numLastRow) {
+                            numMissingRows = Metadata.formRowNum - numLastRow;
+                            FormControls.title = messages['Other Optional Memorial'];
+                            FormControls.settings.commonField = true;
+                            while (numMissingRows-- > 0) {
+                                $('.carousel-item').eq(3).find('form').append($(FormControls.CreateFestivityRow()));
+                            }
+                        }
+                        $row = $('#carouselItemOptionalMemorials form .form-row').eq(Metadata.formRowNum);
+                        break;
+                }
+                $row.find('.litEventName').val(Festivity.name).attr('data-valuewas', Festivity.name.replace(/[^a-zA-Z]/gi, ''));
+                $row.find('.litEventDay').val(Festivity.day);
+                $row.find('.litEventMonth').val(Festivity.month);
+                setCommonMultiselect( $row, Festivity.common );
+                $row.find('.litEventColor').multiselect({ buttonWidth: '100%' }).multiselect('deselectAll', false).multiselect('select', Festivity.color);
+                $row.find('.litEventFromYear').val(Metadata.sinceYear);
+            };
+            setFocusFirstTabWithData();
+        },
+        error: (xhr, textStatus, errorThrown) => {
+            if( xhr.status !== 404 ) { //we have already handled 404 Not Found above
+                toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown, "Error");
+            }
+        }
+    });
+}
+
 jQuery.ajax({
     url: MetaDataURL,
     dataType: 'json',
@@ -631,15 +733,18 @@ $(document).on('change', '.litEvent', ev => {
             //console.log('new LitEvent name identifier is ' + eventKey);
             if ($(ev.currentTarget).attr('data-valuewas') == '' && $CALENDAR.LitCal.hasOwnProperty(eventKey) === false) {
                 //console.log('there was no data-valuewas attribute or it was empty, so we are creating ex-novo a new LitEvent');
-                $CALENDAR.LitCal[eventKey] = new litEvent();
-                $CALENDAR.LitCal[eventKey].name = $(ev.currentTarget).val();
+                $CALENDAR.LitCal[eventKey] = { Festivity: {}, Metadata: {} };
+                $CALENDAR.LitCal[eventKey].Festivity = new litEvent(
+                    $(ev.currentTarget).val(), //name
+                    $row.find('.litEventColor').val(), //color
+                    null,
+                    $row.find('.litEventCommon').val(), //common
+                    parseInt($row.find('.litEventDay').val()), //day
+                    parseInt($row.find('.litEventMonth').val()), //month
+                );
                 //let's initialize defaults just in case the default input values happen to be correct, so no change events are fired
-                $CALENDAR.LitCal[eventKey].day = parseInt($row.find('.litEventDay').val());
-                $CALENDAR.LitCal[eventKey].month = parseInt($row.find('.litEventMonth').val());
-                $CALENDAR.LitCal[eventKey].color = $row.find('.litEventColor').val();
-                $CALENDAR.LitCal[eventKey].common = $row.find('.litEventCommon').val();
-                $CALENDAR.LitCal[eventKey].sinceYear = parseInt($row.find('.litEventFromYear').val());
-                $CALENDAR.LitCal[eventKey].formRowNum = $card.find('.form-row').index($row);
+                $CALENDAR.LitCal[eventKey].Metadata.sinceYear = parseInt($row.find('.litEventFromYear').val());
+                $CALENDAR.LitCal[eventKey].Metadata.formRowNum = $card.find('.form-row').index($row);
                 $(ev.currentTarget).attr('data-valuewas', eventKey);
                 $(ev.currentTarget).removeClass('is-invalid');
             } else if ($(ev.currentTarget).attr('data-valuewas') != '') {
@@ -650,7 +755,7 @@ $(document).on('change', '.litEvent', ev => {
                         //console.log('will now attempt to copy the values from <' + oldEventKey + '> to <' + eventKey + '> and then remove <' + oldEventKey + '>');
                         Object.defineProperty($CALENDAR.LitCal, eventKey,
                             Object.getOwnPropertyDescriptor($CALENDAR.LitCal, oldEventKey));
-                        $CALENDAR.LitCal[eventKey].name = $(ev.currentTarget).val();
+                        $CALENDAR.LitCal[eventKey].Festivity.name = $(ev.currentTarget).val();
                         delete $CALENDAR.LitCal[oldEventKey];
                         $(ev.currentTarget).attr('data-valuewas', eventKey);
                         $(ev.currentTarget).removeClass('is-invalid');
@@ -663,23 +768,23 @@ $(document).on('change', '.litEvent', ev => {
             }
             switch ($(ev.currentTarget).closest('.carousel-item').attr('id')) {
                 case 'carouselItemSolemnities':
-                    $CALENDAR.LitCal[eventKey].grade = 6;
+                    $CALENDAR.LitCal[eventKey].Festivity.grade = 6;
                     if ($(ev.currentTarget).val().match(/(martyr|martir|mártir|märtyr)/i) !== null) {
                         $row.find('.litEventColor').multiselect('deselectAll', false).multiselect('select', 'red');
-                        $CALENDAR.LitCal[eventKey].color = [ 'red' ];
+                        $CALENDAR.LitCal[eventKey].Festivity.color = [ 'red' ];
                     } else {
                         $row.find('.litEventColor').multiselect('deselectAll', false).multiselect('select', 'white');
-                        $CALENDAR.LitCal[eventKey].color = [ 'white' ];
+                        $CALENDAR.LitCal[eventKey].Festivity.color = [ 'white' ];
                     }
                     break;
                 case 'carouselItemFeasts':
-                    $CALENDAR.LitCal[eventKey].grade = 4;
+                    $CALENDAR.LitCal[eventKey].Festivity.grade = 4;
                     break;
                 case 'carouselItemMemorials':
-                    $CALENDAR.LitCal[eventKey].grade = 3;
+                    $CALENDAR.LitCal[eventKey].Festivity.grade = 3;
                     break;
                 case 'carouselItemOptionalMemorials':
-                    $CALENDAR.LitCal[eventKey].grade = 2;
+                    $CALENDAR.LitCal[eventKey].Festivity.grade = 2;
                     break;
             }
         }
@@ -687,7 +792,7 @@ $(document).on('change', '.litEvent', ev => {
         if ($row.find('.litEventName').val() != "") {
             eventKey = $row.find('.litEventName').val().replace(/[^a-zA-Z]/gi, '');
             if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
-                $CALENDAR.LitCal[eventKey].day = parseInt($(ev.currentTarget).val());
+                $CALENDAR.LitCal[eventKey].Festivity.day = parseInt($(ev.currentTarget).val());
             }
         }
     } else if ($(ev.currentTarget).hasClass('litEventMonth')) {
@@ -695,7 +800,7 @@ $(document).on('change', '.litEvent', ev => {
         if ($row.find('.litEventName').val() != "") {
             eventKey = $row.find('.litEventName').val().replace(/[^a-zA-Z]/gi, '');
             if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
-                $CALENDAR.LitCal[eventKey].month = selcdMonth;
+                $CALENDAR.LitCal[eventKey].Festivity.month = selcdMonth;
             }
         }
         $row.find('.litEventDay').attr('max', selcdMonth === FEBRUARY ? "28" : (monthsOfThirty.includes(selcdMonth) ? "30" : "31"));
@@ -706,36 +811,36 @@ $(document).on('change', '.litEvent', ev => {
         if ($row.find('.litEventName').val() !== "") {
             eventKey = $row.find('.litEventName').val().replace(/[^a-zA-Z]/gi, '');
             if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
-                $CALENDAR.LitCal[eventKey].common = $(ev.currentTarget).val();
+                $CALENDAR.LitCal[eventKey].Festivity.common = $(ev.currentTarget).val();
                 let eventColors = [];
-                if ($CALENDAR.LitCal[eventKey].common.some( m => /Martyrs/.test(m) )) {
+                if ($CALENDAR.LitCal[eventKey].Festivity.common.some( m => /Martyrs/.test(m) )) {
                     eventColors.push('red');
                 }
-                if ($CALENDAR.LitCal[eventKey].common.some( m => /(Blessed Virgin Mary|Pastors|Doctors|Virgins|Holy Men and Women|Dedication of a Church)/.test(m) ) ) {
+                if ($CALENDAR.LitCal[eventKey].Festivity.common.some( m => /(Blessed Virgin Mary|Pastors|Doctors|Virgins|Holy Men and Women|Dedication of a Church)/.test(m) ) ) {
                     eventColors.push('white');
                 }
                 $row.find('.litEventColor').multiselect('deselectAll', false).multiselect('select', eventColors);
-                $CALENDAR.LitCal[eventKey].color = eventColors;
+                $CALENDAR.LitCal[eventKey].Festivity.color = eventColors;
             }
         }
     } else if ($(ev.currentTarget).hasClass('litEventColor')) {
         if ($row.find('.litEventName').val() != "") {
             eventKey = $row.find('.litEventName').val().replace(/[^a-zA-Z]/gi, '');
             if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
-                $CALENDAR.LitCal[eventKey].color = $(ev.currentTarget).val();
+                $CALENDAR.LitCal[eventKey].Festivity.color = $(ev.currentTarget).val();
             }
         }
     } else if ($(ev.currentTarget).hasClass('litEventFromYear')) {
         if ($row.find('.litEventName').val() != "") {
             eventKey = $row.find('.litEventName').val().replace(/[^a-zA-Z]/gi, '');
             if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
-                $CALENDAR.LitCal[eventKey].sinceYear = parseInt($(ev.currentTarget).val());
+                $CALENDAR.LitCal[eventKey].Metadata.sinceYear = parseInt($(ev.currentTarget).val());
             }
         }
     }
 });
 
-$(document).on('click', '#saveDiocesanCalendar_btn', ev => {
+$(document).on('click', '#saveDiocesanCalendar_btn', () => {
     $data = JSON.stringify($CALENDAR);
     $nation = $('#diocesanCalendarNationalDependency').val();
     $diocese = $('#diocesanCalendarDioceseName').val();
@@ -762,11 +867,16 @@ $(document).on('click', '#saveDiocesanCalendar_btn', ev => {
     }
 
     let formsValid = true;
-    $('form').each((idx, el) => {
-        if (el.checkValidity() === false) {
-            formsValid = false;
+    $('form').find('.form-row').each((idx,row) => {
+        if( $(row).find('.litEventName').val() !== '' ) {
+            $(row).find('input,select').each((idx, el) => {
+                if (el.checkValidity() === false) {
+                    formsValid = false;
+                    alert(el.validationMessage);
+                }
+                $(el).addClass('was-validated');
+            });
         }
-        $(el).addClass('was-validated');
     });
     if ( formsValid ) {
         $.ajax({
@@ -787,110 +897,10 @@ $(document).on('click', '#saveDiocesanCalendar_btn', ev => {
             }
         });
     } else {
-        alert('Nation / Diocese cannot be empty');
+        //alert('Nation / Diocese cannot be empty');
     }
 });
 
-$(document).on('click', '#retrieveExistingDiocesanData', evt => {
-    evt.preventDefault();
-    let diocese = $('#diocesanCalendarDioceseName').val();
-    let dioceseKey = $('#DiocesesList').find('option[value="' + diocese + '"]').attr('data-value').toUpperCase();
-    //let $diocesanCalendar;
-    jQuery.ajax({
-        url: RegionalDataURL,
-        method: 'GET',
-        dataType: 'json',
-        data: { "key" : dioceseKey, "category": "diocesanCalendar" },
-        statusCode: {
-            404: (xhr, textStatus, errorThrown) => {
-                toastr["warning"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />The Diocesan Calendar for ' + diocese + ' does not exist yet.', "Warning");
-                console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown + 'The Diocesan Calendar for ' + diocese + ' does not exist yet.');
-            }
-        },
-        success: data => {
-            console.log('retrieved diocesan data:');
-            console.log(data);
-            toastr["success"]("Diocesan Calendar was retrieved successfully", "Success");
-            $CALENDAR = data;
-            if( data.hasOwnProperty('Overrides') ) {
-                if( data.Overrides.hasOwnProperty('Epiphany') ) {
-                    $('#diocesanCalendarOverrideEpiphany').val( data.Overrides.Epiphany );
-                }
-                if( data.Overrides.hasOwnProperty('Ascension') ) {
-                    $('#diocesanCalendarOverrideAscension').val( data.Overrides.Ascension );
-                }
-                if( data.Overrides.hasOwnProperty('CorpusChristi') ) {
-                    $('#diocesanCalendarOverrideCorpusChristi').val( data.Overrides.CorpusChristi );
-                }
-            }
-            for (const [key, litevent] of Object.entries(data.LitCal)) {
-                let $form;
-                let $row;
-                let numLastRow;
-                let numMissingRows;
-                switch (litevent.grade) {
-                    case RANK.SOLEMNITY:
-                        $form = $('#carouselItemSolemnities form');
-                        numLastRow = $form.find('.form-row').length - 1;
-                        if (litevent.formRowNum > numLastRow) {
-                            numMissingRows = litevent.formRowNum - numLastRow;
-                            FormControls.title = messages['Other Solemnity'];
-                            while (numMissingRows-- > 0) {
-                                $form.append($(FormControls.CreateFestivityRow()));
-                            }
-                        }
-                        $row = $('#carouselItemSolemnities form .form-row').eq(litevent.formRowNum);
-                        break;
-                    case RANK.FEAST:
-                        numLastRow = $('#carouselItemFeasts form .form-row').length - 1;
-                        if (litevent.formRowNum > numLastRow) {
-                            numMissingRows = litevent.formRowNum - numLastRow;
-                            FormControls.title = messages['Other Feast'];
-                            while (numMissingRows-- > 0) {
-                                $('.carousel-item').eq(1).find('form').append($(FormControls.CreateFestivityRow()));
-                            }
-                        }
-                        $row = $('#carouselItemFeasts form .form-row').eq(litevent.formRowNum);
-                        break;
-                    case RANK.MEMORIAL:
-                        numLastRow = $('#carouselItemMemorials form .form-row').length - 1;
-                        if (litevent.formRowNum > numLastRow) {
-                            numMissingRows = litevent.formRowNum - numLastRow;
-                            FormControls.title = messages['Other Memorial'];
-                            while (numMissingRows-- > 0) {
-                                $('.carousel-item').eq(2).find('form').append($(FormControls.CreateFestivityRow()));
-                            }
-                        }
-                        $row = $('#carouselItemMemorials form .form-row').eq(litevent.formRowNum);
-                        break;
-                    case RANK.OPTIONALMEMORIAL:
-                        numLastRow = $('#carouselItemOptionalMemorials form .form-row').length - 1;
-                        if (litevent.formRowNum > numLastRow) {
-                            numMissingRows = litevent.formRowNum - numLastRow;
-                            FormControls.title = messages['Other Optional Memorial'];
-                            while (numMissingRows-- > 0) {
-                                $('.carousel-item').eq(3).find('form').append($(FormControls.CreateFestivityRow()));
-                            }
-                        }
-                        $row = $('#carouselItemOptionalMemorials form .form-row').eq(litevent.formRowNum);
-                        break;
-                }
-                $row.find('.litEventName').val(litevent.name).attr('data-valuewas', litevent.name.replace(/[^a-zA-Z]/gi, ''));
-                $row.find('.litEventDay').val(litevent.day);
-                $row.find('.litEventMonth').val(litevent.month);
-                setCommonMultiselect( $row, litevent.common );
-                $row.find('.litEventColor').multiselect({ buttonWidth: '100%' }).multiselect('deselectAll', false).multiselect('select', litevent.color);
-                $row.find('.litEventFromYear').val(litevent.sinceYear);
-            };
-            setFocusFirstTabWithData();
-        },
-        error: (xhr, textStatus, errorThrown) => {
-            if( xhr.status !== 404 ) { //we have already handled 404 Not Found above
-                toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown, "Error");
-            }
-        }
-    });
-});
 
 $(document).on('click', '#removeExistingDiocesanData', evt => {
     evt.preventDefault();
@@ -1148,15 +1158,14 @@ $(document).on('change', '#diocesanCalendarDioceseName', ev => {
         $key = $('#DiocesesList').find('option[value="' + $(ev.currentTarget).val() + '"]').attr('data-value').toUpperCase();
         //console.log('selected diocese with key = ' + $key);
         if ($index.DiocesanCalendars.hasOwnProperty($key)) {
-            $('#retrieveExistingDiocesanData').prop('disabled', false);
             $('#removeExistingDiocesanData').prop('disabled', false);
             $('body').append(removeDiocesanCalendarModal($(ev.currentTarget).val()));
             if($index.DiocesanCalendars[$key].hasOwnProperty('group')){
                 $('#diocesanCalendarGroup').val($index.DiocesanCalendars[$key].group);
             }
+            loadDiocesanCalendarData();
             //console.log('we have an existing entry for this diocese!');
         } else {
-            $('#retrieveExistingDiocesanData').prop('disabled', true);
             $('#removeExistingDiocesanData').prop('disabled', true);
             $('body').find('#removeDiocesanCalendarPrompt').remove();
             //console.log('no existing entry for this diocese');

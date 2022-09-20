@@ -43,6 +43,7 @@ if($isStaging) {
             <option value="api/dev/data/propriumdesanctis_ITALY_1983/propriumdesanctis_ITALY_1983.json">propriumdesanctis_ITALY_1983.json</option>
             <option value="api/dev/data/propriumdesanctis_USA_2011/propriumdesanctis_USA_2011.json">propriumdesanctis_USA_2011.json</option>
             <option value="api/dev/data/propriumdetempore.json">propriumdetempore.json</option>
+            <option value="api/dev/data/memorialsFromDecrees/memorialsFromDecrees.json">memorialsFromDecrees.json</option>
         </select>
     </div>
     <div class="row m-2 justify-content-end">
@@ -67,7 +68,7 @@ if($isStaging) {
                     foreach( $JSON as $row ) {
                         echo "<tr>";
                         foreach( $row as $value ) {
-                            if( is_array( $value ) ) {
+                            if( is_array( $value ) && is_string( array_keys( $value )[0] ) ) {
                                 echo "<td contenteditable='false'>";
                                 echo "<table><tbody>";
                                 foreach( $value as $title => $val ) {
@@ -82,7 +83,11 @@ if($isStaging) {
                                 }
                                 echo "</tbody></table>";
                                 echo "</td>";
-                            } else {
+                            }
+                            else if( is_array( $value ) ) {
+                                echo "<td contenteditable='false'>" . implode(",", $value) . "</td>";
+                            }
+                            else {
                                 echo "<td contenteditable='false'>$value</td>";
                             }
                         }

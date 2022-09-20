@@ -36,9 +36,7 @@ $(document).ready(() => {
 $(document).on('change', '#jsonFileSelect', () => {
     let jsonFile = $('#jsonFileSelect').val();
     if( isStaging ) {
-        console.log('we cannot actually manage the JSON files in the staging environment, because of CORS issues');
-        jsonFile = 'https://litcal.johnromanodorazio.com/' + jsonFile;
-        return false;
+        jsonFile = 'includes/readJSONFile.php?filename=https://litcal.johnromanodorazio.com/' + jsonFile;
     } else {
         jsonFile = './' + jsonFile;
     }
@@ -47,57 +45,70 @@ $(document).on('change', '#jsonFileSelect', () => {
         const $theadRow = $('#jsonDataTbl thead tr');
         $('#jsonDataTbl tbody').empty();
         $theadRow.empty();
-        if( Array.isArray(data) ) {
-            $('#jsonDataTbl').removeClass('propriumDeTempore');
-            let n;
-            if( jsonFile.includes('USA') || jsonFile.includes('ITALY') ) {
-                $('#jsonDataTbl').addClass('nationalCalendar');
-                n = [10, 10, 14, 0, 5, 0, 25, 0, 6, 30];
-            } else {
-                $('#jsonDataTbl').removeClass('nationalCalendar');
-                n = [10, 10, 14, 5, 25, 0, 6, 30];
-            }
-            const keys = Object.keys( data[0] );
-            keys.forEach((el,i) => {
-                $theadRow.append(`<th class="sticky-top" style="width: ${n[i]}%;" scope="col">${el}</th>`);
-            });
-            let tbodyHtmlStrr = '';
-            data.forEach(row => {
-                //let $tr = $('<tr>');
-                let trHtmlStr = '<tr>';
-                keys.forEach(prop => {
-                    if( typeof row[prop] === 'object' ){
-                        let htmlStr = '<table><tbody>';
-                        Object.keys( row[prop] ).forEach(title => {
-                            let val = row[prop][title];
-                            if( typeof val === 'object' ) {
-                                htmlStr += `<tr><td colspan="2" style="text-align:center;font-weight:bold;border:0;background-color:lightgray;">${title}</td></tr>`;
-                                Object.keys( val ).forEach(title2 => {
-                                    let val2 = val[title2];
-                                    htmlStr += `<tr><td>${title2}</td><td contenteditable="false">${val2}</td></tr>`;
-                                })
-                            } else {
-                                htmlStr += `<tr><td>${title}</td><td contenteditable="false">${val}</td></tr>`;
-                            }
-                        });
-                        htmlStr += '</tbody></table>';
-                        trHtmlStr += `<td contenteditable="false">${htmlStr}</td>`;
-                    } else {
-                        trHtmlStr += `<td contenteditable="false">${row[prop]}</td>`;
-                    }
-                });
-                trHtmlStr += '</tr>';
-                tbodyHtmlStrr += trHtmlStr;
-            });
-            $('#jsonDataTbl tbody').append(tbodyHtmlStrr);
+
+        if(/memorialsFromDecrees\.json$/.test(jsonFile)) {
+            //TODO: build interface to display and define memorialsFromDecrees.json data
         } else {
-            createPropriumDeTemporeTable( data );
+            if( Array.isArray(data) ) {
+                $('#jsonDataTbl').removeClass('propriumDeTempore');
+                let n;
+                if( jsonFile.includes('USA') || jsonFile.includes('ITALY') ) {
+                    $('#jsonDataTbl').addClass('nationalCalendar');
+                    n = [10, 10, 14, 0, 5, 0, 25, 0, 6, 30];
+                } else {
+                    $('#jsonDataTbl').removeClass('nationalCalendar');
+                    n = [10, 10, 14, 5, 25, 0, 6, 30];
+                }
+                const keys = Object.keys( data[0] );
+                keys.forEach((el,i) => {
+                    $theadRow.append(`<th class="sticky-top" style="width: ${n[i]}%;" scope="col">${el}</th>`);
+                });
+                let tbodyHtmlStrr = '';
+                data.forEach(row => {
+                    //let $tr = $('<tr>');
+                    let trHtmlStr = '<tr>';
+                    keys.forEach(prop => {
+                        if( Array.isArray( row[prop] ) ) {
+                            console.log(`we have an array in key ${prop}:`);
+                            console.log( row[prop] );
+                            trHtmlStr += `<td contenteditable="false">${row[prop].join(',')}</td>`;
+                        }
+                        else if( typeof row[prop] === 'object' ) {
+                            console.log(`we have an object in key ${prop}:`);
+                            console.log( row[prop] );
+                            let htmlStr = '<table><tbody>';
+                            Object.keys( row[prop] ).forEach(title => {
+                                let val = row[prop][title];
+                                if( typeof val === 'object' ) {
+                                    htmlStr += `<tr><td colspan="2" style="text-align:center;font-weight:bold;border:0;background-color:lightgray;">${title}</td></tr>`;
+                                    Object.keys( val ).forEach(title2 => {
+                                        let val2 = val[title2];
+                                        htmlStr += `<tr><td>${title2}</td><td contenteditable="false">${val2}</td></tr>`;
+                                    })
+                                } else {
+                                    htmlStr += `<tr><td>${title}</td><td contenteditable="false">${val}</td></tr>`;
+                                }
+                            });
+                            htmlStr += '</tbody></table>';
+                            trHtmlStr += `<td contenteditable="false">${htmlStr}</td>`;
+                        } else {
+                            trHtmlStr += `<td contenteditable="false">${row[prop]}</td>`;
+                        }
+                    });
+                    trHtmlStr += '</tr>';
+                    tbodyHtmlStrr += trHtmlStr;
+                });
+                $('#jsonDataTbl tbody').append(tbodyHtmlStrr);
+            } else {
+                createPropriumDeTemporeTable( data );
+            }
         }
+
     });
 });
 
 //$(document).on('dblclick', '#jsonDataTbl th,#jsonDataTbl td', ev => {
-    $(document).on('dblclick', '#jsonDataTbl table tr td:nth-child(2)', ev => {
+$(document).on('dblclick', '#jsonDataTbl table tr td:nth-child(2)', ev => {
     $(ev.currentTarget).attr('contenteditable',true).addClass('bg-white').focus();
 });
 
