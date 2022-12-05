@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-05 05:16+0000\n"
-"PO-Revision-Date: 2022-05-21 10:16+0000\n"
+"PO-Revision-Date: 2022-12-06 06:17+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
@@ -406,11 +406,16 @@ msgid ""
 "The first step in creating a National calendar, is to translate the already "
 "existing calendar data into the language for that nation."
 msgstr ""
+"Il primo passo nella creazione di un calendario Nazionale, è quello di "
+"tradurre i dati di calendario già esistenti nella lingua propria del "
+"calendario nazionale."
 
 #: extending.php:32
 #, php-format
 msgid "This can be done on the <a href=\"%1$s\">LitCal translation server</a>."
 msgstr ""
+"Per fare ciò si utilizzi il <a href=\"%1$s\">server delle traduzioni per il "
+"progetto LitCal</a>."
 
 #: extending.php:36
 #, php-format
@@ -421,6 +426,10 @@ msgid ""
 "href=\"%4$s\">Proprium de Tempore</a>, and 5. <a href=\"%5$s\">Memorials "
 "from Decrees</a>."
 msgstr ""
+"Specificamente, i componenti che dovranno essere tradotti sono: 1. <a href=\""
+"%1$s\">Proprium de Sanctis 1970</a>, 2. <a href=\"%2$s\">Proprium de Sanctis "
+"2002</a>, 3. <a href=\"%3$s\">Proprium de Sanctis 2008</a>, 4. <a href=\"%4$"
+"s\">Proprium de Tempore</a>, e 5. <a href=\"%5$s\">Memorie dai Decreti</a>."
 
 #: extending.php:43
 msgid ""
@@ -1097,7 +1106,7 @@ msgstr "Per le sante"
 #: includes/LitCommon.php:170 includes/LitCommon.php:182
 msgctxt "(SING_FEMM)"
 msgid "of the"
-msgstr ""
+msgstr "della"
 
 #. translators: (plural feminine) glue between "From the Common" and the actual common. Latin: leave empty!
 #: includes/LitCommon.php:173
@@ -1115,7 +1124,7 @@ msgstr "dei"
 #: includes/LitCommon.php:185
 msgctxt "(SING_MASC)"
 msgid "of the"
-msgstr ""
+msgstr "del"
 
 #: includes/LitCommon.php:266
 msgid "From the Common"
