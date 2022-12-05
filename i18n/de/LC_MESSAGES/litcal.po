@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-05 05:16+0000\n"
-"PO-Revision-Date: 2022-06-06 14:16+0000\n"
+"PO-Revision-Date: 2022-12-06 06:17+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -1077,7 +1077,7 @@ msgstr "Optionale Gedenkstät"
 
 #: includes/LitGrade.php:107
 msgid "Memorial"
-msgstr "Gedenkstät"
+msgstr "Gedenktag"
 
 #: includes/LitGrade.php:110
 msgid "FEAST"
