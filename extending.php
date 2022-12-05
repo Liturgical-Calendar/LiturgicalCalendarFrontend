@@ -287,7 +287,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                                         <label><?php echo _( 'LOCALE' ) ?></label>
                                         <select class="form-control" id="nationalCalendarSettingLocale">
                                             <?php
-                                                foreach( $AvailableLocales as $AvlLOCALE => $AvlLANGUAGE ) {
+                                                foreach( $AllAvailableLocales as $AvlLOCALE => $AvlLANGUAGE ) {
                                                     echo "<option value=\"{$AvlLOCALE}\"" . ($i18n->LOCALE === $AvlLOCALE ? ' selected' : '') . ">{$AvlLANGUAGE}</option>";
                                                 }
                                             ?>

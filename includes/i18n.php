@@ -19,18 +19,19 @@ class i18n {
         else {
             $this->LOCALE = "en";
         }
-        //we only need the two letter ISO code, not the national extension
+        //we only need the two letter ISO code, not the national extension, when setting the text domain...
+        $LOCALE = $this->LOCALE;
         if( strpos( $this->LOCALE, "_" ) ) {
-            $this->LOCALE = explode( "_", $this->LOCALE )[0];
+            $LOCALE = explode( "_", $this->LOCALE )[0];
         } else if ( strpos( $this->LOCALE, "-" ) ) {
-            $this->LOCALE = explode( "-", $this->LOCALE )[0];
+            $LOCALE = explode( "-", $this->LOCALE )[0];
         }
 
         $localeArray = [
-            strtolower( $this->LOCALE ) . '_' . strtoupper( $this->LOCALE ) . '.utf8',
-            strtolower( $this->LOCALE ) . '_' . strtoupper( $this->LOCALE ) . '.UTF-8',
-            strtolower( $this->LOCALE ) . '_' . strtoupper( $this->LOCALE ),
-            strtolower( $this->LOCALE )
+            strtolower( $LOCALE ) . '_' . strtoupper( $LOCALE ) . '.utf8',
+            strtolower( $LOCALE ) . '_' . strtoupper( $LOCALE ) . '.UTF-8',
+            strtolower( $LOCALE ) . '_' . strtoupper( $LOCALE ),
+            strtolower( $LOCALE )
         ];
         setlocale( LC_ALL, $localeArray );
         bindtextdomain("litcal", "i18n");

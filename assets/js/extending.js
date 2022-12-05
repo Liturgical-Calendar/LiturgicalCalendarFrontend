@@ -1052,7 +1052,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                     $('#nationalCalendarSettingEpiphany').val( Settings.Epiphany );
                     $('#nationalCalendarSettingAscension').val( Settings.Ascension );
                     $('#nationalCalendarSettingCorpusChristi').val( Settings.CorpusChristi );
-                    $('#nationalCalendarSettingLocale').val( Settings.Locale.toLowerCase() );
+                    $('#nationalCalendarSettingLocale').val( Settings.Locale );
                     $('#publishedRomanMissalList').empty().append( '<li class="list-group-item">' + Metadata.Missals.join('</li><li class="list-group-item">') + '</li>' );
                     $('#associatedWiderRegion').val( Metadata.WiderRegion.name );
             }
@@ -1253,14 +1253,14 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
                     "Epiphany": $('#nationalCalendarSettingEpiphany').val(),
                     "Ascension": $('#nationalCalendarSettingAscension').val(),
                     "CorpusChristi": $('#nationalCalendarSettingCorpusChristi').val(),
-                    "Locale": lcl.toUpperCase()
+                    "Locale": lcl
                 },
                 "Metadata": {
                     "Region": regionNamesLocalized.of( messages.countryISOCodes[$('.regionalNationalCalendarName').val().toUpperCase()] ).toUpperCase().replace(/[.]/g,'_'),
                     "WiderRegion": {
                         "name": widerRegion,
                         "jsonFile": `nations/${widerRegion}.json`,
-                        "i18nFile": `nations/${widerRegion.toUpperCase()}/${lcl.toLowerCase()}.json`
+                        "i18nFile": `nations/${widerRegion.toUpperCase()}/${lcl}.json`
                     },
                     "Missals": $.map( $('#publishedRomanMissalList li'), el => { return $(el).text() })
                 }
