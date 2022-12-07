@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-05 05:16+0000\n"
-"PO-Revision-Date: 2022-12-06 06:17+0000\n"
+"PO-Revision-Date: 2022-12-08 15:23+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -1073,7 +1073,7 @@ msgstr ""
 
 #: includes/LitGrade.php:104
 msgid "Optional memorial"
-msgstr "Optionale Gedenkstät"
+msgstr "Nichtgebotener Gedenktag"
 
 #: includes/LitGrade.php:107
 msgid "Memorial"
@@ -1089,7 +1089,7 @@ msgstr "FEST DES HERRN"
 
 #: includes/LitGrade.php:116
 msgid "SOLEMNITY"
-msgstr "FESTLICHKEIT"
+msgstr "HOCHFEST"
 
 #: includes/LitGrade.php:119
 msgid "celebration with precedence over solemnities"
