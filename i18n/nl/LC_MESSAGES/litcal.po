@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-05 05:16+0000\n"
+"POT-Creation-Date: 2022-12-08 15:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -765,7 +765,9 @@ msgid "Full stack web developer"
 msgstr ""
 
 #: about.php:31
-msgid "ANOTHERVOLUNTEER"
+msgid ""
+"Latin Liturgy Association of the Netherlands, contributed the national "
+"calendar for the Netherlands to this project with all related translations"
 msgstr ""
 
 #: about.php:60
