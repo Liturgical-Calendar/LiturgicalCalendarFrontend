@@ -45,10 +45,12 @@
     "or": "",
     "weekday": "",
     "Commemoration": "",
-    "Optional-memorial": "",
-    "Memorial": "",
+    "Optional-memorial": "Nichtgebotener Gedenktag",
+    "Memorial": "Gedenktag",
     "FEAST": "",
     "FEAST-OF-THE-LORD": "",
     "SOLEMNITY": "Festlichkeit",
-    "of_(SING_FEMM)": ""
+    "of_(SING_FEMM)": "",
+    "MEMORIAL": "Gedenktag",
+    "OPTIONAL-MEMORIAL": "Nichtgebotener Gedenktag"
 }
