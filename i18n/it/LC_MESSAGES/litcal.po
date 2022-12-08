@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-08 15:23+0000\n"
-"PO-Revision-Date: 2022-12-06 06:17+0000\n"
+"PO-Revision-Date: 2022-12-08 21:23+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
@@ -451,19 +451,14 @@ msgstr ""
 "della Regione più ampia dovrebbe essere applicata al Calendario Nazionale."
 
 #: extending.php:45
-#, fuzzy
-#| msgid ""
-#| "National calendars must be defined using data from the translation of the "
-#| "Roman Missal used in the Region or in any case from decrees of the "
-#| "Episcopal Conference of the Region."
 msgid ""
 "National calendars and their relative translations must be defined using "
 "data from the translation of the Roman Missal used in the Region or in any "
 "case from decrees of the Episcopal Conference of the Region."
 msgstr ""
-"I calendari nazionali devono essere definiti utilizzando i dati della "
-"traduzione del Messale Romano utilizzata nella Regione o comunque da decreti "
-"della Conferenza Episcopale della Regione."
+"I calendari nazionali e le relative traduzioni devono essere definiti "
+"utilizzando i dati della traduzione del Messale Romano utilizzata nella "
+"Regione o comunque da decreti della Conferenza Episcopale della Regione."
 
 #: extending.php:46
 msgid ""
@@ -813,22 +808,16 @@ msgid "Cancel"
 msgstr "Annulla"
 
 #: extending.php:572
-#, fuzzy
-#| msgid "Move festivity"
 msgid "Move Festivity"
 msgstr "Sposta festività"
 
 #: extending.php:588
-#, fuzzy
-#| msgid "New festivity"
 msgid "New Festivity from existing"
-msgstr "Nuova festività"
+msgstr "Nuova festività da esistente"
 
 #: extending.php:589
-#, fuzzy
-#| msgid "New festivity"
 msgid "New Festivity ex novo"
-msgstr "Nuova festività"
+msgstr "Nuova festività ex novo"
 
 #: extending.php:606
 msgid "Choose from known Roman Missal language editions"
@@ -907,6 +896,9 @@ msgid ""
 "Latin Liturgy Association of the Netherlands, contributed the national "
 "calendar for the Netherlands to this project with all related translations"
 msgstr ""
+"Associazione per il Latino nella Liturgia nei Paesi Bassi, ha contribuito a "
+"questo progetto con il calendario nazionale per i Paesi Bassi con tutte le "
+"relative traduzioni"
 
 #: about.php:60
 msgid ""
