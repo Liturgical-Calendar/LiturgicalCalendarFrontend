@@ -1392,12 +1392,19 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
 
 });
 
+Object.filter = (obj, predicate) => 
+    Object.keys(obj)
+      .filter( key => predicate(obj[key]) )
+      .reduce( (res, key) => (res[key] = obj[key], res), {} );
+
+
 $(document).on('change', '#diocesanCalendarNationalDependency', ev => {
     $('#diocesanCalendarDioceseName').val('');
-    $('#retrieveExistingDiocesanData').prop('disabled', true);
+    //$('#retrieveExistingDiocesanData').prop('disabled', true);
     $('#removeExistingDiocesanData').prop('disabled', true);
     $('body').find('#removeDiocesanCalendarPrompt').remove();
-    switch ($(ev.currentTarget).val()) {
+    let currentSelectedNation = $(ev.currentTarget).val();
+    switch (currentSelectedNation) {
         case "ITALY":
             $('#DiocesesList').empty();
             ITALYDiocesesArr.forEach(diocese => $('#DiocesesList').append('<option data-value="' + diocese.replace(/[^a-zA-Z]/gi, '').toUpperCase() + '" value="' + diocese + '">'));
@@ -1408,6 +1415,9 @@ $(document).on('change', '#diocesanCalendarNationalDependency', ev => {
             break;
         default:
             $('#DiocesesList').empty();
+            let dioceses = Object.filter( $index.DiocesanCalendars, key => key.nation === currentSelectedNation );
+            console.log(dioceses);
+            Object.values( dioceses ).forEach( el => $('#DiocesesList').append('<option data-value="' + el.diocese.replace(/[^a-zA-Z]/gi, '').toUpperCase() + '" value="' + el.diocese + '">') )
     }
 });
 
