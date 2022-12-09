@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-08 15:23+0000\n"
+"POT-Creation-Date: 2022-12-09 23:00+0000\n"
 "PO-Revision-Date: 2022-12-08 21:23+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
@@ -59,8 +59,8 @@ msgid ""
 msgstr ""
 "Als een nationale of diocesane kalender wordt aangevraagd, zullen deze "
 "kalenders automatisch de specifieke opties instellen in de API-aanvraag. Als "
-"in plaats daarvan geen nationale of diocesane kalender wordt aangevraagd ("
-"d.w.z. de universele kalender wordt aangevraagd), dan kunnen de meer "
+"in plaats daarvan geen nationale of diocesane kalender wordt aangevraagd (d."
+"w.z. de universele kalender wordt aangevraagd), dan kunnen de meer "
 "specifieke opties worden aangevraagd:"
 
 #: index.php:68
@@ -246,8 +246,8 @@ msgid ""
 "Go to <i><b>Phone Settings → Accounts → Add account → Other → Add Calendar</"
 "b></i>."
 msgstr ""
-"Ga naar <i><b>Telefooninstellingen → Accounts → Account toevoegen → Overige →"
-" Kalender toevoegen</b></i>."
+"Ga naar <i><b>Telefooninstellingen → Accounts → Account toevoegen → Overige "
+"→ Kalender toevoegen</b></i>."
 
 #: usage.php:128
 msgid ""
@@ -255,8 +255,8 @@ msgid ""
 "<i><b>Phone Settings → Accounts → Fetch New Data → Fetch</b></i>."
 msgstr ""
 "De iPhone Kalender-app peilt de kalender-URL op basis van de instellingen in "
-"<i><b>Telefooninstellingen → Accounts → Nieuwe gegevens ophalen → "
-"Ophalen</b></i>."
+"<i><b>Telefooninstellingen → Accounts → Nieuwe gegevens ophalen → Ophalen</"
+"b></i>."
 
 #: usage.php:135
 #, php-format
@@ -416,10 +416,10 @@ msgid ""
 "href=\"%4$s\">Proprium de Tempore</a>, and 5. <a href=\"%5$s\">Memorials "
 "from Decrees</a>."
 msgstr ""
-"Specifiek zijn de componenten die vertaling vereisen: 1. <a href=\"%1$s\""
-">Proprium de Sanctis 1970</a>, 2. <a href=\"%2$s\">Proprium de Sanctis 2002</"
-"a>, 3. <a href=\"%3$s\">Proprium de Sanctis 2008</a>, 4. <a href=\"%4$s\""
-">Proprium de Tempore</a>, en 5. <a href=\"%5$s\">Gedenktekens uit "
+"Specifiek zijn de componenten die vertaling vereisen: 1. <a href=\"%1$s"
+"\">Proprium de Sanctis 1970</a>, 2. <a href=\"%2$s\">Proprium de Sanctis "
+"2002</a>, 3. <a href=\"%3$s\">Proprium de Sanctis 2008</a>, 4. <a href=\"%4$s"
+"\">Proprium de Tempore</a>, en 5. <a href=\"%5$s\">Gedenktekens uit "
 "decreten</a>."
 
 #: extending.php:43
@@ -703,8 +703,14 @@ msgid "Diocese"
 msgstr "Bisdom"
 
 #: extending.php:343
+#, fuzzy
+#| msgid ""
+#| "This diocese does not seem to exist? Please choose from a value in the "
+#| "list."
 msgid ""
-"This diocese does not seem to exist? Please choose from a value in the list."
+"This diocese does not seem to exist? Please choose from a value in the list "
+"to retrieve an existing diocese, or ignore if creating a new diocesan "
+"calendar."
 msgstr "Dit bisdom lijkt niet te bestaan? Kies uit een waarde in de lijst."
 
 #: extending.php:350
