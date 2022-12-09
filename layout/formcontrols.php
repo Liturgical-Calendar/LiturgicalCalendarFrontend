@@ -123,7 +123,7 @@ class FormControls {
         "<option value=\"Pastors:For a Bishop\">" . $this->LitCommon->C("Pastors:For a Bishop") . "</option>" .
         "<option value=\"Pastors:For One Pastor\">" . $this->LitCommon->C("Pastors:For One Pastor") . "</option>" .
         "<option value=\"Pastors:For Several Pastors\">" . $this->LitCommon->C("Pastors:For Several Pastors") . "</option>" .
-        "<option value=\"Pastors:Missionaries\">" . $this->LitCommon->C("Pastors:For Missionaries") . "</option>" .
+        "<option value=\"Pastors:For Missionaries\">" . $this->LitCommon->C("Pastors:For Missionaries") . "</option>" .
         "<option value=\"Pastors:For Founders of a Church\">" . $this->LitCommon->C("Pastors:For Founders of a Church") . "</option>" .
         "<option value=\"Pastors:For Several Founders\">" . $this->LitCommon->C("Pastors:For Several Founders") . "</option>" .
         "<option value=\"Pastors:For One Founder\">" . $this->LitCommon->C("Pastors:For One Founder") . "</option>" .
