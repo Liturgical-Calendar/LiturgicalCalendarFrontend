@@ -340,7 +340,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                         <div class="form-group col col-md-3">
                             <label for="diocesanCalendarDioceseName" class="font-weight-bold"><?php echo _( "Diocese"); ?>:</label>
                             <input list="DiocesesList" class="form-control" id="diocesanCalendarDioceseName" required>
-                            <div class="invalid-feedback"><?php echo _( "This diocese does not seem to exist? Please choose from a value in the list."); ?></div>
+                            <div class="invalid-feedback"><?php echo _( "This diocese does not seem to exist? Please choose from a value in the list to retrieve an existing diocese, or ignore if creating a new diocesan calendar."); ?></div>
                             <datalist id="DiocesesList">
                                 <option value=""></option>
                             </datalist>
