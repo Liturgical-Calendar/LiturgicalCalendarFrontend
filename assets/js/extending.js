@@ -156,7 +156,7 @@ class FormControls {
         monthField: true,
         colorField: true,
         gradeField: false,
-        commonField: false,
+        commonField: true,
         gradeFieldShow: false,
         commonFieldShow: false,
         fromYearField: true,
