@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-09 23:00+0000\n"
-"PO-Revision-Date: 2022-12-08 15:23+0000\n"
+"PO-Revision-Date: 2022-12-10 09:38+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -739,10 +739,8 @@ msgstr ""
 "oder das Territorium gilt"
 
 #: extending.php:484
-#, fuzzy
-#| msgid "Depends on national calendar"
 msgid "Diocesan overrides to the national calendar for ..."
-msgstr "Abhängig vom nationalen Kalender"
+msgstr "Diözesananpassung in Bezug auf den nationalen Kalender für …"
 
 #: extending.php:516
 msgid "SAVE DIOCESAN CALENDAR"
