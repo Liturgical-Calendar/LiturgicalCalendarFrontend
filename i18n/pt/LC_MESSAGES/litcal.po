@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-09 23:00+0000\n"
-"PO-Revision-Date: 2022-06-02 20:16+0000\n"
+"PO-Revision-Date: 2022-12-10 09:38+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pt/>\n"
@@ -644,15 +644,14 @@ msgid "Diocese"
 msgstr "Diocese"
 
 #: extending.php:343
-#, fuzzy
-#| msgid ""
-#| "This diocese does not seem to exist? Please choose from a value in the "
-#| "list."
 msgid ""
 "This diocese does not seem to exist? Please choose from a value in the list "
 "to retrieve an existing diocese, or ignore if creating a new diocesan "
 "calendar."
-msgstr "Esta diocese parece não existir? Escolha um valor da lista."
+msgstr ""
+"Esta diocese parece não existir? Escolha um valor da lista para recuperar "
+"uma diocese existente ou ignorar se estiver criando um novo calendário "
+"diocesano.."
 
 #: extending.php:350
 msgid "Diocesan group"
@@ -723,10 +722,8 @@ msgstr ""
 "território"
 
 #: extending.php:484
-#, fuzzy
-#| msgid "Depends on national calendar"
 msgid "Diocesan overrides to the national calendar for ..."
-msgstr "Depende do calendário nacional"
+msgstr "Personalização diocesana em relação ao calendário nacional para …"
 
 #: extending.php:516
 msgid "SAVE DIOCESAN CALENDAR"
