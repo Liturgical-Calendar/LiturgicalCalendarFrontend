@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-08 15:23+0000\n"
-"PO-Revision-Date: 2022-12-07 07:17+0000\n"
+"POT-Creation-Date: 2022-12-09 23:00+0000\n"
+"PO-Revision-Date: 2022-12-10 09:38+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
@@ -538,16 +538,12 @@ msgid "Choose from existing festivities"
 msgstr ""
 
 #: extending.php:133
-#, fuzzy
-#| msgid ""
-#| "This diocese does not seem to exist? Please choose from a value in the "
-#| "list."
 msgid ""
 "This festivity does not seem to exist? Please choose from a value in the "
 "list."
 msgstr ""
-"Ce diocèse ne semble pas exister? Veuillez choisir parmi une valeur dans la "
-"liste."
+"Cette festivité ne semble pas exister ? Veuillez choisir parmi une valeur "
+"dans la liste."
 
 #: extending.php:137
 msgid "Property to change"
@@ -657,10 +653,13 @@ msgstr "Diocèse"
 
 #: extending.php:343
 msgid ""
-"This diocese does not seem to exist? Please choose from a value in the list."
+"This diocese does not seem to exist? Please choose from a value in the list "
+"to retrieve an existing diocese, or ignore if creating a new diocesan "
+"calendar."
 msgstr ""
-"Ce diocèse ne semble pas exister? Veuillez choisir parmi une valeur dans la "
-"liste."
+"Ce diocèse ne semble pas exister ? Veuillez choisir parmi une valeur dans la "
+"liste pour récupérer un diocèse existant, ou ignorer si créer un nouveau "
+"calendrier diocésain."
 
 #: extending.php:350
 msgid "Diocesan group"
@@ -734,10 +733,8 @@ msgstr ""
 "province ou au territoire"
 
 #: extending.php:484
-#, fuzzy
-#| msgid "Depends on national calendar"
 msgid "Diocesan overrides to the national calendar for ..."
-msgstr "Dépend du calendrier national"
+msgstr "Personnalisation diocésaine par rapport au calendrier national pour …"
 
 #: extending.php:516
 msgid "SAVE DIOCESAN CALENDAR"
