@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-11 22:34+0000\n"
-"PO-Revision-Date: 2022-12-11 21:42+0000\n"
+"PO-Revision-Date: 2022-12-11 22:39+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
@@ -1175,16 +1175,12 @@ msgid "Extending the API"
 msgstr "Estendi l'API"
 
 #: layout/header.php:61
-#, fuzzy
-#| msgid "Commemoration"
 msgid "Documentation"
-msgstr "Commemorazione"
+msgstr "Documentazione"
 
 #: layout/header.php:73
-#, fuzzy
-#| msgid "Examples"
 msgid "Examples of Usage"
-msgstr "Esempi"
+msgstr "Esempi di Utilizzo"
 
 #: layout/header.php:140
 msgid "Usage"
