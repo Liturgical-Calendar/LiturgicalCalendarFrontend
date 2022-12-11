@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-11 22:34+0000\n"
-"PO-Revision-Date: 2022-12-11 21:42+0000\n"
+"PO-Revision-Date: 2022-12-11 22:39+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -1157,31 +1157,27 @@ msgstr "viering met voorrang op hoogfesten"
 
 #: layout/header.php:35
 msgid "Home"
-msgstr ""
+msgstr "Startpagina"
 
 #: layout/header.php:54 layout/header.php:132
 msgid "Extending the API"
-msgstr ""
+msgstr "Uitbreiding van de API"
 
 #: layout/header.php:61
-#, fuzzy
-#| msgid "Commemoration"
 msgid "Documentation"
-msgstr "Vrije gedachtenis"
+msgstr "Documentatie"
 
 #: layout/header.php:73
-#, fuzzy
-#| msgid "Examples"
 msgid "Examples of Usage"
-msgstr "Voorbeelden"
+msgstr "Voorbeelden van gebruik"
 
 #: layout/header.php:140
 msgid "Usage"
-msgstr ""
+msgstr "Gebruik"
 
 #: layout/header.php:141
 msgid "About us"
-msgstr ""
+msgstr "Over ons"
 
 #: layout/formcontrols.php:107
 msgid "Common (or Proper)"
