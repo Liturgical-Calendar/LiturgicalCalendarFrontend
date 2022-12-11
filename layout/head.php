@@ -29,7 +29,7 @@
     if($pageName === "index"){
         echo '<link href="assets/css/homepage.css">';
     }
-    if( $pageName === 'extending' ) {
+    if( $pageName === 'extending' || $pageName === 'admin' ) {
         echo '<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.1/css/bootstrap-multiselect.min.css" rel="stylesheet">';
         echo '<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">';
     }

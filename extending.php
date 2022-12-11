@@ -481,7 +481,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                 </div>
 
                 <div id="diocesanOverridesContainer" class="container">
-                    <h3 id="diocesanOverridesTitle" class="text-center"><?php echo _("Diocesan overrides to the national calendar for ...") ?></h3>
+                    <h3 id="diocesanOverridesTitle" class="text-center"><?php echo _("Diocesan overrides to the national calendar for …") ?></h3>
                     <form id="diocesanOverridesForm" class="row justify-content-center needs-validation" novalidate>
                         <div class="form-group col col-md-3">
                             <label><?php echo _( 'EPIPHANY' ) ?></label>
