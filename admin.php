@@ -166,9 +166,9 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
             </tbody>
         </table>
     </div>
+    <?php echo $buttonGroup; ?>
     <form class="needs-validation" id="memorialsFromDecreesForm" novalidate>
     </form>
-    <?php echo $buttonGroup; ?>
 
     <!-- DEFINE SET PROPERTY MODAL  -->
     <div class="modal fade actionPromptModal" id="setPropertyActionPrompt" tabindex="-1" role="dialog" aria-labelledby="setPropertyActionModalLabel" aria-hidden="true">
