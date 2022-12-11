@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-11 11:18+0000\n"
-"PO-Revision-Date: 2022-12-10 09:38+0000\n"
+"PO-Revision-Date: 2022-12-11 21:39+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -785,10 +785,8 @@ msgstr ""
 "provincie of het territorium"
 
 #: extending.php:484
-#, fuzzy
-#| msgid "Diocesan overrides to the national calendar for ..."
 msgid "Diocesan overrides to the national calendar for …"
-msgstr "Diocesane overschrijft de nationale kalender voor ..."
+msgstr "Diocesane overschrijft de nationale kalender voor …"
 
 #: extending.php:516
 msgid "SAVE DIOCESAN CALENDAR"
