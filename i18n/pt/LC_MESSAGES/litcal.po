@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-09 23:00+0000\n"
+"POT-Creation-Date: 2022-12-11 11:18+0000\n"
 "PO-Revision-Date: 2022-12-10 09:38+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
@@ -722,7 +722,9 @@ msgstr ""
 "território"
 
 #: extending.php:484
-msgid "Diocesan overrides to the national calendar for ..."
+#, fuzzy
+#| msgid "Diocesan overrides to the national calendar for ..."
+msgid "Diocesan overrides to the national calendar for …"
 msgstr "Personalização diocesana em relação ao calendário nacional para …"
 
 #: extending.php:516
