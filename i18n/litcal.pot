@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-11 21:39+0000\n"
+"POT-Creation-Date: 2022-12-11 22:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,7 +29,7 @@ msgstr ""
 msgid "General Roman Calendar"
 msgstr ""
 
-#: index.php:27
+#: index.php:27 layout/header.php:22
 msgid "Catholic Liturgical Calendar"
 msgstr ""
 
@@ -108,7 +108,7 @@ msgstr ""
 msgid "EXAMPLE USAGE OF THE API"
 msgstr ""
 
-#: usage.php:34
+#: usage.php:34 layout/header.php:80
 msgid "Web calendar"
 msgstr ""
 
@@ -145,7 +145,7 @@ msgstr ""
 msgid "View Full Calendar (messages first)"
 msgstr ""
 
-#: usage.php:83
+#: usage.php:83 layout/header.php:86
 msgid "Calendar subscription"
 msgstr ""
 
@@ -278,7 +278,7 @@ msgid ""
 "more \"beautified\" for Outlook."
 msgstr ""
 
-#: usage.php:173
+#: usage.php:173 layout/header.php:92
 msgid "Dates of Easter"
 msgstr ""
 
@@ -290,7 +290,7 @@ msgstr ""
 msgid "Calculate the Date of Easter"
 msgstr ""
 
-#: usage.php:197
+#: usage.php:197 layout/header.php:97
 msgid "Liturgy of the Day"
 msgstr ""
 
@@ -542,7 +542,7 @@ msgstr ""
 msgid "Remove existing data"
 msgstr ""
 
-#: extending.php:211
+#: extending.php:211 layout/header.php:135
 msgid "Create a Calendar for a Wider Region"
 msgstr ""
 
@@ -554,7 +554,7 @@ msgstr ""
 msgid "National Calendar"
 msgstr ""
 
-#: extending.php:255
+#: extending.php:255 layout/header.php:136
 msgid "Create a National Calendar"
 msgstr ""
 
@@ -634,6 +634,7 @@ msgid "Optional memorials"
 msgstr ""
 
 #: extending.php:392 extending.php:413 extending.php:434 extending.php:455
+#: layout/header.php:137
 msgid "Create a Diocesan Calendar"
 msgstr ""
 
@@ -1031,6 +1032,30 @@ msgstr ""
 
 #: includes/LitGrade.php:119
 msgid "celebration with precedence over solemnities"
+msgstr ""
+
+#: layout/header.php:35
+msgid "Home"
+msgstr ""
+
+#: layout/header.php:54 layout/header.php:132
+msgid "Extending the API"
+msgstr ""
+
+#: layout/header.php:61
+msgid "Documentation"
+msgstr ""
+
+#: layout/header.php:73
+msgid "Examples of Usage"
+msgstr ""
+
+#: layout/header.php:140
+msgid "Usage"
+msgstr ""
+
+#: layout/header.php:141
+msgid "About us"
 msgstr ""
 
 #: layout/formcontrols.php:107
