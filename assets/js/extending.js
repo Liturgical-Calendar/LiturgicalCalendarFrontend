@@ -91,6 +91,7 @@ class litEvent {
 }
 
 const { LOCALE } = messages;
+const jsLocale = LOCALE.replace('_', '-');
 
 const lowercaseKeys = obj =>
   Object.keys(obj).reduce((acc, key) => {
@@ -174,7 +175,7 @@ class FormControls {
         let formRow = '';
 
         if (FormControls.title !== null) {
-            formRow += `<div class="d-flex justify-content-left"><h4 class="data-group-title">${FormControls.title}</h4></div>`;
+            formRow += `<div class="d-flex justify-content-left data-group-title"><h4 class="data-group-title">${FormControls.title}</h4></div>`;
         }
 
         formRow += `<div class="form-row">`;
@@ -197,7 +198,7 @@ class FormControls {
             <label for="onTheFly${FormControls.uniqid}Month">${messages[ "Month" ]}</label>
             <select class="form-control litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month">`;
 
-            let formatter = new Intl.DateTimeFormat(LOCALE, { month: 'long' });
+            let formatter = new Intl.DateTimeFormat(jsLocale, { month: 'long' });
             for (let i = 0; i < 12; i++) {
                 let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
                 formRow += `<option value=${i + 1}>${formatter.format(month)}</option>`;
@@ -264,7 +265,7 @@ class FormControls {
         }
 
         if (FormControls.title !== null) {
-            formRow += `<div class="d-flex justify-content-left"><h4 class="data-group-title">${FormControls.title}</h4>`;
+            formRow += `<div class="d-flex justify-content-left data-group-title"><h4 class="data-group-title">${FormControls.title}</h4>`;
             if(FormControls.action.description === RowAction.CreateNew.description) {
                 if( festivity !== null && festivity.hasOwnProperty( 'strtotime' ) ) {
                     formRow += `<button type="button" class="ml-auto btn btn-info strtotime-toggle-btn active" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="true" autocomplete="off"><i class="fas fa-comment mr-2"></i>explicatory date</button>`;
@@ -326,7 +327,7 @@ class FormControls {
             <label for="onTheFly${FormControls.uniqid}Month">${messages[ "Month" ]}</label>
             <select class="form-control litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month"${FormControls.settings.monthField === false ?  'readonly' : '' } >`;
 
-            let formatter = new Intl.DateTimeFormat(LOCALE, { month: 'long' });
+            let formatter = new Intl.DateTimeFormat(jsLocale, { month: 'long' });
             for (let i = 0; i < 12; i++) {
                 let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
                 formRow += `<option value=${i + 1}${festivity !== null && festivity.month === i+1 ? ' selected' : '' }>${formatter.format(month)}</option>`;
@@ -691,7 +692,7 @@ $(document).on('click', '.strtotime-toggle-btn', ev => {
         let formRow = `<div class="form-group col-sm-1">
         <label for="onTheFly${uniqid}Month">${messages[ "Month" ]}</label>
         <select class="form-control litEvent litEventMonth" id="onTheFly${uniqid}Month" >`;
-        let formatter = new Intl.DateTimeFormat(LOCALE, { month: 'long' });
+        let formatter = new Intl.DateTimeFormat(jsLocale, { month: 'long' });
         for (let i = 0; i < 12; i++) {
             let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
             formRow += `<option value=${i + 1}>${formatter.format(month)}</option>`;
@@ -1146,7 +1147,7 @@ $(document).on('change', '#diocesanCalendarDioceseName', ev => {
     $('.carousel-item form').each((idx, el) => {
         el.reset();
         $(el).find('.form-row').slice(3).remove();
-        $(el).find('h4.data-group-title').slice(3).remove();
+        $(el).find('div.data-group-title').remove();
         $(el).find('.litEventCommon').multiselect('deselectAll', false).multiselect('select', 'Proper');
         $(el).find('.litEventColor').multiselect('deselectAll', false).multiselect('select', 'white');
         $(el).find('.litEventName').attr('data-valuewas', '');
