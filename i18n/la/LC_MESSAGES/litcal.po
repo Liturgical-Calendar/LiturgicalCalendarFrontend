@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-11 11:18+0000\n"
+"POT-Creation-Date: 2022-12-11 21:39+0000\n"
 "PO-Revision-Date: 2022-05-10 20:08+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
@@ -377,15 +377,15 @@ msgstr ""
 msgid "Tag"
 msgstr ""
 
-#: extending.php:82 extending.php:139
+#: extending.php:82 extending.php:139 layout/formcontrols.php:42
 msgid "Name"
 msgstr "Nomen"
 
-#: extending.php:83 liturgyOfAnyDay.php:67
+#: extending.php:83 liturgyOfAnyDay.php:67 layout/formcontrols.php:49
 msgid "Day"
 msgstr "Dies"
 
-#: extending.php:84 liturgyOfAnyDay.php:71
+#: extending.php:84 liturgyOfAnyDay.php:71 layout/formcontrols.php:55
 msgid "Month"
 msgstr "Mensis"
 
@@ -416,37 +416,37 @@ msgid ""
 "and no longer available in the client applications."
 msgstr ""
 
-#: extending.php:91
+#: extending.php:91 layout/formcontrols.php:76
 msgid "Liturgical color"
 msgstr "Color liturgicum"
 
 #. translators: context = liturgical color
-#: extending.php:92 includes/LitColor.php:29
+#: extending.php:92 includes/LitColor.php:29 layout/formcontrols.php:78
 msgid "white"
 msgstr "albus"
 
 #. translators: context = liturgical color
-#: extending.php:93 includes/LitColor.php:32
+#: extending.php:93 includes/LitColor.php:32 layout/formcontrols.php:79
 msgid "red"
 msgstr "ruber"
 
 #. translators: context = liturgical color
-#: extending.php:94 includes/LitColor.php:23
+#: extending.php:94 includes/LitColor.php:23 layout/formcontrols.php:81
 msgid "green"
 msgstr "viridis"
 
 #. translators: context = liturgical color
-#: extending.php:95 includes/LitColor.php:26
+#: extending.php:95 includes/LitColor.php:26 layout/formcontrols.php:80
 msgid "purple"
 msgstr "purpura"
 
 #. translators: in reference to the first year from which this festivity takes place
-#: extending.php:97
+#: extending.php:97 layout/formcontrols.php:88
 msgid "Since"
 msgstr "Ab anno"
 
 #. translators: in reference to the year from which this festivity no longer needs to be dealt with
-#: extending.php:99
+#: extending.php:99 layout/formcontrols.php:95
 msgid "Until"
 msgstr ""
 
@@ -516,7 +516,7 @@ msgstr ""
 msgid "Property to change"
 msgstr ""
 
-#: extending.php:140
+#: extending.php:140 layout/formcontrols.php:153
 msgid "Grade"
 msgstr ""
 
@@ -1035,5 +1035,6 @@ msgstr "SOLLEMNITAS"
 msgid "celebration with precedence over solemnities"
 msgstr "celebratio altioris ordinis quam sollemnitatis"
 
-#~ msgid "Common (or Proper)"
-#~ msgstr "Communis (vel Proprium)"
+#: layout/formcontrols.php:107
+msgid "Common (or Proper)"
+msgstr "Communis (vel Proprium)"
