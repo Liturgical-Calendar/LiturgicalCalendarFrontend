@@ -85,21 +85,24 @@ class FormControls {
                     festivity.day = FestivityCollection[festivity.tag].DAY;
                 }
             }
-            if( false === festivity.hasOwnProperty( 'day' ) ) {
+            if( false === festivity.hasOwnProperty( 'month' ) ) {
+                console.log( 'festivity does not have a month property, now trying to retrieve info...' );
                 if( FestivityCollection.hasOwnProperty(festivity.tag) && FestivityCollection[festivity.tag].hasOwnProperty( 'MONTH' ) ) {
-                    festivity.day = FestivityCollection[festivity.tag].MONTH;
+                    festivity.month = FestivityCollection[festivity.tag].MONTH;
+                } else {
+                    console.log( 'could not retrieve month info...' );
                 }
             }
             //console.log(festivity);
         }
 
         if (FormControls.title !== null) {
-            formRow += `<div class="d-flex justify-content-left"><h4 class="data-group-title">${FormControls.title}</h4>`;
+            formRow += `<hr><div class="d-flex justify-content-left"><h4 class="data-group-title">${FormControls.title}</h4>`;
             if(FormControls.action.description === RowAction.CreateNew.description) {
                 if( festivity !== null && festivity.hasOwnProperty( 'strtotime' ) ) {
                     formRow += `<button type="button" class="ml-auto btn btn-info strtotime-toggle-btn active" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="true" autocomplete="off"><i class="fas fa-comment mr-2"></i>explicatory date</button>`;
                 } else {
-                    formRow += `<button type="button" class="ml-auto btn btn-info strtotime-toggle-btn" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="false" autocomplete="off"><i class="fas fa-comment-slash mr-2"></i>explicatory date</button>`;
+                    formRow += `<button type="button" class="ml-auto btn btn-secondary strtotime-toggle-btn" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="false" autocomplete="off"><i class="fas fa-comment-slash mr-2"></i>explicatory date</button>`;
                 }
             }
             formRow += `</div>`;
@@ -142,8 +145,6 @@ class FormControls {
         </div>`;
 
         if( festivity !== null && festivity.hasOwnProperty( 'strtotime' ) ) {
-            let daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-            let weekdayFormatter = new Intl.DateTimeFormat(LOCALE, { weekday: "long" });
             formRow += `<div class="form-group col-sm-2">
             <label for="onTheFly${FormControls.uniqid}StrToTime">Explicatory date</label>
             <select class="form-control litEvent litEventStrtotime" id="onTheFly${FormControls.uniqid}StrToTime-dayOfTheWeek">`;
@@ -186,7 +187,7 @@ class FormControls {
         }
         
         if (FormControls.settings.gradeFieldShow) {
-            formRow +=  messages.gradeTemplate.formatUnicorn({uniqid:FormControls.uniqid,colWidth:1});
+            formRow +=  messages.gradeTemplate.formatUnicorn({uniqid:FormControls.uniqid,colWidth:2});
         }
 
         if (FormControls.settings.commonFieldShow) {
@@ -194,7 +195,7 @@ class FormControls {
         }
 
         if (FormControls.settings.readingsField) {
-            formRow += `<div class="col-sm-6"><table>`;
+            formRow += `<div class="col-sm-5"><table>`;
             formRow += READINGS_PROPERTIES.map((prop,idx) => `<tr><td><label for="onTheFly${FormControls.uniqid}Readings_${prop}">${prop}</label></td><td style="padding-left: 15px;"><input type="text" class="form-control litEvent litEventReadings litEventReadings_${prop}" id="onTheFly${FormControls.uniqid}Readings_${prop}" ${festivity === null || typeof festivity.common === 'undefined' || festivity.common !== 'Proper' ? `disabled` : ``} value="${festivity && festivity?.common === 'Proper' ? festivity.readings[prop] : ''}" /></td>${idx===0 ? `<td rowspan="5" style="vertical-align: top;"><i class="fas fa-info-circle m-2" style="color: #4e73df;" title="When the festivity has its own Proper, then Readings can be defined, otherwise the readings will depend on the Common"></i>` : ``}</td></tr>`).join('');
             formRow += `</table></div>`;
         }
@@ -215,7 +216,7 @@ class FormControls {
 
         if(FormControls.settings.decreeLangMapField) {
             let decreeLangs = festivity !== null && typeof festivity.decreeLangs !== 'undefined' ? Object.keys(festivity.decreeLangs).map(key => key+'='+festivity.decreeLangs[key] ) : null;
-            formRow += `<div class="form-group col-sm-5">
+            formRow += `<div class="form-group col-sm-4">
             <label for="onTheFly${FormControls.uniqid}DecreeLangs">${messages[ "Decree Langs" ]}<i class="ml-2 fas fa-info-circle" title="Use a comma separated list of key=value pairings, e.g. DE=ge,EN=en. Key is uppercased two letter ISO code, value is (generally lowercased) two letter representation used within the actual URL"></i></label>
             <input type="text" class="form-control litEvent litEventDecreeLangs" value="${festivity !== null && typeof festivity.decreeLangs !== 'undefined' ? decreeLangs.join(',') : ''}" />
             </div>`;
@@ -242,7 +243,10 @@ const OCTOBER = 10;
 const NOVEMBER = 11;
 const DECEMBER = 12;
 
+const { LOCALE } = messages;
 const monthsOfThirty = [SEPTEMBER, APRIL, JUNE, NOVEMBER];
+const daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const weekdayFormatter = new Intl.DateTimeFormat(LOCALE, { weekday: "long" });
 
 const RANK = {
     HIGHERSOLEMNITY: 7,
@@ -264,8 +268,6 @@ class litEvent {
         this.month = month;
     }
 }
-
-const { LOCALE } = messages;
 
 const lowercaseKeys = obj =>
   Object.keys(obj).reduce((acc, key) => {
@@ -296,8 +298,8 @@ const setFormSettings = action => {
         case RowAction.MakeDoctor.description:
             FormControls.settings.tagField = false;
             FormControls.settings.nameField = true;
-            FormControls.settings.gradeFieldShow = true;
-            FormControls.settings.gradeField = true;
+            FormControls.settings.gradeFieldShow = false;
+            FormControls.settings.gradeField = false;
             FormControls.settings.commonFieldShow = false;
             FormControls.settings.dayField = false;
             FormControls.settings.monthField = false;
@@ -339,23 +341,7 @@ const setFormSettings = action => {
             FormControls.action = RowAction.MoveFestivity;
             break;
         case 'newFestivityFromExistingButton':
-            //nobreak
         case RowAction.CreateNewFromExisting.description:
-            FormControls.settings.tagField = false;
-            FormControls.settings.nameField = false;
-            FormControls.settings.gradeFieldShow = true;
-            FormControls.settings.commonFieldShow = true;
-            FormControls.settings.gradeField = false;
-            FormControls.settings.commonField = false;
-            FormControls.settings.dayField = false;
-            FormControls.settings.monthField = false;
-            FormControls.settings.untilYearField = true;
-            FormControls.settings.colorField = false;
-            FormControls.settings.reasonField = false;
-            FormControls.settings.readingsField = true;
-            FormControls.title = messages[ 'New festivity' ];
-            FormControls.action = RowAction.CreateNew;
-            break;
         case 'newFestivityExNovoButton':
             //nobreak
         case RowAction.CreateNew.description:
@@ -473,13 +459,13 @@ const createPropriumDeTemporeTable = ( data ) => {
             let trHtmlStr = '<tr>';
             keys.forEach(prop => {
                 if( Array.isArray( row[prop] ) ) {
-                    console.log(`we have an array in key ${prop}:`);
-                    console.log( row[prop] );
+                    //console.log(`we have an array in key ${prop}:`);
+                    //console.log( row[prop] );
                     trHtmlStr += `<td contenteditable="false">${row[prop].join(',')}</td>`;
                 }
                 else if( typeof row[prop] === 'object' ) {
-                    console.log(`we have an object in key ${prop}:`);
-                    console.log( row[prop] );
+                    //console.log(`we have an object in key ${prop}:`);
+                    //console.log( row[prop] );
                     let htmlStr = '<table><tbody>';
                     Object.keys( row[prop] ).forEach(title => {
                         let val = row[prop][title];
@@ -505,7 +491,8 @@ const createPropriumDeTemporeTable = ( data ) => {
         $('#jsonDataTbl tbody').append(tbodyHtmlStrr);
     },
     createMemorialsFromDecreesInterface = ( data ) => {
-        $( '#tableContainer' ).hide();
+        $('#saveDataBtn').prop('disabled', true);
+        $('#tableContainer,#addColumnBtn').hide();
         $('#memorialsFromDecreesBtnGrp').fadeIn( 'slow' );
         $('#memorialsFromDecreesForm').empty();
         data.forEach((el) => {
@@ -530,7 +517,7 @@ const createPropriumDeTemporeTable = ( data ) => {
                 $formrow.data('prop', el.Metadata.property).attr('data-prop', el.Metadata.property);
             }
             if( el.Festivity.hasOwnProperty('common') && el.Festivity.common.includes('Proper') ) {
-                $formrow.find('.litEventReadings').prop('disabled',false);
+                $formrow.find('.litEventReadings').prop('disabled', false);
             }
 
             if( false === el.Festivity.hasOwnProperty( 'color' ) ) {
@@ -577,37 +564,58 @@ $(document).ready(() => {
 
 });
 */
+
+const jsonFileData = {};
+
 $(document).on('change', '#jsonFileSelect', () => {
+    let baseJsonFile = $('#jsonFileSelect :selected').text();
     let jsonFile = $('#jsonFileSelect').val();
+    let jsonFileFull = '';
     if( isStaging ) {
-        jsonFile = 'includes/readJSONFile.php?filename=https://litcal.johnromanodorazio.com/' + jsonFile;
+        jsonFileFull = 'includes/readJSONFile.php?filename=https://litcal.johnromanodorazio.com/' + jsonFile;
     } else {
-        jsonFile = './' + jsonFile;
+        jsonFileFull = './' + jsonFile;
     }
-    $.getJSON(jsonFile, data => {
-        console.log(data);
-        $('#jsonDataTbl tbody').empty();
-
-        if(/memorialsFromDecrees\.json$/.test(jsonFile)) {
-            createMemorialsFromDecreesInterface( data );
-        } else {
-            if( $( '#tableContainer' ).is(':hidden') ) {
-                console.log( 'tableContainer was hidden, now showing in order to repopulate...' );
-                $( '#tableContainer' ).show(200, () => { createPropriumTable( data, jsonFile ) } );
-            } else {
-                createPropriumTable( data, jsonFile );
+    //console.log(baseJsonFile);
+    if( false === jsonFileData.hasOwnProperty( baseJsonFile ) ) {
+        $.getJSON(jsonFileFull, data => {
+            //console.log(data);
+            console.log('storing data in script cache...');
+            if(/memorialsFromDecrees\.json$/.test(jsonFile)) {
+                // b - a for reverse sort: this is what we want, so the newer decrees will be on top
+                data.sort((a,b) => b.Metadata.sinceYear - a.Metadata.sinceYear);
             }
-            if( $( '#memorialsFromDecreesBtnGrp' ).is(':hidden') === false ) {
-                $('#memorialsFromDecreesForm').empty();
-                $('#memorialsFromDecreesBtnGrp').fadeOut( 'slow' );
-            }
-
-        }
-
-    });
+            jsonFileData[baseJsonFile] = data;
+            handleJsonFileData( data, jsonFile );
+        });
+    } else {
+        console.log( 'using stored data to avoid making another ajax call uselessly...' );
+        let data = jsonFileData[baseJsonFile];
+        handleJsonFileData( data, jsonFile );
+    }
 });
 
+const handleJsonFileData = ( data, jsonFile ) => {
+    if(/memorialsFromDecrees\.json$/.test(jsonFile)) {
+        $('#jsonDataTbl tbody').empty();
+        createMemorialsFromDecreesInterface( data );
+    } else {
+        if( $( '#memorialsFromDecreesBtnGrp' ).is(':hidden') === false ) {
+            $('#memorialsFromDecreesForm').empty();
+            $('#memorialsFromDecreesBtnGrp').fadeOut( 'slow' );
+        }
+        if( $( '#tableContainer' ).is(':hidden') ) {
+            console.log( 'tableContainer was hidden, now showing in order to repopulate...' );
+            $( '#tableContainer,#addColumnBtn' ).show(200, () => { createPropriumTable( data, jsonFile ) } );
+        } else {
+            createPropriumTable( data, jsonFile );
+        }
+    }
+}
+
 const createPropriumTable = ( data, jsonFile ) => {
+    $('#saveDataBtn').prop('disabled', false);
+    $('#jsonDataTbl tbody').empty();
     if( Array.isArray(data) ) {
         createPropriumDeSanctisTable( data, jsonFile );
     } else {
@@ -725,7 +733,7 @@ $(document).on('click', '.actionPromptButton', ev => {
     } else {
         $row = $(FormControls.CreateDoctorRow());
     }
-    $('#memorialsFromDecreesForm').append($row);
+    $('#memorialsFromDecreesForm').prepend($row);
     $modal.modal('hide');
     $row.find('.form-group').closest('.form-row').data('action', FormControls.action.description).attr('data-action', FormControls.action.description);
     if( FormControls.action.description === RowAction.SetProperty.description ) {
@@ -795,5 +803,56 @@ $(document).on('change', '.existingFestivityName', ev => {
             $('#newFestivityFromExistingButton').prop('disabled', disabledState);
             $('#newFestivityExNovoButton').prop('disabled', !disabledState);
             break;
+    }
+});
+
+
+$(document).on('click', '.strtotime-toggle-btn', ev => {
+    let uniqid = $(ev.currentTarget).attr('data-row-uniqid');
+    let currentJsonFile = $('#jsonFileSelect :selected').text();
+    let tag = $(`#onTheFly${uniqid}Tag`).val();
+    let festivityData = jsonFileData[currentJsonFile].filter(el => el.Festivity.tag === tag)[0];
+    let strtotime = typeof festivityData !== 'undefined' && festivityData.Metadata.hasOwnProperty('strtotime') ? festivityData.Metadata.strtotime : {};
+    // console.log('festivityData = ');
+    // console.log(festivityData);
+    // console.log('strtotime = ');
+    // console.log(strtotime);
+    if( $(ev.currentTarget).attr('aria-pressed') === 'true' ) {
+        $(ev.currentTarget).find('i').removeClass('fa-comment-slash').addClass('fa-comment');
+        $(ev.currentTarget).removeClass('btn-secondary').addClass('btn-info');
+        $(`#onTheFly${uniqid}Month`).closest('.form-group').remove();
+        let $dayFormGroup = $(`#onTheFly${uniqid}Day`).closest('.form-group');
+        let $strToTimeFormGroup = `<label for="onTheFly${uniqid}StrToTime-dayOfTheWeek">Explicatory date</label>
+        <select class="form-control litEvent litEventStrtotime" id="onTheFly${uniqid}StrToTime-dayOfTheWeek">`;
+        for (let i = 0; i < 7; i++ ) {
+            let dayOfTheWeek = new Date(Date.UTC(2000, 0, 2+i));
+            $strToTimeFormGroup += `<option value="${daysOfTheWeek[i]}"${strtotime.hasOwnProperty('dayOfTheWeek') && strtotime.dayOfTheWeek === daysOfTheWeek[i] ? ' selected': ''}>${weekdayFormatter.format(dayOfTheWeek)}</option>`;
+        }
+        $strToTimeFormGroup += `</select>
+        <select class="form-control litEvent litEventStrtotime" id="onTheFly${uniqid}StrToTime-relativeTime">
+            <option value="before"${strtotime.hasOwnProperty('relativeTime') && strtotime.relativeTime === 'before' ? ' selected': ''}>before</option>
+            <option value="after"${strtotime.hasOwnProperty('relativeTime') && strtotime.relativeTime === 'after' ? ' selected': ''}>after</option>
+        </select>
+        <input list="existingFestivitiesList" class="form-control litEvent litEventStrtotime existingFestivityName" id="onTheFly${uniqid}StrToTime-festivityKey" value="${strtotime.hasOwnProperty('festivityKey') ? strtotime.festivityKey : ''}" required>`;
+        $dayFormGroup.empty().removeClass('col-sm-1').addClass('col-sm-2').append($strToTimeFormGroup);
+    } else {
+        $(ev.currentTarget).find('i').removeClass('fa-comment').addClass('fa-comment-slash');
+        $(ev.currentTarget).removeClass('btn-info').addClass('btn-secondary');
+        let $strToTimeFormGroup = $(`#onTheFly${uniqid}StrToTime-dayOfTheWeek`).closest('.form-group');
+        $strToTimeFormGroup.empty().removeClass('col-sm-2').addClass('col-sm-1').append(
+            `<label for="onTheFly${uniqid}Day">Day</label>
+            <input type="number" min="1" max="31" value="${typeof festivityData !== 'undefined' && festivityData.Festivity.hasOwnProperty('day') ? festivityData.Festivity.day : ''}" class="form-control litEvent litEventDay" id="onTheFly${uniqid}Day" />`
+        );
+        let formRow = `<div class="form-group col-sm-1">
+        <label for="onTheFly${uniqid}Month">${messages[ "Month" ]}</label>
+        <select class="form-control litEvent litEventMonth" id="onTheFly${uniqid}Month" >`;
+        let formatter = new Intl.DateTimeFormat(LOCALE, { month: 'long' });
+        for (let i = 0; i < 12; i++) {
+            let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
+            formRow += `<option value=${i + 1}${typeof festivityData !== 'undefined' && festivityData.Festivity.hasOwnProperty('month') && festivityData.Festivity.month === i+1 ? ' selected' : ''}>${formatter.format(month)}</option>`;
+        }
+        formRow += `</select>
+        </div>`;
+        $strToTimeFormGroup.after(formRow);
     }
 });
