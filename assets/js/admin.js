@@ -169,7 +169,7 @@ class FormControls {
             <label for="onTheFly${FormControls.uniqid}Month">${messages[ "Month" ]}</label>
             <select class="form-control litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month"${FormControls.settings.monthField === false ?  'readonly' : '' } >`;
 
-            let formatter = new Intl.DateTimeFormat(LOCALE, { month: 'long' });
+            let formatter = new Intl.DateTimeFormat(jsLocale, { month: 'long' });
             for (let i = 0; i < 12; i++) {
                 let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
                 formRow += `<option value=${i + 1}${festivity !== null && festivity.month === i+1 ? ' selected' : '' }>${formatter.format(month)}</option>`;
@@ -244,9 +244,10 @@ const NOVEMBER = 11;
 const DECEMBER = 12;
 
 const { LOCALE } = messages;
+const jsLocale = LOCALE.replace('_','-');
 const monthsOfThirty = [SEPTEMBER, APRIL, JUNE, NOVEMBER];
 const daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-const weekdayFormatter = new Intl.DateTimeFormat(LOCALE, { weekday: "long" });
+const weekdayFormatter = new Intl.DateTimeFormat(jsLocale, { weekday: "long" });
 
 const RANK = {
     HIGHERSOLEMNITY: 7,
@@ -846,7 +847,7 @@ $(document).on('click', '.strtotime-toggle-btn', ev => {
         let formRow = `<div class="form-group col-sm-1">
         <label for="onTheFly${uniqid}Month">${messages[ "Month" ]}</label>
         <select class="form-control litEvent litEventMonth" id="onTheFly${uniqid}Month" >`;
-        let formatter = new Intl.DateTimeFormat(LOCALE, { month: 'long' });
+        let formatter = new Intl.DateTimeFormat(jsLocale, { month: 'long' });
         for (let i = 0; i < 12; i++) {
             let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
             formRow += `<option value=${i + 1}${typeof festivityData !== 'undefined' && festivityData.Festivity.hasOwnProperty('month') && festivityData.Festivity.month === i+1 ? ' selected' : ''}>${formatter.format(month)}</option>`;
