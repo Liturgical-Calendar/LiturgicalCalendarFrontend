@@ -12,7 +12,7 @@ class FormControls {
         "colorField"    => true,
         "properField"   => true,
         "fromYearField" => true,
-        "toYearField"   => false
+        "untilYearField"   => true
     ];
 
     private i18n $i18n;
@@ -72,7 +72,7 @@ class FormControls {
         }
 
         if(self::$settings["colorField"]){
-            $formRow .= "<div class=\"form-group col-sm-2\">" .
+            $formRow .= "<div class=\"form-group col-sm-1\">" .
             "<label for=\"{$uniqid}Color\">" . _( "Liturgical color" ) . "</label>" .
             "<select class=\"form-control litEvent litEventColor\" id=\"{$uniqid}Color\" multiple=\"multiple\" />" .
             "<option value=\"white\" selected>" . strtoupper(_( "white" ) ) . "</option>" .
@@ -90,10 +90,10 @@ class FormControls {
             "</div>";
         }
 
-        if(self::$settings["toYearField"]){
+        if(self::$settings["untilYearField"]){
             $formRow .= "<div class=\"form-group col-sm-1\">" .
-            "<label for=\"{$uniqid}ToYear\">" . _( "Until" ) . "</label>" .
-            "<input type=\"number\" min=1900 max=9999 class=\"form-control litEvent litEventToYear\" id=\"{$uniqid}ToYear\" value=1970 />" .
+            "<label for=\"{$uniqid}UntilYear\">" . _( "Until" ) . "</label>" .
+            "<input type=\"number\" min=1900 max=9999 class=\"form-control litEvent litEventUntilYear\" id=\"{$uniqid}UntilYear\" value=\"\" />" .
             "</div>";
         }
 

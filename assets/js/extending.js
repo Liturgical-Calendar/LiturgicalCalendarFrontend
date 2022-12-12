@@ -161,7 +161,7 @@ class FormControls {
         gradeFieldShow: false,
         commonFieldShow: false,
         fromYearField: true,
-        untilYearField: false,
+        untilYearField: true,
         tagField: false,
         decreeURLField: false,
         decreeLangMapField: false,
@@ -213,7 +213,7 @@ class FormControls {
         }
 
         if (FormControls.settings.colorField) {
-            formRow += `<div class="form-group col-sm-2">
+            formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}Color">${messages[ "Liturgical color" ]}</label>
             <select class="form-control litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple" />
             <option value="white" selected>${messages[ "white" ].toUpperCase()}</option>
@@ -231,6 +231,13 @@ class FormControls {
             </div>`;
         }
 
+        if (FormControls.settings.untilYearField) {
+            formRow += `<div class="form-group col-sm-1">
+            <label for="onTheFly${FormControls.uniqid}UntilYear">${messages[ "Until" ]}</label>
+            <input type="number" min="1582" max="9999" class="form-control litEvent litEventUntilYear" id="onTheFly${FormControls.uniqid}UntilYear" value="" />
+            </div>`;
+        }
+
         formRow += `</div>`;
         ++FormControls.uniqid;
 
@@ -245,7 +252,7 @@ class FormControls {
                 festivity = lowercaseKeys( FestivityCollection[element] );
                 festivity.tag = element;
                 festivity.sinceYear = 1970;
-                festivity.untilYear = '';
+                //festivity.untilYear = null;
                 festivity.decreeURL = '';
                 festivity.decreeLangs = {};
             }
@@ -255,7 +262,7 @@ class FormControls {
                     ...element.Metadata
                 };
                 if( festivity.hasOwnProperty( 'untilYear' ) === false ) {
-                    festivity.untilYear = '';
+                    //festivity.untilYear = null;
                 }
                 if( festivity.hasOwnProperty( 'color' ) === false ) {
                     festivity.color = FestivityCollection.hasOwnProperty(festivity.tag) ? FestivityCollection[festivity.tag].COLOR : [];
@@ -647,6 +654,9 @@ const loadDiocesanCalendarData = () => {
                 setCommonMultiselect( $row, Festivity.common );
                 $row.find('.litEventColor').multiselect({ buttonWidth: '100%' }).multiselect('deselectAll', false).multiselect('select', Festivity.color);
                 $row.find('.litEventFromYear').val(Metadata.sinceYear);
+                if( Metadata.hasOwnProperty('untilYear') ) {
+                    $row.find('.litEventUntilYear').val(Metadata.untilYear);
+                }
             };
             setFocusFirstTabWithData();
         },
@@ -726,14 +736,17 @@ $(document).on('change', '.litEvent', ev => {
             //empty value probably means we are trying to delete an already defined event
             //so let's find the key and remove it
             oldEventKey = $(ev.currentTarget).attr('data-valuewas');
+            console.log('seems we are trying to delete the object key ' + oldEventKey);
             if ($CALENDAR.LitCal.hasOwnProperty(oldEventKey)) {
                 delete $CALENDAR.LitCal[oldEventKey];
             }
+            $(ev.currentTarget).attr('data-valuewas', '');
         } else {
             eventKey = $(ev.currentTarget).val().replace(/[^a-zA-Z]/gi, '');
-            //console.log('new LitEvent name identifier is ' + eventKey);
+            console.log('new LitEvent name identifier is ' + eventKey);
+            console.log('festivity name is ' + $(ev.currentTarget).val());
             if ($(ev.currentTarget).attr('data-valuewas') == '' && $CALENDAR.LitCal.hasOwnProperty(eventKey) === false) {
-                //console.log('there was no data-valuewas attribute or it was empty, so we are creating ex-novo a new LitEvent');
+                console.log('there was no data-valuewas attribute or it was empty, so we are creating ex-novo a new LitEvent');
                 $CALENDAR.LitCal[eventKey] = { Festivity: {}, Metadata: {} };
                 $CALENDAR.LitCal[eventKey].Festivity = new litEvent(
                     $(ev.currentTarget).val(), //name
@@ -745,15 +758,21 @@ $(document).on('change', '.litEvent', ev => {
                 );
                 //let's initialize defaults just in case the default input values happen to be correct, so no change events are fired
                 $CALENDAR.LitCal[eventKey].Metadata.sinceYear = parseInt($row.find('.litEventFromYear').val());
-                $CALENDAR.LitCal[eventKey].Metadata.formRowNum = $card.find('.form-row').index($row);
+                if( $row.find('.litEventUntilYear').val() !== '' ) {
+                    $CALENDAR.LitCal[eventKey].Metadata.untilYear = parseInt($row.find('.litEventUntilYear').val());
+                }
+                let formRowIndex = $card.find('.form-row').index($row);
+                $CALENDAR.LitCal[eventKey].Metadata.formRowNum = formRowIndex;
+                console.log('form row index is ' + formRowIndex);
                 $(ev.currentTarget).attr('data-valuewas', eventKey);
                 $(ev.currentTarget).removeClass('is-invalid');
+                console.log( $CALENDAR.LitCal[eventKey] );
             } else if ($(ev.currentTarget).attr('data-valuewas') != '') {
                 oldEventKey = $(ev.currentTarget).attr('data-valuewas');
-                //console.log('the preceding value here was ' + oldEventKey);
+                console.log('the preceding value here was ' + oldEventKey);
                 if ($CALENDAR.LitCal.hasOwnProperty(oldEventKey)) {
                     if (oldEventKey !== eventKey) {
-                        //console.log('will now attempt to copy the values from <' + oldEventKey + '> to <' + eventKey + '> and then remove <' + oldEventKey + '>');
+                        console.log('will now attempt to copy the values from <' + oldEventKey + '> to <' + eventKey + '> and then remove <' + oldEventKey + '>');
                         Object.defineProperty($CALENDAR.LitCal, eventKey,
                             Object.getOwnPropertyDescriptor($CALENDAR.LitCal, oldEventKey));
                         $CALENDAR.LitCal[eventKey].Festivity.name = $(ev.currentTarget).val();
@@ -763,7 +782,7 @@ $(document).on('change', '.litEvent', ev => {
                     }
                 }
             } else if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
-                //ev.currentTarget exact same festivity name was already defined elsewhere!
+                console.log('exact same festivity name was already defined elsewhere! key ' + eventKey + ' already exists!');
                 $(ev.currentTarget).val('');
                 $(ev.currentTarget).addClass('is-invalid');
             }
@@ -836,6 +855,17 @@ $(document).on('change', '.litEvent', ev => {
             eventKey = $row.find('.litEventName').val().replace(/[^a-zA-Z]/gi, '');
             if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
                 $CALENDAR.LitCal[eventKey].Metadata.sinceYear = parseInt($(ev.currentTarget).val());
+            }
+        }
+    } else if ($(ev.currentTarget).hasClass('litEventUntilYear')) {
+        if ($row.find('.litEventName').val() != "") {
+            eventKey = $row.find('.litEventName').val().replace(/[^a-zA-Z]/gi, '');
+            if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
+                if($(ev.currentTarget).val() !== '') {
+                    $CALENDAR.LitCal[eventKey].Metadata.untilYear = parseInt($(ev.currentTarget).val());
+                } else {
+                    delete $CALENDAR.LitCal[eventKey].Metadata.untilYear;
+                }
             }
         }
     }
