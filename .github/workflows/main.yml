@@ -34,7 +34,7 @@ jobs:
       # push the output folder to your repo
       - name: Push changes
         if: ${{ steps.update_pot.outputs.POT_LINES_CHANGED > 0 }}
-        uses: actions-x/commit@v5
+        uses: actions-x/commit@v6
         with:
           # The committer's email address
           email: 41898282+github-actions[bot]@users.noreply.github.com
