@@ -85,8 +85,8 @@ class FormControls {
 
         if(self::$settings["fromYearField"]){
             $formRow .= "<div class=\"form-group col-sm-1\">" .
-            "<label for=\"{$uniqid}FromYear\">" . _( "Since" ) . "</label>" .
-            "<input type=\"number\" min=1970 max=9999 class=\"form-control litEvent litEventFromYear\" id=\"{$uniqid}FromYear\" value=1970 />" .
+            "<label for=\"{$uniqid}SinceYear\">" . _( "Since" ) . "</label>" .
+            "<input type=\"number\" min=1970 max=9999 class=\"form-control litEvent litEventSinceYear\" id=\"{$uniqid}SinceYear\" value=1970 />" .
             "</div>";
         }
 
