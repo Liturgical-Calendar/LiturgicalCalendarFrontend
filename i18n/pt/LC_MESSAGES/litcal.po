@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-11 22:34+0000\n"
+"POT-Creation-Date: 2022-12-13 15:44+0000\n"
 "PO-Revision-Date: 2022-12-10 09:38+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
@@ -439,37 +439,37 @@ msgid ""
 "and no longer available in the client applications."
 msgstr ""
 
-#: extending.php:91 layout/formcontrols.php:76
+#: extending.php:91 layout/formcontrols.php:79
 msgid "Liturgical color"
 msgstr "Cor litúrgica"
 
 #. translators: context = liturgical color
-#: extending.php:92 includes/LitColor.php:29 layout/formcontrols.php:78
+#: extending.php:92 includes/LitColor.php:29 layout/formcontrols.php:81
 msgid "white"
 msgstr ""
 
 #. translators: context = liturgical color
-#: extending.php:93 includes/LitColor.php:32 layout/formcontrols.php:79
+#: extending.php:93 includes/LitColor.php:32 layout/formcontrols.php:82
 msgid "red"
 msgstr ""
 
 #. translators: context = liturgical color
-#: extending.php:94 includes/LitColor.php:23 layout/formcontrols.php:81
+#: extending.php:94 includes/LitColor.php:23 layout/formcontrols.php:84
 msgid "green"
 msgstr ""
 
 #. translators: context = liturgical color
-#: extending.php:95 includes/LitColor.php:26 layout/formcontrols.php:80
+#: extending.php:95 includes/LitColor.php:26 layout/formcontrols.php:83
 msgid "purple"
 msgstr ""
 
 #. translators: in reference to the first year from which this festivity takes place
-#: extending.php:97 layout/formcontrols.php:88
+#: extending.php:97 layout/formcontrols.php:91
 msgid "Since"
 msgstr "Do ano"
 
 #. translators: in reference to the year from which this festivity no longer needs to be dealt with
-#: extending.php:99 layout/formcontrols.php:95
+#: extending.php:99 layout/formcontrols.php:98
 msgid "Until"
 msgstr ""
 
@@ -543,7 +543,7 @@ msgstr "Esta diocese parece não existir? Escolha um valor da lista."
 msgid "Property to change"
 msgstr ""
 
-#: extending.php:140 layout/formcontrols.php:153
+#: extending.php:140 layout/formcontrols.php:156
 msgid "Grade"
 msgstr ""
 
@@ -1113,7 +1113,7 @@ msgstr "Uso"
 msgid "About us"
 msgstr "Sobre nós"
 
-#: layout/formcontrols.php:107
+#: layout/formcontrols.php:110
 msgid "Common (or Proper)"
 msgstr "Comum (ou Próprio)"
 
