@@ -8,3 +8,14 @@
 .carousel-control-prev:hover,.carousel-control-next:hover {
     opacity: 0.9;
 }
+
+/** fix for bootstrap toggle button */
+.toggle-group .toggle-off {
+    left: 45%;
+    right: -5px;
+}
+
+.toggle-group .toggle-on {
+    right: 45%;
+    left: -5px;
+}
