@@ -1,9 +1,9 @@
 if(Cookies.get("currentLocale") === undefined){
     Cookies.set("currentLocale", navigator.language );
 }
-
+const currentLocale = new Intl.Locale(Cookies.get("currentLocale").replaceAll('_','-') || 'en');
 var ISO_3166_1_alpha_2 = {
-    LITCAL_LOCALE : Cookies.get("currentLocale").substring(0,2),
+    LITCAL_LOCALE : currentLocale.language,
     COUNTRIES : {
         "ÅLAND ISLANDS": "AX",
         "AFGHANISTAN": "AF",
