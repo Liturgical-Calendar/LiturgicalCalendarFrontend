@@ -161,7 +161,7 @@ const translCommon = common => {
                 let commonKey = '';
                 switch (commonGeneral) {
                     case i18next.t("Blessed-Virgin-Mary"):
-                        commonKey = i18next.t("of-the", {context: "(SING_FEMM)"});
+                        commonKey = i18next.t("of", {context: "(SING_FEMM)"});
                         break;
                     case i18next.t("Virgins"):
                         commonKey = i18next.t("of", {context: "(PLUR_FEMM)"});
@@ -173,7 +173,7 @@ const translCommon = common => {
                         commonKey = i18next.t("of", {context: "(PLUR_MASC)"});
                         break;
                     case i18next.t("Dedication-of-a-Church"):
-                        commonKey = i18next.t("of-the", {context: "(SING_FEMM)"});
+                        commonKey = i18next.t("of", {context: "(SING_FEMM)"});
                         break;
                     default:
                         commonKey = i18next.t("of", {context: "(SING_MASC)"});

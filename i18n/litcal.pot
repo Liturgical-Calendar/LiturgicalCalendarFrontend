@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 11:30+0000\n"
+"POT-Creation-Date: 2022-12-11 22:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,7 +29,7 @@ msgstr ""
 msgid "General Roman Calendar"
 msgstr ""
 
-#: index.php:27
+#: index.php:27 layout/header.php:22
 msgid "Catholic Liturgical Calendar"
 msgstr ""
 
@@ -108,7 +108,7 @@ msgstr ""
 msgid "EXAMPLE USAGE OF THE API"
 msgstr ""
 
-#: usage.php:34
+#: usage.php:34 layout/header.php:80
 msgid "Web calendar"
 msgstr ""
 
@@ -145,7 +145,7 @@ msgstr ""
 msgid "View Full Calendar (messages first)"
 msgstr ""
 
-#: usage.php:83
+#: usage.php:83 layout/header.php:86
 msgid "Calendar subscription"
 msgstr ""
 
@@ -278,7 +278,7 @@ msgid ""
 "more \"beautified\" for Outlook."
 msgstr ""
 
-#: usage.php:173
+#: usage.php:173 layout/header.php:92
 msgid "Dates of Easter"
 msgstr ""
 
@@ -290,7 +290,7 @@ msgstr ""
 msgid "Calculate the Date of Easter"
 msgstr ""
 
-#: usage.php:197
+#: usage.php:197 layout/header.php:97
 msgid "Liturgy of the Day"
 msgstr ""
 
@@ -337,8 +337,8 @@ msgstr ""
 #: extending.php:36
 #, php-format
 msgid ""
-"Specifically, the components which will require translation are: 1. <a href="
-"\"%1$s\">Proprium de Sanctis 1970</a>, 2. <a href=\"%2$s\">Proprium de "
+"Specifically, the components which will require translation are: 1. <a "
+"href=\"%1$s\">Proprium de Sanctis 1970</a>, 2. <a href=\"%2$s\">Proprium de "
 "Sanctis 2002</a>, 3. <a href=\"%3$s\">Proprium de Sanctis 2008</a>, 4. <a "
 "href=\"%4$s\">Proprium de Tempore</a>, and 5. <a href=\"%5$s\">Memorials "
 "from Decrees</a>."
@@ -375,15 +375,15 @@ msgstr ""
 msgid "Tag"
 msgstr ""
 
-#: extending.php:82 extending.php:139
+#: extending.php:82 extending.php:139 layout/formcontrols.php:42
 msgid "Name"
 msgstr ""
 
-#: extending.php:83 liturgyOfAnyDay.php:67
+#: extending.php:83 liturgyOfAnyDay.php:67 layout/formcontrols.php:49
 msgid "Day"
 msgstr ""
 
-#: extending.php:84 liturgyOfAnyDay.php:71
+#: extending.php:84 liturgyOfAnyDay.php:71 layout/formcontrols.php:55
 msgid "Month"
 msgstr ""
 
@@ -414,37 +414,37 @@ msgid ""
 "and no longer available in the client applications."
 msgstr ""
 
-#: extending.php:91
+#: extending.php:91 layout/formcontrols.php:76
 msgid "Liturgical color"
 msgstr ""
 
 #. translators: context = liturgical color
-#: extending.php:92 includes/LitColor.php:29
+#: extending.php:92 includes/LitColor.php:29 layout/formcontrols.php:78
 msgid "white"
 msgstr ""
 
 #. translators: context = liturgical color
-#: extending.php:93 includes/LitColor.php:32
+#: extending.php:93 includes/LitColor.php:32 layout/formcontrols.php:79
 msgid "red"
 msgstr ""
 
 #. translators: context = liturgical color
-#: extending.php:94 includes/LitColor.php:23
+#: extending.php:94 includes/LitColor.php:23 layout/formcontrols.php:81
 msgid "green"
 msgstr ""
 
 #. translators: context = liturgical color
-#: extending.php:95 includes/LitColor.php:26
+#: extending.php:95 includes/LitColor.php:26 layout/formcontrols.php:80
 msgid "purple"
 msgstr ""
 
 #. translators: in reference to the first year from which this festivity takes place
-#: extending.php:97
+#: extending.php:97 layout/formcontrols.php:88
 msgid "Since"
 msgstr ""
 
 #. translators: in reference to the year from which this festivity no longer needs to be dealt with
-#: extending.php:99
+#: extending.php:99 layout/formcontrols.php:95
 msgid "Until"
 msgstr ""
 
@@ -514,7 +514,7 @@ msgstr ""
 msgid "Property to change"
 msgstr ""
 
-#: extending.php:140
+#: extending.php:140 layout/formcontrols.php:153
 msgid "Grade"
 msgstr ""
 
@@ -542,7 +542,7 @@ msgstr ""
 msgid "Remove existing data"
 msgstr ""
 
-#: extending.php:211
+#: extending.php:211 layout/header.php:135
 msgid "Create a Calendar for a Wider Region"
 msgstr ""
 
@@ -554,7 +554,7 @@ msgstr ""
 msgid "National Calendar"
 msgstr ""
 
-#: extending.php:255
+#: extending.php:255 layout/header.php:136
 msgid "Create a National Calendar"
 msgstr ""
 
@@ -608,7 +608,9 @@ msgstr ""
 
 #: extending.php:343
 msgid ""
-"This diocese does not seem to exist? Please choose from a value in the list."
+"This diocese does not seem to exist? Please choose from a value in the list "
+"to retrieve an existing diocese, or ignore if creating a new diocesan "
+"calendar."
 msgstr ""
 
 #: extending.php:350
@@ -632,6 +634,7 @@ msgid "Optional memorials"
 msgstr ""
 
 #: extending.php:392 extending.php:413 extending.php:434 extending.php:455
+#: layout/header.php:137
 msgid "Create a Diocesan Calendar"
 msgstr ""
 
@@ -676,7 +679,7 @@ msgid ""
 msgstr ""
 
 #: extending.php:484
-msgid "Diocesan overrides to the national calendar for ..."
+msgid "Diocesan overrides to the national calendar for …"
 msgstr ""
 
 #: extending.php:516
@@ -767,7 +770,9 @@ msgid "Full stack web developer"
 msgstr ""
 
 #: about.php:31
-msgid "ANOTHERVOLUNTEER"
+msgid ""
+"Latin Liturgy Association of the Netherlands, contributed the national "
+"calendar for the Netherlands to this project with all related translations"
 msgstr ""
 
 #: about.php:60
@@ -967,7 +972,7 @@ msgstr ""
 #. translators: (singular feminine) glue between "From the Common" and the actual common. Latin: leave empty!
 #: includes/LitCommon.php:170 includes/LitCommon.php:182
 msgctxt "(SING_FEMM)"
-msgid "of"
+msgid "of the"
 msgstr ""
 
 #. translators: (plural feminine) glue between "From the Common" and the actual common. Latin: leave empty!
@@ -985,7 +990,7 @@ msgstr ""
 #. translators: (singular masculine) glue between "From the Common" and the actual common. Latin: leave empty!
 #: includes/LitCommon.php:185
 msgctxt "(SING_MASC)"
-msgid "of"
+msgid "of the"
 msgstr ""
 
 #: includes/LitCommon.php:266
@@ -1027,4 +1032,32 @@ msgstr ""
 
 #: includes/LitGrade.php:119
 msgid "celebration with precedence over solemnities"
+msgstr ""
+
+#: layout/header.php:35
+msgid "Home"
+msgstr ""
+
+#: layout/header.php:54 layout/header.php:132
+msgid "Extending the API"
+msgstr ""
+
+#: layout/header.php:61
+msgid "Documentation"
+msgstr ""
+
+#: layout/header.php:73
+msgid "Examples of Usage"
+msgstr ""
+
+#: layout/header.php:140
+msgid "Usage"
+msgstr ""
+
+#: layout/header.php:141
+msgid "About us"
+msgstr ""
+
+#: layout/formcontrols.php:107
+msgid "Common (or Proper)"
 msgstr ""

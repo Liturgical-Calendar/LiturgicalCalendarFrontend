@@ -26,11 +26,11 @@ $cardInfo = [
         "img"       => "./assets/img/michaelshelton_125x125.jpg",
         "icon"      => "fas fa-code fa-2x text-gray-300"
     ],
-    "ANOTHERVOLUNTEER" => [
-        "website"   => "",
-        "note"      => _( "ANOTHERVOLUNTEER"),
-        "img"       => "./assets/img/easter-egg-5-120-279148.png",
-        "icon"      => "fas fa-code fa-2x text-gray-300"
+    "STEVENVANROODE" => [
+        "website"   => sprintf( $formatStr, 'https://www.latijnseliturgie.nl/', 'Steven van Roode' ),
+        "note"      => _( 'Latin Liturgy Association of the Netherlands, contributed the national calendar for the Netherlands to this project with all related translations' ),
+        "img"       => "./assets/img/Steven van Roode 125x125.jpg",
+        "icon"      => "fas fa-music fa-2x text-gray-300"
     ]
 ];
 
@@ -81,7 +81,7 @@ $ABOUT_US = _( "The Liturgical Calendar project is curated by a group of volunte
 
         <div class="row">
             <?php generateCard( 'MICHAELSHELTON' ); ?>
-            <?php generateCard( 'ANOTHERVOLUNTEER' ); ?>
+            <?php generateCard( 'STEVENVANROODE' ); ?>
         </div>
 
     <?php include_once('./layout/footer.php'); ?>

@@ -31,3 +31,7 @@
     border: 1px dashed gray;
     border-radius: 3px;
 }
+
+#memorialsFromDecreesBtnGrp {
+    display: none;
+}

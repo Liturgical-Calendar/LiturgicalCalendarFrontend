@@ -44,11 +44,10 @@
     if( $pageName === "index" ){
         echo '<script src="assets/js/homepage.js"></script>';
     }
-    if( $pageName === "extending" ) {
+    if( $pageName === "extending" || $pageName === "admin" ) {
         echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.1/js/bootstrap-multiselect.min.js"></script>';
         echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
     }
     if( file_exists( "assets/js/{$pageName}.js" ) ) {
         echo "<script src=\"assets/js/{$pageName}.js\"></script>";
     }
-?>

@@ -18,9 +18,10 @@ jobs:
         fetch-depth: 0
 
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
-        node-version: 14.x
+        node-version: 18.x
+        cache: 'npm'
 
     - name: Build
       run: |
@@ -28,7 +29,7 @@ jobs:
         gulp --gulpfile 'gulpfile.js' i18next
 
     - name: Push changes  # push the output folder to your repo
-      uses: actions-x/commit@v5
+      uses: actions-x/commit@v6
       with:
         # The committer's email address
         email: 41898282+github-actions[bot]@users.noreply.github.com

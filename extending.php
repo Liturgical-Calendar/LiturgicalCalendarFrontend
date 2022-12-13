@@ -287,7 +287,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                                         <label><?php echo _( 'LOCALE' ) ?></label>
                                         <select class="form-control" id="nationalCalendarSettingLocale">
                                             <?php
-                                                foreach( $AvailableLocales as $AvlLOCALE => $AvlLANGUAGE ) {
+                                                foreach( $AllAvailableLocales as $AvlLOCALE => $AvlLANGUAGE ) {
                                                     echo "<option value=\"{$AvlLOCALE}\"" . ($i18n->LOCALE === $AvlLOCALE ? ' selected' : '') . ">{$AvlLANGUAGE}</option>";
                                                 }
                                             ?>
@@ -340,7 +340,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                         <div class="form-group col col-md-3">
                             <label for="diocesanCalendarDioceseName" class="font-weight-bold"><?php echo _( "Diocese"); ?>:</label>
                             <input list="DiocesesList" class="form-control" id="diocesanCalendarDioceseName" required>
-                            <div class="invalid-feedback"><?php echo _( "This diocese does not seem to exist? Please choose from a value in the list."); ?></div>
+                            <div class="invalid-feedback"><?php echo _( "This diocese does not seem to exist? Please choose from a value in the list to retrieve an existing diocese, or ignore if creating a new diocesan calendar."); ?></div>
                             <datalist id="DiocesesList">
                                 <option value=""></option>
                             </datalist>
@@ -481,7 +481,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                 </div>
 
                 <div id="diocesanOverridesContainer" class="container">
-                    <h3 id="diocesanOverridesTitle" class="text-center"><?php echo _("Diocesan overrides to the national calendar for ...") ?></h3>
+                    <h3 id="diocesanOverridesTitle" class="text-center"><?php echo _("Diocesan overrides to the national calendar for …") ?></h3>
                     <form id="diocesanOverridesForm" class="row justify-content-center needs-validation" novalidate>
                         <div class="form-group col col-md-3">
                             <label><?php echo _( 'EPIPHANY' ) ?></label>

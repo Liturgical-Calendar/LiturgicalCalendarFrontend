@@ -1,0 +1,10 @@
+.carousel-control-prev,.carousel-control-next {
+    background-color: rgb(70,70,120);
+}
+
+.carousel-control-prev:focus,.carousel-control-next:focus {
+    opacity: 0.5;
+}
+.carousel-control-prev:hover,.carousel-control-next:hover {
+    opacity: 0.9;
+}
