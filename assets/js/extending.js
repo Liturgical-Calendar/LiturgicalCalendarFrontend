@@ -166,7 +166,8 @@ class FormControls {
         decreeURLField: false,
         decreeLangMapField: false,
         reasonField: false,
-        missalField: false
+        missalField: false,
+        strtotimeField: false
     }
     static action = null;
     static title = null;
@@ -195,7 +196,10 @@ class FormControls {
 
         if (FormControls.settings.monthField) {
             formRow += `<div class="form-group col-sm-2">
-            <label for="onTheFly${FormControls.uniqid}Month">${messages[ "Month" ]}</label>
+            <label for="onTheFly${FormControls.uniqid}Month"><span class="month-label">${messages[ "Month" ]}</span><div class="form-check form-check-inline form-switch ml-2 border border-right-0 border-secondary rounded-left bg-light pl-1" title="switch on for mobile celebration as opposed to fixed date">
+                <label class="form-check-label mr-2" for="onTheFly${FormControls.uniqid}StrtotimeSwitch">Mobile</label>
+                <input class="form-check-input litEvent litEventStrtotimeSwitch" type="checkbox" data-toggle="toggle" data-size="xs" data-onstyle="info" data-offstyle="dark" role="switch" id="onTheFly${FormControls.uniqid}StrtotimeSwitch">
+            </div></label>
             <select class="form-control litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month">`;
 
             let formatter = new Intl.DateTimeFormat(jsLocale, { month: 'long' });
@@ -205,6 +209,16 @@ class FormControls {
             }
 
             formRow += `</select>
+            </div>`;
+        }
+
+        if(FormControls.settings.strtotimeField) {
+            formRow += `<div class="form-group col-sm-3>
+            <label for="onTheFly${FormControls.uniqid}Strtotime"><span class="month-label">Explicatory date</span><div class="form-check form-check-inline form-switch ml-2 border border-right-0 border-secondary rounded-left bg-light pl-1" title="switch on for mobile celebration as opposed to fixed date">
+                <label class="form-check-label mr-2" for="onTheFly${FormControls.uniqid}StrtotimeSwitch">Mobile</label>
+                <input class="form-check-input litEvent litEventStrtotimeSwitch" type="checkbox" data-toggle="toggle" data-size="xs" data-onstyle="info" data-offstyle="dark" role="switch" id="onTheFly${FormControls.uniqid}StrtotimeSwitch">
+            </div></label>
+            <input type="text" class="form-control litEvent litEventStrtotime" id="onTheFly${FormControls.uniqid}Strtotime" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" />
             </div>`;
         }
 
@@ -321,8 +335,8 @@ class FormControls {
 
         if( festivity !== null && festivity.hasOwnProperty( 'strtotime' ) ) {
             formRow += `<div class="form-group col-sm-2">
-            <label for="onTheFly${FormControls.uniqid}StrToTime">Explicatory date</label>
-            <input type="text" value="${festivity.strtotime}" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" class="form-control litEvent litEventStrtotime" id="onTheFly${FormControls.uniqid}StrToTime" />
+            <label for="onTheFly${FormControls.uniqid}Strtotime">Explicatory date</label>
+            <input type="text" value="${festivity.strtotime}" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" class="form-control litEvent litEventStrtotime" id="onTheFly${FormControls.uniqid}Strtotime" />
             </div>`;
         } else {
             formRow += `<div class="form-group col-sm-1">
@@ -597,6 +611,15 @@ const loadDiocesanCalendarData = () => {
                 let $row;
                 let numLastRow;
                 let numMissingRows;
+                if(Metadata.hasOwnProperty('strtotime')) {
+                    FormControls.settings.dayField = false;
+                    FormControls.settings.monthField = false;
+                    FormControls.settings.strtotimeField = true;
+                } else {
+                    FormControls.settings.dayField = true;
+                    FormControls.settings.monthField = true;
+                    FormControls.settings.strtotimeField = false;
+                }
                 switch (Festivity.grade) {
                     case RANK.SOLEMNITY:
                         $form = $('#carouselItemSolemnities form');
@@ -649,8 +672,22 @@ const loadDiocesanCalendarData = () => {
                         break;
                 }
                 $row.find('.litEventName').val(Festivity.name).attr('data-valuewas', key);
-                $row.find('.litEventDay').val(Festivity.day);
-                $row.find('.litEventMonth').val(Festivity.month);
+                if(Metadata.formRowNum > 2) {
+                    $row.find('.litEventStrtotimeSwitch').bootstrapToggle();
+                }
+                if( Metadata.hasOwnProperty('strtotime') ) {
+                    $row.find('.litEventStrtotimeSwitch').bootstrapToggle('on', true);
+                    if( $row.find('.litEventStrtotime').length === 0 ) {
+                        switcheroo( $row, Metadata );
+                    }
+                    $row.find('.litEventStrtotime').val(Metadata.strtotime);
+                } else {
+                    if( $row.find('.litEventStrtotime').length > 0 ) {
+                        unswitcheroo( $row, Festivity );
+                    }
+                    $row.find('.litEventDay').val(Festivity.day);
+                    $row.find('.litEventMonth').val(Festivity.month);
+                }
                 setCommonMultiselect( $row, Festivity.common );
                 $row.find('.litEventColor').multiselect({ buttonWidth: '100%' }).multiselect('deselectAll', false).multiselect('select', Festivity.color);
                 $row.find('.litEventSinceYear').val(Metadata.sinceYear);
@@ -666,6 +703,38 @@ const loadDiocesanCalendarData = () => {
             }
         }
     });
+}
+
+const switcheroo = ( $row, Metadata ) => {
+    $row.find('.litEventDay').closest('.form-group').remove();
+    let $litEventMonth = $row.find('.litEventMonth');
+    let $litEventMonthFormGrp = $litEventMonth.closest('.form-group');
+    let strtotimeId = $litEventMonth.attr('id').replace('Month','Strtotime');
+    $litEventMonthFormGrp.removeClass('col-sm-2').addClass('col-sm-3');
+    $litEventMonth.remove();
+    $litEventMonthFormGrp.find('.month-label').text('Explicatory date').attr('for',strtotimeId);
+    $litEventMonthFormGrp.append(`<input type="text" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" class="form-control litEvent litEventStrtotime" id="${strtotimeId}" value="${Metadata.strtotime}" />`);
+}
+
+const unswitcheroo = ( $row, Festivity ) => {
+    let $litEventStrtotime = $row.find('.litEventStrtotime');
+    let $strToTimeFormGroup = $litEventStrtotime.closest('.form-group');
+    $strToTimeFormGroup.removeClass('col-sm-3').addClass('col-sm-2');
+    let dayId = $litEventStrtotime.attr('id').replace('Strtotime', 'Day');
+    let monthId = $litEventStrtotime.attr('id').replace('Strtotime', 'Month');
+    $strToTimeFormGroup.before(`<div class="form-group col-sm-1">
+    <label for="${dayId}">${messages[ "Day" ]}</label><input type="number" min="1" max="31" value="1" class="form-control litEvent litEventDay" id="${dayId}" value="${Festivity.day}" />
+    </div>`);
+    $litEventStrtotime.remove();
+    let formRow = `<select class="form-control litEvent litEventMonth" id="${monthId}">`;
+    let formatter = new Intl.DateTimeFormat(jsLocale, { month: 'long' });
+    for (let i = 0; i < 12; i++) {
+        let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
+        formRow += `<option value=${i + 1}${(i+1)===Festivity.month ? ' selected' : ''}>${formatter.format(month)}</option>`;
+    }
+    formRow += `</select>`;
+    $strToTimeFormGroup.append(formRow);
+    $strToTimeFormGroup.find('.month-label').text(messages[ 'Month' ]).attr('for',monthId);
 }
 
 jQuery.ajax({
@@ -694,10 +763,10 @@ $(document).on('click', '.strtotime-toggle-btn', ev => {
         $(ev.currentTarget).find('i').removeClass('fa-comment-slash').addClass('fa-comment');
         $(`#onTheFly${uniqid}Month`).closest('.form-group').remove();
         let $dayFormGroup = $(`#onTheFly${uniqid}Day`).closest('.form-group');
-        $dayFormGroup.empty().removeClass('col-sm-1').addClass('col-sm-2').append(`<label for="onTheFly${uniqid}StrToTime">Explicatory date</label><input type="text" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" class="form-control litEvent litEventStrtotime" id="onTheFly${uniqid}StrToTime" />`);
+        $dayFormGroup.empty().removeClass('col-sm-1').addClass('col-sm-2').append(`<label for="onTheFly${uniqid}Strtotime">Explicatory date</label><input type="text" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" class="form-control litEvent litEventStrtotime" id="onTheFly${uniqid}Strtotime" />`);
     } else {
         $(ev.currentTarget).find('i').removeClass('fa-comment').addClass('fa-comment-slash');
-        let $strToTimeFormGroup = $(`#onTheFly${uniqid}StrToTime`).closest('.form-group');
+        let $strToTimeFormGroup = $(`#onTheFly${uniqid}Strtotime`).closest('.form-group');
         $strToTimeFormGroup.empty().removeClass('col-sm-2').addClass('col-sm-1').append(`<label for="onTheFly${uniqid}Day">Day</label><input type="number" min="1" max="31" value="false" class="form-control litEvent litEventDay" id="onTheFly${uniqid}Day" />`);
         let formRow = `<div class="form-group col-sm-1">
         <label for="onTheFly${uniqid}Month">${messages[ "Month" ]}</label>
@@ -905,6 +974,61 @@ $(document).on('change', '.litEvent', ev => {
                 }
             }
         }
+    } else if ($(ev.currentTarget).hasClass('litEventStrtotimeSwitch')) {
+        if ($row.find('.litEventName').val() != "") {
+            eventKey = $row.find('.litEventName').attr('data-valuewas');
+            if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
+                if(false === $(ev.currentTarget).prop('checked')) {
+                    delete $CALENDAR.LitCal[eventKey].Metadata.strtotime;
+                    $CALENDAR.LitCal[eventKey].Festivity.Day = 1;
+                    $CALENDAR.LitCal[eventKey].Festivity.Month = 1;
+                    let $strToTimeFormGroup = $(ev.currentTarget).closest('.form-group');
+                    $strToTimeFormGroup.removeClass('col-sm-3').addClass('col-sm-2');
+                    let $litEventStrtotime = $strToTimeFormGroup.find('.litEventStrtotime');
+                    let dayId = $litEventStrtotime.attr('id').replace('Strtotime', 'Day');
+                    let monthId = $litEventStrtotime.attr('id').replace('Strtotime', 'Month');
+                    $strToTimeFormGroup.before(`<div class="form-group col-sm-1">
+                    <label for="${dayId}">${messages[ "Day" ]}</label><input type="number" min="1" max="31" value="1" class="form-control litEvent litEventDay" id="${dayId}" />
+                    </div>`);
+                    $litEventStrtotime.remove();
+                    let formRow = `<select class="form-control litEvent litEventMonth" id="${monthId}">`;
+                    let formatter = new Intl.DateTimeFormat(jsLocale, { month: 'long' });
+                    for (let i = 0; i < 12; i++) {
+                        let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
+                        formRow += `<option value=${i + 1}>${formatter.format(month)}</option>`;
+                    }
+                    formRow += `</select>`;
+                    $strToTimeFormGroup.append(formRow);
+                    $strToTimeFormGroup.find('.month-label').text(messages[ 'Month' ]).attr('for',monthId);
+                } else {
+                    delete $CALENDAR.LitCal[eventKey].Festivity.Day;
+                    delete $CALENDAR.LitCal[eventKey].Festivity.Month;
+                    $CALENDAR.LitCal[eventKey].Metadata.strtotime = '';
+                    $row.find('.litEventDay').closest('.form-group').remove();
+                    let $litEventMonthFormGrp = $(ev.currentTarget).closest('.form-group');
+                    let $litEventMonth = $litEventMonthFormGrp.find('.litEventMonth');
+                    let strtotimeId = $litEventMonth.attr('id').replace('Month','Strtotime');
+                    $litEventMonthFormGrp.removeClass('col-sm-2').addClass('col-sm-3');
+                    $litEventMonth.remove();
+                    $litEventMonthFormGrp.find('.month-label').text('Explicatory date').attr('for',strtotimeId);
+                    $litEventMonthFormGrp.append(`<input type="text" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" class="form-control litEvent litEventStrtotime" id="${strtotimeId}" />`);
+                }
+            }
+        } else {
+            alert('this switch is disabled as long as the festivity row does not have a festivity name!');
+            if( false === $(ev.currentTarget).prop('checked') ) {
+                $(ev.currentTarget).bootstrapToggle('on', true);
+            } else {
+                $(ev.currentTarget).bootstrapToggle('off', true);
+            }
+        }
+    } else if ($(ev.currentTarget).hasClass('litEventStrtotime')) {
+        if ($row.find('.litEventName').val() != "") {
+            eventKey = $row.find('.litEventName').attr('data-valuewas');
+            if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
+                $CALENDAR.LitCal[eventKey].Metadata.strtotime = $(ev.currentTarget).val();
+            }
+        }
     }
 });
 
@@ -1005,6 +1129,7 @@ $(document).on('click', '.onTheFlyEventRow', ev => {
     $row.find('.litEventColor').multiselect({
         buttonWidth: '100%'
     });
+    $row.find('.litEventStrtotimeSwitch').bootstrapToggle();
 });
 
 $(document).on('click', '.actionPromptButton', ev => {

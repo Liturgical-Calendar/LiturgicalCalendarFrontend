@@ -167,7 +167,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
     if(isset($_GET["choice"])){
         switch($_GET["choice"]){
             case "widerRegion":
-                //FormControls::$settings["toYearField"] = true;
+                //FormControls::$settings["untilYearField"] = true;
                 ?>
                 <div class="container-fluid">
                     <form class="row justify-content-center needs-validation" novalidate>
@@ -322,7 +322,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                 <?php
             break;
             case "diocesan":
-                FormControls::$settings["toYearField"] = false;
+                FormControls::$settings["untilYearField"] = true;
                 ?>
                 <div class="container">
                     <form class="row justify-content-center needs-validation" novalidate>
