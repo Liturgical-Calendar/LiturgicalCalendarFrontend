@@ -107,3 +107,6 @@ api/*
 debuginfo.php
 examples/
 credentials.php
+
+.php-ini
+.php-version
