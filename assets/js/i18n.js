@@ -272,6 +272,7 @@ Object.freeze(ISO_3166_1_alpha_2);
       $('#langChoiceSpanish').text( languageNames.of('es') );
       $('#langChoicePortuguese').text( languageNames.of('pt') );
       $('#langChoiceLatin').text( languageNames.of('lat') );
+      $('#langChoiceDutch').text( languageNames.of('nl') );
       $(document).on( 'click', '#langChoicesDropdownItems .dropdown-item', ev => {
         ev.preventDefault();
         //let oldLocale = Cookies.get('currentLocale');
@@ -297,6 +298,8 @@ Object.freeze(ISO_3166_1_alpha_2);
             case 'langChoiceLatin':
                 Cookies.set('currentLocale','lat');
                 break;
+            case 'langChoiceDutch':
+                Cookies.set('currentLocale','nl');
         }
         //only reload if the value has changed
         if(Cookies.get('currentLocale') != LITCAL_LOCALE){
