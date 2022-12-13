@@ -28,7 +28,9 @@ jQuery(() => {
 
 let queryString = '';
 let CalData = {};
-let dtFormat = new Intl.DateTimeFormat((Cookies.get('currentLocale') || 'en'), { dateStyle: 'full', timeZone: 'UTC' });
+let currentLocale = Cookies.get('currentLocale') || 'en';
+currentLocale = currentLocale.substring(0,2);
+let dtFormat = new Intl.DateTimeFormat(currentLocale, { dateStyle: 'full', timeZone: 'UTC' });
 let newDate = new Date();
 let highContrast = [ "green", "red", "purple" ];
 let commonsMap = {};
