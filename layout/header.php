@@ -154,6 +154,7 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOf
                           <a class="dropdown-item<?php echo $i18n->LOCALE==="la" ? " active" : "" ?>" id="langChoiceLatin" href="#"><span class="d-none d-md-inline">Latin</span><span class="d-inline d-md-none">LA</span></a>
                           <a class="dropdown-item<?php echo $i18n->LOCALE==="pt" ? " active" : "" ?>" id="langChoicePortuguese" href="#"><span class="d-none d-md-inline">Portuguese</span><span class="d-inline d-md-none">PT</span></a>
                           <a class="dropdown-item<?php echo $i18n->LOCALE==="es" ? " active" : "" ?>" id="langChoiceSpanish" href="#"><span class="d-none d-md-inline">Spanish</span><span class="d-inline d-md-none">ES</span></a>
+                          <a class="dropdown-item<?php echo $i18n->LOCALE==="nl" || $i18n->LOCALE === "nl_NL" ? " active" : "" ?>" id="langChoiceDutch" href="#"><span class="d-none d-md-inline">Dutch</span><span class="d-inline d-md-none">NL</span></a>
                         </div>
                       </li>
                 </ul>
