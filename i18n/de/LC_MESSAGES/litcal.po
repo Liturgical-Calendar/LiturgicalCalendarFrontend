@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-13 15:44+0000\n"
-"PO-Revision-Date: 2022-12-10 09:38+0000\n"
+"PO-Revision-Date: 2022-12-15 04:17+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -45,7 +45,7 @@ msgstr "API-Endpunkt"
 
 #: index.php:40
 msgid "Calendar to retrieve from the API"
-msgstr ""
+msgstr "Kalender der von der API abgerufen werden soll"
 
 #: index.php:58
 msgid "Liturgical Calendar API endpoint"
@@ -58,12 +58,19 @@ msgid ""
 "national or diocesan calendar is requested (i.e. the Universal Calendar is "
 "requested) then the more specific options can be requested:"
 msgstr ""
+"Wenn ein nationaler oder diözesaner Kalender angefordert wird, werden diese "
+"Kalender automatisch die spezifischen Optionen in der API-Anforderung "
+"festlegen. Wenn stattdessen kein nationaler oder diözesaner Kalender "
+"angefordert wird (d. h. der universelle Kalender angefordert wird), können "
+"die spezifischeren Optionen angefordert werden:"
 
 #: index.php:68
 msgid ""
 "URL for the API request based on selected options (the above button is set "
 "to this URL)"
 msgstr ""
+"URL für die API-Anforderung basierend auf ausgewählten Optionen (die obige "
+"Schaltfläche ist auf diese URL eingestellt)"
 
 #: index.php:78 usage.php:182
 msgid "Calculation of the Date of Easter"
@@ -96,6 +103,10 @@ msgid ""
 "case, since the API returns a UNIX timestamp for each date of Easter, "
 "localizations can be done in a client application just as well."
 msgstr ""
+"Aktuell können die Daten mit nahezu jeder Lokalisierung abgefragt werden. Da "
+"die API in jedem Fall einen UNIX-Zeitstempel für jedes Osterdatum "
+"zurückgibt, können Lokalisierungen genauso gut in einer Client-Anwendung "
+"durchgeführt werden."
 
 #: index.php:95
 msgid "Definition"
@@ -103,7 +114,7 @@ msgstr "Definition"
 
 #: index.php:98
 msgid "Swagger / Open API Documentation"
-msgstr ""
+msgstr "Swagger / Open API-Dokumentation"
 
 #: usage.php:7
 msgid ""
@@ -119,44 +130,50 @@ msgstr ""
 
 #: usage.php:19
 msgid "Examples"
-msgstr ""
+msgstr "Beispiele"
 
 #: usage.php:27
 msgid "EXAMPLE USAGE OF THE API"
-msgstr ""
+msgstr "BEISPIEL FÜR DIE NUTZUNG DER API"
 
 #: usage.php:34 layout/header.php:80
 msgid "Web calendar"
-msgstr ""
+msgstr "Webkalender"
 
 #: usage.php:47
 msgid "HTML presentation elaborated by PHP using a CURL request"
 msgstr ""
+"HTML-Präsentation, die von JAVASCRIPT unter Verwendung einer CURL-Anfrage "
+"erstellt wurde"
 
 #: usage.php:48
 msgid "View PHP Example"
-msgstr ""
+msgstr "PHP-Beispiel ansehen"
 
 #: usage.php:58
 msgid "HTML presentation elaborated by JAVASCRIPT using an AJAX request"
 msgstr ""
+"HTML-Präsentation, die von JAVASCRIPT unter Verwendung einer AJAX-Anfrage "
+"erstellt wurde"
 
 #: usage.php:59
 msgid "View JavaScript Example"
-msgstr ""
+msgstr "JavaScript-Beispiel anzeigen"
 
 #: usage.php:66
 msgid "Calendar"
-msgstr ""
+msgstr "Kalender"
 
 #: usage.php:69
 msgid ""
 "Fullcalendar representation elaborated by JAVASCRIPT using an AJAX request"
 msgstr ""
+"Präsentation Fullcalendar, die von JAVASCRIPT unter Verwendung einer AJAX-"
+"Anforderung ausgearbeitet wurde"
 
 #: usage.php:70
 msgid "View Full Calendar"
-msgstr ""
+msgstr "Fullcalendar anzeigen"
 
 #: usage.php:71
 msgid "View Full Calendar (messages first)"
