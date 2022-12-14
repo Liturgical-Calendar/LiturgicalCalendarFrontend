@@ -28,8 +28,11 @@ jQuery(() => {
 
 let queryString = '';
 let CalData = {};
-let currentLocale = Cookies.get('currentLocale') || 'en';
-currentLocale = currentLocale.substring(0,2);
+if( typeof currentLocale === 'undefined' ) {
+    currentLocale = Cookies.get('currentLocale').replaceAll('_','-') || 'en';
+    let localeObj = new Intl.Locale(currentLocale);
+    currentLocale = localeObj.language;
+}
 let dtFormat = new Intl.DateTimeFormat(currentLocale, { dateStyle: 'full', timeZone: 'UTC' });
 let newDate = new Date();
 let highContrast = [ "green", "red", "purple" ];

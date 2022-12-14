@@ -1,8 +1,7 @@
 <?php 
-//turn on error reporting for the staging site
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
 
 class i18n {
 
@@ -20,18 +19,24 @@ class i18n {
             $this->LOCALE = "en";
         }
         //we only need the two letter ISO code, not the national extension, when setting the text domain...
-        $LOCALE = $this->LOCALE;
-        if( strpos( $this->LOCALE, "_" ) ) {
-            $LOCALE = explode( "_", $this->LOCALE )[0];
-        } else if ( strpos( $this->LOCALE, "-" ) ) {
-            $LOCALE = explode( "-", $this->LOCALE )[0];
+        if( $this->LOCALE !== 'la' && $this->LOCALE !== "LA" ) {
+            $LOCALE = Locale::getPrimaryLanguage( $this->LOCALE );
+            $REGION = Locale::getRegion( $this->LOCALE );
+        } else {
+            $LOCALE = 'la';
+            $REGION = 'VA';
         }
 
         $localeArray = [
-            strtolower( $LOCALE ) . '_' . strtoupper( $LOCALE ) . '.utf8',
-            strtolower( $LOCALE ) . '_' . strtoupper( $LOCALE ) . '.UTF-8',
-            strtolower( $LOCALE ) . '_' . strtoupper( $LOCALE ),
-            strtolower( $LOCALE )
+            $LOCALE . '_' . $REGION . '.utf8',
+            $LOCALE . '_' . $REGION . '.UTF-8',
+            $LOCALE . '_' . $REGION,
+            $LOCALE . '_' . strtoupper( $LOCALE) . '.utf8',
+            $LOCALE . '_' . strtoupper( $LOCALE ) . '.UTF-8',
+            $LOCALE . '_' . strtoupper( $LOCALE ),
+            $LOCALE . '.utf8',
+            $LOCALE . '.UTF-8',
+            $LOCALE
         ];
         setlocale( LC_ALL, $localeArray );
         bindtextdomain("litcal", "i18n");
