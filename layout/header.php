@@ -147,14 +147,14 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOf
                           English
                         </a>
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="langChoicesDropdown" id="langChoicesDropdownItems">
-                          <a class="dropdown-item<?php echo $i18n->LOCALE==="en" ? " active" : "" ?>" id="langChoiceEnglish" href="#"><span class="d-none d-md-inline">English</span><span class="d-inline d-md-none">EN</span></a>
-                          <a class="dropdown-item<?php echo $i18n->LOCALE==="fr" ? " active" : "" ?>" id="langChoiceFrench" href="#"><span class="d-none d-md-inline">French</span><span class="d-inline d-md-none">FR</span></a>
-                          <a class="dropdown-item<?php echo $i18n->LOCALE==="de" ? " active" : "" ?>" id="langChoiceGerman" href="#"><span class="d-none d-md-inline">German</span><span class="d-inline d-md-none">DE</span></a>
-                          <a class="dropdown-item<?php echo $i18n->LOCALE==="it" ? " active" : "" ?>" id="langChoiceItalian" href="#"><span class="d-none d-md-inline">Italian</span><span class="d-inline d-md-none">IT</span></a>
-                          <a class="dropdown-item<?php echo $i18n->LOCALE==="la" ? " active" : "" ?>" id="langChoiceLatin" href="#"><span class="d-none d-md-inline">Latin</span><span class="d-inline d-md-none">LA</span></a>
-                          <a class="dropdown-item<?php echo $i18n->LOCALE==="pt" ? " active" : "" ?>" id="langChoicePortuguese" href="#"><span class="d-none d-md-inline">Portuguese</span><span class="d-inline d-md-none">PT</span></a>
-                          <a class="dropdown-item<?php echo $i18n->LOCALE==="es" ? " active" : "" ?>" id="langChoiceSpanish" href="#"><span class="d-none d-md-inline">Spanish</span><span class="d-inline d-md-none">ES</span></a>
-                          <a class="dropdown-item<?php echo $i18n->LOCALE==="nl" || $i18n->LOCALE === "nl_NL" ? " active" : "" ?>" id="langChoiceDutch" href="#"><span class="d-none d-md-inline">Dutch</span><span class="d-inline d-md-none">NL</span></a>
+                          <a class="dropdown-item<?php echo substr( $i18n->LOCALE, 0 ,2 ) === "en" ? " active" : "" ?>" id="langChoiceEnglish" href="#"><span class="d-none d-md-inline">English</span><span class="d-inline d-md-none">EN</span></a>
+                          <a class="dropdown-item<?php echo substr( $i18n->LOCALE, 0 ,2 ) === "fr" ? " active" : "" ?>" id="langChoiceFrench" href="#"><span class="d-none d-md-inline">French</span><span class="d-inline d-md-none">FR</span></a>
+                          <a class="dropdown-item<?php echo substr( $i18n->LOCALE, 0 ,2 ) === "de" ? " active" : "" ?>" id="langChoiceGerman" href="#"><span class="d-none d-md-inline">German</span><span class="d-inline d-md-none">DE</span></a>
+                          <a class="dropdown-item<?php echo substr( $i18n->LOCALE, 0 ,2 ) === "it" ? " active" : "" ?>" id="langChoiceItalian" href="#"><span class="d-none d-md-inline">Italian</span><span class="d-inline d-md-none">IT</span></a>
+                          <a class="dropdown-item<?php echo substr( $i18n->LOCALE, 0 ,2 ) === "la" ? " active" : "" ?>" id="langChoiceLatin" href="#"><span class="d-none d-md-inline">Latin</span><span class="d-inline d-md-none">LA</span></a>
+                          <a class="dropdown-item<?php echo substr( $i18n->LOCALE, 0 ,2 ) === "pt" ? " active" : "" ?>" id="langChoicePortuguese" href="#"><span class="d-none d-md-inline">Portuguese</span><span class="d-inline d-md-none">PT</span></a>
+                          <a class="dropdown-item<?php echo substr( $i18n->LOCALE, 0 ,2 ) === "es" ? " active" : "" ?>" id="langChoiceSpanish" href="#"><span class="d-none d-md-inline">Spanish</span><span class="d-inline d-md-none">ES</span></a>
+                          <a class="dropdown-item<?php echo substr( $i18n->LOCALE, 0 ,2 ) === "nl" ? " active" : "" ?>" id="langChoiceDutch" href="#"><span class="d-none d-md-inline">Dutch</span><span class="d-inline d-md-none">NL</span></a>
                         </div>
                       </li>
                 </ul>
