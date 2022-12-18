@@ -2,9 +2,13 @@ const isStaging = location.href.includes( "-staging" );
 const endpointV = isStaging ? "dev" : "v3";
 const endpointURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalEngine.php?`;
 
+if( typeof currentLocale === 'undefined' ) {
+    currentLocale = new Intl.Locale(Cookies.get('currentLocale').replaceAll('_','-') || 'en');
+}
+
 i18next.use(i18nextHttpBackend).init({
     debug: true,
-    lng: Cookies.get("currentLocale").substring(0,2),
+    lng: currentLocale.language,
     backend: {
         loadPath: '/assets/locales/{{lng}}/{{ns}}.json'
     }
@@ -19,21 +23,24 @@ i18next.use(i18nextHttpBackend).init({
     //$('.content').localize();
   });
 
+let queryString = '';
+let cookieVal = Cookies.get('queryString');
+if(typeof cookieVal !== 'undefined') {
+    console.log('looks like we have a queryString cookie?');
+    let cookieObj = JSON.parse(cookieVal);
+    queryString = cookieObj.queryString;
+    $('#calendarSelect').val(cookieObj.calendar);
+} else {
+    console.log('no queryString cookie found, will load default results...');
+}
 jQuery(() => {
     i18next.on('initialized', () => {
         setTranslations();
-        getLiturgyOfADay();
+        getLiturgyOfADay(typeof cookieVal !== 'undefined');
     });
 });
-
-let queryString = '';
 let CalData = {};
-if( typeof currentLocale === 'undefined' ) {
-    currentLocale = Cookies.get('currentLocale').replaceAll('_','-') || 'en';
-    let localeObj = new Intl.Locale(currentLocale);
-    currentLocale = localeObj.language;
-}
-let dtFormat = new Intl.DateTimeFormat(currentLocale, { dateStyle: 'full', timeZone: 'UTC' });
+let dtFormat = new Intl.DateTimeFormat(currentLocale.language, { dateStyle: 'full', timeZone: 'UTC' });
 let newDate = new Date();
 let highContrast = [ "green", "red", "purple" ];
 let commonsMap = {};
@@ -94,30 +101,51 @@ $(document).on("change", "#calendarSelect,#dayControl", () => {
     getLiturgyOfADay();
 });
 
-let getLiturgyOfADay = () => {
-    let year =  $('#yearControl').val();
-    let month = $('#monthControl').val();
-    let day = $('#dayControl').val();
+let getLiturgyOfADay = (useCookie=false) => {
+    let newQueryString = '';
+    let year;
+    let month;
+    let day;
+    if(useCookie && typeof Cookies.get('queryString') !== 'undefined' ){
+        let cookieVal = JSON.parse(Cookies.get('queryString'));
+        year = cookieVal.year;
+        month = cookieVal.month;
+        day = cookieVal.day;
+        queryString = cookieVal.queryString;
+        newQueryString = queryString;
+    } else {
+        year =  $('#yearControl').val();
+        month = $('#monthControl').val();
+        day = $('#dayControl').val();
+
+        let params = {
+            year: year
+        };
+        switch( $('#calendarSelect').find(':selected').attr('data-calendartype') ) {
+            case 'nationalcalendar':
+                params.nationalcalendar = $('#calendarSelect').val();
+                break;
+            case 'diocesancalendar':
+                params.diocesancalendar = $('#calendarSelect').val();
+                break;
+            default:
+                params.diocesancalendar = 'DIOCESIDIROMA';
+        }
+        newQueryString = new URLSearchParams(params).toString();
+    }
+    console.log(`queryString = ${queryString}, year = ${year}, month = ${month}, day = ${day}`);
+    Cookies.set('queryString', JSON.stringify({queryString: newQueryString, year: year, month: month, day: day, calendar: $('#calendarSelect').val()}));
     newDate = new Date(Date.UTC(year, month - 1, day, 0, 0, 0));
     let timestamp = newDate.getTime() / 1000;
 
-    let params = {
-        year: year
-    };
-    switch( $('#calendarSelect').find(':selected').attr('data-calendartype') ) {
-        case 'nationalcalendar':
-            params.nationalcalendar = $('#calendarSelect').val();
-            break;
-        case 'diocesancalendar':
-            params.diocesancalendar = $('#calendarSelect').val();
-            break;
-        default:
-            params.diocesancalendar = 'DIOCESIDIROMA';
-    }
-    let newQueryString = new URLSearchParams(params).toString();
-    if( newQueryString !== queryString ) {
-        console.log( 'queryString has changed. queryString = ' + queryString + ', newQueryString = ' + newQueryString );
-        queryString = newQueryString;
+    if( newQueryString !== queryString || useCookie === true ) {
+        console.log(`queryString = ${queryString}, newQueryString = ${newQueryString}`);
+        if(false === useCookie) {
+            console.log( 'queryString has changed. queryString = ' + queryString + ', newQueryString = ' + newQueryString );
+            queryString = newQueryString;
+        } else {
+            console.log('we have a cookie with the last settings used, since this is a new page or page refresh we will use that information...');
+        }
         $.getJSON( `${endpointURL}${queryString}`, data => {
             if( data.hasOwnProperty('LitCal') ) {
                 CalData = data.LitCal;
