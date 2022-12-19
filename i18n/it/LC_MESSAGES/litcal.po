@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-18 23:50+0000\n"
-"PO-Revision-Date: 2022-12-11 22:39+0000\n"
+"PO-Revision-Date: 2022-12-19 00:06+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
@@ -169,11 +169,11 @@ msgstr ""
 
 #: usage.php:70
 msgid "View Full Calendar"
-msgstr "Visualizza l'esempio Fullcalendar"
+msgstr "Visualizza l'esempio FullCalendar"
 
 #: usage.php:71
 msgid "View Full Calendar (messages first)"
-msgstr "Visualizza l'esempio Fullcalendar (messaggi in alto)"
+msgstr "Visualizza l'esempio FullCalendar (messaggi in alto)"
 
 #: usage.php:83 layout/header.php:86
 msgid "Calendar subscription"
