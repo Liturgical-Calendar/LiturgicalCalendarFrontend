@@ -66,9 +66,9 @@ $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/Lit
                                         <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Calendar" ); ?><i class="far fa-calendar float-right text-gray-600"></i></h6>
                                     </div>
                                     <div class="card-body">
-                                        <p><?php echo _( "Fullcalendar representation elaborated by JAVASCRIPT using an AJAX request" ); ?></p>
-                                        <div class="text-center"><a href="examples/fullcalendar/examples/month-view.html" class="btn btn-primary"><?php echo _( "View Full Calendar" ); ?></a></div>
-                                        <div class="text-center"><a href="examples/fullcalendar/examples/messages.html" class="btn btn-primary mt-2"><?php echo _( "View Full Calendar (messages first)" ); ?></a></div>
+                                        <p><?php echo _( "FullCalendar representation elaborated by JAVASCRIPT using an AJAX request" ); ?></p>
+                                        <div class="text-center"><a href="examples/fullcalendar/examples/month-view.html" class="btn btn-primary"><?php echo _( "View FullCalendar" ); ?></a></div>
+                                        <div class="text-center"><a href="examples/fullcalendar/examples/messages.html" class="btn btn-primary mt-2"><?php echo _( "View FullCalendar (messages first)" ); ?></a></div>
                                     </div>
                                 </div>
                             </div>
