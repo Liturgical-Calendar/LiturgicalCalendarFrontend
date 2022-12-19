@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-18 23:50+0000\n"
+"POT-Creation-Date: 2022-12-19 00:06+0000\n"
 "PO-Revision-Date: 2022-12-19 00:06+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
@@ -165,19 +165,26 @@ msgid "Calendar"
 msgstr "Kalender"
 
 #: usage.php:69
+#, fuzzy
+#| msgid ""
+#| "Fullcalendar representation elaborated by JAVASCRIPT using an AJAX request"
 msgid ""
-"Fullcalendar representation elaborated by JAVASCRIPT using an AJAX request"
+"FullCalendar representation elaborated by JAVASCRIPT using an AJAX request"
 msgstr ""
 "Präsentation Fullcalendar, die von JAVASCRIPT unter Verwendung einer AJAX-"
 "Anforderung ausgearbeitet wurde"
 
 #: usage.php:70
-msgid "View Full Calendar"
+#, fuzzy
+#| msgid "View Full Calendar"
+msgid "View FullCalendar"
 msgstr "FullCalendar anzeigen"
 
 #: usage.php:71
-msgid "View Full Calendar (messages first)"
-msgstr ""
+#, fuzzy
+#| msgid "View Full Calendar"
+msgid "View FullCalendar (messages first)"
+msgstr "FullCalendar anzeigen"
 
 #: usage.php:83 layout/header.php:86
 msgid "Calendar subscription"
