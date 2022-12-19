@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-13 15:44+0000\n"
-"PO-Revision-Date: 2022-12-11 22:39+0000\n"
+"POT-Creation-Date: 2022-12-19 00:06+0000\n"
+"PO-Revision-Date: 2022-12-19 00:05+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
@@ -31,7 +31,7 @@ msgstr ""
 "partir de 1970 jusqu'à 9999, que ce soit pour le calendrier romain universel "
 "ou général ou pour les calendriers nationaux et diocésains dérivés"
 
-#: index.php:19 usage.php:19 liturgyOfAnyDay.php:54
+#: index.php:19 usage.php:19 liturgyOfAnyDay.php:61
 msgid "General Roman Calendar"
 msgstr "Calendrier Romain Général"
 
@@ -45,7 +45,7 @@ msgstr "Point de terminaison de l'API"
 
 #: index.php:40
 msgid "Calendar to retrieve from the API"
-msgstr ""
+msgstr "Calendrier à récupérer depuis l'API"
 
 #: index.php:58
 msgid "Liturgical Calendar API endpoint"
@@ -58,12 +58,20 @@ msgid ""
 "national or diocesan calendar is requested (i.e. the Universal Calendar is "
 "requested) then the more specific options can be requested:"
 msgstr ""
+"Si un calendrier national ou diocésain est demandé, ces mêmes calendriers "
+"fixeront automatiquement divers paramètres de la demande (local, épiphanie, "
+"corpuschristi, ascension). Si au lieu de cela aucun calendrier national ou "
+"diocésain n'est demandé (c'est-à-dire simplement le calendrier universel est "
+"demandé), alors dans ce cas, il est possible de définir les paramètres plus "
+"spécifiquement :"
 
 #: index.php:68
 msgid ""
 "URL for the API request based on selected options (the above button is set "
 "to this URL)"
 msgstr ""
+"URL de la requête à l'API effectuée selon les options sélectionnées (le "
+"bouton ci-dessus est paramétré sur cette URL)"
 
 #: index.php:78 usage.php:182
 msgid "Calculation of the Date of Easter"
@@ -96,6 +104,10 @@ msgid ""
 "case, since the API returns a UNIX timestamp for each date of Easter, "
 "localizations can be done in a client application just as well."
 msgstr ""
+"Les données peuvent actuellement être demandées dans pratiquement toutes les "
+"langues. Dans tous les cas, étant donné que l'API renvoie un horodatage Unix "
+"pour chaque date de Pâques, la localisation peut également être effectuée "
+"par l'application cliente."
 
 #: index.php:95
 msgid "Definition"
@@ -103,7 +115,7 @@ msgstr "Définition"
 
 #: index.php:98
 msgid "Swagger / Open API Documentation"
-msgstr ""
+msgstr "Documentation Swagger/OpenAPI"
 
 #: usage.php:7
 msgid ""
@@ -119,47 +131,53 @@ msgstr ""
 
 #: usage.php:19
 msgid "Examples"
-msgstr ""
+msgstr "Exemples"
 
 #: usage.php:27
 msgid "EXAMPLE USAGE OF THE API"
-msgstr ""
+msgstr "EXEMPLE D'UTILISATION DE L'API"
 
 #: usage.php:34 layout/header.php:80
 msgid "Web calendar"
-msgstr ""
+msgstr "Calendrier HTML"
 
 #: usage.php:47
 msgid "HTML presentation elaborated by PHP using a CURL request"
-msgstr ""
+msgstr "Présentation HTML traitée par PHP à l'aide d'une requête cURL"
 
 #: usage.php:48
 msgid "View PHP Example"
-msgstr ""
+msgstr "Voir l'exemple PHP"
 
 #: usage.php:58
 msgid "HTML presentation elaborated by JAVASCRIPT using an AJAX request"
-msgstr ""
+msgstr "Présentation HTML traitée en Javascript à l'aide d'une requête AJAX"
 
 #: usage.php:59
 msgid "View JavaScript Example"
-msgstr ""
+msgstr "Voir l'exemple Javascript"
 
 #: usage.php:66
 msgid "Calendar"
-msgstr ""
+msgstr "Calendrier"
 
 #: usage.php:69
+#, fuzzy
+#| msgid ""
+#| "Fullcalendar representation elaborated by JAVASCRIPT using an AJAX request"
 msgid ""
-"Fullcalendar representation elaborated by JAVASCRIPT using an AJAX request"
+"FullCalendar representation elaborated by JAVASCRIPT using an AJAX request"
 msgstr ""
+"Présentation FullCalendar traitée en Javascript à l'aide d'une requête AJAX"
 
 #: usage.php:70
-msgid "View Full Calendar"
-msgstr ""
+#, fuzzy
+#| msgid "Calendar"
+msgid "View FullCalendar"
+msgstr "Calendrier"
 
 #: usage.php:71
-msgid "View Full Calendar (messages first)"
+msgid "View FullCalendar (messages first)"
 msgstr ""
 
 #: usage.php:83 layout/header.php:86
@@ -325,7 +343,7 @@ msgstr ""
 msgid "In development"
 msgstr ""
 
-#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:54 liturgyOfAnyDay.php:62
+#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:61 liturgyOfAnyDay.php:69
 msgid "Liturgy of any day"
 msgstr ""
 
@@ -410,11 +428,11 @@ msgstr ""
 msgid "Name"
 msgstr "Nom"
 
-#: extending.php:83 liturgyOfAnyDay.php:67 layout/formcontrols.php:49
+#: extending.php:83 liturgyOfAnyDay.php:74 layout/formcontrols.php:49
 msgid "Day"
 msgstr "Jour"
 
-#: extending.php:84 liturgyOfAnyDay.php:71 layout/formcontrols.php:55
+#: extending.php:84 liturgyOfAnyDay.php:78 layout/formcontrols.php:55
 msgid "Month"
 msgstr "Mois"
 
@@ -848,15 +866,15 @@ msgstr ""
 msgid "Liturgical Calendar - About us"
 msgstr "Calendrier liturgique - À propos de nous"
 
-#: liturgyOfAnyDay.php:81
+#: liturgyOfAnyDay.php:98
 msgid "Year"
 msgstr ""
 
 #. translators: %s = current selected date
-#: liturgyOfAnyDay.php:88
+#: liturgyOfAnyDay.php:105
 #, php-format
 msgid "Liturgy of %s"
-msgstr ""
+msgstr "Liturgie du %s"
 
 #. translators: context = liturgical color
 #: includes/LitColor.php:35
