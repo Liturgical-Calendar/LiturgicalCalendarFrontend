@@ -11,11 +11,12 @@ The Liturgical Calendar project offers an API that generates data for the liturg
 
 This frontend is an interface with documentation and examples for the API.
 
-There are two national calendars built into the API, that of Italy and that of the USA, which can be requested through the `nationalCalendar` parameter.
+The API can be extended with National Calendars, based on the Roman Missals issued in the region; these calendars can then be requested with the `nationalCalendar` parameter.
 
-The API is also extendable for Diocesan Calendars (currently only for those national calendars that are built into the API, i.e. Dioceses of Italy and of the USA).
+The API is also extendable for Diocesan Calendars, which however can only be defined after the National Calendar for the region has been defined;
+once the Diocesan Calendar is defined, it can be requested using the `diocesanCalendar` parameter.
 
-The Diocesan Calendar data can be defined directly through the interfaces offered by this frontend.
+The National and Diocesan Calendar data can be defined directly through the interfaces offered by this frontend.
 
 # Localization of the Frontend
 <a href="https://translate.johnromanodorazio.com/engage/liturgical-calendar/">

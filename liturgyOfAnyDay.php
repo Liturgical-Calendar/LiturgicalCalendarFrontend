@@ -46,6 +46,13 @@ if( verifyCalendarIndexJson( $JSON ) ) {
     sort( $CalendarNations );
 }
 
+$haveCookie = false;
+
+if(isset($_COOKIE['queryString'])) {
+    $haveCookie = true;
+    $cookieVal = json_decode($_COOKIE['queryString']);
+}
+
 ?>
 
 <!doctype html>
@@ -65,21 +72,31 @@ if( verifyCalendarIndexJson( $JSON ) ) {
             <div class="row">
                 <div class="form-group col-md">
                     <label><?php echo _("Day"); ?></label>
-                    <input class="form-control" id="dayControl" type="number" min="1" max="<?php echo $dateToday->format('t') ?>" value="<?php echo $dateToday->format('d') ?>" />
+                    <input class="form-control" id="dayControl" type="number" min="1" max="<?php echo $dateToday->format('t') ?>" value="<?php echo $haveCookie ? $cookieVal->day : $dateToday->format('d') ?>" />
                 </div>
                 <div class="form-group col-md">
                     <label><?php echo _("Month"); ?></label>
                     <select class="form-control" id="monthControl">
                         <?php foreach( range(1,12) as $monthNumber ) {
                             $monthDate->setDate($dateToday->format('Y'), $monthNumber, 15);
-                            echo "<option value=\"{$monthNumber}\" " . (intval($dateToday->format('n')) === $monthNumber ? "selected" : "") . ">{$fmt->format($monthDate)}</option>";
+                            $selected = '';
+                            if($haveCookie) {
+                                if(intval($cookieVal->month) === $monthNumber) {
+                                    $selected = 'selected';
+                                }
+                            } else {
+                                if(intval($dateToday->format('n')) === $monthNumber) {
+                                    $selected = 'selected';
+                                }
+                            }
+                            echo "<option value=\"{$monthNumber}\" " . $selected . ">{$fmt->format($monthDate)}</option>";
                         }
                         ?>
                     </select>
                 </div>
                 <div class="form-group col-md">
                     <label><?php echo _("Year"); ?></label>
-                    <input class="form-control" id="yearControl" type="number" min="1970" max="9999" value="<?php echo $dateToday->format('Y') ?>" />
+                    <input class="form-control" id="yearControl" type="number" min="1970" max="9999" value="<?php echo $haveCookie ? $cookieVal->year : $dateToday->format('Y') ?>" />
                 </div>
             </div>
             <div class="card shadow m-2">

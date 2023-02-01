@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-13 15:44+0000\n"
+"POT-Creation-Date: 2022-12-19 00:06+0000\n"
 "PO-Revision-Date: 2022-12-10 09:38+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
@@ -31,7 +31,7 @@ msgstr ""
 "calendário romano universal ou geral ou para calendários nacionais e "
 "diocesanos derivados"
 
-#: index.php:19 usage.php:19 liturgyOfAnyDay.php:54
+#: index.php:19 usage.php:19 liturgyOfAnyDay.php:61
 msgid "General Roman Calendar"
 msgstr "Calendário Romano Geral"
 
@@ -144,15 +144,15 @@ msgstr ""
 
 #: usage.php:69
 msgid ""
-"Fullcalendar representation elaborated by JAVASCRIPT using an AJAX request"
+"FullCalendar representation elaborated by JAVASCRIPT using an AJAX request"
 msgstr ""
 
 #: usage.php:70
-msgid "View Full Calendar"
+msgid "View FullCalendar"
 msgstr ""
 
 #: usage.php:71
-msgid "View Full Calendar (messages first)"
+msgid "View FullCalendar (messages first)"
 msgstr ""
 
 #: usage.php:83 layout/header.php:86
@@ -318,7 +318,7 @@ msgstr ""
 msgid "In development"
 msgstr ""
 
-#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:54 liturgyOfAnyDay.php:62
+#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:61 liturgyOfAnyDay.php:69
 msgid "Liturgy of any day"
 msgstr ""
 
@@ -402,11 +402,11 @@ msgstr ""
 msgid "Name"
 msgstr "Nome"
 
-#: extending.php:83 liturgyOfAnyDay.php:67 layout/formcontrols.php:49
+#: extending.php:83 liturgyOfAnyDay.php:74 layout/formcontrols.php:49
 msgid "Day"
 msgstr "Dia"
 
-#: extending.php:84 liturgyOfAnyDay.php:71 layout/formcontrols.php:55
+#: extending.php:84 liturgyOfAnyDay.php:78 layout/formcontrols.php:55
 msgid "Month"
 msgstr "Mês"
 
@@ -838,12 +838,12 @@ msgstr ""
 msgid "Liturgical Calendar - About us"
 msgstr "Calendário litúrgico - Sobre nós"
 
-#: liturgyOfAnyDay.php:81
+#: liturgyOfAnyDay.php:98
 msgid "Year"
 msgstr ""
 
 #. translators: %s = current selected date
-#: liturgyOfAnyDay.php:88
+#: liturgyOfAnyDay.php:105
 #, php-format
 msgid "Liturgy of %s"
 msgstr ""
