@@ -70,6 +70,21 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                         </small>
                     </div>
                 </div>
+                <div class="card shadow m-2">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Liturgical Calendar Validator" ); ?><i class="fas fa-flask-vial float-right fa-2x text-gray-300"></i></h6>
+                    </div>
+                    <div class="card-body">
+                        <p><?php echo _( "In order to verify that the liturgical data produced by the API is correct, there is a Unit Test interface that can run predefined tests against the JSON responses produced by the API starting from the year 1970 and going up to 25 years from the current year." ); ?></p>
+                        <div class="text-center"><a href="https://litcal-tests.johnromanodorazio.com/" class="btn btn-primary mt-2"><?php echo _( "LitCal Validator" ); ?></a></div>
+                        <small class="text-muted">
+                            <i>
+                                <?php echo sprintf( _( "The unit tests are defined in the %s folder in the Liturgical Calendar API repository." ), "<a href=\"https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI/tree/development/tests\">LiturgicalCalendarAPI/tree/development/tests</a>" ); ?>
+                                <?php echo sprintf( _( "The unit test interface is curated in a repository of its own: %s." ), "<a href=\"https://github.com/Liturgical-Calendar/UnitTestInterface\">Liturgical-Calendar/UnitTestInterface</a>" ); ?>
+                            </i>
+                        </small>
+                    </div>
+                </div>
             </div>
             
             <div class="col-md-6">
@@ -96,6 +111,11 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                     </div>
                     <div class="card-body">
                         <div class="text-center"><a href="dist/" class="btn btn-primary mt-2"><?php echo _( "Swagger / Open API Documentation" ); ?></a></div>
+                        <small class="text-muted">
+                            <i><?php echo sprintf( _( "The Open API json schema for this API has been updated to OpenAPI 3.1. " .
+                            "However the Swagger UI is not yet able to render OpenAPI 3.1 schemas. Until the Swagger UI supports OpenAPI 3.1 schemas, the UI will not be able to render the schema. " .
+                            "See %s for updates." ), "<a href=\"https://github.com/swagger-api/swagger-ui/issues/5891\">swagger-api/swagger-ui/issues/5891</a>" ); ?></i>
+                        </small>
                     </div>
                 </div>
             </div>
