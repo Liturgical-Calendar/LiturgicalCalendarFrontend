@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-19 00:06+0000\n"
+"POT-Creation-Date: 2023-02-02 00:29+0000\n"
 "PO-Revision-Date: 2022-12-10 09:38+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
@@ -39,7 +39,7 @@ msgstr "Calendário Romano Geral"
 msgid "Catholic Liturgical Calendar"
 msgstr "Calendário Litúrgico Católico"
 
-#: index.php:34 index.php:95
+#: index.php:34 index.php:110
 msgid "API Endpoint"
 msgstr "Endpoint de API"
 
@@ -65,11 +65,41 @@ msgid ""
 "to this URL)"
 msgstr ""
 
-#: index.php:78 usage.php:182
+#: index.php:75
+#, fuzzy
+#| msgid "Liturgical Calendar API endpoint"
+msgid "Liturgical Calendar Validator"
+msgstr "Endpoint da API do Calendário Litúrgico"
+
+#: index.php:78
+msgid ""
+"In order to verify that the liturgical data produced by the API is correct, "
+"there is a Unit Test interface that can run predefined tests against the "
+"JSON responses produced by the API starting from the year 1970 and going up "
+"to 25 years from the current year."
+msgstr ""
+
+#: index.php:79
+msgid "LitCal Validator"
+msgstr ""
+
+#: index.php:82
+#, php-format
+msgid ""
+"The unit tests are defined in the %s folder in the Liturgical Calendar API "
+"repository."
+msgstr ""
+
+#: index.php:83
+#, php-format
+msgid "The unit test interface is curated in a repository of its own: %s."
+msgstr ""
+
+#: index.php:93 usage.php:182
 msgid "Calculation of the Date of Easter"
 msgstr "Cálculo da Data da Páscoa"
 
-#: index.php:81
+#: index.php:96
 msgid ""
 "A simple API endpoint that returns data about the Date of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -79,23 +109,32 @@ msgid ""
 "Julian easter (observed by orthodox churches)"
 msgstr ""
 
-#: index.php:86
+#: index.php:101
 msgid "Date of Easter API endpoint"
 msgstr "Data da Páscoa API"
 
-#: index.php:88
+#: index.php:103
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
 "localizations can be done in a client application just as well."
 msgstr ""
 
-#: index.php:95
+#: index.php:110
 msgid "Definition"
 msgstr "Definição"
 
-#: index.php:98
+#: index.php:113
 msgid "Swagger / Open API Documentation"
+msgstr ""
+
+#: index.php:115
+#, php-format
+msgid ""
+"The Open API json schema for this API has been updated to OpenAPI 3.1. "
+"However the Swagger UI is not yet able to render OpenAPI 3.1 schemas. Until "
+"the Swagger UI supports OpenAPI 3.1 schemas, the UI will not be able to "
+"render the schema. See %s for updates."
 msgstr ""
 
 #: usage.php:7

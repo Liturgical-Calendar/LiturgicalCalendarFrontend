@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-19 00:06+0000\n"
+"POT-Creation-Date: 2023-02-02 00:29+0000\n"
 "PO-Revision-Date: 2022-12-20 01:17+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
@@ -39,7 +39,7 @@ msgstr "Calendrier Romain Général"
 msgid "Catholic Liturgical Calendar"
 msgstr "Calendrier Liturgique Catholique"
 
-#: index.php:34 index.php:95
+#: index.php:34 index.php:110
 msgid "API Endpoint"
 msgstr "Point de terminaison de l'API"
 
@@ -73,11 +73,41 @@ msgstr ""
 "URL de la requête à l'API effectuée selon les options sélectionnées (le "
 "bouton ci-dessus est paramétré sur cette URL)"
 
-#: index.php:78 usage.php:182
+#: index.php:75
+#, fuzzy
+#| msgid "Liturgical Calendar API endpoint"
+msgid "Liturgical Calendar Validator"
+msgstr "API du calendrier liturgique"
+
+#: index.php:78
+msgid ""
+"In order to verify that the liturgical data produced by the API is correct, "
+"there is a Unit Test interface that can run predefined tests against the "
+"JSON responses produced by the API starting from the year 1970 and going up "
+"to 25 years from the current year."
+msgstr ""
+
+#: index.php:79
+msgid "LitCal Validator"
+msgstr ""
+
+#: index.php:82
+#, php-format
+msgid ""
+"The unit tests are defined in the %s folder in the Liturgical Calendar API "
+"repository."
+msgstr ""
+
+#: index.php:83
+#, php-format
+msgid "The unit test interface is curated in a repository of its own: %s."
+msgstr ""
+
+#: index.php:93 usage.php:182
 msgid "Calculation of the Date of Easter"
 msgstr "Calcul de la date de Pâques"
 
-#: index.php:81
+#: index.php:96
 msgid ""
 "A simple API endpoint that returns data about the Date of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -94,11 +124,11 @@ msgstr ""
 "et de l'algorithme Meeus pour les Pâques de Julian (observé par les églises "
 "orthodoxes)"
 
-#: index.php:86
+#: index.php:101
 msgid "Date of Easter API endpoint"
 msgstr "Date de Pâques API"
 
-#: index.php:88
+#: index.php:103
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
@@ -109,13 +139,22 @@ msgstr ""
 "pour chaque date de Pâques, la localisation peut également être effectuée "
 "par l'application cliente."
 
-#: index.php:95
+#: index.php:110
 msgid "Definition"
 msgstr "Définition"
 
-#: index.php:98
+#: index.php:113
 msgid "Swagger / Open API Documentation"
 msgstr "Documentation Swagger/OpenAPI"
+
+#: index.php:115
+#, php-format
+msgid ""
+"The Open API json schema for this API has been updated to OpenAPI 3.1. "
+"However the Swagger UI is not yet able to render OpenAPI 3.1 schemas. Until "
+"the Swagger UI supports OpenAPI 3.1 schemas, the UI will not be able to "
+"render the schema. See %s for updates."
+msgstr ""
 
 #: usage.php:7
 msgid ""
@@ -190,7 +229,8 @@ msgstr "URL d'abonnement au calendrier"
 
 #: usage.php:111 usage.php:124 usage.php:149
 msgid "Click on the link above to copy it the clipboard."
-msgstr "Cliquez sur le lien ci-dessus pour le copier dans votre presse-papiers."
+msgstr ""
+"Cliquez sur le lien ci-dessus pour le copier dans votre presse-papiers."
 
 #: usage.php:112
 #, php-format
@@ -202,8 +242,8 @@ msgid ""
 "At the bottom left corner of the screen, next to Other calendars, click on "
 "the + icon to add a new calendar, and choose <i><b>From URL</b></i>."
 msgstr ""
-"En bas à gauche de la fenêtre, à côté d'Autres agendas, cliquez sur l'icône +"
-" pour ajouter un nouvel agenda, puis sélectionnez <i><b>À partir de "
+"En bas à gauche de la fenêtre, à côté d'Autres agendas, cliquez sur "
+"l'icône + pour ajouter un nouvel agenda, puis sélectionnez <i><b>À partir de "
 "l'URL</b></i>."
 
 #: usage.php:114 usage.php:126 usage.php:152
@@ -255,8 +295,8 @@ msgid ""
 "Go to <i><b>Phone Settings → Accounts → Add account → Other → Add Calendar</"
 "b></i>."
 msgstr ""
-"Accédez à <i><b>Paramètres du téléphone → Compte → Ajouter un compte → Plus →"
-" Ajouter un calendrier</b></i>."
+"Accédez à <i><b>Paramètres du téléphone → Compte → Ajouter un compte → "
+"Plus → Ajouter un calendrier</b></i>."
 
 #: usage.php:128
 msgid ""
@@ -305,8 +345,8 @@ msgid ""
 "On the ribbon of the Home menu item, click on <i><b>Open calendar → From the "
 "internet</b></i>."
 msgstr ""
-"Dans le ruban de la section Accueil, cliquez sur <i><b>Ouvrir le calendrier →"
-" À partir d'Internet</b></i>."
+"Dans le ruban de la section Accueil, cliquez sur <i><b>Ouvrir le calendrier "
+"→ À partir d'Internet</b></i>."
 
 #: usage.php:153
 msgid ""
