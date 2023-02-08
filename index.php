@@ -19,26 +19,26 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
     <title><?php echo _( "General Roman Calendar" ) ?></title>
     <?php include_once('layout/head.php'); ?>
 </head>
-<body>
+<body class="sb-nav-fixed">
 
     <?php include_once('layout/header.php'); ?>
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800"><?php echo _( "Catholic Liturgical Calendar" ); ?></h1>
+        <h1 class="h3 mb-2 text-dark"><?php echo _( "Catholic Liturgical Calendar" ); ?></h1>
 
         <!-- Content Row -->
         <div class="row">
             <div class="col-md-6">
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "API Endpoint" ); ?><i class="fas fa-code float-right fa-2x text-gray-300"></i></h6>
+                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "API Endpoint" ); ?><i class="fas fa-code float-end fa-2x text-black-50"></i></h6>
                     </div>
                     <div class="card-body">
                         <p class="mb-4"><?php echo $API_DESCRIPTION; ?></p>
-                        <div class="form-row">
+                        <div class="row">
                             <div class="form-group col-sm-7">
                                 <label for="APICalendarSelect"><?php echo _( "Calendar to retrieve from the API" ); ?>:</label>
-                                <select id="APICalendarSelect" class="form-control">
+                                <select id="APICalendarSelect" class="form-select">
                                     <option value="">---</option>
                                 </select>
                             </div>
@@ -47,7 +47,7 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>returntype</label>
-                                <select id="RequestOptionReturnType" class="form-control">
+                                <select id="RequestOptionReturnType" class="form-select">
                                     <option value="">--</option>
                                     <option value="JSON">JSON</option>
                                     <option value="XML">XML</option>
@@ -58,11 +58,11 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                         <div class="text-center"><a id="RequestURLButton" href="<?php echo $endpointURL; ?>" class="btn btn-primary m-2"><?php echo _( "Liturgical Calendar API endpoint"); ?></a></div>
                         <p><?php echo _( "If a national or diocesan calendar is requested, these calendars will automatically set the specific options in the API request. " .
                             "If instead no national or diocesan calendar is requested (i.e. the Universal Calendar is requested) then the more specific options can be requested:" ); ?></p>
-                        <div class="form-row">
-                            <div class="form-group col-sm-3"><label>epiphany</label><select id="RequestOptionEpiphany" class="form-control requestOption"><option value="">--</option><option value="SUNDAY_JAN2_JAN8">SUNDAY_JAN2_JAN8</option><option value="JAN6">JAN6</option></select></div>
-                            <div class="form-group col-sm-3"><label>ascension</label><select id="RequestOptionAscension" class="form-control requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
-                            <div class="form-group col-sm-3"><label>corpuschristi</label><select id="RequestOptionCorpusChristi" class="form-control requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
-                            <div class="form-group col-sm-3"><label>locale</label><select id="RequestOptionLocale" class="form-control requestOption"><option value="">--</option><option value="EN">English</option><option value="IT">Italian</option><option value="LA">Latin</option></select></div>
+                        <div class="row">
+                            <div class="form-group col-sm-3"><label>epiphany</label><select id="RequestOptionEpiphany" class="form-select requestOption"><option value="">--</option><option value="SUNDAY_JAN2_JAN8">SUNDAY_JAN2_JAN8</option><option value="JAN6">JAN6</option></select></div>
+                            <div class="form-group col-sm-3"><label>ascension</label><select id="RequestOptionAscension" class="form-select requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
+                            <div class="form-group col-sm-3"><label>corpuschristi</label><select id="RequestOptionCorpusChristi" class="form-select requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
+                            <div class="form-group col-sm-3"><label>locale</label><select id="RequestOptionLocale" class="form-select requestOption"><option value="">--</option><option value="EN">English</option><option value="IT">Italian</option><option value="LA">Latin</option></select></div>
                         </div>
                         <small class="text-muted">
                             <p><i><?php echo _( "URL for the API request based on selected options (the above button is set to this URL)" ); ?>:</i></p>
@@ -72,7 +72,7 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                 </div>
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Liturgical Calendar Validator" ); ?><i class="fas fa-flask-vial float-right fa-2x text-gray-300"></i></h6>
+                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Liturgical Calendar Validator" ); ?><i class="fas fa-flask-vial float-end fa-2x text-black-50"></i></h6>
                     </div>
                     <div class="card-body">
                         <p><?php echo _( "In order to verify that the liturgical data produced by the API is correct, there is a Unit Test interface that can run predefined tests against the JSON responses produced by the API starting from the year 1970 and going up to 25 years from the current year." ); ?></p>
@@ -90,7 +90,7 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
             <div class="col-md-6">
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Calculation of the Date of Easter" ); ?>: API<i class="fas fa-code float-right fa-2x text-gray-300"></i></h6>
+                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Calculation of the Date of Easter" ); ?>: API<i class="fas fa-code float-end fa-2x text-black-50"></i></h6>
                     </div>
                     <div class="card-body">
                         <?php $EASTER_CALCULATOR_API = _( "A simple API endpoint that returns data about the Date of Easter, both Gregorian and Julian, " .
@@ -107,7 +107,7 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                 </div>
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "API Endpoint" ); ?>: <?php  echo _( "Definition" ) ?><i class="fas fa-file-code float-right fa-2x text-gray-300"></i></h6>
+                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "API Endpoint" ); ?>: <?php  echo _( "Definition" ) ?><i class="fas fa-file-code float-end fa-2x text-black-50"></i></h6>
                     </div>
                     <div class="card-body">
                         <div class="text-center"><a href="dist/" class="btn btn-primary mt-2"><?php echo _( "Swagger / Open API Documentation" ); ?></a></div>

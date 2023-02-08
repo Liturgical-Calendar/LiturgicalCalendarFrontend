@@ -1,6 +1,11 @@
+body {
+    font-family: 'Nunito', sans-serif !important;
+}
+
 .carousel .carousel-indicators li {
     background-color: rgba(70, 70, 70, 0.25);
-  }
+}
+
 .carousel .carousel-indicators .active {
     background-color: #444;
 }
