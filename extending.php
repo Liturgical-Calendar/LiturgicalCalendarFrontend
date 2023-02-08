@@ -128,14 +128,14 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
     $modalBody = "<div class=\"modal-body\">
     <form class=\"row justify-content-left needs-validation\" novalidate>
         <div class=\"form-group col col-md-10\">
-            <label for=\"existingFestivityName\" class=\"font-weight-bold\">" . _( "Choose from existing festivities") . ":</label>
+            <label for=\"existingFestivityName\" class=\"fw-bold\">" . _( "Choose from existing festivities") . ":</label>
             <input list=\"existingFestivitiesList\" class=\"form-control existingFestivityName\" required>
             <div class=\"invalid-feedback\">" . _( "This festivity does not seem to exist? Please choose from a value in the list.") . "</div>
         </div>";
     if( $hasPropertyChange ) {
         $modalBody .= "<div class=\"form-group col col-md-6\">
-            <label for=\"propertyToChange\" class=\"font-weight-bold\">" . _( "Property to change" ) . ":</label>
-            <select class=\"form-control\" id=\"propertyToChange\" name=\"propertyToChange\">
+            <label for=\"propertyToChange\" class=\"fw-bold\">" . _( "Property to change" ) . ":</label>
+            <select class=\"form-select\" id=\"propertyToChange\" name=\"propertyToChange\">
                 <option value=\"name\">" . _( "Name" ) . "</option>
                 <option value=\"grade\">" . _( "Grade" ) . "</option>
             </select>
@@ -158,7 +158,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
     <?php include_once('./layout/header.php'); ?>
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800"><?php echo _( "Extend the General Roman Calendar with National or Diocesan data"); ?></h1>
+        <h1 class="h3 mb-2 text-dark"><?php echo _( "Extend the General Roman Calendar with National or Diocesan data"); ?></h1>
         <p class="mb-4">
             <p><?php echo $API_EXTEND_HOWTO_A . " " . $API_EXTEND_HOWTO_A1 . " " . $API_EXTEND_HOWTO_A1a . " " . $API_EXTEND_HOWTO_A1b . " " . $API_EXTEND_HOWTO_A2 . " " . $API_EXTEND_HOWTO_A3; ?></p>
             <p><?php echo $API_EXTEND_HOWTO_B; ?></p>
@@ -172,7 +172,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                 <div class="container-fluid">
                     <form class="row justify-content-center needs-validation" novalidate>
                         <div class="form-group col col-md-3">
-                            <label for="widerRegionCalendarName" class="font-weight-bold"><?php echo _( "Wider Region"); ?></label>
+                            <label for="widerRegionCalendarName" class="fw-bold"><?php echo _( "Wider Region"); ?></label>
                             <input list="WiderRegionsList" class="form-control regionalNationalCalendarName" id="widerRegionCalendarName" data-category="widerRegionCalendar" required>
                             <div class="invalid-feedback"><?php echo _( "This value cannot be empty."); ?></div>
                             <datalist id="WiderRegionsList">
@@ -187,11 +187,11 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                         <div class="form-group col col-md-3">
                             <div class="form-check form-switch">
                                 <input type="checkbox" class="form-check-input" id="widerRegionIsMultilingual" />
-                                <label for="widerRegionIsMultilingual" class="form-check-label font-weight-bold"><?php echo _( "Wider Region is multilingual" ) ?></label>
+                                <label for="widerRegionIsMultilingual" class="form-check-label fw-bold"><?php echo _( "Wider Region is multilingual" ) ?></label>
                             </div>
                             <div class="form-group">
                                 <label for="widerRegionLanguages"></label>
-                                <select class="form-control" id="widerRegionLanguages" multiple="multiple">
+                                <select class="form-select" id="widerRegionLanguages" multiple="multiple">
                                     <?php foreach( $AllAvailableLocales as $locale => $lang_region ){
                                         echo "<option value='$locale'>$lang_region</option>";
                                     } ?>
@@ -199,16 +199,16 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                             </div>
                         </div>
                         <div class="form-group col col-md-3">
-                            <label for="removeExistingWiderRegionData" class="font-weight-bold"></label>
+                            <label for="removeExistingWiderRegionData" class="fw-bold"></label>
                             <button class="btn btn-danger m-2 form-control" id="removeExistingWiderRegionData" disabled data-toggle="modal" data-target="#removeWiderRegionDataPrompt">
                                 <i class="far fa-trash-alt mr-2"></i>
                                 <?php echo _( "Remove existing data"); ?>
                             </button>
                         </div>
                     </form>
-                    <div class="card border-left-primary mr-5 mx-5">
+                    <div class="card border-primary border-start mr-5 mx-5">
                         <div class="card-header py-3">
-                            <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Create a Calendar for a Wider Region"); ?></h4>
+                            <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black-50 d-inline-block fa-fw"></i>&nbsp;<?php echo _( "Create a Calendar for a Wider Region"); ?></h4>
                         </div>
                         <div class="card-body">
                             <hr>
@@ -228,7 +228,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                 <div class="container-fluid">
                     <form class="row justify-content-center needs-validation" novalidate>
                         <div class="form-group col col-md-3">
-                            <label for="nationalCalendarName" class="font-weight-bold"><?php echo _( "National Calendar"); ?></label>
+                            <label for="nationalCalendarName" class="fw-bold"><?php echo _( "National Calendar"); ?></label>
                             <input list="nationalCalendarsList" class="form-control regionalNationalCalendarName" id="nationalCalendarName" data-category="nationalCalendar" required>
                             <div class="invalid-feedback"><?php echo _( "This value cannot be empty."); ?></div>
                             <datalist id="nationalCalendarsList">
@@ -243,25 +243,25 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                             </datalist>
                         </div>
                         <div class="form-group col col-md-3">
-                            <label for="removeExistingNationalData" class="font-weight-bold"></label>
+                            <label for="removeExistingNationalData" class="fw-bold"></label>
                             <button class="btn btn-danger m-2 form-control" id="removeExistingNationalData" disabled data-toggle="modal" data-target="#removeNationalDataPrompt">
                                 <i class="far fa-trash-alt mr-2"></i>
                                 <?php echo _( "Remove existing data"); ?>
                             </button>
                         </div>
                     </form>
-                    <div class="card border-left-primary mr-5 mx-5">
+                    <div class="card border-primary border-start mr-5 mx-5">
                         <div class="card-header py-3">
-                            <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Create a National Calendar"); ?></h4>
+                            <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black-50 d-inline-block fa-fw"></i>&nbsp;<?php echo _( "Create a National Calendar"); ?></h4>
                         </div>
                         <div class="card-body">
 
                             <div id="nationalCalendarSettingsContainer" class="container">
-                                <h3 id="nationalCalendarSettingsTitle" class="text-center"><?php echo _("National calendar settings") ?><i class="fas fa-info-circle ml-4" role="button" title="please keep in mind that the first step to creating a national calendar, is to translate the already existing calendar data into the correct language. This can be done on the LitCal translation server (see above for details)"></i></h3>
+                                <h3 id="nationalCalendarSettingsTitle" class="text-center"><?php echo _("National calendar settings") ?><i class="fas fa-info-circle ml-4 d-inline-block" role="button" title="please keep in mind that the first step to creating a national calendar, is to translate the already existing calendar data into the correct language. This can be done on the LitCal translation server (see above for details)"></i></h3>
                                 <form id="nationalCalendarSettingsForm" class="row justify-content-center needs-validation" novalidate>
                                     <div class="form-group col col-md-3">
                                         <label><?php echo _( 'EPIPHANY' ) ?></label>
-                                        <select class="form-control" id="nationalCalendarSettingEpiphany">
+                                        <select class="form-select" id="nationalCalendarSettingEpiphany">
                                             <option value=""></option>
                                             <option value="JAN6"><?php echo _("January 6") ?></option>
                                             <option value="SUNDAY_JAN2_JAN8"><?php echo _("Sunday between January 2 and January 8") ?></option>
@@ -269,7 +269,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                                     </div>
                                     <div class="form-group col col-md-3">
                                         <label><?php echo _( 'ASCENSION' ) ?></label>
-                                        <select class="form-control" id="nationalCalendarSettingAscension">
+                                        <select class="form-select" id="nationalCalendarSettingAscension">
                                             <option value=""></option>
                                             <option value="THURSDAY"><?php echo $thursday ?></option>
                                             <option value="SUNDAY"><?php echo $sunday ?></option>
@@ -277,7 +277,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                                     </div>
                                     <div class="form-group col col-md-3">
                                         <label><?php echo _( 'CORPUS CHRISTI' ) ?></label>
-                                        <select class="form-control" id="nationalCalendarSettingCorpusChristi">
+                                        <select class="form-select" id="nationalCalendarSettingCorpusChristi">
                                             <option value=""></option>
                                             <option value="THURSDAY"><?php echo $thursday ?></option>
                                             <option value="SUNDAY"><?php echo $sunday ?></option>
@@ -285,7 +285,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                                     </div>
                                     <div class="form-group col col-md-3">
                                         <label><?php echo _( 'LOCALE' ) ?></label>
-                                        <select class="form-control" id="nationalCalendarSettingLocale">
+                                        <select class="form-select" id="nationalCalendarSettingLocale">
                                             <?php
                                                 foreach( $AllAvailableLocales as $AvlLOCALE => $AvlLANGUAGE ) {
                                                     echo "<option value=\"{$AvlLOCALE}\"" . ($i18n->LOCALE === $AvlLOCALE ? ' selected' : '') . ">{$AvlLANGUAGE}</option>";
@@ -327,8 +327,8 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                 <div class="container">
                     <form class="row justify-content-center needs-validation" novalidate>
                         <div class="form-group col col-md-3">
-                            <label for="diocesanCalendarNationalDependency" class="font-weight-bold"><?php echo _( "Depends on national calendar"); ?>:</label>
-                            <select class="form-control" id="diocesanCalendarNationalDependency" required>
+                            <label for="diocesanCalendarNationalDependency" class="fw-bold"><?php echo _( "Depends on national calendar"); ?>:</label>
+                            <select class="form-select" id="diocesanCalendarNationalDependency" required>
                                 <option value=""></option>
                                 <?php
                                     foreach( $availableNationalCalendars as $nation => $displayName ) {
@@ -338,7 +338,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                             </select>
                         </div>
                         <div class="form-group col col-md-3">
-                            <label for="diocesanCalendarDioceseName" class="font-weight-bold"><?php echo _( "Diocese"); ?>:</label>
+                            <label for="diocesanCalendarDioceseName" class="fw-bold"><?php echo _( "Diocese"); ?>:</label>
                             <input list="DiocesesList" class="form-control" id="diocesanCalendarDioceseName" required>
                             <div class="invalid-feedback"><?php echo _( "This diocese does not seem to exist? Please choose from a value in the list to retrieve an existing diocese, or ignore if creating a new diocesan calendar."); ?></div>
                             <datalist id="DiocesesList">
@@ -347,7 +347,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                             <div class="col text-center"><button class="btn btn-danger m-2" id="removeExistingDiocesanData" disabled data-toggle="modal" data-target="#removeDiocesanCalendarPrompt"><?php echo _( "Remove existing data"); ?></button></div>
                         </div>
                         <div class="form-group col col-md-3">
-                            <label for="diocesanCalendarGroup" class="font-weight-bold"><?php echo _( "Diocesan group"); ?>:</label>
+                            <label for="diocesanCalendarGroup" class="fw-bold"><?php echo _( "Diocesan group"); ?>:</label>
                             <input list="DiocesanGroupsList" class="form-control" id="diocesanCalendarGroup" aria-describedby="diocesanCalendarGroupHelp">
                             <datalist id="DiocesanGroupsList">
                                 <option value=""></option>
@@ -387,9 +387,9 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                     <div class="carousel-inner">
                         <div class="carousel-item active" id="carouselItemSolemnities">
                             <div class="container-fluid">
-                                <div class="card border-left-primary mr-5 mx-5">
+                                <div class="card border-primary border-start mr-5 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Solemnities"); ?></h4>
+                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black-50 d-inline-block fa-fw"></i>&nbsp;<?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Solemnities"); ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
@@ -408,9 +408,9 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                         </div>
                         <div class="carousel-item" id="carouselItemFeasts">
                             <div class="container-fluid">
-                                <div class="card border-left-primary mr-5 mx-5">
+                                <div class="card border-primary border-start mr-5 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Feasts"); ?></h4>
+                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black-50 d-inline-block fa-fw"></i>&nbsp;<?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Feasts"); ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
@@ -429,9 +429,9 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                         </div>
                         <div class="carousel-item" id="carouselItemMemorials">
                             <div class="container-fluid">
-                                <div class="card border-left-primary mr-5 mx-5">
+                                <div class="card border-primary border-start mr-5 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Memorials"); ?></h4>
+                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black-50 d-inline-block fa-fw"></i>&nbsp;<?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Memorials"); ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
@@ -450,9 +450,9 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                         </div>
                         <div class="carousel-item" id="carouselItemOptionalMemorials">
                             <div class="container-fluid">
-                                <div class="card border-left-primary mr-5 mx-5">
+                                <div class="card border-primary border-start mr-5 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 font-weight-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-gray-300 mr-4"></i><?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Optional Memorials"); ?></h4>
+                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black-50 d-inline-block fa-fw"></i>&nbsp;<?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Optional Memorials"); ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
@@ -485,7 +485,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                     <form id="diocesanOverridesForm" class="row justify-content-center needs-validation" novalidate>
                         <div class="form-group col col-md-3">
                             <label><?php echo _( 'EPIPHANY' ) ?></label>
-                            <select class="form-control" id="diocesanCalendarOverrideEpiphany">
+                            <select class="form-select" id="diocesanCalendarOverrideEpiphany">
                                 <option value=""></option>
                                 <option value="JAN6"><?php echo _("January 6") ?></option>
                                 <option value="SUNDAY_JAN2_JAN8"><?php echo _("Sunday between January 2 and January 8") ?></option>
@@ -493,7 +493,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                         </div>
                         <div class="form-group col col-md-3">
                             <label><?php echo _( 'ASCENSION' ) ?></label>
-                            <select class="form-control" id="diocesanCalendarOverrideAscension">
+                            <select class="form-select" id="diocesanCalendarOverrideAscension">
                                 <option value=""></option>
                                 <option value="THURSDAY"><?php echo $thursday ?></option>
                                 <option value="SUNDAY"><?php echo $sunday ?></option>
@@ -501,7 +501,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                         </div>
                         <div class="form-group col col-md-3">
                             <label><?php echo _( 'CORPUS CHRISTI' ) ?></label>
-                            <select class="form-control" id="diocesanCalendarOverrideCorpusChristi">
+                            <select class="form-select" id="diocesanCalendarOverrideCorpusChristi">
                                 <option value=""></option>
                                 <option value="THURSDAY"><?php echo $thursday ?></option>
                                 <option value="SUNDAY"><?php echo $sunday ?></option>
@@ -603,7 +603,7 @@ const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
             <div class="modal-body">
                 <form class="row justify-content-center needs-validation" novalidate>
                     <div class="form-group col col-md-10">
-                        <label for="languageEditionRomanMissalName" class="font-weight-bold"><?php echo _( "Choose from known Roman Missal language editions"); ?>:</label>
+                        <label for="languageEditionRomanMissalName" class="fw-bold"><?php echo _( "Choose from known Roman Missal language editions"); ?>:</label>
                         <input list="languageEditionRomanMissalList" class="form-control" id="languageEditionRomanMissalName">
                         <div class="invalid-feedback"><?php echo _( "This Missal is unknown to the Liturgical Calendar API. Please choose from a value in the list, or contact the curator of the API to have the Missal added to known language edition Missals."); ?></div>
                     </div>
