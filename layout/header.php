@@ -13,7 +13,7 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOf
 <!-- Topbar -->
 <nav class="sb-topnav navbar navbar-expand navbar-light bg-white shadow">
     <!-- Navbar Brand -->
-    <a class="navbar-brand ps-3" href="/"></a>
+    <a class="navbar-brand ps-3" href="/">Navbar</a>
 
     <!-- Sidebar Toggle (Topbar) -->
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
@@ -22,7 +22,7 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOf
     <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
         <li class="nav-item<?php echo $currentPage=="index" || $currentPage == "" ? " active" : ""; ?>" id="topNavBar_API"><a class="nav-link<?php echo $currentPage=="index" || $currentPage == "" ? " font-weight-bold" : ""; ?>" href="./index.php">API</a></li>
         <li class="nav-item dropdown<?php echo $currentPage=="extending" ? " active" : ""; ?>" id="topNavBar_Extending">
-            <a class="nav-link dropdown-toggle<?php echo $currentPage=="extending" ? " font-weight-bold" : ""; ?>" style="white-space: normal;" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="extendingChoicesDropdown">
+            <a class="nav-link dropdown-toggle<?php echo $currentPage=="extending" ? " font-weight-bold" : ""; ?>" style="white-space: normal;" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="extendingChoicesDropdown">
                 <?php echo _( "Extending the API" ); ?>
             </a>
             <div class="dropdown-menu dropdown-menu-left shadow animated--grow-in" aria-labelledby="extendingChoicesDropdown" id="extendingChoicesDropdownItems">
@@ -37,7 +37,7 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOf
     <ul class="navbar-nav ml-auto">
         <li class="nav-item dropdown">
             <!-- this should contain the value of the currently selected language, based on a cookie -->
-            <a class="nav-link dropdown-toggle" href="#" id="langChoicesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" href="#" id="langChoicesDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 English
             </a>
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="langChoicesDropdown" id="langChoicesDropdownItems">
