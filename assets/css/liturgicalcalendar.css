@@ -19,3 +19,31 @@ body {
     width: 30px;
     height: 30px;
 }
+/*
+.sidebar.toggled {
+    width: 0 !important;
+    overflow: hidden;
+}
+*/
+
+@media (min-width: 768px) {
+
+    .sb-sidenav-collapsed:not(.sb-sidenav-toggled) #layoutSidenav #layoutSidenav_nav {
+        width: 125px;
+        font-size: .8em;
+        text-align: center;
+    }
+    .sb-sidenav-collapsed:not(.sb-sidenav-toggled) #layoutSidenav #layoutSidenav_content {
+        margin-left: -125px;
+    }
+    .sb-sidenav-collapsed:not(.sb-sidenav-toggled) #layoutSidenav #layoutSidenav_nav .nav-link {
+        flex-direction: column;
+    }
+    .sb-sidenav-collapsed:not(.sb-sidenav-toggled) #layoutSidenav #layoutSidenav_nav .nav-link .sb-nav-link-icon {
+        margin-right: 0;
+    }
+    .sb-sidenav-collapsed .sidebar-brand {
+        display: none;
+    }
+
+}

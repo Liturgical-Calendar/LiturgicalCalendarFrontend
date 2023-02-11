@@ -71,7 +71,7 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOf
             <div class="sb-sidenav-menu">
                 <div class="nav">
                     <!-- Sidebar - Brand -->
-                    <div class="text-center lh-2 px-5 pt-2">
+                    <div class="text-center lh-2 px-5 pt-2 sidebar-brand">
                         <a class="text-uppercase fs-6 fw-bold text-white text-decoration-none" href="/">
                             <?php echo _( "Catholic Liturgical Calendar" ); ?>
                         </a>
@@ -119,7 +119,7 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOf
             <div class="sb-sidenav-footer">
                 <!-- Sidebar Toggler (Sidebar) -->
                 <div class="text-center">
-                    <button class="rounded-circle border-0" id="sidebarToggleB"></button>
+                    <button type="button" class="btn btn-secondary rounded-circle border-0 sidebarToggle" id="sidebarToggleB"><i class="fas fa-angle-left"></i></button>
                 </div>
             </div>
 
