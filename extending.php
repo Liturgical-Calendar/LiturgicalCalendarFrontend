@@ -294,9 +294,14 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                                         </select>
                                     </div>
 
-                                    <div class="form col col-md-6">
-                                        <div class="row">
-                                            <label><i class="fas fa-info-circle me-2" role="button" title="if data from the Proper of Saints of a given Missal for this nation has already been incorporated into the main LitCal engine, you can choose the Missal from this list to associate it with this National Calendar (if the Missal is not in the list, it has not been incorporated into the LitCal engine)"></i><?php echo _( 'Published Roman Missals' ) ?></label><button class="btn btn-sm btn-primary ms-2 mb-2" id="addPublishedRomanMissal" data-bs-toggle="modal" data-bs-target="#addPublishedRomanMissalPrompt" type="button"><i class="fas fa-plus me-2"></i><?php echo _( 'Add Missal' ) ?></button>
+                                    <div class="col col-md-6">
+                                        <div class="row mt-2">
+                                            <div class="col-5">
+                                                <label><i class="fas fa-info-circle me-2" role="button" title="if data from the Proper of Saints of a given Missal for this nation has already been incorporated into the main LitCal engine, you can choose the Missal from this list to associate it with this National Calendar (if the Missal is not in the list, it has not been incorporated into the LitCal engine)"></i><?php echo _( 'Published Roman Missals' ) ?></label>
+                                            </div>
+                                            <div class="col-4">
+                                                <button class="btn btn-sm btn-primary ms-2 mb-2" id="addPublishedRomanMissal" data-bs-toggle="modal" data-bs-target="#addPublishedRomanMissalPrompt" type="button"><i class="fas fa-plus me-2"></i><?php echo _( 'Add Missal' ) ?></button>
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <ul class="list-group" id="publishedRomanMissalList" style="width: 250px;">
