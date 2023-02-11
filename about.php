@@ -37,7 +37,7 @@ $cardInfo = [
 function generateCard( string $who ) : void {
     global $cardInfo;
     $card = "<div class=\"col-md-6\">
-        <div class=\"card border-left-success shadow m-2\">
+        <div class=\"card border-3 border-top-0 border-bottom-0 border-end-0 border-primary shadow m-2\">
             <div class=\"card-body\">
                 <div class=\"row no-gutters align-items-center\">
                     <div class=\"col mr-2\">
