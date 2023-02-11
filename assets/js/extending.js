@@ -196,9 +196,9 @@ class FormControls {
 
         if (FormControls.settings.monthField) {
             formRow += `<div class="form-group col-sm-2">
-            <label for="onTheFly${FormControls.uniqid}Month"><span class="month-label">${messages[ "Month" ]}</span><div class="form-check form-check-inline form-switch ms-2 border border-right-0 border-secondary rounded-left bg-light ps-1" title="switch on for mobile celebration as opposed to fixed date">
+            <label for="onTheFly${FormControls.uniqid}Month"><span class="month-label">${messages[ "Month" ]}</span><div class="form-check form-check-inline form-switch ms-2 border border-end-0 border-secondary rounded-start bg-light ps-1" title="switch on for mobile celebration as opposed to fixed date">
                 <label class="form-check-label me-2" for="onTheFly${FormControls.uniqid}StrtotimeSwitch">Mobile</label>
-                <input class="form-check-input litEvent litEventStrtotimeSwitch" type="checkbox" data-bs-toggle="toggle" data-size="xs" data-bs-onstyle="info" data-bs-offstyle="dark" role="switch" id="onTheFly${FormControls.uniqid}StrtotimeSwitch">
+                <input class="form-check-input litEvent litEventStrtotimeSwitch" type="checkbox" data-bs-toggle="toggle" data-bs-size="xs" data-bs-onstyle="info" data-bs-offstyle="dark" role="switch" id="onTheFly${FormControls.uniqid}StrtotimeSwitch">
             </div></label>
             <select class="form-control litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month">`;
 
@@ -214,7 +214,7 @@ class FormControls {
 
         if(FormControls.settings.strtotimeField) {
             formRow += `<div class="form-group col-sm-3>
-            <label for="onTheFly${FormControls.uniqid}Strtotime"><span class="month-label">Explicatory date</span><div class="form-check form-check-inline form-switch ms-2 border border-right-0 border-secondary rounded-left bg-light ps-1" title="switch on for mobile celebration as opposed to fixed date">
+            <label for="onTheFly${FormControls.uniqid}Strtotime"><span class="month-label">Explicatory date</span><div class="form-check form-check-inline form-switch ms-2 border border-end-0 border-secondary rounded-start bg-light ps-1" title="switch on for mobile celebration as opposed to fixed date">
                 <label class="form-check-label me-2" for="onTheFly${FormControls.uniqid}StrtotimeSwitch">Mobile</label>
                 <input class="form-check-input litEvent litEventStrtotimeSwitch" type="checkbox" data-bs-toggle="toggle" data-bs-size="xs" data-bs-onstyle="info" data-bs-offstyle="dark" role="switch" id="onTheFly${FormControls.uniqid}StrtotimeSwitch">
             </div></label>
@@ -676,11 +676,11 @@ const loadDiocesanCalendarData = () => {
                         break;
                 }
                 $row.find('.litEventName').val(Festivity.name).attr('data-valuewas', key);
-                if(Metadata.formRowNum > 2) {
-                    $row.find('.litEventStrtotimeSwitch').bootstrapToggle();
-                }
+                //if(Metadata.formRowNum > 2) {
+                //    $row.find('.litEventStrtotimeSwitch').bootstrapToggle();
+                //}
                 if( Metadata.hasOwnProperty('strtotime') ) {
-                    $row.find('.litEventStrtotimeSwitch').bootstrapToggle('on', true);
+                    $row.find('.litEventStrtotimeSwitch').prop('checked', true);
                     if( $row.find('.litEventStrtotime').length === 0 ) {
                         switcheroo( $row, Metadata );
                     }
@@ -1026,10 +1026,11 @@ $(document).on('change', '.litEvent', ev => {
             }
         } else {
             alert('this switch is disabled as long as the festivity row does not have a festivity name!');
+            //ev.preventDefault();
             if( false === $(ev.currentTarget).prop('checked') ) {
-                $(ev.currentTarget).bootstrapToggle('on', true);
+                $(ev.currentTarget).prop('checked', true);
             } else {
-                $(ev.currentTarget).bootstrapToggle('off', true);
+                $(ev.currentTarget).prop('checked', false);
             }
         }
     } else if ($(ev.currentTarget).hasClass('litEventStrtotime')) {
@@ -1143,7 +1144,7 @@ $(document).on('click', '.onTheFlyEventRow', ev => {
             button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
         }
     });
-    $row.find('.litEventStrtotimeSwitch').bootstrapToggle();
+    //$row.find('.litEventStrtotimeSwitch').bootstrapToggle();
 });
 
 $(document).on('click', '.actionPromptButton', ev => {
