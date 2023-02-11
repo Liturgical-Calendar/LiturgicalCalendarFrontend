@@ -89,16 +89,16 @@ $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/Lit
                                 <div class="text-center bg-light border border-info rounded p-2" role="button" title="Click to copy to the clipboard!" id="calSubscriptionURLWrapper"><code id="calSubscriptionURL"><?php echo $calSubscriptionURL; ?></code><i class="fas fa-clipboard float-end text-info"></i></div>
                                 <ul class="nav nav-tabs mt-4" role="tablist">
                                     <li class="nav-item">
-                                        <button class="nav-link active" id="gcal-tab" data-bs-toggle="tab" data-bs-target="#gcal" role="tab" aria-controls="gcal" aria-selected="true"><i class="fab fa-google mr-2"></i>&nbsp;Google Calendar</button>
+                                        <button class="nav-link active" id="gcal-tab" data-bs-toggle="tab" data-bs-target="#gcal" role="tab" aria-controls="gcal" aria-selected="true"><i class="fab fa-google me-2"></i>&nbsp;Google Calendar</button>
                                     </li>
                                     <li class="nav-item">
-                                        <button class="nav-link" id="iphone-tab" data-bs-toggle="tab" data-bs-target="#iphone" role="tab" aria-controls="iphone" aria-selected="false"><i class="fab fa-apple mr-2"></i>&nbsp;iPhone</button>
+                                        <button class="nav-link" id="iphone-tab" data-bs-toggle="tab" data-bs-target="#iphone" role="tab" aria-controls="iphone" aria-selected="false"><i class="fab fa-apple me-2"></i>&nbsp;iPhone</button>
                                     </li>
                                     <li class="nav-item">
-                                        <button class="nav-link" id="android-tab" data-bs-toggle="tab" data-bs-target="#android" role="tab" aria-controls="android" aria-selected="false"><i class="fab fa-android mr-2"></i>&nbsp;Android</button>
+                                        <button class="nav-link" id="android-tab" data-bs-toggle="tab" data-bs-target="#android" role="tab" aria-controls="android" aria-selected="false"><i class="fab fa-android me-2"></i>&nbsp;Android</button>
                                     </li>
                                     <li class="nav-item">
-                                        <button class="nav-link" id="msoutlook-tab" data-bs-toggle="tab" data-bs-target="#msoutlook" role="tab" aria-controls="msoutlook" aria-selected="false"><i class="fab fa-microsoft mr-2"></i>&nbsp;Microsoft Outlook</button>
+                                        <button class="nav-link" id="msoutlook-tab" data-bs-toggle="tab" data-bs-target="#msoutlook" role="tab" aria-controls="msoutlook" aria-selected="false"><i class="fab fa-microsoft me-2"></i>&nbsp;Microsoft Outlook</button>
                                     </li>
                                 </ul>
                                 <div class="tab-content" id="myTabContent">

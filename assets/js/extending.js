@@ -141,8 +141,8 @@ const removeDiocesanCalendarModal = diocese => {
         ${messages[ "If you choose" ]}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-backspace mr-2">Cancel</button>
-        <button type="button" id="deleteDiocesanCalendarButton" class="btn btn-danger"><i class="far fa-trash-alt mr-2"></i>Delete calendar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-backspace me-2">Cancel</button>
+        <button type="button" id="deleteDiocesanCalendarButton" class="btn btn-danger"><i class="far fa-trash-alt me-2"></i>Delete calendar</button>
       </div>
     </div>
   </div>
@@ -179,7 +179,7 @@ class FormControls {
             formRow += `<div class="d-flex justify-content-left data-group-title"><h4 class="data-group-title">${FormControls.title}</h4></div>`;
         }
 
-        formRow += `<div class="form-row">`;
+        formRow += `<div class="row">`;
 
         if (FormControls.settings.nameField) {
             formRow += `<div class="form-group col-sm-3">
@@ -196,9 +196,9 @@ class FormControls {
 
         if (FormControls.settings.monthField) {
             formRow += `<div class="form-group col-sm-2">
-            <label for="onTheFly${FormControls.uniqid}Month"><span class="month-label">${messages[ "Month" ]}</span><div class="form-check form-check-inline form-switch ml-2 border border-right-0 border-secondary rounded-left bg-light pl-1" title="switch on for mobile celebration as opposed to fixed date">
-                <label class="form-check-label mr-2" for="onTheFly${FormControls.uniqid}StrtotimeSwitch">Mobile</label>
-                <input class="form-check-input litEvent litEventStrtotimeSwitch" type="checkbox" data-toggle="toggle" data-size="xs" data-onstyle="info" data-offstyle="dark" role="switch" id="onTheFly${FormControls.uniqid}StrtotimeSwitch">
+            <label for="onTheFly${FormControls.uniqid}Month"><span class="month-label">${messages[ "Month" ]}</span><div class="form-check form-check-inline form-switch ms-2 border border-right-0 border-secondary rounded-left bg-light ps-1" title="switch on for mobile celebration as opposed to fixed date">
+                <label class="form-check-label me-2" for="onTheFly${FormControls.uniqid}StrtotimeSwitch">Mobile</label>
+                <input class="form-check-input litEvent litEventStrtotimeSwitch" type="checkbox" data-bs-toggle="toggle" data-size="xs" data-bs-onstyle="info" data-bs-offstyle="dark" role="switch" id="onTheFly${FormControls.uniqid}StrtotimeSwitch">
             </div></label>
             <select class="form-control litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month">`;
 
@@ -214,9 +214,9 @@ class FormControls {
 
         if(FormControls.settings.strtotimeField) {
             formRow += `<div class="form-group col-sm-3>
-            <label for="onTheFly${FormControls.uniqid}Strtotime"><span class="month-label">Explicatory date</span><div class="form-check form-check-inline form-switch ml-2 border border-right-0 border-secondary rounded-left bg-light pl-1" title="switch on for mobile celebration as opposed to fixed date">
-                <label class="form-check-label mr-2" for="onTheFly${FormControls.uniqid}StrtotimeSwitch">Mobile</label>
-                <input class="form-check-input litEvent litEventStrtotimeSwitch" type="checkbox" data-toggle="toggle" data-size="xs" data-onstyle="info" data-offstyle="dark" role="switch" id="onTheFly${FormControls.uniqid}StrtotimeSwitch">
+            <label for="onTheFly${FormControls.uniqid}Strtotime"><span class="month-label">Explicatory date</span><div class="form-check form-check-inline form-switch ms-2 border border-right-0 border-secondary rounded-left bg-light ps-1" title="switch on for mobile celebration as opposed to fixed date">
+                <label class="form-check-label me-2" for="onTheFly${FormControls.uniqid}StrtotimeSwitch">Mobile</label>
+                <input class="form-check-input litEvent litEventStrtotimeSwitch" type="checkbox" data-bs-toggle="toggle" data-bs-size="xs" data-bs-onstyle="info" data-bs-offstyle="dark" role="switch" id="onTheFly${FormControls.uniqid}StrtotimeSwitch">
             </div></label>
             <input type="text" class="form-control litEvent litEventStrtotime" id="onTheFly${FormControls.uniqid}Strtotime" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" />
             </div>`;
@@ -289,15 +289,15 @@ class FormControls {
             formRow += `<div class="d-flex justify-content-left data-group-title"><h4 class="data-group-title">${FormControls.title}</h4>`;
             if(FormControls.action.description === RowAction.CreateNew.description) {
                 if( festivity !== null && festivity.hasOwnProperty( 'strtotime' ) ) {
-                    formRow += `<button type="button" class="ml-auto btn btn-info strtotime-toggle-btn active" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="true" autocomplete="off"><i class="fas fa-comment mr-2"></i>explicatory date</button>`;
+                    formRow += `<button type="button" class="ms-auto btn btn-info strtotime-toggle-btn active" data-bs-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="true" autocomplete="off"><i class="fas fa-comment me-2"></i>explicatory date</button>`;
                 } else {
-                    formRow += `<button type="button" class="ml-auto btn btn-info strtotime-toggle-btn" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="false" autocomplete="off"><i class="fas fa-comment-slash mr-2"></i>explicatory date</button>`;
+                    formRow += `<button type="button" class="ms-auto btn btn-info strtotime-toggle-btn" data-bs-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="false" autocomplete="off"><i class="fas fa-comment-slash me-2"></i>explicatory date</button>`;
                 }
             }
             formRow += `</div>`;
         }
 
-        formRow += `<div class="form-row">`;
+        formRow += `<div class="row">`;
 
         formRow += `<div class="form-group col-sm-6">`;
         if(FormControls.settings.tagField === false){
@@ -398,7 +398,7 @@ class FormControls {
 
         if(FormControls.settings.decreeURLField) {
             formRow += `<div class="form-group col-sm-6">
-            <label for="onTheFly${FormControls.uniqid}DecreeURL">${messages[ "Decree URL" ]}<i class="ml-2 fas fa-info-circle" title="Use %s in place of the language code if using a language mapping"></i></label>
+            <label for="onTheFly${FormControls.uniqid}DecreeURL">${messages[ "Decree URL" ]}<i class="ms-2 fas fa-info-circle" title="Use %s in place of the language code if using a language mapping"></i></label>
             <input type="text" class="form-control litEvent litEventDecreeURL" value="${festivity !== null && typeof festivity.decreeURL !== 'undefined' ? festivity.decreeURL : ''}" />
             </div>`;
         }
@@ -406,7 +406,7 @@ class FormControls {
         if(FormControls.settings.decreeLangMapField) {
             let decreeLangs = festivity !== null && typeof festivity.decreeLangs !== 'undefined' ? Object.keys(festivity.decreeLangs).map(key => key+'='+festivity.decreeLangs[key] ) : null;
             formRow += `<div class="form-group col-sm-6">
-            <label for="onTheFly${FormControls.uniqid}DecreeLangs">${messages[ "Decree Langs" ]}<i class="ml-2 fas fa-info-circle" title="Use a comma separated list of key=value pairings, e.g. DE=ge,EN=en. Key is uppercased two letter ISO code, value is (generally lowercased) two letter representation used within the actual URL"></i></label>
+            <label for="onTheFly${FormControls.uniqid}DecreeLangs">${messages[ "Decree Langs" ]}<i class="ms-2 fas fa-info-circle" title="Use a comma separated list of key=value pairings, e.g. DE=ge,EN=en. Key is uppercased two letter ISO code, value is (generally lowercased) two letter representation used within the actual URL"></i></label>
             <input type="text" class="form-control litEvent litEventDecreeLangs" value="${festivity !== null && typeof festivity.decreeLangs !== 'undefined' ? decreeLangs.join(',') : ''}" />
             </div>`;
         }
@@ -534,18 +534,22 @@ const setCommonMultiselect = ($row=null,common=null) => {
     }
     $litEventCommon.multiselect({
         buttonWidth: '100%',
+        buttonClass: 'form-select',
+        templates: {
+            button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+        },
         maxHeight: 200,
         enableCaseInsensitiveFiltering: true,
         onChange: (option, checked, select) => {
             if (($(option).val() !== 'Proper' && checked === true && $(option).parent().val().includes('Proper')) || checked === false ) {
                 $(option).parent().multiselect('deselect', 'Proper');
-                $row = $(option).closest('.form-row');
+                $row = $(option).closest('.row');
                 if( $row.find('.litEventReadings').length ) {
                     $row.find('.litEventReadings').prop('disabled',true);
                 }
             } else if ($(option).val() === 'Proper' && checked === true) {
                 $(option).parent().multiselect('deselectAll', false).multiselect('select', 'Proper');
-                $row = $(option).closest('.form-row');
+                $row = $(option).closest('.row');
                 if( $row.find('.litEventReadings').length ) {
                     $row.find('.litEventReadings').prop('disabled',false);
                 }
@@ -623,7 +627,7 @@ const loadDiocesanCalendarData = () => {
                 switch (Festivity.grade) {
                     case RANK.SOLEMNITY:
                         $form = $('#carouselItemSolemnities form');
-                        numLastRow = $form.find('.form-row').length - 1;
+                        numLastRow = $form.find('.row').length - 1;
                         if (Metadata.formRowNum > numLastRow) {
                             numMissingRows = Metadata.formRowNum - numLastRow;
                             FormControls.title = messages['Other Solemnity'];
@@ -632,10 +636,10 @@ const loadDiocesanCalendarData = () => {
                                 $form.append($(FormControls.CreateFestivityRow()));
                             }
                         }
-                        $row = $('#carouselItemSolemnities form .form-row').eq(Metadata.formRowNum);
+                        $row = $('#carouselItemSolemnities form .row').eq(Metadata.formRowNum);
                         break;
                     case RANK.FEAST:
-                        numLastRow = $('#carouselItemFeasts form .form-row').length - 1;
+                        numLastRow = $('#carouselItemFeasts form .row').length - 1;
                         if (Metadata.formRowNum > numLastRow) {
                             numMissingRows = Metadata.formRowNum - numLastRow;
                             FormControls.title = messages['Other Feast'];
@@ -644,10 +648,10 @@ const loadDiocesanCalendarData = () => {
                                 $('.carousel-item').eq(1).find('form').append($(FormControls.CreateFestivityRow()));
                             }
                         }
-                        $row = $('#carouselItemFeasts form .form-row').eq(Metadata.formRowNum);
+                        $row = $('#carouselItemFeasts form .row').eq(Metadata.formRowNum);
                         break;
                     case RANK.MEMORIAL:
-                        numLastRow = $('#carouselItemMemorials form .form-row').length - 1;
+                        numLastRow = $('#carouselItemMemorials form .row').length - 1;
                         if (Metadata.formRowNum > numLastRow) {
                             numMissingRows = Metadata.formRowNum - numLastRow;
                             FormControls.title = messages['Other Memorial'];
@@ -656,10 +660,10 @@ const loadDiocesanCalendarData = () => {
                                 $('.carousel-item').eq(2).find('form').append($(FormControls.CreateFestivityRow()));
                             }
                         }
-                        $row = $('#carouselItemMemorials form .form-row').eq(Metadata.formRowNum);
+                        $row = $('#carouselItemMemorials form .row').eq(Metadata.formRowNum);
                         break;
                     case RANK.OPTIONALMEMORIAL:
-                        numLastRow = $('#carouselItemOptionalMemorials form .form-row').length - 1;
+                        numLastRow = $('#carouselItemOptionalMemorials form .row').length - 1;
                         if (Metadata.formRowNum > numLastRow) {
                             numMissingRows = Metadata.formRowNum - numLastRow;
                             FormControls.title = messages['Other Optional Memorial'];
@@ -668,7 +672,7 @@ const loadDiocesanCalendarData = () => {
                                 $('.carousel-item').eq(3).find('form').append($(FormControls.CreateFestivityRow()));
                             }
                         }
-                        $row = $('#carouselItemOptionalMemorials form .form-row').eq(Metadata.formRowNum);
+                        $row = $('#carouselItemOptionalMemorials form .row').eq(Metadata.formRowNum);
                         break;
                 }
                 $row.find('.litEventName').val(Festivity.name).attr('data-valuewas', key);
@@ -689,7 +693,13 @@ const loadDiocesanCalendarData = () => {
                     $row.find('.litEventMonth').val(Festivity.month);
                 }
                 setCommonMultiselect( $row, Festivity.common );
-                $row.find('.litEventColor').multiselect({ buttonWidth: '100%' }).multiselect('deselectAll', false).multiselect('select', Festivity.color);
+                $row.find('.litEventColor').multiselect({
+                    buttonWidth: '100%',
+                    buttonClass: 'form-select',
+                    templates: {
+                        button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+                    }
+                }).multiselect('deselectAll', false).multiselect('select', Festivity.color);
                 $row.find('.litEventSinceYear').val(Metadata.sinceYear);
                 if( Metadata.hasOwnProperty('untilYear') ) {
                     $row.find('.litEventUntilYear').val(Metadata.untilYear);
@@ -792,12 +802,12 @@ $(document).on('click', '#diocesanCalendarDefinitionCardLinks a.page-link', ev =
         $('.carousel').carousel('prev');
     } else {
         $(ev.currentTarget).parent('li').addClass('active');
-        $('.carousel').carousel(parseInt($(ev.currentTarget).attr('data-slide-to')));
+        $('.carousel').carousel(parseInt($(ev.currentTarget).attr('data-bs-slide-to')));
     }
 });
 
 $(document).on('change', '.litEvent', ev => {
-    $row = $(ev.currentTarget).closest('.form-row');
+    $row = $(ev.currentTarget).closest('.row');
     $card = $(ev.currentTarget).closest('.card-body');
     if ($(ev.currentTarget).hasClass('litEventName')) {
         //console.log('LitEvent name has changed');
@@ -830,7 +840,7 @@ $(document).on('change', '.litEvent', ev => {
                 if( $row.find('.litEventUntilYear').val() !== '' ) {
                     $CALENDAR.LitCal[eventKey].Metadata.untilYear = parseInt($row.find('.litEventUntilYear').val());
                 }
-                let formRowIndex = $card.find('.form-row').index($row);
+                let formRowIndex = $card.find('.row').index($row);
                 $CALENDAR.LitCal[eventKey].Metadata.formRowNum = formRowIndex;
                 console.log('form row index is ' + formRowIndex);
                 $(ev.currentTarget).attr('data-valuewas', eventKey);
@@ -886,7 +896,7 @@ $(document).on('change', '.litEvent', ev => {
                             parseInt($row.find('.litEventMonth').val()), //month
                         );
                         $CALENDAR.LitCal[eventKey].Metadata.sinceYear = untilYear + 1;
-                        let formRowIndex = $card.find('.form-row').index($row);
+                        let formRowIndex = $card.find('.row').index($row);
                         $CALENDAR.LitCal[eventKey].Metadata.formRowNum = formRowIndex;
                         console.log('form row index is ' + formRowIndex);
                     }
@@ -1059,7 +1069,7 @@ $(document).on('click', '#saveDiocesanCalendar_btn', () => {
     }
 
     let formsValid = true;
-    $('form').find('.form-row').each((idx,row) => {
+    $('form').find('.row').each((idx,row) => {
         if( $(row).find('.litEventName').val() !== '' ) {
             $(row).find('input,select').each((idx, el) => {
                 if (el.checkValidity() === false) {
@@ -1127,7 +1137,11 @@ $(document).on('click', '.onTheFlyEventRow', ev => {
 
     setCommonMultiselect( $row, null );
     $row.find('.litEventColor').multiselect({
-        buttonWidth: '100%'
+        buttonWidth: '100%',
+        buttonClass: 'form-select',
+        templates: {
+            button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+        }
     });
     $row.find('.litEventStrtotimeSwitch').bootstrapToggle();
 });
@@ -1159,13 +1173,17 @@ $(document).on('click', '.actionPromptButton', ev => {
     }
     $('.regionalNationalDataForm').append($row);
     $modal.modal('hide');
-    $row.find('.form-group').closest('.form-row').data('action', FormControls.action.description).attr('data-action', FormControls.action.description);
+    $row.find('.form-group').closest('.row').data('action', FormControls.action.description).attr('data-action', FormControls.action.description);
     if( FormControls.action.description === RowAction.SetProperty.description ) {
         console.log('propertyToChange is of type ' + typeof propertyToChange + ' and has a value of ' + propertyToChange);
-        $row.find('.form-group').closest('.form-row').data('prop', propertyToChange).attr('data-prop', propertyToChange);
+        $row.find('.form-group').closest('.row').data('prop', propertyToChange).attr('data-prop', propertyToChange);
     }
     $row.find('.litEventColor').multiselect({
-        buttonWidth: '100%'
+        buttonWidth: '100%',
+        buttonClass: 'form-select',
+        templates: {
+            button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+        }
     }).multiselect('deselectAll', false);
 
     if(FormControls.settings.colorField === false) {
@@ -1264,7 +1282,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                 $row = $(FormControls.CreatePatronRow( el ));
                 $('.regionalNationalDataForm').append($row);
 
-                $formrow = $row.find('.form-group').closest('.form-row');
+                $formrow = $row.find('.form-group').closest('.row');
                 $formrow.data('action', el.Metadata.action).attr('data-action', el.Metadata.action);
                 if( el.Metadata.action === RowAction.SetProperty.description ) {
                     $formrow.data('prop', el.Metadata.property).attr('data-prop', el.Metadata.property);
@@ -1278,7 +1296,11 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                     $row.find(`#onTheFly${currentUniqid}Missal`).val(MISSAL); //.prop('disabled', true);
                 }
                 $row.find('.litEventColor').multiselect({
-                    buttonWidth: '100%'
+                    buttonWidth: '100%',
+                    buttonClass: 'form-select',
+                    templates: {
+                        button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+                    }
                 }).multiselect('deselectAll', false);
 
                 if( el.Festivity.hasOwnProperty( 'color' ) === false && existingFestivityTag !== null ) {
@@ -1338,7 +1360,7 @@ $(document).on('change', '#diocesanCalendarDioceseName', ev => {
     $CALENDAR = { LitCal: {} };
     $('.carousel-item form').each((idx, el) => {
         el.reset();
-        $(el).find('.form-row').slice(3).remove();
+        $(el).find('.row').slice(3).remove();
         $(el).find('div.data-group-title').remove();
         $(el).find('.litEventCommon').multiselect('deselectAll', false).multiselect('select', 'Proper');
         $(el).find('.litEventColor').multiselect('deselectAll', false).multiselect('select', 'white');
@@ -1487,7 +1509,7 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
             break;
     }
 
-    $('.regionalNationalDataForm .form-row').each((idx, el) => {
+    $('.regionalNationalDataForm .row').each((idx, el) => {
         const action = $(el).data('action');
         let rowData = {
             "Festivity": {},
@@ -1640,11 +1662,15 @@ jQuery(document).ready(() => {
             $('#diocesanCalendarDefinitionCardLinks li:first-child').removeClass('disabled');
             $('#diocesanCalendarDefinitionCardLinks li:last-child').removeClass('disabled');
         }
-        $('#diocesanCalendarDefinitionCardLinks li').find('[data-slide-to=' + event.to + ']').parent('li').addClass('active');
+        $('#diocesanCalendarDefinitionCardLinks li').find('[data-bs-slide-to=' + event.to + ']').parent('li').addClass('active');
     });
 
     $('#widerRegionLanguages').multiselect({
         buttonWidth: '100%',
+        buttonClass: 'form-select',
+        templates: {
+            button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+        },
         maxHeight: 200,
         enableCaseInsensitiveFiltering: true
     });
@@ -1652,7 +1678,11 @@ jQuery(document).ready(() => {
     setCommonMultiselect(null, null);
 
     $('.litEventColor').multiselect({
-        buttonWidth: '100%'
+        buttonWidth: '100%',
+        buttonClass: 'form-select',
+        templates: {
+            button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+        }
     });
 
 });

@@ -100,15 +100,15 @@ class FormControls {
             formRow += `<hr><div class="d-flex justify-content-left"><h4 class="data-group-title">${FormControls.title}</h4>`;
             if(FormControls.action.description === RowAction.CreateNew.description) {
                 if( festivity !== null && festivity.hasOwnProperty( 'strtotime' ) ) {
-                    formRow += `<button type="button" class="ml-auto btn btn-info strtotime-toggle-btn active" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="true" autocomplete="off"><i class="fas fa-comment mr-2"></i>explicatory date</button>`;
+                    formRow += `<button type="button" class="ms-auto btn btn-info strtotime-toggle-btn active" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="true" autocomplete="off"><i class="fas fa-comment me-2"></i>explicatory date</button>`;
                 } else {
-                    formRow += `<button type="button" class="ml-auto btn btn-secondary strtotime-toggle-btn" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="false" autocomplete="off"><i class="fas fa-comment-slash mr-2"></i>explicatory date</button>`;
+                    formRow += `<button type="button" class="ms-auto btn btn-secondary strtotime-toggle-btn" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="false" autocomplete="off"><i class="fas fa-comment-slash me-2"></i>explicatory date</button>`;
                 }
             }
             formRow += `</div>`;
         }
 
-        formRow += `<div class="form-row">`;
+        formRow += `<div class="row">`;
 
         formRow += `<div class="form-group col-sm-6">`;
         if(FormControls.settings.tagField === false){
@@ -136,7 +136,7 @@ class FormControls {
         let selectedColors = festivity !== null ? (Array.isArray(festivity.color) ? festivity.color : festivity.color.split(',')) : [];
         formRow += `<div class="form-group col-sm-2">
         <label for="onTheFly${FormControls.uniqid}Color">${messages[ "Liturgical color" ]}</label>
-        <select class="form-control litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple"${FormControls.settings.colorField === false ? ' readonly' : ''} />
+        <select class="form-select litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple"${FormControls.settings.colorField === false ? ' readonly' : ''} />
         <option value="white"${festivity !== null && selectedColors.includes("white") ? ' selected' : '' }>${messages[ "white" ].toUpperCase()}</option>
         <option value="red"${festivity !== null && selectedColors.includes("red") ? ' selected' : '' }>${messages[ "red" ].toUpperCase()}</option>
         <option value="purple"${festivity !== null && selectedColors.includes("purple") ? ' selected' : '' }>${messages[ "purple" ].toUpperCase()}</option>
@@ -147,13 +147,13 @@ class FormControls {
         if( festivity !== null && festivity.hasOwnProperty( 'strtotime' ) ) {
             formRow += `<div class="form-group col-sm-2">
             <label for="onTheFly${FormControls.uniqid}StrToTime">Explicatory date</label>
-            <select class="form-control litEvent litEventStrtotime" id="onTheFly${FormControls.uniqid}StrToTime-dayOfTheWeek">`;
+            <select class="form-select litEvent litEventStrtotime" id="onTheFly${FormControls.uniqid}StrToTime-dayOfTheWeek">`;
             for (let i = 0; i < 7; i++ ) {
                 let dayOfTheWeek = new Date(Date.UTC(2000, 0, 2+i));
                 formRow += `<option value="${daysOfTheWeek[i]}"${festivity.strtotime.dayOfTheWeek === daysOfTheWeek[i] ? ' selected' : '' }>${weekdayFormatter.format(dayOfTheWeek)}</option>`;
             }
             formRow += `</select>
-            <select class="form-control litEvent litEventStrtotime" id="onTheFly${FormControls.uniqid}StrToTime-relativeTime">
+            <select class="form-select litEvent litEventStrtotime" id="onTheFly${FormControls.uniqid}StrToTime-relativeTime">
                 <option value="before"${festivity.strtotime.relativeTime === 'before' ? ' selected' : ''}>before</option>
                 <option value="after"${festivity.strtotime.relativeTime === 'after' ? ' selected' : ''}>after</option>
             </select>
@@ -167,7 +167,7 @@ class FormControls {
 
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}Month">${messages[ "Month" ]}</label>
-            <select class="form-control litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month"${FormControls.settings.monthField === false ?  'readonly' : '' } >`;
+            <select class="form-select litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month"${FormControls.settings.monthField === false ?  'readonly' : '' } >`;
 
             let formatter = new Intl.DateTimeFormat(jsLocale, { month: 'long' });
             for (let i = 0; i < 12; i++) {
@@ -209,7 +209,7 @@ class FormControls {
 
         if(FormControls.settings.decreeURLField) {
             formRow += `<div class="form-group col-sm-6">
-            <label for="onTheFly${FormControls.uniqid}DecreeURL">${messages[ "Decree URL" ]}<i class="ml-2 fas fa-info-circle" title="Use %s in place of the language code if using a language mapping"></i></label>
+            <label for="onTheFly${FormControls.uniqid}DecreeURL">${messages[ "Decree URL" ]}<i class="ms-2 fas fa-info-circle" title="Use %s in place of the language code if using a language mapping"></i></label>
             <input type="text" class="form-control litEvent litEventDecreeURL" value="${festivity !== null && typeof festivity.decreeURL !== 'undefined' ? festivity.decreeURL : ''}" />
             </div>`;
         }
@@ -217,7 +217,7 @@ class FormControls {
         if(FormControls.settings.decreeLangMapField) {
             let decreeLangs = festivity !== null && typeof festivity.decreeLangs !== 'undefined' ? Object.keys(festivity.decreeLangs).map(key => key+'='+festivity.decreeLangs[key] ) : null;
             formRow += `<div class="form-group col-sm-4">
-            <label for="onTheFly${FormControls.uniqid}DecreeLangs">${messages[ "Decree Langs" ]}<i class="ml-2 fas fa-info-circle" title="Use a comma separated list of key=value pairings, e.g. DE=ge,EN=en. Key is uppercased two letter ISO code, value is (generally lowercased) two letter representation used within the actual URL"></i></label>
+            <label for="onTheFly${FormControls.uniqid}DecreeLangs">${messages[ "Decree Langs" ]}<i class="ms-2 fas fa-info-circle" title="Use a comma separated list of key=value pairings, e.g. DE=ge,EN=en. Key is uppercased two letter ISO code, value is (generally lowercased) two letter representation used within the actual URL"></i></label>
             <input type="text" class="form-control litEvent litEventDecreeLangs" value="${festivity !== null && typeof festivity.decreeLangs !== 'undefined' ? decreeLangs.join(',') : ''}" />
             </div>`;
         }
@@ -386,18 +386,22 @@ const setCommonMultiselect = ($row=null,common=null) => {
     }
     $litEventCommon.multiselect({
         buttonWidth: '100%',
+        buttonClass: 'form-select',
+        templates: {
+            button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+        },
         maxHeight: 200,
         enableCaseInsensitiveFiltering: true,
         onChange: (option, checked, select) => {
             if (($(option).val() !== 'Proper' && checked === true && $(option).parent().val().includes('Proper')) || checked === false ) {
                 $(option).parent().multiselect('deselect', 'Proper');
-                $row = $(option).closest('.form-row');
+                $row = $(option).closest('.row');
                 if( $row.find('.litEventReadings').length ) {
                     $row.find('.litEventReadings').prop('disabled',true);
                 }
             } else if ($(option).val() === 'Proper' && checked === true) {
                 $(option).parent().multiselect('deselectAll', false).multiselect('select', 'Proper');
-                $row = $(option).closest('.form-row');
+                $row = $(option).closest('.row');
                 if( $row.find('.litEventReadings').length ) {
                     $row.find('.litEventReadings').prop('disabled',false);
                 }
@@ -512,7 +516,7 @@ const createPropriumDeTemporeTable = ( data ) => {
             $row = $(FormControls.CreateDoctorRow( el ));
             $('#memorialsFromDecreesForm').append($row);
 
-            $formrow = $row.find('.form-group').closest('.form-row');
+            $formrow = $row.find('.form-group').closest('.row');
             $formrow.data('action', el.Metadata.action).attr('data-action', el.Metadata.action);
             if( el.Metadata.action === RowAction.SetProperty.description ) {
                 $formrow.data('prop', el.Metadata.property).attr('data-prop', el.Metadata.property);
@@ -530,7 +534,11 @@ const createPropriumDeTemporeTable = ( data ) => {
             if( el.Festivity.hasOwnProperty( 'color' ) ) {
                 let colorVal = Array.isArray(el.Festivity.color) ? el.Festivity.color : el.Festivity.color.split(',');
                 $row.find('.litEventColor').multiselect({
-                    buttonWidth: '100%'
+                    buttonWidth: '100%',
+                    buttonClass: 'form-select',
+                    templates: {
+                        button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+                    },
                 }).multiselect('deselectAll', false).multiselect('select', colorVal);
                 if(FormControls.settings.colorField === false) {
                     $row.find('.litEventColor').multiselect('disable');
@@ -736,12 +744,16 @@ $(document).on('click', '.actionPromptButton', ev => {
     }
     $('#memorialsFromDecreesForm').prepend($row);
     $modal.modal('hide');
-    $row.find('.form-group').closest('.form-row').data('action', FormControls.action.description).attr('data-action', FormControls.action.description);
+    $row.find('.form-group').closest('.row').data('action', FormControls.action.description).attr('data-action', FormControls.action.description);
     if( FormControls.action.description === RowAction.SetProperty.description ) {
-        $row.find('.form-group').closest('.form-row').data('prop', propertyToChange).attr('data-prop', propertyToChange);
+        $row.find('.form-group').closest('.row').data('prop', propertyToChange).attr('data-prop', propertyToChange);
     }
     $row.find('.litEventColor').multiselect({
-        buttonWidth: '100%'
+        buttonWidth: '100%',
+        buttonClass: 'form-select',
+        templates: {
+            button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+        }
     }).multiselect('deselectAll', false);
 
     if(FormControls.settings.colorField === false) {
@@ -824,13 +836,13 @@ $(document).on('click', '.strtotime-toggle-btn', ev => {
         $(`#onTheFly${uniqid}Month`).closest('.form-group').remove();
         let $dayFormGroup = $(`#onTheFly${uniqid}Day`).closest('.form-group');
         let $strToTimeFormGroup = `<label for="onTheFly${uniqid}StrToTime-dayOfTheWeek">Explicatory date</label>
-        <select class="form-control litEvent litEventStrtotime" id="onTheFly${uniqid}StrToTime-dayOfTheWeek">`;
+        <select class="form-select litEvent litEventStrtotime" id="onTheFly${uniqid}StrToTime-dayOfTheWeek">`;
         for (let i = 0; i < 7; i++ ) {
             let dayOfTheWeek = new Date(Date.UTC(2000, 0, 2+i));
             $strToTimeFormGroup += `<option value="${daysOfTheWeek[i]}"${strtotime.hasOwnProperty('dayOfTheWeek') && strtotime.dayOfTheWeek === daysOfTheWeek[i] ? ' selected': ''}>${weekdayFormatter.format(dayOfTheWeek)}</option>`;
         }
         $strToTimeFormGroup += `</select>
-        <select class="form-control litEvent litEventStrtotime" id="onTheFly${uniqid}StrToTime-relativeTime">
+        <select class="form-select litEvent litEventStrtotime" id="onTheFly${uniqid}StrToTime-relativeTime">
             <option value="before"${strtotime.hasOwnProperty('relativeTime') && strtotime.relativeTime === 'before' ? ' selected': ''}>before</option>
             <option value="after"${strtotime.hasOwnProperty('relativeTime') && strtotime.relativeTime === 'after' ? ' selected': ''}>after</option>
         </select>
@@ -846,7 +858,7 @@ $(document).on('click', '.strtotime-toggle-btn', ev => {
         );
         let formRow = `<div class="form-group col-sm-1">
         <label for="onTheFly${uniqid}Month">${messages[ "Month" ]}</label>
-        <select class="form-control litEvent litEventMonth" id="onTheFly${uniqid}Month" >`;
+        <select class="form-select litEvent litEventMonth" id="onTheFly${uniqid}Month" >`;
         let formatter = new Intl.DateTimeFormat(jsLocale, { month: 'long' });
         for (let i = 0; i < 12; i++) {
             let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
