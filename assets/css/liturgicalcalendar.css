@@ -30,11 +30,11 @@ body {
 
     .sb-sidenav-collapsed:not(.sb-sidenav-toggled) #layoutSidenav #layoutSidenav_nav {
         width: 125px;
-        font-size: .8em;
+        font-size: .7em;
         text-align: center;
     }
     .sb-sidenav-collapsed:not(.sb-sidenav-toggled) #layoutSidenav #layoutSidenav_content {
-        margin-left: -125px;
+        margin-left: -105px;
     }
     .sb-sidenav-collapsed:not(.sb-sidenav-toggled) #layoutSidenav #layoutSidenav_nav .nav-link {
         flex-direction: column;

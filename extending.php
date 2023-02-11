@@ -392,7 +392,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                     <div class="carousel-inner">
                         <div class="carousel-item active" id="carouselItemSolemnities">
                             <div class="container-fluid">
-                                <div class="card border-primary border-4 border-top-0 border-bottom-0 border-end-0 m-4">
+                                <div class="card border-primary border-4 border-top-0 border-bottom-0 border-end-0 my-4 mx-5">
                                     <div class="card-header py-3">
                                         <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black-50 d-inline-block me-4"></i><?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Solemnities"); ?></h4>
                                     </div>
@@ -413,7 +413,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                         </div>
                         <div class="carousel-item" id="carouselItemFeasts">
                             <div class="container-fluid">
-                                <div class="card border-primary border-4 border-top-0 border-bottom-0 border-end-0 m-4">
+                                <div class="card border-primary border-4 border-top-0 border-bottom-0 border-end-0 my-4 mx-5">
                                     <div class="card-header py-3">
                                         <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black-50 d-inline-block me-4"></i><?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Feasts"); ?></h4>
                                     </div>
@@ -434,7 +434,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                         </div>
                         <div class="carousel-item" id="carouselItemMemorials">
                             <div class="container-fluid">
-                                <div class="card border-primary border-4 border-top-0 border-bottom-0 border-end-0 m-4">
+                                <div class="card border-primary border-4 border-top-0 border-bottom-0 border-end-0 my-4 mx-5">
                                     <div class="card-header py-3">
                                         <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black-50 d-inline-block me-4"></i><?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Memorials"); ?></h4>
                                     </div>
@@ -455,7 +455,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                         </div>
                         <div class="carousel-item" id="carouselItemOptionalMemorials">
                             <div class="container-fluid">
-                                <div class="card border-primary border-4 border-top-0 border-bottom-0 border-end-0 m-4">
+                                <div class="card border-primary border-4 border-top-0 border-bottom-0 border-end-0 my-4 mx-5">
                                     <div class="card-header py-3">
                                         <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black-50 d-inline-block me-4"></i><?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Optional Memorials"); ?></h4>
                                     </div>

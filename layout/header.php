@@ -20,9 +20,9 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOf
 
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-        <li class="nav-item<?php echo $currentPage=="index" || $currentPage == "" ? " active" : ""; ?>" id="topNavBar_API"><a class="nav-link<?php echo $currentPage=="index" || $currentPage == "" ? " font-weight-bold" : ""; ?>" href="./index.php">API</a></li>
-        <li class="nav-item dropdown<?php echo $currentPage=="extending" ? " active" : ""; ?>" id="topNavBar_Extending">
-            <a class="nav-link dropdown-toggle<?php echo $currentPage=="extending" ? " font-weight-bold" : ""; ?>" style="white-space: normal;" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="extendingChoicesDropdown">
+        <li class="nav-item ms-2<?php echo $currentPage=="index" || $currentPage == "" ? " active" : ""; ?>" id="topNavBar_API"><a class="nav-link btn btn-outline-light border-0<?php echo $currentPage=="index" || $currentPage == "" ? " fw-bold" : ""; ?>" href="./index.php">API</a></li>
+        <li class="nav-item ms-2 dropdown<?php echo $currentPage=="extending" ? " active" : ""; ?>" id="topNavBar_Extending">
+            <a class="nav-link dropdown-toggle btn btn-outline-light border-0<?php echo $currentPage=="extending" ? " fw-bold" : ""; ?>" style="white-space: normal;" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="extendingChoicesDropdown">
                 <?php echo _( "Extending the API" ); ?>
             </a>
             <div class="dropdown-menu dropdown-menu-left shadow animated--grow-in" aria-labelledby="extendingChoicesDropdown" id="extendingChoicesDropdownItems">
@@ -31,16 +31,16 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOf
                 <a class="dropdown-item<?php echo isset($_GET["choice"]) && $_GET["choice"]==="diocesan"?" active":"" ?>" id="extendingChoiceDiocesanCalendar" href="./extending.php?choice=diocesan"><?php echo _( "Create a Diocesan Calendar" ); ?></a>
             </div>
         </li>
-        <li class="nav-item<?php echo $currentPage=="usage" ? " active" : ""; ?>" id="topNavBar_Usage"><a class="nav-link<?php echo $currentPage=="usage" ? " font-weight-bold" : ""; ?>" href="./usage.php"><?php echo _( "Usage" ); ?></a></li>
-        <li class="nav-item<?php echo $currentPage=="about" ? " active" : ""; ?>" id="topNavBar_AboutUs"><a class="nav-link<?php echo $currentPage=="about" ? " font-weight-bold" : ""; ?>" href="./about.php"><?php echo _( "About us" ); ?></a></li>
-    </ul>                
-    <ul class="navbar-nav ml-auto">
+        <li class="nav-item ms-2<?php echo $currentPage=="usage" ? " active" : ""; ?>" id="topNavBar_Usage"><a class="nav-link btn btn-outline-light border-0<?php echo $currentPage=="usage" ? " fw-bold" : ""; ?>" href="./usage.php"><?php echo _( "Usage" ); ?></a></li>
+        <li class="nav-item ms-2<?php echo $currentPage=="about" ? " active" : ""; ?>" id="topNavBar_AboutUs"><a class="nav-link btn btn-outline-light border-0<?php echo $currentPage=="about" ? " fw-bold" : ""; ?>" href="./about.php"><?php echo _( "About us" ); ?></a></li>
+    </ul>
+    <ul class="navbar-nav ms-auto">
         <li class="nav-item dropdown">
             <!-- this should contain the value of the currently selected language, based on a cookie -->
-            <a class="nav-link dropdown-toggle" href="#" id="langChoicesDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link dropdown-toggle btn btn-outline-light border-0" href="#" id="langChoicesDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 English
             </a>
-            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="langChoicesDropdown" id="langChoicesDropdownItems">
+            <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="langChoicesDropdown" id="langChoicesDropdownItems">
                 <a class="dropdown-item<?php echo substr( $i18n->LOCALE, 0 ,2 ) === "en" ? " active" : "" ?>" id="langChoiceEnglish" href="#"><span class="d-none d-md-inline">English</span><span class="d-inline d-md-none">EN</span></a>
                 <a class="dropdown-item<?php echo substr( $i18n->LOCALE, 0 ,2 ) === "fr" ? " active" : "" ?>" id="langChoiceFrench" href="#"><span class="d-none d-md-inline">French</span><span class="d-inline d-md-none">FR</span></a>
                 <a class="dropdown-item<?php echo substr( $i18n->LOCALE, 0 ,2 ) === "de" ? " active" : "" ?>" id="langChoiceGerman" href="#"><span class="d-none d-md-inline">German</span><span class="d-inline d-md-none">DE</span></a>
@@ -53,7 +53,7 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOf
             </li>
     </ul>
 
-    <a class="btn btn-transparent-dark mr-2"
+    <a class="btn btn-outline-light text-dark border-0 me-2"
         href="https://github.com/Liturgical-Calendar/" target="_blank"
         title="See the project repositories on GitHub">
         <i class="fab fa-github"></i>
