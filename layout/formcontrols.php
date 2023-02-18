@@ -52,8 +52,8 @@ class FormControls {
 
         if(self::$settings["monthField"]){
             $formRow .= "<div class=\"form-group col-sm-2\">" .
-            "<label for=\"{$uniqid}Month\"><span class=\"month-label\">" . _( "Month" ) . "</span><div class=\"form-check form-check-inline form-switch ms-2 border border-end-0 border-secondary rounded-start bg-light\" title=\"switch on for mobile celebration as opposed to fixed date\">" .
-            "<label class=\"form-check-label me-2\" for=\"{$uniqid}Strtotime\">Mobile</label>" .
+            "<label for=\"{$uniqid}Month\"><span class=\"month-label\">" . _( "Month" ) . "</span><div class=\"form-check form-check-inline form-switch ms-2 ps-5 border border-end-0 border-secondary rounded-start bg-light\" title=\"switch on for mobile celebration as opposed to fixed date\">" .
+            "<label class=\"form-check-label me-1\" for=\"{$uniqid}Strtotime\">Mobile</label>" .
             "<input class=\"form-check-input litEvent litEventStrtotimeSwitch\" type=\"checkbox\" data-bs-toggle=\"toggle\" data-bs-size=\"xs\" data-bs-onstyle=\"info\" data-bs-offstyle=\"dark\" role=\"switch\" id=\"{$uniqid}Strtotime\">" .
             "</div></label>" .
             "<select class=\"form-control litEvent litEventMonth\" id=\"{$uniqid}Month\">";
