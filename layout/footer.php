@@ -48,5 +48,5 @@
         echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
     }
     if( file_exists( "assets/js/{$pageName}.js" ) ) {
-        echo "<script src=\"assets/js/{$pageName}.js\"></script>";
+        echo "<script type=\"module\" src=\"assets/js/{$pageName}.js\"></script>";
     }
