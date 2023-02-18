@@ -36,6 +36,7 @@
 
 <!-- Custom scripts for all pages-->
 <script src="assets/js/i18n.js"></script>
+<script src="assets/js/common.js"></script>
 
 <?php 
     //some assets are only needed on certain pages

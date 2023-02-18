@@ -8,27 +8,6 @@ import {
     daysOfTheWeek
 } from './FormControls.js';
 
-const isStaging = location.href.includes('-staging');
-
-String.prototype.formatUnicorn = String.prototype.formatUnicorn ||
-function () {
-    "use strict";
-    var str = this.toString();
-    if (arguments.length) {
-        let t = typeof arguments[0];
-        let args = ("string" === t || "number" === t) ?
-            Array.prototype.slice.call(arguments)
-            : arguments[0];
-
-        for (const key in args) {
-            str = str.replace(new RegExp("\\{" + key + "\\}", "gi"), args[key]);
-        }
-    }
-
-    return str;
-};
-
-
 const { LOCALE } = messages;
 const jsLocale = LOCALE.replace('_','-');
 FormControls.jsLocale = jsLocale;
