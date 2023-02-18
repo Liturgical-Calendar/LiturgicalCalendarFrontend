@@ -2,13 +2,13 @@
 # Copyright (C) 2021 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # Ubuntu <priest@johnromanodorazio.com>, 2021.
-# John R. D'Orazio <priest@johnromanodorazio.com>, 2022.
+# John R. D'Orazio <priest@johnromanodorazio.com>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-11 01:48+0000\n"
-"PO-Revision-Date: 2022-12-20 01:17+0000\n"
+"PO-Revision-Date: 2023-02-18 23:19+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
@@ -85,10 +85,14 @@ msgid ""
 "JSON responses produced by the API starting from the year 1970 and going up "
 "to 25 years from the current year."
 msgstr ""
+"Per verificare che i dati liturgici prodotti dall'API siano corretti, c'è "
+"un'interfaccia di Test Unitario che può avviare dei test predefiniti sulle "
+"risposte JSON prodotte dall'API partendo dall'anno 1970 fino a 25 anni nel "
+"futuro rispetto all'anno corrente."
 
 #: index.php:79
 msgid "LitCal Validator"
-msgstr ""
+msgstr "Validatore LitCal"
 
 #: index.php:82
 #, php-format
@@ -96,11 +100,14 @@ msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
 "repository."
 msgstr ""
+"I test unitari sono definiti nella cartella %s all'interno del repository "
+"dell'API del Calendario Liturgico."
 
 #: index.php:83
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
 msgstr ""
+"L'interfaccia di test unitari viene curata in un repository tutto suo: %s."
 
 #: index.php:93 usage.php:176
 msgid "Calculation of the Date of Easter"
@@ -153,6 +160,11 @@ msgid ""
 "the Swagger UI supports OpenAPI 3.1 schemas, the UI will not be able to "
 "render the schema. See %s for updates."
 msgstr ""
+"Lo schema json Open API per questo API è stato aggiornato ad OpenAPI 3.1. "
+"Tuttavia l'interfaccia utente Swagger non è ancora in grado di renderizzare "
+"gli shemi OpenAPI 3.1. Fino a quando l'UI Swagger non supporterà gli schemi "
+"OpenAPI 3.1, l'UI non sarà in grado di renderizzare lo schema. Vedi %s per "
+"aggiornamenti in merito."
 
 #: usage.php:7
 msgid ""
