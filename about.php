@@ -12,25 +12,25 @@ $cardInfo = [
         "website"   => sprintf( $formatStr, 'https://www.johnromanodorazio.com', 'John Romano D\'Orazio' ),
         "note"      => _( 'Priest in the Diocese of Rome, self-taught programmer, author of the BibleGet Project' ),
         "img"       => "./assets/img/donjohn_125x125.jpg",
-        "icon"      => "fas fa-cross fa-2x text-gray-300"
+        "icon"      => "fas fa-cross fa-2x text-black"
     ],
     "MIKETRUSO" => [
         "website"   => sprintf( $formatStr, 'https://www.miketruso.com/', 'Mike Truso' ),
         "note"      => _( 'Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild for Catholic IT Professionals' ),
         "img"       => "./assets/img/miketruso_125x125.jpg",
-        "icon"      => "fas fa-code fa-2x text-gray-300"
+        "icon"      => "fas fa-code fa-2x text-black"
     ],
     "MICHAELSHELTON" => [
         "website"   => sprintf( $formatStr, 'https://www.linkedin.com/in/michaelrshelton/', 'Michael Shelton' ),
         "note"      => _( 'Full stack web developer' ),
         "img"       => "./assets/img/michaelshelton_125x125.jpg",
-        "icon"      => "fas fa-code fa-2x text-gray-300"
+        "icon"      => "fas fa-code fa-2x text-black"
     ],
     "STEVENVANROODE" => [
         "website"   => sprintf( $formatStr, 'https://www.latijnseliturgie.nl/', 'Steven van Roode' ),
         "note"      => _( 'Latin Liturgy Association of the Netherlands, contributed the national calendar for the Netherlands to this project with all related translations' ),
         "img"       => "./assets/img/Steven van Roode 125x125.jpg",
-        "icon"      => "fas fa-music fa-2x text-gray-300"
+        "icon"      => "fas fa-music fa-2x text-black"
     ]
 ];
 
@@ -47,7 +47,7 @@ function generateCard( string $who ) : void {
                         </div>
                     </div>
                     <div class=\"col-auto\">
-                        <i class=\"" . $cardInfo[ $who ]["icon"] . "\"></i>
+                        <i class=\"" . $cardInfo[ $who ]["icon"] . "\" style=\"--bs-text-opacity: .15;\"></i>
                     </div>
                 </div>
             </div>
@@ -66,12 +66,12 @@ $ABOUT_US = _( "The Liturgical Calendar project is curated by a group of volunte
     <title><?php echo _( "Liturgical Calendar - About us") ?></title>
     <?php include_once('./layout/head.php'); ?>
 </head>
-<body>
+<body class="sb-nav-fixed">
 
     <?php include_once('./layout/header.php'); ?>
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800"><?php echo _( "Liturgical Calendar - About us"); ?></h1>
+        <h1 class="h3 mb-2 text-black" style="--bs-text-opacity: .6;"><?php echo _( "Liturgical Calendar - About us"); ?></h1>
         <p><?php echo $ABOUT_US; ?></p>
 
         <div class="row">

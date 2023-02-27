@@ -1,7 +1,3 @@
-const isStaging = location.hostname.includes( '-staging' );
-const endpointV = isStaging ? 'dev' : 'v3';
-const MetaDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalMetadata.php`;
-const RequestURLBase = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalEngine.php`;
 const { COUNTRIES, LITCAL_LOCALE } = ISO_3166_1_alpha_2;
 let countryNames = new Intl.DisplayNames([LITCAL_LOCALE], {type: 'region'});
 let CalendarNations = [];

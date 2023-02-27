@@ -24,14 +24,14 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
     <?php include_once('layout/header.php'); ?>
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-dark"><?php echo _( "Catholic Liturgical Calendar" ); ?></h1>
+        <h1 class="h3 mb-2 text-black" style="--bs-text-opacity: .6;"><?php echo _( "Catholic Liturgical Calendar" ); ?></h1>
 
         <!-- Content Row -->
         <div class="row">
             <div class="col-md-6">
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "API Endpoint" ); ?><i class="fas fa-code float-end fa-2x text-black-50"></i></h6>
+                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "API Endpoint" ); ?><i class="fas fa-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
                     </div>
                     <div class="card-body">
                         <p class="mb-4"><?php echo $API_DESCRIPTION; ?></p>
@@ -72,7 +72,7 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                 </div>
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Liturgical Calendar Validator" ); ?><i class="fas fa-flask-vial float-end fa-2x text-black-50"></i></h6>
+                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Liturgical Calendar Validator" ); ?><i class="fas fa-flask-vial float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
                     </div>
                     <div class="card-body">
                         <p><?php echo _( "In order to verify that the liturgical data produced by the API is correct, there is a Unit Test interface that can run predefined tests against the JSON responses produced by the API starting from the year 1970 and going up to 25 years from the current year." ); ?></p>
@@ -90,7 +90,7 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
             <div class="col-md-6">
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Calculation of the Date of Easter" ); ?>: API<i class="fas fa-code float-end fa-2x text-black-50"></i></h6>
+                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Calculation of the Date of Easter" ); ?>: API<i class="fas fa-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
                     </div>
                     <div class="card-body">
                         <?php $EASTER_CALCULATOR_API = _( "A simple API endpoint that returns data about the Date of Easter, both Gregorian and Julian, " .
@@ -107,7 +107,7 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                 </div>
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "API Endpoint" ); ?>: <?php  echo _( "Definition" ) ?><i class="fas fa-file-code float-end fa-2x text-black-50"></i></h6>
+                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "API Endpoint" ); ?>: <?php  echo _( "Definition" ) ?><i class="fas fa-file-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
                     </div>
                     <div class="card-body">
                         <div class="text-center"><a href="dist/" class="btn btn-primary mt-2"><?php echo _( "Swagger / Open API Documentation" ); ?></a></div>

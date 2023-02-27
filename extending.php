@@ -158,7 +158,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
     <?php include_once('./layout/header.php'); ?>
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-dark"><?php echo _( "Extend the General Roman Calendar with National or Diocesan data"); ?></h1>
+        <h1 class="h3 mb-2 text-black" style="--bs-text-opacity: .6;"><?php echo _( "Extend the General Roman Calendar with National or Diocesan data"); ?></h1>
         <p class="mb-4">
             <p><?php echo $API_EXTEND_HOWTO_A . " " . $API_EXTEND_HOWTO_A1 . " " . $API_EXTEND_HOWTO_A1a . " " . $API_EXTEND_HOWTO_A1b . " " . $API_EXTEND_HOWTO_A2 . " " . $API_EXTEND_HOWTO_A3; ?></p>
             <p><?php echo $API_EXTEND_HOWTO_B; ?></p>
@@ -206,9 +206,9 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                             </button>
                         </div>
                     </form>
-                    <div class="card border-primary border-4 border-top-0 border-bottom-0 border-end-0 m-4">
+                    <div class="card border-4 border-top-0 border-bottom-0 border-end-0 border-primary rounded-3 m-4">
                         <div class="card-header py-3">
-                            <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black-50 d-inline-block me-4"></i><?php echo _( "Create a Calendar for a Wider Region"); ?></h4>
+                            <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo _( "Create a Calendar for a Wider Region"); ?></h4>
                         </div>
                         <div class="card-body">
                             <hr>
@@ -250,14 +250,14 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                             </button>
                         </div>
                     </form>
-                    <div class="card border-primary border-4 border-top-0 border-bottom-0 border-end-0 m-4">
+                    <div class="card border-4 border-top-0 border-bottom-0 border-end-0 border-primary rounded-3 m-4">
                         <div class="card-header py-3">
-                            <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black-50 d-inline-block me-4"></i><?php echo _( "Create a National Calendar"); ?></h4>
+                            <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo _( "Create a National Calendar"); ?></h4>
                         </div>
                         <div class="card-body">
 
                             <div id="nationalCalendarSettingsContainer" class="container">
-                                <h3 id="nationalCalendarSettingsTitle" class="text-center"><?php echo _("National calendar settings") ?><i class="fas fa-info-circle ms-4 d-inline-block" role="button" title="please keep in mind that the first step to creating a national calendar, is to translate the already existing calendar data into the correct language. This can be done on the LitCal translation server (see above for details)"></i></h3>
+                                <h3 id="nationalCalendarSettingsTitle" class="text-center"><?php echo _("National calendar settings") ?><i class="fas fa-info-circle ms-4 d-inline-block text-black" style="--bs-text-opacity: .3;" role="button" title="please keep in mind that the first step to creating a national calendar, is to translate the already existing calendar data into the correct language. This can be done on the LitCal translation server (see above for details)"></i></h3>
                                 <form id="nationalCalendarSettingsForm" class="row justify-content-center needs-validation" novalidate>
                                     <div class="form-group col col-md-3">
                                         <label><?php echo _( 'EPIPHANY' ) ?></label>
@@ -297,7 +297,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                                     <div class="col col-md-6">
                                         <div class="row mt-2">
                                             <div class="col-5">
-                                                <label><i class="fas fa-info-circle me-2" role="button" title="if data from the Proper of Saints of a given Missal for this nation has already been incorporated into the main LitCal engine, you can choose the Missal from this list to associate it with this National Calendar (if the Missal is not in the list, it has not been incorporated into the LitCal engine)"></i><?php echo _( 'Published Roman Missals' ) ?></label>
+                                                <label><i class="fas fa-info-circle me-2 text-black" style="--bs-text-opacity: .3;" role="button" title="if data from the Proper of Saints of a given Missal for this nation has already been incorporated into the main LitCal engine, you can choose the Missal from this list to associate it with this National Calendar (if the Missal is not in the list, it has not been incorporated into the LitCal engine)"></i><?php echo _( 'Published Roman Missals' ) ?></label>
                                             </div>
                                             <div class="col-4">
                                                 <button class="btn btn-sm btn-primary ms-2 mb-2" id="addPublishedRomanMissal" data-bs-toggle="modal" data-bs-target="#addPublishedRomanMissalPrompt" type="button"><i class="fas fa-plus me-2"></i><?php echo _( 'Add Missal' ) ?></button>
@@ -309,7 +309,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                                         </div>
                                     </div>
                                     <div class="form-group col col-md-3">
-                                        <label><?php echo _( 'Wider Region' ) ?><i class="fas fa-info-circle ms-2" role="button" title="if data for a Wider Region that regards this National Calendar has already been defined, you can associate the Wider Region data with the National Calendar here"></i></label>
+                                        <label><?php echo _( 'Wider Region' ) ?><i class="fas fa-info-circle ms-2 text-black" style="--bs-text-opacity: .3;" role="button" title="if data for a Wider Region that regards this National Calendar has already been defined, you can associate the Wider Region data with the National Calendar here"></i></label>
                                         <input class="form-control" type="text" id="associatedWiderRegion" />
                                     </div>
                                 </form>
@@ -392,9 +392,9 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                     <div class="carousel-inner">
                         <div class="carousel-item active" id="carouselItemSolemnities">
                             <div class="container-fluid">
-                                <div class="card border-primary border-4 border-top-0 border-bottom-0 border-end-0 my-4 mx-5">
+                                <div class="card border-4 border-top-0 border-bottom-0 border-end-0 border-primary rounded-3 my-4 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black-50 d-inline-block me-4"></i><?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Solemnities"); ?></h4>
+                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Solemnities"); ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
@@ -413,9 +413,9 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                         </div>
                         <div class="carousel-item" id="carouselItemFeasts">
                             <div class="container-fluid">
-                                <div class="card border-primary border-4 border-top-0 border-bottom-0 border-end-0 my-4 mx-5">
+                                <div class="card border-4 border-top-0 border-bottom-0 border-end-0 border-primary rounded-3 my-4 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black-50 d-inline-block me-4"></i><?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Feasts"); ?></h4>
+                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Feasts"); ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
@@ -434,9 +434,9 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                         </div>
                         <div class="carousel-item" id="carouselItemMemorials">
                             <div class="container-fluid">
-                                <div class="card border-primary border-4 border-top-0 border-bottom-0 border-end-0 my-4 mx-5">
+                                <div class="card border-4 border-top-0 border-bottom-0 border-end-0 border-primary rounded-3 my-4 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black-50 d-inline-block me-4"></i><?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Memorials"); ?></h4>
+                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Memorials"); ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
@@ -455,9 +455,9 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                         </div>
                         <div class="carousel-item" id="carouselItemOptionalMemorials">
                             <div class="container-fluid">
-                                <div class="card border-primary border-4 border-top-0 border-bottom-0 border-end-0 my-4 mx-5">
+                                <div class="card border-4 border-top-0 border-bottom-0 border-end-0 border-primary rounded-3 my-4 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black-50 d-inline-block me-4"></i><?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Optional Memorials"); ?></h4>
+                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo _( "Create a Diocesan Calendar"); ?>: <?php echo _( "Define the Optional Memorials"); ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
