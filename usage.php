@@ -76,7 +76,7 @@ $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/Lit
             </div>
             <div class="accordion-item">
                 <h2 class="accordion-header">
-                    <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#calSubscription" aria-expanded="false" aria-controls="calSubscription">
+                    <button class="accordion-button bg-light collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#calSubscription" aria-expanded="false" aria-controls="calSubscription">
                         <i class="far fa-calendar-plus"></i>&nbsp;<?php echo _("Calendar subscription"); ?>
                     </button>
                 </h2>
@@ -164,7 +164,7 @@ $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/Lit
             </div>
             <div class="accordion-item">
                 <h2 class="accordion-header">
-                    <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#datesOfEaster" aria-expanded="false" aria-controls="datesOfEaster">
+                    <button class="accordion-button bg-light collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#datesOfEaster" aria-expanded="false" aria-controls="datesOfEaster">
                         <i class="fas fa-egg"></i>&nbsp;<?php echo _("Dates of Easter"); ?>
                     </button>
                 </h2>
@@ -186,7 +186,7 @@ $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/Lit
             </div>
             <div class="accordion-item">
                 <h2 class="accordion-header">
-                    <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#liturgyOfTheDay" aria-expanded="false" aria-controls="liturgyOfTheDay">
+                    <button class="accordion-button bg-light collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#liturgyOfTheDay" aria-expanded="false" aria-controls="liturgyOfTheDay">
                         <i class="fas fa-calendar-day"></i>&nbsp;<?php echo _("Liturgy of the Day"); ?>
                     </button>
                 </h2>
