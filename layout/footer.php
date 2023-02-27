@@ -44,7 +44,7 @@
     if( $pageName === "index" ){
         echo '<script src="assets/js/homepage.js"></script>';
     }
-    if( $pageName === "extending" || $pageName === "admin" ) {
+    if( in_array( $pageName, [ "extending", "usage", "admin" ] ) ) {
         echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/js/bootstrap-multiselect.min.js"></script>';
         echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
     }

@@ -1,21 +1,3 @@
-let toast = `<div aria-live="polite" aria-atomic="true" style="position: absolute; min-height: 50vh; min-width: 300px; top: 10px; right: -500px;" id="toast-wrapper">
-<div style="position: sticky; top: 0; right: 0;">
-<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
-<div class="toast-header bg-success text-white">
-  <i class="fas fa-info mr-2"></i>
-  <strong class="mr-auto">Notification</strong>
-  <small>11 mins ago</small>
-  <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-<div class="toast-body">
-  URL was successfully copied to the clipboard.
-</div>
-</div>
-</div>
-</div>`;
-
 const updateSubscriptionURL = () => {
     let params = {};
     switch( $('#calendarSelect').find(':selected').attr('data-calendartype') ) {
@@ -32,10 +14,28 @@ const updateSubscriptionURL = () => {
     $('#calSubscriptionURL').text(calSubscriptionURL + new URLSearchParams(params).toString());
 }
 
-let isStaging = location.href.includes( "-staging" );
 //let stagingURL = isStaging ? "-staging" : "";
-let endpointV = isStaging ? "dev" : "v3";
 let calSubscriptionURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalEngine.php?`;
+
+
+toastr.options = {
+    "closeButton": true,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": true,
+    "positionClass": "toast-bottom-center",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "2000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+}
+
 
 $(document).ready(() => {
     if( location.hash != null && location.hash != "" ) {
@@ -46,18 +46,11 @@ $(document).ready(() => {
         $('a.nav-link[href*="'+location.hash+'"]').find('i,span').addClass('text-white');
     }
     updateSubscriptionURL();
-    $('body').append(toast);
-    $('.toast').on('show.bs.toast', () => {
-        $('#toast-wrapper').css({"right":"10px"});
-    });
-    $('.toast').on('hidden.bs.toast', () => {
-        $('#toast-wrapper').css({"right":"-500px"});
-    });
 });
 
 $(document).on('click', '#calSubscriptionURLWrapper', () => {
     navigator.clipboard.writeText($('#calSubscriptionURL').text());
-    $('.toast').toast('show');
+    toastr["success"]("URL was copied to the clipboard","Success");
 });
 
 $(document).on('click', '#examplesOfUsage > .card > .card-header button', ev => {
