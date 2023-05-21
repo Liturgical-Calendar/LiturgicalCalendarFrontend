@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-11 01:48+0000\n"
+"POT-Creation-Date: 2023-02-27 18:24+0000\n"
 "PO-Revision-Date: 2022-12-20 01:17+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
@@ -173,8 +173,8 @@ msgid "Examples"
 msgstr "Exemples"
 
 #: usage.php:27
-msgid "EXAMPLE USAGE OF THE API"
-msgstr "EXEMPLE D'UTILISATION DE L'API"
+msgid "Example usage of the API"
+msgstr ""
 
 #: usage.php:33 layout/header.php:102
 msgid "Web calendar"
@@ -1251,6 +1251,9 @@ msgstr ""
 #: layout/formcontrols.php:110
 msgid "Common (or Proper)"
 msgstr "Commun (ou Propre)"
+
+#~ msgid "EXAMPLE USAGE OF THE API"
+#~ msgstr "EXEMPLE D'UTILISATION DE L'API"
 
 #~ msgid "Retrieve existing data"
 #~ msgstr "Récupérer les données existantes"
