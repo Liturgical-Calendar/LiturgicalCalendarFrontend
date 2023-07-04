@@ -52,7 +52,7 @@ class FormControls {
                 <label class="form-check-label me-1" for="onTheFly${FormControls.uniqid}StrtotimeSwitch">Mobile</label>
                 <input class="form-check-input litEvent litEventStrtotimeSwitch" type="checkbox" data-bs-toggle="toggle" data-bs-size="xs" data-bs-onstyle="info" data-bs-offstyle="dark" role="switch" id="onTheFly${FormControls.uniqid}StrtotimeSwitch">
             </div></label>
-            <select class="form-control litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month">`;
+            <select class="form-select litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month">`;
 
             let formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
             for (let i = 0; i < 12; i++) {
@@ -81,7 +81,7 @@ class FormControls {
         if (FormControls.settings.colorField) {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}Color">${messages[ "Liturgical color" ]}</label>
-            <select class="form-control litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple" />
+            <select class="form-select litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple" />
             <option value="white" selected>${messages[ "white" ].toUpperCase()}</option>
             <option value="red">${messages[ "red" ].toUpperCase()}</option>
             <option value="purple">${messages[ "purple" ].toUpperCase()}</option>
@@ -177,7 +177,7 @@ class FormControls {
         let selectedColors = festivity !== null ? (Array.isArray(festivity.color) ? festivity.color : festivity.color.split(',')) : [];
         formRow += `<div class="form-group col-sm-2">
         <label for="onTheFly${FormControls.uniqid}Color">${messages[ "Liturgical color" ]}</label>
-        <select class="form-control litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple"${FormControls.settings.colorField === false ? ' readonly' : ''} />
+        <select class="form-select litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple"${FormControls.settings.colorField === false ? ' readonly' : ''} />
         <option value="white"${festivity !== null && selectedColors.includes("white") ? ' selected' : '' }>${messages[ "white" ].toUpperCase()}</option>
         <option value="red"${festivity !== null && selectedColors.includes("red") ? ' selected' : '' }>${messages[ "red" ].toUpperCase()}</option>
         <option value="purple"${festivity !== null && selectedColors.includes("purple") ? ' selected' : '' }>${messages[ "purple" ].toUpperCase()}</option>
@@ -198,7 +198,7 @@ class FormControls {
 
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}Month">${messages[ "Month" ]}</label>
-            <select class="form-control litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month"${FormControls.settings.monthField === false ?  'readonly' : '' } >`;
+            <select class="form-select litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month"${FormControls.settings.monthField === false ?  'readonly' : '' } >`;
 
             let formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
             for (let i = 0; i < 12; i++) {
@@ -241,7 +241,7 @@ class FormControls {
         if (FormControls.settings.missalField) {
             formRow += `<div class="form-group col-sm-6">
             <label for="onTheFly${FormControls.uniqid}Missal">${messages[ "Missal" ]}</label>
-            <select class="form-control litEvent litEventMissal" id="onTheFly${FormControls.uniqid}Missal">`;
+            <select class="form-select litEvent litEventMissal" id="onTheFly${FormControls.uniqid}Missal">`;
             //console.log(Object.values( FormControls.index.RomanMissals ).map(({value,name}) => `<option class="list-group-item" value="${value}">${name}</option>`));
             formRow += Object.values( FormControls.index.RomanMissals ).map(({value,name}) => `<option class="list-group-item" value="${value}">${name}</option>`).join('');
             formRow += `</select>

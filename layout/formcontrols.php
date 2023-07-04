@@ -56,7 +56,7 @@ class FormControls {
             "<label class=\"form-check-label me-1\" for=\"{$uniqid}Strtotime\">Mobile</label>" .
             "<input class=\"form-check-input litEvent litEventStrtotimeSwitch\" type=\"checkbox\" data-bs-toggle=\"toggle\" data-bs-size=\"xs\" data-bs-onstyle=\"info\" data-bs-offstyle=\"dark\" role=\"switch\" id=\"{$uniqid}Strtotime\">" .
             "</div></label>" .
-            "<select class=\"form-control litEvent litEventMonth\" id=\"{$uniqid}Month\">";
+            "<select class=\"form-select litEvent litEventMonth\" id=\"{$uniqid}Month\">";
             $formatter = new IntlDateFormatter($this->i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::NONE);
             $formatter->setPattern("MMMM");
             for($i=1;$i<=12;$i++){
@@ -77,7 +77,7 @@ class FormControls {
         if(self::$settings["colorField"]){
             $formRow .= "<div class=\"form-group col-sm-1\">" .
             "<label for=\"{$uniqid}Color\">" . _( "Liturgical color" ) . "</label>" .
-            "<select class=\"form-control litEvent litEventColor\" id=\"{$uniqid}Color\" multiple=\"multiple\" />" .
+            "<select class=\"form-select litEvent litEventColor\" id=\"{$uniqid}Color\" multiple=\"multiple\" />" .
             "<option value=\"white\" selected>" . strtoupper(_( "white" ) ) . "</option>" .
             "<option value=\"red\">" . strtoupper(_( "red" ) ) . "</option>" .
             "<option value=\"purple\">" . strtoupper(_( "purple" ) ) . "</option>" .
@@ -108,7 +108,7 @@ class FormControls {
     public function getCommonsTemplate() {
         return "<div class=\"form-group col-sm-{colWidth}\">" .
         "<label style=\"display:block;\" for=\"onTheFly{uniqid}Common\">" . _( "Common (or Proper)") . "</label>" .
-        "<select class=\"form-control litEvent litEventCommon\" id=\"onTheFly{uniqid}Common\" multiple=\"multiple\" />" .
+        "<select class=\"form-select litEvent litEventCommon\" id=\"onTheFly{uniqid}Common\" multiple=\"multiple\" />" .
         "<option value=\"Proper\" selected>" . $this->LitCommon->C("Proper") . "</option>" .
         "<option value=\"Blessed Virgin Mary\">" . $this->LitCommon->C("Blessed Virgin Mary") . "</option>" .
         //"<optgroup label=\"" . $this->LitCommon->C("Common of Martyrs") . "\">" .
@@ -154,7 +154,7 @@ class FormControls {
     public function getGradeTemplate() {
         $gradeTemplate = "<div class=\"form-group col-sm-{colWidth}\">" .
         "<label style=\"display:block;\" for=\"onTheFly{uniqid}Grade\">" . _( "Grade") . "</label>" .
-        "<select class=\"form-control litEvent litEventGrade\" id=\"onTheFly{uniqid}Grade\">";
+        "<select class=\"form-select litEvent litEventGrade\" id=\"onTheFly{uniqid}Grade\">";
         foreach( LitGrade::$values as $value ) {
             $gradeTemplate .= "<option value=\"$value\">" . $this->LitGrade->i18n( $value ) . "</option>";
         }

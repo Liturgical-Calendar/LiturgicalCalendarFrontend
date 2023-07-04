@@ -251,7 +251,7 @@ const unswitcheroo = ( $row, Festivity ) => {
     <label for="${dayId}">${messages[ "Day" ]}</label><input type="number" min="1" max="31" value="1" class="form-control litEvent litEventDay" id="${dayId}" value="${Festivity.day}" />
     </div>`);
     $litEventStrtotime.remove();
-    let formRow = `<select class="form-control litEvent litEventMonth" id="${monthId}">`;
+    let formRow = `<select class="form-select litEvent litEventMonth" id="${monthId}">`;
     let formatter = new Intl.DateTimeFormat(jsLocale, { month: 'long' });
     for (let i = 0; i < 12; i++) {
         let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
@@ -296,7 +296,7 @@ $(document).on('click', '.strtotime-toggle-btn', ev => {
         $strToTimeFormGroup.empty().removeClass('col-sm-2').addClass('col-sm-1').append(`<label for="onTheFly${uniqid}Day">Day</label><input type="number" min="1" max="31" value="false" class="form-control litEvent litEventDay" id="onTheFly${uniqid}Day" />`);
         let formRow = `<div class="form-group col-sm-1">
         <label for="onTheFly${uniqid}Month">${messages[ "Month" ]}</label>
-        <select class="form-control litEvent litEventMonth" id="onTheFly${uniqid}Month" >`;
+        <select class="form-select litEvent litEventMonth" id="onTheFly${uniqid}Month" >`;
         let formatter = new Intl.DateTimeFormat(jsLocale, { month: 'long' });
         for (let i = 0; i < 12; i++) {
             let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
@@ -517,7 +517,7 @@ $(document).on('change', '.litEvent', ev => {
                     <label for="${dayId}">${messages[ "Day" ]}</label><input type="number" min="1" max="31" value="1" class="form-control litEvent litEventDay" id="${dayId}" />
                     </div>`);
                     $litEventStrtotime.remove();
-                    let formRow = `<select class="form-control litEvent litEventMonth" id="${monthId}">`;
+                    let formRow = `<select class="form-select litEvent litEventMonth" id="${monthId}">`;
                     let formatter = new Intl.DateTimeFormat(jsLocale, { month: 'long' });
                     for (let i = 0; i < 12; i++) {
                         let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
