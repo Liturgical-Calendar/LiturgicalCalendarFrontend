@@ -76,7 +76,7 @@ if(isset($_COOKIE['queryString'])) {
                 </div>
                 <div class="form-group col-md">
                     <label><?php echo _("Month"); ?></label>
-                    <select class="form-control" id="monthControl">
+                    <select class="form-select" id="monthControl">
                         <?php foreach( range(1,12) as $monthNumber ) {
                             $monthDate->setDate($dateToday->format('Y'), $monthNumber, 15);
                             $selected = '';
