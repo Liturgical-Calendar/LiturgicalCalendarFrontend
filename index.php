@@ -113,8 +113,9 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                         <div class="text-center"><a href="dist/" class="btn btn-primary mt-2"><?php echo _( "Swagger / Open API Documentation" ); ?></a></div>
                         <small class="text-muted">
                             <i><?php echo sprintf( _( "The Open API json schema for this API has been updated to OpenAPI 3.1. " .
-                            "However the Swagger UI is not yet able to render OpenAPI 3.1 schemas. Until the Swagger UI supports OpenAPI 3.1 schemas, the UI will not be able to render the schema. " .
-                            "See %s for updates." ), "<a href=\"https://github.com/swagger-api/swagger-ui/issues/5891\">swagger-api/swagger-ui/issues/5891</a>" ); ?></i>
+                            "The Swagger UI is now able to render OpenAPI 3.1 schemas, however there may still be a few bugs in the Swagger Validator that need fixing. " .
+                            "If the schema is showing as invalid, it is probably because of a bug in the validator. " .
+                            "See %s for updates." ), "https://github.com/swagger-api/validator-badge/issues/215"); ?></i>
                         </small>
                     </div>
                 </div>
