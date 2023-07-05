@@ -102,7 +102,7 @@ if(isset($_COOKIE['queryString'])) {
             <div class="card shadow m-2">
                 <div class="card-header py-3">
                     <?php /**translators: %s = current selected date */ ?>
-                    <h6 class="m-0 font-weight-bold text-primary"><?php echo sprintf( _("Liturgy of %s"), "<span id=\"dateOfLiturgy\">" . $fmtFull->format( $dateToday ) . "</span>" ); ?><i class="fas fa-cross float-right text-gray-600"></i></h6>
+                    <h6 class="m-0 font-weight-bold text-primary"><?php echo sprintf( _("Liturgy of %s"), "<span id=\"dateOfLiturgy\">" . $fmtFull->format( $dateToday ) . "</span>" ); ?><i class="fas fa-cross float-end text-black" style="--bs-text-opacity: .15;"></i></h6>
                 </div>
                 <div class="card-body" id="liturgyResults">
                 </div>
