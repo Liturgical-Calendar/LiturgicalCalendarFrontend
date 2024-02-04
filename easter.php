@@ -12,10 +12,13 @@ $dateOfEasterURL    = "https://litcal.johnromanodorazio.com/api/{$endpointV}/Dat
 
 include_once( 'includes/functions.php' );
 
-$LOCALE = isset($_GET["locale"]) ? strtoupper($_GET["locale"]) : "LA"; //default to latin
+$AllAvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($value) {
+    return strpos($value, 'POSIX') === false;
+});
+$LOCALE = isset($_GET["locale"]) && in_array($LOCALE, $AllAvailableLocales) ? $_GET["locale"] : "LA"; //default to latin
 ini_set('date.timezone', 'Europe/Vatican');
 
-$baseLocale = strtolower( explode( '_', $LOCALE )[0] );
+$baseLocale = Locale::getPrimaryLanguage($LOCALE);
 $localeArray = [
     $LOCALE . '.utf8',
     $LOCALE . '.UTF-8',
@@ -45,7 +48,7 @@ if ( curl_errno( $ch ) ) {
 curl_close( $ch );
 $DatesOfEaster = json_decode( $response );
 
-$AvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($value) {
+$AvailableLocales = array_filter($AllAvailableLocales, function ($value) {
     return strpos($value, '_') === false;
 });
 $AvailableLocales = array_reduce($AvailableLocales, function($carry, $item) use($LOCALE){
