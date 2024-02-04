@@ -15,7 +15,7 @@ include_once( 'includes/functions.php' );
 $AllAvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($value) {
     return strpos($value, 'POSIX') === false;
 });
-$LOCALE = isset($_GET["locale"]) && in_array($LOCALE, $AllAvailableLocales) ? $_GET["locale"] : "LA"; //default to latin
+$LOCALE = isset($_GET["locale"]) && in_array($_GET["locale"], $AllAvailableLocales) ? $_GET["locale"] : "LA"; //default to latin
 ini_set('date.timezone', 'Europe/Vatican');
 
 $baseLocale = Locale::getPrimaryLanguage($LOCALE);
