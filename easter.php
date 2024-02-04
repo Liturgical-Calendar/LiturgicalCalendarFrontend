@@ -85,7 +85,7 @@ $c->asort($AvailableLocales);
     <select id="langSelect">
         <?php
             foreach($AvailableLocales as $Lcl => $DisplayLang) {
-                $optionContent = $baseLocale === 'en' : $DisplayLang ? $DisplayLang . ' (' . Locale::getDisplayLanguage($Lcl, 'en') . ')';
+                $optionContent = $baseLocale === 'en' ? $DisplayLang : $DisplayLang . ' (' . Locale::getDisplayLanguage($Lcl, 'en') . ')';
                 echo '<option value="'.$Lcl.'"'. (strtolower($LOCALE) === strtolower($Lcl) ? " selected" : "") . ' title="'.Locale::getDisplayLanguage($Lcl, 'en').'">'. $optionContent . '</option>';
             }
         ?>
