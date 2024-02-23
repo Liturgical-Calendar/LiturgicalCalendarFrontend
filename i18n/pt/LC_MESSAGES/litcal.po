@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 06:31+0000\n"
+"POT-Creation-Date: 2024-02-04 13:17+0000\n"
 "PO-Revision-Date: 2022-12-10 09:38+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
@@ -808,33 +808,33 @@ msgstr ""
 msgid "Add language edition Roman Missal"
 msgstr ""
 
-#: easter.php:58
+#: easter.php:67
 msgid "Date of Easter from 1583 to 9999"
 msgstr ""
 
-#: easter.php:75
+#: easter.php:84
 msgid "Go back"
 msgstr ""
 
-#: easter.php:89
+#: easter.php:99
 msgid "Century"
 msgstr ""
 
-#: easter.php:96
+#: easter.php:106
 msgid ""
 "Easter Day Calculation in PHP (Years in which Julian and Gregorian easter "
 "coincide are marked in yellow)"
 msgstr ""
 
-#: easter.php:100
+#: easter.php:110
 msgid "Gregorian Easter"
 msgstr ""
 
-#: easter.php:100
+#: easter.php:110
 msgid "Julian Easter"
 msgstr ""
 
-#: easter.php:100
+#: easter.php:110
 msgid "Julian Easter in Gregorian Calendar"
 msgstr ""
 
