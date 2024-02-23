@@ -1,6 +1,6 @@
 <?php
-ini_set('displayecho _rrors', 1);
-ini_set('display_startupecho _rrors', 1);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 $isStaging          = ( strpos( $_SERVER['HTTP_HOST'], "-staging" ) !== false );
@@ -12,14 +12,23 @@ $dateOfEasterURL    = "https://litcal.johnromanodorazio.com/api/{$endpointV}/Dat
 
 include_once( 'includes/functions.php' );
 
-$LOCALE = isset($_GET["locale"]) ? strtoupper($_GET["locale"]) : "LA"; //default to latin
+$AllAvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($value) {
+    return strpos($value, 'POSIX') === false;
+});
+$LOCALE = isset($_GET["locale"]) && in_array($_GET["locale"], $AllAvailableLocales) ? $_GET["locale"] : "LA"; //default to latin
 ini_set('date.timezone', 'Europe/Vatican');
 
+$baseLocale = Locale::getPrimaryLanguage($LOCALE);
 $localeArray = [
-    strtolower( $LOCALE ) . '_' . $LOCALE . '.utf8',
-    strtolower( $LOCALE ) . '_' . $LOCALE . '.UTF-8',
-    strtolower( $LOCALE ) . '_' . $LOCALE,
-    strtolower( $LOCALE )
+    $LOCALE . '.utf8',
+    $LOCALE . '.UTF-8',
+    $LOCALE,
+    $baseLocale . '_' . strtoupper( $baseLocale ) . '.utf8',
+    $baseLocale . '_' . strtoupper( $baseLocale ) . '.UTF-8',
+    $baseLocale . '_' . strtoupper( $baseLocale ),
+    $baseLocale . '.utf8',
+    $baseLocale . '.UTF-8',
+    $baseLocale
 ];
 setlocale( LC_ALL, $localeArray );
 bindtextdomain("litcal", "i18n");
@@ -39,7 +48,7 @@ if ( curl_errno( $ch ) ) {
 curl_close( $ch );
 $DatesOfEaster = json_decode( $response );
 
-$AvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($value) {
+$AvailableLocales = array_filter($AllAvailableLocales, function ($value) {
     return strpos($value, '_') === false;
 });
 $AvailableLocales = array_reduce($AvailableLocales, function($carry, $item) use($LOCALE){
@@ -76,7 +85,8 @@ $c->asort($AvailableLocales);
     <select id="langSelect">
         <?php
             foreach($AvailableLocales as $Lcl => $DisplayLang) {
-                echo '<option value="'.$Lcl.'"'. (strtolower($LOCALE) === strtolower($Lcl) ? " selected" : "") . ' title="'.Locale::getDisplayLanguage($Lcl, 'en').'">'.$DisplayLang.'</option>';
+                $optionContent = $baseLocale === 'en' ? $DisplayLang : $DisplayLang . ' (' . Locale::getDisplayLanguage($Lcl, 'en') . ')';
+                echo '<option value="'.$Lcl.'"'. (strtolower($LOCALE) === strtolower($Lcl) ? " selected" : "") . ' title="'.Locale::getDisplayLanguage($Lcl, 'en').'">'. $optionContent . '</option>';
             }
         ?>
     </select>
