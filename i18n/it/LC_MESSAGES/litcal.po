@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-05 06:31+0000\n"
+"POT-Creation-Date: 2024-02-04 13:17+0000\n"
 "PO-Revision-Date: 2023-02-18 23:19+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
@@ -900,19 +900,19 @@ msgstr ""
 msgid "Add language edition Roman Missal"
 msgstr "Aggiungi edizione in lingua del Messale Romano"
 
-#: easter.php:58
+#: easter.php:67
 msgid "Date of Easter from 1583 to 9999"
 msgstr "Data della Pasqua dal 1583 al 9999"
 
-#: easter.php:75
+#: easter.php:84
 msgid "Go back"
 msgstr "Torna indietro"
 
-#: easter.php:89
+#: easter.php:99
 msgid "Century"
 msgstr "Secolo"
 
-#: easter.php:96
+#: easter.php:106
 msgid ""
 "Easter Day Calculation in PHP (Years in which Julian and Gregorian easter "
 "coincide are marked in yellow)"
@@ -920,15 +920,15 @@ msgstr ""
 "Calcolo del giorno della Pasqua utilizzando PHP (Anni nei quali la pasqua "
 "gregoriana e quella giuliana coincidono sono evidenziati in giallo)"
 
-#: easter.php:100
+#: easter.php:110
 msgid "Gregorian Easter"
 msgstr "Pasqua Gregoriana"
 
-#: easter.php:100
+#: easter.php:110
 msgid "Julian Easter"
 msgstr "Pasqua Giuliana"
 
-#: easter.php:100
+#: easter.php:110
 msgid "Julian Easter in Gregorian Calendar"
 msgstr "Pasqua Giuliana nel Calendario Gregoriano"
 
