@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-09 20:24+0000\n"
+"POT-Creation-Date: 2024-04-09 21:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -121,7 +121,7 @@ msgid "Swagger / Open API Documentation"
 msgstr ""
 
 #: index.php:115
-msgid "The Open API json schema for this API has been updated to OpenAPI 3.1. "
+msgid "The Open API json schema for this API has been updated to OpenAPI 3.1."
 msgstr ""
 
 #: usage.php:7
