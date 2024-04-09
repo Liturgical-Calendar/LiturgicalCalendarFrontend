@@ -600,7 +600,7 @@ $(document).on('click', '#saveDiocesanCalendar_btn', () => {
     if ( formsValid ) {
         $.ajax({
             url: RegionalDataURL,
-            method: 'put',
+            method: 'PUT',
             dataType: 'json',
             contentType: 'application/json',
             crossDomain: false,
@@ -783,6 +783,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                     $('#nationalCalendarSettingLocale').val( Settings.Locale );
                     $('#publishedRomanMissalList').empty().append( '<li class="list-group-item">' + Metadata.Missals.join('</li><li class="list-group-item">') + '</li>' );
                     $('#associatedWiderRegion').val( Metadata.WiderRegion.name );
+                    $('#nationalCalendarSettingHighPriest').prop('checked', Settings.EternalHighPriest );
             }
             $('.regionalNationalDataForm').empty();
             data.LitCal.forEach((el) => {
@@ -987,6 +988,7 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
                     "Epiphany": $('#nationalCalendarSettingEpiphany').val(),
                     "Ascension": $('#nationalCalendarSettingAscension').val(),
                     "CorpusChristi": $('#nationalCalendarSettingCorpusChristi').val(),
+                    "EternalHighPriest": $('#nationalCalendarSettingHighPriest').is(':checked'),
                     "Locale": lcl
                 },
                 "Metadata": {

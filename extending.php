@@ -267,7 +267,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                                             <option value="SUNDAY_JAN2_JAN8"><?php echo _("Sunday between January 2 and January 8") ?></option>
                                         </select>
                                     </div>
-                                    <div class="form-group col col-md-3">
+                                    <div class="form-group col col-md-2">
                                         <label><?php echo _( 'ASCENSION' ) ?></label>
                                         <select class="form-select" id="nationalCalendarSettingAscension">
                                             <option value=""></option>
@@ -275,13 +275,20 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                                             <option value="SUNDAY"><?php echo $sunday ?></option>
                                         </select>
                                     </div>
-                                    <div class="form-group col col-md-3">
+                                    <div class="form-group col col-md-2">
                                         <label><?php echo _( 'CORPUS CHRISTI' ) ?></label>
                                         <select class="form-select" id="nationalCalendarSettingCorpusChristi">
                                             <option value=""></option>
                                             <option value="THURSDAY"><?php echo $thursday ?></option>
                                             <option value="SUNDAY"><?php echo $sunday ?></option>
                                         </select>
+                                    </div>
+                                    <div class="form-group col col-md-2">
+                                        <label><?php echo _( 'JESUS HIGH PRIEST' ) ?></label>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="nationalCalendarSettingHighPriest">
+                                            <i class="fas fa-info-circle ms-4 d-inline-block text-black" style="--bs-text-opacity: .3;" role="button" title="In 2012, Pope Benedict XVI gave faculty to the Episcopal Conferences to insert the Feast of Jesus Christ Eternal High Priest in their own liturgical calendars on the Thursday after Pentecost."></i>
+                                        </div>
                                     </div>
                                     <div class="form-group col col-md-3">
                                         <label><?php echo _( 'LOCALE' ) ?></label>
