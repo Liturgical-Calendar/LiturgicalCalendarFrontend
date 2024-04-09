@@ -112,7 +112,7 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                     <div class="card-body">
                         <div class="text-center"><a href="dist/" class="btn btn-primary mt-2"><?php echo _( "Swagger / Open API Documentation" ); ?></a></div>
                         <small class="text-muted">
-                            <i><?php echo _( "The Open API json schema for this API has been updated to OpenAPI 3.1. " ); ?></i>
+                            <i><?php echo _( "The Open API json schema for this API has been updated to OpenAPI 3.1." ); ?></i>
                         </small>
                     </div>
                 </div>
