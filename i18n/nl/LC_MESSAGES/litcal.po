@@ -2,13 +2,14 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # John R. D'Orazio <priest@johnromanodorazio.com>, 2022.
+# Weblate Admin <admin@example.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-04-09 21:35+0000\n"
-"PO-Revision-Date: 2022-12-20 01:17+0000\n"
-"Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2024-04-09 21:53+0000\n"
+"Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
 "Language: nl\n"
@@ -16,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.12.1\n"
+"X-Generator: Weblate 5.4.3\n"
 
 #: index.php:13
 msgid ""
@@ -84,10 +85,15 @@ msgid ""
 "JSON responses produced by the API starting from the year 1970 and going up "
 "to 25 years from the current year."
 msgstr ""
+"Om te controleren of de liturgische gegevens die door de API worden "
+"geproduceerd correct zijn, is er een Unit Test-interface die vooraf "
+"gedefinieerde tests kan uitvoeren tegen de JSON-responses die door de API "
+"worden geproduceerd, beginnend vanaf het jaar 1970 en tot 25 jaar vanaf het "
+"huidige jaar."
 
 #: index.php:79
 msgid "LitCal Validator"
-msgstr ""
+msgstr "Validatietool voor LitCal"
 
 #: index.php:82
 #, php-format
@@ -95,11 +101,14 @@ msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
 "repository."
 msgstr ""
+"De unit tests zijn gedefinieerd in de %s map in de repository van de "
+"Liturgische Kalender API."
 
 #: index.php:83
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
 msgstr ""
+"De interface voor de unit test is samengesteld in een eigen repository: %s."
 
 #: index.php:93 usage.php:176
 msgid "Calculation of the Date of Easter"
@@ -147,7 +156,7 @@ msgstr "Swagger / Openen API-documentatie"
 
 #: index.php:115
 msgid "The Open API json schema for this API has been updated to OpenAPI 3.1."
-msgstr ""
+msgstr "De Open API JSON-schema voor deze API is bijgewerkt naar OpenAPI 3.1."
 
 #: usage.php:7
 msgid ""
@@ -715,7 +724,7 @@ msgstr "SACRAMENTSDAG"
 
 #: extending.php:287
 msgid "JESUS HIGH PRIEST"
-msgstr ""
+msgstr "JEZUS HOGE PRIESTER"
 
 #: extending.php:294
 msgid "LOCALE"
