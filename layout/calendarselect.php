@@ -20,7 +20,7 @@ sort( $CalendarNations );
 <div class="row">
     <div class="form-group col-md">
         <label><?php echo _("Select calendar"); ?></label>
-        <select class="form-control" id="calendarSelect">
+        <select class="form-select" id="calendarSelect">
             <?php foreach( $CalendarNations as $nation ) {
                 if( array_key_exists( $nation, $SelectOptions ) && is_array( $SelectOptions[ $nation ] ) ) {
                     echo "<option data-calendartype=\"nationalcalendar\" value=\"{$nation}\">$nation</option>";

@@ -1,7 +1,7 @@
 </div>
 <!-- /.container-fluid -->
 
-</div>
+</main>
 <!-- End of Main Content -->
 
 <!-- Footer -->
@@ -26,9 +26,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
 
 <!-- Bootstrap / sb-admin JavaScript-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.1/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/4.1.4/js/sb-admin-2.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap4-toggle/3.6.1/bootstrap4-toggle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/startbootstrap-sb-admin@7.0.5/dist/js/scripts.js"></script>
 
 <!-- i18next -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/21.6.6/i18next.min.js" integrity="sha512-3CUvxyR4WtlZanN/KmorrZ2VALnUndAQBYjf1HEYNa6McBY+G2zYq4gOZPUDkDtuk3uBdQIva0Lk89hYQ9fQrA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -37,6 +36,7 @@
 
 <!-- Custom scripts for all pages-->
 <script src="assets/js/i18n.js"></script>
+<script src="assets/js/common.js"></script>
 
 <?php 
     //some assets are only needed on certain pages
@@ -44,10 +44,10 @@
     if( $pageName === "index" ){
         echo '<script src="assets/js/homepage.js"></script>';
     }
-    if( $pageName === "extending" || $pageName === "admin" ) {
-        echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.1/js/bootstrap-multiselect.min.js"></script>';
+    if( in_array( $pageName, [ "extending", "usage", "admin" ] ) ) {
+        echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/js/bootstrap-multiselect.min.js"></script>';
         echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
     }
     if( file_exists( "assets/js/{$pageName}.js" ) ) {
-        echo "<script src=\"assets/js/{$pageName}.js\"></script>";
+        echo "<script type=\"module\" src=\"assets/js/{$pageName}.js\"></script>";
     }

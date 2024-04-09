@@ -66,10 +66,10 @@ $messages = [
 
 $buttonGroup = "<div id=\"memorialsFromDecreesBtnGrp\">
 <hr><div class=\"d-flex justify-content-around\">
-<button class=\"btn btn-sm btn-primary m-2\" id=\"setPropertyAction\" data-toggle=\"modal\" data-target=\"#setPropertyActionPrompt\"><i class=\"fas fa-edit mr-2\"></i>" . _( "Change name or grade of existing festivity" ) . "</button>
-<button class=\"btn btn-sm btn-primary m-2\" id=\"moveFestivityAction\" data-toggle=\"modal\" data-target=\"#moveFestivityActionPrompt\"><i class=\"fas fa-calendar-day mr-2\"></i>" . _( "Move festivity to new date" ) . "</button>
-<button class=\"btn btn-sm btn-primary m-2\" id=\"newFestivityAction\" data-toggle=\"modal\" data-target=\"#newFestivityActionPrompt\"><i class=\"far fa-calendar-plus mr-2\"></i>" . _( "Create a new festivity" ) . "</button>
-<button class=\"btn btn-sm btn-primary m-2\" id=\"makeDoctorAction\" data-toggle=\"modal\" data-target=\"#makeDoctorActionPrompt\"><i class=\"fas fa-user-graduate mr-2\"></i>" . _( "Designate Doctor of the Church from existing festivity" ) . "</button>
+<button class=\"btn btn-sm btn-primary m-2\" id=\"setPropertyAction\" data-bs-toggle=\"modal\" data-bs-target=\"#setPropertyActionPrompt\"><i class=\"fas fa-edit me-2\"></i>" . _( "Change name or grade of existing festivity" ) . "</button>
+<button class=\"btn btn-sm btn-primary m-2\" id=\"moveFestivityAction\" data-bs-toggle=\"modal\" data-bs-target=\"#moveFestivityActionPrompt\"><i class=\"fas fa-calendar-day me-2\"></i>" . _( "Move festivity to new date" ) . "</button>
+<button class=\"btn btn-sm btn-primary m-2\" id=\"newFestivityAction\" data-bs-toggle=\"modal\" data-bs-target=\"#newFestivityActionPrompt\"><i class=\"far fa-calendar-plus me-2\"></i>" . _( "Create a new festivity" ) . "</button>
+<button class=\"btn btn-sm btn-primary m-2\" id=\"makeDoctorAction\" data-bs-toggle=\"modal\" data-bs-target=\"#makeDoctorActionPrompt\"><i class=\"fas fa-user-graduate me-2\"></i>" . _( "Designate Doctor of the Church from existing festivity" ) . "</button>
 </div>
 </div>";
 
@@ -84,7 +84,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
     if( $hasPropertyChange ) {
         $modalBody .= "<div class=\"form-group col col-md-6\">
             <label for=\"propertyToChange\" class=\"font-weight-bold\">" . _( "Property to change" ) . ":</label>
-            <select class=\"form-control\" id=\"propertyToChange\" name=\"propertyToChange\">
+            <select class=\"form-select\" id=\"propertyToChange\" name=\"propertyToChange\">
                 <option value=\"name\">" . _( "Name" ) . "</option>
                 <option value=\"grade\">" . _( "Grade" ) . "</option>
             </select>
@@ -106,7 +106,7 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
     <h1>Liturgical Calendar project Administration tools</h1>
     <div class="form-group col-md">
         <label>Select JSON file to manage:</label>
-        <select class="form-control" id="jsonFileSelect">
+        <select class="form-select" id="jsonFileSelect">
             <option value="api/dev/data/propriumdesanctis_1970/propriumdesanctis_1970.json">propriumdesanctis_1970.json</option>
             <option value="api/dev/data/propriumdesanctis_2002/propriumdesanctis_2002.json">propriumdesanctis_2002.json</option>
             <option value="api/dev/data/propriumdesanctis_ITALY_1983/propriumdesanctis_ITALY_1983.json">propriumdesanctis_ITALY_1983.json</option>
@@ -115,9 +115,9 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
             <option value="api/dev/data/memorialsFromDecrees/memorialsFromDecrees.json">memorialsFromDecrees.json</option>
         </select>
     </div>
-    <div class="row m-2 justify-content-end">
-        <button class="btn btn-primary mr-2" id="addColumnBtn"><i class="fas fa-plus-square mr-2"></i>Add Column<i class="fas fa-columns ml-2"></i></button>
-        <button class="btn btn-primary mr-2" id="saveDataBtn"><i class="fas fa-save mr-2"></i>Save data</button>
+    <div class="d-flex m-2 justify-content-end">
+        <button class="btn btn-primary me-2" id="addColumnBtn"><i class="fas fa-plus-square me-2"></i>Add Column<i class="fas fa-columns ms-2"></i></button>
+        <button class="btn btn-primary me-2" id="saveDataBtn"><i class="fas fa-save me-2"></i>Save data</button>
     </div>
     <div id="tableContainer">
         <table class="table" id="jsonDataTbl">
@@ -179,8 +179,8 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                 </div>
                 <?php generateModalBody(true); ?>
                 <div class="modal-footer">
-                    <button type="button" id="setPropertyButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-edit mr-2"></i>Set Property</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i><?php echo _( "Cancel" ) ?></button>
+                    <button type="button" id="setPropertyButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-edit me-2"></i>Set Property</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _( "Cancel" ) ?></button>
                 </div>
             </div>
         </div>
@@ -195,8 +195,8 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                 </div>
                 <?php generateModalBody(false); ?>
                 <div class="modal-footer">
-                    <button type="button" id="moveFestivityButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-day mr-2"></i><?php echo _( "Move Festivity" ) ?></button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i><?php echo _( "Cancel" ) ?></button>
+                    <button type="button" id="moveFestivityButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-day me-2"></i><?php echo _( "Move Festivity" ) ?></button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _( "Cancel" ) ?></button>
                 </div>
             </div>
         </div>
@@ -211,9 +211,9 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                 </div>
                 <?php generateModalBody(false); ?>
                 <div class="modal-footer">
-                    <button type="button" id="newFestivityFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus mr-2"></i><?php echo _( "New Festivity from existing" ) ?></button>
-                    <button type="button" id="newFestivityExNovoButton" class="btn btn-primary actionPromptButton"><i class="fas fa-calendar-plus mr-2"></i><?php echo _( "New Festivity ex novo" ) ?></button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i><?php echo _( "Cancel" ) ?></button>
+                    <button type="button" id="newFestivityFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus me-2"></i><?php echo _( "New Festivity from existing" ) ?></button>
+                    <button type="button" id="newFestivityExNovoButton" class="btn btn-primary actionPromptButton"><i class="fas fa-calendar-plus me-2"></i><?php echo _( "New Festivity ex novo" ) ?></button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _( "Cancel" ) ?></button>
                 </div>
             </div>
         </div>
@@ -228,8 +228,8 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
                 </div>
                 <?php generateModalBody(false); ?>
                 <div class="modal-footer">
-                    <button type="button" id="designateDoctorButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-user-graduate mr-2"></i><?php echo _( "Designate Doctor of the Church" ) ?></button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fas fa-window-close mr-2"></i><?php echo _( "Cancel" ) ?></button>
+                    <button type="button" id="designateDoctorButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-user-graduate me-2"></i><?php echo _( "Designate Doctor of the Church" ) ?></button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _( "Cancel" ) ?></button>
                 </div>
             </div>
         </div>

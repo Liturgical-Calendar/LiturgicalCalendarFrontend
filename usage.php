@@ -19,29 +19,27 @@ $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/Lit
     <title><?php echo _( "General Roman Calendar") . ' - ' . _( 'Examples' ) ?></title>
     <?php include_once('./layout/head.php'); ?>
 </head>
-<body>
+<body class="sb-nav-fixed">
 
     <?php include_once('./layout/header.php'); ?>
 
         <!-- Page Heading -->
-        <h3 class="h3 mb-2 text-gray-800"><?php echo _( "EXAMPLE USAGE OF THE API" ); ?></h3>
+        <h3 class="h3 mb-2 text-black" style="--bs-text-opacity: .6;"><?php echo _( "Example usage of the API" ); ?></h3>
 
         <div class="accordion" id="examplesOfUsage">
-            <div class="card">
-                <div class="card-header" id="headingOne">
-                    <h2 class="mb-0">
-                        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#webCalendar" aria-expanded="true" aria-controls="webCalendar">
-                            <?php echo _("Web calendar"); ?>
-                        </button>
-                    </h2>
-                </div>
-                <div id="webCalendar" class="collapse show" aria-labelledby="headingOne" data-parent="#examplesOfUsage">
-                    <div class="card-body">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#webCalendar" aria-expanded="true" aria-controls="webCalendar">
+                        <i class="fas fa-calendar"></i>&nbsp;<?php echo _("Web calendar"); ?>
+                    </button>
+                </h2>
+                <div id="webCalendar" class="collapse show" aria-labelledby="headingOne" data-bs-parent="#examplesOfUsage">
+                    <div class="accordion-body">
                         <div class="row">
                             <div class="col-lg">
                                 <div class="card shadow m-2">
                                     <div class="card-header py-3">
-                                        <h6 class="m-0 font-weight-bold text-primary">PHP<i class="fab fa-php float-right text-gray-600"></i></h6>
+                                        <h6 class="m-0 font-weight-bold text-primary">PHP<i class="fab fa-php float-end text-black" style="--bs-text-opacity: .15;"></i></h6>
                                     </div>
                                     <div class="card-body">
                                         <p><?php echo _( "HTML presentation elaborated by PHP using a CURL request" ); ?></p>
@@ -52,7 +50,7 @@ $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/Lit
                             <div class="col-lg">
                                 <div class="card shadow m-2">
                                     <div class="card-header py-3">
-                                        <h6 class="m-0 font-weight-bold text-primary">JavaScript<i class="fab fa-js float-right text-gray-600"></i></h6>
+                                        <h6 class="m-0 font-weight-bold text-primary">JavaScript<i class="fab fa-js float-end text-black" style="--bs-text-opacity: .15;"></i></h6>
                                     </div>
                                     <div class="card-body">
                                         <p><?php echo _( "HTML presentation elaborated by JAVASCRIPT using an AJAX request" ); ?></p>
@@ -63,7 +61,7 @@ $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/Lit
                             <div class="col-lg">
                                 <div class="card shadow m-2">
                                     <div class="card-header py-3">
-                                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Calendar" ); ?><i class="far fa-calendar float-right text-gray-600"></i></h6>
+                                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Calendar" ); ?><i class="far fa-calendar float-end text-black" style="--bs-text-opacity: .15;"></i></h6>
                                     </div>
                                     <div class="card-body">
                                         <p><?php echo _( "FullCalendar representation elaborated by JAVASCRIPT using an AJAX request" ); ?></p>
@@ -76,33 +74,31 @@ $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/Lit
                     </div>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-header" id="headingCalSubscription">
-                    <h2 class="mb-0">
-                        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#calSubscription" aria-expanded="false" aria-controls="calSubscription">
-                            <?php echo _("Calendar subscription"); ?>
-                        </button>
-                    </h2>
-                </div>
-                <div id="calSubscription" class="collapse hide" aria-labelledby="headingCalSubscription" data-parent="#examplesOfUsage">
-                    <div class="card-body">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button bg-light collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#calSubscription" aria-expanded="false" aria-controls="calSubscription">
+                        <i class="far fa-calendar-plus"></i>&nbsp;<?php echo _("Calendar subscription"); ?>
+                    </button>
+                </h2>
+                <div id="calSubscription" class="collapse hide" aria-labelledby="headingCalSubscription" data-bs-parent="#examplesOfUsage">
+                    <div class="accordion-body">
                         <div class="row">
                             <div class="col-lg">
                                 <?php include_once('./layout/calendarselect.php') ?>
                                 <p><?php echo _( "Calendar subscription URL" ); ?></p>
-                                <div class="text-center bg-light border border-info rounded p-2" role="button" title="Click to copy to the clipboard!" id="calSubscriptionURLWrapper"><code id="calSubscriptionURL"><?php echo $calSubscriptionURL; ?></code><i class="fas fa-clipboard float-right text-info"></i></div>
+                                <div class="text-center bg-light border border-info rounded p-2" role="button" title="Click to copy to the clipboard!" id="calSubscriptionURLWrapper"><code id="calSubscriptionURL"><?php echo $calSubscriptionURL; ?></code><i class="fas fa-clipboard float-end text-info"></i></div>
                                 <ul class="nav nav-tabs mt-4" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link active" id="gcal-tab" data-toggle="tab" href="#gcal" role="tab" aria-controls="gcal" aria-selected="true"><i class="fab fa-google mr-2"></i>Google Calendar</a>
+                                        <button class="nav-link active" id="gcal-tab" data-bs-toggle="tab" data-bs-target="#gcal" role="tab" aria-controls="gcal" aria-selected="true"><i class="fab fa-google me-2"></i>&nbsp;Google Calendar</button>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="iphone-tab" data-toggle="tab" href="#iphone" role="tab" aria-controls="iphone" aria-selected="false"><i class="fab fa-apple mr-2"></i>iPhone</a>
+                                        <button class="nav-link" id="iphone-tab" data-bs-toggle="tab" data-bs-target="#iphone" role="tab" aria-controls="iphone" aria-selected="false"><i class="fab fa-apple me-2"></i>&nbsp;iPhone</button>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="android-tab" data-toggle="tab" href="#android" role="tab" aria-controls="android" aria-selected="false"><i class="fab fa-android mr-2"></i>Android</a>
+                                        <button class="nav-link" id="android-tab" data-bs-toggle="tab" data-bs-target="#android" role="tab" aria-controls="android" aria-selected="false"><i class="fab fa-android me-2"></i>&nbsp;Android</button>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="msoutlook-tab" data-toggle="tab" href="#msoutlook" role="tab" aria-controls="msoutlook" aria-selected="false"><i class="fab fa-microsoft mr-2"></i>Microsoft Outlook</a>
+                                        <button class="nav-link" id="msoutlook-tab" data-bs-toggle="tab" data-bs-target="#msoutlook" role="tab" aria-controls="msoutlook" aria-selected="false"><i class="fab fa-microsoft me-2"></i>&nbsp;Microsoft Outlook</button>
                                     </li>
                                 </ul>
                                 <div class="tab-content" id="myTabContent">
@@ -166,20 +162,18 @@ $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/Lit
                     </div>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-header" id="headingTwo">
-                    <h2 class="mb-0">
-                        <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#datesOfEaster" aria-expanded="false" aria-controls="datesOfEaster">
-                            <?php echo _("Dates of Easter"); ?>
-                        </button>
-                    </h2>
-                </div>
-                <div id="datesOfEaster" class="collapse" aria-labelledby="headingTwo" data-parent="#examplesOfUsage">
-                    <div class="card-body">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button bg-light collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#datesOfEaster" aria-expanded="false" aria-controls="datesOfEaster">
+                        <i class="fas fa-egg"></i>&nbsp;<?php echo _("Dates of Easter"); ?>
+                    </button>
+                </h2>
+                <div id="datesOfEaster" class="collapse" aria-labelledby="headingTwo" data-bs-parent="#examplesOfUsage">
+                    <div class="accordion-body">
                         <div class="col-md-6">
                             <div class="card shadow m-2">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Calculation of the Date of Easter" ); ?>: Example interface<i class="fas fa-poll-h float-right fa-2x text-gray-300"></i></h6>
+                                    <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Calculation of the Date of Easter" ); ?>: Example interface<i class="fas fa-poll-h float-end fa-2x text-light"></i></h6>
                                 </div>
                                 <div class="card-body">
                                     <p><?php echo _( "Example display of the date of Easter from 1583 to 9999" ); ?></p>
@@ -190,21 +184,19 @@ $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/Lit
                     </div>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-header" id="headingThree">
-                    <h2 class="mb-0">
-                        <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#liturgyOfTheDay" aria-expanded="false" aria-controls="liturgyOfTheDay">
-                            <?php echo _("Liturgy of the Day"); ?>
-                        </button>
-                    </h2>
-                </div>
-                <div id="liturgyOfTheDay" class="collapse" aria-labelledby="headingThree" data-parent="#examplesOfUsage">
-                    <div class="card-body">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button bg-light collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#liturgyOfTheDay" aria-expanded="false" aria-controls="liturgyOfTheDay">
+                        <i class="fas fa-calendar-day"></i>&nbsp;<?php echo _("Liturgy of the Day"); ?>
+                    </button>
+                </h2>
+                <div id="liturgyOfTheDay" class="collapse" aria-labelledby="headingThree" data-bs-parent="#examplesOfUsage">
+                    <div class="accordion-body">
                         <div class="row">
                             <div class="col-lg">
                                 <div class="card shadow m-2">
                                     <div class="card-header py-3">
-                                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _("Alexa News Brief"); ?><i class="fab fa-amazon float-right text-gray-600"></i></h6>
+                                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _("Alexa News Brief"); ?><i class="fab fa-amazon float-end text-black" style="--bs-text-opacity: .15;"></i></h6>
                                     </div>
                                     <div class="card-body">
                                         <p><?php echo _( "Daily news brief with the liturgy of the day, as an Amazon Alexa skill" ); ?></p>
@@ -223,7 +215,7 @@ $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/Lit
                             <div class="col-lg">
                                 <div class="card shadow m-2">
                                     <div class="card-header py-3">
-                                        <h6 class="m-0 font-weight-bold text-primary">Alexa interactive skill<i class="fab fa-amazon float-right text-gray-600"></i></h6>
+                                        <h6 class="m-0 font-weight-bold text-primary">Alexa interactive skill<i class="fab fa-amazon float-end text-black" style="--bs-text-opacity: .15;"></i></h6>
                                     </div>
                                     <div class="card-body">
                                         <p><?php echo _( "In development" ); ?></p>
@@ -231,7 +223,7 @@ $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/Lit
                                 </div>
                                 <div class="card shadow m-2">
                                     <div class="card-header py-3">
-                                        <h6 class="m-0 font-weight-bold text-primary">Google Assistant app<i class="fab fa-google float-right text-gray-600"></i></h6>
+                                        <h6 class="m-0 font-weight-bold text-primary">Google Assistant app<i class="fab fa-google float-end text-black" style="--bs-text-opacity: .15;"></i></h6>
                                     </div>
                                     <div class="card-body">
                                         <p><?php echo _( "In development" ); ?></p>
@@ -241,7 +233,7 @@ $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/Lit
                             <div class="col-lg">
                                 <div class="card shadow m-2">
                                     <div class="card-header py-3">
-                                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _("Liturgy of any day"); ?><i class="fas fa-church float-right text-gray-600"></i></h6>
+                                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _("Liturgy of any day"); ?><i class="fas fa-church float-end text-black" style="--bs-text-opacity: .15;"></i></h6>
                                     </div>
                                     <div class="card-body">
                                         <p><?php echo _( "For example, you can find the liturgy of the day from the day of your baptism." ); ?></p>
