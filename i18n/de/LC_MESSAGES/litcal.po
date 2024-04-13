@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-13 20:40+0000\n"
+"POT-Creation-Date: 2024-04-13 20:41+0000\n"
 "PO-Revision-Date: 2022-12-19 00:06+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
@@ -35,7 +35,7 @@ msgstr ""
 msgid "General Roman Calendar"
 msgstr "Allgemeiner Römischer Kalender"
 
-#: index.php:25 layout/header.php:83
+#: index.php:25 layout/header.php:82
 msgid "Catholic Liturgical Calendar"
 msgstr "Katholischer Liturgischer Kalender"
 
@@ -178,7 +178,7 @@ msgstr "Beispiele"
 msgid "Example usage of the API"
 msgstr ""
 
-#: usage.php:31 layout/header.php:109
+#: usage.php:31 layout/header.php:108
 msgid "Web calendar"
 msgstr "Webkalender"
 
@@ -228,7 +228,7 @@ msgstr "FullCalendar anzeigen"
 msgid "View FullCalendar (messages first)"
 msgstr "FullCalendar anzeigen"
 
-#: usage.php:78 layout/header.php:113
+#: usage.php:78 layout/header.php:112
 msgid "Calendar subscription"
 msgstr ""
 
@@ -361,7 +361,7 @@ msgid ""
 "more \"beautified\" for Outlook."
 msgstr ""
 
-#: usage.php:166 layout/header.php:117
+#: usage.php:166 layout/header.php:116
 #, fuzzy
 #| msgid "Date of Easter API endpoint"
 msgid "Dates of Easter"
@@ -375,7 +375,7 @@ msgstr ""
 msgid "Calculate the Date of Easter"
 msgstr "Berechnen Sie das Osterdatums"
 
-#: usage.php:188 layout/header.php:121
+#: usage.php:188 layout/header.php:120
 msgid "Liturgy of the Day"
 msgstr ""
 
@@ -648,7 +648,7 @@ msgstr ""
 msgid "Remove existing data"
 msgstr "Vorhandene Daten entfernen"
 
-#: extending.php:211 layout/header.php:35
+#: extending.php:211 layout/header.php:34
 msgid "Create a Calendar for a Wider Region"
 msgstr ""
 
@@ -664,7 +664,7 @@ msgstr "Allgemeiner Römischer Kalender"
 msgid "National Calendar"
 msgstr "Erstellen Sie einen nationalen Kalender"
 
-#: extending.php:255 layout/header.php:36
+#: extending.php:255 layout/header.php:35
 msgid "Create a National Calendar"
 msgstr "Erstellen Sie einen nationalen Kalender"
 
@@ -758,7 +758,7 @@ msgid "Optional memorials"
 msgstr "Optionale Gedenkstätten"
 
 #: extending.php:404 extending.php:425 extending.php:446 extending.php:467
-#: layout/header.php:37
+#: layout/header.php:36
 msgid "Create a Diocesan Calendar"
 msgstr "Erstellen Sie einen Diözesankalender"
 
@@ -1174,33 +1174,33 @@ msgstr "HOCHFEST"
 msgid "celebration with precedence over solemnities"
 msgstr ""
 
-#: layout/header.php:32 layout/header.php:97
+#: layout/header.php:31 layout/header.php:96
 msgid "Extending the API"
 msgstr "Erweiterung der API"
 
-#: layout/header.php:40
+#: layout/header.php:39
 msgid "Usage"
 msgstr "Verwendung"
 
-#: layout/header.php:41
+#: layout/header.php:40
 msgid "Translations"
 msgstr ""
 
-#: layout/header.php:42
+#: layout/header.php:41
 msgid "About us"
 msgstr "Über uns"
 
-#: layout/header.php:89
+#: layout/header.php:88
 msgid "Home"
 msgstr ""
 
-#: layout/header.php:101
+#: layout/header.php:100
 #, fuzzy
 #| msgid "Definition"
 msgid "Documentation"
 msgstr "Definition"
 
-#: layout/header.php:105
+#: layout/header.php:104
 msgid "Examples of Usage"
 msgstr ""
 
