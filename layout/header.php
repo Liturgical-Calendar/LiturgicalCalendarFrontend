@@ -15,7 +15,6 @@ foreach( $langsAvailable as $lang ) {
 }
 asort($langsAssoc);
 ?>
-<!-- <?php echo implode(' | ', $langsAssoc); ?> -->
 <!-- Topbar -->
 <nav class="sb-topnav navbar navbar-expand navbar-light bg-white shadow">
     <!-- Navbar Brand -->
