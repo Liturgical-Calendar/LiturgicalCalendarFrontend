@@ -116,6 +116,16 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                         </small>
                     </div>
                 </div>
+                <div class="card shadow m-2">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Translation Tool" ); ?><i class="fas fa-language float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
+                    </div>
+                    <div class="card-body">
+                        <a href="https://translate.johnromanodorazio.com/engage/liturgical-calendar/">
+                            <img src="https://translate.johnromanodorazio.com/widget/liturgical-calendar/multi-auto.svg" alt="<?php echo _( "State of the translations" ) ?>" />
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
 
