@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-13 22:09+0000\n"
+"POT-Creation-Date: 2024-04-13 23:18+0000\n"
 "PO-Revision-Date: 2022-12-19 00:06+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
@@ -154,8 +154,8 @@ msgstr ""
 msgid "Translation Tool"
 msgstr ""
 
-#: index.php:123
-msgid "State of the translations"
+#: index.php:122 index.php:126
+msgid "Translations status"
 msgstr ""
 
 #: usage.php:7
