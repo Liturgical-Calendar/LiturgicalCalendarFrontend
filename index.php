@@ -119,8 +119,12 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                         <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Translation Tool" ); ?><i class="fas fa-language float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
                     </div>
                     <div class="card-body">
+                        <p><?php echo _( "Translations status" ); ?></p>
                         <a href="https://translate.johnromanodorazio.com/engage/liturgical-calendar/">
-                            <img src="https://translate.johnromanodorazio.com/widget/liturgical-calendar/multi-auto.svg" alt="<?php echo _( "State of the translations" ) ?>" />
+                            <picture>
+                                <source media="(max-width: 600px)" srcset="https://translate.johnromanodorazio.com/widget/liturgical-calendar/horizontal-auto.svg" />
+                                <img src="https://translate.johnromanodorazio.com/widget/liturgical-calendar/multi-auto.svg" alt="<?php echo _( "Translations status" ); ?>" />
+                            </picture>
                         </a>
                     </div>
                 </div>
