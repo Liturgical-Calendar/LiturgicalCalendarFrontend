@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Ubuntu <priest@johnromanodorazio.com>, 2021.
 # John R. D'Orazio <priest@johnromanodorazio.com>, 2022, 2023.
+# Weblate Admin <admin@example.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-09 20:24+0000\n"
-"PO-Revision-Date: 2023-02-18 23:19+0000\n"
-"Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
+"POT-Creation-Date: 2024-04-09 21:35+0000\n"
+"PO-Revision-Date: 2024-04-09 21:53+0000\n"
+"Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
 "Language: it\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.12.1\n"
+"X-Generator: Weblate 5.4.3\n"
 
 #: index.php:13
 msgid ""
@@ -73,10 +74,8 @@ msgstr ""
 "pulsante sopra è impostato a questo URL)"
 
 #: index.php:75
-#, fuzzy
-#| msgid "Liturgical Calendar API endpoint"
 msgid "Liturgical Calendar Validator"
-msgstr "API del Calendario Liturgico"
+msgstr "Validatore del Calendario Liturgico"
 
 #: index.php:78
 msgid ""
@@ -153,8 +152,8 @@ msgid "Swagger / Open API Documentation"
 msgstr "Documentazione Swagger / OpenAPI"
 
 #: index.php:115
-msgid "The Open API json schema for this API has been updated to OpenAPI 3.1. "
-msgstr ""
+msgid "The Open API json schema for this API has been updated to OpenAPI 3.1."
+msgstr "Lo schema JSON dell'API è stato aggiornato a OpenAPI 3.1."
 
 #: usage.php:7
 msgid ""
@@ -172,8 +171,6 @@ msgid "Examples"
 msgstr "Esempi"
 
 #: usage.php:27
-#, fuzzy
-#| msgid "Examples of Usage"
 msgid "Example usage of the API"
 msgstr "Esempi di Utilizzo"
 
@@ -733,7 +730,7 @@ msgstr "CORPUS DOMINI"
 
 #: extending.php:287
 msgid "JESUS HIGH PRIEST"
-msgstr ""
+msgstr "GESÙ SOMMO SACERDOTE"
 
 #: extending.php:294
 msgid "LOCALE"
