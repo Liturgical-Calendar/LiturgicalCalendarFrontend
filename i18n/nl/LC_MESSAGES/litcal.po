@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-04-13 23:18+0000\n"
-"PO-Revision-Date: 2024-04-09 21:53+0000\n"
+"PO-Revision-Date: 2024-04-13 23:46+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -164,7 +164,7 @@ msgstr ""
 
 #: index.php:122 index.php:126
 msgid "Translations status"
-msgstr ""
+msgstr "Vertalingsstatus"
 
 #: usage.php:7
 msgid ""
@@ -461,7 +461,7 @@ msgstr ""
 
 #: extending.php:32
 msgid "(see <a href=\"translations.php\">Translations</a>)"
-msgstr ""
+msgstr "(zie <a href=\"translations.php\">Vertalingen</a>)"
 
 #: extending.php:33
 msgid ""
@@ -1199,7 +1199,7 @@ msgstr "Gebruik"
 
 #: layout/header.php:40
 msgid "Translations"
-msgstr ""
+msgstr "Vertalingen"
 
 #: layout/header.php:41
 msgid "About us"
