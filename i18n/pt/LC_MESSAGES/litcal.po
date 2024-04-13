@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-09 21:35+0000\n"
+"POT-Creation-Date: 2024-04-13 12:21+0000\n"
 "PO-Revision-Date: 2024-04-09 21:43+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
@@ -131,6 +131,14 @@ msgstr ""
 
 #: index.php:115
 msgid "The Open API json schema for this API has been updated to OpenAPI 3.1."
+msgstr ""
+
+#: index.php:121
+msgid "Translation Tool"
+msgstr ""
+
+#: index.php:125
+msgid "State of the translations"
 msgstr ""
 
 #: usage.php:7
