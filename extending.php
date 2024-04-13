@@ -1,3 +1,4 @@
+<!doctype html>
 <?php
 
 include_once("includes/i18n.php");
@@ -27,22 +28,10 @@ foreach( array_keys($NationalCalendars) as $country_name ) {
 asort($availableNationalCalendars, SORT_LOCALE_STRING);
 
 $API_EXTEND_HOWTO_A = _( "The General Roman Calendar can be extended so as to create a National or Diocesan calendar. Diocesan calendars depend on National calendars, so the National calendar must first be created." );
-$API_EXTEND_HOWTO_A1 = _( "The first step in creating a National calendar, is to translate the already existing calendar data into the language for that nation." );
-$API_EXTEND_HOWTO_A1a = sprintf(
-    _( 'This can be done on the <a href="%1$s">LitCal translation server</a>.' ),
-    'https://translate.johnromanodorazio.com/projects/liturgical-calendar/'
-);
-$API_EXTEND_HOWTO_A1b = sprintf(
-    _( 'Specifically, the components which will require translation are: 1. <a href="%1$s">Proprium de Sanctis 1970</a>, 2. <a href="%2$s">Proprium de Sanctis 2002</a>, 3. <a href="%3$s">Proprium de Sanctis 2008</a>, 4. <a href="%4$s">Proprium de Tempore</a>, and 5. <a href="%5$s">Memorials from Decrees</a>.' ),
-    'https://translate.johnromanodorazio.com/projects/liturgical-calendar/proprium-de-sanctis-1970/',
-    'https://translate.johnromanodorazio.com/projects/liturgical-calendar/proprium-de-sanctis-2002/',
-    'https://translate.johnromanodorazio.com/projects/liturgical-calendar/proprium-de-sanctis-2008/',
-    'https://translate.johnromanodorazio.com/projects/liturgical-calendar/proprium-de-tempore/',
-    'https://translate.johnromanodorazio.com/projects/liturgical-calendar/memorials-from-decrees/'
-);
+$API_EXTEND_HOWTO_A1 = _( 'For more information on the translation process, see <a href="translations.php">Translations</a>.' );
 $API_EXTEND_HOWTO_A2 = _( "A National calendar may have some festivities in common with other National calendars, for example the patron of a wider region." );
 $API_EXTEND_HOWTO_A3 = _( "In this case, the festivities for the Wider region should be defined separately, and if applicable should be made translatable, then the Wider region should be applied to the National Calendar." );
-$API_EXTEND_HOWTO_B = _( "National calendars and their relative translations must be defined using data from the translation of the Roman Missal used in the Region or in any case from decrees of the Episcopal Conference of the Region." );
+$API_EXTEND_HOWTO_B = _( "National calendars and related translations must be defined using data from the translation of the Roman Missal used in the Region or in any case from decrees of the Episcopal Conference of the Region." );
 $DioceseGroupHelp = _( "If a group of dioceses decides to pool their Liturgical Calendar data, for example to print out one single yearly calendar with the data for all the dioceses in the group, the group can be defined or set here." );
 
 $c = new Collator($i18n->LOCALE);
@@ -146,8 +135,6 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
 }
 
 ?>
-
-<!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
     <title><?php echo _( "General Roman Calendar - Extending") ?></title>
@@ -159,10 +146,10 @@ function generateModalBody( bool $hasPropertyChange = false ) : void {
 
         <!-- Page Heading -->
         <h1 class="h3 mb-2 text-black" style="--bs-text-opacity: .6;"><?php echo _( "Extend the General Roman Calendar with National or Diocesan data"); ?></h1>
-        <p class="mb-4">
-            <p><?php echo $API_EXTEND_HOWTO_A . " " . $API_EXTEND_HOWTO_A1 . " " . $API_EXTEND_HOWTO_A1a . " " . $API_EXTEND_HOWTO_A1b . " " . $API_EXTEND_HOWTO_A2 . " " . $API_EXTEND_HOWTO_A3; ?></p>
+        <div class="mb-4">
+            <p><?php echo $API_EXTEND_HOWTO_A . " " . $API_EXTEND_HOWTO_A1 . " " . $API_EXTEND_HOWTO_A2 . " " . $API_EXTEND_HOWTO_A3; ?></p>
             <p><?php echo $API_EXTEND_HOWTO_B; ?></p>
-        </p>
+        </div>
 <?php
     if(isset($_GET["choice"])){
         switch($_GET["choice"]){
