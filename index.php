@@ -1,4 +1,4 @@
-<?php
+<!doctype html><?php
 
 include_once("includes/i18n.php");
 $i18n = new i18n();
@@ -12,8 +12,6 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOf
 
 $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve data for the Liturgical events of any given year from 1970 to 9999, whether for the Universal or General Roman Calendar or for derived National and Diocesan calendars" );
 ?>
-
-<!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
     <title><?php echo _( "General Roman Calendar" ) ?></title>
