@@ -17,7 +17,7 @@ $API_EXTEND_HOWTO_5 = sprintf(
     _( 'Other translations required for the Liturgical Calendar data are found in the %1$s translation component. Upon choosing the language in which to translate this component, you will find tags that categorize the strings for translation in the "String status" section. The categories that are required to complete the Liturgical calendar data are: %2$s. The %3$s tag / category are the messages that explain how the calendar was calculated for a given year; though not essential for the Calendar data, it is useful information for understanding where the results of the current calculation came from.' ),
     '<a href="https://translate.johnromanodorazio.com/projects/liturgical-calendar/api-strings/" target="_blank" class="text-light">API strings <i class="fas fa-up-right-from-square mx-2"></i></a>',
     '<span class="text-nowrap">1. <kbd>Calendar strings</kbd></span>, <span class="text-nowrap">2. <kbd>Commons</kbd></span>, <span class="text-nowrap">3. <kbd>Liturgical colors</kbd></span>, <span class="text-nowrap">4. <kbd>Liturgical grades</kbd></span>',
-    '<kbd>Calendar messages</kbd>'
+    '<span class="text-nowrap"><kbd>Calendar messages</kbd></span>'
 );
 
 $API_EXTEND_HOWTO_5a = sprintf(
@@ -59,8 +59,8 @@ $API_EXTEND_HOWTO_10 = _( 'The project website can be also be translated into ot
         <div class="tab-content">
             <div class="tab-pane fade show active pt-3" id="calendar-data-panel" role="tabpanel" aria-labelledby="calendar-data-tab">
                 <p style="text-align:justify;"><?php echo $API_EXTEND_HOWTO_1 . " " . $API_EXTEND_HOWTO_2 . " " . $API_EXTEND_HOWTO_3; ?></p>
-                <div class="row bg-secondary text-light p-2 m-2">
-                    <div class="col-3">
+                <div class="d-flex flex-column gap-3 flex-lg-row bg-secondary text-light p-4 m-2">
+                    <div class="col-12 col-lg-3">
                         <p style="text-align:justify;"><?php echo $API_EXTEND_HOWTO_4; ?></p>
                         <ol class="mb-0">
                             <li><a href="https://translate.johnromanodorazio.com/projects/liturgical-calendar/proprium-de-sanctis-1970/" target="_blank" class="text-light"><small>Proprium de Sanctis 1970 <i class="fas fa-up-right-from-square ms-2"></i></small></a></li>
@@ -70,7 +70,7 @@ $API_EXTEND_HOWTO_10 = _( 'The project website can be also be translated into ot
                             <li><a href="https://translate.johnromanodorazio.com/projects/liturgical-calendar/memorials-from-decrees/" target="_blank" class="text-light"><small>Memorials from Decrees <i class="fas fa-up-right-from-square ms-2"></i></small></a></li>
                         </ol>
                     </div>
-                    <div class="col-9">
+                    <div class="col-12 col-lg-9">
                         <p><?php echo $API_EXTEND_HOWTO_5; ?></p>
                         <p><small><i><?php echo $API_EXTEND_HOWTO_5a; ?></small></i></p>
                     </div>
