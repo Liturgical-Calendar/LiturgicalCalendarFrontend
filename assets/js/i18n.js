@@ -262,45 +262,15 @@ Object.freeze(ISO_3166_1_alpha_2);
 
 (function ($) {
     const { LITCAL_LOCALE } = ISO_3166_1_alpha_2;
-    let languageNames = new Intl.DisplayNames([LITCAL_LOCALE], {type: 'language'});
     $(document).ready(function() {
-        $('#langChoicesDropdown').text( languageNames.of(LITCAL_LOCALE) );
-        $('#langChoiceEnglish').text( languageNames.of('en') );
-        $('#langChoiceFrench').text( languageNames.of('fr') );
-        $('#langChoiceGerman').text( languageNames.of('de') );
-        $('#langChoiceItalian').text( languageNames.of('it') );
-        $('#langChoiceSpanish').text( languageNames.of('es') );
-        $('#langChoicePortuguese').text( languageNames.of('pt') );
-        $('#langChoiceLatin').text( languageNames.of('lat') );
-        $('#langChoiceDutch').text( languageNames.of('nl') );
         $(document).on( 'click', '#langChoicesDropdownItems .dropdown-item', ev => {
             ev.preventDefault();
             //let oldLocale = Cookies.get('currentLocale');
-            switch( $(ev.currentTarget).attr('id') ){
-                case 'langChoiceEnglish':
-                    Cookies.set('currentLocale','en');
-                    break;
-                case 'langChoiceFrench':
-                    Cookies.set('currentLocale','fr');
-                    break;
-                case 'langChoiceGerman':
-                    Cookies.set('currentLocale','de');
-                    break;
-                case 'langChoiceItalian':
-                    Cookies.set('currentLocale','it');
-                    break;
-                case 'langChoiceSpanish':
-                    Cookies.set('currentLocale','es');
-                    break;
-                case 'langChoicePortuguese':
-                    Cookies.set('currentLocale','pt');
-                    break;
-                case 'langChoiceLatin':
-                    Cookies.set('currentLocale','lat');
-                    break;
-                case 'langChoiceDutch':
-                    Cookies.set('currentLocale','nl');
+            let langChoice = $(ev.currentTarget).attr('id').split('-')[1];
+            if( langChoice === 'la' ) {
+                langChoice = 'lat';
             }
+            Cookies.set('currentLocale', langChoice);
             //only reload if the value has changed
             if(Cookies.get('currentLocale') != LITCAL_LOCALE){
                 location.reload();

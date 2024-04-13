@@ -8,8 +8,14 @@ $endpointURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalEngi
 $metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMetadata.php";
 $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOfEaster.php";
 
+$langsAvailable = ['en', ...array_map('basename', glob("i18n/*", GLOB_ONLYDIR))];
+$langsAssoc = [];
+foreach( $langsAvailable as $lang ) {
+    $langsAssoc[$lang] = Locale::getDisplayLanguage($lang, $i18n->LOCALE);
+}
+asort($langsAssoc);
 ?>
-
+<!-- <?php echo implode(' | ', $langsAssoc); ?> -->
 <!-- Topbar -->
 <nav class="sb-topnav navbar navbar-expand navbar-light bg-white shadow">
     <!-- Navbar Brand -->
@@ -32,23 +38,24 @@ $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOf
             </div>
         </li>
         <li class="nav-item ms-2<?php echo $currentPage=="usage" ? " active" : ""; ?>" id="topNavBar_Usage"><a class="nav-link btn btn-outline-light border-0<?php echo $currentPage=="usage" ? " fw-bold" : ""; ?>" href="./usage.php"><?php echo _( "Usage" ); ?></a></li>
+        <li class="nav-item ms-2<?php echo $currentPage=="translations" ? " active" : ""; ?>" id="topNavBar_Translations"><a class="nav-link btn btn-outline-light border-0<?php echo $currentPage=="translations" ? " fw-bold" : ""; ?>" href="./translations.php"><?php echo _( "Translations" ); ?></a></li>
         <li class="nav-item ms-2<?php echo $currentPage=="about" ? " active" : ""; ?>" id="topNavBar_AboutUs"><a class="nav-link btn btn-outline-light border-0<?php echo $currentPage=="about" ? " fw-bold" : ""; ?>" href="./about.php"><?php echo _( "About us" ); ?></a></li>
     </ul>
     <ul class="navbar-nav ms-auto">
         <li class="nav-item dropdown">
             <!-- this should contain the value of the currently selected language, based on a cookie -->
             <a class="nav-link dropdown-toggle btn btn-outline-light border-0" href="#" id="langChoicesDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                English
+                <?php echo Locale::getDisplayLanguage($i18n->LOCALE, $i18n->LOCALE); ?>
             </a>
             <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="langChoicesDropdown" id="langChoicesDropdownItems">
-                <a class="dropdown-item<?php echo substr( $i18n->LOCALE, 0 ,2 ) === "en" ? " active" : "" ?>" id="langChoiceEnglish" href="#"><span class="d-none d-md-inline">English</span><span class="d-inline d-md-none">EN</span></a>
-                <a class="dropdown-item<?php echo substr( $i18n->LOCALE, 0 ,2 ) === "fr" ? " active" : "" ?>" id="langChoiceFrench" href="#"><span class="d-none d-md-inline">French</span><span class="d-inline d-md-none">FR</span></a>
-                <a class="dropdown-item<?php echo substr( $i18n->LOCALE, 0 ,2 ) === "de" ? " active" : "" ?>" id="langChoiceGerman" href="#"><span class="d-none d-md-inline">German</span><span class="d-inline d-md-none">DE</span></a>
-                <a class="dropdown-item<?php echo substr( $i18n->LOCALE, 0 ,2 ) === "it" ? " active" : "" ?>" id="langChoiceItalian" href="#"><span class="d-none d-md-inline">Italian</span><span class="d-inline d-md-none">IT</span></a>
-                <a class="dropdown-item<?php echo substr( $i18n->LOCALE, 0 ,2 ) === "la" ? " active" : "" ?>" id="langChoiceLatin" href="#"><span class="d-none d-md-inline">Latin</span><span class="d-inline d-md-none">LA</span></a>
-                <a class="dropdown-item<?php echo substr( $i18n->LOCALE, 0 ,2 ) === "pt" ? " active" : "" ?>" id="langChoicePortuguese" href="#"><span class="d-none d-md-inline">Portuguese</span><span class="d-inline d-md-none">PT</span></a>
-                <a class="dropdown-item<?php echo substr( $i18n->LOCALE, 0 ,2 ) === "es" ? " active" : "" ?>" id="langChoiceSpanish" href="#"><span class="d-none d-md-inline">Spanish</span><span class="d-inline d-md-none">ES</span></a>
-                <a class="dropdown-item<?php echo substr( $i18n->LOCALE, 0 ,2 ) === "nl" ? " active" : "" ?>" id="langChoiceDutch" href="#"><span class="d-none d-md-inline">Dutch</span><span class="d-inline d-md-none">NL</span></a>
+                <?php
+                    foreach( $langsAssoc as $key => $lang ) {
+                        $classList = substr( $i18n->LOCALE, 0, 2 ) === $key ? "dropdown-item active" : "dropdown-item";
+                        $isoLang = strtoupper( $key );
+                        $displayName = Locale::getDisplayLanguage( $key, 'en');
+                        echo "<a class=\"$classList\" id=\"langChoice-$key\" href=\"#\" title=\"$displayName\"><span class=\"d-none d-md-inline\">$lang</span><span class=\"d-inline d-md-none\">$isoLang</span></a>";
+                    }
+                ?>
             </div>
             </li>
     </ul>
