@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-13 12:21+0000\n"
+"POT-Creation-Date: 2024-04-13 20:39+0000\n"
 "PO-Revision-Date: 2024-04-09 21:53+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
@@ -35,7 +35,7 @@ msgstr ""
 msgid "General Roman Calendar"
 msgstr "Calendario Romano Generale"
 
-#: index.php:27 layout/header.php:76
+#: index.php:27 layout/header.php:83
 msgid "Catholic Liturgical Calendar"
 msgstr "Calendario Liturgico Cattolico"
 
@@ -182,7 +182,7 @@ msgstr "Esempi"
 msgid "Example usage of the API"
 msgstr "Esempi di Utilizzo"
 
-#: usage.php:33 layout/header.php:102
+#: usage.php:33 layout/header.php:109
 msgid "Web calendar"
 msgstr "Calendario HTML"
 
@@ -223,7 +223,7 @@ msgstr "Visualizza l'esempio FullCalendar"
 msgid "View FullCalendar (messages first)"
 msgstr "Visualizza l'esempio FullCalendar (messaggi in alto)"
 
-#: usage.php:80 layout/header.php:106
+#: usage.php:80 layout/header.php:113
 msgid "Calendar subscription"
 msgstr "Sottoscrizione calendario"
 
@@ -396,7 +396,7 @@ msgstr ""
 "eventi, pertanto le descrizioni degli eventi generate dall'URL di "
 "sottoscrizione sono maggiormente \"abbellite\" per Outlook."
 
-#: usage.php:168 layout/header.php:110
+#: usage.php:168 layout/header.php:117
 msgid "Dates of Easter"
 msgstr "Date della Pasqua"
 
@@ -409,7 +409,7 @@ msgstr ""
 msgid "Calculate the Date of Easter"
 msgstr "Calcola la Data della Pasqua"
 
-#: usage.php:190 layout/header.php:114
+#: usage.php:190 layout/header.php:121
 msgid "Liturgy of the Day"
 msgstr "Liturgia del Giorno"
 
@@ -696,7 +696,7 @@ msgstr "La Regione più ampia è multilingue"
 msgid "Remove existing data"
 msgstr "Rimuovi dati esistenti"
 
-#: extending.php:211 layout/header.php:29
+#: extending.php:211 layout/header.php:35
 msgid "Create a Calendar for a Wider Region"
 msgstr "Crea il Calendario di una Regione più ampia"
 
@@ -708,7 +708,7 @@ msgstr "Salva Dati Calendario della Regione più ampia"
 msgid "National Calendar"
 msgstr "Calendario Nazionale"
 
-#: extending.php:255 layout/header.php:30
+#: extending.php:255 layout/header.php:36
 msgid "Create a National Calendar"
 msgstr "Crea un Calendario Nazionale"
 
@@ -795,7 +795,7 @@ msgid "Optional memorials"
 msgstr "Memorie facoltative"
 
 #: extending.php:404 extending.php:425 extending.php:446 extending.php:467
-#: layout/header.php:31
+#: layout/header.php:37
 msgid "Create a Diocesan Calendar"
 msgstr "Crea un Calendario Diocesano"
 
@@ -1218,27 +1218,31 @@ msgstr "SOLENNITÀ"
 msgid "celebration with precedence over solemnities"
 msgstr "celebrazione con precedenza sulle solennità"
 
-#: layout/header.php:26 layout/header.php:90
+#: layout/header.php:32 layout/header.php:97
 msgid "Extending the API"
 msgstr "Estendi l'API"
 
-#: layout/header.php:34
+#: layout/header.php:40
 msgid "Usage"
 msgstr "Utilizzo"
 
-#: layout/header.php:35
+#: layout/header.php:41
+msgid "Translations"
+msgstr ""
+
+#: layout/header.php:42
 msgid "About us"
 msgstr "Chi siamo"
 
-#: layout/header.php:82
+#: layout/header.php:89
 msgid "Home"
 msgstr "Home"
 
-#: layout/header.php:94
+#: layout/header.php:101
 msgid "Documentation"
 msgstr "Documentazione"
 
-#: layout/header.php:98
+#: layout/header.php:105
 msgid "Examples of Usage"
 msgstr "Esempi di Utilizzo"
 

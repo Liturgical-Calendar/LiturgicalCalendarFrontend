@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-13 12:21+0000\n"
+"POT-Creation-Date: 2024-04-13 20:39+0000\n"
 "PO-Revision-Date: 2024-04-09 21:53+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
@@ -35,7 +35,7 @@ msgstr ""
 msgid "General Roman Calendar"
 msgstr "Algemene Romeinse kalender"
 
-#: index.php:27 layout/header.php:76
+#: index.php:27 layout/header.php:83
 msgid "Catholic Liturgical Calendar"
 msgstr "Katholieke Liturgische Kalender"
 
@@ -188,7 +188,7 @@ msgstr "Voorbeelden"
 msgid "Example usage of the API"
 msgstr "Voorbeelden van gebruik"
 
-#: usage.php:33 layout/header.php:102
+#: usage.php:33 layout/header.php:109
 msgid "Web calendar"
 msgstr "Webkalender"
 
@@ -227,7 +227,7 @@ msgstr "Bekijk FullCalendar voorbeeld"
 msgid "View FullCalendar (messages first)"
 msgstr "Bekijk FullCalendar voorbeeld (berichten eerst)"
 
-#: usage.php:80 layout/header.php:106
+#: usage.php:80 layout/header.php:113
 msgid "Calendar subscription"
 msgstr "Kalender abonnement"
 
@@ -395,7 +395,7 @@ msgstr ""
 "gebeurtenisbeschrijving, dus de gebeurtenisbeschrijvingen die door de "
 "abonnements-URL worden geleverd, zijn iets \"verfraaider\" voor Outlook."
 
-#: usage.php:168 layout/header.php:110
+#: usage.php:168 layout/header.php:117
 msgid "Dates of Easter"
 msgstr "Data van Pasen"
 
@@ -407,7 +407,7 @@ msgstr "Voorbeeldweergave van de datum van Pasen van 1583 tot 9999"
 msgid "Calculate the Date of Easter"
 msgstr "Bereken de datum van Pasen"
 
-#: usage.php:190 layout/header.php:114
+#: usage.php:190 layout/header.php:121
 msgid "Liturgy of the Day"
 msgstr "Liturgie van de dag"
 
@@ -690,7 +690,7 @@ msgstr "Bredere regio is meertalig"
 msgid "Remove existing data"
 msgstr "Verwijder bestaande gegevens"
 
-#: extending.php:211 layout/header.php:29
+#: extending.php:211 layout/header.php:35
 msgid "Create a Calendar for a Wider Region"
 msgstr "Maak een kalender voor een grotere regio"
 
@@ -702,7 +702,7 @@ msgstr "Bewaar kalendergegevens van grotere regio's"
 msgid "National Calendar"
 msgstr "Nationale kalender"
 
-#: extending.php:255 layout/header.php:30
+#: extending.php:255 layout/header.php:36
 msgid "Create a National Calendar"
 msgstr "Maak een nationale kalender"
 
@@ -789,7 +789,7 @@ msgid "Optional memorials"
 msgstr "Vrije Gedachtenissen"
 
 #: extending.php:404 extending.php:425 extending.php:446 extending.php:467
-#: layout/header.php:31
+#: layout/header.php:37
 msgid "Create a Diocesan Calendar"
 msgstr "Maak een diocesane kalender"
 
@@ -1211,27 +1211,31 @@ msgstr "HOOGFEEST"
 msgid "celebration with precedence over solemnities"
 msgstr "viering met voorrang op hoogfesten"
 
-#: layout/header.php:26 layout/header.php:90
+#: layout/header.php:32 layout/header.php:97
 msgid "Extending the API"
 msgstr "Uitbreiding van de API"
 
-#: layout/header.php:34
+#: layout/header.php:40
 msgid "Usage"
 msgstr "Gebruik"
 
-#: layout/header.php:35
+#: layout/header.php:41
+msgid "Translations"
+msgstr ""
+
+#: layout/header.php:42
 msgid "About us"
 msgstr "Over ons"
 
-#: layout/header.php:82
+#: layout/header.php:89
 msgid "Home"
 msgstr "Startpagina"
 
-#: layout/header.php:94
+#: layout/header.php:101
 msgid "Documentation"
 msgstr "Documentatie"
 
-#: layout/header.php:98
+#: layout/header.php:105
 msgid "Examples of Usage"
 msgstr "Voorbeelden van gebruik"
 

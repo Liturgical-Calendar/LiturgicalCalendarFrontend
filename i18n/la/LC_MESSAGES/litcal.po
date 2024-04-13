@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-13 12:21+0000\n"
+"POT-Creation-Date: 2024-04-13 20:39+0000\n"
 "PO-Revision-Date: 2022-05-10 20:08+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
@@ -31,7 +31,7 @@ msgstr ""
 msgid "General Roman Calendar"
 msgstr ""
 
-#: index.php:27 layout/header.php:76
+#: index.php:27 layout/header.php:83
 msgid "Catholic Liturgical Calendar"
 msgstr ""
 
@@ -152,7 +152,7 @@ msgstr ""
 msgid "Example usage of the API"
 msgstr ""
 
-#: usage.php:33 layout/header.php:102
+#: usage.php:33 layout/header.php:109
 msgid "Web calendar"
 msgstr ""
 
@@ -189,7 +189,7 @@ msgstr ""
 msgid "View FullCalendar (messages first)"
 msgstr ""
 
-#: usage.php:80 layout/header.php:106
+#: usage.php:80 layout/header.php:113
 msgid "Calendar subscription"
 msgstr ""
 
@@ -322,7 +322,7 @@ msgid ""
 "more \"beautified\" for Outlook."
 msgstr ""
 
-#: usage.php:168 layout/header.php:110
+#: usage.php:168 layout/header.php:117
 msgid "Dates of Easter"
 msgstr ""
 
@@ -334,7 +334,7 @@ msgstr ""
 msgid "Calculate the Date of Easter"
 msgstr ""
 
-#: usage.php:190 layout/header.php:114
+#: usage.php:190 layout/header.php:121
 msgid "Liturgy of the Day"
 msgstr "Liturgia Hodierna"
 
@@ -586,7 +586,7 @@ msgstr ""
 msgid "Remove existing data"
 msgstr ""
 
-#: extending.php:211 layout/header.php:29
+#: extending.php:211 layout/header.php:35
 msgid "Create a Calendar for a Wider Region"
 msgstr ""
 
@@ -598,7 +598,7 @@ msgstr ""
 msgid "National Calendar"
 msgstr "Calendarium Nationalis"
 
-#: extending.php:255 layout/header.php:30
+#: extending.php:255 layout/header.php:36
 msgid "Create a National Calendar"
 msgstr ""
 
@@ -682,7 +682,7 @@ msgid "Optional memorials"
 msgstr "Memoriæ ad libitum"
 
 #: extending.php:404 extending.php:425 extending.php:446 extending.php:467
-#: layout/header.php:31
+#: layout/header.php:37
 msgid "Create a Diocesan Calendar"
 msgstr ""
 
@@ -1082,29 +1082,33 @@ msgstr "SOLLEMNITAS"
 msgid "celebration with precedence over solemnities"
 msgstr "celebratio altioris ordinis quam sollemnitatis"
 
-#: layout/header.php:26 layout/header.php:90
+#: layout/header.php:32 layout/header.php:97
 msgid "Extending the API"
 msgstr ""
 
-#: layout/header.php:34
+#: layout/header.php:40
 msgid "Usage"
 msgstr ""
 
-#: layout/header.php:35
+#: layout/header.php:41
+msgid "Translations"
+msgstr ""
+
+#: layout/header.php:42
 msgid "About us"
 msgstr ""
 
-#: layout/header.php:82
+#: layout/header.php:89
 msgid "Home"
 msgstr ""
 
-#: layout/header.php:94
+#: layout/header.php:101
 #, fuzzy
 #| msgid "Commemoration"
 msgid "Documentation"
 msgstr "Commemoratio"
 
-#: layout/header.php:98
+#: layout/header.php:105
 msgid "Examples of Usage"
 msgstr ""
 
