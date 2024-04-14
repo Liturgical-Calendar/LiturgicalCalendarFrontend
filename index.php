@@ -56,11 +56,18 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                         <div class="text-center"><a id="RequestURLButton" href="<?php echo $endpointURL; ?>" class="btn btn-primary m-2"><?php echo _( "Liturgical Calendar API endpoint"); ?></a></div>
                         <p><?php echo _( "If a national or diocesan calendar is requested, these calendars will automatically set the specific options in the API request. " .
                             "If instead no national or diocesan calendar is requested (i.e. the Universal Calendar is requested) then the more specific options can be requested:" ); ?></p>
-                        <div class="row">
+                        <div class="row"><!-- <?php echo implode(' | ', $langsAssoc); ?> -->
                             <div class="form-group col-sm-3"><label>epiphany</label><select id="RequestOptionEpiphany" class="form-select requestOption"><option value="">--</option><option value="SUNDAY_JAN2_JAN8">SUNDAY_JAN2_JAN8</option><option value="JAN6">JAN6</option></select></div>
                             <div class="form-group col-sm-3"><label>ascension</label><select id="RequestOptionAscension" class="form-select requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
                             <div class="form-group col-sm-3"><label>corpuschristi</label><select id="RequestOptionCorpusChristi" class="form-select requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
-                            <div class="form-group col-sm-3"><label>locale</label><select id="RequestOptionLocale" class="form-select requestOption"><option value="">--</option><option value="EN">English</option><option value="IT">Italian</option><option value="LA">Latin</option></select></div>
+                            <div class="form-group col-sm-3"><label>locale</label><select id="RequestOptionLocale" class="form-select requestOption"><option value="">--</option><?php
+                                foreach( $langsAssoc as $key => $lang ) {
+                                    $keyUC = strtoupper($key);
+                                    echo "<option value=\"$keyUC\">$lang</option>";
+                                }
+                            ?></select></div>
+                            <div class="form-group col-sm-3"><label>calendartype</label><select id="RequestOptionCalendarType" class="form-select requestOption"><option value="">--</option><option value="CIVIL">CIVIL</option><option value="LITURGICAL">LITURGICAL</option></select></div>
+                            <div class="form-group col-sm-3"><label>eternalhighpriest</label><select id="RequestOptionEternalHighPriest" class="form-select requestOption"><option value="">--</option><option value="true">true</option><option value="false">false</option></select></div>
                         </div>
                         <small class="text-muted">
                             <p><i><?php echo _( "URL for the API request based on selected options (the above button is set to this URL)" ); ?>:</i></p>
@@ -109,9 +116,9 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                     </div>
                     <div class="card-body">
                         <div class="text-center"><a href="dist/" class="btn btn-primary mt-2"><?php echo _( "Swagger / Open API Documentation" ); ?></a></div>
-                        <small class="text-muted">
+                        <p class="m-2 text-center"><small class="text-muted">
                             <i><?php echo _( "The Open API json schema for this API has been updated to OpenAPI 3.1." ); ?></i>
-                        </small>
+                        </small></p>
                     </div>
                 </div>
                 <div class="card shadow m-2">
@@ -119,13 +126,13 @@ $API_DESCRIPTION = _( "A Liturgical Calendar API from which you can retrieve dat
                         <h6 class="m-0 font-weight-bold text-primary"><?php echo _( "Translation Tool" ); ?><i class="fas fa-language float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
                     </div>
                     <div class="card-body">
-                        <p><?php echo _( "Translations status" ); ?></p>
                         <a href="https://translate.johnromanodorazio.com/engage/liturgical-calendar/">
                             <picture>
                                 <source media="(max-width: 600px)" srcset="https://translate.johnromanodorazio.com/widget/liturgical-calendar/horizontal-auto.svg" />
                                 <img src="https://translate.johnromanodorazio.com/widget/liturgical-calendar/multi-auto.svg" alt="<?php echo _( "Translations status" ); ?>" />
                             </picture>
                         </a>
+                        <p class="m-2 text-center"><i><?php echo _( "Translations status" ); ?></i></p>
                     </div>
                 </div>
             </div>

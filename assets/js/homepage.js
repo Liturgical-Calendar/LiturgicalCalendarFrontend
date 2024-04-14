@@ -10,7 +10,9 @@ let requestURL = {
     locale: null,
     returntype: null,
     nationalcalendar: null,
-    diocesancalendar: null
+    diocesancalendar: null,
+    calendartype: null,
+    eternalhighpriest: null
 };
 let serializeRequestURL = function(obj){
     let parameters = [];
@@ -72,6 +74,8 @@ let serializeRequestURL = function(obj){
         requestURL.ascension = null;
         requestURL.corpuschristi = null;
         requestURL.epiphany = null;
+        requestURL.calendartype = null;
+        requestURL.eternalhighpriest = null;
         $('.requestOption').val('');
         let requestURL_encoded = serializeRequestURL(requestURL);
         $('#RequestURLExample').text(`${RequestURLBase}${requestURL_encoded!=''?'?':''}${requestURL_encoded}`);
@@ -102,6 +106,11 @@ let serializeRequestURL = function(obj){
             case 'RequestOptionLocale':
                 requestURL.locale = $(this).val();
                 break;
+            case 'RequestOptionCalendarType':
+                requestURL.calendartype = $(this).val();
+                break;
+            case 'RequestOptionEternalHighPriest':
+                requestURL.eternalhighpriest = $(this).val();
         }
         let requestURL_encoded = serializeRequestURL(requestURL);
         $('#RequestURLExample').text(`${RequestURLBase}${requestURL_encoded!=''?'?':''}${requestURL_encoded}`);
