@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-13 23:18+0000\n"
+"POT-Creation-Date: 2024-04-14 21:53+0000\n"
 "PO-Revision-Date: 2024-04-14 21:53+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
@@ -39,7 +39,7 @@ msgstr "Calendario Romano Generale"
 msgid "Catholic Liturgical Calendar"
 msgstr "Calendario Liturgico Cattolico"
 
-#: index.php:32 index.php:108
+#: index.php:32 index.php:115
 msgid "API Endpoint"
 msgstr "API endpoint"
 
@@ -65,7 +65,7 @@ msgstr ""
 "il Calendario Universale), allora in quel caso è possibile impostare i "
 "parametri più specificamente:"
 
-#: index.php:66
+#: index.php:73
 msgid ""
 "URL for the API request based on selected options (the above button is set "
 "to this URL)"
@@ -73,11 +73,11 @@ msgstr ""
 "URL per la richiesta all'API formulata in base alle opzioni selezionate (il "
 "pulsante sopra è impostato a questo URL)"
 
-#: index.php:73
+#: index.php:80
 msgid "Liturgical Calendar Validator"
 msgstr "Validatore del Calendario Liturgico"
 
-#: index.php:76
+#: index.php:83
 msgid ""
 "In order to verify that the liturgical data produced by the API is correct, "
 "there is a Unit Test interface that can run predefined tests against the "
@@ -89,11 +89,11 @@ msgstr ""
 "risposte JSON prodotte dall'API partendo dall'anno 1970 fino a 25 anni nel "
 "futuro rispetto all'anno corrente."
 
-#: index.php:77
+#: index.php:84
 msgid "LitCal Validator"
 msgstr "Validatore LitCal"
 
-#: index.php:80
+#: index.php:87
 #, php-format
 msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
@@ -102,17 +102,17 @@ msgstr ""
 "I test unitari sono definiti nella cartella %s all'interno del repository "
 "dell'API del Calendario Liturgico."
 
-#: index.php:81
+#: index.php:88
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
 msgstr ""
 "L'interfaccia di test unitari viene curata in un repository tutto suo: %s."
 
-#: index.php:91 usage.php:174
+#: index.php:98 usage.php:174
 msgid "Calculation of the Date of Easter"
 msgstr "Calcolo della Data della Pasqua"
 
-#: index.php:94
+#: index.php:101
 msgid ""
 "A simple API endpoint that returns data about the Date of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -128,11 +128,11 @@ msgstr ""
 "Pasqua Gregoriana (celebrata dalla Chiesa Romana) e dell'algoritmo di Meeus "
 "per il calcolo della Pasqua Giuliana (celebrata dalle chiese ortodosse)"
 
-#: index.php:99
+#: index.php:106
 msgid "Date of Easter API endpoint"
 msgstr "API per la Data della Pasqua"
 
-#: index.php:101
+#: index.php:108
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
@@ -143,23 +143,23 @@ msgstr ""
 "ogni data della Pasqua, la localizzazione può essere effettuata anche "
 "dall'applicazione cliente."
 
-#: index.php:108
+#: index.php:115
 msgid "Definition"
 msgstr "Definizione"
 
-#: index.php:111
+#: index.php:118
 msgid "Swagger / Open API Documentation"
 msgstr "Documentazione Swagger / OpenAPI"
 
-#: index.php:113
+#: index.php:120
 msgid "The Open API json schema for this API has been updated to OpenAPI 3.1."
 msgstr "Lo schema JSON dell'API è stato aggiornato a OpenAPI 3.1."
 
-#: index.php:119
+#: index.php:126
 msgid "Translation Tool"
 msgstr "Strumento per la Traduzione"
 
-#: index.php:122 index.php:126
+#: index.php:132 index.php:135
 msgid "Translations status"
 msgstr "Stato delle traduzioni"
 
