@@ -13,10 +13,15 @@
 #APICalendarSelect > optgroup > option {
     background-color: #fff;
 }
-
 #RequestURLExampleWrapper {
     background-color: #eee;
     border: 1px solid Gray;
     border-radius: 6px;
     padding: 12px;
+}
+a#transl-status-btn.btn.btn-light {
+    border: 3px solid lightgoldenrodyellow;
+}
+a#transl-status-btn.btn.btn-light:hover {
+    border: 3px solid orange;
 }
