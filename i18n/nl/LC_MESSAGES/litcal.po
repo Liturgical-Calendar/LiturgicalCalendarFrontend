@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-13 23:18+0000\n"
-"PO-Revision-Date: 2024-04-13 23:46+0000\n"
+"POT-Creation-Date: 2024-04-14 21:53+0000\n"
+"PO-Revision-Date: 2024-04-14 21:53+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -39,7 +39,7 @@ msgstr "Algemene Romeinse kalender"
 msgid "Catholic Liturgical Calendar"
 msgstr "Katholieke Liturgische Kalender"
 
-#: index.php:32 index.php:108
+#: index.php:32 index.php:115
 msgid "API Endpoint"
 msgstr "API-eindpunt"
 
@@ -64,7 +64,7 @@ msgstr ""
 "w.z. de universele kalender wordt aangevraagd), dan kunnen de meer "
 "specifieke opties worden aangevraagd:"
 
-#: index.php:66
+#: index.php:73
 msgid ""
 "URL for the API request based on selected options (the above button is set "
 "to this URL)"
@@ -72,13 +72,11 @@ msgstr ""
 "URL voor het API-verzoek op basis van geselecteerde opties (de bovenstaande "
 "knop is ingesteld op deze URL)"
 
-#: index.php:73
-#, fuzzy
-#| msgid "Liturgical Calendar API endpoint"
+#: index.php:80
 msgid "Liturgical Calendar Validator"
-msgstr "Liturgische Kalender API-eindpunt"
+msgstr "Liturgische Kalender Validatie hulpmiddel"
 
-#: index.php:76
+#: index.php:83
 msgid ""
 "In order to verify that the liturgical data produced by the API is correct, "
 "there is a Unit Test interface that can run predefined tests against the "
@@ -91,11 +89,11 @@ msgstr ""
 "worden geproduceerd, beginnend vanaf het jaar 1970 en tot 25 jaar vanaf het "
 "huidige jaar."
 
-#: index.php:77
+#: index.php:84
 msgid "LitCal Validator"
 msgstr "Validatietool voor LitCal"
 
-#: index.php:80
+#: index.php:87
 #, php-format
 msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
@@ -104,17 +102,17 @@ msgstr ""
 "De unit tests zijn gedefinieerd in de %s map in de repository van de "
 "Liturgische Kalender API."
 
-#: index.php:81
+#: index.php:88
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
 msgstr ""
 "De interface voor de unit test is samengesteld in een eigen repository: %s."
 
-#: index.php:91 usage.php:174
+#: index.php:98 usage.php:174
 msgid "Calculation of the Date of Easter"
 msgstr "Berekening van de datum van Pasen"
 
-#: index.php:94
+#: index.php:101
 msgid ""
 "A simple API endpoint that returns data about the Date of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -131,11 +129,11 @@ msgstr ""
 "en van het Meeus-algoritme voor Juliaans Pasen (waargenomen door orthodoxe "
 "kerken)"
 
-#: index.php:99
+#: index.php:106
 msgid "Date of Easter API endpoint"
 msgstr "Datum van Pasen API-eindpunt"
 
-#: index.php:101
+#: index.php:108
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
@@ -146,23 +144,23 @@ msgstr ""
 "datum van Pasen, kunnen lokalisaties net zo goed in een clienttoepassing "
 "worden uitgevoerd."
 
-#: index.php:108
+#: index.php:115
 msgid "Definition"
 msgstr "Definitie"
 
-#: index.php:111
+#: index.php:118
 msgid "Swagger / Open API Documentation"
 msgstr "Swagger / Openen API-documentatie"
 
-#: index.php:113
+#: index.php:120
 msgid "The Open API json schema for this API has been updated to OpenAPI 3.1."
 msgstr "De Open API JSON-schema voor deze API is bijgewerkt naar OpenAPI 3.1."
 
-#: index.php:119
+#: index.php:126
 msgid "Translation Tool"
-msgstr ""
+msgstr "Vertaalhulpmiddel"
 
-#: index.php:122 index.php:126
+#: index.php:132 index.php:135
 msgid "Translations status"
 msgstr "Vertalingsstatus"
 
@@ -183,10 +181,8 @@ msgid "Examples"
 msgstr "Voorbeelden"
 
 #: usage.php:25
-#, fuzzy
-#| msgid "Examples of Usage"
 msgid "Example usage of the API"
-msgstr "Voorbeelden van gebruik"
+msgstr "Voorbeeldgebruik van de API"
 
 #: usage.php:31 layout/header.php:108
 msgid "Web calendar"
@@ -447,17 +443,14 @@ msgstr ""
 "kalenders, dus de nationale kalender moet eerst worden gemaakt."
 
 #: extending.php:31
-#, fuzzy
-#| msgid ""
-#| "The first step in creating a National calendar, is to translate the "
-#| "already existing calendar data into the language for that nation."
 msgid ""
 "The first step in creating a national or diocesan calendar, is to translate "
 "the data for the General Roman Calendar into the language for that nation or "
 "diocese."
 msgstr ""
-"De eerste stap bij het maken van een nationale kalender is het vertalen van "
-"de reeds bestaande kalendergegevens naar de taal voor dat land."
+"De eerste stap bij het maken van een nationale of diocesane kalender is het "
+"vertalen van de gegevens voor de Algemene Romeinse Kalender naar de taal van "
+"dat land of die diocese."
 
 #: extending.php:32
 msgid "(see <a href=\"translations.php\">Translations</a>)"

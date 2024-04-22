@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-13 23:18+0000\n"
-"PO-Revision-Date: 2024-04-13 23:46+0000\n"
+"POT-Creation-Date: 2024-04-14 21:53+0000\n"
+"PO-Revision-Date: 2024-04-14 21:53+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
@@ -40,7 +40,7 @@ msgstr "Calendrier Romain Général"
 msgid "Catholic Liturgical Calendar"
 msgstr "Calendrier Liturgique Catholique"
 
-#: index.php:32 index.php:108
+#: index.php:32 index.php:115
 msgid "API Endpoint"
 msgstr "Point de terminaison de l'API"
 
@@ -66,7 +66,7 @@ msgstr ""
 "demandé), alors dans ce cas, il est possible de définir les paramètres plus "
 "spécifiquement :"
 
-#: index.php:66
+#: index.php:73
 msgid ""
 "URL for the API request based on selected options (the above button is set "
 "to this URL)"
@@ -74,41 +74,47 @@ msgstr ""
 "URL de la requête à l'API effectuée selon les options sélectionnées (le "
 "bouton ci-dessus est paramétré sur cette URL)"
 
-#: index.php:73
+#: index.php:80
 #, fuzzy
 #| msgid "Liturgical Calendar API endpoint"
 msgid "Liturgical Calendar Validator"
 msgstr "API du calendrier liturgique"
 
-#: index.php:76
+#: index.php:83
 msgid ""
 "In order to verify that the liturgical data produced by the API is correct, "
 "there is a Unit Test interface that can run predefined tests against the "
 "JSON responses produced by the API starting from the year 1970 and going up "
 "to 25 years from the current year."
 msgstr ""
+"Pour vérifier que les données liturgiques produites par l'API sont "
+"correctes, il existe une interface de test unitaire qui peut exécuter des "
+"tests prédéfinis contre les réponses JSON produites par l'API à partir de "
+"l'année 1970 et jusqu'à 25 ans à partir de l'année actuelle."
 
-#: index.php:77
+#: index.php:84
 msgid "LitCal Validator"
-msgstr ""
+msgstr "Validateur LitCal"
 
-#: index.php:80
+#: index.php:87
 #, php-format
 msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
 "repository."
 msgstr ""
+"Les tests unitaires sont définis dans le dossier %s du dépôt de l'API du "
+"Calendrier Liturgique."
 
-#: index.php:81
+#: index.php:88
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
-msgstr ""
+msgstr "L'interface de test unitaire est gérée dans son propre dépôt : %s."
 
-#: index.php:91 usage.php:174
+#: index.php:98 usage.php:174
 msgid "Calculation of the Date of Easter"
 msgstr "Calcul de la date de Pâques"
 
-#: index.php:94
+#: index.php:101
 msgid ""
 "A simple API endpoint that returns data about the Date of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -125,11 +131,11 @@ msgstr ""
 "et de l'algorithme Meeus pour les Pâques de Julian (observé par les églises "
 "orthodoxes)"
 
-#: index.php:99
+#: index.php:106
 msgid "Date of Easter API endpoint"
 msgstr "Date de Pâques API"
 
-#: index.php:101
+#: index.php:108
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
@@ -140,25 +146,25 @@ msgstr ""
 "pour chaque date de Pâques, la localisation peut également être effectuée "
 "par l'application cliente."
 
-#: index.php:108
+#: index.php:115
 msgid "Definition"
 msgstr "Définition"
 
-#: index.php:111
+#: index.php:118
 msgid "Swagger / Open API Documentation"
 msgstr "Documentation Swagger/OpenAPI"
 
-#: index.php:113
+#: index.php:120
 msgid "The Open API json schema for this API has been updated to OpenAPI 3.1."
-msgstr ""
+msgstr "Le schéma JSON de l'API a été mis à jour en OpenAPI 3.1."
 
-#: index.php:119
+#: index.php:126
 msgid "Translation Tool"
-msgstr ""
+msgstr "Outil de traduction"
 
-#: index.php:122 index.php:126
+#: index.php:132 index.php:135
 msgid "Translations status"
-msgstr ""
+msgstr "État des traductions"
 
 #: usage.php:7
 msgid ""
@@ -178,7 +184,7 @@ msgstr "Exemples"
 
 #: usage.php:25
 msgid "Example usage of the API"
-msgstr ""
+msgstr "Exemple d'utilisation de l'API"
 
 #: usage.php:31 layout/header.php:108
 msgid "Web calendar"
@@ -468,7 +474,7 @@ msgstr ""
 
 #: extending.php:32
 msgid "(see <a href=\"translations.php\">Translations</a>)"
-msgstr ""
+msgstr "(voir <a href=\"translations.php\">Traductions</a>)"
 
 #: extending.php:33
 msgid ""
@@ -666,15 +672,15 @@ msgstr ""
 
 #: extending.php:159 extending.php:302
 msgid "Wider Region"
-msgstr ""
+msgstr "Région élargie"
 
 #: extending.php:161 extending.php:216
 msgid "This value cannot be empty."
-msgstr ""
+msgstr "Cette valeur ne peut pas être vide."
 
 #: extending.php:174
 msgid "Wider Region is multilingual"
-msgstr ""
+msgstr "La région élargie est multilingue"
 
 #: extending.php:188 extending.php:232 extending.php:342
 msgid "Remove existing data"
@@ -682,7 +688,7 @@ msgstr "Supprimer les données existantes"
 
 #: extending.php:194 layout/header.php:34
 msgid "Create a Calendar for a Wider Region"
-msgstr ""
+msgstr "Créez un calendrier pour une région élargie"
 
 #: extending.php:203
 #, fuzzy
@@ -708,39 +714,39 @@ msgstr "Créer un calendrier national"
 
 #: extending.php:246 extending.php:481
 msgid "EPIPHANY"
-msgstr ""
+msgstr "ÉPIPHANIE"
 
 #: extending.php:249 extending.php:484
 msgid "January 6"
-msgstr ""
+msgstr "6 janvier"
 
 #: extending.php:250 extending.php:485
 msgid "Sunday between January 2 and January 8"
-msgstr ""
+msgstr "Dimanche entre le 2 janvier et le 8 janvier"
 
 #: extending.php:254 extending.php:489
 msgid "ASCENSION"
-msgstr ""
+msgstr "ASCENSION"
 
 #: extending.php:262 extending.php:497
 msgid "CORPUS CHRISTI"
-msgstr ""
+msgstr "CORPUS CHRISTI"
 
 #: extending.php:270
 msgid "JESUS HIGH PRIEST"
-msgstr ""
+msgstr "JÉSUS GRAND PRÊTRE"
 
 #: extending.php:277
 msgid "LOCALE"
-msgstr ""
+msgstr "LANGUE"
 
 #: extending.php:290
 msgid "Published Roman Missals"
-msgstr ""
+msgstr "Missels Romains Publiés"
 
 #: extending.php:293 extending.php:595
 msgid "Add Missal"
-msgstr ""
+msgstr "Ajouter un missel"
 
 #: extending.php:313
 #, fuzzy
@@ -850,20 +856,20 @@ msgstr "ENREGISTRER LE CALENDRIER DIOCÉSAIN"
 
 #: extending.php:534
 msgid "Designate patron"
-msgstr ""
+msgstr "Désignez le saint patron"
 
 #: extending.php:535 extending.php:551 extending.php:567 extending.php:584
 #: extending.php:608
 msgid "Cancel"
-msgstr ""
+msgstr "Annuler"
 
 #: extending.php:566
 msgid "Move Festivity"
-msgstr ""
+msgstr "Déplacer fête"
 
 #: extending.php:582
 msgid "New Festivity from existing"
-msgstr ""
+msgstr "Nouvelle festivité à partir de l'existant"
 
 #: extending.php:583
 msgid "New Festivity ex novo"
