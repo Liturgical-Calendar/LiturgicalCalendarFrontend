@@ -667,7 +667,7 @@ $(document).on('click', '.actionPromptButton', ev => {
     let currentUniqid = FormControls.uniqid;
     let $modal = $(ev.currentTarget).closest('.actionPromptModal');
     let $modalForm = $modal.find('form');
-    let existingFestivityTag = $modalForm.find('.existingFestivityName').val();
+    let existingFestivityTag = sanitizeInput( $modalForm.find('.existingFestivityName').val() );
     let propertyToChange;
     //let buttonId = ev.currentTarget.id;
     //console.log(buttonId + ' button was clicked');
@@ -1204,6 +1204,7 @@ jQuery(document).ready(() => {
 
 });
 
+//kudos to https://stackoverflow.com/a/47140708/394921 for the idea
 const sanitizeInput = (input) => {
     let doc = new DOMParser().parseFromString(input, 'text/html');
     return doc.body.textContent || "";
