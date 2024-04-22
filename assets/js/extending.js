@@ -1157,7 +1157,7 @@ $(document).on('change', '#languageEditionRomanMissalName', ev => {
 });
 
 $(document).on('click', '#addLanguageEditionRomanMissal', ev => {
-    let languageEditionRomanMissal = $('#languageEditionRomanMissalName').val();
+    let languageEditionRomanMissal = sanitizeInput( $('#languageEditionRomanMissalName').val() );
     $('#publishedRomanMissalList').append(`<li class="list-group-item">${languageEditionRomanMissal}</li>`);
     let $modal = $(ev.currentTarget).closest('.modal');
     $modal.modal('hide');
@@ -1202,3 +1202,8 @@ jQuery(document).ready(() => {
     });
 
 });
+
+const sanitizeInput = (input) => {
+    let doc = new DOMParser().parseFromString(input, 'text/html');
+    return doc.body.textContent || "";
+}
