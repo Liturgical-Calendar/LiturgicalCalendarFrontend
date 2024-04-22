@@ -1,4 +1,4 @@
-<?php
+<!doctype html><?php
 
 include_once("includes/i18n.php");
 
@@ -12,8 +12,6 @@ $endpointV = $isStaging ? "dev" : "v3";
 $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalEngine.php?returntype=ICS";
 
 ?>
-
-<!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
     <title><?php echo _( "General Roman Calendar") . ' - ' . _( 'Examples' ) ?></title>

@@ -1,8 +1,8 @@
 <?php 
-const SWAGGER_UI_DIST_VERSION = '5.1.0';
-?>
-<!-- HTML for static distribution bundle build -->
-<!DOCTYPE html>
+const SWAGGER_UI_DIST_VERSION = '5.15.1';
+$isStaging = ( strpos( $_SERVER['HTTP_HOST'], "-staging" ) !== false );
+$OpenAPISchema = $isStaging ? "development" : "master";
+?><!DOCTYPE html><!-- HTML for static distribution bundle build -->
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -22,7 +22,7 @@ const SWAGGER_UI_DIST_VERSION = '5.1.0';
     window.onload = function() {
       // Begin Swagger UI call region
       const ui = SwaggerUIBundle({
-        url: "https://raw.githubusercontent.com/JohnRDOrazio/LiturgicalCalendar/master/schemas/openapi.json",
+        url: "https://raw.githubusercontent.com/JohnRDOrazio/LiturgicalCalendar/<?php echo $OpenAPISchema; ?>/schemas/openapi.json",
         "dom_id": "#swagger-ui",
         deepLinking: true,
         presets: [

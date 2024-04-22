@@ -53,5 +53,11 @@
     "of_(SING_FEMM)": "de la",
     "OPTIONAL-MEMORIAL": "Mémoire optionnelle",
     "MEMORIAL": "Mémoire",
-    "of_(PLUR_MASC_ALT)": "des"
+    "of_(PLUR_MASC_ALT)": "des",
+    "green": "vert",
+    "purple": "violet",
+    "white": "blanc",
+    "red": "rouge",
+    "pink": "rose",
+    "EPIPHANY": "ÉPIPHANIE"
 }

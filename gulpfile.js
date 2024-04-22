@@ -5,7 +5,7 @@ var scanner = require('i18next-scanner');
 gulp.task('i18next', function() {
     return gulp.src(['assets/js/*.{js,html}'])
         .pipe(scanner({
-            lngs: ['en', 'es', 'de', 'fr', 'it', 'pt', 'la'], // supported languages
+            lngs: ['en', 'es', 'de', 'fr', 'it', 'pt', 'la', 'nl'], // supported languages
             resource: {
                 // the source path is relative to current working directory
                 loadPath: process.env.GITHUB_WORKSPACE+'/assets/locales/{{lng}}/{{ns}}.json',

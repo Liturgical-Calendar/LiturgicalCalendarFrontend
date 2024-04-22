@@ -26,7 +26,7 @@
         echo "<link href=\"assets/css/{$pageName}.css\" rel=\"stylesheet\">";
     }
     if($pageName === "index"){
-        echo '<link href="assets/css/homepage.css">';
+        echo '<link href="assets/css/homepage.css" rel="stylesheet">';
     }
     if( in_array( $pageName, [ 'extending', 'usage', 'admin' ] ) ) {
         echo '<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.1/css/bootstrap-multiselect.min.css" rel="stylesheet">';
