@@ -877,6 +877,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
 });
 
 $(document).on('change', '#diocesanCalendarDioceseName', ev => {
+    const currentVal = sanitizeInput( $(ev.currentTarget).val() );
     $CALENDAR = { LitCal: {} };
     $('.carousel-item form').each((idx, el) => {
         el.reset();
@@ -888,13 +889,13 @@ $(document).on('change', '#diocesanCalendarDioceseName', ev => {
     });
     $('form').each((idx, el) => { $(el).removeClass('was-validated') });
     //first we'll enforce only values from the current datalist
-    if ($('#DiocesesList').find('option[value="' + $(ev.currentTarget).val() + '"]').length > 0) {
+    if ($('#DiocesesList').find('option[value="' + currentVal + '"]').length > 0) {
         $(ev.currentTarget).removeClass('is-invalid');
-        let $key = $('#DiocesesList').find('option[value="' + $(ev.currentTarget).val() + '"]').attr('data-value').toUpperCase();
+        let $key = $('#DiocesesList').find('option[value="' + currentVal + '"]').attr('data-value').toUpperCase();
         //console.log('selected diocese with key = ' + $key);
         if ($index.DiocesanCalendars.hasOwnProperty($key)) {
             $('#removeExistingDiocesanData').prop('disabled', false);
-            $('body').append(removeDiocesanCalendarModal($(ev.currentTarget).val()));
+            $('body').append(removeDiocesanCalendarModal(currentVal));
             if($index.DiocesanCalendars[$key].hasOwnProperty('group')){
                 $('#diocesanCalendarGroup').val($index.DiocesanCalendars[$key].group);
             }
