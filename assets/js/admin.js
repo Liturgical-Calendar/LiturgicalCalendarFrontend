@@ -178,7 +178,7 @@ const jsonFileData = {};
 
 $(document).on('change', '#jsonFileSelect', () => {
     let baseJsonFile = $('#jsonFileSelect :selected').text();
-    let jsonFile = $('#jsonFileSelect').val();
+    let jsonFile = sanitizeInput( $('#jsonFileSelect').val() );
     let jsonFileFull = '';
     if( isStaging ) {
         jsonFileFull = 'includes/readJSONFile.php?filename=https://litcal.johnromanodorazio.com/' + jsonFile;
@@ -302,7 +302,7 @@ $(document).on('click', '#saveDataBtn', () => {
     });
     //navigator.clipboard.writeText( JSON.stringify(jsonData) );
     //alert('JSON data copied to clipboard');
-    let filename = $('#jsonFileSelect').val();
+    let filename = sanitizeInput( $('#jsonFileSelect').val() );
     //JSON.stringify will automatically use DOS/Windows syntax \r\n
     //which git will see as a change in the code from what was previously just \n
     //so let's make sure we get rid of all \r's
@@ -322,10 +322,10 @@ $(document).on('click', '#saveDataBtn', () => {
 });
 
 $(document).on('click', '.actionPromptButton', ev => {
-    let currentUniqid = FormControls.uniqid;
+    let currentUniqid = parseInt( FormControls.uniqid );
     let $modal = $(ev.currentTarget).closest('.actionPromptModal');
     let $modalForm = $modal.find('form');
-    let existingFestivityTag = $modalForm.find('.existingFestivityName').val();
+    let existingFestivityTag = sanitizeInput( $modalForm.find('.existingFestivityName').val() );
     let propertyToChange;
     //let buttonId = ev.currentTarget.id;
     //console.log(buttonId + ' button was clicked');
@@ -333,7 +333,7 @@ $(document).on('click', '.actionPromptButton', ev => {
     FormControls.settings.decreeLangMapField = true; //TODO: check how this should be set, it's different than extending.js
     setFormSettings( ev.currentTarget.id );
     if( ev.currentTarget.id === 'setPropertyButton' ) {
-        propertyToChange = $('#propertyToChange').val();
+        propertyToChange = sanitizeInput( $('#propertyToChange').val() );
         setFormSettingsForProperty( propertyToChange );
     }
 
@@ -391,7 +391,8 @@ $(document).on('change', '.existingFestivityName', ev => {
     $form = $modal.find('form');
     $form.each((idx, el) => { $(el).removeClass('was-validated') });
     let disabledState;
-    if ($('#existingFestivitiesList').find('option[value="' + $(ev.currentTarget).val() + '"]').length > 0) {
+    const curTargVal = sanitizeInput( $(ev.currentTarget).val() );
+    if ($('#existingFestivitiesList').find('option[value="' + curTargVal + '"]').length > 0) {
         disabledState = false;
         if( $(ev.currentTarget).prop('required') ) {
             $(ev.currentTarget).removeClass('is-invalid');
@@ -423,7 +424,7 @@ $(document).on('change', '.existingFestivityName', ev => {
 $(document).on('click', '.strtotime-toggle-btn', ev => {
     let uniqid = $(ev.currentTarget).attr('data-row-uniqid');
     let currentJsonFile = $('#jsonFileSelect :selected').text();
-    let tag = $(`#onTheFly${uniqid}Tag`).val();
+    let tag = sanitizeInput( $(`#onTheFly${uniqid}Tag`).val() );
     let festivityData = jsonFileData[currentJsonFile].filter(el => el.Festivity.tag === tag)[0];
     let strtotime = typeof festivityData !== 'undefined' && festivityData.Metadata.hasOwnProperty('strtotime') ? festivityData.Metadata.strtotime : {};
     // console.log('festivityData = ');
@@ -469,3 +470,9 @@ $(document).on('click', '.strtotime-toggle-btn', ev => {
         $strToTimeFormGroup.after(formRow);
     }
 });
+
+//kudos to https://stackoverflow.com/a/47140708/394921 for the idea
+const sanitizeInput = (input) => {
+    let doc = new DOMParser().parseFromString(input, 'text/html');
+    return doc.body.textContent || "";
+}
