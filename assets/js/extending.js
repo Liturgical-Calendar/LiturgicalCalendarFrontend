@@ -284,7 +284,7 @@ jQuery.ajax({
 });
 
 $(document).on('click', '.strtotime-toggle-btn', ev => {
-    let uniqid = $(ev.currentTarget).attr('data-row-uniqid');
+    let uniqid = parseInt( $(ev.currentTarget).attr('data-row-uniqid') );
     if( $(ev.currentTarget).attr('aria-pressed') === 'true' ) {
         $(ev.currentTarget).find('i').removeClass('fa-comment-slash').addClass('fa-comment');
         $(`#onTheFly${uniqid}Month`).closest('.form-group').remove();
