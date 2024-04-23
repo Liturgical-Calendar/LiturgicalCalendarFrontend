@@ -422,7 +422,7 @@ $(document).on('change', '.existingFestivityName', ev => {
 
 
 $(document).on('click', '.strtotime-toggle-btn', ev => {
-    let uniqid = $(ev.currentTarget).attr('data-row-uniqid');
+    let uniqid = parseInt( $(ev.currentTarget).attr('data-row-uniqid') );
     let currentJsonFile = $('#jsonFileSelect :selected').text();
     let tag = sanitizeInput( $(`#onTheFly${uniqid}Tag`).val() );
     let festivityData = jsonFileData[currentJsonFile].filter(el => el.Festivity.tag === tag)[0];

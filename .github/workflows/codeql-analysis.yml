@@ -16,7 +16,7 @@ on:
     branches: [ development ]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ development ]
+    branches: [ development, main ]
   #schedule:
   #  - cron: '21 23 * * 0'
   workflow_dispatch:
