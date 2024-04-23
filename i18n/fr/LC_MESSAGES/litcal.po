@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-04-14 21:53+0000\n"
-"PO-Revision-Date: 2024-04-14 21:53+0000\n"
+"PO-Revision-Date: 2024-04-23 02:53+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
@@ -873,11 +873,11 @@ msgstr "Nouvelle festivité à partir de l'existant"
 
 #: extending.php:583
 msgid "New Festivity ex novo"
-msgstr ""
+msgstr "Nouvelle festivité ex novo"
 
 #: extending.php:600
 msgid "Choose from known Roman Missal language editions"
-msgstr ""
+msgstr "Choisissez parmi les éditions connues du Missel romain"
 
 #: extending.php:602
 msgid ""
@@ -885,40 +885,45 @@ msgid ""
 "value in the list, or contact the curator of the API to have the Missal "
 "added to known language edition Missals."
 msgstr ""
+"Ce Missel est inconnu de l'API du Calendrier liturgique. Veuillez choisir "
+"une valeur dans la liste ou contacter le conservateur de l'API pour ajouter "
+"le Missel aux editions des Missels dans d'autres langues connus."
 
 #: extending.php:607
 msgid "Add language edition Roman Missal"
-msgstr ""
+msgstr "Ajouter édition du Missel Romain dans d'autre langue"
 
 #: easter.php:67
 msgid "Date of Easter from 1583 to 9999"
-msgstr ""
+msgstr "Date de Pâques de 1583 à 9999"
 
 #: easter.php:84
 msgid "Go back"
-msgstr ""
+msgstr "Retourner"
 
 #: easter.php:99
 msgid "Century"
-msgstr ""
+msgstr "Siècle"
 
 #: easter.php:106
 msgid ""
 "Easter Day Calculation in PHP (Years in which Julian and Gregorian easter "
 "coincide are marked in yellow)"
 msgstr ""
+"Calcul de la date de Pâques en PHP (Les années où Pâques julienne et "
+"grégorienne coïncident sont marquées en jaune)"
 
 #: easter.php:110
 msgid "Gregorian Easter"
-msgstr ""
+msgstr "Pâques grégorienne"
 
 #: easter.php:110
 msgid "Julian Easter"
-msgstr ""
+msgstr "Pâques julienne"
 
 #: easter.php:110
 msgid "Julian Easter in Gregorian Calendar"
-msgstr ""
+msgstr "Pâques julienne dans le calendrier grégorien"
 
 #: about.php:13
 msgid ""
@@ -946,6 +951,8 @@ msgid ""
 "Latin Liturgy Association of the Netherlands, contributed the national "
 "calendar for the Netherlands to this project with all related translations"
 msgstr ""
+"Association de la liturgie latine des Pays-Bas, a contribué à ce projet le "
+"calendrier national des Pays-Bas avec toutes les traductions associées"
 
 #: about.php:60
 msgid ""
@@ -961,7 +968,7 @@ msgstr "Calendrier liturgique - À propos de nous"
 
 #: liturgyOfAnyDay.php:98
 msgid "Year"
-msgstr ""
+msgstr "Année"
 
 #. translators: %s = current selected date
 #: liturgyOfAnyDay.php:105
@@ -996,7 +1003,7 @@ msgstr "Martyrs"
 #. translators: context = from the Common of nn
 #: includes/LitCommon.php:64
 msgid "Pastors"
-msgstr ""
+msgstr "Pasteurs"
 
 #. translators: context = from the Common of nn
 #: includes/LitCommon.php:66
@@ -1016,12 +1023,12 @@ msgstr ""
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:73
 msgid "For One Martyr"
-msgstr ""
+msgstr "Pour un martyr"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:75
 msgid "For Several Martyrs"
-msgstr ""
+msgstr "Pour plusieurs martyrs"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:77
