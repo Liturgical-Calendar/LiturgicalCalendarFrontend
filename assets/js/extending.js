@@ -669,6 +669,7 @@ $(document).on('click', '.actionPromptButton', ev => {
     const $modalForm = $modal.find('form');
     const existingFestivityTag = sanitizeInput( $modalForm.find('.existingFestivityName').val() );
     let propertyToChange;
+    let rowStr;
     let $row;
     //let buttonId = ev.currentTarget.id;
     //console.log(buttonId + ' button was clicked');
@@ -681,7 +682,9 @@ $(document).on('click', '.actionPromptButton', ev => {
     }
 
     if( existingFestivityTag !== '' ) {
-        $row = $(FormControls.CreatePatronRow( existingFestivityTag ));
+        rowStr = FormControls.CreatePatronRow( existingFestivityTag );
+        console.log(rowStr);
+        $row = $( rowStr );
         console.log($row);
         if( FormControls.settings.missalField ) {
             const { MISSAL } = FestivityCollection[existingFestivityTag];
