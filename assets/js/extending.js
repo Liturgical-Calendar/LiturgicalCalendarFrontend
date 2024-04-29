@@ -99,6 +99,7 @@ const loadDiocesanCalendarData = () => {
         url: RegionalDataURL,
         method: 'GET',
         dataType: 'json',
+        crossDomain: true,
         data: { "key" : dioceseKey, "category": "diocesanCalendar" },
         statusCode: {
             404: (xhr, textStatus, errorThrown) => {
@@ -753,6 +754,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
         url: RegionalDataURL,
         method: 'GET',
         dataType: 'json',
+        crossDomain: true,
         data: { "key" : key, "category": category, "locale": LOCALE },
         statusCode: {
             404: (xhr, textStatus, errorThrown) => {
@@ -961,7 +963,7 @@ $(document).on('click', '#deleteDiocesanCalendarButton', ev => {
     let deleteKey = { LitCal: $key, Diocese: $diocese, Nation: $nation, category: 'diocesanCalendar' };
     $.ajax({
         url: RegionalDataURL,
-        method: 'delete',
+        method: 'DELETE',
         dataType: 'json',
         contentType: 'application/json',
         crossDomain: false,
@@ -1107,7 +1109,7 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
     //console.log(JSON.stringify(finalObj));
     $.ajax({
         url: RegionalDataURL,
-        method: 'put',
+        method: 'PUT',
         dataType: 'json',
         contentType: 'application/json',
         crossDomain: false,
