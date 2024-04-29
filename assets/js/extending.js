@@ -682,6 +682,7 @@ $(document).on('click', '.actionPromptButton', ev => {
 
     if( existingFestivityTag !== '' ) {
         $row = $(FormControls.CreatePatronRow( existingFestivityTag ));
+        console.log($row);
         if( FormControls.settings.missalField ) {
             const { MISSAL } = FestivityCollection[existingFestivityTag];
             $row.find(`#onTheFly${currentUniqid}Missal`).val(MISSAL); //.prop('disabled', true);
