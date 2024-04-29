@@ -684,14 +684,15 @@ $(document).on('click', '.actionPromptButton', ev => {
     if( existingFestivityTag !== '' ) {
         rowStr = FormControls.CreatePatronRow( existingFestivityTag );
         console.log(rowStr);
-        $row = $( rowStr );
+        $row = $( `${rowStr}` );
         console.log($row);
         if( FormControls.settings.missalField ) {
             const { MISSAL } = FestivityCollection[existingFestivityTag];
             $row.find(`#onTheFly${currentUniqid}Missal`).val(MISSAL); //.prop('disabled', true);
         }
     } else {
-        $row = $(FormControls.CreatePatronRow());
+        rowStr = FormControls.CreatePatronRow();
+        $row = $( `${rowStr}` );
     }
     $('.regionalNationalDataForm').append($row);
     $modal.modal('hide');
