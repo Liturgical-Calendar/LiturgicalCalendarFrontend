@@ -664,11 +664,12 @@ $(document).on('click', '.onTheFlyEventRow', ev => {
 });
 
 $(document).on('click', '.actionPromptButton', ev => {
-    let currentUniqid = FormControls.uniqid;
-    let $modal = $(ev.currentTarget).closest('.actionPromptModal');
-    let $modalForm = $modal.find('form');
-    let existingFestivityTag = sanitizeInput( $modalForm.find('.existingFestivityName').val() );
+    const currentUniqid = FormControls.uniqid;
+    const $modal = $(ev.currentTarget).closest('.actionPromptModal');
+    const $modalForm = $modal.find('form');
+    const existingFestivityTag = sanitizeInput( $modalForm.find('.existingFestivityName').val() );
     let propertyToChange;
+    let $row;
     //let buttonId = ev.currentTarget.id;
     //console.log(buttonId + ' button was clicked');
     FormControls.settings.decreeURLField = true;
@@ -719,11 +720,11 @@ $(document).on('click', '.actionPromptButton', ev => {
     }
 
     if( existingFestivityTag !== '' ) {
-        litevent = FestivityCollection[existingFestivityTag];
+        const litevent = FestivityCollection[existingFestivityTag];
 
         $row.find(`#onTheFly${currentUniqid}Grade`).val(litevent.GRADE);
         $row.find(`#onTheFly${currentUniqid}Common`).multiselect('select', litevent.COMMON)
-        let colorVal = Array.isArray( litevent.COLOR ) ? litevent.COLOR : litevent.COLOR.split(',');
+        const colorVal = Array.isArray( litevent.COLOR ) ? litevent.COLOR : litevent.COLOR.split(',');
         $row.find(`.litEventColor`).multiselect('select', colorVal);
 
         if(FormControls.settings.monthField === false) {
