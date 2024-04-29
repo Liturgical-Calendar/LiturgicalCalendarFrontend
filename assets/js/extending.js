@@ -670,6 +670,7 @@ $(document).on('click', '.actionPromptButton', ev => {
     const existingFestivityTag = sanitizeInput( $modalForm.find('.existingFestivityName').val() );
     let propertyToChange;
     let rowStr;
+    let rowEls;
     let $row;
     //let buttonId = ev.currentTarget.id;
     //console.log(buttonId + ' button was clicked');
@@ -686,7 +687,8 @@ $(document).on('click', '.actionPromptButton', ev => {
         rowStr = rowStr.replaceAll('    ','');
         rowStr = rowStr.replace(/(?:\r\n|\r|\n)/g,'');
         console.log(rowStr);
-        $row = $( `${rowStr}` );
+        rowEls = $.parseHTML(rowStr);
+        $row = $( rowEls );
         console.log($row);
         if( FormControls.settings.missalField ) {
             const { MISSAL } = FestivityCollection[existingFestivityTag];
@@ -696,7 +698,8 @@ $(document).on('click', '.actionPromptButton', ev => {
         rowStr = FormControls.CreatePatronRow();
         rowStr = rowStr.replaceAll('    ','');
         rowStr = rowStr.replace(/(?:\r\n|\r|\n)/g,'');
-        $row = $( `${rowStr}` );
+        rowEls = $.parseHTML( rowStr );
+        $row = $( rowEls );
     }
     $('.regionalNationalDataForm').append($row);
     $modal.modal('hide');
