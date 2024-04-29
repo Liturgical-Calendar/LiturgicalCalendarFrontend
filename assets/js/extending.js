@@ -916,8 +916,8 @@ $(document).on('change', '.existingFestivityName', ev => {
     console.log( ev.currentTarget );
     console.log( $(ev.currentTarget).closest('.actionPromptModal') );
     console.log( $(ev.target).closest('.actionPromptModal') );
-    $modal = $(ev.currentTarget).closest('.actionPromptModal');
-    $form = $modal.find('form');
+    const $modal = $(ev.currentTarget).closest('.actionPromptModal');
+    const $form = $modal.find('form');
     $form.each((idx, el) => { $(el).removeClass('was-validated') });
     let disabledState;
     if ($('#existingFestivitiesList').find('option[value="' + $(ev.currentTarget).val() + '"]').length > 0) {
