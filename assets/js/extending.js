@@ -912,10 +912,6 @@ $(document).on('change', '#diocesanCalendarDioceseName', ev => {
 });
 
 $(document).on('change', '.existingFestivityName', ev => {
-    console.log( ev.target );
-    console.log( ev.currentTarget );
-    console.log( $(ev.currentTarget).closest('.actionPromptModal') );
-    console.log( $(ev.target).closest('.actionPromptModal') );
     const $modal = $(ev.currentTarget).closest('.actionPromptModal');
     const $form = $modal.find('form');
     $form.each((idx, el) => { $(el).removeClass('was-validated') });
