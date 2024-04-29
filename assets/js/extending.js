@@ -684,9 +684,6 @@ $(document).on('click', '.actionPromptButton', ev => {
 
     if( existingFestivityTag !== '' ) {
         rowStr = FormControls.CreatePatronRow( existingFestivityTag );
-        rowStr = rowStr.replaceAll('    ','');
-        rowStr = rowStr.replace(/(?:\r\n|\r|\n)/g,'');
-        console.log(rowStr);
         rowEls = $.parseHTML(rowStr);
         $row = $( rowEls );
         console.log($row);
@@ -696,8 +693,6 @@ $(document).on('click', '.actionPromptButton', ev => {
         }
     } else {
         rowStr = FormControls.CreatePatronRow();
-        rowStr = rowStr.replaceAll('    ','');
-        rowStr = rowStr.replace(/(?:\r\n|\r|\n)/g,'');
         rowEls = $.parseHTML( rowStr );
         $row = $( rowEls );
     }
@@ -811,8 +806,8 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                 }
 
                 let rowStr = FormControls.CreatePatronRow( el );
-                console.log(rowStr);
-                let $row = $(rowStr);
+                let rowEls = $.parseHTML(rowStr);
+                let $row = $(rowEls);
                 $('.regionalNationalDataForm').append($row);
 
                 let $formrow = $row.find('.form-group').closest('.row');

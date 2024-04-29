@@ -107,7 +107,7 @@ class FormControls {
         formRow += `</div>`;
         ++FormControls.uniqid;
 
-        return formRow;
+        return formRow.replaceAll('    ','').replace(/(?:\r\n|\r|\n)/g,'');
     }
 
     static CreatePatronRow(element = null) {
@@ -266,7 +266,7 @@ class FormControls {
         formRow += `</div>`;
         ++FormControls.uniqid;
 
-        return formRow;
+        return formRow.replaceAll('    ','').replace(/(?:\r\n|\r|\n)/g,'');
     }
 
     static CreateDoctorRow(element = null) {
@@ -444,7 +444,7 @@ class FormControls {
         formRow += `</div>`;
         ++FormControls.uniqid;
 
-        return formRow;
+        return formRow.replaceAll('    ','').replace(/(?:\r\n|\r|\n)/g,'');
     }
 
 }
