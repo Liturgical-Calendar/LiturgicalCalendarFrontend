@@ -22,7 +22,7 @@ Object.filter = (obj, predicate) =>
       .reduce( (res, key) => (res[key] = obj[key], res), {} );
 
 const isStaging = location.href.includes('-staging');
-const endpointV = isStaging ? 'namespaced' : 'v3';
+const endpointV = isStaging ? 'dev' : 'v3';
 const MetaDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/metadata/`;
 const RegionalDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/regionaldata/`;
 const RequestURLBase = `https://litcal.johnromanodorazio.com/api/${endpointV}/`;

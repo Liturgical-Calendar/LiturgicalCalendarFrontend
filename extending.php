@@ -7,7 +7,7 @@ include_once("./layout/formcontrols.php");
 $i18n = new i18n();
 $FormControls = new FormControls($i18n);
 $isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false );
-$versionAPI = $isStaging ? "namespaced" : "v3";
+$versionAPI = $isStaging ? "dev" : "v3";
 
 $dayOfWeekFmt = IntlDateFormatter::create($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'UTC', IntlDateFormatter::GREGORIAN, 'EEEE');
 $thursday   = $dayOfWeekFmt->format(DateTime::createFromFormat('!j-n-Y', '1-1-2022', new DateTimeZone('UTC'))->modify('next Thursday'));
