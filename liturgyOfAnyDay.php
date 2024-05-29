@@ -4,9 +4,9 @@ include_once("includes/i18n.php");
 
 $isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false );
 $stagingURL = $isStaging ? "-staging" : "";
-$endpointV = $isStaging ? "dev" : "v3";
-define("LITCAL_API_URL", "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalEngine.php");
-define("METADATA_URL", "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMetadata.php");
+$endpointV = $isStaging ? "namespaced" : "v3";
+define("LITCAL_API_URL", "https://litcal.johnromanodorazio.com/api/{$endpointV}/");
+define("METADATA_URL", "https://litcal.johnromanodorazio.com/api/{$endpointV}/metadata/");
 
 $i18n = new i18n();
 $dateToday = new DateTime();

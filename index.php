@@ -5,10 +5,10 @@ $i18n = new i18n();
 
 $isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false );
 $stagingURL = $isStaging ? "-staging" : "";
-$endpointV = $isStaging ? "dev" : "v3";
-$endpointURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalEngine.php";
-$metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMetadata.php";
-$dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOfEaster.php";
+$endpointV = $isStaging ? "namespaced" : "v3";
+$endpointURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/";
+$metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/metadata/";
+$dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/easter/";
 
 $API_DESCRIPTION = _("A Liturgical Calendar API from which you can retrieve data for the Liturgical events of any given year from 1970 to 9999, whether for the Universal or General Roman Calendar or for derived National and Diocesan calendars");
 ?>

@@ -3,10 +3,10 @@ $currentPage = basename($_SERVER["SCRIPT_FILENAME"], '.php');
 
 $isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false );
 $stagingURL = $isStaging ? "-staging" : "";
-$endpointV = $isStaging ? "dev" : "v3";
-$endpointURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalEngine.php";
-$metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMetadata.php";
-$dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOfEaster.php";
+$endpointV = $isStaging ? "namespaced" : "v3";
+$endpointURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/";
+$metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/metadata/";
+$dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/easter/";
 
 $langsAvailable = ['en', ...array_map('basename', glob("i18n/*", GLOB_ONLYDIR))];
 $langsAssoc = [];

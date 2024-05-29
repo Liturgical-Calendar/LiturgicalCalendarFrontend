@@ -37,7 +37,7 @@ if ($isStaging) {
     //$months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
 }
 
-[ "LitCalAllFestivities" => $FestivityCollection ] = json_decode(file_get_contents("https://litcal.johnromanodorazio.com/api/dev/LitCalAllFestivities.php?locale=en"), true);
+[ "LitCalAllFestivities" => $FestivityCollection ] = json_decode(file_get_contents("https://litcal.johnromanodorazio.com/api/namespaced/allevents/?locale=en"), true);
 
 $messages = [
     "Tag"               => _("Tag"),
