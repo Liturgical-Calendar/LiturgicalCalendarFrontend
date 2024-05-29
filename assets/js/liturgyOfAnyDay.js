@@ -1,5 +1,5 @@
 const isStaging = location.href.includes( "-staging" );
-const endpointV = isStaging ? "namespaced" : "v3";
+const endpointV = isStaging ? "dev" : "v3";
 const endpointURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/?`;
 
 if( typeof currentLocale === 'undefined' ) {

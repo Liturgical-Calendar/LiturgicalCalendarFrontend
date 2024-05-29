@@ -8,7 +8,7 @@ $API_DESCRIPTION = _("A Liturgical Calendar API from which you can retrieve data
 
 $isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false );
 $stagingURL = $isStaging ? "-staging" : "";
-$endpointV = $isStaging ? "namespaced" : "v3";
+$endpointV = $isStaging ? "dev" : "v3";
 $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/?returntype=ICS";
 
 ?>

@@ -1,7 +1,7 @@
 <?php
 const SWAGGER_UI_DIST_VERSION = '5.17.14';
 $isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false );
-$OpenAPISchema = $isStaging ? "namespaced" : "master"; //development
+$OpenAPISchema = $isStaging ? "dev" : "master"; //development
 ?><!DOCTYPE html><!-- HTML for static distribution bundle build -->
 <html lang="en">
   <head>

@@ -3,7 +3,7 @@ $currentPage = basename($_SERVER["SCRIPT_FILENAME"], '.php');
 
 $isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false );
 $stagingURL = $isStaging ? "-staging" : "";
-$endpointV = $isStaging ? "namespaced" : "v3";
+$endpointV = $isStaging ? "dev" : "v3";
 $endpointURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/";
 $metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/metadata/";
 $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/easter/";
