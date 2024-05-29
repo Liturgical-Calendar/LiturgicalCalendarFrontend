@@ -3,14 +3,14 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$isStaging          = ( strpos( $_SERVER['HTTP_HOST'], "-staging" ) !== false );
+$isStaging          = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false );
 $stagingURL         = $isStaging ? "-staging" : "";
 $endpointV          = $isStaging ? "dev" : "v3";
-$endpointURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalEngine.php";
-$metadataURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMetadata.php";
-$dateOfEasterURL    = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOfEaster.php";
+$endpointURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/";
+$metadataURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/metadata/";
+$dateOfEasterURL    = "https://litcal.johnromanodorazio.com/api/{$endpointV}/easter/";
 
-include_once( 'includes/functions.php' );
+include_once('includes/functions.php');
 
 $AllAvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($value) {
     return strpos($value, 'POSIX') === false;
@@ -23,38 +23,38 @@ $localeArray = [
     $LOCALE . '.utf8',
     $LOCALE . '.UTF-8',
     $LOCALE,
-    $baseLocale . '_' . strtoupper( $baseLocale ) . '.utf8',
-    $baseLocale . '_' . strtoupper( $baseLocale ) . '.UTF-8',
-    $baseLocale . '_' . strtoupper( $baseLocale ),
+    $baseLocale . '_' . strtoupper($baseLocale) . '.utf8',
+    $baseLocale . '_' . strtoupper($baseLocale) . '.UTF-8',
+    $baseLocale . '_' . strtoupper($baseLocale),
     $baseLocale . '.utf8',
     $baseLocale . '.UTF-8',
     $baseLocale
 ];
-setlocale( LC_ALL, $localeArray );
+setlocale(LC_ALL, $localeArray);
 bindtextdomain("litcal", "i18n");
 textdomain("litcal");
 
 $error_msg = "";
 $ch = curl_init();
 
-curl_setopt( $ch, CURLOPT_URL, $dateOfEasterURL . "?locale=" . $LOCALE );
-curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-$response = curl_exec( $ch );
-if ( curl_errno( $ch ) ) {
-    $error_msg = curl_error( $ch );
-    curl_close( $ch );
-    die( $error_msg );
+curl_setopt($ch, CURLOPT_URL, $dateOfEasterURL . "?locale=" . $LOCALE);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$response = curl_exec($ch);
+if (curl_errno($ch)) {
+    $error_msg = curl_error($ch);
+    curl_close($ch);
+    die($error_msg);
 }
-curl_close( $ch );
-$DatesOfEaster = json_decode( $response );
+curl_close($ch);
+$DatesOfEaster = json_decode($response);
 
 $AvailableLocales = array_filter($AllAvailableLocales, function ($value) {
     return strpos($value, '_') === false;
 });
-$AvailableLocales = array_reduce($AvailableLocales, function($carry, $item) use($LOCALE){
+$AvailableLocales = array_reduce($AvailableLocales, function ($carry, $item) use ($LOCALE) {
     $carry[$item] = Locale::getDisplayLanguage($item, $LOCALE);
     return $carry;
-},[]);
+}, []);
 
 $c = new Collator($LOCALE);
 $c->asort($AvailableLocales);
@@ -84,20 +84,20 @@ $c->asort($AvailableLocales);
     <div><a class="backNav" href="/">↩      <?php echo _('Go back')?>      ↩</a></div>
     <select id="langSelect">
         <?php
-            foreach($AvailableLocales as $Lcl => $DisplayLang) {
-                $optionContent = $baseLocale === 'en' ? $DisplayLang : $DisplayLang . ' (' . Locale::getDisplayLanguage($Lcl, 'en') . ')';
-                echo '<option value="'.$Lcl.'"'. (strtolower($LOCALE) === strtolower($Lcl) ? " selected" : "") . ' title="'.Locale::getDisplayLanguage($Lcl, 'en').'">'. $optionContent . '</option>';
-            }
+        foreach ($AvailableLocales as $Lcl => $DisplayLang) {
+            $optionContent = $baseLocale === 'en' ? $DisplayLang : $DisplayLang . ' (' . Locale::getDisplayLanguage($Lcl, 'en') . ')';
+            echo '<option value="' . $Lcl . '"' . (strtolower($LOCALE) === strtolower($Lcl) ? " selected" : "") . ' title="' . Locale::getDisplayLanguage($Lcl, 'en') . '">' . $optionContent . '</option>';
+        }
         ?>
     </select>
     <div id="HistoryNavigationLeftSidebar">
         <div id="slider-vertical"></div>
         <div id="TimelineCenturiesContainer">
-        <?php 
-            for($i=16;$i<=100;$i++){
-                $century = strtolower($LOCALE) === "en" ? ordinal($i) : integerToRoman($i);
-                echo "<div class=\"TimelineCenturyMarker\">" . $century . " " . _("Century") . "</div>";
-            }
+        <?php
+        for ($i = 16; $i <= 100; $i++) {
+            $century = strtolower($LOCALE) === "en" ? ordinal($i) : integerToRoman($i);
+            echo "<div class=\"TimelineCenturyMarker\">" . $century . " " . _("Century") . "</div>";
+        }
         ?>
         </div>
     </div>
@@ -111,14 +111,14 @@ $c->asort($AvailableLocales);
     $EasterTableContainer .= '<tbody>';
     //$Y = (int)date("Y");
     //for($i=1997;$i<=2037;$i++){
-    for($i=1583;$i<=9999;$i++){
-        $gregDateString = $DatesOfEaster->DatesArray[$i-1583]->gregorianDateString;
-        $julianDateString = $DatesOfEaster->DatesArray[$i-1583]->julianDateString;
-        $westernJulianDateString = $DatesOfEaster->DatesArray[$i-1583]->westernJulianDateString;
+for ($i = 1583; $i <= 9999; $i++) {
+    $gregDateString = $DatesOfEaster->EasterDates[$i - 1583]->gregorianDateString;
+    $julianDateString = $DatesOfEaster->EasterDates[$i - 1583]->julianDateString;
+    $westernJulianDateString = $DatesOfEaster->EasterDates[$i - 1583]->westernJulianDateString;
 
-        $style_str = $DatesOfEaster->DatesArray[$i-1583]->coinciding ? ' style="background-color:Yellow;font-weight:bold;color:Blue;"' : '';
-        $EasterTableContainer .= '<tr'.$style_str.'><td width="300">'.$gregDateString.'</td><td width="300">' . $julianDateString . '</td><td width="300">'.$westernJulianDateString.'</td></tr>';
-    }
+    $style_str = $DatesOfEaster->EasterDates[$i - 1583]->coinciding ? ' style="background-color:Yellow;font-weight:bold;color:Blue;"' : '';
+    $EasterTableContainer .= '<tr' . $style_str . '><td width="300">' . $gregDateString . '</td><td width="300">' . $julianDateString . '</td><td width="300">' . $westernJulianDateString . '</td></tr>';
+}
     $EasterTableContainer .= '</tbody></table>';
     $EasterTableContainer .= '</div>';
 

@@ -1,14 +1,15 @@
 <?php
+
 header("Content-Type: application/json");
-if( $_SERVER['REQUEST_METHOD'] === 'GET' ) {
-    if( !isset( $_GET['filename'] ) ) {
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    if (!isset($_GET['filename'])) {
         die(json_encode(["error" => "MISSING_PARAMS: \"filename\" param is required"]));
     }
-    $data = file_get_contents( $_GET['filename'] );
-    $jsonData = json_decode( $data );
-    if( json_last_error() === JSON_ERROR_NONE ) {
-       echo $data;
-       exit(0);
+    $data = file_get_contents($_GET['filename']);
+    $jsonData = json_decode($data);
+    if (json_last_error() === JSON_ERROR_NONE) {
+        echo $data;
+        exit(0);
     } else {
         die(json_encode(["error" => "JSON_ERROR: " . json_last_error_msg() ]));
     }

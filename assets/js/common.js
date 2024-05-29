@@ -23,9 +23,9 @@ Object.filter = (obj, predicate) =>
 
 const isStaging = location.href.includes('-staging');
 const endpointV = isStaging ? 'dev' : 'v3';
-const MetaDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalMetadata.php`;
-const RegionalDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalRegionalData.php`;
-const RequestURLBase = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalEngine.php`;
+const MetaDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/metadata/`;
+const RegionalDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/regionaldata/`;
+const RequestURLBase = `https://litcal.johnromanodorazio.com/api/${endpointV}/`;
 
 $(document).on('click', '.sidebarToggle', event => {
     event.preventDefault();

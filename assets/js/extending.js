@@ -99,6 +99,7 @@ const loadDiocesanCalendarData = () => {
         url: RegionalDataURL,
         method: 'GET',
         dataType: 'json',
+        //crossDomain: true,
         data: { "key" : dioceseKey, "category": "diocesanCalendar" },
         statusCode: {
             404: (xhr, textStatus, errorThrown) => {
@@ -284,7 +285,7 @@ jQuery.ajax({
 });
 
 $(document).on('click', '.strtotime-toggle-btn', ev => {
-    let uniqid = parseInt( $(ev.currentTarget).attr('data-row-uniqid') );
+    const uniqid = parseInt( $(ev.currentTarget).attr('data-row-uniqid') );
     if( $(ev.currentTarget).attr('aria-pressed') === 'true' ) {
         $(ev.currentTarget).find('i').removeClass('fa-comment-slash').addClass('fa-comment');
         $(`#onTheFly${uniqid}Month`).closest('.form-group').remove();
@@ -664,11 +665,14 @@ $(document).on('click', '.onTheFlyEventRow', ev => {
 });
 
 $(document).on('click', '.actionPromptButton', ev => {
-    let currentUniqid = FormControls.uniqid;
-    let $modal = $(ev.currentTarget).closest('.actionPromptModal');
-    let $modalForm = $modal.find('form');
-    let existingFestivityTag = sanitizeInput( $modalForm.find('.existingFestivityName').val() );
+    const currentUniqid = FormControls.uniqid;
+    const $modal = $(ev.currentTarget).closest('.actionPromptModal');
+    const $modalForm = $modal.find('form');
+    const existingFestivityTag = sanitizeInput( $modalForm.find('.existingFestivityName').val() );
     let propertyToChange;
+    let rowStr;
+    let rowEls;
+    let $row;
     //let buttonId = ev.currentTarget.id;
     //console.log(buttonId + ' button was clicked');
     FormControls.settings.decreeURLField = true;
@@ -680,13 +684,18 @@ $(document).on('click', '.actionPromptButton', ev => {
     }
 
     if( existingFestivityTag !== '' ) {
-        $row = $(FormControls.CreatePatronRow( existingFestivityTag ));
+        rowStr = FormControls.CreatePatronRow( existingFestivityTag );
+        rowEls = $.parseHTML(rowStr);
+        $row = $( rowEls );
+        console.log($row);
         if( FormControls.settings.missalField ) {
             const { MISSAL } = FestivityCollection[existingFestivityTag];
             $row.find(`#onTheFly${currentUniqid}Missal`).val(MISSAL); //.prop('disabled', true);
         }
     } else {
-        $row = $(FormControls.CreatePatronRow());
+        rowStr = FormControls.CreatePatronRow();
+        rowEls = $.parseHTML( rowStr );
+        $row = $( rowEls );
     }
     $('.regionalNationalDataForm').append($row);
     $modal.modal('hide');
@@ -719,11 +728,11 @@ $(document).on('click', '.actionPromptButton', ev => {
     }
 
     if( existingFestivityTag !== '' ) {
-        litevent = FestivityCollection[existingFestivityTag];
+        const litevent = FestivityCollection[existingFestivityTag];
 
         $row.find(`#onTheFly${currentUniqid}Grade`).val(litevent.GRADE);
         $row.find(`#onTheFly${currentUniqid}Common`).multiselect('select', litevent.COMMON)
-        let colorVal = Array.isArray( litevent.COLOR ) ? litevent.COLOR : litevent.COLOR.split(',');
+        const colorVal = Array.isArray( litevent.COLOR ) ? litevent.COLOR : litevent.COLOR.split(',');
         $row.find(`.litEventColor`).multiselect('select', colorVal);
 
         if(FormControls.settings.monthField === false) {
@@ -745,6 +754,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
         url: RegionalDataURL,
         method: 'GET',
         dataType: 'json',
+        //crossDomain: true,
         data: { "key" : key, "category": category, "locale": LOCALE },
         statusCode: {
             404: (xhr, textStatus, errorThrown) => {
@@ -798,8 +808,8 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                 }
 
                 let rowStr = FormControls.CreatePatronRow( el );
-                console.log(rowStr);
-                let $row = $(rowStr);
+                let rowEls = $.parseHTML(rowStr);
+                let $row = $(rowEls);
                 $('.regionalNationalDataForm').append($row);
 
                 let $formrow = $row.find('.form-group').closest('.row');
@@ -912,8 +922,8 @@ $(document).on('change', '#diocesanCalendarDioceseName', ev => {
 });
 
 $(document).on('change', '.existingFestivityName', ev => {
-    $modal = $(ev.currentTarget).closest('.actionPromptModal');
-    $form = $modal.find('form');
+    const $modal = $(ev.currentTarget).closest('.actionPromptModal');
+    const $form = $modal.find('form');
     $form.each((idx, el) => { $(el).removeClass('was-validated') });
     let disabledState;
     if ($('#existingFestivitiesList').find('option[value="' + $(ev.currentTarget).val() + '"]').length > 0) {
@@ -953,7 +963,7 @@ $(document).on('click', '#deleteDiocesanCalendarButton', ev => {
     let deleteKey = { LitCal: $key, Diocese: $diocese, Nation: $nation, category: 'diocesanCalendar' };
     $.ajax({
         url: RegionalDataURL,
-        method: 'delete',
+        method: 'DELETE',
         dataType: 'json',
         contentType: 'application/json',
         crossDomain: false,
@@ -1099,7 +1109,7 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
     //console.log(JSON.stringify(finalObj));
     $.ajax({
         url: RegionalDataURL,
-        method: 'put',
+        method: 'PUT',
         dataType: 'json',
         contentType: 'application/json',
         crossDomain: false,
