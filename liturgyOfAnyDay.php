@@ -2,54 +2,53 @@
 
 include_once("includes/i18n.php");
 
-$isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false );
+$isStaging = ( strpos( $_SERVER['HTTP_HOST'], "-staging" ) !== false );
 $stagingURL = $isStaging ? "-staging" : "";
 $endpointV = $isStaging ? "dev" : "v3";
-define("LITCAL_API_URL", "https://litcal.johnromanodorazio.com/api/{$endpointV}/");
-define("METADATA_URL", "https://litcal.johnromanodorazio.com/api/{$endpointV}/metadata/");
+define("LITCAL_API_URL", "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalEngine.php");
+define("METADATA_URL", "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMetadata.php");
 
 $i18n = new i18n();
 $dateToday = new DateTime();
-$fmt = new IntlDateFormatter($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::FULL, 'UTC', IntlDateFormatter::GREGORIAN, "MMMM");
-$fmtFull = new IntlDateFormatter($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'UTC', IntlDateFormatter::GREGORIAN);
+$fmt = new IntlDateFormatter( $i18n->LOCALE,IntlDateFormatter::FULL, IntlDateFormatter::FULL, 'UTC', IntlDateFormatter::GREGORIAN, "MMMM" );
+$fmtFull = new IntlDateFormatter( $i18n->LOCALE,IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'UTC', IntlDateFormatter::GREGORIAN );
 $monthDate = new DateTime();
 
-function verifyCalendarIndexJson($JSON)
-{
+function verifyCalendarIndexJson( $JSON ) {
     return (
-        array_key_exists("LitCalMetadata", $JSON) &&
-        is_array($JSON["LitCalMetadata"]) &&
-        array_key_exists("NationalCalendars", $JSON["LitCalMetadata"]) &&
-        is_array($JSON["LitCalMetadata"]["NationalCalendars"]) &&
-        array_key_exists("DiocesanCalendars", $JSON["LitCalMetadata"]) &&
-        is_array($JSON["LitCalMetadata"]["DiocesanCalendars"])
+        array_key_exists( "LitCalMetadata", $JSON ) &&
+        is_array( $JSON["LitCalMetadata"] ) &&
+        array_key_exists( "NationalCalendars", $JSON["LitCalMetadata"] ) &&
+        is_array( $JSON["LitCalMetadata"]["NationalCalendars"] ) &&
+        array_key_exists( "DiocesanCalendars", $JSON["LitCalMetadata"] ) &&
+        is_array( $JSON["LitCalMetadata"]["DiocesanCalendars"] )
     );
 }
 
 $CalendarNations = [];
 $SelectOptions = [];
-$JSON = json_decode(file_get_contents(METADATA_URL), true);
-if (verifyCalendarIndexJson($JSON)) {
+$JSON = json_decode( file_get_contents( METADATA_URL ), true );
+if( verifyCalendarIndexJson( $JSON ) ) {
     $NationalCalendars = $JSON["LitCalMetadata"]["NationalCalendars"];
     $DiocesanCalendars = $JSON["LitCalMetadata"]["DiocesanCalendars"];
-    foreach ($DiocesanCalendars as $key => $value) {
-        if (!in_array($value["nation"], $CalendarNations)) {
-            array_push($CalendarNations, $value["nation"]);
+    foreach( $DiocesanCalendars as $key => $value ) {
+        if( !in_array( $value["nation"], $CalendarNations ) ) {
+            array_push( $CalendarNations, $value["nation"] );
             $SelectOptions[$value["nation"]] = [];
         }
-        array_push($SelectOptions[$value["nation"]], "<option data-calendartype=\"diocesancalendar\" value=\"{$key}\">{$value["diocese"]}</option>");
+        array_push( $SelectOptions[$value["nation"]], "<option data-calendartype=\"diocesancalendar\" value=\"{$key}\">{$value["diocese"]}</option>" );
     }
-    foreach (array_keys($NationalCalendars) as $key) {
-        if (!in_array($key, $CalendarNations)) {
-            array_push($CalendarNations, $key);
+    foreach( array_keys( $NationalCalendars ) as $key ) {
+        if( !in_array( $key, $CalendarNations ) ) {
+            array_push( $CalendarNations, $key );
         }
     }
-    sort($CalendarNations);
+    sort( $CalendarNations );
 }
 
 $haveCookie = false;
 
-if (isset($_COOKIE['queryString'])) {
+if(isset($_COOKIE['queryString'])) {
     $haveCookie = true;
     $cookieVal = json_decode($_COOKIE['queryString']);
 }
@@ -59,7 +58,7 @@ if (isset($_COOKIE['queryString'])) {
 <!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
-    <title><?php echo _("General Roman Calendar") . ' - ' . _('Liturgy of any day') ?></title>
+    <title><?php echo _( "General Roman Calendar") . ' - ' . _( 'Liturgy of any day' ) ?></title>
     <?php include_once('./layout/head.php'); ?>
 </head>
 <body>
@@ -67,7 +66,7 @@ if (isset($_COOKIE['queryString'])) {
     <?php include_once('./layout/header.php'); ?>
 
         <!-- Page Heading -->
-        <h3 class="h3 mb-2 text-gray-800"><?php echo _("Liturgy of any day"); ?></h3>
+        <h3 class="h3 mb-2 text-gray-800"><?php echo _( "Liturgy of any day" ); ?></h3>
         <div class="container">
         <?php include_once('./layout/calendarselect.php') ?>
             <div class="row">
@@ -78,15 +77,15 @@ if (isset($_COOKIE['queryString'])) {
                 <div class="form-group col-md">
                     <label><?php echo _("Month"); ?></label>
                     <select class="form-select" id="monthControl">
-                        <?php foreach (range(1, 12) as $monthNumber) {
+                        <?php foreach( range(1,12) as $monthNumber ) {
                             $monthDate->setDate($dateToday->format('Y'), $monthNumber, 15);
                             $selected = '';
-                            if ($haveCookie) {
-                                if (intval($cookieVal->month) === $monthNumber) {
+                            if($haveCookie) {
+                                if(intval($cookieVal->month) === $monthNumber) {
                                     $selected = 'selected';
                                 }
                             } else {
-                                if (intval($dateToday->format('n')) === $monthNumber) {
+                                if(intval($dateToday->format('n')) === $monthNumber) {
                                     $selected = 'selected';
                                 }
                             }
@@ -102,12 +101,8 @@ if (isset($_COOKIE['queryString'])) {
             </div>
             <div class="card shadow m-2">
                 <div class="card-header py-3">
-                    <?php
-
-/**translators: %s = current selected date */
-
-                    ?>
-                    <h6 class="m-0 font-weight-bold text-primary"><?php echo sprintf(_("Liturgy of %s"), "<span id=\"dateOfLiturgy\">" . $fmtFull->format($dateToday) . "</span>"); ?><i class="fas fa-cross float-end text-black" style="--bs-text-opacity: .15;"></i></h6>
+                    <?php /**translators: %s = current selected date */ ?>
+                    <h6 class="m-0 font-weight-bold text-primary"><?php echo sprintf( _("Liturgy of %s"), "<span id=\"dateOfLiturgy\">" . $fmtFull->format( $dateToday ) . "</span>" ); ?><i class="fas fa-cross float-end text-black" style="--bs-text-opacity: .15;"></i></h6>
                 </div>
                 <div class="card-body" id="liturgyResults">
                 </div>

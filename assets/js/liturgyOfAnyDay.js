@@ -1,6 +1,6 @@
 const isStaging = location.href.includes( "-staging" );
 const endpointV = isStaging ? "dev" : "v3";
-const endpointURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/?`;
+const endpointURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalEngine.php?`;
 
 if( typeof currentLocale === 'undefined' ) {
     currentLocale = new Intl.Locale(Cookies.get('currentLocale').replaceAll('_','-') || 'en');
@@ -186,7 +186,7 @@ const translCommon = common => {
     if( common.includes( 'Proper' ) ) {
         return i18next.t('Proper');
     } else {
-        let commons = common.map(txt => {
+        commons = common.map(txt => {
             let common = txt.split(":");
             if( universalCommons.includes(common[0]) ) {
                 let commonGeneral = i18next.t(common[0].replaceAll(' ', '-'));

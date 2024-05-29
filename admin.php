@@ -2,20 +2,15 @@
 
 include_once("credentials.php");
 
-function authenticated()
-{
-    if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])) {
-        return false;
-    }
-    if ($_SERVER['PHP_AUTH_USER'] === AUTH_USERNAME && password_verify($_SERVER['PHP_AUTH_PW'], AUTH_PASSWORD)) {
-        return true;
-    }
+function authenticated() {
+    if ( !isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) ) return false;
+    if ($_SERVER['PHP_AUTH_USER'] === AUTH_USERNAME && password_verify($_SERVER['PHP_AUTH_PW'], AUTH_PASSWORD)) return true;
     return false;
 }
 
-if (!authenticated()) {
+if(!authenticated()) {
     header("WWW-Authenticate: Basic realm=\"Please insert your credentials\"");
-    header($_SERVER["SERVER_PROTOCOL"] . " 401 Unauthorized");
+    header($_SERVER["SERVER_PROTOCOL"]." 401 Unauthorized");
     echo "You need a username and password to access this service.";
     die();
 }
@@ -24,46 +19,46 @@ include_once("./includes/i18n.php");
 include_once("./layout/formcontrols.php");
 
 $i18n = new i18n();
-$FormControls = new FormControls($i18n);
+$FormControls = new FormControls( $i18n );
 
-$isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false );
+$isStaging = ( strpos( $_SERVER['HTTP_HOST'], "-staging" ) !== false );
 
-if ($isStaging) {
-    $JSON = json_decode(file_get_contents('https://litcal.johnromanodorazio.com/api/dev/data/propriumdesanctis_1970/propriumdesanctis_1970.json'), true);
-    $thh = array_keys($JSON[0]);
+if($isStaging) {
+    $JSON = json_decode( file_get_contents( 'https://litcal.johnromanodorazio.com/api/dev/data/propriumdesanctis_1970/propriumdesanctis_1970.json' ), true );
+    $thh = array_keys( $JSON[0] );
 } else {
-    $JSON = json_decode(file_get_contents('api/dev/data/propriumdesanctis_1970/propriumdesanctis_1970.json'), true);
-    $thh = array_keys($JSON[0]);
+    $JSON = json_decode( file_get_contents( 'api/dev/data/propriumdesanctis_1970/propriumdesanctis_1970.json' ), true );
+    $thh = array_keys( $JSON[0] );
     //$months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
 }
 
-[ "LitCalAllFestivities" => $FestivityCollection ] = json_decode(file_get_contents("https://litcal.johnromanodorazio.com/api/dev/allevents/?locale=en"), true);
+[ "LitCalAllFestivities" => $FestivityCollection ] = json_decode( file_get_contents( "https://litcal.johnromanodorazio.com/api/dev/LitCalAllFestivities.php?locale=en" ), true );
 
 $messages = [
-    "Tag"               => _("Tag"),
-    "Name"              => _("Name"),
-    "Day"               => _("Day"),
-    "Month"             => _("Month"),
-    "Liturgical color"  => _("Liturgical color"),
-    "white"             => _("white"),
-    "red"               => _("red"),
-    "green"             => _("green"),
-    "purple"            => _("purple"),
+    "Tag"               => _( "Tag" ),
+    "Name"              => _( "Name" ),
+    "Day"               => _( "Day" ),
+    "Month"             => _( "Month" ),
+    "Liturgical color"  => _( "Liturgical color" ),
+    "white"             => _( "white" ),
+    "red"               => _( "red" ),
+    "green"             => _( "green" ),
+    "purple"            => _( "purple" ),
     /**translators: in reference to the first year from which this festivity takes place */
-    "Since"             => _("Since"),
+    "Since"             => _( "Since" ),
     /**translators: in reference to the year from which this festivity no longer needs to be dealt with */
-    "Until"             => _("Until"),
+    "Until"             => _( "Until" ),
     /**translators: label of the form row */
-    "Designate Doctor"  => _("Designate Doctor of the Church"),
+    "Designate Doctor"  => _( "Designate Doctor of the Church"),
     /**translators: label of the form row */
-    "New festivity"     => _("New festivity"),
+    "New festivity"     => _( "New festivity" ),
     /**translators: label of the form row */
-    "Change name or grade" => _("Change name or grade"),
+    "Change name or grade" => _( "Change name or grade" ),
     /**translators: label of the form row */
-    "Move festivity" => _("Move festivity"),
-    "Decree URL"        => _("Decree URL"),
-    "Decree Langs"      => _("Decree Language mappings"),
-    "Reason"            => _("Reason (in favor of festivity)"),
+    "Move festivity" => _( "Move festivity" ),
+    "Decree URL"        => _( "Decree URL" ),
+    "Decree Langs"      => _( "Decree Language mappings" ),
+    "Reason"            => _( "Reason (in favor of festivity)" ),
     "commonsTemplate"   => $FormControls->getCommonsTemplate(),
     "gradeTemplate"     => $FormControls->getGradeTemplate(),
     "LOCALE"            => $i18n->LOCALE,
@@ -71,28 +66,27 @@ $messages = [
 
 $buttonGroup = "<div id=\"memorialsFromDecreesBtnGrp\">
 <hr><div class=\"d-flex justify-content-around\">
-<button class=\"btn btn-sm btn-primary m-2\" id=\"setPropertyAction\" data-bs-toggle=\"modal\" data-bs-target=\"#setPropertyActionPrompt\"><i class=\"fas fa-edit me-2\"></i>" . _("Change name or grade of existing festivity") . "</button>
-<button class=\"btn btn-sm btn-primary m-2\" id=\"moveFestivityAction\" data-bs-toggle=\"modal\" data-bs-target=\"#moveFestivityActionPrompt\"><i class=\"fas fa-calendar-day me-2\"></i>" . _("Move festivity to new date") . "</button>
-<button class=\"btn btn-sm btn-primary m-2\" id=\"newFestivityAction\" data-bs-toggle=\"modal\" data-bs-target=\"#newFestivityActionPrompt\"><i class=\"far fa-calendar-plus me-2\"></i>" . _("Create a new festivity") . "</button>
-<button class=\"btn btn-sm btn-primary m-2\" id=\"makeDoctorAction\" data-bs-toggle=\"modal\" data-bs-target=\"#makeDoctorActionPrompt\"><i class=\"fas fa-user-graduate me-2\"></i>" . _("Designate Doctor of the Church from existing festivity") . "</button>
+<button class=\"btn btn-sm btn-primary m-2\" id=\"setPropertyAction\" data-bs-toggle=\"modal\" data-bs-target=\"#setPropertyActionPrompt\"><i class=\"fas fa-edit me-2\"></i>" . _( "Change name or grade of existing festivity" ) . "</button>
+<button class=\"btn btn-sm btn-primary m-2\" id=\"moveFestivityAction\" data-bs-toggle=\"modal\" data-bs-target=\"#moveFestivityActionPrompt\"><i class=\"fas fa-calendar-day me-2\"></i>" . _( "Move festivity to new date" ) . "</button>
+<button class=\"btn btn-sm btn-primary m-2\" id=\"newFestivityAction\" data-bs-toggle=\"modal\" data-bs-target=\"#newFestivityActionPrompt\"><i class=\"far fa-calendar-plus me-2\"></i>" . _( "Create a new festivity" ) . "</button>
+<button class=\"btn btn-sm btn-primary m-2\" id=\"makeDoctorAction\" data-bs-toggle=\"modal\" data-bs-target=\"#makeDoctorActionPrompt\"><i class=\"fas fa-user-graduate me-2\"></i>" . _( "Designate Doctor of the Church from existing festivity" ) . "</button>
 </div>
 </div>";
 
-function generateModalBody(bool $hasPropertyChange = false): void
-{
+function generateModalBody( bool $hasPropertyChange = false ) : void {
     $modalBody = "<div class=\"modal-body\">
     <form class=\"row justify-content-left needs-validation\" novalidate>
         <div class=\"form-group col col-md-10\">
-            <label for=\"existingFestivityName\" class=\"font-weight-bold\">" . _("Choose from existing festivities") . ":</label>
+            <label for=\"existingFestivityName\" class=\"font-weight-bold\">" . _( "Choose from existing festivities") . ":</label>
             <input list=\"existingFestivitiesList\" class=\"form-control existingFestivityName\" required>
-            <div class=\"invalid-feedback\">" . _("This festivity does not seem to exist? Please choose from a value in the list.") . "</div>
+            <div class=\"invalid-feedback\">" . _( "This festivity does not seem to exist? Please choose from a value in the list.") . "</div>
         </div>";
-    if ($hasPropertyChange) {
+    if( $hasPropertyChange ) {
         $modalBody .= "<div class=\"form-group col col-md-6\">
-            <label for=\"propertyToChange\" class=\"font-weight-bold\">" . _("Property to change") . ":</label>
+            <label for=\"propertyToChange\" class=\"font-weight-bold\">" . _( "Property to change" ) . ":</label>
             <select class=\"form-select\" id=\"propertyToChange\" name=\"propertyToChange\">
-                <option value=\"name\">" . _("Name") . "</option>
-                <option value=\"grade\">" . _("Grade") . "</option>
+                <option value=\"name\">" . _( "Name" ) . "</option>
+                <option value=\"grade\">" . _( "Grade" ) . "</option>
             </select>
         </div>";
     }
@@ -132,40 +126,42 @@ function generateModalBody(bool $hasPropertyChange = false): void
                     <?php
                         $i = 0;
                         $n = [ 10, 10, 14, 5, 25, 0, 6, 30 ];
-                    foreach ($thh as $th) {
-                        echo "<th class=\"sticky-top\" style=\"width: {$n[$i++]}%;\" scope=\"col\">$th</th>";
-                    }
+                        foreach( $thh as $th ) {
+                            echo "<th class=\"sticky-top\" style=\"width: {$n[$i++]}%;\" scope=\"col\">$th</th>";
+                        }
                     ?>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                foreach ($JSON as $row) {
-                    echo "<tr>";
-                    foreach ($row as $value) {
-                        if (is_array($value) && is_string(array_keys($value)[0])) {
-                            echo "<td contenteditable='false'>";
-                            echo "<table><tbody>";
-                            foreach ($value as $title => $val) {
-                                if (is_array($val)) {
-                                    echo "<tr><td colspan=\"2\" style=\"text-align:center;font-weight:bold;border:0;background-color:lightgray;\">$title</td></tr>";
-                                    foreach ($val as $title2 => $val2) {
-                                        echo "<tr><td>$title2</td><td contenteditable='false'>$val2</td></tr>";
+                    foreach( $JSON as $row ) {
+                        echo "<tr>";
+                        foreach( $row as $value ) {
+                            if( is_array( $value ) && is_string( array_keys( $value )[0] ) ) {
+                                echo "<td contenteditable='false'>";
+                                echo "<table><tbody>";
+                                foreach( $value as $title => $val ) {
+                                    if( is_array($val) ) {
+                                        echo "<tr><td colspan=\"2\" style=\"text-align:center;font-weight:bold;border:0;background-color:lightgray;\">$title</td></tr>";
+                                        foreach( $val as $title2 => $val2 ) {
+                                            echo "<tr><td>$title2</td><td contenteditable='false'>$val2</td></tr>";
+                                        }
+                                    } else {
+                                        echo "<tr><td>$title</td><td contenteditable='false'>$val</td></tr>";
                                     }
-                                } else {
-                                    echo "<tr><td>$title</td><td contenteditable='false'>$val</td></tr>";
                                 }
+                                echo "</tbody></table>";
+                                echo "</td>";
                             }
-                            echo "</tbody></table>";
-                            echo "</td>";
-                        } elseif (is_array($value)) {
-                            echo "<td contenteditable='false'>" . implode(",", $value) . "</td>";
-                        } else {
-                            echo "<td contenteditable='false'>$value</td>";
+                            else if( is_array( $value ) ) {
+                                echo "<td contenteditable='false'>" . implode(",", $value) . "</td>";
+                            }
+                            else {
+                                echo "<td contenteditable='false'>$value</td>";
+                            }
                         }
+                        echo "</tr>";
                     }
-                    echo "</tr>";
-                }
                 ?>
             </tbody>
         </table>
@@ -179,12 +175,12 @@ function generateModalBody(bool $hasPropertyChange = false): void
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="setPropertyActionModalLabel"><?php echo _("Change name or grade of existing festivity") ?></h5>
+                    <h5 class="modal-title" id="setPropertyActionModalLabel"><?php echo _( "Change name or grade of existing festivity" ) ?></h5>
                 </div>
                 <?php generateModalBody(true); ?>
                 <div class="modal-footer">
                     <button type="button" id="setPropertyButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-edit me-2"></i>Set Property</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _("Cancel") ?></button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _( "Cancel" ) ?></button>
                 </div>
             </div>
         </div>
@@ -195,12 +191,12 @@ function generateModalBody(bool $hasPropertyChange = false): void
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="moveFestivityActionModalLabel"><?php echo _("Move festivity to new date") ?></h5>
+                    <h5 class="modal-title" id="moveFestivityActionModalLabel"><?php echo _( "Move festivity to new date" ) ?></h5>
                 </div>
                 <?php generateModalBody(false); ?>
                 <div class="modal-footer">
-                    <button type="button" id="moveFestivityButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-day me-2"></i><?php echo _("Move Festivity") ?></button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _("Cancel") ?></button>
+                    <button type="button" id="moveFestivityButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-day me-2"></i><?php echo _( "Move Festivity" ) ?></button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _( "Cancel" ) ?></button>
                 </div>
             </div>
         </div>
@@ -211,13 +207,13 @@ function generateModalBody(bool $hasPropertyChange = false): void
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="newFestivityActionModalLabel"><?php echo _("Create a new festivity") ?></h5>
+                    <h5 class="modal-title" id="newFestivityActionModalLabel"><?php echo _( "Create a new festivity" ) ?></h5>
                 </div>
                 <?php generateModalBody(false); ?>
                 <div class="modal-footer">
-                    <button type="button" id="newFestivityFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus me-2"></i><?php echo _("New Festivity from existing") ?></button>
-                    <button type="button" id="newFestivityExNovoButton" class="btn btn-primary actionPromptButton"><i class="fas fa-calendar-plus me-2"></i><?php echo _("New Festivity ex novo") ?></button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _("Cancel") ?></button>
+                    <button type="button" id="newFestivityFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus me-2"></i><?php echo _( "New Festivity from existing" ) ?></button>
+                    <button type="button" id="newFestivityExNovoButton" class="btn btn-primary actionPromptButton"><i class="fas fa-calendar-plus me-2"></i><?php echo _( "New Festivity ex novo" ) ?></button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _( "Cancel" ) ?></button>
                 </div>
             </div>
         </div>
@@ -228,12 +224,12 @@ function generateModalBody(bool $hasPropertyChange = false): void
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="makeDoctorActionModalLabel"><?php echo _("Designate Doctor of the Church from existing festivity") ?></h5>
+                    <h5 class="modal-title" id="makeDoctorActionModalLabel"><?php echo _( "Designate Doctor of the Church from existing festivity" ) ?></h5>
                 </div>
                 <?php generateModalBody(false); ?>
                 <div class="modal-footer">
-                    <button type="button" id="designateDoctorButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-user-graduate me-2"></i><?php echo _("Designate Doctor of the Church") ?></button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _("Cancel") ?></button>
+                    <button type="button" id="designateDoctorButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-user-graduate me-2"></i><?php echo _( "Designate Doctor of the Church" ) ?></button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _( "Cancel" ) ?></button>
                 </div>
             </div>
         </div>
@@ -241,9 +237,9 @@ function generateModalBody(bool $hasPropertyChange = false): void
 
     <datalist id="existingFestivitiesList">
     <?php
-    foreach ($FestivityCollection as $key => $festivity) {
-        echo "<option value=\"{$key}\">{$festivity["NAME"]}</option>";
-    }
+        foreach( $FestivityCollection as $key => $festivity ) {
+            echo "<option value=\"{$key}\">{$festivity["NAME"]}</option>";
+        }
     ?>
     </datalist>
     <script>

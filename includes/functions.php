@@ -1,13 +1,11 @@
 <?php
 
-function ordinal($number)
-{
+function ordinal($number) {
     $ends = array('th','st','nd','rd','th','th','th','th','th','th');
-    if ((($number % 100) >= 11) && (($number % 100) <= 13)) {
-        return $number . 'th';
-    } else {
-        return $number . $ends[$number % 10];
-    }
+    if ((($number % 100) >= 11) && (($number%100) <= 13))
+        return $number. 'th';
+    else
+        return $number. $ends[$number % 10];
 }
 
 $messages = [
@@ -74,12 +72,11 @@ $monthsLatin = [
     "December"
 ];
 
-function integerToRoman($integer)
-{
+function integerToRoman($integer) {
     // Convert the integer into an integer (just to make sure)
     $integer = intval($integer);
     $result = '';
-
+    
     // Create a lookup array that contains all of the Roman numerals.
     $lookup = array(
         'X&#773;'           => 10000,
@@ -100,18 +97,18 @@ function integerToRoman($integer)
         'IV'                => 4,
         'I'                 => 1
     );
-
-    foreach ($lookup as $roman => $value) {
+    
+    foreach($lookup as $roman => $value){
         // Determine the number of matches
-        $matches = intval($integer / $value);
-
+        $matches = intval($integer/$value);
+        
         // Add the same number of characters to the string
-        $result .= str_repeat($roman, $matches);
-
+        $result .= str_repeat($roman,$matches);
+        
         // Set the integer to be the remainder of the integer and the value
         $integer = $integer % $value;
     }
-
+    
     // The Roman numeral should be built, return it
     return $result;
 }

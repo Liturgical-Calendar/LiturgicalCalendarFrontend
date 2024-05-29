@@ -15,7 +15,7 @@ const updateSubscriptionURL = () => {
 }
 
 //let stagingURL = isStaging ? "-staging" : "";
-let calSubscriptionURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/?`;
+let calSubscriptionURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/LitCalEngine.php?`;
 
 
 toastr.options = {
