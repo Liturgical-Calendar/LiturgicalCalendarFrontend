@@ -186,7 +186,7 @@ const translCommon = common => {
     if( common.includes( 'Proper' ) ) {
         return i18next.t('Proper');
     } else {
-        commons = common.map(txt => {
+        let commons = common.map(txt => {
             let common = txt.split(":");
             if( universalCommons.includes(common[0]) ) {
                 let commonGeneral = i18next.t(common[0].replaceAll(' ', '-'));
