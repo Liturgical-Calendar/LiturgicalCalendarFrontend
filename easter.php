@@ -112,11 +112,11 @@ $c->asort($AvailableLocales);
     //$Y = (int)date("Y");
     //for($i=1997;$i<=2037;$i++){
 for ($i = 1583; $i <= 9999; $i++) {
-    $gregDateString = $DatesOfEaster->DatesArray[$i - 1583]->gregorianDateString;
-    $julianDateString = $DatesOfEaster->DatesArray[$i - 1583]->julianDateString;
-    $westernJulianDateString = $DatesOfEaster->DatesArray[$i - 1583]->westernJulianDateString;
+    $gregDateString = $DatesOfEaster->EasterDates[$i - 1583]->gregorianDateString;
+    $julianDateString = $DatesOfEaster->EasterDates[$i - 1583]->julianDateString;
+    $westernJulianDateString = $DatesOfEaster->EasterDates[$i - 1583]->westernJulianDateString;
 
-    $style_str = $DatesOfEaster->DatesArray[$i - 1583]->coinciding ? ' style="background-color:Yellow;font-weight:bold;color:Blue;"' : '';
+    $style_str = $DatesOfEaster->EasterDates[$i - 1583]->coinciding ? ' style="background-color:Yellow;font-weight:bold;color:Blue;"' : '';
     $EasterTableContainer .= '<tr' . $style_str . '><td width="300">' . $gregDateString . '</td><td width="300">' . $julianDateString . '</td><td width="300">' . $westernJulianDateString . '</td></tr>';
 }
     $EasterTableContainer .= '</tbody></table>';
