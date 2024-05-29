@@ -5,10 +5,10 @@ error_reporting(E_ALL);
 
 $isStaging          = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false );
 $stagingURL         = $isStaging ? "-staging" : "";
-$endpointV          = $isStaging ? "dev" : "v3";
-$endpointURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalEngine.php";
-$metadataURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMetadata.php";
-$dateOfEasterURL    = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOfEaster.php";
+$endpointV          = $isStaging ? "namespaced" : "v3";
+$endpointURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/";
+$metadataURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/metadata/";
+$dateOfEasterURL    = "https://litcal.johnromanodorazio.com/api/{$endpointV}/easter/";
 
 include_once('includes/functions.php');
 
@@ -112,11 +112,11 @@ $c->asort($AvailableLocales);
     //$Y = (int)date("Y");
     //for($i=1997;$i<=2037;$i++){
 for ($i = 1583; $i <= 9999; $i++) {
-    $gregDateString = $DatesOfEaster->DatesArray[$i - 1583]->gregorianDateString;
-    $julianDateString = $DatesOfEaster->DatesArray[$i - 1583]->julianDateString;
-    $westernJulianDateString = $DatesOfEaster->DatesArray[$i - 1583]->westernJulianDateString;
+    $gregDateString = $DatesOfEaster->EasterDates[$i - 1583]->gregorianDateString;
+    $julianDateString = $DatesOfEaster->EasterDates[$i - 1583]->julianDateString;
+    $westernJulianDateString = $DatesOfEaster->EasterDates[$i - 1583]->westernJulianDateString;
 
-    $style_str = $DatesOfEaster->DatesArray[$i - 1583]->coinciding ? ' style="background-color:Yellow;font-weight:bold;color:Blue;"' : '';
+    $style_str = $DatesOfEaster->EasterDates[$i - 1583]->coinciding ? ' style="background-color:Yellow;font-weight:bold;color:Blue;"' : '';
     $EasterTableContainer .= '<tr' . $style_str . '><td width="300">' . $gregDateString . '</td><td width="300">' . $julianDateString . '</td><td width="300">' . $westernJulianDateString . '</td></tr>';
 }
     $EasterTableContainer .= '</tbody></table>';

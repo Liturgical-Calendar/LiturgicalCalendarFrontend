@@ -7,7 +7,7 @@ include_once("./layout/formcontrols.php");
 $i18n = new i18n();
 $FormControls = new FormControls($i18n);
 $isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false );
-$versionAPI = $isStaging ? "dev" : "v3";
+$versionAPI = $isStaging ? "namespaced" : "v3";
 
 $dayOfWeekFmt = IntlDateFormatter::create($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'UTC', IntlDateFormatter::GREGORIAN, 'EEEE');
 $thursday   = $dayOfWeekFmt->format(DateTime::createFromFormat('!j-n-Y', '1-1-2022', new DateTimeZone('UTC'))->modify('next Thursday'));
@@ -15,8 +15,8 @@ $sunday     = $dayOfWeekFmt->format(DateTime::createFromFormat('!j-n-Y', '1-1-20
 
 $countryISOCodes = json_decode(file_get_contents("./assets/data/CountryToISO.json"), true);
 
-[ "LitCalMetadata" => $LitCalMetadata ] = json_decode(file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/LitCalMetadata.php"), true);
-[ "LitCalAllFestivities" => $FestivityCollection ] = json_decode(file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/LitCalAllFestivities.php?locale=" . $i18n->LOCALE), true);
+[ "LitCalMetadata" => $LitCalMetadata ] = json_decode(file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/metadata/"), true);
+[ "LitCalAllFestivities" => $FestivityCollection ] = json_decode(file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/allevents/?locale=" . $i18n->LOCALE), true);
 $NationalCalendars = $LitCalMetadata["NationalCalendars"];
 unset($NationalCalendars["VATICAN"]);
 $DiocesanGroups = array_keys($LitCalMetadata["DiocesanGroups"]);
