@@ -99,7 +99,7 @@ const loadDiocesanCalendarData = () => {
         url: RegionalDataURL,
         method: 'GET',
         dataType: 'json',
-        crossDomain: true,
+        //crossDomain: true,
         data: { "key" : dioceseKey, "category": "diocesanCalendar" },
         statusCode: {
             404: (xhr, textStatus, errorThrown) => {
@@ -754,7 +754,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
         url: RegionalDataURL,
         method: 'GET',
         dataType: 'json',
-        crossDomain: true,
+        //crossDomain: true,
         data: { "key" : key, "category": category, "locale": LOCALE },
         statusCode: {
             404: (xhr, textStatus, errorThrown) => {
