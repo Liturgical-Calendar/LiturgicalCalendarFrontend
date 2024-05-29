@@ -5,10 +5,10 @@ error_reporting(E_ALL);
 
 $isStaging          = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false );
 $stagingURL         = $isStaging ? "-staging" : "";
-$endpointV          = $isStaging ? "dev" : "v3";
-$endpointURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalEngine.php";
-$metadataURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/LitCalMetadata.php";
-$dateOfEasterURL    = "https://litcal.johnromanodorazio.com/api/{$endpointV}/DateOfEaster.php";
+$endpointV          = $isStaging ? "namespaced" : "v3";
+$endpointURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/";
+$metadataURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/metadata/";
+$dateOfEasterURL    = "https://litcal.johnromanodorazio.com/api/{$endpointV}/easter/";
 
 include_once('includes/functions.php');
 

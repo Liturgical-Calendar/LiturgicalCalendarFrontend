@@ -1,7 +1,7 @@
 <?php
 $CalendarNations = [];
 $SelectOptions = [];
-[ 'LitCalMetadata' => $CalendarIndex ] = json_decode(file_get_contents('https://litcal.johnromanodorazio.com/api/v3/LitCalMetadata.php'), true);
+[ 'LitCalMetadata' => $CalendarIndex ] = json_decode(file_get_contents("https://litcal.johnromanodorazio.com/api/{$endpointV}/metadata/"), true);
 foreach ($CalendarIndex["DiocesanCalendars"] as $key => $value) {
     if (!in_array($value["nation"], $CalendarNations)) {
         array_push($CalendarNations, $value["nation"]);
