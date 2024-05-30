@@ -17,9 +17,9 @@ asort($langsAssoc);
 ?>
 
 <!-- Navbar -->
-<nav class="navbar fixed top-0 start-0 z-10 w-full bg-white border-b border-gray-400">
+<nav class="navbar fixed top-0 start-0 z-10 w-full bg-base-200 border-b border-gray-400">
     <div class="navbar-start">
-        <a class="text-xl mr-8" href="/">Litcal.org</a>
+        <a class="text-xl font-bold text-primary" href="/">Litcal.org</a>
     </div>
 
     <div class="navbar-center hidden md:flex">
@@ -28,7 +28,7 @@ asort($langsAssoc);
             <li>
                 <details>
                     <summary><?php echo _( "Extending the API" ); ?></summary>
-                    <ul class="p-2 bg-white w-48 md:w-72">
+                    <ul class="p-2 bg-base-200 w-48 md:w-72">
                         <li><a class="<?php echo isset($_GET["choice"]) && $_GET["choice"]==="widerRegion"?" bg-base-200":"" ?>" id="extendingChoiceWiderRegion" href="./extending.php?choice=widerRegion"><?php echo _( "Create a Calendar for a Wider Region" ); ?></a></li>
                         <li><a class="<?php echo isset($_GET["choice"]) && $_GET["choice"]==="national"?" bg-base-200":"" ?>" id="extendingChoiceNationalCalendar" href="./extending.php?choice=national"><?php echo _( "Create a National Calendar" ); ?></a></li>
                         <li><a class="<?php echo isset($_GET["choice"]) && $_GET["choice"]==="diocesan"?" bg-base-200":"" ?>" id="extendingChoiceDiocesanCalendar" href="./extending.php?choice=diocesan"><?php echo _( "Create a Diocesan Calendar" ); ?></a></li>
@@ -38,7 +38,7 @@ asort($langsAssoc);
             <li>
                 <details>
                     <summary><?php echo _( "Example Usage" ); ?></summary>
-                    <ul class="p-2 bg-white w-48">
+                    <ul class="p-2 bg-base-200 w-48">
                         <li><a href="#">Web Calendar</a></li>
                         <li><a href="#">Calendar Subscription</a></li>
                         <li><a href="#">Dates of Easter</a></li>
@@ -57,7 +57,7 @@ asort($langsAssoc);
                 <details>
                     <!-- this should contain the value of the currently selected language, based on a cookie -->
                     <summary><?php echo Locale::getDisplayLanguage($i18n->LOCALE, $i18n->LOCALE); ?></summary>
-                    <ul class="p-2 bg-white">
+                    <ul class="p-2 bg-base-200">
                         <?php
                             foreach( $langsAssoc as $key => $lang ) {
                                 $classList = substr( $i18n->LOCALE, 0, 2 ) === $key ? "bg-base-200" : "";
