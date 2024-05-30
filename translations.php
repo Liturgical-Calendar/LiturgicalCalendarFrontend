@@ -1,7 +1,7 @@
 <!doctype html><?php
 
-include_once("includes/i18n.php");
-$i18n = new i18n();
+include_once("includes/I18n.php");
+$i18n = new I18n();
 
 $API_EXTEND_HOWTO_1 = _("The first step in creating a national or diocesan calendar, is to translate the data for the General Roman Calendar into the language for that nation or diocese.");
 $API_EXTEND_HOWTO_2 = sprintf(

@@ -3,8 +3,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$isStaging          = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false );
-$stagingURL         = $isStaging ? "-staging" : "";
+$isStaging          = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false || strpos($_SERVER['HTTP_HOST'], "localhost") !== false );
+//$stagingURL         = $isStaging ? "-staging" : "";
 $endpointV          = $isStaging ? "dev" : "v3";
 $endpointURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/";
 $metadataURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/metadata/";

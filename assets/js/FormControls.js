@@ -24,7 +24,7 @@ class FormControls {
     static weekdayFormatter = null;
     static index = null;
 
-    static CreateFestivityRow() {
+    static createFestivityRow() {
         let formRow = '';
 
         if (FormControls.title !== null) {
