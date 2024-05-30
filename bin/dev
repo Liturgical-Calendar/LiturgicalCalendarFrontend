@@ -1,0 +1,33 @@
+#!/bin/bash
+set -e
+
+SCRIPT_DIR=$(dirname "${BASH_SOURCE[0]}")
+
+# To run when Ctrl-C is pressed
+cleanup() {
+    echo ""
+    echo "Cleaning up..."
+    kill $PID1 2>/dev/null
+    kill $PID2 2>/dev/null
+    kill $PID3 2>/dev/null
+    rm php.log tailwind.log
+    exit 0
+}
+
+# Trap the SIGINT signal (Ctrl-C) and call the cleanup function
+trap cleanup SIGINT
+
+
+# Run all the things!
+(npx tailwindcss -i ${SCRIPT_DIR}/../tailwind.css -o ${SCRIPT_DIR}/../assets/css/tailwind.css --watch=always > tailwind.log 2>&1) &
+PID1=$!
+
+(php -S localhost:8000 > php.log 2>&1) &
+PID2=$!
+
+(tail -f tailwind.log php.log) &
+PID3=$!
+
+wait $PID1
+wait $PID2
+wait $PID3
