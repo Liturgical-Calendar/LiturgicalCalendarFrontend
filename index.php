@@ -101,75 +101,50 @@ $API_DESCRIPTION = _("A Liturgical Calendar API from which you can retrieve data
             </div>
         </div>
 
+        
+        <h2 class="text-xl font-bold text-primary mb-4"><?php echo _( "Liturgical Calendar Validator" ); ?></h2>
+        <p class="mb-4"><?php echo _( "In order to verify that the liturgical data produced by the API is correct, there is a Unit Test interface that can run predefined tests against the JSON responses produced by the API starting from the year 1970 and going up to 25 years from the current year." ); ?></p>
+        <div><a href="https://litcal-tests.johnromanodorazio.com/" class="btn btn-primary btn-outline mb-4"><?php echo _( "LitCal Validator" ); ?></a></div>
+        <small>
+            <i>
+                <?php echo sprintf( _( "The unit tests are defined in the %s folder in the Liturgical Calendar API repository." ), "<a href=\"https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI/tree/development/tests\">LiturgicalCalendarAPI/tree/development/tests</a>" ); ?>
+                <?php echo sprintf( _( "The unit test interface is curated in a repository of its own: %s." ), "<a href=\"https://github.com/Liturgical-Calendar/UnitTestInterface\">Liturgical-Calendar/UnitTestInterface</a>" ); ?>
+            </i>
+        </small>
 
-        <div class="row"><!-- <?php echo implode(' | ', $langsAssoc); ?> -->
 
-        </div>
-
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card shadow m-2">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _("Liturgical Calendar Validator"); ?><i class="fas fa-flask-vial float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
-                    </div>
-                    <div class="card-body">
-                        <p><?php echo _("In order to verify that the liturgical data produced by the API is correct, there is a Unit Test interface that can run predefined tests against the JSON responses produced by the API starting from the year 1970 and going up to 25 years from the current year."); ?></p>
-                        <div class="text-center"><a href="https://litcal-tests.johnromanodorazio.com/" class="btn btn-primary mt-2"><?php echo _("LitCal Validator"); ?></a></div>
-                        <small class="text-muted">
-                            <i>
-                                <?php echo sprintf(_("The unit tests are defined in the %s folder in the Liturgical Calendar API repository."), "<a href=\"https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI/tree/development/tests\">LiturgicalCalendarAPI/tree/development/tests</a>"); ?>
-                                <?php echo sprintf(_("The unit test interface is curated in a repository of its own: %s."), "<a href=\"https://github.com/Liturgical-Calendar/UnitTestInterface\">Liturgical-Calendar/UnitTestInterface</a>"); ?>
-                            </i>
-                        </small>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-6">
-                <div class="card shadow m-2">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _("Calculation of the Date of Easter"); ?>: API<i class="fas fa-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
-                    </div>
-                    <div class="card-body">
-                        <?php $EASTER_CALCULATOR_API = _("A simple API endpoint that returns data about the Date of Easter, both Gregorian and Julian, " .
+        <h2 class="text-xl font-bold text-primary mb-4 mt-8"><?php echo _("Calculation of the Date of Easter"); ?>: API</h2>
+        <p class="mb-4"><?php $EASTER_CALCULATOR_API = _("A simple API endpoint that returns data about the Date of Easter, both Gregorian and Julian, " .
                 "from 1583 (year of the adoption of the Gregorian Calendar) to 9999 (maximum possible date calculation in 64bit PHP), " .
                 "using a PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian easter (observed by the Roman Catholic church) " .
-                "and of the Meeus algorithm for Julian easter (observed by orthodox churches)"); ?>
-                        <p><?php echo $EASTER_CALCULATOR_API; ?></p>
-                        <div class="text-center"><a href="<?php echo $dateOfEasterURL ?>" class="btn btn-primary m-2"><?php echo _("Date of Easter API endpoint"); ?></a></div>
-                        <small class="text-muted">
-                            <i><?php echo _("Currently the data can be requested with almost any localization. " .
-                            "In any case, since the API returns a UNIX timestamp for each date of Easter, localizations can be done in a client application just as well."); ?></i>
-                        </small>
-                    </div>
-                </div>
-                <div class="card shadow m-2">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _("API Endpoint"); ?>: <?php  echo _("Definition") ?><i class="fas fa-file-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="text-center"><a href="dist/" class="btn btn-primary mt-2"><?php echo _("Swagger / Open API Documentation"); ?></a></div>
-                        <p class="m-2 text-center"><small class="text-muted">
-                            <i><?php echo _("The Open API json schema for this API has been updated to OpenAPI 3.1."); ?></i>
-                        </small></p>
-                    </div>
-                </div>
-                <div class="card shadow m-2">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _("Translation Tool"); ?><i class="fas fa-language float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
-                    </div>
-                    <div class="card-body text-center">
-                        <a href="https://translate.johnromanodorazio.com/engage/liturgical-calendar/" class="btn btn-light" id="transl-status-btn">
-                            <picture>
-                                <source media="(max-width: 600px)" srcset="https://translate.johnromanodorazio.com/widget/liturgical-calendar/horizontal-auto.svg" />
-                                <img src="https://translate.johnromanodorazio.com/widget/liturgical-calendar/multi-auto.svg" alt="<?php echo _("Translations status"); ?>" />
-                            </picture>
-                        </a>
-                        <p class="m-2"><i><?php echo _("Translations status"); ?></i></p>
-                    </div>
-                </div>
+                "and of the Meeus algorithm for Julian easter (observed by orthodox churches)"); ?></p>
+        <p class="mb-4"><?php echo $EASTER_CALCULATOR_API; ?></p>
+        <div><a href="<?php echo $dateOfEasterURL ?>" class="btn btn-primary btn-outline mb-4"><?php echo _("Date of Easter API endpoint"); ?></a></div>
+        <small>
+            <i><?php echo _("Currently the data can be requested with almost any localization. " .
+            "In any case, since the API returns a UNIX timestamp for each date of Easter, localizations can be done in a client application just as well."); ?></i>
+        </small>
+
+
+        <h2 class="text-xl font-bold text-primary mb-4 mt-8">API Documentation & Schema</h2>
+        <div><a href="dist/" class="btn btn-primary btn-outline mb-4"><?php echo _("Swagger / Open API Documentation"); ?></a></div>
+        <small>
+            <i><?php echo _("The Open API json schema for this API has been updated to OpenAPI 3.1."); ?></i>
+        </small>
+
+
+        <h2 class="text-xl font-bold text-primary mb-4 mt-8"><?php echo _("Translation Tool"); ?></h2>
+        <div class="flex">
+            <div class="border border-primary p-2 my-4">
+                <picture>
+                    <source media="(max-width: 600px)" srcset="https://translate.johnromanodorazio.com/widget/liturgical-calendar/horizontal-auto.svg" />
+                    <img src="https://translate.johnromanodorazio.com/widget/liturgical-calendar/multi-auto.svg" alt="<?php echo _("Translations status"); ?>" />
+                </picture>
             </div>
+        </div>
+
+        <div class="mb-12">
+            <a href="https://translate.johnromanodorazio.com/engage/liturgical-calendar/" class="btn btn-primary btn-outline" id="transl-status-btn"><?php echo _("Translations status"); ?></a>
         </div>
 
 
