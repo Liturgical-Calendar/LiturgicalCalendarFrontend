@@ -20,10 +20,10 @@ if (!authenticated()) {
     die();
 }
 
-include_once("./includes/i18n.php");
-include_once("./layout/formcontrols.php");
+include_once("./includes/I18n.php");
+include_once("./layout/FormControls.php");
 
-$i18n = new i18n();
+$i18n = new I18n();
 $FormControls = new FormControls($i18n);
 
 $isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false );
@@ -37,7 +37,7 @@ if ($isStaging) {
     //$months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
 }
 
-[ "LitCalAllFestivities" => $FestivityCollection ] = json_decode(file_get_contents("https://litcal.johnromanodorazio.com/api/namespaced/allevents/?locale=en"), true);
+[ "LitCalAllFestivities" => $FestivityCollection ] = json_decode(file_get_contents("https://litcal.johnromanodorazio.com/api/dev/allevents/?locale=en"), true);
 
 $messages = [
     "Tag"               => _("Tag"),

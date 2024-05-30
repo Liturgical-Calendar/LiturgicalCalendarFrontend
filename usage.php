@@ -1,13 +1,13 @@
 <!doctype html><?php
 
-include_once("includes/i18n.php");
+include_once("includes/I18n.php");
 
-$i18n = new i18n();
+$i18n = new I18n();
 
 $API_DESCRIPTION = _("A Liturgical Calendar API from which you can retrieve data for the Liturgical events of any given year from 1970 onwards, whether for the Universal or General Roman Calendar or for derived National and Diocesan calendars");
 
-$isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false );
-$stagingURL = $isStaging ? "-staging" : "";
+$isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false || strpos($_SERVER['HTTP_HOST'], "localhost") !== false );
+//$stagingURL = $isStaging ? "-staging" : "";
 $endpointV = $isStaging ? "dev" : "v3";
 $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/?returntype=ICS";
 

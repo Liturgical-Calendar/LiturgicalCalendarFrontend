@@ -147,7 +147,7 @@ const loadDiocesanCalendarData = () => {
                             FormControls.title = messages['Other Solemnity'];
                             FormControls.settings.commonField = true;
                             while (numMissingRows-- > 0) {
-                                $form.append($(FormControls.CreateFestivityRow()));
+                                $form.append($(FormControls.createFestivityRow()));
                             }
                         }
                         $row = $('#carouselItemSolemnities form .row').eq(Metadata.formRowNum);
@@ -159,7 +159,7 @@ const loadDiocesanCalendarData = () => {
                             FormControls.title = messages['Other Feast'];
                             FormControls.settings.commonField = true;
                             while (numMissingRows-- > 0) {
-                                $('.carousel-item').eq(1).find('form').append($(FormControls.CreateFestivityRow()));
+                                $('.carousel-item').eq(1).find('form').append($(FormControls.createFestivityRow()));
                             }
                         }
                         $row = $('#carouselItemFeasts form .row').eq(Metadata.formRowNum);
@@ -171,7 +171,7 @@ const loadDiocesanCalendarData = () => {
                             FormControls.title = messages['Other Memorial'];
                             FormControls.settings.commonField = true;
                             while (numMissingRows-- > 0) {
-                                $('.carousel-item').eq(2).find('form').append($(FormControls.CreateFestivityRow()));
+                                $('.carousel-item').eq(2).find('form').append($(FormControls.createFestivityRow()));
                             }
                         }
                         $row = $('#carouselItemMemorials form .row').eq(Metadata.formRowNum);
@@ -183,7 +183,7 @@ const loadDiocesanCalendarData = () => {
                             FormControls.title = messages['Other Optional Memorial'];
                             FormControls.settings.commonField = true;
                             while (numMissingRows-- > 0) {
-                                $('.carousel-item').eq(3).find('form').append($(FormControls.CreateFestivityRow()));
+                                $('.carousel-item').eq(3).find('form').append($(FormControls.createFestivityRow()));
                             }
                         }
                         $row = $('#carouselItemOptionalMemorials form .row').eq(Metadata.formRowNum);
@@ -633,22 +633,22 @@ $(document).on('click', '.onTheFlyEventRow', ev => {
     switch (ev.currentTarget.id) {
         case "addSolemnity":
             FormControls.title = messages['Other Solemnity'];
-            $row = $(FormControls.CreateFestivityRow());
+            $row = $(FormControls.createFestivityRow());
             $('.carousel-item').first().find('form').append($row);
             break;
         case "addFeast":
             FormControls.title = messages['Other Feast'];
-            $row = $(FormControls.CreateFestivityRow());
+            $row = $(FormControls.createFestivityRow());
             $('.carousel-item').eq(1).find('form').append($row);
             break;
         case "addMemorial":
             FormControls.title = messages['Other Memorial'];
-            $row = $(FormControls.CreateFestivityRow());
+            $row = $(FormControls.createFestivityRow());
             $('.carousel-item').eq(2).find('form').append($row);
             break;
         case "addOptionalMemorial":
             FormControls.title = messages['Other Optional Memorial'];
-            $row = $(FormControls.CreateFestivityRow());
+            $row = $(FormControls.createFestivityRow());
             $('.carousel-item').eq(3).find('form').append($row);
             break;
     }

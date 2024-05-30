@@ -1,22 +1,27 @@
-<!doctype html>
 <?php
 
-include_once("includes/i18n.php");
-include_once("./layout/formcontrols.php");
+include_once("includes/I18n.php");
+include_once("layout/FormControls.php");
 
-$i18n = new i18n();
+$i18n = new I18n();
 $FormControls = new FormControls($i18n);
-$isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false );
+$isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false || strpos($_SERVER['HTTP_HOST'], "localhost") !== false );
 $versionAPI = $isStaging ? "dev" : "v3";
 
 $dayOfWeekFmt = IntlDateFormatter::create($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'UTC', IntlDateFormatter::GREGORIAN, 'EEEE');
 $thursday   = $dayOfWeekFmt->format(DateTime::createFromFormat('!j-n-Y', '1-1-2022', new DateTimeZone('UTC'))->modify('next Thursday'));
 $sunday     = $dayOfWeekFmt->format(DateTime::createFromFormat('!j-n-Y', '1-1-2022', new DateTimeZone('UTC'))->modify('next Sunday'));
 
-$countryISOCodes = json_decode(file_get_contents("./assets/data/CountryToISO.json"), true);
+$countryISOCodes = json_decode(file_get_contents("assets/data/CountryToISO.json"), true);
 
-[ "LitCalMetadata" => $LitCalMetadata ] = json_decode(file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/metadata/"), true);
-[ "LitCalAllFestivities" => $FestivityCollection ] = json_decode(file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/allevents/?locale=" . $i18n->LOCALE), true);
+[ "LitCalMetadata" => $LitCalMetadata ] = json_decode(
+    file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/metadata/"),
+    true
+);
+[ "LitCalAllFestivities" => $FestivityCollection ] = json_decode(
+    file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/allevents/?locale=" . $i18n->LOCALE),
+    true
+);
 $NationalCalendars = $LitCalMetadata["NationalCalendars"];
 unset($NationalCalendars["VATICAN"]);
 $DiocesanGroups = array_keys($LitCalMetadata["DiocesanGroups"]);
@@ -40,7 +45,10 @@ $AllAvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($v
     return strpos($value, 'POSIX') === false;
 });
 $AllAvailableLocales = array_reduce($AllAvailableLocales, function ($carry, $item) use ($i18n) {
-    //$carry[$item] = Locale::getDisplayLanguage($item, $i18n->LOCALE) . (Locale::getDisplayRegion($item, $i18n->LOCALE) !== "" ? " (" . Locale::getDisplayRegion($item, $i18n->LOCALE) . ")" : "");
+    //$carry[$item] = Locale::getDisplayLanguage($item, $i18n->LOCALE)
+    //    . (Locale::getDisplayRegion($item, $i18n->LOCALE) !== ""
+    //          ? " (" . Locale::getDisplayRegion($item, $i18n->LOCALE) . ")"
+    //          : "");
     $carry[$item] = Locale::getDisplayName($item, $i18n->LOCALE);
     return $carry;
 }, []);
@@ -135,15 +143,15 @@ function generateModalBody(bool $hasPropertyChange = false): void
     echo $modalBody;
 }
 
-?>
+?><!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
     <title><?php echo _("General Roman Calendar - Extending") ?></title>
-    <?php include_once('./layout/head.php'); ?>
+    <?php include_once('layout/head.php'); ?>
 </head>
 <body class="sb-nav-fixed">
 
-    <?php include_once('./layout/header.php'); ?>
+    <?php include_once('layout/header.php'); ?>
 
         <!-- Page Heading -->
         <h1 class="h3 mb-2 text-black" style="--bs-text-opacity: .6;"><?php echo _("Extend the General Roman Calendar with National or Diocesan data"); ?></h1>
@@ -390,9 +398,9 @@ if (isset($_GET["choice"])) {
                                         <!--<div class="row no-gutters align-items-center">
                                             <div class="col me-2">-->
                                                 <form class="needs-validation" novalidate>
-                                                <?php $FormControls->CreateFestivityRow(_("Principal Patron(s) of the Place, Diocese, Region, Province or Territory")) ?>
-                                                <?php $FormControls->CreateFestivityRow(_("Dedication of the Cathedral")) ?>
-                                                <?php $FormControls->CreateFestivityRow(_("Other Solemnity")) ?>
+                                                <?php $FormControls->createFestivityRow(_("Principal Patron(s) of the Place, Diocese, Region, Province or Territory")) ?>
+                                                <?php $FormControls->createFestivityRow(_("Dedication of the Cathedral")) ?>
+                                                <?php $FormControls->createFestivityRow(_("Other Solemnity")) ?>
                                                 </form>
                                                 <div class="text-center"><button class="btn btn-lg btn-primary m-3 onTheFlyEventRow" id="addSolemnity">+</button></div>
                                             <!--</div>
@@ -411,9 +419,9 @@ if (isset($_GET["choice"])) {
                                         <!--<div class="row no-gutters align-items-center">
                                             <div class="col me-2">-->
                                                 <form class="needs-validation" novalidate>
-                                                <?php $FormControls->CreateFestivityRow(_("Patron(s) of the Place, Diocese, Region, Province or Territory")) ?>
-                                                <?php $FormControls->CreateFestivityRow(_("Dedication of the Cathedral")) ?>
-                                                <?php $FormControls->CreateFestivityRow(_("Other Feast")) ?>
+                                                <?php $FormControls->createFestivityRow(_("Patron(s) of the Place, Diocese, Region, Province or Territory")) ?>
+                                                <?php $FormControls->createFestivityRow(_("Dedication of the Cathedral")) ?>
+                                                <?php $FormControls->createFestivityRow(_("Other Feast")) ?>
                                                 </form>
                                                 <div class="text-center"><button class="btn btn-lg btn-primary m-3 onTheFlyEventRow" id="addFeast">+</button></div>
                                             <!--</div>
@@ -432,9 +440,9 @@ if (isset($_GET["choice"])) {
                                         <!--<div class="row no-gutters align-items-center">
                                             <div class="col me-2">-->
                                                 <form class="needs-validation" novalidate>
-                                                <?php $FormControls->CreateFestivityRow(_("Secondary Patron(s) of the Place, Diocese, Region, Province or Territory")) ?>
-                                                <?php $FormControls->CreateFestivityRow(_("Other Memorial")) ?>
-                                                <?php $FormControls->CreateFestivityRow(_("Other Memorial")) ?>
+                                                <?php $FormControls->createFestivityRow(_("Secondary Patron(s) of the Place, Diocese, Region, Province or Territory")) ?>
+                                                <?php $FormControls->createFestivityRow(_("Other Memorial")) ?>
+                                                <?php $FormControls->createFestivityRow(_("Other Memorial")) ?>
                                                 </form>
                                                 <div class="text-center"><button class="btn btn-lg btn-primary m-3 onTheFlyEventRow" id="addMemorial">+</button></div>
                                             <!--</div>
@@ -453,9 +461,9 @@ if (isset($_GET["choice"])) {
                                         <!--<div class="row no-gutters align-items-center">
                                             <div class="col me-2">-->
                                                 <form class="needs-validation" novalidate>
-                                                <?php $FormControls->CreateFestivityRow(_("Saints whos veneration is local to the Place, Diocese, Region, Province or Territory")) ?>
-                                                <?php $FormControls->CreateFestivityRow(_("Other Optional Memorial")) ?>
-                                                <?php $FormControls->CreateFestivityRow(_("Other Optional Memorial")) ?>
+                                                <?php $FormControls->createFestivityRow(_("Saints whos veneration is local to the Place, Diocese, Region, Province or Territory")) ?>
+                                                <?php $FormControls->createFestivityRow(_("Other Optional Memorial")) ?>
+                                                <?php $FormControls->createFestivityRow(_("Other Optional Memorial")) ?>
                                                 </form>
                                                 <div class="text-center"><button class="btn btn-lg btn-primary m-3 onTheFlyEventRow" id="addOptionalMemorial">+</button></div>
                                             <!--</div>

@@ -4,8 +4,8 @@
  * Define our translation strings
 */
 
-include_once("includes/i18n.php");
-$i18n = new i18n();
+include_once("includes/I18n.php");
+$i18n = new I18n();
 $formatStr = '<a href=%s>%s</a> - ';
 
 $cardInfo = [
