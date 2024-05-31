@@ -27,17 +27,17 @@ asort($langsAssoc);
             <li><a href="/index.php">API</a></li>
             <li>
                 <details>
-                    <summary><?php echo _( "Extending the API" ); ?></summary>
+                    <summary><?php echo _("Extending the API"); ?></summary>
                     <ul class="p-2 bg-base-200 w-48 md:w-72">
-                        <li><a class="<?php echo isset($_GET["choice"]) && $_GET["choice"]==="widerRegion"?" bg-base-200":"" ?>" id="extendingChoiceWiderRegion" href="./extending.php?choice=widerRegion"><?php echo _( "Create a Calendar for a Wider Region" ); ?></a></li>
-                        <li><a class="<?php echo isset($_GET["choice"]) && $_GET["choice"]==="national"?" bg-base-200":"" ?>" id="extendingChoiceNationalCalendar" href="./extending.php?choice=national"><?php echo _( "Create a National Calendar" ); ?></a></li>
-                        <li><a class="<?php echo isset($_GET["choice"]) && $_GET["choice"]==="diocesan"?" bg-base-200":"" ?>" id="extendingChoiceDiocesanCalendar" href="./extending.php?choice=diocesan"><?php echo _( "Create a Diocesan Calendar" ); ?></a></li>
+                        <li><a class="<?php echo isset($_GET["choice"]) && $_GET["choice"] === "widerRegion" ? " bg-base-200" : "" ?>" id="extendingChoiceWiderRegion" href="./extending.php?choice=widerRegion"><?php echo _("Create a Calendar for a Wider Region"); ?></a></li>
+                        <li><a class="<?php echo isset($_GET["choice"]) && $_GET["choice"] === "national" ? " bg-base-200" : "" ?>" id="extendingChoiceNationalCalendar" href="./extending.php?choice=national"><?php echo _("Create a National Calendar"); ?></a></li>
+                        <li><a class="<?php echo isset($_GET["choice"]) && $_GET["choice"] === "diocesan" ? " bg-base-200" : "" ?>" id="extendingChoiceDiocesanCalendar" href="./extending.php?choice=diocesan"><?php echo _("Create a Diocesan Calendar"); ?></a></li>
                     </ul>
                 </details>
             </li>
             <li>
                 <details>
-                    <summary><?php echo _( "Example Usage" ); ?></summary>
+                    <summary><?php echo _("Example Usage"); ?></summary>
                     <ul class="p-2 bg-base-200 w-48">
                         <li><a href="#">Web Calendar</a></li>
                         <li><a href="#">Calendar Subscription</a></li>
@@ -46,8 +46,8 @@ asort($langsAssoc);
                     </ul>
                 </details>
             </li>
-            <li class="<?php echo $currentPage=="translations" ? " bg-base-200" : ""; ?>" id="topNavBar_Translations"><a href="./translations.php"><?php echo _( "Translations" ); ?></a></li>
-            <li class="<?php echo $currentPage=="about" ? " bg-base-200" : ""; ?>" id="topNavBar_AboutUs"><a href="./about.php"><?php echo _( "About Us" ); ?></a></li>
+            <li class="<?php echo $currentPage == "translations" ? " bg-base-200" : ""; ?>" id="topNavBar_Translations"><a href="./translations.php"><?php echo _("Translations"); ?></a></li>
+            <li class="<?php echo $currentPage == "about" ? " bg-base-200" : ""; ?>" id="topNavBar_AboutUs"><a href="./about.php"><?php echo _("About Us"); ?></a></li>
         </ul>
     </div>
 
@@ -59,12 +59,12 @@ asort($langsAssoc);
                     <summary><?php echo Locale::getDisplayLanguage($i18n->LOCALE, $i18n->LOCALE); ?></summary>
                     <ul class="p-2 bg-base-200">
                         <?php
-                            foreach( $langsAssoc as $key => $lang ) {
-                                $classList = substr( $i18n->LOCALE, 0, 2 ) === $key ? "bg-base-200" : "";
-                                $isoLang = strtoupper( $key );
-                                $displayName = Locale::getDisplayLanguage( $key, 'en');
-                                echo "<li><a class=\"$classList\" id=\"langChoice-$key\" href=\"#\" title=\"$displayName\"><span class=\"hidden md:inline\">$lang</span><span class=\"inline md:hidden\">$isoLang</span></a></li>";
-                            }
+                        foreach ($langsAssoc as $key => $lang) {
+                            $classList = substr($i18n->LOCALE, 0, 2) === $key ? "bg-base-200" : "";
+                            $isoLang = strtoupper($key);
+                            $displayName = Locale::getDisplayLanguage($key, 'en');
+                            echo "<li><a class=\"$classList\" id=\"langChoice-$key\" href=\"#\" title=\"$displayName\"><span class=\"hidden md:inline\">$lang</span><span class=\"inline md:hidden\">$isoLang</span></a></li>";
+                        }
                         ?>
                     </ul>
                 </details>

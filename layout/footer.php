@@ -27,12 +27,12 @@
 <?php
     //some assets are only needed on certain pages
     $pageName = basename($_SERVER["SCRIPT_FILENAME"], '.php');
-    if($pageName === "index"){
-        echo '<script src="assets/js/homepage.js"></script>';
-    }
-    if(in_array($pageName, [ "extending", "usage", "admin" ])) {
-        echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
-    }
-    if(file_exists("assets/js/{$pageName}.js")) {
-        echo "<script type=\"module\" src=\"assets/js/{$pageName}.js\"></script>";
-    }
+if ($pageName === "index") {
+    echo '<script src="assets/js/homepage.js"></script>';
+}
+if (in_array($pageName, [ "extending", "usage", "admin" ])) {
+    echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
+}
+if (file_exists("assets/js/{$pageName}.js")) {
+    echo "<script type=\"module\" src=\"assets/js/{$pageName}.js\"></script>";
+}

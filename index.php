@@ -77,11 +77,11 @@ $API_DESCRIPTION = _("A Liturgical Calendar API from which you can retrieve data
             <div class="form-group col-span-4">
                 <label class="label">locale</label>
                 <select id="RequestOptionLocale" class="select select-bordered w-full requestOption"><option value="">--</option><?php
-                foreach($langsAssoc as $key => $lang) {
+                foreach ($langsAssoc as $key => $lang) {
                     $keyUC = strtoupper($key);
                     echo "<option value=\"$keyUC\">$lang</option>";
                 }
-            ?></select>
+                ?></select>
             </div>
             <div class="form-group col-span-4">
                 <label class="label">calendartype</label>
@@ -102,13 +102,13 @@ $API_DESCRIPTION = _("A Liturgical Calendar API from which you can retrieve data
         </div>
 
         
-        <h2 class="text-xl font-bold text-primary mb-4"><?php echo _( "Liturgical Calendar Validator" ); ?></h2>
-        <p class="mb-4"><?php echo _( "In order to verify that the liturgical data produced by the API is correct, there is a Unit Test interface that can run predefined tests against the JSON responses produced by the API starting from the year 1970 and going up to 25 years from the current year." ); ?></p>
-        <div><a href="https://litcal-tests.johnromanodorazio.com/" class="btn btn-primary btn-outline mb-4"><?php echo _( "LitCal Validator" ); ?></a></div>
+        <h2 class="text-xl font-bold text-primary mb-4"><?php echo _("Liturgical Calendar Validator"); ?></h2>
+        <p class="mb-4"><?php echo _("In order to verify that the liturgical data produced by the API is correct, there is a Unit Test interface that can run predefined tests against the JSON responses produced by the API starting from the year 1970 and going up to 25 years from the current year."); ?></p>
+        <div><a href="https://litcal-tests.johnromanodorazio.com/" class="btn btn-primary btn-outline mb-4"><?php echo _("LitCal Validator"); ?></a></div>
         <small>
             <i>
-                <?php echo sprintf( _( "The unit tests are defined in the %s folder in the Liturgical Calendar API repository." ), "<a href=\"https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI/tree/development/tests\">LiturgicalCalendarAPI/tree/development/tests</a>" ); ?>
-                <?php echo sprintf( _( "The unit test interface is curated in a repository of its own: %s." ), "<a href=\"https://github.com/Liturgical-Calendar/UnitTestInterface\">Liturgical-Calendar/UnitTestInterface</a>" ); ?>
+                <?php echo sprintf(_("The unit tests are defined in the %s folder in the Liturgical Calendar API repository."), "<a href=\"https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI/tree/development/tests\">LiturgicalCalendarAPI/tree/development/tests</a>"); ?>
+                <?php echo sprintf(_("The unit test interface is curated in a repository of its own: %s."), "<a href=\"https://github.com/Liturgical-Calendar/UnitTestInterface\">Liturgical-Calendar/UnitTestInterface</a>"); ?>
             </i>
         </small>
 
