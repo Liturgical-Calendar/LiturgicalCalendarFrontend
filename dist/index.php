@@ -61,10 +61,18 @@ $OpenAPISchema = $isStaging ? "development" : "master";
             ruby: {
               title: "Ruby",
               syntax: "ruby"
+            },
+            java: {
+              title: "Java",
+              syntax: "java"
+            },
+            go: {
+              title: "Go",
+              syntax: "go"
             }
           },
           defaultExpanded: true,
-          languages: ['curl_bash', 'curl_powershell', 'curl_cmd', 'node_native', 'js_fetch', 'python', 'php', 'ruby']
+          languages: ['curl_bash', 'curl_powershell', 'curl_cmd', 'node_native', 'js_fetch', 'python', 'php', 'ruby', 'java', 'go']
         },
         presets: [
           SwaggerUIBundle.presets.apis,
@@ -76,7 +84,9 @@ $OpenAPISchema = $isStaging ? "development" : "master";
           SnippetGeneratorJsFetchPlugin,
           SnippetGeneratorPythonPlugin,
           SnippetGeneratorPHPPlugin,
-          SnippetGeneratorRubyPlugin
+          SnippetGeneratorRubyPlugin,
+          SnippetGeneratorJavaPlugin,
+          SnippetGeneratorGoPlugin
         ],
         layout: "StandaloneLayout",
       })
@@ -136,7 +146,7 @@ const options = {
   "port": ${url.port || "null"},
   "path": "${url.pathname}"${headers && headers.size ? `,
   "headers": {
-    ${request.get("headers").map((val, key) => `"${key}": "${val}"`).valueSeq().join(",\n    ")}
+    ${headers.map((val, key) => `"${key}": "${val}"`).valueSeq().join(",\n    ")}
   }` : ""}
 };
 const req = http.request(options, function (res) {
@@ -205,7 +215,7 @@ req.end();`;
           return `const options = {
   "method": "${request.get("method")}"${headers && headers.size ? `,
   "headers": {
-    ${request.get("headers").map((val, key) => `"${key}": "${val}"`).valueSeq().join(",\n    ")}
+    ${headers.map((val, key) => `"${key}": "${val}"`).valueSeq().join(",\n    ")}
   }` : ""}${reqBody ? `,
   "body": ${stringBody}` : ""}
 };
@@ -260,7 +270,7 @@ fetch("${url}", options)
 
 url = "${url}"
 headers = {${headers && headers.size ? `
-  ${request.get("headers").map((val, key) => `"${key}": "${val}"`).valueSeq().join(",\n  ")}` : ""}
+  ${headers.map((val, key) => `"${key}": "${val}"`).valueSeq().join(",\n  ")}` : ""}
 }
 ${reqBody ? `payload = ${isJsonBody ? '' : '"'}${reqBody}${isJsonBody ? '' : '"'}\n` : ''}
 
@@ -388,6 +398,160 @@ end
 
 response_json = JSON.parse(response.body)
 puts response.body`;
+        }
+      }
+    },
+    SnippetGeneratorJavaPlugin = {
+      fn: {
+        requestSnippetGenerator_java: (request) => {
+          const url = new URL(request.get("url"));
+          let isMultipartFormDataRequest = false;
+          let isJsonBody = false;
+          const headers = request.get("headers");
+          if (headers && headers.size) {
+            headers.map((val, key) => {
+              isMultipartFormDataRequest = isMultipartFormDataRequest || /^content-type$/i.test(key) && /^multipart\/form-data$/i.test(val);
+              isJsonBody = isJsonBody || /^content-type$/i.test(key) && /^application\/json$/i.test(val);
+            });
+          }
+          let headersStr = '';
+          let reqBody = request.get("body");
+          if (reqBody) {
+            if (isMultipartFormDataRequest && ["POST", "PUT", "PATCH"].includes(request.get("method"))) {
+              return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
+            } else {
+              if (typeof reqBody !== "string") {
+                reqBody = JSON.stringify(reqBody);
+              }
+            }
+          } else if (!reqBody && request.get("method") === "POST") {
+            reqBody = "";
+          }
+          let reqBodyJson = isJsonBody ? JSON.parse(reqBody) : null;
+          reqBodyStr = isJsonBody
+            ? `"{" +
+${Object.entries(reqBodyJson).map(([key,value]) => `          "\\\"${key}\\\": \\\"${value}\\\"," +\n` ).join('') }          "}"`
+            : `"${reqBody}"`;
+          if (headers && headers.size) {
+            headersStr = `${headers.map((val, key) => `conn.setRequestProperty("${key}", "${val}");`).valueSeq().join("\n      ")}`;
+            /*headersStr = 'conn.setRequestProperty("';
+            headers.forEach((val, key) => {
+              headersStr += `${key}", "${val}");\n      conn.setRequestProperty("`;
+            });
+            headersStr = headersStr.slice(0, -24); // Remove the last `conn.setRequestProperty("`*/
+          }
+
+          return `import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public class Main {
+  public static void main(String[] args) {
+    try {
+      URL url = new URL("${url}");
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      conn.setRequestMethod("${request.get("method").toUpperCase()}");
+${headersStr ? `
+      ${headersStr}
+` : ''}${reqBody ? `
+      conn.setDoOutput(true);
+      try(OutputStream os = conn.getOutputStream()) {
+        String inputStr = ${reqBodyStr};
+        byte[] input = inputStr.getBytes("utf-8");
+        os.write(input, 0, input.length);
+      }` : ''}
+      BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+      StringBuilder response = new StringBuilder();
+      String responseLine = null;
+      while ((responseLine = br.readLine()) != null) {
+        response.append(responseLine.trim());
+      }
+      System.out.println(response.toString());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+}`;
+        }
+      }
+    },
+    SnippetGeneratorGoPlugin = {
+      fn: {
+        requestSnippetGenerator_go: (request) => {
+          const url = new URL(request.get("url"));
+          let isMultipartFormDataRequest = false;
+          let isJsonBody = false;
+          const headers = request.get("headers");
+          if (headers && headers.size) {
+            headers.map((val, key) => {
+              isMultipartFormDataRequest = isMultipartFormDataRequest || /^content-type$/i.test(key) && /^multipart\/form-data$/i.test(val);
+              isJsonBody = isJsonBody || /^content-type$/i.test(key) && /^application\/json$/i.test(val);
+            });
+          }
+          let headersStr = '';
+          let reqBody = request.get("body");
+          if (reqBody) {
+            if (isMultipartFormDataRequest && ["POST", "PUT", "PATCH"].includes(request.get("method"))) {
+              return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
+            } else {
+              if (typeof reqBody !== "string") {
+                reqBody = JSON.stringify(reqBody);
+              }
+            }
+          } else if (!reqBody && request.get("method") === "POST") {
+            reqBody = "";
+          }
+
+          if (headers && headers.size) {
+            headersStr = 'req.Header.Set("';
+            headers.forEach((val, key) => {
+              headersStr += `${key}", "${val}");\nreq.Header.Set("`;
+            });
+            headersStr = headersStr.slice(0, -16); // Remove the last `req.Header.Set("`
+          }
+
+          return `package main
+
+import (
+  "fmt"
+  "io/ioutil"
+  "net/http"
+  "strings"
+)
+
+func main() {
+  url := "${url}"
+  method := "${request.get("method").toUpperCase()}"
+
+  payload := strings.NewReader(${isJsonBody ? reqBody : `"${reqBody}"`})
+
+  client := &http.Client {}
+  req, err := http.NewRequest(method, url, payload)
+
+  if err != nil {
+    fmt.Println(err)
+    return
+  }
+${headersStr ? `
+  ${headersStr}
+` : ''}
+
+  res, err := client.Do(req)
+  if err != nil {
+    fmt.Println(err)
+    return
+  }
+  defer res.Body.Close()
+
+  body, err := ioutil.ReadAll(res.Body)
+  if err != nil {
+    fmt.Println(err)
+    return
+  }
+  fmt.Println(string(body))
+}`;
         }
       }
     }
