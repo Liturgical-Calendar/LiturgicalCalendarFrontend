@@ -32,7 +32,8 @@ $OpenAPISchema = $isStaging ? "development" : "master";
           generators: {
             curl_bash: {
               title: "cURL (bash)",
-              syntax: "bash"
+              syntax: "bash",
+              default: true
             },
             curl_powershell: {
               title: "cURL (PowerShell)",
@@ -42,37 +43,37 @@ $OpenAPISchema = $isStaging ? "development" : "master";
               title: "cURL (CMD)",
               syntax: "bash"
             },
-            node_native: {
-              title: "NodeJs Native",
-              syntax: "javascript"
-            },
-            js_fetch: {
-              title: "Javascript",
-              syntax: "javascript"
-            },
-            python: {
-              title: "Python",
-              syntax: "python"
-            },
-            php: {
-              title: "PHP",
-              syntax: "php"
-            },
-            ruby: {
-              title: "Ruby",
-              syntax: "ruby"
+            go: {
+              title: "Go",
+              syntax: "go"
             },
             java: {
               title: "Java",
               syntax: "java"
             },
-            go: {
-              title: "Go",
-              syntax: "go"
+            js_fetch: {
+              title: "Javascript",
+              syntax: "javascript"
+            },
+            node_native: {
+              title: "NodeJs Native",
+              syntax: "javascript"
+            },
+            php: {
+              title: "PHP",
+              syntax: "php"
+            },
+            python: {
+              title: "Python",
+              syntax: "python"
+            },
+            ruby: {
+              title: "Ruby",
+              syntax: "ruby"
             }
           },
           defaultExpanded: true,
-          languages: ['curl_bash', 'curl_powershell', 'curl_cmd', 'node_native', 'js_fetch', 'python', 'php', 'ruby', 'java', 'go']
+          languages: ['curl_bash', 'curl_powershell', 'curl_cmd', 'go', 'java', 'js_fetch', 'node_native', 'php', 'python', 'ruby']
         },
         presets: [
           SwaggerUIBundle.presets.apis,
@@ -102,11 +103,19 @@ $OpenAPISchema = $isStaging ? "development" : "master";
           const url = new URL(request.get("url"));
           let isMultipartFormDataRequest = false;
           let isJsonBody = false;
+          let isJsonResponse = false;
+          let isXMLResponse = false;
+          let isYamlResponse = false;
+          let isICSResponse = false;
           const headers = request.get("headers");
           if (headers && headers.size) {
             headers.map((val, key) => {
               isMultipartFormDataRequest = isMultipartFormDataRequest || /^content-type$/i.test(key) && /^multipart\/form-data$/i.test(val);
               isJsonBody = isJsonBody || /^content-type$/i.test(key) && /^application\/json$/i.test(val);
+              isJsonResponse = isJsonResponse || /^accept$/i.test(key) && /^application\/json$/i.test(val);
+              isXMLResponse = isXMLResponse || /^accept$/i.test(key) && /^application\/xml$/i.test(val);
+              isYamlResponse = isYamlResponse || /^accept$/i.test(key) && /^application\/yaml$/i.test(val);
+              isICSResponse = isICSResponse || /^accept$/i.test(key) && /^text\/calendar$/i.test(val);
             });
           }
           const packageStr = url.protocol === "https:" ? "https" : "http";
@@ -139,7 +148,10 @@ $OpenAPISchema = $isStaging ? "development" : "master";
               .replace(/\\n/g, "\n")
               .replace(/`/g, "\\`");
           const stringBody = `${isJsonBody ? 'JSON.stringify(' : `"`}` + reqBody + `${isJsonBody ? ')' : `"`}`;
-          return `const http = require("${packageStr}");
+          return `const HTTP = require("${packageStr}");
+${isYamlResponse ? `// npm install yaml
+const YAML = require('yaml');` : isXMLResponse ? `//npm install xml2js
+const XML2JS = require('xml2js');` : ''}
 const options = {
   "method": "${request.get("method")}",
   "hostname": "${url.host}",
@@ -149,15 +161,23 @@ const options = {
     ${headers.map((val, key) => `"${key}": "${val}"`).valueSeq().join(",\n    ")}
   }` : ""}
 };
-const req = http.request(options, function (res) {
+const req = HTTP.request(options, function (res) {
   const chunks = [];
   res.on("data", function (chunk) {
     chunks.push(chunk);
   });
   res.on("end", function () {
     const body = Buffer.concat(chunks);
-    const jsonBody = JSON.parse(body.toString());
-    console.log(jsonBody);
+    ${isJsonResponse ? `const jsonResponse = JSON.parse(body.toString());
+    console.log(jsonBody);`
+      : isYamlResponse ? 'const yamlResponse = YAML.parse(body.toString());'
+      : isXMLResponse ? `XML2JS.Parser.parseStringPromise(body.toString()).then(result => {
+      console.dir(result);
+    })
+    .catch(error => {
+      console.error(error);
+    });`
+      : 'console.log(body.toString());'}
   });
 });
 ${reqBody ? `\nreq.write(${stringBody});` : ""}
@@ -172,11 +192,19 @@ req.end();`;
           const url = new URL(request.get("url"));
           let isMultipartFormDataRequest = false;
           let isJsonBody = false;
+          let isJsonResponse = false;
+          let isXMLResponse = false;
+          let isYamlResponse = false;
+          let isICSResponse = false;
           const headers = request.get("headers");
           if (headers && headers.size) {
             headers.map((val, key) => {
               isMultipartFormDataRequest = isMultipartFormDataRequest || /^content-type$/i.test(key) && /^multipart\/form-data$/i.test(val);
               isJsonBody = isJsonBody || /^content-type$/i.test(key) && /^application\/json$/i.test(val);
+              isJsonResponse = isJsonResponse || /^accept$/i.test(key) && /^application\/json$/i.test(val);
+              isXMLResponse = isXMLResponse || /^accept$/i.test(key) && /^application\/xml$/i.test(val);
+              isYamlResponse = isYamlResponse || /^accept$/i.test(key) && /^application\/yaml$/i.test(val);
+              isICSResponse = isICSResponse || /^accept$/i.test(key) && /^text\/calendar$/i.test(val);
             });
           }
           let reqBody = request.get("body");
@@ -212,7 +240,12 @@ req.end();`;
           }
           const stringBody = `${isJsonBody ? 'JSON.stringify(' : `"`}` + reqBody +
             `${isJsonBody ? ')' : `"`}`;
-          return `const options = {
+          return `// N.B. browser fetch to the litcal domain will not work
+//      unless the domain from which the fetch call is made
+//      has been registered with the litcal project${isYamlResponse ? `
+// To enable yaml parsing you will have to load a script capable of doing this,
+//   such as https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js` : ''}
+const options = {
   "method": "${request.get("method")}"${headers && headers.size ? `,
   "headers": {
     ${headers.map((val, key) => `"${key}": "${val}"`).valueSeq().join(",\n    ")}
@@ -220,8 +253,18 @@ req.end();`;
   "body": ${stringBody}` : ""}
 };
 fetch("${url}", options)
-  .then(response => response.json())
-  .then(data => console.log(data))
+  .then(response => ${isJsonResponse ? `response.json())
+  .then(data => console.log(data))` : isYamlResponse ? `response.text())
+  .then(text => {
+    const yaml = jsyaml.load(text);
+    console.log(yaml);
+  })` : isXMLResponse ? `response.text())
+  .then(text => {
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(text,"text/xml");
+    console.log(xmlDoc);
+  })` : `response.text())
+  .then(data => console.log(data))` }
   .catch(error => console.error('Error:', error));`;
         }
       }
@@ -233,11 +276,19 @@ fetch("${url}", options)
           const url = new URL(request.get("url"));
           let isMultipartFormDataRequest = false;
           let isJsonBody = false;
+          let isJsonResponse = false;
+          let isXMLResponse = false;
+          let isYamlResponse = false;
+          let isICSResponse = false;
           const headers = request.get("headers");
           if (headers && headers.size) {
             headers.map((val, key) => {
               isMultipartFormDataRequest = isMultipartFormDataRequest || /^content-type$/i.test(key) && /^multipart\/form-data$/i.test(val);
               isJsonBody = isJsonBody || /^content-type$/i.test(key) && /^application\/json$/i.test(val);
+              isJsonResponse = isJsonResponse || /^accept$/i.test(key) && /^application\/json$/i.test(val);
+              isXMLResponse = isXMLResponse || /^accept$/i.test(key) && /^application\/xml$/i.test(val);
+              isYamlResponse = isYamlResponse || /^accept$/i.test(key) && /^application\/yaml$/i.test(val);
+              isICSResponse = isICSResponse || /^accept$/i.test(key) && /^text\/calendar$/i.test(val);
             });
           }
           let headersStr = '';
@@ -266,6 +317,7 @@ fetch("${url}", options)
           } else if (!reqBody && request.get("method") === "POST") {
             reqBody = "";
           }
+          reqBody = isJsonBody ? reqBody.replaceAll(': true', ': True').replaceAll(': false', ': False') : reqBody;
           return `import requests
 
 url = "${url}"
@@ -286,11 +338,19 @@ data = response.json()`;
           const url = new URL(request.get("url"));
           let isMultipartFormDataRequest = false;
           let isJsonBody = false;
+          let isJsonResponse = false;
+          let isXMLResponse = false;
+          let isYamlResponse = false;
+          let isICSResponse = false;
           const headers = request.get("headers");
           if (headers && headers.size) {
             headers.map((val, key) => {
               isMultipartFormDataRequest = isMultipartFormDataRequest || /^content-type$/i.test(key) && /^multipart\/form-data$/i.test(val);
               isJsonBody = isJsonBody || /^content-type$/i.test(key) && /^application\/json$/i.test(val);
+              isJsonResponse = isJsonResponse || /^accept$/i.test(key) && /^application\/json$/i.test(val);
+              isXMLResponse = isXMLResponse || /^accept$/i.test(key) && /^application\/xml$/i.test(val);
+              isYamlResponse = isYamlResponse || /^accept$/i.test(key) && /^application\/yaml$/i.test(val);
+              isICSResponse = isICSResponse || /^accept$/i.test(key) && /^text\/calendar$/i.test(val);
             });
           }
           let headersStr = '';
@@ -317,7 +377,10 @@ data = response.json()`;
           }
 
           return '<' + `?php
-
+${isYamlResponse ? `// php-yaml extension required` : isICSResponse ? `// composer require sabre/vobject
+require 'vendor/autoload.php';
+use Sabre\\VObject;
+` : ''} 
 $curl = curl_init();
 ${headersStr ? `${headersStr}\n` : ''}${isJsonBody ? `$payload = <<<JSON\n${reqBody}\nJSON;\n` : ''}
 curl_setopt_array($curl, array(
@@ -340,8 +403,14 @@ curl_close($curl);
 if ($err) {
   echo "cURL Error #:" . $err;
 } else {
-  $jsonData = json_decode($response);
   echo $response;
+  ${isJsonResponse ? `$jsonData = json_decode($response);` : isYamlResponse ? `$yamlData = yaml_parse($response);` : isXMLResponse ? `$xml = new DOMDocument();
+  $xml->loadXML($response);
+` : isICSResponse ? `try {
+    $vcalendar = VObject\\Reader::read($data);
+  } catch (VObject\\ParseException $ex) {
+    echo $ex->message;
+  }` : '' }
 }`;
         }
       }
@@ -352,11 +421,19 @@ if ($err) {
           const url = new URL(request.get("url"));
           let isMultipartFormDataRequest = false;
           let isJsonBody = false;
+          let isJsonResponse = false;
+          let isXMLResponse = false;
+          let isYamlResponse = false;
+          let isICSResponse = false;
           const headers = request.get("headers");
           if (headers && headers.size) {
             headers.map((val, key) => {
               isMultipartFormDataRequest = isMultipartFormDataRequest || /^content-type$/i.test(key) && /^multipart\/form-data$/i.test(val);
               isJsonBody = isJsonBody || /^content-type$/i.test(key) && /^application\/json$/i.test(val);
+              isJsonResponse = isJsonResponse || /^accept$/i.test(key) && /^application\/json$/i.test(val);
+              isXMLResponse = isXMLResponse || /^accept$/i.test(key) && /^application\/xml$/i.test(val);
+              isYamlResponse = isYamlResponse || /^accept$/i.test(key) && /^application\/yaml$/i.test(val);
+              isICSResponse = isICSResponse || /^accept$/i.test(key) && /^text\/calendar$/i.test(val);
             });
           }
           let headersStr = '';
@@ -376,28 +453,38 @@ if ($err) {
           if (headers && headers.size) {
             headersStr = "headers = {\n";
             headers.forEach((val, key) => {
-              headersStr += `  "${key}" => "${val}",\n`;
+              headersStr += `  '${key}' => '${val}',\n`;
             });
             headersStr = headersStr.trim().slice(0, -1); // Remove the last comma and newline
             headersStr += "\n}";
           }
+          const reqMethod = request.get("method")[0].toUpperCase() + request.get("method").slice(1).toLowerCase();
+          return `# frozen_string_literal: true
 
-          return `require 'net/http'
-require 'uri'
-require 'json'
+require 'net/http'
+require 'uri'${(isJsonBody || isJsonResponse) ? "\nrequire 'json'" : ''}${isYamlResponse
+  ? "\nrequire 'yaml'"
+  : isXMLResponse ? "\nrequire 'nokogiri'" : ''}
 
-uri = URI.parse("${url}")
-request = Net::HTTP::${request.get("method")}.new(uri)${headersStr ? `
+uri = URI.parse('${url}')
+request = Net::HTTP::${reqMethod}.new(uri)${headersStr ? `
 ${headersStr}
 request.initialize_http_header(headers)` : ''}${reqBody ? `
-request.body = ${isJsonBody ? 'JSON.generate(' : '"'}${reqBody}${isJsonBody ? ')' : '"'}` : ''}
+request.body = ${isJsonBody ? 'JSON.generate(' : "'"}${reqBody}${isJsonBody ? ')' : "'"}` : ''}
 
 response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == 'https') do |http|
   http.request(request)
 end
 
-response_json = JSON.parse(response.body)
-puts response.body`;
+${isJsonResponse
+  ? `response_json = JSON.parse(response.body)
+puts response_json`
+  : isYamlResponse ? `response_yaml = YAML.load(response.body)
+puts response_yaml.to_ruby.to_yaml`
+  : isXMLResponse ? `response_xml = Nokogiri::XML(response.body)
+puts response_xml`
+  : `
+puts response.body` }`;
         }
       }
     },
@@ -407,11 +494,19 @@ puts response.body`;
           const url = new URL(request.get("url"));
           let isMultipartFormDataRequest = false;
           let isJsonBody = false;
+          let isJsonResponse = false;
+          let isXMLResponse = false;
+          let isYamlResponse = false;
+          let isICSResponse = false;
           const headers = request.get("headers");
           if (headers && headers.size) {
             headers.map((val, key) => {
               isMultipartFormDataRequest = isMultipartFormDataRequest || /^content-type$/i.test(key) && /^multipart\/form-data$/i.test(val);
               isJsonBody = isJsonBody || /^content-type$/i.test(key) && /^application\/json$/i.test(val);
+              isJsonResponse = isJsonResponse || /^accept$/i.test(key) && /^application\/json$/i.test(val);
+              isXMLResponse = isXMLResponse || /^accept$/i.test(key) && /^application\/xml$/i.test(val);
+              isYamlResponse = isYamlResponse || /^accept$/i.test(key) && /^application\/yaml$/i.test(val);
+              isICSResponse = isICSResponse || /^accept$/i.test(key) && /^text\/calendar$/i.test(val);
             });
           }
           let headersStr = '';
@@ -434,25 +529,32 @@ ${Object.entries(reqBodyJson).map(([key,value]) => `          "\\\"${key}\\\": \
             : `"${reqBody}"`;
           if (headers && headers.size) {
             headersStr = `${headers.map((val, key) => `conn.setRequestProperty("${key}", "${val}");`).valueSeq().join("\n      ")}`;
-            /*headersStr = 'conn.setRequestProperty("';
-            headers.forEach((val, key) => {
-              headersStr += `${key}", "${val}");\n      conn.setRequestProperty("`;
-            });
-            headersStr = headersStr.slice(0, -24); // Remove the last `conn.setRequestProperty("`*/
           }
 
           return `import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URL;${isJsonResponse ? `
+// Add a package with JSON reading capabilities to classpath,
+//   for example w/Maven pkg:maven/jakarta.json/jakarta.json-api@2.1.3
+import jakarta.json.Json;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonNumber;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonString;
+import jakarta.json.JsonValue;` : isYamlResponse ? `
+// Add a package with YAML reading capabilities to classpath,
+//   for example w/Maven pkg:maven/org.yaml/snakeyaml@2.2
+import java.util.*;
+import org.yaml.snakeyaml.Yaml;` : ''}
 
 public class Main {
   public static void main(String[] args) {
     try {
       URL url = new URL("${url}");
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-      conn.setRequestMethod("${request.get("method").toUpperCase()}");
+      conn.setRequestMethod("${request.get("method")}");
 ${headersStr ? `
       ${headersStr}
 ` : ''}${reqBody ? `
@@ -468,7 +570,15 @@ ${headersStr ? `
       while ((responseLine = br.readLine()) != null) {
         response.append(responseLine.trim());
       }
-      System.out.println(response.toString());
+      ${isJsonResponse ? `
+      final JsonReader jsonReader = Json.createReader(new StringReader(response.toString()));
+      final JsonObject json = jsonReader.readObject();
+      final JsonObject litCal = json.getJsonObject("LitCal");
+      ` : isYamlResponse ? `
+      final Yaml yaml = new Yaml();
+      Map<String, Map<String, Object>> doc = yaml.load(new StringReader(response.toString()));
+      System.out.println(doc);` : `
+      System.out.println(response.toString());`}
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -483,11 +593,19 @@ ${headersStr ? `
           const url = new URL(request.get("url"));
           let isMultipartFormDataRequest = false;
           let isJsonBody = false;
+          let isJsonResponse = false;
+          let isXMLResponse = false;
+          let isYamlResponse = false;
+          let isICSResponse = false;
           const headers = request.get("headers");
           if (headers && headers.size) {
             headers.map((val, key) => {
               isMultipartFormDataRequest = isMultipartFormDataRequest || /^content-type$/i.test(key) && /^multipart\/form-data$/i.test(val);
               isJsonBody = isJsonBody || /^content-type$/i.test(key) && /^application\/json$/i.test(val);
+              isJsonResponse = isJsonResponse || /^accept$/i.test(key) && /^application\/json$/i.test(val);
+              isXMLResponse = isXMLResponse || /^accept$/i.test(key) && /^application\/xml$/i.test(val);
+              isYamlResponse = isYamlResponse || /^accept$/i.test(key) && /^application\/yaml$/i.test(val);
+              isICSResponse = isICSResponse || /^accept$/i.test(key) && /^text\/calendar$/i.test(val);
             });
           }
           let headersStr = '';
@@ -505,38 +623,34 @@ ${headersStr ? `
           }
 
           if (headers && headers.size) {
-            headersStr = 'req.Header.Set("';
-            headers.forEach((val, key) => {
-              headersStr += `${key}", "${val}");\nreq.Header.Set("`;
-            });
-            headersStr = headersStr.slice(0, -16); // Remove the last `req.Header.Set("`
+            headersStr = `${headers.map((val, key) => `req.Header.Set("${key}", "${val}");`).valueSeq().join("\n  ")}`;
           }
 
           return `package main
 
-import (
+import (${reqBody ? (isJsonBody ? `
+  "bytes"` : `
+  "strings"`) : ''}
   "fmt"
-  "io/ioutil"
+  "io"
   "net/http"
-  "strings"
 )
 
 func main() {
   url := "${url}"
-  method := "${request.get("method").toUpperCase()}"
+  method := "${request.get("method")}"${reqBody ? `
 
-  payload := strings.NewReader(${isJsonBody ? reqBody : `"${reqBody}"`})
+  payload := ${isJsonBody ? `[]byte(\`${reqBody}\`)` : `strings.NewReader("${reqBody}")`}` : ''}
 
   client := &http.Client {}
-  req, err := http.NewRequest(method, url, payload)
+  req, err := http.NewRequest(method, url, ${reqBody ? `${isJsonBody ? 'bytes.NewBuffer(payload)' : 'payload'}` : 'nil'})
 
   if err != nil {
     fmt.Println(err)
     return
-  }
-${headersStr ? `
-  ${headersStr}
-` : ''}
+  }${headersStr ? `
+
+  ${headersStr}` : ''}
 
   res, err := client.Do(req)
   if err != nil {
@@ -545,7 +659,7 @@ ${headersStr ? `
   }
   defer res.Body.Close()
 
-  body, err := ioutil.ReadAll(res.Body)
+  body, err := io.ReadAll(res.Body)
   if err != nil {
     fmt.Println(err)
     return
