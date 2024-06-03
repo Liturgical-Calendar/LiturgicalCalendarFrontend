@@ -1,0 +1,31 @@
+{
+  "name": "liturgical-calendar-frontend",
+  "version": "1.0.0",
+  "description": "Litcal.org",
+  "main": "",
+  "dependencies": {
+    "bootstrap": "^5.2.3"
+  },
+  "devDependencies": {
+    "autoprefixer": "10.4.14",
+    "postcss": "8.4.21",
+    "sass": "1.60.0",
+    "shelljs": "^0.8.5",
+    "upath": "2.0.1"
+  },
+  "scripts": {
+    "build": "npm run clean && npm run build:scss",
+    "build:scss": "node scripts/build-scss.js",
+    "clean": "node scripts/clean.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Liturgical-Calendar/LiturgicalCalendarFrontend.git"
+  },
+  "author": "John D'Orazio",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/Liturgical-Calendar/LiturgicalCalendarFrontend/issues"
+  },
+  "homepage": "https://github.com/Liturgical-Calendar/LiturgicalCalendarFrontend#readme"
+}
