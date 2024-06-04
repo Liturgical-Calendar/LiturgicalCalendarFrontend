@@ -27,6 +27,10 @@ $OpenAPISchema = $isStaging ? "development" : "master";
         url: "https://raw.githubusercontent.com/JohnRDOrazio/LiturgicalCalendar/<?php echo $OpenAPISchema; ?>/schemas/openapi.json",
         "dom_id": "#swagger-ui",
         deepLinking: true,
+        syntaxHighlight: {
+          activated: true,
+          theme: "obsidian"
+        },
         requestSnippetsEnabled: true,
         requestSnippets: {
           generators: {
@@ -70,10 +74,14 @@ $OpenAPISchema = $isStaging ? "development" : "master";
             ruby: {
               title: "Ruby",
               syntax: "ruby"
+            },
+            csharp: {
+              title: "C#",
+              syntax: "csharp"
             }
           },
           defaultExpanded: true,
-          languages: ['curl_bash', 'curl_powershell', 'curl_cmd', 'go', 'java', 'js_fetch', 'node_native', 'php', 'python', 'ruby']
+          languages: ['curl_bash', 'curl_powershell', 'curl_cmd', 'go', 'java', 'js_fetch', 'node_native', 'php', 'python', 'ruby', 'csharp']
         },
         presets: [
           SwaggerUIBundle.presets.apis,
@@ -87,7 +95,8 @@ $OpenAPISchema = $isStaging ? "development" : "master";
           SnippetGeneratorPHPPlugin,
           SnippetGeneratorRubyPlugin,
           SnippetGeneratorJavaPlugin,
-          SnippetGeneratorGoPlugin
+          SnippetGeneratorGoPlugin,
+          SnippetGeneratorCsPlugin
         ],
         layout: "StandaloneLayout",
       })
@@ -380,7 +389,7 @@ data = response.json()`;
 ${isYamlResponse ? `// php-yaml extension required` : isICSResponse ? `// composer require sabre/vobject
 require 'vendor/autoload.php';
 use Sabre\\VObject;
-` : ''} 
+` : ''}
 $curl = curl_init();
 ${headersStr ? `${headersStr}\n` : ''}${isJsonBody ? `$payload = <<<JSON\n${reqBody}\nJSON;\n` : ''}
 curl_setopt_array($curl, array(
@@ -533,20 +542,19 @@ ${Object.entries(reqBodyJson).map(([key,value]) => `          "\\\"${key}\\\": \
 
           return `import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.OutputStream;${isJsonResponse || isYamlResponse ? `
+import java.io.StringReader;` : ''}
 import java.net.HttpURLConnection;
 import java.net.URL;${isJsonResponse ? `
 // Add a package with JSON reading capabilities to classpath,
 //   for example w/Maven pkg:maven/jakarta.json/jakarta.json-api@2.1.3
+//   together with pkg:maven/org.eclipse.parsson/parsson@1.1.6 (for parsing)
 import jakarta.json.Json;
-import jakarta.json.JsonArray;
-import jakarta.json.JsonNumber;
 import jakarta.json.JsonObject;
-import jakarta.json.JsonString;
-import jakarta.json.JsonValue;` : isYamlResponse ? `
+import jakarta.json.JsonReader;` : isYamlResponse ? `
 // Add a package with YAML reading capabilities to classpath,
 //   for example w/Maven pkg:maven/org.yaml/snakeyaml@2.2
-import java.util.*;
+import java.util.Map;
 import org.yaml.snakeyaml.Yaml;` : ''}
 
 public class Main {
@@ -574,6 +582,8 @@ ${headersStr ? `
       final JsonReader jsonReader = Json.createReader(new StringReader(response.toString()));
       final JsonObject json = jsonReader.readObject();
       final JsonObject litCal = json.getJsonObject("LitCal");
+      final int litCalEventsCount = litCal.size();
+      System.out.println(String.format("Received %d liturgical events from the API call", litCalEventsCount));
       ` : isYamlResponse ? `
       final Yaml yaml = new Yaml();
       Map<String, Map<String, Object>> doc = yaml.load(new StringReader(response.toString()));
@@ -633,7 +643,10 @@ import (${reqBody ? (isJsonBody ? `
   "strings"`) : ''}
   "fmt"
   "io"
-  "net/http"
+  "net/http"${isJsonResponse ? `
+  "encoding/json"` : isYamlResponse ? `
+  "gopkg.in/yaml.v3"` : isXMLResponse ? `
+  "encoding/xml"` : ''}
 )
 
 func main() {
@@ -663,12 +676,104 @@ func main() {
   if err != nil {
     fmt.Println(err)
     return
-  }
-  fmt.Println(string(body))
+  }${isJsonResponse ? `
+  obj := make(map[string]interface{})
+  json.Unmarshal(body, &obj)
+  fmt.Println(obj)` : isYamlResponse ? `
+  obj := make(map[string]interface{})
+  yaml.Unmarshal(body, &obj)
+  fmt.Println(obj)` : isXMLResponse ? `
+  obj := make(map[string]interface{})
+  xml.Unmarshal(body, &obj)
+  fmt.Println(obj)` : `
+  fmt.Println(string(body))`}
 }`;
         }
       }
+    },
+    SnippetGeneratorCsPlugin = {
+      fn: {
+        requestSnippetGenerator_csharp: (request) => {
+          const url = new URL(request.get("url"));
+          let isMultipartFormDataRequest = false;
+          let isJsonBody = false;
+          let isJsonResponse = false;
+          let isXMLResponse = false;
+          let isYamlResponse = false;
+          let isICSResponse = false;
+          const headers = request.get("headers");
+
+          if (headers && headers.size) {
+            headers.map((val, key) => {
+              isMultipartFormDataRequest = isMultipartFormDataRequest || /^content-type$/i.test(key) && /^multipart\/form-data$/i.test(val);
+              isJsonBody = isJsonBody || /^content-type$/i.test(key) && /^application\/json$/i.test(val);
+              isJsonResponse = isJsonResponse || /^accept$/i.test(key) && /^application\/json$/i.test(val);
+              isXMLResponse = isXMLResponse || /^accept$/i.test(key) && /^application\/xml$/i.test(val);
+              isYamlResponse = isYamlResponse || /^accept$/i.test(key) && /^application\/yaml$/i.test(val);
+              isICSResponse = isICSResponse || /^accept$/i.test(key) && /^text\/calendar$/i.test(val);
+            });
+          }
+
+          let headersStr = '';
+          if (headers && headers.size) {
+            headersStr = headers.map((val, key) => `httpWebRequest.Headers.Add("${key}", "${val}");`).valueSeq().join("\n");
+          }
+
+          let reqBody = request.get("body");
+          let bodyStr = '';
+          if (reqBody) {
+            if (isMultipartFormDataRequest && ["POST", "PUT", "PATCH"].includes(request.get("method"))) {
+              return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
+            } else {
+              if (typeof reqBody !== "string") {
+                reqBody = JSON.stringify(reqBody);
+              }
+              bodyStr = isJsonBody ? `@"${reqBody.replaceAll('"', '""') }"` : `"${reqBody}"`;
+            }
+          }
+
+          return `using System.Net.Http.Headers;${isJsonResponse ? `
+using System.Text.Json;` : isYamlResponse ? `
+using YamlDotNet.Serialization;` : isXMLResponse ? `
+using System.Xml;` : ""}
+
+class Program
+{
+    static readonly HttpClient client = new HttpClient();
+    static async Task Main()
+    {
+        try
+        {${request.get("method") === 'GET' ? `
+            Stream responseBody = await client.GetStreamAsync("${url}");` : request.get("method") === 'POST' ? `
+            var httpContent = new StringContent(${bodyStr});${isJsonBody ? `
+            httpContent.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");` : `
+            httpContent.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded");`}
+            using HttpResponseMessage response = await client.PostAsync("${url}",httpContent);
+            response.EnsureSuccessStatusCode();
+            Stream responseBody = await response.Content.ReadAsStreamAsync();` : ''}
+            using var streamReader = new StreamReader(responseBody);
+            var responseText = streamReader.ReadToEnd();${isJsonResponse ? `
+            var jsonDocument = JsonDocument.Parse(responseText);
+            Console.WriteLine(jsonDocument.RootElement);` : isYamlResponse ? `
+            var deserializer = new Deserializer();
+            var yamlObject = deserializer.Deserialize(new StringReader(responseText));
+            Console.WriteLine(yamlObject);` : isXMLResponse ? `
+            var xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(responseText);
+            Console.WriteLine(xmlDoc.InnerXml);` : `
+            Console.WriteLine(responseText);`}
+        }
+        catch (HttpRequestException e)
+        {
+            Console.WriteLine("Exception Caught!");
+            Console.WriteLine("Message :{0} ", e.Message);
+        }
     }
+}`;
+    }
+  }
+};
+
   </script>
 </body>
 
