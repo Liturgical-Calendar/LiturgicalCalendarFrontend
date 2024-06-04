@@ -27,10 +27,6 @@ $OpenAPISchema = $isStaging ? "development" : "master";
         url: "https://raw.githubusercontent.com/JohnRDOrazio/LiturgicalCalendar/<?php echo $OpenAPISchema; ?>/schemas/openapi.json",
         "dom_id": "#swagger-ui",
         deepLinking: true,
-        syntaxHighlight: {
-          activated: true,
-          theme: "obsidian"
-        },
         requestSnippetsEnabled: true,
         requestSnippets: {
           generators: {
@@ -78,10 +74,14 @@ $OpenAPISchema = $isStaging ? "development" : "master";
             csharp: {
               title: "C#",
               syntax: "csharp"
+            },
+            vb_net: {
+              title: "VB.NET",
+              syntax: "vbnet"
             }
           },
           defaultExpanded: true,
-          languages: ['curl_bash', 'curl_powershell', 'curl_cmd', 'go', 'java', 'js_fetch', 'node_native', 'php', 'python', 'ruby', 'csharp']
+          languages: ['curl_bash', 'curl_powershell', 'curl_cmd', 'go', 'java', 'js_fetch', 'node_native', 'php', 'python', 'ruby', 'csharp', 'vb_net']
         },
         presets: [
           SwaggerUIBundle.presets.apis,
@@ -89,14 +89,15 @@ $OpenAPISchema = $isStaging ? "development" : "master";
         ],
         plugins: [
           SwaggerUIBundle.plugins.DownloadUrl,
-          SnippetGeneratorNodeJsPlugin,
-          SnippetGeneratorJsFetchPlugin,
-          SnippetGeneratorPythonPlugin,
-          SnippetGeneratorPHPPlugin,
-          SnippetGeneratorRubyPlugin,
-          SnippetGeneratorJavaPlugin,
           SnippetGeneratorGoPlugin,
-          SnippetGeneratorCsPlugin
+          SnippetGeneratorJavaPlugin,
+          SnippetGeneratorJsFetchPlugin,
+          SnippetGeneratorNodeJsPlugin,
+          SnippetGeneratorPHPPlugin,
+          SnippetGeneratorPythonPlugin,
+          SnippetGeneratorRubyPlugin,
+          SnippetGeneratorCsPlugin,
+          SnippetGeneratorVbNetPlugin
         ],
         layout: "StandaloneLayout",
       })
@@ -714,11 +715,6 @@ func main() {
             });
           }
 
-          let headersStr = '';
-          if (headers && headers.size) {
-            headersStr = headers.map((val, key) => `httpWebRequest.Headers.Add("${key}", "${val}");`).valueSeq().join("\n");
-          }
-
           let reqBody = request.get("body");
           let bodyStr = '';
           if (reqBody) {
@@ -770,9 +766,83 @@ class Program
         }
     }
 }`;
-    }
-  }
-};
+        }
+      }
+    },
+    SnippetGeneratorVbNetPlugin = {
+      fn: {
+        requestSnippetGenerator_vb_net: (request) => {
+          const url = new URL(request.get("url"));
+          let isMultipartFormDataRequest = false;
+          let isJsonBody = false;
+          let isJsonResponse = false;
+          let isXMLResponse = false;
+          let isYamlResponse = false;
+          let isICSResponse = false;
+          const headers = request.get("headers");
+
+          if (headers && headers.size) {
+            headers.map((val, key) => {
+              isMultipartFormDataRequest = isMultipartFormDataRequest || /^content-type$/i.test(key) && /^multipart\/form-data$/i.test(val);
+              isJsonBody = isJsonBody || /^content-type$/i.test(key) && /^application\/json$/i.test(val);
+              isJsonResponse = isJsonResponse || /^accept$/i.test(key) && /^application\/json$/i.test(val);
+              isXMLResponse = isXMLResponse || /^accept$/i.test(key) && /^application\/xml$/i.test(val);
+              isYamlResponse = isYamlResponse || /^accept$/i.test(key) && /^application\/yaml$/i.test(val);
+              isICSResponse = isICSResponse || /^accept$/i.test(key) && /^text\/calendar$/i.test(val);
+            });
+          }
+
+          let reqBody = request.get("body");
+          let bodyStr = '';
+          if (reqBody) {
+            if (isMultipartFormDataRequest && ["POST", "PUT", "PATCH"].includes(request.get("method"))) {
+              return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
+            } else {
+              if (typeof reqBody !== "string") {
+                reqBody = JSON.stringify(reqBody);
+              }
+              bodyStr = isJsonBody ? `@"${reqBody.replaceAll('"', '""') }"` : `"${reqBody}"`;
+              //bodyStr = `Dim content = New StringContent("${reqBody}", Encoding.UTF8, "application/json")`;
+            }
+          }
+
+          return `Imports System.Net.Http.Headers${isJsonResponse ? `
+Imports System.Text.Json` : isYamlResponse ? `
+Imports YamlDotNet.Serialization` : isXMLResponse ? `
+Imports System.Xml` : ""}
+
+Module Program
+    Private ReadOnly client As New HttpClient()
+
+    Async Function Main(args As String()) As Task
+        Try${request.get("method") === 'GET' ? `
+          Dim responseBody As Stream = Await client.GetStreamAsync("${url}");` : request.get("method") === 'POST' ? `
+          Dim httpContent = New StringContent(${bodyStr});${isJsonBody ? `
+          httpContent.Headers.ContentType = New MediaTypeWithQualityHeaderValue("application/json");` : `
+          httpContent.Headers.ContentType = New MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded");`}
+          Dim response As HttpResponseMessage = Await client.PostAsync("${url}",httpContent);
+          response.EnsureSuccessStatusCode()
+          Dim responseBody As Stream = Await response.Content.ReadAsStreamAsync()` : ''}
+          Dim streamReader = New StreamReader(responseBody)
+          Dim responseText = streamReader.ReadToEnd()${isJsonResponse ? `
+          Dim jsonDocument = JsonDocument.Parse(responseText)
+          Console.WriteLine(jsonDocument.RootElement)` : isYamlResponse ? `
+          Dim deserializer = New Deserializer()
+          Dim yamlObject = deserializer.Deserialize(New StringReader(responseText))
+          Console.WriteLone(yamlObject)` : isXMLResponse ? `
+          Dim xmlDoc = New XmlDocument()
+          xmlDoc.LoadXml(responseText)
+          Console.WriteLine(xmlDoc.InnerXml)` : `
+          Console.WriteLine(responseText)`}
+        Catch ex As HttpRequestException
+            Console.WriteLine("Exception Caught!")
+            Console.WriteLine("Message :{0} ", e.Message)
+        End Try
+    End Function
+End Module`;
+        }
+      }
+    };
 
   </script>
 </body>
