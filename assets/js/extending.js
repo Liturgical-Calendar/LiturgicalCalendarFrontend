@@ -564,23 +564,23 @@ $(document).on('click', '#saveDiocesanCalendar_btn', () => {
     $nation = $('#diocesanCalendarNationalDependency').val();
     $diocese = $('#diocesanCalendarDioceseName').val();
     //console.log('save button was clicked for NATION = ' + $nation + ', DIOCESE = ' + $diocese);
-    let saveObj = { LitCal: $CALENDAR, Diocese: $diocese, Nation: $nation, category: 'diocesanCalendar' };
+    let saveObj = { CalData: $CALENDAR, Diocese: $diocese, Nation: $nation, category: 'diocesanCalendar' };
     if($('#diocesanCalendarGroup').val() != ''){
         saveObj.group = $('#diocesanCalendarGroup').val();
     }
     if( diocesanOvveridesDefined() ) {
         //console.log( 'This diocesan calendar has defined some options that will override the national calendar.' );
-        saveObj.Overrides = {};
+        saveObj.CalData.Overrides = {};
         if( $('#diocesanCalendarOverrideEpiphany').val() !== "" ) {
-            saveObj.Overrides.Epiphany = $('#diocesanCalendarOverrideEpiphany').val();
+            saveObj.CalData.Overrides.Epiphany = $('#diocesanCalendarOverrideEpiphany').val();
             //console.log( 'Epiphany in this diocese will override Epiphany in the national calendar.' );
         }
         if( $('#diocesanCalendarOverrideAscension').val() !== "" ) {
-            saveObj.Overrides.Ascension = $('#diocesanCalendarOverrideAscension').val();
+            saveObj.CalData.Overrides.Ascension = $('#diocesanCalendarOverrideAscension').val();
             //console.log( 'Ascension in this diocese will override Ascension in the national calendar.' );
         }
         if( $('#diocesanCalendarOverrideCorpusChristi').val() !== "" ) {
-            saveObj.Overrides.CorpusChristi = $('#diocesanCalendarOverrideCorpusChristi').val();
+            saveObj.CalData.Overrides.CorpusChristi = $('#diocesanCalendarOverrideCorpusChristi').val();
             //console.log( 'Corpus Christi in this diocese will override Corpus Christi in the national calendar.' );
         }
     }
