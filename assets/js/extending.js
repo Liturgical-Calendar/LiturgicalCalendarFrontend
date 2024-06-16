@@ -561,11 +561,10 @@ $(document).on('change', '.litEvent', ev => {
 });
 
 $(document).on('click', '#saveDiocesanCalendar_btn', () => {
-    $data = JSON.stringify($CALENDAR);
     $nation = $('#diocesanCalendarNationalDependency').val();
     $diocese = $('#diocesanCalendarDioceseName').val();
     //console.log('save button was clicked for NATION = ' + $nation + ', DIOCESE = ' + $diocese);
-    let saveObj = { LitCal: $data, Diocese: $diocese, Nation: $nation, category: 'diocesanCalendar' };
+    let saveObj = { LitCal: $CALENDAR, Diocese: $diocese, Nation: $nation, category: 'diocesanCalendar' };
     if($('#diocesanCalendarGroup').val() != ''){
         saveObj.group = $('#diocesanCalendarGroup').val();
     }
