@@ -1,0 +1,19 @@
+{
+  "name": "liturgical-calendar-frontend",
+  "version": "1.0.0",
+  "description": "**Code quality** | MAIN | DEVELOPMENT | |:----:|:-----------:| | [![CodeFactor](https://www.codefactor.io/repository/github/liturgical-calendar/liturgicalcalendarfrontend/badge/main)](https://www.codefactor.io/repository/github/liturgical-calendar/liturgicalcalendarfrontend/overview/main) | [![CodeFactor](https://www.codefactor.io/repository/github/liturgical-calendar/liturgicalcalendarfrontend/badge/development)](https://www.codefactor.io/repository/github/liturgical-calendar/liturgicalcalendarfrontend/overview/development) |",
+  "main": "",
+  "scripts": {
+    "start": "nf start",
+    "tailwind": "npx tailwindcss -i ./tailwind.css -o ./assets/css/tailwind.css -m"
+  },
+  "author": "John D'Orazio",
+  "license": "ISC",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "daisyui": "^4.11.1",
+    "foreman": "^3.0.1",
+    "tailwindcss": "^3.4.3"
+  }
+}

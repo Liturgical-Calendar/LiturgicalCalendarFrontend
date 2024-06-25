@@ -17,125 +17,134 @@ $API_DESCRIPTION = _("A Liturgical Calendar API from which you can retrieve data
     <title><?php echo _("General Roman Calendar") ?></title>
     <?php include_once('layout/head.php'); ?>
 </head>
-<body class="sb-nav-fixed">
+<body>
 
     <?php include_once('layout/header.php'); ?>
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-black" style="--bs-text-opacity: .6;"><?php echo _("Catholic Liturgical Calendar"); ?></h1>
+        <h1 class="text-2xl mb-4 font-bold"><?php echo _("Catholic Liturgical Calendar"); ?></h1>
 
-        <!-- Content Row -->
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card shadow m-2">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _("API Endpoint"); ?><i class="fas fa-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
-                    </div>
-                    <div class="card-body">
-                        <p class="mb-4"><?php echo $API_DESCRIPTION; ?></p>
-                        <div class="row">
-                            <div class="form-group col-sm-7">
-                                <label for="APICalendarSelect"><?php echo _("Calendar to retrieve from the API"); ?>:</label>
-                                <select id="APICalendarSelect" class="form-select">
-                                    <option value="">---</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-sm-3">
-                                <label>year</label><input id="RequestOptionYear" class="form-control" type="number" min=1970 max=9999 value=<?php echo date("Y"); ?> />
-                            </div>
-                            <div class="form-group col-sm-2">
-                                <label>returntype</label>
-                                <select id="RequestOptionReturnType" class="form-select">
-                                    <option value="">--</option>
-                                    <option value="JSON">JSON</option>
-                                    <option value="XML">XML</option>
-                                    <option value="ICS">ICS (ICAL feed)</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="text-center"><a id="RequestURLButton" href="<?php echo $endpointURL; ?>" class="btn btn-primary m-2"><?php echo _("Liturgical Calendar API endpoint"); ?></a></div>
-                        <p><?php echo _("If a national or diocesan calendar is requested, these calendars will automatically set the specific options in the API request. " .
-                            "If instead no national or diocesan calendar is requested (i.e. the Universal Calendar is requested) then the more specific options can be requested:"); ?></p>
-                        <div class="row"><!-- <?php echo implode(' | ', $langsAssoc); ?> -->
-                            <div class="form-group col-sm-3"><label>epiphany</label><select id="RequestOptionEpiphany" class="form-select requestOption"><option value="">--</option><option value="SUNDAY_JAN2_JAN8">SUNDAY_JAN2_JAN8</option><option value="JAN6">JAN6</option></select></div>
-                            <div class="form-group col-sm-3"><label>ascension</label><select id="RequestOptionAscension" class="form-select requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
-                            <div class="form-group col-sm-3"><label>corpuschristi</label><select id="RequestOptionCorpusChristi" class="form-select requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
-                            <div class="form-group col-sm-3"><label>locale</label><select id="RequestOptionLocale" class="form-select requestOption"><option value="">--</option><?php
-                            foreach ($langsAssoc as $key => $lang) {
-                                $keyUC = strtoupper($key);
-                                echo "<option value=\"$keyUC\">$lang</option>";
-                            }
-                            ?></select></div>
-                            <div class="form-group col-sm-3"><label>calendartype</label><select id="RequestOptionCalendarType" class="form-select requestOption"><option value="">--</option><option value="CIVIL">CIVIL</option><option value="LITURGICAL">LITURGICAL</option></select></div>
-                            <div class="form-group col-sm-3"><label>eternalhighpriest</label><select id="RequestOptionEternalHighPriest" class="form-select requestOption"><option value="">--</option><option value="true">true</option><option value="false">false</option></select></div>
-                        </div>
-                        <small class="text-muted">
-                            <p><i><?php echo _("URL for the API request based on selected options (the above button is set to this URL)"); ?>:</i></p>
-                            <div id="RequestURLExampleWrapper"><code id="RequestURLExample"><?php echo $endpointURL; ?></code></div>
-                        </small>
-                    </div>
-                </div>
-                <div class="card shadow m-2">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _("Liturgical Calendar Validator"); ?><i class="fas fa-flask-vial float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
-                    </div>
-                    <div class="card-body">
-                        <p><?php echo _("In order to verify that the liturgical data produced by the API is correct, there is a Unit Test interface that can run predefined tests against the JSON responses produced by the API starting from the year 1970 and going up to 25 years from the current year."); ?></p>
-                        <div class="text-center"><a href="https://litcal-tests.johnromanodorazio.com/" class="btn btn-primary mt-2"><?php echo _("LitCal Validator"); ?></a></div>
-                        <small class="text-muted">
-                            <i>
-                                <?php echo sprintf(_("The unit tests are defined in the %s folder in the Liturgical Calendar API repository."), "<a href=\"https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI/tree/development/tests\">LiturgicalCalendarAPI/tree/development/tests</a>"); ?>
-                                <?php echo sprintf(_("The unit test interface is curated in a repository of its own: %s."), "<a href=\"https://github.com/Liturgical-Calendar/UnitTestInterface\">Liturgical-Calendar/UnitTestInterface</a>"); ?>
-                            </i>
-                        </small>
-                    </div>
-                </div>
+        <h2 class="text-xl font-bold text-primary mb-4"><?php echo _("API Endpoint"); ?></h2>
+        <p class="mb-4"><?php echo $API_DESCRIPTION; ?></p>
+
+        <div class="mb-8 border border-black p-4 rounded grid grid-cols-12 gap-4">
+            <div class="col-span-5 form-control">
+                <label class="label" for="APICalendarSelect"><?php echo _("Calendar to retrieve from the API"); ?>:</label>
+                <select id="APICalendarSelect" class="select select-bordered w-full">
+                    <option value="">---</option>
+                </select>
             </div>
-            
-            <div class="col-md-6">
-                <div class="card shadow m-2">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _("Calculation of the Date of Easter"); ?>: API<i class="fas fa-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
-                    </div>
-                    <div class="card-body">
-                        <?php $EASTER_CALCULATOR_API = _("A simple API endpoint that returns data about the Date of Easter, both Gregorian and Julian, " .
-                        "from 1583 (year of the adoption of the Gregorian Calendar) to 9999 (maximum possible date calculation in 64bit PHP), " .
-                        "using a PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian easter (observed by the Roman Catholic church) " .
-                        "and of the Meeus algorithm for Julian easter (observed by orthodox churches)"); ?>
-                        <p><?php echo $EASTER_CALCULATOR_API; ?></p>
-                        <div class="text-center"><a href="<?php echo $dateOfEasterURL ?>" class="btn btn-primary m-2"><?php echo _("Date of Easter API endpoint"); ?></a></div>
-                        <small class="text-muted">
-                            <i><?php echo _("Currently the data can be requested with almost any localization. " .
-                            "In any case, since the API returns a UNIX timestamp for each date of Easter, localizations can be done in a client application just as well."); ?></i>
-                        </small>
-                    </div>
-                </div>
-                <div class="card shadow m-2">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _("API Endpoint"); ?>: <?php  echo _("Definition") ?><i class="fas fa-file-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="text-center"><a href="dist/" class="btn btn-primary mt-2"><?php echo _("Swagger / Open API Documentation"); ?></a></div>
-                        <p class="m-2 text-center"><small class="text-muted">
-                            <i><?php echo _("The Open API json schema for this API has been updated to OpenAPI 3.1."); ?></i>
-                        </small></p>
-                    </div>
-                </div>
-                <div class="card shadow m-2">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _("Translation Tool"); ?><i class="fas fa-language float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
-                    </div>
-                    <div class="card-body text-center">
-                        <a href="https://translate.johnromanodorazio.com/engage/liturgical-calendar/" class="btn btn-light" id="transl-status-btn">
-                            <picture>
-                                <source media="(max-width: 600px)" srcset="https://translate.johnromanodorazio.com/widget/liturgical-calendar/horizontal-auto.svg" />
-                                <img src="https://translate.johnromanodorazio.com/widget/liturgical-calendar/multi-auto.svg" alt="<?php echo _("Translations status"); ?>" />
-                            </picture>
-                        </a>
-                        <p class="m-2"><i><?php echo _("Translations status"); ?></i></p>
-                    </div>
-                </div>
+            <div class="col-span-3 form-control">
+                <label for="RequestOptionYear" class="label">year</label>
+                <input id="RequestOptionYear" class="input input-bordered w-full" type="number" min=1970 max=9999 value=<?php echo date("Y"); ?> />
             </div>
+            <div class="col-span-4 form-control">
+                <label for="RequestOptionReturnType" class="label">returntype</label>
+                <select id="RequestOptionReturnType" class="select select-bordered w-full">
+                    <option value="">--</option>
+                    <option value="JSON">JSON</option>
+                    <option value="XML">XML</option>
+                    <option value="ICS">ICS (ICAL feed)</option>
+                </select>
+            </div>
+
+            <div class="col-span-10">
+                <small class="text-base-700"><p><i><?php echo _("URL for the API request based on selected options (the above button is set to this URL)"); ?>:</i></p></small>
+                <div id="RequestURLExampleWrapper"><code id="RequestURLExample"><?php echo $endpointURL; ?></code></div>
+            </div>
+            <div class="form-control col-span-2 self-end">
+                <a id="RequestURLButton" href="<?php echo $endpointURL; ?>" class="btn btn-primary w-full">GET</a>
+            </div>
+        </div>
+
+        <h2 class="text-xl font-bold text-primary mb-4">Customizable API Endpoint</h2>
+        <p class="mb-4"><?php echo _("If a national or diocesan calendar is requested, these calendars will automatically set the specific options in the API request. " .
+            "If instead no national or diocesan calendar is requested (i.e. the Universal Calendar is requested) then the more specific options can be requested:"); ?></p>
+
+        <div class="mb-8 border border-black p-4 rounded grid grid-cols-12 gap-4">
+            <div class="form-group col-span-4">
+                <label class="label">epiphany</label>
+                <select id="RequestOptionEpiphany" class="select select-bordered w-full requestOption"><option value="">--</option><option value="SUNDAY_JAN2_JAN8">SUNDAY_JAN2_JAN8</option><option value="JAN6">JAN6</option></select>
+            </div>
+            <div class="form-group col-span-4">
+                <label class="label">ascension</label>
+                <select id="RequestOptionAscension" class="select select-bordered w-full requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select>
+            </div>
+            <div class="form-group col-span-4">
+                <label class="label">corpuschristi</label>
+                <select id="RequestOptionCorpusChristi" class="select select-bordered w-full requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select>
+            </div>
+            <div class="form-group col-span-4">
+                <label class="label">locale</label>
+                <select id="RequestOptionLocale" class="select select-bordered w-full requestOption"><option value="">--</option><?php
+                foreach ($langsAssoc as $key => $lang) {
+                    $keyUC = strtoupper($key);
+                    echo "<option value=\"$keyUC\">$lang</option>";
+                }
+                ?></select>
+            </div>
+            <div class="form-group col-span-4">
+                <label class="label">calendartype</label>
+                <select id="RequestOptionCalendarType" class="select select-bordered w-full requestOption"><option value="">--</option><option value="CIVIL">CIVIL</option><option value="LITURGICAL">LITURGICAL</option></select>
+            </div>
+            <div class="form-group col-span-4">
+                <label class="label">eternalhighpriest</label>
+                <select id="RequestOptionEternalHighPriest" class="select select-bordered w-full requestOption"><option value="">--</option><option value="true">true</option><option value="false">false</option></select>
+            </div>
+
+            <div class="col-span-10">
+                <small class="text-base-700"><p><i><?php echo _("URL for the API request based on selected options (the above button is set to this URL)"); ?>:</i></p></small>
+                <div id="RequestURLExampleWrapper"><code id="RequestURLExample"><?php echo $endpointURL; ?></code></div>
+            </div>
+            <div class="form-control col-span-2 self-end">
+                <a id="RequestURLButton" href="<?php echo $endpointURL; ?>" class="btn btn-primary w-full">GET</a>
+            </div>
+        </div>
+
+        
+        <h2 class="text-xl font-bold text-primary mb-4"><?php echo _("Liturgical Calendar Validator"); ?></h2>
+        <p class="mb-4"><?php echo _("In order to verify that the liturgical data produced by the API is correct, there is a Unit Test interface that can run predefined tests against the JSON responses produced by the API starting from the year 1970 and going up to 25 years from the current year."); ?></p>
+        <div><a href="https://litcal-tests.johnromanodorazio.com/" class="btn btn-primary btn-outline mb-4"><?php echo _("LitCal Validator"); ?></a></div>
+        <small>
+            <i>
+                <?php echo sprintf(_("The unit tests are defined in the %s folder in the Liturgical Calendar API repository."), "<a href=\"https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI/tree/development/tests\">LiturgicalCalendarAPI/tree/development/tests</a>"); ?>
+                <?php echo sprintf(_("The unit test interface is curated in a repository of its own: %s."), "<a href=\"https://github.com/Liturgical-Calendar/UnitTestInterface\">Liturgical-Calendar/UnitTestInterface</a>"); ?>
+            </i>
+        </small>
+
+
+        <h2 class="text-xl font-bold text-primary mb-4 mt-8"><?php echo _("Calculation of the Date of Easter"); ?>: API</h2>
+        <p class="mb-4"><?php $EASTER_CALCULATOR_API = _("A simple API endpoint that returns data about the Date of Easter, both Gregorian and Julian, " .
+                "from 1583 (year of the adoption of the Gregorian Calendar) to 9999 (maximum possible date calculation in 64bit PHP), " .
+                "using a PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian easter (observed by the Roman Catholic church) " .
+                "and of the Meeus algorithm for Julian easter (observed by orthodox churches)"); ?></p>
+        <p class="mb-4"><?php echo $EASTER_CALCULATOR_API; ?></p>
+        <div><a href="<?php echo $dateOfEasterURL ?>" class="btn btn-primary btn-outline mb-4"><?php echo _("Date of Easter API endpoint"); ?></a></div>
+        <small>
+            <i><?php echo _("Currently the data can be requested with almost any localization. " .
+            "In any case, since the API returns a UNIX timestamp for each date of Easter, localizations can be done in a client application just as well."); ?></i>
+        </small>
+
+
+        <h2 class="text-xl font-bold text-primary mb-4 mt-8">API Documentation & Schema</h2>
+        <div><a href="dist/" class="btn btn-primary btn-outline mb-4"><?php echo _("Swagger / Open API Documentation"); ?></a></div>
+        <small>
+            <i><?php echo _("The Open API json schema for this API has been updated to OpenAPI 3.1."); ?></i>
+        </small>
+
+
+        <h2 class="text-xl font-bold text-primary mb-4 mt-8"><?php echo _("Translation Tool"); ?></h2>
+        <div class="flex">
+            <div class="border border-primary p-2 my-4">
+                <picture>
+                    <source media="(max-width: 600px)" srcset="https://translate.johnromanodorazio.com/widget/liturgical-calendar/horizontal-auto.svg" />
+                    <img src="https://translate.johnromanodorazio.com/widget/liturgical-calendar/multi-auto.svg" alt="<?php echo _("Translations status"); ?>" />
+                </picture>
+            </div>
+        </div>
+
+        <div class="mb-12">
+            <a href="https://translate.johnromanodorazio.com/engage/liturgical-calendar/" class="btn btn-primary btn-outline" id="transl-status-btn"><?php echo _("Translations status"); ?></a>
         </div>
 
 
