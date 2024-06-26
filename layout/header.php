@@ -18,7 +18,7 @@ asort($langsAssoc);
 <!-- Topbar -->
 <nav class="sb-topnav navbar navbar-expand navbar-light bg-white shadow">
     <!-- Navbar Brand -->
-    <a class="navbar-brand ps-3" href="/">Navbar</a>
+    <a class="navbar-brand ps-3" href="/">Litcal</a>
 
     <!-- Sidebar Toggle (Topbar) -->
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle"><i class="fas fa-bars"></i></button>
