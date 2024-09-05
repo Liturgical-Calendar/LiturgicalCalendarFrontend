@@ -10,7 +10,7 @@ $endpointURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/";
 $metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/metadata/";
 $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/easter/";
 
-$API_DESCRIPTION = _("An API for the Liturgical Calendar API that returns the Liturgical events for any given year between 1970 and 9999. The base `/calendar` path returns liturgical events for the Universal or General Roman Calendar. National and Diocesan calendars can be requested on the `/calendar/nation/{NATION}` and `/calendar/diocese/{DIOCESE}` paths respectively.");
+$API_DESCRIPTION = _("An API for the Liturgical Calendar API that returns a collection of Liturgical events for any given year between 1970 and 9999. The base `/calendar` path returns liturgical events for the Universal or General Roman Calendar. National and Diocesan calendars can be requested on the `/calendar/nation/{NATION}` and `/calendar/diocese/{DIOCESE}` paths respectively.");
 ?>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
@@ -26,7 +26,7 @@ $API_DESCRIPTION = _("An API for the Liturgical Calendar API that returns the Li
 
         <!-- Content Row -->
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary"><?php echo _("API Endpoint"); ?><i class="fas fa-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
@@ -92,7 +92,9 @@ $API_DESCRIPTION = _("An API for the Liturgical Calendar API that returns the Li
                         </small>
                     </div>
                     <div class="text-center"><a id="RequestURLButton" href="<?php echo $endpointURL; ?>" class="btn btn-primary m-2"><?php echo _("Liturgical Calendar API endpoint"); ?></a></div>
-                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary"><?php echo _("Liturgical Calendar Validator"); ?><i class="fas fa-flask-vial float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
