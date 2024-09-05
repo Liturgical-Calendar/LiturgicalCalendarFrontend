@@ -30,7 +30,7 @@ class RequestPayload {
  * Used to build the full endpoint URL for the API /calendar endpoint
  */
 class CurrentEndpoint {
-    get apiBase() {
+    static get apiBase() {
         return `${RequestURLBase}calendar`
     };
     static calendarType   = null;
