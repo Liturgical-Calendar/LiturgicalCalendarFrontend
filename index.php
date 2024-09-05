@@ -47,14 +47,23 @@ $API_DESCRIPTION = sprintf(
                         <p><small class="text-muted"><i><?php echo $API_DESCRIPTION; ?></i></small></p>
                         <div class="row mb-4">
                             <h5 class="fw-bold"><?php echo _("Path builder"); ?></h5>
-                            <div class="form-group col-sm-7">
-                                <label for="APICalendarSelect"><?php echo _("Calendar to retrieve from the API"); ?>:</label>
+                            <div class="form-group col-sm-3">
+                                <label><?php echo _("Select route"); ?></label>
+                                <select id="APICalendarRouteSelect" class="form-select">
+                                    <option value="/calendar">/calendar</option>
+                                    <option value="/calendar/nation/">/calendar/nation/</option>
+                                    <option value="/calendar/diocese/">/calendar/diocese/</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="APICalendarSelect"><?php echo _("Calendars available on selected route"); ?>:</label>
                                 <select id="APICalendarSelect" class="form-select">
                                     <option value="">---</option>
                                 </select>
                             </div>
                             <div class="form-group col-sm-3">
-                                <label>year</label><input id="RequestOptionYear" class="form-control" type="number" min=1970 max=9999 value=<?php echo date("Y"); ?> />
+                                <label>year</label>
+                                <input id="RequestOptionYear" class="form-control" type="number" min=1970 max=9999 value=<?php echo date("Y"); ?> />
                             </div>
                         </div>
                         <div class="row mb-4">
@@ -62,7 +71,7 @@ $API_DESCRIPTION = sprintf(
                                 echo sprintf(
                                     /**translators: %s = '/calendar' */
                                     _('Request parameters available on the base %s path'),
-                                    '/calendar'
+                                    '<b><code>/calendar</code></b>'
                                 );
                                 ?></h5>
                             <div class="form-group col-sm-2"><label>epiphany</label><select id="RequestOptionEpiphany" class="form-select requestOption"><option value="">--</option><option value="SUNDAY_JAN2_JAN8">SUNDAY_JAN2_JAN8</option><option value="JAN6">JAN6</option></select></div>
