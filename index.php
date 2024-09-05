@@ -29,7 +29,7 @@ $API_DESCRIPTION = _("Collection of Liturgical events for any given year between
             <div class="col-md-12">
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _("API Endpoint"); ?><i class="fas fa-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
+                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _("API '/calendar' endpoint"); ?><i class="fas fa-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
                     </div>
                     <div class="card-body">
                         <p><small class="text-muted"><i><?php echo $API_DESCRIPTION; ?></i></small></p>
@@ -63,7 +63,11 @@ $API_DESCRIPTION = _("Collection of Liturgical events for any given year between
                                 echo "<option value=\"$keyUC\">$lang</option>";
                             }
                             ?></select></div>
-                            <small class="text-muted"><i><?php echo _("Some request parameters can only be set on the base `/calendar` path, that is when no National or Diocesan calendar is requested. National and Diocesan calendars have these parameters built in. N.B. even though selecting 'VATICAN' will set the base `/calendar` path, it will have the same effect as selecting a National or Diocesan calendar, since we are requesting the Vatican calendar's built-in parameters; in other words, using none of the following parameters on the base path will give us the General Roman calendar <i>as used in the Vatican</i>."); ?></i></small>
+                            <small class="text-muted"><i>
+                                <?php echo _("These parameters are useful for tweaking the calendar results, when no National or Diocesan calendar is requested. Since National and Diocesan calendars have these parameters built in, the parameters are not available on routes for National or Diocesan calendars."); ?>
+                                <br />
+                                <?php echo _("N.B. Even though selecting 'VATICAN' will set the base `/calendar` path, it will have the same effect as selecting a National or Diocesan calendar, since we are requesting the Vatican calendar's built-in parameters; in other words, using none of the following parameters on the base path will give us the General Roman calendar as used in the Vatican."); ?>
+                            </i></small>
                         </div>
                         <div class="row mb-4">
                             <h5 class="fw-bold"><?php echo _("Request parameters available on all calendar paths"); ?></h5>
@@ -114,9 +118,34 @@ $API_DESCRIPTION = _("Collection of Liturgical events for any given year between
                         </small>
                     </div>
                 </div>
+                <div class="card shadow m-2">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _("Translation Tool"); ?><i class="fas fa-language float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
+                    </div>
+                    <div class="card-body text-center">
+                        <a href="https://translate.johnromanodorazio.com/engage/liturgical-calendar/" class="btn btn-light" id="transl-status-btn">
+                            <picture>
+                                <source media="(max-width: 600px)" srcset="https://translate.johnromanodorazio.com/widget/liturgical-calendar/horizontal-auto.svg" />
+                                <img src="https://translate.johnromanodorazio.com/widget/liturgical-calendar/multi-auto.svg" alt="<?php echo _("Translations status"); ?>" />
+                            </picture>
+                        </a>
+                        <p class="m-2"><i><?php echo _("Translations status"); ?></i></p>
+                    </div>
+                </div>
             </div>
 
             <div class="col-md-6">
+                <div class="card shadow m-2">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary"><?php  echo _("Open API Schema") ?><i class="fas fa-file-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center"><a href="dist/" class="btn btn-primary mt-2"><?php echo _("Swagger / Open API Documentation"); ?></a></div>
+                        <p class="m-2 text-center"><small class="text-muted">
+                            <i><?php echo _("All of the available API routes with their supported methods, parameters, content types and responses are described here."); ?></i>
+                        </small></p>
+                    </div>
+                </div>
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary"><?php echo _("Calculation of the Date of Easter"); ?>: API<i class="fas fa-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
@@ -132,31 +161,6 @@ $API_DESCRIPTION = _("Collection of Liturgical events for any given year between
                             <i><?php echo _("Currently the data can be requested with almost any localization. " .
                             "In any case, since the API returns a UNIX timestamp for each date of Easter, localizations can be done in a client application just as well."); ?></i>
                         </small>
-                    </div>
-                </div>
-                <div class="card shadow m-2">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _("API Endpoint"); ?>: <?php  echo _("Definition") ?><i class="fas fa-file-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="text-center"><a href="dist/" class="btn btn-primary mt-2"><?php echo _("Swagger / Open API Documentation"); ?></a></div>
-                        <p class="m-2 text-center"><small class="text-muted">
-                            <i><?php echo _("The Open API json schema for this API has been updated to OpenAPI 3.1."); ?></i>
-                        </small></p>
-                    </div>
-                </div>
-                <div class="card shadow m-2">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _("Translation Tool"); ?><i class="fas fa-language float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
-                    </div>
-                    <div class="card-body text-center">
-                        <a href="https://translate.johnromanodorazio.com/engage/liturgical-calendar/" class="btn btn-light" id="transl-status-btn">
-                            <picture>
-                                <source media="(max-width: 600px)" srcset="https://translate.johnromanodorazio.com/widget/liturgical-calendar/horizontal-auto.svg" />
-                                <img src="https://translate.johnromanodorazio.com/widget/liturgical-calendar/multi-auto.svg" alt="<?php echo _("Translations status"); ?>" />
-                            </picture>
-                        </a>
-                        <p class="m-2"><i><?php echo _("Translations status"); ?></i></p>
                     </div>
                 </div>
             </div>
