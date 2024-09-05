@@ -35,7 +35,13 @@ $API_DESCRIPTION = sprintf(
             <div class="col-md-12">
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary"><?php echo _("API /calendar endpoint"); ?><i class="fas fa-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
+                        <h6 class="m-0 font-weight-bold text-primary"><?php
+                            echo sprintf(
+                                /**translators: 1. /calendar */
+                                _('API %1$s endpoint'),
+                                '<b><code>/calendar</code></b>'
+                            );
+                            ?><i class="fas fa-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
                     </div>
                     <div class="card-body">
                         <p><small class="text-muted"><i><?php echo $API_DESCRIPTION; ?></i></small></p>
