@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-05 19:49+0000\n"
+"POT-Creation-Date: 2024-09-05 20:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,10 +19,11 @@ msgstr ""
 
 #: index.php:13
 msgid ""
-"A Liturgical Calendar API from which you can retrieve data for the "
-"Liturgical events of any given year from 1970 to 9999, whether for the "
-"Universal or General Roman Calendar or for derived National and Diocesan "
-"calendars"
+"An API for the Liturgical Calendar API that returns the Liturgical events "
+"for any given year between 1970 and 9999. The base `/calendar` path returns "
+"liturgical events for the Universal or General Roman Calendar. National and "
+"Diocesan calendars can be requested on the `/calendar/nation/{NATION}` and `/"
+"calendar/diocese/{DIOCESE}` paths respectively."
 msgstr ""
 
 #: index.php:17 usage.php:17 liturgyOfAnyDay.php:71
@@ -41,15 +42,22 @@ msgstr ""
 msgid "Calendar to retrieve from the API"
 msgstr ""
 
-#: index.php:47
-msgid "These parameters can always be set:"
+#: index.php:48
+msgid ""
+"Request parameters that can always be set, whether we are requesting the "
+"base `/calendar` resource or any resource below the `/calendar` path:"
 msgstr ""
 
-#: index.php:67
+#: index.php:68
 msgid ""
-"Whereas these parameters can only be set on the base `/calendar` path, that "
-"is when no national or diocesan calendar is requested. National and Diocesan "
-"calendars have these parameters built in:"
+"Request parameters that can only be set on the base `/calendar` path, that "
+"is when no National or Diocesan calendar is requested. National and Diocesan "
+"calendars have these parameters built in (N.B. even though selecting "
+"'VATICAN' will set the base `/calendar` path, it will have the same effect "
+"as selecting a National or Diocesan calendar, since we are requesting the "
+"Vatican calendar's built-in parameters; in other words, using none of the "
+"following parameters on the base path will give us the General Roman "
+"calendar as used in the Vatican):"
 msgstr ""
 
 #: index.php:81
