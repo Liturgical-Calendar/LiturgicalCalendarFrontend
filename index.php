@@ -90,7 +90,7 @@ $API_DESCRIPTION = _("Collection of Liturgical events for any given year between
                             </div>
                             <small class="text-muted"><i><?php echo _("These request parameters can always be set, whether we are requesting the base `/calendar` resource or any resource below the `/calendar` path."); ?></i></small>
                         </div>
-                        <div class="row">
+                        <div class="row align-items-center">
                             <div class="form-group col-sm-8">
                                 <div id="RequestURLExampleWrapper"><small class="text-muted"><code id="RequestURLExample"><?php echo $endpointURL; ?></code></small></div>
                             </div>
