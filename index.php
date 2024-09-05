@@ -43,8 +43,11 @@ $API_DESCRIPTION = _("A Liturgical Calendar API from which you can retrieve data
                             <div class="form-group col-sm-3">
                                 <label>year</label><input id="RequestOptionYear" class="form-control" type="number" min=1970 max=9999 value=<?php echo date("Y"); ?> />
                             </div>
-                            <div class="form-group col-sm-2">
-                                <label>returntype</label>
+                        </div>
+                        <p><?php echo _("These parameters can always be set:"); ?></p>
+                        <div class="row">
+                            <div class="form-group col-sm-4">
+                                <label>return_type</label>
                                 <select id="RequestOptionReturnType" class="form-select">
                                     <option value="">--</option>
                                     <option value="JSON">JSON</option>
@@ -52,29 +55,35 @@ $API_DESCRIPTION = _("A Liturgical Calendar API from which you can retrieve data
                                     <option value="ICS">ICS (ICAL feed)</option>
                                 </select>
                             </div>
+                            <div class="form-group col-sm-4">
+                                <label>calendar_type</label>
+                                <select id="RequestOptionCalendarType" class="form-select">
+                                    <option value="">--</option>
+                                    <option value="CIVIL">CIVIL</option>
+                                    <option value="LITURGICAL">LITURGICAL</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="text-center"><a id="RequestURLButton" href="<?php echo $endpointURL; ?>" class="btn btn-primary m-2"><?php echo _("Liturgical Calendar API endpoint"); ?></a></div>
-                        <p><?php echo _("If a national or diocesan calendar is requested, these calendars will automatically set the specific options in the API request. " .
-                            "If instead no national or diocesan calendar is requested (i.e. the Universal Calendar is requested) then the more specific options can be requested:"); ?></p>
-                        <div class="row"><!-- <?php echo implode(' | ', $langsAssoc); ?> -->
-                            <div class="form-group col-sm-3"><label>epiphany</label><select id="RequestOptionEpiphany" class="form-select requestOption"><option value="">--</option><option value="SUNDAY_JAN2_JAN8">SUNDAY_JAN2_JAN8</option><option value="JAN6">JAN6</option></select></div>
-                            <div class="form-group col-sm-3"><label>ascension</label><select id="RequestOptionAscension" class="form-select requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
-                            <div class="form-group col-sm-3"><label>corpus_christi</label><select id="RequestOptionCorpusChristi" class="form-select requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
-                            <div class="form-group col-sm-3"><label>locale</label><select id="RequestOptionLocale" class="form-select requestOption"><option value="">--</option><?php
+                        <p><?php echo _("Whereas these parameters can only be set on the base `/calendar` path, that is when no national or diocesan calendar is requested. National and Diocesan calendars have these parameters built in:"); ?></p>
+                        <div class="row">
+                            <div class="form-group col-sm-4"><label>epiphany</label><select id="RequestOptionEpiphany" class="form-select requestOption"><option value="">--</option><option value="SUNDAY_JAN2_JAN8">SUNDAY_JAN2_JAN8</option><option value="JAN6">JAN6</option></select></div>
+                            <div class="form-group col-sm-4"><label>ascension</label><select id="RequestOptionAscension" class="form-select requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
+                            <div class="form-group col-sm-4"><label>corpus_christi</label><select id="RequestOptionCorpusChristi" class="form-select requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
+                            <div class="form-group col-sm-4"><label>eternal_high_priest</label><select id="RequestOptionEternalHighPriest" class="form-select requestOption"><option value="">--</option><option value="true">true</option><option value="false">false</option></select></div>
+                            <div class="form-group col-sm-4"><label>locale</label><select id="RequestOptionLocale" class="form-select requestOption"><option value="">--</option><?php
                             foreach ($langsAssoc as $key => $lang) {
                                 $keyUC = strtoupper($key);
                                 echo "<option value=\"$keyUC\">$lang</option>";
                             }
                             ?></select></div>
-                            <div class="form-group col-sm-3"><label>calendar_type</label><select id="RequestOptionCalendarType" class="form-select requestOption"><option value="">--</option><option value="CIVIL">CIVIL</option><option value="LITURGICAL">LITURGICAL</option></select></div>
-                            <div class="form-group col-sm-3"><label>eternal_high_priest</label><select id="RequestOptionEternalHighPriest" class="form-select requestOption"><option value="">--</option><option value="true">true</option><option value="false">false</option></select></div>
                         </div>
                         <small class="text-muted">
                             <p><i><?php echo _("URL for the API request based on selected options (the above button is set to this URL)"); ?>:</i></p>
                             <div id="RequestURLExampleWrapper"><code id="RequestURLExample"><?php echo $endpointURL; ?></code></div>
                         </small>
                     </div>
-                </div>
+                    <div class="text-center"><a id="RequestURLButton" href="<?php echo $endpointURL; ?>" class="btn btn-primary m-2"><?php echo _("Liturgical Calendar API endpoint"); ?></a></div>
+                    </div>
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary"><?php echo _("Liturgical Calendar Validator"); ?><i class="fas fa-flask-vial float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
