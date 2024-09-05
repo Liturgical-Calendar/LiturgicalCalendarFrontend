@@ -86,13 +86,13 @@ $API_DESCRIPTION = _("An API for the Liturgical Calendar that returns a collecti
                             </div>
                             <small class="text-muted"><?php echo _("These request parameters can always be set, whether we are requesting the base `/calendar` resource or any resource below the `/calendar` path."); ?></small>
                         </div>
-                        <small class="text-muted">
-                            <div class="row">
-                                <div id="RequestURLExampleWrapper" class="col-sm-8"><code id="RequestURLExample"><?php echo $endpointURL; ?></code></div>
-                                <div class="col-sm-4"><a id="RequestURLButton" href="<?php echo $endpointURL; ?>" class="btn btn-primary m-2" target="_blank"><?php echo _("Liturgical Calendar API endpoint"); ?></a></div>
+                        <div class="row">
+                            <div id="RequestURLExampleWrapper" class="col-sm-8">
+                                <code id="RequestURLExample"><?php echo $endpointURL; ?></code>
                             </div>
-                            <i><?php echo _("URL for the API request based on selected options. The button is set to the same URL, click on it to see results."); ?>:</i>
-                        </small>
+                            <div class="col-sm-4"><a id="RequestURLButton" href="<?php echo $endpointURL; ?>" class="btn btn-primary m-2" target="_blank"><?php echo _("Liturgical Calendar API endpoint"); ?></a></div>
+                            <small class="text-muted"><i><?php echo _("URL for the API request based on selected options. The button is set to the same URL, click on it to see results."); ?></i></small>
+                        </div>
                     </div>
                 </div>
             </div>
