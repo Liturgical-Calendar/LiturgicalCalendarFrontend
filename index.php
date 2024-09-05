@@ -10,7 +10,7 @@ $endpointURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/";
 $metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/metadata/";
 $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/easter/";
 
-$API_DESCRIPTION = _("An API for the Liturgical Calendar API that returns a collection of Liturgical events for any given year between 1970 and 9999. The base `/calendar` path returns liturgical events for the Universal or General Roman Calendar. National and Diocesan calendars can be requested on the `/calendar/nation/{NATION}` and `/calendar/diocese/{DIOCESE}` paths respectively.");
+$API_DESCRIPTION = _("An API for the Liturgical Calendar that returns a collection of Liturgical events for any given year between 1970 and 9999. The base `/calendar` path returns liturgical events for the Universal or General Roman Calendar. National and Diocesan calendars can be requested on the `/calendar/nation/{NATION}` and `/calendar/diocese/{DIOCESE}` paths respectively.");
 ?>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
@@ -34,7 +34,7 @@ $API_DESCRIPTION = _("An API for the Liturgical Calendar API that returns a coll
                     <div class="card-body">
                         <p class="mb-4"><?php echo $API_DESCRIPTION; ?></p>
                         <div class="row mb-4">
-                            <h4><?php echo _("Path builder"); ?></h4>
+                            <h5 class="fw-bold"><?php echo _("Path builder"); ?></h5>
                             <div class="form-group col-sm-7">
                                 <label for="APICalendarSelect"><?php echo _("Calendar to retrieve from the API"); ?>:</label>
                                 <select id="APICalendarSelect" class="form-select">
@@ -46,7 +46,27 @@ $API_DESCRIPTION = _("An API for the Liturgical Calendar API that returns a coll
                             </div>
                         </div>
                         <div class="row mb-4">
-                            <h4><?php echo _("Request parameters on all calendar paths"); ?></h4>
+                            <h5 class="fw-bold"><?php
+                                echo sprintf(
+                                    /**translators: %s = '/calendar' */
+                                    _('Request parameters available on the base %s path'),
+                                    '/calendar'
+                                );
+                                ?></h5>
+                            <div class="form-group col-sm-2"><label>epiphany</label><select id="RequestOptionEpiphany" class="form-select requestOption"><option value="">--</option><option value="SUNDAY_JAN2_JAN8">SUNDAY_JAN2_JAN8</option><option value="JAN6">JAN6</option></select></div>
+                            <div class="form-group col-sm-2"><label>ascension</label><select id="RequestOptionAscension" class="form-select requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
+                            <div class="form-group col-sm-2"><label>corpus_christi</label><select id="RequestOptionCorpusChristi" class="form-select requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
+                            <div class="form-group col-sm-2"><label>eternal_high_priest</label><select id="RequestOptionEternalHighPriest" class="form-select requestOption"><option value="">--</option><option value="true">true</option><option value="false">false</option></select></div>
+                            <div class="form-group col-sm-2"><label>locale</label><select id="RequestOptionLocale" class="form-select requestOption"><option value="">--</option><?php
+                            foreach ($langsAssoc as $key => $lang) {
+                                $keyUC = strtoupper($key);
+                                echo "<option value=\"$keyUC\">$lang</option>";
+                            }
+                            ?></select></div>
+                            <small class="text-muted"><?php echo _("Some request parameters can only be set on the base `/calendar` path, that is when no National or Diocesan calendar is requested. National and Diocesan calendars have these parameters built in (N.B. even though selecting 'VATICAN' will set the base `/calendar` path, it will have the same effect as selecting a National or Diocesan calendar, since we are requesting the Vatican calendar's built-in parameters; in other words, using none of the following parameters on the base path will give us the General Roman calendar as used in the Vatican):"); ?></small>
+                        </div>
+                        <div class="row mb-4">
+                            <h5 class="fw-bold"><?php echo _("Request parameters available on all calendar paths"); ?></h5>
                             <div class="form-group col-sm-4">
                                 <label>return_type</label>
                                 <select id="RequestOptionReturnType" class="form-select">
@@ -64,27 +84,7 @@ $API_DESCRIPTION = _("An API for the Liturgical Calendar API that returns a coll
                                     <option value="LITURGICAL">LITURGICAL</option>
                                 </select>
                             </div>
-                            <small class="text-muted"><?php echo _("These request parameters can always be set, whether we are requesting the base `/calendar` resource or any resource below the `/calendar` path:"); ?></small>
-                        </div>
-                        <div class="row mb-4">
-                            <h4><?php
-                                echo sprintf(
-                                    /**translators: %s = '/calendar' */
-                                    _('Request parameters available on the base %s path'),
-                                    '/calendar'
-                                );
-                                ?></h4>
-                            <div class="form-group col-sm-4"><label>epiphany</label><select id="RequestOptionEpiphany" class="form-select requestOption"><option value="">--</option><option value="SUNDAY_JAN2_JAN8">SUNDAY_JAN2_JAN8</option><option value="JAN6">JAN6</option></select></div>
-                            <div class="form-group col-sm-4"><label>ascension</label><select id="RequestOptionAscension" class="form-select requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
-                            <div class="form-group col-sm-4"><label>corpus_christi</label><select id="RequestOptionCorpusChristi" class="form-select requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
-                            <div class="form-group col-sm-4"><label>eternal_high_priest</label><select id="RequestOptionEternalHighPriest" class="form-select requestOption"><option value="">--</option><option value="true">true</option><option value="false">false</option></select></div>
-                            <div class="form-group col-sm-4"><label>locale</label><select id="RequestOptionLocale" class="form-select requestOption"><option value="">--</option><?php
-                            foreach ($langsAssoc as $key => $lang) {
-                                $keyUC = strtoupper($key);
-                                echo "<option value=\"$keyUC\">$lang</option>";
-                            }
-                            ?></select></div>
-                            <small class="text-muted"><?php echo _("Request parameters that can only be set on the base `/calendar` path, that is when no National or Diocesan calendar is requested. National and Diocesan calendars have these parameters built in (N.B. even though selecting 'VATICAN' will set the base `/calendar` path, it will have the same effect as selecting a National or Diocesan calendar, since we are requesting the Vatican calendar's built-in parameters; in other words, using none of the following parameters on the base path will give us the General Roman calendar as used in the Vatican):"); ?></small>
+                            <small class="text-muted"><?php echo _("These request parameters can always be set, whether we are requesting the base `/calendar` resource or any resource below the `/calendar` path."); ?></small>
                         </div>
                         <small class="text-muted">
                             <p><i><?php echo _("URL for the API request based on selected options (the above button is set to this URL)"); ?>:</i></p>
