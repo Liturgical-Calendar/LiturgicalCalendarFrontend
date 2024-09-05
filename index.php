@@ -10,7 +10,7 @@ $endpointURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/";
 $metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/metadata/";
 $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/easter/";
 
-$API_DESCRIPTION = _("A Liturgical Calendar API from which you can retrieve data for the Liturgical events of any given year from 1970 to 9999, whether for the Universal or General Roman Calendar or for derived National and Diocesan calendars");
+$API_DESCRIPTION = _("An API for the Liturgical Calendar API that returns the Liturgical events for any given year between 1970 and 9999. The base `/calendar` path returns liturgical events for the Universal or General Roman Calendar. National and Diocesan calendars can be requested on the `/calendar/nation/{NATION}` and `/calendar/diocese/{DIOCESE}` paths respectively.");
 ?>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
@@ -33,7 +33,7 @@ $API_DESCRIPTION = _("A Liturgical Calendar API from which you can retrieve data
                     </div>
                     <div class="card-body">
                         <p class="mb-4"><?php echo $API_DESCRIPTION; ?></p>
-                        <div class="row">
+                        <div class="row mb-4">
                             <div class="form-group col-sm-7">
                                 <label for="APICalendarSelect"><?php echo _("Calendar to retrieve from the API"); ?>:</label>
                                 <select id="APICalendarSelect" class="form-select">
@@ -44,8 +44,8 @@ $API_DESCRIPTION = _("A Liturgical Calendar API from which you can retrieve data
                                 <label>year</label><input id="RequestOptionYear" class="form-control" type="number" min=1970 max=9999 value=<?php echo date("Y"); ?> />
                             </div>
                         </div>
-                        <p><?php echo _("These parameters can always be set:"); ?></p>
-                        <div class="row">
+                        <div class="row mb-4">
+                            <p><?php echo _("Request parameters that can always be set, whether we are requesting the base `/calendar` resource or any resource below the `/calendar` path:"); ?></p>
                             <div class="form-group col-sm-4">
                                 <label>return_type</label>
                                 <select id="RequestOptionReturnType" class="form-select">
@@ -64,8 +64,8 @@ $API_DESCRIPTION = _("A Liturgical Calendar API from which you can retrieve data
                                 </select>
                             </div>
                         </div>
-                        <p><?php echo _("Whereas these parameters can only be set on the base `/calendar` path, that is when no national or diocesan calendar is requested. National and Diocesan calendars have these parameters built in:"); ?></p>
                         <div class="row">
+                            <p><?php echo _("Request parameters that can only be set on the base `/calendar` path, that is when no National or Diocesan calendar is requested. National and Diocesan calendars have these parameters built in (N.B. even though selecting 'VATICAN' will set the base `/calendar` path, it will have the same effect as selecting a National or Diocesan calendar, since we are requesting the Vatican calendar's built-in parameters; in other words, using none of the following parameters on the base path will give us the General Roman calendar as used in the Vatican):"); ?></p>
                             <div class="form-group col-sm-4"><label>epiphany</label><select id="RequestOptionEpiphany" class="form-select requestOption"><option value="">--</option><option value="SUNDAY_JAN2_JAN8">SUNDAY_JAN2_JAN8</option><option value="JAN6">JAN6</option></select></div>
                             <div class="form-group col-sm-4"><label>ascension</label><select id="RequestOptionAscension" class="form-select requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
                             <div class="form-group col-sm-4"><label>corpus_christi</label><select id="RequestOptionCorpusChristi" class="form-select requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
