@@ -32,7 +32,7 @@ $API_DESCRIPTION = _("An API for the Liturgical Calendar that returns a collecti
                         <h6 class="m-0 font-weight-bold text-primary"><?php echo _("API Endpoint"); ?><i class="fas fa-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
                     </div>
                     <div class="card-body">
-                        <p class="mb-4"><?php echo $API_DESCRIPTION; ?></p>
+                        <small class="text-muted mb-4"><?php echo $API_DESCRIPTION; ?></small>
                         <div class="row mb-4">
                             <h5 class="fw-bold"><?php echo _("Path builder"); ?></h5>
                             <div class="form-group col-sm-7">
