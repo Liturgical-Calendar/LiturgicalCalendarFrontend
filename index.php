@@ -10,7 +10,7 @@ $endpointURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/";
 $metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/metadata/";
 $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/easter/";
 
-$API_DESCRIPTION = _("An API for the Liturgical Calendar that returns a collection of Liturgical events for any given year between 1970 and 9999. The base `/calendar` path returns liturgical events for the Universal or General Roman Calendar. National and Diocesan calendars can be requested on the `/calendar/nation/{NATION}` and `/calendar/diocese/{DIOCESE}` paths respectively.");
+$API_DESCRIPTION = _("Collection of Liturgical events for any given year between 1970 and 9999. The base `/calendar` path returns liturgical events for the Universal or General Roman Calendar. National and Diocesan calendars can be requested on the `/calendar/nation/{NATION}` and `/calendar/diocese/{DIOCESE}` paths respectively.");
 ?>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
@@ -32,7 +32,7 @@ $API_DESCRIPTION = _("An API for the Liturgical Calendar that returns a collecti
                         <h6 class="m-0 font-weight-bold text-primary"><?php echo _("API Endpoint"); ?><i class="fas fa-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
                     </div>
                     <div class="card-body">
-                        <small class="text-muted mb-4"><?php echo $API_DESCRIPTION; ?></small>
+                        <p><small class="text-muted"><i><?php echo $API_DESCRIPTION; ?></i></small></p>
                         <div class="row mb-4">
                             <h5 class="fw-bold"><?php echo _("Path builder"); ?></h5>
                             <div class="form-group col-sm-7">
@@ -63,7 +63,7 @@ $API_DESCRIPTION = _("An API for the Liturgical Calendar that returns a collecti
                                 echo "<option value=\"$keyUC\">$lang</option>";
                             }
                             ?></select></div>
-                            <small class="text-muted"><?php echo _("Some request parameters can only be set on the base `/calendar` path, that is when no National or Diocesan calendar is requested. National and Diocesan calendars have these parameters built in. N.B. even though selecting 'VATICAN' will set the base `/calendar` path, it will have the same effect as selecting a National or Diocesan calendar, since we are requesting the Vatican calendar's built-in parameters; in other words, using none of the following parameters on the base path will give us the General Roman calendar <i>as used in the Vatican</i>."); ?></small>
+                            <small class="text-muted"><i><?php echo _("Some request parameters can only be set on the base `/calendar` path, that is when no National or Diocesan calendar is requested. National and Diocesan calendars have these parameters built in. N.B. even though selecting 'VATICAN' will set the base `/calendar` path, it will have the same effect as selecting a National or Diocesan calendar, since we are requesting the Vatican calendar's built-in parameters; in other words, using none of the following parameters on the base path will give us the General Roman calendar <i>as used in the Vatican</i>."); ?></i></small>
                         </div>
                         <div class="row mb-4">
                             <h5 class="fw-bold"><?php echo _("Request parameters available on all calendar paths"); ?></h5>
@@ -84,13 +84,15 @@ $API_DESCRIPTION = _("An API for the Liturgical Calendar that returns a collecti
                                     <option value="LITURGICAL">LITURGICAL</option>
                                 </select>
                             </div>
-                            <small class="text-muted"><?php echo _("These request parameters can always be set, whether we are requesting the base `/calendar` resource or any resource below the `/calendar` path."); ?></small>
+                            <small class="text-muted"><i><?php echo _("These request parameters can always be set, whether we are requesting the base `/calendar` resource or any resource below the `/calendar` path."); ?></i></small>
                         </div>
                         <div class="row">
-                            <div id="RequestURLExampleWrapper" class="col-sm-8">
-                                <code id="RequestURLExample"><?php echo $endpointURL; ?></code>
+                            <div class="form-group col-sm-8">
+                                <div id="RequestURLExampleWrapper"><small class="text-muted"><code id="RequestURLExample"><?php echo $endpointURL; ?></code></small></div>
                             </div>
-                            <div class="col-sm-4"><a id="RequestURLButton" href="<?php echo $endpointURL; ?>" class="btn btn-primary m-2" target="_blank"><?php echo _("Liturgical Calendar API endpoint"); ?></a></div>
+                            <div class="form-group col-sm-4">
+                                <a id="RequestURLButton" href="<?php echo $endpointURL; ?>" class="btn btn-primary m-2" target="_blank"><?php echo _("Liturgical Calendar API endpoint"); ?></a>
+                            </div>
                             <small class="text-muted"><i><?php echo _("URL for the API request based on selected options. The button is set to the same URL, click on it to see results."); ?></i></small>
                         </div>
                     </div>
