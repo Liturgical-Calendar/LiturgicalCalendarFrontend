@@ -91,11 +91,17 @@ class CurrentEndpoint {
     });
 
     $(document).on('change', '#APICalendarSelect', function() {
-        if( this.value === "VATICAN" ) {
-            CurrentEndpoint.calendarType = null;
-            CurrentEndpoint.calendarId   = null;
+        if( this.value === "VATICAN" || this.value === '' ) {
+            CurrentEndpoint.calendarType       = null;
+            CurrentEndpoint.calendarId         = null;
+            RequestPayload.locale              = null;
+            RequestPayload.ascension           = null;
+            RequestPayload.corpus_christi      = null;
+            RequestPayload.epiphany            = null;
+            RequestPayload.calendar_type       = null;
+            RequestPayload.eternal_high_priest = null;
         }
-        else if( this.value !== "" ) {
+        else {
             const calendarType = $(this).find(':selected').attr("data-calendartype");
             switch (calendarType){
                 case 'nationalcalendar':
@@ -108,13 +114,12 @@ class CurrentEndpoint {
                     break;
             }
         }
-        RequestPayload.locale              = null;
-        RequestPayload.ascension           = null;
-        RequestPayload.corpus_christi      = null;
-        RequestPayload.epiphany            = null;
-        RequestPayload.calendar_type       = null;
-        RequestPayload.eternal_high_priest = null;
-        $('.requestOption').val('');
+        if( this.value !== '' ) {
+            $('.requestOption').val('');
+            $('.requestOption').prop('disabled', true);
+        } else {
+            $('.requestOption').prop('disabled', false);
+        }
         $('#RequestURLExample').text(CurrentEndpoint.serialize());
         $('#RequestURLButton').attr('href', CurrentEndpoint.serialize());
     });

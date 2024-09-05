@@ -59,15 +59,15 @@ $API_DESCRIPTION = _("A Liturgical Calendar API from which you can retrieve data
                         <div class="row"><!-- <?php echo implode(' | ', $langsAssoc); ?> -->
                             <div class="form-group col-sm-3"><label>epiphany</label><select id="RequestOptionEpiphany" class="form-select requestOption"><option value="">--</option><option value="SUNDAY_JAN2_JAN8">SUNDAY_JAN2_JAN8</option><option value="JAN6">JAN6</option></select></div>
                             <div class="form-group col-sm-3"><label>ascension</label><select id="RequestOptionAscension" class="form-select requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
-                            <div class="form-group col-sm-3"><label>corpuschristi</label><select id="RequestOptionCorpusChristi" class="form-select requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
+                            <div class="form-group col-sm-3"><label>corpus_christi</label><select id="RequestOptionCorpusChristi" class="form-select requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
                             <div class="form-group col-sm-3"><label>locale</label><select id="RequestOptionLocale" class="form-select requestOption"><option value="">--</option><?php
                             foreach ($langsAssoc as $key => $lang) {
                                 $keyUC = strtoupper($key);
                                 echo "<option value=\"$keyUC\">$lang</option>";
                             }
                             ?></select></div>
-                            <div class="form-group col-sm-3"><label>calendartype</label><select id="RequestOptionCalendarType" class="form-select requestOption"><option value="">--</option><option value="CIVIL">CIVIL</option><option value="LITURGICAL">LITURGICAL</option></select></div>
-                            <div class="form-group col-sm-3"><label>eternalhighpriest</label><select id="RequestOptionEternalHighPriest" class="form-select requestOption"><option value="">--</option><option value="true">true</option><option value="false">false</option></select></div>
+                            <div class="form-group col-sm-3"><label>calendar_type</label><select id="RequestOptionCalendarType" class="form-select requestOption"><option value="">--</option><option value="CIVIL">CIVIL</option><option value="LITURGICAL">LITURGICAL</option></select></div>
+                            <div class="form-group col-sm-3"><label>eternal_high_priest</label><select id="RequestOptionEternalHighPriest" class="form-select requestOption"><option value="">--</option><option value="true">true</option><option value="false">false</option></select></div>
                         </div>
                         <small class="text-muted">
                             <p><i><?php echo _("URL for the API request based on selected options (the above button is set to this URL)"); ?>:</i></p>
@@ -91,7 +91,7 @@ $API_DESCRIPTION = _("A Liturgical Calendar API from which you can retrieve data
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-md-6">
                 <div class="card shadow m-2">
                     <div class="card-header py-3">
