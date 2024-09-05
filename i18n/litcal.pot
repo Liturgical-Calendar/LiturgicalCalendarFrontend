@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-05 20:49+0000\n"
+"POT-Creation-Date: 2024-09-05 22:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,11 +19,11 @@ msgstr ""
 
 #: index.php:13
 msgid ""
-"An API for the Liturgical Calendar that returns a collection of Liturgical "
-"events for any given year between 1970 and 9999. The base `/calendar` path "
-"returns liturgical events for the Universal or General Roman Calendar. "
-"National and Diocesan calendars can be requested on the `/calendar/nation/"
-"{NATION}` and `/calendar/diocese/{DIOCESE}` paths respectively."
+"Collection of Liturgical events for any given year between 1970 and 9999. "
+"The base `/calendar` path returns liturgical events for the Universal or "
+"General Roman Calendar. National and Diocesan calendars can be requested on "
+"the `/calendar/nation/{NATION}` and `/calendar/diocese/{DIOCESE}` paths "
+"respectively."
 msgstr ""
 
 #: index.php:17 usage.php:17 liturgyOfAnyDay.php:71
@@ -34,7 +34,7 @@ msgstr ""
 msgid "Catholic Liturgical Calendar"
 msgstr ""
 
-#: index.php:32 index.php:137
+#: index.php:32 index.php:139
 msgid "API Endpoint"
 msgstr ""
 
@@ -74,21 +74,21 @@ msgid ""
 "base `/calendar` resource or any resource below the `/calendar` path."
 msgstr ""
 
-#: index.php:93
+#: index.php:94
 msgid "Liturgical Calendar API endpoint"
 msgstr ""
 
-#: index.php:94
+#: index.php:96
 msgid ""
 "URL for the API request based on selected options. The button is set to the "
 "same URL, click on it to see results."
 msgstr ""
 
-#: index.php:102
+#: index.php:104
 msgid "Liturgical Calendar Validator"
 msgstr ""
 
-#: index.php:105
+#: index.php:107
 msgid ""
 "In order to verify that the liturgical data produced by the API is correct, "
 "there is a Unit Test interface that can run predefined tests against the "
@@ -96,27 +96,27 @@ msgid ""
 "to 25 years from the current year."
 msgstr ""
 
-#: index.php:106
+#: index.php:108
 msgid "LitCal Validator"
 msgstr ""
 
-#: index.php:109
+#: index.php:111
 #, php-format
 msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
 "repository."
 msgstr ""
 
-#: index.php:110
+#: index.php:112
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
 msgstr ""
 
-#: index.php:120 usage.php:174
+#: index.php:122 usage.php:174
 msgid "Calculation of the Date of Easter"
 msgstr ""
 
-#: index.php:123
+#: index.php:125
 msgid ""
 "A simple API endpoint that returns data about the Date of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -126,34 +126,34 @@ msgid ""
 "Julian easter (observed by orthodox churches)"
 msgstr ""
 
-#: index.php:128
+#: index.php:130
 msgid "Date of Easter API endpoint"
 msgstr ""
 
-#: index.php:130
+#: index.php:132
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
 "localizations can be done in a client application just as well."
 msgstr ""
 
-#: index.php:137
+#: index.php:139
 msgid "Definition"
 msgstr ""
 
-#: index.php:140
+#: index.php:142
 msgid "Swagger / Open API Documentation"
 msgstr ""
 
-#: index.php:142
+#: index.php:144
 msgid "The Open API json schema for this API has been updated to OpenAPI 3.1."
 msgstr ""
 
-#: index.php:148
+#: index.php:150
 msgid "Translation Tool"
 msgstr ""
 
-#: index.php:154 index.php:157
+#: index.php:156 index.php:159
 msgid "Translations status"
 msgstr ""
 
