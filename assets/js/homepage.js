@@ -1,132 +1,159 @@
 const { COUNTRIES, LITCAL_LOCALE } = ISO_3166_1_alpha_2;
 let countryNames = new Intl.DisplayNames([LITCAL_LOCALE], {type: 'region'});
-let CalendarNations = [];
-let selectOptions = {};
-let requestURL = {
-    year: null,
-    corpuschristi: null,
-    epiphany: null,
-    ascension: null,
-    locale: null,
-    returntype: null,
-    nationalcalendar: null,
-    diocesancalendar: null,
-    calendartype: null,
-    eternalhighpriest: null
+
+/**
+ * Enum CalendarType
+ * Used in building the endpoint URL for requests to the API /calendar endpoint
+ */
+const CalendarType = {
+    NATIONAL: 'nation',
+    DIOCESAN: 'diocese'
+}
+Object.freeze(CalendarType);
+
+/**
+ * Class RequestPayload
+ * Describes the URL parameters that can be set on the API /calendar endpoint
+ */
+class RequestPayload {
+    static corpus_christi       = null;
+    static epiphany             = null;
+    static ascension            = null;
+    static locale               = null;
+    static return_type          = null;
+    static calendar_type        = null;
+    static eternal_high_priest  = null;
 };
-let serializeRequestURL = function(obj){
-    let parameters = [];
-    for (const key in obj) {
-        if(obj[key] != null && obj[key] != ''){
-            parameters.push(key + "=" + encodeURIComponent(obj[key]));
+
+/**
+ * Class CurrentEndpoint
+ * Used to build the full endpoint URL for the API /calendar endpoint
+ */
+class CurrentEndpoint {
+    get apiBase() {
+        return `${RequestURLBase}calendar`
+    };
+    static calendarType   = null;
+    static calendarId     = null;
+    static calendarYear   = null;
+    static serialize = () => {
+        let currentEndpoint = CurrentEndpoint.apiBase;
+        if ( CurrentEndpoint.calendarType !== null && CurrentEndpoint.calendarId !== null ) {
+            currentEndpoint += `/${CurrentEndpoint.calendarType}/${CurrentEndpoint.calendarId}`;
         }
+        if ( CurrentEndpoint.calendarYear !== null ) {
+            currentEndpoint += `/${CurrentEndpoint.calendarYear}`;
+        }
+        let parameters = [];
+        for (const key in RequestPayload) {
+            if(RequestPayload[key] !== null && RequestPayload[key] !== ''){
+                parameters.push(key + "=" + encodeURIComponent(RequestPayload[key]));
+            }
+        }
+        let urlParams = parameters.length ? `?${parameters.join('&')}` : '';
+        return `${currentEndpoint}${urlParams}`;
     }
-    return parameters.join('&');
-};
+}
+
 
 (function ($) {
-    $.getJSON( MetaDataURL, data => {
-        const { LitCalMetadata } = data;
-        const { NationalCalendars, DiocesanCalendars } = LitCalMetadata;
-        for(const [key,value] of Object.entries(DiocesanCalendars)){
-            if(CalendarNations.indexOf(value.nation) === -1){
-                CalendarNations.push(value.nation);
-                selectOptions[value.nation] = [];
-            }
-            selectOptions[value.nation].push(`<option data-calendartype="diocesancalendar" value="${key}">${value.diocese}</option>`);
-        }
+    let CalendarNations = [];
+    let selectOptions = {};
 
-        let nations = Object.keys( NationalCalendars );
-        nations.sort((a, b) => countryNames.of(COUNTRIES[a]).localeCompare(countryNames.of(COUNTRIES[b])))
-        nations.forEach(item => {
+    $.getJSON( MetaDataURL, data => {
+        const { litcal_metadata } = data;
+        const { national_calendars_keys, diocesan_calendars } = litcal_metadata;
+
+        diocesan_calendars.forEach(item => {
+            if(false === CalendarNations.includes(item.nation)){
+                CalendarNations.push(item.nation);
+                selectOptions[item.nation] = [];
+            }
+            selectOptions[item.nation].push(`<option data-calendartype="diocesancalendar" value="${item.calendar_id}">${item.diocese}</option>`);
+        });
+
+        national_calendars_keys.sort((a, b) => countryNames.of(COUNTRIES[a]).localeCompare(countryNames.of(COUNTRIES[b])))
+
+        const $select = $('#APICalendarSelect');
+        national_calendars_keys.forEach(item => {
             if( false === CalendarNations.includes(item) ) {
-                $('#APICalendarSelect').append(`<option data-calendartype="nationalcalendar" value="${item}">${countryNames.of(COUNTRIES[item])}</option>`);
+                $select.append(`<option data-calendartype="nationalcalendar" value="${item}">${countryNames.of(COUNTRIES[item])}</option>`);
             }
         });
 
         CalendarNations.sort((a, b) => countryNames.of(COUNTRIES[a]).localeCompare(countryNames.of(COUNTRIES[b])));
         CalendarNations.forEach(item => {
-            $('#APICalendarSelect').append(`<option data-calendartype="nationalcalendar" value="${item}">${countryNames.of(COUNTRIES[item])}</option>`);
-            let $optGroup = $(`<optgroup label="${countryNames.of(COUNTRIES[item])}">`);
-            $('#APICalendarSelect').append($optGroup);
+            $select.append(`<option data-calendartype="nationalcalendar" value="${item}">${countryNames.of(COUNTRIES[item])}</option>`);
+            const $optGroup = $(`<optgroup label="${countryNames.of(COUNTRIES[item])}">`);
+            $select.append($optGroup);
             selectOptions[item].forEach(groupItem => $optGroup.append(groupItem));
         });
     });
 
-    $(document).on('change','#APICalendarSelect',function(){
-        if($(this).val() != "" && $(this).val() != "VATICAN" ){
-            let calendarType = $(this).find(':selected').attr("data-calendartype");
-            switch(calendarType){
+    $(document).on('change', '#APICalendarSelect', function() {
+        if( this.value === "VATICAN" ) {
+            CurrentEndpoint.calendarType = null;
+            CurrentEndpoint.calendarId   = null;
+        }
+        else if( this.value !== "" ) {
+            const calendarType = $(this).find(':selected').attr("data-calendartype");
+            switch (calendarType){
                 case 'nationalcalendar':
-                    requestURL.nationalcalendar = $(this).val();
-                    requestURL.diocesancalendar = null;
+                    CurrentEndpoint.calendarType = CalendarType.NATIONAL;
+                    CurrentEndpoint.calendarId   = this.value;
                     break;
                 case 'diocesancalendar':
-                    requestURL.diocesancalendar = $(this).val();
-                    requestURL.nationalcalendar = null;
+                    CurrentEndpoint.calendarType = CalendarType.DIOCESAN;
+                    CurrentEndpoint.calendarId   = this.value;
                     break;
             }
-        } else {
-            requestURL.nationalcalendar = null;
-            requestURL.diocesancalendar = null;
         }
-        requestURL.locale = null;
-        requestURL.ascension = null;
-        requestURL.corpuschristi = null;
-        requestURL.epiphany = null;
-        requestURL.calendartype = null;
-        requestURL.eternalhighpriest = null;
+        RequestPayload.locale              = null;
+        RequestPayload.ascension           = null;
+        RequestPayload.corpus_christi      = null;
+        RequestPayload.epiphany            = null;
+        RequestPayload.calendar_type       = null;
+        RequestPayload.eternal_high_priest = null;
         $('.requestOption').val('');
-        let requestURL_encoded = serializeRequestURL(requestURL);
-        $('#RequestURLExample').text(`${RequestURLBase}${requestURL_encoded!=''?'?':''}${requestURL_encoded}`);
-        $('#RequestURLButton').attr('href',`${RequestURLBase}${requestURL_encoded!=''?'?':''}${requestURL_encoded}`);
+        $('#RequestURLExample').text(CurrentEndpoint.serialize());
+        $('#RequestURLButton').attr('href', CurrentEndpoint.serialize());
     });
 
-    $(document).on('change','#RequestOptionReturnType',function(){
-        requestURL.returntype = $(this).val();
-        let requestURL_encoded = serializeRequestURL(requestURL);
-        $('#RequestURLExample').text(`${RequestURLBase}${requestURL_encoded!=''?'?':''}${requestURL_encoded}`);
-        $('#RequestURLButton').attr('href',`${RequestURLBase}${requestURL_encoded!=''?'?':''}${requestURL_encoded}`);
+    $(document).on('change', '#RequestOptionReturnType', function() {
+        RequestPayload.return_type = this.value;
+        $('#RequestURLExample').text(CurrentEndpoint.serialize());
+        $('#RequestURLButton').attr('href', CurrentEndpoint.serialize());
     });
 
-    $(document).on('change','.requestOption',function(){
+    $(document).on( 'change', '.requestOption', function() {
         $('#APICalendarSelect').val("");
-        requestURL.nationalcalendar = null;
-        requestURL.diocesancalendar = null;
         switch($(this).attr("id")){
             case 'RequestOptionEpiphany':
-                requestURL.epiphany = $(this).val();
+                RequestPayload.epiphany = this.value;
                 break;
             case 'RequestOptionCorpusChristi':
-                requestURL.corpuschristi = $(this).val();
+                RequestPayload.corpus_christi = this.value;
                 break;
             case 'RequestOptionAscension':
-                requestURL.ascension = $(this).val();
+                RequestPayload.ascension = this.value;
                 break;
             case 'RequestOptionLocale':
-                requestURL.locale = $(this).val();
+                RequestPayload.locale = this.value;
                 break;
             case 'RequestOptionCalendarType':
-                requestURL.calendartype = $(this).val();
+                RequestPayload.calendar_type = this.value;
                 break;
             case 'RequestOptionEternalHighPriest':
-                requestURL.eternalhighpriest = $(this).val();
+                RequestPayload.eternal_high_priest = this.value;
         }
-        let requestURL_encoded = serializeRequestURL(requestURL);
-        $('#RequestURLExample').text(`${RequestURLBase}${requestURL_encoded!=''?'?':''}${requestURL_encoded}`);
-        $('#RequestURLButton').attr('href',`${RequestURLBase}${requestURL_encoded!=''?'?':''}${requestURL_encoded}`);
+        $('#RequestURLExample').text(CurrentEndpoint.serialize());
+        $('#RequestURLButton').attr('href', CurrentEndpoint.serialize());
     });
 
-    $(document).on('change','#RequestOptionYear',function(){
-        requestURL.year = $(this).val();
-        let requestURL_encoded = serializeRequestURL(requestURL);
-        $('#RequestURLExample').text(`${RequestURLBase}${requestURL_encoded!=''?'?':''}${requestURL_encoded}`);
-        $('#RequestURLButton').attr('href',`${RequestURLBase}${requestURL_encoded!=''?'?':''}${requestURL_encoded}`);
+    $(document).on( 'change', '#RequestOptionYear', function() {
+        CurrentEndpoint.calendarYear = this.value;
+        $('#RequestURLExample').text(CurrentEndpoint.serialize());
+        $('#RequestURLButton').attr('href', CurrentEndpoint.serialize());
     });
 
 })(jQuery);
-/*
-const onlyUnique = function(value, index, self) {
-    return self.indexOf(value) === index;
-}
-*/

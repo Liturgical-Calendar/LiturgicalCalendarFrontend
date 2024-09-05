@@ -16,15 +16,15 @@ function () {
     return str;
 };
 
-Object.filter = (obj, predicate) => 
+Object.filter = (obj, predicate) =>
     Object.keys(obj)
       .filter( key => predicate(obj[key]) )
       .reduce( (res, key) => (res[key] = obj[key], res), {} );
 
 const isStaging = location.href.includes('-staging');
 const endpointV = isStaging ? 'dev' : 'v3';
-const MetaDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/metadata/`;
-const RegionalDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/regionaldata/`;
+const MetaDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/calendars`;
+const RegionalDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/data`;
 const RequestURLBase = `https://litcal.johnromanodorazio.com/api/${endpointV}/`;
 
 $(document).on('click', '.sidebarToggle', event => {
