@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-05 22:31+0000\n"
+"POT-Creation-Date: 2024-09-05 23:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,83 +17,92 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: index.php:13
+#. translators: 1. /calendar, 2. /calendar/nation/{NATION}, 3. /calendar/diocese/{DIOCESE}
+#: index.php:15
+#, php-format
 msgid ""
 "Collection of Liturgical events for any given year between 1970 and 9999. "
-"The base `/calendar` path returns liturgical events for the Universal or "
-"General Roman Calendar. National and Diocesan calendars can be requested on "
-"the `/calendar/nation/{NATION}` and `/calendar/diocese/{DIOCESE}` paths "
+"The base %1$s path returns liturgical events for the General Roman Calendar. "
+"National and Diocesan calendars can be requested on the %2$s and %3$s paths "
 "respectively."
 msgstr ""
 
-#: index.php:17 usage.php:17 liturgyOfAnyDay.php:71
+#: index.php:23 usage.php:17 liturgyOfAnyDay.php:71
 msgid "General Roman Calendar"
 msgstr ""
 
-#: index.php:25 layout/header.php:81
+#: index.php:31 layout/header.php:81
 msgid "Catholic Liturgical Calendar"
 msgstr ""
 
-#: index.php:32
-msgid "API '/calendar' endpoint"
+#: index.php:38
+msgid "API /calendar endpoint"
 msgstr ""
 
-#: index.php:37
+#: index.php:43
 msgid "Path builder"
 msgstr ""
 
-#: index.php:39
+#: index.php:45
 msgid "Calendar to retrieve from the API"
 msgstr ""
 
 #. translators: %s = '/calendar'
-#: index.php:52
+#: index.php:58
 #, php-format
 msgid "Request parameters available on the base %s path"
 msgstr ""
 
-#: index.php:67
+#. translators: 1. /calendar/nation/{NATION}, 2. /calendar/diocese/{DIOCESE}
+#: index.php:75
+#, php-format
 msgid ""
 "These parameters are useful for tweaking the calendar results, when no "
 "National or Diocesan calendar is requested. Since National and Diocesan "
 "calendars have these parameters built in, the parameters are not available "
-"on routes for National or Diocesan calendars."
+"on the %1$s and %2$s routes."
 msgstr ""
 
-#: index.php:69
+#. translators: 1. VATICAN, 2. /calendar
+#: index.php:82
+#, php-format
 msgid ""
-"N.B. Even though selecting 'VATICAN' will set the base `/calendar` path, it "
-"will have the same effect as selecting a National or Diocesan calendar, "
-"since we are requesting the Vatican calendar's built-in parameters; in other "
-"words, using none of the following parameters on the base path will give us "
-"the General Roman calendar as used in the Vatican."
+"N.B. Even though selecting %1$s will set the base %2$s path, it will have "
+"the same effect as selecting a National or Diocesan calendar, since we are "
+"requesting the Vatican calendar's built-in parameters; in other words, using "
+"none of these parameters on the base %2$s path will give us the General "
+"Roman calendar as used in the Vatican."
 msgstr ""
 
-#: index.php:73
-msgid "Request parameters available on all calendar paths"
-msgstr ""
-
+#. translators: 1. /calendar
 #: index.php:91
+#, php-format
+msgid "Request parameters available on all %1$s paths"
+msgstr ""
+
+#. translators: 1. /calendar
+#: index.php:114
+#, php-format
 msgid ""
 "These request parameters can always be set, whether we are requesting the "
-"base `/calendar` resource or any resource below the `/calendar` path."
+"base %1$s resource or any resource below the %1$s path."
 msgstr ""
 
-#: index.php:98
+#: index.php:124
 msgid "Liturgical Calendar API endpoint"
 msgstr ""
 
-#: index.php:100
+#: index.php:126
 msgid ""
-"URL for the API request based on selected options. The button is set to the "
+"URL of the API request based on selected options. The button is set to the "
 "same URL, click on it to see results."
 msgstr ""
 
-#: index.php:108
+#: index.php:134 index.php:138
 msgid "Liturgical Calendar Validator"
 msgstr ""
 
-#: index.php:111
+#: index.php:137
 msgid ""
 "In order to verify that the liturgical data produced by the API is correct, "
 "there is a Unit Test interface that can run predefined tests against the "
@@ -101,63 +110,59 @@ msgid ""
 "to 25 years from the current year."
 msgstr ""
 
-#: index.php:112
-msgid "LitCal Validator"
-msgstr ""
-
-#: index.php:115
+#: index.php:141
 #, php-format
 msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
 "repository."
 msgstr ""
 
-#: index.php:116
+#: index.php:142
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
 msgstr ""
 
-#: index.php:123
+#: index.php:149
 msgid "Translation Tool"
 msgstr ""
 
-#: index.php:129 index.php:132
+#: index.php:155 index.php:158
 msgid "Translations status"
 msgstr ""
 
-#: index.php:140
+#: index.php:166
 msgid "Open API Schema"
 msgstr ""
 
-#: index.php:143
+#: index.php:169
 msgid "Swagger / Open API Documentation"
 msgstr ""
 
-#: index.php:145
+#: index.php:171
 msgid ""
 "All of the available API routes with their supported methods, parameters, "
 "content types and responses are described here."
 msgstr ""
 
-#: index.php:151 usage.php:174
+#: index.php:177 usage.php:174
 msgid "Calculation of the Date of Easter"
 msgstr ""
 
-#: index.php:154
+#: index.php:180
 msgid ""
 "A simple API endpoint that returns data about the Date of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
 "Calendar) to 9999 (maximum possible date calculation in 64bit PHP), using a "
 "PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian easter "
 "(observed by the Roman Catholic church) and of the Meeus algorithm for "
-"Julian easter (observed by orthodox churches)"
+"Julian easter (observed by orthodox churches)."
 msgstr ""
 
-#: index.php:159
+#: index.php:185
 msgid "Date of Easter API endpoint"
 msgstr ""
 
-#: index.php:161
+#: index.php:187
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
