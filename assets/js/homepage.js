@@ -60,8 +60,9 @@ class CurrentEndpoint {
     let CalendarNations = [];
     let selectOptions = {};
 
-    $.getJSON( MetaDataURL, data => {
-        const { litcal_metadata } = data;
+    fetch( MetaDataURL ).then(data => data.json()).then(jsonData => {
+        console.log(jsonData);
+        const { litcal_metadata } = jsonData;
         const { national_calendars_keys, diocesan_calendars } = litcal_metadata;
 
         diocesan_calendars.forEach(item => {
