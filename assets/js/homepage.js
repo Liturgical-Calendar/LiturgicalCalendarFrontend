@@ -25,6 +25,14 @@ class RequestPayload {
     static calendar_type        = null;
 };
 
+const requestOptionDefaults = {
+    "epiphany": 'JAN6',
+    "ascension": 'THURSDAY',
+    "corpus_christi": 'THURSDAY',
+    "eternal_high_priest": false,
+    "locale": 'LA'
+}
+
 /**
  * Class CurrentEndpoint
  * Used to build the full endpoint URL for the API /calendar endpoint
@@ -119,6 +127,7 @@ class CalendarSelect {
     }
 }
 
+let litcalMetadata = null;
 
 (function ($) {
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
@@ -127,6 +136,7 @@ class CalendarSelect {
         console.log(jsonData);
         const { litcal_metadata } = jsonData;
         const { national_calendars_keys, diocesan_calendars } = litcal_metadata;
+        litcalMetadata = litcal_metadata;
 
         CalendarSelect.buildAllOptions(diocesan_calendars, national_calendars_keys);
     });
@@ -148,22 +158,25 @@ class CalendarSelect {
                 $('#APICalendarSelect').prop('disabled', true);
                 break;
             case '/calendar/nation/':
-                $('.requestOption').prop('disabled', true);
-                $('#APICalendarSelect').prop('disabled', false);
                 selectEl.innerHTML = CalendarSelect.nationsInnerHtml;
                 if ( CurrentEndpoint.calendarType !== CalendarType.NATIONAL ) {
                     CurrentEndpoint.calendarId   = selectEl.value;
                     CurrentEndpoint.calendarType = CalendarType.NATIONAL;
                 }
-                break;
-            case '/calendar/diocese/':
+                document.querySelectorAll('.requestOption').forEach(el => {
+                    el.value = requestOptionDefaults[el.dataset.param];
+                })
                 $('.requestOption').prop('disabled', true);
                 $('#APICalendarSelect').prop('disabled', false);
+                break;
+            case '/calendar/diocese/':
                 selectEl.innerHTML = CalendarSelect.diocesesInnerHtml;
                 if ( CurrentEndpoint.calendarType !== CalendarType.DIOCESAN ) {
                     CurrentEndpoint.calendarId   = selectEl.value;
                     CurrentEndpoint.calendarType = CalendarType.DIOCESAN;
                 }
+                $('.requestOption').prop('disabled', true);
+                $('#APICalendarSelect').prop('disabled', false);
                 break;
         }
         $('#RequestURLExample').text(CurrentEndpoint.serialize());

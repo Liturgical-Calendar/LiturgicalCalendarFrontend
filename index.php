@@ -82,7 +82,7 @@ $API_DESCRIPTION = _('Collection of Liturgical events for any given year between
                                 ?></h5>
                             <div class="form-group col-sm-2">
                                 <label>epiphany</label>
-                                <select id="RequestOptionEpiphany" class="form-select requestOption">
+                                <select id="RequestOptionEpiphany" data-param="epiphany" class="form-select requestOption">
                                     <option value="">--</option>
                                     <option value="SUNDAY_JAN2_JAN8">SUNDAY_JAN2_JAN8</option>
                                     <option value="JAN6">JAN6</option>
@@ -90,7 +90,7 @@ $API_DESCRIPTION = _('Collection of Liturgical events for any given year between
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>ascension</label>
-                                <select id="RequestOptionAscension" class="form-select requestOption">
+                                <select id="RequestOptionAscension" data-param="ascension" class="form-select requestOption">
                                     <option value="">--</option>
                                     <option value="SUNDAY">SUNDAY</option>
                                     <option value="THURSDAY">THURSDAY</option>
@@ -98,7 +98,7 @@ $API_DESCRIPTION = _('Collection of Liturgical events for any given year between
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>corpus_christi</label>
-                                <select id="RequestOptionCorpusChristi" class="form-select requestOption">
+                                <select id="RequestOptionCorpusChristi" data-param="corpus_christi" class="form-select requestOption">
                                     <option value="">--</option>
                                     <option value="SUNDAY">SUNDAY</option>
                                     <option value="THURSDAY">THURSDAY</option>
@@ -106,7 +106,7 @@ $API_DESCRIPTION = _('Collection of Liturgical events for any given year between
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>eternal_high_priest</label>
-                                <select id="RequestOptionEternalHighPriest" class="form-select requestOption">
+                                <select id="RequestOptionEternalHighPriest" data-param="eternal_high_priest" class="form-select requestOption">
                                     <option value="">--</option>
                                     <option value="true">true</option>
                                     <option value="false">false</option>
@@ -114,7 +114,7 @@ $API_DESCRIPTION = _('Collection of Liturgical events for any given year between
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>locale <i class="fas fa-circle-info ms-2" data-bs-toggle="tooltip" data-bs-title="<?php echo _('It is preferable to set the locale using the Accept-Language header rather than using this request parameter. N.B. The Accept-Language header will have no effect when a National or Diocesan calendar is requested.'); ?>" role="button"></i></label>
-                                <select id="RequestOptionLocale" class="form-select requestOption">
+                                <select id="RequestOptionLocale" data-param="locale" class="form-select requestOption">
                                     <option value="">--</option><?php
                                     foreach ($langsAssoc as $key => $lang) {
                                         $keyUC = strtoupper($key);
