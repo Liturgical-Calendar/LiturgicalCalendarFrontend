@@ -80,16 +80,49 @@ $API_DESCRIPTION = _('Collection of Liturgical events for any given year between
                                     '<b><code>/calendar</code></b>'
                                 );
                                 ?></h5>
-                            <div class="form-group col-sm-2"><label>epiphany</label><select id="RequestOptionEpiphany" class="form-select requestOption"><option value="">--</option><option value="SUNDAY_JAN2_JAN8">SUNDAY_JAN2_JAN8</option><option value="JAN6">JAN6</option></select></div>
-                            <div class="form-group col-sm-2"><label>ascension</label><select id="RequestOptionAscension" class="form-select requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
-                            <div class="form-group col-sm-2"><label>corpus_christi</label><select id="RequestOptionCorpusChristi" class="form-select requestOption"><option value="">--</option><option value="SUNDAY">SUNDAY</option><option value="THURSDAY">THURSDAY</option></select></div>
-                            <div class="form-group col-sm-2"><label>eternal_high_priest</label><select id="RequestOptionEternalHighPriest" class="form-select requestOption"><option value="">--</option><option value="true">true</option><option value="false">false</option></select></div>
-                            <div class="form-group col-sm-2"><label>locale</label><select id="RequestOptionLocale" class="form-select requestOption"><option value="">--</option><?php
-                            foreach ($langsAssoc as $key => $lang) {
-                                $keyUC = strtoupper($key);
-                                echo "<option value=\"$keyUC\">$lang</option>";
-                            }
-                            ?></select></div>
+                            <div class="form-group col-sm-2">
+                                <label>epiphany</label>
+                                <select id="RequestOptionEpiphany" class="form-select requestOption">
+                                    <option value="">--</option>
+                                    <option value="SUNDAY_JAN2_JAN8">SUNDAY_JAN2_JAN8</option>
+                                    <option value="JAN6">JAN6</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>ascension</label>
+                                <select id="RequestOptionAscension" class="form-select requestOption">
+                                    <option value="">--</option>
+                                    <option value="SUNDAY">SUNDAY</option>
+                                    <option value="THURSDAY">THURSDAY</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>corpus_christi</label>
+                                <select id="RequestOptionCorpusChristi" class="form-select requestOption">
+                                    <option value="">--</option>
+                                    <option value="SUNDAY">SUNDAY</option>
+                                    <option value="THURSDAY">THURSDAY</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>eternal_high_priest</label>
+                                <select id="RequestOptionEternalHighPriest" class="form-select requestOption">
+                                    <option value="">--</option>
+                                    <option value="true">true</option>
+                                    <option value="false">false</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>locale <i class="fas fa-circle-info ms-2" title="<?php echo _('It is preferable to set the locale using the Accept-Language header rather than using this request parameter.'); ?>" role="button"></i></label>
+                                <select id="RequestOptionLocale" class="form-select requestOption">
+                                    <option value="">--</option><?php
+                                    foreach ($langsAssoc as $key => $lang) {
+                                        $keyUC = strtoupper($key);
+                                        echo "<option value=\"$keyUC\">$lang</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
                             <small class="text-muted"><i>
                                 <?php echo sprintf(
                                     /**translators: 1. /calendar/nation/{NATION}, 2. /calendar/diocese/{DIOCESE} */
@@ -110,7 +143,7 @@ $API_DESCRIPTION = _('Collection of Liturgical events for any given year between
                                 '<b><code>/calendar</code></b>'
                             ); ?></h5>
                             <div class="form-group col-sm-4">
-                                <label>return_type</label>
+                                <label>return_type <i class="fas fa-circle-info ms-2" title="<?php echo _('It is preferable to request the response content type using the Accept header rather than using this request parameter.'); ?>" role="button"></i></label>
                                 <select id="RequestOptionReturnType" class="form-select">
                                     <option value="">--</option>
                                     <option value="JSON">JSON</option>
