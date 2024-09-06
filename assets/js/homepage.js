@@ -194,6 +194,9 @@ let litcalMetadata = null;
                 });
                 if (this.value !== 'VATICAN') {
                     let nationalCalendarSettings = litcalMetadata.national_calendars.filter(nationCalendarObj => nationCalendarObj.calendar_id === this.value)[0].settings;
+                    let locale = nationalCalendarSettings.locale.replace('_', '-');
+                    locale = new Intl.Locale(locale);
+                    nationalCalendarSettings.locale = locale.language.toUpperCase();
                     document.querySelectorAll('.requestOption').forEach(el => {
                         if (nationalCalendarSettings.hasOwnProperty(el.dataset.param)) {
                             el.value = nationalCalendarSettings[el.dataset.param];
