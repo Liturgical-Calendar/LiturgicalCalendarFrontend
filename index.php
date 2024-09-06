@@ -10,13 +10,19 @@ $calendarURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/calendar";
 $metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/calendars/";
 $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/easter/";
 
-$API_DESCRIPTION = sprintf(
-    /**translators: 1. /calendar, 2. /calendar/nation/{NATION}, 3. /calendar/diocese/{DIOCESE} */
-    _('Collection of Liturgical events for any given year between 1970 and 9999. The base %1$s path returns liturgical events for the General Roman Calendar. National and Diocesan calendars can be requested on the %2$s and %3$s paths respectively.'),
-    '<b><code>/calendar</code></b>',
-    '<b><code>/calendar/nation/{NATION}</code></b>',
-    '<b><code>/calendar/diocese/{DIOCESE}</code></b>'
-);
+$API_DESCRIPTION = _('Collection of Liturgical events for any given year between 1970 and 9999.') . " " .
+    sprintf(
+        /**translators: 1. /calendar, 2. /calendar/nation/{NATION}, 3. /calendar/diocese/{DIOCESE} */
+        _('The base %1$s path returns liturgical events for the General Roman Calendar. National and Diocesan calendars can be requested on the %2$s and %3$s paths respectively.'),
+        '<b><code>/calendar</code></b>',
+        '<b><code>/calendar/nation/{NATION}</code></b>',
+        '<b><code>/calendar/diocese/{DIOCESE}</code></b>'
+    ) . " " .
+    sprintf(
+        /**translators: 1. /{YEAR} */
+        _('Each of these paths can optionally be further specified with a %1$s path parameter. When not specified, the API will default to the current year.'),
+        '<b><code>/{YEAR}</code></b>'
+    );
 ?>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
@@ -56,13 +62,13 @@ $API_DESCRIPTION = sprintf(
                                 </select>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="APICalendarSelect"><?php echo _("Calendars available on selected route"); ?>:</label>
+                                <label for="APICalendarSelect"><?php echo _("Calendars available on selected route"); ?></label>
                                 <select id="APICalendarSelect" class="form-select" disabled>
                                     <option value="">GENERAL ROMAN</option>
                                 </select>
                             </div>
                             <div class="form-group col-sm-3">
-                                <label>year</label>
+                                <label><?php echo _("Year"); ?></label>
                                 <input id="RequestOptionYear" class="form-control" type="number" min=1970 max=9999 value=<?php echo date("Y"); ?> />
                             </div>
                         </div>
@@ -92,11 +98,9 @@ $API_DESCRIPTION = sprintf(
                                     '<b><code>/calendar/diocese/{DIOCESE}</code></b>'
                                 ); ?>
                                 <br />
-                                <?php echo sprintf(
-                                    /**translators: 1. /calendar */
-                                    _('N.B. Using none of these parameters on the base %1$s route will give us the General Roman calendar as used in the Vatican.'),
-                                    '<b><code>/calendar</code></b>'
-                                ); ?>
+                                <?php
+                                    echo _('N.B. When none of these parameters are set, the API will use the defaults as in use in the Vatican.')
+                                ?>
                             </i></small>
                         </div>
                         <div class="row mb-4">
