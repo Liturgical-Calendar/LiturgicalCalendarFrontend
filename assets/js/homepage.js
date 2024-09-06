@@ -125,18 +125,30 @@ class CalendarSelect {
         switch (this.value) {
             case '/calendar':
                 selectEl.innerHTML = '<option value="">---</option>';
+                CurrentEndpoint.calendarType = null;
+                CurrentEndpoint.calendarId   = null;
                 break;
             case '/calendar/nation/':
                 selectEl.innerHTML = CalendarSelect.nationsInnerHtml;
+                if ( CurrentEndpoint.calendarType !== CalendarType.NATIONAL ) {
+                    CurrentEndpoint.calendarId   = null;
+                    CurrentEndpoint.calendarType = CalendarType.NATIONAL;
+                }
                 break;
             case '/calendar/diocese/':
                 selectEl.innerHTML = CalendarSelect.diocesesInnerHtml;
+                if ( CurrentEndpoint.calendarType !== CalendarType.DIOCESAN ) {
+                    CurrentEndpoint.calendarId   = null;
+                    CurrentEndpoint.calendarType = CalendarType.DIOCESAN;
+                }
                 break;
         }
+        $('#RequestURLExample').text(CurrentEndpoint.serialize());
+        $('#RequestURLButton').attr('href', CurrentEndpoint.serialize());
     });
 
     $(document).on('change', '#APICalendarSelect', function() {
-        if( this.value === "VATICAN" || this.value === '' ) {
+        if( this.value === '' ) {
             CurrentEndpoint.calendarType       = null;
             CurrentEndpoint.calendarId         = null;
             RequestPayload.locale              = null;
@@ -145,6 +157,7 @@ class CalendarSelect {
             RequestPayload.epiphany            = null;
             RequestPayload.calendar_type       = null;
             RequestPayload.eternal_high_priest = null;
+            $('.requestOption').prop('disabled', false);
         }
         else {
             const calendarType = $(this).find(':selected').attr("data-calendartype");
@@ -158,12 +171,8 @@ class CalendarSelect {
                     CurrentEndpoint.calendarId   = this.value;
                     break;
             }
-        }
-        if( this.value !== '' ) {
             $('.requestOption').val('');
             $('.requestOption').prop('disabled', true);
-        } else {
-            $('.requestOption').prop('disabled', false);
         }
         $('#RequestURLExample').text(CurrentEndpoint.serialize());
         $('#RequestURLButton').attr('href', CurrentEndpoint.serialize());
