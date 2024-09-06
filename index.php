@@ -113,7 +113,7 @@ $API_DESCRIPTION = _('Collection of Liturgical events for any given year between
                                 </select>
                             </div>
                             <div class="form-group col-sm-2">
-                                <label>locale <i class="fas fa-circle-info ms-2" data-bs-toggle="tooltip" data-bs-title="<?php echo _('It is preferable to set the locale using the Accept-Language header rather than using this request parameter.'); ?>" role="button"></i></label>
+                                <label>locale <i class="fas fa-circle-info ms-2" data-bs-toggle="tooltip" data-bs-title="<?php echo _('It is preferable to set the locale using the Accept-Language header rather than using this request parameter. N.B. The Accept-Language header will have no effect when a National or Diocesan calendar is requested.'); ?>" role="button"></i></label>
                                 <select id="RequestOptionLocale" class="form-select requestOption">
                                     <option value="">--</option><?php
                                     foreach ($langsAssoc as $key => $lang) {
