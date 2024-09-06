@@ -121,7 +121,8 @@ class CalendarSelect {
 
 
 (function ($) {
-
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
     fetch( MetaDataURL ).then(data => data.json()).then(jsonData => {
         console.log(jsonData);
         const { litcal_metadata } = jsonData;

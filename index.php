@@ -113,7 +113,7 @@ $API_DESCRIPTION = _('Collection of Liturgical events for any given year between
                                 </select>
                             </div>
                             <div class="form-group col-sm-2">
-                                <label>locale <i class="fas fa-circle-info ms-2" title="<?php echo _('It is preferable to set the locale using the Accept-Language header rather than using this request parameter.'); ?>" role="button"></i></label>
+                                <label>locale <i class="fas fa-circle-info ms-2" data-bs-toggle="tooltip" data-bs-title="<?php echo _('It is preferable to set the locale using the Accept-Language header rather than using this request parameter.'); ?>" role="button"></i></label>
                                 <select id="RequestOptionLocale" class="form-select requestOption">
                                     <option value="">--</option><?php
                                     foreach ($langsAssoc as $key => $lang) {
@@ -143,7 +143,7 @@ $API_DESCRIPTION = _('Collection of Liturgical events for any given year between
                                 '<b><code>/calendar</code></b>'
                             ); ?></h5>
                             <div class="form-group col-sm-4">
-                                <label>return_type <i class="fas fa-circle-info ms-2" title="<?php echo _('It is preferable to request the response content type using the Accept header rather than using this request parameter.'); ?>" role="button"></i></label>
+                                <label>return_type <i class="fas fa-circle-info ms-2" data-bs-toggle="tooltip" data-bs-title="<?php echo _('It is preferable to request the response content type using the Accept header rather than using this request parameter.'); ?>" role="button"></i></label>
                                 <select id="RequestOptionReturnType" class="form-select">
                                     <option value="">--</option>
                                     <option value="JSON">JSON</option>
