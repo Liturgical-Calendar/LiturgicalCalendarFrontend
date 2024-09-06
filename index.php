@@ -57,7 +57,7 @@ $API_DESCRIPTION = sprintf(
                             </div>
                             <div class="form-group col-sm-6">
                                 <label for="APICalendarSelect"><?php echo _("Calendars available on selected route"); ?>:</label>
-                                <select id="APICalendarSelect" class="form-select">
+                                <select id="APICalendarSelect" class="form-select" disabled>
                                     <option value="">---</option>
                                 </select>
                             </div>
