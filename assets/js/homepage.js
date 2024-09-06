@@ -141,7 +141,7 @@ class CalendarSelect {
             case '/calendar/nation/':
                 selectEl.innerHTML = CalendarSelect.nationsInnerHtml;
                 if ( CurrentEndpoint.calendarType !== CalendarType.NATIONAL ) {
-                    CurrentEndpoint.calendarId   = null;
+                    CurrentEndpoint.calendarId   = selectEl.value;
                     CurrentEndpoint.calendarType = CalendarType.NATIONAL;
                 }
                 break;
