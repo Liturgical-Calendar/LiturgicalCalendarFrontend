@@ -134,7 +134,7 @@ class CalendarSelect {
         const selectEl = document.querySelector('#APICalendarSelect');
         switch (this.value) {
             case '/calendar':
-                selectEl.innerHTML = '<option value="">---</option>';
+                selectEl.innerHTML = '<option value="">GENERAL ROMAN</option>';
                 CurrentEndpoint.calendarType       = null;
                 CurrentEndpoint.calendarId         = null;
                 RequestPayload.locale              = null;
