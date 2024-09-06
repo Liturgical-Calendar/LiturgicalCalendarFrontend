@@ -56,34 +56,58 @@ class CurrentEndpoint {
 }
 
 class CalendarSelect {
-    static #calendarNations = [];
+    static #calendarNationsWithDioceses = [];
     static #nationOptions = [];
     static #dioceseOptions = {};
     static #dioceseOptionsGrouped = [];
 
-    static hasNation(nation) {
-        return this.#calendarNations.includes(nation);
+    static hasNationWithDiocese(nation) {
+        return this.#calendarNationsWithDioceses.includes(nation);
     }
-    static addCalendarNation(nation) {
-        this.#calendarNations.push(nation);
+    static addCalendarNationWithDiocese(nation) {
+        this.#calendarNationsWithDioceses.push(nation);
         this.#dioceseOptions[nation] = [];
     }
-    static addNationOption(item) {
-        let option = `<option data-calendartype="nationalcalendar" value="${item}">${countryNames.of(COUNTRIES[item])}</option>`;
+    static addNationOption(nationKey, selected = false) {
+        let option = `<option data-calendartype="nationalcalendar" value="${nationKey}"${selected ? ' selected' : ''}>${countryNames.of(COUNTRIES[nationKey])}</option>`;
         this.#nationOptions.push(option);
     }
     static addDioceseOption(item) {
         let option = `<option data-calendartype="diocesancalendar" value="${item.calendar_id}">${item.diocese}</option>`;
         this.#dioceseOptions[item.nation].push(option);
     }
-    static buildAllOptions() {
-        this.#calendarNations.sort((a, b) => countryNames.of(COUNTRIES[a]).localeCompare(countryNames.of(COUNTRIES[b])));
-        this.#calendarNations.forEach(item => {
-            let option = `<option data-calendartype="nationalcalendar" value="${item}">${countryNames.of(COUNTRIES[item])}</option>`;
-            this.#nationOptions.push(option);
-            let optGroup = `<optgroup label="${countryNames.of(COUNTRIES[item])}">${this.#dioceseOptions[item].join('')}</optgroup>`;
+    static buildAllOptions(diocesan_calendars, national_calendars_keys) {
+        diocesan_calendars.forEach(diocesanCalendarObj => {
+            if(false === this.hasNationWithDiocese(diocesanCalendarObj.nation)) {
+                // we add all nations with dioceses to the nations list
+                this.addCalendarNationWithDiocese(diocesanCalendarObj.nation);
+            }
+            this.addDioceseOption(diocesanCalendarObj);
+        });
+
+        national_calendars_keys.sort((a, b) => countryNames.of(COUNTRIES[a]).localeCompare(countryNames.of(COUNTRIES[b])));
+        national_calendars_keys.forEach(nationKey => {
+            if( false === this.hasNationWithDiocese(nationKey) ) {
+                // This is the first time we call CalendarSelect.addNationOption().
+                // This will ensure that the VATICAN (a nation without any diocese) will be added as the first option.
+                // In theory any other nation for whom no dioceses are defined will be added here too,
+                // so we will ensure that the VATICAN is always the default selected option
+                if ('VATICAN' === nationKey) {
+                    this.addNationOption(nationKey, true);
+                } else {
+                    this.addNationOption(nationKey);
+                }
+            }
+        });
+
+        // now we can add the options for the nations in the #calendarNationsWithDiocese list
+        // that is to say, nations that have dioceses
+        this.#calendarNationsWithDioceses.sort((a, b) => countryNames.of(COUNTRIES[a]).localeCompare(countryNames.of(COUNTRIES[b])));
+        this.#calendarNationsWithDioceses.forEach(nationKey => {
+            this.addNationOption(nationKey);
+            let optGroup = `<optgroup label="${countryNames.of(COUNTRIES[nationKey])}">${this.#dioceseOptions[nationKey].join('')}</optgroup>`;
             this.#dioceseOptionsGrouped.push(optGroup);
-        })
+        });
     }
 
     static get nationsInnerHtml() {
@@ -103,21 +127,7 @@ class CalendarSelect {
         const { litcal_metadata } = jsonData;
         const { national_calendars_keys, diocesan_calendars } = litcal_metadata;
 
-        diocesan_calendars.forEach(item => {
-            if(false === CalendarSelect.hasNation(item.nation)) {
-                CalendarSelect.addCalendarNation(item.nation);
-            }
-            CalendarSelect.addDioceseOption(item);
-        });
-
-        national_calendars_keys.sort((a, b) => countryNames.of(COUNTRIES[a]).localeCompare(countryNames.of(COUNTRIES[b])));
-        national_calendars_keys.forEach(item => {
-            if( false === CalendarSelect.hasNation(item) ) {
-                CalendarSelect.addNationOption(item);
-            }
-        });
-
-        CalendarSelect.buildAllOptions();
+        CalendarSelect.buildAllOptions(diocesan_calendars, national_calendars_keys);
     });
 
     $(document).on('change', '#APICalendarRouteSelect', function() {
