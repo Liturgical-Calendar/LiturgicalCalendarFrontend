@@ -154,6 +154,7 @@ let litcalMetadata = null;
                 RequestPayload.epiphany            = null;
                 RequestPayload.calendar_type       = null;
                 RequestPayload.eternal_high_priest = null;
+                $('.requestOption').val('');
                 $('.requestOption').prop('disabled', false);
                 $('#APICalendarSelect').prop('disabled', true);
                 break;
@@ -178,7 +179,7 @@ let litcalMetadata = null;
                 document.querySelectorAll('.requestOption').forEach(el => {
                     el.value = requestOptionDefaults[el.dataset.param];
                 });
-                let nation = litcalMetadata.diocesan_calendars.filter(diocesanCalendarObj => diocesanCalendarObj.calendar_id === selectEl.value);
+                let nation = litcalMetadata.diocesan_calendars.filter(diocesanCalendarObj => diocesanCalendarObj.calendar_id === selectEl.value)[0].nation;
                 let nationalCalendarSettings = litcalMetadata.national_calendars.filter(nationCalendarObj => nationCalendarObj.calendar_id === nation)[0].settings;
                 let locale = nationalCalendarSettings.locale.replace('_', '-');
                 locale = new Intl.Locale(locale);
@@ -219,7 +220,7 @@ let litcalMetadata = null;
                 }
                 break;
             case 'diocesancalendar':
-                let nation = litcalMetadata.diocesan_calendars.filter(diocesanCalendarObj => diocesanCalendarObj.calendar_id === this.value);
+                let nation = litcalMetadata.diocesan_calendars.filter(diocesanCalendarObj => diocesanCalendarObj.calendar_id === this.value)[0].nation;
                 let nationalCalendarSettings = litcalMetadata.national_calendars.filter(nationCalendarObj => nationCalendarObj.calendar_id === nation)[0].settings;
                 let locale = nationalCalendarSettings.locale.replace('_', '-');
                 locale = new Intl.Locale(locale);
