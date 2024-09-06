@@ -55,10 +55,48 @@ class CurrentEndpoint {
     }
 }
 
+class CalendarSelect {
+    static #calendarNations = [];
+    static #nationOptions = [];
+    static #dioceseOptions = {};
+    static #dioceseOptionsGrouped = [];
+
+    static hasNation(nation) {
+        return this.#calendarNations.includes(nation);
+    }
+    static addCalendarNation(nation) {
+        this.#calendarNations.push(nation);
+        this.#dioceseOptions[nation] = [];
+    }
+    static addNationOption(item) {
+        let option = `<option data-calendartype="nationalcalendar" value="${item}">${countryNames.of(COUNTRIES[item])}</option>`;
+        this.#nationOptions.push(option);
+    }
+    static addDioceseOption(item) {
+        let option = `<option data-calendartype="diocesancalendar" value="${item.calendar_id}">${item.diocese}</option>`;
+        this.#dioceseOptions[item.nation].push(option);
+    }
+    static buildAllOptions() {
+        this.#calendarNations.sort((a, b) => countryNames.of(COUNTRIES[a]).localeCompare(countryNames.of(COUNTRIES[b])));
+        this.#calendarNations.forEach(item => {
+            let option = `<option data-calendartype="nationalcalendar" value="${item}">${countryNames.of(COUNTRIES[item])}</option>`;
+            this.#nationOptions.push(option);
+            let optGroup = `<optgroup label="${countryNames.of(COUNTRIES[item])}">${this.#dioceseOptions[item].join('')}</optgroup>`;
+            this.#dioceseOptionsGrouped.push(optGroup);
+        })
+    }
+
+    static get nationsInnerHtml() {
+        return this.#nationOptions.join('');
+    }
+
+    static get diocesesInnerHtml() {
+        return this.#dioceseOptionsGrouped.join('');
+    }
+}
+
 
 (function ($) {
-    let CalendarNations = [];
-    let selectOptions = {};
 
     fetch( MetaDataURL ).then(data => data.json()).then(jsonData => {
         console.log(jsonData);
@@ -66,29 +104,35 @@ class CurrentEndpoint {
         const { national_calendars_keys, diocesan_calendars } = litcal_metadata;
 
         diocesan_calendars.forEach(item => {
-            if(false === CalendarNations.includes(item.nation)){
-                CalendarNations.push(item.nation);
-                selectOptions[item.nation] = [];
+            if(false === CalendarSelect.hasNation(item.nation)) {
+                CalendarSelect.addCalendarNation(item.nation);
             }
-            selectOptions[item.nation].push(`<option data-calendartype="diocesancalendar" value="${item.calendar_id}">${item.diocese}</option>`);
+            CalendarSelect.addDioceseOption(item);
         });
 
-        national_calendars_keys.sort((a, b) => countryNames.of(COUNTRIES[a]).localeCompare(countryNames.of(COUNTRIES[b])))
-
-        const $select = $('#APICalendarSelect');
+        national_calendars_keys.sort((a, b) => countryNames.of(COUNTRIES[a]).localeCompare(countryNames.of(COUNTRIES[b])));
         national_calendars_keys.forEach(item => {
-            if( false === CalendarNations.includes(item) ) {
-                $select.append(`<option data-calendartype="nationalcalendar" value="${item}">${countryNames.of(COUNTRIES[item])}</option>`);
+            if( false === CalendarSelect.hasNation(item) ) {
+                CalendarSelect.addNationOption(item);
             }
         });
 
-        CalendarNations.sort((a, b) => countryNames.of(COUNTRIES[a]).localeCompare(countryNames.of(COUNTRIES[b])));
-        CalendarNations.forEach(item => {
-            $select.append(`<option data-calendartype="nationalcalendar" value="${item}">${countryNames.of(COUNTRIES[item])}</option>`);
-            const $optGroup = $(`<optgroup label="${countryNames.of(COUNTRIES[item])}">`);
-            $select.append($optGroup);
-            selectOptions[item].forEach(groupItem => $optGroup.append(groupItem));
-        });
+        CalendarSelect.buildAllOptions();
+    });
+
+    $(document).on('change', '#APICalendarRouteSelect', function() {
+        const selectEl = document.querySelector('#APICalendarSelect');
+        switch (this.value) {
+            case '/calendar':
+                selectEl.innerHTML = '<option value="">---</option>';
+                break;
+            case '/calendar/nation/':
+                selectEl.innerHTML = CalendarSelect.nationsInnerHtml;
+                break;
+            case '/calendar/diocese/':
+                selectEl.innerHTML = CalendarSelect.diocesesInnerHtml;
+                break;
+        }
     });
 
     $(document).on('change', '#APICalendarSelect', function() {
