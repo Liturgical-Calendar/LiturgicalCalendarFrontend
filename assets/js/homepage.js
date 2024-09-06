@@ -175,6 +175,19 @@ let litcalMetadata = null;
                     CurrentEndpoint.calendarId   = selectEl.value;
                     CurrentEndpoint.calendarType = CalendarType.DIOCESAN;
                 }
+                document.querySelectorAll('.requestOption').forEach(el => {
+                    el.value = requestOptionDefaults[el.dataset.param];
+                });
+                let nation = litcalMetadata.diocesan_calendars.filter(diocesanCalendarObj => diocesanCalendarObj.calendar_id === selectEl.value);
+                let nationalCalendarSettings = litcalMetadata.national_calendars.filter(nationCalendarObj => nationCalendarObj.calendar_id === nation)[0].settings;
+                let locale = nationalCalendarSettings.locale.replace('_', '-');
+                locale = new Intl.Locale(locale);
+                nationalCalendarSettings.locale = locale.language.toUpperCase();
+                document.querySelectorAll('.requestOption').forEach(el => {
+                    if (nationalCalendarSettings.hasOwnProperty(el.dataset.param)) {
+                        el.value = nationalCalendarSettings[el.dataset.param];
+                    }
+                });
                 $('.requestOption').prop('disabled', true);
                 $('#APICalendarSelect').prop('disabled', false);
                 break;
@@ -184,14 +197,15 @@ let litcalMetadata = null;
     });
 
     $(document).on('change', '#APICalendarSelect', function() {
+        // reset request options to defaults
+        document.querySelectorAll('.requestOption').forEach(el => {
+            el.value = requestOptionDefaults[el.dataset.param];
+        });
         const calendarType = $(this).find(':selected').attr("data-calendartype");
         switch (calendarType){
             case 'nationalcalendar':
                 CurrentEndpoint.calendarType = CalendarType.NATIONAL;
                 CurrentEndpoint.calendarId   = this.value;
-                document.querySelectorAll('.requestOption').forEach(el => {
-                    el.value = requestOptionDefaults[el.dataset.param];
-                });
                 if (this.value !== 'VATICAN') {
                     let nationalCalendarSettings = litcalMetadata.national_calendars.filter(nationCalendarObj => nationCalendarObj.calendar_id === this.value)[0].settings;
                     let locale = nationalCalendarSettings.locale.replace('_', '-');
@@ -205,6 +219,17 @@ let litcalMetadata = null;
                 }
                 break;
             case 'diocesancalendar':
+                let nation = litcalMetadata.diocesan_calendars.filter(diocesanCalendarObj => diocesanCalendarObj.calendar_id === this.value);
+                let nationalCalendarSettings = litcalMetadata.national_calendars.filter(nationCalendarObj => nationCalendarObj.calendar_id === nation)[0].settings;
+                let locale = nationalCalendarSettings.locale.replace('_', '-');
+                locale = new Intl.Locale(locale);
+                nationalCalendarSettings.locale = locale.language.toUpperCase();
+                document.querySelectorAll('.requestOption').forEach(el => {
+                    if (nationalCalendarSettings.hasOwnProperty(el.dataset.param)) {
+                        el.value = nationalCalendarSettings[el.dataset.param];
+                    }
+                });
+
                 CurrentEndpoint.calendarType = CalendarType.DIOCESAN;
                 CurrentEndpoint.calendarId   = this.value;
                 break;
