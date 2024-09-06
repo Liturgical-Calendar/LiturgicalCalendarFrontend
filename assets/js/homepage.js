@@ -16,13 +16,13 @@ Object.freeze(CalendarType);
  * Describes the URL parameters that can be set on the API /calendar endpoint
  */
 class RequestPayload {
-    static corpus_christi       = null;
     static epiphany             = null;
     static ascension            = null;
+    static corpus_christi       = null;
+    static eternal_high_priest  = null;
     static locale               = null;
     static return_type          = null;
     static calendar_type        = null;
-    static eternal_high_priest  = null;
 };
 
 /**
