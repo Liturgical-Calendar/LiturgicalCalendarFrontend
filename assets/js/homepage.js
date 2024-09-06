@@ -135,8 +135,8 @@ class CalendarSelect {
         switch (this.value) {
             case '/calendar':
                 selectEl.innerHTML = '<option value="">---</option>';
-                CurrentEndpoint.calendarType = null;
-                CurrentEndpoint.calendarId   = null;
+                CurrentEndpoint.calendarType       = null;
+                CurrentEndpoint.calendarId         = null;
                 RequestPayload.locale              = null;
                 RequestPayload.ascension           = null;
                 RequestPayload.corpus_christi      = null;
@@ -147,6 +147,7 @@ class CalendarSelect {
                 $('#APICalendarSelect').prop('disabled', true);
                 break;
             case '/calendar/nation/':
+                $('.requestOption').prop('disabled', true);
                 $('#APICalendarSelect').prop('disabled', false);
                 selectEl.innerHTML = CalendarSelect.nationsInnerHtml;
                 if ( CurrentEndpoint.calendarType !== CalendarType.NATIONAL ) {
@@ -155,6 +156,7 @@ class CalendarSelect {
                 }
                 break;
             case '/calendar/diocese/':
+                $('.requestOption').prop('disabled', true);
                 $('#APICalendarSelect').prop('disabled', false);
                 selectEl.innerHTML = CalendarSelect.diocesesInnerHtml;
                 if ( CurrentEndpoint.calendarType !== CalendarType.DIOCESAN ) {
@@ -179,8 +181,8 @@ class CalendarSelect {
                 CurrentEndpoint.calendarId   = this.value;
                 break;
         }
+        //TODO: we should set the requestOption values to the current selected calendar's values
         $('.requestOption').val('');
-        $('.requestOption').prop('disabled', true);
         $('#RequestURLExample').text(CurrentEndpoint.serialize());
         $('#RequestURLButton').attr('href', CurrentEndpoint.serialize());
     });
