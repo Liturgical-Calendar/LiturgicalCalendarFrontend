@@ -165,7 +165,7 @@ let litcalMetadata = null;
                 }
                 document.querySelectorAll('.requestOption').forEach(el => {
                     el.value = requestOptionDefaults[el.dataset.param];
-                })
+                });
                 $('.requestOption').prop('disabled', true);
                 $('#APICalendarSelect').prop('disabled', false);
                 break;
@@ -189,6 +189,17 @@ let litcalMetadata = null;
             case 'nationalcalendar':
                 CurrentEndpoint.calendarType = CalendarType.NATIONAL;
                 CurrentEndpoint.calendarId   = this.value;
+                document.querySelectorAll('.requestOption').forEach(el => {
+                    el.value = requestOptionDefaults[el.dataset.param];
+                });
+                if (this.value !== 'VATICAN') {
+                    let nationalCalendarSettings = litcalMetadata.national_calendars.filter(nationCalendarObj => nationCalendarObj.calendar_id === this.value)[0].settings;
+                    document.querySelectorAll('.requestOption').forEach(el => {
+                        if (nationalCalendarSettings.hasOwnProperty(el.dataset.param)) {
+                            el.value = nationalCalendarSettings[el.dataset.param];
+                        }
+                    });
+                }
                 break;
             case 'diocesancalendar':
                 CurrentEndpoint.calendarType = CalendarType.DIOCESAN;
@@ -196,7 +207,7 @@ let litcalMetadata = null;
                 break;
         }
         //TODO: we should set the requestOption values to the current selected calendar's values
-        $('.requestOption').val('');
+        //$('.requestOption').val('');
         $('#RequestURLExample').text(CurrentEndpoint.serialize());
         $('#RequestURLButton').attr('href', CurrentEndpoint.serialize());
     });
