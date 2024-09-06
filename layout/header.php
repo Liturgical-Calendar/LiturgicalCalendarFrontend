@@ -4,9 +4,9 @@ $currentPage = basename($_SERVER["SCRIPT_FILENAME"], '.php');
 $isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false || strpos($_SERVER['HTTP_HOST'], "localhost") !== false );
 //$stagingURL = $isStaging ? "-staging" : "";
 $endpointV = $isStaging ? "dev" : "v3";
-$endpointURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/";
-$metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/metadata/";
-$dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/easter/";
+$endpointURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/calendar";
+$metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/calendars";
+$dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/easter";
 
 $langsAvailable = ['en', ...array_map('basename', glob("i18n/*", GLOB_ONLYDIR))];
 $langsAssoc = [];

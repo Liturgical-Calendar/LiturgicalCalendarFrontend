@@ -6,9 +6,9 @@ error_reporting(E_ALL);
 $isStaging          = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false || strpos($_SERVER['HTTP_HOST'], "localhost") !== false );
 //$stagingURL         = $isStaging ? "-staging" : "";
 $endpointV          = $isStaging ? "dev" : "v3";
-$endpointURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/";
-$metadataURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/metadata/";
-$dateOfEasterURL    = "https://litcal.johnromanodorazio.com/api/{$endpointV}/easter/";
+$endpointURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/calendar";
+$metadataURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/calendars";
+$dateOfEasterURL    = "https://litcal.johnromanodorazio.com/api/{$endpointV}/easter";
 
 include_once('includes/functions.php');
 
@@ -73,7 +73,7 @@ $c->asort($AvailableLocales);
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="easter-egg-5-144-279148.png">
     <link rel="apple-touch-icon-precomposed" sizes="120x120" href="easter-egg-5-120-279148.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="easter-egg-5-114-279148.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="easter-egg-5-72-279148.png">    
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="easter-egg-5-72-279148.png">
     <link rel="apple-touch-icon-precomposed" href="easter-egg-5-57-279148.png">
     <link rel="icon" href="easter-egg-5-32-279148.png" sizes="32x32">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">

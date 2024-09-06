@@ -6,7 +6,7 @@ $i18n = new I18n();
 $isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false || strpos($_SERVER['HTTP_HOST'], "localhost") !== false );
 //$stagingURL = $isStaging ? "-staging" : "";
 $endpointV = $isStaging ? "dev" : "v3";
-$endpointURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/calendar";
+$calendarURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/calendar";
 $metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/calendars/";
 $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/easter/";
 
@@ -133,10 +133,14 @@ $API_DESCRIPTION = sprintf(
                         </div>
                         <div class="row align-items-center">
                             <div class="form-group col-sm-8">
-                                <div id="RequestURLExampleWrapper"><small class="text-muted"><code id="RequestURLExample"><?php echo $endpointURL; ?></code></small></div>
+                                <div id="RequestURLExampleWrapper">
+                                    <small class="text-muted"><code id="RequestURLExample"><?php echo $calendarURL; ?></code></small>
+                                </div>
                             </div>
                             <div class="form-group col-sm-4">
-                                <a id="RequestURLButton" href="<?php echo $endpointURL; ?>" class="btn btn-primary m-2" target="_blank"><?php echo _("Liturgical Calendar API endpoint"); ?></a>
+                                <a id="RequestURLButton" href="<?php echo $calendarURL; ?>" class="btn btn-primary m-2" target="_blank"><?php
+                                    echo _("Liturgical Calendar API endpoint");
+                                ?></a>
                             </div>
                             <small class="text-muted"><i><?php echo _("URL of the API request based on selected options. The button is set to the same URL, click on it to see results."); ?></i></small>
                         </div>
