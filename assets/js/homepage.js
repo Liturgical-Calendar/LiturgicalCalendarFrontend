@@ -137,8 +137,17 @@ class CalendarSelect {
                 selectEl.innerHTML = '<option value="">---</option>';
                 CurrentEndpoint.calendarType = null;
                 CurrentEndpoint.calendarId   = null;
+                RequestPayload.locale              = null;
+                RequestPayload.ascension           = null;
+                RequestPayload.corpus_christi      = null;
+                RequestPayload.epiphany            = null;
+                RequestPayload.calendar_type       = null;
+                RequestPayload.eternal_high_priest = null;
+                $('.requestOption').prop('disabled', false);
+                $('#APICalendarSelect').prop('disabled', true);
                 break;
             case '/calendar/nation/':
+                $('#APICalendarSelect').prop('disabled', false);
                 selectEl.innerHTML = CalendarSelect.nationsInnerHtml;
                 if ( CurrentEndpoint.calendarType !== CalendarType.NATIONAL ) {
                     CurrentEndpoint.calendarId   = selectEl.value;
@@ -146,9 +155,10 @@ class CalendarSelect {
                 }
                 break;
             case '/calendar/diocese/':
+                $('#APICalendarSelect').prop('disabled', false);
                 selectEl.innerHTML = CalendarSelect.diocesesInnerHtml;
                 if ( CurrentEndpoint.calendarType !== CalendarType.DIOCESAN ) {
-                    CurrentEndpoint.calendarId   = null;
+                    CurrentEndpoint.calendarId   = selectEl.value;
                     CurrentEndpoint.calendarType = CalendarType.DIOCESAN;
                 }
                 break;
@@ -158,32 +168,19 @@ class CalendarSelect {
     });
 
     $(document).on('change', '#APICalendarSelect', function() {
-        if( this.value === '' ) {
-            CurrentEndpoint.calendarType       = null;
-            CurrentEndpoint.calendarId         = null;
-            RequestPayload.locale              = null;
-            RequestPayload.ascension           = null;
-            RequestPayload.corpus_christi      = null;
-            RequestPayload.epiphany            = null;
-            RequestPayload.calendar_type       = null;
-            RequestPayload.eternal_high_priest = null;
-            $('.requestOption').prop('disabled', false);
+        const calendarType = $(this).find(':selected').attr("data-calendartype");
+        switch (calendarType){
+            case 'nationalcalendar':
+                CurrentEndpoint.calendarType = CalendarType.NATIONAL;
+                CurrentEndpoint.calendarId   = this.value;
+                break;
+            case 'diocesancalendar':
+                CurrentEndpoint.calendarType = CalendarType.DIOCESAN;
+                CurrentEndpoint.calendarId   = this.value;
+                break;
         }
-        else {
-            const calendarType = $(this).find(':selected').attr("data-calendartype");
-            switch (calendarType){
-                case 'nationalcalendar':
-                    CurrentEndpoint.calendarType = CalendarType.NATIONAL;
-                    CurrentEndpoint.calendarId   = this.value;
-                    break;
-                case 'diocesancalendar':
-                    CurrentEndpoint.calendarType = CalendarType.DIOCESAN;
-                    CurrentEndpoint.calendarId   = this.value;
-                    break;
-            }
-            $('.requestOption').val('');
-            $('.requestOption').prop('disabled', true);
-        }
+        $('.requestOption').val('');
+        $('.requestOption').prop('disabled', true);
         $('#RequestURLExample').text(CurrentEndpoint.serialize());
         $('#RequestURLButton').attr('href', CurrentEndpoint.serialize());
     });
