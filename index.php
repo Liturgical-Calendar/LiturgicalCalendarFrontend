@@ -93,9 +93,8 @@ $API_DESCRIPTION = sprintf(
                                 ); ?>
                                 <br />
                                 <?php echo sprintf(
-                                    /**translators: 1. VATICAN, 2. /calendar */
-                                    _('N.B. Even though selecting %1$s will set the base %2$s path, it will have the same effect as selecting a National or Diocesan calendar, since we are requesting the Vatican calendar\'s built-in parameters; in other words, using none of these parameters on the base %2$s path will give us the General Roman calendar as used in the Vatican.'),
-                                    '<b><code>VATICAN</code></b>',
+                                    /**translators: 1. /calendar */
+                                    _('N.B. Using none of these parameters on the base %1$s route will give us the General Roman calendar as used in the Vatican.'),
                                     '<b><code>/calendar</code></b>'
                                 ); ?>
                             </i></small>
@@ -126,7 +125,7 @@ $API_DESCRIPTION = sprintf(
                             <small class="text-muted"><i><?php
                                 echo sprintf(
                                     /**translators: 1. /calendar */
-                                    _('These request parameters can always be set, whether we are requesting the base %1$s resource or any resource below the %1$s path.'),
+                                    _('These request parameters can always be set, whether we are requesting the base %1$s resource or any resource below the %1$s path. National and Diocesan calendars do not have these parameters built-in.'),
                                     '<b><code>/calendar</code></b>'
                                 );
                                 ?></i></small>

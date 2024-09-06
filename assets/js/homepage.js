@@ -193,6 +193,12 @@ class CalendarSelect {
         $('#RequestURLButton').attr('href', CurrentEndpoint.serialize());
     });
 
+    $(document).on('change', '#RequestOptionCalendarType', function() {
+        RequestPayload.calendar_type = this.value;
+        $('#RequestURLExample').text(CurrentEndpoint.serialize());
+        $('#RequestURLButton').attr('href', CurrentEndpoint.serialize());
+    });
+
     $(document).on( 'change', '.requestOption', function() {
         $('#APICalendarSelect').val("");
         switch($(this).attr("id")){
@@ -207,9 +213,6 @@ class CalendarSelect {
                 break;
             case 'RequestOptionLocale':
                 RequestPayload.locale = this.value;
-                break;
-            case 'RequestOptionCalendarType':
-                RequestPayload.calendar_type = this.value;
                 break;
             case 'RequestOptionEternalHighPriest':
                 RequestPayload.eternal_high_priest = this.value;
