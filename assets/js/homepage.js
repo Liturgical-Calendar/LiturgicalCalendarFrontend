@@ -22,7 +22,7 @@ class RequestPayload {
     static eternal_high_priest  = null;
     static locale               = null;
     static return_type          = null;
-    static calendar_type        = null;
+    static year_type        = null;
 };
 
 const requestOptionDefaults = {
@@ -152,7 +152,7 @@ let litcalMetadata = null;
                 RequestPayload.ascension           = null;
                 RequestPayload.corpus_christi      = null;
                 RequestPayload.epiphany            = null;
-                RequestPayload.calendar_type       = null;
+                RequestPayload.year_type       = null;
                 RequestPayload.eternal_high_priest = null;
                 $('.requestOption').val('');
                 $('.requestOption').prop('disabled', false);
@@ -258,8 +258,8 @@ let litcalMetadata = null;
         $('#RequestURLButton').attr('href', CurrentEndpoint.serialize());
     });
 
-    $(document).on('change', '#RequestOptionCalendarType', function() {
-        RequestPayload.calendar_type = this.value;
+    $(document).on('change', '#RequestOptionYearType', function() {
+        RequestPayload.year_type = this.value;
         $('#RequestURLExample').text(CurrentEndpoint.serialize());
         $('#RequestURLButton').attr('href', CurrentEndpoint.serialize());
     });

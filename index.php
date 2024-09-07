@@ -152,8 +152,8 @@ $API_DESCRIPTION = _('Collection of Liturgical events for any given year between
                                 </select>
                             </div>
                             <div class="form-group col-sm-4">
-                                <label>calendar_type</label>
-                                <select id="RequestOptionCalendarType" class="form-select">
+                                <label>year_type</label>
+                                <select id="RequestOptionYearType" class="form-select">
                                     <option value="">--</option>
                                     <option value="CIVIL">CIVIL</option>
                                     <option value="LITURGICAL">LITURGICAL</option>
