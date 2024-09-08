@@ -4,13 +4,14 @@
 # Ubuntu <priest@johnromanodorazio.com>, 2021.
 # John R. D'Orazio <priest@johnromanodorazio.com>, 2022.
 # OpenAI <noreply-mt-openai@weblate.org>, 2024.
+# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-08 20:33+0000\n"
 "PO-Revision-Date: 2024-09-08 20:42+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
 "Language: es\n"
@@ -77,7 +78,7 @@ msgstr "Calendarios disponibles en la ruta seleccionada"
 
 #: index.php:71 liturgyOfAnyDay.php:108
 msgid "Year"
-msgstr ""
+msgstr "Año"
 
 #: index.php:71
 msgid ""
@@ -212,7 +213,7 @@ msgstr "Esquema de API abierta"
 
 #: index.php:224
 msgid "Swagger / Open API Documentation"
-msgstr ""
+msgstr "Documentación Swagger / Open API"
 
 #: index.php:226
 msgid ""
@@ -283,7 +284,7 @@ msgstr "Ejemplos"
 
 #: usage.php:25
 msgid "Example usage of the API"
-msgstr ""
+msgstr "Ejemplo de uso de la API"
 
 #: usage.php:31 layout/header.php:107
 msgid "Web calendar"
@@ -387,18 +388,26 @@ msgid ""
 "Once the calendar has been added from a desktop, it will become available "
 "for the same Gmail account on the Google Calendar app on a smartphone."
 msgstr ""
+"Una vez que el calendario se haya agregado desde un escritorio, estará "
+"disponible para la misma cuenta de Gmail en la aplicación de Google Calendar "
+"en un teléfono inteligente."
 
 #: usage.php:119
 msgid ""
 "Go to <i><b>Phone Settings → Accounts → Add account → Other → Add Calendar</"
 "b></i>."
 msgstr ""
+"Ve a <i><b>Configuración del teléfono → Cuentas → Añadir cuenta → Otros → "
+"Añadir calendario</b></i>."
 
 #: usage.php:122
 msgid ""
 "The iPhone Calendar app will poll the calendar URL based on the settings at "
 "<i><b>Phone Settings → Accounts → Fetch New Data → Fetch</b></i>."
 msgstr ""
+"La aplicación Calendario del iPhone consultará la URL del calendario según "
+"la configuración en <i><b>Configuración del iPhone → Cuentas → Obtener "
+"nuevos datos → Obtener</b></i>."
 
 #: usage.php:129
 #, php-format
@@ -406,28 +415,35 @@ msgid ""
 "If you have not yet added the calendar subscription from the desktop version "
 "of Google Calendar, please do so now (see %s)."
 msgstr ""
+"Si aún no has añadido la suscripción al calendario desde la versión de "
+"escritorio de Google Calendar, hazlo ahora (ver %s)."
 
 #: usage.php:130
 msgid "Open the Google Calendar app."
-msgstr ""
+msgstr "Abre la aplicación de Google Calendar."
 
 #: usage.php:131
 msgid ""
 "Go to <i><b>Settings</b></i>, then under the account which you used for the "
 "Desktop version, click on the Calendar subscription name."
 msgstr ""
+"Ve a <i><b>Configuración</b></i>, luego, bajo la cuenta que usaste para la "
+"versión de Escritorio, haz clic en el nombre de la suscripción del "
+"Calendario."
 
 #: usage.php:132
 msgid "Make sure <i><b>Synchronization</b></i> is turned on."
-msgstr ""
+msgstr "Asegúrate de que <i><b>Sincronización</b></i> esté activada."
 
 #: usage.php:142
 msgid "tested with Outlook 2013"
-msgstr ""
+msgstr "probado con Outlook 2013"
 
 #: usage.php:144
 msgid "At the bottom of the screen, switch from Email view to Calendar view."
 msgstr ""
+"En la parte inferior de la pantalla, cambia de vista de Correo a vista de "
+"Calendario."
 
 #: usage.php:145
 msgid ""
@@ -448,6 +464,8 @@ msgstr ""
 #: usage.php:148
 msgid "Outlook Calendar should now poll the calendar URL once a day."
 msgstr ""
+"Outlook Calendar ahora debería consultar la URL del calendario una vez al "
+"día."
 
 #: usage.php:150
 msgid ""
@@ -560,6 +578,8 @@ msgid ""
 "A National calendar may have some festivities in common with other National "
 "calendars, for example the patron of a wider region."
 msgstr ""
+"Un calendario nacional puede tener algunas festividades en común con otros "
+"calendarios nacionales, por ejemplo, el patrón de una región más amplia."
 
 #: extending.php:39
 msgid ""
@@ -567,6 +587,9 @@ msgid ""
 "separately, and if applicable should be made translatable, then the Wider "
 "region should be applied to the National Calendar."
 msgstr ""
+"En este caso, las festividades para la región más amplia deben definirse por "
+"separado y, si es aplicable, deben hacerse traducibles, luego la región más "
+"amplia debe aplicarse al Calendario Nacional."
 
 #: extending.php:40
 msgid ""
@@ -633,12 +656,12 @@ msgstr "Color litúrgico"
 #. translators: context = liturgical color
 #: extending.php:89 includes/LitColor.php:33 layout/FormControls.php:82
 msgid "white"
-msgstr ""
+msgstr "blanco"
 
 #. translators: context = liturgical color
 #: extending.php:90 includes/LitColor.php:36 layout/FormControls.php:83
 msgid "red"
-msgstr ""
+msgstr "rojo"
 
 #. translators: context = liturgical color
 #: extending.php:91 includes/LitColor.php:27 layout/FormControls.php:85
@@ -1291,7 +1314,7 @@ msgstr "Uso"
 
 #: layout/header.php:40
 msgid "Translations"
-msgstr ""
+msgstr "Traducciones"
 
 #: layout/header.php:41
 msgid "About us"
@@ -1299,7 +1322,7 @@ msgstr "Sobre nosotros"
 
 #: layout/header.php:87
 msgid "Home"
-msgstr ""
+msgstr "Inicio"
 
 #: layout/header.php:99
 #, fuzzy
@@ -1309,7 +1332,7 @@ msgstr "Definición"
 
 #: layout/header.php:103
 msgid "Examples of Usage"
-msgstr ""
+msgstr "Ejemplos de uso"
 
 #: layout/FormControls.php:112
 msgid "Common (or Proper)"
