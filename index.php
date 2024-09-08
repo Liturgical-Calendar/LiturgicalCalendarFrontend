@@ -68,7 +68,7 @@ $API_DESCRIPTION = _('Collection of Liturgical events for any given year between
                                 </select>
                             </div>
                             <div class="form-group col-sm-3">
-                                <label><?php echo _("Year"); ?></label>
+                                <label><?php echo _("Year"); ?> <i class="fas fa-circle-info ms-2" data-bs-toggle="tooltip" data-bs-title="<?php echo _("When not specified, the API will default to the current year. Try specifically setting the year by changing the value here."); ?>"></i></label>
                                 <input id="RequestOptionYear" class="form-control" type="number" min=1970 max=9999 value=<?php echo date("Y"); ?> />
                             </div>
                         </div>
