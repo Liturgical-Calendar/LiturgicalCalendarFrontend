@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-30 00:24+0000\n"
+"POT-Creation-Date: 2024-09-06 02:12+0000\n"
 "PO-Revision-Date: 2024-04-09 21:43+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
@@ -22,57 +22,124 @@ msgstr ""
 
 #: index.php:13
 msgid ""
-"A Liturgical Calendar API from which you can retrieve data for the "
-"Liturgical events of any given year from 1970 to 9999, whether for the "
-"Universal or General Roman Calendar or for derived National and Diocesan "
-"calendars"
+"Collection of Liturgical events for any given year between 1970 and 9999."
 msgstr ""
-"Uma API para o calendário litúrgico do qual você pode recuperar dados para "
-"os eventos litúrgicos de qualquer ano a partir de 1970 até 9999, seja para o "
-"calendário romano universal ou geral ou para calendários nacionais e "
-"diocesanos derivados"
 
-#: index.php:17 usage.php:17 liturgyOfAnyDay.php:71
+#. translators: 1. /calendar, 2. /calendar/nation/{NATION}, 3. /calendar/diocese/{DIOCESE}
+#: index.php:16
+#, php-format
+msgid ""
+"The base %1$s path returns liturgical events for the General Roman Calendar. "
+"National and Diocesan calendars can be requested on the %2$s and %3$s paths "
+"respectively."
+msgstr ""
+
+#. translators: 1. /{YEAR}
+#: index.php:23
+#, php-format
+msgid ""
+"Each of these paths can optionally be further specified with a %1$s path "
+"parameter. When not specified, the API will default to the current year."
+msgstr ""
+
+#: index.php:29 usage.php:17 liturgyOfAnyDay.php:71
 msgid "General Roman Calendar"
 msgstr "Calendário Romano Geral"
 
-#: index.php:25 layout/header.php:81
+#: index.php:37 layout/header.php:81
 msgid "Catholic Liturgical Calendar"
 msgstr "Calendário Litúrgico Católico"
 
-#: index.php:32 index.php:115
-msgid "API Endpoint"
+#. translators: 1. /calendar
+#: index.php:47
+#, fuzzy, php-format
+#| msgid "API Endpoint"
+msgid "API %1$s endpoint"
 msgstr "Endpoint de API"
 
-#: index.php:38
-msgid "Calendar to retrieve from the API"
+#: index.php:55
+msgid "Path builder"
 msgstr ""
 
-#: index.php:56
+#: index.php:57
+msgid "Select route"
+msgstr ""
+
+#: index.php:65
+msgid "Calendars available on selected route"
+msgstr ""
+
+#: index.php:71 liturgyOfAnyDay.php:108
+msgid "Year"
+msgstr ""
+
+#. translators: %s = '/calendar'
+#: index.php:79
+#, php-format
+msgid "Request parameters available on the base %s path"
+msgstr ""
+
+#: index.php:116
+msgid ""
+"It is preferable to set the locale using the Accept-Language header rather "
+"than using this request parameter. N.B. The Accept-Language header will have "
+"no effect when a National or Diocesan calendar is requested."
+msgstr ""
+
+#. translators: 1. /calendar/nation/{NATION}, 2. /calendar/diocese/{DIOCESE}
+#: index.php:129
+#, php-format
+msgid ""
+"These parameters are useful for tweaking the calendar results, when no "
+"National or Diocesan calendar is requested. Since National and Diocesan "
+"calendars have these parameters built in, the parameters are not available "
+"on the %1$s and %2$s routes."
+msgstr ""
+
+#: index.php:135
+msgid ""
+"N.B. When none of these parameters are set, the API will use the defaults as "
+"in use in the Vatican."
+msgstr ""
+
+#. translators: 1. /calendar
+#: index.php:142
+#, php-format
+msgid "Request parameters available on all %1$s paths"
+msgstr ""
+
+#: index.php:146
+msgid ""
+"It is preferable to request the response content type using the Accept "
+"header rather than using this request parameter."
+msgstr ""
+
+#. translators: 1. /calendar
+#: index.php:165
+#, php-format
+msgid ""
+"These request parameters can always be set, whether we are requesting the "
+"base %1$s resource or any resource below the %1$s path. National and "
+"Diocesan calendars do not have these parameters built-in."
+msgstr ""
+
+#: index.php:178
 msgid "Liturgical Calendar API endpoint"
 msgstr "Endpoint da API do Calendário Litúrgico"
 
-#: index.php:57
+#: index.php:181
 msgid ""
-"If a national or diocesan calendar is requested, these calendars will "
-"automatically set the specific options in the API request. If instead no "
-"national or diocesan calendar is requested (i.e. the Universal Calendar is "
-"requested) then the more specific options can be requested:"
+"URL of the API request based on selected options. The button is set to the "
+"same URL, click on it to see results."
 msgstr ""
 
-#: index.php:73
-msgid ""
-"URL for the API request based on selected options (the above button is set "
-"to this URL)"
-msgstr ""
-
-#: index.php:80
+#: index.php:189 index.php:193
 #, fuzzy
 #| msgid "Liturgical Calendar API endpoint"
 msgid "Liturgical Calendar Validator"
 msgstr "Endpoint da API do Calendário Litúrgico"
 
-#: index.php:83
+#: index.php:192
 msgid ""
 "In order to verify that the liturgical data produced by the API is correct, "
 "there is a Unit Test interface that can run predefined tests against the "
@@ -80,65 +147,63 @@ msgid ""
 "to 25 years from the current year."
 msgstr ""
 
-#: index.php:84
-msgid "LitCal Validator"
-msgstr ""
-
-#: index.php:87
+#: index.php:196
 #, php-format
 msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
 "repository."
 msgstr ""
 
-#: index.php:88
+#: index.php:197
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
 msgstr ""
 
-#: index.php:98 usage.php:174
+#: index.php:204
+msgid "Translation Tool"
+msgstr ""
+
+#: index.php:210 index.php:213
+msgid "Translations status"
+msgstr ""
+
+#: index.php:221
+msgid "Open API Schema"
+msgstr ""
+
+#: index.php:224
+msgid "Swagger / Open API Documentation"
+msgstr ""
+
+#: index.php:226
+msgid ""
+"All of the available API routes with their supported methods, parameters, "
+"content types and responses are described here."
+msgstr ""
+
+#: index.php:232 usage.php:174
 msgid "Calculation of the Date of Easter"
 msgstr "Cálculo da Data da Páscoa"
 
-#: index.php:101
+#: index.php:235
 msgid ""
 "A simple API endpoint that returns data about the Date of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
 "Calendar) to 9999 (maximum possible date calculation in 64bit PHP), using a "
 "PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian easter "
 "(observed by the Roman Catholic church) and of the Meeus algorithm for "
-"Julian easter (observed by orthodox churches)"
+"Julian easter (observed by orthodox churches)."
 msgstr ""
 
-#: index.php:106
+#: index.php:240
 msgid "Date of Easter API endpoint"
 msgstr "Data da Páscoa API"
 
-#: index.php:108
+#: index.php:242
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
 "localizations can be done in a client application just as well."
-msgstr ""
-
-#: index.php:115
-msgid "Definition"
-msgstr "Definição"
-
-#: index.php:118
-msgid "Swagger / Open API Documentation"
-msgstr ""
-
-#: index.php:120
-msgid "The Open API json schema for this API has been updated to OpenAPI 3.1."
-msgstr ""
-
-#: index.php:126
-msgid "Translation Tool"
-msgstr ""
-
-#: index.php:132 index.php:135
-msgid "Translations status"
 msgstr ""
 
 #: usage.php:7
@@ -860,10 +925,6 @@ msgstr ""
 msgid "Liturgical Calendar - About us"
 msgstr "Calendário litúrgico - Sobre nós"
 
-#: liturgyOfAnyDay.php:108
-msgid "Year"
-msgstr ""
-
 #. translators: %s = current selected date
 #: liturgyOfAnyDay.php:116
 #, php-format
@@ -1142,6 +1203,20 @@ msgstr ""
 #: layout/FormControls.php:112
 msgid "Common (or Proper)"
 msgstr "Comum (ou Próprio)"
+
+#~ msgid ""
+#~ "A Liturgical Calendar API from which you can retrieve data for the "
+#~ "Liturgical events of any given year from 1970 to 9999, whether for the "
+#~ "Universal or General Roman Calendar or for derived National and Diocesan "
+#~ "calendars"
+#~ msgstr ""
+#~ "Uma API para o calendário litúrgico do qual você pode recuperar dados "
+#~ "para os eventos litúrgicos de qualquer ano a partir de 1970 até 9999, "
+#~ "seja para o calendário romano universal ou geral ou para calendários "
+#~ "nacionais e diocesanos derivados"
+
+#~ msgid "Definition"
+#~ msgstr "Definição"
 
 #, fuzzy
 #~| msgid ""
