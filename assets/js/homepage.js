@@ -142,18 +142,18 @@ let litcalMetadata = null;
     });
 
     $(document).on('change', '#APICalendarRouteSelect', function() {
+        RequestPayload.locale              = null;
+        RequestPayload.ascension           = null;
+        RequestPayload.corpus_christi      = null;
+        RequestPayload.epiphany            = null;
+        RequestPayload.year_type           = null;
+        RequestPayload.eternal_high_priest = null;
         const selectEl = document.querySelector('#APICalendarSelect');
         switch (this.value) {
             case '/calendar':
-                selectEl.innerHTML = '<option value="">GENERAL ROMAN</option>';
                 CurrentEndpoint.calendarType       = null;
                 CurrentEndpoint.calendarId         = null;
-                RequestPayload.locale              = null;
-                RequestPayload.ascension           = null;
-                RequestPayload.corpus_christi      = null;
-                RequestPayload.epiphany            = null;
-                RequestPayload.year_type       = null;
-                RequestPayload.eternal_high_priest = null;
+                selectEl.innerHTML = '<option value="">GENERAL ROMAN</option>';
                 $('.requestOption').val('');
                 $('.requestOption').prop('disabled', false);
                 $('#APICalendarSelect').prop('disabled', true);
@@ -164,6 +164,7 @@ let litcalMetadata = null;
                     CurrentEndpoint.calendarId   = selectEl.value;
                     CurrentEndpoint.calendarType = CalendarType.NATIONAL;
                 }
+                // since the default selected nation is VATICAN, we can just use the default options used in the VATICAN
                 document.querySelectorAll('.requestOption').forEach(el => {
                     el.value = requestOptionDefaults[el.dataset.param];
                 });
