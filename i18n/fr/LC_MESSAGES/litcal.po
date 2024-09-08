@@ -4,13 +4,14 @@
 # Ubuntu <priest@johnromanodorazio.com>, 2021.
 # John R. D'Orazio <priest@johnromanodorazio.com>, 2022.
 # Weblate Admin <admin@example.com>, 2024.
+# OpenAI <noreply-mt-openai@weblate.org>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-08 20:33+0000\n"
-"PO-Revision-Date: 2024-04-23 02:53+0000\n"
-"Last-Translator: Weblate Admin <admin@example.com>\n"
+"PO-Revision-Date: 2024-09-08 20:42+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
 "Language: fr\n"
@@ -18,12 +19,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.4.3\n"
+"X-Generator: Weblate 5.6.1\n"
 
 #: index.php:13
 msgid ""
 "Collection of Liturgical events for any given year between 1970 and 9999."
 msgstr ""
+"Collection d'événements liturgiques pour une année donnée entre 1970 et 9999."
 
 #. translators: 1. /calendar, 2. /calendar/nation/{NATION}, 3. /calendar/diocese/{DIOCESE}
 #: index.php:16
@@ -33,6 +35,9 @@ msgid ""
 "National and Diocesan calendars can be requested on the %2$s and %3$s paths "
 "respectively."
 msgstr ""
+"Le chemin de base %1$s renvoie les événements liturgiques pour le Calendrier "
+"Romain Général. Les calendriers nationaux et diocésains peuvent être "
+"demandés sur les chemins %2$s et %3$s respectivement."
 
 #. translators: 1. /{YEAR}
 #: index.php:23
@@ -41,6 +46,9 @@ msgid ""
 "Each of these paths can optionally be further specified with a %1$s path "
 "parameter. When not specified, the API will default to the current year."
 msgstr ""
+"Chacun de ces chemins peut être spécifié en option avec un paramètre de "
+"chemin %1$s. Lorsqu'il n'est pas spécifié, l'API utilisera par défaut "
+"l'année en cours."
 
 #: index.php:29 usage.php:17 liturgyOfAnyDay.php:71
 msgid "General Roman Calendar"
@@ -59,15 +67,15 @@ msgstr "Point de terminaison de l'API"
 
 #: index.php:55
 msgid "Path builder"
-msgstr ""
+msgstr "Constructeur de chemin"
 
 #: index.php:57
 msgid "Select route"
-msgstr ""
+msgstr "Sélectionner l'itinéraire"
 
 #: index.php:65
 msgid "Calendars available on selected route"
-msgstr ""
+msgstr "Calendriers disponibles sur l'itinéraire sélectionné"
 
 #: index.php:71 liturgyOfAnyDay.php:108
 msgid "Year"
@@ -78,12 +86,14 @@ msgid ""
 "When not specified, the API will default to the current year. Try "
 "specifically setting the year by changing the value here."
 msgstr ""
+"Lorsqu'il n'est pas spécifié, l'API utilisera par défaut l'année en cours. "
+"Essayez de définir spécifiquement l'année en changeant la valeur ici."
 
 #. translators: %s = '/calendar'
 #: index.php:79
 #, php-format
 msgid "Request parameters available on the base %s path"
-msgstr ""
+msgstr "Paramètres de requête disponibles sur le chemin de base %s"
 
 #: index.php:116
 msgid ""
@@ -91,6 +101,10 @@ msgid ""
 "than using this request parameter. N.B. The Accept-Language header will have "
 "no effect when a National or Diocesan calendar is requested."
 msgstr ""
+"Il est préférable de définir la locale en utilisant l'en-tête Accept-"
+"Language plutôt qu'en utilisant ce paramètre de requête. N.B. L'en-tête "
+"Accept-Language n'aura aucun effet lorsqu'un calendrier national ou "
+"diocésain est demandé."
 
 #. translators: 1. /calendar/nation/{NATION}, 2. /calendar/diocese/{DIOCESE}
 #: index.php:129
@@ -101,24 +115,32 @@ msgid ""
 "calendars have these parameters built in, the parameters are not available "
 "on the %1$s and %2$s routes."
 msgstr ""
+"Ces paramètres sont utiles pour ajuster les résultats du calendrier, "
+"lorsqu'aucun calendrier national ou diocésain n'est demandé. Étant donné que "
+"les calendriers nationaux et diocésains ont ces paramètres intégrés, les "
+"paramètres ne sont pas disponibles sur les itinéraires %1$s et %2$s."
 
 #: index.php:135
 msgid ""
 "N.B. When none of these parameters are set, the API will use the defaults as "
 "in use in the Vatican."
 msgstr ""
+"N.B. Lorsque aucun de ces paramètres n'est défini, l'API utilisera les "
+"valeurs par défaut en vigueur au Vatican."
 
 #. translators: 1. /calendar
 #: index.php:142
 #, php-format
 msgid "Request parameters available on all %1$s paths"
-msgstr ""
+msgstr "Paramètres de requête disponibles sur tous les chemins %1$s"
 
 #: index.php:146
 msgid ""
 "It is preferable to request the response content type using the Accept "
 "header rather than using this request parameter."
 msgstr ""
+"Il est préférable de demander le type de contenu de la réponse en utilisant l"
+"'en-tête Accept plutôt qu'en utilisant ce paramètre de requête."
 
 #. translators: 1. /calendar
 #: index.php:165
@@ -128,6 +150,9 @@ msgid ""
 "base %1$s resource or any resource below the %1$s path. National and "
 "Diocesan calendars do not have these parameters built-in."
 msgstr ""
+"Ces paramètres de requête peuvent toujours être définis, que nous demandions "
+"la ressource de base %1$s ou toute ressource en dessous du chemin %1$s. Les "
+"calendriers nationaux et diocésains n'ont pas ces paramètres intégrés."
 
 #: index.php:178
 msgid "Liturgical Calendar API endpoint"
@@ -187,7 +212,7 @@ msgstr "État des traductions"
 
 #: index.php:221
 msgid "Open API Schema"
-msgstr ""
+msgstr "Schéma Open API"
 
 #: index.php:224
 msgid "Swagger / Open API Documentation"
@@ -198,6 +223,8 @@ msgid ""
 "All of the available API routes with their supported methods, parameters, "
 "content types and responses are described here."
 msgstr ""
+"Toutes les routes API disponibles avec leurs méthodes, paramètres, types de "
+"contenu et réponses pris en charge sont décrites ici."
 
 #: index.php:232 usage.php:174
 msgid "Calculation of the Date of Easter"
@@ -1056,17 +1083,17 @@ msgstr "rose"
 
 #: includes/LitCommon.php:57
 msgid "Proper"
-msgstr ""
+msgstr "Propre"
 
 #. translators: context = from the Common of nn
 #: includes/LitCommon.php:59
 msgid "Dedication of a Church"
-msgstr ""
+msgstr "Dédicace d'une Église"
 
 #. translators: context = from the Common of nn
 #: includes/LitCommon.php:61
 msgid "Blessed Virgin Mary"
-msgstr ""
+msgstr "Bienheureuse Vierge Marie"
 
 #. translators: context = from the Common of nn
 #: includes/LitCommon.php:63
@@ -1081,7 +1108,7 @@ msgstr "Pasteurs"
 #. translators: context = from the Common of nn
 #: includes/LitCommon.php:67
 msgid "Doctors"
-msgstr ""
+msgstr "Docteurs"
 
 #. translators: context = from the Common of nn
 #: includes/LitCommon.php:69
@@ -1091,7 +1118,7 @@ msgstr "Vierges"
 #. translators: context = from the Common of nn
 #: includes/LitCommon.php:71
 msgid "Holy Men and Women"
-msgstr ""
+msgstr "Saints et Saintes"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:74
@@ -1106,122 +1133,122 @@ msgstr "Pour plusieurs martyrs"
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:78
 msgid "For Missionary Martyrs"
-msgstr ""
+msgstr "Pour les Martyrs Missionnaires"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:80
 msgid "For One Missionary Martyr"
-msgstr ""
+msgstr "Pour un Martyr Missionnaire"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:82
 msgid "For Several Missionary Martyrs"
-msgstr ""
+msgstr "Pour plusieurs Martyrs Missionnaires"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:84
 msgid "For a Virgin Martyr"
-msgstr ""
+msgstr "Pour une Vierge Martyre"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:86
 msgid "For a Holy Woman Martyr"
-msgstr ""
+msgstr "Pour une Sainte Martyre"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:88
 msgid "For a Pope"
-msgstr ""
+msgstr "Pour un Pape"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:90
 msgid "For a Bishop"
-msgstr ""
+msgstr "Pour un Évêque"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:92
 msgid "For One Pastor"
-msgstr ""
+msgstr "Pour un Pasteur"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:94
 msgid "For Several Pastors"
-msgstr ""
+msgstr "Pour plusieurs pasteurs"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:96
 msgid "For Founders of a Church"
-msgstr ""
+msgstr "Pour les fondateurs d'une église"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:98
 msgid "For One Founder"
-msgstr ""
+msgstr "Pour Un Fondateur"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:100
 msgid "For Several Founders"
-msgstr ""
+msgstr "Pour plusieurs fondateurs"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:102
 msgid "For Missionaries"
-msgstr ""
+msgstr "Pour les missionnaires"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:104
 msgid "For One Virgin"
-msgstr ""
+msgstr "Pour une Vierge"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:106
 msgid "For Several Virgins"
-msgstr ""
+msgstr "Pour plusieurs vierges"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:108
 msgid "For Several Saints"
-msgstr ""
+msgstr "Pour plusieurs saints"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:110
 msgid "For One Saint"
-msgstr ""
+msgstr "Pour un Saint"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:112
 msgid "For an Abbot"
-msgstr ""
+msgstr "Pour un Abbé"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:114
 msgid "For a Monk"
-msgstr ""
+msgstr "Pour un Moine"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:116
 msgid "For a Nun"
-msgstr ""
+msgstr "Pour une religieuse"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:118
 msgid "For Religious"
-msgstr ""
+msgstr "Pour les religieux"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:120
 msgid "For Those Who Practiced Works of Mercy"
-msgstr ""
+msgstr "Pour ceux qui ont pratiqué des œuvres de miséricorde"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:122
 msgid "For Educators"
-msgstr ""
+msgstr "Pour les éducateurs"
 
 #. translators: context = from the Common of nn: nn
 #: includes/LitCommon.php:124
 msgid "For Holy Women"
-msgstr ""
+msgstr "Pour les saintes femmes"
 
 #. translators: (singular feminine) glue between "From the Common" and the actual common. Latin: leave empty!
 #: includes/LitCommon.php:172 includes/LitCommon.php:184
@@ -1249,20 +1276,20 @@ msgstr "du"
 
 #: includes/LitCommon.php:273
 msgid "From the Common"
-msgstr ""
+msgstr "Du Commun"
 
 #. translators: when there are multiple possible commons, this will be the glue "or from the common of..."
 #: includes/LitCommon.php:277
 msgid "or"
-msgstr ""
+msgstr "ou"
 
 #: includes/LitGrade.php:100
 msgid "weekday"
-msgstr ""
+msgstr "jour de semaine"
 
 #: includes/LitGrade.php:103
 msgid "Commemoration"
-msgstr ""
+msgstr "Commémoration"
 
 #: includes/LitGrade.php:106
 msgid "Optional memorial"
@@ -1298,7 +1325,7 @@ msgstr "Utilisation"
 
 #: layout/header.php:40
 msgid "Translations"
-msgstr ""
+msgstr "Traductions"
 
 #: layout/header.php:41
 msgid "About us"
@@ -1306,7 +1333,7 @@ msgstr "À propos de nous"
 
 #: layout/header.php:87
 msgid "Home"
-msgstr ""
+msgstr "Accueil"
 
 #: layout/header.php:99
 #, fuzzy
@@ -1316,7 +1343,7 @@ msgstr "Définition"
 
 #: layout/header.php:103
 msgid "Examples of Usage"
-msgstr ""
+msgstr "Exemples d'utilisation"
 
 #: layout/FormControls.php:112
 msgid "Common (or Proper)"
