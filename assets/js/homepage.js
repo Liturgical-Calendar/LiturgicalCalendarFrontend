@@ -72,10 +72,10 @@ class CalendarSelect {
     static #nationalCalendars             = [];
 
     static hasNationalCalendarWithDioceses(nation) {
-        return this.#nationalCalendarsWithDioceses.filter(item => item?.country_iso === nation).length;
+        return this.#nationalCalendarsWithDioceses.filter(item => item?.calendar_id === nation).length > 0;
     }
     static addNationalCalendarWithDioceses(nation) {
-        const nationalCalendar = this.#nationalCalendars.find(item => item.country_iso === nation);
+        const nationalCalendar = this.#nationalCalendars.find(item => item.calendar_id === nation);
         this.#nationalCalendarsWithDioceses.push(nationalCalendar);
         this.#dioceseOptions[nation] = [];
     }
@@ -117,7 +117,7 @@ class CalendarSelect {
         this.#nationalCalendarsWithDioceses.sort((a, b) => countryNames.of(a.country_iso).localeCompare(countryNames.of(b.country_iso)));
         this.#nationalCalendarsWithDioceses.forEach(nationalCalendar => {
             this.addNationOption(nationalCalendar);
-            let optGroup = `<optgroup label="${countryNames.of(nationalCalendar.country_iso)}">${this.#dioceseOptions[nationKey].join('')}</optgroup>`;
+            let optGroup = `<optgroup label="${countryNames.of(nationalCalendar.country_iso)}">${this.#dioceseOptions[nationalCalendar.calendar_id].join('')}</optgroup>`;
             this.#dioceseOptionsGrouped.push(optGroup);
         });
     }
