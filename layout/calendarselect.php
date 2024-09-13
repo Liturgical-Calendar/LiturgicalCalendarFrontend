@@ -45,7 +45,7 @@ class CalendarSelect
         self::$dioceseOptions[$item['nation']][] = "{$optionOpenTag}{$optionContents}{$optionCloseTag}";
     }
 
-    public static function buildAllOptions($diocesan_calendars, $national_calendars)
+    private static function buildAllOptions($diocesan_calendars, $national_calendars)
     {
         $col = \Collator::create(self::$locale);  // the default rules will do in this case..
         $col->setStrength(\Collator::PRIMARY); // only compare base characters; not accents, lower/upper-case, ...
@@ -92,35 +92,80 @@ class CalendarSelect
         }
     }
 
-    public static function get($key)
+    public static function getOptions($key)
     {
-        if ($key === 'nationsInnerHtml') {
+        if ($key === 'nations') {
             return implode('', self::$nationOptions);
         }
 
-        if ($key === 'diocesesInnerHtml') {
+        if ($key === 'diocesesGrouped') {
             return implode('', self::$dioceseOptionsGrouped);
         }
 
+        if ($key === 'all') {
+            return implode('', self::$nationOptions) . implode('', self::$dioceseOptionsGrouped);
+        }
+
         return "<option>$key</option>";
+    }
+
+    public static function getSelect($options)
+    {
+        $defaultOptions = [
+            "class"   => "calendarSelect",
+            "id"      => "calendarSelect",
+            "options" => 'all',
+            "label"   => false,
+            "labelStr" => 'Select a calendar'
+        ];
+        $options = array_merge($defaultOptions, $options);
+        $optionsHtml = self::getOptions($options['options']);
+        return ($options['label'] ? "<label for=\"{$options['id']}\">{$options['labelStr']}</label>" : '')
+            . "<select id=\"{$options['id']}\" class=\"{$options['class']}\">{$optionsHtml}</select>";
+    }
+
+    public static function init($metadataURL)
+    {
+        $metadataRaw = file_get_contents($metadataURL);
+        if ($metadataRaw === false) {
+            throw new \Exception("Error fetching metadata from {$metadataURL}");
+        }
+        $metadataJSON = json_decode($metadataRaw, true);
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            throw new \Exception("Error decoding metadata from {$metadataURL}: " . json_last_error_msg());
+        }
+        if (array_key_exists('litcal_metadata', $metadataJSON) === false) {
+            throw new \Exception("Missing 'litcal_metadata' in metadata from {$metadataURL}");
+        }
+        if (array_key_exists('diocesan_calendars', $metadataJSON['litcal_metadata']) === false) {
+            throw new \Exception("Missing 'diocesan_calendars' in metadata from {$metadataURL}");
+        }
+        if (array_key_exists('national_calendars', $metadataJSON['litcal_metadata']) === false) {
+            throw new \Exception("Missing 'national_calendars' in metadata from {$metadataURL}");
+        }
+        [ 'litcal_metadata' => $CalendarIndex ] = $metadataJSON;
+        [ 'diocesan_calendars' => $diocesan_calendars, 'national_calendars' => $national_calendars ] = $CalendarIndex;
+        self::buildAllOptions($diocesan_calendars, $national_calendars);
     }
 }
 
 $locale = isset($_COOKIE['currentLocale']) ? $_COOKIE['currentLocale'] : Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);
 CalendarSelect::setLocale($locale);
-
-$metadataRaw = file_get_contents("https://litcal.johnromanodorazio.com/api/{$endpointV}/calendars");
-$metadataJSON = json_decode($metadataRaw, true);
-[ 'litcal_metadata' => $CalendarIndex ] = $metadataJSON;
-
-CalendarSelect::buildAllOptions($CalendarIndex["diocesan_calendars"], $CalendarIndex["national_calendars"]);
+try {
+    CalendarSelect::init("https://litcal.johnromanodorazio.com/api/{$endpointV}/calendars");
+} catch (\Throwable $th) {
+    echo $th->getMessage();
+}
 ?>
 
 <div class="row">
     <div class="form-group col-md">
-        <label><?php echo _("Select calendar"); ?></label>
-        <select class="form-select" id="calendarSelect">
-            <?php echo CalendarSelect::get('nationsInnerHtml') . CalendarSelect::get('diocesesInnerHtml'); ?>
-        </select>
+        <?php echo CalendarSelect::getSelect([
+            'class' => 'form-select',
+            'id' => 'calendarSelect',
+            'options' => 'all',
+            'label' => true,
+            'labelStr' => _("Select calendar")
+        ]); ?>
     </div>
 </div>
