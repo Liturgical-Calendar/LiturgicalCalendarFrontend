@@ -1,43 +1,124 @@
 <?php
-$CalendarNations = [];
-$SelectOptions = [];
+
+class CalendarSelect
+{
+    private static $nationalCalendarsWithDioceses = [];
+    private static $nationOptions                 = [];
+    private static $dioceseOptions                = [];
+    private static $dioceseOptionsGrouped         = [];
+    private static $nationalCalendars             = [];
+    private static $locale                        = 'en';
+    public static $nationsInnerHtml;
+    public static $diocesesInnerHtml;
+
+    public static function setLocale($locale)
+    {
+        self::$locale = $locale;
+    }
+
+    private static function hasNationalCalendarWithDioceses($nation)
+    {
+        return count(self::$nationalCalendarsWithDioceses) && count(array_filter(self::$nationalCalendarsWithDioceses, fn($item) => $item['calendar_id'] === $nation)) > 0;
+    }
+
+    private static function addNationalCalendarWithDioceses($nation)
+    {
+        $nationalCalendar = array_filter(self::$nationalCalendars, fn($item) => $item['calendar_id'] === $nation);
+        array_push(self::$nationalCalendarsWithDioceses, $nationalCalendar[0]);
+        self::$dioceseOptions[$nation] = [];
+    }
+
+    private static function addNationOption($nationalCalendar, $selected = false)
+    {
+        $selectedStr = $selected ? ' selected' : '';
+        $optionOpenTag = "<option data-calendartype=\"nationalcalendar\" value=\"{$nationalCalendar['calendar_id']}\"{$selectedStr}>";
+        $optionContents = \Locale::getDisplayRegion('-' . $nationalCalendar['country_iso'], self::$locale);
+        $optionCloseTag = "</option>";
+        self::$nationOptions[] = "{$optionOpenTag}{$optionContents}{$optionCloseTag}";
+    }
+
+    private static function addDioceseOption($item)
+    {
+        $optionOpenTag = "<option data-calendartype=\"diocesancalendar\" value=\"{$item['calendar_id']}\">";
+        $optionContents = $item['diocese'];
+        $optionCloseTag = "</option>";
+        self::$dioceseOptions[$item['nation']][] = "{$optionOpenTag}{$optionContents}{$optionCloseTag}";
+    }
+
+    public static function buildAllOptions($diocesan_calendars, $national_calendars)
+    {
+        $col = \Collator::create(self::$locale);  // the default rules will do in this case..
+        $col->setStrength(\Collator::PRIMARY); // only compare base characters; not accents, lower/upper-case, ...
+
+        self::$nationalCalendars = $national_calendars;
+        foreach ($diocesan_calendars as $diocesanCalendar) {
+            if (!self::hasNationalCalendarWithDioceses($diocesanCalendar['nation'])) {
+                // we add all nations with dioceses to the nations list
+                self::addNationalCalendarWithDioceses($diocesanCalendar['nation']);
+            }
+            self::addDioceseOption($diocesanCalendar);
+        }
+        usort($national_calendars, fn($a, $b) => $col->compare(
+            \Locale::getDisplayRegion("-" . $a['country_iso'], self::$locale),
+            \Locale::getDisplayRegion("-" . $b['country_iso'], self::$locale)
+        ));
+        foreach ($national_calendars as $nationalCalendar) {
+            if (!self::hasNationalCalendarWithDioceses($nationalCalendar['calendar_id'])) {
+                // This is the first time we call CalendarSelect::addNationOption().
+                // This will ensure that the VATICAN (or any other nation without any diocese) will be added as the first option.
+                // In theory any other nation for whom no dioceses are defined will be added here too,
+                // so we will ensure that the VATICAN is always the default selected option
+                if ('VATICAN' === $nationalCalendar['nation']) {
+                    self::addNationOption($nationalCalendar, true);
+                } else {
+                    self::addNationOption($nationalCalendar);
+                }
+            }
+
+            // now we can add the options for the nations in the #calendarNationsWithDiocese list
+            // that is to say, nations that have dioceses
+            usort(self::$nationalCalendarsWithDioceses, fn($a, $b) => $col->compare(
+                \Locale::getDisplayRegion('-' . $a['country_iso'], self::$locale),
+                \Locale::getDisplayRegion('-' . $b['country_iso'], self::$locale)
+            ));
+            foreach (self::$nationalCalendarsWithDioceses as $nationalCalendar) {
+                self::addNationOption($nationalCalendar);
+                $optgroupLabel = \Locale::getDisplayRegion("-" . $nationalCalendar['country_iso'], self::$locale);
+                $optgroupOpenTag = "<optgroup label=\"{$optgroupLabel}\">";
+                $optgroupContents = implode('', self::$dioceseOptions[$nationalCalendar['calendar_id']]);
+                $optgroupCloseTag = "</optgroup>";
+                array_push(self::$dioceseOptionsGrouped, "{$optgroupOpenTag}{$optgroupContents}{$optgroupCloseTag}");
+            }
+        }
+    }
+
+    public function __get($key)
+    {
+        if ($key === 'nationsInnerHtml') {
+            return implode('', self::$nationOptions);
+        }
+
+        if ($key === 'diocesesInnerHtml') {
+            return implode('', self::$dioceseOptionsGrouped);
+        }
+    }
+}
+
 $locale = isset($_COOKIE['currentLocale']) ? $_COOKIE['currentLocale'] : Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+CalendarSelect::setLocale($locale);
 
 $metadataRaw = file_get_contents("https://litcal.johnromanodorazio.com/api/{$endpointV}/calendars");
 $metadataJSON = json_decode($metadataRaw, true);
 [ 'litcal_metadata' => $CalendarIndex ] = $metadataJSON;
-foreach ($CalendarIndex["diocesan_calendars"] as $diocesanCalendar) {
-    if (!in_array($diocesanCalendar["nation"], $CalendarNations)) {
-        array_push($CalendarNations, $diocesanCalendar["nation"]);
-        $SelectOptions[$diocesanCalendar["nation"]] = [];
-    }
-    array_push($SelectOptions[$diocesanCalendar["nation"]], "<option data-calendartype=\"diocesancalendar\" value=\"{$diocesanCalendar['calendar_id']}\">{$diocesanCalendar["diocese"]}</option>");
-}
-foreach ($CalendarIndex["national_calendars_keys"] as $key) {
-    if (!in_array($key, $CalendarNations)) {
-        array_push($CalendarNations, $key);
-    }
-}
-sort($CalendarNations);
+
+CalendarSelect::buildAllOptions($CalendarIndex["diocesan_calendars"], $CalendarIndex["national_calendars"]);
 ?>
 
 <div class="row">
     <div class="form-group col-md">
         <label><?php echo _("Select calendar"); ?></label>
         <select class="form-select" id="calendarSelect">
-            <?php foreach ($CalendarNations as $nation) {
-                if (false === array_key_exists($nation, $SelectOptions) || false === is_array($SelectOptions[ $nation ])) {
-                    echo "<option data-calendartype=\"nationalcalendar\" value=\"{$nation}\">$nation</option>";
-                } else {
-                    echo "<option data-calendartype=\"nationalcalendar\" value=\"{$nation}\">$nation</option>";
-                    echo "<optgroup label=\"$nation\">" . PHP_EOL;
-                    foreach ($SelectOptions[$nation] as $option) {
-                        echo $option . PHP_EOL;
-                    }
-                    echo "</optgroup>";
-                }
-            }
-            ?>
+            <?php echo CalendarSelect::$nationsInnerHtml . CalendarSelect::$diocesesInnerHtml; ?>
         </select>
     </div>
 </div>
