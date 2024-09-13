@@ -8,8 +8,6 @@ class CalendarSelect
     private static $dioceseOptionsGrouped         = [];
     private static $nationalCalendars             = [];
     private static $locale                        = 'en';
-    public static $nationsInnerHtml;
-    public static $diocesesInnerHtml;
 
     public static function setLocale($locale)
     {
@@ -34,7 +32,8 @@ class CalendarSelect
         $optionOpenTag = "<option data-calendartype=\"nationalcalendar\" value=\"{$nationalCalendar['calendar_id']}\"{$selectedStr}>";
         $optionContents = \Locale::getDisplayRegion('-' . $nationalCalendar['country_iso'], self::$locale);
         $optionCloseTag = "</option>";
-        self::$nationOptions[] = "{$optionOpenTag}{$optionContents}{$optionCloseTag}";
+        $optionHtml = "{$optionOpenTag}{$optionContents}{$optionCloseTag}";
+        array_push(self::$nationOptions, $optionHtml);
     }
 
     private static function addDioceseOption($item)
@@ -42,12 +41,13 @@ class CalendarSelect
         $optionOpenTag = "<option data-calendartype=\"diocesancalendar\" value=\"{$item['calendar_id']}\">";
         $optionContents = $item['diocese'];
         $optionCloseTag = "</option>";
-        self::$dioceseOptions[$item['nation']][] = "{$optionOpenTag}{$optionContents}{$optionCloseTag}";
+        $optionHtml = "{$optionOpenTag}{$optionContents}{$optionCloseTag}";
+        array_push(self::$dioceseOptions[$item['nation']], $optionHtml);
     }
 
     private static function buildAllOptions($diocesan_calendars, $national_calendars)
     {
-        $col = \Collator::create(self::$locale);  // the default rules will do in this case..
+        $col = \Collator::create(self::$locale);
         $col->setStrength(\Collator::PRIMARY); // only compare base characters; not accents, lower/upper-case, ...
 
         self::$nationalCalendars = $national_calendars;
@@ -74,22 +74,23 @@ class CalendarSelect
                     self::addNationOption($nationalCalendar);
                 }
             }
-
-            // now we can add the options for the nations in the #calendarNationsWithDiocese list
-            // that is to say, nations that have dioceses
-            usort(self::$nationalCalendarsWithDioceses, fn($a, $b) => $col->compare(
-                \Locale::getDisplayRegion('-' . $a['country_iso'], self::$locale),
-                \Locale::getDisplayRegion('-' . $b['country_iso'], self::$locale)
-            ));
-            foreach (self::$nationalCalendarsWithDioceses as $nationalCalendar) {
-                self::addNationOption($nationalCalendar);
-                $optgroupLabel = \Locale::getDisplayRegion("-" . $nationalCalendar['country_iso'], self::$locale);
-                $optgroupOpenTag = "<optgroup label=\"{$optgroupLabel}\">";
-                $optgroupContents = implode('', self::$dioceseOptions[$nationalCalendar['calendar_id']]);
-                $optgroupCloseTag = "</optgroup>";
-                array_push(self::$dioceseOptionsGrouped, "{$optgroupOpenTag}{$optgroupContents}{$optgroupCloseTag}");
-            }
         }
+
+        // now we can add the options for the nations in the #calendarNationsWithDiocese list
+        // that is to say, nations that have dioceses
+        usort(self::$nationalCalendarsWithDioceses, fn($a, $b) => $col->compare(
+            \Locale::getDisplayRegion('-' . $a['country_iso'], self::$locale),
+            \Locale::getDisplayRegion('-' . $b['country_iso'], self::$locale)
+        ));
+        foreach (self::$nationalCalendarsWithDioceses as $nationalCalendar) {
+            self::addNationOption($nationalCalendar);
+            $optgroupLabel = \Locale::getDisplayRegion("-" . $nationalCalendar['country_iso'], self::$locale);
+            $optgroupOpenTag = "<optgroup label=\"{$optgroupLabel}\">";
+            $optgroupContents = implode('', self::$dioceseOptions[$nationalCalendar['calendar_id']]);
+            $optgroupCloseTag = "</optgroup>";
+            array_push(self::$dioceseOptionsGrouped, "{$optgroupOpenTag}{$optgroupContents}{$optgroupCloseTag}");
+        }
+
     }
 
     public static function getOptions($key)
@@ -161,10 +162,10 @@ try {
 <div class="row">
     <div class="form-group col-md">
         <?php echo CalendarSelect::getSelect([
-            'class' => 'form-select',
-            'id' => 'calendarSelect',
-            'options' => 'all',
-            'label' => true,
+            'class'    => 'form-select',
+            'id'       => 'calendarSelect',
+            'options'  => 'all',
+            'label'    => true,
             'labelStr' => _("Select calendar")
         ]); ?>
     </div>
