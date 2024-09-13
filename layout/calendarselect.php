@@ -1,6 +1,7 @@
 <?php
 $CalendarNations = [];
 $SelectOptions = [];
+$locale = isset($_COOKIE['currentLocale']) ? $_COOKIE['currentLocale'] : Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);
 
 $metadataRaw = file_get_contents("https://litcal.johnromanodorazio.com/api/{$endpointV}/calendars");
 $metadataJSON = json_decode($metadataRaw, true);
@@ -25,15 +26,15 @@ sort($CalendarNations);
         <label><?php echo _("Select calendar"); ?></label>
         <select class="form-select" id="calendarSelect">
             <?php foreach ($CalendarNations as $nation) {
-                if (array_key_exists($nation, $SelectOptions) && is_array($SelectOptions[ $nation ])) {
+                if (false === array_key_exists($nation, $SelectOptions) || false === is_array($SelectOptions[ $nation ])) {
+                    echo "<option data-calendartype=\"nationalcalendar\" value=\"{$nation}\">$nation</option>";
+                } else {
                     echo "<option data-calendartype=\"nationalcalendar\" value=\"{$nation}\">$nation</option>";
                     echo "<optgroup label=\"$nation\">" . PHP_EOL;
                     foreach ($SelectOptions[$nation] as $option) {
                         echo $option . PHP_EOL;
                     }
                     echo "</optgroup>";
-                } else {
-                    echo "<option data-calendartype=\"nationalcalendar\" value=\"{$nation}\">$nation</option>";
                 }
             }
             ?>
