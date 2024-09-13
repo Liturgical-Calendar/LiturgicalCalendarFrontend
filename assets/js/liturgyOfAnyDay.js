@@ -6,27 +6,21 @@ if( typeof currentLocale === 'undefined' ) {
     currentLocale = new Intl.Locale(Cookies.get('currentLocale').replaceAll('_','-') || 'en');
 }
 
-i18next.use(i18nextHttpBackend).init({
-    debug: true,
-    lng: currentLocale.language,
-    backend: {
-        loadPath: '/assets/locales/{{lng}}/{{ns}}.json'
-    }
-  }, () => { //(err, t)
-    // for options see
-    // https://github.com/i18next/jquery-i18next#initialize-the-plugin
-    jqueryI18next.init(i18next, $);
-
-    // start localizing, details:
-    // https://github.com/i18next/jquery-i18next#usage-of-selector-function
-    //$('.nav').localize();
-    //$('.content').localize();
-  });
-
 jQuery(() => {
-    i18next.on('initialized', () => {
-        getLiturgyOfADay(true);
-    });
+    switch( $('#calendarSelect').find(':selected').attr('data-calendartype') ) {
+        case 'nationalcalendar':
+            CalendarState.calendarType = 'nation';
+            CalendarState.calendar = $('#calendarSelect').val();
+            break;
+        case 'diocesancalendar':
+            CalendarState.calendarType = 'diocese';
+            CalendarState.calendar = $('#calendarSelect').val();
+            break;
+        default:
+            CalendarState.calendarType = '';
+            CalendarState.calendar = '';
+    }
+    getLiturgyOfADay(true);
 });
 let CalData = {};
 let dtFormat = new Intl.DateTimeFormat(currentLocale.language, { dateStyle: 'full' }); //, timeZone: 'UTC'
