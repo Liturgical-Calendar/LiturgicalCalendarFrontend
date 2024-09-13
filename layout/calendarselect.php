@@ -1,15 +1,18 @@
 <?php
 $CalendarNations = [];
 $SelectOptions = [];
-[ 'LitCalMetadata' => $CalendarIndex ] = json_decode(file_get_contents("https://litcal.johnromanodorazio.com/api/{$endpointV}/metadata/"), true);
-foreach ($CalendarIndex["DiocesanCalendars"] as $key => $value) {
-    if (!in_array($value["nation"], $CalendarNations)) {
-        array_push($CalendarNations, $value["nation"]);
-        $SelectOptions[$value["nation"]] = [];
+
+$metadataRaw = file_get_contents("https://litcal.johnromanodorazio.com/api/{$endpointV}/calendars");
+$metadataJSON = json_decode($metadataRaw, true);
+[ 'litcal_metadata' => $CalendarIndex ] = $metadataJSON;
+foreach ($CalendarIndex["diocesan_calendars"] as $diocesanCalendar) {
+    if (!in_array($diocesanCalendar["nation"], $CalendarNations)) {
+        array_push($CalendarNations, $diocesanCalendar["nation"]);
+        $SelectOptions[$diocesanCalendar["nation"]] = [];
     }
-    array_push($SelectOptions[$value["nation"]], "<option data-calendartype=\"diocesancalendar\" value=\"{$key}\">{$value["diocese"]}</option>");
+    array_push($SelectOptions[$diocesanCalendar["nation"]], "<option data-calendartype=\"diocesancalendar\" value=\"{$diocesanCalendar['calendar_id']}\">{$diocesanCalendar["diocese"]}</option>");
 }
-foreach (array_keys($CalendarIndex["NationalCalendars"]) as $key) {
+foreach (array_keys($CalendarIndex["national_calendars_keys"]) as $key) {
     if (!in_array($key, $CalendarNations)) {
         array_push($CalendarNations, $key);
     }
