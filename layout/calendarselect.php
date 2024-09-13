@@ -12,7 +12,7 @@ foreach ($CalendarIndex["diocesan_calendars"] as $diocesanCalendar) {
     }
     array_push($SelectOptions[$diocesanCalendar["nation"]], "<option data-calendartype=\"diocesancalendar\" value=\"{$diocesanCalendar['calendar_id']}\">{$diocesanCalendar["diocese"]}</option>");
 }
-foreach (array_keys($CalendarIndex["national_calendars_keys"]) as $key) {
+foreach ($CalendarIndex["national_calendars_keys"] as $key) {
     if (!in_array($key, $CalendarNations)) {
         array_push($CalendarNations, $key);
     }
