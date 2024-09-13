@@ -82,9 +82,12 @@ let getLiturgyOfADay = (apiRequest = false) => {
     console.log(`timestamp = ${timestamp}`);
     if( apiRequest ) {
         $.getJSON( CalendarState.requestPath, data => {
+            console.log('successful request to ' + CalendarState.requestPath);
             if( data.hasOwnProperty('litcal') ) {
                 CalData = data.litcal;
                 console.log( 'now filtering entries with a date value of ' + timestamp );
+                console.log('CalData:');
+                console.log(CalData);
                 //key === key is superfluous, it's just to make codefactor happy that key is being used!
                 let liturgyOfADay = Object.entries(CalData).filter(([key, value]) => parseInt(value.date) === timestamp && key === key );
                 updateResults(liturgyOfADay);
