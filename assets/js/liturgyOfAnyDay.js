@@ -29,16 +29,16 @@ jQuery(() => {
     });
 });
 let CalData = {};
-let dtFormat = new Intl.DateTimeFormat(currentLocale.language, { dateStyle: 'full', timeZone: 'UTC' });
+let dtFormat = new Intl.DateTimeFormat(currentLocale.language, { dateStyle: 'full' }); //, timeZone: 'UTC'
 let liturgyDate = new Date();
 liturgyDate.setHours(0,0,0,0);
 let highContrast = [ "green", "red", "purple" ];
 let commonsMap = {};
 
 class CalendarState {
-    static year         = liturgyDate.getUTCFullYear();
-    static month        = liturgyDate.getUTCMonth() + 1;
-    static day          = liturgyDate.getUTCDate();
+    static year         = liturgyDate.getFullYear();
+    static month        = liturgyDate.getMonth() + 1;
+    static day          = liturgyDate.getDate();
     static calendar     = 'DIOCESIDIROMA';
     static calendarType = 'diocese';
     static get requestPath () {
@@ -71,7 +71,7 @@ $(document).on("change", "#monthControl,#yearControl,#calendarSelect,#dayControl
         apiRequest = true;
     }
     if (["monthControl", "dayControl", "yearControl"].includes(event.currentTarget.id)) {
-        liturgyDate = new Date(Date.UTC(CalendarState.year, CalendarState.month - 1, CalendarState.day, 0, 0, 0));
+        liturgyDate = new Date(CalendarState.year, CalendarState.month - 1, CalendarState.day, 0, 0, 0);
     }
     getLiturgyOfADay(apiRequest);
 });
