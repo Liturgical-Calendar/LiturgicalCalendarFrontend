@@ -68,7 +68,7 @@ class CalendarSelect
                 // This will ensure that the VATICAN (or any other nation without any diocese) will be added as the first option.
                 // In theory any other nation for whom no dioceses are defined will be added here too,
                 // so we will ensure that the VATICAN is always the default selected option
-                if ('VATICAN' === $nationalCalendar['nation']) {
+                if ('VATICAN' === $nationalCalendar['calendar_id']) {
                     self::addNationOption($nationalCalendar, true);
                 } else {
                     self::addNationOption($nationalCalendar);
