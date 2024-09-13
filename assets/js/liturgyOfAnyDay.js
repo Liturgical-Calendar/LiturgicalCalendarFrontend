@@ -68,6 +68,9 @@ $(document).on("change", "#monthControl,#yearControl,#calendarSelect,#dayControl
         apiRequest = true;
     }
     if (["monthControl", "dayControl", "yearControl"].includes(event.currentTarget.id)) {
+        CalendarState.year = $('#yearControl').val();
+        CalendarState.month = $('#monthControl').val();
+        CalendarState.day = $('#dayControl').val();
         liturgyDate = new Date(Date.UTC(CalendarState.year, CalendarState.month - 1, CalendarState.day, 0, 0, 0, 0));
     }
     getLiturgyOfADay(apiRequest);
