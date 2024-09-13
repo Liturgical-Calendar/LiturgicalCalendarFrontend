@@ -31,6 +31,7 @@ jQuery(() => {
 let CalData = {};
 let dtFormat = new Intl.DateTimeFormat(currentLocale.language, { dateStyle: 'full', timeZone: 'UTC' });
 let liturgyDate = new Date();
+liturgyDate.setHours(0,0,0,0);
 let highContrast = [ "green", "red", "purple" ];
 let commonsMap = {};
 
