@@ -23,10 +23,7 @@ class CalendarSelect
 
     private static function addNationalCalendarWithDioceses($nation)
     {
-        $nationalCalendar = array_filter(self::$nationalCalendars, fn($item) => $item['calendar_id'] === $nation);
-        if (!count($nationalCalendar)) {
-            die('could not find national calendar for ' . $nation . ' in ' . json_encode(self::$nationalCalendars));
-        }
+        $nationalCalendar = array_values(array_filter(self::$nationalCalendars, fn($item) => $item['calendar_id'] === $nation));
         array_push(self::$nationalCalendarsWithDioceses, $nationalCalendar[0]);
         self::$dioceseOptions[$nation] = [];
     }
