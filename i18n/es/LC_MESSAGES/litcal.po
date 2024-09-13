@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-13 13:09+0000\n"
+"POT-Creation-Date: 2024-09-13 13:26+0000\n"
 "PO-Revision-Date: 2024-09-08 20:42+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
@@ -49,7 +49,7 @@ msgstr ""
 "de ruta %1$s. Cuando no se especifica, la API usará el año actual por "
 "defecto."
 
-#: index.php:29 usage.php:17 liturgyOfAnyDay.php:28
+#: index.php:29 usage.php:17 liturgyOfAnyDay.php:22
 msgid "General Roman Calendar"
 msgstr "Calendario Romano General"
 
@@ -76,7 +76,7 @@ msgstr "Seleccionar ruta"
 msgid "Calendars available on selected route"
 msgstr "Calendarios disponibles en la ruta seleccionada"
 
-#: index.php:71 liturgyOfAnyDay.php:65
+#: index.php:71 liturgyOfAnyDay.php:53
 msgid "Year"
 msgstr "Año"
 
@@ -529,7 +529,7 @@ msgstr ""
 msgid "In development"
 msgstr "En desarrollo"
 
-#: usage.php:234 usage.php:238 liturgyOfAnyDay.php:28 liturgyOfAnyDay.php:36
+#: usage.php:234 usage.php:238 liturgyOfAnyDay.php:22 liturgyOfAnyDay.php:30
 msgid "Liturgy of any day"
 msgstr "Liturgia de cualquier día"
 
@@ -609,11 +609,11 @@ msgstr "Etiqueta"
 msgid "Name"
 msgstr "Nombre"
 
-#: extending.php:80 liturgyOfAnyDay.php:41 layout/FormControls.php:50
+#: extending.php:80 liturgyOfAnyDay.php:35 layout/FormControls.php:50
 msgid "Day"
 msgstr "Día"
 
-#: extending.php:81 liturgyOfAnyDay.php:45 layout/FormControls.php:56
+#: extending.php:81 liturgyOfAnyDay.php:39 layout/FormControls.php:56
 msgid "Month"
 msgstr "Mes"
 
@@ -1060,7 +1060,7 @@ msgid "Liturgical Calendar - About us"
 msgstr "Calendario litúrgico - Sobre nosotros"
 
 #. translators: %s = current selected date
-#: liturgyOfAnyDay.php:73
+#: liturgyOfAnyDay.php:61
 #, php-format
 msgid "Liturgy of %s"
 msgstr "Liturgia de %s"
