@@ -89,7 +89,7 @@ let getLiturgyOfADay = (apiRequest = false) => {
                 console.log('CalData:');
                 console.log(CalData);
                 //key === key is superfluous, it's just to make codefactor happy that key is being used!
-                let liturgyOfADay = Object.entries(CalData).filter(([key, value]) => parseInt(value.date) === timestamp && key === key );
+                let liturgyOfADay = Object.entries(CalData).filter(([key, value]) => value.date === timestamp && key === key );
                 updateResults(liturgyOfADay);
             } else {
                 $('#liturgyResults').append(`<div>ERROR: no 'litcal' property: ${JSON.stringify(data)}</div>`);
@@ -97,7 +97,7 @@ let getLiturgyOfADay = (apiRequest = false) => {
         });
     } else {
         //key === key is superfluous, it's just to make codefactor happy that key is being used!
-        let liturgyOfADay = Object.entries(CalData).filter(([key, value]) => parseInt(value.date) === timestamp && key === key );
+        let liturgyOfADay = Object.entries(CalData).filter(([key, value]) => value.date === timestamp && key === key );
         updateResults(liturgyOfADay);
     }
 }
