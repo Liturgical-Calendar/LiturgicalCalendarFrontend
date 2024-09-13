@@ -11,6 +11,9 @@ jQuery(() => {
         case 'nationalcalendar':
             CalendarState.calendarType = 'nation';
             CalendarState.calendar = $('#calendarSelect').val();
+            if (CalendarState.calendar === 'VATICAN') {
+                CalendarState.calendarType = '';
+            }
             break;
         case 'diocesancalendar':
             CalendarState.calendarType = 'diocese';
@@ -79,6 +82,7 @@ let getLiturgyOfADay = (apiRequest = false) => {
         if (CalendarState.calendar === 'VATICAN') {
             headers['Accept-Language'] = currentLocale.language;
         }
+        console.log(headers);
         $.ajax({
             url: CalendarState.requestPath,
             headers: headers,
