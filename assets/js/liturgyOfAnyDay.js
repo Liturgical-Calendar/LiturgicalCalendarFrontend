@@ -36,13 +36,13 @@ let highContrast = [ "green", "red", "purple" ];
 let commonsMap = {};
 
 class CalendarState {
-    static year = liturgyDate.getUTCFullYear();
-    static month = liturgyDate.getUTCMonth() + 1;
-    static day = liturgyDate.getUTCDate();
-    static calendar = 'DIOCESIDIROMA';
+    static year         = liturgyDate.getUTCFullYear();
+    static month        = liturgyDate.getUTCMonth() + 1;
+    static day          = liturgyDate.getUTCDate();
+    static calendar     = 'DIOCESIDIROMA';
     static calendarType = 'diocese';
     static get requestPath () {
-        return `${endpointURL}/${CalendarState.calendarType !== '' ? `${CalendarState.calendarType}/${CalendarState.calendar}` : ''}/${CalendarState.year}`;
+        return `${endpointURL}/${CalendarState.calendarType !== '' ? `${CalendarState.calendarType}/${CalendarState.calendar}/` : ''}${CalendarState.year}`;
     }
 }
 
@@ -79,7 +79,7 @@ $(document).on("change", "#monthControl,#yearControl,#calendarSelect,#dayControl
 
 let getLiturgyOfADay = (apiRequest = false) => {
     let timestamp = liturgyDate.getTime() / 1000;
-
+    console.log(`timestamp = ${timestamp}`);
     if( apiRequest ) {
         $.getJSON( CalendarState.requestPath, data => {
             if( data.hasOwnProperty('litcal') ) {
@@ -95,7 +95,7 @@ let getLiturgyOfADay = (apiRequest = false) => {
     } else {
         //key === key is superfluous, it's just to make codefactor happy that key is being used!
         let liturgyOfADay = Object.entries(CalData).filter(([key, value]) => parseInt(value.date) === timestamp && key === key );
-        updateResults( liturgyOfADay );
+        updateResults(liturgyOfADay);
     }
 }
 
@@ -107,7 +107,8 @@ const filterTagsDisplayGrade = [
 ];
 
 
-let updateResults = liturgyOfADay => {
+let updateResults = (liturgyOfADay) => {
+    console.log('liturgyOfADay = ' + JSON.stringify(liturgyOfADay));
     $('#dateOfLiturgy').text( dtFormat.format(liturgyDate) );
     $('#liturgyResults').empty();
     liturgyOfADay.forEach(([tag,eventData]) => {

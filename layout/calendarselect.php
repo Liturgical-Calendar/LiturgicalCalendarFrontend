@@ -65,9 +65,8 @@ class CalendarSelect
         foreach ($national_calendars as $nationalCalendar) {
             if (!self::hasNationalCalendarWithDioceses($nationalCalendar['calendar_id'])) {
                 // This is the first time we call CalendarSelect::addNationOption().
-                // This will ensure that the VATICAN (or any other nation without any diocese) will be added as the first option.
-                // In theory any other nation for whom no dioceses are defined will be added here too,
-                // so we will ensure that the VATICAN is always the default selected option
+                // This will ensure that the VATICAN (or any other nation without any diocese) will be added as the first option(s).
+                // We also ensure that the VATICAN is always the default selected option
                 if ('VATICAN' === $nationalCalendar['calendar_id']) {
                     self::addNationOption($nationalCalendar, true);
                 } else {
@@ -90,7 +89,6 @@ class CalendarSelect
             $optgroupCloseTag = "</optgroup>";
             array_push(self::$dioceseOptionsGrouped, "{$optgroupOpenTag}{$optgroupContents}{$optgroupCloseTag}");
         }
-
     }
 
     public static function getOptions($key)
