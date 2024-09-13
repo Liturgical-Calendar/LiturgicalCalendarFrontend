@@ -101,6 +101,8 @@ class CalendarSelect
         if ($key === 'diocesesInnerHtml') {
             return implode('', self::$dioceseOptionsGrouped);
         }
+
+        return "<option>$key</option>";
     }
 }
 
