@@ -23,9 +23,9 @@ jQuery(() => {
     getLiturgyOfADay(true);
 });
 let CalData = {};
-let dtFormat = new Intl.DateTimeFormat(currentLocale.language, { dateStyle: 'full' }); //, timeZone: 'UTC'
+let dtFormat = new Intl.DateTimeFormat(currentLocale.language, { dateStyle: 'full' });
 const now = new Date();
-const liturgyDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0));
+let liturgyDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0));
 let highContrast = [ "green", "red", "purple" ];
 let commonsMap = {};
 
@@ -75,18 +75,29 @@ let getLiturgyOfADay = (apiRequest = false) => {
     let timestamp = liturgyDate.getTime() / 1000;
     console.log(`timestamp = ${timestamp}`);
     if( apiRequest ) {
-        $.getJSON( CalendarState.requestPath, data => {
-            console.log('successful request to ' + CalendarState.requestPath);
-            if( data.hasOwnProperty('litcal') ) {
-                CalData = data.litcal;
-                console.log( 'now filtering entries with a date value of ' + timestamp );
-                console.log('CalData:');
-                console.log(CalData);
-                //key === key is superfluous, it's just to make codefactor happy that key is being used!
-                let liturgyOfADay = Object.entries(CalData).filter(([key, value]) => value.date === timestamp && key === key );
-                updateResults(liturgyOfADay);
-            } else {
-                $('#liturgyResults').append(`<div>ERROR: no 'litcal' property: ${JSON.stringify(data)}</div>`);
+        let headers = {};
+        if (CalendarState.calendar === 'VATICAN') {
+            headers['Accept-Language'] = currentLocale.language;
+        }
+        $.ajax({
+            url: CalendarState.requestPath,
+            headers: headers,
+            success: (data, textStatus, xhr) => {
+                console.log('successful request to ' + CalendarState.requestPath);
+                if( data.hasOwnProperty('litcal') ) {
+                    CalData = data.litcal;
+                    console.log( 'now filtering entries with a date value of ' + timestamp );
+                    console.log('CalData:');
+                    console.log(CalData);
+                    //key === key is superfluous, it's just to make codefactor happy that key is being used!
+                    let liturgyOfADay = Object.entries(CalData).filter(([key, value]) => value.date === timestamp && key === key );
+                    updateResults(liturgyOfADay);
+                } else {
+                    $('#liturgyResults').append(`<div>ERROR: no 'litcal' property: ${JSON.stringify(data)}</div>`);
+                }
+            },
+            error: (xhr, textStatus, errorThrown) => {
+                $('#liturgyResults').append(`<div>ERROR: ${JSON.stringify(xhr)}</div>`);
             }
         });
     } else {
