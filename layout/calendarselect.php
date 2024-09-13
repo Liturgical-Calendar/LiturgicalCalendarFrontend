@@ -92,7 +92,7 @@ class CalendarSelect
         }
     }
 
-    public function __get($key)
+    public static function get($key)
     {
         if ($key === 'nationsInnerHtml') {
             return implode('', self::$nationOptions);
@@ -120,7 +120,7 @@ CalendarSelect::buildAllOptions($CalendarIndex["diocesan_calendars"], $CalendarI
     <div class="form-group col-md">
         <label><?php echo _("Select calendar"); ?></label>
         <select class="form-select" id="calendarSelect">
-            <?php echo CalendarSelect::$nationsInnerHtml . CalendarSelect::$diocesesInnerHtml; ?>
+            <?php echo CalendarSelect::get('nationsInnerHtml') . CalendarSelect::get('diocesesInnerHtml'); ?>
         </select>
     </div>
 </div>
