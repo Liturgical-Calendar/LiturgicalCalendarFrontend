@@ -69,7 +69,8 @@ $(document).on('mouseup', '#calSubscriptionURLWrapper', () => {
             sel.addRange(range);//add Range to a Selection.
         },1);
         }
-    }else if (document.selection) { //older ie
+    }
+    else if (document.selection) { //older ie
         sel = document.selection.createRange();
         if(sel.text == ''){ //no text selection
             range = document.body.createTextRange();//Creates TextRange object
