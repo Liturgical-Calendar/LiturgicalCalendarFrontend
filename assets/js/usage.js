@@ -1,21 +1,88 @@
+/**
+ * Enum CalendarType
+ * Used in building the endpoint URL for requests to the API /calendar endpoint
+ */
+const CalendarType = {
+    NATIONAL: 'nation',
+    DIOCESAN: 'diocese'
+}
+Object.freeze(CalendarType);
+
+class RequestPayload {
+    static epiphany             = null;
+    static ascension            = null;
+    static corpus_christi       = null;
+    static eternal_high_priest  = null;
+    static locale               = null;
+    static return_type          = 'ICS';
+    static year_type            = null;
+};
+
+const requestOptionDefaults = {
+    "epiphany":            'JAN6',
+    "ascension":           'THURSDAY',
+    "corpus_christi":      'THURSDAY',
+    "eternal_high_priest": false,
+    "locale":              'LA'
+}
+
+/**
+ * Class CurrentEndpoint
+ * Used to build the full endpoint URL for the API /calendar endpoint
+ * @param {string} calendarType The type of calendar (national, diocesan)
+ * @param {string} calendarId The ID of the calendar
+ * @param {string} calendarYear The year of the calendar
+ *
+ */
+class CurrentEndpoint {
+    /**
+     * The base URL of the API /calendar endpoint
+     * @returns {string} The base URL of the API /calendar endpoint
+     */
+    static get apiBase() {
+        return `${RequestURLBase}calendar`
+    };
+    static calendarType   = null;
+    static calendarId     = null;
+    static calendarYear   = null;
+    static serialize = () => {
+        let currentEndpoint = CurrentEndpoint.apiBase;
+        if ( CurrentEndpoint.calendarType !== null && CurrentEndpoint.calendarId !== null ) {
+            currentEndpoint += `/${CurrentEndpoint.calendarType}/${CurrentEndpoint.calendarId}`;
+        }
+        if ( CurrentEndpoint.calendarYear !== null ) {
+            currentEndpoint += `/${CurrentEndpoint.calendarYear}`;
+        }
+        let parameters = [];
+        for (const key in RequestPayload) {
+            if(RequestPayload[key] !== null && RequestPayload[key] !== ''){
+                parameters.push(key + "=" + encodeURIComponent(RequestPayload[key]));
+            }
+        }
+        let urlParams = parameters.length ? `?${parameters.join('&')}` : '';
+        return `${currentEndpoint}${urlParams}`;
+    }
+}
+
+
 const updateSubscriptionURL = () => {
-    let params = {};
+    CurrentEndpoint.calendarId = $('#calendarSelect').val();
     switch( $('#calendarSelect').find(':selected').attr('data-calendartype') ) {
         case 'nationalcalendar':
-            params.nationalcalendar = $('#calendarSelect').val();
+            CurrentEndpoint.calendarType = CalendarType.NATIONAL;
             break;
         case 'diocesancalendar':
-            params.diocesancalendar = $('#calendarSelect').val();
+            CurrentEndpoint.calendarType = CalendarType.DIOCESAN;
             break;
         default:
-            params.diocesancalendar = 'DIOCESIDIROMA';
+            CurrentEndpoint.calendarId = null;
+            CurrentEndpoint.calendarType = null;
     }
-    params.returntype = "ICS";
-    $('#calSubscriptionURL').text(calSubscriptionURL + new URLSearchParams(params).toString());
+    $('#calSubscriptionURL').text(CurrentEndpoint.serialize());
 }
 
 //let stagingURL = isStaging ? "-staging" : "";
-let calSubscriptionURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/?`;
+let calSubscriptionURL = CurrentEndpoint.serialize();
 
 
 toastr.options = {
