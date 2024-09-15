@@ -9,7 +9,7 @@
 include_once("includes/I18n.php");
 include_once("vendor/autoload.php");
 
-use LiturgicalCalendar\Components;
+use LiturgicalCalendar\Components\CalendarSelect;
 
 $i18n = new I18n();
 $dateToday = new DateTime();
