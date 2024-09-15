@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-15 21:35+0000\n"
+"POT-Creation-Date: 2024-09-15 23:34+0000\n"
 "PO-Revision-Date: 2024-09-08 20:42+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
@@ -50,7 +50,7 @@ msgstr ""
 "spezifiziert werden. Wenn nicht angegeben, wird die API standardmäßig das "
 "aktuelle Jahr verwenden."
 
-#: index.php:29 usage.php:17 liturgyOfAnyDay.php:27
+#: index.php:29 usage.php:20 liturgyOfAnyDay.php:27
 msgid "General Roman Calendar"
 msgstr "Allgemeiner Römischer Kalender"
 
@@ -228,7 +228,7 @@ msgstr ""
 "Alle verfügbaren API-Routen mit ihren unterstützten Methoden, Parametern, "
 "Inhaltstypen und Antworten sind hier beschrieben."
 
-#: index.php:232 usage.php:174
+#: index.php:232 usage.php:187
 msgid "Calculation of the Date of Easter"
 msgstr "Berechnung des Osterdatums"
 
@@ -272,7 +272,7 @@ msgstr ""
 "zurückgibt, können Lokalisierungen genauso gut in einer Client-Anwendung "
 "durchgeführt werden."
 
-#: usage.php:7
+#: usage.php:10
 msgid ""
 "A Liturgical Calendar API from which you can retrieve data for the "
 "Liturgical events of any given year from 1970 onwards, whether for the "
@@ -284,43 +284,43 @@ msgstr ""
 "es für den universellen oder allgemeinen römischen Kalender oder für "
 "abgeleitete nationale und diözesane Kalender"
 
-#: usage.php:17
+#: usage.php:20
 msgid "Examples"
 msgstr "Beispiele"
 
-#: usage.php:25
+#: usage.php:28
 msgid "Example usage of the API"
 msgstr "Beispielhafte Verwendung der API"
 
-#: usage.php:31 layout/header.php:107
+#: usage.php:34 layout/header.php:107
 msgid "Web calendar"
 msgstr "Webkalender"
 
-#: usage.php:43
+#: usage.php:46
 msgid "HTML presentation elaborated by PHP using a CURL request"
 msgstr ""
 "HTML-Präsentation, die von JAVASCRIPT unter Verwendung einer CURL-Anfrage "
 "erstellt wurde"
 
-#: usage.php:44
+#: usage.php:47
 msgid "View PHP Example"
 msgstr "PHP-Beispiel ansehen"
 
-#: usage.php:54
+#: usage.php:57
 msgid "HTML presentation elaborated by JAVASCRIPT using an AJAX request"
 msgstr ""
 "HTML-Präsentation, die von JAVASCRIPT unter Verwendung einer AJAX-Anfrage "
 "erstellt wurde"
 
-#: usage.php:55
+#: usage.php:58
 msgid "View JavaScript Example"
 msgstr "JavaScript-Beispiel anzeigen"
 
-#: usage.php:62
+#: usage.php:65
 msgid "Calendar"
 msgstr "Kalender"
 
-#: usage.php:65
+#: usage.php:68
 #, fuzzy
 #| msgid ""
 #| "Fullcalendar representation elaborated by JAVASCRIPT using an AJAX request"
@@ -330,36 +330,42 @@ msgstr ""
 "Präsentation Fullcalendar, die von JAVASCRIPT unter Verwendung einer AJAX-"
 "Anforderung ausgearbeitet wurde"
 
-#: usage.php:66
+#: usage.php:69
 #, fuzzy
 #| msgid "View Full Calendar"
 msgid "View FullCalendar"
 msgstr "FullCalendar anzeigen"
 
-#: usage.php:67
+#: usage.php:70
 #, fuzzy
 #| msgid "View Full Calendar"
 msgid "View FullCalendar (messages first)"
 msgstr "FullCalendar anzeigen"
 
-#: usage.php:78 layout/header.php:111
+#: usage.php:81 layout/header.php:111
 msgid "Calendar subscription"
 msgstr "Kalenderabonnement"
 
-#: usage.php:86
+#: usage.php:95 liturgyOfAnyDay.php:44
+#, fuzzy
+#| msgid "Generate Diocesan Calendar"
+msgid "Select calendar"
+msgstr "Diözesankalender erstellen"
+
+#: usage.php:99
 msgid "Calendar subscription URL"
 msgstr "Kalenderabonnement-URL"
 
-#: usage.php:105 usage.php:118 usage.php:143
+#: usage.php:118 usage.php:131 usage.php:156
 msgid "Click on the link above to copy it the clipboard."
 msgstr "Klicke auf den obigen Link, um ihn in die Zwischenablage zu kopieren."
 
-#: usage.php:106
+#: usage.php:119
 #, php-format
 msgid "Navigate to %s."
 msgstr "Navigiere zu %s."
 
-#: usage.php:107
+#: usage.php:120
 msgid ""
 "At the bottom left corner of the screen, next to Other calendars, click on "
 "the + icon to add a new calendar, and choose <i><b>From URL</b></i>."
@@ -368,11 +374,11 @@ msgstr ""
 "Symbol, um einen neuen Kalender hinzuzufügen, und wähle <i><b>Aus URL</b></"
 "i>."
 
-#: usage.php:108 usage.php:120 usage.php:146
+#: usage.php:121 usage.php:133 usage.php:159
 msgid "Paste in the URL that you copied earlier."
 msgstr "Füge die URL ein, die du zuvor kopiert hast."
 
-#: usage.php:109 usage.php:121 usage.php:133 usage.php:149
+#: usage.php:122 usage.php:134 usage.php:146 usage.php:162
 msgid ""
 "Once subscribed, your calendar will be populated with the events from the "
 "subscription URL."
@@ -380,11 +386,11 @@ msgstr ""
 "Sobald du abonniert bist, wird dein Kalender mit den Ereignissen aus der "
 "Abonnement-URL gefüllt."
 
-#: usage.php:110 usage.php:134
+#: usage.php:123 usage.php:147
 msgid "Google Calendar will poll the calendar URL every 8 hours."
 msgstr "Google Kalender wird die Kalender-URL alle 8 Stunden abfragen."
 
-#: usage.php:111 usage.php:123 usage.php:135 usage.php:153
+#: usage.php:124 usage.php:136 usage.php:148 usage.php:166
 msgid ""
 "Since you have made a subscription, any updates in the Liturgical Calendar "
 "API will be propagated to your subscription."
@@ -392,7 +398,7 @@ msgstr ""
 "Da du ein Abonnement abgeschlossen hast, werden alle Updates in der "
 "Liturgischen Kalender-API an dein Abonnement weitergeleitet."
 
-#: usage.php:112 usage.php:124 usage.php:136 usage.php:154
+#: usage.php:125 usage.php:137 usage.php:149 usage.php:167
 msgid ""
 "You will only see events for the current year. On the first day of a new "
 "year however, new events will be created automatically for the new year."
@@ -401,7 +407,7 @@ msgstr ""
 "neuen Jahres werden jedoch automatisch neue Ereignisse für das neue Jahr "
 "erstellt."
 
-#: usage.php:113
+#: usage.php:126
 msgid ""
 "Once the calendar has been added from a desktop, it will become available "
 "for the same Gmail account on the Google Calendar app on a smartphone."
@@ -410,7 +416,7 @@ msgstr ""
 "dasselbe Gmail-Konto in der Google Kalender-App auf einem Smartphone "
 "verfügbar."
 
-#: usage.php:119
+#: usage.php:132
 msgid ""
 "Go to <i><b>Phone Settings → Accounts → Add account → Other → Add Calendar</"
 "b></i>."
@@ -418,7 +424,7 @@ msgstr ""
 "Gehe zu <i><b>Telefoneinstellungen → Konten → Konto hinzufügen → Andere → "
 "Kalender hinzufügen</b></i>."
 
-#: usage.php:122
+#: usage.php:135
 msgid ""
 "The iPhone Calendar app will poll the calendar URL based on the settings at "
 "<i><b>Phone Settings → Accounts → Fetch New Data → Fetch</b></i>."
@@ -427,7 +433,7 @@ msgstr ""
 "Einstellungen unter <i><b>Telefoneinstellungen → Accounts → Neue Daten "
 "abrufen → Abrufen</b></i> abfragen."
 
-#: usage.php:129
+#: usage.php:142
 #, php-format
 msgid ""
 "If you have not yet added the calendar subscription from the desktop version "
@@ -436,11 +442,11 @@ msgstr ""
 "Falls du das Kalenderabonnement noch nicht von der Desktop-Version von "
 "Google Kalender hinzugefügt hast, tue dies bitte jetzt (siehe %s)."
 
-#: usage.php:130
+#: usage.php:143
 msgid "Open the Google Calendar app."
 msgstr "Öffne die Google Kalender App."
 
-#: usage.php:131
+#: usage.php:144
 msgid ""
 "Go to <i><b>Settings</b></i>, then under the account which you used for the "
 "Desktop version, click on the Calendar subscription name."
@@ -448,20 +454,20 @@ msgstr ""
 "Gehe zu <i><b>Einstellungen</b></i>, dann klicke unter dem Konto, das du für "
 "die Desktop-Version verwendet hast, auf den Namen des Kalenderabonnements."
 
-#: usage.php:132
+#: usage.php:145
 msgid "Make sure <i><b>Synchronization</b></i> is turned on."
 msgstr "Stelle sicher, dass <i><b>Synchronisierung</b></i> eingeschaltet ist."
 
-#: usage.php:142
+#: usage.php:155
 msgid "tested with Outlook 2013"
 msgstr "getestet mit Outlook 2013"
 
-#: usage.php:144
+#: usage.php:157
 msgid "At the bottom of the screen, switch from Email view to Calendar view."
 msgstr ""
 "Wechsle unten auf dem Bildschirm von der E-Mail-Ansicht zur Kalenderansicht."
 
-#: usage.php:145
+#: usage.php:158
 msgid ""
 "On the ribbon of the Home menu item, click on <i><b>Open calendar → From the "
 "internet</b></i>."
@@ -469,7 +475,7 @@ msgstr ""
 "Klicke im Menüband des Home-Menüelements auf <i><b>Kalender öffnen → Aus dem "
 "Internet</b></i>."
 
-#: usage.php:147
+#: usage.php:160
 msgid ""
 "On the following screen, check the checkbox along the lines of \"Poll this "
 "calendar in the interval suggested by the creator\"."
@@ -477,11 +483,11 @@ msgstr ""
 "Aktiviere auf dem folgenden Bildschirm das Kontrollkästchen in etwa \"Diesen "
 "Kalender im vom Ersteller vorgeschlagenen Intervall abfragen\"."
 
-#: usage.php:148
+#: usage.php:161
 msgid "Outlook Calendar should now poll the calendar URL once a day."
 msgstr "Outlook Kalender sollte nun die Kalender-URL einmal täglich abfragen."
 
-#: usage.php:150
+#: usage.php:163
 msgid ""
 "Make sure the Calendar is created in the Other calendars folder; if you find "
 "it under the Personal calendars folder, drag it and drop it onto the Other "
@@ -493,7 +499,7 @@ msgstr ""
 "Andere Kalender, um sicherzustellen, dass er als Abonnement-Internetkalender "
 "behandelt wird."
 
-#: usage.php:151
+#: usage.php:164
 msgid ""
 "You can manually fetch new data by clicking on <i><b>Send/receive all</b></"
 "i> (from the SEND/RECEIVE menu item)."
@@ -501,7 +507,7 @@ msgstr ""
 "Du kannst neue Daten manuell abrufen, indem du auf <i><b>Senden/Empfangen "
 "alle</b></i> (im Menüpunkt SENDEN/EMPFANGEN) klickst."
 
-#: usage.php:152
+#: usage.php:165
 msgid ""
 "Outlook Calendar supports a minimal amount of HTML in the event description, "
 "so the event descriptions provided by the subscription URL are a little bit "
@@ -511,43 +517,43 @@ msgstr ""
 "Ereignisbeschreibung, daher sind die Ereignisbeschreibungen, die von der "
 "Abonnement-URL bereitgestellt werden, für Outlook etwas \"verschönert\"."
 
-#: usage.php:166 layout/header.php:115
+#: usage.php:179 layout/header.php:115
 #, fuzzy
 #| msgid "Date of Easter API endpoint"
 msgid "Dates of Easter"
 msgstr "Osterdatum API-Endpunkt"
 
-#: usage.php:177
+#: usage.php:190
 msgid "Example display of the date of Easter from 1583 to 9999"
 msgstr "Beispielanzeige des Osterdatums von 1583 bis 9999"
 
-#: usage.php:178
+#: usage.php:191
 msgid "Calculate the Date of Easter"
 msgstr "Berechnen Sie das Osterdatums"
 
-#: usage.php:188 layout/header.php:119
+#: usage.php:201 layout/header.php:119
 msgid "Liturgy of the Day"
 msgstr "Liturgie des Tages"
 
-#: usage.php:197
+#: usage.php:210
 msgid "Alexa News Brief"
 msgstr "Alexa Nachrichtenüberblick"
 
-#: usage.php:200
+#: usage.php:213
 msgid "Daily news brief with the liturgy of the day, as an Amazon Alexa skill"
 msgstr ""
 "Tägliche Nachrichtenübersicht mit der Liturgie des Tages, als Amazon Alexa "
 "Skill"
 
-#: usage.php:219 usage.php:227
+#: usage.php:232 usage.php:240
 msgid "In development"
 msgstr "In Entwicklung"
 
-#: usage.php:234 usage.php:238 liturgyOfAnyDay.php:27 liturgyOfAnyDay.php:35
+#: usage.php:247 usage.php:251 liturgyOfAnyDay.php:27 liturgyOfAnyDay.php:35
 msgid "Liturgy of any day"
 msgstr "Liturgie eines beliebigen Tages"
 
-#: usage.php:237
+#: usage.php:250
 msgid ""
 "For example, you can find the liturgy of the day from the day of your "
 "baptism."
@@ -1075,12 +1081,6 @@ msgstr ""
 #: about.php:68 about.php:76
 msgid "Liturgical Calendar - About us"
 msgstr "Liturgischer Kalender - Über uns"
-
-#: liturgyOfAnyDay.php:44
-#, fuzzy
-#| msgid "Generate Diocesan Calendar"
-msgid "Select calendar"
-msgstr "Diözesankalender erstellen"
 
 #. translators: %s = current selected date
 #: liturgyOfAnyDay.php:76
