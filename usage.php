@@ -1,9 +1,12 @@
 <!doctype html><?php
 
 include_once("includes/I18n.php");
+include_once("vendor/autoload.php");
+
+use LiturgicalCalendar\Components\CalendarSelect;
 
 $i18n = new I18n();
-
+$CalendarSelect = new CalendarSelect(["locale" => $i18n->LOCALE]);
 $API_DESCRIPTION = _("A Liturgical Calendar API from which you can retrieve data for the Liturgical events of any given year from 1970 onwards, whether for the Universal or General Roman Calendar or for derived National and Diocesan calendars");
 
 $isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false || strpos($_SERVER['HTTP_HOST'], "localhost") !== false );
@@ -82,7 +85,17 @@ $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/cal
                     <div class="accordion-body">
                         <div class="row">
                             <div class="col-lg">
-                                <?php include_once('./layout/calendarselect.php') ?>
+                                <div class="row">
+                                    <div class="form-group col-md">
+                                        <?php echo $CalendarSelect->getSelect([
+                                            'class'    => 'form-select',
+                                            'id'       => 'calendarSelect',
+                                            'options'  => 'all',
+                                            'label'    => true,
+                                            'labelStr' => _("Select calendar")
+                                        ]); ?>
+                                    </div>
+                                </div>
                                 <p><?php echo _("Calendar subscription URL"); ?></p>
                                 <div class="text-center bg-light border border-info rounded p-2" role="button" title="Click to copy to the clipboard!" id="calSubscriptionURLWrapper"><code id="calSubscriptionURL"><?php echo $calSubscriptionURL; ?></code><i class="fas fa-clipboard float-end text-info"></i></div>
                                 <ul class="nav nav-tabs mt-4" role="tablist">
