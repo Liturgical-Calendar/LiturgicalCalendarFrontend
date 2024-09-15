@@ -96,8 +96,12 @@ $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/cal
                                         ]); ?>
                                     </div>
                                 </div>
-                                <p><?php echo _("Calendar subscription URL"); ?></p>
-                                <div class="text-center bg-light border border-info rounded p-2" role="button" title="Click to copy to the clipboard!" id="calSubscriptionURLWrapper"><code id="calSubscriptionURL"><?php echo $calSubscriptionURL; ?></code><i class="fas fa-clipboard float-end text-info"></i></div>
+                                <p class="mt-2 mb-1"><?php echo _("Calendar subscription URL"); ?></p>
+                                <div class="text-center bg-light border border-info rounded p-2" role="button"
+                                     title="Click to copy to the clipboard!" id="calSubscriptionURLWrapper">
+                                     <code id="calSubscriptionURL"><?php echo $calSubscriptionURL; ?></code>
+                                     <i class="fas fa-clipboard float-end text-info"></i>
+                                </div>
                                 <ul class="nav nav-tabs mt-4" role="tablist">
                                     <li class="nav-item">
                                         <button class="nav-link active" id="gcal-tab" data-bs-toggle="tab" data-bs-target="#gcal" role="tab" aria-controls="gcal" aria-selected="true"><i class="fab fa-google me-2"></i>&nbsp;Google Calendar</button>
