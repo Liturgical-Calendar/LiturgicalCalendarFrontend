@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-13 13:26+0000\n"
+"POT-Creation-Date: 2024-09-15 21:35+0000\n"
 "PO-Revision-Date: 2024-09-08 20:42+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
@@ -49,7 +49,7 @@ msgstr ""
 "parametro di percorso %1$s. Quando non specificato, l'API predefinirà l'anno "
 "corrente."
 
-#: index.php:29 usage.php:17 liturgyOfAnyDay.php:22
+#: index.php:29 usage.php:17 liturgyOfAnyDay.php:27
 msgid "General Roman Calendar"
 msgstr "Calendario Romano Generale"
 
@@ -76,7 +76,7 @@ msgstr "Seleziona percorso"
 msgid "Calendars available on selected route"
 msgstr "Calendari disponibili sul percorso selezionato"
 
-#: index.php:71 liturgyOfAnyDay.php:53
+#: index.php:71 liturgyOfAnyDay.php:68
 msgid "Year"
 msgstr "Anno"
 
@@ -531,7 +531,7 @@ msgstr ""
 msgid "In development"
 msgstr "Sotto sviluppo"
 
-#: usage.php:234 usage.php:238 liturgyOfAnyDay.php:22 liturgyOfAnyDay.php:30
+#: usage.php:234 usage.php:238 liturgyOfAnyDay.php:27 liturgyOfAnyDay.php:35
 msgid "Liturgy of any day"
 msgstr "Liturgia di un qualsiasi giorno"
 
@@ -605,11 +605,11 @@ msgstr "Etichetta"
 msgid "Name"
 msgstr "Nome"
 
-#: extending.php:80 liturgyOfAnyDay.php:35 layout/FormControls.php:50
+#: extending.php:80 liturgyOfAnyDay.php:50 layout/FormControls.php:50
 msgid "Day"
 msgstr "Giorno"
 
-#: extending.php:81 liturgyOfAnyDay.php:39 layout/FormControls.php:56
+#: extending.php:81 liturgyOfAnyDay.php:54 layout/FormControls.php:56
 msgid "Month"
 msgstr "Mese"
 
@@ -1047,8 +1047,12 @@ msgstr ""
 msgid "Liturgical Calendar - About us"
 msgstr "Calendario Liturgico - Chi siamo"
 
+#: liturgyOfAnyDay.php:44
+msgid "Select calendar"
+msgstr "Seleziona calendario"
+
 #. translators: %s = current selected date
-#: liturgyOfAnyDay.php:61
+#: liturgyOfAnyDay.php:76
 #, php-format
 msgid "Liturgy of %s"
 msgstr "Liturgia di %s"
@@ -1432,9 +1436,6 @@ msgstr "Comune (o Proprio)"
 
 #~ msgid "Retrieve existing data"
 #~ msgstr "Recupera dati esistenti"
-
-#~ msgid "Select calendar"
-#~ msgstr "Seleziona calendario"
 
 #~ msgid "Overwrites universal / national calendar"
 #~ msgstr "Sovrascrive il calendario universale / nazionale"

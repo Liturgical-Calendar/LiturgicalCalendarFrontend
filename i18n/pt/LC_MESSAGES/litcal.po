@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-13 13:26+0000\n"
+"POT-Creation-Date: 2024-09-15 21:35+0000\n"
 "PO-Revision-Date: 2024-09-08 20:42+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
@@ -48,7 +48,7 @@ msgstr ""
 "Cada um desses caminhos pode ser especificado opcionalmente com um parâmetro "
 "de caminho %1$s. Quando não especificado, a API usará o ano atual por padrão."
 
-#: index.php:29 usage.php:17 liturgyOfAnyDay.php:22
+#: index.php:29 usage.php:17 liturgyOfAnyDay.php:27
 msgid "General Roman Calendar"
 msgstr "Calendário Romano Geral"
 
@@ -75,7 +75,7 @@ msgstr "Selecionar rota"
 msgid "Calendars available on selected route"
 msgstr "Calendários disponíveis na rota selecionada"
 
-#: index.php:71 liturgyOfAnyDay.php:53
+#: index.php:71 liturgyOfAnyDay.php:68
 msgid "Year"
 msgstr "Ano"
 
@@ -514,7 +514,7 @@ msgstr ""
 msgid "In development"
 msgstr "Em desenvolvimento"
 
-#: usage.php:234 usage.php:238 liturgyOfAnyDay.php:22 liturgyOfAnyDay.php:30
+#: usage.php:234 usage.php:238 liturgyOfAnyDay.php:27 liturgyOfAnyDay.php:35
 msgid "Liturgy of any day"
 msgstr "Liturgia de qualquer dia"
 
@@ -585,11 +585,11 @@ msgstr "Tag"
 msgid "Name"
 msgstr "Nome"
 
-#: extending.php:80 liturgyOfAnyDay.php:35 layout/FormControls.php:50
+#: extending.php:80 liturgyOfAnyDay.php:50 layout/FormControls.php:50
 msgid "Day"
 msgstr "Dia"
 
-#: extending.php:81 liturgyOfAnyDay.php:39 layout/FormControls.php:56
+#: extending.php:81 liturgyOfAnyDay.php:54 layout/FormControls.php:56
 msgid "Month"
 msgstr "Mês"
 
@@ -1036,8 +1036,14 @@ msgstr ""
 msgid "Liturgical Calendar - About us"
 msgstr "Calendário litúrgico - Sobre nós"
 
+#: liturgyOfAnyDay.php:44
+#, fuzzy
+#| msgid "Generate Diocesan Calendar"
+msgid "Select calendar"
+msgstr "Gera calendário diocesano"
+
 #. translators: %s = current selected date
-#: liturgyOfAnyDay.php:61
+#: liturgyOfAnyDay.php:76
 #, php-format
 msgid "Liturgy of %s"
 msgstr "Liturgia de %s"
@@ -1345,11 +1351,6 @@ msgstr "Comum (ou Próprio)"
 
 #~ msgid "Retrieve existing data"
 #~ msgstr "Carrega dados existentes"
-
-#, fuzzy
-#~| msgid "Generate Diocesan Calendar"
-#~ msgid "Select calendar"
-#~ msgstr "Gera calendário diocesano"
 
 #~ msgid "Overwrites universal / national calendar"
 #~ msgstr "Substitui o calendário universal / nacional"
