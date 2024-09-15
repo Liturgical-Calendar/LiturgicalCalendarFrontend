@@ -17,7 +17,7 @@ $fmt = new IntlDateFormatter($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFor
 $fmtFull = new IntlDateFormatter($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'UTC', IntlDateFormatter::GREGORIAN);
 $monthDate = new DateTime();
 $locale = isset($_COOKIE['currentLocale']) ? $_COOKIE['currentLocale'] : Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);
-$CalendarSelect = new CalendarSelect(["locale => $locale"]);
+$CalendarSelect = new CalendarSelect(["locale" => $i18n->LOCALE]);
 
 ?>
 
