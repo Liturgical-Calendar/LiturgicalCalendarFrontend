@@ -7,12 +7,17 @@
  */
 
 include_once("includes/I18n.php");
+include_once("vendor/autoload.php");
+
+use LiturgicalCalendar\Components;
 
 $i18n = new I18n();
 $dateToday = new DateTime();
 $fmt = new IntlDateFormatter($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::FULL, 'UTC', IntlDateFormatter::GREGORIAN, "MMMM");
 $fmtFull = new IntlDateFormatter($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'UTC', IntlDateFormatter::GREGORIAN);
 $monthDate = new DateTime();
+$locale = isset($_COOKIE['currentLocale']) ? $_COOKIE['currentLocale'] : Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+$CalendarSelect = new CalendarSelect(["locale => $locale"]);
 
 ?>
 
@@ -29,7 +34,17 @@ $monthDate = new DateTime();
         <!-- Page Heading -->
         <h3 class="h3 mb-2 text-gray-800"><?php echo _("Liturgy of any day"); ?></h3>
         <div class="container">
-        <?php include_once('./layout/calendarselect.php') ?>
+            <div class="row">
+                <div class="form-group col-md">
+                    <?php echo $CalendarSelect->getSelect([
+                        'class'    => 'form-select',
+                        'id'       => 'calendarSelect',
+                        'options'  => 'all',
+                        'label'    => true,
+                        'labelStr' => _("Select calendar")
+                    ]); ?>
+                </div>
+            </div>
             <div class="row">
                 <div class="form-group col-md">
                     <label><?php echo _("Day"); ?></label>
