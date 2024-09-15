@@ -110,3 +110,5 @@ credentials.php
 
 .php-ini
 .php-version
+
+/vendor/
