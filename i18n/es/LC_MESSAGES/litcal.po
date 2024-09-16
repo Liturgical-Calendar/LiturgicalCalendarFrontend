@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-15 23:59+0000\n"
+"POT-Creation-Date: 2024-09-16 19:17+0000\n"
 "PO-Revision-Date: 2024-09-16 00:17+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
@@ -49,7 +49,7 @@ msgstr ""
 "de ruta %1$s. Cuando no se especifica, la API usará el año actual por "
 "defecto."
 
-#: index.php:29 usage.php:20 liturgyOfAnyDay.php:27
+#: index.php:29 usage.php:20 liturgyOfAnyDay.php:26
 msgid "General Roman Calendar"
 msgstr "Calendario Romano General"
 
@@ -75,7 +75,7 @@ msgstr "Seleccionar ruta"
 msgid "Calendars available on selected route"
 msgstr "Calendarios disponibles en la ruta seleccionada"
 
-#: index.php:71 liturgyOfAnyDay.php:68
+#: index.php:71 liturgyOfAnyDay.php:67
 msgid "Year"
 msgstr "Año"
 
@@ -235,9 +235,9 @@ msgid ""
 msgstr ""
 "Un punto final de API simple que devuelve datos sobre la fecha de Pascua, "
 "tanto gregoriana como juliana, desde 1583 (año de la adopción del calendario "
-"gregoriano) hasta 9999 (cálculo de la fecha máxima posible en PHP de 64 bits)"
-", utilizando una adaptación PHP del algoritmo Meeus / Jones / Butcher para "
-"la Pascua gregoriana (observado por la iglesia católica romana) y del "
+"gregoriano) hasta 9999 (cálculo de la fecha máxima posible en PHP de 64 "
+"bits), utilizando una adaptación PHP del algoritmo Meeus / Jones / Butcher "
+"para la Pascua gregoriana (observado por la iglesia católica romana) y del "
 "algoritmo Meeus para la Pascua juliana (observado por las iglesias ortodoxas)"
 
 #: index.php:240
@@ -318,7 +318,7 @@ msgstr "Ver FullCalendar (mensajes primero)"
 msgid "Calendar subscription"
 msgstr "Suscripción al calendario"
 
-#: usage.php:95 liturgyOfAnyDay.php:44
+#: usage.php:95 liturgyOfAnyDay.php:43
 msgid "Select calendar"
 msgstr "Seleccionar calendario"
 
@@ -520,7 +520,7 @@ msgstr ""
 msgid "In development"
 msgstr "En desarrollo"
 
-#: usage.php:251 usage.php:255 liturgyOfAnyDay.php:27 liturgyOfAnyDay.php:35
+#: usage.php:251 usage.php:255 liturgyOfAnyDay.php:26 liturgyOfAnyDay.php:34
 msgid "Liturgy of any day"
 msgstr "Liturgia de cualquier día"
 
@@ -589,11 +589,11 @@ msgstr "Etiqueta"
 msgid "Name"
 msgstr "Nombre"
 
-#: extending.php:80 liturgyOfAnyDay.php:50 layout/FormControls.php:50
+#: extending.php:80 liturgyOfAnyDay.php:49 layout/FormControls.php:50
 msgid "Day"
 msgstr "Día"
 
-#: extending.php:81 liturgyOfAnyDay.php:54 layout/FormControls.php:56
+#: extending.php:81 liturgyOfAnyDay.php:53 layout/FormControls.php:56
 msgid "Month"
 msgstr "Mes"
 
@@ -1025,7 +1025,7 @@ msgid "Liturgical Calendar - About us"
 msgstr "Calendario litúrgico - Sobre nosotros"
 
 #. translators: %s = current selected date
-#: liturgyOfAnyDay.php:76
+#: liturgyOfAnyDay.php:75
 #, php-format
 msgid "Liturgy of %s"
 msgstr "Liturgia de %s"

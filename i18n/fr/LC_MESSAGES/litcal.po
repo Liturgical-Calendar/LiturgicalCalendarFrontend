@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-15 23:59+0000\n"
+"POT-Creation-Date: 2024-09-16 19:17+0000\n"
 "PO-Revision-Date: 2024-09-16 00:17+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
@@ -51,7 +51,7 @@ msgstr ""
 "chemin %1$s. Lorsqu'il n'est pas spécifié, l'API utilisera par défaut "
 "l'année en cours."
 
-#: index.php:29 usage.php:20 liturgyOfAnyDay.php:27
+#: index.php:29 usage.php:20 liturgyOfAnyDay.php:26
 msgid "General Roman Calendar"
 msgstr "Calendrier Romain Général"
 
@@ -77,7 +77,7 @@ msgstr "Sélectionner l'itinéraire"
 msgid "Calendars available on selected route"
 msgstr "Calendriers disponibles sur l'itinéraire sélectionné"
 
-#: index.php:71 liturgyOfAnyDay.php:68
+#: index.php:71 liturgyOfAnyDay.php:67
 msgid "Year"
 msgstr "Année"
 
@@ -318,7 +318,7 @@ msgstr "Voir l'exemple FullCalendar (messages ci-dessus)"
 msgid "Calendar subscription"
 msgstr "Abonnement au calendrier"
 
-#: usage.php:95 liturgyOfAnyDay.php:44
+#: usage.php:95 liturgyOfAnyDay.php:43
 msgid "Select calendar"
 msgstr "Sélectionner le calendrier"
 
@@ -522,7 +522,7 @@ msgstr ""
 msgid "In development"
 msgstr "En cours de développement"
 
-#: usage.php:251 usage.php:255 liturgyOfAnyDay.php:27 liturgyOfAnyDay.php:35
+#: usage.php:251 usage.php:255 liturgyOfAnyDay.php:26 liturgyOfAnyDay.php:34
 msgid "Liturgy of any day"
 msgstr "Liturgie de tous les jours"
 
@@ -596,11 +596,11 @@ msgstr "Étiquette"
 msgid "Name"
 msgstr "Nom"
 
-#: extending.php:80 liturgyOfAnyDay.php:50 layout/FormControls.php:50
+#: extending.php:80 liturgyOfAnyDay.php:49 layout/FormControls.php:50
 msgid "Day"
 msgstr "Jour"
 
-#: extending.php:81 liturgyOfAnyDay.php:54 layout/FormControls.php:56
+#: extending.php:81 liturgyOfAnyDay.php:53 layout/FormControls.php:56
 msgid "Month"
 msgstr "Mois"
 
@@ -1038,7 +1038,7 @@ msgid "Liturgical Calendar - About us"
 msgstr "Calendrier liturgique - À propos de nous"
 
 #. translators: %s = current selected date
-#: liturgyOfAnyDay.php:76
+#: liturgyOfAnyDay.php:75
 #, php-format
 msgid "Liturgy of %s"
 msgstr "Liturgie du %s"
