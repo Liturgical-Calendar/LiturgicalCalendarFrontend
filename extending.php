@@ -13,22 +13,41 @@ $thursday   = $dayOfWeekFmt->format(DateTime::createFromFormat('!j-n-Y', '1-1-20
 $sunday     = $dayOfWeekFmt->format(DateTime::createFromFormat('!j-n-Y', '1-1-2022', new DateTimeZone('UTC'))->modify('next Sunday'));
 
 $countryISOCodes = json_decode(file_get_contents("assets/data/CountryToISO.json"), true);
-
-[ "LitCalMetadata" => $LitCalMetadata ] = json_decode(
-    file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/metadata/"),
-    true
-);
-[ "LitCalAllFestivities" => $FestivityCollection ] = json_decode(
-    file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/allevents/?locale=" . $i18n->LOCALE),
-    true
-);
-$NationalCalendars = $LitCalMetadata["NationalCalendars"];
-unset($NationalCalendars["VATICAN"]);
-$DiocesanGroups = array_keys($LitCalMetadata["DiocesanGroups"]);
-
 $availableNationalCalendars = [];
-foreach (array_keys($NationalCalendars) as $country_name) {
-    $availableNationalCalendars[$country_name] = Locale::getDisplayRegion("-" . $countryISOCodes[$country_name], $i18n->LOCALE);
+
+if ($isStaging) {
+    [ "litcal_metadata" => $LitCalMetadata ] = json_decode(
+        file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/calendars"),
+        true
+    );
+    [ "litcal_events" => $FestivityCollection ] = json_decode(
+        file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/events?locale=" . $i18n->LOCALE),
+        true
+    );
+    $NationalCalendars = array_filter(
+        $LitCalMetadata["national_calendars"],
+        fn($calendar) => isset($calendar['calendar_id']) && $calendar['calendar_id'] !== 'VATICAN'
+    );
+
+    $DiocesanGroups = $LitCalMetadata["diocesan_groups"];
+    foreach ($NationalCalendars as $calendar) {
+        $availableNationalCalendars[$calendar['calendar_id']] = Locale::getDisplayRegion("-" . $calendar['country_iso'], $i18n->LOCALE);
+    }
+} else {
+    [ "LitCalMetadata" => $LitCalMetadata ] = json_decode(
+        file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/metadata/"),
+        true
+    );
+    [ "LitCalAllFestivities" => $FestivityCollection ] = json_decode(
+        file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/allevents/?locale=" . $i18n->LOCALE),
+        true
+    );
+    $NationalCalendars = $LitCalMetadata["NationalCalendars"];
+    $DiocesanGroups = array_keys($LitCalMetadata["DiocesanGroups"]);
+    unset($NationalCalendars["VATICAN"]);
+    foreach (array_keys($NationalCalendars) as $country_name) {
+        $availableNationalCalendars[$country_name] = Locale::getDisplayRegion("-" . $countryISOCodes[$country_name], $i18n->LOCALE);
+    }
 }
 asort($availableNationalCalendars, SORT_LOCALE_STRING);
 
@@ -171,8 +190,14 @@ if (isset($_GET["choice"])) {
                             <datalist id="WiderRegionsList">
                                 <option value=""></option>
                             <?php
-                            foreach ($LitCalMetadata["WiderRegions"] as $widerRegion) {
-                                echo "<option value=\"{$widerRegion}\">{$widerRegion}</option>";
+                            if ($isStaging) {
+                                foreach ($LitCalMetadata["wider_regions"] as $widerRegion) {
+                                    echo "<option value=\"{$widerRegion['name']}\">{$widerRegion['name']}</option>";
+                                }
+                            } else {
+                                foreach ($LitCalMetadata["WiderRegions"] as $widerRegion) {
+                                    echo "<option value=\"{$widerRegion}\">{$widerRegion}</option>";
+                                }
                             }
                             ?>
                             </datalist>
@@ -356,8 +381,14 @@ if (isset($_GET["choice"])) {
                             <datalist id="DiocesanGroupsList">
                                 <option value=""></option>
                                 <?php
-                                foreach ($DiocesanGroups as $diocesanGroup) {
-                                    echo "<option value=\"$diocesanGroup\">$diocesanGroup</option>";
+                                if ($isStaging) {
+                                    foreach ($DiocesanGroups as $diocesanGroup) {
+                                        echo "<option value=\"{$diocesanGroup['group_name']}\">{$diocesanGroup['group_name']}</option>";
+                                    }
+                                } else {
+                                    foreach ($DiocesanGroups as $diocesanGroup) {
+                                        echo "<option value=\"$diocesanGroup\">$diocesanGroup</option>";
+                                    }
                                 }
                                 ?>
                             </datalist>
