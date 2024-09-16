@@ -5,13 +5,14 @@
 # John R. D'Orazio <priest@johnromanodorazio.com>, 2022.
 # Weblate Admin <admin@example.com>, 2024.
 # OpenAI <noreply-mt-openai@weblate.org>, 2024.
+# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-15 23:59+0000\n"
-"PO-Revision-Date: 2024-09-08 20:42+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2024-09-16 00:17+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
 "Language: fr\n"
@@ -60,10 +61,9 @@ msgstr "Calendrier Liturgique Catholique"
 
 #. translators: 1. /calendar
 #: index.php:47
-#, fuzzy, php-format
-#| msgid "API Endpoint"
+#, php-format
 msgid "API %1$s endpoint"
-msgstr "Point de terminaison de l'API"
+msgstr "Chemin d'accès %1$s de l'API"
 
 #: index.php:55
 msgid "Path builder"
@@ -159,22 +159,16 @@ msgid "Liturgical Calendar API endpoint"
 msgstr "API du calendrier liturgique"
 
 #: index.php:181
-#, fuzzy
-#| msgid ""
-#| "URL for the API request based on selected options (the above button is "
-#| "set to this URL)"
 msgid ""
 "URL of the API request based on selected options. The button is set to the "
 "same URL, click on it to see results."
 msgstr ""
-"URL de la requête à l'API effectuée selon les options sélectionnées (le "
-"bouton ci-dessus est paramétré sur cette URL)"
+"URL de la requête API basée sur les options sélectionnées. Le bouton est "
+"défini sur la même URL, cliquez dessus pour voir les résultats."
 
 #: index.php:189 index.php:193
-#, fuzzy
-#| msgid "Liturgical Calendar API endpoint"
 msgid "Liturgical Calendar Validator"
-msgstr "API du calendrier liturgique"
+msgstr "Validateur de calendrier liturgique"
 
 #: index.php:192
 msgid ""
@@ -231,14 +225,6 @@ msgid "Calculation of the Date of Easter"
 msgstr "Calcul de la date de Pâques"
 
 #: index.php:235
-#, fuzzy
-#| msgid ""
-#| "A simple API endpoint that returns data about the Date of Easter, both "
-#| "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
-#| "Calendar) to 9999 (maximum possible date calculation in 64bit PHP), using "
-#| "a PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian "
-#| "easter (observed by the Roman Catholic church) and of the Meeus algorithm "
-#| "for Julian easter (observed by orthodox churches)"
 msgid ""
 "A simple API endpoint that returns data about the Date of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -253,7 +239,7 @@ msgstr ""
 "bits) , en utilisant une adaptation PHP de l'algorithme Meeus / Jones / "
 "Butcher pour les Pâques grégoriens (observé par l'église catholique romaine) "
 "et de l'algorithme Meeus pour les Pâques de Julian (observé par les églises "
-"orthodoxes)"
+"orthodoxes)."
 
 #: index.php:240
 msgid "Date of Easter API endpoint"
@@ -315,19 +301,14 @@ msgid "Calendar"
 msgstr "Calendrier"
 
 #: usage.php:68
-#, fuzzy
-#| msgid ""
-#| "Fullcalendar representation elaborated by JAVASCRIPT using an AJAX request"
 msgid ""
 "FullCalendar representation elaborated by JAVASCRIPT using an AJAX request"
 msgstr ""
 "Présentation FullCalendar traitée en Javascript à l'aide d'une requête AJAX"
 
 #: usage.php:69
-#, fuzzy
-#| msgid "Calendar"
 msgid "View FullCalendar"
-msgstr "Calendrier"
+msgstr "Voir FullCalendar"
 
 #: usage.php:70
 msgid "View FullCalendar (messages first)"
@@ -338,10 +319,8 @@ msgid "Calendar subscription"
 msgstr "Abonnement au calendrier"
 
 #: usage.php:95 liturgyOfAnyDay.php:44
-#, fuzzy
-#| msgid "Generate Diocesan Calendar"
 msgid "Select calendar"
-msgstr "Génére un calendrier diocésain"
+msgstr "Sélectionner le calendrier"
 
 #: usage.php:99
 msgid "Calendar subscription URL"
@@ -514,10 +493,8 @@ msgstr ""
 "générées à partir de l'URL d'abonnement sont plus « embellies » pour Outlook."
 
 #: usage.php:183 layout/header.php:115
-#, fuzzy
-#| msgid "Date of Easter API endpoint"
 msgid "Dates of Easter"
-msgstr "Date de Pâques API"
+msgstr "Dates de Pâques"
 
 #: usage.php:194
 msgid "Example display of the date of Easter from 1583 to 9999"
@@ -569,18 +546,14 @@ msgstr ""
 "créé."
 
 #: extending.php:36
-#, fuzzy
-#| msgid ""
-#| "The first step in creating a National calendar, is to translate the "
-#| "already existing calendar data into the language for that nation."
 msgid ""
 "The first step in creating a national or diocesan calendar, is to translate "
 "the data for the General Roman Calendar into the language for that nation or "
 "diocese."
 msgstr ""
-"La première étape de la création d'un calendrier national consiste à "
-"traduire les données du calendrier existant dans la langue du calendrier "
-"national."
+"La première étape pour créer un calendrier national ou diocésain est de "
+"traduire les données du Calendrier romain général dans la langue de cette "
+"nation ou de ce diocèse."
 
 #: extending.php:37
 msgid "(see <a href=\"translations.php\">Translations</a>)"
@@ -648,10 +621,8 @@ msgid "Other Optional Memorial"
 msgstr "Autre mémorial facultatif"
 
 #: extending.php:86
-#, fuzzy
-#| msgid "Generate Diocesan Calendar"
 msgid "Delete diocesan calendar"
-msgstr "Génére un calendrier diocésain"
+msgstr "Supprimer le calendrier diocésain"
 
 #: extending.php:87
 msgid ""
@@ -801,26 +772,20 @@ msgid "Create a Calendar for a Wider Region"
 msgstr "Créez un calendrier pour une région élargie"
 
 #: extending.php:212
-#, fuzzy
-#| msgid "General Roman Calendar"
 msgid "Save Wider Region Calendar Data"
-msgstr "Calendrier Romain Général"
+msgstr "Enregistrer les données du calendrier de la région élargie"
 
 #: extending.php:223
-#, fuzzy
-#| msgid "Create a National Calendar"
 msgid "National Calendar"
-msgstr "Créer un calendrier national"
+msgstr "Calendrier national"
 
 #: extending.php:247 layout/header.php:35
 msgid "Create a National Calendar"
 msgstr "Créer un calendrier national"
 
 #: extending.php:252
-#, fuzzy
-#| msgid "Create a National Calendar"
 msgid "National calendar settings"
-msgstr "Créer un calendrier national"
+msgstr "Paramètres du calendrier national"
 
 #: extending.php:255 extending.php:490
 msgid "EPIPHANY"
@@ -859,10 +824,8 @@ msgid "Add Missal"
 msgstr "Ajouter un missel"
 
 #: extending.php:322
-#, fuzzy
-#| msgid "Generate National Calendar"
 msgid "Save National Calendar Data"
-msgstr "Génére un calendrier national"
+msgstr "Enregistrer les données du calendrier national"
 
 #: extending.php:334
 msgid "Depends on national calendar"
@@ -955,8 +918,6 @@ msgstr ""
 "province ou au territoire"
 
 #: extending.php:487
-#, fuzzy
-#| msgid "Diocesan overrides to the national calendar for ..."
 msgid "Diocesan overrides to the national calendar for …"
 msgstr "Personnalisation diocésaine par rapport au calendrier national pour …"
 
@@ -1342,10 +1303,8 @@ msgid "Home"
 msgstr "Accueil"
 
 #: layout/header.php:99
-#, fuzzy
-#| msgid "Definition"
 msgid "Documentation"
-msgstr "Définition"
+msgstr "Documentation"
 
 #: layout/header.php:103
 msgid "Examples of Usage"
