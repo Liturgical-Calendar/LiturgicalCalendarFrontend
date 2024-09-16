@@ -4,13 +4,14 @@
 # John R. D'Orazio <priest@johnromanodorazio.com>, 2022.
 # Weblate Admin <admin@example.com>, 2024.
 # OpenAI <noreply-mt-openai@weblate.org>, 2024.
+# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-15 23:59+0000\n"
-"PO-Revision-Date: 2024-09-08 20:42+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2024-09-16 00:17+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
 "Language: nl\n"
@@ -59,10 +60,9 @@ msgstr "Katholieke Liturgische Kalender"
 
 #. translators: 1. /calendar
 #: index.php:47
-#, fuzzy, php-format
-#| msgid "API Endpoint"
+#, php-format
 msgid "API %1$s endpoint"
-msgstr "API-eindpunt"
+msgstr "API %1$s eindpunt"
 
 #: index.php:55
 msgid "Path builder"
@@ -158,16 +158,12 @@ msgid "Liturgical Calendar API endpoint"
 msgstr "Liturgische Kalender API-eindpunt"
 
 #: index.php:181
-#, fuzzy
-#| msgid ""
-#| "URL for the API request based on selected options (the above button is "
-#| "set to this URL)"
 msgid ""
 "URL of the API request based on selected options. The button is set to the "
 "same URL, click on it to see results."
 msgstr ""
-"URL voor het API-verzoek op basis van geselecteerde opties (de bovenstaande "
-"knop is ingesteld op deze URL)"
+"URL van het API-verzoek op basis van geselecteerde opties. De knop is "
+"ingesteld op dezelfde URL, klik erop om resultaten te zien."
 
 #: index.php:189 index.php:193
 msgid "Liturgical Calendar Validator"
@@ -230,14 +226,6 @@ msgid "Calculation of the Date of Easter"
 msgstr "Berekening van de datum van Pasen"
 
 #: index.php:235
-#, fuzzy
-#| msgid ""
-#| "A simple API endpoint that returns data about the Date of Easter, both "
-#| "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
-#| "Calendar) to 9999 (maximum possible date calculation in 64bit PHP), using "
-#| "a PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian "
-#| "easter (observed by the Roman Catholic church) and of the Meeus algorithm "
-#| "for Julian easter (observed by orthodox churches)"
 msgid ""
 "A simple API endpoint that returns data about the Date of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -252,7 +240,7 @@ msgstr ""
 "PHP), met behulp van een PHP-aanpassing van de Meeus/ Jones/Butcher-"
 "algoritme voor Gregoriaans Pasen (waargenomen door de rooms-katholieke kerk) "
 "en van het Meeus-algoritme voor Juliaans Pasen (waargenomen door orthodoxe "
-"kerken)"
+"kerken)."
 
 #: index.php:240
 msgid "Date of Easter API endpoint"
@@ -333,10 +321,8 @@ msgid "Calendar subscription"
 msgstr "Kalender abonnement"
 
 #: usage.php:95 liturgyOfAnyDay.php:44
-#, fuzzy
-#| msgid "Web calendar"
 msgid "Select calendar"
-msgstr "Webkalender"
+msgstr "Selecteer kalender"
 
 #: usage.php:99
 msgid "Calendar subscription URL"
