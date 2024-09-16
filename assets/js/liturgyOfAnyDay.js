@@ -1,15 +1,12 @@
 const isStaging = location.href.includes( "-staging" );
 const endpointV = isStaging ? "dev" : "v3";
 const endpointURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/calendar`;
+
 let CalData = null;
 let dtFormat = new Intl.DateTimeFormat(currentLocale.language, { dateStyle: 'full' });
 const now = new Date();
 let liturgyDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0));
 let highContrast = [ "green", "red", "purple" ];
-
-if( typeof currentLocale === 'undefined' ) {
-    currentLocale = new Intl.Locale(Cookies.get('currentLocale').replaceAll('_','-') || 'en');
-}
 
 jQuery(() => {
     switch( $('#calendarSelect').find(':selected').attr('data-calendartype') ) {
