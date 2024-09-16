@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-16 20:37+0000\n"
-"PO-Revision-Date: 2024-09-16 00:17+0000\n"
+"PO-Revision-Date: 2024-09-16 21:15+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -1031,13 +1031,13 @@ msgid "Liturgical Calendar - About us"
 msgstr "Liturgische kalender - Over ons"
 
 #: translations.php:8
-#, fuzzy, php-format
-#| msgid ""
-#| "This can be done on the <a href=\"%1$s\">LitCal translation server</a>."
+#, php-format
 msgid ""
 "This can be done on the <a href=\"%1$s\" target=\"_blank\">LitCal "
 "translation server %2$s</a>."
-msgstr "Dit kan worden gedaan op de <a href=\"%1$s\">LitCal-vertaalserver</a>."
+msgstr ""
+"Dit kan gedaan worden op de <a href=\"%1$s\" target=\"_blank\">LitCal "
+"vertaalserver %2$s</a>."
 
 #: translations.php:12
 msgid ""
@@ -1045,10 +1045,12 @@ msgid ""
 "for your region, please feel free to create an account on the translation "
 "server."
 msgstr ""
+"Als je wilt bijdragen aan de vertalingen van de liturgische gegevens voor "
+"jouw regio, maak dan gerust een account aan op de vertaalserver."
 
 #: translations.php:13
 msgid "Specifically, the components which require translation are:"
-msgstr ""
+msgstr "Specifiek de onderdelen die vertaald moeten worden zijn:"
 
 #. translators: 1 = name of the translation component ("API strings"), 2 = names of the categories, 3 = name of a category ("Calendar messages")
 #: translations.php:17
@@ -1064,6 +1066,15 @@ msgid ""
 "information for understanding where the results of the current calculation "
 "came from."
 msgstr ""
+"Andere vertalingen die nodig zijn voor de Liturgische Kalendergegevens zijn "
+"te vinden in de %1$s vertaalcomponent. Bij het kiezen van de taal waarin je "
+"deze component wilt vertalen, vind je tags die de strings categoriseren voor "
+"vertaling in de sectie \"String status\". De categorieën die nodig zijn om "
+"de Liturgische kalendergegevens te voltooien zijn: %2$s. De %3$s tag / "
+"categorie zijn de berichten die uitleggen hoe de kalender voor een bepaald "
+"jaar is berekend; hoewel niet essentieel voor de Kalendergegevens, is het "
+"nuttige informatie om te begrijpen waar de resultaten van de huidige "
+"berekening vandaan komen."
 
 #: translations.php:24
 #, php-format
@@ -1071,6 +1082,8 @@ msgid ""
 "If translating liturgical calendar data for a European country, you will "
 "also want to translate the %1$s component."
 msgstr ""
+"Als je liturgische kalendergegevens voor een Europees land vertaalt, wil je "
+"ook de %1$s component vertalen."
 
 #: translations.php:28
 msgid ""
@@ -1079,6 +1092,10 @@ msgid ""
 "the Roman Missal used in the region for which the translation is "
 "accomplished."
 msgstr ""
+"Vertalingen van de bovengenoemde feestdagen MOGEN NIET alleen gebaseerd zijn "
+"op de taalkundige vaardigheden van de vertaler, maar MOETEN worden "
+"overgenomen uit het Romeins Missaal dat wordt gebruikt in de regio waarvoor "
+"de vertaling wordt uitgevoerd."
 
 #: translations.php:29
 msgid ""
@@ -1086,6 +1103,10 @@ msgid ""
 "of the Roman Missal to the next; translators should simply use the most "
 "recent edition of the Roman Missal for their region as a reference."
 msgstr ""
+"De vertalingen van de bovengenoemde feestdagen kunnen van de ene editie van "
+"het Romeins Missaal naar de andere veranderen; vertalers moeten gewoon de "
+"meest recente editie van het Romeins Missaal voor hun regio als referentie "
+"gebruiken."
 
 #: translations.php:30
 msgid ""
@@ -1094,28 +1115,29 @@ msgid ""
 "historical accuracy as regards differences in the translations of the "
 "festivities over time."
 msgstr ""
+"Deze API is bedoeld om historisch correct te zijn wat betreft de berekening "
+"van de data en de voorrang van de feestdagen, maar pretendeert geen "
+"historische nauwkeurigheid wat betreft verschillen in de vertalingen van de "
+"feestdagen in de loop van de tijd."
 
 #: translations.php:32
-#, fuzzy
-#| msgid ""
-#| "National calendars and their relative translations must be defined using "
-#| "data from the translation of the Roman Missal used in the Region or in "
-#| "any case from decrees of the Episcopal Conference of the Region."
 msgid ""
 "National calendars and related translations must be defined using data from "
 "the translation of the Roman Missal used in the Region or in any case from "
 "decrees of the Episcopal Conference of the Region."
 msgstr ""
-"Nationale kalenders en hun relatieve vertalingen moeten worden gedefinieerd "
-"aan de hand van gegevens uit de vertaling van het Romeins missaal die in de "
+"Nationale kalenders en gerelateerde vertalingen moeten worden gedefinieerd "
+"met behulp van gegevens uit de vertaling van het Romeins Missaal dat in de "
 "regio wordt gebruikt of in ieder geval uit decreten van de "
-"bisschoppenconferentie van de regio."
+"Bisschoppenconferentie van de regio."
 
 #: translations.php:33
 msgid ""
 "Anyone who intends on contributing to the translations is required to agree "
 "to these conditions."
 msgstr ""
+"Iedereen die van plan is bij te dragen aan de vertalingen, moet akkoord gaan "
+"met deze voorwaarden."
 
 #: translations.php:34
 msgid ""
@@ -1124,34 +1146,34 @@ msgid ""
 "require overview by a liturgical expert before being incorporated into this "
 "project."
 msgstr ""
+"Als de vertaler geen expert is in liturgische wetenschap of geen rol heeft "
+"in een diocesaan bureau voor liturgie en eredienst, moeten de vertalingen "
+"door een liturgisch expert worden gecontroleerd voordat ze in dit project "
+"worden opgenomen."
 
 #: translations.php:36
 msgid ""
 "The project website can be also be translated into other languages. The "
 "translation strings can be found in the following translation components:"
 msgstr ""
+"De projectwebsite kan ook in andere talen worden vertaald. De vertaalstrings "
+"zijn te vinden in de volgende vertaalcomponenten:"
 
 #: translations.php:40
-#, fuzzy
-#| msgid "National Calendar"
 msgid "Translating the Calendar"
-msgstr "Nationale kalender"
+msgstr "De kalender vertalen"
 
 #: translations.php:48
-#, fuzzy
-#| msgid "Catholic Liturgical Calendar"
 msgid "Translating the Liturgical Calendar project"
-msgstr "Katholieke Liturgische Kalender"
+msgstr "Het vertalen van het Liturgische Kalenderproject"
 
 #: translations.php:52
-#, fuzzy
-#| msgid "Calendar"
 msgid "Calendar data"
-msgstr "Kalender"
+msgstr "Kalendergegevens"
 
 #: translations.php:55
 msgid "Project website"
-msgstr ""
+msgstr "Projectwebsite"
 
 #. translators: %s = current selected date
 #: liturgyOfAnyDay.php:75
