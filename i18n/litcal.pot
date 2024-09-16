@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-15 23:59+0000\n"
+"POT-Creation-Date: 2024-09-16 19:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,7 +39,7 @@ msgid ""
 "parameter. When not specified, the API will default to the current year."
 msgstr ""
 
-#: index.php:29 usage.php:20 liturgyOfAnyDay.php:27
+#: index.php:29 usage.php:20 liturgyOfAnyDay.php:26
 msgid "General Roman Calendar"
 msgstr ""
 
@@ -65,7 +65,7 @@ msgstr ""
 msgid "Calendars available on selected route"
 msgstr ""
 
-#: index.php:71 liturgyOfAnyDay.php:68
+#: index.php:71 liturgyOfAnyDay.php:67
 msgid "Year"
 msgstr ""
 
@@ -263,7 +263,7 @@ msgstr ""
 msgid "Calendar subscription"
 msgstr ""
 
-#: usage.php:95 liturgyOfAnyDay.php:44
+#: usage.php:95 liturgyOfAnyDay.php:43
 msgid "Select calendar"
 msgstr ""
 
@@ -424,7 +424,7 @@ msgstr ""
 msgid "In development"
 msgstr ""
 
-#: usage.php:251 usage.php:255 liturgyOfAnyDay.php:27 liturgyOfAnyDay.php:35
+#: usage.php:251 usage.php:255 liturgyOfAnyDay.php:26 liturgyOfAnyDay.php:34
 msgid "Liturgy of any day"
 msgstr ""
 
@@ -480,11 +480,11 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: extending.php:80 liturgyOfAnyDay.php:50 layout/FormControls.php:50
+#: extending.php:80 liturgyOfAnyDay.php:49 layout/FormControls.php:50
 msgid "Day"
 msgstr ""
 
-#: extending.php:81 liturgyOfAnyDay.php:54 layout/FormControls.php:56
+#: extending.php:81 liturgyOfAnyDay.php:53 layout/FormControls.php:56
 msgid "Month"
 msgstr ""
 
@@ -891,7 +891,7 @@ msgid "Liturgical Calendar - About us"
 msgstr ""
 
 #. translators: %s = current selected date
-#: liturgyOfAnyDay.php:76
+#: liturgyOfAnyDay.php:75
 #, php-format
 msgid "Liturgy of %s"
 msgstr ""
