@@ -1,3 +1,34 @@
+const JANUARY   = 1;
+const FEBRUARY  = 2;
+const MARCH     = 3;
+const APRIL     = 4;
+const MAY       = 5;
+const JUNE      = 6;
+const JULY      = 7;
+const AUGUST    = 8;
+const SEPTEMBER = 9;
+const OCTOBER   = 10;
+const NOVEMBER  = 11;
+const DECEMBER  = 12;
+
+/**
+ * Thirty days hath September, April, June, and November.
+ */
+const monthsOfThirty = [SEPTEMBER, APRIL, JUNE, NOVEMBER];
+
+/**
+ * An array of English names of the seven days of the week, used to check or set the value of the strtotime property in liturgical events.
+ * @constant
+ * @type {String[]}
+ */
+const daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+/**
+ * A class containing static methods and properties used to create form controls.
+ * @class
+ * @property {Number} uniqid - a unique id for the form elements
+ * @property {Object} settings - an object containing settings for the form controls
+ */
 class FormControls {
     static uniqid = 0;
     static settings = {
@@ -24,6 +55,12 @@ class FormControls {
     static weekdayFormatter = null;
     static index = null;
 
+    /**
+     * Creates a form row for a new festivity / liturgical event.
+     * It contains fields for name, day, month, common, color, since_year and until_year.
+     * The fields shown depend on the settings in FormControls.settings.
+     * @returns {string} The HTML for the form row.
+     */
     static createFestivityRow() {
         let formRow = '';
 
@@ -110,6 +147,12 @@ class FormControls {
         return formRow.replaceAll('    ','').replace(/(?:\r\n|\r|\n)/g,'');
     }
 
+    /**
+     * Creates a form row for a new patron saint celebration.
+     * The fields shown depend on the settings in FormControls.settings.
+     * @param {string|object} [element=null] - Either a string (the event_key of the FestivityCollection) or an object with the festivity and its metadata.
+     * @returns {string} The HTML for the form row.
+     */
     static CreatePatronRow(element = null) {
         let formRow = '';
         let festivity = null;
@@ -269,6 +312,12 @@ class FormControls {
         return formRow.replaceAll('    ','').replace(/(?:\r\n|\r|\n)/g,'');
     }
 
+    /**
+     * Creates a form row for a new doctor of the Church celebration.
+     * The fields shown depend on the settings in FormControls.settings.
+     * @param {string|object} [element=null] - Either a string (the event_key of the FestivityCollection) or an object with the festivity and its metadata.
+     * @returns {string} The HTML for the form row.
+     */
     static CreateDoctorRow(element = null) {
         let formRow = '';
         let festivity = null;
@@ -449,6 +498,10 @@ class FormControls {
 
 }
 
+/**
+ * Sets the FormControls settings based on the given action.
+ * @param {string} action - the name of the action as given in RowAction
+ */
 const setFormSettings = action => {
     switch( action ) {
         case 'designateDoctorButton':
@@ -559,6 +612,10 @@ const setFormSettings = action => {
     }
 }
 
+/**
+ * Sets the FormControls settings for a given property.
+ * @param {string} property - name of the property
+ */
 const setFormSettingsForProperty = property => {
     switch(property) {
         case 'name':
@@ -573,6 +630,18 @@ const setFormSettingsForProperty = property => {
     }
 }
 
+/**
+ * An enumeration of possible actions that can be used to create a form row.
+ * @typedef {Object} RowAction
+ * @property {Symbol} MakePatron - Designate a festivity as a patron saint.
+ * @property {Symbol} MakeDoctor - Designate a festivity as a doctor of the Church.
+ * @property {Symbol} SetProperty - Set the name, grade, color, or readings of a festivity.
+ * @property {Symbol} MoveFestivity - Move a festivity to a different date.
+ * @property {Symbol} CreateNew - Create a new festivity.
+ * @property {Symbol} CreateNewFromExisting - Create a new festivity using an existing one as a template.
+ * @example
+ * const rowAction = new RowAction(RowAction.MakePatron);
+ */
 class RowAction {
     static MakePatron       = Symbol('makePatron');
     static MakeDoctor       = Symbol('makeDoctor');
@@ -580,23 +649,51 @@ class RowAction {
     static MoveFestivity    = Symbol('moveFestivity');
     static CreateNew        = Symbol('createNew');
     static CreateNewFromExisting = Symbol('createNewFromExisting');
+    /**
+     * Creates a new RowAction with the given name (do we even use this? what is name?).
+     * @param {Symbol} name - The name of the row action.
+     */
     constructor(name) {
         this.name = name;
     }
 }
 
+/**
+ * A mapping of festivity ranks to numerical values for sorting purposes.
+ * @constant
+ * @enum {Number}
+ * @property {Number} HIGHERSOLEMNITY - Higher solemnity (7)
+ * @property {Number} SOLEMNITY - Solemnity (6)
+ * @property {Number} FEASTLORD - Feast of the Lord (5)
+ * @property {Number} FEAST - Feast (4)
+ * @property {Number} MEMORIAL - Memorial (3)
+ * @property {Number} OPTIONALMEMORIAL - Optional memorial (2)
+ * @property {Number} WEEKDAY - Weekday (1)
+ */
 const RANK = {
-    HIGHERSOLEMNITY: 7,
-    SOLEMNITY: 6,
-    FEASTLORD: 5,
-    FEAST: 4,
-    MEMORIAL: 3,
+    HIGHERSOLEMNITY:  7,
+    SOLEMNITY:        6,
+    FEASTLORD:        5,
+    FEAST:            4,
+    MEMORIAL:         3,
     OPTIONALMEMORIAL: 2,
-    WEEKDAY: 1
+    WEEKDAY:          1
 }
 
-
+/**
+ * Represents a liturgical event.
+ * @class
+ */
 class LitEvent {
+    /**
+     * Creates a new LitEvent.
+     * @param {string} [name=""] - Name of the liturgical event.
+     * @param {string} [color=""] - Color of the liturgical event.
+     * @param {number} [grade=0] - Grade of the liturgical event.
+     * @param {string} [common=""] - Common of the liturgical event.
+     * @param {number} [day=1] - Day of the month of the liturgical event.
+     * @param {number} [month=1] - Month of the liturgical event.
+     */
     constructor(name = "", color = "", grade = 0, common = "", day = 1, month = 1 ) {
         this.name = name;
         this.color = color;
@@ -607,23 +704,60 @@ class LitEvent {
     }
 }
 
+/**
+ * Properties that are relevant for Mass readings.
+ * @constant
+ * @enum {String}
+ * @property {String} FIRST_READING - First reading
+ * @property {String} RESPONSORIAL_PSYLM - Responsorial psalm
+ * @property {String} SECOND_READING - Second reading
+ * @property {String} ALLELUIA_VERSE - Alleluia verse
+ * @property {String} GOSPEL - Gospel
+ */
 const READINGS_PROPERTIES = [
-    "FIRST_READING",
-    "RESPONSORIAL_PSALM",
-    "SECOND_READING",
-    "ALLELUIA_VERSE",
-    "GOSPEL"
+    "first_reading",
+    "responsorial_psalm",
+    "second_reading",
+    "alleluia_verse",
+    "gospel"
 ];
 
-const integerVals = [ 'day', 'month', 'grade', 'sinceYear', 'untilYear' ];
+/**
+ * The properties of the `LitCal` object that should be treated as integers.
+ * @constant
+ * @type {Array<string>}
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#toJSON()_behavior|toJSON() behavior}
+ */
+const integerVals = [ 'day', 'month', 'grade', 'since_year', 'until_year' ];
+
+/**
+ * The properties of the `LitCal` object that are expected to be present in the JSON payload of each action.
+ * @constant
+ * @type {Object<string, Array<string>>}
+ * @property {Array<string>} makePatron - The properties to expect in the JSON payload for the "makePatron" action.
+ * @property {Array<string>} setProperty - The properties to expect in the JSON payload for the "setProperty" action.
+ * @property {Array<string>} moveFestivity - The properties to expect in the JSON payload for the "moveFestivity" action.
+ * @property {Array<string>} createNew - The properties to expect in the JSON payload for the "createNew" action.
+ */
 const expectedJSONProperties = {
     'makePatron': [ 'event_key', 'name', 'color', 'grade', 'day', 'month' ],
     'setProperty': [ 'event_key', 'name', 'grade', 'day', 'month' ],
     'moveFestivity': [ 'event_key', 'name', 'day', 'month', 'missal', 'reason' ],
     'createNew': [ 'event_key', 'name', 'color', 'grade', 'day', 'month', 'strtotime', 'common' ] //'readings' is only expected for createNew when common=Proper
 };
+
+/**
+ * The properties of the `LitCal` object that are related to the metadata of a festivity / liturgical event.
+ * @constant
+ * @type {Array<string>}
+ */
 const metadataProps = [ 'missal', 'reason' ];
 
+/**
+ * Configures the multiselect for the liturgical common field of a festivity / liturgical event row.
+ * @param {jQuery} $row - The jQuery object of the row to configure the multiselect for. If null, the function will configure all rows.
+ * @param {Array<string>} common - The values to select in the multiselect. If null, the function will select all values.
+ */
 const setCommonMultiselect = ($row=null,common=null) => {
     let $litEventCommon;
     if( $row !== null ) {
@@ -660,27 +794,18 @@ const setCommonMultiselect = ($row=null,common=null) => {
     }
 }
 
+/**
+ * Returns a new object with the same values as the passed in object, but with
+ * all property names converted to lowercase.
+ * @param {Object} obj - The object to convert
+ * @returns {Object} - The new object with lowercase property names
+ */
 const lowercaseKeys = obj =>
   Object.keys(obj).reduce((acc, key) => {
     acc[key.toLowerCase()] = obj[key];
     return acc;
   }, {});
 
-const JANUARY = 1;
-const FEBRUARY = 2;
-const MARCH = 3;
-const APRIL = 4;
-const MAY = 5;
-const JUNE = 6;
-const JULY = 7;
-const AUGUST = 8;
-const SEPTEMBER = 9;
-const OCTOBER = 10;
-const NOVEMBER = 11;
-const DECEMBER = 12;
-
-const monthsOfThirty = [SEPTEMBER, APRIL, JUNE, NOVEMBER];
-const daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 
 export {
