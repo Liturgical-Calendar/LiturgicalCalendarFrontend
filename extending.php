@@ -321,7 +321,7 @@ if (isset($_GET["choice"])) {
                                         </select>
                                     </div>
 
-                                    <div class="col col-md-6">
+                                    <div class="col col-md-6 mt-4">
                                         <div class="row mt-2">
                                             <div class="col-5">
                                                 <label><i class="fas fa-info-circle me-2 text-black" style="--bs-text-opacity: .3;" role="button" title="if data from the Proper of Saints of a given Missal for this nation has already been incorporated into the main LitCal engine, you can choose the Missal from this list to associate it with this National Calendar (if the Missal is not in the list, it has not been incorporated into the LitCal engine)"></i><?php echo _('Published Roman Missals') ?></label>
@@ -335,7 +335,7 @@ if (isset($_GET["choice"])) {
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="form-group col col-md-3">
+                                    <div class="form-group col col-md-3 mt-4">
                                         <label><?php echo _('Wider Region') ?><i class="fas fa-info-circle ms-2 text-black" style="--bs-text-opacity: .3;" role="button" title="if data for a Wider Region that regards this National Calendar has already been defined, you can associate the Wider Region data with the National Calendar here"></i></label>
                                         <input class="form-control" type="text" id="associatedWiderRegion" />
                                     </div>
