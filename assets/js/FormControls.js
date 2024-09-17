@@ -259,7 +259,7 @@ class FormControls {
             let decreeLangs = festivity !== null && typeof festivity.url_lang_map !== 'undefined' ? Object.keys(festivity.url_lang_map).map(key => key+'='+festivity.url_lang_map[key] ) : null;
             formRow += `<div class="form-group col-sm-6">
             <label for="onTheFly${FormControls.uniqid}DecreeLangs">${messages[ "Decree Langs" ]}<i class="ms-2 fas fa-info-circle" title="Use a comma separated list of key=value pairings, e.g. DE=ge,EN=en. Key is uppercased two letter ISO code, value is (generally lowercased) two letter representation used within the actual URL"></i></label>
-            <input type="text" class="form-control litEvent litEventDecreeLangs" value="${festivity !== null && typeof festivity.url_lang_map !== 'undefined' ? festivity.url_lang_map.join(',') : ''}" id="onTheFly${FormControls.uniqid}DecreeLangs" />
+            <input type="text" class="form-control litEvent litEventDecreeLangs" value="${festivity !== null && typeof festivity.url_lang_map !== 'undefined' ? decreeLangs.join(',') : ''}" id="onTheFly${FormControls.uniqid}DecreeLangs" />
             </div>`;
         }
 
@@ -437,7 +437,7 @@ class FormControls {
             let decreeLangs = festivity !== null && typeof festivity.url_lang_map !== 'undefined' ? Object.keys(festivity.url_lang_map).map(key => key+'='+festivity.url_lang_map[key] ) : null;
             formRow += `<div class="form-group col-sm-4">
             <label for="onTheFly${FormControls.uniqid}DecreeLangs">${messages[ "Decree Langs" ]}<i class="ms-2 fas fa-info-circle" title="Use a comma separated list of key=value pairings, e.g. DE=ge,EN=en. Key is uppercased two letter ISO code, value is (generally lowercased) two letter representation used within the actual URL"></i></label>
-            <input type="text" class="form-control litEvent litEventDecreeLangs" value="${festivity !== null && typeof festivity.url_lang_map !== 'undefined' ? festivity.url_lang_map.join(',') : ''}" />
+            <input type="text" class="form-control litEvent litEventDecreeLangs" value="${festivity !== null && typeof festivity.url_lang_map !== 'undefined' ? decreeLangs.join(',') : ''}" />
             </div>`;
         }
 
