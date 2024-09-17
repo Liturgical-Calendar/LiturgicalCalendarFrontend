@@ -25,7 +25,8 @@ const isStaging = location.href.includes('-staging');
 const endpointV = isStaging ? 'dev' : 'v3';
 const MetaDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/calendars`;
 const RegionalDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/data`;
-const RequestURLBase = `https://litcal.johnromanodorazio.com/api/${endpointV}/`;
+const CalendarURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/calendar`;
+const MissalsURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/missals`;
 
 $(document).on('click', '.sidebarToggle', event => {
     event.preventDefault();
