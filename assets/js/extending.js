@@ -4,7 +4,7 @@ import {
     setFormSettings,
     setFormSettingsForProperty,
     RANK,
-    litEvent,
+    LitEvent,
     integerVals,
     expectedJSONProperties,
     metadataProps,
