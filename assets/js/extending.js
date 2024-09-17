@@ -300,6 +300,7 @@ Promise.all([
             console.log('retrieved /missals metadata:');
             console.log(data);
             $missals = data.litcal_missals;
+            FormControls.missals = data.litcal_missals;
             let publishedRomanMissalsStr = $missals.map(({missal_id,name}) => !missal_id.startsWith('EDITIO_TYPICA_') ? `<option class="list-group-item" value="${missal_id}">${name}</option>` : null).join('')
             $('#languageEditionRomanMissalList').append(publishedRomanMissalsStr);
             toastr["success"]('Successfully retrieved data from /missals path', "Success");
