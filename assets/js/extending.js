@@ -389,14 +389,14 @@ $(document).on('change', '.litEvent', ev => {
         if ($(ev.currentTarget).val() == '') {
             //empty value probably means we are trying to delete an already defined event
             //so let's find the key and remove it
-            oldEventKey = $(ev.currentTarget).attr('data-valuewas');
+            let oldEventKey = $(ev.currentTarget).attr('data-valuewas');
             console.log('seems we are trying to delete the object key ' + oldEventKey);
             if ($CALENDAR.litcal.hasOwnProperty(oldEventKey)) {
                 delete $CALENDAR.litcal[oldEventKey];
             }
             $(ev.currentTarget).attr('data-valuewas', '');
         } else {
-            eventKey = $(ev.currentTarget).val().replace(/[^a-zA-Z]/gi, '');
+            let eventKey = $(ev.currentTarget).val().replace(/[^a-zA-Z]/gi, '');
             console.log('new LitEvent name identifier is ' + eventKey);
             console.log('festivity name is ' + $(ev.currentTarget).val());
             if ($(ev.currentTarget).attr('data-valuewas') == '' && $CALENDAR.litcal.hasOwnProperty(eventKey) === false) {
@@ -422,7 +422,7 @@ $(document).on('change', '.litEvent', ev => {
                 $(ev.currentTarget).removeClass('is-invalid');
                 console.log( $CALENDAR.litcal[eventKey] );
             } else if ($(ev.currentTarget).attr('data-valuewas') != '') {
-                oldEventKey = $(ev.currentTarget).attr('data-valuewas');
+                let oldEventKey = $(ev.currentTarget).attr('data-valuewas');
                 console.log('the preceding value here was ' + oldEventKey);
                 if ($CALENDAR.litcal.hasOwnProperty(oldEventKey)) {
                     if (oldEventKey !== eventKey) {
@@ -501,7 +501,7 @@ $(document).on('change', '.litEvent', ev => {
         }
     } else if ($(ev.currentTarget).hasClass('litEventDay')) {
         if ($row.find('.litEventName').val() != "") {
-            eventKey = $row.find('.litEventName').attr('data-valuewas');
+            let eventKey = $row.find('.litEventName').attr('data-valuewas');
             if ($CALENDAR.litcal.hasOwnProperty(eventKey)) {
                 $CALENDAR.litcal[eventKey].festivity.day = parseInt($(ev.currentTarget).val());
             }
@@ -509,7 +509,7 @@ $(document).on('change', '.litEvent', ev => {
     } else if ($(ev.currentTarget).hasClass('litEventMonth')) {
         let selcdMonth = parseInt($(ev.currentTarget).val());
         if ($row.find('.litEventName').val() != "") {
-            eventKey = $row.find('.litEventName').attr('data-valuewas');
+            let eventKey = $row.find('.litEventName').attr('data-valuewas');
             if ($CALENDAR.litcal.hasOwnProperty(eventKey)) {
                 $CALENDAR.litcal[eventKey].festivity.month = selcdMonth;
             }
@@ -520,7 +520,7 @@ $(document).on('change', '.litEvent', ev => {
         }
     } else if ($(ev.currentTarget).hasClass('litEventCommon')) {
         if ($row.find('.litEventName').val() !== "") {
-            eventKey = $row.find('.litEventName').attr('data-valuewas');
+            let eventKey = $row.find('.litEventName').attr('data-valuewas');
             if ($CALENDAR.litcal.hasOwnProperty(eventKey)) {
                 $CALENDAR.litcal[eventKey].festivity.common = $(ev.currentTarget).val();
                 let eventColors = [];
@@ -536,21 +536,21 @@ $(document).on('change', '.litEvent', ev => {
         }
     } else if ($(ev.currentTarget).hasClass('litEventColor')) {
         if ($row.find('.litEventName').val() != "") {
-            eventKey = $row.find('.litEventName').attr('data-valuewas');
+            let eventKey = $row.find('.litEventName').attr('data-valuewas');
             if ($CALENDAR.litcal.hasOwnProperty(eventKey)) {
                 $CALENDAR.litcal[eventKey].festivity.color = $(ev.currentTarget).val();
             }
         }
     } else if ($(ev.currentTarget).hasClass('litEventSinceYear')) {
         if ($row.find('.litEventName').val() != "") {
-            eventKey = $row.find('.litEventName').attr('data-valuewas');
+            let eventKey = $row.find('.litEventName').attr('data-valuewas');
             if ($CALENDAR.litcal.hasOwnProperty(eventKey)) {
                 $CALENDAR.litcal[eventKey].metadata.since_year = parseInt($(ev.currentTarget).val());
             }
         }
     } else if ($(ev.currentTarget).hasClass('litEventUntilYear')) {
         if ($row.find('.litEventName').val() != "") {
-            eventKey = $row.find('.litEventName').attr('data-valuewas');
+            let eventKey = $row.find('.litEventName').attr('data-valuewas');
             if ($CALENDAR.litcal.hasOwnProperty(eventKey)) {
                 if($(ev.currentTarget).val() !== '') {
                     $CALENDAR.litcal[eventKey].metadata.until_year = parseInt($(ev.currentTarget).val());
@@ -561,7 +561,7 @@ $(document).on('change', '.litEvent', ev => {
         }
     } else if ($(ev.currentTarget).hasClass('litEventStrtotimeSwitch')) {
         if ($row.find('.litEventName').val() != "") {
-            eventKey = $row.find('.litEventName').attr('data-valuewas');
+            let eventKey = $row.find('.litEventName').attr('data-valuewas');
             if ($CALENDAR.litcal.hasOwnProperty(eventKey)) {
                 if(false === $(ev.currentTarget).prop('checked')) {
                     delete $CALENDAR.litcal[eventKey].metadata.strtotime;
@@ -610,7 +610,7 @@ $(document).on('change', '.litEvent', ev => {
         }
     } else if ($(ev.currentTarget).hasClass('litEventStrtotime')) {
         if ($row.find('.litEventName').val() != "") {
-            eventKey = $row.find('.litEventName').attr('data-valuewas');
+            let eventKey = $row.find('.litEventName').attr('data-valuewas');
             if ($CALENDAR.litcal.hasOwnProperty(eventKey)) {
                 $CALENDAR.litcal[eventKey].metadata.strtotime = $(ev.currentTarget).val();
             }
