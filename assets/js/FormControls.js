@@ -242,8 +242,8 @@ class FormControls {
             formRow += `<div class="form-group col-sm-6">
             <label for="onTheFly${FormControls.uniqid}Missal">${messages[ "Missal" ]}</label>
             <select class="form-select litEvent litEventMissal" id="onTheFly${FormControls.uniqid}Missal">`;
-            //console.log(Object.values( FormControls.index.RomanMissals ).map(({value,name}) => `<option class="list-group-item" value="${value}">${name}</option>`));
-            formRow += Object.values( FormControls.index.RomanMissals ).map(({value,name}) => `<option class="list-group-item" value="${value}">${name}</option>`).join('');
+            //console.log(Object.values( FormControls.missals ).map(({value,name}) => `<option class="list-group-item" value="${value}">${name}</option>`));
+            formRow += FormControls.missals.map(({missal_id,name}) => `<option class="list-group-item" value="${missal_id}">${name}</option>`).join('');
             formRow += `</select>
             </div>`;
         }
