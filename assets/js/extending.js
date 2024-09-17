@@ -74,17 +74,6 @@ const removeDiocesanCalendarModal = diocese => {
 </div>`;
 };
 
-const bestBetLocale = (regionName) => {
-    switch(regionName) {
-        case "Americas":
-            return 'en_US';
-        case 'Europe':
-            return 'it_IT';
-        case 'Asia':
-            return 'ja_JP';
-    }
-}
-
 let ITALYDiocesesArr;
 let USDiocesesByState;
 let USDiocesesArr = [];
@@ -787,24 +776,18 @@ $(document).on('click', '.actionPromptButton', ev => {
 });
 
 $(document).on('change', '.regionalNationalCalendarName', ev => {
-    const category = $(ev.currentTarget).data('category');
-    const key = (
-        category === 'WIDERREGIONCALENDAR'
-            ? $(ev.currentTarget).val()
-            : ($(ev.currentTarget).val().toUpperCase() === 'UNITED STATES'
-                ? 'USA'
-                : $(ev.currentTarget).val().toUpperCase())
-    );
     const data = {
-        "key" : key,
-        "category": category
+        "key" : '',
+        "category": $(ev.currentTarget).data('category')
     };
-    if (category === "WIDERREGIONCALENDAR") {
-        const wider_region = $index.wider_regions.filter(r => r.name === key)[0];
-        if (wider_region.languages.includes(LOCALE_WITH_REGION)) {
-            data.locale = LOCALE_WITH_REGION;
-        } else {
-            data.locale = bestBetLocale(wider_region.name);
+    if ( category === 'WIDERREGIONCALENDAR' ) {
+        const [key, locale] = $(ev.currentTarget).val().split(' - ');
+        data.key = key;
+        data.locale = locale;
+    } else if (category === 'NATIONALCALENDAR') {
+        data.key = $(ev.currentTarget).val().toUpperCase();
+        if (data.key === 'UNITED STATES') {
+            data.key = 'USA';
         }
     }
     //console.log('category: ' + category + ', key = ' + key);
