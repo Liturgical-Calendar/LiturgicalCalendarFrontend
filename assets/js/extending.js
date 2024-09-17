@@ -923,7 +923,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
 
 $(document).on('change', '#diocesanCalendarDioceseName', ev => {
     const currentVal = sanitizeInput( $(ev.currentTarget).val() );
-    $CALENDAR = { LitCal: {} };
+    $CALENDAR = { litcal: {} };
     $('.carousel-item form').each((idx, el) => {
         el.reset();
         $(el).find('.row').slice(3).remove();
@@ -938,11 +938,12 @@ $(document).on('change', '#diocesanCalendarDioceseName', ev => {
         $(ev.currentTarget).removeClass('is-invalid');
         let $key = $('#DiocesesList').find('option[value="' + currentVal + '"]').attr('data-value').toUpperCase();
         //console.log('selected diocese with key = ' + $key);
-        if ($index.DiocesanCalendars.hasOwnProperty($key)) {
+        if ($index.diocesan_calendars_keys.includes($key)) {
+            const diocesan_calendar = $index.diocesan_calendars.filter(el => el.calendar_id === $key)[0];
             $('#removeExistingDiocesanData').prop('disabled', false);
             $('body').append(removeDiocesanCalendarModal(currentVal));
-            if($index.DiocesanCalendars[$key].hasOwnProperty('group')){
-                $('#diocesanCalendarGroup').val($index.DiocesanCalendars[$key].group);
+            if(diocesan_calendar.hasOwnProperty('group')){
+                $('#diocesanCalendarGroup').val(diocesan_calendar.group);
             }
             loadDiocesanCalendarData();
             //console.log('we have an existing entry for this diocese!');
