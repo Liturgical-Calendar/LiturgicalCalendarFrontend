@@ -94,43 +94,44 @@ $AvailableCountries = array_reduce($AvailableCountries, function ($carry, $item)
 $c->asort($AvailableCountries);
 
 $messages = [
-    "Tag"               => _("Tag"),
-    "Name"              => _("Name"),
-    "Day"               => _("Day"),
-    "Month"             => _("Month"),
-    "Other Solemnity"   => _("Other Solemnity"),
-    "Other Feast"       => _("Other Feast"),
-    "Other Memorial"    => _("Other Memorial"),
+    "Tag"                => _("Tag"),
+    "Name"               => _("Name"),
+    "Day"                => _("Day"),
+    "Month"              => _("Month"),
+    "Other Solemnity"    => _("Other Solemnity"),
+    "Other Feast"        => _("Other Feast"),
+    "Other Memorial"     => _("Other Memorial"),
     "Other Optional Memorial"   => _("Other Optional Memorial"),
     "Delete diocesan calendar"  => _("Delete diocesan calendar"),
-    "If you choose"     => _("If you choose to delete this diocesan calendar, the liturgical events defined for the calendar and the corresponding index entry will be removed and no longer available in the client applications."),
-    "Liturgical color"  => _("Liturgical color"),
-    "white"             => _("white"),
-    "red"               => _("red"),
-    "green"             => _("green"),
-    "purple"            => _("purple"),
+    "If you choose"      => _("If you choose to delete this diocesan calendar, the liturgical events defined for the calendar and the corresponding index entry will be removed and no longer available in the client applications."),
+    "Liturgical color"   => _("Liturgical color"),
+    "white"              => _("white"),
+    "red"                => _("red"),
+    "green"              => _("green"),
+    "purple"             => _("purple"),
     /**translators: in reference to the first year from which this festivity takes place */
-    "Since"             => _("Since"),
+    "Since"              => _("Since"),
     /**translators: in reference to the year from which this festivity no longer needs to be dealt with */
-    "Until"             => _("Until"),
+    "Until"              => _("Until"),
     /**translators: label of the form row */
-    "Designate patron"  => _("Patron or Patrons of the Wider Region"),
+    "Designate patron"   => _("Patron or Patrons of the Wider Region"),
     /**translators: label of the form row */
-    "New festivity"     => _("New festivity"),
+    "New festivity"      => _("New festivity"),
     /**translators: label of the form row */
     "Change name or grade" => _("Change name or grade"),
     /**translators: label of the form row */
-    "Move festivity" => _("Move festivity"),
-    "Decree URL"        => _("Decree URL"),
-    "Decree Langs"      => _("Decree Language mappings"),
-    "Missal"            => _("Missal"),
-    "Reason"            => _("Reason (in favor of festivity)"),
-    "commonsTemplate"   => $FormControls->getCommonsTemplate(),
-    "gradeTemplate"     => $FormControls->getGradeTemplate(),
-    "LOCALE"            => $i18n->LOCALE,
-    "AvailableLocales"  => $AvailableLocales,
+    "Move festivity"     => _("Move festivity"),
+    "Decree URL"         => _("Decree URL"),
+    "Decree Langs"       => _("Decree Language mappings"),
+    "Missal"             => _("Missal"),
+    "Reason"             => _("Reason (in favor of festivity)"),
+    "commonsTemplate"    => $FormControls->getCommonsTemplate(),
+    "gradeTemplate"      => $FormControls->getGradeTemplate(),
+    "LOCALE"             => $i18n->LOCALE,
+    "LOCALE_WITH_REGION" => $i18n->LOCALE_WITH_REGION,
+    "AvailableLocales"   => $AvailableLocales,
     "AvailableCountries" => $AvailableCountries,
-    "countryISOCodes"   => $countryISOCodes
+    "countryISOCodes"    => $countryISOCodes
 ];
 
 $buttonGroup = "<hr><div class=\"d-flex justify-content-around\">

@@ -36,7 +36,7 @@ toastr.options = {
 }
 
 
-const { LOCALE } = messages;
+const { LOCALE, LOCALE_WITH_REGION } = messages;
 const jsLocale = LOCALE.replace('_', '-');
 FormControls.jsLocale = jsLocale;
 FormControls.weekdayFormatter = new Intl.DateTimeFormat(jsLocale, { weekday: "long" });
@@ -88,8 +88,8 @@ $.getJSON( './assets/data/USDiocesesByState.json', data => {
 });
 
 let $CALENDAR = { LitCal: {} };
-let $index = {};
-let $missals = {};
+let $index = null;
+let $missals = null;
 
 const loadDiocesanCalendarData = () => {
     let diocese = $('#diocesanCalendarDioceseName').val();
@@ -789,7 +789,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
         method: 'GET',
         dataType: 'json',
         //crossDomain: true,
-        data: { "key" : key, "category": category, "locale": LOCALE },
+        data: { "key" : key, "category": category, "locale": LOCALE_WITH_REGION },
         statusCode: {
             404: (xhr, textStatus, errorThrown) => {
                 toastr["warning"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />The Data File for the ' + category + ' ' + key + ' does not exist yet. Not that it\'s a big deal, just go ahead and create it now!', "Warning");
