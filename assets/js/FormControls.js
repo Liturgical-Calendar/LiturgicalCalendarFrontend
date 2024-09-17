@@ -31,7 +31,7 @@ class FormControls {
             formRow += `<div class="d-flex justify-content-left data-group-title"><h4 class="data-group-title">${FormControls.title}</h4></div>`;
         }
 
-        formRow += `<div class="row gx-2">`;
+        formRow += `<div class="row gx-2 align-items-baseline">`;
 
         if (FormControls.settings.nameField) {
             formRow += `<div class="form-group col-sm-3">
@@ -149,7 +149,7 @@ class FormControls {
             formRow += `</div>`;
         }
 
-        formRow += `<div class="row gx-2">`;
+        formRow += `<div class="row gx-2 align-items-baseline">`;
 
         formRow += `<div class="form-group col-sm-6">`;
         if(FormControls.settings.tagField === false){

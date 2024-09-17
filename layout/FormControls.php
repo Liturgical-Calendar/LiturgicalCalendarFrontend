@@ -36,7 +36,7 @@ class FormControls
             $formRow .= "<h4>" . $title . "</h4>";
         }
 
-        $formRow .= "<div class=\"row gx-2\">";
+        $formRow .= "<div class=\"row gx-2 align-items-baseline\">";
 
         if (self::$settings["nameField"]) {
             $formRow .= "<div class=\"form-group col-sm-3\">" .
