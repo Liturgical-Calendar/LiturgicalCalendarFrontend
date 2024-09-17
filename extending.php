@@ -193,7 +193,9 @@ if (isset($_GET["choice"])) {
                             <?php
                             if ($isStaging) {
                                 foreach ($LitCalMetadata["wider_regions"] as $widerRegion) {
-                                    echo "<option value=\"{$widerRegion['name']}\">{$widerRegion['name']}</option>";
+                                    foreach ($widerRegion["languages"] as $widerRegionLanguage) {
+                                        echo "<option value=\"{$widerRegion['name']}\" data-language=\"{$widerRegionLanguage}\">{$widerRegion['name']} ({$widerRegionLanguage})</option>";
+                                    }
                                 }
                             } else {
                                 foreach ($LitCalMetadata["WiderRegions"] as $widerRegion) {
