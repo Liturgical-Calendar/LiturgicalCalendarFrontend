@@ -382,8 +382,8 @@ $(document).on('click', '#diocesanCalendarDefinitionCardLinks a.page-link', ev =
 });
 
 $(document).on('change', '.litEvent', ev => {
-    $row = $(ev.currentTarget).closest('.row');
-    $card = $(ev.currentTarget).closest('.card-body');
+    let $row = $(ev.currentTarget).closest('.row');
+    let $card = $(ev.currentTarget).closest('.card-body');
     if ($(ev.currentTarget).hasClass('litEventName')) {
         //console.log('LitEvent name has changed');
         if ($(ev.currentTarget).val() == '') {
@@ -392,7 +392,7 @@ $(document).on('change', '.litEvent', ev => {
             oldEventKey = $(ev.currentTarget).attr('data-valuewas');
             console.log('seems we are trying to delete the object key ' + oldEventKey);
             if ($CALENDAR.litcal.hasOwnProperty(oldEventKey)) {
-                delete $CALENDAR.litCal[oldEventKey];
+                delete $CALENDAR.litcal[oldEventKey];
             }
             $(ev.currentTarget).attr('data-valuewas', '');
         } else {
