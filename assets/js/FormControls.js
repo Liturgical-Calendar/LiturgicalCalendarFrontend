@@ -131,7 +131,7 @@ class FormControls {
                     //festivity.until_year = null;
                 }
                 if( festivity.hasOwnProperty( 'color' ) === false ) {
-                    festivity.color = FestivityCollection.hasOwnProperty(festivity.event_key) ? FestivityCollection[festivity.event_key].COLOR : [];
+                    festivity.color = FestivityCollection.hasOwnProperty(festivity.event_key) ? FestivityCollection[festivity.event_key].color : [];
                 }
             }
             //console.log(festivity);
