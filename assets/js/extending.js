@@ -74,18 +74,46 @@ const removeDiocesanCalendarModal = diocese => {
 </div>`;
 };
 
-let ITALYDiocesesArr;
-let USDiocesesByState;
-let USDiocesesArr = [];
+const DIOCESES_ARR = {};
 
-$.getJSON( './assets/data/ItalyDioceses.json', data => { ITALYDiocesesArr = data; } );
-$.getJSON( './assets/data/USDiocesesByState.json', data => {
-    USDiocesesByState = data;
+Promise.all([
+    fetch('./assets/data/ItalyDioceses.json', {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json'
+        }
+    }),
+    fetch('./assets/data/USDiocesesByState.json', {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json'
+        }
+    }),
+    fetch('./assets/data/NetherlandsDioceses.json', {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+]).then(responses => {
+    return Promise.all(responses.map((response) => {
+        if(response.ok) {
+            return response.json();
+        }
+        else {
+            throw new Error(response.status + ' ' + response.statusText + ': ' + response.text);
+        }
+    }));
+}).then(data => {
+    DIOCESES_ARR.ITALY = data[0];
+    DIOCESES_ARR.USA = [];
+    let USDiocesesByState = data[1];
     let c = 0;
     for (const [state, arr] of Object.entries(USDiocesesByState)) {
-        arr.forEach(diocese => USDiocesesArr[c++] = diocese + " (" + state + ")");
+        arr.forEach(diocese => DIOCESES_ARR.USA[c++] = diocese + " (" + state + ")");
     }
-});
+    DIOCESES_ARR.NETHERLANDS = data[2];
+})
 
 let $CALENDAR = { litcal: {} };
 let $index = null;
@@ -1187,20 +1215,14 @@ $(document).on('change', '#diocesanCalendarNationalDependency', ev => {
     $('#removeExistingDiocesanData').prop('disabled', true);
     $('body').find('#removeDiocesanCalendarPrompt').remove();
     let currentSelectedNation = $(ev.currentTarget).val();
-    switch (currentSelectedNation) {
-        case "ITALY":
-            $('#DiocesesList').empty();
-            ITALYDiocesesArr.forEach(diocese => $('#DiocesesList').append('<option data-value="' + diocese.replace(/[^a-zA-Z]/gi, '').toUpperCase() + '" value="' + diocese + '">'));
-            break;
-        case "USA":
-            $('#DiocesesList').empty();
-            USDiocesesArr.forEach(diocese => $('#DiocesesList').append('<option data-value="' + diocese.replace(/[^a-zA-Z]/gi, '').toUpperCase() + '" value="' + diocese + '">'));
-            break;
-        default:
-            $('#DiocesesList').empty();
-            let dioceses = Object.filter( $index.DiocesanCalendars, key => key.nation === currentSelectedNation );
-            console.log(dioceses);
-            Object.values( dioceses ).forEach( el => $('#DiocesesList').append('<option data-value="' + el.diocese.replace(/[^a-zA-Z]/gi, '').toUpperCase() + '" value="' + el.diocese + '">') )
+    if (['ITALY','USA','NETHERLANDS'].includes(currentSelectedNation)) {
+        $('#DiocesesList').empty();
+        DIOCESES_ARR[currentSelectedNation].forEach(diocese => $('#DiocesesList').append('<option data-value="' + diocese.replace(/[^a-zA-Z]/gi, '').toUpperCase() + '" value="' + diocese + '">'));
+    } else {
+        $('#DiocesesList').empty();
+        let dioceses = Object.filter( $index.diocesan_calendars, key => key.nation === currentSelectedNation );
+        console.log(dioceses);
+        Object.values( dioceses ).forEach( el => $('#DiocesesList').append('<option data-value="' + el.diocese.replace(/[^a-zA-Z]/gi, '').toUpperCase() + '" value="' + el.diocese + '">') )
     }
 });
 
