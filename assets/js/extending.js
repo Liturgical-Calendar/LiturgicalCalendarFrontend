@@ -1137,13 +1137,13 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
         });
         if( action === 'createNew' && rowData.festivity.common.includes( 'Proper' ) ) {
             rowData.festivity.readings = {
-                FIRST_READING: $(el).find('.litEventReadings_FIRST_READING').val(),
-                RESPONSORIAL_PSALM: $(el).find('.litEventReadings_RESPONSORIAL_PSALM').val(),
-                ALLELUIA_VERSE: $(el).find('.litEventReadings_ALLELUIA_VERSE').val(),
-                GOSPEL: $(el).find('.litEventReadings_GOSPEL').val()
+                first_reading: $(el).find('.litEventReadings_FIRST_READING').val(),
+                responsorial_psalm: $(el).find('.litEventReadings_RESPONSORIAL_PSALM').val(),
+                alleluia_verse: $(el).find('.litEventReadings_ALLELUIA_VERSE').val(),
+                gospel: $(el).find('.litEventReadings_GOSPEL').val()
             };
             if( $(el).find('.litEventReadings_SECOND_READING').val() !== "" ) {
-                rowData.festivity.readings.SECOND_READING = $(el).find('.litEventReadings_SECOND_READING').val();
+                rowData.festivity.readings.second_reading = $(el).find('.litEventReadings_SECOND_READING').val();
             }
         }
 
