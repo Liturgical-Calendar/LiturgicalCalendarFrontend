@@ -717,8 +717,8 @@ $(document).on('click', '.actionPromptButton', ev => {
         $row = $( rowEls );
         console.log($row);
         if( FormControls.settings.missalField ) {
-            const { MISSAL } = FestivityCollection[existingFestivityTag];
-            $row.find(`#onTheFly${currentUniqid}Missal`).val(MISSAL); //.prop('disabled', true);
+            const { missal } = FestivityCollection[existingFestivityTag];
+            $row.find(`#onTheFly${currentUniqid}Missal`).val(missal); //.prop('disabled', true);
         }
     } else {
         rowStr = FormControls.CreatePatronRow();
@@ -856,8 +856,8 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                 }
 
                 if( FormControls.settings.missalField && existingFestivityTag !== null ) {
-                    const { MISSAL } = FestivityCollection[existingFestivityTag];
-                    $row.find(`#onTheFly${currentUniqid}Missal`).val(MISSAL); //.prop('disabled', true);
+                    const { missal } = FestivityCollection[existingFestivityTag];
+                    $row.find(`#onTheFly${currentUniqid}Missal`).val(missal); //.prop('disabled', true);
                 }
                 $row.find('.litEventColor').multiselect({
                     buttonWidth: '100%',
