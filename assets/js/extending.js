@@ -776,17 +776,17 @@ $(document).on('click', '.actionPromptButton', ev => {
 });
 
 $(document).on('change', '.regionalNationalCalendarName', ev => {
-    const data = {
+    const payload = {
         "category": $(ev.currentTarget).data('category')
     };
-    if ( data.category === 'WIDERREGIONCALENDAR' ) {
+    if ( payload.category === 'WIDERREGIONCALENDAR' ) {
         const [key, locale] = $(ev.currentTarget).val().split(' - ');
-        data.key = key;
-        data.locale = locale;
-    } else if (data.category === 'NATIONALCALENDAR') {
-        data.key = $(ev.currentTarget).val().toUpperCase();
-        if (data.key === 'UNITED STATES') {
-            data.key = 'USA';
+        payload.key = key;
+        payload.locale = locale;
+    } else if (payload.category === 'NATIONALCALENDAR') {
+        payload.key = $(ev.currentTarget).val().toUpperCase();
+        if (payload.key === 'UNITED STATES') {
+            payload.key = 'USA';
         }
     }
     //console.log('category: ' + category + ', key = ' + key);
@@ -795,12 +795,12 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
         method: 'GET',
         dataType: 'json',
         //crossDomain: true,
-        data: data,
+        data: payload,
         statusCode: {
             404: (xhr, textStatus, errorThrown) => {
-                toastr["warning"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />The Data File for the ' + category + ' ' + key + ' does not exist yet. Not that it\'s a big deal, just go ahead and create it now!', "Warning");
-                console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown + 'The Data File for the ' + category + ' ' + key + ' does not exist yet (just saying, not that it is really a big deal. Just go ahead and create it now!)');
-                switch(category) {
+                toastr["warning"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />The Data File for the ' + payload.category + ' ' + payload.key + ' does not exist yet. Not that it\'s a big deal, just go ahead and create it now!', "Warning");
+                console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown + 'The Data File for the ' + payload.category + ' ' + payload.key + ' does not exist yet (just saying, not that it is really a big deal. Just go ahead and create it now!)');
+                switch(payload.category) {
                     case 'WIDERREGIONCALENDAR':
                         $('#widerRegionIsMultilingual').prop('checked', false);
                         $('#widerRegionLanguages').multiselect('deselectAll', false);
@@ -814,9 +814,9 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
             }
         },
         success: data => {
-            console.log( `successfully retrieved the data file for the ${category} ${key}` );
+            console.log( `successfully retrieved the data file for the ${payload.category} ${payload.key}` );
             console.log(data);
-            switch(category) {
+            switch(payload.category) {
                 case 'WIDERREGIONCALENDAR':
                     $('#widerRegionIsMultilingual').prop('checked', data.metadata.multilingual);
                     FormControls.settings.decreeURLField = true;
