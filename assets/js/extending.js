@@ -777,7 +777,7 @@ $(document).on('click', '.actionPromptButton', ev => {
 $(document).on('change', '.regionalNationalCalendarName', ev => {
     const category = $(ev.currentTarget).data('category');
     const key = (
-        category === 'widerRegionCalendar'
+        category === 'WIDERREGIONCALENDAR'
             ? $(ev.currentTarget).val()
             : ($(ev.currentTarget).val().toUpperCase() === 'UNITED STATES'
                 ? 'USA'
@@ -795,11 +795,11 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                 toastr["warning"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />The Data File for the ' + category + ' ' + key + ' does not exist yet. Not that it\'s a big deal, just go ahead and create it now!', "Warning");
                 console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown + 'The Data File for the ' + category + ' ' + key + ' does not exist yet (just saying, not that it is really a big deal. Just go ahead and create it now!)');
                 switch(category) {
-                    case 'widerRegionCalendar':
+                    case 'WIDERREGIONCALENDAR':
                         $('#widerRegionIsMultilingual').prop('checked', false);
                         $('#widerRegionLanguages').multiselect('deselectAll', false);
                         break;
-                    case 'nationalCalendar':
+                    case 'NATIONALCALENDAR':
                         $('form#nationalCalendarSettingsForm')[0].reset();
                         $('#publishedRomanMissalList').empty();
                         break;
@@ -811,13 +811,13 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
             console.log( `successfully retrieved the data file for the ${category} ${key}` );
             console.log(data);
             switch(category) {
-                case 'widerRegionCalendar':
+                case 'WIDERREGIONCALENDAR':
                     $('#widerRegionIsMultilingual').prop('checked', data.Metadata.IsMultilingual);
                     FormControls.settings.decreeURLField = true;
                     FormControls.settings.decreeLangMapField = true;
                     $('#widerRegionLanguages').multiselect('deselectAll', false).multiselect('select', data.Metadata.Languages);
                     break;
-                case 'nationalCalendar':
+                case 'NATIONALCALENDAR':
                     FormControls.settings.decreeURLField = true;
                     FormControls.settings.decreeLangMapField = false;
                     const { Settings, Metadata } = data;
@@ -1024,7 +1024,7 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
     const lcl = $('#nationalCalendarSettingLocale').val();
     let finalObj = {};
     switch(category) {
-        case 'nationalCalendar':
+        case 'NATIONALCALENDAR':
             const regionNamesLocalized = new Intl.DisplayNames(['en'], { type: 'region' });
             const widerRegion = $('#associatedWiderRegion').val();
             finalObj = {
@@ -1047,7 +1047,7 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
                 }
             }
             break;
-        case 'widerRegionCalendar':
+        case 'WIDERREGIONCALENDAR':
             const regionNamesLocalizedEng = new Intl.DisplayNames(['en'], { type: 'region' });
             let nationalCalendars = $('#widerRegionLanguages').val().reduce((prev, curr) => {
                 curr = curr.replaceAll('_', '-');
