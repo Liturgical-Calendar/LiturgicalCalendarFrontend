@@ -74,6 +74,17 @@ const removeDiocesanCalendarModal = diocese => {
 </div>`;
 };
 
+const bestBetLocale = (regionName) => {
+    switch(regionName) {
+        case "Americas":
+            return 'en_US';
+        case 'Europe':
+            return 'it_IT';
+        case 'Asia':
+            return 'ja_JP';
+    }
+}
+
 let ITALYDiocesesArr;
 let USDiocesesByState;
 let USDiocesesArr = [];
@@ -784,13 +795,25 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                 ? 'USA'
                 : $(ev.currentTarget).val().toUpperCase())
     );
+    const data = {
+        "key" : key,
+        "category": category
+    };
+    if (category === "WIDERREGIONCALENDAR") {
+        const wider_region = $index.wider_regions.filter(r => r.name === key)[0];
+        if (wider_region.languages.includes(LOCALE_WITH_REGION)) {
+            data.locale = LOCALE_WITH_REGION;
+        } else {
+            data.locale = bestBetLocale(wider_region.name);
+        }
+    }
     //console.log('category: ' + category + ', key = ' + key);
     jQuery.ajax({
         url: RegionalDataURL,
         method: 'GET',
         dataType: 'json',
         //crossDomain: true,
-        data: { "key" : key, "category": category, "locale": LOCALE_WITH_REGION },
+        data: data,
         statusCode: {
             404: (xhr, textStatus, errorThrown) => {
                 toastr["warning"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />The Data File for the ' + category + ' ' + key + ' does not exist yet. Not that it\'s a big deal, just go ahead and create it now!', "Warning");
