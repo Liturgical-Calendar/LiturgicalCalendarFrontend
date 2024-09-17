@@ -777,14 +777,13 @@ $(document).on('click', '.actionPromptButton', ev => {
 
 $(document).on('change', '.regionalNationalCalendarName', ev => {
     const data = {
-        "key" : '',
         "category": $(ev.currentTarget).data('category')
     };
-    if ( category === 'WIDERREGIONCALENDAR' ) {
+    if ( data.category === 'WIDERREGIONCALENDAR' ) {
         const [key, locale] = $(ev.currentTarget).val().split(' - ');
         data.key = key;
         data.locale = locale;
-    } else if (category === 'NATIONALCALENDAR') {
+    } else if (data.category === 'NATIONALCALENDAR') {
         data.key = $(ev.currentTarget).val().toUpperCase();
         if (data.key === 'UNITED STATES') {
             data.key = 'USA';
