@@ -87,7 +87,7 @@ $.getJSON( './assets/data/USDiocesesByState.json', data => {
     }
 });
 
-let $CALENDAR = { LitCal: {} };
+let $CALENDAR = { litcal: {} };
 let $index = null;
 let $missals = null;
 
@@ -362,18 +362,18 @@ $(document).on('change', '.litEvent', ev => {
             //so let's find the key and remove it
             oldEventKey = $(ev.currentTarget).attr('data-valuewas');
             console.log('seems we are trying to delete the object key ' + oldEventKey);
-            if ($CALENDAR.LitCal.hasOwnProperty(oldEventKey)) {
-                delete $CALENDAR.LitCal[oldEventKey];
+            if ($CALENDAR.litcal.hasOwnProperty(oldEventKey)) {
+                delete $CALENDAR.litCal[oldEventKey];
             }
             $(ev.currentTarget).attr('data-valuewas', '');
         } else {
             eventKey = $(ev.currentTarget).val().replace(/[^a-zA-Z]/gi, '');
             console.log('new LitEvent name identifier is ' + eventKey);
             console.log('festivity name is ' + $(ev.currentTarget).val());
-            if ($(ev.currentTarget).attr('data-valuewas') == '' && $CALENDAR.LitCal.hasOwnProperty(eventKey) === false) {
+            if ($(ev.currentTarget).attr('data-valuewas') == '' && $CALENDAR.litcal.hasOwnProperty(eventKey) === false) {
                 console.log('there was no data-valuewas attribute or it was empty, so we are creating ex-novo a new LitEvent');
-                $CALENDAR.LitCal[eventKey] = { Festivity: {}, Metadata: {} };
-                $CALENDAR.LitCal[eventKey].Festivity = new litEvent(
+                $CALENDAR.litcal[eventKey] = { festivity: {}, metadata: {} };
+                $CALENDAR.litcal[eventKey].festivity = new LitEvent(
                     $(ev.currentTarget).val(), //name
                     $row.find('.litEventColor').val(), //color
                     null,
@@ -382,43 +382,43 @@ $(document).on('change', '.litEvent', ev => {
                     parseInt($row.find('.litEventMonth').val()), //month
                 );
                 //let's initialize defaults just in case the default input values happen to be correct, so no change events are fired
-                $CALENDAR.LitCal[eventKey].Metadata.sinceYear = parseInt($row.find('.litEventSinceYear').val());
+                $CALENDAR.litcal[eventKey].metadata.since_year = parseInt($row.find('.litEventSinceYear').val());
                 if( $row.find('.litEventUntilYear').val() !== '' ) {
-                    $CALENDAR.LitCal[eventKey].Metadata.untilYear = parseInt($row.find('.litEventUntilYear').val());
+                    $CALENDAR.litcal[eventKey].metadata.until_year = parseInt($row.find('.litEventUntilYear').val());
                 }
                 let formRowIndex = $card.find('.row').index($row);
-                $CALENDAR.LitCal[eventKey].metadata.form_rownum = formRowIndex;
+                $CALENDAR.litcal[eventKey].metadata.form_rownum = formRowIndex;
                 console.log('form row index is ' + formRowIndex);
                 $(ev.currentTarget).attr('data-valuewas', eventKey);
                 $(ev.currentTarget).removeClass('is-invalid');
-                console.log( $CALENDAR.LitCal[eventKey] );
+                console.log( $CALENDAR.litcal[eventKey] );
             } else if ($(ev.currentTarget).attr('data-valuewas') != '') {
                 oldEventKey = $(ev.currentTarget).attr('data-valuewas');
                 console.log('the preceding value here was ' + oldEventKey);
-                if ($CALENDAR.LitCal.hasOwnProperty(oldEventKey)) {
+                if ($CALENDAR.litcal.hasOwnProperty(oldEventKey)) {
                     if (oldEventKey !== eventKey) {
                         if( /_2$/.test(eventKey) ) {
                             console.log('oh geez, we are dealing with a second festivity that has the same name as a first festivity, because it continues where the previous untilYear left off...');
                             eventKey = oldEventKey;
                             console.log('but wait, why would you be changing the name of the second festivity? it will no longer match the first festivity!');
                             console.log('this is becoming a big mess, arghhhh... results can start to be unpredictable');
-                            $CALENDAR.LitCal[eventKey].Festivity.name = $(ev.currentTarget).val();
+                            $CALENDAR.litcal[eventKey].festivity.name = $(ev.currentTarget).val();
                             $(ev.currentTarget).attr('data-valuewas', eventKey);
                             $(ev.currentTarget).removeClass('is-invalid');
                         } else {
                             console.log('I see you are trying to change the name of a festivity that was already defined. This will effectively change the relative key also, so here is what we are going to do:');
                             console.log('will now attempt to copy the values from <' + oldEventKey + '> to <' + eventKey + '> and then remove <' + oldEventKey + '>');
-                            Object.defineProperty($CALENDAR.LitCal, eventKey,
-                                Object.getOwnPropertyDescriptor($CALENDAR.LitCal, oldEventKey));
-                            $CALENDAR.LitCal[eventKey].Festivity.name = $(ev.currentTarget).val();
-                            delete $CALENDAR.LitCal[oldEventKey];
+                            Object.defineProperty($CALENDAR.litcal, eventKey,
+                                Object.getOwnPropertyDescriptor($CALENDAR.litcal, oldEventKey));
+                            $CALENDAR.litcal[eventKey].festivity.name = $(ev.currentTarget).val();
+                            delete $CALENDAR.litcal[oldEventKey];
                             $(ev.currentTarget).attr('data-valuewas', eventKey);
                             $(ev.currentTarget).removeClass('is-invalid');
                         }
                     }
                 }
-            } else if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
-                if( false === $CALENDAR.LitCal[eventKey].Metadata.hasOwnProperty('untilYear') ) {
+            } else if ($CALENDAR.litcal.hasOwnProperty(eventKey)) {
+                if( false === $CALENDAR.litcal[eventKey].metadata.hasOwnProperty('until_year') ) {
                     console.log('exact same festivity name was already defined elsewhere! key ' + eventKey + ' already exists! and the untilYear property was not defined!');
                     $(ev.currentTarget).val('');
                     $(ev.currentTarget).addClass('is-invalid');
@@ -426,14 +426,14 @@ $(document).on('change', '.litEvent', ev => {
                     let confrm = confirm('The same festivity name was already defined elsewhere. However an untilYear property was also defined, so perhaps you are wanting to define again for the years following. If this is the case, press OK, otherwise Cancel');
                     if(confrm) {
                         //retrieve untilYear from the previous festivity with the same name
-                        let untilYear = $CALENDAR.LitCal[eventKey].Metadata.untilYear;
+                        let untilYear = $CALENDAR.litcal[eventKey].metadata.until_year;
                         //set the sinceYear field on this row to the previous untilYear plus one
                         $row.find('.litEventSinceYear').val(untilYear+1);
                         //update our eventKey to be distinct from the previous festivity
                         eventKey = eventKey+'_2';
                         $(ev.currentTarget).attr('data-valuewas', eventKey);
-                        $CALENDAR.LitCal[eventKey] = { Festivity: {}, Metadata: {} };
-                        $CALENDAR.LitCal[eventKey].Festivity = new litEvent(
+                        $CALENDAR.litcal[eventKey] = { festivity: {}, metadata: {} };
+                        $CALENDAR.litcal[eventKey].festivity = new LitEvent(
                             $(ev.currentTarget).val(), //name
                             $row.find('.litEventColor').val(), //color
                             null,
@@ -441,48 +441,48 @@ $(document).on('change', '.litEvent', ev => {
                             parseInt($row.find('.litEventDay').val()), //day
                             parseInt($row.find('.litEventMonth').val()), //month
                         );
-                        $CALENDAR.LitCal[eventKey].Metadata.sinceYear = untilYear + 1;
+                        $CALENDAR.litcal[eventKey].metadata.since_year = untilYear + 1;
                         let formRowIndex = $card.find('.row').index($row);
-                        $CALENDAR.LitCal[eventKey].metadata.form_rownum = formRowIndex;
+                        $CALENDAR.litcal[eventKey].metadata.form_rownum = formRowIndex;
                         console.log('form row index is ' + formRowIndex);
                     }
                 }
             }
             switch ($(ev.currentTarget).closest('.carousel-item').attr('id')) {
                 case 'carouselItemSolemnities':
-                    $CALENDAR.LitCal[eventKey].Festivity.grade = 6;
+                    $CALENDAR.litcal[eventKey].festivity.grade = 6;
                     if ($(ev.currentTarget).val().match(/(martyr|martir|mártir|märtyr)/i) !== null) {
                         $row.find('.litEventColor').multiselect('deselectAll', false).multiselect('select', 'red');
-                        $CALENDAR.LitCal[eventKey].Festivity.color = [ 'red' ];
+                        $CALENDAR.litcal[eventKey].festivity.color = [ 'red' ];
                     } else {
                         $row.find('.litEventColor').multiselect('deselectAll', false).multiselect('select', 'white');
-                        $CALENDAR.LitCal[eventKey].Festivity.color = [ 'white' ];
+                        $CALENDAR.litcal[eventKey].festivity.color = [ 'white' ];
                     }
                     break;
                 case 'carouselItemFeasts':
-                    $CALENDAR.LitCal[eventKey].Festivity.grade = 4;
+                    $CALENDAR.litcal[eventKey].festivity.grade = 4;
                     break;
                 case 'carouselItemMemorials':
-                    $CALENDAR.LitCal[eventKey].Festivity.grade = 3;
+                    $CALENDAR.litcal[eventKey].festivity.grade = 3;
                     break;
                 case 'carouselItemOptionalMemorials':
-                    $CALENDAR.LitCal[eventKey].Festivity.grade = 2;
+                    $CALENDAR.litcal[eventKey].festivity.grade = 2;
                     break;
             }
         }
     } else if ($(ev.currentTarget).hasClass('litEventDay')) {
         if ($row.find('.litEventName').val() != "") {
             eventKey = $row.find('.litEventName').attr('data-valuewas');
-            if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
-                $CALENDAR.LitCal[eventKey].Festivity.day = parseInt($(ev.currentTarget).val());
+            if ($CALENDAR.litcal.hasOwnProperty(eventKey)) {
+                $CALENDAR.litcal[eventKey].festivity.day = parseInt($(ev.currentTarget).val());
             }
         }
     } else if ($(ev.currentTarget).hasClass('litEventMonth')) {
         let selcdMonth = parseInt($(ev.currentTarget).val());
         if ($row.find('.litEventName').val() != "") {
             eventKey = $row.find('.litEventName').attr('data-valuewas');
-            if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
-                $CALENDAR.LitCal[eventKey].Festivity.month = selcdMonth;
+            if ($CALENDAR.litcal.hasOwnProperty(eventKey)) {
+                $CALENDAR.litcal[eventKey].festivity.month = selcdMonth;
             }
         }
         $row.find('.litEventDay').attr('max', selcdMonth === FEBRUARY ? "28" : (monthsOfThirty.includes(selcdMonth) ? "30" : "31"));
@@ -492,52 +492,52 @@ $(document).on('change', '.litEvent', ev => {
     } else if ($(ev.currentTarget).hasClass('litEventCommon')) {
         if ($row.find('.litEventName').val() !== "") {
             eventKey = $row.find('.litEventName').attr('data-valuewas');
-            if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
-                $CALENDAR.LitCal[eventKey].Festivity.common = $(ev.currentTarget).val();
+            if ($CALENDAR.litcal.hasOwnProperty(eventKey)) {
+                $CALENDAR.litcal[eventKey].festivity.common = $(ev.currentTarget).val();
                 let eventColors = [];
-                if ($CALENDAR.LitCal[eventKey].Festivity.common.some( m => /Martyrs/.test(m) )) {
+                if ($CALENDAR.litcal[eventKey].festivity.common.some( m => /Martyrs/.test(m) )) {
                     eventColors.push('red');
                 }
-                if ($CALENDAR.LitCal[eventKey].Festivity.common.some( m => /(Blessed Virgin Mary|Pastors|Doctors|Virgins|Holy Men and Women|Dedication of a Church)/.test(m) ) ) {
+                if ($CALENDAR.litcal[eventKey].festivity.common.some( m => /(Blessed Virgin Mary|Pastors|Doctors|Virgins|Holy Men and Women|Dedication of a Church)/.test(m) ) ) {
                     eventColors.push('white');
                 }
                 $row.find('.litEventColor').multiselect('deselectAll', false).multiselect('select', eventColors);
-                $CALENDAR.LitCal[eventKey].Festivity.color = eventColors;
+                $CALENDAR.litcal[eventKey].festivity.color = eventColors;
             }
         }
     } else if ($(ev.currentTarget).hasClass('litEventColor')) {
         if ($row.find('.litEventName').val() != "") {
             eventKey = $row.find('.litEventName').attr('data-valuewas');
-            if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
-                $CALENDAR.LitCal[eventKey].Festivity.color = $(ev.currentTarget).val();
+            if ($CALENDAR.litcal.hasOwnProperty(eventKey)) {
+                $CALENDAR.litcal[eventKey].festivity.color = $(ev.currentTarget).val();
             }
         }
     } else if ($(ev.currentTarget).hasClass('litEventSinceYear')) {
         if ($row.find('.litEventName').val() != "") {
             eventKey = $row.find('.litEventName').attr('data-valuewas');
-            if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
-                $CALENDAR.LitCal[eventKey].Metadata.sinceYear = parseInt($(ev.currentTarget).val());
+            if ($CALENDAR.litcal.hasOwnProperty(eventKey)) {
+                $CALENDAR.litcal[eventKey].metadata.since_year = parseInt($(ev.currentTarget).val());
             }
         }
     } else if ($(ev.currentTarget).hasClass('litEventUntilYear')) {
         if ($row.find('.litEventName').val() != "") {
             eventKey = $row.find('.litEventName').attr('data-valuewas');
-            if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
+            if ($CALENDAR.litcal.hasOwnProperty(eventKey)) {
                 if($(ev.currentTarget).val() !== '') {
-                    $CALENDAR.LitCal[eventKey].Metadata.untilYear = parseInt($(ev.currentTarget).val());
+                    $CALENDAR.litcal[eventKey].metadata.until_year = parseInt($(ev.currentTarget).val());
                 } else {
-                    delete $CALENDAR.LitCal[eventKey].Metadata.untilYear;
+                    delete $CALENDAR.litcal[eventKey].metadata.until_year;
                 }
             }
         }
     } else if ($(ev.currentTarget).hasClass('litEventStrtotimeSwitch')) {
         if ($row.find('.litEventName').val() != "") {
             eventKey = $row.find('.litEventName').attr('data-valuewas');
-            if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
+            if ($CALENDAR.litcal.hasOwnProperty(eventKey)) {
                 if(false === $(ev.currentTarget).prop('checked')) {
-                    delete $CALENDAR.LitCal[eventKey].Metadata.strtotime;
-                    $CALENDAR.LitCal[eventKey].Festivity.Day = 1;
-                    $CALENDAR.LitCal[eventKey].Festivity.Month = 1;
+                    delete $CALENDAR.litcal[eventKey].metadata.strtotime;
+                    $CALENDAR.litcal[eventKey].festivity.day = 1;
+                    $CALENDAR.litcal[eventKey].festivity.month = 1;
                     let $strToTimeFormGroup = $(ev.currentTarget).closest('.form-group');
                     $strToTimeFormGroup.removeClass('col-sm-3').addClass('col-sm-2');
                     let $litEventStrtotime = $strToTimeFormGroup.find('.litEventStrtotime');
@@ -557,9 +557,9 @@ $(document).on('change', '.litEvent', ev => {
                     $strToTimeFormGroup.append(formRow);
                     $strToTimeFormGroup.find('.month-label').text(messages[ 'Month' ]).attr('for',monthId);
                 } else {
-                    delete $CALENDAR.LitCal[eventKey].Festivity.Day;
-                    delete $CALENDAR.LitCal[eventKey].Festivity.Month;
-                    $CALENDAR.LitCal[eventKey].Metadata.strtotime = '';
+                    delete $CALENDAR.litcal[eventKey].festivity.day;
+                    delete $CALENDAR.litcal[eventKey].festivity.month;
+                    $CALENDAR.litcal[eventKey].metadata.strtotime = '';
                     $row.find('.litEventDay').closest('.form-group').remove();
                     let $litEventMonthFormGrp = $(ev.currentTarget).closest('.form-group');
                     let $litEventMonth = $litEventMonthFormGrp.find('.litEventMonth');
@@ -582,8 +582,8 @@ $(document).on('change', '.litEvent', ev => {
     } else if ($(ev.currentTarget).hasClass('litEventStrtotime')) {
         if ($row.find('.litEventName').val() != "") {
             eventKey = $row.find('.litEventName').attr('data-valuewas');
-            if ($CALENDAR.LitCal.hasOwnProperty(eventKey)) {
-                $CALENDAR.LitCal[eventKey].Metadata.strtotime = $(ev.currentTarget).val();
+            if ($CALENDAR.litcal.hasOwnProperty(eventKey)) {
+                $CALENDAR.litcal[eventKey].metadata.strtotime = $(ev.currentTarget).val();
             }
         }
     }
@@ -599,17 +599,17 @@ $(document).on('click', '#saveDiocesanCalendar_btn', () => {
     }
     if( diocesanOvveridesDefined() ) {
         //console.log( 'This diocesan calendar has defined some options that will override the national calendar.' );
-        saveObj.CalData.Overrides = {};
+        saveObj.CalData.overrides = {};
         if( $('#diocesanCalendarOverrideEpiphany').val() !== "" ) {
-            saveObj.CalData.Overrides.Epiphany = $('#diocesanCalendarOverrideEpiphany').val();
+            saveObj.CalData.overrides.epiphany = $('#diocesanCalendarOverrideEpiphany').val();
             //console.log( 'Epiphany in this diocese will override Epiphany in the national calendar.' );
         }
         if( $('#diocesanCalendarOverrideAscension').val() !== "" ) {
-            saveObj.CalData.Overrides.Ascension = $('#diocesanCalendarOverrideAscension').val();
+            saveObj.CalData.overrides.ascension = $('#diocesanCalendarOverrideAscension').val();
             //console.log( 'Ascension in this diocese will override Ascension in the national calendar.' );
         }
         if( $('#diocesanCalendarOverrideCorpusChristi').val() !== "" ) {
-            saveObj.CalData.Overrides.CorpusChristi = $('#diocesanCalendarOverrideCorpusChristi').val();
+            saveObj.CalData.overrides.corpus_christi = $('#diocesanCalendarOverrideCorpusChristi').val();
             //console.log( 'Corpus Christi in this diocese will override Corpus Christi in the national calendar.' );
         }
     }
@@ -758,13 +758,13 @@ $(document).on('click', '.actionPromptButton', ev => {
     if( existingFestivityTag !== '' ) {
         const litevent = FestivityCollection[existingFestivityTag];
 
-        $row.find(`#onTheFly${currentUniqid}Grade`).val(litevent.GRADE);
-        $row.find(`#onTheFly${currentUniqid}Common`).multiselect('select', litevent.COMMON)
-        const colorVal = Array.isArray( litevent.COLOR ) ? litevent.COLOR : litevent.COLOR.split(',');
+        $row.find(`#onTheFly${currentUniqid}Grade`).val(litevent.grade);
+        $row.find(`#onTheFly${currentUniqid}Common`).multiselect('select', litevent.common)
+        const colorVal = Array.isArray( litevent.color ) ? litevent.color : litevent.color.split(',');
         $row.find(`.litEventColor`).multiselect('select', colorVal);
 
         if(FormControls.settings.monthField === false) {
-            $row.find(`#onTheFly${currentUniqid}Month > option[value]:not([value=${litevent.MONTH}])`).prop('disabled',true);
+            $row.find(`#onTheFly${currentUniqid}Month > option[value]:not([value=${litevent.month}])`).prop('disabled',true);
         }
     }
 
@@ -812,33 +812,33 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
             console.log(data);
             switch(category) {
                 case 'WIDERREGIONCALENDAR':
-                    $('#widerRegionIsMultilingual').prop('checked', data.Metadata.IsMultilingual);
+                    $('#widerRegionIsMultilingual').prop('checked', data.metadata.multilingual);
                     FormControls.settings.decreeURLField = true;
                     FormControls.settings.decreeLangMapField = true;
-                    $('#widerRegionLanguages').multiselect('deselectAll', false).multiselect('select', data.Metadata.Languages);
+                    $('#widerRegionLanguages').multiselect('deselectAll', false).multiselect('select', data.metadata.languages);
                     break;
                 case 'NATIONALCALENDAR':
                     FormControls.settings.decreeURLField = true;
                     FormControls.settings.decreeLangMapField = false;
-                    const { Settings, Metadata } = data;
-                    $('#nationalCalendarSettingEpiphany').val( Settings.Epiphany );
-                    $('#nationalCalendarSettingAscension').val( Settings.Ascension );
-                    $('#nationalCalendarSettingCorpusChristi').val( Settings.CorpusChristi );
-                    $('#nationalCalendarSettingLocale').val( Settings.Locale );
-                    $('#publishedRomanMissalList').empty().append( '<li class="list-group-item">' + Metadata.Missals.join('</li><li class="list-group-item">') + '</li>' );
-                    $('#associatedWiderRegion').val( Metadata.WiderRegion.name );
-                    $('#nationalCalendarSettingHighPriest').prop('checked', Settings.EternalHighPriest );
+                    const { settings, metadata } = data;
+                    $('#nationalCalendarSettingEpiphany').val( settings.epiphany );
+                    $('#nationalCalendarSettingAscension').val( settings.ascension );
+                    $('#nationalCalendarSettingCorpusChristi').val( settings.corpus_christi );
+                    $('#nationalCalendarSettingLocale').val( settings.locale );
+                    $('#publishedRomanMissalList').empty().append( '<li class="list-group-item">' + metadata.missals.join('</li><li class="list-group-item">') + '</li>' );
+                    $('#associatedWiderRegion').val( metadata.wider_region.name );
+                    $('#nationalCalendarSettingHighPriest').prop('checked', settings.eternal_high_priest );
             }
             $('.regionalNationalDataForm').empty();
-            data.LitCal.forEach((el) => {
+            data.litcal.forEach((el) => {
                 let currentUniqid = FormControls.uniqid;
-                let existingFestivityTag = el.Festivity.hasOwnProperty( 'tag' ) ? el.Festivity.tag : null;
-                if( el.Metadata.action === RowAction.CreateNew.description && FestivityCollection.hasOwnProperty( existingFestivityTag ) ) {
-                    el.Metadata.action = RowAction.CreateNewFromExisting.description;
+                let existingFestivityTag = el.festivity.event_key ?? null;
+                if( el.metadata.action === RowAction.CreateNew.description && FestivityCollection.hasOwnProperty( existingFestivityTag ) ) {
+                    el.metadata.action = RowAction.CreateNewFromExisting.description;
                 }
-                setFormSettings( el.Metadata.action );
-                if( el.Metadata.action === RowAction.SetProperty.description ) {
-                    setFormSettingsForProperty( el.Metadata.property );
+                setFormSettings( el.metadata.action );
+                if( el.metadata.action === RowAction.SetProperty.description ) {
+                    setFormSettingsForProperty( el.metadata.property );
                 }
 
                 let rowStr = FormControls.CreatePatronRow( el );
@@ -847,11 +847,11 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                 $('.regionalNationalDataForm').append($row);
 
                 let $formrow = $row.find('.form-group').closest('.row');
-                $formrow.data('action', el.Metadata.action).attr('data-action', el.Metadata.action);
-                if( el.Metadata.action === RowAction.SetProperty.description ) {
-                    $formrow.data('prop', el.Metadata.property).attr('data-prop', el.Metadata.property);
+                $formrow.data('action', el.metadata.action).attr('data-action', el.metadata.action);
+                if( el.metadata.action === RowAction.SetProperty.description ) {
+                    $formrow.data('prop', el.metadata.property).attr('data-prop', el.metadata.property);
                 }
-                if( el.Festivity.hasOwnProperty('common') && el.Festivity.common.includes('Proper') ) {
+                if( el.festivity.hasOwnProperty('common') && el.festivity.common.includes('Proper') ) {
                     $formrow.find('.litEventReadings').prop('disabled',false);
                 }
 
@@ -867,19 +867,19 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                     }
                 }).multiselect('deselectAll', false);
 
-                if( el.Festivity.hasOwnProperty( 'color' ) === false && existingFestivityTag !== null ) {
+                if( el.festivity.hasOwnProperty( 'color' ) === false && existingFestivityTag !== null ) {
                     console.log( 'retrieving default festivity info for ' + existingFestivityTag );
                     console.log( FestivityCollection[existingFestivityTag] );
-                    el.Festivity.color = FestivityCollection[existingFestivityTag].COLOR;
+                    el.festivity.color = FestivityCollection[existingFestivityTag].color;
                 }
-                let colorVal = Array.isArray(el.Festivity.color) ? el.Festivity.color : el.Festivity.color.split(',');
+                let colorVal = Array.isArray(el.festivity.color) ? el.festivity.color : el.festivity.color.split(',');
                 $row.find('.litEventColor').multiselect('select', colorVal);
                 if(FormControls.settings.colorField === false) {
                     $row.find('.litEventColor').multiselect('disable');
                 }
 
-                if( el.Festivity.hasOwnProperty( 'common' ) ) {
-                    let common = Array.isArray( el.Festivity.common ) ? el.Festivity.common : el.Festivity.common.split(',');
+                if( el.festivity.hasOwnProperty( 'common' ) ) {
+                    let common = Array.isArray( el.festivity.common ) ? el.festivity.common : el.festivity.common.split(',');
                     if(FormControls.settings.commonFieldShow) {
                         setCommonMultiselect( $row, common );
                         if(FormControls.settings.commonField === false) {
@@ -889,18 +889,18 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                 }
 
                 if(FormControls.settings.gradeFieldShow) {
-                    $row.find(`#onTheFly${currentUniqid}Grade`).val(el.Festivity.grade);
+                    $row.find(`#onTheFly${currentUniqid}Grade`).val(el.festivity.grade);
                     if(FormControls.settings.gradeField === false) {
                         $row.find(`#onTheFly${currentUniqid}Grade`).prop('disabled', true);
                     }
                 }
 
-                if(FormControls.settings.missalField && el.Metadata.hasOwnProperty('missal') ) {
-                    $row.find(`#onTheFly${currentUniqid}Missal`).val(el.Metadata.missal);
+                if(FormControls.settings.missalField && el.metadata.hasOwnProperty('missal') ) {
+                    $row.find(`#onTheFly${currentUniqid}Missal`).val(el.metadata.missal);
                 }
 
                 if(FormControls.settings.monthField === false) {
-                    $row.find(`#onTheFly${currentUniqid}Month > option[value]:not([value=${el.Festivity.month}])`).prop('disabled',true);
+                    $row.find(`#onTheFly${currentUniqid}Month > option[value]:not([value=${el.festivity.month}])`).prop('disabled',true);
                 }
             });
             $('.serializeRegionalNationalData').prop('disabled', false);
@@ -1028,22 +1028,22 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
             const regionNamesLocalized = new Intl.DisplayNames(['en'], { type: 'region' });
             const widerRegion = $('#associatedWiderRegion').val();
             finalObj = {
-                "LitCal": [],
-                "Settings": {
-                    "Epiphany": $('#nationalCalendarSettingEpiphany').val(),
-                    "Ascension": $('#nationalCalendarSettingAscension').val(),
-                    "CorpusChristi": $('#nationalCalendarSettingCorpusChristi').val(),
-                    "EternalHighPriest": $('#nationalCalendarSettingHighPriest').is(':checked'),
-                    "Locale": lcl
+                "litcal": [],
+                "settings": {
+                    "epiphany": $('#nationalCalendarSettingEpiphany').val(),
+                    "ascension": $('#nationalCalendarSettingAscension').val(),
+                    "corpus_christi": $('#nationalCalendarSettingCorpusChristi').val(),
+                    "eternal_high_priest": $('#nationalCalendarSettingHighPriest').is(':checked'),
+                    "locale": lcl
                 },
-                "Metadata": {
-                    "Region": regionNamesLocalized.of( messages.countryISOCodes[$('.regionalNationalCalendarName').val().toUpperCase()] ).toUpperCase().replace(/[.]/g,'_'),
-                    "WiderRegion": {
+                "metadata": {
+                    "region": regionNamesLocalized.of( messages.countryISOCodes[$('.regionalNationalCalendarName').val().toUpperCase()] ).toUpperCase().replace(/[.]/g,'_'),
+                    "wider_region": {
                         "name": widerRegion,
-                        "jsonFile": `nations/${widerRegion}.json`,
-                        "i18nFile": `nations/${widerRegion.toUpperCase()}/${lcl}.json`
+                        "json_file": `nations/${widerRegion}.json`,
+                        "i18n_file": `nations/${widerRegion.toUpperCase()}/${lcl}.json`
                     },
-                    "Missals": $.map( $('#publishedRomanMissalList li'), el => { return $(el).text() })
+                    "missals": $.map( $('#publishedRomanMissalList li'), el => { return $(el).text() })
                 }
             }
             break;
@@ -1064,12 +1064,12 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
                 return prev;
             }, {});
             finalObj = {
-                "LitCal": [],
-                "NationalCalendars": nationalCalendars,
-                "Metadata": {
-                    "IsMultilingual": $('#widerRegionIsMultilingual').prop('checked'),
-                    "Languages": $('#widerRegionLanguages').val(),
-                    "WiderRegion": $('#widerRegionCalendarName').val()
+                "litcal": [],
+                "national_calendars": nationalCalendars,
+                "metadata": {
+                    "multilingual": $('#widerRegionIsMultilingual').prop('checked'),
+                    "languages": $('#widerRegionLanguages').val(),
+                    "wider_region": $('#widerRegionCalendarName').val()
                 }
             }
             break;
@@ -1078,13 +1078,13 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
     $('.regionalNationalDataForm .row').each((idx, el) => {
         const action = $(el).data('action');
         let rowData = {
-            "Festivity": {},
-            "Metadata": {
+            "festivity": {},
+            "metadata": {
                 "action": action
             }
         }
         if( action === RowAction.SetProperty.description ) {
-            rowData.Metadata.property = $(el).data('prop');
+            rowData.metadata.property = $(el).data('prop');
         }
         expectedJSONProperties[action].forEach(prop => {
             let propClass = '.litEvent' + prop.charAt(0).toUpperCase() + prop.substring(1).toLowerCase();
@@ -1094,49 +1094,49 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
                     val = parseInt( val );
                 }
                 if( metadataProps.includes(prop) ) {
-                    rowData.Metadata[prop] = val;
+                    rowData.metadata[prop] = val;
                 } else {
-                    rowData.Festivity[prop] = val;
+                    rowData.festivity[prop] = val;
                 }
             }
         });
-        if( action === 'createNew' && rowData.Festivity.common.includes( 'Proper' ) ) {
-            rowData.Festivity.readings = {
+        if( action === 'createNew' && rowData.festivity.common.includes( 'Proper' ) ) {
+            rowData.festivity.readings = {
                 FIRST_READING: $(el).find('.litEventReadings_FIRST_READING').val(),
                 RESPONSORIAL_PSALM: $(el).find('.litEventReadings_RESPONSORIAL_PSALM').val(),
                 ALLELUIA_VERSE: $(el).find('.litEventReadings_ALLELUIA_VERSE').val(),
                 GOSPEL: $(el).find('.litEventReadings_GOSPEL').val()
             };
             if( $(el).find('.litEventReadings_SECOND_READING').val() !== "" ) {
-                rowData.Festivity.readings.SECOND_READING = $(el).find('.litEventReadings_SECOND_READING').val();
+                rowData.festivity.readings.SECOND_READING = $(el).find('.litEventReadings_SECOND_READING').val();
             }
         }
 
         if( $(el).find('.litEventSinceYear').length ) {
             let sinceYear = parseInt($(el).find('.litEventSinceYear').val());
             if( sinceYear > 1582 && sinceYear <= 9999 ) {
-                rowData.Metadata.sinceYear = sinceYear;
+                rowData.metadata.since_year = sinceYear;
             }
         }
         if( $(el).find('.litEventUntilYear').length ) {
             let untilYear = parseInt($(el).find('.litEventUntilYear').val());
             if( untilYear >= 1970 && untilYear <= 9999 ) {
-                rowData.Metadata.untilYear = untilYear;
+                rowData.metadata.until_year = untilYear;
             }
         }
         if( $(el).find('.litEventDecreeURL').length ) {
             let decreeURL = $(el).find('.litEventDecreeURL').val();
             if( decreeURL !== '' ) {
-                rowData.Metadata.decreeURL = decreeURL;
+                rowData.metadata.url = decreeURL;
             }
         }
         if( $(el).find('.litEventDecreeLangs').length ) {
             let decreeLangs = $(el).find('.litEventDecreeLangs').val();
             if( decreeLangs !== '' ) {
-                rowData.Metadata.decreeLangs = decreeLangs.split(',').reduce((prevVal, curVal) => { let assoc = curVal.split('='); prevVal[assoc[0]] = assoc[1]; return prevVal; }, {}) ;
+                rowData.metadata.url_lang_map = decreeLangs.split(',').reduce((prevVal, curVal) => { let assoc = curVal.split('='); prevVal[assoc[0]] = assoc[1]; return prevVal; }, {}) ;
             }
         }
-        finalObj.LitCal.push(rowData);
+        finalObj.litcal.push(rowData);
     });
 
     //console.log(finalObj);

@@ -116,22 +116,22 @@ class FormControls {
         if( element !== null ) {
             if( typeof element === 'string' ) {
                 festivity = lowercaseKeys( FestivityCollection[element] );
-                festivity.tag = element;
-                festivity.sinceYear = 1970;
-                //festivity.untilYear = null;
-                festivity.decreeURL = '';
-                festivity.decreeLangs = {};
+                festivity.event_key = element;
+                festivity.since_year = 1970;
+                //festivity.until_year = null;
+                festivity.url = '';
+                festivity.url_lang_map = {};
             }
             if( typeof element === 'object' ) {
                 festivity = {
-                    ...element.Festivity,
-                    ...element.Metadata
+                    ...element.festivity,
+                    ...element.metadata
                 };
-                if( festivity.hasOwnProperty( 'untilYear' ) === false ) {
-                    //festivity.untilYear = null;
+                if( festivity.hasOwnProperty( 'until_year' ) === false ) {
+                    //festivity.until_year = null;
                 }
                 if( festivity.hasOwnProperty( 'color' ) === false ) {
-                    festivity.color = FestivityCollection.hasOwnProperty(festivity.tag) ? FestivityCollection[festivity.tag].COLOR : [];
+                    festivity.color = FestivityCollection.hasOwnProperty(festivity.event_key) ? FestivityCollection[festivity.event_key].COLOR : [];
                 }
             }
             //console.log(festivity);
@@ -153,7 +153,7 @@ class FormControls {
 
         formRow += `<div class="form-group col-sm-6">`;
         if(FormControls.settings.tagField === false){
-            formRow += `<input type="hidden" class="litEventTag" id="onTheFly${FormControls.uniqid}Tag" value="${festivity !== null ? festivity.tag : ''}" />`;
+            formRow += `<input type="hidden" class="litEventTag" id="onTheFly${FormControls.uniqid}Tag" value="${festivity !== null ? festivity.event_key : ''}" />`;
         }
         formRow += `<label for="onTheFly${FormControls.uniqid}Name">${messages[ "Name" ]}</label>
         <input type="text" class="form-control litEvent litEventName${festivity !== null && typeof festivity.name==='undefined' ? ` is-invalid` : ``}" id="onTheFly${FormControls.uniqid}Name" value="${festivity !== null ? festivity.name : ''}"${FormControls.settings.nameField === false ? ' readonly' : ''} />
@@ -163,14 +163,14 @@ class FormControls {
         if (FormControls.settings.fromYearField) {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}FromYear">${messages[ "Since" ]}</label>
-            <input type="number" min="1582" max="9999" class="form-control litEvent litEventSinceYear" id="onTheFly${FormControls.uniqid}FromYear" value="${festivity !== null ? festivity.sinceYear : ''}" />
+            <input type="number" min="1582" max="9999" class="form-control litEvent litEventSinceYear" id="onTheFly${FormControls.uniqid}FromYear" value="${festivity !== null ? festivity.since_year : ''}" />
             </div>`;
         }
 
         if (FormControls.settings.untilYearField) {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}UntilYear">${messages[ "Until" ]}</label>
-            <input type="number" min="1582" max="9999" class="form-control litEvent litEventUntilYear" id="onTheFly${FormControls.uniqid}UntilYear" value="${festivity !== null ? festivity.untilYear : ''}" />
+            <input type="number" min="1582" max="9999" class="form-control litEvent litEventUntilYear" id="onTheFly${FormControls.uniqid}UntilYear" value="${festivity !== null ? festivity.until_year : ''}" />
             </div>`;
         }
 
@@ -213,10 +213,10 @@ class FormControls {
         if (FormControls.settings.tagField) {
             formRow += `<div class="form-group col-sm-2">
             <label for="onTheFly${FormControls.uniqid}Tag">${messages[ "Tag" ]}</label>
-            <input type="text" value="${festivity !== null ? festivity.tag : ''}" class="form-control litEvent litEventTag" id="onTheFly${FormControls.uniqid}Tag" />
+            <input type="text" value="${festivity !== null ? festivity.event_key : ''}" class="form-control litEvent litEventTag" id="onTheFly${FormControls.uniqid}Tag" />
             </div>`;
         }
-        
+
         if (FormControls.settings.gradeFieldShow) {
             formRow +=  messages.gradeTemplate.formatUnicorn({uniqid:FormControls.uniqid,colWidth:4});
         }
@@ -251,15 +251,15 @@ class FormControls {
         if(FormControls.settings.decreeURLField) {
             formRow += `<div class="form-group col-sm-6">
             <label for="onTheFly${FormControls.uniqid}DecreeURL">${messages[ "Decree URL" ]}<i class="ms-2 fas fa-info-circle" title="Use %s in place of the language code if using a language mapping"></i></label>
-            <input type="text" class="form-control litEvent litEventDecreeURL" value="${festivity !== null && typeof festivity.decreeURL !== 'undefined' ? festivity.decreeURL : ''}" id="onTheFly${FormControls.uniqid}DecreeURL" />
+            <input type="text" class="form-control litEvent litEventDecreeURL" value="${festivity !== null && typeof festivity.url !== 'undefined' ? festivity.url : ''}" id="onTheFly${FormControls.uniqid}DecreeURL" />
             </div>`;
         }
 
         if(FormControls.settings.decreeLangMapField) {
-            let decreeLangs = festivity !== null && typeof festivity.decreeLangs !== 'undefined' ? Object.keys(festivity.decreeLangs).map(key => key+'='+festivity.decreeLangs[key] ) : null;
+            let decreeLangs = festivity !== null && typeof festivity.url_lang_map !== 'undefined' ? Object.keys(festivity.url_lang_map).map(key => key+'='+festivity.url_lang_map[key] ) : null;
             formRow += `<div class="form-group col-sm-6">
             <label for="onTheFly${FormControls.uniqid}DecreeLangs">${messages[ "Decree Langs" ]}<i class="ms-2 fas fa-info-circle" title="Use a comma separated list of key=value pairings, e.g. DE=ge,EN=en. Key is uppercased two letter ISO code, value is (generally lowercased) two letter representation used within the actual URL"></i></label>
-            <input type="text" class="form-control litEvent litEventDecreeLangs" value="${festivity !== null && typeof festivity.decreeLangs !== 'undefined' ? decreeLangs.join(',') : ''}" id="onTheFly${FormControls.uniqid}DecreeLangs" />
+            <input type="text" class="form-control litEvent litEventDecreeLangs" value="${festivity !== null && typeof festivity.url_lang_map !== 'undefined' ? festivity.url_lang_map.join(',') : ''}" id="onTheFly${FormControls.uniqid}DecreeLangs" />
             </div>`;
         }
 
@@ -274,40 +274,40 @@ class FormControls {
         let festivity = null;
         if( element !== null ) {
             if( typeof element === 'string' ) {
-                festivity = lowercaseKeys( FestivityCollection[element] );
-                festivity.tag = element;
-                festivity.sinceYear = 1970;
-                festivity.untilYear = '';
-                festivity.decreeURL = '';
-                festivity.decreeLangs = {};
+                //festivity = lowercaseKeys( FestivityCollection[element] );
+                festivity.event_key = element;
+                festivity.since_year = 1970;
+                festivity.until_year = '';
+                festivity.url = '';
+                festivity.url_lang_map = {};
             }
             if( typeof element === 'object' ) {
-                element.Festivity = lowercaseKeys( element.Festivity );
+                //element.festivity = lowercaseKeys( element.festivity );
                 festivity = {
-                    ...element.Festivity,
-                    ...element.Metadata
+                    ...element.festivity,
+                    ...element.metadata
                 };
-                if( false === festivity.hasOwnProperty( 'untilYear' ) ) {
-                    festivity.untilYear = '';
+                if( false === festivity.hasOwnProperty( 'until_year' ) ) {
+                    festivity.until_year = '';
                 }
                 if( false === festivity.hasOwnProperty( 'color' ) ) {
-                    festivity.color = FestivityCollection.hasOwnProperty(festivity.tag) && FestivityCollection[festivity.tag].hasOwnProperty( 'COLOR' ) ? FestivityCollection[festivity.tag].COLOR : [];
+                    festivity.color = FestivityCollection.hasOwnProperty(festivity.event_key) && FestivityCollection[festivity.event_key].hasOwnProperty( 'color' ) ? FestivityCollection[festivity.event_key].color : [];
                 }
             }
             if( false === festivity.hasOwnProperty( 'name' ) ) {
-                if( FestivityCollection.hasOwnProperty( festivity.tag ) && FestivityCollection[festivity.tag].hasOwnProperty( 'NAME' ) ) {
-                    festivity.name = FestivityCollection[festivity.tag].NAME;
+                if( FestivityCollection.hasOwnProperty( festivity.event_key ) && FestivityCollection[festivity.event_key].hasOwnProperty( 'name' ) ) {
+                    festivity.name = FestivityCollection[festivity.event_key].name;
                 }
             }
             if( false === festivity.hasOwnProperty( 'day' ) ) {
-                if( FestivityCollection.hasOwnProperty(festivity.tag) && FestivityCollection[festivity.tag].hasOwnProperty( 'DAY' ) ) {
-                    festivity.day = FestivityCollection[festivity.tag].DAY;
+                if( FestivityCollection.hasOwnProperty(festivity.event_key) && FestivityCollection[festivity.event_key].hasOwnProperty( 'day' ) ) {
+                    festivity.day = FestivityCollection[festivity.event_key].day;
                 }
             }
             if( false === festivity.hasOwnProperty( 'month' ) ) {
                 console.log( 'festivity does not have a month property, now trying to retrieve info...' );
-                if( FestivityCollection.hasOwnProperty(festivity.tag) && FestivityCollection[festivity.tag].hasOwnProperty( 'MONTH' ) ) {
-                    festivity.month = FestivityCollection[festivity.tag].MONTH;
+                if( FestivityCollection.hasOwnProperty(festivity.event_key) && FestivityCollection[festivity.event_key].hasOwnProperty( 'month' ) ) {
+                    festivity.month = FestivityCollection[festivity.event_key].month;
                 } else {
                     console.log( 'could not retrieve month info...' );
                 }
@@ -331,7 +331,7 @@ class FormControls {
 
         formRow += `<div class="form-group col-sm-6">`;
         if(FormControls.settings.tagField === false){
-            formRow += `<input type="hidden" class="litEventTag" id="onTheFly${FormControls.uniqid}Tag" value="${festivity !== null ? festivity.tag : ''}" />`;
+            formRow += `<input type="hidden" class="litEventTag" id="onTheFly${FormControls.uniqid}Tag" value="${festivity !== null ? festivity.event_key : ''}" />`;
         }
         formRow += `<label for="onTheFly${FormControls.uniqid}Name">${messages[ "Name" ]}</label>
         <input type="text" class="form-control litEvent litEventName${festivity !== null && typeof festivity.name==='undefined' ? ` is-invalid` : ``}" id="onTheFly${FormControls.uniqid}Name" value="${festivity !== null ? festivity.name : ''}"${FormControls.settings.nameField === false ? ' readonly' : ''} />
@@ -341,14 +341,14 @@ class FormControls {
         if (FormControls.settings.fromYearField) {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}FromYear">${messages[ "Since" ]}</label>
-            <input type="number" min="1582" max="9999" class="form-control litEvent litEventFromYear" id="onTheFly${FormControls.uniqid}FromYear" value="${festivity !== null ? festivity.sinceYear : ''}" />
+            <input type="number" min="1582" max="9999" class="form-control litEvent litEventFromYear" id="onTheFly${FormControls.uniqid}FromYear" value="${festivity !== null ? festivity.since_year : ''}" />
             </div>`;
         }
 
         if (FormControls.settings.untilYearField) {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}UntilYear">${messages[ "Until" ]}</label>
-            <input type="number" min="1582" max="9999" class="form-control litEvent litEventUntilYear" id="onTheFly${FormControls.uniqid}UntilYear" value="${festivity !== null ? festivity.untilYear : ''}" />
+            <input type="number" min="1582" max="9999" class="form-control litEvent litEventUntilYear" id="onTheFly${FormControls.uniqid}UntilYear" value="${festivity !== null ? festivity.until_year : ''}" />
             </div>`;
         }
 
@@ -369,14 +369,14 @@ class FormControls {
             <select class="form-select litEvent litEventStrtotime" id="onTheFly${FormControls.uniqid}StrToTime-dayOfTheWeek">`;
             for (let i = 0; i < 7; i++ ) {
                 let dayOfTheWeek = new Date(Date.UTC(2000, 0, 2+i));
-                formRow += `<option value="${daysOfTheWeek[i]}"${festivity.strtotime.dayOfTheWeek === daysOfTheWeek[i] ? ' selected' : '' }>${FormControls.weekdayFormatter.format(dayOfTheWeek)}</option>`;
+                formRow += `<option value="${daysOfTheWeek[i]}"${festivity.strtotime.day_of_the_week === daysOfTheWeek[i] ? ' selected' : '' }>${FormControls.weekdayFormatter.format(dayOfTheWeek)}</option>`;
             }
             formRow += `</select>
             <select class="form-select litEvent litEventStrtotime" id="onTheFly${FormControls.uniqid}StrToTime-relativeTime">
-                <option value="before"${festivity.strtotime.relativeTime === 'before' ? ' selected' : ''}>before</option>
-                <option value="after"${festivity.strtotime.relativeTime === 'after' ? ' selected' : ''}>after</option>
+                <option value="before"${festivity.strtotime.relative_time === 'before' ? ' selected' : ''}>before</option>
+                <option value="after"${festivity.strtotime.relative_time === 'after' ? ' selected' : ''}>after</option>
             </select>
-            <input list="existingFestivitiesList" value="${festivity.strtotime.festivityKey}" class="form-control litEvent litEventStrtotime existingFestivityName" id="onTheFly${FormControls.uniqid}StrToTime-festivityKey" required>
+            <input list="existingFestivitiesList" value="${festivity.strtotime.festivity_key}" class="form-control litEvent litEventStrtotime existingFestivityName" id="onTheFly${FormControls.uniqid}StrToTime-festivityKey" required>
             </div>`;
         } else {
             formRow += `<div class="form-group col-sm-1">
@@ -401,10 +401,10 @@ class FormControls {
         if (FormControls.settings.tagField) {
             formRow += `<div class="form-group col-sm-2">
             <label for="onTheFly${FormControls.uniqid}Tag">${messages[ "Tag" ]}</label>
-            <input type="text" value="${festivity !== null ? festivity.tag : ''}" class="form-control litEvent litEventTag" id="onTheFly${FormControls.uniqid}Tag" />
+            <input type="text" value="${festivity !== null ? festivity.event_key : ''}" class="form-control litEvent litEventTag" id="onTheFly${FormControls.uniqid}Tag" />
             </div>`;
         }
-        
+
         if (FormControls.settings.gradeFieldShow) {
             formRow +=  messages.gradeTemplate.formatUnicorn({uniqid:FormControls.uniqid,colWidth:2});
         }
@@ -429,15 +429,15 @@ class FormControls {
         if(FormControls.settings.decreeURLField) {
             formRow += `<div class="form-group col-sm-6">
             <label for="onTheFly${FormControls.uniqid}DecreeURL">${messages[ "Decree URL" ]}<i class="ms-2 fas fa-info-circle" title="Use %s in place of the language code if using a language mapping"></i></label>
-            <input type="text" class="form-control litEvent litEventDecreeURL" value="${festivity !== null && typeof festivity.decreeURL !== 'undefined' ? festivity.decreeURL : ''}" />
+            <input type="text" class="form-control litEvent litEventDecreeURL" value="${festivity !== null && typeof festivity.url !== 'undefined' ? festivity.url : ''}" />
             </div>`;
         }
 
         if(FormControls.settings.decreeLangMapField) {
-            let decreeLangs = festivity !== null && typeof festivity.decreeLangs !== 'undefined' ? Object.keys(festivity.decreeLangs).map(key => key+'='+festivity.decreeLangs[key] ) : null;
+            let decreeLangs = festivity !== null && typeof festivity.url_lang_map !== 'undefined' ? Object.keys(festivity.url_lang_map).map(key => key+'='+festivity.url_lang_map[key] ) : null;
             formRow += `<div class="form-group col-sm-4">
             <label for="onTheFly${FormControls.uniqid}DecreeLangs">${messages[ "Decree Langs" ]}<i class="ms-2 fas fa-info-circle" title="Use a comma separated list of key=value pairings, e.g. DE=ge,EN=en. Key is uppercased two letter ISO code, value is (generally lowercased) two letter representation used within the actual URL"></i></label>
-            <input type="text" class="form-control litEvent litEventDecreeLangs" value="${festivity !== null && typeof festivity.decreeLangs !== 'undefined' ? decreeLangs.join(',') : ''}" />
+            <input type="text" class="form-control litEvent litEventDecreeLangs" value="${festivity !== null && typeof festivity.url_lang_map !== 'undefined' ? festivity.url_lang_map.join(',') : ''}" />
             </div>`;
         }
 
@@ -596,7 +596,7 @@ const RANK = {
 }
 
 
-class litEvent {
+class LitEvent {
     constructor(name = "", color = "", grade = 0, common = "", day = 1, month = 1 ) {
         this.name = name;
         this.color = color;
@@ -617,10 +617,10 @@ const READINGS_PROPERTIES = [
 
 const integerVals = [ 'day', 'month', 'grade', 'sinceYear', 'untilYear' ];
 const expectedJSONProperties = {
-    'makePatron': [ 'tag', 'name', 'color', 'grade', 'day', 'month' ],
-    'setProperty': [ 'tag', 'name', 'grade', 'day', 'month' ],
-    'moveFestivity': [ 'tag', 'name', 'day', 'month', 'missal', 'reason' ],
-    'createNew': [ 'tag', 'name', 'color', 'grade', 'day', 'month', 'strtotime', 'common' ] //'readings' is only expected for createNew when common=Proper
+    'makePatron': [ 'event_key', 'name', 'color', 'grade', 'day', 'month' ],
+    'setProperty': [ 'event_key', 'name', 'grade', 'day', 'month' ],
+    'moveFestivity': [ 'event_key', 'name', 'day', 'month', 'missal', 'reason' ],
+    'createNew': [ 'event_key', 'name', 'color', 'grade', 'day', 'month', 'strtotime', 'common' ] //'readings' is only expected for createNew when common=Proper
 };
 const metadataProps = [ 'missal', 'reason' ];
 
@@ -687,7 +687,7 @@ export {
     FormControls,
     RowAction,
     RANK,
-    litEvent,
+    LitEvent,
     READINGS_PROPERTIES,
     integerVals,
     expectedJSONProperties,
