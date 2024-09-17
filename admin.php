@@ -255,7 +255,7 @@ function generateModalBody(bool $hasPropertyChange = false): void
     <datalist id="existingFestivitiesList">
     <?php
     foreach ($FestivityCollection as $key => $festivity) {
-        echo "<option value=\"{$key}\">{$festivity["NAME"]}</option>";
+        echo "<option value=\"{$key}\">{$festivity["name"]}</option>";
     }
     ?>
     </datalist>
