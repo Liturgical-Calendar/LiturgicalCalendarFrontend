@@ -40,7 +40,7 @@ class CurrentEndpoint {
      * @returns {string} The base URL of the API /calendar endpoint
      */
     static get apiBase() {
-        return `${RequestURLBase}calendar`
+        return `${CalendarURL}`
     };
     static calendarType   = null;
     static calendarId     = null;
