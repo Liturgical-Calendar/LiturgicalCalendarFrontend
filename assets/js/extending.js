@@ -40,7 +40,11 @@ toastr.options = {
     "hideMethod": "fadeOut"
 }
 
-
+const DataPathTranslate = {
+    "WIDERREGIONCALENDAR": 'widerregion',
+    "NATIONALCALENDAR": 'nation',
+    "DIOCESANCALENDAR": 'diocese'
+};
 const { LOCALE, LOCALE_WITH_REGION } = messages;
 const jsLocale = LOCALE.replace('_', '-');
 FormControls.jsLocale = jsLocale;
@@ -811,7 +815,7 @@ $(document).on('click', '.actionPromptButton', ev => {
 $(document).on('change', '.regionalNationalCalendarName', ev => {
     const category = ev.currentTarget.dataset.category;
     let key = ev.currentTarget.value;
-    let apiDataPath = `${RegionalDataURL}/${category}/`;
+    let apiDataPath = `${RegionalDataURL}/${DataPathTranslate[category]}/`;
     const headers = {
         'Accept': 'application/json'
     };
