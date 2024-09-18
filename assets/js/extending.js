@@ -953,7 +953,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
         $('.serializeRegionalNationalData').prop('disabled', false);
     }).catch(error => {
         console.error(error);
-        response.json().then(json => {
+        error.json().then(json => {
             console.error(json);
         })
         toastr["error"](error.status + ' ' + error.statusText + ': ' + error.text, "Error");
