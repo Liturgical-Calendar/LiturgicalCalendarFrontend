@@ -1243,6 +1243,10 @@ $(document).on('click', '#addLanguageEditionRomanMissal', ev => {
     $modal.modal('hide');
 });
 
+$(document).on('change', '#widerRegionIsMultilingual', ev => {
+    $('#widerRegionLanguages').prop('disabled', !$(ev.currentTarget).is(':checked'));
+});
+
 jQuery(document).ready(() => {
     let $carousel = $('.carousel').carousel();
 
