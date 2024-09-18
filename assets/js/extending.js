@@ -812,7 +812,7 @@ $(document).on('click', '.actionPromptButton', ev => {
 $(document).on('change', '.regionalNationalCalendarName', ev => {
     const category = ev.currentTarget.dataset.category;
     let key = ev.currentTarget.value;
-    let apiDataPath = `${RegionalDataURL}/'${category}/`;
+    let apiDataPath = `${RegionalDataURL}/${category}/`;
     const headers = {
         'Accept': 'application/json'
     };
