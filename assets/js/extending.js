@@ -816,9 +816,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
     const category = ev.currentTarget.dataset.category;
     let key = ev.currentTarget.value;
     let apiDataPath = `${RegionalDataURL}/${DataPathTranslate[category]}/`;
-    const headers = {
-        'Accept': 'application/json'
-    };
+    const headers = {};
     if ( category === 'WIDERREGIONCALENDAR' ) {
         let locale;
         ([key, locale] = ev.currentTarget.value.split(' - '));
