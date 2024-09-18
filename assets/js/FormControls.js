@@ -13,6 +13,7 @@ const DECEMBER  = 12;
 
 /**
  * Thirty days hath September, April, June, and November.
+ * Useful for setting the limit on the day input.
  */
 const monthsOfThirty = [SEPTEMBER, APRIL, JUNE, NOVEMBER];
 

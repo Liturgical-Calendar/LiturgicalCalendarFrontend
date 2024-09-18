@@ -1,3 +1,4 @@
+import { response } from 'express';
 import {
     FormControls,
     RowAction,
@@ -13,6 +14,11 @@ import {
 } from './FormControls.js';
 
 
+/**
+ * @function diocesanOvveridesDefined
+ * @description Returns true if at least one of the overrides for epiphany, ascension, or corpus christi have been set, false otherwise.
+ * @returns {boolean}
+ */
 const diocesanOvveridesDefined = () => {
     return ( $('#diocesanCalendarOverrideEpiphany').val() !== "" || $('#diocesanCalendarOverrideAscension').val() !== "" || $('#diocesanCalendarOverrideCorpusChristi').val() !== "" );
 }
@@ -804,31 +810,35 @@ $(document).on('click', '.actionPromptButton', ev => {
 });
 
 $(document).on('change', '.regionalNationalCalendarName', ev => {
-    const payload = {
-        "category": $(ev.currentTarget).data('category')
+    const category = ev.currentTarget.dataset.category;
+    let key = ev.currentTarget.value;
+    let apiDataPath = `${RegionalDataURL}/'${category}/`;
+    const headers = {
+        'Accept': 'application/json'
     };
-    if ( payload.category === 'WIDERREGIONCALENDAR' ) {
-        const [key, locale] = $(ev.currentTarget).val().split(' - ');
-        payload.key = key;
-        payload.locale = locale;
-    } else if (payload.category === 'NATIONALCALENDAR') {
-        payload.key = $(ev.currentTarget).val().toUpperCase();
-        if (payload.key === 'UNITED STATES') {
-            payload.key = 'USA';
+    if ( category === 'WIDERREGIONCALENDAR' ) {
+        let locale;
+        ([key, locale] = ev.currentTarget.value.split(' - '));
+        apiDataPath += key;
+        headers['Accept-Language'] = locale;
+    } else if (category === 'NATIONALCALENDAR') {
+        key = key.toUpperCase();
+        if (key === 'UNITED STATES') {
+            key = 'USA';
         }
+        apiDataPath += key;
+    } else {
+        apiDataPath += key;
     }
-    //console.log('category: ' + category + ', key = ' + key);
-    jQuery.ajax({
-        url: RegionalDataURL,
-        method: 'GET',
-        dataType: 'json',
-        //crossDomain: true,
-        data: payload,
-        statusCode: {
-            404: (xhr, textStatus, errorThrown) => {
-                toastr["warning"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />The Data File for the ' + payload.category + ' ' + payload.key + ' does not exist yet. Not that it\'s a big deal, just go ahead and create it now!', "Warning");
-                console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown + 'The Data File for the ' + payload.category + ' ' + payload.key + ' does not exist yet (just saying, not that it is really a big deal. Just go ahead and create it now!)');
-                switch(payload.category) {
+
+    fetch(apiDataPath, { headers }).then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            if (404 === response.status) {
+                toastr["warning"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />The Data File for the ' + category + ' ' + key + ' does not exist yet. Not that it\'s a big deal, just go ahead and create it now!', "Warning");
+                console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown + 'The Data File for the ' + category + ' ' + key + ' does not exist yet (just saying, not that it is really a big deal. Just go ahead and create it now!)');
+                switch(category) {
                     case 'WIDERREGIONCALENDAR':
                         $('#widerRegionIsMultilingual').prop('checked', false);
                         $('#widerRegionLanguages').multiselect('deselectAll', false);
@@ -839,118 +849,113 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                         break;
                 }
                 $('form.regionalNationalDataForm').empty();
+                return;
             }
-        },
-        success: data => {
-            console.log( `successfully retrieved the data file for the ${payload.category} ${payload.key}` );
-            console.log(data);
-            switch(payload.category) {
-                case 'WIDERREGIONCALENDAR':
-                    $('#widerRegionIsMultilingual').prop('checked', data.metadata.multilingual);
-                    FormControls.settings.decreeURLField = true;
-                    FormControls.settings.decreeLangMapField = true;
-                    $('#widerRegionLanguages').multiselect('deselectAll', false).multiselect('select', data.metadata.languages);
-                    break;
-                case 'NATIONALCALENDAR':
-                    FormControls.settings.decreeURLField = true;
-                    FormControls.settings.decreeLangMapField = false;
-                    const { settings, metadata } = data;
-                    $('#nationalCalendarSettingEpiphany').val( settings.epiphany );
-                    $('#nationalCalendarSettingAscension').val( settings.ascension );
-                    $('#nationalCalendarSettingCorpusChristi').val( settings.corpus_christi );
-                    $('#nationalCalendarSettingLocale').val( settings.locale );
-                    $('#publishedRomanMissalList').empty().append( '<li class="list-group-item">' + metadata.missals.join('</li><li class="list-group-item">') + '</li>' );
-                    $('#associatedWiderRegion').val( metadata.wider_region.name );
-                    $('#nationalCalendarSettingHighPriest').prop('checked', settings.eternal_high_priest );
-            }
-            $('.regionalNationalDataForm').empty();
-            data.litcal.forEach((el) => {
-                let currentUniqid = FormControls.uniqid;
-                let existingFestivityTag = el.festivity.event_key ?? null;
-                if( el.metadata.action === RowAction.CreateNew.description && FestivityCollection.hasOwnProperty( existingFestivityTag ) ) {
-                    el.metadata.action = RowAction.CreateNewFromExisting.description;
-                }
-                setFormSettings( el.metadata.action );
-                if( el.metadata.action === RowAction.SetProperty.description ) {
-                    setFormSettingsForProperty( el.metadata.property );
-                }
-
-                let rowStr = FormControls.CreatePatronRow( el );
-                let rowEls = $.parseHTML(rowStr);
-                let $row = $(rowEls);
-                $('.regionalNationalDataForm').append($row);
-
-                let $formrow = $row.find('.form-group').closest('.row');
-                $formrow.data('action', el.metadata.action).attr('data-action', el.metadata.action);
-                if( el.metadata.action === RowAction.SetProperty.description ) {
-                    $formrow.data('prop', el.metadata.property).attr('data-prop', el.metadata.property);
-                }
-                if( el.festivity.hasOwnProperty('common') && el.festivity.common.includes('Proper') ) {
-                    $formrow.find('.litEventReadings').prop('disabled',false);
-                }
-
-                if( FormControls.settings.missalField && existingFestivityTag !== null ) {
-                    const { missal } = FestivityCollection[existingFestivityTag];
-                    $row.find(`#onTheFly${currentUniqid}Missal`).val(missal); //.prop('disabled', true);
-                }
-                $row.find('.litEventColor').multiselect({
-                    buttonWidth: '100%',
-                    buttonClass: 'form-select',
-                    templates: {
-                        button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
-                    }
-                }).multiselect('deselectAll', false);
-
-                if( el.festivity.hasOwnProperty( 'color' ) === false && existingFestivityTag !== null ) {
-                    console.log( 'retrieving default festivity info for ' + existingFestivityTag );
-                    console.log( FestivityCollection[existingFestivityTag] );
-                    el.festivity.color = FestivityCollection[existingFestivityTag].color;
-                }
-                let colorVal = Array.isArray(el.festivity.color) ? el.festivity.color : el.festivity.color.split(',');
-                $row.find('.litEventColor').multiselect('select', colorVal);
-                if(FormControls.settings.colorField === false) {
-                    $row.find('.litEventColor').multiselect('disable');
-                }
-
-                if( el.festivity.hasOwnProperty( 'common' ) ) {
-                    let common = Array.isArray( el.festivity.common ) ? el.festivity.common : el.festivity.common.split(',');
-                    if(FormControls.settings.commonFieldShow) {
-                        setCommonMultiselect( $row, common );
-                        if(FormControls.settings.commonField === false) {
-                            $row.find(`#onTheFly${currentUniqid}Common`).multiselect('disable');
-                        }
-                    }
-                }
-
-                if(FormControls.settings.gradeFieldShow) {
-                    $row.find(`#onTheFly${currentUniqid}Grade`).val(el.festivity.grade);
-                    if(FormControls.settings.gradeField === false) {
-                        $row.find(`#onTheFly${currentUniqid}Grade`).prop('disabled', true);
-                    }
-                }
-
-                if(FormControls.settings.missalField && el.metadata.hasOwnProperty('missal') ) {
-                    $row.find(`#onTheFly${currentUniqid}Missal`).val(el.metadata.missal);
-                }
-
-                if(FormControls.settings.monthField === false) {
-                    $row.find(`#onTheFly${currentUniqid}Month > option[value]:not([value=${el.festivity.month}])`).prop('disabled',true);
-                }
-            });
-            $('.serializeRegionalNationalData').prop('disabled', false);
-        },
-        error: (xhr, textStatus, errorThrown) => {
-            if( xhr.status !== 404 ) { //we have already handled 404 Not Found above
-                let errorBody = '';
-                if( xhr.responseText !== '' ) {
-                    let responseObj = JSON.parse(xhr.responseText);
-                    if( responseObj.hasOwnProperty( 'error' ) ) {
-                        errorBody = responseObj.error;
-                    }
-                }
-                toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<hr>' + errorBody, "Error");
-            }
+            return Promise.reject(response);
         }
+    }).then(data => {
+        console.log( `successfully retrieved the data file for the ${category} ${key}` );
+        console.log(data);
+        switch(category) {
+            case 'WIDERREGIONCALENDAR':
+                $('#widerRegionIsMultilingual').prop('checked', data.metadata.multilingual);
+                FormControls.settings.decreeURLField = true;
+                FormControls.settings.decreeLangMapField = true;
+                $('#widerRegionLanguages').multiselect('deselectAll', false).multiselect('select', data.metadata.languages);
+                break;
+            case 'NATIONALCALENDAR':
+                FormControls.settings.decreeURLField = true;
+                FormControls.settings.decreeLangMapField = false;
+                const { settings, metadata } = data;
+                $('#nationalCalendarSettingEpiphany').val( settings.epiphany );
+                $('#nationalCalendarSettingAscension').val( settings.ascension );
+                $('#nationalCalendarSettingCorpusChristi').val( settings.corpus_christi );
+                $('#nationalCalendarSettingLocale').val( settings.locale );
+                $('#publishedRomanMissalList').empty().append( '<li class="list-group-item">' + metadata.missals.join('</li><li class="list-group-item">') + '</li>' );
+                $('#associatedWiderRegion').val( metadata.wider_region.name );
+                $('#nationalCalendarSettingHighPriest').prop('checked', settings.eternal_high_priest );
+        }
+        $('.regionalNationalDataForm').empty();
+        data.litcal.forEach((el) => {
+            let currentUniqid = FormControls.uniqid;
+            let existingFestivityTag = el.festivity.event_key ?? null;
+            if( el.metadata.action === RowAction.CreateNew.description && FestivityCollection.hasOwnProperty( existingFestivityTag ) ) {
+                el.metadata.action = RowAction.CreateNewFromExisting.description;
+            }
+            setFormSettings( el.metadata.action );
+            if( el.metadata.action === RowAction.SetProperty.description ) {
+                setFormSettingsForProperty( el.metadata.property );
+            }
+
+            let rowStr = FormControls.CreatePatronRow( el );
+            let rowEls = $.parseHTML(rowStr);
+            let $row = $(rowEls);
+            $('.regionalNationalDataForm').append($row);
+
+            let $formrow = $row.find('.form-group').closest('.row');
+            $formrow.data('action', el.metadata.action).attr('data-action', el.metadata.action);
+            if( el.metadata.action === RowAction.SetProperty.description ) {
+                $formrow.data('prop', el.metadata.property).attr('data-prop', el.metadata.property);
+            }
+            if( el.festivity.hasOwnProperty('common') && el.festivity.common.includes('Proper') ) {
+                $formrow.find('.litEventReadings').prop('disabled',false);
+            }
+
+            if( FormControls.settings.missalField && existingFestivityTag !== null ) {
+                const { missal } = FestivityCollection[existingFestivityTag];
+                $row.find(`#onTheFly${currentUniqid}Missal`).val(missal); //.prop('disabled', true);
+            }
+            $row.find('.litEventColor').multiselect({
+                buttonWidth: '100%',
+                buttonClass: 'form-select',
+                templates: {
+                    button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+                }
+            }).multiselect('deselectAll', false);
+
+            if( el.festivity.hasOwnProperty( 'color' ) === false && existingFestivityTag !== null ) {
+                console.log( 'retrieving default festivity info for ' + existingFestivityTag );
+                console.log( FestivityCollection[existingFestivityTag] );
+                el.festivity.color = FestivityCollection[existingFestivityTag].color;
+            }
+            let colorVal = Array.isArray(el.festivity.color) ? el.festivity.color : el.festivity.color.split(',');
+            $row.find('.litEventColor').multiselect('select', colorVal);
+            if(FormControls.settings.colorField === false) {
+                $row.find('.litEventColor').multiselect('disable');
+            }
+
+            if( el.festivity.hasOwnProperty( 'common' ) ) {
+                let common = Array.isArray( el.festivity.common ) ? el.festivity.common : el.festivity.common.split(',');
+                if(FormControls.settings.commonFieldShow) {
+                    setCommonMultiselect( $row, common );
+                    if(FormControls.settings.commonField === false) {
+                        $row.find(`#onTheFly${currentUniqid}Common`).multiselect('disable');
+                    }
+                }
+            }
+
+            if(FormControls.settings.gradeFieldShow) {
+                $row.find(`#onTheFly${currentUniqid}Grade`).val(el.festivity.grade);
+                if(FormControls.settings.gradeField === false) {
+                    $row.find(`#onTheFly${currentUniqid}Grade`).prop('disabled', true);
+                }
+            }
+
+            if(FormControls.settings.missalField && el.metadata.hasOwnProperty('missal') ) {
+                $row.find(`#onTheFly${currentUniqid}Missal`).val(el.metadata.missal);
+            }
+
+            if(FormControls.settings.monthField === false) {
+                $row.find(`#onTheFly${currentUniqid}Month > option[value]:not([value=${el.festivity.month}])`).prop('disabled',true);
+            }
+        });
+        $('.serializeRegionalNationalData').prop('disabled', false);
+    }).catch(error => {
+        console.error(error);
+        response.json().then(json => {
+            console.error(json);
+        })
+        toastr["error"](error.status + ' ' + error.statusText + ': ' + error.text, "Error");
     });
 });
 
