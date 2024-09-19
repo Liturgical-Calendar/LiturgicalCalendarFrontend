@@ -936,11 +936,10 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
         });
         $('.serializeRegionalNationalData').prop('disabled', false);
     }).catch(error => {
-        console.error(error);
-        if (404 === response.status) {
-            const responseText = response.text();
-            toastr["warning"](response.status + ' ' + response.statusText + ': ' + responseText + '<br />The Data File for the ' + category + ' ' + key + ' does not exist yet. Not that it\'s a big deal, just go ahead and create it now!', "Warning");
-            console.warn(response.status + ' ' + response.statusText + ': ' + responseText + ' The Data File for the ' + category + ' ' + key + ' does not exist yet (just saying, not that it is really a big deal. Just go ahead and create it now!)');
+        if (404 === error.status) {
+            const responseText = error.text();
+            toastr["warning"](error.status + ' ' + error.statusText + ': ' + responseText + '<br />The Data File for the ' + category + ' ' + key + ' does not exist yet. Not that it\'s a big deal, just go ahead and create it now!', "Warning");
+            console.warn(error.status + ' ' + error.statusText + ': ' + responseText + ' The Data File for the ' + category + ' ' + key + ' does not exist yet (just saying, not that it is really a big deal. Just go ahead and create it now!)');
             switch(category) {
                 case 'WIDERREGIONCALENDAR':
                     $('#widerRegionIsMultilingual').prop('checked', false);
