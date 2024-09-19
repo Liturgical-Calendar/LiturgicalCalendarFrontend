@@ -1247,6 +1247,7 @@ $(document).on('click', '#addLanguageEditionRomanMissal', ev => {
 });
 
 $(document).on('change', '#widerRegionIsMultilingual', ev => {
+    console.log('widerRegionIsMultilingual input was changed to ' + $(ev.currentTarget).is(':checked'));
     $('#widerRegionLanguages').prop('disabled', !$(ev.currentTarget).is(':checked'));
 });
 
