@@ -837,8 +837,8 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
             return response.json();
         } else {
             if (404 === response.status) {
-                toastr["warning"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />The Data File for the ' + category + ' ' + key + ' does not exist yet. Not that it\'s a big deal, just go ahead and create it now!', "Warning");
-                console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown + 'The Data File for the ' + category + ' ' + key + ' does not exist yet (just saying, not that it is really a big deal. Just go ahead and create it now!)');
+                toastr["warning"](response.status + ' ' + response.statusText + ': ' + response.text() + '<br />The Data File for the ' + category + ' ' + key + ' does not exist yet. Not that it\'s a big deal, just go ahead and create it now!', "Warning");
+                console.warning(response.status + ' ' + response.statusText + ': ' + response.text() + ' The Data File for the ' + category + ' ' + key + ' does not exist yet (just saying, not that it is really a big deal. Just go ahead and create it now!)');
                 switch(category) {
                     case 'WIDERREGIONCALENDAR':
                         $('#widerRegionIsMultilingual').prop('checked', false);
@@ -955,8 +955,8 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
         console.error(error);
         error.json().then(json => {
             console.error(json);
-        })
-        toastr["error"](error.status + ' ' + error.statusText + ': ' + error.text, "Error");
+            toastr["error"](json.status + ' ' + json.response + ': ' + json.description, "Error");
+        });
     });
 });
 
