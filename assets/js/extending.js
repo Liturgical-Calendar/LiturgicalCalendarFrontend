@@ -1248,7 +1248,11 @@ $(document).on('click', '#addLanguageEditionRomanMissal', ev => {
 
 $(document).on('change', '#widerRegionIsMultilingual', ev => {
     console.log('widerRegionIsMultilingual input was changed to ' + $(ev.currentTarget).is(':checked'));
-    $('#widerRegionLanguages').prop('disabled', !$(ev.currentTarget).is(':checked'));
+    if ($(ev.currentTarget).is(':checked')) {
+        $('#widerRegionLanguages').multiselect('enable');
+    } else {
+        $('#widerRegionLanguages').multiselect('disable');
+    }
 });
 
 jQuery(document).ready(() => {
