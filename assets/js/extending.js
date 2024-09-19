@@ -836,23 +836,6 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
         if (response.ok) {
             return response.json();
         } else {
-            if (404 === response.status) {
-                const responseText = response.text();
-                toastr["warning"](response.status + ' ' + response.statusText + ': ' + responseText + '<br />The Data File for the ' + category + ' ' + key + ' does not exist yet. Not that it\'s a big deal, just go ahead and create it now!', "Warning");
-                console.warn(response.status + ' ' + response.statusText + ': ' + responseText + ' The Data File for the ' + category + ' ' + key + ' does not exist yet (just saying, not that it is really a big deal. Just go ahead and create it now!)');
-                switch(category) {
-                    case 'WIDERREGIONCALENDAR':
-                        $('#widerRegionIsMultilingual').prop('checked', false);
-                        $('#widerRegionLanguages').multiselect('deselectAll', false);
-                        break;
-                    case 'NATIONALCALENDAR':
-                        $('form#nationalCalendarSettingsForm')[0].reset();
-                        $('#publishedRomanMissalList').empty();
-                        break;
-                }
-                $('form.regionalNationalDataForm').empty();
-                return;
-            }
             return Promise.reject(response);
         }
     }).then(data => {
@@ -954,10 +937,28 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
         $('.serializeRegionalNationalData').prop('disabled', false);
     }).catch(error => {
         console.error(error);
-        error.json().then(json => {
-            console.error(json);
-            toastr["error"](json.status + ' ' + json.response + ': ' + json.description, "Error");
-        });
+        if (404 === response.status) {
+            const responseText = response.text();
+            toastr["warning"](response.status + ' ' + response.statusText + ': ' + responseText + '<br />The Data File for the ' + category + ' ' + key + ' does not exist yet. Not that it\'s a big deal, just go ahead and create it now!', "Warning");
+            console.warn(response.status + ' ' + response.statusText + ': ' + responseText + ' The Data File for the ' + category + ' ' + key + ' does not exist yet (just saying, not that it is really a big deal. Just go ahead and create it now!)');
+            switch(category) {
+                case 'WIDERREGIONCALENDAR':
+                    $('#widerRegionIsMultilingual').prop('checked', false);
+                    $('#widerRegionLanguages').multiselect('deselectAll', false);
+                    break;
+                case 'NATIONALCALENDAR':
+                    $('form#nationalCalendarSettingsForm')[0].reset();
+                    $('#publishedRomanMissalList').empty();
+                    break;
+            }
+            $('form.regionalNationalDataForm').empty();
+            return;
+        } else {
+            error.json().then(json => {
+                console.error(json);
+                toastr["error"](json.status + ' ' + json.response + ': ' + json.description, "Error");
+            });
+        }
     });
 });
 
