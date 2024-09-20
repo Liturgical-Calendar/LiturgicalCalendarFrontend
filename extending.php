@@ -60,10 +60,10 @@ $DioceseGroupHelp = _("If a group of dioceses decides to pool their Liturgical C
 
 $c = new Collator($i18n->LOCALE);
 
-$AllAvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($value) {
-    return strpos($value, 'POSIX') === false;
+$SystemLocalesWithRegion = array_filter(ResourceBundle::getLocales(''), function ($value) use ($i18n) {
+    return strpos($value, 'POSIX') === false && Locale::getDisplayRegion($value, $i18n->LOCALE) !== "";
 });
-$AllAvailableLocales = array_reduce($AllAvailableLocales, function ($carry, $item) use ($i18n) {
+$SystemLocalesWithRegion = array_reduce($SystemLocalesWithRegion, function ($carry, $item) use ($i18n) {
     //$carry[$item] = Locale::getDisplayLanguage($item, $i18n->LOCALE)
     //    . (Locale::getDisplayRegion($item, $i18n->LOCALE) !== ""
     //          ? " (" . Locale::getDisplayRegion($item, $i18n->LOCALE) . ")"
@@ -71,16 +71,16 @@ $AllAvailableLocales = array_reduce($AllAvailableLocales, function ($carry, $ite
     $carry[$item] = Locale::getDisplayName($item, $i18n->LOCALE);
     return $carry;
 }, []);
-$c->asort($AllAvailableLocales);
+$c->asort($SystemLocalesWithRegion);
 
-$AvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($value) {
+$SystemLocalesWithoutRegion = array_filter(ResourceBundle::getLocales(''), function ($value) {
     return strpos($value, '_') === false;
 });
-$AvailableLocales = array_reduce($AvailableLocales, function ($carry, $item) use ($i18n) {
+$SystemLocalesWithoutRegion = array_reduce($SystemLocalesWithoutRegion, function ($carry, $item) use ($i18n) {
     $carry[$item] = Locale::getDisplayLanguage($item, $i18n->LOCALE);
     return $carry;
 }, []);
-$c->asort($AvailableLocales);
+$c->asort($SystemLocalesWithoutRegion);
 
 $AvailableCountries = array_filter(ResourceBundle::getLocales(''), function ($value) {
     return strpos($value, '_');
@@ -129,7 +129,7 @@ $messages = [
     "gradeTemplate"      => $FormControls->getGradeTemplate(),
     "LOCALE"             => $i18n->LOCALE,
     "LOCALE_WITH_REGION" => $i18n->LOCALE_WITH_REGION,
-    "AvailableLocales"   => $AvailableLocales,
+    "AvailableLocales"   => $SystemLocalesWithoutRegion,
     "AvailableCountries" => $AvailableCountries,
     "countryISOCodes"    => $countryISOCodes
 ];
@@ -212,7 +212,7 @@ if (isset($_GET["choice"])) {
                             </div>
                             <div>
                                 <select class="form-select" id="widerRegionLanguages" multiple="multiple" disabled>
-                                <?php foreach ($AllAvailableLocales as $locale => $lang_region) {
+                                <?php foreach ($SystemLocalesWithRegion as $locale => $lang_region) {
                                         echo "<option value='$locale'>$lang_region</option>";
                                 } ?>
                                 </select>
@@ -314,7 +314,7 @@ if (isset($_GET["choice"])) {
                                         <label><?php echo _('LOCALE') ?></label>
                                         <select class="form-select" id="nationalCalendarSettingLocale">
                                         <?php
-                                        foreach ($AllAvailableLocales as $AvlLOCALE => $AvlLANGUAGE) {
+                                        foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
                                             echo "<option value=\"{$AvlLOCALE}\"" . ($i18n->LOCALE === $AvlLOCALE ? ' selected' : '') . ">{$AvlLANGUAGE}</option>";
                                         }
                                         ?>

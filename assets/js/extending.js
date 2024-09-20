@@ -1098,11 +1098,11 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
                 curr = curr.replaceAll('_', '-');
                 //this should never be the case, if we are careful to select only languages associated with a specific territory...
                 //might be even better to exclude non-regional languages from the select list, so that regions will have to be associated
-                //and perhaps the language-region locale should be define in the RomanMissal enum itself;
+                //and perhaps the language-region locale should be defined in the RomanMissal enum itself;
                 //we should try to get an exhaustive list of all printed Roman Missals since Vatican II!
-                if( curr.includes('-') === false ) {
+                /*if( curr.includes('-') === false ) {
                     curr += '-' + curr.toUpperCase();
-                }
+                }*/
                 let locale = new Intl.Locale( curr );
                 console.log( 'curr = ' + curr + ', nation = ' + locale.region );
                 prev[ regionNamesLocalizedEng.of( locale.region ) ] = locale.region;
