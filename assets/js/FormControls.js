@@ -1,21 +1,24 @@
-const JANUARY   = 1;
-const FEBRUARY  = 2;
-const MARCH     = 3;
-const APRIL     = 4;
-const MAY       = 5;
-const JUNE      = 6;
-const JULY      = 7;
-const AUGUST    = 8;
-const SEPTEMBER = 9;
-const OCTOBER   = 10;
-const NOVEMBER  = 11;
-const DECEMBER  = 12;
+
+const Month = Object.freeze({
+    JANUARY:    1,
+    FEBRUARY:   2,
+    MARCH:      3,
+    APRIL:      4,
+    MAY:        5,
+    JUNE:       6,
+    JULY:       7,
+    AUGUST:     8,
+    SEPTEMBER:  9,
+    OCTOBER:    10,
+    NOVEMBER:   11,
+    DECEMBER:   12,
+});
 
 /**
  * Thirty days hath September, April, June, and November.
  * Useful for setting the limit on the day input.
  */
-const monthsOfThirty = [SEPTEMBER, APRIL, JUNE, NOVEMBER];
+const MonthsOfThirty = [Month.SEPTEMBER, Month.APRIL, Month.JUNE, Month.NOVEMBER];
 
 /**
  * An array of English names of the seven days of the week, used to check or set the value of the strtotime property in liturgical events.
@@ -822,6 +825,7 @@ export {
     setFormSettingsForProperty,
     setCommonMultiselect,
     lowercaseKeys,
-    monthsOfThirty,
+    Month,
+    MonthsOfThirty,
     daysOfTheWeek
 };

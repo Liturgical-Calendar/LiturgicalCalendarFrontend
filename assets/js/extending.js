@@ -9,7 +9,8 @@ import {
     expectedJSONProperties,
     metadataProps,
     setCommonMultiselect,
-    monthsOfThirty
+    Month,
+    MonthsOfThirty
 } from './FormControls.js';
 
 
@@ -523,7 +524,7 @@ $(document).on('change', '.litEvent', ev => {
                 $CALENDAR.litcal[eventKey].festivity.month = selcdMonth;
             }
         }
-        $row.find('.litEventDay').attr('max', selcdMonth === FEBRUARY ? "28" : (monthsOfThirty.includes(selcdMonth) ? "30" : "31"));
+        $row.find('.litEventDay').attr('max', selcdMonth === Month.FEBRUARY ? "28" : (MonthsOfThirty.includes(selcdMonth) ? "30" : "31"));
         if (parseInt($row.find('.litEventDay').val()) > parseInt($row.find('.litEventDay').attr('max'))) {
             $row.find('.litEventDay').val($row.find('.litEventDay').attr('max'));
         }
