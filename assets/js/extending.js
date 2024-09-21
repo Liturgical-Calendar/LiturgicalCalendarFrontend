@@ -46,17 +46,16 @@ const jsLocale = LOCALE.replace('_', '-');
 FormControls.jsLocale = jsLocale;
 FormControls.weekdayFormatter = new Intl.DateTimeFormat(jsLocale, { weekday: "long" });
 
-// TODO: utilize a proxy for the API constant, that will verify the values of the properties that are set,
-//       and will automatically set the path parameter based on the category and key parameters
-
-const API = new Proxy({
-    category: '',
-    key: '',
-    path: '',
-    locale: ''
-}, setProxiedAPI);
-
-const setProxiedAPI = {
+/**
+ * Proxy sanitizer for the proxied API object. Sanitizes the values assigned to properties of the proxied API object.
+ * @type {Proxy}
+ * @prop {function} get - the getter for the proxy
+ * @prop {function} set - the setter for the proxy
+ * @prop {string} prop - the name of the property being accessed or modified
+ * @prop {*} value - the value to be assigned to the property
+ * @prop {Object} target - the object being proxied
+ */
+const sanitizeProxiedAPI = {
     get: (target, prop) => {
         return Reflect.get(target, prop);
     },
@@ -128,6 +127,20 @@ const setProxiedAPI = {
     }
 }
 
+/**
+ * Proxied API object. This object is used to build the URL for the API to be queried.
+ * @typedef {Object} ProxiedAPI
+ * @property {string} category - category of API query. Valid values are 'widerregion', 'nation' and 'diocese'.
+ * @property {string} key - value of category above. Valid values are ISO 3166-1 Alpha-2 codes for nations and valid diocese codes for dioceses.
+ * @property {string} path - URL path for API query. Will be set by the proxy once category and key are set.
+ * @property {string} locale - locale in which the API query result will be returned, or the payload will be PUT. Must be a valid locale.
+ */
+const API = new Proxy({
+    category: '',
+    key: '',
+    path: '',
+    locale: ''
+}, sanitizeProxiedAPI);
 
 
 const setFocusFirstTabWithData = () => {
