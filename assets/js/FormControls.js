@@ -711,12 +711,11 @@ class LitEvent {
 /**
  * Properties that are relevant for Mass readings.
  * @constant
- * @enum {String}
- * @property {String} FIRST_READING - First reading
- * @property {String} RESPONSORIAL_PSYLM - Responsorial psalm
- * @property {String} SECOND_READING - Second reading
- * @property {String} ALLELUIA_VERSE - Alleluia verse
- * @property {String} GOSPEL - Gospel
+ * @property {String} first_reading - First reading
+ * @property {String} responsorial_psalm - Responsorial psalm
+ * @property {String} second_reading - Second reading
+ * @property {String} alleluia_verse - Alleluia verse
+ * @property {String} gospel - Gospel
  */
 const READINGS_PROPERTIES = [
     "first_reading",

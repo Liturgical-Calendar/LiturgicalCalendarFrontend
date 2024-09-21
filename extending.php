@@ -186,7 +186,7 @@ if (isset($_GET["choice"])) {
                     <form class="row justify-content-center align-items-center needs-validation" novalidate>
                         <div class="form-group col col-md-4">
                             <label for="widerRegionCalendarName" class="fw-bold"><?php echo _("Wider Region"); ?></label>
-                            <input list="WiderRegionsList" class="form-control regionalNationalCalendarName" id="widerRegionCalendarName" data-category="WIDERREGIONCALENDAR" required>
+                            <input list="WiderRegionsList" class="form-control regionalNationalCalendarName" id="widerRegionCalendarName" data-category="widerregion" required>
                             <div class="invalid-feedback"><?php echo _("This value cannot be empty."); ?></div>
                             <datalist id="WiderRegionsList">
                                 <option value=""></option>
@@ -237,7 +237,7 @@ if (isset($_GET["choice"])) {
                             <?php echo $buttonGroup ?>
                         </div>
                         <div class="card-footer text-center">
-                            <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeWiderRegionData" data-category="WIDERREGIONCALENDAR" disabled><i class="fas fa-save me-2"></i><?php echo _("Save Wider Region Calendar Data") ?></button>
+                            <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeWiderRegionData" data-category="widerregion" disabled><i class="fas fa-save me-2"></i><?php echo _("Save Wider Region Calendar Data") ?></button>
                         </div>
                     </div>
                 </div>
@@ -249,7 +249,7 @@ if (isset($_GET["choice"])) {
                     <form class="row justify-content-center needs-validation align-items-center" novalidate>
                         <div class="form-group col col-md-3">
                             <label for="nationalCalendarName" class="fw-bold"><?php echo _("National Calendar"); ?></label>
-                            <input list="nationalCalendarsList" class="form-control regionalNationalCalendarName" id="nationalCalendarName" data-category="NATIONALCALENDAR" required>
+                            <input list="nationalCalendarsList" class="form-control regionalNationalCalendarName" id="nationalCalendarName" data-category="nation" required>
                             <div class="invalid-feedback"><?php echo _("This value cannot be empty."); ?></div>
                             <datalist id="nationalCalendarsList">
                             <?php
@@ -347,7 +347,7 @@ if (isset($_GET["choice"])) {
                             <?php echo $buttonGroup ?>
                         </div>
                         <div class="card-footer text-center">
-                            <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeNationalCalendarData" data-category="NATIONALCALENDAR" disabled><i class="fas fa-save me-2"></i><?php echo _("Save National Calendar Data") ?></button>
+                            <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeNationalCalendarData" data-category="nation" disabled><i class="fas fa-save me-2"></i><?php echo _("Save National Calendar Data") ?></button>
                         </div>
                     </div>
                 </div>

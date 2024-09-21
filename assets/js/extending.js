@@ -41,11 +41,6 @@ toastr.options = {
     "hideMethod": "fadeOut"
 }
 
-const DataPathTranslate = {
-    "WIDERREGIONCALENDAR": 'widerregion',
-    "NATIONALCALENDAR": 'nation',
-    "DIOCESANCALENDAR": 'diocese'
-};
 const { LOCALE, LOCALE_WITH_REGION } = messages;
 const jsLocale = LOCALE.replace('_', '-');
 FormControls.jsLocale = jsLocale;
@@ -816,14 +811,14 @@ $(document).on('click', '.actionPromptButton', ev => {
 $(document).on('change', '.regionalNationalCalendarName', ev => {
     const category = ev.currentTarget.dataset.category;
     let key = ev.currentTarget.value;
-    let apiDataPath = `${RegionalDataURL}/${DataPathTranslate[category]}/`;
+    let apiDataPath = `${RegionalDataURL}/${category}/`;
     const headers = {};
-    if ( category === 'WIDERREGIONCALENDAR' ) {
+    if ( category === 'widerregion' ) {
         let locale;
         ([key, locale] = ev.currentTarget.value.split(' - '));
         apiDataPath += key;
         headers['Accept-Language'] = locale;
-    } else if (category === 'NATIONALCALENDAR') {
+    } else if (category === 'nation') {
         key = key.toUpperCase();
         if (key === 'UNITED STATES') {
             key = 'USA';
@@ -832,6 +827,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
     } else {
         apiDataPath += key;
     }
+    console.log(`apiDataPath is ${apiDataPath} (category is ${category} and key is ${key}). Now checking if a calendar already exists...`);
 
     fetch(apiDataPath, { headers }).then(response => {
         if (response.ok) {
@@ -843,13 +839,13 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
         console.log( `successfully retrieved the data file for the ${category} ${key}` );
         console.log(data);
         switch(category) {
-            case 'WIDERREGIONCALENDAR':
+            case 'widerregion':
                 $('#widerRegionIsMultilingual').prop('checked', data.metadata.multilingual);
                 FormControls.settings.decreeURLField = true;
                 FormControls.settings.decreeLangMapField = true;
                 $('#widerRegionLanguages').multiselect('deselectAll', false).multiselect('select', data.metadata.languages);
                 break;
-            case 'NATIONALCALENDAR':
+            case 'nation':
                 FormControls.settings.decreeURLField = true;
                 FormControls.settings.decreeLangMapField = false;
                 const { settings, metadata } = data;
@@ -944,11 +940,11 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                 console.warn(message);
             });
             switch(category) {
-                case 'WIDERREGIONCALENDAR':
+                case 'widerregion':
                     $('#widerRegionIsMultilingual').prop('checked', false);
                     $('#widerRegionLanguages').multiselect('deselectAll', false);
                     break;
-                case 'NATIONALCALENDAR':
+                case 'nation':
                     $('form#nationalCalendarSettingsForm')[0].reset();
                     $('#publishedRomanMissalList').empty();
                     break;
@@ -958,6 +954,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
         } else {
             error.json().then(json => {
                 console.error(json);
+                //We're taking for granted that the API is sending back a JSON object with status, response and description
                 toastr["error"](json.status + ' ' + json.response + ': ' + json.description, "Error");
             });
         }
@@ -1064,6 +1061,143 @@ $(document).on('click', '#deleteDiocesanCalendarButton', ev => {
     });
 });
 
+/**
+ * TODO: define payload classes for the various possible scenarios
+ *
+ * The following event handle is used to serialize the data from the wider region or national
+ * calendar forms for submission to the API. The event handler receives the jQuery event object as
+ * an argument, and prepares a JSON object as the payload with the following structure:
+ *
+ * For a national calendar:
+ *  {
+ *      "litcal": litcalevent[],
+ *      "settings": {
+ *          "epiphany": string,
+ *          "ascension": string,
+ *          "corpus_christi": string
+ *          "eternal_high_priest": boolean,
+ *          "locale": string
+ *      },
+ *      "metadata": {
+ *          "region": string,
+ *          "wider_region": {
+ *              "name": string,
+ *              "json_file": string,
+ *              "i18n_file": string
+ *          },
+ *          "missals": string[],
+ *      }
+ *  }
+ *
+ * For a wider region:
+ *  {
+ *      "litcal": litcalevent[],
+ *      "national_calendars": {},
+ *      "metadata": {
+ *          "multilingual": boolean,
+ *          "languages": string[],
+ *          "wider_region": string
+ *      }
+ *  }[]
+ *
+ * The litcal object contains the liturgical events defined for the calendar.
+ * litcal is an array of objects, each containing the information about a
+ * single event in the calendar.
+ * The object structure of the entries for the litcal array depend on the action being taken:
+ *
+ * - makePatron (will generally take a liturgical event that is already defined in the General Roman Calendar and allow to override the name to indicate patronage):
+ *      {
+ *          "festivity": {
+ *              "event_key": string,
+ *              "name": string,
+ *              "color": string,
+ *              "grade": number ,
+ *              "day": number,
+ *              "month": number
+ *          },
+ *          "metadata": {
+ *              "action": "makePatron"
+ *          }
+ *     }[]
+ *
+ * - setProperty (takes a liturgical event that is already defined in the General Roman Calendar and overrides the specified property of the liturgical event)
+ *      {
+ *          "festivity": {
+ *              "event_key": string,
+ *              "name": string,
+ *              "grade": number,
+ *              "day": number,
+ *              "month": number
+ *          },
+ *          "metadata": {
+ *              "action": "setProperty",
+ *              "property": string
+ *          }
+ *     }[]
+ *
+ * - moveFestivity (takes a liturgical event that is already defined in the General Roman Calendar and moves it to a different date)
+ *      {
+ *          "festivity": {
+ *              "event_key": string,
+ *              "name": string,
+ *              "day": number,
+ *              "month": number,
+ *              "missal": string,
+ *              "reason": string
+ *          },
+ *          "metadata": {
+ *              "action": "moveFestivity"
+ *          }
+ *     }[]
+ *
+ * - createNew (creates a new fixed date liturgical event for the wider region or national calendar)
+ *      - createNew with common=Proper
+ *      {
+ *          "festivity": {
+ *              "event_key": string,
+ *              "name": string,
+ *              "color": string,
+ *              "grade": number,
+ *              "day": number,
+ *              "month": number,
+ *              "common": [ "Proper" ],
+ *              "readings": {
+ *                  "first_reading": string,
+ *                  "second_reading": string (optional),
+ *                  "responsorial_psalm": string,
+ *                  "alleluia_verse": string,
+ *                  "gospel": string
+ *              }
+ *          },
+ *          "metadata": {
+ *              "action": "createNew"
+ *          }
+ *     }[]
+ *
+ *     - createNew without common=Proper
+ *      {
+ *          "festivity": {
+ *              "event_key": string,
+ *              "name": string,
+ *              "color": string,
+ *              "grade": number,
+ *              "day": number,
+ *              "month": number,
+ *              "common": string[]
+ *          },
+ *          "metadata": {
+ *              "action": "createNew"
+ *          }
+ *     }[]
+ *   N.B. For the createNew action, if the liturgical event is mobile, the "day" and "month" properties will be omitted,
+ *          and a "strtotime" property of type string will be added to the festivity object.
+ *
+ *   N.B. For any action, if sinceYear, untilYear, decreeURL, or decreeLangs are defined, they will be added to the metadata object:
+ *          - metadata.since_year,
+ *          - metadata.until_year,
+ *          - metadata.url,
+ *          - metadata.url_lang_map
+*/
 $(document).on('click', '.serializeRegionalNationalData', ev => {
     const category = $(ev.currentTarget).data('category');
     const lcl = $('#nationalCalendarSettingLocale').val();
@@ -1096,15 +1230,12 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
             const regionNamesLocalizedEng = new Intl.DisplayNames(['en'], { type: 'region' });
             let nationalCalendars = $('#widerRegionLanguages').val().reduce((prev, curr) => {
                 curr = curr.replaceAll('_', '-');
-                //this should never be the case, if we are careful to select only languages associated with a specific territory...
-                //might be even better to exclude non-regional languages from the select list, so that regions will have to be associated
-                //and perhaps the language-region locale should be defined in the RomanMissal enum itself;
-                //we should try to get an exhaustive list of all printed Roman Missals since Vatican II!
-                /*if( curr.includes('-') === false ) {
-                    curr += '-' + curr.toUpperCase();
-                }*/
+                // We have already exluded non-regional languages from the select list,
+                // so we know we will always have a region associated with each of the selected languages.
+                // Should we also define the language-region locale in the RomanMissal enum itself, on the API backend?
+                // In that case we should try to get an exhaustive list of all printed Roman Missals since Vatican II.
                 let locale = new Intl.Locale( curr );
-                console.log( 'curr = ' + curr + ', nation = ' + locale.region );
+                console.log( `curr = ${curr}, nation = ${locale.region}` );
                 prev[ regionNamesLocalizedEng.of( locale.region ) ] = locale.region;
                 return prev;
             }, {});
@@ -1212,7 +1343,6 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
                 console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown);
                 toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown, "Error");
             }
-
         }
     });
 
