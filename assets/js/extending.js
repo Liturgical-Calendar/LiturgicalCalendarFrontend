@@ -46,6 +46,90 @@ const jsLocale = LOCALE.replace('_', '-');
 FormControls.jsLocale = jsLocale;
 FormControls.weekdayFormatter = new Intl.DateTimeFormat(jsLocale, { weekday: "long" });
 
+// TODO: utilize a proxy for the API constant, that will verify the values of the properties that are set,
+//       and will automatically set the path parameter based on the category and key parameters
+
+const API = new Proxy({
+    category: '',
+    key: '',
+    path: '',
+    locale: ''
+}, setProxiedAPI);
+
+const setProxiedAPI = {
+    get: (target, prop) => {
+        return Reflect.get(target, prop);
+    },
+    set: (target, prop, value) => {
+        // all props are strings
+        if (typeof value !== 'string') {
+            console.warn(`property ${prop} of this object must be of type string`);
+            return;
+        }
+        if (value !== '') {
+            value = sanitizeInput( value );
+        }
+        switch (prop) {
+            case 'path':
+                // the path will be set based on the category and key parameters
+                value = (target.hasOwnProperty('category') && target['category'] !== '' && target.hasOwnProperty('key') && target['key'] !== '') ? `${RegionalDataURL}/${target['category']}/${target['key']}` : '';
+                break;
+            case 'category':
+                if (false === ['widerregion', 'nation', 'diocese'].includes(value)) {
+                    console.warn(`property 'category' of this object must be one of the values 'widerregion', 'nation', or 'diocese'`);
+                    return;
+                }
+                if (target.hasOwnProperty('key') && target['key'] !== '') {
+                    target['path'] = `${RegionalDataURL}/${value}/${target['key']}`;
+                }
+                break;
+            case 'key':
+                if (target['category'] === 'widerregion') {
+                    if (false === ['Americas', 'Europe', 'Africa', 'Oceania', 'Asia'].includes(value)) {
+                        console.warn(`property 'key' of this object must be one of the values 'Americas', 'Europe', 'Africa', 'Oceania', or 'Asia'`);
+                        return;
+                    }
+                }
+                else if (target['category'] === 'nation') {
+                    value = value.toUpperCase();
+                    if (value === 'UNITED STATES') {
+                        value = 'USA';
+                    }
+                    /*
+                    if (false === isValidNation(value)) {
+                        console.warn(`property 'key' of this object must be a valid nation`);
+                        return;
+                    }
+                    */
+                }
+                else if (target['category'] === 'diocese') {
+                    value = value.toUpperCase();
+                    /*
+                    if (false === isValidDiocese(value)) {
+                        console.warn(`property 'key' of this object must be a valid diocese`);
+                        return;
+                    }
+                    */
+                }
+                if (target.hasOwnProperty('category') && target['category'] !== '') {
+                    target['path'] = `${RegionalDataURL}/${target['category']}/${value}`;
+                }
+                break;
+            case 'locale':
+                if (false === LOCALE.includes(value) && false === LOCALE_WITH_REGION.includes(value)) {
+                    console.warn(`property 'locale' of this object must be one of the values ${LOCALE.join(', ')}, ${LOCALE_WITH_REGION.join(', ')}`);
+                    return;
+                }
+            default:
+                console.warn('unexpected property ' + prop + ' of type ' + typeof prop + ' on target of type ' + typeof target);
+                return;
+        }
+        return Reflect.set(target, prop, value);
+    }
+}
+
+
+
 const setFocusFirstTabWithData = () => {
     let $firstInputWithNonEmptyValue = $('.carousel-item form .litEventName')
         .filter(function(idx) {
@@ -132,7 +216,7 @@ const loadDiocesanCalendarData = () => {
         method: 'GET',
         dataType: 'json',
         //crossDomain: true,
-        data: { "key" : dioceseKey, "category": "DIOCESANCALENDAR" },
+        data: { "key" : dioceseKey, "category": "diocese" },
         statusCode: {
             404: (xhr, textStatus, errorThrown) => {
                 toastr["warning"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />The Diocesan Calendar for ' + diocese + ' does not exist yet.', "Warning");
@@ -624,26 +708,26 @@ $(document).on('change', '.litEvent', ev => {
 });
 
 $(document).on('click', '#saveDiocesanCalendar_btn', () => {
-    $nation = $('#diocesanCalendarNationalDependency').val();
-    $diocese = $('#diocesanCalendarDioceseName').val();
+    let nation = $('#diocesanCalendarNationalDependency').val();
+    let diocese = $('#diocesanCalendarDioceseName').val();
     //console.log('save button was clicked for NATION = ' + $nation + ', DIOCESE = ' + $diocese);
-    let saveObj = { CalData: $CALENDAR, Diocese: $diocese, Nation: $nation, category: 'diocesanCalendar' };
+    let saveObj = { caldata: $CALENDAR, diocese: diocese, nation: nation, category: 'diocese' };
     if($('#diocesanCalendarGroup').val() != ''){
         saveObj.group = $('#diocesanCalendarGroup').val();
     }
     if( diocesanOvveridesDefined() ) {
         //console.log( 'This diocesan calendar has defined some options that will override the national calendar.' );
-        saveObj.CalData.overrides = {};
+        saveObj.caldata.overrides = {};
         if( $('#diocesanCalendarOverrideEpiphany').val() !== "" ) {
-            saveObj.CalData.overrides.epiphany = $('#diocesanCalendarOverrideEpiphany').val();
+            saveObj.caldata.overrides.epiphany = $('#diocesanCalendarOverrideEpiphany').val();
             //console.log( 'Epiphany in this diocese will override Epiphany in the national calendar.' );
         }
         if( $('#diocesanCalendarOverrideAscension').val() !== "" ) {
-            saveObj.CalData.overrides.ascension = $('#diocesanCalendarOverrideAscension').val();
+            saveObj.caldata.overrides.ascension = $('#diocesanCalendarOverrideAscension').val();
             //console.log( 'Ascension in this diocese will override Ascension in the national calendar.' );
         }
         if( $('#diocesanCalendarOverrideCorpusChristi').val() !== "" ) {
-            saveObj.CalData.overrides.corpus_christi = $('#diocesanCalendarOverrideCorpusChristi').val();
+            saveObj.caldata.overrides.corpus_christi = $('#diocesanCalendarOverrideCorpusChristi').val();
             //console.log( 'Corpus Christi in this diocese will override Corpus Christi in the national calendar.' );
         }
     }
@@ -809,36 +893,25 @@ $(document).on('click', '.actionPromptButton', ev => {
 });
 
 $(document).on('change', '.regionalNationalCalendarName', ev => {
-    const category = ev.currentTarget.dataset.category;
-    let key = ev.currentTarget.value;
-    let apiDataPath = `${RegionalDataURL}/${category}/`;
+    API.category = ev.currentTarget.dataset.category;
+    API.key = ev.currentTarget.value;
     const headers = {};
-    if ( category === 'widerregion' ) {
-        let locale;
-        ([key, locale] = ev.currentTarget.value.split(' - '));
-        apiDataPath += key;
-        headers['Accept-Language'] = locale;
-    } else if (category === 'nation') {
-        key = key.toUpperCase();
-        if (key === 'UNITED STATES') {
-            key = 'USA';
-        }
-        apiDataPath += key;
-    } else {
-        apiDataPath += key;
+    if ( API.category === 'widerregion' ) {
+        ([API.key, API.locale] = ev.currentTarget.value.split(' - '));
+        headers['Accept-Language'] = API.locale;
     }
-    console.log(`apiDataPath is ${apiDataPath} (category is ${category} and key is ${key}). Now checking if a calendar already exists...`);
+    console.log(`API.path is ${API.path} (category is ${API.category} and key is ${API.key}). Now checking if a calendar already exists...`);
 
-    fetch(apiDataPath, { headers }).then(response => {
+    fetch(API.path, { headers }).then(response => {
         if (response.ok) {
             return response.json();
         } else {
             return Promise.reject(response);
         }
     }).then(data => {
-        console.log( `successfully retrieved the data file for the ${category} ${key}` );
+        console.log( `successfully retrieved the data file for the ${API.category} ${API.key}` );
         console.log(data);
-        switch(category) {
+        switch(API.category) {
             case 'widerregion':
                 $('#widerRegionIsMultilingual').prop('checked', data.metadata.multilingual);
                 FormControls.settings.decreeURLField = true;
@@ -935,11 +1008,11 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
     }).catch(error => {
         if (404 === error.status) {
             error.json().then(json => {
-                const message = `${error.status} ${json.status} ${json.response}: ${json.description}<br />The Data File for the ${category} ${key} does not exist yet. Not that it's a big deal, just go ahead and create it now!`;
+                const message = `${error.status} ${json.status} ${json.response}: ${json.description}<br />The Data File for the ${API.category} ${API.key} does not exist yet. Not that it's a big deal, just go ahead and create it now!`;
                 toastr["warning"](message, "Warning");
                 console.warn(message);
             });
-            switch(category) {
+            switch(API.category) {
                 case 'widerregion':
                     $('#widerRegionIsMultilingual').prop('checked', false);
                     $('#widerRegionLanguages').multiselect('deselectAll', false);
@@ -1032,11 +1105,11 @@ $(document).on('change', '.existingFestivityName', ev => {
 
 $(document).on('click', '#deleteDiocesanCalendarButton', ev => {
     $('#removeDiocesanCalendarPrompt').modal('toggle');
-    let $diocese = $('#diocesanCalendarDioceseName').val();
-    let $key = $('#DiocesesList').find('option[value="' + $diocese + '"]').attr('data-value').toUpperCase();
-    let $nation = $('#diocesanCalendarNationalDependency').val();
-    delete $index.DiocesanCalendars[$key];
-    let deleteKey = { LitCal: $key, Diocese: $diocese, Nation: $nation, category: 'diocesanCalendar' };
+    let diocese = $('#diocesanCalendarDioceseName').val();
+    let key = $('#DiocesesList').find('option[value="' + diocese + '"]').attr('data-value').toUpperCase();
+    let nation = $('#diocesanCalendarNationalDependency').val();
+    delete $index.DiocesanCalendars[key];
+    let deleteKey = { litcal: key, diocese: diocese, nation: nation, category: 'diocese' };
     $.ajax({
         url: RegionalDataURL,
         method: 'DELETE',
@@ -1044,7 +1117,7 @@ $(document).on('click', '#deleteDiocesanCalendarButton', ev => {
         contentType: 'application/json',
         crossDomain: false,
         data: JSON.stringify( deleteKey ),
-        success: data => {
+        success: () => {
             $('#retrieveExistingDiocesanData').prop('disabled', true);
             $('#removeExistingDiocesanData').prop('disabled', true);
             $('body').find('#removeDiocesanCalendarPrompt').remove();
@@ -1052,7 +1125,7 @@ $(document).on('click', '#deleteDiocesanCalendarButton', ev => {
             $('#diocesanCalendarNationalDependency').val('');
             //console.log('data returned from delete action: ');
             //console.log(data);
-            toastr["success"]("Diocesan Calendar was deleted successfully", "Success");
+            toastr["success"](`Diocesan Calendar '${key}' was deleted successfully`, "Success");
         },
         error: (xhr, textStatus, errorThrown) => {
             console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown);
@@ -1199,34 +1272,37 @@ $(document).on('click', '#deleteDiocesanCalendarButton', ev => {
  *          - metadata.url_lang_map
 */
 $(document).on('click', '.serializeRegionalNationalData', ev => {
-    const category = $(ev.currentTarget).data('category');
-    const lcl = $('#nationalCalendarSettingLocale').val();
-    let finalObj = {};
-    switch(category) {
-        case 'NATIONALCALENDAR':
+    API.category = $(ev.currentTarget).data('category');
+    const payload = {};
+    switch(API.category) {
+        case 'nation':
+            API.key = $('#nationalCalendarName').val().toUpperCase();
+            API.locale = $('#nationalCalendarSettingLocale').val();
             const regionNamesLocalized = new Intl.DisplayNames(['en'], { type: 'region' });
             const widerRegion = $('#associatedWiderRegion').val();
-            finalObj = {
+            payload = {
                 "litcal": [],
                 "settings": {
                     "epiphany": $('#nationalCalendarSettingEpiphany').val(),
                     "ascension": $('#nationalCalendarSettingAscension').val(),
                     "corpus_christi": $('#nationalCalendarSettingCorpusChristi').val(),
                     "eternal_high_priest": $('#nationalCalendarSettingHighPriest').is(':checked'),
-                    "locale": lcl
+                    "locale": API.locale
                 },
                 "metadata": {
-                    "region": regionNamesLocalized.of( messages.countryISOCodes[$('.regionalNationalCalendarName').val().toUpperCase()] ).toUpperCase().replace(/[.]/g,'_'),
+                    "region": regionNamesLocalized.of( messages.countryISOCodes[$('#nationalCalendarName').val().toUpperCase()] ).toUpperCase().replace(/[.]/g,'_'),
                     "wider_region": {
                         "name": widerRegion,
                         "json_file": `nations/${widerRegion}.json`,
-                        "i18n_file": `nations/${widerRegion.toUpperCase()}/${lcl}.json`
+                        "i18n_file": `nations/${widerRegion.toUpperCase()}/${API.locale}.json`
                     },
                     "missals": $.map( $('#publishedRomanMissalList li'), el => { return $(el).text() })
                 }
             }
             break;
-        case 'WIDERREGIONCALENDAR':
+        case 'widerregion':
+            ([API.key, API.locale] = document.querySelector('#widerRegionCalendarName').value.split(' - '));
+            API.key = API.key.toUpperCase();
             const regionNamesLocalizedEng = new Intl.DisplayNames(['en'], { type: 'region' });
             let nationalCalendars = $('#widerRegionLanguages').val().reduce((prev, curr) => {
                 curr = curr.replaceAll('_', '-');
@@ -1239,7 +1315,7 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
                 prev[ regionNamesLocalizedEng.of( locale.region ) ] = locale.region;
                 return prev;
             }, {});
-            finalObj = {
+            payload = {
                 "litcal": [],
                 "national_calendars": nationalCalendars,
                 "metadata": {
@@ -1312,18 +1388,18 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
                 rowData.metadata.url_lang_map = decreeLangs.split(',').reduce((prevVal, curVal) => { let assoc = curVal.split('='); prevVal[assoc[0]] = assoc[1]; return prevVal; }, {}) ;
             }
         }
-        finalObj.litcal.push(rowData);
+        payload.litcal.push(rowData);
     });
 
-    //console.log(finalObj);
-    //console.log(JSON.stringify(finalObj));
+    //console.log(payload);
+    //console.log(JSON.stringify(payload));
     $.ajax({
         url: RegionalDataURL,
         method: 'PUT',
         dataType: 'json',
         contentType: 'application/json',
         crossDomain: false,
-        data: JSON.stringify( finalObj ),
+        data: payload,
         success: (data, textStatus, xhr) => {
             console.log(xhr.status + ' ' + textStatus + ': data returned from save action: ');
             console.log(data);
