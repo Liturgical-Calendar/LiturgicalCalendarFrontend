@@ -84,6 +84,9 @@ const sanitizeProxiedAPI = {
                 break;
             case 'key':
                 if (target['category'] === 'widerregion') {
+                    if (value.includes(' - ')) {
+                        ([value, target['locale']] = value.split(' - '));
+                    }
                     if (false === ['Americas', 'Europe', 'Africa', 'Oceania', 'Asia'].includes(value)) {
                         console.warn(`property 'key' of this object must be one of the values 'Americas', 'Europe', 'Africa', 'Oceania', or 'Asia'`);
                         return;
@@ -222,14 +225,13 @@ let $index = null;
 let $missals = null;
 
 const loadDiocesanCalendarData = () => {
+    API.category = 'diocese';
     let diocese = $('#diocesanCalendarDioceseName').val();
-    let dioceseKey = $('#DiocesesList').find('option[value="' + diocese + '"]').attr('data-value').toUpperCase();
+    API.key = $('#DiocesesList').find('option[value="' + diocese + '"]').attr('data-value');
     jQuery.ajax({
-        url: RegionalDataURL,
+        url: API.path,
         method: 'GET',
         dataType: 'json',
-        //crossDomain: true,
-        data: { "key" : dioceseKey, "category": "diocese" },
         statusCode: {
             404: (xhr, textStatus, errorThrown) => {
                 toastr["warning"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />The Diocesan Calendar for ' + diocese + ' does not exist yet.', "Warning");
@@ -907,10 +909,10 @@ $(document).on('click', '.actionPromptButton', ev => {
 
 $(document).on('change', '.regionalNationalCalendarName', ev => {
     API.category = ev.currentTarget.dataset.category;
+    // our proxy will take care of splitting locale from wider region, when we are setting a wider region key
     API.key = ev.currentTarget.value;
     const headers = {};
     if ( API.category === 'widerregion' ) {
-        ([API.key, API.locale] = ev.currentTarget.value.split(' - '));
         headers['Accept-Language'] = API.locale;
     }
     console.log(`API.path is ${API.path} (category is ${API.category} and key is ${API.key}). Now checking if a calendar already exists...`);
@@ -1062,9 +1064,9 @@ $(document).on('change', '#diocesanCalendarDioceseName', ev => {
     //first we'll enforce only values from the current datalist
     if ($('#DiocesesList').find('option[value="' + currentVal + '"]').length > 0) {
         $(ev.currentTarget).removeClass('is-invalid');
-        let $key = $('#DiocesesList').find('option[value="' + currentVal + '"]').attr('data-value').toUpperCase();
-        //console.log('selected diocese with key = ' + $key);
-        if ($index.diocesan_calendars_keys.includes($key)) {
+        API.key = $('#DiocesesList').find('option[value="' + currentVal + '"]').attr('data-value');
+        //console.log('selected diocese with key = ' + API.key);
+        if ($index.diocesan_calendars_keys.includes(API.key)) {
             const diocesan_calendar = $index.diocesan_calendars.filter(el => el.calendar_id === $key)[0];
             $('#removeExistingDiocesanData').prop('disabled', false);
             $('body').append(removeDiocesanCalendarModal(currentVal));
@@ -1117,19 +1119,20 @@ $(document).on('change', '.existingFestivityName', ev => {
 });
 
 $(document).on('click', '#deleteDiocesanCalendarButton', ev => {
+    API.category = 'diocese';
     $('#removeDiocesanCalendarPrompt').modal('toggle');
-    let diocese = $('#diocesanCalendarDioceseName').val();
-    let key = $('#DiocesesList').find('option[value="' + diocese + '"]').attr('data-value').toUpperCase();
+    const diocese = $('#diocesanCalendarDioceseName').val();
+    API.key = $('#DiocesesList').find('option[value="' + diocese + '"]').attr('data-value');
     let nation = $('#diocesanCalendarNationalDependency').val();
     delete $index.DiocesanCalendars[key];
-    let deleteKey = { litcal: key, diocese: diocese, nation: nation, category: 'diocese' };
+    const payload = { diocese: diocese, nation: nation };
     $.ajax({
         url: RegionalDataURL,
         method: 'DELETE',
         dataType: 'json',
         contentType: 'application/json',
         crossDomain: false,
-        data: JSON.stringify( deleteKey ),
+        data: JSON.stringify( payload ),
         success: () => {
             $('#retrieveExistingDiocesanData').prop('disabled', true);
             $('#removeExistingDiocesanData').prop('disabled', true);
@@ -1289,7 +1292,7 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
     const payload = {};
     switch(API.category) {
         case 'nation':
-            API.key = $('#nationalCalendarName').val().toUpperCase();
+            API.key = $('#nationalCalendarName').val();
             API.locale = $('#nationalCalendarSettingLocale').val();
             const regionNamesLocalized = new Intl.DisplayNames(['en'], { type: 'region' });
             const widerRegion = $('#associatedWiderRegion').val();
@@ -1314,8 +1317,8 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
             }
             break;
         case 'widerregion':
-            ([API.key, API.locale] = document.querySelector('#widerRegionCalendarName').value.split(' - '));
-            API.key = API.key.toUpperCase();
+            // our proxy will take care of splitting locale from wider region
+            API.key = document.querySelector('#widerRegionCalendarName').value;
             const regionNamesLocalizedEng = new Intl.DisplayNames(['en'], { type: 'region' });
             let nationalCalendars = $('#widerRegionLanguages').val().reduce((prev, curr) => {
                 curr = curr.replaceAll('_', '-');
@@ -1407,7 +1410,7 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
     //console.log(payload);
     //console.log(JSON.stringify(payload));
     $.ajax({
-        url: RegionalDataURL,
+        url: API.path,
         method: 'PUT',
         dataType: 'json',
         contentType: 'application/json',
