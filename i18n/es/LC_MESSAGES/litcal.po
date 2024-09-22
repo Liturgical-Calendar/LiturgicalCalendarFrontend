@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-22 00:21+0000\n"
-"PO-Revision-Date: 2024-09-16 21:15+0000\n"
+"PO-Revision-Date: 2024-09-22 00:28+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
@@ -554,10 +554,6 @@ msgid "(see <a href=\"translations.php\">Translations</a>)"
 msgstr "(ver <a href=\"translations.php\">Traducciones</a>)"
 
 #: extending.php:57
-#, fuzzy
-#| msgid ""
-#| "A National calendar may have some festivities in common with other "
-#| "National calendars, for example the patron of a wider region."
 msgid ""
 "A national calendar may have some festivities in common with other national "
 "calendars, for example the patron of a wider region."
@@ -566,11 +562,6 @@ msgstr ""
 "calendarios nacionales, por ejemplo, el patrón de una región más amplia."
 
 #: extending.php:58
-#, fuzzy
-#| msgid ""
-#| "In this case, the festivities for the Wider region should be defined "
-#| "separately, and if applicable should be made translatable, then the Wider "
-#| "region should be applied to the National Calendar."
 msgid ""
 "In this case, the festivities for the wider region should be defined "
 "separately, and the languages applicable to the wider region should be set; "
@@ -578,8 +569,9 @@ msgid ""
 "calendars belonging to the wider region."
 msgstr ""
 "En este caso, las festividades para la región más amplia deben definirse por "
-"separado y, si es aplicable, deben hacerse traducibles, luego la región más "
-"amplia debe aplicarse al Calendario Nacional."
+"separado, y los idiomas aplicables a la región más amplia deben establecerse;"
+" los datos de la región más amplia se aplicarán automáticamente a los "
+"calendarios nacionales pertenecientes a la región más amplia."
 
 #: extending.php:59
 msgid ""
