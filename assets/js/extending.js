@@ -1067,7 +1067,7 @@ $(document).on('change', '#diocesanCalendarDioceseName', ev => {
         API.key = $('#DiocesesList').find('option[value="' + currentVal + '"]').attr('data-value');
         //console.log('selected diocese with key = ' + API.key);
         if ($index.diocesan_calendars_keys.includes(API.key)) {
-            const diocesan_calendar = $index.diocesan_calendars.filter(el => el.calendar_id === $key)[0];
+            const diocesan_calendar = $index.diocesan_calendars.filter(el => el.calendar_id === API.key)[0];
             $('#removeExistingDiocesanData').prop('disabled', false);
             $('body').append(removeDiocesanCalendarModal(currentVal));
             if(diocesan_calendar.hasOwnProperty('group')){
