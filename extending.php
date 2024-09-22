@@ -54,8 +54,8 @@ asort($availableNationalCalendars, SORT_LOCALE_STRING);
 $API_EXTEND_HOWTO_A = _("The General Roman Calendar can be extended so as to create a National or Diocesan calendar. Diocesan calendars depend on National calendars, so the National calendar must first be created.");
 $API_EXTEND_HOWTO_A1 = _('The first step in creating a national or diocesan calendar, is to translate the data for the General Roman Calendar into the language for that nation or diocese.');
 $API_EXTEND_HOWTO_A1a = _('(see <a href="translations.php">Translations</a>)');
-$API_EXTEND_HOWTO_A2 = _("A National calendar may have some festivities in common with other National calendars, for example the patron of a wider region.");
-$API_EXTEND_HOWTO_A3 = _("In this case, the festivities for the Wider region should be defined separately, and if applicable should be made translatable, then the Wider region should be applied to the National Calendar.");
+$API_EXTEND_HOWTO_A2 = _("A national calendar may have some festivities in common with other national calendars, for example the patron of a wider region.");
+$API_EXTEND_HOWTO_A3 = _("In this case, the festivities for the wider region should be defined separately, and the languages applicable to the wider region should be set; the wider region data will then be applied automatically to national calendars belonging to the wider region.");
 $DioceseGroupHelp = _("If a group of dioceses decides to pool their Liturgical Calendar data, for example to print out one single yearly calendar with the data for all the dioceses in the group, the group can be defined or set here.");
 
 $c = new Collator($i18n->LOCALE);
@@ -357,7 +357,7 @@ if (isset($_GET["choice"])) {
             FormControls::$settings["untilYearField"] = true;
             ?>
                 <div class="container">
-                    <form class="row justify-content-center needs-validation" novalidate>
+                    <form class="row justify-content-center align-items-baseline needs-validation" novalidate>
                         <div class="form-group col col-md-3">
                             <label for="diocesanCalendarNationalDependency" class="fw-bold"><?php echo _("Depends on national calendar"); ?>:</label>
                             <select class="form-select" id="diocesanCalendarNationalDependency" required>
