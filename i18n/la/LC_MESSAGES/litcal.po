@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-17 04:56+0000\n"
+"POT-Creation-Date: 2024-09-22 00:21+0000\n"
 "PO-Revision-Date: 2022-05-10 20:08+0000\n"
 "Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
@@ -458,15 +458,16 @@ msgstr ""
 
 #: extending.php:57
 msgid ""
-"A National calendar may have some festivities in common with other National "
+"A national calendar may have some festivities in common with other national "
 "calendars, for example the patron of a wider region."
 msgstr ""
 
 #: extending.php:58
 msgid ""
-"In this case, the festivities for the Wider region should be defined "
-"separately, and if applicable should be made translatable, then the Wider "
-"region should be applied to the National Calendar."
+"In this case, the festivities for the wider region should be defined "
+"separately, and the languages applicable to the wider region should be set; "
+"the wider region data will then be applied automatically to national "
+"calendars belonging to the wider region."
 msgstr ""
 
 #: extending.php:59
