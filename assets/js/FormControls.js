@@ -1,4 +1,20 @@
-
+/**
+ * An enumeration of the 12 months of the Gregorian calendar.
+ * @readonly
+ * @enum {number}
+ * @property {Number} JANUARY - January (1)
+ * @property {Number} FEBRUARY - February (2)
+ * @property {Number} MARCH - March (3)
+ * @property {Number} APRIL - April (4)
+ * @property {Number} MAY - May (5)
+ * @property {Number} JUNE - June (6)
+ * @property {Number} JULY - July (7)
+ * @property {Number} AUGUST - August (8)
+ * @property {Number} SEPTEMBER - September (9)
+ * @property {Number} OCTOBER - October (10)
+ * @property {Number} NOVEMBER - November (11)
+ * @property {Number} DECEMBER - December (12)
+ */
 const Month = Object.freeze({
     JANUARY:    1,
     FEBRUARY:   2,
@@ -15,26 +31,180 @@ const Month = Object.freeze({
 });
 
 /**
- * Thirty days hath September, April, June, and November.
- * Useful for setting the limit on the day input.
+ * Thirty days hath September, April, June, and November. Useful for setting the limit on the day input.
+ * @readonly
+ * @enum {Month}
  */
-const MonthsOfThirty = [Month.SEPTEMBER, Month.APRIL, Month.JUNE, Month.NOVEMBER];
+const MonthsOfThirty = Object.freeze([Month.SEPTEMBER, Month.APRIL, Month.JUNE, Month.NOVEMBER]);
 
 /**
- * An array of English names of the seven days of the week, used to check or set the value of the strtotime property in liturgical events.
- * @constant
- * @type {String[]}
+ * English names of the seven days of the week indexed from 0 to 7, used to check or set the value of the strtotime property in liturgical events.
+ * @readonly
+ * @enum {String}
  */
-const daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const DaysOfTheWeek = Object.freeze(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']);
+
+/**
+ * A mapping of festivity ranks to numerical values for sorting purposes.
+ * @readonly
+ * @enum {Number}
+ * @property {Number} HIGHERSOLEMNITY - Higher solemnity (7)
+ * @property {Number} SOLEMNITY - Solemnity (6)
+ * @property {Number} FEASTLORD - Feast of the Lord (5)
+ * @property {Number} FEAST - Feast (4)
+ * @property {Number} MEMORIAL - Memorial (3)
+ * @property {Number} OPTIONALMEMORIAL - Optional memorial (2)
+ * @property {Number} WEEKDAY - Weekday (1)
+ */
+const Rank = Object.freeze({
+    HIGHERSOLEMNITY:  7,
+    SOLEMNITY:        6,
+    FEASTLORD:        5,
+    FEAST:            4,
+    MEMORIAL:         3,
+    OPTIONALMEMORIAL: 2,
+    WEEKDAY:          1
+});
+
+/**
+ * An enumeration of possible actions that can be used to create a form row.
+ * @readonly
+ * @enum {String} RowAction
+ * @property {String} MakePatron - Designate a festivity as a patron saint (makePatron)
+ * @property {String} MakeDoctor - Designate a festivity as a doctor of the Church (makeDoctor)
+ * @property {String} SetProperty - Set the name, grade, color, or readings of a festivity (setProperty)
+ * @property {String} MoveFestivity - Move a festivity to a different date (moveFestivity)
+ * @property {String} CreateNew - Create a new festivity (createNew)
+ * @property {String} CreateNewFromExisting - Create a new festivity using an existing one as a template (createNewFromExisting)
+ */
+const RowAction = Object.freeze({
+    MakePatron:       'makePatron',
+    MakeDoctor:       'makeDoctor',
+    SetProperty:      'setProperty',
+    MoveFestivity:    'moveFestivity',
+    CreateNew:        'createNew',
+    CreateNewFromExisting: 'createNewFromExisting'
+});
+
+/**
+ * An enumeration of possible form row titles based on the RowAction. Produces the string key for localization purposes.
+ * @readonly
+ * @enum {String} RowActionTitle
+ * @property {String} RowAction.MakePatron - Designate a festivity as a patron saint ('Designate patron')
+ * @property {String} RowAction.MakeDoctor - Designate a festivity as a doctor of the Church ('Designate Doctor')
+ * @property {String} RowAction.SetProperty - Set the name, grade, color, or readings of a festivity ('Change name or grade')
+ * @property {String} RowAction.MoveFestivity - Move a festivity to a different date ('Move festivity')
+ * @property {String} RowAction.CreateNew - Create a new festivity ('New festivity')
+ * @property {String} RowAction.CreateNewFromExisting - Create a new festivity using an existing one as a template ('New festivity')
+ */
+const RowActionTitle = Object.freeze({
+    [RowAction.MakePatron]:            'Designate patron',
+    [RowAction.MakeDoctor]:            'Designate Doctor',
+    [RowAction.SetProperty]:           'Change name or grade',
+    [RowAction.MoveFestivity]:         'Move festivity',
+    [RowAction.CreateNew]:             'New festivity',
+    [RowAction.CreateNewFromExisting]: 'New festivity',
+});
+
+/**
+ * Properties that are relevant for Mass readings.
+ * @readonly
+ * @type {Array<string>}
+ * @property {String} first_reading - First reading
+ * @property {String} responsorial_psalm - Responsorial psalm
+ * @property {String} second_reading - Second reading
+ * @property {String} alleluia_verse - Alleluia verse
+ * @property {String} gospel - Gospel
+ */
+const readingsProperties = Object.freeze([
+    "first_reading",
+    "responsorial_psalm",
+    "second_reading",
+    "alleluia_verse",
+    "gospel"
+]);
+
+/**
+ * The properties of the `LitCal` object that should be treated as integers.
+ * @readonly
+ * @type {Array<string>}
+ * @property {Number} day - Day
+ * @property {Number} month - Month
+ * @property {Number} grade - Grade
+ * @property {Number} since_year - Since year
+ * @property {Number} until_year - Until year
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#toJSON()_behavior|toJSON() behavior}
+ */
+const integerProperties = Object.freeze([ 'day', 'month', 'grade', 'since_year', 'until_year' ]);
+
+/**
+ * The properties of the `LitCal` object that are expected to be present in the JSON payload of each action.
+ * @readonly
+ * @type {Object<RowAction, Array<string>>}
+ * @property {Array<string>} RowAction.MakePatron - The properties to expect in the JSON payload for the "makePatron" action.
+ * @property {Array<string>} RowAction.SetProperty - The properties to expect in the JSON payload for the "setProperty" action.
+ * @property {Array<string>} RowAction.MoveFestivity - The properties to expect in the JSON payload for the "moveFestivity" action.
+ * @property {Array<string>} RowAction.CreateNew - The properties to expect in the JSON payload for the "createNew" action.
+ */
+const payloadProperties = Object.freeze({
+    [RowAction.MakePatron]:    Object.freeze([ 'event_key', 'name', 'color', 'grade', 'day', 'month' ]),
+    [RowAction.SetProperty]:   Object.freeze([ 'event_key', 'name', 'grade', 'day', 'month' ]),
+    [RowAction.MoveFestivity]: Object.freeze([ 'event_key', 'name', 'day', 'month', 'missal', 'reason' ]),
+    [RowAction.CreateNew]:     Object.freeze([ 'event_key', 'name', 'color', 'grade', 'day', 'month', 'strtotime', 'common' ]) //'readings' is only expected for createNew when common=Proper
+});
+
+/**
+ * The properties of the `LitCal` object that are related to the metadata of a festivity / liturgical event.
+ * @readonly
+ * @type {Array<string>}
+ */
+const metadataProperties = Object.freeze([ 'missal', 'reason' ]);
+
+
 
 /**
  * A class containing static methods and properties used to create form controls.
  * @class
  * @property {Number} uniqid - a unique id for the form elements
  * @property {Object} settings - an object containing settings for the form controls
+ * @property {RowAction?} action - sets the fields of the form row according to the action that the form row intends to take
+ * @property {RowActionTitle?} title - the localizable title of the form row based on the action being taken
+ * @property {String?} jsLocale - the current locale used for localizing form elements
+ * @property {Intl.DateTimeFormat?} weekdayFormatter - the formatter for the weekday
+ * @property {Number?} index - the index of the form row, which is stored in the submitted form data in order to be able to recreate the exact order for form rows
+ * @property {Function} CreateFestivityRow - a function that creates a new form row for a liturgical event
+ * @property {Function} CreatePatronRow - a function that creates a new form row for a patron saint
+ * @property {Function} CreateDoctorRow - a function that creates a new form row for a doctor of the church
  */
 class FormControls {
+    /**
+     * A unique id for the form elements. This is used to create distinct form field names, which is important when creating multiple form rows dynamically.
+     * @type {Number}
+     * @static
+     */
     static uniqid = 0;
+
+    /**
+     * An object containing settings for the form controls. The properties of this object determine whether a given form field is shown or not, or in some cases whether it is enabled.
+     * @type {Object}
+     * @property {Boolean} nameField - whether the form field for the name of the festivity is shown
+     * @property {Boolean} dayField - whether the form field for the day of the festivity is shown
+     * @property {Boolean} monthField - whether the form field for the month of the festivity is shown
+     * @property {Boolean} colorField - whether the form field for the color of the festivity is shown
+     * @property {Boolean} gradeField - whether the form field for the grade of the festivity is enabled
+     * @property {Boolean} commonField - whether the form field for the common of the festivity is enabled
+     * @property {Boolean} gradeFieldShow - whether the grade field is shown
+     * @property {Boolean} commonFieldShow - whether the common field is shown
+     * @property {Boolean} fromYearField - whether the form field for the year that the festivity starts is shown
+     * @property {Boolean} untilYearField - whether the form field for the year that the festivity ends is shown
+     * @property {Boolean} tagField - whether the form field for the tag of the festivity is shown
+     * @property {Boolean} decreeURLField - whether the form field for the url of the decree on which the festivity is based is shown
+     * @property {Boolean} decreeLangMapField - whether the form field for the language map of the decree on which the festivity is based is shown
+     * @property {Boolean} reasonField - whether the form field for the reason for which the festivity is being moved is shown
+     * @property {Boolean} missalField - whether the form field for the missal on which the festivity is based is shown
+     * @property {Boolean} strtotimeField - whether the form field for the relative date of the festivity (in PHP strtotime format) is shown
+     * @static
+     */
     static settings = {
         nameField: true,
         dayField: true,
@@ -53,10 +223,43 @@ class FormControls {
         missalField: false,
         strtotimeField: false
     }
+
+    /**
+     * The action that the form will perform, e.g. RowAction.MakePatron, RowAction.MakeDoctor, RowAction.SetProperty, RowAction.MoveFestivity, RowAction.CreateNew, or RowAction.CreateNewFromExisting.
+     * @type {RowAction?}
+     * @static
+     */
     static action = null;
+
+    /**
+     * The localized title of the action being performed, e.g. RowActionTitle[RowAction.MakePatron], RowActionTitle[RowAction.MakeDoctor], RowActionTitle[RowAction.SetProperty], RowActionTitle[RowAction.MoveFestivity], RowActionTitle[RowAction.CreateNew], or RowActionTitle[RowAction.CreateNewFromExisting].
+     * @type {RowActionTitle?}
+     * @static
+     */
     static title = null;
+
+    /**
+     * The current locale used for localizing form elements.
+     * @type {String?}
+     * @static
+     * @example "en" for English, "es" for Spanish, "de" for German, etc.
+     */
     static jsLocale = null;
+
+    /**
+     * An object used to format the weekday in the date picker.
+     * It must be an instance of the Intl.DateTimeFormat class.
+     * @type {Intl.DateTimeFormat?}
+     * @static
+     * @example new Intl.DateTimeFormat('en', { weekday: 'long' }) for English.
+     */
     static weekdayFormatter = null;
+
+    /**
+     * The index of the form row, which is stored in the submitted form data in order to be able to recreate the exact order for form rows.
+     * @type {Number?}
+     * @static
+     */
     static index = null;
 
     /**
@@ -64,8 +267,9 @@ class FormControls {
      * It contains fields for name, day, month, common, color, since_year and until_year.
      * The fields shown depend on the settings in FormControls.settings.
      * @returns {string} The HTML for the form row.
+     * @static
      */
-    static createFestivityRow() {
+    static CreateFestivityRow() {
         let formRow = '';
 
         if (FormControls.title !== null) {
@@ -156,13 +360,14 @@ class FormControls {
      * The fields shown depend on the settings in FormControls.settings.
      * @param {string|object} [element=null] - Either a string (the event_key of the FestivityCollection) or an object with the festivity and its metadata.
      * @returns {string} The HTML for the form row.
+     * @static
      */
     static CreatePatronRow(element = null) {
         let formRow = '';
         let festivity = null;
         if( element !== null ) {
             if( typeof element === 'string' ) {
-                festivity = lowercaseKeys( FestivityCollection[element] );
+                festivity = FestivityCollection[element];
                 festivity.event_key = element;
                 festivity.since_year = 1970;
                 //festivity.until_year = null;
@@ -186,7 +391,7 @@ class FormControls {
 
         if (FormControls.title !== null) {
             formRow += `<div class="d-flex justify-content-left data-group-title"><h4 class="data-group-title">${FormControls.title}</h4>`;
-            if(FormControls.action.description === RowAction.CreateNew.description) {
+            if(FormControls.action.description === RowAction.CreateNew) {
                 if( festivity !== null && festivity.hasOwnProperty( 'strtotime' ) ) {
                     formRow += `<button type="button" class="ms-auto btn btn-info strtotime-toggle-btn active" data-bs-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="true" autocomplete="off"><i class="fas fa-comment me-2"></i>explicatory date</button>`;
                 } else {
@@ -274,7 +479,7 @@ class FormControls {
 
         if (FormControls.settings.readingsField) {
             formRow += `<div class="col-sm-6"><table>`;
-            formRow += READINGS_PROPERTIES.map((prop,idx) => `<tr><td><label for="onTheFly${FormControls.uniqid}Readings_${prop}">${prop}</label></td><td style="padding-left: 15px;"><input type="text" class="form-control litEvent litEventReadings litEventReadings_${prop}" id="onTheFly${FormControls.uniqid}Readings_${prop}" ${festivity === null || typeof festivity.common === 'undefined' || festivity.common !== 'Proper' ? `disabled` : ``} value="${festivity && festivity?.common === 'Proper' ? festivity.readings[prop] : ''}" /></td>${idx===0 ? `<td rowspan="5" style="vertical-align: top;"><i class="fas fa-info-circle m-2" style="color: #4e73df;" title="When the festivity has its own Proper, then Readings can be defined, otherwise the readings will depend on the Common"></i></td>` : ``}</tr>`).join('');
+            formRow += readingsProperties.map((prop,idx) => `<tr><td><label for="onTheFly${FormControls.uniqid}Readings_${prop}">${prop}</label></td><td style="padding-left: 15px;"><input type="text" class="form-control litEvent litEventReadings litEventReadings_${prop}" id="onTheFly${FormControls.uniqid}Readings_${prop}" ${festivity === null || typeof festivity.common === 'undefined' || festivity.common !== 'Proper' ? `disabled` : ``} value="${festivity && festivity?.common === 'Proper' ? festivity.readings[prop] : ''}" /></td>${idx===0 ? `<td rowspan="5" style="vertical-align: top;"><i class="fas fa-info-circle m-2" style="color: #4e73df;" title="When the festivity has its own Proper, then Readings can be defined, otherwise the readings will depend on the Common"></i></td>` : ``}</tr>`).join('');
             formRow += `</table></div>`;
         }
 
@@ -321,13 +526,13 @@ class FormControls {
      * The fields shown depend on the settings in FormControls.settings.
      * @param {string|object} [element=null] - Either a string (the event_key of the FestivityCollection) or an object with the festivity and its metadata.
      * @returns {string} The HTML for the form row.
+     * @static
      */
     static CreateDoctorRow(element = null) {
         let formRow = '';
         let festivity = null;
         if( element !== null ) {
             if( typeof element === 'string' ) {
-                //festivity = lowercaseKeys( FestivityCollection[element] );
                 festivity.event_key = element;
                 festivity.since_year = 1970;
                 festivity.until_year = '';
@@ -335,7 +540,6 @@ class FormControls {
                 festivity.url_lang_map = {};
             }
             if( typeof element === 'object' ) {
-                //element.festivity = lowercaseKeys( element.festivity );
                 festivity = {
                     ...element.festivity,
                     ...element.metadata
@@ -370,7 +574,7 @@ class FormControls {
 
         if (FormControls.title !== null) {
             formRow += `<hr><div class="d-flex justify-content-left"><h4 class="data-group-title">${FormControls.title}</h4>`;
-            if(FormControls.action.description === RowAction.CreateNew.description) {
+            if(FormControls.action.description === RowAction.CreateNew) {
                 if( festivity !== null && festivity.hasOwnProperty( 'strtotime' ) ) {
                     formRow += `<button type="button" class="ms-auto btn btn-info strtotime-toggle-btn active" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="true" autocomplete="off"><i class="fas fa-comment me-2"></i>explicatory date</button>`;
                 } else {
@@ -422,7 +626,7 @@ class FormControls {
             <select class="form-select litEvent litEventStrtotime" id="onTheFly${FormControls.uniqid}StrToTime-dayOfTheWeek">`;
             for (let i = 0; i < 7; i++ ) {
                 let dayOfTheWeek = new Date(Date.UTC(2000, 0, 2+i));
-                formRow += `<option value="${daysOfTheWeek[i]}"${festivity.strtotime.day_of_the_week === daysOfTheWeek[i] ? ' selected' : '' }>${FormControls.weekdayFormatter.format(dayOfTheWeek)}</option>`;
+                formRow += `<option value="${DaysOfTheWeek[i]}"${festivity.strtotime.day_of_the_week === DaysOfTheWeek[i] ? ' selected' : '' }>${FormControls.weekdayFormatter.format(dayOfTheWeek)}</option>`;
             }
             formRow += `</select>
             <select class="form-select litEvent litEventStrtotime" id="onTheFly${FormControls.uniqid}StrToTime-relativeTime">
@@ -468,7 +672,7 @@ class FormControls {
 
         if (FormControls.settings.readingsField) {
             formRow += `<div class="col-sm-5"><table>`;
-            formRow += READINGS_PROPERTIES.map((prop,idx) => `<tr><td><label for="onTheFly${FormControls.uniqid}Readings_${prop}">${prop}</label></td><td style="padding-left: 15px;"><input type="text" class="form-control litEvent litEventReadings litEventReadings_${prop}" id="onTheFly${FormControls.uniqid}Readings_${prop}" ${festivity === null || typeof festivity.common === 'undefined' || festivity.common !== 'Proper' ? `disabled` : ``} value="${festivity && festivity?.common === 'Proper' ? festivity.readings[prop] : ''}" /></td>${idx===0 ? `<td rowspan="5" style="vertical-align: top;"><i class="fas fa-info-circle m-2" style="color: #4e73df;" title="When the festivity has its own Proper, then Readings can be defined, otherwise the readings will depend on the Common"></i>` : ``}</td></tr>`).join('');
+            formRow += readingsProperties.map((prop,idx) => `<tr><td><label for="onTheFly${FormControls.uniqid}Readings_${prop}">${prop}</label></td><td style="padding-left: 15px;"><input type="text" class="form-control litEvent litEventReadings litEventReadings_${prop}" id="onTheFly${FormControls.uniqid}Readings_${prop}" ${festivity === null || typeof festivity.common === 'undefined' || festivity.common !== 'Proper' ? `disabled` : ``} value="${festivity && festivity?.common === 'Proper' ? festivity.readings[prop] : ''}" /></td>${idx===0 ? `<td rowspan="5" style="vertical-align: top;"><i class="fas fa-info-circle m-2" style="color: #4e73df;" title="When the festivity has its own Proper, then Readings can be defined, otherwise the readings will depend on the Common"></i>` : ``}</td></tr>`).join('');
             formRow += `</table></div>`;
         }
 
@@ -504,13 +708,13 @@ class FormControls {
 
 /**
  * Sets the FormControls settings based on the given action.
- * @param {string} action - the name of the action as given in RowAction
+ * @param {RowAction|string} action - the RowAction type action, or related action as given by a frontend action button
  */
 const setFormSettings = action => {
     switch( action ) {
         case 'designateDoctorButton':
             //nobreak
-        case RowAction.MakeDoctor.description:
+        case RowAction.MakeDoctor:
             FormControls.settings.tagField = false;
             FormControls.settings.nameField = true;
             FormControls.settings.gradeFieldShow = false;
@@ -522,12 +726,12 @@ const setFormSettings = action => {
             FormControls.settings.colorField = false;
             FormControls.settings.reasonField = false;
             FormControls.settings.readingsField = false;
-            FormControls.title = messages[ 'Designate Doctor' ];
+            FormControls.title = messages[ RowActionTitle[RowAction.MakeDoctor] ];
             FormControls.action = RowAction.MakeDoctor;
             break;
         case 'designatePatronButton':
             //nobreak
-        case RowAction.MakePatron.description:
+        case RowAction.MakePatron:
             FormControls.settings.tagField = false;
             FormControls.settings.nameField = true;
             FormControls.settings.gradeFieldShow = true;
@@ -540,12 +744,12 @@ const setFormSettings = action => {
             FormControls.settings.missalField = false;
             FormControls.settings.reasonField = false;
             FormControls.settings.readingsField = false;
-            FormControls.title =  messages[ 'Designate patron' ];
+            FormControls.title =  messages[ RowActionTitle[RowAction.MakePatron] ];
             FormControls.action = RowAction.MakePatron;
             break;
         case 'setPropertyButton':
             //nobreak
-        case RowAction.SetProperty.description:
+        case RowAction.SetProperty:
             FormControls.settings.tagField = false;
             FormControls.settings.commonFieldShow = false;
             FormControls.settings.dayField = false;
@@ -555,12 +759,12 @@ const setFormSettings = action => {
             FormControls.settings.missalField = false;
             FormControls.settings.reasonField = false;
             FormControls.settings.readingsField = false;
-            FormControls.title = messages[ 'Change name or grade' ];
+            FormControls.title = messages[ RowActionTitle[RowAction.SetProperty] ];
             FormControls.action = RowAction.SetProperty;
             break;
         case 'moveFestivityButton':
             //nobreak
-        case RowAction.MoveFestivity.description:
+        case RowAction.MoveFestivity:
             FormControls.settings.tagField = false;
             FormControls.settings.nameField = false;
             FormControls.settings.gradeFieldShow = false;
@@ -572,12 +776,12 @@ const setFormSettings = action => {
             FormControls.settings.missalField = true;
             FormControls.settings.reasonField = true;
             FormControls.settings.readingsField = false;
-            FormControls.title = messages[ 'Move festivity' ];
+            FormControls.title = messages[ RowActionTitle[RowAction.MoveFestivity] ];
             FormControls.action = RowAction.MoveFestivity;
             break;
         case 'newFestivityFromExistingButton':
             //nobreak
-        case RowAction.CreateNewFromExisting.description:
+        case RowAction.CreateNewFromExisting:
             FormControls.settings.tagField = false;
             FormControls.settings.nameField = false;
             FormControls.settings.gradeFieldShow = true;
@@ -591,12 +795,12 @@ const setFormSettings = action => {
             FormControls.settings.missalField = false;
             FormControls.settings.reasonField = false;
             FormControls.settings.readingsField = true;
-            FormControls.title = messages[ 'New festivity' ];
+            FormControls.title = messages[ RowActionTitle[RowAction.CreateNew] ];
             FormControls.action = RowAction.CreateNew;
             break;
         case 'newFestivityExNovoButton':
             //nobreak
-        case RowAction.CreateNew.description:
+        case RowAction.CreateNew:
             FormControls.settings.tagField = true;
             FormControls.settings.nameField = true;
             FormControls.settings.gradeFieldShow = true;
@@ -610,7 +814,7 @@ const setFormSettings = action => {
             FormControls.settings.missalField = false;
             FormControls.settings.reasonField = false;
             FormControls.settings.readingsField = true;
-            FormControls.title = messages[ 'New festivity' ];
+            FormControls.title = messages[ RowActionTitle[RowAction.CreateNew] ];
             FormControls.action = RowAction.CreateNew;
             break;
     }
@@ -618,7 +822,7 @@ const setFormSettings = action => {
 
 /**
  * Sets the FormControls settings for a given property.
- * @param {string} property - name of the property
+ * @param {string} property - name of the property being set, one of 'name' or 'grade'
  */
 const setFormSettingsForProperty = property => {
     switch(property) {
@@ -634,59 +838,16 @@ const setFormSettingsForProperty = property => {
     }
 }
 
-/**
- * An enumeration of possible actions that can be used to create a form row.
- * @typedef {Object} RowAction
- * @property {Symbol} MakePatron - Designate a festivity as a patron saint.
- * @property {Symbol} MakeDoctor - Designate a festivity as a doctor of the Church.
- * @property {Symbol} SetProperty - Set the name, grade, color, or readings of a festivity.
- * @property {Symbol} MoveFestivity - Move a festivity to a different date.
- * @property {Symbol} CreateNew - Create a new festivity.
- * @property {Symbol} CreateNewFromExisting - Create a new festivity using an existing one as a template.
- * @example
- * const rowAction = new RowAction(RowAction.MakePatron);
- */
-class RowAction {
-    static MakePatron       = Symbol('makePatron');
-    static MakeDoctor       = Symbol('makeDoctor');
-    static SetProperty      = Symbol('setProperty');
-    static MoveFestivity    = Symbol('moveFestivity');
-    static CreateNew        = Symbol('createNew');
-    static CreateNewFromExisting = Symbol('createNewFromExisting');
-    /**
-     * Creates a new RowAction with the given name (do we even use this? what is name?).
-     * @param {Symbol} name - The name of the row action.
-     */
-    constructor(name) {
-        this.name = name;
-    }
-}
-
-/**
- * A mapping of festivity ranks to numerical values for sorting purposes.
- * @constant
- * @enum {Number}
- * @property {Number} HIGHERSOLEMNITY - Higher solemnity (7)
- * @property {Number} SOLEMNITY - Solemnity (6)
- * @property {Number} FEASTLORD - Feast of the Lord (5)
- * @property {Number} FEAST - Feast (4)
- * @property {Number} MEMORIAL - Memorial (3)
- * @property {Number} OPTIONALMEMORIAL - Optional memorial (2)
- * @property {Number} WEEKDAY - Weekday (1)
- */
-const RANK = {
-    HIGHERSOLEMNITY:  7,
-    SOLEMNITY:        6,
-    FEASTLORD:        5,
-    FEAST:            4,
-    MEMORIAL:         3,
-    OPTIONALMEMORIAL: 2,
-    WEEKDAY:          1
-}
 
 /**
  * Represents a liturgical event.
  * @class
+ * @property {string} name - Name of the liturgical event.
+ * @property {string} color - Color of the liturgical event.
+ * @property {number} grade - Grade of the liturgical event.
+ * @property {string} common - Common of the liturgical event.
+ * @property {number} day - Day of the month of the liturgical event.
+ * @property {number} month - Month of the liturgical event.
  */
 class LitEvent {
     /**
@@ -707,54 +868,6 @@ class LitEvent {
         this.month = month;
     }
 }
-
-/**
- * Properties that are relevant for Mass readings.
- * @constant
- * @property {String} first_reading - First reading
- * @property {String} responsorial_psalm - Responsorial psalm
- * @property {String} second_reading - Second reading
- * @property {String} alleluia_verse - Alleluia verse
- * @property {String} gospel - Gospel
- */
-const READINGS_PROPERTIES = [
-    "first_reading",
-    "responsorial_psalm",
-    "second_reading",
-    "alleluia_verse",
-    "gospel"
-];
-
-/**
- * The properties of the `LitCal` object that should be treated as integers.
- * @constant
- * @type {Array<string>}
- * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#toJSON()_behavior|toJSON() behavior}
- */
-const integerVals = [ 'day', 'month', 'grade', 'since_year', 'until_year' ];
-
-/**
- * The properties of the `LitCal` object that are expected to be present in the JSON payload of each action.
- * @constant
- * @type {Object<string, Array<string>>}
- * @property {Array<string>} makePatron - The properties to expect in the JSON payload for the "makePatron" action.
- * @property {Array<string>} setProperty - The properties to expect in the JSON payload for the "setProperty" action.
- * @property {Array<string>} moveFestivity - The properties to expect in the JSON payload for the "moveFestivity" action.
- * @property {Array<string>} createNew - The properties to expect in the JSON payload for the "createNew" action.
- */
-const expectedJSONProperties = {
-    'makePatron': [ 'event_key', 'name', 'color', 'grade', 'day', 'month' ],
-    'setProperty': [ 'event_key', 'name', 'grade', 'day', 'month' ],
-    'moveFestivity': [ 'event_key', 'name', 'day', 'month', 'missal', 'reason' ],
-    'createNew': [ 'event_key', 'name', 'color', 'grade', 'day', 'month', 'strtotime', 'common' ] //'readings' is only expected for createNew when common=Proper
-};
-
-/**
- * The properties of the `LitCal` object that are related to the metadata of a festivity / liturgical event.
- * @constant
- * @type {Array<string>}
- */
-const metadataProps = [ 'missal', 'reason' ];
 
 /**
  * Configures the multiselect for the liturgical common field of a festivity / liturgical event row.
@@ -814,17 +927,17 @@ const lowercaseKeys = obj =>
 export {
     FormControls,
     RowAction,
-    RANK,
+    Rank,
     LitEvent,
-    READINGS_PROPERTIES,
-    integerVals,
-    expectedJSONProperties,
-    metadataProps,
+    Month,
+    MonthsOfThirty,
+    DaysOfTheWeek,
+    readingsProperties,
+    integerProperties,
+    payloadProperties,
+    metadataProperties,
     setFormSettings,
     setFormSettingsForProperty,
     setCommonMultiselect,
-    lowercaseKeys,
-    Month,
-    MonthsOfThirty,
-    daysOfTheWeek
+    lowercaseKeys
 };

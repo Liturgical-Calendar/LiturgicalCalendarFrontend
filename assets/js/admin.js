@@ -4,14 +4,17 @@ import {
     setFormSettings,
     setFormSettingsForProperty,
     setCommonMultiselect,
-    lowercaseKeys,
-    daysOfTheWeek
+    DaysOfTheWeek
 } from './FormControls.js';
 
+import {
+    sanitizeInput
+} from './templates.js';
+
+// The global messages object is set in admin.php
 const { LOCALE } = messages;
-const jsLocale = LOCALE.replace('_','-');
-FormControls.jsLocale = jsLocale;
-FormControls.weekdayFormatter = new Intl.DateTimeFormat(jsLocale, { weekday: "long" });
+FormControls.jsLocale = LOCALE.replace('_','-');
+FormControls.weekdayFormatter = new Intl.DateTimeFormat(FormControls.jsLocale, { weekday: "long" });
 
 const createPropriumDeTemporeTable = ( data ) => {
         const $theadRow = $('#jsonDataTbl thead tr');
@@ -103,13 +106,12 @@ const createPropriumDeTemporeTable = ( data ) => {
         data.forEach((el) => {
             let currentUniqid = FormControls.uniqid;
             //console.log( el );
-            el.Festivity = lowercaseKeys( el.Festivity );
             let existingFestivityTag = el.Festivity.hasOwnProperty( 'tag' ) ? el.Festivity.tag : null;
-            if( el.Metadata.action === RowAction.CreateNew.description && FestivityCollection.hasOwnProperty( existingFestivityTag ) ) {
-                el.Metadata.action = RowAction.CreateNewFromExisting.description;
+            if( el.Metadata.action === RowAction.CreateNew && FestivityCollection.hasOwnProperty( existingFestivityTag ) ) {
+                el.Metadata.action = RowAction.CreateNewFromExisting;
             }
             setFormSettings( el.Metadata.action );
-            if( el.Metadata.action === RowAction.SetProperty.description ) {
+            if( el.Metadata.action === RowAction.SetProperty ) {
                 setFormSettingsForProperty( el.Metadata.property );
             }
 
@@ -118,7 +120,7 @@ const createPropriumDeTemporeTable = ( data ) => {
 
             let $formrow = $row.find('.form-group').closest('.row');
             $formrow.data('action', el.Metadata.action).attr('data-action', el.Metadata.action);
-            if( el.Metadata.action === RowAction.SetProperty.description ) {
+            if( el.Metadata.action === RowAction.SetProperty ) {
                 $formrow.data('prop', el.Metadata.property).attr('data-prop', el.Metadata.property);
             }
             if( el.Festivity.hasOwnProperty('common') && el.Festivity.common.includes('Proper') ) {
@@ -167,14 +169,9 @@ const createPropriumDeTemporeTable = ( data ) => {
             }
         });
 
-    }
-/*
-$(document).ready(() => {
+    },
+    jsonFileData = {};
 
-});
-*/
-
-const jsonFileData = {};
 
 $(document).on('change', '#jsonFileSelect', () => {
     let baseJsonFile = $('#jsonFileSelect :selected').text();
@@ -345,7 +342,7 @@ $(document).on('click', '.actionPromptButton', ev => {
     $('#memorialsFromDecreesForm').prepend($row);
     $modal.modal('hide');
     $row.find('.form-group').closest('.row').data('action', FormControls.action.description).attr('data-action', FormControls.action.description);
-    if( FormControls.action.description === RowAction.SetProperty.description ) {
+    if( FormControls.action.description === RowAction.SetProperty ) {
         $row.find('.form-group').closest('.row').data('prop', propertyToChange).attr('data-prop', propertyToChange);
     }
     $row.find('.litEventColor').multiselect({
@@ -440,7 +437,7 @@ $(document).on('click', '.strtotime-toggle-btn', ev => {
         <select class="form-select litEvent litEventStrtotime" id="onTheFly${uniqid}StrToTime-dayOfTheWeek">`;
         for (let i = 0; i < 7; i++ ) {
             let dayOfTheWeek = new Date(Date.UTC(2000, 0, 2+i));
-            $strToTimeFormGroup += `<option value="${daysOfTheWeek[i]}"${strtotime.hasOwnProperty('dayOfTheWeek') && strtotime.dayOfTheWeek === daysOfTheWeek[i] ? ' selected': ''}>${FormControls.weekdayFormatter.format(dayOfTheWeek)}</option>`;
+            $strToTimeFormGroup += `<option value="${DaysOfTheWeek[i]}"${strtotime.hasOwnProperty('dayOfTheWeek') && strtotime.dayOfTheWeek === DaysOfTheWeek[i] ? ' selected': ''}>${FormControls.weekdayFormatter.format(dayOfTheWeek)}</option>`;
         }
         $strToTimeFormGroup += `</select>
         <select class="form-select litEvent litEventStrtotime" id="onTheFly${uniqid}StrToTime-relativeTime">
@@ -460,7 +457,7 @@ $(document).on('click', '.strtotime-toggle-btn', ev => {
         let formRow = `<div class="form-group col-sm-1">
         <label for="onTheFly${uniqid}Month">${messages[ "Month" ]}</label>
         <select class="form-select litEvent litEventMonth" id="onTheFly${uniqid}Month" >`;
-        let formatter = new Intl.DateTimeFormat(jsLocale, { month: 'long' });
+        let formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
         for (let i = 0; i < 12; i++) {
             let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
             formRow += `<option value=${i + 1}${typeof festivityData !== 'undefined' && festivityData.Festivity.hasOwnProperty('month') && festivityData.Festivity.month === i+1 ? ' selected' : ''}>${formatter.format(month)}</option>`;
@@ -471,8 +468,3 @@ $(document).on('click', '.strtotime-toggle-btn', ev => {
     }
 });
 
-//kudos to https://stackoverflow.com/a/47140708/394921 for the idea
-const sanitizeInput = (input) => {
-    let doc = new DOMParser().parseFromString(input, 'text/html');
-    return doc.body.textContent || "";
-}
