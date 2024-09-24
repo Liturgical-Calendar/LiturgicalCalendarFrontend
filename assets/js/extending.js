@@ -1091,7 +1091,6 @@ $(document).on('click', '#deleteDiocesanCalendarButton', ev => {
     const diocese = $('#diocesanCalendarDioceseName').val();
     API.key = $('#DiocesesList').find('option[value="' + diocese + '"]').attr('data-value');
     let nation = $('#diocesanCalendarNationalDependency').val();
-    delete CalendarsIndex.DiocesanCalendars[key];
     const payload = { diocese: diocese, nation: nation };
     $.ajax({
         url: RegionalDataURL,
@@ -1101,6 +1100,7 @@ $(document).on('click', '#deleteDiocesanCalendarButton', ev => {
         crossDomain: false,
         data: JSON.stringify( payload ),
         success: () => {
+            delete CalendarsIndex.DiocesanCalendars[API.key];
             $('#retrieveExistingDiocesanData').prop('disabled', true);
             $('#removeExistingDiocesanData').prop('disabled', true);
             $('#removeDiocesanCalendarPrompt').remove();
@@ -1108,7 +1108,7 @@ $(document).on('click', '#deleteDiocesanCalendarButton', ev => {
             $('#diocesanCalendarNationalDependency').val('');
             //console.log('data returned from delete action: ');
             //console.log(data);
-            toastr["success"](`Diocesan Calendar '${key}' was deleted successfully`, "Success");
+            toastr["success"](`Diocesan Calendar '${API.key}' was deleted successfully`, "Success");
         },
         error: (xhr, textStatus, errorThrown) => {
             console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown);
