@@ -207,7 +207,7 @@ Promise.all([
             return response.json();
         }
         else {
-            throw new Error(response.status + ' ' + response.statusText + ': ' + response.text);
+            throw new Error(response.status + ': ' + response.text);
         }
     }));
 }).then(data => {
@@ -750,10 +750,9 @@ $(document).on('click', '#saveDiocesanCalendar_btn', () => {
 });
 
 
-$(document).on('click', '#removeExistingDiocesanData', evt => {
+$(document).on('click', '#removeExistingDiocesanDataBtn', evt => {
+    // We don't want any forms to submit, so we prevent the default action
     evt.preventDefault();
-    //let diocese = $('#diocesanCalendarDioceseName').val();
-    //let dioceseKey = $('#DiocesesList').find('option[value="' + diocese + '"]').attr('data-value').toUpperCase();
 });
 
 $(document).on('click', '.onTheFlyEventRow', ev => {
@@ -1035,7 +1034,7 @@ $(document).on('change', '#diocesanCalendarDioceseName', ev => {
         //console.log('selected diocese with key = ' + API.key);
         if (CalendarsIndex.diocesan_calendars_keys.includes(API.key)) {
             const diocesan_calendar = CalendarsIndex.diocesan_calendars.filter(el => el.calendar_id === API.key)[0];
-            $('#removeExistingDiocesanData').prop('disabled', false);
+            $('#removeExistingDiocesanDataBtn').prop('disabled', false);
             $('body').append(removeDiocesanCalendarModal(currentVal, messages));
             if(diocesan_calendar.hasOwnProperty('group')){
                 $('#diocesanCalendarGroup').val(diocesan_calendar.group);
@@ -1043,7 +1042,7 @@ $(document).on('change', '#diocesanCalendarDioceseName', ev => {
             loadDiocesanCalendarData();
             //console.log('we have an existing entry for this diocese!');
         } else {
-            $('#removeExistingDiocesanData').prop('disabled', true);
+            $('#removeExistingDiocesanDataBtn').prop('disabled', true);
             $('body').find('#removeDiocesanCalendarPrompt').remove();
             //console.log('no existing entry for this diocese');
         }
@@ -1085,7 +1084,7 @@ $(document).on('change', '.existingFestivityName', ev => {
     }
 });
 
-$(document).on('click', '#deleteDiocesanCalendarButton', () => {
+$(document).on('click', '#deleteDiocesanCalendarConfirm', () => {
     API.category = 'diocese';
     $('#removeDiocesanCalendarPrompt').modal('toggle');
     const diocese = $('#diocesanCalendarDioceseName').val();
@@ -1102,9 +1101,10 @@ $(document).on('click', '#deleteDiocesanCalendarButton', () => {
     }).then(response => {
         if (response.ok) {
             //return response.json();
-            delete CalendarsIndex.DiocesanCalendars[API.key];
+            CalendarsIndex.diocesan_calendars = CalendarsIndex.diocesan_calendars.filter(el => el.calendar_id !== API.key);
+            CalendarsIndex.diocesan_calendars_keys = CalendarsIndex.diocesan_calendars_keys.filter(el => el !== API.key);
             $('#retrieveExistingDiocesanData').prop('disabled', true);
-            $('#removeExistingDiocesanData').prop('disabled', true);
+            $('#removeExistingDiocesanDataBtn').prop('disabled', true);
             $('#removeDiocesanCalendarPrompt').remove();
             $('#diocesanCalendarDioceseName').val('');
             $('#diocesanCalendarNationalDependency').val('');
@@ -1115,8 +1115,10 @@ $(document).on('click', '#deleteDiocesanCalendarButton', () => {
             return Promise.reject(response);
         }
     }).catch(error => {
-        console.error(error.status); // + ' ' + error.response + ': ' + error.description
-        //toastr["error"](error, "Error");
+        error.json().then(json => {
+            console.error(`${error.status} ${json.response}: ${json.description}`);
+            toastr["error"](`${error.status} ${json.response}: ${json.description}`, "Error");
+        })
     })
 });
 
@@ -1414,7 +1416,7 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
 $(document).on('change', '#diocesanCalendarNationalDependency', ev => {
     $('#diocesanCalendarDioceseName').val('');
     //$('#retrieveExistingDiocesanData').prop('disabled', true);
-    $('#removeExistingDiocesanData').prop('disabled', true);
+    $('#removeExistingDiocesanDataBtn').prop('disabled', true);
     $('body').find('#removeDiocesanCalendarPrompt').remove();
     let currentSelectedNation = $(ev.currentTarget).val();
     if (['ITALY','USA','NETHERLANDS'].includes(currentSelectedNation)) {

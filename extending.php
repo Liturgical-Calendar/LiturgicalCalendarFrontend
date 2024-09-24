@@ -219,8 +219,8 @@ if (isset($_GET["choice"])) {
                             </div>
                         </div>
                         <div class="form-group col col-md-4">
-                            <label for="removeExistingWiderRegionData" class="fw-bold"></label>
-                            <button class="btn btn-danger m-2 form-control" id="removeExistingWiderRegionData" disabled data-bs-toggle="modal" data-bs-target="#removeWiderRegionDataPrompt">
+                            <label for="removeExistingWiderRegionDataBtn" class="fw-bold"></label>
+                            <button class="btn btn-danger m-2 form-control" id="removeExistingWiderRegionDataBtn" disabled data-bs-toggle="modal" data-bs-target="#removeWiderRegionDataPrompt">
                                 <i class="far fa-trash-alt me-2"></i>
                                 <?php echo _("Remove existing data"); ?>
                             </button>
@@ -263,8 +263,8 @@ if (isset($_GET["choice"])) {
                             </datalist>
                         </div>
                         <div class="form-group col col-md-3">
-                            <label for="removeExistingNationalData" class="fw-bold"></label>
-                            <button class="btn btn-danger m-2 form-control" id="removeExistingNationalData" disabled data-bs-toggle="modal" data-bs-target="#removeNationalDataPrompt">
+                            <label for="removeExistingNationalDataBtn" class="fw-bold"></label>
+                            <button class="btn btn-danger m-2 form-control" id="removeExistingNationalDataBtn" disabled data-bs-toggle="modal" data-bs-target="#removeNationalDataPrompt">
                                 <i class="far fa-trash-alt me-2"></i>
                                 <?php echo _("Remove existing data"); ?>
                             </button>
@@ -376,7 +376,7 @@ if (isset($_GET["choice"])) {
                             <datalist id="DiocesesList">
                                 <option value=""></option>
                             </datalist>
-                            <div class="col text-center"><button class="btn btn-danger m-2" id="removeExistingDiocesanData" disabled data-bs-toggle="modal" data-bs-target="#removeDiocesanCalendarPrompt"><?php echo _("Remove existing data"); ?></button></div>
+                            <div class="col text-center"><button class="btn btn-danger m-2" id="removeExistingDiocesanDataBtn" disabled data-bs-toggle="modal" data-bs-target="#removeDiocesanCalendarPrompt"><?php echo _("Remove existing data"); ?></button></div>
                         </div>
                         <div class="form-group col col-md-3">
                             <label for="diocesanCalendarGroup" class="fw-bold"><?php echo _("Diocesan group"); ?>: <i class="fas fa-circle-info mx-2" title="<?php echo $DioceseGroupHelp; ?>"></i></label>
