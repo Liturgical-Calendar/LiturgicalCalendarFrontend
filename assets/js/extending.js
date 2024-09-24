@@ -1100,17 +1100,25 @@ $(document).on('click', '#deleteDiocesanCalendarConfirm', () => {
         body: JSON.stringify( payload )
     }).then(response => {
         if (response.ok) {
-            //return response.json();
             CalendarsIndex.diocesan_calendars = CalendarsIndex.diocesan_calendars.filter(el => el.calendar_id !== API.key);
             CalendarsIndex.diocesan_calendars_keys = CalendarsIndex.diocesan_calendars_keys.filter(el => el !== API.key);
-            $('#retrieveExistingDiocesanData').prop('disabled', true);
             $('#removeExistingDiocesanDataBtn').prop('disabled', true);
             $('#removeDiocesanCalendarPrompt').remove();
             $('#diocesanCalendarDioceseName').val('');
             $('#diocesanCalendarNationalDependency').val('');
-            //console.log('data returned from delete action: ');
-            //console.log(data);
+            $('#diocesanCalendarGroup').val('');
+            $('.carousel-item form').each((idx, el) => {
+                el.reset();
+                $(el).find('.row').slice(3).remove();
+                $(el).find('div.data-group-title').remove();
+                $(el).find('.litEventCommon').multiselect('deselectAll', false).multiselect('select', 'Proper');
+                $(el).find('.litEventColor').multiselect('deselectAll', false).multiselect('select', 'white');
+                $(el).find('.litEventName').attr('data-valuewas', '');
+            });
             toastr["success"](`Diocesan Calendar '${API.key}' was deleted successfully`, "Success");
+            response.json().then(json => {
+                console.log(json);
+            });
         } else {
             return Promise.reject(response);
         }
@@ -1415,7 +1423,6 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
 
 $(document).on('change', '#diocesanCalendarNationalDependency', ev => {
     $('#diocesanCalendarDioceseName').val('');
-    //$('#retrieveExistingDiocesanData').prop('disabled', true);
     $('#removeExistingDiocesanDataBtn').prop('disabled', true);
     $('body').find('#removeDiocesanCalendarPrompt').remove();
     let currentSelectedNation = $(ev.currentTarget).val();
