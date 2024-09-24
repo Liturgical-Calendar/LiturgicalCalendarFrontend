@@ -1085,21 +1085,23 @@ $(document).on('change', '.existingFestivityName', ev => {
     }
 });
 
-$(document).on('click', '#deleteDiocesanCalendarButton', ev => {
+$(document).on('click', '#deleteDiocesanCalendarButton', () => {
     API.category = 'diocese';
     $('#removeDiocesanCalendarPrompt').modal('toggle');
     const diocese = $('#diocesanCalendarDioceseName').val();
     API.key = $('#DiocesesList').find('option[value="' + diocese + '"]').attr('data-value');
     let nation = $('#diocesanCalendarNationalDependency').val();
     const payload = { diocese: diocese, nation: nation };
-    $.ajax({
-        url: RegionalDataURL,
+    fetch(API.path, {
         method: 'DELETE',
-        dataType: 'json',
-        contentType: 'application/json',
-        crossDomain: false,
-        data: JSON.stringify( payload ),
-        success: () => {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify( payload )
+    }).then(response => {
+        if (response.ok) {
+            //return response.json();
             delete CalendarsIndex.DiocesanCalendars[API.key];
             $('#retrieveExistingDiocesanData').prop('disabled', true);
             $('#removeExistingDiocesanData').prop('disabled', true);
@@ -1109,12 +1111,13 @@ $(document).on('click', '#deleteDiocesanCalendarButton', ev => {
             //console.log('data returned from delete action: ');
             //console.log(data);
             toastr["success"](`Diocesan Calendar '${API.key}' was deleted successfully`, "Success");
-        },
-        error: (xhr, textStatus, errorThrown) => {
-            console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown);
-            toastr["error"](xhr.status + ' ' + textStatus + ': ' + errorThrown, "Error");
+        } else {
+            return Promise.reject(response);
         }
-    });
+    }).catch(error => {
+        console.error(error.status); // + ' ' + error.response + ': ' + error.description
+        //toastr["error"](error, "Error");
+    })
 });
 
 /**
