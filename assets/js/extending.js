@@ -1103,7 +1103,7 @@ $(document).on('click', '#deleteDiocesanCalendarButton', ev => {
         success: () => {
             $('#retrieveExistingDiocesanData').prop('disabled', true);
             $('#removeExistingDiocesanData').prop('disabled', true);
-            $('body').find('#removeDiocesanCalendarPrompt').remove();
+            $('#removeDiocesanCalendarPrompt').remove();
             $('#diocesanCalendarDioceseName').val('');
             $('#diocesanCalendarNationalDependency').val('');
             //console.log('data returned from delete action: ');

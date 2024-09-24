@@ -17,7 +17,7 @@ const removeDiocesanCalendarModal = (diocese, messages) => {
         ${messages[ "If you choose" ]}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-backspace me-2">Cancel</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-backspace me-2"></i>Cancel</button>
         <button type="button" id="deleteDiocesanCalendarButton" class="btn btn-danger"><i class="far fa-trash-alt me-2"></i>Delete calendar</button>
       </div>
     </div>
