@@ -9,6 +9,11 @@ let liturgyDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDa
 let highContrast = [ "green", "red", "purple" ];
 
 jQuery(() => {
+    document.querySelector('#monthControl').value = now.getMonth() + 1;
+    let daysInMonth = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+    document.querySelector('#dayControl').setAttribute("max", daysInMonth);
+    document.querySelector('#dayControl').value = now.getDate();
+
     switch( $('#calendarSelect').find(':selected').attr('data-calendartype') ) {
         case 'nationalcalendar':
             CalendarState.calendarType = 'nation';
