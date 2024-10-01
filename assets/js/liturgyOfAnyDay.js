@@ -17,14 +17,14 @@ jQuery(() => {
     switch( $('#calendarSelect').find(':selected').attr('data-calendartype') ) {
         case 'nationalcalendar':
             CalendarState.calendarType = 'nation';
-            CalendarState.calendar = $('#calendarSelect').val();
+            CalendarState.calendar = document.querySelector('#calendarSelect').value;
             if (CalendarState.calendar === 'VA') {
                 CalendarState.calendarType = '';
             }
             break;
         case 'diocesancalendar':
             CalendarState.calendarType = 'diocese';
-            CalendarState.calendar = $('#calendarSelect').val();
+            CalendarState.calendar = document.querySelector('#calendarSelect').value;
             break;
         default:
             CalendarState.calendarType = '';
@@ -51,20 +51,24 @@ class CalendarState {
 $(document).on("change", "#monthControl,#yearControl,#calendarSelect,#dayControl", (event) => {
     let apiRequest = false;
     if (["monthControl", "yearControl"].includes(event.currentTarget.id)) {
-        const year =  $('#yearControl').val();
-        const month = $('#monthControl').val();
+        const year =  document.querySelector('#yearControl').value;
+        const month = document.querySelector('#monthControl').value;
         const daysInMonth = new Date(year, month, 0).getDate();
-        $('#dayControl').attr("max", daysInMonth);
+        document.querySelector('#dayControl').setAttribute("max", daysInMonth);
+        if (document.querySelector('#dayControl').value > daysInMonth) {
+            document.querySelector('#dayControl').value = daysInMonth;
+            CalendarState.day = document.querySelector('#dayControl').value;
+        }
     }
     if (["yearControl", "calendarSelect"].includes(event.currentTarget.id)) {
         switch( $('#calendarSelect').find(':selected').attr('data-calendartype') ) {
             case 'nationalcalendar':
                 CalendarState.calendarType = 'nation';
-                CalendarState.calendar = $('#calendarSelect').val();
+                CalendarState.calendar = document.querySelector('#calendarSelect').value;
                 break;
             case 'diocesancalendar':
                 CalendarState.calendarType = 'diocese';
-                CalendarState.calendar = $('#calendarSelect').val();
+                CalendarState.calendar = document.querySelector('#calendarSelect').value;
                 break;
             default:
                 CalendarState.calendarType = '';
@@ -73,9 +77,9 @@ $(document).on("change", "#monthControl,#yearControl,#calendarSelect,#dayControl
         apiRequest = true;
     }
     if (["monthControl", "dayControl", "yearControl"].includes(event.currentTarget.id)) {
-        CalendarState.year = $('#yearControl').val();
-        CalendarState.month = $('#monthControl').val();
-        CalendarState.day = $('#dayControl').val();
+        CalendarState.year = document.querySelector('#yearControl').value;
+        CalendarState.month = document.querySelector('#monthControl').value;
+        CalendarState.day = document.querySelector('#dayControl').value;
         liturgyDate = new Date(Date.UTC(CalendarState.year, CalendarState.month - 1, CalendarState.day, 0, 0, 0, 0));
     }
     getLiturgyOfADay(apiRequest);
