@@ -211,7 +211,7 @@ let litcalMetadata = null;
             case 'nationalcalendar':
                 CurrentEndpoint.calendarType = CalendarType.NATIONAL;
                 CurrentEndpoint.calendarId   = this.value;
-                if (this.value !== 'VATICAN') {
+                if (this.value !== 'VA') {
                     let nationalCalendarSettings = litcalMetadata.national_calendars.filter(nationCalendarObj => nationCalendarObj.calendar_id === this.value)[0].settings;
                     let locale = nationalCalendarSettings.locale.replace('_', '-');
                     locale = new Intl.Locale(locale);
