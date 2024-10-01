@@ -80,7 +80,7 @@ class CalendarSelect {
         this.#dioceseOptions[nation] = [];
     }
     static addNationOption(nationalCalendar, selected = false) {
-        let option = `<option data-calendartype="nationalcalendar" value="${nationalCalendar.calendar_id}"${selected ? ' selected' : ''}>${countryNames.of(nationalCalendar.country_iso)}</option>`;
+        let option = `<option data-calendartype="nationalcalendar" value="${nationalCalendar.calendar_id}"${selected ? ' selected' : ''}>${countryNames.of(nationalCalendar.calendar_id)}</option>`;
         this.#nationOptions.push(option);
     }
     static addDioceseOption(item) {
@@ -97,13 +97,13 @@ class CalendarSelect {
             this.addDioceseOption(diocesanCalendarObj);
         });
 
-        national_calendars.sort((a, b) => countryNames.of(a.country_iso).localeCompare(countryNames.of(b.country_iso)));
+        national_calendars.sort((a, b) => countryNames.of(a.calendar_id).localeCompare(countryNames.of(b.calendar_id)));
         national_calendars.forEach(nationalCalendar => {
             if( false === this.hasNationalCalendarWithDioceses(nationalCalendar.calendar_id) ) {
                 // This is the first time we call CalendarSelect.addNationOption().
                 // This will ensure that the VATICAN (or any other nation without any diocese) will be added as the first option(s).
                 // We also ensure that the VATICAN is always the default selected option
-                if ('VATICAN' === nationalCalendar.calendar_id) {
+                if ('VA' === nationalCalendar.calendar_id) {
                     this.addNationOption(nationalCalendar, true);
                 } else {
                     this.addNationOption(nationalCalendar);
@@ -113,10 +113,10 @@ class CalendarSelect {
 
         // now we can add the options for the nations in the #calendarNationsWithDiocese list
         // that is to say, nations that have dioceses
-        this.#nationalCalendarsWithDioceses.sort((a, b) => countryNames.of(a.country_iso).localeCompare(countryNames.of(b.country_iso)));
+        this.#nationalCalendarsWithDioceses.sort((a, b) => countryNames.of(a.calendar_id).localeCompare(countryNames.of(b.calendar_id)));
         this.#nationalCalendarsWithDioceses.forEach(nationalCalendar => {
             this.addNationOption(nationalCalendar);
-            let optGroup = `<optgroup label="${countryNames.of(nationalCalendar.country_iso)}">${this.#dioceseOptions[nationalCalendar.calendar_id].join('')}</optgroup>`;
+            let optGroup = `<optgroup label="${countryNames.of(nationalCalendar.calendar_id)}">${this.#dioceseOptions[nationalCalendar.calendar_id].join('')}</optgroup>`;
             this.#dioceseOptionsGrouped.push(optGroup);
         });
     }
