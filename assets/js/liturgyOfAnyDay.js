@@ -10,7 +10,7 @@ let highContrast = [ "green", "red", "purple" ];
 
 jQuery(() => {
     document.querySelector('#monthControl').value = now.getMonth() + 1;
-    let daysInMonth = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+    const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
     document.querySelector('#dayControl').setAttribute("max", daysInMonth);
     document.querySelector('#dayControl').value = now.getDate();
 
@@ -51,10 +51,10 @@ class CalendarState {
 $(document).on("change", "#monthControl,#yearControl,#calendarSelect,#dayControl", (event) => {
     let apiRequest = false;
     if (["monthControl", "yearControl"].includes(event.currentTarget.id)) {
-        let year =  $('#yearControl').val();
-        let month = $('#monthControl').val();
-        let daysInMonth = new Date(year, month, 0).getDate();
-        $('#dayControl').attr("max",daysInMonth);
+        const year =  $('#yearControl').val();
+        const month = $('#monthControl').val();
+        const daysInMonth = new Date(year, month, 0).getDate();
+        $('#dayControl').attr("max", daysInMonth);
     }
     if (["yearControl", "calendarSelect"].includes(event.currentTarget.id)) {
         switch( $('#calendarSelect').find(':selected').attr('data-calendartype') ) {
