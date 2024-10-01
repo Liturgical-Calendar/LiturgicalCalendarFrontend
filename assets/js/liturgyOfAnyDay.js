@@ -44,7 +44,7 @@ class CalendarState {
      * @returns {string} The full endpoint URL for the API /calendar endpoint
      */
     static get requestPath () {
-        return `${endpointURL}/${CalendarState.calendarType !== '' ? `${CalendarState.calendarType}/${CalendarState.calendar}/` : ''}${CalendarState.year}`;
+        return `${endpointURL}/${CalendarState.calendarType !== '' ? `${CalendarState.calendarType}/${CalendarState.calendar}/` : ''}${CalendarState.year}&year_type=CIVIL`;
     }
 }
 
