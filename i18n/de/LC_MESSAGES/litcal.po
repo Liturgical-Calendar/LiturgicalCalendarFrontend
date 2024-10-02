@@ -5,13 +5,14 @@
 # John R. D'Orazio <priest@johnromanodorazio.com>, 2022.
 # OpenAI <noreply-mt-openai@weblate.org>, 2024.
 # "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024.
+# Weblate Admin <admin@example.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-22 00:21+0000\n"
-"PO-Revision-Date: 2024-09-22 00:28+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2024-10-03 01:33+0000\n"
+"Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
 "Language: de\n"
@@ -802,7 +803,7 @@ msgstr "Sonntag zwischen dem 2. und 8. Januar"
 
 #: extending.php:291 extending.php:532
 msgid "ASCENSION"
-msgstr "AUFFAHRT"
+msgstr "HIMMELFAHRT"
 
 #: extending.php:299 extending.php:540
 msgid "CORPUS CHRISTI"
