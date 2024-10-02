@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-22 00:21+0000\n"
-"PO-Revision-Date: 2024-09-22 00:28+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2024-10-03 01:33+0000\n"
+"Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pt/>\n"
 "Language: pt\n"
@@ -784,7 +784,7 @@ msgstr "6 de janeiro"
 
 #: extending.php:287 extending.php:528
 msgid "Sunday between January 2 and January 8"
-msgstr "Domingo entre 2 e 8 de janeiro"
+msgstr "Domingo entre 2 de janeiro e 8 de janeiro"
 
 #: extending.php:291 extending.php:532
 msgid "ASCENSION"
