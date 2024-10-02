@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Ubuntu <priest@johnromanodorazio.com>, 2021.
 # John R. D'Orazio <priest@johnromanodorazio.com>, 2022.
+# Weblate Admin <admin@example.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-22 00:21+0000\n"
-"PO-Revision-Date: 2022-05-10 20:08+0000\n"
-"Last-Translator: John R. D'Orazio <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2024-10-03 01:33+0000\n"
+"Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
 "Language: la\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.12.1\n"
+"X-Generator: Weblate 5.6.1\n"
 
 #: index.php:13
 msgid ""
@@ -678,7 +679,7 @@ msgstr "6 Ianuarii"
 
 #: extending.php:287 extending.php:528
 msgid "Sunday between January 2 and January 8"
-msgstr ""
+msgstr "Dominica inter diem 2 Ianuarii et diem 8 Ianuarii"
 
 #: extending.php:291 extending.php:532
 msgid "ASCENSION"
@@ -686,7 +687,7 @@ msgstr "ASCENSIO"
 
 #: extending.php:299 extending.php:540
 msgid "CORPUS CHRISTI"
-msgstr ""
+msgstr "CORPUS CHRISTI"
 
 #: extending.php:307
 msgid "JESUS HIGH PRIEST"
@@ -838,7 +839,7 @@ msgstr ""
 
 #: easter.php:84
 msgid "Go back"
-msgstr ""
+msgstr "Revertere"
 
 #: easter.php:99
 msgid "Century"
