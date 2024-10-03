@@ -697,9 +697,11 @@ $(document).on('change', '.litEvent', ev => {
 });
 
 $(document).on('click', '#saveDiocesanCalendar_btn', () => {
-    let nation = $('#diocesanCalendarNationalDependency').val();
-    let diocese = $('#diocesanCalendarDioceseName').val();
-    let saveObj = { payload: CalendarData };
+    const nation = document.querySelector('#diocesanCalendarNationalDependency').value;
+    const diocese = document.querySelector('#diocesanCalendarDioceseName').value;
+    const option = document.querySelector('#DiocesesList option[value="' + diocese + '"]');
+    const diocese_key = option ? option.getAttribute('data-value') : null;
+    const saveObj = { payload: CalendarData };
     switch (API.method) {
         case 'PUT':   // we PUT data to the base /data API path
             API.path = `${RegionalDataURL}/diocese`;
@@ -708,7 +710,7 @@ $(document).on('click', '#saveDiocesanCalendar_btn', () => {
             break;
         case 'PATCH': // we PATCH data on an existing /data/{category}/{key} path
             API.category = 'diocese';
-            API.key = diocese;
+            API.key = diocese_key;
             break;
     }
     //console.log('save button was clicked for NATION = ' + $nation + ', DIOCESE = ' + $diocese);
