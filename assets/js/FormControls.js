@@ -40,9 +40,9 @@ const MonthsOfThirty = Object.freeze([Month.SEPTEMBER, Month.APRIL, Month.JUNE, 
 /**
  * English names of the seven days of the week indexed from 0 to 7, used to check or set the value of the strtotime property in liturgical events.
  * @readonly
- * @enum {String}
+ * @enum {('Sunday'|'Monday'|'Tuesday'|'Wednesday'|'Thursday'|'Friday'|'Saturday')}
  */
-const DaysOfTheWeek = Object.freeze(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']);
+const DaysOfTheWeek = Object.freeze(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
 
 /**
  * A mapping of festivity ranks to numerical values for sorting purposes.
@@ -280,20 +280,20 @@ class FormControls {
 
         if (FormControls.settings.nameField) {
             formRow += `<div class="form-group col-sm-3">
-            <label for="onTheFly${FormControls.uniqid}Name">${messages[ "Name" ]}</label><input type="text" class="form-control litEvent litEventName" id="onTheFly${FormControls.uniqid}Name" data-valuewas="" />
+            <label for="onTheFly${FormControls.uniqid}Name">${Messages[ "Name" ]}</label><input type="text" class="form-control litEvent litEventName" id="onTheFly${FormControls.uniqid}Name" data-valuewas="" />
             <div class="invalid-feedback">This same celebration was already defined elsewhere. Please remove it first where it is defined, then you can define it here.</div>
             </div>`;
         }
 
         if (FormControls.settings.dayField) {
             formRow += `<div class="form-group col-sm-1">
-            <label for="onTheFly${FormControls.uniqid}Day">${messages[ "Day" ]}</label><input type="number" min="1" max="31" value="1" class="form-control litEvent litEventDay" id="onTheFly${FormControls.uniqid}Day" />
+            <label for="onTheFly${FormControls.uniqid}Day">${Messages[ "Day" ]}</label><input type="number" min="1" max="31" value="1" class="form-control litEvent litEventDay" id="onTheFly${FormControls.uniqid}Day" />
             </div>`;
         }
 
         if (FormControls.settings.monthField) {
             formRow += `<div class="form-group col-sm-2">
-            <label for="onTheFly${FormControls.uniqid}Month"><span class="month-label">${messages[ "Month" ]}</span><div class="form-check form-check-inline form-switch ms-2 ps-5 border border-secondary bg-light" title="switch on for mobile celebration as opposed to fixed date">
+            <label for="onTheFly${FormControls.uniqid}Month"><span class="month-label">${Messages[ "Month" ]}</span><div class="form-check form-check-inline form-switch ms-2 ps-5 border border-secondary bg-light" title="switch on for mobile celebration as opposed to fixed date">
                 <label class="form-check-label me-1" for="onTheFly${FormControls.uniqid}StrtotimeSwitch">Mobile</label>
                 <input class="form-check-input litEvent litEventStrtotimeSwitch" type="checkbox" data-bs-toggle="toggle" data-bs-size="xs" data-bs-onstyle="info" data-bs-offstyle="dark" role="switch" id="onTheFly${FormControls.uniqid}StrtotimeSwitch">
             </div></label>
@@ -320,31 +320,31 @@ class FormControls {
         }
 
         if (FormControls.settings.commonField) {
-            formRow += messages.commonsTemplate.formatUnicorn({uniqid:FormControls.uniqid,colWidth:3});
+            formRow += Messages.commonsTemplate.formatUnicorn({uniqid:FormControls.uniqid,colWidth:3});
         }
 
         if (FormControls.settings.colorField) {
             formRow += `<div class="form-group col-sm-1">
-            <label for="onTheFly${FormControls.uniqid}Color">${messages[ "Liturgical color" ]}</label>
+            <label for="onTheFly${FormControls.uniqid}Color">${Messages[ "Liturgical color" ]}</label>
             <select class="form-select litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple" />
-            <option value="white" selected>${messages[ "white" ].toUpperCase()}</option>
-            <option value="red">${messages[ "red" ].toUpperCase()}</option>
-            <option value="purple">${messages[ "purple" ].toUpperCase()}</option>
-            <option value="green">${messages[ "green" ].toUpperCase()}</option>
+            <option value="white" selected>${Messages[ "white" ].toUpperCase()}</option>
+            <option value="red">${Messages[ "red" ].toUpperCase()}</option>
+            <option value="purple">${Messages[ "purple" ].toUpperCase()}</option>
+            <option value="green">${Messages[ "green" ].toUpperCase()}</option>
             </select>
             </div>`;
         }
 
         if (FormControls.settings.fromYearField) {
             formRow += `<div class="form-group col-sm-1">
-            <label for="onTheFly${FormControls.uniqid}FromYear">${messages[ "Since" ]}</label>
+            <label for="onTheFly${FormControls.uniqid}FromYear">${Messages[ "Since" ]}</label>
             <input type="number" min="1582" max="9999" class="form-control litEvent litEventSinceYear" id="onTheFly${FormControls.uniqid}FromYear" value="1970" />
             </div>`;
         }
 
         if (FormControls.settings.untilYearField) {
             formRow += `<div class="form-group col-sm-1">
-            <label for="onTheFly${FormControls.uniqid}UntilYear">${messages[ "Until" ]}</label>
+            <label for="onTheFly${FormControls.uniqid}UntilYear">${Messages[ "Until" ]}</label>
             <input type="number" min="1582" max="9999" class="form-control litEvent litEventUntilYear" id="onTheFly${FormControls.uniqid}UntilYear" value="" />
             </div>`;
         }
@@ -407,33 +407,33 @@ class FormControls {
         if(FormControls.settings.tagField === false){
             formRow += `<input type="hidden" class="litEventTag" id="onTheFly${FormControls.uniqid}Tag" value="${festivity !== null ? festivity.event_key : ''}" />`;
         }
-        formRow += `<label for="onTheFly${FormControls.uniqid}Name">${messages[ "Name" ]}</label>
+        formRow += `<label for="onTheFly${FormControls.uniqid}Name">${Messages[ "Name" ]}</label>
         <input type="text" class="form-control litEvent litEventName${festivity !== null && typeof festivity.name==='undefined' ? ` is-invalid` : ``}" id="onTheFly${FormControls.uniqid}Name" value="${festivity !== null ? festivity.name : ''}"${FormControls.settings.nameField === false ? ' readonly' : ''} />
         <div class="invalid-feedback">There is no locale data for this celebration in the current locale. Perhaps try a different locale?.</div>
         </div>`;
 
         if (FormControls.settings.fromYearField) {
             formRow += `<div class="form-group col-sm-1">
-            <label for="onTheFly${FormControls.uniqid}FromYear">${messages[ "Since" ]}</label>
+            <label for="onTheFly${FormControls.uniqid}FromYear">${Messages[ "Since" ]}</label>
             <input type="number" min="1582" max="9999" class="form-control litEvent litEventSinceYear" id="onTheFly${FormControls.uniqid}FromYear" value="${festivity !== null ? festivity.since_year : ''}" />
             </div>`;
         }
 
         if (FormControls.settings.untilYearField) {
             formRow += `<div class="form-group col-sm-1">
-            <label for="onTheFly${FormControls.uniqid}UntilYear">${messages[ "Until" ]}</label>
+            <label for="onTheFly${FormControls.uniqid}UntilYear">${Messages[ "Until" ]}</label>
             <input type="number" min="1582" max="9999" class="form-control litEvent litEventUntilYear" id="onTheFly${FormControls.uniqid}UntilYear" value="${festivity !== null ? festivity.until_year : ''}" />
             </div>`;
         }
 
         let selectedColors = festivity !== null ? (Array.isArray(festivity.color) ? festivity.color : festivity.color.split(',')) : [];
         formRow += `<div class="form-group col-sm-2">
-        <label for="onTheFly${FormControls.uniqid}Color">${messages[ "Liturgical color" ]}</label>
+        <label for="onTheFly${FormControls.uniqid}Color">${Messages[ "Liturgical color" ]}</label>
         <select class="form-select litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple"${FormControls.settings.colorField === false ? ' readonly' : ''} />
-        <option value="white"${festivity !== null && selectedColors.includes("white") ? ' selected' : '' }>${messages[ "white" ].toUpperCase()}</option>
-        <option value="red"${festivity !== null && selectedColors.includes("red") ? ' selected' : '' }>${messages[ "red" ].toUpperCase()}</option>
-        <option value="purple"${festivity !== null && selectedColors.includes("purple") ? ' selected' : '' }>${messages[ "purple" ].toUpperCase()}</option>
-        <option value="green"${festivity !== null && selectedColors.includes("green") ? ' selected' : '' }>${messages[ "green" ].toUpperCase()}</option>
+        <option value="white"${festivity !== null && selectedColors.includes("white") ? ' selected' : '' }>${Messages[ "white" ].toUpperCase()}</option>
+        <option value="red"${festivity !== null && selectedColors.includes("red") ? ' selected' : '' }>${Messages[ "red" ].toUpperCase()}</option>
+        <option value="purple"${festivity !== null && selectedColors.includes("purple") ? ' selected' : '' }>${Messages[ "purple" ].toUpperCase()}</option>
+        <option value="green"${festivity !== null && selectedColors.includes("green") ? ' selected' : '' }>${Messages[ "green" ].toUpperCase()}</option>
         </select>
         </div>`;
 
@@ -444,12 +444,12 @@ class FormControls {
             </div>`;
         } else {
             formRow += `<div class="form-group col-sm-1">
-            <label for="onTheFly${FormControls.uniqid}Day">${messages[ "Day" ]}</label>
+            <label for="onTheFly${FormControls.uniqid}Day">${Messages[ "Day" ]}</label>
             <input type="number" min="1" max="31" value="${festivity !== null && festivity.day}" class="form-control litEvent litEventDay" id="onTheFly${FormControls.uniqid}Day"${FormControls.settings.dayField === false ?  'readonly' : '' } />
             </div>`;
 
             formRow += `<div class="form-group col-sm-1">
-            <label for="onTheFly${FormControls.uniqid}Month">${messages[ "Month" ]}</label>
+            <label for="onTheFly${FormControls.uniqid}Month">${Messages[ "Month" ]}</label>
             <select class="form-select litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month"${FormControls.settings.monthField === false ?  'readonly' : '' } >`;
 
             let formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
@@ -464,17 +464,17 @@ class FormControls {
 
         if (FormControls.settings.tagField) {
             formRow += `<div class="form-group col-sm-2">
-            <label for="onTheFly${FormControls.uniqid}Tag">${messages[ "Tag" ]}</label>
+            <label for="onTheFly${FormControls.uniqid}Tag">${Messages[ "Tag" ]}</label>
             <input type="text" value="${festivity !== null ? festivity.event_key : ''}" class="form-control litEvent litEventTag" id="onTheFly${FormControls.uniqid}Tag" />
             </div>`;
         }
 
         if (FormControls.settings.gradeFieldShow) {
-            formRow +=  messages.gradeTemplate.formatUnicorn({uniqid:FormControls.uniqid,colWidth:4});
+            formRow +=  Messages.gradeTemplate.formatUnicorn({uniqid:FormControls.uniqid,colWidth:4});
         }
 
         if (FormControls.settings.commonFieldShow) {
-            formRow += messages.commonsTemplate.formatUnicorn({uniqid:FormControls.uniqid,colWidth:6});
+            formRow += Messages.commonsTemplate.formatUnicorn({uniqid:FormControls.uniqid,colWidth:6});
         }
 
         if (FormControls.settings.readingsField) {
@@ -485,14 +485,14 @@ class FormControls {
 
         if (FormControls.settings.reasonField) {
             formRow += `<div class="form-group col-sm-6">
-            <label for="onTheFly${FormControls.uniqid}Reason">${messages[ "Reason" ]}</label>
+            <label for="onTheFly${FormControls.uniqid}Reason">${Messages[ "Reason" ]}</label>
             <input type="text" value="${festivity?.reason||''}" class="form-control litEvent litEventReason" id="onTheFly${FormControls.uniqid}Reason" />
             </div>`;
         }
 
         if (FormControls.settings.missalField) {
             formRow += `<div class="form-group col-sm-6">
-            <label for="onTheFly${FormControls.uniqid}Missal">${messages[ "Missal" ]}</label>
+            <label for="onTheFly${FormControls.uniqid}Missal">${Messages[ "Missal" ]}</label>
             <select class="form-select litEvent litEventMissal" id="onTheFly${FormControls.uniqid}Missal">`;
             //console.log(Object.values( FormControls.missals ).map(({value,name}) => `<option class="list-group-item" value="${value}">${name}</option>`));
             formRow += FormControls.missals.map(({missal_id,name}) => `<option class="list-group-item" value="${missal_id}">${name}</option>`).join('');
@@ -502,7 +502,7 @@ class FormControls {
 
         if(FormControls.settings.decreeURLField) {
             formRow += `<div class="form-group col-sm-6">
-            <label for="onTheFly${FormControls.uniqid}DecreeURL">${messages[ "Decree URL" ]}<i class="ms-2 fas fa-info-circle" title="Use %s in place of the language code if using a language mapping"></i></label>
+            <label for="onTheFly${FormControls.uniqid}DecreeURL">${Messages[ "Decree URL" ]}<i class="ms-2 fas fa-info-circle" title="Use %s in place of the language code if using a language mapping"></i></label>
             <input type="text" class="form-control litEvent litEventDecreeURL" value="${festivity !== null && typeof festivity.url !== 'undefined' ? festivity.url : ''}" id="onTheFly${FormControls.uniqid}DecreeURL" />
             </div>`;
         }
@@ -510,7 +510,7 @@ class FormControls {
         if(FormControls.settings.decreeLangMapField) {
             let decreeLangs = festivity !== null && typeof festivity.url_lang_map !== 'undefined' ? Object.keys(festivity.url_lang_map).map(key => key+'='+festivity.url_lang_map[key] ) : null;
             formRow += `<div class="form-group col-sm-6">
-            <label for="onTheFly${FormControls.uniqid}DecreeLangs">${messages[ "Decree Langs" ]}<i class="ms-2 fas fa-info-circle" title="Use a comma separated list of key=value pairings, e.g. DE=ge,EN=en. Key is uppercased two letter ISO code, value is (generally lowercased) two letter representation used within the actual URL"></i></label>
+            <label for="onTheFly${FormControls.uniqid}DecreeLangs">${Messages[ "Decree Langs" ]}<i class="ms-2 fas fa-info-circle" title="Use a comma separated list of key=value pairings, e.g. DE=ge,EN=en. Key is uppercased two letter ISO code, value is (generally lowercased) two letter representation used within the actual URL"></i></label>
             <input type="text" class="form-control litEvent litEventDecreeLangs" value="${festivity !== null && typeof festivity.url_lang_map !== 'undefined' ? decreeLangs.join(',') : ''}" id="onTheFly${FormControls.uniqid}DecreeLangs" />
             </div>`;
         }
@@ -590,33 +590,33 @@ class FormControls {
         if(FormControls.settings.tagField === false){
             formRow += `<input type="hidden" class="litEventTag" id="onTheFly${FormControls.uniqid}Tag" value="${festivity !== null ? festivity.event_key : ''}" />`;
         }
-        formRow += `<label for="onTheFly${FormControls.uniqid}Name">${messages[ "Name" ]}</label>
+        formRow += `<label for="onTheFly${FormControls.uniqid}Name">${Messages[ "Name" ]}</label>
         <input type="text" class="form-control litEvent litEventName${festivity !== null && typeof festivity.name==='undefined' ? ` is-invalid` : ``}" id="onTheFly${FormControls.uniqid}Name" value="${festivity !== null ? festivity.name : ''}"${FormControls.settings.nameField === false ? ' readonly' : ''} />
         <div class="invalid-feedback">There is no locale data for this celebration in the current locale. Perhaps try a different locale?.</div>
         </div>`;
 
         if (FormControls.settings.fromYearField) {
             formRow += `<div class="form-group col-sm-1">
-            <label for="onTheFly${FormControls.uniqid}FromYear">${messages[ "Since" ]}</label>
+            <label for="onTheFly${FormControls.uniqid}FromYear">${Messages[ "Since" ]}</label>
             <input type="number" min="1582" max="9999" class="form-control litEvent litEventFromYear" id="onTheFly${FormControls.uniqid}FromYear" value="${festivity !== null ? festivity.since_year : ''}" />
             </div>`;
         }
 
         if (FormControls.settings.untilYearField) {
             formRow += `<div class="form-group col-sm-1">
-            <label for="onTheFly${FormControls.uniqid}UntilYear">${messages[ "Until" ]}</label>
+            <label for="onTheFly${FormControls.uniqid}UntilYear">${Messages[ "Until" ]}</label>
             <input type="number" min="1582" max="9999" class="form-control litEvent litEventUntilYear" id="onTheFly${FormControls.uniqid}UntilYear" value="${festivity !== null ? festivity.until_year : ''}" />
             </div>`;
         }
 
         let selectedColors = festivity !== null ? (Array.isArray(festivity.color) ? festivity.color : festivity.color.split(',')) : [];
         formRow += `<div class="form-group col-sm-2">
-        <label for="onTheFly${FormControls.uniqid}Color">${messages[ "Liturgical color" ]}</label>
+        <label for="onTheFly${FormControls.uniqid}Color">${Messages[ "Liturgical color" ]}</label>
         <select class="form-select litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple"${FormControls.settings.colorField === false ? ' readonly' : ''} />
-        <option value="white"${festivity !== null && selectedColors.includes("white") ? ' selected' : '' }>${messages[ "white" ].toUpperCase()}</option>
-        <option value="red"${festivity !== null && selectedColors.includes("red") ? ' selected' : '' }>${messages[ "red" ].toUpperCase()}</option>
-        <option value="purple"${festivity !== null && selectedColors.includes("purple") ? ' selected' : '' }>${messages[ "purple" ].toUpperCase()}</option>
-        <option value="green"${festivity !== null && selectedColors.includes("green") ? ' selected' : '' }>${messages[ "green" ].toUpperCase()}</option>
+        <option value="white"${festivity !== null && selectedColors.includes("white") ? ' selected' : '' }>${Messages[ "white" ].toUpperCase()}</option>
+        <option value="red"${festivity !== null && selectedColors.includes("red") ? ' selected' : '' }>${Messages[ "red" ].toUpperCase()}</option>
+        <option value="purple"${festivity !== null && selectedColors.includes("purple") ? ' selected' : '' }>${Messages[ "purple" ].toUpperCase()}</option>
+        <option value="green"${festivity !== null && selectedColors.includes("green") ? ' selected' : '' }>${Messages[ "green" ].toUpperCase()}</option>
         </select>
         </div>`;
 
@@ -637,12 +637,12 @@ class FormControls {
             </div>`;
         } else {
             formRow += `<div class="form-group col-sm-1">
-            <label for="onTheFly${FormControls.uniqid}Day">${messages[ "Day" ]}</label>
+            <label for="onTheFly${FormControls.uniqid}Day">${Messages[ "Day" ]}</label>
             <input type="number" min="1" max="31" value="${festivity !== null && festivity.day}" class="form-control litEvent litEventDay" id="onTheFly${FormControls.uniqid}Day"${FormControls.settings.dayField === false ?  'readonly' : '' } />
             </div>`;
 
             formRow += `<div class="form-group col-sm-1">
-            <label for="onTheFly${FormControls.uniqid}Month">${messages[ "Month" ]}</label>
+            <label for="onTheFly${FormControls.uniqid}Month">${Messages[ "Month" ]}</label>
             <select class="form-select litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month"${FormControls.settings.monthField === false ?  'readonly' : '' } >`;
 
             let formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
@@ -657,17 +657,17 @@ class FormControls {
 
         if (FormControls.settings.tagField) {
             formRow += `<div class="form-group col-sm-2">
-            <label for="onTheFly${FormControls.uniqid}Tag">${messages[ "Tag" ]}</label>
+            <label for="onTheFly${FormControls.uniqid}Tag">${Messages[ "Tag" ]}</label>
             <input type="text" value="${festivity !== null ? festivity.event_key : ''}" class="form-control litEvent litEventTag" id="onTheFly${FormControls.uniqid}Tag" />
             </div>`;
         }
 
         if (FormControls.settings.gradeFieldShow) {
-            formRow +=  messages.gradeTemplate.formatUnicorn({uniqid:FormControls.uniqid,colWidth:2});
+            formRow +=  Messages.gradeTemplate.formatUnicorn({uniqid:FormControls.uniqid,colWidth:2});
         }
 
         if (FormControls.settings.commonFieldShow) {
-            formRow += messages.commonsTemplate.formatUnicorn({uniqid:FormControls.uniqid,colWidth:3});
+            formRow += Messages.commonsTemplate.formatUnicorn({uniqid:FormControls.uniqid,colWidth:3});
         }
 
         if (FormControls.settings.readingsField) {
@@ -678,14 +678,14 @@ class FormControls {
 
         if (FormControls.settings.reasonField) {
             formRow += `<div class="form-group col-sm-6">
-            <label for="onTheFly${FormControls.uniqid}Reason">${messages[ "Reason" ]}</label>
+            <label for="onTheFly${FormControls.uniqid}Reason">${Messages[ "Reason" ]}</label>
             <input type="text" value="${festivity?.reason||''}" class="form-control litEvent litEventReason" id="onTheFly${FormControls.uniqid}Reason" />
             </div>`;
         }
 
         if(FormControls.settings.decreeURLField) {
             formRow += `<div class="form-group col-sm-6">
-            <label for="onTheFly${FormControls.uniqid}DecreeURL">${messages[ "Decree URL" ]}<i class="ms-2 fas fa-info-circle" title="Use %s in place of the language code if using a language mapping"></i></label>
+            <label for="onTheFly${FormControls.uniqid}DecreeURL">${Messages[ "Decree URL" ]}<i class="ms-2 fas fa-info-circle" title="Use %s in place of the language code if using a language mapping"></i></label>
             <input type="text" class="form-control litEvent litEventDecreeURL" value="${festivity !== null && typeof festivity.url !== 'undefined' ? festivity.url : ''}" />
             </div>`;
         }
@@ -693,7 +693,7 @@ class FormControls {
         if(FormControls.settings.decreeLangMapField) {
             let decreeLangs = festivity !== null && typeof festivity.url_lang_map !== 'undefined' ? Object.keys(festivity.url_lang_map).map(key => key+'='+festivity.url_lang_map[key] ) : null;
             formRow += `<div class="form-group col-sm-4">
-            <label for="onTheFly${FormControls.uniqid}DecreeLangs">${messages[ "Decree Langs" ]}<i class="ms-2 fas fa-info-circle" title="Use a comma separated list of key=value pairings, e.g. DE=ge,EN=en. Key is uppercased two letter ISO code, value is (generally lowercased) two letter representation used within the actual URL"></i></label>
+            <label for="onTheFly${FormControls.uniqid}DecreeLangs">${Messages[ "Decree Langs" ]}<i class="ms-2 fas fa-info-circle" title="Use a comma separated list of key=value pairings, e.g. DE=ge,EN=en. Key is uppercased two letter ISO code, value is (generally lowercased) two letter representation used within the actual URL"></i></label>
             <input type="text" class="form-control litEvent litEventDecreeLangs" value="${festivity !== null && typeof festivity.url_lang_map !== 'undefined' ? decreeLangs.join(',') : ''}" />
             </div>`;
         }
@@ -726,7 +726,7 @@ const setFormSettings = action => {
             FormControls.settings.colorField = false;
             FormControls.settings.reasonField = false;
             FormControls.settings.readingsField = false;
-            FormControls.title = messages[ RowActionTitle[RowAction.MakeDoctor] ];
+            FormControls.title = Messages[ RowActionTitle[RowAction.MakeDoctor] ];
             FormControls.action = RowAction.MakeDoctor;
             break;
         case 'designatePatronButton':
@@ -744,7 +744,7 @@ const setFormSettings = action => {
             FormControls.settings.missalField = false;
             FormControls.settings.reasonField = false;
             FormControls.settings.readingsField = false;
-            FormControls.title =  messages[ RowActionTitle[RowAction.MakePatron] ];
+            FormControls.title =  Messages[ RowActionTitle[RowAction.MakePatron] ];
             FormControls.action = RowAction.MakePatron;
             break;
         case 'setPropertyButton':
@@ -759,7 +759,7 @@ const setFormSettings = action => {
             FormControls.settings.missalField = false;
             FormControls.settings.reasonField = false;
             FormControls.settings.readingsField = false;
-            FormControls.title = messages[ RowActionTitle[RowAction.SetProperty] ];
+            FormControls.title = Messages[ RowActionTitle[RowAction.SetProperty] ];
             FormControls.action = RowAction.SetProperty;
             break;
         case 'moveFestivityButton':
@@ -776,7 +776,7 @@ const setFormSettings = action => {
             FormControls.settings.missalField = true;
             FormControls.settings.reasonField = true;
             FormControls.settings.readingsField = false;
-            FormControls.title = messages[ RowActionTitle[RowAction.MoveFestivity] ];
+            FormControls.title = Messages[ RowActionTitle[RowAction.MoveFestivity] ];
             FormControls.action = RowAction.MoveFestivity;
             break;
         case 'newFestivityFromExistingButton':
@@ -795,7 +795,7 @@ const setFormSettings = action => {
             FormControls.settings.missalField = false;
             FormControls.settings.reasonField = false;
             FormControls.settings.readingsField = true;
-            FormControls.title = messages[ RowActionTitle[RowAction.CreateNew] ];
+            FormControls.title = Messages[ RowActionTitle[RowAction.CreateNew] ];
             FormControls.action = RowAction.CreateNew;
             break;
         case 'newFestivityExNovoButton':
@@ -814,7 +814,7 @@ const setFormSettings = action => {
             FormControls.settings.missalField = false;
             FormControls.settings.reasonField = false;
             FormControls.settings.readingsField = true;
-            FormControls.title = messages[ RowActionTitle[RowAction.CreateNew] ];
+            FormControls.title = Messages[ RowActionTitle[RowAction.CreateNew] ];
             FormControls.action = RowAction.CreateNew;
             break;
     }
