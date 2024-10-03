@@ -1011,7 +1011,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
             $('form.regionalNationalDataForm').empty();
             return;
         } else {
-            console.error(error.status);
+            console.error(error);
             /*error.json().then(json => {
                 console.error(json);
                 //We're taking for granted that the API is sending back a JSON object with status, response and description
