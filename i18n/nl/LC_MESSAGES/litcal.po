@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-03 01:33+0000\n"
+"POT-Creation-Date: 2024-10-03 01:36+0000\n"
 "PO-Revision-Date: 2024-09-22 00:28+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
@@ -973,7 +973,7 @@ msgstr "Juliaanse Pasen"
 msgid "Julian Easter in Gregorian Calendar"
 msgstr "Juliaanse Pasen in de Gregoriaanse kalender"
 
-#: about.php:8
+#: about.php:10
 msgid ""
 "The Liturgical Calendar project is curated by a group of volunteer catholic "
 "programmers, seeking to serve the Church."
@@ -981,7 +981,7 @@ msgstr ""
 "Het liturgische kalenderproject wordt samengesteld door een groep "
 "vrijwillige katholieke programmeurs die de kerk willen dienen."
 
-#: about.php:14 about.php:22
+#: about.php:16 about.php:24
 msgid "Liturgical Calendar - About us"
 msgstr "Liturgische kalender - Over ons"
 

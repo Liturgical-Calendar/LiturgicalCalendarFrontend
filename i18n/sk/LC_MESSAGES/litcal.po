@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-03 01:33+0000\n"
+"POT-Creation-Date: 2024-10-03 01:36+0000\n"
 "PO-Revision-Date: 2024-09-30 19:40+0000\n"
 "Last-Translator: Milan Šalka <salka.milan@googlemail.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -947,7 +947,7 @@ msgstr "Juliánska Veľká noc"
 msgid "Julian Easter in Gregorian Calendar"
 msgstr "Juliánska Veľká noc v gregoriánskom kalendári"
 
-#: about.php:8
+#: about.php:10
 msgid ""
 "The Liturgical Calendar project is curated by a group of volunteer catholic "
 "programmers, seeking to serve the Church."
@@ -955,7 +955,7 @@ msgstr ""
 "Projekt liturgického kalendára je spravovaný skupinou dobrovoľných "
 "katolíckych programátorov, ktorí sa snažia slúžiť Cirkvi."
 
-#: about.php:14 about.php:22
+#: about.php:16 about.php:24
 msgid "Liturgical Calendar - About us"
 msgstr "Liturgický kalendár - O nás"
 
