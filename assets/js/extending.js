@@ -951,16 +951,14 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                 console.log( FestivityCollection[existingFestivityTag] );
                 el.festivity.color = FestivityCollection[existingFestivityTag].color;
             }
-            let colorVal = Array.isArray(el.festivity.color) ? el.festivity.color : el.festivity.color.split(',');
-            $row.find('.litEventColor').multiselect('select', colorVal);
+            $row.find('.litEventColor').multiselect('select', el.festivity.color);
             if(FormControls.settings.colorField === false) {
                 $row.find('.litEventColor').multiselect('disable');
             }
 
             if( el.festivity.hasOwnProperty( 'common' ) ) {
-                let common = Array.isArray( el.festivity.common ) ? el.festivity.common : el.festivity.common.split(',');
                 if(FormControls.settings.commonFieldShow) {
-                    setCommonMultiselect( $row, common );
+                    setCommonMultiselect( $row, el.festivity.common );
                     if(FormControls.settings.commonField === false) {
                         $row.find(`#onTheFly${currentUniqid}Common`).multiselect('disable');
                     }
