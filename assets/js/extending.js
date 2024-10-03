@@ -127,6 +127,7 @@ const sanitizeProxiedAPI = {
                     console.warn(`property 'method' of this object must be one of the values 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'`);
                     return;
                 }
+                break;
             default:
                 console.warn('unexpected property ' + prop + ' of type ' + typeof prop + ' on target of type ' + typeof target);
                 return;
@@ -698,13 +699,12 @@ $(document).on('change', '.litEvent', ev => {
 $(document).on('click', '#saveDiocesanCalendar_btn', () => {
     let nation = $('#diocesanCalendarNationalDependency').val();
     let diocese = $('#diocesanCalendarDioceseName').val();
-    let saveObj = { caldata: CalendarData };
+    let saveObj = { payload: CalendarData };
     switch (API.method) {
         case 'PUT':   // we PUT data to the base /data API path
-            API.path = RegionalDataURL;
-            saveObj.diocese = diocese;
-            saveObj.nation = nation;
-            saveObj.category = 'diocese';
+            API.path = `${RegionalDataURL}/diocese`;
+            saveObj.payload.diocese = diocese;
+            saveObj.payload.nation = nation;
             break;
         case 'PATCH': // we PATCH data on an existing /data/{category}/{key} path
             API.category = 'diocese';
@@ -713,21 +713,21 @@ $(document).on('click', '#saveDiocesanCalendar_btn', () => {
     }
     //console.log('save button was clicked for NATION = ' + $nation + ', DIOCESE = ' + $diocese);
     if($('#diocesanCalendarGroup').val() != ''){
-        saveObj.group = $('#diocesanCalendarGroup').val();
+        saveObj.payload.group = $('#diocesanCalendarGroup').val();
     }
     if( diocesanOvveridesDefined() ) {
         //console.log( 'This diocesan calendar has defined some options that will override the national calendar.' );
-        saveObj.caldata.overrides = {};
+        saveObj.payload.overrides = {};
         if( $('#diocesanCalendarOverrideEpiphany').val() !== "" ) {
-            saveObj.caldata.overrides.epiphany = $('#diocesanCalendarOverrideEpiphany').val();
+            saveObj.payload.overrides.epiphany = $('#diocesanCalendarOverrideEpiphany').val();
             //console.log( 'Epiphany in this diocese will override Epiphany in the national calendar.' );
         }
         if( $('#diocesanCalendarOverrideAscension').val() !== "" ) {
-            saveObj.caldata.overrides.ascension = $('#diocesanCalendarOverrideAscension').val();
+            saveObj.payload.overrides.ascension = $('#diocesanCalendarOverrideAscension').val();
             //console.log( 'Ascension in this diocese will override Ascension in the national calendar.' );
         }
         if( $('#diocesanCalendarOverrideCorpusChristi').val() !== "" ) {
-            saveObj.caldata.overrides.corpus_christi = $('#diocesanCalendarOverrideCorpusChristi').val();
+            saveObj.payload.overrides.corpus_christi = $('#diocesanCalendarOverrideCorpusChristi').val();
             //console.log( 'Corpus Christi in this diocese will override Corpus Christi in the national calendar.' );
         }
     }
