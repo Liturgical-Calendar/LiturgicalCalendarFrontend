@@ -1,7 +1,9 @@
 <?php
 
-include_once('includes/LitCommon.php');
-include_once('includes/LitGrade.php');
+namespace LiturgicalCalendar\Frontend;
+
+use LiturgicalCalendar\Frontend\LitCommon;
+use LiturgicalCalendar\Frontend\LitGrade;
 
 class FormControls
 {
@@ -15,11 +17,11 @@ class FormControls
         "untilYearField"   => true
     ];
 
-    private i18n $i18n;
+    private I18n $i18n;
     private LitCommon $LitCommon;
     private LitGrade $LitGrade;
 
-    public function __construct(i18n $i18n)
+    public function __construct(I18n $i18n)
     {
         $this->i18n = $i18n;
         $this->LitCommon = new LitCommon($i18n->LOCALE);
@@ -58,10 +60,10 @@ class FormControls
             "<input class=\"form-check-input litEvent litEventStrtotimeSwitch\" type=\"checkbox\" data-bs-toggle=\"toggle\" data-bs-size=\"xs\" data-bs-onstyle=\"info\" data-bs-offstyle=\"dark\" role=\"switch\" id=\"{$uniqid}Strtotime\">" .
             "</div></label>" .
             "<select class=\"form-select litEvent litEventMonth\" id=\"{$uniqid}Month\">";
-            $formatter = new IntlDateFormatter($this->i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::NONE);
+            $formatter = new \IntlDateFormatter($this->i18n->LOCALE, \IntlDateFormatter::FULL, \IntlDateFormatter::NONE);
             $formatter->setPattern("MMMM");
             for ($i = 1; $i <= 12; $i++) {
-                $month = DateTime::createFromFormat("n j", $i . " 15", new DateTimeZone('UTC'));
+                $month = \DateTime::createFromFormat("n j", $i . " 15", new \DateTimeZone('UTC'));
                 $formRow .= "<option value={$i}>" . $formatter->format($month) . "</option>";
             }
 

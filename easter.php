@@ -3,6 +3,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+use LiturgicalCalendar\Frontend\Utilities;
+
 $isStaging          = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false || strpos($_SERVER['HTTP_HOST'], "localhost") !== false );
 //$stagingURL         = $isStaging ? "-staging" : "";
 $endpointV          = $isStaging ? "dev" : "v3";
@@ -10,12 +12,11 @@ $endpointURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/cal
 $metadataURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/calendars";
 $dateOfEasterURL    = "https://litcal.johnromanodorazio.com/api/{$endpointV}/easter";
 
-include_once('includes/functions.php');
 
 $AllAvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($value) {
     return strpos($value, 'POSIX') === false;
 });
-$LOCALE = isset($_GET["locale"]) && in_array($_GET["locale"], $AllAvailableLocales) ? $_GET["locale"] : "LA"; //default to latin
+$LOCALE = isset($_GET["locale"]) && in_array($_GET["locale"], $AllAvailableLocales) ? $_GET["locale"] : "la_VA"; //default to latin
 ini_set('date.timezone', 'Europe/Vatican');
 
 $baseLocale = Locale::getPrimaryLanguage($LOCALE);
@@ -95,7 +96,7 @@ $c->asort($AvailableLocales);
         <div id="TimelineCenturiesContainer">
         <?php
         for ($i = 16; $i <= 100; $i++) {
-            $century = strtolower($LOCALE) === "en" ? ordinal($i) : integerToRoman($i);
+            $century = strtolower($LOCALE) === "en" ? Utilities::ordinal($i) : Utilities::romanNumeral($i);
             echo "<div class=\"TimelineCenturyMarker\">" . $century . " " . _("Century") . "</div>";
         }
         ?>

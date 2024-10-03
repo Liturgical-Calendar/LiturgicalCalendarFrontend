@@ -1,6 +1,9 @@
-<!doctype html><?php
+<?php
 
-include_once("includes/I18n.php");
+use LiturgicalCalendar\Frontend\I18n;
+
+include_once("vendor/autoload.php");
+
 $i18n = new I18n();
 
 $isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false || strpos($_SERVER['HTTP_HOST'], "localhost") !== false );
@@ -23,7 +26,7 @@ $API_DESCRIPTION = _('Collection of Liturgical events for any given year between
         _('Each of these paths can optionally be further specified with a %1$s path parameter. When not specified, the API will default to the current year.'),
         '<b><code>/{YEAR}</code></b>'
     );
-?>
+?><!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
     <title><?php echo _("General Roman Calendar") ?></title>

@@ -1,6 +1,9 @@
-<!doctype html><?php
+<?php
 
-include_once("includes/I18n.php");
+use LiturgicalCalendar\Frontend\I18n;
+
+include_once("vendor/autoload.php");
+
 $i18n = new I18n();
 
 $API_EXTEND_HOWTO_1 = _("The first step in creating a national or diocesan calendar, is to translate the data for the General Roman Calendar into the language for that nation or diocese.");
@@ -34,7 +37,7 @@ $API_EXTEND_HOWTO_8 = _("Anyone who intends on contributing to the translations 
 $API_EXTEND_HOWTO_9 = _("If the translator is not an expert in liturgical science or does not have a role in a diocesan office for liturgy and worship, the translations will require overview by a liturgical expert before being incorporated into this project.");
 
 $API_EXTEND_HOWTO_10 = _('The project website can be also be translated into other languages. The translation strings can be found in the following translation components:');
-?>
+?><!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
     <title><?php echo _("Translating the Calendar") ?></title>

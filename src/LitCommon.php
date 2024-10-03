@@ -1,6 +1,6 @@
 <?php
 
-include_once("includes/pgettext.php");
+namespace LiturgicalCalendar\Frontend;
 
 class LitCommon
 {

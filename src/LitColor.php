@@ -1,5 +1,7 @@
 <?php
 
+namespace LiturgicalCalendar\Frontend;
+
 class LitColor
 {
     public const GREEN     = "green";
