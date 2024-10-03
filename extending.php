@@ -156,15 +156,9 @@ if (isset($_GET["choice"])) {
                             <datalist id="WiderRegionsList">
                                 <option value=""></option>
                             <?php
-                            if ($isStaging) {
-                                foreach ($LitCalMetadata["wider_regions"] as $widerRegion) {
-                                    foreach ($widerRegion["languages"] as $widerRegionLanguage) {
-                                        echo "<option value=\"{$widerRegion['name']} - {$widerRegionLanguage}\">{$widerRegion['name']}</option>";
-                                    }
-                                }
-                            } else {
-                                foreach ($LitCalMetadata["WiderRegions"] as $widerRegion) {
-                                    echo "<option value=\"{$widerRegion}\">{$widerRegion}</option>";
+                            foreach ($LitCalMetadata["wider_regions"] as $widerRegion) {
+                                foreach ($widerRegion["languages"] as $widerRegionLanguage) {
+                                    echo "<option value=\"{$widerRegion['name']} - {$widerRegionLanguage}\">{$widerRegion['name']}</option>";
                                 }
                             }
                             ?>
@@ -349,14 +343,8 @@ if (isset($_GET["choice"])) {
                             <datalist id="DiocesanGroupsList">
                                 <option value=""></option>
                                 <?php
-                                if ($isStaging) {
-                                    foreach ($DiocesanGroups as $diocesanGroup) {
-                                        echo "<option value=\"{$diocesanGroup['group_name']}\">{$diocesanGroup['group_name']}</option>";
-                                    }
-                                } else {
-                                    foreach ($DiocesanGroups as $diocesanGroup) {
-                                        echo "<option value=\"$diocesanGroup\">$diocesanGroup</option>";
-                                    }
+                                foreach ($DiocesanGroups as $diocesanGroup) {
+                                    echo "<option value=\"{$diocesanGroup['group_name']}\">{$diocesanGroup['group_name']}</option>";
                                 }
                                 ?>
                             </datalist>
