@@ -99,14 +99,14 @@ const sanitizeProxiedAPI = {
                     }
                 }
                 else if (target['category'] === 'nation') {
-                    if (false === LitCalMetaData.national_calendars_keys.includes(value)) {
-                        console.warn(`property 'key' of this object must be a valid nation key: ${LitCalMetaData.national_calendars_keys.join(', ')}`);
+                    if (false === LitCalMetadata.national_calendars_keys.includes(value)) {
+                        console.warn(`property 'key' of this object must be a valid nation key: ${LitCalMetadata.national_calendars_keys.join(', ')}`);
                         return;
                     }
                 }
                 else if (target['category'] === 'diocese') {
-                    if (false === LitCalMetaData.diocesan_calendars_keys.includes(value)) {
-                        console.warn(`property 'key' of this object must be a valid diocese key: ${LitCalMetaData.diocesan_calendars_keys.join(', ')}`);
+                    if (false === LitCalMetadata.diocesan_calendars_keys.includes(value)) {
+                        console.warn(`property 'key' of this object must be a valid diocese key: ${LitCalMetadata.diocesan_calendars_keys.join(', ')}`);
                         return;
                     }
                 }
