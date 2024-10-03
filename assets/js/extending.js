@@ -47,7 +47,7 @@ toastr.options = {
 }
 
 // the Messages global is set in extending.php
-const { LOCALE, LOCALE_WITH_REGION } = Messages;
+const { LOCALE, LOCALE_WITH_REGION, AvailableLocalesWithRegion } = Messages;
 const jsLocale = LOCALE.replace('_', '-');
 FormControls.jsLocale = jsLocale;
 FormControls.weekdayFormatter = new Intl.DateTimeFormat(jsLocale, { weekday: "long" });
@@ -996,6 +996,14 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                 case 'nation':
                     $('form#nationalCalendarSettingsForm')[0].reset();
                     $('#publishedRomanMissalList').empty();
+                    const LocalesForRegion = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, localeDisplayName]) => {
+                        const locale = new Intl.Locale(localeIso.replace('_', '-'));
+                        return locale.region === API.key;
+                    });
+                    const localeOptions = LocalesForRegion.map(([localeIso, localeDisplayName]) => {
+                        return `<option value="${localeIso}">${localeDisplayName}</option>`;
+                    });
+                    document.querySelector('#nationalCalendarSettingLocale').innerHTML = localeOptions.join('\n');
                     break;
             }
             $('form.regionalNationalDataForm').empty();

@@ -117,6 +117,7 @@ $messages = [
     "LOCALE"             => $i18n->LOCALE,
     "LOCALE_WITH_REGION" => $i18n->LOCALE_WITH_REGION,
     "AvailableLocales"   => $SystemLocalesWithoutRegion,
+    "AvailableLocalesWithRegion" => $SystemLocalesWithRegion,
     "AvailableCountries" => $AvailableCountries
 ];
 
@@ -268,7 +269,7 @@ if (isset($_GET["choice"])) {
                                         </select>
                                     </div>
                                     <div class="form-group col col-md-2">
-                                        <label><?php echo _('JESUS HIGH PRIEST') ?></label>
+                                        <label><?php echo _('ETERNAL HIGH PRIEST') ?></label>
                                         <div class="form-check form-switch">
                                             <input class="form-check-input" type="checkbox" role="switch" id="nationalCalendarSettingHighPriest">
                                             <i class="fas fa-info-circle ms-4 d-inline-block text-black" style="--bs-text-opacity: .3;" role="button" title="In 2012, Pope Benedict XVI gave faculty to the Episcopal Conferences to insert the Feast of Jesus Christ Eternal High Priest in their own liturgical calendars on the Thursday after Pentecost."></i>
