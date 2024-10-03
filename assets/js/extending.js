@@ -800,7 +800,7 @@ $(document).on('click', '.actionPromptButton', ev => {
     //let buttonId = ev.currentTarget.id;
     //console.log(buttonId + ' button was clicked');
     FormControls.settings.decreeURLField = true;
-    FormControls.settings.decreeLangMapField = $('.regionalNationalCalendarName').attr('id') === 'widerRegionCalendarName';
+    FormControls.settings.decreeLangMapField = document.querySelector('.regionalNationalCalendarName')[0].id === 'widerRegionCalendarName';
     setFormSettings( ev.currentTarget.id );
     if( ev.currentTarget.id === 'setPropertyButton' ) {
         propertyToChange = $('#propertyToChange').val();
@@ -878,7 +878,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
     if ( API.category === 'widerregion' ) {
         headers['Accept-Language'] = API.locale;
     }
-    console.log(`API.path is ${API.path} (category is ${API.category} and key is ${API.key}). Now checking if a calendar already exists...`);
+    console.log(`API.path is ${API.path} (category is ${API.category} and key is ${API.key}). Locale set to ${API.locale}. Now checking if a calendar already exists...`);
 
     fetch(API.path, { headers }).then(response => {
         if (response.ok) {
