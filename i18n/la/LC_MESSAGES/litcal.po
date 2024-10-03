@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-03 02:17+0000\n"
 "PO-Revision-Date: 2024-10-03 13:11+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
 "Language: la\n"
@@ -163,10 +163,8 @@ msgstr ""
 "est, preme ut eventus videas."
 
 #: index.php:192 index.php:196
-#, fuzzy
-#| msgid "Liturgical color"
 msgid "Liturgical Calendar Validator"
-msgstr "Color liturgicum"
+msgstr "Liturgicus Calendarii Validator"
 
 #: index.php:195
 msgid ""
@@ -1084,10 +1082,8 @@ msgstr ""
 "sequentibus componentibus translationis inveniri potest:"
 
 #: translations.php:43
-#, fuzzy
-#| msgid "National Calendar"
 msgid "Translating the Calendar"
-msgstr "Calendarium Nationalis"
+msgstr "Calendarium transferens"
 
 #: translations.php:51
 msgid "Translating the Liturgical Calendar project"
@@ -1427,10 +1423,8 @@ msgid "Home"
 msgstr "Domus"
 
 #: layout/header.php:99
-#, fuzzy
-#| msgid "Commemoration"
 msgid "Documentation"
-msgstr "Commemoratio"
+msgstr "Documentatio"
 
 #: layout/header.php:103
 msgid "Examples of Usage"
