@@ -47,7 +47,7 @@ toastr.options = {
 }
 
 // the Messages global is set in extending.php
-const { LOCALE, LOCALE_WITH_REGION, AvailableLocalesWithRegion } = Messages;
+const { LOCALE, LOCALE_WITH_REGION, AvailableLocalesWithRegion, AvailableCountries } = Messages;
 const jsLocale = LOCALE.replace('_', '-');
 FormControls.jsLocale = jsLocale;
 FormControls.weekdayFormatter = new Intl.DateTimeFormat(jsLocale, { weekday: "long" });
@@ -99,15 +99,17 @@ const sanitizeProxiedAPI = {
                     }
                 }
                 else if (target['category'] === 'nation') {
-                    if (false === LitCalMetadata.national_calendars_keys.includes(value)) {
-                        console.warn(`property 'key' of this object must be a valid nation key: ${LitCalMetadata.national_calendars_keys.join(', ')}`);
+                    if (false === Object.keys(AvailableCountries).includes(value)) {
+                        console.warn(`property 'key' of this object is not a valid value, possible values are: ${Object.keys(AvailableCountries).join(', ')}`);
                         return;
+                    }
+                    if (false === LitCalMetadata.national_calendars_keys.includes(value)) {
+                        console.warn(`property 'key' of this object is not yet defined, defined values are: ${LitCalMetadata.national_calendars_keys.join(', ')}`);
                     }
                 }
                 else if (target['category'] === 'diocese') {
                     if (false === LitCalMetadata.diocesan_calendars_keys.includes(value)) {
-                        console.warn(`property 'key' of this object must be a valid diocese key: ${LitCalMetadata.diocesan_calendars_keys.join(', ')}`);
-                        return;
+                        console.warn(`property 'key' of this object is not yet defined, defined values are: ${LitCalMetadata.diocesan_calendars_keys.join(', ')}`);
                     }
                 }
                 if (target.hasOwnProperty('category') && target['category'] !== '') {
