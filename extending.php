@@ -74,7 +74,7 @@ $AvailableCountries = array_filter(ResourceBundle::getLocales(''), function ($va
 });
 $AvailableCountries = array_reduce($AvailableCountries, function ($carry, $item) use ($i18n) {
     if (!array_key_exists($item, $carry)) {
-        $carry[$item] = Locale::getDisplayRegion($item, $i18n->LOCALE);
+        $carry[Locale::getRegion($item)] = Locale::getDisplayRegion($item, $i18n->LOCALE);
     }
     return $carry;
 }, []);
