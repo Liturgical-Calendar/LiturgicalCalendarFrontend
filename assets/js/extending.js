@@ -51,7 +51,7 @@ const { LOCALE, LOCALE_WITH_REGION, AvailableLocalesWithRegion, AvailableCountri
 const jsLocale = LOCALE.replace('_', '-');
 FormControls.jsLocale = jsLocale;
 FormControls.weekdayFormatter = new Intl.DateTimeFormat(jsLocale, { weekday: "long" });
-console.log(AvailableLocalesWithRegion);
+console.log(Object.entries(AvailableLocalesWithRegion));
 
 /**
  * Proxy sanitizer for the proxied API object. Sanitizes the values assigned to properties of the proxied API object.
