@@ -876,7 +876,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
     API.key = ev.currentTarget.value;
     const headers = {};
     if ( API.category === 'widerregion' ) {
-        headers['Accept-Language'] = API.locale;
+        headers['Accept-Language'] = API.locale.replaceAll('_', '-');
     }
     console.log(`API.path is ${API.path} (category is ${API.category} and key is ${API.key}). Locale set to ${API.locale}. Now checking if a calendar already exists...`);
 
