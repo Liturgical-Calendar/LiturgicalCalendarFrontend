@@ -6,10 +6,10 @@
  * @link https://litcal.johnromanodorazio.com
  */
 
-include_once("includes/I18n.php");
 include_once("vendor/autoload.php");
 
 use LiturgicalCalendar\Components\CalendarSelect;
+use LiturgicalCalendar\Frontend\I18n;
 
 $i18n = new I18n();
 $dateToday = new DateTime();

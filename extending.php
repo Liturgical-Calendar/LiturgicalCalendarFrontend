@@ -1,7 +1,10 @@
 <?php
 
-include_once("includes/I18n.php");
-include_once("layout/FormControls.php");
+use LiturgicalCalendar\Frontend\FormControls;
+use LiturgicalCalendar\Frontend\I18n;
+use LiturgicalCalendar\Frontend\Utilities;
+
+include_once("vendor/autoload.php");
 
 $i18n = new I18n();
 $FormControls = new FormControls($i18n);
@@ -12,42 +15,26 @@ $dayOfWeekFmt = IntlDateFormatter::create($i18n->LOCALE, IntlDateFormatter::FULL
 $thursday   = $dayOfWeekFmt->format(DateTime::createFromFormat('!j-n-Y', '1-1-2022', new DateTimeZone('UTC'))->modify('next Thursday'));
 $sunday     = $dayOfWeekFmt->format(DateTime::createFromFormat('!j-n-Y', '1-1-2022', new DateTimeZone('UTC'))->modify('next Sunday'));
 
-$countryISOCodes = json_decode(file_get_contents("assets/data/CountryToISO.json"), true);
 $availableNationalCalendars = [];
 
-if ($isStaging) {
-    [ "litcal_metadata" => $LitCalMetadata ] = json_decode(
-        file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/calendars"),
-        true
-    );
-    [ "litcal_events" => $FestivityCollection ] = json_decode(
-        file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/events?locale=" . $i18n->LOCALE),
-        true
-    );
-    $NationalCalendars = array_filter(
-        $LitCalMetadata["national_calendars"],
-        fn($calendar) => isset($calendar['calendar_id']) && $calendar['calendar_id'] !== 'VATICAN'
-    );
 
-    $DiocesanGroups = $LitCalMetadata["diocesan_groups"];
-    foreach ($NationalCalendars as $calendar) {
-        $availableNationalCalendars[$calendar['calendar_id']] = Locale::getDisplayRegion("-" . $calendar['country_iso'], $i18n->LOCALE);
-    }
-} else {
-    [ "LitCalMetadata" => $LitCalMetadata ] = json_decode(
-        file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/metadata/"),
-        true
-    );
-    [ "LitCalAllFestivities" => $FestivityCollection ] = json_decode(
-        file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/allevents/?locale=" . $i18n->LOCALE),
-        true
-    );
-    $NationalCalendars = $LitCalMetadata["NationalCalendars"];
-    $DiocesanGroups = array_keys($LitCalMetadata["DiocesanGroups"]);
-    unset($NationalCalendars["VATICAN"]);
-    foreach (array_keys($NationalCalendars) as $country_name) {
-        $availableNationalCalendars[$country_name] = Locale::getDisplayRegion("-" . $countryISOCodes[$country_name], $i18n->LOCALE);
-    }
+[ "litcal_metadata" => $LitCalMetadata ] = json_decode(
+    file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/calendars"),
+    true
+);
+[ "litcal_events" => $FestivityCollection ] = json_decode(
+    file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/events?locale=" . $i18n->LOCALE),
+    true
+);
+
+$NationalCalendars = array_filter(
+    $LitCalMetadata["national_calendars"],
+    fn($calendar) => isset($calendar['calendar_id']) && $calendar['calendar_id'] !== 'VA'
+);
+
+$DiocesanGroups = $LitCalMetadata["diocesan_groups"];
+foreach ($NationalCalendars as $calendar) {
+    $availableNationalCalendars[$calendar['calendar_id']] = Locale::getDisplayRegion("-" . $calendar['country_iso'], $i18n->LOCALE);
 }
 asort($availableNationalCalendars, SORT_LOCALE_STRING);
 
@@ -130,8 +117,7 @@ $messages = [
     "LOCALE"             => $i18n->LOCALE,
     "LOCALE_WITH_REGION" => $i18n->LOCALE_WITH_REGION,
     "AvailableLocales"   => $SystemLocalesWithoutRegion,
-    "AvailableCountries" => $AvailableCountries,
-    "countryISOCodes"    => $countryISOCodes
+    "AvailableCountries" => $AvailableCountries
 ];
 
 $buttonGroup = "<hr><div class=\"d-flex justify-content-around\">
@@ -140,28 +126,6 @@ $buttonGroup = "<hr><div class=\"d-flex justify-content-around\">
 <button class=\"btn btn-sm btn-primary m-2\" id=\"moveFestivityAction\" data-bs-toggle=\"modal\" data-bs-target=\"#moveFestivityActionPrompt\"><i class=\"fas fa-calendar-day me-2\"></i>" . _("Move festivity to new date") . "</button>
 <button class=\"btn btn-sm btn-primary m-2\" id=\"newFestivityAction\" data-bs-toggle=\"modal\" data-bs-target=\"#newFestivityActionPrompt\"><i class=\"far fa-calendar-plus me-2\"></i>" . _("Create a new festivity") . "</button>
 </div>";
-
-function generateModalBody(bool $hasPropertyChange = false): void
-{
-    $modalBody = "<div class=\"modal-body\">
-    <form class=\"row justify-content-left needs-validation\" novalidate>
-        <div class=\"form-group col col-md-10\">
-            <label for=\"existingFestivityName\" class=\"fw-bold\">" . _("Choose from existing festivities") . ":</label>
-            <input list=\"existingFestivitiesList\" class=\"form-control existingFestivityName\" id=\"existingFestivityName\" required>
-            <div class=\"invalid-feedback\">" . _("This festivity does not seem to exist? Please choose from a value in the list.") . "</div>
-        </div>";
-    if ($hasPropertyChange) {
-        $modalBody .= "<div class=\"form-group col col-md-6\">
-            <label for=\"propertyToChange\" class=\"fw-bold\">" . _("Property to change") . ":</label>
-            <select class=\"form-select\" id=\"propertyToChange\" name=\"propertyToChange\">
-                <option value=\"name\">" . _("Name") . "</option>
-                <option value=\"grade\">" . _("Grade") . "</option>
-            </select>
-        </div>";
-    }
-    $modalBody .= "</form></div>";
-    echo $modalBody;
-}
 
 ?><!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
@@ -560,8 +524,9 @@ if (isset($_GET["choice"])) {
 }
 ?>
 <script>
-const messages = <?php echo json_encode($messages); ?>;
+const Messages = <?php echo json_encode($messages); ?>;
 const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
+const LitCalMetadata = <?php echo json_encode($LitCalMetadata); ?>;
 </script>
 <?php include_once('./layout/footer.php'); ?>
 
@@ -572,7 +537,7 @@ const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
             <div class="modal-header">
                 <h5 class="modal-title" id="makePatronActionModalLabel"><?php echo _("Designate patron from existing festivity") ?></h5>
             </div>
-            <?php generateModalBody(false); ?>
+            <?php Utilities::generateModalBody(false); ?>
             <div class="modal-footer">
                 <button type="button" id="designatePatronButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-user-graduate me-2"></i><?php echo _("Designate patron") ?></button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _("Cancel") ?></button>
@@ -588,7 +553,7 @@ const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
             <div class="modal-header">
                 <h5 class="modal-title" id="setPropertyActionModalLabel"><?php echo _("Change name or grade of existing festivity") ?></h5>
             </div>
-            <?php generateModalBody(true); ?>
+            <?php Utilities::generateModalBody(true); ?>
             <div class="modal-footer">
                 <button type="button" id="setPropertyButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-edit me-2"></i>Set Property</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _("Cancel") ?></button>
@@ -604,7 +569,7 @@ const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
             <div class="modal-header">
                 <h5 class="modal-title" id="moveFestivityActionModalLabel"><?php echo _("Move festivity to new date") ?></h5>
             </div>
-            <?php generateModalBody(false); ?>
+            <?php Utilities::generateModalBody(false); ?>
             <div class="modal-footer">
                 <button type="button" id="moveFestivityButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-day me-2"></i><?php echo _("Move Festivity") ?></button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _("Cancel") ?></button>
@@ -620,7 +585,7 @@ const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
             <div class="modal-header">
                 <h5 class="modal-title" id="newFestivityActionModalLabel"><?php echo _("Create a new festivity") ?></h5>
             </div>
-            <?php generateModalBody(false); ?>
+            <?php Utilities::generateModalBody(false); ?>
             <div class="modal-footer">
                 <button type="button" id="newFestivityFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus me-2"></i><?php echo _("New Festivity from existing") ?></button>
                 <button type="button" id="newFestivityExNovoButton" class="btn btn-primary actionPromptButton"><i class="fas fa-calendar-plus me-2"></i><?php echo _("New Festivity ex novo") ?></button>

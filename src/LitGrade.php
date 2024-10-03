@@ -8,12 +8,14 @@
  *  A COPY OF THE DOCUMENT IS INCLUDED ALONGSIDE THIS ENGINE, SEEING THAT THERE IS NO DIRECT ONLINE LINK TO THE ACTUAL NORMS
  */
 
+namespace LiturgicalCalendar\Frontend;
+
+class LitGrade
+{
 /*****************************************************
  * DEFINE THE ORDER OF IMPORTANCE OF THE FESTIVITIES *
  ****************************************************/
 
-class LitGrade
-{
 // I.
     public const HIGHER_SOLEMNITY  = 7;
 // HIGHER RANKING SOLEMNITIES, THAT HAVE PRECEDENCE OVER ALL OTHERS:
@@ -95,29 +97,29 @@ class LitGrade
     private static function translateGrade(int $value)
     {
         switch ($value) {
-/**translators: liturgical rank. Keep lowercase  */
             case self::WEEKDAY:
+                /**translators: liturgical rank. Keep lowercase  */
                 return _("weekday");
-/**translators: liturgical rank. Keep Capitalized  */
             case self::COMMEMORATION:
+                /**translators: liturgical rank. Keep Capitalized  */
                 return _("Commemoration");
-/**translators: liturgical rank. Keep Capitalized  */
             case self::MEMORIAL_OPT:
+                /**translators: liturgical rank. Keep Capitalized  */
                 return _("Optional memorial");
-/**translators: liturgical rank. Keep Capitalized  */
             case self::MEMORIAL:
+                /**translators: liturgical rank. Keep Capitalized  */
                 return _("Memorial");
-/**translators: liturgical rank. Keep UPPERCASE  */
             case self::FEAST:
+                /**translators: liturgical rank. Keep UPPERCASE  */
                 return _("FEAST");
-/**translators: liturgical rank. Keep UPPERCASE  */
             case self::FEAST_LORD:
+                /**translators: liturgical rank. Keep UPPERCASE  */
                 return _("FEAST OF THE LORD");
-/**translators: liturgical rank. Keep UPPERCASE  */
             case self::SOLEMNITY:
+                /**translators: liturgical rank. Keep UPPERCASE  */
                 return _("SOLEMNITY");
-/**translators: liturgical rank. Keep lowercase  */
             case self::HIGHER_SOLEMNITY:
+                /**translators: liturgical rank. Keep lowercase  */
                 return _("celebration with precedence over solemnities");
         }
     }

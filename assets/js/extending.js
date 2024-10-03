@@ -46,8 +46,8 @@ toastr.options = {
     "hideMethod": "fadeOut"
 }
 
-// the messages global is set in extending.php
-const { LOCALE, LOCALE_WITH_REGION } = messages;
+// the Messages global is set in extending.php
+const { LOCALE, LOCALE_WITH_REGION } = Messages;
 const jsLocale = LOCALE.replace('_', '-');
 FormControls.jsLocale = jsLocale;
 FormControls.weekdayFormatter = new Intl.DateTimeFormat(jsLocale, { weekday: "long" });
@@ -99,25 +99,16 @@ const sanitizeProxiedAPI = {
                     }
                 }
                 else if (target['category'] === 'nation') {
-                    value = value.toUpperCase();
-                    if (value === 'UNITED STATES') {
-                        value = 'USA';
-                    }
-                    /*
-                    if (false === isValidNation(value)) {
-                        console.warn(`property 'key' of this object must be a valid nation`);
+                    if (false === LitCalMetaData.national_calendars_keys.includes(value)) {
+                        console.warn(`property 'key' of this object must be a valid nation key: ${LitCalMetaData.national_calendars_keys.join(', ')}`);
                         return;
                     }
-                    */
                 }
                 else if (target['category'] === 'diocese') {
-                    value = value.toUpperCase();
-                    /*
-                    if (false === isValidDiocese(value)) {
-                        console.warn(`property 'key' of this object must be a valid diocese`);
+                    if (false === LitCalMetaData.diocesan_calendars_keys.includes(value)) {
+                        console.warn(`property 'key' of this object must be a valid diocese key: ${LitCalMetaData.diocesan_calendars_keys.join(', ')}`);
                         return;
                     }
-                    */
                 }
                 if (target.hasOwnProperty('category') && target['category'] !== '') {
                     target['path'] = `${RegionalDataURL}/${target['category']}/${value}`;
@@ -143,6 +134,10 @@ const sanitizeProxiedAPI = {
  * @property {string} key - value of category above. Valid values are ISO 3166-1 Alpha-2 codes for nations and valid diocese codes for dioceses.
  * @property {string} path - URL path for API query. Will be set by the proxy once category and key are set.
  * @property {string} locale - locale in which the API query result will be returned, or the payload will be PUT. Must be a valid locale.
+ */
+
+/**
+ * @type {ProxiedAPI}
  */
 const API = new Proxy({
     category: '',
@@ -293,7 +288,7 @@ const loadDiocesanCalendarData = () => {
                         numLastRow = $form.find('.row').length - 1;
                         if (metadata.form_rownum > numLastRow) {
                             numMissingRows = metadata.form_rownum - numLastRow;
-                            FormControls.title = messages['Other Solemnity'];
+                            FormControls.title = Messages['Other Solemnity'];
                             FormControls.settings.commonField = true;
                             while (numMissingRows-- > 0) {
                                 $form.append($(FormControls.CreateFestivityRow()));
@@ -305,7 +300,7 @@ const loadDiocesanCalendarData = () => {
                         numLastRow = $('#carouselItemFeasts form .row').length - 1;
                         if (metadata.form_rownum > numLastRow) {
                             numMissingRows = metadata.form_rownum - numLastRow;
-                            FormControls.title = messages['Other Feast'];
+                            FormControls.title = Messages['Other Feast'];
                             FormControls.settings.commonField = true;
                             while (numMissingRows-- > 0) {
                                 $('.carousel-item').eq(1).find('form').append($(FormControls.CreateFestivityRow()));
@@ -317,7 +312,7 @@ const loadDiocesanCalendarData = () => {
                         numLastRow = $('#carouselItemMemorials form .row').length - 1;
                         if (metadata.form_rownum > numLastRow) {
                             numMissingRows = metadata.form_rownum - numLastRow;
-                            FormControls.title = messages['Other Memorial'];
+                            FormControls.title = Messages['Other Memorial'];
                             FormControls.settings.commonField = true;
                             while (numMissingRows-- > 0) {
                                 $('.carousel-item').eq(2).find('form').append($(FormControls.CreateFestivityRow()));
@@ -329,7 +324,7 @@ const loadDiocesanCalendarData = () => {
                         numLastRow = $('#carouselItemOptionalMemorials form .row').length - 1;
                         if (metadata.form_rownum > numLastRow) {
                             numMissingRows = metadata.form_rownum - numLastRow;
-                            FormControls.title = messages['Other Optional Memorial'];
+                            FormControls.title = Messages['Other Optional Memorial'];
                             FormControls.settings.commonField = true;
                             while (numMissingRows-- > 0) {
                                 $('.carousel-item').eq(3).find('form').append($(FormControls.CreateFestivityRow()));
@@ -398,7 +393,7 @@ const unswitcheroo = ( $row, Festivity ) => {
     let dayId = $litEventStrtotime.attr('id').replace('Strtotime', 'Day');
     let monthId = $litEventStrtotime.attr('id').replace('Strtotime', 'Month');
     $strToTimeFormGroup.before(`<div class="form-group col-sm-1">
-    <label for="${dayId}">${messages[ "Day" ]}</label><input type="number" min="1" max="31" value="1" class="form-control litEvent litEventDay" id="${dayId}" value="${Festivity.day}" />
+    <label for="${dayId}">${Messages[ "Day" ]}</label><input type="number" min="1" max="31" value="1" class="form-control litEvent litEventDay" id="${dayId}" value="${Festivity.day}" />
     </div>`);
     $litEventStrtotime.remove();
     let formRow = `<select class="form-select litEvent litEventMonth" id="${monthId}">`;
@@ -409,7 +404,7 @@ const unswitcheroo = ( $row, Festivity ) => {
     }
     formRow += `</select>`;
     $strToTimeFormGroup.append(formRow);
-    $strToTimeFormGroup.find('.month-label').text(messages[ 'Month' ]).attr('for',monthId);
+    $strToTimeFormGroup.find('.month-label').text(Messages[ 'Month' ]).attr('for',monthId);
 }
 
 
@@ -425,7 +420,7 @@ $(document).on('click', '.strtotime-toggle-btn', ev => {
         let $strToTimeFormGroup = $(`#onTheFly${uniqid}Strtotime`).closest('.form-group');
         $strToTimeFormGroup.empty().removeClass('col-sm-2').addClass('col-sm-1').append(`<label for="onTheFly${uniqid}Day">Day</label><input type="number" min="1" max="31" value="false" class="form-control litEvent litEventDay" id="onTheFly${uniqid}Day" />`);
         let formRow = `<div class="form-group col-sm-1">
-        <label for="onTheFly${uniqid}Month">${messages[ "Month" ]}</label>
+        <label for="onTheFly${uniqid}Month">${Messages[ "Month" ]}</label>
         <select class="form-select litEvent litEventMonth" id="onTheFly${uniqid}Month" >`;
         let formatter = new Intl.DateTimeFormat(jsLocale, { month: 'long' });
         for (let i = 0; i < 12; i++) {
@@ -644,7 +639,7 @@ $(document).on('change', '.litEvent', ev => {
                     let dayId = $litEventStrtotime.attr('id').replace('Strtotime', 'Day');
                     let monthId = $litEventStrtotime.attr('id').replace('Strtotime', 'Month');
                     $strToTimeFormGroup.before(`<div class="form-group col-sm-1">
-                    <label for="${dayId}">${messages[ "Day" ]}</label><input type="number" min="1" max="31" value="1" class="form-control litEvent litEventDay" id="${dayId}" />
+                    <label for="${dayId}">${Messages[ "Day" ]}</label><input type="number" min="1" max="31" value="1" class="form-control litEvent litEventDay" id="${dayId}" />
                     </div>`);
                     $litEventStrtotime.remove();
                     let formRow = `<select class="form-select litEvent litEventMonth" id="${monthId}">`;
@@ -655,7 +650,7 @@ $(document).on('change', '.litEvent', ev => {
                     }
                     formRow += `</select>`;
                     $strToTimeFormGroup.append(formRow);
-                    $strToTimeFormGroup.find('.month-label').text(messages[ 'Month' ]).attr('for',monthId);
+                    $strToTimeFormGroup.find('.month-label').text(Messages[ 'Month' ]).attr('for',monthId);
                 } else {
                     delete CalendarData.litcal[eventKey].festivity.day;
                     delete CalendarData.litcal[eventKey].festivity.month;
@@ -759,22 +754,22 @@ $(document).on('click', '.onTheFlyEventRow', ev => {
     let $row;
     switch (ev.currentTarget.id) {
         case "addSolemnity":
-            FormControls.title = messages['Other Solemnity'];
+            FormControls.title = Messages['Other Solemnity'];
             $row = $(FormControls.CreateFestivityRow());
             $('.carousel-item').first().find('form').append($row);
             break;
         case "addFeast":
-            FormControls.title = messages['Other Feast'];
+            FormControls.title = Messages['Other Feast'];
             $row = $(FormControls.CreateFestivityRow());
             $('.carousel-item').eq(1).find('form').append($row);
             break;
         case "addMemorial":
-            FormControls.title = messages['Other Memorial'];
+            FormControls.title = Messages['Other Memorial'];
             $row = $(FormControls.CreateFestivityRow());
             $('.carousel-item').eq(2).find('form').append($row);
             break;
         case "addOptionalMemorial":
-            FormControls.title = messages['Other Optional Memorial'];
+            FormControls.title = Messages['Other Optional Memorial'];
             $row = $(FormControls.CreateFestivityRow());
             $('.carousel-item').eq(3).find('form').append($row);
             break;
@@ -1035,7 +1030,7 @@ $(document).on('change', '#diocesanCalendarDioceseName', ev => {
         if (CalendarsIndex.diocesan_calendars_keys.includes(API.key)) {
             const diocesan_calendar = CalendarsIndex.diocesan_calendars.filter(el => el.calendar_id === API.key)[0];
             $('#removeExistingDiocesanDataBtn').prop('disabled', false);
-            $('body').append(removeDiocesanCalendarModal(currentVal, messages));
+            $('body').append(removeDiocesanCalendarModal(currentVal, Messages));
             if(diocesan_calendar.hasOwnProperty('group')){
                 $('#diocesanCalendarGroup').val(diocesan_calendar.group);
             }
@@ -1274,7 +1269,6 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
         case 'nation':
             API.key = $('#nationalCalendarName').val();
             API.locale = $('#nationalCalendarSettingLocale').val();
-            const regionNamesLocalized = new Intl.DisplayNames(['en'], { type: 'region' });
             const widerRegion = $('#associatedWiderRegion').val();
             payload = {
                 "litcal": [],
@@ -1286,7 +1280,7 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
                     "locale": API.locale
                 },
                 "metadata": {
-                    "region": regionNamesLocalized.of( messages.countryISOCodes[$('#nationalCalendarName').val().toUpperCase()] ).toUpperCase().replace(/[.]/g,'_'),
+                    "region": API.key,
                     "wider_region": {
                         "name": widerRegion,
                         "json_file": `nations/${widerRegion}.json`,

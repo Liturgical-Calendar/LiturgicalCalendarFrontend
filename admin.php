@@ -1,5 +1,9 @@
 <?php
 
+use LiturgicalCalendar\Frontend\I18n;
+use LiturgicalCalendar\Frontend\FormControls;
+use LiturgicalCalendar\Frontend\Utilities;
+
 if (false === file_exists("credentials.php")) {
     die("missing credentials definition");
 }
@@ -14,26 +18,15 @@ if (false === is_array(AUTH_USERS) || 0 === count(AUTH_USERS)) {
     die("AUTH_USERS must be an array");
 }
 
-function authenticated()
-{
-    if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])) {
-        return false;
-    }
-    if (array_key_exists($_SERVER['PHP_AUTH_USER'], AUTH_USERS) && password_verify($_SERVER['PHP_AUTH_PW'], AUTH_USERS[$_SERVER['PHP_AUTH_USER']])) {
-        return true;
-    }
-    return false;
-}
 
-if (!authenticated()) {
+if (!Utilities::authenticated(AUTH_USERS)) {
     header("WWW-Authenticate: Basic realm=\"Please insert your credentials\"");
     header($_SERVER["SERVER_PROTOCOL"] . " 401 Unauthorized");
     echo "You need a username and password to access this service.";
     die();
 }
 
-include_once("./includes/I18n.php");
-include_once("./layout/FormControls.php");
+include_once("vendor/autoload.php");
 
 $i18n = new I18n();
 $FormControls = new FormControls($i18n);
@@ -90,28 +83,6 @@ $buttonGroup = "<div id=\"memorialsFromDecreesBtnGrp\">
 <button class=\"btn btn-sm btn-primary m-2\" id=\"makeDoctorAction\" data-bs-toggle=\"modal\" data-bs-target=\"#makeDoctorActionPrompt\"><i class=\"fas fa-user-graduate me-2\"></i>" . _("Designate Doctor of the Church from existing festivity") . "</button>
 </div>
 </div>";
-
-function generateModalBody(bool $hasPropertyChange = false): void
-{
-    $modalBody = "<div class=\"modal-body\">
-    <form class=\"row justify-content-left needs-validation\" novalidate>
-        <div class=\"form-group col col-md-10\">
-            <label for=\"existingFestivityName\" class=\"font-weight-bold\">" . _("Choose from existing festivities") . ":</label>
-            <input list=\"existingFestivitiesList\" class=\"form-control existingFestivityName\" required>
-            <div class=\"invalid-feedback\">" . _("This festivity does not seem to exist? Please choose from a value in the list.") . "</div>
-        </div>";
-    if ($hasPropertyChange) {
-        $modalBody .= "<div class=\"form-group col col-md-6\">
-            <label for=\"propertyToChange\" class=\"font-weight-bold\">" . _("Property to change") . ":</label>
-            <select class=\"form-select\" id=\"propertyToChange\" name=\"propertyToChange\">
-                <option value=\"name\">" . _("Name") . "</option>
-                <option value=\"grade\">" . _("Grade") . "</option>
-            </select>
-        </div>";
-    }
-    $modalBody .= "</form></div>";
-    echo $modalBody;
-}
 
 ?>
 <!DOCTYPE html>
@@ -194,7 +165,7 @@ function generateModalBody(bool $hasPropertyChange = false): void
                 <div class="modal-header">
                     <h5 class="modal-title" id="setPropertyActionModalLabel"><?php echo _("Change name or grade of existing festivity") ?></h5>
                 </div>
-                <?php generateModalBody(true); ?>
+                <?php Utilities::generateModalBody(true); ?>
                 <div class="modal-footer">
                     <button type="button" id="setPropertyButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-edit me-2"></i>Set Property</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _("Cancel") ?></button>
@@ -210,7 +181,7 @@ function generateModalBody(bool $hasPropertyChange = false): void
                 <div class="modal-header">
                     <h5 class="modal-title" id="moveFestivityActionModalLabel"><?php echo _("Move festivity to new date") ?></h5>
                 </div>
-                <?php generateModalBody(false); ?>
+                <?php Utilities::generateModalBody(false); ?>
                 <div class="modal-footer">
                     <button type="button" id="moveFestivityButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-day me-2"></i><?php echo _("Move Festivity") ?></button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _("Cancel") ?></button>
@@ -226,7 +197,7 @@ function generateModalBody(bool $hasPropertyChange = false): void
                 <div class="modal-header">
                     <h5 class="modal-title" id="newFestivityActionModalLabel"><?php echo _("Create a new festivity") ?></h5>
                 </div>
-                <?php generateModalBody(false); ?>
+                <?php Utilities::generateModalBody(false); ?>
                 <div class="modal-footer">
                     <button type="button" id="newFestivityFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus me-2"></i><?php echo _("New Festivity from existing") ?></button>
                     <button type="button" id="newFestivityExNovoButton" class="btn btn-primary actionPromptButton"><i class="fas fa-calendar-plus me-2"></i><?php echo _("New Festivity ex novo") ?></button>
@@ -243,7 +214,7 @@ function generateModalBody(bool $hasPropertyChange = false): void
                 <div class="modal-header">
                     <h5 class="modal-title" id="makeDoctorActionModalLabel"><?php echo _("Designate Doctor of the Church from existing festivity") ?></h5>
                 </div>
-                <?php generateModalBody(false); ?>
+                <?php Utilities::generateModalBody(false); ?>
                 <div class="modal-footer">
                     <button type="button" id="designateDoctorButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-user-graduate me-2"></i><?php echo _("Designate Doctor of the Church") ?></button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _("Cancel") ?></button>

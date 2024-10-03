@@ -1,9 +1,9 @@
-<!doctype html><?php
-
-include_once("includes/I18n.php");
-include_once("vendor/autoload.php");
+<?php
 
 use LiturgicalCalendar\Components\CalendarSelect;
+use LiturgicalCalendar\Frontend\I18n;
+
+include_once("vendor/autoload.php");
 
 $i18n = new I18n();
 $CalendarSelect = new CalendarSelect(["locale" => $i18n->LOCALE]);
@@ -14,7 +14,7 @@ $isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false || strpos($_S
 $endpointV = $isStaging ? "dev" : "v3";
 $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/calendar?returntype=ICS";
 
-?>
+?><!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
     <title><?php echo _("General Roman Calendar") . ' - ' . _('Examples') ?></title>
