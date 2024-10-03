@@ -27,14 +27,14 @@ $availableNationalCalendars = [];
     true
 );
 
-$NationalCalendars = array_filter(
+$DiocesanGroups = $LitCalMetadata["diocesan_groups"];
+
+$NationalCalendars = array_values(array_filter(
     $LitCalMetadata["national_calendars"],
     fn($calendar) => isset($calendar['calendar_id']) && $calendar['calendar_id'] !== 'VA'
-);
-
-$DiocesanGroups = $LitCalMetadata["diocesan_groups"];
+));
 foreach ($NationalCalendars as $calendar) {
-    $availableNationalCalendars[$calendar['calendar_id']] = Locale::getDisplayRegion("-" . $calendar['country_iso'], $i18n->LOCALE);
+    $availableNationalCalendars[$calendar['calendar_id']] = Locale::getDisplayRegion("-" . $calendar['calendar_id'], $i18n->LOCALE);
 }
 asort($availableNationalCalendars, SORT_LOCALE_STRING);
 
