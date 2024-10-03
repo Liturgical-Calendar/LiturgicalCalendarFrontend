@@ -982,7 +982,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
         });
         $('.serializeRegionalNationalData').prop('disabled', false);
     }).catch(error => {
-        if (404 === error.status) {
+        if (404 === error.status || 400 === error.status) {
             error.json().then(json => {
                 const message = `${error.status} ${json.status} ${json.response}: ${json.description}<br />The Data File for the ${API.category} ${API.key} does not exist yet. Not that it's a big deal, just go ahead and create it now!`;
                 toastr["warning"](message, "Warning");
@@ -1007,7 +1007,6 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                     break;
             }
             $('form.regionalNationalDataForm').empty();
-            return;
         } else {
             console.error(error);
             /*error.json().then(json => {
