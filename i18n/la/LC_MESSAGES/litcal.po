@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-03 02:17+0000\n"
-"PO-Revision-Date: 2024-10-03 13:11+0000\n"
+"PO-Revision-Date: 2024-10-03 15:08+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
@@ -1287,7 +1287,7 @@ msgstr "de"
 #: src/LitCommon.php:175
 msgctxt "(PLUR_FEMM)"
 msgid "of"
-msgstr "de"
+msgstr ""
 
 #. translators: (plural masculine) glue between "From the Common" and the actual common. Latin: leave empty!
 #: src/LitCommon.php:181
@@ -1299,7 +1299,7 @@ msgstr "de"
 #: src/LitCommon.php:187
 msgctxt "(SING_MASC)"
 msgid "of the"
-msgstr "de"
+msgstr ""
 
 #: src/LitCommon.php:273
 msgid "From the Common"
