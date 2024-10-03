@@ -220,8 +220,8 @@ if (isset($_GET["choice"])) {
                                 /*foreach( $NationalCalendars as $nationalCalendar => $dioceseArray ) {
                                         echo "<option value=\"{$nationalCalendar}\">{$nationalCalendar}</option>";
                                 }*/
-                            foreach ($AvailableCountries as $countryEnglish => $countryLocalized) {
-                                echo "<option value=\"{$countryEnglish}\">{$countryLocalized}</option>";
+                            foreach ($AvailableCountries as $isoCode => $countryLocalized) {
+                                echo "<option value=\"{$isoCode}\">{$countryLocalized}</option>";
                             }
                             ?>
                             </datalist>
