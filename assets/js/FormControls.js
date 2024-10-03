@@ -273,7 +273,7 @@ class FormControls {
         let formRow = '';
 
         if (FormControls.title !== null) {
-            formRow += `<div class="d-flex justify-content-left data-group-title"><h4 class="data-group-title">${FormControls.title}</h4></div>`;
+            formRow += `<div class="mt-4 d-flex justify-content-left data-group-title"><h4 class="data-group-title">${FormControls.title}</h4></div>`;
         }
 
         formRow += `<div class="row gx-2 align-items-baseline">`;
@@ -390,7 +390,7 @@ class FormControls {
         }
 
         if (FormControls.title !== null) {
-            formRow += `<div class="d-flex justify-content-left data-group-title"><h4 class="data-group-title">${FormControls.title}</h4>`;
+            formRow += `<div class="mt-4 d-flex justify-content-left data-group-title"><h4 class="data-group-title">${FormControls.title}</h4>`;
             if(FormControls.action.description === RowAction.CreateNew) {
                 if( festivity !== null && festivity.hasOwnProperty( 'strtotime' ) ) {
                     formRow += `<button type="button" class="ms-auto btn btn-info strtotime-toggle-btn active" data-bs-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="true" autocomplete="off"><i class="fas fa-comment me-2"></i>explicatory date</button>`;
@@ -573,7 +573,7 @@ class FormControls {
         }
 
         if (FormControls.title !== null) {
-            formRow += `<hr><div class="d-flex justify-content-left"><h4 class="data-group-title">${FormControls.title}</h4>`;
+            formRow += `<hr><div class="mt-4 d-flex justify-content-left"><h4 class="data-group-title">${FormControls.title}</h4>`;
             if(FormControls.action.description === RowAction.CreateNew) {
                 if( festivity !== null && festivity.hasOwnProperty( 'strtotime' ) ) {
                     formRow += `<button type="button" class="ms-auto btn btn-info strtotime-toggle-btn active" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="true" autocomplete="off"><i class="fas fa-comment me-2"></i>explicatory date</button>`;
