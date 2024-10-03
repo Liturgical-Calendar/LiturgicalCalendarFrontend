@@ -5,13 +5,14 @@
 # John R. D'Orazio <priest@johnromanodorazio.com>, 2022.
 # OpenAI <noreply-mt-openai@weblate.org>, 2024.
 # "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024.
+# Weblate Admin <admin@example.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-03 02:17+0000\n"
-"PO-Revision-Date: 2024-09-22 00:28+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2024-10-03 13:11+0000\n"
+"Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
 "Language: es\n"
@@ -780,10 +781,8 @@ msgid "CORPUS CHRISTI"
 msgstr "CORPUS CHRISTI"
 
 #: extending.php:266
-#, fuzzy
-#| msgid "JESUS HIGH PRIEST"
 msgid "ETERNAL HIGH PRIEST"
-msgstr "JESÚS SUMO SACERDOTE"
+msgstr "SUMO SACERDOTE ETERNO"
 
 #: extending.php:273
 msgid "LOCALE"
