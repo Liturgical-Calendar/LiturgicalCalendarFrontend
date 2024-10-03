@@ -1011,11 +1011,12 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
             $('form.regionalNationalDataForm').empty();
             return;
         } else {
-            error.json().then(json => {
+            console.error(error.status);
+            /*error.json().then(json => {
                 console.error(json);
                 //We're taking for granted that the API is sending back a JSON object with status, response and description
                 toastr["error"](json.status + ' ' + json.response + ': ' + json.description, "Error");
-            });
+            });*/
         }
     });
 });
