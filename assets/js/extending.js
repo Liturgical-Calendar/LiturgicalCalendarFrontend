@@ -121,6 +121,12 @@ const sanitizeProxiedAPI = {
                     console.warn(`property 'locale' of this object must be one of the values ${LOCALE.join(', ')}, ${LOCALE_WITH_REGION.join(', ')}`);
                     return;
                 }
+                break;
+            case 'method':
+                if (false === ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].includes(value)) {
+                    console.warn(`property 'method' of this object must be one of the values 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'`);
+                    return;
+                }
             default:
                 console.warn('unexpected property ' + prop + ' of type ' + typeof prop + ' on target of type ' + typeof target);
                 return;
@@ -145,7 +151,8 @@ const API = new Proxy({
     category: '',
     key: '',
     path: '',
-    locale: ''
+    locale: '',
+    method: ''
 }, sanitizeProxiedAPI);
 
 
@@ -251,9 +258,11 @@ const loadDiocesanCalendarData = () => {
             404: (xhr, textStatus, errorThrown) => {
                 toastr["warning"](xhr.status + ' ' + textStatus + ': ' + errorThrown + '<br />The Diocesan Calendar for ' + diocese + ' does not exist yet.', "Warning");
                 console.log(xhr.status + ' ' + textStatus + ': ' + errorThrown + 'The Diocesan Calendar for ' + diocese + ' does not exist yet.');
+                API.method = 'PUT';
             }
         },
         success: data => {
+            API.method = 'PATCH';
             console.log('retrieved diocesan data:');
             console.log(data);
             toastr["success"]("Diocesan Calendar was retrieved successfully", "Success");
@@ -689,8 +698,20 @@ $(document).on('change', '.litEvent', ev => {
 $(document).on('click', '#saveDiocesanCalendar_btn', () => {
     let nation = $('#diocesanCalendarNationalDependency').val();
     let diocese = $('#diocesanCalendarDioceseName').val();
+    let saveObj = { caldata: CalendarData };
+    switch (API.method) {
+        case 'PUT':   // we PUT data to the base /data API path
+            API.path = RegionalDataURL;
+            saveObj.diocese = diocese;
+            saveObj.nation = nation;
+            saveObj.category = 'diocese';
+            break;
+        case 'PATCH': // we PATCH data on an existing /data/{category}/{key} path
+            API.category = 'diocese';
+            API.key = diocese;
+            break;
+    }
     //console.log('save button was clicked for NATION = ' + $nation + ', DIOCESE = ' + $diocese);
-    let saveObj = { caldata: CalendarData, diocese: diocese, nation: nation, category: 'diocese' };
     if($('#diocesanCalendarGroup').val() != ''){
         saveObj.group = $('#diocesanCalendarGroup').val();
     }
@@ -725,8 +746,8 @@ $(document).on('click', '#saveDiocesanCalendar_btn', () => {
     });
     if ( formsValid ) {
         $.ajax({
-            url: RegionalDataURL,
-            method: 'PUT',
+            url: API.path,
+            method: API.method,
             dataType: 'json',
             contentType: 'application/json',
             crossDomain: false,
