@@ -143,6 +143,7 @@ const sanitizeProxiedAPI = {
  * @property {string} key - value of category above. Valid values are ISO 3166-1 Alpha-2 codes for nations and valid diocese codes for dioceses.
  * @property {string} path - URL path for API query. Will be set by the proxy once category and key are set.
  * @property {string} locale - locale in which the API query result will be returned, or the payload will be PUT. Must be a valid locale.
+ * @property {string} method - HTTP method for API query. Must be one of the values 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'.
  */
 
 /**
@@ -705,32 +706,31 @@ $(document).on('click', '#saveDiocesanCalendar_btn', () => {
     switch (API.method) {
         case 'PUT':   // we PUT data to the base /data API path
             API.path = `${RegionalDataURL}/diocese`;
-            saveObj.payload.diocese = diocese;
             saveObj.payload.nation = nation;
+            saveObj.payload.diocese = diocese;
             break;
         case 'PATCH': // we PATCH data on an existing /data/{category}/{key} path
             API.category = 'diocese';
             API.key = diocese_key;
             break;
     }
-    //console.log('save button was clicked for NATION = ' + $nation + ', DIOCESE = ' + $diocese);
+
+    // if the diocese pools it's data with a group of other dioceses, add the group name to the payload
     if($('#diocesanCalendarGroup').val() != ''){
         saveObj.payload.group = $('#diocesanCalendarGroup').val();
     }
+
+    // if the diocese overrides Epiphany, Ascension and Corpus Christi compared to the national calendar, add the overrides to the payload
     if( diocesanOvveridesDefined() ) {
-        //console.log( 'This diocesan calendar has defined some options that will override the national calendar.' );
         saveObj.payload.overrides = {};
         if( $('#diocesanCalendarOverrideEpiphany').val() !== "" ) {
             saveObj.payload.overrides.epiphany = $('#diocesanCalendarOverrideEpiphany').val();
-            //console.log( 'Epiphany in this diocese will override Epiphany in the national calendar.' );
         }
         if( $('#diocesanCalendarOverrideAscension').val() !== "" ) {
             saveObj.payload.overrides.ascension = $('#diocesanCalendarOverrideAscension').val();
-            //console.log( 'Ascension in this diocese will override Ascension in the national calendar.' );
         }
         if( $('#diocesanCalendarOverrideCorpusChristi').val() !== "" ) {
             saveObj.payload.overrides.corpus_christi = $('#diocesanCalendarOverrideCorpusChristi').val();
-            //console.log( 'Corpus Christi in this diocese will override Corpus Christi in the national calendar.' );
         }
     }
 
