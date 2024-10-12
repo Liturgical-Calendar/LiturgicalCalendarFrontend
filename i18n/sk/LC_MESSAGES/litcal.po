@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024.
 # Milan Šalka <salka.milan@googlemail.com>, 2024.
+# Weblate Admin <admin@example.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-12 16:32+0000\n"
-"PO-Revision-Date: 2024-10-03 11:01+0000\n"
-"Last-Translator: Milan Šalka <salka.milan@googlemail.com>\n"
+"POT-Creation-Date: 2024-10-12 17:19+0000\n"
+"PO-Revision-Date: 2024-10-12 17:36+0000\n"
+"Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
 "Language: sk\n"
@@ -572,7 +573,7 @@ msgstr ""
 msgid "Tag"
 msgstr "Značka"
 
-#: extending.php:85 src/Utilities.php:184 src/FormControls.php:45
+#: extending.php:85 src/Utilities.php:210 src/FormControls.php:45
 msgid "Name"
 msgstr "Meno"
 
@@ -1351,27 +1352,41 @@ msgstr "SLÁVNOSŤ"
 msgid "celebration with precedence over solemnities"
 msgstr "slávenie s prednosťou pred slávnosťami"
 
-#: src/Utilities.php:92
+#. translators: 1. BibleGet github url 2. Liturgical Calendar github url
+#: src/Utilities.php:115
+#, php-format
 msgid ""
-"Priest in the Diocese of Rome, self-taught programmer, author of the "
-"BibleGet Project"
-msgstr "Kňaz v Rímskej diecéze, samouk programátor, autor projektu BibleGet"
+"Priest in the Diocese of Rome, author of the <a href=\"%1$s\" "
+"target=\"_blank\">BibleGet project</a> and of the <a href=\"%2$s\" "
+"target=\"_blank\">Liturgical Calendar project</a>"
+msgstr ""
+"Kňaz v Rímskej diecéze, autor projektu <a href=\"%1$s\" target=\"_blank\""
+">BibleGet</a> a projektu <a href=\"%2$s\" target=\"_blank\">Liturgický "
+"kalendár</a>"
 
-#: src/Utilities.php:98
+#: src/Utilities.php:124
+#, fuzzy
+#| msgid ""
+#| "Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, "
+#| "Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
+#| "for Catholic IT Professionals"
 msgid ""
 "Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, "
 "Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
-"for Catholic IT Professionals"
+"for Catholic IT Professionals, contributed the bootstrap theming of the "
+"project website"
 msgstr ""
 "Softvérový vývojár so sídlom v St. Paul, MN (USA), spoluzakladateľ JobPost, "
 "senior softvérový inžinier v Agile Orbit, zakladateľ Cechu sv. Izidora pre "
 "katolíckych IT profesionálov"
 
-#: src/Utilities.php:104
-msgid "Full stack web developer"
-msgstr "Full stack web developer"
+#: src/Utilities.php:130
+msgid ""
+"Full stack web developer, contributed to the generation of the Open API "
+"documentation"
+msgstr "Full stack web developer, prispel k vytvoreniu dokumentácie Open API"
 
-#: src/Utilities.php:110
+#: src/Utilities.php:136
 msgid ""
 "Latin Liturgy Association of the Netherlands, contributed the national "
 "calendar for the Netherlands to this project with all related translations"
@@ -1379,22 +1394,22 @@ msgstr ""
 "Latinská liturgická asociácia Holandska prispela do tohto projektu národným "
 "kalendárom pre Holandsko so všetkými súvisiacimi prekladmi"
 
-#: src/Utilities.php:176
+#: src/Utilities.php:202
 msgid "Choose from existing festivities"
 msgstr "Vyber si z existujúcich slávností"
 
-#: src/Utilities.php:178
+#: src/Utilities.php:204
 msgid ""
 "This festivity does not seem to exist? Please choose from a value in the "
 "list."
 msgstr ""
 "Zdá sa, že táto slávnosť neexistuje. Prosím, vyberte si hodnotu zo zoznamu."
 
-#: src/Utilities.php:182
+#: src/Utilities.php:208
 msgid "Property to change"
 msgstr "Vlastnosť na zmenu"
 
-#: src/Utilities.php:185 src/FormControls.php:161
+#: src/Utilities.php:211 src/FormControls.php:161
 msgid "Grade"
 msgstr "Trieda"
 
@@ -1429,3 +1444,11 @@ msgstr "Dokumentácia"
 #: layout/header.php:103
 msgid "Examples of Usage"
 msgstr "Príklady použitia"
+
+#~ msgid ""
+#~ "Priest in the Diocese of Rome, self-taught programmer, author of the "
+#~ "BibleGet Project"
+#~ msgstr "Kňaz v Rímskej diecéze, samouk programátor, autor projektu BibleGet"
+
+#~ msgid "Full stack web developer"
+#~ msgstr "Full stack web developer"

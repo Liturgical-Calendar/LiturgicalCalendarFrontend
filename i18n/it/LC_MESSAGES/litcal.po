@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-12 16:32+0000\n"
-"PO-Revision-Date: 2024-10-03 13:11+0000\n"
+"POT-Creation-Date: 2024-10-12 17:19+0000\n"
+"PO-Revision-Date: 2024-10-12 17:36+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
@@ -596,7 +596,7 @@ msgstr ""
 msgid "Tag"
 msgstr "Etichetta"
 
-#: extending.php:85 src/Utilities.php:184 src/FormControls.php:45
+#: extending.php:85 src/Utilities.php:210 src/FormControls.php:45
 msgid "Name"
 msgstr "Nome"
 
@@ -1388,29 +1388,43 @@ msgstr "SOLENNITÀ"
 msgid "celebration with precedence over solemnities"
 msgstr "celebrazione con precedenza sulle solennità"
 
-#: src/Utilities.php:92
+#. translators: 1. BibleGet github url 2. Liturgical Calendar github url
+#: src/Utilities.php:115
+#, php-format
 msgid ""
-"Priest in the Diocese of Rome, self-taught programmer, author of the "
-"BibleGet Project"
+"Priest in the Diocese of Rome, author of the <a href=\"%1$s\" "
+"target=\"_blank\">BibleGet project</a> and of the <a href=\"%2$s\" "
+"target=\"_blank\">Liturgical Calendar project</a>"
 msgstr ""
-"Sacerdote della Diocesi di Roma, programmatore autodidatta, autore del "
-"Progetto BibleGet"
+"Sacerdote della Diocesi di Roma, autore del progetto <a href=\"%1$s\" target="
+"\"_blank\">BibleGet</a> e del progetto <a href=\"%2$s\" target=\"_blank\""
+">Calendario Liturgico</a>"
 
-#: src/Utilities.php:98
+#: src/Utilities.php:124
+#, fuzzy
+#| msgid ""
+#| "Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, "
+#| "Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
+#| "for Catholic IT Professionals"
 msgid ""
 "Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, "
 "Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
-"for Catholic IT Professionals"
+"for Catholic IT Professionals, contributed the bootstrap theming of the "
+"project website"
 msgstr ""
 "Sviluppatore software con sede a St. Paul, MN (USA), Co-Fondatore presso "
 "JobPost, Ingegnere Informatico presso Agile Orbit, Fondatore della Gilda di "
 "Sant'Isidoro per Professionisti IT Cattolici"
 
-#: src/Utilities.php:104
-msgid "Full stack web developer"
-msgstr "Sviluppatore web full stack"
+#: src/Utilities.php:130
+msgid ""
+"Full stack web developer, contributed to the generation of the Open API "
+"documentation"
+msgstr ""
+"Sviluppatore web full stack, ha contribuito alla creazione della "
+"documentazione Open API"
 
-#: src/Utilities.php:110
+#: src/Utilities.php:136
 msgid ""
 "Latin Liturgy Association of the Netherlands, contributed the national "
 "calendar for the Netherlands to this project with all related translations"
@@ -1419,11 +1433,11 @@ msgstr ""
 "questo progetto con il calendario nazionale per i Paesi Bassi con tutte le "
 "relative traduzioni"
 
-#: src/Utilities.php:176
+#: src/Utilities.php:202
 msgid "Choose from existing festivities"
 msgstr "Scegli dalle festività esistenti"
 
-#: src/Utilities.php:178
+#: src/Utilities.php:204
 msgid ""
 "This festivity does not seem to exist? Please choose from a value in the "
 "list."
@@ -1431,11 +1445,11 @@ msgstr ""
 "Questa festività non sembra esistere? Si prega scegliere da un valore "
 "nell'elenco."
 
-#: src/Utilities.php:182
+#: src/Utilities.php:208
 msgid "Property to change"
 msgstr "Proprietà da modificare"
 
-#: src/Utilities.php:185 src/FormControls.php:161
+#: src/Utilities.php:211 src/FormControls.php:161
 msgid "Grade"
 msgstr "Grado"
 
@@ -1470,6 +1484,16 @@ msgstr "Documentazione"
 #: layout/header.php:103
 msgid "Examples of Usage"
 msgstr "Esempi di Utilizzo"
+
+#~ msgid ""
+#~ "Priest in the Diocese of Rome, self-taught programmer, author of the "
+#~ "BibleGet Project"
+#~ msgstr ""
+#~ "Sacerdote della Diocesi di Roma, programmatore autodidatta, autore del "
+#~ "Progetto BibleGet"
+
+#~ msgid "Full stack web developer"
+#~ msgstr "Sviluppatore web full stack"
 
 #~ msgid ""
 #~ "A Liturgical Calendar API from which you can retrieve data for the "

@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-12 16:32+0000\n"
-"PO-Revision-Date: 2024-10-03 13:11+0000\n"
+"POT-Creation-Date: 2024-10-12 17:19+0000\n"
+"PO-Revision-Date: 2024-10-12 17:36+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pt/>\n"
@@ -583,7 +583,7 @@ msgstr ""
 msgid "Tag"
 msgstr "Tag"
 
-#: extending.php:85 src/Utilities.php:184 src/FormControls.php:45
+#: extending.php:85 src/Utilities.php:210 src/FormControls.php:45
 msgid "Name"
 msgstr "Nome"
 
@@ -1367,29 +1367,43 @@ msgstr "SOLENIDADE"
 msgid "celebration with precedence over solemnities"
 msgstr "celebração com precedência sobre solenidades"
 
-#: src/Utilities.php:92
+#. translators: 1. BibleGet github url 2. Liturgical Calendar github url
+#: src/Utilities.php:115
+#, php-format
 msgid ""
-"Priest in the Diocese of Rome, self-taught programmer, author of the "
-"BibleGet Project"
+"Priest in the Diocese of Rome, author of the <a href=\"%1$s\" "
+"target=\"_blank\">BibleGet project</a> and of the <a href=\"%2$s\" "
+"target=\"_blank\">Liturgical Calendar project</a>"
 msgstr ""
-"Sacerdote da Diocese de Roma, programador autodidata, autor do projeto "
-"BibleGet"
+"Presbítero na Diocese de Roma, autor do projeto <a href=\"%1$s\" target="
+"\"_blank\">BibleGet</a> e do projeto <a href=\"%2$s\" target=\"_blank\""
+">Calendário Litúrgico</a>"
 
-#: src/Utilities.php:98
+#: src/Utilities.php:124
+#, fuzzy
+#| msgid ""
+#| "Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, "
+#| "Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
+#| "for Catholic IT Professionals"
 msgid ""
 "Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, "
 "Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
-"for Catholic IT Professionals"
+"for Catholic IT Professionals, contributed the bootstrap theming of the "
+"project website"
 msgstr ""
 "Desenvolvedor de software baseado em St. Paul, MN (USA), Cofundador da "
 "JobPost, engenheiro de computação da Agile Orbit, Fundador da Guilda de "
 "Santo Isidoro para Profissionais Católicos de TI"
 
-#: src/Utilities.php:104
-msgid "Full stack web developer"
-msgstr "Desenvolvedor web full stack"
+#: src/Utilities.php:130
+msgid ""
+"Full stack web developer, contributed to the generation of the Open API "
+"documentation"
+msgstr ""
+"Desenvolvedor web full stack, contribuiu para a geração da documentação Open "
+"API"
 
-#: src/Utilities.php:110
+#: src/Utilities.php:136
 msgid ""
 "Latin Liturgy Association of the Netherlands, contributed the national "
 "calendar for the Netherlands to this project with all related translations"
@@ -1398,22 +1412,22 @@ msgstr ""
 "nacional dos Países Baixos para este projeto com todas as traduções "
 "relacionadas"
 
-#: src/Utilities.php:176
+#: src/Utilities.php:202
 msgid "Choose from existing festivities"
 msgstr "Escolher entre festividades existentes"
 
-#: src/Utilities.php:178
+#: src/Utilities.php:204
 msgid ""
 "This festivity does not seem to exist? Please choose from a value in the "
 "list."
 msgstr ""
 "Essa festividade parece não existir? Por favor, escolha um valor da lista."
 
-#: src/Utilities.php:182
+#: src/Utilities.php:208
 msgid "Property to change"
 msgstr "Propriedade a alterar"
 
-#: src/Utilities.php:185 src/FormControls.php:161
+#: src/Utilities.php:211 src/FormControls.php:161
 msgid "Grade"
 msgstr "Grau"
 
@@ -1448,6 +1462,16 @@ msgstr "Documentação"
 #: layout/header.php:103
 msgid "Examples of Usage"
 msgstr "Exemplos de Uso"
+
+#~ msgid ""
+#~ "Priest in the Diocese of Rome, self-taught programmer, author of the "
+#~ "BibleGet Project"
+#~ msgstr ""
+#~ "Sacerdote da Diocese de Roma, programador autodidata, autor do projeto "
+#~ "BibleGet"
+
+#~ msgid "Full stack web developer"
+#~ msgstr "Desenvolvedor web full stack"
 
 #~ msgid ""
 #~ "A Liturgical Calendar API from which you can retrieve data for the "

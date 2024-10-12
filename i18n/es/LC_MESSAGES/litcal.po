@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-12 16:32+0000\n"
-"PO-Revision-Date: 2024-10-03 13:11+0000\n"
+"POT-Creation-Date: 2024-10-12 17:19+0000\n"
+"PO-Revision-Date: 2024-10-12 17:36+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
@@ -234,12 +234,13 @@ msgid ""
 "(observed by the Roman Catholic church) and of the Meeus algorithm for "
 "Julian easter (observed by orthodox churches)."
 msgstr ""
-"Un punto final de API simple que devuelve datos sobre la fecha de Pascua, "
-"tanto gregoriana como juliana, desde 1583 (año de la adopción del calendario "
-"gregoriano) hasta 9999 (cálculo de la fecha máxima posible en PHP de 64 "
-"bits), utilizando una adaptación PHP del algoritmo Meeus / Jones / Butcher "
-"para la Pascua gregoriana (observado por la iglesia católica romana) y del "
-"algoritmo Meeus para la Pascua juliana (observado por las iglesias ortodoxas)"
+"Un endpoint de API simple que devuelve datos sobre la fecha de Pascua, tanto "
+"gregoriana como juliana, desde 1583 (año de la adopción del calendario "
+"gregoriano) hasta 9999 (máxima fecha posible de cálculo en PHP de 64 bits), "
+"utilizando una adaptación en PHP del algoritmo de Meeus/Jones/Butcher para "
+"la Pascua gregoriana (observada por la Iglesia Católica Romana) y del "
+"algoritmo de Meeus para la Pascua juliana (observada por las iglesias "
+"ortodoxas)."
 
 #: index.php:243
 msgid "Date of Easter API endpoint"
@@ -588,7 +589,7 @@ msgstr ""
 msgid "Tag"
 msgstr "Etiqueta"
 
-#: extending.php:85 src/Utilities.php:184 src/FormControls.php:45
+#: extending.php:85 src/Utilities.php:210 src/FormControls.php:45
 msgid "Name"
 msgstr "Nombre"
 
@@ -1374,29 +1375,43 @@ msgstr "SOLEMNIDAD"
 msgid "celebration with precedence over solemnities"
 msgstr "celebración con precedencia sobre solemnidades"
 
-#: src/Utilities.php:92
+#. translators: 1. BibleGet github url 2. Liturgical Calendar github url
+#: src/Utilities.php:115
+#, php-format
 msgid ""
-"Priest in the Diocese of Rome, self-taught programmer, author of the "
-"BibleGet Project"
+"Priest in the Diocese of Rome, author of the <a href=\"%1$s\" "
+"target=\"_blank\">BibleGet project</a> and of the <a href=\"%2$s\" "
+"target=\"_blank\">Liturgical Calendar project</a>"
 msgstr ""
-"Sacerdote de la diócesis de Roma, programador autodidacta, autor del "
-"proyecto BibleGet"
+"Sacerdote en la Diócesis de Roma, autor del proyecto <a href=\"%1$s\" target="
+"\"_blank\">BibleGet</a> y del proyecto <a href=\"%2$s\" target=\"_blank\""
+">Calendario Litúrgico</a>"
 
-#: src/Utilities.php:98
+#: src/Utilities.php:124
+#, fuzzy
+#| msgid ""
+#| "Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, "
+#| "Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
+#| "for Catholic IT Professionals"
 msgid ""
 "Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, "
 "Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
-"for Catholic IT Professionals"
+"for Catholic IT Professionals, contributed the bootstrap theming of the "
+"project website"
 msgstr ""
 "Desarrollador de software con sede en St. Paul, MN (USA), Co-Fundador en "
 "JobPost, Ingeniero en Computación en Agile Orbit, Fundador del Gremio de San "
 "Isidoro para profesionales católicos de TI"
 
-#: src/Utilities.php:104
-msgid "Full stack web developer"
-msgstr "Desarrollador web full stack"
+#: src/Utilities.php:130
+msgid ""
+"Full stack web developer, contributed to the generation of the Open API "
+"documentation"
+msgstr ""
+"Desarrollador web full stack, contribuyó a la generación de la documentación "
+"de Open API"
 
-#: src/Utilities.php:110
+#: src/Utilities.php:136
 msgid ""
 "Latin Liturgy Association of the Netherlands, contributed the national "
 "calendar for the Netherlands to this project with all related translations"
@@ -1405,22 +1420,22 @@ msgstr ""
 "calendario nacional de los Países Bajos a este proyecto con todas las "
 "traducciones relacionadas"
 
-#: src/Utilities.php:176
+#: src/Utilities.php:202
 msgid "Choose from existing festivities"
 msgstr "Elegir entre festividades existentes"
 
-#: src/Utilities.php:178
+#: src/Utilities.php:204
 msgid ""
 "This festivity does not seem to exist? Please choose from a value in the "
 "list."
 msgstr ""
 "¿Esta festividad no parece existir? Por favor, elige un valor de la lista."
 
-#: src/Utilities.php:182
+#: src/Utilities.php:208
 msgid "Property to change"
 msgstr "Propiedad a cambiar"
 
-#: src/Utilities.php:185 src/FormControls.php:161
+#: src/Utilities.php:211 src/FormControls.php:161
 msgid "Grade"
 msgstr "Grado"
 
@@ -1455,6 +1470,16 @@ msgstr "Documentación"
 #: layout/header.php:103
 msgid "Examples of Usage"
 msgstr "Ejemplos de uso"
+
+#~ msgid ""
+#~ "Priest in the Diocese of Rome, self-taught programmer, author of the "
+#~ "BibleGet Project"
+#~ msgstr ""
+#~ "Sacerdote de la diócesis de Roma, programador autodidacta, autor del "
+#~ "proyecto BibleGet"
+
+#~ msgid "Full stack web developer"
+#~ msgstr "Desarrollador web full stack"
 
 #~ msgid ""
 #~ "A Liturgical Calendar API from which you can retrieve data for the "
