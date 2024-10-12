@@ -71,7 +71,28 @@ class Utilities
         return $result;
     }
 
-    private static $formatStr = '<a href=%s>%s</a> - ';
+
+    /**
+     * Format string used to format the name of a person with their website URL.
+     * The first string parameter %1$s corresponds to the URL and the second
+     * string parameter %2$s corresponds to the full name of the person.
+     *
+     * @var string
+     */
+    private const NAME_WITH_URL = '<a href="%1$s">%2$s</a>';
+
+    /**
+     * Format a string with the given URL and name, using the
+     * self::NAME_WITH_URL format string.
+     *
+     * @param string $url the URL of the person
+     * @param string $name the full name of the person
+     * @return string the formatted string
+     */
+    private static function formatNameWithUrl(string $url, string $name)
+    {
+        return sprintf(self::NAME_WITH_URL, $url, $name) . " - ";
+    }
 
     /**
      * Return an associative array with information about a person.
@@ -88,25 +109,30 @@ class Utilities
     {
         $cards = [
             "DONJOHN" => [
-                "website"   => sprintf(Utilities::$formatStr, 'https://www.johnromanodorazio.com', 'John Romano D\'Orazio'),
-                "note"      => _('Priest in the Diocese of Rome, self-taught programmer, author of the BibleGet Project'),
+                "website"   => Utilities::formatNameWithUrl('https://www.johnromanodorazio.com', 'John Romano D\'Orazio'),
+                "note"      => sprintf(
+                    /**translators: 1. BibleGet github url 2. Liturgical Calendar github url */
+                    _('Priest in the Diocese of Rome, author of the <a href="%1$s" target="_blank">BibleGet project</a> and of the <a href="%2$s" target="_blank">Liturgical Calendar project</a>'),
+                    'https://github.com/BibleGet-I-O',
+                    'https://github.com/Liturgical-Calendar'
+                ),
                 "img"       => "./assets/img/donjohn_125x125.jpg",
                 "icon"      => "fas fa-cross fa-2x text-black"
             ],
             "MIKETRUSO" => [
-                "website"   => sprintf(Utilities::$formatStr, 'https://www.miketruso.com/', 'Mike Truso'),
-                "note"      => _('Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild for Catholic IT Professionals'),
+                "website"   => Utilities::formatNameWithUrl('https://www.miketruso.com/', 'Mike Truso'),
+                "note"      => _('Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild for Catholic IT Professionals, contributed the bootstrap theming of the project website'),
                 "img"       => "./assets/img/miketruso_125x125.jpg",
                 "icon"      => "fas fa-code fa-2x text-black"
             ],
             "MICHAELSHELTON" => [
-                "website"   => sprintf(Utilities::$formatStr, 'https://www.linkedin.com/in/michaelrshelton/', 'Michael Shelton'),
-                "note"      => _('Full stack web developer'),
+                "website"   => Utilities::formatNameWithUrl('https://www.linkedin.com/in/michaelrshelton/', 'Michael Shelton'),
+                "note"      => _('Full stack web developer, contributed to the generation of the Open API documentation'),
                 "img"       => "./assets/img/michaelshelton_125x125.jpg",
                 "icon"      => "fas fa-code fa-2x text-black"
             ],
             "STEVENVANROODE" => [
-                "website"   => sprintf(Utilities::$formatStr, 'https://www.latijnseliturgie.nl/', 'Steven van Roode'),
+                "website"   => Utilities::formatNameWithUrl('https://www.latijnseliturgie.nl/', 'Steven van Roode'),
                 "note"      => _('Latin Liturgy Association of the Netherlands, contributed the national calendar for the Netherlands to this project with all related translations'),
                 "img"       => "./assets/img/Steven van Roode 125x125.jpg",
                 "icon"      => "fas fa-music fa-2x text-black"
