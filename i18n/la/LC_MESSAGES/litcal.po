@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-03 02:17+0000\n"
+"POT-Creation-Date: 2024-10-12 16:04+0000\n"
 "PO-Revision-Date: 2024-10-03 15:08+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
@@ -296,7 +296,8 @@ msgstr "Calendarium"
 #: usage.php:68
 msgid ""
 "FullCalendar representation elaborated by JAVASCRIPT using an AJAX request"
-msgstr "Repraesentatio FullCalendar elaborata a JAVASCRIPT utens petitione AJAX"
+msgstr ""
+"Repraesentatio FullCalendar elaborata a JAVASCRIPT utens petitione AJAX"
 
 #: usage.php:69
 msgid "View FullCalendar"
@@ -380,8 +381,8 @@ msgid ""
 "Go to <i><b>Phone Settings → Accounts → Add account → Other → Add Calendar</"
 "b></i>."
 msgstr ""
-"Ite ad <i><b>Phone Settings → Accounts → Add account → Other → Add "
-"Calendar</b></i>."
+"Ite ad <i><b>Phone Settings → Accounts → Add account → Other → Add Calendar</"
+"b></i>."
 
 #: usage.php:139
 msgid ""
@@ -460,8 +461,8 @@ msgid ""
 "You can manually fetch new data by clicking on <i><b>Send/receive all</b></"
 "i> (from the SEND/RECEIVE menu item)."
 msgstr ""
-"Potes manualiter novas notitias accipere premendo <i><b>Mitte/accipe "
-"omnia</b></i> (ex menu item SEND/RECEIVE)."
+"Potes manualiter novas notitias accipere premendo <i><b>Mitte/accipe omnia</"
+"b></i> (ex menu item SEND/RECEIVE)."
 
 #: usage.php:169
 msgid ""
@@ -914,19 +915,19 @@ msgstr ""
 msgid "Add language edition Roman Missal"
 msgstr "Adde editionem linguae Missalis Romani"
 
-#: easter.php:68
+#: easter.php:69
 msgid "Date of Easter from 1583 to 9999"
 msgstr "Dies Paschae ab 1583 ad 9999"
 
-#: easter.php:85
+#: easter.php:86
 msgid "Go back"
 msgstr "Revertere"
 
-#: easter.php:100
+#: easter.php:101
 msgid "Century"
 msgstr "Saeculum"
 
-#: easter.php:107
+#: easter.php:108
 msgid ""
 "Easter Day Calculation in PHP (Years in which Julian and Gregorian easter "
 "coincide are marked in yellow)"
@@ -934,15 +935,15 @@ msgstr ""
 "Computatio Diei Paschae in PHP (Anni in quibus Pascha Iulianum et "
 "Gregorianum coincidunt in flavo notantur)"
 
-#: easter.php:111
+#: easter.php:112
 msgid "Gregorian Easter"
 msgstr "Pascha Gregorianum"
 
-#: easter.php:111
+#: easter.php:112
 msgid "Julian Easter"
 msgstr "Pascha Iuliana"
 
-#: easter.php:111
+#: easter.php:112
 msgid "Julian Easter in Gregorian Calendar"
 msgstr "Pascha Iulianum in Calendario Gregoriano"
 

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-03 02:17+0000\n"
+"POT-Creation-Date: 2024-10-12 16:04+0000\n"
 "PO-Revision-Date: 2024-10-03 13:11+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
@@ -946,19 +946,19 @@ msgstr ""
 msgid "Add language edition Roman Missal"
 msgstr "Sprachausgabe Römisches Messbuch hinzufügen"
 
-#: easter.php:68
+#: easter.php:69
 msgid "Date of Easter from 1583 to 9999"
 msgstr "Osterdatum von 1583 bis 9999"
 
-#: easter.php:85
+#: easter.php:86
 msgid "Go back"
 msgstr "Zurück"
 
-#: easter.php:100
+#: easter.php:101
 msgid "Century"
 msgstr "Jahrhundert"
 
-#: easter.php:107
+#: easter.php:108
 msgid ""
 "Easter Day Calculation in PHP (Years in which Julian and Gregorian easter "
 "coincide are marked in yellow)"
@@ -966,15 +966,15 @@ msgstr ""
 "Ostertagsberechnung in PHP (Jahre, in denen das julianische und "
 "gregorianische Ostern zusammenfallen, sind gelb markiert)"
 
-#: easter.php:111
+#: easter.php:112
 msgid "Gregorian Easter"
 msgstr "Gregorianisches Ostern"
 
-#: easter.php:111
+#: easter.php:112
 msgid "Julian Easter"
 msgstr "Julianisches Ostern"
 
-#: easter.php:111
+#: easter.php:112
 msgid "Julian Easter in Gregorian Calendar"
 msgstr "Julianisches Ostern im Gregorianischen Kalender"
 
