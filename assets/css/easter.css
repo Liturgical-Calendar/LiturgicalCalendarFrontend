@@ -58,7 +58,7 @@ tbody td {
     content  : "";
     position : fixed;
     z-index  : 1;
-    bottom   : 50px;
+    bottom   : 45px;
     right    : 35px;
     pointer-events   : none;
     background-image : linear-gradient(to bottom,
