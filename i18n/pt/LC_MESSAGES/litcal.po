@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-12 16:25+0000\n"
+"POT-Creation-Date: 2024-10-12 16:32+0000\n"
 "PO-Revision-Date: 2024-10-03 13:11+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
@@ -929,19 +929,19 @@ msgstr ""
 msgid "Add language edition Roman Missal"
 msgstr "Adicionar edição de língua do Missal Romano"
 
-#: easter.php:81
+#: easter.php:82
 msgid "Date of Easter from 1583 to 9999"
 msgstr "Data da Páscoa de 1583 a 9999"
 
-#: easter.php:98
+#: easter.php:99
 msgid "Go back"
 msgstr "Voltar"
 
-#: easter.php:113
+#: easter.php:114
 msgid "Century"
 msgstr "Século"
 
-#: easter.php:120
+#: easter.php:121
 msgid ""
 "Easter Day Calculation in PHP (Years in which Julian and Gregorian easter "
 "coincide are marked in yellow)"
@@ -949,15 +949,15 @@ msgstr ""
 "Cálculo do Dia da Páscoa em PHP (Anos em que a Páscoa Juliana e Gregoriana "
 "coincidem estão marcados em amarelo)"
 
-#: easter.php:124
+#: easter.php:125
 msgid "Gregorian Easter"
 msgstr "Páscoa Gregoriana"
 
-#: easter.php:124
+#: easter.php:125
 msgid "Julian Easter"
 msgstr "Páscoa Juliana"
 
-#: easter.php:124
+#: easter.php:125
 msgid "Julian Easter in Gregorian Calendar"
 msgstr "Páscoa Juliana no Calendário Gregoriano"
 
