@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-12 17:19+0000\n"
-"PO-Revision-Date: 2024-10-03 13:11+0000\n"
+"PO-Revision-Date: 2024-10-12 17:36+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -1397,6 +1397,9 @@ msgid ""
 "target=\"_blank\">BibleGet project</a> and of the <a href=\"%2$s\" "
 "target=\"_blank\">Liturgical Calendar project</a>"
 msgstr ""
+"Priester in der Diözese Rom, Autor des <a href=\"%1$s\" target=\"_blank\""
+">BibleGet-Projekts</a> und des <a href=\"%2$s\" target=\"_blank\""
+">Liturgischen Kalenderprojekts</a>"
 
 #: src/Utilities.php:124
 #, fuzzy
@@ -1419,6 +1422,7 @@ msgid ""
 "Full stack web developer, contributed to the generation of the Open API "
 "documentation"
 msgstr ""
+"Full-Stack-Webentwickler, trug zur Erstellung der Open-API-Dokumentation bei"
 
 #: src/Utilities.php:136
 msgid ""
