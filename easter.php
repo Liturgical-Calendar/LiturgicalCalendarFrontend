@@ -17,23 +17,24 @@ $dateOfEasterURL    = "https://litcal.johnromanodorazio.com/api/{$endpointV}/eas
 $AllAvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($value) {
     return strpos($value, 'POSIX') === false;
 });
+
+$currentLocale = isset($_GET["locale"]) && in_array($_GET["locale"], $AllAvailableLocales) ? $_GET["locale"] : "en_US"; //default to English
+ini_set('date.timezone', 'Europe/Vatican');
+
 $AvailableLocalesWithRegion = array_filter($AllAvailableLocales, function ($value) {
     return strpos($value, '_') === false;
 });
-$AvailableLocalesWithRegion = array_reduce($AvailableLocalesWithRegion, function ($carry, $item) use ($LOCALE) {
-    $carry[$item] = Locale::getDisplayLanguage($item, $LOCALE);
+$AvailableLocalesWithRegion = array_reduce($AvailableLocalesWithRegion, function ($carry, $item) use ($currentLocale) {
+    $carry[$item] = Locale::getDisplayLanguage($item, $currentLocale);
     return $carry;
 }, []);
 
 
-$LOCALE = isset($_GET["locale"]) && in_array($_GET["locale"], $AllAvailableLocales) ? $_GET["locale"] : "en_US"; //default to English
-ini_set('date.timezone', 'Europe/Vatican');
-
-$baseLocale = Locale::getPrimaryLanguage($LOCALE);
+$baseLocale = Locale::getPrimaryLanguage($currentLocale);
 $localeArray = [
-    $LOCALE . '.utf8',
-    $LOCALE . '.UTF-8',
-    $LOCALE,
+    $currentLocale . '.utf8',
+    $currentLocale . '.UTF-8',
+    $currentLocale,
     $baseLocale . '.utf8',
     $baseLocale . '.UTF-8',
     $baseLocale
@@ -42,12 +43,12 @@ setlocale(LC_ALL, $localeArray);
 bindtextdomain("litcal", "i18n");
 textdomain("litcal");
 
-$c = new Collator($LOCALE);
+$c = new Collator($currentLocale);
 $c->asort($AvailableLocalesWithRegion);
 
 $ch = curl_init();
 
-curl_setopt($ch, CURLOPT_URL, $dateOfEasterURL . "?locale=" . $LOCALE);
+curl_setopt($ch, CURLOPT_URL, $dateOfEasterURL . "?locale=" . $currentLocale);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($ch);
 if (curl_errno($ch)) {
@@ -109,7 +110,7 @@ $DatesOfEaster = $responseJson->litcal_easter;
         <div id="TimelineCenturiesContainer">
         <?php
         for ($i = 16; $i <= 100; $i++) {
-            $century = strtolower($LOCALE) === "en" ? Utilities::ordinal($i) : Utilities::romanNumeral($i);
+            $century = strtolower($currentLocale) === "en" ? Utilities::ordinal($i) : Utilities::romanNumeral($i);
             echo "<div class=\"TimelineCenturyMarker\">" . $century . " " . _("Century") . "</div>";
         }
         ?>
