@@ -99,7 +99,7 @@ $DatesOfEaster = $responseJson->litcal_easter;
     <div><a class="backNav" href="/">↩      <?php echo _('Go back')?>      ↩</a></div>
     <select id="langSelect">
         <?php
-        foreach ($AvailableLocales as $Lcl => $DisplayLang) {
+        foreach ($AvailableLocalesWithRegion as $Lcl => $DisplayLang) {
             $optionContent = $baseLocale === 'en' ? $DisplayLang : $DisplayLang . ' (' . Locale::getDisplayLanguage($Lcl, 'en') . ')';
             echo '<option value="' . $Lcl . '"' . ($baseLocale === $Lcl ? " selected" : "") . ' title="' . Locale::getDisplayLanguage($Lcl, 'en') . '">' . $optionContent . '</option>';
         }
