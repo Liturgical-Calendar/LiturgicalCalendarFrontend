@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-12 16:32+0000\n"
+"POT-Creation-Date: 2024-10-12 17:19+0000\n"
 "PO-Revision-Date: 2024-10-03 15:08+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
@@ -570,7 +570,7 @@ msgstr ""
 msgid "Tag"
 msgstr "Tag"
 
-#: extending.php:85 src/Utilities.php:184 src/FormControls.php:45
+#: extending.php:85 src/Utilities.php:210 src/FormControls.php:45
 msgid "Name"
 msgstr "Nomen"
 
@@ -1351,29 +1351,38 @@ msgstr "SOLLEMNITAS"
 msgid "celebration with precedence over solemnities"
 msgstr "celebratio altioris ordinis quam sollemnitatis"
 
-#: src/Utilities.php:92
+#. translators: 1. BibleGet github url 2. Liturgical Calendar github url
+#: src/Utilities.php:115
+#, php-format
 msgid ""
-"Priest in the Diocese of Rome, self-taught programmer, author of the "
-"BibleGet Project"
+"Priest in the Diocese of Rome, author of the <a href=\"%1$s\" "
+"target=\"_blank\">BibleGet project</a> and of the <a href=\"%2$s\" "
+"target=\"_blank\">Liturgical Calendar project</a>"
 msgstr ""
-"Sacerdos in Dioecesi Romana, autodidactus programmator, auctor Projectus "
-"BibleGet"
 
-#: src/Utilities.php:98
+#: src/Utilities.php:124
+#, fuzzy
+#| msgid ""
+#| "Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, "
+#| "Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
+#| "for Catholic IT Professionals"
 msgid ""
 "Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, "
 "Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
-"for Catholic IT Professionals"
+"for Catholic IT Professionals, contributed the bootstrap theming of the "
+"project website"
 msgstr ""
 "Programmatum Fautor in Sancto Paulo, MN (USA), Co-conditor apud JobPost, "
 "Senior Software Engineer apud Agile Orbit, conditor Gildae Sancti Isidori "
 "pro Catholicis IT Professionalibus"
 
-#: src/Utilities.php:104
-msgid "Full stack web developer"
-msgstr "Plenus acervus interretialis excultor"
+#: src/Utilities.php:130
+msgid ""
+"Full stack web developer, contributed to the generation of the Open API "
+"documentation"
+msgstr ""
 
-#: src/Utilities.php:110
+#: src/Utilities.php:136
 msgid ""
 "Latin Liturgy Association of the Netherlands, contributed the national "
 "calendar for the Netherlands to this project with all related translations"
@@ -1381,21 +1390,21 @@ msgstr ""
 "Consociatio Liturgiae Latinae Nederlandiae, calendarium nationale pro "
 "Nederlandia huic proposito cum omnibus translationibus relatis contulit"
 
-#: src/Utilities.php:176
+#: src/Utilities.php:202
 msgid "Choose from existing festivities"
 msgstr "Elige ex festivitatibus existentibus"
 
-#: src/Utilities.php:178
+#: src/Utilities.php:204
 msgid ""
 "This festivity does not seem to exist? Please choose from a value in the "
 "list."
 msgstr "Haec festivitas non videtur existere? Elige quaeso valorem ex indice."
 
-#: src/Utilities.php:182
+#: src/Utilities.php:208
 msgid "Property to change"
 msgstr "Proprietas mutanda"
 
-#: src/Utilities.php:185 src/FormControls.php:161
+#: src/Utilities.php:211 src/FormControls.php:161
 msgid "Grade"
 msgstr "Gradus"
 
@@ -1430,3 +1439,13 @@ msgstr "Documentatio"
 #: layout/header.php:103
 msgid "Examples of Usage"
 msgstr "Exempla Usus"
+
+#~ msgid ""
+#~ "Priest in the Diocese of Rome, self-taught programmer, author of the "
+#~ "BibleGet Project"
+#~ msgstr ""
+#~ "Sacerdos in Dioecesi Romana, autodidactus programmator, auctor Projectus "
+#~ "BibleGet"
+
+#~ msgid "Full stack web developer"
+#~ msgstr "Plenus acervus interretialis excultor"
