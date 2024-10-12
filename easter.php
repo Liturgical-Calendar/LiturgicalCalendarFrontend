@@ -17,7 +17,16 @@ $dateOfEasterURL    = "https://litcal.johnromanodorazio.com/api/{$endpointV}/eas
 $AllAvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($value) {
     return strpos($value, 'POSIX') === false;
 });
-$LOCALE = isset($_GET["locale"]) && in_array($_GET["locale"], $AllAvailableLocales) ? $_GET["locale"] : "la_VA"; //default to latin
+$AvailableLocalesWithRegion = array_filter($AllAvailableLocales, function ($value) {
+    return strpos($value, '_') === false;
+});
+$AvailableLocalesWithRegion = array_reduce($AvailableLocalesWithRegion, function ($carry, $item) use ($LOCALE) {
+    $carry[$item] = Locale::getDisplayLanguage($item, $LOCALE);
+    return $carry;
+}, []);
+
+
+$LOCALE = isset($_GET["locale"]) && in_array($_GET["locale"], $AllAvailableLocales) ? $_GET["locale"] : "en_US"; //default to English
 ini_set('date.timezone', 'Europe/Vatican');
 
 $baseLocale = Locale::getPrimaryLanguage($LOCALE);
@@ -25,9 +34,6 @@ $localeArray = [
     $LOCALE . '.utf8',
     $LOCALE . '.UTF-8',
     $LOCALE,
-    $baseLocale . '_' . strtoupper($baseLocale) . '.utf8',
-    $baseLocale . '_' . strtoupper($baseLocale) . '.UTF-8',
-    $baseLocale . '_' . strtoupper($baseLocale),
     $baseLocale . '.utf8',
     $baseLocale . '.UTF-8',
     $baseLocale
@@ -36,7 +42,9 @@ setlocale(LC_ALL, $localeArray);
 bindtextdomain("litcal", "i18n");
 textdomain("litcal");
 
-$error_msg = "";
+$c = new Collator($LOCALE);
+$c->asort($AvailableLocalesWithRegion);
+
 $ch = curl_init();
 
 curl_setopt($ch, CURLOPT_URL, $dateOfEasterURL . "?locale=" . $LOCALE);
@@ -48,20 +56,24 @@ if (curl_errno($ch)) {
     die($error_msg);
 }
 curl_close($ch);
-$DatesOfEaster = json_decode($response);
 
-$AvailableLocales = array_filter($AllAvailableLocales, function ($value) {
-    return strpos($value, '_') === false;
-});
-$AvailableLocales = array_reduce($AvailableLocales, function ($carry, $item) use ($LOCALE) {
-    $carry[$item] = Locale::getDisplayLanguage($item, $LOCALE);
-    return $carry;
-}, []);
+$responseJson = json_decode($response);
+if (json_last_error() !== JSON_ERROR_NONE) {
+    $error_msg = json_last_error_msg();
+    die($error_msg);
+}
 
-$c = new Collator($LOCALE);
-$c->asort($AvailableLocales);
+if (
+    false === property_exists($responseJson, "litcal_easter")
+    ||
+    false === is_array($responseJson->litcal_easter)
+) {
+    $error_msg = "Missing data from response: litcal_easter property does not exist or is not an array";
+    die($error_msg);
+}
 
-//uasort($AvailableLocales, 'strcmp');
+$DatesOfEaster = $responseJson->litcal_easter;
+
 
 ?>
 <!DOCTYPE html>
@@ -88,7 +100,7 @@ $c->asort($AvailableLocales);
         <?php
         foreach ($AvailableLocales as $Lcl => $DisplayLang) {
             $optionContent = $baseLocale === 'en' ? $DisplayLang : $DisplayLang . ' (' . Locale::getDisplayLanguage($Lcl, 'en') . ')';
-            echo '<option value="' . $Lcl . '"' . (strtolower($LOCALE) === strtolower($Lcl) ? " selected" : "") . ' title="' . Locale::getDisplayLanguage($Lcl, 'en') . '">' . $optionContent . '</option>';
+            echo '<option value="' . $Lcl . '"' . ($baseLocale === $Lcl ? " selected" : "") . ' title="' . Locale::getDisplayLanguage($Lcl, 'en') . '">' . $optionContent . '</option>';
         }
         ?>
     </select>
@@ -114,17 +126,17 @@ $c->asort($AvailableLocales);
     //$Y = (int)date("Y");
     //for($i=1997;$i<=2037;$i++){
 for ($i = 1583; $i <= 9999; $i++) {
-    $gregDateString = $DatesOfEaster->EasterDates[$i - 1583]->gregorianDateString;
-    $julianDateString = $DatesOfEaster->EasterDates[$i - 1583]->julianDateString;
-    $westernJulianDateString = $DatesOfEaster->EasterDates[$i - 1583]->westernJulianDateString;
+    $gregDateString = $DatesOfEaster[$i - 1583]->gregorianDateString;
+    $julianDateString = $DatesOfEaster[$i - 1583]->julianDateString;
+    $westernJulianDateString = $DatesOfEaster[$i - 1583]->westernJulianDateString;
 
-    $style_str = $DatesOfEaster->EasterDates[$i - 1583]->coinciding ? ' style="background-color:Yellow;font-weight:bold;color:Blue;"' : '';
+    $style_str = $DatesOfEaster[$i - 1583]->coinciding ? ' style="background-color:Yellow;font-weight:bold;color:Blue;"' : '';
     $EasterTableContainer .= '<tr' . $style_str . '><td width="300">' . $gregDateString . '</td><td width="300">' . $julianDateString . '</td><td width="300">' . $westernJulianDateString . '</td></tr>';
 }
     $EasterTableContainer .= '</tbody></table>';
     $EasterTableContainer .= '</div>';
 
-    echo '<div style="text-align:center;width:40%;margin:0px auto;font-size:.7em;z-index:10;position:relative;"><i>The last coinciding Easter will be: ' . $DatesOfEaster->lastCoincidenceString . '</i></div>';
+    echo '<div style="text-align:center;width:40%;margin:0px auto;font-size:.7em;z-index:10;position:relative;"><i>The last coinciding Easter will be: ' . $responseJson->lastCoincidenceString . '</i></div>';
     echo $EasterTableContainer;
 ?>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
