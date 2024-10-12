@@ -117,25 +117,25 @@ class Utilities
                     'https://github.com/Liturgical-Calendar'
                 ),
                 "img"       => "./assets/img/donjohn_125x125.jpg",
-                "icon"      => "fas fa-cross fa-2x text-black"
+                "icon"      => "fa-cross"
             ],
             "MIKETRUSO" => [
                 "website"   => Utilities::formatNameWithUrl('https://www.miketruso.com/', 'Mike Truso'),
                 "note"      => _('Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild for Catholic IT Professionals, contributed the bootstrap theming of the project website'),
                 "img"       => "./assets/img/miketruso_125x125.jpg",
-                "icon"      => "fas fa-code fa-2x text-black"
+                "icon"      => "fa-code"
             ],
             "MICHAELSHELTON" => [
                 "website"   => Utilities::formatNameWithUrl('https://www.linkedin.com/in/michaelrshelton/', 'Michael Shelton'),
                 "note"      => _('Full stack web developer, contributed to the generation of the Open API documentation'),
                 "img"       => "./assets/img/michaelshelton_125x125.jpg",
-                "icon"      => "fas fa-code fa-2x text-black"
+                "icon"      => "fa-code"
             ],
             "STEVENVANROODE" => [
                 "website"   => Utilities::formatNameWithUrl('https://www.latijnseliturgie.nl/', 'Steven van Roode'),
                 "note"      => _('Latin Liturgy Association of the Netherlands, contributed the national calendar for the Netherlands to this project with all related translations'),
                 "img"       => "./assets/img/Steven van Roode 125x125.jpg",
-                "icon"      => "fas fa-music fa-2x text-black"
+                "icon"      => "fa-music"
             ]
         ];
         return $cards[$who];
@@ -161,7 +161,7 @@ class Utilities
                             </div>
                         </div>
                         <div class=\"col-auto\">
-                            <i class=\"" . $cardInfo["icon"] . "\" style=\"--bs-text-opacity: .15;\"></i>
+                            <i class=\"fas " . $cardInfo["icon"] . " fa-2x text-black\" style=\"--bs-text-opacity: .15;\"></i>
                         </div>
                     </div>
                 </div>
