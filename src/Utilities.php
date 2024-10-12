@@ -79,7 +79,7 @@ class Utilities
      *
      * @var string
      */
-    private const NAME_WITH_URL = '<a href="%1$s">%2$s</a>';
+    private const NAME_WITH_URL = '<a href="%1$s" target="_blank">%2$s</a>';
 
     /**
      * Format a string with the given URL and name, using the
