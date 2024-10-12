@@ -1,31 +1,29 @@
-# Spanish translations for PACKAGE package.
-# Copyright (C) 2021 THE PACKAGE'S COPYRIGHT HOLDER
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Ubuntu <priest@johnromanodorazio.com>, 2021.
-# John R. D'Orazio <priest@johnromanodorazio.com>, 2022.
-# OpenAI <noreply-mt-openai@weblate.org>, 2024.
 # "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024.
-# Weblate Admin <admin@example.com>, 2024.
+# Milan Šalka <salka.milan@googlemail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-12 16:32+0000\n"
-"PO-Revision-Date: 2024-10-03 13:11+0000\n"
-"Last-Translator: Weblate Admin <admin@example.com>\n"
-"Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
-"liturgical-calendar/frontend/es/>\n"
-"Language: es\n"
+"PO-Revision-Date: 2024-10-03 11:01+0000\n"
+"Last-Translator: Milan Šalka <salka.milan@googlemail.com>\n"
+"Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
+"liturgical-calendar/frontend/sk/>\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: Weblate 5.6.1\n"
 
 #: index.php:16
 msgid ""
 "Collection of Liturgical events for any given year between 1970 and 9999."
-msgstr "Colección de eventos litúrgicos para cualquier año entre 1970 y 9999."
+msgstr ""
+"Zbierka liturgických udalostí na akýkoľvek daný rok medzi rokmi 1970 a 9999."
 
 #. translators: 1. /calendar, 2. /calendar/nation/{NATION}, 3. /calendar/diocese/{DIOCESE}
 #: index.php:19
@@ -35,9 +33,9 @@ msgid ""
 "National and Diocesan calendars can be requested on the %2$s and %3$s paths "
 "respectively."
 msgstr ""
-"La ruta base %1$s devuelve eventos litúrgicos para el Calendario Romano "
-"General. Los calendarios nacionales y diocesanos se pueden solicitar en las "
-"rutas %2$s y %3$s respectivamente."
+"Základná cesta %1$s vracia liturgické udalosti pre Všeobecný rímsky "
+"kalendár. Národné a diecézne kalendáre je možné vyžiadať na cestách %2$s a "
+"%3$s."
 
 #. translators: 1. /{YEAR}
 #: index.php:26
@@ -46,53 +44,52 @@ msgid ""
 "Each of these paths can optionally be further specified with a %1$s path "
 "parameter. When not specified, the API will default to the current year."
 msgstr ""
-"Cada una de estas rutas puede especificarse opcionalmente con un parámetro "
-"de ruta %1$s. Cuando no se especifica, la API usará el año actual por "
-"defecto."
+"Každú z týchto ciest je možné voliteľne ďalej špecifikovať pomocou parametra "
+"cesty %1$s. Ak nie je špecifikovaný, API predvolene použije aktuálny rok."
 
 #: index.php:32 usage.php:20 liturgyOfAnyDay.php:26
 msgid "General Roman Calendar"
-msgstr "Calendario Romano General"
+msgstr "Všeobecný rímsky kalendár"
 
 #: index.php:40 layout/header.php:81
 msgid "Catholic Liturgical Calendar"
-msgstr "Calendario Litúrgico Católico"
+msgstr "Katolícky liturgický kalendár"
 
 #. translators: 1. /calendar
 #: index.php:50
 #, php-format
 msgid "API %1$s endpoint"
-msgstr "Ruta %1$s de la API"
+msgstr "API %1$s koncový bod"
 
 #: index.php:58
 msgid "Path builder"
-msgstr "Constructor de rutas"
+msgstr "Staviteľ cesty"
 
 #: index.php:60
 msgid "Select route"
-msgstr "Seleccionar ruta"
+msgstr "Vyber trasu"
 
 #: index.php:68
 msgid "Calendars available on selected route"
-msgstr "Calendarios disponibles en la ruta seleccionada"
+msgstr "Kalendáre dostupné na vybranej trase"
 
 #: index.php:74 liturgyOfAnyDay.php:67
 msgid "Year"
-msgstr "Año"
+msgstr "Rok"
 
 #: index.php:74
 msgid ""
 "When not specified, the API will default to the current year. Try "
 "specifically setting the year by changing the value here."
 msgstr ""
-"Cuando no se especifica, la API usará por defecto el año actual. Intenta "
-"establecer específicamente el año cambiando el valor aquí."
+"Ak nie je uvedené inak, API predvolene nastaví aktuálny rok. Skúste "
+"konkrétne nastaviť rok zmenou hodnoty tu."
 
 #. translators: %s = '/calendar'
 #: index.php:82
 #, php-format
 msgid "Request parameters available on the base %s path"
-msgstr "Parámetros de solicitud disponibles en la ruta base %s"
+msgstr "Dostupné parametre požiadaviek na základnej ceste %s"
 
 #: index.php:119
 msgid ""
@@ -100,10 +97,9 @@ msgid ""
 "than using this request parameter. N.B. The Accept-Language header will have "
 "no effect when a National or Diocesan calendar is requested."
 msgstr ""
-"Es preferible establecer la configuración regional usando el encabezado "
-"Accept-Language en lugar de usar este parámetro de solicitud. N.B. El "
-"encabezado Accept-Language no tendrá efecto cuando se solicite un calendario "
-"Nacional o Diocesano."
+"Je vhodnejšie nastaviť lokalitu pomocou hlavičky Accept-Language než pomocou "
+"tohto parametra požiadavky. Upozornenie: Hlavička Accept-Language nebude mať "
+"žiadny účinok, keď je požadovaný národný alebo diecézny kalendár."
 
 #. translators: 1. /calendar/nation/{NATION}, 2. /calendar/diocese/{DIOCESE}
 #: index.php:132
@@ -114,32 +110,32 @@ msgid ""
 "calendars have these parameters built in, the parameters are not available "
 "on the %1$s and %2$s routes."
 msgstr ""
-"Estos parámetros son útiles para ajustar los resultados del calendario, "
-"cuando no se solicita un calendario Nacional o Diocesano. Dado que los "
-"calendarios Nacionales y Diocesanos tienen estos parámetros incorporados, "
-"los parámetros no están disponibles en las rutas %1$s y %2$s."
+"Tieto parametre sú užitočné na úpravu výsledkov kalendára, keď nie je "
+"požadovaný národný alebo diecézny kalendár. Keďže národné a diecézne "
+"kalendáre majú tieto parametre zabudované, parametre nie sú dostupné na "
+"trasách %1$s a %2$s."
 
 #: index.php:138
 msgid ""
 "N.B. When none of these parameters are set, the API will use the defaults as "
 "in use in the Vatican."
 msgstr ""
-"N.B. Cuando ninguno de estos parámetros está configurado, la API usará los "
-"valores predeterminados en uso en el Vaticano."
+"Pozn.: Keď nie sú nastavené žiadne z týchto parametrov, API použije "
+"predvolené hodnoty používané vo Vatikáne."
 
 #. translators: 1. /calendar
 #: index.php:145
 #, php-format
 msgid "Request parameters available on all %1$s paths"
-msgstr "Parámetros de solicitud disponibles en todas las rutas %1$s"
+msgstr "Parametre požiadaviek dostupné na všetkých cestách %1$s"
 
 #: index.php:149
 msgid ""
 "It is preferable to request the response content type using the Accept "
 "header rather than using this request parameter."
 msgstr ""
-"Es preferible solicitar el tipo de contenido de la respuesta usando el "
-"encabezado Accept en lugar de usar este parámetro de solicitud."
+"Je vhodnejšie požiadať o typ obsahu odpovede pomocou hlavičky Accept, než "
+"pomocou tohto parametra požiadavky."
 
 #. translators: 1. /calendar
 #: index.php:168
@@ -149,26 +145,25 @@ msgid ""
 "base %1$s resource or any resource below the %1$s path. National and "
 "Diocesan calendars do not have these parameters built-in."
 msgstr ""
-"Estos parámetros de solicitud siempre se pueden configurar, ya sea que "
-"estemos solicitando el recurso base %1$s o cualquier recurso debajo de la "
-"ruta %1$s. Los calendarios nacionales y diocesanos no tienen estos "
-"parámetros integrados."
+"Tieto parametre požiadavky môžu byť vždy nastavené, či už žiadame o základný "
+"zdroj %1$s alebo akýkoľvek zdroj pod cestou %1$s. Národné a diecézne "
+"kalendáre tieto parametre nemajú zabudované."
 
 #: index.php:181
 msgid "Liturgical Calendar API endpoint"
-msgstr "API del Calendario litúrgico"
+msgstr "Koncový bod API liturgického kalendára"
 
 #: index.php:184
 msgid ""
 "URL of the API request based on selected options. The button is set to the "
 "same URL, click on it to see results."
 msgstr ""
-"URL de la solicitud de API basada en las opciones seleccionadas. El botón "
-"está configurado a la misma URL, haz clic en él para ver los resultados."
+"URL požiadavky API na základe vybraných možností. Tlačidlo je nastavené na "
+"rovnakú URL, kliknite naň, aby ste videli výsledky."
 
 #: index.php:192 index.php:196
 msgid "Liturgical Calendar Validator"
-msgstr "Validador del Calendario Litúrgico"
+msgstr "Overovač liturgického kalendára"
 
 #: index.php:195
 msgid ""
@@ -177,10 +172,10 @@ msgid ""
 "JSON responses produced by the API starting from the year 1970 and going up "
 "to 25 years from the current year."
 msgstr ""
-"Para verificar que los datos litúrgicos producidos por la API sean "
-"correctos, hay una interfaz de prueba unitaria que puede ejecutar pruebas "
-"predefinidas contra las respuestas JSON producidas por la API desde el año "
-"1970 hasta 25 años a partir del año actual."
+"Aby bolo možné overiť, že liturgické údaje vytvorené API sú správne, "
+"existuje rozhranie Unit Test, ktoré môže spustiť preddefinované testy proti "
+"JSON odpovediam vytvoreným API od roku 1970 až do 25 rokov od aktuálneho "
+"roku."
 
 #: index.php:199
 #, php-format
@@ -188,42 +183,41 @@ msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
 "repository."
 msgstr ""
-"Las pruebas unitarias están definidas en la carpeta %s en el repositorio de "
-"la API del Calendario Litúrgico."
+"Jednotkové testy sú definované v priečinku %s v repozitári Liturgického "
+"kalendára API."
 
 #: index.php:200
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
-msgstr ""
-"La interfaz de prueba unitaria está gestionada en un repositorio propio: %s."
+msgstr "Rozhranie jednotkového testu je spravované v samostatnom úložisku: %s."
 
 #: index.php:207
 msgid "Translation Tool"
-msgstr "Herramienta de traducción"
+msgstr "Nástroj na preklad"
 
 #: index.php:213 index.php:216
 msgid "Translations status"
-msgstr "Estado de las traducciones"
+msgstr "Stav prekladov"
 
 #: index.php:224
 msgid "Open API Schema"
-msgstr "Esquema de API abierta"
+msgstr "Otvoriť schému API"
 
 #: index.php:227
 msgid "Swagger / Open API Documentation"
-msgstr "Documentación Swagger / Open API"
+msgstr "Swagger / Open API Dokumentácia"
 
 #: index.php:229
 msgid ""
 "All of the available API routes with their supported methods, parameters, "
 "content types and responses are described here."
 msgstr ""
-"Todas las rutas de API disponibles con sus métodos, parámetros, tipos de "
-"contenido y respuestas compatibles se describen aquí."
+"Všetky dostupné API trasy s ich podporovanými metódami, parametrami, typmi "
+"obsahu a odpoveďami sú popísané tu."
 
 #: index.php:235 usage.php:191
 msgid "Calculation of the Date of Easter"
-msgstr "Cálculo de la fecha de Pascua"
+msgstr "Výpočet dátumu Veľkej noci"
 
 #: index.php:238
 msgid ""
@@ -234,16 +228,16 @@ msgid ""
 "(observed by the Roman Catholic church) and of the Meeus algorithm for "
 "Julian easter (observed by orthodox churches)."
 msgstr ""
-"Un punto final de API simple que devuelve datos sobre la fecha de Pascua, "
-"tanto gregoriana como juliana, desde 1583 (año de la adopción del calendario "
-"gregoriano) hasta 9999 (cálculo de la fecha máxima posible en PHP de 64 "
-"bits), utilizando una adaptación PHP del algoritmo Meeus / Jones / Butcher "
-"para la Pascua gregoriana (observado por la iglesia católica romana) y del "
-"algoritmo Meeus para la Pascua juliana (observado por las iglesias ortodoxas)"
+"Jednoduchý API endpoint, ktorý vracia údaje o dátume Veľkej noci, ako "
+"gregoriánskej, tak aj juliánskej, od roku 1583 (rok prijatia gregoriánskeho "
+"kalendára) do roku 9999 (maximálny možný dátum výpočtu v 64bit PHP), pomocou "
+"PHP adaptácie algoritmu Meeus/Jones/Butcher pre gregoriánsku Veľkú noc "
+"(pozorovanú rímskokatolíckou cirkvou) a algoritmu Meeus pre juliánsku Veľkú "
+"noc (pozorovanú pravoslávnymi cirkvami)."
 
 #: index.php:243
 msgid "Date of Easter API endpoint"
-msgstr "Fecha de Pascua API"
+msgstr "Dátum Veľkej noci API endpoint"
 
 #: index.php:245
 msgid ""
@@ -251,10 +245,9 @@ msgid ""
 "case, since the API returns a UNIX timestamp for each date of Easter, "
 "localizations can be done in a client application just as well."
 msgstr ""
-"Actualmente, los datos se pueden solicitar con casi cualquier localización. "
-"En cualquier caso, dado que la API devuelve una marca de tiempo UNIX para "
-"cada fecha de Pascua, las localizaciones se pueden hacer igualmente en una "
-"aplicación cliente."
+"Momentálne je možné údaje vyžiadať s takmer akoukoľvek lokalizáciou. V "
+"každom prípade, keďže API vracia UNIX časovú pečiatku pre každý dátum Veľkej "
+"noci, lokalizácie môžu byť vykonané rovnako dobre v klientskej aplikácii."
 
 #: usage.php:10
 msgid ""
@@ -263,145 +256,143 @@ msgid ""
 "Universal or General Roman Calendar or for derived National and Diocesan "
 "calendars"
 msgstr ""
-"Una API para el Calendario Litúrgico del cual puede recuperar datos para los "
-"eventos litúrgicos de cualquier año desde 1970 en adelante, ya sea para el "
-"Calendario Romano General o Universal o para los calendarios nacionales y "
-"diocesanos derivados"
+"API liturgického kalendára, z ktorého môžete získať údaje o liturgických "
+"udalostiach pre akýkoľvek rok od roku 1970, či už pre univerzálny alebo "
+"všeobecný rímsky kalendár, alebo pre odvodené národné a diecézne kalendáre"
 
 #: usage.php:20
 msgid "Examples"
-msgstr "Ejemplos"
+msgstr "Príklady"
 
 #: usage.php:28
 msgid "Example usage of the API"
-msgstr "Ejemplo de uso de la API"
+msgstr "Príklad použitia API"
 
 #: usage.php:34 layout/header.php:107
 msgid "Web calendar"
-msgstr "Calendario web"
+msgstr "Webový kalendár"
 
 #: usage.php:46
 msgid "HTML presentation elaborated by PHP using a CURL request"
-msgstr "Presentación HTML elaborada por PHP usando una solicitud CURL"
+msgstr "HTML prezentácia vypracovaná pomocou PHP s použitím CURL požiadavky"
 
 #: usage.php:47
 msgid "View PHP Example"
-msgstr "Ver Ejemplo PHP"
+msgstr "Zobraziť príklad PHP"
 
 #: usage.php:57
 msgid "HTML presentation elaborated by JAVASCRIPT using an AJAX request"
-msgstr "Presentación HTML elaborada por JAVASCRIPT usando una solicitud AJAX"
+msgstr ""
+"HTML prezentácia vypracovaná pomocou JAVASCRIPT-u s použitím AJAX požiadavky"
 
 #: usage.php:58
 msgid "View JavaScript Example"
-msgstr "Ver ejemplo en JavaScript"
+msgstr "Zobraziť príklad JavaScriptu"
 
 #: usage.php:65
 msgid "Calendar"
-msgstr "Calendario"
+msgstr "Kalendár"
 
 #: usage.php:68
 msgid ""
 "FullCalendar representation elaborated by JAVASCRIPT using an AJAX request"
 msgstr ""
-"Representación de FullCalendar elaborada por JAVASCRIPT usando una solicitud "
-"AJAX"
+"Reprezentácia FullCalendar vypracovaná pomocou JAVASCRIPTU s použitím AJAX "
+"požiadavky"
 
 #: usage.php:69
 msgid "View FullCalendar"
-msgstr "Ver FullCalendar"
+msgstr "Zobraziť celý kalendár"
 
 #: usage.php:70
 msgid "View FullCalendar (messages first)"
-msgstr "Ver FullCalendar (mensajes primero)"
+msgstr "Zobraziť celý kalendár (najprv správy)"
 
 #: usage.php:81 layout/header.php:111
 msgid "Calendar subscription"
-msgstr "Suscripción al calendario"
+msgstr "Predplatenie kalendára"
 
 #: usage.php:95 liturgyOfAnyDay.php:43
 msgid "Select calendar"
-msgstr "Seleccionar calendario"
+msgstr "Vyber kalendár"
 
 #: usage.php:99
 msgid "Calendar subscription URL"
-msgstr "URL de suscripción al calendario"
+msgstr "URL na prihlásenie sa na odber kalendára"
 
 #: usage.php:122 usage.php:135 usage.php:160
 msgid "Click on the link above to copy it the clipboard."
-msgstr "Haz clic en el enlace de arriba para copiarlo al portapapeles."
+msgstr "Kliknite na odkaz vyššie, aby ste ho skopírovali do schránky."
 
 #: usage.php:123
 #, php-format
 msgid "Navigate to %s."
-msgstr "Navega a %s."
+msgstr "Prejdite na %s."
 
 #: usage.php:124
 msgid ""
 "At the bottom left corner of the screen, next to Other calendars, click on "
 "the + icon to add a new calendar, and choose <i><b>From URL</b></i>."
 msgstr ""
-"En la esquina inferior izquierda de la pantalla, junto a Otros calendarios, "
-"haz clic en el icono + para agregar un nuevo calendario y elige <i><b>Desde "
-"URL</b></i>."
+"V ľavom dolnom rohu obrazovky, vedľa Iné kalendáre, klikni na ikonu +, aby "
+"si pridal nový kalendár, a vyber <i><b>Z URL</b></i>."
 
 #: usage.php:125 usage.php:137 usage.php:163
 msgid "Paste in the URL that you copied earlier."
-msgstr "Pega la URL que copiaste anteriormente."
+msgstr "Prilepte URL, ktorý ste skopírovali skôr."
 
 #: usage.php:126 usage.php:138 usage.php:150 usage.php:166
 msgid ""
 "Once subscribed, your calendar will be populated with the events from the "
 "subscription URL."
 msgstr ""
-"Una vez suscrito, tu calendario se llenará con los eventos de la URL de "
-"suscripción."
+"Po prihlásení bude váš kalendár naplnený udalosťami z URL adresy "
+"predplatného."
 
 #: usage.php:127 usage.php:151
 msgid "Google Calendar will poll the calendar URL every 8 hours."
-msgstr "Google Calendar consultará la URL del calendario cada 8 horas."
+msgstr "Google Kalendár bude kontrolovať URL kalendára každých 8 hodín."
 
 #: usage.php:128 usage.php:140 usage.php:152 usage.php:170
 msgid ""
 "Since you have made a subscription, any updates in the Liturgical Calendar "
 "API will be propagated to your subscription."
 msgstr ""
-"Dado que has hecho una suscripción, cualquier actualización en la API del "
-"Calendario Litúrgico se propagará a tu suscripción."
+"Keďže ste si predplatili, všetky aktualizácie v API liturgického kalendára "
+"budú propagované do vášho predplatného."
 
 #: usage.php:129 usage.php:141 usage.php:153 usage.php:171
 msgid ""
 "You will only see events for the current year. On the first day of a new "
 "year however, new events will be created automatically for the new year."
 msgstr ""
-"Solo verás eventos para el año en curso. Sin embargo, el primer día de un "
-"nuevo año, se crearán automáticamente nuevos eventos para el nuevo año."
+"Uvidíš iba udalosti pre aktuálny rok. Avšak, v prvý deň nového roka sa "
+"automaticky vytvoria nové udalosti pre nový rok."
 
 #: usage.php:130
 msgid ""
 "Once the calendar has been added from a desktop, it will become available "
 "for the same Gmail account on the Google Calendar app on a smartphone."
 msgstr ""
-"Una vez que el calendario se haya agregado desde un escritorio, estará "
-"disponible para la misma cuenta de Gmail en la aplicación de Google Calendar "
-"en un teléfono inteligente."
+"Ako sa kalendár pridá z počítača, bude dostupný pre rovnaký účet Gmail v "
+"aplikácii Google Kalendár na smartfóne."
 
 #: usage.php:136
 msgid ""
 "Go to <i><b>Phone Settings → Accounts → Add account → Other → Add Calendar</"
 "b></i>."
 msgstr ""
-"Ve a <i><b>Configuración del teléfono → Cuentas → Añadir cuenta → Otros → "
-"Añadir calendario</b></i>."
+"Choď do <i><b>Nastavenia telefónu → Účty → Pridať účet → Iné → Pridať "
+"kalendár</b></i>."
 
 #: usage.php:139
 msgid ""
 "The iPhone Calendar app will poll the calendar URL based on the settings at "
 "<i><b>Phone Settings → Accounts → Fetch New Data → Fetch</b></i>."
 msgstr ""
-"La aplicación Calendario del iPhone consultará la URL del calendario según "
-"la configuración en <i><b>Configuración del iPhone → Cuentas → Obtener "
-"nuevos datos → Obtener</b></i>."
+"Aplikácia Kalendár v iPhone bude kontrolovať URL kalendára na základe "
+"nastavení v <i><b>Nastavenia telefónu → Účty → Načítať nové dáta → Načítať</"
+"b></i>."
 
 #: usage.php:146
 #, php-format
@@ -409,57 +400,52 @@ msgid ""
 "If you have not yet added the calendar subscription from the desktop version "
 "of Google Calendar, please do so now (see %s)."
 msgstr ""
-"Si aún no has añadido la suscripción al calendario desde la versión de "
-"escritorio de Google Calendar, hazlo ahora (ver %s)."
+"Ak ste ešte nepridali odber kalendára z desktopovej verzie Google Kalendára, "
+"urobte tak teraz (pozrite %s)."
 
 #: usage.php:147
 msgid "Open the Google Calendar app."
-msgstr "Abre la aplicación de Google Calendar."
+msgstr "Otvorte aplikáciu Google Kalendár."
 
 #: usage.php:148
 msgid ""
 "Go to <i><b>Settings</b></i>, then under the account which you used for the "
 "Desktop version, click on the Calendar subscription name."
 msgstr ""
-"Ve a <i><b>Configuración</b></i>, luego, bajo la cuenta que usaste para la "
-"versión de Escritorio, haz clic en el nombre de la suscripción del "
-"Calendario."
+"Prejdite na <i><b>Nastavenia</b></i>, potom pod účtom, ktorý ste použili pre "
+"verziu pre počítač, kliknite na názov predplatného kalendára."
 
 #: usage.php:149
 msgid "Make sure <i><b>Synchronization</b></i> is turned on."
-msgstr "Asegúrate de que <i><b>Sincronización</b></i> esté activada."
+msgstr "Uisti sa, že <i><b>Synchronizácia</b></i> je zapnutá."
 
 #: usage.php:159
 msgid "tested with Outlook 2013"
-msgstr "probado con Outlook 2013"
+msgstr "testované s Outlookom 2013"
 
 #: usage.php:161
 msgid "At the bottom of the screen, switch from Email view to Calendar view."
-msgstr ""
-"En la parte inferior de la pantalla, cambia de vista de Correo a vista de "
-"Calendario."
+msgstr "V dolnej časti obrazovky prepnite z pohľadu Email na pohľad Kalendár."
 
 #: usage.php:162
 msgid ""
 "On the ribbon of the Home menu item, click on <i><b>Open calendar → From the "
 "internet</b></i>."
 msgstr ""
-"En la cinta del menú de inicio, haz clic en <i><b>Abrir calendario → Desde "
-"internet</b></i>."
+"Na páse položky ponuky Domov klikni na <i><b>Otvoriť kalendár → Z internetu</"
+"b></i>."
 
 #: usage.php:164
 msgid ""
 "On the following screen, check the checkbox along the lines of \"Poll this "
 "calendar in the interval suggested by the creator\"."
 msgstr ""
-"En la pantalla siguiente, marca la casilla de verificación que dice algo "
-"como \"Consultar este calendario en el intervalo sugerido por el creador\"."
+"Na nasledujúcej obrazovke začiarknite políčko vedľa textu \"Kontrolovať "
+"tento kalendár v intervale navrhnutom tvorcom\"."
 
 #: usage.php:165
 msgid "Outlook Calendar should now poll the calendar URL once a day."
-msgstr ""
-"Outlook Calendar ahora debería consultar la URL del calendario una vez al "
-"día."
+msgstr "Outlook Kalendár by mal teraz kontrolovať URL kalendára raz denne."
 
 #: usage.php:167
 msgid ""
@@ -468,18 +454,17 @@ msgid ""
 "calendars folder, so as to ensure that it is treated as a subscription "
 "internet calendar."
 msgstr ""
-"Asegúrate de que el Calendario se cree en la carpeta Otros calendarios; si "
-"lo encuentras en la carpeta Calendarios personales, arrástralo y suéltalo en "
-"la carpeta Otros calendarios, para asegurarte de que se trate como un "
-"calendario de suscripción de internet."
+"Uistite sa, že Kalendár je vytvorený v priečinku Ostatné kalendáre; ak ho "
+"nájdete v priečinku Osobné kalendáre, presuňte ho do priečinka Ostatné "
+"kalendáre, aby bol považovaný za internetový kalendár na odber."
 
 #: usage.php:168
 msgid ""
 "You can manually fetch new data by clicking on <i><b>Send/receive all</b></"
 "i> (from the SEND/RECEIVE menu item)."
 msgstr ""
-"Puedes obtener nuevos datos manualmente haciendo clic en <i><b>Enviar/"
-"recibir todo</b></i> (desde el menú ENVIAR/RECIBIR)."
+"Nové údaje môžete manuálne načítať kliknutím na <i><b>Odoslať/prijať všetko</"
+"b></i> (z položky menu ODOSLAŤ/PRIJÍMAŤ)."
 
 #: usage.php:169
 msgid ""
@@ -487,49 +472,47 @@ msgid ""
 "so the event descriptions provided by the subscription URL are a little bit "
 "more \"beautified\" for Outlook."
 msgstr ""
-"Outlook Calendar soporta una cantidad mínima de HTML en la descripción del "
-"evento, por lo que las descripciones de eventos proporcionadas por la URL de "
-"suscripción están un poco más \"embellecidas\" para Outlook."
+"Outlook Kalendár podporuje minimálne množstvo HTML v popise udalosti, takže "
+"popisy udalostí poskytované URL adresou predplatného sú pre Outlook trochu "
+"viac \"skrášlené\"."
 
 #: usage.php:183 layout/header.php:115
 msgid "Dates of Easter"
-msgstr "Fechas de Pascua"
+msgstr "Dátumy Veľkej noci"
 
 #: usage.php:194
 msgid "Example display of the date of Easter from 1583 to 9999"
-msgstr "Ejemplo de visualización de la fecha de Pascua desde 1583 hasta 9999"
+msgstr "Príklad zobrazenia dátumu Veľkej noci od roku 1583 do roku 9999"
 
 #: usage.php:195
 msgid "Calculate the Date of Easter"
-msgstr "Calcula la fecha de Pascua"
+msgstr "Vypočítaj dátum Veľkej noci"
 
 #: usage.php:205 layout/header.php:119
 msgid "Liturgy of the Day"
-msgstr "Liturgia del Día"
+msgstr "Liturgia dňa"
 
 #: usage.php:214
 msgid "Alexa News Brief"
-msgstr "Resumen de Noticias de Alexa"
+msgstr "Alexa Novinky"
 
 #: usage.php:217
 msgid "Daily news brief with the liturgy of the day, as an Amazon Alexa skill"
-msgstr ""
-"Resumen diario de noticias con la liturgia del día, como una habilidad de "
-"Amazon Alexa"
+msgstr "Denný spravodajský prehľad s liturgiou dňa, ako zručnosť Amazon Alexa"
 
 #: usage.php:236 usage.php:244
 msgid "In development"
-msgstr "En desarrollo"
+msgstr "Vo vývoji"
 
 #: usage.php:251 usage.php:255 liturgyOfAnyDay.php:26 liturgyOfAnyDay.php:34
 msgid "Liturgy of any day"
-msgstr "Liturgia de cualquier día"
+msgstr "Liturgia ktoréhokoľvek dňa"
 
 #: usage.php:254
 msgid ""
 "For example, you can find the liturgy of the day from the day of your "
 "baptism."
-msgstr "Por ejemplo, puedes encontrar la liturgia del día de tu bautismo."
+msgstr "Napríklad, môžete nájsť liturgiu dňa z dňa vášho krstu."
 
 #: extending.php:41
 msgid ""
@@ -537,9 +520,9 @@ msgid ""
 "Diocesan calendar. Diocesan calendars depend on National calendars, so the "
 "National calendar must first be created."
 msgstr ""
-"El Calendario General Romano puede ampliarse para crear un calendario "
-"Nacional o Diocesano. Los calendarios diocesanos dependen de los calendarios "
-"nacionales, por lo que primero debe crearse el calendario nacional."
+"Všeobecný rímsky kalendár možno rozšíriť tak, aby vytvoril národný alebo "
+"diecézny kalendár. Diecézne kalendáre závisia od národných kalendárov, takže "
+"najprv musí byť vytvorený národný kalendár."
 
 #: extending.php:42 translations.php:9
 msgid ""
@@ -547,20 +530,21 @@ msgid ""
 "the data for the General Roman Calendar into the language for that nation or "
 "diocese."
 msgstr ""
-"El primer paso para crear un calendario nacional o diocesano es traducir los "
-"datos del Calendario Romano General al idioma de esa nación o diócesis."
+"Prvým krokom pri vytváraní národného alebo diecézneho kalendára je preložiť "
+"údaje z Všeobecného rímskeho kalendára do jazyka pre daný národ alebo "
+"diecézu."
 
 #: extending.php:43
 msgid "(see <a href=\"translations.php\">Translations</a>)"
-msgstr "(ver <a href=\"translations.php\">Traducciones</a>)"
+msgstr "(pozri <a href=\"translations.php\">Preklady</a>)"
 
 #: extending.php:44
 msgid ""
 "A national calendar may have some festivities in common with other national "
 "calendars, for example the patron of a wider region."
 msgstr ""
-"Un calendario nacional puede tener algunas festividades en común con otros "
-"calendarios nacionales, por ejemplo, el patrón de una región más amplia."
+"Národný kalendár môže mať niektoré sviatky spoločné s inými národnými "
+"kalendármi, napríklad patróna širšieho regiónu."
 
 #: extending.php:45
 msgid ""
@@ -569,10 +553,10 @@ msgid ""
 "the wider region data will then be applied automatically to national "
 "calendars belonging to the wider region."
 msgstr ""
-"En este caso, las festividades para la región más amplia deben definirse por "
-"separado, y los idiomas aplicables a la región más amplia deben "
-"establecerse; los datos de la región más amplia se aplicarán automáticamente "
-"a los calendarios nacionales pertenecientes a la región más amplia."
+"V tomto prípade by mali byť slávnosti pre širší región definované samostatne "
+"a mali by byť nastavené jazyky platné pre širší región; údaje o širšom "
+"regióne sa potom automaticky použijú na národné kalendáre patriace do "
+"širšieho regiónu."
 
 #: extending.php:46
 msgid ""
@@ -580,45 +564,45 @@ msgid ""
 "example to print out one single yearly calendar with the data for all the "
 "dioceses in the group, the group can be defined or set here."
 msgstr ""
-"Si un grupo de diócesis decide agrupar sus datos del Calendario Litúrgico, "
-"por ejemplo, para imprimir un solo calendario anual con los datos de todas "
-"las diócesis del grupo, el grupo puede definirse o configurarse aquí."
+"Ak sa skupina diecéz rozhodne spojiť svoje údaje o liturgickom kalendári, "
+"napríklad vytlačiť jeden spoločný ročný kalendár s údajmi pre všetky diecézy "
+"v skupine, skupina môže byť definovaná alebo nastavená tu."
 
 #: extending.php:84
 msgid "Tag"
-msgstr "Etiqueta"
+msgstr "Značka"
 
 #: extending.php:85 src/Utilities.php:184 src/FormControls.php:45
 msgid "Name"
-msgstr "Nombre"
+msgstr "Meno"
 
 #: extending.php:86 liturgyOfAnyDay.php:49 src/FormControls.php:52
 msgid "Day"
-msgstr "Día"
+msgstr "Deň"
 
 #: extending.php:87 liturgyOfAnyDay.php:53 src/FormControls.php:58
 msgid "Month"
-msgstr "Mes"
+msgstr "Mesiac"
 
 #: extending.php:88 extending.php:390
 msgid "Other Solemnity"
-msgstr "Otra solemnidad"
+msgstr "Iná iná slávnosť"
 
 #: extending.php:89 extending.php:411
 msgid "Other Feast"
-msgstr "Otra fiesta"
+msgstr "Iné sviatky"
 
 #: extending.php:90 extending.php:431 extending.php:432
 msgid "Other Memorial"
-msgstr "Otro Memorial"
+msgstr "Iná pamiatka"
 
 #: extending.php:91 extending.php:452 extending.php:453
 msgid "Other Optional Memorial"
-msgstr "Otro Memorial Opcional"
+msgstr "Iné ľubovoľné spomienky"
 
 #: extending.php:92
 msgid "Delete diocesan calendar"
-msgstr "Eliminar calendario diocesano"
+msgstr "Odstrániť diecézny kalendár"
 
 #: extending.php:93
 msgid ""
@@ -626,187 +610,187 @@ msgid ""
 "defined for the calendar and the corresponding index entry will be removed "
 "and no longer available in the client applications."
 msgstr ""
-"Si decides eliminar este calendario diocesano, los eventos litúrgicos "
-"definidos para el calendario y la entrada correspondiente en el índice se "
-"eliminarán y ya no estarán disponibles en las aplicaciones cliente."
+"Ak sa rozhodnete odstrániť tento diecézny kalendár, liturgické udalosti "
+"definované pre kalendár a zodpovedajúci indexový záznam budú odstránené a už "
+"nebudú dostupné v klientských aplikáciách."
 
 #: extending.php:94 src/FormControls.php:82
 msgid "Liturgical color"
-msgstr "Color litúrgico"
+msgstr "Liturgická farba"
 
 #. translators: context = liturgical color
 #: extending.php:95 src/LitColor.php:35 src/FormControls.php:84
 msgid "white"
-msgstr "blanco"
+msgstr "biela"
 
 #. translators: context = liturgical color
 #: extending.php:96 src/LitColor.php:38 src/FormControls.php:85
 msgid "red"
-msgstr "rojo"
+msgstr "červená"
 
 #. translators: context = liturgical color
 #: extending.php:97 src/LitColor.php:29 src/FormControls.php:87
 msgid "green"
-msgstr "verde"
+msgstr "zelená"
 
 #. translators: context = liturgical color
 #: extending.php:98 src/LitColor.php:32 src/FormControls.php:86
 msgid "purple"
-msgstr "morado"
+msgstr "fialová"
 
 #. translators: in reference to the first year from which this festivity takes place
 #: extending.php:100 src/FormControls.php:94
 msgid "Since"
-msgstr "Desde el año"
+msgstr "Od"
 
 #. translators: in reference to the year from which this festivity no longer needs to be dealt with
 #: extending.php:102 src/FormControls.php:101
 msgid "Until"
-msgstr "Hasta"
+msgstr "Až do"
 
 #. translators: label of the form row
 #: extending.php:104
 msgid "Patron or Patrons of the Wider Region"
-msgstr "Patrono o Patronos de la Región Ampliada"
+msgstr "Patrón alebo Patróni širšieho regiónu"
 
 #. translators: label of the form row
 #: extending.php:106
 msgid "New festivity"
-msgstr "Nueva festividad"
+msgstr "Nový sviatok"
 
 #. translators: label of the form row
 #: extending.php:108
 msgid "Change name or grade"
-msgstr "Cambiar nombre o grado"
+msgstr "Zmeniť meno alebo známku"
 
 #. translators: label of the form row
 #: extending.php:110
 msgid "Move festivity"
-msgstr "Mover festividad"
+msgstr "Presunúť slávnosť"
 
 #: extending.php:111
 msgid "Decree URL"
-msgstr "URL del Decreto"
+msgstr "Dekrét URL"
 
 #: extending.php:112
 msgid "Decree Language mappings"
-msgstr "Mapeos de Idiomas del Decreto"
+msgstr "Jazykové mapovania dekrétov"
 
 #: extending.php:113
 msgid "Missal"
-msgstr "Misal"
+msgstr "Misál"
 
 #: extending.php:114
 msgid "Reason (in favor of festivity)"
-msgstr "Razón (a favor de la festividad)"
+msgstr "Dôvod (v prospech slávnosti)"
 
 #: extending.php:125 extending.php:527
 msgid "Designate patron from existing festivity"
-msgstr "Designar patrón de festividad existente"
+msgstr "Urči patróna z existujúcej slávnosti"
 
 #: extending.php:126 extending.php:543
 msgid "Change name or grade of existing festivity"
-msgstr "Cambiar nombre o grado de festividad existente"
+msgstr "Zmeniť názov alebo stupeň existujúcej slávnosti"
 
 #: extending.php:127 extending.php:559
 msgid "Move festivity to new date"
-msgstr "Mover festividad a nueva fecha"
+msgstr "Presuňte slávnosť na nový dátum"
 
 #: extending.php:128 extending.php:575
 msgid "Create a new festivity"
-msgstr "Crear una nueva festividad"
+msgstr "Vytvorte nový sviatok"
 
 #: extending.php:134
 msgid "General Roman Calendar - Extending"
-msgstr "Calendario Romano General - Extensión"
+msgstr "Všeobecný rímsky kalendár - Rozšírenie"
 
 #: extending.php:142
 msgid "Extend the General Roman Calendar with National or Diocesan data"
-msgstr "Ampliar el Calendario Romano General con datos nacionales o diocesanos"
+msgstr "Rozšírte Všeobecný rímsky kalendár o národné alebo diecézne údaje"
 
 #: extending.php:153 extending.php:298
 msgid "Wider Region"
-msgstr "Región más amplia"
+msgstr "Širší región"
 
 #: extending.php:155 extending.php:212
 msgid "This value cannot be empty."
-msgstr "Este valor no puede estar vacío."
+msgstr "Táto hodnota nemôže byť prázdna."
 
 #: extending.php:170
 msgid "Wider Region is multilingual"
-msgstr "La región más amplia es multilingüe"
+msgstr "Širší región je viacjazyčný"
 
 #: extending.php:184 extending.php:228 extending.php:338
 msgid "Remove existing data"
-msgstr "Quita datos existentes"
+msgstr "Odstrániť existujúce údaje"
 
 #: extending.php:190 layout/header.php:34
 msgid "Create a Calendar for a Wider Region"
-msgstr "Crear un calendario para una región más amplia"
+msgstr "Vytvoriť kalendár pre širší región"
 
 #: extending.php:199
 msgid "Save Wider Region Calendar Data"
-msgstr "Guardar datos del calendario de la región más amplia"
+msgstr "Uložiť údaje kalendára širšieho regiónu"
 
 #: extending.php:210
 msgid "National Calendar"
-msgstr "Calendario Nacional"
+msgstr "Národný kalendár"
 
 #: extending.php:234 layout/header.php:35
 msgid "Create a National Calendar"
-msgstr "Crea un calendario nacional"
+msgstr "Vytvoriť národný kalendár"
 
 #: extending.php:239
 msgid "National calendar settings"
-msgstr "Configuración del calendario nacional"
+msgstr "Nastavenia národného kalendára"
 
 #: extending.php:242 extending.php:477
 msgid "EPIPHANY"
-msgstr "EPIFANÍA"
+msgstr "Zjavenie Pána"
 
 #: extending.php:245 extending.php:480
 msgid "January 6"
-msgstr "6 de enero"
+msgstr "6. januára"
 
 #: extending.php:246 extending.php:481
 msgid "Sunday between January 2 and January 8"
-msgstr "Domingo entre el 2 y el 8 de enero"
+msgstr "Nedeľa medzi 2. januárom a 8. januárom"
 
 #: extending.php:250 extending.php:485
 msgid "ASCENSION"
-msgstr "ASCENSIÓN"
+msgstr "Nanebovstúpenie"
 
 #: extending.php:258 extending.php:493
 msgid "CORPUS CHRISTI"
-msgstr "CORPUS CHRISTI"
+msgstr "Sviatok Božieho Tela"
 
 #: extending.php:266
 msgid "ETERNAL HIGH PRIEST"
-msgstr "SUMO SACERDOTE ETERNO"
+msgstr "VEČNÝ VEĽKŇAZ"
 
 #: extending.php:273
 msgid "LOCALE"
-msgstr "LOCAL"
+msgstr "MIESTO"
 
 #: extending.php:286
 msgid "Published Roman Missals"
-msgstr "Misales Romanos Publicados"
+msgstr "Publikované rímske misály"
 
 #: extending.php:289 extending.php:592
 msgid "Add Missal"
-msgstr "Agregar Misal"
+msgstr "Pridať Misál"
 
 #: extending.php:309
 msgid "Save National Calendar Data"
-msgstr "Guardar datos del calendario nacional"
+msgstr "Uložiť údaje národného kalendára"
 
 #: extending.php:321
 msgid "Depends on national calendar"
-msgstr "Depende del calendario nacional"
+msgstr "Závisí od národného kalendára"
 
 #: extending.php:332
 msgid "Diocese"
-msgstr "Diócesis"
+msgstr "Diecéza"
 
 #: extending.php:334
 msgid ""
@@ -814,110 +798,108 @@ msgid ""
 "to retrieve an existing diocese, or ignore if creating a new diocesan "
 "calendar."
 msgstr ""
-"¿Esta diócesis no parece existir? Elija un valor de la lista para recuperar "
-"una diócesis existente, o ignorar si crea un nuevo calendario diocesano.."
+"Táto diecéza sa zdá neexistuje? Vyberte hodnotu zo zoznamu na získanie "
+"existujúcej diecézy, alebo ignorujte, ak vytvárate nový diecézny kalendár."
 
 #: extending.php:341
 msgid "Diocesan group"
-msgstr "Grupo de diócesis"
+msgstr "Diecézna skupina"
 
 #: extending.php:360
 msgid "Solemnities"
-msgstr "Solemnidades"
+msgstr "Slávnosti"
 
 #: extending.php:361
 msgid "Feasts"
-msgstr "Fiestas"
+msgstr "Sviatky"
 
 #: extending.php:362
 msgid "Memorials"
-msgstr "Memorias"
+msgstr "Pamätníky"
 
 #: extending.php:363
 msgid "Optional memorials"
-msgstr "Memorias opcionales"
+msgstr "Ľubovoľné spomienky"
 
 #: extending.php:382 extending.php:403 extending.php:424 extending.php:445
 #: layout/header.php:36
 msgid "Create a Diocesan Calendar"
-msgstr "Crea un calendario diocesano"
+msgstr "Vytvoriť diecézny kalendár"
 
 #: extending.php:382
 msgid "Define the Solemnities"
-msgstr "Definir las Solemnidades"
+msgstr "Definícia slávností"
 
 #: extending.php:388
 msgid ""
 "Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
-msgstr ""
-"Patrono(s) principal(es) del lugar, diócesis, región, provincia o territorio"
+msgstr "Hlavný patrón(i) miesta, diecézy, regiónu, provincie alebo územia"
 
 #: extending.php:389 extending.php:410
 msgid "Dedication of the Cathedral"
-msgstr "Dedicación de la Catedral"
+msgstr "Posviacka katedrály"
 
 #: extending.php:403
 msgid "Define the Feasts"
-msgstr "Definir las Fiestas"
+msgstr "Definuj sviatky"
 
 #: extending.php:409
 msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
-msgstr "Patrono(s) del lugar, diócesis, región, provincia o territorio"
+msgstr "Patrón(i) miesta, diecézy, regiónu, provincie alebo územia"
 
 #: extending.php:424
 msgid "Define the Memorials"
-msgstr "Definir las Memoriales"
+msgstr "Definuj pamätné dni"
 
 #: extending.php:430
 msgid ""
 "Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
-msgstr ""
-"Patrono(s) secundario(s) del lugar, diócesis, región, provincia o territorio"
+msgstr "Sekundárny patrón(i) miesta, diecézy, regiónu, provincie alebo územia"
 
 #: extending.php:445
 msgid "Define the Optional Memorials"
-msgstr "Definir las Memoriales opcionales"
+msgstr "Definuj voliteľné spomienky"
 
 #: extending.php:451
 msgid ""
 "Saints whos veneration is local to the Place, Diocese, Region, Province or "
 "Territory"
 msgstr ""
-"Santos cuya veneración es local del lugar, diócesis, región, provincia o "
-"territorio"
+"Svätí, ktorých uctievanie je miestne pre miesto, diecézu, región, provinciu "
+"alebo územie"
 
 #: extending.php:474
 msgid "Diocesan overrides to the national calendar for …"
-msgstr "Adaptación diocesana respecto al calendario nacional para …"
+msgstr "Diecézne výnimky z národného kalendára pre …"
 
 #: extending.php:506
 msgid "SAVE DIOCESAN CALENDAR"
-msgstr "GUARDAR CALENDARIO DIOCESANO"
+msgstr "ULOŽIŤ DIECÉZNY KALENDÁR"
 
 #: extending.php:531
 msgid "Designate patron"
-msgstr "Designar patrón"
+msgstr "Určiť patróna"
 
 #: extending.php:532 extending.php:548 extending.php:564 extending.php:581
 #: extending.php:605
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr "Zrušiť"
 
 #: extending.php:563
 msgid "Move Festivity"
-msgstr "Mover festividad"
+msgstr "Presunúť Slávnosť"
 
 #: extending.php:579
 msgid "New Festivity from existing"
-msgstr "Nueva festividad de existente"
+msgstr "Nový sviatok z existujúceho"
 
 #: extending.php:580
 msgid "New Festivity ex novo"
-msgstr "Nueva Festividad ex novo"
+msgstr "Nový sviatok ex novo"
 
 #: extending.php:597
 msgid "Choose from known Roman Missal language editions"
-msgstr "Elegir de las ediciones conocidas del Misal Romano"
+msgstr "Vyberte si z dostupných jazykových vydaní Rímskeho misála"
 
 #: extending.php:599
 msgid ""
@@ -925,57 +907,57 @@ msgid ""
 "value in the list, or contact the curator of the API to have the Missal "
 "added to known language edition Missals."
 msgstr ""
-"Este Misal es desconocido para la API del Calendario Litúrgico. Por favor, "
-"elige un valor de la lista o contacta al curador de la API para que el Misal "
-"sea agregado a las ediciones de idioma conocidas."
+"Tento misál nie je známy v API liturgického kalendára. Prosím, vyberte "
+"hodnotu zo zoznamu alebo kontaktujte kurátora API, aby bol misál pridaný do "
+"známych jazykových vydaní misálov."
 
 #: extending.php:604
 msgid "Add language edition Roman Missal"
-msgstr "Agregar edición de idioma Misal Romano"
+msgstr "Pridať jazykovú edíciu Rímskeho misála"
 
 #: easter.php:82
 msgid "Date of Easter from 1583 to 9999"
-msgstr "Fecha de Pascua desde 1583 hasta 9999"
+msgstr "Dátum Veľkej noci od roku 1583 do roku 9999"
 
 #: easter.php:99
 msgid "Go back"
-msgstr "Regresar"
+msgstr "Vráť sa späť"
 
 #: easter.php:114
 msgid "Century"
-msgstr "Siglo"
+msgstr "Storočie"
 
 #: easter.php:121
 msgid ""
 "Easter Day Calculation in PHP (Years in which Julian and Gregorian easter "
 "coincide are marked in yellow)"
 msgstr ""
-"Cálculo del Día de Pascua en PHP (Los años en los que la Pascua juliana y "
-"gregoriana coinciden están marcados en amarillo)"
+"Výpočet Veľkonočného dňa v PHP (Roky, v ktorých sa Julian a Gregoriánska "
+"Veľká noc zhodujú, sú označené žltou farbou)"
 
 #: easter.php:125
 msgid "Gregorian Easter"
-msgstr "Pascua gregoriana"
+msgstr "Gregoriánska Veľká noc"
 
 #: easter.php:125
 msgid "Julian Easter"
-msgstr "Pascua juliana"
+msgstr "Juliánska Veľká noc"
 
 #: easter.php:125
 msgid "Julian Easter in Gregorian Calendar"
-msgstr "Pascua Juliana en el Calendario Gregoriano"
+msgstr "Juliánska Veľká noc v gregoriánskom kalendári"
 
 #: about.php:10
 msgid ""
 "The Liturgical Calendar project is curated by a group of volunteer catholic "
 "programmers, seeking to serve the Church."
 msgstr ""
-"El proyecto del Calendario Litúrgico está comisariado por un grupo de "
-"programadores católicos voluntarios que buscan servir a la Iglesia."
+"Projekt liturgického kalendára je spravovaný skupinou dobrovoľných "
+"katolíckych programátorov, ktorí sa snažia slúžiť Cirkvi."
 
 #: about.php:16 about.php:24
 msgid "Liturgical Calendar - About us"
-msgstr "Calendario litúrgico - Sobre nosotros"
+msgstr "Liturgický kalendár - O nás"
 
 #: translations.php:11
 #, php-format
@@ -983,8 +965,8 @@ msgid ""
 "This can be done on the <a href=\"%1$s\" target=\"_blank\">LitCal "
 "translation server %2$s</a>."
 msgstr ""
-"Esto se puede hacer en el servidor de traducción <a href=\"%1$s\" "
-"target=\"_blank\">LitCal %2$s</a>."
+"Toto sa dá urobiť na serveri <a href=\"%1$s\" target=\"_blank\">LitCal pre "
+"preklady %2$s</a>."
 
 #: translations.php:15
 msgid ""
@@ -992,12 +974,12 @@ msgid ""
 "for your region, please feel free to create an account on the translation "
 "server."
 msgstr ""
-"Si deseas contribuir a las traducciones de los datos litúrgicos de tu "
-"región, no dudes en crear una cuenta en el servidor de traducción."
+"Ak by ste chceli prispieť k prekladom liturgických údajov pre váš región, "
+"neváhajte si vytvoriť účet na prekladateľskom serveri."
 
 #: translations.php:16
 msgid "Specifically, the components which require translation are:"
-msgstr "Específicamente, los componentes que requieren traducción son:"
+msgstr "Konkrétne komponenty, ktoré si vyžadujú preklad, sú:"
 
 #. translators: 1 = name of the translation component ("API strings"), 2 = names of the categories, 3 = name of a category ("Calendar messages")
 #: translations.php:20
@@ -1013,15 +995,14 @@ msgid ""
 "information for understanding where the results of the current calculation "
 "came from."
 msgstr ""
-"Otras traducciones necesarias para los datos del Calendario Litúrgico se "
-"encuentran en el componente de traducción %1$s. Al elegir el idioma en el "
-"que traducir este componente, encontrarás etiquetas que categorizan las "
-"cadenas para traducir en la sección \"Estado de la cadena\". Las categorías "
-"necesarias para completar los datos del Calendario Litúrgico son: %2$s. La "
-"etiqueta / categoría %3$s son los mensajes que explican cómo se calculó el "
-"calendario para un año determinado; aunque no es esencial para los datos del "
-"Calendario, es información útil para entender de dónde provienen los "
-"resultados del cálculo actual."
+"Ďalšie preklady potrebné pre údaje Liturgického kalendára sa nachádzajú v "
+"prekladovej zložke %1$s. Po výbere jazyka, do ktorého chcete túto zložku "
+"preložiť, nájdete značky, ktoré kategorizujú reťazce na preklad v sekcii "
+"\"Stav reťazca\". Kategórie, ktoré sú potrebné na dokončenie údajov "
+"Liturgického kalendára, sú: %2$s. Značka / kategória %3$s sú správy, ktoré "
+"vysvetľujú, ako bol kalendár vypočítaný pre daný rok; hoci nie sú nevyhnutné "
+"pre údaje kalendára, sú užitočné pre pochopenie, odkiaľ pochádzajú výsledky "
+"aktuálneho výpočtu."
 
 #: translations.php:27
 #, php-format
@@ -1029,8 +1010,8 @@ msgid ""
 "If translating liturgical calendar data for a European country, you will "
 "also want to translate the %1$s component."
 msgstr ""
-"Si estás traduciendo datos del calendario litúrgico para un país europeo, "
-"también querrás traducir el componente %1$s."
+"Ak budeš prekladať údaje z liturgického kalendára pre európsku krajinu, "
+"budeš chcieť preložiť aj komponent %1$s."
 
 #: translations.php:31
 msgid ""
@@ -1039,10 +1020,9 @@ msgid ""
 "the Roman Missal used in the region for which the translation is "
 "accomplished."
 msgstr ""
-"Las traducciones de las festividades mencionadas NO deben hacerse "
-"simplemente basándose en las habilidades lingüísticas del traductor, sino "
-"que DEBEN tomarse del Misal Romano utilizado en la región para la cual se "
-"realiza la traducción."
+"Preklady vyššie uvedených sviatkov NESMÚ byť vykonané len na základe "
+"jazykových schopností prekladateľa, ale MUSIA byť prevzaté z Rímskeho misála "
+"používaného v regióne, pre ktorý sa preklad vykonáva."
 
 #: translations.php:32
 msgid ""
@@ -1050,10 +1030,9 @@ msgid ""
 "of the Roman Missal to the next; translators should simply use the most "
 "recent edition of the Roman Missal for their region as a reference."
 msgstr ""
-"Las traducciones de las festividades mencionadas anteriormente pueden "
-"cambiar de una edición del Misal Romano a la siguiente; los traductores "
-"deben simplemente usar la edición más reciente del Misal Romano para su "
-"región como referencia."
+"Preklady vyššie uvedených sviatkov sa môžu meniť z jednej edície Rímskeho "
+"misála na druhú; prekladatelia by mali jednoducho použiť najnovšiu edíciu "
+"Rímskeho misála pre svoj región ako referenciu."
 
 #: translations.php:33
 msgid ""
@@ -1062,10 +1041,9 @@ msgid ""
 "historical accuracy as regards differences in the translations of the "
 "festivities over time."
 msgstr ""
-"Esta API pretende ser históricamente correcta en cuanto al cálculo de las "
-"fechas y la precedencia de las festividades, pero no pretende precisión "
-"histórica en cuanto a las diferencias en las traducciones de las "
-"festividades a lo largo del tiempo."
+"Toto API má byť historicky presné, pokiaľ ide o výpočet dátumov a prednosť "
+"sviatkov, ale nepredstiera historickú presnosť, pokiaľ ide o rozdiely v "
+"prekladoch sviatkov v priebehu času."
 
 #: translations.php:35
 msgid ""
@@ -1073,17 +1051,17 @@ msgid ""
 "the translation of the Roman Missal used in the Region or in any case from "
 "decrees of the Episcopal Conference of the Region."
 msgstr ""
-"Los calendarios nacionales y las traducciones relacionadas deben definirse "
-"utilizando datos de la traducción del Misal Romano usado en la Región o, en "
-"cualquier caso, de los decretos de la Conferencia Episcopal de la Región."
+"Národné kalendáre a súvisiace preklady musia byť definované pomocou údajov z "
+"prekladu Rímskeho misála používaného v regióne alebo v každom prípade z "
+"dekrétov Biskupskej konferencie regiónu."
 
 #: translations.php:36
 msgid ""
 "Anyone who intends on contributing to the translations is required to agree "
 "to these conditions."
 msgstr ""
-"Cualquiera que tenga la intención de contribuir a las traducciones debe "
-"aceptar estas condiciones."
+"Každý, kto má v úmysle prispieť k prekladom, je povinný súhlasiť s týmito "
+"podmienkami."
 
 #: translations.php:37
 msgid ""
@@ -1092,295 +1070,292 @@ msgid ""
 "require overview by a liturgical expert before being incorporated into this "
 "project."
 msgstr ""
-"Si el traductor no es un experto en ciencia litúrgica o no tiene un papel en "
-"una oficina diocesana de liturgia y culto, las traducciones deberán ser "
-"revisadas por un experto litúrgico antes de ser incorporadas a este proyecto."
+"Ak prekladateľ nie je odborníkom na liturgické vedy alebo nemá úlohu v "
+"diecéznej kancelárii pre liturgiu a bohoslužby, preklady budú vyžadovať "
+"prehľad liturgického odborníka pred ich začlenením do tohto projektu."
 
 #: translations.php:39
 msgid ""
 "The project website can be also be translated into other languages. The "
 "translation strings can be found in the following translation components:"
 msgstr ""
-"El sitio web del proyecto también se puede traducir a otros idiomas. Las "
-"cadenas de traducción se pueden encontrar en los siguientes componentes de "
-"traducción:"
+"Webová stránka projektu môže byť preložená aj do iných jazykov. Prekladové "
+"reťazce nájdete v nasledujúcich prekladových komponentoch:"
 
 #: translations.php:43
 msgid "Translating the Calendar"
-msgstr "Traduciendo el calendario"
+msgstr "Preklad kalendára"
 
 #: translations.php:51
 msgid "Translating the Liturgical Calendar project"
-msgstr "Traduciendo el proyecto del Calendario Litúrgico"
+msgstr "Preklad projektu Liturgický kalendár"
 
 #: translations.php:55
 msgid "Calendar data"
-msgstr "Datos del calendario"
+msgstr "Údaje kalendára"
 
 #: translations.php:58
 msgid "Project website"
-msgstr "Sitio web del proyecto"
+msgstr "Webová stránka projektu"
 
 #. translators: %s = current selected date
 #: liturgyOfAnyDay.php:75
 #, php-format
 msgid "Liturgy of %s"
-msgstr "Liturgia de %s"
+msgstr "Liturgia %s"
 
 #. translators: context = liturgical color
 #: src/LitColor.php:41
 msgid "pink"
-msgstr "rosa"
+msgstr "ružová"
 
 #: src/LitCommon.php:57
 msgid "Proper"
-msgstr "Propio"
+msgstr "Správne"
 
 #. translators: context = from the Common of nn
 #: src/LitCommon.php:59
 msgid "Dedication of a Church"
-msgstr "Dedicación de una Iglesia"
+msgstr "Posviacka kostola"
 
 #. translators: context = from the Common of nn
 #: src/LitCommon.php:61
 msgid "Blessed Virgin Mary"
-msgstr "Santísima Virgen María"
+msgstr "Blahoslavená Panna Mária"
 
 #. translators: context = from the Common of nn
 #: src/LitCommon.php:63
 msgid "Martyrs"
-msgstr "Mártires"
+msgstr "Mučeníci"
 
 #. translators: context = from the Common of nn
 #: src/LitCommon.php:65
 msgid "Pastors"
-msgstr "Pastores"
+msgstr "Pastori"
 
 #. translators: context = from the Common of nn
 #: src/LitCommon.php:67
 msgid "Doctors"
-msgstr "Doctores"
+msgstr "Lekári"
 
 #. translators: context = from the Common of nn
 #: src/LitCommon.php:69
 msgid "Virgins"
-msgstr "Vírgenes"
+msgstr "Panny"
 
 #. translators: context = from the Common of nn
 #: src/LitCommon.php:71
 msgid "Holy Men and Women"
-msgstr "Hombres y Mujeres Santos"
+msgstr "Svätí muži a ženy"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:74
 msgid "For One Martyr"
-msgstr "Para un mártir"
+msgstr "Pre jedného mučeníka"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:76
 msgid "For Several Martyrs"
-msgstr "Para Varios Mártires"
+msgstr "Pre niekoľkých mučeníkov"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:78
 msgid "For Missionary Martyrs"
-msgstr "Para Misioneros Mártires"
+msgstr "Za misionárskych mučeníkov"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:80
 msgid "For One Missionary Martyr"
-msgstr "Para Un Misionero Mártir"
+msgstr "Za jedného misionárskeho mučeníka"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:82
 msgid "For Several Missionary Martyrs"
-msgstr "Para Varios Mártires Misioneros"
+msgstr "Za niekoľkých misionárskych mučeníkov"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:84
 msgid "For a Virgin Martyr"
-msgstr "Para Una Virgen Mártir"
+msgstr "Pre Pannu Martýrku"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:86
 msgid "For a Holy Woman Martyr"
-msgstr "Para Una Mujer Santa Mártir"
+msgstr "Pre svätú ženu mučeníčku"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:88
 msgid "For a Pope"
-msgstr "Para un Papa"
+msgstr "Pre pápeža"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:90
 msgid "For a Bishop"
-msgstr "Para Un Obispo"
+msgstr "Pre biskupa"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:92
 msgid "For One Pastor"
-msgstr "Para Un Pastor"
+msgstr "Pre jedného pastora"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:94
 msgid "For Several Pastors"
-msgstr "Para Varios Pastores"
+msgstr "Pre niekoľkých pastierov"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:96
 msgid "For Founders of a Church"
-msgstr "Para Fundadores de una Iglesia"
+msgstr "Pre zakladateľov Cirkvi"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:98
 msgid "For One Founder"
-msgstr "Para Un Fundador"
+msgstr "Pre jedného zakladateľa"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:100
 msgid "For Several Founders"
-msgstr "Para Varios Fundadores"
+msgstr "Za viacerých zakladateľov"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:102
 msgid "For Missionaries"
-msgstr "Para Misioneros"
+msgstr "Pre misionárov"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:104
 msgid "For One Virgin"
-msgstr "Para Una Virgen"
+msgstr "Pre jednu Pannu"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:106
 msgid "For Several Virgins"
-msgstr "Para Varias Vírgenes"
+msgstr "Pre niekoľko panien"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:108
 msgid "For Several Saints"
-msgstr "Para varios santos"
+msgstr "Pre niekoľkých svätých"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:110
 msgid "For One Saint"
-msgstr "Para un santo"
+msgstr "Pre jedného svätého"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:112
 msgid "For an Abbot"
-msgstr "Para un abad"
+msgstr "Za opáta"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:114
 msgid "For a Monk"
-msgstr "Para un monje"
+msgstr "Pre mnícha"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:116
 msgid "For a Nun"
-msgstr "Para una monja"
+msgstr "Pre mníšku"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:118
 msgid "For Religious"
-msgstr "Para religiosos"
+msgstr "Pre náboženské účely"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:120
 msgid "For Those Who Practiced Works of Mercy"
-msgstr "Para quienes practicaron obras de misericordia"
+msgstr "Pre tých, ktorí vykonávali skutky milosrdenstva"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:122
 msgid "For Educators"
-msgstr "Para educadores"
+msgstr "Pre pedagógov"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:124
 msgid "For Holy Women"
-msgstr "Para mujeres santas"
+msgstr "Za sväté ženy"
 
 #. translators: (singular feminine) glue between "From the Common" and the actual common. Latin: leave empty!
 #: src/LitCommon.php:172 src/LitCommon.php:184
 msgctxt "(SING_FEMM)"
 msgid "of the"
-msgstr "del"
+msgstr "z"
 
 #. translators: (plural feminine) glue between "From the Common" and the actual common. Latin: leave empty!
 #: src/LitCommon.php:175
 msgctxt "(PLUR_FEMM)"
 msgid "of"
-msgstr "de"
+msgstr "z"
 
 #. translators: (plural masculine) glue between "From the Common" and the actual common. Latin: leave empty!
 #: src/LitCommon.php:181
 msgctxt "(PLUR_MASC)"
 msgid "of"
-msgstr "de"
+msgstr "z"
 
 #. translators: (singular masculine) glue between "From the Common" and the actual common. Latin: leave empty!
 #: src/LitCommon.php:187
 msgctxt "(SING_MASC)"
 msgid "of the"
-msgstr "del"
+msgstr "z"
 
 #: src/LitCommon.php:273
 msgid "From the Common"
-msgstr "Del Común"
+msgstr "Z bežného"
 
 #. translators: when there are multiple possible commons, this will be the glue "or from the common of..."
 #: src/LitCommon.php:277
 msgid "or"
-msgstr "o"
+msgstr "alebo"
 
 #. translators: liturgical rank. Keep lowercase
 #: src/LitGrade.php:102
 msgid "weekday"
-msgstr "día de la semana"
+msgstr "pracovný deň"
 
 #. translators: liturgical rank. Keep Capitalized
 #: src/LitGrade.php:105
 msgid "Commemoration"
-msgstr "Conmemoración"
+msgstr "Spomienka"
 
 #. translators: liturgical rank. Keep Capitalized
 #: src/LitGrade.php:108
 msgid "Optional memorial"
-msgstr "Memoria facultativa"
+msgstr "Ľubovoľná spomienka"
 
 #. translators: liturgical rank. Keep Capitalized
 #: src/LitGrade.php:111
 msgid "Memorial"
-msgstr "Memoria obligatoria"
+msgstr "Pamätník"
 
 #. translators: liturgical rank. Keep UPPERCASE
 #: src/LitGrade.php:114
 msgid "FEAST"
-msgstr "FIESTA"
+msgstr "SVIATOK"
 
 #. translators: liturgical rank. Keep UPPERCASE
 #: src/LitGrade.php:117
 msgid "FEAST OF THE LORD"
-msgstr "FIESTA DEL SEÑOR"
+msgstr "SVIATOK PÁNA"
 
 #. translators: liturgical rank. Keep UPPERCASE
 #: src/LitGrade.php:120
 msgid "SOLEMNITY"
-msgstr "SOLEMNIDAD"
+msgstr "SLÁVNOSŤ"
 
 #. translators: liturgical rank. Keep lowercase
 #: src/LitGrade.php:123
 msgid "celebration with precedence over solemnities"
-msgstr "celebración con precedencia sobre solemnidades"
+msgstr "slávenie s prednosťou pred slávnosťami"
 
 #: src/Utilities.php:92
 msgid ""
 "Priest in the Diocese of Rome, self-taught programmer, author of the "
 "BibleGet Project"
-msgstr ""
-"Sacerdote de la diócesis de Roma, programador autodidacta, autor del "
-"proyecto BibleGet"
+msgstr "Kňaz v Rímskej diecéze, samouk programátor, autor projektu BibleGet"
 
 #: src/Utilities.php:98
 msgid ""
@@ -1388,93 +1363,69 @@ msgid ""
 "Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
 "for Catholic IT Professionals"
 msgstr ""
-"Desarrollador de software con sede en St. Paul, MN (USA), Co-Fundador en "
-"JobPost, Ingeniero en Computación en Agile Orbit, Fundador del Gremio de San "
-"Isidoro para profesionales católicos de TI"
+"Softvérový vývojár so sídlom v St. Paul, MN (USA), spoluzakladateľ JobPost, "
+"senior softvérový inžinier v Agile Orbit, zakladateľ Cechu sv. Izidora pre "
+"katolíckych IT profesionálov"
 
 #: src/Utilities.php:104
 msgid "Full stack web developer"
-msgstr "Desarrollador web full stack"
+msgstr "Full stack web developer"
 
 #: src/Utilities.php:110
 msgid ""
 "Latin Liturgy Association of the Netherlands, contributed the national "
 "calendar for the Netherlands to this project with all related translations"
 msgstr ""
-"Asociación de Liturgia Latina de los Países Bajos, contribuyó con el "
-"calendario nacional de los Países Bajos a este proyecto con todas las "
-"traducciones relacionadas"
+"Latinská liturgická asociácia Holandska prispela do tohto projektu národným "
+"kalendárom pre Holandsko so všetkými súvisiacimi prekladmi"
 
 #: src/Utilities.php:176
 msgid "Choose from existing festivities"
-msgstr "Elegir entre festividades existentes"
+msgstr "Vyber si z existujúcich slávností"
 
 #: src/Utilities.php:178
 msgid ""
 "This festivity does not seem to exist? Please choose from a value in the "
 "list."
 msgstr ""
-"¿Esta festividad no parece existir? Por favor, elige un valor de la lista."
+"Zdá sa, že táto slávnosť neexistuje. Prosím, vyberte si hodnotu zo zoznamu."
 
 #: src/Utilities.php:182
 msgid "Property to change"
-msgstr "Propiedad a cambiar"
+msgstr "Vlastnosť na zmenu"
 
 #: src/Utilities.php:185 src/FormControls.php:161
 msgid "Grade"
-msgstr "Grado"
+msgstr "Trieda"
 
 #: src/FormControls.php:114
 msgid "Common (or Proper)"
-msgstr "Común (o Propio)"
+msgstr "Bežné (alebo Vlastné)"
 
 #: layout/header.php:31 layout/header.php:95
 msgid "Extending the API"
-msgstr "Extensión de la API"
+msgstr "Rozšírenie API"
 
 #: layout/header.php:39
 msgid "Usage"
-msgstr "Uso"
+msgstr "Použitie"
 
 #: layout/header.php:40
 msgid "Translations"
-msgstr "Traducciones"
+msgstr "Preklady"
 
 #: layout/header.php:41
 msgid "About us"
-msgstr "Sobre nosotros"
+msgstr "O nás"
 
 #: layout/header.php:87
 msgid "Home"
-msgstr "Inicio"
+msgstr "Domov"
 
 #: layout/header.php:99
 msgid "Documentation"
-msgstr "Documentación"
+msgstr "Dokumentácia"
 
 #: layout/header.php:103
 msgid "Examples of Usage"
-msgstr "Ejemplos de uso"
-
-#~ msgid ""
-#~ "A Liturgical Calendar API from which you can retrieve data for the "
-#~ "Liturgical events of any given year from 1970 to 9999, whether for the "
-#~ "Universal or General Roman Calendar or for derived National and Diocesan "
-#~ "calendars"
-#~ msgstr ""
-#~ "Una API para el Calendario Litúrgico del cual puede recuperar datos para "
-#~ "los eventos litúrgicos de cualquier año a partir de 1970 hasta 9999, ya "
-#~ "sea para el Calendario Romano General o Universal o para los calendarios "
-#~ "nacionales y diocesanos derivados"
-
-#~ msgid "Definition"
-#~ msgstr "Definición"
-
-#~ msgid "Retrieve existing data"
-#~ msgstr "Carga datos existentes"
-
-#~ msgid "Overwrites universal / national calendar"
-#~ msgstr "Sobrescribe el calendario nacional / universal"
-
-#~ msgid "Generate Diocesan Calendar"
-#~ msgstr "Genera calendario diocesano"
+msgstr "Príklady použitia"
