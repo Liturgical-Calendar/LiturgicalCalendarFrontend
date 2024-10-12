@@ -14,7 +14,8 @@ class I18n
         "fr" => "FR",
         "it" => "IT",
         "de" => "DE",
-        "nl" => "NL"
+        "nl" => "NL",
+        "sk" => "SK"
     ];
 
     public function __construct()
