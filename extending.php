@@ -73,8 +73,9 @@ $SystemLocalesWithoutRegion = array_reduce($SystemLocalesWithoutRegion, function
 }, []);
 $c->asort($SystemLocalesWithoutRegion);
 
-
-$CountriesWithCatholicDioceses = array_map(fn ($item) => [$item['country_iso'] => Locale::getDisplayRegion("-" . strtoupper($item['country_iso']), $i18n->LOCALE)], $CatholicDiocesesByNation);
+$DisplayRegions = array_map(fn ($item) => Locale::getDisplayRegion("-" . strtoupper($item['country_iso']), $i18n->LOCALE), $CatholicDiocesesByNation);
+$CountryIso = array_column($CatholicDiocesesByNation, 'country_iso');
+$CountriesWithCatholicDioceses = array_combine($CountryIso, $DisplayRegions);
 $c->asort($CountriesWithCatholicDioceses);
 
 $messages = [
