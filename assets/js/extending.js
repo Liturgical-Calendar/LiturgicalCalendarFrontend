@@ -209,17 +209,17 @@ Promise.all([
 
     if(data[1].hasOwnProperty('litcal_metadata')) {
         console.log('retrieved /calendars metadata:');
-        console.log(data[3]);
-        CalendarsIndex = data[3].litcal_metadata;
-        FormControls.index = data[3].litcal_metadata;
+        console.log(data[1]);
+        CalendarsIndex = data[1].litcal_metadata;
+        FormControls.index = data[1].litcal_metadata;
         toastr["success"]('Successfully retrieved data from /calendars path', "Success");
     }
 
     if (data[2].hasOwnProperty('litcal_missals')) {
         console.log('retrieved /missals metadata:');
-        console.log(data[4]);
-        MissalsIndex = data[4].litcal_missals;
-        FormControls.missals = data[4].litcal_missals;
+        console.log(data[2]);
+        MissalsIndex = data[2].litcal_missals;
+        FormControls.missals = data[2].litcal_missals;
         const publishedRomanMissalsStr = MissalsIndex.map(({missal_id,name}) => !missal_id.startsWith('EDITIO_TYPICA_') ? `<option class="list-group-item" value="${missal_id}">${name}</option>` : null).join('')
         $('#languageEditionRomanMissalList').append(publishedRomanMissalsStr);
         toastr["success"]('Successfully retrieved data from /missals path', "Success");
