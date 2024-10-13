@@ -47,7 +47,7 @@ toastr.options = {
 }
 
 // the Messages global is set in extending.php
-const { LOCALE, LOCALE_WITH_REGION, AvailableLocalesWithRegion, AvailableCountries } = Messages;
+const { LOCALE, LOCALE_WITH_REGION, AvailableLocalesWithRegion, CatholicDiocesesByNation } = Messages;
 const jsLocale = LOCALE.replace('_', '-');
 FormControls.jsLocale = jsLocale;
 FormControls.weekdayFormatter = new Intl.DateTimeFormat(jsLocale, { weekday: "long" });
@@ -99,8 +99,8 @@ const sanitizeProxiedAPI = {
                     }
                 }
                 else if (target['category'] === 'nation') {
-                    if (false === Object.keys(AvailableCountries).includes(value)) {
-                        console.warn(`property 'key' of this object is not a valid value, possible values are: ${Object.keys(AvailableCountries).join(', ')}`);
+                    if (false === Object.keys(CatholicDiocesesByNation).includes(value)) {
+                        console.warn(`property 'key' of this object is not a valid value, possible values are: ${Object.keys(CatholicDiocesesByNation).join(', ')}`);
                         return;
                     }
                     if (false === LitCalMetadata.national_calendars_keys.includes(value)) {
@@ -171,25 +171,13 @@ const setFocusFirstTabWithData = () => {
     $(`#diocesanCalendarDefinitionCardLinks li:nth-child(${itemIndex+2})`).addClass('active');
 };
 
-const DiocesesList = {};
+const DiocesesList = null;
 let CalendarData = { litcal: {} };
 let CalendarsIndex = null;
 let MissalsIndex = null;
 
 Promise.all([
-    fetch('./assets/data/ItalyDioceses.json', {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json'
-        }
-    }),
-    fetch('./assets/data/USDiocesesByState.json', {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json'
-        }
-    }),
-    fetch('./assets/data/NetherlandsDioceses.json', {
+    fetch('./assets/data/WorldDiocesesByNation.json', {
         method: 'GET',
         headers: {
             'Accept': 'application/json'
@@ -217,16 +205,9 @@ Promise.all([
         }
     }));
 }).then(data => {
-    DiocesesList.ITALY = data[0];
-    DiocesesList.USA = [];
-    let USDiocesesByState = data[1];
-    let c = 0;
-    for (const [state, arr] of Object.entries(USDiocesesByState)) {
-        arr.forEach(diocese => DiocesesList.USA[c++] = diocese + " (" + state + ")");
-    }
-    DiocesesList.NETHERLANDS = data[2];
+    DiocesesList = data[0].catholic_dioceses_latin_rite;
 
-    if(data[3].hasOwnProperty('litcal_metadata')) {
+    if(data[1].hasOwnProperty('litcal_metadata')) {
         console.log('retrieved /calendars metadata:');
         console.log(data[3]);
         CalendarsIndex = data[3].litcal_metadata;
@@ -234,7 +215,7 @@ Promise.all([
         toastr["success"]('Successfully retrieved data from /calendars path', "Success");
     }
 
-    if (data[4].hasOwnProperty('litcal_missals')) {
+    if (data[2].hasOwnProperty('litcal_missals')) {
         console.log('retrieved /missals metadata:');
         console.log(data[4]);
         MissalsIndex = data[4].litcal_missals;
@@ -1452,7 +1433,7 @@ $(document).on('change', '#diocesanCalendarNationalDependency', ev => {
     $('#removeExistingDiocesanDataBtn').prop('disabled', true);
     $('body').find('#removeDiocesanCalendarPrompt').remove();
     let currentSelectedNation = $(ev.currentTarget).val();
-    if (['ITALY','USA','NETHERLANDS'].includes(currentSelectedNation)) {
+    if (['IT','US','NL'].includes(currentSelectedNation)) {
         $('#DiocesesList').empty();
         DiocesesList[currentSelectedNation].forEach(diocese => $('#DiocesesList').append('<option data-value="' + diocese.replace(/[^a-zA-Z]/gi, '').toUpperCase() + '" value="' + diocese + '">'));
     } else {
