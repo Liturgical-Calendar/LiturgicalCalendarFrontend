@@ -47,7 +47,7 @@ toastr.options = {
 }
 
 // the Messages global is set in extending.php
-const { LOCALE, LOCALE_WITH_REGION, AvailableLocalesWithRegion, CatholicDiocesesByNation } = Messages;
+const { LOCALE, LOCALE_WITH_REGION, AvailableLocalesWithRegion, CountriesWithCatholicDioceses } = Messages;
 const jsLocale = LOCALE.replace('_', '-');
 FormControls.jsLocale = jsLocale;
 FormControls.weekdayFormatter = new Intl.DateTimeFormat(jsLocale, { weekday: "long" });
@@ -99,8 +99,8 @@ const sanitizeProxiedAPI = {
                     }
                 }
                 else if (target['category'] === 'nation') {
-                    if (false === Object.keys(CatholicDiocesesByNation).includes(value)) {
-                        console.warn(`property 'key' of this object is not a valid value, possible values are: ${Object.keys(CatholicDiocesesByNation).join(', ')}`);
+                    if (false === Object.keys(CountriesWithCatholicDioceses).includes(value)) {
+                        console.warn(`property 'key' of this object is not a valid value, possible values are: ${Object.keys(CountriesWithCatholicDioceses).join(', ')}`);
                         return;
                     }
                     if (false === LitCalMetadata.national_calendars_keys.includes(value)) {
