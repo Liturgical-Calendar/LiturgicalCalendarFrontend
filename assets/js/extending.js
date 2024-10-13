@@ -171,7 +171,7 @@ const setFocusFirstTabWithData = () => {
     $(`#diocesanCalendarDefinitionCardLinks li:nth-child(${itemIndex+2})`).addClass('active');
 };
 
-const DiocesesList = null;
+let DiocesesList = null;
 let CalendarData = { litcal: {} };
 let CalendarsIndex = null;
 let MissalsIndex = null;
@@ -1433,15 +1433,9 @@ $(document).on('change', '#diocesanCalendarNationalDependency', ev => {
     $('#removeExistingDiocesanDataBtn').prop('disabled', true);
     $('body').find('#removeDiocesanCalendarPrompt').remove();
     let currentSelectedNation = $(ev.currentTarget).val();
-    if (['IT','US','NL'].includes(currentSelectedNation)) {
-        $('#DiocesesList').empty();
-        DiocesesList[currentSelectedNation].forEach(diocese => $('#DiocesesList').append('<option data-value="' + diocese.replace(/[^a-zA-Z]/gi, '').toUpperCase() + '" value="' + diocese + '">'));
-    } else {
-        $('#DiocesesList').empty();
-        let dioceses = Object.filter( CalendarsIndex.diocesan_calendars, key => key.nation === currentSelectedNation );
-        console.log(dioceses);
-        Object.values( dioceses ).forEach( el => $('#DiocesesList').append('<option data-value="' + el.diocese.replace(/[^a-zA-Z]/gi, '').toUpperCase() + '" value="' + el.diocese + '">') )
-    }
+    let DiocesesForNation = DiocesesList.filter(item => item.country_iso.toUpperCase() === currentSelectedNation)[0].dioceses;
+    $('#DiocesesList').empty();
+    DiocesesForNation.forEach(item => $('#DiocesesList').append('<option data-value="' + item.diocese_id + '" value="' + item.diocese_name + '">'));
 });
 
 $(document).on('change', '#languageEditionRomanMissalName', ev => {
