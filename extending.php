@@ -15,7 +15,9 @@ $dayOfWeekFmt = IntlDateFormatter::create($i18n->LOCALE, IntlDateFormatter::FULL
 $thursday   = $dayOfWeekFmt->format(DateTime::createFromFormat('!j-n-Y', '1-1-2022', new DateTimeZone('UTC'))->modify('next Thursday'));
 $sunday     = $dayOfWeekFmt->format(DateTime::createFromFormat('!j-n-Y', '1-1-2022', new DateTimeZone('UTC'))->modify('next Sunday'));
 
-$availableNationalCalendars = [];
+$AvailableNationalCalendars = [];
+
+$c = new Collator($i18n->LOCALE);
 
 
 [ "litcal_metadata" => $LitCalMetadata ] = json_decode(
@@ -33,23 +35,22 @@ $availableNationalCalendars = [];
 
 $DiocesanGroups = $LitCalMetadata["diocesan_groups"];
 
+// National Calendars that have been defined in the API except "Vatican"
 $NationalCalendars = array_values(array_filter(
     $LitCalMetadata["national_calendars"],
     fn($calendar) => isset($calendar['calendar_id']) && $calendar['calendar_id'] !== 'VA'
 ));
 foreach ($NationalCalendars as $calendar) {
-    $availableNationalCalendars[$calendar['calendar_id']] = Locale::getDisplayRegion("-" . $calendar['calendar_id'], $i18n->LOCALE);
+    $AvailableNationalCalendars[$calendar['calendar_id']] = Locale::getDisplayRegion("-" . $calendar['calendar_id'], $i18n->LOCALE);
 }
-asort($availableNationalCalendars, SORT_LOCALE_STRING);
+$c->asort($AvailableNationalCalendars);
 
-$API_EXTEND_HOWTO_A = _("The General Roman Calendar can be extended so as to create a National or Diocesan calendar. Diocesan calendars depend on National calendars, so the National calendar must first be created.");
-$API_EXTEND_HOWTO_A1 = _('The first step in creating a national or diocesan calendar, is to translate the data for the General Roman Calendar into the language for that nation or diocese.');
-$API_EXTEND_HOWTO_A1a = _('(see <a href="translations.php">Translations</a>)');
-$API_EXTEND_HOWTO_A2 = _("A national calendar may have some festivities in common with other national calendars, for example the patron of a wider region.");
-$API_EXTEND_HOWTO_A3 = _("In this case, the festivities for the wider region should be defined separately, and the languages applicable to the wider region should be set; the wider region data will then be applied automatically to national calendars belonging to the wider region.");
-$DioceseGroupHelp = _("If a group of dioceses decides to pool their Liturgical Calendar data, for example to print out one single yearly calendar with the data for all the dioceses in the group, the group can be defined or set here.");
+// Extract the 'country_iso' values from the CatholicDiocesesByNation array and transform values to upper case
+$CountryIso = array_map('strtoupper', array_column($CatholicDiocesesByNation, 'country_iso'));
+$DisplayRegions = array_map(fn ($item) => Locale::getDisplayRegion("-" . $item, $i18n->LOCALE), $CountryIso);
+$CountriesWithCatholicDioceses = array_combine($CountryIso, $DisplayRegions);
+$c->asort($CountriesWithCatholicDioceses);
 
-$c = new Collator($i18n->LOCALE);
 
 $SystemLocalesWithRegion = array_filter(ResourceBundle::getLocales(''), function ($value) use ($i18n) {
     return strpos($value, 'POSIX') === false && Locale::getDisplayRegion($value, $i18n->LOCALE) !== "";
@@ -73,10 +74,12 @@ $SystemLocalesWithoutRegion = array_reduce($SystemLocalesWithoutRegion, function
 }, []);
 $c->asort($SystemLocalesWithoutRegion);
 
-$DisplayRegions = array_map(fn ($item) => Locale::getDisplayRegion("-" . strtoupper($item['country_iso']), $i18n->LOCALE), $CatholicDiocesesByNation);
-$CountryIso = array_column($CatholicDiocesesByNation, 'country_iso');
-$CountriesWithCatholicDioceses = array_combine($CountryIso, $DisplayRegions);
-$c->asort($CountriesWithCatholicDioceses);
+$API_EXTEND_HOWTO_A = _("The General Roman Calendar can be extended so as to create a National or Diocesan calendar. Diocesan calendars depend on National calendars, so the National calendar must first be created.");
+$API_EXTEND_HOWTO_A1 = _('The first step in creating a national or diocesan calendar, is to translate the data for the General Roman Calendar into the language for that nation or diocese.');
+$API_EXTEND_HOWTO_A1a = _('(see <a href="translations.php">Translations</a>)');
+$API_EXTEND_HOWTO_A2 = _("A national calendar may have some festivities in common with other national calendars, for example the patron of a wider region.");
+$API_EXTEND_HOWTO_A3 = _("In this case, the festivities for the wider region should be defined separately, and the languages applicable to the wider region should be set; the wider region data will then be applied automatically to national calendars belonging to the wider region.");
+$DioceseGroupHelp = _("If a group of dioceses decides to pool their Liturgical Calendar data, for example to print out one single yearly calendar with the data for all the dioceses in the group, the group can be defined or set here.");
 
 $messages = [
     "Tag"                => _("Tag"),
@@ -317,7 +320,7 @@ if (isset($_GET["choice"])) {
                             <select class="form-select" id="diocesanCalendarNationalDependency" required>
                                 <option value=""></option>
                             <?php
-                            foreach ($availableNationalCalendars as $nation => $displayName) {
+                            foreach ($AvailableNationalCalendars as $nation => $displayName) {
                                 echo "<option value=\"{$nation}\">$displayName</option>";
                             }
                             ?>
