@@ -1435,7 +1435,11 @@ $(document).on('change', '#diocesanCalendarNationalDependency', ev => {
     let currentSelectedNation = $(ev.currentTarget).val();
     let DiocesesForNation = DiocesesList.filter(item => item.country_iso.toUpperCase() === currentSelectedNation)[0].dioceses;
     $('#DiocesesList').empty();
-    DiocesesForNation.forEach(item => $('#DiocesesList').append('<option data-value="' + item.diocese_id + '" value="' + item.diocese_name + '">'));
+    if (currentSelectedNation === 'US') {
+        DiocesesForNation.forEach(item => $('#DiocesesList').append(`<option data-value="${item.diocese_id}" value="${item.diocese_name} (${item.province})">`));
+    } else {
+        DiocesesForNation.forEach(item => $('#DiocesesList').append('<option data-value="' + item.diocese_id + '" value="' + item.diocese_name + '">'));
+    }
 });
 
 $(document).on('change', '#languageEditionRomanMissalName', ev => {
