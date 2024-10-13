@@ -26,6 +26,10 @@ $availableNationalCalendars = [];
     file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/events?locale=" . $i18n->LOCALE),
     true
 );
+[ "catholic_dioceses_latin_rite" => $CatholicDiocesesByNation ] = json_decode(
+    file_get_contents("./assets/data/WorldDiocesesByNation.json"),
+    true
+);
 
 $DiocesanGroups = $LitCalMetadata["diocesan_groups"];
 
@@ -69,16 +73,9 @@ $SystemLocalesWithoutRegion = array_reduce($SystemLocalesWithoutRegion, function
 }, []);
 $c->asort($SystemLocalesWithoutRegion);
 
-$AvailableCountries = array_filter(ResourceBundle::getLocales(''), function ($value) {
-    return strpos($value, '_');
-});
-$AvailableCountries = array_reduce($AvailableCountries, function ($carry, $item) use ($i18n) {
-    if (!array_key_exists($item, $carry)) {
-        $carry[Locale::getRegion($item)] = Locale::getDisplayRegion($item, $i18n->LOCALE);
-    }
-    return $carry;
-}, []);
-$c->asort($AvailableCountries);
+
+$CountriesWithCatholicDioceses = array_map(fn ($item) => [$item['country_iso'] => Locale::getDisplayRegion("-" . strtoupper($item['country_iso']), $i18n->LOCALE)], $CatholicDiocesesByNation);
+$c->asort($CountriesWithCatholicDioceses);
 
 $messages = [
     "Tag"                => _("Tag"),
@@ -117,8 +114,8 @@ $messages = [
     "LOCALE"             => $i18n->LOCALE,
     "LOCALE_WITH_REGION" => $i18n->LOCALE_WITH_REGION,
     "AvailableLocales"   => $SystemLocalesWithoutRegion,
-    "AvailableLocalesWithRegion" => $SystemLocalesWithRegion,
-    "AvailableCountries" => $AvailableCountries
+    "AvailableLocalesWithRegion"    => $SystemLocalesWithRegion,
+    "CountriesWithCatholicDioceses" => $CountriesWithCatholicDioceses
 ];
 
 $buttonGroup = "<hr><div class=\"d-flex justify-content-around\">
@@ -212,10 +209,7 @@ if (isset($_GET["choice"])) {
                             <div class="invalid-feedback"><?php echo _("This value cannot be empty."); ?></div>
                             <datalist id="nationalCalendarsList">
                             <?php
-                                /*foreach( $NationalCalendars as $nationalCalendar => $dioceseArray ) {
-                                        echo "<option value=\"{$nationalCalendar}\">{$nationalCalendar}</option>";
-                                }*/
-                            foreach ($AvailableCountries as $isoCode => $countryLocalized) {
+                            foreach ($CountriesWithCatholicDioceses as $isoCode => $countryLocalized) {
                                 echo "<option value=\"{$isoCode}\">{$countryLocalized}</option>";
                             }
                             ?>
