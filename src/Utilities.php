@@ -168,7 +168,7 @@ class Utilities
                     <div class=\"row no-gutters align-items-center\">
                         <div class=\"col mr-2\">
                             <div class=\"row no-gutters align-items-center\">
-                                <div class=\"col-auto mr-2\"><img class=\"img-profile rounded-circle mx-auto img-fluid\" src=\"" . $cardInfo["img"] ?? './assets/img/default_125x125.jpg' . "\"></div>
+                                <div class=\"col-auto mr-2\"><img class=\"img-profile rounded-circle mx-auto img-fluid\" src=\"" . ($cardInfo["img"] ?? './assets/img/default_125x125.jpg') . "\"></div>
                                 <div class=\"col\">" . $cardInfo["website"] . $cardInfo["note"] . "</div>
                             </div>
                         </div>
