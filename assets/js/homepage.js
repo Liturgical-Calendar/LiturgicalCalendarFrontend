@@ -1,6 +1,12 @@
 /**
- * Enum CalendarType
- * Used in building the endpoint URL for requests to the API /calendar endpoint
+ * CalendarCategory
+ * @typedef {('nation'|'diocese')} CalendarCategory
+ */
+
+/**
+ * CalendarType
+ * @readonly
+ * @enum {CalendarCategory} Used in building the endpoint URL for requests to the API /calendar endpoint
  */
 const CalendarType = {
     NATIONAL: 'nation',
@@ -9,16 +15,64 @@ const CalendarType = {
 Object.freeze(CalendarType);
 
 /**
- * Class RequestPayload
+ * Epiphany
+ * @typedef {('JAN6'|'SUNDAY_JAN2_JAN8')} Epiphany
+ * @default 'JAN6'
+ */
+
+/**
+ * Ascension
+ * @typedef {('THURSDAY'|'SUNDAY')} Ascension
+ * @default 'THURSDAY'
+ */
+
+/**
+ * Corpus Christi
+ * @typedef {('THURSDAY'|'SUNDAY')} CorpusChristi
+ * @default 'THURSDAY'
+ */
+
+/** Eternal High Priest
+ * @typedef {boolean} EternalHighPriest
+ * @default false
+ */
+
+/**
+ * Locale
+ * @typedef {('la'|'en'|'it'|'fr'|'es'|'de'|'pt'|'nl'|'la_VA'|'en_US'|'it_IT'|'fr_FR'|'es_ES'|'de_DE'|'pt_PT'|'nl_NL')} Locale
+ * @default 'la'
+ */
+
+/**
+ * ReturnType
+ * @typedef {('ICS'|'JSON'|'XML'|'YAML')} ReturnType
+ * @default 'JSON'
+ */
+
+/**
+ * YearType
+ * @typedef {('CIVIL'|'LITURGICAL')} YearType
+ * @default 'CIVIL'
+ */
+
+/**
  * Describes the URL parameters that can be set on the API /calendar endpoint
+ * @module RequestPayload
  */
 class RequestPayload {
+    /** @type {?Epiphany} - Whether Epiphany is to be celebrated on January 6 or on the Sunday between January 2 and January 8 */
     static epiphany             = null;
+    /** @type {?Ascension} - Whether Ascension is to be celebrated on Thursday or on Sunday */
     static ascension            = null;
+    /** @type {?CorpusChristi} - Whether Corpus Christi is to be celebrated on Thursday or on Sunday */
     static corpus_christi       = null;
+    /** @type {?EternalHighPriest} - Whether Eternal High Priest is to be celebrated */
     static eternal_high_priest  = null;
+    /** @type {?Locale} - The locale in which the liturgical calendar should be produced */
     static locale               = null;
+    /** @type {?ReturnType} - The format of the response data */
     static return_type          = null;
+    /** @type {?YearType} - Whether the liturgical calendar data should be for the liturgical year or the civil year */
     static year_type            = null;
 };
 
@@ -27,12 +81,13 @@ const requestOptionDefaults = {
     "ascension":           'THURSDAY',
     "corpus_christi":      'THURSDAY',
     "eternal_high_priest": false,
-    "locale":              'LA'
+    "locale":              'la_VA'
 }
 
 /**
- * Class CurrentEndpoint
  * Used to build the full endpoint URL for the API /calendar endpoint
+ * @module CurrentEndpoint
+ *
  */
 class CurrentEndpoint {
     /**

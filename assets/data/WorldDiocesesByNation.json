@@ -266,11 +266,11 @@
                 },
                 {
                     "diocese_name": "La Plata",
-                    "diocese_id": "lapla_ar"
+                    "diocese_id": "laplat_ar"
                 },
                 {
                     "diocese_name": "La Rioja",
-                    "diocese_id": "lario_ar"
+                    "diocese_id": "larioj_ar"
                 },
                 {
                     "diocese_name": "Lomas de Zamora",
@@ -794,7 +794,7 @@
                 },
                 {
                     "diocese_name": "N’Dali",
-                    "diocese_id": "ndal_bj"
+                    "diocese_id": "ndalil_bj"
                 },
                 {
                     "diocese_name": "Natitingou",
@@ -846,15 +846,15 @@
                 },
                 {
                     "diocese_name": "El Alto",
-                    "diocese_id": "elalt_bo"
+                    "diocese_id": "elalto_bo"
                 },
                 {
                     "diocese_name": "El Beni",
-                    "diocese_id": "elben_bo"
+                    "diocese_id": "elbeni_bo"
                 },
                 {
                     "diocese_name": "La Paz",
-                    "diocese_id": "lapaz_bo"
+                    "diocese_id": "lapaza_bo"
                 },
                 {
                     "diocese_name": "Ñuflo de Chávez",
@@ -1456,7 +1456,7 @@
                 },
                 {
                     "diocese_name": "Jaú",
-                    "diocese_id": "jauajundefined_br"
+                    "diocese_id": "jauaja_br"
                 },
                 {
                     "diocese_name": "Jequié",
@@ -1464,7 +1464,7 @@
                 },
                 {
                     "diocese_name": "Ji-Paraná",
-                    "diocese_id": "jipar_br"
+                    "diocese_id": "jipara_br"
                 },
                 {
                     "diocese_name": "Joaçaba",
@@ -1528,7 +1528,7 @@
                 },
                 {
                     "diocese_name": "Luz",
-                    "diocese_id": "luzulundefined_br"
+                    "diocese_id": "luzulu_br"
                 },
                 {
                     "diocese_name": "Luziânia",
@@ -1624,7 +1624,7 @@
                 },
                 {
                     "diocese_name": "Olinda e Recife",
-                    "diocese_id": "olere_br"
+                    "diocese_id": "olerec_br"
                 },
                 {
                     "diocese_name": "Oliveira",
@@ -2032,7 +2032,7 @@
                 },
                 {
                     "diocese_name": "Zé Doca",
-                    "diocese_id": "zedoc_br"
+                    "diocese_id": "zedoca_br"
                 }
             ]
         },
@@ -2086,7 +2086,7 @@
                 },
                 {
                     "diocese_name": "Fada N’Gourma",
-                    "diocese_id": "fango_bf"
+                    "diocese_id": "fangou_bf"
                 },
                 {
                     "diocese_name": "Gaoua",
@@ -2618,7 +2618,7 @@
                 },
                 {
                     "diocese_name": "Laï",
-                    "diocese_id": "laialundefined_td"
+                    "diocese_id": "laiala_td"
                 },
                 {
                     "diocese_name": "Mongo",
@@ -2630,7 +2630,7 @@
                 },
                 {
                     "diocese_name": "N’Djaména",
-                    "diocese_id": "ndja_td"
+                    "diocese_id": "ndjame_td"
                 },
                 {
                     "diocese_name": "Pala",
@@ -2672,7 +2672,7 @@
                 },
                 {
                     "diocese_name": "La Serena",
-                    "diocese_id": "laser_cl"
+                    "diocese_id": "lasere_cl"
                 },
                 {
                     "diocese_name": "Linares",
@@ -2910,7 +2910,7 @@
                 },
                 {
                     "diocese_name": "Ji’an",
-                    "diocese_id": "jian_cn"
+                    "diocese_id": "jianji_cn"
                 },
                 {
                     "diocese_name": "Jiading",
@@ -2922,7 +2922,7 @@
                 },
                 {
                     "diocese_name": "Jian’ou",
-                    "diocese_id": "jiaou_cn"
+                    "diocese_id": "jianou_cn"
                 },
                 {
                     "diocese_name": "Jiangmen",
@@ -2994,7 +2994,7 @@
                 },
                 {
                     "diocese_name": "Lu’an",
-                    "diocese_id": "luan_cn"
+                    "diocese_id": "luanlu_cn"
                 },
                 {
                     "diocese_name": "Luoyang",
@@ -3178,7 +3178,7 @@
                 },
                 {
                     "diocese_name": "Xi’an",
-                    "diocese_id": "xian_cn"
+                    "diocese_id": "xianai_cn"
                 },
                 {
                     "diocese_name": "Xiamen",
@@ -3234,7 +3234,7 @@
                 },
                 {
                     "diocese_name": "Yan’an",
-                    "diocese_id": "yanan_cn"
+                    "diocese_id": "yanana_cn"
                 },
                 {
                     "diocese_name": "Yanggu",
@@ -3404,7 +3404,7 @@
                 },
                 {
                     "diocese_name": "El Banco",
-                    "diocese_id": "elban_co"
+                    "diocese_id": "elbanc_co"
                 },
                 {
                     "diocese_name": "Engativá",
@@ -3600,7 +3600,7 @@
                 },
                 {
                     "diocese_name": "Socorro y San Gil",
-                    "diocese_id": "soyundefined_co"
+                    "diocese_id": "soysag_co"
                 },
                 {
                     "diocese_name": "Sonsón–Rionegro",
@@ -3992,7 +3992,7 @@
                 },
                 {
                     "diocese_name": "Man",
-                    "diocese_id": "manamundefined_ci"
+                    "diocese_id": "manama_ci"
                 },
                 {
                     "diocese_name": "Odienné",
@@ -4038,11 +4038,11 @@
                 },
                 {
                     "diocese_name": "Krk",
-                    "diocese_id": "krkrkundefined_hr"
+                    "diocese_id": "krkrkr_hr"
                 },
                 {
                     "diocese_name": "Poreč i Pula",
-                    "diocese_id": "poipu_hr"
+                    "diocese_id": "poipul_hr"
                 },
                 {
                     "diocese_name": "Požega",
@@ -4088,7 +4088,7 @@
             "dioceses": [
                 {
                     "diocese_name": "Bayamo y Manzanillo",
-                    "diocese_id": "bayma_cu"
+                    "diocese_id": "bayman_cu"
                 },
                 {
                     "diocese_name": "Camagüey",
@@ -4112,7 +4112,7 @@
                 },
                 {
                     "diocese_name": "La Habana",
-                    "diocese_id": "lahab_cu"
+                    "diocese_id": "lahaba_cu"
                 },
                 {
                     "diocese_name": "Matanzas",
@@ -4186,7 +4186,7 @@
             "dioceses": [
                 {
                     "diocese_name": "København",
-                    "diocese_id": "kben_dk"
+                    "diocese_id": "kobenh_dk"
                 }
             ]
         },
@@ -4224,7 +4224,7 @@
                 },
                 {
                     "diocese_name": "La Vega",
-                    "diocese_id": "laveg_do"
+                    "diocese_id": "lavega_do"
                 },
                 {
                     "diocese_name": "Mao–Monte Cristi",
@@ -4708,7 +4708,7 @@
                 },
                 {
                     "diocese_name": "Aix",
-                    "diocese_id": "aixiaundefined_fr"
+                    "diocese_id": "aixiai_fr"
                 },
                 {
                     "diocese_name": "Ajaccio",
@@ -4856,7 +4856,7 @@
                 },
                 {
                     "diocese_name": "La Rochelle",
-                    "diocese_id": "laroc_fr"
+                    "diocese_id": "laroch_fr"
                 },
                 {
                     "diocese_name": "Langres",
@@ -4868,11 +4868,11 @@
                 },
                 {
                     "diocese_name": "Le Havre",
-                    "diocese_id": "lehav_fr"
+                    "diocese_id": "lehavr_fr"
                 },
                 {
                     "diocese_name": "Le Mans",
-                    "diocese_id": "leman_fr"
+                    "diocese_id": "lemans_fr"
                 },
                 {
                     "diocese_name": "Le Puy-en-Velay",
@@ -5298,7 +5298,7 @@
                 },
                 {
                     "diocese_name": "Ho",
-                    "diocese_id": "hohundefined_gh"
+                    "diocese_id": "hohoho_gh"
                 },
                 {
                     "diocese_name": "Jasikan",
@@ -5346,7 +5346,7 @@
                 },
                 {
                     "diocese_name": "Wa",
-                    "diocese_id": "wawundefined_gh"
+                    "diocese_id": "wawawa_gh"
                 },
                 {
                     "diocese_name": "Wiawso",
@@ -5446,7 +5446,7 @@
             "dioceses": [
                 {
                     "diocese_name": "El Petén",
-                    "diocese_id": "elpet_gt"
+                    "diocese_id": "elpete_gt"
                 },
                 {
                     "diocese_name": "Escuintla",
@@ -5532,7 +5532,7 @@
                 },
                 {
                     "diocese_name": "N’Zérékoré",
-                    "diocese_id": "nzer_gn"
+                    "diocese_id": "nzerek_gn"
                 }
             ]
         },
@@ -5632,7 +5632,7 @@
                 },
                 {
                     "diocese_name": "La Ceiba",
-                    "diocese_id": "lacei_hn"
+                    "diocese_id": "laceib_hn"
                 },
                 {
                     "diocese_name": "San Pedro Sula",
@@ -5720,7 +5720,7 @@
                 },
                 {
                     "diocese_name": "Vác",
-                    "diocese_id": "vacavundefined_hu"
+                    "diocese_id": "vacava_hu"
                 },
                 {
                     "diocese_name": "Veszprém",
@@ -6922,7 +6922,7 @@
                 },
                 {
                     "diocese_name": "Arcidiocesi di L'Aquila",
-                    "diocese_id": "laqu_it"
+                    "diocese_id": "laquil_it"
                 },
                 {
                     "diocese_name": "Diocesi di La Spezia - Sarzana - Brugnato",
@@ -7642,7 +7642,7 @@
                 },
                 {
                     "diocese_name": "Murang’a",
-                    "diocese_id": "mura_ke"
+                    "diocese_id": "murang_ke"
                 },
                 {
                     "diocese_name": "Nairobi",
@@ -7778,11 +7778,11 @@
                 },
                 {
                     "diocese_name": "Mohale’s Hoek",
-                    "diocese_id": "mosho_ls"
+                    "diocese_id": "moshoe_ls"
                 },
                 {
                     "diocese_name": "Qacha’s Nek",
-                    "diocese_id": "qasne_ls"
+                    "diocese_id": "qasnek_ls"
                 }
             ]
         },
@@ -8086,7 +8086,7 @@
                 },
                 {
                     "diocese_name": "San",
-                    "diocese_id": "sanasundefined_ml"
+                    "diocese_id": "sanasa_ml"
                 },
                 {
                     "diocese_name": "Ségou",
@@ -8274,11 +8274,11 @@
                 },
                 {
                     "diocese_name": "El Nayar",
-                    "diocese_id": "elnay_mx"
+                    "diocese_id": "elnaya_mx"
                 },
                 {
                     "diocese_name": "El Salto",
-                    "diocese_id": "elsal_mx"
+                    "diocese_id": "elsalt_mx"
                 },
                 {
                     "diocese_name": "Ensenada",
@@ -8326,7 +8326,7 @@
                 },
                 {
                     "diocese_name": "La Paz",
-                    "diocese_id": "lapaz_mx"
+                    "diocese_id": "lapaza_mx"
                 },
                 {
                     "diocese_name": "León",
@@ -8592,7 +8592,7 @@
             "dioceses": [
                 {
                     "diocese_name": "Bar",
-                    "diocese_id": "barabundefined_me"
+                    "diocese_id": "baraba_me"
                 },
                 {
                     "diocese_name": "Kotor",
@@ -8682,7 +8682,7 @@
                 },
                 {
                     "diocese_name": "Hpa-an",
-                    "diocese_id": "hpaan_mm"
+                    "diocese_id": "hpaana_mm"
                 },
                 {
                     "diocese_name": "Kalay",
@@ -8772,7 +8772,7 @@
             "dioceses": [
                 {
                     "diocese_name": "’s-Hertogenbosch",
-                    "diocese_id": "sher_nl"
+                    "diocese_id": "sherto_nl"
                 },
                 {
                     "diocese_name": "Breda",
@@ -8910,7 +8910,7 @@
             "dioceses": [
                 {
                     "diocese_name": "Aba",
-                    "diocese_id": "ababaundefined_ng"
+                    "diocese_id": "ababab_ng"
                 },
                 {
                     "diocese_name": "Abakaliki",
@@ -9006,7 +9006,7 @@
                 },
                 {
                     "diocese_name": "Jos",
-                    "diocese_id": "josojundefined_ng"
+                    "diocese_id": "josojo_ng"
                 },
                 {
                     "diocese_name": "Kaduna",
@@ -9098,7 +9098,7 @@
                 },
                 {
                     "diocese_name": "Oyo",
-                    "diocese_id": "oyoyoundefined_ng"
+                    "diocese_id": "oyoyoy_ng"
                 },
                 {
                     "diocese_name": "Pankshin",
@@ -9126,7 +9126,7 @@
                 },
                 {
                     "diocese_name": "Uyo",
-                    "diocese_id": "uyoyuundefined_ng"
+                    "diocese_id": "uyoyuy_ng"
                 },
                 {
                     "diocese_name": "Warri",
@@ -9330,7 +9330,7 @@
                 },
                 {
                     "diocese_name": "Lae",
-                    "diocese_id": "laealundefined_pg"
+                    "diocese_id": "laeala_pg"
                 },
                 {
                     "diocese_name": "Madang",
@@ -9538,7 +9538,7 @@
                 },
                 {
                     "diocese_name": "Ica",
-                    "diocese_id": "icaciundefined_pe"
+                    "diocese_id": "icacic_pe"
                 },
                 {
                     "diocese_name": "Iquitos",
@@ -9606,7 +9606,7 @@
                 },
                 {
                     "diocese_name": "Tacna y Moquegua",
-                    "diocese_id": "taymo_pe"
+                    "diocese_id": "taymoq_pe"
                 },
                 {
                     "diocese_name": "Tarma",
@@ -9744,7 +9744,7 @@
                 },
                 {
                     "diocese_name": "Iba",
-                    "diocese_id": "ibabiundefined_ph"
+                    "diocese_id": "ibabib_ph"
                 },
                 {
                     "diocese_name": "Ilagan",
@@ -10006,7 +10006,7 @@
                 },
                 {
                     "diocese_name": "Ełk",
-                    "diocese_id": "ek_pl"
+                    "diocese_id": "elklel_pl"
                 },
                 {
                     "diocese_name": "Gdańsk",
@@ -10046,7 +10046,7 @@
                 },
                 {
                     "diocese_name": "Łódź",
-                    "diocese_id": "odzdoundefined_pl"
+                    "diocese_id": "lodzdo_pl"
                 },
                 {
                     "diocese_name": "Łomża",
@@ -10074,7 +10074,7 @@
                 },
                 {
                     "diocese_name": "Płock",
-                    "diocese_id": "pock_pl"
+                    "diocese_id": "plockc_pl"
                 },
                 {
                     "diocese_name": "Poznań",
@@ -10134,11 +10134,11 @@
                 },
                 {
                     "diocese_name": "Włocławek",
-                    "diocese_id": "wocaw_pl"
+                    "diocese_id": "wlocla_pl"
                 },
                 {
                     "diocese_name": "Wrocław",
-                    "diocese_id": "wroaw_pl"
+                    "diocese_id": "wrocla_pl"
                 },
                 {
                     "diocese_name": "Zamość–Lubaczów",
@@ -10500,7 +10500,7 @@
             "dioceses": [
                 {
                     "diocese_name": "Bo",
-                    "diocese_id": "bobundefined_sl"
+                    "diocese_id": "bobobo_sl"
                 },
                 {
                     "diocese_name": "Freetown",
@@ -10648,7 +10648,7 @@
                 },
                 {
                     "diocese_name": "De Aar",
-                    "diocese_id": "deaar_za"
+                    "diocese_id": "deaara_za"
                 },
                 {
                     "diocese_name": "Dundee",
@@ -10840,11 +10840,11 @@
                 },
                 {
                     "diocese_name": "Wau",
-                    "diocese_id": "wauawundefined_ss"
+                    "diocese_id": "wauwau_ss"
                 },
                 {
                     "diocese_name": "Yei",
-                    "diocese_id": "yeieyundefined_ss"
+                    "diocese_id": "yeiyei_ss"
                 }
             ]
         },
@@ -10894,7 +10894,7 @@
                 },
                 {
                     "diocese_name": "Cádiz y Ceuta",
-                    "diocese_id": "cayce_es"
+                    "diocese_id": "cayceu_es"
                 },
                 {
                     "diocese_name": "Calahorra y La Calzada–Logroño",
@@ -11030,7 +11030,7 @@
                 },
                 {
                     "diocese_name": "Pamplona y Tudela",
-                    "diocese_id": "paytu_es"
+                    "diocese_id": "paytud_es"
                 },
                 {
                     "diocese_name": "Plasencia",
@@ -11094,7 +11094,7 @@
                 },
                 {
                     "diocese_name": "Teruel y Albarracín",
-                    "diocese_id": "teyal_es"
+                    "diocese_id": "teyalb_es"
                 },
                 {
                     "diocese_name": "Toledo",
@@ -11122,7 +11122,7 @@
                 },
                 {
                     "diocese_name": "Vic",
-                    "diocese_id": "vicivundefined_es"
+                    "diocese_id": "vicvic_es"
                 },
                 {
                     "diocese_name": "Vitoria",
@@ -11198,7 +11198,7 @@
             "dioceses": [
                 {
                     "diocese_name": "El Obeid",
-                    "diocese_id": "elobe_sd"
+                    "diocese_id": "elobei_sd"
                 },
                 {
                     "diocese_name": "Khartoum",
@@ -12222,7 +12222,7 @@
                 },
                 {
                     "diocese_name": "Diocese of La Crosse",
-                    "diocese_id": "lacro_us",
+                    "diocese_id": "lacros_us",
                     "province": "Wisconsin"
                 },
                 {
@@ -12567,7 +12567,7 @@
                 },
                 {
                     "diocese_name": "Archdiocese of Santa Fe",
-                    "diocese_id": "sanfe_us",
+                    "diocese_id": "santfe_us",
                     "province": "New Mexico"
                 },
                 {
@@ -12809,7 +12809,7 @@
                 },
                 {
                     "diocese_name": "El Tigre",
-                    "diocese_id": "eltig_ve"
+                    "diocese_id": "eltigr_ve"
                 },
                 {
                     "diocese_name": "El Vigía–San Carlos del Zulia",
@@ -12829,7 +12829,7 @@
                 },
                 {
                     "diocese_name": "La Guaira",
-                    "diocese_id": "lagua_ve"
+                    "diocese_id": "laguai_ve"
                 },
                 {
                     "diocese_name": "Los Teques",
@@ -12919,7 +12919,7 @@
             "dioceses": [
                 {
                     "diocese_name": "Ba Ria",
-                    "diocese_id": "baria_vn"
+                    "diocese_id": "bariai_vn"
                 },
                 {
                     "diocese_name": "Bac Ninh",
@@ -12939,19 +12939,19 @@
                 },
                 {
                     "diocese_name": "Đà Lat",
-                    "diocese_id": "alat_vn"
+                    "diocese_id": "dalata_vn"
                 },
                 {
                     "diocese_name": "Đà Nang",
-                    "diocese_id": "anan_vn"
+                    "diocese_id": "danang_vn"
                 },
                 {
                     "diocese_name": "Hà Nôi",
-                    "diocese_id": "hanoi_vn"
+                    "diocese_id": "hanoio_vn"
                 },
                 {
                     "diocese_name": "Hà Tĩnh",
-                    "diocese_id": "hatin_vn"
+                    "diocese_id": "hatinh_vn"
                 },
                 {
                     "diocese_name": "Hai Phòng",
@@ -12959,7 +12959,7 @@
                 },
                 {
                     "diocese_name": "Huê",
-                    "diocese_id": "hueuhundefined_vn"
+                    "diocese_id": "huehue_vn"
                 },
                 {
                     "diocese_name": "Hung Hoá",
@@ -12979,7 +12979,7 @@
                 },
                 {
                     "diocese_name": "My Tho",
-                    "diocese_id": "mytho_vn"
+                    "diocese_id": "mythoh_vn"
                 },
                 {
                     "diocese_name": "Nha Trang",

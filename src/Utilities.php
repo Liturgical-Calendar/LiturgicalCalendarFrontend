@@ -134,8 +134,20 @@ class Utilities
             "STEVENVANROODE" => [
                 "website"   => Utilities::formatNameWithUrl('https://www.latijnseliturgie.nl/', 'Steven van Roode'),
                 "note"      => _('Latin Liturgy Association of the Netherlands, contributed the national calendar for the Netherlands to this project with all related translations'),
-                "img"       => "./assets/img/Steven van Roode 125x125.jpg",
+                "img"       => "./assets/img/stevenvanroode_125x125.jpg",
                 "icon"      => "fa-music"
+            ],
+            "MIKEKASBERG"   => [
+                "website"   => Utilities::formatNameWithUrl('https://www.mikekasberg.com/', 'Mike Kasberg'),
+                "note"      => _('Senior software engineer at Strava, author of the ConfessIt app, contributed to the structuring of the JSON responses of the Liturgical Calendar API'),
+                "img"       => "./assets/img/mikekasberg_125x125.jpg",
+                "icon"      => "fa-code"
+            ],
+            "GABRIELCHOW"   => [
+                "website"   => Utilities::formatNameWithUrl('https://gcatholic.org/', 'Gabriel Chow'),
+                "note"      => _('Software Engineer and contributor to Salt + Light Television, contributed information about the dioceses of Latin rite'),
+                "img"       => null,
+                "icon"      => "fa-code"
             ]
         ];
         return $cards[$who];
@@ -156,7 +168,7 @@ class Utilities
                     <div class=\"row no-gutters align-items-center\">
                         <div class=\"col mr-2\">
                             <div class=\"row no-gutters align-items-center\">
-                                <div class=\"col-auto mr-2\"><img class=\"img-profile rounded-circle mx-auto img-fluid\" src=\"" . $cardInfo["img"] . "\"></div>
+                                <div class=\"col-auto mr-2\"><img class=\"img-profile rounded-circle mx-auto img-fluid\" src=\"" . $cardInfo["img"] ?? './assets/img/default_125x125.jpg' . "\"></div>
                                 <div class=\"col\">" . $cardInfo["website"] . $cardInfo["note"] . "</div>
                             </div>
                         </div>
