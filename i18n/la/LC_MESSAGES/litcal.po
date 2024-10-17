@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-13 13:25+0000\n"
+"POT-Creation-Date: 2024-10-17 22:00+0000\n"
 "PO-Revision-Date: 2024-10-12 17:47+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
@@ -570,7 +570,7 @@ msgstr ""
 msgid "Tag"
 msgstr "Tag"
 
-#: extending.php:86 src/Utilities.php:210 src/FormControls.php:45
+#: extending.php:86 src/Utilities.php:222 src/FormControls.php:45
 msgid "Name"
 msgstr "Nomen"
 
@@ -1391,21 +1391,33 @@ msgstr ""
 "Consociatio Liturgiae Latinae Nederlandiae, calendarium nationale pro "
 "Nederlandia huic proposito cum omnibus translationibus relatis contulit"
 
-#: src/Utilities.php:202
+#: src/Utilities.php:142
+msgid ""
+"Senior software engineer at Strava, author of the ConfessIt app, contributed "
+"to the structuring of the JSON responses of the Liturgical Calendar API"
+msgstr ""
+
+#: src/Utilities.php:148
+msgid ""
+"Software Engineer and contributor to Salt + Light Television, contributed "
+"information about the dioceses of Latin rite"
+msgstr ""
+
+#: src/Utilities.php:214
 msgid "Choose from existing festivities"
 msgstr "Elige ex festivitatibus existentibus"
 
-#: src/Utilities.php:204
+#: src/Utilities.php:216
 msgid ""
 "This festivity does not seem to exist? Please choose from a value in the "
 "list."
 msgstr "Haec festivitas non videtur existere? Elige quaeso valorem ex indice."
 
-#: src/Utilities.php:208
+#: src/Utilities.php:220
 msgid "Property to change"
 msgstr "Proprietas mutanda"
 
-#: src/Utilities.php:211 src/FormControls.php:161
+#: src/Utilities.php:223 src/FormControls.php:161
 msgid "Grade"
 msgstr "Gradus"
 
