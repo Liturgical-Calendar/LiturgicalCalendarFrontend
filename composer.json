@@ -3,7 +3,7 @@
     "description": "Frontend website for the Liturgical Calendar API",
     "type": "library",
     "require": {
-        "liturgical-calendar/components": "^1.0"
+        "liturgical-calendar/components": "^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.3"

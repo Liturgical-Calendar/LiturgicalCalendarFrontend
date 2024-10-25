@@ -1,6 +1,9 @@
 <?php
 
 use LiturgicalCalendar\Frontend\I18n;
+use LiturgicalCalendar\Components\ApiOptions;
+use LiturgicalCalendar\Components\ApiOptions\Input;
+use LiturgicalCalendar\Components\ApiOptions\PathType;
 
 include_once("vendor/autoload.php");
 
@@ -26,6 +29,62 @@ $API_DESCRIPTION = _('Collection of Liturgical events for any given year between
         _('Each of these paths can optionally be further specified with a %1$s path parameter. When not specified, the API will default to the current year.'),
         '<b><code>/{YEAR}</code></b>'
     );
+
+$firstAfterA = sprintf(
+    /**translators: 1. /calendar/nation/{NATION}, 2. /calendar/diocese/{DIOCESE} */
+    _('These parameters are useful for tweaking the calendar results, when no National or Diocesan calendar is requested. Since National and Diocesan calendars have these parameters built in, the parameters are not available on the %1$s and %2$s routes.'),
+    '<b><code>/calendar/nation/{NATION}</code></b>',
+    '<b><code>/calendar/diocese/{DIOCESE}</code></b>'
+);
+$firstAfterB = _('N.B. When none of these parameters are set, the API will use the defaults as in use in the Vatican.');
+$firstAfter = "<small class=\"text-muted\"><i>$firstAfterA<br>$firstAfterB</i></small>";
+
+$secondAfterA = sprintf(
+    /**translators: 1. /calendar */
+    _('These request parameters can always be set, whether we are requesting the base %1$s resource or any resource below the %1$s path. National and Diocesan calendars do not have these parameters built-in.'),
+    '<b><code>/calendar</code></b>'
+);
+$secondAfter = "<small class=\"text-muted\"><i>$secondAfterA</i></small>";
+
+$localeLabelAfterA = _('It is preferable to set the locale using the Accept-Language header rather than using the locale parameter. N.B. The Accept-Language header will have no effect when a National or Diocesan calendar is requested.');
+$localeLabelAfter = "<i class=\"fas fa-circle-info ms-2\" data-bs-toggle=\"tooltip\" data-bs-title=\"$localeLabelAfterA\" role=\"button\"></i>";
+
+$acceptLabelAfterA = _('It is preferable to request the response content type using the Accept header rather than using the return_type parameter.');
+$acceptLabelAfter = "<i class=\"fas fa-circle-info ms-2\" data-bs-toggle=\"tooltip\" data-bs-title=\"$acceptLabelAfterA\" role=\"button\"></i>";
+
+$formLabelA = sprintf(
+    /**translators: %s = '/calendar' */
+    _('Request parameters available on the base %s path'),
+    '<b><code>/calendar</code></b>'
+);
+
+$formLabelB = sprintf(
+    /**translators: 1. /calendar */
+    _('Request parameters available on all %1$s paths'),
+    '<b><code>/calendar/*</code></b>'
+);
+
+$options = [
+    "locale"    => $i18n->LOCALE,
+    "formLabel" => true,
+    "wrapper"   => true
+];
+$apiOptions = new ApiOptions($options);
+$apiOptions->wrapper->as('div')->class('row mb-4')->id('calendarOptions');
+$apiOptions->formLabel->as('h5')->class('fw-bold');
+Input::setGlobalWrapper('div');
+Input::setGlobalWrapperClass('form-group col-sm-2');
+Input::setGlobalInputClass('form-select requestOption');
+$apiOptions->epiphanyInput->id('RequestOptionEpiphany');
+$apiOptions->ascensionInput->id('RequestOptionAscension');
+$apiOptions->corpusChristiInput->id('RequestOptionCorpusChristi');
+$apiOptions->eternalHighPriestInput->id('RequestOptionEternalHighPriest');
+$apiOptions->localeInput->id('RequestOptionLocale');
+$apiOptions->acceptHeaderInput->id('RequestOptionAcceptHeader');
+$apiOptions->localeInput->labelAfter($localeLabelAfter);
+$apiOptions->yearTypeInput->id('RequestOptionYearType')->class('form-select');
+$apiOptions->acceptHeaderInput->labelAfter($acceptLabelAfter)->class('form-select');
+
 ?><!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
@@ -75,101 +134,14 @@ $API_DESCRIPTION = _('Collection of Liturgical events for any given year between
                                 <input id="RequestOptionYear" class="form-control" type="number" min=1970 max=9999 value=<?php echo date("Y"); ?> />
                             </div>
                         </div>
-                        <div class="row mb-4">
-                            <h5 class="fw-bold"><?php
-                                echo sprintf(
-                                    /**translators: %s = '/calendar' */
-                                    _('Request parameters available on the base %s path'),
-                                    '<b><code>/calendar</code></b>'
-                                );
-                                ?></h5>
-                            <div class="form-group col-sm-2">
-                                <label>epiphany</label>
-                                <select id="RequestOptionEpiphany" data-param="epiphany" class="form-select requestOption">
-                                    <option value="">--</option>
-                                    <option value="SUNDAY_JAN2_JAN8">SUNDAY_JAN2_JAN8</option>
-                                    <option value="JAN6">JAN6</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-sm-2">
-                                <label>ascension</label>
-                                <select id="RequestOptionAscension" data-param="ascension" class="form-select requestOption">
-                                    <option value="">--</option>
-                                    <option value="SUNDAY">SUNDAY</option>
-                                    <option value="THURSDAY">THURSDAY</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-sm-2">
-                                <label>corpus_christi</label>
-                                <select id="RequestOptionCorpusChristi" data-param="corpus_christi" class="form-select requestOption">
-                                    <option value="">--</option>
-                                    <option value="SUNDAY">SUNDAY</option>
-                                    <option value="THURSDAY">THURSDAY</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-sm-2">
-                                <label>eternal_high_priest</label>
-                                <select id="RequestOptionEternalHighPriest" data-param="eternal_high_priest" class="form-select requestOption">
-                                    <option value="">--</option>
-                                    <option value="true">true</option>
-                                    <option value="false">false</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-sm-2">
-                                <label>locale <i class="fas fa-circle-info ms-2" data-bs-toggle="tooltip" data-bs-title="<?php echo _('It is preferable to set the locale using the Accept-Language header rather than using this request parameter. N.B. The Accept-Language header will have no effect when a National or Diocesan calendar is requested.'); ?>" role="button"></i></label>
-                                <select id="RequestOptionLocale" data-param="locale" class="form-select requestOption">
-                                    <option value="">--</option><?php
-                                    foreach ($langsAssoc as $key => $lang) {
-                                        $keyUC = strtoupper($key);
-                                        echo "<option value=\"$keyUC\">$lang</option>";
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                            <small class="text-muted"><i>
-                                <?php echo sprintf(
-                                    /**translators: 1. /calendar/nation/{NATION}, 2. /calendar/diocese/{DIOCESE} */
-                                    _('These parameters are useful for tweaking the calendar results, when no National or Diocesan calendar is requested. Since National and Diocesan calendars have these parameters built in, the parameters are not available on the %1$s and %2$s routes.'),
-                                    '<b><code>/calendar/nation/{NATION}</code></b>',
-                                    '<b><code>/calendar/diocese/{DIOCESE}</code></b>'
-                                ); ?>
-                                <br />
-                                <?php
-                                    echo _('N.B. When none of these parameters are set, the API will use the defaults as in use in the Vatican.')
-                                ?>
-                            </i></small>
-                        </div>
-                        <div class="row mb-4">
-                            <h5 class="fw-bold"><?php echo sprintf(
-                                /**translators: 1. /calendar */
-                                _('Request parameters available on all %1$s paths'),
-                                '<b><code>/calendar</code></b>'
-                            ); ?></h5>
-                            <div class="form-group col-sm-4">
-                                <label>return_type <i class="fas fa-circle-info ms-2" data-bs-toggle="tooltip" data-bs-title="<?php echo _('It is preferable to request the response content type using the Accept header rather than using this request parameter.'); ?>" role="button"></i></label>
-                                <select id="RequestOptionReturnType" class="form-select">
-                                    <option value="">--</option>
-                                    <option value="JSON">JSON</option>
-                                    <option value="XML">XML</option>
-                                    <option value="ICS">ICS (ICAL feed)</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-sm-4">
-                                <label>year_type</label>
-                                <select id="RequestOptionYearType" class="form-select">
-                                    <option value="">--</option>
-                                    <option value="CIVIL">CIVIL</option>
-                                    <option value="LITURGICAL">LITURGICAL</option>
-                                </select>
-                            </div>
-                            <small class="text-muted"><i><?php
-                                echo sprintf(
-                                    /**translators: 1. /calendar */
-                                    _('These request parameters can always be set, whether we are requesting the base %1$s resource or any resource below the %1$s path. National and Diocesan calendars do not have these parameters built-in.'),
-                                    '<b><code>/calendar</code></b>'
-                                );
-                                ?></i></small>
-                        </div>
+                        <?php
+                        $apiOptions->formLabel->text($formLabelA);
+                        $apiOptions->after($firstAfter);
+                        echo $apiOptions->getForm(PathType::BASE_PATH);
+                        $apiOptions->formLabel->text($formLabelB);
+                        $apiOptions->after($secondAfter);
+                        echo $apiOptions->getForm(PathType::ALL_PATHS);
+                        ?>
                         <div class="row align-items-center">
                             <div class="form-group col-sm-8">
                                 <div id="RequestURLExampleWrapper">
