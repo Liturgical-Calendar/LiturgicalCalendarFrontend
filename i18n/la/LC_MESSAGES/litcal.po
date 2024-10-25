@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-17 22:00+0000\n"
+"POT-Creation-Date: 2024-10-25 09:08+0000\n"
 "PO-Revision-Date: 2024-10-12 17:47+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
@@ -21,13 +21,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.6.1\n"
 
-#: index.php:16
+#: index.php:19
 msgid ""
 "Collection of Liturgical events for any given year between 1970 and 9999."
 msgstr "Collectio eventuum liturgicorum pro quolibet anno inter 1970 et 9999."
 
 #. translators: 1. /calendar, 2. /calendar/nation/{NATION}, 3. /calendar/diocese/{DIOCESE}
-#: index.php:19
+#: index.php:22
 #, php-format
 msgid ""
 "The base %1$s path returns liturgical events for the General Roman Calendar. "
@@ -39,7 +39,7 @@ msgstr ""
 "peti possunt."
 
 #. translators: 1. /{YEAR}
-#: index.php:26
+#: index.php:29
 #, php-format
 msgid ""
 "Each of these paths can optionally be further specified with a %1$s path "
@@ -48,62 +48,8 @@ msgstr ""
 "Quisque ex his itineribus potest optative ulterius specificari cum parametro "
 "itineris %1$s. Cum non specificatur, API defaltum erit ad annum currentem."
 
-#: index.php:32 usage.php:20 liturgyOfAnyDay.php:26
-msgid "General Roman Calendar"
-msgstr "Calendarium Romanum Generale"
-
-#: index.php:40 layout/header.php:81
-msgid "Catholic Liturgical Calendar"
-msgstr "Calendarium Liturgicum Catholicum"
-
-#. translators: 1. /calendar
-#: index.php:50
-#, php-format
-msgid "API %1$s endpoint"
-msgstr "API %1$s terminus"
-
-#: index.php:58
-msgid "Path builder"
-msgstr "Viae structor"
-
-#: index.php:60
-msgid "Select route"
-msgstr "Iter selige"
-
-#: index.php:68
-msgid "Calendars available on selected route"
-msgstr "Calendaria in itinere selecto praesto"
-
-#: index.php:74 liturgyOfAnyDay.php:67
-msgid "Year"
-msgstr "Annum"
-
-#: index.php:74
-msgid ""
-"When not specified, the API will default to the current year. Try "
-"specifically setting the year by changing the value here."
-msgstr ""
-"Cum non specificatum, API defaltum ad annum currentem. Conare specificare "
-"annum mutando valorem hic."
-
-#. translators: %s = '/calendar'
-#: index.php:82
-#, php-format
-msgid "Request parameters available on the base %s path"
-msgstr "Parametri petitionis praesto in basi %s itineris"
-
-#: index.php:119
-msgid ""
-"It is preferable to set the locale using the Accept-Language header rather "
-"than using this request parameter. N.B. The Accept-Language header will have "
-"no effect when a National or Diocesan calendar is requested."
-msgstr ""
-"Praestat locum constituere utens capite Accept-Language potius quam hoc "
-"parametro petitionis uti. N.B. Caput Accept-Language nullum effectum habebit "
-"cum Calendarium Nationale vel Dioecesanum petitur."
-
 #. translators: 1. /calendar/nation/{NATION}, 2. /calendar/diocese/{DIOCESE}
-#: index.php:132
+#: index.php:35
 #, php-format
 msgid ""
 "These parameters are useful for tweaking the calendar results, when no "
@@ -116,7 +62,7 @@ msgstr ""
 "Dioecesana hos parametros in se habeant, parametri non praesto sunt in "
 "itineribus %1$s et %2$s."
 
-#: index.php:138
+#: index.php:39
 msgid ""
 "N.B. When none of these parameters are set, the API will use the defaults as "
 "in use in the Vatican."
@@ -125,21 +71,7 @@ msgstr ""
 "usu in Vaticano."
 
 #. translators: 1. /calendar
-#: index.php:145
-#, php-format
-msgid "Request parameters available on all %1$s paths"
-msgstr "Parametri petitionis praesto in omnibus itineribus %1$s"
-
-#: index.php:149
-msgid ""
-"It is preferable to request the response content type using the Accept "
-"header rather than using this request parameter."
-msgstr ""
-"Praestat petere genus contenti responsionis utendo capite Accepto potius "
-"quam hoc parametro petitionis."
-
-#. translators: 1. /calendar
-#: index.php:168
+#: index.php:44
 #, php-format
 msgid ""
 "These request parameters can always be set, whether we are requesting the "
@@ -150,11 +82,88 @@ msgstr ""
 "resource vel quamlibet resource infra %1$s viam. Calendaria Nationalia et "
 "Dioecesana hos parametros non habent in aedificatis."
 
-#: index.php:181
+#: index.php:49
+#, fuzzy
+#| msgid ""
+#| "It is preferable to set the locale using the Accept-Language header "
+#| "rather than using this request parameter. N.B. The Accept-Language header "
+#| "will have no effect when a National or Diocesan calendar is requested."
+msgid ""
+"It is preferable to set the locale using the Accept-Language header rather "
+"than using the locale parameter. N.B. The Accept-Language header will have "
+"no effect when a National or Diocesan calendar is requested."
+msgstr ""
+"Praestat locum constituere utens capite Accept-Language potius quam hoc "
+"parametro petitionis uti. N.B. Caput Accept-Language nullum effectum habebit "
+"cum Calendarium Nationale vel Dioecesanum petitur."
+
+#: index.php:52
+#, fuzzy
+#| msgid ""
+#| "It is preferable to request the response content type using the Accept "
+#| "header rather than using this request parameter."
+msgid ""
+"It is preferable to request the response content type using the Accept "
+"header rather than using the return_type parameter."
+msgstr ""
+"Praestat petere genus contenti responsionis utendo capite Accepto potius "
+"quam hoc parametro petitionis."
+
+#. translators: %s = '/calendar'
+#: index.php:57
+#, php-format
+msgid "Request parameters available on the base %s path"
+msgstr "Parametri petitionis praesto in basi %s itineris"
+
+#. translators: 1. /calendar
+#: index.php:63
+#, php-format
+msgid "Request parameters available on all %1$s paths"
+msgstr "Parametri petitionis praesto in omnibus itineribus %1$s"
+
+#: index.php:91 usage.php:20 liturgyOfAnyDay.php:26
+msgid "General Roman Calendar"
+msgstr "Calendarium Romanum Generale"
+
+#: index.php:99 layout/header.php:81
+msgid "Catholic Liturgical Calendar"
+msgstr "Calendarium Liturgicum Catholicum"
+
+#. translators: 1. /calendar
+#: index.php:109
+#, php-format
+msgid "API %1$s endpoint"
+msgstr "API %1$s terminus"
+
+#: index.php:117
+msgid "Path builder"
+msgstr "Viae structor"
+
+#: index.php:119
+msgid "Select route"
+msgstr "Iter selige"
+
+#: index.php:127
+msgid "Calendars available on selected route"
+msgstr "Calendaria in itinere selecto praesto"
+
+#: index.php:133 liturgyOfAnyDay.php:67
+msgid "Year"
+msgstr "Annum"
+
+#: index.php:133
+msgid ""
+"When not specified, the API will default to the current year. Try "
+"specifically setting the year by changing the value here."
+msgstr ""
+"Cum non specificatum, API defaltum ad annum currentem. Conare specificare "
+"annum mutando valorem hic."
+
+#: index.php:153
 msgid "Liturgical Calendar API endpoint"
 msgstr "API terminus Calendarii Liturgici"
 
-#: index.php:184
+#: index.php:156
 msgid ""
 "URL of the API request based on selected options. The button is set to the "
 "same URL, click on it to see results."
@@ -162,11 +171,11 @@ msgstr ""
 "URL petitionis API secundum optiones selectas. Puga ad eundem URL constituta "
 "est, preme ut eventus videas."
 
-#: index.php:192 index.php:196
+#: index.php:164 index.php:168
 msgid "Liturgical Calendar Validator"
 msgstr "Liturgicus Calendarii Validator"
 
-#: index.php:195
+#: index.php:167
 msgid ""
 "In order to verify that the liturgical data produced by the API is correct, "
 "there is a Unit Test interface that can run predefined tests against the "
@@ -178,7 +187,7 @@ msgstr ""
 "producta currere potest incipiendo ab anno 1970 et usque ad 25 annos a "
 "currenti anno."
 
-#: index.php:199
+#: index.php:171
 #, php-format
 msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
@@ -187,28 +196,28 @@ msgstr ""
 "Probationes unitatis in fasciculo %s in reposito API Calendarii Liturgici "
 "definitae sunt."
 
-#: index.php:200
+#: index.php:172
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
 msgstr "Interfacies unitatis testium in reposito proprio curatur: %s."
 
-#: index.php:207
+#: index.php:179
 msgid "Translation Tool"
 msgstr "Instrumentum Translationis"
 
-#: index.php:213 index.php:216
+#: index.php:185 index.php:188
 msgid "Translations status"
 msgstr "Status translationum"
 
-#: index.php:224
+#: index.php:196
 msgid "Open API Schema"
 msgstr "Aperi Schema API"
 
-#: index.php:227
+#: index.php:199
 msgid "Swagger / Open API Documentation"
 msgstr "Swagger / Open API Documentatio"
 
-#: index.php:229
+#: index.php:201
 msgid ""
 "All of the available API routes with their supported methods, parameters, "
 "content types and responses are described here."
@@ -216,11 +225,11 @@ msgstr ""
 "Omnes viae API praesto cum methodis, parametris, generibus contentorum et "
 "responsionibus hic describuntur."
 
-#: index.php:235 usage.php:191
+#: index.php:207 usage.php:191
 msgid "Calculation of the Date of Easter"
 msgstr "Computatio Diei Paschae"
 
-#: index.php:238
+#: index.php:210
 msgid ""
 "A simple API endpoint that returns data about the Date of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -236,11 +245,11 @@ msgstr ""
 "et algorithmorum Meeus pro Pascha Iuliana (a ecclesiis orthodoxis observata) "
 "reddit."
 
-#: index.php:243
+#: index.php:215
 msgid "Date of Easter API endpoint"
 msgstr "Dies Paschae API terminus"
 
-#: index.php:245
+#: index.php:217
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
