@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 09:08+0000\n"
-"PO-Revision-Date: 2024-10-17 22:15+0000\n"
+"PO-Revision-Date: 2024-10-25 09:58+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
@@ -83,31 +83,22 @@ msgstr ""
 "kalendáre tieto parametre nemajú zabudované."
 
 #: index.php:49
-#, fuzzy
-#| msgid ""
-#| "It is preferable to set the locale using the Accept-Language header "
-#| "rather than using this request parameter. N.B. The Accept-Language header "
-#| "will have no effect when a National or Diocesan calendar is requested."
 msgid ""
 "It is preferable to set the locale using the Accept-Language header rather "
 "than using the locale parameter. N.B. The Accept-Language header will have "
 "no effect when a National or Diocesan calendar is requested."
 msgstr ""
 "Je vhodnejšie nastaviť lokalitu pomocou hlavičky Accept-Language než pomocou "
-"tohto parametra požiadavky. Upozornenie: Hlavička Accept-Language nebude mať "
-"žiadny účinok, keď je požadovaný národný alebo diecézny kalendár."
+"parametra locale. Upozornenie: Hlavička Accept-Language nebude mať žiadny "
+"vplyv, keď sa žiada o národný alebo diecézny kalendár."
 
 #: index.php:52
-#, fuzzy
-#| msgid ""
-#| "It is preferable to request the response content type using the Accept "
-#| "header rather than using this request parameter."
 msgid ""
 "It is preferable to request the response content type using the Accept "
 "header rather than using the return_type parameter."
 msgstr ""
-"Je vhodnejšie požiadať o typ obsahu odpovede pomocou hlavičky Accept, než "
-"pomocou tohto parametra požiadavky."
+"Je lepšie požiadať o typ obsahu odpovede pomocou hlavičky Accept než pomocou "
+"parametra return_type."
 
 #. translators: %s = '/calendar'
 #: index.php:57
