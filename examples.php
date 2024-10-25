@@ -1,4 +1,11 @@
 <?php
+
+use LiturgicalCalendar\Frontend\I18n;
+
+include_once("vendor/autoload.php");
+
+$i18n = new I18n();
+
 $example = isset($_GET['example']) ? $_GET['example'] : null;
 const EXAMPLES = [
     "PHP" => "examples/php/index.php",
