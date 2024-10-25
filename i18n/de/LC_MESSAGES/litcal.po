@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 09:08+0000\n"
-"PO-Revision-Date: 2024-10-17 22:15+0000\n"
+"PO-Revision-Date: 2024-10-25 09:58+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -88,32 +88,23 @@ msgstr ""
 "eingebaut."
 
 #: index.php:49
-#, fuzzy
-#| msgid ""
-#| "It is preferable to set the locale using the Accept-Language header "
-#| "rather than using this request parameter. N.B. The Accept-Language header "
-#| "will have no effect when a National or Diocesan calendar is requested."
 msgid ""
 "It is preferable to set the locale using the Accept-Language header rather "
 "than using the locale parameter. N.B. The Accept-Language header will have "
 "no effect when a National or Diocesan calendar is requested."
 msgstr ""
-"Es ist vorzuziehen, das Gebietsschema mit dem Accept-Language-Header "
-"festzulegen, anstatt diesen Anforderungsparameter zu verwenden. Hinweis: Der "
-"Accept-Language-Header hat keine Wirkung, wenn ein nationaler oder "
-"diözesaner Kalender angefordert wird."
+"Es ist vorzuziehen, die Locale über den Accept-Language-Header festzulegen, "
+"anstatt den Locale-Parameter zu verwenden. Hinweis: Der Accept-Language-"
+"Header hat keine Wirkung, wenn ein nationaler oder diözesaner Kalender "
+"angefordert wird."
 
 #: index.php:52
-#, fuzzy
-#| msgid ""
-#| "It is preferable to request the response content type using the Accept "
-#| "header rather than using this request parameter."
 msgid ""
 "It is preferable to request the response content type using the Accept "
 "header rather than using the return_type parameter."
 msgstr ""
-"Es ist vorzuziehen, den Antwortinhaltstyp mit dem Accept-Header anzufordern, "
-"anstatt diesen Anforderungsparameter zu verwenden."
+"Es ist vorzuziehen, den Antwortinhaltstyp über den Accept-Header "
+"anzufordern, anstatt den return_type-Parameter zu verwenden."
 
 #. translators: %s = '/calendar'
 #: index.php:57
