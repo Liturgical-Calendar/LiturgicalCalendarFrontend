@@ -44,7 +44,7 @@ $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/cal
                                     </div>
                                     <div class="card-body">
                                         <p><?php echo _("HTML presentation elaborated by PHP using a CURL request"); ?></p>
-                                        <div class="text-center"><a href="examples/php/" class="btn btn-primary"><?php echo _("View PHP Example"); ?></a></div>
+                                        <div class="text-center"><a href="examples.php?example=PHP" class="btn btn-primary"><?php echo _("View PHP Example"); ?></a></div>
                                     </div>
                                 </div>
                             </div>
@@ -55,7 +55,7 @@ $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/cal
                                     </div>
                                     <div class="card-body">
                                         <p><?php echo _("HTML presentation elaborated by JAVASCRIPT using an AJAX request"); ?></p>
-                                        <div class="text-center"><a href="examples/javascript/" class="btn btn-primary"><?php echo _("View JavaScript Example"); ?></a></div>
+                                        <div class="text-center"><a href="examples.php?example=JavaScript" class="btn btn-primary"><?php echo _("View JavaScript Example"); ?></a></div>
                                     </div>
                                 </div>
                             </div>
@@ -66,8 +66,8 @@ $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/cal
                                     </div>
                                     <div class="card-body">
                                         <p><?php echo _("FullCalendar representation elaborated by JAVASCRIPT using an AJAX request"); ?></p>
-                                        <div class="text-center"><a href="examples/fullcalendar/examples/month-view.html" class="btn btn-primary"><?php echo _("View FullCalendar"); ?></a></div>
-                                        <div class="text-center"><a href="examples/fullcalendar/examples/messages.html" class="btn btn-primary mt-2"><?php echo _("View FullCalendar (messages first)"); ?></a></div>
+                                        <div class="text-center"><a href="examples.php?example=FullCalendar" class="btn btn-primary"><?php echo _("View FullCalendar"); ?></a></div>
+                                        <div class="text-center"><a href="examples.php?example=FullCalendarMessages" class="btn btn-primary mt-2"><?php echo _("View FullCalendar (messages first)"); ?></a></div>
                                     </div>
                                 </div>
                             </div>
