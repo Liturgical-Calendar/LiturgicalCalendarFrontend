@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 09:08+0000\n"
-"PO-Revision-Date: 2024-10-17 22:15+0000\n"
+"PO-Revision-Date: 2024-10-25 09:58+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
@@ -86,32 +86,23 @@ msgstr ""
 "calendriers nationaux et diocésains n'ont pas ces paramètres intégrés."
 
 #: index.php:49
-#, fuzzy
-#| msgid ""
-#| "It is preferable to set the locale using the Accept-Language header "
-#| "rather than using this request parameter. N.B. The Accept-Language header "
-#| "will have no effect when a National or Diocesan calendar is requested."
 msgid ""
 "It is preferable to set the locale using the Accept-Language header rather "
 "than using the locale parameter. N.B. The Accept-Language header will have "
 "no effect when a National or Diocesan calendar is requested."
 msgstr ""
 "Il est préférable de définir la locale en utilisant l'en-tête Accept-"
-"Language plutôt qu'en utilisant ce paramètre de requête. N.B. L'en-tête "
+"Language plutôt qu'en utilisant le paramètre de locale. N.B. L'en-tête "
 "Accept-Language n'aura aucun effet lorsqu'un calendrier national ou "
 "diocésain est demandé."
 
 #: index.php:52
-#, fuzzy
-#| msgid ""
-#| "It is preferable to request the response content type using the Accept "
-#| "header rather than using this request parameter."
 msgid ""
 "It is preferable to request the response content type using the Accept "
 "header rather than using the return_type parameter."
 msgstr ""
-"Il est préférable de demander le type de contenu de la réponse en utilisant "
-"l'en-tête Accept plutôt qu'en utilisant ce paramètre de requête."
+"Il est préférable de demander le type de contenu de la réponse en utilisant l"
+"'en-tête Accept plutôt qu'en utilisant le paramètre return_type."
 
 #. translators: %s = '/calendar'
 #: index.php:57
