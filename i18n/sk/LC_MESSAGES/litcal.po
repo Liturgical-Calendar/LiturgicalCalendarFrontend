@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 09:08+0000\n"
+"POT-Creation-Date: 2024-10-25 10:18+0000\n"
 "PO-Revision-Date: 2024-10-25 09:58+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -112,7 +112,7 @@ msgstr "Dostupné parametre požiadaviek na základnej ceste %s"
 msgid "Request parameters available on all %1$s paths"
 msgstr "Parametre požiadaviek dostupné na všetkých cestách %1$s"
 
-#: index.php:91 usage.php:20 liturgyOfAnyDay.php:26
+#: index.php:90 usage.php:20 liturgyOfAnyDay.php:26
 msgid "General Roman Calendar"
 msgstr "Všeobecný rímsky kalendár"
 
@@ -126,23 +126,23 @@ msgstr "Katolícky liturgický kalendár"
 msgid "API %1$s endpoint"
 msgstr "API %1$s koncový bod"
 
-#: index.php:117
+#: index.php:118
 msgid "Path builder"
 msgstr "Staviteľ cesty"
 
-#: index.php:119
+#: index.php:122
 msgid "Select route"
 msgstr "Vyber trasu"
 
-#: index.php:127
+#: index.php:132
 msgid "Calendars available on selected route"
 msgstr "Kalendáre dostupné na vybranej trase"
 
-#: index.php:133 liturgyOfAnyDay.php:67
+#: index.php:139 liturgyOfAnyDay.php:67
 msgid "Year"
 msgstr "Rok"
 
-#: index.php:133
+#: index.php:139
 msgid ""
 "When not specified, the API will default to the current year. Try "
 "specifically setting the year by changing the value here."
@@ -150,11 +150,11 @@ msgstr ""
 "Ak nie je uvedené inak, API predvolene nastaví aktuálny rok. Skúste "
 "konkrétne nastaviť rok zmenou hodnoty tu."
 
-#: index.php:153
+#: index.php:159
 msgid "Liturgical Calendar API endpoint"
 msgstr "Koncový bod API liturgického kalendára"
 
-#: index.php:156
+#: index.php:162
 msgid ""
 "URL of the API request based on selected options. The button is set to the "
 "same URL, click on it to see results."
@@ -162,11 +162,11 @@ msgstr ""
 "URL požiadavky API na základe vybraných možností. Tlačidlo je nastavené na "
 "rovnakú URL, kliknite naň, aby ste videli výsledky."
 
-#: index.php:164 index.php:168
+#: index.php:170 index.php:174
 msgid "Liturgical Calendar Validator"
 msgstr "Overovač liturgického kalendára"
 
-#: index.php:167
+#: index.php:173
 msgid ""
 "In order to verify that the liturgical data produced by the API is correct, "
 "there is a Unit Test interface that can run predefined tests against the "
@@ -178,7 +178,7 @@ msgstr ""
 "JSON odpovediam vytvoreným API od roku 1970 až do 25 rokov od aktuálneho "
 "roku."
 
-#: index.php:171
+#: index.php:177
 #, php-format
 msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
@@ -187,28 +187,28 @@ msgstr ""
 "Jednotkové testy sú definované v priečinku %s v repozitári Liturgického "
 "kalendára API."
 
-#: index.php:172
+#: index.php:178
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
 msgstr "Rozhranie jednotkového testu je spravované v samostatnom úložisku: %s."
 
-#: index.php:179
+#: index.php:185
 msgid "Translation Tool"
 msgstr "Nástroj na preklad"
 
-#: index.php:185 index.php:188
+#: index.php:191 index.php:194
 msgid "Translations status"
 msgstr "Stav prekladov"
 
-#: index.php:196
+#: index.php:202
 msgid "Open API Schema"
 msgstr "Otvoriť schému API"
 
-#: index.php:199
+#: index.php:205
 msgid "Swagger / Open API Documentation"
 msgstr "Swagger / Open API Dokumentácia"
 
-#: index.php:201
+#: index.php:207
 msgid ""
 "All of the available API routes with their supported methods, parameters, "
 "content types and responses are described here."
@@ -216,11 +216,11 @@ msgstr ""
 "Všetky dostupné API trasy s ich podporovanými metódami, parametrami, typmi "
 "obsahu a odpoveďami sú popísané tu."
 
-#: index.php:207 usage.php:191
+#: index.php:213 usage.php:191
 msgid "Calculation of the Date of Easter"
 msgstr "Výpočet dátumu Veľkej noci"
 
-#: index.php:210
+#: index.php:216
 msgid ""
 "A simple API endpoint that returns data about the Date of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -236,11 +236,11 @@ msgstr ""
 "(pozorovanú rímskokatolíckou cirkvou) a algoritmu Meeus pre juliánsku Veľkú "
 "noc (pozorovanú pravoslávnymi cirkvami)."
 
-#: index.php:215
+#: index.php:221
 msgid "Date of Easter API endpoint"
 msgstr "Dátum Veľkej noci API endpoint"
 
-#: index.php:217
+#: index.php:223
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-25 09:08+0000\n"
+"POT-Creation-Date: 2024-10-25 10:18+0000\n"
 "PO-Revision-Date: 2024-10-25 09:58+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
@@ -116,7 +116,7 @@ msgstr "Parametri di richiesta disponibili sul percorso base %s"
 msgid "Request parameters available on all %1$s paths"
 msgstr "Parametri di richiesta disponibili su tutti i percorsi %1$s"
 
-#: index.php:91 usage.php:20 liturgyOfAnyDay.php:26
+#: index.php:90 usage.php:20 liturgyOfAnyDay.php:26
 msgid "General Roman Calendar"
 msgstr "Calendario Romano Generale"
 
@@ -130,23 +130,23 @@ msgstr "Calendario Liturgico Cattolico"
 msgid "API %1$s endpoint"
 msgstr "Percorso API %1$s"
 
-#: index.php:117
+#: index.php:118
 msgid "Path builder"
 msgstr "Costruttore di percorsi"
 
-#: index.php:119
+#: index.php:122
 msgid "Select route"
 msgstr "Seleziona percorso"
 
-#: index.php:127
+#: index.php:132
 msgid "Calendars available on selected route"
 msgstr "Calendari disponibili sul percorso selezionato"
 
-#: index.php:133 liturgyOfAnyDay.php:67
+#: index.php:139 liturgyOfAnyDay.php:67
 msgid "Year"
 msgstr "Anno"
 
-#: index.php:133
+#: index.php:139
 msgid ""
 "When not specified, the API will default to the current year. Try "
 "specifically setting the year by changing the value here."
@@ -154,11 +154,11 @@ msgstr ""
 "Quando non specificato, l'API predefinirà l'anno corrente. Prova a impostare "
 "specificamente l'anno cambiando il valore qui."
 
-#: index.php:153
+#: index.php:159
 msgid "Liturgical Calendar API endpoint"
 msgstr "API del Calendario Liturgico"
 
-#: index.php:156
+#: index.php:162
 msgid ""
 "URL of the API request based on selected options. The button is set to the "
 "same URL, click on it to see results."
@@ -166,11 +166,11 @@ msgstr ""
 "L'URL della richiesta all'API è basata sulle opzioni selezionate. Il "
 "pulsante è impostato sullo stesso URL, cliccalo per vedere i risultati."
 
-#: index.php:164 index.php:168
+#: index.php:170 index.php:174
 msgid "Liturgical Calendar Validator"
 msgstr "Validatore del Calendario Liturgico"
 
-#: index.php:167
+#: index.php:173
 msgid ""
 "In order to verify that the liturgical data produced by the API is correct, "
 "there is a Unit Test interface that can run predefined tests against the "
@@ -182,7 +182,7 @@ msgstr ""
 "risposte JSON prodotte dall'API partendo dall'anno 1970 fino a 25 anni nel "
 "futuro rispetto all'anno corrente."
 
-#: index.php:171
+#: index.php:177
 #, php-format
 msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
@@ -191,29 +191,29 @@ msgstr ""
 "I test unitari sono definiti nella cartella %s all'interno del repository "
 "dell'API del Calendario Liturgico."
 
-#: index.php:172
+#: index.php:178
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
 msgstr ""
 "L'interfaccia di test unitari viene curata in un repository tutto suo: %s."
 
-#: index.php:179
+#: index.php:185
 msgid "Translation Tool"
 msgstr "Strumento per la Traduzione"
 
-#: index.php:185 index.php:188
+#: index.php:191 index.php:194
 msgid "Translations status"
 msgstr "Stato delle traduzioni"
 
-#: index.php:196
+#: index.php:202
 msgid "Open API Schema"
 msgstr "Schema Open API"
 
-#: index.php:199
+#: index.php:205
 msgid "Swagger / Open API Documentation"
 msgstr "Documentazione Swagger / OpenAPI"
 
-#: index.php:201
+#: index.php:207
 msgid ""
 "All of the available API routes with their supported methods, parameters, "
 "content types and responses are described here."
@@ -221,11 +221,11 @@ msgstr ""
 "Tutti i percorsi API disponibili con i loro metodi supportati, parametri, "
 "tipi di contenuto e risposte sono descritti qui."
 
-#: index.php:207 usage.php:191
+#: index.php:213 usage.php:191
 msgid "Calculation of the Date of Easter"
 msgstr "Calcolo della Data della Pasqua"
 
-#: index.php:210
+#: index.php:216
 msgid ""
 "A simple API endpoint that returns data about the Date of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -241,11 +241,11 @@ msgstr ""
 "Pasqua Gregoriana (celebrata dalla Chiesa Romana) e dell'algoritmo di Meeus "
 "per il calcolo della Pasqua Giuliana (celebrata dalle chiese ortodosse)."
 
-#: index.php:215
+#: index.php:221
 msgid "Date of Easter API endpoint"
 msgstr "API per la Data della Pasqua"
 
-#: index.php:217
+#: index.php:223
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
