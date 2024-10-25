@@ -79,16 +79,16 @@ $apiOptions->epiphanyInput->id('RequestOptionEpiphany');
 $apiOptions->ascensionInput->id('RequestOptionAscension');
 $apiOptions->corpusChristiInput->id('RequestOptionCorpusChristi');
 $apiOptions->eternalHighPriestInput->id('RequestOptionEternalHighPriest');
-$apiOptions->localeInput->id('RequestOptionLocale');
-$apiOptions->acceptHeaderInput->id('RequestOptionAcceptHeader');
-$apiOptions->localeInput->labelAfter($localeLabelAfter);
+$apiOptions->localeInput->id('RequestOptionLocale')->labelAfter($localeLabelAfter);
 $apiOptions->yearTypeInput->id('RequestOptionYearType')->class('form-select')->wrapperClass('form-group col-sm-3');
-$apiOptions->acceptHeaderInput->labelAfter($acceptLabelAfter)->class('form-select')->wrapperClass('form-group col-sm-3');
+$apiOptions->acceptHeaderInput->id('RequestOptionAcceptHeader')->labelAfter($acceptLabelAfter)->class('form-select')->wrapperClass('form-group col-sm-3');
 
 ?><!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
-    <title><?php echo _("General Roman Calendar") ?></title>
+    <title><?php
+        echo _("General Roman Calendar");
+    ?></title>
     <?php include_once('layout/head.php'); ?>
 </head>
 <body class="sb-nav-fixed">
@@ -114,9 +114,13 @@ $apiOptions->acceptHeaderInput->labelAfter($acceptLabelAfter)->class('form-selec
                     <div class="card-body">
                         <p><small class="text-muted"><i><?php echo $API_DESCRIPTION; ?></i></small></p>
                         <div class="row mb-4">
-                            <h5 class="fw-bold"><?php echo _("Path builder"); ?></h5>
+                            <h5 class="fw-bold"><?php
+                                echo _("Path builder");
+                            ?></h5>
                             <div class="form-group col-sm-3">
-                                <label><?php echo _("Select route"); ?></label>
+                                <label><?php
+                                    echo _("Select route");
+                                ?></label>
                                 <select id="APICalendarRouteSelect" class="form-select">
                                     <option value="/calendar">/calendar</option>
                                     <option value="/calendar/nation/">/calendar/nation/</option>
@@ -124,7 +128,9 @@ $apiOptions->acceptHeaderInput->labelAfter($acceptLabelAfter)->class('form-selec
                                 </select>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="APICalendarSelect"><?php echo _("Calendars available on selected route"); ?></label>
+                                <label for="APICalendarSelect"><?php
+                                    echo _("Calendars available on selected route");
+                                ?></label>
                                 <select id="APICalendarSelect" class="form-select" disabled>
                                     <option value="">GENERAL ROMAN</option>
                                 </select>
