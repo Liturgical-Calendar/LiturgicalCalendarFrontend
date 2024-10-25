@@ -29,7 +29,7 @@ if (array_key_exists($example, EXAMPLES)) {
     if ("PHP" == $example) {
         include_once(EXAMPLES[$example]);
     } else {
-        echo "<iframe src='" . EXAMPLES[$example] . "'></iframe>";
+        echo "<iframe src='" . EXAMPLES[$example] . "' style='width: 100%;'></iframe>";
     }
 } else {
     echo "<h1>" . sprintf(_("Example '%s' not found"), $example) . "</h1>";
