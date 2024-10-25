@@ -82,8 +82,8 @@ $apiOptions->eternalHighPriestInput->id('RequestOptionEternalHighPriest');
 $apiOptions->localeInput->id('RequestOptionLocale');
 $apiOptions->acceptHeaderInput->id('RequestOptionAcceptHeader');
 $apiOptions->localeInput->labelAfter($localeLabelAfter);
-$apiOptions->yearTypeInput->id('RequestOptionYearType')->class('form-select');
-$apiOptions->acceptHeaderInput->labelAfter($acceptLabelAfter)->class('form-select');
+$apiOptions->yearTypeInput->id('RequestOptionYearType')->class('form-select')->wrapperClass('form-group col-sm-3');
+$apiOptions->acceptHeaderInput->labelAfter($acceptLabelAfter)->class('form-select')->wrapperClass('form-group col-sm-3');
 
 ?><!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
