@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-10-25 10:18+0000\n"
-"PO-Revision-Date: 2024-10-25 09:58+0000\n"
+"PO-Revision-Date: 2024-11-03 16:24+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
@@ -1361,7 +1361,7 @@ msgstr "Commemorazione"
 #. translators: liturgical rank. Keep Capitalized
 #: src/LitGrade.php:108
 msgid "Optional memorial"
-msgstr "Memoria facoltativa"
+msgstr "memoria facoltativa"
 
 #. translators: liturgical rank. Keep Capitalized
 #: src/LitGrade.php:111
