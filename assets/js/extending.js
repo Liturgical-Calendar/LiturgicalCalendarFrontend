@@ -804,7 +804,7 @@ $(document).on('click', '.actionPromptButton', ev => {
     //let buttonId = ev.currentTarget.id;
     //console.log(buttonId + ' button was clicked');
     FormControls.settings.decreeURLField = true;
-    FormControls.settings.decreeLangMapField = document.querySelector('.regionalNationalCalendarName')[0].id === 'widerRegionCalendarName';
+    FormControls.settings.decreeLangMapField = document.querySelector('.regionalNationalCalendarName').id === 'widerRegionCalendarName';
     setFormSettings( ev.currentTarget.id );
     if( ev.currentTarget.id === 'setPropertyButton' ) {
         propertyToChange = $('#propertyToChange').val();
