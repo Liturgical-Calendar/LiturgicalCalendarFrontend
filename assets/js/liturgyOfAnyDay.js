@@ -147,7 +147,7 @@ let updateResults = (liturgyOfADay) => {
     liturgyOfADay.forEach(([tag,eventData]) => {
         const lclzdGrade = eventData.grade < 7 ? eventData.grade_lcl : '';
         const isSundayOrdAdvLentEaster = filterTagsDisplayGrade.some(pattern => pattern.test(tag));
-        const eventDataGrade = eventData.display_grade !== ''
+        const eventDataGrade = eventData.grade_display !== ''
             ? eventData.displayGrade
             : (!isSundayOrdAdvLentEaster ? lclzdGrade : '');
         const eventDataCommon = eventData.common.length ? eventData.common_lcl : '';
