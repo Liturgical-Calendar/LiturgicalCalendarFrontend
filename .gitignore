@@ -112,3 +112,6 @@ credentials.php
 .php-version
 
 /vendor/
+/**/.env
+/**/.env.*
+!/**/.env.example

@@ -1,12 +1,12 @@
 const isStaging = location.href.includes( "-staging" );
 const endpointV = isStaging ? "dev" : "v3";
-const endpointURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/calendar`;
+const endpointURL = `${API_URL}/calendar` ?? `https://litcal.johnromanodorazio.com/api/${endpointV}/calendar`;
 
 let CalData = null;
 let dtFormat = new Intl.DateTimeFormat(currentLocale.language, { dateStyle: 'full' });
 const now = new Date();
 let liturgyDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0));
-let highContrast = [ "green", "red", "purple" ];
+let highContrast = [ 'green', 'red', 'purple' ];
 
 jQuery(() => {
     document.querySelector('#monthControl').value = now.getMonth() + 1;
@@ -98,30 +98,29 @@ $(document).on("change", "#monthControl,#yearControl,#calendarSelect,#dayControl
 let getLiturgyOfADay = (apiRequest = false) => {
     let timestamp = liturgyDate.getTime() / 1000;
     if( apiRequest ) {
-        let headers = {};
+        let headers = {
+            'Origin': location.origin
+        };
         if (CalendarState.calendar === 'VA') {
             headers['Accept-Language'] = currentLocale.language;
         }
-        $.ajax({
-            url: CalendarState.requestPath,
-            headers: headers,
-            success: (data, textStatus, xhr) => {
+        fetch(CalendarState.requestPath, {headers})
+            .then(response => response.json())
+            .then(data => {
                 if( data.hasOwnProperty('litcal') ) {
                     CalData = data.litcal;
-                    //key === key is superfluous, it's just to make codefactor happy that key is being used!
-                    let liturgyOfADay = Object.entries(CalData).filter(([key, value]) => value.date === timestamp && key === key );
+                    let liturgyOfADay = CalData.filter((celebration) => celebration.date === timestamp );
                     updateResults(liturgyOfADay);
                 } else {
                     $('#liturgyResults').append(`<div>ERROR: no 'litcal' property: ${JSON.stringify(data)}</div>`);
                 }
-            },
-            error: (xhr, textStatus, errorThrown) => {
-                $('#liturgyResults').append(`<div>ERROR: ${JSON.stringify(xhr)}</div>`);
-            }
-        });
+            })
+            .catch(error => {
+                $('#liturgyResults').append(`<div>ERROR: ${JSON.stringify(error)}</div>`);
+            });
     } else {
         //key === key is superfluous, it's just to make codefactor happy that key is being used!
-        let liturgyOfADay = Object.entries(CalData).filter(([key, value]) => value.date === timestamp && key === key );
+        let liturgyOfADay = CalData.filter((celebration) => celebration.date === timestamp );
         updateResults(liturgyOfADay);
     }
 }
@@ -135,28 +134,36 @@ const filterTagsDisplayGrade = [
 
 
 /**
- * Displays the liturgical events for the currently selected day.
- * @param {Object[][]} liturgyOfADay - A 2D array of objects where the outer
- *   array contains the events for the day. Each inner array contains two
- *   elements: the first is the tag of the event (e.g. "OrdSunday1") and the
- *   second is the event data.
+ * Updates the liturgy results section with the given liturgy of a day array.
+ * @param {Object[]} liturgyOfADay - an array of liturgical events, with each event
+ *      containing properties:
+ *          * date: number - the date of the event in seconds since the Unix epoch
+ *          * event_key: string - the key of the event
+ *          * name: string - the name of the event
+ *          * grade: number - the grade of the event
+ *          * grade_display: string - the display version of the grade of the event
+ *          * common: string[] - the common of the event
+ *          * common_lcl: string - the localized version of the common of the event
+ *          * grade_lcl: string - the localized version of the grade of the event
+ *          * liturgical_year: string - the liturgical year of the event
+ *          * color: string[] - the color of the event
  */
 let updateResults = (liturgyOfADay) => {
     $('#dateOfLiturgy').text( dtFormat.format(liturgyDate) );
     $('#liturgyResults').empty();
-    liturgyOfADay.forEach(([tag,eventData]) => {
-        const lclzdGrade = eventData.grade < 7 ? eventData.grade_lcl : '';
-        const isSundayOrdAdvLentEaster = filterTagsDisplayGrade.some(pattern => pattern.test(tag));
-        const eventDataGrade = eventData.grade_display !== ''
-            ? eventData.grade_display
+    liturgyOfADay.forEach((celebration) => {
+        const lclzdGrade = celebration.grade < 7 ? celebration.grade_lcl : '';
+        const isSundayOrdAdvLentEaster = filterTagsDisplayGrade.some(pattern => pattern.test(celebration.event_key));
+        const celebrationGrade = celebration.grade_display !== ''
+            ? celebration.grade_display
             : (!isSundayOrdAdvLentEaster ? lclzdGrade : '');
-        const eventDataCommon = eventData.common.length ? eventData.common_lcl : '';
-        const eventDataColor = eventData.color;
-        let finalHTML = `<div class="p-4 m-4 border rounded" style="background-color:${eventDataColor[0]};color:${highContrast.includes(eventDataColor[0]) ? "white" : "black"};">`;
-        finalHTML += `<h3>${eventData.name}</h3>`;
-        finalHTML += (eventDataGrade !== '' ? `<div>${eventDataGrade}</div>` : '');
-        finalHTML += `<div>${eventDataCommon}</div>`;
-        finalHTML += (eventData.hasOwnProperty('liturgical_year') ? `<div>${eventData.liturgical_year}</div>` : '');
+        const celebrationCommon = celebration.common.length ? celebration.common_lcl : '';
+        const celebrationColor = celebration.color;
+        let finalHTML = `<div class="p-4 m-4 border rounded" style="background-color:${celebrationColor[0]};color:${highContrast.includes(celebrationColor[0]) ? "white" : "black"};">`;
+        finalHTML += `<h3>${celebration.name}</h3>`;
+        finalHTML += (celebrationGrade !== '' ? `<div>${celebrationGrade}</div>` : '');
+        finalHTML += `<div>${celebrationCommon}</div>`;
+        finalHTML += (celebration.hasOwnProperty('liturgical_year') ? `<div>${celebration.liturgical_year}</div>` : '');
         finalHTML += `</div>`;
         $('#liturgyResults').append(finalHTML);
     });
