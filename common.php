@@ -19,6 +19,7 @@ if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'development') {
     $missalsURL = "{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}:{$_ENV['API_PORT']}/missals";
     $decreesURL = "{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}:{$_ENV['API_PORT']}/decrees";
     $regionalDataURL = "{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}:{$_ENV['API_PORT']}/data";
+    $calSubscriptionURL = "{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}:{$_ENV['API_PORT']}/calendar?returntype=ICS";
 } else {
     $isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false );
     //$stagingURL = $isStaging ? "-staging" : "";
@@ -31,6 +32,7 @@ if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'development') {
     $missalsURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/missals";
     $decreesURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/decrees";
     $regionalDataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/data";
+    $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/calendar?returntype=ICS";
 }
 /*
 $API_URLS = [
