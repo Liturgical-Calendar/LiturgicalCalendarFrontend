@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-17 21:23+0000\n"
+"POT-Creation-Date: 2024-11-17 21:27+0000\n"
 "PO-Revision-Date: 2024-10-25 09:58+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
@@ -115,7 +115,7 @@ msgstr "Aanvraagparameters beschikbaar op het basispad %s"
 msgid "Request parameters available on all %1$s paths"
 msgstr "Aanvraagparameters beschikbaar op alle paden %1$s"
 
-#: index.php:80 usage.php:13 liturgyOfAnyDay.php:35
+#: index.php:80 usage.php:13 liturgyOfAnyDay.php:24
 msgid "General Roman Calendar"
 msgstr "Algemene Romeinse kalender"
 
@@ -141,7 +141,7 @@ msgstr "Selecteer route"
 msgid "Calendars available on selected route"
 msgstr "Kalenders beschikbaar op geselecteerde route"
 
-#: index.php:129 liturgyOfAnyDay.php:76
+#: index.php:129 liturgyOfAnyDay.php:65
 msgid "Year"
 msgstr "Jaar"
 
@@ -320,7 +320,7 @@ msgstr "Bekijk FullCalendar voorbeeld (berichten eerst)"
 msgid "Calendar subscription"
 msgstr "Kalender abonnement"
 
-#: usage.php:88 liturgyOfAnyDay.php:52
+#: usage.php:88 liturgyOfAnyDay.php:41
 msgid "Select calendar"
 msgstr "Selecteer kalender"
 
@@ -518,7 +518,7 @@ msgstr ""
 msgid "In development"
 msgstr "In ontwikkeling"
 
-#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:35 liturgyOfAnyDay.php:43
+#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:24 liturgyOfAnyDay.php:32
 msgid "Liturgy of any day"
 msgstr "Liturgie van elke dag"
 
@@ -593,11 +593,11 @@ msgstr "Label"
 msgid "Name"
 msgstr "Naam"
 
-#: extending.php:83 liturgyOfAnyDay.php:58 src/FormControls.php:52
+#: extending.php:83 liturgyOfAnyDay.php:47 src/FormControls.php:52
 msgid "Day"
 msgstr "Dag"
 
-#: extending.php:84 liturgyOfAnyDay.php:62 src/FormControls.php:58
+#: extending.php:84 liturgyOfAnyDay.php:51 src/FormControls.php:58
 msgid "Month"
 msgstr "Maand"
 
@@ -1131,7 +1131,7 @@ msgid "Project website"
 msgstr "Projectwebsite"
 
 #. translators: %s = current selected date
-#: liturgyOfAnyDay.php:84
+#: liturgyOfAnyDay.php:73
 #, php-format
 msgid "Liturgy of %s"
 msgstr "Liturgie van %s"

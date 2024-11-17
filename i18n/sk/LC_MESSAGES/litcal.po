@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-17 21:23+0000\n"
+"POT-Creation-Date: 2024-11-17 21:27+0000\n"
 "PO-Revision-Date: 2024-10-25 09:58+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -112,7 +112,7 @@ msgstr "Dostupné parametre požiadaviek na základnej ceste %s"
 msgid "Request parameters available on all %1$s paths"
 msgstr "Parametre požiadaviek dostupné na všetkých cestách %1$s"
 
-#: index.php:80 usage.php:13 liturgyOfAnyDay.php:35
+#: index.php:80 usage.php:13 liturgyOfAnyDay.php:24
 msgid "General Roman Calendar"
 msgstr "Všeobecný rímsky kalendár"
 
@@ -138,7 +138,7 @@ msgstr "Vyber trasu"
 msgid "Calendars available on selected route"
 msgstr "Kalendáre dostupné na vybranej trase"
 
-#: index.php:129 liturgyOfAnyDay.php:76
+#: index.php:129 liturgyOfAnyDay.php:65
 msgid "Year"
 msgstr "Rok"
 
@@ -313,7 +313,7 @@ msgstr "Zobraziť celý kalendár (najprv správy)"
 msgid "Calendar subscription"
 msgstr "Predplatenie kalendára"
 
-#: usage.php:88 liturgyOfAnyDay.php:52
+#: usage.php:88 liturgyOfAnyDay.php:41
 msgid "Select calendar"
 msgstr "Vyber kalendár"
 
@@ -505,7 +505,7 @@ msgstr "Denný spravodajský prehľad s liturgiou dňa, ako zručnosť Amazon Al
 msgid "In development"
 msgstr "Vo vývoji"
 
-#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:35 liturgyOfAnyDay.php:43
+#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:24 liturgyOfAnyDay.php:32
 msgid "Liturgy of any day"
 msgstr "Liturgia ktoréhokoľvek dňa"
 
@@ -577,11 +577,11 @@ msgstr "Značka"
 msgid "Name"
 msgstr "Meno"
 
-#: extending.php:83 liturgyOfAnyDay.php:58 src/FormControls.php:52
+#: extending.php:83 liturgyOfAnyDay.php:47 src/FormControls.php:52
 msgid "Day"
 msgstr "Deň"
 
-#: extending.php:84 liturgyOfAnyDay.php:62 src/FormControls.php:58
+#: extending.php:84 liturgyOfAnyDay.php:51 src/FormControls.php:58
 msgid "Month"
 msgstr "Mesiac"
 
@@ -1100,7 +1100,7 @@ msgid "Project website"
 msgstr "Webová stránka projektu"
 
 #. translators: %s = current selected date
-#: liturgyOfAnyDay.php:84
+#: liturgyOfAnyDay.php:73
 #, php-format
 msgid "Liturgy of %s"
 msgstr "Liturgia %s"
