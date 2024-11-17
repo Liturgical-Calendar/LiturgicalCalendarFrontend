@@ -21,13 +21,6 @@ Object.filter = (obj, predicate) =>
       .filter( key => predicate(obj[key]) )
       .reduce( (res, key) => (res[key] = obj[key], res), {} );
 
-const isStaging = location.href.includes('-staging');
-const endpointV = isStaging ? 'dev' : 'v3';
-const MetaDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/calendars`;
-const RegionalDataURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/data`;
-const CalendarURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/calendar`;
-const MissalsURL = `https://litcal.johnromanodorazio.com/api/${endpointV}/missals`;
-
 $(document).on('click', '.sidebarToggle', event => {
     event.preventDefault();
     if(document.body.classList.contains('sb-sidenav-collapsed') ) {

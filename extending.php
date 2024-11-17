@@ -1,15 +1,11 @@
 <?php
 
 use LiturgicalCalendar\Frontend\FormControls;
-use LiturgicalCalendar\Frontend\I18n;
 use LiturgicalCalendar\Frontend\Utilities;
 
-include_once("vendor/autoload.php");
+include_once "common.php"; // provides $i18n and all API URLs
 
-$i18n = new I18n();
 $FormControls = new FormControls($i18n);
-$isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false || strpos($_SERVER['HTTP_HOST'], "localhost") !== false );
-$versionAPI = $isStaging ? "dev" : "v3";
 
 $dayOfWeekFmt = IntlDateFormatter::create($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'UTC', IntlDateFormatter::GREGORIAN, 'EEEE');
 $thursday   = $dayOfWeekFmt->format(DateTime::createFromFormat('!j-n-Y', '1-1-2022', new DateTimeZone('UTC'))->modify('next Thursday'));
@@ -21,11 +17,11 @@ $c = new Collator($i18n->LOCALE);
 
 
 [ "litcal_metadata" => $LitCalMetadata ] = json_decode(
-    file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/calendars"),
+    file_get_contents($metadataURL),
     true
 );
 [ "litcal_events" => $FestivityCollection ] = json_decode(
-    file_get_contents("https://litcal.johnromanodorazio.com/api/{$versionAPI}/events?locale=" . $i18n->LOCALE),
+    file_get_contents("{$eventsURL}?locale=" . $i18n->LOCALE),
     true
 );
 [ "catholic_dioceses_latin_rite" => $CatholicDiocesesByNation ] = json_decode(

@@ -1,30 +1,10 @@
 <?php
 
-use LiturgicalCalendar\Frontend\I18n;
 use LiturgicalCalendar\Components\ApiOptions;
 use LiturgicalCalendar\Components\ApiOptions\Input;
 use LiturgicalCalendar\Components\ApiOptions\PathType;
 
-include_once("vendor/autoload.php");
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__, ['.env', '.env.local', '.env.development', '.env.production'], false);
-$dotenv->safeLoad();
-$i18n = new I18n();
-
-if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'development') {
-    if (false === isset($_ENV['API_PROTOCOL']) || false === isset($_ENV['API_HOST']) || false === isset($_ENV['API_PORT'])) {
-        die("API_PROTOCOL, API_HOST and API_PORT must be defined in .env.development or similar dotenv when APP_ENV is development");
-    }
-    $calendarURL = "{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}:{$_ENV['API_PORT']}/calendar";
-    $metadataURL = "{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}:{$_ENV['API_PORT']}/calendars";
-    $dateOfEasterURL = "{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}:{$_ENV['API_PORT']}/easter";
-} else {
-    $isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false || strpos($_SERVER['HTTP_HOST'], "localhost") !== false );
-    //$stagingURL = $isStaging ? "-staging" : "";
-    $endpointV = $isStaging ? "dev" : "v3";
-    $calendarURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/calendar";
-    $metadataURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/calendars/";
-    $dateOfEasterURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/easter/";
-}
+include_once "common.php"; // provides $i18n and all API URLs
 
 $API_DESCRIPTION = _('Collection of Liturgical events for any given year between 1970 and 9999.') . " " .
     sprintf(

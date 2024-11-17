@@ -3,16 +3,9 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-include_once("vendor/autoload.php");
 use LiturgicalCalendar\Frontend\Utilities;
 
-$isStaging          = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false || strpos($_SERVER['HTTP_HOST'], "localhost") !== false );
-//$stagingURL         = $isStaging ? "-staging" : "";
-$endpointV          = $isStaging ? "dev" : "v3";
-$endpointURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/calendar";
-$metadataURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/calendars";
-$dateOfEasterURL    = "https://litcal.johnromanodorazio.com/api/{$endpointV}/easter";
-
+include_once "common.php";
 
 $AllAvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($value) {
     return strpos($value, 'POSIX') === false;

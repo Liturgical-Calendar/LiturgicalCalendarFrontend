@@ -20,6 +20,26 @@
 </div>
 <!-- End of Page Wrapper -->
 
+<!-- All API URLs are provided by common.php -->
+<script>
+const DateOfEasterURL = '<?php echo $dateOfEasterURL; ?>';
+const CalendarURL = '<?php echo $calendarURL; ?>';
+const MetadataURL = '<?php echo $metadataURL; ?>';
+const EventsURL = '<?php echo $eventsURL; ?>';
+const MissalsURL = '<?php echo $missalsURL; ?>';
+const DecreesURL = '<?php echo $decreesURL; ?>';
+const RegionalDataURL = '<?php echo $regionalDataURL; ?>';
+console.log({
+    'dateOfEasterURL': DateOfEasterURL,
+    'calendarURL': CalendarURL,
+    'metadataURL': MetadataURL,
+    'eventsURL': EventsURL,
+    'missalsURL': MissalsURL,
+    'decreesURL': DecreesURL,
+    'regionalDataURL': RegionalDataURL
+});
+</script>
+
 <!-- jQuery-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
