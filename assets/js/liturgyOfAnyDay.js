@@ -156,12 +156,13 @@ let updateResults = (liturgyOfADay) => {
         const isSundayOrdAdvLentEaster = filterTagsDisplayGrade.some(pattern => pattern.test(celebration.event_key));
         const celebrationGrade = celebration.grade_display !== null
             ? celebration.grade_display
-            : (!isSundayOrdAdvLentEaster ? lclzdGrade : '');
+            : (!isSundayOrdAdvLentEaster && celebration.grade !== 0 ? lclzdGrade : '');
         const celebrationCommon = celebration.common.length ? celebration.common_lcl : '';
         const celebrationColor = celebration.color;
+        const litGradeStyle = celebration.grade < 3 ? ' style="font-style:italic;"' : '';
         let finalHTML = `<div class="p-4 m-4 border rounded" style="background-color:${celebrationColor[0]};color:${highContrast.includes(celebrationColor[0]) ? "white" : "black"};">`;
         finalHTML += `<h3>${celebration.name}</h3>`;
-        finalHTML += (celebrationGrade !== '' ? `<div>${celebrationGrade}</div>` : '');
+        finalHTML += (celebrationGrade !== '' ? `<div${litGradeStyle}>${celebrationGrade}</div>` : '');
         finalHTML += `<div>${celebrationCommon}</div>`;
         finalHTML += (celebration.hasOwnProperty('liturgical_year') ? `<div>${celebration.liturgical_year}</div>` : '');
         finalHTML += `</div>`;
