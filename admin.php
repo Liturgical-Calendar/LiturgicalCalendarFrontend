@@ -1,6 +1,5 @@
 <?php
 
-use LiturgicalCalendar\Frontend\I18n;
 use LiturgicalCalendar\Frontend\FormControls;
 use LiturgicalCalendar\Frontend\Utilities;
 
@@ -26,23 +25,13 @@ if (!Utilities::authenticated(AUTH_USERS)) {
     die();
 }
 
-include_once("vendor/autoload.php");
+include_once("common.php");
 
-$i18n = new I18n();
 $FormControls = new FormControls($i18n);
 
-$isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false );
-
-if ($isStaging) {
-    $JSON = json_decode(file_get_contents('https://litcal.johnromanodorazio.com/api/dev/data/propriumdesanctis_1970/propriumdesanctis_1970.json'), true);
-    $thh = array_keys($JSON[0]);
-    [ "litcal_events" => $FestivityCollection ] = json_decode(file_get_contents("https://litcal.johnromanodorazio.com/api/dev/events/?locale={$i18n->LOCALE}"), true);
-} else {
-    $JSON = json_decode(file_get_contents('api/dev/data/propriumdesanctis_1970/propriumdesanctis_1970.json'), true);
-    $thh = array_keys($JSON[0]);
-    //$months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
-    [ "LitCalAllFestivities" => $FestivityCollection ] = json_decode(file_get_contents("https://litcal.johnromanodorazio.com/api/dev/allevents/?locale={$i18n->LOCALE}"), true);
-}
+$JSON = json_decode(file_get_contents($regionalDataURL . '/propriumdesanctis_1970/propriumdesanctis_1970.json'), true);
+$thh = array_keys($JSON[0]);
+[ "litcal_events" => $FestivityCollection ] = json_decode(file_get_contents("{$eventsURL}?locale={$i18n->LOCALE}"), true);
 
 
 $messages = [

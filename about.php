@@ -1,11 +1,8 @@
 <?php
 
-use LiturgicalCalendar\Frontend\I18n;
 use LiturgicalCalendar\Frontend\Utilities;
 
-include_once("vendor/autoload.php");
-
-$i18n = new I18n();
+include_once "common.php";
 
 $ABOUT_US = _("The Liturgical Calendar project is curated by a group of volunteer catholic programmers, seeking to serve the Church.");
 ?>
