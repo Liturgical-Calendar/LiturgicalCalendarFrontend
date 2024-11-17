@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-17 21:27+0000\n"
+"POT-Creation-Date: 2024-11-17 21:35+0000\n"
 "PO-Revision-Date: 2024-10-25 09:58+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
@@ -966,7 +966,7 @@ msgstr "Pascua juliana"
 msgid "Julian Easter in Gregorian Calendar"
 msgstr "Pascua Juliana en el Calendario Gregoriano"
 
-#: about.php:10
+#: about.php:7
 msgid ""
 "The Liturgical Calendar project is curated by a group of volunteer catholic "
 "programmers, seeking to serve the Church."
@@ -974,7 +974,7 @@ msgstr ""
 "El proyecto del Calendario Litúrgico está comisariado por un grupo de "
 "programadores católicos voluntarios que buscan servir a la Iglesia."
 
-#: about.php:16 about.php:24
+#: about.php:13 about.php:21
 msgid "Liturgical Calendar - About us"
 msgstr "Calendario litúrgico - Sobre nosotros"
 
