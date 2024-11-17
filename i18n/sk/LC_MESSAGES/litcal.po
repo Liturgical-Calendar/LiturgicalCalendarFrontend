@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-17 21:00+0000\n"
+"POT-Creation-Date: 2024-11-17 21:23+0000\n"
 "PO-Revision-Date: 2024-10-25 09:58+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -112,7 +112,7 @@ msgstr "Dostupné parametre požiadaviek na základnej ceste %s"
 msgid "Request parameters available on all %1$s paths"
 msgstr "Parametre požiadaviek dostupné na všetkých cestách %1$s"
 
-#: index.php:80 usage.php:20 liturgyOfAnyDay.php:35
+#: index.php:80 usage.php:13 liturgyOfAnyDay.php:35
 msgid "General Roman Calendar"
 msgstr "Všeobecný rímsky kalendár"
 
@@ -216,7 +216,7 @@ msgstr ""
 "Všetky dostupné API trasy s ich podporovanými metódami, parametrami, typmi "
 "obsahu a odpoveďami sú popísané tu."
 
-#: index.php:203 usage.php:191
+#: index.php:203 usage.php:184
 msgid "Calculation of the Date of Easter"
 msgstr "Výpočet dátumu Veľkej noci"
 
@@ -250,7 +250,7 @@ msgstr ""
 "každom prípade, keďže API vracia UNIX časovú pečiatku pre každý dátum Veľkej "
 "noci, lokalizácie môžu byť vykonané rovnako dobre v klientskej aplikácii."
 
-#: usage.php:10
+#: usage.php:8
 msgid ""
 "A Liturgical Calendar API from which you can retrieve data for the "
 "Liturgical events of any given year from 1970 onwards, whether for the "
@@ -261,76 +261,76 @@ msgstr ""
 "udalostiach pre akýkoľvek rok od roku 1970, či už pre univerzálny alebo "
 "všeobecný rímsky kalendár, alebo pre odvodené národné a diecézne kalendáre"
 
-#: usage.php:20
+#: usage.php:13
 msgid "Examples"
 msgstr "Príklady"
 
-#: usage.php:28
+#: usage.php:21
 msgid "Example usage of the API"
 msgstr "Príklad použitia API"
 
-#: usage.php:34 layout/header.php:100
+#: usage.php:27 layout/header.php:100
 msgid "Web calendar"
 msgstr "Webový kalendár"
 
-#: usage.php:46
+#: usage.php:39
 msgid "HTML presentation elaborated by PHP using a CURL request"
 msgstr "HTML prezentácia vypracovaná pomocou PHP s použitím CURL požiadavky"
 
-#: usage.php:47
+#: usage.php:40
 msgid "View PHP Example"
 msgstr "Zobraziť príklad PHP"
 
-#: usage.php:57
+#: usage.php:50
 msgid "HTML presentation elaborated by JAVASCRIPT using an AJAX request"
 msgstr ""
 "HTML prezentácia vypracovaná pomocou JAVASCRIPT-u s použitím AJAX požiadavky"
 
-#: usage.php:58
+#: usage.php:51
 msgid "View JavaScript Example"
 msgstr "Zobraziť príklad JavaScriptu"
 
-#: usage.php:65
+#: usage.php:58
 msgid "Calendar"
 msgstr "Kalendár"
 
-#: usage.php:68
+#: usage.php:61
 msgid ""
 "FullCalendar representation elaborated by JAVASCRIPT using an AJAX request"
 msgstr ""
 "Reprezentácia FullCalendar vypracovaná pomocou JAVASCRIPTU s použitím AJAX "
 "požiadavky"
 
-#: usage.php:69
+#: usage.php:62
 msgid "View FullCalendar"
 msgstr "Zobraziť celý kalendár"
 
-#: usage.php:70
+#: usage.php:63
 msgid "View FullCalendar (messages first)"
 msgstr "Zobraziť celý kalendár (najprv správy)"
 
-#: usage.php:81 layout/header.php:104
+#: usage.php:74 layout/header.php:104
 msgid "Calendar subscription"
 msgstr "Predplatenie kalendára"
 
-#: usage.php:95 liturgyOfAnyDay.php:52
+#: usage.php:88 liturgyOfAnyDay.php:52
 msgid "Select calendar"
 msgstr "Vyber kalendár"
 
-#: usage.php:99
+#: usage.php:92
 msgid "Calendar subscription URL"
 msgstr "URL na prihlásenie sa na odber kalendára"
 
-#: usage.php:122 usage.php:135 usage.php:160
+#: usage.php:115 usage.php:128 usage.php:153
 msgid "Click on the link above to copy it the clipboard."
 msgstr "Kliknite na odkaz vyššie, aby ste ho skopírovali do schránky."
 
-#: usage.php:123
+#: usage.php:116
 #, php-format
 msgid "Navigate to %s."
 msgstr "Prejdite na %s."
 
-#: usage.php:124
+#: usage.php:117
 msgid ""
 "At the bottom left corner of the screen, next to Other calendars, click on "
 "the + icon to add a new calendar, and choose <i><b>From URL</b></i>."
@@ -338,11 +338,11 @@ msgstr ""
 "V ľavom dolnom rohu obrazovky, vedľa Iné kalendáre, klikni na ikonu +, aby "
 "si pridal nový kalendár, a vyber <i><b>Z URL</b></i>."
 
-#: usage.php:125 usage.php:137 usage.php:163
+#: usage.php:118 usage.php:130 usage.php:156
 msgid "Paste in the URL that you copied earlier."
 msgstr "Prilepte URL, ktorý ste skopírovali skôr."
 
-#: usage.php:126 usage.php:138 usage.php:150 usage.php:166
+#: usage.php:119 usage.php:131 usage.php:143 usage.php:159
 msgid ""
 "Once subscribed, your calendar will be populated with the events from the "
 "subscription URL."
@@ -350,11 +350,11 @@ msgstr ""
 "Po prihlásení bude váš kalendár naplnený udalosťami z URL adresy "
 "predplatného."
 
-#: usage.php:127 usage.php:151
+#: usage.php:120 usage.php:144
 msgid "Google Calendar will poll the calendar URL every 8 hours."
 msgstr "Google Kalendár bude kontrolovať URL kalendára každých 8 hodín."
 
-#: usage.php:128 usage.php:140 usage.php:152 usage.php:170
+#: usage.php:121 usage.php:133 usage.php:145 usage.php:163
 msgid ""
 "Since you have made a subscription, any updates in the Liturgical Calendar "
 "API will be propagated to your subscription."
@@ -362,7 +362,7 @@ msgstr ""
 "Keďže ste si predplatili, všetky aktualizácie v API liturgického kalendára "
 "budú propagované do vášho predplatného."
 
-#: usage.php:129 usage.php:141 usage.php:153 usage.php:171
+#: usage.php:122 usage.php:134 usage.php:146 usage.php:164
 msgid ""
 "You will only see events for the current year. On the first day of a new "
 "year however, new events will be created automatically for the new year."
@@ -370,7 +370,7 @@ msgstr ""
 "Uvidíš iba udalosti pre aktuálny rok. Avšak, v prvý deň nového roka sa "
 "automaticky vytvoria nové udalosti pre nový rok."
 
-#: usage.php:130
+#: usage.php:123
 msgid ""
 "Once the calendar has been added from a desktop, it will become available "
 "for the same Gmail account on the Google Calendar app on a smartphone."
@@ -378,7 +378,7 @@ msgstr ""
 "Ako sa kalendár pridá z počítača, bude dostupný pre rovnaký účet Gmail v "
 "aplikácii Google Kalendár na smartfóne."
 
-#: usage.php:136
+#: usage.php:129
 msgid ""
 "Go to <i><b>Phone Settings → Accounts → Add account → Other → Add Calendar</"
 "b></i>."
@@ -386,7 +386,7 @@ msgstr ""
 "Choď do <i><b>Nastavenia telefónu → Účty → Pridať účet → Iné → Pridať "
 "kalendár</b></i>."
 
-#: usage.php:139
+#: usage.php:132
 msgid ""
 "The iPhone Calendar app will poll the calendar URL based on the settings at "
 "<i><b>Phone Settings → Accounts → Fetch New Data → Fetch</b></i>."
@@ -395,7 +395,7 @@ msgstr ""
 "nastavení v <i><b>Nastavenia telefónu → Účty → Načítať nové dáta → Načítať</"
 "b></i>."
 
-#: usage.php:146
+#: usage.php:139
 #, php-format
 msgid ""
 "If you have not yet added the calendar subscription from the desktop version "
@@ -404,11 +404,11 @@ msgstr ""
 "Ak ste ešte nepridali odber kalendára z desktopovej verzie Google Kalendára, "
 "urobte tak teraz (pozrite %s)."
 
-#: usage.php:147
+#: usage.php:140
 msgid "Open the Google Calendar app."
 msgstr "Otvorte aplikáciu Google Kalendár."
 
-#: usage.php:148
+#: usage.php:141
 msgid ""
 "Go to <i><b>Settings</b></i>, then under the account which you used for the "
 "Desktop version, click on the Calendar subscription name."
@@ -416,19 +416,19 @@ msgstr ""
 "Prejdite na <i><b>Nastavenia</b></i>, potom pod účtom, ktorý ste použili pre "
 "verziu pre počítač, kliknite na názov predplatného kalendára."
 
-#: usage.php:149
+#: usage.php:142
 msgid "Make sure <i><b>Synchronization</b></i> is turned on."
 msgstr "Uisti sa, že <i><b>Synchronizácia</b></i> je zapnutá."
 
-#: usage.php:159
+#: usage.php:152
 msgid "tested with Outlook 2013"
 msgstr "testované s Outlookom 2013"
 
-#: usage.php:161
+#: usage.php:154
 msgid "At the bottom of the screen, switch from Email view to Calendar view."
 msgstr "V dolnej časti obrazovky prepnite z pohľadu Email na pohľad Kalendár."
 
-#: usage.php:162
+#: usage.php:155
 msgid ""
 "On the ribbon of the Home menu item, click on <i><b>Open calendar → From the "
 "internet</b></i>."
@@ -436,7 +436,7 @@ msgstr ""
 "Na páse položky ponuky Domov klikni na <i><b>Otvoriť kalendár → Z internetu</"
 "b></i>."
 
-#: usage.php:164
+#: usage.php:157
 msgid ""
 "On the following screen, check the checkbox along the lines of \"Poll this "
 "calendar in the interval suggested by the creator\"."
@@ -444,11 +444,11 @@ msgstr ""
 "Na nasledujúcej obrazovke začiarknite políčko vedľa textu \"Kontrolovať "
 "tento kalendár v intervale navrhnutom tvorcom\"."
 
-#: usage.php:165
+#: usage.php:158
 msgid "Outlook Calendar should now poll the calendar URL once a day."
 msgstr "Outlook Kalendár by mal teraz kontrolovať URL kalendára raz denne."
 
-#: usage.php:167
+#: usage.php:160
 msgid ""
 "Make sure the Calendar is created in the Other calendars folder; if you find "
 "it under the Personal calendars folder, drag it and drop it onto the Other "
@@ -459,7 +459,7 @@ msgstr ""
 "nájdete v priečinku Osobné kalendáre, presuňte ho do priečinka Ostatné "
 "kalendáre, aby bol považovaný za internetový kalendár na odber."
 
-#: usage.php:168
+#: usage.php:161
 msgid ""
 "You can manually fetch new data by clicking on <i><b>Send/receive all</b></"
 "i> (from the SEND/RECEIVE menu item)."
@@ -467,7 +467,7 @@ msgstr ""
 "Nové údaje môžete manuálne načítať kliknutím na <i><b>Odoslať/prijať všetko</"
 "b></i> (z položky menu ODOSLAŤ/PRIJÍMAŤ)."
 
-#: usage.php:169
+#: usage.php:162
 msgid ""
 "Outlook Calendar supports a minimal amount of HTML in the event description, "
 "so the event descriptions provided by the subscription URL are a little bit "
@@ -477,39 +477,39 @@ msgstr ""
 "popisy udalostí poskytované URL adresou predplatného sú pre Outlook trochu "
 "viac \"skrášlené\"."
 
-#: usage.php:183 layout/header.php:108
+#: usage.php:176 layout/header.php:108
 msgid "Dates of Easter"
 msgstr "Dátumy Veľkej noci"
 
-#: usage.php:194
+#: usage.php:187
 msgid "Example display of the date of Easter from 1583 to 9999"
 msgstr "Príklad zobrazenia dátumu Veľkej noci od roku 1583 do roku 9999"
 
-#: usage.php:195
+#: usage.php:188
 msgid "Calculate the Date of Easter"
 msgstr "Vypočítaj dátum Veľkej noci"
 
-#: usage.php:205 layout/header.php:112
+#: usage.php:198 layout/header.php:112
 msgid "Liturgy of the Day"
 msgstr "Liturgia dňa"
 
-#: usage.php:214
+#: usage.php:207
 msgid "Alexa News Brief"
 msgstr "Alexa Novinky"
 
-#: usage.php:217
+#: usage.php:210
 msgid "Daily news brief with the liturgy of the day, as an Amazon Alexa skill"
 msgstr "Denný spravodajský prehľad s liturgiou dňa, ako zručnosť Amazon Alexa"
 
-#: usage.php:236 usage.php:244
+#: usage.php:229 usage.php:237
 msgid "In development"
 msgstr "Vo vývoji"
 
-#: usage.php:251 usage.php:255 liturgyOfAnyDay.php:35 liturgyOfAnyDay.php:43
+#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:35 liturgyOfAnyDay.php:43
 msgid "Liturgy of any day"
 msgstr "Liturgia ktoréhokoľvek dňa"
 
-#: usage.php:254
+#: usage.php:247
 msgid ""
 "For example, you can find the liturgy of the day from the day of your "
 "baptism."
