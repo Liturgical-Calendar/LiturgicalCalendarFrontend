@@ -6,26 +6,15 @@
  * @link https://litcal.johnromanodorazio.com
  */
 
-include_once("vendor/autoload.php");
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__, ['.env', '.env.local', '.env.development', '.env.production'], false);
-$dotenv->safeLoad();
-
 use LiturgicalCalendar\Components\CalendarSelect;
-use LiturgicalCalendar\Frontend\I18n;
 
-$i18n = new I18n();
+include_once "common.php";
+
 $dateToday = new DateTime();
 $fmt = new IntlDateFormatter($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::FULL, 'UTC', IntlDateFormatter::GREGORIAN, "MMMM");
 $fmtFull = new IntlDateFormatter($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'UTC', IntlDateFormatter::GREGORIAN);
 $monthDate = new DateTime();
-if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'development') {
-    if (false === isset($_ENV['API_PROTOCOL']) || false === isset($_ENV['API_HOST']) || false === isset($_ENV['API_PORT'])) {
-        die("API_PROTOCOL, API_HOST and API_PORT must be defined in .env.development or similar dotenv when APP_ENV is development");
-    }
-    $CalendarSelect = new CalendarSelect(["locale" => $i18n->LOCALE, "url" => "{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}:{$_ENV['API_PORT']}/calendars"]);
-} else {
-    $CalendarSelect = new CalendarSelect(["locale" => $i18n->LOCALE]);
-}
+$CalendarSelect = new CalendarSelect(["locale" => $i18n->LOCALE, "url" => $metadataURL]);
 
 ?>
 
@@ -88,7 +77,6 @@ if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'development') {
                 </div>
             </div>
         </div>
-        <script>const API_URL = '<?php echo rtrim($CalendarSelect->getMetadataUrl(), '/calendars'); ?>'</script>
         <?php include_once('./layout/footer.php'); ?>
         <script nomodule defer src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
 </body>

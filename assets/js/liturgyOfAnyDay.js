@@ -1,7 +1,3 @@
-const isStaging = location.href.includes( "-staging" );
-const endpointV = isStaging ? "dev" : "v3";
-const endpointURL = `${API_URL}/calendar` ?? `https://litcal.johnromanodorazio.com/api/${endpointV}/calendar`;
-
 let CalData = null;
 let dtFormat = new Intl.DateTimeFormat(currentLocale.language, { dateStyle: 'full' });
 const now = new Date();
@@ -44,7 +40,7 @@ class CalendarState {
      * @returns {string} The full endpoint URL for the API /calendar endpoint
      */
     static get requestPath () {
-        return `${endpointURL}/${CalendarState.calendarType !== '' ? `${CalendarState.calendarType}/${CalendarState.calendar}/` : ''}${CalendarState.year}?year_type=CIVIL`;
+        return `${CalendarURL}/${CalendarState.calendarType !== '' ? `${CalendarState.calendarType}/${CalendarState.calendar}/` : ''}${CalendarState.year}?year_type=CIVIL`;
     }
 }
 
