@@ -183,7 +183,7 @@ Promise.all([
             'Accept': 'application/json'
         }
     }),
-    fetch(MetaDataURL, {
+    fetch(MetadataURL, {
         method: 'GET',
         headers: {
             'Accept': 'application/json'
