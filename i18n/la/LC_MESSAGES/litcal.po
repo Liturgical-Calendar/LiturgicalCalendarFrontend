@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-17 21:35+0000\n"
+"POT-Creation-Date: 2024-11-21 22:34+0000\n"
 "PO-Revision-Date: 2024-10-12 17:47+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
@@ -691,19 +691,19 @@ msgstr "Missale"
 msgid "Reason (in favor of festivity)"
 msgstr "Ratio (pro festivitate)"
 
-#: extending.php:122 extending.php:521
+#: extending.php:122 extending.php:522
 msgid "Designate patron from existing festivity"
 msgstr "Patronum ex festo existente designa"
 
-#: extending.php:123 extending.php:537
+#: extending.php:123 extending.php:538
 msgid "Change name or grade of existing festivity"
 msgstr "Nomen vel gradum festi existentis muta"
 
-#: extending.php:124 extending.php:553
+#: extending.php:124 extending.php:554
 msgid "Move festivity to new date"
 msgstr "Festo ad novam diem move"
 
-#: extending.php:125 extending.php:569
+#: extending.php:125 extending.php:570
 msgid "Create a new festivity"
 msgstr "Crea novam festivitatem"
 
@@ -783,7 +783,7 @@ msgstr "LINGUA"
 msgid "Published Roman Missals"
 msgstr "Missalia Romana edita"
 
-#: extending.php:283 extending.php:586
+#: extending.php:283 extending.php:587
 msgid "Add Missal"
 msgstr "Addere Missale"
 
@@ -885,32 +885,32 @@ msgstr "Dioecesanae exceptiones ad calendarium nationale pro …"
 msgid "SAVE DIOCESAN CALENDAR"
 msgstr "SERVA CALENDARIUM DIOECESANUM"
 
-#: extending.php:525
+#: extending.php:526
 msgid "Designate patron"
 msgstr "Patronum designa"
 
-#: extending.php:526 extending.php:542 extending.php:558 extending.php:575
-#: extending.php:599
+#: extending.php:527 extending.php:543 extending.php:559 extending.php:576
+#: extending.php:600
 msgid "Cancel"
 msgstr "Cancella"
 
-#: extending.php:557
+#: extending.php:558
 msgid "Move Festivity"
 msgstr "Movere Festivitatem"
 
-#: extending.php:573
+#: extending.php:574
 msgid "New Festivity from existing"
 msgstr "Nova Festivitas ex existente"
 
-#: extending.php:574
+#: extending.php:575
 msgid "New Festivity ex novo"
 msgstr "Nova Festivitas ex novo"
 
-#: extending.php:591
+#: extending.php:592
 msgid "Choose from known Roman Missal language editions"
 msgstr "Elige ex notis editionibus linguae Missalis Romani"
 
-#: extending.php:593
+#: extending.php:594
 msgid ""
 "This Missal is unknown to the Liturgical Calendar API. Please choose from a "
 "value in the list, or contact the curator of the API to have the Missal "
@@ -920,7 +920,7 @@ msgstr ""
 "vel contacta curatorem API ut Missale addatur ad Missalia editionis linguae "
 "notae."
 
-#: extending.php:598
+#: extending.php:599
 msgid "Add language edition Roman Missal"
 msgstr "Adde editionem linguae Missalis Romani"
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-17 21:35+0000\n"
+"POT-Creation-Date: 2024-11-21 22:34+0000\n"
 "PO-Revision-Date: 2024-10-25 09:58+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -685,19 +685,19 @@ msgstr "Misál"
 msgid "Reason (in favor of festivity)"
 msgstr "Dôvod (v prospech slávnosti)"
 
-#: extending.php:122 extending.php:521
+#: extending.php:122 extending.php:522
 msgid "Designate patron from existing festivity"
 msgstr "Urči patróna z existujúcej slávnosti"
 
-#: extending.php:123 extending.php:537
+#: extending.php:123 extending.php:538
 msgid "Change name or grade of existing festivity"
 msgstr "Zmeniť názov alebo stupeň existujúcej slávnosti"
 
-#: extending.php:124 extending.php:553
+#: extending.php:124 extending.php:554
 msgid "Move festivity to new date"
 msgstr "Presuňte slávnosť na nový dátum"
 
-#: extending.php:125 extending.php:569
+#: extending.php:125 extending.php:570
 msgid "Create a new festivity"
 msgstr "Vytvorte nový sviatok"
 
@@ -777,7 +777,7 @@ msgstr "MIESTO"
 msgid "Published Roman Missals"
 msgstr "Publikované rímske misály"
 
-#: extending.php:283 extending.php:586
+#: extending.php:283 extending.php:587
 msgid "Add Missal"
 msgstr "Pridať Misál"
 
@@ -877,32 +877,32 @@ msgstr "Diecézne výnimky z národného kalendára pre …"
 msgid "SAVE DIOCESAN CALENDAR"
 msgstr "ULOŽIŤ DIECÉZNY KALENDÁR"
 
-#: extending.php:525
+#: extending.php:526
 msgid "Designate patron"
 msgstr "Určiť patróna"
 
-#: extending.php:526 extending.php:542 extending.php:558 extending.php:575
-#: extending.php:599
+#: extending.php:527 extending.php:543 extending.php:559 extending.php:576
+#: extending.php:600
 msgid "Cancel"
 msgstr "Zrušiť"
 
-#: extending.php:557
+#: extending.php:558
 msgid "Move Festivity"
 msgstr "Presunúť Slávnosť"
 
-#: extending.php:573
+#: extending.php:574
 msgid "New Festivity from existing"
 msgstr "Nový sviatok z existujúceho"
 
-#: extending.php:574
+#: extending.php:575
 msgid "New Festivity ex novo"
 msgstr "Nový sviatok ex novo"
 
-#: extending.php:591
+#: extending.php:592
 msgid "Choose from known Roman Missal language editions"
 msgstr "Vyberte si z dostupných jazykových vydaní Rímskeho misála"
 
-#: extending.php:593
+#: extending.php:594
 msgid ""
 "This Missal is unknown to the Liturgical Calendar API. Please choose from a "
 "value in the list, or contact the curator of the API to have the Missal "
@@ -912,7 +912,7 @@ msgstr ""
 "hodnotu zo zoznamu alebo kontaktujte kurátora API, aby bol misál pridaný do "
 "známych jazykových vydaní misálov."
 
-#: extending.php:598
+#: extending.php:599
 msgid "Add language edition Roman Missal"
 msgstr "Pridať jazykovú edíciu Rímskeho misála"
 
