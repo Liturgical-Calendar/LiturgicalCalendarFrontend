@@ -13,10 +13,18 @@ import {
     metadataProperties
 } from './FormControls.js';
 
+
 import {
     removeDiocesanCalendarModal,
     sanitizeInput
 } from './templates.js';
+
+import {
+    WiderRegionPayload,
+    NationalCalendarPayload,
+    DiocesanCalendarPayload,
+    DiocesanCalendarDELETEPayload
+} from './Payload.js';
 
 
 /**
@@ -58,7 +66,7 @@ FormControls.weekdayFormatter = new Intl.DateTimeFormat(jsLocale, { weekday: "lo
  * @prop {function} get - the getter for the proxy
  * @prop {function} set - the setter for the proxy
  * @prop {string} prop - the name of the property being accessed or modified
- * @prop {*} value - the value to be assigned to the property
+ * @prop {string} value - the value to be assigned to the property
  * @prop {Object} target - the object being proxied
  */
 const sanitizeProxiedAPI = {
@@ -158,6 +166,10 @@ const API = new Proxy({
 }, sanitizeProxiedAPI);
 
 
+/**
+ * Sets focus on the first tab of the diocesan calendar definition form with non-empty data.
+ * @function setFocusFirstTabWithData
+ */
 const setFocusFirstTabWithData = () => {
     let $firstInputWithNonEmptyValue = $('.carousel-item form .litEventName')
         .filter(function(idx) {
@@ -229,6 +241,10 @@ Promise.all([
     toastr["error"](error, "Error");
 });
 
+/**
+ * @description Retrieves the data for the Diocesan Calendar associated with the currently selected diocese, and populates the edit form with the retrieved data.
+ * @function loadDiocesanCalendarData
+ */
 const loadDiocesanCalendarData = () => {
     API.category = 'diocese';
     let diocese = $('#diocesanCalendarDioceseName').val();
@@ -367,6 +383,11 @@ const loadDiocesanCalendarData = () => {
     });
 }
 
+/**
+ * Replaces the day input and month select with a text input for strtotime.
+ * @param {jQuery} $row - The containing row of the form.
+ * @param {Object} Metadata - The metadata object from the JSON payload.
+ */
 const switcheroo = ( $row, Metadata ) => {
     $row.find('.litEventDay').closest('.form-group').remove();
     let $litEventMonth = $row.find('.litEventMonth');
@@ -380,6 +401,14 @@ const switcheroo = ( $row, Metadata ) => {
     $litEventMonthFormGrp.append(`<input type="text" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" class="form-control litEvent litEventStrtotime" id="${strtotimeId}" value="${Metadata.strtotime}" />`);
 }
 
+/**
+ * Reverts the form row from a strtotime text input back to separate day and month fields.
+ * Adjusts the form group classes to accommodate the change.
+ * Inserts a day input and month select dropdown based on the provided festivity data.
+ *
+ * @param {jQuery} $row - The containing row of the form.
+ * @param {Object} Festivity - The festivity data object containing day and month information.
+ */
 const unswitcheroo = ( $row, Festivity ) => {
     let $litEventStrtotime = $row.find('.litEventStrtotime');
     let $strToTimeFormGroup = $litEventStrtotime.closest('.form-group');
@@ -1098,7 +1127,8 @@ $(document).on('click', '#deleteDiocesanCalendarConfirm', () => {
     const diocese = $('#diocesanCalendarDioceseName').val();
     API.key = $('#DiocesesList').find('option[value="' + diocese + '"]').attr('data-value');
     let nation = $('#diocesanCalendarNationalDependency').val();
-    const payload = { diocese: diocese, nation: nation };
+    /** @type {DiocesanCalendarDELETEPayload} */
+    const payload = new DiocesanCalendarDELETEPayload(diocese, nation);
     fetch(API.path, {
         method: 'DELETE',
         headers: {
@@ -1139,43 +1169,19 @@ $(document).on('click', '#deleteDiocesanCalendarConfirm', () => {
 });
 
 /**
+ * @typedef {Object} RowData
+ * @prop {Object} festivity
+ * @prop {Object} metadata
+ * @prop {RowAction} metadata.action
+ */
+
+
+/**
  * TODO: define payload classes for the various possible scenarios
  *
  * The following event handle is used to serialize the data from the wider region or national
  * calendar forms for submission to the API. The event handler receives the jQuery event object as
  * an argument, and prepares a JSON object as the payload with the following structure:
- *
- * For a national calendar:
- *  {
- *      "litcal": litcalevent[],
- *      "settings": {
- *          "epiphany": string,
- *          "ascension": string,
- *          "corpus_christi": string
- *          "eternal_high_priest": boolean,
- *          "locale": string
- *      },
- *      "metadata": {
- *          "region": string,
- *          "wider_region": {
- *              "name": string,
- *              "json_file": string,
- *              "i18n_file": string
- *          },
- *          "missals": string[],
- *      }
- *  }
- *
- * For a wider region:
- *  {
- *      "litcal": litcalevent[],
- *      "national_calendars": {},
- *      "metadata": {
- *          "multilingual": boolean,
- *          "languages": string[],
- *          "wider_region": string
- *      }
- *  }[]
  *
  * The litcal object contains the liturgical events defined for the calendar.
  * litcal is an array of objects, each containing the information about a
@@ -1187,10 +1193,7 @@ $(document).on('click', '#deleteDiocesanCalendarConfirm', () => {
  *          "festivity": {
  *              "event_key": string,
  *              "name": string,
- *              "color": string,
- *              "grade": number ,
- *              "day": number,
- *              "month": number
+ *              "grade": number
  *          },
  *          "metadata": {
  *              "action": "makePatron"
@@ -1203,8 +1206,6 @@ $(document).on('click', '#deleteDiocesanCalendarConfirm', () => {
  *              "event_key": string,
  *              "name": string,
  *              "grade": number,
- *              "day": number,
- *              "month": number
  *          },
  *          "metadata": {
  *              "action": "setProperty",
@@ -1269,7 +1270,7 @@ $(document).on('click', '#deleteDiocesanCalendarConfirm', () => {
  *   N.B. For the createNew action, if the liturgical event is mobile, the "day" and "month" properties will be omitted,
  *          and a "strtotime" property of type string will be added to the festivity object.
  *
- *   N.B. For any action, if sinceYear, untilYear, decreeURL, or decreeLangs are defined, they will be added to the metadata object:
+ *   N.B. For any action, if since_year, until_year, url, or url_lang_map are defined, they will be added to the metadata object:
  *          - metadata.since_year,
  *          - metadata.until_year,
  *          - metadata.url,
@@ -1277,31 +1278,32 @@ $(document).on('click', '#deleteDiocesanCalendarConfirm', () => {
 */
 $(document).on('click', '.serializeRegionalNationalData', ev => {
     API.category = $(ev.currentTarget).data('category');
+    /**
+     * @type {NationalCalendarPUTPayload|WiderRegionPUTPayload}
+     */
     const payload = {};
     switch(API.category) {
         case 'nation':
-            API.key = $('#nationalCalendarName').val();
-            API.locale = $('#nationalCalendarSettingLocale').val();
+            API.key           = $('#nationalCalendarName').val();
+            API.locale        = $('#nationalCalendarSettingLocale').val();
             const widerRegion = $('#associatedWiderRegion').val();
-            payload = {
-                "litcal": [],
-                "settings": {
-                    "epiphany": $('#nationalCalendarSettingEpiphany').val(),
-                    "ascension": $('#nationalCalendarSettingAscension').val(),
-                    "corpus_christi": $('#nationalCalendarSettingCorpusChristi').val(),
-                    "eternal_high_priest": $('#nationalCalendarSettingHighPriest').is(':checked'),
-                    "locale": API.locale
+            payload.litcal    = [];
+            payload.settings  = {
+                epiphany: $('#nationalCalendarSettingEpiphany').val(),
+                ascension: $('#nationalCalendarSettingAscension').val(),
+                corpus_christi: $('#nationalCalendarSettingCorpusChristi').val(),
+                eternal_high_priest: $('#nationalCalendarSettingHighPriest').is(':checked'),
+                locale: API.locale
+            };
+            payload.metadata  = {
+                region: API.key,
+                wider_region: {
+                    name: widerRegion,
+                    json_file: `nations/${widerRegion}.json`,
+                    i18n_file: `nations/${widerRegion.toUpperCase()}/${API.locale}.json`
                 },
-                "metadata": {
-                    "region": API.key,
-                    "wider_region": {
-                        "name": widerRegion,
-                        "json_file": `nations/${widerRegion}.json`,
-                        "i18n_file": `nations/${widerRegion.toUpperCase()}/${API.locale}.json`
-                    },
-                    "missals": $.map( $('#publishedRomanMissalList li'), el => { return $(el).text() })
-                }
-            }
+                missals: $.map( $('#publishedRomanMissalList li'), el => { return $(el).text() })
+            };
             break;
         case 'widerregion':
             // our proxy will take care of splitting locale from wider region
@@ -1318,24 +1320,25 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
                 prev[ regionNamesLocalizedEng.of( locale.region ) ] = locale.region;
                 return prev;
             }, {});
-            payload = {
-                "litcal": [],
-                "national_calendars": nationalCalendars,
-                "metadata": {
-                    "multilingual": $('#widerRegionIsMultilingual').prop('checked'),
-                    "languages": $('#widerRegionLanguages').val(),
-                    "wider_region": $('#widerRegionCalendarName').val()
-                }
-            }
+            payload.litcal = [];
+            payload.national_calendars = nationalCalendars;
+            payload.metadata = {
+                multilingual: $('#widerRegionIsMultilingual').prop('checked'),
+                languages: $('#widerRegionLanguages').val(),
+                wider_region: $('#widerRegionCalendarName').val()
+            };
             break;
     }
 
     $('.regionalNationalDataForm .row').each((idx, el) => {
         const action = $(el).data('action');
+        /**
+         * @type RowData
+         */
         let rowData = {
-            "festivity": {},
-            "metadata": {
-                "action": action
+            festivity: {},
+            metadata: {
+                action: action
             }
         }
         if( action === RowAction.SetProperty ) {

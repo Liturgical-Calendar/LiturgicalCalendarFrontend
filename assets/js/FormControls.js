@@ -1,19 +1,8 @@
+
 /**
- * An enumeration of the 12 months of the Gregorian calendar.
+ * An enumeration of the months of the year.
  * @readonly
- * @enum {number}
- * @property {Number} JANUARY - January (1)
- * @property {Number} FEBRUARY - February (2)
- * @property {Number} MARCH - March (3)
- * @property {Number} APRIL - April (4)
- * @property {Number} MAY - May (5)
- * @property {Number} JUNE - June (6)
- * @property {Number} JULY - July (7)
- * @property {Number} AUGUST - August (8)
- * @property {Number} SEPTEMBER - September (9)
- * @property {Number} OCTOBER - October (10)
- * @property {Number} NOVEMBER - November (11)
- * @property {Number} DECEMBER - December (12)
+ * @enum {(1|2|3|4|5|6|7|8|9|10|11|12)}
  */
 const Month = Object.freeze({
     JANUARY:    1,
@@ -27,34 +16,36 @@ const Month = Object.freeze({
     SEPTEMBER:  9,
     OCTOBER:    10,
     NOVEMBER:   11,
-    DECEMBER:   12,
+    DECEMBER:   12
 });
 
 /**
- * Thirty days hath September, April, June, and November. Useful for setting the limit on the day input.
+ * Thirty days hath September = 9, April = 4, June = 6, and November = 11. Useful for setting the limit on the day input.
  * @readonly
- * @enum {Month}
+ * @type {[Month.SEPTEMBER, Month.APRIL, Month.JUNE, Month.NOVEMBER]}
  */
 const MonthsOfThirty = Object.freeze([Month.SEPTEMBER, Month.APRIL, Month.JUNE, Month.NOVEMBER]);
+
 
 /**
  * English names of the seven days of the week indexed from 0 to 7, used to check or set the value of the strtotime property in liturgical events.
  * @readonly
- * @enum {('Sunday'|'Monday'|'Tuesday'|'Wednesday'|'Thursday'|'Friday'|'Saturday')}
+ * @type {['Sunday'|'Monday'|'Tuesday'|'Wednesday'|'Thursday'|'Friday'|'Saturday']}
  */
 const DaysOfTheWeek = Object.freeze(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
 
 /**
  * A mapping of festivity ranks to numerical values for sorting purposes.
  * @readonly
- * @enum {Number}
+ * @enum {(7|6|5|4|3|2|1|0)}
  * @property {Number} HIGHERSOLEMNITY - Higher solemnity (7)
  * @property {Number} SOLEMNITY - Solemnity (6)
  * @property {Number} FEASTLORD - Feast of the Lord (5)
  * @property {Number} FEAST - Feast (4)
  * @property {Number} MEMORIAL - Memorial (3)
  * @property {Number} OPTIONALMEMORIAL - Optional memorial (2)
- * @property {Number} WEEKDAY - Weekday (1)
+ * @property {Number} COMMEMORATION - Commemoration (1)
+ * @property {Number} WEEKDAY - Weekday (0)
  */
 const Rank = Object.freeze({
     HIGHERSOLEMNITY:  7,
@@ -63,13 +54,15 @@ const Rank = Object.freeze({
     FEAST:            4,
     MEMORIAL:         3,
     OPTIONALMEMORIAL: 2,
-    WEEKDAY:          1
+    COMMEMORATION:    1,
+    WEEKDAY:          0
 });
+
 
 /**
  * An enumeration of possible actions that can be used to create a form row.
  * @readonly
- * @enum {String} RowAction
+ * @enum {('makePatron'|'makeDoctor'|'setProperty'|'moveFestivity'|'createNew'|'createNewFromExisting')} RowAction
  * @property {String} MakePatron - Designate a festivity as a patron saint (makePatron)
  * @property {String} MakeDoctor - Designate a festivity as a doctor of the Church (makeDoctor)
  * @property {String} SetProperty - Set the name, grade, color, or readings of a festivity (setProperty)
@@ -89,7 +82,7 @@ const RowAction = Object.freeze({
 /**
  * An enumeration of possible form row titles based on the RowAction. Produces the string key for localization purposes.
  * @readonly
- * @enum {String} RowActionTitle
+ * @enum {('Designate patron'|'Designate Doctor'|'Change name or grade'|'Move festivity'|'New festivity'|'New festivity')} RowActionTitle
  * @property {String} RowAction.MakePatron - Designate a festivity as a patron saint ('Designate patron')
  * @property {String} RowAction.MakeDoctor - Designate a festivity as a doctor of the Church ('Designate Doctor')
  * @property {String} RowAction.SetProperty - Set the name, grade, color, or readings of a festivity ('Change name or grade')
@@ -109,12 +102,7 @@ const RowActionTitle = Object.freeze({
 /**
  * Properties that are relevant for Mass readings.
  * @readonly
- * @type {Array<string>}
- * @property {String} first_reading - First reading
- * @property {String} responsorial_psalm - Responsorial psalm
- * @property {String} second_reading - Second reading
- * @property {String} alleluia_verse - Alleluia verse
- * @property {String} gospel - Gospel
+ * @type {['first_reading', 'responsorial_psalm', 'second_reading', 'alleluia_verse', 'gospel']}
  */
 const readingsProperties = Object.freeze([
     "first_reading",
@@ -127,24 +115,18 @@ const readingsProperties = Object.freeze([
 /**
  * The properties of the `LitCal` object that should be treated as integers.
  * @readonly
- * @type {Array<string>}
- * @property {Number} day - Day
- * @property {Number} month - Month
- * @property {Number} grade - Grade
- * @property {Number} since_year - Since year
- * @property {Number} until_year - Until year
- * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#toJSON()_behavior|toJSON() behavior}
+ * @type {['day', 'month', 'grade', 'since_year', 'until_year']}
  */
 const integerProperties = Object.freeze([ 'day', 'month', 'grade', 'since_year', 'until_year' ]);
 
 /**
  * The properties of the `LitCal` object that are expected to be present in the JSON payload of each action.
  * @readonly
- * @type {Object<RowAction, Array<string>>}
- * @property {Array<string>} RowAction.MakePatron - The properties to expect in the JSON payload for the "makePatron" action.
- * @property {Array<string>} RowAction.SetProperty - The properties to expect in the JSON payload for the "setProperty" action.
- * @property {Array<string>} RowAction.MoveFestivity - The properties to expect in the JSON payload for the "moveFestivity" action.
- * @property {Array<string>} RowAction.CreateNew - The properties to expect in the JSON payload for the "createNew" action.
+ * @type {Object<RowAction, string[]>}
+ * @property {[ 'event_key', 'name', 'color', 'grade', 'day', 'month' ]} [RowAction.MakePatron] - The properties to expect in the JSON payload for the "makePatron" action.
+ * @property {[ 'event_key', 'name', 'grade', 'day', 'month' ]} [RowAction.SetProperty] - The properties to expect in the JSON payload for the "setProperty" action.
+ * @property {[ 'event_key', 'name', 'day', 'month', 'missal', 'reason' ]} [RowAction.MoveFestivity] - The properties to expect in the JSON payload for the "moveFestivity" action.
+ * @property {[ 'event_key', 'name', 'color', 'grade', 'day', 'month', 'strtotime', 'common' ]} [RowAction.CreateNew] - The properties to expect in the JSON payload for the "createNew" action.
  */
 const payloadProperties = Object.freeze({
     [RowAction.MakePatron]:    Object.freeze([ 'event_key', 'name', 'color', 'grade', 'day', 'month' ]),
@@ -156,7 +138,7 @@ const payloadProperties = Object.freeze({
 /**
  * The properties of the `LitCal` object that are related to the metadata of a festivity / liturgical event.
  * @readonly
- * @type {Array<string>}
+ * @type {['missal', 'reason']}
  */
 const metadataProperties = Object.freeze([ 'missal', 'reason' ]);
 
