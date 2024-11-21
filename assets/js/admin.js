@@ -107,7 +107,7 @@ const createPropriumDeTemporeTable = ( data ) => {
             let currentUniqid = FormControls.uniqid;
             //console.log( el );
             let existingFestivityTag = el.Festivity.hasOwnProperty( 'tag' ) ? el.Festivity.tag : null;
-            if( el.Metadata.action === RowAction.CreateNew && FestivityCollection.hasOwnProperty( existingFestivityTag ) ) {
+            if( el.Metadata.action === RowAction.CreateNew && FestivityCollectionKeys.includes( existingFestivityTag ) ) {
                 el.Metadata.action = RowAction.CreateNewFromExisting;
             }
             setFormSettings( el.Metadata.action );
@@ -129,7 +129,7 @@ const createPropriumDeTemporeTable = ( data ) => {
 
             if( false === el.Festivity.hasOwnProperty( 'color' ) ) {
                 if( existingFestivityTag !== null ) {
-                    el.Festivity.color = FestivityCollection[existingFestivityTag].COLOR;
+                    el.Festivity.color = FestivityCollection.filter(el => el.event_key === existingFestivityTag)[0].color;
                 }
             }
 
@@ -369,7 +369,7 @@ $(document).on('click', '.actionPromptButton', ev => {
     }
 
     if( existingFestivityTag !== '' ) {
-        litevent = FestivityCollection[existingFestivityTag];
+        litevent = FestivityCollection.filter(el => el.event_key === existingFestivityTag)[0];
 
         $row.find(`#onTheFly${currentUniqid}Grade`).val(litevent.GRADE);
         $row.find(`#onTheFly${currentUniqid}Common`).multiselect('select', litevent.COMMON)
