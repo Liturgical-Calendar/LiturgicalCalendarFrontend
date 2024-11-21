@@ -214,14 +214,15 @@ $buttonGroup = "<div id=\"memorialsFromDecreesBtnGrp\">
 
     <datalist id="existingFestivitiesList">
     <?php
-    foreach ($FestivityCollection as $key => $festivity) {
-        echo "<option value=\"{$key}\">{$festivity["name"]}</option>";
+    foreach ($FestivityCollection as $festivity) {
+        echo "<option value=\"{$festivity["event_key"]}\">{$festivity["name"]}</option>";
     }
     ?>
     </datalist>
     <script>
         const messages = <?php echo json_encode($messages); ?>;
         const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
+        const FestivityCollectionKeys = <?php echo json_encode(array_column($FestivityCollection, "event_key")); ?>;
     </script>
 
     <?php include_once('./layout/footer.php'); ?>

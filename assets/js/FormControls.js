@@ -367,7 +367,7 @@ class FormControls {
         let festivity = null;
         if( element !== null ) {
             if( typeof element === 'string' ) {
-                festivity = FestivityCollection[element];
+                festivity = FestivityCollection.filter(festivity => festivity.event_key === element)[0];
                 festivity.event_key = element;
                 festivity.since_year = 1970;
                 //festivity.until_year = null;
@@ -383,7 +383,7 @@ class FormControls {
                     //festivity.until_year = null;
                 }
                 if( festivity.hasOwnProperty( 'color' ) === false ) {
-                    festivity.color = FestivityCollection.hasOwnProperty(festivity.event_key) ? FestivityCollection[festivity.event_key].color : [];
+                    festivity.color = FestivityCollectionKeys.includes(festivity.event_key) ? FestivityCollection.filter(fest => fest.event_key === festivity.event_key)[0].color : [];
                 }
             }
             //console.log(festivity);
@@ -547,26 +547,30 @@ class FormControls {
                 if( false === festivity.hasOwnProperty( 'until_year' ) ) {
                     festivity.until_year = '';
                 }
+            }
+            if (FestivityCollectionKeys.includes(festivity.event_key)) {
+                let event = FestivityCollection.filter(fest => fest.event_key === festivity.event_key)[0];
                 if( false === festivity.hasOwnProperty( 'color' ) ) {
-                    festivity.color = FestivityCollection.hasOwnProperty(festivity.event_key) && FestivityCollection[festivity.event_key].hasOwnProperty( 'color' ) ? FestivityCollection[festivity.event_key].color : [];
+                    festivity.color = event.hasOwnProperty('color') ? event.color : [];
                 }
-            }
-            if( false === festivity.hasOwnProperty( 'name' ) ) {
-                if( FestivityCollection.hasOwnProperty( festivity.event_key ) && FestivityCollection[festivity.event_key].hasOwnProperty( 'name' ) ) {
-                    festivity.name = FestivityCollection[festivity.event_key].name;
+                if( false === festivity.hasOwnProperty( 'name' ) ) {
+                    if( event.hasOwnProperty( 'name' ) ) {
+                        festivity.name = event.name;
+                    }
                 }
-            }
-            if( false === festivity.hasOwnProperty( 'day' ) ) {
-                if( FestivityCollection.hasOwnProperty(festivity.event_key) && FestivityCollection[festivity.event_key].hasOwnProperty( 'day' ) ) {
-                    festivity.day = FestivityCollection[festivity.event_key].day;
+                if( false === festivity.hasOwnProperty( 'day' ) ) {
+                    if( event.hasOwnProperty( 'day' ) ) {
+                        festivity.day = event.day;
+                    }
                 }
-            }
-            if( false === festivity.hasOwnProperty( 'month' ) ) {
-                console.log( 'festivity does not have a month property, now trying to retrieve info...' );
-                if( FestivityCollection.hasOwnProperty(festivity.event_key) && FestivityCollection[festivity.event_key].hasOwnProperty( 'month' ) ) {
-                    festivity.month = FestivityCollection[festivity.event_key].month;
-                } else {
-                    console.log( 'could not retrieve month info...' );
+                if( false === festivity.hasOwnProperty( 'month' ) ) {
+                    console.log( 'festivity does not have a month property, now trying to retrieve info...' );
+                    if( event.hasOwnProperty( 'month' ) ) {
+                        festivity.month = event.month;
+                    }
+                     else {
+                        console.log( 'could not retrieve month info...' );
+                    }
                 }
             }
             //console.log(festivity);
