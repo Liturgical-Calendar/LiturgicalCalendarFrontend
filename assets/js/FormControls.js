@@ -68,14 +68,14 @@ const Rank = Object.freeze({
  * @property {String} SetProperty - Set the name, grade, color, or readings of a festivity (setProperty)
  * @property {String} MoveFestivity - Move a festivity to a different date (moveFestivity)
  * @property {String} CreateNew - Create a new festivity (createNew)
- * @property {String} CreateNewFromExisting - Create a new festivity using an existing one as a template (createNewFromExisting)
+ * @property {String} CreateNewFromExisting - Create a new festivity using an existing one as a template (createNewFromExisting), only for diocesan calendars
  */
 const RowAction = Object.freeze({
-    MakePatron:       'makePatron',
-    MakeDoctor:       'makeDoctor',
-    SetProperty:      'setProperty',
-    MoveFestivity:    'moveFestivity',
-    CreateNew:        'createNew',
+    MakePatron:            'makePatron',
+    MakeDoctor:            'makeDoctor',
+    SetProperty:           'setProperty',
+    MoveFestivity:         'moveFestivity',
+    CreateNew:             'createNew',
     CreateNewFromExisting: 'createNewFromExisting'
 });
 
@@ -697,105 +697,105 @@ const setFormSettings = action => {
         case 'designateDoctorButton':
             //nobreak
         case RowAction.MakeDoctor:
-            FormControls.settings.tagField = false;
-            FormControls.settings.nameField = true;
-            FormControls.settings.gradeFieldShow = false;
-            FormControls.settings.gradeField = false;
+            FormControls.settings.tagField        = false;
+            FormControls.settings.nameField       = true;
+            FormControls.settings.gradeFieldShow  = false;
+            FormControls.settings.gradeField      = false;
             FormControls.settings.commonFieldShow = false;
-            FormControls.settings.dayField = false;
-            FormControls.settings.monthField = false;
-            FormControls.settings.untilYearField = true;
-            FormControls.settings.colorField = false;
-            FormControls.settings.reasonField = false;
-            FormControls.settings.readingsField = false;
-            FormControls.title = Messages[ RowActionTitle[RowAction.MakeDoctor] ];
+            FormControls.settings.dayField        = false;
+            FormControls.settings.monthField      = false;
+            FormControls.settings.untilYearField  = true;
+            FormControls.settings.colorField      = false;
+            FormControls.settings.reasonField     = false;
+            FormControls.settings.readingsField   = false;
+            FormControls.title  = Messages[ RowActionTitle[RowAction.MakeDoctor] ];
             FormControls.action = RowAction.MakeDoctor;
             break;
         case 'designatePatronButton':
             //nobreak
         case RowAction.MakePatron:
-            FormControls.settings.tagField = false;
-            FormControls.settings.nameField = true;
-            FormControls.settings.gradeFieldShow = true;
-            FormControls.settings.gradeField = true;
+            FormControls.settings.tagField        = false;
+            FormControls.settings.nameField       = true;
+            FormControls.settings.gradeFieldShow  = true;
+            FormControls.settings.gradeField      = true;
             FormControls.settings.commonFieldShow = false;
-            FormControls.settings.dayField = false;
-            FormControls.settings.monthField = false;
-            FormControls.settings.untilYearField = true;
-            FormControls.settings.colorField = false;
-            FormControls.settings.missalField = false;
-            FormControls.settings.reasonField = false;
-            FormControls.settings.readingsField = false;
-            FormControls.title =  Messages[ RowActionTitle[RowAction.MakePatron] ];
+            FormControls.settings.dayField        = false;
+            FormControls.settings.monthField      = false;
+            FormControls.settings.untilYearField  = true;
+            FormControls.settings.colorField      = false;
+            FormControls.settings.missalField     = false;
+            FormControls.settings.reasonField     = false;
+            FormControls.settings.readingsField   = false;
+            FormControls.title  =  Messages[ RowActionTitle[RowAction.MakePatron] ];
             FormControls.action = RowAction.MakePatron;
             break;
         case 'setPropertyButton':
             //nobreak
         case RowAction.SetProperty:
-            FormControls.settings.tagField = false;
+            FormControls.settings.tagField        = false;
             FormControls.settings.commonFieldShow = false;
-            FormControls.settings.dayField = false;
-            FormControls.settings.monthField = false;
-            FormControls.settings.untilYearField = true;
-            FormControls.settings.colorField = false;
-            FormControls.settings.missalField = false;
-            FormControls.settings.reasonField = false;
-            FormControls.settings.readingsField = false;
-            FormControls.title = Messages[ RowActionTitle[RowAction.SetProperty] ];
+            FormControls.settings.dayField        = false;
+            FormControls.settings.monthField      = false;
+            FormControls.settings.untilYearField  = true;
+            FormControls.settings.colorField      = false;
+            FormControls.settings.missalField     = false;
+            FormControls.settings.reasonField     = false;
+            FormControls.settings.readingsField   = false;
+            FormControls.title  = Messages[ RowActionTitle[RowAction.SetProperty] ];
             FormControls.action = RowAction.SetProperty;
             break;
         case 'moveFestivityButton':
             //nobreak
         case RowAction.MoveFestivity:
-            FormControls.settings.tagField = false;
-            FormControls.settings.nameField = false;
-            FormControls.settings.gradeFieldShow = false;
+            FormControls.settings.tagField        = false;
+            FormControls.settings.nameField       = false;
+            FormControls.settings.gradeFieldShow  = false;
             FormControls.settings.commonFieldShow = false;
-            FormControls.settings.dayField = true;
-            FormControls.settings.monthField = true;
-            FormControls.settings.untilYearField = true;
-            FormControls.settings.colorField = false;
-            FormControls.settings.missalField = true;
-            FormControls.settings.reasonField = true;
-            FormControls.settings.readingsField = false;
-            FormControls.title = Messages[ RowActionTitle[RowAction.MoveFestivity] ];
+            FormControls.settings.dayField        = true;
+            FormControls.settings.monthField      = true;
+            FormControls.settings.untilYearField  = true;
+            FormControls.settings.colorField      = false;
+            FormControls.settings.missalField     = true;
+            FormControls.settings.reasonField     = true;
+            FormControls.settings.readingsField   = false;
+            FormControls.title  = Messages[ RowActionTitle[RowAction.MoveFestivity] ];
             FormControls.action = RowAction.MoveFestivity;
             break;
         case 'newFestivityFromExistingButton':
             //nobreak
         case RowAction.CreateNewFromExisting:
-            FormControls.settings.tagField = false;
-            FormControls.settings.nameField = false;
-            FormControls.settings.gradeFieldShow = true;
+            FormControls.settings.tagField        = false;
+            FormControls.settings.nameField       = false;
+            FormControls.settings.gradeFieldShow  = true;
             FormControls.settings.commonFieldShow = true;
-            FormControls.settings.gradeField = false; //defaults to true in admin.js
-            FormControls.settings.commonField = false; //defaults to true in admin.js
-            FormControls.settings.dayField = false; //defaults to true in admin.js
-            FormControls.settings.monthField = false; //defaults to true in admin.js
-            FormControls.settings.untilYearField = true; //defaults to true in admin.js
-            FormControls.settings.colorField = false; //defaults to true in admin.js
-            FormControls.settings.missalField = false;
-            FormControls.settings.reasonField = false;
-            FormControls.settings.readingsField = true;
-            FormControls.title = Messages[ RowActionTitle[RowAction.CreateNew] ];
+            FormControls.settings.gradeField      = false; //defaults to true in admin.js
+            FormControls.settings.commonField     = false; //defaults to true in admin.js
+            FormControls.settings.dayField        = false; //defaults to true in admin.js
+            FormControls.settings.monthField      = false; //defaults to true in admin.js
+            FormControls.settings.untilYearField  = true; //defaults to true in admin.js
+            FormControls.settings.colorField      = false; //defaults to true in admin.js
+            FormControls.settings.missalField     = false;
+            FormControls.settings.reasonField     = false;
+            FormControls.settings.readingsField   = true;
+            FormControls.title  = Messages[ RowActionTitle[RowAction.CreateNew] ];
             FormControls.action = RowAction.CreateNew;
             break;
         case 'newFestivityExNovoButton':
             //nobreak
         case RowAction.CreateNew:
-            FormControls.settings.tagField = true;
-            FormControls.settings.nameField = true;
-            FormControls.settings.gradeFieldShow = true;
+            FormControls.settings.tagField        = true;
+            FormControls.settings.nameField       = true;
+            FormControls.settings.gradeFieldShow  = true;
             FormControls.settings.commonFieldShow = true;
-            FormControls.settings.gradeField = true;
-            FormControls.settings.commonField = true;
-            FormControls.settings.dayField = true;
-            FormControls.settings.monthField = true;
-            FormControls.settings.untilYearField = true;
-            FormControls.settings.colorField = true;
-            FormControls.settings.missalField = false;
-            FormControls.settings.reasonField = false;
-            FormControls.settings.readingsField = true;
+            FormControls.settings.gradeField      = true;
+            FormControls.settings.commonField     = true;
+            FormControls.settings.dayField        = true;
+            FormControls.settings.monthField      = true;
+            FormControls.settings.untilYearField  = true;
+            FormControls.settings.colorField      = true;
+            FormControls.settings.missalField     = false;
+            FormControls.settings.reasonField     = false;
+            FormControls.settings.readingsField   = true;
             FormControls.title = Messages[ RowActionTitle[RowAction.CreateNew] ];
             FormControls.action = RowAction.CreateNew;
             break;
@@ -809,13 +809,13 @@ const setFormSettings = action => {
 const setFormSettingsForProperty = property => {
     switch(property) {
         case 'name':
-            FormControls.settings.nameField = true;
+            FormControls.settings.nameField      = true;
             FormControls.settings.gradeFieldShow = false;
             break;
         case 'grade':
-            FormControls.settings.nameField = false;
+            FormControls.settings.nameField      = false;
             FormControls.settings.gradeFieldShow = true;
-            FormControls.settings.gradeField = true;
+            FormControls.settings.gradeField     = true;
             break;
     }
 }
@@ -842,12 +842,12 @@ class LitEvent {
      * @param {number} [month=1] - Month of the liturgical event.
      */
     constructor(name = "", color = "", grade = 0, common = "", day = 1, month = 1 ) {
-        this.name = name;
-        this.color = color;
-        this.grade = grade;
+        this.name   = name;
+        this.color  = color;
+        this.grade  = grade;
         this.common = common;
-        this.day = day;
-        this.month = month;
+        this.day    = day;
+        this.month  = month;
     }
 }
 

@@ -1279,7 +1279,7 @@ $(document).on('click', '#deleteDiocesanCalendarConfirm', () => {
 $(document).on('click', '.serializeRegionalNationalData', ev => {
     API.category = $(ev.currentTarget).data('category');
     /**
-     * @type {NationalCalendarPUTPayload|WiderRegionPUTPayload}
+     * @type {NationalCalendarPayload|WiderRegionPayload}
      */
     const payload = {};
     switch(API.category) {

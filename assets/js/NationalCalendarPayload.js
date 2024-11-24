@@ -1,4 +1,3 @@
-import { Settings, Locale } from './Settings.js';
 /**
  * Represents the possible values for the `epiphany` setting.
  * @typedef Epiphany
@@ -29,6 +28,13 @@ import { Settings, Locale } from './Settings.js';
  * @enum {string}
  */
 
+/**
+ * @typedef LitGrade
+ * @enum {7|6|5|4|3|2|1|0}
+ */
+
+import { Settings, Locale } from './Settings.js';
+
 /** @enum {'white'|'red'|'green'|'purple'|'pink'} */
 class LitColor {
     static White    = 'white';
@@ -54,10 +60,6 @@ class LitColor {
 };
 Object.freeze(LitColor);
 
-/**
- * @typedef LitGrade
- * @enum {7|6|5|4|3|2|1|0}
- */
 class LitGrade {
     static HIGHER_SOLEMNITY = 7;
     static SOLEMNITY        = 6;
@@ -97,17 +99,19 @@ Object.freeze(LitGrade);
 class NationalCalendarFestivityData {
     static #allowedProps = Object.freeze(['event_key', 'name', 'grade', 'color', 'common', 'day', 'month', 'strototime']);
     static #allowedPropsByFlavor = Object.freeze({
-        makePatron: ['event_key', 'name', 'grade'],
-        setProperty: ['event_key', 'name', 'grade'],
-        moveFestivity: ['event_key']
+        makePatron: ['event_key', 'name', 'grade'],  // name should always be present, grade is optional (only if it changes)
+        setProperty: ['event_key', 'name', 'grade'], // either name or grade should always be present, but not both; depends on which is indicated in `metadata.property`
+        moveFestivity: ['event_key', 'day', 'month', 'missal', 'reason'], // the idea is that only an authority such as a published Roman Missal can move a festivity
+        createNew: ['event_key', 'name', 'color', 'grade', 'day', 'month', 'common', 'strtotime', 'readings'] // 'readings' is only expected for createNew when common=Proper
     });
     constructor( festivityData, flavor ) {
         if (typeof festivityData !== 'object' || festivityData === null) {
             throw new Error('the value passed to the constructor of a NationalCalendarFestivityData must be of type object and not null');
         }
         if (false === festivityData.hasOwnProperty('event_key')) {
-            throw new Error('the value passed to the constructor of a NationalCalendarFestivityData must have a "event_key" property');
+            throw new Error('the value passed to the constructor of a NationalCalendarFestivityData must have an "event_key" property');
         }
+        switch (flavor) {}
         return new Proxy(this, {
             set: (target, prop, value) => {
                 if (false === festivityData.hasOwnProperty(prop)) {
@@ -122,7 +126,7 @@ Object.freeze(NationalCalendarFestivityData);
 
 class NationalCalendarFestivityMetadata {
     static #flavors       = Object.freeze(['makePatron', 'setProperty', 'moveFestivity', 'createNew']);
-    static #allowedProps  = Object.freeze(['since_year', 'until_year', 'url', 'url_lang_map']);
+    static #allowedProps  = Object.freeze(['since_year', 'until_year', 'url', 'url_lang_map', 'missal', 'reason']); //'property'
     static #propOverrides = Object.freeze(['name', 'grade']);
     static MakePatron     = new NationalCalendarFestivityMetadata('makePatron');
     static SetProperty    = new NationalCalendarFestivityMetadata('setProperty');
