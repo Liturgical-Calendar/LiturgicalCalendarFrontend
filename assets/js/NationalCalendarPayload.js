@@ -466,7 +466,7 @@ class NationalCalendarPayloadMetadata {
                 throw new Error('`metadata.locales` parameter must be an array of valid locale codes');
             }
         }
-        if (false === typeof metadata.wider_region === 'string') {
+        if (typeof metadata.wider_region !== 'string') {
             throw new Error('`metadata.wider_region` parameter must be a string');
         }
         const re2 = /^(Americas|Europe|Asia|Africa|Oceania|Middle East|Antarctica)$/;
@@ -498,13 +498,13 @@ class NationalCalendarPayload {
         if (null === litcal || null === settings || null === metadata) {
             throw new Error('litcal, settings and metadata parameters are required');
         }
-        if (false === typeof litcal === 'object') {
+        if (typeof litcal !== 'object') {
             throw new Error('litcal parameter must be an object');
         }
-        if (false === typeof settings === 'object') {
+        if (typeof settings !== 'object') {
             throw new Error('settings parameter must be an object');
         }
-        if (false === typeof metadata === 'object') {
+        if (typeof metadata !== 'object') {
             throw new Error('metadata parameter must be an object');
         }
         /**@type {NationalCalendarLitCalArray} */

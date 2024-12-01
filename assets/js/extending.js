@@ -931,7 +931,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                 FormControls.settings.decreeLangMapField = true;
                 $('#widerRegionLocales').multiselect('deselectAll', false).multiselect('select', data.metadata.locales);
                 break;
-            case 'nation':
+            case 'nation': {
                 FormControls.settings.decreeURLField = true;
                 FormControls.settings.decreeLangMapField = false;
                 const { settings, metadata } = data;
@@ -953,6 +953,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                 $('#publishedRomanMissalList').empty().append( '<li class="list-group-item">' + metadata.missals.join('</li><li class="list-group-item">') + '</li>' );
                 $('#associatedWiderRegion').val( metadata.wider_region );
                 $('#nationalCalendarSettingHighPriest').prop('checked', settings.eternal_high_priest );
+            }
         }
         $('.regionalNationalDataForm').empty();
         data.litcal.forEach((el) => {
@@ -1041,7 +1042,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                 case 'widerregion':
                     $('#widerRegionLocales').multiselect('deselectAll', false);
                     break;
-                case 'nation':
+                case 'nation': {
                     $('form#nationalCalendarSettingsForm')[0].reset();
                     $('#publishedRomanMissalList').empty();
                     const LocalesForRegion = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, localeDisplayName]) => {
@@ -1054,6 +1055,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                     });
                     document.querySelector('#nationalCalendarLocales').innerHTML = localeOptions.join('\n');
                     break;
+                }
             }
             $('form.regionalNationalDataForm').empty();
         } else {
@@ -1321,7 +1323,7 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
      */
     const payload = {};
     switch(API.category) {
-        case 'nation':
+        case 'nation': {
             API.key           = $('#nationalCalendarName').val();
             API.locale        = $('#currentLocalization').val();
             const widerRegion = $('#associatedWiderRegion').val();
@@ -1339,7 +1341,8 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
                 locales: $('#nationalCalendarLocales').val()
             };
             break;
-        case 'widerregion':
+        }
+        case 'widerregion': {
             // our proxy will take care of splitting locale from wider region
             API.key = document.querySelector('#widerRegionCalendarName').value;
             const regionNamesLocalizedEng = new Intl.DisplayNames(['en'], { type: 'region' });
@@ -1361,6 +1364,7 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
                 wider_region: $('#widerRegionCalendarName').val()
             };
             break;
+        }
     }
     let action;
     $('.regionalNationalDataForm .row').each((idx, el) => {

@@ -303,9 +303,9 @@ if (isset($_GET["choice"])) {
                                         <input class="form-control" list="availableLocalizationsForNation" id="currentLocalization" />
                                         <datalist id="availableLocalizationsForNation">
                                         <?php
-                                            foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
-                                                echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
-                                            }
+                                        foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
+                                            echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
+                                        }
                                         ?>
                                         </datalist>
                                         <div class="invalid-feedback"><?php echo _("You must choose a value from the list."); ?></div>
