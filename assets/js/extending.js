@@ -1324,21 +1324,21 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
     const payload = {};
     switch(API.category) {
         case 'nation': {
-            API.key           = $('#nationalCalendarName').val();
-            API.locale        = $('#currentLocalization').val();
-            const widerRegion = $('#associatedWiderRegion').val();
+            API.key           = document.querySelector('#nationalCalendarName').value;
+            API.locale        = document.querySelector('#currentLocalization').value;
+            const widerRegion = document.querySelector('#associatedWiderRegion').value;
             payload.litcal    = [];
             payload.settings  = {
-                epiphany: $('#nationalCalendarSettingEpiphany').val(),
-                ascension: $('#nationalCalendarSettingAscension').val(),
-                corpus_christi: $('#nationalCalendarSettingCorpusChristi').val(),
-                eternal_high_priest: $('#nationalCalendarSettingHighPriest').is(':checked'),
+                epiphany:            document.querySelector('#nationalCalendarSettingEpiphany').value,
+                ascension:           document.querySelector('#nationalCalendarSettingAscension').value,
+                corpus_christi:      document.querySelector('#nationalCalendarSettingCorpusChristi').value,
+                eternal_high_priest: document.querySelector('#nationalCalendarSettingHighPriest').checked,
             };
             payload.metadata  = {
-                nation: API.key,
+                nation:       API.key,
                 wider_region: widerRegion,
-                missals: $.map( $('#publishedRomanMissalList li'), el => { return $(el).text() }),
-                locales: $('#nationalCalendarLocales').val()
+                missals:      $.map( $('#publishedRomanMissalList li'), el => { return $(el).text() }),
+                locales:      $('#nationalCalendarLocales').val()
             };
             break;
         }
@@ -1444,7 +1444,8 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
     //console.log(`API.key = ${API.key}`);
     //console.log(`API.locale = ${API.locale}`);
     const headers = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
     }
     if ( API.locale !== '' ) {
         headers['Accept-Language'] = API.locale;
