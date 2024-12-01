@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-01 11:52+0000\n"
 "PO-Revision-Date: 2024-12-01 17:47+0000\n"
-"Last-Translator: chrissherren <sherrenchris@icloud.com>\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
 "Language: fr\n"
@@ -807,11 +807,11 @@ msgstr "Ajouter un missel"
 
 #: extending.php:302
 msgid "Current localization"
-msgstr ""
+msgstr "Localisation actuelle"
 
 #: extending.php:311
 msgid "You must choose a value from the list."
-msgstr ""
+msgstr "Vous devez choisir une valeur dans la liste."
 
 #: extending.php:321
 msgid "Save National Calendar Data"
