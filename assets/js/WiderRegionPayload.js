@@ -3,8 +3,7 @@
  * @prop {Array<RowData>} litcal
  * @prop {Object} national_calendars
  * @prop {Object} metadata
- * @prop {string} metadata.multilingual
- * @prop {Array<string>} metadata.languages
+ * @prop {Array<string>} metadata.locales
  * @prop {string} metadata.wider_region
  */
 

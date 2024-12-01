@@ -129,9 +129,9 @@ const integerProperties = Object.freeze([ 'day', 'month', 'grade', 'since_year',
  * @property {[ 'event_key', 'name', 'color', 'grade', 'day', 'month', 'strtotime', 'common' ]} [RowAction.CreateNew] - The properties to expect in the JSON payload for the "createNew" action.
  */
 const payloadProperties = Object.freeze({
-    [RowAction.MakePatron]:    Object.freeze([ 'event_key', 'name', 'color', 'grade', 'day', 'month' ]),
-    [RowAction.SetProperty]:   Object.freeze([ 'event_key', 'name', 'grade', 'day', 'month' ]),
-    [RowAction.MoveFestivity]: Object.freeze([ 'event_key', 'name', 'day', 'month', 'missal', 'reason' ]),
+    [RowAction.MakePatron]:    Object.freeze([ 'event_key', 'name', 'grade' ]),
+    [RowAction.SetProperty]:   Object.freeze([ 'event_key', 'name', 'grade' ]),
+    [RowAction.MoveFestivity]: Object.freeze([ 'event_key', 'day', 'month', 'missal', 'reason' ]),
     [RowAction.CreateNew]:     Object.freeze([ 'event_key', 'name', 'color', 'grade', 'day', 'month', 'strtotime', 'common' ]) //'readings' is only expected for createNew when common=Proper
 });
 
@@ -349,7 +349,7 @@ class FormControls {
         let festivity = null;
         if( element !== null ) {
             if( typeof element === 'string' ) {
-                festivity = FestivityCollection[element];
+                festivity = FestivityCollection.filter(festivity => festivity.event_key === element)[0];
                 festivity.event_key = element;
                 festivity.since_year = 1970;
                 //festivity.until_year = null;
@@ -365,7 +365,9 @@ class FormControls {
                     //festivity.until_year = null;
                 }
                 if( festivity.hasOwnProperty( 'color' ) === false ) {
-                    festivity.color = FestivityCollection.hasOwnProperty(festivity.event_key) ? FestivityCollection[festivity.event_key].color : [];
+                    festivity.color = FestivityCollection.filter(item => item.event_key === festivity.event_key).length
+                        ? FestivityCollection.filter(item => item.event_key === festivity.event_key)[0].color
+                        : [];
                 }
             }
             //console.log(festivity);
@@ -373,7 +375,7 @@ class FormControls {
 
         if (FormControls.title !== null) {
             formRow += `<div class="mt-4 d-flex justify-content-left data-group-title"><h4 class="data-group-title">${FormControls.title}</h4>`;
-            if(FormControls.action.description === RowAction.CreateNew) {
+            if(FormControls.action === RowAction.CreateNew) {
                 if( festivity !== null && festivity.hasOwnProperty( 'strtotime' ) ) {
                     formRow += `<button type="button" class="ms-auto btn btn-info strtotime-toggle-btn active" data-bs-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="true" autocomplete="off"><i class="fas fa-comment me-2"></i>explicatory date</button>`;
                 } else {
@@ -387,7 +389,7 @@ class FormControls {
 
         formRow += `<div class="form-group col-sm-6">`;
         if(FormControls.settings.tagField === false){
-            formRow += `<input type="hidden" class="litEventTag" id="onTheFly${FormControls.uniqid}Tag" value="${festivity !== null ? festivity.event_key : ''}" />`;
+            formRow += `<input type="hidden" class="litEventEvent_key" id="onTheFly${FormControls.uniqid}Tag" value="${festivity !== null ? festivity.event_key : ''}" />`;
         }
         formRow += `<label for="onTheFly${FormControls.uniqid}Name">${Messages[ "Name" ]}</label>
         <input type="text" class="form-control litEvent litEventName${festivity !== null && typeof festivity.name==='undefined' ? ` is-invalid` : ``}" id="onTheFly${FormControls.uniqid}Name" value="${festivity !== null ? festivity.name : ''}"${FormControls.settings.nameField === false ? ' readonly' : ''} />
@@ -526,27 +528,28 @@ class FormControls {
                     ...element.festivity,
                     ...element.metadata
                 };
+                let litEvent = FestivityCollection.filter( item => item.event_key === festivity.event_key )[0] ?? null;
                 if( false === festivity.hasOwnProperty( 'until_year' ) ) {
                     festivity.until_year = '';
                 }
                 if( false === festivity.hasOwnProperty( 'color' ) ) {
-                    festivity.color = FestivityCollection.hasOwnProperty(festivity.event_key) && FestivityCollection[festivity.event_key].hasOwnProperty( 'color' ) ? FestivityCollection[festivity.event_key].color : [];
+                    festivity.color = litEvent && litEvent.hasOwnProperty( 'color' ) ? litEvent.color : [];
                 }
             }
             if( false === festivity.hasOwnProperty( 'name' ) ) {
-                if( FestivityCollection.hasOwnProperty( festivity.event_key ) && FestivityCollection[festivity.event_key].hasOwnProperty( 'name' ) ) {
-                    festivity.name = FestivityCollection[festivity.event_key].name;
+                if( litEvent && litEvent.hasOwnProperty( 'name' ) ) {
+                    festivity.name = litEvent.name;
                 }
             }
             if( false === festivity.hasOwnProperty( 'day' ) ) {
-                if( FestivityCollection.hasOwnProperty(festivity.event_key) && FestivityCollection[festivity.event_key].hasOwnProperty( 'day' ) ) {
-                    festivity.day = FestivityCollection[festivity.event_key].day;
+                if( litEvent && litEvent.hasOwnProperty( 'day' ) ) {
+                    festivity.day = litEvent.day;
                 }
             }
             if( false === festivity.hasOwnProperty( 'month' ) ) {
                 console.log( 'festivity does not have a month property, now trying to retrieve info...' );
-                if( FestivityCollection.hasOwnProperty(festivity.event_key) && FestivityCollection[festivity.event_key].hasOwnProperty( 'month' ) ) {
-                    festivity.month = FestivityCollection[festivity.event_key].month;
+                if( litEvent && litEvent.hasOwnProperty( 'month' ) ) {
+                    festivity.month = litEvent.month;
                 } else {
                     console.log( 'could not retrieve month info...' );
                 }
@@ -556,7 +559,7 @@ class FormControls {
 
         if (FormControls.title !== null) {
             formRow += `<hr><div class="mt-4 d-flex justify-content-left"><h4 class="data-group-title">${FormControls.title}</h4>`;
-            if(FormControls.action.description === RowAction.CreateNew) {
+            if(FormControls.action === RowAction.CreateNew) {
                 if( festivity !== null && festivity.hasOwnProperty( 'strtotime' ) ) {
                     formRow += `<button type="button" class="ms-auto btn btn-info strtotime-toggle-btn active" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="true" autocomplete="off"><i class="fas fa-comment me-2"></i>explicatory date</button>`;
                 } else {
@@ -570,7 +573,7 @@ class FormControls {
 
         formRow += `<div class="form-group col-sm-6">`;
         if(FormControls.settings.tagField === false){
-            formRow += `<input type="hidden" class="litEventTag" id="onTheFly${FormControls.uniqid}Tag" value="${festivity !== null ? festivity.event_key : ''}" />`;
+            formRow += `<input type="hidden" class="litEventEvent_key" id="onTheFly${FormControls.uniqid}Tag" value="${festivity !== null ? festivity.event_key : ''}" />`;
         }
         formRow += `<label for="onTheFly${FormControls.uniqid}Name">${Messages[ "Name" ]}</label>
         <input type="text" class="form-control litEvent litEventName${festivity !== null && typeof festivity.name==='undefined' ? ` is-invalid` : ``}" id="onTheFly${FormControls.uniqid}Name" value="${festivity !== null ? festivity.name : ''}"${FormControls.settings.nameField === false ? ' readonly' : ''} />

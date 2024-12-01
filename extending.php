@@ -20,10 +20,20 @@ $c = new Collator($i18n->LOCALE);
     file_get_contents($metadataURL),
     true
 );
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $eventsURL);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    "Accept-Language: " . $i18n->LOCALE
+]);
+$response = curl_exec($ch);
 [ "litcal_events" => $FestivityCollection ] = json_decode(
-    file_get_contents("{$eventsURL}?locale=" . $i18n->LOCALE),
+    $response,
     true
 );
+curl_close($ch);
+
 [ "catholic_dioceses_latin_rite" => $CatholicDiocesesByNation ] = json_decode(
     file_get_contents("./assets/data/WorldDiocesesByNation.json"),
     true
@@ -154,7 +164,7 @@ if (isset($_GET["choice"])) {
                                 <option value=""></option>
                             <?php
                             foreach ($LitCalMetadata["wider_regions"] as $widerRegion) {
-                                foreach ($widerRegion["languages"] as $widerRegionLanguage) {
+                                foreach ($widerRegion["locales"] as $widerRegionLanguage) {
                                     echo "<option value=\"{$widerRegion['name']} - {$widerRegionLanguage}\">{$widerRegion['name']}</option>";
                                 }
                             }
@@ -162,12 +172,8 @@ if (isset($_GET["choice"])) {
                             </datalist>
                         </div>
                         <div class="col col-md-4">
-                            <div class="form-check form-switch">
-                                <input type="checkbox" class="form-check-input" id="widerRegionIsMultilingual" />
-                                <label for="widerRegionIsMultilingual" class="form-check-label fw-bold"><?php echo _("Wider Region is multilingual") ?></label>
-                            </div>
                             <div>
-                                <select class="form-select" id="widerRegionLanguages" multiple="multiple" disabled>
+                                <select class="form-select" id="widerRegionLocales" multiple="multiple" disabled>
                                 <?php foreach ($SystemLocalesWithRegion as $locale => $lang_region) {
                                         echo "<option value='$locale'>$lang_region</option>";
                                 } ?>
@@ -264,11 +270,11 @@ if (isset($_GET["choice"])) {
                                         </div>
                                     </div>
                                     <div class="form-group col col-md-3">
-                                        <label><?php echo _('LOCALE') ?></label>
-                                        <select class="form-select" id="nationalCalendarSettingLocale">
+                                        <label><?php echo _('LOCALES') ?></label>
+                                        <select class="form-select" id="nationalCalendarLocales" multiple="multiple">
                                         <?php
                                         foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
-                                            echo "<option value=\"{$AvlLOCALE}\"" . ($i18n->LOCALE === $AvlLOCALE ? ' selected' : '') . ">{$AvlLANGUAGE}</option>";
+                                            echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
                                         }
                                         ?>
                                         </select>
@@ -289,8 +295,20 @@ if (isset($_GET["choice"])) {
                                         </div>
                                     </div>
                                     <div class="form-group col col-md-3 mt-4">
-                                        <label><?php echo _('Wider Region') ?><i class="fas fa-info-circle ms-2 text-black" style="--bs-text-opacity: .3;" role="button" title="if data for a Wider Region that regards this National Calendar has already been defined, you can associate the Wider Region data with the National Calendar here"></i></label>
+                                        <label for="associatedWiderRegion"><?php echo _('Wider Region') ?><i class="fas fa-info-circle ms-2 text-black" style="--bs-text-opacity: .3;" role="button" title="if data for a Wider Region that regards this National Calendar has already been defined, you can associate the Wider Region data with the National Calendar here"></i></label>
                                         <input class="form-control" type="text" id="associatedWiderRegion" />
+                                    </div>
+                                    <div class="form-group col col-md-3 mt-4">
+                                        <label><?php echo _('Current localization') ?></label>
+                                        <input class="form-control" list="availableLocalizationsForNation" id="currentLocalization" />
+                                        <datalist id="availableLocalizationsForNation">
+                                        <?php
+                                            foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
+                                                echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
+                                            }
+                                        ?>
+                                        </datalist>
+                                        <div class="invalid-feedback"><?php echo _("You must choose a value from the list."); ?></div>
                                     </div>
                                 </form>
                             </div>
@@ -604,8 +622,8 @@ const LitCalMetadata = <?php echo json_encode($LitCalMetadata); ?>;
 
 <datalist id="existingFestivitiesList">
 <?php
-foreach ($FestivityCollection as $key => $festivity) {
-    echo "<option value=\"{$key}\">{$festivity["name"]}</option>";
+foreach ($FestivityCollection as $idx => $festivity) {
+    echo "<option value=\"{$festivity['event_key']}\">{$festivity['name']}</option>";
 }
 ?>
 </datalist>

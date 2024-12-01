@@ -211,28 +211,25 @@ class Locale {
     }
 }
 
-class Settings {
+class CalendarSettings {
     constructor(settingsObj) {
         if (typeof settingsObj !== 'object') {
             throw new Error(`Invalid settings object: ${settingsObj}`);
         }
-        if (settingsObj.hasOwnProperty('locale')) {
-            this.locale = new Locale(settingsObj.locale);
+        if (
+            false === settingsObj.hasOwnProperty('epiphany')
+            || false === settingsObj.hasOwnProperty('ascension')
+            || false === settingsObj.hasOwnProperty('corpus_christi')
+            || false === settingsObj.hasOwnProperty('eternal_high_priest')
+        ) {
+            throw new Error(`Invalid settings object: ${settingsObj}, properties epiphany, ascension, corpus_christi, eternal_high_priest are required`);
         }
-        if (settingsObj.hasOwnProperty('epiphany')) {
-            this.epiphany = new Epiphany(settingsObj.epiphany);
-        }
-        if (settingsObj.hasOwnProperty('ascension')) {
-            this.ascension = new Ascension(settingsObj.ascension);
-        }
-        if (settingsObj.hasOwnProperty('corpus_christi')) {
-            this.corpus_christi = new CorpusChristi(settingsObj.corpus_christi);
-        }
-        if (settingsObj.hasOwnProperty('eternal_high_priest')) {
-            this.eternal_high_priest = new EternalHighPriest(settingsObj.eternal_high_priest);
-        }
+        this.epiphany = new Epiphany(settingsObj.epiphany);
+        this.ascension = new Ascension(settingsObj.ascension);
+        this.corpus_christi = new CorpusChristi(settingsObj.corpus_christi);
+        this.eternal_high_priest = new EternalHighPriest(settingsObj.eternal_high_priest);
         return Object.freeze(this);
     }
 }
 
-export { Settings, Locale };
+export { CalendarSettings, Locale };
