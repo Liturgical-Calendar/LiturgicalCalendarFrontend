@@ -887,7 +887,7 @@ $(document).on('click', '.actionPromptButton', ev => {
     }
 
     if( existingFestivityTag !== '' ) {
-        const litevent = FestivityCollection.filter(festivity => festivity.event_key === existingFestivityTag)[0];
+        const litevent = FestivityCollection.filter(el => el.event_key === existingFestivityTag)[0];
 
         $row.find(`#onTheFly${currentUniqid}Grade`).val(litevent.grade);
         $row.find(`#onTheFly${currentUniqid}Common`).multiselect('select', litevent.common)
@@ -958,7 +958,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
         data.litcal.forEach((el) => {
             let currentUniqid = FormControls.uniqid;
             let existingFestivityTag = el.festivity.event_key ?? null;
-            if( el.metadata.action === RowAction.CreateNew && FestivityCollection.filter(festivity => festivity.event_key === existingFestivityTag).length ) {
+            if( el.metadata.action === RowAction.CreateNew && FestivityCollectionKeys.includes( existingFestivityTag ) ) {
                 el.metadata.action = RowAction.CreateNewFromExisting;
             }
             setFormSettings( el.metadata.action );
@@ -981,7 +981,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
             }
 
             if( FormControls.settings.missalField && existingFestivityTag !== null ) {
-                const { missal } = FestivityCollection.filter(festivity => festivity.event_key === existingFestivityTag)[0];
+                const { missal } = FestivityCollection.filter(el => el.event_key === existingFestivityTag)[0];
                 $row.find(`#onTheFly${currentUniqid}Missal`).val(missal); //.prop('disabled', true);
             }
             $row.find('.litEventColor').multiselect({
@@ -994,8 +994,8 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
 
             if( el.festivity.hasOwnProperty( 'color' ) === false && existingFestivityTag !== null ) {
                 console.log( 'retrieving default festivity info for ' + existingFestivityTag );
-                console.log( FestivityCollection.filter(festivity => festivity.event_key === existingFestivityTag)[0] );
-                el.festivity.color = FestivityCollection.filter(festivity => festivity.event_key === existingFestivityTag)[0].color;
+                console.log( FestivityCollection.filter( el => el.event_key === existingFestivityTag )[0] );
+                el.festivity.color = FestivityCollection.filter( el => el.event_key === existingFestivityTag )[0].color;
             }
 
             $row.find('.litEventColor').multiselect('select', el.festivity.color);
@@ -1064,6 +1064,29 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                 toastr["error"](json.status + ' ' + json.response + ': ' + json.description, "Error");
             });*/
         }
+    });
+
+    let eventsUrlForCurrentCategory = API.category === 'widerregion'
+        ? `${EventsURL}?locale=${API.locale}`
+        : `${EventsURL}/${API.category}/${API.key}`;
+    fetch(eventsUrlForCurrentCategory, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json'
+        }
+    }).then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            return Promise.reject(response);
+        }
+    }).then(json => {
+        FestivityCollection = json.litcal_events;
+        FestivityCollectionKeys = FestivityCollection.map(el => el.event_key);
+        console.log( json.litcal_events );
+        document.querySelector('#existingFestivitiesList').innerHTML = FestivityCollection.map(el => `<option value="${el.event_key}">${el.name}</option>`).join('\n');
+    }).catch(error => {
+        console.error(error);
     });
 });
 

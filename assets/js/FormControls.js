@@ -365,9 +365,7 @@ class FormControls {
                     //festivity.until_year = null;
                 }
                 if( festivity.hasOwnProperty( 'color' ) === false ) {
-                    festivity.color = FestivityCollection.filter(item => item.event_key === festivity.event_key).length
-                        ? FestivityCollection.filter(item => item.event_key === festivity.event_key)[0].color
-                        : [];
+                    festivity.color = FestivityCollectionKeys.includes(festivity.event_key) ? FestivityCollection.filter(fest => fest.event_key === festivity.event_key)[0].color : [];
                 }
             }
             //console.log(festivity);
@@ -528,30 +526,33 @@ class FormControls {
                     ...element.festivity,
                     ...element.metadata
                 };
-                let litEvent = FestivityCollection.filter( item => item.event_key === festivity.event_key )[0] ?? null;
                 if( false === festivity.hasOwnProperty( 'until_year' ) ) {
                     festivity.until_year = '';
                 }
+            }
+            if (FestivityCollectionKeys.includes(festivity.event_key)) {
+                let event = FestivityCollection.filter(fest => fest.event_key === festivity.event_key)[0];
                 if( false === festivity.hasOwnProperty( 'color' ) ) {
-                    festivity.color = litEvent && litEvent.hasOwnProperty( 'color' ) ? litEvent.color : [];
+                    festivity.color = event.hasOwnProperty('color') ? event.color : [];
                 }
-            }
-            if( false === festivity.hasOwnProperty( 'name' ) ) {
-                if( litEvent && litEvent.hasOwnProperty( 'name' ) ) {
-                    festivity.name = litEvent.name;
+                if( false === festivity.hasOwnProperty( 'name' ) ) {
+                    if( event.hasOwnProperty( 'name' ) ) {
+                        festivity.name = event.name;
+                    }
                 }
-            }
-            if( false === festivity.hasOwnProperty( 'day' ) ) {
-                if( litEvent && litEvent.hasOwnProperty( 'day' ) ) {
-                    festivity.day = litEvent.day;
+                if( false === festivity.hasOwnProperty( 'day' ) ) {
+                    if( event.hasOwnProperty( 'day' ) ) {
+                        festivity.day = event.day;
+                    }
                 }
-            }
-            if( false === festivity.hasOwnProperty( 'month' ) ) {
-                console.log( 'festivity does not have a month property, now trying to retrieve info...' );
-                if( litEvent && litEvent.hasOwnProperty( 'month' ) ) {
-                    festivity.month = litEvent.month;
-                } else {
-                    console.log( 'could not retrieve month info...' );
+                if( false === festivity.hasOwnProperty( 'month' ) ) {
+                    console.log( 'festivity does not have a month property, now trying to retrieve info...' );
+                    if( event.hasOwnProperty( 'month' ) ) {
+                        festivity.month = event.month;
+                    }
+                     else {
+                        console.log( 'could not retrieve month info...' );
+                    }
                 }
             }
             //console.log(festivity);

@@ -526,8 +526,9 @@ if (isset($_GET["choice"])) {
 ?>
 <script>
 const Messages = <?php echo json_encode($messages); ?>;
-const FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
 const LitCalMetadata = <?php echo json_encode($LitCalMetadata); ?>;
+let FestivityCollection = <?php echo json_encode($FestivityCollection); ?>;
+let FestivityCollectionKeys = <?php echo json_encode(array_column($FestivityCollection, "event_key")); ?>;
 </script>
 <?php include_once('./layout/footer.php'); ?>
 
@@ -622,8 +623,8 @@ const LitCalMetadata = <?php echo json_encode($LitCalMetadata); ?>;
 
 <datalist id="existingFestivitiesList">
 <?php
-foreach ($FestivityCollection as $idx => $festivity) {
-    echo "<option value=\"{$festivity['event_key']}\">{$festivity['name']}</option>";
+foreach ($FestivityCollection as $festivity) {
+    echo "<option value=\"{$festivity["event_key"]}\">{$festivity["name"]}</option>";
 }
 ?>
 </datalist>
