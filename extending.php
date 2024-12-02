@@ -328,48 +328,66 @@ if (isset($_GET["choice"])) {
             FormControls::$settings["untilYearField"] = true;
             ?>
                 <div class="container">
-                    <form class="row justify-content-center align-items-baseline needs-validation" novalidate>
-                        <div class="form-group col col-md-3">
-                            <label for="diocesanCalendarNationalDependency" class="fw-bold"><?php echo _("Depends on national calendar"); ?>:</label>
-                            <select class="form-select" id="diocesanCalendarNationalDependency" required>
-                                <option value=""></option>
-                            <?php
-                            foreach ($AvailableNationalCalendars as $nation => $displayName) {
-                                echo "<option value=\"{$nation}\">$displayName</option>";
-                            }
-                            ?>
-                            </select>
-                        </div>
-                        <div class="form-group col col-md-3">
-                            <label for="diocesanCalendarDioceseName" class="fw-bold"><?php echo _("Diocese"); ?>:</label>
-                            <input list="DiocesesList" class="form-control" id="diocesanCalendarDioceseName" required>
-                            <div class="invalid-feedback"><?php echo _("This diocese does not seem to exist? Please choose from a value in the list to retrieve an existing diocese, or ignore if creating a new diocesan calendar."); ?></div>
-                            <datalist id="DiocesesList">
-                                <option value=""></option>
-                            </datalist>
-                            <div class="col text-center"><button class="btn btn-danger m-2" id="removeExistingDiocesanDataBtn" disabled data-bs-toggle="modal" data-bs-target="#removeDiocesanCalendarPrompt"><?php echo _("Remove existing data"); ?></button></div>
-                        </div>
-                        <div class="form-group col col-md-3">
-                            <label for="diocesanCalendarGroup" class="fw-bold"><?php echo _("Diocesan group"); ?>: <i class="fas fa-circle-info mx-2" title="<?php echo $DioceseGroupHelp; ?>"></i></label>
-                            <input list="DiocesanGroupsList" class="form-control" id="diocesanCalendarGroup" aria-describedby="diocesanCalendarGroupHelp">
-                            <datalist id="DiocesanGroupsList">
-                                <option value=""></option>
+                    <form class="needs-validation" novalidate>
+                        <div class="row justify-content-center align-items-baseline ">
+                            <div class="form-group col col-md-3">
+                                <label for="diocesanCalendarNationalDependency" class="fw-bold"><?php echo _("Depends on national calendar"); ?>:</label>
+                                <select class="form-select" id="diocesanCalendarNationalDependency" required>
+                                    <option value=""></option>
                                 <?php
-                                foreach ($DiocesanGroups as $diocesanGroup) {
-                                    echo "<option value=\"{$diocesanGroup['group_name']}\">{$diocesanGroup['group_name']}</option>";
+                                foreach ($AvailableNationalCalendars as $nation => $displayName) {
+                                    echo "<option value=\"{$nation}\">$displayName</option>";
                                 }
                                 ?>
-                            </datalist>
+                                </select>
+                            </div>
+                            <div class="form-group col col-md-3">
+                                <label for="diocesanCalendarDioceseName" class="fw-bold"><?php echo _("Diocese"); ?>:</label>
+                                <input list="DiocesesList" class="form-control" id="diocesanCalendarDioceseName" required>
+                                <div class="invalid-feedback"><?php echo _("This diocese does not seem to exist? Please choose from a value in the list to retrieve an existing diocese, or ignore if creating a new diocesan calendar."); ?></div>
+                                <datalist id="DiocesesList">
+                                    <option value=""></option>
+                                </datalist>
+                            </div>
+                            <div class="form-group col col-md-3">
+                                <label for="diocesanCalendarGroup" class="fw-bold"><?php echo _("Diocesan group"); ?>: <i class="fas fa-circle-info mx-2" title="<?php echo $DioceseGroupHelp; ?>"></i></label>
+                                <input list="DiocesanGroupsList" class="form-control" id="diocesanCalendarGroup" aria-describedby="diocesanCalendarGroupHelp">
+                                <datalist id="DiocesanGroupsList">
+                                    <option value=""></option>
+                                    <?php
+                                    foreach ($DiocesanGroups as $diocesanGroup) {
+                                        echo "<option value=\"{$diocesanGroup['group_name']}\">{$diocesanGroup['group_name']}</option>";
+                                    }
+                                    ?>
+                                </datalist>
+                            </div>
                         </div>
-                        <div class="form-group col col-md-3">
-                            <label><?php echo _('LOCALES') ?></label>
-                            <select class="form-select calendarLocales" id="diocesanCalendarLocales" multiple="multiple">
-                            <?php
-                            foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
-                                echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
-                            }
-                            ?>
-                            </select>
+                        <div class="row justify-content-center align-items-baseline">
+                            <div class="form-group col col-md-3">
+                                <label><?php echo '<b>' . ucwords(strtolower(_('LOCALES'))) . ':</b>' ?></label>
+                                <select class="form-select calendarLocales" id="diocesanCalendarLocales" multiple="multiple">
+                                <?php
+                                foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
+                                    echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
+                                }
+                                ?>
+                                </select>
+                            </div>
+                            <div class="form-group col col-md-3">
+                                <label for="currentLocalization" class="fw-bold"><?php echo _("Current localization"); ?>:</label>
+                                <input class="form-control" list="availableLocalizationsForDiocese" id="currentLocalization" />
+                                <datalist id="availableLocalizationsForDiocese">
+                                <?php
+                                foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
+                                    echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
+                                }
+                                ?>
+                                </datalist>
+                                <div class="invalid-feedback"><?php echo _("You must choose a value from the list."); ?></div>
+                            </div>
+                            <div class="col col-md-3 text-center align-self-end">
+                                <button class="btn btn-danger" id="removeExistingDiocesanDataBtn" disabled data-bs-toggle="modal" data-bs-target="#removeDiocesanCalendarPrompt"><?php echo _("Remove existing data"); ?></button>
+                            </div>
                         </div>
                     </form>
                 </div>
