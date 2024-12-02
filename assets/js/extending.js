@@ -27,15 +27,6 @@ import {
 } from './Payload.js';
 
 
-/**
- * @function diocesanOvveridesDefined
- * @description Returns true if at least one of the overrides for epiphany, ascension, or corpus christi have been set, false otherwise.
- * @returns {boolean}
- */
-const diocesanOvveridesDefined = () => {
-    return ( $('#diocesanCalendarOverrideEpiphany').val() !== "" || $('#diocesanCalendarOverrideAscension').val() !== "" || $('#diocesanCalendarOverrideCorpusChristi').val() !== "" );
-}
-
 toastr.options = {
     "closeButton": true,
     "debug": false,
@@ -166,23 +157,6 @@ const API = new Proxy({
 }, sanitizeProxiedAPI);
 
 
-/**
- * Sets focus on the first tab of the diocesan calendar definition form with non-empty data.
- * @function setFocusFirstTabWithData
- */
-const setFocusFirstTabWithData = () => {
-    let $firstInputWithNonEmptyValue = $('.carousel-item form .litEventName')
-        .filter(function(idx) {
-            return $(this).val() !== "";
-        })
-        .first();
-    let $parentCarouselItem = $firstInputWithNonEmptyValue.parents('.carousel-item');
-    let itemIndex = $('.carousel-item').index( $parentCarouselItem );
-    $('#diocesanCalendarDefinitionCardLinks li').removeClass('active');
-    $('.carousel').carousel(itemIndex);
-    $(`#diocesanCalendarDefinitionCardLinks li:nth-child(${itemIndex+2})`).addClass('active');
-};
-
 let DiocesesList = null;
 let CalendarData = { litcal: [] };
 let CalendarsIndex = null;
@@ -242,244 +216,8 @@ Promise.all([
 });
 
 /**
- * @description Retrieves the data for the Diocesan Calendar associated with the currently selected diocese, and populates the edit form with the retrieved data.
- * @function loadDiocesanCalendarData
+ * All Calendars interactions
  */
-const loadDiocesanCalendarData = () => {
-    API.category = 'diocese';
-    let diocese = $('#diocesanCalendarDioceseName').val();
-    API.key = $('#DiocesesList').find('option[value="' + diocese + '"]').attr('data-value');
-    let dioceseMetadata = CalendarsIndex.diocesan_calendars.filter(item => item.calendar_id === API.key)[0];
-    API.locale = dioceseMetadata.locales[0];
-    const headers = {
-        'Accept': 'application/json',
-        'Accept-Language': API.locale
-    }
-    fetch(API.path, {
-        method: 'GET',
-        headers
-    }).then(response => {
-        if(response.ok) {
-            return response.json();
-        } else if(response.status === 404) {
-            toastr["warning"](response.status + ' ' + response.statusText + ': ' + response.url + '<br />The Diocesan Calendar for ' + diocese + ' does not exist yet.', "Warning");
-            console.log(response.status + ' ' + response.statusText + ': ' + response.url + 'The Diocesan Calendar for ' + diocese + ' does not exist yet.');
-            API.method = 'PUT';
-            return Promise.resolve({});
-        } else {
-            throw new Error(response.status + ' ' + response.statusText + ': ' + response.url);
-        }
-    }).then(data => {
-        API.method = 'PATCH';
-        console.log('retrieved diocesan data:');
-        console.log(data);
-        toastr["success"]("Diocesan Calendar was retrieved successfully", "Success");
-        CalendarData = data;
-        if( data.hasOwnProperty('settings') ) {
-            if( data.settings.hasOwnProperty('epiphany') ) {
-                $('#diocesanCalendarOverrideEpiphany').val( data.settings.epiphany );
-            }
-            if( data.settings.hasOwnProperty('ascension') ) {
-                $('#diocesanCalendarOverrideAscension').val( data.settings.ascension );
-            }
-            if( data.settings.hasOwnProperty('corpus_christi') ) {
-                $('#diocesanCalendarOverrideCorpusChristi').val( data.settings.corpus_christi );
-            }
-        }
-        fillDiocesanFormWithData(data);
-        setFocusFirstTabWithData();
-    }).catch(error => {
-        if( error instanceof Error && error.message.startsWith('404') ) { //we have already handled 404 Not Found above
-            return;
-        }
-        toastr["error"](error.message, "Error");
-    });
-}
-
-const fillDiocesanFormWithData = (data) => {
-    for (const entry of data.litcal) {
-        const { festivity, metadata } = entry;
-        let $form;
-        let $row;
-        let numLastRow;
-        let numMissingRows;
-        if(metadata.hasOwnProperty('strtotime')) {
-            FormControls.settings.dayField = false;
-            FormControls.settings.monthField = false;
-            FormControls.settings.strtotimeField = true;
-        } else {
-            FormControls.settings.dayField = true;
-            FormControls.settings.monthField = true;
-            FormControls.settings.strtotimeField = false;
-        }
-        switch (festivity.grade) {
-            case Rank.SOLEMNITY:
-                $form = $('#carouselItemSolemnities form');
-                numLastRow = $form.find('.row').length - 1;
-                if (metadata.form_rownum > numLastRow) {
-                    numMissingRows = metadata.form_rownum - numLastRow;
-                    FormControls.title = Messages['Other Solemnity'];
-                    FormControls.settings.commonField = true;
-                    while (numMissingRows-- > 0) {
-                        $form.append($(FormControls.CreateFestivityRow()));
-                    }
-                }
-                $row = $('#carouselItemSolemnities form .row').eq(metadata.form_rownum);
-                break;
-            case Rank.FEAST:
-                numLastRow = $('#carouselItemFeasts form .row').length - 1;
-                if (metadata.form_rownum > numLastRow) {
-                    numMissingRows = metadata.form_rownum - numLastRow;
-                    FormControls.title = Messages['Other Feast'];
-                    FormControls.settings.commonField = true;
-                    while (numMissingRows-- > 0) {
-                        $('.carousel-item').eq(1).find('form').append($(FormControls.CreateFestivityRow()));
-                    }
-                }
-                $row = $('#carouselItemFeasts form .row').eq(metadata.form_rownum);
-                break;
-            case Rank.MEMORIAL:
-                numLastRow = $('#carouselItemMemorials form .row').length - 1;
-                if (metadata.form_rownum > numLastRow) {
-                    numMissingRows = metadata.form_rownum - numLastRow;
-                    FormControls.title = Messages['Other Memorial'];
-                    FormControls.settings.commonField = true;
-                    while (numMissingRows-- > 0) {
-                        $('.carousel-item').eq(2).find('form').append($(FormControls.CreateFestivityRow()));
-                    }
-                }
-                $row = $('#carouselItemMemorials form .row').eq(metadata.form_rownum);
-                break;
-            case Rank.OPTIONALMEMORIAL:
-                numLastRow = $('#carouselItemOptionalMemorials form .row').length - 1;
-                if (metadata.form_rownum > numLastRow) {
-                    numMissingRows = metadata.form_rownum - numLastRow;
-                    FormControls.title = Messages['Other Optional Memorial'];
-                    FormControls.settings.commonField = true;
-                    while (numMissingRows-- > 0) {
-                        $('.carousel-item').eq(3).find('form').append($(FormControls.CreateFestivityRow()));
-                    }
-                }
-                $row = $('#carouselItemOptionalMemorials form .row').eq(metadata.form_rownum);
-                break;
-        }
-        $row.find('.litEventName').val(festivity.name).attr('data-valuewas', festivity.event_key);
-        //if(metadata.form_rownum > 2) {
-        //    $row.find('.litEventStrtotimeSwitch').bootstrapToggle();
-        //}
-        if( metadata.hasOwnProperty('strtotime') ) {
-            $row.find('.litEventStrtotimeSwitch').prop('checked', true);
-            if( $row.find('.litEventStrtotime').length === 0 ) {
-                switcheroo( $row, metadata );
-            }
-            $row.find('.litEventStrtotime').val(metadata.strtotime);
-        } else {
-            if( $row.find('.litEventStrtotime').length > 0 ) {
-                unswitcheroo( $row, festivity );
-            }
-            $row.find('.litEventDay').val(festivity.day);
-            $row.find('.litEventMonth').val(festivity.month);
-        }
-        setCommonMultiselect( $row, festivity.common );
-        $row.find('.litEventColor').multiselect({
-            buttonWidth: '100%',
-            buttonClass: 'form-select',
-            templates: {
-                button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
-            }
-        }).multiselect('deselectAll', false).multiselect('select', festivity.color);
-        $row.find('.litEventSinceYear').val(metadata.since_year);
-        if( metadata.hasOwnProperty('until_year') ) {
-            $row.find('.litEventUntilYear').val(metadata.until_year);
-        }
-    };
-}
-
-/**
- * Replaces the day input and month select with a text input for strtotime.
- * @param {jQuery} $row - The containing row of the form.
- * @param {Object} Metadata - The metadata object from the JSON payload.
- */
-const switcheroo = ( $row, Metadata ) => {
-    $row.find('.litEventDay').closest('.form-group').remove();
-    let $litEventMonth = $row.find('.litEventMonth');
-    let $litEventMonthFormGrp = $litEventMonth.closest('.form-group');
-    console.log($litEventMonth.attr('id'));
-    let strtotimeId = $litEventMonth.attr('id').replace('Month','Strtotime');
-    console.log(strtotimeId);
-    $litEventMonthFormGrp.removeClass('col-sm-2').addClass('col-sm-3');
-    $litEventMonth.remove();
-    $litEventMonthFormGrp.find('.month-label').text('Explicatory date').attr('for',strtotimeId);
-    $litEventMonthFormGrp.append(`<input type="text" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" class="form-control litEvent litEventStrtotime" id="${strtotimeId}" value="${Metadata.strtotime}" />`);
-}
-
-/**
- * Reverts the form row from a strtotime text input back to separate day and month fields.
- * Adjusts the form group classes to accommodate the change.
- * Inserts a day input and month select dropdown based on the provided festivity data.
- *
- * @param {jQuery} $row - The containing row of the form.
- * @param {Object} Festivity - The festivity data object containing day and month information.
- */
-const unswitcheroo = ( $row, Festivity ) => {
-    let $litEventStrtotime = $row.find('.litEventStrtotime');
-    let $strToTimeFormGroup = $litEventStrtotime.closest('.form-group');
-    $strToTimeFormGroup.removeClass('col-sm-3').addClass('col-sm-2');
-    let dayId = $litEventStrtotime.attr('id').replace('Strtotime', 'Day');
-    let monthId = $litEventStrtotime.attr('id').replace('Strtotime', 'Month');
-    $strToTimeFormGroup.before(`<div class="form-group col-sm-1">
-    <label for="${dayId}">${Messages[ "Day" ]}</label><input type="number" min="1" max="31" value="1" class="form-control litEvent litEventDay" id="${dayId}" value="${Festivity.day}" />
-    </div>`);
-    $litEventStrtotime.remove();
-    let formRow = `<select class="form-select litEvent litEventMonth" id="${monthId}">`;
-    let formatter = new Intl.DateTimeFormat(jsLocale, { month: 'long' });
-    for (let i = 0; i < 12; i++) {
-        let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
-        formRow += `<option value=${i + 1}${(i+1)===Festivity.month ? ' selected' : ''}>${formatter.format(month)}</option>`;
-    }
-    formRow += `</select>`;
-    $strToTimeFormGroup.append(formRow);
-    $strToTimeFormGroup.find('.month-label').text(Messages[ 'Month' ]).attr('for',monthId);
-}
-
-$(document).on('click', '.strtotime-toggle-btn', ev => {
-    const uniqid = parseInt( $(ev.currentTarget).attr('data-row-uniqid') );
-    if( $(ev.currentTarget).attr('aria-pressed') === 'true' ) {
-        $(ev.currentTarget).find('i').removeClass('fa-comment-slash').addClass('fa-comment');
-        $(`#onTheFly${uniqid}Month`).closest('.form-group').remove();
-        let $dayFormGroup = $(`#onTheFly${uniqid}Day`).closest('.form-group');
-        $dayFormGroup.empty().removeClass('col-sm-1').addClass('col-sm-2').append(`<label for="onTheFly${uniqid}Strtotime">Explicatory date</label><input type="text" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" class="form-control litEvent litEventStrtotime" id="onTheFly${uniqid}Strtotime" />`);
-    } else {
-        $(ev.currentTarget).find('i').removeClass('fa-comment').addClass('fa-comment-slash');
-        let $strToTimeFormGroup = $(`#onTheFly${uniqid}Strtotime`).closest('.form-group');
-        $strToTimeFormGroup.empty().removeClass('col-sm-2').addClass('col-sm-1').append(`<label for="onTheFly${uniqid}Day">Day</label><input type="number" min="1" max="31" value="false" class="form-control litEvent litEventDay" id="onTheFly${uniqid}Day" />`);
-        let formRow = `<div class="form-group col-sm-1">
-        <label for="onTheFly${uniqid}Month">${Messages[ "Month" ]}</label>
-        <select class="form-select litEvent litEventMonth" id="onTheFly${uniqid}Month" >`;
-        let formatter = new Intl.DateTimeFormat(jsLocale, { month: 'long' });
-        for (let i = 0; i < 12; i++) {
-            let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
-            formRow += `<option value=${i + 1}>${formatter.format(month)}</option>`;
-        }
-        formRow += `</select>
-        </div>`;
-        $strToTimeFormGroup.after(formRow);
-    }
-});
-
-$(document).on('click', '#diocesanCalendarDefinitionCardLinks a.page-link', ev => {
-    ev.preventDefault();
-    $('#diocesanCalendarDefinitionCardLinks li').removeClass('active');
-    //console.log("you clicked " + $(ev.currentTarget).text());
-    if ($(ev.currentTarget).hasClass('diocesan-carousel-next')) {
-        $('.carousel').carousel('next');
-    } else if ($(ev.currentTarget).hasClass('diocesan-carousel-prev')) {
-        $('.carousel').carousel('prev');
-    } else {
-        $(ev.currentTarget).parent('li').addClass('active');
-        $('.carousel').carousel(parseInt($(ev.currentTarget).attr('data-bs-slide-to')));
-    }
-});
 
 $(document).on('change', '.litEvent', ev => {
     let $row = $(ev.currentTarget).closest('.row');
@@ -722,80 +460,6 @@ $(document).on('change', '.litEvent', ev => {
     }
 });
 
-$(document).on('click', '#saveDiocesanCalendar_btn', () => {
-    //const nation = document.querySelector('#diocesanCalendarNationalDependency').value;
-    const diocese = document.querySelector('#diocesanCalendarDioceseName').value;
-    const option = document.querySelector('#DiocesesList option[value="' + diocese + '"]');
-    const diocese_key = option ? option.getAttribute('data-value') : null;
-    const saveObj = { payload: CalendarData };
-    API.category = 'diocese';
-    if (API.method === 'PATCH') {
-        API.key = diocese_key;
-    }
-
-    // if the diocese overrides Epiphany, Ascension and Corpus Christi settings compared to the national calendar, add the settings to the payload
-    if( diocesanOvveridesDefined() ) {
-        saveObj.payload.settings = {};
-        if( $('#diocesanCalendarOverrideEpiphany').val() !== "" ) {
-            saveObj.payload.settings.epiphany = $('#diocesanCalendarOverrideEpiphany').val();
-        }
-        if( $('#diocesanCalendarOverrideAscension').val() !== "" ) {
-            saveObj.payload.settings.ascension = $('#diocesanCalendarOverrideAscension').val();
-        }
-        if( $('#diocesanCalendarOverrideCorpusChristi').val() !== "" ) {
-            saveObj.payload.settings.corpus_christi = $('#diocesanCalendarOverrideCorpusChristi').val();
-        }
-    }
-
-    let formsValid = true;
-    $('form').find('.row').each((idx,row) => {
-        if( $(row).find('.litEventName').val() !== '' ) {
-            $(row).find('input,select').each((idx, el) => {
-                if (el.checkValidity() === false) {
-                    formsValid = false;
-                    alert(el.validationMessage);
-                }
-                $(el).addClass('was-validated');
-            });
-        }
-    });
-    if ( formsValid ) {
-        const headers = {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        };
-        if (API.locale !== '') {
-            headers['Accept-Language'] = API.locale;
-        }
-        const body = JSON.stringify(saveObj.payload);
-
-        fetch(API.path, {
-            method: API.method,
-            headers,
-            body
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => { throw err; });
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Data returned from save action:', data);
-            toastr["success"]("Diocesan Calendar was created or updated successfully", "Success");
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            toastr["error"](error.status + ' ' + error.message, "Error");
-        });
-    }
-});
-
-$(document).on('click', '#removeExistingDiocesanDataBtn', evt => {
-    // We don't want any forms to submit, so we prevent the default action
-    evt.preventDefault();
-});
-
 $(document).on('click', '.onTheFlyEventRow', ev => {
     let $row;
     switch (ev.currentTarget.id) {
@@ -832,89 +496,50 @@ $(document).on('click', '.onTheFlyEventRow', ev => {
     //$row.find('.litEventStrtotimeSwitch').bootstrapToggle();
 });
 
-$(document).on('click', '.actionPromptButton', ev => {
-    const currentUniqid = FormControls.uniqid;
-    const $modal = $(ev.currentTarget).closest('.actionPromptModal');
-    const $modalForm = $modal.find('form');
-    const existingFestivityTag = sanitizeInput( $modalForm.find('.existingFestivityName').val() );
-    let existingFestivity = FestivityCollection.filter(festivity => festivity.event_key === existingFestivityTag)[0] ?? null;
-    let propertyToChange;
-    let rowStr;
-    let rowEls;
-    let $row;
-    //let buttonId = ev.currentTarget.id;
-    //console.log(buttonId + ' button was clicked');
-    FormControls.settings.decreeURLField = true;
-    FormControls.settings.decreeLangMapField = document.querySelector('.regionalNationalCalendarName').id === 'widerRegionCalendarName';
-    setFormSettings( ev.currentTarget.id );
-    console.log(`FormControls.action = ${FormControls.action}, ev.currentTarget.id = ${ev.currentTarget.id}`);
-    if( ev.currentTarget.id === 'setPropertyButton' ) {
-        propertyToChange = $('#propertyToChange').val();
-        setFormSettingsForProperty( propertyToChange );
-    }
 
-    if( existingFestivityTag !== '' ) {
-        rowStr = FormControls.CreatePatronRow( existingFestivityTag );
-        rowEls = $.parseHTML(rowStr);
-        $row = $( rowEls );
-        console.log($row);
-        if( FormControls.settings.missalField ) {
-            const { missal } = existingFestivity;
-            $row.find(`#onTheFly${currentUniqid}Missal`).val(missal); //.prop('disabled', true);
+jQuery(document).ready(() => {
+    let $carousel = $('.carousel').carousel();
+
+    $carousel.on('slide.bs.carousel', event => {
+        $('#diocesanCalendarDefinitionCardLinks li').removeClass('active');
+        if (event.to == 0) {
+            $('#diocesanCalendarDefinitionCardLinks li:first-child').addClass('disabled');
+            $('#diocesanCalendarDefinitionCardLinks li:last-child').removeClass('disabled');
+        } else if (event.to == 3) {
+            $('#diocesanCalendarDefinitionCardLinks li:last-child').addClass('disabled');
+            $('#diocesanCalendarDefinitionCardLinks li:first-child').removeClass('disabled');
+        } else {
+            $('#diocesanCalendarDefinitionCardLinks li:first-child').removeClass('disabled');
+            $('#diocesanCalendarDefinitionCardLinks li:last-child').removeClass('disabled');
         }
-    } else {
-        rowStr = FormControls.CreatePatronRow();
-        rowEls = $.parseHTML( rowStr );
-        $row = $( rowEls );
-    }
-    $('.regionalNationalDataForm').append($row);
-    $modal.modal('hide');
-    $row.find('.form-group').closest('.row').data('action', FormControls.action).attr('data-action', FormControls.action);
-    if( FormControls.action === RowAction.SetProperty ) {
-        console.log('propertyToChange is of type ' + typeof propertyToChange + ' and has a value of ' + propertyToChange);
-        $row.find('.form-group').closest('.row').data('prop', propertyToChange).attr('data-prop', propertyToChange);
-    }
-    $row.find('.litEventColor').multiselect({
+        $('#diocesanCalendarDefinitionCardLinks li').find('[data-bs-slide-to=' + event.to + ']').parent('li').addClass('active');
+    });
+
+    $('.calendarLocales').multiselect({
+        buttonWidth: '100%',
+        buttonClass: 'form-select',
+        templates: {
+            button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+        },
+        maxHeight: 200,
+        enableCaseInsensitiveFiltering: true
+    });
+
+    setCommonMultiselect(null, null);
+
+    $('.litEventColor').multiselect({
         buttonWidth: '100%',
         buttonClass: 'form-select',
         templates: {
             button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
         }
-    }).multiselect('deselectAll', false);
-
-    if(FormControls.settings.colorField === false) {
-        $row.find('.litEventColor').multiselect('disable');
-    }
-
-    if(FormControls.settings.commonFieldShow) {
-        setCommonMultiselect( $row, null );
-        if(FormControls.settings.commonField === false) {
-            $row.find(`#onTheFly${currentUniqid}Common`).multiselect('disable');
-        }
-    }
-
-    if(FormControls.settings.gradeFieldShow && FormControls.settings.gradeField === false) {
-        $row.find(`#onTheFly${currentUniqid}Grade`).prop('disabled', true);
-    }
-
-    if( existingFestivityTag !== '' ) {
-        const litevent = FestivityCollection.filter(el => el.event_key === existingFestivityTag)[0];
-
-        $row.find(`#onTheFly${currentUniqid}Grade`).val(litevent.grade);
-        $row.find(`#onTheFly${currentUniqid}Common`).multiselect('select', litevent.common)
-        const colorVal = Array.isArray( litevent.color ) ? litevent.color : litevent.color.split(',');
-        $row.find(`.litEventColor`).multiselect('select', colorVal);
-
-        if(FormControls.settings.monthField === false) {
-            $row.find(`#onTheFly${currentUniqid}Month > option[value]:not([value=${litevent.month}])`).prop('disabled',true);
-        }
-    }
-
-    if( $('.serializeRegionalNationalData').prop('disabled') ) {
-        $('.serializeRegionalNationalData').prop('disabled', false);
-    }
+    });
 
 });
+
+/**
+ * Wider Region and National Calendar interactions
+ */
 
 $(document).on('change', '.regionalNationalCalendarName', ev => {
     API.category = ev.currentTarget.dataset.category;
@@ -1101,6 +726,162 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
     }).catch(error => {
         console.error(error);
     });
+});
+
+/**
+ * Replaces the day input and month select with a text input for strtotime.
+ * @param {jQuery} $row - The containing row of the form.
+ * @param {Object} Metadata - The metadata object from the JSON payload.
+ */
+const switcheroo = ( $row, Metadata ) => {
+    $row.find('.litEventDay').closest('.form-group').remove();
+    let $litEventMonth = $row.find('.litEventMonth');
+    let $litEventMonthFormGrp = $litEventMonth.closest('.form-group');
+    console.log($litEventMonth.attr('id'));
+    let strtotimeId = $litEventMonth.attr('id').replace('Month','Strtotime');
+    console.log(strtotimeId);
+    $litEventMonthFormGrp.removeClass('col-sm-2').addClass('col-sm-3');
+    $litEventMonth.remove();
+    $litEventMonthFormGrp.find('.month-label').text('Explicatory date').attr('for',strtotimeId);
+    $litEventMonthFormGrp.append(`<input type="text" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" class="form-control litEvent litEventStrtotime" id="${strtotimeId}" value="${Metadata.strtotime}" />`);
+}
+
+/**
+ * Reverts the form row from a strtotime text input back to separate day and month fields.
+ * Adjusts the form group classes to accommodate the change.
+ * Inserts a day input and month select dropdown based on the provided festivity data.
+ *
+ * @param {jQuery} $row - The containing row of the form.
+ * @param {Object} Festivity - The festivity data object containing day and month information.
+ */
+const unswitcheroo = ( $row, Festivity ) => {
+    let $litEventStrtotime = $row.find('.litEventStrtotime');
+    let $strToTimeFormGroup = $litEventStrtotime.closest('.form-group');
+    $strToTimeFormGroup.removeClass('col-sm-3').addClass('col-sm-2');
+    let dayId = $litEventStrtotime.attr('id').replace('Strtotime', 'Day');
+    let monthId = $litEventStrtotime.attr('id').replace('Strtotime', 'Month');
+    $strToTimeFormGroup.before(`<div class="form-group col-sm-1">
+    <label for="${dayId}">${Messages[ "Day" ]}</label><input type="number" min="1" max="31" value="1" class="form-control litEvent litEventDay" id="${dayId}" value="${Festivity.day}" />
+    </div>`);
+    $litEventStrtotime.remove();
+    let formRow = `<select class="form-select litEvent litEventMonth" id="${monthId}">`;
+    let formatter = new Intl.DateTimeFormat(jsLocale, { month: 'long' });
+    for (let i = 0; i < 12; i++) {
+        let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
+        formRow += `<option value=${i + 1}${(i+1)===Festivity.month ? ' selected' : ''}>${formatter.format(month)}</option>`;
+    }
+    formRow += `</select>`;
+    $strToTimeFormGroup.append(formRow);
+    $strToTimeFormGroup.find('.month-label').text(Messages[ 'Month' ]).attr('for',monthId);
+}
+
+$(document).on('click', '.strtotime-toggle-btn', ev => {
+    const uniqid = parseInt( $(ev.currentTarget).attr('data-row-uniqid') );
+    if( $(ev.currentTarget).attr('aria-pressed') === 'true' ) {
+        $(ev.currentTarget).find('i').removeClass('fa-comment-slash').addClass('fa-comment');
+        $(`#onTheFly${uniqid}Month`).closest('.form-group').remove();
+        let $dayFormGroup = $(`#onTheFly${uniqid}Day`).closest('.form-group');
+        $dayFormGroup.empty().removeClass('col-sm-1').addClass('col-sm-2').append(`<label for="onTheFly${uniqid}Strtotime">Explicatory date</label><input type="text" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" class="form-control litEvent litEventStrtotime" id="onTheFly${uniqid}Strtotime" />`);
+    } else {
+        $(ev.currentTarget).find('i').removeClass('fa-comment').addClass('fa-comment-slash');
+        let $strToTimeFormGroup = $(`#onTheFly${uniqid}Strtotime`).closest('.form-group');
+        $strToTimeFormGroup.empty().removeClass('col-sm-2').addClass('col-sm-1').append(`<label for="onTheFly${uniqid}Day">Day</label><input type="number" min="1" max="31" value="false" class="form-control litEvent litEventDay" id="onTheFly${uniqid}Day" />`);
+        let formRow = `<div class="form-group col-sm-1">
+        <label for="onTheFly${uniqid}Month">${Messages[ "Month" ]}</label>
+        <select class="form-select litEvent litEventMonth" id="onTheFly${uniqid}Month" >`;
+        let formatter = new Intl.DateTimeFormat(jsLocale, { month: 'long' });
+        for (let i = 0; i < 12; i++) {
+            let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
+            formRow += `<option value=${i + 1}>${formatter.format(month)}</option>`;
+        }
+        formRow += `</select>
+        </div>`;
+        $strToTimeFormGroup.after(formRow);
+    }
+});
+
+$(document).on('click', '.actionPromptButton', ev => {
+    const currentUniqid = FormControls.uniqid;
+    const $modal = $(ev.currentTarget).closest('.actionPromptModal');
+    const $modalForm = $modal.find('form');
+    const existingFestivityTag = sanitizeInput( $modalForm.find('.existingFestivityName').val() );
+    let existingFestivity = FestivityCollection.filter(festivity => festivity.event_key === existingFestivityTag)[0] ?? null;
+    let propertyToChange;
+    let rowStr;
+    let rowEls;
+    let $row;
+    //let buttonId = ev.currentTarget.id;
+    //console.log(buttonId + ' button was clicked');
+    FormControls.settings.decreeURLField = true;
+    FormControls.settings.decreeLangMapField = document.querySelector('.regionalNationalCalendarName').id === 'widerRegionCalendarName';
+    setFormSettings( ev.currentTarget.id );
+    console.log(`FormControls.action = ${FormControls.action}, ev.currentTarget.id = ${ev.currentTarget.id}`);
+    if( ev.currentTarget.id === 'setPropertyButton' ) {
+        propertyToChange = $('#propertyToChange').val();
+        setFormSettingsForProperty( propertyToChange );
+    }
+
+    if( existingFestivityTag !== '' ) {
+        rowStr = FormControls.CreatePatronRow( existingFestivityTag );
+        rowEls = $.parseHTML(rowStr);
+        $row = $( rowEls );
+        console.log($row);
+        if( FormControls.settings.missalField ) {
+            const { missal } = existingFestivity;
+            $row.find(`#onTheFly${currentUniqid}Missal`).val(missal); //.prop('disabled', true);
+        }
+    } else {
+        rowStr = FormControls.CreatePatronRow();
+        rowEls = $.parseHTML( rowStr );
+        $row = $( rowEls );
+    }
+    $('.regionalNationalDataForm').append($row);
+    $modal.modal('hide');
+    $row.find('.form-group').closest('.row').data('action', FormControls.action).attr('data-action', FormControls.action);
+    if( FormControls.action === RowAction.SetProperty ) {
+        console.log('propertyToChange is of type ' + typeof propertyToChange + ' and has a value of ' + propertyToChange);
+        $row.find('.form-group').closest('.row').data('prop', propertyToChange).attr('data-prop', propertyToChange);
+    }
+    $row.find('.litEventColor').multiselect({
+        buttonWidth: '100%',
+        buttonClass: 'form-select',
+        templates: {
+            button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+        }
+    }).multiselect('deselectAll', false);
+
+    if(FormControls.settings.colorField === false) {
+        $row.find('.litEventColor').multiselect('disable');
+    }
+
+    if(FormControls.settings.commonFieldShow) {
+        setCommonMultiselect( $row, null );
+        if(FormControls.settings.commonField === false) {
+            $row.find(`#onTheFly${currentUniqid}Common`).multiselect('disable');
+        }
+    }
+
+    if(FormControls.settings.gradeFieldShow && FormControls.settings.gradeField === false) {
+        $row.find(`#onTheFly${currentUniqid}Grade`).prop('disabled', true);
+    }
+
+    if( existingFestivityTag !== '' ) {
+        const litevent = FestivityCollection.filter(el => el.event_key === existingFestivityTag)[0];
+
+        $row.find(`#onTheFly${currentUniqid}Grade`).val(litevent.grade);
+        $row.find(`#onTheFly${currentUniqid}Common`).multiselect('select', litevent.common)
+        const colorVal = Array.isArray( litevent.color ) ? litevent.color : litevent.color.split(',');
+        $row.find(`.litEventColor`).multiselect('select', colorVal);
+
+        if(FormControls.settings.monthField === false) {
+            $row.find(`#onTheFly${currentUniqid}Month > option[value]:not([value=${litevent.month}])`).prop('disabled',true);
+        }
+    }
+
+    if( $('.serializeRegionalNationalData').prop('disabled') ) {
+        $('.serializeRegionalNationalData').prop('disabled', false);
+    }
+
 });
 
 /**
@@ -1370,6 +1151,190 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
     });
 });
 
+/**
+ * Diocesan Calendar interactions
+ */
+
+/**
+ * Sets focus on the first tab of the diocesan calendar definition form with non-empty data.
+ * @function setFocusFirstTabWithData
+ */
+const setFocusFirstTabWithData = () => {
+    let $firstInputWithNonEmptyValue = $('.carousel-item form .litEventName')
+        .filter(function(idx) {
+            return $(this).val() !== "";
+        })
+        .first();
+    let $parentCarouselItem = $firstInputWithNonEmptyValue.parents('.carousel-item');
+    let itemIndex = $('.carousel-item').index( $parentCarouselItem );
+    $('#diocesanCalendarDefinitionCardLinks li').removeClass('active');
+    $('.carousel').carousel(itemIndex);
+    $(`#diocesanCalendarDefinitionCardLinks li:nth-child(${itemIndex+2})`).addClass('active');
+};
+
+/**
+ * @description Retrieves the data for the Diocesan Calendar associated with the currently selected diocese, and populates the edit form with the retrieved data.
+ * @function loadDiocesanCalendarData
+ */
+const loadDiocesanCalendarData = () => {
+    API.category = 'diocese';
+    let diocese = $('#diocesanCalendarDioceseName').val();
+    API.key = $('#DiocesesList').find('option[value="' + diocese + '"]').attr('data-value');
+    let dioceseMetadata = CalendarsIndex.diocesan_calendars.filter(item => item.calendar_id === API.key)[0];
+    API.locale = dioceseMetadata.locales[0];
+    const headers = {
+        'Accept': 'application/json',
+        'Accept-Language': API.locale
+    }
+    fetch(API.path, {
+        method: 'GET',
+        headers
+    }).then(response => {
+        if(response.ok) {
+            return response.json();
+        } else if(response.status === 404) {
+            toastr["warning"](response.status + ' ' + response.statusText + ': ' + response.url + '<br />The Diocesan Calendar for ' + diocese + ' does not exist yet.', "Warning");
+            console.log(response.status + ' ' + response.statusText + ': ' + response.url + 'The Diocesan Calendar for ' + diocese + ' does not exist yet.');
+            API.method = 'PUT';
+            return Promise.resolve({});
+        } else {
+            throw new Error(response.status + ' ' + response.statusText + ': ' + response.url);
+        }
+    }).then(data => {
+        API.method = 'PATCH';
+        console.log('retrieved diocesan data:');
+        console.log(data);
+        toastr["success"]("Diocesan Calendar was retrieved successfully", "Success");
+        CalendarData = data;
+        if( data.hasOwnProperty('settings') ) {
+            if( data.settings.hasOwnProperty('epiphany') ) {
+                $('#diocesanCalendarOverrideEpiphany').val( data.settings.epiphany );
+            }
+            if( data.settings.hasOwnProperty('ascension') ) {
+                $('#diocesanCalendarOverrideAscension').val( data.settings.ascension );
+            }
+            if( data.settings.hasOwnProperty('corpus_christi') ) {
+                $('#diocesanCalendarOverrideCorpusChristi').val( data.settings.corpus_christi );
+            }
+        }
+        fillDiocesanFormWithData(data);
+        setFocusFirstTabWithData();
+    }).catch(error => {
+        if( error instanceof Error && error.message.startsWith('404') ) { //we have already handled 404 Not Found above
+            return;
+        }
+        toastr["error"](error.message, "Error");
+    });
+}
+
+const fillDiocesanFormWithData = (data) => {
+    for (const entry of data.litcal) {
+        const { festivity, metadata } = entry;
+        let $form;
+        let $row;
+        let numLastRow;
+        let numMissingRows;
+        if(metadata.hasOwnProperty('strtotime')) {
+            FormControls.settings.dayField = false;
+            FormControls.settings.monthField = false;
+            FormControls.settings.strtotimeField = true;
+        } else {
+            FormControls.settings.dayField = true;
+            FormControls.settings.monthField = true;
+            FormControls.settings.strtotimeField = false;
+        }
+        switch (festivity.grade) {
+            case Rank.SOLEMNITY:
+                $form = $('#carouselItemSolemnities form');
+                numLastRow = $form.find('.row').length - 1;
+                if (metadata.form_rownum > numLastRow) {
+                    numMissingRows = metadata.form_rownum - numLastRow;
+                    FormControls.title = Messages['Other Solemnity'];
+                    FormControls.settings.commonField = true;
+                    while (numMissingRows-- > 0) {
+                        $form.append($(FormControls.CreateFestivityRow()));
+                    }
+                }
+                $row = $('#carouselItemSolemnities form .row').eq(metadata.form_rownum);
+                break;
+            case Rank.FEAST:
+                numLastRow = $('#carouselItemFeasts form .row').length - 1;
+                if (metadata.form_rownum > numLastRow) {
+                    numMissingRows = metadata.form_rownum - numLastRow;
+                    FormControls.title = Messages['Other Feast'];
+                    FormControls.settings.commonField = true;
+                    while (numMissingRows-- > 0) {
+                        $('.carousel-item').eq(1).find('form').append($(FormControls.CreateFestivityRow()));
+                    }
+                }
+                $row = $('#carouselItemFeasts form .row').eq(metadata.form_rownum);
+                break;
+            case Rank.MEMORIAL:
+                numLastRow = $('#carouselItemMemorials form .row').length - 1;
+                if (metadata.form_rownum > numLastRow) {
+                    numMissingRows = metadata.form_rownum - numLastRow;
+                    FormControls.title = Messages['Other Memorial'];
+                    FormControls.settings.commonField = true;
+                    while (numMissingRows-- > 0) {
+                        $('.carousel-item').eq(2).find('form').append($(FormControls.CreateFestivityRow()));
+                    }
+                }
+                $row = $('#carouselItemMemorials form .row').eq(metadata.form_rownum);
+                break;
+            case Rank.OPTIONALMEMORIAL:
+                numLastRow = $('#carouselItemOptionalMemorials form .row').length - 1;
+                if (metadata.form_rownum > numLastRow) {
+                    numMissingRows = metadata.form_rownum - numLastRow;
+                    FormControls.title = Messages['Other Optional Memorial'];
+                    FormControls.settings.commonField = true;
+                    while (numMissingRows-- > 0) {
+                        $('.carousel-item').eq(3).find('form').append($(FormControls.CreateFestivityRow()));
+                    }
+                }
+                $row = $('#carouselItemOptionalMemorials form .row').eq(metadata.form_rownum);
+                break;
+        }
+        $row.find('.litEventName').val(festivity.name).attr('data-valuewas', festivity.event_key);
+        //if(metadata.form_rownum > 2) {
+        //    $row.find('.litEventStrtotimeSwitch').bootstrapToggle();
+        //}
+        if( metadata.hasOwnProperty('strtotime') ) {
+            $row.find('.litEventStrtotimeSwitch').prop('checked', true);
+            if( $row.find('.litEventStrtotime').length === 0 ) {
+                switcheroo( $row, metadata );
+            }
+            $row.find('.litEventStrtotime').val(metadata.strtotime);
+        } else {
+            if( $row.find('.litEventStrtotime').length > 0 ) {
+                unswitcheroo( $row, festivity );
+            }
+            $row.find('.litEventDay').val(festivity.day);
+            $row.find('.litEventMonth').val(festivity.month);
+        }
+        setCommonMultiselect( $row, festivity.common );
+        $row.find('.litEventColor').multiselect({
+            buttonWidth: '100%',
+            buttonClass: 'form-select',
+            templates: {
+                button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+            }
+        }).multiselect('deselectAll', false).multiselect('select', festivity.color);
+        $row.find('.litEventSinceYear').val(metadata.since_year);
+        if( metadata.hasOwnProperty('until_year') ) {
+            $row.find('.litEventUntilYear').val(metadata.until_year);
+        }
+    };
+}
+
+/**
+ * @function diocesanOvveridesDefined
+ * @description Returns true if at least one of the overrides for epiphany, ascension, or corpus christi have been set, false otherwise.
+ * @returns {boolean}
+ */
+const diocesanOvveridesDefined = () => {
+    return ( $('#diocesanCalendarOverrideEpiphany').val() !== "" || $('#diocesanCalendarOverrideAscension').val() !== "" || $('#diocesanCalendarOverrideCorpusChristi').val() !== "" );
+}
+
 $(document).on('change', '#diocesanCalendarNationalDependency', ev => {
     $('#diocesanCalendarDioceseName').val('');
     $('#removeExistingDiocesanDataBtn').prop('disabled', true);
@@ -1435,6 +1400,11 @@ $(document).on('change', '#diocesanCalendarDioceseName', ev => {
     }
 });
 
+$(document).on('click', '#removeExistingDiocesanDataBtn', evt => {
+    // We don't want any forms to submit, so we prevent the default action
+    evt.preventDefault();
+});
+
 $(document).on('click', '#deleteDiocesanCalendarConfirm', () => {
     API.category = 'diocese';
     $('#removeDiocesanCalendarPrompt').modal('toggle');
@@ -1482,6 +1452,89 @@ $(document).on('click', '#deleteDiocesanCalendarConfirm', () => {
     })
 });
 
+$(document).on('click', '#saveDiocesanCalendar_btn', () => {
+    //const nation = document.querySelector('#diocesanCalendarNationalDependency').value;
+    const diocese = document.querySelector('#diocesanCalendarDioceseName').value;
+    const option = document.querySelector('#DiocesesList option[value="' + diocese + '"]');
+    const diocese_key = option ? option.getAttribute('data-value') : null;
+    const saveObj = { payload: CalendarData };
+    API.category = 'diocese';
+    if (API.method === 'PATCH') {
+        API.key = diocese_key;
+    }
+
+    // if the diocese overrides Epiphany, Ascension and Corpus Christi settings compared to the national calendar, add the settings to the payload
+    if( diocesanOvveridesDefined() ) {
+        saveObj.payload.settings = {};
+        if( $('#diocesanCalendarOverrideEpiphany').val() !== "" ) {
+            saveObj.payload.settings.epiphany = $('#diocesanCalendarOverrideEpiphany').val();
+        }
+        if( $('#diocesanCalendarOverrideAscension').val() !== "" ) {
+            saveObj.payload.settings.ascension = $('#diocesanCalendarOverrideAscension').val();
+        }
+        if( $('#diocesanCalendarOverrideCorpusChristi').val() !== "" ) {
+            saveObj.payload.settings.corpus_christi = $('#diocesanCalendarOverrideCorpusChristi').val();
+        }
+    }
+
+    let formsValid = true;
+    $('form').find('.row').each((idx,row) => {
+        if( $(row).find('.litEventName').val() !== '' ) {
+            $(row).find('input,select').each((idx, el) => {
+                if (el.checkValidity() === false) {
+                    formsValid = false;
+                    alert(el.validationMessage);
+                }
+                $(el).addClass('was-validated');
+            });
+        }
+    });
+    if ( formsValid ) {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        };
+        if (API.locale !== '') {
+            headers['Accept-Language'] = API.locale;
+        }
+        const body = JSON.stringify(saveObj.payload);
+
+        fetch(API.path, {
+            method: API.method,
+            headers,
+            body
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw err; });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Data returned from save action:', data);
+            toastr["success"]("Diocesan Calendar was created or updated successfully", "Success");
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            toastr["error"](error.status + ' ' + error.message, "Error");
+        });
+    }
+});
+
+$(document).on('click', '#diocesanCalendarDefinitionCardLinks a.page-link', ev => {
+    ev.preventDefault();
+    $('#diocesanCalendarDefinitionCardLinks li').removeClass('active');
+    //console.log("you clicked " + $(ev.currentTarget).text());
+    if ($(ev.currentTarget).hasClass('diocesan-carousel-next')) {
+        $('.carousel').carousel('next');
+    } else if ($(ev.currentTarget).hasClass('diocesan-carousel-prev')) {
+        $('.carousel').carousel('prev');
+    } else {
+        $(ev.currentTarget).parent('li').addClass('active');
+        $('.carousel').carousel(parseInt($(ev.currentTarget).attr('data-bs-slide-to')));
+    }
+});
+
 $(document).on('change', '.existingFestivityName', ev => {
     const $modal = $(ev.currentTarget).closest('.actionPromptModal');
     const $form = $modal.find('form');
@@ -1524,44 +1577,4 @@ $(document).on('click', '#addLanguageEditionRomanMissal', ev => {
     $('#publishedRomanMissalList').append(`<li class="list-group-item">${languageEditionRomanMissal}</li>`);
     let $modal = $(ev.currentTarget).closest('.modal');
     $modal.modal('hide');
-});
-
-jQuery(document).ready(() => {
-    let $carousel = $('.carousel').carousel();
-
-    $carousel.on('slide.bs.carousel', event => {
-        $('#diocesanCalendarDefinitionCardLinks li').removeClass('active');
-        if (event.to == 0) {
-            $('#diocesanCalendarDefinitionCardLinks li:first-child').addClass('disabled');
-            $('#diocesanCalendarDefinitionCardLinks li:last-child').removeClass('disabled');
-        } else if (event.to == 3) {
-            $('#diocesanCalendarDefinitionCardLinks li:last-child').addClass('disabled');
-            $('#diocesanCalendarDefinitionCardLinks li:first-child').removeClass('disabled');
-        } else {
-            $('#diocesanCalendarDefinitionCardLinks li:first-child').removeClass('disabled');
-            $('#diocesanCalendarDefinitionCardLinks li:last-child').removeClass('disabled');
-        }
-        $('#diocesanCalendarDefinitionCardLinks li').find('[data-bs-slide-to=' + event.to + ']').parent('li').addClass('active');
-    });
-
-    $('.calendarLocales').multiselect({
-        buttonWidth: '100%',
-        buttonClass: 'form-select',
-        templates: {
-            button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
-        },
-        maxHeight: 200,
-        enableCaseInsensitiveFiltering: true
-    });
-
-    setCommonMultiselect(null, null);
-
-    $('.litEventColor').multiselect({
-        buttonWidth: '100%',
-        buttonClass: 'form-select',
-        templates: {
-            button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
-        }
-    });
-
 });
