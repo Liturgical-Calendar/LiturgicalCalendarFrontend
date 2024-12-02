@@ -1492,13 +1492,21 @@ $(document).on('change', '#diocesanCalendarNationalDependency', ev => {
     $('#diocesanCalendarDioceseName').val('');
     $('#removeExistingDiocesanDataBtn').prop('disabled', true);
     $('body').find('#removeDiocesanCalendarPrompt').remove();
-    let currentSelectedNation = $(ev.currentTarget).val();
-    let DiocesesForNation = DiocesesList.filter(item => item.country_iso.toUpperCase() === currentSelectedNation)[0].dioceses;
+    const currentSelectedNation = $(ev.currentTarget).val();
+    const DiocesesForNation = Object.freeze(DiocesesList.filter(item => item.country_iso.toUpperCase() === currentSelectedNation)[0].dioceses);
+    const LocalesForNation = Object.freeze(Object.entries(AvailableLocalesWithRegion).filter(([key, value]) => {
+        return key.split('_' ).pop() === currentSelectedNation;
+    }));
+    console.log(`LocalesForNation = ${JSON.stringify(LocalesForNation)}`);
     $('#DiocesesList').empty();
     if (currentSelectedNation === 'US') {
         DiocesesForNation.forEach(item => $('#DiocesesList').append(`<option data-value="${item.diocese_id}" value="${item.diocese_name} (${item.province})">`));
     } else {
         DiocesesForNation.forEach(item => $('#DiocesesList').append('<option data-value="' + item.diocese_id + '" value="' + item.diocese_name + '">'));
+    }
+    if (LocalesForNation.length > 0) {
+        document.querySelector('#diocesanCalendarLocales').innerHTML = LocalesForNation.map(item => `<option value="${item[0]}">${item[1]}</option>`).join('');
+        $('#diocesanCalendarLocales').multiselect('rebuild');
     }
 });
 
@@ -1531,7 +1539,7 @@ jQuery(document).ready(() => {
         $('#diocesanCalendarDefinitionCardLinks li').find('[data-bs-slide-to=' + event.to + ']').parent('li').addClass('active');
     });
 
-    $('#widerRegionLocales, #nationalCalendarLocales').multiselect({
+    $('.calendarLocales').multiselect({
         buttonWidth: '100%',
         buttonClass: 'form-select',
         templates: {

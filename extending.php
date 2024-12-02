@@ -173,7 +173,7 @@ if (isset($_GET["choice"])) {
                         </div>
                         <div class="col col-md-4">
                             <div>
-                                <select class="form-select" id="widerRegionLocales" multiple="multiple" disabled>
+                                <select class="form-select calendarLocales" id="widerRegionLocales" multiple="multiple" disabled>
                                 <?php foreach ($SystemLocalesWithRegion as $locale => $lang_region) {
                                         echo "<option value='$locale'>$lang_region</option>";
                                 } ?>
@@ -271,7 +271,7 @@ if (isset($_GET["choice"])) {
                                     </div>
                                     <div class="form-group col col-md-3">
                                         <label><?php echo _('LOCALES') ?></label>
-                                        <select class="form-select" id="nationalCalendarLocales" multiple="multiple">
+                                        <select class="form-select calendarLocales" id="nationalCalendarLocales" multiple="multiple">
                                         <?php
                                         foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
                                             echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
@@ -360,6 +360,16 @@ if (isset($_GET["choice"])) {
                                 }
                                 ?>
                             </datalist>
+                        </div>
+                        <div class="form-group col col-md-3">
+                            <label><?php echo _('LOCALES') ?></label>
+                            <select class="form-select calendarLocales" id="diocesanCalendarLocales" multiple="multiple">
+                            <?php
+                            foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
+                                echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
+                            }
+                            ?>
+                            </select>
                         </div>
                     </form>
                 </div>
