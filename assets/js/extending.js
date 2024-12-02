@@ -1354,6 +1354,7 @@ $(document).on('change', '#diocesanCalendarNationalDependency', ev => {
         document.querySelector('#diocesanCalendarLocales').innerHTML = LocalesForNation.map(item => `<option value="${item[0]}">${item[1]}</option>`).join('');
         $('#diocesanCalendarLocales').multiselect('rebuild');
         document.querySelector('#availableLocalizationsForDiocese').innerHTML = LocalesForNation.map(item => `<option value="${item[0]}">${item[1]}</option>`).join('');
+        document.querySelector('#currentLocalization').value = '';
     }
 });
 
