@@ -828,24 +828,27 @@ const setFormSettingsForProperty = property => {
 /**
  * Represents a liturgical event.
  * @class
+ * @property {string} event_key - Key of the liturgical event.
  * @property {string} name - Name of the liturgical event.
- * @property {string} color - Color of the liturgical event.
+ * @property {string[]} color - Color of the liturgical event.
  * @property {number} grade - Grade of the liturgical event.
- * @property {string} common - Common of the liturgical event.
+ * @property {string[]} common - Common of the liturgical event.
  * @property {number} day - Day of the month of the liturgical event.
  * @property {number} month - Month of the liturgical event.
  */
 class LitEvent {
     /**
      * Creates a new LitEvent.
+     * @param {string} [event_key=""] - Key of the liturgical event.
      * @param {string} [name=""] - Name of the liturgical event.
-     * @param {string} [color=""] - Color of the liturgical event.
+     * @param {string[]} [color=[]] - Color of the liturgical event.
      * @param {number} [grade=0] - Grade of the liturgical event.
-     * @param {string} [common=""] - Common of the liturgical event.
+     * @param {string[]} [common=[]] - Common of the liturgical event.
      * @param {number} [day=1] - Day of the month of the liturgical event.
      * @param {number} [month=1] - Month of the liturgical event.
      */
-    constructor(name = "", color = "", grade = 0, common = "", day = 1, month = 1 ) {
+    constructor(key = "", name = "", color = [], grade = 0, common = [], day = 1, month = 1 ) {
+        this.event_key = key;
         this.name   = name;
         this.color  = color;
         this.grade  = grade;

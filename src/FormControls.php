@@ -35,7 +35,14 @@ class FormControls
         $formRow = "";
 
         if ($title !== null) {
-            $formRow .= "<h4>" . $title . "</h4>";
+            // Do not add data-group-title to the div, because extending.js will remove all divs with the data-group-title class
+            // when resetting the form (see $(document).on('change', '#diocesanCalendarDioceseName', ...))
+            // But these are supposed to be fixed and not removed, even when empty
+            $formRow .= "<div class=\"mt-4 d-flex justify-content-left\">"
+                        . "<h4 class=\"data-group-title\">"
+                        . $title
+                        . "</h4>"
+                        . "</div>";
         }
 
         $formRow .= "<div class=\"row gx-2 align-items-baseline\">";
