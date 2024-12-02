@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-01 11:52+0000\n"
+"POT-Creation-Date: 2024-12-02 20:08+0000\n"
 "PO-Revision-Date: 2024-12-01 17:47+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
@@ -589,15 +589,15 @@ msgstr ""
 msgid "Tag"
 msgstr "Etiqueta"
 
-#: extending.php:92 src/Utilities.php:222 src/FormControls.php:45
+#: extending.php:92 src/Utilities.php:222 src/FormControls.php:52
 msgid "Name"
 msgstr "Nombre"
 
-#: extending.php:93 liturgyOfAnyDay.php:47 src/FormControls.php:52
+#: extending.php:93 liturgyOfAnyDay.php:47 src/FormControls.php:59
 msgid "Day"
 msgstr "Día"
 
-#: extending.php:94 liturgyOfAnyDay.php:51 src/FormControls.php:58
+#: extending.php:94 liturgyOfAnyDay.php:51 src/FormControls.php:65
 msgid "Month"
 msgstr "Mes"
 
@@ -631,37 +631,37 @@ msgstr ""
 "definidos para el calendario y la entrada correspondiente en el índice se "
 "eliminarán y ya no estarán disponibles en las aplicaciones cliente."
 
-#: extending.php:101 src/FormControls.php:82
+#: extending.php:101 src/FormControls.php:89
 msgid "Liturgical color"
 msgstr "Color litúrgico"
 
 #. translators: context = liturgical color
-#: extending.php:102 src/LitColor.php:35 src/FormControls.php:84
+#: extending.php:102 src/LitColor.php:35 src/FormControls.php:91
 msgid "white"
 msgstr "blanco"
 
 #. translators: context = liturgical color
-#: extending.php:103 src/LitColor.php:38 src/FormControls.php:85
+#: extending.php:103 src/LitColor.php:38 src/FormControls.php:92
 msgid "red"
 msgstr "rojo"
 
 #. translators: context = liturgical color
-#: extending.php:104 src/LitColor.php:29 src/FormControls.php:87
+#: extending.php:104 src/LitColor.php:29 src/FormControls.php:94
 msgid "green"
 msgstr "verde"
 
 #. translators: context = liturgical color
-#: extending.php:105 src/LitColor.php:32 src/FormControls.php:86
+#: extending.php:105 src/LitColor.php:32 src/FormControls.php:93
 msgid "purple"
 msgstr "morado"
 
 #. translators: in reference to the first year from which this festivity takes place
-#: extending.php:107 src/FormControls.php:94
+#: extending.php:107 src/FormControls.php:101
 msgid "Since"
 msgstr "Desde el año"
 
 #. translators: in reference to the year from which this festivity no longer needs to be dealt with
-#: extending.php:109 src/FormControls.php:101
+#: extending.php:109 src/FormControls.php:108
 msgid "Until"
 msgstr "Hasta"
 
@@ -1454,11 +1454,11 @@ msgstr ""
 msgid "Property to change"
 msgstr "Propiedad a cambiar"
 
-#: src/Utilities.php:223 src/FormControls.php:161
+#: src/Utilities.php:223 src/FormControls.php:168
 msgid "Grade"
 msgstr "Grado"
 
-#: src/FormControls.php:114
+#: src/FormControls.php:121
 msgid "Common (or Proper)"
 msgstr "Común (o Propio)"
 
