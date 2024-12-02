@@ -1,7 +1,22 @@
 <?php
-const SWAGGER_UI_DIST_VERSION = '5.17.14';
+const SWAGGER_UI_DIST_VERSION = '5.18.2';
 $isStaging = (strpos($_SERVER['HTTP_HOST'], "-staging") !== false || strpos($_SERVER['HTTP_HOST'], "localhost") !== false);
-$OpenAPISchema = $isStaging ? "development" : "master";
+
+/**
+ * Returns true if the server is running on localhost.
+ *
+ * @return bool true if the server is running on localhost, false otherwise
+ */
+function isLocalhost(): bool
+{
+    $localhostAddresses = ['127.0.0.1', '::1'];
+    $localhostNames     = ['localhost', '127.0.0.1', '::1'];
+    return in_array($_SERVER['SERVER_ADDR'] ?? '', $localhostAddresses) ||
+            in_array($_SERVER['REMOTE_ADDR'] ?? '', $localhostAddresses) ||
+            in_array($_SERVER['SERVER_NAME'] ?? '', $localhostNames);
+}
+
+$OpenAPISchema = $isStaging || isLocalhost() ? "development" : "master";
 ?>
 <!DOCTYPE html><!-- HTML for static distribution bundle build -->
 <html lang="en">
@@ -24,7 +39,7 @@ $OpenAPISchema = $isStaging ? "development" : "master";
     window.onload = function() {
       // Begin Swagger UI call region
       const ui = SwaggerUIBundle({
-        url: "https://raw.githubusercontent.com/JohnRDOrazio/LiturgicalCalendar/<?php echo $OpenAPISchema; ?>/schemas/openapi.json",
+        url: "https://raw.githubusercontent.com/JohnRDOrazio/LiturgicalCalendar/<?php echo $OpenAPISchema; ?>/jsondata/schemas/openapi.json",
         "dom_id": "#swagger-ui",
         deepLinking: true,
         requestSnippetsEnabled: true,
