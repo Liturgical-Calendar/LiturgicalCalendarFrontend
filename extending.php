@@ -155,8 +155,8 @@ if (isset($_GET["choice"])) {
             //FormControls::$settings["untilYearField"] = true;
             ?>
                 <div class="container-fluid">
-                    <form class="row justify-content-center align-items-center needs-validation" novalidate>
-                        <div class="form-group col col-md-4">
+                    <form class="row justify-content-center align-items-end needs-validation" novalidate>
+                        <div class="form-group col col-md-3">
                             <label for="widerRegionCalendarName" class="fw-bold"><?php echo _("Wider Region"); ?></label>
                             <input list="WiderRegionsList" class="form-control regionalNationalCalendarName" id="widerRegionCalendarName" data-category="widerregion" required>
                             <div class="invalid-feedback"><?php echo _("This value cannot be empty."); ?></div>
@@ -171,8 +171,9 @@ if (isset($_GET["choice"])) {
                             ?>
                             </datalist>
                         </div>
-                        <div class="col col-md-4">
+                        <div class="col col-md-3">
                             <div>
+                                <label for="widerRegionLocales" class="fw-bold"><?php echo _("Locales") ?></label>
                                 <select class="form-select calendarLocales" id="widerRegionLocales" multiple="multiple" disabled>
                                 <?php foreach ($SystemLocalesWithRegion as $locale => $lang_region) {
                                         echo "<option value='$locale'>$lang_region</option>";
@@ -180,9 +181,18 @@ if (isset($_GET["choice"])) {
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group col col-md-4">
-                            <label for="removeExistingWiderRegionDataBtn" class="fw-bold"></label>
-                            <button class="btn btn-danger m-2 form-control" id="removeExistingWiderRegionDataBtn" disabled data-bs-toggle="modal" data-bs-target="#removeWiderRegionDataPrompt">
+                        <div class="col col-md-3">
+                            <label for="currentLocalization" class="fw-bold"><?php echo _('Current localization') ?></label>
+                            <select class="form-select currentLocalizationChoices" id="currentLocalization">
+                                <?php
+                                foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
+                                    echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="col col-md-3">
+                            <button class="btn btn-danger" id="removeExistingWiderRegionDataBtn" disabled data-bs-toggle="modal" data-bs-target="#removeWiderRegionDataPrompt">
                                 <i class="far fa-trash-alt me-2"></i>
                                 <?php echo _("Remove existing data"); ?>
                             </button>
@@ -237,7 +247,7 @@ if (isset($_GET["choice"])) {
 
                             <div id="nationalCalendarSettingsContainer" class="container">
                                 <h3 id="nationalCalendarSettingsTitle" class="text-center"><?php echo _("National calendar settings") ?><i class="fas fa-info-circle ms-4 d-inline-block text-black" style="--bs-text-opacity: .3;" role="button" title="please keep in mind that the first step to creating a national calendar, is to translate the already existing calendar data into the correct language. This can be done on the LitCal translation server (see above for details)"></i></h3>
-                                <form id="nationalCalendarSettingsForm" class="row justify-content-center needs-validation" novalidate>
+                                <form id="nationalCalendarSettingsForm" class="row justify-content-center align-items-baseline needs-validation" novalidate>
                                     <div class="form-group col col-md-3">
                                         <label><?php echo _('EPIPHANY') ?></label>
                                         <select class="form-select" id="nationalCalendarSettingEpiphany">
@@ -299,16 +309,14 @@ if (isset($_GET["choice"])) {
                                         <input class="form-control" type="text" id="associatedWiderRegion" />
                                     </div>
                                     <div class="form-group col col-md-3 mt-4">
-                                        <label><?php echo _('Current localization') ?></label>
-                                        <input class="form-control" list="availableLocalizationsForNation" id="currentLocalization" />
-                                        <datalist id="availableLocalizationsForNation">
-                                        <?php
-                                        foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
-                                            echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
-                                        }
-                                        ?>
-                                        </datalist>
-                                        <div class="invalid-feedback"><?php echo _("You must choose a value from the list."); ?></div>
+                                        <label for="currentLocalization"><?php echo _('Current localization') ?></label>
+                                        <select class="form-select currentLocalizationChoices" id="currentLocalization">
+                                            <?php
+                                            foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
+                                                echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                 </form>
                             </div>
@@ -375,15 +383,14 @@ if (isset($_GET["choice"])) {
                             </div>
                             <div class="form-group col col-md-3">
                                 <label for="currentLocalization" class="fw-bold"><?php echo _("Current localization"); ?>:</label>
-                                <input class="form-control" list="availableLocalizationsForDiocese" id="currentLocalization" />
-                                <datalist id="availableLocalizationsForDiocese">
-                                <?php
-                                foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
-                                    echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
-                                }
-                                ?>
-                                </datalist>
-                                <div class="invalid-feedback"><?php echo _("You must choose a value from the list."); ?></div>
+                                <select class="form-select currentLocalizationChoices" id="currentLocalization">
+                                    <?php
+                                    echo "<option value=\"\"></option>";
+                                    foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
+                                        echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
+                                    }
+                                    ?>
+                                </select>
                             </div>
                             <div class="col col-md-3 text-center align-self-end">
                                 <button class="btn btn-danger" id="removeExistingDiocesanDataBtn" disabled data-bs-toggle="modal" data-bs-target="#removeDiocesanCalendarPrompt"><?php echo _("Remove existing data"); ?></button>
