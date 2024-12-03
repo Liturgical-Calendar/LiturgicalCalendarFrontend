@@ -293,7 +293,7 @@ class FormControls {
 
         if(FormControls.settings.strtotimeField) {
             formRow += `<div class="form-group col-sm-3">
-            <label for="onTheFly${FormControls.uniqid}Strtotime"><span class="month-label">Explicatory date</span><div class="form-check form-check-inline form-switch ms-2 ps-5 border border-secondary bg-light" title="switch on for mobile celebration as opposed to fixed date">
+            <label for="onTheFly${FormControls.uniqid}Strtotime"><span class="month-label">Relative date</span><div class="form-check form-check-inline form-switch ms-2 ps-5 border border-secondary bg-light" title="switch on for mobile celebration as opposed to fixed date">
                 <label class="form-check-label me-1" for="onTheFly${FormControls.uniqid}StrtotimeSwitch">Mobile</label>
                 <input class="form-check-input litEvent litEventStrtotimeSwitch" type="checkbox" data-bs-toggle="toggle" data-bs-size="xs" data-bs-onstyle="info" data-bs-offstyle="dark" role="switch" id="onTheFly${FormControls.uniqid}StrtotimeSwitch">
             </div></label>
@@ -361,11 +361,25 @@ class FormControls {
                     ...element.festivity,
                     ...element.metadata
                 };
-                if( festivity.hasOwnProperty( 'until_year' ) === false ) {
-                    //festivity.until_year = null;
-                }
-                if( festivity.hasOwnProperty( 'color' ) === false ) {
-                    festivity.color = FestivityCollectionKeys.includes(festivity.event_key) ? FestivityCollection.filter(fest => fest.event_key === festivity.event_key)[0].color : [];
+                if (FestivityCollectionKeys.includes(festivity.event_key)) {
+                    let knownEvent = FestivityCollection.filter(fest => fest.event_key === festivity.event_key)[0];
+                    if( festivity.hasOwnProperty( 'name' ) === false && knownEvent.hasOwnProperty( 'name' ) ) {
+                        festivity.name = knownEvent.name;
+                    }
+                    if ( false === festivity.hasOwnProperty( 'strtotime' ) ) {
+                        if( festivity.hasOwnProperty( 'day' ) === false && knownEvent.hasOwnProperty( 'day' ) ) {
+                            festivity.day = knownEvent.day;
+                        }
+                        if( festivity.hasOwnProperty( 'month' ) === false && knownEvent.hasOwnProperty( 'month' ) ) {
+                            festivity.month = knownEvent.month;
+                        }
+                    }
+                    if( festivity.hasOwnProperty( 'grade' ) === false && knownEvent.hasOwnProperty( 'grade' ) ) {
+                        festivity.grade = knownEvent.grade;
+                    }
+                    if( festivity.hasOwnProperty( 'color' ) === false && knownEvent.hasOwnProperty( 'color' ) ) {
+                        festivity.color = knownEvent.color;
+                    }
                 }
             }
             //console.log(festivity);
@@ -374,11 +388,14 @@ class FormControls {
         if (FormControls.title !== null) {
             formRow += `<div class="mt-4 d-flex justify-content-left data-group-title"><h4 class="data-group-title">${FormControls.title}</h4>`;
             if(FormControls.action === RowAction.CreateNew) {
-                if( festivity !== null && festivity.hasOwnProperty( 'strtotime' ) ) {
-                    formRow += `<button type="button" class="ms-auto btn btn-info strtotime-toggle-btn active" data-bs-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="true" autocomplete="off"><i class="fas fa-comment me-2"></i>explicatory date</button>`;
-                } else {
-                    formRow += `<button type="button" class="ms-auto btn btn-info strtotime-toggle-btn" data-bs-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="false" autocomplete="off"><i class="fas fa-comment-slash me-2"></i>explicatory date</button>`;
-                }
+                const isStrToTime = festivity !== null && festivity.hasOwnProperty( 'strtotime' );
+                formRow += `<div class="btn-group ms-auto" role="group" aria-label="Exact date or relative strtotime toggle group">
+  <input type="radio" class="btn-check datetype-toggle-btn exact-date" name="btnradio${FormControls.uniqid}" id="exactDate${FormControls.uniqid}" autocomplete="off" data-row-uniqid="${FormControls.uniqid}"${false === isStrToTime ? ' checked' : ''}>
+  <label class="btn btn-outline-info" for="exactDate${FormControls.uniqid}" title="month and day"><i class="fas fa-calendar-day me-2"></i>exact date</label>
+
+  <input type="radio" class="btn-check datetype-toggle-btn strtotime" name="btnradio${FormControls.uniqid}" id="relativeDate${FormControls.uniqid}" autocomplete="off" data-row-uniqid="${FormControls.uniqid}"${isStrToTime ? ' checked' : ''}>
+  <label class="btn btn-outline-info" for="relativeDate${FormControls.uniqid}" title="php strtotime">relative date<i class="fas fa-comment ms-2"></i></label>
+</div>`; //${false === isStrToTime ? ' active' : ''} // ${isStrToTime ? ' active' : ''}
             }
             formRow += `</div>`;
         }
@@ -420,12 +437,12 @@ class FormControls {
         </div>`;
 
         if( festivity !== null && festivity.hasOwnProperty( 'strtotime' ) ) {
-            formRow += `<div class="form-group col-sm-2">
-            <label for="onTheFly${FormControls.uniqid}Strtotime">Explicatory date</label>
+            formRow += `<div class="form-group col-sm-2" data-valuewas="">
+            <label for="onTheFly${FormControls.uniqid}Strtotime">Relative date</label>
             <input type="text" value="${festivity.strtotime}" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" class="form-control litEvent litEventStrtotime" id="onTheFly${FormControls.uniqid}Strtotime" />
             </div>`;
         } else {
-            formRow += `<div class="form-group col-sm-1">
+            formRow += `<div class="form-group col-sm-1" data-valuewas="">
             <label for="onTheFly${FormControls.uniqid}Day">${Messages[ "Day" ]}</label>
             <input type="number" min="1" max="31" value="${festivity !== null && festivity.day}" class="form-control litEvent litEventDay" id="onTheFly${FormControls.uniqid}Day"${FormControls.settings.dayField === false ?  'readonly' : '' } />
             </div>`;
@@ -562,9 +579,9 @@ class FormControls {
             formRow += `<hr><div class="mt-4 d-flex justify-content-left"><h4 class="data-group-title">${FormControls.title}</h4>`;
             if(FormControls.action === RowAction.CreateNew) {
                 if( festivity !== null && festivity.hasOwnProperty( 'strtotime' ) ) {
-                    formRow += `<button type="button" class="ms-auto btn btn-info strtotime-toggle-btn active" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="true" autocomplete="off"><i class="fas fa-comment me-2"></i>explicatory date</button>`;
+                    formRow += `<button type="button" class="ms-auto btn btn-info strtotime-toggle-btn active" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="true" autocomplete="off"><i class="fas fa-comment me-2"></i>relative date</button>`;
                 } else {
-                    formRow += `<button type="button" class="ms-auto btn btn-secondary strtotime-toggle-btn" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="false" autocomplete="off"><i class="fas fa-comment-slash me-2"></i>explicatory date</button>`;
+                    formRow += `<button type="button" class="ms-auto btn btn-secondary strtotime-toggle-btn" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="false" autocomplete="off"><i class="fas fa-comment-slash me-2"></i>relative date</button>`;
                 }
             }
             formRow += `</div>`;
@@ -608,7 +625,7 @@ class FormControls {
 
         if( festivity !== null && festivity.hasOwnProperty( 'strtotime' ) ) {
             formRow += `<div class="form-group col-sm-2">
-            <label for="onTheFly${FormControls.uniqid}StrToTime">Explicatory date</label>
+            <label for="onTheFly${FormControls.uniqid}StrToTime">Relative date</label>
             <select class="form-select litEvent litEventStrtotime" id="onTheFly${FormControls.uniqid}StrToTime-dayOfTheWeek">`;
             for (let i = 0; i < 7; i++ ) {
                 let dayOfTheWeek = new Date(Date.UTC(2000, 0, 2+i));
