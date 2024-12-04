@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-03 20:36+0000\n"
+"POT-Creation-Date: 2024-12-04 16:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -506,14 +506,14 @@ msgid "Other Optional Memorial"
 msgstr ""
 
 #: extending.php:99
-msgid "Delete diocesan calendar"
+msgid "Delete calendar"
 msgstr ""
 
 #: extending.php:100
 msgid ""
-"If you choose to delete this diocesan calendar, the liturgical events "
-"defined for the calendar and the corresponding index entry will be removed "
-"and no longer available in the client applications."
+"If you choose to delete this calendar, the liturgical events defined for the "
+"calendar and the corresponding index entries will be removed and no longer "
+"available in the client applications."
 msgstr ""
 
 #: extending.php:101 src/FormControls.php:89
