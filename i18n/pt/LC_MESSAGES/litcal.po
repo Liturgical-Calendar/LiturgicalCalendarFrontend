@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-03 20:36+0000\n"
+"POT-Creation-Date: 2024-12-04 16:38+0000\n"
 "PO-Revision-Date: 2024-12-01 17:47+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
@@ -612,14 +612,21 @@ msgid "Other Optional Memorial"
 msgstr "Outro Memorial Opcional"
 
 #: extending.php:99
-msgid "Delete diocesan calendar"
-msgstr "Excluir calendário diocesano"
+#, fuzzy
+#| msgid "Select calendar"
+msgid "Delete calendar"
+msgstr "Selecionar calendário"
 
 #: extending.php:100
+#, fuzzy
+#| msgid ""
+#| "If you choose to delete this diocesan calendar, the liturgical events "
+#| "defined for the calendar and the corresponding index entry will be "
+#| "removed and no longer available in the client applications."
 msgid ""
-"If you choose to delete this diocesan calendar, the liturgical events "
-"defined for the calendar and the corresponding index entry will be removed "
-"and no longer available in the client applications."
+"If you choose to delete this calendar, the liturgical events defined for the "
+"calendar and the corresponding index entries will be removed and no longer "
+"available in the client applications."
 msgstr ""
 "Se você optar por excluir este calendário diocesano, os eventos litúrgicos "
 "definidos para o calendário e a entrada correspondente no índice serão "
@@ -1481,6 +1488,9 @@ msgstr "Documentação"
 #: layout/header.php:96
 msgid "Examples of Usage"
 msgstr "Exemplos de Uso"
+
+#~ msgid "Delete diocesan calendar"
+#~ msgstr "Excluir calendário diocesano"
 
 #~ msgid "You must choose a value from the list."
 #~ msgstr "Você deve escolher um valor da lista."

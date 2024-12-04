@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-03 20:36+0000\n"
+"POT-Creation-Date: 2024-12-04 16:38+0000\n"
 "PO-Revision-Date: 2024-12-01 17:47+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
@@ -609,14 +609,21 @@ msgid "Other Optional Memorial"
 msgstr "Aliud Memoriale Optionale"
 
 #: extending.php:99
-msgid "Delete diocesan calendar"
-msgstr "Dele calendarium dioecesanum"
+#, fuzzy
+#| msgid "Select calendar"
+msgid "Delete calendar"
+msgstr "Calendarium selige"
 
 #: extending.php:100
+#, fuzzy
+#| msgid ""
+#| "If you choose to delete this diocesan calendar, the liturgical events "
+#| "defined for the calendar and the corresponding index entry will be "
+#| "removed and no longer available in the client applications."
 msgid ""
-"If you choose to delete this diocesan calendar, the liturgical events "
-"defined for the calendar and the corresponding index entry will be removed "
-"and no longer available in the client applications."
+"If you choose to delete this calendar, the liturgical events defined for the "
+"calendar and the corresponding index entries will be removed and no longer "
+"available in the client applications."
 msgstr ""
 "Si hoc calendarium dioecesanum delere elegeris, eventus liturgici pro "
 "calendario definiti et index correspondens removebuntur et in "
@@ -1468,6 +1475,9 @@ msgstr "Documentatio"
 #: layout/header.php:96
 msgid "Examples of Usage"
 msgstr "Exempla Usus"
+
+#~ msgid "Delete diocesan calendar"
+#~ msgstr "Dele calendarium dioecesanum"
 
 #~ msgid "You must choose a value from the list."
 #~ msgstr "Ex indice eligere debes valorem."
