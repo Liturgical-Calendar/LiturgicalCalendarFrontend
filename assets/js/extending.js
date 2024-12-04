@@ -608,6 +608,18 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
             } else {
                 document.querySelector('#removeExistingCalendarDataBtn').disabled = true;
                 $('body').find('#removeCalendarPrompt').remove();
+                $('form#nationalCalendarSettingsForm')[0].reset();
+                $('#publishedRomanMissalList').empty();
+                const localeOptions = Object.entries(AvailableLocalesWithRegion).map(([localeIso, localeDisplayName]) => {
+                    return `<option value="${localeIso}">${localeDisplayName}</option>`;
+                });
+                document.querySelector('#nationalCalendarLocales').innerHTML = localeOptions.join('\n');
+                document.querySelector('#currentLocalization').innerHTML = localeOptions.join('\n');
+                $('#nationalCalendarLocales').multiselect('rebuild');
+                $('.regionalNationalSettingsForm .form-select').not('[multiple]').each(function() {
+                    $(this).val('').trigger('change');
+                });
+
                 return Promise.reject(response);
             }
         }).then(data => {
