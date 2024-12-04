@@ -558,27 +558,28 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
     API.category = ev.currentTarget.dataset.category;
     // our proxy will take care of splitting locale from wider region, when we are setting a wider region key
     API.key = ev.currentTarget.value;
+    let nationalCalendarNotExists = true;
 
     const headers = {
         'Accept': 'application/json'
     };
+
     if ( API.category === 'nation' ) {
         const selectedNationalCalendar = CalendarsIndex.national_calendars.filter(item => item.calendar_id === API.key);
         if (selectedNationalCalendar.length > 0) {
-            API.locale = CalendarsIndex.national_calendars.filter(item => item.calendar_id === API.key)[0].locales[0];
+            API.locale = selectedNationalCalendar[0].locales[0];
             headers['Accept-Language'] = API.locale.replaceAll('_', '-');
-        } else {
-            API.key = '';
-            API.locale = '';
+            nationalCalendarNotExists = false;
         }
     } else {
         headers['Accept-Language'] = API.locale.replaceAll('_', '-');
     }
     console.log(`API.path is ${API.path} (category is ${API.category} and key is ${API.key}). Locale set to ${API.locale === '' ? ' (empty string)' : API.locale}. Now checking if a calendar already exists...`);
 
-    const eventsUrlForCurrentCategory = API.category === 'widerregion' || API.locale === ''
+    const eventsUrlForCurrentCategory = API.category === 'widerregion' || nationalCalendarNotExists
         ? `${EventsURL}`
         : `${EventsURL}/${API.category}/${API.key}`;
+
     fetch(eventsUrlForCurrentCategory, {
         method: 'GET',
         headers
