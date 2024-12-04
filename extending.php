@@ -96,8 +96,8 @@ $messages = [
     "Other Feast"        => _("Other Feast"),
     "Other Memorial"     => _("Other Memorial"),
     "Other Optional Memorial"   => _("Other Optional Memorial"),
-    "Delete diocesan calendar"  => _("Delete diocesan calendar"),
-    "If you choose"      => _("If you choose to delete this diocesan calendar, the liturgical events defined for the calendar and the corresponding index entry will be removed and no longer available in the client applications."),
+    "Delete calendar"    => _("Delete calendar"),
+    "If you choose"      => _("If you choose to delete this calendar, the liturgical events defined for the calendar and the corresponding index entries will be removed and no longer available in the client applications."),
     "Liturgical color"   => _("Liturgical color"),
     "white"              => _("white"),
     "red"                => _("red"),
@@ -155,7 +155,7 @@ if (isset($_GET["choice"])) {
             //FormControls::$settings["untilYearField"] = true;
             ?>
                 <div class="container-fluid">
-                    <form class="row justify-content-center align-items-end needs-validation" novalidate>
+                    <form class="row justify-content-center align-items-end needs-validation regionalNationalSettingsForm" novalidate>
                         <div class="form-group col col-md-3">
                             <label for="widerRegionCalendarName" class="fw-bold"><?php echo _("Wider Region"); ?></label>
                             <input list="WiderRegionsList" class="form-control regionalNationalCalendarName" id="widerRegionCalendarName" data-category="widerregion" required>
@@ -192,7 +192,7 @@ if (isset($_GET["choice"])) {
                             </select>
                         </div>
                         <div class="col col-md-3">
-                            <button class="btn btn-danger" id="removeExistingWiderRegionDataBtn" disabled data-bs-toggle="modal" data-bs-target="#removeWiderRegionDataPrompt">
+                            <button class="btn btn-danger" id="removeExistingCalendarDataBtn" disabled data-bs-toggle="modal" data-bs-target="#removeCalendarDataPrompt">
                                 <i class="far fa-trash-alt me-2"></i>
                                 <?php echo _("Remove existing data"); ?>
                             </button>
@@ -218,7 +218,7 @@ if (isset($_GET["choice"])) {
         case "national":
             ?>
                 <div class="container-fluid">
-                    <form class="row justify-content-center needs-validation align-items-center" novalidate>
+                    <form class="row justify-content-center needs-validation align-items-center regionalNationalSettingsForm" novalidate>
                         <div class="form-group col col-md-3">
                             <label for="nationalCalendarName" class="fw-bold"><?php echo _("National Calendar"); ?></label>
                             <input list="nationalCalendarsList" class="form-control regionalNationalCalendarName" id="nationalCalendarName" data-category="nation" required>
@@ -232,8 +232,8 @@ if (isset($_GET["choice"])) {
                             </datalist>
                         </div>
                         <div class="form-group col col-md-3">
-                            <label for="removeExistingNationalDataBtn" class="fw-bold"></label>
-                            <button class="btn btn-danger m-2 form-control" id="removeExistingNationalDataBtn" disabled data-bs-toggle="modal" data-bs-target="#removeNationalDataPrompt">
+                            <label for="removeExistingCalendarDataBtn" class="fw-bold"></label>
+                            <button class="btn btn-danger m-2 form-control" id="removeExistingCalendarDataBtn" disabled data-bs-toggle="modal" data-bs-target="#removeCalendarDataPrompt">
                                 <i class="far fa-trash-alt me-2"></i>
                                 <?php echo _("Remove existing data"); ?>
                             </button>
