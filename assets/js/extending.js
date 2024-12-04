@@ -16,6 +16,7 @@ import {
 
 import {
     removeDiocesanCalendarModal,
+    removeCalendarModal,
     sanitizeInput
 } from './templates.js';
 
@@ -562,15 +563,20 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
         'Accept': 'application/json'
     };
     if ( API.category === 'nation' ) {
-        API.locale = CalendarsIndex.national_calendars.filter(item => item.calendar_id === API.key)[0].locales[0];
-        headers['Accept-Language'] = API.locale.replaceAll('_', '-');
-        console.log(`API.locale is ${API.locale}`);
+        const selectedNationalCalendar = CalendarsIndex.national_calendars.filter(item => item.calendar_id === API.key);
+        if (selectedNationalCalendar.length > 0) {
+            API.locale = CalendarsIndex.national_calendars.filter(item => item.calendar_id === API.key)[0].locales[0];
+            headers['Accept-Language'] = API.locale.replaceAll('_', '-');
+        } else {
+            API.key = '';
+            API.locale = '';
+        }
     } else {
         headers['Accept-Language'] = API.locale.replaceAll('_', '-');
     }
-    console.log(`API.path is ${API.path} (category is ${API.category} and key is ${API.key}). Locale set to ${API.locale}${API.locale === '' ? ' (empty string)' : ''}. Now checking if a calendar already exists...`);
+    console.log(`API.path is ${API.path} (category is ${API.category} and key is ${API.key}). Locale set to ${API.locale === '' ? ' (empty string)' : API.locale}. Now checking if a calendar already exists...`);
 
-    const eventsUrlForCurrentCategory = API.category === 'widerregion'
+    const eventsUrlForCurrentCategory = API.category === 'widerregion' || API.locale === ''
         ? `${EventsURL}`
         : `${EventsURL}/${API.category}/${API.key}`;
     fetch(eventsUrlForCurrentCategory, {
@@ -595,8 +601,12 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
             headers
         }).then(response => {
             if (response.ok) {
+                document.querySelector('#removeExistingCalendarDataBtn').disabled = false;
+                $('body').append(removeCalendarModal(`${API.category}/${API.key}`, Messages));
                 return response.json();
             } else {
+                document.querySelector('#removeExistingCalendarDataBtn').disabled = true;
+                $('body').find('#removeCalendarPrompt').remove();
                 return Promise.reject(response);
             }
         }).then(data => {
@@ -630,7 +640,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                     document.querySelector('#nationalCalendarLocales').innerHTML = localesForNation.map(([localeIso, localeDisplayName]) => {
                         return `<option value="${localeIso}">${localeDisplayName}</option>\n`;
                     });
-                    document.querySelector('#nationalCalendarLocales').value = metadata.locales;
+                    $('#nationalCalendarLocales').val(metadata.locales);
                     $('#nationalCalendarLocales').multiselect('rebuild');
                     const currentLocalizationChoices = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, localeDisplayName]) => {
                         return metadata.locales.includes(localeIso);
@@ -777,8 +787,6 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
 });
 
 $(document).on('click', '.datetype-toggle-btn', ev => {
-    console.log('datetype-toggle-btn clicked');
-    console.log(ev.currentTarget);
     const uniqid = parseInt( $(ev.currentTarget).attr('data-row-uniqid') );
     if( $(ev.currentTarget).hasClass('strtotime') ) {
         const monthVal = $(`#onTheFly${uniqid}Month`).val();
@@ -897,6 +905,65 @@ $(document).on('click', '.actionPromptButton', ev => {
         $('.serializeRegionalNationalData').prop('disabled', false);
     }
 
+});
+
+$(document).on('click', '#removeExistingCalendarDataBtn', evt => {
+    // We don't want any forms to submit, so we prevent the default action
+    evt.preventDefault();
+});
+
+$(document).on('click', '#deleteCalendarConfirm', () => {
+    $('#deleteCalendarConfirm').blur(); // Remove focus from the button
+    $('#removeCalendarDataPrompt').modal('hide');
+    API.key = $('.regionalNationalCalendarName').val();
+    API.category = $('.regionalNationalCalendarName').data('category');
+    fetch(API.path, {
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json'
+        }
+    }).then(response => {
+        if (response.ok) {
+            switch ( API.category ) {
+                case 'widerregion':
+                    CalendarsIndex.wider_regions = CalendarsIndex.wider_regions.filter(el => el.name !== API.key);
+                    CalendarsIndex.wider_regions_keys = CalendarsIndex.wider_regions_keys.filter(el => el !== API.key);
+                    break;
+                case 'nation':
+                    CalendarsIndex.national_calendars = CalendarsIndex.national_calendars.filter(el => el.calendar_id !== API.key);
+                    CalendarsIndex.national_calendars_keys = CalendarsIndex.national_calendars_keys.filter(el => el !== API.key);
+                    $('form#nationalCalendarSettingsForm')[0].reset();
+                    $('#publishedRomanMissalList').empty();
+                    const localeOptions = Object.entries(AvailableLocalesWithRegion).map(([localeIso, localeDisplayName]) => {
+                        return `<option value="${localeIso}">${localeDisplayName}</option>`;
+                    });
+                    document.querySelector('#nationalCalendarLocales').innerHTML = localeOptions.join('\n');
+                    document.querySelector('#currentLocalization').innerHTML = localeOptions.join('\n');
+                    $('#nationalCalendarLocales').multiselect('rebuild');
+                    $('.regionalNationalSettingsForm .form-select').not('[multiple]').each(function() {
+                        $(this).val('').trigger('change');
+                    });
+                    break;
+            }
+            $('#removeExistingCalendarDataBtn').prop('disabled', true);
+            $('#removeCalendarDataPrompt').remove();
+            $('.regionalNationalCalendarName').val('');
+            $('.regionalNationalDataForm').empty();
+            //$('.regionalNationalSettingsForm')[0].reset();
+            toastr["success"](`Calendar '${API.category}/${API.key}' was deleted successfully`, "Success");
+            response.json().then(json => {
+                console.log(json);
+            });
+        } else {
+            return Promise.reject(response);
+        }
+    }).catch(error => {
+        console.error(error);
+        /*error.json().then(json => {
+            console.error(`${error.status} ${json.response}: ${json.description}`);
+            toastr["error"](`${error.status} ${json.response}: ${json.description}`, "Error");
+        });*/
+    })
 });
 
 /**
