@@ -115,3 +115,5 @@ credentials.php
 /**/.env
 /**/.env.*
 !/**/.env.example
+/**/.envrc
+!/**/.envrc.example
