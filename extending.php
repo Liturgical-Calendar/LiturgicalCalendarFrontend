@@ -174,7 +174,7 @@ if (isset($_GET["choice"])) {
                         <div class="col col-md-3">
                             <div>
                                 <label for="widerRegionLocales" class="fw-bold"><?php echo _("Locales") ?></label>
-                                <select class="form-select calendarLocales" id="widerRegionLocales" multiple="multiple" disabled>
+                                <select class="form-select calendarLocales" id="widerRegionLocales" multiple="multiple">
                                 <?php foreach ($SystemLocalesWithRegion as $locale => $lang_region) {
                                         echo "<option value='$locale'>$lang_region</option>";
                                 } ?>

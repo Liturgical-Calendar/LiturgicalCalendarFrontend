@@ -93,7 +93,7 @@ const sanitizeProxiedAPI = {
                     if (value.includes(' - ')) {
                         ([value, target['locale']] = value.split(' - '));
                     }
-                    if (false === ['Americas', 'Europe', 'Africa', 'Oceania', 'Asia'].includes(value)) {
+                    if (false === ['Americas', 'Europe', 'Africa', 'Oceania', 'Asia', 'Antarctica'].includes(value)) {
                         console.warn(`property 'key' of this object must be one of the values 'Americas', 'Europe', 'Africa', 'Oceania', or 'Asia'`);
                         return;
                     }
@@ -608,14 +608,20 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
             } else {
                 document.querySelector('#removeExistingCalendarDataBtn').disabled = true;
                 $('body').find('#removeCalendarPrompt').remove();
-                $('form#nationalCalendarSettingsForm')[0].reset();
-                $('#publishedRomanMissalList').empty();
                 const localeOptions = Object.entries(AvailableLocalesWithRegion).map(([localeIso, localeDisplayName]) => {
                     return `<option value="${localeIso}">${localeDisplayName}</option>`;
                 });
-                document.querySelector('#nationalCalendarLocales').innerHTML = localeOptions.join('\n');
-                document.querySelector('#currentLocalization').innerHTML = localeOptions.join('\n');
-                $('#nationalCalendarLocales').multiselect('rebuild');
+                if (API.category === 'nation') {
+                    $('form#nationalCalendarSettingsForm')[0].reset();
+                    $('#publishedRomanMissalList').empty();
+                    document.querySelector('#nationalCalendarLocales').innerHTML = localeOptions.join('\n');
+                    document.querySelector('#currentLocalization').innerHTML = localeOptions.join('\n');
+                    $('#nationalCalendarLocales').multiselect('rebuild');
+                } else {
+                    document.querySelector('#widerRegionLocales').innerHTML = localeOptions.join('\n');
+                    document.querySelector('#currentLocalization').innerHTML = localeOptions.join('\n');
+                    $('#widerRegionLocales').multiselect('rebuild');
+                }
                 $('.regionalNationalSettingsForm .form-select').not('[multiple]').each(function() {
                     $(this).val('').trigger('change');
                 });
