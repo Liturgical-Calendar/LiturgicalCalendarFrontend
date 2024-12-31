@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-31 23:47+0000\n"
-"PO-Revision-Date: 2024-12-31 15:34+0000\n"
+"PO-Revision-Date: 2024-12-31 23:52+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
@@ -625,26 +625,18 @@ msgid "Other Optional Memorial"
 msgstr "Altra Memoria Facoltativa"
 
 #: extending.php:99
-#, fuzzy
-#| msgid "Select calendar"
 msgid "Delete calendar"
-msgstr "Seleziona calendario"
+msgstr "Elimina calendario"
 
 #: extending.php:100
-#, fuzzy
-#| msgid ""
-#| "If you choose to delete this diocesan calendar, the liturgical events "
-#| "defined for the calendar and the corresponding index entry will be "
-#| "removed and no longer available in the client applications."
 msgid ""
 "If you choose to delete this calendar, the liturgical events defined for the "
 "calendar and the corresponding index entries will be removed and no longer "
 "available in the client applications."
 msgstr ""
-"Se scegli di rimuovere questo calendario diocesano, gli eventi liturgici "
-"definiti nel calendario e l'elemento corrispondente nell'indice dei "
-"calendari verrà rimosso e non sarà più disponibile nelle applicazioni "
-"cliente."
+"Se scegli di rimuovere questo calendario, gli eventi liturgici definiti nel "
+"calendario e l'elemento corrispondente nell'indice dei calendari verrà "
+"rimosso e non sarà più disponibile nelle applicazioni cliente."
 
 #: extending.php:101 src/FormControls.php:89
 msgid "Liturgical color"
@@ -805,10 +797,8 @@ msgid "ETERNAL HIGH PRIEST"
 msgstr "SOMMO ED ETERNO SACERDOTE"
 
 #: extending.php:283 extending.php:375
-#, fuzzy
-#| msgid "LOCALE"
 msgid "LOCALES"
-msgstr "LINGUA"
+msgstr "LINGUE"
 
 #: extending.php:296
 msgid "Published Roman Missals"
@@ -992,17 +982,13 @@ msgid "Julian Easter in Gregorian Calendar"
 msgstr "Pasqua Giuliana nel Calendario Gregoriano"
 
 #: about.php:7
-#, fuzzy
-#| msgid ""
-#| "The Liturgical Calendar project is curated by a group of volunteer "
-#| "catholic programmers, seeking to serve the Church."
 msgid ""
 "The Liturgical Calendar project is curated by a group of volunteer catholic "
 "programmers and experts in Catholic liturgy, seeking to serve the Church."
 msgstr ""
-"Il progetto del Calendario Liturgico viene curato da un gruppo di "
-"programmatori cattolici volontari, che cercano di rendere un servizio per la "
-"Chiesa."
+"Il progetto del Calendario Liturgico è curato da un gruppo di programmatori "
+"cattolici volontari ed esperti in liturgia cattolica, che cercano di servire "
+"la Chiesa."
 
 #: about.php:13 about.php:21
 msgid "Liturgical Calendar - About us"
