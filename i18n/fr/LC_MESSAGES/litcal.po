@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-31 23:47+0000\n"
-"PO-Revision-Date: 2024-12-31 15:34+0000\n"
+"PO-Revision-Date: 2024-12-31 23:52+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
@@ -625,26 +625,18 @@ msgid "Other Optional Memorial"
 msgstr "Autre mémorial facultatif"
 
 #: extending.php:99
-#, fuzzy
-#| msgid "Select calendar"
 msgid "Delete calendar"
-msgstr "Sélectionner le calendrier"
+msgstr "Supprimer le calendrier"
 
 #: extending.php:100
-#, fuzzy
-#| msgid ""
-#| "If you choose to delete this diocesan calendar, the liturgical events "
-#| "defined for the calendar and the corresponding index entry will be "
-#| "removed and no longer available in the client applications."
 msgid ""
 "If you choose to delete this calendar, the liturgical events defined for the "
 "calendar and the corresponding index entries will be removed and no longer "
 "available in the client applications."
 msgstr ""
-"Si vous choisissez de supprimer ce calendrier diocésain, les événements "
-"liturgiques définis dans le calendrier et l'élément correspondant dans "
-"l'index du calendrier seront supprimés et ne seront plus disponibles dans "
-"les applications clientes."
+"Si vous choisissez de supprimer ce calendrier, les événements liturgiques "
+"définis pour le calendrier et les entrées d'index correspondantes seront "
+"supprimés et ne seront plus disponibles dans les applications clientes."
 
 #: extending.php:101 src/FormControls.php:89
 msgid "Liturgical color"
@@ -807,10 +799,8 @@ msgid "ETERNAL HIGH PRIEST"
 msgstr "PRÊTRE ÉTERNEL ET SOUVERAIN"
 
 #: extending.php:283 extending.php:375
-#, fuzzy
-#| msgid "LOCALE"
 msgid "LOCALES"
-msgstr "LANGUE"
+msgstr "LANGUES"
 
 #: extending.php:296
 msgid "Published Roman Missals"
@@ -994,16 +984,13 @@ msgid "Julian Easter in Gregorian Calendar"
 msgstr "Pâques julienne dans le calendrier grégorien"
 
 #: about.php:7
-#, fuzzy
-#| msgid ""
-#| "The Liturgical Calendar project is curated by a group of volunteer "
-#| "catholic programmers, seeking to serve the Church."
 msgid ""
 "The Liturgical Calendar project is curated by a group of volunteer catholic "
 "programmers and experts in Catholic liturgy, seeking to serve the Church."
 msgstr ""
-"Le projet du calendrier liturgique est organisé par un groupe de "
-"programmeurs catholiques bénévoles, cherchant à servir l'Église."
+"Le projet du Calendrier Liturgique est organisé par un groupe de "
+"programmeurs catholiques bénévoles et d'experts en liturgie catholique, "
+"cherchant à servir l'Église."
 
 #: about.php:13 about.php:21
 msgid "Liturgical Calendar - About us"
