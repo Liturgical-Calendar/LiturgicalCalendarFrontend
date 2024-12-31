@@ -134,7 +134,7 @@ class Utilities
             "STEVENVANROODE" => [
                 "website"   => Utilities::formatNameWithUrl('https://www.latijnseliturgie.nl/', 'Steven van Roode'),
                 "note"      => _('Latin Liturgy Association of the Netherlands, contributed the national calendar for the Netherlands to this project with all related translations'),
-                "img"       => "./assets/img/stevenvanroode_125x125.jpg",
+                "img"       => "./assets/img/stevenvanroode_512x512.jpg",
                 "icon"      => "fa-music"
             ],
             "MIKEKASBERG"   => [
