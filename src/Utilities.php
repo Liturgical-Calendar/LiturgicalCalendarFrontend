@@ -116,7 +116,7 @@ class Utilities
                     'https://github.com/BibleGet-I-O',
                     'https://github.com/Liturgical-Calendar'
                 ),
-                "img"       => "./assets/img/donjohn_125x125.jpg",
+                "img"       => "./assets/img/johndorazio_512x512.jpg",
                 "icon"      => "fa-cross"
             ],
             "MIKETRUSO" => [
