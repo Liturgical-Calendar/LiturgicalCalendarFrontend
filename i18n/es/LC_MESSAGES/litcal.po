@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-31 15:18+0000\n"
-"PO-Revision-Date: 2024-12-01 17:47+0000\n"
+"PO-Revision-Date: 2024-12-31 15:34+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
@@ -742,7 +742,7 @@ msgstr "Este valor no puede estar vacío."
 
 #: extending.php:176
 msgid "Locales"
-msgstr ""
+msgstr "Idiomas"
 
 #: extending.php:185 extending.php:312 extending.php:385
 msgid "Current localization"
@@ -1451,6 +1451,8 @@ msgid ""
 "Chancellor of the Diocese of Charlottetown, contributed liturgical calendar "
 "data for Canada in both English and French"
 msgstr ""
+"Canciller de la Diócesis de Charlottetown, contribuyó con datos del "
+"calendario litúrgico para Canadá en inglés y francés"
 
 #: src/Utilities.php:220
 msgid "Choose from existing festivities"
