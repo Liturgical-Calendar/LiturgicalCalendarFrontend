@@ -148,6 +148,12 @@ class Utilities
                 "note"      => _('Software Engineer and contributor to Salt + Light Television, contributed information about the dioceses of Latin rite'),
                 "img"       => null,
                 "icon"      => "fa-code"
+            ],
+            "CHRISSHERREN"  => [
+                "website"   => Utilities::formatNameWithUrl('https://dioceseofcharlottetown.com/priests/', 'Chris Sherren'),
+                "note"      => _('Chancellor of the Diocese of Charlottetown, contributed liturgical calendar data for Canada in both English and French'),
+                "img"       => "./assets/img/chrissherren_504x504.jpg",
+                "icon"      => "fa-cross"
             ]
         ];
         return $cards[$who];
@@ -168,7 +174,7 @@ class Utilities
                     <div class=\"row no-gutters align-items-center\">
                         <div class=\"col mr-2\">
                             <div class=\"row no-gutters align-items-center\">
-                                <div class=\"col-auto mr-2\"><img class=\"img-profile rounded-circle mx-auto img-fluid\" src=\"" . ($cardInfo["img"] ?? './assets/img/default_125x125.jpg') . "\"></div>
+                                <div class=\"col-auto mr-2\"><img height=\"125\" width=\"125\" class=\"img-profile rounded-circle mx-auto img-fluid\" src=\"" . ($cardInfo["img"] ?? './assets/img/default_125x125.jpg') . "\"></div>
                                 <div class=\"col\">" . $cardInfo["website"] . $cardInfo["note"] . "</div>
                             </div>
                         </div>
