@@ -36,6 +36,10 @@ $ABOUT_US = _("The Liturgical Calendar project is curated by a group of voluntee
             <?php Utilities::generateCard('GABRIELCHOW'); ?>
         </div>
 
+        <div class="row">
+            <?php Utilities::generateCard('CHRISSHERREN'); ?>
+        </div>
+
     <?php include_once('./layout/footer.php'); ?>
 
 </body>
