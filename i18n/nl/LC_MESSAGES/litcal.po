@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-31 15:18+0000\n"
-"PO-Revision-Date: 2024-12-31 15:34+0000\n"
+"POT-Creation-Date: 2024-12-31 23:47+0000\n"
+"PO-Revision-Date: 2024-12-31 23:52+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -618,26 +618,19 @@ msgid "Other Optional Memorial"
 msgstr "Andere Vrije Gedachtenis"
 
 #: extending.php:99
-#, fuzzy
-#| msgid "Select calendar"
 msgid "Delete calendar"
-msgstr "Selecteer kalender"
+msgstr "Kalender verwijderen"
 
 #: extending.php:100
-#, fuzzy
-#| msgid ""
-#| "If you choose to delete this diocesan calendar, the liturgical events "
-#| "defined for the calendar and the corresponding index entry will be "
-#| "removed and no longer available in the client applications."
 msgid ""
 "If you choose to delete this calendar, the liturgical events defined for the "
 "calendar and the corresponding index entries will be removed and no longer "
 "available in the client applications."
 msgstr ""
-"Als u ervoor kiest om deze diocesane kalender te verwijderen, zullen de "
-"liturgische gebeurtenissen die voor de kalender zijn gedefinieerd en de "
-"overeenkomstige indexvermelding worden verwijderd en niet langer beschikbaar "
-"zijn in de client-applicaties."
+"Als je ervoor kiest om deze kalender te verwijderen, worden de liturgische "
+"evenementen die voor de kalender zijn gedefinieerd en de bijbehorende "
+"indexvermeldingen verwijderd en zijn ze niet langer beschikbaar in de "
+"clienttoepassingen."
 
 #: extending.php:101 src/FormControls.php:89
 msgid "Liturgical color"
@@ -799,10 +792,8 @@ msgid "ETERNAL HIGH PRIEST"
 msgstr "EEUWIGE HOGEPRIESTER"
 
 #: extending.php:283 extending.php:375
-#, fuzzy
-#| msgid "LOCALE"
 msgid "LOCALES"
-msgstr "TAAL"
+msgstr "TALEN"
 
 #: extending.php:296
 msgid "Published Roman Missals"
@@ -989,10 +980,11 @@ msgstr "Juliaanse Pasen in de Gregoriaanse kalender"
 #: about.php:7
 msgid ""
 "The Liturgical Calendar project is curated by a group of volunteer catholic "
-"programmers, seeking to serve the Church."
+"programmers and experts in Catholic liturgy, seeking to serve the Church."
 msgstr ""
-"Het liturgische kalenderproject wordt samengesteld door een groep "
-"vrijwillige katholieke programmeurs die de kerk willen dienen."
+"Het Liturgische Kalenderproject wordt beheerd door een groep vrijwillige "
+"katholieke programmeurs en experts in de katholieke liturgie, die de Kerk "
+"willen dienen."
 
 #: about.php:13 about.php:21
 msgid "Liturgical Calendar - About us"
