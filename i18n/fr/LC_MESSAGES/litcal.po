@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-31 15:18+0000\n"
-"PO-Revision-Date: 2024-12-01 17:47+0000\n"
+"PO-Revision-Date: 2024-12-31 15:34+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
@@ -752,7 +752,7 @@ msgstr "Cette valeur ne peut pas être vide."
 
 #: extending.php:176
 msgid "Locales"
-msgstr ""
+msgstr "Langues"
 
 #: extending.php:185 extending.php:312 extending.php:385
 msgid "Current localization"
@@ -1219,7 +1219,7 @@ msgstr "Pour les missionnaires martyrs"
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:80
 msgid "For One Missionary Martyr"
-msgstr "Pour un Martyr Missionnaire"
+msgstr "Pour un missionnaire martyr"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:82
@@ -1279,7 +1279,7 @@ msgstr "Pour des missionnaires"
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:104
 msgid "For One Virgin"
-msgstr "Pour une Vierge"
+msgstr "Pour une vierge"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:106
@@ -1294,7 +1294,7 @@ msgstr "Pour plusieurs saints"
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:110
 msgid "For One Saint"
-msgstr "Pour un Saint"
+msgstr "Pour un saint"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:112
@@ -1466,6 +1466,8 @@ msgid ""
 "Chancellor of the Diocese of Charlottetown, contributed liturgical calendar "
 "data for Canada in both English and French"
 msgstr ""
+"Chancelier du diocèse de Charlottetown, a contribué les données du "
+"calendrier liturgique pour le Canada en anglais et en français"
 
 #: src/Utilities.php:220
 msgid "Choose from existing festivities"
