@@ -122,13 +122,13 @@ class Utilities
             "MIKETRUSO" => [
                 "website"   => Utilities::formatNameWithUrl('https://www.miketruso.com/', 'Mike Truso'),
                 "note"      => _('Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild for Catholic IT Professionals, contributed the bootstrap theming of the project website'),
-                "img"       => "./assets/img/miketruso_125x125.jpg",
+                "img"       => "./assets/img/miketruso_512x512.jpg",
                 "icon"      => "fa-code"
             ],
             "MICHAELSHELTON" => [
                 "website"   => Utilities::formatNameWithUrl('https://www.linkedin.com/in/michaelrshelton/', 'Michael Shelton'),
                 "note"      => _('Full stack web developer, contributed to the generation of the Open API documentation'),
-                "img"       => "./assets/img/michaelshelton_125x125.jpg",
+                "img"       => "./assets/img/michaelshelton_512x512.jpg",
                 "icon"      => "fa-code"
             ],
             "STEVENVANROODE" => [
@@ -140,7 +140,7 @@ class Utilities
             "MIKEKASBERG"   => [
                 "website"   => Utilities::formatNameWithUrl('https://www.mikekasberg.com/', 'Mike Kasberg'),
                 "note"      => _('Senior software engineer at Strava, author of the ConfessIt app, contributed to the structuring of the JSON responses of the Liturgical Calendar API'),
-                "img"       => "./assets/img/mikekasberg_125x125.jpg",
+                "img"       => "./assets/img/mikekasberg_512x512.jpg",
                 "icon"      => "fa-code"
             ],
             "GABRIELCHOW"   => [
