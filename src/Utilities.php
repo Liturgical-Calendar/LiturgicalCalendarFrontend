@@ -146,7 +146,7 @@ class Utilities
             "GABRIELCHOW"   => [
                 "website"   => Utilities::formatNameWithUrl('https://gcatholic.org/', 'Gabriel Chow'),
                 "note"      => _('Software Engineer and contributor to Salt + Light Television, contributed information about the dioceses of Latin rite'),
-                "img"       => null,
+                "img"       => "./assets/img/gabrielchow_512x512.jpg",
                 "icon"      => "fa-code"
             ],
             "CHRISSHERREN"  => [
