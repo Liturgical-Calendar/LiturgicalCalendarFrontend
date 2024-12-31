@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-04 16:38+0000\n"
+"POT-Creation-Date: 2024-12-31 15:18+0000\n"
 "PO-Revision-Date: 2024-12-01 17:47+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
@@ -589,7 +589,7 @@ msgstr ""
 msgid "Tag"
 msgstr "Label"
 
-#: extending.php:92 src/Utilities.php:222 src/FormControls.php:52
+#: extending.php:92 src/Utilities.php:228 src/FormControls.php:52
 msgid "Name"
 msgstr "Naam"
 
@@ -1452,21 +1452,27 @@ msgstr ""
 "Software Engineer en medewerker van Salt + Light Television, leverde "
 "informatie over de bisdommen van de Latijnse ritus"
 
-#: src/Utilities.php:214
+#: src/Utilities.php:154
+msgid ""
+"Chancellor of the Diocese of Charlottetown, contributed liturgical calendar "
+"data for Canada in both English and French"
+msgstr ""
+
+#: src/Utilities.php:220
 msgid "Choose from existing festivities"
 msgstr "Kies uit bestaande vieringen"
 
-#: src/Utilities.php:216
+#: src/Utilities.php:222
 msgid ""
 "This festivity does not seem to exist? Please choose from a value in the "
 "list."
 msgstr "Dit viering lijkt niet te bestaan? Kies uit een waarde in de lijst."
 
-#: src/Utilities.php:220
+#: src/Utilities.php:226
 msgid "Property to change"
 msgstr "Eigenschap wijzigen"
 
-#: src/Utilities.php:223 src/FormControls.php:168
+#: src/Utilities.php:229 src/FormControls.php:168
 msgid "Grade"
 msgstr "Graad"
 

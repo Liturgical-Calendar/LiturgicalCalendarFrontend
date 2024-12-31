@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-04 16:38+0000\n"
+"POT-Creation-Date: 2024-12-31 15:18+0000\n"
 "PO-Revision-Date: 2024-12-01 17:47+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
@@ -596,7 +596,7 @@ msgstr ""
 msgid "Tag"
 msgstr "Étiquette"
 
-#: extending.php:92 src/Utilities.php:222 src/FormControls.php:52
+#: extending.php:92 src/Utilities.php:228 src/FormControls.php:52
 msgid "Name"
 msgstr "Nom"
 
@@ -1461,11 +1461,17 @@ msgstr ""
 "Ingénieur logiciel et collaborateur de Sel + Lumière Télévision, a contribué "
 "des informations sur les diocèses de rite latin"
 
-#: src/Utilities.php:214
+#: src/Utilities.php:154
+msgid ""
+"Chancellor of the Diocese of Charlottetown, contributed liturgical calendar "
+"data for Canada in both English and French"
+msgstr ""
+
+#: src/Utilities.php:220
 msgid "Choose from existing festivities"
 msgstr "Choisissez parmi les festivités existants"
 
-#: src/Utilities.php:216
+#: src/Utilities.php:222
 msgid ""
 "This festivity does not seem to exist? Please choose from a value in the "
 "list."
@@ -1473,11 +1479,11 @@ msgstr ""
 "Cette festivité ne semble pas exister ? Veuillez choisir parmi une valeur "
 "dans la liste."
 
-#: src/Utilities.php:220
+#: src/Utilities.php:226
 msgid "Property to change"
 msgstr "Propriété à modifier"
 
-#: src/Utilities.php:223 src/FormControls.php:168
+#: src/Utilities.php:229 src/FormControls.php:168
 msgid "Grade"
 msgstr "Grade"
 
