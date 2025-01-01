@@ -69,7 +69,7 @@ $apiOptions->epiphanyInput->id('RequestOptionEpiphany');
 $apiOptions->ascensionInput->id('RequestOptionAscension');
 $apiOptions->corpusChristiInput->id('RequestOptionCorpusChristi');
 $apiOptions->eternalHighPriestInput->id('RequestOptionEternalHighPriest');
-$apiOptions->localeInput->id('RequestOptionLocale')->labelAfter($localeLabelAfter);
+$apiOptions->localeInput->id('RequestOptionLocale')->labelAfter($localeLabelAfter)->class('form-select');
 $apiOptions->yearTypeInput->id('RequestOptionYearType')->class('form-select')->wrapperClass('form-group col-sm-3');
 $apiOptions->acceptHeaderInput->id('RequestOptionReturnType')->labelAfter($acceptLabelAfter)->class('form-select')->wrapperClass('form-group col-sm-3')->asReturnTypeParam();
 
