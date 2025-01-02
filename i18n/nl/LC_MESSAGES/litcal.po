@@ -2,16 +2,16 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # John R. D'Orazio <priest@johnromanodorazio.com>, 2022.
-# Weblate Admin <admin@example.com>, 2024.
+# Weblate Admin <admin@example.com>, 2024, 2025.
 # OpenAI <noreply-mt-openai@weblate.org>, 2024.
 # "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-31 23:47+0000\n"
-"PO-Revision-Date: 2024-12-31 23:52+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"POT-Creation-Date: 2025-01-02 23:08+0000\n"
+"PO-Revision-Date: 2025-01-02 23:11+0000\n"
+"Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
 "Language: nl\n"
@@ -115,7 +115,7 @@ msgstr "Aanvraagparameters beschikbaar op het basispad %s"
 msgid "Request parameters available on all %1$s paths"
 msgstr "Aanvraagparameters beschikbaar op alle paden %1$s"
 
-#: index.php:80 usage.php:13 liturgyOfAnyDay.php:24
+#: index.php:80 usage.php:13 examples.php:28 liturgyOfAnyDay.php:24
 msgid "General Roman Calendar"
 msgstr "Algemene Romeinse kalender"
 
@@ -989,6 +989,15 @@ msgstr ""
 #: about.php:13 about.php:21
 msgid "Liturgical Calendar - About us"
 msgstr "Liturgische kalender - Over ons"
+
+#: examples.php:6
+msgid "Liturgical Calendar as an HTML table produced by Javascript"
+msgstr "Liturgische kalender als een HTML-tabel geproduceerd door Javascript"
+
+#: examples.php:56
+#, php-format
+msgid "Example '%s' not found"
+msgstr "Voorbeeld '%s' niet gevonden"
 
 #: translations.php:11
 #, php-format

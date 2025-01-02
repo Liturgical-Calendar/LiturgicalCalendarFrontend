@@ -5,14 +5,14 @@
 # John R. D'Orazio <priest@johnromanodorazio.com>, 2022.
 # OpenAI <noreply-mt-openai@weblate.org>, 2024.
 # "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024.
-# Weblate Admin <admin@example.com>, 2024.
+# Weblate Admin <admin@example.com>, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-31 23:47+0000\n"
-"PO-Revision-Date: 2024-12-31 23:52+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"POT-Creation-Date: 2025-01-02 23:08+0000\n"
+"PO-Revision-Date: 2025-01-02 23:11+0000\n"
+"Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
 "Language: es\n"
@@ -116,7 +116,7 @@ msgstr "Parámetros de solicitud disponibles en la ruta base %s"
 msgid "Request parameters available on all %1$s paths"
 msgstr "Parámetros de solicitud disponibles en todas las rutas %1$s"
 
-#: index.php:80 usage.php:13 liturgyOfAnyDay.php:24
+#: index.php:80 usage.php:13 examples.php:28 liturgyOfAnyDay.php:24
 msgid "General Roman Calendar"
 msgstr "Calendario Romano General"
 
@@ -982,6 +982,15 @@ msgstr ""
 #: about.php:13 about.php:21
 msgid "Liturgical Calendar - About us"
 msgstr "Calendario litúrgico - Sobre nosotros"
+
+#: examples.php:6
+msgid "Liturgical Calendar as an HTML table produced by Javascript"
+msgstr "Calendario Litúrgico como una tabla HTML producida por Javascript"
+
+#: examples.php:56
+#, php-format
+msgid "Example '%s' not found"
+msgstr "Ejemplo '%s' no encontrado"
 
 #: translations.php:11
 #, php-format
