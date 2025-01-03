@@ -219,7 +219,7 @@ let litcalMetadata = null;
             case '/calendar/nation/':
                 selectEl.innerHTML = CalendarSelect.nationsInnerHtml;
                 if ( CurrentEndpoint.calendarType !== CalendarType.NATIONAL ) {
-                    CurrentEndpoint.calendarId   = selectEl.value;
+                    CurrentEndpoint.calendarId   = encodeURIComponent(selectEl.value);
                     CurrentEndpoint.calendarType = CalendarType.NATIONAL;
                 }
                 // since the default selected nation is VATICAN, we can just use the default options used in the VATICAN
@@ -232,7 +232,7 @@ let litcalMetadata = null;
             case '/calendar/diocese/':
                 selectEl.innerHTML = CalendarSelect.diocesesInnerHtml;
                 if ( CurrentEndpoint.calendarType !== CalendarType.DIOCESAN ) {
-                    CurrentEndpoint.calendarId   = selectEl.value;
+                    CurrentEndpoint.calendarId   = encodeURIComponent(selectEl.value);
                     CurrentEndpoint.calendarType = CalendarType.DIOCESAN;
                 }
                 document.querySelectorAll('.requestOption').forEach(el => {
