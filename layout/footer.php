@@ -20,6 +20,26 @@
 </div>
 <!-- End of Page Wrapper -->
 
+<!-- All API URLs are provided by common.php -->
+<script>
+const DateOfEasterURL = '<?php echo $dateOfEasterURL; ?>';
+const CalendarURL = '<?php echo $calendarURL; ?>';
+const MetadataURL = '<?php echo $metadataURL; ?>';
+const EventsURL = '<?php echo $eventsURL; ?>';
+const MissalsURL = '<?php echo $missalsURL; ?>';
+const DecreesURL = '<?php echo $decreesURL; ?>';
+const RegionalDataURL = '<?php echo $regionalDataURL; ?>';
+console.log({
+    'dateOfEasterURL': DateOfEasterURL,
+    'calendarURL': CalendarURL,
+    'metadataURL': MetadataURL,
+    'eventsURL': EventsURL,
+    'missalsURL': MissalsURL,
+    'decreesURL': DecreesURL,
+    'regionalDataURL': RegionalDataURL
+});
+</script>
+
 <!-- jQuery-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
@@ -38,16 +58,16 @@
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/common.js"></script>
 
-<?php 
+<?php
     //some assets are only needed on certain pages
-    $pageName = basename( $_SERVER["SCRIPT_FILENAME"], '.php' );
-    if( $pageName === "index" ){
-        echo '<script src="assets/js/homepage.js"></script>';
-    }
-    if( in_array( $pageName, [ "extending", "usage", "admin" ] ) ) {
-        echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/js/bootstrap-multiselect.min.js"></script>';
-        echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
-    }
-    if( file_exists( "assets/js/{$pageName}.js" ) ) {
-        echo "<script type=\"module\" src=\"assets/js/{$pageName}.js\"></script>";
-    }
+    $pageName = basename($_SERVER["SCRIPT_FILENAME"], '.php');
+if ($pageName === "index") {
+    echo '<script src="assets/js/homepage.js"></script>';
+}
+if (in_array($pageName, [ "extending", "usage", "admin" ])) {
+    echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/js/bootstrap-multiselect.min.js"></script>';
+    echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
+}
+if (file_exists("assets/js/{$pageName}.js")) {
+    echo "<script type=\"module\" src=\"assets/js/{$pageName}.js\"></script>";
+}

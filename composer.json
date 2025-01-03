@@ -1,0 +1,35 @@
+{
+    "name": "liturgical-calendar/frontend",
+    "description": "Frontend website for the Liturgical Calendar API",
+    "type": "library",
+    "require": {
+        "liturgical-calendar/components": "^2.0",
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.3"
+    },
+    "license": "Apache-2.0",
+    "autoload": {
+        "psr-4": {
+            "LiturgicalCalendar\\Frontend\\": "src/"
+        },
+        "files": ["src/pgettext.php"]
+    },
+    "authors": [
+        {
+            "name": "John R. D'Orazio",
+            "email": "priest@johnromanodorazio.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "scripts": {
+        "post-install-cmd": [
+            "LiturgicalCalendar\\Frontend\\Utilities::postInstall"
+        ],
+        "post-update-cmd": [
+            "LiturgicalCalendar\\Frontend\\Utilities::postInstall"
+        ],
+        "test": "phpunit tests"
+    }
+}

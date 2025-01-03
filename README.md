@@ -11,12 +11,24 @@ The Liturgical Calendar project offers an API that generates data for the liturg
 
 This frontend is an interface with documentation and examples for the API.
 
-The API can be extended with National Calendars, based on the Roman Missals issued in the region; these calendars can then be requested with the `nationalCalendar` parameter.
+The API can be extended with National Calendars, based on the Roman Missals issued in the region; these calendars can then be requested on the Liturgical Calendar API `/calendar/nation/{NATION}` path, where `{NATION}` is the two letter ISO country code, as defined in [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
 
 The API is also extendable for Diocesan Calendars, which however can only be defined after the National Calendar for the region has been defined;
-once the Diocesan Calendar is defined, it can be requested using the `diocesanCalendar` parameter.
+once the Diocesan Calendar is defined, it can be requested on the Liturgical Calendar API `/calendar/diocese/{DIOCESE}` path, where `{DIOCESE}` is the code for the diocese as defined in [/assets/data/WorldDiocesesByNation.json](https://github.com/Liturgical-Calendar/LiturgicalCalendarFrontend/blob/development/assets/data/WorldDiocesesByNation.json) in this frontend repository.
 
 The National and Diocesan Calendar data can be defined directly through the interfaces offered by this frontend.
+
+# Development
+
+To test the frontend locally, first install all package dependencies with `composer install`.
+
+Then make sure you have an instance of the API running locally (see [Liturgical-Calendar/LiturgicalCalendarAPI/README.md#testing-locally](https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI/tree/development?tab=readme-ov-file#testing-locally)).
+
+Then copy `.env.example` to `.env.development`. You shouldn't have to change any values, unless you are running the local API instance on a port other than 8000.
+
+Finally, launch PHP's builtin server from a separate terminal instance from the local API, with `php -S localhost:3000` and open your browser at `localhost:3000`.
+
+For convenience when using VSCode, a `tasks.json` has been defined so that you can simply type <kbd>CTRL</kbd>+<kbd>SHIFT</kbd>+<kbd>B</kbd> (<kbd>CMD</kbd>+<kbd>SHIFT</kbd>+<kbd>B</kbd> on MacOS) to start the PHP builtin server and open the browser at `localhost:3000`.
 
 # Localization of the Frontend
 <a href="https://translate.johnromanodorazio.com/engage/liturgical-calendar/">

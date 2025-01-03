@@ -58,13 +58,13 @@ tbody td {
     content  : "";
     position : fixed;
     z-index  : 1;
-    bottom   : 50px;
+    bottom   : 45px;
     right    : 35px;
     pointer-events   : none;
-    background-image : linear-gradient(to bottom, 
-                        rgba(255,255,255, 0), 
+    background-image : linear-gradient(to bottom,
+                        rgba(255,255,255, 0),
                         rgba(255,255,255, 1) 90%);
-    width    : 50px;
+    width    : 65px;
     height   : 4em;
     transition: height 0.25s ease-out;
 }
@@ -79,8 +79,8 @@ tbody td {
     bottom   : 30px;
     left     : 0;
     pointer-events   : none;
-    background-image : linear-gradient(to bottom, 
-                        rgba(255,255,255, 0), 
+    background-image : linear-gradient(to bottom,
+                        rgba(255,255,255, 0),
                         rgba(255,255,255, 1) 90%);
     width    : 80%;
     height   : 4em;

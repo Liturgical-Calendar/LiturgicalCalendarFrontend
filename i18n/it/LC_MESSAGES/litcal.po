@@ -3,13 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Ubuntu <priest@johnromanodorazio.com>, 2021.
 # John R. D'Orazio <priest@johnromanodorazio.com>, 2022, 2023.
-# Weblate Admin <admin@example.com>, 2024.
+# Weblate Admin <admin@example.com>, 2024, 2025.
+# OpenAI <noreply-mt-openai@weblate.org>, 2024.
+# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-14 21:53+0000\n"
-"PO-Revision-Date: 2024-04-14 21:53+0000\n"
+"POT-Creation-Date: 2025-01-02 23:08+0000\n"
+"PO-Revision-Date: 2025-01-02 23:11+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
@@ -18,66 +20,157 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.4.3\n"
+"X-Generator: Weblate 5.8.4\n"
 
-#: index.php:13
+#: index.php:9
 msgid ""
-"A Liturgical Calendar API from which you can retrieve data for the "
-"Liturgical events of any given year from 1970 to 9999, whether for the "
-"Universal or General Roman Calendar or for derived National and Diocesan "
-"calendars"
-msgstr ""
-"Una API per il Calendario Liturgico, da cui estrarre i dati degli eventi "
-"liturgici di un qualsiasi anno dal 1970 fino al 9999, sia per il Calendario "
-"Romano Universale che per i calendari nazionali e diocesani derivati"
+"Collection of Liturgical events for any given year between 1970 and 9999."
+msgstr "Raccolta di eventi liturgici per qualsiasi anno tra il 1970 e il 9999."
 
-#: index.php:17 usage.php:17 liturgyOfAnyDay.php:61
+#. translators: 1. /calendar, 2. /calendar/nation/{NATION}, 3. /calendar/diocese/{DIOCESE}
+#: index.php:12
+#, php-format
+msgid ""
+"The base %1$s path returns liturgical events for the General Roman Calendar. "
+"National and Diocesan calendars can be requested on the %2$s and %3$s paths "
+"respectively."
+msgstr ""
+"Il percorso base %1$s restituisce eventi liturgici per il Calendario Romano "
+"Generale. I calendari nazionali e diocesani possono essere richiesti "
+"rispettivamente sui percorsi %2$s e %3$s."
+
+#. translators: 1. /{YEAR}
+#: index.php:19
+#, php-format
+msgid ""
+"Each of these paths can optionally be further specified with a %1$s path "
+"parameter. When not specified, the API will default to the current year."
+msgstr ""
+"Ciascuno di questi percorsi può essere ulteriormente specificato con un "
+"parametro di percorso %1$s. Quando non specificato, l'API predefinirà l'anno "
+"corrente."
+
+#. translators: 1. /calendar/nation/{NATION}, 2. /calendar/diocese/{DIOCESE}
+#: index.php:25
+#, php-format
+msgid ""
+"These parameters are useful for tweaking the calendar results, when no "
+"National or Diocesan calendar is requested. Since National and Diocesan "
+"calendars have these parameters built in, the parameters are not available "
+"on the %1$s and %2$s routes."
+msgstr ""
+"Questi parametri sono utili per modificare i risultati del calendario, "
+"quando non viene richiesto un calendario nazionale o diocesano. Poiché i "
+"calendari nazionali e diocesani hanno questi parametri integrati, i "
+"parametri non sono disponibili sui percorsi %1$s e %2$s."
+
+#: index.php:29
+msgid ""
+"N.B. When none of these parameters are set, the API will use the defaults as "
+"in use in the Vatican."
+msgstr ""
+"N.B. Quando nessuno di questi parametri è impostato, l'API utilizzerà i "
+"valori predefiniti in uso in Vaticano."
+
+#. translators: 1. /calendar
+#: index.php:34
+#, php-format
+msgid ""
+"These request parameters can always be set, whether we are requesting the "
+"base %1$s resource or any resource below the %1$s path. National and "
+"Diocesan calendars do not have these parameters built-in."
+msgstr ""
+"Questi parametri di richiesta possono sempre essere impostati, sia che "
+"stiamo richiedendo la risorsa base %1$s o qualsiasi risorsa sotto il "
+"percorso %1$s. I calendari nazionali e diocesani non hanno questi parametri "
+"integrati."
+
+#: index.php:39
+msgid ""
+"It is preferable to set the locale using the Accept-Language header rather "
+"than using the locale parameter. N.B. The Accept-Language header will have "
+"no effect when a National or Diocesan calendar is requested."
+msgstr ""
+"È preferibile impostare la località utilizzando l'intestazione Accept-"
+"Language piuttosto che il parametro locale. N.B. L'intestazione Accept-"
+"Language non avrà effetto quando viene richiesto un calendario nazionale o "
+"diocesano."
+
+#: index.php:42
+msgid ""
+"It is preferable to request the response content type using the Accept "
+"header rather than using the return_type parameter."
+msgstr ""
+"È preferibile richiedere il tipo di contenuto della risposta utilizzando "
+"l'intestazione Accept piuttosto che il parametro return_type."
+
+#. translators: %s = '/calendar'
+#: index.php:47
+#, php-format
+msgid "Request parameters available on the base %s path"
+msgstr "Parametri di richiesta disponibili sul percorso base %s"
+
+#. translators: 1. /calendar
+#: index.php:53
+#, php-format
+msgid "Request parameters available on all %1$s paths"
+msgstr "Parametri di richiesta disponibili su tutti i percorsi %1$s"
+
+#: index.php:80 usage.php:13 examples.php:28 liturgyOfAnyDay.php:24
 msgid "General Roman Calendar"
 msgstr "Calendario Romano Generale"
 
-#: index.php:25 layout/header.php:82
+#: index.php:89 layout/header.php:74
 msgid "Catholic Liturgical Calendar"
 msgstr "Calendario Liturgico Cattolico"
 
-#: index.php:32 index.php:115
-msgid "API Endpoint"
-msgstr "API endpoint"
+#. translators: 1. /calendar
+#: index.php:99
+#, php-format
+msgid "API %1$s endpoint"
+msgstr "Percorso API %1$s"
 
-#: index.php:38
-msgid "Calendar to retrieve from the API"
-msgstr "Calendario da reperire dall'API"
+#: index.php:108
+msgid "Path builder"
+msgstr "Costruttore di percorsi"
 
-#: index.php:56
+#: index.php:112
+msgid "Select route"
+msgstr "Seleziona percorso"
+
+#: index.php:122
+msgid "Calendars available on selected route"
+msgstr "Calendari disponibili sul percorso selezionato"
+
+#: index.php:129 liturgyOfAnyDay.php:65
+msgid "Year"
+msgstr "Anno"
+
+#: index.php:129
+msgid ""
+"When not specified, the API will default to the current year. Try "
+"specifically setting the year by changing the value here."
+msgstr ""
+"Quando non specificato, l'API predefinirà l'anno corrente. Prova a impostare "
+"specificamente l'anno cambiando il valore qui."
+
+#: index.php:149
 msgid "Liturgical Calendar API endpoint"
 msgstr "API del Calendario Liturgico"
 
-#: index.php:57
+#: index.php:152
 msgid ""
-"If a national or diocesan calendar is requested, these calendars will "
-"automatically set the specific options in the API request. If instead no "
-"national or diocesan calendar is requested (i.e. the Universal Calendar is "
-"requested) then the more specific options can be requested:"
+"URL of the API request based on selected options. The button is set to the "
+"same URL, click on it to see results."
 msgstr ""
-"Se viene richiesto un calendario nazionale o diocesano, questi stessi "
-"calendari imposteranno in automatico vari parameteri della richiesta "
-"(locale, epifania, corpuschristi, ascensione). Se invece non viene richiesto "
-"alcun calendario nazionale o diocesano (ossia, viene richiesto semplicemente "
-"il Calendario Universale), allora in quel caso è possibile impostare i "
-"parametri più specificamente:"
+"L'URL della richiesta all'API è basata sulle opzioni selezionate. Il "
+"pulsante è impostato sullo stesso URL, cliccalo per vedere i risultati."
 
-#: index.php:73
-msgid ""
-"URL for the API request based on selected options (the above button is set "
-"to this URL)"
-msgstr ""
-"URL per la richiesta all'API formulata in base alle opzioni selezionate (il "
-"pulsante sopra è impostato a questo URL)"
-
-#: index.php:80
+#: index.php:160 index.php:164
 msgid "Liturgical Calendar Validator"
 msgstr "Validatore del Calendario Liturgico"
 
-#: index.php:83
+#: index.php:163
 msgid ""
 "In order to verify that the liturgical data produced by the API is correct, "
 "there is a Unit Test interface that can run predefined tests against the "
@@ -89,11 +182,7 @@ msgstr ""
 "risposte JSON prodotte dall'API partendo dall'anno 1970 fino a 25 anni nel "
 "futuro rispetto all'anno corrente."
 
-#: index.php:84
-msgid "LitCal Validator"
-msgstr "Validatore LitCal"
-
-#: index.php:87
+#: index.php:167
 #, php-format
 msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
@@ -102,37 +191,61 @@ msgstr ""
 "I test unitari sono definiti nella cartella %s all'interno del repository "
 "dell'API del Calendario Liturgico."
 
-#: index.php:88
+#: index.php:168
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
 msgstr ""
 "L'interfaccia di test unitari viene curata in un repository tutto suo: %s."
 
-#: index.php:98 usage.php:174
+#: index.php:175
+msgid "Translation Tool"
+msgstr "Strumento per la Traduzione"
+
+#: index.php:181 index.php:184
+msgid "Translations status"
+msgstr "Stato delle traduzioni"
+
+#: index.php:192
+msgid "Open API Schema"
+msgstr "Schema Open API"
+
+#: index.php:195
+msgid "Swagger / Open API Documentation"
+msgstr "Documentazione Swagger / OpenAPI"
+
+#: index.php:197
+msgid ""
+"All of the available API routes with their supported methods, parameters, "
+"content types and responses are described here."
+msgstr ""
+"Tutti i percorsi API disponibili con i loro metodi supportati, parametri, "
+"tipi di contenuto e risposte sono descritti qui."
+
+#: index.php:203 usage.php:184
 msgid "Calculation of the Date of Easter"
 msgstr "Calcolo della Data della Pasqua"
 
-#: index.php:101
+#: index.php:206
 msgid ""
 "A simple API endpoint that returns data about the Date of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
 "Calendar) to 9999 (maximum possible date calculation in 64bit PHP), using a "
 "PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian easter "
 "(observed by the Roman Catholic church) and of the Meeus algorithm for "
-"Julian easter (observed by orthodox churches)"
+"Julian easter (observed by orthodox churches)."
 msgstr ""
 "Una API che semplicemente restituisce dati riguardo alla data della Pasqua, "
 "sia Gregoriana che Giuliana, dall'anno 1583 (anno di adozione del Calendario "
 "Gregoriano) al 9999 (massima data calcolabile nel PHP a 64 bit), utilizzando "
 "un adattamento PHP dell'algoritmo Meeus/Jones/Butcher per il calcolo della "
 "Pasqua Gregoriana (celebrata dalla Chiesa Romana) e dell'algoritmo di Meeus "
-"per il calcolo della Pasqua Giuliana (celebrata dalle chiese ortodosse)"
+"per il calcolo della Pasqua Giuliana (celebrata dalle chiese ortodosse)."
 
-#: index.php:106
+#: index.php:211
 msgid "Date of Easter API endpoint"
 msgstr "API per la Data della Pasqua"
 
-#: index.php:108
+#: index.php:213
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
@@ -143,27 +256,7 @@ msgstr ""
 "ogni data della Pasqua, la localizzazione può essere effettuata anche "
 "dall'applicazione cliente."
 
-#: index.php:115
-msgid "Definition"
-msgstr "Definizione"
-
-#: index.php:118
-msgid "Swagger / Open API Documentation"
-msgstr "Documentazione Swagger / OpenAPI"
-
-#: index.php:120
-msgid "The Open API json schema for this API has been updated to OpenAPI 3.1."
-msgstr "Lo schema JSON dell'API è stato aggiornato a OpenAPI 3.1."
-
-#: index.php:126
-msgid "Translation Tool"
-msgstr "Strumento per la Traduzione"
-
-#: index.php:132 index.php:135
-msgid "Translations status"
-msgstr "Stato delle traduzioni"
-
-#: usage.php:7
+#: usage.php:8
 msgid ""
 "A Liturgical Calendar API from which you can retrieve data for the "
 "Liturgical events of any given year from 1970 onwards, whether for the "
@@ -174,73 +267,77 @@ msgstr ""
 "liturgici di un qualsiasi anno dal 1970 fino al 9999, sia per il Calendario "
 "Romano Universale che per i calendari nazionali e diocesani derivati"
 
-#: usage.php:17
+#: usage.php:13
 msgid "Examples"
 msgstr "Esempi"
 
-#: usage.php:25
+#: usage.php:21
 msgid "Example usage of the API"
 msgstr "Esempi di Utilizzo"
 
-#: usage.php:31 layout/header.php:108
+#: usage.php:27 layout/header.php:100
 msgid "Web calendar"
 msgstr "Calendario HTML"
 
-#: usage.php:43
+#: usage.php:39
 msgid "HTML presentation elaborated by PHP using a CURL request"
 msgstr ""
 "Presentazione HTML elaborata da PHP con l'utilizzo di una richiesta cURL"
 
-#: usage.php:44
+#: usage.php:40
 msgid "View PHP Example"
 msgstr "Visualizza l'esempio in PHP"
 
-#: usage.php:54
+#: usage.php:50
 msgid "HTML presentation elaborated by JAVASCRIPT using an AJAX request"
 msgstr ""
 "Presentazione HTML elaborata in Javascript utilizzando una richiesta AJAX"
 
-#: usage.php:55
+#: usage.php:51
 msgid "View JavaScript Example"
 msgstr "Visualizza l'esempio in Javascript"
 
-#: usage.php:62
+#: usage.php:58
 msgid "Calendar"
 msgstr "Calendario"
 
-#: usage.php:65
+#: usage.php:61
 msgid ""
 "FullCalendar representation elaborated by JAVASCRIPT using an AJAX request"
 msgstr ""
 "Presentazione FullCalendar elaborata in Javascript utilizzando una richiesta "
 "AJAX"
 
-#: usage.php:66
+#: usage.php:62
 msgid "View FullCalendar"
 msgstr "Visualizza l'esempio FullCalendar"
 
-#: usage.php:67
+#: usage.php:63
 msgid "View FullCalendar (messages first)"
 msgstr "Visualizza l'esempio FullCalendar (messaggi in alto)"
 
-#: usage.php:78 layout/header.php:112
+#: usage.php:74 layout/header.php:104
 msgid "Calendar subscription"
 msgstr "Sottoscrizione calendario"
 
-#: usage.php:86
+#: usage.php:88 liturgyOfAnyDay.php:41
+msgid "Select calendar"
+msgstr "Seleziona calendario"
+
+#: usage.php:92
 msgid "Calendar subscription URL"
 msgstr "URL di sottoscrizione del calendario"
 
-#: usage.php:105 usage.php:118 usage.php:143
+#: usage.php:115 usage.php:128 usage.php:153
 msgid "Click on the link above to copy it the clipboard."
 msgstr "Clicca sul link sopra per copiarlo negli appunti."
 
-#: usage.php:106
+#: usage.php:116
 #, php-format
 msgid "Navigate to %s."
 msgstr "Naviga a %s."
 
-#: usage.php:107
+#: usage.php:117
 msgid ""
 "At the bottom left corner of the screen, next to Other calendars, click on "
 "the + icon to add a new calendar, and choose <i><b>From URL</b></i>."
@@ -249,11 +346,11 @@ msgstr ""
 "sull'icona + per aggiungere un nuovo calendario, e scegli <i><b>Da URL</b></"
 "i>."
 
-#: usage.php:108 usage.php:120 usage.php:146
+#: usage.php:118 usage.php:130 usage.php:156
 msgid "Paste in the URL that you copied earlier."
 msgstr "Incolla l'URL che hai copiato da sopra poc'anzi."
 
-#: usage.php:109 usage.php:121 usage.php:133 usage.php:149
+#: usage.php:119 usage.php:131 usage.php:143 usage.php:159
 msgid ""
 "Once subscribed, your calendar will be populated with the events from the "
 "subscription URL."
@@ -261,11 +358,11 @@ msgstr ""
 "Una volta effettuata la sottoscrizione, il tuo calendario verrà popolato con "
 "gli eventi dall'URL di sottoscrizione."
 
-#: usage.php:110 usage.php:134
+#: usage.php:120 usage.php:144
 msgid "Google Calendar will poll the calendar URL every 8 hours."
 msgstr "Google Calendar sonderà l'URL del calendario una volta ogni 8 ore."
 
-#: usage.php:111 usage.php:123 usage.php:135 usage.php:153
+#: usage.php:121 usage.php:133 usage.php:145 usage.php:163
 msgid ""
 "Since you have made a subscription, any updates in the Liturgical Calendar "
 "API will be propagated to your subscription."
@@ -274,7 +371,7 @@ msgstr ""
 "nell'API del Calendario Liturgico che può avere effetto sugli eventi verrà "
 "propagato alla tua sottoscrizione."
 
-#: usage.php:112 usage.php:124 usage.php:136 usage.php:154
+#: usage.php:122 usage.php:134 usage.php:146 usage.php:164
 msgid ""
 "You will only see events for the current year. On the first day of a new "
 "year however, new events will be created automatically for the new year."
@@ -282,7 +379,7 @@ msgstr ""
 "Saranno visibili soltanto gli eventi per l'anno corrente. Il primo giorno di "
 "un nuovo anno, verranno creati in automatico gli eventi per il nuovo anno."
 
-#: usage.php:113
+#: usage.php:123
 msgid ""
 "Once the calendar has been added from a desktop, it will become available "
 "for the same Gmail account on the Google Calendar app on a smartphone."
@@ -291,7 +388,7 @@ msgstr ""
 "sarà poi disponibile per lo stesso account Gmail sull'app android di Google "
 "Calendar."
 
-#: usage.php:119
+#: usage.php:129
 msgid ""
 "Go to <i><b>Phone Settings → Accounts → Add account → Other → Add Calendar</"
 "b></i>."
@@ -299,7 +396,7 @@ msgstr ""
 "Vai a <i><b>Impostazioni Telefono → Account → Aggiungi account → Altro → "
 "Aggiungi Calendario</b></i>."
 
-#: usage.php:122
+#: usage.php:132
 msgid ""
 "The iPhone Calendar app will poll the calendar URL based on the settings at "
 "<i><b>Phone Settings → Accounts → Fetch New Data → Fetch</b></i>."
@@ -308,7 +405,7 @@ msgstr ""
 "base alle impostazioni a <i><b>Impostazioni del Telefono → Account → "
 "Acquisisci nuovi dati → Acquisisci</b></i>."
 
-#: usage.php:129
+#: usage.php:139
 #, php-format
 msgid ""
 "If you have not yet added the calendar subscription from the desktop version "
@@ -317,11 +414,11 @@ msgstr ""
 "Se non hai ancora aggiunto il calendario da sottoscrivere attraverso la "
 "versione desktop di Google Calendar, si prega farlo ora (vedi %s)."
 
-#: usage.php:130
+#: usage.php:140
 msgid "Open the Google Calendar app."
 msgstr "Apri l'app di Google Calendar."
 
-#: usage.php:131
+#: usage.php:141
 msgid ""
 "Go to <i><b>Settings</b></i>, then under the account which you used for the "
 "Desktop version, click on the Calendar subscription name."
@@ -329,21 +426,21 @@ msgstr ""
 "Vai a <i><b>Impostazioni</b></i>, poi sotto l'account che hai usato per la "
 "versione Desktop, clicca sul nome del calendario sottoscritto."
 
-#: usage.php:132
+#: usage.php:142
 msgid "Make sure <i><b>Synchronization</b></i> is turned on."
 msgstr "Assicùrati che <i><b>Sincronizzazione</b></i> è attivata."
 
-#: usage.php:142
+#: usage.php:152
 msgid "tested with Outlook 2013"
 msgstr "testato con Outlook 2013"
 
-#: usage.php:144
+#: usage.php:154
 msgid "At the bottom of the screen, switch from Email view to Calendar view."
 msgstr ""
 "In fondo alla finestra, cambia da visualizzazione Posta a visualizzazione "
 "Calendario."
 
-#: usage.php:145
+#: usage.php:155
 msgid ""
 "On the ribbon of the Home menu item, click on <i><b>Open calendar → From the "
 "internet</b></i>."
@@ -351,7 +448,7 @@ msgstr ""
 "Sulla barra multifunzione nella sezione Home, clicca su <i><b>Apri "
 "calendario → Dall'internet</b></i>."
 
-#: usage.php:147
+#: usage.php:157
 msgid ""
 "On the following screen, check the checkbox along the lines of \"Poll this "
 "calendar in the interval suggested by the creator\"."
@@ -360,13 +457,13 @@ msgstr ""
 "qualcosa tipo \"Sonda questo calendario nell'intervallo suggerito dal "
 "creatore\"."
 
-#: usage.php:148
+#: usage.php:158
 msgid "Outlook Calendar should now poll the calendar URL once a day."
 msgstr ""
 "Outlook Calendar dovrebbe ora sondare l'URL del calendario una volta al "
 "giorno."
 
-#: usage.php:150
+#: usage.php:160
 msgid ""
 "Make sure the Calendar is created in the Other calendars folder; if you find "
 "it under the Personal calendars folder, drag it and drop it onto the Other "
@@ -378,7 +475,7 @@ msgstr ""
 "Altri calendari, in modo che venga trattato come calendario sottoscritto e "
 "non come calendario locale."
 
-#: usage.php:151
+#: usage.php:161
 msgid ""
 "You can manually fetch new data by clicking on <i><b>Send/receive all</b></"
 "i> (from the SEND/RECEIVE menu item)."
@@ -386,7 +483,7 @@ msgstr ""
 "Puoi anche aggiornare manualmente i dati cliccando su <i><b>Invia/ricevi "
 "tutto</b></i> (dalla voce di menu INVIA/RICEVI)."
 
-#: usage.php:152
+#: usage.php:162
 msgid ""
 "Outlook Calendar supports a minimal amount of HTML in the event description, "
 "so the event descriptions provided by the subscription URL are a little bit "
@@ -396,41 +493,41 @@ msgstr ""
 "eventi, pertanto le descrizioni degli eventi generate dall'URL di "
 "sottoscrizione sono maggiormente \"abbellite\" per Outlook."
 
-#: usage.php:166 layout/header.php:116
+#: usage.php:176 layout/header.php:108
 msgid "Dates of Easter"
 msgstr "Date della Pasqua"
 
-#: usage.php:177
+#: usage.php:187
 msgid "Example display of the date of Easter from 1583 to 9999"
 msgstr ""
 "Esempio di Presentazione grafica della data della Pasqua dal 1583 al 9999"
 
-#: usage.php:178
+#: usage.php:188
 msgid "Calculate the Date of Easter"
 msgstr "Calcola la Data della Pasqua"
 
-#: usage.php:188 layout/header.php:120
+#: usage.php:198 layout/header.php:112
 msgid "Liturgy of the Day"
 msgstr "Liturgia del Giorno"
 
-#: usage.php:197
+#: usage.php:207
 msgid "Alexa News Brief"
 msgstr "Sommario quotidiano Alexa"
 
-#: usage.php:200
+#: usage.php:210
 msgid "Daily news brief with the liturgy of the day, as an Amazon Alexa skill"
 msgstr ""
 "Sommario quotidiano con la liturgia del giorno, come skill di Amazon Alexa"
 
-#: usage.php:219 usage.php:227
+#: usage.php:229 usage.php:237
 msgid "In development"
 msgstr "Sotto sviluppo"
 
-#: usage.php:234 usage.php:238 liturgyOfAnyDay.php:61 liturgyOfAnyDay.php:69
+#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:24 liturgyOfAnyDay.php:32
 msgid "Liturgy of any day"
 msgstr "Liturgia di un qualsiasi giorno"
 
-#: usage.php:237
+#: usage.php:247
 msgid ""
 "For example, you can find the liturgy of the day from the day of your "
 "baptism."
@@ -438,7 +535,7 @@ msgstr ""
 "Per esempio, puoi cercare la liturgia del giorno dal giorno del tuo "
 "battesimo."
 
-#: extending.php:30
+#: extending.php:83
 msgid ""
 "The General Roman Calendar can be extended so as to create a National or "
 "Diocesan calendar. Diocesan calendars depend on National calendars, so the "
@@ -449,7 +546,7 @@ msgstr ""
 "calendari nazionali, quindi è necessario prima creare il calendario "
 "nazionale."
 
-#: extending.php:31
+#: extending.php:84 translations.php:9
 msgid ""
 "The first step in creating a national or diocesan calendar, is to translate "
 "the data for the General Roman Calendar into the language for that nation or "
@@ -459,29 +556,32 @@ msgstr ""
 "quello di tradurre i dati del Calendario Romano Generale nella lingua "
 "propria del calendario nazionale o diocesano."
 
-#: extending.php:32
+#: extending.php:85
 msgid "(see <a href=\"translations.php\">Translations</a>)"
 msgstr "(vedi <a href=\"translations.php\">Traduzioni</a>)"
 
-#: extending.php:33
+#: extending.php:86
 msgid ""
-"A National calendar may have some festivities in common with other National "
+"A national calendar may have some festivities in common with other national "
 "calendars, for example the patron of a wider region."
 msgstr ""
-"Un Calendario nazionale può avere alcune festività in comune con altri "
-"calendari nazionali, per esempio il patrono di una regione più ampia."
+"Un calendario nazionale può avere alcune festività in comune con altri "
+"calendari nazionali, ad esempio il patrono di una regione più ampia."
 
-#: extending.php:34
+#: extending.php:87
 msgid ""
-"In this case, the festivities for the Wider region should be defined "
-"separately, and if applicable should be made translatable, then the Wider "
-"region should be applied to the National Calendar."
+"In this case, the festivities for the wider region should be defined "
+"separately, and the languages applicable to the wider region should be set; "
+"the wider region data will then be applied automatically to national "
+"calendars belonging to the wider region."
 msgstr ""
-"In tal caso, le festività della Regione più ampia dovrebbero essere definite "
-"separatamente, e nel caso dovrebbero essere traducibili, poi il calendario "
-"della Regione più ampia dovrebbe essere applicata al Calendario Nazionale."
+"In questo caso, le festività per la regione più ampia dovrebbero essere "
+"definite separatamente e le lingue applicabili alla regione più ampia "
+"dovrebbero essere impostate; i dati della regione più ampia verranno quindi "
+"applicati automaticamente ai calendari nazionali appartenenti alla regione "
+"più ampia."
 
-#: extending.php:35
+#: extending.php:88
 msgid ""
 "If a group of dioceses decides to pool their Liturgical Calendar data, for "
 "example to print out one single yearly calendar with the data for all the "
@@ -492,252 +592,235 @@ msgstr ""
 "di tutte le diocesi nel gruppo, tale gruppo può essere definito o impostato "
 "qui."
 
-#: extending.php:70
+#: extending.php:91
 msgid "Tag"
 msgstr "Etichetta"
 
-#: extending.php:71 extending.php:128 layout/formcontrols.php:42
+#: extending.php:92 src/Utilities.php:228 src/FormControls.php:52
 msgid "Name"
 msgstr "Nome"
 
-#: extending.php:72 liturgyOfAnyDay.php:74 layout/formcontrols.php:49
+#: extending.php:93 liturgyOfAnyDay.php:47 src/FormControls.php:59
 msgid "Day"
 msgstr "Giorno"
 
-#: extending.php:73 liturgyOfAnyDay.php:78 layout/formcontrols.php:55
+#: extending.php:94 liturgyOfAnyDay.php:51 src/FormControls.php:65
 msgid "Month"
 msgstr "Mese"
 
-#: extending.php:74 extending.php:394
+#: extending.php:95 extending.php:437
 msgid "Other Solemnity"
 msgstr "Altra Solennità"
 
-#: extending.php:75 extending.php:415
+#: extending.php:96 extending.php:458
 msgid "Other Feast"
 msgstr "Altra Festa"
 
-#: extending.php:76 extending.php:435 extending.php:436
+#: extending.php:97 extending.php:478 extending.php:479
 msgid "Other Memorial"
 msgstr "Altra Memoria"
 
-#: extending.php:77 extending.php:456 extending.php:457
+#: extending.php:98 extending.php:499 extending.php:500
 msgid "Other Optional Memorial"
 msgstr "Altra Memoria Facoltativa"
 
-#: extending.php:78
-msgid "Delete diocesan calendar"
-msgstr "Rimuovi calendario diocesano"
+#: extending.php:99
+msgid "Delete calendar"
+msgstr "Elimina calendario"
 
-#: extending.php:79
+#: extending.php:100
 msgid ""
-"If you choose to delete this diocesan calendar, the liturgical events "
-"defined for the calendar and the corresponding index entry will be removed "
-"and no longer available in the client applications."
+"If you choose to delete this calendar, the liturgical events defined for the "
+"calendar and the corresponding index entries will be removed and no longer "
+"available in the client applications."
 msgstr ""
-"Se scegli di rimuovere questo calendario diocesano, gli eventi liturgici "
-"definiti nel calendario e l'elemento corrispondente nell'indice dei "
-"calendari verrà rimosso e non sarà più disponibile nelle applicazioni "
-"cliente."
+"Se scegli di rimuovere questo calendario, gli eventi liturgici definiti nel "
+"calendario e l'elemento corrispondente nell'indice dei calendari verrà "
+"rimosso e non sarà più disponibile nelle applicazioni cliente."
 
-#: extending.php:80 layout/formcontrols.php:79
+#: extending.php:101 src/FormControls.php:89
 msgid "Liturgical color"
 msgstr "Colore Liturgico"
 
 #. translators: context = liturgical color
-#: extending.php:81 includes/LitColor.php:29 layout/formcontrols.php:81
+#: extending.php:102 src/LitColor.php:35 src/FormControls.php:91
 msgid "white"
 msgstr "bianco"
 
 #. translators: context = liturgical color
-#: extending.php:82 includes/LitColor.php:32 layout/formcontrols.php:82
+#: extending.php:103 src/LitColor.php:38 src/FormControls.php:92
 msgid "red"
 msgstr "rosso"
 
 #. translators: context = liturgical color
-#: extending.php:83 includes/LitColor.php:23 layout/formcontrols.php:84
+#: extending.php:104 src/LitColor.php:29 src/FormControls.php:94
 msgid "green"
 msgstr "verde"
 
 #. translators: context = liturgical color
-#: extending.php:84 includes/LitColor.php:26 layout/formcontrols.php:83
+#: extending.php:105 src/LitColor.php:32 src/FormControls.php:93
 msgid "purple"
 msgstr "viola"
 
 #. translators: in reference to the first year from which this festivity takes place
-#: extending.php:86 layout/formcontrols.php:91
+#: extending.php:107 src/FormControls.php:101
 msgid "Since"
 msgstr "Dall'anno"
 
 #. translators: in reference to the year from which this festivity no longer needs to be dealt with
-#: extending.php:88 layout/formcontrols.php:98
+#: extending.php:109 src/FormControls.php:108
 msgid "Until"
 msgstr "All'anno"
 
 #. translators: label of the form row
-#: extending.php:90
+#: extending.php:111
 msgid "Patron or Patrons of the Wider Region"
 msgstr "Patrono o Patroni della Regione più ampia"
 
 #. translators: label of the form row
-#: extending.php:92
+#: extending.php:113
 msgid "New festivity"
 msgstr "Nuova festività"
 
 #. translators: label of the form row
-#: extending.php:94
+#: extending.php:115
 msgid "Change name or grade"
 msgstr "Cambia nome o grado"
 
 #. translators: label of the form row
-#: extending.php:96
+#: extending.php:117
 msgid "Move festivity"
 msgstr "Sposta festività"
 
-#: extending.php:97
+#: extending.php:118
 msgid "Decree URL"
 msgstr "URL del Decreto"
 
-#: extending.php:98
+#: extending.php:119
 msgid "Decree Language mappings"
 msgstr "Mappatura delle lingue del Decreto"
 
-#: extending.php:99
+#: extending.php:120
 msgid "Missal"
 msgstr "Messale"
 
-#: extending.php:100
+#: extending.php:121
 msgid "Reason (in favor of festivity)"
 msgstr "Motivo (a favore di festività)"
 
-#: extending.php:110 extending.php:530
+#: extending.php:132 extending.php:575
 msgid "Designate patron from existing festivity"
 msgstr "Designa il patrono partendo da una festività esistente"
 
-#: extending.php:111 extending.php:546
+#: extending.php:133 extending.php:591
 msgid "Change name or grade of existing festivity"
 msgstr "Cambia nome o grado di una festività esistente"
 
-#: extending.php:112 extending.php:562
+#: extending.php:134 extending.php:607
 msgid "Move festivity to new date"
 msgstr "Sposta una festività ad altra data"
 
-#: extending.php:113 extending.php:578
+#: extending.php:135 extending.php:623
 msgid "Create a new festivity"
 msgstr "Crea una nuova festività"
 
-#: extending.php:120
-msgid "Choose from existing festivities"
-msgstr "Scegli dalle festività esistenti"
-
-#: extending.php:122
-msgid ""
-"This festivity does not seem to exist? Please choose from a value in the "
-"list."
-msgstr ""
-"Questa festività non sembra esistere? Si prega scegliere da un valore "
-"nell'elenco."
-
-#: extending.php:126
-msgid "Property to change"
-msgstr "Proprietà da modificare"
-
-#: extending.php:129 layout/formcontrols.php:156
-msgid "Grade"
-msgstr "Grado"
-
-#: extending.php:140
+#: extending.php:141
 msgid "General Roman Calendar - Extending"
 msgstr "Calendario Romano Generale - Estensione"
 
-#: extending.php:148
+#: extending.php:149
 msgid "Extend the General Roman Calendar with National or Diocesan data"
 msgstr "Estendi il Calendario Romano Generale con dati Nazionali o Diocesani"
 
-#: extending.php:159 extending.php:302
+#: extending.php:160 extending.php:308
 msgid "Wider Region"
 msgstr "Regione più ampia"
 
-#: extending.php:161 extending.php:216
+#: extending.php:162 extending.php:225
 msgid "This value cannot be empty."
 msgstr "Questo valore non può essere vuoto."
 
-#: extending.php:174
-msgid "Wider Region is multilingual"
-msgstr "La Regione più ampia è multilingue"
+#: extending.php:176
+msgid "Locales"
+msgstr "Lingue"
 
-#: extending.php:188 extending.php:232 extending.php:342
+#: extending.php:185 extending.php:312 extending.php:385
+msgid "Current localization"
+msgstr "Localizzazione attuale"
+
+#: extending.php:197 extending.php:238 extending.php:396
 msgid "Remove existing data"
 msgstr "Rimuovi dati esistenti"
 
-#: extending.php:194 layout/header.php:34
+#: extending.php:203 layout/header.php:27
 msgid "Create a Calendar for a Wider Region"
 msgstr "Crea il Calendario di una Regione più ampia"
 
-#: extending.php:203
+#: extending.php:212
 msgid "Save Wider Region Calendar Data"
 msgstr "Salva Dati Calendario della Regione più ampia"
 
-#: extending.php:214
+#: extending.php:223
 msgid "National Calendar"
 msgstr "Calendario Nazionale"
 
-#: extending.php:238 layout/header.php:35
+#: extending.php:244 layout/header.php:28
 msgid "Create a National Calendar"
 msgstr "Crea un Calendario Nazionale"
 
-#: extending.php:243
+#: extending.php:249
 msgid "National calendar settings"
 msgstr "Impostazioni del Calendario Nazionale"
 
-#: extending.php:246 extending.php:481
+#: extending.php:252 extending.php:524
 msgid "EPIPHANY"
 msgstr "EPIFANIA"
 
-#: extending.php:249 extending.php:484
+#: extending.php:255 extending.php:527
 msgid "January 6"
 msgstr "6 Gennaio"
 
-#: extending.php:250 extending.php:485
+#: extending.php:256 extending.php:528
 msgid "Sunday between January 2 and January 8"
 msgstr "Domenica tra il 2 gennaio e l'8 gennaio"
 
-#: extending.php:254 extending.php:489
+#: extending.php:260 extending.php:532
 msgid "ASCENSION"
 msgstr "ASCENSIONE"
 
-#: extending.php:262 extending.php:497
+#: extending.php:268 extending.php:540
 msgid "CORPUS CHRISTI"
 msgstr "CORPUS DOMINI"
 
-#: extending.php:270
-msgid "JESUS HIGH PRIEST"
-msgstr "GESÙ SOMMO SACERDOTE"
+#: extending.php:276
+msgid "ETERNAL HIGH PRIEST"
+msgstr "SOMMO ED ETERNO SACERDOTE"
 
-#: extending.php:277
-msgid "LOCALE"
-msgstr "LINGUA"
+#: extending.php:283 extending.php:375
+msgid "LOCALES"
+msgstr "LINGUE"
 
-#: extending.php:290
+#: extending.php:296
 msgid "Published Roman Missals"
 msgstr "Messali Romani pubblicati"
 
-#: extending.php:293 extending.php:595
+#: extending.php:299 extending.php:640
 msgid "Add Missal"
 msgstr "Aggiungi Messale"
 
-#: extending.php:313
+#: extending.php:329
 msgid "Save National Calendar Data"
 msgstr "Salva i Dati del Calendario Nazionale"
 
-#: extending.php:325
+#: extending.php:342
 msgid "Depends on national calendar"
 msgstr "Dipende da calendario nazionale"
 
-#: extending.php:336
+#: extending.php:353
 msgid "Diocese"
 msgstr "Diocesi"
 
-#: extending.php:338
+#: extending.php:355
 msgid ""
 "This diocese does not seem to exist? Please choose from a value in the list "
 "to retrieve an existing diocese, or ignore if creating a new diocesan "
@@ -747,71 +830,71 @@ msgstr ""
 "nell'elenco per recuperare un calendario diocesano esistente, oppure non ci "
 "far caso se si sta creando un nuovo calendario."
 
-#: extending.php:345
+#: extending.php:361
 msgid "Diocesan group"
 msgstr "Gruppo di Diocesi"
 
-#: extending.php:364
+#: extending.php:407
 msgid "Solemnities"
 msgstr "Solennità"
 
-#: extending.php:365
+#: extending.php:408
 msgid "Feasts"
 msgstr "Feste"
 
-#: extending.php:366
+#: extending.php:409
 msgid "Memorials"
 msgstr "Memorie"
 
-#: extending.php:367
+#: extending.php:410
 msgid "Optional memorials"
 msgstr "Memorie facoltative"
 
-#: extending.php:386 extending.php:407 extending.php:428 extending.php:449
-#: layout/header.php:36
+#: extending.php:429 extending.php:450 extending.php:471 extending.php:492
+#: layout/header.php:29
 msgid "Create a Diocesan Calendar"
 msgstr "Crea un Calendario Diocesano"
 
-#: extending.php:386
+#: extending.php:429
 msgid "Define the Solemnities"
 msgstr "Definisci le Solennità"
 
-#: extending.php:392
+#: extending.php:435
 msgid ""
 "Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
 "Principale/i Patrono/i del Luogo, la Diocesi, la Regione, la Provincia o il "
 "Territorio"
 
-#: extending.php:393 extending.php:414
+#: extending.php:436 extending.php:457
 msgid "Dedication of the Cathedral"
 msgstr "Dedicazione della Cattedrale"
 
-#: extending.php:407
+#: extending.php:450
 msgid "Define the Feasts"
 msgstr "Definisci le Feste"
 
-#: extending.php:413
+#: extending.php:456
 msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
 "Patrono/i del Luogo, la Diocesi, la Regione, la Provincia o il Territorio"
 
-#: extending.php:428
+#: extending.php:471
 msgid "Define the Memorials"
 msgstr "Definisci le Memorie"
 
-#: extending.php:434
+#: extending.php:477
 msgid ""
 "Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
 "Patrono/i Secondario/i del Luogo, la Diocesi, la Regione, la Provincia o il "
 "Territorio"
 
-#: extending.php:449
+#: extending.php:492
 msgid "Define the Optional Memorials"
 msgstr "Definisci le Memorie Facoltative"
 
-#: extending.php:455
+#: extending.php:498
 msgid ""
 "Saints whos veneration is local to the Place, Diocese, Region, Province or "
 "Territory"
@@ -819,40 +902,40 @@ msgstr ""
 "Santi la cui venerazione è locale al Luogo, la Diocesi, la Regione, la "
 "Provincia o il Territorio"
 
-#: extending.php:478
+#: extending.php:521
 msgid "Diocesan overrides to the national calendar for …"
 msgstr "Customizzazione diocesana rispetto al calendario nazionale per …"
 
-#: extending.php:510
+#: extending.php:553
 msgid "SAVE DIOCESAN CALENDAR"
 msgstr "SALVA CALENDARIO DIOCESANO"
 
-#: extending.php:534
+#: extending.php:579
 msgid "Designate patron"
 msgstr "Designa patrono"
 
-#: extending.php:535 extending.php:551 extending.php:567 extending.php:584
-#: extending.php:608
+#: extending.php:580 extending.php:596 extending.php:612 extending.php:629
+#: extending.php:653
 msgid "Cancel"
 msgstr "Annulla"
 
-#: extending.php:566
+#: extending.php:611
 msgid "Move Festivity"
 msgstr "Sposta festività"
 
-#: extending.php:582
+#: extending.php:627
 msgid "New Festivity from existing"
 msgstr "Nuova festività da esistente"
 
-#: extending.php:583
+#: extending.php:628
 msgid "New Festivity ex novo"
 msgstr "Nuova festività ex novo"
 
-#: extending.php:600
+#: extending.php:645
 msgid "Choose from known Roman Missal language editions"
 msgstr "Scegli dalle edizioni in lingua del Messale Romano note all'API"
 
-#: extending.php:602
+#: extending.php:647
 msgid ""
 "This Missal is unknown to the Liturgical Calendar API. Please choose from a "
 "value in the list, or contact the curator of the API to have the Missal "
@@ -862,23 +945,23 @@ msgstr ""
 "scegliere da un valore nella lista, oppure contattare il curatore dell'API "
 "in modo che il Messale venga aggiunto alle edizioni in lingua note."
 
-#: extending.php:607
+#: extending.php:652
 msgid "Add language edition Roman Missal"
 msgstr "Aggiungi edizione in lingua del Messale Romano"
 
-#: easter.php:67
+#: easter.php:75
 msgid "Date of Easter from 1583 to 9999"
 msgstr "Data della Pasqua dal 1583 al 9999"
 
-#: easter.php:84
+#: easter.php:92
 msgid "Go back"
 msgstr "Torna indietro"
 
-#: easter.php:99
+#: easter.php:107
 msgid "Century"
 msgstr "Secolo"
 
-#: easter.php:106
+#: easter.php:114
 msgid ""
 "Easter Day Calculation in PHP (Years in which Julian and Gregorian easter "
 "coincide are marked in yellow)"
@@ -886,41 +969,470 @@ msgstr ""
 "Calcolo del giorno della Pasqua utilizzando PHP (Anni nei quali la pasqua "
 "gregoriana e quella giuliana coincidono sono evidenziati in giallo)"
 
-#: easter.php:110
+#: easter.php:118
 msgid "Gregorian Easter"
 msgstr "Pasqua Gregoriana"
 
-#: easter.php:110
+#: easter.php:118
 msgid "Julian Easter"
 msgstr "Pasqua Giuliana"
 
-#: easter.php:110
+#: easter.php:118
 msgid "Julian Easter in Gregorian Calendar"
 msgstr "Pasqua Giuliana nel Calendario Gregoriano"
 
-#: about.php:13
+#: about.php:7
 msgid ""
-"Priest in the Diocese of Rome, self-taught programmer, author of the "
-"BibleGet Project"
+"The Liturgical Calendar project is curated by a group of volunteer catholic "
+"programmers and experts in Catholic liturgy, seeking to serve the Church."
 msgstr ""
-"Sacerdote della Diocesi di Roma, programmatore autodidatta, autore del "
-"Progetto BibleGet"
+"Il progetto del Calendario Liturgico è curato da un gruppo di programmatori "
+"cattolici volontari ed esperti in liturgia cattolica, che cercano di servire "
+"la Chiesa."
 
-#: about.php:19
+#: about.php:13 about.php:21
+msgid "Liturgical Calendar - About us"
+msgstr "Calendario Liturgico - Chi siamo"
+
+#: examples.php:6
+msgid "Liturgical Calendar as an HTML table produced by Javascript"
+msgstr "Calendario Liturgico come tabella HTML prodotta da Javascript"
+
+#: examples.php:56
+#, php-format
+msgid "Example '%s' not found"
+msgstr "Esempio '%s' non trovato"
+
+#: translations.php:11
+#, php-format
+msgid ""
+"This can be done on the <a href=\"%1$s\" target=\"_blank\">LitCal "
+"translation server %2$s</a>."
+msgstr ""
+"Questo può essere fatto sul server di traduzione <a href=\"%1$s\" "
+"target=\"_blank\">LitCal %2$s</a>."
+
+#: translations.php:15
+msgid ""
+"If you would like to contribute to the translations of the Liturgical data "
+"for your region, please feel free to create an account on the translation "
+"server."
+msgstr ""
+"Se desideri contribuire alle traduzioni dei dati liturgici per la tua "
+"regione, sentiti libero di creare un account sul server di traduzione."
+
+#: translations.php:16
+msgid "Specifically, the components which require translation are:"
+msgstr "Specificamente, i componenti che richiedono traduzione sono:"
+
+#. translators: 1 = name of the translation component ("API strings"), 2 = names of the categories, 3 = name of a category ("Calendar messages")
+#: translations.php:20
+#, php-format
+msgid ""
+"Other translations required for the Liturgical Calendar data are found in "
+"the %1$s translation component. Upon choosing the language in which to "
+"translate this component, you will find tags that categorize the strings for "
+"translation in the \"String status\" section. The categories that are "
+"required to complete the Liturgical calendar data are: %2$s. The %3$s tag / "
+"category are the messages that explain how the calendar was calculated for a "
+"given year; though not essential for the Calendar data, it is useful "
+"information for understanding where the results of the current calculation "
+"came from."
+msgstr ""
+"Altre traduzioni richieste per i dati del Calendario Liturgico si trovano "
+"nel componente di traduzione %1$s. Dopo aver scelto la lingua in cui "
+"tradurre questo componente, troverai tag che categorizzano le stringhe per "
+"la traduzione nella sezione \"Stato della stringa\". Le categorie richieste "
+"per completare i dati del Calendario Liturgico sono: %2$s. Il tag / "
+"categoria %3$s sono i messaggi che spiegano come è stato calcolato il "
+"calendario per un dato anno; sebbene non essenziali per i dati del "
+"Calendario, sono informazioni utili per comprendere da dove provengono i "
+"risultati del calcolo attuale."
+
+#: translations.php:27
+#, php-format
+msgid ""
+"If translating liturgical calendar data for a European country, you will "
+"also want to translate the %1$s component."
+msgstr ""
+"Se traduci i dati del calendario liturgico per un paese europeo, vorrai "
+"anche tradurre il componente %1$s."
+
+#: translations.php:31
+msgid ""
+"Translations of the above mentioned festivities MUST NOT be done simply "
+"based on the linguistic abilities of the translator, but MUST be taken from "
+"the Roman Missal used in the region for which the translation is "
+"accomplished."
+msgstr ""
+"Le traduzioni delle suddette festività NON DEVONO essere fatte semplicemente "
+"basandosi sulle abilità linguistiche del traduttore, ma DEVONO essere prese "
+"dal Messale Romano utilizzato nella regione per cui viene effettuata la "
+"traduzione."
+
+#: translations.php:32
+msgid ""
+"Translations of the above mentioned festivities may change from one edition "
+"of the Roman Missal to the next; translators should simply use the most "
+"recent edition of the Roman Missal for their region as a reference."
+msgstr ""
+"Le traduzioni delle festività sopra menzionate possono cambiare da "
+"un'edizione all'altra del Messale Romano; i traduttori dovrebbero "
+"semplicemente usare l'edizione più recente del Messale Romano per la loro "
+"regione come riferimento."
+
+#: translations.php:33
+msgid ""
+"This API intends to be historically correct as regards the calculation of "
+"the dates and the precedence of the festivities, but does not pretend "
+"historical accuracy as regards differences in the translations of the "
+"festivities over time."
+msgstr ""
+"Questa API intende essere storicamente corretta per quanto riguarda il "
+"calcolo delle date e la precedenza delle festività, ma non pretende "
+"accuratezza storica per quanto riguarda le differenze nelle traduzioni delle "
+"festività nel tempo."
+
+#: translations.php:35
+msgid ""
+"National calendars and related translations must be defined using data from "
+"the translation of the Roman Missal used in the Region or in any case from "
+"decrees of the Episcopal Conference of the Region."
+msgstr ""
+"I calendari nazionali e le relative traduzioni devono essere definiti "
+"utilizzando i dati della traduzione del Messale Romano usato nella Regione o "
+"comunque dai decreti della Conferenza Episcopale della Regione."
+
+#: translations.php:36
+msgid ""
+"Anyone who intends on contributing to the translations is required to agree "
+"to these conditions."
+msgstr ""
+"Chiunque intenda contribuire alle traduzioni è tenuto ad accettare queste "
+"condizioni."
+
+#: translations.php:37
+msgid ""
+"If the translator is not an expert in liturgical science or does not have a "
+"role in a diocesan office for liturgy and worship, the translations will "
+"require overview by a liturgical expert before being incorporated into this "
+"project."
+msgstr ""
+"Se il traduttore non è un esperto in scienze liturgiche o non ha un ruolo in "
+"un ufficio diocesano per la liturgia e il culto, le traduzioni richiederanno "
+"una revisione da parte di un esperto liturgico prima di essere incorporate "
+"in questo progetto."
+
+#: translations.php:39
+msgid ""
+"The project website can be also be translated into other languages. The "
+"translation strings can be found in the following translation components:"
+msgstr ""
+"Il sito del progetto può essere tradotto anche in altre lingue. Le stringhe "
+"di traduzione si trovano nei seguenti componenti di traduzione:"
+
+#: translations.php:43
+msgid "Translating the Calendar"
+msgstr "Tradurre il calendario"
+
+#: translations.php:51
+msgid "Translating the Liturgical Calendar project"
+msgstr "Traduzione del progetto del Calendario Liturgico"
+
+#: translations.php:55
+msgid "Calendar data"
+msgstr "Dati del calendario"
+
+#: translations.php:58
+msgid "Project website"
+msgstr "Sito web del progetto"
+
+#. translators: %s = current selected date
+#: liturgyOfAnyDay.php:73
+#, php-format
+msgid "Liturgy of %s"
+msgstr "Liturgia di %s"
+
+#. translators: context = liturgical color
+#: src/LitColor.php:41
+msgid "pink"
+msgstr "rosa"
+
+#: src/LitCommon.php:57
+msgid "Proper"
+msgstr "Proprio"
+
+#. translators: context = from the Common of nn
+#: src/LitCommon.php:59
+msgid "Dedication of a Church"
+msgstr "Dedicazione di una Chiesa"
+
+#. translators: context = from the Common of nn
+#: src/LitCommon.php:61
+msgid "Blessed Virgin Mary"
+msgstr "Beata Vergine Maria"
+
+#. translators: context = from the Common of nn
+#: src/LitCommon.php:63
+msgid "Martyrs"
+msgstr "Martiri"
+
+#. translators: context = from the Common of nn
+#: src/LitCommon.php:65
+msgid "Pastors"
+msgstr "Pastori"
+
+#. translators: context = from the Common of nn
+#: src/LitCommon.php:67
+msgid "Doctors"
+msgstr "Dottori della Chiesa"
+
+#. translators: context = from the Common of nn
+#: src/LitCommon.php:69
+msgid "Virgins"
+msgstr "Vergini"
+
+#. translators: context = from the Common of nn
+#: src/LitCommon.php:71
+msgid "Holy Men and Women"
+msgstr "Santi e delle Sante"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:74
+msgid "For One Martyr"
+msgstr "Per un martire"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:76
+msgid "For Several Martyrs"
+msgstr "Per più martiri"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:78
+msgid "For Missionary Martyrs"
+msgstr "Per i martiri missionari"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:80
+msgid "For One Missionary Martyr"
+msgstr "Per un martire missionario"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:82
+msgid "For Several Missionary Martyrs"
+msgstr "Per più martiri missionari"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:84
+msgid "For a Virgin Martyr"
+msgstr "Per una vergine martire"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:86
+msgid "For a Holy Woman Martyr"
+msgstr "Per una santa martire"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:88
+msgid "For a Pope"
+msgstr "Per un papa"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:90
+msgid "For a Bishop"
+msgstr "Per un vescovo"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:92
+msgid "For One Pastor"
+msgstr "Per un pastore"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:94
+msgid "For Several Pastors"
+msgstr "Per più pastori"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:96
+msgid "For Founders of a Church"
+msgstr "Per i fondatori delle chiese"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:98
+msgid "For One Founder"
+msgstr "Per un fondatore"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:100
+msgid "For Several Founders"
+msgstr "Per più fondatori"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:102
+msgid "For Missionaries"
+msgstr "Per i missionari"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:104
+msgid "For One Virgin"
+msgstr "Per una vergine"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:106
+msgid "For Several Virgins"
+msgstr "Per più vergini"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:108
+msgid "For Several Saints"
+msgstr "Per più santi"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:110
+msgid "For One Saint"
+msgstr "Per un santo"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:112
+msgid "For an Abbot"
+msgstr "Per un abate"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:114
+msgid "For a Monk"
+msgstr "Per un monaco"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:116
+msgid "For a Nun"
+msgstr "Per una monaca"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:118
+msgid "For Religious"
+msgstr "Per i religiosi"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:120
+msgid "For Those Who Practiced Works of Mercy"
+msgstr "Per gli operatori di misericordia"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:122
+msgid "For Educators"
+msgstr "Per gli educatori"
+
+#. translators: context = from the Common of nn: nn
+#: src/LitCommon.php:124
+msgid "For Holy Women"
+msgstr "Per le sante"
+
+#. translators: (singular feminine) glue between "From the Common" and the actual common. Latin: leave empty!
+#: src/LitCommon.php:172 src/LitCommon.php:184
+msgctxt "(SING_FEMM)"
+msgid "of the"
+msgstr "della"
+
+#. translators: (plural feminine) glue between "From the Common" and the actual common. Latin: leave empty!
+#: src/LitCommon.php:175
+msgctxt "(PLUR_FEMM)"
+msgid "of"
+msgstr "delle"
+
+#. translators: (plural masculine) glue between "From the Common" and the actual common. Latin: leave empty!
+#: src/LitCommon.php:181
+msgctxt "(PLUR_MASC)"
+msgid "of"
+msgstr "dei"
+
+#. translators: (singular masculine) glue between "From the Common" and the actual common. Latin: leave empty!
+#: src/LitCommon.php:187
+msgctxt "(SING_MASC)"
+msgid "of the"
+msgstr "del"
+
+#: src/LitCommon.php:273
+msgid "From the Common"
+msgstr "Dal Comune"
+
+#. translators: when there are multiple possible commons, this will be the glue "or from the common of..."
+#: src/LitCommon.php:277
+msgid "or"
+msgstr "oppure"
+
+#. translators: liturgical rank. Keep lowercase
+#: src/LitGrade.php:102
+msgid "weekday"
+msgstr "feria"
+
+#. translators: liturgical rank. Keep Capitalized
+#: src/LitGrade.php:105
+msgid "Commemoration"
+msgstr "Commemorazione"
+
+#. translators: liturgical rank. Keep Capitalized
+#: src/LitGrade.php:108
+msgid "Optional memorial"
+msgstr "memoria facoltativa"
+
+#. translators: liturgical rank. Keep Capitalized
+#: src/LitGrade.php:111
+msgid "Memorial"
+msgstr "Memoria"
+
+#. translators: liturgical rank. Keep UPPERCASE
+#: src/LitGrade.php:114
+msgid "FEAST"
+msgstr "FESTA"
+
+#. translators: liturgical rank. Keep UPPERCASE
+#: src/LitGrade.php:117
+msgid "FEAST OF THE LORD"
+msgstr "FESTA DEL SIGNORE"
+
+#. translators: liturgical rank. Keep UPPERCASE
+#: src/LitGrade.php:120
+msgid "SOLEMNITY"
+msgstr "SOLENNITÀ"
+
+#. translators: liturgical rank. Keep lowercase
+#: src/LitGrade.php:123
+msgid "celebration with precedence over solemnities"
+msgstr "celebrazione con precedenza sulle solennità"
+
+#. translators: 1. BibleGet github url 2. Liturgical Calendar github url
+#: src/Utilities.php:115
+#, php-format
+msgid ""
+"Priest in the Diocese of Rome, author of the <a href=\"%1$s\" "
+"target=\"_blank\">BibleGet project</a> and of the <a href=\"%2$s\" "
+"target=\"_blank\">Liturgical Calendar project</a>"
+msgstr ""
+"Sacerdote della Diocesi di Roma, autore del progetto <a href=\"%1$s\" "
+"target=\"_blank\">BibleGet</a> e del progetto <a href=\"%2$s\" "
+"target=\"_blank\">Calendario Liturgico</a>"
+
+#: src/Utilities.php:124
 msgid ""
 "Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, "
 "Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
-"for Catholic IT Professionals"
+"for Catholic IT Professionals, contributed the bootstrap theming of the "
+"project website"
 msgstr ""
-"Sviluppatore software con sede a St. Paul, MN (USA), Co-Fondatore presso "
-"JobPost, Ingegnere Informatico presso Agile Orbit, Fondatore della Gilda di "
-"Sant'Isidoro per Professionisti IT Cattolici"
+"Sviluppatore software con sede a St. Paul, MN (USA), co-fondatore di "
+"JobPost, Senior Software Engineer presso Agile Orbit, fondatore della St. "
+"Isidore Guild per i professionisti IT cattolici, ha contribuito al tema "
+"bootstrap del sito web del progetto"
 
-#: about.php:25
-msgid "Full stack web developer"
-msgstr "Sviluppatore web full stack"
+#: src/Utilities.php:130
+msgid ""
+"Full stack web developer, contributed to the generation of the Open API "
+"documentation"
+msgstr ""
+"Sviluppatore web full stack, ha contribuito alla creazione della "
+"documentazione Open API"
 
-#: about.php:31
+#: src/Utilities.php:136
 msgid ""
 "Latin Liturgy Association of the Netherlands, contributed the national "
 "calendar for the Netherlands to this project with all related translations"
@@ -929,319 +1441,141 @@ msgstr ""
 "questo progetto con il calendario nazionale per i Paesi Bassi con tutte le "
 "relative traduzioni"
 
-#: about.php:60
+#: src/Utilities.php:142
 msgid ""
-"The Liturgical Calendar project is curated by a group of volunteer catholic "
-"programmers, seeking to serve the Church."
+"Senior software engineer at Strava, author of the ConfessIt app, contributed "
+"to the structuring of the JSON responses of the Liturgical Calendar API"
 msgstr ""
-"Il progetto del Calendario Liturgico viene curato da un gruppo di "
-"programmatori cattolici volontari, che cercano di rendere un servizio per la "
-"Chiesa."
+"Ingegnere informatico senior presso Strava, autore dell'app ConfessIt, ha "
+"contribuito alla strutturazione delle risposte JSON dell'API del Calendario "
+"Liturgico"
 
-#: about.php:66 about.php:74
-msgid "Liturgical Calendar - About us"
-msgstr "Calendario Liturgico - Chi siamo"
+#: src/Utilities.php:148
+msgid ""
+"Software Engineer and contributor to Salt + Light Television, contributed "
+"information about the dioceses of Latin rite"
+msgstr ""
+"Ingegnere informatico e collaboratore di Salt + Light Television, ha fornito "
+"informazioni sulle diocesi di rito latino"
 
-#: liturgyOfAnyDay.php:98
-msgid "Year"
-msgstr "Anno"
+#: src/Utilities.php:154
+msgid ""
+"Chancellor of the Diocese of Charlottetown, contributed liturgical calendar "
+"data for Canada in both English and French"
+msgstr ""
+"Cancelliere della Diocesi di Charlottetown, ha contribuito i dati del "
+"calendario liturgico per il Canada sia in inglese che in francese"
 
-#. translators: %s = current selected date
-#: liturgyOfAnyDay.php:105
-#, php-format
-msgid "Liturgy of %s"
-msgstr "Liturgia di %s"
+#: src/Utilities.php:220
+msgid "Choose from existing festivities"
+msgstr "Scegli dalle festività esistenti"
 
-#. translators: context = liturgical color
-#: includes/LitColor.php:35
-msgid "pink"
-msgstr "rosa"
+#: src/Utilities.php:222
+msgid ""
+"This festivity does not seem to exist? Please choose from a value in the "
+"list."
+msgstr ""
+"Questa festività non sembra esistere? Si prega scegliere da un valore "
+"nell'elenco."
 
-#: includes/LitCommon.php:56
-msgid "Proper"
-msgstr "Proprio"
+#: src/Utilities.php:226
+msgid "Property to change"
+msgstr "Proprietà da modificare"
 
-#. translators: context = from the Common of nn
-#: includes/LitCommon.php:58
-msgid "Dedication of a Church"
-msgstr "Dedicazione di una Chiesa"
+#: src/Utilities.php:229 src/FormControls.php:168
+msgid "Grade"
+msgstr "Grado"
 
-#. translators: context = from the Common of nn
-#: includes/LitCommon.php:60
-msgid "Blessed Virgin Mary"
-msgstr "Beata Vergine Maria"
-
-#. translators: context = from the Common of nn
-#: includes/LitCommon.php:62
-msgid "Martyrs"
-msgstr "Martiri"
-
-#. translators: context = from the Common of nn
-#: includes/LitCommon.php:64
-msgid "Pastors"
-msgstr "Pastori"
-
-#. translators: context = from the Common of nn
-#: includes/LitCommon.php:66
-msgid "Doctors"
-msgstr "Dottori della Chiesa"
-
-#. translators: context = from the Common of nn
-#: includes/LitCommon.php:68
-msgid "Virgins"
-msgstr "Vergini"
-
-#. translators: context = from the Common of nn
-#: includes/LitCommon.php:70
-msgid "Holy Men and Women"
-msgstr "Santi e delle Sante"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:73
-msgid "For One Martyr"
-msgstr "Per un martire"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:75
-msgid "For Several Martyrs"
-msgstr "Per più martiri"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:77
-msgid "For Missionary Martyrs"
-msgstr "Per i martiri missionari"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:79
-msgid "For One Missionary Martyr"
-msgstr "Per un martire missionario"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:81
-msgid "For Several Missionary Martyrs"
-msgstr "Per più martiri missionari"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:83
-msgid "For a Virgin Martyr"
-msgstr "Per una vergine martire"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:85
-msgid "For a Holy Woman Martyr"
-msgstr "Per una santa martire"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:87
-msgid "For a Pope"
-msgstr "Per un papa"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:89
-msgid "For a Bishop"
-msgstr "Per un vescovo"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:91
-msgid "For One Pastor"
-msgstr "Per un pastore"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:93
-msgid "For Several Pastors"
-msgstr "Per più pastori"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:95
-msgid "For Founders of a Church"
-msgstr "Per i fondatori delle chiese"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:97
-msgid "For One Founder"
-msgstr "Per un fondatore"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:99
-msgid "For Several Founders"
-msgstr "Per più fondatori"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:101
-msgid "For Missionaries"
-msgstr "Per i missionari"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:103
-msgid "For One Virgin"
-msgstr "Per una vergine"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:105
-msgid "For Several Virgins"
-msgstr "Per più vergini"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:107
-msgid "For Several Saints"
-msgstr "Per più santi"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:109
-msgid "For One Saint"
-msgstr "Per un santo"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:111
-msgid "For an Abbot"
-msgstr "Per un abate"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:113
-msgid "For a Monk"
-msgstr "Per un monaco"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:115
-msgid "For a Nun"
-msgstr "Per una monaca"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:117
-msgid "For Religious"
-msgstr "Per i religiosi"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:119
-msgid "For Those Who Practiced Works of Mercy"
-msgstr "Per gli operatori di misericordia"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:121
-msgid "For Educators"
-msgstr "Per gli educatori"
-
-#. translators: context = from the Common of nn: nn
-#: includes/LitCommon.php:123
-msgid "For Holy Women"
-msgstr "Per le sante"
-
-#. translators: (singular feminine) glue between "From the Common" and the actual common. Latin: leave empty!
-#: includes/LitCommon.php:170 includes/LitCommon.php:182
-msgctxt "(SING_FEMM)"
-msgid "of the"
-msgstr "della"
-
-#. translators: (plural feminine) glue between "From the Common" and the actual common. Latin: leave empty!
-#: includes/LitCommon.php:173
-msgctxt "(PLUR_FEMM)"
-msgid "of"
-msgstr "delle"
-
-#. translators: (plural masculine) glue between "From the Common" and the actual common. Latin: leave empty!
-#: includes/LitCommon.php:179
-msgctxt "(PLUR_MASC)"
-msgid "of"
-msgstr "dei"
-
-#. translators: (singular masculine) glue between "From the Common" and the actual common. Latin: leave empty!
-#: includes/LitCommon.php:185
-msgctxt "(SING_MASC)"
-msgid "of the"
-msgstr "del"
-
-#: includes/LitCommon.php:266
-msgid "From the Common"
-msgstr "Dal Comune"
-
-#. translators: when there are multiple possible commons, this will be the glue "or from the common of..."
-#: includes/LitCommon.php:270
-msgid "or"
-msgstr "oppure"
-
-#: includes/LitGrade.php:98
-msgid "weekday"
-msgstr "feria"
-
-#: includes/LitGrade.php:101
-msgid "Commemoration"
-msgstr "Commemorazione"
-
-#: includes/LitGrade.php:104
-msgid "Optional memorial"
-msgstr "Memoria facoltativa"
-
-#: includes/LitGrade.php:107
-msgid "Memorial"
-msgstr "Memoria"
-
-#: includes/LitGrade.php:110
-msgid "FEAST"
-msgstr "FESTA"
-
-#: includes/LitGrade.php:113
-msgid "FEAST OF THE LORD"
-msgstr "FESTA DEL SIGNORE"
-
-#: includes/LitGrade.php:116
-msgid "SOLEMNITY"
-msgstr "SOLENNITÀ"
-
-#: includes/LitGrade.php:119
-msgid "celebration with precedence over solemnities"
-msgstr "celebrazione con precedenza sulle solennità"
-
-#: layout/header.php:31 layout/header.php:96
-msgid "Extending the API"
-msgstr "Estendi l'API"
-
-#: layout/header.php:39
-msgid "Usage"
-msgstr "Utilizzo"
-
-#: layout/header.php:40
-msgid "Translations"
-msgstr "Traduzioni"
-
-#: layout/header.php:41
-msgid "About us"
-msgstr "Chi siamo"
-
-#: layout/header.php:88
-msgid "Home"
-msgstr "Home"
-
-#: layout/header.php:100
-msgid "Documentation"
-msgstr "Documentazione"
-
-#: layout/header.php:104
-msgid "Examples of Usage"
-msgstr "Esempi di Utilizzo"
-
-#: layout/formcontrols.php:110
+#: src/FormControls.php:121
 msgid "Common (or Proper)"
 msgstr "Comune (o Proprio)"
 
-#, fuzzy
-#~| msgid ""
-#~| "National calendars and their relative translations must be defined using "
-#~| "data from the translation of the Roman Missal used in the Region or in "
-#~| "any case from decrees of the Episcopal Conference of the Region."
-#~ msgid ""
-#~ "National calendars and related translations must be defined using data "
-#~ "from the translation of the Roman Missal used in the Region or in any "
-#~ "case from decrees of the Episcopal Conference of the Region."
-#~ msgstr ""
-#~ "I calendari nazionali e le relative traduzioni devono essere definiti "
-#~ "utilizzando i dati della traduzione del Messale Romano utilizzata nella "
-#~ "Regione o comunque da decreti della Conferenza Episcopale della Regione."
+#: layout/header.php:24 layout/header.php:88
+msgid "Extending the API"
+msgstr "Estendi l'API"
+
+#: layout/header.php:32
+msgid "Usage"
+msgstr "Utilizzo"
+
+#: layout/header.php:33
+msgid "Translations"
+msgstr "Traduzioni"
+
+#: layout/header.php:34
+msgid "About us"
+msgstr "Chi siamo"
+
+#: layout/header.php:80
+msgid "Home"
+msgstr "Home"
+
+#: layout/header.php:92
+msgid "Documentation"
+msgstr "Documentazione"
+
+#: layout/header.php:96
+msgid "Examples of Usage"
+msgstr "Esempi di Utilizzo"
+
+#~ msgid "Delete diocesan calendar"
+#~ msgstr "Rimuovi calendario diocesano"
+
+#~ msgid "You must choose a value from the list."
+#~ msgstr "Devi scegliere un valore dall'elenco."
+
+#~ msgid "Wider Region is multilingual"
+#~ msgstr "La Regione più ampia è multilingue"
 
 #~ msgid ""
-#~ "This can be done on the <a href=\"%1$s\">LitCal translation server</a>."
+#~ "Priest in the Diocese of Rome, self-taught programmer, author of the "
+#~ "BibleGet Project"
 #~ msgstr ""
-#~ "Per fare ciò si utilizzi il <a href=\"%1$s\">server delle traduzioni per "
-#~ "il progetto LitCal</a>."
+#~ "Sacerdote della Diocesi di Roma, programmatore autodidatta, autore del "
+#~ "Progetto BibleGet"
+
+#~ msgid "Full stack web developer"
+#~ msgstr "Sviluppatore web full stack"
+
+#~ msgid ""
+#~ "A Liturgical Calendar API from which you can retrieve data for the "
+#~ "Liturgical events of any given year from 1970 to 9999, whether for the "
+#~ "Universal or General Roman Calendar or for derived National and Diocesan "
+#~ "calendars"
+#~ msgstr ""
+#~ "Una API per il Calendario Liturgico, da cui estrarre i dati degli eventi "
+#~ "liturgici di un qualsiasi anno dal 1970 fino al 9999, sia per il "
+#~ "Calendario Romano Universale che per i calendari nazionali e diocesani "
+#~ "derivati"
+
+#~ msgid "API Endpoint"
+#~ msgstr "API endpoint"
+
+#~ msgid "Calendar to retrieve from the API"
+#~ msgstr "Calendario da reperire dall'API"
+
+#~ msgid ""
+#~ "If a national or diocesan calendar is requested, these calendars will "
+#~ "automatically set the specific options in the API request. If instead no "
+#~ "national or diocesan calendar is requested (i.e. the Universal Calendar "
+#~ "is requested) then the more specific options can be requested:"
+#~ msgstr ""
+#~ "Se viene richiesto un calendario nazionale o diocesano, questi stessi "
+#~ "calendari imposteranno in automatico vari parameteri della richiesta "
+#~ "(locale, epifania, corpuschristi, ascensione). Se invece non viene "
+#~ "richiesto alcun calendario nazionale o diocesano (ossia, viene richiesto "
+#~ "semplicemente il Calendario Universale), allora in quel caso è possibile "
+#~ "impostare i parametri più specificamente:"
+
+#~ msgid "LitCal Validator"
+#~ msgstr "Validatore LitCal"
+
+#~ msgid "Definition"
+#~ msgstr "Definizione"
+
+#~ msgid ""
+#~ "The Open API json schema for this API has been updated to OpenAPI 3.1."
+#~ msgstr "Lo schema JSON dell'API è stato aggiornato a OpenAPI 3.1."
 
 #~ msgid ""
 #~ "Specifically, the components which will require translation are: 1. <a "
@@ -1292,9 +1626,6 @@ msgstr "Comune (o Proprio)"
 #~ msgid "Retrieve existing data"
 #~ msgstr "Recupera dati esistenti"
 
-#~ msgid "Select calendar"
-#~ msgstr "Seleziona calendario"
-
 #~ msgid "Overwrites universal / national calendar"
 #~ msgstr "Sovrascrive il calendario universale / nazionale"
 
@@ -1303,9 +1634,6 @@ msgstr "Comune (o Proprio)"
 
 #~ msgid "Scripts"
 #~ msgstr "Script"
-
-#~ msgid "API endpoint"
-#~ msgstr "API"
 
 #~ msgid "Swagger / Open API Docs"
 #~ msgstr "Documentazione Swagger / OpenAPI"

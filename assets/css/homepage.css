@@ -17,7 +17,7 @@
     background-color: #eee;
     border: 1px solid Gray;
     border-radius: 6px;
-    padding: 12px;
+    padding: 6px 12px;
 }
 a#transl-status-btn.btn.btn-light {
     border: 3px solid lightgoldenrodyellow;

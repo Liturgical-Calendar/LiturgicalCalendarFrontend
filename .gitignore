@@ -110,3 +110,10 @@ credentials.php
 
 .php-ini
 .php-version
+
+/vendor/
+/**/.env
+/**/.env.*
+!/**/.env.example
+/**/.envrc
+!/**/.envrc.example
