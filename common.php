@@ -23,7 +23,7 @@ if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'development') {
 } else {
     $isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false );
     //$stagingURL = $isStaging ? "-staging" : "";
-    $endpointV = $isStaging ? "dev" : "v3";
+    $endpointV = $isStaging ? "dev" : "v4";
 
     $dateOfEasterURL    = "https://litcal.johnromanodorazio.com/api/{$endpointV}/easter/";
     $calendarURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/calendar";
