@@ -229,7 +229,7 @@ let litcalMetadata = null;
                 $('.requestOption').prop('disabled', true);
                 $('#APICalendarSelect').prop('disabled', false);
                 break;
-            case '/calendar/diocese/':
+            case '/calendar/diocese/': {
                 selectEl.innerHTML = CalendarSelect.diocesesInnerHtml;
                 if ( CurrentEndpoint.calendarType !== CalendarType.DIOCESAN ) {
                     CurrentEndpoint.calendarId   = encodeURIComponent(selectEl.value);
@@ -251,6 +251,7 @@ let litcalMetadata = null;
                 $('.requestOption').prop('disabled', true);
                 $('#APICalendarSelect').prop('disabled', false);
                 break;
+            }
         }
         $('#RequestURLExample').text(CurrentEndpoint.serialize());
         $('#RequestURLButton').attr('href', CurrentEndpoint.serialize());
@@ -278,7 +279,7 @@ let litcalMetadata = null;
                     });
                 }
                 break;
-            case 'diocesancalendar':
+            case 'diocesancalendar': {
                 let settings = null;
                 let diocesanCalendarObj = litcalMetadata.diocesan_calendars.filter(diocesanCalendarObj => diocesanCalendarObj.calendar_id === this.value)[0];
                 let nation = diocesanCalendarObj.nation;
@@ -304,6 +305,7 @@ let litcalMetadata = null;
                 CurrentEndpoint.calendarType = CalendarType.DIOCESAN;
                 CurrentEndpoint.calendarId   = this.value;
                 break;
+            }
         }
         //TODO: we should set the requestOption values to the current selected calendar's values
         //$('.requestOption').val('');
