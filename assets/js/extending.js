@@ -948,7 +948,7 @@ $(document).on('click', '#deleteCalendarConfirm', () => {
                     CalendarsIndex.wider_regions = CalendarsIndex.wider_regions.filter(el => el.name !== API.key);
                     CalendarsIndex.wider_regions_keys = CalendarsIndex.wider_regions_keys.filter(el => el !== API.key);
                     break;
-                case 'nation':
+                case 'nation': {
                     CalendarsIndex.national_calendars = CalendarsIndex.national_calendars.filter(el => el.calendar_id !== API.key);
                     CalendarsIndex.national_calendars_keys = CalendarsIndex.national_calendars_keys.filter(el => el !== API.key);
                     $('form#nationalCalendarSettingsForm')[0].reset();
@@ -963,6 +963,7 @@ $(document).on('click', '#deleteCalendarConfirm', () => {
                         $(this).val('').trigger('change');
                     });
                     break;
+                }
             }
             $('#removeExistingCalendarDataBtn').prop('disabled', true);
             $('#removeCalendarDataPrompt').remove();
