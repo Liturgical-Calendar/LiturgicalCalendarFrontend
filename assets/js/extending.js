@@ -502,7 +502,7 @@ $(document).on('change', '.calendarLocales', ev => {
     const updatedLocales = $(ev.currentTarget).val();
     console.log('updatedLocales:');
     console.log(updatedLocales);
-    const updatedLocalizationChoices = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, localeDisplayName]) => {
+    const updatedLocalizationChoices = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => {
         return updatedLocales.includes(localeIso);
     });
     document.querySelector('.currentLocalizationChoices').innerHTML = updatedLocalizationChoices.map(([localeIso, localeDisplayName]) => {
@@ -637,7 +637,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                     FormControls.settings.decreeURLField = true;
                     FormControls.settings.decreeLangMapField = true;
                     $('#widerRegionLocales').multiselect('deselectAll', false).multiselect('select', data.metadata.locales);
-                    const currentLocalizationChoices = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, localeDisplayName]) => {
+                    const currentLocalizationChoices = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => {
                         return data.metadata.locales.includes(localeIso);
                     });
                     document.querySelector('.currentLocalizationChoices').innerHTML = currentLocalizationChoices.map(([localeIso, localeDisplayName]) => {
@@ -653,7 +653,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                     $('#nationalCalendarSettingEpiphany').val( settings.epiphany );
                     $('#nationalCalendarSettingAscension').val( settings.ascension );
                     $('#nationalCalendarSettingCorpusChristi').val( settings.corpus_christi );
-                    const localesForNation = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, localeDisplayName]) => {
+                    const localesForNation = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => {
                         return localeIso.split('_').pop() === API.key;
                     });
                     document.querySelector('#nationalCalendarLocales').innerHTML = localesForNation.map(([localeIso, localeDisplayName]) => {
@@ -661,7 +661,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                     });
                     $('#nationalCalendarLocales').val(metadata.locales);
                     $('#nationalCalendarLocales').multiselect('rebuild');
-                    const currentLocalizationChoices = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, localeDisplayName]) => {
+                    const currentLocalizationChoices = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => {
                         return metadata.locales.includes(localeIso);
                     });
                     document.querySelector('.currentLocalizationChoices').innerHTML = currentLocalizationChoices.map(([localeIso, localeDisplayName]) => {
@@ -779,7 +779,7 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
                     case 'nation': {
                         $('form#nationalCalendarSettingsForm')[0].reset();
                         $('#publishedRomanMissalList').empty();
-                        const LocalesForRegion = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, localeDisplayName]) => {
+                        const LocalesForRegion = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => {
                             const jsLocaleStr = localeIso.replaceAll('_', '-');
                             const locale = new Intl.Locale(jsLocaleStr);
                             return locale.region === API.key;
@@ -1263,7 +1263,7 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
  */
 const setFocusFirstTabWithData = () => {
     let $firstInputWithNonEmptyValue = $('.carousel-item form .litEventName')
-        .filter(function(idx) {
+        .filter(function() {
             return $(this).val() !== "";
         })
         .first();
@@ -1489,7 +1489,7 @@ $(document).on('change', '#diocesanCalendarNationalDependency', ev => {
     $('body').find('#removeDiocesanCalendarPrompt').remove();
     const currentSelectedNation = $(ev.currentTarget).val();
     const DiocesesForNation = Object.freeze(DiocesesList.filter(item => item.country_iso.toUpperCase() === currentSelectedNation)[0].dioceses);
-    const LocalesForNation = Object.freeze(Object.entries(AvailableLocalesWithRegion).filter(([key, value]) => {
+    const LocalesForNation = Object.freeze(Object.entries(AvailableLocalesWithRegion).filter(([key, ]) => {
         return key.split('_' ).pop() === currentSelectedNation;
     }));
     $('#DiocesesList').empty();
@@ -1533,7 +1533,7 @@ $(document).on('change', '#diocesanCalendarDioceseName', ev => {
             }
             loadDiocesanCalendarData();
             document.querySelector('#diocesanCalendarLocales').value = diocesan_calendar.locales;
-            const LocalesForDiocese = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, localeDisplayName]) => {
+            const LocalesForDiocese = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => {
                 return diocesan_calendar.locales.includes(localeIso);
             });
             document.querySelector('#currentLocalization').innerHTML = LocalesForDiocese.map(item => `<option value="${item[0]}">${item[1]}</option>`).join('');
@@ -1719,11 +1719,11 @@ $(document).on('change', '.existingFestivityName', ev => {
     }
 });
 
-$(document).on('change', '#languageEditionRomanMissalName', ev => {
+$(document).on('change', '#languageEditionRomanMissalName', () => {
     $('#addLanguageEditionRomanMissal').prop('disabled', false);
 });
 
-$(document).on('click', '#addLanguageEditionRomanMissal', ev => {
+$(document).on('click', '#addLanguageEditionRomanMissal', () => {
     let languageEditionRomanMissal = sanitizeInput( $('#languageEditionRomanMissalName').val() );
     $('#publishedRomanMissalList').append(`<li class="list-group-item">${languageEditionRomanMissal}</li>`);
     let $modal = $(ev.currentTarget).closest('.modal');

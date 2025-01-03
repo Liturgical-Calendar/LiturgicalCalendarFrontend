@@ -895,7 +895,7 @@ const setCommonMultiselect = ($row=null,common=null) => {
         },
         maxHeight: 200,
         enableCaseInsensitiveFiltering: true,
-        onChange: (option, checked, select) => {
+        onChange: (option, checked) => {
             if (($(option).val() !== 'Proper' && checked === true && $(option).parent().val().includes('Proper')) || checked === false ) {
                 $(option).parent().multiselect('deselect', 'Proper');
                 $row = $(option).closest('.row');

@@ -164,12 +164,12 @@ $apiOptions->acceptHeaderInput->id('RequestOptionReturnType')->labelAfter($accep
                         <div class="text-center mb-2"><a href="https://litcal-tests.johnromanodorazio.com/" class="btn btn-primary mt-2"><?php echo _("Liturgical Calendar Validator"); ?></a></div>
                         <small class="text-muted">
                             <i>
-                                <?php echo sprintf(_(
-                                    "The unit tests are defined in the %s folder in the Liturgical Calendar API repository."),
+                                <?php echo sprintf(
+                                    _("The unit tests are defined in the %s folder in the Liturgical Calendar API repository."),
                                     "<a href=\"https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI/tree/development/jsondata/tests\">LiturgicalCalendarAPI/tree/development/jsondata/tests</a>"
                                 ); ?>
-                                <?php echo sprintf(_(
-                                    "The unit test interface is curated in a repository of its own: %s."),
+                                <?php echo sprintf(
+                                    _("The unit test interface is curated in a repository of its own: %s."),
                                     "<a href=\"https://github.com/Liturgical-Calendar/UnitTestInterface\">Liturgical-Calendar/UnitTestInterface</a>"
                                 ); ?>
                             </i>
