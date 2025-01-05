@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-05 03:14+0000\n"
+"POT-Creation-Date: 2025-01-05 04:18+0000\n"
 "PO-Revision-Date: 2025-01-02 23:11+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
@@ -998,7 +998,7 @@ msgstr "Liturgischer Kalender - Über uns"
 msgid "Liturgical Calendar as an HTML table produced by Javascript"
 msgstr "Liturgischer Kalender als HTML-Tabelle, erstellt mit Javascript"
 
-#: examples.php:129
+#: examples.php:132
 #, php-format
 msgid "Example '%s' not found"
 msgstr "Beispiel '%s' nicht gefunden"
