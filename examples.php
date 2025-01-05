@@ -106,6 +106,9 @@ $EXAMPLES = [
                     echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">';
                     echo '<link href="examples/fullcalendar/styles.css" rel="stylesheet" />';
                     break;
+                case "PHP":
+                    echo '<link href="examples/php/styles.css" rel="stylesheet" />';
+                    break;
             }
         }
     ?>
