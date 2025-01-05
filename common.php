@@ -1,10 +1,11 @@
 <?php
 
-use LiturgicalCalendar\Frontend\I18n;
-
 include_once("vendor/autoload.php");
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__, ['.env', '.env.local', '.env.development', '.env.production'], false);
+use LiturgicalCalendar\Frontend\I18n;
+use Dotenv\Dotenv;
+
+$dotenv = Dotenv::createImmutable(__DIR__, ['.env', '.env.local', '.env.development', '.env.production'], false);
 $dotenv->safeLoad();
 
 if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'development') {
