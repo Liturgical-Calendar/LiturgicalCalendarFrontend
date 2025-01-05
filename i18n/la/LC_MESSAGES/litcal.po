@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-03 21:58+0000\n"
+"POT-Creation-Date: 2025-01-05 03:14+0000\n"
 "PO-Revision-Date: 2024-12-31 15:34+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
@@ -122,7 +122,7 @@ msgstr "Parametri petitionis praesto in basi %s itineris"
 msgid "Request parameters available on all %1$s paths"
 msgstr "Parametri petitionis praesto in omnibus itineribus %1$s"
 
-#: index.php:80 usage.php:13 examples.php:28 liturgyOfAnyDay.php:24
+#: index.php:80 usage.php:13 examples.php:94 liturgyOfAnyDay.php:24
 msgid "General Roman Calendar"
 msgstr "Calendarium Romanum Generale"
 
@@ -990,7 +990,7 @@ msgstr "Calendarium Liturgicum - De nobis"
 msgid "Liturgical Calendar as an HTML table produced by Javascript"
 msgstr ""
 
-#: examples.php:56
+#: examples.php:129
 #, php-format
 msgid "Example '%s' not found"
 msgstr ""
