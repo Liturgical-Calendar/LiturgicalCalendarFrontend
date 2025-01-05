@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-05 03:14+0000\n"
+"POT-Creation-Date: 2025-01-05 04:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -858,7 +858,7 @@ msgstr ""
 msgid "Liturgical Calendar as an HTML table produced by Javascript"
 msgstr ""
 
-#: examples.php:129
+#: examples.php:132
 #, php-format
 msgid "Example '%s' not found"
 msgstr ""
