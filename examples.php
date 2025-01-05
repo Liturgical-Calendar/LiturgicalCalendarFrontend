@@ -94,23 +94,23 @@ $EXAMPLES = [
         echo _("General Roman Calendar");
     ?></title>
     <?php
-        include_once('layout/head.php');
-        // Since JavaScript is not an iframe, we need to ensure the CSS is loaded
-        if ($example) {
-            switch ($example) {
-                case "JavaScript":
-                    echo '<link rel="stylesheet" href="examples/javascript/styles.css">';
-                    break;
-                case "FullCalendar":
-                case "FullCalendarMessages":
-                    echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">';
-                    echo '<link href="examples/fullcalendar/styles.css" rel="stylesheet" />';
-                    break;
-                case "PHP":
-                    echo '<link href="examples/php/styles.css" rel="stylesheet" />';
-                    break;
-            }
+    include_once('layout/head.php');
+    // Since JavaScript is not an iframe, we need to ensure the CSS is loaded
+    if ($example) {
+        switch ($example) {
+            case "JavaScript":
+                echo '<link rel="stylesheet" href="examples/javascript/styles.css">';
+                break;
+            case "FullCalendar":
+            case "FullCalendarMessages":
+                echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">';
+                echo '<link href="examples/fullcalendar/styles.css" rel="stylesheet" />';
+                break;
+            case "PHP":
+                echo '<link href="examples/php/styles.css" rel="stylesheet" />';
+                break;
         }
+    }
     ?>
 </head>
 <body class="sb-nav-fixed">
