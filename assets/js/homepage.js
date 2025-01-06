@@ -83,7 +83,7 @@ ApiClient.init().then(apiClient => {
     if (false === apiClient || false === apiClient instanceof ApiClient) {
         alert('Error initializing the Liturgical Calendar API Client');
     } else {
-        const apiOptions = (new ApiOptions( 'en-US' ));
+        const apiOptions = (new ApiOptions( LITCAL_LOCALE ));
         apiOptions._localeInput.defaultValue( 'la' ).class( 'form-select requestOption' ).id('RequestOptionLocale');
         apiOptions._acceptHeaderInput.asReturnTypeParam().id('RequestOptionReturnType');
         apiOptions._yearInput.class( 'form-control' ).id('RequestOptionYear');
@@ -95,7 +95,7 @@ ApiClient.init().then(apiClient => {
         apiOptions._eternalHighPriestInput.id('RequestOptionEternalHighPriest').class( 'form-select requestOption' );
         apiOptions.filter( ApiOptionsFilter.PATH_BUILDER ).appendTo('#pathBuilder');
 
-        const calendarSelect = (new CalendarSelect( 'en-US' )).allowNull();
+        const calendarSelect = (new CalendarSelect( LITCAL_LOCALE )).allowNull();
         calendarSelect.label({
             class: 'form-label mb-1',
             id: 'calendarSelectLabel',
