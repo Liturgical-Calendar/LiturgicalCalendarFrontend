@@ -1,9 +1,5 @@
 <?php
 
-use LiturgicalCalendar\Components\ApiOptions;
-use LiturgicalCalendar\Components\ApiOptions\Input;
-use LiturgicalCalendar\Components\ApiOptions\PathType;
-
 include_once "common.php"; // provides $i18n and all API URLs
 
 $API_DESCRIPTION = _('Collection of Liturgical events for any given year between 1970 and 9999.') . " " .
@@ -53,26 +49,6 @@ $formLabelB = sprintf(
     _('Request parameters available on all %1$s paths'),
     '<b><code>/calendar/*</code></b>'
 );
-
-$options = [
-    "locale"    => $i18n->LOCALE,
-    "formLabel" => true,
-    "wrapper"   => true
-];
-$apiOptions = new ApiOptions($options);
-$apiOptions->wrapper->as('div')->class('row mb-4')->id('calendarOptions');
-$apiOptions->formLabel->as('h5')->class('fw-bold');
-Input::setGlobalWrapper('div');
-Input::setGlobalWrapperClass('form-group col-sm-2');
-Input::setGlobalInputClass('form-select requestOption');
-$apiOptions->epiphanyInput->id('RequestOptionEpiphany');
-$apiOptions->ascensionInput->id('RequestOptionAscension');
-$apiOptions->corpusChristiInput->id('RequestOptionCorpusChristi');
-$apiOptions->eternalHighPriestInput->id('RequestOptionEternalHighPriest');
-$apiOptions->localeInput->id('RequestOptionLocale')->labelAfter($localeLabelAfter)->class('form-select');
-$apiOptions->yearTypeInput->id('RequestOptionYearType')->class('form-select')->wrapperClass('form-group col-sm-3');
-$apiOptions->acceptHeaderInput->id('RequestOptionReturnType')->labelAfter($acceptLabelAfter)->class('form-select')->wrapperClass('form-group col-sm-3')->asReturnTypeParam();
-
 ?><!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
@@ -103,40 +79,26 @@ $apiOptions->acceptHeaderInput->id('RequestOptionReturnType')->labelAfter($accep
                     </div>
                     <div class="card-body">
                         <p><small class="text-muted"><i><?php echo $API_DESCRIPTION; ?></i></small></p>
-                        <div class="row mb-4">
+                        <div class="row mb-4" id="pathBuilder">
                             <h5 class="fw-bold"><?php
                                 echo _("Path builder");
                             ?></h5>
-                            <div class="form-group col-sm-3">
-                                <label><?php
-                                    echo _("Select route");
-                                ?></label>
-                                <select id="APICalendarRouteSelect" class="form-select">
-                                    <option value="/calendar">/calendar</option>
-                                    <option value="/calendar/nation/">/calendar/nation/</option>
-                                    <option value="/calendar/diocese/">/calendar/diocese/</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-sm-6">
-                                <label for="APICalendarSelect"><?php
-                                    echo _("Calendars available on selected route");
-                                ?></label>
-                                <select id="APICalendarSelect" class="form-select" disabled>
-                                    <option value="">GENERAL ROMAN</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-sm-3">
-                                <label><?php echo _("Year"); ?> <i class="fas fa-circle-info ms-2" data-bs-toggle="tooltip" data-bs-title="<?php echo _("When not specified, the API will default to the current year. Try specifically setting the year by changing the value here."); ?>"></i></label>
-                                <input id="RequestOptionYear" class="form-control" type="number" min=1970 max=9999 value=<?php echo date("Y"); ?> />
-                            </div>
+                        </div>
+                        <div class="row mb-4" id="requestParametersBasePath">
+                            <h5 class="fw-bold"><?php echo $formLabelA; ?></h5>
+                        </div>
+                        <div class="row mb-4" id="requestParametersAllPaths">
+                            <h5 class="fw-bold"><?php echo $formLabelB; ?></h5>
                         </div>
                         <?php
+                        /*
                         $apiOptions->formLabel->text($formLabelA);
                         $apiOptions->after($firstAfter);
                         echo $apiOptions->getForm(PathType::BASE_PATH);
                         $apiOptions->formLabel->text($formLabelB);
                         $apiOptions->after($secondAfter);
                         echo $apiOptions->getForm(PathType::ALL_PATHS);
+                        */
                         ?>
                         <div class="row align-items-center">
                             <div class="form-group col-sm-8">
