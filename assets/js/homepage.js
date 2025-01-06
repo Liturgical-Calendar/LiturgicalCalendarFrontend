@@ -88,7 +88,7 @@ ApiClient.init().then(apiClient => {
         apiOptions._acceptHeaderInput.asReturnTypeParam().id('RequestOptionReturnType');
         apiOptions._yearInput.class( 'form-control' ).id('RequestOptionYear');
         apiOptions._yearTypeInput.id('RequestOptionYearType');
-        apiOptions._calendarPathInput.class( 'form-select' ).id( 'APICalendarRouteSelect' );
+        apiOptions._calendarPathInput.id( 'APICalendarRouteSelect' ).class( 'form-select' );
         apiOptions._epiphanyInput.id('RequestOptionEpiphany').class( 'form-select requestOption' );
         apiOptions._ascensionInput.id('RequestOptionAscension').class( 'form-select requestOption' );
         apiOptions._corpusChristiInput.id('RequestOptionCorpusChristi').class( 'form-select requestOption' );
@@ -118,6 +118,12 @@ ApiClient.init().then(apiClient => {
             console.log('calendarFetch event received with data:', data );
         });
         */
+       const localeLabelAfter = document.querySelector('#localeLabelAfter');
+       const acceptLabelAfter = document.querySelector('#acceptLabelAfter');
+       const yearLabelAfter = document.querySelector('#yearLabelAfter');
+       apiOptions._localeInput._labelElement.insertAdjacentElement('beforeend', localeLabelAfter);
+       apiOptions._acceptHeaderInput._labelElement.insertAdjacentElement('beforeend', acceptLabelAfter);
+       apiOptions._yearInput._labelElement.insertAdjacentElement('beforeend', yearLabelAfter);
     }
 });
 
