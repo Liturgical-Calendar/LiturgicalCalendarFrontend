@@ -106,7 +106,11 @@ $formLabelB = sprintf(
                     */
                     ?>
                     <div id="pathBuilderComponent"></div>
-                    <small class="text-muted"><i><?php echo _("URL of the API request based on selected options. The button is set to the same URL, click on it to see results."); ?></i></small>
+                    <div class="row mb-4">
+                        <small class="text-muted">
+                            <i><?php echo _("URL of the API request based on selected options. The button is set to the same URL, click on it to see results."); ?></i>
+                        </small>
+                    </div>
                 </div>
             </div>
         </div>

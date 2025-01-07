@@ -46,7 +46,7 @@ ApiClient.init().then(apiClient => {
         apiOptions._yearInput._labelElement.insertAdjacentElement('beforeend', yearLabelAfter);
 
         const pathBuilder = new PathBuilder(apiOptions, calendarSelect)
-        .class('row align-items-center ps-2')
+        .class('row align-items-center ps-3')
         .pathWrapperClass('col-sm-8 border border-secondary rounded bg-light px-3 py-1')
         .buttonWrapperClass('col-sm-3')
         .buttonClass('btn btn-primary')
