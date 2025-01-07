@@ -105,19 +105,7 @@ $formLabelB = sprintf(
                     echo $apiOptions->getForm(PathType::ALL_PATHS);
                     */
                     ?>
-                    <div class="row align-items-center">
-                        <div class="form-group col-sm-8">
-                            <div id="RequestURLExampleWrapper">
-                                <small class="text-muted"><code id="RequestURLExample"><?php echo $calendarURL; ?></code></small>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-4">
-                            <a id="RequestURLButton" href="<?php echo $calendarURL; ?>" class="btn btn-primary m-2" target="_blank"><?php
-                                echo _("Liturgical Calendar API endpoint");
-                            ?></a>
-                        </div>
-                        <small class="text-muted"><i><?php echo _("URL of the API request based on selected options. The button is set to the same URL, click on it to see results."); ?></i></small>
-                    </div>
+                    <div id="pathBuilderComponent"></div>
                 </div>
             </div>
         </div>
