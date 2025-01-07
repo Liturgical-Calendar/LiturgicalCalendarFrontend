@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-07 23:23+0000\n"
+"POT-Creation-Date: 2025-01-07 23:32+0000\n"
 "PO-Revision-Date: 2025-01-02 23:11+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -138,11 +138,19 @@ msgstr "API %1$s koncový bod"
 msgid "Path builder"
 msgstr "Staviteľ cesty"
 
-#: index.php:115 index.php:119
+#: index.php:109
+msgid ""
+"URL of the API request based on selected options. The button is set to the "
+"same URL, click on it to see results."
+msgstr ""
+"URL požiadavky API na základe vybraných možností. Tlačidlo je nastavené na "
+"rovnakú URL, kliknite naň, aby ste videli výsledky."
+
+#: index.php:116 index.php:120
 msgid "Liturgical Calendar Validator"
 msgstr "Overovač liturgického kalendára"
 
-#: index.php:118
+#: index.php:119
 msgid ""
 "In order to verify that the liturgical data produced by the API is correct, "
 "there is a Unit Test interface that can run predefined tests against the "
@@ -154,7 +162,7 @@ msgstr ""
 "JSON odpovediam vytvoreným API od roku 1970 až do 25 rokov od aktuálneho "
 "roku."
 
-#: index.php:123
+#: index.php:124
 #, php-format
 msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
@@ -163,28 +171,28 @@ msgstr ""
 "Jednotkové testy sú definované v priečinku %s v repozitári Liturgického "
 "kalendára API."
 
-#: index.php:127
+#: index.php:128
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
 msgstr "Rozhranie jednotkového testu je spravované v samostatnom úložisku: %s."
 
-#: index.php:136
+#: index.php:137
 msgid "Translation Tool"
 msgstr "Nástroj na preklad"
 
-#: index.php:142 index.php:145
+#: index.php:143 index.php:146
 msgid "Translations status"
 msgstr "Stav prekladov"
 
-#: index.php:153
+#: index.php:154
 msgid "Open API Schema"
 msgstr "Otvoriť schému API"
 
-#: index.php:156
+#: index.php:157
 msgid "Swagger / Open API Documentation"
 msgstr "Swagger / Open API Dokumentácia"
 
-#: index.php:158
+#: index.php:159
 msgid ""
 "All of the available API routes with their supported methods, parameters, "
 "content types and responses are described here."
@@ -192,11 +200,11 @@ msgstr ""
 "Všetky dostupné API trasy s ich podporovanými metódami, parametrami, typmi "
 "obsahu a odpoveďami sú popísané tu."
 
-#: index.php:164 usage.php:184
+#: index.php:165 usage.php:184
 msgid "Calculation of the Date of Easter"
 msgstr "Výpočet dátumu Veľkej noci"
 
-#: index.php:167
+#: index.php:168
 msgid ""
 "A simple API endpoint that returns data about the Date of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -212,11 +220,11 @@ msgstr ""
 "(pozorovanú rímskokatolíckou cirkvou) a algoritmu Meeus pre juliánsku Veľkú "
 "noc (pozorovanú pravoslávnymi cirkvami)."
 
-#: index.php:172
+#: index.php:173
 msgid "Date of Easter API endpoint"
 msgstr "Dátum Veľkej noci API endpoint"
 
-#: index.php:174
+#: index.php:175
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
@@ -1461,13 +1469,6 @@ msgstr "Príklady použitia"
 
 #~ msgid "Liturgical Calendar API endpoint"
 #~ msgstr "Koncový bod API liturgického kalendára"
-
-#~ msgid ""
-#~ "URL of the API request based on selected options. The button is set to "
-#~ "the same URL, click on it to see results."
-#~ msgstr ""
-#~ "URL požiadavky API na základe vybraných možností. Tlačidlo je nastavené "
-#~ "na rovnakú URL, kliknite naň, aby ste videli výsledky."
 
 #~ msgid "Select route"
 #~ msgstr "Vyber trasu"
