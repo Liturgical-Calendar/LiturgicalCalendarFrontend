@@ -3,7 +3,7 @@
     "description": "Frontend website for the Liturgical Calendar API",
     "type": "library",
     "require": {
-        "liturgical-calendar/components": "^2.0",
+        "liturgical-calendar/components": "^3.1",
         "vlucas/phpdotenv": "^5.6"
     },
     "require-dev": {

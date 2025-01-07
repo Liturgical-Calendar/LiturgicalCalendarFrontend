@@ -57,12 +57,18 @@ console.log({
 <!-- Custom scripts for all pages-->
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/common.js"></script>
-
+<script type="importmap">
+    {
+        "imports": {
+            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@1.2.0/+esm"
+        }
+    }
+</script>
 <?php
     //some assets are only needed on certain pages
     $pageName = basename($_SERVER["SCRIPT_FILENAME"], '.php');
 if ($pageName === "index") {
-    echo '<script src="assets/js/homepage.js"></script>';
+    echo '<script type="module" src="assets/js/homepage.js"></script>';
 }
 if (in_array($pageName, [ "extending", "usage", "admin" ])) {
     echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/js/bootstrap-multiselect.min.js"></script>';
