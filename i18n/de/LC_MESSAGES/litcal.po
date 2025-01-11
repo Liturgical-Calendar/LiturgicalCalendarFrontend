@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-07 23:32+0000\n"
+"POT-Creation-Date: 2025-01-07 23:44+0000\n"
 "PO-Revision-Date: 2025-01-02 23:11+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
@@ -144,7 +144,7 @@ msgstr "API-Endpunkt %1$s"
 msgid "Path builder"
 msgstr "Pfad-Builder"
 
-#: index.php:109
+#: index.php:111
 msgid ""
 "URL of the API request based on selected options. The button is set to the "
 "same URL, click on it to see results."
@@ -152,11 +152,11 @@ msgstr ""
 "URL der API-Anfrage basierend auf den ausgewählten Optionen. Der Button ist "
 "auf dieselbe URL gesetzt, klicken Sie darauf, um die Ergebnisse zu sehen."
 
-#: index.php:116 index.php:120
+#: index.php:120 index.php:124
 msgid "Liturgical Calendar Validator"
 msgstr "Liturgischer Kalender-Validator"
 
-#: index.php:119
+#: index.php:123
 msgid ""
 "In order to verify that the liturgical data produced by the API is correct, "
 "there is a Unit Test interface that can run predefined tests against the "
@@ -168,7 +168,7 @@ msgstr ""
 "gegen die JSON-Antworten der API ausführen kann, beginnend ab dem Jahr 1970 "
 "und bis zu 25 Jahre ab dem aktuellen Jahr."
 
-#: index.php:124
+#: index.php:128
 #, php-format
 msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
@@ -177,29 +177,29 @@ msgstr ""
 "Die Unit-Tests sind im %s Ordner im Liturgischen Kalender-API-Repository "
 "definiert."
 
-#: index.php:128
+#: index.php:132
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
 msgstr ""
 "Die Unit-Test-Schnittstelle wird in einem eigenen Repository gepflegt: %s."
 
-#: index.php:137
+#: index.php:141
 msgid "Translation Tool"
 msgstr "Übersetzungstool"
 
-#: index.php:143 index.php:146
+#: index.php:147 index.php:150
 msgid "Translations status"
 msgstr "Übersetzungsstatus"
 
-#: index.php:154
+#: index.php:158
 msgid "Open API Schema"
 msgstr "Open API Schema"
 
-#: index.php:157
+#: index.php:161
 msgid "Swagger / Open API Documentation"
 msgstr "Swagger / Open API-Dokumentation"
 
-#: index.php:159
+#: index.php:163
 msgid ""
 "All of the available API routes with their supported methods, parameters, "
 "content types and responses are described here."
@@ -207,11 +207,11 @@ msgstr ""
 "Alle verfügbaren API-Routen mit ihren unterstützten Methoden, Parametern, "
 "Inhaltstypen und Antworten sind hier beschrieben."
 
-#: index.php:165 usage.php:184
+#: index.php:169 usage.php:184
 msgid "Calculation of the Date of Easter"
 msgstr "Berechnung des Osterdatums"
 
-#: index.php:168
+#: index.php:172
 msgid ""
 "A simple API endpoint that returns data about the Date of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -228,11 +228,11 @@ msgstr ""
 "katholischen Kirche) und des Meeus-Algorithmus für Julian Easter (von "
 "orthodoxen Kirchen beobachtet)"
 
-#: index.php:173
+#: index.php:177
 msgid "Date of Easter API endpoint"
 msgstr "Osterdatum API-Endpunkt"
 
-#: index.php:175
+#: index.php:179
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
