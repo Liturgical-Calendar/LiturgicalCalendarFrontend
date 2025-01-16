@@ -275,7 +275,7 @@ class FormControls {
 
         if (FormControls.settings.monthField) {
             formRow += `<div class="form-group col-sm-2">
-            <label for="onTheFly${FormControls.uniqid}Month"><span class="month-label">${Messages[ "Month" ]}</span><div class="form-check form-check-inline form-switch ms-2 ps-5 border border-secondary bg-light" title="switch on for mobile celebration as opposed to fixed date">
+            <label for="onTheFly${FormControls.uniqid}Month"><span class="month-label">${Messages[ "Month" ]}</span><div class="form-check form-check-inline form-switch ms-2 ps-5 border border-secondary bg-light align-bottom" title="switch on for mobile celebration as opposed to fixed date">
                 <label class="form-check-label me-1" for="onTheFly${FormControls.uniqid}StrtotimeSwitch">Mobile</label>
                 <input class="form-check-input litEvent litEventStrtotimeSwitch" type="checkbox" data-bs-toggle="toggle" data-bs-size="xs" data-bs-onstyle="info" data-bs-offstyle="dark" role="switch" id="onTheFly${FormControls.uniqid}StrtotimeSwitch">
             </div></label>
@@ -293,7 +293,7 @@ class FormControls {
 
         if(FormControls.settings.strtotimeField) {
             formRow += `<div class="form-group col-sm-3">
-            <label for="onTheFly${FormControls.uniqid}Strtotime"><span class="month-label">Relative date</span><div class="form-check form-check-inline form-switch ms-2 ps-5 border border-secondary bg-light" title="switch on for mobile celebration as opposed to fixed date">
+            <label for="onTheFly${FormControls.uniqid}Strtotime"><span class="month-label">Relative date</span><div class="form-check form-check-inline form-switch ms-2 ps-5 border border-secondary bg-light align-bottom" title="switch on for mobile celebration as opposed to fixed date">
                 <label class="form-check-label me-1" for="onTheFly${FormControls.uniqid}StrtotimeSwitch">Mobile</label>
                 <input class="form-check-input litEvent litEventStrtotimeSwitch" type="checkbox" data-bs-toggle="toggle" data-bs-size="xs" data-bs-onstyle="info" data-bs-offstyle="dark" role="switch" id="onTheFly${FormControls.uniqid}StrtotimeSwitch">
             </div></label>
@@ -877,17 +877,17 @@ class LitEvent {
 
 /**
  * Configures the multiselect for the liturgical common field of a festivity / liturgical event row.
- * @param {jQuery} $row - The jQuery object of the row to configure the multiselect for. If null, the function will configure all rows.
+ * @param {HTMLElement} row - The HTMLElement representing the row to configure the multiselect for. If null, the function will configure all rows.
  * @param {Array<string>} common - The values to select in the multiselect. If null, the function will select all values.
  */
-const setCommonMultiselect = ($row=null,common=null) => {
-    let $litEventCommon;
-    if( $row !== null ) {
-        $litEventCommon = $row.find('.litEventCommon');
+const setCommonMultiselect = (row=null, common=null) => {
+    let litEventCommon;
+    if( row !== null ) {
+        litEventCommon = row.querySelector('.litEventCommon');
     } else {
-        $litEventCommon = $('.litEventCommon');
+        litEventCommon = document.querySelectorAll('.litEventCommon');
     }
-    $litEventCommon.multiselect({
+    $(litEventCommon).multiselect({
         buttonWidth: '100%',
         buttonClass: 'form-select',
         templates: {
@@ -896,23 +896,27 @@ const setCommonMultiselect = ($row=null,common=null) => {
         maxHeight: 200,
         enableCaseInsensitiveFiltering: true,
         onChange: (option, checked) => {
-            if (($(option).val() !== 'Proper' && checked === true && $(option).parent().val().includes('Proper')) || checked === false ) {
-                $(option).parent().multiselect('deselect', 'Proper');
-                $row = $(option).closest('.row');
-                if( $row.find('.litEventReadings').length ) {
-                    $row.find('.litEventReadings').prop('disabled',true);
+            const selectEl = option.parentElement;
+            const selectedOptions = Array.from(selectEl.selectedOptions).map(({value}) => value);
+            if ((option.value !== 'Proper' && checked === true && selectedOptions.includes('Proper')) || checked === false ) {
+                $(selectEl).multiselect('deselect', 'Proper');
+                row = option.closest('.row');
+                const litEventReadingsEl = row.querySelector('.litEventReadings');
+                if( litEventReadingsEl ) {
+                    litEventReadingsEl.disabled = true;
                 }
-            } else if ($(option).val() === 'Proper' && checked === true) {
-                $(option).parent().multiselect('deselectAll', false).multiselect('select', 'Proper');
-                $row = $(option).closest('.row');
-                if( $row.find('.litEventReadings').length ) {
-                    $row.find('.litEventReadings').prop('disabled',false);
+            } else if (option.value === 'Proper' && checked === true) {
+                $(selectEl).multiselect('deselectAll', false).multiselect('select', 'Proper');
+                row = option.closest('.row');
+                const litEventReadingsEl = row.querySelector('.litEventReadings');
+                if( litEventReadingsEl ) {
+                    litEventReadingsEl.disabled = false;
                 }
             }
         }
     }).multiselect('deselectAll', false);
     if( common !== null ) {
-        $litEventCommon.multiselect('select', common);
+        $(litEventCommon).multiselect('select', common);
     }
 }
 
