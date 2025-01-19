@@ -51,9 +51,16 @@ class DiocesanCalendarDELETEPayload {
         const allowedProps = new Set(['diocese', 'nation']);
         this.diocese = diocese;
         this.nation = nation;
+
         return new Proxy( this, {
             get: (target, prop) => {
                 if ( allowedProps.has( prop ) || (prop === 'toJSON' && typeof target[prop] === 'function') ) {
+                    if (prop === 'toJSON') {
+                        return () => ({
+                            diocese: this.diocese,
+                            nation: this.nation
+                        });
+                    }
                     return Reflect.get(target, prop);
                 } else {
                     throw new Error( `Cannot access invalid property "${prop}".` );
