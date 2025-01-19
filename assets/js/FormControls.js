@@ -275,8 +275,8 @@ class FormControls {
 
         if (FormControls.settings.monthField) {
             formRow += `<div class="form-group col-sm-2">
-            <label for="onTheFly${FormControls.uniqid}Month"><span class="month-label">${Messages[ "Month" ]}</span><div class="form-check form-check-inline form-switch ms-2 ps-5 border border-secondary bg-light" title="switch on for mobile celebration as opposed to fixed date">
-                <label class="form-check-label me-1" for="onTheFly${FormControls.uniqid}StrtotimeSwitch">Mobile</label>
+            <label for="onTheFly${FormControls.uniqid}Month" class="d-flex justify-content-between align-items-end"><span class="month-label">${Messages[ "Month" ]}</span><div class="form-check form-check-inline form-switch me-0 ps-5 pe-2 border border-2 border-secondary rounded bg-light" title="switch on for mobile celebration as opposed to fixed date">
+                <label class="form-check-label" for="onTheFly${FormControls.uniqid}StrtotimeSwitch">Mobile</label>
                 <input class="form-check-input litEvent litEventStrtotimeSwitch" type="checkbox" data-bs-toggle="toggle" data-bs-size="xs" data-bs-onstyle="info" data-bs-offstyle="dark" role="switch" id="onTheFly${FormControls.uniqid}StrtotimeSwitch">
             </div></label>
             <select class="form-select litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month">`;
@@ -293,8 +293,8 @@ class FormControls {
 
         if(FormControls.settings.strtotimeField) {
             formRow += `<div class="form-group col-sm-3">
-            <label for="onTheFly${FormControls.uniqid}Strtotime"><span class="month-label">Relative date</span><div class="form-check form-check-inline form-switch ms-2 ps-5 border border-secondary bg-light" title="switch on for mobile celebration as opposed to fixed date">
-                <label class="form-check-label me-1" for="onTheFly${FormControls.uniqid}StrtotimeSwitch">Mobile</label>
+            <label for="onTheFly${FormControls.uniqid}Strtotime" class="d-flex justify-content-between align-items-end"><span class="month-label">Relative date</span><div class="form-check form-check-inline form-switch me-0 ps-5 pe-2 border border-2 border-secondary rounded bg-light" title="switch on for mobile celebration as opposed to fixed date">
+                <label class="form-check-label" for="onTheFly${FormControls.uniqid}StrtotimeSwitch">Mobile</label>
                 <input class="form-check-input litEvent litEventStrtotimeSwitch" type="checkbox" data-bs-toggle="toggle" data-bs-size="xs" data-bs-onstyle="info" data-bs-offstyle="dark" role="switch" id="onTheFly${FormControls.uniqid}StrtotimeSwitch">
             </div></label>
             <input type="text" class="form-control litEvent litEventStrtotime" id="onTheFly${FormControls.uniqid}Strtotime" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" />
@@ -403,7 +403,7 @@ class FormControls {
         formRow += `<div class="row gx-2 align-items-baseline">`;
 
         formRow += `<div class="form-group col-sm-6">`;
-        if(FormControls.settings.tagField === false){
+        if(FormControls.settings.tagField === false) {
             formRow += `<input type="hidden" class="litEventEvent_key" id="onTheFly${FormControls.uniqid}Tag" value="${festivity !== null ? festivity.event_key : ''}" />`;
         }
         formRow += `<label for="onTheFly${FormControls.uniqid}Name">${Messages[ "Name" ]}</label>
@@ -464,7 +464,7 @@ class FormControls {
         if (FormControls.settings.tagField) {
             formRow += `<div class="form-group col-sm-2">
             <label for="onTheFly${FormControls.uniqid}Tag">${Messages[ "Tag" ]}</label>
-            <input type="text" value="${festivity !== null ? festivity.event_key : ''}" class="form-control litEvent litEventTag" id="onTheFly${FormControls.uniqid}Tag" />
+            <input type="text" value="${festivity !== null ? festivity.event_key : ''}" class="form-control litEvent litEventEvent_key" id="onTheFly${FormControls.uniqid}Tag" />
             </div>`;
         }
 
@@ -661,7 +661,7 @@ class FormControls {
         if (FormControls.settings.tagField) {
             formRow += `<div class="form-group col-sm-2">
             <label for="onTheFly${FormControls.uniqid}Tag">${Messages[ "Tag" ]}</label>
-            <input type="text" value="${festivity !== null ? festivity.event_key : ''}" class="form-control litEvent litEventTag" id="onTheFly${FormControls.uniqid}Tag" />
+            <input type="text" value="${festivity !== null ? festivity.event_key : ''}" class="form-control litEvent litEventEvent_key" id="onTheFly${FormControls.uniqid}Tag" />
             </div>`;
         }
 
@@ -877,17 +877,17 @@ class LitEvent {
 
 /**
  * Configures the multiselect for the liturgical common field of a festivity / liturgical event row.
- * @param {jQuery} $row - The jQuery object of the row to configure the multiselect for. If null, the function will configure all rows.
+ * @param {HTMLElement} row - The HTMLElement representing the row to configure the multiselect for. If null, the function will configure all rows.
  * @param {Array<string>} common - The values to select in the multiselect. If null, the function will select all values.
  */
-const setCommonMultiselect = ($row=null,common=null) => {
-    let $litEventCommon;
-    if( $row !== null ) {
-        $litEventCommon = $row.find('.litEventCommon');
+const setCommonMultiselect = (row=null, common=null) => {
+    let litEventCommon;
+    if( row !== null ) {
+        litEventCommon = row.querySelector('.litEventCommon');
     } else {
-        $litEventCommon = $('.litEventCommon');
+        litEventCommon = document.querySelectorAll('.litEventCommon');
     }
-    $litEventCommon.multiselect({
+    $(litEventCommon).multiselect({
         buttonWidth: '100%',
         buttonClass: 'form-select',
         templates: {
@@ -896,23 +896,27 @@ const setCommonMultiselect = ($row=null,common=null) => {
         maxHeight: 200,
         enableCaseInsensitiveFiltering: true,
         onChange: (option, checked) => {
-            if (($(option).val() !== 'Proper' && checked === true && $(option).parent().val().includes('Proper')) || checked === false ) {
-                $(option).parent().multiselect('deselect', 'Proper');
-                $row = $(option).closest('.row');
-                if( $row.find('.litEventReadings').length ) {
-                    $row.find('.litEventReadings').prop('disabled',true);
+            const selectEl = option[0].parentElement;
+            const selectedOptions = Array.from(selectEl.selectedOptions).map(({value}) => value);
+            if ((option.value !== 'Proper' && checked === true && selectedOptions.includes('Proper')) || checked === false ) {
+                $(selectEl).multiselect('deselect', 'Proper');
+                row = option[0].closest('.row');
+                const litEventReadingsEl = row.querySelector('.litEventReadings');
+                if( litEventReadingsEl ) {
+                    litEventReadingsEl.disabled = true;
                 }
-            } else if ($(option).val() === 'Proper' && checked === true) {
-                $(option).parent().multiselect('deselectAll', false).multiselect('select', 'Proper');
-                $row = $(option).closest('.row');
-                if( $row.find('.litEventReadings').length ) {
-                    $row.find('.litEventReadings').prop('disabled',false);
+            } else if (option.value === 'Proper' && checked === true) {
+                $(selectEl).multiselect('deselectAll', false).multiselect('select', 'Proper');
+                row = option[0].closest('.row');
+                const litEventReadingsEl = row.querySelector('.litEventReadings');
+                if( litEventReadingsEl ) {
+                    litEventReadingsEl.disabled = false;
                 }
             }
         }
     }).multiselect('deselectAll', false);
     if( common !== null ) {
-        $litEventCommon.multiselect('select', common);
+        $(litEventCommon).multiselect('select', common);
     }
 }
 

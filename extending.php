@@ -97,6 +97,7 @@ $messages = [
     "Other Memorial"     => _("Other Memorial"),
     "Other Optional Memorial"   => _("Other Optional Memorial"),
     "Delete calendar"    => _("Delete calendar"),
+    "Delete diocesan calendar" => _("Delete diocesan calendar"),
     "If you choose"      => _("If you choose to delete this calendar, the liturgical events defined for the calendar and the corresponding index entries will be removed and no longer available in the client applications."),
     "Liturgical color"   => _("Liturgical color"),
     "white"              => _("white"),
@@ -335,7 +336,7 @@ if (isset($_GET["choice"])) {
         case "diocesan":
             FormControls::$settings["untilYearField"] = true;
             ?>
-                <div class="container">
+                <div class="container mb-5">
                     <form class="needs-validation" novalidate>
                         <div class="row justify-content-center align-items-baseline ">
                             <div class="form-group col col-md-3">
@@ -384,12 +385,18 @@ if (isset($_GET["choice"])) {
                             <div class="form-group col col-md-3">
                                 <label for="currentLocalization" class="fw-bold"><?php echo _("Current localization"); ?>:</label>
                                 <select class="form-select currentLocalizationChoices" id="currentLocalization">
+                                    <option value=""></option>
                                     <?php
-                                    echo "<option value=\"\"></option>";
                                     foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
                                         echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
                                     }
                                     ?>
+                                </select>
+                            </div>
+                            <div class="form-group col col-md-3">
+                                <label for="diocesanCalendarTimezone" class="fw-bold"><?php echo _("Timezone"); ?></label>
+                                <select class="form-select" id="diocesanCalendarTimezone">
+                                    <option value=""></option>
                                 </select>
                             </div>
                             <div class="col col-md-3 text-center align-self-end">
