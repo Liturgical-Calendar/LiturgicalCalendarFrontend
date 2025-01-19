@@ -56,7 +56,15 @@ let DiocesesList = null;
 let CalendarData = { litcal: [], i18n: {} };
 let MissalsIndex = null;
 let tzdata;
-let translationData = {};
+const translationData = {};
+const EventsCollection = {
+    [EventsURL]: {
+        [LOCALE]: FestivityCollection
+    }
+};
+const EventsCollectionKeys = {
+    [EventsURL]: FestivityCollection.map(el => el.event_key)
+}
 
 Promise.all([
     fetch('./assets/data/WorldDiocesesByNation.json', {
@@ -253,14 +261,25 @@ const API = new Proxy({
     method: ''
 }, sanitizeProxiedAPI);
 
-const translationTemplate = (locale, el) => {
+class DataLoader {
+    static lastRequestPath = '';
+    static lastRequestLocale = '';
+    static allLocalesLoaded = {};
+}
+
+class EventsLoader {
+    static lastRequestPath = '';
+    static lastRequestLocale = '';
+}
+
+const translationTemplate = (path, locale, el) => {
     const localeStr = locale.replace(/_/g, '-');
     const localeObj = new Intl.Locale(localeStr);
     const lang = localeObj.language.toUpperCase();
     const langWithRegion = AvailableLocalesWithRegion[locale];
     const eventKeyEl = el.parentElement.querySelector('.litEventEvent_key');
     const eventKey = eventKeyEl ? eventKeyEl.value : (el.dataset.hasOwnProperty('valuewas') ? el.dataset.valuewas : '');
-    const value = translationData[locale].hasOwnProperty(eventKey) ? ` value="${translationData[locale][eventKey]}"` : '';
+    const value = translationData[path][locale].hasOwnProperty(eventKey) ? ` value="${translationData[path][locale][eventKey]}"` : '';
     return `<div class="input-group input-group-sm mt-1">
             <label class="input-group-text font-monospace" for="${el.id}_${locale}" title="${langWithRegion}">${lang}</label>
             <input type="text" class="form-control litEvent litEventName_${lang}" id="${el.id}_${locale}" data-locale="${locale}"${value}>
@@ -272,8 +291,8 @@ const translationTemplate = (locale, el) => {
  */
 
 $(document).on('change', '.litEvent', ev => {
-    let row = ev.target.closest('.row');
-    let card = ev.target.closest('.card-body');
+    const row = ev.target.closest('.row');
+    const card = ev.target.closest('.card-body');
 
     if (ev.target.classList.contains('litEventName')) {
         //console.log('LitEvent name has changed');
@@ -318,7 +337,7 @@ $(document).on('change', '.litEvent', ev => {
                 if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
                     const currentLocalization = document.querySelector('#currentLocalization').value;
                     const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions).filter(({ value }) => value !== currentLocalization).map(({ value }) => value);
-                    const otherLocalizationsInputs = otherLocalizations.map(localization => translationTemplate(localization, ev.target));
+                    const otherLocalizationsInputs = otherLocalizations.map(localization => translationTemplate(API.path, localization, ev.target));
                     ev.target.insertAdjacentHTML('afterend', otherLocalizationsInputs.join(''));
                 }
                 CalendarData.litcal.push(newEvent);
@@ -562,7 +581,7 @@ $(document).on('click', '.onTheFlyEventRow', ev => {
 });
 
 
-$(document).on('change', '.calendarLocales', ev => {
+$(document).on('change', '.calendarLocales', () => {
     const calendarLocalesEl = document.querySelector('.calendarLocales');
     const updatedLocales = Array.from(calendarLocalesEl.selectedOptions).map(({ value }) => value);
     console.log('updatedLocales:', updatedLocales);
@@ -621,10 +640,256 @@ jQuery(document).ready(() => {
  * Wider Region and National Calendar interactions
  */
 
-$(document).on('change', '.regionalNationalCalendarName', ev => {
-    API.category = ev.target.dataset.category;
-    // our proxy will take care of splitting locale from wider region, when we are setting a wider region key
-    API.key = ev.target.value;
+const updateRegionalCalendarData = (data) => {
+    console.log( `successfully retrieved the data file for the ${API.category} ${API.key}` );
+    API.method = 'PATCH';
+    console.log(data);
+    switch(API.category) {
+        case 'widerregion': {
+            FormControls.settings.decreeURLField = true;
+            FormControls.settings.decreeLangMapField = true;
+            $('#widerRegionLocales').multiselect('deselectAll', false).multiselect('select', data.metadata.locales);
+            const currentLocalizationChoices = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => {
+                return data.metadata.locales.includes(localeIso);
+            });
+            document.querySelector('.currentLocalizationChoices').innerHTML = currentLocalizationChoices.map(([localeIso, localeDisplayName]) => {
+                return `<option value="${localeIso}">${localeDisplayName}</option>\n`;
+            });
+            document.querySelector('#currentLocalization').value = API.locale !== '' ? API.locale : data.metadata.locales[0];
+            break;
+        }
+        case 'nation': {
+            FormControls.settings.decreeURLField = true;
+            FormControls.settings.decreeLangMapField = false;
+            const { settings, metadata } = data;
+
+            document.querySelector('#nationalCalendarSettingEpiphany').value = settings.epiphany;
+            document.querySelector('#nationalCalendarSettingAscension').value = settings.ascension;
+            document.querySelector('#nationalCalendarSettingCorpusChristi').value = settings.corpus_christi;
+
+            const localesForNation = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => {
+                return localeIso.split('_').pop() === API.key;
+            });
+
+            // Rebuild the #nationalCalendarLocales select
+            const nationalCalendarLocalesSelect = document.querySelector('#nationalCalendarLocales');
+            nationalCalendarLocalesSelect.innerHTML = localesForNation.map(([localeIso, localeDisplayName]) => {
+                return `<option value="${localeIso}"${metadata.locales.includes(localeIso) ? ' selected' : ''}>${localeDisplayName}</option>\n`;
+            });
+            $('#nationalCalendarLocales').multiselect('rebuild');
+
+            // Rebuild the .currentLocalizationChoices select (same as #currentLocalization)
+            const currentLocalizationChoices = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => {
+                return metadata.locales.includes(localeIso);
+            });
+            document.querySelector('.currentLocalizationChoices').innerHTML = currentLocalizationChoices.map(([localeIso, localeDisplayName]) => {
+                return `<option value="${localeIso}">${localeDisplayName}</option>\n`;
+            });
+            document.querySelector('#currentLocalization').value = API.locale !== '' ? API.locale : metadata.locales[0];
+
+            // Rebuild the #publishedRomanMissalList
+            const publishedRomanMissalList = document.querySelector('#publishedRomanMissalList');
+            publishedRomanMissalList.innerHTML = metadata.missals.map(missal => `<li class="list-group-item">${missal}</li>`).join('');
+
+            document.querySelector('#associatedWiderRegion').value = metadata.wider_region;
+            document.querySelector('#nationalCalendarSettingHighPriest').checked = settings.eternal_high_priest;
+            break;
+        }
+    }
+    document.querySelector('.regionalNationalDataForm').innerHTML = '';
+    //console.log('EventLoader.lastRequestPath', EventsLoader.lastRequestPath);
+    //console.log('EventsCollectionKeys', EventsCollectionKeys);
+    data.litcal.forEach((el) => {
+        const currentUniqid = FormControls.uniqid;
+        const existingFestivityTag = el.festivity.event_key ?? null;
+        if ( el.metadata.action === RowAction.CreateNew && EventsCollectionKeys[EventsLoader.lastRequestPath].includes( existingFestivityTag ) ) {
+            el.metadata.action = RowAction.CreateNewFromExisting;
+        }
+        setFormSettings( el.metadata.action );
+        if ( el.metadata.action === RowAction.SetProperty ) {
+            setFormSettingsForProperty( el.metadata.property );
+        }
+        const rowStr = FormControls.CreatePatronRow( el );
+        const rowEls = $.parseHTML(rowStr);
+        document.querySelector('.regionalNationalDataForm').append(...rowEls);
+
+        const formrow = rowEls[1].querySelector('.form-group').closest('.row');
+        formrow.setAttribute('data-action', el.metadata.action);
+
+        if ( el.metadata.action === RowAction.SetProperty ) {
+            formrow.setAttribute('data-prop', el.metadata.property);
+        }
+
+        if ( el.festivity.hasOwnProperty('common') && el.festivity.common.includes('Proper') ) {
+            formrow.querySelector('.litEventReadings').disabled = false;
+        }
+
+        if ( FormControls.settings.missalField && existingFestivityTag !== null ) {
+            const { missal } = EventsCollection[EventsLoader.lastRequestPath][EventsLoader.lastRequestLocale].filter(el => el.event_key === existingFestivityTag)[0];
+            formrow.querySelector(`#onTheFly${currentUniqid}Missal`).value = missal;
+        }
+
+        $(formrow.querySelector('.litEventColor')).multiselect({
+            buttonWidth: '100%',
+            buttonClass: 'form-select',
+            templates: {
+                button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+            }
+        }).multiselect('deselectAll', false);
+
+        if ( el.festivity.hasOwnProperty( 'color' ) === false && existingFestivityTag !== null ) {
+            console.log( 'retrieving default festivity info for ' + existingFestivityTag );
+            console.log( EventsCollection[EventsLoader.lastRequestPath][EventsLoader.lastRequestLocale].filter( el => el.event_key === existingFestivityTag )[0] );
+            el.festivity.color = EventsCollection[EventsLoader.lastRequestPath][EventsLoader.lastRequestLocale].filter( el => el.event_key === existingFestivityTag )[0].color;
+        }
+
+        $(formrow.querySelector('.litEventColor')).multiselect('select', el.festivity.color);
+
+        if (FormControls.settings.colorField === false) {
+            $(formrow.querySelector('.litEventColor')).multiselect('disable');
+        }
+
+        if ( el.festivity.hasOwnProperty( 'common' ) ) {
+            if (FormControls.settings.commonFieldShow) {
+                setCommonMultiselect( formrow, el.festivity.common );
+                if (FormControls.settings.commonField === false) {
+                    $(formrow.querySelector(`#onTheFly${currentUniqid}Common`)).multiselect('disable');
+                }
+            }
+        }
+
+        if (FormControls.settings.gradeFieldShow) {
+            formrow.querySelector(`#onTheFly${currentUniqid}Grade`).value = el.festivity.grade;
+            if (FormControls.settings.gradeField === false) {
+                formrow.querySelector(`#onTheFly${currentUniqid}Grade`).disabled = true;
+            }
+        }
+
+        if (FormControls.settings.missalField && el.metadata.hasOwnProperty('missal') ) {
+            formrow.querySelector(`#onTheFly${currentUniqid}Missal`).value = el.metadata.missal;
+        }
+
+        if (FormControls.settings.monthField === false) {
+            formrow.querySelectorAll(`#onTheFly${currentUniqid}Month > option[value]:not([value="${el.festivity.month}"])`).forEach(el => { el.disabled = true; });
+        }
+    });
+    if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
+        const currentLocalization = document.querySelector('#currentLocalization').value;
+        const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions).filter(({ value }) => value !== currentLocalization).map(({ value }) => value);
+        console.log('otherLocalizations:', otherLocalizations);
+        if (DataLoader.lastRequestPath !== API.path) {
+            Promise.all(otherLocalizations.map(localization => fetch(API.path + '/' + localization).then(response => response.json()))).then(data => {
+                toastr["success"]("Calendar translation data was retrieved successfully", "Success");
+                if (false === translationData.hasOwnProperty(API.path)) {
+                    translationData[API.path] = {};
+                }
+                data.forEach((localizationData, i) => {
+                    translationData[API.path][otherLocalizations[i]] = localizationData;
+                });
+                console.log('translationData:', translationData);
+                resetOtherLocalizationInputs();
+                refreshOtherLocalizationInputs(otherLocalizations);
+                DataLoader.lastRequestPath = API.path;
+                DataLoader.lastRequestLocale = currentLocalization;
+            });
+        } else {
+            // We are requesting the same calendar, just with a different locale
+            // We don't need to reload ALL i18n data, just the data for the last locale, if we haven't already
+            if (DataLoader.allLocalesLoaded.hasOwnProperty(API.path)) {
+                resetOtherLocalizationInputs();
+                refreshOtherLocalizationInputs(otherLocalizations);
+            } else {
+                fetch(API.path + '/' + DataLoader.lastRequestLocale).then(response => response.json()).then(localizationData => {
+                    if (false === translationData.hasOwnProperty(API.path)) {
+                        translationData[API.path] = {};
+                    }
+                    translationData[API.path][DataLoader.lastRequestLocale] = localizationData;
+                    console.log('translationData:', translationData);
+                    resetOtherLocalizationInputs();
+                    refreshOtherLocalizationInputs(otherLocalizations);
+                    DataLoader.allLocalesLoaded[API.path] = true;
+                });
+            }
+        }
+    }
+
+    document.querySelector('.serializeRegionalNationalData').disabled = false;
+}
+
+const fetchRegionalCalendarData = (headers) => {
+    fetch(API.path, {
+        method: 'GET',
+        headers
+    }).then(response => {
+        if (response.ok) {
+            document.querySelector('#removeExistingCalendarDataBtn').disabled = false;
+            document.querySelector('body').insertAdjacentHTML('beforeend', removeCalendarModal(`${API.category}/${API.key}`, Messages));
+            return response.json();
+        } else {
+            document.querySelector('#removeExistingCalendarDataBtn').disabled = true;
+            document.querySelector('#removeCalendarPrompt').remove();
+            const localeOptions = Object.entries(AvailableLocalesWithRegion).map(([localeIso, localeDisplayName]) => {
+                return `<option value="${localeIso}">${localeDisplayName}</option>`;
+            });
+            if (API.category === 'nation') {
+                document.querySelector('#nationalCalendarSettingsForm').reset();
+                document.querySelector('#publishedRomanMissalList').innerHTML = '';
+                document.querySelector('#nationalCalendarLocales').innerHTML = localeOptions.join('\n');
+                document.querySelector('#currentLocalization').innerHTML = localeOptions.join('\n');
+                $('#nationalCalendarLocales').multiselect('rebuild');
+            } else {
+                document.querySelector('#widerRegionLocales').innerHTML = localeOptions.join('\n');
+                document.querySelector('#currentLocalization').innerHTML = localeOptions.join('\n');
+                $('#widerRegionLocales').multiselect('rebuild');
+            }
+
+            document.querySelectorAll('.regionalNationalSettingsForm .form-select:not([multiple])').forEach(formSelect => {
+                formSelect.value = '';
+                formSelect.dispatchEvent(new Event('change'));
+            });
+
+            return Promise.reject(response);
+        }
+    }).then(updateRegionalCalendarData).catch(error => {
+        if (404 === error.status || 400 === error.status) {
+            API.method = 'PUT';
+            error.json().then(json => {
+                const message = `${error.status} ${json.status} ${json.response}: ${json.description}<br />The Data File for the ${API.category} ${API.key} does not exist yet. Not that it's a big deal, just go ahead and create it now!`;
+                toastr["warning"](message, "Warning");
+                console.warn(message);
+            });
+            switch(API.category) {
+                case 'widerregion':
+                    $('#widerRegionLocales').multiselect('deselectAll', false);
+                    break;
+                case 'nation': {
+                    document.querySelector('#nationalCalendarSettingsForm').reset();
+                    document.querySelector('#publishedRomanMissalList').innerHTML = '';
+                    const LocalesForRegion = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => {
+                        const jsLocaleStr = localeIso.replaceAll('_', '-');
+                        const locale = new Intl.Locale(jsLocaleStr);
+                        return locale.region === API.key;
+                    });
+                    const localeOptions = LocalesForRegion.map(([localeIso, localeDisplayName]) => {
+                        return `<option value="${localeIso}">${localeDisplayName}</option>`;
+                    });
+                    document.querySelector('#nationalCalendarLocales').innerHTML = localeOptions.join('\n');
+                    break;
+                }
+            }
+            document.querySelector('.regionalNationalDataForm').innerHTML = '';
+        } else {
+            console.error(error);
+            /*error.json().then(json => {
+                console.error(json);
+                //We're taking for granted that the API is sending back a JSON object with status, response and description
+                toastr["error"](json.status + ' ' + json.response + ': ' + json.description, "Error");
+            });*/
+        }
+    });
+}
+
+const fetchEventsAndCalendarData = () => {
     let nationalCalendarNotExists = true;
 
     const headers = {
@@ -634,7 +899,8 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
     if ( API.category === 'nation' ) {
         const selectedNationalCalendar = LitCalMetadata.national_calendars.filter(item => item.calendar_id === API.key);
         if (selectedNationalCalendar.length > 0) {
-            API.locale = selectedNationalCalendar[0].locales[0];
+            const currentSelectedLocale = document.querySelector('#currentLocalization').value;
+            API.locale = selectedNationalCalendar[0].locales.includes(currentSelectedLocale) ? currentSelectedLocale : selectedNationalCalendar[0].locales[0];
             headers['Accept-Language'] = API.locale.replaceAll('_', '-');
             nationalCalendarNotExists = false;
         }
@@ -647,259 +913,40 @@ $(document).on('change', '.regionalNationalCalendarName', ev => {
         ? `${EventsURL}`
         : `${EventsURL}/${API.category}/${API.key}`;
 
-    fetch(eventsUrlForCurrentCategory, {
-        method: 'GET',
-        headers
-    }).then(response => {
-        if (response.ok) {
-            return response.json();
-        } else {
-            return Promise.reject(response);
+    // Only fetch events if we don't already have them
+    if (false === EventsCollection.hasOwnProperty(eventsUrlForCurrentCategory) || false === EventsCollection[eventsUrlForCurrentCategory].hasOwnProperty(API.locale)) {
+        if (false === EventsCollection.hasOwnProperty(eventsUrlForCurrentCategory)) {
+            EventsCollection[eventsUrlForCurrentCategory] = {};
         }
-    }).then(json => {
-        FestivityCollection = json.litcal_events;
-        FestivityCollectionKeys = FestivityCollection.map(el => el.event_key);
-        console.log( json.litcal_events );
-        document.querySelector('#existingFestivitiesList').innerHTML = FestivityCollection.map(el => `<option value="${el.event_key}">${el.name}</option>`).join('\n');
-    }).catch(error => {
-        console.error(error);
-    }).finally(() => {
-        fetch(API.path, {
+        fetch(eventsUrlForCurrentCategory, {
             method: 'GET',
             headers
         }).then(response => {
             if (response.ok) {
-                document.querySelector('#removeExistingCalendarDataBtn').disabled = false;
-                document.querySelector('body').insertAdjacentHTML('beforeend', removeCalendarModal(`${API.category}/${API.key}`, Messages));
                 return response.json();
             } else {
-                document.querySelector('#removeExistingCalendarDataBtn').disabled = true;
-                document.querySelector('#removeCalendarPrompt').remove();
-                const localeOptions = Object.entries(AvailableLocalesWithRegion).map(([localeIso, localeDisplayName]) => {
-                    return `<option value="${localeIso}">${localeDisplayName}</option>`;
-                });
-                if (API.category === 'nation') {
-                    document.querySelector('#nationalCalendarSettingsForm').reset();
-                    document.querySelector('#publishedRomanMissalList').innerHTML = '';
-                    document.querySelector('#nationalCalendarLocales').innerHTML = localeOptions.join('\n');
-                    document.querySelector('#currentLocalization').innerHTML = localeOptions.join('\n');
-                    $('#nationalCalendarLocales').multiselect('rebuild');
-                } else {
-                    document.querySelector('#widerRegionLocales').innerHTML = localeOptions.join('\n');
-                    document.querySelector('#currentLocalization').innerHTML = localeOptions.join('\n');
-                    $('#widerRegionLocales').multiselect('rebuild');
-                }
-
-                document.querySelectorAll('.regionalNationalSettingsForm .form-select:not([multiple])').forEach(formSelect => {
-                    formSelect.value = '';
-                    formSelect.dispatchEvent(new Event('change'));
-                });
-
                 return Promise.reject(response);
             }
-        }).then(data => {
-            console.log( `successfully retrieved the data file for the ${API.category} ${API.key}` );
-            API.method = 'PATCH';
-            console.log(data);
-            switch(API.category) {
-                case 'widerregion': {
-                    FormControls.settings.decreeURLField = true;
-                    FormControls.settings.decreeLangMapField = true;
-                    $('#widerRegionLocales').multiselect('deselectAll', false).multiselect('select', data.metadata.locales);
-                    const currentLocalizationChoices = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => {
-                        return data.metadata.locales.includes(localeIso);
-                    });
-                    document.querySelector('.currentLocalizationChoices').innerHTML = currentLocalizationChoices.map(([localeIso, localeDisplayName]) => {
-                        return `<option value="${localeIso}">${localeDisplayName}</option>\n`;
-                    });
-                    document.querySelector('#currentLocalization').value = API.locale !== '' ? API.locale : data.metadata.locales[0];
-                    break;
-                }
-                case 'nation': {
-                    FormControls.settings.decreeURLField = true;
-                    FormControls.settings.decreeLangMapField = false;
-                    const { settings, metadata } = data;
-
-                    document.querySelector('#nationalCalendarSettingEpiphany').value = settings.epiphany;
-                    document.querySelector('#nationalCalendarSettingAscension').value = settings.ascension;
-                    document.querySelector('#nationalCalendarSettingCorpusChristi').value = settings.corpus_christi;
-
-                    const localesForNation = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => {
-                        return localeIso.split('_').pop() === API.key;
-                    });
-
-                    // Rebuild the #nationalCalendarLocales select
-                    const nationalCalendarLocalesSelect = document.querySelector('#nationalCalendarLocales');
-                    nationalCalendarLocalesSelect.innerHTML = localesForNation.map(([localeIso, localeDisplayName]) => {
-                        return `<option value="${localeIso}"${metadata.locales.includes(localeIso) ? ' selected' : ''}>${localeDisplayName}</option>\n`;
-                    });
-                    $('#nationalCalendarLocales').multiselect('rebuild');
-
-                    // Rebuild the .currentLocalizationChoices select (same as #currentLocalization)
-                    const currentLocalizationChoices = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => {
-                        return metadata.locales.includes(localeIso);
-                    });
-                    document.querySelector('.currentLocalizationChoices').innerHTML = currentLocalizationChoices.map(([localeIso, localeDisplayName]) => {
-                        return `<option value="${localeIso}">${localeDisplayName}</option>\n`;
-                    });
-                    document.querySelector('#currentLocalization').value = API.locale !== '' ? API.locale : metadata.locales[0];
-
-                    // Rebuild the #publishedRomanMissalList
-                    const publishedRomanMissalList = document.querySelector('#publishedRomanMissalList');
-                    publishedRomanMissalList.innerHTML = metadata.missals.map(missal => `<li class="list-group-item">${missal}</li>`).join('');
-
-                    document.querySelector('#associatedWiderRegion').value = metadata.wider_region;
-                    document.querySelector('#nationalCalendarSettingHighPriest').checked = settings.eternal_high_priest;
-                }
-            }
-            document.querySelector('.regionalNationalDataForm').innerHTML = '';
-            data.litcal.forEach((el) => {
-                let currentUniqid = FormControls.uniqid;
-                let existingFestivityTag = el.festivity.event_key ?? null;
-                if ( el.metadata.action === RowAction.CreateNew && FestivityCollectionKeys.includes( existingFestivityTag ) ) {
-                    el.metadata.action = RowAction.CreateNewFromExisting;
-                }
-                setFormSettings( el.metadata.action );
-                if ( el.metadata.action === RowAction.SetProperty ) {
-                    setFormSettingsForProperty( el.metadata.property );
-                }
-                /*
-                if (FestivityCollectionKeys.includes( existingFestivityTag ) ) {
-                    if ( el.festivity.hasOwnProperty( 'name' ) === false ) {
-                        el.festivity.name = FestivityCollection.filter(el => el.event_key === existingFestivityTag)[0].name;
-                    }
-                    if ( el.festivity.hasOwnProperty( 'day' ) === false ) {
-                        el.festivity.day = FestivityCollection.filter(el => el.event_key === existingFestivityTag)[0].day;
-                    }
-                    if ( el.festivity.hasOwnProperty( 'month' ) === false ) {
-                        el.festivity.month = FestivityCollection.filter(el => el.event_key === existingFestivityTag)[0].month;
-                    }
-                    if ( el.festivity.hasOwnProperty( 'grade' ) === false ) {
-                        el.festivity.grade = FestivityCollection.filter(el => el.event_key === existingFestivityTag)[0].grade;
-                    }
-                }*/
-                let rowStr = FormControls.CreatePatronRow( el );
-                let rowEls = $.parseHTML(rowStr);
-                document.querySelector('.regionalNationalDataForm').append(...rowEls);
-
-                let formrow = rowEls[1].querySelector('.form-group').closest('.row');
-                formrow.setAttribute('data-action', el.metadata.action);
-
-                if ( el.metadata.action === RowAction.SetProperty ) {
-                    formrow.setAttribute('data-prop', el.metadata.property);
-                }
-
-                if ( el.festivity.hasOwnProperty('common') && el.festivity.common.includes('Proper') ) {
-                    formrow.querySelector('.litEventReadings').disabled = false;
-                }
-
-                if ( FormControls.settings.missalField && existingFestivityTag !== null ) {
-                    const { missal } = FestivityCollection.filter(el => el.event_key === existingFestivityTag)[0];
-                    formrow.querySelector(`#onTheFly${currentUniqid}Missal`).value = missal;
-                }
-
-                $(formrow.querySelector('.litEventColor')).multiselect({
-                    buttonWidth: '100%',
-                    buttonClass: 'form-select',
-                    templates: {
-                        button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
-                    }
-                }).multiselect('deselectAll', false);
-
-                if ( el.festivity.hasOwnProperty( 'color' ) === false && existingFestivityTag !== null ) {
-                    console.log( 'retrieving default festivity info for ' + existingFestivityTag );
-                    console.log( FestivityCollection.filter( el => el.event_key === existingFestivityTag )[0] );
-                    el.festivity.color = FestivityCollection.filter( el => el.event_key === existingFestivityTag )[0].color;
-                }
-
-                $(formrow.querySelector('.litEventColor')).multiselect('select', el.festivity.color);
-
-                if (FormControls.settings.colorField === false) {
-                    $(formrow.querySelector('.litEventColor')).multiselect('disable');
-                }
-
-                if ( el.festivity.hasOwnProperty( 'common' ) ) {
-                    if (FormControls.settings.commonFieldShow) {
-                        setCommonMultiselect( formrow, el.festivity.common );
-                        if (FormControls.settings.commonField === false) {
-                            $(formrow.querySelector(`#onTheFly${currentUniqid}Common`)).multiselect('disable');
-                        }
-                    }
-                }
-
-                if (FormControls.settings.gradeFieldShow) {
-                    formrow.querySelector(`#onTheFly${currentUniqid}Grade`).value = el.festivity.grade;
-                    if (FormControls.settings.gradeField === false) {
-                        formrow.querySelector(`#onTheFly${currentUniqid}Grade`).disabled = true;
-                    }
-                }
-
-                if (FormControls.settings.missalField && el.metadata.hasOwnProperty('missal') ) {
-                    formrow.querySelector(`#onTheFly${currentUniqid}Missal`).value = el.metadata.missal;
-                }
-
-                if (FormControls.settings.monthField === false) {
-                    formrow.querySelectorAll(`#onTheFly${currentUniqid}Month > option[value]:not([value="${el.festivity.month}"])`).forEach(el => { el.disabled = true; });
-                }
-            });
-            if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
-                const currentLocalization = document.querySelector('#currentLocalization').value;
-                const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions).filter(({ value }) => value !== currentLocalization).map(({ value }) => value);
-                Promise.all(otherLocalizations.map(localization => fetch(API.path + '/' + localization).then(response => response.json()))).then(data => {
-                    toastr["success"]("Calendar translation data was retrieved successfully", "Success");
-                    data.forEach((localizationData, i) => {
-                        translationData[otherLocalizations[i]] = localizationData;
-                    });
-                    console.log('translationData:', translationData);
-                    Array.from(document.querySelectorAll('.litEventName')).filter(el => el.dataset.valuewas !== '').forEach(el => {
-                        while (el.nextSibling) {
-                            el.nextSibling.remove();
-                        }
-                        const otherLocalizationsInputs = otherLocalizations.map(localization => translationTemplate(localization, el));
-                        el.insertAdjacentHTML('afterend', otherLocalizationsInputs.join(''));
-                    });
-                });
-            }
-
-            document.querySelector('.serializeRegionalNationalData').disabled = false;
+        }).then(json => {
+            EventsCollection[eventsUrlForCurrentCategory][API.locale] = json.litcal_events;
+            EventsCollectionKeys[eventsUrlForCurrentCategory] = EventsCollection[eventsUrlForCurrentCategory][API.locale].map(el => el.event_key);
+            EventsLoader.lastRequestPath = eventsUrlForCurrentCategory;
+            EventsLoader.lastRequestLocale = API.locale;
+            console.log( EventsCollection );
+            document.querySelector('#existingFestivitiesList').innerHTML = EventsCollection[eventsUrlForCurrentCategory][API.locale].map(el => `<option value="${el.event_key}">${el.name}</option>`).join('\n');
         }).catch(error => {
-            if (404 === error.status || 400 === error.status) {
-                API.method = 'PUT';
-                error.json().then(json => {
-                    const message = `${error.status} ${json.status} ${json.response}: ${json.description}<br />The Data File for the ${API.category} ${API.key} does not exist yet. Not that it's a big deal, just go ahead and create it now!`;
-                    toastr["warning"](message, "Warning");
-                    console.warn(message);
-                });
-                switch(API.category) {
-                    case 'widerregion':
-                        $('#widerRegionLocales').multiselect('deselectAll', false);
-                        break;
-                    case 'nation': {
-                        document.querySelector('#nationalCalendarSettingsForm').reset();
-                        document.querySelector('#publishedRomanMissalList').innerHTML = '';
-                        const LocalesForRegion = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => {
-                            const jsLocaleStr = localeIso.replaceAll('_', '-');
-                            const locale = new Intl.Locale(jsLocaleStr);
-                            return locale.region === API.key;
-                        });
-                        const localeOptions = LocalesForRegion.map(([localeIso, localeDisplayName]) => {
-                            return `<option value="${localeIso}">${localeDisplayName}</option>`;
-                        });
-                        document.querySelector('#nationalCalendarLocales').innerHTML = localeOptions.join('\n');
-                        break;
-                    }
-                }
-                document.querySelector('.regionalNationalDataForm').innerHTML = '';
-            } else {
-                console.error(error);
-                /*error.json().then(json => {
-                    console.error(json);
-                    //We're taking for granted that the API is sending back a JSON object with status, response and description
-                    toastr["error"](json.status + ' ' + json.response + ': ' + json.description, "Error");
-                });*/
-            }
-        });
-    });
+            console.error(error);
+        }).finally(fetchRegionalCalendarData(headers));
+    } else {
+        fetchRegionalCalendarData(headers);
+    }
+}
+
+$(document).on('change', '.regionalNationalCalendarName', ev => {
+    API.category = ev.target.dataset.category;
+    // our proxy will take care of splitting locale from wider region, when we are setting a wider region key
+    API.key = ev.target.value;
+    fetchEventsAndCalendarData();
 });
 
 $(document).on('click', '.datetype-toggle-btn', ev => {
@@ -951,7 +998,7 @@ $(document).on('click', '.actionPromptButton', ev => {
     const modal = ev.target.closest('.actionPromptModal');
     const modalForm = modal.querySelector('form');
     const existingFestivityTag = sanitizeInput( modalForm.querySelector('.existingFestivityName').value );
-    let existingFestivity = FestivityCollection.filter(festivity => festivity.event_key === existingFestivityTag)[0] ?? null;
+    let existingFestivity = EventsCollection[EventsLoader.lastRequestPath][EventsLoader.lastRequestLocale].filter(festivity => festivity.event_key === existingFestivityTag)[0] ?? null;
     let propertyToChange;
     let rowStr;
     let rowEls;
@@ -1011,7 +1058,7 @@ $(document).on('click', '.actionPromptButton', ev => {
     }
 
     if ( existingFestivityTag !== '' ) {
-        const litevent = FestivityCollection.filter(el => el.event_key === existingFestivityTag)[0];
+        const litevent = EventsCollection[EventsLoader.lastRequestPath][EventsLoader.lastRequestLocale].filter(el => el.event_key === existingFestivityTag)[0];
 
         if (FormControls.settings.gradeFieldShow) {
             formrow.querySelector(`#onTheFly${currentUniqid}Grade`).value = litevent.grade;
@@ -1389,6 +1436,45 @@ const setFocusFirstTabWithData = () => {
     document.querySelector(`#diocesanCalendarDefinitionCardLinks li:nth-child(${itemIndex+2})`).classList.add('active');
 }
 
+const refreshOtherLocalizationInputs = (otherLocalizations) => {
+    switch (API.category) {
+        case 'diocese': {
+            Array.from(document.querySelectorAll('.litEventName')).filter(el => el.dataset.valuewas !== '').forEach(el => {
+                const otherLocalizationsInputs = otherLocalizations.map(localization => translationTemplate(API.path, localization, el));
+                el.insertAdjacentHTML('afterend', otherLocalizationsInputs.join(''));
+            });
+            break;
+        }
+        default: {
+            Array.from(document.querySelectorAll('.litEventName')).filter(el => {
+                return (
+                    el.parentElement.querySelector('.litEventEvent_key')
+                    && (
+                        [
+                            RowAction.CreateNew,
+                            RowAction.CreateNewFromExisting,
+                            RowAction.MakePatron,
+                            RowAction.MakeDoctor
+                        ].includes(el.closest('.row').dataset.action)
+                        || (el.closest('.row').dataset.action === RowAction.SetProperty && el.closest('.row').dataset.prop === 'name')
+                    )
+                );
+            }).forEach(el => {
+                const otherLocalizationsInputs = otherLocalizations.map(localization => translationTemplate(API.path, localization, el));
+                el.insertAdjacentHTML('afterend', otherLocalizationsInputs.join(''));
+            });
+        }
+    }
+}
+
+const resetOtherLocalizationInputs = () => {
+    Array.from(document.querySelectorAll('.litEventName')).forEach(el => {
+        while (el.nextSibling) {
+            el.nextSibling.remove();
+        }
+    });
+}
+
 /**
  * @description Retrieves the data for the Diocesan Calendar associated with the currently selected diocese, and populates the edit form with the retrieved data.
  * @function loadDiocesanCalendarData
@@ -1442,20 +1528,42 @@ const loadDiocesanCalendarData = () => {
         if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
             const currentLocalization = document.querySelector('#currentLocalization').value;
             const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions).filter(({ value }) => value !== currentLocalization).map(({ value }) => value);
-            Promise.all(otherLocalizations.map(localization => fetch(API.path + '/' + localization).then(response => response.json()))).then(data => {
-                toastr["success"]("Diocesan Calendar translation data was retrieved successfully", "Success");
-                data.forEach((localizationData, i) => {
-                    translationData[otherLocalizations[i]] = localizationData;
-                });
-                console.log('translationData:', translationData);
-                Array.from(document.querySelectorAll('.litEventName')).filter(el => el.dataset.valuewas !== '').forEach(el => {
-                    while (el.nextSibling) {
-                        el.nextSibling.remove();
+            if (DataLoader.lastRequestPath !== API.path) {
+                // We are requesting a totally different calendar, we need to reload ALL i18n data
+                Promise.all(otherLocalizations.map(localization => fetch(API.path + '/' + localization).then(response => response.json()))).then(data => {
+                    toastr["success"]("Diocesan Calendar translation data was retrieved successfully", "Success");
+                    if (false === translationData.hasOwnProperty(API.path)) {
+                        translationData[API.path] = {};
                     }
-                    const otherLocalizationsInputs = otherLocalizations.map(localization => translationTemplate(localization, el));
-                    el.insertAdjacentHTML('afterend', otherLocalizationsInputs.join(''));
+                    data.forEach((localizationData, i) => {
+                        translationData[API.path][otherLocalizations[i]] = localizationData;
+                    });
+                    console.log('translationData:', translationData);
+                    resetOtherLocalizationInputs();
+                    refreshOtherLocalizationInputs(otherLocalizations);
+                    DataLoader.lastRequestPath = API.path;
+                    DataLoader.lastRequestLocale = currentLocalization;
                 });
-            });
+            }
+            else {
+                // We are requesting the same calendar, just with a different locale
+                // We don't need to reload ALL i18n data, just the data for the last locale, if we haven't already
+                if (DataLoader.allLocalesLoaded.hasOwnProperty(API.path)) {
+                    resetOtherLocalizationInputs();
+                    refreshOtherLocalizationInputs(otherLocalizations);
+                } else {
+                    fetch(API.path + '/' + DataLoader.lastRequestLocale).then(response => response.json()).then(localizationData => {
+                        if (false === translationData.hasOwnProperty(API.path)) {
+                            translationData[API.path] = {};
+                        }
+                        translationData[API.path][DataLoader.lastRequestLocale] = localizationData;
+                        console.log('translationData:', translationData);
+                        resetOtherLocalizationInputs();
+                        refreshOtherLocalizationInputs(otherLocalizations);
+                        DataLoader.allLocalesLoaded[API.path] = true;
+                    });
+                }
+            }
         }
 
         setFocusFirstTabWithData();
@@ -1723,6 +1831,7 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
     const selectedOption = document.querySelector(`#DiocesesList > option[value="${currentVal}"]`);
     if (selectedOption) {
         ev.target.classList.remove('is-invalid');
+        resetOtherLocalizationInputs();
         API.category = 'diocese';
         API.key = selectedOption.getAttribute('data-value');
         console.log('selected diocese with key = ' + API.key);
@@ -1996,6 +2105,13 @@ document.addEventListener('change', ev => {
     if (ev.target.id === 'currentLocalization') {
         if (API.category === 'diocese' && API.method === 'PATCH') {
             loadDiocesanCalendarData();
+        }
+        else if (API.method === 'PATCH') {
+            if (API.category === 'widerregion') {
+                document.querySelector('#widerRegionCalendarName').value = `${API.key} - ${ev.target.value}`;
+            }
+            API.locale = ev.target.value;
+            fetchEventsAndCalendarData();
         }
     }
 });
