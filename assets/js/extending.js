@@ -23,8 +23,7 @@ import {
 import {
     WiderRegionPayload,
     NationalCalendarPayload,
-    DiocesanCalendarPayload,
-    DiocesanCalendarDELETEPayload
+    DiocesanCalendarPayload
 } from './Payload.js';
 
 // the Messages global is set in extending.php
@@ -155,6 +154,8 @@ const sanitizeProxiedAPI = {
                     }
                     else if (target.hasOwnProperty('category') && target['category'] !== '') {
                         value = `${RegionalDataURL}/${target['category']}`;
+                    } else {
+                        value = `${RegionalDataURL}`;
                     }
                 }
                 break;
@@ -203,6 +204,7 @@ const sanitizeProxiedAPI = {
                     console.error(`property 'category=${target['category']}' of this object is not a valid value, possible values are: 'widerregion', 'nation' or 'diocese'`);
                     return;
                 }
+
                 if (target.hasOwnProperty('category') && target['category'] !== '') {
                     if (target.hasOwnProperty('method') && target['method'] === 'PUT') {
                         target['path'] = `${RegionalDataURL}/${target['category']}`;
@@ -232,6 +234,8 @@ const sanitizeProxiedAPI = {
                     }
                     else if (target.hasOwnProperty('category') && target['category'] !== '') {
                         target['path'] = `${RegionalDataURL}/${target['category']}`;
+                    } else {
+                        target['path'] = `${RegionalDataURL}`;
                     }
                 }
                 break;
@@ -1711,9 +1715,7 @@ const fillDiocesanFormWithData = (data) => {
         }
         row.querySelector('.litEventName').value = festivity.name;
         row.querySelector('.litEventName').setAttribute('data-valuewas', festivity.event_key);
-        //if (metadata.form_rownum > 2) {
-        //    $row.find('.litEventStrtotimeSwitch').bootstrapToggle();
-        //}
+
         if ( festivity.hasOwnProperty('strtotime') ) {
             if ( row.querySelectorAll('.litEventStrtotime').length === 0 ) {
                 switcheroo( row, metadata );
@@ -1829,7 +1831,7 @@ const diocesanCalendarNationalDependencyChanged = (ev) => {
 
 const diocesanCalendarDioceseNameChanged = (ev) => {
     const currentVal = sanitizeInput( ev.target.value );
-    CalendarData = { litcal: [] };
+    CalendarData = { litcal: [], i18n: {} };
     document.querySelectorAll('.carousel-item form').forEach(form => {
         form.reset();
         form.querySelectorAll('.row').forEach((row, idx) => {
@@ -1880,13 +1882,11 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
             loadDiocesanCalendarData();
         } else {
             API.method = 'PUT';
-            console.log(`API.method set to '${API.method}'`);
             document.querySelector('#removeExistingDiocesanDataBtn').disabled = true;
             const removePrompt = document.getElementById('removeDiocesanCalendarPrompt');
             if (removePrompt) {
                 removePrompt.remove();
             }
-            //console.log('no existing entry for this diocese');
         }
     } else {
         ev.target.classList.add('is-invalid');
@@ -1894,26 +1894,25 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
 }
 
 const deleteDiocesanCalendarConfirmClicked = () => {
-    API.category = 'diocese';
     const modalElement = document.getElementById('removeDiocesanCalendarPrompt');
     const modal = bootstrap.Modal.getInstance(modalElement);
-    console.log(modal);
     modal.toggle();
+    document.querySelector('#diocesanCalendarNationalDependency').focus();
+
+    API.method = 'DELETE';
+    API.category = 'diocese';
     const diocese = document.querySelector('#diocesanCalendarDioceseName').value;
     API.key = document.querySelector('#DiocesesList option[value="' + diocese + '"]').dataset.value;
-    const nation = document.querySelector('#diocesanCalendarNationalDependency').value;
-    /** @type {DiocesanCalendarDELETEPayload} */
-    const payload = new DiocesanCalendarDELETEPayload(diocese, nation);
+
     const headers = new Headers({
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Accept-Language': API.locale
+        'Accept': 'application/json'
     });
+
     const request = new Request(API.path, {
-        method: 'DELETE',
-        headers,
-        body: JSON.stringify( payload )
+        method: API.method,
+        headers
     });
+
     fetch(request).then(response => {
         if (response.ok) {
             LitCalMetadata.diocesan_calendars = LitCalMetadata.diocesan_calendars.filter(el => el.calendar_id !== API.key);
@@ -1978,6 +1977,13 @@ const saveDiocesanCalendar_btnClicked = () => {
     }
     API.locale = document.querySelector('#currentLocalization').value;
 
+    saveObj.payload.i18n[API.locale] = saveObj.payload.litcal.reduce((obj, item) => {
+        const festivityCopy = { ...item.festivity };
+        obj[festivityCopy.event_key] = festivityCopy.name;
+        delete item.festivity.name;
+        return obj;
+    }, {});;
+
     // if the diocese overrides Epiphany, Ascension and Corpus Christi settings compared to the national calendar, add the settings to the payload
     if ( diocesanOvveridesDefined() ) {
         saveObj.payload.settings = {};
@@ -2017,16 +2023,58 @@ const saveDiocesanCalendar_btnClicked = () => {
         if (API.locale !== '') {
             headers.append('Accept-Language', API.locale);
         }
+
+        const selectedOptions = document.querySelector('#diocesanCalendarLocales').selectedOptions;
+        saveObj.payload.metadata = {
+            locales: Array.from(selectedOptions).map(({ value }) => value),
+            timezone: document.querySelector('#diocesanCalendarTimezone').value
+        };
+
+        if (saveObj.payload.metadata.locales.length > 1) {
+            const eventKeys = Object.keys(saveObj.payload.i18n[API.locale]);
+
+            // Pre-fetch all elements with the class `litEventName` and `data-valuewas` attribute
+            const litEventNameElements = document.querySelectorAll(`.litEventName[data-valuewas]`);
+
+            // Create a Map for fast lookups of litEventNameElements by data-valuewas
+            const litEventNameMap = new Map();
+            litEventNameElements.forEach(el => {
+                litEventNameMap.set(el.dataset.valuewas, el);
+            });
+
+            eventKeys.forEach(eventKey => {
+                // Find the specific litEventNameEl
+                const litEventNameEl = litEventNameMap.get(eventKey);
+
+                if (litEventNameEl) {
+                    // Find all input elements with the data-locale attribute within the same parent
+                    const localeInputs = litEventNameEl.parentElement.querySelectorAll('input[data-locale]');
+
+                    localeInputs.forEach(el => {
+                        const locale = el.dataset.locale;
+                        const value = el.value;
+
+                        // Ensure the locale object exists in saveObj.payload.i18n
+                        if (false === saveObj.payload.i18n.hasOwnProperty(locale)) {
+                            saveObj.payload.i18n[locale] = {};
+                        }
+
+                        // Assign the value to the corresponding eventKey
+                        saveObj.payload.i18n[locale][eventKey] = value;
+                    });
+                }
+            });
+        }
+
         if (API.method === 'PUT') {
-            const selectedOptions = document.querySelector('#diocesanCalendarLocales').selectedOptions;
             saveObj.payload.metadata = {
-                locales: Array.from(selectedOptions).map(({ value }) => value),
+                ...saveObj.payload.metadata,
                 nation: document.querySelector('#diocesanCalendarNationalDependency').value,
                 diocese_id: diocese_key,
                 diocese_name: document.querySelector('#diocesanCalendarDioceseName').value,
-                timezone: document.querySelector('#diocesanCalendarTimezone').value
             };
         }
+
         const body = API.method === 'PATCH'
             ? JSON.stringify(saveObj.payload)
             : (
@@ -2034,15 +2082,13 @@ const saveDiocesanCalendar_btnClicked = () => {
                     ? JSON.stringify(saveObj)
                     : null
             );
-        console.log('path: ', API.path);
-        console.log('method: ', API.method);
-        console.log('headers: ', headers);
-        console.log('body: ', body);
+
         const request = new Request(API.path, {
             method: API.method,
             headers,
             body
         });
+
         fetch(request)
         .then(response => {
             if (!response.ok) {
@@ -2053,6 +2099,12 @@ const saveDiocesanCalendar_btnClicked = () => {
         .then(data => {
             console.log('Data returned from save action:', data);
             toastr["success"]("Diocesan Calendar was created or updated successfully", "Success");
+
+            document.querySelector('#removeExistingDiocesanDataBtn').disabled = false;
+
+            // Create "Remove diocesan data" modal
+            document.body.insertAdjacentHTML('beforeend', removeDiocesanCalendarModal(document.querySelector('#diocesanCalendarDioceseName').value, Messages));
+
         })
         .catch(error => {
             console.error('Error:', error);
