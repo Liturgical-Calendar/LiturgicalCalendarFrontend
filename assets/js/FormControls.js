@@ -896,18 +896,18 @@ const setCommonMultiselect = (row=null, common=null) => {
         maxHeight: 200,
         enableCaseInsensitiveFiltering: true,
         onChange: (option, checked) => {
-            const selectEl = option.parentElement;
+            const selectEl = option[0].parentElement;
             const selectedOptions = Array.from(selectEl.selectedOptions).map(({value}) => value);
             if ((option.value !== 'Proper' && checked === true && selectedOptions.includes('Proper')) || checked === false ) {
                 $(selectEl).multiselect('deselect', 'Proper');
-                row = option.closest('.row');
+                row = option[0].closest('.row');
                 const litEventReadingsEl = row.querySelector('.litEventReadings');
                 if( litEventReadingsEl ) {
                     litEventReadingsEl.disabled = true;
                 }
             } else if (option.value === 'Proper' && checked === true) {
                 $(selectEl).multiselect('deselectAll', false).multiselect('select', 'Proper');
-                row = option.closest('.row');
+                row = option[0].closest('.row');
                 const litEventReadingsEl = row.querySelector('.litEventReadings');
                 if( litEventReadingsEl ) {
                     litEventReadingsEl.disabled = false;
