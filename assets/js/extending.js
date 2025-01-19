@@ -280,7 +280,7 @@ const translationTemplate = (path, locale, el) => {
     const langWithRegion = AvailableLocalesWithRegion[locale];
     const eventKeyEl = el.parentElement.querySelector('.litEventEvent_key');
     const eventKey = eventKeyEl ? eventKeyEl.value : (el.dataset.hasOwnProperty('valuewas') ? el.dataset.valuewas : '');
-    const value = translationData[path][locale].hasOwnProperty(eventKey) ? ` value="${translationData[path][locale][eventKey]}"` : '';
+    const value = translationData?.[path]?.[locale]?.hasOwnProperty(eventKey) ? ` value="${translationData[path][locale][eventKey]}"` : '';
     return `<div class="input-group input-group-sm mt-1">
             <label class="input-group-text font-monospace" for="${el.id}_${locale}" title="${langWithRegion}">${lang}</label>
             <input type="text" class="form-control litEvent litEventName_${lang}" id="${el.id}_${locale}" data-locale="${locale}"${value}>
@@ -1803,7 +1803,7 @@ const diocesanCalendarNationalDependencyChanged = (ev) => {
     }
     if (localesForNation.length > 0) {
         const diocesanCalendarLocales = document.getElementById('diocesanCalendarLocales');
-        diocesanCalendarLocales.innerHTML = localesForNation.map(item => `<option value="${item[0]}">${item[1]}</option>`).join('');
+        diocesanCalendarLocales.innerHTML = localesForNation.map(item => `<option value="${item[0]}" selected>${item[1]}</option>`).join('');
         $(diocesanCalendarLocales).multiselect('rebuild');
         const currentLocalization = document.getElementById('currentLocalization');
         currentLocalization.innerHTML = localesForNation.map(item => `<option value="${item[0]}">${item[1]}</option>`).join('');
@@ -1999,7 +1999,6 @@ const saveDiocesanCalendar_btnClicked = () => {
                 }
                 el.classList.add('was-validated');
             });
-            console.log(`row`, row, `has eventName`, eventName, `with value`, eventName.value);
         }
     });
 
