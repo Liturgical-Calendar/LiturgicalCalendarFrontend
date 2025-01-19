@@ -66,25 +66,26 @@ const EventsCollectionKeys = {
     [EventsURL]: FestivityCollection.map(el => el.event_key)
 }
 
+const initialHeaders = new Headers({
+    'Accept': 'application/json'
+});
+const worldDiocesesRequest = new Request('./assets/data/WorldDiocesesByNation.json', {
+    method: 'GET',
+    headers: initialHeaders
+});
+const missalsRequest = new Request(MissalsURL, {
+    method: 'GET',
+    headers: initialHeaders
+});
+const tzdataRequest = new Request('https://raw.githubusercontent.com/vvo/tzdb/refs/heads/main/raw-time-zones.json', {
+    method: 'GET',
+    headers: initialHeaders
+});
+
 Promise.all([
-    fetch('./assets/data/WorldDiocesesByNation.json', {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json'
-        }
-    }),
-    fetch(MissalsURL, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json'
-        }
-    }),
-    fetch('https://raw.githubusercontent.com/vvo/tzdb/refs/heads/main/raw-time-zones.json', {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json'
-        }
-    })
+    fetch(worldDiocesesRequest),
+    fetch(missalsRequest),
+    fetch(tzdataRequest)
 ]).then(responses => {
     return Promise.all(responses.map((response) => {
         if (response.ok) {
@@ -817,10 +818,11 @@ const updateRegionalCalendarData = (data) => {
 }
 
 const fetchRegionalCalendarData = (headers) => {
-    fetch(API.path, {
+    const request = new Request(API.path, {
         method: 'GET',
         headers
-    }).then(response => {
+    });
+    fetch(request).then(response => {
         if (response.ok) {
             document.querySelector('#removeExistingCalendarDataBtn').disabled = false;
             document.querySelector('body').insertAdjacentHTML('beforeend', removeCalendarModal(`${API.category}/${API.key}`, Messages));
@@ -918,10 +920,11 @@ const fetchEventsAndCalendarData = () => {
         if (false === EventsCollection.hasOwnProperty(eventsUrlForCurrentCategory)) {
             EventsCollection[eventsUrlForCurrentCategory] = {};
         }
-        fetch(eventsUrlForCurrentCategory, {
+        const request = new Request(eventsUrlForCurrentCategory, {
             method: 'GET',
             headers
-        }).then(response => {
+        });
+        fetch(request).then(response => {
             if (response.ok) {
                 return response.json();
             } else {
@@ -1088,12 +1091,14 @@ $(document).on('click', '#deleteCalendarConfirm', () => {
     bootstrap.Modal.getInstance(removeCalendarDataPrompt).hide();
     API.key = document.querySelector('.regionalNationalCalendarName').value;
     API.category = document.querySelector('.regionalNationalCalendarName').dataset.category;
-    fetch(API.path, {
+    const headers = new Headers({
+        'Accept': 'application/json'
+    });
+    const request = new Request(API.path, {
         method: 'DELETE',
-        headers: {
-            'Accept': 'application/json'
-        }
-    }).then(response => {
+        headers
+    });
+    fetch(request).then(response => {
         if (response.ok) {
             switch ( API.category ) {
                 case 'widerregion':
@@ -1383,19 +1388,21 @@ $(document).on('click', '.serializeRegionalNationalData', ev => {
 
     const finalPayload = Object.freeze(new NationalCalendarPayload(payload.litcal, payload.settings, payload.metadata));
 
-    const headers = {
+    const headers = new Headers({
         'Content-Type': 'application/json',
         'Accept': 'application/json'
-    }
+    });
     if ( API.locale !== '' ) {
-        headers['Accept-Language'] = API.locale;
+        headers.append('Accept-Language', API.locale);
     }
 
-    fetch(API.path, {
+    const request = new Request(API.path, {
         method: API.method,
         headers,
-        body: JSON.stringify(payload)
-    })
+        body: JSON.stringify(finalPayload)
+    });
+
+    fetch(request)
     .then(response => {
         if (!response.ok) {
             return response.json().then(err => { throw err; });
@@ -1490,14 +1497,15 @@ const loadDiocesanCalendarData = () => {
 
     //let dioceseMetadata = LitCalMetadata.diocesan_calendars.filter(item => item.calendar_id === API.key)[0];
     API.locale = document.querySelector('#currentLocalization').value;
-    const headers = {
+    const headers = new Headers({
         'Accept': 'application/json',
         'Accept-Language': API.locale
-    }
-    fetch(API.path, {
+    });
+    const request = new Request(API.path, {
         method: 'GET',
         headers
-    }).then(response => {
+    });
+    fetch(request).then(response => {
         if (response.ok) {
             return response.json();
         } else if (response.status === 404) {
@@ -1888,14 +1896,17 @@ const deleteDiocesanCalendarConfirmClicked = () => {
     const nation = document.querySelector('#diocesanCalendarNationalDependency').value;
     /** @type {DiocesanCalendarDELETEPayload} */
     const payload = new DiocesanCalendarDELETEPayload(diocese, nation);
-    fetch(API.path, {
+    const headers = new Headers({
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Accept-Language': API.locale
+    });
+    const request = new Request(API.path, {
         method: 'DELETE',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
+        headers,
         body: JSON.stringify( payload )
-    }).then(response => {
+    });
+    fetch(request).then(response => {
         if (response.ok) {
             LitCalMetadata.diocesan_calendars = LitCalMetadata.diocesan_calendars.filter(el => el.calendar_id !== API.key);
             LitCalMetadata.diocesan_calendars_keys = LitCalMetadata.diocesan_calendars_keys.filter(el => el !== API.key);
@@ -1993,12 +2004,12 @@ const saveDiocesanCalendar_btnClicked = () => {
     });
 
     if ( formsValid ) {
-        const headers = {
+        const headers = new Headers({
             'Content-Type': 'application/json',
             'Accept': 'application/json'
-        };
+        });
         if (API.locale !== '') {
-            headers['Accept-Language'] = API.locale;
+            headers.append('Accept-Language', API.locale);
         }
         if (API.method === 'PUT') {
             const selectedOptions = document.querySelector('#diocesanCalendarLocales').selectedOptions;
@@ -2021,11 +2032,12 @@ const saveDiocesanCalendar_btnClicked = () => {
         console.log('method: ', API.method);
         console.log('headers: ', headers);
         console.log('body: ', body);
-        fetch(API.path, {
+        const request = new Request(API.path, {
             method: API.method,
             headers,
             body
-        })
+        });
+        fetch(request)
         .then(response => {
             if (!response.ok) {
                 return response.json().then(err => { throw err; });
