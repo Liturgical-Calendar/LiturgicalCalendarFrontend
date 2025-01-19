@@ -109,6 +109,8 @@ Promise.all([
     }
 
     tzdata = data[2];
+    const timezonesOptions = tzdata.map(tz => `<option value="${tz.name}" title="${tz.alternativeName} (${tz.mainCities.join(' - ')})">${tz.name} (${tz.abbreviation})</option>`);
+    document.querySelector('#diocesanCalendarTimezone').innerHTML = timezonesOptions.length ? timezonesOptions.join('') : '<option value=""></option>';
     toastr["success"]('Successfully retrieved time zone data', "Success");
 }).catch(error => {
     console.error(error);
@@ -847,7 +849,10 @@ const fetchRegionalCalendarData = (headers) => {
 
             document.querySelectorAll('.regionalNationalSettingsForm .form-select:not([multiple])').forEach(formSelect => {
                 formSelect.value = '';
-                formSelect.dispatchEvent(new Event('change'));
+                formSelect.dispatchEvent(new CustomEvent('change', {
+                    bubbles: true,
+                    cancelable: true
+                  }));
             });
 
             return Promise.reject(response);
@@ -1119,7 +1124,10 @@ $(document).on('click', '#deleteCalendarConfirm', () => {
 
                     document.querySelectorAll('.regionalNationalSettingsForm .form-select:not([multiple])').forEach(formSelect => {
                         formSelect.value = '';
-                        formSelect.dispatchEvent(new Event('change'));
+                        formSelect.dispatchEvent(new CustomEvent('change', {
+                            bubbles: true,
+                            cancelable: true
+                          }));
                     });
                     break;
                 }
@@ -1754,6 +1762,7 @@ const diocesanOvveridesDefined = () => {
  */
 
 const diocesanCalendarNationalDependencyChanged = (ev) => {
+    console.log('National dependency changed', ev);
     const currentSelectedNation = ev.target.value;
 
     // Disable "Remove diocesan data" button
@@ -1813,8 +1822,7 @@ const diocesanCalendarNationalDependencyChanged = (ev) => {
     }
 
     // Reset the list of timezones for the current selected nation
-    const timezonesForCountry = tzdata.filter(tz => tz.countryCode === currentSelectedNation);
-    console.log('timezonesForCountry = ', timezonesForCountry);
+    const timezonesForCountry = currentSelectedNation !== '' ? tzdata.filter(tz => tz.countryCode === currentSelectedNation): tzdata;
     const timezonesOptions = timezonesForCountry.map(tz => `<option value="${tz.name}" title="${tz.alternativeName} (${tz.mainCities.join(' - ')})">${tz.name} (${tz.abbreviation})</option>`);
     document.querySelector('#diocesanCalendarTimezone').innerHTML = timezonesOptions.length ? timezonesOptions.join('') : '<option value=""></option>';
 }
@@ -1911,14 +1919,11 @@ const deleteDiocesanCalendarConfirmClicked = () => {
             LitCalMetadata.diocesan_calendars = LitCalMetadata.diocesan_calendars.filter(el => el.calendar_id !== API.key);
             LitCalMetadata.diocesan_calendars_keys = LitCalMetadata.diocesan_calendars_keys.filter(el => el !== API.key);
 
-            document.getElementById('removeExistingDiocesanDataBtn').disabled = true;
-            const removePromptElement = document.getElementById('removeDiocesanCalendarPrompt');
-            if (removePromptElement) {
-                removePromptElement.remove();
-            }
-            document.getElementById('diocesanCalendarDioceseName').value = '';
             document.getElementById('diocesanCalendarNationalDependency').value = '';
-            document.getElementById('diocesanCalendarGroup').value = '';
+            document.getElementById('diocesanCalendarNationalDependency').dispatchEvent(new CustomEvent('change', {
+                bubbles: true,
+                cancelable: true
+              }));
 
             document.querySelectorAll('.carousel-item form').forEach(form => {
                 form.reset();
@@ -1943,6 +1948,8 @@ const deleteDiocesanCalendarConfirmClicked = () => {
                     litEventNames[i].setAttribute('data-valuewas', '');
                 }
             });
+            document.querySelector('#diocesanOverridesForm').reset();
+            resetOtherLocalizationInputs();
 
             toastr["success"](`Diocesan Calendar '${API.key}' was deleted successfully`, "Success");
             response.json().then(json => {
