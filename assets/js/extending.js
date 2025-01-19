@@ -1966,7 +1966,6 @@ const deleteDiocesanCalendarConfirmClicked = () => {
 }
 
 const saveDiocesanCalendar_btnClicked = () => {
-    //const nation = document.querySelector('#diocesanCalendarNationalDependency').value;
     const diocese = document.querySelector('#diocesanCalendarDioceseName').value;
     const option = document.querySelector('#DiocesesList option[value="' + diocese + '"]');
     const diocese_key = option ? option.getAttribute('data-value') : null;
@@ -1979,12 +1978,17 @@ const saveDiocesanCalendar_btnClicked = () => {
 
     saveObj.payload.i18n[API.locale] = saveObj.payload.litcal.reduce((obj, item) => {
         const festivityCopy = { ...item.festivity };
-        obj[festivityCopy.event_key] = festivityCopy.name;
-        delete item.festivity.name;
+        if (festivityCopy.hasOwnProperty('name')) {
+            obj[festivityCopy.event_key] = sanitizeInput(festivityCopy.name);
+            delete item.festivity.name;
+        } else {
+            obj[festivityCopy.event_key] = document.querySelector(`.litEventName[data-valuewas="${festivityCopy.event_key}"]`).value;
+        }
         return obj;
     }, {});;
 
-    // if the diocese overrides Epiphany, Ascension and Corpus Christi settings compared to the national calendar, add the settings to the payload
+    // If the diocesan calendar overrides the national calendar settings for Epiphany, Ascension and Corpus Christi,
+    // then we add these `settings` to the payload
     if ( diocesanOvveridesDefined() ) {
         saveObj.payload.settings = {};
         const epiphanyValue = document.querySelector('#diocesanCalendarOverrideEpiphany').value;
@@ -2001,8 +2005,8 @@ const saveDiocesanCalendar_btnClicked = () => {
         }
     }
 
+    // Check if forms are valid
     let formsValid = true;
-
     document.querySelectorAll('.carousel-item form .row').forEach(row => {
         if (row.querySelector('.litEventName').value !== '') {
             row.querySelectorAll('input,select').forEach(el => {
@@ -2015,6 +2019,7 @@ const saveDiocesanCalendar_btnClicked = () => {
         }
     });
 
+    // And if forms are valid, proceed to the API call
     if ( formsValid ) {
         const headers = new Headers({
             'Content-Type': 'application/json',
@@ -2026,10 +2031,15 @@ const saveDiocesanCalendar_btnClicked = () => {
 
         const selectedOptions = document.querySelector('#diocesanCalendarLocales').selectedOptions;
         saveObj.payload.metadata = {
+            nation: document.querySelector('#diocesanCalendarNationalDependency').value,
+            diocese_id: diocese_key,
+            diocese_name: document.querySelector('#diocesanCalendarDioceseName').value,
             locales: Array.from(selectedOptions).map(({ value }) => value),
             timezone: document.querySelector('#diocesanCalendarTimezone').value
         };
 
+        // If we are dealing with a multi-locale diocesan calendar,
+        // we need to build the i18n data for each locale
         if (saveObj.payload.metadata.locales.length > 1) {
             const eventKeys = Object.keys(saveObj.payload.i18n[API.locale]);
 
@@ -2066,22 +2076,8 @@ const saveDiocesanCalendar_btnClicked = () => {
             });
         }
 
-        if (API.method === 'PUT') {
-            saveObj.payload.metadata = {
-                ...saveObj.payload.metadata,
-                nation: document.querySelector('#diocesanCalendarNationalDependency').value,
-                diocese_id: diocese_key,
-                diocese_name: document.querySelector('#diocesanCalendarDioceseName').value,
-            };
-        }
-
-        const body = API.method === 'PATCH'
-            ? JSON.stringify(saveObj.payload)
-            : (
-                API.method === 'PUT'
-                    ? JSON.stringify(saveObj)
-                    : null
-            );
+        // For a patch request, we only need to provide the payload with `litcal` and `i18n` properties
+        const body = JSON.stringify(saveObj.payload);
 
         const request = new Request(API.path, {
             method: API.method,
@@ -2096,15 +2092,30 @@ const saveDiocesanCalendar_btnClicked = () => {
             }
             return response.json();
         })
-        .then(data => {
-            console.log('Data returned from save action:', data);
-            toastr["success"]("Diocesan Calendar was created or updated successfully", "Success");
+        .then(responseData => {
+            console.log('Data returned from save action:', responseData);
+            toastr["success"](responseData.success, "Success");
 
             document.querySelector('#removeExistingDiocesanDataBtn').disabled = false;
 
-            // Create "Remove diocesan data" modal
-            document.body.insertAdjacentHTML('beforeend', removeDiocesanCalendarModal(document.querySelector('#diocesanCalendarDioceseName').value, Messages));
+            // Create "Remove diocesan data" modal if it doesn't exist
+            const removePrompt = document.getElementById('removeDiocesanCalendarPrompt');
+            if (!removePrompt) {
+                document.body.insertAdjacentHTML('beforeend', removeDiocesanCalendarModal(document.querySelector('#diocesanCalendarDioceseName').value, Messages));
+            }
 
+            // If we just created a calendar, we should now set the method to PATCH to allow updating the calendar
+            // and update our global metadata to reflect the new calendar
+            if (API.method === 'PUT') {
+                LitCalMetadata.diocesan_calendars_keys.push(diocese_key);
+                LitCalMetadata.diocesan_calendars.push(responseData.data);
+                LitCalMetadata.national_calendars.filter(el => el.calendar_id === responseData.data.metadata.nation).forEach(el => {
+                    el.dioceses.push(responseData.data.metadata.diocese_id);
+                });
+                API.method = 'PATCH';
+                API.key = diocese_key;
+                API.locale = document.querySelector('#currentLocalization').value;
+            }
         })
         .catch(error => {
             console.error('Error:', error);

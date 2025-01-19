@@ -97,6 +97,7 @@ $messages = [
     "Other Memorial"     => _("Other Memorial"),
     "Other Optional Memorial"   => _("Other Optional Memorial"),
     "Delete calendar"    => _("Delete calendar"),
+    "Delete diocesan calendar" => _("Delete diocesan calendar"),
     "If you choose"      => _("If you choose to delete this calendar, the liturgical events defined for the calendar and the corresponding index entries will be removed and no longer available in the client applications."),
     "Liturgical color"   => _("Liturgical color"),
     "white"              => _("white"),
