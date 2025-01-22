@@ -2651,8 +2651,16 @@ document.addEventListener('change', (ev) => {
         document.querySelector('#addLanguageEditionRomanMissal').disabled = false;
     }
     if (ev.target.id === 'currentLocalization') {
-        if (API.category === 'diocese' && API.method === 'PATCH') {
-            loadDiocesanCalendarData();
+        if (API.category === 'diocese') {
+            if (API.method === 'PATCH') {
+                loadDiocesanCalendarData();
+            }
+            if (API.method === 'PUT') {
+                const currentLocalization = document.querySelector('#currentLocalization').value;
+                const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions).filter(({ value }) => value !== currentLocalization).map(({ value }) => value);
+                resetOtherLocalizationInputs();
+                refreshOtherLocalizationInputs(otherLocalizations);
+            }
         }
         else if (API.method === 'PATCH') {
             if (API.category === 'widerregion') {
