@@ -404,7 +404,7 @@ class FormControls {
 
         formRow += `<div class="form-group col-sm-6">`;
         if(FormControls.settings.tagField === false) {
-            formRow += `<input type="hidden" class="litEventEvent_key" id="onTheFly${FormControls.uniqid}Tag" value="${festivity !== null ? festivity.event_key : ''}" />`;
+            formRow += `<input type="hidden" class="litEventEventKey" id="onTheFly${FormControls.uniqid}Tag" value="${festivity !== null ? festivity.event_key : ''}" />`;
         }
         formRow += `<label for="onTheFly${FormControls.uniqid}Name">${Messages[ "Name" ]}</label>
         <input type="text" class="form-control litEvent litEventName${festivity !== null && typeof festivity.name==='undefined' ? ` is-invalid` : ``}" id="onTheFly${FormControls.uniqid}Name" value="${festivity !== null ? festivity.name : ''}"${FormControls.settings.nameField === false ? ' readonly' : ''} />
@@ -464,7 +464,7 @@ class FormControls {
         if (FormControls.settings.tagField) {
             formRow += `<div class="form-group col-sm-2">
             <label for="onTheFly${FormControls.uniqid}Tag">${Messages[ "Tag" ]}</label>
-            <input type="text" value="${festivity !== null ? festivity.event_key : ''}" class="form-control litEvent litEventEvent_key" id="onTheFly${FormControls.uniqid}Tag" />
+            <input type="text" value="${festivity !== null ? festivity.event_key : ''}" class="form-control litEvent litEventEventKey" id="onTheFly${FormControls.uniqid}Tag" />
             </div>`;
         }
 
@@ -591,7 +591,7 @@ class FormControls {
 
         formRow += `<div class="form-group col-sm-6">`;
         if(FormControls.settings.tagField === false){
-            formRow += `<input type="hidden" class="litEventEvent_key" id="onTheFly${FormControls.uniqid}Tag" value="${festivity !== null ? festivity.event_key : ''}" />`;
+            formRow += `<input type="hidden" class="litEventEventKey" id="onTheFly${FormControls.uniqid}Tag" value="${festivity !== null ? festivity.event_key : ''}" />`;
         }
         formRow += `<label for="onTheFly${FormControls.uniqid}Name">${Messages[ "Name" ]}</label>
         <input type="text" class="form-control litEvent litEventName${festivity !== null && typeof festivity.name==='undefined' ? ` is-invalid` : ``}" id="onTheFly${FormControls.uniqid}Name" value="${festivity !== null ? festivity.name : ''}"${FormControls.settings.nameField === false ? ' readonly' : ''} />
@@ -661,7 +661,7 @@ class FormControls {
         if (FormControls.settings.tagField) {
             formRow += `<div class="form-group col-sm-2">
             <label for="onTheFly${FormControls.uniqid}Tag">${Messages[ "Tag" ]}</label>
-            <input type="text" value="${festivity !== null ? festivity.event_key : ''}" class="form-control litEvent litEventEvent_key" id="onTheFly${FormControls.uniqid}Tag" />
+            <input type="text" value="${festivity !== null ? festivity.event_key : ''}" class="form-control litEvent litEventEventKey" id="onTheFly${FormControls.uniqid}Tag" />
             </div>`;
         }
 
@@ -877,8 +877,8 @@ class LitEvent {
 
 /**
  * Configures the multiselect for the liturgical common field of a festivity / liturgical event row.
- * @param {HTMLElement} row - The HTMLElement representing the row to configure the multiselect for. If null, the function will configure all rows.
- * @param {Array<string>} common - The values to select in the multiselect. If null, the function will select all values.
+ * @param {?HTMLElement} row - The HTMLElement representing the row to configure the multiselect for. If null, the function will configure all rows.
+ * @param {?Array<string>} common - The values to select in the multiselect. If null, the function will select all values.
  */
 const setCommonMultiselect = (row=null, common=null) => {
     let litEventCommon;
@@ -895,17 +895,28 @@ const setCommonMultiselect = (row=null, common=null) => {
         },
         maxHeight: 200,
         enableCaseInsensitiveFiltering: true,
+        /**
+         * Triggered when the selected values of the multiselect for the liturgical common field change.
+         * @param {HTMLOptionElement} option - The option that was selected or deselected.
+         * @param {boolean} checked - Whether the option was selected or deselected.
+         * @fires CustomEvent#change
+         */
         onChange: (option, checked) => {
             const selectEl = option[0].parentElement;
             const selectedOptions = Array.from(selectEl.selectedOptions).map(({value}) => value);
-            if ((option.value !== 'Proper' && checked === true && selectedOptions.includes('Proper')) || checked === false ) {
+            console.log('setCommonMultiselect: litEventCommon has changed, new value is: ', selectedOptions);
+            if (option[0].value !== 'Proper' && checked === true && selectedOptions.includes('Proper')) {
+                console.log('setCommonMultiselect: option[0].value:', option[0].value, 'checked:', checked, 'selectedOptions.includes(\'Proper\'):', selectedOptions.includes('Proper'));
+                console.log('setCommonMultiselect: deselecting Proper');
                 $(selectEl).multiselect('deselect', 'Proper');
                 row = option[0].closest('.row');
                 const litEventReadingsEl = row.querySelector('.litEventReadings');
                 if( litEventReadingsEl ) {
                     litEventReadingsEl.disabled = true;
                 }
-            } else if (option.value === 'Proper' && checked === true) {
+            } else if (option[0].value === 'Proper' && checked === true) {
+                console.log('setCommonMultiselect: option[0].value:', option[0].value, 'checked:', checked);
+                console.log('setCommonMultiselect: selecting Proper');
                 $(selectEl).multiselect('deselectAll', false).multiselect('select', 'Proper');
                 row = option[0].closest('.row');
                 const litEventReadingsEl = row.querySelector('.litEventReadings');
@@ -913,8 +924,13 @@ const setCommonMultiselect = (row=null, common=null) => {
                     litEventReadingsEl.disabled = false;
                 }
             }
+            selectEl.dispatchEvent(new CustomEvent('change', {
+                bubbles: true,
+                cancelable: true
+              }));
         }
     }).multiselect('deselectAll', false);
+
     if( common !== null ) {
         $(litEventCommon).multiselect('select', common);
     }
