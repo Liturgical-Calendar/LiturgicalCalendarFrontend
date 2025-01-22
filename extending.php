@@ -97,6 +97,7 @@ $messages = [
     "Other Memorial"     => _("Other Memorial"),
     "Other Optional Memorial"   => _("Other Optional Memorial"),
     "Delete calendar"    => _("Delete calendar"),
+    "Delete diocesan calendar" => _("Delete diocesan calendar"),
     "If you choose"      => _("If you choose to delete this calendar, the liturgical events defined for the calendar and the corresponding index entries will be removed and no longer available in the client applications."),
     "Liturgical color"   => _("Liturgical color"),
     "white"              => _("white"),
@@ -125,7 +126,8 @@ $messages = [
     "LOCALE_WITH_REGION" => $i18n->LOCALE_WITH_REGION,
     "AvailableLocales"   => $SystemLocalesWithoutRegion,
     "AvailableLocalesWithRegion"    => $SystemLocalesWithRegion,
-    "CountriesWithCatholicDioceses" => $CountriesWithCatholicDioceses
+    "CountriesWithCatholicDioceses" => $CountriesWithCatholicDioceses,
+    "DiocesesList"       => $CatholicDiocesesByNation
 ];
 
 $buttonGroup = "<hr><div class=\"d-flex justify-content-around\">
@@ -209,7 +211,10 @@ if (isset($_GET["choice"])) {
                             <?php echo $buttonGroup ?>
                         </div>
                         <div class="card-footer text-center">
-                            <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeWiderRegionData" data-category="widerregion" disabled><i class="fas fa-save me-2"></i><?php echo _("Save Wider Region Calendar Data") ?></button>
+                            <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeWiderRegionData" data-category="widerregion" disabled>
+                                <i class="fas fa-save me-2"></i>
+                                <?php echo _("Save Wider Region Calendar Data") ?>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -326,7 +331,10 @@ if (isset($_GET["choice"])) {
                             <?php echo $buttonGroup ?>
                         </div>
                         <div class="card-footer text-center">
-                            <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeNationalCalendarData" data-category="nation" disabled><i class="fas fa-save me-2"></i><?php echo _("Save National Calendar Data") ?></button>
+                            <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeNationalCalendarData" data-category="nation" disabled>
+                                <i class="fas fa-save me-2"></i>
+                                <?php echo _("Save National Calendar Data") ?>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -335,7 +343,7 @@ if (isset($_GET["choice"])) {
         case "diocesan":
             FormControls::$settings["untilYearField"] = true;
             ?>
-                <div class="container">
+                <div class="container mb-5">
                     <form class="needs-validation" novalidate>
                         <div class="row justify-content-center align-items-baseline ">
                             <div class="form-group col col-md-3">
@@ -384,16 +392,25 @@ if (isset($_GET["choice"])) {
                             <div class="form-group col col-md-3">
                                 <label for="currentLocalization" class="fw-bold"><?php echo _("Current localization"); ?>:</label>
                                 <select class="form-select currentLocalizationChoices" id="currentLocalization">
+                                    <option value=""></option>
                                     <?php
-                                    echo "<option value=\"\"></option>";
                                     foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
                                         echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
                                     }
                                     ?>
                                 </select>
                             </div>
+                            <div class="form-group col col-md-3">
+                                <label for="diocesanCalendarTimezone" class="fw-bold"><?php echo _("Timezone"); ?></label>
+                                <select class="form-select" id="diocesanCalendarTimezone">
+                                    <option value=""></option>
+                                </select>
+                            </div>
                             <div class="col col-md-3 text-center align-self-end">
-                                <button class="btn btn-danger" id="removeExistingDiocesanDataBtn" disabled data-bs-toggle="modal" data-bs-target="#removeDiocesanCalendarPrompt"><?php echo _("Remove existing data"); ?></button>
+                                <button class="btn btn-danger" id="removeExistingDiocesanDataBtn" disabled data-bs-toggle="modal" data-bs-target="#removeDiocesanCalendarPrompt">
+                                    <i class="far fa-trash-alt me-2"></i>
+                                    <?php echo _("Remove existing data"); ?>
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -550,7 +567,10 @@ if (isset($_GET["choice"])) {
                 <div class="container">
                     <div class="row">
                         <div class="col text-center">
-                            <button class="btn btn-lg btn-primary m-1" id="saveDiocesanCalendar_btn"><?php echo _("SAVE DIOCESAN CALENDAR") ?></button>
+                            <button class="btn btn-lg btn-primary m-1" id="saveDiocesanCalendar_btn">
+                                <i class="fas fa-save me-2"></i>
+                                <?php echo _("SAVE DIOCESAN CALENDAR") ?>
+                            </button>
                         </div>
                     </div>
                 </div>
