@@ -375,7 +375,14 @@ const domContentLoadedCallback = () => {
             button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
         },
         maxHeight: 200,
-        enableCaseInsensitiveFiltering: true
+        enableCaseInsensitiveFiltering: true,
+        onChange: (option) => {
+            const selectEl = option[0].parentElement;
+            selectEl.dispatchEvent(new CustomEvent('change', {
+                bubbles: true,
+                cancelable: true
+              }));
+        }
     });
 
     setCommonMultiselect(null, null);
