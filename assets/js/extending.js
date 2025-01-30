@@ -375,7 +375,14 @@ const domContentLoadedCallback = () => {
             button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
         },
         maxHeight: 200,
-        enableCaseInsensitiveFiltering: true
+        enableCaseInsensitiveFiltering: true,
+        onChange: (option) => {
+            const selectEl = option[0].parentElement;
+            selectEl.dispatchEvent(new CustomEvent('change', {
+                bubbles: true,
+                cancelable: true
+              }));
+        }
     });
 
     setCommonMultiselect(null, null);
@@ -2239,10 +2246,12 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
         form.reset();
         form.querySelectorAll('.row').forEach((row, idx) => {
             if (idx >= 3) {
+                if (row.previousElementSibling && row.previousElementSibling.querySelector('.data-group-title')) {
+                    row.previousElementSibling.remove();
+                }
                 row.remove();
             }
         });
-        form.querySelectorAll('.data-group-title').forEach(el => el.remove());
         form.querySelectorAll('.litEventCommon').forEach(el => $(el).multiselect('deselectAll', false).multiselect('select', 'Proper'));
         form.querySelectorAll('.litEventColor').forEach(el => $(el).multiselect('deselectAll', false).multiselect('select', 'white'));
         form.querySelectorAll('.litEventName').forEach(el => el.setAttribute('data-valuewas', ''));
@@ -2273,9 +2282,7 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
 
             // Set the list of locales for the current selected diocese
             document.querySelector('#diocesanCalendarLocales').value = diocesan_calendar.locales;
-            const LocalesForDiocese = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => {
-                return diocesan_calendar.locales.includes(localeIso);
-            });
+            const LocalesForDiocese = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => diocesan_calendar.locales.includes(localeIso));
             document.querySelector('#currentLocalization').innerHTML = LocalesForDiocese.map(item => `<option value="${item[0]}">${item[1]}</option>`).join('');
             $('#diocesanCalendarLocales').multiselect('deselectAll', false).multiselect('select', diocesan_calendar.locales);
 

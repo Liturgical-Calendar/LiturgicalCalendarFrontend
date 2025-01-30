@@ -57,19 +57,19 @@ $FULLCALENDAR_EXAMPLE_CONTENTS = <<<EOT
 
 {INTERPOLATE}
 
-<script type='importmap'>
-        {
+<script type="importmap">
+    {
         "imports": {
             "@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.15",
             "@fullcalendar/core/": "https://cdn.skypack.dev/@fullcalendar/core@6.1.15/",
             "@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.15",
             "@fullcalendar/list": "https://cdn.skypack.dev/@fullcalendar/list@6.1.15",
             "@fullcalendar/bootstrap5": "https://cdn.skypack.dev/@fullcalendar/bootstrap5@6.1.15",
-            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@1.0.7/+esm"
+            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@1.2.0/+esm"
         }
-        }
+    }
 </script>
-<script src='https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/latest/js.cookie.min.js"
     integrity="sha512-iewyUmLNmAZBOOtFnG+GlGeGudYzwDjE1SX3l9SWpGUs0qJTzdeVgGFeBeU7/BIyOZdDy6DpILikEBBvixqO9Q=="
