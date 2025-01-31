@@ -7,18 +7,22 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-22 21:57+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2025-02-01 13:05+0000\n"
+"Last-Translator: Lovro <development.lovro@gmail.com>\n"
+"Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
+"liturgical-calendar/frontend/hr/>\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.8.4\n"
 
 #: index.php:5
 msgid ""
 "Collection of Liturgical events for any given year between 1970 and 9999."
-msgstr ""
+msgstr "Zbirka liturgijskih događaja za godine između 1970 i 9999."
 
 #. translators: 1. /calendar, 2. /calendar/nation/{NATION}, 3. /calendar/diocese/{DIOCESE}
 #: index.php:8
@@ -28,6 +32,8 @@ msgid ""
 "National and Diocesan calendars can be requested on the %2$s and %3$s paths "
 "respectively."
 msgstr ""
+"Putanjom %1$s vraća liturgijske događaje za Opći rimski kalendar. Nacionalni "
+"i dijecezanski Kalendari mogu se potražiti na putanjama %2$s i %3$s."
 
 #. translators: 1. /{YEAR}
 #: index.php:15
@@ -509,22 +515,22 @@ msgstr ""
 #. translators: context = liturgical color
 #: extending.php:103 src/LitColor.php:35 src/FormControls.php:91
 msgid "white"
-msgstr ""
+msgstr "bijela"
 
 #. translators: context = liturgical color
 #: extending.php:104 src/LitColor.php:38 src/FormControls.php:92
 msgid "red"
-msgstr ""
+msgstr "crvena"
 
 #. translators: context = liturgical color
 #: extending.php:105 src/LitColor.php:29 src/FormControls.php:94
 msgid "green"
-msgstr ""
+msgstr "zelena"
 
 #. translators: context = liturgical color
 #: extending.php:106 src/LitColor.php:32 src/FormControls.php:93
 msgid "purple"
-msgstr ""
+msgstr "ljubičasta"
 
 #. translators: in reference to the first year from which this festivity takes place
 #: extending.php:108 src/FormControls.php:101
@@ -972,7 +978,7 @@ msgstr ""
 #. translators: context = liturgical color
 #: src/LitColor.php:41
 msgid "pink"
-msgstr ""
+msgstr "ružičasta"
 
 #: src/LitCommon.php:57
 msgid "Proper"
@@ -1174,12 +1180,12 @@ msgstr ""
 #. translators: when there are multiple possible commons, this will be the glue "or from the common of..."
 #: src/LitCommon.php:277
 msgid "or"
-msgstr ""
+msgstr "ili"
 
 #. translators: liturgical rank. Keep lowercase
 #: src/LitGrade.php:102
 msgid "weekday"
-msgstr ""
+msgstr "svagdan"
 
 #. translators: liturgical rank. Keep Capitalized
 #: src/LitGrade.php:105
@@ -1194,27 +1200,27 @@ msgstr ""
 #. translators: liturgical rank. Keep Capitalized
 #: src/LitGrade.php:111
 msgid "Memorial"
-msgstr ""
+msgstr "Spomendan"
 
 #. translators: liturgical rank. Keep UPPERCASE
 #: src/LitGrade.php:114
 msgid "FEAST"
-msgstr ""
+msgstr "BLAGDAN"
 
 #. translators: liturgical rank. Keep UPPERCASE
 #: src/LitGrade.php:117
 msgid "FEAST OF THE LORD"
-msgstr ""
+msgstr "GOSPODNJI BLAGDAN"
 
 #. translators: liturgical rank. Keep UPPERCASE
 #: src/LitGrade.php:120
 msgid "SOLEMNITY"
-msgstr ""
+msgstr "SVETKOVINA"
 
 #. translators: liturgical rank. Keep lowercase
 #: src/LitGrade.php:123
 msgid "celebration with precedence over solemnities"
-msgstr ""
+msgstr "slavlje s prednošću nad svetkovinom"
 
 #. translators: 1. BibleGet github url 2. Liturgical Calendar github url
 #: src/Utilities.php:115
