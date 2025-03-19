@@ -174,9 +174,8 @@ class LitCalCreateNewFixedData extends LitCalFestivityData {
             || false === festivity.hasOwnProperty('color')
             || false === festivity.hasOwnProperty('grade')
             || false === festivity.hasOwnProperty('common')
-            || false === festivity.hasOwnProperty('name')
         ) {
-            throw new Error('`festivity.event_key`, `festivity.day`, `festivity.month`, `festivity.color`, `festivity.grade`, `festivity.common` and `festivity.name` properties are required for a `metadata.action` of `createNew` and when the new festivity is fixed');
+            throw new Error('`festivity.event_key`, `festivity.day`, `festivity.month`, `festivity.color`, `festivity.grade`, and `festivity.common` properties are required for a `metadata.action` of `createNew` and when the new festivity is fixed');
         }
         if (typeof festivity.month !== 'number' || !Number.isInteger(festivity.month) || festivity.month < 1 || festivity.month > 12) {
             throw new Error('`festivity.month` must be an integer between 1 and 12');
@@ -201,16 +200,12 @@ class LitCalCreateNewFixedData extends LitCalFestivityData {
                 }
             }
         }
-        if (typeof festivity.name !== 'string') {
-            throw new Error('`festivity.name` must be a string');
-        }
         super(festivity.event_key);
         this.day    = festivity.day;
         this.month  = festivity.month;
         this.color  = festivity.color.map(color => new LitColor(color));
         this.grade  = new LitGrade(festivity.grade);
         this.common = festivity.common;
-        this.name   = festivity.name;
         return Object.freeze(this);
     }
 }
@@ -223,9 +218,8 @@ class LitCalCreateNewMobileData extends LitCalFestivityData {
             || false === festivity.hasOwnProperty('color')
             || false === festivity.hasOwnProperty('grade')
             || false === festivity.hasOwnProperty('common')
-            || false === festivity.hasOwnProperty('name')
         ) {
-            throw new Error('`festivity.event_key`, `festivity.strtotime`, `festivity.color`, `festivity.grade`, `festivity.common` and `festivity.name` properties are required for a `metadata.action` of `createNew` and when the new festivity is mobile');
+            throw new Error('`festivity.event_key`, `festivity.strtotime`, `festivity.color`, `festivity.grade`, and `festivity.common` properties are required for a `metadata.action` of `createNew` and when the new festivity is mobile');
         }
         if (typeof festivity.strtotime !== 'string') {
             throw new Error('`festivity.strtotime` must be a string');
@@ -243,15 +237,11 @@ class LitCalCreateNewMobileData extends LitCalFestivityData {
                 }
             }
         }
-        if (typeof festivity.name !== 'string') {
-            throw new Error('`festivity.name` must be a string');
-        }
         super(festivity.event_key);
         this.strtotime = festivity.strtotime;
         this.color  = festivity.color.map(color => new LitColor(color));
         this.grade  = new LitGrade(festivity.grade);
         this.common = festivity.common;
-        this.name   = festivity.name;
         return Object.freeze(this);
     }
 }
@@ -383,6 +373,7 @@ class NationalCalendarLitCalItem {
         if (false === litcalItem.metadata.hasOwnProperty('action')) {
             throw new Error('metadata must have an `action` property');
         }
+        console.log('verifying integrity of NationalCalendarLitCalItem with action = ' + litcalItem.metadata.action);
         switch (litcalItem.metadata.action) {
             case 'moveFestivity':
                 /**@type {LitCalMoveFestivityData} */
@@ -494,12 +485,13 @@ class NationalCalendarPayloadMetadata {
 }
 
 class NationalCalendarPayload {
-    constructor( litcal = null, settings = null, metadata = null ) {
-        if (null === litcal || null === settings || null === metadata) {
-            throw new Error('litcal, settings and metadata parameters are required');
+    constructor( litcal = null, settings = null, metadata = null, i18n = null ) {
+        const allowedProps = new Set(['litcal', 'settings', 'metadata', 'i18n']);
+        if (null === litcal || null === settings || null === metadata || null === i18n) {
+            throw new Error('litcal, settings, metadata and i18n parameters are required');
         }
-        if (typeof litcal !== 'object') {
-            throw new Error('litcal parameter must be an object');
+        if (false === Array.isArray(litcal)) {
+            throw new Error('litcal parameter must be an array');
         }
         if (typeof settings !== 'object') {
             throw new Error('settings parameter must be an object');
@@ -507,12 +499,25 @@ class NationalCalendarPayload {
         if (typeof metadata !== 'object') {
             throw new Error('metadata parameter must be an object');
         }
+        if (false === metadata.hasOwnProperty('locales')) {
+            throw new Error('metadata.locales parameter is required');
+        }
+        if (false === Array.isArray(metadata.locales) || 0 === metadata.locales.length) {
+            throw new Error('metadata.locales parameter must be an array and must not be empty');
+        }
+        if (typeof i18n !== 'object') {
+            throw new Error('i18n parameter must be an object');
+        }
+        if (Object.keys(i18n).sort().join(',') !== metadata.locales.sort().join(',')) {
+            throw new Error('i18n parameter must have the same locales as metadata.locales');
+        }
         /**@type {NationalCalendarLitCalArray} */
         this.litcal   = new NationalCalendarLitCalArray(litcal);
         /**@type {CalendarSettings} */
         this.settings = new CalendarSettings(settings);
         /**@type {NationalCalendarPayloadMetadata} */
         this.metadata = new NationalCalendarPayloadMetadata(metadata);
+        this.i18n     = i18n;
         return Object.freeze(this);
     }
 }

@@ -326,8 +326,8 @@ $(document).on('click', '.actionPromptButton', ev => {
     let propertyToChange;
     //let buttonId = ev.currentTarget.id;
     //console.log(buttonId + ' button was clicked');
-    FormControls.settings.decreeURLField = true;
-    FormControls.settings.decreeLangMapField = true; //TODO: check how this should be set, it's different than extending.js
+    FormControls.settings.decreeURLFieldShow = true;
+    FormControls.settings.decreeLangMapFieldShow = true; //TODO: check how this should be set, it's different than extending.js
     setFormSettings( ev.currentTarget.id );
     if( ev.currentTarget.id === 'setPropertyButton' ) {
         propertyToChange = sanitizeInput( $('#propertyToChange').val() );

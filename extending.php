@@ -88,7 +88,7 @@ $API_EXTEND_HOWTO_A3 = _("In this case, the festivities for the wider region sho
 $DioceseGroupHelp = _("If a group of dioceses decides to pool their Liturgical Calendar data, for example to print out one single yearly calendar with the data for all the dioceses in the group, the group can be defined or set here.");
 
 $messages = [
-    "Tag"                => _("Tag"),
+    "EventKey"                => _("Tag"),
     "Name"               => _("Name"),
     "Day"                => _("Day"),
     "Month"              => _("Month"),
@@ -113,7 +113,8 @@ $messages = [
     /**translators: label of the form row */
     "New festivity"      => _("New festivity"),
     /**translators: label of the form row */
-    "Change name or grade" => _("Change name or grade"),
+    "Change name" => _("Change name"),
+    "Change grade" => _("Change grade"),
     /**translators: label of the form row */
     "Move festivity"     => _("Move festivity"),
     "Decree URL"         => _("Decree URL"),
@@ -131,7 +132,7 @@ $messages = [
 ];
 
 $buttonGroup = "<hr><div class=\"d-flex justify-content-around\">
-<button class=\"btn btn-sm btn-primary m-2\" id=\"makePatronAction\" data-bs-toggle=\"modal\" data-bs-target=\"#makePatronActionPrompt\"><i class=\"fas fa-user-graduate me-2\"></i>" . _("Designate patron from existing festivity") . "</button>
+<button class=\"btn btn-sm btn-primary m-2\" id=\"makePatronAction\" data-bs-toggle=\"modal\" data-bs-target=\"#makePatronActionPrompt\"><i class=\"fas fa-user-graduate me-2\"></i>" . _("Designate patron") . "</button>
 <button class=\"btn btn-sm btn-primary m-2\" id=\"setPropertyAction\" data-bs-toggle=\"modal\" data-bs-target=\"#setPropertyActionPrompt\"><i class=\"fas fa-edit me-2\"></i>" . _("Change name or grade of existing festivity") . "</button>
 <button class=\"btn btn-sm btn-primary m-2\" id=\"moveFestivityAction\" data-bs-toggle=\"modal\" data-bs-target=\"#moveFestivityActionPrompt\"><i class=\"fas fa-calendar-day me-2\"></i>" . _("Move festivity to new date") . "</button>
 <button class=\"btn btn-sm btn-primary m-2\" id=\"newFestivityAction\" data-bs-toggle=\"modal\" data-bs-target=\"#newFestivityActionPrompt\"><i class=\"far fa-calendar-plus me-2\"></i>" . _("Create a new festivity") . "</button>
@@ -311,7 +312,15 @@ if (isset($_GET["choice"])) {
                                     </div>
                                     <div class="form-group col col-md-3 mt-4">
                                         <label for="associatedWiderRegion"><?php echo _('Wider Region') ?><i class="fas fa-info-circle ms-2 text-black" style="--bs-text-opacity: .3;" role="button" title="if data for a Wider Region that regards this National Calendar has already been defined, you can associate the Wider Region data with the National Calendar here"></i></label>
-                                        <input class="form-control" type="text" id="associatedWiderRegion" />
+                                        <input class="form-control" list="WiderRegionsList" id="associatedWiderRegion" />
+                                        <datalist id="WiderRegionsList">
+                                            <option value=""></option>
+                                        <?php
+                                        foreach ($LitCalMetadata["wider_regions_keys"] as $WiderRegion) {
+                                            echo "<option value=\"{$WiderRegion}\">{$WiderRegion}</option>";
+                                        }
+                                        ?>
+                                        </datalist>
                                     </div>
                                     <div class="form-group col col-md-3 mt-4">
                                         <label for="currentLocalization"><?php echo _('Current localization') ?></label>
@@ -592,9 +601,9 @@ let FestivityCollectionKeys = <?php echo json_encode(array_column($FestivityColl
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="makePatronActionModalLabel"><?php echo _("Designate patron from existing festivity") ?></h5>
+                <h5 class="modal-title" id="makePatronActionModalLabel"><?php echo _("Designate patron") ?></h5>
             </div>
-            <?php Utilities::generateModalBody(false); ?>
+            <?php Utilities::generateModalBody(false, false); ?>
             <div class="modal-footer">
                 <button type="button" id="designatePatronButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-user-graduate me-2"></i><?php echo _("Designate patron") ?></button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _("Cancel") ?></button>
@@ -610,7 +619,7 @@ let FestivityCollectionKeys = <?php echo json_encode(array_column($FestivityColl
             <div class="modal-header">
                 <h5 class="modal-title" id="setPropertyActionModalLabel"><?php echo _("Change name or grade of existing festivity") ?></h5>
             </div>
-            <?php Utilities::generateModalBody(true); ?>
+            <?php Utilities::generateModalBody(true, true); ?>
             <div class="modal-footer">
                 <button type="button" id="setPropertyButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-edit me-2"></i>Set Property</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _("Cancel") ?></button>
@@ -626,7 +635,7 @@ let FestivityCollectionKeys = <?php echo json_encode(array_column($FestivityColl
             <div class="modal-header">
                 <h5 class="modal-title" id="moveFestivityActionModalLabel"><?php echo _("Move festivity to new date") ?></h5>
             </div>
-            <?php Utilities::generateModalBody(false); ?>
+            <?php Utilities::generateModalBody(true, false); ?>
             <div class="modal-footer">
                 <button type="button" id="moveFestivityButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-day me-2"></i><?php echo _("Move Festivity") ?></button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _("Cancel") ?></button>
@@ -642,10 +651,9 @@ let FestivityCollectionKeys = <?php echo json_encode(array_column($FestivityColl
             <div class="modal-header">
                 <h5 class="modal-title" id="newFestivityActionModalLabel"><?php echo _("Create a new festivity") ?></h5>
             </div>
-            <?php Utilities::generateModalBody(false); ?>
+            <?php Utilities::generateModalBody(false, false); ?>
             <div class="modal-footer">
-                <button type="button" id="newFestivityFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus me-2"></i><?php echo _("New Festivity from existing") ?></button>
-                <button type="button" id="newFestivityExNovoButton" class="btn btn-primary actionPromptButton"><i class="fas fa-calendar-plus me-2"></i><?php echo _("New Festivity ex novo") ?></button>
+                <button type="button" id="newFestivityFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus me-2"></i><?php echo _("Create Festivity") ?></button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _("Cancel") ?></button>
             </div>
         </div>
@@ -685,6 +693,10 @@ foreach ($FestivityCollection as $festivity) {
 </datalist>
 
 <datalist id="languageEditionRomanMissalList"></datalist>
+
+<div id="overlay">
+    <div class="lds-dual-ring"></div>
+</div>
 
 </body>
 </html>
