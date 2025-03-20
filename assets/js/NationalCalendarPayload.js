@@ -290,8 +290,8 @@ class LitCalMetadata {
         if ( typeof since_year !== 'number' || !Number.isInteger(since_year) ) {
             throw new Error('since_year parameter must be an integer');
         }
-        if ( since_year < 1900 ) {
-            throw new Error('since_year parameter must represent a year from the 20th century or later');
+        if ( since_year < 1800 ) {
+            throw new Error('since_year parameter must represent a year from the 19th century or later');
         }
         this.action      = 'createNew';
         this.since_year  = since_year;
@@ -401,7 +401,7 @@ class NationalCalendarLitCalItem {
                 if (litcalItem.festivity.hasOwnProperty('day') && litcalItem.festivity.hasOwnProperty('month')) {
                     /**@type {LitCalCreateNewFixedData} */
                     this.festivity = new LitCalCreateNewFixedData(litcalItem.festivity);
-                } else if (festivity.hasOwnProperty('strtotime')) {
+                } else if (litcalItem.festivity.hasOwnProperty('strtotime')) {
                     /**@type {LitCalCreateNewMobileData} */
                     this.festivity = new LitCalCreateNewMobileData(litcalItem.festivity);
                 } else {
