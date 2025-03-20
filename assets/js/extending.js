@@ -85,7 +85,7 @@ const initialHeaders = new Headers({
     'Accept': 'application/json'
 });
 
-const missalsRequest = new Request(MissalsURL, {
+const missalsRequest = new Request(`${MissalsURL}?include_empty=true`, {
     method: 'GET',
     headers: initialHeaders
 });
