@@ -30,6 +30,8 @@ const Month = Object.freeze({
  */
 const MonthsOfThirty = Object.freeze([Month.SEPTEMBER, Month.APRIL, Month.JUNE, Month.NOVEMBER]);
 
+const getMonthMaxDay = (month) => month === Month.FEBRUARY ? 28 : (MonthsOfThirty.includes(month) ? 30 : 31);
+
 
 /**
  * English names of the seven days of the week indexed from 0 to 7, used to check or set the value of the strtotime property in liturgical events.
@@ -630,7 +632,7 @@ class FormControls {
 
             dayInput.type = 'number';
             dayInput.min = 1;
-            dayInput.max = 31;
+            dayInput.max = festivity !== null ? getMonthMaxDay(festivity.month) : 31;
             dayInput.className = 'form-control litEvent litEventDay';
             dayInput.id = `onTheFly${FormControls.uniqid}Day`;
             dayInput.value = festivity !== null ? festivity.day : '';
@@ -1288,6 +1290,7 @@ export {
     LitEvent,
     Month,
     MonthsOfThirty,
+    getMonthMaxDay,
     DaysOfTheWeek,
     readingsProperties,
     integerProperties,

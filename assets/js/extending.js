@@ -2,8 +2,7 @@ import {
     FormControls,
     LitEvent,
     RowAction,
-    Month,
-    MonthsOfThirty,
+    getMonthMaxDay,
     Rank,
     setFormSettings,
     setFormSettingsForProperty,
@@ -693,7 +692,6 @@ const litEventDayChangeHandler = (ev) => {
  *
  * @param {Event} ev - The change event triggered by selecting a new month.
  */
-
 const litEventMonthChangeHandler = (ev) => {
     const row = ev.target.closest('.row');
     const selcdMonth = parseInt(ev.target.value);
@@ -703,7 +701,7 @@ const litEventMonthChangeHandler = (ev) => {
             CalendarData.litcal.filter(item => item.festivity.event_key === eventKey)[0].festivity.month = selcdMonth;
         }
     }
-    row.querySelector('.litEventDay').max = selcdMonth === Month.FEBRUARY ? 28 : (MonthsOfThirty.includes(selcdMonth) ? 30 : 31);
+    row.querySelector('.litEventDay').max = getMonthMaxDay(selcdMonth);
     if (parseInt(row.querySelector('.litEventDay').value) > parseInt(row.querySelector('.litEventDay').max)) {
         row.querySelector('.litEventDay').value = parseInt(row.querySelector('.litEventDay').max);
     }
@@ -717,7 +715,6 @@ const litEventMonthChangeHandler = (ev) => {
  * @param {Event} ev - The change event triggered by the 'common' multiselect.
  * @listens change
  */
-
 const litEventCommonChangeHandler = (ev) => {
     const row = ev.target.closest('.row');
     if (row.querySelector('.litEventName').value !== '') {
@@ -1578,6 +1575,15 @@ const actionPromptButtonClicked = (ev) => {
 
     if (FormControls.settings.colorField === false) {
         $(controlsRow.querySelector('.litEventColor')).multiselect('disable');
+    } else {
+        if (actionButtonId === 'newFestivityExNovoButton') {
+            // Attempt to set liturgical color to red for martyrs, white for all other cases
+            if (controlsRow.querySelector('.litEventName').value.match(/(martyr|martir|mártir|märtyr)/i) !== null) {
+                $(controlsRow.querySelector('.litEventColor')).multiselect('select', 'red');
+            } else {
+                $(controlsRow.querySelector('.litEventColor')).multiselect('select', 'white');
+            }
+        }
     }
 
     if (FormControls.settings.commonFieldShow) {
