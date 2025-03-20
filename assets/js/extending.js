@@ -1463,12 +1463,20 @@ const datetypeToggleBtnClicked = (ev) => {
     }
 }
 
+/**
+ * Creates a unique key for a liturgical event based on its name, by splitting on
+ * the first comma (if applicable), removing accented characters, reducing multiple
+ * spaces to single spaces, removing leading and trailing spaces, splitting into
+ * words, capitalizing the first letter of each word, and joining them back together.
+ * @param {string} name - The name of the liturgical event.
+ * @returns {string} A unique key for the liturgical event.
+ */
 const createEventKey = (name) => name.split(',')[0] // only consider everything up to the first comma (if applicable)
     .normalize('NFD')                // split accented characters
     .replace(/[\u0300-\u036f]/g, '') // remove accented characters
     .replace(/\s+/g, ' ')            // reduce multiple spaces to single spaces
     .trim()                          // remove leading and trailing spaces
-    .split(' ')                      // split into words
+    .split(/[^a-zA-Z]/)              // split into words
     .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // capitalize first letter of each word
     .join('');
 
