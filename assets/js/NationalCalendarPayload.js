@@ -98,8 +98,8 @@ Object.freeze(LitGrade);
 
 
 class NationalCalendarLitCalArray {
-    constructor( litcalarray = [] ) {
-        let litCalItemsArr = litcalarray.map(litcalitem => new NationalCalendarLitCalItem(litcalitem));
+    constructor( litcalarray = [], i18nData ) {
+        let litCalItemsArr = litcalarray.map(litcalitem => new NationalCalendarLitCalItem(litcalitem, i18nData));
         return new Array(...litCalItemsArr);
     }
 }
@@ -273,14 +273,10 @@ class LitCalSetPropertyGradeData extends LitCalFestivityData {
 
 class LitCalMakePatronData extends LitCalFestivityData {
     constructor( festivity ) {
-        if (false === festivity.hasOwnProperty('event_key') || false === festivity.hasOwnProperty('name') || false === festivity.hasOwnProperty('grade')) {
-            throw new Error('`festivity.event_key`, `festivity.name` and `festivity.grade` properties are required for a `metadata.action` of `makePatron`, we received: ' + JSON.stringify(festivity));
-        }
-        if (typeof festivity.name !== 'string') {
-            throw new Error('`festivity.name` must be a string');
+        if (false === festivity.hasOwnProperty('event_key') || false === festivity.hasOwnProperty('grade')) {
+            throw new Error('`festivity.event_key` and `festivity.grade` properties are required for a `metadata.action` of `makePatron`, we received: ' + JSON.stringify(festivity));
         }
         super(festivity.event_key);
-        this.name = festivity.name;
         this.grade = new LitGrade(festivity.grade);
         return Object.freeze(this);
     }
@@ -363,7 +359,7 @@ class LitCalMakePatronMetadata extends LitCalMetadata {
 }
 
 class NationalCalendarLitCalItem {
-    constructor( litcalItem ) {
+    constructor( litcalItem, i18nData ) {
         if (typeof litcalItem !== 'object') {
             throw new Error('litcalItem parameter must be an object');
         }
@@ -374,6 +370,26 @@ class NationalCalendarLitCalItem {
             throw new Error('metadata must have an `action` property');
         }
         console.log('verifying integrity of NationalCalendarLitCalItem with action = ' + litcalItem.metadata.action);
+
+        // Cases in which we would need a `name` property: createNew, makePatron, and setProperty.name
+        // We no longer use the `name` property, because we have translated strings in the i18n data
+        // We should however check that the i18n data does actually exist for the litcalItem.event_key,
+        // and it's simply easier to theck that here rather than continue passing down the i18nData to each subclass
+        if (
+            (['createNew', 'makePatron'].includes(litcalItem.metadata.action))
+            ||
+            (litcalItem.metadata.action === 'setProperty' && litcalItem.metadata.property === 'name')
+        ) {
+            if (false === litcalItem.festivity.hasOwnProperty('event_key')) {
+                throw new Error('litcalItem.festivity must have an `event_key` property');
+            }
+            Object.entries(i18nData).forEach( ([isoCode, translations]) => {
+                if (false === litcalItem.festivity.event_key in translations) {
+                    throw new Error(`The litcalItem.festivity.event_key ${litcalItem.festivity.event_key} is missing in i18nData[${isoCode}]: ${JSON.stringify(translations)}`);
+                }
+            });
+        }
+
         switch (litcalItem.metadata.action) {
             case 'moveFestivity':
                 /**@type {LitCalMoveFestivityData} */
@@ -511,13 +527,13 @@ class NationalCalendarPayload {
         if (Object.keys(i18n).sort().join(',') !== metadata.locales.sort().join(',')) {
             throw new Error('i18n parameter must have the same locales as metadata.locales');
         }
+        this.i18n     = i18n;
         /**@type {NationalCalendarLitCalArray} */
-        this.litcal   = new NationalCalendarLitCalArray(litcal);
+        this.litcal   = new NationalCalendarLitCalArray(litcal, this.i18n);
         /**@type {CalendarSettings} */
         this.settings = new CalendarSettings(settings);
         /**@type {NationalCalendarPayloadMetadata} */
         this.metadata = new NationalCalendarPayloadMetadata(metadata);
-        this.i18n     = i18n;
         return Object.freeze(this);
     }
 }
