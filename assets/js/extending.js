@@ -68,6 +68,12 @@ const jsLocale = LOCALE.replace('_', '-');
  * @return {string}
  */
 const snakeCaseToPascalCase = (str) => str.replace(/(^\w|[-_][a-z])/g, g => g.toUpperCase().replace(/[-_]/, ''));
+
+/**
+ * Takes a string in snake_case and returns it in camelCase.
+ * @param {string} str
+ * @return {string}
+ */
 const snakeCaseToCamelCase = (str) => str.replace(/([-_][a-z])/g, g => g[1].toUpperCase());
 
 FormControls.jsLocale = jsLocale;
@@ -345,7 +351,7 @@ const translationTemplate = (path, locale, el) => {
     const localeObj = new Intl.Locale(localeStr);
     const lang = localeObj.language.toUpperCase();
     const langWithRegion = AvailableLocalesWithRegion[locale];
-    const eventKeyEl = el.parentElement.querySelector('.litEventEventKey');
+    const eventKeyEl = el.closest('.row').querySelector('.litEventEventKey');
     const eventKey = eventKeyEl ? eventKeyEl.value : (el.dataset.hasOwnProperty('valuewas') ? el.dataset.valuewas : '');
     const value = (TranslationData.has(path) && TranslationData.get(path).has(locale) && TranslationData.get(path).get(locale).hasOwnProperty(eventKey)) ? ` value="${TranslationData.get(path).get(locale)[eventKey]}"` : '';
     return `<div class="input-group input-group-sm mt-1">
@@ -445,7 +451,7 @@ const litEventNameChangeHandler = (ev) => {
     if (ev.target.value === '') {
         //empty value probably means we are trying to delete an already defined event
         //so let's find the key and remove it
-        const oldEventKeyEl = ev.target.parentElement.querySelector('.litEventEventKey');
+        const oldEventKeyEl = ev.target.closest('.row').querySelector('.litEventEventKey');
         const oldEventKey = oldEventKeyEl
             ? oldEventKeyEl.value
             : (ev.target.dataset.hasOwnProperty('valuewas') ? ev.target.dataset.valuewas : '');
@@ -493,7 +499,7 @@ const litEventNameChangeHandler = (ev) => {
 
         if (false === calendarExists) {
             console.log('calendar does not exist in the Liturgical Calendar API, so we are generating a new event key or updating a new event key');
-            const oldEventKeyEl = ev.target.parentElement.querySelector('.litEventEventKey');
+            const oldEventKeyEl = ev.target.closest('.row').querySelector('.litEventEventKey');
             const oldEventKey = oldEventKeyEl ? oldEventKeyEl.value : (ev.target.dataset.hasOwnProperty('valuewas') ? ev.target.dataset.valuewas : '');
             console.log(CalendarData);
             // This condition will never be met when dealing with national or wider region calendars
@@ -936,7 +942,7 @@ const calendarLocalesChanged = (ev) => {
  * @param {Object} data
  * @returns {void}
  */
-const updateRegionalCalendarData = (data) => {
+const updateRegionalCalendarForm = (data) => {
     console.log( `successfully retrieved the data file for the ${API.category} ${API.key}` );
     API.method = 'PATCH';
     console.log(data);
@@ -995,10 +1001,12 @@ const updateRegionalCalendarData = (data) => {
     //console.log('EventsCollectionKeys', EventsCollectionKeys);
     data.litcal.forEach((el) => {
         const currentUniqid = FormControls.uniqid;
-        const existingFestivityEventKey = el.festivity.event_key ?? null;
+        //const existingFestivityEventKey = el.festivity.event_key ?? null;
+        /*
         if ( el.metadata.action === RowAction.CreateNew && EventsCollectionKeys.get(EventsLoader.lastRequestPath).includes( existingFestivityEventKey ) ) {
             el.metadata.action = RowAction.CreateNewFromExisting;
         }
+        */
         setFormSettings( el.metadata.action );
         if ( el.metadata.action === RowAction.SetProperty ) {
             setFormSettingsForProperty( el.metadata.property );
@@ -1012,16 +1020,35 @@ const updateRegionalCalendarData = (data) => {
             controlsRow.setAttribute('data-prop', el.metadata.property);
         }
 
+        if (
+            [RowAction.CreateNew, RowAction.MakePatron].includes(el.metadata.action)
+            ||
+            (el.metadata.action === RowAction.SetProperty && el.metadata.property === 'name')
+        ) {
+            if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
+                const currentLocalization = document.querySelector('#currentLocalization').value;
+                const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions).filter(({ value }) => value !== currentLocalization).map(({ value }) => value);
+                const nameInput = controlsRow.querySelector(`#onTheFly${currentUniqid}Name`);
+                const otherLocalizationsInputs = otherLocalizations.map(localization => translationTemplate(API.path, localization, nameInput));
+                nameInput.insertAdjacentHTML('afterend', otherLocalizationsInputs.join(''));
+            }
+        }
+
         if ( el.festivity.hasOwnProperty('common') && el.festivity.common.includes('Proper') ) {
             controlsRow.querySelector('.litEventReadings').disabled = false;
         }
 
+        /*
         if ( FormControls.settings.missalFieldShow && existingFestivityEventKey !== null ) {
-            const { missal } = EventsCollection.get(EventsLoader.lastRequestPath).get(EventsLoader.lastRequestLocale).filter(el => el.event_key === existingFestivityEventKey)[0];
+            const { missal } = EventsCollection.get(EventsLoader.lastRequestPath).get(EventsLoader.lastRequestLocale).find(el => el.event_key === existingFestivityEventKey);
             controlsRow.querySelector(`#onTheFly${currentUniqid}Missal`).value = missal;
         }
+        */
+        if ( FormControls.settings.missalFieldShow && el.metadata.hasOwnProperty('missal') ) {
+            controlsRow.querySelector(`#onTheFly${currentUniqid}Missal`).value = el.metadata.missal;
+        }
 
-        $(controlsRow.querySelector('.litEventColor')).multiselect({
+        $( controlsRow.querySelector('.litEventColor') ).multiselect({
             buttonWidth: '100%',
             buttonClass: 'form-select',
             templates: {
@@ -1029,15 +1056,22 @@ const updateRegionalCalendarData = (data) => {
             }
         }).multiselect('deselectAll', false);
 
+        if ( el.festivity.hasOwnProperty('color') && el.festivity.color.length ) {
+            $(controlsRow.querySelector('.litEventColor')).multiselect('select', el.festivity.color);
+        }
+
+        /*
         if ( el.festivity.hasOwnProperty( 'color' ) === false && existingFestivityEventKey !== null ) {
             console.log( 'retrieving default festivity info for ' + existingFestivityEventKey );
             console.log( 'EventsLoader.lastRequestPath:', EventsLoader.lastRequestPath );
             console.log( 'EventsLoader.lastRequestLocale:', EventsLoader.lastRequestLocale );
-            console.log( EventsCollection.get(EventsLoader.lastRequestPath).get(EventsLoader.lastRequestLocale).filter( el => el.event_key === existingFestivityEventKey )[0] );
-            el.festivity.color = EventsCollection.get(EventsLoader.lastRequestPath).get(EventsLoader.lastRequestLocale).filter( el => el.event_key === existingFestivityEventKey )[0].color;
+            const existingEvent = EventsCollection.get(EventsLoader.lastRequestPath).get(EventsLoader.lastRequestLocale).find( el => el.event_key === existingFestivityEventKey );
+            console.log( existingEvent );
+            el.festivity.color = existingEvent.color;
         }
-
         $(controlsRow.querySelector('.litEventColor')).multiselect('select', el.festivity.color);
+        */
+
 
         if (FormControls.settings.colorField === false) {
             $(controlsRow.querySelector('.litEventColor')).multiselect('disable');
@@ -1067,6 +1101,7 @@ const updateRegionalCalendarData = (data) => {
             controlsRow.querySelectorAll(`#onTheFly${currentUniqid}Month > option[value]:not([value="${el.festivity.month}"])`).forEach(el => { el.disabled = true; });
         }
     });
+
     if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
         const currentLocalization = document.querySelector('#currentLocalization').value;
         const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions).filter(({ value }) => value !== currentLocalization).map(({ value }) => value);
@@ -1179,7 +1214,7 @@ const fetchRegionalCalendarData = (headers) => {
 
                 return Promise.reject(response);
             }
-        }).then(updateRegionalCalendarData).catch(error => {
+        }).then(updateRegionalCalendarForm).catch(error => {
             if (404 === error.status || 400 === error.status) {
                 API.method = 'PUT';
                 error.json().then(json => {
@@ -2043,7 +2078,7 @@ const setFocusFirstTabWithData = () => {
 
 /**
  * Rebuilds the other localization input fields for the given localization list.
- * This method is used when the user changes the primary localization of the diocesan calendar.
+ * This method is used when the user changes the primary localization of the calendar.
  *
  * @param {Array<string>} otherLocalizations - A list of localization codes that are not the primary localization.
  * @returns {void}
@@ -2059,16 +2094,17 @@ const refreshOtherLocalizationInputs = (otherLocalizations) => {
         }
         default: {
             Array.from(document.querySelectorAll('.litEventName')).filter(el => {
+                const closestRow = el.closest('.row');
                 return (
-                    el.parentElement.querySelector('.litEventEventKey')
+                    closestRow.querySelector('.litEventEventKey')
                     && (
                         [
                             RowAction.CreateNew,
                             RowAction.CreateNewFromExisting,
                             RowAction.MakePatron,
                             RowAction.MakeDoctor
-                        ].includes(el.closest('.row').dataset.action)
-                        || (el.closest('.row').dataset.action === RowAction.SetProperty && el.closest('.row').dataset.prop === 'name')
+                        ].includes(closestRow.dataset.action)
+                        || (closestRow.dataset.action === RowAction.SetProperty && closestRow.dataset.prop === 'name')
                     )
                 );
             }).forEach(el => {
