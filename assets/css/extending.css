@@ -1,11 +1,15 @@
-.carousel-control-prev,.carousel-control-next {
-    background-color: rgb(70,70,120);
+.carousel-control-prev,
+.carousel-control-next {
+    background-color: rgb(70, 70, 120);
 }
 
-.carousel-control-prev:focus,.carousel-control-next:focus {
+.carousel-control-prev:focus,
+.carousel-control-next:focus {
     opacity: 0.5;
 }
-.carousel-control-prev:hover,.carousel-control-next:hover {
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
     opacity: 0.9;
 }
 
@@ -18,4 +22,62 @@
 .toggle-group .toggle-on {
     right: 45%;
     left: -5px;
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition-property: display opacity;
+    transition-duration: 1s;
+    transition-behavior: allow-discrete;
+}
+
+#overlay.hidden {
+    display: none;
+    opacity: 0;
+    @starting-style {
+        opacity: 1;
+    }
+}
+
+
+.lds-dual-ring {
+    width: 80px;
+    height: 80px;
+    color: white;
+}
+
+.lds-dual-ring,
+.lds-dual-ring:after {
+    box-sizing: border-box;
+}
+
+.lds-dual-ring:after {
+    content: " ";
+    display: block;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6.4px solid currentColor;
+    border-color: currentColor transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+}
+
+@keyframes lds-dual-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }

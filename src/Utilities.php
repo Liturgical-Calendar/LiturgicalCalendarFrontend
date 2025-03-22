@@ -210,16 +210,21 @@ class Utilities
     /**
      * Generates the modal body for the modals that use the "Choose from existing festivities" input.
      *
-     * @param bool $hasPropertyChange Whether the modal needs to have the property to change select input.
+     * @param bool $required Whether the festivity input is required to use a value from the existing festivities list.
+     * @param bool $hasPropertyChange Whether the modal needs to have the "property to change" select input.
      */
-    public static function generateModalBody(bool $hasPropertyChange = false): void
+    public static function generateModalBody(bool $required = true, bool $hasPropertyChange = false): void
     {
+        $feedbackDiv = $required
+            ? "<div class=\"invalid-feedback\">" . _("This festivity does not seem to exist? Please choose from a value in the list.") . "</div>"
+            : "<div class=\"form-text text-warning d-none\">" . _("This festivity does not exist, so it will be created.") . "</div>";
+
         $modalBody = "<div class=\"modal-body\">
         <form class=\"row justify-content-left needs-validation\" novalidate>
             <div class=\"form-group col col-md-10\">
-                <label for=\"existingFestivityName\" class=\"fw-bold\">" . _("Choose from existing festivities") . ":</label>
-                <input list=\"existingFestivitiesList\" class=\"form-control existingFestivityName\" id=\"existingFestivityName\" required>
-                <div class=\"invalid-feedback\">" . _("This festivity does not seem to exist? Please choose from a value in the list.") . "</div>
+                <label for=\"existingFestivityName\" class=\"fw-bold\">" . ($required ? _('Choose from existing festivities') : _("Choose from existing festivities (or create a new one)")) . ":</label>
+                <input list=\"existingFestivitiesList\" class=\"form-control existingFestivityName\" id=\"existingFestivityName\"" . ($required ? ' required' : '') . ">
+                " . $feedbackDiv . "
             </div>";
         if ($hasPropertyChange) {
             $modalBody .= "<div class=\"form-group col col-md-6\">
