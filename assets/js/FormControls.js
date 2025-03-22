@@ -506,7 +506,7 @@ class FormControls {
         nameInput.className = 'form-control litEvent litEventName';
         nameInput.id = `onTheFly${FormControls.uniqid}Name`;
         nameInput.value = festivity !== null ? festivity.name : '';
-        nameInput.readOnly = FormControls.settings.nameField === false;
+        nameInput.disabled = FormControls.settings.nameField === false;
         eventNameFormGroup.appendChild(nameInput);
         const nameInputInvalidFeedback = document.createElement('div');
         nameInputInvalidFeedback.className = 'invalid-feedback';
