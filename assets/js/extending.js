@@ -330,6 +330,9 @@ class EventsLoader {
     static lastRequestLocale = '';
 }
 
+
+const country2flag = (countryCode) => countryCode.replace(/./g, (letter) => String.fromCodePoint((letter.charCodeAt(0) % 32) + 0x1F1E5));
+
 /**
  * Returns a string containing HTML for a Bootstrap input group element with a label
  * and an input text element. The label shows the language of the locale and the
@@ -348,6 +351,7 @@ class EventsLoader {
  */
 const translationTemplate = (path, locale, el) => {
     const localeStr = locale.replace(/_/g, '-');
+    const region = localeStr.split('-')[1];
     const localeObj = new Intl.Locale(localeStr);
     const lang = localeObj.language.toUpperCase();
     const langWithRegion = AvailableLocalesWithRegion[locale];
@@ -355,7 +359,7 @@ const translationTemplate = (path, locale, el) => {
     const eventKey = eventKeyEl ? eventKeyEl.value : (el.dataset.hasOwnProperty('valuewas') ? el.dataset.valuewas : '');
     const value = (TranslationData.has(path) && TranslationData.get(path).has(locale) && TranslationData.get(path).get(locale).hasOwnProperty(eventKey)) ? ` value="${TranslationData.get(path).get(locale)[eventKey]}"` : '';
     return `<div class="input-group input-group-sm mt-1">
-            <label class="input-group-text font-monospace" for="${el.id}_${locale}" title="${langWithRegion}">${lang}</label>
+            <label class="input-group-text font-monospace" for="${el.id}_${locale}" title="${langWithRegion}"><span class="noto-color-emoji-regular me-2">${country2flag(region)}</span>${lang}</label>
             <input type="text" class="form-control litEvent litEventName_${lang}" id="${el.id}_${locale}" data-locale="${locale}"${value}>
         </div>`;
 }
@@ -403,7 +407,15 @@ const domContentLoadedCallback = () => {
         },
         maxHeight: 200,
         enableCaseInsensitiveFiltering: true,
-        onChange: (option) => {
+        onChange: (option, checked) => {
+            if (false === checked && document.querySelector('#currentLocalization').value === option[0].value) {
+                console.log('value of this in multiselect onChange:', this);
+                alert('You cannot remove the current localization. In order to remove this locale, you must first switch to a different current localization.');
+                $(option).prop('selected', !checked);
+                $('.calendarLocales').multiselect('refresh');
+                return;
+            }
+            console.log('option:', option, 'checked:', checked);
             const selectEl = option[0].parentElement;
             selectEl.dispatchEvent(new CustomEvent('change', {
                 bubbles: true,
@@ -923,13 +935,14 @@ const calendarLocalesChanged = (ev) => {
         return updatedLocales.includes(localeIso);
     });
     const currentLocalizationEl = document.querySelector('#currentLocalization');
+    const currentLocalization = currentLocalizationEl.value;
+    console.log(`currentLocalizationEl.value: ${currentLocalizationEl.value}`);
     currentLocalizationEl.innerHTML = updatedLocalizationChoices.map(([localeIso, localeDisplayName]) => {
-        return `<option value="${localeIso}">${localeDisplayName}</option>`;
+        const selectedProp = localeIso === currentLocalization ? ' selected' : '';
+        return `<option value="${localeIso}"${selectedProp}>${localeDisplayName}</option>`;
     });
-    // set as default currentLocalization the locale with greater percentage per population, of those that are available
-    const regionalLocales = updatedLocalizationChoices.map(item => item[0].split('_')[0]);
-    const mostSpokenLanguage = likelyLanguage(API.key, regionalLocales);
-    currentLocalizationEl.value = `${mostSpokenLanguage}_${API.key}`;
+    const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions).filter(({ value }) => value !== currentLocalization).map(({ value }) => value);
+    refreshOtherLocalizationInputs(otherLocalizations);
 }
 
 
@@ -1102,6 +1115,9 @@ const updateRegionalCalendarForm = (data) => {
         }
     });
 
+    /**
+     * Load translation data
+     */
     if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
         const currentLocalization = document.querySelector('#currentLocalization').value;
         const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions).filter(({ value }) => value !== currentLocalization).map(({ value }) => value);
@@ -1122,7 +1138,6 @@ const updateRegionalCalendarForm = (data) => {
                     TranslationData.get(API.path).set(otherLocalizations[i], localizationData);
                 });
                 console.log('TranslationData:', TranslationData);
-                resetOtherLocalizationInputs();
                 refreshOtherLocalizationInputs(otherLocalizations);
                 DataLoader.lastRequestPath = API.path;
                 DataLoader.lastRequestLocale = currentLocalization;
@@ -1133,7 +1148,6 @@ const updateRegionalCalendarForm = (data) => {
             // We are requesting the same calendar, just with a different locale
             // We don't need to reload ALL i18n data, just the data for the last locale, if we haven't already
             if (DataLoader.allLocalesLoaded.hasOwnProperty(API.path)) {
-                resetOtherLocalizationInputs();
                 refreshOtherLocalizationInputs(otherLocalizations);
             } else {
                 document.querySelector('#overlay').classList.remove('hidden');
@@ -1143,7 +1157,6 @@ const updateRegionalCalendarForm = (data) => {
                     }
                     TranslationData.get(API.path).set(DataLoader.lastRequestLocale, localizationData);
                     console.log('TranslationData:', TranslationData);
-                    resetOtherLocalizationInputs();
                     refreshOtherLocalizationInputs(otherLocalizations);
                     DataLoader.allLocalesLoaded[API.path] = true;
                 }).finally(() => {
@@ -1151,6 +1164,8 @@ const updateRegionalCalendarForm = (data) => {
                 });
             }
         }
+    } else {
+        document.querySelector('#overlay').classList.add('hidden');
     }
 
     document.querySelector('.serializeRegionalNationalData').disabled = false;
@@ -1251,7 +1266,9 @@ const fetchRegionalCalendarData = (headers) => {
                 });*/
             }
         }).finally(() => {
-            document.querySelector('#overlay').classList.add('hidden');
+            // Leave this commented out for now, we don't want to remove the overlay until all locales are loaded,
+            // see updateRegionalCalendarForm()
+            //document.querySelector('#overlay').classList.add('hidden');
         });
     } else {
         API.method = 'PUT';
@@ -1440,6 +1457,7 @@ const fetchEventsAndCalendarData = () => {
  * @returns {void}
  */
 const regionalNationalCalendarNameChanged = (ev) => {
+    document.querySelector('#overlay').classList.remove('hidden');
     API.category = ev.target.dataset.category;
     // our proxy will take care of splitting locale from wider region, when we are setting a wider region key
     API.key = ev.target.value;
@@ -1664,16 +1682,16 @@ const actionPromptButtonClicked = (ev) => {
  * on the current selected calendar.
  */
 const deleteCalendarConfirmClicked = () => {
-    document.querySelector('#deleteCalendarConfirm').blur(); // Remove focus from the button
     document.querySelector('#overlay').classList.remove('hidden');
 
     const removeCalendarDataPrompt = document.querySelector('#removeCalendarDataPrompt');
     bootstrap.Modal.getInstance(removeCalendarDataPrompt).hide();
 
-    API.key = document.querySelector('.regionalNationalCalendarName').value;
     API.category = document.querySelector('.regionalNationalCalendarName').dataset.category;
+    API.key = document.querySelector('.regionalNationalCalendarName').value;
     const headers = new Headers({
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        'Accept-Language': API.locale
     });
     const request = new Request(API.path, {
         method: 'DELETE',
@@ -1884,7 +1902,7 @@ const serializeRegionalNationalDataClicked = (ev) => {
             payload.national_calendars = nationalCalendars;
             payload.metadata = {
                 locales: Array.from(selectedLocales).map(({ value }) => value),
-                wider_region: document.querySelector('#widerRegionCalendarName').value
+                wider_region: document.querySelector('#widerRegionCalendarName').value.split(' - ')[0]
             };
             break;
         }
@@ -2014,7 +2032,9 @@ const serializeRegionalNationalDataClicked = (ev) => {
     });
 
     console.log('payload so far:', payload);
-    const finalPayload = Object.freeze(new NationalCalendarPayload(payload.litcal, payload.settings, payload.metadata, payload.i18n));
+    const finalPayload = API.category === 'nation'
+        ? Object.freeze(new NationalCalendarPayload(payload.litcal, payload.settings, payload.metadata, payload.i18n))
+        : Object.freeze(new WiderRegionPayload(payload.litcal, payload.national_calendars, payload.metadata, payload.i18n));
 
     const headers = new Headers({
         'Content-Type': 'application/json',
@@ -2084,6 +2104,8 @@ const setFocusFirstTabWithData = () => {
  * @returns {void}
  */
 const refreshOtherLocalizationInputs = (otherLocalizations) => {
+    const previousValues = resetOtherLocalizationInputs();
+    console.log('stored previousValues as follows:', previousValues);
     switch (API.category) {
         case 'diocese': {
             Array.from(document.querySelectorAll('.litEventName')).filter(el => el.dataset.valuewas !== '').forEach(el => {
@@ -2110,6 +2132,14 @@ const refreshOtherLocalizationInputs = (otherLocalizations) => {
             }).forEach(el => {
                 const otherLocalizationsInputs = otherLocalizations.map(localization => translationTemplate(API.path, localization, el));
                 el.insertAdjacentHTML('afterend', otherLocalizationsInputs.join(''));
+                let currentEl = el;
+                while (currentEl.nextSibling) {
+                    currentEl = currentEl.nextSibling;
+                    const inputEl = currentEl.querySelector('input');
+                    if (inputEl.value === '' && previousValues.has(inputEl.id)) {
+                        inputEl.value = previousValues.get(inputEl.id);
+                    }
+                }
             });
         }
     }
@@ -2124,11 +2154,18 @@ const refreshOtherLocalizationInputs = (otherLocalizations) => {
  * added after these elements, ensuring a clean state for localization input.
  */
 const resetOtherLocalizationInputs = () => {
+    const previousValues = new Map();
     Array.from(document.querySelectorAll('.litEventName')).forEach(el => {
         while (el.nextSibling) {
+            const inputEl = el.nextSibling.querySelector('input');
+            if (inputEl && inputEl.value !== '') {
+                console.log('nextSibling input.id:', inputEl.id, 'nextSibling input.value:', inputEl.value);
+                previousValues.set(inputEl.id, inputEl.value);
+            }
             el.nextSibling.remove();
         }
     });
+    return previousValues;
 }
 
 /**
@@ -2198,7 +2235,6 @@ const loadDiocesanCalendarData = () => {
                         TranslationData.get(API.path).set(otherLocalizations[i], localizationData);
                     });
                     console.log('TranslationData:', TranslationData);
-                    resetOtherLocalizationInputs();
                     refreshOtherLocalizationInputs(otherLocalizations);
                     DataLoader.lastRequestPath = API.path;
                     DataLoader.lastRequestLocale = currentLocalization;
@@ -2208,7 +2244,6 @@ const loadDiocesanCalendarData = () => {
                 // We are requesting the same calendar, just with a different locale
                 // We don't need to reload ALL i18n data, just the data for the last locale, if we haven't already
                 if (DataLoader.allLocalesLoaded.hasOwnProperty(API.path)) {
-                    resetOtherLocalizationInputs();
                     refreshOtherLocalizationInputs(otherLocalizations);
                 } else {
                     fetch(API.path + '/' + DataLoader.lastRequestLocale).then(response => response.json()).then(localizationData => {
@@ -2217,7 +2252,6 @@ const loadDiocesanCalendarData = () => {
                         }
                         TranslationData.get(API.path).set(DataLoader.lastRequestLocale, localizationData);
                         console.log('TranslationData:', TranslationData);
-                        resetOtherLocalizationInputs();
                         refreshOtherLocalizationInputs(otherLocalizations);
                         DataLoader.allLocalesLoaded[API.path] = true;
                     });
@@ -3006,7 +3040,6 @@ document.addEventListener('change', (ev) => {
             if (API.method === 'PUT') {
                 const currentLocalization = document.querySelector('#currentLocalization').value;
                 const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions).filter(({ value }) => value !== currentLocalization).map(({ value }) => value);
-                resetOtherLocalizationInputs();
                 refreshOtherLocalizationInputs(otherLocalizations);
             }
         }

@@ -34,6 +34,12 @@ class WiderRegionPayload {
         if (Object.keys(i18n).sort().join(',') !== metadata.locales.sort().join(',')) {
             throw new Error('`i18n` object must have the same keys as found in the `metadata.locales` array');
         }
+        if (false === metadata.hasOwnProperty('wider_region')) {
+            throw new Error('`metadata.wider_region` parameter is required');
+        }
+        if (metadata.wider_region.includes(' - ')) {
+            metadata.wider_region = metadata.wider_region.split(' - ')[0];
+        }
         this.litcal = litcal;
         this.national_calendars = national_calendars;
         this.metadata = metadata;
