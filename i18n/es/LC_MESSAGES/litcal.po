@@ -6,13 +6,14 @@
 # OpenAI <noreply-mt-openai@weblate.org>, 2024.
 # "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024.
 # Weblate Admin <admin@example.com>, 2024, 2025.
+# Miguel Galvez <miggalvez@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-22 21:57+0000\n"
-"PO-Revision-Date: 2025-01-02 23:11+0000\n"
-"Last-Translator: Weblate Admin <admin@example.com>\n"
+"PO-Revision-Date: 2025-04-11 06:02+0000\n"
+"Last-Translator: Miguel Galvez <miggalvez@gmail.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
 "Language: es\n"
@@ -490,7 +491,7 @@ msgstr "Calcula la fecha de Pascua"
 
 #: usage.php:198 layout/header.php:112
 msgid "Liturgy of the Day"
-msgstr "Liturgia del Día"
+msgstr "Liturgia del día"
 
 #: usage.php:207
 msgid "Alexa News Brief"
@@ -816,7 +817,7 @@ msgstr "Grupo de diócesis"
 
 #: extending.php:404
 msgid "Timezone"
-msgstr ""
+msgstr "Zona horaria"
 
 #: extending.php:424
 msgid "Solemnities"
@@ -1180,12 +1181,12 @@ msgstr "Vírgenes"
 #. translators: context = from the Common of nn
 #: src/LitCommon.php:71
 msgid "Holy Men and Women"
-msgstr "Hombres y Mujeres Santos"
+msgstr "Santos y Santas"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:74
 msgid "For One Martyr"
-msgstr "Para un mártir"
+msgstr "Por un mártir"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:76
@@ -1195,27 +1196,27 @@ msgstr "Para Varios Mártires"
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:78
 msgid "For Missionary Martyrs"
-msgstr "Para Misioneros Mártires"
+msgstr "Por Misioneros Mártires"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:80
 msgid "For One Missionary Martyr"
-msgstr "Para Un Misionero Mártir"
+msgstr "Por un Misionero Mártir"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:82
 msgid "For Several Missionary Martyrs"
-msgstr "Para Varios Mártires Misioneros"
+msgstr "Por Varios Misioneros Mártires"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:84
 msgid "For a Virgin Martyr"
-msgstr "Para Una Virgen Mártir"
+msgstr "Por una Virgen Mártir"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:86
 msgid "For a Holy Woman Martyr"
-msgstr "Para Una Mujer Santa Mártir"
+msgstr "Por una Santa Mártir"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:88
@@ -1225,7 +1226,7 @@ msgstr "Para un Papa"
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:90
 msgid "For a Bishop"
-msgstr "Para Un Obispo"
+msgstr "Por un Obispo"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:92
@@ -1245,12 +1246,12 @@ msgstr "Para Fundadores de una Iglesia"
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:98
 msgid "For One Founder"
-msgstr "Para Un Fundador"
+msgstr "Por un Fundador"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:100
 msgid "For Several Founders"
-msgstr "Para Varios Fundadores"
+msgstr "Por Varios Fundadores"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:102
@@ -1260,27 +1261,27 @@ msgstr "Para Misioneros"
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:104
 msgid "For One Virgin"
-msgstr "Para Una Virgen"
+msgstr "Por una Virgen"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:106
 msgid "For Several Virgins"
-msgstr "Para Varias Vírgenes"
+msgstr "Por Varias Vírgenes"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:108
 msgid "For Several Saints"
-msgstr "Para varios santos"
+msgstr "Por Varios Santos"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:110
 msgid "For One Saint"
-msgstr "Para un santo"
+msgstr "Por un Santo"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:112
 msgid "For an Abbot"
-msgstr "Para un abad"
+msgstr "Por un Abad"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:114
@@ -1305,12 +1306,12 @@ msgstr "Para quienes practicaron obras de misericordia"
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:122
 msgid "For Educators"
-msgstr "Para educadores"
+msgstr "Por Educadores"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:124
 msgid "For Holy Women"
-msgstr "Para mujeres santas"
+msgstr "Por Mujeres Santas"
 
 #. translators: (singular feminine) glue between "From the Common" and the actual common. Latin: leave empty!
 #: src/LitCommon.php:172 src/LitCommon.php:184
