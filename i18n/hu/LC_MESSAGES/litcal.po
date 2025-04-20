@@ -7,13 +7,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-19 22:12+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2025-04-21 21:30+0000\n"
+"Last-Translator: Gábor <pleineux@gmail.com>\n"
+"Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
+"liturgical-calendar/frontend/hu/>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.11\n"
 
 #: index.php:5
 msgid ""
@@ -509,22 +512,22 @@ msgstr ""
 #. translators: context = liturgical color
 #: extending.php:103 src/LitColor.php:35 src/FormControls.php:91
 msgid "white"
-msgstr ""
+msgstr "fehér"
 
 #. translators: context = liturgical color
 #: extending.php:104 src/LitColor.php:38 src/FormControls.php:92
 msgid "red"
-msgstr ""
+msgstr "piros"
 
 #. translators: context = liturgical color
 #: extending.php:105 src/LitColor.php:29 src/FormControls.php:94
 msgid "green"
-msgstr ""
+msgstr "zöld"
 
 #. translators: context = liturgical color
 #: extending.php:106 src/LitColor.php:32 src/FormControls.php:93
 msgid "purple"
-msgstr ""
+msgstr "viola"
 
 #. translators: in reference to the first year from which this festivity takes place
 #: extending.php:108 src/FormControls.php:101
@@ -968,7 +971,7 @@ msgstr ""
 #. translators: context = liturgical color
 #: src/LitColor.php:41
 msgid "pink"
-msgstr ""
+msgstr "rózsaszín"
 
 #: src/LitCommon.php:57
 msgid "Proper"
