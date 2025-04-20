@@ -13,38 +13,22 @@ if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'development') {
         die("API_PROTOCOL, API_HOST and API_PORT must be defined in .env.development or similar dotenv when APP_ENV=development");
     }
 
-    $dateOfEasterURL    = "{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}:{$_ENV['API_PORT']}/easter";
-    $calendarURL        = "{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}:{$_ENV['API_PORT']}/calendar";
-    $metadataURL        = "{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}:{$_ENV['API_PORT']}/calendars";
-    $eventsURL          = "{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}:{$_ENV['API_PORT']}/events";
-    $missalsURL         = "{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}:{$_ENV['API_PORT']}/missals";
-    $decreesURL         = "{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}:{$_ENV['API_PORT']}/decrees";
-    $regionalDataURL    = "{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}:{$_ENV['API_PORT']}/data";
-    $calSubscriptionURL = "{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}:{$_ENV['API_PORT']}/calendar?returntype=ICS";
+    $baseURL = "{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}:{$_ENV['API_PORT']}";
+
 } else {
     $isStaging = ( strpos($_SERVER['HTTP_HOST'], "-staging") !== false );
     //$stagingURL = $isStaging ? "-staging" : "";
     $endpointV = $isStaging ? "dev" : "v4";
-
-    $dateOfEasterURL    = "https://litcal.johnromanodorazio.com/api/{$endpointV}/easter/";
-    $calendarURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/calendar";
-    $metadataURL        = "https://litcal.johnromanodorazio.com/api/{$endpointV}/calendars/";
-    $eventsURL          = "https://litcal.johnromanodorazio.com/api/{$endpointV}/events";
-    $missalsURL         = "https://litcal.johnromanodorazio.com/api/{$endpointV}/missals";
-    $decreesURL         = "https://litcal.johnromanodorazio.com/api/{$endpointV}/decrees";
-    $regionalDataURL    = "https://litcal.johnromanodorazio.com/api/{$endpointV}/data";
-    $calSubscriptionURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}/calendar?returntype=ICS";
+    $baseURL = "https://litcal.johnromanodorazio.com/api/{$endpointV}";
 }
-/*
-$API_URLS = [
-    "dateOfEaster" => $dateOfEasterURL,
-    "calendar" => $calendarURL,
-    "metadata" => $metadataURL,
-    "events" => $eventsURL,
-    "missals" => $missalsURL,
-    "decrees" => $decreesURL,
-    "regionalData" => $regionalDataURL
-];
-die(json_encode($API_URLS));
-*/
+
+$dateOfEasterURL    = "{$baseURL}/easter";
+$calendarURL        = "{$baseURL}/calendar";
+$metadataURL        = "{$baseURL}/calendars";
+$eventsURL          = "{$baseURL}/events";
+$missalsURL         = "{$baseURL}/missals";
+$decreesURL         = "{$baseURL}/decrees";
+$regionalDataURL    = "{$baseURL}/data";
+$calSubscriptionURL = "{$baseURL}/calendar?returntype=ICS";
+
 $i18n = new I18n();

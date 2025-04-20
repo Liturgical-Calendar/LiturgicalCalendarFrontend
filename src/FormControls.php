@@ -168,7 +168,7 @@ class FormControls
         "<label style=\"display:block;\" for=\"onTheFly{uniqid}Grade\">" . _("Grade") . "</label>" .
         "<select class=\"form-select litEvent litEventGrade\" id=\"onTheFly{uniqid}Grade\">";
         foreach (LitGrade::$values as $value) {
-            $gradeTemplate .= "<option value=\"$value\">" . $this->LitGrade->i18n($value) . "</option>";
+            $gradeTemplate .= "<option value=\"$value\">" . $this->LitGrade->i18n($value, false) . "</option>";
         }
         $gradeTemplate .= "</select>";
         $gradeTemplate .= "</div>";

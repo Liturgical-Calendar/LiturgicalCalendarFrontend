@@ -26,9 +26,16 @@ Then make sure you have an instance of the API running locally (see [Liturgical-
 
 Then copy `.env.example` to `.env.development`. You shouldn't have to change any values, unless you are running the local API instance on a port other than 8000.
 
-Finally, launch PHP's builtin server from a separate terminal instance from the local API, with `php -S localhost:3000` and open your browser at `localhost:3000`.
+Finally, launch PHP's builtin server from a separate terminal instance than the one on which you are running the local API instance:
 
-For convenience when using VSCode, a `tasks.json` has been defined so that you can simply type <kbd>CTRL</kbd>+<kbd>SHIFT</kbd>+<kbd>B</kbd> (<kbd>CMD</kbd>+<kbd>SHIFT</kbd>+<kbd>B</kbd> on MacOS) to start the PHP builtin server and open the browser at `localhost:3000`.
+```console
+php -S localhost:3000
+```
+
+Then navigate to `localhost:3000` in your browser, and you should see a running instance of the frontend website that is fully communicational with the backend API.
+
+> [!TIP]
+> For convenience when using VSCode, a `tasks.json` has been defined so that you can simply type <kbd>CTRL</kbd>+<kbd>SHIFT</kbd>+<kbd>B</kbd> (<kbd>CMD</kbd>+<kbd>SHIFT</kbd>+<kbd>B</kbd> on MacOS) to start the PHP builtin server and open the browser at `localhost:3000`.
 
 # Localization of the Frontend
 <a href="https://translate.johnromanodorazio.com/engage/liturgical-calendar/">
