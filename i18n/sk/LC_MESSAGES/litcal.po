@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-22 21:57+0000\n"
+"POT-Creation-Date: 2025-03-19 22:12+0000\n"
 "PO-Revision-Date: 2025-02-01 13:05+0000\n"
 "Last-Translator: Lovro <development.lovro@gmail.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -558,7 +558,7 @@ msgstr ""
 msgid "Tag"
 msgstr "Značka"
 
-#: extending.php:92 src/Utilities.php:228 src/FormControls.php:52
+#: extending.php:92 src/Utilities.php:233 src/FormControls.php:52
 msgid "Name"
 msgstr "Meno"
 
@@ -570,19 +570,19 @@ msgstr "Deň"
 msgid "Month"
 msgstr "Mesiac"
 
-#: extending.php:95 extending.php:454
+#: extending.php:95 extending.php:463
 msgid "Other Solemnity"
 msgstr "Iná iná slávnosť"
 
-#: extending.php:96 extending.php:475
+#: extending.php:96 extending.php:484
 msgid "Other Feast"
 msgstr "Iné sviatky"
 
-#: extending.php:97 extending.php:495 extending.php:496
+#: extending.php:97 extending.php:504 extending.php:505
 msgid "Other Memorial"
 msgstr "Iná pamiatka"
 
-#: extending.php:98 extending.php:516 extending.php:517
+#: extending.php:98 extending.php:525 extending.php:526
 msgid "Other Optional Memorial"
 msgstr "Iné ľubovoľné spomienky"
 
@@ -650,143 +650,151 @@ msgstr "Nový sviatok"
 
 #. translators: label of the form row
 #: extending.php:116
-msgid "Change name or grade"
+#, fuzzy
+#| msgid "Change name or grade"
+msgid "Change name"
+msgstr "Zmeniť meno alebo známku"
+
+#: extending.php:117
+#, fuzzy
+#| msgid "Change name or grade"
+msgid "Change grade"
 msgstr "Zmeniť meno alebo známku"
 
 #. translators: label of the form row
-#: extending.php:118
+#: extending.php:119
 msgid "Move festivity"
 msgstr "Presunúť slávnosť"
 
-#: extending.php:119
+#: extending.php:120
 msgid "Decree URL"
 msgstr "Dekrét URL"
 
-#: extending.php:120
+#: extending.php:121
 msgid "Decree Language mappings"
 msgstr "Jazykové mapovania dekrétov"
 
-#: extending.php:121
+#: extending.php:122
 msgid "Missal"
 msgstr "Misál"
 
-#: extending.php:122
+#: extending.php:123
 msgid "Reason (in favor of festivity)"
 msgstr "Dôvod (v prospech slávnosti)"
 
-#: extending.php:134 extending.php:595
-msgid "Designate patron from existing festivity"
-msgstr "Urči patróna z existujúcej slávnosti"
+#: extending.php:135 extending.php:604 extending.php:608
+msgid "Designate patron"
+msgstr "Určiť patróna"
 
-#: extending.php:135 extending.php:611
+#: extending.php:136 extending.php:620
 msgid "Change name or grade of existing festivity"
 msgstr "Zmeniť názov alebo stupeň existujúcej slávnosti"
 
-#: extending.php:136 extending.php:627
+#: extending.php:137 extending.php:636
 msgid "Move festivity to new date"
 msgstr "Presuňte slávnosť na nový dátum"
 
-#: extending.php:137 extending.php:643
+#: extending.php:138 extending.php:652
 msgid "Create a new festivity"
 msgstr "Vytvorte nový sviatok"
 
-#: extending.php:143
+#: extending.php:144
 msgid "General Roman Calendar - Extending"
 msgstr "Všeobecný rímsky kalendár - Rozšírenie"
 
-#: extending.php:151
+#: extending.php:152
 msgid "Extend the General Roman Calendar with National or Diocesan data"
 msgstr "Rozšírte Všeobecný rímsky kalendár o národné alebo diecézne údaje"
 
-#: extending.php:162 extending.php:313
+#: extending.php:163 extending.php:314
 msgid "Wider Region"
 msgstr "Širší región"
 
-#: extending.php:164 extending.php:230
+#: extending.php:165 extending.php:231
 msgid "This value cannot be empty."
 msgstr "Táto hodnota nemôže byť prázdna."
 
-#: extending.php:178
+#: extending.php:179
 msgid "Locales"
 msgstr "Jazykoch"
 
-#: extending.php:187 extending.php:317 extending.php:393
+#: extending.php:188 extending.php:326 extending.php:402
 msgid "Current localization"
 msgstr "Aktuálna lokalizácia"
 
-#: extending.php:199 extending.php:243 extending.php:412
+#: extending.php:200 extending.php:244 extending.php:421
 msgid "Remove existing data"
 msgstr "Odstrániť existujúce údaje"
 
-#: extending.php:205 layout/header.php:27
+#: extending.php:206 layout/header.php:27
 msgid "Create a Calendar for a Wider Region"
 msgstr "Vytvoriť kalendár pre širší región"
 
-#: extending.php:216
+#: extending.php:217
 msgid "Save Wider Region Calendar Data"
 msgstr "Uložiť údaje kalendára širšieho regiónu"
 
-#: extending.php:228
+#: extending.php:229
 msgid "National Calendar"
 msgstr "Národný kalendár"
 
-#: extending.php:249 layout/header.php:28
+#: extending.php:250 layout/header.php:28
 msgid "Create a National Calendar"
 msgstr "Vytvoriť národný kalendár"
 
-#: extending.php:254
+#: extending.php:255
 msgid "National calendar settings"
 msgstr "Nastavenia národného kalendára"
 
-#: extending.php:257 extending.php:541
+#: extending.php:258 extending.php:550
 msgid "EPIPHANY"
 msgstr "Zjavenie Pána"
 
-#: extending.php:260 extending.php:544
+#: extending.php:261 extending.php:553
 msgid "January 6"
 msgstr "6. januára"
 
-#: extending.php:261 extending.php:545
+#: extending.php:262 extending.php:554
 msgid "Sunday between January 2 and January 8"
 msgstr "Nedeľa medzi 2. januárom a 8. januárom"
 
-#: extending.php:265 extending.php:549
+#: extending.php:266 extending.php:558
 msgid "ASCENSION"
 msgstr "Nanebovstúpenie"
 
-#: extending.php:273 extending.php:557
+#: extending.php:274 extending.php:566
 msgid "CORPUS CHRISTI"
 msgstr "Sviatok Božieho Tela"
 
-#: extending.php:281
+#: extending.php:282
 msgid "ETERNAL HIGH PRIEST"
 msgstr "VEČNÝ VEĽKŇAZ"
 
-#: extending.php:288 extending.php:383
+#: extending.php:289 extending.php:392
 msgid "LOCALES"
 msgstr "JAZYKOCH"
 
-#: extending.php:301
+#: extending.php:302
 msgid "Published Roman Missals"
 msgstr "Publikované rímske misály"
 
-#: extending.php:304 extending.php:660
+#: extending.php:305 extending.php:668
 msgid "Add Missal"
 msgstr "Pridať Misál"
 
-#: extending.php:336
+#: extending.php:345
 msgid "Save National Calendar Data"
 msgstr "Uložiť údaje národného kalendára"
 
-#: extending.php:350
+#: extending.php:359
 msgid "Depends on national calendar"
 msgstr "Závisí od národného kalendára"
 
-#: extending.php:361
+#: extending.php:370
 msgid "Diocese"
 msgstr "Diecéza"
 
-#: extending.php:363
+#: extending.php:372
 msgid ""
 "This diocese does not seem to exist? Please choose from a value in the list "
 "to retrieve an existing diocese, or ignore if creating a new diocesan "
@@ -795,70 +803,70 @@ msgstr ""
 "Táto diecéza sa zdá neexistuje? Vyberte hodnotu zo zoznamu na získanie "
 "existujúcej diecézy, alebo ignorujte, ak vytvárate nový diecézny kalendár."
 
-#: extending.php:369
+#: extending.php:378
 msgid "Diocesan group"
 msgstr "Diecézna skupina"
 
-#: extending.php:404
+#: extending.php:413
 msgid "Timezone"
 msgstr ""
 
-#: extending.php:424
+#: extending.php:433
 msgid "Solemnities"
 msgstr "Slávnosti"
 
-#: extending.php:425
+#: extending.php:434
 msgid "Feasts"
 msgstr "Sviatky"
 
-#: extending.php:426
+#: extending.php:435
 msgid "Memorials"
 msgstr "Pamätníky"
 
-#: extending.php:427
+#: extending.php:436
 msgid "Optional memorials"
 msgstr "Ľubovoľné spomienky"
 
-#: extending.php:446 extending.php:467 extending.php:488 extending.php:509
+#: extending.php:455 extending.php:476 extending.php:497 extending.php:518
 #: layout/header.php:29
 msgid "Create a Diocesan Calendar"
 msgstr "Vytvoriť diecézny kalendár"
 
-#: extending.php:446
+#: extending.php:455
 msgid "Define the Solemnities"
 msgstr "Definícia slávností"
 
-#: extending.php:452
+#: extending.php:461
 msgid ""
 "Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr "Hlavný patrón(i) miesta, diecézy, regiónu, provincie alebo územia"
 
-#: extending.php:453 extending.php:474
+#: extending.php:462 extending.php:483
 msgid "Dedication of the Cathedral"
 msgstr "Posviacka katedrály"
 
-#: extending.php:467
+#: extending.php:476
 msgid "Define the Feasts"
 msgstr "Definuj sviatky"
 
-#: extending.php:473
+#: extending.php:482
 msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr "Patrón(i) miesta, diecézy, regiónu, provincie alebo územia"
 
-#: extending.php:488
+#: extending.php:497
 msgid "Define the Memorials"
 msgstr "Definuj pamätné dni"
 
-#: extending.php:494
+#: extending.php:503
 msgid ""
 "Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr "Sekundárny patrón(i) miesta, diecézy, regiónu, provincie alebo územia"
 
-#: extending.php:509
+#: extending.php:518
 msgid "Define the Optional Memorials"
 msgstr "Definuj voliteľné spomienky"
 
-#: extending.php:515
+#: extending.php:524
 msgid ""
 "Saints whos veneration is local to the Place, Diocese, Region, Province or "
 "Territory"
@@ -866,40 +874,34 @@ msgstr ""
 "Svätí, ktorých uctievanie je miestne pre miesto, diecézu, región, provinciu "
 "alebo územie"
 
-#: extending.php:538
+#: extending.php:547
 msgid "Diocesan overrides to the national calendar for …"
 msgstr "Diecézne výnimky z národného kalendára pre …"
 
-#: extending.php:572
+#: extending.php:581
 msgid "SAVE DIOCESAN CALENDAR"
 msgstr "ULOŽIŤ DIECÉZNY KALENDÁR"
 
-#: extending.php:599
-msgid "Designate patron"
-msgstr "Určiť patróna"
-
-#: extending.php:600 extending.php:616 extending.php:632 extending.php:649
-#: extending.php:673
+#: extending.php:609 extending.php:625 extending.php:641 extending.php:657
+#: extending.php:681
 msgid "Cancel"
 msgstr "Zrušiť"
 
-#: extending.php:631
+#: extending.php:640
 msgid "Move Festivity"
 msgstr "Presunúť Slávnosť"
 
-#: extending.php:647
-msgid "New Festivity from existing"
-msgstr "Nový sviatok z existujúceho"
+#: extending.php:656
+#, fuzzy
+#| msgid "Create a new festivity"
+msgid "Create Festivity"
+msgstr "Vytvorte nový sviatok"
 
-#: extending.php:648
-msgid "New Festivity ex novo"
-msgstr "Nový sviatok ex novo"
-
-#: extending.php:665
+#: extending.php:673
 msgid "Choose from known Roman Missal language editions"
 msgstr "Vyberte si z dostupných jazykových vydaní Rímskeho misála"
 
-#: extending.php:667
+#: extending.php:675
 msgid ""
 "This Missal is unknown to the Liturgical Calendar API. Please choose from a "
 "value in the list, or contact the curator of the API to have the Missal "
@@ -909,7 +911,7 @@ msgstr ""
 "hodnotu zo zoznamu alebo kontaktujte kurátora API, aby bol misál pridaný do "
 "známych jazykových vydaní misálov."
 
-#: extending.php:672
+#: extending.php:680
 msgid "Add language edition Roman Missal"
 msgstr "Pridať jazykovú edíciu Rímskeho misála"
 
@@ -1425,22 +1427,37 @@ msgstr ""
 "Kancelár diecézy Charlottetown prispel údajmi o liturgickom kalendári pre "
 "Kanadu v angličtine aj francúzštine"
 
-#: src/Utilities.php:220
-msgid "Choose from existing festivities"
-msgstr "Vyber si z existujúcich slávností"
-
-#: src/Utilities.php:222
+#: src/Utilities.php:219
 msgid ""
 "This festivity does not seem to exist? Please choose from a value in the "
 "list."
 msgstr ""
 "Zdá sa, že táto slávnosť neexistuje. Prosím, vyberte si hodnotu zo zoznamu."
 
-#: src/Utilities.php:226
+#: src/Utilities.php:220
+#, fuzzy
+#| msgid ""
+#| "This festivity does not seem to exist? Please choose from a value in the "
+#| "list."
+msgid "This festivity does not exist, so it will be created."
+msgstr ""
+"Zdá sa, že táto slávnosť neexistuje. Prosím, vyberte si hodnotu zo zoznamu."
+
+#: src/Utilities.php:225
+msgid "Choose from existing festivities"
+msgstr "Vyber si z existujúcich slávností"
+
+#: src/Utilities.php:225
+#, fuzzy
+#| msgid "Choose from existing festivities"
+msgid "Choose from existing festivities (or create a new one)"
+msgstr "Vyber si z existujúcich slávností"
+
+#: src/Utilities.php:231
 msgid "Property to change"
 msgstr "Vlastnosť na zmenu"
 
-#: src/Utilities.php:229 src/FormControls.php:168
+#: src/Utilities.php:234 src/FormControls.php:168
 msgid "Grade"
 msgstr "Trieda"
 
@@ -1475,6 +1492,15 @@ msgstr "Dokumentácia"
 #: layout/header.php:96
 msgid "Examples of Usage"
 msgstr "Príklady použitia"
+
+#~ msgid "Designate patron from existing festivity"
+#~ msgstr "Urči patróna z existujúcej slávnosti"
+
+#~ msgid "New Festivity from existing"
+#~ msgstr "Nový sviatok z existujúceho"
+
+#~ msgid "New Festivity ex novo"
+#~ msgstr "Nový sviatok ex novo"
 
 #~ msgid "Liturgical Calendar API endpoint"
 #~ msgstr "Koncový bod API liturgického kalendára"
