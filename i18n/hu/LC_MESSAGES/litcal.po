@@ -2,13 +2,14 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # Gábor <pleineux@gmail.com>, 2025.
+# OpenAI <noreply-mt-openai@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-19 22:12+0000\n"
-"PO-Revision-Date: 2025-04-21 21:30+0000\n"
-"Last-Translator: Gábor <pleineux@gmail.com>\n"
+"PO-Revision-Date: 2025-06-21 00:50+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hu/>\n"
 "Language: hu\n"
@@ -16,161 +17,211 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.11\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #: index.php:5
+#, fuzzy
 msgid ""
 "Collection of Liturgical events for any given year between 1970 and 9999."
 msgstr ""
+"Liturgikus események gyűjteménye bármely adott évre 1970 és 9999 között."
 
 #. translators: 1. /calendar, 2. /calendar/nation/{NATION}, 3. /calendar/diocese/{DIOCESE}
 #: index.php:8
-#, php-format
+#, fuzzy, php-format
 msgid ""
 "The base %1$s path returns liturgical events for the General Roman Calendar. "
 "National and Diocesan calendars can be requested on the %2$s and %3$s paths "
 "respectively."
 msgstr ""
+"Az alap %1$s útvonal a Római Általános Naptár liturgikus eseményeit adja "
+"vissza. Nemzeti és egyházmegyei naptárak kérhetők a %2$s és %3$s útvonalakon."
 
 #. translators: 1. /{YEAR}
 #: index.php:15
-#, php-format
+#, fuzzy, php-format
 msgid ""
 "Each of these paths can optionally be further specified with a %1$s path "
 "parameter. When not specified, the API will default to the current year."
 msgstr ""
+"Ezek az útvonalak opcionálisan tovább specifikálhatók egy %1$s "
+"útvonalparaméterrel. Ha nincs megadva, az API az aktuális évre áll be "
+"alapértelmezésként."
 
 #. translators: 1. /calendar/nation/{NATION}, 2. /calendar/diocese/{DIOCESE}
 #: index.php:21
-#, php-format
+#, fuzzy, php-format
 msgid ""
 "These parameters are useful for tweaking the calendar results, when no "
 "National or Diocesan calendar is requested. Since National and Diocesan "
 "calendars have these parameters built in, the parameters are not available "
 "on the %1$s and %2$s routes."
 msgstr ""
+"Ezek a paraméterek hasznosak a naptár eredményeinek finomhangolásához, ha "
+"nem kérnek nemzeti vagy egyházmegyei naptárt. Mivel a nemzeti és "
+"egyházmegyei naptárakban ezek a paraméterek beépítettek, a paraméterek nem "
+"érhetők el a %1$s és %2$s útvonalakon."
 
 #: index.php:25
+#, fuzzy
 msgid ""
 "N.B. When none of these parameters are set, the API will use the defaults as "
 "in use in the Vatican."
 msgstr ""
+"Megjegyzés: Ha egyik paraméter sincs beállítva, az API a Vatikánban használt "
+"alapértelmezéseket fogja használni."
 
 #. translators: 1. /calendar
 #: index.php:30
-#, php-format
+#, fuzzy, php-format
 msgid ""
 "These request parameters can always be set, whether we are requesting the "
 "base %1$s resource or any resource below the %1$s path. National and "
 "Diocesan calendars do not have these parameters built-in."
 msgstr ""
+"Ezek a kérési paraméterek mindig beállíthatók, függetlenül attól, hogy az "
+"alap %1$s erőforrást vagy bármely erőforrást kérünk az %1$s útvonal alatt. A "
+"nemzeti és egyházmegyei naptárakban nincsenek beépített paraméterek."
 
 #: index.php:35
+#, fuzzy
 msgid ""
 "It is preferable to set the locale using the Accept-Language header rather "
 "than using the locale parameter. N.B. The Accept-Language header will have "
 "no effect when a National or Diocesan calendar is requested."
 msgstr ""
+"Célszerűbb a helyi beállítást az Accept-Language fejléc használatával "
+"megadni, mint a locale paraméterrel. Megjegyzés: Az Accept-Language fejléc "
+"nem lesz hatással, ha nemzeti vagy egyházmegyei naptárt kérnek."
 
 #: index.php:38
+#, fuzzy
 msgid ""
 "It is preferable to request the response content type using the Accept "
 "header rather than using the return_type parameter."
 msgstr ""
+"Célszerűbb a válasz tartalomtípusát az Accept fejléc használatával kérni, "
+"mint a return_type paraméterrel."
 
 #: index.php:41
+#, fuzzy
 msgid ""
 "When not specified, the API will default to the current year. Try "
 "specifically setting the year by changing the value here."
 msgstr ""
+"Ha nincs megadva, az API az aktuális évre áll be alapértelmezésként. Próbáld "
+"meg kifejezetten beállítani az évet az érték megváltoztatásával itt."
 
 #. translators: %s = '/calendar'
 #: index.php:46
-#, php-format
+#, fuzzy, php-format
 msgid "Request parameters available on the base %s path"
-msgstr ""
+msgstr "Kérési paraméterek elérhetők az alap %s útvonalon"
 
 #. translators: 1. /calendar
 #: index.php:52
-#, php-format
+#, fuzzy, php-format
 msgid "Request parameters available on all %1$s paths"
-msgstr ""
+msgstr "Kérési paraméterek elérhetők minden %1$s útvonalon"
 
 #: index.php:59 usage.php:13 examples.php:94 liturgyOfAnyDay.php:24
+#, fuzzy
 msgid "General Roman Calendar"
-msgstr ""
+msgstr "Római Általános Naptár"
 
 #: index.php:68 layout/header.php:74
+#, fuzzy
 msgid "Catholic Liturgical Calendar"
-msgstr ""
+msgstr "Katolikus Liturgikus Naptár"
 
 #. translators: 1. /calendar
 #: index.php:78
-#, php-format
+#, fuzzy, php-format
 msgid "API %1$s endpoint"
-msgstr ""
+msgstr "API %1$s végpont"
 
 #: index.php:87
+#, fuzzy
 msgid "Path builder"
-msgstr ""
+msgstr "Útvonalépítő"
 
 #: index.php:111
+#, fuzzy
 msgid ""
 "URL of the API request based on selected options. The button is set to the "
 "same URL, click on it to see results."
 msgstr ""
+"Az API kérés URL-je a kiválasztott opciók alapján. A gomb ugyanarra az URL-"
+"re van beállítva, kattints rá az eredmények megtekintéséhez."
 
 #: index.php:120 index.php:124
+#, fuzzy
 msgid "Liturgical Calendar Validator"
-msgstr ""
+msgstr "Liturgikus Naptár Ellenőrző"
 
 #: index.php:123
+#, fuzzy
 msgid ""
 "In order to verify that the liturgical data produced by the API is correct, "
 "there is a Unit Test interface that can run predefined tests against the "
 "JSON responses produced by the API starting from the year 1970 and going up "
 "to 25 years from the current year."
 msgstr ""
+"Annak érdekében, hogy ellenőrizzük, hogy az API által előállított liturgikus "
+"adatok helyesek-e, van egy Egység Teszt felület, amely előre meghatározott "
+"teszteket futtathat az API által előállított JSON válaszok ellen 1970-től "
+"kezdve és az aktuális évtől számított 25 évig."
 
 #: index.php:128
-#, php-format
+#, fuzzy, php-format
 msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
 "repository."
 msgstr ""
+"Az egység tesztek a %s mappában vannak meghatározva a Liturgikus Naptár API "
+"tárolójában."
 
 #: index.php:132
-#, php-format
+#, fuzzy, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
-msgstr ""
+msgstr "Az egység teszt felület saját tárolóban van gondozva: %s."
 
 #: index.php:141
+#, fuzzy
 msgid "Translation Tool"
-msgstr ""
+msgstr "Fordító eszköz"
 
 #: index.php:147 index.php:150
+#, fuzzy
 msgid "Translations status"
-msgstr ""
+msgstr "Fordítások állapota"
 
 #: index.php:158
+#, fuzzy
 msgid "Open API Schema"
-msgstr ""
+msgstr "Nyílt API séma"
 
 #: index.php:161
+#, fuzzy
 msgid "Swagger / Open API Documentation"
-msgstr ""
+msgstr "Swagger / Open API dokumentáció"
 
 #: index.php:163
+#, fuzzy
 msgid ""
 "All of the available API routes with their supported methods, parameters, "
 "content types and responses are described here."
 msgstr ""
+"Az összes elérhető API útvonal a támogatott módszerekkel, paraméterekkel, "
+"tartalomtípusokkal és válaszokkal itt van leírva."
 
 #: index.php:169 usage.php:184
+#, fuzzy
 msgid "Calculation of the Date of Easter"
-msgstr ""
+msgstr "A húsvét dátumának kiszámítása"
 
 #: index.php:172
+#, fuzzy
 msgid ""
 "A simple API endpoint that returns data about the Date of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -179,335 +230,465 @@ msgid ""
 "(observed by the Roman Catholic church) and of the Meeus algorithm for "
 "Julian easter (observed by orthodox churches)."
 msgstr ""
+"Egy egyszerű API végpont, amely visszaadja a húsvét dátumára vonatkozó "
+"adatokat, mind a Gergely-naptár, mind a Julián-naptár szerint, 1583-tól (a "
+"Gergely-naptár bevezetésének éve) 9999-ig (a maximális lehetséges dátum "
+"kiszámítása 64 bites PHP-ben), a Meeus/Jones/Butcher algoritmus Gergely-"
+"naptár szerinti húsvétjára (amelyet a római katolikus egyház tart) és a "
+"Meeus algoritmus Julián-naptár szerinti húsvétjára (amelyet az ortodox "
+"egyházak tartanak) alkalmazott PHP adaptációval."
 
 #: index.php:177
+#, fuzzy
 msgid "Date of Easter API endpoint"
-msgstr ""
+msgstr "Húsvét dátuma API végpont"
 
 #: index.php:179
+#, fuzzy
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
 "localizations can be done in a client application just as well."
 msgstr ""
+"Jelenleg az adatokat szinte bármilyen lokalizációval lehet kérni. "
+"Mindenesetre, mivel az API UNIX időbélyeget ad vissza minden húsvét "
+"dátumára, a lokalizációk egy kliens alkalmazásban is elvégezhetők."
 
 #: usage.php:8
+#, fuzzy
 msgid ""
 "A Liturgical Calendar API from which you can retrieve data for the "
 "Liturgical events of any given year from 1970 onwards, whether for the "
 "Universal or General Roman Calendar or for derived National and Diocesan "
 "calendars"
 msgstr ""
+"Liturgikus naptár API, amelyből lekérhetők bármely adott év liturgikus "
+"eseményei 1970-től kezdődően, akár az egyetemes vagy általános római naptár, "
+"akár a származtatott nemzeti és egyházmegyei naptárak esetében"
 
 #: usage.php:13
+#, fuzzy
 msgid "Examples"
-msgstr ""
+msgstr "Példák"
 
 #: usage.php:21
+#, fuzzy
 msgid "Example usage of the API"
-msgstr ""
+msgstr "Az API példahasználata"
 
 #: usage.php:27 layout/header.php:100
+#, fuzzy
 msgid "Web calendar"
-msgstr ""
+msgstr "Webnaptár"
 
 #: usage.php:39
+#, fuzzy
 msgid "HTML presentation elaborated by PHP using a CURL request"
-msgstr ""
+msgstr "HTML bemutató, amelyet PHP dolgoz fel egy CURL kérés segítségével"
 
 #: usage.php:40
+#, fuzzy
 msgid "View PHP Example"
-msgstr ""
+msgstr "PHP példa megtekintése"
 
 #: usage.php:50
+#, fuzzy
 msgid "HTML presentation elaborated by JAVASCRIPT using an AJAX request"
 msgstr ""
+"HTML bemutató, amelyet JAVASCRIPT dolgoz fel egy AJAX kérés segítségével"
 
 #: usage.php:51
+#, fuzzy
 msgid "View JavaScript Example"
-msgstr ""
+msgstr "JavaScript példa megtekintése"
 
 #: usage.php:58
+#, fuzzy
 msgid "Calendar"
-msgstr ""
+msgstr "Naptár"
 
 #: usage.php:61
+#, fuzzy
 msgid ""
 "FullCalendar representation elaborated by JAVASCRIPT using an AJAX request"
 msgstr ""
+"FullCalendar ábrázolás, amelyet JAVASCRIPT dolgoz fel egy AJAX kérés "
+"segítségével"
 
 #: usage.php:62
+#, fuzzy
 msgid "View FullCalendar"
-msgstr ""
+msgstr "FullCalendar megtekintése"
 
 #: usage.php:63
+#, fuzzy
 msgid "View FullCalendar (messages first)"
-msgstr ""
+msgstr "Teljes naptár megtekintése (üzenetek először)"
 
 #: usage.php:74 layout/header.php:104
+#, fuzzy
 msgid "Calendar subscription"
-msgstr ""
+msgstr "Naptár előfizetés"
 
 #: usage.php:88 liturgyOfAnyDay.php:41
+#, fuzzy
 msgid "Select calendar"
-msgstr ""
+msgstr "Naptár kiválasztása"
 
 #: usage.php:92
+#, fuzzy
 msgid "Calendar subscription URL"
-msgstr ""
+msgstr "Naptár előfizetési URL"
 
 #: usage.php:115 usage.php:128 usage.php:153
+#, fuzzy
 msgid "Click on the link above to copy it the clipboard."
-msgstr ""
+msgstr "Kattints a fenti linkre, hogy a vágólapra másold."
 
 #: usage.php:116
-#, php-format
+#, fuzzy, php-format
 msgid "Navigate to %s."
-msgstr ""
+msgstr "Navigálj ide: %s."
 
 #: usage.php:117
+#, fuzzy
 msgid ""
 "At the bottom left corner of the screen, next to Other calendars, click on "
 "the + icon to add a new calendar, and choose <i><b>From URL</b></i>."
 msgstr ""
+"A képernyő bal alsó sarkában, az Egyéb naptárak mellett kattints a + ikonra "
+"új naptár hozzáadásához, és válaszd a <i><b>URL alapján</b></i> lehetőséget."
 
 #: usage.php:118 usage.php:130 usage.php:156
+#, fuzzy
 msgid "Paste in the URL that you copied earlier."
-msgstr ""
+msgstr "Illeszd be az URL-t, amit korábban másoltál."
 
 #: usage.php:119 usage.php:131 usage.php:143 usage.php:159
+#, fuzzy
 msgid ""
 "Once subscribed, your calendar will be populated with the events from the "
 "subscription URL."
 msgstr ""
+"Miután feliratkoztál, a naptárad megtelik az előfizetési URL eseményeivel."
 
 #: usage.php:120 usage.php:144
+#, fuzzy
 msgid "Google Calendar will poll the calendar URL every 8 hours."
-msgstr ""
+msgstr "A Google Naptár 8 óránként lekérdezi a naptár URL-t."
 
 #: usage.php:121 usage.php:133 usage.php:145 usage.php:163
+#, fuzzy
 msgid ""
 "Since you have made a subscription, any updates in the Liturgical Calendar "
 "API will be propagated to your subscription."
 msgstr ""
+"Mivel feliratkoztál, a Liturgikus Naptár API bármilyen frissítése eljut az "
+"előfizetésedhez."
 
 #: usage.php:122 usage.php:134 usage.php:146 usage.php:164
+#, fuzzy
 msgid ""
 "You will only see events for the current year. On the first day of a new "
 "year however, new events will be created automatically for the new year."
 msgstr ""
+"Csak az aktuális év eseményeit fogod látni. Az új év első napján azonban "
+"automatikusan létrejönnek az új év eseményei."
 
 #: usage.php:123
+#, fuzzy
 msgid ""
 "Once the calendar has been added from a desktop, it will become available "
 "for the same Gmail account on the Google Calendar app on a smartphone."
 msgstr ""
+"Miután a naptárat hozzáadtad asztali gépről, elérhetővé válik ugyanazon "
+"Gmail fiók számára a Google Naptár alkalmazásban okostelefonon."
 
 #: usage.php:129
+#, fuzzy
 msgid ""
 "Go to <i><b>Phone Settings → Accounts → Add account → Other → Add Calendar</"
 "b></i>."
 msgstr ""
+"Menj ide: <i><b>Telefon beállítások → Fiókok → Fiók hozzáadása → Egyéb → "
+"Naptár hozzáadása</b></i>."
 
 #: usage.php:132
+#, fuzzy
 msgid ""
 "The iPhone Calendar app will poll the calendar URL based on the settings at "
 "<i><b>Phone Settings → Accounts → Fetch New Data → Fetch</b></i>."
 msgstr ""
+"Az iPhone Naptár alkalmazás a naptár URL-t a <i><b>Telefon beállítások → "
+"Fiókok → Új adatok lekérése → Lekérés</b></i> beállítások alapján kérdezi le."
 
 #: usage.php:139
-#, php-format
+#, fuzzy, php-format
 msgid ""
 "If you have not yet added the calendar subscription from the desktop version "
 "of Google Calendar, please do so now (see %s)."
 msgstr ""
+"Ha még nem adtad hozzá a naptár előfizetést a Google Naptár asztali "
+"verziójából, kérlek, tedd meg most (lásd %s)."
 
 #: usage.php:140
+#, fuzzy
 msgid "Open the Google Calendar app."
-msgstr ""
+msgstr "Nyisd meg a Google Naptár alkalmazást."
 
 #: usage.php:141
+#, fuzzy
 msgid ""
 "Go to <i><b>Settings</b></i>, then under the account which you used for the "
 "Desktop version, click on the Calendar subscription name."
 msgstr ""
+"Menj ide: <i><b>Beállítások</b></i>, majd az asztali verzióhoz használt fiók "
+"alatt kattints a naptár előfizetés nevére."
 
 #: usage.php:142
+#, fuzzy
 msgid "Make sure <i><b>Synchronization</b></i> is turned on."
-msgstr ""
+msgstr "Győződj meg róla, hogy a <i><b>Szinkronizálás</b></i> be van kapcsolva."
 
 #: usage.php:152
+#, fuzzy
 msgid "tested with Outlook 2013"
-msgstr ""
+msgstr "tesztelve Outlook 2013-mal"
 
 #: usage.php:154
+#, fuzzy
 msgid "At the bottom of the screen, switch from Email view to Calendar view."
-msgstr ""
+msgstr "A képernyő alján válts az E-mail nézetről a Naptár nézetre."
 
 #: usage.php:155
+#, fuzzy
 msgid ""
 "On the ribbon of the Home menu item, click on <i><b>Open calendar → From the "
 "internet</b></i>."
 msgstr ""
+"A Kezdőlap menüszalagján kattints a <i><b>Naptár megnyitása → Az "
+"internetről</b></i> lehetőségre."
 
 #: usage.php:157
+#, fuzzy
 msgid ""
 "On the following screen, check the checkbox along the lines of \"Poll this "
 "calendar in the interval suggested by the creator\"."
 msgstr ""
+"A következő képernyőn jelöld be a jelölőnégyzetet, amely körülbelül így szól:"
+" \"Kérdezze le ezt a naptárt a készítő által javasolt időközönként\"."
 
 #: usage.php:158
+#, fuzzy
 msgid "Outlook Calendar should now poll the calendar URL once a day."
 msgstr ""
+"Az Outlook Naptárnak most naponta egyszer le kell kérdeznie a naptár URL-jét."
 
 #: usage.php:160
+#, fuzzy
 msgid ""
 "Make sure the Calendar is created in the Other calendars folder; if you find "
 "it under the Personal calendars folder, drag it and drop it onto the Other "
 "calendars folder, so as to ensure that it is treated as a subscription "
 "internet calendar."
 msgstr ""
+"Győződj meg róla, hogy a Naptár az Egyéb naptárak mappában jön létre; ha a "
+"Személyes naptárak mappában találod, húzd át az Egyéb naptárak mappába, hogy "
+"előfizetéses internetes naptárként kezeljék."
 
 #: usage.php:161
+#, fuzzy
 msgid ""
 "You can manually fetch new data by clicking on <i><b>Send/receive all</b></"
 "i> (from the SEND/RECEIVE menu item)."
 msgstr ""
+"Új adatok kézi lekéréséhez kattints a <i><b>Összes küldése/fogadása</b></i> ("
+"a KÜLDÉS/FOGADÁS menüpontból)."
 
 #: usage.php:162
+#, fuzzy
 msgid ""
 "Outlook Calendar supports a minimal amount of HTML in the event description, "
 "so the event descriptions provided by the subscription URL are a little bit "
 "more \"beautified\" for Outlook."
 msgstr ""
+"Az Outlook Naptár minimális mennyiségű HTML-t támogat az esemény leírásában, "
+"így az előfizetési URL által biztosított esemény leírások kicsit \"szebbek\" "
+"az Outlook számára."
 
 #: usage.php:176 layout/header.php:108
+#, fuzzy
 msgid "Dates of Easter"
-msgstr ""
+msgstr "Húsvét dátumai"
 
 #: usage.php:187
+#, fuzzy
 msgid "Example display of the date of Easter from 1583 to 9999"
-msgstr ""
+msgstr "A húsvét dátumának példamegjelenítése 1583-tól 9999-ig"
 
 #: usage.php:188
+#, fuzzy
 msgid "Calculate the Date of Easter"
-msgstr ""
+msgstr "Számítsd ki a húsvét dátumát"
 
 #: usage.php:198 layout/header.php:112
+#, fuzzy
 msgid "Liturgy of the Day"
-msgstr ""
+msgstr "A nap liturgiája"
 
 #: usage.php:207
+#, fuzzy
 msgid "Alexa News Brief"
-msgstr ""
+msgstr "Alexa hírek röviden"
 
 #: usage.php:210
+#, fuzzy
 msgid "Daily news brief with the liturgy of the day, as an Amazon Alexa skill"
-msgstr ""
+msgstr "Napi hírek röviden a nap liturgiájával, mint Amazon Alexa készség"
 
 #: usage.php:229 usage.php:237
+#, fuzzy
 msgid "In development"
-msgstr ""
+msgstr "Fejlesztés alatt"
 
 #: usage.php:244 usage.php:248 liturgyOfAnyDay.php:24 liturgyOfAnyDay.php:32
+#, fuzzy
 msgid "Liturgy of any day"
-msgstr ""
+msgstr "Bármely nap liturgiája"
 
 #: usage.php:247
+#, fuzzy
 msgid ""
 "For example, you can find the liturgy of the day from the day of your "
 "baptism."
-msgstr ""
+msgstr "Például megtalálhatod a nap liturgiáját a keresztelőd napjáról."
 
 #: extending.php:83
+#, fuzzy
 msgid ""
 "The General Roman Calendar can be extended so as to create a National or "
 "Diocesan calendar. Diocesan calendars depend on National calendars, so the "
 "National calendar must first be created."
 msgstr ""
+"Az Általános Római Naptár kiterjeszthető nemzeti vagy egyházmegyei naptár "
+"létrehozására. Az egyházmegyei naptárak a nemzeti naptáraktól függenek, így "
+"először a nemzeti naptárat kell létrehozni."
 
 #: extending.php:84 translations.php:9
+#, fuzzy
 msgid ""
 "The first step in creating a national or diocesan calendar, is to translate "
 "the data for the General Roman Calendar into the language for that nation or "
 "diocese."
 msgstr ""
+"Az első lépés egy nemzeti vagy egyházmegyei naptár létrehozásában az, hogy "
+"az Általános Római Naptár adatait lefordítjuk az adott nemzet vagy "
+"egyházmegye nyelvére."
 
 #: extending.php:85
+#, fuzzy
 msgid "(see <a href=\"translations.php\">Translations</a>)"
-msgstr ""
+msgstr "(lásd <a href=\"translations.php\">Fordítások</a>)"
 
 #: extending.php:86
+#, fuzzy
 msgid ""
 "A national calendar may have some festivities in common with other national "
 "calendars, for example the patron of a wider region."
 msgstr ""
+"Egy nemzeti naptárnak lehetnek közös ünnepei más nemzeti naptárakkal, "
+"például egy szélesebb régió védőszentje."
 
 #: extending.php:87
+#, fuzzy
 msgid ""
 "In this case, the festivities for the wider region should be defined "
 "separately, and the languages applicable to the wider region should be set; "
 "the wider region data will then be applied automatically to national "
 "calendars belonging to the wider region."
 msgstr ""
+"Ebben az esetben a szélesebb régió ünnepeit külön kell meghatározni, és a "
+"szélesebb régióra vonatkozó nyelveket be kell állítani; a szélesebb régió "
+"adatai automatikusan alkalmazásra kerülnek a szélesebb régióhoz tartozó "
+"nemzeti naptárakra."
 
 #: extending.php:88
+#, fuzzy
 msgid ""
 "If a group of dioceses decides to pool their Liturgical Calendar data, for "
 "example to print out one single yearly calendar with the data for all the "
 "dioceses in the group, the group can be defined or set here."
 msgstr ""
+"Ha egy csoport egyházmegyék úgy dönt, hogy összevonják liturgikus "
+"naptáradataikat, például hogy egyetlen éves naptárt nyomtassanak ki a "
+"csoport összes egyházmegyéjének adataival, akkor a csoport itt "
+"meghatározható vagy beállítható."
 
 #: extending.php:91
+#, fuzzy
 msgid "Tag"
-msgstr ""
+msgstr "Címke"
 
 #: extending.php:92 src/Utilities.php:233 src/FormControls.php:52
+#, fuzzy
 msgid "Name"
-msgstr ""
+msgstr "Név"
 
 #: extending.php:93 liturgyOfAnyDay.php:47 src/FormControls.php:59
+#, fuzzy
 msgid "Day"
-msgstr ""
+msgstr "Nap"
 
 #: extending.php:94 liturgyOfAnyDay.php:51 src/FormControls.php:65
+#, fuzzy
 msgid "Month"
-msgstr ""
+msgstr "Hónap"
 
 #: extending.php:95 extending.php:463
+#, fuzzy
 msgid "Other Solemnity"
-msgstr ""
+msgstr "Egyéb ünnepélyesség"
 
 #: extending.php:96 extending.php:484
+#, fuzzy
 msgid "Other Feast"
-msgstr ""
+msgstr "Egyéb ünnep"
 
 #: extending.php:97 extending.php:504 extending.php:505
+#, fuzzy
 msgid "Other Memorial"
-msgstr ""
+msgstr "Egyéb emléknap"
 
 #: extending.php:98 extending.php:525 extending.php:526
+#, fuzzy
 msgid "Other Optional Memorial"
-msgstr ""
+msgstr "Egyéb választható emléknap"
 
 #: extending.php:99
+#, fuzzy
 msgid "Delete calendar"
-msgstr ""
+msgstr "Naptár törlése"
 
 #: extending.php:100
+#, fuzzy
 msgid "Delete diocesan calendar"
-msgstr ""
+msgstr "Egyházmegyei naptár törlése"
 
 #: extending.php:101
+#, fuzzy
 msgid ""
 "If you choose to delete this calendar, the liturgical events defined for the "
 "calendar and the corresponding index entries will be removed and no longer "
 "available in the client applications."
 msgstr ""
+"Ha úgy döntesz, hogy törlöd ezt a naptárt, a naptárhoz meghatározott "
+"liturgikus események és a megfelelő indexbejegyzések eltávolításra kerülnek, "
+"és többé nem lesznek elérhetők az ügyfélalkalmazásokban."
 
 #: extending.php:102 src/FormControls.php:89
+#, fuzzy
 msgid "Liturgical color"
-msgstr ""
+msgstr "Liturgikus szín"
 
 #. translators: context = liturgical color
 #: extending.php:103 src/LitColor.php:35 src/FormControls.php:91
@@ -531,348 +712,442 @@ msgstr "viola"
 
 #. translators: in reference to the first year from which this festivity takes place
 #: extending.php:108 src/FormControls.php:101
+#, fuzzy
 msgid "Since"
-msgstr ""
+msgstr "Óta"
 
 #. translators: in reference to the year from which this festivity no longer needs to be dealt with
 #: extending.php:110 src/FormControls.php:108
+#, fuzzy
 msgid "Until"
-msgstr ""
+msgstr "Amíg"
 
 #. translators: label of the form row
 #: extending.php:112
+#, fuzzy
 msgid "Patron or Patrons of the Wider Region"
-msgstr ""
+msgstr "A szélesebb régió védőszentje vagy védőszentjei"
 
 #. translators: label of the form row
 #: extending.php:114
+#, fuzzy
 msgid "New festivity"
-msgstr ""
+msgstr "Új ünnep"
 
 #. translators: label of the form row
 #: extending.php:116
+#, fuzzy
 msgid "Change name"
-msgstr ""
+msgstr "Név megváltoztatása"
 
 #: extending.php:117
+#, fuzzy
 msgid "Change grade"
-msgstr ""
+msgstr "Fokozat megváltoztatása"
 
 #. translators: label of the form row
 #: extending.php:119
+#, fuzzy
 msgid "Move festivity"
-msgstr ""
+msgstr "Ünnep áthelyezése"
 
 #: extending.php:120
+#, fuzzy
 msgid "Decree URL"
-msgstr ""
+msgstr "Rendelet URL"
 
 #: extending.php:121
+#, fuzzy
 msgid "Decree Language mappings"
-msgstr ""
+msgstr "Rendelet nyelvi hozzárendelések"
 
 #: extending.php:122
+#, fuzzy
 msgid "Missal"
-msgstr ""
+msgstr "Misekönyv"
 
 #: extending.php:123
+#, fuzzy
 msgid "Reason (in favor of festivity)"
-msgstr ""
+msgstr "Indoklás (az ünnep mellett)"
 
 #: extending.php:135 extending.php:604 extending.php:608
+#, fuzzy
 msgid "Designate patron"
-msgstr ""
+msgstr "Védőszent kijelölése"
 
 #: extending.php:136 extending.php:620
+#, fuzzy
 msgid "Change name or grade of existing festivity"
-msgstr ""
+msgstr "Meglévő ünnep neve vagy fokozata megváltoztatása"
 
 #: extending.php:137 extending.php:636
+#, fuzzy
 msgid "Move festivity to new date"
-msgstr ""
+msgstr "Ünnep áthelyezése új dátumra"
 
 #: extending.php:138 extending.php:652
+#, fuzzy
 msgid "Create a new festivity"
-msgstr ""
+msgstr "Új ünnep létrehozása"
 
 #: extending.php:144
+#, fuzzy
 msgid "General Roman Calendar - Extending"
-msgstr ""
+msgstr "Általános római naptár - Kiterjesztés"
 
 #: extending.php:152
+#, fuzzy
 msgid "Extend the General Roman Calendar with National or Diocesan data"
 msgstr ""
+"Általános római naptár kiterjesztése nemzeti vagy egyházmegyei adatokkal"
 
 #: extending.php:163 extending.php:314
+#, fuzzy
 msgid "Wider Region"
-msgstr ""
+msgstr "Szélesebb régió"
 
 #: extending.php:165 extending.php:231
+#, fuzzy
 msgid "This value cannot be empty."
-msgstr ""
+msgstr "Ez az érték nem lehet üres."
 
 #: extending.php:179
+#, fuzzy
 msgid "Locales"
-msgstr ""
+msgstr "Helyi beállítások"
 
 #: extending.php:188 extending.php:326 extending.php:402
+#, fuzzy
 msgid "Current localization"
-msgstr ""
+msgstr "Jelenlegi lokalizáció"
 
 #: extending.php:200 extending.php:244 extending.php:421
+#, fuzzy
 msgid "Remove existing data"
-msgstr ""
+msgstr "Meglévő adatok eltávolítása"
 
 #: extending.php:206 layout/header.php:27
+#, fuzzy
 msgid "Create a Calendar for a Wider Region"
-msgstr ""
+msgstr "Naptár létrehozása szélesebb régió számára"
 
 #: extending.php:217
+#, fuzzy
 msgid "Save Wider Region Calendar Data"
-msgstr ""
+msgstr "Szélesebb régió naptáradatainak mentése"
 
 #: extending.php:229
+#, fuzzy
 msgid "National Calendar"
-msgstr ""
+msgstr "Nemzeti naptár"
 
 #: extending.php:250 layout/header.php:28
+#, fuzzy
 msgid "Create a National Calendar"
-msgstr ""
+msgstr "Nemzeti naptár létrehozása"
 
 #: extending.php:255
+#, fuzzy
 msgid "National calendar settings"
-msgstr ""
+msgstr "Nemzeti naptár beállításai"
 
 #: extending.php:258 extending.php:550
+#, fuzzy
 msgid "EPIPHANY"
-msgstr ""
+msgstr "VÍZKERESZT"
 
 #: extending.php:261 extending.php:553
+#, fuzzy
 msgid "January 6"
-msgstr ""
+msgstr "Január 6."
 
 #: extending.php:262 extending.php:554
+#, fuzzy
 msgid "Sunday between January 2 and January 8"
-msgstr ""
+msgstr "Vasárnap január 2. és január 8. között"
 
 #: extending.php:266 extending.php:558
+#, fuzzy
 msgid "ASCENSION"
-msgstr ""
+msgstr "MENNYBEMENETEL"
 
 #: extending.php:274 extending.php:566
+#, fuzzy
 msgid "CORPUS CHRISTI"
-msgstr ""
+msgstr "ÚRNAPJA"
 
 #: extending.php:282
+#, fuzzy
 msgid "ETERNAL HIGH PRIEST"
-msgstr ""
+msgstr "ÖRÖK FŐPAP"
 
 #: extending.php:289 extending.php:392
+#, fuzzy
 msgid "LOCALES"
-msgstr ""
+msgstr "HELYI BEÁLLÍTÁSOK"
 
 #: extending.php:302
+#, fuzzy
 msgid "Published Roman Missals"
-msgstr ""
+msgstr "Kiadott római misekönyvek"
 
 #: extending.php:305 extending.php:668
+#, fuzzy
 msgid "Add Missal"
-msgstr ""
+msgstr "Misekönyv hozzáadása"
 
 #: extending.php:345
+#, fuzzy
 msgid "Save National Calendar Data"
-msgstr ""
+msgstr "Nemzeti naptár adatok mentése"
 
 #: extending.php:359
+#, fuzzy
 msgid "Depends on national calendar"
-msgstr ""
+msgstr "Nemzeti naptártól függ"
 
 #: extending.php:370
+#, fuzzy
 msgid "Diocese"
-msgstr ""
+msgstr "Egyházmegye"
 
 #: extending.php:372
+#, fuzzy
 msgid ""
 "This diocese does not seem to exist? Please choose from a value in the list "
 "to retrieve an existing diocese, or ignore if creating a new diocesan "
 "calendar."
 msgstr ""
+"Úgy tűnik, ez az egyházmegye nem létezik? Kérjük, válasszon egy értéket a "
+"listából egy meglévő egyházmegye lekéréséhez, vagy hagyja figyelmen kívül, "
+"ha új egyházmegyei naptárt hoz létre."
 
 #: extending.php:378
+#, fuzzy
 msgid "Diocesan group"
-msgstr ""
+msgstr "Egyházmegyei csoport"
 
 #: extending.php:413
+#, fuzzy
 msgid "Timezone"
-msgstr ""
+msgstr "Időzóna"
 
 #: extending.php:433
+#, fuzzy
 msgid "Solemnities"
-msgstr ""
+msgstr "Főünnepek"
 
 #: extending.php:434
+#, fuzzy
 msgid "Feasts"
-msgstr ""
+msgstr "Ünnepek"
 
 #: extending.php:435
+#, fuzzy
 msgid "Memorials"
-msgstr ""
+msgstr "Emléknapok"
 
 #: extending.php:436
+#, fuzzy
 msgid "Optional memorials"
-msgstr ""
+msgstr "Választható emléknapok"
 
 #: extending.php:455 extending.php:476 extending.php:497 extending.php:518
 #: layout/header.php:29
+#, fuzzy
 msgid "Create a Diocesan Calendar"
-msgstr ""
+msgstr "Hozzon létre egy egyházmegyei naptárt"
 
 #: extending.php:455
+#, fuzzy
 msgid "Define the Solemnities"
-msgstr ""
+msgstr "Határozza meg az ünnepeket"
 
 #: extending.php:461
+#, fuzzy
 msgid ""
 "Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
-msgstr ""
+msgstr "A hely, egyházmegye, régió, tartomány vagy terület fővédnöke(i)"
 
 #: extending.php:462 extending.php:483
+#, fuzzy
 msgid "Dedication of the Cathedral"
-msgstr ""
+msgstr "A katedrális felszentelése"
 
 #: extending.php:476
+#, fuzzy
 msgid "Define the Feasts"
-msgstr ""
+msgstr "Határozza meg az ünnepeket"
 
 #: extending.php:482
+#, fuzzy
 msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
-msgstr ""
+msgstr "A hely, egyházmegye, régió, tartomány vagy terület védőszentje(i)"
 
 #: extending.php:497
+#, fuzzy
 msgid "Define the Memorials"
-msgstr ""
+msgstr "Határozza meg az emléknapokat"
 
 #: extending.php:503
+#, fuzzy
 msgid ""
 "Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
+"A hely, egyházmegye, régió, tartomány vagy terület másodlagos védőszentje(i)"
 
 #: extending.php:518
+#, fuzzy
 msgid "Define the Optional Memorials"
-msgstr ""
+msgstr "Határozza meg a fakultatív emléknapokat"
 
 #: extending.php:524
+#, fuzzy
 msgid ""
 "Saints whos veneration is local to the Place, Diocese, Region, Province or "
 "Territory"
 msgstr ""
+"Szentek, akiknek tisztelete helyi a hely, egyházmegye, régió, tartomány vagy "
+"terület számára"
 
 #: extending.php:547
+#, fuzzy
 msgid "Diocesan overrides to the national calendar for …"
-msgstr ""
+msgstr "Egyházmegyei felülírások a nemzeti naptárhoz …"
 
 #: extending.php:581
+#, fuzzy
 msgid "SAVE DIOCESAN CALENDAR"
-msgstr ""
+msgstr "EGYHÁZMEGYEI NAPTÁR MENTÉSE"
 
 #: extending.php:609 extending.php:625 extending.php:641 extending.php:657
 #: extending.php:681
+#, fuzzy
 msgid "Cancel"
-msgstr ""
+msgstr "Mégse"
 
 #: extending.php:640
+#, fuzzy
 msgid "Move Festivity"
-msgstr ""
+msgstr "Ünnep áthelyezése"
 
 #: extending.php:656
+#, fuzzy
 msgid "Create Festivity"
-msgstr ""
+msgstr "Ünnep létrehozása"
 
 #: extending.php:673
+#, fuzzy
 msgid "Choose from known Roman Missal language editions"
-msgstr ""
+msgstr "Válasszon a Római Misekönyv ismert nyelvi kiadásai közül"
 
 #: extending.php:675
+#, fuzzy
 msgid ""
 "This Missal is unknown to the Liturgical Calendar API. Please choose from a "
 "value in the list, or contact the curator of the API to have the Missal "
 "added to known language edition Missals."
 msgstr ""
+"Ez a Misekönyv ismeretlen a Liturgikus Naptár API számára. Kérjük, válasszon "
+"egy értéket a listából, vagy lépjen kapcsolatba az API kurátorával, hogy a "
+"Misekönyvet hozzáadják az ismert nyelvi kiadásokhoz."
 
 #: extending.php:680
+#, fuzzy
 msgid "Add language edition Roman Missal"
-msgstr ""
+msgstr "Nyelvi kiadású Római Misekönyv hozzáadása"
 
 #: easter.php:75
+#, fuzzy
 msgid "Date of Easter from 1583 to 9999"
-msgstr ""
+msgstr "Húsvét dátuma 1583-tól 9999-ig"
 
 #: easter.php:92
+#, fuzzy
 msgid "Go back"
-msgstr ""
+msgstr "Vissza"
 
 #: easter.php:107
+#, fuzzy
 msgid "Century"
-msgstr ""
+msgstr "Évszázad"
 
 #: easter.php:114
+#, fuzzy
 msgid ""
 "Easter Day Calculation in PHP (Years in which Julian and Gregorian easter "
 "coincide are marked in yellow)"
 msgstr ""
+"Húsvét napjának kiszámítása PHP-ben (Az évek, amikor a Julián és a Gergely-"
+"naptár szerinti húsvét egybeesik, sárgával vannak jelölve)"
 
 #: easter.php:118
+#, fuzzy
 msgid "Gregorian Easter"
-msgstr ""
+msgstr "Gergely-naptár szerinti húsvét"
 
 #: easter.php:118
+#, fuzzy
 msgid "Julian Easter"
-msgstr ""
+msgstr "Julián-naptár szerinti húsvét"
 
 #: easter.php:118
+#, fuzzy
 msgid "Julian Easter in Gregorian Calendar"
-msgstr ""
+msgstr "Julián-naptár szerinti húsvét a Gergely-naptárban"
 
 #: about.php:7
+#, fuzzy
 msgid ""
 "The Liturgical Calendar project is curated by a group of volunteer catholic "
 "programmers and experts in Catholic liturgy, seeking to serve the Church."
 msgstr ""
+"A Liturgikus Naptár projektet önkéntes katolikus programozók és a katolikus "
+"liturgia szakértői gondozzák, akik az Egyház szolgálatára törekszenek."
 
 #: about.php:13 about.php:21
+#, fuzzy
 msgid "Liturgical Calendar - About us"
-msgstr ""
+msgstr "Liturgikus Naptár - Rólunk"
 
 #: examples.php:6
+#, fuzzy
 msgid "Liturgical Calendar as an HTML table produced by Javascript"
-msgstr ""
+msgstr "Liturgikus naptár HTML táblázatként, amelyet Javascript állít elő"
 
 #: examples.php:132
-#, php-format
+#, fuzzy, php-format
 msgid "Example '%s' not found"
-msgstr ""
+msgstr "Példa '%s' nem található"
 
 #: translations.php:11
-#, php-format
+#, fuzzy, php-format
 msgid ""
 "This can be done on the <a href=\"%1$s\" target=\"_blank\">LitCal "
 "translation server %2$s</a>."
 msgstr ""
+"Ez megtehető a <a href=\"%1$s\" target=\"_blank\">LitCal fordítószerveren "
+"%2$s</a>."
 
 #: translations.php:15
+#, fuzzy
 msgid ""
 "If you would like to contribute to the translations of the Liturgical data "
 "for your region, please feel free to create an account on the translation "
 "server."
 msgstr ""
+"Ha szeretnél hozzájárulni a liturgikus adatok fordításához a régiód számára, "
+"bátran hozz létre egy fiókot a fordítószerveren."
 
 #: translations.php:16
+#, fuzzy
 msgid "Specifically, the components which require translation are:"
-msgstr ""
+msgstr "Kifejezetten azok az összetevők igényelnek fordítást, amelyek:"
 
 #. translators: 1 = name of the translation component ("API strings"), 2 = names of the categories, 3 = name of a category ("Calendar messages")
 #: translations.php:20
-#, php-format
+#, fuzzy, php-format
 msgid ""
 "Other translations required for the Liturgical Calendar data are found in "
 "the %1$s translation component. Upon choosing the language in which to "
@@ -884,89 +1159,130 @@ msgid ""
 "information for understanding where the results of the current calculation "
 "came from."
 msgstr ""
+"A liturgikus naptár adataihoz szükséges egyéb fordítások a %1$s fordítási "
+"összetevőben találhatók. Amikor kiválasztod a nyelvet, amelyre ezt az "
+"összetevőt fordítod, a \"String status\" szekcióban találod a fordítandó "
+"szövegeket kategorizáló címkéket. A liturgikus naptár adataihoz szükséges "
+"kategóriák: %2$s. Az %3$s címke / kategória azok az üzenetek, amelyek "
+"elmagyarázzák, hogyan számították ki a naptárt egy adott évre; bár nem "
+"elengedhetetlenek a naptár adataihoz, hasznos információt nyújtanak a "
+"jelenlegi számítás eredetének megértéséhez."
 
 #: translations.php:27
-#, php-format
+#, fuzzy, php-format
 msgid ""
 "If translating liturgical calendar data for a European country, you will "
 "also want to translate the %1$s component."
 msgstr ""
+"Ha egy európai ország liturgikus naptár adatait fordítod, akkor az %1$s "
+"összetevőt is le kell fordítanod."
 
 #: translations.php:31
+#, fuzzy
 msgid ""
 "Translations of the above mentioned festivities MUST NOT be done simply "
 "based on the linguistic abilities of the translator, but MUST be taken from "
 "the Roman Missal used in the region for which the translation is "
 "accomplished."
 msgstr ""
+"A fent említett ünnepek fordítását NEM szabad egyszerűen a fordító nyelvi "
+"képességei alapján elvégezni, hanem a régióban használt Római Misekönyvből "
+"kell venni."
 
 #: translations.php:32
+#, fuzzy
 msgid ""
 "Translations of the above mentioned festivities may change from one edition "
 "of the Roman Missal to the next; translators should simply use the most "
 "recent edition of the Roman Missal for their region as a reference."
 msgstr ""
+"A fent említett ünnepek fordítása változhat a Római Misekönyv egyik "
+"kiadásáról a másikra; a fordítóknak egyszerűen a régiójuk legújabb Római "
+"Misekönyv kiadását kell referenciaként használniuk."
 
 #: translations.php:33
+#, fuzzy
 msgid ""
 "This API intends to be historically correct as regards the calculation of "
 "the dates and the precedence of the festivities, but does not pretend "
 "historical accuracy as regards differences in the translations of the "
 "festivities over time."
 msgstr ""
+"Ez az API történelmileg pontos kíván lenni az ünnepek dátumainak kiszámítása "
+"és elsőbbsége tekintetében, de nem törekszik történelmi pontosságra az "
+"ünnepek fordításának időbeli különbségei tekintetében."
 
 #: translations.php:35
+#, fuzzy
 msgid ""
 "National calendars and related translations must be defined using data from "
 "the translation of the Roman Missal used in the Region or in any case from "
 "decrees of the Episcopal Conference of the Region."
 msgstr ""
+"A nemzeti naptárakat és a kapcsolódó fordításokat a régióban használt Római "
+"Misekönyv fordításának adatai alapján vagy a régió püspöki konferenciájának "
+"rendeletei alapján kell meghatározni."
 
 #: translations.php:36
+#, fuzzy
 msgid ""
 "Anyone who intends on contributing to the translations is required to agree "
 "to these conditions."
 msgstr ""
+"Bárki, aki hozzájárulni kíván a fordításokhoz, köteles elfogadni ezeket a "
+"feltételeket."
 
 #: translations.php:37
+#, fuzzy
 msgid ""
 "If the translator is not an expert in liturgical science or does not have a "
 "role in a diocesan office for liturgy and worship, the translations will "
 "require overview by a liturgical expert before being incorporated into this "
 "project."
 msgstr ""
+"Ha a fordító nem szakértő a liturgikus tudományokban, vagy nincs szerepe "
+"egyházmegyei liturgikus és istentiszteleti irodában, a fordításokat egy "
+"liturgikus szakértőnek kell áttekintenie, mielőtt beépítenék a projektbe."
 
 #: translations.php:39
+#, fuzzy
 msgid ""
 "The project website can be also be translated into other languages. The "
 "translation strings can be found in the following translation components:"
 msgstr ""
+"A projekt weboldala más nyelvekre is lefordítható. A fordítási szövegek a "
+"következő fordítási összetevőkben találhatók:"
 
 #: translations.php:43
+#, fuzzy
 msgid "Translating the Calendar"
-msgstr ""
+msgstr "A naptár fordítása"
 
 #: translations.php:51
+#, fuzzy
 msgid "Translating the Liturgical Calendar project"
-msgstr ""
+msgstr "A liturgikus naptár projekt fordítása"
 
 #: translations.php:55
+#, fuzzy
 msgid "Calendar data"
-msgstr ""
+msgstr "Naptár adatok"
 
 #: translations.php:58
+#, fuzzy
 msgid "Project website"
-msgstr ""
+msgstr "Projekt weboldal"
 
 #: liturgyOfAnyDay.php:65
+#, fuzzy
 msgid "Year"
-msgstr ""
+msgstr "Év"
 
 #. translators: %s = current selected date
 #: liturgyOfAnyDay.php:73
-#, php-format
+#, fuzzy, php-format
 msgid "Liturgy of %s"
-msgstr ""
+msgstr "%s liturgiája"
 
 #. translators: context = liturgical color
 #: src/LitColor.php:41
@@ -974,348 +1290,433 @@ msgid "pink"
 msgstr "rózsaszín"
 
 #: src/LitCommon.php:57
+#, fuzzy
 msgid "Proper"
-msgstr ""
+msgstr "Saját"
 
 #. translators: context = from the Common of nn
 #: src/LitCommon.php:59
+#, fuzzy
 msgid "Dedication of a Church"
-msgstr ""
+msgstr "Templom felszentelése"
 
 #. translators: context = from the Common of nn
 #: src/LitCommon.php:61
+#, fuzzy
 msgid "Blessed Virgin Mary"
-msgstr ""
+msgstr "Boldogságos Szűz Mária"
 
 #. translators: context = from the Common of nn
 #: src/LitCommon.php:63
+#, fuzzy
 msgid "Martyrs"
-msgstr ""
+msgstr "Vértanúk"
 
 #. translators: context = from the Common of nn
 #: src/LitCommon.php:65
+#, fuzzy
 msgid "Pastors"
-msgstr ""
+msgstr "Pásztorok"
 
 #. translators: context = from the Common of nn
 #: src/LitCommon.php:67
+#, fuzzy
 msgid "Doctors"
-msgstr ""
+msgstr "Egyháztanítók"
 
 #. translators: context = from the Common of nn
 #: src/LitCommon.php:69
+#, fuzzy
 msgid "Virgins"
-msgstr ""
+msgstr "Szüzek"
 
 #. translators: context = from the Common of nn
 #: src/LitCommon.php:71
+#, fuzzy
 msgid "Holy Men and Women"
-msgstr ""
+msgstr "Szent férfiak és nők"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:74
+#, fuzzy
 msgid "For One Martyr"
-msgstr ""
+msgstr "Egy vértanúért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:76
+#, fuzzy
 msgid "For Several Martyrs"
-msgstr ""
+msgstr "Több vértanúért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:78
+#, fuzzy
 msgid "For Missionary Martyrs"
-msgstr ""
+msgstr "Misszionárius vértanúkért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:80
+#, fuzzy
 msgid "For One Missionary Martyr"
-msgstr ""
+msgstr "Egy misszionárius vértanúért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:82
+#, fuzzy
 msgid "For Several Missionary Martyrs"
-msgstr ""
+msgstr "Több misszionárius vértanúért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:84
+#, fuzzy
 msgid "For a Virgin Martyr"
-msgstr ""
+msgstr "Szűz vértanúért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:86
+#, fuzzy
 msgid "For a Holy Woman Martyr"
-msgstr ""
+msgstr "Szent női vértanúért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:88
+#, fuzzy
 msgid "For a Pope"
-msgstr ""
+msgstr "Pápáért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:90
+#, fuzzy
 msgid "For a Bishop"
-msgstr ""
+msgstr "Püspökért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:92
+#, fuzzy
 msgid "For One Pastor"
-msgstr ""
+msgstr "Egy pásztorért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:94
+#, fuzzy
 msgid "For Several Pastors"
-msgstr ""
+msgstr "Több pásztorért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:96
+#, fuzzy
 msgid "For Founders of a Church"
-msgstr ""
+msgstr "Egyház alapítóiért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:98
+#, fuzzy
 msgid "For One Founder"
-msgstr ""
+msgstr "Egy alapítóért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:100
+#, fuzzy
 msgid "For Several Founders"
-msgstr ""
+msgstr "Több alapítóért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:102
+#, fuzzy
 msgid "For Missionaries"
-msgstr ""
+msgstr "Misszionáriusokért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:104
+#, fuzzy
 msgid "For One Virgin"
-msgstr ""
+msgstr "Egy szűzért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:106
+#, fuzzy
 msgid "For Several Virgins"
-msgstr ""
+msgstr "Több szűzért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:108
+#, fuzzy
 msgid "For Several Saints"
-msgstr ""
+msgstr "Több szentért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:110
+#, fuzzy
 msgid "For One Saint"
-msgstr ""
+msgstr "Egy szentért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:112
+#, fuzzy
 msgid "For an Abbot"
-msgstr ""
+msgstr "Apátért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:114
+#, fuzzy
 msgid "For a Monk"
-msgstr ""
+msgstr "Szerzetesért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:116
+#, fuzzy
 msgid "For a Nun"
-msgstr ""
+msgstr "Apácáért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:118
+#, fuzzy
 msgid "For Religious"
-msgstr ""
+msgstr "Szerzetesekért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:120
+#, fuzzy
 msgid "For Those Who Practiced Works of Mercy"
-msgstr ""
+msgstr "Azokért, akik irgalmasság cselekedeteit gyakorolták"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:122
+#, fuzzy
 msgid "For Educators"
-msgstr ""
+msgstr "Nevelőkért"
 
 #. translators: context = from the Common of nn: nn
 #: src/LitCommon.php:124
+#, fuzzy
 msgid "For Holy Women"
-msgstr ""
+msgstr "Szent Nőknek"
 
 #. translators: (singular feminine) glue between "From the Common" and the actual common. Latin: leave empty!
 #: src/LitCommon.php:172 src/LitCommon.php:184
+#, fuzzy
 msgctxt "(SING_FEMM)"
 msgid "of the"
-msgstr ""
+msgstr "a"
 
 #. translators: (plural feminine) glue between "From the Common" and the actual common. Latin: leave empty!
 #: src/LitCommon.php:175
+#, fuzzy
 msgctxt "(PLUR_FEMM)"
 msgid "of"
-msgstr ""
+msgstr "a"
 
 #. translators: (plural masculine) glue between "From the Common" and the actual common. Latin: leave empty!
 #: src/LitCommon.php:181
+#, fuzzy
 msgctxt "(PLUR_MASC)"
 msgid "of"
-msgstr ""
+msgstr "a"
 
 #. translators: (singular masculine) glue between "From the Common" and the actual common. Latin: leave empty!
 #: src/LitCommon.php:187
+#, fuzzy
 msgctxt "(SING_MASC)"
 msgid "of the"
-msgstr ""
+msgstr "a"
 
 #: src/LitCommon.php:273
+#, fuzzy
 msgid "From the Common"
-msgstr ""
+msgstr "A közösből"
 
 #. translators: when there are multiple possible commons, this will be the glue "or from the common of..."
 #: src/LitCommon.php:277
+#, fuzzy
 msgid "or"
-msgstr ""
+msgstr "vagy"
 
 #. translators: liturgical rank. Keep lowercase
 #: src/LitGrade.php:102
+#, fuzzy
 msgid "weekday"
-msgstr ""
+msgstr "hétköznap"
 
 #. translators: liturgical rank. Keep Capitalized
 #: src/LitGrade.php:105
+#, fuzzy
 msgid "Commemoration"
-msgstr ""
+msgstr "Emléknap"
 
 #. translators: liturgical rank. Keep Capitalized
 #: src/LitGrade.php:108
+#, fuzzy
 msgid "Optional memorial"
-msgstr ""
+msgstr "Választható emléknap"
 
 #. translators: liturgical rank. Keep Capitalized
 #: src/LitGrade.php:111
+#, fuzzy
 msgid "Memorial"
-msgstr ""
+msgstr "Emléknap"
 
 #. translators: liturgical rank. Keep UPPERCASE
 #: src/LitGrade.php:114
+#, fuzzy
 msgid "FEAST"
-msgstr ""
+msgstr "ÜNNEP"
 
 #. translators: liturgical rank. Keep UPPERCASE
 #: src/LitGrade.php:117
+#, fuzzy
 msgid "FEAST OF THE LORD"
-msgstr ""
+msgstr "AZ ÚR ÜNNEPE"
 
 #. translators: liturgical rank. Keep UPPERCASE
 #: src/LitGrade.php:120
+#, fuzzy
 msgid "SOLEMNITY"
-msgstr ""
+msgstr "FŐÜNNEP"
 
 #. translators: liturgical rank. Keep lowercase
 #: src/LitGrade.php:123
+#, fuzzy
 msgid "celebration with precedence over solemnities"
-msgstr ""
+msgstr "ünnep, amely elsőbbséget élvez a főünnepekkel szemben"
 
 #. translators: 1. BibleGet github url 2. Liturgical Calendar github url
 #: src/Utilities.php:115
-#, php-format
+#, fuzzy, php-format
 msgid ""
 "Priest in the Diocese of Rome, author of the <a href=\"%1$s\" "
 "target=\"_blank\">BibleGet project</a> and of the <a href=\"%2$s\" "
 "target=\"_blank\">Liturgical Calendar project</a>"
 msgstr ""
+"Pap a Római Egyházmegyében, a <a href=\"%1$s\" target=\"_blank\">BibleGet "
+"projekt</a> és a <a href=\"%2$s\" target=\"_blank\">Liturgikus Naptár "
+"projekt</a> szerzője"
 
 #: src/Utilities.php:124
+#, fuzzy
 msgid ""
 "Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, "
 "Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
 "for Catholic IT Professionals, contributed the bootstrap theming of the "
 "project website"
 msgstr ""
+"Szoftverfejlesztő St. Paulban, MN (USA), a JobPost társalapítója, vezető "
+"szoftvermérnök az Agile Orbitnál, a St. Isidore Guild for Catholic IT "
+"Professionals alapítója, hozzájárult a projekt weboldalának bootstrap "
+"témázásához"
 
 #: src/Utilities.php:130
+#, fuzzy
 msgid ""
 "Full stack web developer, contributed to the generation of the Open API "
 "documentation"
 msgstr ""
+"Full stack webfejlesztő, hozzájárult az Open API dokumentáció generálásához"
 
 #: src/Utilities.php:136
+#, fuzzy
 msgid ""
 "Latin Liturgy Association of the Netherlands, contributed the national "
 "calendar for the Netherlands to this project with all related translations"
 msgstr ""
+"Hollandiai Latin Liturgia Egyesület, hozzájárult a holland nemzeti naptárhoz "
+"a projekthez minden kapcsolódó fordítással"
 
 #: src/Utilities.php:142
+#, fuzzy
 msgid ""
 "Senior software engineer at Strava, author of the ConfessIt app, contributed "
 "to the structuring of the JSON responses of the Liturgical Calendar API"
 msgstr ""
+"Vezető szoftvermérnök a Stravánál, a ConfessIt alkalmazás szerzője, "
+"hozzájárult a Liturgikus Naptár API JSON válaszainak struktúrájához"
 
 #: src/Utilities.php:148
+#, fuzzy
 msgid ""
 "Software Engineer and contributor to Salt + Light Television, contributed "
 "information about the dioceses of Latin rite"
 msgstr ""
+"Szoftvermérnök és a Salt + Light Television közreműködője, információt "
+"szolgáltatott a latin rítusú egyházmegyékről"
 
 #: src/Utilities.php:154
+#, fuzzy
 msgid ""
 "Chancellor of the Diocese of Charlottetown, contributed liturgical calendar "
 "data for Canada in both English and French"
 msgstr ""
+"A Charlottetowni Egyházmegye kancellárja, liturgikus naptáradatokat "
+"szolgáltatott Kanadának angolul és franciául"
 
 #: src/Utilities.php:219
+#, fuzzy
 msgid ""
 "This festivity does not seem to exist? Please choose from a value in the "
 "list."
 msgstr ""
+"Úgy tűnik, ez az ünnep nem létezik? Kérjük, válasszon egy értéket a listából."
 
 #: src/Utilities.php:220
+#, fuzzy
 msgid "This festivity does not exist, so it will be created."
-msgstr ""
+msgstr "Ez az ünnep nem létezik, így létre lesz hozva."
 
 #: src/Utilities.php:225
+#, fuzzy
 msgid "Choose from existing festivities"
-msgstr ""
+msgstr "Válasszon a meglévő ünnepek közül"
 
 #: src/Utilities.php:225
+#, fuzzy
 msgid "Choose from existing festivities (or create a new one)"
-msgstr ""
+msgstr "Válasszon a meglévő ünnepek közül (vagy hozzon létre újat)"
 
 #: src/Utilities.php:231
+#, fuzzy
 msgid "Property to change"
-msgstr ""
+msgstr "Módosítandó tulajdonság"
 
 #: src/Utilities.php:234 src/FormControls.php:168
+#, fuzzy
 msgid "Grade"
-msgstr ""
+msgstr "Fokozat"
 
 #: src/FormControls.php:121
+#, fuzzy
 msgid "Common (or Proper)"
-msgstr ""
+msgstr "Általános (vagy Saját)"
 
 #: layout/header.php:24 layout/header.php:88
+#, fuzzy
 msgid "Extending the API"
-msgstr ""
+msgstr "Az API kiterjesztése"
 
 #: layout/header.php:32
+#, fuzzy
 msgid "Usage"
-msgstr ""
+msgstr "Használat"
 
 #: layout/header.php:33
+#, fuzzy
 msgid "Translations"
-msgstr ""
+msgstr "Fordítások"
 
 #: layout/header.php:34
+#, fuzzy
 msgid "About us"
-msgstr ""
+msgstr "Rólunk"
 
 #: layout/header.php:80
+#, fuzzy
 msgid "Home"
-msgstr ""
+msgstr "Kezdőlap"
 
 #: layout/header.php:92
+#, fuzzy
 msgid "Documentation"
-msgstr ""
+msgstr "Dokumentáció"
 
 #: layout/header.php:96
+#, fuzzy
 msgid "Examples of Usage"
-msgstr ""
+msgstr "Használati példák"
