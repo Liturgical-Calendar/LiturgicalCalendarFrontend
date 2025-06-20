@@ -72,7 +72,7 @@ $DatesOfEaster = $responseJson->litcal_easter;
 ?>
 <!DOCTYPE html>
 <head>
-    <title><?php echo _('Date of Easter from 1583 to 9999')?></title>
+    <title><?php echo _('Date of Easter from 1583 to 9999'); ?></title>
     <meta charset="UTF-8">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <meta name="msapplication-TileColor" content="#ffffff" />
@@ -89,7 +89,7 @@ $DatesOfEaster = $responseJson->litcal_easter;
 </head>
 <body>
     <div id="clipDiv" style="position:absolute;top:-500px;height:7em;z-index:0;background-image:linear-gradient(to bottom, rgba(255,255,255, 1), rgba(255,255,255, 1), rgba(255,255,255, 0) );left: 0px;width: 100%;"></div>
-    <div><a class="backNav" href="/">↩      <?php echo _('Go back')?>      ↩</a></div>
+    <div><a class="backNav" href="/">↩      <?php echo _('Go back'); ?>      ↩</a></div>
     <select id="langSelect">
         <?php
         foreach ($AvailableLocalesWithRegion as $Lcl => $DisplayLang) {
