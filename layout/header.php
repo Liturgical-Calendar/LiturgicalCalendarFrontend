@@ -31,6 +31,7 @@ asort($langsAssoc);
         </li>
         <li class="nav-item ms-2<?php echo $currentPage == "usage" ? " active" : ""; ?>" id="topNavBar_Usage"><a class="nav-link btn btn-outline-light border-0<?php echo $currentPage == "usage" ? " fw-bold" : ""; ?>" href="./usage.php"><?php echo _("Usage"); ?></a></li>
         <li class="nav-item ms-2<?php echo $currentPage == "translations" ? " active" : ""; ?>" id="topNavBar_Translations"><a class="nav-link btn btn-outline-light border-0<?php echo $currentPage == "translations" ? " fw-bold" : ""; ?>" href="./translations.php"><?php echo _("Translations"); ?></a></li>
+        <li class="nav-item ms-2<?php echo $currentPage == "decrees" ? " active" : ""; ?>" id="topNavBar_Decrees"><a class="nav-link btn btn-outline-light border-0<?php echo $currentPage == "decrees" ? " fw-bold" : ""; ?>" href="./decrees.php"><?php echo _("Decrees"); ?></a></li>
         <li class="nav-item ms-2<?php echo $currentPage == "about" ? " active" : ""; ?>" id="topNavBar_AboutUs"><a class="nav-link btn btn-outline-light border-0<?php echo $currentPage == "about" ? " fw-bold" : ""; ?>" href="./about.php"><?php echo _("About us"); ?></a></li>
     </ul>
     <ul class="navbar-nav ms-auto">
