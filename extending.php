@@ -88,7 +88,7 @@ $API_EXTEND_HOWTO_A3 = _("In this case, the festivities for the wider region sho
 $DioceseGroupHelp = _("If a group of dioceses decides to pool their Liturgical Calendar data, for example to print out one single yearly calendar with the data for all the dioceses in the group, the group can be defined or set here.");
 
 $messages = [
-    "EventKey"                => _("Tag"),
+    "EventKey"           => _("Tag"),
     "Name"               => _("Name"),
     "Day"                => _("Day"),
     "Month"              => _("Month"),
@@ -113,8 +113,9 @@ $messages = [
     /**translators: label of the form row */
     "New festivity"      => _("New festivity"),
     /**translators: label of the form row */
-    "Change name" => _("Change name"),
-    "Change grade" => _("Change grade"),
+    "Change name"        => _("Change name"),
+    /**translators: label of the form row */
+    "Change grade"       => _("Change grade"),
     /**translators: label of the form row */
     "Move festivity"     => _("Move festivity"),
     "Decree URL"         => _("Decree URL"),
