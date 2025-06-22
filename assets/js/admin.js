@@ -50,7 +50,7 @@ const createPropriumDeTemporeTable = ( data ) => {
         $theadRow.empty();
         $('#jsonDataTbl').removeClass('propriumDeTempore');
         let n;
-        if( jsonFile.includes('USA') || jsonFile.includes('ITALY') ) {
+        if( jsonFile.includes('_US_') || jsonFile.includes('_IT_') ) {
             $('#jsonDataTbl').addClass('nationalCalendar');
             n = [10, 10, 14, 0, 5, 0, 25, 0, 6, 30];
         } else {
@@ -71,9 +71,9 @@ const createPropriumDeTemporeTable = ( data ) => {
                     //console.log( row[prop] );
                     trHtmlStr += `<td contenteditable="false">${row[prop].join(',')}</td>`;
                 }
-                else if( typeof row[prop] === 'object' ) {
-                    //console.log(`we have an object in key ${prop}:`);
-                    //console.log( row[prop] );
+                else if( typeof row[prop] === 'object' && row[prop] !== null ) {
+                    console.log(`we have an object in key ${prop}:`);
+                    console.log( row[prop] );
                     let htmlStr = '<table><tbody>';
                     Object.keys( row[prop] ).forEach(title => {
                         let val = row[prop][title];
@@ -177,7 +177,7 @@ $(document).on('change', '#jsonFileSelect', () => {
     let baseJsonFile = $('#jsonFileSelect :selected').text();
     let jsonFile = sanitizeInput( $('#jsonFileSelect').val() );
     let jsonFileFull = '';
-    if( isStaging ) {
+    if( location.hostname !== 'litcal.johnromanodorazio.com' ) {
         jsonFileFull = 'includes/readJSONFile.php?filename=https://litcal.johnromanodorazio.com/' + jsonFile;
     } else {
         jsonFileFull = './' + jsonFile;
@@ -206,7 +206,7 @@ const handleJsonFileData = ( data, jsonFile ) => {
         $('#jsonDataTbl tbody').empty();
         createMemorialsFromDecreesInterface( data );
     } else {
-        if( $( '#memorialsFromDecreesBtnGrp' ).is(':hidden') === false ) {
+        if( $('#memorialsFromDecreesBtnGrp').is(':hidden') === false ) {
             $('#memorialsFromDecreesForm').empty();
             $('#memorialsFromDecreesBtnGrp').fadeOut( 'slow' );
         }

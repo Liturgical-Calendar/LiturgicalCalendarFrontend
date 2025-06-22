@@ -1,5 +1,7 @@
 <?php
 
+include_once("common.php"); // provides $i18n and all API URLs
+
 use LiturgicalCalendar\Frontend\FormControls;
 use LiturgicalCalendar\Frontend\Utilities;
 
@@ -25,15 +27,36 @@ if (!Utilities::authenticated(AUTH_USERS)) {
     die();
 }
 
-include_once("common.php");
-
 $FormControls = new FormControls($i18n);
 
-$JSON = json_decode(file_get_contents($regionalDataURL . '/propriumdesanctis_1970/propriumdesanctis_1970.json'), true);
-$thh = array_keys($JSON[0]);
-[ "litcal_events" => $FestivityCollection ] = json_decode(file_get_contents("{$eventsURL}?locale={$i18n->LOCALE}"), true);
+/**
+ * Fetch missals and events
+ */
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $missalsURL . "/EDITIO_TYPICA_1970");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    "Accept-Language: " . $i18n->LOCALE
+]);
+$missalsResponse = curl_exec($ch);
+
+curl_setopt($ch, CURLOPT_URL, $eventsURL);
+$eventsResponse = curl_exec($ch);
+curl_close($ch);
 
 
+/**
+ * Decode the JSON responses
+ */
+//[ "litcal_missals" => $MissalData ] = json_decode($missalsResponse, true);
+$MissalData = json_decode($missalsResponse, true);
+$thh = array_keys($MissalData[0]);
+
+[ "litcal_events" => $FestivityCollection ] = json_decode($eventsResponse, true);
+
+/**
+ * Prepare our translations strings
+ */
 $messages = [
     "Tag"               => _("Tag"),
     "Name"              => _("Name"),
@@ -55,7 +78,7 @@ $messages = [
     /**translators: label of the form row */
     "Change name or grade" => _("Change name or grade"),
     /**translators: label of the form row */
-    "Move festivity" => _("Move festivity"),
+    "Move festivity"    => _("Move festivity"),
     "Decree URL"        => _("Decree URL"),
     "Decree Langs"      => _("Decree Language mappings"),
     "Reason"            => _("Reason (in favor of festivity)"),
@@ -86,12 +109,13 @@ $buttonGroup = "<div id=\"memorialsFromDecreesBtnGrp\">
     <div class="form-group col-md">
         <label>Select JSON file to manage:</label>
         <select class="form-select" id="jsonFileSelect">
-            <option value="api/dev/data/propriumdesanctis_1970/propriumdesanctis_1970.json">propriumdesanctis_1970.json</option>
-            <option value="api/dev/data/propriumdesanctis_2002/propriumdesanctis_2002.json">propriumdesanctis_2002.json</option>
-            <option value="api/dev/data/propriumdesanctis_ITALY_1983/propriumdesanctis_ITALY_1983.json">propriumdesanctis_ITALY_1983.json</option>
-            <option value="api/dev/data/propriumdesanctis_USA_2011/propriumdesanctis_USA_2011.json">propriumdesanctis_USA_2011.json</option>
-            <option value="api/dev/data/propriumdetempore.json">propriumdetempore.json</option>
-            <option value="api/dev/data/memorialsFromDecrees/memorialsFromDecrees.json">memorialsFromDecrees.json</option>
+            <option value="api/dev/jsondata/sourcedata/missals/propriumdesanctis_1970/propriumdesanctis_1970.json">Editio Typica 1970</option>
+            <option value="api/dev/jsondata/sourcedata/missals/propriumdesanctis_2002/propriumdesanctis_2002.json">Editio Typica Tertia 2002</option>
+            <option value="api/dev/jsondata/sourcedata/missals/propriumdesanctis_2008/propriumdesanctis_2008.json">Editio Typica Tertia Emendata 2008</option>
+            <option value="api/dev/jsondata/sourcedata/missals/propriumdesanctis_IT_1983/propriumdesanctis_IT_1983.json">Messale Romano ed. 1983 pubblicata dalla CEI</option>
+            <option value="api/dev/jsondata/sourcedata/missals/propriumdesanctis_US_2011/propriumdesanctis_US_2011.json">2011 Roman Missal issued by the USCCB</option>
+            <option value="api/dev/jsondata/sourcedata/missals/propriumdetempore/propriumdetempore.json">propriumdetempore.json</option>
+            <option value="api/dev/jsondata/sourcedata/decrees/decrees.json">decrees.json</option>
         </select>
     </div>
     <div class="d-flex m-2 justify-content-end">
@@ -113,7 +137,7 @@ $buttonGroup = "<div id=\"memorialsFromDecreesBtnGrp\">
             </thead>
             <tbody>
                 <?php
-                foreach ($JSON as $row) {
+                foreach ($MissalData as $row) {
                     echo "<tr>";
                     foreach ($row as $value) {
                         if (is_array($value) && is_string(array_keys($value)[0])) {
