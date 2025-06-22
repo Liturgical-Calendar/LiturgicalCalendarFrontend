@@ -5,14 +5,14 @@
 # John R. D'Orazio <priest@johnromanodorazio.com>, 2022, 2023.
 # Weblate Admin <admin@example.com>, 2024, 2025.
 # OpenAI <noreply-mt-openai@weblate.org>, 2024.
-# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024.
+# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-19 22:12+0000\n"
-"PO-Revision-Date: 2025-01-02 23:11+0000\n"
-"Last-Translator: Weblate Admin <admin@example.com>\n"
+"PO-Revision-Date: 2025-06-22 00:00+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
 "Language: it\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8.4\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #: index.php:5
 msgid ""
@@ -672,16 +672,12 @@ msgstr "Nuova festività"
 
 #. translators: label of the form row
 #: extending.php:116
-#, fuzzy
-#| msgid "Change name or grade"
 msgid "Change name"
-msgstr "Cambia nome o grado"
+msgstr "Cambia nome"
 
 #: extending.php:117
-#, fuzzy
-#| msgid "Change name or grade"
 msgid "Change grade"
-msgstr "Cambia nome o grado"
+msgstr "Cambia grado"
 
 #. translators: label of the form row
 #: extending.php:119
@@ -832,7 +828,7 @@ msgstr "Gruppo di Diocesi"
 
 #: extending.php:413
 msgid "Timezone"
-msgstr ""
+msgstr "Fuso orario"
 
 #: extending.php:433
 msgid "Solemnities"
