@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-06-22 12:56+0000\n"
-"PO-Revision-Date: 2025-06-22 00:00+0000\n"
+"PO-Revision-Date: 2025-06-23 23:59+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
@@ -917,10 +917,8 @@ msgid "Move Festivity"
 msgstr "Sposta festività"
 
 #: extending.php:657
-#, fuzzy
-#| msgid "Create a new festivity"
 msgid "Create Festivity"
-msgstr "Crea una nuova festività"
+msgstr "Crea festività"
 
 #: extending.php:674
 msgid "Choose from known Roman Missal language editions"
@@ -1470,24 +1468,16 @@ msgstr ""
 "nell'elenco."
 
 #: src/Utilities.php:220
-#, fuzzy
-#| msgid ""
-#| "This festivity does not seem to exist? Please choose from a value in the "
-#| "list."
 msgid "This festivity does not exist, so it will be created."
-msgstr ""
-"Questa festività non sembra esistere? Si prega scegliere da un valore "
-"nell'elenco."
+msgstr "Questa festività non esiste, quindi verrà creata."
 
 #: src/Utilities.php:225
 msgid "Choose from existing festivities"
 msgstr "Scegli dalle festività esistenti"
 
 #: src/Utilities.php:225
-#, fuzzy
-#| msgid "Choose from existing festivities"
 msgid "Choose from existing festivities (or create a new one)"
-msgstr "Scegli dalle festività esistenti"
+msgstr "Scegli tra le festività esistenti (o creane una nuova)"
 
 #: src/Utilities.php:231
 msgid "Property to change"
@@ -1514,10 +1504,8 @@ msgid "Translations"
 msgstr "Traduzioni"
 
 #: layout/header.php:34
-#, fuzzy
-#| msgid "Decree URL"
 msgid "Decrees"
-msgstr "URL del Decreto"
+msgstr "Decreti"
 
 #: layout/header.php:35
 msgid "About us"
