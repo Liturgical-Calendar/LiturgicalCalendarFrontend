@@ -65,12 +65,12 @@ curl_close($ch);
 
         <!-- Page Heading -->
         <h1 class="h3 mb-2 text-black" style="--bs-text-opacity: .6;"><?php echo _("Refine the General Roman Calendar with Decrees of the Congregation for Divine Worship"); ?></h1>
-        <p class="mb-4"><?php echo _("The Liturgical Calendar is based off of both pubished Roman Missals, and Decrees of the Congregation for Divine Worship. These Decrees can refine the data from the Roman Missals, adding or removing or changing liturgical events, or instructing on how to handle any possible coincidences between mandatory celebrations."); ?></p>
-        <p class="mb-4"><?php
-            echo _("Data for <b>Roman Missals</b> is handled by the <code>/missals</code> endpoint of the API.") . " ";
-            echo _("Data for <b>Decrees</b> is handled by the <code>/decrees</code> endpoint of the API.") . " ";
+        <p class="mb-1 small"><?php echo _("The Liturgical Calendar is based off of both published Roman Missals, and Decrees of the Congregation for Divine Worship. These Decrees can refine the data from the Roman Missals, adding or removing or changing liturgical events, or instructing on how to handle any possible coincidences between mandatory celebrations."); ?></p>
+        <p class="mb-1 small"><?php
+            echo _("Data for <b>Roman Missals</b> is handled by the <code>/missals</code> endpoint of the API, while data for <b>Decrees</b> is handled by the <code>/decrees</code> endpoint of the API.") . " ";
             echo sprintf(
-                _("Currently, these endpoints are read-only. Here is the current data as read from %s:"),
+                _("Currently, these endpoints are read-only. There are currently <b>%d Decrees</b> defined at the endpoint %s."),
+                count($LitCalDecrees),
                 "<a href=\"{$decreesURL}\" target=\"_blank\">{$decreesURL}</a>"
             );
         ?></p>
@@ -79,7 +79,15 @@ curl_close($ch);
                 return strtotime($a['decree_date']) <=> strtotime($b['decree_date']);
             });
 
+            // Use a single loop to build arrays of HTML elements, then output them.
+            $navItems = [];
+            $cardItems = [];
+
             foreach ($LitCalDecrees as $decree) {
+                // Nav item
+                $navItems[] = "<li class=\"nav-item small border\"><a class=\"nav-link rounded-0\" href=\"#{$decree['decree_id']}\">{$decree['decree_protocol']}\t({$decree['decree_date']})</a></li>";
+
+                // Card item
                 if (array_key_exists('url_lang_map', $decree['metadata'])) {
                     if (array_key_exists($i18n->LOCALE, $decree['metadata']['url_lang_map'])) {
                         $decree['url'] = $decree['metadata']['urls_langs'][$i18n->LOCALE];
@@ -90,15 +98,10 @@ curl_close($ch);
                     $decree['url'] = $decree['metadata']['url'];
                 }
 
-                // When defining a new festivity for the first time, $existingFestivity will be null.
-                // However, once the decree is applied, the festivity will be added to the collection.
-                // So we can use this to check if the festivity already exists in the collection, in all cases, when reading from the API.
                 $existingFestivity = array_find($FestivityCollection, function($event) use ($decree) {
                     return $event['event_key'] === $decree['festivity']['event_key'];
                 });
 
-                $ActionCard = "<div class='card mb-3'>";
-                $ActionCard .= "<div class='card-header'>";
                 $ActionCardTitle = $RowActionTitle[$decree['metadata']['action']] ?? '???';
                 if ($decree['metadata']['action'] === 'setProperty') {
                     if ($decree['metadata']['property'] === 'name') {
@@ -108,35 +111,35 @@ curl_close($ch);
                         $ActionCardTitle = $RowActionTitle[$RowAction['SetGradeProperty']];
                     }
                 }
-                $ActionCard .= "<h5 class='card-title'>{$ActionCardTitle}</h5>";
-                $ActionCard .= "<h6 class='card-subtitle mb-2 text-muted'>{$decree['decree_id']}</h6>";
-                $ActionCard .= "</div>"; // close card-header
-                $ActionCard .= "<div class='card-body'>";
-                $ActionCard .= "<div class=\"row gx-2 align-items-baseline\">";
-                $ActionCard .= "<div class=\"form-group col-sm-4\">";
-                $ActionCard .= "<label for='event_key_{$decree['decree_id']}' class='event_key'>Event Key</label>";
-                $ActionCard .= "<input type='text' class='form-control event_key' id='event_key_{$decree['decree_id']}' value='{$decree['festivity']['event_key']}' list='existingFestivitiesList'>";
-                $ActionCard .= "</div>"; // close form-group
-                $ActionCard .= "<div class=\"form-group col-sm-2\">";
-                $ActionCard .= "<label for='since_year_{$decree['decree_id']}' class='since_year'>To take effect in the year</label>";
-                $ActionCard .= "<input type='number' class='form-control since_year' id='since_year_{$decree['decree_id']}' value='{$decree['metadata']['since_year']}' min='" . (int)date('Y', strtotime($decree['decree_date'])) . "'>";
-                $ActionCard .= "</div>"; // close form-group
-                $ActionCard .= "</div>"; // close row
-                $ActionCard .= "</div>"; // close card-body
-                $ActionCard .= "</div>"; // close card
 
-                echo "<div class='card mb-3'>";
-                echo "<div class='card-header'>";
-                echo "<h5 class='card-title'>{$decree['decree_protocol']}</h5>";
-                echo "<h6 class='card-subtitle mb-2 text-muted'>{$decree['decree_date']}</h6>";
-                echo "</div>";
-                echo "<div class='card-body'>";
-                echo "<p class='card-text'>{$decree['description']}</p>";
-                echo "<p class='card-text'><a href='{$decree['url']}' class='btn btn-primary' target='_blank'>" . _("Read the Decree") . "</a></p>";
-                echo $ActionCard;
-                echo "</div>";
-                echo "</div>";
+                $cardItems[] = "<div class='card mb-3' id=\"{$decree['decree_id']}\">"
+                    . "<div class='card-header'>"
+                    . "<h5 class='card-title d-flex justify-content-between'><div>{$decree['decree_protocol']}</div><div>" . $messages[$ActionCardTitle] . "</div></h5>"
+                    . "<h6 class='card-subtitle mb-2 text-muted d-flex justify-content-between'><div>{$decree['decree_date']}</div><div>{$decree['decree_id']}</div></h6>"
+                    . "</div>"
+                    . "<div class='card-body'>"
+                    . "<p class='card-text'>{$decree['description']}<a href='{$decree['url']}' class='ms-2' target='_blank'>" . _("Read the Decree") . "</a></p>"
+                    . "<div class=\"row gx-2 align-items-baseline\">"
+                    . "<div class=\"form-group col-sm-4\">"
+                    . "<label for='event_key_{$decree['decree_id']}' class='event_key'>Event Key</label>"
+                    . "<input type='text' class='form-control event_key' id='event_key_{$decree['decree_id']}' value='{$decree['festivity']['event_key']}' list='existingFestivitiesList' disabled>"
+                    . "</div>"
+                    . "<div class=\"form-group col-sm-2\">"
+                    . "<label for='since_year_{$decree['decree_id']}' class='since_year'>To take effect in the year</label>"
+                    . "<input type='number' class='form-control since_year' id='since_year_{$decree['decree_id']}' value='{$decree['metadata']['since_year']}' min='" . (int)date('Y', strtotime($decree['decree_date'])) . "' disabled>"
+                    . "</div>"
+                    . "</div>"
+                    . "</div>"
+                    . "</div>";
             }
+
+            echo "<nav id=\"decreesNavBar\" class=\"navbar navbar-expand-lg mt-3 mb-3 p-0\" style=\"background-color: #e3f2fd;\" data-bs-theme=\"light\">";
+            echo "<ul class=\"nav nav-pills\">" . implode('', $navItems) . "<button class=\"btn btn-primary btn-sm ms-3\" title=\"Add Decree\" id=\"addDecreeBtn\" disabled>+</button>" . "</ul>";
+            echo "</nav>";
+
+            echo "<div class=\"border\" style=\"height: calc(100vh - 22rem); overflow-y: auto; box-shadow: inset 0px 0px 20px -6px rgba(0,0,0,0.3);\" data-bs-spy=\"scroll\" data-bs-target=\"#decreesNavBar\" data-bs-root-margin=\"0px 0px -40%\" data-bs-smooth-scroll=\"true\">";
+            echo implode('', $cardItems);
+            echo "</div>";
         ?>
 
         <?php include_once('layout/footer.php'); ?>
