@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-22 12:56+0000\n"
+"POT-Creation-Date: 2025-11-14 15:18+0000\n"
 "PO-Revision-Date: 2025-06-21 00:50+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
@@ -122,28 +122,28 @@ msgstr "Parametri zahtjeva dostupni na osnovnom %s putu"
 msgid "Request parameters available on all %1$s paths"
 msgstr "Parametri zahtjeva dostupni na svim %1$s putanjama"
 
-#: index.php:59 usage.php:13 examples.php:94 liturgyOfAnyDay.php:24
+#: index.php:60 usage.php:13 examples.php:94 liturgyOfAnyDay.php:22
 #, fuzzy
 msgid "General Roman Calendar"
 msgstr "Opći rimski kalendar"
 
-#: index.php:68 layout/header.php:75
+#: index.php:69 layout/header.php:75
 #, fuzzy
 msgid "Catholic Liturgical Calendar"
 msgstr "Katolički liturgijski kalendar"
 
 #. translators: 1. /calendar
-#: index.php:78
+#: index.php:79
 #, fuzzy, php-format
 msgid "API %1$s endpoint"
 msgstr "API %1$s krajnja točka"
 
-#: index.php:87
+#: index.php:88
 #, fuzzy
 msgid "Path builder"
 msgstr "Graditelj puta"
 
-#: index.php:111
+#: index.php:112
 #, fuzzy
 msgid ""
 "URL of the API request based on selected options. The button is set to the "
@@ -152,12 +152,12 @@ msgstr ""
 "URL API zahtjeva temeljen na odabranim opcijama. Gumb je postavljen na isti "
 "URL, kliknite na njega da biste vidjeli rezultate."
 
-#: index.php:120 index.php:124
+#: index.php:121 index.php:125
 #, fuzzy
 msgid "Liturgical Calendar Validator"
 msgstr "Validator liturgijskog kalendara"
 
-#: index.php:123
+#: index.php:124
 #, fuzzy
 msgid ""
 "In order to verify that the liturgical data produced by the API is correct, "
@@ -170,7 +170,7 @@ msgstr ""
 "testove protiv JSON odgovora koje API proizvodi počevši od 1970. godine pa "
 "do 25 godina od tekuće godine."
 
-#: index.php:128
+#: index.php:129
 #, fuzzy, php-format
 msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
@@ -179,33 +179,33 @@ msgstr ""
 "Jedinični testovi su definirani u mapi %s u spremištu Liturgijskog kalendara "
 "API-ja."
 
-#: index.php:132
+#: index.php:133
 #, fuzzy, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
 msgstr ""
 "Sučelje za jedinice testiranja je uređeno u vlastitom repozitoriju: %s."
 
-#: index.php:141
+#: index.php:142
 #, fuzzy
 msgid "Translation Tool"
 msgstr "Alat za prevođenje"
 
-#: index.php:147 index.php:150
+#: index.php:148 index.php:151
 #, fuzzy
 msgid "Translations status"
 msgstr "Status prijevoda"
 
-#: index.php:158
+#: index.php:159
 #, fuzzy
 msgid "Open API Schema"
 msgstr "Otvori API shemu"
 
-#: index.php:161
+#: index.php:162
 #, fuzzy
 msgid "Swagger / Open API Documentation"
 msgstr "Swagger / Open API dokumentacija"
 
-#: index.php:163
+#: index.php:164
 #, fuzzy
 msgid ""
 "All of the available API routes with their supported methods, parameters, "
@@ -214,12 +214,12 @@ msgstr ""
 "Svi dostupni API putevi s njihovim podržanim metodama, parametrima, vrstama "
 "sadržaja i odgovorima opisani su ovdje."
 
-#: index.php:169 usage.php:184
+#: index.php:170 usage.php:184
 #, fuzzy
 msgid "Calculation of the Date of Easter"
 msgstr "Izračun datuma Uskrsa"
 
-#: index.php:172
+#: index.php:173
 #, fuzzy
 msgid ""
 "A simple API endpoint that returns data about the Date of Easter, both "
@@ -236,12 +236,12 @@ msgstr ""
 "Uskrs (koji slavi Rimokatolička crkva) i Meeusov algoritam za julijanski "
 "Uskrs (koji slave pravoslavne crkve)."
 
-#: index.php:177
+#: index.php:178
 #, fuzzy
 msgid "Date of Easter API endpoint"
 msgstr "API krajnja točka za datum Uskrsa"
 
-#: index.php:179
+#: index.php:180
 #, fuzzy
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
@@ -325,7 +325,7 @@ msgstr "Pogledaj FullCalendar (poruke prvo)"
 msgid "Calendar subscription"
 msgstr "Pretplata na kalendar"
 
-#: usage.php:88 liturgyOfAnyDay.php:41
+#: usage.php:88 liturgyOfAnyDay.php:39
 #, fuzzy
 msgid "Select calendar"
 msgstr "Odaberi kalendar"
@@ -546,7 +546,7 @@ msgstr "Dnevni pregled vijesti s liturgijom dana, kao vještina za Amazon Alexa"
 msgid "In development"
 msgstr "U razvoju"
 
-#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:24 liturgyOfAnyDay.php:32
+#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:22 liturgyOfAnyDay.php:30
 #, fuzzy
 msgid "Liturgy of any day"
 msgstr "Liturgija bilo kojeg dana"
@@ -558,7 +558,7 @@ msgid ""
 "baptism."
 msgstr "Na primjer, možeš pronaći liturgiju dana od dana svog krštenja."
 
-#: extending.php:83
+#: extending.php:81
 #, fuzzy
 msgid ""
 "The General Roman Calendar can be extended so as to create a National or "
@@ -569,7 +569,7 @@ msgstr ""
 "biskupijski kalendar. Biskupijski kalendari ovise o nacionalnim kalendarima, "
 "stoga se prvo mora stvoriti nacionalni kalendar."
 
-#: extending.php:84 translations.php:9
+#: extending.php:82 translations.php:9
 #, fuzzy
 msgid ""
 "The first step in creating a national or diocesan calendar, is to translate "
@@ -579,24 +579,24 @@ msgstr ""
 "Prvi korak u stvaranju nacionalnog ili biskupijskog kalendara je prevođenje "
 "podataka za Opći rimski kalendar na jezik te nacije ili biskupije."
 
-#: extending.php:85
+#: extending.php:83
 #, fuzzy
 msgid "(see <a href=\"translations.php\">Translations</a>)"
 msgstr "(vidi <a href=\"translations.php\">Prijevodi</a>)"
 
-#: extending.php:86
+#: extending.php:84
 #, fuzzy
 msgid ""
-"A national calendar may have some festivities in common with other national "
-"calendars, for example the patron of a wider region."
+"A national calendar may have some liturgical events in common with other "
+"national calendars, for example the patron of a wider region."
 msgstr ""
 "Nacionalni kalendar može imati neke zajedničke svečanosti s drugim "
 "nacionalnim kalendarima, na primjer zaštitnika šire regije."
 
-#: extending.php:87
+#: extending.php:85
 #, fuzzy
 msgid ""
-"In this case, the festivities for the wider region should be defined "
+"In this case, the liturgical events for the wider region should be defined "
 "separately, and the languages applicable to the wider region should be set; "
 "the wider region data will then be applied automatically to national "
 "calendars belonging to the wider region."
@@ -606,7 +606,7 @@ msgstr ""
 "regije tada će se automatski primijeniti na nacionalne kalendare koji "
 "pripadaju široj regiji."
 
-#: extending.php:88
+#: extending.php:86
 #, fuzzy
 msgid ""
 "If a group of dioceses decides to pool their Liturgical Calendar data, for "
@@ -617,57 +617,57 @@ msgstr ""
 "na primjer kako bi ispisala jedan godišnji kalendar s podacima za sve "
 "biskupije u grupi, grupa se može definirati ili postaviti ovdje."
 
-#: extending.php:91
+#: extending.php:89
 #, fuzzy
 msgid "Tag"
 msgstr "Oznaka"
 
-#: extending.php:92 src/Utilities.php:233 src/FormControls.php:52
+#: extending.php:90 src/Utilities.php:233 src/FormControls.php:52
 #, fuzzy
 msgid "Name"
 msgstr "Ime"
 
-#: extending.php:93 liturgyOfAnyDay.php:47 src/FormControls.php:59
+#: extending.php:91 liturgyOfAnyDay.php:45 src/FormControls.php:59
 #, fuzzy
 msgid "Day"
 msgstr "Dan"
 
-#: extending.php:94 liturgyOfAnyDay.php:51 src/FormControls.php:65
+#: extending.php:92 liturgyOfAnyDay.php:49 src/FormControls.php:65
 #, fuzzy
 msgid "Month"
 msgstr "Mjesec"
 
-#: extending.php:95 extending.php:464
+#: extending.php:93 extending.php:462
 #, fuzzy
 msgid "Other Solemnity"
 msgstr "Druga svetkovina"
 
-#: extending.php:96 extending.php:485
+#: extending.php:94 extending.php:483
 #, fuzzy
 msgid "Other Feast"
 msgstr "Druga svetkovina"
 
-#: extending.php:97 extending.php:505 extending.php:506
+#: extending.php:95 extending.php:503 extending.php:504
 #, fuzzy
 msgid "Other Memorial"
 msgstr "Drugi spomen"
 
-#: extending.php:98 extending.php:526 extending.php:527
+#: extending.php:96 extending.php:524 extending.php:525
 #, fuzzy
 msgid "Other Optional Memorial"
 msgstr "Drugi neobavezni spomen"
 
-#: extending.php:99
+#: extending.php:97
 #, fuzzy
 msgid "Delete calendar"
 msgstr "Izbriši kalendar"
 
-#: extending.php:100
+#: extending.php:98
 #, fuzzy
 msgid "Delete diocesan calendar"
 msgstr "Izbriši biskupijski kalendar"
 
-#: extending.php:101
+#: extending.php:99
 #, fuzzy
 msgid ""
 "If you choose to delete this calendar, the liturgical events defined for the "
@@ -678,234 +678,232 @@ msgstr ""
 "kalendar i odgovarajući unosi u indeksu bit će uklonjeni i više neće biti "
 "dostupni u klijentskim aplikacijama."
 
-#: extending.php:102 src/FormControls.php:89
+#: extending.php:100 src/FormControls.php:89
 #, fuzzy
 msgid "Liturgical color"
 msgstr "Liturgijska boja"
 
 #. translators: context = liturgical color
-#: extending.php:103 src/LitColor.php:35 src/FormControls.php:91
+#: extending.php:101 src/LitColor.php:35 src/FormControls.php:91
 msgid "white"
 msgstr "bijela"
 
 #. translators: context = liturgical color
-#: extending.php:104 src/LitColor.php:38 src/FormControls.php:92
+#: extending.php:102 src/LitColor.php:38 src/FormControls.php:92
 msgid "red"
 msgstr "crvena"
 
 #. translators: context = liturgical color
-#: extending.php:105 src/LitColor.php:29 src/FormControls.php:94
+#: extending.php:103 src/LitColor.php:29 src/FormControls.php:94
 msgid "green"
 msgstr "zelena"
 
 #. translators: context = liturgical color
-#: extending.php:106 src/LitColor.php:32 src/FormControls.php:93
+#: extending.php:104 src/LitColor.php:32 src/FormControls.php:93
 msgid "purple"
 msgstr "ljubičasta"
 
-#. translators: in reference to the first year from which this festivity takes place
-#: extending.php:108 src/FormControls.php:101
+#. translators: in reference to the first year from which this liturgical event takes place
+#: extending.php:106 src/FormControls.php:101
 #, fuzzy
 msgid "Since"
 msgstr "Od"
 
-#. translators: in reference to the year from which this festivity no longer needs to be dealt with
-#: extending.php:110 src/FormControls.php:108
+#. translators: in reference to the year from which this liturgical event no longer needs to be dealt with
+#: extending.php:108 src/FormControls.php:108
 #, fuzzy
 msgid "Until"
 msgstr "Do"
 
 #. translators: label of the form row
-#: extending.php:112
+#: extending.php:110
 #, fuzzy
 msgid "Patron or Patrons of the Wider Region"
 msgstr "Zaštitnik ili zaštitnici šire regije"
 
 #. translators: label of the form row
-#: extending.php:114
-#, fuzzy
-msgid "New festivity"
-msgstr "Nova svetkovina"
+#: extending.php:112
+msgid "New liturgical event"
+msgstr ""
 
 #. translators: label of the form row
-#: extending.php:116
+#: extending.php:114
 #, fuzzy
 msgid "Change name"
 msgstr "Promijeni ime"
 
 #. translators: label of the form row
-#: extending.php:118
+#: extending.php:116
 #, fuzzy
 msgid "Change grade"
 msgstr "Promijeni ocjenu"
 
 #. translators: label of the form row
-#: extending.php:120
-#, fuzzy
-msgid "Move festivity"
-msgstr "Premjesti svetkovinu"
+#: extending.php:118
+msgid "Move liturgical event"
+msgstr ""
 
-#: extending.php:121
+#: extending.php:119
 #, fuzzy
 msgid "Decree URL"
 msgstr "URL dekreta"
 
-#: extending.php:122
+#: extending.php:120
 #, fuzzy
 msgid "Decree Language mappings"
 msgstr "Dekret Jezične mape"
 
-#: extending.php:123
+#: extending.php:121
 #, fuzzy
 msgid "Missal"
 msgstr "Misal"
 
-#: extending.php:124
+#: extending.php:122
 #, fuzzy
-msgid "Reason (in favor of festivity)"
+msgid "Reason (in favor of liturgical event)"
 msgstr "Razlog (u korist svetkovine)"
 
-#: extending.php:136 extending.php:605 extending.php:609
+#: extending.php:134 extending.php:603 extending.php:607
 #, fuzzy
 msgid "Designate patron"
 msgstr "Odredite zaštitnika"
 
-#: extending.php:137 extending.php:621
+#: extending.php:135 extending.php:619
 #, fuzzy
-msgid "Change name or grade of existing festivity"
+msgid "Change name or grade of existing liturgical event"
 msgstr "Promijeni ime ili stupanj postojećeg blagdana"
 
-#: extending.php:138 extending.php:637
+#: extending.php:136 extending.php:635
 #, fuzzy
-msgid "Move festivity to new date"
+msgid "Move liturgical event to new date"
 msgstr "Premjesti blagdan na novi datum"
 
-#: extending.php:139 extending.php:653
+#: extending.php:137 extending.php:651
 #, fuzzy
-msgid "Create a new festivity"
+msgid "Create a new liturgical event"
 msgstr "Kreiraj novu svetkovinu"
 
-#: extending.php:145
+#: extending.php:143
 #, fuzzy
 msgid "General Roman Calendar - Extending"
 msgstr "Opći rimski kalendar - Proširenje"
 
-#: extending.php:153
+#: extending.php:151
 #, fuzzy
 msgid "Extend the General Roman Calendar with National or Diocesan data"
 msgstr "Proširi Opći rimski kalendar s nacionalnim ili biskupijskim podacima"
 
-#: extending.php:164 extending.php:315
+#: extending.php:162 extending.php:313
 #, fuzzy
 msgid "Wider Region"
 msgstr "Šira regija"
 
-#: extending.php:166 extending.php:232
+#: extending.php:164 extending.php:230
 #, fuzzy
 msgid "This value cannot be empty."
 msgstr "Ova vrijednost ne može biti prazna."
 
-#: extending.php:180
+#: extending.php:178
 #, fuzzy
 msgid "Locales"
 msgstr "Lokaliteti"
 
-#: extending.php:189 extending.php:327 extending.php:403
+#: extending.php:187 extending.php:325 extending.php:401
 #, fuzzy
 msgid "Current localization"
 msgstr "Trenutna lokalizacija"
 
-#: extending.php:201 extending.php:245 extending.php:422
+#: extending.php:199 extending.php:243 extending.php:420
 #, fuzzy
 msgid "Remove existing data"
 msgstr "Ukloni postojeće podatke"
 
-#: extending.php:207 layout/header.php:27
+#: extending.php:205 layout/header.php:27
 #, fuzzy
 msgid "Create a Calendar for a Wider Region"
 msgstr "Kreiraj kalendar za širu regiju"
 
-#: extending.php:218
+#: extending.php:216
 #, fuzzy
 msgid "Save Wider Region Calendar Data"
 msgstr "Spremi podatke kalendara šire regije"
 
-#: extending.php:230
+#: extending.php:228
 #, fuzzy
 msgid "National Calendar"
 msgstr "Nacionalni kalendar"
 
-#: extending.php:251 layout/header.php:28
+#: extending.php:249 layout/header.php:28
 #, fuzzy
 msgid "Create a National Calendar"
 msgstr "Kreiraj nacionalni kalendar"
 
-#: extending.php:256
+#: extending.php:254
 #, fuzzy
 msgid "National calendar settings"
 msgstr "Postavke nacionalnog kalendara"
 
-#: extending.php:259 extending.php:551
+#: extending.php:257 extending.php:549
 #, fuzzy
 msgid "EPIPHANY"
 msgstr "BOGOJAVLJENJE"
 
-#: extending.php:262 extending.php:554
+#: extending.php:260 extending.php:552
 #, fuzzy
 msgid "January 6"
 msgstr "6. siječnja"
 
-#: extending.php:263 extending.php:555
+#: extending.php:261 extending.php:553
 #, fuzzy
 msgid "Sunday between January 2 and January 8"
 msgstr "Nedjelja između 2. i 8. siječnja"
 
-#: extending.php:267 extending.php:559
+#: extending.php:265 extending.php:557
 #, fuzzy
 msgid "ASCENSION"
 msgstr "UZAŠAŠĆE"
 
-#: extending.php:275 extending.php:567
+#: extending.php:273 extending.php:565
 #, fuzzy
 msgid "CORPUS CHRISTI"
 msgstr "TIJELOVO"
 
-#: extending.php:283
+#: extending.php:281
 #, fuzzy
 msgid "ETERNAL HIGH PRIEST"
 msgstr "VJEČNI VELIKI SVEĆENIK"
 
-#: extending.php:290 extending.php:393
+#: extending.php:288 extending.php:391
 #, fuzzy
 msgid "LOCALES"
 msgstr "LOKALITETI"
 
-#: extending.php:303
+#: extending.php:301
 #, fuzzy
 msgid "Published Roman Missals"
 msgstr "Objavljeni Rimski misali"
 
-#: extending.php:306 extending.php:669
+#: extending.php:304 extending.php:667
 #, fuzzy
 msgid "Add Missal"
 msgstr "Dodaj Misal"
 
-#: extending.php:346
+#: extending.php:344
 #, fuzzy
 msgid "Save National Calendar Data"
 msgstr "Spremi podatke nacionalnog kalendara"
 
-#: extending.php:360
+#: extending.php:358
 #, fuzzy
 msgid "Depends on national calendar"
 msgstr "Ovisi o nacionalnom kalendaru"
 
-#: extending.php:371
+#: extending.php:369
 #, fuzzy
 msgid "Diocese"
 msgstr "Biskupija"
 
-#: extending.php:373
+#: extending.php:371
 #, fuzzy
 msgid ""
 "This diocese does not seem to exist? Please choose from a value in the list "
@@ -916,48 +914,48 @@ msgstr ""
 "dohvaćanje postojeće biskupije ili zanemarite ako stvarate novi biskupijski "
 "kalendar."
 
-#: extending.php:379
+#: extending.php:377
 #, fuzzy
 msgid "Diocesan group"
 msgstr "Biskupijska skupina"
 
-#: extending.php:414
+#: extending.php:412
 #, fuzzy
 msgid "Timezone"
 msgstr "Vremenska zona"
 
-#: extending.php:434
+#: extending.php:432
 #, fuzzy
 msgid "Solemnities"
 msgstr "Svetkovine"
 
-#: extending.php:435
+#: extending.php:433
 #, fuzzy
 msgid "Feasts"
 msgstr "Blagdani"
 
-#: extending.php:436
+#: extending.php:434
 #, fuzzy
 msgid "Memorials"
 msgstr "Spomendani"
 
-#: extending.php:437
+#: extending.php:435
 #, fuzzy
 msgid "Optional memorials"
 msgstr "Neobavezni spomendani"
 
-#: extending.php:456 extending.php:477 extending.php:498 extending.php:519
+#: extending.php:454 extending.php:475 extending.php:496 extending.php:517
 #: layout/header.php:29
 #, fuzzy
 msgid "Create a Diocesan Calendar"
 msgstr "Kreiraj biskupijski kalendar"
 
-#: extending.php:456
+#: extending.php:454
 #, fuzzy
 msgid "Define the Solemnities"
 msgstr "Definiraj svetkovine"
 
-#: extending.php:462
+#: extending.php:460
 #, fuzzy
 msgid ""
 "Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
@@ -965,27 +963,27 @@ msgstr ""
 "Glavni zaštitnik/zaštitnici mjesta, biskupije, regije, pokrajine ili "
 "teritorija"
 
-#: extending.php:463 extending.php:484
+#: extending.php:461 extending.php:482
 #, fuzzy
 msgid "Dedication of the Cathedral"
 msgstr "Posveta katedrale"
 
-#: extending.php:477
+#: extending.php:475
 #, fuzzy
 msgid "Define the Feasts"
 msgstr "Definiraj blagdane"
 
-#: extending.php:483
+#: extending.php:481
 #, fuzzy
 msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr "Zaštitnik/ci mjesta, biskupije, regije, pokrajine ili teritorija"
 
-#: extending.php:498
+#: extending.php:496
 #, fuzzy
 msgid "Define the Memorials"
 msgstr "Definiraj spomendane"
 
-#: extending.php:504
+#: extending.php:502
 #, fuzzy
 msgid ""
 "Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
@@ -993,12 +991,12 @@ msgstr ""
 "Sekundarni zaštitnik/zaštitnici mjesta, biskupije, regije, pokrajine ili "
 "teritorija"
 
-#: extending.php:519
+#: extending.php:517
 #, fuzzy
 msgid "Define the Optional Memorials"
 msgstr "Definiraj opcionalne spomendane"
 
-#: extending.php:525
+#: extending.php:523
 #, fuzzy
 msgid ""
 "Saints whos veneration is local to the Place, Diocese, Region, Province or "
@@ -1007,38 +1005,38 @@ msgstr ""
 "Sveci čije je štovanje lokalno za mjesto, biskupiju, regiju, pokrajinu ili "
 "teritorij"
 
-#: extending.php:548
+#: extending.php:546
 #, fuzzy
 msgid "Diocesan overrides to the national calendar for …"
 msgstr "Biskupijski nadomjesci za nacionalni kalendar za …"
 
-#: extending.php:582
+#: extending.php:580
 #, fuzzy
 msgid "SAVE DIOCESAN CALENDAR"
 msgstr "SPREMI BISKUPIJSKI KALENDAR"
 
-#: extending.php:610 extending.php:626 extending.php:642 extending.php:658
-#: extending.php:682
+#: extending.php:608 extending.php:624 extending.php:640 extending.php:656
+#: extending.php:680
 #, fuzzy
 msgid "Cancel"
 msgstr "Otkaži"
 
-#: extending.php:641
+#: extending.php:639
 #, fuzzy
-msgid "Move Festivity"
-msgstr "Premjesti svečanost"
+msgid "Move Liturgical Event"
+msgstr "Katolički liturgijski kalendar"
 
-#: extending.php:657
+#: extending.php:655
 #, fuzzy
-msgid "Create Festivity"
-msgstr "Kreiraj svetkovinu"
+msgid "Create Liturgical Event"
+msgstr "Katolički liturgijski kalendar"
 
-#: extending.php:674
+#: extending.php:672
 #, fuzzy
 msgid "Choose from known Roman Missal language editions"
 msgstr "Odaberi iz poznatih jezičnih izdanja Rimskog misala"
 
-#: extending.php:676
+#: extending.php:674
 #, fuzzy
 msgid ""
 "This Missal is unknown to the Liturgical Calendar API. Please choose from a "
@@ -1049,7 +1047,7 @@ msgstr ""
 "vrijednost s popisa ili kontaktirajte kustosa API-ja kako bi Misal bio dodan "
 "poznatim jezičnim izdanjima Misala."
 
-#: extending.php:681
+#: extending.php:679
 #, fuzzy
 msgid "Add language edition Roman Missal"
 msgstr "Dodaj jezično izdanje Rimskog misala"
@@ -1176,9 +1174,9 @@ msgstr ""
 #: translations.php:31
 #, fuzzy
 msgid ""
-"Translations of the above mentioned festivities MUST NOT be done simply "
-"based on the linguistic abilities of the translator, but MUST be taken from "
-"the Roman Missal used in the region for which the translation is "
+"Translations of the above mentioned liturgical events MUST NOT be done "
+"simply based on the linguistic abilities of the translator, but MUST be "
+"taken from the Roman Missal used in the region for which the translation is "
 "accomplished."
 msgstr ""
 "Prijevodi gore spomenutih svetkovina NE SMIJU se raditi jednostavno na "
@@ -1188,9 +1186,9 @@ msgstr ""
 #: translations.php:32
 #, fuzzy
 msgid ""
-"Translations of the above mentioned festivities may change from one edition "
-"of the Roman Missal to the next; translators should simply use the most "
-"recent edition of the Roman Missal for their region as a reference."
+"Translations of the above mentioned liturgical events may change from one "
+"edition of the Roman Missal to the next; translators should simply use the "
+"most recent edition of the Roman Missal for their region as a reference."
 msgstr ""
 "Prijevodi gore spomenutih svetkovina mogu se mijenjati iz jednog izdanja "
 "Rimskog misala u drugo; prevoditelji bi trebali jednostavno koristiti "
@@ -1200,9 +1198,9 @@ msgstr ""
 #, fuzzy
 msgid ""
 "This API intends to be historically correct as regards the calculation of "
-"the dates and the precedence of the festivities, but does not pretend "
+"the dates and the precedence of the liturgical events, but does not pretend "
 "historical accuracy as regards differences in the translations of the "
-"festivities over time."
+"liturgical events over time."
 msgstr ""
 "Ovaj API namjerava biti povijesno točan u pogledu izračuna datuma i "
 "prednosti svetkovina, ali ne pretendira na povijesnu točnost u pogledu "
@@ -1268,21 +1266,21 @@ msgstr "Podaci kalendara"
 msgid "Project website"
 msgstr "Web stranica projekta"
 
-#: liturgyOfAnyDay.php:65
+#: liturgyOfAnyDay.php:63
 #, fuzzy
 msgid "Year"
 msgstr "Godina"
 
 #. translators: %s = current selected date
-#: liturgyOfAnyDay.php:73
+#: liturgyOfAnyDay.php:71
 #, fuzzy, php-format
 msgid "Liturgy of %s"
 msgstr "Liturgija %s"
 
 #. translators: context = liturgical color
 #: src/LitColor.php:41
-msgid "pink"
-msgstr "ružičasta"
+msgid "rose"
+msgstr ""
 
 #: src/LitCommon.php:57
 #, fuzzy
@@ -1637,24 +1635,24 @@ msgstr ""
 #: src/Utilities.php:219
 #, fuzzy
 msgid ""
-"This festivity does not seem to exist? Please choose from a value in the "
-"list."
+"This liturgical event does not seem to exist? Please choose from a value in "
+"the list."
 msgstr ""
 "Čini se da ova svetkovina ne postoji? Molimo odaberite vrijednost s popisa."
 
 #: src/Utilities.php:220
 #, fuzzy
-msgid "This festivity does not exist, so it will be created."
+msgid "This liturgical event does not exist, so it will be created."
 msgstr "Ova svetkovina ne postoji, pa će biti stvorena."
 
 #: src/Utilities.php:225
 #, fuzzy
-msgid "Choose from existing festivities"
+msgid "Choose from existing liturgical events"
 msgstr "Odaberi iz postojećih svetkovina"
 
 #: src/Utilities.php:225
 #, fuzzy
-msgid "Choose from existing festivities (or create a new one)"
+msgid "Choose from existing liturgical events (or create a new one)"
 msgstr "Odaberi iz postojećih svetkovina (ili stvori novu)"
 
 #: src/Utilities.php:231
@@ -1711,3 +1709,22 @@ msgstr "Dokumentacija"
 #, fuzzy
 msgid "Examples of Usage"
 msgstr "Primjeri upotrebe"
+
+#, fuzzy
+#~ msgid "New festivity"
+#~ msgstr "Nova svetkovina"
+
+#, fuzzy
+#~ msgid "Move festivity"
+#~ msgstr "Premjesti svetkovinu"
+
+#, fuzzy
+#~ msgid "Move Festivity"
+#~ msgstr "Premjesti svečanost"
+
+#, fuzzy
+#~ msgid "Create Festivity"
+#~ msgstr "Kreiraj svetkovinu"
+
+#~ msgid "pink"
+#~ msgstr "ružičasta"
