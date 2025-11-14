@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 22:12+0000\n"
+"POT-Creation-Date: 2025-06-22 12:56+0000\n"
 "PO-Revision-Date: 2025-06-21 00:50+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
@@ -129,7 +129,7 @@ msgstr "Kérési paraméterek elérhetők minden %1$s útvonalon"
 msgid "General Roman Calendar"
 msgstr "Római Általános Naptár"
 
-#: index.php:68 layout/header.php:74
+#: index.php:68 layout/header.php:75
 #, fuzzy
 msgid "Catholic Liturgical Calendar"
 msgstr "Katolikus Liturgikus Naptár"
@@ -276,7 +276,7 @@ msgstr "Példák"
 msgid "Example usage of the API"
 msgstr "Az API példahasználata"
 
-#: usage.php:27 layout/header.php:100
+#: usage.php:27 layout/header.php:101
 #, fuzzy
 msgid "Web calendar"
 msgstr "Webnaptár"
@@ -325,7 +325,7 @@ msgstr "FullCalendar megtekintése"
 msgid "View FullCalendar (messages first)"
 msgstr "Teljes naptár megtekintése (üzenetek először)"
 
-#: usage.php:74 layout/header.php:104
+#: usage.php:74 layout/header.php:105
 #, fuzzy
 msgid "Calendar subscription"
 msgstr "Naptár előfizetés"
@@ -448,7 +448,8 @@ msgstr ""
 #: usage.php:142
 #, fuzzy
 msgid "Make sure <i><b>Synchronization</b></i> is turned on."
-msgstr "Győződj meg róla, hogy a <i><b>Szinkronizálás</b></i> be van kapcsolva."
+msgstr ""
+"Győződj meg róla, hogy a <i><b>Szinkronizálás</b></i> be van kapcsolva."
 
 #: usage.php:152
 #, fuzzy
@@ -475,8 +476,8 @@ msgid ""
 "On the following screen, check the checkbox along the lines of \"Poll this "
 "calendar in the interval suggested by the creator\"."
 msgstr ""
-"A következő képernyőn jelöld be a jelölőnégyzetet, amely körülbelül így szól:"
-" \"Kérdezze le ezt a naptárt a készítő által javasolt időközönként\"."
+"A következő képernyőn jelöld be a jelölőnégyzetet, amely körülbelül így "
+"szól: \"Kérdezze le ezt a naptárt a készítő által javasolt időközönként\"."
 
 #: usage.php:158
 #, fuzzy
@@ -502,8 +503,8 @@ msgid ""
 "You can manually fetch new data by clicking on <i><b>Send/receive all</b></"
 "i> (from the SEND/RECEIVE menu item)."
 msgstr ""
-"Új adatok kézi lekéréséhez kattints a <i><b>Összes küldése/fogadása</b></i> ("
-"a KÜLDÉS/FOGADÁS menüpontból)."
+"Új adatok kézi lekéréséhez kattints a <i><b>Összes küldése/fogadása</b></i> "
+"(a KÜLDÉS/FOGADÁS menüpontból)."
 
 #: usage.php:162
 #, fuzzy
@@ -516,7 +517,7 @@ msgstr ""
 "így az előfizetési URL által biztosított esemény leírások kicsit \"szebbek\" "
 "az Outlook számára."
 
-#: usage.php:176 layout/header.php:108
+#: usage.php:176 layout/header.php:109
 #, fuzzy
 msgid "Dates of Easter"
 msgstr "Húsvét dátumai"
@@ -531,7 +532,7 @@ msgstr "A húsvét dátumának példamegjelenítése 1583-tól 9999-ig"
 msgid "Calculate the Date of Easter"
 msgstr "Számítsd ki a húsvét dátumát"
 
-#: usage.php:198 layout/header.php:112
+#: usage.php:198 layout/header.php:113
 #, fuzzy
 msgid "Liturgy of the Day"
 msgstr "A nap liturgiája"
@@ -644,22 +645,22 @@ msgstr "Nap"
 msgid "Month"
 msgstr "Hónap"
 
-#: extending.php:95 extending.php:463
+#: extending.php:95 extending.php:464
 #, fuzzy
 msgid "Other Solemnity"
 msgstr "Egyéb ünnepélyesség"
 
-#: extending.php:96 extending.php:484
+#: extending.php:96 extending.php:485
 #, fuzzy
 msgid "Other Feast"
 msgstr "Egyéb ünnep"
 
-#: extending.php:97 extending.php:504 extending.php:505
+#: extending.php:97 extending.php:505 extending.php:506
 #, fuzzy
 msgid "Other Memorial"
 msgstr "Egyéb emléknap"
 
-#: extending.php:98 extending.php:525 extending.php:526
+#: extending.php:98 extending.php:526 extending.php:527
 #, fuzzy
 msgid "Other Optional Memorial"
 msgstr "Egyéb választható emléknap"
@@ -740,179 +741,180 @@ msgstr "Új ünnep"
 msgid "Change name"
 msgstr "Név megváltoztatása"
 
-#: extending.php:117
+#. translators: label of the form row
+#: extending.php:118
 #, fuzzy
 msgid "Change grade"
 msgstr "Fokozat megváltoztatása"
 
 #. translators: label of the form row
-#: extending.php:119
+#: extending.php:120
 #, fuzzy
 msgid "Move festivity"
 msgstr "Ünnep áthelyezése"
 
-#: extending.php:120
+#: extending.php:121
 #, fuzzy
 msgid "Decree URL"
 msgstr "Rendelet URL"
 
-#: extending.php:121
+#: extending.php:122
 #, fuzzy
 msgid "Decree Language mappings"
 msgstr "Rendelet nyelvi hozzárendelések"
 
-#: extending.php:122
+#: extending.php:123
 #, fuzzy
 msgid "Missal"
 msgstr "Misekönyv"
 
-#: extending.php:123
+#: extending.php:124
 #, fuzzy
 msgid "Reason (in favor of festivity)"
 msgstr "Indoklás (az ünnep mellett)"
 
-#: extending.php:135 extending.php:604 extending.php:608
+#: extending.php:136 extending.php:605 extending.php:609
 #, fuzzy
 msgid "Designate patron"
 msgstr "Védőszent kijelölése"
 
-#: extending.php:136 extending.php:620
+#: extending.php:137 extending.php:621
 #, fuzzy
 msgid "Change name or grade of existing festivity"
 msgstr "Meglévő ünnep neve vagy fokozata megváltoztatása"
 
-#: extending.php:137 extending.php:636
+#: extending.php:138 extending.php:637
 #, fuzzy
 msgid "Move festivity to new date"
 msgstr "Ünnep áthelyezése új dátumra"
 
-#: extending.php:138 extending.php:652
+#: extending.php:139 extending.php:653
 #, fuzzy
 msgid "Create a new festivity"
 msgstr "Új ünnep létrehozása"
 
-#: extending.php:144
+#: extending.php:145
 #, fuzzy
 msgid "General Roman Calendar - Extending"
 msgstr "Általános római naptár - Kiterjesztés"
 
-#: extending.php:152
+#: extending.php:153
 #, fuzzy
 msgid "Extend the General Roman Calendar with National or Diocesan data"
 msgstr ""
 "Általános római naptár kiterjesztése nemzeti vagy egyházmegyei adatokkal"
 
-#: extending.php:163 extending.php:314
+#: extending.php:164 extending.php:315
 #, fuzzy
 msgid "Wider Region"
 msgstr "Szélesebb régió"
 
-#: extending.php:165 extending.php:231
+#: extending.php:166 extending.php:232
 #, fuzzy
 msgid "This value cannot be empty."
 msgstr "Ez az érték nem lehet üres."
 
-#: extending.php:179
+#: extending.php:180
 #, fuzzy
 msgid "Locales"
 msgstr "Helyi beállítások"
 
-#: extending.php:188 extending.php:326 extending.php:402
+#: extending.php:189 extending.php:327 extending.php:403
 #, fuzzy
 msgid "Current localization"
 msgstr "Jelenlegi lokalizáció"
 
-#: extending.php:200 extending.php:244 extending.php:421
+#: extending.php:201 extending.php:245 extending.php:422
 #, fuzzy
 msgid "Remove existing data"
 msgstr "Meglévő adatok eltávolítása"
 
-#: extending.php:206 layout/header.php:27
+#: extending.php:207 layout/header.php:27
 #, fuzzy
 msgid "Create a Calendar for a Wider Region"
 msgstr "Naptár létrehozása szélesebb régió számára"
 
-#: extending.php:217
+#: extending.php:218
 #, fuzzy
 msgid "Save Wider Region Calendar Data"
 msgstr "Szélesebb régió naptáradatainak mentése"
 
-#: extending.php:229
+#: extending.php:230
 #, fuzzy
 msgid "National Calendar"
 msgstr "Nemzeti naptár"
 
-#: extending.php:250 layout/header.php:28
+#: extending.php:251 layout/header.php:28
 #, fuzzy
 msgid "Create a National Calendar"
 msgstr "Nemzeti naptár létrehozása"
 
-#: extending.php:255
+#: extending.php:256
 #, fuzzy
 msgid "National calendar settings"
 msgstr "Nemzeti naptár beállításai"
 
-#: extending.php:258 extending.php:550
+#: extending.php:259 extending.php:551
 #, fuzzy
 msgid "EPIPHANY"
 msgstr "VÍZKERESZT"
 
-#: extending.php:261 extending.php:553
+#: extending.php:262 extending.php:554
 #, fuzzy
 msgid "January 6"
 msgstr "Január 6."
 
-#: extending.php:262 extending.php:554
+#: extending.php:263 extending.php:555
 #, fuzzy
 msgid "Sunday between January 2 and January 8"
 msgstr "Vasárnap január 2. és január 8. között"
 
-#: extending.php:266 extending.php:558
+#: extending.php:267 extending.php:559
 #, fuzzy
 msgid "ASCENSION"
 msgstr "MENNYBEMENETEL"
 
-#: extending.php:274 extending.php:566
+#: extending.php:275 extending.php:567
 #, fuzzy
 msgid "CORPUS CHRISTI"
 msgstr "ÚRNAPJA"
 
-#: extending.php:282
+#: extending.php:283
 #, fuzzy
 msgid "ETERNAL HIGH PRIEST"
 msgstr "ÖRÖK FŐPAP"
 
-#: extending.php:289 extending.php:392
+#: extending.php:290 extending.php:393
 #, fuzzy
 msgid "LOCALES"
 msgstr "HELYI BEÁLLÍTÁSOK"
 
-#: extending.php:302
+#: extending.php:303
 #, fuzzy
 msgid "Published Roman Missals"
 msgstr "Kiadott római misekönyvek"
 
-#: extending.php:305 extending.php:668
+#: extending.php:306 extending.php:669
 #, fuzzy
 msgid "Add Missal"
 msgstr "Misekönyv hozzáadása"
 
-#: extending.php:345
+#: extending.php:346
 #, fuzzy
 msgid "Save National Calendar Data"
 msgstr "Nemzeti naptár adatok mentése"
 
-#: extending.php:359
+#: extending.php:360
 #, fuzzy
 msgid "Depends on national calendar"
 msgstr "Nemzeti naptártól függ"
 
-#: extending.php:370
+#: extending.php:371
 #, fuzzy
 msgid "Diocese"
 msgstr "Egyházmegye"
 
-#: extending.php:372
+#: extending.php:373
 #, fuzzy
 msgid ""
 "This diocese does not seem to exist? Please choose from a value in the list "
@@ -923,86 +925,86 @@ msgstr ""
 "listából egy meglévő egyházmegye lekéréséhez, vagy hagyja figyelmen kívül, "
 "ha új egyházmegyei naptárt hoz létre."
 
-#: extending.php:378
+#: extending.php:379
 #, fuzzy
 msgid "Diocesan group"
 msgstr "Egyházmegyei csoport"
 
-#: extending.php:413
+#: extending.php:414
 #, fuzzy
 msgid "Timezone"
 msgstr "Időzóna"
 
-#: extending.php:433
+#: extending.php:434
 #, fuzzy
 msgid "Solemnities"
 msgstr "Főünnepek"
 
-#: extending.php:434
+#: extending.php:435
 #, fuzzy
 msgid "Feasts"
 msgstr "Ünnepek"
 
-#: extending.php:435
+#: extending.php:436
 #, fuzzy
 msgid "Memorials"
 msgstr "Emléknapok"
 
-#: extending.php:436
+#: extending.php:437
 #, fuzzy
 msgid "Optional memorials"
 msgstr "Választható emléknapok"
 
-#: extending.php:455 extending.php:476 extending.php:497 extending.php:518
+#: extending.php:456 extending.php:477 extending.php:498 extending.php:519
 #: layout/header.php:29
 #, fuzzy
 msgid "Create a Diocesan Calendar"
 msgstr "Hozzon létre egy egyházmegyei naptárt"
 
-#: extending.php:455
+#: extending.php:456
 #, fuzzy
 msgid "Define the Solemnities"
 msgstr "Határozza meg az ünnepeket"
 
-#: extending.php:461
+#: extending.php:462
 #, fuzzy
 msgid ""
 "Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr "A hely, egyházmegye, régió, tartomány vagy terület fővédnöke(i)"
 
-#: extending.php:462 extending.php:483
+#: extending.php:463 extending.php:484
 #, fuzzy
 msgid "Dedication of the Cathedral"
 msgstr "A katedrális felszentelése"
 
-#: extending.php:476
+#: extending.php:477
 #, fuzzy
 msgid "Define the Feasts"
 msgstr "Határozza meg az ünnepeket"
 
-#: extending.php:482
+#: extending.php:483
 #, fuzzy
 msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr "A hely, egyházmegye, régió, tartomány vagy terület védőszentje(i)"
 
-#: extending.php:497
+#: extending.php:498
 #, fuzzy
 msgid "Define the Memorials"
 msgstr "Határozza meg az emléknapokat"
 
-#: extending.php:503
+#: extending.php:504
 #, fuzzy
 msgid ""
 "Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
 "A hely, egyházmegye, régió, tartomány vagy terület másodlagos védőszentje(i)"
 
-#: extending.php:518
+#: extending.php:519
 #, fuzzy
 msgid "Define the Optional Memorials"
 msgstr "Határozza meg a fakultatív emléknapokat"
 
-#: extending.php:524
+#: extending.php:525
 #, fuzzy
 msgid ""
 "Saints whos veneration is local to the Place, Diocese, Region, Province or "
@@ -1011,38 +1013,38 @@ msgstr ""
 "Szentek, akiknek tisztelete helyi a hely, egyházmegye, régió, tartomány vagy "
 "terület számára"
 
-#: extending.php:547
+#: extending.php:548
 #, fuzzy
 msgid "Diocesan overrides to the national calendar for …"
 msgstr "Egyházmegyei felülírások a nemzeti naptárhoz …"
 
-#: extending.php:581
+#: extending.php:582
 #, fuzzy
 msgid "SAVE DIOCESAN CALENDAR"
 msgstr "EGYHÁZMEGYEI NAPTÁR MENTÉSE"
 
-#: extending.php:609 extending.php:625 extending.php:641 extending.php:657
-#: extending.php:681
+#: extending.php:610 extending.php:626 extending.php:642 extending.php:658
+#: extending.php:682
 #, fuzzy
 msgid "Cancel"
 msgstr "Mégse"
 
-#: extending.php:640
+#: extending.php:641
 #, fuzzy
 msgid "Move Festivity"
 msgstr "Ünnep áthelyezése"
 
-#: extending.php:656
+#: extending.php:657
 #, fuzzy
 msgid "Create Festivity"
 msgstr "Ünnep létrehozása"
 
-#: extending.php:673
+#: extending.php:674
 #, fuzzy
 msgid "Choose from known Roman Missal language editions"
 msgstr "Válasszon a Római Misekönyv ismert nyelvi kiadásai közül"
 
-#: extending.php:675
+#: extending.php:676
 #, fuzzy
 msgid ""
 "This Missal is unknown to the Liturgical Calendar API. Please choose from a "
@@ -1053,7 +1055,7 @@ msgstr ""
 "egy értéket a listából, vagy lépjen kapcsolatba az API kurátorával, hogy a "
 "Misekönyvet hozzáadják az ismert nyelvi kiadásokhoz."
 
-#: extending.php:680
+#: extending.php:681
 #, fuzzy
 msgid "Add language edition Roman Missal"
 msgstr "Nyelvi kiadású Római Misekönyv hozzáadása"
@@ -1686,7 +1688,7 @@ msgstr "Fokozat"
 msgid "Common (or Proper)"
 msgstr "Általános (vagy Saját)"
 
-#: layout/header.php:24 layout/header.php:88
+#: layout/header.php:24 layout/header.php:89
 #, fuzzy
 msgid "Extending the API"
 msgstr "Az API kiterjesztése"
@@ -1703,20 +1705,25 @@ msgstr "Fordítások"
 
 #: layout/header.php:34
 #, fuzzy
+msgid "Decrees"
+msgstr "Rendelet URL"
+
+#: layout/header.php:35
+#, fuzzy
 msgid "About us"
 msgstr "Rólunk"
 
-#: layout/header.php:80
+#: layout/header.php:81
 #, fuzzy
 msgid "Home"
 msgstr "Kezdőlap"
 
-#: layout/header.php:92
+#: layout/header.php:93
 #, fuzzy
 msgid "Documentation"
 msgstr "Dokumentáció"
 
-#: layout/header.php:96
+#: layout/header.php:97
 #, fuzzy
 msgid "Examples of Usage"
 msgstr "Használati példák"
