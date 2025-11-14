@@ -65,7 +65,9 @@ ApiClient.init(BaseURL).then(apiClient => {
         calendarSelect._domElement.addEventListener('change', (ev) => {
             $('#holydays_of_obligation').multiselect('rebuild');
             if (ev.target.value === '') {
-                $('#holydays_of_obligation').multiselect('deselectAll', false).multiselect('selectAll', false);
+                $('#holydays_of_obligation').multiselect('deselectAll', false).multiselect('selectAll', false).parent().find('button.multiselect').removeAttr('style');
+            } else {
+                $('#holydays_of_obligation').parent().find('button.multiselect').css('background-color', '#e9ecef');
             }
         });
 
