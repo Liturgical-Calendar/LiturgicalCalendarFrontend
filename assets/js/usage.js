@@ -18,6 +18,7 @@ class RequestPayload {
     static year_type            = null;
 };
 
+/*
 const requestOptionDefaults = {
     "epiphany":            'JAN6',
     "ascension":           'THURSDAY',
@@ -25,6 +26,7 @@ const requestOptionDefaults = {
     "eternal_high_priest": false,
     "locale":              'LA'
 }
+*/
 
 /**
  * Class CurrentEndpoint
@@ -82,7 +84,7 @@ const updateSubscriptionURL = () => {
 }
 
 //let stagingURL = isStaging ? "-staging" : "";
-let calSubscriptionURL = CurrentEndpoint.serialize();
+//let calSubscriptionURL = CurrentEndpoint.serialize();
 
 
 toastr.options = {

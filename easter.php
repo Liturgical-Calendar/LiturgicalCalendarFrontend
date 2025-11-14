@@ -5,13 +5,13 @@ error_reporting(E_ALL);
 
 use LiturgicalCalendar\Frontend\Utilities;
 
-include_once "common.php";
+include_once 'common.php';
 
 $AllAvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($value) {
     return strpos($value, 'POSIX') === false;
 });
 
-$currentLocale = isset($_GET["locale"]) && in_array($_GET["locale"], $AllAvailableLocales) ? $_GET["locale"] : "en_US"; //default to English
+$currentLocale = isset($_GET['locale']) && in_array($_GET['locale'], $AllAvailableLocales) ? $_GET['locale'] : 'en_US'; //default to English
 ini_set('date.timezone', 'Europe/Vatican');
 
 $AvailableLocalesWithRegion = array_filter($AllAvailableLocales, function ($value) {
@@ -23,7 +23,7 @@ $AvailableLocalesWithRegion = array_reduce($AvailableLocalesWithRegion, function
 }, []);
 
 
-$baseLocale = Locale::getPrimaryLanguage($currentLocale);
+$baseLocale  = Locale::getPrimaryLanguage($currentLocale);
 $localeArray = [
     $currentLocale . '.utf8',
     $currentLocale . '.UTF-8',
@@ -33,15 +33,15 @@ $localeArray = [
     $baseLocale
 ];
 setlocale(LC_ALL, $localeArray);
-bindtextdomain("litcal", "i18n");
-textdomain("litcal");
+bindtextdomain('litcal', 'i18n');
+textdomain('litcal');
 
 $c = new Collator($currentLocale);
 $c->asort($AvailableLocalesWithRegion);
 
 $ch = curl_init();
 
-curl_setopt($ch, CURLOPT_URL, $dateOfEasterURL . "?locale=" . $currentLocale);
+curl_setopt($ch, CURLOPT_URL, $dateOfEasterURL . '?locale=' . $currentLocale);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($ch);
 if (curl_errno($ch)) {
@@ -58,11 +58,11 @@ if (json_last_error() !== JSON_ERROR_NONE) {
 }
 
 if (
-    false === property_exists($responseJson, "litcal_easter")
+    false === property_exists($responseJson, 'litcal_easter')
     ||
     false === is_array($responseJson->litcal_easter)
 ) {
-    $error_msg = "Missing data from response: litcal_easter property does not exist or is not an array";
+    $error_msg = 'Missing data from response: litcal_easter property does not exist or is not an array';
     die($error_msg);
 }
 
@@ -94,7 +94,7 @@ $DatesOfEaster = $responseJson->litcal_easter;
         <?php
         foreach ($AvailableLocalesWithRegion as $Lcl => $DisplayLang) {
             $optionContent = $baseLocale === 'en' ? $DisplayLang : $DisplayLang . ' (' . Locale::getDisplayLanguage($Lcl, 'en') . ')';
-            echo '<option value="' . $Lcl . '"' . ($baseLocale === $Lcl ? " selected" : "") . ' title="' . Locale::getDisplayLanguage($Lcl, 'en') . '">' . $optionContent . '</option>';
+            echo '<option value="' . $Lcl . '"' . ( $baseLocale === $Lcl ? ' selected' : '' ) . ' title="' . Locale::getDisplayLanguage($Lcl, 'en') . '">' . $optionContent . '</option>';
         }
         ?>
     </select>
@@ -103,28 +103,28 @@ $DatesOfEaster = $responseJson->litcal_easter;
         <div id="TimelineCenturiesContainer">
         <?php
         for ($i = 16; $i <= 100; $i++) {
-            $century = strtolower($currentLocale) === "en" ? Utilities::ordinal($i) : Utilities::romanNumeral($i);
-            echo "<div class=\"TimelineCenturyMarker\">" . $century . " " . _("Century") . "</div>";
+            $century = strtolower($currentLocale) === 'en' ? Utilities::ordinal($i) : Utilities::romanNumeral($i);
+            echo '<div class="TimelineCenturyMarker">' . $century . ' ' . _('Century') . '</div>';
         }
         ?>
         </div>
     </div>
 <?php
 
-    echo '<h3 style="text-align:center;">' . _("Easter Day Calculation in PHP (Years in which Julian and Gregorian easter coincide are marked in yellow)") . '</h3>';
+    echo '<h3 style="text-align:center;">' . _('Easter Day Calculation in PHP (Years in which Julian and Gregorian easter coincide are marked in yellow)') . '</h3>';
 
-    $EasterTableContainer = '<div id="EasterTableContainer">';
+    $EasterTableContainer  = '<div id="EasterTableContainer">';
     $EasterTableContainer .= '<table style="width:60%;margin:30px auto;border:1px solid Blue;border-radius: 6px; padding:10px;background:LightBlue;">';
     $EasterTableContainer .= '<thead><tr><th width="300">' . _('Gregorian Easter') . '</th><th width="300">' . _('Julian Easter') . '</th><th width="300">' . _('Julian Easter in Gregorian Calendar') . '</th></tr></thead>';
     $EasterTableContainer .= '<tbody>';
     //$Y = (int)date("Y");
     //for($i=1997;$i<=2037;$i++){
 for ($i = 1583; $i <= 9999; $i++) {
-    $gregDateString = $DatesOfEaster[$i - 1583]->gregorianDateString;
-    $julianDateString = $DatesOfEaster[$i - 1583]->julianDateString;
+    $gregDateString          = $DatesOfEaster[$i - 1583]->gregorianDateString;
+    $julianDateString        = $DatesOfEaster[$i - 1583]->julianDateString;
     $westernJulianDateString = $DatesOfEaster[$i - 1583]->westernJulianDateString;
 
-    $style_str = $DatesOfEaster[$i - 1583]->coinciding ? ' style="background-color:Yellow;font-weight:bold;color:Blue;"' : '';
+    $style_str             = $DatesOfEaster[$i - 1583]->coinciding ? ' style="background-color:Yellow;font-weight:bold;color:Blue;"' : '';
     $EasterTableContainer .= '<tr' . $style_str . '><td width="300">' . $gregDateString . '</td><td width="300">' . $julianDateString . '</td><td width="300">' . $westernJulianDateString . '</td></tr>';
 }
     $EasterTableContainer .= '</tbody></table>';

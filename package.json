@@ -1,0 +1,12 @@
+{
+  "name": "liturgical-calendar-frontend",
+  "packageManager": "yarn@4.9.2",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.32.0",
+    "eslint": "^9.32.0",
+    "globals": "^16.3.0"
+  }
+}

@@ -35,14 +35,14 @@
 
 import { CalendarSettings, Locale } from './Settings.js';
 
-/** @enum {'white'|'red'|'green'|'purple'|'pink'} */
+/** @enum {'white'|'red'|'green'|'purple'|'rose'} */
 class LitColor {
     static White    = 'white';
     static Red      = 'red';
     static Green    = 'green';
     static Purple   = 'purple';
-    static Pink     = 'pink';
-    static #map     = Object.freeze({ white: 'White', red: 'Red', green: 'Green', purple: 'Purple', pink: 'Pink' });
+    static Pink     = 'rose';
+    static #map     = Object.freeze({ white: 'White', red: 'Red', green: 'Green', purple: 'Purple', rose: 'Pink' });
     constructor(value) {
         if (typeof value !== 'string') {
             throw new Error('the value passed to the constructor of a LitColor must be a string');
@@ -104,19 +104,19 @@ class NationalCalendarLitCalArray {
     }
 }
 
-class LitCalFestivityData {
+class LitCalEventData {
     constructor( event_key = null ) {
         if (event_key === null) {
-            throw new Error('`festivity.event_key` parameter is required');
+            throw new Error('`liturgical_event.event_key` parameter is required');
         }
         if (typeof event_key !== 'string') {
-            throw new Error('`festivity.event_key` must be a string');
+            throw new Error('`liturgical_event.event_key` must be a string');
         }
         this.event_key = event_key;
     }
 }
 
-class LitCalMoveFestivityData extends LitCalFestivityData {
+class LitCalMoveEventData extends LitCalEventData {
     static #isValidDayValueForMonth(month, day) {
         switch (month) {
             case 2:
@@ -130,28 +130,28 @@ class LitCalMoveFestivityData extends LitCalFestivityData {
                 return day > 0 && day < 31;
         }
     }
-    constructor( festivity ) {
-        if (false === festivity.hasOwnProperty('event_key') || false === festivity.hasOwnProperty('day') || false === festivity.hasOwnProperty('month')) {
-            throw new Error('`festivity.event_key`, `festivity.day` and `festivity.month` properties are required for a `metadata.action` of `moveFestivity`');
+    constructor( liturgical_event ) {
+        if (false === liturgical_event.hasOwnProperty('event_key') || false === liturgical_event.hasOwnProperty('day') || false === liturgical_event.hasOwnProperty('month')) {
+            throw new Error('`liturgical_event.event_key`, `liturgical_event.day` and `liturgical_event.month` properties are required for a `metadata.action` of `moveEvent`');
         }
-        super(festivity.event_key);
-        this.day    = festivity.day;
-        this.month  = festivity.month;
-        if (typeof festivity.month !== 'number' || !Number.isInteger(festivity.month) || festivity.month < 1 || festivity.month > 12) {
-            throw new Error('`festivity.month` must be an integer between 1 and 12');
+        super(liturgical_event.event_key);
+        this.day    = liturgical_event.day;
+        this.month  = liturgical_event.month;
+        if (typeof liturgical_event.month !== 'number' || !Number.isInteger(liturgical_event.month) || liturgical_event.month < 1 || liturgical_event.month > 12) {
+            throw new Error('`liturgical_event.month` must be an integer between 1 and 12');
         }
         if (
-            typeof festivity.day !== 'number'
-            || !Number.isInteger(festivity.day)
-            || false === LitCalMoveFestivityData.#isValidDayValueForMonth(festivity.month, festivity.day)
+            typeof liturgical_event.day !== 'number'
+            || !Number.isInteger(liturgical_event.day)
+            || false === LitCalMoveEventData.#isValidDayValueForMonth(liturgical_event.month, liturgical_event.day)
         ) {
-            throw new Error('`festivity.day` must be an integer between 1 and 31 and it must be a valid day value for the given month');
+            throw new Error('`liturgical_event.day` must be an integer between 1 and 31 and it must be a valid day value for the given month');
         }
         return Object.freeze(this);
     }
 }
 
-class LitCalCreateNewFixedData extends LitCalFestivityData {
+class LitCalCreateNewFixedData extends LitCalEventData {
     static #isValidDayValueForMonth(month, day) {
         switch (month) {
             case 2:
@@ -166,118 +166,118 @@ class LitCalCreateNewFixedData extends LitCalFestivityData {
         }
     }
 
-    constructor( festivity ) {
+    constructor( liturgical_event ) {
         if (
-            false === festivity.hasOwnProperty('event_key')
-            || false === festivity.hasOwnProperty('day')
-            || false === festivity.hasOwnProperty('month')
-            || false === festivity.hasOwnProperty('color')
-            || false === festivity.hasOwnProperty('grade')
-            || false === festivity.hasOwnProperty('common')
+            false === liturgical_event.hasOwnProperty('event_key')
+            || false === liturgical_event.hasOwnProperty('day')
+            || false === liturgical_event.hasOwnProperty('month')
+            || false === liturgical_event.hasOwnProperty('color')
+            || false === liturgical_event.hasOwnProperty('grade')
+            || false === liturgical_event.hasOwnProperty('common')
         ) {
-            throw new Error('`festivity.event_key`, `festivity.day`, `festivity.month`, `festivity.color`, `festivity.grade`, and `festivity.common` properties are required for a `metadata.action` of `createNew` and when the new festivity is fixed');
+            throw new Error('`liturgical_event.event_key`, `liturgical_event.day`, `liturgical_event.month`, `liturgical_event.color`, `liturgical_event.grade`, and `liturgical_event.common` properties are required for a `metadata.action` of `createNew` and when the new liturgical_event is fixed');
         }
-        if (typeof festivity.month !== 'number' || !Number.isInteger(festivity.month) || festivity.month < 1 || festivity.month > 12) {
-            throw new Error('`festivity.month` must be an integer between 1 and 12');
+        if (typeof liturgical_event.month !== 'number' || !Number.isInteger(liturgical_event.month) || liturgical_event.month < 1 || liturgical_event.month > 12) {
+            throw new Error('`liturgical_event.month` must be an integer between 1 and 12');
         }
         if (
-            typeof festivity.day !== 'number'
-            || !Number.isInteger(festivity.day)
-            || false === LitCalCreateNewFixedData.#isValidDayValueForMonth(festivity.month, festivity.day)
+            typeof liturgical_event.day !== 'number'
+            || !Number.isInteger(liturgical_event.day)
+            || false === LitCalCreateNewFixedData.#isValidDayValueForMonth(liturgical_event.month, liturgical_event.day)
         ) {
-            throw new Error('`festivity.day` must be an integer between 1 and 31 and it must be a valid day value for the given month');
+            throw new Error('`liturgical_event.day` must be an integer between 1 and 31 and it must be a valid day value for the given month');
         }
-        if (false === Array.isArray(festivity.color) || 0 === festivity.color.length) {
-            throw new Error('`festivity.color` must be an array with at least one element');
+        if (false === Array.isArray(liturgical_event.color) || 0 === liturgical_event.color.length) {
+            throw new Error('`liturgical_event.color` must be an array with at least one element');
         }
-        if (false === Array.isArray(festivity.common)) {
-            throw new Error('`festivity.common` must be an array');
+        if (false === Array.isArray(liturgical_event.common)) {
+            throw new Error('`liturgical_event.common` must be an array');
         }
-        if (festivity.common.length) {
-            for (const common of festivity.common) {
+        if (liturgical_event.common.length) {
+            for (const common of liturgical_event.common) {
                 if (typeof common !== 'string') {
-                    throw new Error('`festivity.common` must be an array of strings');
+                    throw new Error('`liturgical_event.common` must be an array of strings');
                 }
             }
         }
-        super(festivity.event_key);
-        this.day    = festivity.day;
-        this.month  = festivity.month;
-        this.color  = festivity.color.map(color => new LitColor(color));
-        this.grade  = new LitGrade(festivity.grade);
-        this.common = festivity.common;
+        super(liturgical_event.event_key);
+        this.day    = liturgical_event.day;
+        this.month  = liturgical_event.month;
+        this.color  = liturgical_event.color.map(color => new LitColor(color));
+        this.grade  = new LitGrade(liturgical_event.grade);
+        this.common = liturgical_event.common;
         return Object.freeze(this);
     }
 }
 
-class LitCalCreateNewMobileData extends LitCalFestivityData {
-    constructor( festivity ) {
+class LitCalCreateNewMobileData extends LitCalEventData {
+    constructor( liturgical_event ) {
         if (
-            false === festivity.hasOwnProperty('event_key')
-            || false === festivity.hasOwnProperty('strtotime')
-            || false === festivity.hasOwnProperty('color')
-            || false === festivity.hasOwnProperty('grade')
-            || false === festivity.hasOwnProperty('common')
+            false === liturgical_event.hasOwnProperty('event_key')
+            || false === liturgical_event.hasOwnProperty('strtotime')
+            || false === liturgical_event.hasOwnProperty('color')
+            || false === liturgical_event.hasOwnProperty('grade')
+            || false === liturgical_event.hasOwnProperty('common')
         ) {
-            throw new Error('`festivity.event_key`, `festivity.strtotime`, `festivity.color`, `festivity.grade`, and `festivity.common` properties are required for a `metadata.action` of `createNew` and when the new festivity is mobile');
+            throw new Error('`liturgical_event.event_key`, `liturgical_event.strtotime`, `liturgical_event.color`, `liturgical_event.grade`, and `liturgical_event.common` properties are required for a `metadata.action` of `createNew` and when the new liturgical_event is mobile');
         }
-        if (typeof festivity.strtotime !== 'string') {
-            throw new Error('`festivity.strtotime` must be a string');
+        if (typeof liturgical_event.strtotime !== 'string') {
+            throw new Error('`liturgical_event.strtotime` must be a string');
         }
-        if (false === Array.isArray(festivity.color) || 0 === festivity.color.length) {
-            throw new Error('`festivity.color` must be an array with at least one element');
+        if (false === Array.isArray(liturgical_event.color) || 0 === liturgical_event.color.length) {
+            throw new Error('`liturgical_event.color` must be an array with at least one element');
         }
-        if (false === Array.isArray(festivity.common)) {
-            throw new Error('`festivity.common` must be an array');
+        if (false === Array.isArray(liturgical_event.common)) {
+            throw new Error('`liturgical_event.common` must be an array');
         }
-        if (festivity.common.length) {
-            for (const common of festivity.common) {
+        if (liturgical_event.common.length) {
+            for (const common of liturgical_event.common) {
                 if (typeof common !== 'string') {
-                    throw new Error('`festivity.common` must be an array of strings');
+                    throw new Error('`liturgical_event.common` must be an array of strings');
                 }
             }
         }
-        super(festivity.event_key);
-        this.strtotime = festivity.strtotime;
-        this.color  = festivity.color.map(color => new LitColor(color));
-        this.grade  = new LitGrade(festivity.grade);
-        this.common = festivity.common;
+        super(liturgical_event.event_key);
+        this.strtotime = liturgical_event.strtotime;
+        this.color  = liturgical_event.color.map(color => new LitColor(color));
+        this.grade  = new LitGrade(liturgical_event.grade);
+        this.common = liturgical_event.common;
         return Object.freeze(this);
     }
 }
 
-class LitCalSetPropertyNameData extends LitCalFestivityData {
-    constructor( festivity ) {
-        if (false === festivity.hasOwnProperty('event_key') || false === festivity.hasOwnProperty('name')) {
-            throw new Error('`festivity.event_key` and `festivity.name` properties are required for a `metadata.action` of `setProperty` and when the property is `name`');
+class LitCalSetPropertyNameData extends LitCalEventData {
+    constructor( liturgical_event ) {
+        if (false === liturgical_event.hasOwnProperty('event_key') || false === liturgical_event.hasOwnProperty('name')) {
+            throw new Error('`liturgical_event.event_key` and `liturgical_event.name` properties are required for a `metadata.action` of `setProperty` and when the property is `name`');
         }
-        if (typeof festivity.name !== 'string') {
-            throw new Error('`festivity.name` must be a string');
+        if (typeof liturgical_event.name !== 'string') {
+            throw new Error('`liturgical_event.name` must be a string');
         }
-        super(festivity.event_key);
-        this.name = festivity.name;
+        super(liturgical_event.event_key);
+        this.name = liturgical_event.name;
         return Object.freeze(this);
     }
 }
 
-class LitCalSetPropertyGradeData extends LitCalFestivityData {
-    constructor( festivity ) {
-        if (false === festivity.hasOwnProperty('event_key') || false === festivity.hasOwnProperty('grade')) {
-            throw new Error('`festivity.event_key` and `festivity.grade` properties are required for a `metadata.action` of `setProperty` and when the property is `grade`');
+class LitCalSetPropertyGradeData extends LitCalEventData {
+    constructor( liturgical_event ) {
+        if (false === liturgical_event.hasOwnProperty('event_key') || false === liturgical_event.hasOwnProperty('grade')) {
+            throw new Error('`liturgical_event.event_key` and `liturgical_event.grade` properties are required for a `metadata.action` of `setProperty` and when the property is `grade`');
         }
-        super(festivity.event_key);
-        this.grade = new LitGrade(festivity.grade);
+        super(liturgical_event.event_key);
+        this.grade = new LitGrade(liturgical_event.grade);
         return Object.freeze(this);
     }
 }
 
-class LitCalMakePatronData extends LitCalFestivityData {
-    constructor( festivity ) {
-        if (false === festivity.hasOwnProperty('event_key') || false === festivity.hasOwnProperty('grade')) {
-            throw new Error('`festivity.event_key` and `festivity.grade` properties are required for a `metadata.action` of `makePatron`, we received: ' + JSON.stringify(festivity));
+class LitCalMakePatronData extends LitCalEventData {
+    constructor( liturgical_event ) {
+        if (false === liturgical_event.hasOwnProperty('event_key') || false === liturgical_event.hasOwnProperty('grade')) {
+            throw new Error('`liturgical_event.event_key` and `liturgical_event.grade` properties are required for a `metadata.action` of `makePatron`, we received: ' + JSON.stringify(liturgical_event));
         }
-        super(festivity.event_key);
-        this.grade = new LitGrade(festivity.grade);
+        super(liturgical_event.event_key);
+        this.grade = new LitGrade(liturgical_event.grade);
         return Object.freeze(this);
     }
 }
@@ -307,13 +307,13 @@ class LitCalMetadata {
     }
 }
 
-class LitCalMoveFestivityMetadata extends LitCalMetadata {
+class LitCalMoveEventMetadata extends LitCalMetadata {
     constructor( metadata ) {
         if ( false === metadata.hasOwnProperty('since_year') || false === metadata.hasOwnProperty('missal') || false === metadata.hasOwnProperty('reason') ) {
             throw new Error('since_year, missal, and reason parameters are required');
         }
         super(metadata.since_year, metadata.until_year ?? null);
-        this.action      = 'moveFestivity';
+        this.action      = 'moveEvent';
         this.missal      = metadata.missal;
         this.reason      = metadata.reason;
         return Object.freeze(this);
@@ -363,8 +363,8 @@ class NationalCalendarLitCalItem {
         if (typeof litcalItem !== 'object') {
             throw new Error('litcalItem parameter must be an object');
         }
-        if (false === litcalItem.hasOwnProperty('festivity') || false === litcalItem.hasOwnProperty('metadata')) {
-            throw new Error('`festivity` and `metadata` parameters are required');
+        if (false === litcalItem.hasOwnProperty('liturgical_event') || false === litcalItem.hasOwnProperty('metadata')) {
+            throw new Error('`liturgical_event` and `metadata` parameters are required');
         }
         if (false === litcalItem.metadata.hasOwnProperty('action')) {
             throw new Error('metadata must have an `action` property');
@@ -380,32 +380,32 @@ class NationalCalendarLitCalItem {
             ||
             (litcalItem.metadata.action === 'setProperty' && litcalItem.metadata.property === 'name')
         ) {
-            if (false === litcalItem.festivity.hasOwnProperty('event_key')) {
-                throw new Error('litcalItem.festivity must have an `event_key` property');
+            if (false === litcalItem.liturgical_event.hasOwnProperty('event_key')) {
+                throw new Error('litcalItem.liturgical_event must have an `event_key` property');
             }
             Object.entries(i18nData).forEach( ([isoCode, translations]) => {
-                if (false === litcalItem.festivity.event_key in translations) {
-                    throw new Error(`The litcalItem.festivity.event_key ${litcalItem.festivity.event_key} is missing in i18nData[${isoCode}]: ${JSON.stringify(translations)}`);
+                if (false === litcalItem.liturgical_event.event_key in translations) {
+                    throw new Error(`The litcalItem.liturgical_event.event_key ${litcalItem.liturgical_event.event_key} is missing in i18nData[${isoCode}]: ${JSON.stringify(translations)}`);
                 }
             });
         }
 
         switch (litcalItem.metadata.action) {
-            case 'moveFestivity':
-                /**@type {LitCalMoveFestivityData} */
-                this.festivity = new LitCalMoveFestivityData(litcalItem.festivity);
-                /**@type {LitCalMoveFestivityMetadata} */
-                this.metadata = new LitCalMoveFestivityMetadata(litcalItem.metadata);
+            case 'moveEvent':
+                /**@type {LitCalMoveEventData} */
+                this.liturgical_event = new LitCalMoveEventData(litcalItem.liturgical_event);
+                /**@type {LitCalMoveEventMetadata} */
+                this.metadata = new LitCalMoveEventMetadata(litcalItem.metadata);
                 break;
             case 'createNew':
-                if (litcalItem.festivity.hasOwnProperty('day') && litcalItem.festivity.hasOwnProperty('month')) {
+                if (litcalItem.liturgical_event.hasOwnProperty('day') && litcalItem.liturgical_event.hasOwnProperty('month')) {
                     /**@type {LitCalCreateNewFixedData} */
-                    this.festivity = new LitCalCreateNewFixedData(litcalItem.festivity);
-                } else if (litcalItem.festivity.hasOwnProperty('strtotime')) {
+                    this.liturgical_event = new LitCalCreateNewFixedData(litcalItem.liturgical_event);
+                } else if (litcalItem.liturgical_event.hasOwnProperty('strtotime')) {
                     /**@type {LitCalCreateNewMobileData} */
-                    this.festivity = new LitCalCreateNewMobileData(litcalItem.festivity);
+                    this.liturgical_event = new LitCalCreateNewMobileData(litcalItem.liturgical_event);
                 } else {
-                    throw new Error('when metadata.action is `createNew`, `festivity` must have either `day` and `month` properties or `strtotime` property');
+                    throw new Error('when metadata.action is `createNew`, `liturgical_event` must have either `day` and `month` properties or `strtotime` property');
                 }
                 /**@type {LitCalMetadata} */
                 this.metadata = new LitCalMetadata(litcalItem.metadata.since_year, litcalItem.metadata.until_year ?? null);
@@ -417,13 +417,13 @@ class NationalCalendarLitCalItem {
                 switch (litcalItem.metadata.property) {
                     case 'name':
                         /**@type {LitCalSetPropertyNameData} */
-                        this.festivity = new LitCalSetPropertyNameData(litcalItem.festivity);
+                        this.liturgical_event = new LitCalSetPropertyNameData(litcalItem.liturgical_event);
                         /**@type {LitCalSetPropertyNameMetadata} */
                         this.metadata = new LitCalSetPropertyNameMetadata(litcalItem.metadata);
                         break;
                     case 'grade':
                         /**@type {LitCalSetPropertyGradeData} */
-                        this.festivity = new LitCalSetPropertyGradeData(litcalItem.festivity);
+                        this.liturgical_event = new LitCalSetPropertyGradeData(litcalItem.liturgical_event);
                         /**@type {LitCalSetPropertyGradeMetadata} */
                         this.metadata = new LitCalSetPropertyGradeMetadata(litcalItem.metadata);
                         break;
@@ -433,12 +433,12 @@ class NationalCalendarLitCalItem {
                 break;
             case 'makePatron':
                 /**@type {LitCalMakePatronData} */
-                this.festivity = new LitCalMakePatronData(litcalItem.festivity);
+                this.liturgical_event = new LitCalMakePatronData(litcalItem.liturgical_event);
                 /**@type {LitCalMakePatronMetadata} */
                 this.metadata = new LitCalMakePatronMetadata(litcalItem.metadata);
                 break;
             default:
-                throw new Error('metadata.action must be one of `moveFestivity`, `createNew`, `setProperty` or `makePatron`');
+                throw new Error('metadata.action must be one of `moveEvent`, `createNew`, `setProperty` or `makePatron`');
         }
         return Object.freeze(this);
     }
@@ -502,7 +502,7 @@ class NationalCalendarPayloadMetadata {
 
 class NationalCalendarPayload {
     constructor( litcal = null, settings = null, metadata = null, i18n = null ) {
-        const allowedProps = new Set(['litcal', 'settings', 'metadata', 'i18n']);
+        // const allowedProps = new Set(['litcal', 'settings', 'metadata', 'i18n']);
         if (null === litcal || null === settings || null === metadata || null === i18n) {
             throw new Error('litcal, settings, metadata and i18n parameters are required');
         }

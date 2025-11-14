@@ -22,16 +22,16 @@ import {
 import {
     WiderRegionPayload,
     NationalCalendarPayload,
-    DiocesanCalendarPayload
+    //DiocesanCalendarPayload
 } from './Payload.js';
 
 import {
-    Festivity
-} from './Festivity.js';
+    LiturgicalEvent
+} from './LiturgicalEvent.js';
 
 /**
  * @typedef {Object} RowData
- * @prop {Object} festivity
+ * @prop {Object} liturgical_event
  * @prop {Object} metadata
  * @prop {RowAction} metadata.action
  */
@@ -74,7 +74,7 @@ const snakeCaseToPascalCase = (str) => str.replace(/(^\w|[-_][a-z])/g, g => g.to
  * @param {string} str
  * @return {string}
  */
-const snakeCaseToCamelCase = (str) => str.replace(/([-_][a-z])/g, g => g[1].toUpperCase());
+//const snakeCaseToCamelCase = (str) => str.replace(/([-_][a-z])/g, g => g[1].toUpperCase());
 
 FormControls.jsLocale = jsLocale;
 FormControls.weekdayFormatter = new Intl.DateTimeFormat(jsLocale, { weekday: "long" });
@@ -83,9 +83,9 @@ FormControls.index = LitCalMetadata;
 const TranslationData = new Map();
 const EventsCollection = new Map();
 EventsCollection.set(EventsURL, new Map());
-EventsCollection.get(EventsURL).set(LOCALE, FestivityCollection.map(el => Festivity.fromObject(el)));
+EventsCollection.get(EventsURL).set(LOCALE, LiturgicalEventCollection.map(el => LiturgicalEvent.fromObject(el)));
 const EventsCollectionKeys = new Map();
-EventsCollectionKeys.set(EventsURL, FestivityCollection.map(el => el.event_key));
+EventsCollectionKeys.set(EventsURL, LiturgicalEventCollection.map(el => el.event_key));
 
 const initialHeaders = new Headers({
     'Accept': 'application/json'
@@ -451,13 +451,13 @@ if (document.readyState === 'loading') {
  * It checks if the input value is empty, indicating a potential deletion, or if it's a new
  * or updated event name. Based on the event key and the calendar existence, it updates
  * CalendarData accordingly. The function also handles the assignment of event keys,
- * festivity properties, and localization inputs. Additionally, it manages validation
+ * liturgical_event properties, and localization inputs. Additionally, it manages validation
  * and conflict resolution for event keys, ensuring unique entries in the calendar.
  *
  * @param {Event} ev - The change event triggered by the liturgical event name input field.
  */
 const litEventNameChangeHandler = (ev) => {
-    const row = ev.target.closest('.row');
+    const row  = ev.target.closest('.row');
     const card = ev.target.closest('.card-body');
     //console.log('LitEvent name has changed');
     if (ev.target.value === '') {
@@ -468,7 +468,7 @@ const litEventNameChangeHandler = (ev) => {
             ? oldEventKeyEl.value
             : (ev.target.dataset.hasOwnProperty('valuewas') ? ev.target.dataset.valuewas : '');
         console.log('seems we are trying to delete the object key ' + oldEventKey);
-        CalendarData.litcal = CalendarData.litcal.filter(item => item.festivity.event_key !== oldEventKey);
+        CalendarData.litcal = CalendarData.litcal.filter(item => item.liturgical_event.event_key !== oldEventKey);
         if (oldEventKeyEl) {
             oldEventKeyEl.value = '';
         } else {
@@ -505,7 +505,7 @@ const litEventNameChangeHandler = (ev) => {
                 console.error('unexpected choice ' + choice + ', should be a value of "nation", "diocese" or "widerregion"');
         }
 
-        console.log('new festivity name is ' + ev.target.value);
+        console.log('new liturgical_event name is ' + ev.target.value);
         const newEventKey = createEventKey(ev.target.value);
         console.log('if applicable, new LitEvent name identifier would be ' + newEventKey);
 
@@ -518,12 +518,13 @@ const litEventNameChangeHandler = (ev) => {
             if (oldEventKey === '') {
                 console.log('the previous event_key was empty so we need not search for an entry in CalendarData, we simply create a new event with the new event key and add it to the CalendarData');
                 // we need to ensure the new event_key does not collide with an existing event_key
-                if (CalendarData.litcal.filter(item => item.festivity.event_key === newEventKey).length === 0) {
+                const litEvent = CalendarData.litcal.find(item => item.liturgical_event.event_key === newEventKey) ?? null;
+                if (litEvent === null) {
                     console.log('new event key is unique');
                     const colorSelectedOptions = Array.from(row.querySelector('.litEventColor').selectedOptions);
                     const commonSelectedOptions = Array.from(row.querySelector('.litEventCommon').selectedOptions);
 
-                    const festivity = new LitEvent(
+                    const liturgical_event = new LitEvent(
                         newEventKey,
                         ev.target.value, //name
                         colorSelectedOptions.map(({ value }) => value), //color
@@ -552,13 +553,15 @@ const litEventNameChangeHandler = (ev) => {
 
                     if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
                         const currentLocalization = document.querySelector('#currentLocalization').value;
-                        const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions).filter(({ value }) => value !== currentLocalization).map(({ value }) => value);
+                        const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
+                                                    .filter(({ value }) => value !== currentLocalization)
+                                                    .map(({ value }) => value);
                         const otherLocalizationsInputs = otherLocalizations.map(localization => translationTemplate(API.path, localization, ev.target));
                         ev.target.insertAdjacentHTML('afterend', otherLocalizationsInputs.join(''));
                     }
 
                     const newEvent = {
-                        festivity,
+                        liturgical_event,
                         metadata
                     };
                     console.log('adding new event to CalendarData.litcal:');
@@ -567,16 +570,16 @@ const litEventNameChangeHandler = (ev) => {
                 } else {
                     // If there is a collision with an existing event_key, we should let the user know and ask if they want to create an entry anyways.
                     // In this case, we can copy values from the existing event to the new event.
-                    if ( false === CalendarData.litcal.filter(item => item.festivity.event_key === newEventKey)[0].metadata.hasOwnProperty('until_year') ) {
-                        console.log('exact same festivity name was already defined elsewhere! key ' + newEventKey + ' already exists! and the untilYear property was not defined!');
+                    if ( false === litEvent.metadata.hasOwnProperty('until_year') ) {
+                        console.log('exact same liturgical_event name was already defined elsewhere! key ' + newEventKey + ' already exists! and the untilYear property was not defined!');
                         ev.target.value = '';
                         ev.target.classList.add('is-invalid');
                     } else {
-                        const confrm = confirm('The same festivity name was already defined elsewhere. However an untilYear property was also defined, so perhaps you are wanting to define again for the years following. If this is the case, press OK, otherwise Cancel');
+                        const confrm = confirm('The same liturgical_event name was already defined elsewhere. However an untilYear property was also defined, so perhaps you are wanting to define again for the years following. If this is the case, press OK, otherwise Cancel');
                         if (confrm) {
                             ev.target.classList.remove('is-invalid');
-                            //retrieve untilYear from the previous festivity with the same name
-                            const { until_year } = CalendarData.litcal.filter(item => item.festivity.event_key === newEventKey)[0].metadata;
+                            //retrieve untilYear from the previous liturgical_event with the same name
+                            const { until_year } = litEvent.metadata;
                             //set the sinceYear field on this row to the previous until_year plus one
                             row.querySelector('.litEventSinceYear').value = (until_year + 1);
                             row.querySelector('.litEventUntilYear').min = (until_year + 2);
@@ -589,7 +592,7 @@ const litEventNameChangeHandler = (ev) => {
                             const colorSelectedOptions = Array.from(row.querySelector('.litEventColor').selectedOptions);
                             const commonSelectedOptions = Array.from(row.querySelector('.litEventCommon').selectedOptions);
 
-                            const festivity = new LitEvent(
+                            const liturgical_event = new LitEvent(
                                 newEventKey,
                                 ev.target.value, //name
                                 colorSelectedOptions.map(({ value }) => value), //color
@@ -605,7 +608,7 @@ const litEventNameChangeHandler = (ev) => {
                                 form_rownum
                             };
                             const newEvent = {
-                                festivity,
+                                liturgical_event,
                                 metadata
                             }
                             console.log('form row index is ' + form_rownum);
@@ -615,17 +618,17 @@ const litEventNameChangeHandler = (ev) => {
                 }
             } else {
                 // If the previous event_key is not empty, we are probably wanting to update an existing event with a new event_key
-                // however we do NOT want to change the event_key when making a patron saint, or changing the name of an existing festivity,
+                // however we do NOT want to change the event_key when making a patron saint, or changing the name of an existing liturgical_event,
                 // so this logic really only applies to diocesan calendar forms
                 console.log('the previous event_key was not empty: ', oldEventKey);
                 if (choice === 'diocesan') {
-                    if (CalendarData.litcal.filter(item => item.festivity.event_key === oldEventKey).length > 0) {
+                    const litEvent = CalendarData.litcal.find(item => item.liturgical_event.event_key === oldEventKey) ?? null;
+                    if (litEvent !== null) {
                         if (oldEventKey !== newEventKey) {
-                            console.log('Name change on an existing festivity.');
+                            console.log('Name change on an existing liturgical_event.');
                             console.log('will now attempt to copy the values from <' + oldEventKey + '> to <' + newEventKey + '> and then remove <' + oldEventKey + '>');
-                            const existingEvent = CalendarData.litcal.filter(item => item.festivity.event_key === oldEventKey)[0];
-                            existingEvent.festivity.event_key = newEventKey;
-                            existingEvent.festivity.name = ev.target.value;
+                            litEvent.liturgical_event.event_key = newEventKey;
+                            litEvent.liturgical_event.name = ev.target.value;
                             if (oldEventKeyEl) {
                                 oldEventKeyEl.value = newEventKey;
                             } else {
@@ -638,43 +641,44 @@ const litEventNameChangeHandler = (ev) => {
             }
 
             if (choice === 'diocesan') {
+                const litEvent = CalendarData.litcal.find(item => item.liturgical_event.event_key === newEventKey) ?? null;
                 // We set the grade based on the current carousel item
                 switch (ev.target.closest('.carousel-item').id) {
                     case 'carouselItemSolemnities':
-                        CalendarData.litcal.filter(item => item.festivity.event_key === newEventKey)[0].festivity.grade = 6;
+                        litEvent.liturgical_event.grade = 6;
                         break;
                     case 'carouselItemFeasts':
-                        CalendarData.litcal.filter(item => item.festivity.event_key === newEventKey)[0].festivity.grade = 4;
+                        litEvent.liturgical_event.grade = 4;
                         break;
                     case 'carouselItemMemorials':
-                        CalendarData.litcal.filter(item => item.festivity.event_key === newEventKey)[0].festivity.grade = 3;
+                        litEvent.liturgical_event.grade = 3;
                         break;
                     case 'carouselItemOptionalMemorials':
-                        CalendarData.litcal.filter(item => item.festivity.event_key === newEventKey)[0].festivity.grade = 2;
+                        litEvent.liturgical_event.grade = 2;
                         break;
                 }
 
                 // Attempt to set liturgical color to red for martyrs, white for all other cases
                 if (ev.target.value.match(/(martyr|martir|mártir|märtyr)/i) !== null) {
                     $(row.querySelector('.litEventColor')).multiselect('deselectAll', false).multiselect('select', 'red');
-                    CalendarData.litcal.filter(item => item.festivity.event_key === newEventKey)[0].festivity.color = [ 'red' ];
+                    litEvent.liturgical_event.color = [ 'red' ];
                 } else {
                     $(row.querySelector('.litEventColor')).multiselect('deselectAll', false).multiselect('select', 'white');
-                    CalendarData.litcal.filter(item => item.festivity.event_key === newEventKey)[0].festivity.color = [ 'white' ];
+                    litEvent.liturgical_event.color = [ 'white' ];
                 }
             }
         } else {
-            // Seeing the calendar already exists, we should keep the event_key the same and just update the festivity name
+            // Seeing the calendar already exists, we should keep the event_key the same and just update the liturgical_event name
             // We only need to do this for diocesan calendars, because WiderRegion and National calendars are serialized on the spot,
             // not at each form control change event
             if (choice === 'diocesan') {
                 const eventKey = ev.target.dataset.valuewas;
-                console.log('calendar already exists, so we are just updating the festivity name while keeping the event_key the same', eventKey);
+                console.log('calendar already exists, so we are just updating the liturgical_event name while keeping the event_key the same', eventKey);
                 if (eventKey !== '') {
                     console.log('CalendarData before update: ', CalendarData);
-                    const existingEntry = CalendarData.litcal.filter(item => item.festivity.event_key === eventKey);
+                    const existingEntry = CalendarData.litcal.find(item => item.liturgical_event.event_key === eventKey);
                     console.log('existingEntry is: ', existingEntry);
-                    existingEntry[0].festivity.name = ev.target.value;
+                    existingEntry.liturgical_event.name = ev.target.value;
                     console.log('CalendarData.litcal has been updated:', CalendarData);
                 } else {
                     console.error('why is event_key empty?');
@@ -687,7 +691,7 @@ const litEventNameChangeHandler = (ev) => {
 /**
  * Updates the day of a liturgical event when the day input is changed.
  * If the event's name is not empty and exists in the CalendarData,
- * it modifies the event's festivity day with the new value.
+ * it modifies the event's liturgical_event day with the new value.
  *
  * @param {Event} ev - The change event triggered by the day input field.
  */
@@ -695,15 +699,16 @@ const litEventDayChangeHandler = (ev) => {
     const row = ev.target.closest('.row');
     if (row.querySelector('.litEventName').value !== '') {
         const eventKey = row.querySelector('.litEventName').dataset.valuewas;
-        if (CalendarData.litcal.filter(item => item.festivity.event_key === eventKey).length > 0) {
-            CalendarData.litcal.filter(item => item.festivity.event_key === eventKey)[0].festivity.day = parseInt(ev.target.value);
+        const litEvent = CalendarData.litcal.find(item => item.liturgical_event.event_key === eventKey) ?? null;
+        if (litEvent !== null) {
+            litEvent.liturgical_event.day = parseInt(ev.target.value);
         }
     }
 }
 
 /**
  * Handles changes to the month select element for a liturgical event.
- * Updates the festivity's month property in the CalendarData and adjusts
+ * Updates the liturgical_event's month property in the CalendarData and adjusts
  * the maximum day value allowed based on the selected month.
  * If the current day value exceeds the maximum allowed for the selected month,
  * it resets the day value to the maximum.
@@ -715,8 +720,9 @@ const litEventMonthChangeHandler = (ev) => {
     const selcdMonth = parseInt(ev.target.value);
     if (row.querySelector('.litEventName').value !== '') {
         const eventKey = row.querySelector('.litEventName').dataset.valuewas;
-        if (CalendarData.litcal.filter(item => item.festivity.event_key === eventKey).length > 0) {
-            CalendarData.litcal.filter(item => item.festivity.event_key === eventKey)[0].festivity.month = selcdMonth;
+        const litEvent = CalendarData.litcal.find(item => item.liturgical_event.event_key === eventKey) ?? null;
+        if (litEvent !== null) {
+            litEvent.liturgical_event.month = selcdMonth;
         }
     }
     row.querySelector('.litEventDay').max = getMonthMaxDay(selcdMonth);
@@ -727,7 +733,7 @@ const litEventMonthChangeHandler = (ev) => {
 
 /**
  * Handles changes to the 'common' multiselect for a liturgical event in the editor.
- * Updates the festivity's 'common' and 'color' properties based on the selected options.
+ * Updates the liturgical_event's 'common' and 'color' properties based on the selected options.
  * Additionally, updates the multiselect options for the 'litEventColor' field.
  *
  * @param {Event} ev - The change event triggered by the 'common' multiselect.
@@ -737,20 +743,20 @@ const litEventCommonChangeHandler = (ev) => {
     const row = ev.target.closest('.row');
     if (row.querySelector('.litEventName').value !== '') {
         const eventKey = row.querySelector('.litEventName').dataset.valuewas;
-        const event = CalendarData.litcal.filter(item => item.festivity.event_key === eventKey);
-        if (event.length > 0) {
+        const litEvent = CalendarData.litcal.find(item => item.liturgical_event.event_key === eventKey) ?? null;
+        if (litEvent !== null) {
             const selectedOptions = Array.from(ev.target.selectedOptions);
-            event[0].festivity.common = selectedOptions.map(({ value }) => value);
-            console.log('litEventChanged: litEventCommon has changed, new value is: ', CalendarData.litcal.filter(item => item.festivity.event_key === eventKey)[0].festivity.common);
+            litEvent.liturgical_event.common = selectedOptions.map(({ value }) => value);
+            console.log('litEventChanged: litEventCommon has changed, new value is: ', CalendarData.litcal.find(item => item.liturgical_event.event_key === eventKey).liturgical_event.common);
             let eventColors = [];
-            if (event[0].festivity.common.some( m => /Martyrs/.test(m) )) {
+            if (litEvent.liturgical_event.common.some( m => /Martyrs/.test(m) )) {
                 eventColors.push('red');
             }
-            if (event[0].festivity.common.some( m => /(Blessed Virgin Mary|Pastors|Doctors|Virgins|Holy Men and Women|Dedication of a Church)/.test(m) ) ) {
+            if (litEvent.liturgical_event.common.some( m => /(Blessed Virgin Mary|Pastors|Doctors|Virgins|Holy Men and Women|Dedication of a Church)/.test(m) ) ) {
                 eventColors.push('white');
             }
             $(row.querySelector('.litEventColor')).multiselect('deselectAll', false).multiselect('select', eventColors);
-            event[0].festivity.color = eventColors;
+            litEvent.liturgical_event.color = eventColors;
         }
     }
 }
@@ -764,9 +770,10 @@ const litEventColorChangeHandler = (ev) => {
     const row = ev.target.closest('.row');
     if (row.querySelector('.litEventName').value !== '') {
         const eventKey = row.querySelector('.litEventName').dataset.valuewas;
-        if (CalendarData.litcal.filter(item => item.festivity.event_key === eventKey).length > 0) {
+        const litEvent = CalendarData.litcal.find(item => item.liturgical_event.event_key === eventKey) ?? null;
+        if (litEvent !== null) {
             const selectedOptions = Array.from(ev.target.selectedOptions);
-            CalendarData.litcal.filter(item => item.festivity.event_key === eventKey)[0].festivity.color = selectedOptions.map(({ value }) => value);;
+            litEvent.liturgical_event.color = selectedOptions.map(({ value }) => value);;
         }
     }
 }
@@ -780,8 +787,9 @@ const litEventSinceYearChangeHandler = (ev) => {
     const row = ev.target.closest('.row');
     if (row.querySelector('.litEventName').value !== '') {
         const eventKey = row.querySelector('.litEventName').dataset.valuewas;
-        if (CalendarData.litcal.filter(item => item.festivity.event_key === eventKey).length > 0) {
-            CalendarData.litcal.filter(item => item.festivity.event_key === eventKey)[0].metadata.since_year = parseInt(ev.target.value);
+        const litEvent = CalendarData.litcal.find(item => item.liturgical_event.event_key === eventKey) ?? null;
+        if (litEvent !== null) {
+            litEvent.metadata.since_year = parseInt(ev.target.value);
         }
     }
     row.querySelector('.litEventUntilYear').min = parseInt(ev.target.value) + 1;
@@ -796,18 +804,19 @@ const litEventUntilYearChangeHandler = (ev) => {
     const row = ev.target.closest('.row');
     if (row.querySelector('.litEventName').value !== '') {
         const eventKey = row.querySelector('.litEventName').dataset.valuewas;
-        if (CalendarData.litcal.filter(item => item.festivity.event_key === eventKey).length > 0) {
+        const litEvent = CalendarData.litcal.find(item => item.liturgical_event.event_key === eventKey) ?? null;
+        if (litEvent !== null) {
             if (ev.target.value !== '') {
-                CalendarData.litcal.filter(item => item.festivity.event_key === eventKey)[0].metadata.until_year = parseInt(ev.target.value);
+                litEvent.metadata.until_year = parseInt(ev.target.value);
             } else {
-                delete CalendarData.litcal.filter(item => item.festivity.event_key === eventKey)[0].metadata.until_year;
+                delete litEvent.metadata.until_year;
             }
         }
     }
 }
 
 /**
- * Handles the toggle switch that determines whether the festivity date is either a static date (day and month) or a relative date (strtotime syntax)
+ * Handles the toggle switch that determines whether the liturgical_event date is either a static date (day and month) or a relative date (strtotime syntax)
  * @param {Event} ev the change event
  * @listens change
  */
@@ -815,11 +824,12 @@ const litEventStrtotimeSwitchHandler = (ev) => {
     const row = ev.target.closest('.row');
     if (row.querySelector('.litEventName').value !== '') {
         const eventKey = row.querySelector('.litEventName').dataset.valuewas;
-        if (CalendarData.litcal.filter(item => item.festivity.event_key === eventKey).length > 0) {
+        const litEvent = CalendarData.litcal.find(item => item.liturgical_event.event_key === eventKey) ?? null;
+        if (litEvent !== null) {
             if (false === ev.target.checked) {
-                delete CalendarData.litcal.filter(item => item.festivity.event_key === eventKey)[0].festivity.strtotime;
-                CalendarData.litcal.filter(item => item.festivity.event_key === eventKey)[0].festivity.day = 1;
-                CalendarData.litcal.filter(item => item.festivity.event_key === eventKey)[0].festivity.month = 1;
+                delete litEvent.liturgical_event.strtotime;
+                litEvent.liturgical_event.day = 1;
+                litEvent.liturgical_event.month = 1;
                 const strToTimeFormGroup = ev.target.closest('.form-group');
                 strToTimeFormGroup.classList.remove('col-sm-3');
                 strToTimeFormGroup.classList.add('col-sm-2');
@@ -841,9 +851,9 @@ const litEventStrtotimeSwitchHandler = (ev) => {
                 strToTimeFormGroup.querySelector('.month-label').textContent = Messages[ 'Month' ];
                 strToTimeFormGroup.querySelector('.month-label').setAttribute('for', monthId);
             } else {
-                delete CalendarData.litcal.filter(item => item.festivity.event_key === eventKey)[0].festivity.day;
-                delete CalendarData.litcal.filter(item => item.festivity.event_key === eventKey)[0].festivity.month;
-                CalendarData.litcal.filter(item => item.festivity.event_key === eventKey)[0].festivity.strtotime = '';
+                delete litEvent.liturgical_event.day;
+                delete litEvent.liturgical_event.month;
+                litEvent.liturgical_event.strtotime = '';
 
                 const dayFormGroup = row.querySelector('.litEventDay').closest('.form-group');
                 dayFormGroup.remove();
@@ -860,7 +870,7 @@ const litEventStrtotimeSwitchHandler = (ev) => {
             }
         }
     } else {
-        alert('this switch is disabled as long as the festivity row does not have a festivity name!');
+        alert('this switch is disabled as long as the liturgical_event row does not have a liturgical_event name!');
         //ev.preventDefault();
         ev.target.checked = !ev.target.checked;
     }
@@ -880,8 +890,9 @@ const litEventStrtotimeChangeHandler = (ev) => {
     const row = ev.target.closest('.row');
     if (row.querySelector('.litEventName').value !== '') {
         const eventKey = row.querySelector('.litEventName').dataset.valuewas;
-        if (CalendarData.litcal.filter(item => item.festivity.event_key === eventKey).length > 0) {
-            CalendarData.litcal.filter(item => item.festivity.event_key === eventKey)[0].festivity.strtotime = ev.target.value;
+        const litEvent = CalendarData.litcal.find(item => item.liturgical_event.event_key === eventKey) ?? null;
+        if (litEvent !== null) {
+            litEvent.liturgical_event.strtotime = ev.target.value;
         }
     }
 
@@ -941,7 +952,9 @@ const calendarLocalesChanged = (ev) => {
         const selectedProp = localeIso === currentLocalization ? ' selected' : '';
         return `<option value="${localeIso}"${selectedProp}>${localeDisplayName}</option>`;
     });
-    const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions).filter(({ value }) => value !== currentLocalization).map(({ value }) => value);
+    const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
+                                .filter(({ value }) => value !== currentLocalization)
+                                .map(({ value }) => value);
     refreshOtherLocalizationInputs(otherLocalizations);
 }
 
@@ -1014,9 +1027,9 @@ const updateRegionalCalendarForm = (data) => {
     //console.log('EventsCollectionKeys', EventsCollectionKeys);
     data.litcal.forEach((el) => {
         const currentUniqid = FormControls.uniqid;
-        //const existingFestivityEventKey = el.festivity.event_key ?? null;
+        //const existingLiturgicalEventEventKey = el.liturgical_event.event_key ?? null;
         /*
-        if ( el.metadata.action === RowAction.CreateNew && EventsCollectionKeys.get(EventsLoader.lastRequestPath).includes( existingFestivityEventKey ) ) {
+        if ( el.metadata.action === RowAction.CreateNew && EventsCollectionKeys.get(EventsLoader.lastRequestPath).includes( existingLiturgicalEventEventKey ) ) {
             el.metadata.action = RowAction.CreateNewFromExisting;
         }
         */
@@ -1040,20 +1053,22 @@ const updateRegionalCalendarForm = (data) => {
         ) {
             if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
                 const currentLocalization = document.querySelector('#currentLocalization').value;
-                const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions).filter(({ value }) => value !== currentLocalization).map(({ value }) => value);
+                const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
+                                            .filter(({ value }) => value !== currentLocalization)
+                                            .map(({ value }) => value);
                 const nameInput = controlsRow.querySelector(`#onTheFly${currentUniqid}Name`);
                 const otherLocalizationsInputs = otherLocalizations.map(localization => translationTemplate(API.path, localization, nameInput));
                 nameInput.insertAdjacentHTML('afterend', otherLocalizationsInputs.join(''));
             }
         }
 
-        if ( el.festivity.hasOwnProperty('common') && el.festivity.common.includes('Proper') ) {
+        if ( el.liturgical_event.hasOwnProperty('common') && el.liturgical_event.common.includes('Proper') ) {
             controlsRow.querySelector('.litEventReadings').disabled = false;
         }
 
         /*
-        if ( FormControls.settings.missalFieldShow && existingFestivityEventKey !== null ) {
-            const { missal } = EventsCollection.get(EventsLoader.lastRequestPath).get(EventsLoader.lastRequestLocale).find(el => el.event_key === existingFestivityEventKey);
+        if ( FormControls.settings.missalFieldShow && existingLiturgicalEventEventKey !== null ) {
+            const { missal } = EventsCollection.get(EventsLoader.lastRequestPath).get(EventsLoader.lastRequestLocale).find(el => el.event_key === existingLiturgicalEventEventKey);
             controlsRow.querySelector(`#onTheFly${currentUniqid}Missal`).value = missal;
         }
         */
@@ -1069,20 +1084,20 @@ const updateRegionalCalendarForm = (data) => {
             }
         }).multiselect('deselectAll', false);
 
-        if ( el.festivity.hasOwnProperty('color') && el.festivity.color.length ) {
-            $(controlsRow.querySelector('.litEventColor')).multiselect('select', el.festivity.color);
+        if ( el.liturgical_event.hasOwnProperty('color') && el.liturgical_event.color.length ) {
+            $(controlsRow.querySelector('.litEventColor')).multiselect('select', el.liturgical_event.color);
         }
 
         /*
-        if ( el.festivity.hasOwnProperty( 'color' ) === false && existingFestivityEventKey !== null ) {
-            console.log( 'retrieving default festivity info for ' + existingFestivityEventKey );
+        if ( el.liturgical_event.hasOwnProperty( 'color' ) === false && existingLiturgicalEventEventKey !== null ) {
+            console.log( 'retrieving default liturgical_event info for ' + existingLiturgicalEventEventKey );
             console.log( 'EventsLoader.lastRequestPath:', EventsLoader.lastRequestPath );
             console.log( 'EventsLoader.lastRequestLocale:', EventsLoader.lastRequestLocale );
-            const existingEvent = EventsCollection.get(EventsLoader.lastRequestPath).get(EventsLoader.lastRequestLocale).find( el => el.event_key === existingFestivityEventKey );
+            const existingEvent = EventsCollection.get(EventsLoader.lastRequestPath).get(EventsLoader.lastRequestLocale).find( el => el.event_key === existingLiturgicalEventEventKey );
             console.log( existingEvent );
-            el.festivity.color = existingEvent.color;
+            el.liturgical_event.color = existingEvent.color;
         }
-        $(controlsRow.querySelector('.litEventColor')).multiselect('select', el.festivity.color);
+        $(controlsRow.querySelector('.litEventColor')).multiselect('select', el.liturgical_event.color);
         */
 
 
@@ -1090,9 +1105,9 @@ const updateRegionalCalendarForm = (data) => {
             $(controlsRow.querySelector('.litEventColor')).multiselect('disable');
         }
 
-        if ( el.festivity.hasOwnProperty( 'common' ) ) {
+        if ( el.liturgical_event.hasOwnProperty( 'common' ) ) {
             if (FormControls.settings.commonFieldShow) {
-                setCommonMultiselect( controlsRow, el.festivity.common );
+                setCommonMultiselect( controlsRow, el.liturgical_event.common );
                 if (FormControls.settings.commonField === false) {
                     $(controlsRow.querySelector(`#onTheFly${currentUniqid}Common`)).multiselect('disable');
                 }
@@ -1100,7 +1115,7 @@ const updateRegionalCalendarForm = (data) => {
         }
 
         if (FormControls.settings.gradeFieldShow) {
-            controlsRow.querySelector(`#onTheFly${currentUniqid}Grade`).value = el.festivity.grade;
+            controlsRow.querySelector(`#onTheFly${currentUniqid}Grade`).value = el.liturgical_event.grade;
             if (FormControls.settings.gradeField === false) {
                 controlsRow.querySelector(`#onTheFly${currentUniqid}Grade`).disabled = true;
             }
@@ -1111,7 +1126,7 @@ const updateRegionalCalendarForm = (data) => {
         }
 
         if (FormControls.settings.monthField === false) {
-            controlsRow.querySelectorAll(`#onTheFly${currentUniqid}Month > option[value]:not([value="${el.festivity.month}"])`).forEach(el => { el.disabled = true; });
+            controlsRow.querySelectorAll(`#onTheFly${currentUniqid}Month > option[value]:not([value="${el.liturgical_event.month}"])`).forEach(el => { el.disabled = true; });
         }
     });
 
@@ -1120,7 +1135,9 @@ const updateRegionalCalendarForm = (data) => {
      */
     if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
         const currentLocalization = document.querySelector('#currentLocalization').value;
-        const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions).filter(({ value }) => value !== currentLocalization).map(({ value }) => value);
+        const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
+                                    .filter(({ value }) => value !== currentLocalization)
+                                    .map(({ value }) => value);
         console.log('otherLocalizations:', otherLocalizations);
         if (DataLoader.lastRequestPath !== API.path) {
             document.querySelector('#overlay').classList.remove('hidden');
@@ -1429,7 +1446,7 @@ const fetchEventsAndCalendarData = () => {
             } else {
                 console.log(`More than 50% of event names are translated, translated string percentage = ${100-emptyPercentage}%`);
             }
-            EventsCollection.get(eventsUrlForCurrentCategory).set(API.locale, json.litcal_events.map(el => Festivity.fromObject(el)));
+            EventsCollection.get(eventsUrlForCurrentCategory).set(API.locale, json.litcal_events.map(el => LiturgicalEvent.fromObject(el)));
             const keys = json.litcal_events.map(el => el.event_key);
             EventsCollectionKeys.set(eventsUrlForCurrentCategory, keys);
             EventsLoader.lastRequestPath = eventsUrlForCurrentCategory;
@@ -1533,7 +1550,7 @@ const createEventKey = (name) => name.split(',')[0] // only consider everything 
 /**
  * Handles the submission of the action prompt modal. Depending on the action, it will:
  * - Create a new row in the regional national data form
- * - Populate the missal field with the value of the existing festivity
+ * - Populate the missal field with the value of the existing liturgical_event
  * - Set the action and property to change for the new row
  * - Set the common multiselect field
  * - Disable the color field if there is no use in modifying this information
@@ -1548,20 +1565,21 @@ const actionPromptButtonClicked = (ev) => {
     const modal = ev.target.closest('.actionPromptModal');
     const modalForm = modal.querySelector('form');
     const actionButtonId = ev.target.id;
-    const festivityInputVal = sanitizeInput( modalForm.querySelector('.existingFestivityName').value );
-    const eventKey = actionButtonId === 'newFestivityExNovoButton' ? '' : festivityInputVal;
+    const liturgicalEventInputVal = sanitizeInput( modalForm.querySelector('.existingLiturgicalEventName').value );
+    const eventKey = actionButtonId === 'newLiturgicalEventExNovoButton' ? '' : liturgicalEventInputVal;
 
-    let existingFestivity;
+    let existingLiturgicalEvent;
     let propertyToChange;
     let fragment
     let controlsRow;
 
     if (
-        actionButtonId !== 'newFestivityExNovoButton'
+        actionButtonId !== 'newLiturgicalEventExNovoButton'
         && EventsLoader.lastRequestPath !== ''
         && EventsLoader.lastRequestLocale !== ''
     ) {
-        existingFestivity = EventsCollection.get(EventsLoader.lastRequestPath).get(EventsLoader.lastRequestLocale).filter(festivity => festivity.event_key === eventKey)[0];
+        existingLiturgicalEvent = EventsCollection.get(EventsLoader.lastRequestPath).get(EventsLoader.lastRequestLocale)
+                                    .find(liturgical_event => liturgical_event.event_key === eventKey);
     }
 
     FormControls.settings.decreeURLFieldShow = true;
@@ -1574,24 +1592,24 @@ const actionPromptButtonClicked = (ev) => {
         setFormSettingsForProperty( propertyToChange );
     }
 
-    if ( existingFestivity instanceof Festivity ) {
-        ({fragment, controlsRow} = FormControls.CreateRegionalFormRow( existingFestivity ));
+    if ( existingLiturgicalEvent instanceof LiturgicalEvent ) {
+        ({fragment, controlsRow} = FormControls.CreateRegionalFormRow( existingLiturgicalEvent ));
         if (FormControls.settings.missalFieldShow) {
-            controlsRow.querySelector(`#onTheFly${currentUniqid}Missal`).value = existingFestivity.missal;
+            controlsRow.querySelector(`#onTheFly${currentUniqid}Missal`).value = existingLiturgicalEvent.missal;
         }
     }
-    else if ( eventKey !== '' && existingFestivity !== undefined ) {
+    else if ( eventKey !== '' && existingLiturgicalEvent !== undefined ) {
         ({fragment, controlsRow} = FormControls.CreateRegionalFormRow( eventKey ));
         if ( FormControls.settings.missalFieldShow ) {
-            controlsRow.querySelector(`#onTheFly${currentUniqid}Missal`).value = existingFestivity.missal; //.prop('disabled', true);
+            controlsRow.querySelector(`#onTheFly${currentUniqid}Missal`).value = existingLiturgicalEvent.missal; //.prop('disabled', true);
         }
     } else {
         ({fragment, controlsRow} = FormControls.CreateRegionalFormRow());
-        if (festivityInputVal !== '') {
-            controlsRow.querySelector(`#onTheFly${currentUniqid}Name`).value = festivityInputVal;
+        if (liturgicalEventInputVal !== '') {
+            controlsRow.querySelector(`#onTheFly${currentUniqid}Name`).value = liturgicalEventInputVal;
             if (FormControls.settings.eventKeyField) {
-                // we create a default event key based on the festivity name
-                const newEventKey = createEventKey(festivityInputVal);
+                // we create a default event key based on the liturgical_event name
+                const newEventKey = createEventKey(liturgicalEventInputVal);
                 controlsRow.querySelector(`#onTheFly${currentUniqid}EventKey`).value = newEventKey;
             }
         }
@@ -1606,13 +1624,15 @@ const actionPromptButtonClicked = (ev) => {
     }
 
     if (
-        ['newFestivityExNovoButton', 'designatePatronButton'].includes(actionButtonId)
+        ['newLiturgicalEventExNovoButton', 'designatePatronButton'].includes(actionButtonId)
         ||
         (actionButtonId === 'setPropertyButton' && propertyToChange === 'name')
     ) {
         if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
             const currentLocalization = document.querySelector('#currentLocalization').value;
-            const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions).filter(({ value }) => value !== currentLocalization).map(({ value }) => value);
+            const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
+                                        .filter(({ value }) => value !== currentLocalization)
+                                        .map(({ value }) => value);
             const otherLocalizationsInputs = otherLocalizations.map(localization => translationTemplate(API.path, localization, ev.target));
             controlsRow.querySelector(`#onTheFly${currentUniqid}Name`).insertAdjacentHTML('afterend', otherLocalizationsInputs.join(''));
         }
@@ -1629,7 +1649,7 @@ const actionPromptButtonClicked = (ev) => {
     if (FormControls.settings.colorField === false) {
         $(controlsRow.querySelector('.litEventColor')).multiselect('disable');
     } else {
-        if (actionButtonId === 'newFestivityExNovoButton') {
+        if (actionButtonId === 'newLiturgicalEventExNovoButton') {
             // Attempt to set liturgical color to red for martyrs, white for all other cases
             if (controlsRow.querySelector('.litEventName').value.match(/(martyr|martir|mártir|märtyr)/i) !== null) {
                 $(controlsRow.querySelector('.litEventColor')).multiselect('select', 'red');
@@ -1650,16 +1670,16 @@ const actionPromptButtonClicked = (ev) => {
         controlsRow.querySelector(`#onTheFly${currentUniqid}Grade`).disabled = !FormControls.settings.gradeField;
     }
 
-    if ( eventKey !== '' && existingFestivity !== undefined ) {
+    if ( eventKey !== '' && existingLiturgicalEvent !== undefined ) {
         if (FormControls.settings.gradeFieldShow) {
-            controlsRow.querySelector(`#onTheFly${currentUniqid}Grade`).value = existingFestivity.grade;
+            controlsRow.querySelector(`#onTheFly${currentUniqid}Grade`).value = existingLiturgicalEvent.grade;
         }
-        $(controlsRow.querySelector(`#onTheFly${currentUniqid}Common`)).multiselect('select', existingFestivity.common);
-        const colorVal = Array.isArray( existingFestivity.color ) ? existingFestivity.color : existingFestivity.color.split(',');
+        $(controlsRow.querySelector(`#onTheFly${currentUniqid}Common`)).multiselect('select', existingLiturgicalEvent.common);
+        const colorVal = Array.isArray( existingLiturgicalEvent.color ) ? existingLiturgicalEvent.color : existingLiturgicalEvent.color.split(',');
         $(controlsRow.querySelector(`.litEventColor`)).multiselect('select', colorVal);
 
         if (FormControls.settings.monthField === false) {
-            controlsRow.querySelectorAll(`#onTheFly${currentUniqid}Month > option[value]:not([value="${existingFestivity.month}"])`).forEach(el => { el.disabled = true; });
+            controlsRow.querySelectorAll(`#onTheFly${currentUniqid}Month > option[value]:not([value="${existingLiturgicalEvent.month}"])`).forEach(el => { el.disabled = true; });
         }
     }
 
@@ -1766,7 +1786,7 @@ const deleteCalendarConfirmClicked = () => {
  *
  * - makePatron (will generally take a liturgical event that is already defined in the General Roman Calendar and allow to override the name and grade to indicate patronage):
  *      {
- *          "festivity": {
+ *          "liturgical_event": {
  *              "event_key": string,
  *              "name": string,
  *              "grade": number
@@ -1778,7 +1798,7 @@ const deleteCalendarConfirmClicked = () => {
  *
  * - setProperty (takes a liturgical event that is already defined in the General Roman Calendar and overrides the specified property of the liturgical event)
  *      {
- *          "festivity": {
+ *          "liturgical_event": {
  *              "event_key": string,
  *              "name": string,      // if metadata.property = 'name'
  *              "grade": number,     // if metadata.property = 'grade'
@@ -1789,9 +1809,9 @@ const deleteCalendarConfirmClicked = () => {
  *          }
  *     }[]
  *
- * - moveFestivity (takes a liturgical event that is already defined in the General Roman Calendar and moves it to a different date)
+ * - moveEvent (takes a liturgical event that is already defined in the General Roman Calendar and moves it to a different date)
  *      {
- *          "festivity": {
+ *          "liturgical_event": {
  *              "event_key": string,
  *              "name": string,
  *              "day": number,
@@ -1800,14 +1820,14 @@ const deleteCalendarConfirmClicked = () => {
  *              "reason": string
  *          },
  *          "metadata": {
- *              "action": "moveFestivity"
+ *              "action": "moveEvent"
  *          }
  *     }[]
  *
  * - createNew (creates a new fixed date liturgical event for the wider region or national calendar)
  *      - createNew with common=Proper
  *      {
- *          "festivity": {
+ *          "liturgical_event": {
  *              "event_key": string,
  *              "name": string,
  *              "color": string[],
@@ -1819,7 +1839,7 @@ const deleteCalendarConfirmClicked = () => {
  *                  "first_reading": string,
  *                  "second_reading": string (optional),
  *                  "responsorial_psalm": string,
- *                  "alleluia_verse": string,
+ *                  "gospel_acclamation": string,
  *                  "gospel": string
  *              }
  *          },
@@ -1830,7 +1850,7 @@ const deleteCalendarConfirmClicked = () => {
  *
  *     - createNew without common=Proper
  *      {
- *          "festivity": {
+ *          "liturgical_event": {
  *              "event_key": string,
  *              "name": string,
  *              "color": string[],
@@ -1844,7 +1864,7 @@ const deleteCalendarConfirmClicked = () => {
  *          }
  *     }[]
  *   N.B. For the createNew action, if the liturgical event is mobile, the "day" and "month" properties will be omitted,
- *          and a "strtotime" property of type string will be added to the festivity object.
+ *          and a "strtotime" property of type string will be added to the liturgical_event object.
  *
  *   N.B. For any action, if since_year, until_year, url, or url_lang_map are defined, they will be added to the metadata object:
  *          - metadata.since_year,
@@ -1918,7 +1938,7 @@ const serializeRegionalNationalDataClicked = (ev) => {
          * @type RowData
          */
         let rowData = {
-            festivity: {},
+            liturgical_event: {},
             metadata: {
                 action
             }
@@ -1971,7 +1991,7 @@ const serializeRegionalNationalDataClicked = (ev) => {
                             });
                         }
                     } else {
-                        rowData.festivity[prop] = val;
+                        rowData.liturgical_event[prop] = val;
                     }
                 }
             } else {
@@ -1981,15 +2001,15 @@ const serializeRegionalNationalDataClicked = (ev) => {
 
         console.log('rowData so far:', rowData);
 
-        if ( action === RowAction.CreateNew && rowData.festivity.common.includes( 'Proper' ) ) {
-            rowData.festivity.readings = {
+        if ( action === RowAction.CreateNew && rowData.liturgical_event.common.includes( 'Proper' ) ) {
+            rowData.liturgical_event.readings = {
                 first_reading: row.querySelector('.litEventReadings_FIRST_READING').value,
                 responsorial_psalm: row.querySelector('.litEventReadings_RESPONSORIAL_PSALM').value,
-                alleluia_verse: row.querySelector('.litEventReadings_ALLELUIA_VERSE').value,
+                gospel_acclamation: row.querySelector('.litEventReadings_ALLELUIA_VERSE').value,
                 gospel: row.querySelector('.litEventReadings_GOSPEL').value
             };
             if ( row.querySelector('.litEventReadings_SECOND_READING').value !== '' ) {
-                rowData.festivity.readings.second_reading = row.querySelector('.litEventReadings_SECOND_READING').value;
+                rowData.liturgical_event.readings.second_reading = row.querySelector('.litEventReadings_SECOND_READING').value;
             }
         }
 
@@ -2087,7 +2107,7 @@ const serializeRegionalNationalDataClicked = (ev) => {
  */
 const setFocusFirstTabWithData = () => {
     document.querySelectorAll('#diocesanCalendarDefinitionCardLinks li').forEach(el => el.classList.remove('active'));
-    const firstInputWithNonEmptyValue = Array.from(document.querySelectorAll('.carousel-item form .litEventName')).filter(el => el.dataset.valuewas !== '')[0];
+    const firstInputWithNonEmptyValue = Array.from(document.querySelectorAll('.carousel-item form .litEventName')).find(el => el.dataset.valuewas !== '');
     const parentCarouselItem = firstInputWithNonEmptyValue.closest('.carousel-item');
     const itemIndex = Array.from(document.querySelectorAll('.carousel-item')).indexOf(parentCarouselItem);
     const carouselElement = document.querySelector('.carousel');
@@ -2223,7 +2243,9 @@ const loadDiocesanCalendarData = () => {
         fillDiocesanFormWithData(data);
         if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
             const currentLocalization = document.querySelector('#currentLocalization').value;
-            const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions).filter(({ value }) => value !== currentLocalization).map(({ value }) => value);
+            const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
+                                        .filter(({ value }) => value !== currentLocalization)
+                                        .map(({ value }) => value);
             if (DataLoader.lastRequestPath !== API.path) {
                 // We are requesting a totally different calendar, we need to reload ALL i18n data
                 Promise.all(otherLocalizations.map(localization => fetch(API.path + '/' + localization).then(response => response.json()))).then(data => {
@@ -2272,7 +2294,7 @@ const loadDiocesanCalendarData = () => {
 
 
 /**
- * Handles the creation of a new festivity row when the corresponding button is clicked in the "On the fly" form.
+ * Handles the creation of a new liturgical_event row when the corresponding button is clicked in the "On the fly" form.
  * @param {Event} ev - The event object of the click event.
  * @returns {void}
  */
@@ -2340,12 +2362,12 @@ const switcheroo = ( row, Metadata ) => {
 /**
  * Reverts the form row from a strtotime text input back to separate day and month fields.
  * Adjusts the form group classes to accommodate the change.
- * Inserts a day input and month select dropdown based on the provided festivity data.
+ * Inserts a day input and month select dropdown based on the provided liturgical_event data.
  *
  * @param {HTMLElement} row - The containing row of the form.
- * @param {Object} Festivity - The festivity data object containing day and month information.
+ * @param {Object} LiturgicalEvent - The liturgical_event data object containing day and month information.
  */
-const unswitcheroo = ( row, Festivity ) => {
+const unswitcheroo = ( row, LiturgicalEvent ) => {
     const litEventStrtotime = row.querySelector('.litEventStrtotime');
     const strToTimeFormGroup = litEventStrtotime.closest('.form-group');
     strToTimeFormGroup.classList.remove('col-sm-3');
@@ -2353,14 +2375,14 @@ const unswitcheroo = ( row, Festivity ) => {
     const dayId = litEventStrtotime.id.replace('Strtotime', 'Day');
     const monthId = litEventStrtotime.id.replace('Strtotime', 'Month');
     strToTimeFormGroup.insertAdjacentHTML('beforestart', `<div class="form-group col-sm-1">
-    <label for="${dayId}">${Messages[ "Day" ]}</label><input type="number" min="1" max="31" value="1" class="form-control litEvent litEventDay" id="${dayId}" value="${Festivity.day}" />
+    <label for="${dayId}">${Messages[ "Day" ]}</label><input type="number" min="1" max="31" value="1" class="form-control litEvent litEventDay" id="${dayId}" value="${LiturgicalEvent.day}" />
     </div>`);
     litEventStrtotime.remove();
     let formRow = `<select class="form-select litEvent litEventMonth" id="${monthId}">`;
     const formatter = new Intl.DateTimeFormat(jsLocale, { month: 'long' });
     for (let i = 0; i < 12; i++) {
         const month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
-        formRow += `<option value=${i + 1}${(i+1)===Festivity.month ? ' selected' : ''}>${formatter.format(month)}</option>`;
+        formRow += `<option value=${i + 1}${(i+1)===LiturgicalEvent.month ? ' selected' : ''}>${formatter.format(month)}</option>`;
     }
     formRow += `</select>`;
     strToTimeFormGroup.insertAdjacentHTML('beforeend', formRow);
@@ -2373,20 +2395,20 @@ const unswitcheroo = ( row, Festivity ) => {
  * Populates the diocesan form with data from the provided liturgical calendar object.
  *
  * Iterates through the liturgical calendar data and creates or updates form rows
- * for each festivity based on its grade and metadata. Adjusts the form's input fields
- * and settings according to whether the festivity uses a fixed date or a strtotime format.
- * Sets form fields such as name, date, common, color, and year constraints for each festivity.
+ * for each liturgical_event based on its grade and metadata. Adjusts the form's input fields
+ * and settings according to whether the liturgical_event uses a fixed date or a strtotime format.
+ * Sets form fields such as name, date, common, color, and year constraints for each liturgical_event.
  *
  * @param {Object} data - The data object containing the liturgical calendar information.
  * @param {Array} data.litcal - An array of objects representing festivities with their metadata.
  */
 const fillDiocesanFormWithData = (data) => {
     for (const entry of data.litcal) {
-        const { festivity, metadata } = entry;
+        const { liturgical_event, metadata } = entry;
         let row;
         let numLastRow;
         let numMissingRows;
-        if (festivity.hasOwnProperty('strtotime')) {
+        if (liturgical_event.hasOwnProperty('strtotime')) {
             FormControls.settings.dayField = false;
             FormControls.settings.monthField = false;
             FormControls.settings.strtotimeFieldShow = true;
@@ -2395,7 +2417,7 @@ const fillDiocesanFormWithData = (data) => {
             FormControls.settings.monthField = true;
             FormControls.settings.strtotimeFieldShow = false;
         }
-        switch (festivity.grade) {
+        switch (liturgical_event.grade) {
             case Rank.SOLEMNITY:
                 numLastRow = document.querySelectorAll('#carouselItemSolemnities form .row').length - 1;
                 if (metadata.form_rownum > numLastRow) {
@@ -2445,29 +2467,29 @@ const fillDiocesanFormWithData = (data) => {
                 row = document.querySelectorAll('#carouselItemOptionalMemorials form .row')[metadata.form_rownum];
                 break;
         }
-        row.querySelector('.litEventName').value = festivity.name;
-        row.querySelector('.litEventName').setAttribute('data-valuewas', festivity.event_key);
+        row.querySelector('.litEventName').value = liturgical_event.name;
+        row.querySelector('.litEventName').setAttribute('data-valuewas', liturgical_event.event_key);
 
-        if ( festivity.hasOwnProperty('strtotime') ) {
+        if ( liturgical_event.hasOwnProperty('strtotime') ) {
             if ( row.querySelectorAll('.litEventStrtotime').length === 0 ) {
                 switcheroo( row, metadata );
             }
-            row.querySelector('.litEventStrtotime').value = festivity.strtotime;
+            row.querySelector('.litEventStrtotime').value = liturgical_event.strtotime;
         } else {
             if ( row.querySelectorAll('.litEventStrtotime').length > 0 ) {
-                unswitcheroo( row, festivity );
+                unswitcheroo( row, liturgical_event );
             }
-            row.querySelector('.litEventDay').value = festivity.day;
-            row.querySelector('.litEventMonth').value = festivity.month;
+            row.querySelector('.litEventDay').value = liturgical_event.day;
+            row.querySelector('.litEventMonth').value = liturgical_event.month;
         }
-        setCommonMultiselect( row, festivity.common );
+        setCommonMultiselect( row, liturgical_event.common );
         $(row.querySelector('.litEventColor')).multiselect({
             buttonWidth: '100%',
             buttonClass: 'form-select',
             templates: {
                 button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
             }
-        }).multiselect('deselectAll', false).multiselect('select', festivity.color);
+        }).multiselect('deselectAll', false).multiselect('select', liturgical_event.color);
         row.querySelector('.litEventSinceYear').value = metadata.since_year;
         if ( metadata.hasOwnProperty('until_year') ) {
             row.querySelector('.litEventUntilYear').value = metadata.until_year;
@@ -2613,7 +2635,7 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
         console.log('selected diocese with key = ' + API.key);
         if (LitCalMetadata.diocesan_calendars_keys.includes(API.key)) {
             API.method = 'PATCH';
-            const diocesan_calendar = LitCalMetadata.diocesan_calendars.filter(el => el.calendar_id === API.key)[0];
+            const diocesan_calendar = LitCalMetadata.diocesan_calendars.find(el => el.calendar_id === API.key);
 
             // Enable "Remove diocesan data" button
             document.querySelector('#removeExistingDiocesanDataBtn').disabled = false;
@@ -2764,12 +2786,12 @@ const saveDiocesanCalendar_btnClicked = () => {
     API.locale = document.querySelector('#currentLocalization').value;
 
     saveObj.payload.i18n[API.locale] = saveObj.payload.litcal.reduce((obj, item) => {
-        const festivityCopy = { ...item.festivity };
-        if (festivityCopy.hasOwnProperty('name')) {
-            obj[festivityCopy.event_key] = sanitizeInput(festivityCopy.name);
-            delete item.festivity.name;
+        const liturgicalEventCopy = { ...item.liturgical_event };
+        if (liturgicalEventCopy.hasOwnProperty('name')) {
+            obj[liturgicalEventCopy.event_key] = sanitizeInput(liturgicalEventCopy.name);
+            delete item.liturgical_event.name;
         } else {
-            obj[festivityCopy.event_key] = document.querySelector(`.litEventName[data-valuewas="${festivityCopy.event_key}"]`).value;
+            obj[liturgicalEventCopy.event_key] = document.querySelector(`.litEventName[data-valuewas="${liturgicalEventCopy.event_key}"]`).value;
         }
         return obj;
     }, {});;
@@ -2818,12 +2840,17 @@ const saveDiocesanCalendar_btnClicked = () => {
 
         const selectedOptions = document.querySelector('#diocesanCalendarLocales').selectedOptions;
         saveObj.payload.metadata = {
-            nation: document.querySelector('#diocesanCalendarNationalDependency').value,
             diocese_id,
             diocese_name: document.querySelector('#diocesanCalendarDioceseName').value,
+            nation: document.querySelector('#diocesanCalendarNationalDependency').value,
             locales: Array.from(selectedOptions).map(({ value }) => value),
             timezone: document.querySelector('#diocesanCalendarTimezone').value
         };
+
+        const diocesanGroup = document.querySelector('#diocesanCalendarGroup').value;
+        if (diocesanGroup !== '') {
+            saveObj.payload.metadata.group = diocesanGroup;
+        }
 
         // If we are dealing with a multi-locale diocesan calendar,
         // we need to build the i18n data for each locale
@@ -2945,31 +2972,31 @@ const diocesanCalendarDefinitionsCardLinksClicked = (ev) => {
 }
 
 /**
- * Handles changes to festivity selections in modals.
+ * Handles changes to liturgical_event selections in modals.
  *
- * When a festivity name is changed (whether selected from a list or entered manually),
+ * When a liturgical_event name is changed (whether selected from a list or entered manually),
  * the 'was-validated' class is removed from the form in the modal.
- * Then, if the input is set to required, the selected festivity is validated
+ * Then, if the input is set to required, the selected liturgical_event is validated
  * by looking for an option with the same value in the #existingFestivitiesList select element.
- * If the festivity name is not valid, an 'is-invalid' class is added to the select element.
+ * If the liturgical_event name is not valid, an 'is-invalid' class is added to the select element.
  * If instead the input is not set to required, no validations will take place,
  * but simply a warning message will be displayed to ensure the user understands
- * that they are creating a new festivity that does not already exist.
+ * that they are creating a new liturgical_event that does not already exist.
  * Finally, the buttons in the modal are enabled or disabled
- * based on whether the festivity name is valid or not when the input is set to required.
+ * based on whether the liturgical_event name is valid or not when the input is set to required.
  * If the input is not set to required, the submission button will always be enabled.
- * In a 'newFestivityActionPrompt' modal, the button id is 'newFestivityFromExistingButton' by default,
- * but will be changed to 'newFestivityExNovoButton' if the festivity name is not found in the list.
+ * In a 'newLiturgicalEventActionPrompt' modal, the button id is 'newLiturgicalEventFromExistingButton' by default,
+ * but will be changed to 'newLiturgicalEventExNovoButton' if the liturgical_event name is not found in the list.
  *
  * @param {Event} ev The event object for the change event.
  */
-const existingFestivityNameChanged = (ev) => {
+const existingLiturgicalEventNameChanged = (ev) => {
     const modal = ev.target.closest('.actionPromptModal');
     const form = modal.querySelector('form');
     form.classList.remove('was-validated');
 
     const option = document.querySelector(`#existingFestivitiesList option[value="${ev.target.value}"]`);
-    // if no option corresponding to the selected festivity name is found, disable the submission buttons
+    // if no option corresponding to the selected liturgical_event name is found, disable the submission buttons
     const invalidState = !option && ev.target.required;
     const warningState = !option && !ev.target.required;
     ev.target.classList.toggle('is-invalid', invalidState);
@@ -2985,19 +3012,20 @@ const existingFestivityNameChanged = (ev) => {
         case 'setPropertyActionPrompt':
             document.querySelector('#setPropertyButton').disabled = invalidState;
             break;
-        case 'moveFestivityActionPrompt':
-            document.querySelector('#moveFestivityButton').disabled = invalidState;
+        case 'moveLiturgicalEventActionPrompt':
+            document.querySelector('#moveLiturgicalEventButton').disabled = invalidState;
             break;
-        case 'newFestivityActionPrompt':
+        case 'newLiturgicalEventActionPrompt': {
             const actionPromptButton = modal.querySelector('.actionPromptButton');
             if (option) {
-                actionPromptButton.id = 'newFestivityFromExistingButton';
+                actionPromptButton.id = 'newLiturgicalEventFromExistingButton';
                 actionPromptButton.disabled = false;
             } else {
-                actionPromptButton.id = 'newFestivityExNovoButton';
+                actionPromptButton.id = 'newLiturgicalEventExNovoButton';
                 actionPromptButton.disabled = invalidState;
             }
             break;
+        }
     }
 }
 
@@ -3026,8 +3054,8 @@ document.addEventListener('change', (ev) => {
     if (ev.target.id === 'diocesanCalendarDioceseName') {
         diocesanCalendarDioceseNameChanged(ev);
     }
-    if (ev.target.classList.contains('existingFestivityName')) {
-        existingFestivityNameChanged(ev);
+    if (ev.target.classList.contains('existingLiturgicalEventName')) {
+        existingLiturgicalEventNameChanged(ev);
     }
     if (ev.target.id === 'languageEditionRomanMissalName') {
         document.querySelector('#addLanguageEditionRomanMissal').disabled = false;
@@ -3039,7 +3067,9 @@ document.addEventListener('change', (ev) => {
             }
             if (API.method === 'PUT') {
                 const currentLocalization = document.querySelector('#currentLocalization').value;
-                const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions).filter(({ value }) => value !== currentLocalization).map(({ value }) => value);
+                const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
+                                            .filter(({ value }) => value !== currentLocalization)
+                                            .map(({ value }) => value);
                 refreshOtherLocalizationInputs(otherLocalizations);
             }
         }
@@ -3105,7 +3135,7 @@ document.addEventListener('click', (ev) => {
     }
 });
 
-document.addEventListener('hide.bs.modal', (ev) => {
+document.addEventListener('hide.bs.modal', () => {
     document.activeElement.blur();
 });
 

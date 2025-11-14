@@ -1,6 +1,6 @@
 import {
-    Festivity
-} from './Festivity.js';
+    LiturgicalEvent
+} from './LiturgicalEvent.js';
 
 
 /**
@@ -41,7 +41,7 @@ const getMonthMaxDay = (month) => month === Month.FEBRUARY ? 28 : (MonthsOfThirt
 const DaysOfTheWeek = Object.freeze(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
 
 /**
- * A mapping of festivity ranks to numerical values for sorting purposes.
+ * A mapping of liturgical event ranks to numerical values for sorting purposes.
  * @readonly
  * @enum {(7|6|5|4|3|2|1|0)}
  * @property {Number} HIGHERSOLEMNITY - Higher solemnity (7)
@@ -68,15 +68,15 @@ const Rank = Object.freeze({
 /**
  * An enumeration of possible actions that can be used to create a form row.
  * @readonly
- * @enum {('makePatron'|'makeDoctor'|'setProperty'|'moveFestivity'|'createNew'|'createNewFromExisting')} RowAction
- * @property {String} MakePatron - Designate a festivity as a patron saint (makePatron)
- * @property {String} MakeDoctor - Designate a festivity as a doctor of the Church (makeDoctor)
- * @property {String} SetProperty - Set the name, grade, color, or readings of a festivity (setProperty)
- * @property {String} SetNameProperty - Set the name of a festivity (setNameProperty)
- * @property {String} SetGradeProperty - Set the grade of a festivity (setGradeProperty)
- * @property {String} MoveFestivity - Move a festivity to a different date (moveFestivity)
- * @property {String} CreateNew - Create a new festivity (createNew)
- * @property {String} CreateNewFromExisting - Create a new festivity using an existing one as a template (createNewFromExisting), only for diocesan calendars
+ * @enum {('makePatron'|'makeDoctor'|'setProperty'|'moveEvent'|'createNew'|'createNewFromExisting')} RowAction
+ * @property {String} MakePatron - Designate a liturgical event as a patron saint (makePatron)
+ * @property {String} MakeDoctor - Designate a liturgical event as a doctor of the Church (makeDoctor)
+ * @property {String} SetProperty - Set the name, grade, color, or readings of a liturgical event (setProperty)
+ * @property {String} SetNameProperty - Set the name of a liturgical event (setNameProperty)
+ * @property {String} SetGradeProperty - Set the grade of a liturgical event (setGradeProperty)
+ * @property {String} MoveEvent - Move a liturgical event to a different date (moveEvent)
+ * @property {String} CreateNew - Create a new liturgical event (createNew)
+ * @property {String} CreateNewFromExisting - Create a new liturgical event using an existing one as a template (createNewFromExisting), only for diocesan calendars
  */
 const RowAction = Object.freeze({
     MakePatron:            'makePatron',
@@ -84,7 +84,7 @@ const RowAction = Object.freeze({
     SetProperty:           'setProperty',
     SetNameProperty:       'setNameProperty',
     SetGradeProperty:      'setGradeProperty',
-    MoveFestivity:         'moveFestivity',
+    MoveEvent:             'moveEvent',
     CreateNew:             'createNew',
     CreateNewFromExisting: 'createNewFromExisting'
 });
@@ -92,15 +92,15 @@ const RowAction = Object.freeze({
 /**
  * An enumeration of possible form row titles based on the RowAction. Produces the string key for localization purposes.
  * @readonly
- * @enum {('Designate patron'|'Designate Doctor'|'Change name or grade'|'Move festivity'|'New festivity'|'New festivity')} RowActionTitle
- * @property {String} RowAction.MakePatron - Designate a festivity as a patron saint ('Designate patron')
- * @property {String} RowAction.MakeDoctor - Designate a festivity as a doctor of the Church ('Designate Doctor')
- * @property {String} RowAction.SetProperty - Set the name, grade, color, or readings of a festivity ('Change name or grade')
- * @property {String} RowAction.SetNameProperty - Set the name of a festivity ('Change name')
- * @property {String} RowAction.SetGradeProperty - Set the grade of a festivity ('Change grade')
- * @property {String} RowAction.MoveFestivity - Move a festivity to a different date ('Move festivity')
- * @property {String} RowAction.CreateNew - Create a new festivity ('New festivity')
- * @property {String} RowAction.CreateNewFromExisting - Create a new festivity using an existing one as a template ('New festivity')
+ * @enum {('Designate patron'|'Designate Doctor'|'Change name or grade'|'Move event'|'New event'|'New event')} RowActionTitle
+ * @property {String} RowAction.MakePatron - Designate a liturgical event as a patron saint ('Designate patron')
+ * @property {String} RowAction.MakeDoctor - Designate a liturgical event as a doctor of the Church ('Designate Doctor')
+ * @property {String} RowAction.SetProperty - Set the name, grade, color, or readings of a liturgical event ('Change name or grade')
+ * @property {String} RowAction.SetNameProperty - Set the name of a liturgical event ('Change name')
+ * @property {String} RowAction.SetGradeProperty - Set the grade of a liturgical event ('Change grade')
+ * @property {String} RowAction.MoveEvent - Move a liturgical event to a different date ('Move event')
+ * @property {String} RowAction.CreateNew - Create a new liturgical event ('New event')
+ * @property {String} RowAction.CreateNewFromExisting - Create a new liturgical event using an existing one as a template ('New event')
  */
 const RowActionTitle = Object.freeze({
     [RowAction.MakePatron]:            'Designate patron',
@@ -108,21 +108,21 @@ const RowActionTitle = Object.freeze({
     [RowAction.SetProperty]:           'Change name or grade',
     [RowAction.SetNameProperty]:       'Change name',
     [RowAction.SetGradeProperty]:      'Change grade',
-    [RowAction.MoveFestivity]:         'Move festivity',
-    [RowAction.CreateNew]:             'New festivity',
-    [RowAction.CreateNewFromExisting]: 'New festivity',
+    [RowAction.MoveEvent]:             'Move event',
+    [RowAction.CreateNew]:             'New event',
+    [RowAction.CreateNewFromExisting]: 'New event',
 });
 
 /**
  * Properties that are relevant for Mass readings.
  * @readonly
- * @type {['first_reading', 'responsorial_psalm', 'second_reading', 'alleluia_verse', 'gospel']}
+ * @type {['first_reading', 'responsorial_psalm', 'second_reading', 'gospel_acclamation', 'gospel']}
  */
 const readingsProperties = Object.freeze([
     "first_reading",
     "responsorial_psalm",
     "second_reading",
-    "alleluia_verse",
+    "gospel_acclamation",
     "gospel"
 ]);
 
@@ -139,18 +139,18 @@ const integerProperties = Object.freeze([ 'day', 'month', 'grade', 'since_year',
  * @type {Object<RowAction, string[]>}
  * @property {[ 'event_key', 'name', 'color', 'grade', 'day', 'month' ]} [RowAction.MakePatron] - The properties to expect in the JSON payload for the "makePatron" action.
  * @property {[ 'event_key', 'name', 'grade', 'day', 'month' ]} [RowAction.SetProperty] - The properties to expect in the JSON payload for the "setProperty" action.
- * @property {[ 'event_key', 'name', 'day', 'month', 'missal', 'reason' ]} [RowAction.MoveFestivity] - The properties to expect in the JSON payload for the "moveFestivity" action.
+ * @property {[ 'event_key', 'name', 'day', 'month', 'missal', 'reason' ]} [RowAction.MoveEvent] - The properties to expect in the JSON payload for the "moveEvent" action.
  * @property {[ 'event_key', 'name', 'color', 'grade', 'day', 'month', 'strtotime', 'common' ]} [RowAction.CreateNew] - The properties to expect in the JSON payload for the "createNew" action.
  */
 const payloadProperties = Object.freeze({
     [RowAction.MakePatron]:    Object.freeze([ 'event_key', 'name', 'grade' ]),
     [RowAction.SetProperty]:   Object.freeze([ 'event_key', 'name', 'grade' ]),
-    [RowAction.MoveFestivity]: Object.freeze([ 'event_key', 'day', 'month', 'missal', 'reason' ]),
+    [RowAction.MoveEvent]: Object.freeze([ 'event_key', 'day', 'month', 'missal', 'reason' ]),
     [RowAction.CreateNew]:     Object.freeze([ 'event_key', 'name', 'color', 'grade', 'day', 'month', 'strtotime', 'common' ]) //'readings' is only expected for createNew when common=Proper
 });
 
 /**
- * The properties of the `LitCal` object that are related to the metadata of a festivity / liturgical event.
+ * The properties of the `LitCal` object that are related to the metadata of a liturgical event.
  * @readonly
  * @type {['missal', 'reason']}
  */
@@ -183,23 +183,23 @@ class FormControls {
     /**
      * An object containing settings for the form controls. The properties of this object determine whether a given form field is shown or not, or in some cases whether it is enabled.
      * @type {Object}
-     * @property {Boolean} nameField - whether the form field for the name of the festivity is editable (true) or readonly (false)
-     * @property {Boolean} dayField - whether the form field for the day of the festivity is editable (true) or readonly (false)
-     * @property {Boolean} monthField - whether the form field for the month of the festivity is editable (true) or readonly (false)
-     * @property {Boolean} colorField - whether the form field for the color of the festivity is editable (true) or readonly (false)
-     * @property {Boolean} gradeField - whether the form field for the grade of the festivity is editable (true) or readonly (false)
-     * @property {Boolean} commonField - whether the form field for the common of the festivity is editable (true) or readonly (false)
+     * @property {Boolean} nameField - whether the form field for the name of the liturgical event is editable (true) or readonly (false)
+     * @property {Boolean} dayField - whether the form field for the day of the liturgical event is editable (true) or readonly (false)
+     * @property {Boolean} monthField - whether the form field for the month of the liturgical event is editable (true) or readonly (false)
+     * @property {Boolean} colorField - whether the form field for the color of the liturgical event is editable (true) or readonly (false)
+     * @property {Boolean} gradeField - whether the form field for the grade of the liturgical event is editable (true) or readonly (false)
+     * @property {Boolean} commonField - whether the form field for the common of the liturgical event is editable (true) or readonly (false)
      * @property {Boolean} gradeFieldShow - whether the grade field is shown at all
      * @property {Boolean} commonFieldShow - whether the common field is shown at all
-     * @property {Boolean} fromYearField - whether the form field for the year that the festivity starts is editable (true) or readonly (false)
-     * @property {Boolean} untilYearField - whether the form field for the year that the festivity ends is editable (true) or readonly (false)
-     * @property {Boolean} eventKeyField - whether the form field for the event_key of the festivity is shown and editable or hidden (seems to make more sense to hide than set readonly)
-     * @property {Boolean} decreeURLFieldShow - whether the form field for the url of the decree on which the festivity is based is shown
-     * @property {Boolean} decreeLangMapFieldShow - whether the form field for the language map of the decree on which the festivity is based is shown
-     * @property {Boolean} reasonFieldShow - whether the form field for the reason for which the festivity is being moved is shown
-     * @property {Boolean} readingsFieldShow - whether the form field for the readings of the festivity is shown
-     * @property {Boolean} missalFieldShow - whether the form field for the missal on which the festivity is based is shown
-     * @property {Boolean} strtotimeFieldShow - whether the form field for the relative date of the festivity (in PHP strtotime format) is shown
+     * @property {Boolean} fromYearField - whether the form field for the year that the liturgical event starts is editable (true) or readonly (false)
+     * @property {Boolean} untilYearField - whether the form field for the year that the liturgical event ends is editable (true) or readonly (false)
+     * @property {Boolean} eventKeyField - whether the form field for the event_key of the liturgical event is shown and editable or hidden (seems to make more sense to hide than set readonly)
+     * @property {Boolean} decreeURLFieldShow - whether the form field for the url of the decree on which the liturgical event is based is shown
+     * @property {Boolean} decreeLangMapFieldShow - whether the form field for the language map of the decree on which the liturgical event is based is shown
+     * @property {Boolean} reasonFieldShow - whether the form field for the reason for which the liturgical event is being moved is shown
+     * @property {Boolean} readingsFieldShow - whether the form field for the readings of the liturgical event is shown
+     * @property {Boolean} missalFieldShow - whether the form field for the missal on which the liturgical event is based is shown
+     * @property {Boolean} strtotimeFieldShow - whether the form field for the relative date of the liturgical event (in PHP strtotime format) is shown
      * @static
      */
     static settings = {
@@ -223,14 +223,14 @@ class FormControls {
     }
 
     /**
-     * The action that the form will perform, e.g. RowAction.MakePatron, RowAction.MakeDoctor, RowAction.SetProperty, RowAction.MoveFestivity, RowAction.CreateNew, or RowAction.CreateNewFromExisting.
+     * The action that the form will perform, e.g. RowAction.MakePatron, RowAction.MakeDoctor, RowAction.SetProperty, RowAction.MoveEvent, RowAction.CreateNew, or RowAction.CreateNewFromExisting.
      * @type {RowAction?}
      * @static
      */
     static action = null;
 
     /**
-     * The localized title of the action being performed, e.g. RowActionTitle[RowAction.MakePatron], RowActionTitle[RowAction.MakeDoctor], RowActionTitle[RowAction.SetProperty], RowActionTitle[RowAction.MoveFestivity], RowActionTitle[RowAction.CreateNew], or RowActionTitle[RowAction.CreateNewFromExisting].
+     * The localized title of the action being performed, e.g. RowActionTitle[RowAction.MakePatron], RowActionTitle[RowAction.MakeDoctor], RowActionTitle[RowAction.SetProperty], RowActionTitle[RowAction.MoveEvent], RowActionTitle[RowAction.CreateNew], or RowActionTitle[RowAction.CreateNewFromExisting].
      * @type {RowActionTitle?}
      * @static
      */
@@ -261,7 +261,7 @@ class FormControls {
     static index = null;
 
     /**
-     * Creates a form row for a new festivity / liturgical event on a diocesan calendar form.
+     * Creates a form row for a new liturgical event on a diocesan calendar form.
      * It contains fields for name, day, month, common, color, since_year and until_year.
      * The fields shown depend on the settings in FormControls.settings.
      * Used in diocesan calendar forms.
@@ -359,55 +359,55 @@ class FormControls {
      * Creates a form row for a national calendar or wider region celebration, e.g. a Patron saint.
      * The fields shown depend on the settings in FormControls.settings.
      *
-     * @param {string|object} [element=null] - Either a string (the event_key of the FestivityCollection) or an object with the festivity and its metadata.
+     * @param {string|object} [element=null] - Either a string (the event_key of the LiturgicalEventCollection) or an object with the liturgical event and its metadata.
      * @returns {DocumentFragment} The HTML Document Fragment for the form row, consisting in a "Title" div and a "Form Controls Row" div.
      * @static
      */
     static CreateRegionalFormRow(element = null) {
         const fragment = document.createDocumentFragment();
-        let festivity = null;
+        let liturgical_event = null;
         if( element !== null ) {
-            if (element instanceof Festivity) {
-                console.log('element instanceof Festivity');
-                festivity = element;
-                festivity.url = '';
-                festivity.url_lang_map = {};
+            if (element instanceof LiturgicalEvent) {
+                console.log('element instanceof LiturgicalEvent');
+                liturgical_event = element;
+                liturgical_event.url = '';
+                liturgical_event.url_lang_map = {};
             }
             else if ( typeof element === 'string' ) {
-                // rather than filter the FestivityCollection, we should be either getting from EventsCollection
+                // rather than filter the LiturgicalEventCollection, we should be either getting from EventsCollection
                 // based on EventsLoader.lastRequestPath and EventsLoader.lastRequestLocale,
-                // or we should be able to pass a festivity object directly to  the CreateRegionalFormRow method
-                festivity = FestivityCollection.filter(item => item.event_key === element)[0];
-                festivity.url = '';
-                festivity.url_lang_map = {};
+                // or we should be able to pass a liturgical_event object directly to  the CreateRegionalFormRow method
+                liturgical_event = LiturgicalEventCollection.filter(item => item.event_key === element)[0];
+                liturgical_event.url = '';
+                liturgical_event.url_lang_map = {};
             }
-            else if ( typeof element === 'object' && 'festivity' in element && 'metadata' in element ) {
-                festivity = {
-                    ...element.festivity,
+            else if ( typeof element === 'object' && 'liturgical_event' in element && 'metadata' in element ) {
+                liturgical_event = {
+                    ...element.liturgical_event,
                     ...element.metadata
                 };
-                if (FestivityCollectionKeys.includes(festivity.event_key)) {
-                    const knownEvent = FestivityCollection.filter(fest => fest.event_key === festivity.event_key)[0];
-                    if(  false === 'name' in festivity && 'name' in knownEvent ) {
-                        festivity.name = knownEvent.name;
+                if (LiturgicalEventCollectionKeys.includes(liturgical_event.event_key)) {
+                    const knownEvent = LiturgicalEventCollection.filter(fest => fest.event_key === liturgical_event.event_key)[0];
+                    if(  false === 'name' in liturgical_event && 'name' in knownEvent ) {
+                        liturgical_event.name = knownEvent.name;
                     }
-                    if ( false === 'strtotime' in festivity ) {
-                        if ( false === 'day' in festivity && 'day' in knownEvent ) {
-                            festivity.day = knownEvent.day;
+                    if ( false === 'strtotime' in liturgical_event ) {
+                        if ( false === 'day' in liturgical_event && 'day' in knownEvent ) {
+                            liturgical_event.day = knownEvent.day;
                         }
-                        if ( false === 'month' in festivity && 'month' in knownEvent ) {
-                            festivity.month = knownEvent.month;
+                        if ( false === 'month' in liturgical_event && 'month' in knownEvent ) {
+                            liturgical_event.month = knownEvent.month;
                         }
                     }
-                    if ( false === 'grade' in festivity && 'grade' in knownEvent ) {
-                        festivity.grade = knownEvent.grade;
+                    if ( false === 'grade' in liturgical_event && 'grade' in knownEvent ) {
+                        liturgical_event.grade = knownEvent.grade;
                     }
-                    if ( false === 'color' in festivity && 'color' in knownEvent ) {
-                        festivity.color = knownEvent.color;
+                    if ( false === 'color' in liturgical_event && 'color' in knownEvent ) {
+                        liturgical_event.color = knownEvent.color;
                     }
                 }
             }
-            //console.log(festivity);
+            //console.log(liturgical_event);
         }
 
         if (FormControls.title !== null) {
@@ -419,7 +419,7 @@ class FormControls {
             titleDiv.appendChild(titleH4);
 
             if(FormControls.action === RowAction.CreateNew) {
-                const isStrToTime = festivity !== null && 'strtotime' in festivity;
+                const isStrToTime = liturgical_event !== null && 'strtotime' in liturgical_event;
                 const radioGroupDiv = document.createElement('div');
                 radioGroupDiv.className = 'btn-group ms-auto';
                 radioGroupDiv.setAttribute('role', 'group');
@@ -493,7 +493,7 @@ class FormControls {
             eventKeyInput.type = 'hidden';
             eventKeyInput.className = 'litEventEventKey';
             eventKeyInput.id = `onTheFly${FormControls.uniqid}EventKey`;
-            eventKeyInput.value = festivity !== null ? festivity.event_key : '';
+            eventKeyInput.value = liturgical_event !== null ? liturgical_event.event_key : '';
             eventNameFormGroup.appendChild(eventKeyInput);
         }
         const nameLabel = document.createElement('label');
@@ -505,7 +505,7 @@ class FormControls {
         nameInput.type = 'text';
         nameInput.className = 'form-control litEvent litEventName';
         nameInput.id = `onTheFly${FormControls.uniqid}Name`;
-        nameInput.value = festivity !== null ? festivity.name : '';
+        nameInput.value = liturgical_event !== null ? liturgical_event.name : '';
         nameInput.disabled = FormControls.settings.nameField === false;
         eventNameFormGroup.appendChild(nameInput);
         const nameInputInvalidFeedback = document.createElement('div');
@@ -531,7 +531,7 @@ class FormControls {
             fromYearInput.max = 9998; // max date that PHP supports minus one
             fromYearInput.className = 'form-control litEvent litEventSinceYear';
             fromYearInput.id = `onTheFly${FormControls.uniqid}FromYear`;
-            fromYearInput.value = festivity?.since_year || 1970;
+            fromYearInput.value = liturgical_event?.since_year || 1970;
             fromYearFormGroup.appendChild(fromYearInput);
             controlsRow.appendChild(fromYearFormGroup);
         }
@@ -549,11 +549,11 @@ class FormControls {
 
             const untilYearInput = document.createElement('input');
             untilYearInput.type = 'number';
-            untilYearInput.min = festivity?.since_year ? festivity.since_year + 1 : 1583;
+            untilYearInput.min = liturgical_event?.since_year ? liturgical_event.since_year + 1 : 1583;
             untilYearInput.max = 9999; // max date that PHP supports
             untilYearInput.className = 'form-control litEvent litEventUntilYear';
             untilYearInput.id = `onTheFly${FormControls.uniqid}UntilYear`;
-            untilYearInput.value = festivity?.until_year || '';
+            untilYearInput.value = liturgical_event?.until_year || '';
             untilYearFormGroup.appendChild(untilYearInput);
             controlsRow.appendChild(untilYearFormGroup);
         }
@@ -562,7 +562,7 @@ class FormControls {
          * Liturgical color form group
          * We always have a liturgical color form group
          */
-        const selectedColors = festivity !== null ? (Array.isArray(festivity.color) ? festivity.color : festivity.color.split(',')) : [];
+        const selectedColors = liturgical_event !== null ? (Array.isArray(liturgical_event.color) ? liturgical_event.color : liturgical_event.color.split(',')) : [];
         const colorFormGroup = document.createElement('div');
         colorFormGroup.className = 'form-group col-sm-2';
         const colorLabel = document.createElement('label');
@@ -612,7 +612,7 @@ class FormControls {
 
         const dayLabel = document.createElement('label');
         const dayInput = document.createElement('input');
-        if( festivity !== null && 'strtotime' in festivity ) {
+        if( liturgical_event !== null && 'strtotime' in liturgical_event ) {
             dayFormGroup.className = 'form-group col-sm-2';
             dayLabel.for = `onTheFly${FormControls.uniqid}Strtotime`;
             dayLabel.innerText = 'Relative date';
@@ -621,7 +621,7 @@ class FormControls {
             dayInput.type = 'text';
             dayInput.className = 'form-control litEvent litEventStrtotime';
             dayInput.id = `onTheFly${FormControls.uniqid}Strtotime`;
-            dayInput.value = festivity.strtotime;
+            dayInput.value = liturgical_event.strtotime;
             dayFormGroup.appendChild(dayInput);
             controlsRow.appendChild(dayFormGroup);
         } else {
@@ -632,10 +632,10 @@ class FormControls {
 
             dayInput.type = 'number';
             dayInput.min = 1;
-            dayInput.max = festivity !== null ? getMonthMaxDay(festivity.month) : 31;
+            dayInput.max = liturgical_event !== null ? getMonthMaxDay(liturgical_event.month) : 31;
             dayInput.className = 'form-control litEvent litEventDay';
             dayInput.id = `onTheFly${FormControls.uniqid}Day`;
-            dayInput.value = festivity !== null ? festivity.day : '';
+            dayInput.value = liturgical_event !== null ? liturgical_event.day : '';
             dayFormGroup.appendChild(dayInput);
             controlsRow.appendChild(dayFormGroup);
 
@@ -657,7 +657,7 @@ class FormControls {
                 let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
                 const monthOption = document.createElement('option');
                 monthOption.value = i + 1;
-                monthOption.selected = festivity !== null && festivity.month === i+1;
+                monthOption.selected = liturgical_event !== null && liturgical_event.month === i+1;
                 monthOption.innerText = formatter.format(month);
                 monthSelect.appendChild(monthOption);
             }
@@ -681,7 +681,7 @@ class FormControls {
             eventKeyInput.type = 'text';
             eventKeyInput.className = 'form-control litEvent litEventEventKey';
             eventKeyInput.id = `onTheFly${FormControls.uniqid}EventKey`;
-            eventKeyInput.value = festivity !== null ? festivity.event_key : '';
+            eventKeyInput.value = liturgical_event !== null ? liturgical_event.event_key : '';
             eventKeyFormGroup.appendChild(eventKeyInput);
             controlsRow.appendChild(eventKeyFormGroup);
         }
@@ -728,8 +728,8 @@ class FormControls {
                 input.type = 'text';
                 input.className = `form-control litEvent litEventReadings litEventReadings_${prop}`;
                 input.id = `onTheFly${FormControls.uniqid}Readings_${prop}`;
-                input.value = festivity && festivity?.common === 'Proper' ? festivity.readings[prop] : '';
-                input.disabled = festivity === null || typeof festivity.common === 'undefined' || festivity.common !== 'Proper';
+                input.value = liturgical_event && liturgical_event?.common === 'Proper' ? liturgical_event.readings[prop] : '';
+                input.disabled = liturgical_event === null || typeof liturgical_event.common === 'undefined' || liturgical_event.common !== 'Proper';
                 inputCell.appendChild(input);
                 tr.appendChild(inputCell);
 
@@ -740,7 +740,7 @@ class FormControls {
                     const i = document.createElement('i');
                     i.className = 'fas fa-info-circle m-2';
                     i.style.color = '#4e73df';
-                    i.title = "When the festivity has its own Proper, then Readings can be defined, otherwise the readings will depend on the Common.";
+                    i.title = "When the liturgical_event has its own Proper, then Readings can be defined, otherwise the readings will depend on the Common.";
                     infoCell.appendChild(i);
                     tr.appendChild(infoCell);
                 }
@@ -765,7 +765,7 @@ class FormControls {
             reasonInput.type = 'text';
             reasonInput.className = 'form-control litEvent litEventReason';
             reasonInput.id = `onTheFly${FormControls.uniqid}Reason`;
-            reasonInput.value = festivity?.reason || '';
+            reasonInput.value = liturgical_event?.reason || '';
             reasonFormGroup.appendChild(reasonInput);
             controlsRow.appendChild(reasonFormGroup);
         }
@@ -816,7 +816,7 @@ class FormControls {
             decreeURLInput.type = 'text';
             decreeURLInput.className = 'form-control litEvent litEventDecreeURL';
             decreeURLInput.id = `onTheFly${FormControls.uniqid}DecreeURL`;
-            decreeURLInput.value = festivity !== null && typeof festivity.url !== 'undefined' ? festivity.url : '';
+            decreeURLInput.value = liturgical_event !== null && typeof liturgical_event.url !== 'undefined' ? liturgical_event.url : '';
             decreeURLFormGroup.appendChild(decreeURLInput);
             controlsRow.appendChild(decreeURLFormGroup);
         }
@@ -825,7 +825,7 @@ class FormControls {
          * Decree Langs form group
          */
         if(FormControls.settings.decreeLangMapFieldShow) {
-            const decreeLangs = festivity !== null && typeof festivity.url_lang_map !== 'undefined' ? Object.keys(festivity.url_lang_map).map(key => key+'='+festivity.url_lang_map[key] ) : null;
+            const decreeLangs = liturgical_event !== null && typeof liturgical_event.url_lang_map !== 'undefined' ? Object.keys(liturgical_event.url_lang_map).map(key => key+'='+liturgical_event.url_lang_map[key] ) : null;
             const decreeLangsFormGroup = document.createElement('div');
             decreeLangsFormGroup.className = 'form-group col-sm-6';
             const decreeLangsLabel = document.createElement('label');
@@ -841,7 +841,7 @@ class FormControls {
             decreeLangsInput.type = 'text';
             decreeLangsInput.className = 'form-control litEvent litEventDecreeLangs';
             decreeLangsInput.id = `onTheFly${FormControls.uniqid}DecreeLangs`;
-            decreeLangsInput.value = festivity !== null && typeof festivity.url_lang_map !== 'undefined' ? decreeLangs.join(',') : '';
+            decreeLangsInput.value = liturgical_event !== null && typeof liturgical_event.url_lang_map !== 'undefined' ? decreeLangs.join(',') : '';
             decreeLangsFormGroup.appendChild(decreeLangsInput);
             controlsRow.appendChild(decreeLangsFormGroup);
         }
@@ -854,62 +854,62 @@ class FormControls {
     /**
      * Creates a form row for a new doctor of the Church celebration.
      * The fields shown depend on the settings in FormControls.settings.
-     * @param {string|object} [element=null] - Either a string (the event_key of the FestivityCollection) or an object with the festivity and its metadata.
+     * @param {string|object} [element=null] - Either a string (the event_key of the LiturgicalEventCollection) or an object with the liturgical_event and its metadata.
      * @returns {string} The HTML for the form row.
      * @static
      */
     static CreateDoctorRow(element = null) {
         let formRow = '';
-        let festivity = null;
+        let liturgical_event = null;
         if( element !== null ) {
             if( typeof element === 'string' ) {
-                festivity.event_key = element;
-                festivity.since_year = 1970;
-                festivity.until_year = '';
-                festivity.url = '';
-                festivity.url_lang_map = {};
+                liturgical_event.event_key = element;
+                liturgical_event.since_year = 1970;
+                liturgical_event.until_year = '';
+                liturgical_event.url = '';
+                liturgical_event.url_lang_map = {};
             }
             if( typeof element === 'object' ) {
-                festivity = {
-                    ...element.festivity,
+                liturgical_event = {
+                    ...element.liturgical_event,
                     ...element.metadata
                 };
-                if( false === 'until_year' in festivity ) {
-                    festivity.until_year = '';
+                if( false === 'until_year' in liturgical_event ) {
+                    liturgical_event.until_year = '';
                 }
             }
-            if (FestivityCollectionKeys.includes(festivity.event_key)) {
-                let event = FestivityCollection.filter(fest => fest.event_key === festivity.event_key)[0];
-                if( false === 'color' in festivity ) {
-                    festivity.color = 'color' in event ? event.color : [];
+            if (LiturgicalEventCollectionKeys.includes(liturgical_event.event_key)) {
+                let event = LiturgicalEventCollection.filter(fest => fest.event_key === liturgical_event.event_key)[0];
+                if( false === 'color' in liturgical_event ) {
+                    liturgical_event.color = 'color' in event ? event.color : [];
                 }
-                if( false === 'name' in festivity ) {
+                if( false === 'name' in liturgical_event ) {
                     if( 'name' in event ) {
-                        festivity.name = event.name;
+                        liturgical_event.name = event.name;
                     }
                 }
-                if( false === 'day' in festivity ) {
+                if( false === 'day' in liturgical_event ) {
                     if( 'day' in event ) {
-                        festivity.day = event.day;
+                        liturgical_event.day = event.day;
                     }
                 }
-                if( false === 'month' in festivity ) {
-                    console.log( 'festivity does not have a month property, now trying to retrieve info...' );
+                if( false === 'month' in liturgical_event ) {
+                    console.log( 'liturgical_event does not have a month property, now trying to retrieve info...' );
                     if( 'month' in event ) {
-                        festivity.month = event.month;
+                        liturgical_event.month = event.month;
                     }
                      else {
                         console.log( 'could not retrieve month info...' );
                     }
                 }
             }
-            //console.log(festivity);
+            //console.log(liturgical_event);
         }
 
         if (FormControls.title !== null) {
             formRow += `<hr><div class="mt-4 d-flex justify-content-left"><h4 class="data-group-title">${FormControls.title}</h4>`;
             if(FormControls.action === RowAction.CreateNew) {
-                if( festivity !== null && 'strtotime' in festivity ) {
+                if( liturgical_event !== null && 'strtotime' in liturgical_event ) {
                     formRow += `<button type="button" class="ms-auto btn btn-info strtotime-toggle-btn active" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="true" autocomplete="off"><i class="fas fa-comment me-2"></i>relative date</button>`;
                 } else {
                     formRow += `<button type="button" class="ms-auto btn btn-secondary strtotime-toggle-btn" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="false" autocomplete="off"><i class="fas fa-comment-slash me-2"></i>relative date</button>`;
@@ -922,57 +922,57 @@ class FormControls {
 
         formRow += `<div class="form-group col-sm-6">`;
         if(FormControls.settings.eventKeyField === false){
-            formRow += `<input type="hidden" class="litEventEventKey" id="onTheFly${FormControls.uniqid}EventKey" value="${festivity !== null ? festivity.event_key : ''}" />`;
+            formRow += `<input type="hidden" class="litEventEventKey" id="onTheFly${FormControls.uniqid}EventKey" value="${liturgical_event !== null ? liturgical_event.event_key : ''}" />`;
         }
         formRow += `<label for="onTheFly${FormControls.uniqid}Name">${Messages[ "Name" ]}</label>
-        <input type="text" class="form-control litEvent litEventName${festivity !== null && typeof festivity.name==='undefined' ? ` is-invalid` : ``}" id="onTheFly${FormControls.uniqid}Name" value="${festivity !== null ? festivity.name : ''}"${FormControls.settings.nameField === false ? ' readonly' : ''} />
+        <input type="text" class="form-control litEvent litEventName${liturgical_event !== null && typeof liturgical_event.name==='undefined' ? ` is-invalid` : ``}" id="onTheFly${FormControls.uniqid}Name" value="${liturgical_event !== null ? liturgical_event.name : ''}"${FormControls.settings.nameField === false ? ' readonly' : ''} />
         <div class="invalid-feedback">There is no locale data for this celebration in the current locale. Perhaps try a different locale?.</div>
         </div>`;
 
         if (FormControls.settings.fromYearField) {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}FromYear">${Messages[ "Since" ]}</label>
-            <input type="number" min="1582" max="9999" class="form-control litEvent litEventFromYear" id="onTheFly${FormControls.uniqid}FromYear" value="${festivity !== null ? festivity.since_year : ''}" />
+            <input type="number" min="1582" max="9999" class="form-control litEvent litEventFromYear" id="onTheFly${FormControls.uniqid}FromYear" value="${liturgical_event !== null ? liturgical_event.since_year : ''}" />
             </div>`;
         }
 
         if (FormControls.settings.untilYearField) {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}UntilYear">${Messages[ "Until" ]}</label>
-            <input type="number" min="1582" max="9999" class="form-control litEvent litEventUntilYear" id="onTheFly${FormControls.uniqid}UntilYear" value="${festivity !== null ? festivity.until_year : ''}" />
+            <input type="number" min="1582" max="9999" class="form-control litEvent litEventUntilYear" id="onTheFly${FormControls.uniqid}UntilYear" value="${liturgical_event !== null ? liturgical_event.until_year : ''}" />
             </div>`;
         }
 
-        let selectedColors = festivity !== null ? (Array.isArray(festivity.color) ? festivity.color : festivity.color.split(',')) : [];
+        let selectedColors = liturgical_event !== null ? (Array.isArray(liturgical_event.color) ? liturgical_event.color : liturgical_event.color.split(',')) : [];
         formRow += `<div class="form-group col-sm-2">
         <label for="onTheFly${FormControls.uniqid}Color">${Messages[ "Liturgical color" ]}</label>
         <select class="form-select litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple"${FormControls.settings.colorField === false ? ' readonly' : ''} />
-        <option value="white"${festivity !== null && selectedColors.includes("white") ? ' selected' : '' }>${Messages[ "white" ].toUpperCase()}</option>
-        <option value="red"${festivity !== null && selectedColors.includes("red") ? ' selected' : '' }>${Messages[ "red" ].toUpperCase()}</option>
-        <option value="purple"${festivity !== null && selectedColors.includes("purple") ? ' selected' : '' }>${Messages[ "purple" ].toUpperCase()}</option>
-        <option value="green"${festivity !== null && selectedColors.includes("green") ? ' selected' : '' }>${Messages[ "green" ].toUpperCase()}</option>
+        <option value="white"${liturgical_event !== null && selectedColors.includes("white") ? ' selected' : '' }>${Messages[ "white" ].toUpperCase()}</option>
+        <option value="red"${liturgical_event !== null && selectedColors.includes("red") ? ' selected' : '' }>${Messages[ "red" ].toUpperCase()}</option>
+        <option value="purple"${liturgical_event !== null && selectedColors.includes("purple") ? ' selected' : '' }>${Messages[ "purple" ].toUpperCase()}</option>
+        <option value="green"${liturgical_event !== null && selectedColors.includes("green") ? ' selected' : '' }>${Messages[ "green" ].toUpperCase()}</option>
         </select>
         </div>`;
 
-        if( festivity !== null && 'strtotime' in festivity ) {
+        if( liturgical_event !== null && 'strtotime' in liturgical_event ) {
             formRow += `<div class="form-group col-sm-2">
             <label for="onTheFly${FormControls.uniqid}StrToTime">Relative date</label>
             <select class="form-select litEvent litEventStrtotime" id="onTheFly${FormControls.uniqid}StrToTime-dayOfTheWeek">`;
             for (let i = 0; i < 7; i++ ) {
                 let dayOfTheWeek = new Date(Date.UTC(2000, 0, 2+i));
-                formRow += `<option value="${DaysOfTheWeek[i]}"${festivity.strtotime.day_of_the_week === DaysOfTheWeek[i] ? ' selected' : '' }>${FormControls.weekdayFormatter.format(dayOfTheWeek)}</option>`;
+                formRow += `<option value="${DaysOfTheWeek[i]}"${liturgical_event.strtotime.day_of_the_week === DaysOfTheWeek[i] ? ' selected' : '' }>${FormControls.weekdayFormatter.format(dayOfTheWeek)}</option>`;
             }
             formRow += `</select>
             <select class="form-select litEvent litEventStrtotime" id="onTheFly${FormControls.uniqid}StrToTime-relativeTime">
-                <option value="before"${festivity.strtotime.relative_time === 'before' ? ' selected' : ''}>before</option>
-                <option value="after"${festivity.strtotime.relative_time === 'after' ? ' selected' : ''}>after</option>
+                <option value="before"${liturgical_event.strtotime.relative_time === 'before' ? ' selected' : ''}>before</option>
+                <option value="after"${liturgical_event.strtotime.relative_time === 'after' ? ' selected' : ''}>after</option>
             </select>
-            <input list="existingFestivitiesList" value="${festivity.strtotime.festivity_key}" class="form-control litEvent litEventStrtotime existingFestivityName" id="onTheFly${FormControls.uniqid}StrToTime-festivityKey" required>
+            <input list="existingFestivitiesList" value="${liturgical_event.strtotime.liturgical_event_key}" class="form-control litEvent litEventStrtotime existingLiturgicalEventName" id="onTheFly${FormControls.uniqid}StrToTime-festivityKey" required>
             </div>`;
         } else {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}Day">${Messages[ "Day" ]}</label>
-            <input type="number" min="1" max="31" value="${festivity !== null && festivity.day}" class="form-control litEvent litEventDay" id="onTheFly${FormControls.uniqid}Day"${FormControls.settings.dayField === false ?  'readonly' : '' } />
+            <input type="number" min="1" max="31" value="${liturgical_event !== null && liturgical_event.day}" class="form-control litEvent litEventDay" id="onTheFly${FormControls.uniqid}Day"${FormControls.settings.dayField === false ?  'readonly' : '' } />
             </div>`;
 
             formRow += `<div class="form-group col-sm-1">
@@ -982,7 +982,7 @@ class FormControls {
             let formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
             for (let i = 0; i < 12; i++) {
                 let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
-                formRow += `<option value=${i + 1}${festivity !== null && festivity.month === i+1 ? ' selected' : '' }>${formatter.format(month)}</option>`;
+                formRow += `<option value=${i + 1}${liturgical_event !== null && liturgical_event.month === i+1 ? ' selected' : '' }>${formatter.format(month)}</option>`;
             }
 
             formRow += `</select>
@@ -992,7 +992,7 @@ class FormControls {
         if (FormControls.settings.eventKeyField) {
             formRow += `<div class="form-group col-sm-2">
             <label for="onTheFly${FormControls.uniqid}EventKey">${Messages[ "EventKey" ]}</label>
-            <input type="text" value="${festivity !== null ? festivity.event_key : ''}" class="form-control litEvent litEventEventKey" id="onTheFly${FormControls.uniqid}EventKey" />
+            <input type="text" value="${liturgical_event !== null ? liturgical_event.event_key : ''}" class="form-control litEvent litEventEventKey" id="onTheFly${FormControls.uniqid}EventKey" />
             </div>`;
         }
 
@@ -1006,29 +1006,29 @@ class FormControls {
 
         if (FormControls.settings.readingsFieldShow) {
             formRow += `<div class="col-sm-5"><table>`;
-            formRow += readingsProperties.map((prop,idx) => `<tr><td><label for="onTheFly${FormControls.uniqid}Readings_${prop}">${prop}</label></td><td style="padding-left: 15px;"><input type="text" class="form-control litEvent litEventReadings litEventReadings_${prop}" id="onTheFly${FormControls.uniqid}Readings_${prop}" ${festivity === null || typeof festivity.common === 'undefined' || festivity.common !== 'Proper' ? `disabled` : ``} value="${festivity && festivity?.common === 'Proper' ? festivity.readings[prop] : ''}" /></td>${idx===0 ? `<td rowspan="5" style="vertical-align: top;"><i class="fas fa-info-circle m-2" style="color: #4e73df;" title="When the festivity has its own Proper, then Readings can be defined, otherwise the readings will depend on the Common"></i>` : ``}</td></tr>`).join('');
+            formRow += readingsProperties.map((prop,idx) => `<tr><td><label for="onTheFly${FormControls.uniqid}Readings_${prop}">${prop}</label></td><td style="padding-left: 15px;"><input type="text" class="form-control litEvent litEventReadings litEventReadings_${prop}" id="onTheFly${FormControls.uniqid}Readings_${prop}" ${liturgical_event === null || typeof liturgical_event.common === 'undefined' || liturgical_event.common !== 'Proper' ? `disabled` : ``} value="${liturgical_event && liturgical_event?.common === 'Proper' ? liturgical_event.readings[prop] : ''}" /></td>${idx===0 ? `<td rowspan="5" style="vertical-align: top;"><i class="fas fa-info-circle m-2" style="color: #4e73df;" title="When the liturgical_event has its own Proper, then Readings can be defined, otherwise the readings will depend on the Common"></i>` : ``}</td></tr>`).join('');
             formRow += `</table></div>`;
         }
 
         if (FormControls.settings.reasonFieldShow) {
             formRow += `<div class="form-group col-sm-6">
             <label for="onTheFly${FormControls.uniqid}Reason">${Messages[ "Reason" ]}</label>
-            <input type="text" value="${festivity?.reason||''}" class="form-control litEvent litEventReason" id="onTheFly${FormControls.uniqid}Reason" />
+            <input type="text" value="${liturgical_event?.reason||''}" class="form-control litEvent litEventReason" id="onTheFly${FormControls.uniqid}Reason" />
             </div>`;
         }
 
         if(FormControls.settings.decreeURLFieldShow) {
             formRow += `<div class="form-group col-sm-6">
             <label for="onTheFly${FormControls.uniqid}DecreeURL">${Messages[ "Decree URL" ]}<i class="ms-2 fas fa-info-circle" title="Use %s in place of the language code if using a language mapping"></i></label>
-            <input type="text" class="form-control litEvent litEventDecreeURL" value="${festivity !== null && typeof festivity.url !== 'undefined' ? festivity.url : ''}" />
+            <input type="text" class="form-control litEvent litEventDecreeURL" value="${liturgical_event !== null && typeof liturgical_event.url !== 'undefined' ? liturgical_event.url : ''}" />
             </div>`;
         }
 
         if(FormControls.settings.decreeLangMapFieldShow) {
-            let decreeLangs = festivity !== null && typeof festivity.url_lang_map !== 'undefined' ? Object.keys(festivity.url_lang_map).map(key => key+'='+festivity.url_lang_map[key] ) : null;
+            let decreeLangs = liturgical_event !== null && typeof liturgical_event.url_lang_map !== 'undefined' ? Object.keys(liturgical_event.url_lang_map).map(key => key+'='+liturgical_event.url_lang_map[key] ) : null;
             formRow += `<div class="form-group col-sm-4">
             <label for="onTheFly${FormControls.uniqid}DecreeLangs">${Messages[ "Decree Langs" ]}<i class="ms-2 fas fa-info-circle" title="Use a comma separated list of key=value pairings, e.g. DE=ge,EN=en. Key is uppercased two letter ISO code, value is (generally lowercased) two letter representation used within the actual URL"></i></label>
-            <input type="text" class="form-control litEvent litEventDecreeLangs" value="${festivity !== null && typeof festivity.url_lang_map !== 'undefined' ? decreeLangs.join(',') : ''}" />
+            <input type="text" class="form-control litEvent litEventDecreeLangs" value="${liturgical_event !== null && typeof liturgical_event.url_lang_map !== 'undefined' ? decreeLangs.join(',') : ''}" />
             </div>`;
         }
 
@@ -1047,7 +1047,7 @@ class FormControls {
 const setFormSettings = action => {
     switch( action ) {
         case 'designateDoctorButton':
-            //nobreak
+            /* falls through */
         case RowAction.MakeDoctor:
             FormControls.settings.eventKeyField   = false;
             FormControls.settings.nameField       = true;
@@ -1064,7 +1064,7 @@ const setFormSettings = action => {
             FormControls.action = RowAction.MakeDoctor;
             break;
         case 'designatePatronButton':
-            //nobreak
+            /* falls through */
         case RowAction.MakePatron:
             FormControls.settings.eventKeyField   = false;
             FormControls.settings.nameField       = true;
@@ -1082,7 +1082,7 @@ const setFormSettings = action => {
             FormControls.action = RowAction.MakePatron;
             break;
         case 'setPropertyButton':
-            //nobreak
+            /* falls through */
         case RowAction.SetProperty:
             FormControls.settings.eventKeyField   = false;
             FormControls.settings.commonFieldShow = false;
@@ -1096,9 +1096,9 @@ const setFormSettings = action => {
             FormControls.title  = Messages[ RowActionTitle[RowAction.SetProperty] ];
             FormControls.action = RowAction.SetProperty;
             break;
-        case 'moveFestivityButton':
-            //nobreak
-        case RowAction.MoveFestivity:
+        case 'moveEventButton':
+            /* falls through */
+        case RowAction.MoveEvent:
             FormControls.settings.eventKeyField   = false;
             FormControls.settings.nameField       = false;
             FormControls.settings.gradeFieldShow  = false;
@@ -1110,11 +1110,11 @@ const setFormSettings = action => {
             FormControls.settings.missalFieldShow     = true;
             FormControls.settings.reasonFieldShow     = true;
             FormControls.settings.readingsFieldShow   = false;
-            FormControls.title  = Messages[ RowActionTitle[RowAction.MoveFestivity] ];
-            FormControls.action = RowAction.MoveFestivity;
+            FormControls.title  = Messages[ RowActionTitle[RowAction.MoveEvent] ];
+            FormControls.action = RowAction.MoveEvent;
             break;
-        case 'newFestivityFromExistingButton':
-            //nobreak
+        case 'newLiturgicalEventFromExistingButton':
+            /* falls through */
         case RowAction.CreateNewFromExisting:
             FormControls.settings.eventKeyField   = false;
             FormControls.settings.nameField       = false;
@@ -1132,8 +1132,8 @@ const setFormSettings = action => {
             FormControls.title  = Messages[ RowActionTitle[RowAction.CreateNew] ];
             FormControls.action = RowAction.CreateNew;
             break;
-        case 'newFestivityExNovoButton':
-            //nobreak
+        case 'newLiturgicalEventExNovoButton':
+            /* falls through */
         case RowAction.CreateNew:
             FormControls.settings.eventKeyField   = true;
             FormControls.settings.nameField       = true;
@@ -1209,7 +1209,7 @@ class LitEvent {
 }
 
 /**
- * Configures the multiselect for the liturgical common field of a festivity / liturgical event row.
+ * Configures the multiselect for the liturgical common field of a liturgical event row.
  * @param {?HTMLElement} row - The HTMLElement representing the row to configure the multiselect for. If null, the function will configure all rows.
  * @param {?Array<string>} common - The values to select in the multiselect. If null, the function will select all values.
  */

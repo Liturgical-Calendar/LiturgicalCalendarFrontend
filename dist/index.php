@@ -1,6 +1,7 @@
 <?php
+// phpcs:disable PSR1.Files.SideEffects
 const SWAGGER_UI_DIST_VERSION = '5.18.2';
-$isStaging = (strpos($_SERVER['HTTP_HOST'], "-staging") !== false || strpos($_SERVER['HTTP_HOST'], "localhost") !== false);
+$isStaging                    = ( strpos($_SERVER['HTTP_HOST'], '-staging') !== false || strpos($_SERVER['HTTP_HOST'], 'localhost') !== false );
 
 /**
  * Returns true if the server is running on localhost.
@@ -11,12 +12,12 @@ function isLocalhost(): bool
 {
     $localhostAddresses = ['127.0.0.1', '::1'];
     $localhostNames     = ['localhost', '127.0.0.1', '::1'];
-    return in_array($_SERVER['SERVER_ADDR'] ?? '', $localhostAddresses) ||
-            in_array($_SERVER['REMOTE_ADDR'] ?? '', $localhostAddresses) ||
-            in_array($_SERVER['SERVER_NAME'] ?? '', $localhostNames);
+    return in_array($_SERVER['SERVER_ADDR'] ?? '', $localhostAddresses)
+           || in_array($_SERVER['REMOTE_ADDR'] ?? '', $localhostAddresses)
+           || in_array($_SERVER['SERVER_NAME'] ?? '', $localhostNames);
 }
 
-$OpenAPISchema = $isStaging || isLocalhost() ? "development" : "master";
+$OpenAPISchema = $isStaging || isLocalhost() ? 'development' : 'master';
 ?>
 <!DOCTYPE html><!-- HTML for static distribution bundle build -->
 <html lang="en">

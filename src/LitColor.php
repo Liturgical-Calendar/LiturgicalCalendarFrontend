@@ -4,12 +4,12 @@ namespace LiturgicalCalendar\Frontend;
 
 class LitColor
 {
-    public const GREEN     = "green";
-    public const PURPLE    = "purple";
-    public const WHITE     = "white";
-    public const RED       = "red";
-    public const PINK      = "pink";
-    public static array $values = [ "green", "purple", "white", "red", "pink" ];
+    public const GREEN          = 'green';
+    public const PURPLE         = 'purple';
+    public const WHITE          = 'white';
+    public const RED            = 'red';
+    public const ROSE           = 'rose';
+    public static array $values = [ 'green', 'purple', 'white', 'red', 'rose' ];
 
     public static function isValid(string $value)
     {
@@ -26,19 +26,19 @@ class LitColor
         switch ($value) {
             case self::GREEN:
                 /**translators: context = liturgical color */
-                return $locale === 'LA' ? 'viridis'     : _("green");
+                return $locale === 'LA' ? 'viridis'     : _('green');
             case self::PURPLE:
                 /**translators: context = liturgical color */
-                return $locale === 'LA' ? 'purpura'     : _("purple");
+                return $locale === 'LA' ? 'purpura'     : _('purple');
             case self::WHITE:
                 /**translators: context = liturgical color */
-                return $locale === 'LA' ? 'albus'       : _("white");
+                return $locale === 'LA' ? 'albus'       : _('white');
             case self::RED:
                 /**translators: context = liturgical color */
-                return $locale === 'LA' ? 'ruber'       : _("red");
-            case self::PINK:
+                return $locale === 'LA' ? 'ruber'       : _('red');
+            case self::ROSE:
                 /**translators: context = liturgical color */
-                return $locale === 'LA' ? 'rosea'       : _("pink");
+                return $locale === 'LA' ? 'rosea'       : _('rose');
         }
     }
 }

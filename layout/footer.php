@@ -22,14 +22,16 @@
 
 <!-- All API URLs are provided by common.php -->
 <script>
+const BaseURL         = '<?php echo $baseURL; ?>';
 const DateOfEasterURL = '<?php echo $dateOfEasterURL; ?>';
-const CalendarURL = '<?php echo $calendarURL; ?>';
-const MetadataURL = '<?php echo $metadataURL; ?>';
-const EventsURL = '<?php echo $eventsURL; ?>';
-const MissalsURL = '<?php echo $missalsURL; ?>';
-const DecreesURL = '<?php echo $decreesURL; ?>';
+const CalendarURL     = '<?php echo $calendarURL; ?>';
+const MetadataURL     = '<?php echo $metadataURL; ?>';
+const EventsURL       = '<?php echo $eventsURL; ?>';
+const MissalsURL      = '<?php echo $missalsURL; ?>';
+const DecreesURL      = '<?php echo $decreesURL; ?>';
 const RegionalDataURL = '<?php echo $regionalDataURL; ?>';
 console.log({
+    'baseUrl': BaseURL,
     'dateOfEasterURL': DateOfEasterURL,
     'calendarURL': CalendarURL,
     'metadataURL': MetadataURL,
@@ -62,22 +64,22 @@ $componentsJsImportMap = <<<SCRIPT
 <script type="importmap">
     {
         "imports": {
-            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@1.2.0/+esm"
+            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@1.3.1/+esm"
         }
     }
 </script>
 SCRIPT;
 
 //some assets are only needed on certain pages
-$pageName = basename($_SERVER["SCRIPT_FILENAME"], '.php');
+$pageName = basename($_SERVER['SCRIPT_FILENAME'], '.php');
 
-if (in_array($pageName, [ "extending", "usage", "admin" ])) {
+if (in_array($pageName, [ 'index', 'extending', 'usage', 'admin' ])) {
     echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/js/bootstrap-multiselect.min.js"></script>';
     echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
 }
 
 //don't include the importmap on the examples page, it has it's own importmap
-if ("examples" !== $pageName) {
+if ('examples' !== $pageName) {
     echo $componentsJsImportMap;
 }
 
