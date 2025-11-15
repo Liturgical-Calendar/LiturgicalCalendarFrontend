@@ -38,7 +38,7 @@ if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'development') {
     $isStaging = ( strpos($_SERVER['HTTP_HOST'], '-staging') !== false );
     if (file_exists($ghReleaseCacheFile)) {
         $GitHubReleasesRaw       = file_get_contents($ghReleaseCacheFile);
-        $GitHubLatestReleaseInfo = json_decode($ghReleasesRaw);
+        $GitHubLatestReleaseInfo = json_decode($GitHubReleasesRaw);
         $GitHubLatestRelease     = explode('.', $GitHubLatestReleaseInfo->tag_name)[0];
     } else {
         $GithubLatestRelease = 'dev';
