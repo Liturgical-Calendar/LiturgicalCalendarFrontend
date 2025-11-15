@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Lovro <development.lovro@gmail.com>, 2025.
 # OpenAI <noreply-mt-openai@weblate.org>, 2025.
+# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-14 15:18+0000\n"
-"PO-Revision-Date: 2025-06-21 00:50+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2025-11-15 04:03+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
 "Language: hr\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.13.3\n"
 
 #: index.php:5
 msgid ""
@@ -1280,7 +1281,7 @@ msgstr "Liturgija %s"
 #. translators: context = liturgical color
 #: src/LitColor.php:41
 msgid "rose"
-msgstr ""
+msgstr "ružičasta"
 
 #: src/LitCommon.php:57
 #, fuzzy
@@ -1514,7 +1515,6 @@ msgid "of the"
 msgstr "od"
 
 #: src/LitCommon.php:273
-#, fuzzy
 msgid "From the Common"
 msgstr "Iz Zajedničkog"
 
