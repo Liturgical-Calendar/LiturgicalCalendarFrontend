@@ -5,13 +5,13 @@
 # John R. D'Orazio <priest@johnromanodorazio.com>, 2022.
 # Weblate Admin <admin@example.com>, 2024.
 # OpenAI <noreply-mt-openai@weblate.org>, 2024.
-# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024.
+# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-14 15:18+0000\n"
-"PO-Revision-Date: 2024-12-31 15:34+0000\n"
+"PO-Revision-Date: 2025-11-15 04:03+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8.4\n"
+"X-Generator: Weblate 5.13.3\n"
 
 #: index.php:5
 msgid ""
@@ -1180,7 +1180,7 @@ msgstr "Liturgia %s"
 #. translators: context = liturgical color
 #: src/LitColor.php:41
 msgid "rose"
-msgstr ""
+msgstr "rosa"
 
 #: src/LitCommon.php:57
 msgid "Proper"
