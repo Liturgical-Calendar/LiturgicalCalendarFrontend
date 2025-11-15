@@ -65,7 +65,7 @@ $FULLCALENDAR_EXAMPLE_CONTENTS = <<<EOT
             "@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.15",
             "@fullcalendar/list": "https://cdn.skypack.dev/@fullcalendar/list@6.1.15",
             "@fullcalendar/bootstrap5": "https://cdn.skypack.dev/@fullcalendar/bootstrap5@6.1.15",
-            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@1.2.0/+esm"
+            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@1.3.1/+esm"
         }
     }
 </script>
