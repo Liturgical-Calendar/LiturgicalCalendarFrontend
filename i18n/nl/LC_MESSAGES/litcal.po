@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-20 18:42+0000\n"
-"PO-Revision-Date: 2025-11-20 18:16+0000\n"
+"PO-Revision-Date: 2025-11-20 19:40+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -266,12 +266,12 @@ msgid "Web calendar"
 msgstr "Webkalender"
 
 #: usage.php:39
-#, fuzzy
-#| msgid "HTML presentation elaborated by PHP using a CURL request"
 msgid ""
 "HTML presentation elaborated by PHP using the `@liturgical-calendar/"
 "components` package"
-msgstr "HTML-presentatie uitgewerkt door PHP met behulp van een CURL-verzoek"
+msgstr ""
+"HTML-presentatie uitgewerkt door PHP met gebruik van het pakket `@liturgical-"
+"calendar/components`"
 
 #: usage.php:40
 msgid "View PHP Example"
@@ -282,6 +282,8 @@ msgid ""
 "HTML presentation elaborated by JavaScript using the `@liturgical-calendar/"
 "components-js` ESM module"
 msgstr ""
+"HTML-presentatie uitgewerkt door JavaScript met behulp van de ESM-module "
+"`@liturgical-calendar/components-js`"
 
 #: usage.php:51
 msgid "View JavaScript Example"
@@ -292,14 +294,12 @@ msgid "Calendar"
 msgstr "Kalender"
 
 #: usage.php:61
-#, fuzzy
-#| msgid ""
-#| "FullCalendar representation elaborated by JAVASCRIPT using an AJAX request"
 msgid ""
 "FullCalendar representation elaborated by JavaScript using the `@liturgical-"
 "calendar/components-js` ESM module"
 msgstr ""
-"Bekijk FullCalendar verwerkt door JAVASCRIPT met behulp van een AJAX-verzoek"
+"FullCalendar-representatie uitgewerkt door JavaScript met behulp van de "
+"`@liturgical-calendar/components-js` ESM-module"
 
 #: usage.php:62
 msgid "View FullCalendar"
@@ -486,20 +486,16 @@ msgid "Dates of Easter"
 msgstr "Data van Pasen"
 
 #: usage.php:184
-#, fuzzy
-#| msgid "Calculation of the Date of Easter"
 msgid "Calculation of the Dates of Easter"
-msgstr "Berekening van de datum van Pasen"
+msgstr "Berekening van de datums van Pasen"
 
 #: usage.php:187
 msgid "Example display of the date of Easter from 1583 to 9999"
 msgstr "Voorbeeldweergave van de datum van Pasen van 1583 tot 9999"
 
 #: usage.php:188
-#, fuzzy
-#| msgid "Calculate the Date of Easter"
 msgid "Calculate the Dates of Easter"
-msgstr "Bereken de datum van Pasen"
+msgstr "Bereken de data van Pasen"
 
 #: usage.php:198 layout/header.php:113
 msgid "Liturgy of the Day"
@@ -695,7 +691,7 @@ msgstr "Graad wijzigen"
 #. translators: label of the form row
 #: extending.php:118
 msgid "Move liturgical event"
-msgstr "Verplaats liturgische evenement"
+msgstr "Verplaats liturgisch evenement"
 
 #: extending.php:119
 msgid "Decree URL"
@@ -711,7 +707,7 @@ msgstr "Missaal"
 
 #: extending.php:122
 msgid "Reason (in favor of liturgical event)"
-msgstr "Reden (voor liturgisch evenement)"
+msgstr "Reden (ten gunste van liturgisch evenement)"
 
 #: extending.php:134 extending.php:603 extending.php:607
 msgid "Designate patron"
@@ -719,11 +715,11 @@ msgstr "Patroonheilige aanwijzen"
 
 #: extending.php:135 extending.php:619
 msgid "Change name or grade of existing liturgical event"
-msgstr "Naam of rang van bestaande liturgische evenement wijzigen"
+msgstr "Naam of rang van bestaande liturgisch evenement wijzigen"
 
 #: extending.php:136 extending.php:635
 msgid "Move liturgical event to new date"
-msgstr "Verplaats liturgische evenement naar nieuwe datum"
+msgstr "Verplaats liturgisch evenement naar nieuwe datum"
 
 #: extending.php:137 extending.php:651
 msgid "Create a new liturgical event"
@@ -928,11 +924,11 @@ msgstr "Annuleren"
 
 #: extending.php:639
 msgid "Move Liturgical Event"
-msgstr "Liturgische evenement verplaatsen"
+msgstr "Liturgisch evenement verplaatsen"
 
 #: extending.php:655
 msgid "Create Liturgical Event"
-msgstr "Creëer Liturgisch Evenement"
+msgstr "Creëer een liturgisch evenement"
 
 #: extending.php:672
 msgid "Choose from known Roman Missal language editions"
