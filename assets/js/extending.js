@@ -983,7 +983,9 @@ const updateRegionalCalendarForm = (data) => {
             document.querySelector('.currentLocalizationChoices').innerHTML = currentLocalizationChoices.map(([localeIso, localeDisplayName]) => {
                 return `<option value="${localeIso}">${localeDisplayName}</option>\n`;
             });
-            document.querySelector('#currentLocalization').value = API.locale !== '' ? API.locale : data.metadata.locales[0];
+            const defaultLocale = API.locale !== '' ? API.locale : data.metadata.locales[0];
+            document.querySelector('#currentLocalization').value = defaultLocale;
+            API.locale = defaultLocale;
             break;
         }
         case 'nation': {
