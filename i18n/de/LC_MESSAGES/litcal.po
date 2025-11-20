@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-20 18:42+0000\n"
-"PO-Revision-Date: 2025-11-20 20:51+0000\n"
+"PO-Revision-Date: 2025-11-20 22:11+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -490,7 +490,7 @@ msgstr "Ostertermine"
 
 #: usage.php:184
 msgid "Calculation of the Dates of Easter"
-msgstr "Berechnung der Osterdaten"
+msgstr "Berechnung der Ostertermine"
 
 #: usage.php:187
 msgid "Example display of the date of Easter from 1583 to 9999"
@@ -498,7 +498,7 @@ msgstr "Beispielanzeige des Osterdatums von 1583 bis 9999"
 
 #: usage.php:188
 msgid "Calculate the Dates of Easter"
-msgstr "Berechne die Osterdaten"
+msgstr "Berechne die Ostertermine"
 
 #: usage.php:198 layout/header.php:113
 msgid "Liturgy of the Day"
@@ -1068,8 +1068,8 @@ msgid ""
 msgstr ""
 "Die Übersetzungen der oben genannten liturgischen Ereignisse dürfen NICHT "
 "nur auf den sprachlichen Fähigkeiten des Übersetzers basieren, sondern "
-"MÜSSEN dem für die Region verwendeten Römischen Messbuch entnommen werden, "
-"für die Übersetzung erfolgt."
+"MÜSSEN dem in der betreffenden Region verwendeten Römischen Messbuch "
+"entnommen werden."
 
 #: translations.php:32
 msgid ""
@@ -1484,7 +1484,7 @@ msgstr "Dieses liturgische Ereignis existiert nicht, also wird es erstellt."
 
 #: src/Utilities.php:225
 msgid "Choose from existing liturgical events"
-msgstr "Wählen Sie aus vorhandenen liturgischen Ereignissen"
+msgstr "Wähle aus vorhandenen liturgischen Ereignissen"
 
 #: src/Utilities.php:225
 msgid "Choose from existing liturgical events (or create a new one)"
@@ -1517,7 +1517,7 @@ msgstr "Übersetzungen"
 
 #: layout/header.php:34
 msgid "Decrees"
-msgstr "Verordnungen"
+msgstr "Dekrete"
 
 #: layout/header.php:35
 msgid "About us"
