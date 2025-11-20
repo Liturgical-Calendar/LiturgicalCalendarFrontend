@@ -1633,8 +1633,9 @@ const actionPromptButtonClicked = (ev) => {
             const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
                                         .filter(({ value }) => value !== currentLocalization)
                                         .map(({ value }) => value);
-            const otherLocalizationsInputs = otherLocalizations.map(localization => translationTemplate(API.path, localization, ev.target));
-            controlsRow.querySelector(`#onTheFly${currentUniqid}Name`).insertAdjacentHTML('afterend', otherLocalizationsInputs.join(''));
+            const nameInput = controlsRow.querySelector(`#onTheFly${currentUniqid}Name`);
+            const otherLocalizationsInputs = otherLocalizations.map(localization => translationTemplate(API.path, localization, nameInput));
+            nameInput.insertAdjacentHTML('afterend', otherLocalizationsInputs.join(''));
         }
     }
 
