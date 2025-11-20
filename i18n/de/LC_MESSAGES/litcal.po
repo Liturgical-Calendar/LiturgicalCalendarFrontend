@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-20 18:42+0000\n"
-"PO-Revision-Date: 2025-11-20 18:42+0000\n"
+"PO-Revision-Date: 2025-11-20 19:40+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -268,14 +268,12 @@ msgid "Web calendar"
 msgstr "Webkalender"
 
 #: usage.php:39
-#, fuzzy
-#| msgid "HTML presentation elaborated by PHP using a CURL request"
 msgid ""
 "HTML presentation elaborated by PHP using the `@liturgical-calendar/"
 "components` package"
 msgstr ""
-"Eine HTML-Präsentation, die mit PHP unter Nutzung einer cURL-Anfrage "
-"erstellt wurde"
+"HTML-Präsentation, erstellt mit PHP unter Verwendung des Pakets `@liturgical-"
+"calendar/components`"
 
 #: usage.php:40
 msgid "View PHP Example"
@@ -286,6 +284,8 @@ msgid ""
 "HTML presentation elaborated by JavaScript using the `@liturgical-calendar/"
 "components-js` ESM module"
 msgstr ""
+"HTML-Präsentation, erstellt mit JavaScript unter Verwendung des ESM-Moduls "
+"`@liturgical-calendar/components-js`"
 
 #: usage.php:51
 msgid "View JavaScript Example"
@@ -296,15 +296,12 @@ msgid "Calendar"
 msgstr "Kalender"
 
 #: usage.php:61
-#, fuzzy
-#| msgid ""
-#| "FullCalendar representation elaborated by JAVASCRIPT using an AJAX request"
 msgid ""
 "FullCalendar representation elaborated by JavaScript using the `@liturgical-"
 "calendar/components-js` ESM module"
 msgstr ""
-"Präsentation Fullcalendar, die von JAVASCRIPT unter Verwendung einer AJAX-"
-"Anforderung ausgearbeitet wurde"
+"FullCalendar-Darstellung, erstellt mit JavaScript unter Verwendung des ESM-"
+"Moduls `@liturgical-calendar/components-js`"
 
 #: usage.php:62
 msgid "View FullCalendar"
@@ -492,20 +489,16 @@ msgid "Dates of Easter"
 msgstr "Ostertermine"
 
 #: usage.php:184
-#, fuzzy
-#| msgid "Calculation of the Date of Easter"
 msgid "Calculation of the Dates of Easter"
-msgstr "Berechnung des Osterdatums"
+msgstr "Berechnung der Osterdaten"
 
 #: usage.php:187
 msgid "Example display of the date of Easter from 1583 to 9999"
 msgstr "Beispielanzeige des Osterdatums von 1583 bis 9999"
 
 #: usage.php:188
-#, fuzzy
-#| msgid "Calculate the Date of Easter"
 msgid "Calculate the Dates of Easter"
-msgstr "Berechnen Sie das Osterdatums"
+msgstr "Berechne die Osterdaten"
 
 #: usage.php:198 layout/header.php:113
 msgid "Liturgy of the Day"
@@ -618,11 +611,11 @@ msgstr "Anderes Fest"
 
 #: extending.php:95 extending.php:503 extending.php:504
 msgid "Other Memorial"
-msgstr "Andere Gedenktag"
+msgstr "Anderer Gedenktag"
 
 #: extending.php:96 extending.php:524 extending.php:525
 msgid "Other Optional Memorial"
-msgstr "Andere Optionale Gedenktag"
+msgstr "Anderer optionale Gedenktage"
 
 #: extending.php:97
 msgid "Delete calendar"
@@ -699,7 +692,7 @@ msgstr "Rang ändern"
 #. translators: label of the form row
 #: extending.php:118
 msgid "Move liturgical event"
-msgstr "Liturgische Ereignis verschieben"
+msgstr "Liturgisches Ereignis verschieben"
 
 #: extending.php:119
 msgid "Decree URL"
@@ -723,7 +716,7 @@ msgstr "Patron bestimmen"
 
 #: extending.php:135 extending.php:619
 msgid "Change name or grade of existing liturgical event"
-msgstr "Namen oder Rang einer bestehenden liturgischen Ereignis ändern"
+msgstr "Namen oder Rang einer bestehenden liturgischen Ereignisses ändern"
 
 #: extending.php:136 extending.php:635
 msgid "Move liturgical event to new date"
@@ -932,11 +925,11 @@ msgstr "Abbrechen"
 
 #: extending.php:639
 msgid "Move Liturgical Event"
-msgstr "Liturgische Ereignis verschieben"
+msgstr "Liturgisches Ereignis verschieben"
 
 #: extending.php:655
 msgid "Create Liturgical Event"
-msgstr "Liturgische Ereignis erstellen"
+msgstr "Liturgisches Ereignis erstellen"
 
 #: extending.php:672
 msgid "Choose from known Roman Missal language editions"
@@ -1495,7 +1488,8 @@ msgstr "Wählen Sie aus vorhandenen liturgischen Ereignissen"
 
 #: src/Utilities.php:225
 msgid "Choose from existing liturgical events (or create a new one)"
-msgstr "Wähle aus bestehenden liturgischen Ereignisse oder erstelle eine neue"
+msgstr ""
+"Wähle aus bestehenden liturgischen Ereignissen (oder erstelle eine neue)"
 
 #: src/Utilities.php:231
 msgid "Property to change"
