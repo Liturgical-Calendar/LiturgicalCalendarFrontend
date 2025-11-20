@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-14 15:18+0000\n"
-"PO-Revision-Date: 2025-11-20 18:16+0000\n"
+"PO-Revision-Date: 2025-11-20 18:42+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -271,7 +271,7 @@ msgstr "Webkalender"
 #: usage.php:39
 msgid "HTML presentation elaborated by PHP using a CURL request"
 msgstr ""
-"HTML-Präsentation, die von JAVASCRIPT unter Verwendung einer CURL-Anfrage "
+"Eine HTML-Präsentation, die mit PHP unter Nutzung einer cURL-Anfrage "
 "erstellt wurde"
 
 #: usage.php:40
@@ -301,7 +301,7 @@ msgstr ""
 
 #: usage.php:62
 msgid "View FullCalendar"
-msgstr "FullCalender anzeigen"
+msgstr "FullCalendar anzeigen"
 
 #: usage.php:63
 msgid "View FullCalendar (messages first)"
