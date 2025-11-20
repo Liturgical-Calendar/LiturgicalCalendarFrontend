@@ -2227,6 +2227,10 @@ const loadDiocesanCalendarData = () => {
             throw new Error(response.status + ' ' + response.statusText + ': ' + response.url);
         }
     }).then(data => {
+        if (!data || !Array.isArray(data.litcal)) {
+            // 404 / new calendar case: nothing to fill, remain in PUT mode
+            return;
+        }
         API.method = 'PATCH';
         console.log('retrieved diocesan data:', data);
         toastr["success"]("Diocesan Calendar was retrieved successfully", "Success");
