@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-14 15:18+0000\n"
-"PO-Revision-Date: 2025-11-20 03:38+0000\n"
+"PO-Revision-Date: 2025-11-20 03:57+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -248,9 +248,9 @@ msgid ""
 "Universal or General Roman Calendar or for derived National and Diocesan "
 "calendars"
 msgstr ""
-"Een liturgische kalender-API waaruit u gegevens kunt ophalen voor de "
-"liturgische gebeurtenissen van een bepaald jaar vanaf 1970, of het nu gaat "
-"om de universele of algemene Romeinse kalender of om afgeleide nationale en "
+"Een API voor de liturgische kalender waarmee je data kunt ophalen voor "
+"liturgische evenementen van een willekeurig jaar vanaf 1970, of het nu de "
+"universele of algemene Romeinse kalender betreft, of afgeleide nationale en "
 "diocesane kalenders"
 
 #: usage.php:13
@@ -468,9 +468,9 @@ msgid ""
 "so the event descriptions provided by the subscription URL are a little bit "
 "more \"beautified\" for Outlook."
 msgstr ""
-"Outlook Kalender ondersteunt een minimale hoeveelheid HTML in de "
-"gebeurtenisbeschrijving, dus de gebeurtenisbeschrijvingen die door de "
-"abonnements-URL worden geleverd, zijn iets \"verfraaider\" voor Outlook."
+"Outlook Kalender ondersteunt slechts een minimale hoeveelheid HTML in de "
+"beschrijving van de evenementen, waardoor de beschrijvingen die door de "
+"abonnements-URL worden geleverd, wat meer \"verfraaid\" zijn voor Outlook."
 
 #: usage.php:176 layout/header.php:109
 msgid "Dates of Easter"
@@ -678,7 +678,7 @@ msgstr "Graad wijzigen"
 #. translators: label of the form row
 #: extending.php:118
 msgid "Move liturgical event"
-msgstr "Verplaats liturgische gebeurtenis"
+msgstr "Verplaats liturgische evenement"
 
 #: extending.php:119
 msgid "Decree URL"
@@ -702,11 +702,11 @@ msgstr "Patroonheilige aanwijzen"
 
 #: extending.php:135 extending.php:619
 msgid "Change name or grade of existing liturgical event"
-msgstr "Naam of rang van bestaande liturgische gebeurtenis wijzigen"
+msgstr "Naam of rang van bestaande liturgische evenement wijzigen"
 
 #: extending.php:136 extending.php:635
 msgid "Move liturgical event to new date"
-msgstr "Verplaats liturgische gebeurtenis naar nieuwe datum"
+msgstr "Verplaats liturgische evenement naar nieuwe datum"
 
 #: extending.php:137 extending.php:651
 msgid "Create a new liturgical event"
@@ -911,7 +911,7 @@ msgstr "Annuleren"
 
 #: extending.php:639
 msgid "Move Liturgical Event"
-msgstr "Liturgische gebeurtenis verplaatsen"
+msgstr "Liturgische evenement verplaatsen"
 
 #: extending.php:655
 msgid "Create Liturgical Event"
@@ -1051,7 +1051,7 @@ msgid ""
 "taken from the Roman Missal used in the region for which the translation is "
 "accomplished."
 msgstr ""
-"Vertalingen van de bovengenoemde liturgische gebeurtenissen mogen NIET "
+"Vertalingen van de bovengenoemde liturgische evenementen mogen NIET "
 "eenvoudigweg gebaseerd zijn op de taalkundige capaciteiten van de vertaler, "
 "maar MOETEN afkomstig zijn uit het Romeins Missaal dat in de regio wordt "
 "gebruikt waarvoor de vertaling is bedoeld."
@@ -1062,7 +1062,7 @@ msgid ""
 "edition of the Roman Missal to the next; translators should simply use the "
 "most recent edition of the Roman Missal for their region as a reference."
 msgstr ""
-"Vertalingen van bovengenoemde liturgische gebeurtenissen kunnen van de ene "
+"Vertalingen van bovengenoemde liturgische evenementen kunnen van de ene "
 "editie van het Romeins Missaal naar de andere veranderen; vertalers moeten "
 "eenvoudigweg de meest recente editie van het Romeins Missaal voor hun regio "
 "als referentie gebruiken."
@@ -1465,8 +1465,7 @@ msgstr ""
 
 #: src/Utilities.php:220
 msgid "This liturgical event does not exist, so it will be created."
-msgstr ""
-"Deze liturgische gebeurtenis bestaat niet, dus zal deze worden gecreëerd."
+msgstr "Deze liturgische evenement bestaat niet, dus zal deze worden gecreëerd."
 
 #: src/Utilities.php:225
 msgid "Choose from existing liturgical events"
