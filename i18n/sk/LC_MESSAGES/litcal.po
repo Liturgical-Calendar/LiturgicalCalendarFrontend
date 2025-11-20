@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-20 18:42+0000\n"
-"PO-Revision-Date: 2025-11-20 20:51+0000\n"
+"PO-Revision-Date: 2025-11-20 22:11+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
@@ -662,12 +662,12 @@ msgstr "Nová liturgická udalosť"
 #. translators: label of the form row
 #: extending.php:114
 msgid "Change name"
-msgstr "Zmeň meno"
+msgstr "Zmeniť meno"
 
 #. translators: label of the form row
 #: extending.php:116
 msgid "Change grade"
-msgstr "Zmeň stupeň"
+msgstr "Zmeniť stupeň"
 
 #. translators: label of the form row
 #: extending.php:118
@@ -1349,7 +1349,7 @@ msgstr "Ľubovoľná spomienka"
 #. translators: liturgical rank. Keep Capitalized
 #: src/LitGrade.php:111
 msgid "Memorial"
-msgstr "Pamätník"
+msgstr "Pamiatka"
 
 #. translators: liturgical rank. Keep UPPERCASE
 #: src/LitGrade.php:114
