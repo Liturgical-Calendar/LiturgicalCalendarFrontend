@@ -5,7 +5,13 @@ include_once('vendor/autoload.php');
 use LiturgicalCalendar\Frontend\I18n;
 use Dotenv\Dotenv;
 
-$ghReleaseCacheFile = 'assets/json/github-latest-release.json';
+$ghReleaseCacheFolder = 'assets' . DIRECTORY_SEPARATOR . 'json' . DIRECTORY_SEPARATOR;
+$ghReleaseCacheFile   = $ghReleaseCacheFolder . 'github-latest-release.json';
+if (false === file_exists($ghReleaseCacheFolder)) {
+    if (!mkdir($ghReleaseCacheFolder, 0755, true)) {
+        die('Could not create cache folder for github latest release info at ' . $ghReleaseCacheFolder);
+    }
+}
 if (false === file_exists($ghReleaseCacheFile) || ( time() - filemtime($ghReleaseCacheFile) ) > 86400) {
     $GithubReleasesAPI = 'https://api.github.com/repos/Liturgical-Calendar/LiturgicalCalendarAPI/releases/latest';
 
