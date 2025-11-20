@@ -36,7 +36,7 @@ $API_DESCRIPTION = _('A Liturgical Calendar API from which you can retrieve data
                                         <h6 class="m-0 font-weight-bold text-primary">PHP<i class="fab fa-php float-end text-black" style="--bs-text-opacity: .15;"></i></h6>
                                     </div>
                                     <div class="card-body">
-                                        <p><?php echo _('HTML presentation elaborated by PHP using a CURL request'); ?></p>
+                                        <p><?php echo _('HTML presentation elaborated by PHP using the `@liturgical-calendar/components` package'); ?></p>
                                         <div class="text-center"><a href="examples.php?example=PHP" class="btn btn-primary"><?php echo _('View PHP Example'); ?></a></div>
                                     </div>
                                 </div>
@@ -47,7 +47,7 @@ $API_DESCRIPTION = _('A Liturgical Calendar API from which you can retrieve data
                                         <h6 class="m-0 font-weight-bold text-primary">JavaScript<i class="fab fa-js float-end text-black" style="--bs-text-opacity: .15;"></i></h6>
                                     </div>
                                     <div class="card-body">
-                                        <p><?php echo _('HTML presentation elaborated by JAVASCRIPT using an AJAX request'); ?></p>
+                                        <p><?php echo _('HTML presentation elaborated by JavaScript using the `@liturgical-calendar/components-js` ESM module'); ?></p>
                                         <div class="text-center"><a href="examples.php?example=JavaScript" class="btn btn-primary"><?php echo _('View JavaScript Example'); ?></a></div>
                                     </div>
                                 </div>
@@ -58,7 +58,7 @@ $API_DESCRIPTION = _('A Liturgical Calendar API from which you can retrieve data
                                         <h6 class="m-0 font-weight-bold text-primary"><?php echo _('Calendar'); ?><i class="far fa-calendar float-end text-black" style="--bs-text-opacity: .15;"></i></h6>
                                     </div>
                                     <div class="card-body">
-                                        <p><?php echo _('FullCalendar representation elaborated by JAVASCRIPT using an AJAX request'); ?></p>
+                                        <p><?php echo _('FullCalendar representation elaborated by JavaScript using the `@liturgical-calendar/components-js` ESM module'); ?></p>
                                         <div class="text-center"><a href="examples.php?example=FullCalendar" class="btn btn-primary"><?php echo _('View FullCalendar'); ?></a></div>
                                         <div class="text-center"><a href="examples.php?example=FullCalendarMessages" class="btn btn-primary mt-2"><?php echo _('View FullCalendar (messages first)'); ?></a></div>
                                     </div>
@@ -181,11 +181,11 @@ $API_DESCRIPTION = _('A Liturgical Calendar API from which you can retrieve data
                         <div class="col-md-6">
                             <div class="card shadow m-2">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary"><?php echo _('Calculation of the Date of Easter'); ?>: Example interface<i class="fas fa-poll-h float-end fa-2x text-light"></i></h6>
+                                    <h6 class="m-0 font-weight-bold text-primary"><?php echo _('Calculation of the Dates of Easter'); ?>: Example interface<i class="fas fa-poll-h float-end fa-2x text-light"></i></h6>
                                 </div>
                                 <div class="card-body">
                                     <p><?php echo _('Example display of the date of Easter from 1583 to 9999'); ?></p>
-                                    <div class="text-center"><a href="easter.php" class="btn btn-primary m-2"><?php echo _('Calculate the Date of Easter'); ?></a></div>
+                                    <div class="text-center"><a href="easter.php" class="btn btn-primary m-2"><?php echo _('Calculate the Dates of Easter'); ?></a></div>
                                 </div>
                             </div>
                         </div>
