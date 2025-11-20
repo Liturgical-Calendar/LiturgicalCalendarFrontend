@@ -83,7 +83,16 @@ curl_close($ch);
 
             foreach ($LitCalDecrees as $decree) {
                 // Nav item
-                $navItems[] = "<li class=\"nav-item small border\"><a class=\"nav-link rounded-0\" href=\"#{$decree['decree_id']}\">{$decree['decree_protocol']}\t({$decree['decree_date']})</a></li>";
+                $decreeID          = htmlspecialchars($decree['decree_id'], ENT_QUOTES, 'UTF-8');
+                $decreeProtocol    = htmlspecialchars($decree['decree_protocol'], ENT_QUOTES, 'UTF-8');
+                $decreeDate        = htmlspecialchars($decree['decree_date'], ENT_QUOTES, 'UTF-8');
+                $decreeDescription = htmlspecialchars($decree['description'], ENT_QUOTES, 'UTF-8');
+                $decreeLitEventKey = htmlspecialchars($decree['liturgical_event']['event_key'], ENT_QUOTES, 'UTF-8');
+                if (false === is_int($decree['metadata']['since_year'])) {
+                    throw new Exception('Decree metadata "since_year" is not an integer');
+                }
+
+                $navItems[] = "<li class=\"nav-item small border\"><a class=\"nav-link rounded-0\" href=\"#{$decreeID}\">{$decreeProtocol}\t({$decreeDate})</a></li>";
 
                 // Card item
                 if (array_key_exists('url_lang_map', $decree['metadata'])) {
@@ -109,21 +118,21 @@ curl_close($ch);
                     }
                 }
 
-                $cardItems[] = "<div class='card mb-3' id=\"{$decree['decree_id']}\">"
+                $cardItems[] = "<div class='card mb-3' id=\"{$decreeID}\">"
                     . "<div class='card-header'>"
-                    . "<h5 class='card-title d-flex justify-content-between'><div>{$decree['decree_protocol']}</div><div>" . $messages[$ActionCardTitle] . '</div></h5>'
-                    . "<h6 class='card-subtitle mb-2 text-muted d-flex justify-content-between'><div>{$decree['decree_date']}</div><div>{$decree['decree_id']}</div></h6>"
+                    . "<h5 class='card-title d-flex justify-content-between'><div>{$decreeProtocol}</div><div>" . $messages[$ActionCardTitle] . '</div></h5>'
+                    . "<h6 class='card-subtitle mb-2 text-muted d-flex justify-content-between'><div>{$decreeDate}</div><div>{$decreeID}</div></h6>"
                     . '</div>'
                     . "<div class='card-body'>"
-                    . "<p class='card-text'>{$decree['description']}<a href='{$decree['url']}' class='ms-2' target='_blank'>" . _('Read the Decree') . '</a></p>'
+                    . "<p class='card-text'>{$decreeDescription}<a href='{$decree['url']}' class='ms-2' target='_blank'>" . _('Read the Decree') . '</a></p>'
                     . '<div class="row gx-2 align-items-baseline">'
                     . '<div class="form-group col-sm-4">'
-                    . "<label for='event_key_{$decree['decree_id']}' class='event_key'>Event Key</label>"
-                    . "<input type='text' class='form-control event_key' id='event_key_{$decree['decree_id']}' value='{$decree['liturgical_event']['event_key']}' list='existingLiturgicalEventsList' disabled>"
+                    . "<label for='event_key_{$decreeID}' class='event_key'>Event Key</label>"
+                    . "<input type='text' class='form-control event_key' id='event_key_{$decreeID}' value='{$decreeLitEventKey}' list='existingLiturgicalEventsList' disabled>"
                     . '</div>'
                     . '<div class="form-group col-sm-2">'
-                    . "<label for='since_year_{$decree['decree_id']}' class='since_year'>To take effect in the year</label>"
-                    . "<input type='number' class='form-control since_year' id='since_year_{$decree['decree_id']}' value='{$decree['metadata']['since_year']}' min='" . (int) date('Y', strtotime($decree['decree_date'])) . "' disabled>"
+                    . "<label for='since_year_{$decreeID}' class='since_year'>To take effect in the year</label>"
+                    . "<input type='number' class='form-control since_year' id='since_year_{$decreeID}' value='{$decree['metadata']['since_year']}' min='" . (int) date('Y', strtotime($decreeDate)) . "' disabled>"
                     . '</div>'
                     . '</div>'
                     . '</div>'
