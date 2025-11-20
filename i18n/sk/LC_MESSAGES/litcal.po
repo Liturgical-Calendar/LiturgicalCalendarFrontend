@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-14 15:18+0000\n"
-"PO-Revision-Date: 2025-11-20 03:59+0000\n"
+"PO-Revision-Date: 2025-11-20 18:16+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
@@ -655,7 +655,7 @@ msgstr "Zmeň meno"
 #. translators: label of the form row
 #: extending.php:116
 msgid "Change grade"
-msgstr "Zmeniť známku"
+msgstr "Zmeniť stupeň"
 
 #. translators: label of the form row
 #: extending.php:118
