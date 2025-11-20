@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-14 15:18+0000\n"
-"PO-Revision-Date: 2025-11-15 04:03+0000\n"
+"PO-Revision-Date: 2025-11-20 03:38+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -193,7 +193,7 @@ msgstr "Übersetzungsstatus"
 
 #: index.php:159
 msgid "Open API Schema"
-msgstr "Open API Schema"
+msgstr "OpenAPI-Schema"
 
 #: index.php:162
 msgid "Swagger / Open API Documentation"
@@ -220,13 +220,14 @@ msgid ""
 "(observed by the Roman Catholic church) and of the Meeus algorithm for "
 "Julian easter (observed by orthodox churches)."
 msgstr ""
-"Ein einfacher API-Endpunkt, der Daten zum Osterdatum zurückgibt, sowohl "
-"Gregorianisch als auch Julianisch, aus dem Jahr 1583 (Jahr der Annahme des "
-"Gregorianischen Kalenders) bis 9999 (maximal mögliche Datumsberechnung in 64-"
-"Bit-PHP) unter Verwendung einer PHP-Anpassung des Meeus / Jones / Butcher-"
-"Algorithmus für Gregorianische Ostern (beobachtet von der römisch-"
-"katholischen Kirche) und des Meeus-Algorithmus für Julian Easter (von "
-"orthodoxen Kirchen beobachtet)"
+"Ein einfacher API-Service, der Informationen zum Osterdatum liefert, sowohl "
+"im gregorianischen als auch im julianischen Kalender, von 1583 "
+"(dem Jahr der Einführung des gregorianischen Kalenders) bis 9999 "
+"(maximale Datumsberechnung in 64-Bit-PHP möglich), mit einer PHP-basierten "
+"Adaption des Meeus/Jones/Butcher-Algorithmus für das gregorianische "
+"Osterdatum (gefeiert von der Römisch-Katholischen Kirche) und des Meeus-"
+"Algorithmus für das julianische Osterdatum "
+"(wie von orthodoxen Kirchen gefeiert)."
 
 #: index.php:178
 msgid "Date of Easter API endpoint"
@@ -544,34 +545,26 @@ msgid "(see <a href=\"translations.php\">Translations</a>)"
 msgstr "(siehe <a href=\"translations.php\">Übersetzungen</a>)"
 
 #: extending.php:84
-#, fuzzy
-#| msgid ""
-#| "A national calendar may have some festivities in common with other "
-#| "national calendars, for example the patron of a wider region."
 msgid ""
 "A national calendar may have some liturgical events in common with other "
 "national calendars, for example the patron of a wider region."
 msgstr ""
-"Ein Nationalkalender kann einige Feste mit anderen Nationalkalendern "
-"gemeinsam haben, zum Beispiel den Patron einer größeren Region."
+"Ein nationaler Kalender kann einige liturgische Ereignisse mit anderen "
+"nationalen Kalendern gemeinsam haben, zum Beispiel den Patron einer größeren "
+"Region."
 
 #: extending.php:85
-#, fuzzy
-#| msgid ""
-#| "In this case, the festivities for the wider region should be defined "
-#| "separately, and the languages applicable to the wider region should be "
-#| "set; the wider region data will then be applied automatically to national "
-#| "calendars belonging to the wider region."
 msgid ""
 "In this case, the liturgical events for the wider region should be defined "
 "separately, and the languages applicable to the wider region should be set; "
 "the wider region data will then be applied automatically to national "
 "calendars belonging to the wider region."
 msgstr ""
-"In diesem Fall sollten die Festlichkeiten für die weitere Region separat "
-"definiert und die für die weitere Region geltenden Sprachen festgelegt "
-"werden; die Daten der weiteren Region werden dann automatisch auf die "
-"nationalen Kalender der weiteren Region angewendet."
+"In diesem Fall sollten die liturgischen Ereignisse für die weitere Region "
+"separat festgelegt werden, und die für die weitere Region geltenden Sprachen "
+"sollten festgelegt werden; die Daten der weiteren Region werden dann "
+"automatisch auf die nationalen Kalender angewendet, die zur weiteren Region "
+"gehören."
 
 #: extending.php:86
 msgid ""
@@ -676,26 +669,22 @@ msgstr "Schutzpatron oder Schutzpatrone der weiteren Region"
 #. translators: label of the form row
 #: extending.php:112
 msgid "New liturgical event"
-msgstr ""
+msgstr "Neues liturgisches Ereignis"
 
 #. translators: label of the form row
 #: extending.php:114
-#, fuzzy
-#| msgid "Change name or grade"
 msgid "Change name"
-msgstr "Name oder Rang ändern"
+msgstr "Namen ändern"
 
 #. translators: label of the form row
 #: extending.php:116
-#, fuzzy
-#| msgid "Change name or grade"
 msgid "Change grade"
-msgstr "Name oder Rang ändern"
+msgstr "Rang ändern"
 
 #. translators: label of the form row
 #: extending.php:118
 msgid "Move liturgical event"
-msgstr ""
+msgstr "Liturgische Veranstaltung verschieben"
 
 #: extending.php:119
 msgid "Decree URL"
@@ -710,32 +699,24 @@ msgid "Missal"
 msgstr "Messbuch"
 
 #: extending.php:122
-#, fuzzy
-#| msgid "Reason (in favor of festivity)"
 msgid "Reason (in favor of liturgical event)"
-msgstr "Grund (zugunsten der Festlichkeit)"
+msgstr "Grund (zugunsten des liturgischen Ereignisses)"
 
 #: extending.php:134 extending.php:603 extending.php:607
 msgid "Designate patron"
 msgstr "Patron bestimmen"
 
 #: extending.php:135 extending.php:619
-#, fuzzy
-#| msgid "Change name or grade of existing festivity"
 msgid "Change name or grade of existing liturgical event"
-msgstr "Name oder Rang einer bestehenden Festlichkeit ändern"
+msgstr "Namen oder Rang einer bestehenden liturgischen Feier ändern"
 
 #: extending.php:136 extending.php:635
-#, fuzzy
-#| msgid "Move festivity to new date"
 msgid "Move liturgical event to new date"
-msgstr "Fest auf neues Datum verschieben"
+msgstr "Liturgisches Ereignis auf neues Datum verschieben"
 
 #: extending.php:137 extending.php:651
-#, fuzzy
-#| msgid "Create a new festivity"
 msgid "Create a new liturgical event"
-msgstr "Eine neue Festlichkeit erstellen"
+msgstr "Erstelle ein neues liturgisches Ereignis"
 
 #: extending.php:143
 msgid "General Roman Calendar - Extending"
@@ -851,7 +832,7 @@ msgstr "Gruppe von Diözesen"
 
 #: extending.php:412
 msgid "Timezone"
-msgstr ""
+msgstr "Zeitzone"
 
 #: extending.php:432
 msgid "Solemnities"
@@ -935,16 +916,12 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 #: extending.php:639
-#, fuzzy
-#| msgid "Catholic Liturgical Calendar"
 msgid "Move Liturgical Event"
-msgstr "Katholischer Liturgischer Kalender"
+msgstr "Liturgische Veranstaltung verschieben"
 
 #: extending.php:655
-#, fuzzy
-#| msgid "Catholic Liturgical Calendar"
 msgid "Create Liturgical Event"
-msgstr "Katholischer Liturgischer Kalender"
+msgstr "Liturgische Veranstaltung erstellen"
 
 #: extending.php:672
 msgid "Choose from known Roman Missal language editions"
@@ -1075,47 +1052,29 @@ msgstr ""
 "übersetzt, solltest du auch die Komponente %1$s übersetzen."
 
 #: translations.php:31
-#, fuzzy
-#| msgid ""
-#| "Translations of the above mentioned festivities MUST NOT be done simply "
-#| "based on the linguistic abilities of the translator, but MUST be taken "
-#| "from the Roman Missal used in the region for which the translation is "
-#| "accomplished."
 msgid ""
 "Translations of the above mentioned liturgical events MUST NOT be done "
 "simply based on the linguistic abilities of the translator, but MUST be "
 "taken from the Roman Missal used in the region for which the translation is "
 "accomplished."
 msgstr ""
-"Die Übersetzungen der oben genannten Festlichkeiten DÜRFEN NICHT einfach auf "
-"den sprachlichen Fähigkeiten des Übersetzers basieren, sondern MÜSSEN dem "
-"Römischen Messbuch entnommen werden, das in der Region verwendet wird, für "
-"die Übersetzung erfolgt."
+"Die Übersetzungen der oben genannten liturgischen Ereignisse dürfen NICHT "
+"nur auf den sprachlichen Fähigkeiten des Übersetzers basieren, sondern "
+"MÜSSEN dem für die Region verwendeten Römischen Messbuch entnommen werden, "
+"für die Übersetzung erfolgt."
 
 #: translations.php:32
-#, fuzzy
-#| msgid ""
-#| "Translations of the above mentioned festivities may change from one "
-#| "edition of the Roman Missal to the next; translators should simply use "
-#| "the most recent edition of the Roman Missal for their region as a "
-#| "reference."
 msgid ""
 "Translations of the above mentioned liturgical events may change from one "
 "edition of the Roman Missal to the next; translators should simply use the "
 "most recent edition of the Roman Missal for their region as a reference."
 msgstr ""
-"Die Übersetzungen der oben genannten Festlichkeiten können sich von einer "
-"Ausgabe des Römischen Messbuchs zur nächsten ändern; Übersetzer sollten "
-"einfach die neueste Ausgabe des Römischen Messbuchs für ihre Region als "
-"Referenz verwenden."
+"Übersetzungen der oben genannten liturgischen Ereignisse können sich von "
+"einer Ausgabe des Römischen Messbuchs zur nächsten ändern; Übersetzer "
+"sollten einfach die neueste Ausgabe des Römischen Messbuchs für ihre Region "
+"als Referenz verwenden."
 
 #: translations.php:33
-#, fuzzy
-#| msgid ""
-#| "This API intends to be historically correct as regards the calculation of "
-#| "the dates and the precedence of the festivities, but does not pretend "
-#| "historical accuracy as regards differences in the translations of the "
-#| "festivities over time."
 msgid ""
 "This API intends to be historically correct as regards the calculation of "
 "the dates and the precedence of the liturgical events, but does not pretend "
@@ -1123,9 +1082,9 @@ msgid ""
 "liturgical events over time."
 msgstr ""
 "Diese API beabsichtigt, historisch korrekt in Bezug auf die Berechnung der "
-"Daten und die Reihenfolge der Festlichkeiten zu sein, erhebt jedoch keinen "
-"Anspruch auf historische Genauigkeit in Bezug auf Unterschiede in den "
-"Übersetzungen der Festlichkeiten im Laufe der Zeit."
+"Daten und die Vorherrschaft der liturgischen Ereignisse zu sein, erhebt "
+"jedoch keinen Anspruch auf historische Genauigkeit in Bezug auf Unterschiede "
+"in den Übersetzungen der liturgischen Ereignisse im Laufe der Zeit."
 
 #: translations.php:35
 msgid ""
@@ -1504,38 +1463,25 @@ msgstr ""
 "in Englisch und Französisch bei"
 
 #: src/Utilities.php:219
-#, fuzzy
-#| msgid ""
-#| "This festivity does not seem to exist? Please choose from a value in the "
-#| "list."
 msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
 msgstr ""
-"Dieses Fest scheint nicht zu existieren? Bitte wähle einen Wert aus der "
-"Liste."
+"Dieses liturgische Ereignis scheint nicht zu existieren. Bitte wähle einen "
+"Wert aus der Liste."
 
 #: src/Utilities.php:220
-#, fuzzy
-#| msgid ""
-#| "This festivity does not seem to exist? Please choose from a value in the "
-#| "list."
 msgid "This liturgical event does not exist, so it will be created."
-msgstr ""
-"Dieses Fest scheint nicht zu existieren? Bitte wähle einen Wert aus der "
-"Liste."
+msgstr "Dieses liturgische Ereignis existiert nicht, also wird es erstellt."
 
 #: src/Utilities.php:225
-#, fuzzy
-#| msgid "Choose from existing festivities"
 msgid "Choose from existing liturgical events"
-msgstr "Aus bestehenden Festen wählen"
+msgstr "Wählen Sie aus vorhandenen liturgischen Ereignissen"
 
 #: src/Utilities.php:225
-#, fuzzy
-#| msgid "Choose from existing festivities"
 msgid "Choose from existing liturgical events (or create a new one)"
-msgstr "Aus bestehenden Festen wählen"
+msgstr ""
+"Wähle aus bestehenden liturgischen Veranstaltungen oder erstelle eine neue"
 
 #: src/Utilities.php:231
 msgid "Property to change"
@@ -1562,10 +1508,8 @@ msgid "Translations"
 msgstr "Übersetzungen"
 
 #: layout/header.php:34
-#, fuzzy
-#| msgid "Decree URL"
 msgid "Decrees"
-msgstr "Dekret-URL"
+msgstr "Verordnungen"
 
 #: layout/header.php:35
 msgid "About us"
