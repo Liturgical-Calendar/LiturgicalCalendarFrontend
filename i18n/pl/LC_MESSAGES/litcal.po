@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-20 18:42+0000\n"
-"PO-Revision-Date: 2025-11-20 20:15+0000\n"
+"PO-Revision-Date: 2025-11-20 20:51+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pl/>\n"
@@ -1138,7 +1138,7 @@ msgstr "Liturgia %s"
 #. translators: context = liturgical color
 #: src/LitColor.php:41
 msgid "rose"
-msgstr "róża"
+msgstr "różowy"
 
 #: src/LitCommon.php:57
 msgid "Proper"
