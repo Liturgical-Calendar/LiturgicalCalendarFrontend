@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-20 18:42+0000\n"
-"PO-Revision-Date: 2025-11-20 20:14+0000\n"
+"PO-Revision-Date: 2025-11-20 20:51+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
@@ -611,11 +611,11 @@ msgstr "Otra fiesta"
 
 #: extending.php:95 extending.php:503 extending.php:504
 msgid "Other Memorial"
-msgstr "Otro Memorial"
+msgstr "Otra memoria"
 
 #: extending.php:96 extending.php:524 extending.php:525
 msgid "Other Optional Memorial"
-msgstr "Otro Memorial Opcional"
+msgstr "Otro memoria opcional"
 
 #: extending.php:97
 msgid "Delete calendar"
@@ -829,7 +829,8 @@ msgid ""
 "calendar."
 msgstr ""
 "¿Esta diócesis no parece existir? Elija un valor de la lista para recuperar "
-"una diócesis existente, o ignorar si crea un nuevo calendario diocesano.."
+"una diócesis existente, o ignorar si está creando un nuevo calendario "
+"diocesano."
 
 #: extending.php:377
 msgid "Diocesan group"
@@ -1370,7 +1371,7 @@ msgstr "Conmemoración"
 #. translators: liturgical rank. Keep Capitalized
 #: src/LitGrade.php:108
 msgid "Optional memorial"
-msgstr "Memoria facultativa"
+msgstr "Memoria opcional"
 
 #. translators: liturgical rank. Keep Capitalized
 #: src/LitGrade.php:111
