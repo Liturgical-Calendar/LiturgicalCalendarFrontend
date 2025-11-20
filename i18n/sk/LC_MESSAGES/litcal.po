@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024.
+# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024, 2025.
 # Milan Šalka <salka.milan@googlemail.com>, 2024.
 # Weblate Admin <admin@example.com>, 2024, 2025.
 # Lovro <development.lovro@gmail.com>, 2025.
@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-14 15:18+0000\n"
-"PO-Revision-Date: 2025-02-01 13:05+0000\n"
-"Last-Translator: Lovro <development.lovro@gmail.com>\n"
+"PO-Revision-Date: 2025-11-20 03:38+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
 "Language: sk\n"
@@ -19,13 +19,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 5.8.4\n"
+"X-Generator: Weblate 5.13.3\n"
 
 #: index.php:5
 msgid ""
 "Collection of Liturgical events for any given year between 1970 and 9999."
-msgstr ""
-"Zbierka liturgických udalostí na akýkoľvek daný rok medzi rokmi 1970 a 9999."
+msgstr "Liturgická kolekcia pre ktorýkoľvek rok v rozmedzí od 1970 do 9999."
 
 #. translators: 1. /calendar, 2. /calendar/nation/{NATION}, 3. /calendar/diocese/{DIOCESE}
 #: index.php:8
@@ -525,34 +524,24 @@ msgid "(see <a href=\"translations.php\">Translations</a>)"
 msgstr "(pozri <a href=\"translations.php\">Preklady</a>)"
 
 #: extending.php:84
-#, fuzzy
-#| msgid ""
-#| "A national calendar may have some festivities in common with other "
-#| "national calendars, for example the patron of a wider region."
 msgid ""
 "A national calendar may have some liturgical events in common with other "
 "national calendars, for example the patron of a wider region."
 msgstr ""
-"Národný kalendár môže mať niektoré sviatky spoločné s inými národnými "
-"kalendármi, napríklad patróna širšieho regiónu."
+"Národný kalendár môže mať niektoré liturgické udalosti spoločné s inými "
+"národnými kalendármi, napríklad patróna širšej oblasti."
 
 #: extending.php:85
-#, fuzzy
-#| msgid ""
-#| "In this case, the festivities for the wider region should be defined "
-#| "separately, and the languages applicable to the wider region should be "
-#| "set; the wider region data will then be applied automatically to national "
-#| "calendars belonging to the wider region."
 msgid ""
 "In this case, the liturgical events for the wider region should be defined "
 "separately, and the languages applicable to the wider region should be set; "
 "the wider region data will then be applied automatically to national "
 "calendars belonging to the wider region."
 msgstr ""
-"V tomto prípade by mali byť slávnosti pre širší región definované samostatne "
-"a mali by byť nastavené jazyky platné pre širší región; údaje o širšom "
-"regióne sa potom automaticky použijú na národné kalendáre patriace do "
-"širšieho regiónu."
+"V tomto prípade by mali byť liturgické udalosti pre širší región definované "
+"osobitne a jazyky platné pre širší región by mali byť nastavené; údaje "
+"širšieho regiónu sa potom automaticky použijú na národné kalendáre patriace "
+"do širšieho regiónu."
 
 #: extending.php:86
 msgid ""
@@ -656,26 +645,22 @@ msgstr "Patrón alebo Patróni širšieho regiónu"
 #. translators: label of the form row
 #: extending.php:112
 msgid "New liturgical event"
-msgstr ""
+msgstr "Nová liturgická udalosť"
 
 #. translators: label of the form row
 #: extending.php:114
-#, fuzzy
-#| msgid "Change name or grade"
 msgid "Change name"
-msgstr "Zmeniť meno alebo známku"
+msgstr "Zmeň meno"
 
 #. translators: label of the form row
 #: extending.php:116
-#, fuzzy
-#| msgid "Change name or grade"
 msgid "Change grade"
-msgstr "Zmeniť meno alebo známku"
+msgstr "Zmeniť známku"
 
 #. translators: label of the form row
 #: extending.php:118
 msgid "Move liturgical event"
-msgstr ""
+msgstr "Presunúť liturgickú udalosť"
 
 #: extending.php:119
 msgid "Decree URL"
@@ -690,32 +675,24 @@ msgid "Missal"
 msgstr "Misál"
 
 #: extending.php:122
-#, fuzzy
-#| msgid "Reason (in favor of festivity)"
 msgid "Reason (in favor of liturgical event)"
-msgstr "Dôvod (v prospech slávnosti)"
+msgstr "Dôvod (v prospech liturgickej udalosti)"
 
 #: extending.php:134 extending.php:603 extending.php:607
 msgid "Designate patron"
 msgstr "Určiť patróna"
 
 #: extending.php:135 extending.php:619
-#, fuzzy
-#| msgid "Change name or grade of existing festivity"
 msgid "Change name or grade of existing liturgical event"
-msgstr "Zmeniť názov alebo stupeň existujúcej slávnosti"
+msgstr "Zmeň názov alebo stupeň existujúcej liturgickej udalosti"
 
 #: extending.php:136 extending.php:635
-#, fuzzy
-#| msgid "Move festivity to new date"
 msgid "Move liturgical event to new date"
-msgstr "Presuňte slávnosť na nový dátum"
+msgstr "Presuň liturgickú udalosť na nový dátum"
 
 #: extending.php:137 extending.php:651
-#, fuzzy
-#| msgid "Create a new festivity"
 msgid "Create a new liturgical event"
-msgstr "Vytvorte nový sviatok"
+msgstr "Vytvoriť novú liturgickú udalosť"
 
 #: extending.php:143
 msgid "General Roman Calendar - Extending"
@@ -828,7 +805,7 @@ msgstr "Diecézna skupina"
 
 #: extending.php:412
 msgid "Timezone"
-msgstr ""
+msgstr "Časové pásmo"
 
 #: extending.php:432
 msgid "Solemnities"
@@ -907,16 +884,12 @@ msgid "Cancel"
 msgstr "Zrušiť"
 
 #: extending.php:639
-#, fuzzy
-#| msgid "Catholic Liturgical Calendar"
 msgid "Move Liturgical Event"
-msgstr "Katolícky liturgický kalendár"
+msgstr "Premiestni liturgickú udalosť"
 
 #: extending.php:655
-#, fuzzy
-#| msgid "Catholic Liturgical Calendar"
 msgid "Create Liturgical Event"
-msgstr "Katolícky liturgický kalendár"
+msgstr "Vytvoriť liturgickú udalosť"
 
 #: extending.php:672
 msgid "Choose from known Roman Missal language editions"
@@ -1045,54 +1018,36 @@ msgstr ""
 "budeš chcieť preložiť aj komponent %1$s."
 
 #: translations.php:31
-#, fuzzy
-#| msgid ""
-#| "Translations of the above mentioned festivities MUST NOT be done simply "
-#| "based on the linguistic abilities of the translator, but MUST be taken "
-#| "from the Roman Missal used in the region for which the translation is "
-#| "accomplished."
 msgid ""
 "Translations of the above mentioned liturgical events MUST NOT be done "
 "simply based on the linguistic abilities of the translator, but MUST be "
 "taken from the Roman Missal used in the region for which the translation is "
 "accomplished."
 msgstr ""
-"Preklady vyššie uvedených sviatkov NESMÚ byť vykonané len na základe "
-"jazykových schopností prekladateľa, ale MUSIA byť prevzaté z Rímskeho misála "
-"používaného v regióne, pre ktorý sa preklad vykonáva."
+"Preklady vyššie uvedených liturgických udalostí NESMÚ byť vykonávané len na "
+"základe jazykových schopností prekladateľa, ale MUSIA byť prevzaté z "
+"Rímskeho misála používaného v oblasti, pre ktorú je preklad určený."
 
 #: translations.php:32
-#, fuzzy
-#| msgid ""
-#| "Translations of the above mentioned festivities may change from one "
-#| "edition of the Roman Missal to the next; translators should simply use "
-#| "the most recent edition of the Roman Missal for their region as a "
-#| "reference."
 msgid ""
 "Translations of the above mentioned liturgical events may change from one "
 "edition of the Roman Missal to the next; translators should simply use the "
 "most recent edition of the Roman Missal for their region as a reference."
 msgstr ""
-"Preklady vyššie uvedených sviatkov sa môžu meniť z jednej edície Rímskeho "
-"misála na druhú; prekladatelia by mali jednoducho použiť najnovšiu edíciu "
-"Rímskeho misála pre svoj región ako referenciu."
+"Preklady vyššie uvedených liturgických udalostí sa môžu meniť od jednej "
+"edície Rímskeho misála k druhej; prekladatelia by mali jednoducho použiť "
+"najnovšiu edíciu Rímskeho misála pre svoj región ako referenciu."
 
 #: translations.php:33
-#, fuzzy
-#| msgid ""
-#| "This API intends to be historically correct as regards the calculation of "
-#| "the dates and the precedence of the festivities, but does not pretend "
-#| "historical accuracy as regards differences in the translations of the "
-#| "festivities over time."
 msgid ""
 "This API intends to be historically correct as regards the calculation of "
 "the dates and the precedence of the liturgical events, but does not pretend "
 "historical accuracy as regards differences in the translations of the "
 "liturgical events over time."
 msgstr ""
-"Toto API má byť historicky presné, pokiaľ ide o výpočet dátumov a prednosť "
-"sviatkov, ale nepredstiera historickú presnosť, pokiaľ ide o rozdiely v "
-"prekladoch sviatkov v priebehu času."
+"Toto API sa snaží byť historicky správne, pokiaľ ide o výpočet dátumov a "
+"precedenciu liturgických udalostí, ale nepredstiera historickú presnosť, "
+"pokiaľ ide o rozdiely v prekladoch liturgických udalostí v priebehu času."
 
 #: translations.php:35
 msgid ""
@@ -1160,7 +1115,7 @@ msgstr "Liturgia %s"
 #. translators: context = liturgical color
 #: src/LitColor.php:41
 msgid "rose"
-msgstr ""
+msgstr "ruža"
 
 #: src/LitCommon.php:57
 msgid "Proper"
@@ -1467,36 +1422,24 @@ msgstr ""
 "Kanadu v angličtine aj francúzštine"
 
 #: src/Utilities.php:219
-#, fuzzy
-#| msgid ""
-#| "This festivity does not seem to exist? Please choose from a value in the "
-#| "list."
 msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
 msgstr ""
-"Zdá sa, že táto slávnosť neexistuje. Prosím, vyberte si hodnotu zo zoznamu."
+"Táto liturgická udalosť sa zdá, že neexistuje. Prosím, vyberte hodnotu zo "
+"zoznamu."
 
 #: src/Utilities.php:220
-#, fuzzy
-#| msgid ""
-#| "This festivity does not seem to exist? Please choose from a value in the "
-#| "list."
 msgid "This liturgical event does not exist, so it will be created."
-msgstr ""
-"Zdá sa, že táto slávnosť neexistuje. Prosím, vyberte si hodnotu zo zoznamu."
+msgstr "Táto liturgická udalosť neexistuje, preto sa vytvorí."
 
 #: src/Utilities.php:225
-#, fuzzy
-#| msgid "Choose from existing festivities"
 msgid "Choose from existing liturgical events"
-msgstr "Vyber si z existujúcich slávností"
+msgstr "Vyber si z existujúcich liturgických udalostí"
 
 #: src/Utilities.php:225
-#, fuzzy
-#| msgid "Choose from existing festivities"
 msgid "Choose from existing liturgical events (or create a new one)"
-msgstr "Vyber si z existujúcich slávností"
+msgstr "Vyber si zo súčasných liturgických udalostí (alebo si vytvor novú)"
 
 #: src/Utilities.php:231
 msgid "Property to change"
@@ -1523,10 +1466,8 @@ msgid "Translations"
 msgstr "Preklady"
 
 #: layout/header.php:34
-#, fuzzy
-#| msgid "Decree URL"
 msgid "Decrees"
-msgstr "Dekrét URL"
+msgstr "Nariadenia"
 
 #: layout/header.php:35
 msgid "About us"
