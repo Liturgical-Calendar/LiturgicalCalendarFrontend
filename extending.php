@@ -520,7 +520,7 @@ if (isset($_GET['choice'])) {
                                         <!--<div class="row no-gutters align-items-center">
                                             <div class="col me-2">-->
                                                 <form class="needs-validation" novalidate>
-                                                <?php $FormControls->createEventRow(_('Saints whos veneration is local to the Place, Diocese, Region, Province or Territory')) ?>
+                                                <?php $FormControls->createEventRow(_('Saints whose veneration is local to the Place, Diocese, Region, Province or Territory')) ?>
                                                 <?php $FormControls->createEventRow(_('Other Optional Memorial')) ?>
                                                 <?php $FormControls->createEventRow(_('Other Optional Memorial')) ?>
                                                 </form>
