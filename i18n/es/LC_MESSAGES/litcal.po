@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-20 18:42+0000\n"
-"PO-Revision-Date: 2025-11-20 19:40+0000\n"
+"PO-Revision-Date: 2025-11-20 20:14+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
@@ -884,7 +884,7 @@ msgstr "Patrono(s) del lugar, diócesis, región, provincia o territorio"
 
 #: extending.php:496
 msgid "Define the Memorials"
-msgstr "Definir las Memoriales"
+msgstr "Definir las Memorias"
 
 #: extending.php:502
 msgid ""
@@ -894,7 +894,7 @@ msgstr ""
 
 #: extending.php:517
 msgid "Define the Optional Memorials"
-msgstr "Definir las Memoriales opcionales"
+msgstr "Definir las Memorias opcionales"
 
 #: extending.php:523
 msgid ""
