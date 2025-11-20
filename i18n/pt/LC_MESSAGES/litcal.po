@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-20 18:42+0000\n"
-"PO-Revision-Date: 2025-11-20 20:51+0000\n"
+"PO-Revision-Date: 2025-11-20 22:11+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pt/>\n"
@@ -655,7 +655,7 @@ msgstr "roxo"
 #. translators: in reference to the first year from which this liturgical event takes place
 #: extending.php:106 src/FormControls.php:101
 msgid "Since"
-msgstr "Do ano"
+msgstr "Desde o ano"
 
 #. translators: in reference to the year from which this liturgical event no longer needs to be dealt with
 #: extending.php:108 src/FormControls.php:108
@@ -665,7 +665,7 @@ msgstr "Até"
 #. translators: label of the form row
 #: extending.php:110
 msgid "Patron or Patrons of the Wider Region"
-msgstr "Padroeiro ou Padroeiros da Região Ampla"
+msgstr "Padroeiro ou Padroeiros da Região mais ampla"
 
 #. translators: label of the form row
 #: extending.php:112
@@ -717,7 +717,7 @@ msgstr "Mover o evento litúrgico para uma nova data"
 
 #: extending.php:137 extending.php:651
 msgid "Create a new liturgical event"
-msgstr "Criar um novo evento litúrgico"
+msgstr "Crie um novo evento litúrgico"
 
 #: extending.php:143
 msgid "General Roman Calendar - Extending"
@@ -729,7 +729,7 @@ msgstr "Amplie o calendário romano geral com dados nacionais ou diocesanos"
 
 #: extending.php:162 extending.php:313
 msgid "Wider Region"
-msgstr "Região Ampla"
+msgstr "Região mais ampla"
 
 #: extending.php:164 extending.php:230
 msgid "This value cannot be empty."
@@ -749,11 +749,11 @@ msgstr "Remover dados existentes"
 
 #: extending.php:205 layout/header.php:27
 msgid "Create a Calendar for a Wider Region"
-msgstr "Criar um Calendário para uma Região Mais Ampla"
+msgstr "Crie um Calendário para uma Região mais ampla"
 
 #: extending.php:216
 msgid "Save Wider Region Calendar Data"
-msgstr "Salvar Dados do Calendário da Região Ampla"
+msgstr "Salvar Dados do Calendário da Região mais ampla"
 
 #: extending.php:228
 msgid "National Calendar"
@@ -917,7 +917,7 @@ msgstr "Mover Evento Litúrgico"
 
 #: extending.php:655
 msgid "Create Liturgical Event"
-msgstr "Criar Evento Litúrgico"
+msgstr "Crie Evento Litúrgico"
 
 #: extending.php:672
 msgid "Choose from known Roman Missal language editions"
@@ -1321,7 +1321,7 @@ msgstr "Para Mulheres Santas"
 #: src/LitCommon.php:172 src/LitCommon.php:184
 msgctxt "(SING_FEMM)"
 msgid "of the"
-msgstr "do"
+msgstr "da"
 
 #. translators: (plural feminine) glue between "From the Common" and the actual common. Latin: leave empty!
 #: src/LitCommon.php:175
