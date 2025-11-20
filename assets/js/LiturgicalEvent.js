@@ -29,7 +29,23 @@ class LiturgicalEvent {
     }
 
     static #allowedProps = new Set(['event_key', 'grade', 'common', 'calendar', 'color', 'readings', 'missal', 'name', 'grade_lcl', 'color_lcl']);
+
+    /**
+     * Construct a new LiturgicalEvent object from an object.
+     *
+     * This static method takes an object argument, which it will use to set the properties of the LiturgicalEvent object.
+     * If the object has a 'strtotime' property or a 'type' property set to 'mobile', it will create a MobileLiturgicalEvent object.
+     * If the object has 'day' and 'month' properties, it will create a FixedLiturgicalEvent object.
+     * Otherwise, it will create a LiturgicalEvent object.
+     *
+     * @param {object} liturgical_event An object containing the properties to set on the LiturgicalEvent object.
+     * @throws {TypeError} If liturgical_event is not a non-null object.
+     * @returns {LiturgicalEvent|MobileLiturgicalEvent|FixedLiturgicalEvent} A new LiturgicalEvent object.
+     */
     static fromObject(liturgical_event) {
+        if (!liturgical_event || typeof liturgical_event !== 'object') {
+            throw new TypeError('liturgical_event must be a non-null object');
+        }
         if ('strtotime' in liturgical_event || ('type' in liturgical_event && liturgical_event.type === 'mobile')) {
             return new MobileLiturgicalEvent(liturgical_event);
         } else if ('day' in liturgical_event && 'month' in liturgical_event) {
