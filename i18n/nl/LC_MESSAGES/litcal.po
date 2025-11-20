@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-20 18:42+0000\n"
-"PO-Revision-Date: 2025-11-20 19:40+0000\n"
+"PO-Revision-Date: 2025-11-20 20:15+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -691,7 +691,7 @@ msgstr "Graad wijzigen"
 #. translators: label of the form row
 #: extending.php:118
 msgid "Move liturgical event"
-msgstr "Verplaats liturgisch evenement"
+msgstr "Verplaats een liturgisch evenement"
 
 #: extending.php:119
 msgid "Decree URL"
@@ -715,11 +715,11 @@ msgstr "Patroonheilige aanwijzen"
 
 #: extending.php:135 extending.php:619
 msgid "Change name or grade of existing liturgical event"
-msgstr "Naam of rang van bestaande liturgisch evenement wijzigen"
+msgstr "Naam of rang van een bestaande liturgisch evenement wijzigen"
 
 #: extending.php:136 extending.php:635
 msgid "Move liturgical event to new date"
-msgstr "Verplaats liturgisch evenement naar nieuwe datum"
+msgstr "Verplaats een liturgisch evenement naar een nieuwe datum"
 
 #: extending.php:137 extending.php:651
 msgid "Create a new liturgical event"
@@ -1473,13 +1473,11 @@ msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
 msgstr ""
-"Dit liturgische evenement lijkt niet te bestaan. Kies een waarde uit de "
-"lijst."
+"Dit liturgisch evenement lijkt niet te bestaan. Kies een waarde uit de lijst."
 
 #: src/Utilities.php:220
 msgid "This liturgical event does not exist, so it will be created."
-msgstr ""
-"Deze liturgische evenement bestaat niet, dus zal deze worden gecreëerd."
+msgstr "Dt liturgisch evenement bestaat niet, het zal deze worden aangemaakt."
 
 #: src/Utilities.php:225
 msgid "Choose from existing liturgical events"
