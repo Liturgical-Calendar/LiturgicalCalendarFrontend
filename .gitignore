@@ -117,3 +117,4 @@ credentials.php
 !/**/.env.example
 /**/.envrc
 !/**/.envrc.example
+/assets/json/
