@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-20 18:42+0000\n"
-"PO-Revision-Date: 2025-11-20 03:59+0000\n"
+"PO-Revision-Date: 2025-11-20 19:40+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
@@ -264,13 +264,12 @@ msgid "Web calendar"
 msgstr "Calendario HTML"
 
 #: usage.php:39
-#, fuzzy
-#| msgid "HTML presentation elaborated by PHP using a CURL request"
 msgid ""
 "HTML presentation elaborated by PHP using the `@liturgical-calendar/"
 "components` package"
 msgstr ""
-"Presentazione HTML elaborata da PHP con l'utilizzo di una richiesta cURL"
+"Presentazione HTML elaborata in PHP utilizzando il pacchetto `@liturgical-"
+"calendar/components`"
 
 #: usage.php:40
 msgid "View PHP Example"
@@ -281,6 +280,8 @@ msgid ""
 "HTML presentation elaborated by JavaScript using the `@liturgical-calendar/"
 "components-js` ESM module"
 msgstr ""
+"Presentazione HTML elaborata da JavaScript utilizzando il modulo ESM "
+"`@liturgical-calendar/components-js`"
 
 #: usage.php:51
 msgid "View JavaScript Example"
@@ -291,15 +292,12 @@ msgid "Calendar"
 msgstr "Calendario"
 
 #: usage.php:61
-#, fuzzy
-#| msgid ""
-#| "FullCalendar representation elaborated by JAVASCRIPT using an AJAX request"
 msgid ""
 "FullCalendar representation elaborated by JavaScript using the `@liturgical-"
 "calendar/components-js` ESM module"
 msgstr ""
-"Presentazione FullCalendar elaborata in Javascript utilizzando una richiesta "
-"AJAX"
+"Rappresentazione di FullCalendar elaborata da JavaScript utilizzando il "
+"modulo ESM `@liturgical-calendar/components-js`"
 
 #: usage.php:62
 msgid "View FullCalendar"
@@ -491,10 +489,8 @@ msgid "Dates of Easter"
 msgstr "Date della Pasqua"
 
 #: usage.php:184
-#, fuzzy
-#| msgid "Calculation of the Date of Easter"
 msgid "Calculation of the Dates of Easter"
-msgstr "Calcolo della Data della Pasqua"
+msgstr "Calcolo delle date di Pasqua"
 
 #: usage.php:187
 msgid "Example display of the date of Easter from 1583 to 9999"
@@ -502,10 +498,8 @@ msgstr ""
 "Esempio di Presentazione grafica della data della Pasqua dal 1583 al 9999"
 
 #: usage.php:188
-#, fuzzy
-#| msgid "Calculate the Date of Easter"
 msgid "Calculate the Dates of Easter"
-msgstr "Calcola la Data della Pasqua"
+msgstr "Calcolare le date di Pasqua"
 
 #: usage.php:198 layout/header.php:113
 msgid "Liturgy of the Day"
