@@ -3002,12 +3002,12 @@ const existingLiturgicalEventNameChanged = (ev) => {
     const form = modal.querySelector('form');
     form.classList.remove('was-validated');
 
-    const option = document.querySelector(`#existingLiturgicalEventsList option[value="${ev.target.value}"]`);
+    const option = modal.querySelector(`#existingLiturgicalEventsList option[value="${ev.target.value}"]`);
     // if no option corresponding to the selected liturgical_event name is found, disable the submission buttons
     const invalidState = !option && ev.target.required;
     const warningState = !option && !ev.target.required;
     ev.target.classList.toggle('is-invalid', invalidState);
-    const warningEl = document.querySelector('.text-warning');
+    const warningEl = modal.querySelector('.text-warning');
     warningEl.classList.toggle('d-block', warningState);
     warningEl.classList.toggle('d-none', !warningState);
     console.log(`input is required to have an existing value from the list: ${ev.target.required}, selected value: ${ev.target.value}, option found: ${!!option}`);
