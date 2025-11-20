@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-14 15:18+0000\n"
-"PO-Revision-Date: 2025-11-20 03:57+0000\n"
+"PO-Revision-Date: 2025-11-20 17:09+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -195,7 +195,7 @@ msgstr "Open API Schema"
 
 #: index.php:162
 msgid "Swagger / Open API Documentation"
-msgstr "Swagger / Openen API-documentatie"
+msgstr "Swagger / Open API-documentatie"
 
 #: index.php:164
 msgid ""
