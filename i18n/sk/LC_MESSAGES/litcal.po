@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-20 18:42+0000\n"
-"PO-Revision-Date: 2025-11-20 18:16+0000\n"
+"PO-Revision-Date: 2025-11-20 19:40+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
@@ -258,12 +258,12 @@ msgid "Web calendar"
 msgstr "Webový kalendár"
 
 #: usage.php:39
-#, fuzzy
-#| msgid "HTML presentation elaborated by PHP using a CURL request"
 msgid ""
 "HTML presentation elaborated by PHP using the `@liturgical-calendar/"
 "components` package"
-msgstr "HTML prezentácia vypracovaná pomocou PHP s použitím CURL požiadavky"
+msgstr ""
+"Prezentácia HTML vypracovaná pomocou PHP s použitím balíka `@liturgical-"
+"calendar/components`"
 
 #: usage.php:40
 msgid "View PHP Example"
@@ -274,6 +274,8 @@ msgid ""
 "HTML presentation elaborated by JavaScript using the `@liturgical-calendar/"
 "components-js` ESM module"
 msgstr ""
+"HTML prezentácia vytvorená pomocou JavaScriptu s využitím ESM modulu "
+"`@liturgical-calendar/components-js`"
 
 #: usage.php:51
 msgid "View JavaScript Example"
@@ -284,15 +286,12 @@ msgid "Calendar"
 msgstr "Kalendár"
 
 #: usage.php:61
-#, fuzzy
-#| msgid ""
-#| "FullCalendar representation elaborated by JAVASCRIPT using an AJAX request"
 msgid ""
 "FullCalendar representation elaborated by JavaScript using the `@liturgical-"
 "calendar/components-js` ESM module"
 msgstr ""
-"Reprezentácia FullCalendar vypracovaná pomocou JAVASCRIPTU s použitím AJAX "
-"požiadavky"
+"Zobrazenie FullCalendar spracované pomocou JavaScriptu s použitím modulu ESM "
+"`@liturgical-calendar/components-js`"
 
 #: usage.php:62
 msgid "View FullCalendar"
@@ -475,20 +474,16 @@ msgid "Dates of Easter"
 msgstr "Dátumy Veľkej noci"
 
 #: usage.php:184
-#, fuzzy
-#| msgid "Calculation of the Date of Easter"
 msgid "Calculation of the Dates of Easter"
-msgstr "Výpočet dátumu Veľkej noci"
+msgstr "Výpočet dátumov Veľkej noci"
 
 #: usage.php:187
 msgid "Example display of the date of Easter from 1583 to 9999"
 msgstr "Príklad zobrazenia dátumu Veľkej noci od roku 1583 do roku 9999"
 
 #: usage.php:188
-#, fuzzy
-#| msgid "Calculate the Date of Easter"
 msgid "Calculate the Dates of Easter"
-msgstr "Vypočítaj dátum Veľkej noci"
+msgstr "Vypočítaj dátumy Veľkej noci"
 
 #: usage.php:198 layout/header.php:113
 msgid "Liturgy of the Day"
@@ -672,7 +667,7 @@ msgstr "Zmeň meno"
 #. translators: label of the form row
 #: extending.php:116
 msgid "Change grade"
-msgstr "Zmeniť stupeň"
+msgstr "Zmeň stupeň"
 
 #. translators: label of the form row
 #: extending.php:118
@@ -729,7 +724,7 @@ msgstr "Táto hodnota nemôže byť prázdna."
 
 #: extending.php:178
 msgid "Locales"
-msgstr "Jazykoch"
+msgstr "Jazyky"
 
 #: extending.php:187 extending.php:325 extending.php:401
 msgid "Current localization"
@@ -785,7 +780,7 @@ msgstr "VEČNÝ VEĽKŇAZ"
 
 #: extending.php:288 extending.php:391
 msgid "LOCALES"
-msgstr "JAZYKOCH"
+msgstr "JAZYKY"
 
 #: extending.php:301
 msgid "Published Roman Missals"
@@ -1132,7 +1127,7 @@ msgstr "Liturgia %s"
 #. translators: context = liturgical color
 #: src/LitColor.php:41
 msgid "rose"
-msgstr "ruža"
+msgstr "ružová"
 
 #: src/LitCommon.php:57
 msgid "Proper"
