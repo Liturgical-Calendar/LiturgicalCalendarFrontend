@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-14 15:18+0000\n"
-"PO-Revision-Date: 2025-11-20 03:38+0000\n"
+"PO-Revision-Date: 2025-11-20 17:09+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -603,11 +603,11 @@ msgstr "Anderes Fest"
 
 #: extending.php:95 extending.php:503 extending.php:504
 msgid "Other Memorial"
-msgstr "Andere Gedenkstätte"
+msgstr "Andere Gedenktag"
 
 #: extending.php:96 extending.php:524 extending.php:525
 msgid "Other Optional Memorial"
-msgstr "Andere Optionale Gedenkstätte"
+msgstr "Andere Optionale Gedenktag"
 
 #: extending.php:97
 msgid "Delete calendar"
@@ -844,11 +844,11 @@ msgstr "Feste"
 
 #: extending.php:434
 msgid "Memorials"
-msgstr "Gedenkstätten"
+msgstr "Gedenktage"
 
 #: extending.php:435
 msgid "Optional memorials"
-msgstr "Optionale Gedenkstätten"
+msgstr "Optionale Gedenktage"
 
 #: extending.php:454 extending.php:475 extending.php:496 extending.php:517
 #: layout/header.php:29
@@ -881,7 +881,7 @@ msgstr ""
 
 #: extending.php:496
 msgid "Define the Memorials"
-msgstr "Definieren die Gedenkstätten"
+msgstr "Definieren die Gedenktage"
 
 #: extending.php:502
 msgid ""
@@ -892,7 +892,7 @@ msgstr ""
 
 #: extending.php:517
 msgid "Define the Optional Memorials"
-msgstr "Definieren die Optionalen Gedenkstätten"
+msgstr "Definieren die fakultativen Gedenktage"
 
 #: extending.php:523
 msgid ""
@@ -1371,7 +1371,7 @@ msgstr "Gedächtnis"
 #. translators: liturgical rank. Keep Capitalized
 #: src/LitGrade.php:108
 msgid "Optional memorial"
-msgstr "Nichtgebotener Gedenktag"
+msgstr "Fakultativer Gedenktag"
 
 #. translators: liturgical rank. Keep Capitalized
 #: src/LitGrade.php:111
