@@ -112,7 +112,7 @@ $API_DESCRIPTION = _('A Liturgical Calendar API from which you can retrieve data
                                 <div class="tab-content" id="myTabContent">
                                     <div class="tab-pane fade p-4 border-left border-right border-bottom show active" id="gcal" role="tabpanel" aria-labelledby="gcal-tab">
                                     <?php
-                                        echo '<p>' . _('Click on the link above to copy it the clipboard.') . '</p>';
+                                        echo '<p>' . _('Click on the link above to copy it to the clipboard.') . '</p>';
                                         echo '<p>' . sprintf(_('Navigate to %s.'), '<a href="https://calendar.google.com" target="_blank">https://calendar.google.com</a>') . '</p>';
                                         echo '<p>' . _('At the bottom left corner of the screen, next to Other calendars, click on the + icon to add a new calendar, and choose <i><b>From URL</b></i>.') . '</p>';
                                         echo '<p>' . _('Paste in the URL that you copied earlier.') . '</p>';

@@ -36,7 +36,7 @@ $API_EXTEND_HOWTO_7 = _('National calendars and related translations must be def
 $API_EXTEND_HOWTO_8 = _('Anyone who intends on contributing to the translations is required to agree to these conditions.');
 $API_EXTEND_HOWTO_9 = _('If the translator is not an expert in liturgical science or does not have a role in a diocesan office for liturgy and worship, the translations will require overview by a liturgical expert before being incorporated into this project.');
 
-$API_EXTEND_HOWTO_10 = _('The project website can be also be translated into other languages. The translation strings can be found in the following translation components:');
+$API_EXTEND_HOWTO_10 = _('The project website can also be translated into other languages. The translation strings can be found in the following translation components:');
 ?><!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
