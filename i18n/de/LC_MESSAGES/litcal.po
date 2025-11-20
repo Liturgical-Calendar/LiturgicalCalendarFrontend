@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-14 15:18+0000\n"
-"PO-Revision-Date: 2025-11-20 17:09+0000\n"
+"PO-Revision-Date: 2025-11-20 18:16+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -684,7 +684,7 @@ msgstr "Rang ändern"
 #. translators: label of the form row
 #: extending.php:118
 msgid "Move liturgical event"
-msgstr "Liturgische Veranstaltung verschieben"
+msgstr "Liturgische Ereignis verschieben"
 
 #: extending.php:119
 msgid "Decree URL"
@@ -708,7 +708,7 @@ msgstr "Patron bestimmen"
 
 #: extending.php:135 extending.php:619
 msgid "Change name or grade of existing liturgical event"
-msgstr "Namen oder Rang einer bestehenden liturgischen Feier ändern"
+msgstr "Namen oder Rang einer bestehenden liturgischen Ereignis ändern"
 
 #: extending.php:136 extending.php:635
 msgid "Move liturgical event to new date"
@@ -917,11 +917,11 @@ msgstr "Abbrechen"
 
 #: extending.php:639
 msgid "Move Liturgical Event"
-msgstr "Liturgische Veranstaltung verschieben"
+msgstr "Liturgische Ereignis verschieben"
 
 #: extending.php:655
 msgid "Create Liturgical Event"
-msgstr "Liturgische Veranstaltung erstellen"
+msgstr "Liturgische Ereignis erstellen"
 
 #: extending.php:672
 msgid "Choose from known Roman Missal language editions"
@@ -1480,8 +1480,7 @@ msgstr "Wählen Sie aus vorhandenen liturgischen Ereignissen"
 
 #: src/Utilities.php:225
 msgid "Choose from existing liturgical events (or create a new one)"
-msgstr ""
-"Wähle aus bestehenden liturgischen Veranstaltungen oder erstelle eine neue"
+msgstr "Wähle aus bestehenden liturgischen Ereignisse oder erstelle eine neue"
 
 #: src/Utilities.php:231
 msgid "Property to change"
