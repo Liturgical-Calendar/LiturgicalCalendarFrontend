@@ -2111,6 +2111,9 @@ const serializeRegionalNationalDataClicked = (ev) => {
 const setFocusFirstTabWithData = () => {
     document.querySelectorAll('#diocesanCalendarDefinitionCardLinks li').forEach(el => el.classList.remove('active'));
     const firstInputWithNonEmptyValue = Array.from(document.querySelectorAll('.carousel-item form .litEventName')).find(el => el.dataset.valuewas !== '');
+    if (!firstInputWithNonEmptyValue) {
+        return;
+    }
     const parentCarouselItem = firstInputWithNonEmptyValue.closest('.carousel-item');
     const itemIndex = Array.from(document.querySelectorAll('.carousel-item')).indexOf(parentCarouselItem);
     const carouselElement = document.querySelector('.carousel');
