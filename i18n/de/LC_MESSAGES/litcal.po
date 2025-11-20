@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-20 18:42+0000\n"
-"PO-Revision-Date: 2025-11-20 20:14+0000\n"
+"PO-Revision-Date: 2025-11-20 20:51+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -662,7 +662,7 @@ msgstr "violett"
 #. translators: in reference to the first year from which this liturgical event takes place
 #: extending.php:106 src/FormControls.php:101
 msgid "Since"
-msgstr "Aus dem Jahr"
+msgstr "Ab dem Jahr"
 
 #. translators: in reference to the year from which this liturgical event no longer needs to be dealt with
 #: extending.php:108 src/FormControls.php:108
@@ -865,7 +865,7 @@ msgstr "Erstellen Sie einen Diözesankalender"
 
 #: extending.php:454
 msgid "Define the Solemnities"
-msgstr "Definieren die Hochfeste"
+msgstr "Hochfeste definieren"
 
 #: extending.php:460
 msgid ""
@@ -880,7 +880,7 @@ msgstr "Einweihung der Kathedrale"
 
 #: extending.php:475
 msgid "Define the Feasts"
-msgstr "Definieren die Feste"
+msgstr "Feste definieren"
 
 #: extending.php:481
 msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
@@ -889,7 +889,7 @@ msgstr ""
 
 #: extending.php:496
 msgid "Define the Memorials"
-msgstr "Definieren die Gedenktage"
+msgstr "Gedenktage definieren"
 
 #: extending.php:502
 msgid ""
@@ -900,7 +900,7 @@ msgstr ""
 
 #: extending.php:517
 msgid "Define the Optional Memorials"
-msgstr "Definieren die fakultativen Gedenktage"
+msgstr "Fakultative Gedenktage definieren"
 
 #: extending.php:523
 msgid ""
