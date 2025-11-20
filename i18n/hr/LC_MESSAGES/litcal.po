@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-14 15:18+0000\n"
+"POT-Creation-Date: 2025-11-20 18:42+0000\n"
 "PO-Revision-Date: 2025-11-15 04:03+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
@@ -215,7 +215,7 @@ msgstr ""
 "Svi dostupni API putevi s njihovim podržanim metodama, parametrima, vrstama "
 "sadržaja i odgovorima opisani su ovdje."
 
-#: index.php:170 usage.php:184
+#: index.php:170
 #, fuzzy
 msgid "Calculation of the Date of Easter"
 msgstr "Izračun datuma Uskrsa"
@@ -282,7 +282,9 @@ msgstr "Web kalendar"
 
 #: usage.php:39
 #, fuzzy
-msgid "HTML presentation elaborated by PHP using a CURL request"
+msgid ""
+"HTML presentation elaborated by PHP using the `@liturgical-calendar/"
+"components` package"
 msgstr "HTML prezentacija izrađena pomoću PHP-a koristeći CURL zahtjev"
 
 #: usage.php:40
@@ -291,9 +293,10 @@ msgid "View PHP Example"
 msgstr "Pogledaj PHP primjer"
 
 #: usage.php:50
-#, fuzzy
-msgid "HTML presentation elaborated by JAVASCRIPT using an AJAX request"
-msgstr "HTML prezentacija izrađena pomoću JAVASCRIPT-a koristeći AJAX zahtjev"
+msgid ""
+"HTML presentation elaborated by JavaScript using the `@liturgical-calendar/"
+"components-js` ESM module"
+msgstr ""
 
 #: usage.php:51
 #, fuzzy
@@ -308,7 +311,8 @@ msgstr "Kalendar"
 #: usage.php:61
 #, fuzzy
 msgid ""
-"FullCalendar representation elaborated by JAVASCRIPT using an AJAX request"
+"FullCalendar representation elaborated by JavaScript using the `@liturgical-"
+"calendar/components-js` ESM module"
 msgstr "FullCalendar prikaz izrađen pomoću JAVASCRIPT-a koristeći AJAX zahtjev"
 
 #: usage.php:62
@@ -517,6 +521,11 @@ msgstr ""
 msgid "Dates of Easter"
 msgstr "Datumi Uskrsa"
 
+#: usage.php:184
+#, fuzzy
+msgid "Calculation of the Dates of Easter"
+msgstr "Izračun datuma Uskrsa"
+
 #: usage.php:187
 #, fuzzy
 msgid "Example display of the date of Easter from 1583 to 9999"
@@ -524,7 +533,7 @@ msgstr "Primjer prikaza datuma Uskrsa od 1583. do 9999."
 
 #: usage.php:188
 #, fuzzy
-msgid "Calculate the Date of Easter"
+msgid "Calculate the Dates of Easter"
 msgstr "Izračunaj datum Uskrsa"
 
 #: usage.php:198 layout/header.php:113
@@ -1709,6 +1718,11 @@ msgstr "Dokumentacija"
 #, fuzzy
 msgid "Examples of Usage"
 msgstr "Primjeri upotrebe"
+
+#, fuzzy
+#~ msgid "HTML presentation elaborated by JAVASCRIPT using an AJAX request"
+#~ msgstr ""
+#~ "HTML prezentacija izrađena pomoću JAVASCRIPT-a koristeći AJAX zahtjev"
 
 #, fuzzy
 #~ msgid "New festivity"
