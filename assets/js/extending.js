@@ -983,7 +983,9 @@ const updateRegionalCalendarForm = (data) => {
             document.querySelector('.currentLocalizationChoices').innerHTML = currentLocalizationChoices.map(([localeIso, localeDisplayName]) => {
                 return `<option value="${localeIso}">${localeDisplayName}</option>\n`;
             });
-            document.querySelector('#currentLocalization').value = API.locale !== '' ? API.locale : data.metadata.locales[0];
+            const defaultLocale = API.locale !== '' ? API.locale : data.metadata.locales[0];
+            document.querySelector('#currentLocalization').value = defaultLocale;
+            API.locale = defaultLocale;
             break;
         }
         case 'nation': {
@@ -1380,7 +1382,7 @@ const emptyStringPercentage = (translations) => {
  * events for that locale.
  *
  * If the fetched events are not already in the EventsCollection, it adds them to the collection and updates the
- * #existingFestivitiesList element.
+ * #existingLiturgicalEventsList element.
  *
  * After fetching the events, it calls fetchRegionalCalendarData to fetch the calendar data.
  * @returns {Promise<void>}
@@ -1452,7 +1454,7 @@ const fetchEventsAndCalendarData = () => {
             EventsLoader.lastRequestPath = eventsUrlForCurrentCategory;
             EventsLoader.lastRequestLocale = API.locale;
             console.log('EventsLoader.lastRequestPath:', EventsLoader.lastRequestPath, 'EventsLoader.lastRequestLocale:', EventsLoader.lastRequestLocale, 'EventsCollection:', EventsCollection );
-            document.querySelector('#existingFestivitiesList').innerHTML = EventsCollection.get(eventsUrlForCurrentCategory).get(API.locale).map(el => `<option value="${el.event_key}">${el.name}</option>`).join('\n');
+            document.querySelector('#existingLiturgicalEventsList').innerHTML = EventsCollection.get(eventsUrlForCurrentCategory).get(API.locale).map(el => `<option value="${el.event_key}">${el.name}</option>`).join('\n');
         }).catch(error => {
             console.error(error);
         }).finally(() => {
@@ -1633,8 +1635,9 @@ const actionPromptButtonClicked = (ev) => {
             const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
                                         .filter(({ value }) => value !== currentLocalization)
                                         .map(({ value }) => value);
-            const otherLocalizationsInputs = otherLocalizations.map(localization => translationTemplate(API.path, localization, ev.target));
-            controlsRow.querySelector(`#onTheFly${currentUniqid}Name`).insertAdjacentHTML('afterend', otherLocalizationsInputs.join(''));
+            const nameInput = controlsRow.querySelector(`#onTheFly${currentUniqid}Name`);
+            const otherLocalizationsInputs = otherLocalizations.map(localization => translationTemplate(API.path, localization, nameInput));
+            nameInput.insertAdjacentHTML('afterend', otherLocalizationsInputs.join(''));
         }
     }
 
@@ -2977,7 +2980,7 @@ const diocesanCalendarDefinitionsCardLinksClicked = (ev) => {
  * When a liturgical_event name is changed (whether selected from a list or entered manually),
  * the 'was-validated' class is removed from the form in the modal.
  * Then, if the input is set to required, the selected liturgical_event is validated
- * by looking for an option with the same value in the #existingFestivitiesList select element.
+ * by looking for an option with the same value in the #existingLiturgicalEventsList select element.
  * If the liturgical_event name is not valid, an 'is-invalid' class is added to the select element.
  * If instead the input is not set to required, no validations will take place,
  * but simply a warning message will be displayed to ensure the user understands
@@ -2995,7 +2998,7 @@ const existingLiturgicalEventNameChanged = (ev) => {
     const form = modal.querySelector('form');
     form.classList.remove('was-validated');
 
-    const option = document.querySelector(`#existingFestivitiesList option[value="${ev.target.value}"]`);
+    const option = document.querySelector(`#existingLiturgicalEventsList option[value="${ev.target.value}"]`);
     // if no option corresponding to the selected liturgical_event name is found, disable the submission buttons
     const invalidState = !option && ev.target.required;
     const warningState = !option && !ev.target.required;

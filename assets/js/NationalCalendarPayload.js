@@ -119,15 +119,18 @@ class LitCalEventData {
 class LitCalMoveEventData extends LitCalEventData {
     static #isValidDayValueForMonth(month, day) {
         switch (month) {
+            // Save February at twenty-eight
             case 2:
                 return day > 0 && day < 29;
+            // Thirty days hath September, April, June, and November
+            case 9:
             case 4:
             case 6:
-            case 9:
             case 11:
-                return day > 0 && day < 32;
-            default:
                 return day > 0 && day < 31;
+            // All the rest have thirty-one
+            default:
+                return day > 0 && day < 32;
         }
     }
     constructor( liturgical_event ) {
@@ -154,15 +157,18 @@ class LitCalMoveEventData extends LitCalEventData {
 class LitCalCreateNewFixedData extends LitCalEventData {
     static #isValidDayValueForMonth(month, day) {
         switch (month) {
+            // Save February at twenty-eight
             case 2:
                 return day > 0 && day < 29;
+            // Thirty days hath September, April, June, and November
+            case 9:
             case 4:
             case 6:
-            case 9:
             case 11:
-                return day > 0 && day < 32;
-            default:
                 return day > 0 && day < 31;
+            // All the rest have thirty-one
+            default:
+                return day > 0 && day < 32;
         }
     }
 

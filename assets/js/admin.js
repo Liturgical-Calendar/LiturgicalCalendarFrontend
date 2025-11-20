@@ -129,7 +129,10 @@ const createPropriumDeTemporeTable = ( data ) => {
 
             if( false === el.liturgical_event.hasOwnProperty( 'color' ) ) {
                 if( existingLiturgicalEventTag !== null ) {
-                    el.liturgical_event.color = LiturgicalEventCollection.filter(el => el.event_key === existingLiturgicalEventTag)[0].color;
+                    const fallbackEvent = LiturgicalEventCollection.find(ev => ev.event_key === existingLiturgicalEventTag);
+                    if( fallbackEvent && fallbackEvent.hasOwnProperty('color') ) {
+                        el.liturgical_event.color = fallbackEvent.color;
+                    }
                 }
             }
 
