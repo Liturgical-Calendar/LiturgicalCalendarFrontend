@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-20 18:42+0000\n"
-"PO-Revision-Date: 2025-11-20 19:40+0000\n"
+"PO-Revision-Date: 2025-11-20 20:15+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pt/>\n"
@@ -693,7 +693,7 @@ msgstr "URL do decreto"
 
 #: extending.php:120
 msgid "Decree Language mappings"
-msgstr "Decreto Mapeamento de Idiomas"
+msgstr "Mapeamentos de idiomas do decreto"
 
 #: extending.php:121
 msgid "Missal"
