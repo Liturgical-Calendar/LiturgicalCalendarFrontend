@@ -59,7 +59,19 @@ class LiturgicalEvent {
 class MobileLiturgicalEvent extends LiturgicalEvent {
     type = 'mobile';
     strtotime = '';
-    constructor(liturgical_event = null) {
+
+    /**
+     * Construct a new MobileLiturgicalEvent object from an object.
+     *
+     * This constructor takes an object argument, which it will use to set the properties of the MobileLiturgicalEvent object.
+     * If the object has a 'strtotime' property, it will use that value to set the strtotime property of the MobileLiturgicalEvent object.
+     *
+     * @param {object} liturgical_event An object containing the properties to set on the MobileLiturgicalEvent object.
+     */
+    constructor(liturgical_event) {
+        if (!liturgical_event || typeof liturgical_event !== 'object') {
+            throw new TypeError('liturgical_event must be a non-null object');
+        }
         super(liturgical_event);
         if ('strtotime' in liturgical_event) {
             this.strtotime = liturgical_event.strtotime;
@@ -70,7 +82,19 @@ class MobileLiturgicalEvent extends LiturgicalEvent {
 class FixedLiturgicalEvent extends LiturgicalEvent {
     day = 0;
     month = 0;
-    constructor(liturgical_event = null) {
+
+    /**
+     * Construct a new FixedLiturgicalEvent object from an object.
+     *
+     * This constructor takes an object argument, which it will use to set the properties of the FixedLiturgicalEvent object.
+     * The object argument must have 'day' and 'month' properties, which it will use to set the day and month properties of the FixedLiturgicalEvent object.
+     *
+     * @param {object} liturgical_event An object containing the 'day' and 'month' properties to set on the FixedLiturgicalEvent object.
+     */
+    constructor(liturgical_event) {
+        if (!liturgical_event || typeof liturgical_event !== 'object') {
+            throw new TypeError('liturgical_event must be a non-null object');
+        }
         super(liturgical_event);
         this.day = liturgical_event.day;
         this.month = liturgical_event.month;
