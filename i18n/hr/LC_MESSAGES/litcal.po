@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-20 18:42+0000\n"
 "PO-Revision-Date: 2025-11-20 19:40+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
 "Language: hr\n"
@@ -244,7 +244,7 @@ msgid ""
 msgstr ""
 "API liturgijskog kalendara iz kojeg možete dohvatiti podatke za liturgijske "
 "događaje bilo koje godine od 1970. nadalje, bilo za univerzalni ili opći "
-"rimski kalendar ili za izvedene nacionalne i biskupijske kalendare."
+"rimski kalendar ili za izvedene nacionalne i biskupijske kalendare"
 
 #: usage.php:13
 msgid "Examples"
@@ -480,7 +480,7 @@ msgstr "Izračun datuma Uskrsa"
 
 #: usage.php:187
 msgid "Example display of the date of Easter from 1583 to 9999"
-msgstr "Primjer prikaza datuma Uskrsa od 1583. do 9999."
+msgstr "Primjer prikaza datuma Uskrsa od 1583. do 9999"
 
 #: usage.php:188
 msgid "Calculate the Dates of Easter"
@@ -929,7 +929,7 @@ msgstr "Dodaj jezično izdanje Rimskog misala"
 
 #: easter.php:75
 msgid "Date of Easter from 1583 to 9999"
-msgstr "Datum Uskrsa od 1583. do 9999."
+msgstr "Datum Uskrsa od 1583. do 9999"
 
 #: easter.php:92
 msgid "Go back"
