@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-20 18:42+0000\n"
-"PO-Revision-Date: 2025-11-15 04:03+0000\n"
+"PO-Revision-Date: 2025-11-20 19:40+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
@@ -549,34 +549,24 @@ msgid "(see <a href=\"translations.php\">Translations</a>)"
 msgstr "(vide <a href=\"translations.php\">Translationes</a>)"
 
 #: extending.php:84
-#, fuzzy
-#| msgid ""
-#| "A national calendar may have some festivities in common with other "
-#| "national calendars, for example the patron of a wider region."
 msgid ""
 "A national calendar may have some liturgical events in common with other "
 "national calendars, for example the patron of a wider region."
 msgstr ""
-"Calendarium nationale potest habere aliquas festivitates communes cum aliis "
-"calendariis nationalibus, exempli gratia patronum regionis latioris."
+"Calendarium nationale potest habere aliquas eventus liturgicos communes cum "
+"aliis calendariis nationalibus, exempli gratia patronum regionis latioris."
 
 #: extending.php:85
-#, fuzzy
-#| msgid ""
-#| "In this case, the festivities for the wider region should be defined "
-#| "separately, and the languages applicable to the wider region should be "
-#| "set; the wider region data will then be applied automatically to national "
-#| "calendars belonging to the wider region."
 msgid ""
 "In this case, the liturgical events for the wider region should be defined "
 "separately, and the languages applicable to the wider region should be set; "
 "the wider region data will then be applied automatically to national "
 "calendars belonging to the wider region."
 msgstr ""
-"In hoc casu, festivitates pro regione latiore separatim definiri debent, et "
-"linguae regioni latiori applicabiles constituendae sunt; data regionis "
-"latioris tunc automatice applicabuntur calendariis nationalibus ad regionem "
-"latiorem pertinentibus."
+"In hoc casu, eventus liturgicos pro regione latiore separatim definiri "
+"debent, et linguae regioni latiori applicabiles constituendae sunt; data "
+"regionis latioris tunc automatice applicabuntur calendariis nationalibus ad "
+"regionem latiorem pertinentibus."
 
 #: extending.php:86
 msgid ""
@@ -1083,21 +1073,15 @@ msgstr ""
 "%1$s vertere vis."
 
 #: translations.php:31
-#, fuzzy
-#| msgid ""
-#| "Translations of the above mentioned festivities MUST NOT be done simply "
-#| "based on the linguistic abilities of the translator, but MUST be taken "
-#| "from the Roman Missal used in the region for which the translation is "
-#| "accomplished."
 msgid ""
 "Translations of the above mentioned liturgical events MUST NOT be done "
 "simply based on the linguistic abilities of the translator, but MUST be "
 "taken from the Roman Missal used in the region for which the translation is "
 "accomplished."
 msgstr ""
-"Translationes festorum supra memoratorum NON simpliciter ex facultatibus "
-"linguisticis interpretis fieri debent, sed ex Missali Romano in regione ad "
-"quam translatio perficitur sumendae sunt."
+"Translationes eventuum liturgicorum supra memoratorum NON simpliciter ex "
+"facultatibus linguisticis interpretis fieri debent, sed ex Missali Romano in "
+"regione ad quam translatio perficitur sumendae sunt."
 
 #: translations.php:32
 #, fuzzy
@@ -1116,12 +1100,6 @@ msgstr ""
 "Missalis Romani pro regione sua ut referentiam adhibere debent."
 
 #: translations.php:33
-#, fuzzy
-#| msgid ""
-#| "This API intends to be historically correct as regards the calculation of "
-#| "the dates and the precedence of the festivities, but does not pretend "
-#| "historical accuracy as regards differences in the translations of the "
-#| "festivities over time."
 msgid ""
 "This API intends to be historically correct as regards the calculation of "
 "the dates and the precedence of the liturgical events, but does not pretend "
@@ -1130,7 +1108,7 @@ msgid ""
 msgstr ""
 "Haec API intendit historice recta esse quoad computationem dierum et "
 "praecedentiam festorum, sed non praetendit historicae accuratae esse quoad "
-"differentias in translationibus festorum per tempora."
+"differentias in translationibus eventuum liturgicorum per tempora."
 
 #: translations.php:35
 msgid ""
