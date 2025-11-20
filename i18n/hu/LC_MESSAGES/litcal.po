@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-20 22:27+0000\n"
-"PO-Revision-Date: 2025-11-20 19:40+0000\n"
+"PO-Revision-Date: 2025-11-21 01:55+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hu/>\n"
@@ -1475,7 +1475,7 @@ msgstr "Tulajdonság megváltoztatása"
 
 #: src/Utilities.php:234 src/FormControls.php:168
 msgid "Grade"
-msgstr "Osztályzat"
+msgstr "Fokozat"
 
 #: src/FormControls.php:121
 msgid "Common (or Proper)"
