@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-14 15:18+0000\n"
-"PO-Revision-Date: 2025-11-20 03:38+0000\n"
+"PO-Revision-Date: 2025-11-20 18:16+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
@@ -703,7 +703,7 @@ msgstr "Designar patrón"
 
 #: extending.php:135 extending.php:619
 msgid "Change name or grade of existing liturgical event"
-msgstr "Cambiar nombre o grado de evento litúrgico existente"
+msgstr "Cambiar nombre o grado de un evento litúrgico existente"
 
 #: extending.php:136 extending.php:635
 msgid "Move liturgical event to new date"
