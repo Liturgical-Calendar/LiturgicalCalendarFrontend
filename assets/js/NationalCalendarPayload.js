@@ -41,8 +41,8 @@ class LitColor {
     static Red      = 'red';
     static Green    = 'green';
     static Purple   = 'purple';
-    static Pink     = 'rose';
-    static #map     = Object.freeze({ white: 'White', red: 'Red', green: 'Green', purple: 'Purple', rose: 'Pink' });
+    static Rose     = 'rose';
+    static #map     = Object.freeze({ white: 'White', red: 'Red', green: 'Green', purple: 'Purple', rose: 'Rose' });
     constructor(value) {
         if (typeof value !== 'string') {
             throw new Error('the value passed to the constructor of a LitColor must be a string');
