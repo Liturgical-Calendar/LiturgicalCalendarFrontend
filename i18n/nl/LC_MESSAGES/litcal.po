@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-20 18:42+0000\n"
-"PO-Revision-Date: 2025-11-20 20:15+0000\n"
+"PO-Revision-Date: 2025-11-20 20:51+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -429,14 +429,14 @@ msgstr "getest met Outlook 2013"
 #: usage.php:154
 msgid "At the bottom of the screen, switch from Email view to Calendar view."
 msgstr ""
-"Schakel onder aan het scherm van de E-mailweergave naar de Kalenderweergave.."
+"Schakel onder aan het scherm van de E-mailweergave naar de Kalenderweergave."
 
 #: usage.php:155
 msgid ""
 "On the ribbon of the Home menu item, click on <i><b>Open calendar → From the "
 "internet</b></i>."
 msgstr ""
-"Klik op het lint van het menu-item Home op <i><b>Kaleneder openen → Van "
+"Klik op het lint van het menu-item Home op <i><b>Kalender openen → Van "
 "internet</b></i>."
 
 #: usage.php:157
@@ -715,7 +715,7 @@ msgstr "Patroonheilige aanwijzen"
 
 #: extending.php:135 extending.php:619
 msgid "Change name or grade of existing liturgical event"
-msgstr "Naam of rang van een bestaande liturgisch evenement wijzigen"
+msgstr "Naam of rang van een bestaand liturgisch evenement wijzigen"
 
 #: extending.php:136 extending.php:635
 msgid "Move liturgical event to new date"
@@ -842,7 +842,7 @@ msgstr "Tijdzone"
 
 #: extending.php:432
 msgid "Solemnities"
-msgstr "Hogefeesten"
+msgstr "Hoogfeesten"
 
 #: extending.php:433
 msgid "Feasts"
@@ -863,13 +863,13 @@ msgstr "Maak een diocesane kalender"
 
 #: extending.php:454
 msgid "Define the Solemnities"
-msgstr "Definieer de Hogefeesten"
+msgstr "Definieer de Hoogefeesten"
 
 #: extending.php:460
 msgid ""
 "Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
-"Hoof patroon(s) van de plaats, het bisdom, de regio, de provincie of het "
+"Hoofdpatroon(s) van de plaats, het bisdom, de regio, de provincie of het "
 "territorium"
 
 #: extending.php:461 extending.php:482
@@ -1477,7 +1477,7 @@ msgstr ""
 
 #: src/Utilities.php:220
 msgid "This liturgical event does not exist, so it will be created."
-msgstr "Dt liturgisch evenement bestaat niet, het zal deze worden aangemaakt."
+msgstr "Dit liturgisch evenement bestaat niet, het zal worden aangemaakt."
 
 #: src/Utilities.php:225
 msgid "Choose from existing liturgical events"
