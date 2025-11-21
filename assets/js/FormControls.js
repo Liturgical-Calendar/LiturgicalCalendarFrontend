@@ -384,7 +384,7 @@ class FormControls {
                 // rather than filter the LiturgicalEventCollection, we should be either getting from EventsCollection
                 // based on EventsLoader.lastRequestPath and EventsLoader.lastRequestLocale,
                 // or we should be able to pass a liturgical_event object directly to  the CreateRegionalFormRow method
-                const existingLiturgicalEvent = LiturgicalEventCollection.find(item => item.event_key === element);
+                const existingLiturgicalEvent = LiturgicalEventCollection.find(item => item.event_key === element) ?? {};
                 liturgical_event = {
                     ...existingLiturgicalEvent,
                     url: '',
@@ -870,7 +870,7 @@ class FormControls {
      */
     static CreateDoctorRow(element = null) {
         let formRow = '';
-        let liturgical_event = null;
+        let liturgical_event = {};
         if( element !== null ) {
             if( typeof element === 'string' ) {
                 liturgical_event.event_key = element;
@@ -889,7 +889,7 @@ class FormControls {
                 }
             }
             if (LiturgicalEventCollectionKeys.includes(liturgical_event.event_key)) {
-                let event = LiturgicalEventCollection.filter(fest => fest.event_key === liturgical_event.event_key)[0];
+                let event = LiturgicalEventCollection.find(fest => fest.event_key === liturgical_event.event_key) || {};
                 if( false === 'color' in liturgical_event ) {
                     liturgical_event.color = 'color' in event ? event.color : [];
                 }
