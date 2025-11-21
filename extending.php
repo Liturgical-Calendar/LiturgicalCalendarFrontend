@@ -460,7 +460,7 @@ if (isset($_GET['choice'])) {
                 <nav aria-label="Diocesan calendar definition" id="diocesanCalendarDefinitionCardLinks">
                     <ul class="pagination pagination-lg justify-content-center m-1">
                         <li class="page-item disabled">
-                            <a class="page-link diocesan-carousel-prev" href="#" tabindex="-1" aria-disabled="true" aria-labeled="Previous"><span aria-hidden="true">&laquo;</span></a>
+                            <a class="page-link diocesan-carousel-prev" href="#" tabindex="-1" aria-disabled="true" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
                         </li>
                         <li class="page-item active"><a class="page-link" href="#" data-bs-slide-to="0"><?php echo _('Solemnities'); ?></a></li>
                         <li class="page-item"><a class="page-link" href="#" data-bs-slide-to="1"><?php echo _('Feasts'); ?></a></li>
