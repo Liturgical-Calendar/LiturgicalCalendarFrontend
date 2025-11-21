@@ -56,7 +56,7 @@ $thh        = array_keys($MissalData[0]);
  * Prepare our translations strings
  */
 $messages = [
-    'Tag'                   => _('Tag'),
+    'Event key'             => _('Event key'),
     'Name'                  => _('Name'),
     'Day'                   => _('Day'),
     'Month'                 => _('Month'),
