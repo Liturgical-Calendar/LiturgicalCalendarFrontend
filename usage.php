@@ -125,7 +125,7 @@ $API_DESCRIPTION = _('A Liturgical Calendar API from which you can retrieve data
                                     </div>
                                     <div class="tab-pane fade p-4 border-left border-right border-bottom" id="iphone" role="tabpanel" aria-labelledby="iphone-tab">
                                     <?php
-                                        echo '<p>' . _('Click on the link above to copy it the clipboard.') . '</p>';
+                                        echo '<p>' . _('Click on the link above to copy it to the clipboard.') . '</p>';
                                         echo '<p>' . _('Go to <i><b>Phone Settings → Accounts → Add account → Other → Add Calendar</b></i>.') . '</p>';
                                         echo '<p>' . _('Paste in the URL that you copied earlier.') . '</p>';
                                         echo '<p>' . _('Once subscribed, your calendar will be populated with the events from the subscription URL.') . '</p>';
@@ -150,7 +150,7 @@ $API_DESCRIPTION = _('A Liturgical Calendar API from which you can retrieve data
                                     <div class="tab-pane fade p-4 border-left border-right border-bottom" id="msoutlook" role="tabpanel" aria-labelledby="msoutlook-tab">
                                     <?php
                                         echo '<i class="small">(' . _('tested with Outlook 2013') . ')</i>';
-                                        echo '<p>' . _('Click on the link above to copy it the clipboard.') . '</p>';
+                                        echo '<p>' . _('Click on the link above to copy it to the clipboard.') . '</p>';
                                         echo '<p>' . _('At the bottom of the screen, switch from Email view to Calendar view.') . '</p>';
                                         echo '<p>' . _('On the ribbon of the Home menu item, click on <i><b>Open calendar → From the internet</b></i>.') . '</p>';
                                         echo '<p>' . _('Paste in the URL that you copied earlier.') . '</p>';

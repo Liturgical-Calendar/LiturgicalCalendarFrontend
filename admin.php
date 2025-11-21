@@ -154,21 +154,27 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
                             echo "<td contenteditable='false'>";
                             echo '<table><tbody>';
                             foreach ($value as $title => $val) {
+                                $safeTitle = htmlspecialchars((string) $title, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                                 if (is_array($val)) {
-                                    echo "<tr><td colspan=\"2\" style=\"text-align:center;font-weight:bold;border:0;background-color:lightgray;\">$title</td></tr>";
+                                    echo "<tr><td colspan=\"2\" style=\"text-align:center;font-weight:bold;border:0;background-color:lightgray;\">$safeTitle</td></tr>";
                                     foreach ($val as $title2 => $val2) {
-                                        echo "<tr><td>$title2</td><td contenteditable='false'>$val2</td></tr>";
+                                        $safeTitle2 = htmlspecialchars((string) $title2, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                        $safeVal2   = htmlspecialchars((string) $val2, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                        echo "<tr><td>$safeTitle2</td><td contenteditable='false'>$safeVal2</td></tr>";
                                     }
                                 } else {
-                                    echo "<tr><td>$title</td><td contenteditable='false'>$val</td></tr>";
+                                    $safeValue = htmlspecialchars((string) $val, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                    echo "<tr><td>$safeTitle</td><td contenteditable='false'>$safeValue</td></tr>";
                                 }
                             }
                             echo '</tbody></table>';
                             echo '</td>';
                         } elseif (is_array($value)) {
-                            echo "<td contenteditable='false'>" . implode(',', $value) . '</td>';
+                            $safeValue = htmlspecialchars(implode(',', $value), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                            echo "<td contenteditable='false'>" . $safeValue . '</td>';
                         } else {
-                            echo "<td contenteditable='false'>$value</td>";
+                            $safeValue = htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                            echo "<td contenteditable='false'>$safeValue</td>";
                         }
                     }
                     echo '</tr>';
@@ -206,7 +212,7 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
                 </div>
                 <?php Utilities::generateModalBody(true, false); ?>
                 <div class="modal-footer">
-                    <button type="button" id="moveLiturgicalEventButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-day me-2"></i><?php echo _('Move LiturgicalEvent') ?></button>
+                    <button type="button" id="moveLiturgicalEventButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-day me-2"></i><?php echo _('Move liturgical event') ?></button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _('Cancel') ?></button>
                 </div>
             </div>
@@ -222,8 +228,8 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
                 </div>
                 <?php Utilities::generateModalBody(false, false); ?>
                 <div class="modal-footer">
-                    <button type="button" id="newLiturgicalEventFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus me-2"></i><?php echo _('New LiturgicalEvent from existing') ?></button>
-                    <button type="button" id="newLiturgicalEventExNovoButton" class="btn btn-primary actionPromptButton"><i class="fas fa-calendar-plus me-2"></i><?php echo _('New LiturgicalEvent ex novo') ?></button>
+                    <button type="button" id="newLiturgicalEventFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus me-2"></i><?php echo _('New liturgical event from existing') ?></button>
+                    <button type="button" id="newLiturgicalEventExNovoButton" class="btn btn-primary actionPromptButton"><i class="fas fa-calendar-plus me-2"></i><?php echo _('New liturgical event ex novo') ?></button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _('Cancel') ?></button>
                 </div>
             </div>

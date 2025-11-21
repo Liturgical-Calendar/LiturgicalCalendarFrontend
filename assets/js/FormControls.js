@@ -572,7 +572,11 @@ class FormControls {
          * Liturgical color form group
          * We always have a liturgical color form group
          */
-        const selectedColors = liturgical_event !== null ? (Array.isArray(liturgical_event.color) ? liturgical_event.color : liturgical_event.color.split(',')) : [];
+        const selectedColors = liturgical_event && liturgical_event.color
+            ? (Array.isArray(liturgical_event.color)
+                ? liturgical_event.color
+                : String(liturgical_event.color).split(','))
+            : [];
         const colorFormGroup = document.createElement('div');
         colorFormGroup.className = 'form-group col-sm-2';
         const colorLabel = document.createElement('label');
@@ -738,7 +742,7 @@ class FormControls {
                 input.type = 'text';
                 input.className = `form-control litEvent litEventReadings litEventReadings_${prop}`;
                 input.id = `onTheFly${FormControls.uniqid}Readings_${prop}`;
-                input.value = liturgical_event && liturgical_event?.common === 'Proper' ? liturgical_event.readings[prop] : '';
+                input.value = liturgical_event && liturgical_event?.common === 'Proper' ? (liturgical_event?.readings[prop] || '') : '';
                 input.disabled = liturgical_event === null || typeof liturgical_event.common === 'undefined' || liturgical_event.common !== 'Proper';
                 inputCell.appendChild(input);
                 tr.appendChild(inputCell);
@@ -953,7 +957,11 @@ class FormControls {
             </div>`;
         }
 
-        let selectedColors = liturgical_event !== null ? (Array.isArray(liturgical_event.color) ? liturgical_event.color : liturgical_event.color.split(',')) : [];
+        const selectedColors = liturgical_event && liturgical_event.color
+            ? (Array.isArray(liturgical_event.color)
+                ? liturgical_event.color
+                : String(liturgical_event.color).split(','))
+            : [];
         formRow += `<div class="form-group col-sm-2">
         <label for="onTheFly${FormControls.uniqid}Color">${Messages[ "Liturgical color" ]}</label>
         <select class="form-select litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple"${FormControls.settings.colorField === false ? ' readonly' : ''} />
@@ -982,7 +990,7 @@ class FormControls {
         } else {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}Day">${Messages[ "Day" ]}</label>
-            <input type="number" min="1" max="31" value="${liturgical_event !== null && liturgical_event.day}" class="form-control litEvent litEventDay" id="onTheFly${FormControls.uniqid}Day"${FormControls.settings.dayField === false ?  'readonly' : '' } />
+            <input type="number" min="1" max="31" value="${liturgical_event?.day ?? ''}" class="form-control litEvent litEventDay" id="onTheFly${FormControls.uniqid}Day"${FormControls.settings.dayField === false ?  'readonly' : '' } />
             </div>`;
 
             formRow += `<div class="form-group col-sm-1">
@@ -1016,7 +1024,7 @@ class FormControls {
 
         if (FormControls.settings.readingsFieldShow) {
             formRow += `<div class="col-sm-5"><table>`;
-            formRow += readingsProperties.map((prop,idx) => `<tr><td><label for="onTheFly${FormControls.uniqid}Readings_${prop}">${prop}</label></td><td style="padding-left: 15px;"><input type="text" class="form-control litEvent litEventReadings litEventReadings_${prop}" id="onTheFly${FormControls.uniqid}Readings_${prop}" ${liturgical_event === null || typeof liturgical_event.common === 'undefined' || liturgical_event.common !== 'Proper' ? `disabled` : ``} value="${liturgical_event && liturgical_event?.common === 'Proper' ? liturgical_event.readings[prop] : ''}" /></td>${idx===0 ? `<td rowspan="5" style="vertical-align: top;"><i class="fas fa-info-circle m-2" style="color: #4e73df;" title="When the liturgical_event has its own Proper, then Readings can be defined, otherwise the readings will depend on the Common"></i>` : ``}</td></tr>`).join('');
+            formRow += readingsProperties.map((prop,idx) => `<tr><td><label for="onTheFly${FormControls.uniqid}Readings_${prop}">${prop}</label></td><td style="padding-left: 15px;"><input type="text" class="form-control litEvent litEventReadings litEventReadings_${prop}" id="onTheFly${FormControls.uniqid}Readings_${prop}" ${liturgical_event === null || typeof liturgical_event.common === 'undefined' || liturgical_event.common !== 'Proper' ? `disabled` : ``} value="${liturgical_event && liturgical_event?.common === 'Proper' ? (liturgical_event?.readings[prop] || '') : ''}" /></td>${idx===0 ? `<td rowspan="5" style="vertical-align: top;"><i class="fas fa-info-circle m-2" style="color: #4e73df;" title="When the liturgical_event has its own Proper, then Readings can be defined, otherwise the readings will depend on the Common"></i>` : ``}</td></tr>`).join('');
             formRow += `</table></div>`;
         }
 
@@ -1106,7 +1114,7 @@ const setFormSettings = action => {
             FormControls.title  = Messages[ RowActionTitle[RowAction.SetProperty] ];
             FormControls.action = RowAction.SetProperty;
             break;
-        case 'moveEventButton':
+        case 'moveLiturgicalEventButton':
             /* falls through */
         case RowAction.MoveEvent:
             FormControls.settings.eventKeyField   = false;

@@ -18,13 +18,13 @@ if (false === file_exists($ghReleaseCacheFile) || ( time() - filemtime($ghReleas
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $GithubReleasesAPI);
     curl_setopt($ch, CURLOPT_USERAGENT, 'LiturgicalCalendar');
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
     $ghCurrentReleaseInfo = curl_exec($ch);
 
-    if (curl_errno($ch) || $ghCurrentReleaseInfo === false) {
-        //throw new \Exception('Error while fetching via curl: ' . curl_error($ch));
-    } else {
+    if (!curl_errno($ch) && $ghCurrentReleaseInfo !== false) {
         $GitHubReleasesObj = json_decode($ghCurrentReleaseInfo);
         file_put_contents($ghReleaseCacheFile, json_encode($GitHubReleasesObj, JSON_PRETTY_PRINT));
     }

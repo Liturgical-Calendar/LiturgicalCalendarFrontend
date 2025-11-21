@@ -331,7 +331,19 @@ class EventsLoader {
 }
 
 
-const country2flag = (countryCode) => countryCode.replace(/./g, (letter) => String.fromCodePoint((letter.charCodeAt(0) % 32) + 0x1F1E5));
+/**
+ * Returns a string containing the emoji flag for the given country code.
+ * The country code must be a two-character string.
+ * If the country code is not a string or its length is not 2, an empty string is returned.
+ * @param {string} countryCode - two-character country code
+ * @returns {string} emoji flag for the given country code
+ */
+const country2flag = (countryCode) =>
+    typeof countryCode === 'string' && countryCode.length === 2
+        ? countryCode.toUpperCase().replace(/./g, letter =>
+            String.fromCodePoint((letter.charCodeAt(0) % 32) + 0x1F1E5)
+        )
+        : '';
 
 /**
  * Returns a string containing HTML for a Bootstrap input group element with a label
@@ -2014,13 +2026,13 @@ const serializeRegionalNationalDataClicked = (ev) => {
 
         if ( action === RowAction.CreateNew && rowData.liturgical_event.common.includes( 'Proper' ) ) {
             rowData.liturgical_event.readings = {
-                first_reading: row.querySelector('.litEventReadings_FIRST_READING').value,
-                responsorial_psalm: row.querySelector('.litEventReadings_RESPONSORIAL_PSALM').value,
-                gospel_acclamation: row.querySelector('.litEventReadings_ALLELUIA_VERSE').value,
-                gospel: row.querySelector('.litEventReadings_GOSPEL').value
+                first_reading: row.querySelector('.litEventReadings_first_reading').value,
+                responsorial_psalm: row.querySelector('.litEventReadings_responsorial_psalm').value,
+                gospel_acclamation: row.querySelector('.litEventReadings_gospel_acclamation').value,
+                gospel: row.querySelector('.litEventReadings_gospel').value
             };
-            if ( row.querySelector('.litEventReadings_SECOND_READING').value !== '' ) {
-                rowData.liturgical_event.readings.second_reading = row.querySelector('.litEventReadings_SECOND_READING').value;
+            if ( row.querySelector('.litEventReadings_second_reading').value !== '' ) {
+                rowData.liturgical_event.readings.second_reading = row.querySelector('.litEventReadings_second_reading').value;
             }
         }
 

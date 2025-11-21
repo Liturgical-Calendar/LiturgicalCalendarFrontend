@@ -15,10 +15,27 @@ $AvailableNationalCalendars = [];
 
 $c = new Collator($i18n->LOCALE);
 
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
+
 /**
  * Fetch metadata from API
  */
-$metadataRaw = @file_get_contents($metadataURL);
+curl_setopt($ch, CURLOPT_URL, $metadataURL);
+$metadataRaw = curl_exec($ch);
+
+if (curl_errno($ch)) {
+    $error_msg = curl_error($ch);
+    die($error_msg);
+}
+
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+if ($httpCode >= 400) {
+    die('Error: Received HTTP code ' . $httpCode . ' from API at ' . $metadataURL);
+}
 
 if ($metadataRaw === false) {
     die('Could not fetch metadata from API at ' . $metadataURL);
@@ -29,31 +46,36 @@ if (json_last_error() !== JSON_ERROR_NONE) {
     $error_msg = json_last_error_msg();
     die($error_msg);
 }
+
 if (false === isset($metadataJson['litcal_metadata'])) {
     die('litcal_metadata not found in metadata JSON from API');
 }
+
 [ 'litcal_metadata' => $LitCalMetadata ] = $metadataJson;
 
 /**
  * Fetch liturgical events catalog from API
  */
-$ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $eventsURL);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept-Language: ' . $i18n->LOCALE]);
 
-$response = curl_exec($ch);
+$eventsCatalogRaw = curl_exec($ch);
 
 if (curl_errno($ch)) {
     $error_msg = curl_error($ch);
     die($error_msg);
 }
 
-if ($response === false) {
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+if ($httpCode >= 400) {
+    die('Error: Received HTTP code ' . $httpCode . ' from API at ' . $eventsURL);
+}
+
+if ($eventsCatalogRaw === false) {
     die('Could not fetch events from API at ' . $eventsURL);
 }
 
-$litEventsJson = json_decode($response, true);
+$litEventsJson = json_decode($eventsCatalogRaw, true);
 
 if (json_last_error() !== JSON_ERROR_NONE) {
     $error_msg = json_last_error_msg();
