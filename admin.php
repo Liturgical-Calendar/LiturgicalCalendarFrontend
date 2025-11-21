@@ -46,11 +46,25 @@ curl_close($ch);
 /**
  * Decode the JSON responses
  */
-//[ "litcal_missals" => $MissalData ] = json_decode($missalsResponse, true);
 $MissalData = json_decode($missalsResponse, true);
-$thh        = array_keys($MissalData[0]);
 
-[ 'litcal_events' => $LiturgicalEventCollection ] = json_decode($eventsResponse, true);
+if (!is_array($decodedMissals)) {
+    die('Invalid missals JSON from API');
+}
+
+if (empty($MissalData) || !is_array($MissalData[0])) {
+    die('Unexpected missal data structure from API');
+}
+
+$thh = array_keys($MissalData[0]);
+
+$decodedEvents = json_decode($eventsResponse, true);
+
+if (!is_array($decodedEvents) || !isset($decodedEvents['litcal_events']) || !is_array($decodedEvents['litcal_events'])) {
+    die('Invalid events JSON from API');
+}
+
+[ 'litcal_events' => $LiturgicalEventCollection ] = $decodedEvents;
 
 /**
  * Prepare our translations strings
@@ -65,6 +79,7 @@ $messages = [
     'red'                   => _('red'),
     'green'                 => _('green'),
     'purple'                => _('purple'),
+    'rose'                  => _('rose'),
     /**translators: in reference to the first year from which this liturgical event takes place */
     'Since'                 => _('Since'),
     /**translators: in reference to the year from which this liturgical event no longer needs to be dealt with */

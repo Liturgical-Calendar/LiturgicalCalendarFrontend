@@ -86,7 +86,7 @@ $API_EXTEND_HOWTO_A3  = _('In this case, the liturgical events for the wider reg
 $DioceseGroupHelp     = _('If a group of dioceses decides to pool their Liturgical Calendar data, for example to print out one single yearly calendar with the data for all the dioceses in the group, the group can be defined or set here.');
 
 $messages = [
-    'EventKey'                      => _('Tag'),
+    'EventKey'                      => _('Event key'),
     'Name'                          => _('Name'),
     'Day'                           => _('Day'),
     'Month'                         => _('Month'),
@@ -102,6 +102,7 @@ $messages = [
     'red'                           => _('red'),
     'green'                         => _('green'),
     'purple'                        => _('purple'),
+    'rose'                          => _('rose'),
     /**translators: in reference to the first year from which this liturgical event takes place */
     'Since'                         => _('Since'),
     /**translators: in reference to the year from which this liturgical event no longer needs to be dealt with */

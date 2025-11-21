@@ -2492,14 +2492,16 @@ const fillDiocesanFormWithData = (data) => {
             row.querySelector('.litEventDay').value = liturgical_event.day;
             row.querySelector('.litEventMonth').value = liturgical_event.month;
         }
-        setCommonMultiselect( row, liturgical_event.common );
+        if (Array.isArray(liturgical_event.common) && liturgical_event.common.length) {
+            setCommonMultiselect(row, liturgical_event.common);
+        }
         $(row.querySelector('.litEventColor')).multiselect({
             buttonWidth: '100%',
             buttonClass: 'form-select',
             templates: {
                 button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
             }
-        }).multiselect('deselectAll', false).multiselect('select', liturgical_event.color);
+        }).multiselect('deselectAll', false).multiselect('select', Array.isArray(liturgical_event.color) ? liturgical_event.color : []);
         row.querySelector('.litEventSinceYear').value = metadata.since_year;
         if ( metadata.hasOwnProperty('until_year') ) {
             row.querySelector('.litEventUntilYear').value = metadata.until_year;
