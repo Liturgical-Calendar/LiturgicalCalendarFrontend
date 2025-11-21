@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 08:49+0000\n"
+"POT-Creation-Date: 2025-11-21 16:50+0000\n"
 "PO-Revision-Date: 2025-11-21 07:26+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
@@ -199,13 +199,21 @@ msgstr ""
 "Az összes elérhető API útvonal az általuk támogatott módszerekkel, "
 "paraméterekkel, tartalomtípusokkal és válaszokkal itt van leírva."
 
-#: index.php:170
-msgid "Calculation of the Date of Easter"
-msgstr "Húsvét dátumának kiszámítása"
+#: index.php:170 usage.php:184
+msgid "Calculation of the Dates of Easter"
+msgstr "A húsvéti időpontok kiszámítása"
 
 #: index.php:173
+#, fuzzy
+#| msgid ""
+#| "A simple API endpoint that returns data about the Date of Easter, both "
+#| "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
+#| "Calendar) to 9999 (maximum possible date calculation in 64bit PHP), using "
+#| "a PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian "
+#| "easter (observed by the Roman Catholic church) and of the Meeus algorithm "
+#| "for Julian easter (observed by orthodox churches)."
 msgid ""
-"A simple API endpoint that returns data about the Date of Easter, both "
+"A simple API endpoint that returns data about the Dates of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
 "Calendar) to 9999 (maximum possible date calculation in 64bit PHP), using a "
 "PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian easter "
@@ -220,7 +228,9 @@ msgstr ""
 "julián húsvétra (amelyet az ortodox egyházak figyelnek)."
 
 #: index.php:178
-msgid "Date of Easter API endpoint"
+#, fuzzy
+#| msgid "Date of Easter API endpoint"
+msgid "Dates of Easter API endpoint"
 msgstr "Húsvét dátumának API végpontja"
 
 #: index.php:180
@@ -475,10 +485,6 @@ msgstr ""
 #: usage.php:176 layout/header.php:109
 msgid "Dates of Easter"
 msgstr "A húsvét dátumai"
-
-#: usage.php:184
-msgid "Calculation of the Dates of Easter"
-msgstr "A húsvéti időpontok kiszámítása"
 
 #: usage.php:187
 msgid "Example display of the date of Easter from 1583 to 9999"
@@ -1512,6 +1518,9 @@ msgstr "Dokumentáció"
 #: layout/header.php:97
 msgid "Examples of Usage"
 msgstr "Használati példák"
+
+#~ msgid "Calculation of the Date of Easter"
+#~ msgstr "Húsvét dátumának kiszámítása"
 
 #~ msgid "Click on the link above to copy it the clipboard."
 #~ msgstr "Kattints a fenti linkre, hogy másold a vágólapra."

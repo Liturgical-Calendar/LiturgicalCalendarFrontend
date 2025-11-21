@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 08:49+0000\n"
+"POT-Creation-Date: 2025-11-21 16:50+0000\n"
 "PO-Revision-Date: 2025-11-21 07:26+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
@@ -205,13 +205,21 @@ msgstr ""
 "Toutes les routes API disponibles avec leurs méthodes, paramètres, types de "
 "contenu et réponses pris en charge sont décrites ici."
 
-#: index.php:170
-msgid "Calculation of the Date of Easter"
-msgstr "Calcul de la date de Pâques"
+#: index.php:170 usage.php:184
+msgid "Calculation of the Dates of Easter"
+msgstr "Calcul des dates de Pâques"
 
 #: index.php:173
+#, fuzzy
+#| msgid ""
+#| "A simple API endpoint that returns data about the Date of Easter, both "
+#| "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
+#| "Calendar) to 9999 (maximum possible date calculation in 64bit PHP), using "
+#| "a PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian "
+#| "easter (observed by the Roman Catholic church) and of the Meeus algorithm "
+#| "for Julian easter (observed by orthodox churches)."
 msgid ""
-"A simple API endpoint that returns data about the Date of Easter, both "
+"A simple API endpoint that returns data about the Dates of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
 "Calendar) to 9999 (maximum possible date calculation in 64bit PHP), using a "
 "PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian easter "
@@ -227,7 +235,9 @@ msgstr ""
 "orthodoxes)."
 
 #: index.php:178
-msgid "Date of Easter API endpoint"
+#, fuzzy
+#| msgid "Date of Easter API endpoint"
+msgid "Dates of Easter API endpoint"
 msgstr "Point de terminaison API pour la date de Pâques"
 
 #: index.php:180
@@ -490,10 +500,6 @@ msgstr ""
 #: usage.php:176 layout/header.php:109
 msgid "Dates of Easter"
 msgstr "Dates de Pâques"
-
-#: usage.php:184
-msgid "Calculation of the Dates of Easter"
-msgstr "Calcul des dates de Pâques"
 
 #: usage.php:187
 msgid "Example display of the date of Easter from 1583 to 9999"
@@ -1546,6 +1552,9 @@ msgstr "Documentation"
 #: layout/header.php:97
 msgid "Examples of Usage"
 msgstr "Exemples d'utilisation"
+
+#~ msgid "Calculation of the Date of Easter"
+#~ msgstr "Calcul de la date de Pâques"
 
 #~ msgid "Click on the link above to copy it the clipboard."
 #~ msgstr ""
