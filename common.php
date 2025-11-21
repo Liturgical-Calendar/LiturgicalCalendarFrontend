@@ -44,11 +44,15 @@ if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'development') {
     if (file_exists($ghReleaseCacheFile)) {
         $GitHubReleasesRaw       = file_get_contents($ghReleaseCacheFile);
         $GitHubLatestReleaseInfo = json_decode($GitHubReleasesRaw);
-        $GitHubLatestRelease     = explode('.', $GitHubLatestReleaseInfo->tag_name)[0];
+        $tagName                 = is_object($GitHubLatestReleaseInfo) && isset($GitHubLatestReleaseInfo->tag_name)
+            ? $GitHubLatestReleaseInfo->tag_name
+            : 'dev';
+        $GitHubLatestRelease     = explode('.', $tagName)[0] ?: 'dev';
     } else {
-        $GithubLatestRelease = 'dev';
+        $GitHubLatestRelease = 'dev';
     }
-    $isStaging = ( strpos($_SERVER['HTTP_HOST'], '-staging') !== false );
+    $host      = $_SERVER['HTTP_HOST'] ?? '';
+    $isStaging = ( strpos($host, '-staging') !== false );
     $endpointV = $isStaging ? 'dev' : $GitHubLatestRelease;
     $baseURL   = "https://litcal.johnromanodorazio.com/api/{$endpointV}";
 }
