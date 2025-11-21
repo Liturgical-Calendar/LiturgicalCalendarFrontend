@@ -1,3 +1,5 @@
+/** @import { RowData } from './extending.js' */
+
 /**
  * @typedef DiocesanCalendarPayload
  * @prop {Array<RowData>} litcal
@@ -6,7 +8,6 @@
  * @prop {Object} metadata
  * @prop {string} metadata.region
  */
-
 
 class DiocesanCalendarPayload {
     /**
@@ -31,9 +32,9 @@ class DiocesanCalendarPayload {
                 // Allow JSON.stringify
                 if (prop === 'toJSON') {
                     return () => ({
-                        litcal: this.litcal,
-                        settings: this.settings,
-                        metadata: this.metadata
+                        litcal: target.litcal,
+                        settings: target.settings,
+                        metadata: target.metadata
                     });
                 }
                 if ( allowedProps.has( prop ) ) {

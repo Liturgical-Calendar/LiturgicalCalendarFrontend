@@ -1,0 +1,7 @@
+{
+    "phpcs.autoConfigSearch": true,
+    "phpcs.enable": true,
+    "phpcs.ignorePatterns": [
+        "**/vendor/*"
+    ]
+}

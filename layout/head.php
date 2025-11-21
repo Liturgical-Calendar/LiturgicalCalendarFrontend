@@ -21,15 +21,20 @@
 <link href="assets/css/liturgicalcalendar.css" rel="stylesheet">
 <?php
     //some assets are only needed on certain pages
-    $pageName = basename($_SERVER["SCRIPT_FILENAME"], '.php');
+    $pageName = basename($_SERVER['SCRIPT_FILENAME'], '.php');
 if (file_exists("assets/css/{$pageName}.css")) {
     echo "<link href=\"assets/css/{$pageName}.css\" rel=\"stylesheet\">";
 }
-if ($pageName === "index") {
+if ($pageName === 'index') {
     echo '<link href="assets/css/homepage.css" rel="stylesheet">';
 }
-if (in_array($pageName, [ 'extending', 'usage', 'admin' ])) {
+if (in_array($pageName, [ 'index', 'extending', 'usage', 'admin', 'examples' ])) {
     echo '<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.1/css/bootstrap-multiselect.min.css" rel="stylesheet">';
     echo '<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">';
+}
+if ('extending' === $pageName) {
+    echo '<link rel="preconnect" href="https://fonts.googleapis.com">';
+    echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>';
+    echo '<link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">';
 }
 ?>

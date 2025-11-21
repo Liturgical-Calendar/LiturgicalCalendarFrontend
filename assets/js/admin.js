@@ -11,8 +11,10 @@ import {
     sanitizeInput
 } from './templates.js';
 
-// The global messages object is set in admin.php
-const { LOCALE } = messages;
+if ( typeof Messages === 'undefined' ) {
+    throw new Error('Messages object not defined, should have been set in admin.php');
+}
+const { LOCALE } = Messages;
 FormControls.jsLocale = LOCALE.replace('_','-');
 FormControls.weekdayFormatter = new Intl.DateTimeFormat(FormControls.jsLocale, { weekday: "long" });
 
@@ -50,7 +52,7 @@ const createPropriumDeTemporeTable = ( data ) => {
         $theadRow.empty();
         $('#jsonDataTbl').removeClass('propriumDeTempore');
         let n;
-        if( jsonFile.includes('USA') || jsonFile.includes('ITALY') ) {
+        if( jsonFile.includes('_US_') || jsonFile.includes('_IT_') ) {
             $('#jsonDataTbl').addClass('nationalCalendar');
             n = [10, 10, 14, 0, 5, 0, 25, 0, 6, 30];
         } else {
@@ -71,9 +73,9 @@ const createPropriumDeTemporeTable = ( data ) => {
                     //console.log( row[prop] );
                     trHtmlStr += `<td contenteditable="false">${row[prop].join(',')}</td>`;
                 }
-                else if( typeof row[prop] === 'object' ) {
-                    //console.log(`we have an object in key ${prop}:`);
-                    //console.log( row[prop] );
+                else if( typeof row[prop] === 'object' && row[prop] !== null ) {
+                    console.log(`we have an object in key ${prop}:`);
+                    console.log( row[prop] );
                     let htmlStr = '<table><tbody>';
                     Object.keys( row[prop] ).forEach(title => {
                         let val = row[prop][title];
@@ -106,8 +108,8 @@ const createPropriumDeTemporeTable = ( data ) => {
         data.forEach((el) => {
             let currentUniqid = FormControls.uniqid;
             //console.log( el );
-            let existingFestivityTag = el.Festivity.hasOwnProperty( 'tag' ) ? el.Festivity.tag : null;
-            if( el.Metadata.action === RowAction.CreateNew && FestivityCollectionKeys.includes( existingFestivityTag ) ) {
+            let existingLiturgicalEventKey = el.liturgical_event.hasOwnProperty( 'event_key' ) ? el.liturgical_event.event_key : null;
+            if( el.Metadata.action === RowAction.CreateNew && LiturgicalEventCollectionKeys.includes( existingLiturgicalEventKey ) ) {
                 el.Metadata.action = RowAction.CreateNewFromExisting;
             }
             setFormSettings( el.Metadata.action );
@@ -123,18 +125,21 @@ const createPropriumDeTemporeTable = ( data ) => {
             if( el.Metadata.action === RowAction.SetProperty ) {
                 $formrow.data('prop', el.Metadata.property).attr('data-prop', el.Metadata.property);
             }
-            if( el.Festivity.hasOwnProperty('common') && el.Festivity.common.includes('Proper') ) {
+            if( el.liturgical_event.hasOwnProperty('common') && el.liturgical_event.common.includes('Proper') ) {
                 $formrow.find('.litEventReadings').prop('disabled', false);
             }
 
-            if( false === el.Festivity.hasOwnProperty( 'color' ) ) {
-                if( existingFestivityTag !== null ) {
-                    el.Festivity.color = FestivityCollection.filter(el => el.event_key === existingFestivityTag)[0].color;
+            if( false === el.liturgical_event.hasOwnProperty( 'color' ) ) {
+                if( existingLiturgicalEventKey !== null ) {
+                    const fallbackEvent = LiturgicalEventCollection.find(ev => ev.event_key === existingLiturgicalEventKey);
+                    if( fallbackEvent && fallbackEvent.hasOwnProperty('color') ) {
+                        el.liturgical_event.color = fallbackEvent.color;
+                    }
                 }
             }
 
-            if( el.Festivity.hasOwnProperty( 'color' ) ) {
-                let colorVal = Array.isArray(el.Festivity.color) ? el.Festivity.color : el.Festivity.color.split(',');
+            if( el.liturgical_event.hasOwnProperty( 'color' ) ) {
+                let colorVal = Array.isArray(el.liturgical_event.color) ? el.liturgical_event.color : el.liturgical_event.color.split(',');
                 $row.find('.litEventColor').multiselect({
                     buttonWidth: '100%',
                     buttonClass: 'form-select',
@@ -147,8 +152,8 @@ const createPropriumDeTemporeTable = ( data ) => {
                 }
             }
 
-            if( el.Festivity.hasOwnProperty( 'common' ) ) {
-                let common = Array.isArray( el.Festivity.common ) ? el.Festivity.common : el.Festivity.common.split(',');
+            if( el.liturgical_event.hasOwnProperty( 'common' ) ) {
+                let common = Array.isArray( el.liturgical_event.common ) ? el.liturgical_event.common : el.liturgical_event.common.split(',');
                 if(FormControls.settings.commonFieldShow) {
                     setCommonMultiselect( $row, common );
                     if(FormControls.settings.commonField === false) {
@@ -158,14 +163,14 @@ const createPropriumDeTemporeTable = ( data ) => {
             }
 
             if(FormControls.settings.gradeFieldShow) {
-                $row.find(`#onTheFly${currentUniqid}Grade`).val(el.Festivity.grade);
+                $row.find(`#onTheFly${currentUniqid}Grade`).val(el.liturgical_event.grade);
                 if(FormControls.settings.gradeField === false) {
                     $row.find(`#onTheFly${currentUniqid}Grade`).prop('disabled', true);
                 }
             }
 
             if(FormControls.settings.monthField === false) {
-                $row.find(`#onTheFly${currentUniqid}Month > option[value]:not([value=${el.Festivity.month}])`).prop('disabled',true);
+                $row.find(`#onTheFly${currentUniqid}Month > option[value]:not([value=${el.liturgical_event.month}])`).prop('disabled',true);
             }
         });
 
@@ -177,7 +182,7 @@ $(document).on('change', '#jsonFileSelect', () => {
     let baseJsonFile = $('#jsonFileSelect :selected').text();
     let jsonFile = sanitizeInput( $('#jsonFileSelect').val() );
     let jsonFileFull = '';
-    if( isStaging ) {
+    if( location.hostname !== 'litcal.johnromanodorazio.com' ) {
         jsonFileFull = 'includes/readJSONFile.php?filename=https://litcal.johnromanodorazio.com/' + jsonFile;
     } else {
         jsonFileFull = './' + jsonFile;
@@ -206,7 +211,7 @@ const handleJsonFileData = ( data, jsonFile ) => {
         $('#jsonDataTbl tbody').empty();
         createMemorialsFromDecreesInterface( data );
     } else {
-        if( $( '#memorialsFromDecreesBtnGrp' ).is(':hidden') === false ) {
+        if( $('#memorialsFromDecreesBtnGrp').is(':hidden') === false ) {
             $('#memorialsFromDecreesForm').empty();
             $('#memorialsFromDecreesBtnGrp').fadeOut( 'slow' );
         }
@@ -322,29 +327,37 @@ $(document).on('click', '.actionPromptButton', ev => {
     let currentUniqid = parseInt( FormControls.uniqid );
     let $modal = $(ev.currentTarget).closest('.actionPromptModal');
     let $modalForm = $modal.find('form');
-    let existingFestivityTag = sanitizeInput( $modalForm.find('.existingFestivityName').val() );
+    let existingLiturgicalEventKey = sanitizeInput( $modalForm.find('.existingLiturgicalEventName').val() );
     let propertyToChange;
     //let buttonId = ev.currentTarget.id;
     //console.log(buttonId + ' button was clicked');
+
     FormControls.settings.decreeURLFieldShow = true;
     FormControls.settings.decreeLangMapFieldShow = true; //TODO: check how this should be set, it's different than extending.js
+
     setFormSettings( ev.currentTarget.id );
+
     if( ev.currentTarget.id === 'setPropertyButton' ) {
         propertyToChange = sanitizeInput( $('#propertyToChange').val() );
         setFormSettingsForProperty( propertyToChange );
     }
 
-    if( existingFestivityTag !== '' ) {
-        $row = $(FormControls.CreateDoctorRow( existingFestivityTag ));
+    let $row, litevent;
+    if( existingLiturgicalEventKey !== '' ) {
+        $row = $(FormControls.CreateDoctorRow( existingLiturgicalEventKey ));
     } else {
         $row = $(FormControls.CreateDoctorRow());
     }
+
     $('#memorialsFromDecreesForm').prepend($row);
+
     $modal.modal('hide');
     $row.find('.form-group').closest('.row').data('action', FormControls.action.description).attr('data-action', FormControls.action.description);
+
     if( FormControls.action.description === RowAction.SetProperty ) {
         $row.find('.form-group').closest('.row').data('prop', propertyToChange).attr('data-prop', propertyToChange);
     }
+
     $row.find('.litEventColor').multiselect({
         buttonWidth: '100%',
         buttonClass: 'form-select',
@@ -368,8 +381,8 @@ $(document).on('click', '.actionPromptButton', ev => {
         $row.find(`#onTheFly${currentUniqid}Grade`).prop('disabled', true);
     }
 
-    if( existingFestivityTag !== '' ) {
-        litevent = FestivityCollection.filter(el => el.event_key === existingFestivityTag)[0];
+    if( existingLiturgicalEventKey !== '' ) {
+        litevent = LiturgicalEventCollection.find(el => el.event_key === existingLiturgicalEventKey);
 
         $row.find(`#onTheFly${currentUniqid}Grade`).val(litevent.GRADE);
         $row.find(`#onTheFly${currentUniqid}Common`).multiselect('select', litevent.COMMON)
@@ -383,13 +396,16 @@ $(document).on('click', '.actionPromptButton', ev => {
 
 });
 
-$(document).on('change', '.existingFestivityName', ev => {
-    $modal = $(ev.currentTarget).closest('.actionPromptModal');
-    $form = $modal.find('form');
-    $form.each((idx, el) => { $(el).removeClass('was-validated') });
+$(document).on('change', '.existingLiturgicalEventName', ev => {
+    let $modal = $(ev.currentTarget).closest('.actionPromptModal');
+    let $form = $modal.find('form');
     let disabledState;
+
+    $form.each((idx, el) => { $(el).removeClass('was-validated') });
+
     const curTargVal = sanitizeInput( $(ev.currentTarget).val() );
-    if ($('#existingFestivitiesList').find('option[value="' + curTargVal + '"]').length > 0) {
+
+    if ($('#existingLiturgicalEventsList').find('option[value="' + curTargVal + '"]').length > 0) {
         disabledState = false;
         if( $(ev.currentTarget).prop('required') ) {
             $(ev.currentTarget).removeClass('is-invalid');
@@ -400,6 +416,7 @@ $(document).on('change', '.existingFestivityName', ev => {
             $(ev.currentTarget).addClass('is-invalid');
         }
     }
+
     switch( $modal.attr("id") ) {
         case 'makeDoctorActionPrompt':
             $('#designateDoctorButton').prop('disabled', disabledState);
@@ -407,25 +424,25 @@ $(document).on('change', '.existingFestivityName', ev => {
         case 'setPropertyActionPrompt':
             $('#setPropertyButton').prop('disabled', disabledState);
             break;
-        case 'moveFestivityActionPrompt':
-            $('#moveFestivityButton').prop('disabled', disabledState);
+        case 'moveLiturgicalEventActionPrompt':
+            $('#moveLiturgicalEventButton').prop('disabled', disabledState);
             break;
-        case 'newFestivityActionPrompt':
-            $('#newFestivityFromExistingButton').prop('disabled', disabledState);
-            $('#newFestivityExNovoButton').prop('disabled', !disabledState);
+        case 'newLiturgicalEventActionPrompt':
+            $('#newLiturgicalEventFromExistingButton').prop('disabled', disabledState);
+            $('#newLiturgicalEventExNovoButton').prop('disabled', !disabledState);
             break;
     }
 });
 
 
 $(document).on('click', '.strtotime-toggle-btn', ev => {
-    let uniqid = parseInt( $(ev.currentTarget).attr('data-row-uniqid') );
-    let currentJsonFile = $('#jsonFileSelect :selected').text();
-    let tag = sanitizeInput( $(`#onTheFly${uniqid}Tag`).val() );
-    let festivityData = jsonFileData[currentJsonFile].filter(el => el.Festivity.tag === tag)[0];
-    let strtotime = typeof festivityData !== 'undefined' && festivityData.Metadata.hasOwnProperty('strtotime') ? festivityData.Metadata.strtotime : {};
-    // console.log('festivityData = ');
-    // console.log(festivityData);
+    const uniqid = parseInt( $(ev.currentTarget).attr('data-row-uniqid') );
+    const currentJsonFile = $('#jsonFileSelect :selected').text();
+    const eventKey = sanitizeInput( $(`#onTheFly${uniqid}EventKey`).val() );
+    const liturgicalEventData = jsonFileData[currentJsonFile].find(el => el.liturgical_event.event_key === eventKey);
+    const strtotime = typeof liturgicalEventData !== 'undefined' && liturgicalEventData.Metadata.hasOwnProperty('strtotime') ? liturgicalEventData.Metadata.strtotime : {};
+    // console.log('liturgicalEventData = ');
+    // console.log(liturgicalEventData);
     // console.log('strtotime = ');
     // console.log(strtotime);
     if( $(ev.currentTarget).attr('aria-pressed') === 'true' ) {
@@ -444,7 +461,7 @@ $(document).on('click', '.strtotime-toggle-btn', ev => {
             <option value="before"${strtotime.hasOwnProperty('relativeTime') && strtotime.relativeTime === 'before' ? ' selected': ''}>before</option>
             <option value="after"${strtotime.hasOwnProperty('relativeTime') && strtotime.relativeTime === 'after' ? ' selected': ''}>after</option>
         </select>
-        <input list="existingFestivitiesList" class="form-control litEvent litEventStrtotime existingFestivityName" id="onTheFly${uniqid}StrToTime-festivityKey" value="${strtotime.hasOwnProperty('festivityKey') ? strtotime.festivityKey : ''}" required>`;
+        <input list="existingLiturgicalEventsList" class="form-control litEvent litEventStrtotime existingLiturgicalEventName" id="onTheFly${uniqid}StrToTime-festivityKey" value="${strtotime.hasOwnProperty('festivityKey') ? strtotime.festivityKey : ''}" required>`;
         $dayFormGroup.empty().removeClass('col-sm-1').addClass('col-sm-2').append($strToTimeFormGroup);
     } else {
         $(ev.currentTarget).find('i').removeClass('fa-comment').addClass('fa-comment-slash');
@@ -452,15 +469,15 @@ $(document).on('click', '.strtotime-toggle-btn', ev => {
         let $strToTimeFormGroup = $(`#onTheFly${uniqid}StrToTime-dayOfTheWeek`).closest('.form-group');
         $strToTimeFormGroup.empty().removeClass('col-sm-2').addClass('col-sm-1').append(
             `<label for="onTheFly${uniqid}Day">Day</label>
-            <input type="number" min="1" max="31" value="${typeof festivityData !== 'undefined' && festivityData.Festivity.hasOwnProperty('day') ? festivityData.Festivity.day : ''}" class="form-control litEvent litEventDay" id="onTheFly${uniqid}Day" />`
+            <input type="number" min="1" max="31" value="${typeof liturgicalEventData !== 'undefined' && liturgicalEventData.liturgical_event.hasOwnProperty('day') ? liturgicalEventData.liturgical_event.day : ''}" class="form-control litEvent litEventDay" id="onTheFly${uniqid}Day" />`
         );
         let formRow = `<div class="form-group col-sm-1">
-        <label for="onTheFly${uniqid}Month">${messages[ "Month" ]}</label>
+        <label for="onTheFly${uniqid}Month">${Messages[ "Month" ]}</label>
         <select class="form-select litEvent litEventMonth" id="onTheFly${uniqid}Month" >`;
         let formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
         for (let i = 0; i < 12; i++) {
             let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
-            formRow += `<option value=${i + 1}${typeof festivityData !== 'undefined' && festivityData.Festivity.hasOwnProperty('month') && festivityData.Festivity.month === i+1 ? ' selected' : ''}>${formatter.format(month)}</option>`;
+            formRow += `<option value=${i + 1}${typeof liturgicalEventData !== 'undefined' && liturgicalEventData.liturgical_event.hasOwnProperty('month') && liturgicalEventData.liturgical_event.month === i+1 ? ' selected' : ''}>${formatter.format(month)}</option>`;
         }
         formRow += `</select>
         </div>`;

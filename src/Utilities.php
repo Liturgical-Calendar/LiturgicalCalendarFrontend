@@ -12,8 +12,8 @@ class Utilities
      */
     public static function ordinal($number)
     {
-        $ends = array('th','st','nd','rd','th','th','th','th','th','th');
-        if ((($number % 100) >= 11) && (($number % 100) <= 13)) {
+        $ends = ['th','st','nd','rd','th','th','th','th','th','th'];
+        if (( ( $number % 100 ) >= 11 ) && ( ( $number % 100 ) <= 13 )) {
             return $number . 'th';
         } else {
             return $number . $ends[$number % 10];
@@ -35,25 +35,25 @@ class Utilities
     public static function romanNumeral(int $number)
     {
         // Create a lookup array that contains all of the Roman numerals.
-        $lookup = array(
-            'X&#773;'           => 10000,
-            'I&#773;X&#773;'    => 9000,
-            'V&#773;'           => 5000,
-            'I&#773;V&#773;'    => 4000,
-            'M'                 => 1000,
-            'CM'                => 900,
-            'D'                 => 500,
-            'CD'                => 400,
-            'C'                 => 100,
-            'XC'                => 90,
-            'L'                 => 50,
-            'XL'                => 40,
-            'X'                 => 10,
-            'IX'                => 9,
-            'V'                 => 5,
-            'IV'                => 4,
-            'I'                 => 1
-        );
+        $lookup = [
+            'X&#773;'        => 10000,
+            'I&#773;X&#773;' => 9000,
+            'V&#773;'        => 5000,
+            'I&#773;V&#773;' => 4000,
+            'M'              => 1000,
+            'CM'             => 900,
+            'D'              => 500,
+            'CD'             => 400,
+            'C'              => 100,
+            'XC'             => 90,
+            'L'              => 50,
+            'XL'             => 40,
+            'X'              => 10,
+            'IX'             => 9,
+            'V'              => 5,
+            'IV'             => 4,
+            'I'              => 1
+        ];
 
         $result = '';
         foreach ($lookup as $roman => $value) {
@@ -91,7 +91,7 @@ class Utilities
      */
     private static function formatNameWithUrl(string $url, string $name)
     {
-        return sprintf(self::NAME_WITH_URL, $url, $name) . " - ";
+        return sprintf(self::NAME_WITH_URL, $url, $name) . ' - ';
     }
 
     /**
@@ -108,52 +108,52 @@ class Utilities
     private static function getCardInfo(string $who)
     {
         $cards = [
-            "DONJOHN" => [
-                "website"   => Utilities::formatNameWithUrl('https://www.johnromanodorazio.com', 'John Romano D\'Orazio'),
-                "note"      => sprintf(
+            'DONJOHN'        => [
+                'website' => Utilities::formatNameWithUrl('https://www.johnromanodorazio.com', 'John Romano D\'Orazio'),
+                'note'    => sprintf(
                     /**translators: 1. BibleGet github url 2. Liturgical Calendar github url */
                     _('Priest in the Diocese of Rome, author of the <a href="%1$s" target="_blank">BibleGet project</a> and of the <a href="%2$s" target="_blank">Liturgical Calendar project</a>'),
                     'https://github.com/BibleGet-I-O',
                     'https://github.com/Liturgical-Calendar'
                 ),
-                "img"       => "./assets/img/johndorazio_512x512.jpg",
-                "icon"      => "fa-cross"
+                'img'     => './assets/img/johndorazio_512x512.jpg',
+                'icon'    => 'fa-cross'
             ],
-            "MIKETRUSO" => [
-                "website"   => Utilities::formatNameWithUrl('https://www.miketruso.com/', 'Mike Truso'),
-                "note"      => _('Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild for Catholic IT Professionals, contributed the bootstrap theming of the project website'),
-                "img"       => "./assets/img/miketruso_512x512.jpg",
-                "icon"      => "fa-code"
+            'MIKETRUSO'      => [
+                'website' => Utilities::formatNameWithUrl('https://www.miketruso.com/', 'Mike Truso'),
+                'note'    => _('Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild for Catholic IT Professionals, contributed the bootstrap theming of the project website'),
+                'img'     => './assets/img/miketruso_512x512.jpg',
+                'icon'    => 'fa-code'
             ],
-            "MICHAELSHELTON" => [
-                "website"   => Utilities::formatNameWithUrl('https://www.linkedin.com/in/michaelrshelton/', 'Michael Shelton'),
-                "note"      => _('Full stack web developer, contributed to the generation of the Open API documentation'),
-                "img"       => "./assets/img/michaelshelton_512x512.jpg",
-                "icon"      => "fa-code"
+            'MICHAELSHELTON' => [
+                'website' => Utilities::formatNameWithUrl('https://www.linkedin.com/in/michaelrshelton/', 'Michael Shelton'),
+                'note'    => _('Full stack web developer, contributed to the generation of the Open API documentation'),
+                'img'     => './assets/img/michaelshelton_512x512.jpg',
+                'icon'    => 'fa-code'
             ],
-            "STEVENVANROODE" => [
-                "website"   => Utilities::formatNameWithUrl('https://www.latijnseliturgie.nl/', 'Steven van Roode'),
-                "note"      => _('Latin Liturgy Association of the Netherlands, contributed the national calendar for the Netherlands to this project with all related translations'),
-                "img"       => "./assets/img/stevenvanroode_512x512.jpg",
-                "icon"      => "fa-music"
+            'STEVENVANROODE' => [
+                'website' => Utilities::formatNameWithUrl('https://www.latijnseliturgie.nl/', 'Steven van Roode'),
+                'note'    => _('Latin Liturgy Association of the Netherlands, contributed the national calendar for the Netherlands to this project with all related translations'),
+                'img'     => './assets/img/stevenvanroode_512x512.jpg',
+                'icon'    => 'fa-music'
             ],
-            "MIKEKASBERG"   => [
-                "website"   => Utilities::formatNameWithUrl('https://www.mikekasberg.com/', 'Mike Kasberg'),
-                "note"      => _('Senior software engineer at Strava, author of the ConfessIt app, contributed to the structuring of the JSON responses of the Liturgical Calendar API'),
-                "img"       => "./assets/img/mikekasberg_512x512.jpg",
-                "icon"      => "fa-code"
+            'MIKEKASBERG'    => [
+                'website' => Utilities::formatNameWithUrl('https://www.mikekasberg.com/', 'Mike Kasberg'),
+                'note'    => _('Senior software engineer at Strava, author of the ConfessIt app, contributed to the structuring of the JSON responses of the Liturgical Calendar API'),
+                'img'     => './assets/img/mikekasberg_512x512.jpg',
+                'icon'    => 'fa-code'
             ],
-            "GABRIELCHOW"   => [
-                "website"   => Utilities::formatNameWithUrl('https://gcatholic.org/', 'Gabriel Chow'),
-                "note"      => _('Software Engineer and contributor to Salt + Light Television, contributed information about the dioceses of Latin rite'),
-                "img"       => "./assets/img/gabrielchow_512x512.jpg",
-                "icon"      => "fa-code"
+            'GABRIELCHOW'    => [
+                'website' => Utilities::formatNameWithUrl('https://gcatholic.org/', 'Gabriel Chow'),
+                'note'    => _('Software Engineer and contributor to Salt + Light Television, contributed information about the dioceses of Latin rite'),
+                'img'     => './assets/img/gabrielchow_512x512.webp',
+                'icon'    => 'fa-code'
             ],
-            "CHRISSHERREN"  => [
-                "website"   => Utilities::formatNameWithUrl('https://dioceseofcharlottetown.com/priests/', 'Chris Sherren'),
-                "note"      => _('Chancellor of the Diocese of Charlottetown, contributed liturgical calendar data for Canada in both English and French'),
-                "img"       => "./assets/img/chrissherren_504x504.jpg",
-                "icon"      => "fa-cross"
+            'CHRISSHERREN'   => [
+                'website' => Utilities::formatNameWithUrl('https://dioceseofcharlottetown.com/priests/', 'Chris Sherren'),
+                'note'    => _('Chancellor of the Diocese of Charlottetown, contributed liturgical calendar data for Canada in both English and French'),
+                'img'     => './assets/img/chrissherren_504x504.jpg',
+                'icon'    => 'fa-cross'
             ]
         ];
         return $cards[$who];
@@ -168,23 +168,23 @@ class Utilities
     public static function generateCard(string $who): void
     {
         $cardInfo = self::getCardInfo($who);
-        echo "<div class=\"col-md-6\">
-            <div class=\"card border-3 border-top-0 border-bottom-0 border-end-0 border-primary shadow m-2\">
-                <div class=\"card-body\">
-                    <div class=\"row no-gutters align-items-center\">
-                        <div class=\"col mr-2\">
-                            <div class=\"row no-gutters align-items-center\">
-                                <div class=\"col-auto mr-2\"><img height=\"125\" width=\"125\" class=\"img-profile rounded-circle mx-auto img-fluid\" src=\"" . ($cardInfo["img"] ?? './assets/img/default_125x125.jpg') . "\"></div>
-                                <div class=\"col\">" . $cardInfo["website"] . $cardInfo["note"] . "</div>
+        echo '<div class="col-md-6">
+            <div class="card border-3 border-top-0 border-bottom-0 border-end-0 border-primary shadow m-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto mr-2"><img height="125" width="125" class="img-profile rounded-circle mx-auto img-fluid" src="' . ( $cardInfo['img'] ?? './assets/img/default_125x125.jpg' ) . '"></div>
+                                <div class="col">' . $cardInfo['website'] . $cardInfo['note'] . '</div>
                             </div>
                         </div>
-                        <div class=\"col-auto\">
-                            <i class=\"fas " . $cardInfo["icon"] . " fa-2x text-black\" style=\"--bs-text-opacity: .15;\"></i>
+                        <div class="col-auto">
+                            <i class="fas ' . $cardInfo['icon'] . ' fa-2x text-black" style="--bs-text-opacity: .15;"></i>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>";
+        </div>';
     }
 
     /**
@@ -208,34 +208,34 @@ class Utilities
     }
 
     /**
-     * Generates the modal body for the modals that use the "Choose from existing festivities" input.
+     * Generates the modal body for the modals that use the "Choose from existing liturgical events" input.
      *
-     * @param bool $required Whether the festivity input is required to use a value from the existing festivities list.
+     * @param bool $required Whether the liturgical event input is required to use a value from the existing liturgical events list.
      * @param bool $hasPropertyChange Whether the modal needs to have the "property to change" select input.
      */
     public static function generateModalBody(bool $required = true, bool $hasPropertyChange = false): void
     {
         $feedbackDiv = $required
-            ? "<div class=\"invalid-feedback\">" . _("This festivity does not seem to exist? Please choose from a value in the list.") . "</div>"
-            : "<div class=\"form-text text-warning d-none\">" . _("This festivity does not exist, so it will be created.") . "</div>";
+            ? '<div class="invalid-feedback">' . _('This liturgical event does not seem to exist? Please choose from a value in the list.') . '</div>'
+            : '<div class="form-text text-warning d-none">' . _('This liturgical event does not exist, so it will be created.') . '</div>';
 
-        $modalBody = "<div class=\"modal-body\">
-        <form class=\"row justify-content-left needs-validation\" novalidate>
-            <div class=\"form-group col col-md-10\">
-                <label for=\"existingFestivityName\" class=\"fw-bold\">" . ($required ? _('Choose from existing festivities') : _("Choose from existing festivities (or create a new one)")) . ":</label>
-                <input list=\"existingFestivitiesList\" class=\"form-control existingFestivityName\" id=\"existingFestivityName\"" . ($required ? ' required' : '') . ">
-                " . $feedbackDiv . "
-            </div>";
+        $modalBody = '<div class="modal-body">
+        <form class="row justify-content-left needs-validation" novalidate>
+            <div class="form-group col col-md-10">
+                <label for="existingLiturgicalEventName" class="fw-bold">' . ( $required ? _('Choose from existing liturgical events') : _('Choose from existing liturgical events (or create a new one)') ) . ':</label>
+                <input list="existingLiturgicalEventsList" class="form-control existingLiturgicalEventName" id="existingLiturgicalEventName"' . ( $required ? ' required' : '' ) . '>
+                ' . $feedbackDiv . '
+            </div>';
         if ($hasPropertyChange) {
-            $modalBody .= "<div class=\"form-group col col-md-6\">
-                <label for=\"propertyToChange\" class=\"fw-bold\">" . _("Property to change") . ":</label>
-                <select class=\"form-select\" id=\"propertyToChange\" name=\"propertyToChange\">
-                    <option value=\"name\">" . _("Name") . "</option>
-                    <option value=\"grade\">" . _("Grade") . "</option>
+            $modalBody .= '<div class="form-group col col-md-6">
+                <label for="propertyToChange" class="fw-bold">' . _('Property to change') . ':</label>
+                <select class="form-select" id="propertyToChange" name="propertyToChange">
+                    <option value="name">' . _('Name') . '</option>
+                    <option value="grade">' . _('Grade') . '</option>
                 </select>
-            </div>";
+            </div>';
         }
-        $modalBody .= "</form></div>";
+        $modalBody .= '</form></div>';
         echo $modalBody;
     }
 

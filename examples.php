@@ -2,8 +2,9 @@
 
 include_once('common.php');
 
-$example = isset($_GET['example']) ? $_GET['example'] : null;
-$h2 = _('Liturgical Calendar as an HTML table produced by Javascript');
+$example     = isset($_GET['example']) ? $_GET['example'] : null;
+$safeExample = htmlspecialchars((string) $example, ENT_QUOTES, 'UTF-8');
+$h2          = _('Liturgical Calendar as an HTML table produced by Javascript');
 
 $JAVASCRIPT_EXAMPLE_CONTENTS = <<<EOT
 <form id="litcalForm">
@@ -65,7 +66,7 @@ $FULLCALENDAR_EXAMPLE_CONTENTS = <<<EOT
             "@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.15",
             "@fullcalendar/list": "https://cdn.skypack.dev/@fullcalendar/list@6.1.15",
             "@fullcalendar/bootstrap5": "https://cdn.skypack.dev/@fullcalendar/bootstrap5@6.1.15",
-            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@1.2.0/+esm"
+            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@1.3.1/+esm"
         }
     }
 </script>
@@ -78,35 +79,35 @@ $FULLCALENDAR_EXAMPLE_CONTENTS = <<<EOT
 EOT;
 
 $EXAMPLES = [
-    "PHP" => "examples/php/index.php",
-    "JavaScript" => $JAVASCRIPT_EXAMPLE_CONTENTS,
-    "FullCalendar" => strtr($FULLCALENDAR_EXAMPLE_CONTENTS, [
-        "{INTERPOLATE}" => $FULLCALENDAR_CALENDAR_FIRST
+    'PHP'                  => 'examples/php/index.php',
+    'JavaScript'           => $JAVASCRIPT_EXAMPLE_CONTENTS,
+    'FullCalendar'         => strtr($FULLCALENDAR_EXAMPLE_CONTENTS, [
+        '{INTERPOLATE}' => $FULLCALENDAR_CALENDAR_FIRST
     ]),
-    "FullCalendarMessages" => strtr($FULLCALENDAR_EXAMPLE_CONTENTS, [
-        "{INTERPOLATE}" => $FULLCALENDAR_MESSAGES_FIRST
+    'FullCalendarMessages' => strtr($FULLCALENDAR_EXAMPLE_CONTENTS, [
+        '{INTERPOLATE}' => $FULLCALENDAR_MESSAGES_FIRST
     ])
 ];
 ?><!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
     <title><?php
-        echo _("General Roman Calendar");
+        echo _('General Roman Calendar');
     ?></title>
     <?php
     include_once('layout/head.php');
     // Since JavaScript is not an iframe, we need to ensure the CSS is loaded
     if ($example) {
         switch ($example) {
-            case "JavaScript":
+            case 'JavaScript':
                 echo '<link rel="stylesheet" href="examples/javascript/styles.css">';
                 break;
-            case "FullCalendar":
-            case "FullCalendarMessages":
+            case 'FullCalendar':
+            case 'FullCalendarMessages':
                 echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">';
                 echo '<link href="examples/fullcalendar/styles.css" rel="stylesheet" />';
                 break;
-            case "PHP":
+            case 'PHP':
                 echo '<link href="examples/php/styles.css" rel="stylesheet" />';
                 break;
         }
@@ -119,17 +120,17 @@ $EXAMPLES = [
 include_once('layout/header.php');
 if (array_key_exists($example, $EXAMPLES)) {
     switch ($example) {
-        case "PHP":
+        case 'PHP':
             include_once($EXAMPLES[$example]);
             break;
-        case "JavaScript":
-        case "FullCalendar":
-        case "FullCalendarMessages":
+        case 'JavaScript':
+        case 'FullCalendar':
+        case 'FullCalendarMessages':
             echo $EXAMPLES[$example];
             break;
     }
 } else {
-    echo "<h1>" . sprintf(_("Example '%s' not found"), $example) . "</h1>";
+    echo '<h1>' . sprintf(_("Example '%s' not found"), $safeExample) . '</h1>';
 }
 include_once('layout/footer.php');
 ?>

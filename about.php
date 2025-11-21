@@ -2,15 +2,15 @@
 
 use LiturgicalCalendar\Frontend\Utilities;
 
-include_once "common.php";
+include_once 'common.php';
 
-$ABOUT_US = _("The Liturgical Calendar project is curated by a group of volunteer catholic programmers and experts in Catholic liturgy, seeking to serve the Church.");
+$ABOUT_US = _('The Liturgical Calendar project is curated by a group of volunteer catholic programmers and experts in Catholic liturgy, seeking to serve the Church.');
 ?>
 
 <!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
-    <title><?php echo _("Liturgical Calendar - About us") ?></title>
+    <title><?php echo _('Liturgical Calendar - About us') ?></title>
     <?php include_once('./layout/head.php'); ?>
 </head>
 <body class="sb-nav-fixed">
@@ -18,7 +18,7 @@ $ABOUT_US = _("The Liturgical Calendar project is curated by a group of voluntee
     <?php include_once('./layout/header.php'); ?>
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-black" style="--bs-text-opacity: .6;"><?php echo _("Liturgical Calendar - About us"); ?></h1>
+        <h1 class="h3 mb-2 text-black" style="--bs-text-opacity: .6;"><?php echo _('Liturgical Calendar - About us'); ?></h1>
         <p><?php echo $ABOUT_US; ?></p>
 
         <div class="row">

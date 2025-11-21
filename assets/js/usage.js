@@ -8,6 +8,9 @@ const CalendarType = {
 }
 Object.freeze(CalendarType);
 
+/**
+ * Represents the parameters for the API /calendar endpoint request
+ */
 class RequestPayload {
     static epiphany             = null;
     static ascension            = null;
@@ -18,13 +21,6 @@ class RequestPayload {
     static year_type            = null;
 };
 
-const requestOptionDefaults = {
-    "epiphany":            'JAN6',
-    "ascension":           'THURSDAY',
-    "corpus_christi":      'THURSDAY',
-    "eternal_high_priest": false,
-    "locale":              'LA'
-}
 
 /**
  * Class CurrentEndpoint
@@ -65,6 +61,9 @@ class CurrentEndpoint {
 }
 
 
+/**
+ * Updates the text of the element with the id 'calSubscriptionURL' to reflect the current value of CurrentEndpoint.
+ */
 const updateSubscriptionURL = () => {
     CurrentEndpoint.calendarId = $('#calendarSelect').val();
     switch( $('#calendarSelect').find(':selected').attr('data-calendartype') ) {
@@ -81,10 +80,7 @@ const updateSubscriptionURL = () => {
     $('#calSubscriptionURL').text(CurrentEndpoint.serialize());
 }
 
-//let stagingURL = isStaging ? "-staging" : "";
-let calSubscriptionURL = CurrentEndpoint.serialize();
-
-
+// Toastr configuration
 toastr.options = {
     "closeButton": true,
     "debug": false,

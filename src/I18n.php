@@ -7,29 +7,29 @@ class I18n
     public string $LOCALE;
     public string $LOCALE_WITH_REGION;
     private const PRIMARY_REGIONS = [
-        "en" => "US",
-        "la" => "VA",
-        "es" => "ES",
-        "pt" => "PT",
-        "fr" => "FR",
-        "it" => "IT",
-        "de" => "DE",
-        "nl" => "NL",
-        "sk" => "SK"
+        'en' => 'US',
+        'la' => 'VA',
+        'es' => 'ES',
+        'pt' => 'PT',
+        'fr' => 'FR',
+        'it' => 'IT',
+        'de' => 'DE',
+        'nl' => 'NL',
+        'sk' => 'SK'
     ];
 
     public function __construct()
     {
 
-        if (!empty($_COOKIE["currentLocale"])) {
-            $this->LOCALE = $_COOKIE["currentLocale"];
+        if (!empty($_COOKIE['currentLocale'])) {
+            $this->LOCALE = $_COOKIE['currentLocale'];
         } elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             $this->LOCALE = \Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);
         } else {
-            $this->LOCALE = "en";
+            $this->LOCALE = 'en';
         }
         //we only need the two letter ISO code, not the national extension, when setting the text domain...
-        if ($this->LOCALE !== 'la' && $this->LOCALE !== "LA") {
+        if ($this->LOCALE !== 'la' && $this->LOCALE !== 'LA') {
             $LOCALE = \Locale::getPrimaryLanguage($this->LOCALE);
             $REGION = \Locale::getRegion($this->LOCALE);
             if (null === $REGION || empty($REGION)) {
@@ -38,8 +38,8 @@ class I18n
                 $this->LOCALE_WITH_REGION = $LOCALE . '_' . $REGION;
             }
         } else {
-            $LOCALE = 'la';
-            $REGION = 'VA';
+            $LOCALE                   = 'la';
+            $REGION                   = 'VA';
             $this->LOCALE_WITH_REGION = 'la_VA';
         }
 
@@ -55,7 +55,7 @@ class I18n
             $LOCALE
         ];
         setlocale(LC_ALL, $localeArray);
-        bindtextdomain("litcal", "i18n");
-        textdomain("litcal");
+        bindtextdomain('litcal', 'i18n');
+        textdomain('litcal');
     }
 }
