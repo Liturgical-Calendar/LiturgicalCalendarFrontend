@@ -163,7 +163,10 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
                 $i = 0;
                 $n = [ 5, 5, 14, 5, 20, 0, 6, 30, 15 ];
                 foreach ($thh as $th) {
-                    echo "<th class=\"sticky-top\" style=\"width: {$n[$i++]}%;\" scope=\"col\">$th</th>";
+                    $safeTh = htmlspecialchars((string) $th, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                    $width  = $n[$i] ?? 0;
+                    echo "<th class=\"sticky-top\" style=\"width: {$width}%;\" scope=\"col\">$safeTh</th>";
+                    $i++;
                 }
                 ?></tr>
             </thead>
