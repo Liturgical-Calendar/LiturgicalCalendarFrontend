@@ -3,7 +3,6 @@ if(Cookies.get("currentLocale") === undefined){
 }
 const currentLocale = new Intl.Locale(Cookies.get("currentLocale").replaceAll('_','-') || 'en');
 const LITCAL_LOCALE = currentLocale.language;
-//const countryNames = new Intl.DisplayNames([LITCAL_LOCALE], {type: 'region'});
 
 (function ($) {
     $(document).ready(function() {

@@ -1,3 +1,5 @@
+/** @import { RowData } from './extending.js' */
+
 /**
  * @typedef DiocesanCalendarPayload
  * @prop {Array<RowData>} litcal
@@ -6,7 +8,6 @@
  * @prop {Object} metadata
  * @prop {string} metadata.region
  */
-
 
 class DiocesanCalendarPayload {
     /**

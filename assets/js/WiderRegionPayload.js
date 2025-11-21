@@ -1,3 +1,5 @@
+/** @import { RowData } from './extending.js' */
+
 /**
  * @typedef {Object} WiderRegionPayload
  * @prop {Array<RowData>} litcal
@@ -36,6 +38,9 @@ class WiderRegionPayload {
         }
         if (false === metadata.hasOwnProperty('wider_region')) {
             throw new Error('`metadata.wider_region` parameter is required');
+        }
+        if (typeof metadata.wider_region !== 'string') {
+            throw new Error('`metadata.wider_region` parameter must be a string');
         }
         if (metadata.wider_region.includes(' - ')) {
             metadata.wider_region = metadata.wider_region.split(' - ')[0];

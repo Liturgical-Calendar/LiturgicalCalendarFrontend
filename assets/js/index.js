@@ -6,6 +6,11 @@ Input.setGlobalWrapper('div');
 Input.setGlobalWrapperClass('form-group col col-md-3');
 
 
+if (!BaseURL) {
+    console.error('BaseURL is falsy, cannot initialize ApiClient');
+    return;
+}
+
 ApiClient.init(BaseURL).then(apiClient => {
     if (false === apiClient || false === apiClient instanceof ApiClient) {
         alert('Error initializing the Liturgical Calendar API Client');
@@ -72,6 +77,8 @@ ApiClient.init(BaseURL).then(apiClient => {
         });
 
     }
+}).catch( err => {
+    console.error('Error initializing the Liturgical Calendar API Client:', err);
 });
 
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');

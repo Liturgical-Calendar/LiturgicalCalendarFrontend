@@ -15,27 +15,51 @@ $AvailableNationalCalendars = [];
 
 $c = new Collator($i18n->LOCALE);
 
+/**
+ * Fetch metadata from API
+ */
+$metadataRaw  = file_get_contents($metadataURL);
+$metadataJson = json_decode($metadataRaw, true);
+if (json_last_error() !== JSON_ERROR_NONE) {
+    $error_msg = json_last_error_msg();
+    die($error_msg);
+}
+if (false === isset($metadataJson['litcal_metadata'])) {
+    die('litcal_metadata not found in metadata JSON from API');
+}
+[ 'litcal_metadata' => $LitCalMetadata ] = $metadataJson;
 
-[ 'litcal_metadata' => $LitCalMetadata ] = json_decode(
-    file_get_contents($metadataURL),
-    true
-);
-
+/**
+ * Fetch liturgical events catalog from API
+ */
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $eventsURL);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept-Language: ' . $i18n->LOCALE]);
-$response                                         = curl_exec($ch);
-[ 'litcal_events' => $LiturgicalEventCollection ] = json_decode(
-    $response,
-    true
-);
-curl_close($ch);
+$response      = curl_exec($ch);
+$litEventsJson = json_decode($response, true);
+if (json_last_error() !== JSON_ERROR_NONE) {
+    $error_msg = json_last_error_msg();
+    die($error_msg);
+}
+if (false === isset($litEventsJson['litcal_events'])) {
+    die('litcal_events not found in events JSON from API');
+}
+[ 'litcal_events' => $LiturgicalEventCollection ] = $litEventsJson;
 
-[ 'catholic_dioceses_latin_rite' => $CatholicDiocesesByNation ] = json_decode(
-    file_get_contents('./assets/data/WorldDiocesesByNation.json'),
-    true
-);
+/**
+ * Fetch Catholic Dioceses by Nation data
+ */
+$WorldDiocesesByNation     = file_get_contents('./assets/data/WorldDiocesesByNation.json');
+$WorldDiocesesByNationJson = json_decode($WorldDiocesesByNation, true);
+if (json_last_error() !== JSON_ERROR_NONE) {
+    $error_msg = json_last_error_msg();
+    die($error_msg);
+}
+if (false === isset($WorldDiocesesByNationJson['catholic_dioceses_latin_rite'])) {
+    die('catholic_dioceses_latin_rite not found in WorldDiocesesByNation JSON data');
+}
+[ 'catholic_dioceses_latin_rite' => $CatholicDiocesesByNation ] = $WorldDiocesesByNationJson;
 
 $DiocesanGroups = $LitCalMetadata['diocesan_groups'];
 
@@ -86,7 +110,7 @@ $API_EXTEND_HOWTO_A3  = _('In this case, the liturgical events for the wider reg
 $DioceseGroupHelp     = _('If a group of dioceses decides to pool their Liturgical Calendar data, for example to print out one single yearly calendar with the data for all the dioceses in the group, the group can be defined or set here.');
 
 $messages = [
-    'EventKey'                      => _('Tag'),
+    'EventKey'                      => _('Event key'),
     'Name'                          => _('Name'),
     'Day'                           => _('Day'),
     'Month'                         => _('Month'),
@@ -102,6 +126,7 @@ $messages = [
     'red'                           => _('red'),
     'green'                         => _('green'),
     'purple'                        => _('purple'),
+    'rose'                          => _('rose'),
     /**translators: in reference to the first year from which this liturgical event takes place */
     'Since'                         => _('Since'),
     /**translators: in reference to the year from which this liturgical event no longer needs to be dealt with */
@@ -134,7 +159,7 @@ $buttonGroup = '<hr><div class="d-flex justify-content-around">
 <button class="btn btn-sm btn-primary m-2" id="makePatronAction" data-bs-toggle="modal" data-bs-target="#makePatronActionPrompt"><i class="fas fa-user-graduate me-2"></i>' . _('Designate patron') . '</button>
 <button class="btn btn-sm btn-primary m-2" id="setPropertyAction" data-bs-toggle="modal" data-bs-target="#setPropertyActionPrompt"><i class="fas fa-edit me-2"></i>' . _('Change name or grade of existing liturgical event') . '</button>
 <button class="btn btn-sm btn-primary m-2" id="moveLiturgicalEventAction" data-bs-toggle="modal" data-bs-target="#moveLiturgicalEventActionPrompt"><i class="fas fa-calendar-day me-2"></i>' . _('Move liturgical event to new date') . '</button>
-<button class="btn btn-sm btn-primary m-2" id="newLiturgicalEventAction" data-bs-toggle="modal" data-bs-target="#newEventActionPrompt"><i class="far fa-calendar-plus me-2"></i>' . _('Create a new liturgical event') . '</button>
+<button class="btn btn-sm btn-primary m-2" id="newLiturgicalEventAction" data-bs-toggle="modal" data-bs-target="#newLiturgicalEventActionPrompt"><i class="far fa-calendar-plus me-2"></i>' . _('Create a new liturgical event') . '</button>
 </div>';
 
 ?><!doctype html>
@@ -588,10 +613,10 @@ if (isset($_GET['choice'])) {
 }
 ?>
 <script>
-const Messages = <?php echo json_encode($messages); ?>;
-const LitCalMetadata = <?php echo json_encode($LitCalMetadata); ?>;
-let LiturgicalEventCollection = <?php echo json_encode($LiturgicalEventCollection); ?>;
-let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($LiturgicalEventCollection, 'event_key')); ?>;
+const Messages = <?php echo json_encode($messages, JSON_UNESCAPED_UNICODE); ?>;
+const LitCalMetadata = <?php echo json_encode($LitCalMetadata, JSON_UNESCAPED_UNICODE); ?>;
+let LiturgicalEventCollection = <?php echo json_encode($LiturgicalEventCollection, JSON_UNESCAPED_UNICODE); ?>;
+let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($LiturgicalEventCollection, 'event_key'), JSON_UNESCAPED_UNICODE); ?>;
 </script>
 <?php include_once('./layout/footer.php'); ?>
 
@@ -620,7 +645,7 @@ let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($Liturgi
             </div>
             <?php Utilities::generateModalBody(true, true); ?>
             <div class="modal-footer">
-                <button type="button" id="setPropertyButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-edit me-2"></i>Set Property</button>
+                <button type="button" id="setPropertyButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-edit me-2"></i><?php echo _('Set property') ?></button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _('Cancel') ?></button>
             </div>
         </div>
@@ -686,7 +711,9 @@ let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($Liturgi
 <datalist id="existingLiturgicalEventsList">
 <?php
 foreach ($LiturgicalEventCollection as $liturgical_event) {
-    echo "<option value=\"{$liturgical_event["event_key"]}\">{$liturgical_event["name"]}</option>";
+    $key  = htmlspecialchars($liturgical_event['event_key'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    $name = htmlspecialchars($liturgical_event['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    echo "<option value=\"{$key}\">{$name}</option>";
 }
 ?>
 </datalist>

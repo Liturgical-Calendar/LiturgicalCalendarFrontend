@@ -33,6 +33,8 @@
  * @enum {7|6|5|4|3|2|1|0}
  */
 
+/** @import { RowData } from './extending.js' */
+
 import { CalendarSettings, Locale } from './Settings.js';
 
 /** @enum {'white'|'red'|'green'|'purple'|'rose'} */
@@ -41,8 +43,19 @@ class LitColor {
     static Red      = 'red';
     static Green    = 'green';
     static Purple   = 'purple';
-    static Pink     = 'rose';
-    static #map     = Object.freeze({ white: 'White', red: 'Red', green: 'Green', purple: 'Purple', rose: 'Pink' });
+    static Rose     = 'rose';
+    static #map     = Object.freeze({ white: 'White', red: 'Red', green: 'Green', purple: 'Purple', rose: 'Rose' });
+
+    /**
+     * Construct a new LitColor object from a string.
+     *
+     * This constructor takes a string value, which it will use to set the properties of the LitColor object.
+     * The string value must be one of the following: white, red, green, purple, rose.
+     * If the string value is not one of the above, it will throw an error.
+     *
+     * @param {string} value - The string value to use when constructing the LitColor object.
+     * @throws {Error} If the string value is not one of the above.
+     */
     constructor(value) {
         if (typeof value !== 'string') {
             throw new Error('the value passed to the constructor of a LitColor must be a string');
@@ -52,8 +65,13 @@ class LitColor {
         }
         this.value = value;
         this.name = LitColor.#map[value];
-        return Object.freeze(this);
+        Object.freeze(this);
     }
+
+    /**
+     * Returns the JSON representation of the LitColor object.
+     * @return {string} the value of the LitColor object.
+     */
     toJSON() {
         return this.value;
     }
@@ -79,6 +97,13 @@ class LitGrade {
         'COMMEMORATION',
         'WEEKDAY'
     ]);
+
+    /**
+     * Creates a new LitGrade object.
+     * @param {number} value The grade of the liturgical event. Must be an integer between 0 and 7.
+     * @throws {Error} If the value passed is not an integer, or if it is not between 0 and 7.
+     * @returns {LitGrade} A new LitGrade object.
+     */
     constructor(value) {
         if (typeof value !== 'number' || !Number.isInteger(value)) {
             throw new Error('the value passed to the constructor of a LitGrade must be an integer');
@@ -88,8 +113,13 @@ class LitGrade {
         }
         this.value = value;
         this.name = LitGrade.#map[value];
-        return Object.freeze(this);
+        Object.freeze(this);
     }
+
+    /**
+     * Returns the JSON representation of the LitGrade object.
+     * @return {number} The value of the LitGrade object.
+     */
     toJSON() {
         return this.value;
     }
@@ -98,13 +128,28 @@ Object.freeze(LitGrade);
 
 
 class NationalCalendarLitCalArray {
-    constructor( litcalarray = [], i18nData ) {
-        let litCalItemsArr = litcalarray.map(litcalitem => new NationalCalendarLitCalItem(litcalitem, i18nData));
-        return new Array(...litCalItemsArr);
+
+    /**
+     * Creates a new NationalCalendarLitCalArray from an array of LitCalEvent objects
+     * and an object of i18n data.
+     * @param {Array<RowData>} [litcalarray=[]] - The array of LitCalEvent objects.
+     * @param {Object} i18nData - The object of i18n data.
+     * @return {NationalCalendarLitCalArray} A new NationalCalendarLitCalArray object.
+     */
+    static create(litcalarray = [], i18nData) {
+        return litcalarray.map(
+            litcalitem => new NationalCalendarLitCalItem(litcalitem, i18nData)
+        );
     }
 }
 
 class LitCalEventData {
+
+    /**
+     * Creates a new LitCalEventData object.
+     * @param {string} [event_key=null] - The key of the liturgical event.
+     * @throws {Error} If the `event_key` parameter is not a string, or if it is not provided.
+     */
     constructor( event_key = null ) {
         if (event_key === null) {
             throw new Error('`liturgical_event.event_key` parameter is required');
@@ -117,6 +162,7 @@ class LitCalEventData {
 }
 
 class LitCalMoveEventData extends LitCalEventData {
+
     static #isValidDayValueForMonth(month, day) {
         switch (month) {
             // Save February at twenty-eight
@@ -133,6 +179,13 @@ class LitCalMoveEventData extends LitCalEventData {
                 return day > 0 && day < 32;
         }
     }
+
+    /**
+     * Creates a new LitCalMoveEventData object.
+     * @param {Object} liturgical_event - The object containing the properties of the liturgical event.
+     * @throws {Error} If the `liturgical_event` object does not have the required properties, or if the properties have invalid types.
+     * @returns {LitCalMoveEventData} A new LitCalMoveEventData object.
+     */
     constructor( liturgical_event ) {
         if (false === liturgical_event.hasOwnProperty('event_key') || false === liturgical_event.hasOwnProperty('day') || false === liturgical_event.hasOwnProperty('month')) {
             throw new Error('`liturgical_event.event_key`, `liturgical_event.day` and `liturgical_event.month` properties are required for a `metadata.action` of `moveEvent`');
@@ -150,11 +203,12 @@ class LitCalMoveEventData extends LitCalEventData {
         ) {
             throw new Error('`liturgical_event.day` must be an integer between 1 and 31 and it must be a valid day value for the given month');
         }
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
 class LitCalCreateNewFixedData extends LitCalEventData {
+
     static #isValidDayValueForMonth(month, day) {
         switch (month) {
             // Save February at twenty-eight
@@ -172,6 +226,12 @@ class LitCalCreateNewFixedData extends LitCalEventData {
         }
     }
 
+    /**
+     * Creates a new LitCalCreateNewFixedData object.
+     * @param {object} liturgical_event - The object containing the properties of the liturgical event.
+     * @throws {Error} If the `liturgical_event` object does not have the required properties, or if the properties have invalid types.
+     * @returns {LitCalCreateNewFixedData} A new LitCalCreateNewFixedData object.
+     */
     constructor( liturgical_event ) {
         if (
             false === liturgical_event.hasOwnProperty('event_key')
@@ -212,11 +272,18 @@ class LitCalCreateNewFixedData extends LitCalEventData {
         this.color  = liturgical_event.color.map(color => new LitColor(color));
         this.grade  = new LitGrade(liturgical_event.grade);
         this.common = liturgical_event.common;
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
 class LitCalCreateNewMobileData extends LitCalEventData {
+
+    /**
+     * Creates a new LitCalCreateNewMobileData object.
+     * @param {Object} liturgical_event - The object containing the properties of the liturgical event.
+     * @throws {Error} If the `liturgical_event` object does not have the required properties, or if the properties have invalid types.
+     * @returns {LitCalCreateNewMobileData} A new LitCalCreateNewMobileData object.
+     */
     constructor( liturgical_event ) {
         if (
             false === liturgical_event.hasOwnProperty('event_key')
@@ -248,11 +315,19 @@ class LitCalCreateNewMobileData extends LitCalEventData {
         this.color  = liturgical_event.color.map(color => new LitColor(color));
         this.grade  = new LitGrade(liturgical_event.grade);
         this.common = liturgical_event.common;
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
 class LitCalSetPropertyNameData extends LitCalEventData {
+
+    /**
+     * Creates a new LitCalSetPropertyNameData object.
+     *
+     * @param {object} liturgical_event - The object containing the properties of the liturgical event.
+     * @throws {Error} If the `liturgical_event` object does not have the required properties, or if the properties have invalid types.
+     * @returns {LitCalSetPropertyNameData} A new LitCalSetPropertyNameData object.
+     */
     constructor( liturgical_event ) {
         if (false === liturgical_event.hasOwnProperty('event_key') || false === liturgical_event.hasOwnProperty('name')) {
             throw new Error('`liturgical_event.event_key` and `liturgical_event.name` properties are required for a `metadata.action` of `setProperty` and when the property is `name`');
@@ -262,33 +337,58 @@ class LitCalSetPropertyNameData extends LitCalEventData {
         }
         super(liturgical_event.event_key);
         this.name = liturgical_event.name;
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
 class LitCalSetPropertyGradeData extends LitCalEventData {
+
+    /**
+     * Creates a new LitCalSetPropertyGradeData object.
+     *
+     * @param {object} liturgical_event - The object containing the properties of the liturgical event.
+     * @throws {Error} If the `liturgical_event` object does not have the required properties, or if the properties have invalid types.
+     * @returns {LitCalSetPropertyGradeData} A new LitCalSetPropertyGradeData object.
+     */
     constructor( liturgical_event ) {
         if (false === liturgical_event.hasOwnProperty('event_key') || false === liturgical_event.hasOwnProperty('grade')) {
             throw new Error('`liturgical_event.event_key` and `liturgical_event.grade` properties are required for a `metadata.action` of `setProperty` and when the property is `grade`');
         }
         super(liturgical_event.event_key);
         this.grade = new LitGrade(liturgical_event.grade);
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
 class LitCalMakePatronData extends LitCalEventData {
+
+    /**
+     * Creates a new LitCalMakePatronData object.
+     *
+     * @param {Object} liturgical_event - The object containing the properties of the liturgical event.
+     * @throws {Error} If the `liturgical_event` object does not have the required `event_key` and `grade` properties.
+     * @returns {LitCalMakePatronData} A new LitCalMakePatronData object.
+     */
     constructor( liturgical_event ) {
         if (false === liturgical_event.hasOwnProperty('event_key') || false === liturgical_event.hasOwnProperty('grade')) {
             throw new Error('`liturgical_event.event_key` and `liturgical_event.grade` properties are required for a `metadata.action` of `makePatron`, we received: ' + JSON.stringify(liturgical_event));
         }
         super(liturgical_event.event_key);
         this.grade = new LitGrade(liturgical_event.grade);
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
 class LitCalMetadata {
+
+    /**
+     * Creates a new LitCalMetadata object.
+     *
+     * @param {number} [since_year=null] - The year from which the liturgical event is celebrated.
+     * @param {number} [until_year=null] - The year until which the liturgical event is celebrated.
+     * @throws {Error} If the `since_year` parameter is not an integer, or if the `since_year` parameter is less than 1800, or if the `until_year` parameter is not an integer, or if the `until_year` parameter is less than or equal to the `since_year` parameter.
+     * @returns {LitCalMetadata} A new LitCalMetadata object.
+     */
     constructor( since_year = null, until_year = null ) {
         if ( null === since_year ) {
             throw new Error('since_year parameters is required');
@@ -314,6 +414,14 @@ class LitCalMetadata {
 }
 
 class LitCalMoveEventMetadata extends LitCalMetadata {
+
+    /**
+     * Creates a new LitCalMoveEventMetadata object.
+     *
+     * @param {Object} metadata - The object containing the properties of the metadata.
+     * @throws {Error} If the `metadata` object does not have the required `since_year`, `missal`, and `reason` properties.
+     * @returns {LitCalMoveEventMetadata} A new LitCalMoveEventMetadata object.
+     */
     constructor( metadata ) {
         if ( false === metadata.hasOwnProperty('since_year') || false === metadata.hasOwnProperty('missal') || false === metadata.hasOwnProperty('reason') ) {
             throw new Error('since_year, missal, and reason parameters are required');
@@ -322,11 +430,19 @@ class LitCalMoveEventMetadata extends LitCalMetadata {
         this.action      = 'moveEvent';
         this.missal      = metadata.missal;
         this.reason      = metadata.reason;
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
 class LitCalSetPropertyNameMetadata extends LitCalMetadata {
+
+    /**
+     * Creates a new LitCalSetPropertyNameMetadata object.
+     *
+     * @param {Object} metadata - The object containing the properties of the metadata.
+     * @throws {Error} If the `metadata` object does not have the required `since_year` and `property` properties, or if the `property` property does not have a value of `'name'`.
+     * @returns {LitCalSetPropertyNameMetadata} A new LitCalSetPropertyNameMetadata object.
+     */
     constructor( metadata ) {
         if ( false === metadata.hasOwnProperty('since_year') || false === metadata.hasOwnProperty('property') || metadata.property !== 'name' ) {
             throw new Error('`metadata.since_year` and `metadata.property` parameters are required, and `metadata.property` must have a value of `name`');
@@ -334,11 +450,19 @@ class LitCalSetPropertyNameMetadata extends LitCalMetadata {
         super(metadata.since_year, metadata.until_year ?? null);
         this.action      = 'setProperty';
         this.property    = 'name';
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
 class LitCalSetPropertyGradeMetadata extends LitCalMetadata {
+
+    /**
+     * Creates a new LitCalSetPropertyGradeMetadata object.
+     *
+     * @param {Object} metadata - The object containing the properties of the metadata.
+     * @throws {Error} If the `metadata` object does not have the required `since_year` and `property` properties, or if the `property` property does not have a value of `'grade'`.
+     * @returns {LitCalSetPropertyGradeMetadata} A new LitCalSetPropertyGradeMetadata object.
+     */
     constructor( metadata ) {
         if ( false === metadata.hasOwnProperty('since_year') || false === metadata.hasOwnProperty('property') || metadata.property !== 'grade' ) {
             throw new Error('`metadata.since_year` and `metadata.property` parameters are required, and `metadata.property` must have a value of `grade`');
@@ -346,11 +470,19 @@ class LitCalSetPropertyGradeMetadata extends LitCalMetadata {
         super(metadata.since_year, metadata.until_year ?? null);
         this.action      = 'setProperty';
         this.property    = 'grade';
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
 class LitCalMakePatronMetadata extends LitCalMetadata {
+
+    /**
+     * Creates a new LitCalMakePatronMetadata object.
+     *
+     * @param {Object} metadata - The object containing the properties of the metadata.
+     * @throws {Error} If the `metadata` object does not have the required `since_year` property.
+     * @returns {LitCalMakePatronMetadata} A new LitCalMakePatronMetadata object.
+     */
     constructor( metadata ) {
         if ( false === metadata.hasOwnProperty('since_year') ) {
             throw new Error('`metadata.since_year` parameter is required');
@@ -360,11 +492,20 @@ class LitCalMakePatronMetadata extends LitCalMetadata {
         if (metadata.hasOwnProperty('url')) {
             this.url = metadata.url;
         }
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
 class NationalCalendarLitCalItem {
+
+    /**
+     * Constructor for NationalCalendarLitCalItem.
+     *
+     * @param {RowData} litcalItem - An object containing the properties of the liturgical event and its metadata.
+     * @param {Object} i18nData - An object containing the translated strings for the liturgical events.
+     *
+     * @throws {Error} If the `litcalItem` parameter is not an object, or if the `litcalItem` object does not have the required `liturgical_event` and `metadata` properties, or if the `metadata` object does not have an `action` property, or if the `i18nData` object does not contain the translated string for the liturgical event.
+     */
     constructor( litcalItem, i18nData ) {
         if (typeof litcalItem !== 'object') {
             throw new Error('litcalItem parameter must be an object');
@@ -390,7 +531,7 @@ class NationalCalendarLitCalItem {
                 throw new Error('litcalItem.liturgical_event must have an `event_key` property');
             }
             Object.entries(i18nData).forEach( ([isoCode, translations]) => {
-                if (false === litcalItem.liturgical_event.event_key in translations) {
+                if (false === (litcalItem.liturgical_event.event_key in translations)) {
                     throw new Error(`The litcalItem.liturgical_event.event_key ${litcalItem.liturgical_event.event_key} is missing in i18nData[${isoCode}]: ${JSON.stringify(translations)}`);
                 }
             });
@@ -446,12 +587,24 @@ class NationalCalendarLitCalItem {
             default:
                 throw new Error('metadata.action must be one of `moveEvent`, `createNew`, `setProperty` or `makePatron`');
         }
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
 
 class NationalCalendarPayloadMetadata {
+
+    /**
+     * Constructs a new instance of NationalCalendarPayloadMetadata.
+     *
+     * @param {Object} metadata The object passed to the constructor.
+     * @param {string} metadata.nation A two-letter country ISO code (capital letters).
+     * @param {string[]} metadata.locales An array of valid locale codes, must not be empty.
+     * @param {string} metadata.wider_region One of `Americas`, `Europe`, `Asia`, `Africa`, `Oceania`, `Middle East`, or `Antarctica`.
+     * @param {string[]} metadata.missals An array of valid Roman Missal identifiers.
+     *
+     * @throws {Error} If any parameter does not meet the specified criteria.
+     */
     constructor( metadata ) {
         if (
             false === metadata.hasOwnProperty('nation')
@@ -502,11 +655,22 @@ class NationalCalendarPayloadMetadata {
         this.locales      = metadata.locales;
         this.wider_region = metadata.wider_region;
         this.missals      = metadata.missals;
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
 class NationalCalendarPayload {
+
+    /**
+     * Constructs a new instance of NationalCalendarPayload.
+     *
+     * @param {Array<RowData>|null} litcal The liturgical calendar data to be used.
+     * @param {Object|null} settings The calendar settings.
+     * @param {Object|null} metadata The metadata associated with the calendar.
+     * @param {Object|null} i18n The translations associated with the calendar.
+     *
+     * @throws {Error} If any parameter does not meet the specified criteria.
+     */
     constructor( litcal = null, settings = null, metadata = null, i18n = null ) {
         // const allowedProps = new Set(['litcal', 'settings', 'metadata', 'i18n']);
         if (null === litcal || null === settings || null === metadata || null === i18n) {
@@ -535,12 +699,12 @@ class NationalCalendarPayload {
         }
         this.i18n     = i18n;
         /**@type {NationalCalendarLitCalArray} */
-        this.litcal   = new NationalCalendarLitCalArray(litcal, this.i18n);
+        this.litcal   = NationalCalendarLitCalArray.create(litcal, this.i18n);
         /**@type {CalendarSettings} */
         this.settings = new CalendarSettings(settings);
         /**@type {NationalCalendarPayloadMetadata} */
         this.metadata = new NationalCalendarPayloadMetadata(metadata);
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 

@@ -351,7 +351,12 @@ const country2flag = (countryCode) => countryCode.replace(/./g, (letter) => Stri
  */
 const translationTemplate = (path, locale, el) => {
     const localeStr = locale.replace(/_/g, '-');
-    const region = localeStr.split('-')[1];
+    const parts = localeStr.split('-');
+    if (parts.length < 2) {
+        console.warn(`locale ${locale} does not have a region subtag`);
+        return '';
+    }
+    const region = parts[1];
     const localeObj = new Intl.Locale(localeStr);
     const lang = localeObj.language.toUpperCase();
     const langWithRegion = AvailableLocalesWithRegion[locale];
@@ -2111,6 +2116,9 @@ const serializeRegionalNationalDataClicked = (ev) => {
 const setFocusFirstTabWithData = () => {
     document.querySelectorAll('#diocesanCalendarDefinitionCardLinks li').forEach(el => el.classList.remove('active'));
     const firstInputWithNonEmptyValue = Array.from(document.querySelectorAll('.carousel-item form .litEventName')).find(el => el.dataset.valuewas !== '');
+    if (!firstInputWithNonEmptyValue) {
+        return;
+    }
     const parentCarouselItem = firstInputWithNonEmptyValue.closest('.carousel-item');
     const itemIndex = Array.from(document.querySelectorAll('.carousel-item')).indexOf(parentCarouselItem);
     const carouselElement = document.querySelector('.carousel');
@@ -2227,6 +2235,10 @@ const loadDiocesanCalendarData = () => {
             throw new Error(response.status + ' ' + response.statusText + ': ' + response.url);
         }
     }).then(data => {
+        if (!data || !Array.isArray(data.litcal)) {
+            // 404 / new calendar case: nothing to fill, remain in PUT mode
+            return;
+        }
         API.method = 'PATCH';
         console.log('retrieved diocesan data:', data);
         toastr["success"]("Diocesan Calendar was retrieved successfully", "Success");
@@ -2378,7 +2390,7 @@ const unswitcheroo = ( row, LiturgicalEvent ) => {
     const dayId = litEventStrtotime.id.replace('Strtotime', 'Day');
     const monthId = litEventStrtotime.id.replace('Strtotime', 'Month');
     strToTimeFormGroup.insertAdjacentHTML('beforestart', `<div class="form-group col-sm-1">
-    <label for="${dayId}">${Messages[ "Day" ]}</label><input type="number" min="1" max="31" value="1" class="form-control litEvent litEventDay" id="${dayId}" value="${LiturgicalEvent.day}" />
+    <label for="${dayId}">${Messages[ "Day" ]}</label><input type="number" min="1" max="31" class="form-control litEvent litEventDay" id="${dayId}" value="${LiturgicalEvent.day ?? 1}" />
     </div>`);
     litEventStrtotime.remove();
     let formRow = `<select class="form-select litEvent litEventMonth" id="${monthId}">`;
@@ -2485,14 +2497,16 @@ const fillDiocesanFormWithData = (data) => {
             row.querySelector('.litEventDay').value = liturgical_event.day;
             row.querySelector('.litEventMonth').value = liturgical_event.month;
         }
-        setCommonMultiselect( row, liturgical_event.common );
+        if (Array.isArray(liturgical_event.common) && liturgical_event.common.length) {
+            setCommonMultiselect(row, liturgical_event.common);
+        }
         $(row.querySelector('.litEventColor')).multiselect({
             buttonWidth: '100%',
             buttonClass: 'form-select',
             templates: {
                 button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
             }
-        }).multiselect('deselectAll', false).multiselect('select', liturgical_event.color);
+        }).multiselect('deselectAll', false).multiselect('select', Array.isArray(liturgical_event.color) ? liturgical_event.color : []);
         row.querySelector('.litEventSinceYear').value = metadata.since_year;
         if ( metadata.hasOwnProperty('until_year') ) {
             row.querySelector('.litEventUntilYear').value = metadata.until_year;
@@ -2998,12 +3012,12 @@ const existingLiturgicalEventNameChanged = (ev) => {
     const form = modal.querySelector('form');
     form.classList.remove('was-validated');
 
-    const option = document.querySelector(`#existingLiturgicalEventsList option[value="${ev.target.value}"]`);
+    const option = modal.querySelector(`#existingLiturgicalEventsList option[value="${ev.target.value}"]`);
     // if no option corresponding to the selected liturgical_event name is found, disable the submission buttons
     const invalidState = !option && ev.target.required;
     const warningState = !option && !ev.target.required;
     ev.target.classList.toggle('is-invalid', invalidState);
-    const warningEl = document.querySelector('.text-warning');
+    const warningEl = modal.querySelector('.text-warning');
     warningEl.classList.toggle('d-block', warningState);
     warningEl.classList.toggle('d-none', !warningState);
     console.log(`input is required to have an existing value from the list: ${ev.target.required}, selected value: ${ev.target.value}, option found: ${!!option}`);
