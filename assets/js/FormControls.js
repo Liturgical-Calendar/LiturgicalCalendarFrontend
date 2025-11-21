@@ -30,6 +30,11 @@ const Month = Object.freeze({
  */
 const MonthsOfThirty = Object.freeze([Month.SEPTEMBER, Month.APRIL, Month.JUNE, Month.NOVEMBER]);
 
+/**
+ * Gets the maximum number of days in a given month.
+ * @param {Month} month
+ * @returns {28|30|31} The maximum number of days in the given month.
+ */
 const getMonthMaxDay = (month) => month === Month.FEBRUARY ? 28 : (MonthsOfThirty.includes(month) ? 30 : 31);
 
 
@@ -43,25 +48,25 @@ const DaysOfTheWeek = Object.freeze(['Sunday', 'Monday', 'Tuesday', 'Wednesday',
 /**
  * A mapping of liturgical event ranks to numerical values for sorting purposes.
  * @readonly
- * @enum {(7|6|5|4|3|2|1|0)}
- * @property {Number} HIGHERSOLEMNITY - Higher solemnity (7)
- * @property {Number} SOLEMNITY - Solemnity (6)
- * @property {Number} FEASTLORD - Feast of the Lord (5)
- * @property {Number} FEAST - Feast (4)
- * @property {Number} MEMORIAL - Memorial (3)
- * @property {Number} OPTIONALMEMORIAL - Optional memorial (2)
- * @property {Number} COMMEMORATION - Commemoration (1)
+ * @enum {(0|1|2|3|4|5|6|7)}
  * @property {Number} WEEKDAY - Weekday (0)
+ * @property {Number} COMMEMORATION - Commemoration (1)
+ * @property {Number} OPTIONALMEMORIAL - Optional memorial (2)
+ * @property {Number} MEMORIAL - Memorial (3)
+ * @property {Number} FEAST - Feast (4)
+ * @property {Number} FEASTLORD - Feast of the Lord (5)
+ * @property {Number} SOLEMNITY - Solemnity (6)
+ * @property {Number} HIGHERSOLEMNITY - Higher solemnity (7)
  */
 const Rank = Object.freeze({
-    HIGHERSOLEMNITY:  7,
-    SOLEMNITY:        6,
-    FEASTLORD:        5,
-    FEAST:            4,
-    MEMORIAL:         3,
-    OPTIONALMEMORIAL: 2,
+    WEEKDAY:          0,
     COMMEMORATION:    1,
-    WEEKDAY:          0
+    OPTIONALMEMORIAL: 2,
+    MEMORIAL:         3,
+    FEAST:            4,
+    FEASTLORD:        5,
+    SOLEMNITY:        6,
+    HIGHERSOLEMNITY:  7
 });
 
 

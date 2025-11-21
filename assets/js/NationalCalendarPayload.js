@@ -1,50 +1,90 @@
 /**
  * Represents the possible values for the `epiphany` setting.
- * @typedef Epiphany
- * @enum {'JAN6'|'SUNDAY_JAN2_JAN8'}
+ * @typedef {'JAN6'|'SUNDAY_JAN2_JAN8'} Epiphany
  */
 
 /**
  * Represents the possible values for the `ascension` setting.
- * @typedef Ascension
- * @enum {'THURSDAY'|'SUNDAY'}
+ * @typedef {'THURSDAY'|'SUNDAY'} Ascension
  */
 
 /**
  * Represents the possible values for the `corpus_christi` setting.
- * @typedef CorpusChristi
- * @enum {'THURSDAY'|'SUNDAY'}
+ * @typedef {'THURSDAY'|'SUNDAY'} CorpusChristi
  */
 
 /**
  * Represents the possible values for the `eternal_high_priest` setting.
- * @typedef EternalHighPriest
- * @enum {boolean}
+ * @typedef {boolean} EternalHighPriest
+ */
+
+
+/**
+ * Represents the possible values for liturgical grades (or ranks).
+ * @typedef {0|1|2|3|4|5|6|7} LitGradeValue
  */
 
 /**
- * Represents the possible values for the `locale` setting.
- * @typedef Locale
- * @enum {string}
- */
-
-/**
- * @typedef LitGrade
- * @enum {7|6|5|4|3|2|1|0}
+ * Represents the possible values for liturgical colors.
+ * @typedef {'white'|'red'|'green'|'purple'|'rose'} LitColorValue
  */
 
 /** @import { RowData } from './extending.js' */
 
 import { CalendarSettings, Locale } from './Settings.js';
+import { Month, getMonthMaxDay } from './FormControls.js';
 
-/** @enum {'white'|'red'|'green'|'purple'|'rose'} */
+/**
+ * Checks if a given day value is valid for a given month.
+ * @param {Month} month - The month to check, 1-12.
+ * @param {number} day - The day to check, 1-31.
+ * @returns {boolean} true if the day is valid, false otherwise.
+ */
+const isValidDayValueForMonth = (month, day) => {
+    day > 0 && day <= getMonthMaxDay(month);
+}
+
+/**
+ * @typedef {object} LitColorInstance
+ * @property {LitColorValue} value
+ * @property {string} name
+ */
+
+/**
+ * @implements {LitColorInstance}
+ */
 class LitColor {
+    /** @type {'white'} */
     static White    = 'white';
+    /** @type {'red'} */
     static Red      = 'red';
+    /** @type {'green'} */
     static Green    = 'green';
+    /** @type {'purple'} */
     static Purple   = 'purple';
+    /** @type {'rose'} */
     static Rose     = 'rose';
-    static #map     = Object.freeze({ white: 'White', red: 'Red', green: 'Green', purple: 'Purple', rose: 'Rose' });
+
+    static #map = Object.freeze({
+        white: 'White',
+        red: 'Red',
+        green: 'Green',
+        purple: 'Purple',
+        rose: 'Rose'
+    });
+
+    static #PRIVATE_KEY = Symbol('LitColor');
+
+    /**
+     * Construct a new LitColor object from a string value.
+     *
+     * @param {LitColorValue} value - The string value to use when constructing the LitColor object.
+     * @returns {LitColor} A new LitColor object with the given string value.
+     * @throws {Error} If the string value is not one of the following: white, red, green, purple, rose.
+     */
+    static from(value) {
+        return new LitColor(value, LitColor.#PRIVATE_KEY);
+    }
 
     /**
      * Construct a new LitColor object from a string.
@@ -53,74 +93,125 @@ class LitColor {
      * The string value must be one of the following: white, red, green, purple, rose.
      * If the string value is not one of the above, it will throw an error.
      *
-     * @param {string} value - The string value to use when constructing the LitColor object.
+     * @param {LitColorValue} value - The string value to use when constructing the LitColor object.
+     * @param {Symbol} ctorKey - The private key to allow construction.
      * @throws {Error} If the string value is not one of the above.
      */
-    constructor(value) {
+    constructor(value, ctorKey) {
+        if (ctorKey !== LitColor.#PRIVATE_KEY) {
+            throw new Error('LitColor is a static class and cannot be instantiated directly. Use LitColor.from(value) instead.');
+        }
         if (typeof value !== 'string') {
             throw new Error('the value passed to the constructor of a LitColor must be a string');
         }
         if (!Object.keys(LitColor.#map).includes(value)) {
             throw new Error(`the value passed to the constructor of a LitColor must be one of ${Object.keys(LitColor.#map).join(', ')}, instead it was ${value}`);
         }
+        /** @type {LitColorValue} */
         this.value = value;
+        /** @type {string} */
         this.name = LitColor.#map[value];
         Object.freeze(this);
     }
 
     /**
      * Returns the JSON representation of the LitColor object.
-     * @return {string} the value of the LitColor object.
+     * @return {LitColorValue} the value of the LitColor object.
      */
     toJSON() {
+        return this.value;
+    }
+
+    toString() {
         return this.value;
     }
 };
 Object.freeze(LitColor);
 
+/**
+ * @typedef {object} LitGradeInstance
+ * @property {LitGradeValue} value
+ * @property {string} name
+ */
+
+/**
+ * @implements {LitGradeInstance}
+ */
 class LitGrade {
-    static HIGHER_SOLEMNITY = 7;
-    static SOLEMNITY        = 6;
-    static FEAST_LORD       = 5;
-    static FEAST            = 4;
-    static MEMORIAL         = 3;
-    static MEMORIAL_OPT     = 2;
-    static COMMEMORATION    = 1;
+    /** @type {0} */
     static WEEKDAY          = 0;
+    /** @type {1} */
+    static COMMEMORATION    = 1;
+    /** @type {2} */
+    static MEMORIAL_OPT     = 2;
+    /** @type {3} */
+    static MEMORIAL         = 3;
+    /** @type {4} */
+    static FEAST            = 4;
+    /** @type {5} */
+    static FEAST_LORD       = 5;
+    /** @type {6} */
+    static SOLEMNITY        = 6;
+    /** @type {7} */
+    static HIGHER_SOLEMNITY = 7;
+
     static #map = Object.freeze([
-        'HIGHER_SOLEMNITY',
-        'SOLEMNITY',
-        'FEAST_LORD',
-        'FEAST',
-        'MEMORIAL',
-        'MEMORIAL_OPT',
+        'WEEKDAY',
         'COMMEMORATION',
-        'WEEKDAY'
+        'MEMORIAL_OPT',
+        'MEMORIAL',
+        'FEAST',
+        'FEAST_LORD',
+        'SOLEMNITY',
+        'HIGHER_SOLEMNITY',
     ]);
 
+    static #PRIVATE_KEY = Symbol('LitGrade');
+
     /**
-     * Creates a new LitGrade object.
-     * @param {number} value The grade of the liturgical event. Must be an integer between 0 and 7.
+     * Construct a new LitGrade object from a value.
+     * @param {LitGradeValue} value The grade of the liturgical event. Must be an integer between 0 and 7.
+     * @param {Symbol} ctorKey The private key to allow construction.
      * @throws {Error} If the value passed is not an integer, or if it is not between 0 and 7.
      * @returns {LitGrade} A new LitGrade object.
      */
-    constructor(value) {
+    static from(value) {
+        return new LitGrade(value, LitGrade.#PRIVATE_KEY);
+    }
+
+    /**
+     * Creates a new LitGrade object.
+     * @param {LitGradeValue} value The grade of the liturgical event. Must be an integer between 0 and 7.
+     * @param {Symbol} ctorKey The private key to allow construction.
+     * @throws {Error} If the value passed is not an integer, or if it is not between 0 and 7.
+     * @returns {LitGrade} A new LitGrade object.
+     */
+    constructor(value, ctorKey) {
+        if (ctorKey !== LitGrade.#PRIVATE_KEY) {
+            throw new Error('LitGrade is a static class and cannot be instantiated directly. Use LitGrade.from(value) instead.');
+        }
         if (typeof value !== 'number' || !Number.isInteger(value)) {
             throw new Error('the value passed to the constructor of a LitGrade must be an integer');
         }
         if (value < 0 || value > 7) {
             throw new Error('the value passed to the constructor of a LitGrade must be between 0 and 7');
         }
+        /** @type {LitGradeValue} */
         this.value = value;
+        /** @type {string} */
         this.name = LitGrade.#map[value];
         Object.freeze(this);
     }
 
     /**
      * Returns the JSON representation of the LitGrade object.
-     * @return {number} The value of the LitGrade object.
+     * @return {LitGradeValue} The value of the LitGrade object.
      */
     toJSON() {
+        return this.value;
+    }
+
+    toString() {
         return this.value;
     }
 };
@@ -128,7 +219,6 @@ Object.freeze(LitGrade);
 
 
 class NationalCalendarLitCalArray {
-
     /**
      * Creates a new NationalCalendarLitCalArray from an array of LitCalEvent objects
      * and an object of i18n data.
@@ -144,7 +234,6 @@ class NationalCalendarLitCalArray {
 }
 
 class LitCalEventData {
-
     /**
      * Creates a new LitCalEventData object.
      * @param {string} [event_key=null] - The key of the liturgical event.
@@ -162,23 +251,6 @@ class LitCalEventData {
 }
 
 class LitCalMoveEventData extends LitCalEventData {
-
-    static #isValidDayValueForMonth(month, day) {
-        switch (month) {
-            // Save February at twenty-eight
-            case 2:
-                return day > 0 && day < 29;
-            // Thirty days hath September, April, June, and November
-            case 9:
-            case 4:
-            case 6:
-            case 11:
-                return day > 0 && day < 31;
-            // All the rest have thirty-one
-            default:
-                return day > 0 && day < 32;
-        }
-    }
 
     /**
      * Creates a new LitCalMoveEventData object.
@@ -199,7 +271,7 @@ class LitCalMoveEventData extends LitCalEventData {
         if (
             typeof liturgical_event.day !== 'number'
             || !Number.isInteger(liturgical_event.day)
-            || false === LitCalMoveEventData.#isValidDayValueForMonth(liturgical_event.month, liturgical_event.day)
+            || false === isValidDayValueForMonth(liturgical_event.month, liturgical_event.day)
         ) {
             throw new Error('`liturgical_event.day` must be an integer between 1 and 31 and it must be a valid day value for the given month');
         }
@@ -207,24 +279,16 @@ class LitCalMoveEventData extends LitCalEventData {
     }
 }
 
+/**
+ * @typedef {object} LitCalCreateNewFixedData
+ * @property {string} event_key
+ * @property {number} day
+ * @property {number} month
+ * @property {Array<LitColor>} color
+ * @property {LitGrade} grade
+ * @property {Array<string>} common
+ */
 class LitCalCreateNewFixedData extends LitCalEventData {
-
-    static #isValidDayValueForMonth(month, day) {
-        switch (month) {
-            // Save February at twenty-eight
-            case 2:
-                return day > 0 && day < 29;
-            // Thirty days hath September, April, June, and November
-            case 9:
-            case 4:
-            case 6:
-            case 11:
-                return day > 0 && day < 31;
-            // All the rest have thirty-one
-            default:
-                return day > 0 && day < 32;
-        }
-    }
 
     /**
      * Creates a new LitCalCreateNewFixedData object.
@@ -249,7 +313,7 @@ class LitCalCreateNewFixedData extends LitCalEventData {
         if (
             typeof liturgical_event.day !== 'number'
             || !Number.isInteger(liturgical_event.day)
-            || false === LitCalCreateNewFixedData.#isValidDayValueForMonth(liturgical_event.month, liturgical_event.day)
+            || false === isValidDayValueForMonth(liturgical_event.month, liturgical_event.day)
         ) {
             throw new Error('`liturgical_event.day` must be an integer between 1 and 31 and it must be a valid day value for the given month');
         }
@@ -269,13 +333,21 @@ class LitCalCreateNewFixedData extends LitCalEventData {
         super(liturgical_event.event_key);
         this.day    = liturgical_event.day;
         this.month  = liturgical_event.month;
-        this.color  = liturgical_event.color.map(color => new LitColor(color));
-        this.grade  = new LitGrade(liturgical_event.grade);
+        this.color  = liturgical_event.color.map(color => LitColor.from(color));
+        this.grade  = LitGrade.from(liturgical_event.grade);
         this.common = liturgical_event.common;
         Object.freeze(this);
     }
 }
 
+/**
+ * @typedef {object} LitCalCreateNewMobileData
+ * @property {string} event_key
+ * @property {string} strtotime
+ * @property {Array<LitColor>} color
+ * @property {LitGrade} grade
+ * @property {Array<string>} common
+ */
 class LitCalCreateNewMobileData extends LitCalEventData {
 
     /**
@@ -312,15 +384,19 @@ class LitCalCreateNewMobileData extends LitCalEventData {
         }
         super(liturgical_event.event_key);
         this.strtotime = liturgical_event.strtotime;
-        this.color  = liturgical_event.color.map(color => new LitColor(color));
-        this.grade  = new LitGrade(liturgical_event.grade);
+        this.color  = liturgical_event.color.map(color => LitColor.from(color));
+        this.grade  = LitGrade.from(liturgical_event.grade);
         this.common = liturgical_event.common;
         Object.freeze(this);
     }
 }
 
+/**
+ * @typedef {object} LitCalSetPropertyNameData
+ * @property {string} event_key
+ * @property {string} name
+ */
 class LitCalSetPropertyNameData extends LitCalEventData {
-
     /**
      * Creates a new LitCalSetPropertyNameData object.
      *
@@ -355,7 +431,7 @@ class LitCalSetPropertyGradeData extends LitCalEventData {
             throw new Error('`liturgical_event.event_key` and `liturgical_event.grade` properties are required for a `metadata.action` of `setProperty` and when the property is `grade`');
         }
         super(liturgical_event.event_key);
-        this.grade = new LitGrade(liturgical_event.grade);
+        this.grade = LitGrade.from(liturgical_event.grade);
         Object.freeze(this);
     }
 }
@@ -374,7 +450,8 @@ class LitCalMakePatronData extends LitCalEventData {
             throw new Error('`liturgical_event.event_key` and `liturgical_event.grade` properties are required for a `metadata.action` of `makePatron`, we received: ' + JSON.stringify(liturgical_event));
         }
         super(liturgical_event.event_key);
-        this.grade = new LitGrade(liturgical_event.grade);
+        /** @type {LitGrade} */
+        this.grade = LitGrade.from(liturgical_event.grade);
         Object.freeze(this);
     }
 }
