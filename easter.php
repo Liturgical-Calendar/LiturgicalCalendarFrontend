@@ -46,10 +46,8 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($ch);
 if (curl_errno($ch)) {
     $error_msg = curl_error($ch);
-    curl_close($ch);
     die($error_msg);
 }
-curl_close($ch);
 
 $responseJson = json_decode($response);
 if (json_last_error() !== JSON_ERROR_NONE) {
@@ -103,7 +101,7 @@ $DatesOfEaster = $responseJson->litcal_easter;
         <div id="TimelineCenturiesContainer">
         <?php
         for ($i = 16; $i <= 100; $i++) {
-            $century = strtolower($currentLocale) === 'en' ? Utilities::ordinal($i) : Utilities::romanNumeral($i);
+            $century = strtolower($baseLocale) === 'en' ? Utilities::ordinal($i) : Utilities::romanNumeral($i);
             echo '<div class="TimelineCenturyMarker">' . $century . ' ' . _('Century') . '</div>';
         }
         ?>
