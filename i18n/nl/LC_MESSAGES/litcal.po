@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 07:26+0000\n"
+"POT-Creation-Date: 2025-11-21 08:49+0000\n"
 "PO-Revision-Date: 2025-11-21 07:26+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
@@ -321,7 +321,7 @@ msgstr "Selecteer kalender"
 msgid "Calendar subscription URL"
 msgstr "Kalenderabonnement-URL"
 
-#: usage.php:115
+#: usage.php:115 usage.php:128 usage.php:153
 msgid "Click on the link above to copy it to the clipboard."
 msgstr "Klik op de bovenstaande link om deze naar het klembord te kopiëren."
 
@@ -378,10 +378,6 @@ msgid ""
 msgstr ""
 "Zodra de agenda is toegevoegd vanaf een desktop, wordt deze beschikbaar voor "
 "hetzelfde Gmail-account in de Google Kalender-app op een smartphone."
-
-#: usage.php:128 usage.php:153
-msgid "Click on the link above to copy it the clipboard."
-msgstr "Klik op de bovenstaande link om deze naar het klembord te kopiëren."
 
 #: usage.php:129
 msgid ""
@@ -530,7 +526,7 @@ msgid ""
 msgstr ""
 "U kunt bijvoorbeeld de liturgie van de dag vinden vanaf de dag van uw doop."
 
-#: extending.php:131
+#: extending.php:153
 msgid ""
 "The General Roman Calendar can be extended so as to create a National or "
 "Diocesan calendar. Diocesan calendars depend on National calendars, so the "
@@ -540,7 +536,7 @@ msgstr ""
 "diocesane kalender. Diocesane kalenders zijn afhankelijk van nationale "
 "kalenders, dus de nationale kalender moet eerst worden gemaakt."
 
-#: extending.php:132 translations.php:9
+#: extending.php:154 translations.php:9
 msgid ""
 "The first step in creating a national or diocesan calendar, is to translate "
 "the data for the General Roman Calendar into the language for that nation or "
@@ -550,11 +546,11 @@ msgstr ""
 "vertalen van de gegevens voor de Algemene Romeinse Kalender naar de taal van "
 "dat land of dat bisdom."
 
-#: extending.php:133
+#: extending.php:155
 msgid "(see <a href=\"translations.php\">Translations</a>)"
 msgstr "(zie <a href=\"translations.php\">Vertalingen</a>)"
 
-#: extending.php:134
+#: extending.php:156
 msgid ""
 "A national calendar may have some liturgical events in common with other "
 "national calendars, for example the patron of a wider region."
@@ -563,7 +559,7 @@ msgstr ""
 "andere nationale kalenders, bijvoorbeeld de patroonheilige van een bredere "
 "regio."
 
-#: extending.php:135
+#: extending.php:157
 msgid ""
 "In this case, the liturgical events for the wider region should be defined "
 "separately, and the languages applicable to the wider region should be set; "
@@ -576,7 +572,7 @@ msgstr ""
 "automatisch worden toegepast op nationale kalenders die tot de bredere regio "
 "behoren."
 
-#: extending.php:136
+#: extending.php:158
 msgid ""
 "If a group of dioceses decides to pool their Liturgical Calendar data, for "
 "example to print out one single yearly calendar with the data for all the "
@@ -587,47 +583,47 @@ msgstr ""
 "gegevens voor alle bisdommen in de groep, kan de groep hier worden "
 "gedefinieerd of ingesteld."
 
-#: extending.php:139
+#: extending.php:161
 msgid "Event key"
 msgstr "Evenementsleutel"
 
-#: extending.php:140 src/Utilities.php:233 src/FormControls.php:52
+#: extending.php:162 src/Utilities.php:233 src/FormControls.php:52
 msgid "Name"
 msgstr "Naam"
 
-#: extending.php:141 liturgyOfAnyDay.php:45 src/FormControls.php:59
+#: extending.php:163 liturgyOfAnyDay.php:45 src/FormControls.php:59
 msgid "Day"
 msgstr "Dag"
 
-#: extending.php:142 liturgyOfAnyDay.php:49 src/FormControls.php:65
+#: extending.php:164 liturgyOfAnyDay.php:49 src/FormControls.php:65
 msgid "Month"
 msgstr "Maand"
 
-#: extending.php:143 extending.php:521
+#: extending.php:165 extending.php:543
 msgid "Other Solemnity"
 msgstr "Andere Hoogfeest"
 
-#: extending.php:144 extending.php:542
+#: extending.php:166 extending.php:564
 msgid "Other Feast"
 msgstr "Andere Feest"
 
-#: extending.php:145 extending.php:562 extending.php:563
+#: extending.php:167 extending.php:584 extending.php:585
 msgid "Other Memorial"
 msgstr "Andere Gedachtenis"
 
-#: extending.php:146 extending.php:583 extending.php:584
+#: extending.php:168 extending.php:605 extending.php:606
 msgid "Other Optional Memorial"
 msgstr "Andere Vrije Gedachtenis"
 
-#: extending.php:147
+#: extending.php:169
 msgid "Delete calendar"
 msgstr "Kalender verwijderen"
 
-#: extending.php:148
+#: extending.php:170
 msgid "Delete diocesan calendar"
 msgstr "Schrap de diocesane kalender"
 
-#: extending.php:149
+#: extending.php:171
 msgid ""
 "If you choose to delete this calendar, the liturgical events defined for the "
 "calendar and the corresponding index entries will be removed and no longer "
@@ -638,200 +634,200 @@ msgstr ""
 "indexvermeldingen verwijderd en zijn ze niet langer beschikbaar in de "
 "clienttoepassingen."
 
-#: extending.php:150 src/FormControls.php:89
+#: extending.php:172 src/FormControls.php:89
 msgid "Liturgical color"
 msgstr "Liturgische kleur"
 
 #. translators: context = liturgical color
-#: extending.php:151 src/LitColor.php:35 src/FormControls.php:91
+#: extending.php:173 src/LitColor.php:35 src/FormControls.php:91
 msgid "white"
 msgstr "wit"
 
 #. translators: context = liturgical color
-#: extending.php:152 src/LitColor.php:38 src/FormControls.php:92
+#: extending.php:174 src/LitColor.php:38 src/FormControls.php:92
 msgid "red"
 msgstr "rood"
 
 #. translators: context = liturgical color
-#: extending.php:153 src/LitColor.php:29 src/FormControls.php:94
+#: extending.php:175 src/LitColor.php:29 src/FormControls.php:94
 msgid "green"
 msgstr "groen"
 
 #. translators: context = liturgical color
-#: extending.php:154 src/LitColor.php:32 src/FormControls.php:93
+#: extending.php:176 src/LitColor.php:32 src/FormControls.php:93
 msgid "purple"
 msgstr "paars"
 
 #. translators: context = liturgical color
-#: extending.php:155 src/LitColor.php:41
+#: extending.php:177 src/LitColor.php:41
 msgid "rose"
 msgstr "roze"
 
 #. translators: in reference to the first year from which this liturgical event takes place
-#: extending.php:157 src/FormControls.php:101
+#: extending.php:179 src/FormControls.php:101
 msgid "Since"
 msgstr "Vanaf"
 
 #. translators: in reference to the year from which this liturgical event no longer needs to be dealt with
-#: extending.php:159 src/FormControls.php:108
+#: extending.php:181 src/FormControls.php:108
 msgid "Until"
 msgstr "Tot"
 
 #. translators: label of the form row
-#: extending.php:161
+#: extending.php:183
 msgid "Patron or Patrons of the Wider Region"
 msgstr "Patroonheilige(n) van de wijdere regio"
 
 #. translators: label of the form row
-#: extending.php:163
+#: extending.php:185
 msgid "New liturgical event"
 msgstr "Nieuw liturgisch evenement"
 
 #. translators: label of the form row
-#: extending.php:165
+#: extending.php:187
 msgid "Change name"
 msgstr "Naam wijzigen"
 
 #. translators: label of the form row
-#: extending.php:167
+#: extending.php:189
 msgid "Change grade"
 msgstr "Graad wijzigen"
 
 #. translators: label of the form row
-#: extending.php:169
+#: extending.php:191
 msgid "Move liturgical event"
 msgstr "Verplaats een liturgisch evenement"
 
-#: extending.php:170
+#: extending.php:192
 msgid "Decree URL"
 msgstr "Besluit-URL"
 
-#: extending.php:171
+#: extending.php:193
 msgid "Decree Language mappings"
 msgstr "Taaltoewijzingen van het decreet"
 
-#: extending.php:172
+#: extending.php:194
 msgid "Missal"
 msgstr "Missaal"
 
-#: extending.php:173
+#: extending.php:195
 msgid "Reason (in favor of liturgical event)"
 msgstr "Reden (ten gunste van liturgisch evenement)"
 
-#: extending.php:185 extending.php:662 extending.php:666
+#: extending.php:207 extending.php:684 extending.php:688
 msgid "Designate patron"
 msgstr "Patroonheilige aanwijzen"
 
-#: extending.php:186 extending.php:678
+#: extending.php:208 extending.php:700
 msgid "Change name or grade of existing liturgical event"
 msgstr "Naam of rang van een bestaand liturgisch evenement wijzigen"
 
-#: extending.php:187 extending.php:694
+#: extending.php:209 extending.php:716
 msgid "Move liturgical event to new date"
 msgstr "Verplaats een liturgisch evenement naar een nieuwe datum"
 
-#: extending.php:188 extending.php:710
+#: extending.php:210 extending.php:732
 msgid "Create a new liturgical event"
 msgstr "Maak een nieuw liturgisch evenement"
 
-#: extending.php:194
+#: extending.php:216
 msgid "General Roman Calendar - Extending"
 msgstr "Algemene Romeinse kalender - Uitbreiding"
 
-#: extending.php:202
+#: extending.php:224
 msgid "Extend the General Roman Calendar with National or Diocesan data"
 msgstr ""
 "Breid de algemene Romeinse kalender uit met nationale of diocesane gegevens"
 
-#: extending.php:213 extending.php:368
+#: extending.php:235 extending.php:390
 msgid "Wider Region"
 msgstr "Bredere regio"
 
-#: extending.php:215 extending.php:283
+#: extending.php:237 extending.php:305
 msgid "This value cannot be empty."
 msgstr "Deze waarde kan niet leeg zijn."
 
-#: extending.php:231
+#: extending.php:253
 msgid "Locales"
 msgstr "Talen"
 
-#: extending.php:240 extending.php:381 extending.php:460
+#: extending.php:262 extending.php:403 extending.php:482
 msgid "Current localization"
 msgstr "Huidige lokalisatie"
 
-#: extending.php:252 extending.php:298 extending.php:479
+#: extending.php:274 extending.php:320 extending.php:501
 msgid "Remove existing data"
 msgstr "Verwijder bestaande gegevens"
 
-#: extending.php:258 layout/header.php:27
+#: extending.php:280 layout/header.php:27
 msgid "Create a Calendar for a Wider Region"
 msgstr "Maak een kalender voor een grotere regio"
 
-#: extending.php:269
+#: extending.php:291
 msgid "Save Wider Region Calendar Data"
 msgstr "Bewaar kalendergegevens van grotere regio's"
 
-#: extending.php:281
+#: extending.php:303
 msgid "National Calendar"
 msgstr "Nationale kalender"
 
-#: extending.php:304 layout/header.php:28
+#: extending.php:326 layout/header.php:28
 msgid "Create a National Calendar"
 msgstr "Maak een nationale kalender"
 
-#: extending.php:309
+#: extending.php:331
 msgid "National calendar settings"
 msgstr "Nationale kalenderinstellingen"
 
-#: extending.php:312 extending.php:608
+#: extending.php:334 extending.php:630
 msgid "EPIPHANY"
 msgstr "OPENBARING"
 
-#: extending.php:315 extending.php:611
+#: extending.php:337 extending.php:633
 msgid "January 6"
 msgstr "6 januari"
 
-#: extending.php:316 extending.php:612
+#: extending.php:338 extending.php:634
 msgid "Sunday between January 2 and January 8"
 msgstr "Zondag tussen 2 januari en 8 januari"
 
-#: extending.php:320 extending.php:616
+#: extending.php:342 extending.php:638
 msgid "ASCENSION"
 msgstr "HEMELVAART"
 
-#: extending.php:328 extending.php:624
+#: extending.php:350 extending.php:646
 msgid "CORPUS CHRISTI"
 msgstr "SACRAMENTSDAG"
 
-#: extending.php:336
+#: extending.php:358
 msgid "ETERNAL HIGH PRIEST"
 msgstr "EEUWIGE HOGEPRIESTER"
 
-#: extending.php:343 extending.php:450
+#: extending.php:365 extending.php:472
 msgid "LOCALES"
 msgstr "TALEN"
 
-#: extending.php:356
+#: extending.php:378
 msgid "Published Roman Missals"
 msgstr "Romeinse missalen gepubliceerd"
 
-#: extending.php:359 extending.php:726
+#: extending.php:381 extending.php:748
 msgid "Add Missal"
 msgstr "Missaal toevoegen"
 
-#: extending.php:400
+#: extending.php:422
 msgid "Save National Calendar Data"
 msgstr "Sla nationale kalendergegevens op"
 
-#: extending.php:414
+#: extending.php:436
 msgid "Depends on national calendar"
 msgstr "Hangt af van de nationale kalender"
 
-#: extending.php:427
+#: extending.php:449
 msgid "Diocese"
 msgstr "Bisdom"
 
-#: extending.php:429
+#: extending.php:451
 msgid ""
 "This diocese does not seem to exist? Please choose from a value in the list "
 "to retrieve an existing diocese, or ignore if creating a new diocesan "
@@ -841,76 +837,76 @@ msgstr ""
 "bestaand bisdom op te halen, of negeer deze bij het maken van een nieuwe "
 "diocesane kalender."
 
-#: extending.php:435
+#: extending.php:457
 msgid "Diocesan group"
 msgstr "Groep bisdommen"
 
-#: extending.php:471
+#: extending.php:493
 msgid "Timezone"
 msgstr "Tijdzone"
 
-#: extending.php:491
+#: extending.php:513
 msgid "Solemnities"
 msgstr "Hoogfeesten"
 
-#: extending.php:492
+#: extending.php:514
 msgid "Feasts"
 msgstr "Feesten"
 
-#: extending.php:493
+#: extending.php:515
 msgid "Memorials"
 msgstr "Gedachtenissen"
 
-#: extending.php:494
+#: extending.php:516
 msgid "Optional memorials"
 msgstr "Vrije Gedachtenissen"
 
-#: extending.php:513 extending.php:534 extending.php:555 extending.php:576
+#: extending.php:535 extending.php:556 extending.php:577 extending.php:598
 #: layout/header.php:29
 msgid "Create a Diocesan Calendar"
 msgstr "Maak een diocesane kalender"
 
-#: extending.php:513
+#: extending.php:535
 msgid "Define the Solemnities"
 msgstr "Definieer de Hoogfeesten"
 
-#: extending.php:519
+#: extending.php:541
 msgid ""
 "Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
 "Hoofdpatroon(s) van de plaats, het bisdom, de regio, de provincie of het "
 "territorium"
 
-#: extending.php:520 extending.php:541
+#: extending.php:542 extending.php:563
 msgid "Dedication of the Cathedral"
 msgstr "Toewijding van de kathedraal"
 
-#: extending.php:534
+#: extending.php:556
 msgid "Define the Feasts"
 msgstr "Definieer de Feesten"
 
-#: extending.php:540
+#: extending.php:562
 msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
 "Patroon(s) van de plaats, het bisdom, de regio, de provincie of het "
 "territorium"
 
-#: extending.php:555
+#: extending.php:577
 msgid "Define the Memorials"
 msgstr "Definieer de gedachtenissen"
 
-#: extending.php:561
+#: extending.php:583
 msgid ""
 "Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
 "Secundaire patroon(s) van de plaats, het bisdom, de regio, de provincie of "
 "het territorium"
 
-#: extending.php:576
+#: extending.php:598
 msgid "Define the Optional Memorials"
 msgstr "Definieer de vrije gedachtenissen"
 
-#: extending.php:582
+#: extending.php:604
 msgid ""
 "Saints whose veneration is local to the Place, Diocese, Region, Province or "
 "Territory"
@@ -918,36 +914,36 @@ msgstr ""
 "Heiligen wier verering lokaal is voor de plaats, het bisdom, de regio, de "
 "provincie of het territorium"
 
-#: extending.php:605
+#: extending.php:627
 msgid "Diocesan overrides to the national calendar for …"
 msgstr "Diocesane overschrijvingen op de nationale kalender voor …"
 
-#: extending.php:639
+#: extending.php:661
 msgid "SAVE DIOCESAN CALENDAR"
 msgstr "BEWAAR DE DIOCESANE KALENDER"
 
-#: extending.php:667 extending.php:683 extending.php:699 extending.php:715
-#: extending.php:739
+#: extending.php:689 extending.php:705 extending.php:721 extending.php:737
+#: extending.php:761
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: extending.php:682
+#: extending.php:704
 msgid "Set property"
 msgstr "Eigenschap instellen"
 
-#: extending.php:698
+#: extending.php:720
 msgid "Move Liturgical Event"
 msgstr "Liturgisch evenement verplaatsen"
 
-#: extending.php:714
+#: extending.php:736
 msgid "Create Liturgical Event"
 msgstr "Creëer een liturgisch evenement"
 
-#: extending.php:731
+#: extending.php:753
 msgid "Choose from known Roman Missal language editions"
 msgstr "Kies uit bekende edities van het Romeins Missaal"
 
-#: extending.php:733
+#: extending.php:755
 msgid ""
 "This Missal is unknown to the Liturgical Calendar API. Please choose from a "
 "value in the list, or contact the curator of the API to have the Missal "
@@ -957,7 +953,7 @@ msgstr ""
 "een waarde in de lijst, of neem contact op met de curator van de API om het "
 "missaal toe te voegen aan missalen in de bekende taaleditie."
 
-#: extending.php:738
+#: extending.php:760
 msgid "Add language edition Roman Missal"
 msgstr "Taaleditie Romeins Missaal toevoegen"
 
@@ -1538,6 +1534,9 @@ msgstr "Documentatie"
 #: layout/header.php:97
 msgid "Examples of Usage"
 msgstr "Voorbeelden van gebruik"
+
+#~ msgid "Click on the link above to copy it the clipboard."
+#~ msgstr "Klik op de bovenstaande link om deze naar het klembord te kopiëren."
 
 #~ msgid "Tag"
 #~ msgstr "Label"
