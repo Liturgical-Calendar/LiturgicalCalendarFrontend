@@ -15,27 +15,51 @@ $AvailableNationalCalendars = [];
 
 $c = new Collator($i18n->LOCALE);
 
+/**
+ * Fetch metadata from API
+ */
+$metadataRaw  = file_get_contents($metadataURL);
+$metadataJson = json_decode($metadataRaw, true);
+if (json_last_error() !== JSON_ERROR_NONE) {
+    $error_msg = json_last_error_msg();
+    die($error_msg);
+}
+if (false === isset($metadataJson['litcal_metadata'])) {
+    die('litcal_metadata not found in metadata JSON from API');
+}
+[ 'litcal_metadata' => $LitCalMetadata ] = $metadataJson;
 
-[ 'litcal_metadata' => $LitCalMetadata ] = json_decode(
-    file_get_contents($metadataURL),
-    true
-);
-
+/**
+ * Fetch liturgical events catalog from API
+ */
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $eventsURL);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept-Language: ' . $i18n->LOCALE]);
-$response                                         = curl_exec($ch);
-[ 'litcal_events' => $LiturgicalEventCollection ] = json_decode(
-    $response,
-    true
-);
-curl_close($ch);
+$response      = curl_exec($ch);
+$litEventsJson = json_decode($response, true);
+if (json_last_error() !== JSON_ERROR_NONE) {
+    $error_msg = json_last_error_msg();
+    die($error_msg);
+}
+if (false === isset($litEventsJson['litcal_events'])) {
+    die('litcal_events not found in events JSON from API');
+}
+[ 'litcal_events' => $LiturgicalEventCollection ] = $litEventsJson;
 
-[ 'catholic_dioceses_latin_rite' => $CatholicDiocesesByNation ] = json_decode(
-    file_get_contents('./assets/data/WorldDiocesesByNation.json'),
-    true
-);
+/**
+ * Fetch Catholic Dioceses by Nation data
+ */
+$WorldDiocesesByNation     = file_get_contents('./assets/data/WorldDiocesesByNation.json');
+$WorldDiocesesByNationJson = json_decode($WorldDiocesesByNation, true);
+if (json_last_error() !== JSON_ERROR_NONE) {
+    $error_msg = json_last_error_msg();
+    die($error_msg);
+}
+if (false === isset($WorldDiocesesByNationJson['catholic_dioceses_latin_rite'])) {
+    die('catholic_dioceses_latin_rite not found in WorldDiocesesByNation JSON data');
+}
+[ 'catholic_dioceses_latin_rite' => $CatholicDiocesesByNation ] = $WorldDiocesesByNationJson;
 
 $DiocesanGroups = $LitCalMetadata['diocesan_groups'];
 
@@ -589,10 +613,10 @@ if (isset($_GET['choice'])) {
 }
 ?>
 <script>
-const Messages = <?php echo json_encode($messages); ?>;
-const LitCalMetadata = <?php echo json_encode($LitCalMetadata); ?>;
-let LiturgicalEventCollection = <?php echo json_encode($LiturgicalEventCollection); ?>;
-let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($LiturgicalEventCollection, 'event_key')); ?>;
+const Messages = <?php echo json_encode($messages, JSON_UNESCAPED_UNICODE); ?>;
+const LitCalMetadata = <?php echo json_encode($LitCalMetadata, JSON_UNESCAPED_UNICODE); ?>;
+let LiturgicalEventCollection = <?php echo json_encode($LiturgicalEventCollection, JSON_UNESCAPED_UNICODE); ?>;
+let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($LiturgicalEventCollection, 'event_key'), JSON_UNESCAPED_UNICODE); ?>;
 </script>
 <?php include_once('./layout/footer.php'); ?>
 
@@ -687,7 +711,9 @@ let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($Liturgi
 <datalist id="existingLiturgicalEventsList">
 <?php
 foreach ($LiturgicalEventCollection as $liturgical_event) {
-    echo "<option value=\"{$liturgical_event["event_key"]}\">{$liturgical_event["name"]}</option>";
+    $key  = htmlspecialchars($liturgical_event['event_key'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    $name = htmlspecialchars($liturgical_event['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    echo "<option value=\"{$key}\">{$name}</option>";
 }
 ?>
 </datalist>
