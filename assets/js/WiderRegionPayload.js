@@ -1,3 +1,5 @@
+/** @import { RowData } from './extending.js' */
+
 /**
  * @typedef {Object} WiderRegionPayload
  * @prop {Array<RowData>} litcal

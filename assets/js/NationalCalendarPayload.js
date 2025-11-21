@@ -33,6 +33,8 @@
  * @enum {7|6|5|4|3|2|1|0}
  */
 
+/** @import { RowData } from './extending.js' */
+
 import { CalendarSettings, Locale } from './Settings.js';
 
 /** @enum {'white'|'red'|'green'|'purple'|'rose'} */
@@ -43,6 +45,17 @@ class LitColor {
     static Purple   = 'purple';
     static Rose     = 'rose';
     static #map     = Object.freeze({ white: 'White', red: 'Red', green: 'Green', purple: 'Purple', rose: 'Rose' });
+
+    /**
+     * Construct a new LitColor object from a string.
+     *
+     * This constructor takes a string value, which it will use to set the properties of the LitColor object.
+     * The string value must be one of the following: white, red, green, purple, rose.
+     * If the string value is not one of the above, it will throw an error.
+     *
+     * @param {string} value - The string value to use when constructing the LitColor object.
+     * @throws {Error} If the string value is not one of the above.
+     */
     constructor(value) {
         if (typeof value !== 'string') {
             throw new Error('the value passed to the constructor of a LitColor must be a string');
@@ -52,8 +65,13 @@ class LitColor {
         }
         this.value = value;
         this.name = LitColor.#map[value];
-        return Object.freeze(this);
+        Object.freeze(this);
     }
+
+    /**
+     * Returns the JSON representation of the LitColor object.
+     * @return {string} the value of the LitColor object.
+     */
     toJSON() {
         return this.value;
     }
@@ -95,8 +113,13 @@ class LitGrade {
         }
         this.value = value;
         this.name = LitGrade.#map[value];
-        return Object.freeze(this);
+        Object.freeze(this);
     }
+
+    /**
+     * Returns the JSON representation of the LitGrade object.
+     * @return {number} The value of the LitGrade object.
+     */
     toJSON() {
         return this.value;
     }
@@ -105,13 +128,28 @@ Object.freeze(LitGrade);
 
 
 class NationalCalendarLitCalArray {
-    constructor( litcalarray = [], i18nData ) {
-        let litCalItemsArr = litcalarray.map(litcalitem => new NationalCalendarLitCalItem(litcalitem, i18nData));
-        return new Array(...litCalItemsArr);
+
+    /**
+     * Creates a new NationalCalendarLitCalArray from an array of LitCalEvent objects
+     * and an object of i18n data.
+     * @param {Array<RowData>} [litcalarray=[]] - The array of LitCalEvent objects.
+     * @param {Object} i18nData - The object of i18n data.
+     * @return {NationalCalendarLitCalArray} A new NationalCalendarLitCalArray object.
+     */
+    static create(litcalarray = [], i18nData) {
+        return litcalarray.map(
+            litcalitem => new NationalCalendarLitCalItem(litcalitem, i18nData)
+        );
     }
 }
 
 class LitCalEventData {
+
+    /**
+     * Creates a new LitCalEventData object.
+     * @param {string} [event_key=null] - The key of the liturgical event.
+     * @throws {Error} If the `event_key` parameter is not a string, or if it is not provided.
+     */
     constructor( event_key = null ) {
         if (event_key === null) {
             throw new Error('`liturgical_event.event_key` parameter is required');
@@ -124,6 +162,7 @@ class LitCalEventData {
 }
 
 class LitCalMoveEventData extends LitCalEventData {
+
     static #isValidDayValueForMonth(month, day) {
         switch (month) {
             // Save February at twenty-eight
@@ -164,11 +203,12 @@ class LitCalMoveEventData extends LitCalEventData {
         ) {
             throw new Error('`liturgical_event.day` must be an integer between 1 and 31 and it must be a valid day value for the given month');
         }
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
 class LitCalCreateNewFixedData extends LitCalEventData {
+
     static #isValidDayValueForMonth(month, day) {
         switch (month) {
             // Save February at twenty-eight
@@ -232,7 +272,7 @@ class LitCalCreateNewFixedData extends LitCalEventData {
         this.color  = liturgical_event.color.map(color => new LitColor(color));
         this.grade  = new LitGrade(liturgical_event.grade);
         this.common = liturgical_event.common;
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
@@ -275,7 +315,7 @@ class LitCalCreateNewMobileData extends LitCalEventData {
         this.color  = liturgical_event.color.map(color => new LitColor(color));
         this.grade  = new LitGrade(liturgical_event.grade);
         this.common = liturgical_event.common;
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
@@ -297,7 +337,7 @@ class LitCalSetPropertyNameData extends LitCalEventData {
         }
         super(liturgical_event.event_key);
         this.name = liturgical_event.name;
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
@@ -316,7 +356,7 @@ class LitCalSetPropertyGradeData extends LitCalEventData {
         }
         super(liturgical_event.event_key);
         this.grade = new LitGrade(liturgical_event.grade);
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
@@ -335,7 +375,7 @@ class LitCalMakePatronData extends LitCalEventData {
         }
         super(liturgical_event.event_key);
         this.grade = new LitGrade(liturgical_event.grade);
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
@@ -390,7 +430,7 @@ class LitCalMoveEventMetadata extends LitCalMetadata {
         this.action      = 'moveEvent';
         this.missal      = metadata.missal;
         this.reason      = metadata.reason;
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
@@ -410,7 +450,7 @@ class LitCalSetPropertyNameMetadata extends LitCalMetadata {
         super(metadata.since_year, metadata.until_year ?? null);
         this.action      = 'setProperty';
         this.property    = 'name';
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
@@ -430,7 +470,7 @@ class LitCalSetPropertyGradeMetadata extends LitCalMetadata {
         super(metadata.since_year, metadata.until_year ?? null);
         this.action      = 'setProperty';
         this.property    = 'grade';
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
@@ -452,7 +492,7 @@ class LitCalMakePatronMetadata extends LitCalMetadata {
         if (metadata.hasOwnProperty('url')) {
             this.url = metadata.url;
         }
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
@@ -461,7 +501,7 @@ class NationalCalendarLitCalItem {
     /**
      * Constructor for NationalCalendarLitCalItem.
      *
-     * @param {Object} litcalItem - An object containing the properties of the liturgical event and its metadata.
+     * @param {RowData} litcalItem - An object containing the properties of the liturgical event and its metadata.
      * @param {Object} i18nData - An object containing the translated strings for the liturgical events.
      *
      * @throws {Error} If the `litcalItem` parameter is not an object, or if the `litcalItem` object does not have the required `liturgical_event` and `metadata` properties, or if the `metadata` object does not have an `action` property, or if the `i18nData` object does not contain the translated string for the liturgical event.
@@ -547,7 +587,7 @@ class NationalCalendarLitCalItem {
             default:
                 throw new Error('metadata.action must be one of `moveEvent`, `createNew`, `setProperty` or `makePatron`');
         }
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
@@ -615,7 +655,7 @@ class NationalCalendarPayloadMetadata {
         this.locales      = metadata.locales;
         this.wider_region = metadata.wider_region;
         this.missals      = metadata.missals;
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
@@ -659,12 +699,12 @@ class NationalCalendarPayload {
         }
         this.i18n     = i18n;
         /**@type {NationalCalendarLitCalArray} */
-        this.litcal   = new NationalCalendarLitCalArray(litcal, this.i18n);
+        this.litcal   = NationalCalendarLitCalArray.create(litcal, this.i18n);
         /**@type {CalendarSettings} */
         this.settings = new CalendarSettings(settings);
         /**@type {NationalCalendarPayloadMetadata} */
         this.metadata = new NationalCalendarPayloadMetadata(metadata);
-        return Object.freeze(this);
+        Object.freeze(this);
     }
 }
 
