@@ -18,7 +18,8 @@ $c = new Collator($i18n->LOCALE);
 /**
  * Fetch metadata from API
  */
-$metadataRaw = @file_get_contents($metadataURL);
+$context     = stream_context_create(['http' => ['timeout' => 5]]);
+$metadataRaw = file_get_contents($metadataURL, false, $context);
 
 if ($metadataRaw === false) {
     die('Could not fetch metadata from API at ' . $metadataURL);
@@ -40,6 +41,8 @@ if (false === isset($metadataJson['litcal_metadata'])) {
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $eventsURL);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept-Language: ' . $i18n->LOCALE]);
 
 $response = curl_exec($ch);
@@ -47,6 +50,11 @@ $response = curl_exec($ch);
 if (curl_errno($ch)) {
     $error_msg = curl_error($ch);
     die($error_msg);
+}
+
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+if ($httpCode >= 400) {
+    die('Error: Received HTTP code ' . $httpCode . ' from API at ' . $eventsURL);
 }
 
 if ($response === false) {
