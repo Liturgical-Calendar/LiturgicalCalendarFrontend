@@ -3,17 +3,17 @@ include_once 'common.php'; // provides $i18n and all API URLs
 
 $messages = [
     /**translators: label of the form row */
-    'New event'            => _('New event'),
+    'New liturgical event'  => _('New liturgical event'),
     /**translators: label of the form row */
-    'Change name or grade' => _('Change name or grade'),
+    'Change name or grade'  => _('Change name or grade'),
     /**translators: label of the form row */
-    'Change name'          => _('Change name'),
+    'Change name'           => _('Change name'),
     /**translators: label of the form row */
-    'Change grade'         => _('Change grade'),
+    'Change grade'          => _('Change grade'),
     /**translators: label of the form row */
-    'Move event'           => _('Move event'),
+    'Move liturgical event' => _('Move liturgical event'),
     /**translators: label of the form row */
-    'Designate Doctor'     => _('Designate Doctor of the Church'),
+    'Designate Doctor'      => _('Designate Doctor of the Church'),
 ];
 
 $RowAction = [
