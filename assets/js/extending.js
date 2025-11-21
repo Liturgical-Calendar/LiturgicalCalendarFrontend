@@ -2385,7 +2385,7 @@ const unswitcheroo = ( row, LiturgicalEvent ) => {
     const dayId = litEventStrtotime.id.replace('Strtotime', 'Day');
     const monthId = litEventStrtotime.id.replace('Strtotime', 'Month');
     strToTimeFormGroup.insertAdjacentHTML('beforestart', `<div class="form-group col-sm-1">
-    <label for="${dayId}">${Messages[ "Day" ]}</label><input type="number" min="1" max="31" value="1" class="form-control litEvent litEventDay" id="${dayId}" value="${LiturgicalEvent.day}" />
+    <label for="${dayId}">${Messages[ "Day" ]}</label><input type="number" min="1" max="31" class="form-control litEvent litEventDay" id="${dayId}" value="${LiturgicalEvent.day ?? 1}" />
     </div>`);
     litEventStrtotime.remove();
     let formRow = `<select class="form-select litEvent litEventMonth" id="${monthId}">`;
