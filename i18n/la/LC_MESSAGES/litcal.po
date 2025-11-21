@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-21 08:49+0000\n"
-"PO-Revision-Date: 2025-11-21 12:51+0000\n"
+"PO-Revision-Date: 2025-11-21 13:46+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
@@ -970,7 +970,7 @@ msgid ""
 "programmers and experts in Catholic liturgy, seeking to serve the Church."
 msgstr ""
 "Calendarii Liturgici propositum curatur a grege voluntariorum catholicorum "
-"programmatum et peritorum in liturgia catholica, quaerentium Ecclesiae "
+"programmatorum et peritorum in liturgia catholica, quaerentium Ecclesiae "
 "servire."
 
 #: about.php:13 about.php:21
@@ -1047,7 +1047,7 @@ msgid ""
 "taken from the Roman Missal used in the region for which the translation is "
 "accomplished."
 msgstr ""
-"Translationes eventuum liturgicorum supra memoratorum NON simpliciter ex "
+"Translationes eventuum liturgicorum supradictorum NON simpliciter ex "
 "facultatibus linguisticis interpretis fieri debent, sed ex Missali Romano in "
 "regione ad quam translatio perficitur sumendae sunt."
 
@@ -1057,9 +1057,9 @@ msgid ""
 "edition of the Roman Missal to the next; translators should simply use the "
 "most recent edition of the Roman Missal for their region as a reference."
 msgstr ""
-"Translationes eventuum liturgicorum supradictorum possunt mutare aedilicum "
-"Romanae Missalis unius in aliam; translatores simpliciter debent uti "
-"recentissimam editionem Romanae Missalis pro regione sua ut referentiam."
+"Translationes eventuum liturgicorum supradictorum possunt mutari ab una "
+"editione Missalis Romani ad aliam; interpretes simpliciter debent uti "
+"recentissima editione Missalis Romani regionis suae tamquam norma."
 
 #: translations.php:33
 msgid ""
@@ -1458,7 +1458,7 @@ msgstr "Elige ex eventibus liturgicis exsistentibus"
 
 #: src/Utilities.php:225
 msgid "Choose from existing liturgical events (or create a new one)"
-msgstr "Elige ex eventibus liturgicis exsistentibus (vel creant novum)"
+msgstr "Elige ex eventibus liturgicis exsistentibus (vel novum crea)"
 
 #: src/Utilities.php:231
 msgid "Property to change"
