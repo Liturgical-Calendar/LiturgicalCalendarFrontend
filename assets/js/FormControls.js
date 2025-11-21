@@ -151,7 +151,7 @@ const payloadProperties = Object.freeze({
     [RowAction.MakePatron]:  Object.freeze([ 'event_key', 'name', 'grade' ]),
     [RowAction.SetProperty]: Object.freeze([ 'event_key', 'name', 'grade' ]),
     [RowAction.MoveEvent]:   Object.freeze([ 'event_key', 'day', 'month', 'missal', 'reason' ]),
-    [RowAction.CreateNew]:   Object.freeze([ 'event_key', 'name', 'color', 'grade', 'day', 'month', 'strtotime', 'common' ]) //'readings' is only expected for createNew when common === 'Proper'
+    [RowAction.CreateNew]:   Object.freeze([ 'event_key', 'name', 'color', 'grade', 'day', 'month', 'strtotime', 'common' ]) //'readings' is only expected for createNew when common includes 'Proper'
 });
 
 /**
@@ -742,8 +742,8 @@ class FormControls {
                 input.type = 'text';
                 input.className = `form-control litEvent litEventReadings litEventReadings_${prop}`;
                 input.id = `onTheFly${FormControls.uniqid}Readings_${prop}`;
-                input.value = liturgical_event && liturgical_event?.common === 'Proper' ? (liturgical_event?.readings[prop] || '') : '';
-                input.disabled = liturgical_event === null || typeof liturgical_event.common === 'undefined' || liturgical_event.common !== 'Proper';
+                input.value = liturgical_event && liturgical_event?.common.includes('Proper') ? (liturgical_event?.readings[prop] || '') : '';
+                input.disabled = liturgical_event === null || typeof liturgical_event.common === 'undefined' || false === liturgical_event.common.includes('Proper');
                 inputCell.appendChild(input);
                 tr.appendChild(inputCell);
 
@@ -1024,7 +1024,7 @@ class FormControls {
 
         if (FormControls.settings.readingsFieldShow) {
             formRow += `<div class="col-sm-5"><table>`;
-            formRow += readingsProperties.map((prop,idx) => `<tr><td><label for="onTheFly${FormControls.uniqid}Readings_${prop}">${prop}</label></td><td style="padding-left: 15px;"><input type="text" class="form-control litEvent litEventReadings litEventReadings_${prop}" id="onTheFly${FormControls.uniqid}Readings_${prop}" ${liturgical_event === null || typeof liturgical_event.common === 'undefined' || liturgical_event.common !== 'Proper' ? `disabled` : ``} value="${liturgical_event && liturgical_event?.common === 'Proper' ? (liturgical_event?.readings[prop] || '') : ''}" /></td>${idx===0 ? `<td rowspan="5" style="vertical-align: top;"><i class="fas fa-info-circle m-2" style="color: #4e73df;" title="When the liturgical_event has its own Proper, then Readings can be defined, otherwise the readings will depend on the Common"></i>` : ``}</td></tr>`).join('');
+            formRow += readingsProperties.map((prop,idx) => `<tr><td><label for="onTheFly${FormControls.uniqid}Readings_${prop}">${prop}</label></td><td style="padding-left: 15px;"><input type="text" class="form-control litEvent litEventReadings litEventReadings_${prop}" id="onTheFly${FormControls.uniqid}Readings_${prop}" ${liturgical_event === null || typeof liturgical_event.common === 'undefined' || false === liturgical_event.commone.includs('Proper') ? `disabled` : ``} value="${liturgical_event && liturgical_event?.common.inclueds('Proper') ? (liturgical_event?.readings[prop] || '') : ''}" /></td>${idx===0 ? `<td rowspan="5" style="vertical-align: top;"><i class="fas fa-info-circle m-2" style="color: #4e73df;" title="When the liturgical_event has its own Proper, then Readings can be defined, otherwise the readings will depend on the Common"></i>` : ``}</td></tr>`).join('');
             formRow += `</table></div>`;
         }
 
