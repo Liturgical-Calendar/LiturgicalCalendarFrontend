@@ -12,14 +12,14 @@ Development is done initially on the development branch with a frontend at [http
 
 The Liturgical Calendar project offers an API that generates data for the liturgical events in the General Roman Calendar,
 as well as an API that generates the dates of easter in both the gregorian and the julian calendar from the year 1583 to the year 9999.
-Data from the Liturgical Calendar API can be requested in either JSON or XML format, so as to be consumed by any kind of application that can read JSON or XML data.
-It can also be requested in ICS format, so as to be consumed by any kind of iCal or Calendar application.
+Data from the Liturgical Calendar API can be requested in either JSON or XML format, to be consumed by any kind of application that can read JSON or XML data.
+It can also be requested in ICS format, to be consumed by any kind of iCal or Calendar application.
 
 This frontend is an interface with documentation and examples for the API.
 
 The API can be extended with National Calendars, based on the Roman Missals issued in the region;
 these calendars can then be requested on the Liturgical Calendar API `/calendar/nation/{NATION}` path,
-where `{NATION}` is the two letter ISO country code, as defined in [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+where `{NATION}` is the two-letter ISO country code, as defined in [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
 
 The API is also extendable for Diocesan Calendars, which however can only be defined after the National Calendar for the region has been defined;
 once the Diocesan Calendar is defined, it can be requested on the Liturgical Calendar API `/calendar/diocese/{DIOCESE}` path,
