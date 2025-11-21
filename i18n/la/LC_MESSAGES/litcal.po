@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-21 08:49+0000\n"
-"PO-Revision-Date: 2025-11-21 07:26+0000\n"
+"PO-Revision-Date: 2025-11-21 08:56+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
@@ -316,7 +316,7 @@ msgstr "URL subscriptionis calendarii"
 
 #: usage.php:115 usage.php:128 usage.php:153
 msgid "Click on the link above to copy it to the clipboard."
-msgstr "Preme in ligamen supra ut illud in interretiali tabula condam."
+msgstr "Preme in ligamine supra ut illud in interretiali tabula condas."
 
 #: usage.php:116
 #, php-format
@@ -567,7 +567,7 @@ msgstr ""
 
 #: extending.php:161
 msgid "Event key"
-msgstr "Eventus clavem"
+msgstr "Clavis eventus"
 
 #: extending.php:162 src/Utilities.php:233 src/FormControls.php:52
 msgid "Name"
