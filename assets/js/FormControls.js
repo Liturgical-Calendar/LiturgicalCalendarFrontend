@@ -1114,7 +1114,7 @@ const setFormSettings = action => {
             FormControls.title  = Messages[ RowActionTitle[RowAction.SetProperty] ];
             FormControls.action = RowAction.SetProperty;
             break;
-        case 'moveEventButton':
+        case 'moveLiturgicalEventButton':
             /* falls through */
         case RowAction.MoveEvent:
             FormControls.settings.eventKeyField   = false;
