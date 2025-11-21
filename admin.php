@@ -250,7 +250,9 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
     <datalist id="existingLiturgicalEventsList">
     <?php
     foreach ($LiturgicalEventCollection as $liturgical_event) {
-        echo "<option value=\"{$liturgical_event["event_key"]}\">{$liturgical_event["name"]}</option>";
+        $event_key = htmlspecialchars($liturgical_event['event_key'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $name      = htmlspecialchars($liturgical_event['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        echo "<option value=\"{$event_key}\">{$name}</option>";
     }
     ?>
     </datalist>
