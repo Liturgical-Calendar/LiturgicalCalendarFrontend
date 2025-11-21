@@ -106,7 +106,10 @@ curl_close($ch);
                 } else {
                     $decreeURL = $decree['metadata']['url'];
                 }
-                $decreeURL = htmlspecialchars($decreeURL, ENT_QUOTES, 'UTF-8');
+                $decreeURL = filter_var($decreeURL, FILTER_SANITIZE_URL);
+                if (false === filter_var($decreeURL, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED)) {
+                    $decreeURL = '#';
+                }
 
                 /**
                 $existingEvent = array_find($LiturgicalEventCollection, function ($event) use ($decree) {
