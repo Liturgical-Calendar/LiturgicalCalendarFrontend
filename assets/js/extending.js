@@ -351,13 +351,9 @@ const country2flag = (countryCode) => countryCode.replace(/./g, (letter) => Stri
  */
 const translationTemplate = (path, locale, el) => {
     const localeStr = locale.replace(/_/g, '-');
-    const parts = localeStr.split('-');
-    if (parts.length < 2) {
-        console.warn(`locale ${locale} does not have a region subtag`);
-        return '';
-    }
-    const region = parts[1];
     const localeObj = new Intl.Locale(localeStr);
+    const parts = localeStr.split('-');
+    const region = parts.length > 1 ? parts[1] : localeObj.region;
     const lang = localeObj.language.toUpperCase();
     const langWithRegion = AvailableLocalesWithRegion[locale];
     const eventKeyEl = el.closest('.row').querySelector('.litEventEventKey');
