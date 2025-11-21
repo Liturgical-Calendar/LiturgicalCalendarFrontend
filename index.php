@@ -167,15 +167,15 @@ $formLabelB = sprintf(
             </div>
             <div class="card shadow m-2">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary"><?php echo _('Calculation of the Date of Easter'); ?>: API<i class="fas fa-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
+                    <h6 class="m-0 font-weight-bold text-primary"><?php echo _('Calculation of the Dates of Easter'); ?>: API<i class="fas fa-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
                 </div>
                 <div class="card-body">
-                    <?php $EASTER_CALCULATOR_API = _('A simple API endpoint that returns data about the Date of Easter, both Gregorian and Julian, ' .
+                    <?php $EASTER_CALCULATOR_API = _('A simple API endpoint that returns data about the Dates of Easter, both Gregorian and Julian, ' .
                     'from 1583 (year of the adoption of the Gregorian Calendar) to 9999 (maximum possible date calculation in 64bit PHP), ' .
                     'using a PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian easter (observed by the Roman Catholic church) ' .
                     'and of the Meeus algorithm for Julian easter (observed by orthodox churches).'); ?>
                     <p><?php echo $EASTER_CALCULATOR_API; ?></p>
-                    <div class="text-center"><a href="<?php echo $dateOfEasterURL ?>" class="btn btn-primary m-2"><?php echo _('Date of Easter API endpoint'); ?></a></div>
+                    <div class="text-center"><a href="<?php echo $dateOfEasterURL ?>" class="btn btn-primary m-2"><?php echo _('Dates of Easter API endpoint'); ?></a></div>
                     <small class="text-muted">
                         <i><?php echo _('Currently the data can be requested with almost any localization. ' .
                         'In any case, since the API returns a UNIX timestamp for each date of Easter, localizations can be done in a client application just as well.'); ?></i>
