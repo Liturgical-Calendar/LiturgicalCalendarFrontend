@@ -967,7 +967,7 @@ class FormControls {
                 <option value="before"${liturgical_event.strtotime.relative_time === 'before' ? ' selected' : ''}>before</option>
                 <option value="after"${liturgical_event.strtotime.relative_time === 'after' ? ' selected' : ''}>after</option>
             </select>
-            <input list="existingFestivitiesList" value="${liturgical_event.strtotime.liturgical_event_key}" class="form-control litEvent litEventStrtotime existingLiturgicalEventName" id="onTheFly${FormControls.uniqid}StrToTime-festivityKey" required>
+            <input list="existingLiturgicalEventsList" value="${liturgical_event.strtotime.liturgical_event_key}" class="form-control litEvent litEventStrtotime existingLiturgicalEventName" id="onTheFly${FormControls.uniqid}StrToTime-festivityKey" required>
             </div>`;
         } else {
             formRow += `<div class="form-group col-sm-1">

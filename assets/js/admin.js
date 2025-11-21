@@ -405,7 +405,7 @@ $(document).on('change', '.existingLiturgicalEventName', ev => {
 
     const curTargVal = sanitizeInput( $(ev.currentTarget).val() );
 
-    if ($('#existingFestivitiesList').find('option[value="' + curTargVal + '"]').length > 0) {
+    if ($('#existingLiturgicalEventsList').find('option[value="' + curTargVal + '"]').length > 0) {
         disabledState = false;
         if( $(ev.currentTarget).prop('required') ) {
             $(ev.currentTarget).removeClass('is-invalid');
@@ -461,7 +461,7 @@ $(document).on('click', '.strtotime-toggle-btn', ev => {
             <option value="before"${strtotime.hasOwnProperty('relativeTime') && strtotime.relativeTime === 'before' ? ' selected': ''}>before</option>
             <option value="after"${strtotime.hasOwnProperty('relativeTime') && strtotime.relativeTime === 'after' ? ' selected': ''}>after</option>
         </select>
-        <input list="existingFestivitiesList" class="form-control litEvent litEventStrtotime existingLiturgicalEventName" id="onTheFly${uniqid}StrToTime-festivityKey" value="${strtotime.hasOwnProperty('festivityKey') ? strtotime.festivityKey : ''}" required>`;
+        <input list="existingLiturgicalEventsList" class="form-control litEvent litEventStrtotime existingLiturgicalEventName" id="onTheFly${uniqid}StrToTime-festivityKey" value="${strtotime.hasOwnProperty('festivityKey') ? strtotime.festivityKey : ''}" required>`;
         $dayFormGroup.empty().removeClass('col-sm-1').addClass('col-sm-2').append($strToTimeFormGroup);
     } else {
         $(ev.currentTarget).find('i').removeClass('fa-comment').addClass('fa-comment-slash');
