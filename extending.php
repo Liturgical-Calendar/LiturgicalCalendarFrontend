@@ -211,8 +211,8 @@ if (isset($_GET['choice'])) {
                             </div>
                         </div>
                         <div class="col col-md-3">
-                            <label for="currentLocalization" class="fw-bold"><?php echo _('Current localization') ?></label>
-                            <select class="form-select currentLocalizationChoices" id="currentLocalization">
+                            <label for="currentLocalizationWiderRegion" class="fw-bold"><?php echo _('Current localization') ?></label>
+                            <select class="form-select currentLocalizationChoices" id="currentLocalizationWiderRegion">
                                 <?php
                                 foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
                                     echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
@@ -352,8 +352,8 @@ if (isset($_GET['choice'])) {
                                         </datalist>
                                     </div>
                                     <div class="form-group col col-md-3 mt-4">
-                                        <label for="currentLocalization"><?php echo _('Current localization') ?></label>
-                                        <select class="form-select currentLocalizationChoices" id="currentLocalization">
+                                        <label for="currentLocalizationNational"><?php echo _('Current localization') ?></label>
+                                        <select class="form-select currentLocalizationChoices" id="currentLocalizationNational">
                                             <?php
                                             foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
                                                 echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
@@ -431,8 +431,8 @@ if (isset($_GET['choice'])) {
                                 </select>
                             </div>
                             <div class="form-group col col-md-3">
-                                <label for="currentLocalization" class="fw-bold"><?php echo _('Current localization'); ?>:</label>
-                                <select class="form-select currentLocalizationChoices" id="currentLocalization">
+                                <label for="currentLocalizationDiocesan" class="fw-bold"><?php echo _('Current localization'); ?>:</label>
+                                <select class="form-select currentLocalizationChoices" id="currentLocalizationDiocesan">
                                     <option value=""></option>
                                     <?php
                                     foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
