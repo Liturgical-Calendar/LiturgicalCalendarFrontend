@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-21 08:49+0000\n"
-"PO-Revision-Date: 2025-11-21 08:56+0000\n"
+"PO-Revision-Date: 2025-11-21 12:51+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pl/>\n"
@@ -34,9 +34,9 @@ msgid ""
 "National and Diocesan calendars can be requested on the %2$s and %3$s paths "
 "respectively."
 msgstr ""
-"Ścieżka bazowa %1$s zwraca wydarzenia liturgiczne dla powszechnego "
-"kalendarza rzymskiego. Kalendarze narodowe i diecezjalne można zamówić na "
-"ścieżkach %2$s i %3$s."
+"Ścieżka bazowa %1$s zwraca wydarzenia liturgiczne dla Kalendarza Rzymskiego "
+"Powszechnego. Kalendarze narodowe i diecezjalne można zamówić na ścieżkach "
+"%2$s i %3$s."
 
 #. translators: 1. /{YEAR}
 #: index.php:15
@@ -123,7 +123,7 @@ msgstr "Dostępne parametry żądania na wszystkich ścieżkach %1$s"
 
 #: index.php:60 usage.php:13 examples.php:95 liturgyOfAnyDay.php:22
 msgid "General Roman Calendar"
-msgstr "Powszechny kalendarz rzymski"
+msgstr "Kalendarz Rzymski Powszechny"
 
 #: index.php:69 layout/header.php:75
 msgid "Catholic Liturgical Calendar"
@@ -244,8 +244,8 @@ msgid ""
 "calendars"
 msgstr ""
 "API kalendarza liturgicznego, z którego można pobrać dane dla wydarzeń "
-"liturgicznych dowolnego roku od 1970 roku, zarówno dla Kalendarza "
-"Uniwersalnego lub Ogólnego Rzymskiego, jak i dla kalendarzy krajowych i "
+"liturgicznych dowolnego roku od 1970 roku, zarówno dla Kalendarza Rzymskiego "
+"Powszechniego lub Uniwersalnego, jak i dla kalendarzy krajowych i "
 "diecezjalnych"
 
 #: usage.php:13
@@ -861,7 +861,9 @@ msgstr "Zdefiniuj uroczystości"
 #: extending.php:541
 msgid ""
 "Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
-msgstr "Główny patron miejsca, diecezji, regionu, prowincji lub terytorium"
+msgstr ""
+"Główny patron lub patroni miejsca, diecezji, regionu, prowincji lub "
+"terytorium"
 
 #: extending.php:542 extending.php:563
 msgid "Dedication of the Cathedral"
@@ -873,7 +875,7 @@ msgstr "Zdefiniuj święta"
 
 #: extending.php:562
 msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
-msgstr "Patron miejsca, diecezji, regionu, prowincji lub terytorium"
+msgstr "Patron lub patroni miejsca, diecezji, regionu, prowincji lub terytorium"
 
 #: extending.php:577
 msgid "Define the Memorials"
@@ -883,7 +885,8 @@ msgstr "Zdefiniuj wspomnienia"
 msgid ""
 "Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
-"Drugorzędny patron miejsca, diecezji, regionu, prowincji lub terytorium"
+"Drugorzędny patron lub patroni miejsca, diecezji, regionu, prowincji lub "
+"terytorium"
 
 #: extending.php:598
 msgid "Define the Optional Memorials"
@@ -993,7 +996,7 @@ msgstr ""
 #: examples.php:133
 #, php-format
 msgid "Example '%s' not found"
-msgstr "Przykład '%s' nie znaleziono"
+msgstr "Nie znaleziono przykładu „%s”"
 
 #: translations.php:11
 #, php-format
