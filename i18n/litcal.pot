@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 08:49+0000\n"
+"POT-Creation-Date: 2025-11-21 16:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -165,13 +165,13 @@ msgid ""
 "content types and responses are described here."
 msgstr ""
 
-#: index.php:170
-msgid "Calculation of the Date of Easter"
+#: index.php:170 usage.php:184
+msgid "Calculation of the Dates of Easter"
 msgstr ""
 
 #: index.php:173
 msgid ""
-"A simple API endpoint that returns data about the Date of Easter, both "
+"A simple API endpoint that returns data about the Dates of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
 "Calendar) to 9999 (maximum possible date calculation in 64bit PHP), using a "
 "PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian easter "
@@ -180,7 +180,7 @@ msgid ""
 msgstr ""
 
 #: index.php:178
-msgid "Date of Easter API endpoint"
+msgid "Dates of Easter API endpoint"
 msgstr ""
 
 #: index.php:180
@@ -387,10 +387,6 @@ msgstr ""
 
 #: usage.php:176 layout/header.php:109
 msgid "Dates of Easter"
-msgstr ""
-
-#: usage.php:184
-msgid "Calculation of the Dates of Easter"
 msgstr ""
 
 #: usage.php:187
