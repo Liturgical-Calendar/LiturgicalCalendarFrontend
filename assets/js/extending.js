@@ -410,7 +410,6 @@ const domContentLoadedCallback = () => {
         enableCaseInsensitiveFiltering: true,
         onChange: (option, checked) => {
             if (false === checked && document.querySelector('.currentLocalizationChoices').value === option[0].value) {
-                console.log('value of this in multiselect onChange:', this);
                 alert('You cannot remove the current localization. In order to remove this locale, you must first switch to a different current localization.');
                 $(option).prop('selected', !checked);
                 $('.calendarLocales').multiselect('refresh');
@@ -643,29 +642,35 @@ const litEventNameChangeHandler = (ev) => {
 
             if (choice === 'diocesan') {
                 const litEvent = CalendarData.litcal.find(item => item.liturgical_event.event_key === newEventKey) ?? null;
-                // We set the grade based on the current carousel item
-                switch (ev.target.closest('.carousel-item').id) {
-                    case 'carouselItemSolemnities':
-                        litEvent.liturgical_event.grade = 6;
-                        break;
-                    case 'carouselItemFeasts':
-                        litEvent.liturgical_event.grade = 4;
-                        break;
-                    case 'carouselItemMemorials':
-                        litEvent.liturgical_event.grade = 3;
-                        break;
-                    case 'carouselItemOptionalMemorials':
-                        litEvent.liturgical_event.grade = 2;
-                        break;
+                if (litEvent !== null) {
+                    // We set the grade based on the current carousel item
+                    switch (ev.target.closest('.carousel-item').id) {
+                        case 'carouselItemSolemnities':
+                            litEvent.liturgical_event.grade = Rank.SOLEMNITY;
+                            break;
+                        case 'carouselItemFeasts':
+                            litEvent.liturgical_event.grade = Rank.FEAST;
+                            break;
+                        case 'carouselItemMemorials':
+                            litEvent.liturgical_event.grade = Rank.MEMORIAL;
+                            break;
+                        case 'carouselItemOptionalMemorials':
+                            litEvent.liturgical_event.grade = Rank.OPTIONALMEMORIAL;
+                            break;
+                    }
                 }
 
                 // Attempt to set liturgical color to red for martyrs, white for all other cases
                 if (ev.target.value.match(/(martyr|martir|mártir|märtyr)/i) !== null) {
                     $(row.querySelector('.litEventColor')).multiselect('deselectAll', false).multiselect('select', 'red');
-                    litEvent.liturgical_event.color = [ 'red' ];
+                    if (litEvent !== null) {
+                        litEvent.liturgical_event.color = [ 'red' ];
+                    }
                 } else {
                     $(row.querySelector('.litEventColor')).multiselect('deselectAll', false).multiselect('select', 'white');
-                    litEvent.liturgical_event.color = [ 'white' ];
+                    if (litEvent !== null) {
+                        litEvent.liturgical_event.color = [ 'white' ];
+                    }
                 }
             }
         } else {
@@ -677,10 +682,12 @@ const litEventNameChangeHandler = (ev) => {
                 console.log('calendar already exists, so we are just updating the liturgical_event name while keeping the event_key the same', eventKey);
                 if (eventKey !== '') {
                     console.log('CalendarData before update: ', CalendarData);
-                    const existingEntry = CalendarData.litcal.find(item => item.liturgical_event.event_key === eventKey);
+                    const existingEntry = CalendarData.litcal.find(item => item.liturgical_event.event_key === eventKey) ?? null;
                     console.log('existingEntry is: ', existingEntry);
-                    existingEntry.liturgical_event.name = ev.target.value;
-                    console.log('CalendarData.litcal has been updated:', CalendarData);
+                    if (existingEntry === null) {
+                        existingEntry.liturgical_event.name = ev.target.value;
+                        console.log('CalendarData.litcal has been updated:', CalendarData);
+                    }
                 } else {
                     console.error('why is event_key empty?');
                 }
