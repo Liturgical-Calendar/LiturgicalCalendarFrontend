@@ -97,14 +97,16 @@ curl_close($ch);
                 // Card item
                 if (array_key_exists('url_lang_map', $decree['metadata'])) {
                     if (array_key_exists($i18n->LOCALE, $decree['metadata']['url_lang_map'])) {
-                        $decree['url'] = $decree['metadata']['url_lang_map'][$i18n->LOCALE];
+                        $decreeURL = sprintf($decree['metadata']['url'], $decree['metadata']['url_lang_map'][$i18n->LOCALE]);
+                    } elseif (array_key_exists('en', $decree['metadata']['url_lang_map'])) {
+                        $decreeURL = sprintf($decree['metadata']['url'], $decree['metadata']['url_lang_map']['en']);
                     } else {
-                        $decree['url'] = $decree['metadata']['url_lang_map']['en'];
+                        $decreeURL = sprintf($decree['metadata']['url'], array_values($decree['metadata']['url_lang_map'])[0]);
                     }
                 } else {
-                    $decree['url'] = $decree['metadata']['url'];
+                    $decreeURL = $decree['metadata']['url'];
                 }
-                $decreeURL = htmlspecialchars($decree['url'], ENT_QUOTES, 'UTF-8');
+                $decreeURL = htmlspecialchars($decreeURL, ENT_QUOTES, 'UTF-8');
 
                 /**
                 $existingEvent = array_find($LiturgicalEventCollection, function ($event) use ($decree) {
