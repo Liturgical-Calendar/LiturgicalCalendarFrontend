@@ -990,7 +990,7 @@ class FormControls {
         } else {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}Day">${Messages[ "Day" ]}</label>
-            <input type="number" min="1" max="31" value="${liturgical_event !== null && liturgical_event.day}" class="form-control litEvent litEventDay" id="onTheFly${FormControls.uniqid}Day"${FormControls.settings.dayField === false ?  'readonly' : '' } />
+            <input type="number" min="1" max="31" value="${liturgical_event?.day ?? ''}" class="form-control litEvent litEventDay" id="onTheFly${FormControls.uniqid}Day"${FormControls.settings.dayField === false ?  'readonly' : '' } />
             </div>`;
 
             formRow += `<div class="form-group col-sm-1">
