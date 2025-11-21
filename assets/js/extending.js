@@ -331,7 +331,19 @@ class EventsLoader {
 }
 
 
-const country2flag = (countryCode) => countryCode.replace(/./g, (letter) => String.fromCodePoint((letter.charCodeAt(0) % 32) + 0x1F1E5));
+/**
+ * Returns a string containing the emoji flag for the given country code.
+ * The country code must be a two-character string.
+ * If the country code is not a string or its length is not 2, an empty string is returned.
+ * @param {string} countryCode - two-character country code
+ * @returns {string} emoji flag for the given country code
+ */
+const country2flag = (countryCode) =>
+    typeof countryCode === 'string' && countryCode.length === 2
+        ? countryCode.toUpperCase().replace(/./g, letter =>
+            String.fromCodePoint((letter.charCodeAt(0) % 32) + 0x1F1E5)
+        )
+        : '';
 
 /**
  * Returns a string containing HTML for a Bootstrap input group element with a label
