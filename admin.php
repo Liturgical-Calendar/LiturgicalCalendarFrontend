@@ -36,16 +36,34 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $missalsURL . '/EDITIO_TYPICA_1970');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept-Language: ' . $i18n->LOCALE]);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 $missalsResponse = curl_exec($ch);
+if (curl_errno($ch)) {
+    die('Error fetching missals from API: ' . curl_error($ch));
+}
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+if ($httpCode >= 400) {
+    die('Error: Received HTTP code ' . $httpCode . ' from missals API at ' . $missalsURL);
+}
 
 curl_setopt($ch, CURLOPT_URL, $eventsURL);
 $eventsResponse = curl_exec($ch);
-
+if (curl_errno($ch)) {
+    die('Error fetching events from API: ' . curl_error($ch));
+}
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+if ($httpCode >= 400) {
+    die('Error: Received HTTP code ' . $httpCode . ' from events API at ' . $eventsURL);
+}
 
 /**
  * Decode the JSON responses
  */
 $MissalData = json_decode($missalsResponse, true);
+if (json_last_error() !== JSON_ERROR_NONE) {
+    die('Error decoding missals JSON from API: ' . json_last_error_msg());
+}
 
 if (!is_array($MissalData)) {
     die('Invalid missals JSON from API');
@@ -58,6 +76,10 @@ if (empty($MissalData) || !is_array($MissalData[0])) {
 $thh = array_keys($MissalData[0]);
 
 $decodedEvents = json_decode($eventsResponse, true);
+
+if (json_last_error() !== JSON_ERROR_NONE) {
+    die('Error decoding events catalog JSON from API: ' . json_last_error_msg());
+}
 
 if (!is_array($decodedEvents) || !isset($decodedEvents['litcal_events']) || !is_array($decodedEvents['litcal_events'])) {
     die('Invalid events JSON from API');
