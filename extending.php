@@ -135,7 +135,7 @@ $buttonGroup = '<hr><div class="d-flex justify-content-around">
 <button class="btn btn-sm btn-primary m-2" id="makePatronAction" data-bs-toggle="modal" data-bs-target="#makePatronActionPrompt"><i class="fas fa-user-graduate me-2"></i>' . _('Designate patron') . '</button>
 <button class="btn btn-sm btn-primary m-2" id="setPropertyAction" data-bs-toggle="modal" data-bs-target="#setPropertyActionPrompt"><i class="fas fa-edit me-2"></i>' . _('Change name or grade of existing liturgical event') . '</button>
 <button class="btn btn-sm btn-primary m-2" id="moveLiturgicalEventAction" data-bs-toggle="modal" data-bs-target="#moveLiturgicalEventActionPrompt"><i class="fas fa-calendar-day me-2"></i>' . _('Move liturgical event to new date') . '</button>
-<button class="btn btn-sm btn-primary m-2" id="newLiturgicalEventAction" data-bs-toggle="modal" data-bs-target="#newEventActionPrompt"><i class="far fa-calendar-plus me-2"></i>' . _('Create a new liturgical event') . '</button>
+<button class="btn btn-sm btn-primary m-2" id="newLiturgicalEventAction" data-bs-toggle="modal" data-bs-target="#newLiturgicalEventActionPrompt"><i class="far fa-calendar-plus me-2"></i>' . _('Create a new liturgical event') . '</button>
 </div>';
 
 ?><!doctype html>
