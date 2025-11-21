@@ -192,7 +192,9 @@ if (isset($_GET['choice'])) {
                             <?php
                             foreach ($LitCalMetadata['wider_regions'] as $widerRegion) {
                                 foreach ($widerRegion['locales'] as $widerRegionLanguage) {
-                                    echo "<option value=\"{$widerRegion['name']} - {$widerRegionLanguage}\">{$widerRegion['name']}</option>";
+                                    $widerRegionName         = htmlspecialchars($widerRegion['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                    $widerRegionLanguageSafe = htmlspecialchars($widerRegionLanguage, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                    echo "<option value=\"{$widerRegionName} - {$widerRegionLanguageSafe}\">{$widerRegionName}</option>";
                                 }
                             }
                             ?>
@@ -256,7 +258,9 @@ if (isset($_GET['choice'])) {
                             <datalist id="nationalCalendarsList">
                             <?php
                             foreach ($CountriesWithCatholicDioceses as $isoCode => $countryLocalized) {
-                                echo "<option value=\"{$isoCode}\">{$countryLocalized}</option>";
+                                $isoCodeSafe          = htmlspecialchars($isoCode, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                $countryLocalizedSafe = htmlspecialchars($countryLocalized, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                echo "<option value=\"{$isoCodeSafe}\">{$countryLocalizedSafe}</option>";
                             }
                             ?>
                             </datalist>
@@ -341,7 +345,8 @@ if (isset($_GET['choice'])) {
                                             <option value=""></option>
                                         <?php
                                         foreach ($LitCalMetadata['wider_regions_keys'] as $WiderRegion) {
-                                            echo "<option value=\"{$WiderRegion}\">{$WiderRegion}</option>";
+                                            $widerRegionKeySafe = htmlspecialchars($WiderRegion, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                            echo "<option value=\"{$widerRegionKeySafe}\">{$widerRegionKeySafe}</option>";
                                         }
                                         ?>
                                         </datalist>
@@ -385,7 +390,9 @@ if (isset($_GET['choice'])) {
                                     <option value=""></option>
                                 <?php
                                 foreach ($AvailableNationalCalendars as $nation => $displayName) {
-                                    echo "<option value=\"{$nation}\">$displayName</option>";
+                                    $nationSafe      = htmlspecialchars($nation, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                    $displayNameSafe = htmlspecialchars($displayName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                    echo "<option value=\"{$nationSafe}\">$displayNameSafe</option>";
                                 }
                                 ?>
                                 </select>
@@ -405,7 +412,8 @@ if (isset($_GET['choice'])) {
                                     <option value=""></option>
                                     <?php
                                     foreach ($DiocesanGroups as $diocesanGroup) {
-                                        echo "<option value=\"{$diocesanGroup['group_name']}\">{$diocesanGroup['group_name']}</option>";
+                                        $diocesanGroupName = htmlspecialchars($diocesanGroup['group_name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                        echo "<option value=\"{$diocesanGroupName}\">{$diocesanGroupName}</option>";
                                     }
                                     ?>
                                 </datalist>
