@@ -572,7 +572,11 @@ class FormControls {
          * Liturgical color form group
          * We always have a liturgical color form group
          */
-        const selectedColors = liturgical_event !== null ? (Array.isArray(liturgical_event.color) ? liturgical_event.color : liturgical_event.color.split(',')) : [];
+        const selectedColors = liturgical_event && liturgical_event.color
+            ? (Array.isArray(liturgical_event.color)
+                ? liturgical_event.color
+                : String(liturgical_event.color).split(','))
+            : [];
         const colorFormGroup = document.createElement('div');
         colorFormGroup.className = 'form-group col-sm-2';
         const colorLabel = document.createElement('label');
@@ -953,7 +957,11 @@ class FormControls {
             </div>`;
         }
 
-        let selectedColors = liturgical_event !== null ? (Array.isArray(liturgical_event.color) ? liturgical_event.color : liturgical_event.color.split(',')) : [];
+        const selectedColors = liturgical_event && liturgical_event.color
+            ? (Array.isArray(liturgical_event.color)
+                ? liturgical_event.color
+                : String(liturgical_event.color).split(','))
+            : [];
         formRow += `<div class="form-group col-sm-2">
         <label for="onTheFly${FormControls.uniqid}Color">${Messages[ "Liturgical color" ]}</label>
         <select class="form-select litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple"${FormControls.settings.colorField === false ? ' readonly' : ''} />
