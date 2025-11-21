@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-20 22:27+0000\n"
-"PO-Revision-Date: 2025-11-20 20:51+0000\n"
+"PO-Revision-Date: 2025-11-21 01:55+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
@@ -615,7 +615,7 @@ msgstr "Otra memoria"
 
 #: extending.php:96 extending.php:524 extending.php:525
 msgid "Other Optional Memorial"
-msgstr "Otro memoria opcional"
+msgstr "Otra memoria opcional"
 
 #: extending.php:97
 msgid "Delete calendar"
