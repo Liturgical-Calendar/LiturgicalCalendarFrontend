@@ -18,7 +18,12 @@ $c = new Collator($i18n->LOCALE);
 /**
  * Fetch metadata from API
  */
-$metadataRaw  = file_get_contents($metadataURL);
+$metadataRaw = @file_get_contents($metadataURL);
+
+if ($metadataRaw === false) {
+    die('Could not fetch metadata from API at ' . $metadataURL);
+}
+
 $metadataJson = json_decode($metadataRaw, true);
 if (json_last_error() !== JSON_ERROR_NONE) {
     $error_msg = json_last_error_msg();
@@ -36,29 +41,50 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $eventsURL);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept-Language: ' . $i18n->LOCALE]);
-$response      = curl_exec($ch);
+
+$response = curl_exec($ch);
+
+if (curl_errno($ch)) {
+    $error_msg = curl_error($ch);
+    die($error_msg);
+}
+
+if ($response === false) {
+    die('Could not fetch events from API at ' . $eventsURL);
+}
+
 $litEventsJson = json_decode($response, true);
+
 if (json_last_error() !== JSON_ERROR_NONE) {
     $error_msg = json_last_error_msg();
     die($error_msg);
 }
+
 if (false === isset($litEventsJson['litcal_events'])) {
     die('litcal_events not found in events JSON from API');
 }
+
 [ 'litcal_events' => $LiturgicalEventCollection ] = $litEventsJson;
 
 /**
  * Fetch Catholic Dioceses by Nation data
  */
-$WorldDiocesesByNation     = file_get_contents('./assets/data/WorldDiocesesByNation.json');
+$WorldDiocesesByNation = @file_get_contents('./assets/data/WorldDiocesesByNation.json');
+if ($WorldDiocesesByNation === false) {
+    die('Could not fetch WorldDiocesesByNation.json data');
+}
+
 $WorldDiocesesByNationJson = json_decode($WorldDiocesesByNation, true);
+
 if (json_last_error() !== JSON_ERROR_NONE) {
     $error_msg = json_last_error_msg();
     die($error_msg);
 }
+
 if (false === isset($WorldDiocesesByNationJson['catholic_dioceses_latin_rite'])) {
     die('catholic_dioceses_latin_rite not found in WorldDiocesesByNation JSON data');
 }
+
 [ 'catholic_dioceses_latin_rite' => $CatholicDiocesesByNation ] = $WorldDiocesesByNationJson;
 
 $DiocesanGroups = $LitCalMetadata['diocesan_groups'];
