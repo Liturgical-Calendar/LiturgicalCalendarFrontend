@@ -2026,13 +2026,13 @@ const serializeRegionalNationalDataClicked = (ev) => {
 
         if ( action === RowAction.CreateNew && rowData.liturgical_event.common.includes( 'Proper' ) ) {
             rowData.liturgical_event.readings = {
-                first_reading: row.querySelector('.litEventReadings_FIRST_READING').value,
-                responsorial_psalm: row.querySelector('.litEventReadings_RESPONSORIAL_PSALM').value,
-                gospel_acclamation: row.querySelector('.litEventReadings_ALLELUIA_VERSE').value,
-                gospel: row.querySelector('.litEventReadings_GOSPEL').value
+                first_reading: row.querySelector('.litEventReadings_first_reading').value,
+                responsorial_psalm: row.querySelector('.litEventReadings_responsorial_psalm').value,
+                gospel_acclamation: row.querySelector('.litEventReadings_gospel_acclamation').value,
+                gospel: row.querySelector('.litEventReadings_gospel').value
             };
-            if ( row.querySelector('.litEventReadings_SECOND_READING').value !== '' ) {
-                rowData.liturgical_event.readings.second_reading = row.querySelector('.litEventReadings_SECOND_READING').value;
+            if ( row.querySelector('.litEventReadings_second_reading').value !== '' ) {
+                rowData.liturgical_event.readings.second_reading = row.querySelector('.litEventReadings_second_reading').value;
             }
         }
 
