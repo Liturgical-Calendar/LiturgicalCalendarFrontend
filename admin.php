@@ -70,7 +70,7 @@ if (!is_array($decodedEvents) || !isset($decodedEvents['litcal_events']) || !is_
  * Prepare our translations strings
  */
 $messages = [
-    'Event key'             => _('Event key'),
+    'EventKey'              => _('Event key'),
     'Name'                  => _('Name'),
     'Day'                   => _('Day'),
     'Month'                 => _('Month'),
