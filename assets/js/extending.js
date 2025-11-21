@@ -684,7 +684,7 @@ const litEventNameChangeHandler = (ev) => {
                     console.log('CalendarData before update: ', CalendarData);
                     const existingEntry = CalendarData.litcal.find(item => item.liturgical_event.event_key === eventKey) ?? null;
                     console.log('existingEntry is: ', existingEntry);
-                    if (existingEntry === null) {
+                    if (existingEntry !== null) {
                         existingEntry.liturgical_event.name = ev.target.value;
                         console.log('CalendarData.litcal has been updated:', CalendarData);
                     }
@@ -2798,7 +2798,7 @@ const saveDiocesanCalendar_btnClicked = () => {
     const diocese = document.querySelector('#diocesanCalendarDioceseName').value;
     const option = document.querySelector('#DiocesesList option[value="' + diocese + '"]');
     const diocese_id = option ? option.getAttribute('data-value') : null;
-    const saveObj = { payload: CalendarData };
+    const saveObj = { payload: { ...CalendarData } };
     API.category = 'diocese';
     if (API.method === 'PATCH') {
         API.key = diocese_id;
