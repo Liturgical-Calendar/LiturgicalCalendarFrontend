@@ -588,7 +588,6 @@ class NationalCalendarLitCalItem {
         if (false === litcalItem.metadata.hasOwnProperty('action')) {
             throw new Error('metadata must have an `action` property');
         }
-        console.log('verifying integrity of NationalCalendarLitCalItem with action = ' + litcalItem.metadata.action);
 
         // Cases in which we would need a `name` property: createNew, makePatron, and setProperty.name
         // We no longer use the `name` property, because we have translated strings in the i18n data
