@@ -2190,13 +2190,13 @@ const refreshOtherLocalizationInputs = (otherLocalizations) => {
 const resetOtherLocalizationInputs = () => {
     const previousValues = new Map();
     Array.from(document.querySelectorAll('.litEventName')).forEach(el => {
-        while (el.nextSibling) {
-            const inputEl = el.nextSibling.querySelector('input');
+        while (el.nextElementSibling) {
+            const inputEl = el.nextElementSibling.querySelector('input');
             if (inputEl && inputEl.value !== '') {
                 console.log('nextSibling input.id:', inputEl.id, 'nextSibling input.value:', inputEl.value);
                 previousValues.set(inputEl.id, inputEl.value);
             }
-            el.nextSibling.remove();
+            el.nextElementSibling.remove();
         }
     });
     return previousValues;
