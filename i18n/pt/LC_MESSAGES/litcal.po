@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-21 01:55+0000\n"
-"PO-Revision-Date: 2025-11-20 22:11+0000\n"
+"PO-Revision-Date: 2025-11-21 07:26+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pt/>\n"
@@ -319,8 +319,6 @@ msgid "Calendar subscription URL"
 msgstr "URL de assinatura do calendário"
 
 #: usage.php:115
-#, fuzzy
-#| msgid "Click on the link above to copy it the clipboard."
 msgid "Click on the link above to copy it to the clipboard."
 msgstr "Clique no link acima para copiá-lo para a área de transferência."
 
@@ -586,7 +584,7 @@ msgstr ""
 
 #: extending.php:113
 msgid "Event key"
-msgstr ""
+msgstr "Chave do evento"
 
 #: extending.php:114 src/Utilities.php:233 src/FormControls.php:52
 msgid "Name"
@@ -902,10 +900,6 @@ msgid "Define the Optional Memorials"
 msgstr "Defina as Memórias opcionais"
 
 #: extending.php:548
-#, fuzzy
-#| msgid ""
-#| "Saints whos veneration is local to the Place, Diocese, Region, Province "
-#| "or Territory"
 msgid ""
 "Saints whose veneration is local to the Place, Diocese, Region, Province or "
 "Territory"
@@ -928,7 +922,7 @@ msgstr "Cancelar"
 
 #: extending.php:648
 msgid "Set property"
-msgstr ""
+msgstr "Definir propriedade"
 
 #: extending.php:664
 msgid "Move Liturgical Event"
@@ -1129,10 +1123,6 @@ msgstr ""
 "incorporadas a este projeto."
 
 #: translations.php:39
-#, fuzzy
-#| msgid ""
-#| "The project website can be also be translated into other languages. The "
-#| "translation strings can be found in the following translation components:"
 msgid ""
 "The project website can also be translated into other languages. The "
 "translation strings can be found in the following translation components:"
