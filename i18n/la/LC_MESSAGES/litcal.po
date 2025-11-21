@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-21 08:49+0000\n"
-"PO-Revision-Date: 2025-11-21 08:56+0000\n"
+"PO-Revision-Date: 2025-11-21 12:51+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
@@ -904,7 +904,7 @@ msgstr "Cancella"
 
 #: extending.php:704
 msgid "Set property"
-msgstr "Proprietas constitutere"
+msgstr "Constitue proprietatem"
 
 #: extending.php:720
 msgid "Move Liturgical Event"
@@ -1446,7 +1446,7 @@ msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
 msgstr ""
-"Hic eventus liturgicus non videtur exsistere? Elige e valore in indice."
+"Hic eventus liturgicus non videtur exsistere? Elige ex valore in indice."
 
 #: src/Utilities.php:220
 msgid "This liturgical event does not exist, so it will be created."
