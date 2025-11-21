@@ -454,7 +454,7 @@ if (isset($_GET['choice'])) {
                                 </datalist>
                             </div>
                             <div class="form-group col col-md-3">
-                                <label for="diocesanCalendarGroup" class="fw-bold"><?php echo _('Diocesan group'); ?>: <i class="fas fa-circle-info mx-2" title="<?php echo $DioceseGroupHelp; ?>"></i></label>
+                                <label for="diocesanCalendarGroup" class="fw-bold"><?php echo _('Diocesan group'); ?>: <i class="fas fa-circle-info mx-2" title="<?php echo htmlspecialchars($DioceseGroupHelp, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></i></label>
                                 <input list="DiocesanGroupsList" class="form-control" id="diocesanCalendarGroup" aria-describedby="diocesanCalendarGroupHelp">
                                 <datalist id="DiocesanGroupsList">
                                     <option value=""></option>

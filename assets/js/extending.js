@@ -2371,9 +2371,9 @@ const onTheFlyEventRowClicked = (ev) => {
 /**
  * Replaces the day input and month select with a text input for strtotime.
  * @param {HTMLElement} row - The containing row of the form.
- * @param {Object} Metadata - The metadata object from the JSON payload.
+ * @param {Object} LiturgicalEvent - The metadata object from the JSON payload.
  */
-const switcheroo = ( row, Metadata ) => {
+const switcheroo = ( row, LiturgicalEvent ) => {
     row.querySelector('.litEventDay').closest('.form-group').remove();
     const litEventMonth = row.querySelector('.litEventMonth');
     console.log(litEventMonth.id);
@@ -2386,7 +2386,7 @@ const switcheroo = ( row, Metadata ) => {
     const monthLabel = litEventMonthFormGrp.querySelector('.month-label');
     monthLabel.textContent = 'Relative date';
     monthLabel.setAttribute('for', strtotimeId);
-    litEventMonthFormGrp.insertAdjacentHTML('beforeend', `<input type="text" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" class="form-control litEvent litEventStrtotime" id="${strtotimeId}" value="${Metadata.strtotime}" />`);
+    litEventMonthFormGrp.insertAdjacentHTML('beforeend', `<input type="text" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" class="form-control litEvent litEventStrtotime" id="${strtotimeId}" value="${LiturgicalEvent.strtotime}" />`);
 }
 
 /**
@@ -2502,7 +2502,7 @@ const fillDiocesanFormWithData = (data) => {
 
         if ( liturgical_event.hasOwnProperty('strtotime') ) {
             if ( row.querySelectorAll('.litEventStrtotime').length === 0 ) {
-                switcheroo( row, metadata );
+                switcheroo( row, liturgical_event );
             }
             row.querySelector('.litEventStrtotime').value = liturgical_event.strtotime;
         } else {
