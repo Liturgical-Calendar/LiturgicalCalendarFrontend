@@ -485,7 +485,6 @@ class LitCalMetadata {
             }
             this.until_year  = until_year;
         }
-        Object.freeze(this);
     }
 }
 
@@ -625,7 +624,7 @@ class NationalCalendarLitCalItem {
                     throw new Error('when metadata.action is `createNew`, `liturgical_event` must have either `day` and `month` properties or `strtotime` property');
                 }
                 /**@type {LitCalMetadata} */
-                this.metadata = new LitCalMetadata(litcalItem.metadata.since_year, litcalItem.metadata.until_year ?? null);
+                this.metadata = Object.freeze(new LitCalMetadata(litcalItem.metadata.since_year, litcalItem.metadata.until_year ?? null));
                 break;
             case 'setProperty':
                 if (false === litcalItem.metadata.hasOwnProperty('property')) {
