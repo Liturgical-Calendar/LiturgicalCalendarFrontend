@@ -212,7 +212,7 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
                 </div>
                 <?php Utilities::generateModalBody(true, false); ?>
                 <div class="modal-footer">
-                    <button type="button" id="moveLiturgicalEventButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-day me-2"></i><?php echo _('Move LiturgicalEvent') ?></button>
+                    <button type="button" id="moveLiturgicalEventButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-day me-2"></i><?php echo _('Move liturgical event') ?></button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _('Cancel') ?></button>
                 </div>
             </div>
@@ -228,8 +228,8 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
                 </div>
                 <?php Utilities::generateModalBody(false, false); ?>
                 <div class="modal-footer">
-                    <button type="button" id="newLiturgicalEventFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus me-2"></i><?php echo _('New LiturgicalEvent from existing') ?></button>
-                    <button type="button" id="newLiturgicalEventExNovoButton" class="btn btn-primary actionPromptButton"><i class="fas fa-calendar-plus me-2"></i><?php echo _('New LiturgicalEvent ex novo') ?></button>
+                    <button type="button" id="newLiturgicalEventFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus me-2"></i><?php echo _('New liturgical event from existing') ?></button>
+                    <button type="button" id="newLiturgicalEventExNovoButton" class="btn btn-primary actionPromptButton"><i class="fas fa-calendar-plus me-2"></i><?php echo _('New liturgical event ex novo') ?></button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _('Cancel') ?></button>
                 </div>
             </div>
