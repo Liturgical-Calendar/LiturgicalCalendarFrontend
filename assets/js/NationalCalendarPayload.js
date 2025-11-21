@@ -43,9 +43,8 @@ import { getMonthMaxDay } from './FormControls.js';
  * @param {number} day - The day to check, 1-31.
  * @returns {boolean} true if the day is valid, false otherwise.
  */
-const isValidDayValueForMonth = (month, day) => {
+const isValidDayValueForMonth = (month, day) =>
     day > 0 && day <= getMonthMaxDay(month);
-}
 
 /**
  * @typedef {object} LitColorInstance
