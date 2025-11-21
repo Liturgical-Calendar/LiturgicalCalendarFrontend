@@ -352,7 +352,6 @@ class LitCalCreateNewFixedData extends LitCalEventData {
  * @property {Array<string>} common
  */
 class LitCalCreateNewMobileData extends LitCalEventData {
-
     /**
      * Creates a new LitCalCreateNewMobileData object.
      * @param {Object} liturgical_event - The object containing the properties of the liturgical event.
@@ -421,7 +420,6 @@ class LitCalSetPropertyNameData extends LitCalEventData {
 }
 
 class LitCalSetPropertyGradeData extends LitCalEventData {
-
     /**
      * Creates a new LitCalSetPropertyGradeData object.
      *
@@ -440,7 +438,6 @@ class LitCalSetPropertyGradeData extends LitCalEventData {
 }
 
 class LitCalMakePatronData extends LitCalEventData {
-
     /**
      * Creates a new LitCalMakePatronData object.
      *
@@ -460,7 +457,6 @@ class LitCalMakePatronData extends LitCalEventData {
 }
 
 class LitCalMetadata {
-
     /**
      * Creates a new LitCalMetadata object.
      *
@@ -490,11 +486,11 @@ class LitCalMetadata {
             }
             this.until_year  = until_year;
         }
+        Object.freeze(this);
     }
 }
 
 class LitCalMoveEventMetadata extends LitCalMetadata {
-
     /**
      * Creates a new LitCalMoveEventMetadata object.
      *
@@ -515,7 +511,6 @@ class LitCalMoveEventMetadata extends LitCalMetadata {
 }
 
 class LitCalSetPropertyNameMetadata extends LitCalMetadata {
-
     /**
      * Creates a new LitCalSetPropertyNameMetadata object.
      *
@@ -535,7 +530,6 @@ class LitCalSetPropertyNameMetadata extends LitCalMetadata {
 }
 
 class LitCalSetPropertyGradeMetadata extends LitCalMetadata {
-
     /**
      * Creates a new LitCalSetPropertyGradeMetadata object.
      *
@@ -555,7 +549,6 @@ class LitCalSetPropertyGradeMetadata extends LitCalMetadata {
 }
 
 class LitCalMakePatronMetadata extends LitCalMetadata {
-
     /**
      * Creates a new LitCalMakePatronMetadata object.
      *
@@ -577,7 +570,6 @@ class LitCalMakePatronMetadata extends LitCalMetadata {
 }
 
 class NationalCalendarLitCalItem {
-
     /**
      * Constructor for NationalCalendarLitCalItem.
      *
@@ -673,7 +665,6 @@ class NationalCalendarLitCalItem {
 
 
 class NationalCalendarPayloadMetadata {
-
     /**
      * Constructs a new instance of NationalCalendarPayloadMetadata.
      *
@@ -740,7 +731,6 @@ class NationalCalendarPayloadMetadata {
 }
 
 class NationalCalendarPayload {
-
     /**
      * Constructs a new instance of NationalCalendarPayload.
      *
