@@ -645,7 +645,7 @@ let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($Liturgi
             </div>
             <?php Utilities::generateModalBody(true, true); ?>
             <div class="modal-footer">
-                <button type="button" id="setPropertyButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-edit me-2"></i>Set Property</button>
+                <button type="button" id="setPropertyButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-edit me-2"></i><?php echo _('Set property') ?></button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _('Cancel') ?></button>
             </div>
         </div>
