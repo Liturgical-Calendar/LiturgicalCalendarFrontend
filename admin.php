@@ -287,9 +287,9 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
     ?>
     </datalist>
     <script>
-        const Messages = <?php echo json_encode($messages); ?>;
-        const LiturgicalEventCollection = <?php echo json_encode($LiturgicalEventCollection); ?>;
-        const LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($LiturgicalEventCollection, 'event_key')); ?>;
+        const Messages = <?php echo json_encode($messages, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+        const LiturgicalEventCollection = <?php echo json_encode($LiturgicalEventCollection, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+        const LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($LiturgicalEventCollection, 'event_key'), JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
     </script>
 
     <?php include_once('./layout/footer.php'); ?>
