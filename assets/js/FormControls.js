@@ -143,10 +143,10 @@ const integerProperties = Object.freeze([ 'day', 'month', 'grade', 'since_year',
  * @property {[ 'event_key', 'name', 'color', 'grade', 'day', 'month', 'strtotime', 'common' ]} [RowAction.CreateNew] - The properties to expect in the JSON payload for the "createNew" action.
  */
 const payloadProperties = Object.freeze({
-    [RowAction.MakePatron]:    Object.freeze([ 'event_key', 'name', 'grade' ]),
-    [RowAction.SetProperty]:   Object.freeze([ 'event_key', 'name', 'grade' ]),
-    [RowAction.MoveEvent]: Object.freeze([ 'event_key', 'day', 'month', 'missal', 'reason' ]),
-    [RowAction.CreateNew]:     Object.freeze([ 'event_key', 'name', 'color', 'grade', 'day', 'month', 'strtotime', 'common' ]) //'readings' is only expected for createNew when common=Proper
+    [RowAction.MakePatron]:  Object.freeze([ 'event_key', 'name', 'grade' ]),
+    [RowAction.SetProperty]: Object.freeze([ 'event_key', 'name', 'grade' ]),
+    [RowAction.MoveEvent]:   Object.freeze([ 'event_key', 'day', 'month', 'missal', 'reason' ]),
+    [RowAction.CreateNew]:   Object.freeze([ 'event_key', 'name', 'color', 'grade', 'day', 'month', 'strtotime', 'common' ]) //'readings' is only expected for createNew when common === 'Proper'
 });
 
 /**

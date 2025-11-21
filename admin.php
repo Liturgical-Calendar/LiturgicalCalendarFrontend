@@ -40,7 +40,6 @@ $missalsResponse = curl_exec($ch);
 
 curl_setopt($ch, CURLOPT_URL, $eventsURL);
 $eventsResponse = curl_exec($ch);
-curl_close($ch);
 
 
 /**
@@ -48,7 +47,7 @@ curl_close($ch);
  */
 $MissalData = json_decode($missalsResponse, true);
 
-if (!is_array($decodedMissals)) {
+if (!is_array($MissalData)) {
     die('Invalid missals JSON from API');
 }
 
