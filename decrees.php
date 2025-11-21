@@ -97,9 +97,9 @@ curl_close($ch);
                 // Card item
                 if (array_key_exists('url_lang_map', $decree['metadata'])) {
                     if (array_key_exists($i18n->LOCALE, $decree['metadata']['url_lang_map'])) {
-                        $decree['url'] = $decree['metadata']['urls_langs'][$i18n->LOCALE];
+                        $decree['url'] = $decree['metadata']['url_lang_map'][$i18n->LOCALE];
                     } else {
-                        $decree['url'] = $decree['metadata']['urls_langs']['en'];
+                        $decree['url'] = $decree['metadata']['url_lang_map']['en'];
                     }
                 } else {
                     $decree['url'] = $decree['metadata']['url'];
