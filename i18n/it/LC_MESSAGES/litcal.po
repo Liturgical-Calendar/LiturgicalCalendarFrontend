@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-21 01:55+0000\n"
-"PO-Revision-Date: 2025-11-20 19:40+0000\n"
+"PO-Revision-Date: 2025-11-21 07:26+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
@@ -320,8 +320,6 @@ msgid "Calendar subscription URL"
 msgstr "URL di sottoscrizione del calendario"
 
 #: usage.php:115
-#, fuzzy
-#| msgid "Click on the link above to copy it the clipboard."
 msgid "Click on the link above to copy it to the clipboard."
 msgstr "Clicca sul link sopra per copiarlo negli appunti."
 
@@ -595,7 +593,7 @@ msgstr ""
 
 #: extending.php:113
 msgid "Event key"
-msgstr ""
+msgstr "Chiave dell'evento"
 
 #: extending.php:114 src/Utilities.php:233 src/FormControls.php:52
 msgid "Name"
@@ -914,10 +912,6 @@ msgid "Define the Optional Memorials"
 msgstr "Definisci le Memorie Facoltative"
 
 #: extending.php:548
-#, fuzzy
-#| msgid ""
-#| "Saints whos veneration is local to the Place, Diocese, Region, Province "
-#| "or Territory"
 msgid ""
 "Saints whose veneration is local to the Place, Diocese, Region, Province or "
 "Territory"
@@ -940,7 +934,7 @@ msgstr "Annulla"
 
 #: extending.php:648
 msgid "Set property"
-msgstr ""
+msgstr "Imposta proprietà"
 
 #: extending.php:664
 msgid "Move Liturgical Event"
@@ -1143,10 +1137,6 @@ msgstr ""
 "in questo progetto."
 
 #: translations.php:39
-#, fuzzy
-#| msgid ""
-#| "The project website can be also be translated into other languages. The "
-#| "translation strings can be found in the following translation components:"
 msgid ""
 "The project website can also be translated into other languages. The "
 "translation strings can be found in the following translation components:"
