@@ -105,9 +105,11 @@ curl_close($ch);
                     $decree['url'] = $decree['metadata']['url'];
                 }
 
+                /**
                 $existingEvent = array_find($LiturgicalEventCollection, function ($event) use ($decree) {
                     return $event['event_key'] === $decree['liturgical_event']['event_key'];
                 });
+                */
 
                 $ActionCardTitle = $RowActionTitle[$decree['metadata']['action']] ?? '???';
                 if ($decree['metadata']['action'] === 'setProperty') {

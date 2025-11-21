@@ -369,17 +369,22 @@ class FormControls {
         if( element !== null ) {
             if (element instanceof LiturgicalEvent) {
                 console.log('element instanceof LiturgicalEvent');
-                liturgical_event = element;
-                liturgical_event.url = '';
-                liturgical_event.url_lang_map = {};
+                liturgical_event = {
+                    ...element,
+                    url: '',
+                    url_lang_map: {}
+                };
             }
             else if ( typeof element === 'string' ) {
                 // rather than filter the LiturgicalEventCollection, we should be either getting from EventsCollection
                 // based on EventsLoader.lastRequestPath and EventsLoader.lastRequestLocale,
                 // or we should be able to pass a liturgical_event object directly to  the CreateRegionalFormRow method
-                liturgical_event = LiturgicalEventCollection.filter(item => item.event_key === element)[0];
-                liturgical_event.url = '';
-                liturgical_event.url_lang_map = {};
+                const existingLiturgicalEvent = LiturgicalEventCollection.find(item => item.event_key === element);
+                liturgical_event = {
+                    ...existingLiturgicalEvent,
+                    url: '',
+                    url_lang_map: {}
+                };
             }
             else if ( typeof element === 'object' && 'liturgical_event' in element && 'metadata' in element ) {
                 liturgical_event = {
