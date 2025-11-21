@@ -2,8 +2,9 @@
 
 include_once('common.php');
 
-$example = isset($_GET['example']) ? $_GET['example'] : null;
-$h2      = _('Liturgical Calendar as an HTML table produced by Javascript');
+$example     = isset($_GET['example']) ? $_GET['example'] : null;
+$safeExample = htmlspecialchars((string) $example, ENT_QUOTES, 'UTF-8');
+$h2          = _('Liturgical Calendar as an HTML table produced by Javascript');
 
 $JAVASCRIPT_EXAMPLE_CONTENTS = <<<EOT
 <form id="litcalForm">
@@ -129,7 +130,7 @@ if (array_key_exists($example, $EXAMPLES)) {
             break;
     }
 } else {
-    echo '<h1>' . sprintf(_("Example '%s' not found"), $example) . '</h1>';
+    echo '<h1>' . sprintf(_("Example '%s' not found"), $safeExample) . '</h1>';
 }
 include_once('layout/footer.php');
 ?>
