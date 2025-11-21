@@ -18,7 +18,12 @@ $c = new Collator($i18n->LOCALE);
 /**
  * Fetch metadata from API
  */
-$metadataRaw  = file_get_contents($metadataURL);
+$metadataRaw = @file_get_contents($metadataURL);
+
+if ($metadataRaw === false) {
+    die('Could not fetch metadata from API at ' . $metadataURL);
+}
+
 $metadataJson = json_decode($metadataRaw, true);
 if (json_last_error() !== JSON_ERROR_NONE) {
     $error_msg = json_last_error_msg();
@@ -36,29 +41,50 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $eventsURL);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept-Language: ' . $i18n->LOCALE]);
-$response      = curl_exec($ch);
+
+$response = curl_exec($ch);
+
+if (curl_errno($ch)) {
+    $error_msg = curl_error($ch);
+    die($error_msg);
+}
+
+if ($response === false) {
+    die('Could not fetch events from API at ' . $eventsURL);
+}
+
 $litEventsJson = json_decode($response, true);
+
 if (json_last_error() !== JSON_ERROR_NONE) {
     $error_msg = json_last_error_msg();
     die($error_msg);
 }
+
 if (false === isset($litEventsJson['litcal_events'])) {
     die('litcal_events not found in events JSON from API');
 }
+
 [ 'litcal_events' => $LiturgicalEventCollection ] = $litEventsJson;
 
 /**
  * Fetch Catholic Dioceses by Nation data
  */
-$WorldDiocesesByNation     = file_get_contents('./assets/data/WorldDiocesesByNation.json');
+$WorldDiocesesByNation = @file_get_contents('./assets/data/WorldDiocesesByNation.json');
+if ($WorldDiocesesByNation === false) {
+    die('Could not fetch WorldDiocesesByNation.json data');
+}
+
 $WorldDiocesesByNationJson = json_decode($WorldDiocesesByNation, true);
+
 if (json_last_error() !== JSON_ERROR_NONE) {
     $error_msg = json_last_error_msg();
     die($error_msg);
 }
+
 if (false === isset($WorldDiocesesByNationJson['catholic_dioceses_latin_rite'])) {
     die('catholic_dioceses_latin_rite not found in WorldDiocesesByNation JSON data');
 }
+
 [ 'catholic_dioceses_latin_rite' => $CatholicDiocesesByNation ] = $WorldDiocesesByNationJson;
 
 $DiocesanGroups = $LitCalMetadata['diocesan_groups'];
@@ -192,7 +218,9 @@ if (isset($_GET['choice'])) {
                             <?php
                             foreach ($LitCalMetadata['wider_regions'] as $widerRegion) {
                                 foreach ($widerRegion['locales'] as $widerRegionLanguage) {
-                                    echo "<option value=\"{$widerRegion['name']} - {$widerRegionLanguage}\">{$widerRegion['name']}</option>";
+                                    $widerRegionName         = htmlspecialchars($widerRegion['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                    $widerRegionLanguageSafe = htmlspecialchars($widerRegionLanguage, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                    echo "<option value=\"{$widerRegionName} - {$widerRegionLanguageSafe}\">{$widerRegionName}</option>";
                                 }
                             }
                             ?>
@@ -209,8 +237,8 @@ if (isset($_GET['choice'])) {
                             </div>
                         </div>
                         <div class="col col-md-3">
-                            <label for="currentLocalization" class="fw-bold"><?php echo _('Current localization') ?></label>
-                            <select class="form-select currentLocalizationChoices" id="currentLocalization">
+                            <label for="currentLocalizationWiderRegion" class="fw-bold"><?php echo _('Current localization') ?></label>
+                            <select class="form-select currentLocalizationChoices" id="currentLocalizationWiderRegion">
                                 <?php
                                 foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
                                     echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
@@ -256,7 +284,9 @@ if (isset($_GET['choice'])) {
                             <datalist id="nationalCalendarsList">
                             <?php
                             foreach ($CountriesWithCatholicDioceses as $isoCode => $countryLocalized) {
-                                echo "<option value=\"{$isoCode}\">{$countryLocalized}</option>";
+                                $isoCodeSafe          = htmlspecialchars($isoCode, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                $countryLocalizedSafe = htmlspecialchars($countryLocalized, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                echo "<option value=\"{$isoCodeSafe}\">{$countryLocalizedSafe}</option>";
                             }
                             ?>
                             </datalist>
@@ -341,14 +371,15 @@ if (isset($_GET['choice'])) {
                                             <option value=""></option>
                                         <?php
                                         foreach ($LitCalMetadata['wider_regions_keys'] as $WiderRegion) {
-                                            echo "<option value=\"{$WiderRegion}\">{$WiderRegion}</option>";
+                                            $widerRegionKeySafe = htmlspecialchars($WiderRegion, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                            echo "<option value=\"{$widerRegionKeySafe}\">{$widerRegionKeySafe}</option>";
                                         }
                                         ?>
                                         </datalist>
                                     </div>
                                     <div class="form-group col col-md-3 mt-4">
-                                        <label for="currentLocalization"><?php echo _('Current localization') ?></label>
-                                        <select class="form-select currentLocalizationChoices" id="currentLocalization">
+                                        <label for="currentLocalizationNational"><?php echo _('Current localization') ?></label>
+                                        <select class="form-select currentLocalizationChoices" id="currentLocalizationNational">
                                             <?php
                                             foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
                                                 echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
@@ -385,7 +416,9 @@ if (isset($_GET['choice'])) {
                                     <option value=""></option>
                                 <?php
                                 foreach ($AvailableNationalCalendars as $nation => $displayName) {
-                                    echo "<option value=\"{$nation}\">$displayName</option>";
+                                    $nationSafe      = htmlspecialchars($nation, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                    $displayNameSafe = htmlspecialchars($displayName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                    echo "<option value=\"{$nationSafe}\">$displayNameSafe</option>";
                                 }
                                 ?>
                                 </select>
@@ -405,7 +438,8 @@ if (isset($_GET['choice'])) {
                                     <option value=""></option>
                                     <?php
                                     foreach ($DiocesanGroups as $diocesanGroup) {
-                                        echo "<option value=\"{$diocesanGroup['group_name']}\">{$diocesanGroup['group_name']}</option>";
+                                        $diocesanGroupName = htmlspecialchars($diocesanGroup['group_name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                        echo "<option value=\"{$diocesanGroupName}\">{$diocesanGroupName}</option>";
                                     }
                                     ?>
                                 </datalist>
@@ -423,8 +457,8 @@ if (isset($_GET['choice'])) {
                                 </select>
                             </div>
                             <div class="form-group col col-md-3">
-                                <label for="currentLocalization" class="fw-bold"><?php echo _('Current localization'); ?>:</label>
-                                <select class="form-select currentLocalizationChoices" id="currentLocalization">
+                                <label for="currentLocalizationDiocesan" class="fw-bold"><?php echo _('Current localization'); ?>:</label>
+                                <select class="form-select currentLocalizationChoices" id="currentLocalizationDiocesan">
                                     <option value=""></option>
                                     <?php
                                     foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
@@ -452,7 +486,7 @@ if (isset($_GET['choice'])) {
                 <nav aria-label="Diocesan calendar definition" id="diocesanCalendarDefinitionCardLinks">
                     <ul class="pagination pagination-lg justify-content-center m-1">
                         <li class="page-item disabled">
-                            <a class="page-link diocesan-carousel-prev" href="#" tabindex="-1" aria-disabled="true" aria-labeled="Previous"><span aria-hidden="true">&laquo;</span></a>
+                            <a class="page-link diocesan-carousel-prev" href="#" tabindex="-1" aria-disabled="true" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
                         </li>
                         <li class="page-item active"><a class="page-link" href="#" data-bs-slide-to="0"><?php echo _('Solemnities'); ?></a></li>
                         <li class="page-item"><a class="page-link" href="#" data-bs-slide-to="1"><?php echo _('Feasts'); ?></a></li>
@@ -613,9 +647,9 @@ if (isset($_GET['choice'])) {
 }
 ?>
 <script>
-const Messages = <?php echo json_encode($messages, JSON_UNESCAPED_UNICODE); ?>;
-const LitCalMetadata = <?php echo json_encode($LitCalMetadata, JSON_UNESCAPED_UNICODE); ?>;
-let LiturgicalEventCollection = <?php echo json_encode($LiturgicalEventCollection, JSON_UNESCAPED_UNICODE); ?>;
+const Messages = <?php echo json_encode($messages, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+const LitCalMetadata = <?php echo json_encode($LitCalMetadata, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+let LiturgicalEventCollection = <?php echo json_encode($LiturgicalEventCollection, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($LiturgicalEventCollection, 'event_key'), JSON_UNESCAPED_UNICODE); ?>;
 </script>
 <?php include_once('./layout/footer.php'); ?>

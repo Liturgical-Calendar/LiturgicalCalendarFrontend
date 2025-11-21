@@ -351,13 +351,9 @@ const country2flag = (countryCode) => countryCode.replace(/./g, (letter) => Stri
  */
 const translationTemplate = (path, locale, el) => {
     const localeStr = locale.replace(/_/g, '-');
-    const parts = localeStr.split('-');
-    if (parts.length < 2) {
-        console.warn(`locale ${locale} does not have a region subtag`);
-        return '';
-    }
-    const region = parts[1];
     const localeObj = new Intl.Locale(localeStr);
+    const parts = localeStr.split('-');
+    const region = parts.length > 1 ? parts[1] : localeObj.region;
     const lang = localeObj.language.toUpperCase();
     const langWithRegion = AvailableLocalesWithRegion[locale];
     const eventKeyEl = el.closest('.row').querySelector('.litEventEventKey');
@@ -413,8 +409,7 @@ const domContentLoadedCallback = () => {
         maxHeight: 200,
         enableCaseInsensitiveFiltering: true,
         onChange: (option, checked) => {
-            if (false === checked && document.querySelector('#currentLocalization').value === option[0].value) {
-                console.log('value of this in multiselect onChange:', this);
+            if (false === checked && document.querySelector('.currentLocalizationChoices').value === option[0].value) {
                 alert('You cannot remove the current localization. In order to remove this locale, you must first switch to a different current localization.');
                 $(option).prop('selected', !checked);
                 $('.calendarLocales').multiselect('refresh');
@@ -557,7 +552,7 @@ const litEventNameChangeHandler = (ev) => {
                     ev.target.classList.remove('is-invalid');
 
                     if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
-                        const currentLocalization = document.querySelector('#currentLocalization').value;
+                        const currentLocalization = document.querySelector('.currentLocalizationChoices').value;
                         const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
                                                     .filter(({ value }) => value !== currentLocalization)
                                                     .map(({ value }) => value);
@@ -647,29 +642,35 @@ const litEventNameChangeHandler = (ev) => {
 
             if (choice === 'diocesan') {
                 const litEvent = CalendarData.litcal.find(item => item.liturgical_event.event_key === newEventKey) ?? null;
-                // We set the grade based on the current carousel item
-                switch (ev.target.closest('.carousel-item').id) {
-                    case 'carouselItemSolemnities':
-                        litEvent.liturgical_event.grade = 6;
-                        break;
-                    case 'carouselItemFeasts':
-                        litEvent.liturgical_event.grade = 4;
-                        break;
-                    case 'carouselItemMemorials':
-                        litEvent.liturgical_event.grade = 3;
-                        break;
-                    case 'carouselItemOptionalMemorials':
-                        litEvent.liturgical_event.grade = 2;
-                        break;
+                if (litEvent !== null) {
+                    // We set the grade based on the current carousel item
+                    switch (ev.target.closest('.carousel-item').id) {
+                        case 'carouselItemSolemnities':
+                            litEvent.liturgical_event.grade = Rank.SOLEMNITY;
+                            break;
+                        case 'carouselItemFeasts':
+                            litEvent.liturgical_event.grade = Rank.FEAST;
+                            break;
+                        case 'carouselItemMemorials':
+                            litEvent.liturgical_event.grade = Rank.MEMORIAL;
+                            break;
+                        case 'carouselItemOptionalMemorials':
+                            litEvent.liturgical_event.grade = Rank.OPTIONALMEMORIAL;
+                            break;
+                    }
                 }
 
                 // Attempt to set liturgical color to red for martyrs, white for all other cases
                 if (ev.target.value.match(/(martyr|martir|mártir|märtyr)/i) !== null) {
                     $(row.querySelector('.litEventColor')).multiselect('deselectAll', false).multiselect('select', 'red');
-                    litEvent.liturgical_event.color = [ 'red' ];
+                    if (litEvent !== null) {
+                        litEvent.liturgical_event.color = [ 'red' ];
+                    }
                 } else {
                     $(row.querySelector('.litEventColor')).multiselect('deselectAll', false).multiselect('select', 'white');
-                    litEvent.liturgical_event.color = [ 'white' ];
+                    if (litEvent !== null) {
+                        litEvent.liturgical_event.color = [ 'white' ];
+                    }
                 }
             }
         } else {
@@ -681,10 +682,12 @@ const litEventNameChangeHandler = (ev) => {
                 console.log('calendar already exists, so we are just updating the liturgical_event name while keeping the event_key the same', eventKey);
                 if (eventKey !== '') {
                     console.log('CalendarData before update: ', CalendarData);
-                    const existingEntry = CalendarData.litcal.find(item => item.liturgical_event.event_key === eventKey);
+                    const existingEntry = CalendarData.litcal.find(item => item.liturgical_event.event_key === eventKey) ?? null;
                     console.log('existingEntry is: ', existingEntry);
-                    existingEntry.liturgical_event.name = ev.target.value;
-                    console.log('CalendarData.litcal has been updated:', CalendarData);
+                    if (existingEntry !== null) {
+                        existingEntry.liturgical_event.name = ev.target.value;
+                        console.log('CalendarData.litcal has been updated:', CalendarData);
+                    }
                 } else {
                     console.error('why is event_key empty?');
                 }
@@ -950,7 +953,7 @@ const calendarLocalesChanged = (ev) => {
     const updatedLocalizationChoices = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => {
         return updatedLocales.includes(localeIso);
     });
-    const currentLocalizationEl = document.querySelector('#currentLocalization');
+    const currentLocalizationEl = document.querySelector('.currentLocalizationChoices');
     const currentLocalization = currentLocalizationEl.value;
     console.log(`currentLocalizationEl.value: ${currentLocalizationEl.value}`);
     currentLocalizationEl.innerHTML = updatedLocalizationChoices.map(([localeIso, localeDisplayName]) => {
@@ -989,7 +992,7 @@ const updateRegionalCalendarForm = (data) => {
                 return `<option value="${localeIso}">${localeDisplayName}</option>\n`;
             });
             const defaultLocale = API.locale !== '' ? API.locale : data.metadata.locales[0];
-            document.querySelector('#currentLocalization').value = defaultLocale;
+            document.querySelector('.currentLocalizationChoices').value = defaultLocale;
             API.locale = defaultLocale;
             break;
         }
@@ -1011,14 +1014,14 @@ const updateRegionalCalendarForm = (data) => {
             });
             $('#nationalCalendarLocales').multiselect('rebuild');
 
-            // Rebuild the .currentLocalizationChoices select (same as #currentLocalization)
+            // Rebuild the .currentLocalizationChoices select
             const currentLocalizationChoices = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => {
                 return metadata.locales.includes(localeIso);
             });
             document.querySelector('.currentLocalizationChoices').innerHTML = currentLocalizationChoices.map(([localeIso, localeDisplayName]) => {
                 return `<option value="${localeIso}">${localeDisplayName}</option>\n`;
             });
-            document.querySelector('#currentLocalization').value = API.locale !== '' ? API.locale : metadata.locales[0];
+            document.querySelector('.currentLocalizationChoices').value = API.locale !== '' ? API.locale : metadata.locales[0];
 
             // Rebuild the #publishedRomanMissalList
             const publishedRomanMissalList = document.querySelector('#publishedRomanMissalList');
@@ -1059,7 +1062,7 @@ const updateRegionalCalendarForm = (data) => {
             (el.metadata.action === RowAction.SetProperty && el.metadata.property === 'name')
         ) {
             if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
-                const currentLocalization = document.querySelector('#currentLocalization').value;
+                const currentLocalization = document.querySelector('.currentLocalizationChoices').value;
                 const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
                                             .filter(({ value }) => value !== currentLocalization)
                                             .map(({ value }) => value);
@@ -1141,7 +1144,7 @@ const updateRegionalCalendarForm = (data) => {
      * Load translation data
      */
     if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
-        const currentLocalization = document.querySelector('#currentLocalization').value;
+        const currentLocalization = document.querySelector('.currentLocalizationChoices').value;
         const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
                                     .filter(({ value }) => value !== currentLocalization)
                                     .map(({ value }) => value);
@@ -1235,11 +1238,11 @@ const fetchRegionalCalendarData = (headers) => {
                     document.querySelector('#nationalCalendarSettingsForm').reset();
                     document.querySelector('#publishedRomanMissalList').innerHTML = '';
                     document.querySelector('#nationalCalendarLocales').innerHTML = localeOptions.join('\n');
-                    document.querySelector('#currentLocalization').innerHTML = localeOptions.join('\n');
+                    document.querySelector('.currentLocalizationChoices').innerHTML = localeOptions.join('\n');
                     $('#nationalCalendarLocales').multiselect('rebuild');
                 } else {
                     document.querySelector('#widerRegionLocales').innerHTML = localeOptions.join('\n');
-                    document.querySelector('#currentLocalization').innerHTML = localeOptions.join('\n');
+                    document.querySelector('.currentLocalizationChoices').innerHTML = localeOptions.join('\n');
                     $('#widerRegionLocales').multiselect('rebuild');
                 }
 
@@ -1310,7 +1313,7 @@ const fetchRegionalCalendarData = (headers) => {
                 const calendarLocalesSelect = document.getElementById('nationalCalendarLocales');
                 calendarLocalesSelect.innerHTML = LocalesForRegion.map(item => `<option value="${item[0]}" selected>${item[1]}</option>`).join('');
                 $(calendarLocalesSelect).multiselect('rebuild');
-                const currentLocalizationEl = document.querySelector('#currentLocalization');
+                const currentLocalizationEl = document.querySelector('.currentLocalizationChoices');
                 currentLocalizationEl.innerHTML = LocalesForRegion.map(item => `<option value="${item[0]}">${item[1]}</option>`).join('');
                 // set as default currentLocalization the locale with greater percentage per population, of those that are available
                 const regionalLocales = LocalesForRegion.map(item => item[0].split('_')[0]);
@@ -1401,7 +1404,7 @@ const fetchEventsAndCalendarData = () => {
     if ( API.category === 'nation' ) {
         const selectedNationalCalendar = LitCalMetadata.national_calendars.filter(item => item.calendar_id === API.key);
         if (selectedNationalCalendar.length > 0) {
-            const currentSelectedLocale = document.querySelector('#currentLocalization').value;
+            const currentSelectedLocale = document.querySelector('.currentLocalizationChoices').value;
             API.locale = selectedNationalCalendar[0].locales.includes(currentSelectedLocale) ? currentSelectedLocale : selectedNationalCalendar[0].locales[0];
             headers['Accept-Language'] = API.locale.replaceAll('_', '-');
         } else {
@@ -1636,7 +1639,7 @@ const actionPromptButtonClicked = (ev) => {
         (actionButtonId === 'setPropertyButton' && propertyToChange === 'name')
     ) {
         if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
-            const currentLocalization = document.querySelector('#currentLocalization').value;
+            const currentLocalization = document.querySelector('.currentLocalizationChoices').value;
             const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
                                         .filter(({ value }) => value !== currentLocalization)
                                         .map(({ value }) => value);
@@ -1741,7 +1744,7 @@ const deleteCalendarConfirmClicked = () => {
                         return `<option value="${localeIso}">${localeDisplayName}</option>`;
                     });
                     document.querySelector('#nationalCalendarLocales').innerHTML = localeOptions.join('\n');
-                    document.querySelector('#currentLocalization').innerHTML = localeOptions.join('\n');
+                    document.querySelector('.currentLocalizationChoices').innerHTML = localeOptions.join('\n');
                     $('#nationalCalendarLocales').multiselect('rebuild');
 
                     document.querySelectorAll('.regionalNationalSettingsForm .form-select:not([multiple])').forEach(formSelect => {
@@ -1892,7 +1895,7 @@ const serializeRegionalNationalDataClicked = (ev) => {
     switch(API.category) {
         case 'nation': {
             API.key           = document.querySelector('#nationalCalendarName').value;
-            API.locale        = document.querySelector('#currentLocalization').value;
+            API.locale        = document.querySelector('.currentLocalizationChoices').value;
             const widerRegion = document.querySelector('#associatedWiderRegion').value;
             payload.litcal    = [];
             payload.settings  = {
@@ -2187,13 +2190,13 @@ const refreshOtherLocalizationInputs = (otherLocalizations) => {
 const resetOtherLocalizationInputs = () => {
     const previousValues = new Map();
     Array.from(document.querySelectorAll('.litEventName')).forEach(el => {
-        while (el.nextSibling) {
-            const inputEl = el.nextSibling.querySelector('input');
+        while (el.nextElementSibling) {
+            const inputEl = el.nextElementSibling.querySelector('input');
             if (inputEl && inputEl.value !== '') {
                 console.log('nextSibling input.id:', inputEl.id, 'nextSibling input.value:', inputEl.value);
                 previousValues.set(inputEl.id, inputEl.value);
             }
-            el.nextSibling.remove();
+            el.nextElementSibling.remove();
         }
     });
     return previousValues;
@@ -2214,7 +2217,7 @@ const loadDiocesanCalendarData = () => {
     API.key = dioceseKey;
 
     //let dioceseMetadata = LitCalMetadata.diocesan_calendars.filter(item => item.calendar_id === API.key)[0];
-    API.locale = document.querySelector('#currentLocalization').value;
+    API.locale = document.querySelector('.currentLocalizationChoices').value;
     const headers = new Headers({
         'Accept': 'application/json',
         'Accept-Language': API.locale
@@ -2257,7 +2260,7 @@ const loadDiocesanCalendarData = () => {
         }
         fillDiocesanFormWithData(data);
         if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
-            const currentLocalization = document.querySelector('#currentLocalization').value;
+            const currentLocalization = document.querySelector('.currentLocalizationChoices').value;
             const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
                                         .filter(({ value }) => value !== currentLocalization)
                                         .map(({ value }) => value);
@@ -2597,7 +2600,7 @@ const diocesanCalendarNationalDependencyChanged = (ev) => {
         const diocesanCalendarLocales = document.getElementById('diocesanCalendarLocales');
         diocesanCalendarLocales.innerHTML = localesForNation.map(item => `<option value="${item[0]}" selected>${item[1]}</option>`).join('');
         $(diocesanCalendarLocales).multiselect('rebuild');
-        const currentLocalization = document.getElementById('currentLocalization');
+        const currentLocalization = document.querySelector('.currentLocalizationChoices');
         currentLocalization.innerHTML = localesForNation.map(item => `<option value="${item[0]}">${item[1]}</option>`).join('');
         //currentLocalization.value = '';
     } else {
@@ -2668,7 +2671,7 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
             // Set the list of locales for the current selected diocese
             document.querySelector('#diocesanCalendarLocales').value = diocesan_calendar.locales;
             const LocalesForDiocese = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => diocesan_calendar.locales.includes(localeIso));
-            document.querySelector('#currentLocalization').innerHTML = LocalesForDiocese.map(item => `<option value="${item[0]}">${item[1]}</option>`).join('');
+            document.querySelector('.currentLocalizationChoices').innerHTML = LocalesForDiocese.map(item => `<option value="${item[0]}">${item[1]}</option>`).join('');
             $('#diocesanCalendarLocales').multiselect('deselectAll', false).multiselect('select', diocesan_calendar.locales);
 
             // Set the timezone for the current selected diocese
@@ -2795,12 +2798,12 @@ const saveDiocesanCalendar_btnClicked = () => {
     const diocese = document.querySelector('#diocesanCalendarDioceseName').value;
     const option = document.querySelector('#DiocesesList option[value="' + diocese + '"]');
     const diocese_id = option ? option.getAttribute('data-value') : null;
-    const saveObj = { payload: CalendarData };
+    const saveObj = { payload: { ...CalendarData } };
     API.category = 'diocese';
     if (API.method === 'PATCH') {
         API.key = diocese_id;
     }
-    API.locale = document.querySelector('#currentLocalization').value;
+    API.locale = document.querySelector('.currentLocalizationChoices').value;
 
     saveObj.payload.i18n[API.locale] = saveObj.payload.litcal.reduce((obj, item) => {
         const liturgicalEventCopy = { ...item.liturgical_event };
@@ -2950,7 +2953,7 @@ const saveDiocesanCalendar_btnClicked = () => {
                 console.log('updated LitCalMetadata:', LitCalMetadata);
                 API.method = 'PATCH';
                 API.key = diocese_id;
-                API.locale = document.querySelector('#currentLocalization').value;
+                API.locale = document.querySelector('.currentLocalizationChoices').value;
             }
         })
         .catch(error => {
@@ -3077,13 +3080,13 @@ document.addEventListener('change', (ev) => {
     if (ev.target.id === 'languageEditionRomanMissalName') {
         document.querySelector('#addLanguageEditionRomanMissal').disabled = false;
     }
-    if (ev.target.id === 'currentLocalization') {
+    if (ev.target.id.startsWith('currentLocalization')) {
         if (API.category === 'diocese') {
             if (API.method === 'PATCH') {
                 loadDiocesanCalendarData();
             }
             if (API.method === 'PUT') {
-                const currentLocalization = document.querySelector('#currentLocalization').value;
+                const currentLocalization = document.querySelector('.currentLocalizationChoices').value;
                 const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
                                             .filter(({ value }) => value !== currentLocalization)
                                             .map(({ value }) => value);

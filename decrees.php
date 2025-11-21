@@ -97,17 +97,25 @@ curl_close($ch);
                 // Card item
                 if (array_key_exists('url_lang_map', $decree['metadata'])) {
                     if (array_key_exists($i18n->LOCALE, $decree['metadata']['url_lang_map'])) {
-                        $decree['url'] = $decree['metadata']['urls_langs'][$i18n->LOCALE];
+                        $decreeURL = sprintf($decree['metadata']['url'], $decree['metadata']['url_lang_map'][$i18n->LOCALE]);
+                    } elseif (array_key_exists('en', $decree['metadata']['url_lang_map'])) {
+                        $decreeURL = sprintf($decree['metadata']['url'], $decree['metadata']['url_lang_map']['en']);
                     } else {
-                        $decree['url'] = $decree['metadata']['urls_langs']['en'];
+                        $decreeURL = sprintf($decree['metadata']['url'], array_values($decree['metadata']['url_lang_map'])[0]);
                     }
                 } else {
-                    $decree['url'] = $decree['metadata']['url'];
+                    $decreeURL = $decree['metadata']['url'];
+                }
+                $decreeURL = filter_var($decreeURL, FILTER_SANITIZE_URL);
+                if (false === filter_var($decreeURL, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED)) {
+                    $decreeURL = '#';
                 }
 
+                /**
                 $existingEvent = array_find($LiturgicalEventCollection, function ($event) use ($decree) {
                     return $event['event_key'] === $decree['liturgical_event']['event_key'];
                 });
+                */
 
                 $ActionCardTitle = $RowActionTitle[$decree['metadata']['action']] ?? '???';
                 if ($decree['metadata']['action'] === 'setProperty') {
@@ -124,7 +132,7 @@ curl_close($ch);
                     . "<h6 class='card-subtitle mb-2 text-muted d-flex justify-content-between'><div>{$decreeDate}</div><div>{$decreeID}</div></h6>"
                     . '</div>'
                     . "<div class='card-body'>"
-                    . "<p class='card-text'>{$decreeDescription}<a href='{$decree['url']}' class='ms-2' target='_blank'>" . _('Read the Decree') . '</a></p>'
+                    . "<p class='card-text'>{$decreeDescription}<a href='{$decreeURL}' class='ms-2' target='_blank'>" . _('Read the Decree') . '</a></p>'
                     . '<div class="row gx-2 align-items-baseline">'
                     . '<div class="form-group col-sm-4">'
                     . "<label for='event_key_{$decreeID}' class='event_key'>Event Key</label>"

@@ -40,7 +40,6 @@ $missalsResponse = curl_exec($ch);
 
 curl_setopt($ch, CURLOPT_URL, $eventsURL);
 $eventsResponse = curl_exec($ch);
-curl_close($ch);
 
 
 /**
@@ -48,7 +47,7 @@ curl_close($ch);
  */
 $MissalData = json_decode($missalsResponse, true);
 
-if (!is_array($decodedMissals)) {
+if (!is_array($MissalData)) {
     die('Invalid missals JSON from API');
 }
 
@@ -70,7 +69,7 @@ if (!is_array($decodedEvents) || !isset($decodedEvents['litcal_events']) || !is_
  * Prepare our translations strings
  */
 $messages = [
-    'Event key'             => _('Event key'),
+    'EventKey'              => _('Event key'),
     'Name'                  => _('Name'),
     'Day'                   => _('Day'),
     'Month'                 => _('Month'),

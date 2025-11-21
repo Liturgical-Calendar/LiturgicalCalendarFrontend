@@ -22,13 +22,12 @@ if (false === file_exists($ghReleaseCacheFile) || ( time() - filemtime($ghReleas
 
     $ghCurrentReleaseInfo = curl_exec($ch);
 
-    if (curl_errno($ch)) {
+    if (curl_errno($ch) || $ghCurrentReleaseInfo === false) {
         //throw new \Exception('Error while fetching via curl: ' . curl_error($ch));
     } else {
         $GitHubReleasesObj = json_decode($ghCurrentReleaseInfo);
         file_put_contents($ghReleaseCacheFile, json_encode($GitHubReleasesObj, JSON_PRETTY_PRINT));
     }
-    curl_close($ch);
 }
 
 $dotenv = Dotenv::createImmutable(__DIR__, ['.env', '.env.local', '.env.development', '.env.production'], false);
@@ -42,7 +41,11 @@ if (isset($_ENV['APP_ENV']) && $_ENV['APP_ENV'] === 'development') {
     $baseURL = "{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}:{$_ENV['API_PORT']}";
 } else {
     if (file_exists($ghReleaseCacheFile)) {
-        $GitHubReleasesRaw       = file_get_contents($ghReleaseCacheFile);
+        $GitHubReleasesRaw = @file_get_contents($ghReleaseCacheFile);
+        if ($GitHubReleasesRaw === false) {
+            $lastError = error_get_last();
+            die('Could not read GitHub latest release cache file: ' . $lastError['message']);
+        }
         $GitHubLatestReleaseInfo = json_decode($GitHubReleasesRaw);
         $tagName                 = is_object($GitHubLatestReleaseInfo) && isset($GitHubLatestReleaseInfo->tag_name)
             ? $GitHubLatestReleaseInfo->tag_name

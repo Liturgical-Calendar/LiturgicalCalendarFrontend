@@ -30,6 +30,11 @@ const Month = Object.freeze({
  */
 const MonthsOfThirty = Object.freeze([Month.SEPTEMBER, Month.APRIL, Month.JUNE, Month.NOVEMBER]);
 
+/**
+ * Gets the maximum number of days in a given month.
+ * @param {Month} month
+ * @returns {28|30|31} The maximum number of days in the given month.
+ */
 const getMonthMaxDay = (month) => month === Month.FEBRUARY ? 28 : (MonthsOfThirty.includes(month) ? 30 : 31);
 
 
@@ -43,25 +48,25 @@ const DaysOfTheWeek = Object.freeze(['Sunday', 'Monday', 'Tuesday', 'Wednesday',
 /**
  * A mapping of liturgical event ranks to numerical values for sorting purposes.
  * @readonly
- * @enum {(7|6|5|4|3|2|1|0)}
- * @property {Number} HIGHERSOLEMNITY - Higher solemnity (7)
- * @property {Number} SOLEMNITY - Solemnity (6)
- * @property {Number} FEASTLORD - Feast of the Lord (5)
- * @property {Number} FEAST - Feast (4)
- * @property {Number} MEMORIAL - Memorial (3)
- * @property {Number} OPTIONALMEMORIAL - Optional memorial (2)
- * @property {Number} COMMEMORATION - Commemoration (1)
+ * @enum {(0|1|2|3|4|5|6|7)}
  * @property {Number} WEEKDAY - Weekday (0)
+ * @property {Number} COMMEMORATION - Commemoration (1)
+ * @property {Number} OPTIONALMEMORIAL - Optional memorial (2)
+ * @property {Number} MEMORIAL - Memorial (3)
+ * @property {Number} FEAST - Feast (4)
+ * @property {Number} FEASTLORD - Feast of the Lord (5)
+ * @property {Number} SOLEMNITY - Solemnity (6)
+ * @property {Number} HIGHERSOLEMNITY - Higher solemnity (7)
  */
 const Rank = Object.freeze({
-    HIGHERSOLEMNITY:  7,
-    SOLEMNITY:        6,
-    FEASTLORD:        5,
-    FEAST:            4,
-    MEMORIAL:         3,
-    OPTIONALMEMORIAL: 2,
+    WEEKDAY:          0,
     COMMEMORATION:    1,
-    WEEKDAY:          0
+    OPTIONALMEMORIAL: 2,
+    MEMORIAL:         3,
+    FEAST:            4,
+    FEASTLORD:        5,
+    SOLEMNITY:        6,
+    HIGHERSOLEMNITY:  7
 });
 
 
@@ -143,10 +148,10 @@ const integerProperties = Object.freeze([ 'day', 'month', 'grade', 'since_year',
  * @property {[ 'event_key', 'name', 'color', 'grade', 'day', 'month', 'strtotime', 'common' ]} [RowAction.CreateNew] - The properties to expect in the JSON payload for the "createNew" action.
  */
 const payloadProperties = Object.freeze({
-    [RowAction.MakePatron]:    Object.freeze([ 'event_key', 'name', 'grade' ]),
-    [RowAction.SetProperty]:   Object.freeze([ 'event_key', 'name', 'grade' ]),
-    [RowAction.MoveEvent]: Object.freeze([ 'event_key', 'day', 'month', 'missal', 'reason' ]),
-    [RowAction.CreateNew]:     Object.freeze([ 'event_key', 'name', 'color', 'grade', 'day', 'month', 'strtotime', 'common' ]) //'readings' is only expected for createNew when common=Proper
+    [RowAction.MakePatron]:  Object.freeze([ 'event_key', 'name', 'grade' ]),
+    [RowAction.SetProperty]: Object.freeze([ 'event_key', 'name', 'grade' ]),
+    [RowAction.MoveEvent]:   Object.freeze([ 'event_key', 'day', 'month', 'missal', 'reason' ]),
+    [RowAction.CreateNew]:   Object.freeze([ 'event_key', 'name', 'color', 'grade', 'day', 'month', 'strtotime', 'common' ]) //'readings' is only expected for createNew when common === 'Proper'
 });
 
 /**
@@ -369,17 +374,22 @@ class FormControls {
         if( element !== null ) {
             if (element instanceof LiturgicalEvent) {
                 console.log('element instanceof LiturgicalEvent');
-                liturgical_event = element;
-                liturgical_event.url = '';
-                liturgical_event.url_lang_map = {};
+                liturgical_event = {
+                    ...element,
+                    url: '',
+                    url_lang_map: {}
+                };
             }
             else if ( typeof element === 'string' ) {
                 // rather than filter the LiturgicalEventCollection, we should be either getting from EventsCollection
                 // based on EventsLoader.lastRequestPath and EventsLoader.lastRequestLocale,
                 // or we should be able to pass a liturgical_event object directly to  the CreateRegionalFormRow method
-                liturgical_event = LiturgicalEventCollection.filter(item => item.event_key === element)[0];
-                liturgical_event.url = '';
-                liturgical_event.url_lang_map = {};
+                const existingLiturgicalEvent = LiturgicalEventCollection.find(item => item.event_key === element) ?? {};
+                liturgical_event = {
+                    ...existingLiturgicalEvent,
+                    url: '',
+                    url_lang_map: {}
+                };
             }
             else if ( typeof element === 'object' && 'liturgical_event' in element && 'metadata' in element ) {
                 liturgical_event = {
@@ -860,7 +870,7 @@ class FormControls {
      */
     static CreateDoctorRow(element = null) {
         let formRow = '';
-        let liturgical_event = null;
+        let liturgical_event = {};
         if( element !== null ) {
             if( typeof element === 'string' ) {
                 liturgical_event.event_key = element;
@@ -879,7 +889,7 @@ class FormControls {
                 }
             }
             if (LiturgicalEventCollectionKeys.includes(liturgical_event.event_key)) {
-                let event = LiturgicalEventCollection.filter(fest => fest.event_key === liturgical_event.event_key)[0];
+                let event = LiturgicalEventCollection.find(fest => fest.event_key === liturgical_event.event_key) || {};
                 if( false === 'color' in liturgical_event ) {
                     liturgical_event.color = 'color' in event ? event.color : [];
                 }
