@@ -29,10 +29,13 @@
  * @typedef {'white'|'red'|'green'|'purple'|'rose'} LitColorValue
  */
 
-/** @import { RowData } from './extending.js' */
+/**
+ * @import { RowData } from './extending.js'
+ * @import { Month } from './FormControls.js'
+ */
 
 import { CalendarSettings, Locale } from './Settings.js';
-import { Month, getMonthMaxDay } from './FormControls.js';
+import { getMonthMaxDay } from './FormControls.js';
 
 /**
  * Checks if a given day value is valid for a given month.
