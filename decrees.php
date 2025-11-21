@@ -104,6 +104,7 @@ curl_close($ch);
                 } else {
                     $decree['url'] = $decree['metadata']['url'];
                 }
+                $decreeURL = htmlspecialchars($decree['url'], ENT_QUOTES, 'UTF-8');
 
                 /**
                 $existingEvent = array_find($LiturgicalEventCollection, function ($event) use ($decree) {
@@ -126,7 +127,7 @@ curl_close($ch);
                     . "<h6 class='card-subtitle mb-2 text-muted d-flex justify-content-between'><div>{$decreeDate}</div><div>{$decreeID}</div></h6>"
                     . '</div>'
                     . "<div class='card-body'>"
-                    . "<p class='card-text'>{$decreeDescription}<a href='{$decree['url']}' class='ms-2' target='_blank'>" . _('Read the Decree') . '</a></p>'
+                    . "<p class='card-text'>{$decreeDescription}<a href='{$decreeURL}' class='ms-2' target='_blank'>" . _('Read the Decree') . '</a></p>'
                     . '<div class="row gx-2 align-items-baseline">'
                     . '<div class="form-group col-sm-4">'
                     . "<label for='event_key_{$decreeID}' class='event_key'>Event Key</label>"
