@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-21 08:49+0000\n"
-"PO-Revision-Date: 2025-11-21 13:46+0000\n"
+"PO-Revision-Date: 2025-11-21 16:23+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
@@ -822,7 +822,7 @@ msgstr "Coetus dioecesanus"
 
 #: extending.php:493
 msgid "Timezone"
-msgstr "Tempus zona"
+msgstr "Zona temporis"
 
 #: extending.php:513
 msgid "Solemnities"
