@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 08:49+0000\n"
+"POT-Creation-Date: 2025-11-21 16:50+0000\n"
 "PO-Revision-Date: 2025-11-21 12:51+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
@@ -17,8 +17,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && "
-"(n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 5.13.3\n"
 
 #: index.php:5
@@ -202,13 +202,21 @@ msgstr ""
 "Wszystkie dostępne trasy API z ich obsługiwanymi metodami, parametrami, "
 "typami zawartości i odpowiedziami są tutaj opisane."
 
-#: index.php:170
-msgid "Calculation of the Date of Easter"
-msgstr "Obliczanie daty Wielkanocy"
+#: index.php:170 usage.php:184
+msgid "Calculation of the Dates of Easter"
+msgstr "Obliczanie dat Wielkanocy"
 
 #: index.php:173
+#, fuzzy
+#| msgid ""
+#| "A simple API endpoint that returns data about the Date of Easter, both "
+#| "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
+#| "Calendar) to 9999 (maximum possible date calculation in 64bit PHP), using "
+#| "a PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian "
+#| "easter (observed by the Roman Catholic church) and of the Meeus algorithm "
+#| "for Julian easter (observed by orthodox churches)."
 msgid ""
-"A simple API endpoint that returns data about the Date of Easter, both "
+"A simple API endpoint that returns data about the Dates of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
 "Calendar) to 9999 (maximum possible date calculation in 64bit PHP), using a "
 "PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian easter "
@@ -223,7 +231,9 @@ msgstr ""
 "Meeusa dla Wielkanocy juliańskiej (obserwowanej przez kościoły prawosławne)."
 
 #: index.php:178
-msgid "Date of Easter API endpoint"
+#, fuzzy
+#| msgid "Date of Easter API endpoint"
+msgid "Dates of Easter API endpoint"
 msgstr "Endpoint API daty Wielkanocy"
 
 #: index.php:180
@@ -477,10 +487,6 @@ msgstr ""
 #: usage.php:176 layout/header.php:109
 msgid "Dates of Easter"
 msgstr "Daty Wielkanocy"
-
-#: usage.php:184
-msgid "Calculation of the Dates of Easter"
-msgstr "Obliczanie dat Wielkanocy"
 
 #: usage.php:187
 msgid "Example display of the date of Easter from 1583 to 9999"
@@ -875,7 +881,8 @@ msgstr "Zdefiniuj święta"
 
 #: extending.php:562
 msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
-msgstr "Patron lub patroni miejsca, diecezji, regionu, prowincji lub terytorium"
+msgstr ""
+"Patron lub patroni miejsca, diecezji, regionu, prowincji lub terytorium"
 
 #: extending.php:577
 msgid "Define the Memorials"
@@ -1517,6 +1524,9 @@ msgstr "Dokumentacja"
 #: layout/header.php:97
 msgid "Examples of Usage"
 msgstr "Przykłady użycia"
+
+#~ msgid "Calculation of the Date of Easter"
+#~ msgstr "Obliczanie daty Wielkanocy"
 
 #~ msgid "Click on the link above to copy it the clipboard."
 #~ msgstr "Kliknij link powyżej, aby skopiować go do schowka."

@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 08:49+0000\n"
-"PO-Revision-Date: 2025-11-21 16:38+0000\n"
+"POT-Creation-Date: 2025-11-21 16:50+0000\n"
+"PO-Revision-Date: 2025-11-21 17:12+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -207,13 +207,21 @@ msgstr ""
 "Alle verfügbaren API-Routen mit ihren unterstützten Methoden, Parametern, "
 "Inhaltstypen und Antworten sind hier beschrieben."
 
-#: index.php:170
-msgid "Calculation of the Date of Easter"
-msgstr "Berechnung des Osterdatums"
+#: index.php:170 usage.php:184
+msgid "Calculation of the Dates of Easter"
+msgstr "Berechnung der Ostertermine"
 
 #: index.php:173
+#, fuzzy
+#| msgid ""
+#| "A simple API endpoint that returns data about the Date of Easter, both "
+#| "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
+#| "Calendar) to 9999 (maximum possible date calculation in 64bit PHP), using "
+#| "a PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian "
+#| "easter (observed by the Roman Catholic church) and of the Meeus algorithm "
+#| "for Julian easter (observed by orthodox churches)."
 msgid ""
-"A simple API endpoint that returns data about the Date of Easter, both "
+"A simple API endpoint that returns data about the Dates of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
 "Calendar) to 9999 (maximum possible date calculation in 64bit PHP), using a "
 "PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian easter "
@@ -229,7 +237,9 @@ msgstr ""
 "das julianische Osterdatum (wie von orthodoxen Kirchen gefeiert)."
 
 #: index.php:178
-msgid "Date of Easter API endpoint"
+#, fuzzy
+#| msgid "Date of Easter API endpoint"
+msgid "Dates of Easter API endpoint"
 msgstr "Osterdatum API-Endpunkt"
 
 #: index.php:180
@@ -488,10 +498,6 @@ msgstr ""
 msgid "Dates of Easter"
 msgstr "Ostertermine"
 
-#: usage.php:184
-msgid "Calculation of the Dates of Easter"
-msgstr "Berechnung der Ostertermine"
-
 #: usage.php:187
 msgid "Example display of the date of Easter from 1583 to 9999"
 msgstr "Beispielanzeige des Osterdatums von 1583 bis 9999"
@@ -611,11 +617,11 @@ msgstr "Anderes Fest"
 
 #: extending.php:167 extending.php:584 extending.php:585
 msgid "Other Memorial"
-msgstr "Anderer Gedächtnis"
+msgstr "Anderes Gedächtnis"
 
 #: extending.php:168 extending.php:605 extending.php:606
 msgid "Other Optional Memorial"
-msgstr "Anderer Freiwilliges Gedächtnis"
+msgstr "Anderes Freiwilliges Gedächtnis"
 
 #: extending.php:169
 msgid "Delete calendar"
@@ -905,7 +911,7 @@ msgstr ""
 
 #: extending.php:598
 msgid "Define the Optional Memorials"
-msgstr "Freiwilliges Gedächtnisse definieren"
+msgstr "Freiwillige Gedächtnisse definieren"
 
 #: extending.php:604
 msgid ""
@@ -1538,6 +1544,9 @@ msgstr "Dokumentation"
 #: layout/header.php:97
 msgid "Examples of Usage"
 msgstr "Beispiele für die Verwendung"
+
+#~ msgid "Calculation of the Date of Easter"
+#~ msgstr "Berechnung des Osterdatums"
 
 #~ msgid "Click on the link above to copy it the clipboard."
 #~ msgstr ""
