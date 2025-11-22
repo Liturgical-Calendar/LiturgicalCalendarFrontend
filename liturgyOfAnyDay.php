@@ -9,12 +9,19 @@
 use LiturgicalCalendar\Components\CalendarSelect;
 
 include_once 'common.php';
+// The ApiClient required for CalendarSelect is already instantiated in common.php as $apiClient
 
-$dateToday      = new DateTime();
-$fmt            = new IntlDateFormatter($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::FULL, 'UTC', IntlDateFormatter::GREGORIAN, 'MMMM');
-$fmtFull        = new IntlDateFormatter($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'UTC', IntlDateFormatter::GREGORIAN);
-$monthDate      = new DateTime();
-$CalendarSelect = new CalendarSelect(['locale' => $i18n->LOCALE, 'url' => $metadataURL]);
+
+$dateToday          = new DateTime();
+$daysInCurrentMonth = intval($dateToday->format('t')); // Number of days in the given month (28-31)
+$dayOfTheMonth      = intval($dateToday->format('j')); // Day of the month without leading zeros (1-31)
+$currentMonth       = intval($dateToday->format('n')); // Numeric representation of a month, without leading zeros (1-12)
+$currentYear        = intval($dateToday->format('Y')); // A full numeric representation of a year, 4 digits
+$fmt                = new IntlDateFormatter($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::FULL, 'UTC', IntlDateFormatter::GREGORIAN, 'MMMM');
+$fmtFull            = new IntlDateFormatter($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'UTC', IntlDateFormatter::GREGORIAN);
+$monthDate          = new DateTime();
+$calendarSelect     = new CalendarSelect(['locale' => $i18n->LOCALE]);
+$calendarSelect->class('form-select')->id('calendarSelect')->label(true)->labelText(_('Select calendar'));
 
 ?><!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
@@ -31,19 +38,13 @@ $CalendarSelect = new CalendarSelect(['locale' => $i18n->LOCALE, 'url' => $metad
         <div class="container">
             <div class="row">
                 <div class="form-group col-md"><?php
-                    echo $CalendarSelect->getSelect([
-                        'class'    => 'form-select',
-                        'id'       => 'calendarSelect',
-                        'options'  => 'all',
-                        'label'    => true,
-                        'labelStr' => _('Select calendar')
-                    ]);
+                    echo $calendarSelect->getSelect();
                 ?></div>
             </div>
             <div class="row">
                 <div class="form-group col-md">
                     <label><?php echo _('Day'); ?></label>
-                    <input class="form-control" id="dayControl" type="number" min="1" max="<?php echo $dateToday->format('t') ?>" value="<?php echo $dateToday->format('d') ?>" />
+                    <input class="form-control" id="dayControl" type="number" min="1" max="<?php echo $daysInCurrentMonth; ?>" value="<?php echo $dayOfTheMonth; ?>" />
                 </div>
                 <div class="form-group col-md">
                     <label><?php echo _('Month'); ?></label>
@@ -51,17 +52,17 @@ $CalendarSelect = new CalendarSelect(['locale' => $i18n->LOCALE, 'url' => $metad
                         <?php foreach (range(1, 12) as $monthNumber) {
                             $monthDate->setDate($dateToday->format('Y'), $monthNumber, 15);
                             $selected = '';
-                            if (intval($dateToday->format('n')) === $monthNumber) {
-                                $selected = 'selected';
+                            if ($currentMonth === $monthNumber) {
+                                $selected = ' selected';
                             }
-                            echo "<option value=\"{$monthNumber}\" " . $selected . ">{$fmt->format($monthDate)}</option>";
+                            echo "<option value=\"{$monthNumber}\"{$selected}>{$fmt->format($monthDate)}</option>";
                         }
                         ?>
                     </select>
                 </div>
                 <div class="form-group col-md">
                     <label><?php echo _('Year'); ?></label>
-                    <input class="form-control" id="yearControl" type="number" min="1970" max="9999" value="<?php echo $dateToday->format('Y') ?>" />
+                    <input class="form-control" id="yearControl" type="number" min="1970" max="9999" value="<?php echo $currentYear; ?>" />
                 </div>
             </div>
             <div class="card shadow m-2">

@@ -6,10 +6,10 @@ Input.setGlobalWrapper('div');
 Input.setGlobalWrapperClass('form-group col col-md-3');
 
 
-if (!BaseURL) {
-    console.error('BaseURL is falsy, cannot initialize ApiClient');
+if (!BaseUrl) {
+    console.error('BaseUrl is falsy, cannot initialize ApiClient');
 } else {
-    ApiClient.init(BaseURL).then(apiClient => {
+    ApiClient.init(BaseUrl).then(apiClient => {
         if (false === apiClient || false === apiClient instanceof ApiClient) {
             alert('Error initializing the Liturgical Calendar API Client');
         } else {

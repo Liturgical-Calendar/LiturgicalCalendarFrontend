@@ -82,16 +82,16 @@ FormControls.index = LitCalMetadata;
 
 const TranslationData = new Map();
 const EventsCollection = new Map();
-EventsCollection.set(EventsURL, new Map());
-EventsCollection.get(EventsURL).set(LOCALE, LiturgicalEventCollection.map(el => LiturgicalEvent.fromObject(el)));
+EventsCollection.set(EventsUrl, new Map());
+EventsCollection.get(EventsUrl).set(LOCALE, LiturgicalEventCollection.map(el => LiturgicalEvent.fromObject(el)));
 const EventsCollectionKeys = new Map();
-EventsCollectionKeys.set(EventsURL, LiturgicalEventCollection.map(el => el.event_key));
+EventsCollectionKeys.set(EventsUrl, LiturgicalEventCollection.map(el => el.event_key));
 
 const initialHeaders = new Headers({
     'Accept': 'application/json'
 });
 
-const missalsRequest = new Request(`${MissalsURL}?include_empty=true`, {
+const missalsRequest = new Request(`${MissalsUrl}?include_empty=true`, {
     method: 'GET',
     headers: initialHeaders
 });
@@ -194,18 +194,18 @@ const sanitizeProxiedAPI = {
                 // the path will be set based on the method, category and key parameters
                 if (target.hasOwnProperty('method') && target['method'] === 'PUT') {
                     if (target.hasOwnProperty('category') && target['category'] !== '') {
-                        value = `${RegionalDataURL}/${target['category']}`;
+                        value = `${RegionalDataUrl}/${target['category']}`;
                     } else {
-                        value = `${RegionalDataURL}`;
+                        value = `${RegionalDataUrl}`;
                     }
                 } else {
                     if (target.hasOwnProperty('category') && target['category'] !== '' && target.hasOwnProperty('key') && target['key'] !== '') {
-                        value = `${RegionalDataURL}/${target['category']}/${target['key']}`;
+                        value = `${RegionalDataUrl}/${target['category']}/${target['key']}`;
                     }
                     else if (target.hasOwnProperty('category') && target['category'] !== '') {
-                        value = `${RegionalDataURL}/${target['category']}`;
+                        value = `${RegionalDataUrl}/${target['category']}`;
                     } else {
-                        value = `${RegionalDataURL}`;
+                        value = `${RegionalDataUrl}`;
                     }
                 }
                 break;
@@ -215,13 +215,13 @@ const sanitizeProxiedAPI = {
                     return;
                 }
                 if (target.hasOwnProperty('method') && target['method'] === 'PUT') {
-                    target['path'] = `${RegionalDataURL}/${value}`;
+                    target['path'] = `${RegionalDataUrl}/${value}`;
                 } else {
                     if (target.hasOwnProperty('key') && target['key'] !== '') {
-                        target['path'] = `${RegionalDataURL}/${value}/${target['key']}`;
+                        target['path'] = `${RegionalDataUrl}/${value}/${target['key']}`;
                     }
                     else {
-                        target['path'] = `${RegionalDataURL}/${value}`;
+                        target['path'] = `${RegionalDataUrl}/${value}`;
                     }
                 }
                 break;
@@ -258,9 +258,9 @@ const sanitizeProxiedAPI = {
 
                 if (target.hasOwnProperty('category') && target['category'] !== '') {
                     if (target.hasOwnProperty('method') && target['method'] === 'PUT') {
-                        target['path'] = `${RegionalDataURL}/${target['category']}`;
+                        target['path'] = `${RegionalDataUrl}/${target['category']}`;
                     } else {
-                        target['path'] = `${RegionalDataURL}/${target['category']}/${value}`;
+                        target['path'] = `${RegionalDataUrl}/${target['category']}/${value}`;
                     }
                 }
                 break;
@@ -277,16 +277,16 @@ const sanitizeProxiedAPI = {
                 }
                 if (value === 'PUT') {
                     if (target.hasOwnProperty('category') && target['category'] !== '') {
-                        target['path'] = `${RegionalDataURL}/${target['category']}`;
+                        target['path'] = `${RegionalDataUrl}/${target['category']}`;
                     }
                 } else {
                     if (target.hasOwnProperty('category') && target['category'] !== '' && target.hasOwnProperty('key') && target['key'] !== '') {
-                        target['path'] = `${RegionalDataURL}/${target['category']}/${target['key']}`;
+                        target['path'] = `${RegionalDataUrl}/${target['category']}/${target['key']}`;
                     }
                     else if (target.hasOwnProperty('category') && target['category'] !== '') {
-                        target['path'] = `${RegionalDataURL}/${target['category']}`;
+                        target['path'] = `${RegionalDataUrl}/${target['category']}`;
                     } else {
-                        target['path'] = `${RegionalDataURL}`;
+                        target['path'] = `${RegionalDataUrl}`;
                     }
                 }
                 break;
@@ -1433,18 +1433,18 @@ const fetchEventsAndCalendarData = () => {
     console.log(`API.path is ${API.path} (category is ${API.category} and key is ${API.key}). Locale set to ${API.locale === '' ? ' (empty string)' : API.locale}. Now checking if a calendar already exists...`);
 
     const eventsUrlForCurrentCategory = API.category === 'widerregion' || (API.category === 'nation' && false === LitCalMetadata.national_calendars_keys.includes(API.key))
-        ? `${EventsURL}`
-        : `${EventsURL}/${API.category}/${API.key}`;
+        ? `${EventsUrl}`
+        : `${EventsUrl}/${API.category}/${API.key}`;
 
     // Only fetch events if we don't already have them, and if they are available
     if (
         false === EventsCollection.has(eventsUrlForCurrentCategory)
         || false === EventsCollection.get(eventsUrlForCurrentCategory).has(API.locale)
-        || (eventsUrlForCurrentCategory === EventsURL && LitCalMetadata.locales.includes(API.locale))
+        || (eventsUrlForCurrentCategory === EventsUrl && LitCalMetadata.locales.includes(API.locale))
     ) {
         console.log(`EventsCollection.has(eventsUrlForCurrentCategory): ${EventsCollection.has(eventsUrlForCurrentCategory)}`);
         console.log(`EventsCollection.get(eventsUrlForCurrentCategory).has(API.locale): ${EventsCollection.has(eventsUrlForCurrentCategory) && EventsCollection.get(eventsUrlForCurrentCategory).has(API.locale)}`);
-        console.log(`eventsUrlForCurrentCategory === EventsURL && LitCalMetadata.locales.includes(API.locale): ${eventsUrlForCurrentCategory === EventsURL && LitCalMetadata.locales.includes(API.locale)}`);
+        console.log(`eventsUrlForCurrentCategory === EventsUrl && LitCalMetadata.locales.includes(API.locale): ${eventsUrlForCurrentCategory === EventsUrl && LitCalMetadata.locales.includes(API.locale)}`);
         console.log('If either of the first two conditions is false, or the third condition is true, then we procced to fetch events...');
         if (false === EventsCollection.has(eventsUrlForCurrentCategory)) {
             EventsCollection.set(eventsUrlForCurrentCategory, new Map());

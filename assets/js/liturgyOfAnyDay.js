@@ -1,14 +1,14 @@
-let CalData = null;
-let dtFormat = new Intl.DateTimeFormat(currentLocale.language, { dateStyle: 'full' });
-const now = new Date();
-let liturgyDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0));
-let highContrast = [ 'green', 'red', 'purple' ];
+const now         = new Date();
+const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+let liturgyDate   = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0));
+let dtFormat      = new Intl.DateTimeFormat(currentLocale.language, { dateStyle: 'full' });
+let highContrast  = [ 'green', 'red', 'purple' ];
+let CalData       = null;
 
 jQuery(() => {
-    document.querySelector('#monthControl').value = now.getMonth() + 1;
-    const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-    document.querySelector('#dayControl').setAttribute("max", daysInMonth);
-    document.querySelector('#dayControl').value = now.getDate();
+    //document.querySelector('#monthControl').value = now.getMonth() + 1;
+    //document.querySelector('#dayControl').setAttribute("max", daysInMonth);
+    //document.querySelector('#dayControl').value = now.getDate();
 
     switch( $('#calendarSelect').find(':selected').attr('data-calendartype') ) {
         case 'nationalcalendar':
@@ -40,7 +40,7 @@ class CalendarState {
      * @returns {string} The full endpoint URL for the API /calendar endpoint
      */
     static get requestPath () {
-        return `${CalendarURL}/${CalendarState.calendarType !== '' ? `${CalendarState.calendarType}/${CalendarState.calendar}/` : ''}${CalendarState.year}?year_type=CIVIL`;
+        return `${CalendarUrl}/${CalendarState.calendarType !== '' ? `${CalendarState.calendarType}/${CalendarState.calendar}/` : ''}${CalendarState.year}?year_type=CIVIL`;
     }
 }
 
@@ -73,9 +73,9 @@ $(document).on("change", "#monthControl,#yearControl,#calendarSelect,#dayControl
         apiRequest = true;
     }
     if (["monthControl", "dayControl", "yearControl"].includes(event.currentTarget.id)) {
-        CalendarState.year = document.querySelector('#yearControl').value;
+        CalendarState.year  = document.querySelector('#yearControl').value;
         CalendarState.month = document.querySelector('#monthControl').value;
-        CalendarState.day = document.querySelector('#dayControl').value;
+        CalendarState.day   = document.querySelector('#dayControl').value;
         liturgyDate = new Date(Date.UTC(CalendarState.year, CalendarState.month - 1, CalendarState.day, 0, 0, 0, 0));
     }
     getLiturgyOfADay(apiRequest);
@@ -92,8 +92,11 @@ $(document).on("change", "#monthControl,#yearControl,#calendarSelect,#dayControl
  * @param {boolean} [apiRequest=false] - whether to make an AJAX call to the API endpoint
  */
 let getLiturgyOfADay = (apiRequest = false) => {
-    let timestamp = liturgyDate.getTime() / 1000;
+    const rfc3339datetime = liturgyDate.toISOString().split('.')[0] + '+00:00';
+    console.log(`Getting liturgy of day for date ${rfc3339datetime} (API request: ${apiRequest ? 'yes' : 'no'})`);
+
     if( apiRequest ) {
+        console.log(`Fetching data from ${CalendarState.requestPath}, CalendarUrl: ${CalendarUrl}`);
         let headers = {
             'Origin': location.origin
         };
@@ -105,18 +108,22 @@ let getLiturgyOfADay = (apiRequest = false) => {
             .then(data => {
                 if( data.hasOwnProperty('litcal') ) {
                     CalData = data.litcal;
-                    let liturgyOfADay = CalData.filter((celebration) => celebration.date === timestamp );
+                    console.log(`Fetched ${CalData.length} liturgical events for year ${CalendarState.year}`);
+                    console.log(CalData);
+                    let liturgyOfADay = CalData.filter((celebration) => celebration.date === rfc3339datetime);
+                    console.log(`Found ${liturgyOfADay.length} liturgical events for date ${rfc3339datetime}`);
+                    console.log(liturgyOfADay);
                     updateResults(liturgyOfADay);
                 } else {
                     $('#liturgyResults').append(`<div>ERROR: no 'litcal' property: ${JSON.stringify(data)}</div>`);
                 }
             })
             .catch(error => {
-                $('#liturgyResults').append(`<div>ERROR: ${JSON.stringify(error)}</div>`);
+                console.error('Error fetching liturgy of a day:', error);
+                $('#liturgyResults').append(`<div>There was an error fetching liturgy of a day, see console for details</div>`);
             });
     } else {
-        //key === key is superfluous, it's just to make codefactor happy that key is being used!
-        let liturgyOfADay = CalData.filter((celebration) => celebration.date === timestamp );
+        let liturgyOfADay = CalData.filter((celebration) => celebration.date === rfc3339datetime);
         updateResults(liturgyOfADay);
     }
 }
@@ -156,7 +163,7 @@ let updateResults = (liturgyOfADay) => {
         const celebrationCommon = celebration.common.length ? celebration.common_lcl : '';
         const celebrationColor = celebration.color;
         const litGradeStyle = celebration.grade < 3 ? ' style="font-style:italic;"' : '';
-        let finalHTML = `<div class="p-4 m-4 border rounded" style="background-color:${celebrationColor[0]};color:${highContrast.includes(celebrationColor[0]) ? "white" : "black"};">`;
+        let finalHTML = `<div class="p-4 m-4 border rounded" style="background-color:${celebrationColor[0] === 'rose' ? 'pink' : celebrationColor[0]};color:${highContrast.includes(celebrationColor[0]) ? "white" : "black"};">`;
         finalHTML += `<h3>${celebration.name}</h3>`;
         finalHTML += (celebrationGrade !== '' ? `<div${litGradeStyle}>${celebrationGrade}</div>` : '');
         finalHTML += `<div>${celebrationCommon}</div>`;

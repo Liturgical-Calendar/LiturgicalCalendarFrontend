@@ -96,16 +96,6 @@ $formLabelB = sprintf(
                         <h5 class="fw-bold"><?php echo $formLabelA; ?></h5>
                     </div>
                     <?php echo $firstAfter; ?>
-                    <?php
-                    /*
-                    $apiOptions->formLabel->text($formLabelA);
-                    $apiOptions->after($firstAfter);
-                    echo $apiOptions->getForm(PathType::BASE_PATH);
-                    $apiOptions->formLabel->text($formLabelB);
-                    $apiOptions->after($secondAfter);
-                    echo $apiOptions->getForm(PathType::ALL_PATHS);
-                    */
-                    ?>
                     <div id="pathBuilderComponent"></div>
                     <div class="row mb-4">
                         <small class="text-muted">

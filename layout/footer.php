@@ -22,23 +22,23 @@
 
 <!-- All API URLs are provided by common.php -->
 <script>
-const BaseURL         = '<?php echo $baseURL; ?>';
-const DateOfEasterURL = '<?php echo $dateOfEasterURL; ?>';
-const CalendarURL     = '<?php echo $calendarURL; ?>';
-const MetadataURL     = '<?php echo $metadataURL; ?>';
-const EventsURL       = '<?php echo $eventsURL; ?>';
-const MissalsURL      = '<?php echo $missalsURL; ?>';
-const DecreesURL      = '<?php echo $decreesURL; ?>';
-const RegionalDataURL = '<?php echo $regionalDataURL; ?>';
+const BaseUrl         = '<?php echo $apiBaseUrl; ?>';
+const DateOfEasterUrl = '<?php echo $dateOfEasterUrl; ?>';
+const CalendarUrl     = '<?php echo $calendarUrl; ?>';
+const MetadataUrl     = '<?php echo $metadataUrl; ?>';
+const EventsUrl       = '<?php echo $eventsUrl; ?>';
+const MissalsUrl      = '<?php echo $missalsUrl; ?>';
+const DecreesUrl      = '<?php echo $decreesUrl; ?>';
+const RegionalDataUrl = '<?php echo $regionalDataUrl; ?>';
 console.log({
-    'baseUrl': BaseURL,
-    'dateOfEasterURL': DateOfEasterURL,
-    'calendarURL': CalendarURL,
-    'metadataURL': MetadataURL,
-    'eventsURL': EventsURL,
-    'missalsURL': MissalsURL,
-    'decreesURL': DecreesURL,
-    'regionalDataURL': RegionalDataURL
+    'BaseUrl': BaseUrl,
+    'DateOfEasterUrl': DateOfEasterUrl,
+    'CalendarUrl': CalendarUrl,
+    'MetadataUrl': MetadataUrl,
+    'EventsUrl': EventsUrl,
+    'MissalsUrl': MissalsUrl,
+    'DecreesUrl': DecreesUrl,
+    'RegionalDataUrl': RegionalDataUrl
 });
 </script>
 

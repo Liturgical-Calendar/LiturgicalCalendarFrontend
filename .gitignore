@@ -104,9 +104,23 @@ typings/
 .tern-port
 
 api/*
-debuginfo.php
 examples/
-credentials.php
+*.php
+!about.php
+!admin.php
+!common.php
+!decrees.php
+!easter.php
+!examples.php
+!extending.php
+!index.php
+!liturgyOfAnyDay.php
+!translations.php
+!usage.php
+!layout/footer.php
+!layout/header.php
+!layout/head.php
+!dist/index.php
 
 .php-ini
 .php-version
@@ -118,3 +132,5 @@ credentials.php
 /**/.envrc
 !/**/.envrc.example
 /assets/json/
+
+/cache/
