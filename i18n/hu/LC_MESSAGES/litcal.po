@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 16:50+0000\n"
+"POT-Creation-Date: 2025-11-22 20:21+0000\n"
 "PO-Revision-Date: 2025-11-21 07:26+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
@@ -119,7 +119,7 @@ msgstr "Az alap %s útvonalon elérhető kérési paraméterek"
 msgid "Request parameters available on all %1$s paths"
 msgstr "Minden %1$s útvonalon elérhető kérési paraméterek"
 
-#: index.php:60 usage.php:13 examples.php:95 liturgyOfAnyDay.php:22
+#: index.php:60 usage.php:13 examples.php:95 liturgyOfAnyDay.php:29
 msgid "General Roman Calendar"
 msgstr "Általános római naptár"
 
@@ -137,7 +137,7 @@ msgstr "API %1$s végpont"
 msgid "Path builder"
 msgstr "Útvonal készítő"
 
-#: index.php:112
+#: index.php:102
 msgid ""
 "URL of the API request based on selected options. The button is set to the "
 "same URL, click on it to see results."
@@ -145,11 +145,11 @@ msgstr ""
 "Az API kérés URL-je a kiválasztott lehetőségek alapján. A gomb ugyanahhoz az "
 "URL-hez van beállítva, kattints rá, hogy lásd az eredményeket."
 
-#: index.php:121 index.php:125
+#: index.php:111 index.php:115
 msgid "Liturgical Calendar Validator"
 msgstr "Liturgikus naptár érvényesítő"
 
-#: index.php:124
+#: index.php:114
 msgid ""
 "In order to verify that the liturgical data produced by the API is correct, "
 "there is a Unit Test interface that can run predefined tests against the "
@@ -161,7 +161,7 @@ msgstr ""
 "teszteket futtathat az API által előállított JSON válaszok ellen 1970-től a "
 "jelenlegi évtől számított 25 évig."
 
-#: index.php:129
+#: index.php:119
 #, php-format
 msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
@@ -170,28 +170,28 @@ msgstr ""
 "Az egység tesztek a Liturgikus Naptár API repozitórium %s mappájában vannak "
 "meghatározva."
 
-#: index.php:133
+#: index.php:123
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
 msgstr "Az egység teszt felület saját repozitóriumában van: %s."
 
-#: index.php:142
+#: index.php:132
 msgid "Translation Tool"
 msgstr "Fordítási eszköz"
 
-#: index.php:148 index.php:151
+#: index.php:138 index.php:141
 msgid "Translations status"
 msgstr "Fordítási állapot"
 
-#: index.php:159
+#: index.php:149
 msgid "Open API Schema"
 msgstr "Nyílt API séma"
 
-#: index.php:162
+#: index.php:152
 msgid "Swagger / Open API Documentation"
 msgstr "Swagger / Nyílt API dokumentáció"
 
-#: index.php:164
+#: index.php:154
 msgid ""
 "All of the available API routes with their supported methods, parameters, "
 "content types and responses are described here."
@@ -199,11 +199,11 @@ msgstr ""
 "Az összes elérhető API útvonal az általuk támogatott módszerekkel, "
 "paraméterekkel, tartalomtípusokkal és válaszokkal itt van leírva."
 
-#: index.php:170 usage.php:184
+#: index.php:160 usage.php:184
 msgid "Calculation of the Dates of Easter"
 msgstr "A húsvéti időpontok kiszámítása"
 
-#: index.php:173
+#: index.php:163
 #, fuzzy
 #| msgid ""
 #| "A simple API endpoint that returns data about the Date of Easter, both "
@@ -227,13 +227,13 @@ msgstr ""
 "húsvétra (amelyet a római katolikus egyház figyel), és a Meeus algoritmust a "
 "julián húsvétra (amelyet az ortodox egyházak figyelnek)."
 
-#: index.php:178
+#: index.php:168
 #, fuzzy
 #| msgid "Date of Easter API endpoint"
 msgid "Dates of Easter API endpoint"
 msgstr "Húsvét dátumának API végpontja"
 
-#: index.php:180
+#: index.php:170
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
@@ -315,7 +315,7 @@ msgstr "TeljesNaptár megtekintése (üzenetek először)"
 msgid "Calendar subscription"
 msgstr "Naptár előfizetés"
 
-#: usage.php:88 liturgyOfAnyDay.php:39
+#: usage.php:88 liturgyOfAnyDay.php:24
 msgid "Select calendar"
 msgstr "Naptár kiválasztása"
 
@@ -512,7 +512,7 @@ msgstr ""
 msgid "In development"
 msgstr "Fejlesztés alatt"
 
-#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:22 liturgyOfAnyDay.php:30
+#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:29 liturgyOfAnyDay.php:37
 msgid "Liturgy of any day"
 msgstr "Bármely nap liturgiája"
 
@@ -585,11 +585,11 @@ msgstr "Esemény kulcs"
 msgid "Name"
 msgstr "Név"
 
-#: extending.php:163 liturgyOfAnyDay.php:45 src/FormControls.php:59
+#: extending.php:163 liturgyOfAnyDay.php:46 src/FormControls.php:59
 msgid "Day"
 msgstr "Nap"
 
-#: extending.php:164 liturgyOfAnyDay.php:49 src/FormControls.php:65
+#: extending.php:164 liturgyOfAnyDay.php:50 src/FormControls.php:65
 msgid "Month"
 msgstr "Hónap"
 
@@ -1138,12 +1138,12 @@ msgstr "Naptár adatai"
 msgid "Project website"
 msgstr "Projekt weboldala"
 
-#: liturgyOfAnyDay.php:63
+#: liturgyOfAnyDay.php:64
 msgid "Year"
 msgstr "Év"
 
 #. translators: %s = current selected date
-#: liturgyOfAnyDay.php:71
+#: liturgyOfAnyDay.php:72
 #, php-format
 msgid "Liturgy of %s"
 msgstr "A %s liturgiája"

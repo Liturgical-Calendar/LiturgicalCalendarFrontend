@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 16:50+0000\n"
+"POT-Creation-Date: 2025-11-22 20:21+0000\n"
 "PO-Revision-Date: 2025-11-21 07:26+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
@@ -120,7 +120,7 @@ msgstr "Parametri zahtjeva dostupni na osnovnoj stazi %s"
 msgid "Request parameters available on all %1$s paths"
 msgstr "Parametri zahtjeva dostupni na svim stazama %1$s"
 
-#: index.php:60 usage.php:13 examples.php:95 liturgyOfAnyDay.php:22
+#: index.php:60 usage.php:13 examples.php:95 liturgyOfAnyDay.php:29
 msgid "General Roman Calendar"
 msgstr "Opći rimski kalendar"
 
@@ -138,7 +138,7 @@ msgstr "API %1$s krajnja točka"
 msgid "Path builder"
 msgstr "Građevnik staza"
 
-#: index.php:112
+#: index.php:102
 msgid ""
 "URL of the API request based on selected options. The button is set to the "
 "same URL, click on it to see results."
@@ -146,11 +146,11 @@ msgstr ""
 "URL API zahtjeva temeljen na odabranim opcijama. Gumb je postavljen na isti "
 "URL, kliknite ga da biste vidjeli rezultate."
 
-#: index.php:121 index.php:125
+#: index.php:111 index.php:115
 msgid "Liturgical Calendar Validator"
 msgstr "Validator liturgijskog kalendara"
 
-#: index.php:124
+#: index.php:114
 msgid ""
 "In order to verify that the liturgical data produced by the API is correct, "
 "there is a Unit Test interface that can run predefined tests against the "
@@ -162,7 +162,7 @@ msgstr ""
 "definirane testove protiv JSON odgovora koje proizvodi API počevši od 1970. "
 "godine do 25 godina od tekuće godine."
 
-#: index.php:129
+#: index.php:119
 #, php-format
 msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
@@ -171,28 +171,28 @@ msgstr ""
 "Jedinični testovi su definirani u mapi %s u spremištu API-ja liturgijskog "
 "kalendara."
 
-#: index.php:133
+#: index.php:123
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
 msgstr "Sučelje za jedinične testove je uređeno u vlastitom spremištu: %s."
 
-#: index.php:142
+#: index.php:132
 msgid "Translation Tool"
 msgstr "Alat za prevođenje"
 
-#: index.php:148 index.php:151
+#: index.php:138 index.php:141
 msgid "Translations status"
 msgstr "Status prijevoda"
 
-#: index.php:159
+#: index.php:149
 msgid "Open API Schema"
 msgstr "Otvoreno API shema"
 
-#: index.php:162
+#: index.php:152
 msgid "Swagger / Open API Documentation"
 msgstr "Swagger / Open API Dokumentacija"
 
-#: index.php:164
+#: index.php:154
 msgid ""
 "All of the available API routes with their supported methods, parameters, "
 "content types and responses are described here."
@@ -200,11 +200,11 @@ msgstr ""
 "Svi dostupni API putevi s njihovim podržanim metodama, parametrima, vrstama "
 "sadržaja i odgovorima opisani su ovdje."
 
-#: index.php:170 usage.php:184
+#: index.php:160 usage.php:184
 msgid "Calculation of the Dates of Easter"
 msgstr "Izračun datuma Uskrsa"
 
-#: index.php:173
+#: index.php:163
 #, fuzzy
 #| msgid ""
 #| "A simple API endpoint that returns data about the Date of Easter, both "
@@ -228,13 +228,13 @@ msgstr ""
 "uskrs (koji slavi Rimska katolička crkva) i Meeusov algoritam za julijanski "
 "uskrs (koji slave pravoslavne crkve)."
 
-#: index.php:178
+#: index.php:168
 #, fuzzy
 #| msgid "Date of Easter API endpoint"
 msgid "Dates of Easter API endpoint"
 msgstr "API točka za datum Uskrsa"
 
-#: index.php:180
+#: index.php:170
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
@@ -315,7 +315,7 @@ msgstr "Pregled FullCalendar (poruke prvo)"
 msgid "Calendar subscription"
 msgstr "Pretplata na kalendar"
 
-#: usage.php:88 liturgyOfAnyDay.php:39
+#: usage.php:88 liturgyOfAnyDay.php:24
 msgid "Select calendar"
 msgstr "Odaberite kalendar"
 
@@ -507,7 +507,7 @@ msgstr "Dnevni pregled vijesti s liturgijom dana, kao Amazon Alexa vještina"
 msgid "In development"
 msgstr "U razvoju"
 
-#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:22 liturgyOfAnyDay.php:30
+#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:29 liturgyOfAnyDay.php:37
 msgid "Liturgy of any day"
 msgstr "Liturgija bilo kojeg dana"
 
@@ -578,11 +578,11 @@ msgstr "Ključ događaja"
 msgid "Name"
 msgstr "Ime"
 
-#: extending.php:163 liturgyOfAnyDay.php:45 src/FormControls.php:59
+#: extending.php:163 liturgyOfAnyDay.php:46 src/FormControls.php:59
 msgid "Day"
 msgstr "Dan"
 
-#: extending.php:164 liturgyOfAnyDay.php:49 src/FormControls.php:65
+#: extending.php:164 liturgyOfAnyDay.php:50 src/FormControls.php:65
 msgid "Month"
 msgstr "Mjesec"
 
@@ -1132,12 +1132,12 @@ msgstr "Podaci o kalendaru"
 msgid "Project website"
 msgstr "Web stranica projekta"
 
-#: liturgyOfAnyDay.php:63
+#: liturgyOfAnyDay.php:64
 msgid "Year"
 msgstr "Godina"
 
 #. translators: %s = current selected date
-#: liturgyOfAnyDay.php:71
+#: liturgyOfAnyDay.php:72
 #, php-format
 msgid "Liturgy of %s"
 msgstr "Liturgija %s"

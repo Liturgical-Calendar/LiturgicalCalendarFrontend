@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 16:50+0000\n"
+"POT-Creation-Date: 2025-11-22 20:21+0000\n"
 "PO-Revision-Date: 2025-11-21 12:51+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
@@ -121,7 +121,7 @@ msgstr "Dostępne parametry żądania na ścieżce bazowej %s"
 msgid "Request parameters available on all %1$s paths"
 msgstr "Dostępne parametry żądania na wszystkich ścieżkach %1$s"
 
-#: index.php:60 usage.php:13 examples.php:95 liturgyOfAnyDay.php:22
+#: index.php:60 usage.php:13 examples.php:95 liturgyOfAnyDay.php:29
 msgid "General Roman Calendar"
 msgstr "Kalendarz Rzymski Powszechny"
 
@@ -139,7 +139,7 @@ msgstr "Punkt końcowy API %1$s"
 msgid "Path builder"
 msgstr "Kreator ścieżek"
 
-#: index.php:112
+#: index.php:102
 msgid ""
 "URL of the API request based on selected options. The button is set to the "
 "same URL, click on it to see results."
@@ -147,11 +147,11 @@ msgstr ""
 "URL żądania API na podstawie wybranych opcji. Przycisk jest ustawiony na ten "
 "sam URL, kliknij, aby zobaczyć wyniki."
 
-#: index.php:121 index.php:125
+#: index.php:111 index.php:115
 msgid "Liturgical Calendar Validator"
 msgstr "Walidator kalendarza liturgicznego"
 
-#: index.php:124
+#: index.php:114
 msgid ""
 "In order to verify that the liturgical data produced by the API is correct, "
 "there is a Unit Test interface that can run predefined tests against the "
@@ -163,7 +163,7 @@ msgstr ""
 "wcześniej testy względem odpowiedzi JSON produkowanych przez API, począwszy "
 "od roku 1970 i sięgając do 25 lat od bieżącego roku."
 
-#: index.php:129
+#: index.php:119
 #, php-format
 msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
@@ -172,29 +172,29 @@ msgstr ""
 "Testy jednostkowe są zdefiniowane w folderze %s w repozytorium Liturgical "
 "Calendar API."
 
-#: index.php:133
+#: index.php:123
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
 msgstr ""
 "Interfejs testów jednostkowych jest utrzymywany w odrębnym repozytorium: %s."
 
-#: index.php:142
+#: index.php:132
 msgid "Translation Tool"
 msgstr "Narzędzie tłumaczeniowe"
 
-#: index.php:148 index.php:151
+#: index.php:138 index.php:141
 msgid "Translations status"
 msgstr "Status tłumaczeń"
 
-#: index.php:159
+#: index.php:149
 msgid "Open API Schema"
 msgstr "Otwórz schemat API"
 
-#: index.php:162
+#: index.php:152
 msgid "Swagger / Open API Documentation"
 msgstr "Dokumentacja Swagger / Open API"
 
-#: index.php:164
+#: index.php:154
 msgid ""
 "All of the available API routes with their supported methods, parameters, "
 "content types and responses are described here."
@@ -202,11 +202,11 @@ msgstr ""
 "Wszystkie dostępne trasy API z ich obsługiwanymi metodami, parametrami, "
 "typami zawartości i odpowiedziami są tutaj opisane."
 
-#: index.php:170 usage.php:184
+#: index.php:160 usage.php:184
 msgid "Calculation of the Dates of Easter"
 msgstr "Obliczanie dat Wielkanocy"
 
-#: index.php:173
+#: index.php:163
 #, fuzzy
 #| msgid ""
 #| "A simple API endpoint that returns data about the Date of Easter, both "
@@ -230,13 +230,13 @@ msgstr ""
 "gregoriańskiej (obserwowanej przez Kościół rzymskokatolicki) oraz algorytm "
 "Meeusa dla Wielkanocy juliańskiej (obserwowanej przez kościoły prawosławne)."
 
-#: index.php:178
+#: index.php:168
 #, fuzzy
 #| msgid "Date of Easter API endpoint"
 msgid "Dates of Easter API endpoint"
 msgstr "Endpoint API daty Wielkanocy"
 
-#: index.php:180
+#: index.php:170
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
@@ -318,7 +318,7 @@ msgstr "Zobacz FullCalendar (najpierw wiadomości)"
 msgid "Calendar subscription"
 msgstr "Subskrypcja kalendarza"
 
-#: usage.php:88 liturgyOfAnyDay.php:39
+#: usage.php:88 liturgyOfAnyDay.php:24
 msgid "Select calendar"
 msgstr "Wybierz kalendarz"
 
@@ -514,7 +514,7 @@ msgstr ""
 msgid "In development"
 msgstr "W trakcie rozwoju"
 
-#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:22 liturgyOfAnyDay.php:30
+#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:29 liturgyOfAnyDay.php:37
 msgid "Liturgy of any day"
 msgstr "Liturgia dowolnego dnia"
 
@@ -588,11 +588,11 @@ msgstr "Klucz wydarzenia"
 msgid "Name"
 msgstr "Nazwa"
 
-#: extending.php:163 liturgyOfAnyDay.php:45 src/FormControls.php:59
+#: extending.php:163 liturgyOfAnyDay.php:46 src/FormControls.php:59
 msgid "Day"
 msgstr "Dzień"
 
-#: extending.php:164 liturgyOfAnyDay.php:49 src/FormControls.php:65
+#: extending.php:164 liturgyOfAnyDay.php:50 src/FormControls.php:65
 msgid "Month"
 msgstr "Miesiąc"
 
@@ -1145,12 +1145,12 @@ msgstr "Dane kalendarza"
 msgid "Project website"
 msgstr "Strona internetowa projektu"
 
-#: liturgyOfAnyDay.php:63
+#: liturgyOfAnyDay.php:64
 msgid "Year"
 msgstr "Rok"
 
 #. translators: %s = current selected date
-#: liturgyOfAnyDay.php:71
+#: liturgyOfAnyDay.php:72
 #, php-format
 msgid "Liturgy of %s"
 msgstr "Liturgia %s"
