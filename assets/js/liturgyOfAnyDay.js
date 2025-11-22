@@ -5,47 +5,107 @@ let dtFormat      = new Intl.DateTimeFormat(currentLocale.language, { dateStyle:
 let highContrast  = [ 'green', 'red', 'purple' ];
 let CalData       = null;
 
-jQuery(() => {
-    //document.querySelector('#monthControl').value = now.getMonth() + 1;
-    //document.querySelector('#dayControl').setAttribute("max", daysInMonth);
-    //document.querySelector('#dayControl').value = now.getDate();
-
-    switch( $('#calendarSelect').find(':selected').attr('data-calendartype') ) {
-        case 'nationalcalendar':
-            CalendarState.calendarType = 'nation';
-            CalendarState.calendar = document.querySelector('#calendarSelect').value;
-            if (CalendarState.calendar === 'VA') {
-                CalendarState.calendarType = '';
-            }
-            break;
-        case 'diocesancalendar':
-            CalendarState.calendarType = 'diocese';
-            CalendarState.calendar = document.querySelector('#calendarSelect').value;
-            break;
-        default:
-            CalendarState.calendarType = '';
-            CalendarState.calendar = '';
-    }
-    getLiturgyOfADay(true);
-});
 
 class CalendarState {
-    static year         = liturgyDate.getFullYear();
-    static month        = liturgyDate.getMonth() + 1;
-    static day          = liturgyDate.getDate();
-    static calendar     = 'DIOCESIDIROMA';
-    static calendarType = 'diocese';
+    // We initialize the default state to today's date
+    static #previousYearTypeValue  = (now.getMonth() + 1 === 12 && now.getDate() === 31) ? 'LITURGICAL' : 'CIVIL';
+    static #year                   = now.getFullYear();
+    static #month                  = now.getMonth() + 1;
+    static #day                    = now.getDate();
+    static #calendar               = '';
+    static #calendarType           = '';
+    static #apiRequestFlag         = true; // we need an initial API request to load data
+
+    /**
+     * Determines the correct value for the year_type parameter based on the current day and month.
+     * If the current date is December 31st, returns 'LITURGICAL', otherwise returns 'CIVIL'.
+     * @returns {string} The year type for the current date.
+     * @example CalendarState.yearType // returns 'LITURGICAL' or 'CIVIL'
+     */
+    static get yearType () {
+        const isDec31 = (this.#month === 12 && this.#day === 31);
+        console.log(`Determining year type for date ${this.#year}-${this.#month}-${this.#day}: is December 31st? ${isDec31 ? 'yes' : 'no'}; year type: ${isDec31 ? 'LITURGICAL' : 'CIVIL'}`);
+        return isDec31 ? 'LITURGICAL' : 'CIVIL';
+    }
+
     /**
      * Returns the full endpoint URL for the API /calendar endpoint
      * @returns {string} The full endpoint URL for the API /calendar endpoint
      */
     static get requestPath () {
-        return `${CalendarUrl}/${CalendarState.calendarType !== '' ? `${CalendarState.calendarType}/${CalendarState.calendar}/` : ''}${CalendarState.year}?year_type=CIVIL`;
+        const yearPathParam = this.yearType === 'LITURGICAL' ? this.#year + 1 : this.#year;
+        const pathParams = this.#calendarType !== '' ? `${this.#calendarType}/${this.#calendar}/` : '';
+        return `${CalendarUrl}/${pathParams}${yearPathParam}?year_type=${this.yearType}`;
+    }
+
+    static get apiRequestFlag() {
+        return this.#apiRequestFlag;
+    }
+
+    static get year() {
+        return this.#year;
+    }
+
+    static get month() {
+        return this.#month;
+    }
+
+    static get day() {
+        return this.#day;
+    }
+
+    static #evaluateApiRequest() {
+        console.log(`Evaluating API request necessity. Previous year type: ${this.#previousYearTypeValue}, Current year type: ${this.yearType}`);
+        if (this.#previousYearTypeValue !== this.yearType) {
+            this.#previousYearTypeValue = (this.#previousYearTypeValue === 'CIVIL') ? 'LITURGICAL' : 'CIVIL';
+            this.#apiRequestFlag = true;
+        }
+    }
+
+    static resetApiRequestFlag() {
+        this.#apiRequestFlag = false;
+        console.log(`Resetting API request flag: ${this.#apiRequestFlag ? 'true' : 'false'}`);
+    }
+
+    static set year (newYearValue) {
+        this.#year = parseInt(newYearValue, 10);
+        this.#apiRequestFlag = true;
+    }
+
+
+    static set month (newMonthValue) {
+        console.log(`Setting month to ${newMonthValue}, current day is ${this.#day}`);
+        this.#month = parseInt(newMonthValue, 10);
+        this.#evaluateApiRequest();
+    }
+
+
+    static set day (newDayValue) {
+        console.log(`Setting day to ${newDayValue}, current month is ${this.#month}`);
+        this.#day = parseInt(newDayValue, 10);
+        this.#evaluateApiRequest();
+    }
+
+    static set calendar (newCalendarValue) {
+        this.#calendar = (newCalendarValue === 'VA') ? '' : newCalendarValue;
+        this.#apiRequestFlag = true;
+    }
+
+    static set calendarType (newCalendarTypeValue) {
+        this.#calendarType = (this.#calendar === 'VA' || this.#calendar === '') ? '' : newCalendarTypeValue;
+        this.#apiRequestFlag = true;
     }
 }
 
+
+const filterTagsDisplayGrade = [
+    /OrdSunday[0-9]{1,2}(_vigil){0,1}/,
+    /Advent[1-4](_vigil){0,1}/,
+    /Lent[1-5](_vigil){0,1}/,
+    /Easter[1-7](_vigil){0,1}/
+];
+
 $(document).on("change", "#monthControl,#yearControl,#calendarSelect,#dayControl", (event) => {
-    let apiRequest = false;
     if (["monthControl", "yearControl"].includes(event.currentTarget.id)) {
         const year =  document.querySelector('#yearControl').value;
         const month = document.querySelector('#monthControl').value;
@@ -53,9 +113,25 @@ $(document).on("change", "#monthControl,#yearControl,#calendarSelect,#dayControl
         document.querySelector('#dayControl').setAttribute("max", daysInMonth);
         if (document.querySelector('#dayControl').value > daysInMonth) {
             document.querySelector('#dayControl').value = daysInMonth;
-            CalendarState.day = document.querySelector('#dayControl').value;
+            CalendarState.day = daysInMonth;
         }
     }
+
+    switch( event.currentTarget.id ) {
+        case 'monthControl':
+            CalendarState.month = document.querySelector('#monthControl').value;
+            liturgyDate = new Date(Date.UTC(CalendarState.year, CalendarState.month - 1, CalendarState.day, 0, 0, 0, 0));
+            break;
+        case 'dayControl':
+            CalendarState.day = document.querySelector('#dayControl').value;
+            liturgyDate = new Date(Date.UTC(CalendarState.year, CalendarState.month - 1, CalendarState.day, 0, 0, 0, 0));
+            break;
+        case 'yearControl':
+            CalendarState.year = document.querySelector('#yearControl').value;
+            liturgyDate = new Date(Date.UTC(CalendarState.year, CalendarState.month - 1, CalendarState.day, 0, 0, 0, 0));
+            break;
+    }
+
     if (["yearControl", "calendarSelect"].includes(event.currentTarget.id)) {
         switch( $('#calendarSelect').find(':selected').attr('data-calendartype') ) {
             case 'nationalcalendar':
@@ -70,53 +146,51 @@ $(document).on("change", "#monthControl,#yearControl,#calendarSelect,#dayControl
                 CalendarState.calendarType = '';
                 CalendarState.calendar = '';
         }
-        apiRequest = true;
     }
-    if (["monthControl", "dayControl", "yearControl"].includes(event.currentTarget.id)) {
-        CalendarState.year  = document.querySelector('#yearControl').value;
-        CalendarState.month = document.querySelector('#monthControl').value;
-        CalendarState.day   = document.querySelector('#dayControl').value;
-        liturgyDate = new Date(Date.UTC(CalendarState.year, CalendarState.month - 1, CalendarState.day, 0, 0, 0, 0));
-    }
-    getLiturgyOfADay(apiRequest);
+
+    getLiturgyOfADay();
 });
 
 
 /**
- * If apiRequest is true, this function makes an AJAX call to the API endpoint
+ * If apiRequest is true, this function fetches data from the API endpoint
  * defined in CalendarState.requestPath and updates the #liturgyResults element
  * with the result. If apiRequest is false, this function just updates the
  * #liturgyResults element with the result of filtering the CalData object for
  * the data with a date matching the timestamp of liturgyDate.
  *
- * @param {boolean} [apiRequest=false] - whether to make an AJAX call to the API endpoint
  */
-let getLiturgyOfADay = (apiRequest = false) => {
+let getLiturgyOfADay = () => {
     const rfc3339datetime = liturgyDate.toISOString().split('.')[0] + '+00:00';
-    console.log(`Getting liturgy of day for date ${rfc3339datetime} (API request: ${apiRequest ? 'yes' : 'no'})`);
+    console.log(`Getting liturgy of day for date ${rfc3339datetime} (API request: ${CalendarState.apiRequestFlag ? 'yes' : 'no'})`);
 
-    if( apiRequest ) {
-        console.log(`Fetching data from ${CalendarState.requestPath}, CalendarUrl: ${CalendarUrl}`);
-        let headers = {
-            'Origin': location.origin
-        };
-        if (CalendarState.calendar === 'VA') {
-            headers['Accept-Language'] = currentLocale.language;
+    if( CalendarState.apiRequestFlag ) {
+        console.log(`Fetching data from ${CalendarState.requestPath}`);
+        const headers = new Headers();
+        headers.append('Origin', location.origin);
+        if (CalendarState.calendar === 'VA' || CalendarState.calendar === '') {
+            headers.append('Accept-Language', currentLocale.language);
         }
-        fetch(CalendarState.requestPath, {headers})
+        const url = new URL(CalendarState.requestPath);
+        const request = new Request(url, {
+            method: "GET",
+            headers
+        });
+        fetch(request)
             .then(response => response.json())
             .then(data => {
                 if( data.hasOwnProperty('litcal') ) {
                     CalData = data.litcal;
                     console.log(`Fetched ${CalData.length} liturgical events for year ${CalendarState.year}`);
                     console.log(CalData);
-                    let liturgyOfADay = CalData.filter((celebration) => celebration.date === rfc3339datetime);
+                    const liturgyOfADay = CalData.filter((celebration) => celebration.date === rfc3339datetime);
                     console.log(`Found ${liturgyOfADay.length} liturgical events for date ${rfc3339datetime}`);
                     console.log(liturgyOfADay);
                     updateResults(liturgyOfADay);
                 } else {
                     $('#liturgyResults').append(`<div>ERROR: no 'litcal' property: ${JSON.stringify(data)}</div>`);
                 }
+                CalendarState.resetApiRequestFlag();
             })
             .catch(error => {
                 console.error('Error fetching liturgy of a day:', error);
@@ -128,12 +202,6 @@ let getLiturgyOfADay = (apiRequest = false) => {
     }
 }
 
-const filterTagsDisplayGrade = [
-    /OrdSunday[0-9]{1,2}(_vigil){0,1}/,
-    /Advent[1-4](_vigil){0,1}/,
-    /Lent[1-5](_vigil){0,1}/,
-    /Easter[1-7](_vigil){0,1}/
-];
 
 
 /**
@@ -171,4 +239,12 @@ let updateResults = (liturgyOfADay) => {
         finalHTML += `</div>`;
         $('#liturgyResults').append(finalHTML);
     });
+}
+
+if (document.readyState === "loading") {
+  // Loading hasn't finished yet
+  document.addEventListener("DOMContentLoaded", getLiturgyOfADay);
+} else {
+  // `DOMContentLoaded` has already fired
+  getLiturgyOfADay();
 }
