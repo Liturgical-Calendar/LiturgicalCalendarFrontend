@@ -199,26 +199,25 @@ document.addEventListener( 'change', ( event ) => {
             CalendarState.year = document.querySelector( '#yearControl' ).value;
             liturgyDate = new Date( Date.UTC( CalendarState.year, CalendarState.month - 1, CalendarState.day, 0, 0, 0, 0 ) );
             break;
-    }
+        case 'calendarSelect':
+            const calendarSelect = document.querySelector( '#calendarSelect' );
+            const selectedOption = calendarSelect.options[ calendarSelect.selectedIndex ];
+            const calendarType   = selectedOption.getAttribute( 'data-calendartype' );
 
-    if ( [ 'yearControl', 'calendarSelect' ].includes( target.id ) ) {
-        const calendarSelect = document.querySelector( '#calendarSelect' );
-        const selectedOption = calendarSelect.options[ calendarSelect.selectedIndex ];
-        const calendarType = selectedOption.getAttribute( 'data-calendartype' );
-
-        switch ( calendarType ) {
-            case 'nationalcalendar':
-                CalendarState.calendarType = 'nation';
-                CalendarState.calendar = calendarSelect.value;
-                break;
-            case 'diocesancalendar':
-                CalendarState.calendarType = 'diocese';
-                CalendarState.calendar = calendarSelect.value;
-                break;
-            default:
-                CalendarState.calendarType = '';
-                CalendarState.calendar = '';
-        }
+            switch ( calendarType ) {
+                case 'nationalcalendar':
+                    CalendarState.calendar = calendarSelect.value;
+                    CalendarState.calendarType = 'nation';
+                    break;
+                case 'diocesancalendar':
+                    CalendarState.calendar = calendarSelect.value;
+                    CalendarState.calendarType = 'diocese';
+                    break;
+                default:
+                    CalendarState.calendar = '';
+                    CalendarState.calendarType = '';
+            }
+            break;
     }
 
     getLiturgyOfADay();
@@ -278,6 +277,203 @@ const getLiturgyOfADay = () => {
 
 
 /**
+ * Detects the type of readings object based on its properties
+ * @param {Object|string} readings - The readings object or string
+ * @returns {string} The type of readings
+ */
+const detectReadingType = ( readings ) => {
+    if ( typeof readings === 'string' ) {
+        return 'commons';
+    }
+    if ( readings.hasOwnProperty( 'night' ) && readings.hasOwnProperty( 'dawn' ) && readings.hasOwnProperty( 'day' ) ) {
+        return 'christmas';
+    }
+    if ( readings.hasOwnProperty( 'day' ) && readings.hasOwnProperty( 'evening' ) ) {
+        return 'withEvening';
+    }
+    if ( readings.hasOwnProperty( 'schema_one' ) && readings.hasOwnProperty( 'schema_two' ) && readings.hasOwnProperty( 'schema_three' ) ) {
+        return 'multipleSchemas';
+    }
+    if ( readings.hasOwnProperty( 'easter_season' ) && readings.hasOwnProperty( 'outside_easter_season' ) ) {
+        return 'seasonal';
+    }
+    if ( readings.hasOwnProperty( 'first_reading' ) && readings.hasOwnProperty( 'seventh_reading' ) ) {
+        return 'easterVigil';
+    }
+    if ( readings.hasOwnProperty( 'palm_gospel' ) ) {
+        return 'palmSunday';
+    }
+    if ( readings.hasOwnProperty( 'second_reading' ) ) {
+        return 'festive';
+    }
+    if ( readings.hasOwnProperty( 'first_reading' ) ) {
+        return 'ferial';
+    }
+    return 'unknown';
+}
+
+/**
+ * Formats a simple reading set (ferial, festive, or palm sunday)
+ * @param {Object} readings - The readings object
+ * @param {string} type - The type of readings
+ * @param {boolean} skipWrapper - If true, don't add the outer wrapper div
+ * @returns {string} HTML string
+ */
+const formatSimpleReadings = ( readings, type, skipWrapper = false ) => {
+    let html = skipWrapper ? '' : '<div class="readings mt-2">';
+
+    if ( type === 'palmSunday' ) {
+        html += `<div class="reading-item"><strong>Palm Gospel:</strong> ${readings.palm_gospel}</div>`;
+    }
+
+    html += `<div class="reading-item"><strong>First Reading:</strong> ${readings.first_reading}</div>`;
+    html += `<div class="reading-item"><strong>Responsorial Psalm:</strong> ${readings.responsorial_psalm}</div>`;
+
+    if ( type === 'festive' || type === 'palmSunday' ) {
+        html += `<div class="reading-item"><strong>Second Reading:</strong> ${readings.second_reading}</div>`;
+    }
+
+    html += `<div class="reading-item"><strong>Gospel Acclamation:</strong> ${readings.gospel_acclamation}</div>`;
+    html += `<div class="reading-item"><strong>Gospel:</strong> ${readings.gospel}</div>`;
+
+    if ( !skipWrapper ) {
+        html += '</div>';
+    }
+
+    return html;
+}
+
+/**
+ * Formats Easter Vigil readings
+ * @param {Object} readings - The readings object
+ * @returns {string} HTML string
+ */
+const formatEasterVigilReadings = ( readings ) => {
+    let html = '<div class="readings mt-2">';
+    html += '<div class="reading-section"><strong>Liturgy of the Word:</strong></div>';
+
+    for ( let i = 1; i <= 7; i++ ) {
+        const readingKey = i === 1 ? 'first_reading' : `${['', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh'][i]}_reading`;
+        const psalmKey = i === 1 ? 'responsorial_psalm' : `responsorial_psalm_${i}`;
+        html += `<div class="reading-item"><strong>Reading ${i}:</strong> ${readings[readingKey]}</div>`;
+        html += `<div class="reading-item"><strong>Responsorial Psalm ${i}:</strong> ${readings[psalmKey]}</div>`;
+    }
+
+    html += `<div class="reading-item mt-2"><strong>Epistle:</strong> ${readings.epistle}</div>`;
+    html += `<div class="reading-item"><strong>Responsorial Psalm (Epistle):</strong> ${readings.responsorial_psalm_epistle}</div>`;
+    html += `<div class="reading-item"><strong>Gospel Acclamation:</strong> ${readings.gospel_acclamation}</div>`;
+    html += `<div class="reading-item"><strong>Gospel:</strong> ${readings.gospel}</div>`;
+    html += '</div>';
+
+    return html;
+}
+
+/**
+ * Formats Christmas readings (night, dawn, day)
+ * @param {Object} readings - The readings object
+ * @returns {string} HTML string
+ */
+const formatChristmasReadings = ( readings ) => {
+    let html = '<div class="readings mt-2">';
+
+    [ 'night', 'dawn', 'day' ].forEach( ( mass ) => {
+        const massTitle = mass.charAt( 0 ).toUpperCase() + mass.slice( 1 );
+        html += `<div class="reading-section mt-2"><strong>Mass at ${massTitle}:</strong></div>`;
+        html += formatSimpleReadings( readings[mass], 'festive', true );
+    } );
+
+    html += '</div>';
+    return html;
+}
+
+/**
+ * Formats readings with evening option
+ * @param {Object} readings - The readings object
+ * @returns {string} HTML string
+ */
+const formatWithEveningReadings = ( readings ) => {
+    let html = '<div class="readings mt-2">';
+
+    html += '<div class="reading-section"><strong>Day Mass:</strong></div>';
+    html += formatSimpleReadings( readings.day, 'festive', true );
+
+    html += '<div class="reading-section mt-2"><strong>Evening Mass:</strong></div>';
+    html += formatSimpleReadings( readings.evening, 'festive', true );
+
+    html += '</div>';
+    return html;
+}
+
+/**
+ * Formats multiple schema readings (All Souls Day)
+ * @param {Object} readings - The readings object
+ * @returns {string} HTML string
+ */
+const formatMultipleSchemasReadings = ( readings ) => {
+    let html = '<div class="readings mt-2">';
+
+    [ 'schema_one', 'schema_two', 'schema_three' ].forEach( ( schema, index ) => {
+        html += `<div class="reading-section mt-2"><strong>Schema ${index + 1}:</strong></div>`;
+        html += formatSimpleReadings( readings[schema], 'festive', true );
+    } );
+
+    html += '</div>';
+    return html;
+}
+
+/**
+ * Formats seasonal readings
+ * @param {Object} readings - The readings object
+ * @returns {string} HTML string
+ */
+const formatSeasonalReadings = ( readings ) => {
+    let html = '<div class="readings mt-2">';
+
+    html += '<div class="reading-section"><strong>During Easter Season:</strong></div>';
+    html += formatSimpleReadings( readings.easter_season, 'ferial', true );
+
+    html += '<div class="reading-section mt-2"><strong>Outside Easter Season:</strong></div>';
+    html += formatSimpleReadings( readings.outside_easter_season, 'ferial', true );
+
+    html += '</div>';
+    return html;
+}
+
+/**
+ * Main function to format readings based on their type
+ * @param {Object|string} readings - The readings object or string
+ * @returns {string} HTML string
+ */
+const formatReadings = ( readings ) => {
+    if ( !readings ) {
+        return '';
+    }
+
+    const type = detectReadingType( readings );
+
+    switch ( type ) {
+        case 'commons':
+            return `<div class="readings mt-2"><div class="reading-item"><em>Readings from: ${readings}</em></div></div>`;
+        case 'ferial':
+        case 'festive':
+        case 'palmSunday':
+            return formatSimpleReadings( readings, type );
+        case 'easterVigil':
+            return formatEasterVigilReadings( readings );
+        case 'christmas':
+            return formatChristmasReadings( readings );
+        case 'withEvening':
+            return formatWithEveningReadings( readings );
+        case 'multipleSchemas':
+            return formatMultipleSchemasReadings( readings );
+        case 'seasonal':
+            return formatSeasonalReadings( readings );
+        default:
+            return '';
+    }
+}
+
+/**
  * Updates the liturgy results section with the given liturgy of a day array.
  * @param {Object[]} liturgyOfADay - an array of liturgical events, with each event
  *      containing properties:
@@ -291,6 +487,7 @@ const getLiturgyOfADay = () => {
  *          * grade_lcl: string - the localized version of the grade of the event
  *          * liturgical_year: string - the liturgical year of the event
  *          * color: string[] - the color of the event
+ *          * readings: Object|string - the lectionary readings for the event
  */
 const updateResults = ( liturgyOfADay ) => {
     document.querySelector( '#dateOfLiturgy' ).textContent = dtFormat.format( liturgyDate );
@@ -309,6 +506,7 @@ const updateResults = ( liturgyOfADay ) => {
         finalHTML += ( celebrationGrade !== '' ? `<div${litGradeStyle}>${celebrationGrade}</div>` : '' );
         finalHTML += `<div>${celebrationCommon}</div>`;
         finalHTML += ( celebration.hasOwnProperty( 'liturgical_year' ) ? `<div>${celebration.liturgical_year}</div>` : '' );
+        finalHTML += ( celebration.hasOwnProperty( 'readings' ) ? formatReadings( celebration.readings ) : '' );
         finalHTML += `</div>`;
         document.querySelector( '#liturgyResults' ).insertAdjacentHTML( 'beforeend', finalHTML );
     } );
