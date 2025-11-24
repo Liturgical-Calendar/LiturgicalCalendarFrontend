@@ -199,7 +199,7 @@ class FormControls {
      * @property {Boolean} fromYearField - whether the form field for the year that the liturgical event starts is editable (true) or readonly (false)
      * @property {Boolean} untilYearField - whether the form field for the year that the liturgical event ends is editable (true) or readonly (false)
      * @property {Boolean} eventKeyField - whether the form field for the event_key of the liturgical event is shown and editable or hidden (seems to make more sense to hide than set readonly)
-     * @property {Boolean} decreeURLFieldShow - whether the form field for the url of the decree on which the liturgical event is based is shown
+     * @property {Boolean} decreeUrlFieldShow - whether the form field for the url of the decree on which the liturgical event is based is shown
      * @property {Boolean} decreeLangMapFieldShow - whether the form field for the language map of the decree on which the liturgical event is based is shown
      * @property {Boolean} reasonFieldShow - whether the form field for the reason for which the liturgical event is being moved is shown
      * @property {Boolean} readingsFieldShow - whether the form field for the readings of the liturgical event is shown
@@ -219,7 +219,7 @@ class FormControls {
         fromYearField: true,
         untilYearField: true, //defaults to false in admin.js
         eventKeyField: false,
-        decreeURLFieldShow: false,
+        decreeUrlFieldShow: false,
         decreeLangMapFieldShow: false,
         reasonFieldShow: false,
         readingsFieldShow: false,
@@ -814,25 +814,25 @@ class FormControls {
         /**
          * Decree URL form group
          */
-        if(FormControls.settings.decreeURLFieldShow) {
-            const decreeURLFormGroup = document.createElement('div');
-            decreeURLFormGroup.className = 'form-group col-sm-6';
-            const decreeURLLabel = document.createElement('label');
-            decreeURLLabel.for = `onTheFly${FormControls.uniqid}DecreeURL`;
-            decreeURLLabel.innerText = Messages[ "Decree URL" ];
+        if(FormControls.settings.decreeUrlFieldShow) {
+            const decreeUrlFormGroup = document.createElement('div');
+            decreeUrlFormGroup.className = 'form-group col-sm-6';
+            const decreeUrlLabel = document.createElement('label');
+            decreeUrlLabel.for = `onTheFly${FormControls.uniqid}DecreeURL`;
+            decreeUrlLabel.innerText = Messages[ "Decree URL" ];
             const i = document.createElement('i');
             i.className = 'fas fa-info-circle ms-2';
             i.title = 'Use %s in place of the language code if using a language mapping';
-            decreeURLLabel.appendChild(i);
-            decreeURLFormGroup.appendChild(decreeURLLabel);
+            decreeUrlLabel.appendChild(i);
+            decreeUrlFormGroup.appendChild(decreeUrlLabel);
 
-            const decreeURLInput = document.createElement('input');
-            decreeURLInput.type = 'text';
-            decreeURLInput.className = 'form-control litEvent litEventDecreeURL';
-            decreeURLInput.id = `onTheFly${FormControls.uniqid}DecreeURL`;
-            decreeURLInput.value = liturgical_event !== null && typeof liturgical_event.url !== 'undefined' ? liturgical_event.url : '';
-            decreeURLFormGroup.appendChild(decreeURLInput);
-            controlsRow.appendChild(decreeURLFormGroup);
+            const decreeUrlInput = document.createElement('input');
+            decreeUrlInput.type = 'text';
+            decreeUrlInput.className = 'form-control litEvent litEventDecreeURL';
+            decreeUrlInput.id = `onTheFly${FormControls.uniqid}DecreeURL`;
+            decreeUrlInput.value = liturgical_event !== null && typeof liturgical_event.url !== 'undefined' ? liturgical_event.url : '';
+            decreeUrlFormGroup.appendChild(decreeUrlInput);
+            controlsRow.appendChild(decreeUrlFormGroup);
         }
 
         /**
@@ -1035,7 +1035,7 @@ class FormControls {
             </div>`;
         }
 
-        if(FormControls.settings.decreeURLFieldShow) {
+        if(FormControls.settings.decreeUrlFieldShow) {
             formRow += `<div class="form-group col-sm-6">
             <label for="onTheFly${FormControls.uniqid}DecreeURL">${Messages[ "Decree URL" ]}<i class="ms-2 fas fa-info-circle" title="Use %s in place of the language code if using a language mapping"></i></label>
             <input type="text" class="form-control litEvent litEventDecreeURL" value="${liturgical_event !== null && typeof liturgical_event.url !== 'undefined' ? liturgical_event.url : ''}" />

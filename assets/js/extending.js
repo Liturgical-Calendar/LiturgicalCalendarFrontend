@@ -1131,7 +1131,7 @@ const updateRegionalCalendarForm = (data) => {
     console.log(data);
     switch(API.category) {
         case 'widerregion': {
-            FormControls.settings.decreeURLFieldShow = true;
+            FormControls.settings.decreeUrlFieldShow = true;
             FormControls.settings.decreeLangMapFieldShow = true;
             $('#widerRegionLocales').multiselect('deselectAll', false).multiselect('select', data.metadata.locales);
             const currentLocalizationChoices = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => {
@@ -1146,7 +1146,7 @@ const updateRegionalCalendarForm = (data) => {
             break;
         }
         case 'nation': {
-            FormControls.settings.decreeURLFieldShow = true;
+            FormControls.settings.decreeUrlFieldShow = true;
             FormControls.settings.decreeLangMapFieldShow = false;
             const { settings, metadata } = data;
 
@@ -1741,7 +1741,7 @@ const actionPromptButtonClicked = (ev) => {
                                     .find(liturgical_event => liturgical_event.event_key === eventKey);
     }
 
-    FormControls.settings.decreeURLFieldShow = true;
+    FormControls.settings.decreeUrlFieldShow = true;
     FormControls.settings.decreeLangMapFieldShow = document.querySelector('.regionalNationalCalendarName').id === 'widerRegionCalendarName';
     setFormSettings( actionButtonId );
     console.log(`FormControls.action = ${FormControls.action}, actionButtonId = ${actionButtonId}`);
@@ -1888,64 +1888,70 @@ const deleteCalendarConfirmClicked = () => {
         }));
     };
 
-    makeDeleteRequest().then(async response => {
-        // Handle auth errors
-        if (response.status === 401 || response.status === 403) {
-            return await handleAuthError(response, makeDeleteRequest);
-        }
-        return response;
-    }).then(response => {
-        if (response.ok) {
-            switch ( API.category ) {
-                case 'widerregion':
-                    LitCalMetadata.wider_regions = LitCalMetadata.wider_regions.filter(el => el.name !== API.key);
-                    LitCalMetadata.wider_regions_keys = LitCalMetadata.wider_regions_keys.filter(el => el !== API.key);
-                    break;
-                case 'nation': {
-                    LitCalMetadata.national_calendars = LitCalMetadata.national_calendars.filter(el => el.calendar_id !== API.key);
-                    LitCalMetadata.national_calendars_keys = LitCalMetadata.national_calendars_keys.filter(el => el !== API.key);
-                    document.querySelector('#nationalCalendarSettingsForm').reset();
-                    document.querySelector('#publishedRomanMissalList').innerHTML = '';
-                    const localeOptions = Object.entries(AvailableLocalesWithRegion).map(([localeIso, localeDisplayName]) => {
-                        return `<option value="${localeIso}">${localeDisplayName}</option>`;
-                    });
-                    document.querySelector('#nationalCalendarLocales').innerHTML = localeOptions.join('\n');
-                    document.querySelector('.currentLocalizationChoices').innerHTML = localeOptions.join('\n');
-                    $('#nationalCalendarLocales').multiselect('rebuild');
-
-                    document.querySelectorAll('.regionalNationalSettingsForm .form-select:not([multiple])').forEach(formSelect => {
-                        formSelect.value = '';
-                        formSelect.dispatchEvent(new CustomEvent('change', {
-                            bubbles: true,
-                            cancelable: true
-                          }));
-                    });
-                    break;
-                }
+    // Wrap the entire delete flow so retry after login goes through all handlers
+    const runDeleteFlow = () => {
+        makeDeleteRequest().then(async response => {
+            // Handle auth errors
+            if (response.status === 401 || response.status === 403) {
+                return await handleAuthError(response, runDeleteFlow);
             }
+            return response;
+        }).then(response => {
+            if (response.ok) {
+                switch ( API.category ) {
+                    case 'widerregion':
+                        LitCalMetadata.wider_regions = LitCalMetadata.wider_regions.filter(el => el.name !== API.key);
+                        LitCalMetadata.wider_regions_keys = LitCalMetadata.wider_regions_keys.filter(el => el !== API.key);
+                        break;
+                    case 'nation': {
+                        LitCalMetadata.national_calendars = LitCalMetadata.national_calendars.filter(el => el.calendar_id !== API.key);
+                        LitCalMetadata.national_calendars_keys = LitCalMetadata.national_calendars_keys.filter(el => el !== API.key);
+                        document.querySelector('#nationalCalendarSettingsForm').reset();
+                        document.querySelector('#publishedRomanMissalList').innerHTML = '';
+                        const localeOptions = Object.entries(AvailableLocalesWithRegion).map(([localeIso, localeDisplayName]) => {
+                            return `<option value="${localeIso}">${localeDisplayName}</option>`;
+                        });
+                        document.querySelector('#nationalCalendarLocales').innerHTML = localeOptions.join('\n');
+                        document.querySelector('.currentLocalizationChoices').innerHTML = localeOptions.join('\n');
+                        $('#nationalCalendarLocales').multiselect('rebuild');
 
-            document.querySelector('#removeExistingCalendarDataBtn').disabled = true;
-            document.querySelector('#removeCalendarDataPrompt').remove();
-            document.querySelector('.regionalNationalCalendarName').value = '';
-            document.querySelector('.regionalNationalDataForm').innerHTML = '';
+                        document.querySelectorAll('.regionalNationalSettingsForm .form-select:not([multiple])').forEach(formSelect => {
+                            formSelect.value = '';
+                            formSelect.dispatchEvent(new CustomEvent('change', {
+                                bubbles: true,
+                                cancelable: true
+                              }));
+                        });
+                        break;
+                    }
+                }
 
-            toastr["success"](`Calendar '${API.category}/${API.key}' was deleted successfully`, "Success");
-            response.json().then(json => {
-                console.log(json);
-            });
-        } else if (response.status === 400) {
-            response.json().then(json => {
-                console.error(`${response.status} ${json.response}: ${json.description}`);
-                toastr["error"](`${response.status} ${json.response}: ${json.description}`, "Error");
-            });
-        } else {
-            return Promise.reject(response);
-        }
-    }).catch(error => {
-        console.error(error);
-    }).finally(() => {
-        document.querySelector('#overlay').classList.add('hidden');
-    });
+                document.querySelector('#removeExistingCalendarDataBtn').disabled = true;
+                document.querySelector('#removeCalendarDataPrompt').remove();
+                document.querySelector('.regionalNationalCalendarName').value = '';
+                document.querySelector('.regionalNationalDataForm').innerHTML = '';
+
+                toastr["success"](`Calendar '${API.category}/${API.key}' was deleted successfully`, "Success");
+                response.json().then(json => {
+                    console.log(json);
+                });
+            } else if (response.status === 400) {
+                response.json().then(json => {
+                    console.error(`${response.status} ${json.response}: ${json.description}`);
+                    toastr["error"](`${response.status} ${json.response}: ${json.description}`, "Error");
+                });
+            } else {
+                return Promise.reject(response);
+            }
+        }).catch(error => {
+            console.error(error);
+        }).finally(() => {
+            document.querySelector('#overlay').classList.add('hidden');
+        });
+    };
+
+    // Start the delete flow
+    runDeleteFlow();
 }
 
 
@@ -2213,9 +2219,9 @@ const serializeRegionalNationalDataClicked = (ev) => {
 
         const litEventDecreeUrlEl = row.querySelector('.litEventDecreeURL');
         if ( litEventDecreeUrlEl ) {
-            const decreeURL = litEventDecreeUrlEl.value;
-            if ( decreeURL !== '' ) {
-                rowData.metadata.url = decreeURL;
+            const decreeUrl = litEventDecreeUrlEl.value;
+            if ( decreeUrl !== '' ) {
+                rowData.metadata.url = decreeUrl;
             }
         }
 
@@ -2260,32 +2266,38 @@ const serializeRegionalNationalDataClicked = (ev) => {
     console.log('final payload:', finalPayload);
     console.log('json stringified payload:', JSON.stringify(finalPayload));
 
-    makeRequest()
-    .then(async response => {
-        // Handle auth errors
-        if (response.status === 401 || response.status === 403) {
-            return await handleAuthError(response, makeRequest);
-        }
-        if (!response.ok) {
-            return response.json().then(err => { throw err; });
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Data returned from save action:', data);
-        toastr["success"]("National Calendar was created or updated successfully", "Success");
-    })
-    .catch(error => {
-        let errorBody = '';
-        if (error && error.error) {
-            errorBody = error.error;
-            toastr["error"](error.status + ': ' + errorBody, "Error");
-        } else {
-            toastr["error"]('An error occurred', "Error");
-        }
-    }).finally(() => {
-        document.querySelector('#overlay').classList.add('hidden');
-    });
+    // Wrap the entire save flow so retry after login goes through all handlers
+    const runSaveFlow = () => {
+        makeRequest()
+        .then(async response => {
+            // Handle auth errors
+            if (response.status === 401 || response.status === 403) {
+                return await handleAuthError(response, runSaveFlow);
+            }
+            if (!response.ok) {
+                return response.json().then(err => { throw err; });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Data returned from save action:', data);
+            toastr["success"]("National Calendar was created or updated successfully", "Success");
+        })
+        .catch(error => {
+            let errorBody = '';
+            if (error && error.error) {
+                errorBody = error.error;
+                toastr["error"](error.status + ': ' + errorBody, "Error");
+            } else {
+                toastr["error"]('An error occurred', "Error");
+            }
+        }).finally(() => {
+            document.querySelector('#overlay').classList.add('hidden');
+        });
+    };
+
+    // Start the save flow
+    runSaveFlow();
 }
 
 /**
