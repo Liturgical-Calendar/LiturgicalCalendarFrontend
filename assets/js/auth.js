@@ -73,6 +73,16 @@ const Auth = {
     },
 
     /**
+     * Check if tokens are stored persistently (in localStorage)
+     *
+     * @returns {boolean} True if tokens are in localStorage, false otherwise
+     */
+    isPersistentStorage() {
+        return localStorage.getItem(this.TOKEN_KEY) !== null ||
+               localStorage.getItem(this.REFRESH_KEY) !== null;
+    },
+
+    /**
      * Store refresh token
      *
      * @param {string} token - Refresh token
@@ -135,6 +145,9 @@ const Auth = {
             throw new Error('No refresh token available');
         }
 
+        // Detect which storage tier is currently being used
+        const isPersistent = this.isPersistentStorage();
+
         try {
             const authUrl = APIConfig.port ? `${APIConfig.protocol}://${APIConfig.host}:${APIConfig.port}` : `${APIConfig.protocol}://${APIConfig.host}`;
             const response = await fetch(`${authUrl}/auth/refresh`, {
@@ -151,7 +164,11 @@ const Auth = {
             }
 
             const data = await response.json();
-            this.setToken(data.token);
+            // Write refreshed tokens back to the same storage tier
+            this.setToken(data.token, isPersistent);
+            if (data.refresh_token) {
+                this.setRefreshToken(data.refresh_token, isPersistent);
+            }
             return data.token;
         } catch (error) {
             this.clearTokens();
