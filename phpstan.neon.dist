@@ -16,7 +16,7 @@ parameters:
         - translations.php
         - usage.php
     excludePaths:
-        - examples
+        - examples (?)
         - .intelephense-helper.php
     treatPhpDocTypesAsCertain: false
     ignoreErrors:
