@@ -2227,7 +2227,7 @@ const serializeRegionalNationalDataClicked = (ev) => {
 
         const litEventDecreeUrlEl = row.querySelector('.litEventDecreeURL');
         if ( litEventDecreeUrlEl ) {
-            const decreeUrl = litEventDecreeUrlEl.value;
+            const decreeUrl = litEventDecreeUrlEl.value.trim();
             if ( decreeUrl !== '' ) {
                 rowData.metadata.url = decreeUrl;
             }
@@ -2235,13 +2235,18 @@ const serializeRegionalNationalDataClicked = (ev) => {
 
         const litEventDecreeLangsEl = row.querySelector('.litEventDecreeLangs');
         if ( litEventDecreeLangsEl ) {
-            const decreeLangs = litEventDecreeLangsEl.value;
+            const decreeLangs = litEventDecreeLangsEl.value.trim();
             if ( decreeLangs !== '' ) {
-                rowData.metadata.url_lang_map = decreeLangs.split(',').reduce((prevVal, curVal) => {
-                    let assoc = curVal.split('=');
-                    prevVal[assoc[0]] = assoc[1];
-                    return prevVal;
-                }, {}) ;
+                rowData.metadata.url_lang_map = decreeLangs.split(',')
+                    .map(pair => pair.trim())
+                    .filter(pair => pair !== '')
+                    .reduce((prevVal, curVal) => {
+                        const assoc = curVal.split('=').map(part => part.trim());
+                        if (assoc.length === 2 && assoc[0] !== '' && assoc[1] !== '') {
+                            prevVal[assoc[0]] = assoc[1];
+                        }
+                        return prevVal;
+                    }, {});
             }
         }
         payload.litcal.push(rowData);
