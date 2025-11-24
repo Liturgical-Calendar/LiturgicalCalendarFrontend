@@ -40,7 +40,7 @@ class LitColor
                 /**translators: context = liturgical color */
                 return $locale === 'LA' ? 'rosea'       : _('rose');
             default:
-                return '';
+                throw new \InvalidArgumentException("Invalid liturgical color: {$value}");
         }
     }
 }
