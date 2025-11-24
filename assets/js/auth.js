@@ -164,7 +164,7 @@ const Auth = {
             }
 
             return JSON.parse(atob(payload));
-        } catch (e) {
+        } catch (_e) {
             return null;
         }
     },
