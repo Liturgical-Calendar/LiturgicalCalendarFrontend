@@ -2714,12 +2714,12 @@ const populateRowWithEventData = (row, liturgical_event, metadata) => {
     // Handle date fields (strtotime vs day/month)
     if (liturgical_event.hasOwnProperty('strtotime')) {
         if (row.querySelectorAll('.litEventStrtotime').length === 0) {
-            switcheroo(row, liturgical_event);
+            convertToRelativeDateField(row, liturgical_event);
         }
         row.querySelector('.litEventStrtotime').value = liturgical_event.strtotime;
     } else {
         if (row.querySelectorAll('.litEventStrtotime').length > 0) {
-            unswitcheroo(row, liturgical_event);
+            convertToFixedDateFields(row, liturgical_event);
         }
         row.querySelector('.litEventDay').value = liturgical_event.day;
         row.querySelector('.litEventMonth').value = liturgical_event.month;
@@ -2903,11 +2903,11 @@ const onTheFlyEventRowClicked = (ev) => {
 }
 
 /**
- * Replaces the day input and month select with a text input for strtotime.
- * @param {HTMLElement} row - The containing row of the form.
- * @param {Object} LiturgicalEvent - The metadata object from the JSON payload.
+ * Converts fixed date fields (day number + month select) to a relative date field (strtotime input)
+ * @param {HTMLElement} row - The form row containing the date fields
+ * @param {Object} LiturgicalEvent - The liturgical event data containing strtotime value
  */
-const switcheroo = ( row, LiturgicalEvent ) => {
+const convertToRelativeDateField = (row, LiturgicalEvent) => {
     row.querySelector('.litEventDay').closest('.form-group').remove();
     const litEventMonth = row.querySelector('.litEventMonth');
     console.log(litEventMonth.id);
@@ -2924,14 +2924,11 @@ const switcheroo = ( row, LiturgicalEvent ) => {
 }
 
 /**
- * Reverts the form row from a strtotime text input back to separate day and month fields.
- * Adjusts the form group classes to accommodate the change.
- * Inserts a day input and month select dropdown based on the provided liturgical_event data.
- *
- * @param {HTMLElement} row - The containing row of the form.
- * @param {Object} LiturgicalEvent - The liturgical_event data object containing day and month information.
+ * Converts relative date field (strtotime input) to fixed date fields (day number + month select)
+ * @param {HTMLElement} row - The form row containing the strtotime field
+ * @param {Object} LiturgicalEvent - The liturgical event data containing day and month values
  */
-const unswitcheroo = ( row, LiturgicalEvent ) => {
+const convertToFixedDateFields = (row, LiturgicalEvent) => {
     const litEventStrtotime = row.querySelector('.litEventStrtotime');
     const strToTimeFormGroup = litEventStrtotime.closest('.form-group');
     strToTimeFormGroup.classList.remove('col-sm-3');
