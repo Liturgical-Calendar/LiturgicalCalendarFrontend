@@ -3166,6 +3166,11 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
  * @returns {void}
  */
 const deleteDiocesanCalendarConfirmClicked = () => {
+    // Check authentication before allowing delete
+    if (!requireAuth(deleteDiocesanCalendarConfirmClicked)) {
+        return;
+    }
+
     document.querySelector('#overlay').classList.remove('hidden');
     const modalElement = document.getElementById('removeDiocesanCalendarPrompt');
     const modal = bootstrap.Modal.getInstance(modalElement);
@@ -3177,16 +3182,21 @@ const deleteDiocesanCalendarConfirmClicked = () => {
     const diocese = document.querySelector('#diocesanCalendarDioceseName').value;
     API.key = document.querySelector('#DiocesesList option[value="' + diocese + '"]').dataset.value;
 
-    const headers = new Headers({
+    const baseHeaders = new Headers({
         'Accept': 'application/json'
     });
 
-    const request = new Request(API.path, {
-        method: API.method,
-        headers
-    });
+    const makeDeleteRequest = () => makeAuthenticatedRequest('DELETE', API.path, { headers: baseHeaders });
 
-    fetch(request).then(response => {
+    // Wrap the entire delete flow so retry after login goes through all handlers
+    const runDeleteFlow = () => {
+        return makeDeleteRequest().then(async response => {
+            // Handle auth errors
+            if (response.status === 401 || response.status === 403) {
+                return await handleAuthError(response, runDeleteFlow);
+            }
+            return response;
+        }).then(response => {
         if (response.ok) {
             LitCalMetadata.diocesan_calendars = LitCalMetadata.diocesan_calendars.filter(el => el.calendar_id !== API.key);
             LitCalMetadata.diocesan_calendars_keys = LitCalMetadata.diocesan_calendars_keys.filter(el => el !== API.key);
@@ -3227,17 +3237,23 @@ const deleteDiocesanCalendarConfirmClicked = () => {
             response.json().then(json => {
                 console.log(json);
             });
+        } else if (response.status === 400) {
+            response.json().then(json => {
+                console.error(`${response.status} ${json.response}: ${json.description}`);
+                toastr["error"](`${response.status} ${json.response}: ${json.description}`, "Error");
+            });
         } else {
             return Promise.reject(response);
         }
-    }).catch(error => {
-        error.json().then(json => {
-            console.error(`${error.status} ${json.response}: ${json.description}`);
-            toastr["error"](`${error.status} ${json.response}: ${json.description}`, "Error");
-        })
-    }).finally(() => {
-        document.querySelector('#overlay').classList.add('hidden');
-    });
+        }).catch(error => {
+            console.error(error);
+        }).finally(() => {
+            document.querySelector('#overlay').classList.add('hidden');
+        });
+    };
+
+    // Start the delete flow
+    runDeleteFlow();
 }
 
 /**
@@ -3253,6 +3269,11 @@ const deleteDiocesanCalendarConfirmClicked = () => {
  * whether the calendar is being created or updated.
  */
 const saveDiocesanCalendar_btnClicked = () => {
+    // Check authentication before allowing write operations
+    if (!requireAuth(saveDiocesanCalendar_btnClicked)) {
+        return;
+    }
+
     document.querySelector('#overlay').classList.remove('hidden');
     const diocese = document.querySelector('#diocesanCalendarDioceseName').value;
     const option = document.querySelector('#DiocesesList option[value="' + diocese + '"]');
@@ -3370,22 +3391,27 @@ const saveDiocesanCalendar_btnClicked = () => {
         }
 
         // For a patch request, we only need to provide the payload with `litcal` and `i18n` properties
-        const body = JSON.stringify(saveObj.payload);
+        const finalPayload = saveObj.payload;
 
-        const request = new Request(API.path, {
-            method: API.method,
-            headers,
-            body
+        const makeRequest = () => makeAuthenticatedRequest(API.method, API.path, {
+            body: finalPayload,
+            headers
         });
 
-        fetch(request)
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => { throw err; });
-            }
-            return response.json();
-        })
-        .then(responseData => {
+        // Wrap the entire save flow so retry after login goes through all handlers
+        const runSaveFlow = () => {
+            return makeRequest()
+            .then(async response => {
+                // Handle auth errors
+                if (response.status === 401 || response.status === 403) {
+                    return await handleAuthError(response, runSaveFlow);
+                }
+                if (!response.ok) {
+                    return response.json().then(err => { throw err; });
+                }
+                return response.json();
+            })
+            .then(responseData => {
             console.log('Data returned from save action:', responseData);
             toastr["success"](responseData.success, "Success");
 
@@ -3414,13 +3440,19 @@ const saveDiocesanCalendar_btnClicked = () => {
                 API.key = diocese_id;
                 API.locale = document.querySelector('.currentLocalizationChoices').value;
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            toastr["error"](error.status + ' ' + error.message, "Error");
-        }).finally(() => {
-            document.querySelector('#overlay').classList.add('hidden');
-        });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                const status = error && error.status ? `${error.status}: ` : '';
+                const message = error?.message || 'An error occurred';
+                toastr["error"](status + message, "Error");
+            }).finally(() => {
+                document.querySelector('#overlay').classList.add('hidden');
+            });
+        };
+
+        // Start the save flow
+        runSaveFlow();
     } else {
         document.querySelector('#overlay').classList.add('hidden');
     }
