@@ -127,23 +127,35 @@ const Auth = {
     },
 
     /**
+     * Decode and get JWT token payload
+     * Internal helper to centralize JWT parsing logic
+     *
+     * @returns {Object|null} Decoded JWT payload or null if invalid/missing
+     * @private
+     */
+    getPayload() {
+        const token = this.getToken();
+        if (!token) return null;
+
+        try {
+            return JSON.parse(atob(token.split('.')[1]));
+        } catch (e) {
+            return null;
+        }
+    },
+
+    /**
      * Check if user is authenticated
      * Validates token existence and expiration
      *
      * @returns {boolean} True if authenticated with valid token
      */
     isAuthenticated() {
-        const token = this.getToken();
-        if (!token) return false;
+        const payload = this.getPayload();
+        if (!payload) return false;
 
-        // Check if token is expired (decode JWT without verification)
-        try {
-            const payload = JSON.parse(atob(token.split('.')[1]));
-            const now = Math.floor(Date.now() / 1000);
-            return payload.exp > now;
-        } catch (e) {
-            return false;
-        }
+        const now = Math.floor(Date.now() / 1000);
+        return payload.exp > now;
     },
 
     /**
@@ -227,9 +239,10 @@ const Auth = {
         setInterval(async () => {
             if (!this.isAuthenticated()) return;
 
-            const token = this.getToken();
+            const payload = this.getPayload();
+            if (!payload) return;
+
             try {
-                const payload = JSON.parse(atob(token.split('.')[1]));
                 const now = Math.floor(Date.now() / 1000);
                 const timeUntilExpiry = payload.exp - now;
 
@@ -254,9 +267,10 @@ const Auth = {
         setInterval(() => {
             if (!this.isAuthenticated()) return;
 
-            const token = this.getToken();
+            const payload = this.getPayload();
+            if (!payload) return;
+
             try {
-                const payload = JSON.parse(atob(token.split('.')[1]));
                 const now = Math.floor(Date.now() / 1000);
                 const timeUntilExpiry = payload.exp - now;
 
@@ -277,15 +291,10 @@ const Auth = {
      * @returns {boolean} True if user has the permission
      */
     hasPermission(permission) {
-        if (!this.isAuthenticated()) return false;
+        const payload = this.getPayload();
+        if (!payload) return false;
 
-        const token = this.getToken();
-        try {
-            const payload = JSON.parse(atob(token.split('.')[1]));
-            return payload.permissions && payload.permissions.includes(permission);
-        } catch (e) {
-            return false;
-        }
+        return payload.permissions && payload.permissions.includes(permission);
     },
 
     /**
@@ -295,15 +304,10 @@ const Auth = {
      * @returns {boolean} True if user has the role
      */
     hasRole(role) {
-        if (!this.isAuthenticated()) return false;
+        const payload = this.getPayload();
+        if (!payload) return false;
 
-        const token = this.getToken();
-        try {
-            const payload = JSON.parse(atob(token.split('.')[1]));
-            return payload.role === role || (payload.roles && payload.roles.includes(role));
-        } catch (e) {
-            return false;
-        }
+        return payload.role === role || (payload.roles && payload.roles.includes(role));
     },
 
     /**
@@ -312,15 +316,10 @@ const Auth = {
      * @returns {string|null} Username or null if not authenticated
      */
     getUsername() {
-        if (!this.isAuthenticated()) return null;
+        const payload = this.getPayload();
+        if (!payload) return null;
 
-        const token = this.getToken();
-        try {
-            const payload = JSON.parse(atob(token.split('.')[1]));
-            return payload.sub || payload.username || 'Admin';
-        } catch (e) {
-            return null;
-        }
+        return payload.sub || payload.username || 'Admin';
     }
 };
 

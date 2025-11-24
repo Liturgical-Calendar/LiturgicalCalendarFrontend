@@ -3371,15 +3371,10 @@ function updateAuthUI() {
         userMenu.classList.remove('d-none');
 
         // Display username if available
-        const token = Auth.getToken();
-        if (token && username) {
-            try {
-                const payload = JSON.parse(atob(token.split('.')[1]));
-                if (payload.username) {
-                    username.textContent = payload.username;
-                }
-            } catch (e) {
-                console.error('Failed to parse JWT token', e);
+        if (username) {
+            const usernameFromToken = Auth.getUsername();
+            if (usernameFromToken) {
+                username.textContent = usernameFromToken;
             }
         }
     } else {
