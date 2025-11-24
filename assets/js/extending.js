@@ -101,11 +101,16 @@ const initialHeaders = new Headers({
  * @param {Function} callback - Function to execute after successful login
  */
 function showLoginModal(callback) {
-    const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+    const modalEl = document.getElementById('loginModal');
+    if (!modalEl) {
+        console.error('Login modal element #loginModal not found');
+        return;
+    }
 
     // Store callback to execute after successful login
     window.postLoginCallback = callback;
 
+    const loginModal = new bootstrap.Modal(modalEl);
     loginModal.show();
 }
 
