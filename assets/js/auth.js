@@ -146,7 +146,24 @@ const Auth = {
         if (!token) return null;
 
         try {
-            return JSON.parse(atob(token.split('.')[1]));
+            // Get the payload segment (second part of JWT)
+            let payload = token.split('.')[1];
+
+            // Convert base64url to base64 (RFC 4648)
+            // Replace URL-safe characters and add padding
+            payload = payload.replace(/-/g, '+').replace(/_/g, '/');
+
+            // Add padding if needed (base64 strings must be multiple of 4)
+            const pad = payload.length % 4;
+            if (pad) {
+                if (pad === 1) {
+                    // Invalid base64url - cannot have length % 4 === 1
+                    throw new Error('Invalid base64url string');
+                }
+                payload += new Array(5 - pad).join('=');
+            }
+
+            return JSON.parse(atob(payload));
         } catch (e) {
             return null;
         }
