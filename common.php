@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Common bootstrap file for LiturgicalCalendarFrontend
+ *
+ * This file intentionally both declares symbols and causes side effects
+ * (loads environment, sets headers, initializes configuration).
+ * This is a standard pattern for application bootstrap files.
+ *
+ * phpcs:disable PSR1.Files.SideEffects
+ */
+
 include_once('vendor/autoload.php');
 
 use LiturgicalCalendar\Frontend\I18n;
@@ -132,6 +142,14 @@ function setSecureCookie(
     if (!in_array($sameSite, $validSameSite, true)) {
         throw new InvalidArgumentException(
             'Invalid SameSite value. Must be one of: ' . implode(', ', $validSameSite)
+        );
+    }
+
+    // SameSite=None requires Secure flag (HTTPS)
+    // Browsers will silently reject cookies with SameSite=None without Secure
+    if ($sameSite === 'None' && !$isHttps) {
+        throw new InvalidArgumentException(
+            'SameSite=None requires HTTPS. Cookie would be rejected by browsers.'
         );
     }
 
