@@ -603,6 +603,270 @@ if (document.readyState === 'loading') {
  */
 
 /**
+ * Deletes an event from CalendarData by its event key
+ *
+ * @param {HTMLElement} row - The row element containing the event
+ * @param {HTMLInputElement} targetInput - The event name input element
+ */
+const deleteEventByKey = (row, targetInput) => {
+    const oldEventKeyEl = row.querySelector('.litEventEventKey');
+    const oldEventKey = oldEventKeyEl
+        ? oldEventKeyEl.value
+        : (targetInput.dataset.hasOwnProperty('valuewas') ? targetInput.dataset.valuewas : '');
+    console.log('Deleting event with key: ' + oldEventKey);
+    CalendarData.litcal = CalendarData.litcal.filter(item => item.liturgical_event.event_key !== oldEventKey);
+    if (oldEventKeyEl) {
+        oldEventKeyEl.value = '';
+    } else {
+        targetInput.setAttribute('data-valuewas', '');
+    }
+};
+
+/**
+ * Checks if the current calendar exists in the API based on choice (national, diocesan, widerRegion)
+ *
+ * @returns {boolean} True if calendar already exists in the API
+ */
+const checkCalendarExists = () => {
+    switch (choice) {
+        case 'national': {
+            const currentNation = document.querySelector('#nationalCalendarName').value;
+            const exists = LitCalMetadata.national_calendars_keys.includes(currentNation);
+            console.log(`National calendar for ${currentNation} already exists: ${exists}`);
+            return exists;
+        }
+        case 'diocesan': {
+            const currentDioceseName = document.querySelector('#diocesanCalendarDioceseName').value;
+            const currentDioceseOption = document.querySelector(`#DiocesesList > option[value="${currentDioceseName}"]`);
+            const currentDiocese = currentDioceseOption ? currentDioceseOption.dataset.value : null;
+            const exists = LitCalMetadata.diocesan_calendars_keys.includes(currentDiocese);
+            console.log(`Diocesan calendar for ${currentDiocese} already exists: ${exists}`);
+            return exists;
+        }
+        case 'widerRegion': {
+            const currentWiderRegion = document.querySelector('#widerRegionCalendarName').value;
+            const exists = LitCalMetadata.wider_regions_keys.includes(currentWiderRegion);
+            console.log(`Wider region calendar for ${currentWiderRegion} already exists: ${exists}`);
+            return exists;
+        }
+        default:
+            console.error(`Unexpected choice ${choice}, should be "nation", "diocese" or "widerRegion"`);
+            return false;
+    }
+};
+
+/**
+ * Creates a new liturgical event and adds it to CalendarData
+ *
+ * @param {HTMLElement} row - The row element containing event inputs
+ * @param {HTMLElement} card - The card body element
+ * @param {string} newEventKey - The generated event key
+ * @param {string} eventName - The event name
+ * @param {HTMLInputElement} targetInput - The event name input element
+ * @returns {boolean} True if event was created successfully
+ */
+const createNewLiturgicalEvent = (row, card, newEventKey, eventName, targetInput) => {
+    const existingEvent = CalendarData.litcal.find(item => item.liturgical_event.event_key === newEventKey) ?? null;
+
+    if (existingEvent === null) {
+        console.log('New event key is unique, creating event');
+        const colorSelectedOptions = Array.from(row.querySelector('.litEventColor').selectedOptions);
+        const commonSelectedOptions = Array.from(row.querySelector('.litEventCommon').selectedOptions);
+
+        const liturgical_event = new LitEvent(
+            newEventKey,
+            eventName,
+            colorSelectedOptions.map(({ value }) => value),
+            null,
+            commonSelectedOptions.map(({ value }) => value),
+            parseInt(row.querySelector('.litEventDay').value),
+            parseInt(row.querySelector('.litEventMonth').value)
+        );
+
+        const metadata = {
+            since_year: parseInt(row.querySelector('.litEventSinceYear').value),
+            form_rownum: Array.from(card.querySelectorAll('.row')).indexOf(row)
+        };
+
+        if (row.querySelector('.litEventUntilYear').value !== '') {
+            metadata.until_year = parseInt(row.querySelector('.litEventUntilYear').value);
+        }
+
+        const oldEventKeyEl = row.querySelector('.litEventEventKey');
+        if (oldEventKeyEl) {
+            oldEventKeyEl.value = newEventKey;
+        } else {
+            targetInput.setAttribute('data-valuewas', newEventKey);
+        }
+        targetInput.classList.remove('is-invalid');
+
+        if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
+            const currentLocalization = document.querySelector('.currentLocalizationChoices').value;
+            const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
+                .filter(({ value }) => value !== currentLocalization)
+                .map(({ value }) => value);
+            const otherLocalizationsInputs = otherLocalizations.map(localization => translationTemplate(API.path, localization, targetInput));
+            targetInput.insertAdjacentHTML('afterend', otherLocalizationsInputs.join(''));
+        }
+
+        CalendarData.litcal.push({ liturgical_event, metadata });
+        console.log('Added new event to CalendarData');
+        return true;
+    } else {
+        return handleEventKeyCollision(existingEvent, row, card, newEventKey, eventName, targetInput);
+    }
+};
+
+/**
+ * Handles event key collision when creating a new event
+ *
+ * @param {Object} existingEvent - The existing event with the same key
+ * @param {HTMLElement} row - The row element
+ * @param {HTMLElement} card - The card body element
+ * @param {string} newEventKey - The event key
+ * @param {string} eventName - The event name
+ * @param {HTMLInputElement} targetInput - The event name input element
+ * @returns {boolean} True if collision was resolved
+ */
+const handleEventKeyCollision = (existingEvent, row, card, newEventKey, eventName, targetInput) => {
+    if (!existingEvent.metadata.hasOwnProperty('until_year')) {
+        console.log('Event key collision: key already exists without until_year property');
+        targetInput.value = '';
+        targetInput.classList.add('is-invalid');
+        return false;
+    }
+
+    const confirmed = confirm('The same liturgical event name was already defined elsewhere. However an untilYear property was also defined, so perhaps you are wanting to define again for the years following. If this is the case, press OK, otherwise Cancel');
+    if (!confirmed) {
+        return false;
+    }
+
+    const { until_year } = existingEvent.metadata;
+    row.querySelector('.litEventSinceYear').value = (until_year + 1);
+    row.querySelector('.litEventUntilYear').min = (until_year + 2);
+
+    const oldEventKeyEl = row.querySelector('.litEventEventKey');
+    if (oldEventKeyEl) {
+        oldEventKeyEl.value = newEventKey;
+    } else {
+        targetInput.setAttribute('data-valuewas', newEventKey);
+    }
+    targetInput.classList.remove('is-invalid');
+
+    const colorSelectedOptions = Array.from(row.querySelector('.litEventColor').selectedOptions);
+    const commonSelectedOptions = Array.from(row.querySelector('.litEventCommon').selectedOptions);
+
+    const liturgical_event = new LitEvent(
+        newEventKey,
+        eventName,
+        colorSelectedOptions.map(({ value }) => value),
+        null,
+        commonSelectedOptions.map(({ value }) => value),
+        parseInt(row.querySelector('.litEventDay').value),
+        parseInt(row.querySelector('.litEventMonth').value)
+    );
+
+    const metadata = {
+        since_year: until_year + 1,
+        form_rownum: Array.from(card.querySelectorAll('.row')).indexOf(row)
+    };
+
+    CalendarData.litcal.push({ liturgical_event, metadata });
+    console.log('Added event following existing until_year');
+    return true;
+};
+
+/**
+ * Updates an existing event's key and name (diocesan calendars only)
+ *
+ * @param {string} oldEventKey - The old event key
+ * @param {string} newEventKey - The new event key
+ * @param {string} eventName - The new event name
+ * @param {HTMLElement} row - The row element
+ * @param {HTMLInputElement} targetInput - The event name input element
+ */
+const updateExistingEventKey = (oldEventKey, newEventKey, eventName, row, targetInput) => {
+    const litEvent = CalendarData.litcal.find(item => item.liturgical_event.event_key === oldEventKey) ?? null;
+    if (litEvent !== null && oldEventKey !== newEventKey) {
+        console.log(`Name change on existing event: <${oldEventKey}> to <${newEventKey}>`);
+        litEvent.liturgical_event.event_key = newEventKey;
+        litEvent.liturgical_event.name = eventName;
+
+        const oldEventKeyEl = row.querySelector('.litEventEventKey');
+        if (oldEventKeyEl) {
+            oldEventKeyEl.value = newEventKey;
+        } else {
+            targetInput.setAttribute('data-valuewas', newEventKey);
+        }
+        targetInput.classList.remove('is-invalid');
+    }
+};
+
+/**
+ * Updates event grade based on carousel item (diocesan calendars only)
+ *
+ * @param {string} eventKey - The event key
+ * @param {HTMLElement} carouselItem - The carousel item element
+ */
+const updateEventGradeByCarousel = (eventKey, carouselItem) => {
+    const litEvent = CalendarData.litcal.find(item => item.liturgical_event.event_key === eventKey) ?? null;
+    if (litEvent === null) return;
+
+    switch (carouselItem.id) {
+        case 'carouselItemSolemnities':
+            litEvent.liturgical_event.grade = Rank.SOLEMNITY;
+            break;
+        case 'carouselItemFeasts':
+            litEvent.liturgical_event.grade = Rank.FEAST;
+            break;
+        case 'carouselItemMemorials':
+            litEvent.liturgical_event.grade = Rank.MEMORIAL;
+            break;
+        case 'carouselItemOptionalMemorials':
+            litEvent.liturgical_event.grade = Rank.OPTIONALMEMORIAL;
+            break;
+    }
+};
+
+/**
+ * Updates event color based on whether it's a martyr (diocesan calendars only)
+ *
+ * @param {string} eventName - The event name
+ * @param {string} eventKey - The event key
+ * @param {HTMLElement} row - The row element
+ */
+const updateEventColorForMartyrs = (eventName, eventKey, row) => {
+    const litEvent = CalendarData.litcal.find(item => item.liturgical_event.event_key === eventKey) ?? null;
+    const isMartyr = eventName.match(/(martyr|martir|mártir|märtyr)/i) !== null;
+    const color = isMartyr ? 'red' : 'white';
+
+    $(row.querySelector('.litEventColor')).multiselect('deselectAll', false).multiselect('select', color);
+    if (litEvent !== null) {
+        litEvent.liturgical_event.color = [color];
+    }
+};
+
+/**
+ * Updates an existing calendar event's name (when calendar exists in API)
+ *
+ * @param {string} eventKey - The event key from data-valuewas
+ * @param {string} eventName - The new event name
+ */
+const updateExistingCalendarEvent = (eventKey, eventName) => {
+    if (eventKey === '') {
+        console.error('Event key is empty, cannot update');
+        return;
+    }
+
+    console.log('Updating existing calendar event name, keeping same event_key:', eventKey);
+    const existingEntry = CalendarData.litcal.find(item => item.liturgical_event.event_key === eventKey) ?? null;
+    if (existingEntry !== null) {
+        existingEntry.liturgical_event.name = eventName;
+        console.log('CalendarData updated:', CalendarData);
+    }
+};
+
+/**
  * Handles changes to the liturgical event name input field. This function is responsible
  * for managing the creation, updating, or deletion of liturgical events in the CalendarData.
  * It checks if the input value is empty, indicating a potential deletion, or if it's a new
@@ -614,241 +878,49 @@ if (document.readyState === 'loading') {
  * @param {Event} ev - The change event triggered by the liturgical event name input field.
  */
 const litEventNameChangeHandler = (ev) => {
-    const row  = ev.target.closest('.row');
+    const row = ev.target.closest('.row');
     const card = ev.target.closest('.card-body');
-    //console.log('LitEvent name has changed');
-    if (ev.target.value === '') {
-        //empty value probably means we are trying to delete an already defined event
-        //so let's find the key and remove it
-        const oldEventKeyEl = ev.target.closest('.row').querySelector('.litEventEventKey');
+    const eventName = ev.target.value;
+
+    // Handle deletion - empty value means delete the event
+    if (eventName === '') {
+        deleteEventByKey(row, ev.target);
+        return;
+    }
+
+    // Handle creation or update
+    const newEventKey = createEventKey(eventName);
+    console.log(`New liturgical event name: ${eventName}, event key: ${newEventKey}`);
+
+    const calendarExists = checkCalendarExists();
+
+    if (!calendarExists) {
+        console.log('Calendar does not exist in API, generating or updating event key');
+
+        const oldEventKeyEl = row.querySelector('.litEventEventKey');
         const oldEventKey = oldEventKeyEl
             ? oldEventKeyEl.value
             : (ev.target.dataset.hasOwnProperty('valuewas') ? ev.target.dataset.valuewas : '');
-        console.log('seems we are trying to delete the object key ' + oldEventKey);
-        CalendarData.litcal = CalendarData.litcal.filter(item => item.liturgical_event.event_key !== oldEventKey);
-        if (oldEventKeyEl) {
-            oldEventKeyEl.value = '';
-        } else {
-            ev.target.setAttribute('data-valuewas', '');
+
+        // Create new event or handle existing event
+        if (oldEventKey === '') {
+            createNewLiturgicalEvent(row, card, newEventKey, eventName, ev.target);
+        } else if (choice === 'diocesan') {
+            // Update existing event key (diocesan calendars only)
+            updateExistingEventKey(oldEventKey, newEventKey, eventName, row, ev.target);
+        }
+
+        // Set grade and color for diocesan calendars
+        if (choice === 'diocesan') {
+            const carouselItem = ev.target.closest('.carousel-item');
+            updateEventGradeByCarousel(newEventKey, carouselItem);
+            updateEventColorForMartyrs(eventName, newEventKey, row);
         }
     } else {
-        // We are either creating a new event, or updating an existing one
-        // If the calendar already exists in the Liturgical Calendar API, we probably want to keep the event_key as is;
-        //  otherwise we may want to generate a new one based on the new event name value
-        let calendarExists = false;
-        switch (choice) {
-            case 'national': {
-                const currentNation = document.querySelector('#nationalCalendarName').value;
-                calendarExists = LitCalMetadata.national_calendars_keys.includes(currentNation);
-                console.log('national calendar for ' + currentNation + ' already exists: ' + calendarExists);
-                break;
-            }
-            case 'diocesan': {
-                const currentDioceseName = document.querySelector('#diocesanCalendarDioceseName').value;
-                const currentDioceseOption = document.querySelector(`#DiocesesList > option[value="${currentDioceseName}"]`);
-                const currentDiocese = currentDioceseOption ? currentDioceseOption.dataset.value : null;
-                calendarExists = LitCalMetadata.diocesan_calendars_keys.includes(currentDiocese);
-                console.log('currentDioceseName = ' + currentDioceseName + ', currentDioceseOption = ', currentDioceseOption, ',  currentDiocese = ' + currentDiocese);
-                console.log('diocesan calendar for ' + currentDiocese + ' already exists: ' + calendarExists);
-                break;
-            }
-            case 'widerRegion': {
-                const currentWiderRegion = document.querySelector('#widerRegionCalendarName').value;
-                calendarExists = LitCalMetadata.wider_regions_keys.includes(currentWiderRegion);
-                console.log('wider region calendar for ' + currentWiderRegion + ' already exists: ' + calendarExists);
-                break;
-            }
-            default:
-                console.error('unexpected choice ' + choice + ', should be a value of "nation", "diocese" or "widerregion"');
-        }
-
-        console.log('new liturgical_event name is ' + ev.target.value);
-        const newEventKey = createEventKey(ev.target.value);
-        console.log('if applicable, new LitEvent name identifier would be ' + newEventKey);
-
-        if (false === calendarExists) {
-            console.log('calendar does not exist in the Liturgical Calendar API, so we are generating a new event key or updating a new event key');
-            const oldEventKeyEl = ev.target.closest('.row').querySelector('.litEventEventKey');
-            const oldEventKey = oldEventKeyEl ? oldEventKeyEl.value : (ev.target.dataset.hasOwnProperty('valuewas') ? ev.target.dataset.valuewas : '');
-            console.log(CalendarData);
-            // This condition will never be met when dealing with national or wider region calendars
-            if (oldEventKey === '') {
-                console.log('the previous event_key was empty so we need not search for an entry in CalendarData, we simply create a new event with the new event key and add it to the CalendarData');
-                // we need to ensure the new event_key does not collide with an existing event_key
-                const litEvent = CalendarData.litcal.find(item => item.liturgical_event.event_key === newEventKey) ?? null;
-                if (litEvent === null) {
-                    console.log('new event key is unique');
-                    const colorSelectedOptions = Array.from(row.querySelector('.litEventColor').selectedOptions);
-                    const commonSelectedOptions = Array.from(row.querySelector('.litEventCommon').selectedOptions);
-
-                    const liturgical_event = new LitEvent(
-                        newEventKey,
-                        ev.target.value, //name
-                        colorSelectedOptions.map(({ value }) => value), //color
-                        null,
-                        commonSelectedOptions.map(({ value }) => value), //common
-                        parseInt(row.querySelector('.litEventDay').value), //day
-                        parseInt(row.querySelector('.litEventMonth').value), //month
-                    );
-
-                    const metadata = {};
-                    //let's initialize defaults just in case the default input values happen to be correct, so no change events are fired
-                    metadata.since_year = parseInt(row.querySelector('.litEventSinceYear').value);
-                    if ( row.querySelector('.litEventUntilYear').value !== '' ) {
-                        metadata.until_year = parseInt(row.querySelector('.litEventUntilYear').value);
-                    }
-                    const formRowIndex = Array.from(card.querySelectorAll('.row')).indexOf(row);
-                    metadata.form_rownum = formRowIndex;
-                    console.log('form row index is ' + formRowIndex);
-
-                    if (oldEventKeyEl) {
-                        oldEventKeyEl.value = newEventKey;
-                    } else {
-                        ev.target.setAttribute('data-valuewas', newEventKey);
-                    }
-                    ev.target.classList.remove('is-invalid');
-
-                    if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
-                        const currentLocalization = document.querySelector('.currentLocalizationChoices').value;
-                        const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
-                                                    .filter(({ value }) => value !== currentLocalization)
-                                                    .map(({ value }) => value);
-                        const otherLocalizationsInputs = otherLocalizations.map(localization => translationTemplate(API.path, localization, ev.target));
-                        ev.target.insertAdjacentHTML('afterend', otherLocalizationsInputs.join(''));
-                    }
-
-                    const newEvent = {
-                        liturgical_event,
-                        metadata
-                    };
-                    console.log('adding new event to CalendarData.litcal:');
-                    console.log( newEvent );
-                    CalendarData.litcal.push(newEvent);
-                } else {
-                    // If there is a collision with an existing event_key, we should let the user know and ask if they want to create an entry anyways.
-                    // In this case, we can copy values from the existing event to the new event.
-                    if ( false === litEvent.metadata.hasOwnProperty('until_year') ) {
-                        console.log('exact same liturgical_event name was already defined elsewhere! key ' + newEventKey + ' already exists! and the untilYear property was not defined!');
-                        ev.target.value = '';
-                        ev.target.classList.add('is-invalid');
-                    } else {
-                        const confrm = confirm('The same liturgical_event name was already defined elsewhere. However an untilYear property was also defined, so perhaps you are wanting to define again for the years following. If this is the case, press OK, otherwise Cancel');
-                        if (confrm) {
-                            ev.target.classList.remove('is-invalid');
-                            //retrieve untilYear from the previous liturgical_event with the same name
-                            const { until_year } = litEvent.metadata;
-                            //set the sinceYear field on this row to the previous until_year plus one
-                            row.querySelector('.litEventSinceYear').value = (until_year + 1);
-                            row.querySelector('.litEventUntilYear').min = (until_year + 2);
-                            if (oldEventKeyEl) {
-                                oldEventKeyEl.value = newEventKey;
-                            } else {
-                                ev.target.setAttribute('data-valuewas', newEventKey);
-                            }
-
-                            const colorSelectedOptions = Array.from(row.querySelector('.litEventColor').selectedOptions);
-                            const commonSelectedOptions = Array.from(row.querySelector('.litEventCommon').selectedOptions);
-
-                            const liturgical_event = new LitEvent(
-                                newEventKey,
-                                ev.target.value, //name
-                                colorSelectedOptions.map(({ value }) => value), //color
-                                null, // grade
-                                commonSelectedOptions.map(({ value }) => value), //common
-                                parseInt(row.querySelector('.litEventDay').value), //day
-                                parseInt(row.querySelector('.litEventMonth').value), //month
-                            );
-
-                            const form_rownum = Array.from(card.querySelectorAll('.row')).indexOf(row);
-                            const metadata = {
-                                since_year: until_year + 1,
-                                form_rownum
-                            };
-                            const newEvent = {
-                                liturgical_event,
-                                metadata
-                            }
-                            console.log('form row index is ' + form_rownum);
-                            CalendarData.litcal.push(newEvent);
-                        }
-                    }
-                }
-            } else {
-                // If the previous event_key is not empty, we are probably wanting to update an existing event with a new event_key
-                // however we do NOT want to change the event_key when making a patron saint, or changing the name of an existing liturgical_event,
-                // so this logic really only applies to diocesan calendar forms
-                console.log('the previous event_key was not empty: ', oldEventKey);
-                if (choice === 'diocesan') {
-                    const litEvent = CalendarData.litcal.find(item => item.liturgical_event.event_key === oldEventKey) ?? null;
-                    if (litEvent !== null) {
-                        if (oldEventKey !== newEventKey) {
-                            console.log('Name change on an existing liturgical_event.');
-                            console.log('will now attempt to copy the values from <' + oldEventKey + '> to <' + newEventKey + '> and then remove <' + oldEventKey + '>');
-                            litEvent.liturgical_event.event_key = newEventKey;
-                            litEvent.liturgical_event.name = ev.target.value;
-                            if (oldEventKeyEl) {
-                                oldEventKeyEl.value = newEventKey;
-                            } else {
-                                ev.target.setAttribute('data-valuewas', newEventKey);
-                            }
-                            ev.target.classList.remove('is-invalid');
-                        }
-                    }
-                }
-            }
-
-            if (choice === 'diocesan') {
-                const litEvent = CalendarData.litcal.find(item => item.liturgical_event.event_key === newEventKey) ?? null;
-                if (litEvent !== null) {
-                    // We set the grade based on the current carousel item
-                    switch (ev.target.closest('.carousel-item').id) {
-                        case 'carouselItemSolemnities':
-                            litEvent.liturgical_event.grade = Rank.SOLEMNITY;
-                            break;
-                        case 'carouselItemFeasts':
-                            litEvent.liturgical_event.grade = Rank.FEAST;
-                            break;
-                        case 'carouselItemMemorials':
-                            litEvent.liturgical_event.grade = Rank.MEMORIAL;
-                            break;
-                        case 'carouselItemOptionalMemorials':
-                            litEvent.liturgical_event.grade = Rank.OPTIONALMEMORIAL;
-                            break;
-                    }
-                }
-
-                // Attempt to set liturgical color to red for martyrs, white for all other cases
-                if (ev.target.value.match(/(martyr|martir|mártir|märtyr)/i) !== null) {
-                    $(row.querySelector('.litEventColor')).multiselect('deselectAll', false).multiselect('select', 'red');
-                    if (litEvent !== null) {
-                        litEvent.liturgical_event.color = [ 'red' ];
-                    }
-                } else {
-                    $(row.querySelector('.litEventColor')).multiselect('deselectAll', false).multiselect('select', 'white');
-                    if (litEvent !== null) {
-                        litEvent.liturgical_event.color = [ 'white' ];
-                    }
-                }
-            }
-        } else {
-            // Seeing the calendar already exists, we should keep the event_key the same and just update the liturgical_event name
-            // We only need to do this for diocesan calendars, because WiderRegion and National calendars are serialized on the spot,
-            // not at each form control change event
-            if (choice === 'diocesan') {
-                const eventKey = ev.target.dataset.valuewas;
-                console.log('calendar already exists, so we are just updating the liturgical_event name while keeping the event_key the same', eventKey);
-                if (eventKey !== '') {
-                    console.log('CalendarData before update: ', CalendarData);
-                    const existingEntry = CalendarData.litcal.find(item => item.liturgical_event.event_key === eventKey) ?? null;
-                    console.log('existingEntry is: ', existingEntry);
-                    if (existingEntry !== null) {
-                        existingEntry.liturgical_event.name = ev.target.value;
-                        console.log('CalendarData.litcal has been updated:', CalendarData);
-                    }
-                } else {
-                    console.error('why is event_key empty?');
-                }
-            }
+        // Calendar exists in API - update event name keeping same event_key
+        if (choice === 'diocesan') {
+            const eventKey = ev.target.dataset.valuewas;
+            updateExistingCalendarEvent(eventKey, eventName);
         }
     }
 }
