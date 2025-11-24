@@ -144,8 +144,9 @@ async function handleAuthError(response, retryCallback) {
             await Auth.refreshToken();
             // Retry the original request
             return retryCallback();
-        } catch (_error) {
+        } catch (error) {
             // Refresh failed, prompt for login
+            console.error('Token refresh failed:', error.message);
             showLoginModal(retryCallback);
             throw new Error('Authentication required');
         }

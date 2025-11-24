@@ -164,7 +164,8 @@ const Auth = {
             }
 
             return JSON.parse(atob(payload));
-        } catch (_e) {
+        } catch (e) {
+            console.error('Failed to decode JWT token:', e.message);
             return null;
         }
     },
