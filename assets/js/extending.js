@@ -1890,7 +1890,7 @@ const deleteCalendarConfirmClicked = () => {
 
     // Wrap the entire delete flow so retry after login goes through all handlers
     const runDeleteFlow = () => {
-        makeDeleteRequest().then(async response => {
+        return makeDeleteRequest().then(async response => {
             // Handle auth errors
             if (response.status === 401 || response.status === 403) {
                 return await handleAuthError(response, runDeleteFlow);
@@ -2268,7 +2268,7 @@ const serializeRegionalNationalDataClicked = (ev) => {
 
     // Wrap the entire save flow so retry after login goes through all handlers
     const runSaveFlow = () => {
-        makeRequest()
+        return makeRequest()
         .then(async response => {
             // Handle auth errors
             if (response.status === 401 || response.status === 403) {
