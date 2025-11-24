@@ -125,10 +125,27 @@ $(document).on('click', '#calSubscriptionUrlWrapper', () => {
                 toastr["error"]("Failed to copy URL to clipboard", "Error");
             });
     } else {
-        // Fallback for older browsers - use the selection method below
-        // The mouseup handler will handle the selection
-        console.warn('Clipboard API not available, using selection fallback');
-        toastr["info"]("Click and select the URL to copy", "Info");
+        // Fallback for older browsers using execCommand
+        try {
+            // Create a temporary textarea, copy, then remove
+            const textarea = document.createElement('textarea');
+            textarea.value = urlText;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            const successful = document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            if (successful) {
+                toastr["success"]("URL was copied to the clipboard", "Success");
+            } else {
+                toastr["warning"]("Please select and copy manually", "Copy not supported");
+            }
+        } catch (err) {
+            console.error('Fallback copy failed:', err);
+            toastr["warning"]("Please select and copy manually", "Copy not supported");
+        }
     }
 });
 
