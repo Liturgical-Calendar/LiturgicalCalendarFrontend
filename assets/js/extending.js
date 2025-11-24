@@ -182,7 +182,7 @@ function requireAuth(callback) {
  *
  * Note: JWT tokens in headers provide CSRF protection by default,
  * but these helpers add defense-in-depth if the API implements CSRF tokens.
- * Integrated into all authenticated requests (makeRequest, makeDeleteRequest).
+ * Integrated into all authenticated requests via makeAuthenticatedRequest().
  */
 
 /**
@@ -238,6 +238,60 @@ async function addCsrfHeader(headers) {
     }
     return headers;
 }
+
+/**
+ * Authenticated Request Helper
+ *
+ * Makes an authenticated HTTP request with Authorization and CSRF headers.
+ * This helper abstracts the common pattern of:
+ * - Cloning base headers to avoid mutation
+ * - Adding Authorization header from JWT token
+ * - Adding CSRF token for defense-in-depth
+ * - Making the fetch request
+ *
+ * Use this for DELETE, PUT, PATCH, POST requests that require authentication.
+ * Pair with handleAuthError for automatic retry on 401/403.
+ *
+ * @param {string} method - HTTP method (GET, POST, PUT, PATCH, DELETE)
+ * @param {string} url - Request URL
+ * @param {Object} options - Optional fetch options
+ * @param {*} options.body - Request body (will be JSON stringified if object)
+ * @param {Headers} options.headers - Base headers to clone and extend
+ * @returns {Promise<Response>} Fetch response promise
+ *
+ * @example
+ * const baseHeaders = new Headers({ 'Accept': 'application/json' });
+ * const response = await makeAuthenticatedRequest('DELETE', API.path, { headers: baseHeaders });
+ *
+ * @example
+ * const response = await makeAuthenticatedRequest('POST', API.path, {
+ *   body: { data: 'value' },
+ *   headers: new Headers({ 'Content-Type': 'application/json' })
+ * });
+ */
+const makeAuthenticatedRequest = async (method, url, options = {}) => {
+    const { body, headers = new Headers() } = options;
+
+    // Clone headers to avoid mutation of the base headers
+    const requestHeaders = new Headers(headers);
+
+    // Add authentication headers
+    addAuthHeader(requestHeaders);
+    await addCsrfHeader(requestHeaders);
+
+    // Build fetch options
+    const fetchOptions = {
+        method,
+        headers: requestHeaders
+    };
+
+    // Add body if provided
+    if (body !== undefined && body !== null) {
+        fetchOptions.body = typeof body === 'string' ? body : JSON.stringify(body);
+    }
+
+    return fetch(new Request(url, fetchOptions));
+};
 
 const missalsRequest = new Request(`${MissalsUrl}?include_empty=true`, {
     method: 'GET',
@@ -2053,15 +2107,7 @@ const deleteCalendarConfirmClicked = () => {
         'Accept-Language': API.locale
     });
 
-    const makeDeleteRequest = async () => {
-        const requestHeaders = new Headers(baseHeaders);
-        addAuthHeader(requestHeaders);
-        await addCsrfHeader(requestHeaders);
-        return fetch(new Request(API.path, {
-            method: 'DELETE',
-            headers: requestHeaders
-        }));
-    };
+    const makeDeleteRequest = () => makeAuthenticatedRequest('DELETE', API.path, { headers: baseHeaders });
 
     // Wrap the entire delete flow so retry after login goes through all handlers
     const runDeleteFlow = () => {
@@ -2432,16 +2478,10 @@ const serializeRegionalNationalDataClicked = (ev) => {
         baseHeaders.append('Accept-Language', API.locale);
     }
 
-    const makeRequest = async () => {
-        const requestHeaders = new Headers(baseHeaders);
-        addAuthHeader(requestHeaders);
-        await addCsrfHeader(requestHeaders);
-        return fetch(new Request(API.path, {
-            method: API.method,
-            headers: requestHeaders,
-            body: JSON.stringify(finalPayload)
-        }));
-    };
+    const makeRequest = () => makeAuthenticatedRequest(API.method, API.path, {
+        body: finalPayload,
+        headers: baseHeaders
+    });
 
     console.log('we are ready to make the request');
     console.log('final payload:', finalPayload);
