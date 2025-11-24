@@ -183,8 +183,12 @@ function updateAuthUI() {
     const userMenu = document.getElementById('userMenu');
 
     if (isAuth) {
-        loginBtn.classList.add('d-none');
-        userMenu.classList.remove('d-none');
+        if (loginBtn) {
+            loginBtn.classList.add('d-none');
+        }
+        if (userMenu) {
+            userMenu.classList.remove('d-none');
+        }
 
         // Display username
         const usernameElement = document.getElementById('username');
@@ -193,8 +197,12 @@ function updateAuthUI() {
             usernameElement.textContent = username || 'Admin';
         }
     } else {
-        loginBtn.classList.remove('d-none');
-        userMenu.classList.add('d-none');
+        if (loginBtn) {
+            loginBtn.classList.remove('d-none');
+        }
+        if (userMenu) {
+            userMenu.classList.add('d-none');
+        }
     }
 }
 
