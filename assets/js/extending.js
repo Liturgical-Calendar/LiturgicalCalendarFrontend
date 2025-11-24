@@ -2177,6 +2177,194 @@ const deleteCalendarConfirmClicked = () => {
 
 
 /**
+ * Builds national calendar payload structure
+ * @returns {Object} National calendar payload with litcal, settings, and metadata
+ */
+const buildNationalCalendarPayload = () => {
+    API.key = document.querySelector('#nationalCalendarName').value;
+    API.locale = document.querySelector('.currentLocalizationChoices').value;
+    const widerRegion = document.querySelector('#associatedWiderRegion').value;
+    const selectedLocales = document.querySelector('#nationalCalendarLocales').selectedOptions;
+
+    return {
+        litcal: [],
+        settings: {
+            epiphany: document.querySelector('#nationalCalendarSettingEpiphany').value,
+            ascension: document.querySelector('#nationalCalendarSettingAscension').value,
+            corpus_christi: document.querySelector('#nationalCalendarSettingCorpusChristi').value,
+            eternal_high_priest: document.querySelector('#nationalCalendarSettingHighPriest').checked
+        },
+        metadata: {
+            nation: API.key,
+            wider_region: widerRegion,
+            missals: Array.from(document.querySelectorAll('#publishedRomanMissalList li')).map(el => el.textContent),
+            locales: Array.from(selectedLocales).map(({ value }) => value)
+        },
+        i18n: {}
+    };
+};
+
+/**
+ * Builds wider region calendar payload structure
+ * @returns {Object} Wider region calendar payload with litcal, national_calendars, and metadata
+ */
+const buildWiderRegionPayload = () => {
+    API.key = document.querySelector('#widerRegionCalendarName').value;
+    const regionNamesLocalizedEng = new Intl.DisplayNames(['en'], { type: 'region' });
+    const selectedLocales = document.querySelector('#widerRegionLocales').selectedOptions;
+    const nationalCalendars = Array.from(selectedLocales).map(({ value }) => value).reduce((prev, curr) => {
+        curr = curr.replaceAll('_', '-');
+        const locale = new Intl.Locale(curr);
+        console.log(`curr = ${curr}, nation = ${locale.region}`);
+        prev[regionNamesLocalizedEng.of(locale.region)] = locale.region;
+        return prev;
+    }, {});
+
+    return {
+        litcal: [],
+        national_calendars: nationalCalendars,
+        metadata: {
+            locales: Array.from(selectedLocales).map(({ value }) => value),
+            wider_region: document.querySelector('#widerRegionCalendarName').value.split(' - ')[0]
+        },
+        i18n: {}
+    };
+};
+
+/**
+ * Processes form rows to build liturgical calendar data
+ * @param {Object} payload - The payload object to populate
+ * @returns {Object} Updated payload with litcal array and i18n data
+ */
+const buildLitcalDataFromRows = (payload) => {
+    payload.i18n[API.locale] = {};
+
+    const rows = document.querySelectorAll('.regionalNationalDataForm .row');
+    rows.forEach(row => {
+        const { action } = row.dataset;
+        console.log(`action = ${action}`);
+
+        let rowData = {
+            liturgical_event: {},
+            metadata: { action }
+        };
+
+        if (action === RowAction.SetProperty) {
+            rowData.metadata.property = row.dataset.prop;
+        }
+
+        console.log('collecting payload properties', payloadProperties[action], ' based on action', action);
+        payloadProperties[action].forEach(prop => {
+            const propClass = '.litEvent' + snakeCaseToPascalCase(prop);
+            console.log('transforming', prop, 'to Pascal Case: ', propClass);
+            const propEl = row.querySelector(propClass);
+            if (propEl) {
+                let val = propEl.value;
+                if (integerProperties.includes(prop)) {
+                    val = parseInt(val);
+                }
+                if (metadataProperties.includes(prop)) {
+                    rowData.metadata[prop] = val;
+                } else {
+                    if (propEl.tagName === 'SELECT' && propEl.multiple) {
+                        const selectedOptions = Array.from(propEl.selectedOptions);
+                        val = selectedOptions.map(({ value }) => value);
+                    }
+                    if ('name' === prop) {
+                        if (
+                            action !== RowAction.SetProperty
+                            || (action === RowAction.SetProperty && rowData.metadata.property === 'name')
+                        ) {
+                            const eventKey = sanitizeInput(row.querySelector('.litEventEventKey').value);
+                            payload.i18n[API.locale][eventKey] = val;
+
+                            // Find all input elements with the data-locale attribute
+                            const localeInputs = row.querySelectorAll('input[data-locale]');
+                            localeInputs.forEach(el => {
+                                const locale = el.dataset.locale;
+                                const value = el.value;
+
+                                // Ensure the locale object exists
+                                if (false === payload.i18n.hasOwnProperty(locale)) {
+                                    payload.i18n[locale] = {};
+                                }
+
+                                payload.i18n[locale][eventKey] = value;
+                            });
+                        }
+                    } else {
+                        rowData.liturgical_event[prop] = val;
+                    }
+                }
+            } else {
+                console.warn(`No element found in current row for ${propClass}`);
+            }
+        });
+
+        console.log('rowData so far:', rowData);
+
+        // Handle proper readings for createNew action
+        if (action === RowAction.CreateNew && rowData.liturgical_event.common.includes('Proper')) {
+            rowData.liturgical_event.readings = {
+                first_reading: row.querySelector('.litEventReadings_first_reading').value,
+                responsorial_psalm: row.querySelector('.litEventReadings_responsorial_psalm').value,
+                gospel_acclamation: row.querySelector('.litEventReadings_gospel_acclamation').value,
+                gospel: row.querySelector('.litEventReadings_gospel').value
+            };
+            if (row.querySelector('.litEventReadings_second_reading').value !== '') {
+                rowData.liturgical_event.readings.second_reading = row.querySelector('.litEventReadings_second_reading').value;
+            }
+        }
+
+        // Handle optional metadata fields
+        const litEventSinceYearEl = row.querySelector('.litEventSinceYear');
+        if (litEventSinceYearEl) {
+            const sinceYear = parseInt(litEventSinceYearEl.value);
+            if (sinceYear > 1582 && sinceYear <= 9999) {
+                rowData.metadata.since_year = sinceYear;
+            }
+        }
+
+        const litEventUntilYearEl = row.querySelector('.litEventUntilYear');
+        if (litEventUntilYearEl) {
+            const untilYear = parseInt(litEventUntilYearEl.value);
+            if (untilYear >= 1970 && untilYear <= 9999) {
+                rowData.metadata.until_year = untilYear;
+            }
+        }
+
+        const litEventDecreeUrlEl = row.querySelector('.litEventDecreeURL');
+        if (litEventDecreeUrlEl) {
+            const decreeUrl = litEventDecreeUrlEl.value.trim();
+            if (decreeUrl !== '') {
+                rowData.metadata.url = decreeUrl;
+            }
+        }
+
+        const litEventDecreeLangsEl = row.querySelector('.litEventDecreeLangs');
+        if (litEventDecreeLangsEl) {
+            const decreeLangs = litEventDecreeLangsEl.value.trim();
+            if (decreeLangs !== '') {
+                rowData.metadata.url_lang_map = decreeLangs.split(',')
+                    .map(pair => pair.trim())
+                    .filter(pair => pair !== '')
+                    .reduce((prevVal, curVal) => {
+                        const assoc = curVal.split('=').map(part => part.trim());
+                        if (assoc.length === 2 && assoc[0] !== '' && assoc[1] !== '') {
+                            prevVal[assoc[0]] = assoc[1];
+                        }
+                        return prevVal;
+                    }, {});
+            }
+        }
+
+        payload.litcal.push(rowData);
+    });
+
+    return payload;
+};
+
+/**
  * TODO: define payload classes for the various possible scenarios
  *
  * The following event handle is used to serialize the data from the wider region or national
@@ -2285,185 +2473,19 @@ const serializeRegionalNationalDataClicked = (ev) => {
     document.querySelector('#overlay').classList.remove('hidden');
     API.category = ev.target.dataset.category;
 
-    /**
-     * @type {NationalCalendarPayload|WiderRegionPayload}
-     */
-    const payload = {};
-
-    switch(API.category) {
-        case 'nation': {
-            API.key           = document.querySelector('#nationalCalendarName').value;
-            API.locale        = document.querySelector('.currentLocalizationChoices').value;
-            const widerRegion = document.querySelector('#associatedWiderRegion').value;
-            payload.litcal    = [];
-            payload.settings  = {
-                epiphany:            document.querySelector('#nationalCalendarSettingEpiphany').value,
-                ascension:           document.querySelector('#nationalCalendarSettingAscension').value,
-                corpus_christi:      document.querySelector('#nationalCalendarSettingCorpusChristi').value,
-                eternal_high_priest: document.querySelector('#nationalCalendarSettingHighPriest').checked
-            };
-            const selectedLocales = document.querySelector('#nationalCalendarLocales').selectedOptions;
-            payload.metadata  = {
-                nation:       API.key,
-                wider_region: widerRegion,
-                missals:      Array.from(document.querySelectorAll('#publishedRomanMissalList li')).map(el => el.textContent),
-                locales:      Array.from(selectedLocales).map(({ value }) => value)
-            };
+    // Build payload based on calendar category
+    let payload;
+    switch (API.category) {
+        case 'nation':
+            payload = buildNationalCalendarPayload();
             break;
-        }
-        case 'widerregion': {
-            // our proxy will take care of splitting locale from wider region
-            API.key = document.querySelector('#widerRegionCalendarName').value;
-            const regionNamesLocalizedEng = new Intl.DisplayNames(['en'], { type: 'region' });
-            const selectedLocales = document.querySelector('#widerRegionLocales').selectedOptions;
-            const nationalCalendars =  Array.from(selectedLocales).map(({ value }) => value).reduce((prev, curr) => {
-                curr = curr.replaceAll('_', '-');
-                // We have already exluded non-regional languages from the select list,
-                // so we know we will always have a region associated with each of the selected languages.
-                // Should we also define the language-region locale in the RomanMissal enum itself, on the API backend?
-                // In that case we should try to get an exhaustive list of all printed Roman Missals since Vatican II.
-                const locale = new Intl.Locale( curr );
-                console.log( `curr = ${curr}, nation = ${locale.region}` );
-                prev[ regionNamesLocalizedEng.of( locale.region ) ] = locale.region;
-                return prev;
-            }, {});
-            payload.litcal = [];
-            payload.national_calendars = nationalCalendars;
-            payload.metadata = {
-                locales: Array.from(selectedLocales).map(({ value }) => value),
-                wider_region: document.querySelector('#widerRegionCalendarName').value.split(' - ')[0]
-            };
+        case 'widerregion':
+            payload = buildWiderRegionPayload();
             break;
-        }
     }
-    payload.i18n = {};
-    payload.i18n[API.locale] = {};
 
-    const rows = document.querySelectorAll('.regionalNationalDataForm .row');
-    rows.forEach(row => {
-        const { action } = row.dataset;
-        console.log(`action = ${action}`);
-        /**
-         * @type RowData
-         */
-        let rowData = {
-            liturgical_event: {},
-            metadata: {
-                action
-            }
-        }
-
-        if ( action === RowAction.SetProperty ) {
-            rowData.metadata.property = row.dataset.prop;
-        }
-
-        console.log('collecting payload properties', payloadProperties[action], ' based on action', action);
-        payloadProperties[action].forEach(prop => {
-            const propClass = '.litEvent' + snakeCaseToPascalCase(prop);
-            console.log('transforming', prop, 'to Pascal Case: ', propClass);
-            const propEl = row.querySelector(propClass);
-            if ( propEl ) {
-                let val = propEl.value;
-                if ( integerProperties.includes(prop) ) {
-                    val = parseInt( val );
-                }
-                if ( metadataProperties.includes(prop) ) {
-                    rowData.metadata[prop] = val;
-                } else {
-                    if (propEl.tagName === 'SELECT' && propEl.multiple) {
-                        const selectedOptions = Array.from(propEl.selectedOptions);
-                        val = selectedOptions.map(({ value }) => value);
-                    }
-                    if ('name' === prop) {
-                        if (
-                            action !== RowAction.SetProperty
-                            ||
-                            (action === RowAction.SetProperty && rowData.metadata.property === 'name')
-                        ) {
-                            const eventKey = sanitizeInput(row.querySelector('.litEventEventKey').value);
-                            payload.i18n[API.locale][eventKey] = val;
-
-                            // Find all input elements with the data-locale attribute within the same parent
-                            const localeInputs = row.querySelectorAll('input[data-locale]');
-
-                            localeInputs.forEach(el => {
-                                const locale = el.dataset.locale;
-                                const value = el.value;
-
-                                // Ensure the locale object exists in saveObj.payload.i18n
-                                if (false === payload.i18n.hasOwnProperty(locale)) {
-                                    payload.i18n[locale] = {};
-                                }
-
-                                // Assign the value to the corresponding eventKey
-                                payload.i18n[locale][eventKey] = value;
-                            });
-                        }
-                    } else {
-                        rowData.liturgical_event[prop] = val;
-                    }
-                }
-            } else {
-                console.warn(`No element found in current row for ${propClass}`);
-            }
-        });
-
-        console.log('rowData so far:', rowData);
-
-        if ( action === RowAction.CreateNew && rowData.liturgical_event.common.includes( 'Proper' ) ) {
-            rowData.liturgical_event.readings = {
-                first_reading: row.querySelector('.litEventReadings_first_reading').value,
-                responsorial_psalm: row.querySelector('.litEventReadings_responsorial_psalm').value,
-                gospel_acclamation: row.querySelector('.litEventReadings_gospel_acclamation').value,
-                gospel: row.querySelector('.litEventReadings_gospel').value
-            };
-            if ( row.querySelector('.litEventReadings_second_reading').value !== '' ) {
-                rowData.liturgical_event.readings.second_reading = row.querySelector('.litEventReadings_second_reading').value;
-            }
-        }
-
-        const litEventSinceYearEl = row.querySelector('.litEventSinceYear');
-        if ( litEventSinceYearEl ) {
-            const sinceYear = parseInt(litEventSinceYearEl.value);
-            if ( sinceYear > 1582 && sinceYear <= 9999 ) {
-                rowData.metadata.since_year = sinceYear;
-            }
-        }
-
-        const litEventUntilYearEl = row.querySelector('.litEventUntilYear');
-        if ( litEventUntilYearEl ) {
-            const untilYear = parseInt(litEventUntilYearEl.value);
-            if ( untilYear >= 1970 && untilYear <= 9999 ) {
-                rowData.metadata.until_year = untilYear;
-            }
-        }
-
-        const litEventDecreeUrlEl = row.querySelector('.litEventDecreeURL');
-        if ( litEventDecreeUrlEl ) {
-            const decreeUrl = litEventDecreeUrlEl.value.trim();
-            if ( decreeUrl !== '' ) {
-                rowData.metadata.url = decreeUrl;
-            }
-        }
-
-        const litEventDecreeLangsEl = row.querySelector('.litEventDecreeLangs');
-        if ( litEventDecreeLangsEl ) {
-            const decreeLangs = litEventDecreeLangsEl.value.trim();
-            if ( decreeLangs !== '' ) {
-                rowData.metadata.url_lang_map = decreeLangs.split(',')
-                    .map(pair => pair.trim())
-                    .filter(pair => pair !== '')
-                    .reduce((prevVal, curVal) => {
-                        const assoc = curVal.split('=').map(part => part.trim());
-                        if (assoc.length === 2 && assoc[0] !== '' && assoc[1] !== '') {
-                            prevVal[assoc[0]] = assoc[1];
-                        }
-                        return prevVal;
-                    }, {});
-            }
-        }
-        payload.litcal.push(rowData);
-    });
+    // Process form rows to populate liturgical calendar data
+    payload = buildLitcalDataFromRows(payload);
 
     console.log('payload so far:', payload);
     const finalPayload = API.category === 'nation'
@@ -2505,13 +2527,10 @@ const serializeRegionalNationalDataClicked = (ev) => {
             toastr["success"]("National Calendar was created or updated successfully", "Success");
         })
         .catch(error => {
-            let errorBody = '';
-            if (error && error.error) {
-                errorBody = error.error;
-                toastr["error"](error.status + ': ' + errorBody, "Error");
-            } else {
-                toastr["error"]('An error occurred', "Error");
-            }
+            // Handle different error response shapes
+            const status = error && error.status ? `${error.status}: ` : '';
+            const body = error?.error || error?.message || 'An error occurred';
+            toastr["error"](status + body, "Error");
         }).finally(() => {
             document.querySelector('#overlay').classList.add('hidden');
         });
