@@ -1,0 +1,21 @@
+parameters:
+    level: 1
+    paths:
+        - src
+        - includes
+        - layout
+        - about.php
+        - admin.php
+        - common.php
+        - decrees.php
+        - easter.php
+        - examples.php
+        - extending.php
+        - index.php
+        - liturgyOfAnyDay.php
+        - translations.php
+        - usage.php
+    excludePaths:
+        - examples
+        - .intelephense-helper.php
+    treatPhpDocTypesAsCertain: false

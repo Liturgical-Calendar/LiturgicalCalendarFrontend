@@ -131,6 +131,10 @@ examples/
 !/**/.env.example
 /**/.envrc
 !/**/.envrc.example
+phpstan.neon
+!phpstan.neon.dist
+phpunit.xml
+!phpunit.xml.dist
 /assets/json/
 
 /cache/

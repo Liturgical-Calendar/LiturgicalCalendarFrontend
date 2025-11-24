@@ -24,7 +24,7 @@ curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
 /**
  * Fetch metadata from API
  */
-curl_setopt($ch, CURLOPT_URL, $metadataURL);
+curl_setopt($ch, CURLOPT_URL, $metadataUrl);
 $metadataRaw = curl_exec($ch);
 
 if (curl_errno($ch)) {
@@ -34,11 +34,11 @@ if (curl_errno($ch)) {
 
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 if ($httpCode >= 400) {
-    die('Error: Received HTTP code ' . $httpCode . ' from API at ' . $metadataURL);
+    die('Error: Received HTTP code ' . $httpCode . ' from API at ' . $metadataUrl);
 }
 
 if ($metadataRaw === false) {
-    die('Could not fetch metadata from API at ' . $metadataURL);
+    die('Could not fetch metadata from API at ' . $metadataUrl);
 }
 
 $metadataJson = json_decode($metadataRaw, true);
@@ -56,7 +56,7 @@ if (false === isset($metadataJson['litcal_metadata'])) {
 /**
  * Fetch liturgical events catalog from API
  */
-curl_setopt($ch, CURLOPT_URL, $eventsURL);
+curl_setopt($ch, CURLOPT_URL, $eventsUrl);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept-Language: ' . $i18n->LOCALE]);
 
 $eventsCatalogRaw = curl_exec($ch);
@@ -68,11 +68,11 @@ if (curl_errno($ch)) {
 
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 if ($httpCode >= 400) {
-    die('Error: Received HTTP code ' . $httpCode . ' from API at ' . $eventsURL);
+    die('Error: Received HTTP code ' . $httpCode . ' from API at ' . $eventsUrl);
 }
 
 if ($eventsCatalogRaw === false) {
-    die('Could not fetch events from API at ' . $eventsURL);
+    die('Could not fetch events from API at ' . $eventsUrl);
 }
 
 $litEventsJson = json_decode($eventsCatalogRaw, true);
@@ -675,6 +675,10 @@ let LiturgicalEventCollection = <?php echo json_encode($LiturgicalEventCollectio
 let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($LiturgicalEventCollection, 'event_key'), JSON_UNESCAPED_UNICODE); ?>;
 </script>
 <?php include_once('./layout/footer.php'); ?>
+
+<!-- Authentication Module -->
+<script src="assets/js/auth.js"></script>
+<?php include_once('./includes/login-modal.php'); ?>
 
 <!-- DEFINE MAKE PATRON MODAL  -->
 <div class="modal fade actionPromptModal" id="makePatronActionPrompt" tabindex="-1" role="dialog" aria-labelledby="makePatronActionModalLabel" aria-hidden="true">

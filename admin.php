@@ -33,7 +33,7 @@ $FormControls = new FormControls($i18n);
  * Fetch missals and events
  */
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $missalsURL . '/EDITIO_TYPICA_1970');
+curl_setopt($ch, CURLOPT_URL, $missalsUrl . '/EDITIO_TYPICA_1970');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept-Language: ' . $i18n->LOCALE]);
 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -44,17 +44,17 @@ if (curl_errno($ch)) {
 }
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 if ($httpCode >= 400) {
-    die('Error: Received HTTP code ' . $httpCode . ' from missals API at ' . $missalsURL);
+    die('Error: Received HTTP code ' . $httpCode . ' from missals API at ' . $missalsUrl);
 }
 
-curl_setopt($ch, CURLOPT_URL, $eventsURL);
+curl_setopt($ch, CURLOPT_URL, $eventsUrl);
 $eventsResponse = curl_exec($ch);
 if (curl_errno($ch)) {
     die('Error fetching events from API: ' . curl_error($ch));
 }
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 if ($httpCode >= 400) {
-    die('Error: Received HTTP code ' . $httpCode . ' from events API at ' . $eventsURL);
+    die('Error: Received HTTP code ' . $httpCode . ' from events API at ' . $eventsUrl);
 }
 
 /**

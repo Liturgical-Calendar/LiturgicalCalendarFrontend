@@ -31,7 +31,7 @@
     bottom: 0;
     left: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 2000;
+    z-index: 1030; /* Below Bootstrap modal (1055) and backdrop (1050) */
     display: flex;
     align-items: center;
     justify-content: center;

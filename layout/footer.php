@@ -20,8 +20,13 @@
 </div>
 <!-- End of Page Wrapper -->
 
-<!-- All API URLs are provided by common.php -->
+<!-- All API URLs and configuration are provided by common.php -->
 <script>
+const APIConfig = {
+    protocol: '<?php echo $_ENV['API_PROTOCOL']; ?>',
+    host: '<?php echo $_ENV['API_HOST']; ?>',
+    port: '<?php echo $_ENV['API_PORT']; ?>'
+};
 const BaseUrl         = '<?php echo $apiBaseUrl; ?>';
 const DateOfEasterUrl = '<?php echo $dateOfEasterUrl; ?>';
 const CalendarUrl     = '<?php echo $calendarUrl; ?>';
@@ -31,6 +36,7 @@ const MissalsUrl      = '<?php echo $missalsUrl; ?>';
 const DecreesUrl      = '<?php echo $decreesUrl; ?>';
 const RegionalDataUrl = '<?php echo $regionalDataUrl; ?>';
 console.log({
+    'APIConfig': APIConfig,
     'BaseUrl': BaseUrl,
     'DateOfEasterUrl': DateOfEasterUrl,
     'CalendarUrl': CalendarUrl,

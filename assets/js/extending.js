@@ -91,6 +91,138 @@ const initialHeaders = new Headers({
     'Accept': 'application/json'
 });
 
+/**
+ * Authentication Helper Functions
+ */
+
+/**
+ * Show login modal and execute callback after successful authentication
+ *
+ * @param {Function} callback - Function to execute after successful login
+ */
+function showLoginModal(callback) {
+    const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+
+    // Store callback to execute after successful login
+    window.postLoginCallback = callback;
+
+    loginModal.show();
+}
+
+/**
+ * Add Authorization header to protected requests
+ *
+ * @param {Headers} headers - Headers object to modify
+ * @returns {Headers} Modified headers with Authorization token
+ */
+function addAuthHeader(headers) {
+    const token = Auth.getToken();
+    if (token) {
+        headers.append('Authorization', `Bearer ${token}`);
+    }
+    return headers;
+}
+
+/**
+ * Handle authentication errors from API responses
+ * Attempts to refresh token on 401, or prompts for login
+ *
+ * @param {Response} response - Fetch API response object
+ * @param {Function} retryCallback - Function to retry the original request
+ * @returns {Promise<Response>} Original response or retried response
+ * @throws {Error} When authentication fails or user lacks permission
+ */
+async function handleAuthError(response, retryCallback) {
+    if (response.status === 401) {
+        // Token expired, try to refresh
+        try {
+            await Auth.refreshToken();
+            // Retry the original request
+            return retryCallback();
+        } catch (error) {
+            // Refresh failed, prompt for login
+            showLoginModal(retryCallback);
+            throw new Error('Authentication required');
+        }
+    } else if (response.status === 403) {
+        toastr.error('You do not have permission to perform this action', 'Permission Denied');
+        throw new Error('You do not have permission to perform this action');
+    }
+    return response;
+}
+
+/**
+ * Check if user is authenticated before performing an action
+ * Shows login modal if not authenticated
+ *
+ * @param {Function} callback - Function to execute after successful authentication
+ * @returns {boolean} True if authenticated, false if login modal shown
+ */
+function requireAuth(callback) {
+    if (!Auth.isAuthenticated()) {
+        showLoginModal(callback);
+        return false;
+    }
+    return true;
+}
+
+/**
+ * CSRF Protection Helpers
+ * Note: JWT tokens in headers provide CSRF protection by default,
+ * but these helpers are available if the API implements CSRF tokens
+ */
+
+/**
+ * Get CSRF token from meta tag or API endpoint
+ *
+ * @returns {Promise<string|null>} CSRF token or null if not available
+ */
+async function getCsrfToken() {
+    // Check for CSRF token in meta tag
+    const metaToken = document.querySelector('meta[name="csrf-token"]');
+    if (metaToken) {
+        return metaToken.getAttribute('content');
+    }
+
+    // If API supports CSRF endpoint, fetch it
+    // Note: This endpoint may not be implemented yet
+    try {
+        const authUrl = APIConfig.port
+            ? `${APIConfig.protocol}://${APIConfig.host}:${APIConfig.port}`
+            : `${APIConfig.protocol}://${APIConfig.host}`;
+        const response = await fetch(`${authUrl}/auth/csrf`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            return data.csrf_token || null;
+        }
+    } catch (error) {
+        console.debug('CSRF endpoint not available:', error.message);
+    }
+
+    return null;
+}
+
+/**
+ * Add CSRF token to headers if available
+ * Optional defense-in-depth measure
+ *
+ * @param {Headers} headers - Headers object to modify
+ * @returns {Promise<Headers>} Modified headers with CSRF token (if available)
+ */
+async function addCsrfHeader(headers) {
+    const csrfToken = await getCsrfToken();
+    if (csrfToken) {
+        headers.append('X-CSRF-Token', csrfToken);
+    }
+    return headers;
+}
+
 const missalsRequest = new Request(`${MissalsUrl}?include_empty=true`, {
     method: 'GET',
     headers: initialHeaders
@@ -1725,6 +1857,11 @@ const actionPromptButtonClicked = (ev) => {
  * on the current selected calendar.
  */
 const deleteCalendarConfirmClicked = () => {
+    // Check authentication before allowing delete
+    if (!requireAuth(deleteCalendarConfirmClicked)) {
+        return;
+    }
+
     document.querySelector('#overlay').classList.remove('hidden');
 
     const removeCalendarDataPrompt = document.querySelector('#removeCalendarDataPrompt');
@@ -1736,11 +1873,24 @@ const deleteCalendarConfirmClicked = () => {
         'Accept': 'application/json',
         'Accept-Language': API.locale
     });
-    const request = new Request(API.path, {
-        method: 'DELETE',
-        headers
-    });
-    fetch(request).then(response => {
+    // Add Authorization header
+    addAuthHeader(headers);
+
+    const makeDeleteRequest = () => {
+        const request = new Request(API.path, {
+            method: 'DELETE',
+            headers
+        });
+        return fetch(request);
+    };
+
+    makeDeleteRequest().then(async response => {
+        // Handle auth errors
+        if (response.status === 401 || response.status === 403) {
+            return await handleAuthError(response, makeDeleteRequest);
+        }
+        return response;
+    }).then(response => {
         if (response.ok) {
             switch ( API.category ) {
                 case 'widerregion':
@@ -1896,6 +2046,11 @@ const deleteCalendarConfirmClicked = () => {
  *          - metadata.url_lang_map
 */
 const serializeRegionalNationalDataClicked = (ev) => {
+    // Check authentication before allowing write operations
+    if (!requireAuth(() => serializeRegionalNationalDataClicked(ev))) {
+        return;
+    }
+
     document.querySelector('#overlay').classList.remove('hidden');
     API.category = ev.target.dataset.category;
 
@@ -2086,19 +2241,28 @@ const serializeRegionalNationalDataClicked = (ev) => {
     if ( API.locale !== '' ) {
         headers.append('Accept-Language', API.locale);
     }
+    // Add Authorization header
+    addAuthHeader(headers);
 
-    const request = new Request(API.path, {
-        method: API.method,
-        headers,
-        body: JSON.stringify(finalPayload)
-    });
+    const makeRequest = () => {
+        const request = new Request(API.path, {
+            method: API.method,
+            headers,
+            body: JSON.stringify(finalPayload)
+        });
+        return fetch(request);
+    };
 
-    console.log('we are ready to make the request', request);
+    console.log('we are ready to make the request');
     console.log('final payload:', finalPayload);
     console.log('json stringified payload:', JSON.stringify(finalPayload));
 
-    fetch(request)
-    .then(response => {
+    makeRequest()
+    .then(async response => {
+        // Handle auth errors
+        if (response.status === 401 || response.status === 403) {
+            return await handleAuthError(response, makeRequest);
+        }
         if (!response.ok) {
             return response.json().then(err => { throw err; });
         }
@@ -3186,3 +3350,129 @@ document.addEventListener('hidden.bs.modal', (ev) => {
         document.querySelector('#addPublishedRomanMissal').focus();
     }
 });
+
+/**
+ * Authentication UI Management
+ */
+
+/**
+ * Update UI elements based on authentication state
+ */
+function updateAuthUI() {
+    const loginBtn = document.getElementById('loginBtn');
+    const userMenu = document.getElementById('userMenu');
+    const username = document.getElementById('username');
+
+    if (!loginBtn || !userMenu) {
+        return; // Not on a page with auth UI
+    }
+
+    if (Auth.isAuthenticated()) {
+        // Show user menu, hide login button
+        loginBtn.classList.add('d-none');
+        userMenu.classList.remove('d-none');
+
+        // Display username if available
+        const token = Auth.getToken();
+        if (token && username) {
+            try {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                if (payload.username) {
+                    username.textContent = payload.username;
+                }
+            } catch (e) {
+                console.error('Failed to parse JWT token', e);
+            }
+        }
+    } else {
+        // Show login button, hide user menu
+        loginBtn.classList.remove('d-none');
+        userMenu.classList.add('d-none');
+    }
+}
+
+// Initialize Auth module and UI
+if (typeof Auth !== 'undefined') {
+    // Check if user is authenticated (validates token automatically)
+    Auth.isAuthenticated();
+
+    // Update UI based on auth state
+    updateAuthUI();
+
+    // Set up event listeners for login/logout buttons
+    const loginBtn = document.getElementById('loginBtn');
+    if (loginBtn) {
+        loginBtn.addEventListener('click', () => {
+            showLoginModal(null);
+        });
+    }
+
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+            await Auth.logout();
+            updateAuthUI();
+            toastr.success('Successfully logged out', 'Success');
+        });
+    }
+
+    // Clean up backdrop when login modal is closed
+    const loginModalEl = document.getElementById('loginModal');
+    if (loginModalEl) {
+        loginModalEl.addEventListener('hidden.bs.modal', () => {
+            // Remove any leftover backdrop
+            const backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) {
+                backdrop.remove();
+            }
+            document.body.classList.remove('modal-open');
+            document.body.style.removeProperty('overflow');
+            document.body.style.removeProperty('padding-right');
+        });
+    }
+
+    // Handle login form submission
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const rememberMe = document.getElementById('loginRememberMe').checked;
+
+            try {
+                await Auth.login(username, password, rememberMe);
+                updateAuthUI();
+                toastr.success('Successfully logged in', 'Success');
+
+                // Close modal and clean up backdrop
+                const loginModalEl = document.getElementById('loginModal');
+                const loginModal = bootstrap.Modal.getInstance(loginModalEl);
+                if (loginModal) {
+                    loginModal.hide();
+                }
+
+                // Ensure backdrop is removed (Bootstrap sometimes leaves it)
+                setTimeout(() => {
+                    const backdrop = document.querySelector('.modal-backdrop');
+                    if (backdrop) {
+                        backdrop.remove();
+                    }
+                    document.body.classList.remove('modal-open');
+                    document.body.style.removeProperty('overflow');
+                    document.body.style.removeProperty('padding-right');
+                }, 150);
+
+                // Execute post-login callback if exists
+                if (window.postLoginCallback && typeof window.postLoginCallback === 'function') {
+                    window.postLoginCallback();
+                    window.postLoginCallback = null;
+                }
+            } catch (error) {
+                console.error('Login failed', error);
+                toastr.error(error.message || 'Login failed', 'Error');
+            }
+        });
+    }
+}

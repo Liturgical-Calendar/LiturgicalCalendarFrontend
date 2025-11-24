@@ -41,7 +41,7 @@ $c->asort($AvailableLocalesWithRegion);
 
 $ch = curl_init();
 
-curl_setopt($ch, CURLOPT_URL, $dateOfEasterURL . '?locale=' . $currentLocale);
+curl_setopt($ch, CURLOPT_URL, $dateOfEasterUrl . '?locale=' . $currentLocale);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($ch);
 if (curl_errno($ch)) {

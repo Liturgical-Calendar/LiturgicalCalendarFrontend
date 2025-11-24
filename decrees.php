@@ -35,12 +35,12 @@ $RowActionTitle = [
 ];
 
 [ 'litcal_decrees' => $LitCalDecrees ] = json_decode(
-    file_get_contents($decreesURL),
+    file_get_contents($decreesUrl),
     true
 );
 
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $eventsURL);
+curl_setopt($ch, CURLOPT_URL, $eventsUrl);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept-Language: ' . $i18n->LOCALE]);
 $response = curl_exec($ch);
@@ -69,7 +69,7 @@ curl_close($ch);
             echo sprintf(
                 _('Currently, these endpoints are read-only. There are currently <b>%d Decrees</b> defined at the endpoint %s.'),
                 count($LitCalDecrees),
-                "<a href=\"{$decreesURL}\" target=\"_blank\">{$decreesURL}</a>"
+                "<a href=\"{$decreesUrl}\" target=\"_blank\">{$decreesUrl}</a>"
             );
         ?></p>
         <?php

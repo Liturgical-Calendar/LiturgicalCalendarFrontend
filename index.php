@@ -165,7 +165,7 @@ $formLabelB = sprintf(
                     'using a PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian easter (observed by the Roman Catholic church) ' .
                     'and of the Meeus algorithm for Julian easter (observed by orthodox churches).'); ?>
                     <p><?php echo $EASTER_CALCULATOR_API; ?></p>
-                    <div class="text-center"><a href="<?php echo $dateOfEasterURL ?>" class="btn btn-primary m-2"><?php echo _('Dates of Easter API endpoint'); ?></a></div>
+                    <div class="text-center"><a href="<?php echo $dateOfEasterUrl ?>" class="btn btn-primary m-2"><?php echo _('Dates of Easter API endpoint'); ?></a></div>
                     <small class="text-muted">
                         <i><?php echo _('Currently the data can be requested with almost any localization. ' .
                         'In any case, since the API returns a UNIX timestamp for each date of Easter, localizations can be done in a client application just as well.'); ?></i>
