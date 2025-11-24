@@ -19,3 +19,15 @@ parameters:
         - examples
         - .intelephense-helper.php
     treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        # Variables defined in common.php (included by all main files)
+        - '#Variable \$i18n might not be defined#'
+        - '#Variable \$missalsUrl might not be defined#'
+        - '#Variable \$eventsUrl might not be defined#'
+        - '#Variable \$decreesUrl might not be defined#'
+        - '#Variable \$dateOfEasterUrl might not be defined#'
+        - '#Variable \$metadataUrl might not be defined#'
+        - '#Variable \$apiBaseUrl might not be defined#'
+        - '#Variable \$calendarUrl might not be defined#'
+        - '#Variable \$regionalDataUrl might not be defined#'
+        - '#Variable \$calSubscriptionUrl might not be defined#'

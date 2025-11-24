@@ -39,6 +39,8 @@ class LitColor
             case self::ROSE:
                 /**translators: context = liturgical color */
                 return $locale === 'LA' ? 'rosea'       : _('rose');
+            default:
+                return '';
         }
     }
 }
