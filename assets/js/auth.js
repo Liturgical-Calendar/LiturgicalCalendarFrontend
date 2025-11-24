@@ -12,6 +12,13 @@ const Auth = {
     REFRESH_KEY: 'litcal_refresh_token',
 
     /**
+     * Interval IDs for auto-refresh and expiry warning timers
+     * @private
+     */
+    _autoRefreshInterval: null,
+    _expiryWarningInterval: null,
+
+    /**
      * Login with username and password
      *
      * @param {string} username - User's username
@@ -269,9 +276,15 @@ const Auth = {
      * Checks every minute and refreshes if less than 5 minutes until expiry
      */
     startAutoRefresh() {
+        // Prevent multiple concurrent intervals
+        if (this._autoRefreshInterval !== null) {
+            console.warn('Auto-refresh already running');
+            return;
+        }
+
         const checkInterval = 60000; // Check every minute
 
-        setInterval(async () => {
+        this._autoRefreshInterval = setInterval(async () => {
             if (!this.isAuthenticated()) return;
 
             const payload = this.getPayload();
@@ -293,13 +306,29 @@ const Auth = {
     },
 
     /**
+     * Stop auto-refresh timer
+     */
+    stopAutoRefresh() {
+        if (this._autoRefreshInterval !== null) {
+            clearInterval(this._autoRefreshInterval);
+            this._autoRefreshInterval = null;
+        }
+    },
+
+    /**
      * Show warning before token expiry
      * Checks every 30 seconds and warns if less than 2 minutes until expiry
      *
      * @param {Function} warningCallback - Function to call when warning should be shown
      */
     startExpiryWarning(warningCallback) {
-        setInterval(() => {
+        // Prevent multiple concurrent intervals
+        if (this._expiryWarningInterval !== null) {
+            console.warn('Expiry warning already running');
+            return;
+        }
+
+        this._expiryWarningInterval = setInterval(() => {
             if (!this.isAuthenticated()) return;
 
             const payload = this.getPayload();
@@ -317,6 +346,25 @@ const Auth = {
                 console.error('Expiry warning check failed:', error);
             }
         }, 30000); // Check every 30 seconds
+    },
+
+    /**
+     * Stop expiry warning timer
+     */
+    stopExpiryWarning() {
+        if (this._expiryWarningInterval !== null) {
+            clearInterval(this._expiryWarningInterval);
+            this._expiryWarningInterval = null;
+        }
+    },
+
+    /**
+     * Stop all timers (auto-refresh and expiry warning)
+     * Useful when cleaning up or logging out
+     */
+    stopAllTimers() {
+        this.stopAutoRefresh();
+        this.stopExpiryWarning();
     },
 
     /**
