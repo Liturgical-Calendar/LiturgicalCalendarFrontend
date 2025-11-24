@@ -112,8 +112,24 @@ $(document).ready(() => {
 });
 
 $(document).on('click', '#calSubscriptionUrlWrapper', () => {
-    navigator.clipboard.writeText($('#calSubscriptionUrl').text());
-    toastr["success"]("URL was copied to the clipboard","Success");
+    const urlText = $('#calSubscriptionUrl').text();
+
+    // Check if modern clipboard API is available
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(urlText)
+            .then(() => {
+                toastr["success"]("URL was copied to the clipboard", "Success");
+            })
+            .catch(err => {
+                console.error('Failed to copy to clipboard:', err);
+                toastr["error"]("Failed to copy URL to clipboard", "Error");
+            });
+    } else {
+        // Fallback for older browsers - use the selection method below
+        // The mouseup handler will handle the selection
+        console.warn('Clipboard API not available, using selection fallback');
+        toastr["info"]("Click and select the URL to copy", "Info");
+    }
 });
 
 $(document).on('click', '#examplesOfUsage > .card > .card-header button', ev => {
