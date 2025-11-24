@@ -3701,11 +3701,22 @@ function updateAuthUI() {
     }
 }
 
+/**
+ * Cleans up Bootstrap modal backdrop and body classes
+ * Centralized cleanup to avoid duplication
+ */
+function cleanupModalBackdrop() {
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+        backdrop.remove();
+    }
+    document.body.classList.remove('modal-open');
+    document.body.style.removeProperty('overflow');
+    document.body.style.removeProperty('padding-right');
+}
+
 // Initialize Auth module and UI
 if (typeof Auth !== 'undefined') {
-    // Check if user is authenticated (validates token automatically)
-    Auth.isAuthenticated();
-
     // Update UI based on auth state
     updateAuthUI();
 
@@ -3729,16 +3740,7 @@ if (typeof Auth !== 'undefined') {
     // Clean up backdrop when login modal is closed
     const loginModalEl = document.getElementById('loginModal');
     if (loginModalEl) {
-        loginModalEl.addEventListener('hidden.bs.modal', () => {
-            // Remove any leftover backdrop
-            const backdrop = document.querySelector('.modal-backdrop');
-            if (backdrop) {
-                backdrop.remove();
-            }
-            document.body.classList.remove('modal-open');
-            document.body.style.removeProperty('overflow');
-            document.body.style.removeProperty('padding-right');
-        });
+        loginModalEl.addEventListener('hidden.bs.modal', cleanupModalBackdrop);
     }
 
     // Handle login form submission
@@ -3763,16 +3765,8 @@ if (typeof Auth !== 'undefined') {
                     loginModal.hide();
                 }
 
-                // Ensure backdrop is removed (Bootstrap sometimes leaves it)
-                setTimeout(() => {
-                    const backdrop = document.querySelector('.modal-backdrop');
-                    if (backdrop) {
-                        backdrop.remove();
-                    }
-                    document.body.classList.remove('modal-open');
-                    document.body.style.removeProperty('overflow');
-                    document.body.style.removeProperty('padding-right');
-                }, 150);
+                // Ensure backdrop is removed after hide (Bootstrap sometimes leaves it)
+                setTimeout(cleanupModalBackdrop, 150);
 
                 // Execute post-login callback if exists
                 if (window.postLoginCallback && typeof window.postLoginCallback === 'function') {
