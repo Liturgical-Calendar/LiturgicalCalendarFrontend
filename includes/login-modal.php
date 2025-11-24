@@ -45,54 +45,84 @@ let loginSuccessCallback = null;
  * Initialize authentication UI components
  */
 document.addEventListener('DOMContentLoaded', () => {
+    // Guard against missing Auth dependency
+    if (typeof Auth === 'undefined') {
+        console.error('Auth module not loaded - authentication UI will not function');
+        return;
+    }
+
     updateAuthUI();
 
     // Login button click handler
-    document.getElementById('loginBtn').addEventListener('click', () => {
-        showLoginModal();
-    });
+    const loginBtn = document.getElementById('loginBtn');
+    if (loginBtn) {
+        loginBtn.addEventListener('click', () => {
+            showLoginModal();
+        });
+    }
 
     // Logout button click handler
-    document.getElementById('logoutBtn').addEventListener('click', async () => {
-        if (confirm('<?php echo _('Are you sure you want to logout?'); ?>')) {
-            await Auth.logout();
-        }
-    });
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+            if (confirm('<?php echo _('Are you sure you want to logout?'); ?>')) {
+                await Auth.logout();
+            }
+        });
+    }
 
     // Login form submit handler
-    document.getElementById('loginSubmit').addEventListener('click', async () => {
-        await handleLogin();
-    });
+    const loginSubmit = document.getElementById('loginSubmit');
+    if (loginSubmit) {
+        loginSubmit.addEventListener('click', async () => {
+            await handleLogin();
+        });
+    }
 
     // Allow Enter key to submit login form
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        await handleLogin();
-    });
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await handleLogin();
+        });
+    }
 
     // Toggle password visibility
-    document.getElementById('togglePassword').addEventListener('click', () => {
-        const passwordInput = document.getElementById('loginPassword');
-        const toggleIcon = document.getElementById('togglePasswordIcon');
-        const toggleButton = document.getElementById('togglePassword');
+    const togglePassword = document.getElementById('togglePassword');
+    if (togglePassword) {
+        togglePassword.addEventListener('click', () => {
+            const passwordInput = document.getElementById('loginPassword');
+            const toggleIcon = document.getElementById('togglePasswordIcon');
+            const toggleButton = document.getElementById('togglePassword');
 
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            toggleIcon.classList.remove('fa-eye');
-            toggleIcon.classList.add('fa-eye-slash');
-            toggleButton.title = '<?php echo _('Hide password'); ?>';
-        } else {
-            passwordInput.type = 'password';
-            toggleIcon.classList.remove('fa-eye-slash');
-            toggleIcon.classList.add('fa-eye');
-            toggleButton.title = '<?php echo _('Show password'); ?>';
-        }
-    });
+            if (passwordInput && toggleIcon && toggleButton) {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggleIcon.classList.remove('fa-eye');
+                    toggleIcon.classList.add('fa-eye-slash');
+                    toggleButton.title = '<?php echo _('Hide password'); ?>';
+                } else {
+                    passwordInput.type = 'password';
+                    toggleIcon.classList.remove('fa-eye-slash');
+                    toggleIcon.classList.add('fa-eye');
+                    toggleButton.title = '<?php echo _('Show password'); ?>';
+                }
+            }
+        });
+    }
 
     // Start session expiry warnings
-    Auth.startExpiryWarning((message) => {
-        toastr.warning(message, '<?php echo _('Session Expiring'); ?>');
-    });
+    if (typeof toastr !== 'undefined') {
+        Auth.startExpiryWarning((message) => {
+            toastr.warning(message, '<?php echo _('Session Expiring'); ?>');
+        });
+    } else {
+        // Fallback to console if toastr is not available
+        Auth.startExpiryWarning((message) => {
+            console.warn('Session expiring:', message);
+        });
+    }
 
     // Initialize permission-based UI elements
     initPermissionUI();
@@ -104,9 +134,21 @@ document.addEventListener('DOMContentLoaded', () => {
  * @param {Function} onSuccess - Callback to execute after successful login
  */
 function showLoginModal(onSuccess = null) {
+    // Guard against missing bootstrap or modal element
+    if (typeof bootstrap === 'undefined') {
+        console.error('Bootstrap library not loaded - cannot show login modal');
+        return;
+    }
+
+    const loginModalElement = document.getElementById('loginModal');
+    if (!loginModalElement) {
+        console.error('Login modal element not found');
+        return;
+    }
+
     // Initialize modal instance only once
     if (!loginModal) {
-        loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+        loginModal = new bootstrap.Modal(loginModalElement);
     }
 
     // Store success callback in module scope
@@ -115,8 +157,15 @@ function showLoginModal(onSuccess = null) {
     }
 
     // Clear previous errors and form values
-    document.getElementById('loginError').classList.add('d-none');
-    document.getElementById('loginForm').reset();
+    const loginError = document.getElementById('loginError');
+    const loginForm = document.getElementById('loginForm');
+
+    if (loginError) {
+        loginError.classList.add('d-none');
+    }
+    if (loginForm) {
+        loginForm.reset();
+    }
 
     loginModal.show();
 }
@@ -125,10 +174,21 @@ function showLoginModal(onSuccess = null) {
  * Handle login form submission
  */
 async function handleLogin() {
-    const username = document.getElementById('loginUsername').value.trim();
-    const password = document.getElementById('loginPassword').value;
-    const rememberMe = document.getElementById('rememberMe').checked;
+    const usernameInput = document.getElementById('loginUsername');
+    const passwordInput = document.getElementById('loginPassword');
+    const rememberMeInput = document.getElementById('rememberMe');
     const errorDiv = document.getElementById('loginError');
+    const loginSubmit = document.getElementById('loginSubmit');
+
+    // Guard against missing form elements
+    if (!usernameInput || !passwordInput || !rememberMeInput || !errorDiv || !loginSubmit) {
+        console.error('Login form elements not found');
+        return;
+    }
+
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value;
+    const rememberMe = rememberMeInput.checked;
 
     if (!username || !password) {
         errorDiv.textContent = '<?php echo _('Please enter both username and password'); ?>';
@@ -138,35 +198,43 @@ async function handleLogin() {
 
     try {
         // Show loading state
-        document.getElementById('loginSubmit').disabled = true;
-        document.getElementById('loginSubmit').innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span><?php echo _('Logging in...'); ?>';
+        loginSubmit.disabled = true;
+        loginSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span><?php echo _('Logging in...'); ?>';
 
         await Auth.login(username, password, rememberMe);
 
         // Hide modal with proper cleanup after transition
         const loginModalElement = document.getElementById('loginModal');
-        const loginModal = bootstrap.Modal.getInstance(loginModalElement);
+        if (loginModalElement && typeof bootstrap !== 'undefined') {
+            const loginModal = bootstrap.Modal.getInstance(loginModalElement);
 
-        // Add one-time listener for modal hide completion
-        loginModalElement.addEventListener('hidden.bs.modal', () => {
-            // Clean up modal backdrop and body styles after transition completes
-            const backdrop = document.querySelector('.modal-backdrop');
-            if (backdrop) {
-                backdrop.remove();
+            if (loginModal) {
+                // Add one-time listener for modal hide completion
+                loginModalElement.addEventListener('hidden.bs.modal', () => {
+                    // Clean up modal backdrop and body styles after transition completes
+                    const backdrop = document.querySelector('.modal-backdrop');
+                    if (backdrop) {
+                        backdrop.remove();
+                    }
+                    document.body.classList.remove('modal-open');
+                    document.body.style.removeProperty('overflow');
+                    document.body.style.removeProperty('padding-right');
+                }, { once: true });
+
+                loginModal.hide();
             }
-            document.body.classList.remove('modal-open');
-            document.body.style.removeProperty('overflow');
-            document.body.style.removeProperty('padding-right');
-        }, { once: true });
-
-        loginModal.hide();
+        }
 
         // Update UI
         updateAuthUI();
         initPermissionUI();
 
         // Show success message
-        toastr.success('<?php echo _('Login successful'); ?>', '<?php echo _('Success'); ?>');
+        if (typeof toastr !== 'undefined') {
+            toastr.success('<?php echo _('Login successful'); ?>', '<?php echo _('Success'); ?>');
+        } else {
+            console.log('Login successful');
+        }
 
         // Call success callback if provided
         if (loginSuccessCallback) {
@@ -178,8 +246,8 @@ async function handleLogin() {
         errorDiv.classList.remove('d-none');
     } finally {
         // Reset button state
-        document.getElementById('loginSubmit').disabled = false;
-        document.getElementById('loginSubmit').textContent = '<?php echo _('Login'); ?>';
+        loginSubmit.disabled = false;
+        loginSubmit.textContent = '<?php echo _('Login'); ?>';
     }
 }
 
