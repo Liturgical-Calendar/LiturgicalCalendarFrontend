@@ -1,17 +1,16 @@
 
-//Escape HTML meta-characters to prevent DOM text injection/XSS
+// Escape HTML meta-characters to prevent DOM text injection/XSS
+const HTML_ESCAPE_MAP = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    '`': '&#x60;',
+};
+
 const escapeHtml = (input) => {
-    return input.replace(/[&<>"'`]/g, function (char) {
-        const map = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#x27;',
-            '`': '&#x60;'
-        };
-        return map[char];
-    });
+    return String(input).replace(/[&<>"'`]/g, (char) => HTML_ESCAPE_MAP[char]);
 };
 
 /**
