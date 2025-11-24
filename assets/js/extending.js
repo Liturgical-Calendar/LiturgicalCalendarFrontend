@@ -2634,6 +2634,121 @@ const resetOtherLocalizationInputs = () => {
 }
 
 /**
+ * Configures date field settings based on event type
+ * @param {Object} liturgical_event - The liturgical event object
+ */
+const configureDateFieldsForEvent = (liturgical_event) => {
+    if (liturgical_event.hasOwnProperty('strtotime')) {
+        FormControls.settings.dayField = false;
+        FormControls.settings.monthField = false;
+        FormControls.settings.strtotimeFieldShow = true;
+    } else {
+        FormControls.settings.dayField = true;
+        FormControls.settings.monthField = true;
+        FormControls.settings.strtotimeFieldShow = false;
+    }
+};
+
+/**
+ * Grade configuration mapping for carousel items
+ */
+const gradeConfig = {
+    [Rank.SOLEMNITY]: {
+        selector: '#carouselItemSolemnities',
+        title: Messages['Other Solemnity']
+    },
+    [Rank.FEAST]: {
+        selector: '#carouselItemFeasts',
+        title: Messages['Other Feast']
+    },
+    [Rank.MEMORIAL]: {
+        selector: '#carouselItemMemorials',
+        title: Messages['Other Memorial']
+    },
+    [Rank.OPTIONALMEMORIAL]: {
+        selector: '#carouselItemOptionalMemorials',
+        title: Messages['Other Optional Memorial']
+    }
+};
+
+/**
+ * Ensures enough form rows exist for the grade and returns the target row
+ * @param {number} grade - The liturgical grade (Rank enum value)
+ * @param {number} formRowNum - The target row number
+ * @returns {HTMLElement} The target row element
+ */
+const ensureRowsExistForGrade = (grade, formRowNum) => {
+    const config = gradeConfig[grade];
+    if (!config) {
+        throw new Error(`Unknown grade: ${grade}`);
+    }
+
+    const formSelector = `${config.selector} form`;
+    const rowSelector = `${formSelector} .row`;
+    const numLastRow = document.querySelectorAll(rowSelector).length - 1;
+
+    if (formRowNum > numLastRow) {
+        const numMissingRows = formRowNum - numLastRow;
+        FormControls.title = config.title;
+        FormControls.settings.commonField = true;
+
+        for (let i = 0; i < numMissingRows; i++) {
+            document.querySelector(formSelector).insertAdjacentHTML('beforeend', FormControls.CreateDiocesanFormRow());
+        }
+    }
+
+    return document.querySelectorAll(rowSelector)[formRowNum];
+};
+
+/**
+ * Populates a row with liturgical event data
+ * @param {HTMLElement} row - The row element to populate
+ * @param {Object} liturgical_event - The liturgical event data
+ * @param {Object} metadata - The event metadata
+ */
+const populateRowWithEventData = (row, liturgical_event, metadata) => {
+    // Set name and event key
+    row.querySelector('.litEventName').value = liturgical_event.name;
+    row.querySelector('.litEventName').setAttribute('data-valuewas', liturgical_event.event_key);
+
+    // Handle date fields (strtotime vs day/month)
+    if (liturgical_event.hasOwnProperty('strtotime')) {
+        if (row.querySelectorAll('.litEventStrtotime').length === 0) {
+            switcheroo(row, liturgical_event);
+        }
+        row.querySelector('.litEventStrtotime').value = liturgical_event.strtotime;
+    } else {
+        if (row.querySelectorAll('.litEventStrtotime').length > 0) {
+            unswitcheroo(row, liturgical_event);
+        }
+        row.querySelector('.litEventDay').value = liturgical_event.day;
+        row.querySelector('.litEventMonth').value = liturgical_event.month;
+    }
+
+    // Set common multiselect
+    if (Array.isArray(liturgical_event.common) && liturgical_event.common.length) {
+        setCommonMultiselect(row, liturgical_event.common);
+    }
+
+    // Set color multiselect
+    $(row.querySelector('.litEventColor')).multiselect({
+        buttonWidth: '100%',
+        buttonClass: 'form-select',
+        templates: {
+            button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+        }
+    }).multiselect('deselectAll', false).multiselect('select', Array.isArray(liturgical_event.color) ? liturgical_event.color : []);
+
+    // Set year bounds
+    row.querySelector('.litEventSinceYear').value = metadata.since_year;
+    if (metadata.hasOwnProperty('until_year')) {
+        row.querySelector('.litEventUntilYear').value = metadata.until_year;
+    } else {
+        row.querySelector('.litEventUntilYear').min = metadata.since_year + 1;
+    }
+};
+
+/**
  * Handles retrieving the Diocesan Calendar data and related i18n data from the API.
  * @function
  */
@@ -2854,99 +2969,15 @@ const unswitcheroo = ( row, LiturgicalEvent ) => {
 const fillDiocesanFormWithData = (data) => {
     for (const entry of data.litcal) {
         const { liturgical_event, metadata } = entry;
-        let row;
-        let numLastRow;
-        let numMissingRows;
-        if (liturgical_event.hasOwnProperty('strtotime')) {
-            FormControls.settings.dayField = false;
-            FormControls.settings.monthField = false;
-            FormControls.settings.strtotimeFieldShow = true;
-        } else {
-            FormControls.settings.dayField = true;
-            FormControls.settings.monthField = true;
-            FormControls.settings.strtotimeFieldShow = false;
-        }
-        switch (liturgical_event.grade) {
-            case Rank.SOLEMNITY:
-                numLastRow = document.querySelectorAll('#carouselItemSolemnities form .row').length - 1;
-                if (metadata.form_rownum > numLastRow) {
-                    numMissingRows = metadata.form_rownum - numLastRow;
-                    FormControls.title = Messages['Other Solemnity'];
-                    FormControls.settings.commonField = true;
-                    while (numMissingRows-- > 0) {
-                        document.querySelector('#carouselItemSolemnities form').insertAdjacentHTML('beforeend', FormControls.CreateDiocesanFormRow());
-                    }
-                }
-                row = document.querySelectorAll('#carouselItemSolemnities form .row')[metadata.form_rownum];
-                break;
-            case Rank.FEAST:
-                numLastRow = document.querySelectorAll('#carouselItemFeasts form .row').length - 1;
-                if (metadata.form_rownum > numLastRow) {
-                    numMissingRows = metadata.form_rownum - numLastRow;
-                    FormControls.title = Messages['Other Feast'];
-                    FormControls.settings.commonField = true;
-                    while (numMissingRows-- > 0) {
-                         document.querySelector('#carouselItemFeasts form').insertAdjacentHTML('beforeend', FormControls.CreateDiocesanFormRow());
-                    }
-                }
-                row = document.querySelectorAll('#carouselItemFeasts form .row')[metadata.form_rownum];
-                break;
-            case Rank.MEMORIAL:
-                numLastRow = document.querySelectorAll('#carouselItemMemorials form .row').length - 1;
-                if (metadata.form_rownum > numLastRow) {
-                    numMissingRows = metadata.form_rownum - numLastRow;
-                    FormControls.title = Messages['Other Memorial'];
-                    FormControls.settings.commonField = true;
-                    while (numMissingRows-- > 0) {
-                        document.querySelector('#carouselItemMemorials form').insertAdjacentHTML('beforeend', FormControls.CreateDiocesanFormRow());
-                    }
-                }
-                row = document.querySelectorAll('#carouselItemMemorials form .row')[metadata.form_rownum];
-                break;
-            case Rank.OPTIONALMEMORIAL:
-                numLastRow = document.querySelectorAll('#carouselItemOptionalMemorials form .row').length - 1;
-                if (metadata.form_rownum > numLastRow) {
-                    numMissingRows = metadata.form_rownum - numLastRow;
-                    FormControls.title = Messages['Other Optional Memorial'];
-                    FormControls.settings.commonField = true;
-                    while (numMissingRows-- > 0) {
-                        document.querySelector('#carouselItemOptionalMemorials form').insertAdjacentHTML('beforeend', FormControls.CreateDiocesanFormRow());
-                    }
-                }
-                row = document.querySelectorAll('#carouselItemOptionalMemorials form .row')[metadata.form_rownum];
-                break;
-        }
-        row.querySelector('.litEventName').value = liturgical_event.name;
-        row.querySelector('.litEventName').setAttribute('data-valuewas', liturgical_event.event_key);
 
-        if ( liturgical_event.hasOwnProperty('strtotime') ) {
-            if ( row.querySelectorAll('.litEventStrtotime').length === 0 ) {
-                switcheroo( row, liturgical_event );
-            }
-            row.querySelector('.litEventStrtotime').value = liturgical_event.strtotime;
-        } else {
-            if ( row.querySelectorAll('.litEventStrtotime').length > 0 ) {
-                unswitcheroo( row, liturgical_event );
-            }
-            row.querySelector('.litEventDay').value = liturgical_event.day;
-            row.querySelector('.litEventMonth').value = liturgical_event.month;
-        }
-        if (Array.isArray(liturgical_event.common) && liturgical_event.common.length) {
-            setCommonMultiselect(row, liturgical_event.common);
-        }
-        $(row.querySelector('.litEventColor')).multiselect({
-            buttonWidth: '100%',
-            buttonClass: 'form-select',
-            templates: {
-                button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
-            }
-        }).multiselect('deselectAll', false).multiselect('select', Array.isArray(liturgical_event.color) ? liturgical_event.color : []);
-        row.querySelector('.litEventSinceYear').value = metadata.since_year;
-        if ( metadata.hasOwnProperty('until_year') ) {
-            row.querySelector('.litEventUntilYear').value = metadata.until_year;
-        } else {
-            row.querySelector('.litEventUntilYear').min = metadata.since_year + 1;
-        }
+        // Configure date field visibility
+        configureDateFieldsForEvent(liturgical_event);
+
+        // Ensure row exists and get it
+        const row = ensureRowsExistForGrade(liturgical_event.grade, metadata.form_rownum);
+
+        // Populate row with event data
+        populateRowWithEventData(row, liturgical_event, metadata);
     }
 }
 
