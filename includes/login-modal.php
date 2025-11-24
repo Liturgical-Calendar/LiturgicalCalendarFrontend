@@ -137,12 +137,13 @@ async function handleLogin() {
 
         await Auth.login(username, password, rememberMe);
 
-        // Hide modal
-        const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-        loginModal.hide();
+        // Hide modal with proper cleanup after transition
+        const loginModalElement = document.getElementById('loginModal');
+        const loginModal = bootstrap.Modal.getInstance(loginModalElement);
 
-        // Ensure backdrop is removed (Bootstrap sometimes leaves it)
-        setTimeout(() => {
+        // Add one-time listener for modal hide completion
+        loginModalElement.addEventListener('hidden.bs.modal', () => {
+            // Clean up modal backdrop and body styles after transition completes
             const backdrop = document.querySelector('.modal-backdrop');
             if (backdrop) {
                 backdrop.remove();
@@ -150,7 +151,9 @@ async function handleLogin() {
             document.body.classList.remove('modal-open');
             document.body.style.removeProperty('overflow');
             document.body.style.removeProperty('padding-right');
-        }, 150);
+        }, { once: true });
+
+        loginModal.hide();
 
         // Update UI
         updateAuthUI();
