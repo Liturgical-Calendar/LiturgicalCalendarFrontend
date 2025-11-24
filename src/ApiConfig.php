@@ -38,6 +38,11 @@ class ApiConfig
     /**
      * Get the singleton instance
      *
+     * IMPORTANT: The first non-null $apiBaseUrl provided wins. Subsequent calls
+     * with different URLs are silently ignored and return the original instance.
+     * This ensures configuration consistency throughout the application lifecycle.
+     * To reconfigure, call reset() first (test environments only).
+     *
      * @param string|null $apiBaseUrl Base API URL (required on first call)
      * @return self
      * @throws \RuntimeException if called without URL before initialization
@@ -57,7 +62,11 @@ class ApiConfig
     }
 
     /**
-     * Reset the singleton instance (useful for testing)
+     * Reset the singleton instance
+     *
+     * @internal This method is intended for testing purposes only.
+     *           Do NOT use in production code as it will cause configuration
+     *           inconsistencies mid-request. Use only in test tearDown/setUp.
      */
     public static function reset(): void
     {
