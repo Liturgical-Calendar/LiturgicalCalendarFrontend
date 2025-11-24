@@ -3408,9 +3408,9 @@ if (typeof Auth !== 'undefined') {
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
+            // Auth.logout() clears tokens and reloads the page
+            // No need for updateAuthUI() or toast - page will refresh
             await Auth.logout();
-            updateAuthUI();
-            toastr.success('Successfully logged out', 'Success');
         });
     }
 
