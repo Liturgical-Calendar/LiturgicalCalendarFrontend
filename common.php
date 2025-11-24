@@ -70,6 +70,8 @@ $apiCspUrl = "{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}" . $apiPort;
 
 // Content Security Policy - Phase 2 Enhanced Security
 // This MUST be set in PHP because it includes the dynamic API URL from .env
+// TODO: Phase 3 - Remove 'unsafe-inline' from script-src and style-src for stronger CSP
+//       Move inline scripts to external .js files or use nonces/hashes
 header('Content-Security-Policy: ' .
     "default-src 'self'; " .
     "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://cdn.skypack.dev; " .
@@ -124,6 +126,14 @@ function setSecureCookie(
     string $sameSite = 'Strict'
 ): bool {
     global $isHttps;
+
+    // Validate SameSite value
+    $validSameSite = ['Strict', 'Lax', 'None'];
+    if (!in_array($sameSite, $validSameSite, true)) {
+        throw new InvalidArgumentException(
+            'Invalid SameSite value. Must be one of: ' . implode(', ', $validSameSite)
+        );
+    }
 
     $options = [
         'expires'  => $expire,
