@@ -46,7 +46,7 @@ const Auth = {
             }
 
             const data = await response.json();
-            this.setToken(data.token, rememberMe);
+            this.setToken(data.access_token, rememberMe);
 
             if (data.refresh_token) {
                 this.setRefreshToken(data.refresh_token, rememberMe);
@@ -207,11 +207,11 @@ const Auth = {
 
             const data = await response.json();
             // Write refreshed tokens back to the same storage tier
-            this.setToken(data.token, isPersistent);
+            this.setToken(data.access_token, isPersistent);
             if (data.refresh_token) {
                 this.setRefreshToken(data.refresh_token, isPersistent);
             }
-            return data.token;
+            return data.access_token;
         } catch (error) {
             this.clearTokens();
             throw error;
