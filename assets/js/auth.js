@@ -33,8 +33,16 @@ const Auth = {
             });
 
             if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || 'Login failed');
+                let message = 'Login failed';
+                try {
+                    const error = await response.json();
+                    message = error.message || message;
+                } catch {
+                    // Response wasn't JSON, try to get as text
+                    const text = await response.text().catch(() => '');
+                    if (text) message = text;
+                }
+                throw new Error(message);
             }
 
             const data = await response.json();
@@ -185,7 +193,16 @@ const Auth = {
             });
 
             if (!response.ok) {
-                throw new Error('Token refresh failed');
+                let message = 'Token refresh failed';
+                try {
+                    const error = await response.json();
+                    message = error.message || message;
+                } catch {
+                    // Response wasn't JSON, try to get as text
+                    const text = await response.text().catch(() => '');
+                    if (text) message = text;
+                }
+                throw new Error(message);
             }
 
             const data = await response.json();
