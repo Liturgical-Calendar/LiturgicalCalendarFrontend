@@ -119,7 +119,8 @@ examples/
 !usage.php
 !layout/*.php
 !src/*.php
-!dist/index.php
+!dist/*.php
+!includes/*.php
 
 .php-ini
 .php-version
