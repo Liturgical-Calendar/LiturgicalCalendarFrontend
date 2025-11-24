@@ -180,14 +180,8 @@ if (file_exists($ghReleaseCacheFile)) {
     $GitHubLatestRelease = 'dev';
 }
 
-$dateOfEasterUrl    = "{$apiBaseUrl}/easter";
-$calendarUrl        = "{$apiBaseUrl}/calendar";
-$metadataUrl        = "{$apiBaseUrl}/calendars";
-$eventsUrl          = "{$apiBaseUrl}/events";
-$missalsUrl         = "{$apiBaseUrl}/missals";
-$decreesUrl         = "{$apiBaseUrl}/decrees";
-$regionalDataUrl    = "{$apiBaseUrl}/data";
-$calSubscriptionUrl = "{$apiBaseUrl}/calendar?returntype=ICS";
+// Initialize API configuration (singleton)
+$apiConfig = \LiturgicalCalendar\Frontend\ApiConfig::getInstance($apiBaseUrl);
 
 $i18n = new I18n();
 
@@ -250,6 +244,6 @@ $httpClient = HttpClientFactory::createProductionClient(
 
 // 4. Initialize ApiClient Singleton
 $apiClient = ApiClient::getInstance([
-    'apiUrl'     => $apiBaseUrl,
+    'apiUrl'     => $apiConfig->apiBaseUrl,
     'httpClient' => $httpClient
 ]);

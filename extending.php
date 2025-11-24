@@ -24,7 +24,7 @@ curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
 /**
  * Fetch metadata from API
  */
-curl_setopt($ch, CURLOPT_URL, $metadataUrl);
+curl_setopt($ch, CURLOPT_URL, $apiConfig->metadataUrl);
 $metadataRaw = curl_exec($ch);
 
 if (curl_errno($ch)) {
@@ -34,11 +34,11 @@ if (curl_errno($ch)) {
 
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 if ($httpCode >= 400) {
-    die('Error: Received HTTP code ' . $httpCode . ' from API at ' . $metadataUrl);
+    die('Error: Received HTTP code ' . $httpCode . ' from API at ' . $apiConfig->metadataUrl);
 }
 
 if ($metadataRaw === false) {
-    die('Could not fetch metadata from API at ' . $metadataUrl);
+    die('Could not fetch metadata from API at ' . $apiConfig->metadataUrl);
 }
 
 $metadataJson = json_decode($metadataRaw, true);
@@ -56,7 +56,7 @@ if (false === isset($metadataJson['litcal_metadata'])) {
 /**
  * Fetch liturgical events catalog from API
  */
-curl_setopt($ch, CURLOPT_URL, $eventsUrl);
+curl_setopt($ch, CURLOPT_URL, $apiConfig->eventsUrl);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept-Language: ' . $i18n->LOCALE]);
 
 $eventsCatalogRaw = curl_exec($ch);
@@ -68,11 +68,11 @@ if (curl_errno($ch)) {
 
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 if ($httpCode >= 400) {
-    die('Error: Received HTTP code ' . $httpCode . ' from API at ' . $eventsUrl);
+    die('Error: Received HTTP code ' . $httpCode . ' from API at ' . $apiConfig->eventsUrl);
 }
 
 if ($eventsCatalogRaw === false) {
-    die('Could not fetch events from API at ' . $eventsUrl);
+    die('Could not fetch events from API at ' . $apiConfig->eventsUrl);
 }
 
 $litEventsJson = json_decode($eventsCatalogRaw, true);

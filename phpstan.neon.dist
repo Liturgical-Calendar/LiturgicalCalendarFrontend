@@ -18,16 +18,25 @@ parameters:
     excludePaths:
         - examples (?)
         - .intelephense-helper.php
+    scanFiles:
+        - common.php
     treatPhpDocTypesAsCertain: false
     ignoreErrors:
-        # Variables defined in common.php (included by all main files)
-        - '#Variable \$i18n might not be defined#'
-        - '#Variable \$missalsUrl might not be defined#'
-        - '#Variable \$eventsUrl might not be defined#'
-        - '#Variable \$decreesUrl might not be defined#'
-        - '#Variable \$dateOfEasterUrl might not be defined#'
-        - '#Variable \$metadataUrl might not be defined#'
-        - '#Variable \$apiBaseUrl might not be defined#'
-        - '#Variable \$calendarUrl might not be defined#'
-        - '#Variable \$regionalDataUrl might not be defined#'
-        - '#Variable \$calSubscriptionUrl might not be defined#'
+        # Bootstrap variables - All analyzed files include common.php which defines these
+        # variables (see common.php lines 184-186). PHPStan cannot detect this because it
+        # doesn't execute includes during static analysis. These are FALSE POSITIVES -
+        # variables ARE defined at runtime.
+        -
+            message: '#Variable \$(i18n|apiConfig) might not be defined\.#'
+            paths:
+                - about.php
+                - admin.php
+                - decrees.php
+                - easter.php
+                - examples.php
+                - extending.php
+                - index.php
+                - layout/footer.php
+                - layout/header.php
+                - liturgyOfAnyDay.php
+                - usage.php
