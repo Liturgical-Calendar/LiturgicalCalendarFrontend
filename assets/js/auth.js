@@ -1,3 +1,5 @@
+/* global APIConfig */
+
 /**
  * Authentication helper module for JWT token management
  * Handles login, logout, token storage, and automatic token refresh

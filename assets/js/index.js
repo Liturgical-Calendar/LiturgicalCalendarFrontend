@@ -1,3 +1,5 @@
+/* global BaseUrl, bootstrap */
+
 import { ApiClient, CalendarSelect, ApiOptions, Input, ApiOptionsFilter, PathBuilder } from '@liturgical-calendar/components-js';
 
 Input.setGlobalInputClass('form-select');

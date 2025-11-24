@@ -1,3 +1,5 @@
+/* global Auth, APIConfig, bootstrap, toastr, $, Messages, EventsUrl, MissalsUrl, RegionalDataUrl */
+
 import {
     FormControls,
     LitEvent,
