@@ -164,6 +164,11 @@ async function handleAuthError(response, retryCallback) {
  * @returns {boolean} True if authenticated, false if login modal shown
  */
 function requireAuth(callback) {
+    if (typeof Auth === 'undefined') {
+        console.error('Auth module not loaded; blocking protected action.');
+        toastr.error('Authentication module is not available. Please reload the page.', 'Error');
+        return false;
+    }
     if (!Auth.isAuthenticated()) {
         showLoginModal(callback);
         return false;
@@ -173,8 +178,10 @@ function requireAuth(callback) {
 
 /**
  * CSRF Protection Helpers
+ *
  * Note: JWT tokens in headers provide CSRF protection by default,
- * but these helpers are available if the API implements CSRF tokens
+ * but these helpers add defense-in-depth if the API implements CSRF tokens.
+ * Integrated into all authenticated requests (makeRequest, makeDeleteRequest).
  */
 
 /**
@@ -1879,9 +1886,10 @@ const deleteCalendarConfirmClicked = () => {
         'Accept-Language': API.locale
     });
 
-    const makeDeleteRequest = () => {
+    const makeDeleteRequest = async () => {
         const requestHeaders = new Headers(baseHeaders);
         addAuthHeader(requestHeaders);
+        await addCsrfHeader(requestHeaders);
         return fetch(new Request(API.path, {
             method: 'DELETE',
             headers: requestHeaders
@@ -2252,9 +2260,10 @@ const serializeRegionalNationalDataClicked = (ev) => {
         baseHeaders.append('Accept-Language', API.locale);
     }
 
-    const makeRequest = () => {
+    const makeRequest = async () => {
         const requestHeaders = new Headers(baseHeaders);
         addAuthHeader(requestHeaders);
+        await addCsrfHeader(requestHeaders);
         return fetch(new Request(API.path, {
             method: API.method,
             headers: requestHeaders,
