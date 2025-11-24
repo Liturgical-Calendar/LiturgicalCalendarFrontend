@@ -117,9 +117,8 @@ examples/
 !liturgyOfAnyDay.php
 !translations.php
 !usage.php
-!layout/footer.php
-!layout/header.php
-!layout/head.php
+!layout/*.php
+!src/*.php
 !dist/index.php
 
 .php-ini
