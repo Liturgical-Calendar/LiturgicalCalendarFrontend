@@ -89,6 +89,9 @@ document.addEventListener('DOMContentLoaded', () => {
     Auth.startExpiryWarning((message) => {
         toastr.warning(message, '<?php echo _('Session Expiring'); ?>');
     });
+
+    // Initialize permission-based UI elements
+    initPermissionUI();
 });
 
 /**
@@ -151,6 +154,7 @@ async function handleLogin() {
 
         // Update UI
         updateAuthUI();
+        initPermissionUI();
 
         // Show success message
         toastr.success('<?php echo _('Login successful'); ?>', '<?php echo _('Success'); ?>');
@@ -212,7 +216,4 @@ function initPermissionUI() {
         }
     });
 }
-
-// Update permission UI on page load and after login/logout
-document.addEventListener('DOMContentLoaded', initPermissionUI);
 </script>
