@@ -1790,6 +1790,176 @@ const createEventKey = (name) => name.split(',')[0] // only consider everything 
     .join('');
 
 /**
+ * Retrieves an existing liturgical event from the EventsCollection
+ * @param {string} actionButtonId - The ID of the clicked action button
+ * @param {string} eventKey - The event key to search for
+ * @returns {Object|undefined} The liturgical event if found, undefined otherwise
+ */
+const retrieveExistingLiturgicalEvent = (actionButtonId, eventKey) => {
+    if (
+        actionButtonId !== 'newLiturgicalEventExNovoButton'
+        && EventsLoader.lastRequestPath !== ''
+        && EventsLoader.lastRequestLocale !== ''
+    ) {
+        return EventsCollection.get(EventsLoader.lastRequestPath)
+            .get(EventsLoader.lastRequestLocale)
+            .find(liturgical_event => liturgical_event.event_key === eventKey);
+    }
+    return undefined;
+};
+
+/**
+ * Configures form settings based on action button and property to change
+ * @param {string} actionButtonId - The ID of the clicked action button
+ * @returns {string|null} The property to change, or null if not applicable
+ */
+const configureFormSettings = (actionButtonId) => {
+    FormControls.settings.decreeUrlFieldShow = true;
+    FormControls.settings.decreeLangMapFieldShow = document.querySelector('.regionalNationalCalendarName').id === 'widerRegionCalendarName';
+    setFormSettings(actionButtonId);
+    console.log(`FormControls.action = ${FormControls.action}, actionButtonId = ${actionButtonId}`);
+
+    if (actionButtonId === 'setPropertyButton') {
+        const propertyToChange = document.querySelector('#propertyToChange').value;
+        setFormSettingsForProperty(propertyToChange);
+        return propertyToChange;
+    }
+    return null;
+};
+
+/**
+ * Creates a form row based on the existing liturgical event or event key
+ * @param {Object|undefined} existingLiturgicalEvent - The existing liturgical event
+ * @param {string} eventKey - The event key
+ * @param {string} liturgicalEventInputVal - The input value from the modal
+ * @param {number} currentUniqid - The current unique ID
+ * @returns {Object} Object containing fragment and controlsRow
+ */
+const createFormRowWithEvent = (existingLiturgicalEvent, eventKey, liturgicalEventInputVal, currentUniqid) => {
+    let fragment, controlsRow;
+
+    if (existingLiturgicalEvent instanceof LiturgicalEvent) {
+        ({fragment, controlsRow} = FormControls.CreateRegionalFormRow(existingLiturgicalEvent));
+        if (FormControls.settings.missalFieldShow) {
+            controlsRow.querySelector(`#onTheFly${currentUniqid}Missal`).value = existingLiturgicalEvent.missal;
+        }
+    } else if (eventKey !== '' && existingLiturgicalEvent !== undefined) {
+        ({fragment, controlsRow} = FormControls.CreateRegionalFormRow(eventKey));
+        if (FormControls.settings.missalFieldShow) {
+            controlsRow.querySelector(`#onTheFly${currentUniqid}Missal`).value = existingLiturgicalEvent.missal;
+        }
+    } else {
+        ({fragment, controlsRow} = FormControls.CreateRegionalFormRow());
+        if (liturgicalEventInputVal !== '') {
+            controlsRow.querySelector(`#onTheFly${currentUniqid}Name`).value = liturgicalEventInputVal;
+            if (FormControls.settings.eventKeyField) {
+                const newEventKey = createEventKey(liturgicalEventInputVal);
+                controlsRow.querySelector(`#onTheFly${currentUniqid}EventKey`).value = newEventKey;
+            }
+        }
+    }
+
+    return {fragment, controlsRow};
+};
+
+/**
+ * Sets up localization inputs for multiple locale selections
+ * @param {string} actionButtonId - The ID of the clicked action button
+ * @param {string|null} propertyToChange - The property being changed
+ * @param {HTMLElement} controlsRow - The controls row element
+ * @param {number} currentUniqid - The current unique ID
+ */
+const setupLocalizationInputs = (actionButtonId, propertyToChange, controlsRow, currentUniqid) => {
+    if (
+        ['newLiturgicalEventExNovoButton', 'designatePatronButton'].includes(actionButtonId)
+        || (actionButtonId === 'setPropertyButton' && propertyToChange === 'name')
+    ) {
+        if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
+            const currentLocalization = document.querySelector('.currentLocalizationChoices').value;
+            const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
+                .filter(({ value }) => value !== currentLocalization)
+                .map(({ value }) => value);
+            const nameInput = controlsRow.querySelector(`#onTheFly${currentUniqid}Name`);
+            const otherLocalizationsInputs = otherLocalizations.map(localization => translationTemplate(API.path, localization, nameInput));
+            nameInput.insertAdjacentHTML('afterend', otherLocalizationsInputs.join(''));
+        }
+    }
+};
+
+/**
+ * Initializes the color multiselect field with defaults
+ * @param {HTMLElement} controlsRow - The controls row element
+ * @param {string} actionButtonId - The ID of the clicked action button
+ */
+const initializeColorMultiselect = (controlsRow, actionButtonId) => {
+    $(controlsRow.querySelector('.litEventColor')).multiselect({
+        buttonWidth: '100%',
+        buttonClass: 'form-select',
+        templates: {
+            button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+        }
+    }).multiselect('deselectAll', false);
+
+    if (FormControls.settings.colorField === false) {
+        $(controlsRow.querySelector('.litEventColor')).multiselect('disable');
+    } else if (actionButtonId === 'newLiturgicalEventExNovoButton') {
+        // Attempt to set liturgical color to red for martyrs, white for all other cases
+        if (controlsRow.querySelector('.litEventName').value.match(/(martyr|martir|mártir|märtyr)/i) !== null) {
+            $(controlsRow.querySelector('.litEventColor')).multiselect('select', 'red');
+        } else {
+            $(controlsRow.querySelector('.litEventColor')).multiselect('select', 'white');
+        }
+    }
+};
+
+/**
+ * Configures the common multiselect field
+ * @param {HTMLElement} controlsRow - The controls row element
+ * @param {number} currentUniqid - The current unique ID
+ */
+const configureCommonMultiselect = (controlsRow, currentUniqid) => {
+    if (FormControls.settings.commonFieldShow) {
+        setCommonMultiselect(controlsRow, null);
+        if (FormControls.settings.commonField === false) {
+            $(controlsRow.querySelector(`#onTheFly${currentUniqid}Common`)).multiselect('disable');
+        }
+    }
+};
+
+/**
+ * Configures the grade field based on settings
+ * @param {HTMLElement} controlsRow - The controls row element
+ * @param {number} currentUniqid - The current unique ID
+ */
+const configureGradeField = (controlsRow, currentUniqid) => {
+    if (FormControls.settings.gradeFieldShow) {
+        controlsRow.querySelector(`#onTheFly${currentUniqid}Grade`).disabled = !FormControls.settings.gradeField;
+    }
+};
+
+/**
+ * Populates form fields with data from existing liturgical event
+ * @param {string} eventKey - The event key
+ * @param {Object|undefined} existingLiturgicalEvent - The existing liturgical event
+ * @param {HTMLElement} controlsRow - The controls row element
+ * @param {number} currentUniqid - The current unique ID
+ */
+const populateExistingEventData = (eventKey, existingLiturgicalEvent, controlsRow, currentUniqid) => {
+    if (eventKey !== '' && existingLiturgicalEvent !== undefined) {
+        if (FormControls.settings.gradeFieldShow) {
+            controlsRow.querySelector(`#onTheFly${currentUniqid}Grade`).value = existingLiturgicalEvent.grade;
+        }
+        $(controlsRow.querySelector(`#onTheFly${currentUniqid}Common`)).multiselect('select', existingLiturgicalEvent.common);
+        const colorVal = Array.isArray(existingLiturgicalEvent.color) ? existingLiturgicalEvent.color : existingLiturgicalEvent.color.split(',');
+        $(controlsRow.querySelector(`.litEventColor`)).multiselect('select', colorVal);
+
+        if (FormControls.settings.monthField === false) {
+            controlsRow.querySelectorAll(`#onTheFly${currentUniqid}Month > option[value]:not([value="${existingLiturgicalEvent.month}"])`).forEach(el => { el.disabled = true; });
+        }
+    }
+};
+
+/**
  * Handles the submission of the action prompt modal. Depending on the action, it will:
  * - Create a new row in the regional national data form
  * - Populate the missal field with the value of the existing liturgical_event
@@ -1807,125 +1977,46 @@ const actionPromptButtonClicked = (ev) => {
     const modal = ev.target.closest('.actionPromptModal');
     const modalForm = modal.querySelector('form');
     const actionButtonId = ev.target.id;
-    const liturgicalEventInputVal = sanitizeInput( modalForm.querySelector('.existingLiturgicalEventName').value );
+    const liturgicalEventInputVal = sanitizeInput(modalForm.querySelector('.existingLiturgicalEventName').value);
     const eventKey = actionButtonId === 'newLiturgicalEventExNovoButton' ? '' : liturgicalEventInputVal;
 
-    let existingLiturgicalEvent;
-    let propertyToChange;
-    let fragment
-    let controlsRow;
+    // Retrieve existing liturgical event from collection
+    const existingLiturgicalEvent = retrieveExistingLiturgicalEvent(actionButtonId, eventKey);
 
-    if (
-        actionButtonId !== 'newLiturgicalEventExNovoButton'
-        && EventsLoader.lastRequestPath !== ''
-        && EventsLoader.lastRequestLocale !== ''
-    ) {
-        existingLiturgicalEvent = EventsCollection.get(EventsLoader.lastRequestPath).get(EventsLoader.lastRequestLocale)
-                                    .find(liturgical_event => liturgical_event.event_key === eventKey);
-    }
+    // Configure form settings and get property to change (if applicable)
+    const propertyToChange = configureFormSettings(actionButtonId);
 
-    FormControls.settings.decreeUrlFieldShow = true;
-    FormControls.settings.decreeLangMapFieldShow = document.querySelector('.regionalNationalCalendarName').id === 'widerRegionCalendarName';
-    setFormSettings( actionButtonId );
-    console.log(`FormControls.action = ${FormControls.action}, actionButtonId = ${actionButtonId}`);
+    // Create form row with appropriate data
+    const {fragment, controlsRow} = createFormRowWithEvent(
+        existingLiturgicalEvent,
+        eventKey,
+        liturgicalEventInputVal,
+        currentUniqid
+    );
 
-    if ( actionButtonId === 'setPropertyButton' ) {
-        propertyToChange = document.querySelector('#propertyToChange').value;
-        setFormSettingsForProperty( propertyToChange );
-    }
-
-    if ( existingLiturgicalEvent instanceof LiturgicalEvent ) {
-        ({fragment, controlsRow} = FormControls.CreateRegionalFormRow( existingLiturgicalEvent ));
-        if (FormControls.settings.missalFieldShow) {
-            controlsRow.querySelector(`#onTheFly${currentUniqid}Missal`).value = existingLiturgicalEvent.missal;
-        }
-    }
-    else if ( eventKey !== '' && existingLiturgicalEvent !== undefined ) {
-        ({fragment, controlsRow} = FormControls.CreateRegionalFormRow( eventKey ));
-        if ( FormControls.settings.missalFieldShow ) {
-            controlsRow.querySelector(`#onTheFly${currentUniqid}Missal`).value = existingLiturgicalEvent.missal; //.prop('disabled', true);
-        }
-    } else {
-        ({fragment, controlsRow} = FormControls.CreateRegionalFormRow());
-        if (liturgicalEventInputVal !== '') {
-            controlsRow.querySelector(`#onTheFly${currentUniqid}Name`).value = liturgicalEventInputVal;
-            if (FormControls.settings.eventKeyField) {
-                // we create a default event key based on the liturgical_event name
-                const newEventKey = createEventKey(liturgicalEventInputVal);
-                controlsRow.querySelector(`#onTheFly${currentUniqid}EventKey`).value = newEventKey;
-            }
-        }
-    }
+    // Append to DOM and close modal
     document.querySelector('.regionalNationalDataForm').append(fragment);
     bootstrap.Modal.getInstance(modal).hide();
 
+    // Set row action and property attributes
     controlsRow.setAttribute('data-action', FormControls.action);
-    if ( FormControls.action === RowAction.SetProperty ) {
+    if (FormControls.action === RowAction.SetProperty) {
         console.log('propertyToChange is of type ' + typeof propertyToChange + ' and has a value of ' + propertyToChange);
         controlsRow.setAttribute('data-prop', propertyToChange);
     }
 
-    if (
-        ['newLiturgicalEventExNovoButton', 'designatePatronButton'].includes(actionButtonId)
-        ||
-        (actionButtonId === 'setPropertyButton' && propertyToChange === 'name')
-    ) {
-        if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
-            const currentLocalization = document.querySelector('.currentLocalizationChoices').value;
-            const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
-                                        .filter(({ value }) => value !== currentLocalization)
-                                        .map(({ value }) => value);
-            const nameInput = controlsRow.querySelector(`#onTheFly${currentUniqid}Name`);
-            const otherLocalizationsInputs = otherLocalizations.map(localization => translationTemplate(API.path, localization, nameInput));
-            nameInput.insertAdjacentHTML('afterend', otherLocalizationsInputs.join(''));
-        }
-    }
+    // Setup localization inputs for multiple locales
+    setupLocalizationInputs(actionButtonId, propertyToChange, controlsRow, currentUniqid);
 
-    $(controlsRow.querySelector('.litEventColor')).multiselect({
-        buttonWidth: '100%',
-        buttonClass: 'form-select',
-        templates: {
-            button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
-        }
-    }).multiselect('deselectAll', false);
+    // Initialize and configure form fields
+    initializeColorMultiselect(controlsRow, actionButtonId);
+    configureCommonMultiselect(controlsRow, currentUniqid);
+    configureGradeField(controlsRow, currentUniqid);
 
-    if (FormControls.settings.colorField === false) {
-        $(controlsRow.querySelector('.litEventColor')).multiselect('disable');
-    } else {
-        if (actionButtonId === 'newLiturgicalEventExNovoButton') {
-            // Attempt to set liturgical color to red for martyrs, white for all other cases
-            if (controlsRow.querySelector('.litEventName').value.match(/(martyr|martir|mártir|märtyr)/i) !== null) {
-                $(controlsRow.querySelector('.litEventColor')).multiselect('select', 'red');
-            } else {
-                $(controlsRow.querySelector('.litEventColor')).multiselect('select', 'white');
-            }
-        }
-    }
+    // Populate fields with existing event data
+    populateExistingEventData(eventKey, existingLiturgicalEvent, controlsRow, currentUniqid);
 
-    if (FormControls.settings.commonFieldShow) {
-        setCommonMultiselect( controlsRow, null );
-        if (FormControls.settings.commonField === false) {
-            $(controlsRow.querySelector(`#onTheFly${currentUniqid}Common`)).multiselect('disable');
-        }
-    }
-
-    if (FormControls.settings.gradeFieldShow) {
-        controlsRow.querySelector(`#onTheFly${currentUniqid}Grade`).disabled = !FormControls.settings.gradeField;
-    }
-
-    if ( eventKey !== '' && existingLiturgicalEvent !== undefined ) {
-        if (FormControls.settings.gradeFieldShow) {
-            controlsRow.querySelector(`#onTheFly${currentUniqid}Grade`).value = existingLiturgicalEvent.grade;
-        }
-        $(controlsRow.querySelector(`#onTheFly${currentUniqid}Common`)).multiselect('select', existingLiturgicalEvent.common);
-        const colorVal = Array.isArray( existingLiturgicalEvent.color ) ? existingLiturgicalEvent.color : existingLiturgicalEvent.color.split(',');
-        $(controlsRow.querySelector(`.litEventColor`)).multiselect('select', colorVal);
-
-        if (FormControls.settings.monthField === false) {
-            controlsRow.querySelectorAll(`#onTheFly${currentUniqid}Month > option[value]:not([value="${existingLiturgicalEvent.month}"])`).forEach(el => { el.disabled = true; });
-        }
-    }
-
+    // Enable serialize button
     document.querySelector('.serializeRegionalNationalData').disabled = false;
 }
 
