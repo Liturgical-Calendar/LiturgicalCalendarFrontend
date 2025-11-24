@@ -59,7 +59,13 @@ const Auth = {
      */
     setToken(token, persistent = false) {
         const storage = persistent ? localStorage : sessionStorage;
+        const otherStorage = persistent ? sessionStorage : localStorage;
+
+        // Set token in target storage
         storage.setItem(this.TOKEN_KEY, token);
+
+        // Clear from opposite storage to prevent duplicate tokens
+        otherStorage.removeItem(this.TOKEN_KEY);
     },
 
     /**
@@ -74,12 +80,13 @@ const Auth = {
 
     /**
      * Check if tokens are stored persistently (in localStorage)
+     * Specifically checks where the refresh token is stored since that's
+     * what determines persistence during token refresh operations
      *
-     * @returns {boolean} True if tokens are in localStorage, false otherwise
+     * @returns {boolean} True if refresh token is in localStorage, false otherwise
      */
     isPersistentStorage() {
-        return localStorage.getItem(this.TOKEN_KEY) !== null ||
-               localStorage.getItem(this.REFRESH_KEY) !== null;
+        return localStorage.getItem(this.REFRESH_KEY) !== null;
     },
 
     /**
@@ -90,7 +97,13 @@ const Auth = {
      */
     setRefreshToken(token, persistent = false) {
         const storage = persistent ? localStorage : sessionStorage;
+        const otherStorage = persistent ? sessionStorage : localStorage;
+
+        // Set token in target storage
         storage.setItem(this.REFRESH_KEY, token);
+
+        // Clear from opposite storage to prevent duplicate tokens
+        otherStorage.removeItem(this.REFRESH_KEY);
     },
 
     /**
