@@ -1869,19 +1869,18 @@ const deleteCalendarConfirmClicked = () => {
 
     API.category = document.querySelector('.regionalNationalCalendarName').dataset.category;
     API.key = document.querySelector('.regionalNationalCalendarName').value;
-    const headers = new Headers({
+    const baseHeaders = new Headers({
         'Accept': 'application/json',
         'Accept-Language': API.locale
     });
-    // Add Authorization header
-    addAuthHeader(headers);
 
     const makeDeleteRequest = () => {
-        const request = new Request(API.path, {
+        const requestHeaders = new Headers(baseHeaders);
+        addAuthHeader(requestHeaders);
+        return fetch(new Request(API.path, {
             method: 'DELETE',
-            headers
-        });
-        return fetch(request);
+            headers: requestHeaders
+        }));
     };
 
     makeDeleteRequest().then(async response => {
@@ -2234,23 +2233,22 @@ const serializeRegionalNationalDataClicked = (ev) => {
         ? Object.freeze(new NationalCalendarPayload(payload.litcal, payload.settings, payload.metadata, payload.i18n))
         : Object.freeze(new WiderRegionPayload(payload.litcal, payload.national_calendars, payload.metadata, payload.i18n));
 
-    const headers = new Headers({
+    const baseHeaders = new Headers({
         'Content-Type': 'application/json',
         'Accept': 'application/json'
     });
-    if ( API.locale !== '' ) {
-        headers.append('Accept-Language', API.locale);
+    if (API.locale !== '') {
+        baseHeaders.append('Accept-Language', API.locale);
     }
-    // Add Authorization header
-    addAuthHeader(headers);
 
     const makeRequest = () => {
-        const request = new Request(API.path, {
+        const requestHeaders = new Headers(baseHeaders);
+        addAuthHeader(requestHeaders);
+        return fetch(new Request(API.path, {
             method: API.method,
-            headers,
+            headers: requestHeaders,
             body: JSON.stringify(finalPayload)
-        });
-        return fetch(request);
+        }));
     };
 
     console.log('we are ready to make the request');
