@@ -37,6 +37,10 @@
 </div>
 
 <script>
+// Module-scoped variables to avoid global pollution
+let loginModal = null;
+let loginSuccessCallback = null;
+
 /**
  * Initialize authentication UI components
  */
@@ -100,12 +104,14 @@ document.addEventListener('DOMContentLoaded', () => {
  * @param {Function} onSuccess - Callback to execute after successful login
  */
 function showLoginModal(onSuccess = null) {
-    const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+    // Initialize modal instance only once
+    if (!loginModal) {
+        loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+    }
 
-    // Store success callback
+    // Store success callback in module scope
     if (onSuccess) {
-        document.getElementById('loginModal').dataset.onSuccess = 'pending';
-        window._loginSuccessCallback = onSuccess;
+        loginSuccessCallback = onSuccess;
     }
 
     // Clear previous errors and form values
@@ -163,9 +169,9 @@ async function handleLogin() {
         toastr.success('<?php echo _('Login successful'); ?>', '<?php echo _('Success'); ?>');
 
         // Call success callback if provided
-        if (window._loginSuccessCallback) {
-            window._loginSuccessCallback();
-            window._loginSuccessCallback = null;
+        if (loginSuccessCallback) {
+            loginSuccessCallback();
+            loginSuccessCallback = null;
         }
     } catch (error) {
         errorDiv.textContent = error.message || '<?php echo _('Login failed. Please check your credentials.'); ?>';
