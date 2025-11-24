@@ -206,9 +206,9 @@ async function handleLogin() {
         // Hide modal with proper cleanup after transition
         const loginModalElement = document.getElementById('loginModal');
         if (loginModalElement && typeof bootstrap !== 'undefined') {
-            const loginModal = bootstrap.Modal.getInstance(loginModalElement);
+            const modalInstance = bootstrap.Modal.getInstance(loginModalElement);
 
-            if (loginModal) {
+            if (modalInstance) {
                 // Add one-time listener for modal hide completion
                 loginModalElement.addEventListener('hidden.bs.modal', () => {
                     // Clean up modal backdrop and body styles after transition completes
@@ -221,7 +221,7 @@ async function handleLogin() {
                     document.body.style.removeProperty('padding-right');
                 }, { once: true });
 
-                loginModal.hide();
+                modalInstance.hide();
             }
         }
 
