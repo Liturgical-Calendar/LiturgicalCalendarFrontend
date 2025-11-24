@@ -1,5 +1,3 @@
-/* global toastr, $ */
-
 /**
  * Enum CalendarType
  * Used in building the endpoint URL for requests to the API /calendar endpoint

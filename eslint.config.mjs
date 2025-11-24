@@ -31,6 +31,8 @@ export default defineConfig( [
         Cookies: "readonly",
         LITCAL_LOCALE: "writable",
         currentLocale: "writable",
+        Auth: "readonly",
+        APIConfig: "readonly",
       }
     },
     rules: {

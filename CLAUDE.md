@@ -165,6 +165,50 @@ vendor/bin/captainhook config:info
 - Use `const`/`let` (not `var`)
 - Consistent code style matching existing patterns
 
+**Global Variables**:
+
+All JavaScript global variables (from PHP inline scripts or external libraries) are declared centrally in `eslint.config.mjs` to avoid ESLint/CodeFactor warnings.
+
+**Configuration**: `eslint.config.mjs` → `languageOptions.globals`
+
+**Currently defined globals**:
+
+- `$`, `jQuery` - jQuery library
+- `bootstrap` - Bootstrap 5 library
+- `toastr` - Toastr notification library
+- `Auth` - Authentication module (from `assets/js/auth.js`)
+- `APIConfig` - API configuration (from PHP inline script)
+- `BaseUrl` - API base URL (from PHP inline script)
+- `Messages` - Translation strings (from PHP inline script)
+- `EventsUrl`, `MissalsUrl`, `RegionalDataUrl`, `CalendarUrl` - API endpoints (from PHP)
+- `LiturgicalEventCollection`, `LiturgicalEventCollectionKeys`, `LitCalMetadata` - App state (from PHP)
+- `Cookies` - Cookie library
+- `LITCAL_LOCALE`, `currentLocale` - Locale settings (writable)
+
+**Adding new globals**:
+
+1. **DO NOT** use `/* global ... */` comments in individual JavaScript files
+2. **DO** add all globals to `eslint.config.mjs`:
+
+   ```javascript
+   languageOptions: {
+     globals: {
+       ...globals.browser,
+       NewGlobalVar: "readonly",    // For read-only globals
+       WritableGlobal: "writable",  // For globals that can be modified
+     }
+   }
+   ```
+
+3. Run `node --check assets/js/yourfile.js` to verify syntax
+
+**Why centralized?**:
+
+- Avoids "already defined as built-in" errors from CodeFactor
+- Single source of truth for all global variables
+- Easier maintenance and consistency
+- Prevents duplication across files
+
 ### Markdown
 
 **Configuration**: `.markdownlint.yaml`
@@ -175,6 +219,43 @@ vendor/bin/captainhook config:info
 - Fenced code blocks required
 - Blank lines around headings
 - Table column style checking disabled (MD060)
+
+**Code Blocks in Lists**:
+
+When including code blocks within numbered or bulleted lists, proper indentation is critical:
+
+- **Numbered lists**: Indent code blocks with **3 spaces** to maintain list continuity
+- **Bulleted lists**: Indent code blocks with **2 spaces** to maintain list continuity
+
+**Correct indentation example**:
+
+`````markdown
+1. First step
+2. Second step with code:
+
+   ```javascript
+   const example = "code";
+   ```
+
+3. Third step continues correctly
+`````
+
+**Key rules**:
+
+- List item starts at column 0
+- Code fence starts at column 3 (numbered lists) or column 2 (bulleted lists)
+- All code fence lines (opening, content, closing) must maintain this indentation
+
+**Common mistake**: Placing code fence at column 0 breaks the list, causing subsequent items to restart numbering (MD029 error).
+
+**Tip**: When documenting nested code blocks, use five backticks for the outer block to avoid conflicts with inner triple-backtick blocks.
+
+**Linting commands**:
+
+```bash
+composer lint:md         # Check markdown files
+composer lint:md:fix     # Auto-fix most issues (but not indentation)
+```
 
 ## PHPStan Configuration
 
