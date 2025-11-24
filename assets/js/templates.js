@@ -1,8 +1,17 @@
 
-//kudos to https://stackoverflow.com/a/47140708/394921 for the idea
-const sanitizeInput = (input) => {
-    let doc = new DOMParser().parseFromString(input, 'text/html');
-    return doc.body.textContent || "";
+//Escape HTML meta-characters to prevent DOM text injection/XSS
+const escapeHtml = (input) => {
+    return input.replace(/[&<>"'`]/g, function (char) {
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#x27;',
+            '`': '&#x60;'
+        };
+        return map[char];
+    });
 };
 
 /**
@@ -12,13 +21,13 @@ const sanitizeInput = (input) => {
  * @returns {string} A bootstrap modal div string.
  */
 const removeDiocesanCalendarModal = (diocese, messages) => {
-    const sanitizedDiocese = sanitizeInput(diocese);
+    const escapedDiocese = escapeHtml(diocese);
     return `
 <div class="modal fade" id="removeDiocesanCalendarPrompt" tabindex="-1" role="dialog" aria-labelledby="removeDiocesanCalendarModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="removeDiocesanCalendarModalLabel">${messages[ "Delete diocesan calendar" ]} ${sanitizedDiocese}?</h5>
+        <h5 class="modal-title" id="removeDiocesanCalendarModalLabel">${messages[ "Delete diocesan calendar" ]} ${escapedDiocese}?</h5>
       </div>
       <div class="modal-body">
         ${messages[ "If you choose" ]}
@@ -39,13 +48,13 @@ const removeDiocesanCalendarModal = (diocese, messages) => {
  * @returns {string} A bootstrap modal div string.
  */
 const removeCalendarModal = (calendar, messages) => {
-    const sanitizedCalendar = sanitizeInput(calendar);
+    const escapedCalendar = escapeHtml(calendar);
     return `
 <div class="modal fade" id="removeCalendarDataPrompt" tabindex="-1" role="dialog" aria-labelledby="removeCalendarModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="removeCalendarModalLabel">${messages[ "Delete calendar" ]} ${sanitizedCalendar}?</h5>
+        <h5 class="modal-title" id="removeCalendarModalLabel">${messages[ "Delete calendar" ]} ${escapedCalendar}?</h5>
       </div>
       <div class="modal-body">
         ${messages[ "If you choose" ]}
@@ -63,5 +72,5 @@ const removeCalendarModal = (calendar, messages) => {
 export {
     removeDiocesanCalendarModal,
     removeCalendarModal,
-    sanitizeInput
+    escapeHtml
 }
