@@ -200,13 +200,10 @@ async function getCsrfToken() {
     // If API supports CSRF endpoint, fetch it
     // Note: This endpoint may not be implemented yet
     try {
-        if (typeof APIConfig === 'undefined') {
+        if (typeof BaseUrl === 'undefined') {
             return null;
         }
-        const authUrl = APIConfig.port
-            ? `${APIConfig.protocol}://${APIConfig.host}:${APIConfig.port}`
-            : `${APIConfig.protocol}://${APIConfig.host}`;
-        const response = await fetch(`${authUrl}/auth/csrf`, {
+        const response = await fetch(`${BaseUrl}/auth/csrf`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json'

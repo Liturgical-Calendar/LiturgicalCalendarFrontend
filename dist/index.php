@@ -7,7 +7,7 @@ include_once(dirname(__DIR__) . '/vendor/autoload.php');
 use Dotenv\Dotenv;
 
 // Load environment variables
-$dotenv = Dotenv::createImmutable(dirname(__DIR__), ['.env', '.env.local', '.env.development', '.env.production'], false);
+$dotenv = Dotenv::createImmutable(dirname(__DIR__), ['.env', '.env.local', '.env.development', '.env.staging', '.env.production'], false);
 $dotenv->ifPresent(['API_PROTOCOL', 'API_HOST', 'API_BASE_PATH'])->notEmpty();
 $dotenv->ifPresent(['API_PORT'])->isInteger();
 $dotenv->safeLoad();
