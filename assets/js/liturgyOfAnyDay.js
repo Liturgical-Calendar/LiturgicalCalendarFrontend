@@ -501,7 +501,9 @@ const formatReadings = ( readings ) => {
  */
 const updateResults = ( liturgyOfADay ) => {
     document.querySelector( '#dateOfLiturgy' ).textContent = dtFormat.format( liturgyDate );
-    document.querySelector( '#liturgyResults' ).innerHTML = '';
+    const resultsContainer = document.querySelector( '#liturgyResults' );
+    resultsContainer.innerHTML = '';
+
     liturgyOfADay.forEach( ( celebration ) => {
         const lclzdGrade = celebration.grade < 7 ? celebration.grade_lcl : '';
         const isSundayOrdAdvLentEaster = filterTagsDisplayGrade.some( pattern => pattern.test( celebration.event_key ) );
@@ -510,15 +512,47 @@ const updateResults = ( liturgyOfADay ) => {
             : ( !isSundayOrdAdvLentEaster && celebration.grade !== 0 ? lclzdGrade : '' );
         const celebrationCommon = celebration.common.length ? celebration.common_lcl : '';
         const celebrationColor = celebration.color;
-        const litGradeStyle = celebration.grade < 3 ? ' style="font-style:italic;"' : '';
-        let finalHTML = `<div class="p-4 m-4 border rounded" style="background-color:${celebrationColor[ 0 ] === 'rose' ? 'pink' : celebrationColor[ 0 ]};color:${highContrast.includes( celebrationColor[ 0 ] ) ? "white" : "black"};">`;
-        finalHTML += `<h3>${celebration.name}</h3>`;
-        finalHTML += ( celebrationGrade !== '' ? `<div${litGradeStyle}>${celebrationGrade}</div>` : '' );
-        finalHTML += `<div>${celebrationCommon}</div>`;
-        finalHTML += ( celebration.hasOwnProperty( 'liturgical_year' ) ? `<div>${celebration.liturgical_year}</div>` : '' );
-        finalHTML += ( celebration.hasOwnProperty( 'readings' ) ? formatReadings( celebration.readings ) : '' );
-        finalHTML += `</div>`;
-        document.querySelector( '#liturgyResults' ).insertAdjacentHTML( 'beforeend', finalHTML );
+
+        // Build DOM elements for XSS protection
+        const container = document.createElement( 'div' );
+        container.className = 'p-4 m-4 border rounded';
+        container.style.backgroundColor = celebrationColor[ 0 ] === 'rose' ? 'pink' : celebrationColor[ 0 ];
+        container.style.color = highContrast.includes( celebrationColor[ 0 ] ) ? 'white' : 'black';
+
+        const title = document.createElement( 'h3' );
+        title.textContent = celebration.name;
+        container.appendChild( title );
+
+        if ( celebrationGrade !== '' ) {
+            const gradeDiv = document.createElement( 'div' );
+            if ( celebration.grade < 3 ) {
+                gradeDiv.style.fontStyle = 'italic';
+            }
+            gradeDiv.textContent = celebrationGrade;
+            container.appendChild( gradeDiv );
+        }
+
+        const commonDiv = document.createElement( 'div' );
+        commonDiv.textContent = celebrationCommon;
+        container.appendChild( commonDiv );
+
+        if ( celebration.hasOwnProperty( 'liturgical_year' ) ) {
+            const yearDiv = document.createElement( 'div' );
+            yearDiv.textContent = celebration.liturgical_year;
+            container.appendChild( yearDiv );
+        }
+
+        // Readings use innerHTML as they contain structured HTML from formatReadings
+        if ( celebration.hasOwnProperty( 'readings' ) ) {
+            const readingsHtml = formatReadings( celebration.readings );
+            if ( readingsHtml ) {
+                const readingsWrapper = document.createElement( 'div' );
+                readingsWrapper.innerHTML = readingsHtml;
+                container.appendChild( readingsWrapper );
+            }
+        }
+
+        resultsContainer.appendChild( container );
     } );
 }
 
