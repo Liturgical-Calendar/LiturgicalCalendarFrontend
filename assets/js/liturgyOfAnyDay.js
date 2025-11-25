@@ -516,18 +516,15 @@ const updateResults = ( liturgyOfADay ) => {
     } );
 }
 
-if ( document.readyState === "loading" ) {
-    // Loading hasn't finished yet
-    document.addEventListener( "DOMContentLoaded", () => {
-        document.querySelector( '#monthControl' ).value = String( CalendarState.month );
-        document.querySelector( '#dayControl' ).value = String( CalendarState.day );
-        document.querySelector( '#yearControl' ).value = String( CalendarState.year );
-        getLiturgyOfADay();
-    } );
-} else {
-    // `DOMContentLoaded` has already fired
+const initializeControls = () => {
     document.querySelector( '#monthControl' ).value = String( CalendarState.month );
     document.querySelector( '#dayControl' ).value = String( CalendarState.day );
     document.querySelector( '#yearControl' ).value = String( CalendarState.year );
     getLiturgyOfADay();
+};
+
+if ( document.readyState === "loading" ) {
+    document.addEventListener( "DOMContentLoaded", initializeControls );
+} else {
+    initializeControls();
 }
