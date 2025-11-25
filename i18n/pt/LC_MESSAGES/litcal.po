@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-25 02:28+0000\n"
 "PO-Revision-Date: 2025-11-25 06:53+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pt/>\n"
 "Language: pt\n"
@@ -1590,7 +1590,7 @@ msgstr "Login"
 
 #: layout/header.php:49 layout/header.php:51
 msgid "Logout"
-msgstr "Logout"
+msgstr "Sair"
 
 #: layout/header.php:101
 msgid "Home"
