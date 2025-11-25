@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-25 15:42+0000\n"
+"POT-Creation-Date: 2025-11-25 16:01+0000\n"
 "PO-Revision-Date: 2025-11-25 10:01+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
@@ -1573,7 +1573,7 @@ msgid "About us"
 msgstr "Rólunk"
 
 #: layout/header.php:40 layout/header.php:42 includes/login-modal.php:35
-#: includes/login-modal.php:264
+#: includes/login-modal.php:267
 msgid "Login"
 msgstr "Bejelentkezés"
 
@@ -1625,23 +1625,23 @@ msgstr "Jelszó elrejtése"
 msgid "Session Expiring"
 msgstr "Lejár a munkamenet"
 
-#: includes/login-modal.php:208
+#: includes/login-modal.php:211
 msgid "Please enter both username and password"
 msgstr "Kérjük, adja meg mind a felhasználónevet, mind a jelszót"
 
-#: includes/login-modal.php:216
+#: includes/login-modal.php:219
 msgid "Logging in..."
 msgstr "Bejelentkezés..."
 
-#: includes/login-modal.php:248
+#: includes/login-modal.php:251
 msgid "Login successful"
 msgstr "Sikeres bejelentkezés"
 
-#: includes/login-modal.php:248
+#: includes/login-modal.php:251
 msgid "Success"
 msgstr "Siker"
 
-#: includes/login-modal.php:259
+#: includes/login-modal.php:262
 msgid "Login failed. Please check your credentials."
 msgstr "A bejelentkezés sikertelen. Kérjük, ellenőrizze a hitelesítő adatait."
 
