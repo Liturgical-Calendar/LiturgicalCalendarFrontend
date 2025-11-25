@@ -16,7 +16,7 @@ import {
 import {
     removeDiocesanCalendarModal,
     removeCalendarModal,
-    sanitizeInput
+    escapeHtml
 } from './templates.js';
 
 import {
@@ -389,7 +389,7 @@ const sanitizeProxiedAPI = {
             return;
         }
         if (value !== '') {
-            value = sanitizeInput( value );
+            value = escapeHtml( value );
         }
         switch (prop) {
             case 'path':
@@ -2031,7 +2031,7 @@ const actionPromptButtonClicked = (ev) => {
     const modal = ev.target.closest('.actionPromptModal');
     const modalForm = modal.querySelector('form');
     const actionButtonId = ev.target.id;
-    const liturgicalEventInputVal = sanitizeInput(modalForm.querySelector('.existingLiturgicalEventName').value);
+    const liturgicalEventInputVal = escapeHtml(modalForm.querySelector('.existingLiturgicalEventName').value);
     const eventKey = actionButtonId === 'newLiturgicalEventExNovoButton' ? '' : liturgicalEventInputVal;
 
     // Retrieve existing liturgical event from collection
@@ -2275,7 +2275,7 @@ const buildLitcalDataFromRows = (payload) => {
                             action !== RowAction.SetProperty
                             || (action === RowAction.SetProperty && rowData.metadata.property === 'name')
                         ) {
-                            const eventKey = sanitizeInput(row.querySelector('.litEventEventKey').value);
+                            const eventKey = escapeHtml(row.querySelector('.litEventEventKey').value);
                             payload.i18n[API.locale][eventKey] = val;
 
                             // Find all input elements with the data-locale attribute
@@ -3087,7 +3087,7 @@ const diocesanCalendarNationalDependencyChanged = (ev) => {
  * @param {Event} ev - The event object for the change event.
  */
 const diocesanCalendarDioceseNameChanged = (ev) => {
-    const currentVal = sanitizeInput( ev.target.value );
+    const currentVal = escapeHtml( ev.target.value );
     CalendarData = { litcal: [], i18n: {} };
     document.querySelectorAll('.carousel-item form').forEach(form => {
         form.reset();
@@ -3288,7 +3288,7 @@ const saveDiocesanCalendar_btnClicked = () => {
     saveObj.payload.i18n[API.locale] = saveObj.payload.litcal.reduce((obj, item) => {
         const liturgicalEventCopy = { ...item.liturgical_event };
         if (liturgicalEventCopy.hasOwnProperty('name')) {
-            obj[liturgicalEventCopy.event_key] = sanitizeInput(liturgicalEventCopy.name);
+            obj[liturgicalEventCopy.event_key] = escapeHtml(liturgicalEventCopy.name);
             delete item.liturgical_event.name;
         } else {
             obj[liturgicalEventCopy.event_key] = document.querySelector(`.litEventName[data-valuewas="${liturgicalEventCopy.event_key}"]`).value;
@@ -3549,7 +3549,7 @@ const existingLiturgicalEventNameChanged = (ev) => {
  * @param {Event} ev The event object for the click event.
  */
 const addLanguageEditionRomanMissalClicked = (ev) => {
-    const languageEditionRomanMissal = sanitizeInput( document.querySelector('#languageEditionRomanMissalName').value );
+    const languageEditionRomanMissal = escapeHtml( document.querySelector('#languageEditionRomanMissalName').value );
     document.querySelector('#publishedRomanMissalList').insertAdjacentHTML('beforeend', `<li class="list-group-item">${languageEditionRomanMissal}</li>`);
     const modal = ev.target.closest('.modal.show');
     bootstrap.Modal.getInstance(modal).hide();
