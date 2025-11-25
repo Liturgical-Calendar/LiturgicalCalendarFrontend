@@ -212,7 +212,7 @@ try {
     $logger = new Logger('liturgical-calendar');
     $logger->pushHandler(new StreamHandler(
         $logsDir . '/litcal.log',
-        Level::Debug
+        $debugMode ? Level::Debug : Level::Warning
     ));
     if ($debugMode) {
         error_log('Logger initialized successfully');
