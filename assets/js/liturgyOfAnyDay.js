@@ -199,7 +199,7 @@ document.addEventListener( 'change', ( event ) => {
             CalendarState.year = document.querySelector( '#yearControl' ).value;
             liturgyDate = new Date( Date.UTC( CalendarState.year, CalendarState.month - 1, CalendarState.day, 0, 0, 0, 0 ) );
             break;
-        case 'calendarSelect':
+        case 'calendarSelect': {
             const calendarSelect = document.querySelector( '#calendarSelect' );
             const selectedOption = calendarSelect.options[ calendarSelect.selectedIndex ];
             const calendarType   = selectedOption.getAttribute( 'data-calendartype' );
@@ -218,6 +218,7 @@ document.addEventListener( 'change', ( event ) => {
                     CalendarState.calendarType = '';
             }
             break;
+        }
     }
 
     getLiturgyOfADay();
