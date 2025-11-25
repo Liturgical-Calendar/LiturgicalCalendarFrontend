@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-25 06:53+0000\n"
-"PO-Revision-Date: 2025-11-25 06:53+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2025-11-25 07:36+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
 "Language: es\n"
@@ -1218,16 +1218,13 @@ msgstr ""
 "manejan en el endpoint <code>/decrees</code> de la API."
 
 #: decrees.php:70
-#, fuzzy, php-format
-#| msgid ""
-#| "Currently, these endpoints are read-only. There are currently <b>%d "
-#| "Decrees</b> defined at the endpoint %s."
+#, php-format
 msgid ""
 "Currently, these endpoints are read-only. There are currently <b>%1$d "
 "Decrees</b> defined at the endpoint %2$s."
 msgstr ""
-"Actualmente, estos endpoints son solo de lectura. Actualmente hay <b>%d "
-"Decretos</b> definidos en el endpoint %s."
+"Actualmente, estos endpoints son de solo lectura. Actualmente, hay <b>%1$d "
+"Decretos</b> definidos en el endpoint %2$s."
 
 #: decrees.php:135
 msgid "Read the Decree"
