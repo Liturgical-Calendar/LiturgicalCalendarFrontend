@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-25 06:53+0000\n"
-"PO-Revision-Date: 2025-11-25 10:01+0000\n"
+"PO-Revision-Date: 2025-11-25 10:14+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -220,13 +220,14 @@ msgid ""
 "(observed by the Roman Catholic church) and of the Meeus algorithm for "
 "Julian easter (observed by orthodox churches)."
 msgstr ""
-"Einfacher API-Endpunkt, der Daten zu den Osterdaten, sowohl gregorianisch "
-"als auch julianisch, von 1583 (Jahr der Annahme des gregorianischen "
-"Kalenders) bis 9999 (maximales mögliches Datumsberechnung in 64bit PHP), "
-"unter Verwendung einer PHP-Anpassung des Meeus/Jones/Butcher-Algorithmus für "
-"das gregorianische Ostern (beobachtet von der römisch-katholischen Kirche) "
-"und des Meeus-Algorithmus für das julianische Ostern (beobachtet von "
-"orthodoxen Kirchen) zurückgibt."
+"Ein einfacher API-Endpunkt, der Daten zu den Osterterminen, sowohl "
+"gregorianisch als auch julianisch, von 1583 "
+"(Jahr der Einführung des gregorianischen Kalenders) bis 9999 "
+"(maximal mögliche Datumsberechnung in 64‑Bit‑PHP) zurückgibt. Dies geschieht "
+"mithilfe einer PHP-Anpassung des Meeus/Jones/Butcher-Algorithmus für das "
+"gregorianische Osterfest (beobachtet von der römisch-katholischen Kirche) "
+"und des Meeus-Algorithmus für das julianische Osterfest "
+"(beobachtet von orthodoxen Kirchen)."
 
 #: index.php:168
 msgid "Dates of Easter API endpoint"
@@ -1170,7 +1171,7 @@ msgstr "Liturgie von %s"
 #. translators: label of the form row
 #: admin.php:109 admin.php:273 decrees.php:16
 msgid "Designate Doctor of the Church"
-msgstr "Doktor der Kirche ernennen"
+msgstr "Kirchenlehrer ernennen"
 
 #. translators: label of the form row
 #: admin.php:113 decrees.php:8
@@ -1179,7 +1180,7 @@ msgstr "Name oder Grad ändern"
 
 #: admin.php:129 admin.php:269
 msgid "Designate Doctor of the Church from existing liturgical event"
-msgstr "Doktor der Kirche aus bestehenden liturgischen Ereignissen ernennen"
+msgstr "Kirchenlehrer aus einem bestehenden liturgischen Ereignis ernennen"
 
 #: admin.php:256
 msgid "New liturgical event from existing"
@@ -1637,7 +1638,7 @@ msgstr "Passwort anzeigen"
 
 #: includes/login-modal.php:26
 msgid "Remember me"
-msgstr "Erinnere dich an mich"
+msgstr "Angemeldet bleiben"
 
 #: includes/login-modal.php:68
 msgid "Are you sure you want to logout?"
