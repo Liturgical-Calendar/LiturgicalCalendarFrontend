@@ -87,7 +87,7 @@ class CalendarState {
     static #evaluateApiRequest() {
         if ( AppEnv === 'development' ) console.debug( `Evaluating API request necessity. Previous year type: ${this.#previousYearTypeValue}, Current year type: ${this.yearType}` );
         if ( this.#previousYearTypeValue !== this.yearType ) {
-            this.#previousYearTypeValue = ( this.#previousYearTypeValue === 'CIVIL' ) ? 'LITURGICAL' : 'CIVIL';
+            this.#previousYearTypeValue = this.yearType;
             this.#apiRequestFlag = true;
         }
     }
