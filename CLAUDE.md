@@ -177,7 +177,6 @@ All JavaScript global variables (from PHP inline scripts or external libraries) 
 - `bootstrap` - Bootstrap 5 library
 - `toastr` - Toastr notification library
 - `Auth` - Authentication module (from `assets/js/auth.js`)
-- `APIConfig` - API configuration (from PHP inline script)
 - `BaseUrl` - API base URL (from PHP inline script)
 - `Messages` - Translation strings (from PHP inline script)
 - `EventsUrl`, `MissalsUrl`, `RegionalDataUrl`, `CalendarUrl` - API endpoints (from PHP)
@@ -390,10 +389,10 @@ sprintf(_('There are %d items at %s.'), $count, $url);
 
 ### Working with the API
 
-The API configuration is available globally as `APIConfig`:
+The API base URL is available globally as `BaseUrl`:
 
 ```javascript
-const apiUrl = `${APIConfig.BaseUrl}/calendar?year=2024`;
+const apiUrl = `${BaseUrl}/calendar?year=2024`;
 ```
 
 ## Dependencies

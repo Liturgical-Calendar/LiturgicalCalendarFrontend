@@ -69,7 +69,7 @@ const request = new Request(API.path, {
 
 - `assets/js/extending.js` - Added auth helpers and protected all write operations
 - `layout/header.php` - Added auth status UI (login/logout buttons)
-- `layout/footer.php` - Added APIConfig object
+- `layout/footer.php` - Added API URL constants (BaseUrl, etc.)
 - `extending.php` - Included auth module and login modal
 
 **Status:** All Phase 1 requirements implemented and ready for testing.
