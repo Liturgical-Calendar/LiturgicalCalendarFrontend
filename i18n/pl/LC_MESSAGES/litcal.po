@@ -9,16 +9,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-25 06:53+0000\n"
-"PO-Revision-Date: 2025-11-21 12:51+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2025-11-25 07:36+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && "
+"(n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 5.13.3\n"
 
 #: index.php:5
@@ -207,14 +207,6 @@ msgid "Calculation of the Dates of Easter"
 msgstr "Obliczanie dat Wielkanocy"
 
 #: index.php:163
-#, fuzzy
-#| msgid ""
-#| "A simple API endpoint that returns data about the Date of Easter, both "
-#| "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
-#| "Calendar) to 9999 (maximum possible date calculation in 64bit PHP), using "
-#| "a PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian "
-#| "easter (observed by the Roman Catholic church) and of the Meeus algorithm "
-#| "for Julian easter (observed by orthodox churches)."
 msgid ""
 "A simple API endpoint that returns data about the Dates of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -223,18 +215,17 @@ msgid ""
 "(observed by the Roman Catholic church) and of the Meeus algorithm for "
 "Julian easter (observed by orthodox churches)."
 msgstr ""
-"Prosty endpoint API, który zwraca dane o dacie Wielkanocy, zarówno "
-"gregoriańskiej, jak i juliańskiej, od 1583 roku (rok przyjęcia kalendarza "
-"gregoriańskiego) do 9999 roku (maksymalna możliwa data obliczeń w 64-bitowym "
-"PHP), wykorzystując adaptację algorytmu Meeus/Jones/Butcher dla Wielkanocy "
-"gregoriańskiej (obserwowanej przez Kościół rzymskokatolicki) oraz algorytm "
-"Meeusa dla Wielkanocy juliańskiej (obserwowanej przez kościoły prawosławne)."
+"Prosty punkt końcowy API, który zwraca dane o datach Wielkanocy, zarówno "
+"gregoriańskiej, jak i julianskiej, od 1583 roku "
+"(rok przyjęcia kalendarza gregoriańskiego) do 9999 roku "
+"(maksymalna możliwa data obliczeń w 64-bitowym PHP), korzystając z adaptacji "
+"algorytmu Meeus/Jones/Butcher dla Wielkanocy gregoriańskiej "
+"(obserwowanej przez Kościół rzymskokatolicki) oraz algorytmu Meeus dla "
+"Wielkanocy juliańskiej (obserwowanej przez Kościoły prawosławne)."
 
 #: index.php:168
-#, fuzzy
-#| msgid "Date of Easter API endpoint"
 msgid "Dates of Easter API endpoint"
-msgstr "Endpoint API daty Wielkanocy"
+msgstr "Punkt końcowy API dat Wielkanocy"
 
 #: index.php:170
 msgid ""
@@ -1160,47 +1151,37 @@ msgstr "Liturgia %s"
 
 #. translators: label of the form row
 #: admin.php:109 admin.php:273 decrees.php:16
-#, fuzzy
-#| msgid "Dedication of a Church"
 msgid "Designate Doctor of the Church"
-msgstr "Poświęcenie kościoła"
+msgstr "Nadanie tytułu Doktora Kościoła"
 
 #. translators: label of the form row
 #: admin.php:113 decrees.php:8
-#, fuzzy
-#| msgid "Change grade"
 msgid "Change name or grade"
-msgstr "Zmień rangę"
+msgstr "Zmień nazwę lub rangę"
 
 #: admin.php:129 admin.php:269
-#, fuzzy
-#| msgid "Choose from existing liturgical events"
 msgid "Designate Doctor of the Church from existing liturgical event"
-msgstr "Wybierz z istniejących wydarzeń liturgicznych"
+msgstr "Nadanie tytułu Doktora Kościoła z istniejącego wydarzenia liturgicznego"
 
 #: admin.php:256
-#, fuzzy
-#| msgid "New liturgical event"
 msgid "New liturgical event from existing"
-msgstr "Nowe wydarzenie liturgiczne"
+msgstr "Nowe wydarzenie liturgiczne z istniejącego"
 
 #: admin.php:257
-#, fuzzy
-#| msgid "New liturgical event"
 msgid "New liturgical event ex novo"
-msgstr "Nowe wydarzenie liturgiczne"
+msgstr "Nowe wydarzenie liturgiczne ex novo"
 
 #: decrees.php:57
-#, fuzzy
-#| msgid "General Roman Calendar"
 msgid "General Roman Calendar - Decrees"
-msgstr "Kalendarz Rzymski Powszechny"
+msgstr "Kalendarz Rzymski - Dekrety"
 
 #: decrees.php:65
 msgid ""
 "Refine the General Roman Calendar with Decrees of the Dicastery for Divine "
 "Worship and the Discipline of the Sacraments"
 msgstr ""
+"Zdefiniuj Kalendarz Rzymski Dezyzjami Dykasterii ds. Kultu Bożego i "
+"Dyscypliny Sakramentów"
 
 #: decrees.php:66
 msgid ""
@@ -1210,6 +1191,11 @@ msgid ""
 "or removing or changing liturgical events, or instructing on how to handle "
 "any possible coincidences between mandatory celebrations."
 msgstr ""
+"Kalendarz liturgiczny opiera się zarówno na opublikowanych Mszałach "
+"Rzymskich, jak i Dekretach Dykasterii ds. Kultu Bożego i Dyscypliny "
+"Sakramentów. Dekrety te mogą doprecyzować dane z Mszałów Rzymskich, dodając, "
+"usuwając lub zmieniając wydarzenia liturgiczne, bądź instruując, jak "
+"postępować w przypadku możliwych zbieżności pomiędzy obowiązkowymi obchodami."
 
 #: decrees.php:68
 msgid ""
@@ -1217,6 +1203,9 @@ msgid ""
 "endpoint of the API, while data for <b>Decrees</b> is handled by the <code>/"
 "decrees</code> endpoint of the API."
 msgstr ""
+"Dane dla <b>mszałów rzymskich</b> obsługiwane są przez punkt końcowy "
+"<code>/missals</code> API, podczas gdy dane dla <b>dekrety</b> obsługiwane "
+"są przez punkt końcowy <code>/decrees</code> API."
 
 #: decrees.php:70
 #, php-format
@@ -1224,10 +1213,12 @@ msgid ""
 "Currently, these endpoints are read-only. There are currently <b>%1$d "
 "Decrees</b> defined at the endpoint %2$s."
 msgstr ""
+"Obecnie te punkty końcowe są tylko do odczytu. Aktualnie na punkcie końcowym "
+"%2$s zdefiniowano <b>%1$d dekretów</b>."
 
 #: decrees.php:135
 msgid "Read the Decree"
-msgstr ""
+msgstr "Przeczytaj dekret"
 
 #: src/LitCommon.php:57
 msgid "Proper"
@@ -1590,11 +1581,11 @@ msgstr "O nas"
 #: layout/header.php:40 layout/header.php:42 includes/login-modal.php:33
 #: includes/login-modal.php:260
 msgid "Login"
-msgstr ""
+msgstr "Zaloguj się"
 
 #: layout/header.php:49 layout/header.php:51
 msgid "Logout"
-msgstr ""
+msgstr "Wyloguj się"
 
 #: layout/header.php:101
 msgid "Home"
@@ -1610,55 +1601,55 @@ msgstr "Przykłady użycia"
 
 #: includes/login-modal.php:6
 msgid "Administrator Login"
-msgstr ""
+msgstr "Logowanie Administratora"
 
 #: includes/login-modal.php:12
 msgid "Username"
-msgstr ""
+msgstr "Nazwa użytkownika"
 
 #: includes/login-modal.php:16
 msgid "Password"
-msgstr ""
+msgstr "Hasło"
 
 #: includes/login-modal.php:19 includes/login-modal.php:109
 msgid "Show password"
-msgstr ""
+msgstr "Pokaż hasło"
 
 #: includes/login-modal.php:26
 msgid "Remember me"
-msgstr ""
+msgstr "Zapamiętaj mnie"
 
 #: includes/login-modal.php:68
 msgid "Are you sure you want to logout?"
-msgstr ""
+msgstr "Czy na pewno chcesz się wylogować?"
 
 #: includes/login-modal.php:104
 msgid "Hide password"
-msgstr ""
+msgstr "Ukryj hasło"
 
 #: includes/login-modal.php:118
 msgid "Session Expiring"
-msgstr ""
+msgstr "Sesja wygasa"
 
 #: includes/login-modal.php:204
 msgid "Please enter both username and password"
-msgstr ""
+msgstr "Proszę podać zarówno nazwę użytkownika, jak i hasło"
 
 #: includes/login-modal.php:212
 msgid "Logging in..."
-msgstr ""
+msgstr "Logowanie..."
 
 #: includes/login-modal.php:244
 msgid "Login successful"
-msgstr ""
+msgstr "Logowanie zakończone sukcesem"
 
 #: includes/login-modal.php:244
 msgid "Success"
-msgstr ""
+msgstr "Sukces"
 
 #: includes/login-modal.php:255
 msgid "Login failed. Please check your credentials."
-msgstr ""
+msgstr "Logowanie nieudane. Proszę sprawdzić swoje dane."
 
 #~ msgid "Calculation of the Date of Easter"
 #~ msgstr "Obliczanie daty Wielkanocy"
