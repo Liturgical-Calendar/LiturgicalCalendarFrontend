@@ -1,4 +1,4 @@
-# Specify a non-default branch for pull requests for componser dependencies
+# Specify a non-default branch for pull requests for composer dependencies
 
 version: 2
 updates:
