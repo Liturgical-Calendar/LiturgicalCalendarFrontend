@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
-            if (confirm('<?php echo _('Are you sure you want to logout?'); ?>')) {
+            if (confirm(<?php echo json_encode(_('Are you sure you want to logout?')); ?>)) {
                 await Auth.logout();
             }
         });
@@ -101,12 +101,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     passwordInput.type = 'text';
                     toggleIcon.classList.remove('fa-eye');
                     toggleIcon.classList.add('fa-eye-slash');
-                    toggleButton.title = '<?php echo _('Hide password'); ?>';
+                    toggleButton.title = <?php echo json_encode(_('Hide password')); ?>;
                 } else {
                     passwordInput.type = 'password';
                     toggleIcon.classList.remove('fa-eye-slash');
                     toggleIcon.classList.add('fa-eye');
-                    toggleButton.title = '<?php echo _('Show password'); ?>';
+                    toggleButton.title = <?php echo json_encode(_('Show password')); ?>;
                 }
             }
         });
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Start session expiry warnings
     if (typeof toastr !== 'undefined') {
         Auth.startExpiryWarning((message) => {
-            toastr.warning(message, '<?php echo _('Session Expiring'); ?>');
+            toastr.warning(message, <?php echo json_encode(_('Session Expiring')); ?>);
         });
     } else {
         // Fallback to console if toastr is not available
@@ -201,7 +201,7 @@ async function handleLogin() {
     const rememberMe = rememberMeInput.checked;
 
     if (!username || !password) {
-        errorDiv.textContent = '<?php echo _('Please enter both username and password'); ?>';
+        errorDiv.textContent = <?php echo json_encode(_('Please enter both username and password')); ?>;
         errorDiv.classList.remove('d-none');
         return;
     }
@@ -209,7 +209,7 @@ async function handleLogin() {
     try {
         // Show loading state
         loginSubmit.disabled = true;
-        loginSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span><?php echo _('Logging in...'); ?>';
+        loginSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>' + <?php echo json_encode(_('Logging in...')); ?>;
 
         await Auth.login(username, password, rememberMe);
 
@@ -241,7 +241,7 @@ async function handleLogin() {
 
         // Show success message
         if (typeof toastr !== 'undefined') {
-            toastr.success('<?php echo _('Login successful'); ?>', '<?php echo _('Success'); ?>');
+            toastr.success(<?php echo json_encode(_('Login successful')); ?>, <?php echo json_encode(_('Success')); ?>);
         } else {
             console.log('Login successful');
         }
@@ -252,12 +252,12 @@ async function handleLogin() {
             loginSuccessCallback = null;
         }
     } catch (error) {
-        errorDiv.textContent = error.message || '<?php echo _('Login failed. Please check your credentials.'); ?>';
+        errorDiv.textContent = error.message || <?php echo json_encode(_('Login failed. Please check your credentials.')); ?>;
         errorDiv.classList.remove('d-none');
     } finally {
         // Reset button state
         loginSubmit.disabled = false;
-        loginSubmit.textContent = '<?php echo _('Login'); ?>';
+        loginSubmit.textContent = <?php echo json_encode(_('Login')); ?>;
     }
 }
 
