@@ -1,574 +1,206 @@
-const now = new Date();
-const dtFormat = new Intl.DateTimeFormat( currentLocale.language, { dateStyle: 'full' } );
-const highContrast = Object.freeze( [ 'green', 'red', 'purple' ] );
-let liturgyDate = new Date( Date.UTC( now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0 ) );
-let CalData = null;
+/**
+ * Liturgy of Any Day - using liturgy-components-js library
+ *
+ * This module uses the ApiClient, CalendarSelect, ApiOptions, and LiturgyOfAnyDay
+ * components from the liturgy-components-js library. The ApiClient automatically handles
+ * the Accept-Language header when listening to ApiOptions.
+ */
 
+import {
+    ApiClient,
+    CalendarSelect,
+    ApiOptions,
+    ApiOptionsFilter,
+    LiturgyOfAnyDay
+} from '@liturgical-calendar/components-js';
 
-class CalendarState {
-    // We initialize the default state to today's date
-    static #previousYearTypeValue = null;
-    static #year = now.getFullYear();
-    static #month = now.getMonth() + 1;
-    static #day = now.getDate();
-    static #calendar = '';
-    static #calendarType = '';
-    static #apiRequestFlag = true; // we need an initial API request to load data
-
-    /**
-     * Determines the correct value for the year_type parameter based on the current day and month.
-     * If the current date is December 31st, returns 'LITURGICAL', otherwise returns 'CIVIL'.
-     * @returns {string} The year type for the current date.
-     * @example CalendarState.yearType // returns 'LITURGICAL' or 'CIVIL'
-     */
-    static get yearType() {
-        const isDec31 = ( this.#month === 12 && this.#day === 31 );
-        const yearType = isDec31 ? 'LITURGICAL' : 'CIVIL';
-        if ( AppEnv === 'development' ) console.debug( `Determining year type for date ${this.#year}-${this.#month}-${this.#day}: is December 31st? ${isDec31 ? 'yes' : 'no'}; year type: ${yearType}` );
-        // Lazy initialization of previousYearTypeValue
-        if ( this.#previousYearTypeValue === null ) {
-            this.#previousYearTypeValue = yearType;
-        }
-        return yearType;
+// Simple translation maps (Messages is not exported from the library)
+const translations = {
+    selectCalendar: {
+        en: 'Select a calendar',
+        it: 'Seleziona un calendario',
+        es: 'Seleccionar un calendario',
+        fr: 'Sélectionner un calendrier',
+        de: 'Kalender auswählen',
+        pt: 'Selecionar um calendário',
+        nl: 'Selecteer een kalender',
+        la: 'Elige calendarium',
+        hu: 'Válasszon naptárat',
+        sk: 'Vyberte kalendár',
+        vi: 'Chọn lịch',
+        id: 'Pilih kalender'
+    },
+    language: {
+        en: 'Language',
+        it: 'Lingua',
+        es: 'Idioma',
+        fr: 'Langue',
+        de: 'Sprache',
+        pt: 'Língua',
+        nl: 'Taal',
+        la: 'Lingua',
+        hu: 'Nyelv',
+        sk: 'Jazyk',
+        vi: 'Ngôn ngữ',
+        id: 'Bahasa'
+    },
+    day: {
+        en: 'Day',
+        it: 'Giorno',
+        es: 'Día',
+        fr: 'Jour',
+        de: 'Tag',
+        pt: 'Dia',
+        nl: 'Dag',
+        la: 'Dies',
+        hu: 'Nap',
+        sk: 'Deň',
+        vi: 'Ngày',
+        id: 'Hari'
+    },
+    month: {
+        en: 'Month',
+        it: 'Mese',
+        es: 'Mes',
+        fr: 'Mois',
+        de: 'Monat',
+        pt: 'Mês',
+        nl: 'Maand',
+        la: 'Mensis',
+        hu: 'Hónap',
+        sk: 'Mesiac',
+        vi: 'Tháng',
+        id: 'Bulan'
+    },
+    year: {
+        en: 'Year',
+        it: 'Anno',
+        es: 'Año',
+        fr: 'Année',
+        de: 'Jahr',
+        pt: 'Ano',
+        nl: 'Jaar',
+        la: 'Annus',
+        hu: 'Év',
+        sk: 'Rok',
+        vi: 'Năm',
+        id: 'Tahun'
     }
+};
 
-    /**
-     * Returns the full endpoint URL for the API /calendar endpoint
-     * @returns {string} The full endpoint URL for the API /calendar endpoint
-     */
-    static get requestPath() {
-        const yearPathParam = this.yearType === 'LITURGICAL' ? this.#year + 1 : this.#year;
-        const pathParams = this.#calendarType !== '' ? `${this.#calendarType}/${this.#calendar}/` : '';
-        return `${CalendarUrl}/${pathParams}${yearPathParam}?year_type=${this.yearType}`;
-    }
+/**
+ * Initialize the page with JS components
+ */
+const initializePage = async () => {
+    // Initialize ApiClient with the API URL from the global BaseUrl
+    const apiClient = await ApiClient.init( BaseUrl );
 
-
-    /**
-     * Returns the flag indicating whether an API request is needed to load data.
-     * This flag is set to true when the CalendarState is first initialized, and
-     * is set to false after the first API request is made.
-     * This flag is used to determine whether an API request should be made to
-     * load new data when the user navigates to a different date.
-     * @returns {boolean} true if an API request is needed, false otherwise.
-     */
-    static get apiRequestFlag() {
-        return this.#apiRequestFlag;
-    }
-
-    /**
-     * Returns the year of the CalendarState.
-     * @returns {number} The year of the CalendarState.
-     */
-    static get year() {
-        return this.#year;
-    }
-
-
-    /**
-     * Returns the month of the CalendarState as a number (1-12) of the CalendarState.
-     * @returns {number} The month of the CalendarState as a number (1-12) of the CalendarState.
-     * @example CalendarState.month // returns 3 if the current month is March
-     */
-    static get month() {
-        return this.#month;
-    }
-
-    /**
-     * Returns the day of the month as a number (1-31) of the CalendarState.
-     * @returns {number} The day of the month as a number (1-31) of the CalendarState.
-     */
-    static get day() {
-        return this.#day;
-    }
-
-    /**
-     * Evaluates whether an API request is necessary based on the current year type
-     * and the previous year type.
-     * @private
-     * @static
-     * @returns {void}
-     */
-    static #evaluateApiRequest() {
-        if ( AppEnv === 'development' ) console.debug( `Evaluating API request necessity. Previous year type: ${this.#previousYearTypeValue}, Current year type: ${this.yearType}` );
-        if ( this.#previousYearTypeValue !== this.yearType ) {
-            this.#previousYearTypeValue = this.yearType;
-            this.#apiRequestFlag = true;
-        }
-    }
-
-    /**
-     * Resets the API request flag to false.
-     * This flag is used to determine if an API request should be made when the calendar is updated.
-     * When the flag is true, an API request is made when the calendar is updated.
-     * When the flag is false, no API request is made when the calendar is updated.
-     */
-    static resetApiRequestFlag() {
-        this.#apiRequestFlag = false;
-        if ( AppEnv === 'development' ) console.debug( `Resetting API request flag: ${this.#apiRequestFlag ? 'true' : 'false'}` );
-    }
-
-    /**
-     * Sets the year of the CalendarState. Sets the API request flag to true.
-     * @param {string} newYearValue The new year of the CalendarState (4 digits)
-     * @example CalendarState.year = '2022' // sets the year to 2022
-     */
-    static set year( newYearValue ) {
-        this.#year = parseInt( newYearValue, 10 );
-        this.#apiRequestFlag = true;
-    }
-
-
-    /**
-     * Sets the month of the year. Triggers an API request evaluation to set the state of the API request flag.
-     * @param {string} newMonthValue The new month of the year (1-12)
-     * @example CalendarState.month = '6' // sets the month to June
-     */
-    static set month( newMonthValue ) {
-        if ( AppEnv === 'development' ) console.debug( `Setting month to ${newMonthValue}, current day is ${this.#day}` );
-        this.#month = parseInt( newMonthValue, 10 );
-        this.#evaluateApiRequest();
-    }
-
-    /**
-     * Sets the day of the month. Triggers the API request evaluation to set the state of the API request flag.
-     * @param {string} newDayValue The new day of the month (1-31)
-     * @example CalendarState.day = '15' // sets the day to 15
-     */
-    static set day( newDayValue ) {
-        if ( AppEnv === 'development' ) console.debug( `Setting day to ${newDayValue}, current month is ${this.#month}` );
-        this.#day = parseInt( newDayValue, 10 );
-        this.#evaluateApiRequest();
-    }
-
-    /**
-     * Sets the calendar. If the calendar is set to 'VA' or no calendar is set, the calendar is set to an empty string.
-     * Sets the API request flag to true.
-     * @param {string} newCalendarValue The new calendar value.
-     * @example CalendarState.calendar = 'NATION' // sets the calendar to 'NATION'
-     */
-    static set calendar( newCalendarValue ) {
-        this.#calendar = ( newCalendarValue === 'VA' ) ? '' : newCalendarValue;
-        this.#apiRequestFlag = true;
-    }
-
-    /**
-     * Sets the calendar type. If the calendar is set to 'VA' or no calendar is set, the calendar type is set to an empty string.
-     * Sets the API request flag to true.
-     * @param {string} newCalendarTypeValue The new calendar type value.
-     * @example CalendarState.calendarType = 'NATION' // sets the calendar type to 'NATION'
-     */
-    static set calendarType( newCalendarTypeValue ) {
-        this.#calendarType = ( this.#calendar === 'VA' || this.#calendar === '' ) ? '' : newCalendarTypeValue;
-        this.#apiRequestFlag = true;
-    }
-}
-
-
-const filterTagsDisplayGrade = [
-    /OrdSunday[0-9]{1,2}(_vigil){0,1}/,
-    /Advent[1-4](_vigil){0,1}/,
-    /Lent[1-5](_vigil){0,1}/,
-    /Easter[1-7](_vigil){0,1}/
-];
-
-document.addEventListener( 'change', ( event ) => {
-    const target = event.target;
-
-    // Only process changes from our specific controls
-    if ( ![ 'monthControl', 'yearControl', 'calendarSelect', 'dayControl' ].includes( target.id ) ) {
+    if ( !( apiClient instanceof ApiClient ) ) {
+        console.error( 'Failed to initialize ApiClient' );
         return;
     }
 
-    if ( [ 'monthControl', 'yearControl' ].includes( target.id ) ) {
-        const year = document.querySelector( '#yearControl' ).value;
-        const month = document.querySelector( '#monthControl' ).value;
-        const daysInMonth = new Date( year, month, 0 ).getDate();
-        document.querySelector( '#dayControl' ).setAttribute( 'max', daysInMonth );
-        if ( document.querySelector( '#dayControl' ).value > daysInMonth ) {
-            document.querySelector( '#dayControl' ).value = daysInMonth;
-            CalendarState.day = daysInMonth;
-        }
-    }
+    // Get the base language for translations
+    const lang = currentLocale.language;
 
-    switch ( target.id ) {
-        case 'monthControl':
-            CalendarState.month = document.querySelector( '#monthControl' ).value;
-            liturgyDate = new Date( Date.UTC( CalendarState.year, CalendarState.month - 1, CalendarState.day, 0, 0, 0, 0 ) );
-            break;
-        case 'dayControl':
-            CalendarState.day = document.querySelector( '#dayControl' ).value;
-            liturgyDate = new Date( Date.UTC( CalendarState.year, CalendarState.month - 1, CalendarState.day, 0, 0, 0, 0 ) );
-            break;
-        case 'yearControl':
-            CalendarState.year = document.querySelector( '#yearControl' ).value;
-            liturgyDate = new Date( Date.UTC( CalendarState.year, CalendarState.month - 1, CalendarState.day, 0, 0, 0, 0 ) );
-            break;
-        case 'calendarSelect': {
-            const calendarSelect = document.querySelector( '#calendarSelect' );
-            const selectedOption = calendarSelect.options[ calendarSelect.selectedIndex ];
-            const calendarType   = selectedOption.getAttribute( 'data-calendartype' );
+    // Create CalendarSelect component
+    const calendarSelect = new CalendarSelect( lang )
+        .class( 'form-select' )
+        .id( 'calendarSelect' )
+        .label( { text: translations.selectCalendar[ lang ] || translations.selectCalendar.en, class: 'form-label' } )
+        .allowNull( true );
+    calendarSelect.appendTo( '#calendarSelectContainer' );
 
-            switch ( calendarType ) {
-                case 'nationalcalendar':
-                    CalendarState.calendar = calendarSelect.value;
-                    CalendarState.calendarType = 'nation';
-                    break;
-                case 'diocesancalendar':
-                    CalendarState.calendar = calendarSelect.value;
-                    CalendarState.calendarType = 'diocese';
-                    break;
-                default:
-                    CalendarState.calendar = '';
-                    CalendarState.calendarType = '';
-            }
-            break;
-        }
-    }
+    // Set CalendarSelect to General Roman Calendar (empty value) instead of Vatican
+    calendarSelect._domElement.value = '';
 
-    getLiturgyOfADay();
-} );
+    // Create ApiOptions with only the locale input filter
+    const apiOptions = new ApiOptions( lang )
+        .filter( ApiOptionsFilter.LOCALE_ONLY )
+        .linkToCalendarSelect( calendarSelect );
 
+    // Configure the locale input before appending
+    // Set defaultValue to currentLocale.language so it will be selected if available
+    apiOptions._localeInput.id( 'apiOptionsLocale' );
+    apiOptions._localeInput.class( 'form-select' );
+    apiOptions._localeInput.labelClass( 'form-label' );
+    apiOptions._localeInput._labelElement.textContent = translations.language[ lang ] || translations.language.en;
+    apiOptions._localeInput.defaultValue( lang );
 
-/**
- * If apiRequest is true, this function fetches data from the API endpoint
- * defined in CalendarState.requestPath and updates the #liturgyResults element
- * with the result. If apiRequest is false, this function just updates the
- * #liturgyResults element with the result of filtering the CalData object for
- * the data with a date matching the timestamp of liturgyDate.
- *
- */
-const getLiturgyOfADay = () => {
-    const rfc3339datetime = liturgyDate.toISOString().split( '.' )[ 0 ] + '+00:00';
-    if ( AppEnv === 'development' ) console.info( `Getting liturgy of day for date ${rfc3339datetime} (API request: ${CalendarState.apiRequestFlag ? 'yes' : 'no'})` );
+    // Append the locale input to its container using the filter
+    apiOptions.appendTo( '#localeSelectContainer' );
 
-    if ( CalendarState.apiRequestFlag ) {
-        if ( AppEnv === 'development' ) console.info( `Fetching data from ${CalendarState.requestPath}` );
-        const headers = new Headers();
-        headers.append( 'Origin', location.origin );
-        if ( CalendarState.calendar === 'VA' || CalendarState.calendar === '' ) {
-            headers.append( 'Accept-Language', currentLocale.language );
-        }
-        const url = new URL( CalendarState.requestPath );
-        const request = new Request( url, {
-            method: "GET",
-            headers
-        } );
-        fetch( request )
-            .then( response => response.json() )
-            .then( data => {
-                if ( data.hasOwnProperty( 'litcal' ) ) {
-                    CalData = data.litcal;
-                    if ( AppEnv === 'development' ) {
-                        console.info( `Fetched ${CalData.length} liturgical events for year ${CalendarState.year}` );
-                        console.debug( CalData );
-                    }
-                    const liturgyOfADay = CalData.filter( ( celebration ) => celebration.date === rfc3339datetime );
-                    if ( AppEnv === 'development' ) {
-                        console.info( `Found ${liturgyOfADay.length} liturgical events for date ${rfc3339datetime}` );
-                        console.debug( liturgyOfADay );
-                    }
-                    updateResults( liturgyOfADay );
-                } else {
-                    const errorDiv = document.createElement( 'div' );
-                    errorDiv.textContent = 'ERROR: no \'litcal\' property: ' + JSON.stringify( data );
-                    document.querySelector( '#liturgyResults' ).appendChild( errorDiv );
-                }
-                CalendarState.resetApiRequestFlag();
-            } )
-            .catch( error => {
-                console.error( 'Error fetching liturgy of a day:', error );
-                const errorDiv = document.createElement( 'div' );
-                errorDiv.textContent = 'There was an error fetching liturgy of a day, see console for details';
-                document.querySelector( '#liturgyResults' ).appendChild( errorDiv );
-            } );
+    // Try to select the current locale in LocaleInput, fallback to first option if not available
+    // First try exact match, then try matching just the language part (e.g., "en" matches "en_US")
+    const localeOptions = Array.from( apiOptions._localeInput._domElement.options );
+    const exactMatch = localeOptions.find( opt => opt.value === lang );
+    const languageMatch = localeOptions.find( opt => opt.value.split( /[-_]/ )[ 0 ] === lang );
+
+    let selectedLocale;
+    if ( exactMatch ) {
+        selectedLocale = exactMatch.value;
+    } else if ( languageMatch ) {
+        selectedLocale = languageMatch.value;
+    } else if ( localeOptions.length > 0 ) {
+        selectedLocale = localeOptions[ 0 ].value;
     } else {
-        let liturgyOfADay = CalData.filter( ( celebration ) => celebration.date === rfc3339datetime );
-        updateResults( liturgyOfADay );
+        selectedLocale = lang; // Fallback to original lang if no options available
     }
-}
+    apiOptions._localeInput._domElement.value = selectedLocale;
 
+    // Create LiturgyOfAnyDay component
+    const liturgyOfAnyDay = new LiturgyOfAnyDay( { locale: lang } )
+        .id( 'liturgyOfAnyDay' )
+        .class( 'card shadow m-2' )
+        .dateClass( 'card-header py-3 d-flex justify-content-between align-items-center' )
+        .dateControlsClass( 'row g-3 p-3' )
+        .eventsWrapperClass( 'card-body' )
+        .eventClass( 'liturgy-event p-3 mb-2 rounded' )
+        .eventGradeClass( 'small' )
+        .eventCommonClass( 'small fst-italic' )
+        .eventYearCycleClass( 'small' )
+        .dayInputConfig( {
+            wrapper: 'div',
+            wrapperClass: 'col-md',
+            class: 'form-control',
+            labelClass: 'form-label',
+            labelText: translations.day[ lang ] || translations.day.en
+        } )
+        .monthInputConfig( {
+            wrapper: 'div',
+            wrapperClass: 'col-md',
+            class: 'form-select',
+            labelClass: 'form-label',
+            labelText: translations.month[ lang ] || translations.month.en
+        } )
+        .yearInputConfig( {
+            wrapper: 'div',
+            wrapperClass: 'col-md',
+            class: 'form-control',
+            labelClass: 'form-label',
+            labelText: translations.year[ lang ] || translations.year.en
+        } )
+        .buildDateControls()
+        .listenTo( apiClient );
 
+    // Hide the component's title since the page already has a heading
+    liturgyOfAnyDay._titleElement.style.display = 'none';
 
-/**
- * Detects the type of readings object based on its properties
- * @param {Object|string} readings - The readings object or string
- * @returns {string} The type of readings
- */
-const detectReadingType = ( readings ) => {
-    if ( typeof readings === 'string' ) {
-        return 'commons';
-    }
-    if ( readings.hasOwnProperty( 'night' ) && readings.hasOwnProperty( 'dawn' ) && readings.hasOwnProperty( 'day' ) ) {
-        return 'christmas';
-    }
-    if ( readings.hasOwnProperty( 'day' ) && readings.hasOwnProperty( 'evening' ) ) {
-        return 'withEvening';
-    }
-    if ( readings.hasOwnProperty( 'schema_one' ) && readings.hasOwnProperty( 'schema_two' ) && readings.hasOwnProperty( 'schema_three' ) ) {
-        return 'multipleSchemas';
-    }
-    if ( readings.hasOwnProperty( 'easter_season' ) && readings.hasOwnProperty( 'outside_easter_season' ) ) {
-        return 'seasonal';
-    }
-    if ( readings.hasOwnProperty( 'first_reading' ) && readings.hasOwnProperty( 'seventh_reading' ) ) {
-        return 'easterVigil';
-    }
-    if ( readings.hasOwnProperty( 'palm_gospel' ) ) {
-        return 'palmSunday';
-    }
-    if ( readings.hasOwnProperty( 'second_reading' ) ) {
-        return 'festive';
-    }
-    if ( readings.hasOwnProperty( 'first_reading' ) ) {
-        return 'ferial';
-    }
-    return 'unknown';
-}
+    liturgyOfAnyDay.appendTo( '#liturgyOfAnyDayContainer' );
 
-/**
- * Formats a simple reading set (ferial, festive, or palm sunday)
- * @param {Object} readings - The readings object
- * @param {string} type - The type of readings
- * @param {boolean} skipWrapper - If true, don't add the outer wrapper div
- * @returns {string} HTML string
- */
-const formatSimpleReadings = ( readings, type, skipWrapper = false ) => {
-    let html = skipWrapper ? '' : '<div class="readings mt-2">';
+    // Have ApiClient listen to CalendarSelect and ApiOptions
+    // This automatically handles Accept-Language headers based on locale selection
+    apiClient.listenTo( calendarSelect ).listenTo( apiOptions );
 
-    if ( type === 'palmSunday' ) {
-        html += `<div class="reading-item"><strong>Palm Gospel:</strong> ${readings.palm_gospel}</div>`;
-    }
-
-    html += `<div class="reading-item"><strong>First Reading:</strong> ${readings.first_reading}</div>`;
-    html += `<div class="reading-item"><strong>Responsorial Psalm:</strong> ${readings.responsorial_psalm}</div>`;
-
-    if ( type === 'festive' || type === 'palmSunday' ) {
-        html += `<div class="reading-item"><strong>Second Reading:</strong> ${readings.second_reading}</div>`;
-    }
-
-    html += `<div class="reading-item"><strong>Gospel Acclamation:</strong> ${readings.gospel_acclamation}</div>`;
-    html += `<div class="reading-item"><strong>Gospel:</strong> ${readings.gospel}</div>`;
-
-    if ( !skipWrapper ) {
-        html += '</div>';
-    }
-
-    return html;
-}
-
-/**
- * Formats Easter Vigil readings
- * @param {Object} readings - The readings object
- * @returns {string} HTML string
- */
-const formatEasterVigilReadings = ( readings ) => {
-    let html = '<div class="readings mt-2">';
-    html += '<div class="reading-section"><strong>Liturgy of the Word:</strong></div>';
-
-    const ordinals = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh'];
-    for ( let i = 1; i <= 7; i++ ) {
-        const readingKey = `${ordinals[i - 1]}_reading`;
-        const psalmKey = i === 1 ? 'responsorial_psalm' : `responsorial_psalm_${i}`;
-        html += `<div class="reading-item"><strong>Reading ${i}:</strong> ${readings[readingKey]}</div>`;
-        html += `<div class="reading-item"><strong>Responsorial Psalm ${i}:</strong> ${readings[psalmKey]}</div>`;
-    }
-
-    html += `<div class="reading-item mt-2"><strong>Epistle:</strong> ${readings.epistle}</div>`;
-    html += `<div class="reading-item"><strong>Responsorial Psalm (Epistle):</strong> ${readings.responsorial_psalm_epistle}</div>`;
-    html += `<div class="reading-item"><strong>Gospel Acclamation:</strong> ${readings.gospel_acclamation}</div>`;
-    html += `<div class="reading-item"><strong>Gospel:</strong> ${readings.gospel}</div>`;
-    html += '</div>';
-
-    return html;
-}
-
-/**
- * Formats Christmas readings (night, dawn, day)
- * @param {Object} readings - The readings object
- * @returns {string} HTML string
- */
-const formatChristmasReadings = ( readings ) => {
-    let html = '<div class="readings mt-2">';
-
-    [ 'night', 'dawn', 'day' ].forEach( ( mass ) => {
-        const massTitle = mass.charAt( 0 ).toUpperCase() + mass.slice( 1 );
-        html += `<div class="reading-section mt-2"><strong>Mass at ${massTitle}:</strong></div>`;
-        html += formatSimpleReadings( readings[mass], 'festive', true );
-    } );
-
-    html += '</div>';
-    return html;
-}
-
-/**
- * Formats readings with evening option
- * @param {Object} readings - The readings object
- * @returns {string} HTML string
- */
-const formatWithEveningReadings = ( readings ) => {
-    let html = '<div class="readings mt-2">';
-
-    html += '<div class="reading-section"><strong>Day Mass:</strong></div>';
-    html += formatSimpleReadings( readings.day, 'festive', true );
-
-    html += '<div class="reading-section mt-2"><strong>Evening Mass:</strong></div>';
-    html += formatSimpleReadings( readings.evening, 'festive', true );
-
-    html += '</div>';
-    return html;
-}
-
-/**
- * Formats multiple schema readings (All Souls Day)
- * @param {Object} readings - The readings object
- * @returns {string} HTML string
- */
-const formatMultipleSchemasReadings = ( readings ) => {
-    let html = '<div class="readings mt-2">';
-
-    [ 'schema_one', 'schema_two', 'schema_three' ].forEach( ( schema, index ) => {
-        html += `<div class="reading-section mt-2"><strong>Schema ${index + 1}:</strong></div>`;
-        html += formatSimpleReadings( readings[schema], 'festive', true );
-    } );
-
-    html += '</div>';
-    return html;
-}
-
-/**
- * Formats seasonal readings
- * @param {Object} readings - The readings object
- * @returns {string} HTML string
- */
-const formatSeasonalReadings = ( readings ) => {
-    let html = '<div class="readings mt-2">';
-
-    html += '<div class="reading-section"><strong>During Easter Season:</strong></div>';
-    html += formatSimpleReadings( readings.easter_season, 'ferial', true );
-
-    html += '<div class="reading-section mt-2"><strong>Outside Easter Season:</strong></div>';
-    html += formatSimpleReadings( readings.outside_easter_season, 'ferial', true );
-
-    html += '</div>';
-    return html;
-}
-
-/**
- * Main function to format readings based on their type
- * @param {Object|string} readings - The readings object or string
- * @returns {string} HTML string
- */
-const formatReadings = ( readings ) => {
-    if ( !readings ) {
-        return '';
-    }
-
-    const type = detectReadingType( readings );
-
-    switch ( type ) {
-        case 'commons':
-            return `<div class="readings mt-2"><div class="reading-item"><em>Readings from: ${readings}</em></div></div>`;
-        case 'ferial':
-        case 'festive':
-        case 'palmSunday':
-            return formatSimpleReadings( readings, type );
-        case 'easterVigil':
-            return formatEasterVigilReadings( readings );
-        case 'christmas':
-            return formatChristmasReadings( readings );
-        case 'withEvening':
-            return formatWithEveningReadings( readings );
-        case 'multipleSchemas':
-            return formatMultipleSchemasReadings( readings );
-        case 'seasonal':
-            return formatSeasonalReadings( readings );
-        default:
-            return '';
-    }
-}
-
-/**
- * Updates the liturgy results section with the given liturgy of a day array.
- * @param {Object[]} liturgyOfADay - an array of liturgical events, with each event
- *      containing properties:
- *          * date: number - the date of the event in seconds since the Unix epoch
- *          * event_key: string - the key of the event
- *          * name: string - the name of the event
- *          * grade: number - the grade of the event
- *          * grade_display: string - the display version of the grade of the event
- *          * common: string[] - the common of the event
- *          * common_lcl: string - the localized version of the common of the event
- *          * grade_lcl: string - the localized version of the grade of the event
- *          * liturgical_year: string - the liturgical year of the event
- *          * color: string[] - the color of the event
- *          * readings: Object|string - the lectionary readings for the event
- */
-const updateResults = ( liturgyOfADay ) => {
-    document.querySelector( '#dateOfLiturgy' ).textContent = dtFormat.format( liturgyDate );
-    const resultsContainer = document.querySelector( '#liturgyResults' );
-    resultsContainer.innerHTML = '';
-
-    liturgyOfADay.forEach( ( celebration ) => {
-        const lclzdGrade = celebration.grade < 7 ? celebration.grade_lcl : '';
-        const isSundayOrdAdvLentEaster = filterTagsDisplayGrade.some( pattern => pattern.test( celebration.event_key ) );
-        const celebrationGrade = celebration.grade_display !== null
-            ? celebration.grade_display
-            : ( !isSundayOrdAdvLentEaster && celebration.grade !== 0 ? lclzdGrade : '' );
-        const celebrationCommon = celebration.common.length ? celebration.common_lcl : '';
-        const celebrationColor = celebration.color;
-
-        // Build DOM elements for XSS protection
-        const container = document.createElement( 'div' );
-        container.className = 'p-4 m-4 border rounded';
-        container.style.backgroundColor = celebrationColor[ 0 ] === 'rose' ? 'pink' : celebrationColor[ 0 ];
-        container.style.color = highContrast.includes( celebrationColor[ 0 ] ) ? 'white' : 'black';
-
-        const title = document.createElement( 'h3' );
-        title.textContent = celebration.name;
-        container.appendChild( title );
-
-        if ( celebrationGrade !== '' ) {
-            const gradeDiv = document.createElement( 'div' );
-            if ( celebration.grade < 3 ) {
-                gradeDiv.style.fontStyle = 'italic';
-            }
-            gradeDiv.textContent = celebrationGrade;
-            container.appendChild( gradeDiv );
-        }
-
-        const commonDiv = document.createElement( 'div' );
-        commonDiv.textContent = celebrationCommon;
-        container.appendChild( commonDiv );
-
-        if ( celebration.hasOwnProperty( 'liturgical_year' ) ) {
-            const yearDiv = document.createElement( 'div' );
-            yearDiv.textContent = celebration.liturgical_year;
-            container.appendChild( yearDiv );
-        }
-
-        // Readings use innerHTML as they contain structured HTML from formatReadings
-        if ( celebration.hasOwnProperty( 'readings' ) ) {
-            const readingsHtml = formatReadings( celebration.readings );
-            if ( readingsHtml ) {
-                const readingsWrapper = document.createElement( 'div' );
-                readingsWrapper.innerHTML = readingsHtml;
-                container.appendChild( readingsWrapper );
-            }
-        }
-
-        resultsContainer.appendChild( container );
-    } );
-}
-
-const initializeControls = () => {
-    document.querySelector( '#monthControl' ).value = String( CalendarState.month );
-    document.querySelector( '#dayControl' ).value = String( CalendarState.day );
-    document.querySelector( '#yearControl' ).value = String( CalendarState.year );
-    getLiturgyOfADay();
+    // Initial fetch - fetch the General Roman Calendar
+    // Note: LiturgyOfAnyDay.listenTo() already configured ApiClient with the correct
+    // year_type (LITURGICAL for Dec 31st to include vigil masses, CIVIL otherwise)
+    apiClient.fetchCalendar( selectedLocale );
 };
 
-if ( document.readyState === "loading" ) {
-    document.addEventListener( "DOMContentLoaded", initializeControls );
+// Initialize when DOM is ready
+if ( document.readyState === 'loading' ) {
+    document.addEventListener( 'DOMContentLoaded', initializePage );
 } else {
-    initializeControls();
+    initializePage();
 }

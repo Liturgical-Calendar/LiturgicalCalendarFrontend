@@ -138,3 +138,6 @@ phpunit.xml
 /assets/json/
 
 /cache/
+
+# Development symlink to local liturgy-components-js
+/assets/components-js

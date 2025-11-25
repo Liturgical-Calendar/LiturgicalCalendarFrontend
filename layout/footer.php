@@ -62,11 +62,16 @@ if ( AppEnv === 'development' ) console.info({
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/common.js"></script>
 <?php
-$componentsJsImportMap = <<<SCRIPT
+$isDevelopment   = ( $_ENV['APP_ENV'] ?? 'production' ) === 'development';
+$componentsJsUrl = $isDevelopment
+    ? './assets/components-js/index.js'
+    : 'https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@latest/dist/index.js';
+
+    $componentsJsImportMap = <<<SCRIPT
 <script type="importmap">
     {
         "imports": {
-            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@1.3.1/+esm"
+            "@liturgical-calendar/components-js": "{$componentsJsUrl}"
         }
     }
 </script>
