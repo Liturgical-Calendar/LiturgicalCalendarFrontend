@@ -357,8 +357,9 @@ const formatEasterVigilReadings = ( readings ) => {
     let html = '<div class="readings mt-2">';
     html += '<div class="reading-section"><strong>Liturgy of the Word:</strong></div>';
 
+    const ordinals = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh'];
     for ( let i = 1; i <= 7; i++ ) {
-        const readingKey = i === 1 ? 'first_reading' : `${['', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh'][i]}_reading`;
+        const readingKey = `${ordinals[i - 1]}_reading`;
         const psalmKey = i === 1 ? 'responsorial_psalm' : `responsorial_psalm_${i}`;
         html += `<div class="reading-item"><strong>Reading ${i}:</strong> ${readings[readingKey]}</div>`;
         html += `<div class="reading-item"><strong>Responsorial Psalm ${i}:</strong> ${readings[psalmKey]}</div>`;
