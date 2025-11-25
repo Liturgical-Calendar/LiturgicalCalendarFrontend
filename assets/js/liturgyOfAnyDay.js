@@ -24,7 +24,7 @@ class CalendarState {
      */
     static get yearType() {
         const isDec31 = ( this.#month === 12 && this.#day === 31 );
-        console.log( `Determining year type for date ${this.#year}-${this.#month}-${this.#day}: is December 31st? ${isDec31 ? 'yes' : 'no'}; year type: ${isDec31 ? 'LITURGICAL' : 'CIVIL'}` );
+        if ( AppEnv === 'development' ) console.debug( `Determining year type for date ${this.#year}-${this.#month}-${this.#day}: is December 31st? ${isDec31 ? 'yes' : 'no'}; year type: ${isDec31 ? 'LITURGICAL' : 'CIVIL'}` );
         return isDec31 ? 'LITURGICAL' : 'CIVIL';
     }
 
@@ -85,7 +85,7 @@ class CalendarState {
      * @returns {void}
      */
     static #evaluateApiRequest() {
-        console.log( `Evaluating API request necessity. Previous year type: ${this.#previousYearTypeValue}, Current year type: ${this.yearType}` );
+        if ( AppEnv === 'development' ) console.debug( `Evaluating API request necessity. Previous year type: ${this.#previousYearTypeValue}, Current year type: ${this.yearType}` );
         if ( this.#previousYearTypeValue !== this.yearType ) {
             this.#previousYearTypeValue = ( this.#previousYearTypeValue === 'CIVIL' ) ? 'LITURGICAL' : 'CIVIL';
             this.#apiRequestFlag = true;
@@ -100,7 +100,7 @@ class CalendarState {
      */
     static resetApiRequestFlag() {
         this.#apiRequestFlag = false;
-        console.log( `Resetting API request flag: ${this.#apiRequestFlag ? 'true' : 'false'}` );
+        if ( AppEnv === 'development' ) console.debug( `Resetting API request flag: ${this.#apiRequestFlag ? 'true' : 'false'}` );
     }
 
     /**
@@ -120,7 +120,7 @@ class CalendarState {
      * @example CalendarState.month = '6' // sets the month to June
      */
     static set month( newMonthValue ) {
-        console.log( `Setting month to ${newMonthValue}, current day is ${this.#day}` );
+        if ( AppEnv === 'development' ) console.debug( `Setting month to ${newMonthValue}, current day is ${this.#day}` );
         this.#month = parseInt( newMonthValue, 10 );
         this.#evaluateApiRequest();
     }
@@ -131,7 +131,7 @@ class CalendarState {
      * @example CalendarState.day = '15' // sets the day to 15
      */
     static set day( newDayValue ) {
-        console.log( `Setting day to ${newDayValue}, current month is ${this.#month}` );
+        if ( AppEnv === 'development' ) console.debug( `Setting day to ${newDayValue}, current month is ${this.#month}` );
         this.#day = parseInt( newDayValue, 10 );
         this.#evaluateApiRequest();
     }
@@ -234,10 +234,10 @@ document.addEventListener( 'change', ( event ) => {
  */
 const getLiturgyOfADay = () => {
     const rfc3339datetime = liturgyDate.toISOString().split( '.' )[ 0 ] + '+00:00';
-    console.log( `Getting liturgy of day for date ${rfc3339datetime} (API request: ${CalendarState.apiRequestFlag ? 'yes' : 'no'})` );
+    if ( AppEnv === 'development' ) console.info( `Getting liturgy of day for date ${rfc3339datetime} (API request: ${CalendarState.apiRequestFlag ? 'yes' : 'no'})` );
 
     if ( CalendarState.apiRequestFlag ) {
-        console.log( `Fetching data from ${CalendarState.requestPath}` );
+        if ( AppEnv === 'development' ) console.info( `Fetching data from ${CalendarState.requestPath}` );
         const headers = new Headers();
         headers.append( 'Origin', location.origin );
         if ( CalendarState.calendar === 'VA' || CalendarState.calendar === '' ) {
@@ -253,11 +253,15 @@ const getLiturgyOfADay = () => {
             .then( data => {
                 if ( data.hasOwnProperty( 'litcal' ) ) {
                     CalData = data.litcal;
-                    console.log( `Fetched ${CalData.length} liturgical events for year ${CalendarState.year}` );
-                    console.log( CalData );
+                    if ( AppEnv === 'development' ) {
+                        console.info( `Fetched ${CalData.length} liturgical events for year ${CalendarState.year}` );
+                        console.debug( CalData );
+                    }
                     const liturgyOfADay = CalData.filter( ( celebration ) => celebration.date === rfc3339datetime );
-                    console.log( `Found ${liturgyOfADay.length} liturgical events for date ${rfc3339datetime}` );
-                    console.log( liturgyOfADay );
+                    if ( AppEnv === 'development' ) {
+                        console.info( `Found ${liturgyOfADay.length} liturgical events for date ${rfc3339datetime}` );
+                        console.debug( liturgyOfADay );
+                    }
                     updateResults( liturgyOfADay );
                 } else {
                     document.querySelector( '#liturgyResults' ).insertAdjacentHTML( 'beforeend', `<div>ERROR: no 'litcal' property: ${JSON.stringify( data )}</div>` );

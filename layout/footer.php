@@ -22,6 +22,7 @@
 
 <!-- All API URLs and configuration are provided by common.php -->
 <script>
+const AppEnv          = '<?php echo $_ENV['APP_ENV'] ?? 'production'; ?>';
 const BaseUrl         = '<?php echo $apiConfig->apiBaseUrl; ?>';
 const DateOfEasterUrl = '<?php echo $apiConfig->dateOfEasterUrl; ?>';
 const CalendarUrl     = '<?php echo $apiConfig->calendarUrl; ?>';
@@ -30,7 +31,8 @@ const EventsUrl       = '<?php echo $apiConfig->eventsUrl; ?>';
 const MissalsUrl      = '<?php echo $apiConfig->missalsUrl; ?>';
 const DecreesUrl      = '<?php echo $apiConfig->decreesUrl; ?>';
 const RegionalDataUrl = '<?php echo $apiConfig->regionalDataUrl; ?>';
-console.log({
+if ( AppEnv === 'development' ) console.info({
+    'AppEnv': AppEnv,
     'BaseUrl': BaseUrl,
     'DateOfEasterUrl': DateOfEasterUrl,
     'CalendarUrl': CalendarUrl,

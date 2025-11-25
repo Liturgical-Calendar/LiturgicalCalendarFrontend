@@ -21,6 +21,7 @@ export default defineConfig( [
         LiturgicalEventCollection: "readonly",
         LiturgicalEventCollectionKeys: "readonly",
         LitCalMetadata: "readonly",
+        AppEnv: "readonly",
         CalendarUrl: "readonly",
         EventsUrl: "readonly",
         MissalsUrl: "readonly",
