@@ -46,13 +46,15 @@ const Auth = {
 
             if (!response.ok) {
                 let message = 'Login failed';
-                try {
-                    const error = await response.json();
-                    message = error.message || message;
-                } catch {
-                    // Response wasn't JSON, try to get as text
-                    const text = await response.text().catch(() => '');
-                    if (text) message = text;
+                const text = await response.text();
+                if (text) {
+                    try {
+                        const error = JSON.parse(text);
+                        message = error.message || message;
+                    } catch {
+                        // Response wasn't JSON, use raw text
+                        message = text;
+                    }
                 }
                 throw new Error(message);
             }
@@ -244,13 +246,15 @@ const Auth = {
 
             if (!response.ok) {
                 let message = 'Token refresh failed';
-                try {
-                    const error = await response.json();
-                    message = error.message || message;
-                } catch {
-                    // Response wasn't JSON, try to get as text
-                    const text = await response.text().catch(() => '');
-                    if (text) message = text;
+                const text = await response.text();
+                if (text) {
+                    try {
+                        const error = JSON.parse(text);
+                        message = error.message || message;
+                    } catch {
+                        // Response wasn't JSON, use raw text
+                        message = text;
+                    }
                 }
                 throw new Error(message);
             }
