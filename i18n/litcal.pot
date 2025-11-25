@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-25 02:28+0000\n"
+"POT-Creation-Date: 2025-11-25 06:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1036,8 +1036,8 @@ msgstr ""
 #: decrees.php:70
 #, php-format
 msgid ""
-"Currently, these endpoints are read-only. There are currently <b>%d Decrees</"
-"b> defined at the endpoint %s."
+"Currently, these endpoints are read-only. There are currently <b>%1$d "
+"Decrees</b> defined at the endpoint %2$s."
 msgstr ""
 
 #: decrees.php:135
