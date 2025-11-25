@@ -4,9 +4,22 @@
 
 This document outlines the plan for implementing JWT authentication in the Liturgical Calendar Frontend to support authenticated write operations (DELETE, PATCH, POST) to the API.
 
-**Related Issue:** [LiturgicalCalendarAPI#262](https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI/issues/262)
+**Related Issues:**
 
-**Status:** Planning phase (as of 2025-11-23)
+- [LiturgicalCalendarAPI#262](https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI/issues/262) - ✅ API JWT Implementation (Complete)
+- [LiturgicalCalendarFrontend#181](https://github.com/Liturgical-Calendar/LiturgicalCalendarFrontend/issues/181) - 🔄 Frontend JWT Client Implementation (In Progress)
+
+**Status:** Phase 1 and Phase 2 complete - as of 2025-11-23
+
+**API Readiness:**
+The LiturgicalCalendarAPI now has full JWT authentication implemented:
+
+- ✅ `/auth/login` endpoint for obtaining tokens
+- ✅ `/auth/refresh` endpoint for refreshing access tokens
+- ✅ PUT/PATCH/DELETE operations on `/data` endpoint require JWT authentication
+- ✅ Returns 401 Unauthorized for unauthenticated write requests
+
+The frontend can now proceed with implementing JWT client support as outlined in this roadmap.
 
 ## Current State
 
@@ -43,15 +56,35 @@ const request = new Request(API.path, {
 
 ## Implementation Plan
 
-### Phase 1: Basic JWT Authentication (Coordinated with API)
+### Phase 1: Basic JWT Authentication ✅ COMPLETE
+
+**Implementation Date:** 2025-11-23
+
+**Files Created:**
+
+- `assets/js/auth.js` - JWT token management module
+- `includes/login-modal.php` - Bootstrap 5 login modal
+
+**Files Modified:**
+
+- `assets/js/extending.js` - Added auth helpers and protected all write operations
+- `layout/header.php` - Added auth status UI (login/logout buttons)
+- `layout/footer.php` - Added APIConfig object
+- `extending.php` - Included auth module and login modal
+
+**Status:** All Phase 1 requirements implemented and ready for testing.
+
+---
 
 #### 1.1 Login UI
 
 **New Files:**
+
 - `assets/js/auth.js` - Authentication helper functions
 - `templates/partials/login-modal.php` - Login modal component
 
 **Features:**
+
 - Bootstrap 5 modal dialog for login
 - Username/password form (for initial implementation)
 - Remember me option (stores token for longer period)
@@ -472,11 +505,31 @@ function updateAuthUI() {
 </script>
 ```
 
-### Phase 2: Enhanced Security
+### Phase 2: Enhanced Security ✅ COMPLETE
 
-#### 2.1 Token Auto-Refresh
+**Implementation Date:** 2025-11-23
 
-Implement silent token refresh before expiry:
+**Status:** All Phase 2 requirements complete (Auto-refresh 2.1, SameSite CSRF Protection 2.2, CSP 2.3)
+
+**Files Modified:**
+
+- `assets/js/auth.js` - Added auto-refresh and expiry warning methods
+- `common.php` - Added dynamic CSP headers, HSTS, and SameSite cookie protection
+- `README.md` - Added Production Deployment section with nginx and cookie security configuration
+
+---
+
+#### 2.1 Token Auto-Refresh ✅ COMPLETE
+
+**Implementation Date:** 2025-11-23
+
+**Files Modified:**
+
+- `assets/js/auth.js:194-215` - `startAutoRefresh()` method
+- `assets/js/auth.js:223-241` - `startExpiryWarning()` bonus feature
+- `assets/js/auth.js:303-305` - Auto-start on page load
+
+Silent token refresh before expiry implemented:
 
 ```javascript
 /**
@@ -511,50 +564,120 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 ```
 
-#### 2.2 CSRF Protection
+#### 2.2 CSRF Protection ✅ COMPLETE
 
-Add CSRF tokens for forms:
+**Implementation Date:** 2025-11-23
 
-```javascript
-/**
- * Get CSRF token from meta tag or API
- */
-async function getCsrfToken() {
-    const metaToken = document.querySelector('meta[name="csrf-token"]');
-    if (metaToken) {
-        return metaToken.getAttribute('content');
-    }
+**Files Modified:**
 
-    // Fetch from API if not in meta tag
-    const response = await fetch(`${API.protocol}://${API.host}:${API.port}/auth/csrf`);
-    const data = await response.json();
-    return data.csrf_token;
-}
+- `common.php:91-139` - SameSite cookie configuration and helper function
+- `README.md` - Cookie Security documentation
 
-/**
- * Add CSRF token to form data
- */
-async function addCsrfToForm(formData) {
-    const csrfToken = await getCsrfToken();
-    formData.append('csrf_token', csrfToken);
-    return formData;
-}
-```
+**SameSite Cookie Protection implemented** (instead of traditional CSRF tokens):
 
-#### 2.3 Content Security Policy
+**Rationale:**
 
-Update CSP headers in PHP to allow authentication endpoints:
+- Application uses JWT in Authorization headers (not cookies)
+- Traditional CSRF tokens are unnecessary for header-based auth
+- SameSite protection provides defense-in-depth for future cookie usage
+- Lightweight solution without server-side token generation complexity
+
+**Implementation:**
 
 ```php
-// config/security.php or similar
+// common.php - Automatic session cookie protection
+$isHttps = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
+
+// Configure PHP session cookies with SameSite protection
+ini_set('session.cookie_httponly', '1');  // Prevent JavaScript access
+ini_set('session.cookie_samesite', 'Strict');  // CSRF protection
+if ($isHttps) {
+    ini_set('session.cookie_secure', '1');  // HTTPS only
+}
+
+/**
+ * Helper function for secure cookies with SameSite protection
+ */
+function setSecureCookie(
+    string $name,
+    string $value,
+    int $expire = 0,
+    string $path = '/',
+    string $domain = '',
+    string $sameSite = 'Strict'
+): bool {
+    global $isHttps;
+
+    $options = [
+        'expires' => $expire,
+        'path' => $path,
+        'domain' => $domain,
+        'secure' => $isHttps,      // HTTPS only
+        'httponly' => true,        // No JavaScript access
+        'samesite' => $sameSite    // CSRF protection
+    ];
+
+    return setcookie($name, $value, $options);
+}
+```
+
+**SameSite Options:**
+
+- `Strict` - Cookie only sent for same-site requests (default, maximum protection)
+- `Lax` - Cookie sent for top-level navigation (balance between security and usability)
+- `None` - Cookie sent for all requests (requires HTTPS, use only when needed)
+
+**Benefits:**
+
+- ✅ Automatic CSRF protection for all cookies
+- ✅ No server-side token storage or generation
+- ✅ No frontend token validation code needed
+- ✅ Future-proof for any cookie-based features
+- ✅ Works alongside JWT Authorization headers
+
+#### 2.3 Content Security Policy ✅ COMPLETE
+
+**Implementation Date:** 2025-11-23
+
+**Hybrid Approach Implemented:**
+
+- **PHP** (`common.php:57-81`) - Dynamic CSP with API URL from `.env`
+- **nginx** (documented in README.md) - Static security headers for performance
+
+**CSP Headers Implemented:**
+
+```php
+// common.php - Dynamic CSP header
 header("Content-Security-Policy: " .
     "default-src 'self'; " .
-    "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " .
-    "connect-src 'self' {$apiUrl}; " .
+    "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com; " .
+    "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; " .
+    "font-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.gstatic.com data:; " .
     "img-src 'self' data: https:; " .
-    "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;"
+    "connect-src 'self' {$apiCspUrl} https://api.github.com; " .
+    "frame-ancestors 'none'; " .
+    "base-uri 'self'; " .
+    "form-action 'self';"
 );
+
+// HSTS header (PHP sets this for HTTPS detection)
+if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
+    header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
+}
 ```
+
+**nginx Configuration (recommended for production):**
+
+```nginx
+# Static headers in nginx for better performance
+add_header X-Frame-Options "DENY" always;
+add_header X-Content-Type-Options "nosniff" always;
+add_header X-XSS-Protection "1; mode=block" always;
+add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+```
+
+See `README.md` Production Deployment section for full nginx configuration details.
 
 ### Phase 3: User Experience Enhancements
 
@@ -733,11 +856,13 @@ Auth.handleOAuthCallback = async function() {
 **Current Approach:** sessionStorage (default) and localStorage (with "Remember me")
 
 **Pros:**
+
 - Simple implementation
 - Works across browser tabs (localStorage)
 - Accessible to JavaScript for adding to request headers
 
 **Cons:**
+
 - Vulnerable to XSS attacks
 - Not the most secure option
 
@@ -763,6 +888,7 @@ if (window.location.protocol !== 'https:' && window.location.hostname !== 'local
 ### 3. Token Validation
 
 **Never trust client-side token validation alone**
+
 - Frontend token expiry check is for UX only
 - Server MUST validate all tokens
 - Frontend should gracefully handle 401 responses even if token appears valid
@@ -770,6 +896,7 @@ if (window.location.protocol !== 'https:' && window.location.hostname !== 'local
 ### 4. Sensitive Data Exposure
 
 **Do NOT store sensitive data in JWT payload**
+
 - Use opaque identifiers (user ID, not full user object)
 - Avoid storing permissions/roles if they change frequently
 - Keep payload minimal to reduce token size
@@ -880,11 +1007,11 @@ describe('Auth module', () => {
 
 ## Timeline
 
-| Phase | Description | Estimated Effort | Status |
-|-------|-------------|-----------------|--------|
-| Phase 1 | Basic JWT authentication | 2-3 weeks | Not started |
-| Phase 2 | Enhanced security (CSRF, auto-refresh) | 1 week | Not started |
-| Phase 3 | UX enhancements (warnings, permission UI) | 1 week | Not started |
-| Phase 4 | Future enhancements (RBAC, MFA, OAuth) | As needed | Future |
+| Phase   | Description                              | Estimated Effort | Status      |
+| ------- | ---------------------------------------- | ---------------- | ----------- |
+| Phase 1 | Basic JWT authentication                 | 2-3 weeks        | Not started |
+| Phase 2 | Enhanced security (CSRF, auto-refresh)   | 1 week           | Not started |
+| Phase 3 | UX enhancements (warnings, permission UI)| 1 week           | Not started |
+| Phase 4 | Future enhancements (RBAC, MFA, OAuth)   | As needed        | Future      |
 
 **Note:** Timeline assumes sequential implementation coordinated with API development.

@@ -35,12 +35,12 @@ $RowActionTitle = [
 ];
 
 [ 'litcal_decrees' => $LitCalDecrees ] = json_decode(
-    file_get_contents($decreesURL),
+    file_get_contents($apiConfig->decreesUrl),
     true
 );
 
 $ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $eventsURL);
+curl_setopt($ch, CURLOPT_URL, $apiConfig->eventsUrl);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept-Language: ' . $i18n->LOCALE]);
 $response = curl_exec($ch);
@@ -69,7 +69,7 @@ curl_close($ch);
             echo sprintf(
                 _('Currently, these endpoints are read-only. There are currently <b>%d Decrees</b> defined at the endpoint %s.'),
                 count($LitCalDecrees),
-                "<a href=\"{$decreesURL}\" target=\"_blank\">{$decreesURL}</a>"
+                "<a href=\"{$apiConfig->decreesUrl}\" target=\"_blank\">{$apiConfig->decreesUrl}</a>"
             );
         ?></p>
         <?php
@@ -97,18 +97,18 @@ curl_close($ch);
                 // Card item
                 if (array_key_exists('url_lang_map', $decree['metadata'])) {
                     if (array_key_exists($i18n->LOCALE, $decree['metadata']['url_lang_map'])) {
-                        $decreeURL = sprintf($decree['metadata']['url'], $decree['metadata']['url_lang_map'][$i18n->LOCALE]);
+                        $decreeUrl = sprintf($decree['metadata']['url'], $decree['metadata']['url_lang_map'][$i18n->LOCALE]);
                     } elseif (array_key_exists('en', $decree['metadata']['url_lang_map'])) {
-                        $decreeURL = sprintf($decree['metadata']['url'], $decree['metadata']['url_lang_map']['en']);
+                        $decreeUrl = sprintf($decree['metadata']['url'], $decree['metadata']['url_lang_map']['en']);
                     } else {
-                        $decreeURL = sprintf($decree['metadata']['url'], array_values($decree['metadata']['url_lang_map'])[0]);
+                        $decreeUrl = sprintf($decree['metadata']['url'], array_values($decree['metadata']['url_lang_map'])[0]);
                     }
                 } else {
-                    $decreeURL = $decree['metadata']['url'];
+                    $decreeUrl = $decree['metadata']['url'];
                 }
-                $decreeURL = filter_var($decreeURL, FILTER_SANITIZE_URL);
-                if (false === filter_var($decreeURL, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED)) {
-                    $decreeURL = '#';
+                $decreeUrl = filter_var($decreeUrl, FILTER_SANITIZE_URL);
+                if (false === filter_var($decreeUrl, FILTER_VALIDATE_URL, FILTER_FLAG_PATH_REQUIRED)) {
+                    $decreeUrl = '#';
                 }
 
                 /**
@@ -132,7 +132,7 @@ curl_close($ch);
                     . "<h6 class='card-subtitle mb-2 text-muted d-flex justify-content-between'><div>{$decreeDate}</div><div>{$decreeID}</div></h6>"
                     . '</div>'
                     . "<div class='card-body'>"
-                    . "<p class='card-text'>{$decreeDescription}<a href='{$decreeURL}' class='ms-2' target='_blank'>" . _('Read the Decree') . '</a></p>'
+                    . "<p class='card-text'>{$decreeDescription}<a href='{$decreeUrl}' class='ms-2' target='_blank'>" . _('Read the Decree') . '</a></p>'
                     . '<div class="row gx-2 align-items-baseline">'
                     . '<div class="form-group col-sm-4">'
                     . "<label for='event_key_{$decreeID}' class='event_key'>Event Key</label>"
