@@ -430,7 +430,7 @@ const Auth = {
         const payload = this.getPayload();
         if (!payload) return null;
 
-        return payload.sub || payload.username || 'Admin';
+        return payload.sub || payload.username || null;
     }
 };
 
