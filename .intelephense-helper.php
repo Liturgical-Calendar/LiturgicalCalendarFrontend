@@ -1,4 +1,5 @@
 <?php
+
 /**
  * An associative array of usernames and passwords.
  * This is used to authenticate users when they try to access the admin area.
@@ -8,4 +9,5 @@
  *   'username' => 'base64:password'
  * ]);
  */
+
 const AUTH_USERS = [];

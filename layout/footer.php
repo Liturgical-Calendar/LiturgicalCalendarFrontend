@@ -20,17 +20,23 @@
 </div>
 <!-- End of Page Wrapper -->
 
-<!-- All API URLs are provided by common.php -->
+<!-- All API URLs and configuration are provided by common.php -->
 <script>
-const BaseUrl         = '<?php echo $apiBaseUrl; ?>';
-const DateOfEasterUrl = '<?php echo $dateOfEasterUrl; ?>';
-const CalendarUrl     = '<?php echo $calendarUrl; ?>';
-const MetadataUrl     = '<?php echo $metadataUrl; ?>';
-const EventsUrl       = '<?php echo $eventsUrl; ?>';
-const MissalsUrl      = '<?php echo $missalsUrl; ?>';
-const DecreesUrl      = '<?php echo $decreesUrl; ?>';
-const RegionalDataUrl = '<?php echo $regionalDataUrl; ?>';
+const APIConfig = {
+    protocol: '<?php echo $_ENV['API_PROTOCOL']; ?>',
+    host: '<?php echo $_ENV['API_HOST']; ?>',
+    port: '<?php echo $_ENV['API_PORT']; ?>'
+};
+const BaseUrl         = '<?php echo $apiConfig->apiBaseUrl; ?>';
+const DateOfEasterUrl = '<?php echo $apiConfig->dateOfEasterUrl; ?>';
+const CalendarUrl     = '<?php echo $apiConfig->calendarUrl; ?>';
+const MetadataUrl     = '<?php echo $apiConfig->metadataUrl; ?>';
+const EventsUrl       = '<?php echo $apiConfig->eventsUrl; ?>';
+const MissalsUrl      = '<?php echo $apiConfig->missalsUrl; ?>';
+const DecreesUrl      = '<?php echo $apiConfig->decreesUrl; ?>';
+const RegionalDataUrl = '<?php echo $apiConfig->regionalDataUrl; ?>';
 console.log({
+    'APIConfig': APIConfig,
     'BaseUrl': BaseUrl,
     'DateOfEasterUrl': DateOfEasterUrl,
     'CalendarUrl': CalendarUrl,

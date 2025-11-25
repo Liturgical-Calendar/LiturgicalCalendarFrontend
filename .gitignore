@@ -117,10 +117,10 @@ examples/
 !liturgyOfAnyDay.php
 !translations.php
 !usage.php
-!layout/footer.php
-!layout/header.php
-!layout/head.php
-!dist/index.php
+!layout/*.php
+!src/*.php
+!dist/*.php
+!includes/*.php
 
 .php-ini
 .php-version
@@ -131,6 +131,10 @@ examples/
 !/**/.env.example
 /**/.envrc
 !/**/.envrc.example
+phpstan.neon
+!phpstan.neon.dist
+phpunit.xml
+!phpunit.xml.dist
 /assets/json/
 
 /cache/

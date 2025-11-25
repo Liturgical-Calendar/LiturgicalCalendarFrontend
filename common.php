@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Common bootstrap file for LiturgicalCalendarFrontend
+ *
+ * This file intentionally both declares symbols and causes side effects
+ * (loads environment, sets headers, initializes configuration).
+ * This is a standard pattern for application bootstrap files.
+ *
+ * phpcs:disable PSR1.Files.SideEffects
+ */
+
 include_once('vendor/autoload.php');
 
 use LiturgicalCalendar\Frontend\I18n;
@@ -54,6 +64,107 @@ $_ENV['API_BASE_PATH'] = $_ENV['API_BASE_PATH'] ?? '/api/dev';
 $apiPort    = !empty($_ENV['API_PORT']) ? ":{$_ENV['API_PORT']}" : '';
 $apiBaseUrl = rtrim("{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}{$apiPort}{$_ENV['API_BASE_PATH']}", '/');
 
+// ============================================================================
+// Security Headers - Hybrid Approach (nginx + PHP)
+// ============================================================================
+// Static security headers (X-Frame-Options, etc.) should be configured in nginx
+// See: nginx/security-headers.conf for nginx configuration
+//
+// PHP sets only dynamic headers that require environment variables:
+// - Content-Security-Policy (includes dynamic API URL)
+// - Strict-Transport-Security (requires HTTPS detection)
+// ============================================================================
+
+// Build CSP-compliant API URL for connect-src
+$apiCspUrl = "{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}" . $apiPort;
+
+// Content Security Policy - Phase 2 Enhanced Security
+// This MUST be set in PHP because it includes the dynamic API URL from .env
+// TODO: Phase 3 - Remove 'unsafe-inline' from script-src and style-src for stronger CSP
+//       Move inline scripts to external .js files or use nonces/hashes
+header('Content-Security-Policy: ' .
+    "default-src 'self'; " .
+    "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://cdn.skypack.dev; " .
+    "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; " .
+    "font-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.gstatic.com data:; " .
+    "img-src 'self' data: https:; " .
+    "connect-src 'self' {$apiCspUrl} https://api.github.com https://raw.githubusercontent.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://cdn.skypack.dev; " .
+    "frame-ancestors 'none'; " .
+    "base-uri 'self'; " .
+    "form-action 'self';");
+
+// HSTS - Set in PHP for HTTPS detection
+// Note: If nginx always proxies HTTPS, this can be moved to nginx config
+if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
+    header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+}
+
+// ============================================================================
+// Cookie Security - SameSite Protection (Phase 2.2)
+// ============================================================================
+// Configure secure cookie defaults for any future cookie usage
+// This protects against CSRF attacks by preventing cross-site cookie sending
+// ============================================================================
+
+$isHttps = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
+
+// Configure PHP session cookie settings if sessions are ever used
+// Note: Currently the app uses localStorage for JWT, not session cookies
+ini_set('session.cookie_httponly', '1');  // Prevent JavaScript access
+ini_set('session.cookie_samesite', 'Strict');  // CSRF protection
+if ($isHttps) {
+    ini_set('session.cookie_secure', '1');  // HTTPS only
+}
+
+/**
+ * Helper function to set secure cookies with SameSite protection
+ *
+ * @param string $name Cookie name
+ * @param string $value Cookie value
+ * @param int $expire Expiration timestamp (0 for session cookie)
+ * @param string $path Cookie path (default: '/')
+ * @param string $domain Cookie domain (default: '')
+ * @param string $sameSite SameSite policy: 'Strict', 'Lax', or 'None' (default: 'Strict')
+ * @return bool True on success
+ */
+function setSecureCookie(
+    string $name,
+    string $value,
+    int $expire = 0,
+    string $path = '/',
+    string $domain = '',
+    string $sameSite = 'Strict'
+): bool {
+    global $isHttps;
+
+    // Validate SameSite value
+    $validSameSite = ['Strict', 'Lax', 'None'];
+    if (!in_array($sameSite, $validSameSite, true)) {
+        throw new InvalidArgumentException(
+            'Invalid SameSite value. Must be one of: ' . implode(', ', $validSameSite)
+        );
+    }
+
+    // SameSite=None requires Secure flag (HTTPS)
+    // Browsers will silently reject cookies with SameSite=None without Secure
+    if ($sameSite === 'None' && !$isHttps) {
+        throw new InvalidArgumentException(
+            'SameSite=None requires HTTPS. Cookie would be rejected by browsers.'
+        );
+    }
+
+    $options = [
+        'expires'  => $expire,
+        'path'     => $path,
+        'domain'   => $domain,
+        'secure'   => $isHttps,  // Only send over HTTPS
+        'httponly' => true,    // Not accessible via JavaScript
+        'samesite' => $sameSite  // CSRF protection
+    ];
+
+    return setcookie($name, $value, $options);
+}
+
 if (file_exists($ghReleaseCacheFile)) {
     $GitHubReleasesRaw = @file_get_contents($ghReleaseCacheFile);
     if ($GitHubReleasesRaw === false) {
@@ -69,14 +180,8 @@ if (file_exists($ghReleaseCacheFile)) {
     $GitHubLatestRelease = 'dev';
 }
 
-$dateOfEasterUrl    = "{$apiBaseUrl}/easter";
-$calendarUrl        = "{$apiBaseUrl}/calendar";
-$metadataUrl        = "{$apiBaseUrl}/calendars";
-$eventsUrl          = "{$apiBaseUrl}/events";
-$missalsUrl         = "{$apiBaseUrl}/missals";
-$decreesUrl         = "{$apiBaseUrl}/decrees";
-$regionalDataUrl    = "{$apiBaseUrl}/data";
-$calSubscriptionUrl = "{$apiBaseUrl}/calendar?returntype=ICS";
+// Initialize API configuration (singleton)
+$apiConfig = \LiturgicalCalendar\Frontend\ApiConfig::getInstance($apiBaseUrl);
 
 $i18n = new I18n();
 
@@ -139,6 +244,6 @@ $httpClient = HttpClientFactory::createProductionClient(
 
 // 4. Initialize ApiClient Singleton
 $apiClient = ApiClient::getInstance([
-    'apiUrl'     => $apiBaseUrl,
+    'apiUrl'     => $apiConfig->apiBaseUrl,
     'httpClient' => $httpClient
 ]);

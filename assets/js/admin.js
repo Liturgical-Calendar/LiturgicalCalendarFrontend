@@ -332,7 +332,7 @@ $(document).on('click', '.actionPromptButton', ev => {
     //let buttonId = ev.currentTarget.id;
     //console.log(buttonId + ' button was clicked');
 
-    FormControls.settings.decreeURLFieldShow = true;
+    FormControls.settings.decreeUrlFieldShow = true;
     FormControls.settings.decreeLangMapFieldShow = true; //TODO: check how this should be set, it's different than extending.js
 
     setFormSettings( ev.currentTarget.id );

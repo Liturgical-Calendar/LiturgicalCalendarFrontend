@@ -1,0 +1,42 @@
+parameters:
+    level: 1
+    paths:
+        - src
+        - includes
+        - layout
+        - about.php
+        - admin.php
+        - common.php
+        - decrees.php
+        - easter.php
+        - examples.php
+        - extending.php
+        - index.php
+        - liturgyOfAnyDay.php
+        - translations.php
+        - usage.php
+    excludePaths:
+        - examples (?)
+        - .intelephense-helper.php
+    scanFiles:
+        - common.php
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        # Bootstrap variables - All analyzed files include common.php which defines these
+        # variables (see common.php lines 184-186). PHPStan cannot detect this because it
+        # doesn't execute includes during static analysis. These are FALSE POSITIVES -
+        # variables ARE defined at runtime.
+        -
+            message: '#Variable \$(i18n|apiConfig) might not be defined\.#'
+            paths:
+                - about.php
+                - admin.php
+                - decrees.php
+                - easter.php
+                - examples.php
+                - extending.php
+                - index.php
+                - layout/footer.php
+                - layout/header.php
+                - liturgyOfAnyDay.php
+                - usage.php
