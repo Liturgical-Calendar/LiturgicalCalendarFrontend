@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-25 06:53+0000\n"
-"PO-Revision-Date: 2025-11-25 07:36+0000\n"
+"PO-Revision-Date: 2025-11-25 10:01+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
@@ -1378,7 +1378,7 @@ msgstr "Pro sanctis mulieribus"
 #: src/LitCommon.php:172 src/LitCommon.php:184
 msgctxt "(SING_FEMM)"
 msgid "of the"
-msgstr "de la"
+msgstr ""
 
 #. translators: (plural feminine) glue between "From the Common" and the actual common. Latin: leave empty!
 #: src/LitCommon.php:175
@@ -1390,7 +1390,7 @@ msgstr ""
 #: src/LitCommon.php:181
 msgctxt "(PLUR_MASC)"
 msgid "of"
-msgstr "de"
+msgstr ""
 
 #. translators: (singular masculine) glue between "From the Common" and the actual common. Latin: leave empty!
 #: src/LitCommon.php:187
@@ -1565,11 +1565,11 @@ msgstr "De nobis"
 #: layout/header.php:40 layout/header.php:42 includes/login-modal.php:33
 #: includes/login-modal.php:260
 msgid "Login"
-msgstr "Log in"
+msgstr "Intra"
 
 #: layout/header.php:49 layout/header.php:51
 msgid "Logout"
-msgstr "Log out"
+msgstr "Exi"
 
 #: layout/header.php:101
 msgid "Home"
@@ -1585,7 +1585,7 @@ msgstr "Exempla Usus"
 
 #: includes/login-modal.php:6
 msgid "Administrator Login"
-msgstr "Administratoris Log in"
+msgstr "Ingressus Administratoris"
 
 #: includes/login-modal.php:12
 msgid "Username"
