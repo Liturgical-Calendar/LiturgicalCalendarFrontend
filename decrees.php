@@ -67,7 +67,7 @@ curl_close($ch);
         <p class="mb-1 small"><?php
             echo _('Data for <b>Roman Missals</b> is handled by the <code>/missals</code> endpoint of the API, while data for <b>Decrees</b> is handled by the <code>/decrees</code> endpoint of the API.') . ' ';
             echo sprintf(
-                _('Currently, these endpoints are read-only. There are currently <b>%d Decrees</b> defined at the endpoint %s.'),
+                _('Currently, these endpoints are read-only. There are currently <b>%1$d Decrees</b> defined at the endpoint %2$s.'),
                 count($LitCalDecrees),
                 "<a href=\"{$apiConfig->decreesUrl}\" target=\"_blank\">{$apiConfig->decreesUrl}</a>"
             );

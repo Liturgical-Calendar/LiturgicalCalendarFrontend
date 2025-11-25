@@ -218,7 +218,7 @@ All JavaScript global variables (from PHP inline scripts or external libraries) 
 - Max line length: 180 characters (excluding code blocks/tables)
 - Fenced code blocks required
 - Blank lines around headings
-- Table column style checking disabled (MD060)
+- Table columns must be vertically aligned (MD060)
 
 **Code Blocks in Lists**:
 
@@ -249,6 +249,17 @@ When including code blocks within numbered or bulleted lists, proper indentation
 **Common mistake**: Placing code fence at column 0 breaks the list, causing subsequent items to restart numbering (MD029 error).
 
 **Tip**: When documenting nested code blocks, use five backticks for the outer block to avoid conflicts with inner triple-backtick blocks.
+
+**Table Alignment**:
+
+Table columns must be vertically aligned using consistent spacing:
+
+```markdown
+| Column A | Column B | Column C |
+|----------|----------|----------|
+| Short    | Medium   | Longer   |
+| Value    | Value    | Value    |
+```
 
 **Linting commands**:
 
@@ -336,6 +347,22 @@ Uses PHP gettext:
 ```
 
 Translation files: `i18n/*.po`
+
+**Numbered Placeholders in Translation Strings**:
+
+When using `sprintf()` with translatable strings, **always use numbered placeholders** (`%1$s`, `%2$d`, etc.)
+instead of positional placeholders (`%s`, `%d`). This allows translators to reorder placeholders as needed for
+their language's grammar.
+
+```php
+// CORRECT - numbered placeholders allow reordering
+sprintf(_('There are %1$d items at %2$s.'), $count, $url);
+
+// WRONG - positional placeholders cannot be reordered
+sprintf(_('There are %d items at %s.'), $count, $url);
+```
+
+**Why?** Different languages have different word orders. For example, a translation might need to say "at X, there are Y items" instead of "there are Y items at X".
 
 ## Common Development Tasks
 
