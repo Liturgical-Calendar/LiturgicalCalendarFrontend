@@ -1009,8 +1009,8 @@ describe('Auth module', () => {
 
 | Phase   | Description                              | Estimated Effort | Status      |
 | ------- | ---------------------------------------- | ---------------- | ----------- |
-| Phase 1 | Basic JWT authentication                 | 2-3 weeks        | Not started |
-| Phase 2 | Enhanced security (CSRF, auto-refresh)   | 1 week           | Not started |
+| Phase 1 | Basic JWT authentication                 | 2-3 weeks        | COMPLETE    |
+| Phase 2 | Enhanced security (CSRF, auto-refresh)   | 1 week           | COMPLETE    |
 | Phase 3 | UX enhancements (warnings, permission UI)| 1 week           | Not started |
 | Phase 4 | Future enhancements (RBAC, MFA, OAuth)   | As needed        | Future      |
 
