@@ -19,6 +19,12 @@ const Auth = {
     _expiryWarningInterval: null,
 
     /**
+     * Promise for in-flight token refresh to prevent race conditions
+     * @private
+     */
+    _refreshPromise: null,
+
+    /**
      * Login with username and password
      *
      * @param {string} username - User's username
@@ -192,11 +198,32 @@ const Auth = {
 
     /**
      * Refresh access token using refresh token
+     * Deduplicates concurrent refresh calls to prevent race conditions
      *
      * @returns {Promise<string>} New access token
      * @throws {Error} When refresh fails
      */
     async refreshToken() {
+        // Deduplicate concurrent refresh calls
+        if ( this._refreshPromise ) {
+            return this._refreshPromise;
+        }
+
+        this._refreshPromise = this._doRefreshToken();
+        try {
+            return await this._refreshPromise;
+        } finally {
+            this._refreshPromise = null;
+        }
+    },
+
+    /**
+     * Internal method to perform the actual token refresh
+     * @private
+     * @returns {Promise<string>} New access token
+     * @throws {Error} When refresh fails
+     */
+    async _doRefreshToken() {
         const refreshToken = this.getRefreshToken();
         if (!refreshToken) {
             throw new Error('No refresh token available');
