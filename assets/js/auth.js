@@ -29,8 +29,7 @@ const Auth = {
      */
     async login(username, password, rememberMe = false) {
         try {
-            const authUrl = APIConfig.port ? `${APIConfig.protocol}://${APIConfig.host}:${APIConfig.port}` : `${APIConfig.protocol}://${APIConfig.host}`;
-            const response = await fetch(`${authUrl}/auth/login`, {
+            const response = await fetch(`${BaseUrl}/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -207,8 +206,7 @@ const Auth = {
         const isPersistent = this.isPersistentStorage();
 
         try {
-            const authUrl = APIConfig.port ? `${APIConfig.protocol}://${APIConfig.host}:${APIConfig.port}` : `${APIConfig.protocol}://${APIConfig.host}`;
-            const response = await fetch(`${authUrl}/auth/refresh`, {
+            const response = await fetch(`${BaseUrl}/auth/refresh`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -254,8 +252,7 @@ const Auth = {
 
         if (token) {
             try {
-                const authUrl = APIConfig.port ? `${APIConfig.protocol}://${APIConfig.host}:${APIConfig.port}` : `${APIConfig.protocol}://${APIConfig.host}`;
-                await fetch(`${authUrl}/auth/logout`, {
+                await fetch(`${BaseUrl}/auth/logout`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,
