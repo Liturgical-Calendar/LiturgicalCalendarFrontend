@@ -174,12 +174,14 @@ function showLoginModal(onSuccess = null) {
         loginForm.reset();
     }
 
-    // Focus username for better UX
-    if (usernameInput) {
-        usernameInput.focus();
-    }
-
     loginModal.show();
+
+    // Focus username after modal is visible for better UX
+    loginModalElement.addEventListener('shown.bs.modal', () => {
+        if (usernameInput) {
+            usernameInput.focus();
+        }
+    }, { once: true });
 }
 
 /**
