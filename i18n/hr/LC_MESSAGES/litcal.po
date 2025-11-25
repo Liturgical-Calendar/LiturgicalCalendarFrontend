@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-25 02:28+0000\n"
-"PO-Revision-Date: 2025-11-21 07:26+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2025-11-25 06:53+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
 "Language: hr\n"
@@ -205,14 +205,6 @@ msgid "Calculation of the Dates of Easter"
 msgstr "Izračun datuma Uskrsa"
 
 #: index.php:163
-#, fuzzy
-#| msgid ""
-#| "A simple API endpoint that returns data about the Date of Easter, both "
-#| "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
-#| "Calendar) to 9999 (maximum possible date calculation in 64bit PHP), using "
-#| "a PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian "
-#| "easter (observed by the Roman Catholic church) and of the Meeus algorithm "
-#| "for Julian easter (observed by orthodox churches)."
 msgid ""
 "A simple API endpoint that returns data about the Dates of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -221,18 +213,17 @@ msgid ""
 "(observed by the Roman Catholic church) and of the Meeus algorithm for "
 "Julian easter (observed by orthodox churches)."
 msgstr ""
-"Jednostavna API točka koja vraća podatke o datumu Uskrsa, kako "
-"gregorijanskom tako i julijskom, od 1583. (godina usvajanja gregorijanskog "
-"kalendara) do 9999. (maksimalni mogući izračun datuma u 64bitnom PHP-u), "
-"koristeći PHP adaptaciju Meeus/Jones/Butcher algoritma za gregorijanski "
-"uskrs (koji slavi Rimska katolička crkva) i Meeusov algoritam za julijanski "
-"uskrs (koji slave pravoslavne crkve)."
+"Jednostavna API krajnja točka koja vraća podatke o datumima Uskrsa, kako "
+"gregorijanskom tako i julijanskom, od 1583. "
+"(godina usvajanja gregorijanskog kalendara) do 9999. "
+"(maksimalni mogući izračun datuma u 64bitnom PHP-u), koristeći PHP "
+"prilagodbu Meeus/Jones/Butcher algoritma za gregorijanski Uskrs "
+"(kojeg slavi Rimokatolička crkva) i Meeusov algoritam za julijanski Uskrs "
+"(kojeg slave pravoslavne crkve)."
 
 #: index.php:168
-#, fuzzy
-#| msgid "Date of Easter API endpoint"
 msgid "Dates of Easter API endpoint"
-msgstr "API točka za datum Uskrsa"
+msgstr "API krajnja točka za datume Uskrsa"
 
 #: index.php:170
 msgid ""
@@ -1147,47 +1138,37 @@ msgstr "Liturgija %s"
 
 #. translators: label of the form row
 #: admin.php:109 admin.php:273 decrees.php:16
-#, fuzzy
-#| msgid "Dedication of a Church"
 msgid "Designate Doctor of the Church"
-msgstr "Posveta crkve"
+msgstr "Imenovanje za Naučitelja Crkve"
 
 #. translators: label of the form row
 #: admin.php:113 decrees.php:8
-#, fuzzy
-#| msgid "Change grade"
 msgid "Change name or grade"
-msgstr "Promijeni razinu"
+msgstr "Promijeni ime ili stupanj"
 
 #: admin.php:129 admin.php:269
-#, fuzzy
-#| msgid "Choose from existing liturgical events"
 msgid "Designate Doctor of the Church from existing liturgical event"
-msgstr "Odaberite iz postojećih liturgijskih događaja"
+msgstr "Imenovanje za Naučitelja Crkve iz postojećeg liturgijskog događaja"
 
 #: admin.php:256
-#, fuzzy
-#| msgid "New liturgical event"
 msgid "New liturgical event from existing"
-msgstr "Novi liturgijski događaj"
+msgstr "Novi liturgijski događaj iz postojećeg"
 
 #: admin.php:257
-#, fuzzy
-#| msgid "New liturgical event"
 msgid "New liturgical event ex novo"
-msgstr "Novi liturgijski događaj"
+msgstr "Novi liturgijski događaj iznova"
 
 #: decrees.php:57
-#, fuzzy
-#| msgid "General Roman Calendar"
 msgid "General Roman Calendar - Decrees"
-msgstr "Opći rimski kalendar"
+msgstr "Opći rimski kalendar - Dekreti"
 
 #: decrees.php:65
 msgid ""
 "Refine the General Roman Calendar with Decrees of the Dicastery for Divine "
 "Worship and the Discipline of the Sacraments"
 msgstr ""
+"Doradi Opći rimski kalendar dekretima Dikasterija za bogoštovlje i "
+"disciplinu sakramenata"
 
 #: decrees.php:66
 msgid ""
@@ -1197,6 +1178,11 @@ msgid ""
 "or removing or changing liturgical events, or instructing on how to handle "
 "any possible coincidences between mandatory celebrations."
 msgstr ""
+"Liturgijski kalendar temelji se na objavljenim Rimskim Misalima i Dekretima "
+"Dikasterija za bogoštovlje i disciplinu sakramenata. Ovi dekreti mogu "
+"doraditi podatke iz Rimskih Misala, dodajući, uklanjajući ili mijenjajući "
+"liturgijske događaje, ili dajući upute kako postupati kod mogućih "
+"podudarnosti između obveznih slavlja."
 
 #: decrees.php:68
 msgid ""
@@ -1204,6 +1190,9 @@ msgid ""
 "endpoint of the API, while data for <b>Decrees</b> is handled by the <code>/"
 "decrees</code> endpoint of the API."
 msgstr ""
+"Podatke za <b>Rimske Misale</b> obrađuje <code>/missals</code> krajnja točka "
+"API-ja, dok podatke za <b>Dekrete</b> obrađuje <code>/decrees</code> krajnja "
+"točka API-ja."
 
 #: decrees.php:70
 #, php-format
@@ -1211,10 +1200,12 @@ msgid ""
 "Currently, these endpoints are read-only. There are currently <b>%d Decrees</"
 "b> defined at the endpoint %s."
 msgstr ""
+"Trenutno su te krajnje točke samo za čitanje. Trenutno su definirana <b>%d "
+"Dekreta</b> na krajnjoj točki %s."
 
 #: decrees.php:135
 msgid "Read the Decree"
-msgstr ""
+msgstr "Pročitaj Dekret"
 
 #: src/LitCommon.php:57
 msgid "Proper"
@@ -1575,11 +1566,11 @@ msgstr "O nama"
 #: layout/header.php:40 layout/header.php:42 includes/login-modal.php:33
 #: includes/login-modal.php:260
 msgid "Login"
-msgstr ""
+msgstr "Prijava"
 
 #: layout/header.php:49 layout/header.php:51
 msgid "Logout"
-msgstr ""
+msgstr "Odjava"
 
 #: layout/header.php:101
 msgid "Home"
@@ -1595,55 +1586,55 @@ msgstr "Primjeri uporabe"
 
 #: includes/login-modal.php:6
 msgid "Administrator Login"
-msgstr ""
+msgstr "Prijava administratora"
 
 #: includes/login-modal.php:12
 msgid "Username"
-msgstr ""
+msgstr "Korisničko ime"
 
 #: includes/login-modal.php:16
 msgid "Password"
-msgstr ""
+msgstr "Lozinka"
 
 #: includes/login-modal.php:19 includes/login-modal.php:109
 msgid "Show password"
-msgstr ""
+msgstr "Prikaži lozinku"
 
 #: includes/login-modal.php:26
 msgid "Remember me"
-msgstr ""
+msgstr "Zapamti me"
 
 #: includes/login-modal.php:68
 msgid "Are you sure you want to logout?"
-msgstr ""
+msgstr "Jesi li siguran da se želiš odjaviti?"
 
 #: includes/login-modal.php:104
 msgid "Hide password"
-msgstr ""
+msgstr "Sakrij lozinku"
 
 #: includes/login-modal.php:118
 msgid "Session Expiring"
-msgstr ""
+msgstr "Sesija istječe"
 
 #: includes/login-modal.php:204
 msgid "Please enter both username and password"
-msgstr ""
+msgstr "Molimo unesite i korisničko ime i lozinku"
 
 #: includes/login-modal.php:212
 msgid "Logging in..."
-msgstr ""
+msgstr "Prijava u tijeku..."
 
 #: includes/login-modal.php:244
 msgid "Login successful"
-msgstr ""
+msgstr "Prijava uspješna"
 
 #: includes/login-modal.php:244
 msgid "Success"
-msgstr ""
+msgstr "Uspješno"
 
 #: includes/login-modal.php:255
 msgid "Login failed. Please check your credentials."
-msgstr ""
+msgstr "Prijava nije uspjela. Provjerite svoje podatke."
 
 #~ msgid "Calculation of the Date of Easter"
 #~ msgstr "Izračunavanje datuma Uskrsa"
