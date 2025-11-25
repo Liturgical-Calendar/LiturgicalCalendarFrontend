@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-25 06:53+0000\n"
+"POT-Creation-Date: 2025-11-25 12:44+0000\n"
 "PO-Revision-Date: 2025-11-25 07:36+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -896,7 +896,7 @@ msgstr "ULOŽIŤ DIECÉZNY KALENDÁR"
 
 #: extending.php:693 extending.php:709 extending.php:725 extending.php:741
 #: extending.php:765 admin.php:225 admin.php:241 admin.php:258 admin.php:274
-#: includes/login-modal.php:32
+#: includes/login-modal.php:34
 msgid "Cancel"
 msgstr "Zrušiť"
 
@@ -1560,8 +1560,8 @@ msgstr "Nariadenia"
 msgid "About us"
 msgstr "O nás"
 
-#: layout/header.php:40 layout/header.php:42 includes/login-modal.php:33
-#: includes/login-modal.php:260
+#: layout/header.php:40 layout/header.php:42 includes/login-modal.php:35
+#: includes/login-modal.php:262
 msgid "Login"
 msgstr "Prihlásenie"
 
@@ -1593,7 +1593,7 @@ msgstr "Používateľské meno"
 msgid "Password"
 msgstr "Heslo"
 
-#: includes/login-modal.php:19 includes/login-modal.php:109
+#: includes/login-modal.php:19 includes/login-modal.php:111
 msgid "Show password"
 msgstr "Zobraziť heslo"
 
@@ -1601,35 +1601,35 @@ msgstr "Zobraziť heslo"
 msgid "Remember me"
 msgstr "Zapamätať si ma"
 
-#: includes/login-modal.php:68
+#: includes/login-modal.php:70
 msgid "Are you sure you want to logout?"
 msgstr "Naozaj sa chceš odhlásiť?"
 
-#: includes/login-modal.php:104
+#: includes/login-modal.php:106
 msgid "Hide password"
 msgstr "Skryť heslo"
 
-#: includes/login-modal.php:118
+#: includes/login-modal.php:120
 msgid "Session Expiring"
 msgstr "Platnosť relácie končí"
 
-#: includes/login-modal.php:204
+#: includes/login-modal.php:206
 msgid "Please enter both username and password"
 msgstr "Zadajte prosím používateľské meno a heslo"
 
-#: includes/login-modal.php:212
+#: includes/login-modal.php:214
 msgid "Logging in..."
 msgstr "Prihlasovanie..."
 
-#: includes/login-modal.php:244
+#: includes/login-modal.php:246
 msgid "Login successful"
 msgstr "Prihlásenie úspešné"
 
-#: includes/login-modal.php:244
+#: includes/login-modal.php:246
 msgid "Success"
 msgstr "Úspech"
 
-#: includes/login-modal.php:255
+#: includes/login-modal.php:257
 msgid "Login failed. Please check your credentials."
 msgstr "Prihlásenie zlyhalo. Skontrolujte svoje prihlasovacie údaje."
 
