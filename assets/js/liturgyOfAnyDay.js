@@ -7,7 +7,7 @@ let CalData = null;
 
 class CalendarState {
     // We initialize the default state to today's date
-    static #previousYearTypeValue = ( now.getMonth() + 1 === 12 && now.getDate() === 31 ) ? 'LITURGICAL' : 'CIVIL';
+    static #previousYearTypeValue = null;
     static #year = now.getFullYear();
     static #month = now.getMonth() + 1;
     static #day = now.getDate();
@@ -23,8 +23,13 @@ class CalendarState {
      */
     static get yearType() {
         const isDec31 = ( this.#month === 12 && this.#day === 31 );
-        if ( AppEnv === 'development' ) console.debug( `Determining year type for date ${this.#year}-${this.#month}-${this.#day}: is December 31st? ${isDec31 ? 'yes' : 'no'}; year type: ${isDec31 ? 'LITURGICAL' : 'CIVIL'}` );
-        return isDec31 ? 'LITURGICAL' : 'CIVIL';
+        const yearType = isDec31 ? 'LITURGICAL' : 'CIVIL';
+        if ( AppEnv === 'development' ) console.debug( `Determining year type for date ${this.#year}-${this.#month}-${this.#day}: is December 31st? ${isDec31 ? 'yes' : 'no'}; year type: ${yearType}` );
+        // Lazy initialization of previousYearTypeValue
+        if ( this.#previousYearTypeValue === null ) {
+            this.#previousYearTypeValue = yearType;
+        }
+        return yearType;
     }
 
     /**
