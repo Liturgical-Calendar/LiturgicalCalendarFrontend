@@ -125,6 +125,7 @@ if ($isHttps) {
  * @param string $path Cookie path (default: '/')
  * @param string $domain Cookie domain (default: '')
  * @param string $sameSite SameSite policy: 'Strict', 'Lax', or 'None' (default: 'Strict')
+ * @param bool|null $secure Whether to set secure flag (default: auto-detect from HTTPS)
  * @return bool True on success
  */
 function setSecureCookie(
@@ -133,9 +134,10 @@ function setSecureCookie(
     int $expire = 0,
     string $path = '/',
     string $domain = '',
-    string $sameSite = 'Strict'
+    string $sameSite = 'Strict',
+    ?bool $secure = null
 ): bool {
-    global $isHttps;
+    $isHttps = $secure ?? ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' );
 
     // Validate SameSite value
     $validSameSite = ['Strict', 'Lax', 'None'];
