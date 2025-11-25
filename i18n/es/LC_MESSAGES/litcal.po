@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-25 12:44+0000\n"
+"POT-Creation-Date: 2025-11-25 15:42+0000\n"
 "PO-Revision-Date: 2025-11-25 07:36+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
@@ -1591,7 +1591,7 @@ msgid "About us"
 msgstr "Sobre nosotros"
 
 #: layout/header.php:40 layout/header.php:42 includes/login-modal.php:35
-#: includes/login-modal.php:262
+#: includes/login-modal.php:264
 msgid "Login"
 msgstr "Iniciar sesión"
 
@@ -1643,23 +1643,23 @@ msgstr "Ocultar contraseña"
 msgid "Session Expiring"
 msgstr "Sesión a punto de expirar"
 
-#: includes/login-modal.php:206
+#: includes/login-modal.php:208
 msgid "Please enter both username and password"
 msgstr "Por favor, introduce tanto el nombre de usuario como la contraseña"
 
-#: includes/login-modal.php:214
+#: includes/login-modal.php:216
 msgid "Logging in..."
 msgstr "Iniciando sesión..."
 
-#: includes/login-modal.php:246
+#: includes/login-modal.php:248
 msgid "Login successful"
 msgstr "Inicio de sesión exitoso"
 
-#: includes/login-modal.php:246
+#: includes/login-modal.php:248
 msgid "Success"
 msgstr "Éxito"
 
-#: includes/login-modal.php:257
+#: includes/login-modal.php:259
 msgid "Login failed. Please check your credentials."
 msgstr "Error de inicio de sesión. Por favor, revisa tus credenciales."
 

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-25 12:44+0000\n"
+"POT-Creation-Date: 2025-11-25 15:42+0000\n"
 "PO-Revision-Date: 2025-11-25 07:36+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
@@ -1594,7 +1594,7 @@ msgid "About us"
 msgstr "Over ons"
 
 #: layout/header.php:40 layout/header.php:42 includes/login-modal.php:35
-#: includes/login-modal.php:262
+#: includes/login-modal.php:264
 msgid "Login"
 msgstr "Inloggen"
 
@@ -1646,23 +1646,23 @@ msgstr "Wachtwoord verbergen"
 msgid "Session Expiring"
 msgstr "Sessie verloopt"
 
-#: includes/login-modal.php:206
+#: includes/login-modal.php:208
 msgid "Please enter both username and password"
 msgstr "Voer zowel gebruikersnaam als wachtwoord in"
 
-#: includes/login-modal.php:214
+#: includes/login-modal.php:216
 msgid "Logging in..."
 msgstr "Inloggen..."
 
-#: includes/login-modal.php:246
+#: includes/login-modal.php:248
 msgid "Login successful"
 msgstr "Inloggen geslaagd"
 
-#: includes/login-modal.php:246
+#: includes/login-modal.php:248
 msgid "Success"
 msgstr "Succes"
 
-#: includes/login-modal.php:257
+#: includes/login-modal.php:259
 msgid "Login failed. Please check your credentials."
 msgstr "Inloggen mislukt. Controleer je inloggegevens."
 
