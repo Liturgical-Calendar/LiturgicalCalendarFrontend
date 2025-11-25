@@ -1003,7 +1003,7 @@ describe('Auth module', () => {
 
 - [API Authentication Roadmap](../../LiturgicalCalendarAPI/docs/enhancements/AUTHENTICATION_ROADMAP.md)
 - [API Issue #262: JWT Implementation](https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI/issues/262)
-- [Frontend Issue #XXX: JWT Client Implementation](https://github.com/Liturgical-Calendar/LiturgicalCalendarFrontend/issues/XXX) *(to be created)*
+- [Frontend Issue #181: JWT Client Implementation](https://github.com/Liturgical-Calendar/LiturgicalCalendarFrontend/issues/181)
 
 ## Timeline
 
