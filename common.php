@@ -227,10 +227,17 @@ if ($debugMode && $logger) {
 }
 
 // 2. Setup Cache - Filesystem cache (if available) or ArrayCache fallback
+$cacheDir = __DIR__ . '/cache';
+if (!is_dir($cacheDir)) {
+    if (!mkdir($cacheDir, 0755, true)) {
+        error_log('Failed to create cache directory: ' . $cacheDir);
+    }
+}
+
 $filesystemAdapter = new FilesystemAdapter(
     'litcal',
     3600 * 24,
-    __DIR__ . '/cache'
+    $cacheDir
 );
 
 $cache = new Psr16Cache($filesystemAdapter);
