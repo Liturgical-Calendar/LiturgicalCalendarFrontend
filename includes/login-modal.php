@@ -254,6 +254,9 @@ async function handleLogin() {
         // Reset expiry warning flag for new session
         expiryWarningShown = false;
 
+        // Start auto-refresh for new session
+        Auth.startAutoRefresh();
+
         // Show success message
         if (typeof toastr !== 'undefined') {
             toastr.success(<?php echo json_encode(_('Login successful')); ?>, <?php echo json_encode(_('Success')); ?>);
