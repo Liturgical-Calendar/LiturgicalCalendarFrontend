@@ -153,18 +153,28 @@ function showLoginModal(onSuccess = null) {
 
     // Store success callback in module scope
     if (onSuccess) {
-        loginSuccessCallback = onSuccess;
+        if (typeof onSuccess === 'function') {
+            loginSuccessCallback = onSuccess;
+        } else {
+            console.warn('showLoginModal: onSuccess callback should be a function');
+        }
     }
 
     // Clear previous errors and form values
     const loginError = document.getElementById('loginError');
     const loginForm = document.getElementById('loginForm');
+    const usernameInput = document.getElementById('loginUsername');
 
     if (loginError) {
         loginError.classList.add('d-none');
     }
     if (loginForm) {
         loginForm.reset();
+    }
+
+    // Focus username for better UX
+    if (usernameInput) {
+        usernameInput.focus();
     }
 
     loginModal.show();
