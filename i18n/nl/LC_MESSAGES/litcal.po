@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-22 20:21+0000\n"
+"POT-Creation-Date: 2025-11-25 02:28+0000\n"
 "PO-Revision-Date: 2025-11-21 07:26+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
@@ -127,7 +127,7 @@ msgstr "Aanvraagparameters beschikbaar op alle paden %1$s"
 msgid "General Roman Calendar"
 msgstr "Algemene Romeinse kalender"
 
-#: index.php:69 layout/header.php:75
+#: index.php:69 layout/header.php:95
 msgid "Catholic Liturgical Calendar"
 msgstr "Katholieke Liturgische Kalender"
 
@@ -271,7 +271,7 @@ msgstr "Voorbeelden"
 msgid "Example usage of the API"
 msgstr "Voorbeeldgebruik van de API"
 
-#: usage.php:27 layout/header.php:101
+#: usage.php:27 layout/header.php:121
 msgid "Web calendar"
 msgstr "Webkalender"
 
@@ -319,7 +319,7 @@ msgstr "Bekijk FullCalendar voorbeeld"
 msgid "View FullCalendar (messages first)"
 msgstr "Bekijk FullCalendar voorbeeld (berichten eerst)"
 
-#: usage.php:74 layout/header.php:105
+#: usage.php:74 layout/header.php:125
 msgid "Calendar subscription"
 msgstr "Kalenderabonnement"
 
@@ -491,7 +491,7 @@ msgstr ""
 "beschrijving van de evenementen, waardoor de beschrijvingen die door de "
 "abonnements-URL worden geleverd, wat meer \"verfraaid\" zijn voor Outlook."
 
-#: usage.php:176 layout/header.php:109
+#: usage.php:176 layout/header.php:129
 msgid "Dates of Easter"
 msgstr "Data van Pasen"
 
@@ -503,7 +503,7 @@ msgstr "Voorbeeldweergave van de datum van Pasen van 1583 tot 9999"
 msgid "Calculate the Dates of Easter"
 msgstr "Bereken de data van Pasen"
 
-#: usage.php:198 layout/header.php:113
+#: usage.php:198 layout/header.php:133
 msgid "Liturgy of the Day"
 msgstr "Liturgie van de dag"
 
@@ -589,19 +589,21 @@ msgstr ""
 "gegevens voor alle bisdommen in de groep, kan de groep hier worden "
 "gedefinieerd of ingesteld."
 
-#: extending.php:161
+#: extending.php:161 admin.php:94
 msgid "Event key"
 msgstr "Evenementsleutel"
 
-#: extending.php:162 src/Utilities.php:233 src/FormControls.php:52
+#: extending.php:162 admin.php:95 src/Utilities.php:233 src/FormControls.php:52
 msgid "Name"
 msgstr "Naam"
 
-#: extending.php:163 liturgyOfAnyDay.php:46 src/FormControls.php:59
+#: extending.php:163 liturgyOfAnyDay.php:46 admin.php:96
+#: src/FormControls.php:59
 msgid "Day"
 msgstr "Dag"
 
-#: extending.php:164 liturgyOfAnyDay.php:50 src/FormControls.php:65
+#: extending.php:164 liturgyOfAnyDay.php:50 admin.php:97
+#: src/FormControls.php:65
 msgid "Month"
 msgstr "Maand"
 
@@ -640,42 +642,42 @@ msgstr ""
 "indexvermeldingen verwijderd en zijn ze niet langer beschikbaar in de "
 "clienttoepassingen."
 
-#: extending.php:172 src/FormControls.php:89
+#: extending.php:172 admin.php:98 src/FormControls.php:89
 msgid "Liturgical color"
 msgstr "Liturgische kleur"
 
 #. translators: context = liturgical color
-#: extending.php:173 src/LitColor.php:35 src/FormControls.php:91
+#: extending.php:173 admin.php:99 src/LitColor.php:35 src/FormControls.php:91
 msgid "white"
 msgstr "wit"
 
 #. translators: context = liturgical color
-#: extending.php:174 src/LitColor.php:38 src/FormControls.php:92
+#: extending.php:174 admin.php:100 src/LitColor.php:38 src/FormControls.php:92
 msgid "red"
 msgstr "rood"
 
 #. translators: context = liturgical color
-#: extending.php:175 src/LitColor.php:29 src/FormControls.php:94
+#: extending.php:175 admin.php:101 src/LitColor.php:29 src/FormControls.php:94
 msgid "green"
 msgstr "groen"
 
 #. translators: context = liturgical color
-#: extending.php:176 src/LitColor.php:32 src/FormControls.php:93
+#: extending.php:176 admin.php:102 src/LitColor.php:32 src/FormControls.php:93
 msgid "purple"
 msgstr "paars"
 
 #. translators: context = liturgical color
-#: extending.php:177 src/LitColor.php:41
+#: extending.php:177 admin.php:103 src/LitColor.php:41
 msgid "rose"
 msgstr "roze"
 
 #. translators: in reference to the first year from which this liturgical event takes place
-#: extending.php:179 src/FormControls.php:101
+#: extending.php:179 admin.php:105 src/FormControls.php:101
 msgid "Since"
 msgstr "Vanaf"
 
 #. translators: in reference to the year from which this liturgical event no longer needs to be dealt with
-#: extending.php:181 src/FormControls.php:108
+#: extending.php:181 admin.php:107 src/FormControls.php:108
 msgid "Until"
 msgstr "Tot"
 
@@ -685,30 +687,30 @@ msgid "Patron or Patrons of the Wider Region"
 msgstr "Patroonheilige(n) van de wijdere regio"
 
 #. translators: label of the form row
-#: extending.php:185
+#: extending.php:185 admin.php:111 decrees.php:6
 msgid "New liturgical event"
 msgstr "Nieuw liturgisch evenement"
 
 #. translators: label of the form row
-#: extending.php:187
+#: extending.php:187 decrees.php:10
 msgid "Change name"
 msgstr "Naam wijzigen"
 
 #. translators: label of the form row
-#: extending.php:189
+#: extending.php:189 decrees.php:12
 msgid "Change grade"
 msgstr "Graad wijzigen"
 
 #. translators: label of the form row
-#: extending.php:191
+#: extending.php:191 admin.php:115 admin.php:240 decrees.php:14
 msgid "Move liturgical event"
 msgstr "Verplaats een liturgisch evenement"
 
-#: extending.php:192
+#: extending.php:192 admin.php:116
 msgid "Decree URL"
 msgstr "Besluit-URL"
 
-#: extending.php:193
+#: extending.php:193 admin.php:117
 msgid "Decree Language mappings"
 msgstr "Taaltoewijzingen van het decreet"
 
@@ -716,23 +718,23 @@ msgstr "Taaltoewijzingen van het decreet"
 msgid "Missal"
 msgstr "Missaal"
 
-#: extending.php:195
+#: extending.php:195 admin.php:118
 msgid "Reason (in favor of liturgical event)"
 msgstr "Reden (ten gunste van liturgisch evenement)"
 
-#: extending.php:207 extending.php:684 extending.php:688
+#: extending.php:207 extending.php:688 extending.php:692
 msgid "Designate patron"
 msgstr "Patroonheilige aanwijzen"
 
-#: extending.php:208 extending.php:700
+#: extending.php:208 extending.php:704 admin.php:126 admin.php:220
 msgid "Change name or grade of existing liturgical event"
 msgstr "Naam of rang van een bestaand liturgisch evenement wijzigen"
 
-#: extending.php:209 extending.php:716
+#: extending.php:209 extending.php:720 admin.php:127 admin.php:236
 msgid "Move liturgical event to new date"
 msgstr "Verplaats een liturgisch evenement naar een nieuwe datum"
 
-#: extending.php:210 extending.php:732
+#: extending.php:210 extending.php:736 admin.php:128 admin.php:252
 msgid "Create a new liturgical event"
 msgstr "Maak een nieuw liturgisch evenement"
 
@@ -817,7 +819,7 @@ msgstr "TALEN"
 msgid "Published Roman Missals"
 msgstr "Romeinse missalen gepubliceerd"
 
-#: extending.php:381 extending.php:748
+#: extending.php:381 extending.php:752
 msgid "Add Missal"
 msgstr "Missaal toevoegen"
 
@@ -928,28 +930,29 @@ msgstr "Diocesane overschrijvingen op de nationale kalender voor …"
 msgid "SAVE DIOCESAN CALENDAR"
 msgstr "BEWAAR DE DIOCESANE KALENDER"
 
-#: extending.php:689 extending.php:705 extending.php:721 extending.php:737
-#: extending.php:761
+#: extending.php:693 extending.php:709 extending.php:725 extending.php:741
+#: extending.php:765 admin.php:225 admin.php:241 admin.php:258 admin.php:274
+#: includes/login-modal.php:32
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: extending.php:704
+#: extending.php:708
 msgid "Set property"
 msgstr "Eigenschap instellen"
 
-#: extending.php:720
+#: extending.php:724
 msgid "Move Liturgical Event"
 msgstr "Liturgisch evenement verplaatsen"
 
-#: extending.php:736
+#: extending.php:740
 msgid "Create Liturgical Event"
 msgstr "Creëer een liturgisch evenement"
 
-#: extending.php:753
+#: extending.php:757
 msgid "Choose from known Roman Missal language editions"
 msgstr "Kies uit bekende edities van het Romeins Missaal"
 
-#: extending.php:755
+#: extending.php:759
 msgid ""
 "This Missal is unknown to the Liturgical Calendar API. Please choose from a "
 "value in the list, or contact the curator of the API to have the Missal "
@@ -959,7 +962,7 @@ msgstr ""
 "een waarde in de lijst, of neem contact op met de curator van de API om het "
 "missaal toe te voegen aan missalen in de bekende taaleditie."
 
-#: extending.php:760
+#: extending.php:764
 msgid "Add language edition Roman Missal"
 msgstr "Taaleditie Romeins Missaal toevoegen"
 
@@ -1171,6 +1174,77 @@ msgstr "Jaar"
 #, php-format
 msgid "Liturgy of %s"
 msgstr "Liturgie van %s"
+
+#. translators: label of the form row
+#: admin.php:109 admin.php:273 decrees.php:16
+#, fuzzy
+#| msgid "Dedication of a Church"
+msgid "Designate Doctor of the Church"
+msgstr "Kerkwijding"
+
+#. translators: label of the form row
+#: admin.php:113 decrees.php:8
+#, fuzzy
+#| msgid "Change grade"
+msgid "Change name or grade"
+msgstr "Graad wijzigen"
+
+#: admin.php:129 admin.php:269
+#, fuzzy
+#| msgid "Choose from existing liturgical events"
+msgid "Designate Doctor of the Church from existing liturgical event"
+msgstr "Kies uit bestaande liturgische evenementen"
+
+#: admin.php:256
+#, fuzzy
+#| msgid "New liturgical event"
+msgid "New liturgical event from existing"
+msgstr "Nieuw liturgisch evenement"
+
+#: admin.php:257
+#, fuzzy
+#| msgid "New liturgical event"
+msgid "New liturgical event ex novo"
+msgstr "Nieuw liturgisch evenement"
+
+#: decrees.php:57
+#, fuzzy
+#| msgid "General Roman Calendar"
+msgid "General Roman Calendar - Decrees"
+msgstr "Algemene Romeinse kalender"
+
+#: decrees.php:65
+msgid ""
+"Refine the General Roman Calendar with Decrees of the Dicastery for Divine "
+"Worship and the Discipline of the Sacraments"
+msgstr ""
+
+#: decrees.php:66
+msgid ""
+"The Liturgical Calendar is based off of both published Roman Missals, and "
+"Decrees of the Dicastery for Divine Worship and the Discipline of the "
+"Sacraments. These Decrees can refine the data from the Roman Missals, adding "
+"or removing or changing liturgical events, or instructing on how to handle "
+"any possible coincidences between mandatory celebrations."
+msgstr ""
+
+#: decrees.php:68
+msgid ""
+"Data for <b>Roman Missals</b> is handled by the <code>/missals</code> "
+"endpoint of the API, while data for <b>Decrees</b> is handled by the <code>/"
+"decrees</code> endpoint of the API."
+msgstr ""
+
+#: decrees.php:70
+#, php-format
+msgid ""
+"Currently, these endpoints are read-only. There are currently <b>%d Decrees</"
+"b> defined at the endpoint %s."
+msgstr ""
+
+#: decrees.php:135
+msgid "Read the Decree"
+msgstr ""
 
 #: src/LitCommon.php:57
 msgid "Proper"
@@ -1509,7 +1583,7 @@ msgstr "Graad"
 msgid "Common (or Proper)"
 msgstr "Gemeenschappelijke (of Eigen)"
 
-#: layout/header.php:24 layout/header.php:89
+#: layout/header.php:24 layout/header.php:109
 msgid "Extending the API"
 msgstr "Uitbreiding van de API"
 
@@ -1529,17 +1603,78 @@ msgstr "Besluiten"
 msgid "About us"
 msgstr "Over ons"
 
-#: layout/header.php:81
+#: layout/header.php:40 layout/header.php:42 includes/login-modal.php:33
+#: includes/login-modal.php:260
+msgid "Login"
+msgstr ""
+
+#: layout/header.php:49 layout/header.php:51
+msgid "Logout"
+msgstr ""
+
+#: layout/header.php:101
 msgid "Home"
 msgstr "Startpagina"
 
-#: layout/header.php:93
+#: layout/header.php:113
 msgid "Documentation"
 msgstr "Documentatie"
 
-#: layout/header.php:97
+#: layout/header.php:117
 msgid "Examples of Usage"
 msgstr "Voorbeelden van gebruik"
+
+#: includes/login-modal.php:6
+msgid "Administrator Login"
+msgstr ""
+
+#: includes/login-modal.php:12
+msgid "Username"
+msgstr ""
+
+#: includes/login-modal.php:16
+msgid "Password"
+msgstr ""
+
+#: includes/login-modal.php:19 includes/login-modal.php:109
+msgid "Show password"
+msgstr ""
+
+#: includes/login-modal.php:26
+msgid "Remember me"
+msgstr ""
+
+#: includes/login-modal.php:68
+msgid "Are you sure you want to logout?"
+msgstr ""
+
+#: includes/login-modal.php:104
+msgid "Hide password"
+msgstr ""
+
+#: includes/login-modal.php:118
+msgid "Session Expiring"
+msgstr ""
+
+#: includes/login-modal.php:204
+msgid "Please enter both username and password"
+msgstr ""
+
+#: includes/login-modal.php:212
+msgid "Logging in..."
+msgstr ""
+
+#: includes/login-modal.php:244
+msgid "Login successful"
+msgstr ""
+
+#: includes/login-modal.php:244
+msgid "Success"
+msgstr ""
+
+#: includes/login-modal.php:255
+msgid "Login failed. Please check your credentials."
+msgstr ""
 
 #~ msgid "Calculation of the Date of Easter"
 #~ msgstr "Berekening van de datum van Pasen"
