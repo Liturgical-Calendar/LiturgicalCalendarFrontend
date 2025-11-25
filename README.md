@@ -2,12 +2,12 @@
 
 **Code quality**
 
-| MAIN | DEVELOPMENT |
-|:----:|:-----------:|
-| [![CodeFactor](https://www.codefactor.io/repository/github/liturgical-calendar/liturgicalcalendarfrontend/badge/main)](https://www.codefactor.io/repository/github/liturgical-calendar/liturgicalcalendarfrontend/overview/main) | [![CodeFactor](https://www.codefactor.io/repository/github/liturgical-calendar/liturgicalcalendarfrontend/badge/development)](https://www.codefactor.io/repository/github/liturgical-calendar/liturgicalcalendarfrontend/overview/development) |
+| MAIN                                         | DEVELOPMENT                                |
+|:--------------------------------------------:|:------------------------------------------:|
+| [![CodeFactor][cf-main-badge]][cf-main-link] | [![CodeFactor][cf-dev-badge]][cf-dev-link] |
 
-Presentation of the Liturgical Calendar Project, using bootstrap theming.
-See [https://litcal.johnromanodorazio.com/](https://litcal.johnromanodorazio.com/).
+This is the frontend website for the Liturgical Calendar API, using bootstrap theming.
+See the live instance at [https://litcal.johnromanodorazio.com/](https://litcal.johnromanodorazio.com/).
 Development is done initially on the development branch with a frontend at [https://litcal-staging.johnromanodorazio.com/](https://litcal-staging.johnromanodorazio.com/).
 
 The Liturgical Calendar project offers an API that generates data for the liturgical events in the General Roman Calendar,
@@ -179,3 +179,8 @@ The application uses **Authorization headers** for JWT authentication, not cooki
 <a href="https://translate.johnromanodorazio.com/engage/liturgical-calendar/">
 <img src="https://translate.johnromanodorazio.com/widgets/liturgical-calendar/-/frontend/open-graph.png" alt="Translation status" />
 </a>
+
+[cf-main-badge]: https://www.codefactor.io/repository/github/liturgical-calendar/liturgicalcalendarfrontend/badge/main
+[cf-main-link]: https://www.codefactor.io/repository/github/liturgical-calendar/liturgicalcalendarfrontend/overview/main
+[cf-dev-badge]: https://www.codefactor.io/repository/github/liturgical-calendar/liturgicalcalendarfrontend/badge/development
+[cf-dev-link]: https://www.codefactor.io/repository/github/liturgical-calendar/liturgicalcalendarfrontend/overview/development
