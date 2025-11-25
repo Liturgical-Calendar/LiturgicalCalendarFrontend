@@ -42,6 +42,7 @@
 // Module-scoped variables to avoid global pollution
 let loginModal = null;
 let loginSuccessCallback = null;
+let expiryWarningShown = false;
 
 /**
  * Initialize authentication UI components
@@ -114,14 +115,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Start session expiry warnings
+    // Start session expiry warnings (debounced to show only once per expiry period)
     if (typeof toastr !== 'undefined') {
         Auth.startExpiryWarning((message) => {
+            if (expiryWarningShown) return;
+            expiryWarningShown = true;
             toastr.warning(message, <?php echo json_encode(_('Session Expiring')); ?>);
         });
     } else {
         // Fallback to console if toastr is not available
         Auth.startExpiryWarning((message) => {
+            if (expiryWarningShown) return;
+            expiryWarningShown = true;
             console.warn('Session expiring:', message);
         });
     }
@@ -245,6 +250,9 @@ async function handleLogin() {
         // Update UI
         updateAuthUI();
         initPermissionUI();
+
+        // Reset expiry warning flag for new session
+        expiryWarningShown = false;
 
         // Show success message
         if (typeof toastr !== 'undefined') {
