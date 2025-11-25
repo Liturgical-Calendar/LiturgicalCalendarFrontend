@@ -5,13 +5,14 @@
 # Milan Šalka <salka.milan@googlemail.com>, 2024.
 # Weblate Admin <admin@example.com>, 2024, 2025.
 # Lovro <development.lovro@gmail.com>, 2025.
+# OpenAI <noreply-mt-openai@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-25 02:28+0000\n"
-"PO-Revision-Date: 2025-11-21 07:26+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2025-11-25 06:53+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
 "Language: sk\n"
@@ -205,14 +206,6 @@ msgid "Calculation of the Dates of Easter"
 msgstr "Výpočet dátumov Veľkej noci"
 
 #: index.php:163
-#, fuzzy
-#| msgid ""
-#| "A simple API endpoint that returns data about the Date of Easter, both "
-#| "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
-#| "Calendar) to 9999 (maximum possible date calculation in 64bit PHP), using "
-#| "a PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian "
-#| "easter (observed by the Roman Catholic church) and of the Meeus algorithm "
-#| "for Julian easter (observed by orthodox churches)."
 msgid ""
 "A simple API endpoint that returns data about the Dates of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -221,18 +214,17 @@ msgid ""
 "(observed by the Roman Catholic church) and of the Meeus algorithm for "
 "Julian easter (observed by orthodox churches)."
 msgstr ""
-"Jednoduchý API endpoint, ktorý vracia údaje o dátume Veľkej noci, ako "
-"gregoriánskej, tak aj juliánskej, od roku 1583 (rok prijatia gregoriánskeho "
-"kalendára) do roku 9999 (maximálny možný dátum výpočtu v 64bit PHP), pomocou "
-"PHP adaptácie algoritmu Meeus/Jones/Butcher pre gregoriánsku Veľkú noc "
-"(pozorovanú rímskokatolíckou cirkvou) a algoritmu Meeus pre juliánsku Veľkú "
-"noc (pozorovanú pravoslávnymi cirkvami)."
+"Jednoduchý API endpoint, ktorý vracia údaje o dátumoch Veľkej noci, ako v "
+"gregoriánskom, tak aj v juliánskom kalendári, od roku 1583 "
+"(rok prijatia gregoriánskeho kalendára) do roku 9999 "
+"(maximálny možný dátum výpočtu v 64bit PHP), pomocou PHP adaptácie Meeus/"
+"Jones/Butcher algoritmu pre gregoriánsku Veľkú noc "
+"(pozorovanú rímskokatolíckou cirkvou) a Meeusovho algoritmu pre juliánsku "
+"Veľkú noc (pozorovanú pravoslávnymi cirkvami)."
 
 #: index.php:168
-#, fuzzy
-#| msgid "Date of Easter API endpoint"
 msgid "Dates of Easter API endpoint"
-msgstr "Dátum Veľkej noci API endpoint"
+msgstr "API endpoint Dátumy Veľkej noci"
 
 #: index.php:170
 msgid ""
@@ -1144,47 +1136,37 @@ msgstr "Liturgia %s"
 
 #. translators: label of the form row
 #: admin.php:109 admin.php:273 decrees.php:16
-#, fuzzy
-#| msgid "Dedication of a Church"
 msgid "Designate Doctor of the Church"
-msgstr "Posviacka kostola"
+msgstr "Designovať Učiteľa Cirkvi"
 
 #. translators: label of the form row
 #: admin.php:113 decrees.php:8
-#, fuzzy
-#| msgid "Change grade"
 msgid "Change name or grade"
-msgstr "Zmeniť stupeň"
+msgstr "Zmeniť meno alebo stupeň"
 
 #: admin.php:129 admin.php:269
-#, fuzzy
-#| msgid "Choose from existing liturgical events"
 msgid "Designate Doctor of the Church from existing liturgical event"
-msgstr "Vyber si z existujúcich liturgických udalostí"
+msgstr "Designovať Učiteľa Cirkvi z existujúcej liturgickej udalosti"
 
 #: admin.php:256
-#, fuzzy
-#| msgid "New liturgical event"
 msgid "New liturgical event from existing"
-msgstr "Nová liturgická udalosť"
+msgstr "Nová liturgická udalosť z existujúcej"
 
 #: admin.php:257
-#, fuzzy
-#| msgid "New liturgical event"
 msgid "New liturgical event ex novo"
-msgstr "Nová liturgická udalosť"
+msgstr "Nová liturgická udalosť ex novo"
 
 #: decrees.php:57
-#, fuzzy
-#| msgid "General Roman Calendar"
 msgid "General Roman Calendar - Decrees"
-msgstr "Všeobecný rímsky kalendár"
+msgstr "Všeobecný rímsky kalendár - Dekréty"
 
 #: decrees.php:65
 msgid ""
 "Refine the General Roman Calendar with Decrees of the Dicastery for Divine "
 "Worship and the Discipline of the Sacraments"
 msgstr ""
+"Upraviť Všeobecný rímsky kalendár dekretmi Dikastéria pre Boží kult a "
+"disciplínu sviatostí"
 
 #: decrees.php:66
 msgid ""
@@ -1194,6 +1176,11 @@ msgid ""
 "or removing or changing liturgical events, or instructing on how to handle "
 "any possible coincidences between mandatory celebrations."
 msgstr ""
+"Liturgický kalendár je založený na publikovaných Rímskych misáloch a "
+"dekrétoch Dikastéria pre Boží kult a disciplínu sviatostí. Tieto dekréty "
+"môžu upraviť údaje z Rímskych misálov, pridaním alebo odstránením alebo "
+"zmenou liturgických udalostí, alebo poskytnutím pokynov, ako riešiť možné "
+"koincidencie medzi povinnými slávnosťami."
 
 #: decrees.php:68
 msgid ""
@@ -1201,6 +1188,9 @@ msgid ""
 "endpoint of the API, while data for <b>Decrees</b> is handled by the <code>/"
 "decrees</code> endpoint of the API."
 msgstr ""
+"Údaje pre <b>Rímske misále</b> sú spracované API endpointom <code>/missals</"
+"code>, zatiaľ čo údaje pre <b>Dekréty</b> sú spracované API endpointom "
+"<code>/decrees</code>."
 
 #: decrees.php:70
 #, php-format
@@ -1208,10 +1198,12 @@ msgid ""
 "Currently, these endpoints are read-only. There are currently <b>%d Decrees</"
 "b> defined at the endpoint %s."
 msgstr ""
+"V súčasnosti sú tieto endpointy iba na čítanie. V súčasnosti je na endpointu "
+"%s definovaných <b>%d Dekrétov</b>."
 
 #: decrees.php:135
 msgid "Read the Decree"
-msgstr ""
+msgstr "Prečítať dekrét"
 
 #: src/LitCommon.php:57
 msgid "Proper"
@@ -1572,11 +1564,11 @@ msgstr "O nás"
 #: layout/header.php:40 layout/header.php:42 includes/login-modal.php:33
 #: includes/login-modal.php:260
 msgid "Login"
-msgstr ""
+msgstr "Prihlásenie"
 
 #: layout/header.php:49 layout/header.php:51
 msgid "Logout"
-msgstr ""
+msgstr "Odhlásenie"
 
 #: layout/header.php:101
 msgid "Home"
@@ -1592,55 +1584,55 @@ msgstr "Príklady použitia"
 
 #: includes/login-modal.php:6
 msgid "Administrator Login"
-msgstr ""
+msgstr "Prihlásenie správcu"
 
 #: includes/login-modal.php:12
 msgid "Username"
-msgstr ""
+msgstr "Používateľské meno"
 
 #: includes/login-modal.php:16
 msgid "Password"
-msgstr ""
+msgstr "Heslo"
 
 #: includes/login-modal.php:19 includes/login-modal.php:109
 msgid "Show password"
-msgstr ""
+msgstr "Zobraziť heslo"
 
 #: includes/login-modal.php:26
 msgid "Remember me"
-msgstr ""
+msgstr "Zapamätať si ma"
 
 #: includes/login-modal.php:68
 msgid "Are you sure you want to logout?"
-msgstr ""
+msgstr "Naozaj sa chceš odhlásiť?"
 
 #: includes/login-modal.php:104
 msgid "Hide password"
-msgstr ""
+msgstr "Skryť heslo"
 
 #: includes/login-modal.php:118
 msgid "Session Expiring"
-msgstr ""
+msgstr "Platnosť relácie končí"
 
 #: includes/login-modal.php:204
 msgid "Please enter both username and password"
-msgstr ""
+msgstr "Zadajte prosím používateľské meno a heslo"
 
 #: includes/login-modal.php:212
 msgid "Logging in..."
-msgstr ""
+msgstr "Prihlasovanie..."
 
 #: includes/login-modal.php:244
 msgid "Login successful"
-msgstr ""
+msgstr "Prihlásenie úspešné"
 
 #: includes/login-modal.php:244
 msgid "Success"
-msgstr ""
+msgstr "Úspech"
 
 #: includes/login-modal.php:255
 msgid "Login failed. Please check your credentials."
-msgstr ""
+msgstr "Prihlásenie zlyhalo. Skontrolujte svoje prihlasovacie údaje."
 
 #~ msgid "Calculation of the Date of Easter"
 #~ msgstr "Výpočet dátumu Veľkej noci"
