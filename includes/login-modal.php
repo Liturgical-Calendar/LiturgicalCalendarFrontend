@@ -26,6 +26,8 @@
                         <label class="form-check-label" for="rememberMe"><?php echo _('Remember me'); ?></label>
                     </div>
                     <div class="alert alert-danger d-none" id="loginError" role="alert"></div>
+                    <!-- Hidden submit button to enable Enter key submission -->
+                    <button type="submit" class="d-none" aria-hidden="true"></button>
                 </form>
             </div>
             <div class="modal-footer">

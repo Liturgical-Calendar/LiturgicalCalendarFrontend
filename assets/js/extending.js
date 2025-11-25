@@ -3717,63 +3717,10 @@ if (typeof Auth !== 'undefined') {
     // Update UI based on auth state
     updateAuthUI();
 
-    // Set up event listeners for login/logout buttons
-    const loginBtn = document.getElementById('loginBtn');
-    if (loginBtn) {
-        loginBtn.addEventListener('click', () => {
-            showLoginModal(null);
-        });
-    }
-
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', async () => {
-            // Auth.logout() clears tokens and reloads the page
-            // No need for updateAuthUI() or toast - page will refresh
-            await Auth.logout();
-        });
-    }
-
     // Clean up backdrop when login modal is closed
+    // (Login/logout button handlers and form submission are in login-modal.php)
     const loginModalEl = document.getElementById('loginModal');
     if (loginModalEl) {
         loginModalEl.addEventListener('hidden.bs.modal', cleanupModalBackdrop);
-    }
-
-    // Handle login form submission
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
-            const rememberMe = document.getElementById('loginRememberMe').checked;
-
-            try {
-                await Auth.login(username, password, rememberMe);
-                updateAuthUI();
-                toastr.success('Successfully logged in', 'Success');
-
-                // Close modal and clean up backdrop
-                const loginModalEl = document.getElementById('loginModal');
-                const loginModal = bootstrap.Modal.getInstance(loginModalEl);
-                if (loginModal) {
-                    loginModal.hide();
-                }
-
-                // Ensure backdrop is removed after hide (Bootstrap sometimes leaves it)
-                setTimeout(cleanupModalBackdrop, 150);
-
-                // Execute post-login callback if exists
-                if (window.postLoginCallback && typeof window.postLoginCallback === 'function') {
-                    window.postLoginCallback();
-                    window.postLoginCallback = null;
-                }
-            } catch (error) {
-                console.error('Login failed', error);
-                toastr.error(error.message || 'Login failed', 'Error');
-            }
-        });
     }
 }
