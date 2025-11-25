@@ -269,13 +269,17 @@ const getLiturgyOfADay = () => {
                     }
                     updateResults( liturgyOfADay );
                 } else {
-                    document.querySelector( '#liturgyResults' ).insertAdjacentHTML( 'beforeend', `<div>ERROR: no 'litcal' property: ${JSON.stringify( data )}</div>` );
+                    const errorDiv = document.createElement( 'div' );
+                    errorDiv.textContent = 'ERROR: no \'litcal\' property: ' + JSON.stringify( data );
+                    document.querySelector( '#liturgyResults' ).appendChild( errorDiv );
                 }
                 CalendarState.resetApiRequestFlag();
             } )
             .catch( error => {
                 console.error( 'Error fetching liturgy of a day:', error );
-                document.querySelector( '#liturgyResults' ).insertAdjacentHTML( 'beforeend', `<div>There was an error fetching liturgy of a day, see console for details</div>` );
+                const errorDiv = document.createElement( 'div' );
+                errorDiv.textContent = 'There was an error fetching liturgy of a day, see console for details';
+                document.querySelector( '#liturgyResults' ).appendChild( errorDiv );
             } );
     } else {
         let liturgyOfADay = CalData.filter( ( celebration ) => celebration.date === rfc3339datetime );
