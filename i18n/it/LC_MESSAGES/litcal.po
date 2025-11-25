@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-25 06:53+0000\n"
-"PO-Revision-Date: 2025-11-25 07:36+0000\n"
+"PO-Revision-Date: 2025-11-25 10:01+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
@@ -235,10 +235,9 @@ msgid ""
 "case, since the API returns a UNIX timestamp for each date of Easter, "
 "localizations can be done in a client application just as well."
 msgstr ""
-"Attualmente i dati possono essere richiesti in praticamente qualsiasi "
-"lingua. In ogni caso, visto che l'API restituisce uno Unix Timestamp per "
-"ogni data della Pasqua, la localizzazione può essere effettuata anche "
-"dall'applicazione cliente."
+"I dati possono essere richiesti in quasi tutte le lingue. Comunque, visto "
+"che l'API restituisce un timestamp UNIX per ogni data della Pasqua, le "
+"localizzazioni possono essere fatte anche dall'applicazione cliente."
 
 #: usage.php:8
 msgid ""
@@ -705,7 +704,7 @@ msgstr "URL del Decreto"
 
 #: extending.php:193 admin.php:117
 msgid "Decree Language mappings"
-msgstr "Mappatura delle lingue del Decreto"
+msgstr "Mappatura lingue decreto"
 
 #: extending.php:194
 msgid "Missal"
@@ -933,7 +932,7 @@ msgstr "Imposta proprietà"
 
 #: extending.php:724
 msgid "Move Liturgical Event"
-msgstr "Spostare evento liturgico"
+msgstr "Sposta evento liturgico"
 
 #: extending.php:740
 msgid "Create Liturgical Event"
@@ -1181,7 +1180,7 @@ msgstr "Designa Dottore della Chiesa da evento liturgico esistente"
 
 #: admin.php:256
 msgid "New liturgical event from existing"
-msgstr "Nuovo evento liturgico da esistente"
+msgstr "Nuovo evento liturgico da evento esistente"
 
 #: admin.php:257
 msgid "New liturgical event ex novo"
@@ -1189,7 +1188,7 @@ msgstr "Nuovo evento liturgico ex novo"
 
 #: decrees.php:57
 msgid "General Roman Calendar - Decrees"
-msgstr "Calendario romano generale - Decreti"
+msgstr "Calendario Romano Generale - Decreti"
 
 #: decrees.php:65
 msgid ""
