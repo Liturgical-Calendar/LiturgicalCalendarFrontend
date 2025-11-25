@@ -1,5 +1,4 @@
 const now = new Date();
-const daysInMonth = new Date( now.getFullYear(), now.getMonth() + 1, 0 ).getDate();
 const dtFormat = new Intl.DateTimeFormat( currentLocale.language, { dateStyle: 'full' } );
 const highContrast = Object.freeze( [ 'green', 'red', 'purple' ] );
 let liturgyDate = new Date( Date.UTC( now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0 ) );
