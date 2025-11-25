@@ -126,6 +126,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Focus username input when login modal is shown
+    const loginModalElement = document.getElementById('loginModal');
+    if (loginModalElement) {
+        loginModalElement.addEventListener('shown.bs.modal', () => {
+            const usernameInput = document.getElementById('loginUsername');
+            if (usernameInput) {
+                usernameInput.focus();
+            }
+        });
+    }
+
     // Initialize permission-based UI elements
     initPermissionUI();
 });
@@ -165,7 +176,6 @@ function showLoginModal(onSuccess = null) {
     // Clear previous errors and form values
     const loginError = document.getElementById('loginError');
     const loginForm = document.getElementById('loginForm');
-    const usernameInput = document.getElementById('loginUsername');
 
     if (loginError) {
         loginError.classList.add('d-none');
@@ -175,13 +185,6 @@ function showLoginModal(onSuccess = null) {
     }
 
     loginModal.show();
-
-    // Focus username after modal is visible for better UX
-    loginModalElement.addEventListener('shown.bs.modal', () => {
-        if (usernameInput) {
-            usernameInput.focus();
-        }
-    }, { once: true });
 }
 
 /**
