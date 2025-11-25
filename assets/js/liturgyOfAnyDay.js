@@ -1,5 +1,4 @@
 const now = new Date();
-const daysInMonth = new Date( now.getFullYear(), now.getMonth() + 1, 0 ).getDate();
 const dtFormat = new Intl.DateTimeFormat( currentLocale.language, { dateStyle: 'full' } );
 const highContrast = Object.freeze( [ 'green', 'red', 'purple' ] );
 let liturgyDate = new Date( Date.UTC( now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0 ) );
@@ -87,7 +86,7 @@ class CalendarState {
     static #evaluateApiRequest() {
         if ( AppEnv === 'development' ) console.debug( `Evaluating API request necessity. Previous year type: ${this.#previousYearTypeValue}, Current year type: ${this.yearType}` );
         if ( this.#previousYearTypeValue !== this.yearType ) {
-            this.#previousYearTypeValue = ( this.#previousYearTypeValue === 'CIVIL' ) ? 'LITURGICAL' : 'CIVIL';
+            this.#previousYearTypeValue = this.yearType;
             this.#apiRequestFlag = true;
         }
     }
@@ -357,8 +356,9 @@ const formatEasterVigilReadings = ( readings ) => {
     let html = '<div class="readings mt-2">';
     html += '<div class="reading-section"><strong>Liturgy of the Word:</strong></div>';
 
+    const ordinals = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh'];
     for ( let i = 1; i <= 7; i++ ) {
-        const readingKey = i === 1 ? 'first_reading' : `${['', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh'][i]}_reading`;
+        const readingKey = `${ordinals[i - 1]}_reading`;
         const psalmKey = i === 1 ? 'responsorial_psalm' : `responsorial_psalm_${i}`;
         html += `<div class="reading-item"><strong>Reading ${i}:</strong> ${readings[readingKey]}</div>`;
         html += `<div class="reading-item"><strong>Responsorial Psalm ${i}:</strong> ${readings[psalmKey]}</div>`;
