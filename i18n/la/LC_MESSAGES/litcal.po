@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-25 06:53+0000\n"
+"POT-Creation-Date: 2025-11-25 12:44+0000\n"
 "PO-Revision-Date: 2025-11-25 10:01+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
@@ -897,7 +897,7 @@ msgstr "SERVA CALENDARIUM DIOECESANUM"
 
 #: extending.php:693 extending.php:709 extending.php:725 extending.php:741
 #: extending.php:765 admin.php:225 admin.php:241 admin.php:258 admin.php:274
-#: includes/login-modal.php:32
+#: includes/login-modal.php:34
 msgid "Cancel"
 msgstr "Cancella"
 
@@ -1562,8 +1562,8 @@ msgstr "Decreta"
 msgid "About us"
 msgstr "De nobis"
 
-#: layout/header.php:40 layout/header.php:42 includes/login-modal.php:33
-#: includes/login-modal.php:260
+#: layout/header.php:40 layout/header.php:42 includes/login-modal.php:35
+#: includes/login-modal.php:262
 msgid "Login"
 msgstr "Intra"
 
@@ -1595,7 +1595,7 @@ msgstr "Nomen usoris"
 msgid "Password"
 msgstr "Tessera"
 
-#: includes/login-modal.php:19 includes/login-modal.php:109
+#: includes/login-modal.php:19 includes/login-modal.php:111
 msgid "Show password"
 msgstr "Tesseram ostende"
 
@@ -1603,35 +1603,35 @@ msgstr "Tesseram ostende"
 msgid "Remember me"
 msgstr "Memento mei"
 
-#: includes/login-modal.php:68
+#: includes/login-modal.php:70
 msgid "Are you sure you want to logout?"
 msgstr "Certus es ut discedas?"
 
-#: includes/login-modal.php:104
+#: includes/login-modal.php:106
 msgid "Hide password"
 msgstr "Tesseram absconde"
 
-#: includes/login-modal.php:118
+#: includes/login-modal.php:120
 msgid "Session Expiring"
 msgstr "Sessio exspirat"
 
-#: includes/login-modal.php:204
+#: includes/login-modal.php:206
 msgid "Please enter both username and password"
 msgstr "Quaeso et nomen usoris et tesseram inseras"
 
-#: includes/login-modal.php:212
+#: includes/login-modal.php:214
 msgid "Logging in..."
 msgstr "Intra..."
 
-#: includes/login-modal.php:244
+#: includes/login-modal.php:246
 msgid "Login successful"
 msgstr "Ingressus feliciter"
 
-#: includes/login-modal.php:244
+#: includes/login-modal.php:246
 msgid "Success"
 msgstr "Successus"
 
-#: includes/login-modal.php:255
+#: includes/login-modal.php:257
 msgid "Login failed. Please check your credentials."
 msgstr "Ingressus defecit. Quaeso tua testimonia reexamina."
 

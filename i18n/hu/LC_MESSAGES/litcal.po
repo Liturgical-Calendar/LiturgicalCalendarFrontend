@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-25 06:53+0000\n"
+"POT-Creation-Date: 2025-11-25 12:44+0000\n"
 "PO-Revision-Date: 2025-11-25 10:01+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
@@ -212,12 +212,12 @@ msgid ""
 "(observed by the Roman Catholic church) and of the Meeus algorithm for "
 "Julian easter (observed by orthodox churches)."
 msgstr ""
-"Egy egyszerű API végpont, amely visszaadja a húsvét dátumait, mind a Gergely-"
-", mind a Julián-naptár szerint, 1583-tól (a Gergely-naptár elfogadásának éve)"
-" 9999-ig (maximálisan kiszámítható dátum 64 bites PHP-ben), a Gregorian "
-"húsvétot (amit a római katolikus egyház tart) a Meeus/Jones/Butcher "
-"algoritmus, a Julián húsvétot (amit az ortodox egyházak tartanak) pedig a "
-"Meeus algoritmus PHP-s adaptációjával."
+"Egy egyszerű API végpont, amely visszaadja a húsvét dátumait, mind a "
+"Gergely-, mind a Julián-naptár szerint, 1583-tól (a Gergely-naptár "
+"elfogadásának éve) 9999-ig (maximálisan kiszámítható dátum 64 bites PHP-"
+"ben), a Gregorian húsvétot (amit a római katolikus egyház tart) a Meeus/"
+"Jones/Butcher algoritmus, a Julián húsvétot (amit az ortodox egyházak "
+"tartanak) pedig a Meeus algoritmus PHP-s adaptációjával."
 
 #: index.php:168
 msgid "Dates of Easter API endpoint"
@@ -904,7 +904,7 @@ msgstr "EGYHÁZMEGYEI NAPTÁR MENTÉSE"
 
 #: extending.php:693 extending.php:709 extending.php:725 extending.php:741
 #: extending.php:765 admin.php:225 admin.php:241 admin.php:258 admin.php:274
-#: includes/login-modal.php:32
+#: includes/login-modal.php:34
 msgid "Cancel"
 msgstr "Mégse"
 
@@ -1572,8 +1572,8 @@ msgstr "Rendeletek"
 msgid "About us"
 msgstr "Rólunk"
 
-#: layout/header.php:40 layout/header.php:42 includes/login-modal.php:33
-#: includes/login-modal.php:260
+#: layout/header.php:40 layout/header.php:42 includes/login-modal.php:35
+#: includes/login-modal.php:262
 msgid "Login"
 msgstr "Bejelentkezés"
 
@@ -1605,7 +1605,7 @@ msgstr "Felhasználónév"
 msgid "Password"
 msgstr "Jelszó"
 
-#: includes/login-modal.php:19 includes/login-modal.php:109
+#: includes/login-modal.php:19 includes/login-modal.php:111
 msgid "Show password"
 msgstr "Jelszó megjelenítése"
 
@@ -1613,35 +1613,35 @@ msgstr "Jelszó megjelenítése"
 msgid "Remember me"
 msgstr "Emlékezz rám"
 
-#: includes/login-modal.php:68
+#: includes/login-modal.php:70
 msgid "Are you sure you want to logout?"
 msgstr "Biztosan ki szeretnél jelentkezni?"
 
-#: includes/login-modal.php:104
+#: includes/login-modal.php:106
 msgid "Hide password"
 msgstr "Jelszó elrejtése"
 
-#: includes/login-modal.php:118
+#: includes/login-modal.php:120
 msgid "Session Expiring"
 msgstr "Lejár a munkamenet"
 
-#: includes/login-modal.php:204
+#: includes/login-modal.php:206
 msgid "Please enter both username and password"
 msgstr "Kérjük, adja meg mind a felhasználónevet, mind a jelszót"
 
-#: includes/login-modal.php:212
+#: includes/login-modal.php:214
 msgid "Logging in..."
 msgstr "Bejelentkezés..."
 
-#: includes/login-modal.php:244
+#: includes/login-modal.php:246
 msgid "Login successful"
 msgstr "Sikeres bejelentkezés"
 
-#: includes/login-modal.php:244
+#: includes/login-modal.php:246
 msgid "Success"
 msgstr "Siker"
 
-#: includes/login-modal.php:255
+#: includes/login-modal.php:257
 msgid "Login failed. Please check your credentials."
 msgstr "A bejelentkezés sikertelen. Kérjük, ellenőrizze a hitelesítő adatait."
 

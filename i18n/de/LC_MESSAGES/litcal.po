@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-25 06:53+0000\n"
+"POT-Creation-Date: 2025-11-25 12:44+0000\n"
 "PO-Revision-Date: 2025-11-25 10:14+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
@@ -221,13 +221,12 @@ msgid ""
 "Julian easter (observed by orthodox churches)."
 msgstr ""
 "Ein einfacher API-Endpunkt, der Daten zu den Osterterminen, sowohl "
-"gregorianisch als auch julianisch, von 1583 "
-"(Jahr der Einführung des gregorianischen Kalenders) bis 9999 "
-"(maximal mögliche Datumsberechnung in 64‑Bit‑PHP) zurückgibt. Dies geschieht "
-"mithilfe einer PHP-Anpassung des Meeus/Jones/Butcher-Algorithmus für das "
-"gregorianische Osterfest (beobachtet von der römisch-katholischen Kirche) "
-"und des Meeus-Algorithmus für das julianische Osterfest "
-"(beobachtet von orthodoxen Kirchen)."
+"gregorianisch als auch julianisch, von 1583 (Jahr der Einführung des "
+"gregorianischen Kalenders) bis 9999 (maximal mögliche Datumsberechnung in "
+"64‑Bit‑PHP) zurückgibt. Dies geschieht mithilfe einer PHP-Anpassung des "
+"Meeus/Jones/Butcher-Algorithmus für das gregorianische Osterfest (beobachtet "
+"von der römisch-katholischen Kirche) und des Meeus-Algorithmus für das "
+"julianische Osterfest (beobachtet von orthodoxen Kirchen)."
 
 #: index.php:168
 msgid "Dates of Easter API endpoint"
@@ -924,7 +923,7 @@ msgstr "DIÖZESAN-KALENDER SPEICHERN"
 
 #: extending.php:693 extending.php:709 extending.php:725 extending.php:741
 #: extending.php:765 admin.php:225 admin.php:241 admin.php:258 admin.php:274
-#: includes/login-modal.php:32
+#: includes/login-modal.php:34
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -1224,8 +1223,8 @@ msgid ""
 "decrees</code> endpoint of the API."
 msgstr ""
 "Die Daten für <b>Römische Messbücher</b> werden vom <code>/missals</code> "
-"Endpunkt des API bearbeitet, während die Daten für <b>Dekrete</b> vom "
-"<code>/decrees</code> Endpunkt des API bearbeitet werden."
+"Endpunkt des API bearbeitet, während die Daten für <b>Dekrete</b> vom <code>/"
+"decrees</code> Endpunkt des API bearbeitet werden."
 
 #: decrees.php:70
 #, php-format
@@ -1599,8 +1598,8 @@ msgstr "Dekrete"
 msgid "About us"
 msgstr "Über uns"
 
-#: layout/header.php:40 layout/header.php:42 includes/login-modal.php:33
-#: includes/login-modal.php:260
+#: layout/header.php:40 layout/header.php:42 includes/login-modal.php:35
+#: includes/login-modal.php:262
 msgid "Login"
 msgstr "Anmelden"
 
@@ -1632,7 +1631,7 @@ msgstr "Benutzername"
 msgid "Password"
 msgstr "Passwort"
 
-#: includes/login-modal.php:19 includes/login-modal.php:109
+#: includes/login-modal.php:19 includes/login-modal.php:111
 msgid "Show password"
 msgstr "Passwort anzeigen"
 
@@ -1640,35 +1639,35 @@ msgstr "Passwort anzeigen"
 msgid "Remember me"
 msgstr "Angemeldet bleiben"
 
-#: includes/login-modal.php:68
+#: includes/login-modal.php:70
 msgid "Are you sure you want to logout?"
 msgstr "Möchtest du dich wirklich abmelden?"
 
-#: includes/login-modal.php:104
+#: includes/login-modal.php:106
 msgid "Hide password"
 msgstr "Passwort ausblenden"
 
-#: includes/login-modal.php:118
+#: includes/login-modal.php:120
 msgid "Session Expiring"
 msgstr "Sitzung läuft ab"
 
-#: includes/login-modal.php:204
+#: includes/login-modal.php:206
 msgid "Please enter both username and password"
 msgstr "Bitte sowohl Benutzername als auch Passwort eingeben"
 
-#: includes/login-modal.php:212
+#: includes/login-modal.php:214
 msgid "Logging in..."
 msgstr "Anmeldung läuft..."
 
-#: includes/login-modal.php:244
+#: includes/login-modal.php:246
 msgid "Login successful"
 msgstr "Anmeldung erfolgreich"
 
-#: includes/login-modal.php:244
+#: includes/login-modal.php:246
 msgid "Success"
 msgstr "Erfolgreich"
 
-#: includes/login-modal.php:255
+#: includes/login-modal.php:257
 msgid "Login failed. Please check your credentials."
 msgstr "Anmeldung fehlgeschlagen. Bitte überprüfe deine Anmeldedaten."
 
