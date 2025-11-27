@@ -84,6 +84,9 @@ const Auth = {
                 this.setRefreshToken(data.refresh_token, rememberMe);
             }
 
+            // Ensure auto-refresh is running after a successful login
+            this.startAutoRefresh();
+
             return data;
         } catch (error) {
             console.error('Login error:', error);
