@@ -1876,7 +1876,7 @@
     "packages-dev": [
         {
             "name": "captainhook/captainhook-phar",
-            "version": "5.26.1",
+            "version": "5.27.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/captainhook-git/captainhook-phar.git",
@@ -1930,7 +1930,7 @@
             ],
             "support": {
                 "issues": "https://github.com/captainhook-git/captainhook/issues",
-                "source": "https://github.com/captainhook-git/captainhook-phar/tree/5.26.1"
+                "source": "https://github.com/captainhook-git/captainhook-phar/tree/5.27.2"
             },
             "funding": [
                 {
