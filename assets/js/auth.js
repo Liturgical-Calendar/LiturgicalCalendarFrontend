@@ -420,7 +420,8 @@ const Auth = {
      * Show warning before token expiry
      * Checks every 30 seconds and warns if less than 2 minutes until expiry
      *
-     * @param {Function} warningCallback - Function to call when warning should be shown
+     * @param {Function} warningCallback - Function to call with seconds until expiry.
+     *                                     Caller is responsible for i18n/message formatting.
      */
     startExpiryWarning(warningCallback) {
         // Prevent multiple concurrent intervals
@@ -441,7 +442,7 @@ const Auth = {
 
                 // Warn if less than 2 minutes until expiry
                 if (timeUntilExpiry > 0 && timeUntilExpiry < 120) {
-                    warningCallback('Your session will expire soon. Please save your work.');
+                    warningCallback(timeUntilExpiry);
                 }
             } catch (error) {
                 console.error('Expiry warning check failed:', error);

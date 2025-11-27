@@ -116,18 +116,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Start session expiry warnings (debounced to show only once per expiry period)
+    const formatExpiryMessage = (seconds) => {
+        const minutes = Math.ceil(seconds / 60);
+        // Use localized message template
+        return <?php echo json_encode(_('Your session will expire in less than %d minute(s). Please save your work.')); ?>.replace('%d', minutes);
+    };
+
     if (typeof toastr !== 'undefined') {
-        Auth.startExpiryWarning((message) => {
+        Auth.startExpiryWarning((timeUntilExpiry) => {
             if (expiryWarningShown) return;
             expiryWarningShown = true;
-            toastr.warning(message, <?php echo json_encode(_('Session Expiring')); ?>);
+            toastr.warning(formatExpiryMessage(timeUntilExpiry), <?php echo json_encode(_('Session Expiring')); ?>);
         });
     } else {
         // Fallback to console if toastr is not available
-        Auth.startExpiryWarning((message) => {
+        Auth.startExpiryWarning((timeUntilExpiry) => {
             if (expiryWarningShown) return;
             expiryWarningShown = true;
-            console.warn('Session expiring:', message);
+            console.warn('Session expiring:', formatExpiryMessage(timeUntilExpiry));
         });
     }
 
