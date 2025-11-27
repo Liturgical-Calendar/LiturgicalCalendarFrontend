@@ -25,6 +25,20 @@ const Auth = {
     _refreshPromise: null,
 
     /**
+     * Validate that BaseUrl is defined before making API calls
+     * @private
+     * @param {string} methodName - Name of the calling method for error messages
+     * @returns {boolean} True if BaseUrl is valid, false otherwise
+     */
+    _validateBaseUrl(methodName) {
+        if (typeof BaseUrl === 'undefined' || !BaseUrl) {
+            console.error(`Auth.${methodName}: BaseUrl is not defined - cannot make API request`);
+            return false;
+        }
+        return true;
+    },
+
+    /**
      * Login with username and password
      *
      * @param {string} username - User's username
@@ -34,6 +48,10 @@ const Auth = {
      * @throws {Error} When login fails
      */
     async login(username, password, rememberMe = false) {
+        if (!this._validateBaseUrl('login')) {
+            throw new Error('API base URL is not configured');
+        }
+
         try {
             const response = await fetch(`${BaseUrl}/auth/login`, {
                 method: 'POST',
@@ -266,6 +284,10 @@ const Auth = {
      * @throws {Error} When refresh fails
      */
     async _doRefreshToken() {
+        if (!this._validateBaseUrl('_doRefreshToken')) {
+            throw new Error('API base URL is not configured');
+        }
+
         const refreshToken = this.getRefreshToken();
         if (!refreshToken) {
             throw new Error('No refresh token available');
@@ -321,7 +343,8 @@ const Auth = {
     async logout() {
         const token = this.getToken();
 
-        if (token) {
+        // Only attempt server logout if BaseUrl is configured and we have a token
+        if (token && this._validateBaseUrl('logout')) {
             try {
                 await fetch(`${BaseUrl}/auth/logout`, {
                     method: 'POST',
