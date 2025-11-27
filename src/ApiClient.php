@@ -74,15 +74,38 @@ class ApiClient
             return $data;
         } catch (RequestException $e) {
             $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : 0;
-            $message    = $e->hasResponse()
-                ? (string) $e->getResponse()->getBody()
-                : $e->getMessage();
 
-            throw new \RuntimeException(
-                'HTTP request failed for ' . $url . ' (status ' . $statusCode . '): ' . $message,
-                $statusCode,
-                $e
-            );
+            // Build a safe, sanitized error message without leaking sensitive response data
+            $safeMessage = 'HTTP request failed for ' . $url . ' (status ' . $statusCode . ')';
+
+            if ($e->hasResponse()) {
+                $responseBody = (string) $e->getResponse()->getBody();
+
+                // Log full response body for debugging (capped at 2KB to prevent log flooding)
+                $logBody = strlen($responseBody) > 2048
+                    ? substr($responseBody, 0, 2048) . '... [truncated]'
+                    : $responseBody;
+                error_log('ApiClient error response from ' . $url . ': ' . $logBody);
+
+                // Create sanitized preview for exception message
+                // Strip HTML tags and collapse whitespace
+                $preview = strip_tags($responseBody);
+                $preview = preg_replace('/\s+/', ' ', $preview);
+                $preview = trim($preview ?? '');
+
+                // Truncate to ~200 chars
+                if (strlen($preview) > 200) {
+                    $preview = substr($preview, 0, 197) . '...';
+                }
+
+                if ($preview !== '') {
+                    $safeMessage .= ': ' . $preview;
+                }
+            } else {
+                $safeMessage .= ': ' . $e->getMessage();
+            }
+
+            throw new \RuntimeException($safeMessage, $statusCode, $e);
         } catch (GuzzleException $e) {
             throw new \RuntimeException(
                 'HTTP request failed for ' . $url . ': ' . $e->getMessage(),
