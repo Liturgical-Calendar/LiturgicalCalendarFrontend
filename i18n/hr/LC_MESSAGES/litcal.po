@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-27 03:29+0000\n"
+"POT-Creation-Date: 2025-11-27 05:41+0000\n"
 "PO-Revision-Date: 2025-11-25 10:14+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
@@ -1190,7 +1190,7 @@ msgstr ""
 "Trenutno su ove krajnje točke samo za čitanje. Trenutno je definirano "
 "<b>%1$d Dekreta</b> na krajnjoj točki %2$s."
 
-#: decrees.php:141
+#: decrees.php:146
 msgid "Read the Decree"
 msgstr "Pročitaj Dekret"
 

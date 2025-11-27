@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-27 03:29+0000\n"
+"POT-Creation-Date: 2025-11-27 05:41+0000\n"
 "PO-Revision-Date: 2025-11-25 10:01+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
@@ -1197,7 +1197,7 @@ msgstr ""
 "Jelenleg ezek a végpontok csak olvashatók. Jelenleg <b>%1$d határozat</b> "
 "van meghatározva a végponton %2$s."
 
-#: decrees.php:141
+#: decrees.php:146
 msgid "Read the Decree"
 msgstr "Olvasd el a rendeletet"
 

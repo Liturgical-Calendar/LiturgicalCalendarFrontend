@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-27 03:29+0000\n"
+"POT-Creation-Date: 2025-11-27 05:41+0000\n"
 "PO-Revision-Date: 2025-11-25 07:36+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
@@ -1214,7 +1214,7 @@ msgstr ""
 "Actualmente, estos endpoints son de solo lectura. Actualmente, hay <b>%1$d "
 "Decretos</b> definidos en el endpoint %2$s."
 
-#: decrees.php:141
+#: decrees.php:146
 msgid "Read the Decree"
 msgstr "Leer el Decreto"
 
