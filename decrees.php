@@ -121,6 +121,11 @@ try {
 
                 $ActionCardTitle = $RowActionTitle[$decree['metadata']['action']] ?? '???';
                 if ($decree['metadata']['action'] === 'setProperty') {
+                    if (!isset($decree['metadata']['property'])) {
+                        throw new \RuntimeException(
+                            'Decree with action "setProperty" is missing required "property" field: ' . $decreeID
+                        );
+                    }
                     if ($decree['metadata']['property'] === 'name') {
                         $ActionCardTitle = $RowActionTitle[$RowAction['SetNameProperty']];
                     } elseif ($decree['metadata']['property'] === 'grade') {
