@@ -24,7 +24,7 @@ LiturgicalCalendarFrontend/
 ├── i18n/               # Internationalization files (gettext .po/.mo)
 ├── cache/              # Cache directory (gitignored)
 ├── logs/               # Log files (gitignored)
-├── examples/           # Example implementations (separate repository)
+├── examples/           # Symlink to ../examples/ (separate repository at workspace root)
 └── docs/               # Documentation
 
 Main PHP files: index.php, extending.php, admin.php, etc.
@@ -63,6 +63,29 @@ php -S localhost:3000
 ```
 
 Ensure the API is running on the configured host/port (default: localhost:8000).
+
+### Using Local liturgy-components-js Library
+
+In development mode (`APP_ENV=development`), the frontend uses a local version of `liturgy-components-js` instead of the
+CDN version. This allows testing library changes without publishing to npm.
+
+**Setup:**
+
+Create a symlink from the frontend's assets to the local library's dist folder:
+
+```bash
+cd assets
+ln -sf ../../liturgy-components-js/dist components-js
+```
+
+The symlink is gitignored. When `APP_ENV=development`, the import map in `layout/footer.php` automatically points to
+`assets/components-js/index.js`. In staging/production, it uses the CDN version.
+
+**Workflow:**
+
+1. Make changes to `liturgy-components-js/src/`
+2. Run `yarn compile` in the liturgy-components-js directory
+3. Refresh the frontend page to see changes immediately
 
 ## Code Quality and Linting
 
@@ -280,7 +303,7 @@ composer lint:md:fix     # Auto-fix most issues (but not indentation)
 
 **Excluded**:
 
-- `examples/` - Separate repository
+- `examples/` - Symlink to separate repository at workspace root
 - `.intelephense-helper.php` - IDE helper
 
 **Level**: 1 (can be increased as code quality improves)
@@ -336,6 +359,88 @@ if (Auth.isAuthenticated()) {
 
 const response = await fetch(apiUrl, { headers });
 ```
+
+### Liturgy of Any Day Page
+
+The `liturgyOfAnyDay.php` page uses the `liturgy-components-js` library with `ApiClient`, `CalendarSelect`,
+`ApiOptions`, and `LiturgyOfAnyDay` components. This provides a complete interface for viewing liturgical
+events on any selected date.
+
+**Component Wiring Pattern:**
+
+```javascript
+import { ApiClient, CalendarSelect, ApiOptions, ApiOptionsFilter, LiturgyOfAnyDay }
+    from '@liturgical-calendar/components-js';
+
+// 1. Initialize ApiClient
+const apiClient = await ApiClient.init(BaseUrl);
+
+// 2. Create CalendarSelect (default to General Roman Calendar)
+const calendarSelect = new CalendarSelect(lang).allowNull(true);
+calendarSelect.appendTo('#calendarContainer');
+calendarSelect._domElement.value = ''; // Select General Roman Calendar
+
+// 3. Create ApiOptions with locale filter, linked to CalendarSelect
+const apiOptions = new ApiOptions(lang)
+    .filter(ApiOptionsFilter.LOCALE_ONLY)
+    .linkToCalendarSelect(calendarSelect);
+apiOptions.appendTo('#localeContainer');
+
+// 4. Match locale from available options
+const localeOptions = Array.from(apiOptions._localeInput._domElement.options);
+const exactMatch = localeOptions.find(opt => opt.value === lang);
+const languageMatch = localeOptions.find(opt => opt.value.split(/[-_]/)[0] === lang);
+let selectedLocale = exactMatch?.value || languageMatch?.value || localeOptions[0]?.value || lang;
+apiOptions._localeInput._domElement.value = selectedLocale;
+
+// 5. Create LiturgyOfAnyDay (auto-configures year_type for Dec 31st)
+const liturgyOfAnyDay = new LiturgyOfAnyDay({ locale: lang })
+    .buildDateControls()
+    .listenTo(apiClient);
+liturgyOfAnyDay.appendTo('#liturgyContainer');
+
+// 6. Wire ApiClient to listen to UI components
+apiClient.listenTo(calendarSelect).listenTo(apiOptions);
+
+// 7. Initial fetch with matched locale
+apiClient.fetchCalendar(selectedLocale);
+```
+
+**Key Implementation Details:**
+
+- **CalendarSelect default**: By default Vatican is selected; set `_domElement.value = ''` for General Roman Calendar
+- **Locale matching**: Try exact match first, then language match (e.g., "en" matches "en_US"), then first option
+- **LiturgyOfAnyDay year_type**: The component auto-handles December 31st (uses LITURGICAL year_type with year+1 for vigil masses)
+- **Accept-Language header**: Automatically handled by ApiClient when listening to ApiOptions
+
+### Accept-Language Header and CalendarSelect
+
+When `ApiClient` is configured to listen to `ApiOptions`, the `Accept-Language` header is automatically set based on
+the `_localeInput` selection - no manual header handling is required.
+
+**Vatican vs. General Roman Calendar**: When using `CalendarSelect` standalone:
+
+- The component does **not** distinguish between "General Roman Calendar" and "Vatican calendar"
+- Selecting "Vatican" from the dropdown is treated the same as selecting the General Roman Calendar (empty string)
+- Users selecting "Vatican" probably expect to see the calendar in their own language, not forced into Latin
+- Users can explicitly select Latin from the locale dropdown if desired
+
+**Contrast with PathBuilder**: When `CalendarSelect` is used in conjunction with `CalendarPathInput` or `PathBuilder`:
+
+- There **is** an explicit distinction via API paths:
+  - `/calendar` = General Roman Calendar (supports any locale via `Accept-Language`)
+  - `/calendar/nation/VA` = Vatican calendar (inherently Latin)
+- The path explicitly identifies whether the user wants the universal General Roman Calendar or the Vatican's
+  national calendar
+
+**National/Diocesan calendars and language support**: National and diocesan calendars can support multiple languages.
+When `ApiOptions` is linked to `CalendarSelect` (via `apiOptions.linkToCalendarSelect(calendarSelect)`):
+
+- The `_localeInput` automatically shows only locales supported by the selected calendar
+- When the General Roman Calendar (or Vatican) is selected, all API-supported locales are shown
+- The `Accept-Language` header is automatically handled by `ApiClient`
+
+This allows users to select from supported languages (e.g., French Canadian vs. English Canadian for Canada).
 
 ### Internationalization
 

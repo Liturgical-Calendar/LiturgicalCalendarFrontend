@@ -430,7 +430,7 @@ const Auth = {
         const payload = this.getPayload();
         if (!payload) return null;
 
-        return payload.sub || payload.username || 'Admin';
+        return payload.sub || payload.username || null;
     }
 };
 
@@ -439,7 +439,9 @@ if (window.location.protocol !== 'https:' && window.location.hostname !== 'local
     console.warn('Authentication over HTTP is insecure. Use HTTPS in production.');
 }
 
-// Start auto-refresh on page load
+// Start auto-refresh on page load if authenticated
 document.addEventListener('DOMContentLoaded', () => {
-    Auth.startAutoRefresh();
+    if (Auth.isAuthenticated()) {
+        Auth.startAutoRefresh();
+    }
 });
