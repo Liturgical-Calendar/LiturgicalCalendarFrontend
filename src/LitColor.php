@@ -4,11 +4,11 @@ namespace LiturgicalCalendar\Frontend;
 
 class LitColor
 {
-    public const GREEN          = 'green';
-    public const PURPLE         = 'purple';
-    public const WHITE          = 'white';
-    public const RED            = 'red';
-    public const ROSE           = 'rose';
+    public const GREEN  = 'green';
+    public const PURPLE = 'purple';
+    public const WHITE  = 'white';
+    public const RED    = 'red';
+    public const ROSE   = 'rose';
     /** @var array<int, string> */
     public static array $values = [ 'green', 'purple', 'white', 'red', 'rose' ];
 

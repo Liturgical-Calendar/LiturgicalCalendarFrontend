@@ -125,7 +125,7 @@ $NationalCalendars = array_values(array_filter(
     fn($calendar) => isset($calendar['calendar_id']) && $calendar['calendar_id'] !== 'VA'
 ));
 foreach ($NationalCalendars as $calendar) {
-    $displayRegion = Locale::getDisplayRegion('-' . $calendar['calendar_id'], $i18n->LOCALE);
+    $displayRegion                                        = Locale::getDisplayRegion('-' . $calendar['calendar_id'], $i18n->LOCALE);
     $AvailableNationalCalendars[$calendar['calendar_id']] = $displayRegion !== false ? $displayRegion : $calendar['calendar_id'];
 }
 $c->asort($AvailableNationalCalendars);

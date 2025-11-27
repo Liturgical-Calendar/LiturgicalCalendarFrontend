@@ -127,9 +127,9 @@ curl_close($ch);
                     }
                 }
 
-                $actionCardMessage = $messages[$ActionCardTitle] ?? $ActionCardTitle;
+                $actionCardMessage   = $messages[$ActionCardTitle] ?? $ActionCardTitle;
                 $decreeDateTimestamp = strtotime($decreeDate);
-                $minYear = $decreeDateTimestamp !== false ? (int) date('Y', $decreeDateTimestamp) : 1970;
+                $minYear             = $decreeDateTimestamp !== false ? (int) date('Y', $decreeDateTimestamp) : 1970;
 
                 $cardItems[] = "<div class='card mb-3' id=\"{$decreeID}\">"
                     . "<div class='card-header'>"
