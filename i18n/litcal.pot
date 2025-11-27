@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-27 03:29+0000\n"
+"POT-Creation-Date: 2025-11-27 05:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1028,7 +1028,7 @@ msgid ""
 "Decrees</b> defined at the endpoint %2$s."
 msgstr ""
 
-#: decrees.php:141
+#: decrees.php:146
 msgid "Read the Decree"
 msgstr ""
 
