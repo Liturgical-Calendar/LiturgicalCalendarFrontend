@@ -341,7 +341,9 @@ const Auth = {
 
     /**
      * Auto-refresh tokens before expiry
-     * Checks every minute and refreshes if less than 5 minutes until expiry
+     * Checks every minute and refreshes if less than 5 minutes until expiry.
+     * Only attempts refresh if a refresh token is available; access-token-only
+     * sessions will simply expire naturally without forced logout.
      */
     startAutoRefresh() {
         // Prevent multiple concurrent intervals
@@ -354,6 +356,10 @@ const Auth = {
 
         this._autoRefreshInterval = setInterval(async () => {
             if (!this.isAuthenticated()) return;
+
+            // Skip refresh attempt if no refresh token available
+            // This prevents clearing valid access tokens in access-token-only sessions
+            if (!this.getRefreshToken()) return;
 
             const payload = this.getPayload();
             if (!payload) return;
