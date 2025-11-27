@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-27 00:12+0000\n"
+"POT-Creation-Date: 2025-11-27 00:53+0000\n"
 "PO-Revision-Date: 2025-11-25 07:36+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -1549,7 +1549,7 @@ msgid "About us"
 msgstr "O nás"
 
 #: layout/header.php:40 layout/header.php:42 includes/login-modal.php:35
-#: includes/login-modal.php:278
+#: includes/login-modal.php:286
 msgid "Login"
 msgstr "Prihlásenie"
 
@@ -1601,23 +1601,23 @@ msgstr "Skryť heslo"
 msgid "Session Expiring"
 msgstr "Platnosť relácie končí"
 
-#: includes/login-modal.php:216
+#: includes/login-modal.php:224
 msgid "Please enter both username and password"
 msgstr "Zadajte prosím používateľské meno a heslo"
 
-#: includes/login-modal.php:224
+#: includes/login-modal.php:232
 msgid "Logging in..."
 msgstr "Prihlasovanie..."
 
-#: includes/login-modal.php:262
+#: includes/login-modal.php:270
 msgid "Login successful"
 msgstr "Prihlásenie úspešné"
 
-#: includes/login-modal.php:262
+#: includes/login-modal.php:270
 msgid "Success"
 msgstr "Úspech"
 
-#: includes/login-modal.php:273
+#: includes/login-modal.php:281
 msgid "Login failed. Please check your credentials."
 msgstr "Prihlásenie zlyhalo. Skontrolujte svoje prihlasovacie údaje."
 

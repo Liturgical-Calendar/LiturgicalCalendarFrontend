@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-27 00:12+0000\n"
+"POT-Creation-Date: 2025-11-27 00:53+0000\n"
 "PO-Revision-Date: 2025-11-25 14:48+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
@@ -1587,7 +1587,7 @@ msgid "About us"
 msgstr "Über uns"
 
 #: layout/header.php:40 layout/header.php:42 includes/login-modal.php:35
-#: includes/login-modal.php:278
+#: includes/login-modal.php:286
 msgid "Login"
 msgstr "Anmelden"
 
@@ -1639,23 +1639,23 @@ msgstr "Passwort ausblenden"
 msgid "Session Expiring"
 msgstr "Sitzung läuft ab"
 
-#: includes/login-modal.php:216
+#: includes/login-modal.php:224
 msgid "Please enter both username and password"
 msgstr "Bitte sowohl Benutzername als auch Passwort eingeben"
 
-#: includes/login-modal.php:224
+#: includes/login-modal.php:232
 msgid "Logging in..."
 msgstr "Anmeldung läuft..."
 
-#: includes/login-modal.php:262
+#: includes/login-modal.php:270
 msgid "Login successful"
 msgstr "Anmeldung erfolgreich"
 
-#: includes/login-modal.php:262
+#: includes/login-modal.php:270
 msgid "Success"
 msgstr "Erfolgreich"
 
-#: includes/login-modal.php:273
+#: includes/login-modal.php:281
 msgid "Login failed. Please check your credentials."
 msgstr "Anmeldung fehlgeschlagen. Bitte überprüfe deine Anmeldedaten."
 
