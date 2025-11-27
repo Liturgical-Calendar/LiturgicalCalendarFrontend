@@ -208,6 +208,11 @@ async function handleLogin() {
         return;
     }
 
+    // Guard against rapid double-submits
+    if (loginSubmit.disabled) {
+        return;
+    }
+
     const username = usernameInput.value.trim();
     const password = passwordInput.value;
     const rememberMe = rememberMeInput.checked;
