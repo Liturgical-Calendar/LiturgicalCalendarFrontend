@@ -1,5 +1,6 @@
 <?php
 
+use LiturgicalCalendar\Frontend\ApiClient;
 use LiturgicalCalendar\Frontend\FormControls;
 use LiturgicalCalendar\Frontend\Utilities;
 
@@ -23,78 +24,24 @@ $AvailableNationalCalendars = [];
 
 $c = new Collator($i18n->LOCALE);
 
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
-
 /**
- * Fetch metadata from API
+ * Fetch metadata and events from API using Guzzle-based client
  */
-curl_setopt($ch, CURLOPT_URL, $apiConfig->metadataUrl);
-$metadataRaw = curl_exec($ch);
+$apiClient = new ApiClient($i18n->LOCALE);
 
-if (curl_errno($ch)) {
-    $error_msg = curl_error($ch);
-    die($error_msg);
+try {
+    $metadataJson   = $apiClient->fetchJsonWithKey($apiConfig->metadataUrl, 'litcal_metadata');
+    $LitCalMetadata = $metadataJson['litcal_metadata'];
+} catch (\RuntimeException $e) {
+    die('Error fetching metadata from API: ' . $e->getMessage());
 }
 
-$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-if ($httpCode >= 400) {
-    die('Error: Received HTTP code ' . $httpCode . ' from API at ' . $apiConfig->metadataUrl);
+try {
+    $litEventsJson             = $apiClient->fetchJsonWithKey($apiConfig->eventsUrl, 'litcal_events');
+    $LiturgicalEventCollection = $litEventsJson['litcal_events'];
+} catch (\RuntimeException $e) {
+    die('Error fetching events from API: ' . $e->getMessage());
 }
-
-if ($metadataRaw === false || !is_string($metadataRaw)) {
-    die('Could not fetch metadata from API at ' . $apiConfig->metadataUrl);
-}
-
-$metadataJson = json_decode($metadataRaw, true);
-if (json_last_error() !== JSON_ERROR_NONE) {
-    $error_msg = json_last_error_msg();
-    die($error_msg);
-}
-
-if (false === isset($metadataJson['litcal_metadata'])) {
-    die('litcal_metadata not found in metadata JSON from API');
-}
-
-[ 'litcal_metadata' => $LitCalMetadata ] = $metadataJson;
-
-/**
- * Fetch liturgical events catalog from API
- */
-curl_setopt($ch, CURLOPT_URL, $apiConfig->eventsUrl);
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept-Language: ' . $i18n->LOCALE]);
-
-$eventsCatalogRaw = curl_exec($ch);
-
-if (curl_errno($ch)) {
-    $error_msg = curl_error($ch);
-    die($error_msg);
-}
-
-$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-if ($httpCode >= 400) {
-    die('Error: Received HTTP code ' . $httpCode . ' from API at ' . $apiConfig->eventsUrl);
-}
-
-if ($eventsCatalogRaw === false || !is_string($eventsCatalogRaw)) {
-    die('Could not fetch events from API at ' . $apiConfig->eventsUrl);
-}
-
-$litEventsJson = json_decode($eventsCatalogRaw, true);
-
-if (json_last_error() !== JSON_ERROR_NONE) {
-    $error_msg = json_last_error_msg();
-    die($error_msg);
-}
-
-if (false === isset($litEventsJson['litcal_events'])) {
-    die('litcal_events not found in events JSON from API');
-}
-
-[ 'litcal_events' => $LiturgicalEventCollection ] = $litEventsJson;
 
 /**
  * Fetch Catholic Dioceses by Nation data
@@ -125,7 +72,7 @@ $NationalCalendars = array_values(array_filter(
     fn($calendar) => isset($calendar['calendar_id']) && $calendar['calendar_id'] !== 'VA'
 ));
 foreach ($NationalCalendars as $calendar) {
-    $displayRegion = Locale::getDisplayRegion('-' . $calendar['calendar_id'], $i18n->LOCALE);
+    $displayRegion                                        = Locale::getDisplayRegion('-' . $calendar['calendar_id'], $i18n->LOCALE);
     $AvailableNationalCalendars[$calendar['calendar_id']] = $displayRegion !== false ? $displayRegion : $calendar['calendar_id'];
 }
 $c->asort($AvailableNationalCalendars);

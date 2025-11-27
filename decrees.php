@@ -1,6 +1,8 @@
 <?php
 include_once 'common.php'; // provides $i18n and all API URLs
 
+use LiturgicalCalendar\Frontend\ApiClient;
+
 $messages = [
     /**translators: label of the form row */
     'New liturgical event'  => _('New liturgical event'),
@@ -34,23 +36,22 @@ $RowActionTitle = [
     $RowAction['MakeDoctor']       => 'Designate Doctor'
 ];
 
-$decreesJson = file_get_contents($apiConfig->decreesUrl);
-if ($decreesJson === false) {
-    die('Error fetching decrees from API');
-}
-[ 'litcal_decrees' => $LitCalDecrees ] = json_decode($decreesJson, true);
+// Fetch decrees and events from API using Guzzle-based client
+$apiClient = new ApiClient($i18n->LOCALE);
 
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $apiConfig->eventsUrl);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept-Language: ' . $i18n->LOCALE]);
-$response = curl_exec($ch);
-if ($response === false || !is_string($response)) {
-    die('Error fetching events from API');
+try {
+    $decreesData   = $apiClient->fetchJsonWithKey($apiConfig->decreesUrl, 'litcal_decrees');
+    $LitCalDecrees = $decreesData['litcal_decrees'];
+} catch (\RuntimeException $e) {
+    die('Error fetching decrees from API: ' . $e->getMessage());
 }
 
-[ 'litcal_events' => $LiturgicalEventCollection ] = json_decode($response, true);
-curl_close($ch);
+try {
+    $eventsData                = $apiClient->fetchJsonWithKey($apiConfig->eventsUrl, 'litcal_events');
+    $LiturgicalEventCollection = $eventsData['litcal_events'];
+} catch (\RuntimeException $e) {
+    die('Error fetching events from API: ' . $e->getMessage());
+}
 
 ?><!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
@@ -127,9 +128,9 @@ curl_close($ch);
                     }
                 }
 
-                $actionCardMessage = $messages[$ActionCardTitle] ?? $ActionCardTitle;
+                $actionCardMessage   = $messages[$ActionCardTitle] ?? $ActionCardTitle;
                 $decreeDateTimestamp = strtotime($decreeDate);
-                $minYear = $decreeDateTimestamp !== false ? (int) date('Y', $decreeDateTimestamp) : 1970;
+                $minYear             = $decreeDateTimestamp !== false ? (int) date('Y', $decreeDateTimestamp) : 1970;
 
                 $cardItems[] = "<div class='card mb-3' id=\"{$decreeID}\">"
                     . "<div class='card-header'>"

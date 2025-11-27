@@ -386,7 +386,9 @@ const Auth = {
             }
             return data.access_token;
         } catch (error) {
-            this.clearTokens();
+            if (!this._isLoggingOut) {
+                this.clearTokens();
+            }
             throw error;
         }
     },

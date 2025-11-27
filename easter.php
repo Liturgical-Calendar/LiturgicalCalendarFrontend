@@ -3,6 +3,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+use LiturgicalCalendar\Frontend\ApiClient;
 use LiturgicalCalendar\Frontend\Utilities;
 
 include_once 'common.php';
@@ -43,32 +44,17 @@ textdomain('litcal');
 $c = new Collator($currentLocale);
 $c->asort($AvailableLocalesWithRegion);
 
-$ch = curl_init();
+$apiClient = new ApiClient($currentLocale);
 
-curl_setopt($ch, CURLOPT_URL, $apiConfig->dateOfEasterUrl . '?locale=' . $currentLocale);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$response = curl_exec($ch);
-if ($response === false || !is_string($response) || curl_errno($ch)) {
-    $error_msg = curl_error($ch);
-    die($error_msg);
+try {
+    $responseData  = $apiClient->fetchJsonWithKey(
+        $apiConfig->dateOfEasterUrl . '?locale=' . $currentLocale,
+        'litcal_easter'
+    );
+    $DatesOfEaster = $responseData['litcal_easter'];
+} catch (\RuntimeException $e) {
+    die('Error fetching Easter dates from API: ' . $e->getMessage());
 }
-
-$responseJson = json_decode($response);
-if (json_last_error() !== JSON_ERROR_NONE) {
-    $error_msg = json_last_error_msg();
-    die($error_msg);
-}
-
-if (
-    false === property_exists($responseJson, 'litcal_easter')
-    ||
-    false === is_array($responseJson->litcal_easter)
-) {
-    $error_msg = 'Missing data from response: litcal_easter property does not exist or is not an array';
-    die($error_msg);
-}
-
-$DatesOfEaster = $responseJson->litcal_easter;
 
 
 ?>
@@ -122,17 +108,17 @@ $DatesOfEaster = $responseJson->litcal_easter;
     //$Y = (int)date("Y");
     //for($i=1997;$i<=2037;$i++){
 for ($i = 1583; $i <= 9999; $i++) {
-    $gregDateString          = $DatesOfEaster[$i - 1583]->gregorianDateString;
-    $julianDateString        = $DatesOfEaster[$i - 1583]->julianDateString;
-    $westernJulianDateString = $DatesOfEaster[$i - 1583]->westernJulianDateString;
+    $gregDateString          = $DatesOfEaster[$i - 1583]['gregorianDateString'];
+    $julianDateString        = $DatesOfEaster[$i - 1583]['julianDateString'];
+    $westernJulianDateString = $DatesOfEaster[$i - 1583]['westernJulianDateString'];
 
-    $style_str             = $DatesOfEaster[$i - 1583]->coinciding ? ' style="background-color:Yellow;font-weight:bold;color:Blue;"' : '';
+    $style_str             = $DatesOfEaster[$i - 1583]['coinciding'] ? ' style="background-color:Yellow;font-weight:bold;color:Blue;"' : '';
     $EasterTableContainer .= '<tr' . $style_str . '><td width="300">' . $gregDateString . '</td><td width="300">' . $julianDateString . '</td><td width="300">' . $westernJulianDateString . '</td></tr>';
 }
     $EasterTableContainer .= '</tbody></table>';
     $EasterTableContainer .= '</div>';
 
-    echo '<div style="text-align:center;width:40%;margin:0px auto;font-size:.7em;z-index:10;position:relative;"><i>The last coinciding Easter will be: ' . $responseJson->lastCoincidenceString . '</i></div>';
+    echo '<div style="text-align:center;width:40%;margin:0px auto;font-size:.7em;z-index:10;position:relative;"><i>The last coinciding Easter will be: ' . $responseData['lastCoincidenceString'] . '</i></div>';
     echo $EasterTableContainer;
 ?>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
