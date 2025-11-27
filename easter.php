@@ -7,7 +7,11 @@ use LiturgicalCalendar\Frontend\Utilities;
 
 include_once 'common.php';
 
-$AllAvailableLocales = array_filter(ResourceBundle::getLocales(''), function ($value) {
+$resourceBundleLocales = ResourceBundle::getLocales('');
+if ($resourceBundleLocales === false) {
+    die('Error: Could not retrieve available locales from ResourceBundle');
+}
+$AllAvailableLocales = array_filter($resourceBundleLocales, function ($value) {
     return strpos($value, 'POSIX') === false;
 });
 
@@ -44,7 +48,7 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $apiConfig->dateOfEasterUrl . '?locale=' . $currentLocale);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($ch);
-if (curl_errno($ch)) {
+if ($response === false || !is_string($response) || curl_errno($ch)) {
     $error_msg = curl_error($ch);
     die($error_msg);
 }

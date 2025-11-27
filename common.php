@@ -42,7 +42,7 @@ if (false === file_exists($ghReleaseCacheFile) || ( time() - filemtime($ghReleas
 
     $ghCurrentReleaseInfo = curl_exec($ch);
 
-    if (!curl_errno($ch) && $ghCurrentReleaseInfo !== false) {
+    if (!curl_errno($ch) && is_string($ghCurrentReleaseInfo)) {
         $GitHubReleasesObj = json_decode($ghCurrentReleaseInfo);
         file_put_contents($ghReleaseCacheFile, json_encode($GitHubReleasesObj, JSON_PRETTY_PRINT));
     }

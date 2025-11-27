@@ -34,21 +34,22 @@ $RowActionTitle = [
     $RowAction['MakeDoctor']       => 'Designate Doctor'
 ];
 
-[ 'litcal_decrees' => $LitCalDecrees ] = json_decode(
-    file_get_contents($apiConfig->decreesUrl),
-    true
-);
+$decreesJson = file_get_contents($apiConfig->decreesUrl);
+if ($decreesJson === false) {
+    die('Error fetching decrees from API');
+}
+[ 'litcal_decrees' => $LitCalDecrees ] = json_decode($decreesJson, true);
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $apiConfig->eventsUrl);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept-Language: ' . $i18n->LOCALE]);
 $response = curl_exec($ch);
+if ($response === false || !is_string($response)) {
+    die('Error fetching events from API');
+}
 
-[ 'litcal_events' => $LiturgicalEventCollection ] = json_decode(
-    $response,
-    true
-);
+[ 'litcal_events' => $LiturgicalEventCollection ] = json_decode($response, true);
 curl_close($ch);
 
 ?><!doctype html>
@@ -126,9 +127,13 @@ curl_close($ch);
                     }
                 }
 
+                $actionCardMessage = $messages[$ActionCardTitle] ?? $ActionCardTitle;
+                $decreeDateTimestamp = strtotime($decreeDate);
+                $minYear = $decreeDateTimestamp !== false ? (int) date('Y', $decreeDateTimestamp) : 1970;
+
                 $cardItems[] = "<div class='card mb-3' id=\"{$decreeID}\">"
                     . "<div class='card-header'>"
-                    . "<h5 class='card-title d-flex justify-content-between'><div>{$decreeProtocol}</div><div>" . $messages[$ActionCardTitle] . '</div></h5>'
+                    . "<h5 class='card-title d-flex justify-content-between'><div>{$decreeProtocol}</div><div>" . $actionCardMessage . '</div></h5>'
                     . "<h6 class='card-subtitle mb-2 text-muted d-flex justify-content-between'><div>{$decreeDate}</div><div>{$decreeID}</div></h6>"
                     . '</div>'
                     . "<div class='card-body'>"
@@ -140,7 +145,7 @@ curl_close($ch);
                     . '</div>'
                     . '<div class="form-group col-sm-2">'
                     . "<label for='since_year_{$decreeID}' class='since_year'>To take effect in the year</label>"
-                    . "<input type='number' class='form-control since_year' id='since_year_{$decreeID}' value='{$decree['metadata']['since_year']}' min='" . (int) date('Y', strtotime($decreeDate)) . "' disabled>"
+                    . "<input type='number' class='form-control since_year' id='since_year_{$decreeID}' value='{$decree['metadata']['since_year']}' min='{$minYear}' disabled>"
                     . '</div>'
                     . '</div>'
                     . '</div>'

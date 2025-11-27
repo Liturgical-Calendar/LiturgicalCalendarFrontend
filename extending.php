@@ -8,8 +8,16 @@ include_once 'common.php'; // provides $i18n and all API URLs
 $FormControls = new FormControls($i18n);
 
 $dayOfWeekFmt = IntlDateFormatter::create($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'UTC', IntlDateFormatter::GREGORIAN, 'EEEE');
-$thursday     = $dayOfWeekFmt->format(DateTime::createFromFormat('!j-n-Y', '1-1-2022', new DateTimeZone('UTC'))->modify('next Thursday'));
-$sunday       = $dayOfWeekFmt->format(DateTime::createFromFormat('!j-n-Y', '1-1-2022', new DateTimeZone('UTC'))->modify('next Sunday'));
+if ($dayOfWeekFmt === null) {
+    die('Error: Could not create IntlDateFormatter');
+}
+$thursdayDate = DateTime::createFromFormat('!j-n-Y', '1-1-2022', new DateTimeZone('UTC'));
+$sundayDate   = DateTime::createFromFormat('!j-n-Y', '1-1-2022', new DateTimeZone('UTC'));
+if ($thursdayDate === false || $sundayDate === false) {
+    die('Error: Could not create DateTime from format');
+}
+$thursday = $dayOfWeekFmt->format($thursdayDate->modify('next Thursday'));
+$sunday   = $dayOfWeekFmt->format($sundayDate->modify('next Sunday'));
 
 $AvailableNationalCalendars = [];
 
@@ -37,7 +45,7 @@ if ($httpCode >= 400) {
     die('Error: Received HTTP code ' . $httpCode . ' from API at ' . $apiConfig->metadataUrl);
 }
 
-if ($metadataRaw === false) {
+if ($metadataRaw === false || !is_string($metadataRaw)) {
     die('Could not fetch metadata from API at ' . $apiConfig->metadataUrl);
 }
 
@@ -71,7 +79,7 @@ if ($httpCode >= 400) {
     die('Error: Received HTTP code ' . $httpCode . ' from API at ' . $apiConfig->eventsUrl);
 }
 
-if ($eventsCatalogRaw === false) {
+if ($eventsCatalogRaw === false || !is_string($eventsCatalogRaw)) {
     die('Could not fetch events from API at ' . $apiConfig->eventsUrl);
 }
 
@@ -117,18 +125,27 @@ $NationalCalendars = array_values(array_filter(
     fn($calendar) => isset($calendar['calendar_id']) && $calendar['calendar_id'] !== 'VA'
 ));
 foreach ($NationalCalendars as $calendar) {
-    $AvailableNationalCalendars[$calendar['calendar_id']] = Locale::getDisplayRegion('-' . $calendar['calendar_id'], $i18n->LOCALE);
+    $displayRegion = Locale::getDisplayRegion('-' . $calendar['calendar_id'], $i18n->LOCALE);
+    $AvailableNationalCalendars[$calendar['calendar_id']] = $displayRegion !== false ? $displayRegion : $calendar['calendar_id'];
 }
 $c->asort($AvailableNationalCalendars);
 
 // Extract the 'country_iso' values from the CatholicDiocesesByNation array and transform values to upper case
-$CountryIso                    = array_map('strtoupper', array_column($CatholicDiocesesByNation, 'country_iso'));
-$DisplayRegions                = array_map(fn ($item) => Locale::getDisplayRegion('-' . $item, $i18n->LOCALE), $CountryIso);
+$CountryIso     = array_map('strtoupper', array_column($CatholicDiocesesByNation, 'country_iso'));
+$DisplayRegions = array_map(function ($item) use ($i18n) {
+    $region = Locale::getDisplayRegion('-' . $item, $i18n->LOCALE);
+    return $region !== false ? $region : $item;
+}, $CountryIso);
+/** @var array<string, string> $CountriesWithCatholicDioceses */
 $CountriesWithCatholicDioceses = array_combine($CountryIso, $DisplayRegions);
 $c->asort($CountriesWithCatholicDioceses);
 
 
-$SystemLocalesWithRegion = array_filter(ResourceBundle::getLocales(''), function ($value) use ($i18n) {
+$resourceBundleLocales = ResourceBundle::getLocales('');
+if ($resourceBundleLocales === false) {
+    die('Error: Could not retrieve available locales from ResourceBundle');
+}
+$SystemLocalesWithRegion = array_filter($resourceBundleLocales, function ($value) use ($i18n) {
     return strpos($value, 'POSIX') === false && Locale::getDisplayRegion($value, $i18n->LOCALE) !== '';
 });
 $SystemLocalesWithRegion = array_reduce($SystemLocalesWithRegion, function ($carry, $item) use ($i18n) {
@@ -141,7 +158,7 @@ $SystemLocalesWithRegion = array_reduce($SystemLocalesWithRegion, function ($car
 }, []);
 $c->asort($SystemLocalesWithRegion);
 
-$SystemLocalesWithoutRegion = array_filter(ResourceBundle::getLocales(''), function ($value) {
+$SystemLocalesWithoutRegion = array_filter($resourceBundleLocales, function ($value) {
     return strpos($value, '_') === false;
 });
 $SystemLocalesWithoutRegion = array_reduce($SystemLocalesWithoutRegion, function ($carry, $item) use ($i18n) {

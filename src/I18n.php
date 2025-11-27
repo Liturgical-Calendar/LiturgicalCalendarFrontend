@@ -24,7 +24,8 @@ class I18n
         if (!empty($_COOKIE['currentLocale'])) {
             $this->LOCALE = $_COOKIE['currentLocale'];
         } elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            $this->LOCALE = \Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+            $acceptedLocale = \Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+            $this->LOCALE   = $acceptedLocale !== false ? $acceptedLocale : 'en';
         } else {
             $this->LOCALE = 'en';
         }
@@ -33,7 +34,8 @@ class I18n
             $LOCALE = \Locale::getPrimaryLanguage($this->LOCALE);
             $REGION = \Locale::getRegion($this->LOCALE);
             if (null === $REGION || empty($REGION)) {
-                $this->LOCALE_WITH_REGION = $LOCALE . '_' . self::PRIMARY_REGIONS[$LOCALE];
+                $primaryRegion            = self::PRIMARY_REGIONS[$LOCALE] ?? strtoupper($LOCALE);
+                $this->LOCALE_WITH_REGION = $LOCALE . '_' . $primaryRegion;
             } else {
                 $this->LOCALE_WITH_REGION = $LOCALE . '_' . $REGION;
             }
