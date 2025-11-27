@@ -24,7 +24,7 @@ LiturgicalCalendarFrontend/
 ├── i18n/               # Internationalization files (gettext .po/.mo)
 ├── cache/              # Cache directory (gitignored)
 ├── logs/               # Log files (gitignored)
-├── examples/           # Example implementations (separate repository)
+├── examples/           # Symlink to ../examples/ (separate repository at workspace root)
 └── docs/               # Documentation
 
 Main PHP files: index.php, extending.php, admin.php, etc.
@@ -303,7 +303,7 @@ composer lint:md:fix     # Auto-fix most issues (but not indentation)
 
 **Excluded**:
 
-- `examples/` - Separate repository
+- `examples/` - Symlink to separate repository at workspace root
 - `.intelephense-helper.php` - IDE helper
 
 **Level**: 1 (can be increased as code quality improves)
