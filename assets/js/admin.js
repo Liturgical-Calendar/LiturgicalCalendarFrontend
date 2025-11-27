@@ -181,12 +181,8 @@ const createPropriumDeTemporeTable = ( data ) => {
 $(document).on('change', '#jsonFileSelect', () => {
     let baseJsonFile = $('#jsonFileSelect :selected').text();
     let jsonFile = sanitizeInput( $('#jsonFileSelect').val() );
-    let jsonFileFull = '';
-    if( location.hostname !== 'litcal.johnromanodorazio.com' ) {
-        jsonFileFull = 'includes/readJSONFile.php?filename=https://litcal.johnromanodorazio.com/' + jsonFile;
-    } else {
-        jsonFileFull = './' + jsonFile;
-    }
+    // Fetch directly from the API (BaseUrl is set in the page from PHP config)
+    let jsonFileFull = BaseUrl + '/' + jsonFile;
     //console.log(baseJsonFile);
     if( false === jsonFileData.hasOwnProperty( baseJsonFile ) ) {
         $.getJSON(jsonFileFull, data => {

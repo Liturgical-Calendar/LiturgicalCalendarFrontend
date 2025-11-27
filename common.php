@@ -13,6 +13,7 @@
 include_once('vendor/autoload.php');
 
 use LiturgicalCalendar\Frontend\I18n;
+use LiturgicalCalendar\Frontend\ApiClient as FrontendHttpClient;
 use Dotenv\Dotenv;
 use Monolog\Logger;
 use Monolog\Level;
@@ -33,18 +34,13 @@ if (false === file_exists($ghReleaseCacheFolder)) {
 if (false === file_exists($ghReleaseCacheFile) || ( time() - filemtime($ghReleaseCacheFile) ) > 86400) {
     $GithubReleasesAPI = 'https://api.github.com/repos/Liturgical-Calendar/LiturgicalCalendarAPI/releases/latest';
 
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $GithubReleasesAPI);
-    curl_setopt($ch, CURLOPT_USERAGENT, 'LiturgicalCalendar');
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-    $ghCurrentReleaseInfo = curl_exec($ch);
-
-    if (!curl_errno($ch) && is_string($ghCurrentReleaseInfo)) {
-        $GitHubReleasesObj = json_decode($ghCurrentReleaseInfo);
-        file_put_contents($ghReleaseCacheFile, json_encode($GitHubReleasesObj, JSON_PRETTY_PRINT));
+    try {
+        $ghHttpClient       = new FrontendHttpClient();
+        $GitHubReleasesData = $ghHttpClient->fetchJson($GithubReleasesAPI, ['User-Agent' => 'LiturgicalCalendar']);
+        file_put_contents($ghReleaseCacheFile, json_encode($GitHubReleasesData, JSON_PRETTY_PRINT));
+    } catch (\RuntimeException $e) {
+        // Silently fail - cache will be used if available, or this will retry on next request
+        error_log('Failed to fetch GitHub release info: ' . $e->getMessage());
     }
 }
 
@@ -220,9 +216,10 @@ try {
     $logger->info('Logger initialized successfully');
 } catch (Exception $e) {
     error_log('Error creating logger: ' . $e->getMessage());
+    $logger = null;
 }
 
-if ($debugMode) {
+if ($debugMode && $logger !== null) {
     $logger->debug('Debug mode enabled');
 }
 

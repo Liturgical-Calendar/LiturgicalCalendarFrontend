@@ -14,7 +14,7 @@ class LitColor
 
     public static function isValid(string $value): bool
     {
-        return in_array($value, self::$values);
+        return in_array($value, self::$values, true);
     }
 
     /**

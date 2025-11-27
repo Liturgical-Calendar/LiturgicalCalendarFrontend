@@ -156,6 +156,9 @@ class Utilities
                 'icon'    => 'fa-cross'
             ]
         ];
+        if (!isset($cards[$who])) {
+            throw new \InvalidArgumentException("Unknown contributor: {$who}");
+        }
         return $cards[$who];
     }
 

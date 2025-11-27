@@ -34,8 +34,8 @@ class I18n
             $LOCALE = \Locale::getPrimaryLanguage($this->LOCALE);
             $REGION = \Locale::getRegion($this->LOCALE);
             if (null === $REGION || empty($REGION)) {
-                $primaryRegion            = self::PRIMARY_REGIONS[$LOCALE] ?? strtoupper($LOCALE);
-                $this->LOCALE_WITH_REGION = $LOCALE . '_' . $primaryRegion;
+                $REGION                   = self::PRIMARY_REGIONS[$LOCALE] ?? strtoupper($LOCALE);
+                $this->LOCALE_WITH_REGION = $LOCALE . '_' . $REGION;
             } else {
                 $this->LOCALE_WITH_REGION = $LOCALE . '_' . $REGION;
             }
