@@ -1,7 +1,8 @@
 <?php
 $currentPage = basename($_SERVER['SCRIPT_FILENAME'], '.php');
 
-$langsAvailable = ['en', ...array_map('basename', glob('i18n/*', GLOB_ONLYDIR))];
+$i18nDirs       = glob('i18n/*', GLOB_ONLYDIR);
+$langsAvailable = ['en', ...array_map('basename', $i18nDirs !== false ? $i18nDirs : [])];
 $langsAssoc     = [];
 foreach ($langsAvailable as $lang) {
     $langsAssoc[$lang] = Locale::getDisplayLanguage($lang, $i18n->LOCALE);

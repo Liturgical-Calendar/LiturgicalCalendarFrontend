@@ -9,14 +9,18 @@ class LitColor
     public const WHITE          = 'white';
     public const RED            = 'red';
     public const ROSE           = 'rose';
+    /** @var array<int, string> */
     public static array $values = [ 'green', 'purple', 'white', 'red', 'rose' ];
 
-    public static function isValid(string $value)
+    public static function isValid(string $value): bool
     {
         return in_array($value, self::$values);
     }
 
-    public static function areValid(array $values)
+    /**
+     * @param array<int, string> $values
+     */
+    public static function areValid(array $values): bool
     {
         return empty(array_diff($values, self::$values));
     }

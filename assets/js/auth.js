@@ -2,6 +2,12 @@
  * Authentication helper module for JWT token management
  * Handles login, logout, token storage, and automatic token refresh
  *
+ * Supports both HttpOnly cookie-based authentication (preferred, more secure)
+ * and localStorage/sessionStorage fallback for backwards compatibility.
+ *
+ * For cookie-based auth, use checkAuthAsync() to verify authentication state
+ * with the server, as HttpOnly cookies cannot be read by JavaScript.
+ *
  * @module Auth
  */
 const Auth = {
@@ -23,6 +29,12 @@ const Auth = {
      * @private
      */
     _refreshPromise: null,
+
+    /**
+     * Flag to prevent token writes during logout
+     * @private
+     */
+    _isLoggingOut: false,
 
     /**
      * Validate that BaseUrl is defined before making API calls
@@ -55,6 +67,7 @@ const Auth = {
         try {
             const response = await fetch(`${BaseUrl}/auth/login`, {
                 method: 'POST',
+                credentials: 'include', // Include cookies for cross-origin requests
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
@@ -83,6 +96,9 @@ const Auth = {
             if (data.refresh_token) {
                 this.setRefreshToken(data.refresh_token, rememberMe);
             }
+
+            // Ensure auto-refresh is running after a successful login
+            this.startAutoRefresh();
 
             return data;
         } catch (error) {
@@ -244,7 +260,9 @@ const Auth = {
 
     /**
      * Check if user is authenticated
-     * Validates token existence and expiration
+     * Validates token existence and expiration from local storage
+     *
+     * For HttpOnly cookie authentication, use checkAuthAsync() for authoritative check
      *
      * @returns {boolean} True if authenticated with valid token
      */
@@ -254,6 +272,38 @@ const Auth = {
 
         const now = Math.floor(Date.now() / 1000);
         return payload.exp > now;
+    },
+
+    /**
+     * Check authentication state with the server
+     * Calls /auth/me endpoint to verify session (works with HttpOnly cookies)
+     *
+     * @returns {Promise<Object|null>} User info object or null if not authenticated
+     */
+    async checkAuthAsync() {
+        if (!this._validateBaseUrl('checkAuthAsync')) {
+            return null;
+        }
+
+        try {
+            const response = await fetch(`${BaseUrl}/auth/me`, {
+                method: 'GET',
+                credentials: 'include', // Include cookies for cross-origin requests
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                return null;
+            }
+
+            const data = await response.json();
+            return data.authenticated ? data : null;
+        } catch (error) {
+            console.error('Auth check failed:', error);
+            return null;
+        }
     },
 
     /**
@@ -299,6 +349,7 @@ const Auth = {
         try {
             const response = await fetch(`${BaseUrl}/auth/refresh`, {
                 method: 'POST',
+                credentials: 'include', // Include cookies for cross-origin requests
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
@@ -322,6 +373,12 @@ const Auth = {
             }
 
             const data = await response.json();
+
+            // If logout started during the refresh, skip storage writes
+            if (this._isLoggingOut) {
+                return data.access_token;
+            }
+
             // Write refreshed tokens back to the same storage tier
             this.setToken(data.access_token, isPersistent);
             if (data.refresh_token) {
@@ -341,15 +398,23 @@ const Auth = {
      * @returns {Promise<void>}
      */
     async logout() {
-        const token = this.getToken();
+        // Set flag immediately to prevent in-flight refresh from writing tokens
+        this._isLoggingOut = true;
 
-        // Only attempt server logout if BaseUrl is configured and we have a token
-        if (token && this._validateBaseUrl('logout')) {
+        // Stop all timers first to prevent any new refresh attempts
+        this.stopAllTimers();
+
+        // Null out any pending refresh promise to prevent token writes
+        this._refreshPromise = null;
+
+        // Attempt server logout to clear HttpOnly cookies
+        // The server will read the token from cookie, so we don't need to send it in header
+        if (this._validateBaseUrl('logout')) {
             try {
                 await fetch(`${BaseUrl}/auth/logout`, {
                     method: 'POST',
+                    credentials: 'include', // Include cookies for cross-origin requests
                     headers: {
-                        'Authorization': `Bearer ${token}`,
                         'Accept': 'application/json'
                     }
                 });
@@ -358,7 +423,6 @@ const Auth = {
             }
         }
 
-        this.stopAllTimers();
         this.clearTokens();
         window.location.reload(); // Refresh to reset UI state
     },
@@ -417,7 +481,8 @@ const Auth = {
      * Show warning before token expiry
      * Checks every 30 seconds and warns if less than 2 minutes until expiry
      *
-     * @param {Function} warningCallback - Function to call when warning should be shown
+     * @param {Function} warningCallback - Function to call with seconds until expiry.
+     *                                     Caller is responsible for i18n/message formatting.
      */
     startExpiryWarning(warningCallback) {
         // Prevent multiple concurrent intervals
@@ -438,7 +503,7 @@ const Auth = {
 
                 // Warn if less than 2 minutes until expiry
                 if (timeUntilExpiry > 0 && timeUntilExpiry < 120) {
-                    warningCallback('Your session will expire soon. Please save your work.');
+                    warningCallback(timeUntilExpiry);
                 }
             } catch (error) {
                 console.error('Expiry warning check failed:', error);

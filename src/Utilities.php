@@ -103,9 +103,9 @@ class Utilities
      * - icon: a Bootstrap icon class to be used to represent the person
      *
      * @param string $who the name of the person for which to return the information
-     * @return array an associative array with the information about the person
+     * @return array<string, string> an associative array with the information about the person
      */
-    private static function getCardInfo(string $who)
+    private static function getCardInfo(string $who): array
     {
         $cards = [
             'DONJOHN'        => [
@@ -193,10 +193,10 @@ class Utilities
      * The $users parameter should be an associative array where the key is the
      * username and the value is the hashed password (using password_hash()).
      *
-     * @param array $users An associative array of usernames and hashed passwords.
+     * @param array<string, string> $users An associative array of usernames and hashed passwords.
      * @return bool True if the user is authenticated, false otherwise.
      */
-    public static function authenticated(array $users = [])
+    public static function authenticated(array $users = []): bool
     {
         if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])) {
             return false;

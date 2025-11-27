@@ -80,13 +80,12 @@ $API_DESCRIPTION = _('A Liturgical Calendar API from which you can retrieve data
                             <div class="col-lg">
                                 <div class="row">
                                     <div class="form-group col-md"><?php
-                                    echo $CalendarSelect->getSelect([
-                                        'class'    => 'form-select',
-                                        'id'       => 'calendarSelect',
-                                        'options'  => 'all',
-                                        'label'    => true,
-                                        'labelStr' => _('Select calendar')
-                                    ]);
+                                    echo $CalendarSelect
+                                        ->class('form-select')
+                                        ->id('calendarSelect')
+                                        ->label(true)
+                                        ->labelText(_('Select calendar'))
+                                        ->getSelect();
                                     ?></div>
                                 </div>
                                 <p class="mt-2 mb-1"><?php echo _('Calendar subscription URL'); ?></p>

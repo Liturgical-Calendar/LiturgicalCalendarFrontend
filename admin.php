@@ -39,7 +39,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept-Language: ' . $i18n->LOCALE]);
 curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 $missalsResponse = curl_exec($ch);
-if (curl_errno($ch)) {
+if ($missalsResponse === false || !is_string($missalsResponse) || curl_errno($ch)) {
     die('Error fetching missals from API: ' . curl_error($ch));
 }
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -49,7 +49,7 @@ if ($httpCode >= 400) {
 
 curl_setopt($ch, CURLOPT_URL, $apiConfig->eventsUrl);
 $eventsResponse = curl_exec($ch);
-if (curl_errno($ch)) {
+if ($eventsResponse === false || !is_string($eventsResponse) || curl_errno($ch)) {
     die('Error fetching events from API: ' . curl_error($ch));
 }
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
