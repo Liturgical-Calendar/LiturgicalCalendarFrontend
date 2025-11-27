@@ -78,26 +78,40 @@ const Auth = {
      *
      * @param {string} token - JWT access token
      * @param {boolean} persistent - Store in localStorage (true) or sessionStorage (false)
+     * @returns {boolean} True if storage succeeded, false if storage is unavailable
      */
     setToken(token, persistent = false) {
-        const storage = persistent ? localStorage : sessionStorage;
-        const otherStorage = persistent ? sessionStorage : localStorage;
+        try {
+            const storage = persistent ? localStorage : sessionStorage;
+            const otherStorage = persistent ? sessionStorage : localStorage;
 
-        // Set token in target storage
-        storage.setItem(this.TOKEN_KEY, token);
+            // Set token in target storage
+            storage.setItem(this.TOKEN_KEY, token);
 
-        // Clear from opposite storage to prevent duplicate tokens
-        otherStorage.removeItem(this.TOKEN_KEY);
+            // Clear from opposite storage to prevent duplicate tokens
+            otherStorage.removeItem(this.TOKEN_KEY);
+            return true;
+        } catch (e) {
+            // Storage may be unavailable in hardened privacy modes
+            console.warn('Unable to store token:', e.message);
+            return false;
+        }
     },
 
     /**
      * Get stored JWT token
      *
-     * @returns {string|null} JWT token or null if not found
+     * @returns {string|null} JWT token or null if not found/unavailable
      */
     getToken() {
-        return localStorage.getItem(this.TOKEN_KEY) ||
-               sessionStorage.getItem(this.TOKEN_KEY);
+        try {
+            return localStorage.getItem(this.TOKEN_KEY) ||
+                   sessionStorage.getItem(this.TOKEN_KEY);
+        } catch (e) {
+            // Storage may be unavailable in hardened privacy modes
+            console.warn('Unable to access token storage:', e.message);
+            return null;
+        }
     },
 
     /**
@@ -105,10 +119,16 @@ const Auth = {
      * Specifically checks where the refresh token is stored since that's
      * what determines persistence during token refresh operations
      *
-     * @returns {boolean} True if refresh token is in localStorage, false otherwise
+     * @returns {boolean} True if refresh token is in localStorage, false otherwise/unavailable
      */
     isPersistentStorage() {
-        return localStorage.getItem(this.REFRESH_KEY) !== null;
+        try {
+            return localStorage.getItem(this.REFRESH_KEY) !== null;
+        } catch (e) {
+            // Storage may be unavailable in hardened privacy modes
+            console.warn('Unable to check persistent storage:', e.message);
+            return false;
+        }
     },
 
     /**
@@ -116,36 +136,56 @@ const Auth = {
      *
      * @param {string} token - Refresh token
      * @param {boolean} persistent - Store in localStorage (true) or sessionStorage (false)
+     * @returns {boolean} True if storage succeeded, false if storage is unavailable
      */
     setRefreshToken(token, persistent = false) {
-        const storage = persistent ? localStorage : sessionStorage;
-        const otherStorage = persistent ? sessionStorage : localStorage;
+        try {
+            const storage = persistent ? localStorage : sessionStorage;
+            const otherStorage = persistent ? sessionStorage : localStorage;
 
-        // Set token in target storage
-        storage.setItem(this.REFRESH_KEY, token);
+            // Set token in target storage
+            storage.setItem(this.REFRESH_KEY, token);
 
-        // Clear from opposite storage to prevent duplicate tokens
-        otherStorage.removeItem(this.REFRESH_KEY);
+            // Clear from opposite storage to prevent duplicate tokens
+            otherStorage.removeItem(this.REFRESH_KEY);
+            return true;
+        } catch (e) {
+            // Storage may be unavailable in hardened privacy modes
+            console.warn('Unable to store refresh token:', e.message);
+            return false;
+        }
     },
 
     /**
      * Get refresh token
      *
-     * @returns {string|null} Refresh token or null if not found
+     * @returns {string|null} Refresh token or null if not found/unavailable
      */
     getRefreshToken() {
-        return localStorage.getItem(this.REFRESH_KEY) ||
-               sessionStorage.getItem(this.REFRESH_KEY);
+        try {
+            return localStorage.getItem(this.REFRESH_KEY) ||
+                   sessionStorage.getItem(this.REFRESH_KEY);
+        } catch (e) {
+            // Storage may be unavailable in hardened privacy modes
+            console.warn('Unable to access refresh token storage:', e.message);
+            return null;
+        }
     },
 
     /**
      * Remove all tokens (logout)
      */
     clearTokens() {
-        localStorage.removeItem(this.TOKEN_KEY);
-        sessionStorage.removeItem(this.TOKEN_KEY);
-        localStorage.removeItem(this.REFRESH_KEY);
-        sessionStorage.removeItem(this.REFRESH_KEY);
+        try {
+            localStorage.removeItem(this.TOKEN_KEY);
+            sessionStorage.removeItem(this.TOKEN_KEY);
+            localStorage.removeItem(this.REFRESH_KEY);
+            sessionStorage.removeItem(this.REFRESH_KEY);
+        } catch (e) {
+            // Storage may be unavailable in hardened privacy modes
+            // Silently fail - tokens may not have been stored anyway
+            console.warn('Unable to clear token storage:', e.message);
+        }
     },
 
     /**
