@@ -152,6 +152,9 @@ document.addEventListener('DOMContentLoaded', () => {
  * @param {Function} onSuccess - Callback to execute after successful login
  */
 function showLoginModal(onSuccess = null) {
+    // Always reset callback to prevent stale callbacks from previous modal opens
+    loginSuccessCallback = null;
+
     // Guard against missing bootstrap or modal element
     if (typeof bootstrap === 'undefined') {
         console.error('Bootstrap library not loaded - cannot show login modal');
@@ -169,8 +172,8 @@ function showLoginModal(onSuccess = null) {
         loginModal = new bootstrap.Modal(loginModalElement);
     }
 
-    // Store success callback in module scope
-    if (onSuccess) {
+    // Store success callback in module scope if provided
+    if (onSuccess !== null) {
         if (typeof onSuccess === 'function') {
             loginSuccessCallback = onSuccess;
         } else {
