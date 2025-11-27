@@ -9,15 +9,19 @@ This document outlines the plan for implementing JWT authentication in the Litur
 - [LiturgicalCalendarAPI#262](https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI/issues/262) - ✅ API JWT Implementation (Complete)
 - [LiturgicalCalendarFrontend#181](https://github.com/Liturgical-Calendar/LiturgicalCalendarFrontend/issues/181) - 🔄 Frontend JWT Client Implementation (In Progress)
 
-**Status:** Phase 1 and Phase 2 complete - as of 2025-11-23
+**Status:** Phase 1, Phase 2, and Phase 2.5 (HttpOnly Cookie Auth) complete - as of 2025-11-27
 
 **API Readiness:**
-The LiturgicalCalendarAPI now has full JWT authentication implemented:
+The LiturgicalCalendarAPI now has full JWT authentication implemented with HttpOnly cookie support:
 
-- ✅ `/auth/login` endpoint for obtaining tokens
-- ✅ `/auth/refresh` endpoint for refreshing access tokens
+- ✅ `/auth/login` endpoint for obtaining tokens (sets HttpOnly cookies)
+- ✅ `/auth/refresh` endpoint for refreshing access tokens (reads/sets cookies)
+- ✅ `/auth/logout` endpoint for clearing tokens (clears HttpOnly cookies)
+- ✅ `/auth/me` endpoint for checking authentication state (essential for cookie-based auth)
 - ✅ PUT/PATCH/DELETE operations on `/data` endpoint require JWT authentication
 - ✅ Returns 401 Unauthorized for unauthenticated write requests
+- ✅ CORS credentials support (`Access-Control-Allow-Credentials: true`)
+- ✅ Supports both HttpOnly cookies (preferred) and Authorization header (backwards compatible)
 
 The frontend can now proceed with implementing JWT client support as outlined in this roadmap.
 
@@ -679,6 +683,124 @@ add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
 
 See `README.md` Production Deployment section for full nginx configuration details.
 
+#### 2.4 HttpOnly Cookie Authentication ✅ COMPLETE
+
+**Implementation Date:** 2025-11-27
+
+**Overview:**
+Implemented HttpOnly cookie-based JWT storage as a more secure alternative to localStorage/sessionStorage.
+This protects tokens from XSS attacks since JavaScript cannot access HttpOnly cookies.
+
+**API Changes (LiturgicalCalendarAPI):**
+
+**New Files:**
+
+- `src/Http/CookieHelper.php` - Helper class for secure cookie management
+- `src/Handlers/Auth/MeHandler.php` - New `/auth/me` endpoint
+
+**Modified Files:**
+
+- `src/Handlers/Auth/LoginHandler.php` - Sets HttpOnly cookies after login
+- `src/Handlers/Auth/RefreshHandler.php` - Reads refresh token from cookie, sets new access token cookie
+- `src/Handlers/Auth/LogoutHandler.php` - Clears HttpOnly cookies on logout
+- `src/Http/Middleware/JwtAuthMiddleware.php` - Reads token from cookie first, falls back to header
+- `src/Handlers/AbstractHandler.php` - Added CORS credentials support
+- `src/Router.php` - Added `/auth/me` route
+- `jsondata/schemas/openapi.json` - Documented `/auth/me` endpoint
+
+**Frontend Changes (LiturgicalCalendarFrontend):**
+
+- `assets/js/auth.js` - Added `credentials: 'include'` to all fetch calls, added `checkAuthAsync()` method
+
+**Cookie Configuration:**
+
+```php
+// CookieHelper.php - Secure cookie attributes
+$cookie = [
+    'name' => 'litcal_access_token',  // or 'litcal_refresh_token'
+    'value' => $token,
+    'path' => '/',                     // '/' for access, '/auth' for refresh
+    'httponly' => true,                // Not accessible to JavaScript
+    'secure' => $isHttps,              // HTTPS only in production
+    'samesite' => 'Lax',               // CSRF protection ('Strict' for refresh token)
+    'max-age' => $expiry               // Token expiry in seconds
+];
+```
+
+**New `/auth/me` Endpoint:**
+
+Essential for cookie-based authentication since JavaScript cannot read HttpOnly cookies to determine auth state:
+
+```javascript
+// Frontend usage
+const authState = await Auth.checkAuthAsync();
+if (authState && authState.authenticated) {
+    console.log(`Logged in as: ${authState.username}`);
+    console.log(`Roles: ${authState.roles.join(', ')}`);
+    console.log(`Token expires: ${new Date(authState.exp * 1000)}`);
+}
+```
+
+**API Response:**
+
+```json
+{
+    "authenticated": true,
+    "username": "admin",
+    "roles": ["admin"],
+    "exp": 1735689600
+}
+```
+
+**CORS Credentials Support:**
+
+For cross-origin requests with cookies, the API now sends:
+
+```http
+Access-Control-Allow-Origin: https://example.com  (specific origin, not *)
+Access-Control-Allow-Credentials: true
+```
+
+**Frontend Fetch Configuration:**
+
+```javascript
+// All auth-related fetch calls now include credentials
+const response = await fetch(`${BaseUrl}/auth/login`, {
+    method: 'POST',
+    credentials: 'include',  // Include cookies in cross-origin requests
+    headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    },
+    body: JSON.stringify({ username, password })
+});
+```
+
+**Backwards Compatibility:**
+
+The implementation maintains full backwards compatibility:
+
+1. **API reads tokens from both sources** - Checks HttpOnly cookie first, falls back to Authorization header
+2. **API returns tokens in response body** - Clients can still use localStorage if preferred
+3. **Frontend stores tokens locally** - For quick client-side checks (expiry, username)
+4. **Hybrid approach** - HttpOnly cookies provide security, local storage provides convenience
+
+**Security Benefits:**
+
+- ✅ **XSS Protection** - Tokens in HttpOnly cookies cannot be stolen via JavaScript injection
+- ✅ **CSRF Protection** - SameSite cookie attribute prevents cross-site request forgery
+- ✅ **Secure Flag** - Cookies only sent over HTTPS in production
+- ✅ **Path Restriction** - Refresh token cookie only sent to `/auth` endpoints
+
+**Migration Path:**
+
+For full cookie-only authentication (removing client-side token storage):
+
+1. Update `Auth.isAuthenticated()` to use `checkAuthAsync()` or cache server response
+2. Remove `setToken()` and `setRefreshToken()` calls after login
+3. Remove `getToken()` usage in Authorization headers (cookies sent automatically)
+4. Update auto-refresh to rely on server-side cookie expiry
+
 ### Phase 3: User Experience Enhancements
 
 #### 3.1 Permission-Based UI
@@ -853,25 +975,36 @@ Auth.handleOAuthCallback = async function() {
 
 ### 1. Token Storage
 
-**Current Approach:** sessionStorage (default) and localStorage (with "Remember me")
+**Current Approach:** Hybrid - HttpOnly cookies (primary) + sessionStorage/localStorage (secondary)
 
-**Pros:**
+**As of 2025-11-27**, the API now sets HttpOnly cookies for JWT tokens, providing defense-in-depth:
 
-- Simple implementation
-- Works across browser tabs (localStorage)
-- Accessible to JavaScript for adding to request headers
+| Storage Method  | XSS Safe | CSRF Safe | Cross-Tab | Use Case                           |
+| --------------- | -------- | --------- | --------- | ---------------------------------- |
+| HttpOnly Cookie | Yes      | SameSite  | Yes       | Primary token storage (secure)     |
+| sessionStorage  | No       | Yes       | No        | Quick client-side checks           |
+| localStorage    | No       | Yes       | Yes       | "Remember me" + client-side checks |
 
-**Cons:**
+**How it works:**
 
-- Vulnerable to XSS attacks
-- Not the most secure option
+1. **Login** - API sets HttpOnly cookies AND returns tokens in response body
+2. **Frontend** - Stores tokens in localStorage/sessionStorage for client-side convenience
+3. **API Requests** - Browser automatically sends HttpOnly cookies; frontend also sends Authorization header
+4. **API Validation** - Checks cookie first, falls back to Authorization header
 
-**Future Enhancement:** Consider httpOnly cookies
+**Security Benefits:**
+
+- Even if XSS attack steals tokens from localStorage, the HttpOnly cookies remain secure
+- API can validate requests using the secure HttpOnly cookie
+- Attackers cannot forge requests without the HttpOnly cookie (SameSite protection)
+
+**Future Enhancement:** Full cookie-only mode
 
 ```javascript
-// API should set httpOnly cookie with JWT
-// Frontend would not need to manually add Authorization header
-// More secure against XSS
+// For maximum security, remove client-side token storage entirely:
+// 1. Don't store tokens in localStorage/sessionStorage
+// 2. Use Auth.checkAuthAsync() for all auth state checks
+// 3. Let browser handle cookie transmission automatically
 ```
 
 ### 2. HTTPS Enforcement
@@ -1007,11 +1140,12 @@ describe('Auth module', () => {
 
 ## Timeline
 
-| Phase   | Description                              | Estimated Effort | Status      |
-| ------- | ---------------------------------------- | ---------------- | ----------- |
-| Phase 1 | Basic JWT authentication                 | 2-3 weeks        | COMPLETE    |
-| Phase 2 | Enhanced security (CSRF, auto-refresh)   | 1 week           | COMPLETE    |
-| Phase 3 | UX enhancements (warnings, permission UI)| 1 week           | Not started |
-| Phase 4 | Future enhancements (RBAC, MFA, OAuth)   | As needed        | Future      |
+| Phase     | Description                                | Estimated Effort | Status      |
+| --------- | ------------------------------------------ | ---------------- | ----------- |
+| Phase 1   | Basic JWT authentication                   | 2-3 weeks        | COMPLETE    |
+| Phase 2   | Enhanced security (CSRF, auto-refresh)     | 1 week           | COMPLETE    |
+| Phase 2.4 | HttpOnly Cookie Authentication             | 1-2 days         | COMPLETE    |
+| Phase 3   | UX enhancements (warnings, permission UI)  | 1 week           | Not started |
+| Phase 4   | Future enhancements (RBAC, MFA, OAuth)     | As needed        | Future      |
 
 **Note:** Timeline assumes sequential implementation coordinated with API development.
