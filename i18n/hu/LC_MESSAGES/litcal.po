@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-25 16:01+0000\n"
+"POT-Creation-Date: 2025-11-27 00:12+0000\n"
 "PO-Revision-Date: 2025-11-25 10:01+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
@@ -119,7 +119,7 @@ msgstr "Az alap %s útvonalon elérhető kérési paraméterek"
 msgid "Request parameters available on all %1$s paths"
 msgstr "Minden %1$s útvonalon elérhető kérési paraméterek"
 
-#: index.php:60 usage.php:13 examples.php:95 liturgyOfAnyDay.php:29
+#: index.php:60 usage.php:13 examples.php:102 liturgyOfAnyDay.php:18
 msgid "General Roman Calendar"
 msgstr "Általános római naptár"
 
@@ -305,7 +305,7 @@ msgstr "TeljesNaptár megtekintése (üzenetek először)"
 msgid "Calendar subscription"
 msgstr "Naptár előfizetés"
 
-#: usage.php:88 liturgyOfAnyDay.php:24
+#: usage.php:88
 msgid "Select calendar"
 msgstr "Naptár kiválasztása"
 
@@ -502,7 +502,7 @@ msgstr ""
 msgid "In development"
 msgstr "Fejlesztés alatt"
 
-#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:29 liturgyOfAnyDay.php:37
+#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:18 liturgyOfAnyDay.php:26
 msgid "Liturgy of any day"
 msgstr "Bármely nap liturgiája"
 
@@ -575,13 +575,11 @@ msgstr "Esemény kulcs"
 msgid "Name"
 msgstr "Név"
 
-#: extending.php:163 liturgyOfAnyDay.php:46 admin.php:96
-#: src/FormControls.php:59
+#: extending.php:163 admin.php:96 src/FormControls.php:59
 msgid "Day"
 msgstr "Nap"
 
-#: extending.php:164 liturgyOfAnyDay.php:50 admin.php:97
-#: src/FormControls.php:65
+#: extending.php:164 admin.php:97 src/FormControls.php:65
 msgid "Month"
 msgstr "Hónap"
 
@@ -987,7 +985,7 @@ msgstr "Liturgikus Naptár - Rólunk"
 msgid "Liturgical Calendar as an HTML table produced by Javascript"
 msgstr "Liturgikus Naptár HTML táblaként Javascript által előállítva"
 
-#: examples.php:133
+#: examples.php:140
 #, php-format
 msgid "Example '%s' not found"
 msgstr "Példa '%s' nem található"
@@ -1131,16 +1129,6 @@ msgstr "Naptár adatai"
 #: translations.php:58
 msgid "Project website"
 msgstr "Projekt weboldala"
-
-#: liturgyOfAnyDay.php:64
-msgid "Year"
-msgstr "Év"
-
-#. translators: %s = current selected date
-#: liturgyOfAnyDay.php:72
-#, php-format
-msgid "Liturgy of %s"
-msgstr "A %s liturgiája"
 
 #. translators: label of the form row
 #: admin.php:109 admin.php:273 decrees.php:16
@@ -1573,7 +1561,7 @@ msgid "About us"
 msgstr "Rólunk"
 
 #: layout/header.php:40 layout/header.php:42 includes/login-modal.php:35
-#: includes/login-modal.php:267
+#: includes/login-modal.php:278
 msgid "Login"
 msgstr "Bejelentkezés"
 
@@ -1605,7 +1593,7 @@ msgstr "Felhasználónév"
 msgid "Password"
 msgstr "Jelszó"
 
-#: includes/login-modal.php:19 includes/login-modal.php:111
+#: includes/login-modal.php:19 includes/login-modal.php:112
 msgid "Show password"
 msgstr "Jelszó megjelenítése"
 
@@ -1613,37 +1601,43 @@ msgstr "Jelszó megjelenítése"
 msgid "Remember me"
 msgstr "Emlékezz rám"
 
-#: includes/login-modal.php:70
+#: includes/login-modal.php:71
 msgid "Are you sure you want to logout?"
 msgstr "Biztosan ki szeretnél jelentkezni?"
 
-#: includes/login-modal.php:106
+#: includes/login-modal.php:107
 msgid "Hide password"
 msgstr "Jelszó elrejtése"
 
-#: includes/login-modal.php:120
+#: includes/login-modal.php:123
 msgid "Session Expiring"
 msgstr "Lejár a munkamenet"
 
-#: includes/login-modal.php:211
+#: includes/login-modal.php:216
 msgid "Please enter both username and password"
 msgstr "Kérjük, adja meg mind a felhasználónevet, mind a jelszót"
 
-#: includes/login-modal.php:219
+#: includes/login-modal.php:224
 msgid "Logging in..."
 msgstr "Bejelentkezés..."
 
-#: includes/login-modal.php:251
+#: includes/login-modal.php:262
 msgid "Login successful"
 msgstr "Sikeres bejelentkezés"
 
-#: includes/login-modal.php:251
+#: includes/login-modal.php:262
 msgid "Success"
 msgstr "Siker"
 
-#: includes/login-modal.php:262
+#: includes/login-modal.php:273
 msgid "Login failed. Please check your credentials."
 msgstr "A bejelentkezés sikertelen. Kérjük, ellenőrizze a hitelesítő adatait."
+
+#~ msgid "Year"
+#~ msgstr "Év"
+
+#~ msgid "Liturgy of %s"
+#~ msgstr "A %s liturgiája"
 
 #~ msgid "Calculation of the Date of Easter"
 #~ msgstr "Húsvét dátumának kiszámítása"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-25 16:01+0000\n"
+"POT-Creation-Date: 2025-11-27 00:12+0000\n"
 "PO-Revision-Date: 2025-11-25 10:01+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
@@ -124,7 +124,7 @@ msgstr "Parametri di richiesta disponibili sul percorso base %s"
 msgid "Request parameters available on all %1$s paths"
 msgstr "Parametri di richiesta disponibili su tutti i percorsi %1$s"
 
-#: index.php:60 usage.php:13 examples.php:95 liturgyOfAnyDay.php:29
+#: index.php:60 usage.php:13 examples.php:102 liturgyOfAnyDay.php:18
 msgid "General Roman Calendar"
 msgstr "Calendario Romano Generale"
 
@@ -310,7 +310,7 @@ msgstr "Visualizza l'esempio FullCalendar (messaggi in alto)"
 msgid "Calendar subscription"
 msgstr "Sottoscrizione calendario"
 
-#: usage.php:88 liturgyOfAnyDay.php:24
+#: usage.php:88
 msgid "Select calendar"
 msgstr "Seleziona calendario"
 
@@ -513,7 +513,7 @@ msgstr ""
 msgid "In development"
 msgstr "Sotto sviluppo"
 
-#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:29 liturgyOfAnyDay.php:37
+#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:18 liturgyOfAnyDay.php:26
 msgid "Liturgy of any day"
 msgstr "Liturgia di un qualsiasi giorno"
 
@@ -590,13 +590,11 @@ msgstr "Chiave dell'evento"
 msgid "Name"
 msgstr "Nome"
 
-#: extending.php:163 liturgyOfAnyDay.php:46 admin.php:96
-#: src/FormControls.php:59
+#: extending.php:163 admin.php:96 src/FormControls.php:59
 msgid "Day"
 msgstr "Giorno"
 
-#: extending.php:164 liturgyOfAnyDay.php:50 admin.php:97
-#: src/FormControls.php:65
+#: extending.php:164 admin.php:97 src/FormControls.php:65
 msgid "Month"
 msgstr "Mese"
 
@@ -1005,7 +1003,7 @@ msgstr "Calendario Liturgico - Chi siamo"
 msgid "Liturgical Calendar as an HTML table produced by Javascript"
 msgstr "Calendario Liturgico come tabella HTML prodotta da Javascript"
 
-#: examples.php:133
+#: examples.php:140
 #, php-format
 msgid "Example '%s' not found"
 msgstr "Esempio '%s' non trovato"
@@ -1153,16 +1151,6 @@ msgstr "Dati del calendario"
 #: translations.php:58
 msgid "Project website"
 msgstr "Sito web del progetto"
-
-#: liturgyOfAnyDay.php:64
-msgid "Year"
-msgstr "Anno"
-
-#. translators: %s = current selected date
-#: liturgyOfAnyDay.php:72
-#, php-format
-msgid "Liturgy of %s"
-msgstr "Liturgia di %s"
 
 #. translators: label of the form row
 #: admin.php:109 admin.php:273 decrees.php:16
@@ -1595,7 +1583,7 @@ msgid "About us"
 msgstr "Chi siamo"
 
 #: layout/header.php:40 layout/header.php:42 includes/login-modal.php:35
-#: includes/login-modal.php:267
+#: includes/login-modal.php:278
 msgid "Login"
 msgstr "Effettua l'accesso"
 
@@ -1627,7 +1615,7 @@ msgstr "Nome utente"
 msgid "Password"
 msgstr "Password"
 
-#: includes/login-modal.php:19 includes/login-modal.php:111
+#: includes/login-modal.php:19 includes/login-modal.php:112
 msgid "Show password"
 msgstr "Mostra password"
 
@@ -1635,37 +1623,43 @@ msgstr "Mostra password"
 msgid "Remember me"
 msgstr "Ricordami"
 
-#: includes/login-modal.php:70
+#: includes/login-modal.php:71
 msgid "Are you sure you want to logout?"
 msgstr "Sei sicuro di voler uscire?"
 
-#: includes/login-modal.php:106
+#: includes/login-modal.php:107
 msgid "Hide password"
 msgstr "Nascondi password"
 
-#: includes/login-modal.php:120
+#: includes/login-modal.php:123
 msgid "Session Expiring"
 msgstr "Sessione in scadenza"
 
-#: includes/login-modal.php:211
+#: includes/login-modal.php:216
 msgid "Please enter both username and password"
 msgstr "Si prega di inserire sia il nome utente che la password"
 
-#: includes/login-modal.php:219
+#: includes/login-modal.php:224
 msgid "Logging in..."
 msgstr "Accesso in corso..."
 
-#: includes/login-modal.php:251
+#: includes/login-modal.php:262
 msgid "Login successful"
 msgstr "Accesso effettuato con successo"
 
-#: includes/login-modal.php:251
+#: includes/login-modal.php:262
 msgid "Success"
 msgstr "Successo"
 
-#: includes/login-modal.php:262
+#: includes/login-modal.php:273
 msgid "Login failed. Please check your credentials."
 msgstr "Accesso non riuscito. Controlla le tue credenziali."
+
+#~ msgid "Year"
+#~ msgstr "Anno"
+
+#~ msgid "Liturgy of %s"
+#~ msgstr "Liturgia di %s"
 
 #~ msgid "Calculation of the Date of Easter"
 #~ msgstr "Calcolo della Data della Pasqua"
