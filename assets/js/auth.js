@@ -358,6 +358,7 @@ const Auth = {
             }
         }
 
+        this.stopAllTimers();
         this.clearTokens();
         window.location.reload(); // Refresh to reset UI state
     },
