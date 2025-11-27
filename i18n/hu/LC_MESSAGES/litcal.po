@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-27 02:54+0000\n"
+"POT-Creation-Date: 2025-11-27 03:29+0000\n"
 "PO-Revision-Date: 2025-11-25 10:01+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
@@ -512,7 +512,7 @@ msgid ""
 "baptism."
 msgstr "Például megtalálhatod a nap liturgiáját a keresztelésed napjáról."
 
-#: extending.php:170
+#: extending.php:117
 msgid ""
 "The General Roman Calendar can be extended so as to create a National or "
 "Diocesan calendar. Diocesan calendars depend on National calendars, so the "
@@ -522,7 +522,7 @@ msgstr ""
 "létrehozásához. Az egyházmegyei naptárak a nemzeti naptáraktól függenek, "
 "ezért először a nemzeti naptárat kell létrehozni."
 
-#: extending.php:171 translations.php:9
+#: extending.php:118 translations.php:9
 msgid ""
 "The first step in creating a national or diocesan calendar, is to translate "
 "the data for the General Roman Calendar into the language for that nation or "
@@ -532,11 +532,11 @@ msgstr ""
 "Római Általános Naptár adatait lefordítsd az adott nemzet vagy egyházmegye "
 "nyelvére."
 
-#: extending.php:172
+#: extending.php:119
 msgid "(see <a href=\"translations.php\">Translations</a>)"
 msgstr "(lásd <a href=\"translations.php\">Fordítások</a>)"
 
-#: extending.php:173
+#: extending.php:120
 msgid ""
 "A national calendar may have some liturgical events in common with other "
 "national calendars, for example the patron of a wider region."
@@ -544,7 +544,7 @@ msgstr ""
 "Egy nemzeti naptárnak lehetnek közös liturgikus eseményei más nemzeti "
 "naptárakkal, például egy szélesebb régió patrónusa."
 
-#: extending.php:174
+#: extending.php:121
 msgid ""
 "In this case, the liturgical events for the wider region should be defined "
 "separately, and the languages applicable to the wider region should be set; "
@@ -556,7 +556,7 @@ msgstr ""
 "szélesebb régióra vonatkozó adatok automatikusan alkalmazásra kerülnek a "
 "szélesebb régióhoz tartozó nemzeti naptárakban."
 
-#: extending.php:175
+#: extending.php:122
 msgid ""
 "If a group of dioceses decides to pool their Liturgical Calendar data, for "
 "example to print out one single yearly calendar with the data for all the "
@@ -567,47 +567,47 @@ msgstr ""
 "egyházmegye adatával a csoportban, akkor itt lehet meghatározni vagy "
 "beállítani a csoportot."
 
-#: extending.php:178 admin.php:94
+#: extending.php:125 admin.php:62
 msgid "Event key"
 msgstr "Esemény kulcs"
 
-#: extending.php:179 admin.php:95 src/Utilities.php:233 src/FormControls.php:53
+#: extending.php:126 admin.php:63 src/Utilities.php:236 src/FormControls.php:53
 msgid "Name"
 msgstr "Név"
 
-#: extending.php:180 admin.php:96 src/FormControls.php:60
+#: extending.php:127 admin.php:64 src/FormControls.php:60
 msgid "Day"
 msgstr "Nap"
 
-#: extending.php:181 admin.php:97 src/FormControls.php:66
+#: extending.php:128 admin.php:65 src/FormControls.php:66
 msgid "Month"
 msgstr "Hónap"
 
-#: extending.php:182 extending.php:560
+#: extending.php:129 extending.php:507
 msgid "Other Solemnity"
 msgstr "Egyéb főünnep"
 
-#: extending.php:183 extending.php:581
+#: extending.php:130 extending.php:528
 msgid "Other Feast"
 msgstr "Egyéb ünnep"
 
-#: extending.php:184 extending.php:601 extending.php:602
+#: extending.php:131 extending.php:548 extending.php:549
 msgid "Other Memorial"
 msgstr "Egyéb emléknap"
 
-#: extending.php:185 extending.php:622 extending.php:623
+#: extending.php:132 extending.php:569 extending.php:570
 msgid "Other Optional Memorial"
 msgstr "Egyéb fakultatív emléknap"
 
-#: extending.php:186
+#: extending.php:133
 msgid "Delete calendar"
 msgstr "Naptár törlése"
 
-#: extending.php:187
+#: extending.php:134
 msgid "Delete diocesan calendar"
 msgstr "Egyházmegyei naptár törlése"
 
-#: extending.php:188
+#: extending.php:135
 msgid ""
 "If you choose to delete this calendar, the liturgical events defined for the "
 "calendar and the corresponding index entries will be removed and no longer "
@@ -617,200 +617,200 @@ msgstr ""
 "események és a megfelelő index bejegyzések eltávolításra kerülnek, és többé "
 "nem lesznek elérhetők a kliens alkalmazásokban."
 
-#: extending.php:189 admin.php:98 src/FormControls.php:92
+#: extending.php:136 admin.php:66 src/FormControls.php:92
 msgid "Liturgical color"
 msgstr "Liturgikus szín"
 
 #. translators: context = liturgical color
-#: extending.php:190 admin.php:99 src/LitColor.php:39 src/FormControls.php:94
+#: extending.php:137 admin.php:67 src/LitColor.php:39 src/FormControls.php:94
 msgid "white"
 msgstr "fehér"
 
 #. translators: context = liturgical color
-#: extending.php:191 admin.php:100 src/LitColor.php:42 src/FormControls.php:95
+#: extending.php:138 admin.php:68 src/LitColor.php:42 src/FormControls.php:95
 msgid "red"
 msgstr "piros"
 
 #. translators: context = liturgical color
-#: extending.php:192 admin.php:101 src/LitColor.php:33 src/FormControls.php:97
+#: extending.php:139 admin.php:69 src/LitColor.php:33 src/FormControls.php:97
 msgid "green"
 msgstr "zöld"
 
 #. translators: context = liturgical color
-#: extending.php:193 admin.php:102 src/LitColor.php:36 src/FormControls.php:96
+#: extending.php:140 admin.php:70 src/LitColor.php:36 src/FormControls.php:96
 msgid "purple"
 msgstr "viola"
 
 #. translators: context = liturgical color
-#: extending.php:194 admin.php:103 src/LitColor.php:45
+#: extending.php:141 admin.php:71 src/LitColor.php:45
 msgid "rose"
 msgstr "rózsaszín"
 
 #. translators: in reference to the first year from which this liturgical event takes place
-#: extending.php:196 admin.php:105 src/FormControls.php:104
+#: extending.php:143 admin.php:73 src/FormControls.php:104
 msgid "Since"
 msgstr "Óta"
 
 #. translators: in reference to the year from which this liturgical event no longer needs to be dealt with
-#: extending.php:198 admin.php:107 src/FormControls.php:111
+#: extending.php:145 admin.php:75 src/FormControls.php:111
 msgid "Until"
 msgstr "Addig"
 
 #. translators: label of the form row
-#: extending.php:200
+#: extending.php:147
 msgid "Patron or Patrons of the Wider Region"
 msgstr "A tágabb régió védőszentje vagy védőszentjei"
 
 #. translators: label of the form row
-#: extending.php:202 admin.php:111 decrees.php:6
+#: extending.php:149 admin.php:79 decrees.php:8
 msgid "New liturgical event"
 msgstr "Új liturgikus esemény"
 
 #. translators: label of the form row
-#: extending.php:204 decrees.php:10
+#: extending.php:151 decrees.php:12
 msgid "Change name"
 msgstr "Név megváltoztatása"
 
 #. translators: label of the form row
-#: extending.php:206 decrees.php:12
+#: extending.php:153 decrees.php:14
 msgid "Change grade"
 msgstr "Fokozat megváltoztatása"
 
 #. translators: label of the form row
-#: extending.php:208 admin.php:115 admin.php:240 decrees.php:14
+#: extending.php:155 admin.php:83 admin.php:208 decrees.php:16
 msgid "Move liturgical event"
 msgstr "Liturgikus esemény áthelyezése"
 
-#: extending.php:209 admin.php:116
+#: extending.php:156 admin.php:84
 msgid "Decree URL"
 msgstr "Rendelet URL"
 
-#: extending.php:210 admin.php:117
+#: extending.php:157 admin.php:85
 msgid "Decree Language mappings"
 msgstr "Rendelet nyelvi megfeleltetések"
 
-#: extending.php:211
+#: extending.php:158
 msgid "Missal"
 msgstr "Misszálé"
 
-#: extending.php:212 admin.php:118
+#: extending.php:159 admin.php:86
 msgid "Reason (in favor of liturgical event)"
 msgstr "Érv a liturgikus esemény mellett"
 
-#: extending.php:224 extending.php:705 extending.php:709
+#: extending.php:171 extending.php:652 extending.php:656
 msgid "Designate patron"
 msgstr "Védőszent kijelölése"
 
-#: extending.php:225 extending.php:721 admin.php:126 admin.php:220
+#: extending.php:172 extending.php:668 admin.php:94 admin.php:188
 msgid "Change name or grade of existing liturgical event"
 msgstr "Meglévő liturgikus esemény neve vagy fokozata módosítása"
 
-#: extending.php:226 extending.php:737 admin.php:127 admin.php:236
+#: extending.php:173 extending.php:684 admin.php:95 admin.php:204
 msgid "Move liturgical event to new date"
 msgstr "Liturgikus esemény áthelyezése új dátumra"
 
-#: extending.php:227 extending.php:753 admin.php:128 admin.php:252
+#: extending.php:174 extending.php:700 admin.php:96 admin.php:220
 msgid "Create a new liturgical event"
 msgstr "Új liturgikus esemény létrehozása"
 
-#: extending.php:233
+#: extending.php:180
 msgid "General Roman Calendar - Extending"
 msgstr "Általános római naptár - Kiterjesztés"
 
-#: extending.php:241
+#: extending.php:188
 msgid "Extend the General Roman Calendar with National or Diocesan data"
 msgstr ""
 "Az általános római naptár kiterjesztése nemzeti vagy egyházmegyei adatokkal"
 
-#: extending.php:252 extending.php:407
+#: extending.php:199 extending.php:354
 msgid "Wider Region"
 msgstr "Tágabb régió"
 
-#: extending.php:254 extending.php:322
+#: extending.php:201 extending.php:269
 msgid "This value cannot be empty."
 msgstr "Ez az érték nem lehet üres."
 
-#: extending.php:270
+#: extending.php:217
 msgid "Locales"
 msgstr "Helyi beállítások"
 
-#: extending.php:279 extending.php:420 extending.php:499
+#: extending.php:226 extending.php:367 extending.php:446
 msgid "Current localization"
 msgstr "Jelenlegi lokalizáció"
 
-#: extending.php:291 extending.php:337 extending.php:518
+#: extending.php:238 extending.php:284 extending.php:465
 msgid "Remove existing data"
 msgstr "Létező adatok eltávolítása"
 
-#: extending.php:297 layout/header.php:28
+#: extending.php:244 layout/header.php:28
 msgid "Create a Calendar for a Wider Region"
 msgstr "Naptár létrehozása egy szélesebb régióra"
 
-#: extending.php:308
+#: extending.php:255
 msgid "Save Wider Region Calendar Data"
 msgstr "Szélesebb régió naptári adatainak mentése"
 
-#: extending.php:320
+#: extending.php:267
 msgid "National Calendar"
 msgstr "Nemzeti naptár"
 
-#: extending.php:343 layout/header.php:29
+#: extending.php:290 layout/header.php:29
 msgid "Create a National Calendar"
 msgstr "Nemzeti naptár létrehozása"
 
-#: extending.php:348
+#: extending.php:295
 msgid "National calendar settings"
 msgstr "Nemzeti naptár beállításai"
 
-#: extending.php:351 extending.php:647
+#: extending.php:298 extending.php:594
 msgid "EPIPHANY"
 msgstr "VÍZKERESZT"
 
-#: extending.php:354 extending.php:650
+#: extending.php:301 extending.php:597
 msgid "January 6"
 msgstr "Január 6."
 
-#: extending.php:355 extending.php:651
+#: extending.php:302 extending.php:598
 msgid "Sunday between January 2 and January 8"
 msgstr "Vasárnap január 2. és január 8. között"
 
-#: extending.php:359 extending.php:655
+#: extending.php:306 extending.php:602
 msgid "ASCENSION"
 msgstr "MENNYBEMENETEL"
 
-#: extending.php:367 extending.php:663
+#: extending.php:314 extending.php:610
 msgid "CORPUS CHRISTI"
 msgstr "ÚRNAPJA"
 
-#: extending.php:375
+#: extending.php:322
 msgid "ETERNAL HIGH PRIEST"
 msgstr "ÖRÖK FŐPAP"
 
-#: extending.php:382 extending.php:489
+#: extending.php:329 extending.php:436
 msgid "LOCALES"
 msgstr "HELYI BEÁLLÍTÁSOK"
 
-#: extending.php:395
+#: extending.php:342
 msgid "Published Roman Missals"
 msgstr "Megjelent Római Misékönyvek"
 
-#: extending.php:398 extending.php:769
+#: extending.php:345 extending.php:716
 msgid "Add Missal"
 msgstr "Misekönyv hozzáadása"
 
-#: extending.php:439
+#: extending.php:386
 msgid "Save National Calendar Data"
 msgstr "Nemzeti naptári adatok mentése"
 
-#: extending.php:453
+#: extending.php:400
 msgid "Depends on national calendar"
 msgstr "A nemzeti naptártól függ"
 
-#: extending.php:466
+#: extending.php:413
 msgid "Diocese"
 msgstr "Egyházmegye"
 
-#: extending.php:468
+#: extending.php:415
 msgid ""
 "This diocese does not seem to exist? Please choose from a value in the list "
 "to retrieve an existing diocese, or ignore if creating a new diocesan "
@@ -820,71 +820,71 @@ msgstr ""
 "egy meglévő egyházmegye beolvasásához, vagy hagyja figyelmen kívül, ha új "
 "egyházmegyei naptárat hoz létre."
 
-#: extending.php:474
+#: extending.php:421
 msgid "Diocesan group"
 msgstr "Egyházmegyei csoport"
 
-#: extending.php:510
+#: extending.php:457
 msgid "Timezone"
 msgstr "Időzóna"
 
-#: extending.php:530
+#: extending.php:477
 msgid "Solemnities"
 msgstr "Főünnepek"
 
-#: extending.php:531
+#: extending.php:478
 msgid "Feasts"
 msgstr "Ünnepek"
 
-#: extending.php:532
+#: extending.php:479
 msgid "Memorials"
 msgstr "Emléknapok"
 
-#: extending.php:533
+#: extending.php:480
 msgid "Optional memorials"
 msgstr "Választható emléknapok"
 
-#: extending.php:552 extending.php:573 extending.php:594 extending.php:615
+#: extending.php:499 extending.php:520 extending.php:541 extending.php:562
 #: layout/header.php:30
 msgid "Create a Diocesan Calendar"
 msgstr "Egyházmegyei naptár létrehozása"
 
-#: extending.php:552
+#: extending.php:499
 msgid "Define the Solemnities"
 msgstr "Főünnepek meghatározása"
 
-#: extending.php:558
+#: extending.php:505
 msgid ""
 "Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr "Hely, egyházmegye, régió, tartomány vagy terület fő védőszentje(i)"
 
-#: extending.php:559 extending.php:580
+#: extending.php:506 extending.php:527
 msgid "Dedication of the Cathedral"
 msgstr "A székesegyház felszentelése"
 
-#: extending.php:573
+#: extending.php:520
 msgid "Define the Feasts"
 msgstr "Ünnepek meghatározása"
 
-#: extending.php:579
+#: extending.php:526
 msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr "Hely, egyházmegye, régió, tartomány vagy terület védőszentje(i)"
 
-#: extending.php:594
+#: extending.php:541
 msgid "Define the Memorials"
 msgstr "Emléknapok meghatározása"
 
-#: extending.php:600
+#: extending.php:547
 msgid ""
 "Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
 "Hely, egyházmegye, régió, tartomány vagy terület másodlagos védőszentje(i)"
 
-#: extending.php:615
+#: extending.php:562
 msgid "Define the Optional Memorials"
 msgstr "Választható emléknapok meghatározása"
 
-#: extending.php:621
+#: extending.php:568
 msgid ""
 "Saints whose veneration is local to the Place, Diocese, Region, Province or "
 "Territory"
@@ -892,37 +892,37 @@ msgstr ""
 "Olyan szentek, akiknek tisztelete helyi a hely, egyházmegye, régió, "
 "tartomány vagy terület számára"
 
-#: extending.php:644
+#: extending.php:591
 msgid "Diocesan overrides to the national calendar for …"
 msgstr "Egyházmegyei eltérési lehetőségek az országos naptárhoz képest …"
 
-#: extending.php:678
+#: extending.php:625
 msgid "SAVE DIOCESAN CALENDAR"
 msgstr "EGYHÁZMEGYEI NAPTÁR MENTÉSE"
 
-#: extending.php:710 extending.php:726 extending.php:742 extending.php:758
-#: extending.php:782 admin.php:225 admin.php:241 admin.php:258 admin.php:274
+#: extending.php:657 extending.php:673 extending.php:689 extending.php:705
+#: extending.php:729 admin.php:193 admin.php:209 admin.php:226 admin.php:242
 #: includes/login-modal.php:34
 msgid "Cancel"
 msgstr "Mégse"
 
-#: extending.php:725
+#: extending.php:672
 msgid "Set property"
 msgstr "Tulajdonság beállítása"
 
-#: extending.php:741
+#: extending.php:688
 msgid "Move Liturgical Event"
 msgstr "Liturgikus Esemény Áthelyezése"
 
-#: extending.php:757
+#: extending.php:704
 msgid "Create Liturgical Event"
 msgstr "Liturgikus Esemény Létrehozása"
 
-#: extending.php:774
+#: extending.php:721
 msgid "Choose from known Roman Missal language editions"
 msgstr "Válasszon a Római Misekönyv ismert nyelvi kiadásai közül"
 
-#: extending.php:776
+#: extending.php:723
 msgid ""
 "This Missal is unknown to the Liturgical Calendar API. Please choose from a "
 "value in the list, or contact the curator of the API to have the Missal "
@@ -932,23 +932,23 @@ msgstr ""
 "az ismert nyelvi kiadás Misekönyvei közül, vagy lépjen kapcsolatba az API "
 "kurátorával, hogy a Misekönyv felkerüljön a listára."
 
-#: extending.php:781
+#: extending.php:728
 msgid "Add language edition Roman Missal"
 msgstr "Nyelvi kiadás hozzáadása Római Misekönyvhöz"
 
-#: easter.php:77
+#: easter.php:63
 msgid "Date of Easter from 1583 to 9999"
 msgstr "Húsvét dátuma 1583 és 9999 között"
 
-#: easter.php:94
+#: easter.php:80
 msgid "Go back"
 msgstr "Vissza"
 
-#: easter.php:109
+#: easter.php:95
 msgid "Century"
 msgstr "Század"
 
-#: easter.php:116
+#: easter.php:102
 msgid ""
 "Easter Day Calculation in PHP (Years in which Julian and Gregorian easter "
 "coincide are marked in yellow)"
@@ -956,15 +956,15 @@ msgstr ""
 "Húsvétnap számítás PHP-ben (Az évek, amikor a Julián és a Gergely-naptár "
 "szerinti húsvét egybeesik, sárgával vannak kiemelve)"
 
-#: easter.php:120
+#: easter.php:106
 msgid "Gregorian Easter"
 msgstr "Gergely-naptár szerinti húsvét"
 
-#: easter.php:120
+#: easter.php:106
 msgid "Julian Easter"
 msgstr "Julián-naptár szerinti húsvét"
 
-#: easter.php:120
+#: easter.php:106
 msgid "Julian Easter in Gregorian Calendar"
 msgstr "Julián-naptár szerinti húsvét a Gergely-naptárban"
 
@@ -1131,32 +1131,32 @@ msgid "Project website"
 msgstr "Projekt weboldala"
 
 #. translators: label of the form row
-#: admin.php:109 admin.php:273 decrees.php:16
+#: admin.php:77 admin.php:241 decrees.php:18
 msgid "Designate Doctor of the Church"
 msgstr "Egyháztanító kijelölése"
 
 #. translators: label of the form row
-#: admin.php:113 decrees.php:8
+#: admin.php:81 decrees.php:10
 msgid "Change name or grade"
 msgstr "Név vagy fokozat módosítása"
 
-#: admin.php:129 admin.php:269
+#: admin.php:97 admin.php:237
 msgid "Designate Doctor of the Church from existing liturgical event"
 msgstr "Egyháztanító kijelölése meglévő liturgikus esemény alapján"
 
-#: admin.php:256
+#: admin.php:224
 msgid "New liturgical event from existing"
 msgstr "Új liturgikus esemény meglévő alapján"
 
-#: admin.php:257
+#: admin.php:225
 msgid "New liturgical event ex novo"
 msgstr "Új liturgikus esemény ex novo"
 
-#: decrees.php:58
+#: decrees.php:59
 msgid "General Roman Calendar - Decrees"
 msgstr "Általános római naptár - Rendeletek"
 
-#: decrees.php:66
+#: decrees.php:67
 msgid ""
 "Refine the General Roman Calendar with Decrees of the Dicastery for Divine "
 "Worship and the Discipline of the Sacraments"
@@ -1164,7 +1164,7 @@ msgstr ""
 "Az Általános Római Naptár finomítása az Istentiszteleti és Szentségi "
 "Fegyelmi Kongregáció rendeleteivel"
 
-#: decrees.php:67
+#: decrees.php:68
 msgid ""
 "The Liturgical Calendar is based off of both published Roman Missals, and "
 "Decrees of the Dicastery for Divine Worship and the Discipline of the "
@@ -1178,7 +1178,7 @@ msgstr ""
 "eltávolítva, vagy megváltoztatva liturgikus eseményeket, vagy utasítást adva "
 "arról, hogyan kezeljük a kötelező ünnepek közötti esetleges egybeeséseket."
 
-#: decrees.php:69
+#: decrees.php:70
 msgid ""
 "Data for <b>Roman Missals</b> is handled by the <code>/missals</code> "
 "endpoint of the API, while data for <b>Decrees</b> is handled by the <code>/"
@@ -1188,7 +1188,7 @@ msgstr ""
 "kezeli, míg a <b>Rendeletek</b> adatait az <code>/decrees</code> végpontja "
 "kezeli."
 
-#: decrees.php:71
+#: decrees.php:72
 #, php-format
 msgid ""
 "Currently, these endpoints are read-only. There are currently <b>%1$d "
@@ -1197,7 +1197,7 @@ msgstr ""
 "Jelenleg ezek a végpontok csak olvashatók. Jelenleg <b>%1$d határozat</b> "
 "van meghatározva a végponton %2$s."
 
-#: decrees.php:140
+#: decrees.php:141
 msgid "Read the Decree"
 msgstr "Olvasd el a rendeletet"
 
@@ -1507,7 +1507,7 @@ msgstr ""
 "A Charlottetown-i Egyházmegye kancellárja, liturgikus naptár adatokat "
 "szolgáltatott Kanadára angolul és franciául egyaránt"
 
-#: src/Utilities.php:219
+#: src/Utilities.php:222
 msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
@@ -1515,24 +1515,24 @@ msgstr ""
 "Úgy tűnik, hogy ez a liturgikus esemény nem létezik? Kérlek, válassz egy "
 "értéket a listából."
 
-#: src/Utilities.php:220
+#: src/Utilities.php:223
 msgid "This liturgical event does not exist, so it will be created."
 msgstr "Ez a liturgikus esemény nem létezik, így létre fogjuk hozni."
 
-#: src/Utilities.php:225
+#: src/Utilities.php:228
 msgid "Choose from existing liturgical events"
 msgstr "Választhatsz meglévő liturgikus események közül"
 
-#: src/Utilities.php:225
+#: src/Utilities.php:228
 msgid "Choose from existing liturgical events (or create a new one)"
 msgstr ""
 "Választhatsz meglévő liturgikus események közül (vagy létrehozhatsz újat)"
 
-#: src/Utilities.php:231
+#: src/Utilities.php:234
 msgid "Property to change"
 msgstr "Tulajdonság megváltoztatása"
 
-#: src/Utilities.php:234 src/FormControls.php:171
+#: src/Utilities.php:237 src/FormControls.php:171
 msgid "Grade"
 msgstr "Fokozat"
 
