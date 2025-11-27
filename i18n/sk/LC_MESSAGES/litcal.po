@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-25 12:44+0000\n"
+"POT-Creation-Date: 2025-11-27 00:12+0000\n"
 "PO-Revision-Date: 2025-11-25 07:36+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -121,7 +121,7 @@ msgstr "Dostupné parametre požiadaviek na základnej ceste %s"
 msgid "Request parameters available on all %1$s paths"
 msgstr "Parametre požiadaviek dostupné na všetkých cestách %1$s"
 
-#: index.php:60 usage.php:13 examples.php:95 liturgyOfAnyDay.php:29
+#: index.php:60 usage.php:13 examples.php:102 liturgyOfAnyDay.php:18
 msgid "General Roman Calendar"
 msgstr "Všeobecný rímsky kalendár"
 
@@ -306,7 +306,7 @@ msgstr "Zobraziť celý kalendár (najprv správy)"
 msgid "Calendar subscription"
 msgstr "Predplatenie kalendára"
 
-#: usage.php:88 liturgyOfAnyDay.php:24
+#: usage.php:88
 msgid "Select calendar"
 msgstr "Vyber kalendár"
 
@@ -498,7 +498,7 @@ msgstr "Denný spravodajský prehľad s liturgiou dňa, ako zručnosť Amazon Al
 msgid "In development"
 msgstr "Vo vývoji"
 
-#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:29 liturgyOfAnyDay.php:37
+#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:18 liturgyOfAnyDay.php:26
 msgid "Liturgy of any day"
 msgstr "Liturgia ktoréhokoľvek dňa"
 
@@ -570,13 +570,11 @@ msgstr "Kľúč udalosti"
 msgid "Name"
 msgstr "Meno"
 
-#: extending.php:163 liturgyOfAnyDay.php:46 admin.php:96
-#: src/FormControls.php:59
+#: extending.php:163 admin.php:96 src/FormControls.php:59
 msgid "Day"
 msgstr "Deň"
 
-#: extending.php:164 liturgyOfAnyDay.php:50 admin.php:97
-#: src/FormControls.php:65
+#: extending.php:164 admin.php:97 src/FormControls.php:65
 msgid "Month"
 msgstr "Mesiac"
 
@@ -979,7 +977,7 @@ msgstr "Liturgický kalendár - O nás"
 msgid "Liturgical Calendar as an HTML table produced by Javascript"
 msgstr "Liturgický kalendár ako HTML tabuľka vytvorená pomocou Javascriptu"
 
-#: examples.php:133
+#: examples.php:140
 #, php-format
 msgid "Example '%s' not found"
 msgstr "Príklad '%s' nebol nájdený"
@@ -1122,16 +1120,6 @@ msgstr "Údaje kalendára"
 #: translations.php:58
 msgid "Project website"
 msgstr "Webová stránka projektu"
-
-#: liturgyOfAnyDay.php:64
-msgid "Year"
-msgstr "Rok"
-
-#. translators: %s = current selected date
-#: liturgyOfAnyDay.php:72
-#, php-format
-msgid "Liturgy of %s"
-msgstr "Liturgia %s"
 
 #. translators: label of the form row
 #: admin.php:109 admin.php:273 decrees.php:16
@@ -1561,7 +1549,7 @@ msgid "About us"
 msgstr "O nás"
 
 #: layout/header.php:40 layout/header.php:42 includes/login-modal.php:35
-#: includes/login-modal.php:262
+#: includes/login-modal.php:278
 msgid "Login"
 msgstr "Prihlásenie"
 
@@ -1593,7 +1581,7 @@ msgstr "Používateľské meno"
 msgid "Password"
 msgstr "Heslo"
 
-#: includes/login-modal.php:19 includes/login-modal.php:111
+#: includes/login-modal.php:19 includes/login-modal.php:112
 msgid "Show password"
 msgstr "Zobraziť heslo"
 
@@ -1601,37 +1589,43 @@ msgstr "Zobraziť heslo"
 msgid "Remember me"
 msgstr "Zapamätať si ma"
 
-#: includes/login-modal.php:70
+#: includes/login-modal.php:71
 msgid "Are you sure you want to logout?"
 msgstr "Naozaj sa chceš odhlásiť?"
 
-#: includes/login-modal.php:106
+#: includes/login-modal.php:107
 msgid "Hide password"
 msgstr "Skryť heslo"
 
-#: includes/login-modal.php:120
+#: includes/login-modal.php:123
 msgid "Session Expiring"
 msgstr "Platnosť relácie končí"
 
-#: includes/login-modal.php:206
+#: includes/login-modal.php:216
 msgid "Please enter both username and password"
 msgstr "Zadajte prosím používateľské meno a heslo"
 
-#: includes/login-modal.php:214
+#: includes/login-modal.php:224
 msgid "Logging in..."
 msgstr "Prihlasovanie..."
 
-#: includes/login-modal.php:246
+#: includes/login-modal.php:262
 msgid "Login successful"
 msgstr "Prihlásenie úspešné"
 
-#: includes/login-modal.php:246
+#: includes/login-modal.php:262
 msgid "Success"
 msgstr "Úspech"
 
-#: includes/login-modal.php:257
+#: includes/login-modal.php:273
 msgid "Login failed. Please check your credentials."
 msgstr "Prihlásenie zlyhalo. Skontrolujte svoje prihlasovacie údaje."
+
+#~ msgid "Year"
+#~ msgstr "Rok"
+
+#~ msgid "Liturgy of %s"
+#~ msgstr "Liturgia %s"
 
 #~ msgid "Calculation of the Date of Easter"
 #~ msgstr "Výpočet dátumu Veľkej noci"
