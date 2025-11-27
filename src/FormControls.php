@@ -7,7 +7,8 @@ use LiturgicalCalendar\Frontend\LitGrade;
 
 class FormControls
 {
-    public static $settings = [
+    /** @var array<string, bool> */
+    public static array $settings = [
         'nameField'      => true,
         'dayField'       => true,
         'monthField'     => true,
@@ -29,7 +30,7 @@ class FormControls
     }
 
     //public function $this->i18n->__construct()
-    public function createEventRow($title = null)
+    public function createEventRow(?string $title = null): void
     {
         $uniqid  = uniqid();
         $formRow = '';
@@ -115,7 +116,7 @@ class FormControls
         echo $formRow;
     }
 
-    public function getCommonsTemplate()
+    public function getCommonsTemplate(): string
     {
         return '<div class="form-group col-sm-{colWidth}">' .
         '<label style="display:block;" for="onTheFly{uniqid}Common">' . _('Common (or Proper)') . '</label>' .
@@ -162,7 +163,7 @@ class FormControls
         '</div>';
     }
 
-    public function getGradeTemplate()
+    public function getGradeTemplate(): string
     {
         $gradeTemplate = '<div class="form-group col-sm-{colWidth}">' .
         '<label style="display:block;" for="onTheFly{uniqid}Grade">' . _('Grade') . '</label>' .
@@ -175,22 +176,21 @@ class FormControls
         return $gradeTemplate;
     }
 
-    public static function setOption($option, $value)
+    public static function setOption(string $option, bool $value): void
     {
         if (isset(self::$settings[$option])) {
-            if (gettype($value) === 'boolean') {
-                self::$settings[$option] = $value;
-            }
+            self::$settings[$option] = $value;
         }
     }
 
-    public static function setOptions($options)
+    /**
+     * @param array<string, bool> $options
+     */
+    public static function setOptions(array $options): void
     {
         foreach ($options as $option => $value) {
             if (isset(self::$settings[$option])) {
-                if (gettype($value) === 'boolean') {
-                    self::$settings[$option] = $value;
-                }
+                self::$settings[$option] = $value;
             }
         }
     }
