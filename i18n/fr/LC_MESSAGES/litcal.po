@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-27 00:12+0000\n"
-"PO-Revision-Date: 2025-11-25 07:36+0000\n"
+"PO-Revision-Date: 2025-11-27 00:33+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
@@ -1647,7 +1647,7 @@ msgstr "Masquer le mot de passe"
 
 #: includes/login-modal.php:123
 msgid "Session Expiring"
-msgstr "Session expirant"
+msgstr "Votre session va bientôt expirer"
 
 #: includes/login-modal.php:216
 msgid "Please enter both username and password"
