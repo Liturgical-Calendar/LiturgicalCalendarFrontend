@@ -1,23 +1,32 @@
 <?php
 // phpcs:disable PSR1.Files.SideEffects
-const SWAGGER_UI_DIST_VERSION = '5.18.2';
-$isStaging                    = ( strpos($_SERVER['HTTP_HOST'], '-staging') !== false || strpos($_SERVER['HTTP_HOST'], 'localhost') !== false );
+const SWAGGER_UI_DIST_VERSION = '5.30.2';
 
-/**
- * Returns true if the server is running on localhost.
- *
- * @return bool true if the server is running on localhost, false otherwise
- */
-function isLocalhost(): bool
-{
-    $localhostAddresses = ['127.0.0.1', '::1'];
-    $localhostNames     = ['localhost', '127.0.0.1', '::1'];
-    return in_array($_SERVER['SERVER_ADDR'] ?? '', $localhostAddresses)
-           || in_array($_SERVER['REMOTE_ADDR'] ?? '', $localhostAddresses)
-           || in_array($_SERVER['SERVER_NAME'] ?? '', $localhostNames);
-}
+include_once(dirname(__DIR__) . '/vendor/autoload.php');
 
-$OpenAPISchema = $isStaging || isLocalhost() ? 'development' : 'master';
+use Dotenv\Dotenv;
+
+// Load environment variables
+$dotenv = Dotenv::createImmutable(dirname(__DIR__), ['.env', '.env.local', '.env.development', '.env.staging', '.env.production'], false);
+$dotenv->ifPresent(['API_PROTOCOL', 'API_HOST', 'API_BASE_PATH'])->notEmpty();
+$dotenv->ifPresent(['API_PORT'])->isInteger();
+$dotenv->safeLoad();
+
+// Set default environment variables if not already set
+$_ENV['API_PROTOCOL']  = $_ENV['API_PROTOCOL'] ?? 'https';
+$_ENV['API_HOST']      = $_ENV['API_HOST'] ?? 'litcal.johnromanodorazio.com';
+$_ENV['API_PORT']      = $_ENV['API_PORT'] ?? '';
+$_ENV['API_BASE_PATH'] = $_ENV['API_BASE_PATH'] ?? '/api/dev';
+
+// Build Base API URL
+$apiPort    = !empty($_ENV['API_PORT']) ? ":{$_ENV['API_PORT']}" : '';
+$apiBaseUrl = rtrim("{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}{$apiPort}{$_ENV['API_BASE_PATH']}", '/');
+
+// OpenAPI schema is served by the API at /schemas/openapi.json
+$openAPISchemaUrl = $apiBaseUrl . '/schemas/openapi.json';
+
+// Determine if we're running on localhost
+$isLocalhost = $_ENV['API_HOST'] === 'localhost' || $_ENV['API_HOST'] === '127.0.0.1';
 ?>
 <!DOCTYPE html><!-- HTML for static distribution bundle build -->
 <html lang="en">
@@ -40,9 +49,32 @@ $OpenAPISchema = $isStaging || isLocalhost() ? 'development' : 'master';
     window.onload = function() {
       // Begin Swagger UI call region
       const ui = SwaggerUIBundle({
-        url: "https://raw.githubusercontent.com/JohnRDOrazio/LiturgicalCalendar/<?php echo $OpenAPISchema; ?>/jsondata/schemas/openapi.json",
+        url: "<?php echo $openAPISchemaUrl; ?>",
         "dom_id": "#swagger-ui",
         deepLinking: true,
+        // Rewrite requests to use current environment's API URL
+        requestInterceptor: (req) => {
+          const currentApiBase = "<?php echo $apiBaseUrl; ?>";
+          const currentBasePath = "<?php echo rtrim($_ENV['API_BASE_PATH'], '/'); ?>";
+          const url = new URL(req.url);
+          const currentBase = new URL(currentApiBase);
+          // Replace protocol and host
+          url.protocol = currentBase.protocol;
+          url.host = currentBase.host;
+          // Replace schema's base path with current environment's base path
+          // The schema likely has /api/dev, but localhost uses /
+          const schemaBasePaths = ['/api/dev', '/api/stable'];
+          let path = url.pathname;
+          for (const schemaBase of schemaBasePaths) {
+            if (path.startsWith(schemaBase)) {
+              path = currentBasePath + path.substring(schemaBase.length);
+              break;
+            }
+          }
+          url.pathname = path;
+          req.url = url.toString();
+          return req;
+        },
         requestSnippetsEnabled: true,
         requestSnippets: {
           generators: {
@@ -113,7 +145,12 @@ $OpenAPISchema = $isStaging || isLocalhost() ? 'development' : 'master';
           SnippetGeneratorPythonPlugin,
           SnippetGeneratorRubyPlugin,
           SnippetGeneratorCsPlugin,
-          SnippetGeneratorVbNetPlugin
+          SnippetGeneratorVbNetPlugin<?php
+            if (!$isLocalhost) :
+          ?>,
+          DisableAuthTryItOutPlugin<?php
+            endif;
+          ?>
         ],
         layout: "StandaloneLayout",
       })
@@ -121,6 +158,23 @@ $OpenAPISchema = $isStaging || isLocalhost() ? 'development' : 'master';
 
       window.ui = ui
     }
+
+<?php if (!$isLocalhost) :
+?>
+    // Plugin to disable "Try it out" for auth endpoints in staging/production
+    const DisableAuthTryItOutPlugin = {
+      statePlugins: {
+        spec: {
+          wrapSelectors: {
+            allowTryItOutFor: () => (state, path) => {
+              const disabledPaths = ['/auth/login', '/auth/refresh'];
+              return !disabledPaths.some(disabled => path.includes(disabled));
+            }
+          }
+        }
+      }
+    };
+<?php endif; ?>
 
     const SnippetGeneratorNodeJsPlugin = {
       fn: {

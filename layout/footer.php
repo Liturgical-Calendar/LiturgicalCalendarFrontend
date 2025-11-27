@@ -20,25 +20,27 @@
 </div>
 <!-- End of Page Wrapper -->
 
-<!-- All API URLs are provided by common.php -->
+<!-- All API URLs and configuration are provided by common.php -->
 <script>
-const BaseURL         = '<?php echo $baseURL; ?>';
-const DateOfEasterURL = '<?php echo $dateOfEasterURL; ?>';
-const CalendarURL     = '<?php echo $calendarURL; ?>';
-const MetadataURL     = '<?php echo $metadataURL; ?>';
-const EventsURL       = '<?php echo $eventsURL; ?>';
-const MissalsURL      = '<?php echo $missalsURL; ?>';
-const DecreesURL      = '<?php echo $decreesURL; ?>';
-const RegionalDataURL = '<?php echo $regionalDataURL; ?>';
-console.log({
-    'baseUrl': BaseURL,
-    'dateOfEasterURL': DateOfEasterURL,
-    'calendarURL': CalendarURL,
-    'metadataURL': MetadataURL,
-    'eventsURL': EventsURL,
-    'missalsURL': MissalsURL,
-    'decreesURL': DecreesURL,
-    'regionalDataURL': RegionalDataURL
+const AppEnv          = <?php echo json_encode($_ENV['APP_ENV'] ?? 'production'); ?>;
+const BaseUrl         = <?php echo json_encode($apiConfig->apiBaseUrl); ?>;
+const DateOfEasterUrl = <?php echo json_encode($apiConfig->dateOfEasterUrl); ?>;
+const CalendarUrl     = <?php echo json_encode($apiConfig->calendarUrl); ?>;
+const MetadataUrl     = <?php echo json_encode($apiConfig->metadataUrl); ?>;
+const EventsUrl       = <?php echo json_encode($apiConfig->eventsUrl); ?>;
+const MissalsUrl      = <?php echo json_encode($apiConfig->missalsUrl); ?>;
+const DecreesUrl      = <?php echo json_encode($apiConfig->decreesUrl); ?>;
+const RegionalDataUrl = <?php echo json_encode($apiConfig->regionalDataUrl); ?>;
+if ( AppEnv === 'development' ) console.info({
+    'AppEnv': AppEnv,
+    'BaseUrl': BaseUrl,
+    'DateOfEasterUrl': DateOfEasterUrl,
+    'CalendarUrl': CalendarUrl,
+    'MetadataUrl': MetadataUrl,
+    'EventsUrl': EventsUrl,
+    'MissalsUrl': MissalsUrl,
+    'DecreesUrl': DecreesUrl,
+    'RegionalDataUrl': RegionalDataUrl
 });
 </script>
 
@@ -60,11 +62,16 @@ console.log({
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/common.js"></script>
 <?php
-$componentsJsImportMap = <<<SCRIPT
+$isDevelopment   = ( $_ENV['APP_ENV'] ?? 'production' ) === 'development';
+$componentsJsUrl = $isDevelopment
+    ? './assets/components-js/index.js'
+    : 'https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@latest/dist/index.js';
+
+    $componentsJsImportMap = <<<SCRIPT
 <script type="importmap">
     {
         "imports": {
-            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@1.3.1/+esm"
+            "@liturgical-calendar/components-js": "{$componentsJsUrl}"
         }
     }
 </script>

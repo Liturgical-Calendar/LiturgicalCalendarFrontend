@@ -4,19 +4,23 @@ namespace LiturgicalCalendar\Frontend;
 
 class LitColor
 {
-    public const GREEN          = 'green';
-    public const PURPLE         = 'purple';
-    public const WHITE          = 'white';
-    public const RED            = 'red';
-    public const ROSE           = 'rose';
+    public const GREEN  = 'green';
+    public const PURPLE = 'purple';
+    public const WHITE  = 'white';
+    public const RED    = 'red';
+    public const ROSE   = 'rose';
+    /** @var array<int, string> */
     public static array $values = [ 'green', 'purple', 'white', 'red', 'rose' ];
 
-    public static function isValid(string $value)
+    public static function isValid(string $value): bool
     {
-        return in_array($value, self::$values);
+        return in_array($value, self::$values, true);
     }
 
-    public static function areValid(array $values)
+    /**
+     * @param array<int, string> $values
+     */
+    public static function areValid(array $values): bool
     {
         return empty(array_diff($values, self::$values));
     }
@@ -39,6 +43,8 @@ class LitColor
             case self::ROSE:
                 /**translators: context = liturgical color */
                 return $locale === 'LA' ? 'rosea'       : _('rose');
+            default:
+                throw new \InvalidArgumentException("Invalid liturgical color: {$value}");
         }
     }
 }

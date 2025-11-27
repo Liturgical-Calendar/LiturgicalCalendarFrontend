@@ -94,7 +94,7 @@ class LitGrade
         self::HIGHER_SOLEMNITY =>   'celebratio altioris ordinis quam sollemnitatis'
     ];
 
-    private static function translateGrade(int $value)
+    private static function translateGrade(int $value): string
     {
         switch ($value) {
             case self::WEEKDAY:
@@ -121,9 +121,13 @@ class LitGrade
             case self::HIGHER_SOLEMNITY:
                 /**translators: liturgical rank. Keep lowercase  */
                 return _('celebration with precedence over solemnities');
+            default:
+                /**translators: liturgical rank. Keep lowercase  */
+                return _('weekday');
         }
     }
 
+    /** @var array<int, int> */
     public static array $values = [ 0, 1, 2, 3, 4, 5, 6, 7 ];
     private string $locale;
 
@@ -132,12 +136,12 @@ class LitGrade
         $this->locale = $locale;
     }
 
-    public static function isValid(int $value)
+    public static function isValid(int $value): bool
     {
         return in_array($value, self::$values);
     }
 
-    public function i18n(int $value, bool $html = true)
+    public function i18n(int $value, bool $html = true): string
     {
         $TAGS = self::TAGS[$value];
         if (!self::isValid($value)) {

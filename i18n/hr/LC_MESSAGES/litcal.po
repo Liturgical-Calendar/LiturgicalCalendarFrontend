@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 16:50+0000\n"
-"PO-Revision-Date: 2025-11-21 07:26+0000\n"
+"POT-Creation-Date: 2025-11-27 00:12+0000\n"
+"PO-Revision-Date: 2025-11-25 10:14+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
@@ -120,11 +120,11 @@ msgstr "Parametri zahtjeva dostupni na osnovnoj stazi %s"
 msgid "Request parameters available on all %1$s paths"
 msgstr "Parametri zahtjeva dostupni na svim stazama %1$s"
 
-#: index.php:60 usage.php:13 examples.php:95 liturgyOfAnyDay.php:22
+#: index.php:60 usage.php:13 examples.php:102 liturgyOfAnyDay.php:18
 msgid "General Roman Calendar"
 msgstr "Opći rimski kalendar"
 
-#: index.php:69 layout/header.php:75
+#: index.php:69 layout/header.php:95
 msgid "Catholic Liturgical Calendar"
 msgstr "Katolički liturgijski kalendar"
 
@@ -138,7 +138,7 @@ msgstr "API %1$s krajnja točka"
 msgid "Path builder"
 msgstr "Građevnik staza"
 
-#: index.php:112
+#: index.php:102
 msgid ""
 "URL of the API request based on selected options. The button is set to the "
 "same URL, click on it to see results."
@@ -146,11 +146,11 @@ msgstr ""
 "URL API zahtjeva temeljen na odabranim opcijama. Gumb je postavljen na isti "
 "URL, kliknite ga da biste vidjeli rezultate."
 
-#: index.php:121 index.php:125
+#: index.php:111 index.php:115
 msgid "Liturgical Calendar Validator"
 msgstr "Validator liturgijskog kalendara"
 
-#: index.php:124
+#: index.php:114
 msgid ""
 "In order to verify that the liturgical data produced by the API is correct, "
 "there is a Unit Test interface that can run predefined tests against the "
@@ -162,7 +162,7 @@ msgstr ""
 "definirane testove protiv JSON odgovora koje proizvodi API počevši od 1970. "
 "godine do 25 godina od tekuće godine."
 
-#: index.php:129
+#: index.php:119
 #, php-format
 msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
@@ -171,28 +171,28 @@ msgstr ""
 "Jedinični testovi su definirani u mapi %s u spremištu API-ja liturgijskog "
 "kalendara."
 
-#: index.php:133
+#: index.php:123
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
 msgstr "Sučelje za jedinične testove je uređeno u vlastitom spremištu: %s."
 
-#: index.php:142
+#: index.php:132
 msgid "Translation Tool"
 msgstr "Alat za prevođenje"
 
-#: index.php:148 index.php:151
+#: index.php:138 index.php:141
 msgid "Translations status"
 msgstr "Status prijevoda"
 
-#: index.php:159
+#: index.php:149
 msgid "Open API Schema"
 msgstr "Otvoreno API shema"
 
-#: index.php:162
+#: index.php:152
 msgid "Swagger / Open API Documentation"
 msgstr "Swagger / Open API Dokumentacija"
 
-#: index.php:164
+#: index.php:154
 msgid ""
 "All of the available API routes with their supported methods, parameters, "
 "content types and responses are described here."
@@ -200,19 +200,11 @@ msgstr ""
 "Svi dostupni API putevi s njihovim podržanim metodama, parametrima, vrstama "
 "sadržaja i odgovorima opisani su ovdje."
 
-#: index.php:170 usage.php:184
+#: index.php:160 usage.php:184
 msgid "Calculation of the Dates of Easter"
 msgstr "Izračun datuma Uskrsa"
 
-#: index.php:173
-#, fuzzy
-#| msgid ""
-#| "A simple API endpoint that returns data about the Date of Easter, both "
-#| "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
-#| "Calendar) to 9999 (maximum possible date calculation in 64bit PHP), using "
-#| "a PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian "
-#| "easter (observed by the Roman Catholic church) and of the Meeus algorithm "
-#| "for Julian easter (observed by orthodox churches)."
+#: index.php:163
 msgid ""
 "A simple API endpoint that returns data about the Dates of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -221,20 +213,18 @@ msgid ""
 "(observed by the Roman Catholic church) and of the Meeus algorithm for "
 "Julian easter (observed by orthodox churches)."
 msgstr ""
-"Jednostavna API točka koja vraća podatke o datumu Uskrsa, kako "
-"gregorijanskom tako i julijskom, od 1583. (godina usvajanja gregorijanskog "
+"Jednostavna API krajnja točka koja vraća podatke o datumima Uskrsa, kako "
+"gregorijanskom tako i julijanskom, od 1583. (godina usvajanja gregorijanskog "
 "kalendara) do 9999. (maksimalni mogući izračun datuma u 64bitnom PHP-u), "
-"koristeći PHP adaptaciju Meeus/Jones/Butcher algoritma za gregorijanski "
-"uskrs (koji slavi Rimska katolička crkva) i Meeusov algoritam za julijanski "
-"uskrs (koji slave pravoslavne crkve)."
+"koristeći PHP prilagodbu Meeus/Jones/Butcher algoritma za gregorijanski "
+"Uskrs (kojeg slavi Rimokatolička crkva) i Meeusov algoritam za julijanski "
+"Uskrs (kojeg slave pravoslavne crkve)."
 
-#: index.php:178
-#, fuzzy
-#| msgid "Date of Easter API endpoint"
+#: index.php:168
 msgid "Dates of Easter API endpoint"
-msgstr "API točka za datum Uskrsa"
+msgstr "API krajnja točka za datume Uskrsa"
 
-#: index.php:180
+#: index.php:170
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
@@ -263,7 +253,7 @@ msgstr "Primjeri"
 msgid "Example usage of the API"
 msgstr "Primjer upotrebe API-ja"
 
-#: usage.php:27 layout/header.php:101
+#: usage.php:27 layout/header.php:121
 msgid "Web calendar"
 msgstr "Web kalendar"
 
@@ -311,11 +301,11 @@ msgstr "Pregled FullCalendar"
 msgid "View FullCalendar (messages first)"
 msgstr "Pregled FullCalendar (poruke prvo)"
 
-#: usage.php:74 layout/header.php:105
+#: usage.php:74 layout/header.php:125
 msgid "Calendar subscription"
 msgstr "Pretplata na kalendar"
 
-#: usage.php:88 liturgyOfAnyDay.php:39
+#: usage.php:88
 msgid "Select calendar"
 msgstr "Odaberite kalendar"
 
@@ -479,7 +469,7 @@ msgstr ""
 "opisi događaja koji se pružaju putem pretplatničkog URL-a malo više "
 "\"uljepšani\" za Outlook."
 
-#: usage.php:176 layout/header.php:109
+#: usage.php:176 layout/header.php:129
 msgid "Dates of Easter"
 msgstr "Datumi Uskrsa"
 
@@ -491,7 +481,7 @@ msgstr "Primjer prikaza datuma Uskrsa od 1583. do 9999"
 msgid "Calculate the Dates of Easter"
 msgstr "Izračunaj datume Uskrsa"
 
-#: usage.php:198 layout/header.php:113
+#: usage.php:198 layout/header.php:133
 msgid "Liturgy of the Day"
 msgstr "Liturgija dana"
 
@@ -507,7 +497,7 @@ msgstr "Dnevni pregled vijesti s liturgijom dana, kao Amazon Alexa vještina"
 msgid "In development"
 msgstr "U razvoju"
 
-#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:22 liturgyOfAnyDay.php:30
+#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:18 liturgyOfAnyDay.php:26
 msgid "Liturgy of any day"
 msgstr "Liturgija bilo kojeg dana"
 
@@ -570,19 +560,19 @@ msgstr ""
 "kalendara, na primjer kako bi se ispisao jedan godišnji kalendar s podacima "
 "za sve biskupije u grupi, grupa se ovdje može definirati ili postaviti."
 
-#: extending.php:161
+#: extending.php:161 admin.php:94
 msgid "Event key"
 msgstr "Ključ događaja"
 
-#: extending.php:162 src/Utilities.php:233 src/FormControls.php:52
+#: extending.php:162 admin.php:95 src/Utilities.php:233 src/FormControls.php:52
 msgid "Name"
 msgstr "Ime"
 
-#: extending.php:163 liturgyOfAnyDay.php:45 src/FormControls.php:59
+#: extending.php:163 admin.php:96 src/FormControls.php:59
 msgid "Day"
 msgstr "Dan"
 
-#: extending.php:164 liturgyOfAnyDay.php:49 src/FormControls.php:65
+#: extending.php:164 admin.php:97 src/FormControls.php:65
 msgid "Month"
 msgstr "Mjesec"
 
@@ -620,42 +610,42 @@ msgstr ""
 "kalendar i odgovarajući indeksni unosi bit će uklonjeni i više neće biti "
 "dostupni u klijentskim aplikacijama."
 
-#: extending.php:172 src/FormControls.php:89
+#: extending.php:172 admin.php:98 src/FormControls.php:89
 msgid "Liturgical color"
 msgstr "Liturgijska boja"
 
 #. translators: context = liturgical color
-#: extending.php:173 src/LitColor.php:35 src/FormControls.php:91
+#: extending.php:173 admin.php:99 src/LitColor.php:35 src/FormControls.php:91
 msgid "white"
 msgstr "bijela"
 
 #. translators: context = liturgical color
-#: extending.php:174 src/LitColor.php:38 src/FormControls.php:92
+#: extending.php:174 admin.php:100 src/LitColor.php:38 src/FormControls.php:92
 msgid "red"
 msgstr "crvena"
 
 #. translators: context = liturgical color
-#: extending.php:175 src/LitColor.php:29 src/FormControls.php:94
+#: extending.php:175 admin.php:101 src/LitColor.php:29 src/FormControls.php:94
 msgid "green"
 msgstr "zelena"
 
 #. translators: context = liturgical color
-#: extending.php:176 src/LitColor.php:32 src/FormControls.php:93
+#: extending.php:176 admin.php:102 src/LitColor.php:32 src/FormControls.php:93
 msgid "purple"
 msgstr "ljubičasta"
 
 #. translators: context = liturgical color
-#: extending.php:177 src/LitColor.php:41
+#: extending.php:177 admin.php:103 src/LitColor.php:41
 msgid "rose"
 msgstr "ružičasta"
 
 #. translators: in reference to the first year from which this liturgical event takes place
-#: extending.php:179 src/FormControls.php:101
+#: extending.php:179 admin.php:105 src/FormControls.php:101
 msgid "Since"
 msgstr "Od"
 
 #. translators: in reference to the year from which this liturgical event no longer needs to be dealt with
-#: extending.php:181 src/FormControls.php:108
+#: extending.php:181 admin.php:107 src/FormControls.php:108
 msgid "Until"
 msgstr "Do"
 
@@ -665,30 +655,30 @@ msgid "Patron or Patrons of the Wider Region"
 msgstr "Zaštitnik ili zaštitnici šire regije"
 
 #. translators: label of the form row
-#: extending.php:185
+#: extending.php:185 admin.php:111 decrees.php:6
 msgid "New liturgical event"
 msgstr "Novi liturgijski događaj"
 
 #. translators: label of the form row
-#: extending.php:187
+#: extending.php:187 decrees.php:10
 msgid "Change name"
 msgstr "Promijeni ime"
 
 #. translators: label of the form row
-#: extending.php:189
+#: extending.php:189 decrees.php:12
 msgid "Change grade"
 msgstr "Promijeni razinu"
 
 #. translators: label of the form row
-#: extending.php:191
+#: extending.php:191 admin.php:115 admin.php:240 decrees.php:14
 msgid "Move liturgical event"
 msgstr "Premjesti liturgijski događaj"
 
-#: extending.php:192
+#: extending.php:192 admin.php:116
 msgid "Decree URL"
 msgstr "URL dekreta"
 
-#: extending.php:193
+#: extending.php:193 admin.php:117
 msgid "Decree Language mappings"
 msgstr "Mapa jezika dekreta"
 
@@ -696,23 +686,23 @@ msgstr "Mapa jezika dekreta"
 msgid "Missal"
 msgstr "Misal"
 
-#: extending.php:195
+#: extending.php:195 admin.php:118
 msgid "Reason (in favor of liturgical event)"
 msgstr "Razlog (u korist liturgijskog događaja)"
 
-#: extending.php:207 extending.php:684 extending.php:688
+#: extending.php:207 extending.php:688 extending.php:692
 msgid "Designate patron"
 msgstr "Odrediti zaštitnika"
 
-#: extending.php:208 extending.php:700
+#: extending.php:208 extending.php:704 admin.php:126 admin.php:220
 msgid "Change name or grade of existing liturgical event"
 msgstr "Promijeni ime ili razinu postojećeg liturgijskog događaja"
 
-#: extending.php:209 extending.php:716
+#: extending.php:209 extending.php:720 admin.php:127 admin.php:236
 msgid "Move liturgical event to new date"
 msgstr "Premjesti liturgijski događaj na novi datum"
 
-#: extending.php:210 extending.php:732
+#: extending.php:210 extending.php:736 admin.php:128 admin.php:252
 msgid "Create a new liturgical event"
 msgstr "Stvori novi liturgijski događaj"
 
@@ -796,7 +786,7 @@ msgstr "LOKACIJE"
 msgid "Published Roman Missals"
 msgstr "Objavljeni rimski misali"
 
-#: extending.php:381 extending.php:748
+#: extending.php:381 extending.php:752
 msgid "Add Missal"
 msgstr "Dodaj Misal"
 
@@ -906,28 +896,29 @@ msgstr "Biskupijske izmjene nacionalnog kalendara za …"
 msgid "SAVE DIOCESAN CALENDAR"
 msgstr "SPREMI BISKUPIJSKI KALENDAR"
 
-#: extending.php:689 extending.php:705 extending.php:721 extending.php:737
-#: extending.php:761
+#: extending.php:693 extending.php:709 extending.php:725 extending.php:741
+#: extending.php:765 admin.php:225 admin.php:241 admin.php:258 admin.php:274
+#: includes/login-modal.php:34
 msgid "Cancel"
 msgstr "Odustani"
 
-#: extending.php:704
+#: extending.php:708
 msgid "Set property"
 msgstr "Postavi svojstvo"
 
-#: extending.php:720
+#: extending.php:724
 msgid "Move Liturgical Event"
 msgstr "Premjesti liturgijski događaj"
 
-#: extending.php:736
+#: extending.php:740
 msgid "Create Liturgical Event"
 msgstr "Stvori liturgijski događaj"
 
-#: extending.php:753
+#: extending.php:757
 msgid "Choose from known Roman Missal language editions"
 msgstr "Odaberite iz poznatih jezičnih izdanja Rimskog misala"
 
-#: extending.php:755
+#: extending.php:759
 msgid ""
 "This Missal is unknown to the Liturgical Calendar API. Please choose from a "
 "value in the list, or contact the curator of the API to have the Missal "
@@ -937,7 +928,7 @@ msgstr ""
 "vrijednost s popisa ili kontaktirajte kustosa API-ja kako bi se misal dodao "
 "u poznata jezična izdanja."
 
-#: extending.php:760
+#: extending.php:764
 msgid "Add language edition Roman Missal"
 msgstr "Dodaj jezično izdanje Rimskog misala"
 
@@ -989,7 +980,7 @@ msgstr "Liturgijski kalendar - O nama"
 msgid "Liturgical Calendar as an HTML table produced by Javascript"
 msgstr "Liturgijski kalendar kao HTML tablica proizvedena u Javascriptu"
 
-#: examples.php:133
+#: examples.php:140
 #, php-format
 msgid "Example '%s' not found"
 msgstr "Primjer '%s' nije pronađen"
@@ -1132,15 +1123,76 @@ msgstr "Podaci o kalendaru"
 msgid "Project website"
 msgstr "Web stranica projekta"
 
-#: liturgyOfAnyDay.php:63
-msgid "Year"
-msgstr "Godina"
+#. translators: label of the form row
+#: admin.php:109 admin.php:273 decrees.php:16
+msgid "Designate Doctor of the Church"
+msgstr "Imenovanje za Naučitelja Crkve"
 
-#. translators: %s = current selected date
-#: liturgyOfAnyDay.php:71
+#. translators: label of the form row
+#: admin.php:113 decrees.php:8
+msgid "Change name or grade"
+msgstr "Promijeni ime ili stupanj"
+
+#: admin.php:129 admin.php:269
+msgid "Designate Doctor of the Church from existing liturgical event"
+msgstr "Imenovanje za Naučitelja Crkve iz postojećeg liturgijskog događaja"
+
+#: admin.php:256
+msgid "New liturgical event from existing"
+msgstr "Novi liturgijski događaj iz postojećeg"
+
+#: admin.php:257
+msgid "New liturgical event ex novo"
+msgstr "Novi liturgijski događaj iznova"
+
+#: decrees.php:57
+msgid "General Roman Calendar - Decrees"
+msgstr "Opći rimski kalendar - Dekreti"
+
+#: decrees.php:65
+msgid ""
+"Refine the General Roman Calendar with Decrees of the Dicastery for Divine "
+"Worship and the Discipline of the Sacraments"
+msgstr ""
+"Doradi Opći rimski kalendar dekretima Dikasterija za bogoštovlje i "
+"disciplinu sakramenata"
+
+#: decrees.php:66
+msgid ""
+"The Liturgical Calendar is based off of both published Roman Missals, and "
+"Decrees of the Dicastery for Divine Worship and the Discipline of the "
+"Sacraments. These Decrees can refine the data from the Roman Missals, adding "
+"or removing or changing liturgical events, or instructing on how to handle "
+"any possible coincidences between mandatory celebrations."
+msgstr ""
+"Liturgijski kalendar temelji se na objavljenim Rimskim Misalima i Dekretima "
+"Dikasterija za bogoštovlje i disciplinu sakramenata. Ovi dekreti mogu "
+"doraditi podatke iz Rimskih Misala, dodajući, uklanjajući ili mijenjajući "
+"liturgijske događaje, ili dajući upute kako postupati kod mogućih "
+"podudarnosti između obveznih slavlja."
+
+#: decrees.php:68
+msgid ""
+"Data for <b>Roman Missals</b> is handled by the <code>/missals</code> "
+"endpoint of the API, while data for <b>Decrees</b> is handled by the <code>/"
+"decrees</code> endpoint of the API."
+msgstr ""
+"Podatke za <b>Rimske Misale</b> obrađuje <code>/missals</code> krajnja točka "
+"API-ja, dok podatke za <b>Dekrete</b> obrađuje <code>/decrees</code> krajnja "
+"točka API-ja."
+
+#: decrees.php:70
 #, php-format
-msgid "Liturgy of %s"
-msgstr "Liturgija %s"
+msgid ""
+"Currently, these endpoints are read-only. There are currently <b>%1$d "
+"Decrees</b> defined at the endpoint %2$s."
+msgstr ""
+"Trenutno su ove krajnje točke samo za čitanje. Trenutno je definirano "
+"<b>%1$d Dekreta</b> na krajnjoj točki %2$s."
+
+#: decrees.php:135
+msgid "Read the Decree"
+msgstr "Pročitaj Dekret"
 
 #: src/LitCommon.php:57
 msgid "Proper"
@@ -1478,7 +1530,7 @@ msgstr "Rang"
 msgid "Common (or Proper)"
 msgstr "Opće (ili posebno)"
 
-#: layout/header.php:24 layout/header.php:89
+#: layout/header.php:24 layout/header.php:109
 msgid "Extending the API"
 msgstr "Proširivanje API-ja"
 
@@ -1498,17 +1550,84 @@ msgstr "Dekreti"
 msgid "About us"
 msgstr "O nama"
 
-#: layout/header.php:81
+#: layout/header.php:40 layout/header.php:42 includes/login-modal.php:35
+#: includes/login-modal.php:278
+msgid "Login"
+msgstr "Prijava"
+
+#: layout/header.php:49 layout/header.php:51
+msgid "Logout"
+msgstr "Odjava"
+
+#: layout/header.php:101
 msgid "Home"
 msgstr "Početna"
 
-#: layout/header.php:93
+#: layout/header.php:113
 msgid "Documentation"
 msgstr "Dokumentacija"
 
-#: layout/header.php:97
+#: layout/header.php:117
 msgid "Examples of Usage"
 msgstr "Primjeri uporabe"
+
+#: includes/login-modal.php:6
+msgid "Administrator Login"
+msgstr "Prijava administratora"
+
+#: includes/login-modal.php:12
+msgid "Username"
+msgstr "Korisničko ime"
+
+#: includes/login-modal.php:16
+msgid "Password"
+msgstr "Lozinka"
+
+#: includes/login-modal.php:19 includes/login-modal.php:112
+msgid "Show password"
+msgstr "Prikaži lozinku"
+
+#: includes/login-modal.php:26
+msgid "Remember me"
+msgstr "Zapamti me"
+
+#: includes/login-modal.php:71
+msgid "Are you sure you want to logout?"
+msgstr "Jesi li siguran da se želiš odjaviti?"
+
+#: includes/login-modal.php:107
+msgid "Hide password"
+msgstr "Sakrij lozinku"
+
+#: includes/login-modal.php:123
+msgid "Session Expiring"
+msgstr "Sesija istječe"
+
+#: includes/login-modal.php:216
+msgid "Please enter both username and password"
+msgstr "Molimo unesite i korisničko ime i lozinku"
+
+#: includes/login-modal.php:224
+msgid "Logging in..."
+msgstr "Prijava u tijeku..."
+
+#: includes/login-modal.php:262
+msgid "Login successful"
+msgstr "Prijava uspješna"
+
+#: includes/login-modal.php:262
+msgid "Success"
+msgstr "Uspješno"
+
+#: includes/login-modal.php:273
+msgid "Login failed. Please check your credentials."
+msgstr "Prijava nije uspjela. Provjerite svoje podatke."
+
+#~ msgid "Year"
+#~ msgstr "Godina"
+
+#~ msgid "Liturgy of %s"
+#~ msgstr "Liturgija %s"
 
 #~ msgid "Calculation of the Date of Easter"
 #~ msgstr "Izračunavanje datuma Uskrsa"

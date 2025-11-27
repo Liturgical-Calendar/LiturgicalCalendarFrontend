@@ -1,16 +1,32 @@
 
+// Escape HTML meta-characters to prevent DOM text injection/XSS
+const HTML_ESCAPE_MAP = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    '`': '&#x60;',
+};
+
+const escapeHtml = (input) => {
+    return String(input).replace(/[&<>"'`]/g, (char) => HTML_ESCAPE_MAP[char]);
+};
+
 /**
  * Generate a modal for removing a diocesan calendar.
  * @param {string} diocese The name of the diocese being removed.
  * @param {Object} messages A dictionary of localized strings.
  * @returns {string} A bootstrap modal div string.
  */
-const removeDiocesanCalendarModal = (diocese, messages) => `
+const removeDiocesanCalendarModal = (diocese, messages) => {
+    const escapedDiocese = escapeHtml(diocese);
+    return `
 <div class="modal fade" id="removeDiocesanCalendarPrompt" tabindex="-1" role="dialog" aria-labelledby="removeDiocesanCalendarModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="removeDiocesanCalendarModalLabel">${messages[ "Delete diocesan calendar" ]} ${diocese}?</h5>
+        <h5 class="modal-title" id="removeDiocesanCalendarModalLabel">${messages[ "Delete diocesan calendar" ]} ${escapedDiocese}?</h5>
       </div>
       <div class="modal-body">
         ${messages[ "If you choose" ]}
@@ -22,19 +38,22 @@ const removeDiocesanCalendarModal = (diocese, messages) => `
     </div>
   </div>
 </div>`;
+};
 
 /**
- * Generate a modal for removing a diocesan calendar.
- * @param {string} calendar The id of the calenar being removed.
+ * Generate a modal for removing a calendar.
+ * @param {string} calendar The id of the calendar being removed.
  * @param {Object} messages A dictionary of localized strings.
  * @returns {string} A bootstrap modal div string.
  */
-const removeCalendarModal = (calendar, messages) => `
+const removeCalendarModal = (calendar, messages) => {
+    const escapedCalendar = escapeHtml(calendar);
+    return `
 <div class="modal fade" id="removeCalendarDataPrompt" tabindex="-1" role="dialog" aria-labelledby="removeCalendarModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="removeCalendarModalLabel">${messages[ "Delete calendar" ]} ${calendar}?</h5>
+        <h5 class="modal-title" id="removeCalendarModalLabel">${messages[ "Delete calendar" ]} ${escapedCalendar}?</h5>
       </div>
       <div class="modal-body">
         ${messages[ "If you choose" ]}
@@ -46,17 +65,11 @@ const removeCalendarModal = (calendar, messages) => `
     </div>
   </div>
 </div>`;
-
-
-//kudos to https://stackoverflow.com/a/47140708/394921 for the idea
-const sanitizeInput = (input) => {
-    let doc = new DOMParser().parseFromString(input, 'text/html');
-    return doc.body.textContent || "";
-}
+};
 
 
 export {
     removeDiocesanCalendarModal,
     removeCalendarModal,
-    sanitizeInput
+    escapeHtml
 }

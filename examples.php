@@ -17,6 +17,13 @@ $JAVASCRIPT_EXAMPLE_CONTENTS = <<<EOT
 <thead></thead>
 <tbody></tbody>
 </table>
+<script type="importmap">
+    {
+        "imports": {
+            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@1.4.0/+esm"
+        }
+    }
+</script>
 <script type="module" src="examples/javascript/main.js"></script>
 EOT;
 
@@ -61,12 +68,12 @@ $FULLCALENDAR_EXAMPLE_CONTENTS = <<<EOT
 <script type="importmap">
     {
         "imports": {
-            "@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.15",
-            "@fullcalendar/core/": "https://cdn.skypack.dev/@fullcalendar/core@6.1.15/",
-            "@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.15",
-            "@fullcalendar/list": "https://cdn.skypack.dev/@fullcalendar/list@6.1.15",
-            "@fullcalendar/bootstrap5": "https://cdn.skypack.dev/@fullcalendar/bootstrap5@6.1.15",
-            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@1.3.1/+esm"
+            "@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.19",
+            "@fullcalendar/core/": "https://cdn.skypack.dev/@fullcalendar/core@6.1.19/",
+            "@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.19",
+            "@fullcalendar/list": "https://cdn.skypack.dev/@fullcalendar/list@6.1.19",
+            "@fullcalendar/bootstrap5": "https://cdn.skypack.dev/@fullcalendar/bootstrap5@6.1.19",
+            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@1.4.0/+esm"
         }
     }
 </script>

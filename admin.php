@@ -2,6 +2,7 @@
 
 include_once('common.php'); // provides $i18n and all API URLs
 
+use LiturgicalCalendar\Frontend\ApiClient;
 use LiturgicalCalendar\Frontend\FormControls;
 use LiturgicalCalendar\Frontend\Utilities;
 
@@ -30,62 +31,29 @@ if (!Utilities::authenticated(AUTH_USERS)) {
 $FormControls = new FormControls($i18n);
 
 /**
- * Fetch missals and events
+ * Fetch missals and events using Guzzle-based client
  */
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $missalsURL . '/EDITIO_TYPICA_1970');
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept-Language: ' . $i18n->LOCALE]);
-curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-$missalsResponse = curl_exec($ch);
-if (curl_errno($ch)) {
-    die('Error fetching missals from API: ' . curl_error($ch));
-}
-$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-if ($httpCode >= 400) {
-    die('Error: Received HTTP code ' . $httpCode . ' from missals API at ' . $missalsURL);
+$apiClient = new ApiClient($i18n->LOCALE);
+
+try {
+    $MissalData = $apiClient->fetchJson($apiConfig->missalsUrl . '/EDITIO_TYPICA_1970');
+} catch (\RuntimeException $e) {
+    die('Error fetching missals from API: ' . $e->getMessage());
 }
 
-curl_setopt($ch, CURLOPT_URL, $eventsURL);
-$eventsResponse = curl_exec($ch);
-if (curl_errno($ch)) {
-    die('Error fetching events from API: ' . curl_error($ch));
-}
-$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-if ($httpCode >= 400) {
-    die('Error: Received HTTP code ' . $httpCode . ' from events API at ' . $eventsURL);
-}
-
-/**
- * Decode the JSON responses
- */
-$MissalData = json_decode($missalsResponse, true);
-if (json_last_error() !== JSON_ERROR_NONE) {
-    die('Error decoding missals JSON from API: ' . json_last_error_msg());
-}
-
-if (!is_array($MissalData)) {
-    die('Invalid missals JSON from API');
-}
-
-if (empty($MissalData) || !is_array($MissalData[0])) {
+$firstMissalRecord = reset($MissalData);
+if (empty($MissalData) || !is_array($firstMissalRecord)) {
     die('Unexpected missal data structure from API');
 }
 
-$thh = array_keys($MissalData[0]);
+$thh = array_keys($firstMissalRecord);
 
-$decodedEvents = json_decode($eventsResponse, true);
-
-if (json_last_error() !== JSON_ERROR_NONE) {
-    die('Error decoding events catalog JSON from API: ' . json_last_error_msg());
+try {
+    $eventsData                = $apiClient->fetchJsonWithKey($apiConfig->eventsUrl, 'litcal_events');
+    $LiturgicalEventCollection = $eventsData['litcal_events'];
+} catch (\RuntimeException $e) {
+    die('Error fetching events from API: ' . $e->getMessage());
 }
-
-if (!is_array($decodedEvents) || !isset($decodedEvents['litcal_events']) || !is_array($decodedEvents['litcal_events'])) {
-    die('Invalid events JSON from API');
-}
-
-[ 'litcal_events' => $LiturgicalEventCollection ] = $decodedEvents;
 
 /**
  * Prepare our translations strings

@@ -48,6 +48,7 @@ class LitCommon
     public const PRO_SANCTIS_MULIERIBUS                      = 'For Holy Women';
 
     private string $locale;
+    /** @var array<string, string> */
     private array $translate;
 
     public function __construct(string $locale)
@@ -188,6 +189,7 @@ class LitCommon
         }
     }
 
+    /** @var array<int, string> */
     public static array $values = [
         'Proper',
         'Dedication of a Church',
@@ -225,12 +227,15 @@ class LitCommon
         'For Holy Women'
     ];
 
-    public static function isValid(string $value)
+    public static function isValid(string $value): bool
     {
         return in_array($value, self::$values);
     }
 
-    public static function areValid(array $values)
+    /**
+     * @param array<int, string> $values
+     */
+    public static function areValid(array $values): bool
     {
         return empty(array_diff($values, self::$values));
     }

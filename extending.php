@@ -1,5 +1,6 @@
 <?php
 
+use LiturgicalCalendar\Frontend\ApiClient;
 use LiturgicalCalendar\Frontend\FormControls;
 use LiturgicalCalendar\Frontend\Utilities;
 
@@ -8,85 +9,39 @@ include_once 'common.php'; // provides $i18n and all API URLs
 $FormControls = new FormControls($i18n);
 
 $dayOfWeekFmt = IntlDateFormatter::create($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'UTC', IntlDateFormatter::GREGORIAN, 'EEEE');
-$thursday     = $dayOfWeekFmt->format(DateTime::createFromFormat('!j-n-Y', '1-1-2022', new DateTimeZone('UTC'))->modify('next Thursday'));
-$sunday       = $dayOfWeekFmt->format(DateTime::createFromFormat('!j-n-Y', '1-1-2022', new DateTimeZone('UTC'))->modify('next Sunday'));
+if ($dayOfWeekFmt === null) {
+    die('Error: Could not create IntlDateFormatter');
+}
+$thursdayDate = DateTime::createFromFormat('!j-n-Y', '1-1-2022', new DateTimeZone('UTC'));
+$sundayDate   = DateTime::createFromFormat('!j-n-Y', '1-1-2022', new DateTimeZone('UTC'));
+if ($thursdayDate === false || $sundayDate === false) {
+    die('Error: Could not create DateTime from format');
+}
+$thursday = $dayOfWeekFmt->format($thursdayDate->modify('next Thursday'));
+$sunday   = $dayOfWeekFmt->format($sundayDate->modify('next Sunday'));
 
 $AvailableNationalCalendars = [];
 
 $c = new Collator($i18n->LOCALE);
 
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
-
 /**
- * Fetch metadata from API
+ * Fetch metadata and events from API using Guzzle-based client
  */
-curl_setopt($ch, CURLOPT_URL, $metadataURL);
-$metadataRaw = curl_exec($ch);
+$apiClient = new ApiClient($i18n->LOCALE);
 
-if (curl_errno($ch)) {
-    $error_msg = curl_error($ch);
-    die($error_msg);
+try {
+    $metadataJson   = $apiClient->fetchJsonWithKey($apiConfig->metadataUrl, 'litcal_metadata');
+    $LitCalMetadata = $metadataJson['litcal_metadata'];
+} catch (\RuntimeException $e) {
+    die('Error fetching metadata from API: ' . $e->getMessage());
 }
 
-$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-if ($httpCode >= 400) {
-    die('Error: Received HTTP code ' . $httpCode . ' from API at ' . $metadataURL);
+try {
+    $litEventsJson             = $apiClient->fetchJsonWithKey($apiConfig->eventsUrl, 'litcal_events');
+    $LiturgicalEventCollection = $litEventsJson['litcal_events'];
+} catch (\RuntimeException $e) {
+    die('Error fetching events from API: ' . $e->getMessage());
 }
-
-if ($metadataRaw === false) {
-    die('Could not fetch metadata from API at ' . $metadataURL);
-}
-
-$metadataJson = json_decode($metadataRaw, true);
-if (json_last_error() !== JSON_ERROR_NONE) {
-    $error_msg = json_last_error_msg();
-    die($error_msg);
-}
-
-if (false === isset($metadataJson['litcal_metadata'])) {
-    die('litcal_metadata not found in metadata JSON from API');
-}
-
-[ 'litcal_metadata' => $LitCalMetadata ] = $metadataJson;
-
-/**
- * Fetch liturgical events catalog from API
- */
-curl_setopt($ch, CURLOPT_URL, $eventsURL);
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept-Language: ' . $i18n->LOCALE]);
-
-$eventsCatalogRaw = curl_exec($ch);
-
-if (curl_errno($ch)) {
-    $error_msg = curl_error($ch);
-    die($error_msg);
-}
-
-$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-if ($httpCode >= 400) {
-    die('Error: Received HTTP code ' . $httpCode . ' from API at ' . $eventsURL);
-}
-
-if ($eventsCatalogRaw === false) {
-    die('Could not fetch events from API at ' . $eventsURL);
-}
-
-$litEventsJson = json_decode($eventsCatalogRaw, true);
-
-if (json_last_error() !== JSON_ERROR_NONE) {
-    $error_msg = json_last_error_msg();
-    die($error_msg);
-}
-
-if (false === isset($litEventsJson['litcal_events'])) {
-    die('litcal_events not found in events JSON from API');
-}
-
-[ 'litcal_events' => $LiturgicalEventCollection ] = $litEventsJson;
 
 /**
  * Fetch Catholic Dioceses by Nation data
@@ -117,18 +72,27 @@ $NationalCalendars = array_values(array_filter(
     fn($calendar) => isset($calendar['calendar_id']) && $calendar['calendar_id'] !== 'VA'
 ));
 foreach ($NationalCalendars as $calendar) {
-    $AvailableNationalCalendars[$calendar['calendar_id']] = Locale::getDisplayRegion('-' . $calendar['calendar_id'], $i18n->LOCALE);
+    $displayRegion                                        = Locale::getDisplayRegion('-' . $calendar['calendar_id'], $i18n->LOCALE);
+    $AvailableNationalCalendars[$calendar['calendar_id']] = $displayRegion !== false ? $displayRegion : $calendar['calendar_id'];
 }
 $c->asort($AvailableNationalCalendars);
 
 // Extract the 'country_iso' values from the CatholicDiocesesByNation array and transform values to upper case
-$CountryIso                    = array_map('strtoupper', array_column($CatholicDiocesesByNation, 'country_iso'));
-$DisplayRegions                = array_map(fn ($item) => Locale::getDisplayRegion('-' . $item, $i18n->LOCALE), $CountryIso);
+$CountryIso     = array_map('strtoupper', array_column($CatholicDiocesesByNation, 'country_iso'));
+$DisplayRegions = array_map(function ($item) use ($i18n) {
+    $region = Locale::getDisplayRegion('-' . $item, $i18n->LOCALE);
+    return $region !== false ? $region : $item;
+}, $CountryIso);
+/** @var array<string, string> $CountriesWithCatholicDioceses */
 $CountriesWithCatholicDioceses = array_combine($CountryIso, $DisplayRegions);
 $c->asort($CountriesWithCatholicDioceses);
 
 
-$SystemLocalesWithRegion = array_filter(ResourceBundle::getLocales(''), function ($value) use ($i18n) {
+$resourceBundleLocales = ResourceBundle::getLocales('');
+if ($resourceBundleLocales === false) {
+    die('Error: Could not retrieve available locales from ResourceBundle');
+}
+$SystemLocalesWithRegion = array_filter($resourceBundleLocales, function ($value) use ($i18n) {
     return strpos($value, 'POSIX') === false && Locale::getDisplayRegion($value, $i18n->LOCALE) !== '';
 });
 $SystemLocalesWithRegion = array_reduce($SystemLocalesWithRegion, function ($carry, $item) use ($i18n) {
@@ -141,7 +105,7 @@ $SystemLocalesWithRegion = array_reduce($SystemLocalesWithRegion, function ($car
 }, []);
 $c->asort($SystemLocalesWithRegion);
 
-$SystemLocalesWithoutRegion = array_filter(ResourceBundle::getLocales(''), function ($value) {
+$SystemLocalesWithoutRegion = array_filter($resourceBundleLocales, function ($value) {
     return strpos($value, '_') === false;
 });
 $SystemLocalesWithoutRegion = array_reduce($SystemLocalesWithoutRegion, function ($carry, $item) use ($i18n) {
@@ -675,6 +639,10 @@ let LiturgicalEventCollection = <?php echo json_encode($LiturgicalEventCollectio
 let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($LiturgicalEventCollection, 'event_key'), JSON_UNESCAPED_UNICODE); ?>;
 </script>
 <?php include_once('./layout/footer.php'); ?>
+
+<!-- Authentication Module -->
+<script src="assets/js/auth.js"></script>
+<?php include_once('./includes/login-modal.php'); ?>
 
 <!-- DEFINE MAKE PATRON MODAL  -->
 <div class="modal fade actionPromptModal" id="makePatronActionPrompt" tabindex="-1" role="dialog" aria-labelledby="makePatronActionModalLabel" aria-hidden="true">

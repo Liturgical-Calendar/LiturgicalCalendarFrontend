@@ -104,9 +104,23 @@ typings/
 .tern-port
 
 api/*
-debuginfo.php
-examples/
-credentials.php
+/examples
+*.php
+!about.php
+!admin.php
+!common.php
+!decrees.php
+!easter.php
+!examples.php
+!extending.php
+!index.php
+!liturgyOfAnyDay.php
+!translations.php
+!usage.php
+!layout/*.php
+!src/*.php
+!dist/*.php
+!includes/*.php
 
 .php-ini
 .php-version
@@ -117,4 +131,13 @@ credentials.php
 !/**/.env.example
 /**/.envrc
 !/**/.envrc.example
+phpstan.neon
+!phpstan.neon.dist
+phpunit.xml
+!phpunit.xml.dist
 /assets/json/
+
+/cache/
+
+# Development symlink to local liturgy-components-js
+/assets/components-js

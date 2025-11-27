@@ -4,17 +4,13 @@
  * liturgyOfAnyDay
  * @author John Romano D'Orazio <priest@johnromanodorazio.com>
  * @link https://litcal.johnromanodorazio.com
+ *
+ * This page uses the liturgy-components-js library to provide calendar selection,
+ * API options, and the LiturgyOfAnyDay component. The ApiClient handles
+ * Accept-Language headers automatically when listening to ApiOptions.
  */
 
-use LiturgicalCalendar\Components\CalendarSelect;
-
 include_once 'common.php';
-
-$dateToday      = new DateTime();
-$fmt            = new IntlDateFormatter($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::FULL, 'UTC', IntlDateFormatter::GREGORIAN, 'MMMM');
-$fmtFull        = new IntlDateFormatter($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'UTC', IntlDateFormatter::GREGORIAN);
-$monthDate      = new DateTime();
-$CalendarSelect = new CalendarSelect(['locale' => $i18n->LOCALE, 'url' => $metadataURL]);
 
 ?><!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
@@ -30,52 +26,16 @@ $CalendarSelect = new CalendarSelect(['locale' => $i18n->LOCALE, 'url' => $metad
         <h3 class="h3 mb-2 text-gray-800"><?php echo _('Liturgy of any day'); ?></h3>
         <div class="container">
             <div class="row">
-                <div class="form-group col-md"><?php
-                    echo $CalendarSelect->getSelect([
-                        'class'    => 'form-select',
-                        'id'       => 'calendarSelect',
-                        'options'  => 'all',
-                        'label'    => true,
-                        'labelStr' => _('Select calendar')
-                    ]);
-                ?></div>
+                <!-- CalendarSelect will be rendered here by JS -->
+                <div class="form-group col-md" id="calendarSelectContainer"></div>
+                <!-- LocaleInput from ApiOptions will be rendered here by JS -->
+                <div class="form-group col-md" id="localeSelectContainer"></div>
             </div>
-            <div class="row">
-                <div class="form-group col-md">
-                    <label><?php echo _('Day'); ?></label>
-                    <input class="form-control" id="dayControl" type="number" min="1" max="<?php echo $dateToday->format('t') ?>" value="<?php echo $dateToday->format('d') ?>" />
-                </div>
-                <div class="form-group col-md">
-                    <label><?php echo _('Month'); ?></label>
-                    <select class="form-select" id="monthControl">
-                        <?php foreach (range(1, 12) as $monthNumber) {
-                            $monthDate->setDate($dateToday->format('Y'), $monthNumber, 15);
-                            $selected = '';
-                            if (intval($dateToday->format('n')) === $monthNumber) {
-                                $selected = 'selected';
-                            }
-                            echo "<option value=\"{$monthNumber}\" " . $selected . ">{$fmt->format($monthDate)}</option>";
-                        }
-                        ?>
-                    </select>
-                </div>
-                <div class="form-group col-md">
-                    <label><?php echo _('Year'); ?></label>
-                    <input class="form-control" id="yearControl" type="number" min="1970" max="9999" value="<?php echo $dateToday->format('Y') ?>" />
-                </div>
-            </div>
-            <div class="card shadow m-2">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary"><?php
-                        //translators: %s = current selected date
-                        echo sprintf(_('Liturgy of %s'), '<span id="dateOfLiturgy">' . $fmtFull->format($dateToday) . '</span>');
-                    ?><i class="fas fa-cross float-end text-black" style="--bs-text-opacity: .15;"></i></h6>
-                </div>
-                <div class="card-body" id="liturgyResults">
-                </div>
-            </div>
+            <!-- LiturgyOfAnyDay component will be rendered here by JS -->
+            <div id="liturgyOfAnyDayContainer"></div>
         </div>
         <?php include_once('./layout/footer.php'); ?>
         <script nomodule defer src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+        <script type="module" src="assets/js/liturgyOfAnyDay.js"></script>
 </body>
 </html>

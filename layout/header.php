@@ -1,7 +1,8 @@
 <?php
 $currentPage = basename($_SERVER['SCRIPT_FILENAME'], '.php');
 
-$langsAvailable = ['en', ...array_map('basename', glob('i18n/*', GLOB_ONLYDIR))];
+$i18nDirs       = glob('i18n/*', GLOB_ONLYDIR);
+$langsAvailable = ['en', ...array_map('basename', $i18nDirs !== false ? $i18nDirs : [])];
 $langsAssoc     = [];
 foreach ($langsAvailable as $lang) {
     $langsAssoc[$lang] = Locale::getDisplayLanguage($lang, $i18n->LOCALE);
@@ -35,6 +36,24 @@ asort($langsAssoc);
         <li class="nav-item ms-2<?php echo $currentPage == 'about' ? ' active' : ''; ?>" id="topNavBar_AboutUs"><a class="nav-link btn btn-outline-light border-0<?php echo $currentPage == 'about' ? ' fw-bold' : ''; ?>" href="./about.php"><?php echo _('About us'); ?></a></li>
     </ul>
     <ul class="navbar-nav ms-auto">
+        <!-- Authentication Status -->
+        <li class="nav-item" id="authStatus">
+            <button class="nav-link btn btn-sm btn-outline-primary border-0 d-none" id="loginBtn" title="<?php echo _('Login'); ?>">
+                <i class="fas fa-sign-in-alt"></i>
+                <span class="d-none d-md-inline ms-1"><?php echo _('Login'); ?></span>
+            </button>
+            <div class="btn-group d-none" id="userMenu">
+                <button type="button" class="nav-link btn btn-sm btn-outline-success border-0" id="userInfo">
+                    <i class="fas fa-user"></i>
+                    <span class="d-none d-md-inline ms-1" id="username"></span>
+                </button>
+                <button type="button" class="nav-link btn btn-sm btn-outline-danger border-0" id="logoutBtn" title="<?php echo _('Logout'); ?>">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="d-none d-md-inline ms-1"><?php echo _('Logout'); ?></span>
+                </button>
+            </div>
+        </li>
+
         <li class="nav-item dropdown">
             <!-- this should contain the value of the currently selected language, based on a cookie -->
             <a class="nav-link dropdown-toggle btn btn-outline-light border-0" href="#" id="langChoicesDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -50,14 +69,16 @@ asort($langsAssoc);
                 }
                 ?>
             </div>
-            </li>
-    </ul>
+        </li>
 
-    <a class="btn btn-outline-light text-dark border-0 me-2"
-        href="https://github.com/Liturgical-Calendar/" target="_blank"
-        title="See the project repositories on GitHub">
-        <i class="fab fa-github"></i>
-    </a>
+        <li class="nav-item">
+            <a class="nav-link btn btn-outline-light text-dark border-0"
+                href="https://github.com/Liturgical-Calendar/" target="_blank"
+                title="See the project repositories on GitHub">
+                <i class="fab fa-github"></i>
+            </a>
+        </li>
+    </ul>
 </nav>
 
 

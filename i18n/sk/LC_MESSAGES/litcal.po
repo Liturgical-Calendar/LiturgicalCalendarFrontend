@@ -5,12 +5,13 @@
 # Milan Šalka <salka.milan@googlemail.com>, 2024.
 # Weblate Admin <admin@example.com>, 2024, 2025.
 # Lovro <development.lovro@gmail.com>, 2025.
+# OpenAI <noreply-mt-openai@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 16:50+0000\n"
-"PO-Revision-Date: 2025-11-21 07:26+0000\n"
+"POT-Creation-Date: 2025-11-27 00:12+0000\n"
+"PO-Revision-Date: 2025-11-25 07:36+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
@@ -120,11 +121,11 @@ msgstr "Dostupné parametre požiadaviek na základnej ceste %s"
 msgid "Request parameters available on all %1$s paths"
 msgstr "Parametre požiadaviek dostupné na všetkých cestách %1$s"
 
-#: index.php:60 usage.php:13 examples.php:95 liturgyOfAnyDay.php:22
+#: index.php:60 usage.php:13 examples.php:102 liturgyOfAnyDay.php:18
 msgid "General Roman Calendar"
 msgstr "Všeobecný rímsky kalendár"
 
-#: index.php:69 layout/header.php:75
+#: index.php:69 layout/header.php:95
 msgid "Catholic Liturgical Calendar"
 msgstr "Katolícky liturgický kalendár"
 
@@ -138,7 +139,7 @@ msgstr "API %1$s koncový bod"
 msgid "Path builder"
 msgstr "Staviteľ cesty"
 
-#: index.php:112
+#: index.php:102
 msgid ""
 "URL of the API request based on selected options. The button is set to the "
 "same URL, click on it to see results."
@@ -146,11 +147,11 @@ msgstr ""
 "URL požiadavky API na základe vybraných možností. Tlačidlo je nastavené na "
 "rovnakú URL, kliknite naň, aby ste videli výsledky."
 
-#: index.php:121 index.php:125
+#: index.php:111 index.php:115
 msgid "Liturgical Calendar Validator"
 msgstr "Overovač liturgického kalendára"
 
-#: index.php:124
+#: index.php:114
 msgid ""
 "In order to verify that the liturgical data produced by the API is correct, "
 "there is a Unit Test interface that can run predefined tests against the "
@@ -162,7 +163,7 @@ msgstr ""
 "JSON odpovediam vytvoreným API od roku 1970 až do 25 rokov od aktuálneho "
 "roku."
 
-#: index.php:129
+#: index.php:119
 #, php-format
 msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
@@ -171,28 +172,28 @@ msgstr ""
 "Jednotkové testy sú definované v priečinku %s v repozitári Liturgického "
 "kalendára API."
 
-#: index.php:133
+#: index.php:123
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
 msgstr "Rozhranie jednotkového testu je spravované v samostatnom úložisku: %s."
 
-#: index.php:142
+#: index.php:132
 msgid "Translation Tool"
 msgstr "Nástroj na preklad"
 
-#: index.php:148 index.php:151
+#: index.php:138 index.php:141
 msgid "Translations status"
 msgstr "Stav prekladov"
 
-#: index.php:159
+#: index.php:149
 msgid "Open API Schema"
 msgstr "Otvoriť schému API"
 
-#: index.php:162
+#: index.php:152
 msgid "Swagger / Open API Documentation"
 msgstr "Swagger / Open API Dokumentácia"
 
-#: index.php:164
+#: index.php:154
 msgid ""
 "All of the available API routes with their supported methods, parameters, "
 "content types and responses are described here."
@@ -200,19 +201,11 @@ msgstr ""
 "Všetky dostupné API trasy s ich podporovanými metódami, parametrami, typmi "
 "obsahu a odpoveďami sú popísané tu."
 
-#: index.php:170 usage.php:184
+#: index.php:160 usage.php:184
 msgid "Calculation of the Dates of Easter"
 msgstr "Výpočet dátumov Veľkej noci"
 
-#: index.php:173
-#, fuzzy
-#| msgid ""
-#| "A simple API endpoint that returns data about the Date of Easter, both "
-#| "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
-#| "Calendar) to 9999 (maximum possible date calculation in 64bit PHP), using "
-#| "a PHP adaptation of the Meeus/Jones/Butcher algorithm for Gregorian "
-#| "easter (observed by the Roman Catholic church) and of the Meeus algorithm "
-#| "for Julian easter (observed by orthodox churches)."
+#: index.php:163
 msgid ""
 "A simple API endpoint that returns data about the Dates of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -221,20 +214,18 @@ msgid ""
 "(observed by the Roman Catholic church) and of the Meeus algorithm for "
 "Julian easter (observed by orthodox churches)."
 msgstr ""
-"Jednoduchý API endpoint, ktorý vracia údaje o dátume Veľkej noci, ako "
-"gregoriánskej, tak aj juliánskej, od roku 1583 (rok prijatia gregoriánskeho "
-"kalendára) do roku 9999 (maximálny možný dátum výpočtu v 64bit PHP), pomocou "
-"PHP adaptácie algoritmu Meeus/Jones/Butcher pre gregoriánsku Veľkú noc "
-"(pozorovanú rímskokatolíckou cirkvou) a algoritmu Meeus pre juliánsku Veľkú "
-"noc (pozorovanú pravoslávnymi cirkvami)."
+"Jednoduchý API endpoint, ktorý vracia údaje o dátumoch Veľkej noci, ako v "
+"gregoriánskom, tak aj v juliánskom kalendári, od roku 1583 (rok prijatia "
+"gregoriánskeho kalendára) do roku 9999 (maximálny možný dátum výpočtu v "
+"64bit PHP), pomocou PHP adaptácie Meeus/Jones/Butcher algoritmu pre "
+"gregoriánsku Veľkú noc (pozorovanú rímskokatolíckou cirkvou) a Meeusovho "
+"algoritmu pre juliánsku Veľkú noc (pozorovanú pravoslávnymi cirkvami)."
 
-#: index.php:178
-#, fuzzy
-#| msgid "Date of Easter API endpoint"
+#: index.php:168
 msgid "Dates of Easter API endpoint"
-msgstr "Dátum Veľkej noci API endpoint"
+msgstr "API endpoint Dátumy Veľkej noci"
 
-#: index.php:180
+#: index.php:170
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
@@ -263,7 +254,7 @@ msgstr "Príklady"
 msgid "Example usage of the API"
 msgstr "Príklad použitia API"
 
-#: usage.php:27 layout/header.php:101
+#: usage.php:27 layout/header.php:121
 msgid "Web calendar"
 msgstr "Webový kalendár"
 
@@ -311,11 +302,11 @@ msgstr "Zobraziť celý kalendár"
 msgid "View FullCalendar (messages first)"
 msgstr "Zobraziť celý kalendár (najprv správy)"
 
-#: usage.php:74 layout/header.php:105
+#: usage.php:74 layout/header.php:125
 msgid "Calendar subscription"
 msgstr "Predplatenie kalendára"
 
-#: usage.php:88 liturgyOfAnyDay.php:39
+#: usage.php:88
 msgid "Select calendar"
 msgstr "Vyber kalendár"
 
@@ -479,7 +470,7 @@ msgstr ""
 "popisy udalostí poskytované URL adresou predplatného sú pre Outlook trochu "
 "viac \"skrášlené\"."
 
-#: usage.php:176 layout/header.php:109
+#: usage.php:176 layout/header.php:129
 msgid "Dates of Easter"
 msgstr "Dátumy Veľkej noci"
 
@@ -491,7 +482,7 @@ msgstr "Príklad zobrazenia dátumu Veľkej noci od roku 1583 do roku 9999"
 msgid "Calculate the Dates of Easter"
 msgstr "Vypočítaj dátumy Veľkej noci"
 
-#: usage.php:198 layout/header.php:113
+#: usage.php:198 layout/header.php:133
 msgid "Liturgy of the Day"
 msgstr "Liturgia dňa"
 
@@ -507,7 +498,7 @@ msgstr "Denný spravodajský prehľad s liturgiou dňa, ako zručnosť Amazon Al
 msgid "In development"
 msgstr "Vo vývoji"
 
-#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:22 liturgyOfAnyDay.php:30
+#: usage.php:244 usage.php:248 liturgyOfAnyDay.php:18 liturgyOfAnyDay.php:26
 msgid "Liturgy of any day"
 msgstr "Liturgia ktoréhokoľvek dňa"
 
@@ -571,19 +562,19 @@ msgstr ""
 "napríklad vytlačiť jeden spoločný ročný kalendár s údajmi pre všetky diecézy "
 "v skupine, skupina môže byť definovaná alebo nastavená tu."
 
-#: extending.php:161
+#: extending.php:161 admin.php:94
 msgid "Event key"
 msgstr "Kľúč udalosti"
 
-#: extending.php:162 src/Utilities.php:233 src/FormControls.php:52
+#: extending.php:162 admin.php:95 src/Utilities.php:233 src/FormControls.php:52
 msgid "Name"
 msgstr "Meno"
 
-#: extending.php:163 liturgyOfAnyDay.php:45 src/FormControls.php:59
+#: extending.php:163 admin.php:96 src/FormControls.php:59
 msgid "Day"
 msgstr "Deň"
 
-#: extending.php:164 liturgyOfAnyDay.php:49 src/FormControls.php:65
+#: extending.php:164 admin.php:97 src/FormControls.php:65
 msgid "Month"
 msgstr "Mesiac"
 
@@ -621,42 +612,42 @@ msgstr ""
 "kalendár a zodpovedajúce položky indexu budú odstránené a už nebudú dostupné "
 "v klientských aplikáciách."
 
-#: extending.php:172 src/FormControls.php:89
+#: extending.php:172 admin.php:98 src/FormControls.php:89
 msgid "Liturgical color"
 msgstr "Liturgická farba"
 
 #. translators: context = liturgical color
-#: extending.php:173 src/LitColor.php:35 src/FormControls.php:91
+#: extending.php:173 admin.php:99 src/LitColor.php:35 src/FormControls.php:91
 msgid "white"
 msgstr "biela"
 
 #. translators: context = liturgical color
-#: extending.php:174 src/LitColor.php:38 src/FormControls.php:92
+#: extending.php:174 admin.php:100 src/LitColor.php:38 src/FormControls.php:92
 msgid "red"
 msgstr "červená"
 
 #. translators: context = liturgical color
-#: extending.php:175 src/LitColor.php:29 src/FormControls.php:94
+#: extending.php:175 admin.php:101 src/LitColor.php:29 src/FormControls.php:94
 msgid "green"
 msgstr "zelená"
 
 #. translators: context = liturgical color
-#: extending.php:176 src/LitColor.php:32 src/FormControls.php:93
+#: extending.php:176 admin.php:102 src/LitColor.php:32 src/FormControls.php:93
 msgid "purple"
 msgstr "fialová"
 
 #. translators: context = liturgical color
-#: extending.php:177 src/LitColor.php:41
+#: extending.php:177 admin.php:103 src/LitColor.php:41
 msgid "rose"
 msgstr "ružová"
 
 #. translators: in reference to the first year from which this liturgical event takes place
-#: extending.php:179 src/FormControls.php:101
+#: extending.php:179 admin.php:105 src/FormControls.php:101
 msgid "Since"
 msgstr "Od"
 
 #. translators: in reference to the year from which this liturgical event no longer needs to be dealt with
-#: extending.php:181 src/FormControls.php:108
+#: extending.php:181 admin.php:107 src/FormControls.php:108
 msgid "Until"
 msgstr "Až do"
 
@@ -666,30 +657,30 @@ msgid "Patron or Patrons of the Wider Region"
 msgstr "Patrón alebo Patróni širšieho regiónu"
 
 #. translators: label of the form row
-#: extending.php:185
+#: extending.php:185 admin.php:111 decrees.php:6
 msgid "New liturgical event"
 msgstr "Nová liturgická udalosť"
 
 #. translators: label of the form row
-#: extending.php:187
+#: extending.php:187 decrees.php:10
 msgid "Change name"
 msgstr "Zmeniť meno"
 
 #. translators: label of the form row
-#: extending.php:189
+#: extending.php:189 decrees.php:12
 msgid "Change grade"
 msgstr "Zmeniť stupeň"
 
 #. translators: label of the form row
-#: extending.php:191
+#: extending.php:191 admin.php:115 admin.php:240 decrees.php:14
 msgid "Move liturgical event"
 msgstr "Presunúť liturgickú udalosť"
 
-#: extending.php:192
+#: extending.php:192 admin.php:116
 msgid "Decree URL"
 msgstr "Dekrét URL"
 
-#: extending.php:193
+#: extending.php:193 admin.php:117
 msgid "Decree Language mappings"
 msgstr "Jazykové mapovania dekrétov"
 
@@ -697,23 +688,23 @@ msgstr "Jazykové mapovania dekrétov"
 msgid "Missal"
 msgstr "Misál"
 
-#: extending.php:195
+#: extending.php:195 admin.php:118
 msgid "Reason (in favor of liturgical event)"
 msgstr "Dôvod (v prospech liturgickej udalosti)"
 
-#: extending.php:207 extending.php:684 extending.php:688
+#: extending.php:207 extending.php:688 extending.php:692
 msgid "Designate patron"
 msgstr "Určiť patróna"
 
-#: extending.php:208 extending.php:700
+#: extending.php:208 extending.php:704 admin.php:126 admin.php:220
 msgid "Change name or grade of existing liturgical event"
 msgstr "Zmeň názov alebo stupeň existujúcej liturgickej udalosti"
 
-#: extending.php:209 extending.php:716
+#: extending.php:209 extending.php:720 admin.php:127 admin.php:236
 msgid "Move liturgical event to new date"
 msgstr "Presuň liturgickú udalosť na nový dátum"
 
-#: extending.php:210 extending.php:732
+#: extending.php:210 extending.php:736 admin.php:128 admin.php:252
 msgid "Create a new liturgical event"
 msgstr "Vytvoriť novú liturgickú udalosť"
 
@@ -797,7 +788,7 @@ msgstr "JAZYKY"
 msgid "Published Roman Missals"
 msgstr "Publikované rímske misály"
 
-#: extending.php:381 extending.php:748
+#: extending.php:381 extending.php:752
 msgid "Add Missal"
 msgstr "Pridať Misál"
 
@@ -901,28 +892,29 @@ msgstr "Diecézne výnimky z národného kalendára pre …"
 msgid "SAVE DIOCESAN CALENDAR"
 msgstr "ULOŽIŤ DIECÉZNY KALENDÁR"
 
-#: extending.php:689 extending.php:705 extending.php:721 extending.php:737
-#: extending.php:761
+#: extending.php:693 extending.php:709 extending.php:725 extending.php:741
+#: extending.php:765 admin.php:225 admin.php:241 admin.php:258 admin.php:274
+#: includes/login-modal.php:34
 msgid "Cancel"
 msgstr "Zrušiť"
 
-#: extending.php:704
+#: extending.php:708
 msgid "Set property"
 msgstr "Nastaviť vlastnosť"
 
-#: extending.php:720
+#: extending.php:724
 msgid "Move Liturgical Event"
 msgstr "Premiestni liturgickú udalosť"
 
-#: extending.php:736
+#: extending.php:740
 msgid "Create Liturgical Event"
 msgstr "Vytvoriť liturgickú udalosť"
 
-#: extending.php:753
+#: extending.php:757
 msgid "Choose from known Roman Missal language editions"
 msgstr "Vyberte si z dostupných jazykových vydaní Rímskeho misála"
 
-#: extending.php:755
+#: extending.php:759
 msgid ""
 "This Missal is unknown to the Liturgical Calendar API. Please choose from a "
 "value in the list, or contact the curator of the API to have the Missal "
@@ -932,7 +924,7 @@ msgstr ""
 "hodnotu zo zoznamu alebo kontaktujte kurátora API, aby bol misál pridaný do "
 "známych jazykových vydaní misálov."
 
-#: extending.php:760
+#: extending.php:764
 msgid "Add language edition Roman Missal"
 msgstr "Pridať jazykovú edíciu Rímskeho misála"
 
@@ -985,7 +977,7 @@ msgstr "Liturgický kalendár - O nás"
 msgid "Liturgical Calendar as an HTML table produced by Javascript"
 msgstr "Liturgický kalendár ako HTML tabuľka vytvorená pomocou Javascriptu"
 
-#: examples.php:133
+#: examples.php:140
 #, php-format
 msgid "Example '%s' not found"
 msgstr "Príklad '%s' nebol nájdený"
@@ -1129,15 +1121,76 @@ msgstr "Údaje kalendára"
 msgid "Project website"
 msgstr "Webová stránka projektu"
 
-#: liturgyOfAnyDay.php:63
-msgid "Year"
-msgstr "Rok"
+#. translators: label of the form row
+#: admin.php:109 admin.php:273 decrees.php:16
+msgid "Designate Doctor of the Church"
+msgstr "Designovať Učiteľa Cirkvi"
 
-#. translators: %s = current selected date
-#: liturgyOfAnyDay.php:71
+#. translators: label of the form row
+#: admin.php:113 decrees.php:8
+msgid "Change name or grade"
+msgstr "Zmeniť meno alebo stupeň"
+
+#: admin.php:129 admin.php:269
+msgid "Designate Doctor of the Church from existing liturgical event"
+msgstr "Designovať Učiteľa Cirkvi z existujúcej liturgickej udalosti"
+
+#: admin.php:256
+msgid "New liturgical event from existing"
+msgstr "Nová liturgická udalosť z existujúcej"
+
+#: admin.php:257
+msgid "New liturgical event ex novo"
+msgstr "Nová liturgická udalosť ex novo"
+
+#: decrees.php:57
+msgid "General Roman Calendar - Decrees"
+msgstr "Všeobecný rímsky kalendár - Dekréty"
+
+#: decrees.php:65
+msgid ""
+"Refine the General Roman Calendar with Decrees of the Dicastery for Divine "
+"Worship and the Discipline of the Sacraments"
+msgstr ""
+"Upraviť Všeobecný rímsky kalendár dekretmi Dikastéria pre Boží kult a "
+"disciplínu sviatostí"
+
+#: decrees.php:66
+msgid ""
+"The Liturgical Calendar is based off of both published Roman Missals, and "
+"Decrees of the Dicastery for Divine Worship and the Discipline of the "
+"Sacraments. These Decrees can refine the data from the Roman Missals, adding "
+"or removing or changing liturgical events, or instructing on how to handle "
+"any possible coincidences between mandatory celebrations."
+msgstr ""
+"Liturgický kalendár je založený na publikovaných Rímskych misáloch a "
+"dekrétoch Dikastéria pre Boží kult a disciplínu sviatostí. Tieto dekréty "
+"môžu upraviť údaje z Rímskych misálov, pridaním alebo odstránením alebo "
+"zmenou liturgických udalostí, alebo poskytnutím pokynov, ako riešiť možné "
+"koincidencie medzi povinnými slávnosťami."
+
+#: decrees.php:68
+msgid ""
+"Data for <b>Roman Missals</b> is handled by the <code>/missals</code> "
+"endpoint of the API, while data for <b>Decrees</b> is handled by the <code>/"
+"decrees</code> endpoint of the API."
+msgstr ""
+"Údaje pre <b>Rímske misále</b> sú spracované API endpointom <code>/missals</"
+"code>, zatiaľ čo údaje pre <b>Dekréty</b> sú spracované API endpointom "
+"<code>/decrees</code>."
+
+#: decrees.php:70
 #, php-format
-msgid "Liturgy of %s"
-msgstr "Liturgia %s"
+msgid ""
+"Currently, these endpoints are read-only. There are currently <b>%1$d "
+"Decrees</b> defined at the endpoint %2$s."
+msgstr ""
+"Momentálne sú tieto koncové body len na čítanie. Momentálne je definovaných "
+"<b>%1$d dekrétov</b> na koncovom bode %2$s."
+
+#: decrees.php:135
+msgid "Read the Decree"
+msgstr "Prečítať dekrét"
 
 #: src/LitCommon.php:57
 msgid "Proper"
@@ -1475,7 +1528,7 @@ msgstr "Trieda"
 msgid "Common (or Proper)"
 msgstr "Bežné (alebo Vlastné)"
 
-#: layout/header.php:24 layout/header.php:89
+#: layout/header.php:24 layout/header.php:109
 msgid "Extending the API"
 msgstr "Rozšírenie API"
 
@@ -1495,17 +1548,84 @@ msgstr "Nariadenia"
 msgid "About us"
 msgstr "O nás"
 
-#: layout/header.php:81
+#: layout/header.php:40 layout/header.php:42 includes/login-modal.php:35
+#: includes/login-modal.php:278
+msgid "Login"
+msgstr "Prihlásenie"
+
+#: layout/header.php:49 layout/header.php:51
+msgid "Logout"
+msgstr "Odhlásenie"
+
+#: layout/header.php:101
 msgid "Home"
 msgstr "Domov"
 
-#: layout/header.php:93
+#: layout/header.php:113
 msgid "Documentation"
 msgstr "Dokumentácia"
 
-#: layout/header.php:97
+#: layout/header.php:117
 msgid "Examples of Usage"
 msgstr "Príklady použitia"
+
+#: includes/login-modal.php:6
+msgid "Administrator Login"
+msgstr "Prihlásenie správcu"
+
+#: includes/login-modal.php:12
+msgid "Username"
+msgstr "Používateľské meno"
+
+#: includes/login-modal.php:16
+msgid "Password"
+msgstr "Heslo"
+
+#: includes/login-modal.php:19 includes/login-modal.php:112
+msgid "Show password"
+msgstr "Zobraziť heslo"
+
+#: includes/login-modal.php:26
+msgid "Remember me"
+msgstr "Zapamätať si ma"
+
+#: includes/login-modal.php:71
+msgid "Are you sure you want to logout?"
+msgstr "Naozaj sa chceš odhlásiť?"
+
+#: includes/login-modal.php:107
+msgid "Hide password"
+msgstr "Skryť heslo"
+
+#: includes/login-modal.php:123
+msgid "Session Expiring"
+msgstr "Platnosť relácie končí"
+
+#: includes/login-modal.php:216
+msgid "Please enter both username and password"
+msgstr "Zadajte prosím používateľské meno a heslo"
+
+#: includes/login-modal.php:224
+msgid "Logging in..."
+msgstr "Prihlasovanie..."
+
+#: includes/login-modal.php:262
+msgid "Login successful"
+msgstr "Prihlásenie úspešné"
+
+#: includes/login-modal.php:262
+msgid "Success"
+msgstr "Úspech"
+
+#: includes/login-modal.php:273
+msgid "Login failed. Please check your credentials."
+msgstr "Prihlásenie zlyhalo. Skontrolujte svoje prihlasovacie údaje."
+
+#~ msgid "Year"
+#~ msgstr "Rok"
+
+#~ msgid "Liturgy of %s"
+#~ msgstr "Liturgia %s"
 
 #~ msgid "Calculation of the Date of Easter"
 #~ msgstr "Výpočet dátumu Veľkej noci"
