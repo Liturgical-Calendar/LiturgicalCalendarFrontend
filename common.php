@@ -222,7 +222,7 @@ try {
     error_log('Error creating logger: ' . $e->getMessage());
 }
 
-if ($debugMode && $logger) {
+if ($debugMode) {
     $logger->debug('Debug mode enabled');
 }
 
