@@ -447,7 +447,7 @@ class FormControls {
 
                 const exactDateLabel = document.createElement('label');
                 exactDateLabel.className = 'btn btn-outline-info';
-                exactDateLabel.setAttribute('for', `exactDate${FormControls.uniqid}`);
+                exactDateLabel.htmlFor = `exactDate${FormControls.uniqid}`;
                 exactDateLabel.title = 'month and day';
                 exactDateLabel.innerHTML = `<i class="fas fa-calendar-day me-2"></i>exact date`;
                 radioGroupDiv.appendChild(exactDateLabel);
@@ -464,7 +464,7 @@ class FormControls {
 
                 const relativeDateLabel = document.createElement('label');
                 relativeDateLabel.className = 'btn btn-outline-info';
-                relativeDateLabel.setAttribute('for', `relativeDate${FormControls.uniqid}`);
+                relativeDateLabel.htmlFor = `relativeDate${FormControls.uniqid}`;
                 relativeDateLabel.title = 'php strtotime';
                 relativeDateLabel.innerHTML = `relative date<i class="fas fa-comment ms-2"></i>`;
                 radioGroupDiv.appendChild(relativeDateLabel);
