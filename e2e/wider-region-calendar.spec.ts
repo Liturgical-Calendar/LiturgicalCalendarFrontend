@@ -159,14 +159,19 @@ test.describe('Wider Region Calendar Form', () => {
         // CLEANUP: Revert changes using git restore in the API folder
         if (needsGitRestore) {
             const apiPath = process.env.API_REPO_PATH || path.resolve(__dirname, '../../LiturgicalCalendarAPI');
-            await new Promise<void>((resolve) => {
+            const gitRestoreError = await new Promise<string | null>((resolve) => {
                 exec(`git -C "${apiPath}" restore jsondata/sourcedata/`, (error: any) => {
                     if (error) {
-                        console.warn('Git restore warning:', error.message);
+                        resolve(error.message);
+                    } else {
+                        resolve(null);
                     }
-                    resolve();
                 });
             });
+            if (gitRestoreError) {
+                // Fail the test if cleanup fails - leaving modified JSON is risky in shared/CI environments
+                throw new Error(`CLEANUP FAILED: git restore failed for path "${apiPath}". Manual cleanup required. Error: ${gitRestoreError}`);
+            }
             console.log('CLEANUP: git restore completed for wider region calendar update');
         }
     });
