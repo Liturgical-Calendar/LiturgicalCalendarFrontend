@@ -311,6 +311,10 @@ test.describe('National Calendar Form', () => {
         }
 
         // CLEANUP: DELETE the created national calendar and verify 200 response
+        if (!createdNationKey) {
+            console.warn('CLEANUP: Could not determine nation key for deletion');
+            return;
+        }
         console.log(`CLEANUP: Deleting national calendar ${createdNationKey}...`);
 
         // Get the API base URL from the page

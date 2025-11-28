@@ -263,6 +263,10 @@ test.describe('Wider Region Calendar Form', () => {
         }
 
         // CLEANUP: DELETE the created wider region calendar and verify 200 response
+        if (!createdRegionKey) {
+            console.warn('CLEANUP: Could not determine region key for deletion');
+            return;
+        }
         console.log(`CLEANUP: Deleting wider region calendar ${createdRegionKey}...`);
 
         // Get the API base URL from the page
