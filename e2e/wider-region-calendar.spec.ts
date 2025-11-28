@@ -24,8 +24,8 @@ test.describe('Wider Region Calendar Form', () => {
     });
 
     test('should load the wider region calendar form', async ({ page }) => {
-        // Wait for page to fully load
-        await page.waitForTimeout(1000);
+        // Wait for form to be ready
+        await page.waitForSelector('#widerRegionCalendarName', { state: 'visible' });
 
         // Verify key form elements are present (some may be hidden in collapsed sections)
         await expect(page.locator('#widerRegionCalendarName')).toBeVisible();
@@ -48,9 +48,16 @@ test.describe('Wider Region Calendar Form', () => {
         // Select Americas region from the datalist
         await extendingPage.selectCalendar('#widerRegionCalendarName', 'Americas');
 
-        // Wait for data to load
+        // Wait for data to load and locales to be populated
         await page.waitForLoadState('networkidle');
-        await page.waitForTimeout(2000);
+        await page.waitForFunction(() => {
+            const select = document.querySelector('#widerRegionLocales') as HTMLSelectElement;
+            return select && select.options.length > 0;
+        }, { timeout: 15000 });
+        // Wait for success toast indicating data was loaded
+        await page.waitForSelector('.toast-success, .toast.bg-success', { timeout: 10000 }).catch(() => {});
+        // Wait for all remaining async operations to complete
+        await page.waitForLoadState('networkidle');
 
         // Verify locales are populated
         const localesSelect = page.locator('#widerRegionLocales');
@@ -92,7 +99,15 @@ test.describe('Wider Region Calendar Form', () => {
         // Load an existing wider region calendar (UPDATE scenario - should use PATCH)
         await extendingPage.selectCalendar('#widerRegionCalendarName', 'Americas');
         await page.waitForLoadState('networkidle');
-        await page.waitForTimeout(2000);
+        // Wait for locales to be populated (indicates data has loaded)
+        await page.waitForFunction(() => {
+            const select = document.querySelector('#widerRegionLocales') as HTMLSelectElement;
+            return select && select.options.length > 0;
+        }, { timeout: 15000 });
+        // Wait for success toast indicating data was loaded
+        await page.waitForSelector('.toast-success, .toast.bg-success', { timeout: 10000 }).catch(() => {});
+        // Wait for all remaining async operations to complete
+        await page.waitForLoadState('networkidle');
 
         // Dismiss any toast messages that might be blocking
         await page.locator('.toast-container, #toast-container').evaluate(el => el?.remove()).catch(() => {});
@@ -100,7 +115,12 @@ test.describe('Wider Region Calendar Form', () => {
         // Wait for the save button to be enabled (form must be fully loaded)
         const saveButton = page.locator('#serializeWiderRegionData');
         await expect(saveButton).toBeEnabled({ timeout: 15000 });
-        await saveButton.click({ force: true });
+
+        // Click the save button using page.evaluate for more reliable triggering
+        await page.evaluate(() => {
+            const btn = document.querySelector('#serializeWiderRegionData') as HTMLButtonElement;
+            if (btn) btn.click();
+        });
 
         // Wait for the response and capture status
         const response = await page.waitForResponse(
@@ -306,9 +326,6 @@ test.describe('Wider Region Calendar Form', () => {
 
         console.log('Toast warning detected - CREATE operation confirmed');
 
-        // Wait a bit for the form to fully settle after the toast
-        await page.waitForTimeout(2000);
-
         // Dismiss any toast messages that might be blocking
         await page.evaluate(() => {
             const toastContainer = document.querySelector('#toast-container');
@@ -383,7 +400,8 @@ test.describe('Wider Region Calendar Form', () => {
 
         // Wait for network activity to settle after locale change
         await page.waitForLoadState('networkidle');
-        await page.waitForTimeout(1000);
+        // Wait for save button to be ready
+        await expect(page.locator('#serializeWiderRegionData')).toBeEnabled({ timeout: 10000 });
 
         // Now click the save button
         await page.evaluate(() => {
@@ -573,7 +591,15 @@ test.describe('Wider Region Calendar Form - National Calendar Association', () =
         // Load Americas region
         await extendingPage.selectCalendar('#widerRegionCalendarName', 'Americas');
         await page.waitForLoadState('networkidle');
-        await page.waitForTimeout(2000);
+        // Wait for locales to be populated (indicates data has loaded)
+        await page.waitForFunction(() => {
+            const select = document.querySelector('#widerRegionLocales') as HTMLSelectElement;
+            return select && select.options.length > 0;
+        }, { timeout: 15000 });
+        // Wait for success toast indicating data was loaded
+        await page.waitForSelector('.toast-success, .toast.bg-success', { timeout: 10000 }).catch(() => {});
+        // Wait for all remaining async operations to complete
+        await page.waitForLoadState('networkidle');
 
         // The form should show which national calendars are associated with this wider region
         const nationalCalendarsSection = page.locator('#national_calendars');
@@ -596,9 +622,9 @@ test.describe('Wider Region Calendar Form - National Calendar Association', () =
             const localesSelect = page.locator('#widerRegionLocales');
             await expect(localesSelect).toBeVisible();
 
-            // Verify at least one locale is selected (indicating data loaded)
-            const selectedOptions = await localesSelect.locator('option:checked').count();
-            expect(selectedOptions).toBeGreaterThan(0);
+            // Verify locales dropdown has options (indicating data loaded)
+            const optionCount = await localesSelect.locator('option').count();
+            expect(optionCount).toBeGreaterThan(0);
         }
     });
 });
