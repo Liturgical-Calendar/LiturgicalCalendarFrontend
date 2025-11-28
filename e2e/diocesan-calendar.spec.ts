@@ -125,10 +125,21 @@ test.describe('Diocesan Calendar Form', () => {
     });
 
     test('should CREATE (PUT) new diocesan calendar, verify 201 response, and DELETE for cleanup', async ({ page }) => {
-        // This test creates a NEW diocese using PUT, verifies the API returns 201,
-        // then DELETEs it and verifies 200 response for cleanup
+        // This test creates a NEW diocese calendar using PUT for a diocese that exists
+        // in the datalist but doesn't have calendar data yet. Then it DELETEs to clean up.
 
-        const uniqueDioceseName = `E2ETest_${Date.now()}`;
+        // First, query the /calendars API to get existing diocesan calendar IDs
+        const apiBaseUrl = await page.evaluate(() => {
+            // @ts-ignore - BaseUrl is a global variable set by the frontend
+            return typeof BaseUrl !== 'undefined' ? BaseUrl : 'http://localhost:8000';
+        });
+
+        const calendarsResponse = await page.request.get(`${apiBaseUrl}/calendars`);
+        const calendarsData = await calendarsResponse.json();
+        const existingDioceseIds: string[] = calendarsData.diocesan_calendars?.map(
+            (cal: { calendar_id: string }) => cal.calendar_id
+        ) || [];
+        console.log(`Found ${existingDioceseIds.length} existing diocesan calendars`);
 
         // Set up the form with required fields - select first available national calendar
         const nationalSelect = page.locator('#diocesanCalendarNationalDependency');
@@ -147,18 +158,78 @@ test.describe('Diocesan Calendar Form', () => {
         }
 
         await nationalSelect.selectOption(selectedNation);
-        await page.waitForTimeout(1000);
 
-        // Fill in diocese name (use a unique test name that doesn't exist)
-        await page.locator('#diocesanCalendarDioceseName').fill(uniqueDioceseName);
+        // Wait for the dioceses datalist to be populated
+        await page.waitForFunction(() => {
+            const datalist = document.querySelector('#DiocesesList');
+            return datalist && datalist.querySelectorAll('option[data-value]').length > 0;
+        }, { timeout: 15000 });
+
+        // Get all diocese options from the datalist and find one without calendar data
+        const availableDioceses = await page.evaluate(() => {
+            const datalist = document.querySelector('#DiocesesList');
+            if (!datalist) return [];
+            return Array.from(datalist.querySelectorAll('option[data-value]')).map(opt => ({
+                name: opt.getAttribute('value') || '',
+                key: opt.getAttribute('data-value') || ''
+            }));
+        });
+
+        // Find a diocese that's in the datalist but NOT in existing calendars
+        const dioceseToCreate = availableDioceses.find(d => !existingDioceseIds.includes(d.key));
+
+        if (!dioceseToCreate) {
+            test.skip(true, `All ${availableDioceses.length} dioceses for ${selectedNation} already have calendar data`);
+        }
+
+        console.log(`Selected diocese for CREATE test: ${dioceseToCreate.name} (${dioceseToCreate.key})`);
+
+        // Wait for locale options to be populated after national calendar selection
+        await page.waitForFunction(() => {
+            const localesSelect = document.querySelector('#diocesanCalendarLocales') as HTMLSelectElement;
+            return localesSelect && localesSelect.options.length > 0;
+        }, { timeout: 10000 });
+
+        // Select at least one locale (required for saving)
+        const localesSelect = page.locator('#diocesanCalendarLocales');
+        const firstLocale = await localesSelect.locator('option').first().getAttribute('value');
+        if (firstLocale) {
+            await localesSelect.selectOption(firstLocale);
+        }
+
+        // Ensure the current localization is set
+        const currentLocalization = page.locator('#currentLocalizationDiocesan');
+        const firstLocalizationOption = await currentLocalization.locator('option').first().getAttribute('value');
+        if (firstLocalizationOption) {
+            await currentLocalization.selectOption(firstLocalizationOption);
+        }
+
+        // Ensure timezone is selected (use first available)
+        const timezoneSelect = page.locator('#diocesanCalendarTimezone');
+        const firstTimezone = await timezoneSelect.locator('option[value]:not([value=""])').first().getAttribute('value');
+        if (firstTimezone) {
+            await timezoneSelect.selectOption(firstTimezone);
+        }
+
+        // Fill in diocese name from the found diocese (without existing calendar data)
+        const dioceseInput = page.locator('#diocesanCalendarDioceseName');
+        await dioceseInput.fill(dioceseToCreate.name);
+        await dioceseInput.dispatchEvent('change');
+
+        // Wait for the form to process the change
         await page.waitForTimeout(500);
+
+        // Fill in at least one valid liturgical event (Principal Patron)
+        // This is required because empty form rows would fail API schema validation
+        const principalPatronNameInput = page.locator('.carousel-item.active input.litEventName').first();
+        await principalPatronNameInput.fill('Test Principal Patron');
+        await principalPatronNameInput.dispatchEvent('change');
 
         // Set up request interception to capture the payload and method
         let capturedPayload: any = null;
         let capturedMethod: string | null = null;
         let createResponseStatus: number | null = null;
         let createResponseBody: any = null;
-        let createdDioceseKey: string | null = null;
 
         await page.route('**/data/**', async (route, request) => {
             if (['PUT', 'PATCH'].includes(request.method())) {
@@ -196,13 +267,6 @@ test.describe('Diocesan Calendar Form', () => {
             createResponseBody = await response.text();
         }
 
-        // Extract the diocese key from the URL for deletion
-        const url = response.url();
-        const match = url.match(/\/data\/diocese\/([^\/\?]+)/);
-        if (match) {
-            createdDioceseKey = match[1];
-        }
-
         // Verify the HTTP method is PUT (CREATE)
         expect(capturedMethod).toBe('PUT');
         console.log(`HTTP method used: ${capturedMethod}`);
@@ -210,39 +274,19 @@ test.describe('Diocesan Calendar Form', () => {
         // Verify CREATE response status is 201
         expect(createResponseStatus).toBe(201);
         expect(createResponseBody).toHaveProperty('success');
-        console.log(`CREATE (PUT) response: ${createResponseStatus} - ${JSON.stringify(createResponseBody)}`);
+        console.log(`CREATE (PUT) response: ${createResponseStatus}`);
 
         // Validate payload structure
         expect(capturedPayload).not.toBeNull();
-        // Validate DiocesanCalendarPayload structure
         expect(capturedPayload).toHaveProperty('litcal');
         expect(capturedPayload).toHaveProperty('metadata');
-
-        // Validate litcal is an array
         expect(Array.isArray(capturedPayload.litcal)).toBe(true);
-
-        // Validate metadata structure
         expect(capturedPayload.metadata).toHaveProperty('diocese_id');
         expect(capturedPayload.metadata).toHaveProperty('diocese_name');
         expect(capturedPayload.metadata).toHaveProperty('nation');
 
-        // Store the diocese_id for cleanup
-        if (!createdDioceseKey && capturedPayload.metadata.diocese_id) {
-            createdDioceseKey = capturedPayload.metadata.diocese_id;
-        }
-
         // CLEANUP: DELETE the created diocese and verify 200 response
-        if (!createdDioceseKey) {
-            console.warn('CLEANUP: Could not determine diocese key for deletion');
-            return;
-        }
-        console.log(`CLEANUP: Deleting diocese ${createdDioceseKey}...`);
-
-        // Get the API base URL from the page
-        const apiBaseUrl = await page.evaluate(() => {
-            // @ts-ignore - BaseUrl is a global variable set by the frontend
-            return typeof BaseUrl !== 'undefined' ? BaseUrl : 'http://localhost:8000';
-        });
+        console.log(`CLEANUP: Deleting diocese ${dioceseToCreate.key}...`);
 
         // Get the auth token from localStorage (Playwright stores it there)
         const token = await page.evaluate(() => {
@@ -251,7 +295,7 @@ test.describe('Diocesan Calendar Form', () => {
 
         // Make DELETE request
         const deleteResponse = await page.request.delete(
-            `${apiBaseUrl}/data/diocese/${createdDioceseKey}`,
+            `${apiBaseUrl}/data/diocese/${dioceseToCreate.key}`,
             {
                 headers: {
                     'Authorization': `Bearer ${token}`,

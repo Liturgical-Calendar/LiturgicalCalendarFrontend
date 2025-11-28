@@ -2207,6 +2207,7 @@ const buildNationalCalendarPayload = () => {
  */
 const buildWiderRegionPayload = () => {
     API.key = document.querySelector('#widerRegionCalendarName').value;
+    API.locale = document.querySelector('.currentLocalizationChoices').value;
     const regionNamesLocalizedEng = new Intl.DisplayNames(['en'], { type: 'region' });
     const selectedLocales = document.querySelector('#widerRegionLocales').selectedOptions;
     const nationalCalendars = Array.from(selectedLocales).map(({ value }) => value).reduce((prev, curr) => {

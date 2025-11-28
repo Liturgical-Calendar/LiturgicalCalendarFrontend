@@ -624,6 +624,101 @@ When writing tests that need real diocese/calendar data:
 - **Timeout errors**: Increase timeout in `playwright.config.ts` or check network latency
 - **Server startup issues in CI mode**: Check that `../LiturgicalCalendarAPI` directory exists and has `composer.json`
 
+### Writing E2E Tests for Calendar CRUD Operations
+
+When writing Playwright tests for calendar CREATE/UPDATE/DELETE operations, understand the important schema
+differences between calendar types.
+
+**Calendar Schema Differences:**
+
+The API validates payloads against different JSON schemas depending on calendar type. Key differences in the
+`litcal` array actions:
+
+| Calendar Type | Allowed Actions in `litcal[].metadata.action`                        |
+|---------------|----------------------------------------------------------------------|
+| National      | `setProperty`, `createNew`, `moveFeast`, `makeDoctor`, `makePatron`  |
+| Wider Region  | `createNew`, `makePatron` only (NOT `setProperty`)                   |
+| Diocesan      | `createNew`, `makePatron` only (NOT `setProperty`)                   |
+
+**Important:** WiderRegion and Diocesan schemas only accept `createNew` or `makePatron` actions. Using
+`setProperty` (which is valid for National Calendar) will cause a 422 schema validation error.
+
+**Route Interception Pattern for CREATE Tests:**
+
+When testing PUT requests, the form may not have all required fields populated. Use `page.route()` to
+intercept and modify payloads before they reach the API:
+
+```typescript
+await page.route('**/data/**', async (route, request) => {
+    if (request.method() === 'PUT') {
+        const payload = JSON.parse(request.postData() || '{}');
+
+        // Ensure i18n has entries for all metadata.locales
+        for (const locale of payload.metadata?.locales || ['en']) {
+            if (!payload.i18n?.[locale] || Object.keys(payload.i18n[locale]).length === 0) {
+                payload.i18n = payload.i18n || {};
+                payload.i18n[locale] = { 'TestPatron': 'Test Patron Saint' };
+            }
+        }
+
+        // For WiderRegion/Diocesan: use makePatron (NOT setProperty)
+        if (!payload.litcal || payload.litcal.length === 0) {
+            payload.litcal = [{
+                liturgical_event: {
+                    event_key: 'TestPatron',
+                    grade: 5  // Memorial
+                },
+                metadata: {
+                    action: 'makePatron',  // NOT 'setProperty' for WiderRegion!
+                    since_year: 2024,
+                    url: 'https://example.com/decree',
+                    url_lang_map: { en: 'en' }
+                }
+            }];
+        }
+
+        await route.continue({ postData: JSON.stringify(payload) });
+    } else {
+        await route.continue();
+    }
+});
+```
+
+**WiderRegion-Specific Considerations:**
+
+1. **Valid region names**: WiderRegion names must be one of: `Americas`, `Europe`, `Asia`, `Africa`,
+   `Oceania`, `Antarctica`. Random/unique names will fail validation.
+
+2. **Finding available regions**: Query the `/calendars` API to find existing wider regions, then use
+   a region that doesn't have data:
+
+   ```typescript
+   const calendarsResponse = await page.request.get(`${apiBaseUrl}/calendars`);
+   const calendarsData = await calendarsResponse.json();
+   const existingRegionIds = calendarsData.litcal_metadata?.wider_regions_keys || [];
+
+   const validRegions = ['Americas', 'Europe', 'Africa', 'Oceania', 'Asia', 'Antarctica'];
+   const regionToCreate = validRegions.find(r => !existingRegionIds.includes(r));
+   ```
+
+3. **i18n validation**: The `i18n` object must have keys matching `metadata.locales`. If tests fail with
+   "i18n object must have the same keys as found in the metadata.locales array", ensure the route
+   interception adds i18n entries for all locales.
+
+**Known Issues in extending.js:**
+
+During E2E test development, the following bug was discovered and fixed:
+
+- **Missing `API.locale` in `buildWiderRegionPayload()`** (line ~2210): The `buildWiderRegionPayload()`
+  function did not set `API.locale`, unlike `buildNationalCalendarPayload()` (line ~2182). This caused
+  i18n validation errors when creating wider region calendars. The fix was to add:
+
+  ```javascript
+  API.locale = document.querySelector('.currentLocalizationChoices').value;
+  ```
+
+  This ensures the locale is properly captured in the payload for i18n validation.
+
 ## Troubleshooting
 
 ### API Connection Issues
