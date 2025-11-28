@@ -88,8 +88,9 @@ test.describe('Wider Region Calendar Form', () => {
                 if (postData) {
                     try {
                         capturedPayload = JSON.parse(postData);
-                    } catch {
+                    } catch (e) {
                         capturedPayload = postData;
+                        console.log('Failed to parse request payload as JSON:', e);
                     }
                 }
             }
@@ -303,8 +304,9 @@ test.describe('Wider Region Calendar Form', () => {
                             });
                             return;
                         }
-                    } catch {
+                    } catch (e) {
                         capturedPayload = postData;
+                        console.log('Failed to parse request payload as JSON:', e);
                     }
                 }
             }
