@@ -286,6 +286,10 @@ test.describe('Diocesan Calendar Form', () => {
         expect(capturedPayload.metadata).toHaveProperty('diocese_name');
         expect(capturedPayload.metadata).toHaveProperty('nation');
 
+        // Verify payload metadata matches the selected diocese from the datalist
+        expect(capturedPayload.metadata.diocese_id).toBe(dioceseToCreate.key);
+        expect(capturedPayload.metadata.diocese_name).toBe(dioceseToCreate.name);
+
         // CLEANUP: DELETE the created diocese and verify 200 response
         console.log(`CLEANUP: Deleting diocese ${dioceseToCreate.key}...`);
 
