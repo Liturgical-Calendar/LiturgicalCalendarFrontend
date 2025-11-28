@@ -223,6 +223,7 @@ test.describe('Wider Region Calendar Form', () => {
 
         if (!regionToCreate) {
             test.skip(true, `All valid wider regions already have calendar data`);
+            return;
         }
 
         console.log(`Selected region for CREATE test: ${regionToCreate}`);

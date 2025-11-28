@@ -233,6 +233,7 @@ test.describe('National Calendar Form', () => {
 
         if (!nationToCreate) {
             test.skip(true, `All ${availableNations.length} nations already have calendar data`);
+            return;
         }
 
         console.log(`Selected nation for CREATE test: ${nationToCreate.name} (${nationToCreate.key})`);

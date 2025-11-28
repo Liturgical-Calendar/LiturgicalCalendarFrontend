@@ -155,6 +155,7 @@ test.describe('Diocesan Calendar Form', () => {
 
         if (!selectedNation) {
             test.skip(true, 'No national calendars available');
+            return;
         }
 
         await nationalSelect.selectOption(selectedNation);
@@ -180,6 +181,7 @@ test.describe('Diocesan Calendar Form', () => {
 
         if (!dioceseToCreate) {
             test.skip(true, `All ${availableDioceses.length} dioceses for ${selectedNation} already have calendar data`);
+            return;
         }
 
         console.log(`Selected diocese for CREATE test: ${dioceseToCreate.name} (${dioceseToCreate.key})`);
@@ -385,6 +387,7 @@ test.describe('Diocesan Calendar Form', () => {
 
         if (!dioceseToUpdate) {
             test.skip(true, `No US dioceses with existing calendar data found`);
+            return;
         }
 
         console.log(`Selected diocese for UPDATE test: ${dioceseToUpdate.name} (${dioceseToUpdate.key})`);
@@ -550,6 +553,7 @@ test.describe('Diocesan Calendar Form - Loading Existing Diocese', () => {
 
         if (!selectedValue) {
             test.skip(true, 'No national calendars available');
+            return;
         }
 
         await nationalSelect.selectOption(selectedValue);
