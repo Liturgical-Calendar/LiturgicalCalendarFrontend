@@ -76,26 +76,9 @@ test.describe('Wider Region Calendar Form', () => {
         let needsGitRestore = false;
 
         // Set up request interception BEFORE loading the calendar
-        let capturedPayload: any = null;
-        let capturedMethod: string | null = null;
+        const { getPayload, getMethod } = await extendingPage.interceptDataRequests();
         let responseStatus: number | null = null;
         let responseBody: any = null;
-
-        await page.route('**/data/**', async (route, request) => {
-            if (['PUT', 'PATCH'].includes(request.method())) {
-                capturedMethod = request.method();
-                const postData = request.postData();
-                if (postData) {
-                    try {
-                        capturedPayload = JSON.parse(postData);
-                    } catch (e) {
-                        capturedPayload = postData;
-                        console.log('Failed to parse request payload as JSON:', e);
-                    }
-                }
-            }
-            await route.continue();
-        });
 
         // Load an existing wider region calendar (UPDATE scenario - should use PATCH)
         await extendingPage.selectCalendar('#widerRegionCalendarName', 'Americas');
@@ -137,8 +120,8 @@ test.describe('Wider Region Calendar Form', () => {
         needsGitRestore = responseStatus === 201;
 
         // Verify the HTTP method is PATCH (UPDATE)
-        expect(capturedMethod).toBe('PATCH');
-        console.log(`HTTP method used: ${capturedMethod}`);
+        expect(getMethod()).toBe('PATCH');
+        console.log(`HTTP method used: ${getMethod()}`);
 
         // Verify response status is 201
         expect(responseStatus).toBe(201);
@@ -146,6 +129,7 @@ test.describe('Wider Region Calendar Form', () => {
         console.log(`UPDATE (PATCH) response: ${responseStatus} - ${JSON.stringify(responseBody)}`);
 
         // Validate payload structure
+        const capturedPayload = getPayload();
         expect(capturedPayload).not.toBeNull();
         // Validate WiderRegionPayload structure
         expect(capturedPayload).toHaveProperty('litcal');

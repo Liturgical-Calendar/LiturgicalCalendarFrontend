@@ -80,26 +80,9 @@ test.describe('National Calendar Form', () => {
         let needsGitRestore = false;
 
         // Set up request interception to capture the payload and method
-        let capturedPayload: any = null;
-        let capturedMethod: string | null = null;
+        const { getPayload, getMethod } = await extendingPage.interceptDataRequests();
         let responseStatus: number | null = null;
         let responseBody: any = null;
-
-        await page.route('**/data/**', async (route, request) => {
-            if (['PUT', 'PATCH'].includes(request.method())) {
-                capturedMethod = request.method();
-                const postData = request.postData();
-                if (postData) {
-                    try {
-                        capturedPayload = JSON.parse(postData);
-                    } catch (e) {
-                        capturedPayload = postData;
-                        console.log('Failed to parse request payload as JSON:', e);
-                    }
-                }
-            }
-            await route.continue();
-        });
 
         // Wait for the save button to be enabled (form must be fully loaded)
         const saveButton = page.locator('#serializeNationalCalendarData');
@@ -124,8 +107,8 @@ test.describe('National Calendar Form', () => {
         }
 
         // Verify the HTTP method is PATCH (UPDATE)
-        expect(capturedMethod).toBe('PATCH');
-        console.log(`HTTP method used: ${capturedMethod}`);
+        expect(getMethod()).toBe('PATCH');
+        console.log(`HTTP method used: ${getMethod()}`);
 
         // Verify response status is 201
         expect(responseStatus).toBe(201);
@@ -133,6 +116,7 @@ test.describe('National Calendar Form', () => {
         console.log(`UPDATE (PATCH) response: ${responseStatus} - ${JSON.stringify(responseBody)}`);
 
         // Validate payload structure
+        const capturedPayload = getPayload();
         expect(capturedPayload).not.toBeNull();
         // Validate NationalCalendarPayload structure
         expect(capturedPayload).toHaveProperty('litcal');

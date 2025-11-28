@@ -124,7 +124,7 @@ test.describe('Diocesan Calendar Form', () => {
         expect(linkCount).toBeGreaterThan(0);
     });
 
-    test('should CREATE (PUT) new diocesan calendar, verify 201 response, and DELETE for cleanup', async ({ page }) => {
+    test('should CREATE (PUT) new diocesan calendar, verify 201 response, and DELETE for cleanup', async ({ page, extendingPage }) => {
         // This test creates a NEW diocese calendar using PUT for a diocese that exists
         // in the datalist but doesn't have calendar data yet. Then it DELETEs to clean up.
 
@@ -228,26 +228,9 @@ test.describe('Diocesan Calendar Form', () => {
         await principalPatronNameInput.dispatchEvent('change');
 
         // Set up request interception to capture the payload and method
-        let capturedPayload: any = null;
-        let capturedMethod: string | null = null;
+        const { getPayload, getMethod } = await extendingPage.interceptDataRequests();
         let createResponseStatus: number | null = null;
         let createResponseBody: any = null;
-
-        await page.route('**/data/**', async (route, request) => {
-            if (['PUT', 'PATCH'].includes(request.method())) {
-                capturedMethod = request.method();
-                const postData = request.postData();
-                if (postData) {
-                    try {
-                        capturedPayload = JSON.parse(postData);
-                    } catch (e) {
-                        capturedPayload = postData;
-                        console.log('Failed to parse request payload as JSON:', e);
-                    }
-                }
-            }
-            await route.continue();
-        });
 
         // Dismiss any toast messages that might be blocking
         await page.locator('.toast-container, #toast-container').evaluate(el => el?.remove()).catch(() => {});
@@ -272,8 +255,8 @@ test.describe('Diocesan Calendar Form', () => {
         }
 
         // Verify the HTTP method is PUT (CREATE)
-        expect(capturedMethod).toBe('PUT');
-        console.log(`HTTP method used: ${capturedMethod}`);
+        expect(getMethod()).toBe('PUT');
+        console.log(`HTTP method used: ${getMethod()}`);
 
         // Verify CREATE response status is 201
         expect(createResponseStatus).toBe(201);
@@ -281,6 +264,7 @@ test.describe('Diocesan Calendar Form', () => {
         console.log(`CREATE (PUT) response: ${createResponseStatus}`);
 
         // Validate payload structure
+        const capturedPayload = getPayload();
         expect(capturedPayload).not.toBeNull();
         expect(capturedPayload).toHaveProperty('litcal');
         expect(capturedPayload).toHaveProperty('metadata');
@@ -331,26 +315,9 @@ test.describe('Diocesan Calendar Form', () => {
         let needsGitRestore = false;
 
         // Set up request interception BEFORE loading the calendar
-        let capturedPayload: any = null;
-        let capturedMethod: string | null = null;
+        const { getPayload, getMethod } = await extendingPage.interceptDataRequests();
         let responseStatus: number | null = null;
         let responseBody: any = null;
-
-        await page.route('**/data/**', async (route, request) => {
-            if (['PUT', 'PATCH'].includes(request.method())) {
-                capturedMethod = request.method();
-                const postData = request.postData();
-                if (postData) {
-                    try {
-                        capturedPayload = JSON.parse(postData);
-                    } catch (e) {
-                        capturedPayload = postData;
-                        console.log('Failed to parse request payload as JSON:', e);
-                    }
-                }
-            }
-            await route.continue();
-        });
 
         // Load an existing diocesan calendar (UPDATE scenario - should use PATCH)
         // First select USA as the national calendar
@@ -446,8 +413,8 @@ test.describe('Diocesan Calendar Form', () => {
         needsGitRestore = responseStatus === 201;
 
         // Verify the HTTP method is PATCH (UPDATE)
-        expect(capturedMethod).toBe('PATCH');
-        console.log(`HTTP method used: ${capturedMethod}`);
+        expect(getMethod()).toBe('PATCH');
+        console.log(`HTTP method used: ${getMethod()}`);
 
         // Verify response status is 201
         expect(responseStatus).toBe(201);
@@ -455,6 +422,7 @@ test.describe('Diocesan Calendar Form', () => {
         console.log(`UPDATE (PATCH) response: ${responseStatus} - ${JSON.stringify(responseBody)}`);
 
         // Validate payload structure
+        const capturedPayload = getPayload();
         expect(capturedPayload).not.toBeNull();
         // Validate DiocesanCalendarPayload structure
         expect(capturedPayload).toHaveProperty('litcal');

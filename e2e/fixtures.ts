@@ -139,6 +139,40 @@ export class ExtendingPageHelper {
     }
 
     /**
+     * Intercept PUT/PATCH requests to /data/** endpoints and capture payload.
+     * Used for validating form submissions in CREATE/UPDATE tests.
+     * @returns Object with getters for captured payload and method
+     */
+    async interceptDataRequests(): Promise<{
+        getPayload: () => any;
+        getMethod: () => string | null;
+    }> {
+        let capturedPayload: any = null;
+        let capturedMethod: string | null = null;
+
+        await this.page.route('**/data/**', async (route, request) => {
+            if (['PUT', 'PATCH'].includes(request.method())) {
+                capturedMethod = request.method();
+                const postData = request.postData();
+                if (postData) {
+                    try {
+                        capturedPayload = JSON.parse(postData);
+                    } catch (e) {
+                        capturedPayload = postData;
+                        console.log('Failed to parse request payload as JSON:', e);
+                    }
+                }
+            }
+            await route.continue();
+        });
+
+        return {
+            getPayload: () => capturedPayload,
+            getMethod: () => capturedMethod
+        };
+    }
+
+    /**
      * Get toast notification text
      */
     async getToastMessage(): Promise<string | null> {
