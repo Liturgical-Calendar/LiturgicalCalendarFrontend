@@ -58,8 +58,9 @@ Click **Designate patron** to add a patron saint for the wider region:
 
 1. Select an existing liturgical event from the dropdown (type to search)
 2. Set the **Since** year (when the patronage was established)
-3. Enter the **Decree URL** (link to the official decree document)
-4. Configure **Decree Language Mappings** (which languages the decree is available in)
+3. Enter the **Decree URL** (link to the official decree document). Optionally, if the URL contains a `%s`
+   placeholder for the language, configure **Language Mappings** to map standard ISO locale codes to the
+   non-standard identifiers used in the URL.
 
 #### Create New Liturgical Event
 
@@ -75,7 +76,8 @@ Click **Create a new liturgical event** to define a completely new event:
 5. Select the **Liturgical Color(s)**
 6. Optionally select **Common(s)** for the saint
 7. Set the **Since** year
-8. Enter the **Decree URL** and language mappings
+8. Enter the **Decree URL**. Optionally, if the URL contains a `%s` placeholder for the language, configure
+   **Language Mappings** to map standard ISO locale codes to the non-standard identifiers used in the URL.
 
 ### Step 4: Review and Save
 

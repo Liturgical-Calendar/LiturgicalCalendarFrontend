@@ -102,8 +102,8 @@ Click **Designate patron** to add a national patron saint:
 
 1. Select an existing liturgical event from the dropdown
 2. Set the **Since** year
-3. Enter the **Decree URL**
-4. Configure decree language mappings
+3. Enter the **Decree URL**. Optionally, if the URL contains a `%s` placeholder for the language, configure
+   **Language Mappings** to map standard ISO locale codes to the non-standard identifiers used in the URL.
 
 #### Change Name or Grade (Set Property)
 
@@ -112,7 +112,9 @@ Click **Change name or grade of existing liturgical event** to modify an existin
 1. Select the liturgical event to modify
 2. Choose whether to change the **Name**, **Grade**, or both
 3. Enter the new values
-4. Set the **Since** year and decree information
+4. Set the **Since** year and enter the **Decree URL**. Optionally, if the URL contains a `%s` placeholder
+   for the language, configure **Language Mappings** to map standard ISO locale codes to the non-standard
+   identifiers used in the URL.
 
 #### Move Liturgical Event
 
@@ -121,7 +123,9 @@ Click **Move liturgical event to new date** to change when an event is celebrate
 1. Select the liturgical event to move
 2. Enter the new **Day** and **Month**
 3. Optionally specify a **Reason** (existing event that takes precedence)
-4. Set the **Since** year and decree information
+4. Set the **Since** year and enter the **Decree URL**. Optionally, if the URL contains a `%s` placeholder
+   for the language, configure **Language Mappings** to map standard ISO locale codes to the non-standard
+   identifiers used in the URL.
 
 #### Create New Liturgical Event
 
@@ -135,7 +139,9 @@ Click **Create a new liturgical event** to define a completely new event:
 4. Choose the **Grade**
 5. Select **Liturgical Color(s)**
 6. Optionally select **Common(s)**
-7. Set the **Since** year and decree information
+7. Set the **Since** year and enter the **Decree URL**. Optionally, if the URL contains a `%s` placeholder
+   for the language, configure **Language Mappings** to map standard ISO locale codes to the non-standard
+   identifiers used in the URL.
 
 ### Step 7: Review and Save
 
