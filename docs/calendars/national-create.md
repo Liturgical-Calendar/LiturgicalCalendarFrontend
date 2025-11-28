@@ -129,7 +129,7 @@ Click **Move liturgical event to new date** to change when an event is celebrate
 
 #### Create New Liturgical Event
 
-Click **Create a new liturgical event** to define a completely new event:
+Click **Create a new liturgical event** to define a new event:
 
 1. Enter the **Event Key** (unique identifier)
 2. Enter the **Name** (display name in the current locale). If multiple locales are supported, fill in the
@@ -190,7 +190,7 @@ National calendars support all action types:
 | `makePatron`     | Designate an existing saint as national patron        |
 | `setProperty`    | Change the name or grade of an existing event         |
 | `moveFeast`      | Move an event to a different date                     |
-| `createNew`      | Create a completely new liturgical event              |
+| `createNew`      | Create a new liturgical event                         |
 | `makeDoctor`     | Designate a saint as Doctor of the Church             |
 
 ## Example: Creating the USA National Calendar

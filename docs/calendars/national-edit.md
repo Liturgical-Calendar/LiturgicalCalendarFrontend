@@ -92,7 +92,7 @@ Use the action buttons to add new events (same as creation):
 - **Designate patron** - Add a national patron
 - **Change name or grade** - Modify an existing General Roman Calendar event
 - **Move liturgical event** - Change the date of an event
-- **Create new liturgical event** - Add a completely new event
+- **Create new liturgical event** - Add a new event
 
 ### Removing Events
 

@@ -64,7 +64,7 @@ Click **Designate patron** to add a patron saint for the wider region:
 
 #### Create New Liturgical Event
 
-Click **Create a new liturgical event** to define a completely new event:
+Click **Create a new liturgical event** to define a new event:
 
 1. Enter the **Event Key** (unique identifier, use PascalCase like `OurLadyOfGuadalupe`)
 2. Enter the **Name** (display name in the current locale). If multiple locales are supported, fill in the
@@ -111,7 +111,7 @@ For wider region calendars, the following actions are supported:
 | Action            | Description                                    |
 |-------------------|------------------------------------------------|
 | `makePatron`      | Designate an existing saint as patron          |
-| `createNew`       | Create a completely new liturgical event       |
+| `createNew`       | Create a new liturgical event                  |
 
 > **Note:** The `setProperty` and `moveFeast` actions are **not available** for wider region calendars. These
 > actions are only supported by national calendars.

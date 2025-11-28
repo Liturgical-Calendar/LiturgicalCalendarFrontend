@@ -82,7 +82,7 @@ All calendar types support these operations for liturgical events:
 | Operation           | Description                                           |
 |---------------------|-------------------------------------------------------|
 | **Designate Patron**| Add a patron saint for the region/nation/diocese      |
-| **Create New Event**| Define a completely new liturgical event              |
+| **Create New Event**| Define a new liturgical event                         |
 | **Change Property** | Modify the name or grade of an existing event         |
 | **Move Event**      | Change the date of an existing liturgical event       |
 
