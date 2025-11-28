@@ -1,4 +1,5 @@
 import { test, expect } from './fixtures';
+import { exec } from 'child_process';
 
 /**
  * Tests for the Diocesan Calendar form on extending.php
@@ -381,7 +382,6 @@ test.describe('Diocesan Calendar Form', () => {
 
         // CLEANUP: Revert changes using git restore in the API folder
         if (needsGitRestore) {
-            const { exec } = require('child_process');
             const apiPath = '/home/johnrdorazio/development/LiturgicalCalendar/LiturgicalCalendarAPI';
             await new Promise<void>((resolve) => {
                 exec(`cd ${apiPath} && git restore jsondata/sourcedata/`, (error: any) => {
