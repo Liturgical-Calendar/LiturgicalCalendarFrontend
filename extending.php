@@ -651,7 +651,7 @@ let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($Liturgi
             <div class="modal-header">
                 <h5 class="modal-title" id="makePatronActionModalLabel"><?php echo _('Designate patron') ?></h5>
             </div>
-            <?php Utilities::generateModalBody(false, false); ?>
+            <?php Utilities::generateActionPromptModalBody(false, false); ?>
             <div class="modal-footer">
                 <button type="button" id="designatePatronButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-user-graduate me-2"></i><?php echo _('Designate patron') ?></button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _('Cancel') ?></button>
@@ -667,7 +667,7 @@ let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($Liturgi
             <div class="modal-header">
                 <h5 class="modal-title" id="setPropertyActionModalLabel"><?php echo _('Change name or grade of existing liturgical event') ?></h5>
             </div>
-            <?php Utilities::generateModalBody(true, true); ?>
+            <?php Utilities::generateActionPromptModalBody(true, true); ?>
             <div class="modal-footer">
                 <button type="button" id="setPropertyButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-edit me-2"></i><?php echo _('Set property') ?></button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _('Cancel') ?></button>
@@ -683,7 +683,7 @@ let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($Liturgi
             <div class="modal-header">
                 <h5 class="modal-title" id="moveLiturgicalEventActionModalLabel"><?php echo _('Move liturgical event to new date') ?></h5>
             </div>
-            <?php Utilities::generateModalBody(true, false); ?>
+            <?php Utilities::generateActionPromptModalBody(true, false); ?>
             <div class="modal-footer">
                 <button type="button" id="moveLiturgicalEventButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-day me-2"></i><?php echo _('Move Liturgical Event') ?></button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _('Cancel') ?></button>
@@ -699,7 +699,7 @@ let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($Liturgi
             <div class="modal-header">
                 <h5 class="modal-title" id="newLiturgicalEventActionModalLabel"><?php echo _('Create a new liturgical event') ?></h5>
             </div>
-            <?php Utilities::generateModalBody(false, false); ?>
+            <?php Utilities::generateActionPromptModalBody(false, false); ?>
             <div class="modal-footer">
                 <button type="button" id="newLiturgicalEventFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus me-2"></i><?php echo _('Create Liturgical Event') ?></button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _('Cancel') ?></button>
