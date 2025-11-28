@@ -55,7 +55,7 @@ region. These are **not standalone calendars** but rather a shared layer that ge
 - [Editing a Wider Region Calendar](wider-region-edit.md)
 - [Deleting a Wider Region Calendar](wider-region-delete.md)
 
-**Valid Wider Regions:** Americas, Europe, Asia, Africa, Oceania, Antarctica
+**Valid Wider Regions:** Americas, Europe, Asia, Africa, Oceania
 
 ### National Calendar
 

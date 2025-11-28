@@ -430,8 +430,8 @@ const sanitizeProxiedAPI = {
                     if (value.includes(' - ')) {
                         ([value, target['locale']] = value.split(' - '));
                     }
-                    if (false === ['Americas', 'Europe', 'Africa', 'Oceania', 'Asia', 'Antarctica'].includes(value)) {
-                        console.error(`property 'key=${value}' of this object is not a valid value, valid values are: 'Americas', 'Europe', 'Africa', 'Oceania', 'Asia' and 'Antarctica'`);
+                    if (false === ['Americas', 'Europe', 'Africa', 'Oceania', 'Asia'].includes(value)) {
+                        console.error(`property 'key=${value}' of this object is not a valid value, valid values are: 'Americas', 'Europe', 'Africa', 'Oceania', 'Asia'`);
                         return;
                     }
                 }

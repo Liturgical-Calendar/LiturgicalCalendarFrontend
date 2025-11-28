@@ -24,7 +24,6 @@ In the **Wider Region** field, select from the available regions:
 - **Asia** - Asian countries
 - **Africa** - African countries
 - **Oceania** - Oceania countries
-- **Antarctica** - Antarctic region
 
 > **Important:** You must use one of the valid wider region names listed above. Custom region names are not supported.
 

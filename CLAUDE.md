@@ -709,7 +709,7 @@ await page.route('**/data/**', async (route, request) => {
 **WiderRegion-Specific Considerations:**
 
 1. **Valid region names**: WiderRegion names must be one of: `Americas`, `Europe`, `Asia`, `Africa`,
-   `Oceania`, `Antarctica`. Random/unique names will fail validation.
+   `Oceania`. Random/unique names will fail validation.
 
 2. **Finding available regions**: Query the `/calendars` API to find existing wider regions, then use
    a region that doesn't have data:
@@ -719,7 +719,7 @@ await page.route('**/data/**', async (route, request) => {
    const calendarsData = await calendarsResponse.json();
    const existingRegionIds = calendarsData.litcal_metadata?.wider_regions_keys || [];
 
-   const validRegions = ['Americas', 'Europe', 'Africa', 'Oceania', 'Asia', 'Antarctica'];
+   const validRegions = ['Americas', 'Europe', 'Africa', 'Oceania', 'Asia'];
    const regionToCreate = validRegions.find(r => !existingRegionIds.includes(r));
    ```
 
