@@ -318,6 +318,10 @@ test.describe('National Calendar Form', () => {
             await route.continue();
         });
 
+        // Capture console logs and errors for debugging
+        page.on('console', msg => console.log(`Browser console [${msg.type()}]: ${msg.text()}`));
+        page.on('pageerror', err => console.log(`Browser error: ${err.message}`));
+
         // Fill in the national calendar input with the ISO code from the found nation
         const calendarNameInput = page.locator('#nationalCalendarName');
         await calendarNameInput.fill(nationToCreate.key);
@@ -335,10 +339,6 @@ test.describe('National Calendar Form', () => {
         }, { timeout: 20000 });
 
         console.log('Toast warning detected - CREATE operation confirmed');
-
-        // Capture console logs for debugging
-        page.on('console', msg => console.log(`Browser console [${msg.type()}]: ${msg.text()}`));
-        page.on('pageerror', err => console.log(`Browser error: ${err.message}`));
 
         // Dismiss any toastr toast messages first to prevent blocking
         await page.evaluate(() => {
