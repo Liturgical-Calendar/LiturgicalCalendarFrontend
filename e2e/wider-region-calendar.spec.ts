@@ -157,11 +157,13 @@ test.describe('Wider Region Calendar Form', () => {
         const localesSorted = [...capturedPayload.metadata.locales].sort();
         expect(i18nKeys).toEqual(localesSorted);
 
-        // CLEANUP: Revert changes using git restore in the API folder
+        // CLEANUP: Revert changes using git restore AND git clean in the API folder
+        // git restore: reverts modified tracked files
+        // git clean -fd: removes untracked files/directories (new calendars created by the API)
         if (needsGitRestore) {
             const apiPath = process.env.API_REPO_PATH || path.resolve(__dirname, '../../LiturgicalCalendarAPI');
             const gitRestoreError = await new Promise<string | null>((resolve) => {
-                exec(`git -C "${apiPath}" restore jsondata/sourcedata/`, (error: any) => {
+                exec(`git -C "${apiPath}" restore jsondata/sourcedata/ && git -C "${apiPath}" clean -fd jsondata/sourcedata/`, (error: any) => {
                     if (error) {
                         resolve(error.message);
                     } else {
@@ -171,16 +173,13 @@ test.describe('Wider Region Calendar Form', () => {
             });
             if (gitRestoreError) {
                 // Fail the test if cleanup fails - leaving modified JSON is risky in shared/CI environments
-                throw new Error(`CLEANUP FAILED: git restore failed for path "${apiPath}". Manual cleanup required. Error: ${gitRestoreError}`);
+                throw new Error(`CLEANUP FAILED: git restore/clean failed for path "${apiPath}". Manual cleanup required. Error: ${gitRestoreError}`);
             }
-            console.log('CLEANUP: git restore completed for wider region calendar update');
+            console.log('CLEANUP: git restore and clean completed for wider region calendar update');
         }
     });
 
-    // KNOWN ISSUE: This test consistently fails with 422 "Invalid data" from the API.
-    // The frontend form or route interception may not be sending a valid WiderRegionCalendarPayload.
-    // Skipping until the underlying issue is investigated and resolved.
-    test.skip('should CREATE (PUT) new wider region calendar, verify 201 response, and DELETE for cleanup', async ({ page }) => {
+    test('should CREATE (PUT) new wider region calendar, verify 201 response, and DELETE for cleanup', async ({ page }) => {
         // This test creates a NEW wider region calendar using PUT for a region that exists
         // in the datalist but doesn't have calendar data yet. Then it DELETEs to clean up.
 
@@ -460,9 +459,12 @@ test.describe('Wider Region Calendar Form', () => {
         }
 
         // Validate national_calendars if present (may be optional or server-managed)
+        // national_calendars is an object mapping nation codes to booleans, not an array
         if (capturedPayload.national_calendars !== undefined) {
-            expect(Array.isArray(capturedPayload.national_calendars)).toBe(true);
-            console.log(`Original payload national_calendars length: ${capturedPayload.national_calendars.length}`);
+            expect(typeof capturedPayload.national_calendars).toBe('object');
+            expect(capturedPayload.national_calendars).not.toBeNull();
+            const nationKeys = Object.keys(capturedPayload.national_calendars);
+            console.log(`Original payload national_calendars keys: ${nationKeys.join(', ')}`);
         } else {
             console.log('Original payload national_calendars: not present (may be optional)');
         }

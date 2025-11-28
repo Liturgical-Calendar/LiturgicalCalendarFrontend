@@ -461,11 +461,13 @@ test.describe('Diocesan Calendar Form', () => {
         // Validate nation is a 2-letter ISO code
         expect(capturedPayload.metadata.nation).toMatch(/^[A-Z]{2}$/);
 
-        // CLEANUP: Revert changes using git restore in the API folder
+        // CLEANUP: Revert changes using git restore AND git clean in the API folder
+        // git restore: reverts modified tracked files
+        // git clean -fd: removes untracked files/directories (new calendars created by the API)
         if (needsGitRestore) {
             const apiPath = process.env.API_REPO_PATH || path.resolve(__dirname, '../../LiturgicalCalendarAPI');
             const gitRestoreError = await new Promise<string | null>((resolve) => {
-                exec(`git -C "${apiPath}" restore jsondata/sourcedata/`, (error: any) => {
+                exec(`git -C "${apiPath}" restore jsondata/sourcedata/ && git -C "${apiPath}" clean -fd jsondata/sourcedata/`, (error: any) => {
                     if (error) {
                         resolve(error.message);
                     } else {
@@ -475,9 +477,9 @@ test.describe('Diocesan Calendar Form', () => {
             });
             if (gitRestoreError) {
                 // Fail the test if cleanup fails - leaving modified JSON is risky in shared/CI environments
-                throw new Error(`CLEANUP FAILED: git restore failed for path "${apiPath}". Manual cleanup required. Error: ${gitRestoreError}`);
+                throw new Error(`CLEANUP FAILED: git restore/clean failed for path "${apiPath}". Manual cleanup required. Error: ${gitRestoreError}`);
             }
-            console.log('CLEANUP: git restore completed for diocesan calendar update');
+            console.log('CLEANUP: git restore and clean completed for diocesan calendar update');
         }
     });
 });
