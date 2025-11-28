@@ -169,7 +169,7 @@ test.describe('National Calendar Form', () => {
         expect(capturedPayload.metadata.locales.length).toBeGreaterThan(0);
 
         // Validate wider_region is one of the allowed values
-        const allowedRegions = ['Americas', 'Europe', 'Asia', 'Africa', 'Oceania', 'Middle East', 'Antarctica'];
+        const allowedRegions = ['Americas', 'Europe', 'Asia', 'Africa', 'Oceania', 'Antarctica'];
         expect(allowedRegions).toContain(capturedPayload.metadata.wider_region);
 
         // Validate missals is an array
