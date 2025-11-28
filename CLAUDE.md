@@ -523,11 +523,106 @@ const apiUrl = `${BaseUrl}/calendar?year=2024`;
 
 ## Testing
 
-Currently, the project has minimal automated tests. When adding tests:
+### PHP Unit Tests
 
-1. Place test files in `tests/` directory
-2. Run with `composer test`
-3. Follow PHPUnit conventions
+Place PHP test files in `tests/` directory and run with `composer test`.
+
+### E2E Tests (Playwright)
+
+The project uses Playwright for end-to-end testing of the `extending.php` forms. These tests verify that form
+submissions produce payloads matching the API contract (fixtures).
+
+**Test Files:**
+
+```text
+e2e/
+├── auth.setup.ts              # Authentication setup (runs before all tests)
+├── fixtures.ts                # Test fixtures and ExtendingPageHelper class
+├── national-calendar.spec.ts  # National Calendar form tests
+├── wider-region-calendar.spec.ts  # Wider Region Calendar form tests
+├── diocesan-calendar.spec.ts  # Diocesan Calendar form tests
+└── tsconfig.json              # TypeScript config for tests
+```
+
+**Prerequisites:**
+
+1. **Node.js and Yarn** - The project uses Yarn 4.x
+2. **Test user credentials** - A valid user must exist in the API for authentication
+
+**Environment Configuration:**
+
+Add these variables to your `.env.development` file:
+
+```env
+# Playwright test configuration
+FRONTEND_URL=http://localhost:3000
+TEST_USERNAME=your_test_username
+TEST_PASSWORD=your_test_password
+```
+
+**Installing Test Dependencies:**
+
+```bash
+yarn install
+yarn test:install  # Downloads browser binaries with dependencies
+```
+
+**Running Tests:**
+
+```bash
+# CI mode - automatically starts API and frontend servers (recommended)
+yarn test:ci                # All browsers, auto-starts servers
+yarn test:ci:chromium       # Chromium only, auto-starts servers (fastest for CI)
+
+# Manual mode - requires servers already running
+yarn test                   # All browsers
+yarn test:chromium          # Chromium only (fastest)
+yarn test:firefox           # Firefox only
+yarn test:webkit            # WebKit only
+
+# Interactive/debugging modes
+yarn test:ui                # Interactive UI for debugging
+yarn test:headed            # Run with visible browser
+
+# View results
+yarn test:report            # Open HTML test report
+```
+
+**CI Mode vs Manual Mode:**
+
+- **CI mode** (`yarn test:ci`): Automatically starts both API (port 8000) and frontend (port 3000) servers before
+  tests and stops them after. Ideal for CI/CD pipelines and fresh environments.
+- **Manual mode** (`yarn test`): Requires servers to be running beforehand. Useful during development when you
+  already have servers running.
+
+**Test Coverage:**
+
+The tests validate:
+
+1. **Form Loading** - All form elements are present and visible
+2. **Validation** - Required fields are enforced, valid values accepted
+3. **Payload Structure** - PUT/PATCH requests match API contract:
+   - `NationalCalendarPayload` structure (litcal, settings, metadata, i18n)
+   - `WiderRegionPayload` structure (litcal, national_calendars, metadata, i18n)
+   - `DiocesanCalendarPayload` structure (litcal, settings, metadata)
+
+**Valid Test Data:**
+
+When writing tests that need real diocese/calendar data:
+
+- **Diocese data**: Valid diocese names and IDs are in `LiturgicalCalendarAPI/jsondata/world_dioceses.json`
+- **Format**: `{ "country_iso": "us", "dioceses": [{ "diocese_name": "Boston", "diocese_id": "boston_us" }] }`
+- **National calendars**: USA, IT, DE, FR, etc. (2-letter ISO codes, uppercase)
+- **Wider regions**: Americas, Europe, Asia, Africa, Oceania
+
+**Troubleshooting:**
+
+- **Authentication failures**: Ensure `TEST_USERNAME` and `TEST_PASSWORD` are set and valid
+- **Port already in use**: Kill existing processes with `lsof -ti:8000 | xargs kill -9` and `lsof -ti:3000 | xargs kill -9`
+- **Connection refused** (manual mode): Verify both API (port 8000) and frontend (port 3000) are running
+- **WebKit missing libraries**: On Linux, some WebKit dependencies may be missing; use `yarn test:chromium` instead
+- **Timeout errors**: Increase timeout in `playwright.config.ts` or check network latency
+- **Server startup issues in CI mode**: Check that `../LiturgicalCalendarAPI` directory exists and has `composer.json`
 
 ## Troubleshooting
 
