@@ -91,7 +91,7 @@ The symlink is gitignored. When `APP_ENV=development`, the import map in `layout
 
 ### Available Scripts
 
-All linting and quality scripts are defined in `composer.json`:
+Linting and quality scripts are defined in both `composer.json` (PHP) and `package.json` (TypeScript/JavaScript):
 
 ```bash
 # PHP Syntax Checking
@@ -110,6 +110,25 @@ composer lint:md:fix         # Auto-fix markdown issues
 
 # Tests
 composer test                # Run PHPUnit tests (when available)
+```
+
+**TypeScript/JavaScript Scripts** (defined in `package.json`):
+
+```bash
+# TypeScript Type Checking
+yarn typecheck               # Type check e2e test files (uses e2e/tsconfig.json)
+yarn tsc                     # Run TypeScript compiler directly
+
+# Playwright E2E Tests
+yarn test                    # Run all Playwright tests
+yarn test:chromium           # Run tests in Chromium only
+yarn test:ci:chromium        # Run tests in CI mode (Chromium)
+yarn test:headed             # Run tests with browser visible
+yarn test:ui                 # Run tests with Playwright UI
+yarn test:report             # Show test report
+
+# ESLint
+yarn lint                    # Lint JavaScript files
 ```
 
 ### Before Committing
@@ -134,6 +153,9 @@ composer lint:md
 # 5. Verify JavaScript syntax (if modified)
 node --check assets/js/extending.js
 node --check assets/js/auth.js
+
+# 6. Type check e2e tests (if modified)
+yarn typecheck
 ```
 
 ### Git Hooks (CaptainHook)

@@ -30,10 +30,12 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@eslint/js", "npm:9.32.0"],\
           ["@playwright/test", "npm:1.57.0"],\
+          ["@types/node", "npm:24.10.1"],\
           ["dotenv", "npm:16.6.1"],\
           ["eslint", "virtual:6179371518264e06c17e7acf90fff17335f2a55c4bd922de701aabd013ced9cb55342dacec7da16365ef6b5c1f5eef739e137351b9b4c9a0df8660c0c4906924#npm:9.32.0"],\
           ["globals", "npm:16.3.0"],\
-          ["liturgical-calendar-frontend", "workspace:."]\
+          ["liturgical-calendar-frontend", "workspace:."],\
+          ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -270,6 +272,16 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../../.yarn/berry/cache/@types-json-schema-npm-7.0.15-fd16381786-10c0.zip/node_modules/@types/json-schema/",\
         "packageDependencies": [\
           ["@types/json-schema", "npm:7.0.15"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@types/node", [\
+      ["npm:24.10.1", {\
+        "packageLocation": "../../../.yarn/berry/cache/@types-node-npm-24.10.1-d514f50dfd-10c0.zip/node_modules/@types/node/",\
+        "packageDependencies": [\
+          ["@types/node", "npm:24.10.1"],\
+          ["undici-types", "npm:7.16.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -1050,10 +1062,12 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@eslint/js", "npm:9.32.0"],\
           ["@playwright/test", "npm:1.57.0"],\
+          ["@types/node", "npm:24.10.1"],\
           ["dotenv", "npm:16.6.1"],\
           ["eslint", "virtual:6179371518264e06c17e7acf90fff17335f2a55c4bd922de701aabd013ced9cb55342dacec7da16365ef6b5c1f5eef739e137351b9b4c9a0df8660c0c4906924#npm:9.32.0"],\
           ["globals", "npm:16.3.0"],\
-          ["liturgical-calendar-frontend", "workspace:."]\
+          ["liturgical-calendar-frontend", "workspace:."],\
+          ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -1557,6 +1571,24 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["prelude-ls", "npm:1.2.1"],\
           ["type-check", "npm:0.4.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["typescript", [\
+      ["patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5", {\
+        "packageLocation": "../../../.yarn/berry/cache/typescript-patch-6fda4d02cf-10c0.zip/node_modules/typescript/",\
+        "packageDependencies": [\
+          ["typescript", "patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["undici-types", [\
+      ["npm:7.16.0", {\
+        "packageLocation": "../../../.yarn/berry/cache/undici-types-npm-7.16.0-0e23b08124-10c0.zip/node_modules/undici-types/",\
+        "packageDependencies": [\
+          ["undici-types", "npm:7.16.0"]\
         ],\
         "linkType": "HARD"\
       }]\
