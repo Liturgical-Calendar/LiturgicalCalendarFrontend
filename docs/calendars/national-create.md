@@ -128,7 +128,8 @@ Click **Move liturgical event to new date** to change when an event is celebrate
 Click **Create a new liturgical event** to define a completely new event:
 
 1. Enter the **Event Key** (unique identifier)
-2. Enter the **Name**
+2. Enter the **Name** (display name in the current locale). If multiple locales are supported, fill in the
+   translations for each locale in the corresponding Name fields below the main Name field.
 3. Set the **Day** and **Month**
 4. Choose the **Grade**
 5. Select **Liturgical Color(s)**

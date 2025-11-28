@@ -66,7 +66,8 @@ Click **Designate patron** to add a patron saint for the wider region:
 Click **Create a new liturgical event** to define a completely new event:
 
 1. Enter the **Event Key** (unique identifier, use PascalCase like `OurLadyOfGuadalupe`)
-2. Enter the **Name** (display name in the current locale)
+2. Enter the **Name** (display name in the current locale). If multiple locales are supported, fill in the
+   translations for each locale in the corresponding Name fields below the main Name field.
 3. Select the **Day** and **Month** for the celebration
 4. Choose the **Grade** (Memorial, Feast, Solemnity, etc.)
 5. Select the **Liturgical Color(s)**
