@@ -14,10 +14,6 @@ import { test, expect } from './fixtures';
  * inheriting from national, wider region, and General Roman Calendar.
  */
 
-// Generate a unique test diocese ID to avoid conflicts
-const TEST_DIOCESE_ID = `test_e2e_${Date.now()}`;
-const TEST_DIOCESE_NAME = `E2E Test Diocese ${Date.now()}`;
-
 test.describe('Diocesan Calendar Form', () => {
     test.beforeEach(async ({ extendingPage }) => {
         await extendingPage.goToDiocesanCalendar();
@@ -142,8 +138,7 @@ test.describe('Diocesan Calendar Form', () => {
         }
 
         if (!selectedNation) {
-            console.log('No national calendars available, skipping test');
-            return;
+            test.skip(true, 'No national calendars available');
         }
 
         await nationalSelect.selectOption(selectedNation);
@@ -463,8 +458,7 @@ test.describe('Diocesan Calendar Form - Loading Existing Diocese', () => {
         }
 
         if (!selectedValue) {
-            console.log('No national calendars available, skipping test');
-            return;
+            test.skip(true, 'No national calendars available');
         }
 
         await nationalSelect.selectOption(selectedValue);
