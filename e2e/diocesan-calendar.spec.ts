@@ -86,7 +86,10 @@ test.describe('Diocesan Calendar Form', () => {
         if (selectedValue) {
             await nationalSelect.selectOption(selectedValue);
             // Wait for diocese list to be populated
-            await page.waitForTimeout(2000);
+            await page.waitForFunction(() => {
+                const datalist = document.querySelector('#DiocesesList');
+                return datalist && datalist.querySelectorAll('option').length > 0;
+            }, { timeout: 10000 }).catch(() => {});
 
             // The dioceses datalist should have options
             const diocesesList = page.locator('#DiocesesList');
