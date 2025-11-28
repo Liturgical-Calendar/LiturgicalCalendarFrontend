@@ -1,6 +1,7 @@
 import { test, expect } from './fixtures';
 import { exec } from 'child_process';
 import path from 'path';
+import { VALID_WIDER_REGIONS } from './constants';
 
 /**
  * Tests for the National Calendar form on extending.php
@@ -165,8 +166,7 @@ test.describe('National Calendar Form', () => {
         expect(capturedPayload.metadata.locales.length).toBeGreaterThan(0);
 
         // Validate wider_region is one of the allowed values
-        const allowedRegions = ['Americas', 'Europe', 'Asia', 'Africa', 'Oceania', 'Antarctica'];
-        expect(allowedRegions).toContain(capturedPayload.metadata.wider_region);
+        expect(VALID_WIDER_REGIONS).toContain(capturedPayload.metadata.wider_region);
 
         // Validate missals is an array
         expect(Array.isArray(capturedPayload.metadata.missals)).toBe(true);

@@ -1,6 +1,7 @@
 import { test, expect } from './fixtures';
 import { exec } from 'child_process';
 import path from 'path';
+import { VALID_WIDER_REGIONS } from './constants';
 
 /**
  * Tests for the Wider Region Calendar form on extending.php
@@ -195,10 +196,8 @@ test.describe('Wider Region Calendar Form', () => {
         const existingRegionIds: string[] = calendarsData.litcal_metadata?.wider_regions_keys || [];
         console.log(`Found ${existingRegionIds.length} existing wider regions: ${existingRegionIds.join(', ')}`);
 
-        // The valid wider region names are: Americas, Europe, Africa, Oceania, Asia, Antarctica
-        // Find one that doesn't have calendar data yet
-        const validRegions = ['Americas', 'Europe', 'Africa', 'Oceania', 'Asia', 'Antarctica'];
-        const regionToCreate = validRegions.find(r => !existingRegionIds.includes(r));
+        // Find a valid wider region that doesn't have calendar data yet
+        const regionToCreate = VALID_WIDER_REGIONS.find(r => !existingRegionIds.includes(r));
 
         if (!regionToCreate) {
             test.skip(true, `All valid wider regions already have calendar data`);
