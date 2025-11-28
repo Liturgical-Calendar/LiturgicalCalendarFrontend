@@ -48,12 +48,30 @@ composer install
 ### Environment Configuration
 
 1. Copy `.env.example` to `.env.development`
-2. Configure API connection:
+2. Configure the environment variables:
 
    ```env
+   # Application environment (development, staging, production)
+   APP_ENV=development
+
+   # API connection settings
    API_PROTOCOL=http
    API_HOST=localhost
    API_PORT=8000
+   API_BASE_PATH=/
+
+   # Debug mode (enables additional logging)
+   DEBUG_MODE=false
+
+   # Frontend URL (used by Playwright tests)
+   FRONTEND_URL=http://localhost:3000
+
+   # Path to API repository (optional, for CI mode tests)
+   # API_REPO_PATH=/path/to/LiturgicalCalendarAPI
+
+   # Test credentials for E2E tests (required for Playwright)
+   TEST_USERNAME=testuser
+   TEST_PASSWORD=testpassword
    ```
 
 ### Running the Development Server
