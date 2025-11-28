@@ -301,6 +301,7 @@ const tzdataRequest = new Request('https://raw.githubusercontent.com/vvo/tzdb/re
     headers: initialHeaders
 });
 
+// Useful to determine the most probable locale for any given nation
 const cldrDataRequest = new Request('https://raw.githubusercontent.com/unicode-org/cldr-json/refs/heads/main/cldr-json/cldr-core/supplemental/territoryInfo.json', {
     method: 'GET',
     headers: initialHeaders
@@ -1673,7 +1674,7 @@ const emptyStringPercentage = (translations) => {
  * events for that locale.
  *
  * If the fetched events are not already in the EventsCollection, it adds them to the collection and updates the
- * #existingLiturgicalEventsList element.
+ * #existingLiturgicalEventsList datalist element.
  *
  * After fetching the events, it calls fetchRegionalCalendarData to fetch the calendar data.
  * @returns {Promise<void>}
@@ -3486,8 +3487,8 @@ const diocesanCalendarDefinitionsCardLinksClicked = (ev) => {
  * When a liturgical_event name is changed (whether selected from a list or entered manually),
  * the 'was-validated' class is removed from the form in the modal.
  * Then, if the input is set to required, the selected liturgical_event is validated
- * by looking for an option with the same value in the #existingLiturgicalEventsList select element.
- * If the liturgical_event name is not valid, an 'is-invalid' class is added to the select element.
+ * by looking for an option with the same value in the #existingLiturgicalEventsList datalist element.
+ * If the liturgical_event name is not valid, an 'is-invalid' class is added to the input element.
  * If instead the input is not set to required, no validations will take place,
  * but simply a warning message will be displayed to ensure the user understands
  * that they are creating a new liturgical_event that does not already exist.
@@ -3501,10 +3502,11 @@ const diocesanCalendarDefinitionsCardLinksClicked = (ev) => {
  */
 const existingLiturgicalEventNameChanged = (ev) => {
     const modal = ev.target.closest('.actionPromptModal');
-    const form = modal.querySelector('form');
+    const form  = modal.querySelector('form');
     form.classList.remove('was-validated');
 
-    const option = modal.querySelector(`#existingLiturgicalEventsList option[value="${ev.target.value}"]`);
+    // #existingLiturgicalEventsList is a datalist element containing all existing liturgical_event names, and is not contained in the modal but in the main document
+    const option = document.querySelector(`#existingLiturgicalEventsList option[value="${ev.target.value}"]`);
     // if no option corresponding to the selected liturgical_event name is found, disable the submission buttons
     const invalidState = !option && ev.target.required;
     const warningState = !option && !ev.target.required;
