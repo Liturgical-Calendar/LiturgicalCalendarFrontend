@@ -250,6 +250,7 @@ test.describe('Diocesan Calendar Form', () => {
         await page.locator('.toast-container, #toast-container').evaluate(el => el?.remove()).catch(() => {});
 
         // Wait for the save button to be visible and enabled
+        // force: true needed because toasts may still have z-index overlap even after removal
         const saveButton = page.locator('#saveDiocesanCalendar_btn');
         await expect(saveButton).toBeVisible({ timeout: 10000 });
         await expect(saveButton).toBeEnabled({ timeout: 15000 });
