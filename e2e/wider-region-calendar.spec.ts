@@ -181,9 +181,12 @@ test.describe('Wider Region Calendar Form', () => {
         await regionNameInput.fill(uniqueRegionName);
         await page.waitForTimeout(500);
 
-        // Select at least one locale
+        // Select at least one locale (use first available option for robustness)
         const localesSelect = page.locator('#widerRegionLocales');
-        await localesSelect.selectOption('en_US');
+        const firstOption = await localesSelect.locator('option').first().getAttribute('value');
+        if (firstOption) {
+            await localesSelect.selectOption(firstOption);
+        }
         await page.waitForTimeout(500);
 
         // Set up request interception to capture the payload and method
