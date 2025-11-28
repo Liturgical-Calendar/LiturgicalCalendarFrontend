@@ -357,6 +357,7 @@ test.describe('Diocesan Calendar Form', () => {
         // Select an existing diocese from USA
         // For US dioceses, the value format is "Diocese Name (Province/State)"
         // Boston is "Archdiocese of Boston" in "Massachusetts"
+        // NOTE: This test depends on Boston existing in the API's world_dioceses.json
         const dioceseInput = page.locator('#diocesanCalendarDioceseName');
         await dioceseInput.fill('Archdiocese of Boston (Massachusetts)');
 
