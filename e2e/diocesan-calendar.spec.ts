@@ -399,15 +399,24 @@ test.describe('Diocesan Calendar Form', () => {
 
         // Dispatch a change event to trigger the event handler and load diocese data
         await dioceseInput.evaluate(el => el.dispatchEvent(new Event('change', { bubbles: true })));
+
+        // Wait for the diocese data to be fully loaded by checking for populated form fields
+        // The Boston diocese has "Dedication of the Cathedral of the Holy Cross" as a feast
+        await page.waitForFunction(() => {
+            // Check for any litEventName input that has content (indicating data was loaded)
+            const inputs = document.querySelectorAll('input.litEventName');
+            for (const input of inputs) {
+                if ((input as HTMLInputElement).value.length > 0) {
+                    return true;
+                }
+            }
+            return false;
+        }, { timeout: 15000 });
+
+        // Wait for network activity to complete
         await page.waitForLoadState('networkidle');
 
-        // Wait for data to load - success toast or save button enabled indicates completion
-        await Promise.race([
-            page.waitForSelector('#toast-container .toast', { timeout: 10000 }),
-            page.locator('#saveDiocesanCalendar_btn').waitFor({ state: 'visible', timeout: 10000 })
-        ]).catch(() => {});
-
-        // Remove the toast container to prevent it from blocking clicks
+        // Remove any toast containers to prevent them from blocking clicks
         await page.evaluate(() => {
             document.querySelectorAll('#toast-container, .toast-container').forEach(el => el.remove());
         });
@@ -417,21 +426,11 @@ test.describe('Diocesan Calendar Form', () => {
         await expect(saveButton).toBeVisible({ timeout: 10000 });
         await expect(saveButton).toBeEnabled({ timeout: 15000 });
 
-        // Click somewhere neutral to blur any focused inputs
-        // Playwright's fill() doesn't properly fire change on blur, so clicking elsewhere
-        // triggers another change event and data reload. We wait for that to settle.
-        await page.click('body');
-        await page.waitForLoadState('networkidle');
-
-        // Remove any toasts that appeared from the blur-triggered reload
+        // Click the save button using page.evaluate for more reliable triggering
         await page.evaluate(() => {
-            document.querySelectorAll('#toast-container, .toast-container').forEach(el => el.remove());
+            const btn = document.querySelector('#saveDiocesanCalendar_btn') as HTMLButtonElement;
+            if (btn) btn.click();
         });
-        // Wait for save button to be ready again after the blur-triggered reload
-        await expect(saveButton).toBeEnabled({ timeout: 10000 });
-
-        // Click the save button with force to bypass any remaining overlays
-        await saveButton.click({ force: true });
 
         // Wait for the response and capture status
         const response = await page.waitForResponse(
