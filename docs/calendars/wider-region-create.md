@@ -68,7 +68,9 @@ Click **Create a new liturgical event** to define a completely new event:
 1. Enter the **Event Key** (unique identifier, use PascalCase like `OurLadyOfGuadalupe`)
 2. Enter the **Name** (display name in the current locale). If multiple locales are supported, fill in the
    translations for each locale in the corresponding Name fields below the main Name field.
-3. Select the **Day** and **Month** for the celebration
+3. Select the **Day** and **Month** for the celebration. If the celebration is movable (e.g., "first Sunday
+   of November"), select **Relative date** from the switch above the day and month fields to enter a strtotime
+   expression instead.
 4. Choose the **Grade** (Memorial, Feast, Solemnity, etc.)
 5. Select the **Liturgical Color(s)**
 6. Optionally select **Common(s)** for the saint

@@ -130,7 +130,8 @@ Click **Create a new liturgical event** to define a completely new event:
 1. Enter the **Event Key** (unique identifier)
 2. Enter the **Name** (display name in the current locale). If multiple locales are supported, fill in the
    translations for each locale in the corresponding Name fields below the main Name field.
-3. Set the **Day** and **Month**
+3. Set the **Day** and **Month**. If the celebration is movable (e.g., "first Sunday of November"), select
+   **Relative date** from the switch above the day and month fields to enter a strtotime expression instead.
 4. Choose the **Grade**
 5. Select **Liturgical Color(s)**
 6. Optionally select **Common(s)**
