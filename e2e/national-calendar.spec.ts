@@ -19,8 +19,8 @@ test.describe('National Calendar Form', () => {
     });
 
     test('should load the national calendar form', async ({ page }) => {
-        // Wait for page to fully load
-        await page.waitForTimeout(1000);
+        // Wait for form to be ready
+        await page.waitForSelector('#nationalCalendarName', { state: 'visible' });
 
         // Verify key form elements are present (some may be hidden in collapsed sections)
         await expect(page.locator('#nationalCalendarName')).toBeVisible();
