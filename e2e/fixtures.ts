@@ -113,21 +113,29 @@ export class ExtendingPageHelper {
     }
 
     /**
-     * Intercept and capture API requests for validation
+     * Intercept and capture API requests for validation.
+     * Returns both the captured requests array and an unroute function for cleanup.
      */
-    async interceptApiRequest(urlPattern: RegExp | string): Promise<{ url: string; method: string; postData: string | null }[]> {
+    async interceptApiRequest(urlPattern: RegExp | string): Promise<{
+        requests: { url: string; method: string; postData: string | null }[];
+        unroute: () => Promise<void>;
+    }> {
         const requests: { url: string; method: string; postData: string | null }[] = [];
 
-        await this.page.route(urlPattern, async (route, request) => {
+        const handler = async (route: import('@playwright/test').Route, request: import('@playwright/test').Request) => {
             requests.push({
                 url: request.url(),
                 method: request.method(),
                 postData: request.postData()
             });
             await route.continue();
-        });
+        };
+        await this.page.route(urlPattern, handler);
 
-        return requests;
+        return {
+            requests,
+            unroute: () => this.page.unroute(urlPattern, handler)
+        };
     }
 
     /**
