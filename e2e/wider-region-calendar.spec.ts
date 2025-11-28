@@ -289,8 +289,9 @@ test.describe('Wider Region Calendar Form', () => {
                             return;
                         }
                     } catch (e) {
-                        capturedPayload = postData;
-                        console.log('Failed to parse request payload as JSON:', e);
+                        // Fail fast with clear error instead of swallowing parse errors
+                        const errorMsg = e instanceof Error ? e.message : String(e);
+                        throw new Error(`JSON.parse failed for request payload. Error: ${errorMsg}. Raw postData: ${postData?.substring(0, 500)}`);
                     }
                 }
             }
