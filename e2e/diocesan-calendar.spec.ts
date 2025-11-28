@@ -85,15 +85,16 @@ test.describe('Diocesan Calendar Form', () => {
 
         if (selectedValue) {
             await nationalSelect.selectOption(selectedValue);
-            // Wait for diocese list to be populated
+            // Wait for diocese list to be populated - let timeout surface as failure
             await page.waitForFunction(() => {
                 const datalist = document.querySelector('#DiocesesList');
                 return datalist && datalist.querySelectorAll('option').length > 0;
-            }, { timeout: 10000 }).catch(() => {});
+            }, { timeout: 10000 });
 
             // The dioceses datalist should have options
             const diocesesList = page.locator('#DiocesesList');
-            await expect(diocesesList).toBeAttached();
+            const dioceseOptionCount = await diocesesList.locator('option').count();
+            expect(dioceseOptionCount).toBeGreaterThan(0);
         }
     });
 
@@ -529,14 +530,18 @@ test.describe('Diocesan Calendar Form - Loading Existing Diocese', () => {
         }
 
         await nationalSelect.selectOption(selectedValue);
-        // Wait for dioceses datalist to be populated after national selection
+        // Wait for dioceses datalist to be populated - let timeout surface as failure
         await page.waitForFunction(() => {
             const datalist = document.querySelector('#DiocesesList');
             return datalist && datalist.querySelectorAll('option').length > 0;
-        }, { timeout: 10000 }).catch(() => {});
+        }, { timeout: 10000 });
+
+        // The dioceses datalist should have options
+        const diocesesList = page.locator('#DiocesesList');
+        const dioceseOptionCount = await diocesesList.locator('option').count();
+        expect(dioceseOptionCount).toBeGreaterThan(0);
 
         // Then try to type in the diocese input
-        // The dioceses datalist should be populated
         const dioceseInput = page.locator('#diocesanCalendarDioceseName');
         await expect(dioceseInput).toBeVisible();
 
