@@ -37,13 +37,9 @@ test.describe('National Calendar Form', () => {
         // Wait for data to load
         await page.waitForLoadState('networkidle');
 
-        // The save button should be enabled once calendar is loaded
-        // (it may take a moment for data to load)
-        await page.waitForTimeout(2000);
-
-        // Verify settings are populated
+        // Wait for settings form to be populated (indicates data has loaded)
         const epiphanySetting = page.locator('#nationalCalendarSettingEpiphany');
-        await expect(epiphanySetting).toBeVisible();
+        await expect(epiphanySetting).toBeVisible({ timeout: 10000 });
     });
 
     test('should validate settings form fields', async ({ page }) => {
@@ -73,8 +69,8 @@ test.describe('National Calendar Form', () => {
         // The datalist uses ISO country codes as values (e.g., "US" not "USA")
         await extendingPage.selectCalendar('#nationalCalendarName', 'US');
         await page.waitForLoadState('networkidle');
-        // Wait for data to load - use longer timeout like the working wider region test
-        await page.waitForTimeout(3000);
+        // Wait for save button to be enabled (indicates data has loaded)
+        await expect(page.locator('#serializeNationalCalendarData')).toBeEnabled({ timeout: 10000 });
 
         // Dismiss any toast messages that might be blocking
         await page.locator('.toast-container, #toast-container').evaluate(el => el?.remove()).catch(() => {});
@@ -323,9 +319,6 @@ test.describe('National Calendar Form', () => {
         page.on('console', msg => console.log(`Browser console [${msg.type()}]: ${msg.text()}`));
         page.on('pageerror', err => console.log(`Browser error: ${err.message}`));
 
-        // Wait a bit for the form to fully settle after the toast
-        await page.waitForTimeout(2000);
-
         // Dismiss any toastr toast messages first to prevent blocking
         await page.evaluate(() => {
             const toastContainer = document.querySelector('#toast-container');
@@ -359,8 +352,8 @@ test.describe('National Calendar Form', () => {
             console.log('Network idle timeout - continuing anyway');
         });
 
-        // Additional wait to let JavaScript process network responses
-        await page.waitForTimeout(3000);
+        // Wait for save button to be attached (indicates form is ready)
+        await expect(page.locator('#serializeNationalCalendarData')).toBeAttached({ timeout: 10000 });
 
         // Dismiss any toast messages
         await page.evaluate(() => {
@@ -552,7 +545,8 @@ test.describe('National Calendar Form - Validation', () => {
         // Load an existing calendar
         await extendingPage.selectCalendar('#nationalCalendarName', 'US');
         await page.waitForLoadState('networkidle');
-        await page.waitForTimeout(2000);
+        // Wait for save button to be enabled (indicates data has loaded)
+        await expect(page.locator('#serializeNationalCalendarData')).toBeEnabled({ timeout: 10000 });
 
         // Find any grade select in the form
         const gradeSelects = page.locator('#nationalCalendarForm select[name*="grade"]');
