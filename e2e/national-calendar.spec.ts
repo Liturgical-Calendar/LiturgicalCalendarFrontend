@@ -354,43 +354,14 @@ test.describe('National Calendar Form', () => {
         });
         console.log(`Available locales: ${JSON.stringify(localeOptions)}`);
 
-        // STEP 1: Select ONLY ONE locale BEFORE creating the liturgical event
-        // For national calendars, all locales may be pre-selected - we need to select just one
-        // The i18n object must have exactly the same locales as metadata.locales
-        console.log('Selecting only one locale via bootstrap-multiselect...');
-
-        // Dismiss any toasts that might be blocking
-        await page.evaluate(() => {
-            document.querySelectorAll('#toast-container, .toast-container, .toast, [class*="toast"]').forEach(el => el.remove());
-        });
-
-        // Wait a moment for UI to settle
-        await page.waitForTimeout(300);
-
-        // Use jQuery/bootstrap-multiselect API to properly deselect all and select just one
-        const selectedLocale = await page.evaluate(() => {
+        // Leave all locales selected (don't modify the bootstrap-multiselect)
+        // The form should serialize i18n for all selected locales
+        const selectedLocales = await page.evaluate(() => {
             const selectEl = document.querySelector('#nationalCalendarLocales') as HTMLSelectElement;
-            if (!selectEl || selectEl.options.length === 0) return '';
-
-            // Get the first locale value
-            const firstLocale = selectEl.options[0].value;
-
-            // Use jQuery to properly update the bootstrap-multiselect
-            // @ts-ignore - jQuery is a global
-            const $select = $(selectEl);
-
-            // Deselect all options
-            $select.multiselect('deselectAll', false);
-
-            // Select only the first option
-            $select.multiselect('select', firstLocale);
-
-            // Trigger change to update form state
-            selectEl.dispatchEvent(new Event('change', { bubbles: true }));
-
-            return firstLocale;
+            if (!selectEl) return [];
+            return Array.from(selectEl.selectedOptions).map(opt => opt.value);
         });
-        console.log(`Locale selected via bootstrap-multiselect API: ${selectedLocale}`);
+        console.log(`Locales currently selected: ${JSON.stringify(selectedLocales)}`);
 
         // Wait for ALL network activity to complete before proceeding
         // This ensures the async fetchRegionCalendarData and all related requests are done
@@ -520,27 +491,16 @@ test.describe('National Calendar Form', () => {
                 widerRegionInput.dispatchEvent(new Event('change', { bubbles: true }));
             }
 
-            // Ensure ONLY ONE locale is selected - re-apply the selection to be safe
-            // The i18n object must have exactly the same locales as metadata.locales
+            // Log selected locales (leave all selected, don't modify)
             const localesSelect = document.querySelector('#nationalCalendarLocales') as HTMLSelectElement;
-            let selectedLocales: string[] = [];
-            if (localesSelect && localesSelect.options.length > 0) {
-                // Deselect ALL options first
-                Array.from(localesSelect.options).forEach(opt => opt.selected = false);
-                // Select ONLY the first one
-                localesSelect.options[0].selected = true;
-                selectedLocales = [localesSelect.options[0].value];
-                // Trigger change event
-                localesSelect.dispatchEvent(new Event('change', { bubbles: true }));
-            }
+            const selectedLocales = localesSelect
+                ? Array.from(localesSelect.selectedOptions).map(opt => opt.value)
+                : [];
+            console.log(`Selected locales at save time: ${JSON.stringify(selectedLocales)}`);
 
-            // Ensure the current localization matches the selected locale
+            // Log the current localization select value
             const currentLocaleSelect = document.querySelector('.currentLocalizationChoices') as HTMLSelectElement;
-            if (currentLocaleSelect && selectedLocales.length > 0) {
-                // Set to the selected locale
-                currentLocaleSelect.value = selectedLocales[0];
-                currentLocaleSelect.dispatchEvent(new Event('change', { bubbles: true }));
-            }
+            console.log(`Current localization: ${currentLocaleSelect?.value || 'none'}`);
 
             // Set settings - get specific values from options
             const epiphanyEl = document.querySelector('#nationalCalendarSettingEpiphany') as HTMLSelectElement;
@@ -569,7 +529,7 @@ test.describe('National Calendar Form', () => {
             // Get values BEFORE clicking (for logging)
             const values = {
                 widerRegion: widerRegionInput?.value || '',
-                selectedLocale: selectedLocales[0] || '',
+                selectedLocales: selectedLocales,
                 currentLocale: currentLocaleSelect?.value || '',
                 epiphany: epiphanyEl?.value || '',
                 ascension: ascensionEl?.value || '',
