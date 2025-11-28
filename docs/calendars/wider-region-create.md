@@ -44,6 +44,10 @@ for that region.
    event name for each additional locale in the corresponding translation fields that appear below the main
    Name field.
 
+   > **Note:** If you change the Current Localization after entering localized names, the fields will be
+   > reordered so that the newly selected locale becomes the main Name field, and the previous locale moves
+   > to the translation fields below.
+
 ### Step 3: Add Liturgical Events
 
 Use the action buttons at the bottom of the form to add events:

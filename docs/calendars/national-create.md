@@ -71,6 +71,10 @@ Toggle whether the Feast of Jesus Christ Eternal High Priest is celebrated:
    event name for each additional locale in the corresponding translation fields that appear below the main
    Name field.
 
+   > **Note:** If you change the Current Localization after entering localized names, the fields will be
+   > reordered so that the newly selected locale becomes the main Name field, and the previous locale moves
+   > to the translation fields below.
+
 ### Step 4: Add Published Roman Missals (Optional)
 
 If a language edition of the Roman Missal for this nation has been incorporated into the LitCal engine:
