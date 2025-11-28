@@ -127,7 +127,7 @@ try {
                             'decree_id' => $decreeID,
                             'metadata'  => $decree['metadata']
                         ];
-                        if (isset($logger) && $logger !== null) {
+                        if (isset($logger)) {
                             $logger->error($errorMsg, $errorContext);
                         }
                         throw new \RuntimeException(
