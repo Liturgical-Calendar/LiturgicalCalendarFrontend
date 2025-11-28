@@ -109,8 +109,8 @@ test.describe('Diocesan Calendar Form', () => {
     });
 
     test('should have carousel for different feast types', async ({ page }) => {
-        // Wait for page to fully load
-        await page.waitForTimeout(1000);
+        // Wait for carousel navigation to be ready
+        await page.waitForSelector('#diocesanCalendarDefinitionCardLinks', { state: 'visible' });
 
         // The carousel has different cards for Solemnities, Feasts, Memorials, Optional Memorials
         const carouselNav = page.locator('#diocesanCalendarDefinitionCardLinks');
@@ -400,11 +400,13 @@ test.describe('Diocesan Calendar Form', () => {
         // Dispatch a change event to trigger the event handler and load diocese data
         await dioceseInput.evaluate(el => el.dispatchEvent(new Event('change', { bubbles: true })));
         await page.waitForLoadState('networkidle');
-        await page.waitForTimeout(3000);
 
-        // Wait for success toast to appear (indicates data loaded)
-        await page.waitForSelector('#toast-container .toast', { timeout: 10000 }).catch(() => {});
-        await page.waitForTimeout(1000);
+        // Wait for data to load - success toast or save button enabled indicates completion
+        await Promise.race([
+            page.waitForSelector('#toast-container .toast', { timeout: 10000 }),
+            page.locator('#saveDiocesanCalendar_btn').waitFor({ state: 'visible', timeout: 10000 })
+        ]).catch(() => {});
+
         // Remove the toast container to prevent it from blocking clicks
         await page.evaluate(() => {
             document.querySelectorAll('#toast-container, .toast-container').forEach(el => el.remove());
@@ -419,13 +421,14 @@ test.describe('Diocesan Calendar Form', () => {
         // Playwright's fill() doesn't properly fire change on blur, so clicking elsewhere
         // triggers another change event and data reload. We wait for that to settle.
         await page.click('body');
-        await page.waitForTimeout(500);
+        await page.waitForLoadState('networkidle');
 
         // Remove any toasts that appeared from the blur-triggered reload
         await page.evaluate(() => {
             document.querySelectorAll('#toast-container, .toast-container').forEach(el => el.remove());
         });
-        await page.waitForTimeout(500);
+        // Wait for save button to be ready again after the blur-triggered reload
+        await expect(saveButton).toBeEnabled({ timeout: 10000 });
 
         // Click the save button with force to bypass any remaining overlays
         await saveButton.click({ force: true });
@@ -559,7 +562,11 @@ test.describe('Diocesan Calendar Form - Loading Existing Diocese', () => {
         }
 
         await nationalSelect.selectOption(selectedValue);
-        await page.waitForTimeout(2000);
+        // Wait for dioceses datalist to be populated after national selection
+        await page.waitForFunction(() => {
+            const datalist = document.querySelector('#DiocesesList');
+            return datalist && datalist.querySelectorAll('option').length > 0;
+        }, { timeout: 10000 }).catch(() => {});
 
         // Then try to type in the diocese input
         // The dioceses datalist should be populated
@@ -568,7 +575,6 @@ test.describe('Diocesan Calendar Form - Loading Existing Diocese', () => {
 
         // Just verify the input is interactable - actual diocese data depends on API data
         await dioceseInput.fill('Test');
-        await page.waitForTimeout(500);
 
         // The form should accept input
         const inputValue = await dioceseInput.inputValue();
