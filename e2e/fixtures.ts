@@ -98,6 +98,40 @@ export class ExtendingPageHelper {
     }
 
     /**
+     * Get the API base URL from the page's global BaseUrl variable.
+     */
+    async getApiBaseUrl(): Promise<string> {
+        return this.page.evaluate(() => {
+            // @ts-ignore - BaseUrl is a global variable set by the frontend
+            return typeof BaseUrl !== 'undefined' ? BaseUrl : 'http://localhost:8000';
+        });
+    }
+
+    /**
+     * Get existing diocesan calendar IDs from the /calendars API.
+     * @param nationFilter - Optional 2-letter ISO code to filter by nation
+     * @returns Array of diocesan calendar IDs
+     */
+    async getExistingDiocesanCalendarIds(nationFilter?: string): Promise<string[]> {
+        const apiBaseUrl = await this.getApiBaseUrl();
+        const response = await this.page.request.get(`${apiBaseUrl}/calendars`);
+        const data = await response.json();
+
+        // API returns diocesan_calendars nested under litcal_metadata
+        // Each entry has calendar_id and nation (2-letter ISO code) properties
+        const diocesanCalendars: Array<{ calendar_id: string; nation: string }> =
+            data.litcal_metadata?.diocesan_calendars || [];
+
+        if (nationFilter) {
+            return diocesanCalendars
+                .filter(d => d.nation === nationFilter)
+                .map(d => d.calendar_id);
+        }
+
+        return diocesanCalendars.map(d => d.calendar_id);
+    }
+
+    /**
      * Wait for API response after form submission
      */
     async waitForApiResponse(urlPattern: RegExp | string, timeout = 30000) {

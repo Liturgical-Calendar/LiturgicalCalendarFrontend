@@ -129,17 +129,8 @@ test.describe('Diocesan Calendar Form', () => {
         // This test creates a NEW diocese calendar using PUT for a diocese that exists
         // in the datalist but doesn't have calendar data yet. Then it DELETEs to clean up.
 
-        // First, query the /calendars API to get existing diocesan calendar IDs
-        const apiBaseUrl = await page.evaluate(() => {
-            // @ts-ignore - BaseUrl is a global variable set by the frontend
-            return typeof BaseUrl !== 'undefined' ? BaseUrl : 'http://localhost:8000';
-        });
-
-        const calendarsResponse = await page.request.get(`${apiBaseUrl}/calendars`);
-        const calendarsData = await calendarsResponse.json();
-        const existingDioceseIds: string[] = calendarsData.diocesan_calendars?.map(
-            (cal: { calendar_id: string }) => cal.calendar_id
-        ) || [];
+        // Get existing diocesan calendar IDs using the shared helper
+        const existingDioceseIds = await extendingPage.getExistingDiocesanCalendarIds();
         console.log(`Found ${existingDioceseIds.length} existing diocesan calendars`);
 
         // Set up the form with required fields - select first available national calendar
@@ -286,6 +277,9 @@ test.describe('Diocesan Calendar Form', () => {
             return localStorage.getItem('litcal_jwt_token') || sessionStorage.getItem('litcal_jwt_token');
         });
 
+        // Get API base URL for DELETE request
+        const apiBaseUrl = await extendingPage.getApiBaseUrl();
+
         // Make DELETE request
         const deleteResponse = await page.request.delete(
             `${apiBaseUrl}/data/diocese/${dioceseToCreate.key}`,
@@ -341,16 +335,8 @@ test.describe('Diocesan Calendar Form', () => {
             }));
         });
 
-        // Query the API for existing US diocesan calendars
-        const apiBaseUrl = await page.evaluate(() => {
-            // @ts-ignore - BaseUrl is a global variable set by the frontend
-            return typeof BaseUrl !== 'undefined' ? BaseUrl : 'http://localhost:8000';
-        });
-        const calendarsResponse = await page.request.get(`${apiBaseUrl}/calendars`);
-        const calendarsData = await calendarsResponse.json();
-        const existingDioceseIds: string[] = calendarsData.litcal_metadata?.diocesan_calendars
-            ?.filter((d: { nation: string }) => d.nation === 'US')
-            ?.map((d: { calendar_id: string }) => d.calendar_id) || [];
+        // Get existing US diocesan calendar IDs using the shared helper
+        const existingDioceseIds = await extendingPage.getExistingDiocesanCalendarIds('US');
 
         // Find a diocese that exists in the datalist AND has existing calendar data
         const dioceseToUpdate = availableDioceses.find(d => existingDioceseIds.includes(d.key));
