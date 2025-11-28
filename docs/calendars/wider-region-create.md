@@ -39,8 +39,10 @@ for that region.
    - `pt_BR` (Portuguese - Brazil)
    - `fr_CA` (French - Canada)
 
-2. **Current Localization** - Choose the locale you're currently working with. Event names will be saved for this
-   locale.
+2. **Current Localization** - Choose the locale you're currently editing. The event name entered in the main
+   Name field will be saved for this locale. If you have selected multiple locales, you must also fill in the
+   event name for each additional locale in the corresponding translation fields that appear below the main
+   Name field.
 
 ### Step 3: Add Liturgical Events
 
