@@ -120,7 +120,7 @@ composer lint                # Check code standards
 composer lint:fix            # Auto-fix code standard violations
 
 # PHPStan Static Analysis
-composer analyse             # Run PHPStan level 1 analysis
+composer analyse             # Run PHPStan level 7 analysis
 
 # Markdown Linting
 composer lint:md             # Check markdown files
@@ -346,7 +346,7 @@ composer lint:md:fix     # Auto-fix most issues (but not indentation)
 - `examples/` - Symlink to separate repository at workspace root
 - `.intelephense-helper.php` - IDE helper
 
-**Level**: 1 (can be increased as code quality improves)
+**Level**: 7
 
 ## Authentication
 
