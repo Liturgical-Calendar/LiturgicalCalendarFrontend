@@ -370,7 +370,10 @@ test.describe('Diocesan Calendar Form', () => {
         });
 
         // Query the API for existing US diocesan calendars
-        const apiBaseUrl = process.env.API_BASE_URL || 'http://localhost:8000';
+        const apiBaseUrl = await page.evaluate(() => {
+            // @ts-ignore - BaseUrl is a global variable set by the frontend
+            return typeof BaseUrl !== 'undefined' ? BaseUrl : 'http://localhost:8000';
+        });
         const calendarsResponse = await page.request.get(`${apiBaseUrl}/calendars`);
         const calendarsData = await calendarsResponse.json();
         const existingDioceseIds: string[] = calendarsData.litcal_metadata?.diocesan_calendars
