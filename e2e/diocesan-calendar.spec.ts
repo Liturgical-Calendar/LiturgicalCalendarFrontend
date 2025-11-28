@@ -232,6 +232,10 @@ test.describe('Diocesan Calendar Form', () => {
         }
 
         // CLEANUP: DELETE the created diocese and verify 200 response
+        if (!createdDioceseKey) {
+            console.warn('CLEANUP: Could not determine diocese key for deletion');
+            return;
+        }
         console.log(`CLEANUP: Deleting diocese ${createdDioceseKey}...`);
 
         // Get the API base URL from the page
