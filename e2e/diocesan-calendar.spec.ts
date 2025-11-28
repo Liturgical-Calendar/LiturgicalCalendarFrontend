@@ -359,12 +359,35 @@ test.describe('Diocesan Calendar Form', () => {
             return datalist && datalist.querySelectorAll('option[data-value]').length > 0;
         }, { timeout: 15000 });
 
-        // Select an existing diocese from USA
-        // For US dioceses, the value format is "Diocese Name (Province/State)"
-        // Boston is "Archdiocese of Boston" in "Massachusetts"
-        // NOTE: This test depends on Boston existing in the API's world_dioceses.json
+        // Get available dioceses from the datalist
+        const availableDioceses = await page.evaluate(() => {
+            const datalist = document.querySelector('#DiocesesList');
+            if (!datalist) return [];
+            return Array.from(datalist.querySelectorAll('option[data-value]')).map(opt => ({
+                name: opt.getAttribute('value') || '',
+                key: opt.getAttribute('data-value') || ''
+            }));
+        });
+
+        // Query the API for existing US diocesan calendars
+        const apiBaseUrl = process.env.API_BASE_URL || 'http://localhost:8000';
+        const calendarsResponse = await page.request.get(`${apiBaseUrl}/calendars`);
+        const calendarsData = await calendarsResponse.json();
+        const existingDioceseIds: string[] = calendarsData.litcal_metadata?.diocesan_calendars
+            ?.filter((d: { nation: string }) => d.nation === 'US')
+            ?.map((d: { calendar_id: string }) => d.calendar_id) || [];
+
+        // Find a diocese that exists in the datalist AND has existing calendar data
+        const dioceseToUpdate = availableDioceses.find(d => existingDioceseIds.includes(d.key));
+
+        if (!dioceseToUpdate) {
+            test.skip(true, `No US dioceses with existing calendar data found`);
+        }
+
+        console.log(`Selected diocese for UPDATE test: ${dioceseToUpdate.name} (${dioceseToUpdate.key})`);
+
         const dioceseInput = page.locator('#diocesanCalendarDioceseName');
-        await dioceseInput.fill('Archdiocese of Boston (Massachusetts)');
+        await dioceseInput.fill(dioceseToUpdate.name);
 
         // Dispatch a change event to trigger the event handler and load diocese data
         await dioceseInput.evaluate(el => el.dispatchEvent(new Event('change', { bubbles: true })));
