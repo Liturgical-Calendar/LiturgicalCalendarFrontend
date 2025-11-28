@@ -1,5 +1,6 @@
 import { test, expect } from './fixtures';
 import { exec } from 'child_process';
+import path from 'path';
 
 /**
  * Tests for the National Calendar form on extending.php
@@ -181,9 +182,9 @@ test.describe('National Calendar Form', () => {
 
         // CLEANUP: Revert changes using git restore in the API folder
         if (needsGitRestore) {
-            const apiPath = '/home/johnrdorazio/development/LiturgicalCalendar/LiturgicalCalendarAPI';
+            const apiPath = process.env.API_REPO_PATH || path.resolve(__dirname, '../../LiturgicalCalendarAPI');
             await new Promise<void>((resolve) => {
-                exec(`cd ${apiPath} && git restore jsondata/sourcedata/`, (error: any) => {
+                exec(`git -C "${apiPath}" restore jsondata/sourcedata/`, (error: any) => {
                     if (error) {
                         console.warn('Git restore warning:', error.message);
                     }
