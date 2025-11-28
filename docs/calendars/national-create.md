@@ -104,7 +104,6 @@ Click **Designate patron** to add a national patron saint:
 2. Set the **Since** year
 3. Enter the **Decree URL**
 4. Configure decree language mappings
-5. Click **Designate patron**
 
 #### Change Name or Grade (Set Property)
 
@@ -114,7 +113,6 @@ Click **Change name or grade of existing liturgical event** to modify an existin
 2. Choose whether to change the **Name**, **Grade**, or both
 3. Enter the new values
 4. Set the **Since** year and decree information
-5. Click **Set property**
 
 #### Move Liturgical Event
 
@@ -124,7 +122,6 @@ Click **Move liturgical event to new date** to change when an event is celebrate
 2. Enter the new **Day** and **Month**
 3. Optionally specify a **Reason** (existing event that takes precedence)
 4. Set the **Since** year and decree information
-5. Click **Move Liturgical Event**
 
 #### Create New Liturgical Event
 
@@ -137,7 +134,6 @@ Click **Create a new liturgical event** to define a completely new event:
 5. Select **Liturgical Color(s)**
 6. Optionally select **Common(s)**
 7. Set the **Since** year and decree information
-8. Click **Create Liturgical Event**
 
 ### Step 7: Review and Save
 
