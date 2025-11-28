@@ -553,10 +553,23 @@ test.describe('National Calendar Form - Validation', () => {
         const count = await gradeSelects.count();
 
         if (count > 0) {
-            // Get all options from the first grade select
-            const options = await gradeSelects.first().locator('option').allTextContents();
-            // Verify there are options (grades 0-7 = 8 options)
-            expect(options.length).toBeLessThanOrEqual(8);
+            // Get all option values from the first grade select
+            const optionValues = await gradeSelects.first().locator('option').evaluateAll(
+                options => options.map(opt => (opt as HTMLOptionElement).value)
+            );
+
+            // Verify there is at least one option
+            expect(optionValues.length).toBeGreaterThan(0);
+            // Verify there are at most 8 options (grades 0-7)
+            expect(optionValues.length).toBeLessThanOrEqual(8);
+
+            // Verify all option values are valid grade numbers (0-7)
+            const validGrades = ['0', '1', '2', '3', '4', '5', '6', '7'];
+            for (const value of optionValues) {
+                // Skip empty option if present
+                if (value === '') continue;
+                expect(validGrades).toContain(value);
+            }
         }
     });
 });
