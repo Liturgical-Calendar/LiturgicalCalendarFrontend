@@ -381,8 +381,6 @@ test.describe('Wider Region Calendar Form', () => {
 
         console.log(`Save clicked, waiting for response...`);
 
-        console.log(`Form values set and save clicked: ${JSON.stringify(formValuesSet)}`);
-
         // Wait for the CREATE response and capture status
         const response = await page.waitForResponse(
             response => response.url().includes('/data/') && ['PUT', 'PATCH'].includes(response.request().method()),
