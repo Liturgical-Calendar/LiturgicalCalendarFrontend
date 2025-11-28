@@ -78,7 +78,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@eslint/config-array", "npm:0.21.0"],\
           ["@eslint/object-schema", "npm:2.1.6"],\
-          ["debug", "virtual:33589d8154ee9b01f053e5f9b9657e36e349d10535f5963e24203660b3292f6b5d3ad64314773b25cb7ba33298de2f25c2ed9454e5f5e9999e7c3b19f6286965#npm:4.4.1"],\
+          ["debug", "virtual:643ed7cc338bcf145a82d8b05b3bef6bcf150ca545df386225596f10ce53cc90b88b3ca83e348ade1ccea5f3f8e76c92d2f0e2ba544da60d40aff9921c56872d#npm:4.4.3"],\
           ["minimatch", "npm:3.1.2"]\
         ],\
         "linkType": "HARD"\
@@ -109,7 +109,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@eslint/eslintrc", "npm:3.3.1"],\
           ["ajv", "npm:6.12.6"],\
-          ["debug", "virtual:33589d8154ee9b01f053e5f9b9657e36e349d10535f5963e24203660b3292f6b5d3ad64314773b25cb7ba33298de2f25c2ed9454e5f5e9999e7c3b19f6286965#npm:4.4.1"],\
+          ["debug", "virtual:643ed7cc338bcf145a82d8b05b3bef6bcf150ca545df386225596f10ce53cc90b88b3ca83e348ade1ccea5f3f8e76c92d2f0e2ba544da60d40aff9921c56872d#npm:4.4.3"],\
           ["espree", "npm:10.4.0"],\
           ["globals", "npm:14.0.0"],\
           ["ignore", "npm:5.3.2"],\
@@ -477,33 +477,12 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["debug", [\
-      ["npm:4.4.1", {\
-        "packageLocation": "../../../.yarn/berry/cache/debug-npm-4.4.1-6eab84b9f7-10c0.zip/node_modules/debug/",\
-        "packageDependencies": [\
-          ["debug", "npm:4.4.1"]\
-        ],\
-        "linkType": "SOFT"\
-      }],\
       ["npm:4.4.3", {\
         "packageLocation": "../../../.yarn/berry/cache/debug-npm-4.4.3-0105c6123a-10c0.zip/node_modules/debug/",\
         "packageDependencies": [\
           ["debug", "npm:4.4.3"]\
         ],\
         "linkType": "SOFT"\
-      }],\
-      ["virtual:33589d8154ee9b01f053e5f9b9657e36e349d10535f5963e24203660b3292f6b5d3ad64314773b25cb7ba33298de2f25c2ed9454e5f5e9999e7c3b19f6286965#npm:4.4.1", {\
-        "packageLocation": "./.yarn/__virtual__/debug-virtual-df0c87dd00/4/.yarn/berry/cache/debug-npm-4.4.1-6eab84b9f7-10c0.zip/node_modules/debug/",\
-        "packageDependencies": [\
-          ["@types/supports-color", null],\
-          ["debug", "virtual:33589d8154ee9b01f053e5f9b9657e36e349d10535f5963e24203660b3292f6b5d3ad64314773b25cb7ba33298de2f25c2ed9454e5f5e9999e7c3b19f6286965#npm:4.4.1"],\
-          ["ms", "npm:2.1.3"],\
-          ["supports-color", null]\
-        ],\
-        "packagePeers": [\
-          "@types/supports-color",\
-          "supports-color"\
-        ],\
-        "linkType": "HARD"\
       }],\
       ["virtual:643ed7cc338bcf145a82d8b05b3bef6bcf150ca545df386225596f10ce53cc90b88b3ca83e348ade1ccea5f3f8e76c92d2f0e2ba544da60d40aff9921c56872d#npm:4.4.3", {\
         "packageLocation": "./.yarn/__virtual__/debug-virtual-5da9fc757d/4/.yarn/berry/cache/debug-npm-4.4.3-0105c6123a-10c0.zip/node_modules/debug/",\
@@ -603,7 +582,7 @@ const RAW_RUNTIME_STATE =
           ["ajv", "npm:6.12.6"],\
           ["chalk", "npm:4.1.2"],\
           ["cross-spawn", "npm:7.0.6"],\
-          ["debug", "virtual:33589d8154ee9b01f053e5f9b9657e36e349d10535f5963e24203660b3292f6b5d3ad64314773b25cb7ba33298de2f25c2ed9454e5f5e9999e7c3b19f6286965#npm:4.4.1"],\
+          ["debug", "virtual:643ed7cc338bcf145a82d8b05b3bef6bcf150ca545df386225596f10ce53cc90b88b3ca83e348ade1ccea5f3f8e76c92d2f0e2ba544da60d40aff9921c56872d#npm:4.4.3"],\
           ["escape-string-regexp", "npm:4.0.0"],\
           ["eslint", "virtual:6179371518264e06c17e7acf90fff17335f2a55c4bd922de701aabd013ced9cb55342dacec7da16365ef6b5c1f5eef739e137351b9b4c9a0df8660c0c4906924#npm:9.32.0"],\
           ["eslint-scope", "npm:8.4.0"],\
