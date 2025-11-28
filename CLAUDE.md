@@ -360,10 +360,12 @@ The frontend implements JWT authentication for administrative features:
 
 **Key Features**:
 
-- JWT token storage (sessionStorage/localStorage)
+- HttpOnly cookie-based authentication (preferred, more secure)
+- localStorage/sessionStorage fallback for backwards compatibility
 - Automatic token refresh
 - Session expiry warnings
 - Protected UI elements with `data-requires-auth` attribute
+- `checkAuthAsync()` for server-side session verification with HttpOnly cookies
 
 See `docs/AUTHENTICATION_ROADMAP.md` for detailed implementation notes.
 
