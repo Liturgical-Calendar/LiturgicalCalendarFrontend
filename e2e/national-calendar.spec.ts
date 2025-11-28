@@ -354,6 +354,44 @@ test.describe('National Calendar Form', () => {
         });
         console.log(`Available locales: ${JSON.stringify(localeOptions)}`);
 
+        // STEP 1: Select ONLY ONE locale BEFORE creating the liturgical event
+        // For national calendars, all locales may be pre-selected - we need to select just one
+        // The i18n object must have exactly the same locales as metadata.locales
+        console.log('Selecting only one locale via bootstrap-multiselect...');
+
+        // Dismiss any toasts that might be blocking
+        await page.evaluate(() => {
+            document.querySelectorAll('#toast-container, .toast-container, .toast, [class*="toast"]').forEach(el => el.remove());
+        });
+
+        // Wait a moment for UI to settle
+        await page.waitForTimeout(300);
+
+        // Use jQuery/bootstrap-multiselect API to properly deselect all and select just one
+        const selectedLocale = await page.evaluate(() => {
+            const selectEl = document.querySelector('#nationalCalendarLocales') as HTMLSelectElement;
+            if (!selectEl || selectEl.options.length === 0) return '';
+
+            // Get the first locale value
+            const firstLocale = selectEl.options[0].value;
+
+            // Use jQuery to properly update the bootstrap-multiselect
+            // @ts-ignore - jQuery is a global
+            const $select = $(selectEl);
+
+            // Deselect all options
+            $select.multiselect('deselectAll', false);
+
+            // Select only the first option
+            $select.multiselect('select', firstLocale);
+
+            // Trigger change to update form state
+            selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+
+            return firstLocale;
+        });
+        console.log(`Locale selected via bootstrap-multiselect API: ${selectedLocale}`);
+
         // Wait for ALL network activity to complete before proceeding
         // This ensures the async fetchRegionCalendarData and all related requests are done
         console.log('Waiting for network idle...');
@@ -366,14 +404,109 @@ test.describe('National Calendar Form', () => {
 
         // Dismiss any toast messages
         await page.evaluate(() => {
-            const toastContainer = document.querySelector('#toast-container');
-            if (toastContainer) toastContainer.remove();
+            document.querySelectorAll('#toast-container, .toast-container, .toast, [class*="toast"]').forEach(el => el.remove());
         });
 
-        console.log('Network idle, now setting form values and clicking save...');
+        console.log('Network idle, now adding a liturgical event via action prompt modal...');
 
-        // Set ALL required fields AND click save button in ONE synchronous JavaScript execution
-        // This ensures no async callbacks can run between setting values and triggering the save
+        // Wait for the existing liturgical events datalist to be populated
+        // This is required for the setProperty action to work
+        await page.waitForFunction(() => {
+            const datalist = document.querySelector('#existingLiturgicalEventsList');
+            return datalist && datalist.querySelectorAll('option').length > 0;
+        }, { timeout: 15000 });
+        console.log('Events datalist populated');
+
+        // Dismiss any toast messages that might be blocking the modal button
+        await page.evaluate(() => {
+            document.querySelectorAll('#toast-container, .toast-container, .toast, [class*="toast"]').forEach(el => el.remove());
+        });
+
+        // Open the newLiturgicalEventActionPrompt modal to create a new liturgical event
+        // We use "Create new" instead of "setProperty" because setProperty requires
+        // translated values to be available in the events catalog
+        const modalOpened = await page.evaluate(() => {
+            const modalEl = document.querySelector('#newLiturgicalEventActionPrompt');
+            if (!modalEl) {
+                console.error('Modal element #newLiturgicalEventActionPrompt not found in DOM');
+                return false;
+            }
+            // @ts-ignore - bootstrap is a global
+            const modal = new bootstrap.Modal(modalEl);
+            modal.show();
+            return true;
+        });
+        if (!modalOpened) {
+            console.log('Modal element not found');
+        }
+        await page.waitForSelector('#newLiturgicalEventActionPrompt.show', { timeout: 5000 });
+        console.log('newLiturgicalEventActionPrompt modal opened');
+
+        // Type a new event name to create a brand new liturgical event
+        // The input is not required, so typing any name will enable the button
+        const newEventName = 'Test National Saint';
+        const eventInput = page.locator('#newLiturgicalEventActionPrompt .existingLiturgicalEventName');
+        await eventInput.fill(newEventName);
+        await eventInput.dispatchEvent('change');
+        console.log(`Entered new event name: ${newEventName}`);
+
+        // Wait for the submit button to be enabled
+        // Note: The button ID changes dynamically based on whether the event exists:
+        // - newLiturgicalEventFromExistingButton: if event exists in list
+        // - newLiturgicalEventExNovoButton: if creating a brand new event
+        await page.waitForFunction(() => {
+            const btn = document.querySelector('#newLiturgicalEventExNovoButton') as HTMLButtonElement;
+            return btn && !btn.disabled;
+        }, { timeout: 10000 });
+
+        // Submit the modal to create a new row
+        await page.click('#newLiturgicalEventExNovoButton');
+
+        // Wait for the modal to close and new row to appear
+        await page.waitForSelector('#newLiturgicalEventActionPrompt.show', { state: 'hidden', timeout: 5000 });
+        console.log('Modal closed, waiting for new row...');
+
+        // Wait for the new row with createNew action to appear in the form
+        await page.waitForSelector('.regionalNationalDataForm .row[data-action="createNew"]', { timeout: 5000 });
+        console.log('New createNew row created');
+
+        // Fill in the required fields for the createNew row
+        // The form requires: event_key, name, color, grade, day, month, common
+        await page.evaluate(() => {
+            const row = document.querySelector('.regionalNationalDataForm .row[data-action="createNew"]');
+            if (!row) return;
+
+            // Set day to 15 (mid-month to be safe for any month)
+            const dayInput = row.querySelector('.litEventDay') as HTMLInputElement;
+            if (dayInput) {
+                dayInput.value = '15';
+                dayInput.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+
+            // Set month to June (6)
+            const monthSelect = row.querySelector('.litEventMonth') as HTMLSelectElement;
+            if (monthSelect) {
+                monthSelect.value = '6';
+                monthSelect.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+
+            // Set grade to Memorial (3)
+            const gradeSelect = row.querySelector('.litEventGrade') as HTMLSelectElement;
+            if (gradeSelect) {
+                gradeSelect.value = '3';
+                gradeSelect.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        });
+        console.log('CreateNew row fields filled (day, month, grade)');
+
+        // Dismiss any toast messages that may have appeared
+        await page.evaluate(() => {
+            document.querySelectorAll('#toast-container, .toast-container, .toast, [class*="toast"]').forEach(el => el.remove());
+        });
+
+        console.log('Now setting form values and clicking save...');
+
+        // Set form fields (locale already selected via bootstrap-multiselect before creating event)
         const formValuesSet = await page.evaluate(() => {
             // Remove any toast containers that might block
             const toastContainer = document.querySelector('#toast-container');
@@ -387,25 +520,25 @@ test.describe('National Calendar Form', () => {
                 widerRegionInput.dispatchEvent(new Event('change', { bubbles: true }));
             }
 
-            // Select ONLY the first locale (deselect all others first)
-            // The i18n object must have keys matching exactly metadata.locales array
+            // Ensure ONLY ONE locale is selected - re-apply the selection to be safe
+            // The i18n object must have exactly the same locales as metadata.locales
             const localesSelect = document.querySelector('#nationalCalendarLocales') as HTMLSelectElement;
-            let selectedLocale = '';
+            let selectedLocales: string[] = [];
             if (localesSelect && localesSelect.options.length > 0) {
                 // Deselect ALL options first
                 Array.from(localesSelect.options).forEach(opt => opt.selected = false);
                 // Select ONLY the first one
                 localesSelect.options[0].selected = true;
-                selectedLocale = localesSelect.options[0].value;
-                // Dispatch change event so the form updates
+                selectedLocales = [localesSelect.options[0].value];
+                // Trigger change event
                 localesSelect.dispatchEvent(new Event('change', { bubbles: true }));
             }
 
-            // Also set the current localization to match the selected locale
-            // This is used by API.locale which determines the i18n key
+            // Ensure the current localization matches the selected locale
             const currentLocaleSelect = document.querySelector('.currentLocalizationChoices') as HTMLSelectElement;
-            if (currentLocaleSelect && selectedLocale) {
-                currentLocaleSelect.value = selectedLocale;
+            if (currentLocaleSelect && selectedLocales.length > 0) {
+                // Set to the selected locale
+                currentLocaleSelect.value = selectedLocales[0];
                 currentLocaleSelect.dispatchEvent(new Event('change', { bubbles: true }));
             }
 
@@ -436,7 +569,7 @@ test.describe('National Calendar Form', () => {
             // Get values BEFORE clicking (for logging)
             const values = {
                 widerRegion: widerRegionInput?.value || '',
-                selectedLocale: selectedLocale,
+                selectedLocale: selectedLocales[0] || '',
                 currentLocale: currentLocaleSelect?.value || '',
                 epiphany: epiphanyEl?.value || '',
                 ascension: ascensionEl?.value || '',
@@ -533,17 +666,12 @@ test.describe('National Calendar Form', () => {
                 console.log('  - litcal array was empty, added placeholder event');
             }
             console.log('============================================================');
-
-            // If STRICT_PAYLOAD_VALIDATION env is set, fail the test when fixes are needed
-            if (process.env.STRICT_PAYLOAD_VALIDATION === 'true') {
-                throw new Error(
-                    'Frontend payload required test fixes to pass API validation. ' +
-                    'Fixes applied: ' + JSON.stringify(fixesApplied)
-                );
-            }
         } else {
             console.log('No test fixes required - frontend payload was schema-compliant');
         }
+
+        // Fail the test if any fixes were required - this indicates a frontend schema regression
+        expect(anyFixesApplied, 'Frontend payload required test fixes to pass API validation. Fixes applied: ' + JSON.stringify(fixesApplied)).toBe(false);
 
         // CLEANUP: DELETE the created national calendar and verify 200 response
         console.log(`CLEANUP: Deleting national calendar ${nationToCreate.key}...`);
