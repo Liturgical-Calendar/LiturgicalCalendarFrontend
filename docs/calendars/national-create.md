@@ -66,7 +66,10 @@ Toggle whether the Feast of Jesus Christ Eternal High Priest is celebrated:
    - `en_CA` (English - Canada)
    - `fr_CA` (French - Canada)
 
-2. **Current Localization** - Choose the locale you're currently editing.
+2. **Current Localization** - Choose the locale you're currently editing. The event name entered in the main
+   Name field will be saved for this locale. If you have selected multiple locales, you must also fill in the
+   event name for each additional locale in the corresponding translation fields that appear below the main
+   Name field.
 
 ### Step 4: Add Published Roman Missals (Optional)
 
