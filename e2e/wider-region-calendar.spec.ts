@@ -263,8 +263,8 @@ test.describe('Wider Region Calendar Form', () => {
         await page.waitForFunction(() => {
             const select = document.querySelector('#widerRegionLocales') as HTMLSelectElement;
             return select && select.options.length > 0;
-        }, { timeout: 10000 }).catch(() => {
-            console.log('Locales dropdown wait timed out');
+        }, { timeout: 10000 }).catch((e) => {
+            console.warn('Locales dropdown wait timed out - proceeding anyway:', e.message);
         });
 
         console.log('Locales dropdown populated');
@@ -301,7 +301,9 @@ test.describe('Wider Region Calendar Form', () => {
 
         // Close the dropdown by pressing Escape
         await page.keyboard.press('Escape');
-        await page.waitForSelector('.multiselect-container.dropdown-menu.show', { state: 'hidden', timeout: 2000 }).catch(() => {});
+        await page.waitForSelector('.multiselect-container.dropdown-menu.show', { state: 'hidden', timeout: 2000 }).catch(() => {
+            // Dropdown may have already closed or not been visible
+        });
 
         // Wait for network after locale selection (this populates currentLocalizationChoices)
         await page.waitForLoadState('networkidle');
@@ -440,7 +442,9 @@ test.describe('Wider Region Calendar Form', () => {
 
         // Close the dropdown
         await page.keyboard.press('Escape');
-        await page.waitForSelector('.multiselect-container.dropdown-menu.show', { state: 'hidden', timeout: 2000 }).catch(() => {});
+        await page.waitForSelector('.multiselect-container.dropdown-menu.show', { state: 'hidden', timeout: 2000 }).catch(() => {
+            // Dropdown may have already closed or not been visible
+        });
 
         // Fill in the Decree URL and Decree Langs fields (required by WiderRegionCalendar schema for createNew action)
         const decreeFieldsResult = await page.evaluate(() => {
