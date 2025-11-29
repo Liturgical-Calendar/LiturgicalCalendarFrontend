@@ -939,7 +939,7 @@ class FormControls {
             formRow += `<input type="hidden" class="litEventEventKey" id="onTheFly${FormControls.uniqid}EventKey" value="${liturgical_event ? liturgical_event.event_key : ''}" />`;
         }
         formRow += `<label for="onTheFly${FormControls.uniqid}Name">${Messages[ "Name" ]}</label>
-        <input type="text" class="form-control litEvent litEventName${liturgical_event && typeof liturgical_event.name==='undefined' ? ` is-invalid` : ``}" id="onTheFly${FormControls.uniqid}Name" value="${liturgical_event ? liturgical_event.name : ''}"${FormControls.settings.nameField === false ? ' readonly' : ''} />
+        <input type="text" class="form-control litEvent litEventName${typeof liturgical_event.name==='undefined' ? ` is-invalid` : ``}" id="onTheFly${FormControls.uniqid}Name" value="${liturgical_event.name ?? ''}"${FormControls.settings.nameField === false ? ' readonly' : ''} />
         <div class="invalid-feedback">There is no locale data for this celebration in the current locale. Perhaps try a different locale?.</div>
         </div>`;
 
