@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 11:41+0000\n"
+"POT-Creation-Date: 2025-11-29 12:09+0000\n"
 "PO-Revision-Date: 2025-11-29 04:21+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
@@ -120,7 +120,7 @@ msgstr "Parametri zahtjeva dostupni na osnovnoj stazi %s"
 msgid "Request parameters available on all %1$s paths"
 msgstr "Parametri zahtjeva dostupni na svim stazama %1$s"
 
-#: index.php:60 usage.php:13 examples.php:101 liturgyOfAnyDay.php:18
+#: index.php:60 usage.php:13 examples.php:98 liturgyOfAnyDay.php:18
 msgid "General Roman Calendar"
 msgstr "Opći rimski kalendar"
 
@@ -980,7 +980,7 @@ msgstr "Liturgijski kalendar - O nama"
 msgid "Liturgical Calendar as an HTML table produced by Javascript"
 msgstr "Liturgijski kalendar kao HTML tablica proizvedena u Javascriptu"
 
-#: examples.php:139
+#: examples.php:136
 #, php-format
 msgid "Example '%s' not found"
 msgstr "Primjer '%s' nije pronađen"
