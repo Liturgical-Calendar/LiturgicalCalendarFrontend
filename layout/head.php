@@ -29,7 +29,7 @@ if ($pageName === 'index') {
     echo '<link href="assets/css/homepage.css" rel="stylesheet">';
 }
 if (in_array($pageName, [ 'index', 'extending', 'usage', 'admin', 'examples' ])) {
-    echo '<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/css/bootstrap-multiselect.min.css" rel="stylesheet">';
+    echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@2.0.0/dist/css/bootstrap-multiselect.min.css" rel="stylesheet">';
     echo '<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">';
 }
 if ('extending' === $pageName) {
