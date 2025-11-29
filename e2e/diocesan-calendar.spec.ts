@@ -210,8 +210,8 @@ test.describe('Diocesan Calendar Form', () => {
         await dioceseInput.fill(dioceseToCreate.name);
         await dioceseInput.dispatchEvent('change');
 
-        // Wait for the form to process the change
-        await page.waitForTimeout(500);
+        // Wait for the form to process the change (network requests, datalist updates)
+        await page.waitForLoadState('networkidle');
 
         // Fill in at least one valid liturgical event (Principal Patron)
         // This is required because empty form rows would fail API schema validation
@@ -539,8 +539,8 @@ test.describe('Diocesan Calendar Form - Validation', () => {
         await dioceseInput.fill(dioceseToCreate.name);
         await dioceseInput.dispatchEvent('change');
 
-        // Wait for the form to process the change
-        await page.waitForTimeout(500);
+        // Wait for the form to process the change (network requests, datalist updates)
+        await page.waitForLoadState('networkidle');
 
         // Set up request interception to capture the payload
         const { getPayload, getMethod } = await extendingPage.interceptDataRequests();
