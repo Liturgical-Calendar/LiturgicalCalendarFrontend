@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 11:41+0000\n"
+"POT-Creation-Date: 2025-11-29 12:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -95,7 +95,7 @@ msgstr ""
 msgid "Request parameters available on all %1$s paths"
 msgstr ""
 
-#: index.php:60 usage.php:13 examples.php:101 liturgyOfAnyDay.php:18
+#: index.php:60 usage.php:13 examples.php:98 liturgyOfAnyDay.php:18
 msgid "General Roman Calendar"
 msgstr ""
 
@@ -862,7 +862,7 @@ msgstr ""
 msgid "Liturgical Calendar as an HTML table produced by Javascript"
 msgstr ""
 
-#: examples.php:139
+#: examples.php:136
 #, php-format
 msgid "Example '%s' not found"
 msgstr ""
