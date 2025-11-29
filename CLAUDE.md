@@ -807,3 +807,7 @@ Before submitting changes:
 5. ✅ Follow commit message conventions
 
 The pre-commit hooks will automatically check code quality, but it's good practice to run the scripts manually first.
+
+**IMPORTANT: Do not push immediately after committing.** This project uses CodeRabbit for automated code review,
+which has rate limiting. Wait for the user to explicitly request a push, or batch multiple commits before pushing
+to avoid overwhelming CodeRabbit.
