@@ -56,7 +56,9 @@ test.describe('Wider Region Calendar Form', () => {
             return select && select.options.length > 0;
         }, { timeout: 15000 });
         // Wait for success toast indicating data was loaded
-        await page.waitForSelector('.toast-success, .toast.bg-success', { timeout: 10000 }).catch(() => {});
+        await page.waitForSelector('.toast-success, .toast.bg-success', { timeout: 10000 }).catch(() => {
+            console.log('Success toast not detected within timeout - continuing');
+        });
         // Wait for all remaining async operations to complete
         await page.waitForLoadState('networkidle');
 
@@ -90,7 +92,9 @@ test.describe('Wider Region Calendar Form', () => {
             return select && select.options.length > 0;
         }, { timeout: 15000 });
         // Wait for success toast indicating data was loaded
-        await page.waitForSelector('.toast-success, .toast.bg-success', { timeout: 10000 }).catch(() => {});
+        await page.waitForSelector('.toast-success, .toast.bg-success', { timeout: 10000 }).catch(() => {
+            console.log('Success toast not detected within timeout - continuing');
+        });
         // Wait for all remaining async operations to complete
         await page.waitForLoadState('networkidle');
 
@@ -651,7 +655,9 @@ test.describe('Wider Region Calendar Form - National Calendar Association', () =
             return select && select.options.length > 0;
         }, { timeout: 15000 });
         // Wait for success toast indicating data was loaded
-        await page.waitForSelector('.toast-success, .toast.bg-success', { timeout: 10000 }).catch(() => {});
+        await page.waitForSelector('.toast-success, .toast.bg-success', { timeout: 10000 }).catch(() => {
+            console.log('Success toast not detected within timeout - continuing');
+        });
         // Wait for all remaining async operations to complete
         await page.waitForLoadState('networkidle');
 
