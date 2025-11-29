@@ -519,6 +519,13 @@ test.describe('National Calendar Form', () => {
         console.log(`Original payload i18n keys: [${originalI18nKeys.join(', ')}]`);
         console.log(`Metadata locales: [${metadataLocales.join(', ')}]`);
 
+        // Validate i18n keys match metadata.locales for CREATE
+        if (hasI18n) {
+            const i18nKeysSorted = [...originalI18nKeys].sort();
+            const localesSorted = [...metadataLocales].sort();
+            expect(i18nKeysSorted).toEqual(localesSorted);
+        }
+
         // Validate litcal structure from original payload
         const hasLitcal = Array.isArray(capturedPayload.litcal);
         const originalLitcalLength = hasLitcal ? capturedPayload.litcal.length : 0;
