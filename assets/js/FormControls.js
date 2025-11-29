@@ -1000,7 +1000,7 @@ class FormControls {
             let formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
             for (let i = 0; i < 12; i++) {
                 let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
-                formRow += `<option value=${i + 1}${liturgical_event && liturgical_event.month === i+1 ? ' selected' : '' }>${formatter.format(month)}</option>`;
+                formRow += `<option value=${i + 1}${liturgical_event.month === i+1 ? ' selected' : '' }>${formatter.format(month)}</option>`;
             }
 
             formRow += `</select>
@@ -1038,15 +1038,15 @@ class FormControls {
         if(FormControls.settings.decreeUrlFieldShow) {
             formRow += `<div class="form-group col-sm-6">
             <label for="onTheFly${FormControls.uniqid}DecreeURL">${Messages[ "Decree URL" ]}<i class="ms-2 fas fa-info-circle" title="Use %s in place of the language code if using a language mapping"></i></label>
-            <input type="text" class="form-control litEvent litEventDecreeURL" value="${liturgical_event && typeof liturgical_event.url !== 'undefined' ? liturgical_event.url : ''}" />
+            <input type="text" class="form-control litEvent litEventDecreeURL" value="${liturgical_event.url ?? ''}" />
             </div>`;
         }
 
         if(FormControls.settings.decreeLangMapFieldShow) {
-            let decreeLangs = liturgical_event && typeof liturgical_event.url_lang_map !== 'undefined' ? Object.keys(liturgical_event.url_lang_map).map(key => key+'='+liturgical_event.url_lang_map[key] ) : null;
+            let decreeLangs = liturgical_event.url_lang_map ? Object.keys(liturgical_event.url_lang_map).map(key => key+'='+liturgical_event.url_lang_map[key] ) : [];
             formRow += `<div class="form-group col-sm-4">
             <label for="onTheFly${FormControls.uniqid}DecreeLangs">${Messages[ "Decree Langs" ]}<i class="ms-2 fas fa-info-circle" title="Use a comma separated list of key=value pairings, e.g. DE=ge,EN=en. Key is uppercased two letter ISO code, value is (generally lowercased) two letter representation used within the actual URL"></i></label>
-            <input type="text" class="form-control litEvent litEventDecreeLangs" value="${liturgical_event && typeof liturgical_event.url_lang_map !== 'undefined' ? decreeLangs.join(',') : ''}" />
+            <input type="text" class="form-control litEvent litEventDecreeLangs" value="${decreeLangs.join(',')}" />
             </div>`;
         }
 
