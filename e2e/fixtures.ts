@@ -337,7 +337,7 @@ export class ExtendingPageHelper {
      */
     async dismissToasts(): Promise<void> {
         await this.page.evaluate(() => {
-            document.querySelectorAll('#toast-container, .toast-container, .toast, [class*="toast"]')
+            document.querySelectorAll('#toast-container, .toast-container, .toast, .toast-message, .toast-success, .toast-warning, .toast-error, .toast-info')
                 .forEach(el => el.remove());
         });
     }
