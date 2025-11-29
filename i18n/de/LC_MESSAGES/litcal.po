@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-29 04:08+0000\n"
-"PO-Revision-Date: 2025-11-29 04:20+0000\n"
+"PO-Revision-Date: 2025-11-29 05:10+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -1163,7 +1163,7 @@ msgstr "Kirchenlehrer ernennen"
 #. translators: label of the form row
 #: admin.php:81 decrees.php:10
 msgid "Change name or grade"
-msgstr "Name oder Grad ändern"
+msgstr "Name oder rang ändern"
 
 #: admin.php:97 admin.php:237
 msgid "Designate Doctor of the Church from existing liturgical event"
@@ -1505,9 +1505,9 @@ msgid ""
 "Latin Liturgy Association of the Netherlands, contributed the national "
 "calendar for the Netherlands to this project with all related translations"
 msgstr ""
-"Lateinische Liturgievereinigung der Niederlande, trug den nationalen "
-"Kalender für die Niederlande zu diesem Projekt bei, mit allen zugehörigen "
-"Übersetzungen"
+"Lateinische Liturgievereinigung der Niederlande, hat den nationalen Kalender "
+"für die Niederlande mit allen zugehörigen Übersetzungen zu diesem Projekt "
+"beigesteuert"
 
 #: src/Utilities.php:144
 msgid ""
@@ -1530,8 +1530,8 @@ msgid ""
 "Chancellor of the Diocese of Charlottetown, contributed liturgical calendar "
 "data for Canada in both English and French"
 msgstr ""
-"Kanzler der Diözese Charlottetown, trug liturgische Kalenderdaten für Kanada "
-"in Englisch und Französisch bei"
+"Kanzler der Diözese Charlottetown, hat liturgische Kalenderdaten für Kanada "
+"in Englisch und Französisch beigesteuert"
 
 #: src/Utilities.php:226
 msgid ""
@@ -1556,7 +1556,7 @@ msgstr ""
 
 #: src/Utilities.php:238
 msgid "Property to change"
-msgstr "Eigenschaft ändern"
+msgstr "Zu ändernde Eigenschaft"
 
 #: src/Utilities.php:241 src/FormControls.php:171
 msgid "Grade"
