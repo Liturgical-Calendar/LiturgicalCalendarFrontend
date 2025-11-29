@@ -1,6 +1,4 @@
-import { test, expect } from './fixtures';
-import { exec } from 'child_process';
-import path from 'path';
+import { test, expect, gitRestoreApiData } from './fixtures';
 import { VALID_WIDER_REGIONS } from './constants';
 
 /**
@@ -163,24 +161,8 @@ test.describe('Wider Region Calendar Form', () => {
         expect(i18nKeys).toEqual(localesSorted);
 
         // CLEANUP: Revert changes using git restore AND git clean in the API folder
-        // git restore: reverts modified tracked files
-        // git clean -fd: removes untracked files/directories (new calendars created by the API)
         if (needsGitRestore) {
-            const apiPath = process.env.API_REPO_PATH || path.resolve(__dirname, '../../LiturgicalCalendarAPI');
-            const gitRestoreError = await new Promise<string | null>((resolve) => {
-                exec(`git -C "${apiPath}" restore jsondata/sourcedata/ && git -C "${apiPath}" clean -fd jsondata/sourcedata/`, (error: any) => {
-                    if (error) {
-                        resolve(error.message);
-                    } else {
-                        resolve(null);
-                    }
-                });
-            });
-            if (gitRestoreError) {
-                // Fail the test if cleanup fails - leaving modified JSON is risky in shared/CI environments
-                throw new Error(`CLEANUP FAILED: git restore/clean failed for path "${apiPath}". Manual cleanup required. Error: ${gitRestoreError}`);
-            }
-            console.log('CLEANUP: git restore and clean completed for wider region calendar update');
+            await gitRestoreApiData();
         }
     });
 

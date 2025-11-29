@@ -1,9 +1,30 @@
 import { test as base, expect, Page } from '@playwright/test';
+import { exec } from 'child_process';
+import * as path from 'path';
 
 /**
  * Test fixtures for LiturgicalCalendar extending.php form tests.
  * Provides helper methods for common form interactions.
  */
+
+/**
+ * Restore and clean API sourcedata directory using git.
+ * This reverts modified tracked files and removes untracked files/directories.
+ * Used for cleanup after CREATE tests that modify API data.
+ * @throws Error if git restore/clean fails
+ */
+export async function gitRestoreApiData(): Promise<void> {
+    const apiPath = process.env.API_REPO_PATH || path.resolve(__dirname, '../../LiturgicalCalendarAPI');
+    const error = await new Promise<string | null>((resolve) => {
+        exec(`git -C "${apiPath}" restore jsondata/sourcedata/ && git -C "${apiPath}" clean -fd jsondata/sourcedata/`, (err: any) => {
+            resolve(err?.message || null);
+        });
+    });
+    if (error) {
+        throw new Error(`CLEANUP FAILED: git restore/clean failed for path "${apiPath}". Manual cleanup required. Error: ${error}`);
+    }
+    console.log('CLEANUP: git restore and clean completed');
+}
 
 export interface ExtendingPageFixtures {
     extendingPage: ExtendingPageHelper;
