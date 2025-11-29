@@ -937,7 +937,7 @@ class FormControls {
 
         formRow += `<div class="form-group col-sm-6">`;
         if(FormControls.settings.eventKeyField === false){
-            formRow += `<input type="hidden" class="litEventEventKey" id="onTheFly${FormControls.uniqid}EventKey" value="${liturgical_event ? liturgical_event.event_key : ''}" />`;
+            formRow += `<input type="hidden" class="litEventEventKey" id="onTheFly${FormControls.uniqid}EventKey" value="${liturgical_event.event_key ?? ''}" />`;
         }
         formRow += `<label for="onTheFly${FormControls.uniqid}Name">${Messages[ "Name" ]}</label>
         <input type="text" class="form-control litEvent litEventName${typeof liturgical_event.name==='undefined' ? ` is-invalid` : ``}" id="onTheFly${FormControls.uniqid}Name" value="${liturgical_event.name ?? ''}"${FormControls.settings.nameField === false ? ' readonly' : ''} />
@@ -947,14 +947,14 @@ class FormControls {
         if (FormControls.settings.fromYearField) {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}FromYear">${Messages[ "Since" ]}</label>
-            <input type="number" min="1582" max="9999" class="form-control litEvent litEventFromYear" id="onTheFly${FormControls.uniqid}FromYear" value="${liturgical_event ? liturgical_event.since_year : ''}" />
+            <input type="number" min="1582" max="9999" class="form-control litEvent litEventFromYear" id="onTheFly${FormControls.uniqid}FromYear" value="${liturgical_event.since_year ?? ''}" />
             </div>`;
         }
 
         if (FormControls.settings.untilYearField) {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}UntilYear">${Messages[ "Until" ]}</label>
-            <input type="number" min="1582" max="9999" class="form-control litEvent litEventUntilYear" id="onTheFly${FormControls.uniqid}UntilYear" value="${liturgical_event ? liturgical_event.until_year : ''}" />
+            <input type="number" min="1582" max="9999" class="form-control litEvent litEventUntilYear" id="onTheFly${FormControls.uniqid}UntilYear" value="${liturgical_event.until_year ?? ''}" />
             </div>`;
         }
 
@@ -1011,7 +1011,7 @@ class FormControls {
         if (FormControls.settings.eventKeyField) {
             formRow += `<div class="form-group col-sm-2">
             <label for="onTheFly${FormControls.uniqid}EventKey">${Messages[ "EventKey" ]}</label>
-            <input type="text" value="${liturgical_event ? liturgical_event.event_key : ''}" class="form-control litEvent litEventEventKey" id="onTheFly${FormControls.uniqid}EventKey" />
+            <input type="text" value="${liturgical_event.event_key ?? ''}" class="form-control litEvent litEventEventKey" id="onTheFly${FormControls.uniqid}EventKey" />
             </div>`;
         }
 
