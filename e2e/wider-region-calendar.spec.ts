@@ -300,8 +300,9 @@ test.describe('Wider Region Calendar Form', () => {
         // WiderRegion schema allows 'createNew' or 'makePatron' actions (NOT setProperty)
         await page.evaluate(() => {
             const modalEl = document.querySelector('#newLiturgicalEventActionPrompt');
-            if (modalEl) {
-                // @ts-ignore - bootstrap is a global
+            // @ts-ignore - bootstrap is a global
+            if (modalEl && typeof bootstrap !== 'undefined') {
+                // @ts-ignore - bootstrap is a global (checked above)
                 const modal = new bootstrap.Modal(modalEl);
                 modal.show();
             }

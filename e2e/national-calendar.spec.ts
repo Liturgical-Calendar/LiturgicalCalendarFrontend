@@ -306,6 +306,11 @@ test.describe('National Calendar Form', () => {
                 return false;
             }
             // @ts-ignore - bootstrap is a global
+            if (typeof bootstrap === 'undefined') {
+                console.error('Bootstrap is not available');
+                return false;
+            }
+            // @ts-ignore - bootstrap is a global (checked above)
             const modal = new bootstrap.Modal(modalEl);
             modal.show();
             return true;
