@@ -41,8 +41,8 @@
         ],
         "lint": "phpcs || echo 'Linting failed. Please run composer lint:fix to fix the linting issues.'",
         "lint:fix": "phpcbf || echo 'Lint fixing failed. Please check the linting failures and fix them manually.'",
-        "lint:md": "npx --yes markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#vendor\" \"#examples\"",
-        "lint:md:fix": "npx --yes markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#vendor\" \"#examples\" --fix",
+        "lint:md": "npx --yes markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#vendor\" \"#examples\" \"#.yarn\"",
+        "lint:md:fix": "npx --yes markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#vendor\" \"#examples\" \"#.yarn\" --fix",
         "analyse": "phpstan analyse",
         "parallel-lint": "parallel-lint --exclude .git --exclude vendor .",
         "test": "phpunit tests"

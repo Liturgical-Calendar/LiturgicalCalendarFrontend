@@ -4,6 +4,8 @@ namespace LiturgicalCalendar\Frontend;
 
 class Utilities
 {
+    private static int $actionPromptModalIdCounter = 0;
+
     /**
      * Format a number as an ordinal, e.g. 1st, 2nd, 3rd, etc.
      *
@@ -216,8 +218,10 @@ class Utilities
      * @param bool $required Whether the liturgical event input is required to use a value from the existing liturgical events list.
      * @param bool $hasPropertyChange Whether the modal needs to have the "property to change" select input.
      */
-    public static function generateModalBody(bool $required = true, bool $hasPropertyChange = false): void
+    public static function generateActionPromptModalBody(bool $required = true, bool $hasPropertyChange = false): void
     {
+        $actionPromptModalIdCounter = self::$actionPromptModalIdCounter++;
+
         $feedbackDiv = $required
             ? '<div class="invalid-feedback">' . _('This liturgical event does not seem to exist? Please choose from a value in the list.') . '</div>'
             : '<div class="form-text text-warning d-none">' . _('This liturgical event does not exist, so it will be created.') . '</div>';
@@ -225,14 +229,14 @@ class Utilities
         $modalBody = '<div class="modal-body">
         <form class="row justify-content-left needs-validation" novalidate>
             <div class="form-group col col-md-10">
-                <label for="existingLiturgicalEventName" class="fw-bold">' . ( $required ? _('Choose from existing liturgical events') : _('Choose from existing liturgical events (or create a new one)') ) . ':</label>
-                <input list="existingLiturgicalEventsList" class="form-control existingLiturgicalEventName" id="existingLiturgicalEventName"' . ( $required ? ' required' : '' ) . '>
+                <label for="existingLiturgicalEventName_' . $actionPromptModalIdCounter . '" class="fw-bold">' . ( $required ? _('Choose from existing liturgical events') : _('Choose from existing liturgical events (or create a new one)') ) . ':</label>
+                <input list="existingLiturgicalEventsList" class="form-control existingLiturgicalEventName" id="existingLiturgicalEventName_' . $actionPromptModalIdCounter . '"' . ( $required ? ' required' : '' ) . '>
                 ' . $feedbackDiv . '
             </div>';
         if ($hasPropertyChange) {
             $modalBody .= '<div class="form-group col col-md-6">
-                <label for="propertyToChange" class="fw-bold">' . _('Property to change') . ':</label>
-                <select class="form-select" id="propertyToChange" name="propertyToChange">
+                <label for="propertyToChange_' . $actionPromptModalIdCounter . '" class="fw-bold">' . _('Property to change') . ':</label>
+                <select class="form-select" id="propertyToChange_' . $actionPromptModalIdCounter . '" name="propertyToChange">
                     <option value="name">' . _('Name') . '</option>
                     <option value="grade">' . _('Grade') . '</option>
                 </select>

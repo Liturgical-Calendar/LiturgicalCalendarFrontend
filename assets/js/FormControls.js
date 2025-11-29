@@ -370,7 +370,7 @@ class FormControls {
      */
     static CreateRegionalFormRow(element = null) {
         const fragment = document.createDocumentFragment();
-        let liturgical_event = null;
+        let liturgical_event;
         if( element !== null ) {
             if (element instanceof LiturgicalEvent) {
                 console.log('element instanceof LiturgicalEvent');
@@ -429,7 +429,7 @@ class FormControls {
             titleDiv.appendChild(titleH4);
 
             if(FormControls.action === RowAction.CreateNew) {
-                const isStrToTime = liturgical_event !== null && 'strtotime' in liturgical_event;
+                const isStrToTime = liturgical_event && 'strtotime' in liturgical_event;
                 const radioGroupDiv = document.createElement('div');
                 radioGroupDiv.className = 'btn-group ms-auto';
                 radioGroupDiv.setAttribute('role', 'group');
@@ -447,7 +447,7 @@ class FormControls {
 
                 const exactDateLabel = document.createElement('label');
                 exactDateLabel.className = 'btn btn-outline-info';
-                exactDateLabel.setAttribute('for', `exactDate${FormControls.uniqid}`);
+                exactDateLabel.htmlFor = `exactDate${FormControls.uniqid}`;
                 exactDateLabel.title = 'month and day';
                 exactDateLabel.innerHTML = `<i class="fas fa-calendar-day me-2"></i>exact date`;
                 radioGroupDiv.appendChild(exactDateLabel);
@@ -464,7 +464,7 @@ class FormControls {
 
                 const relativeDateLabel = document.createElement('label');
                 relativeDateLabel.className = 'btn btn-outline-info';
-                relativeDateLabel.setAttribute('for', `relativeDate${FormControls.uniqid}`);
+                relativeDateLabel.htmlFor = `relativeDate${FormControls.uniqid}`;
                 relativeDateLabel.title = 'php strtotime';
                 relativeDateLabel.innerHTML = `relative date<i class="fas fa-comment ms-2"></i>`;
                 radioGroupDiv.appendChild(relativeDateLabel);
@@ -503,11 +503,11 @@ class FormControls {
             eventKeyInput.type = 'hidden';
             eventKeyInput.className = 'litEventEventKey';
             eventKeyInput.id = `onTheFly${FormControls.uniqid}EventKey`;
-            eventKeyInput.value = liturgical_event !== null ? liturgical_event.event_key : '';
+            eventKeyInput.value = liturgical_event?.event_key ?? '';
             eventNameFormGroup.appendChild(eventKeyInput);
         }
         const nameLabel = document.createElement('label');
-        nameLabel.for = `onTheFly${FormControls.uniqid}Name`;
+        nameLabel.htmlFor = `onTheFly${FormControls.uniqid}Name`;
         nameLabel.innerText = Messages[ "Name" ];
         eventNameFormGroup.appendChild(nameLabel);
 
@@ -515,7 +515,7 @@ class FormControls {
         nameInput.type = 'text';
         nameInput.className = 'form-control litEvent litEventName';
         nameInput.id = `onTheFly${FormControls.uniqid}Name`;
-        nameInput.value = liturgical_event !== null ? liturgical_event.name : '';
+        nameInput.value = liturgical_event?.name ?? '';
         nameInput.disabled = FormControls.settings.nameField === false;
         eventNameFormGroup.appendChild(nameInput);
         const nameInputInvalidFeedback = document.createElement('div');
@@ -531,7 +531,7 @@ class FormControls {
             const fromYearFormGroup = document.createElement('div');
             fromYearFormGroup.className = 'form-group col-sm-1';
             const fromYearLabel = document.createElement('label');
-            fromYearLabel.for = `onTheFly${FormControls.uniqid}FromYear`;
+            fromYearLabel.htmlFor = `onTheFly${FormControls.uniqid}FromYear`;
             fromYearLabel.innerText = Messages[ "Since" ];
             fromYearFormGroup.appendChild(fromYearLabel);
 
@@ -553,7 +553,7 @@ class FormControls {
             const untilYearFormGroup = document.createElement('div');
             untilYearFormGroup.className = 'form-group col-sm-1';
             const untilYearLabel = document.createElement('label');
-            untilYearLabel.for = `onTheFly${FormControls.uniqid}UntilYear`;
+            untilYearLabel.htmlFor = `onTheFly${FormControls.uniqid}UntilYear`;
             untilYearLabel.innerText = Messages[ "Until" ];
             untilYearFormGroup.appendChild(untilYearLabel);
 
@@ -580,7 +580,7 @@ class FormControls {
         const colorFormGroup = document.createElement('div');
         colorFormGroup.className = 'form-group col-sm-2';
         const colorLabel = document.createElement('label');
-        colorLabel.for = `onTheFly${FormControls.uniqid}Color`;
+        colorLabel.htmlFor = `onTheFly${FormControls.uniqid}Color`;
         colorLabel.innerText = Messages[ "Liturgical color" ];
         colorFormGroup.appendChild(colorLabel);
 
@@ -588,7 +588,7 @@ class FormControls {
         colorSelect.className = 'form-select litEvent litEventColor';
         colorSelect.id = `onTheFly${FormControls.uniqid}Color`;
         colorSelect.multiple = 'multiple';
-        colorSelect.readOnly = FormControls.settings.colorField === false;
+        colorSelect.disabled = FormControls.settings.colorField === false;
 
         const whiteOption = document.createElement('option');
         whiteOption.value = 'white';
@@ -626,9 +626,9 @@ class FormControls {
 
         const dayLabel = document.createElement('label');
         const dayInput = document.createElement('input');
-        if( liturgical_event !== null && 'strtotime' in liturgical_event ) {
+        if( liturgical_event && 'strtotime' in liturgical_event ) {
             dayFormGroup.className = 'form-group col-sm-2';
-            dayLabel.for = `onTheFly${FormControls.uniqid}Strtotime`;
+            dayLabel.htmlFor = `onTheFly${FormControls.uniqid}Strtotime`;
             dayLabel.innerText = 'Relative date';
             dayFormGroup.appendChild(dayLabel);
 
@@ -640,16 +640,16 @@ class FormControls {
             controlsRow.appendChild(dayFormGroup);
         } else {
             dayFormGroup.className = 'form-group col-sm-1';
-            dayLabel.for = `onTheFly${FormControls.uniqid}Day`;
+            dayLabel.htmlFor = `onTheFly${FormControls.uniqid}Day`;
             dayLabel.innerText = Messages[ "Day" ];
             dayFormGroup.appendChild(dayLabel);
 
             dayInput.type = 'number';
             dayInput.min = 1;
-            dayInput.max = liturgical_event !== null ? getMonthMaxDay(liturgical_event.month) : 31;
+            dayInput.max = liturgical_event ? getMonthMaxDay(liturgical_event.month) : 31;
             dayInput.className = 'form-control litEvent litEventDay';
             dayInput.id = `onTheFly${FormControls.uniqid}Day`;
-            dayInput.value = liturgical_event !== null ? liturgical_event.day : '';
+            dayInput.value = liturgical_event?.day ?? '';
             dayFormGroup.appendChild(dayInput);
             controlsRow.appendChild(dayFormGroup);
 
@@ -657,21 +657,21 @@ class FormControls {
             monthFormGroup.className = 'form-group col-sm-1';
 
             const monthLabel = document.createElement('label');
-            monthLabel.for = `onTheFly${FormControls.uniqid}Month`;
+            monthLabel.htmlFor = `onTheFly${FormControls.uniqid}Month`;
             monthLabel.innerText = Messages[ "Month" ];
             monthFormGroup.appendChild(monthLabel);
 
             const monthSelect = document.createElement('select');
             monthSelect.className = 'form-select litEvent litEventMonth';
             monthSelect.id = `onTheFly${FormControls.uniqid}Month`;
-            monthSelect.readOnly = FormControls.settings.monthField === false;
+            monthSelect.disabled = FormControls.settings.monthField === false;
 
             const formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
             for (let i = 0; i < 12; i++) {
                 let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
                 const monthOption = document.createElement('option');
                 monthOption.value = i + 1;
-                monthOption.selected = liturgical_event !== null && liturgical_event.month === i+1;
+                monthOption.selected = liturgical_event && liturgical_event.month === i+1;
                 monthOption.innerText = formatter.format(month);
                 monthSelect.appendChild(monthOption);
             }
@@ -687,7 +687,7 @@ class FormControls {
             const eventKeyFormGroup = document.createElement('div');
             eventKeyFormGroup.className = 'form-group col-sm-2';
             const eventKeyLabel = document.createElement('label');
-            eventKeyLabel.for = `onTheFly${FormControls.uniqid}EventKey`;
+            eventKeyLabel.htmlFor = `onTheFly${FormControls.uniqid}EventKey`;
             eventKeyLabel.innerText = Messages[ "EventKey" ];
             eventKeyFormGroup.appendChild(eventKeyLabel);
 
@@ -695,7 +695,7 @@ class FormControls {
             eventKeyInput.type = 'text';
             eventKeyInput.className = 'form-control litEvent litEventEventKey';
             eventKeyInput.id = `onTheFly${FormControls.uniqid}EventKey`;
-            eventKeyInput.value = liturgical_event !== null ? liturgical_event.event_key : '';
+            eventKeyInput.value = liturgical_event?.event_key ?? '';
             eventKeyFormGroup.appendChild(eventKeyInput);
             controlsRow.appendChild(eventKeyFormGroup);
         }
@@ -731,7 +731,7 @@ class FormControls {
                 const tr = document.createElement('tr');
                 const labelCell = document.createElement('td');
                 const label = document.createElement('label');
-                label.for = `onTheFly${FormControls.uniqid}Readings_${prop}`;
+                label.htmlFor = `onTheFly${FormControls.uniqid}Readings_${prop}`;
                 label.innerText = prop;
                 labelCell.appendChild(label);
                 tr.appendChild(labelCell);
@@ -742,8 +742,9 @@ class FormControls {
                 input.type = 'text';
                 input.className = `form-control litEvent litEventReadings litEventReadings_${prop}`;
                 input.id = `onTheFly${FormControls.uniqid}Readings_${prop}`;
-                input.value = liturgical_event && liturgical_event?.common.includes('Proper') ? (liturgical_event?.readings[prop] || '') : '';
-                input.disabled = liturgical_event === null || typeof liturgical_event.common === 'undefined' || false === liturgical_event.common.includes('Proper');
+                const hasProper = liturgical_event?.common?.includes('Proper') === true;
+                input.value = hasProper ? (liturgical_event?.readings?.[prop] || '') : '';
+                input.disabled = !hasProper;
                 inputCell.appendChild(input);
                 tr.appendChild(inputCell);
 
@@ -771,7 +772,7 @@ class FormControls {
             const reasonFormGroup = document.createElement('div');
             reasonFormGroup.className = 'form-group col-sm-6';
             const reasonLabel = document.createElement('label');
-            reasonLabel.for = `onTheFly${FormControls.uniqid}Reason`;
+            reasonLabel.htmlFor = `onTheFly${FormControls.uniqid}Reason`;
             reasonLabel.innerText = Messages[ "Reason" ];
             reasonFormGroup.appendChild(reasonLabel);
 
@@ -791,7 +792,7 @@ class FormControls {
             const missalFormGroup = document.createElement('div');
             missalFormGroup.className = 'form-group col-sm-6';
             const missalLabel = document.createElement('label');
-            missalLabel.for = `onTheFly${FormControls.uniqid}Missal`;
+            missalLabel.htmlFor = `onTheFly${FormControls.uniqid}Missal`;
             missalLabel.innerText = Messages[ "Missal" ];
             missalFormGroup.appendChild(missalLabel);
 
@@ -818,7 +819,7 @@ class FormControls {
             const decreeUrlFormGroup = document.createElement('div');
             decreeUrlFormGroup.className = 'form-group col-sm-6';
             const decreeUrlLabel = document.createElement('label');
-            decreeUrlLabel.for = `onTheFly${FormControls.uniqid}DecreeURL`;
+            decreeUrlLabel.htmlFor = `onTheFly${FormControls.uniqid}DecreeURL`;
             decreeUrlLabel.innerText = Messages[ "Decree URL" ];
             const i = document.createElement('i');
             i.className = 'fas fa-info-circle ms-2';
@@ -830,7 +831,7 @@ class FormControls {
             decreeUrlInput.type = 'text';
             decreeUrlInput.className = 'form-control litEvent litEventDecreeURL';
             decreeUrlInput.id = `onTheFly${FormControls.uniqid}DecreeURL`;
-            decreeUrlInput.value = liturgical_event !== null && typeof liturgical_event.url !== 'undefined' ? liturgical_event.url : '';
+            decreeUrlInput.value = liturgical_event && typeof liturgical_event.url !== 'undefined' ? liturgical_event.url : '';
             decreeUrlFormGroup.appendChild(decreeUrlInput);
             controlsRow.appendChild(decreeUrlFormGroup);
         }
@@ -839,11 +840,11 @@ class FormControls {
          * Decree Langs form group
          */
         if(FormControls.settings.decreeLangMapFieldShow) {
-            const decreeLangs = liturgical_event !== null && typeof liturgical_event.url_lang_map !== 'undefined' ? Object.keys(liturgical_event.url_lang_map).map(key => key+'='+liturgical_event.url_lang_map[key] ) : null;
+            const decreeLangs = liturgical_event && typeof liturgical_event.url_lang_map !== 'undefined' ? Object.keys(liturgical_event.url_lang_map).map(key => key+'='+liturgical_event.url_lang_map[key] ) : null;
             const decreeLangsFormGroup = document.createElement('div');
             decreeLangsFormGroup.className = 'form-group col-sm-6';
             const decreeLangsLabel = document.createElement('label');
-            decreeLangsLabel.for = `onTheFly${FormControls.uniqid}DecreeLangs`;
+            decreeLangsLabel.htmlFor = `onTheFly${FormControls.uniqid}DecreeLangs`;
             decreeLangsLabel.innerText = Messages[ "Decree Langs" ];
             const i = document.createElement('i');
             i.className = 'fas fa-info-circle ms-2';
@@ -855,7 +856,7 @@ class FormControls {
             decreeLangsInput.type = 'text';
             decreeLangsInput.className = 'form-control litEvent litEventDecreeLangs';
             decreeLangsInput.id = `onTheFly${FormControls.uniqid}DecreeLangs`;
-            decreeLangsInput.value = liturgical_event !== null && typeof liturgical_event.url_lang_map !== 'undefined' ? decreeLangs.join(',') : '';
+            decreeLangsInput.value = liturgical_event && typeof liturgical_event.url_lang_map !== 'undefined' ? decreeLangs.join(',') : '';
             decreeLangsFormGroup.appendChild(decreeLangsInput);
             controlsRow.appendChild(decreeLangsFormGroup);
         }
@@ -923,7 +924,7 @@ class FormControls {
         if (FormControls.title !== null) {
             formRow += `<hr><div class="mt-4 d-flex justify-content-left"><h4 class="data-group-title">${FormControls.title}</h4>`;
             if(FormControls.action === RowAction.CreateNew) {
-                if( liturgical_event !== null && 'strtotime' in liturgical_event ) {
+                if( 'strtotime' in liturgical_event ) {
                     formRow += `<button type="button" class="ms-auto btn btn-info strtotime-toggle-btn active" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="true" autocomplete="off"><i class="fas fa-comment me-2"></i>relative date</button>`;
                 } else {
                     formRow += `<button type="button" class="ms-auto btn btn-secondary strtotime-toggle-btn" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="false" autocomplete="off"><i class="fas fa-comment-slash me-2"></i>relative date</button>`;
@@ -936,24 +937,24 @@ class FormControls {
 
         formRow += `<div class="form-group col-sm-6">`;
         if(FormControls.settings.eventKeyField === false){
-            formRow += `<input type="hidden" class="litEventEventKey" id="onTheFly${FormControls.uniqid}EventKey" value="${liturgical_event !== null ? liturgical_event.event_key : ''}" />`;
+            formRow += `<input type="hidden" class="litEventEventKey" id="onTheFly${FormControls.uniqid}EventKey" value="${liturgical_event.event_key ?? ''}" />`;
         }
         formRow += `<label for="onTheFly${FormControls.uniqid}Name">${Messages[ "Name" ]}</label>
-        <input type="text" class="form-control litEvent litEventName${liturgical_event !== null && typeof liturgical_event.name==='undefined' ? ` is-invalid` : ``}" id="onTheFly${FormControls.uniqid}Name" value="${liturgical_event !== null ? liturgical_event.name : ''}"${FormControls.settings.nameField === false ? ' readonly' : ''} />
+        <input type="text" class="form-control litEvent litEventName${typeof liturgical_event.name==='undefined' ? ` is-invalid` : ``}" id="onTheFly${FormControls.uniqid}Name" value="${liturgical_event.name ?? ''}"${FormControls.settings.nameField === false ? ' readonly' : ''} />
         <div class="invalid-feedback">There is no locale data for this celebration in the current locale. Perhaps try a different locale?.</div>
         </div>`;
 
         if (FormControls.settings.fromYearField) {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}FromYear">${Messages[ "Since" ]}</label>
-            <input type="number" min="1582" max="9999" class="form-control litEvent litEventFromYear" id="onTheFly${FormControls.uniqid}FromYear" value="${liturgical_event !== null ? liturgical_event.since_year : ''}" />
+            <input type="number" min="1582" max="9999" class="form-control litEvent litEventFromYear" id="onTheFly${FormControls.uniqid}FromYear" value="${liturgical_event.since_year ?? ''}" />
             </div>`;
         }
 
         if (FormControls.settings.untilYearField) {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}UntilYear">${Messages[ "Until" ]}</label>
-            <input type="number" min="1582" max="9999" class="form-control litEvent litEventUntilYear" id="onTheFly${FormControls.uniqid}UntilYear" value="${liturgical_event !== null ? liturgical_event.until_year : ''}" />
+            <input type="number" min="1582" max="9999" class="form-control litEvent litEventUntilYear" id="onTheFly${FormControls.uniqid}UntilYear" value="${liturgical_event.until_year ?? ''}" />
             </div>`;
         }
 
@@ -964,15 +965,15 @@ class FormControls {
             : [];
         formRow += `<div class="form-group col-sm-2">
         <label for="onTheFly${FormControls.uniqid}Color">${Messages[ "Liturgical color" ]}</label>
-        <select class="form-select litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple"${FormControls.settings.colorField === false ? ' readonly' : ''} />
-        <option value="white"${liturgical_event !== null && selectedColors.includes("white") ? ' selected' : '' }>${Messages[ "white" ].toUpperCase()}</option>
-        <option value="red"${liturgical_event !== null && selectedColors.includes("red") ? ' selected' : '' }>${Messages[ "red" ].toUpperCase()}</option>
-        <option value="purple"${liturgical_event !== null && selectedColors.includes("purple") ? ' selected' : '' }>${Messages[ "purple" ].toUpperCase()}</option>
-        <option value="green"${liturgical_event !== null && selectedColors.includes("green") ? ' selected' : '' }>${Messages[ "green" ].toUpperCase()}</option>
+        <select class="form-select litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple"${FormControls.settings.colorField === false ? ' disabled' : ''} />
+        <option value="white"${selectedColors.includes("white") ? ' selected' : '' }>${Messages[ "white" ].toUpperCase()}</option>
+        <option value="red"${selectedColors.includes("red") ? ' selected' : '' }>${Messages[ "red" ].toUpperCase()}</option>
+        <option value="purple"${selectedColors.includes("purple") ? ' selected' : '' }>${Messages[ "purple" ].toUpperCase()}</option>
+        <option value="green"${selectedColors.includes("green") ? ' selected' : '' }>${Messages[ "green" ].toUpperCase()}</option>
         </select>
         </div>`;
 
-        if( liturgical_event !== null && 'strtotime' in liturgical_event ) {
+        if( 'strtotime' in liturgical_event ) {
             formRow += `<div class="form-group col-sm-2">
             <label for="onTheFly${FormControls.uniqid}StrToTime">Relative date</label>
             <select class="form-select litEvent litEventStrtotime" id="onTheFly${FormControls.uniqid}StrToTime-dayOfTheWeek">`;
@@ -995,12 +996,12 @@ class FormControls {
 
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}Month">${Messages[ "Month" ]}</label>
-            <select class="form-select litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month"${FormControls.settings.monthField === false ?  'readonly' : '' } >`;
+            <select class="form-select litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month"${FormControls.settings.monthField === false ? ' disabled' : '' } >`;
 
             let formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
             for (let i = 0; i < 12; i++) {
                 let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
-                formRow += `<option value=${i + 1}${liturgical_event !== null && liturgical_event.month === i+1 ? ' selected' : '' }>${formatter.format(month)}</option>`;
+                formRow += `<option value=${i + 1}${liturgical_event.month === i+1 ? ' selected' : '' }>${formatter.format(month)}</option>`;
             }
 
             formRow += `</select>
@@ -1010,7 +1011,7 @@ class FormControls {
         if (FormControls.settings.eventKeyField) {
             formRow += `<div class="form-group col-sm-2">
             <label for="onTheFly${FormControls.uniqid}EventKey">${Messages[ "EventKey" ]}</label>
-            <input type="text" value="${liturgical_event !== null ? liturgical_event.event_key : ''}" class="form-control litEvent litEventEventKey" id="onTheFly${FormControls.uniqid}EventKey" />
+            <input type="text" value="${liturgical_event.event_key ?? ''}" class="form-control litEvent litEventEventKey" id="onTheFly${FormControls.uniqid}EventKey" />
             </div>`;
         }
 
@@ -1023,8 +1024,9 @@ class FormControls {
         }
 
         if (FormControls.settings.readingsFieldShow) {
+            const hasProper = liturgical_event?.common?.includes('Proper') === true;
             formRow += `<div class="col-sm-5"><table>`;
-            formRow += readingsProperties.map((prop,idx) => `<tr><td><label for="onTheFly${FormControls.uniqid}Readings_${prop}">${prop}</label></td><td style="padding-left: 15px;"><input type="text" class="form-control litEvent litEventReadings litEventReadings_${prop}" id="onTheFly${FormControls.uniqid}Readings_${prop}" ${liturgical_event === null || typeof liturgical_event.common === 'undefined' || false === liturgical_event.commone.includs('Proper') ? `disabled` : ``} value="${liturgical_event && liturgical_event?.common.inclueds('Proper') ? (liturgical_event?.readings[prop] || '') : ''}" /></td>${idx===0 ? `<td rowspan="5" style="vertical-align: top;"><i class="fas fa-info-circle m-2" style="color: #4e73df;" title="When the liturgical_event has its own Proper, then Readings can be defined, otherwise the readings will depend on the Common"></i>` : ``}</td></tr>`).join('');
+            formRow += readingsProperties.map((prop,idx) => `<tr><td><label for="onTheFly${FormControls.uniqid}Readings_${prop}">${prop}</label></td><td style="padding-left: 15px;"><input type="text" class="form-control litEvent litEventReadings litEventReadings_${prop}" id="onTheFly${FormControls.uniqid}Readings_${prop}" ${hasProper ? '' : 'disabled'} value="${hasProper ? (liturgical_event?.readings?.[prop] || '') : ''}" /></td>${idx===0 ? `<td rowspan="5" style="vertical-align: top;"><i class="fas fa-info-circle m-2" style="color: #4e73df;" title="When the liturgical_event has its own Proper, then Readings can be defined, otherwise the readings will depend on the Common"></i>` : ``}</td></tr>`).join('');
             formRow += `</table></div>`;
         }
 
@@ -1038,15 +1040,15 @@ class FormControls {
         if(FormControls.settings.decreeUrlFieldShow) {
             formRow += `<div class="form-group col-sm-6">
             <label for="onTheFly${FormControls.uniqid}DecreeURL">${Messages[ "Decree URL" ]}<i class="ms-2 fas fa-info-circle" title="Use %s in place of the language code if using a language mapping"></i></label>
-            <input type="text" class="form-control litEvent litEventDecreeURL" value="${liturgical_event !== null && typeof liturgical_event.url !== 'undefined' ? liturgical_event.url : ''}" />
+            <input type="text" class="form-control litEvent litEventDecreeURL" value="${liturgical_event.url ?? ''}" />
             </div>`;
         }
 
         if(FormControls.settings.decreeLangMapFieldShow) {
-            let decreeLangs = liturgical_event !== null && typeof liturgical_event.url_lang_map !== 'undefined' ? Object.keys(liturgical_event.url_lang_map).map(key => key+'='+liturgical_event.url_lang_map[key] ) : null;
+            let decreeLangs = liturgical_event.url_lang_map ? Object.keys(liturgical_event.url_lang_map).map(key => key+'='+liturgical_event.url_lang_map[key] ) : [];
             formRow += `<div class="form-group col-sm-4">
             <label for="onTheFly${FormControls.uniqid}DecreeLangs">${Messages[ "Decree Langs" ]}<i class="ms-2 fas fa-info-circle" title="Use a comma separated list of key=value pairings, e.g. DE=ge,EN=en. Key is uppercased two letter ISO code, value is (generally lowercased) two letter representation used within the actual URL"></i></label>
-            <input type="text" class="form-control litEvent litEventDecreeLangs" value="${liturgical_event !== null && typeof liturgical_event.url_lang_map !== 'undefined' ? decreeLangs.join(',') : ''}" />
+            <input type="text" class="form-control litEvent litEventDecreeLangs" value="${decreeLangs.join(',')}" />
             </div>`;
         }
 

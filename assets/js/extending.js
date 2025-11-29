@@ -178,73 +178,16 @@ function requireAuth(callback) {
 }
 
 /**
- * CSRF Protection Helpers
- *
- * Note: JWT tokens in headers provide CSRF protection by default,
- * but these helpers add defense-in-depth if the API implements CSRF tokens.
- * Integrated into all authenticated requests via makeAuthenticatedRequest().
- */
-
-/**
- * Get CSRF token from meta tag or API endpoint
- *
- * @returns {Promise<string|null>} CSRF token or null if not available
- */
-async function getCsrfToken() {
-    // Check for CSRF token in meta tag
-    const metaToken = document.querySelector('meta[name="csrf-token"]');
-    if (metaToken) {
-        return metaToken.getAttribute('content');
-    }
-
-    // If API supports CSRF endpoint, fetch it
-    // Note: This endpoint may not be implemented yet
-    try {
-        if (typeof BaseUrl === 'undefined') {
-            return null;
-        }
-        const response = await fetch(`${BaseUrl}/auth/csrf`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            }
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            return data.csrf_token || null;
-        }
-    } catch (error) {
-        console.debug('CSRF endpoint not available:', error.message);
-    }
-
-    return null;
-}
-
-/**
- * Add CSRF token to headers if available
- * Optional defense-in-depth measure
- *
- * @param {Headers} headers - Headers object to modify
- * @returns {Promise<Headers>} Modified headers with CSRF token (if available)
- */
-async function addCsrfHeader(headers) {
-    const csrfToken = await getCsrfToken();
-    if (csrfToken) {
-        headers.append('X-CSRF-Token', csrfToken);
-    }
-    return headers;
-}
-
-/**
  * Authenticated Request Helper
  *
- * Makes an authenticated HTTP request with Authorization and CSRF headers.
+ * Makes an authenticated HTTP request with Authorization header.
  * This helper abstracts the common pattern of:
  * - Cloning base headers to avoid mutation
  * - Adding Authorization header from JWT token
- * - Adding CSRF token for defense-in-depth
  * - Making the fetch request
+ *
+ * Note: The API uses HttpOnly cookies with SameSite protection for CSRF defense,
+ * so explicit CSRF tokens are not needed.
  *
  * Use this for DELETE, PUT, PATCH, POST requests that require authentication.
  * Pair with handleAuthError for automatic retry on 401/403.
@@ -272,9 +215,8 @@ const makeAuthenticatedRequest = async (method, url, options = {}) => {
     // Clone headers to avoid mutation of the base headers
     const requestHeaders = new Headers(headers);
 
-    // Add authentication headers
+    // Add authentication header
     addAuthHeader(requestHeaders);
-    await addCsrfHeader(requestHeaders);
 
     // Build fetch options
     const fetchOptions = {
@@ -301,6 +243,7 @@ const tzdataRequest = new Request('https://raw.githubusercontent.com/vvo/tzdb/re
     headers: initialHeaders
 });
 
+// Useful to determine the most probable locale for any given nation
 const cldrDataRequest = new Request('https://raw.githubusercontent.com/unicode-org/cldr-json/refs/heads/main/cldr-json/cldr-core/supplemental/territoryInfo.json', {
     method: 'GET',
     headers: initialHeaders
@@ -429,8 +372,8 @@ const sanitizeProxiedAPI = {
                     if (value.includes(' - ')) {
                         ([value, target['locale']] = value.split(' - '));
                     }
-                    if (false === ['Americas', 'Europe', 'Africa', 'Oceania', 'Asia', 'Antarctica'].includes(value)) {
-                        console.error(`property 'key=${value}' of this object is not a valid value, valid values are: 'Americas', 'Europe', 'Africa', 'Oceania', 'Asia' and 'Antarctica'`);
+                    if (false === ['Americas', 'Europe', 'Africa', 'Oceania', 'Asia'].includes(value)) {
+                        console.error(`property 'key=${value}' of this object is not a valid value, valid values are: 'Americas', 'Europe', 'Africa', 'Oceania', 'Asia'`);
                         return;
                     }
                 }
@@ -619,16 +562,25 @@ const domContentLoadedCallback = () => {
         },
         maxHeight: 200,
         enableCaseInsensitiveFiltering: true,
+        /**
+         * Called when the user selects a new option in the multiselect element.
+         *
+         * @param {object} option - the selected option element (as a jQuery element)
+         * @param {boolean} checked - whether the option is checked or not
+         */
         onChange: (option, checked) => {
-            if (false === checked && document.querySelector('.currentLocalizationChoices').value === option[0].value) {
+            /** @var {HTMLOptionElement} optionElement */
+            const optionElement = option[0];
+            if (false === checked && document.querySelector('.currentLocalizationChoices').value === optionElement.value) {
                 alert('You cannot remove the current localization. In order to remove this locale, you must first switch to a different current localization.');
-                $(option).prop('selected', !checked);
+                option.prop('selected', !checked);
                 $('.calendarLocales').multiselect('refresh');
                 return;
             }
-            console.log('option:', option, 'checked:', checked);
-            const selectEl = option[0].parentElement;
-            selectEl.dispatchEvent(new CustomEvent('change', {
+            /** @var {HTMLSelectElement} selectElement */
+            const selectElement = optionElement.closest('select');
+            console.log('optionElement:', optionElement, 'checked:', checked, 'selectEl:', selectElement);
+            selectElement.dispatchEvent(new CustomEvent('change', {
                 bubbles: true,
                 cancelable: true
               }));
@@ -1513,7 +1465,7 @@ const fetchRegionalCalendarData = (headers) => {
                 return response.json();
             } else {
                 document.querySelector('#removeExistingCalendarDataBtn').disabled = true;
-                document.querySelector('#removeCalendarPrompt').remove();
+                document.querySelector('#removeCalendarPrompt')?.remove();
                 const localeOptions = Object.entries(AvailableLocalesWithRegion).map(([localeIso, localeDisplayName]) => {
                     return `<option value="${localeIso}">${localeDisplayName}</option>`;
                 });
@@ -1544,7 +1496,7 @@ const fetchRegionalCalendarData = (headers) => {
                 API.method = 'PUT';
                 error.json().then(json => {
                     const message = `${error.status} ${json.status} ${json.response}: ${json.description}<br />The Data File for the ${API.category} ${API.key} does not exist yet. Not that it's a big deal, just go ahead and create it now!`;
-                    toastr["warning"](message, "Warning");
+                    toastr["warning"](message, "Warning").attr('data-toast-type', 'calendar-not-found');
                     console.warn(message);
                 });
                 switch(API.category) {
@@ -1583,7 +1535,7 @@ const fetchRegionalCalendarData = (headers) => {
     } else {
         API.method = 'PUT';
         const message = `The Data File for the ${API.category} ${API.key} does not exist yet. Not that it's a big deal, just go ahead and create it now!`;
-        toastr["warning"](message, "Warning");
+        toastr["warning"](message, "Warning").attr('data-toast-type', 'calendar-not-found');
         console.warn(message);
         switch(API.category) {
             case 'widerregion':
@@ -1673,50 +1625,59 @@ const emptyStringPercentage = (translations) => {
  * events for that locale.
  *
  * If the fetched events are not already in the EventsCollection, it adds them to the collection and updates the
- * #existingLiturgicalEventsList element.
+ * #existingLiturgicalEventsList datalist element.
  *
  * After fetching the events, it calls fetchRegionalCalendarData to fetch the calendar data.
  * @returns {Promise<void>}
  */
 const fetchEventsAndCalendarData = () => {
     document.querySelector('#overlay').classList.remove('hidden');
-    const headers = {
+    const headers = new Headers({
         'Accept': 'application/json'
-    };
+    });
 
     if ( API.category === 'nation' ) {
         const selectedNationalCalendar = LitCalMetadata.national_calendars.filter(item => item.calendar_id === API.key);
         if (selectedNationalCalendar.length > 0) {
             const currentSelectedLocale = document.querySelector('.currentLocalizationChoices').value;
             API.locale = selectedNationalCalendar[0].locales.includes(currentSelectedLocale) ? currentSelectedLocale : selectedNationalCalendar[0].locales[0];
-            headers['Accept-Language'] = API.locale.replaceAll('_', '-');
+            headers.append('Accept-Language', API.locale.replaceAll('_', '-'));
         } else {
             // The selected national calendar does not exist
             // Filter possible locales by nation
             console.log(`API.path is ${API.path} (category is ${API.category} and key is ${API.key}).`);
             API.locale = likelyLanguage(API.key);
             console.log(`likelyLanguage = ${API.locale} (nation is ${API.key})`);
-            headers['Accept-Language'] = API.locale;
+            if (API.locale) {
+                headers.append('Accept-Language', API.locale.replaceAll('_', '-'));
+            }
         }
     } else {
-        headers['Accept-Language'] = API.locale.replaceAll('_', '-');
+        if (API.locale) {
+            headers.append('Accept-Language', API.locale.replaceAll('_', '-'));
+        }
     }
     console.log(`API.path is ${API.path} (category is ${API.category} and key is ${API.key}). Locale set to ${API.locale === '' ? ' (empty string)' : API.locale}. Now checking if a calendar already exists...`);
 
-    const eventsUrlForCurrentCategory = API.category === 'widerregion' || (API.category === 'nation' && false === LitCalMetadata.national_calendars_keys.includes(API.key))
+    const eventsUrlForCurrentCategory = (
+        API.category === 'widerregion'
+        || (API.category === 'nation' && false === LitCalMetadata.national_calendars_keys.includes(API.key))
+    )
         ? `${EventsUrl}`
         : `${EventsUrl}/${API.category}/${API.key}`;
 
-    // Only fetch events if we don't already have them, and if they are available
-    if (
-        false === EventsCollection.has(eventsUrlForCurrentCategory)
-        || false === EventsCollection.get(eventsUrlForCurrentCategory).has(API.locale)
-        || (eventsUrlForCurrentCategory === EventsUrl && LitCalMetadata.locales.includes(API.locale))
-    ) {
-        console.log(`EventsCollection.has(eventsUrlForCurrentCategory): ${EventsCollection.has(eventsUrlForCurrentCategory)}`);
-        console.log(`EventsCollection.get(eventsUrlForCurrentCategory).has(API.locale): ${EventsCollection.has(eventsUrlForCurrentCategory) && EventsCollection.get(eventsUrlForCurrentCategory).has(API.locale)}`);
-        console.log(`eventsUrlForCurrentCategory === EventsUrl && LitCalMetadata.locales.includes(API.locale): ${eventsUrlForCurrentCategory === EventsUrl && LitCalMetadata.locales.includes(API.locale)}`);
-        console.log('If either of the first two conditions is false, or the third condition is true, then we procced to fetch events...');
+    // Only fetch events if we don't already have them, and (for the base URL) only for supported locales
+    const missingForLocale =
+        !EventsCollection.has(eventsUrlForCurrentCategory) ||
+        !EventsCollection.get(eventsUrlForCurrentCategory).has(API.locale);
+    const localeAvailableForBase =
+        eventsUrlForCurrentCategory !== EventsUrl ||
+        LitCalMetadata.locales.includes(API.locale);
+
+    if (missingForLocale && localeAvailableForBase) {
+        console.log(`missingForLocale: ${missingForLocale}`);
+        console.log(`localeAvailableForBase: ${localeAvailableForBase}`);
+        console.log('Data is missing and locale is available, proceeding to fetch events...');
         if (false === EventsCollection.has(eventsUrlForCurrentCategory)) {
             EventsCollection.set(eventsUrlForCurrentCategory, new Map());
         }
@@ -2100,9 +2061,11 @@ const deleteCalendarConfirmClicked = () => {
     API.category = document.querySelector('.regionalNationalCalendarName').dataset.category;
     API.key = document.querySelector('.regionalNationalCalendarName').value;
     const baseHeaders = new Headers({
-        'Accept': 'application/json',
-        'Accept-Language': API.locale
+        'Accept': 'application/json'
     });
+    if (API.locale) {
+        baseHeaders.append('Accept-Language', API.locale.replaceAll('_', '-'));
+    }
 
     const makeDeleteRequest = () => makeAuthenticatedRequest('DELETE', API.path, { headers: baseHeaders });
 
@@ -2145,7 +2108,7 @@ const deleteCalendarConfirmClicked = () => {
                 }
 
                 document.querySelector('#removeExistingCalendarDataBtn').disabled = true;
-                document.querySelector('#removeCalendarDataPrompt').remove();
+                document.querySelector('#removeCalendarDataPrompt')?.remove();
                 document.querySelector('.regionalNationalCalendarName').value = '';
                 document.querySelector('.regionalNationalDataForm').innerHTML = '';
 
@@ -2207,6 +2170,7 @@ const buildNationalCalendarPayload = () => {
  */
 const buildWiderRegionPayload = () => {
     API.key = document.querySelector('#widerRegionCalendarName').value;
+    API.locale = document.querySelector('.currentLocalizationChoices').value;
     const regionNamesLocalizedEng = new Intl.DisplayNames(['en'], { type: 'region' });
     const selectedLocales = document.querySelector('#widerRegionLocales').selectedOptions;
     const nationalCalendars = Array.from(selectedLocales).map(({ value }) => value).reduce((prev, curr) => {
@@ -2493,8 +2457,8 @@ const serializeRegionalNationalDataClicked = (ev) => {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
     });
-    if (API.locale !== '') {
-        baseHeaders.append('Accept-Language', API.locale);
+    if (API.locale) {
+        baseHeaders.append('Accept-Language', API.locale.replaceAll('_', '-'));
     }
 
     const makeRequest = () => makeAuthenticatedRequest(API.method, API.path, {
@@ -2762,9 +2726,11 @@ const loadDiocesanCalendarData = () => {
     //let dioceseMetadata = LitCalMetadata.diocesan_calendars.filter(item => item.calendar_id === API.key)[0];
     API.locale = document.querySelector('.currentLocalizationChoices').value;
     const headers = new Headers({
-        'Accept': 'application/json',
-        'Accept-Language': API.locale
+        'Accept': 'application/json'
     });
+    if (API.locale) {
+        headers.append('Accept-Language', API.locale.replaceAll('_', '-'));
+    }
     const request = new Request(API.path, {
         method: 'GET',
         headers
@@ -2773,7 +2739,7 @@ const loadDiocesanCalendarData = () => {
         if (response.ok) {
             return response.json();
         } else if (response.status === 404) {
-            toastr["warning"](response.status + ' ' + response.statusText + ': ' + response.url + '<br />The Diocesan Calendar for ' + diocese + ' does not exist yet.', "Warning");
+            toastr["warning"](response.status + ' ' + response.statusText + ': ' + response.url + '<br />The Diocesan Calendar for ' + diocese + ' does not exist yet.', "Warning").attr('data-toast-type', 'calendar-not-found');
             console.log(response.status + ' ' + response.statusText + ': ' + response.url + 'The Diocesan Calendar for ' + diocese + ' does not exist yet.');
             API.method = 'PUT';
             return Promise.resolve({});
@@ -3331,8 +3297,8 @@ const saveDiocesanCalendar_btnClicked = () => {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         });
-        if (API.locale !== '') {
-            headers.append('Accept-Language', API.locale);
+        if (API.locale) {
+            headers.append('Accept-Language', API.locale.replaceAll('_', '-'));
         }
 
         const selectedOptions = document.querySelector('#diocesanCalendarLocales').selectedOptions;
@@ -3485,8 +3451,8 @@ const diocesanCalendarDefinitionsCardLinksClicked = (ev) => {
  * When a liturgical_event name is changed (whether selected from a list or entered manually),
  * the 'was-validated' class is removed from the form in the modal.
  * Then, if the input is set to required, the selected liturgical_event is validated
- * by looking for an option with the same value in the #existingLiturgicalEventsList select element.
- * If the liturgical_event name is not valid, an 'is-invalid' class is added to the select element.
+ * by looking for an option with the same value in the #existingLiturgicalEventsList datalist element.
+ * If the liturgical_event name is not valid, an 'is-invalid' class is added to the input element.
  * If instead the input is not set to required, no validations will take place,
  * but simply a warning message will be displayed to ensure the user understands
  * that they are creating a new liturgical_event that does not already exist.
@@ -3500,17 +3466,20 @@ const diocesanCalendarDefinitionsCardLinksClicked = (ev) => {
  */
 const existingLiturgicalEventNameChanged = (ev) => {
     const modal = ev.target.closest('.actionPromptModal');
-    const form = modal.querySelector('form');
+    const form  = modal.querySelector('form');
     form.classList.remove('was-validated');
 
-    const option = modal.querySelector(`#existingLiturgicalEventsList option[value="${ev.target.value}"]`);
+    // #existingLiturgicalEventsList is a datalist element containing all existing liturgical_event names, and is not contained in the modal but in the main document
+    const option = document.querySelector(`#existingLiturgicalEventsList option[value="${ev.target.value}"]`);
     // if no option corresponding to the selected liturgical_event name is found, disable the submission buttons
     const invalidState = !option && ev.target.required;
     const warningState = !option && !ev.target.required;
     ev.target.classList.toggle('is-invalid', invalidState);
-    const warningEl = modal.querySelector('.text-warning');
-    warningEl.classList.toggle('d-block', warningState);
-    warningEl.classList.toggle('d-none', !warningState);
+    if (!ev.target.required) {
+        const warningEl = modal.querySelector('.text-warning');
+        warningEl?.classList.toggle('d-block', warningState);
+        warningEl?.classList.toggle('d-none', !warningState);
+    }
     console.log(`input is required to have an existing value from the list: ${ev.target.required}, selected value: ${ev.target.value}, option found: ${!!option}`);
     console.log(`invalidState: ${invalidState}, warningState: ${warningState}`);
     switch (modal.id) {
