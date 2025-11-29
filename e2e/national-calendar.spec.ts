@@ -405,10 +405,13 @@ test.describe('National Calendar Form', () => {
             const toastContainer = document.querySelector('#toast-container');
             if (toastContainer) toastContainer.remove();
 
-            // Set wider region
+            // Set wider region dynamically from available options
             const widerRegionInput = document.querySelector('#associatedWiderRegion') as HTMLInputElement;
             if (widerRegionInput) {
-                widerRegionInput.value = 'Asia';
+                // Use the first available option from the datalist or keep existing value
+                const datalist = document.querySelector('#WiderRegionsList') as HTMLDataListElement;
+                const firstOption = datalist?.querySelector('option')?.getAttribute('value');
+                widerRegionInput.value = firstOption || widerRegionInput.value || 'Americas';
                 widerRegionInput.dispatchEvent(new Event('input', { bubbles: true }));
                 widerRegionInput.dispatchEvent(new Event('change', { bubbles: true }));
             }
