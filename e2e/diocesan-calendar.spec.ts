@@ -592,14 +592,17 @@ test.describe('Diocesan Calendar Form - Validation', () => {
 
     test('should show validation error when submitting without required fields', async ({ page }) => {
         // Wait for page to fully load
-        await page.waitForTimeout(1000);
+        await page.waitForLoadState('networkidle');
 
         // Try to submit without filling required fields
         const saveButton = page.locator('#saveDiocesanCalendar_btn');
         await saveButton.click({ force: true });
 
-        // Wait a moment for validation to be applied
-        await page.waitForTimeout(500);
+        // Wait for validation classes to be applied
+        await page.waitForFunction(() => {
+            return document.querySelector('form.was-validated') !== null ||
+                   document.querySelector(':invalid') !== null;
+        }, { timeout: 5000 });
 
         // Bootstrap validation adds was-validated class to forms
         // Check that at least one form has this class
