@@ -11,14 +11,14 @@ dotenv.config({ path: path.resolve(__dirname, '.env.development') });
  */
 export default defineConfig({
     testDir: './e2e',
-    /* Run tests in files in parallel */
-    fullyParallel: true,
+    /* Run tests serially - these tests modify shared API state (calendars)
+     * and parallel execution causes race conditions and flaky failures */
+    fullyParallel: false,
+    workers: 1,
     /* Fail the build on CI if you accidentally left test.only in the source code */
     forbidOnly: !!process.env.CI,
     /* Retry on CI only */
     retries: process.env.CI ? 2 : 0,
-    /* Opt out of parallel tests on CI */
-    workers: process.env.CI ? 1 : undefined,
     /* Reporter to use */
     reporter: [
         ['html', { outputFolder: 'playwright-report' }],
