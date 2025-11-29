@@ -320,17 +320,25 @@ test.describe('National Calendar Form', () => {
         await eventInput.dispatchEvent('change');
         console.log(`Entered new event name: ${newEventName}`);
 
-        // Wait for the submit button to be enabled
+        // Wait for either submit button to be enabled
         // Note: The button ID changes dynamically based on whether the event exists:
         // - newLiturgicalEventFromExistingButton: if event exists in list
         // - newLiturgicalEventExNovoButton: if creating a brand new event
         await page.waitForFunction(() => {
-            const btn = document.querySelector('#newLiturgicalEventExNovoButton') as HTMLButtonElement;
-            return btn && !btn.disabled;
+            const exNovo = document.querySelector('#newLiturgicalEventExNovoButton') as HTMLButtonElement | null;
+            const existing = document.querySelector('#newLiturgicalEventFromExistingButton') as HTMLButtonElement | null;
+            return (exNovo && !exNovo.disabled) || (existing && !existing.disabled);
         }, { timeout: 10000 });
 
-        // Submit the modal to create a new row
-        await page.click('#newLiturgicalEventExNovoButton');
+        // Click whichever button is enabled
+        const exNovoEnabled = await page.evaluate(() => {
+            const btn = document.querySelector('#newLiturgicalEventExNovoButton') as HTMLButtonElement | null;
+            return btn && !btn.disabled;
+        });
+        const submitSelector = exNovoEnabled
+            ? '#newLiturgicalEventExNovoButton'
+            : '#newLiturgicalEventFromExistingButton';
+        await page.click(submitSelector);
 
         // Wait for the modal to close and new row to appear
         await page.waitForSelector('#newLiturgicalEventActionPrompt.show', { state: 'hidden', timeout: 5000 });
