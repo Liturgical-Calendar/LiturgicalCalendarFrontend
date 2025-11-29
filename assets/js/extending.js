@@ -3477,8 +3477,8 @@ const existingLiturgicalEventNameChanged = (ev) => {
     ev.target.classList.toggle('is-invalid', invalidState);
     if (!ev.target.required) {
         const warningEl = modal.querySelector('.text-warning');
-        warningEl.classList.toggle('d-block', warningState);
-        warningEl.classList.toggle('d-none', !warningState);
+        warningEl?.classList.toggle('d-block', warningState);
+        warningEl?.classList.toggle('d-none', !warningState);
     }
     console.log(`input is required to have an existing value from the list: ${ev.target.required}, selected value: ${ev.target.value}, option found: ${!!option}`);
     console.log(`invalidState: ${invalidState}, warningState: ${warningState}`);
