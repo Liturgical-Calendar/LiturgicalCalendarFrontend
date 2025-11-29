@@ -195,7 +195,7 @@ test.describe('National Calendar Form', () => {
 
         const calendarsResponse = await page.request.get(`${apiBaseUrl}/calendars`);
         const calendarsData = await calendarsResponse.json();
-        const existingNationIds: string[] = calendarsData.national_calendars?.map(
+        const existingNationIds: string[] = calendarsData.litcal_metadata?.national_calendars?.map(
             (cal: { calendar_id: string }) => cal.calendar_id
         ) || [];
         console.log(`Found ${existingNationIds.length} existing national calendars: ${existingNationIds.join(', ')}`);
@@ -223,18 +223,11 @@ test.describe('National Calendar Form', () => {
 
         console.log(`Selected nation for CREATE test: ${nationToCreate.name} (${nationToCreate.key})`);
 
-        // Set up request interception with payload fixes for schema validation
+        // Set up request interception to capture the payload (no modifications)
         let capturedPayload: any = null;
         let capturedMethod: string | null = null;
         let createResponseStatus: number | null = null;
         let createResponseBody: any = null;
-
-        // Track which fixes were applied (to detect frontend schema issues)
-        let fixesApplied = {
-            i18nAdded: false,
-            i18nLocalesFixed: [] as string[],
-            litcalAdded: false
-        };
 
         await page.route('**/data/**', async (route, request) => {
             if (['PUT', 'PATCH'].includes(request.method())) {
@@ -242,62 +235,9 @@ test.describe('National Calendar Form', () => {
                 const postData = request.postData();
                 if (postData) {
                     try {
-                        // Deep clone the original payload BEFORE any mutations
-                        capturedPayload = JSON.parse(JSON.stringify(JSON.parse(postData)));
-
-                        const payload = JSON.parse(postData);
-
-                        // For PUT (CREATE) requests, fix payload for API validation
-                        if (request.method() === 'PUT') {
-                            const metadataLocales = payload.metadata?.locales || [];
-
-                            // i18n is REQUIRED for PUT operations (calendar creation)
-                            // Each locale object must have at least 1 property (minProperties: 1)
-                            // For setProperty grade, we add a placeholder event_key translation
-                            if (!payload.i18n || Object.keys(payload.i18n).length === 0) {
-                                payload.i18n = {};
-                                fixesApplied.i18nAdded = true;
-                            }
-                            // Ensure each locale has at least one translation entry
-                            for (const locale of metadataLocales) {
-                                if (!payload.i18n[locale] || Object.keys(payload.i18n[locale]).length === 0) {
-                                    // Add minimal translation - event_key matching the litcal event
-                                    payload.i18n[locale] = { 'Epiphany': 'Epiphany' };
-                                    fixesApplied.i18nLocalesFixed.push(locale);
-                                }
-                            }
-                            if (fixesApplied.i18nAdded || fixesApplied.i18nLocalesFixed.length > 0) {
-                                console.log(`TEST FIX: Set i18n with placeholder translations for: ${metadataLocales.join(', ')}`);
-                            }
-
-                            // API requires litcal to be non-empty
-                            // Add a minimal valid setProperty event if litcal is empty
-                            if (!payload.litcal || payload.litcal.length === 0) {
-                                payload.litcal = [{
-                                    liturgical_event: {
-                                        event_key: 'Epiphany',
-                                        grade: 7
-                                    },
-                                    metadata: {
-                                        action: 'setProperty',
-                                        property: 'grade',
-                                        since_year: 2024
-                                    }
-                                }];
-                                fixesApplied.litcalAdded = true;
-                                console.log('TEST FIX: Added minimal litcal event for CREATE validation');
-                            }
-
-                            const modifiedPayload = JSON.stringify(payload);
-                            console.log(`MODIFIED PAYLOAD BEING SENT: ${modifiedPayload}`);
-
-                            await route.continue({
-                                postData: modifiedPayload
-                            });
-                            return;
-                        }
+                        capturedPayload = JSON.parse(postData);
+                        console.log(`CAPTURED PAYLOAD: ${postData}`);
                     } catch (e) {
-                        // Fail fast with clear error instead of swallowing parse errors
                         const errorMsg = e instanceof Error ? e.message : String(e);
                         throw new Error(`JSON.parse failed for request payload. Error: ${errorMsg}. Raw postData: ${postData?.substring(0, 500)}`);
                     }
@@ -608,30 +548,6 @@ test.describe('National Calendar Form', () => {
                 expect(item.metadata).toHaveProperty('action');
             }
         }
-
-        // Report on fixes that were applied
-        const anyFixesApplied = fixesApplied.i18nAdded ||
-                                fixesApplied.i18nLocalesFixed.length > 0 ||
-                                fixesApplied.litcalAdded;
-
-        if (anyFixesApplied) {
-            console.log('=== TEST FIXES APPLIED (frontend schema issues detected) ===');
-            if (fixesApplied.i18nAdded) {
-                console.log('  - i18n object was missing or empty');
-            }
-            if (fixesApplied.i18nLocalesFixed.length > 0) {
-                console.log(`  - i18n entries added for locales: ${fixesApplied.i18nLocalesFixed.join(', ')}`);
-            }
-            if (fixesApplied.litcalAdded) {
-                console.log('  - litcal array was empty, added placeholder event');
-            }
-            console.log('============================================================');
-        } else {
-            console.log('No test fixes required - frontend payload was schema-compliant');
-        }
-
-        // Fail the test if any fixes were required - this indicates a frontend schema regression
-        expect(anyFixesApplied, 'Frontend payload required test fixes to pass API validation. Fixes applied: ' + JSON.stringify(fixesApplied)).toBe(false);
 
         // CLEANUP: DELETE the created national calendar and verify 200 response
         console.log(`CLEANUP: Deleting national calendar ${nationToCreate.key}...`);

@@ -213,19 +213,12 @@ test.describe('Wider Region Calendar Form', () => {
 
         console.log(`Selected region for CREATE test: ${regionToCreate}`);
 
-        // Set up request interception FIRST with payload fixes for schema validation
+        // Set up request interception to capture the payload (no modifications)
         let capturedPayload: any = null;
         let capturedMethod: string | null = null;
         let createResponseStatus: number | null = null;
         let createResponseBody: any = null;
         let createdRegionKey: string | null = null;
-
-        // Track which fixes were applied (to detect frontend schema issues)
-        let fixesApplied = {
-            i18nAdded: false,
-            i18nLocalesFixed: [] as string[],
-            litcalAdded: false
-        };
 
         await page.route('**/data/**', async (route, request) => {
             if (['PUT', 'PATCH'].includes(request.method())) {
@@ -233,89 +226,9 @@ test.describe('Wider Region Calendar Form', () => {
                 const postData = request.postData();
                 if (postData) {
                     try {
-                        // Deep clone the original payload BEFORE any mutations
-                        capturedPayload = JSON.parse(JSON.stringify(JSON.parse(postData)));
-
-                        const payload = JSON.parse(postData);
-
-                        // For PUT (CREATE) requests, fix payload for API validation
-                        if (request.method() === 'PUT') {
-                            const metadataLocales = payload.metadata?.locales || [];
-
-                            // i18n is REQUIRED for PUT operations (calendar creation)
-                            // Each locale object must have at least 1 property (minProperties: 1)
-                            if (!payload.i18n || Object.keys(payload.i18n).length === 0) {
-                                payload.i18n = {};
-                                fixesApplied.i18nAdded = true;
-                            }
-                            // Ensure each locale has at least one translation entry
-                            for (const locale of metadataLocales) {
-                                if (!payload.i18n[locale] || Object.keys(payload.i18n[locale]).length === 0) {
-                                    // Add minimal translation - event_key matching the litcal event
-                                    payload.i18n[locale] = { 'TestPatron': 'Test Patron Saint' };
-                                    fixesApplied.i18nLocalesFixed.push(locale);
-                                }
-                            }
-                            if (fixesApplied.i18nAdded || fixesApplied.i18nLocalesFixed.length > 0) {
-                                console.log(`TEST FIX: Set i18n with placeholder translations for: ${metadataLocales.join(', ')}`);
-                            }
-
-                            // API requires litcal to be non-empty for WiderRegion
-                            // WiderRegion schema only allows 'createNew' or 'makePatron' actions (NOT setProperty)
-                            // Add a minimal valid makePatron event if litcal is empty
-                            if (!payload.litcal || payload.litcal.length === 0) {
-                                payload.litcal = [{
-                                    liturgical_event: {
-                                        event_key: 'TestPatron',
-                                        grade: 5  // Memorial grade
-                                    },
-                                    metadata: {
-                                        action: 'makePatron',
-                                        since_year: 2024,
-                                        url: 'https://example.com/decree',
-                                        url_lang_map: { en: 'en' }
-                                    }
-                                }];
-                                fixesApplied.litcalAdded = true;
-                                console.log('TEST FIX: Added minimal makePatron litcal event for WiderRegion CREATE validation');
-                            } else {
-                                // Fix existing litcal entries that may have missing required metadata fields
-                                for (const item of payload.litcal) {
-                                    if (item.metadata) {
-                                        // Ensure required metadata fields exist
-                                        if (!item.metadata.since_year) {
-                                            item.metadata.since_year = 1970;
-                                            console.log('TEST FIX: Added missing since_year to litcal metadata');
-                                        }
-                                        if (!item.metadata.url) {
-                                            item.metadata.url = 'https://example.com/decree';
-                                            console.log('TEST FIX: Added missing url to litcal metadata');
-                                        }
-                                        if (!item.metadata.url_lang_map || Object.keys(item.metadata.url_lang_map).length === 0) {
-                                            item.metadata.url_lang_map = { en: 'en' };
-                                            console.log('TEST FIX: Added missing url_lang_map to litcal metadata');
-                                        }
-                                    }
-                                    // For createNew events, ensure common is set (required field)
-                                    if (item.metadata?.action === 'createNew' && item.liturgical_event) {
-                                        if (!item.liturgical_event.common || (Array.isArray(item.liturgical_event.common) && item.liturgical_event.common.length === 0)) {
-                                            item.liturgical_event.common = ['Proper'];
-                                            console.log('TEST FIX: Added missing common to createNew liturgical_event');
-                                        }
-                                    }
-                                }
-                            }
-
-                            const modifiedPayload = JSON.stringify(payload);
-                            console.log(`MODIFIED PAYLOAD BEING SENT: ${modifiedPayload}`);
-
-                            await route.continue({
-                                postData: modifiedPayload
-                            });
-                            return;
-                        }
+                        capturedPayload = JSON.parse(postData);
+                        console.log(`CAPTURED PAYLOAD: ${postData}`);
                     } catch (e) {
-                        // Fail fast with clear error instead of swallowing parse errors
                         const errorMsg = e instanceof Error ? e.message : String(e);
                         throw new Error(`JSON.parse failed for request payload. Error: ${errorMsg}. Raw postData: ${postData?.substring(0, 500)}`);
                     }
@@ -489,6 +402,78 @@ test.describe('Wider Region Calendar Form', () => {
         });
         console.log(`CreateNew row fields filled: ${JSON.stringify(rowFieldsResult)}`);
 
+        // Select "Martyrs" from the Common bootstrap-multiselect (not "Proper" which triggers readings addition)
+        // The multiselect is within the createNew row - find the btn-group that follows the hidden select
+        const commonRow = page.locator('.regionalNationalDataForm .row[data-action="createNew"]');
+
+        // First deselect "Proper" if it's selected (it's the default), then select "Martyrs"
+        // Click to open the multiselect dropdown
+        await commonRow.locator('.btn-group button.multiselect').last().click();
+        await page.waitForSelector('.multiselect-container.dropdown-menu.show', { timeout: 5000 });
+
+        // Deselect "Proper" and select "Martyrs" by VALUE (not label text, which may be translated)
+        const commonSelection = await page.evaluate(() => {
+            const container = document.querySelector('.multiselect-container.dropdown-menu.show');
+            if (!container) return { found: false, reason: 'no container' };
+
+            // Deselect "Proper" if checked (to avoid triggering readings addition)
+            const properInput = container.querySelector('input[type="checkbox"][value="Proper"]') as HTMLInputElement;
+            if (properInput && properInput.checked) {
+                properInput.click();
+            }
+
+            // Select "Martyrs" instead
+            const martyrsInput = container.querySelector('input[type="checkbox"][value="Martyrs"]') as HTMLInputElement;
+            if (martyrsInput) {
+                if (!martyrsInput.checked) {
+                    martyrsInput.click();
+                }
+                return { found: true, value: martyrsInput.value, checked: martyrsInput.checked, properDeselected: !properInput?.checked };
+            }
+
+            // Debug: list all checkbox values
+            const allCheckboxes = container.querySelectorAll('input[type="checkbox"]');
+            const values = Array.from(allCheckboxes).map(cb => (cb as HTMLInputElement).value);
+            return { found: false, reason: 'no Martyrs checkbox', availableValues: values };
+        });
+        console.log(`Common "Martyrs" selection: ${JSON.stringify(commonSelection)}`);
+
+        // Close the dropdown
+        await page.keyboard.press('Escape');
+        await page.waitForSelector('.multiselect-container.dropdown-menu.show', { state: 'hidden', timeout: 2000 }).catch(() => {});
+
+        // Fill in the Decree URL and Decree Langs fields (required by WiderRegionCalendar schema for createNew action)
+        const decreeFieldsResult = await page.evaluate(() => {
+            const row = document.querySelector('.regionalNationalDataForm .row[data-action="createNew"]');
+            if (!row) return { success: false, error: 'createNew row not found' };
+
+            // Fill in Decree URL (required for createNew action)
+            const decreeUrlInput = row.querySelector('.litEventDecreeURL') as HTMLInputElement;
+            if (decreeUrlInput) {
+                decreeUrlInput.value = 'https://www.vatican.va/content/francesco/en/test-decree.html';
+                decreeUrlInput.dispatchEvent(new Event('input', { bubbles: true }));
+                decreeUrlInput.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+
+            // Fill in Decree Langs / url_lang_map (required for createNew action)
+            // Format: "EN=en,DE=ge,FR=fr" - maps ISO 2-letter codes to URL language codes
+            const decreeLangsInput = row.querySelector('.litEventDecreeLangs') as HTMLInputElement;
+            if (decreeLangsInput) {
+                decreeLangsInput.value = 'en=en';
+                decreeLangsInput.dispatchEvent(new Event('input', { bubbles: true }));
+                decreeLangsInput.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+
+            return {
+                success: true,
+                decreeUrlFound: !!decreeUrlInput,
+                decreeUrlValue: decreeUrlInput?.value,
+                decreeLangsFound: !!decreeLangsInput,
+                decreeLangsValue: decreeLangsInput?.value
+            };
+        });
+        console.log(`Decree fields filled: ${JSON.stringify(decreeFieldsResult)}`);
+
         // Dismiss any toast messages that may have appeared
         await page.evaluate(() => {
             document.querySelectorAll('#toast-container, .toast-container, .toast, [class*="toast"]').forEach(el => el.remove());
@@ -649,30 +634,6 @@ test.describe('Wider Region Calendar Form', () => {
 
         console.log(`Original payload i18n keys: [${originalI18nKeys.join(', ')}]`);
         console.log(`Metadata locales: [${metadataLocales.join(', ')}]`);
-
-        // Report on fixes that were applied
-        const anyFixesApplied = fixesApplied.i18nAdded ||
-                                fixesApplied.i18nLocalesFixed.length > 0 ||
-                                fixesApplied.litcalAdded;
-
-        if (anyFixesApplied) {
-            console.log('=== TEST FIXES APPLIED (frontend schema issues detected) ===');
-            if (fixesApplied.i18nAdded) {
-                console.log('  - i18n object was missing or empty');
-            }
-            if (fixesApplied.i18nLocalesFixed.length > 0) {
-                console.log(`  - i18n entries added for locales: ${fixesApplied.i18nLocalesFixed.join(', ')}`);
-            }
-            if (fixesApplied.litcalAdded) {
-                console.log('  - litcal array was empty, added placeholder makePatron event');
-            }
-            console.log('============================================================');
-        } else {
-            console.log('No test fixes required - frontend payload was schema-compliant');
-        }
-
-        // Fail the test if any fixes were required - this indicates a frontend schema regression
-        expect(anyFixesApplied, 'Frontend payload required test fixes to pass API validation. Fixes applied: ' + JSON.stringify(fixesApplied)).toBe(false);
 
         // Store the region key for cleanup
         if (!createdRegionKey && capturedPayload.metadata?.wider_region) {
