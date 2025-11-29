@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-27 05:41+0000\n"
+"POT-Creation-Date: 2025-11-29 04:08+0000\n"
 "PO-Revision-Date: 2025-11-25 10:01+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
@@ -571,7 +571,7 @@ msgstr ""
 msgid "Event key"
 msgstr "Esemény kulcs"
 
-#: extending.php:126 admin.php:63 src/Utilities.php:236 src/FormControls.php:53
+#: extending.php:126 admin.php:63 src/Utilities.php:240 src/FormControls.php:53
 msgid "Name"
 msgstr "Név"
 
@@ -1197,7 +1197,7 @@ msgstr ""
 "Jelenleg ezek a végpontok csak olvashatók. Jelenleg <b>%1$d határozat</b> "
 "van meghatározva a végponton %2$s."
 
-#: decrees.php:146
+#: decrees.php:154
 msgid "Read the Decree"
 msgstr "Olvasd el a rendeletet"
 
@@ -1444,7 +1444,7 @@ msgid "celebration with precedence over solemnities"
 msgstr "ünnep, amely elsőbbséget élvez a főünnepekkel szemben"
 
 #. translators: 1. BibleGet github url 2. Liturgical Calendar github url
-#: src/Utilities.php:115
+#: src/Utilities.php:117
 #, php-format
 msgid ""
 "Priest in the Diocese of Rome, author of the <a href=\"%1$s\" "
@@ -1455,7 +1455,7 @@ msgstr ""
 "projekt</a> és a <a href=\"%2$s\" target=\"_blank\">Liturgikus Naptár "
 "projekt</a> szerzője"
 
-#: src/Utilities.php:124
+#: src/Utilities.php:126
 msgid ""
 "Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, "
 "Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
@@ -1467,7 +1467,7 @@ msgstr ""
 "Szakemberei Céh alapítója, közreműködött a projekt weboldalának bootstrap "
 "témázásában"
 
-#: src/Utilities.php:130
+#: src/Utilities.php:132
 msgid ""
 "Full stack web developer, contributed to the generation of the Open API "
 "documentation"
@@ -1475,7 +1475,7 @@ msgstr ""
 "Teljes stack webfejlesztő, hozzájárult az Open API dokumentáció "
 "létrehozásához"
 
-#: src/Utilities.php:136
+#: src/Utilities.php:138
 msgid ""
 "Latin Liturgy Association of the Netherlands, contributed the national "
 "calendar for the Netherlands to this project with all related translations"
@@ -1483,7 +1483,7 @@ msgstr ""
 "Hollandiai Latin Liturgia Egyesület, hozzájárult a holland nemzeti naptár "
 "projektjéhez minden kapcsolódó fordítással"
 
-#: src/Utilities.php:142
+#: src/Utilities.php:144
 msgid ""
 "Senior software engineer at Strava, author of the ConfessIt app, contributed "
 "to the structuring of the JSON responses of the Liturgical Calendar API"
@@ -1491,7 +1491,7 @@ msgstr ""
 "Senior szoftvermérnök a Stravánál, a ConfessIt alkalmazás szerzője, "
 "hozzájárult a Liturgikus Naptár API JSON válaszainak strukturálásához"
 
-#: src/Utilities.php:148
+#: src/Utilities.php:150
 msgid ""
 "Software Engineer and contributor to Salt + Light Television, contributed "
 "information about the dioceses of Latin rite"
@@ -1499,7 +1499,7 @@ msgstr ""
 "Szoftvermérnök és közreműködő a Salt + Light Televisionnál, információkat "
 "adott a latin szertartású egyházmegyékről"
 
-#: src/Utilities.php:154
+#: src/Utilities.php:156
 msgid ""
 "Chancellor of the Diocese of Charlottetown, contributed liturgical calendar "
 "data for Canada in both English and French"
@@ -1507,7 +1507,7 @@ msgstr ""
 "A Charlottetown-i Egyházmegye kancellárja, liturgikus naptár adatokat "
 "szolgáltatott Kanadára angolul és franciául egyaránt"
 
-#: src/Utilities.php:222
+#: src/Utilities.php:226
 msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
@@ -1515,24 +1515,24 @@ msgstr ""
 "Úgy tűnik, hogy ez a liturgikus esemény nem létezik? Kérlek, válassz egy "
 "értéket a listából."
 
-#: src/Utilities.php:223
+#: src/Utilities.php:227
 msgid "This liturgical event does not exist, so it will be created."
 msgstr "Ez a liturgikus esemény nem létezik, így létre fogjuk hozni."
 
-#: src/Utilities.php:228
+#: src/Utilities.php:232
 msgid "Choose from existing liturgical events"
 msgstr "Választhatsz meglévő liturgikus események közül"
 
-#: src/Utilities.php:228
+#: src/Utilities.php:232
 msgid "Choose from existing liturgical events (or create a new one)"
 msgstr ""
 "Választhatsz meglévő liturgikus események közül (vagy létrehozhatsz újat)"
 
-#: src/Utilities.php:234
+#: src/Utilities.php:238
 msgid "Property to change"
 msgstr "Tulajdonság megváltoztatása"
 
-#: src/Utilities.php:237 src/FormControls.php:171
+#: src/Utilities.php:241 src/FormControls.php:171
 msgid "Grade"
 msgstr "Fokozat"
 

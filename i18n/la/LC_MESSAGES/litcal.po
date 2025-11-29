@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-27 05:41+0000\n"
+"POT-Creation-Date: 2025-11-29 04:08+0000\n"
 "PO-Revision-Date: 2025-11-25 10:01+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
@@ -565,7 +565,7 @@ msgstr ""
 msgid "Event key"
 msgstr "Clavis eventus"
 
-#: extending.php:126 admin.php:63 src/Utilities.php:236 src/FormControls.php:53
+#: extending.php:126 admin.php:63 src/Utilities.php:240 src/FormControls.php:53
 msgid "Name"
 msgstr "Nomen"
 
@@ -1189,7 +1189,7 @@ msgstr ""
 "In praesentia, hi endpoints sunt solum legendi. Sunt nunc <b>%1$d Decreta</"
 "b> definita ad endpoint %2$s."
 
-#: decrees.php:146
+#: decrees.php:154
 msgid "Read the Decree"
 msgstr "Legere Decretum"
 
@@ -1436,7 +1436,7 @@ msgid "celebration with precedence over solemnities"
 msgstr "celebratio altioris ordinis quam sollemnitatis"
 
 #. translators: 1. BibleGet github url 2. Liturgical Calendar github url
-#: src/Utilities.php:115
+#: src/Utilities.php:117
 #, php-format
 msgid ""
 "Priest in the Diocese of Rome, author of the <a href=\"%1$s\" "
@@ -1447,7 +1447,7 @@ msgstr ""
 "target=\"_blank\">BibleGet</a> et propositi <a href=\"%2$s\" "
 "target=\"_blank\">Calendarii Liturgici</a>"
 
-#: src/Utilities.php:124
+#: src/Utilities.php:126
 msgid ""
 "Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, "
 "Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
@@ -1459,7 +1459,7 @@ msgstr ""
 "Isidori Gildae pro Catholicis IT Professionalibus, contulit ad themata "
 "bootstrap pro situ proiecti"
 
-#: src/Utilities.php:130
+#: src/Utilities.php:132
 msgid ""
 "Full stack web developer, contributed to the generation of the Open API "
 "documentation"
@@ -1467,7 +1467,7 @@ msgstr ""
 "Plenam acervum interretialem excultor, ad generationem Open API documentorum "
 "contulit"
 
-#: src/Utilities.php:136
+#: src/Utilities.php:138
 msgid ""
 "Latin Liturgy Association of the Netherlands, contributed the national "
 "calendar for the Netherlands to this project with all related translations"
@@ -1475,7 +1475,7 @@ msgstr ""
 "Consociatio Liturgiae Latinae Nederlandiae, calendarium nationale pro "
 "Nederlandia huic proposito cum omnibus translationibus relatis contulit"
 
-#: src/Utilities.php:142
+#: src/Utilities.php:144
 msgid ""
 "Senior software engineer at Strava, author of the ConfessIt app, contributed "
 "to the structuring of the JSON responses of the Liturgical Calendar API"
@@ -1483,7 +1483,7 @@ msgstr ""
 "Senior architectus programmatum apud Strava, auctor app \"ConfessIt\", "
 "contulit ad structurationem responsionum JSON Calendarii Liturgici API"
 
-#: src/Utilities.php:148
+#: src/Utilities.php:150
 msgid ""
 "Software Engineer and contributor to Salt + Light Television, contributed "
 "information about the dioceses of Latin rite"
@@ -1491,7 +1491,7 @@ msgstr ""
 "Architectus Programmatum et contributor Salt + Light Television, contulit "
 "informationem de dioecesibus ritus Latini"
 
-#: src/Utilities.php:154
+#: src/Utilities.php:156
 msgid ""
 "Chancellor of the Diocese of Charlottetown, contributed liturgical calendar "
 "data for Canada in both English and French"
@@ -1499,30 +1499,30 @@ msgstr ""
 "Cancellarius Dioecesis de Charlottetown, contulit data calendarii liturgici "
 "pro Canada in Anglico et Gallico"
 
-#: src/Utilities.php:222
+#: src/Utilities.php:226
 msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
 msgstr ""
 "Hic eventus liturgicus non videtur exsistere? Elige ex valore in indice."
 
-#: src/Utilities.php:223
+#: src/Utilities.php:227
 msgid "This liturgical event does not exist, so it will be created."
 msgstr "Hic eventus liturgicus non exsistit, ita creabitur."
 
-#: src/Utilities.php:228
+#: src/Utilities.php:232
 msgid "Choose from existing liturgical events"
 msgstr "Elige ex eventibus liturgicis exsistentibus"
 
-#: src/Utilities.php:228
+#: src/Utilities.php:232
 msgid "Choose from existing liturgical events (or create a new one)"
 msgstr "Elige ex eventibus liturgicis exsistentibus (vel novum crea)"
 
-#: src/Utilities.php:234
+#: src/Utilities.php:238
 msgid "Property to change"
 msgstr "Proprietas mutanda"
 
-#: src/Utilities.php:237 src/FormControls.php:171
+#: src/Utilities.php:241 src/FormControls.php:171
 msgid "Grade"
 msgstr "Gradus"
 
