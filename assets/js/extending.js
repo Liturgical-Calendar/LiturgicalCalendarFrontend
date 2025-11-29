@@ -1465,7 +1465,7 @@ const fetchRegionalCalendarData = (headers) => {
                 return response.json();
             } else {
                 document.querySelector('#removeExistingCalendarDataBtn').disabled = true;
-                document.querySelector('#removeCalendarPrompt').remove();
+                document.querySelector('#removeCalendarPrompt')?.remove();
                 const localeOptions = Object.entries(AvailableLocalesWithRegion).map(([localeIso, localeDisplayName]) => {
                     return `<option value="${localeIso}">${localeDisplayName}</option>`;
                 });
@@ -2108,7 +2108,7 @@ const deleteCalendarConfirmClicked = () => {
                 }
 
                 document.querySelector('#removeExistingCalendarDataBtn').disabled = true;
-                document.querySelector('#removeCalendarDataPrompt').remove();
+                document.querySelector('#removeCalendarDataPrompt')?.remove();
                 document.querySelector('.regionalNationalCalendarName').value = '';
                 document.querySelector('.regionalNationalDataForm').innerHTML = '';
 
