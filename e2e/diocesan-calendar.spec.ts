@@ -81,19 +81,22 @@ test.describe('Diocesan Calendar Form', () => {
             }
         }
 
-        if (selectedValue) {
-            await nationalSelect.selectOption(selectedValue);
-            // Wait for diocese list to be populated - let timeout surface as failure
-            await page.waitForFunction(() => {
-                const datalist = document.querySelector('#DiocesesList');
-                return datalist && datalist.querySelectorAll('option').length > 0;
-            }, { timeout: 10000 });
-
-            // The dioceses datalist should have options
-            const diocesesList = page.locator('#DiocesesList');
-            const dioceseOptionCount = await diocesesList.locator('option').count();
-            expect(dioceseOptionCount).toBeGreaterThan(0);
+        if (!selectedValue) {
+            test.skip(true, 'No selectable national calendars with non-empty values');
+            return;
         }
+
+        await nationalSelect.selectOption(selectedValue);
+        // Wait for diocese list to be populated - let timeout surface as failure
+        await page.waitForFunction(() => {
+            const datalist = document.querySelector('#DiocesesList');
+            return datalist && datalist.querySelectorAll('option').length > 0;
+        }, { timeout: 10000 });
+
+        // The dioceses datalist should have options
+        const diocesesList = page.locator('#DiocesesList');
+        const dioceseOptionCount = await diocesesList.locator('option').count();
+        expect(dioceseOptionCount).toBeGreaterThan(0);
     });
 
     test('should have diocesan overrides form', async ({ page }) => {
