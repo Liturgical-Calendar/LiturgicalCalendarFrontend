@@ -198,29 +198,11 @@ test.describe('Wider Region Calendar Form', () => {
 
         console.log(`Selected region for CREATE test: ${regionToCreate}`);
 
-        // Set up request interception to capture the payload (no modifications)
-        let capturedPayload: any = null;
-        let capturedMethod: string | null = null;
+        // Set up request interception using shared fixture
+        const { getPayload, getMethod } = await extendingPage.interceptDataRequests();
         let createResponseStatus: number | null = null;
         let createResponseBody: any = null;
         let createdRegionKey: string | null = null;
-
-        await page.route('**/data/**', async (route, request) => {
-            if (['PUT', 'PATCH'].includes(request.method())) {
-                capturedMethod = request.method();
-                const postData = request.postData();
-                if (postData) {
-                    try {
-                        capturedPayload = JSON.parse(postData);
-                        console.log(`CAPTURED PAYLOAD: ${postData}`);
-                    } catch (e) {
-                        const errorMsg = e instanceof Error ? e.message : String(e);
-                        throw new Error(`JSON.parse failed for request payload. Error: ${errorMsg}. Raw postData: ${postData?.substring(0, 500)}`);
-                    }
-                }
-            }
-            await route.continue();
-        });
 
         // Fill in the wider region name with the found region that doesn't have data
         const regionNameInput = page.locator('#widerRegionCalendarName');
@@ -558,8 +540,8 @@ test.describe('Wider Region Calendar Form', () => {
         }
 
         // Verify the HTTP method is PUT (CREATE)
-        expect(capturedMethod).toBe('PUT');
-        console.log(`HTTP method used: ${capturedMethod}`);
+        expect(getMethod()).toBe('PUT');
+        console.log(`HTTP method used: ${getMethod()}`);
 
         // Debug: Log the response details before assertions
         console.log(`CREATE response status: ${createResponseStatus}`);
@@ -571,6 +553,7 @@ test.describe('Wider Region Calendar Form', () => {
         console.log(`CREATE (PUT) response: ${createResponseStatus} - ${JSON.stringify(createResponseBody)}`);
 
         // Validate payload structure (against the ORIGINAL payload from frontend)
+        const capturedPayload = getPayload();
         expect(capturedPayload).not.toBeNull();
 
         // Validate WiderRegionPayload required properties exist

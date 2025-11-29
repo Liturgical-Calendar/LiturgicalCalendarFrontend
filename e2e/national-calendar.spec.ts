@@ -205,28 +205,10 @@ test.describe('National Calendar Form', () => {
 
         console.log(`Selected nation for CREATE test: ${nationToCreate.name} (${nationToCreate.key})`);
 
-        // Set up request interception to capture the payload (no modifications)
-        let capturedPayload: any = null;
-        let capturedMethod: string | null = null;
+        // Set up request interception to capture the payload using shared fixture
+        const { getPayload, getMethod } = await extendingPage.interceptDataRequests();
         let createResponseStatus: number | null = null;
         let createResponseBody: any = null;
-
-        await page.route('**/data/**', async (route, request) => {
-            if (['PUT', 'PATCH'].includes(request.method())) {
-                capturedMethod = request.method();
-                const postData = request.postData();
-                if (postData) {
-                    try {
-                        capturedPayload = JSON.parse(postData);
-                        console.log(`CAPTURED PAYLOAD: ${postData}`);
-                    } catch (e) {
-                        const errorMsg = e instanceof Error ? e.message : String(e);
-                        throw new Error(`JSON.parse failed for request payload. Error: ${errorMsg}. Raw postData: ${postData?.substring(0, 500)}`);
-                    }
-                }
-            }
-            await route.continue();
-        });
 
         // Capture console logs and errors for debugging
         page.on('console', msg => console.log(`Browser console [${msg.type()}]: ${msg.text()}`));
@@ -478,13 +460,13 @@ test.describe('National Calendar Form', () => {
         }
 
         // Debug: Log the actual payload sent and response received
-        console.log(`DEBUG - Captured payload: ${JSON.stringify(capturedPayload, null, 2)}`);
+        console.log(`DEBUG - Captured payload: ${JSON.stringify(getPayload(), null, 2)}`);
         console.log(`DEBUG - Response status: ${createResponseStatus}`);
         console.log(`DEBUG - Response body: ${JSON.stringify(createResponseBody, null, 2)}`);
 
         // Verify the HTTP method is PUT (CREATE)
-        expect(capturedMethod).toBe('PUT');
-        console.log(`HTTP method used: ${capturedMethod}`);
+        expect(getMethod()).toBe('PUT');
+        console.log(`HTTP method used: ${getMethod()}`);
 
         // Verify CREATE response status is 201
         expect(createResponseStatus).toBe(201);
@@ -492,6 +474,7 @@ test.describe('National Calendar Form', () => {
         console.log(`CREATE (PUT) response: ${createResponseStatus}`);
 
         // Validate payload structure (against the ORIGINAL payload from frontend)
+        const capturedPayload = getPayload();
         expect(capturedPayload).not.toBeNull();
         expect(capturedPayload).toHaveProperty('litcal');
         expect(capturedPayload).toHaveProperty('settings');
