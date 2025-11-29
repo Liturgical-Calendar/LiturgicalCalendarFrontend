@@ -165,7 +165,7 @@ test.describe('National Calendar Form', () => {
         }
     });
 
-    test('should CREATE (PUT) new national calendar, verify 201 response, and DELETE for cleanup', async ({ page }) => {
+    test('should CREATE (PUT) new national calendar, verify 201 response, and DELETE for cleanup', async ({ page, extendingPage }) => {
         // This test creates a NEW national calendar using PUT for a nation that exists
         // in the datalist but doesn't have calendar data yet. Then it DELETEs to clean up.
 
@@ -296,9 +296,7 @@ test.describe('National Calendar Form', () => {
         await expect(page.locator('#serializeNationalCalendarData')).toBeAttached({ timeout: 10000 });
 
         // Dismiss any toast messages
-        await page.evaluate(() => {
-            document.querySelectorAll('#toast-container, .toast-container, .toast, [class*="toast"]').forEach(el => el.remove());
-        });
+        await extendingPage.dismissToasts();
 
         console.log('Network idle, now adding a liturgical event via action prompt modal...');
 
@@ -311,9 +309,7 @@ test.describe('National Calendar Form', () => {
         console.log('Events datalist populated');
 
         // Dismiss any toast messages that might be blocking the modal button
-        await page.evaluate(() => {
-            document.querySelectorAll('#toast-container, .toast-container, .toast, [class*="toast"]').forEach(el => el.remove());
-        });
+        await extendingPage.dismissToasts();
 
         // Open the newLiturgicalEventActionPrompt modal to create a new liturgical event
         // We use "Create new" instead of "setProperty" because setProperty requires
@@ -393,9 +389,7 @@ test.describe('National Calendar Form', () => {
         console.log('CreateNew row fields filled (day, month, grade)');
 
         // Dismiss any toast messages that may have appeared
-        await page.evaluate(() => {
-            document.querySelectorAll('#toast-container, .toast-container, .toast, [class*="toast"]').forEach(el => el.remove());
-        });
+        await extendingPage.dismissToasts();
 
         console.log('Now setting form values and clicking save...');
 

@@ -391,9 +391,7 @@ test.describe('Diocesan Calendar Form', () => {
         await page.waitForLoadState('networkidle');
 
         // Remove any toast containers to prevent them from blocking clicks
-        await page.evaluate(() => {
-            document.querySelectorAll('#toast-container, .toast-container').forEach(el => el.remove());
-        });
+        await extendingPage.dismissToasts();
 
         // Wait for the save button to be enabled and visible
         const saveButton = page.locator('#saveDiocesanCalendar_btn');

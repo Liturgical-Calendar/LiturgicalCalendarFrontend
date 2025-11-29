@@ -310,6 +310,17 @@ export class ExtendingPageHelper {
     }
 
     /**
+     * Dismiss all toast notifications to prevent them from blocking UI interactions.
+     * Removes toast containers and individual toast elements.
+     */
+    async dismissToasts(): Promise<void> {
+        await this.page.evaluate(() => {
+            document.querySelectorAll('#toast-container, .toast-container, .toast, [class*="toast"]')
+                .forEach(el => el.remove());
+        });
+    }
+
+    /**
      * Check if form has validation errors
      */
     async hasValidationErrors(): Promise<boolean> {

@@ -169,7 +169,7 @@ test.describe('Wider Region Calendar Form', () => {
         }
     });
 
-    test('should CREATE (PUT) new wider region calendar, verify 201 response, and DELETE for cleanup', async ({ page }) => {
+    test('should CREATE (PUT) new wider region calendar, verify 201 response, and DELETE for cleanup', async ({ page, extendingPage }) => {
         // This test creates a NEW wider region calendar using PUT for a region that exists
         // in the datalist but doesn't have calendar data yet. Then it DELETEs to clean up.
 
@@ -298,9 +298,7 @@ test.describe('Wider Region Calendar Form', () => {
         console.log('Events datalist populated');
 
         // Dismiss any toast messages that might be blocking the modal button
-        await page.evaluate(() => {
-            document.querySelectorAll('#toast-container, .toast-container, .toast, [class*="toast"]').forEach(el => el.remove());
-        });
+        await extendingPage.dismissToasts();
 
         // STEP 2: Now create the liturgical event via modal
         // Open the newLiturgicalEventActionPrompt modal to create a new liturgical event
@@ -465,9 +463,7 @@ test.describe('Wider Region Calendar Form', () => {
         expect(decreeFieldsResult.success, 'Failed to fill decree fields').toBe(true);
 
         // Dismiss any toast messages that may have appeared
-        await page.evaluate(() => {
-            document.querySelectorAll('#toast-container, .toast-container, .toast, [class*="toast"]').forEach(el => el.remove());
-        });
+        await extendingPage.dismissToasts();
 
         // Verify the form state - locales should already be selected from Step 1
         const formState = await page.evaluate(() => {
