@@ -4,6 +4,40 @@ import path from 'path';
 const authFile = path.join(__dirname, '.auth/user.json');
 
 /**
+ * Response shape from /auth/login endpoint.
+ * Matches the API's JSON schema for authentication responses.
+ */
+interface LoginTokenData {
+    access_token: string;
+    refresh_token?: string;
+    token_type?: string;
+    expires_in?: number;
+}
+
+interface LoginSuccessResult {
+    ok: true;
+    status: number;
+    data: LoginTokenData;
+}
+
+interface LoginErrorResult {
+    ok: false;
+    status: number;
+    error: string;
+}
+
+type LoginResult = LoginSuccessResult | LoginErrorResult;
+
+/**
+ * Response shape from /auth/me endpoint check.
+ */
+interface AuthCheckResult {
+    ok: boolean;
+    status: number;
+    error?: string;
+}
+
+/**
  * Authentication setup for Playwright tests.
  *
  * Uses a hybrid approach for maximum compatibility:
@@ -38,7 +72,7 @@ setup('authenticate', async ({ page }) => {
 
     // Authenticate via fetch with credentials: 'include' to ensure cookies are set
     // Also capture the token response for localStorage storage
-    const loginResponse = await page.evaluate(async (credentials) => {
+    const loginResponse: LoginResult = await page.evaluate(async (credentials) => {
         const response = await fetch(`${credentials.apiUrl}/auth/login`, {
             method: 'POST',
             credentials: 'include', // Include cookies for HttpOnly cookie authentication
@@ -85,7 +119,7 @@ setup('authenticate', async ({ page }) => {
 
     // Verify authentication by making a request to an authenticated endpoint
     // This verifies both cookie-based auth and that tokens are properly stored
-    const authCheck = await page.evaluate(async (apiUrl) => {
+    const authCheck: AuthCheckResult = await page.evaluate(async (apiUrl) => {
         try {
             const response = await fetch(`${apiUrl}/auth/me`, {
                 method: 'GET',
