@@ -243,7 +243,6 @@ test.describe('National Calendar Form', () => {
         console.log('Toast dismissed, waiting for locales dropdown...');
 
         // Wait for locales dropdown to have options
-        const localesSelect = page.locator('#nationalCalendarLocales');
         await page.waitForFunction(() => {
             const select = document.querySelector('#nationalCalendarLocales') as HTMLSelectElement;
             return select && select.options.length > 0;
