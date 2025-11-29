@@ -685,46 +685,48 @@ The API validates payloads against different JSON schemas depending on calendar 
 **Important:** WiderRegion and Diocesan schemas only accept `createNew` or `makePatron` actions. Using
 `setProperty` (which is valid for National Calendar) will cause a 422 schema validation error.
 
-**Route Interception Pattern for CREATE Tests:**
+**Route Interception for Payload Capture (Not Modification):**
 
-When testing PUT requests, the form may not have all required fields populated. Use `page.route()` to
-intercept and modify payloads before they reach the API:
+Tests should properly fill in forms rather than modifying payloads via route interception. Use `page.route()`
+only to **capture** payloads for verification, not to modify them:
 
 ```typescript
+let capturedPayload: any = null;
+let capturedMethod: string | null = null;
+
 await page.route('**/data/**', async (route, request) => {
-    if (request.method() === 'PUT') {
-        const payload = JSON.parse(request.postData() || '{}');
-
-        // Ensure i18n has entries for all metadata.locales
-        for (const locale of payload.metadata?.locales || ['en']) {
-            if (!payload.i18n?.[locale] || Object.keys(payload.i18n[locale]).length === 0) {
-                payload.i18n = payload.i18n || {};
-                payload.i18n[locale] = { 'TestPatron': 'Test Patron Saint' };
-            }
+    if (['PUT', 'PATCH'].includes(request.method())) {
+        capturedMethod = request.method();
+        const postData = request.postData();
+        if (postData) {
+            capturedPayload = JSON.parse(postData);
+            console.log(`CAPTURED PAYLOAD: ${postData}`);
         }
-
-        // For WiderRegion/Diocesan: use makePatron (NOT setProperty)
-        if (!payload.litcal || payload.litcal.length === 0) {
-            payload.litcal = [{
-                liturgical_event: {
-                    event_key: 'TestPatron',
-                    grade: 5  // Memorial
-                },
-                metadata: {
-                    action: 'makePatron',  // NOT 'setProperty' for WiderRegion!
-                    since_year: 2024,
-                    url: 'https://example.com/decree',
-                    url_lang_map: { en: 'en' }
-                }
-            }];
-        }
-
-        await route.continue({ postData: JSON.stringify(payload) });
-    } else {
-        await route.continue();
     }
+    await route.continue();  // Always continue without modification
 });
 ```
+
+**Required Form Fields for CREATE Tests:**
+
+For `createNew` action, ensure the test properly fills all required fields:
+
+1. **Common selection**: Select a value other than "Proper" (e.g., "Martyrs") to avoid adding `readings`
+   property which is not allowed by WiderRegion/Diocesan schemas (`additionalProperties: false`)
+
+2. **Decree URL and Langs** (WiderRegion/Diocesan only): Fill `.litEventDecreeURL` and `.litEventDecreeLangs`
+   fields - these are required by the schema's `MetadataCreateNew` definition:
+
+   ```typescript
+   const decreeUrlInput = row.querySelector('.litEventDecreeURL') as HTMLInputElement;
+   decreeUrlInput.value = 'https://www.vatican.va/content/francesco/en/decree.html';
+
+   const decreeLangsInput = row.querySelector('.litEventDecreeLangs') as HTMLInputElement;
+   decreeLangsInput.value = 'en=en';  // Format: KEY=value pairs
+   ```
+
+3. **Bootstrap-multiselect for locales**: Use `.multiselect('select', [...])` to select locales, then
+   fill name fields for each locale
 
 **WiderRegion-Specific Considerations:**
 
@@ -744,8 +746,9 @@ await page.route('**/data/**', async (route, request) => {
    ```
 
 3. **i18n validation**: The `i18n` object must have keys matching `metadata.locales`. If tests fail with
-   "i18n object must have the same keys as found in the metadata.locales array", ensure the route
-   interception adds i18n entries for all locales.
+   "i18n object must have the same keys as found in the metadata.locales array", ensure the test fills
+   name fields for all selected locales (each locale has a corresponding name field like
+   `.litEventName_${locale}`).
 
 **Known Issues in extending.js:**
 
