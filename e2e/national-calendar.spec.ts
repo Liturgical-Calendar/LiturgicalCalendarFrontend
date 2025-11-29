@@ -226,12 +226,9 @@ test.describe('National Calendar Form', () => {
         // The form fetches events, then checks if calendar exists, and shows a toast warning
         await page.waitForLoadState('networkidle');
 
-        // Wait for the toast warning message indicating calendar doesn't exist (CREATE operation)
-        // The message "does not exist yet" confirms the form recognized this as a CREATE (PUT) operation
-        await page.waitForFunction(() => {
-            const toastWarning = document.querySelector('.toast-warning, .toast.bg-warning');
-            return toastWarning && toastWarning.textContent?.includes('does not exist yet');
-        }, { timeout: 20000 });
+        // Wait for the toast with data-toast-type="calendar-not-found" indicating CREATE operation
+        // Using data attribute is more robust than text matching (works regardless of locale)
+        await page.waitForSelector('[data-toast-type="calendar-not-found"]', { timeout: 20000 });
 
         console.log('Toast warning detected - CREATE operation confirmed');
 

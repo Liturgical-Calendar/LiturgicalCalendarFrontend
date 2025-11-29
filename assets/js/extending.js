@@ -1496,7 +1496,7 @@ const fetchRegionalCalendarData = (headers) => {
                 API.method = 'PUT';
                 error.json().then(json => {
                     const message = `${error.status} ${json.status} ${json.response}: ${json.description}<br />The Data File for the ${API.category} ${API.key} does not exist yet. Not that it's a big deal, just go ahead and create it now!`;
-                    toastr["warning"](message, "Warning");
+                    toastr["warning"](message, "Warning").attr('data-toast-type', 'calendar-not-found');
                     console.warn(message);
                 });
                 switch(API.category) {
@@ -1535,7 +1535,7 @@ const fetchRegionalCalendarData = (headers) => {
     } else {
         API.method = 'PUT';
         const message = `The Data File for the ${API.category} ${API.key} does not exist yet. Not that it's a big deal, just go ahead and create it now!`;
-        toastr["warning"](message, "Warning");
+        toastr["warning"](message, "Warning").attr('data-toast-type', 'calendar-not-found');
         console.warn(message);
         switch(API.category) {
             case 'widerregion':
@@ -2739,7 +2739,7 @@ const loadDiocesanCalendarData = () => {
         if (response.ok) {
             return response.json();
         } else if (response.status === 404) {
-            toastr["warning"](response.status + ' ' + response.statusText + ': ' + response.url + '<br />The Diocesan Calendar for ' + diocese + ' does not exist yet.', "Warning");
+            toastr["warning"](response.status + ' ' + response.statusText + ': ' + response.url + '<br />The Diocesan Calendar for ' + diocese + ' does not exist yet.', "Warning").attr('data-toast-type', 'calendar-not-found');
             console.log(response.status + ' ' + response.statusText + ': ' + response.url + 'The Diocesan Calendar for ' + diocese + ' does not exist yet.');
             API.method = 'PUT';
             return Promise.resolve({});
