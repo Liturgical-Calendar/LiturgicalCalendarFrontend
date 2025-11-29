@@ -112,10 +112,10 @@ asort($langsAssoc);
                         <span><?php echo _('Home'); ?></span>
                     </a>
                     <!-- <hr> -->
-                    <div class="sb-sidenav-menu-heading<?php echo in_array($currentPage, ['', 'index', 'extending'], true) ? ' text-white' : '' ?>">
+                    <div class="sb-sidenav-menu-heading<?php echo in_array($currentPage, ['', 'index', 'extending'], true) ? ' text-white' : ''; ?>">
                         <?php echo 'API'; ?>
                     </div>
-                    <a class="nav-link<?php echo $currentPage === 'extending' ? ' active' : '' ?>" href="extending.php?choice=diocesan">
+                    <a class="nav-link<?php echo $currentPage === 'extending' ? ' active' : ''; ?>" href="extending.php?choice=diocesan">
                         <i class="sb-nav-link-icon fas fa-fw fa-folder"></i>
                         <span><?php echo _('Extending the API'); ?></span>
                     </a>
@@ -124,10 +124,10 @@ asort($langsAssoc);
                         <span><?php echo _('Documentation'); ?></span>
                     </a>
                     <!-- <hr> -->
-                    <div class="sb-sidenav-menu-heading<?php echo $currentPage === 'usage' ? ' text-white' : '' ?>">
+                    <div class="sb-sidenav-menu-heading<?php echo in_array($currentPage, ['usage', 'examples', 'liturgyOfAnyDay'], true) ? ' text-white' : '' ?>">
                         <?php echo _('Examples of Usage'); ?>
                     </div>
-                    <a class="nav-link" href="usage.php#webCalendar">
+                    <a class="nav-link<?php echo $currentPage === 'examples' ? ' active' : ''; ?>" href="usage.php#webCalendar">
                         <i class="sb-nav-link-icon fas fa-fw fa-folder"></i>
                         <span><?php echo _('Web calendar'); ?></span>
                     </a>
@@ -135,11 +135,11 @@ asort($langsAssoc);
                         <i class="sb-nav-link-icon fas fa-fw fa-folder"></i>
                         <span><?php echo _('Calendar subscription'); ?></span>
                     </a>
-                    <a class="nav-link" href="usage.php#datesOfEaster">
+                    <a class="nav-link<?php echo $currentPage === 'easter' ? ' active' : ''; ?>" href="usage.php#datesOfEaster">
                         <i class="sb-nav-link-icon fas fa-fw fa-folder"></i>
                         <span><?php echo _('Dates of Easter'); ?></span>
                     </a>
-                    <a class="nav-link" href="usage.php#liturgyOfTheDay">
+                    <a class="nav-link<?php echo $currentPage === 'liturgyOfAnyDay' ? ' active' : ''; ?>" href="usage.php#liturgyOfTheDay">
                         <i class="sb-nav-link-icon fas fa-fw fa-folder"></i>
                         <span><?php echo _('Liturgy of the Day'); ?></span>
                     </a>
