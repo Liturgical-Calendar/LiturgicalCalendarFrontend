@@ -13,7 +13,10 @@
 <link rel="icon" href="assets/img/easter-egg-5-32-279148.png" sizes="32x32">
 
 <!-- Custom fonts for this template-->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
 <!-- Custom styles for this template-->
@@ -30,7 +33,7 @@ if ($pageName === 'index') {
 }
 if (in_array($pageName, [ 'index', 'extending', 'usage', 'admin', 'examples' ])) {
     echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@2.0.0/dist/css/bootstrap-multiselect.min.css" rel="stylesheet">';
-    echo '<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">';
+    echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" integrity="sha512-6S2HWzVFxruDlZxI3sXOZZ4/eJ8AcxkQH1+JjSe/ONCEqR9L4Ysq5JdT5ipqtzU7WHalNwzwBv+iE51gNHJNqQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />';
 }
 if ('extending' === $pageName) {
     echo '<link rel="preconnect" href="https://fonts.googleapis.com">';
