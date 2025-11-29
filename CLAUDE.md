@@ -70,6 +70,7 @@ composer install
    # API_REPO_PATH=/path/to/LiturgicalCalendarAPI
 
    # Test credentials for E2E tests (required for Playwright)
+   # These must match a valid user in the API database
    TEST_USERNAME=testuser
    TEST_PASSWORD=testpassword
    ```
