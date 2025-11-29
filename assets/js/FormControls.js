@@ -923,7 +923,7 @@ class FormControls {
         if (FormControls.title !== null) {
             formRow += `<hr><div class="mt-4 d-flex justify-content-left"><h4 class="data-group-title">${FormControls.title}</h4>`;
             if(FormControls.action === RowAction.CreateNew) {
-                if( liturgical_event && 'strtotime' in liturgical_event ) {
+                if( 'strtotime' in liturgical_event ) {
                     formRow += `<button type="button" class="ms-auto btn btn-info strtotime-toggle-btn active" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="true" autocomplete="off"><i class="fas fa-comment me-2"></i>relative date</button>`;
                 } else {
                     formRow += `<button type="button" class="ms-auto btn btn-secondary strtotime-toggle-btn" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="false" autocomplete="off"><i class="fas fa-comment-slash me-2"></i>relative date</button>`;
