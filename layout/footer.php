@@ -45,18 +45,35 @@ if ( AppEnv === 'development' ) console.info({
 </script>
 
 <!-- jQuery-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+    integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"
+    integrity="sha512-0QbL0ph8Tc8g5bLhfVzSqxe9GERORsKhIn1IrpxDAgUsbBGz/V7iSav2zzW325XGd1OMLdL4UiqRJj702IeqnQ=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.5/js.cookie.min.js"
+    integrity="sha512-nlp9/l96/EpjYBx7EP7pGASVXNe80hGhYAUrjeXnu/fyF5Py0/RXav4BBNs7n5Hx1WFhOEOWSAVjGeC3oKxDVQ=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"></script>
 
 <!-- Bootstrap / sb-admin JavaScript-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.bundle.min.js"
+    integrity="sha512-HvOjJrdwNpDbkGJIG2ZNqDlVqMo77qbs4Me4cah0HoDrfhrbA+8SBlZn1KrvAQw7cILLPFJvdwIgphzQmMm+Pw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"></script>
 <script src="https://cdn.jsdelivr.net/npm/startbootstrap-sb-admin@7.0.7/dist/js/scripts.js"></script>
 
 <!-- i18next -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/21.6.6/i18next.min.js" integrity="sha512-3CUvxyR4WtlZanN/KmorrZ2VALnUndAQBYjf1HEYNa6McBY+G2zYq4gOZPUDkDtuk3uBdQIva0Lk89hYQ9fQrA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-i18next/1.2.1/jquery-i18next.min.js" integrity="sha512-79RgNpOyaf8AvNEUdanuk1x6g53UPoB6Fh2uogMkOMGADBG6B0DCzxc+dDktXkVPg2rlxGvPeAFKoZxTycVooQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@1.3.1/i18nextHttpBackend.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/25.5.2/i18next.min.js"
+    integrity="sha512-41q9Nizfj3hnJoKqqMdlUlqK4K6WUyERaAWE50zuXMDvJT/91KdN9eiulSqOFw703IKsflcvrCJSb8Q+EjtyIQ=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/i18next-http-backend/3.0.2/i18nextHttpBackend.min.js"
+    integrity="sha512-RYgVA7vVuFPjAksuk9TPraxVuJvdB5sF3KkbHdPkh47Bw2/q4wfiO67yU/btAG6k8t6qg7bY0VRHddW0/JcEsw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"></script>
 
 <!-- Custom scripts for all pages-->
 <script src="assets/js/i18n.js"></script>
@@ -65,9 +82,9 @@ if ( AppEnv === 'development' ) console.info({
 $isDevelopment   = ( $_ENV['APP_ENV'] ?? 'production' ) === 'development';
 $componentsJsUrl = $isDevelopment
     ? './assets/components-js/index.js'
-    : 'https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@latest/dist/index.js';
+    : 'https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@1.4.0/+esm';
 
-    $componentsJsImportMap = <<<SCRIPT
+$componentsJsImportMap = <<<SCRIPT
 <script type="importmap">
     {
         "imports": {
@@ -81,8 +98,8 @@ SCRIPT;
 $pageName = basename($_SERVER['SCRIPT_FILENAME'], '.php');
 
 if (in_array($pageName, [ 'index', 'extending', 'usage', 'admin', 'examples' ])) {
-    echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/1.1.2/js/bootstrap-multiselect.min.js"></script>';
-    echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>';
+    echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@2.0.0/dist/js/bootstrap-multiselect.min.js"></script>';
+    echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>';
 }
 
 //don't include the importmap on the examples page, it has it's own importmap

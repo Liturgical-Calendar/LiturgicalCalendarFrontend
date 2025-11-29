@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 04:08+0000\n"
+"POT-Creation-Date: 2025-11-29 11:41+0000\n"
 "PO-Revision-Date: 2025-11-29 04:21+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
@@ -120,11 +120,11 @@ msgstr "Parametri zahtjeva dostupni na osnovnoj stazi %s"
 msgid "Request parameters available on all %1$s paths"
 msgstr "Parametri zahtjeva dostupni na svim stazama %1$s"
 
-#: index.php:60 usage.php:13 examples.php:102 liturgyOfAnyDay.php:18
+#: index.php:60 usage.php:13 examples.php:101 liturgyOfAnyDay.php:18
 msgid "General Roman Calendar"
 msgstr "Opći rimski kalendar"
 
-#: index.php:69 layout/header.php:96
+#: index.php:69 layout/header.php:106
 msgid "Catholic Liturgical Calendar"
 msgstr "Katolički liturgijski kalendar"
 
@@ -253,7 +253,7 @@ msgstr "Primjeri"
 msgid "Example usage of the API"
 msgstr "Primjer upotrebe API-ja"
 
-#: usage.php:27 layout/header.php:122
+#: usage.php:27 layout/header.php:132
 msgid "Web calendar"
 msgstr "Web kalendar"
 
@@ -301,7 +301,7 @@ msgstr "Pregled FullCalendar"
 msgid "View FullCalendar (messages first)"
 msgstr "Pregled FullCalendar (poruke prvo)"
 
-#: usage.php:74 layout/header.php:126
+#: usage.php:74 layout/header.php:136
 msgid "Calendar subscription"
 msgstr "Pretplata na kalendar"
 
@@ -469,7 +469,7 @@ msgstr ""
 "opisi događaja koji se pružaju putem pretplatničkog URL-a malo više "
 "\"uljepšani\" za Outlook."
 
-#: usage.php:175 layout/header.php:130
+#: usage.php:175 layout/header.php:140
 msgid "Dates of Easter"
 msgstr "Datumi Uskrsa"
 
@@ -481,7 +481,7 @@ msgstr "Primjer prikaza datuma Uskrsa od 1583. do 9999"
 msgid "Calculate the Dates of Easter"
 msgstr "Izračunaj datume Uskrsa"
 
-#: usage.php:197 layout/header.php:134
+#: usage.php:197 layout/header.php:144
 msgid "Liturgy of the Day"
 msgstr "Liturgija dana"
 
@@ -734,7 +734,7 @@ msgstr "Trenutna lokalizacija"
 msgid "Remove existing data"
 msgstr "Ukloni postojeće podatke"
 
-#: extending.php:244 layout/header.php:28
+#: extending.php:244 layout/header.php:30
 msgid "Create a Calendar for a Wider Region"
 msgstr "Izradi kalendar za širu regiju"
 
@@ -746,7 +746,7 @@ msgstr "Spremi podatke kalendara šire regije"
 msgid "National Calendar"
 msgstr "Nacionalni kalendar"
 
-#: extending.php:290 layout/header.php:29
+#: extending.php:290 layout/header.php:31
 msgid "Create a National Calendar"
 msgstr "Izradi nacionalni kalendar"
 
@@ -837,7 +837,7 @@ msgid "Optional memorials"
 msgstr "Neobvezatni spomendani"
 
 #: extending.php:499 extending.php:520 extending.php:541 extending.php:562
-#: layout/header.php:30
+#: layout/header.php:32
 msgid "Create a Diocesan Calendar"
 msgstr "Kreiraj biskupijski kalendar"
 
@@ -980,7 +980,7 @@ msgstr "Liturgijski kalendar - O nama"
 msgid "Liturgical Calendar as an HTML table produced by Javascript"
 msgstr "Liturgijski kalendar kao HTML tablica proizvedena u Javascriptu"
 
-#: examples.php:140
+#: examples.php:139
 #, php-format
 msgid "Example '%s' not found"
 msgstr "Primjer '%s' nije pronađen"
@@ -1530,44 +1530,44 @@ msgstr "Rang"
 msgid "Common (or Proper)"
 msgstr "Opće (ili posebno)"
 
-#: layout/header.php:25 layout/header.php:110
+#: layout/header.php:27 layout/header.php:120
 msgid "Extending the API"
 msgstr "Proširivanje API-ja"
 
-#: layout/header.php:33
+#: layout/header.php:36
 msgid "Usage"
 msgstr "Upotreba"
 
-#: layout/header.php:34
+#: layout/header.php:39
 msgid "Translations"
 msgstr "Prijevodi"
 
-#: layout/header.php:35
+#: layout/header.php:42
 msgid "Decrees"
 msgstr "Dekreti"
 
-#: layout/header.php:36
+#: layout/header.php:45
 msgid "About us"
 msgstr "O nama"
 
-#: layout/header.php:41 layout/header.php:43 includes/login-modal.php:35
+#: layout/header.php:51 layout/header.php:53 includes/login-modal.php:35
 #: includes/login-modal.php:292
 msgid "Login"
 msgstr "Prijava"
 
-#: layout/header.php:50 layout/header.php:52
+#: layout/header.php:60 layout/header.php:62
 msgid "Logout"
 msgstr "Odjava"
 
-#: layout/header.php:102
+#: layout/header.php:112
 msgid "Home"
 msgstr "Početna"
 
-#: layout/header.php:114
+#: layout/header.php:124
 msgid "Documentation"
 msgstr "Dokumentacija"
 
-#: layout/header.php:118
+#: layout/header.php:128
 msgid "Examples of Usage"
 msgstr "Primjeri uporabe"
 

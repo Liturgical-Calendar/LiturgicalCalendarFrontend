@@ -2,11 +2,10 @@
  * Enum CalendarType
  * Used in building the endpoint URL for requests to the API /calendar endpoint
  */
-const CalendarType = {
+const CalendarType = Object.freeze({
     NATIONAL: 'nation',
     DIOCESAN: 'diocese'
-}
-Object.freeze(CalendarType);
+});
 
 /**
  * Represents the parameters for the API /calendar endpoint request
@@ -19,8 +18,7 @@ class RequestPayload {
     static locale               = null;
     static return_type          = 'ICS';
     static year_type            = null;
-};
-
+}
 
 /**
  * Class CurrentEndpoint
@@ -28,7 +26,6 @@ class RequestPayload {
  * @param {string} calendarType The type of calendar (national, diocesan)
  * @param {string} calendarId The ID of the calendar
  * @param {string} calendarYear The year of the calendar
- *
  */
 class CurrentEndpoint {
     /**
@@ -36,37 +33,42 @@ class CurrentEndpoint {
      * @returns {string} The base URL of the API /calendar endpoint
      */
     static get apiBase() {
-        return `${CalendarUrl}`
-    };
+        return `${CalendarUrl}`;
+    }
     static calendarType   = null;
     static calendarId     = null;
     static calendarYear   = null;
     static serialize = () => {
         let currentEndpoint = CurrentEndpoint.apiBase;
-        if ( CurrentEndpoint.calendarType !== null && CurrentEndpoint.calendarId !== null ) {
+        if (CurrentEndpoint.calendarType !== null && CurrentEndpoint.calendarId !== null) {
             currentEndpoint += `/${CurrentEndpoint.calendarType}/${CurrentEndpoint.calendarId}`;
         }
-        if ( CurrentEndpoint.calendarYear !== null ) {
+        if (CurrentEndpoint.calendarYear !== null) {
             currentEndpoint += `/${CurrentEndpoint.calendarYear}`;
         }
-        let parameters = [];
+        const parameters = [];
         for (const key in RequestPayload) {
-            if(RequestPayload[key] !== null && RequestPayload[key] !== ''){
-                parameters.push(key + "=" + encodeURIComponent(RequestPayload[key]));
+            if (RequestPayload[key] !== null && RequestPayload[key] !== '') {
+                parameters.push(key + '=' + encodeURIComponent(RequestPayload[key]));
             }
         }
-        let urlParams = parameters.length ? `?${parameters.join('&')}` : '';
+        const urlParams = parameters.length ? `?${parameters.join('&')}` : '';
         return `${currentEndpoint}${urlParams}`;
-    }
+    };
 }
-
 
 /**
  * Updates the text of the element with the id 'calSubscriptionUrl' to reflect the current value of CurrentEndpoint.
  */
 const updateSubscriptionURL = () => {
-    CurrentEndpoint.calendarId = $('#calendarSelect').val();
-    switch( $('#calendarSelect').find(':selected').attr('data-calendartype') ) {
+    const calendarSelect = document.getElementById('calendarSelect');
+    const calSubscriptionUrl = document.getElementById('calSubscriptionUrl');
+    if (!calendarSelect || !calSubscriptionUrl) {
+        return;
+    }
+    CurrentEndpoint.calendarId = calendarSelect.value;
+    const selectedOption = calendarSelect.options[calendarSelect.selectedIndex];
+    switch (selectedOption?.dataset.calendartype) {
         case 'nationalcalendar':
             CurrentEndpoint.calendarType = CalendarType.NATIONAL;
             break;
@@ -77,52 +79,83 @@ const updateSubscriptionURL = () => {
             CurrentEndpoint.calendarId = null;
             CurrentEndpoint.calendarType = null;
     }
-    $('#calSubscriptionUrl').text(CurrentEndpoint.serialize());
-}
+    calSubscriptionUrl.textContent = CurrentEndpoint.serialize();
+};
 
 // Toastr configuration
 toastr.options = {
-    "closeButton": true,
-    "debug": false,
-    "newestOnTop": false,
-    "progressBar": true,
-    "positionClass": "toast-bottom-center",
-    "preventDuplicates": false,
-    "onclick": null,
-    "showDuration": "300",
-    "hideDuration": "1000",
-    "timeOut": "2000",
-    "extendedTimeOut": "1000",
-    "showEasing": "swing",
-    "hideEasing": "linear",
-    "showMethod": "fadeIn",
-    "hideMethod": "fadeOut"
-}
+    closeButton: true,
+    debug: false,
+    newestOnTop: false,
+    progressBar: true,
+    positionClass: 'toast-bottom-center',
+    preventDuplicates: false,
+    onclick: null,
+    showDuration: '300',
+    hideDuration: '1000',
+    timeOut: '2000',
+    extendedTimeOut: '1000',
+    showEasing: 'swing',
+    hideEasing: 'linear',
+    showMethod: 'fadeIn',
+    hideMethod: 'fadeOut'
+};
 
+/**
+ * Updates nav sidebar styling based on which accordion section is active
+ * @param {string} sectionId - The ID of the section (with or without #)
+ * @param {boolean} isActive - Whether the section is being shown
+ */
+const updateNavHighlight = (sectionId, isActive) => {
+    const hash = sectionId.startsWith('#') ? sectionId : `#${sectionId}`;
 
-$(document).ready(() => {
-    if( location.hash != null && location.hash != "" ) {
-        console.log( location.hash );
-        //$('.collapse').collapse('hide');
-        $(location.hash + '.collapse').collapse('show');
-        $('a.nav-link[href*="usage.php"]').find('i,span').removeClass('text-white');
-        $('a.nav-link[href*="'+location.hash+'"]').find('i,span').addClass('text-white');
+    // Remove text-white from all usage nav links
+    document.querySelectorAll('a.nav-link[href*="usage.php"] i, a.nav-link[href*="usage.php"] span').forEach(el => {
+        el.classList.remove('text-white');
+    });
+
+    // Add text-white to matching nav link if section is active
+    // Using $= (ends with) selector for exact hash matching at end of href
+    if (isActive) {
+        document.querySelectorAll(`a.nav-link[href$="${hash}"] i, a.nav-link[href$="${hash}"] span`).forEach(el => {
+            el.classList.add('text-white');
+        });
     }
-    updateSubscriptionURL();
-});
+};
 
-$(document).on('click', '#calSubscriptionUrlWrapper', () => {
-    const urlText = $('#calSubscriptionUrl').text();
+/**
+ * Handles hash change - shows the appropriate collapse section and updates nav styling
+ */
+const handleHashChange = () => {
+    if (location.hash) {
+        //console.log(location.hash);
+        const collapseEl = document.querySelector(location.hash + '.collapse');
+        if (collapseEl) {
+            // Use getOrCreateInstance to avoid conflicts with Bootstrap's native handling
+            const bsCollapse = bootstrap.Collapse.getOrCreateInstance(collapseEl);
+            bsCollapse.show();
+        }
+        // Immediately update nav highlight for responsive UX
+        // (shown.bs.collapse event will also fire but that's fine)
+        updateNavHighlight(location.hash, true);
+    }
+};
+
+/**
+ * Copies URL to clipboard with fallback for older browsers
+ */
+const copyUrlToClipboard = () => {
+    const urlText = document.getElementById('calSubscriptionUrl').textContent;
 
     // Check if modern clipboard API is available
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(urlText)
             .then(() => {
-                toastr["success"]("URL was copied to the clipboard", "Success");
+                toastr.success('URL was copied to the clipboard', 'Success');
             })
             .catch(err => {
                 console.error('Failed to copy to clipboard:', err);
-                toastr["error"]("Failed to copy URL to clipboard", "Error");
+                toastr.error('Failed to copy URL to clipboard', 'Error');
             });
     } else {
         // Fallback for older browsers using execCommand
@@ -138,51 +171,91 @@ $(document).on('click', '#calSubscriptionUrlWrapper', () => {
             document.body.removeChild(textarea);
 
             if (successful) {
-                toastr["success"]("URL was copied to the clipboard", "Success");
+                toastr.success('URL was copied to the clipboard', 'Success');
             } else {
-                toastr["warning"]("Please select and copy manually", "Copy not supported");
+                toastr.warning('Please select and copy manually', 'Copy not supported');
             }
         } catch (err) {
             console.error('Fallback copy failed:', err);
-            toastr["warning"]("Please select and copy manually", "Copy not supported");
+            toastr.warning('Please select and copy manually', 'Copy not supported');
         }
     }
-});
+};
 
-$(document).on('click', '#examplesOfUsage > .card > .card-header button', ev => {
-    window.location = ev.currentTarget.dataset.target;
-});
-
-$(document).on('mouseup', '#calSubscriptionUrlWrapper', () => {
-    var sel, range;
-    if (window.getSelection && document.createRange) { //Browser compatibility
-        sel = window.getSelection();
-        if(sel.toString() == ''){ //no text selection
-            window.setTimeout(function(){
-            range = document.createRange(); //range object
-            range.selectNodeContents($('#calSubscriptionUrl')[0]); //sets Range
-            sel.removeAllRanges(); //remove all ranges from selection
-            sel.addRange(range);//add Range to a Selection.
-        },1);
+/**
+ * Selects the URL text on mouseup for easy copying
+ */
+const selectUrlOnMouseUp = () => {
+    const calSubscriptionUrl = document.getElementById('calSubscriptionUrl');
+    if (window.getSelection && document.createRange) {
+        const sel = window.getSelection();
+        if (sel.toString() === '') {
+            // No text selection - select all content after brief delay
+            setTimeout(() => {
+                const range = document.createRange();
+                range.selectNodeContents(calSubscriptionUrl);
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }, 1);
+        }
+    } else if (document.selection) {
+        // Older IE fallback
+        const sel = document.selection.createRange();
+        if (sel.text === '') {
+            const range = document.body.createTextRange();
+            range.moveToElementText(calSubscriptionUrl);
+            range.select();
         }
     }
-    else if (document.selection) { //older ie
-        sel = document.selection.createRange();
-        if(sel.text == ''){ //no text selection
-            range = document.body.createTextRange();//Creates TextRange object
-            range.moveToElementText($('#calSubscriptionUrl')[0]);//sets Range
-            range.select(); //make selection.
-        }
+};
+
+/**
+ * Handles navigation to collapse sections from card header buttons
+ * @param {Event} ev - The click event
+ */
+const handleCardHeaderClick = (ev) => {
+    const button = ev.target.closest('button');
+    if (button?.dataset.target) {
+        window.location = button.dataset.target;
+    }
+};
+
+// Initialize on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+    handleHashChange();
+    updateSubscriptionURL();
+
+    // Event: Click on subscription URL wrapper to copy
+    const calSubscriptionUrlWrapper = document.getElementById('calSubscriptionUrlWrapper');
+    if (calSubscriptionUrlWrapper) {
+        calSubscriptionUrlWrapper.addEventListener('click', copyUrlToClipboard);
+        calSubscriptionUrlWrapper.addEventListener('mouseup', selectUrlOnMouseUp);
+    }
+
+    // Event: Click on card header buttons in examples section
+    const examplesOfUsage = document.getElementById('examplesOfUsage');
+    if (examplesOfUsage) {
+        examplesOfUsage.addEventListener('click', (ev) => {
+            if (ev.target.closest('.card > .card-header button')) {
+                handleCardHeaderClick(ev);
+            }
+        });
+
+        // Listen for Bootstrap collapse shown event to update nav sidebar highlighting
+        // Using 'shown.bs.collapse' (after transition) for reliable state
+        examplesOfUsage.addEventListener('shown.bs.collapse', (ev) => {
+            updateNavHighlight(ev.target.id, true);
+            // Update URL hash without triggering hashchange
+            history.replaceState(null, '', `#${ev.target.id}`);
+        });
+    }
+
+    // Event: Calendar select change
+    const calendarSelect = document.getElementById('calendarSelect');
+    if (calendarSelect) {
+        calendarSelect.addEventListener('change', updateSubscriptionURL);
     }
 });
 
-$(window).on('hashchange', () => {
-    if( location.hash != null && location.hash != "" ) {
-        console.log( location.hash );
-        $(location.hash + '.collapse').collapse('show');
-        $('a.nav-link[href*="usage.php"]').find('i,span').removeClass('text-white');
-        $('a.nav-link[href*="'+location.hash+'"]').find('i,span').addClass('text-white');
-    }
-});
-
-$(document).on('change', '#calendarSelect', updateSubscriptionURL);
+// Handle hash changes
+window.addEventListener('hashchange', handleHashChange);

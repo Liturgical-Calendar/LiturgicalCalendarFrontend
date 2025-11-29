@@ -19,21 +19,31 @@ asort($langsAssoc);
 
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-        <li class="nav-item ms-2<?php echo $currentPage == 'index' || $currentPage == '' ? ' active' : ''; ?>" id="topNavBar_API"><a class="nav-link btn btn-outline-light border-0<?php echo $currentPage == 'index' || $currentPage == '' ? ' fw-bold' : ''; ?>" href="./index.php">API</a></li>
-        <li class="nav-item ms-2 dropdown<?php echo $currentPage == 'extending' ? ' active' : ''; ?>" id="topNavBar_Extending">
-            <a class="nav-link dropdown-toggle btn btn-outline-light border-0<?php echo $currentPage == 'extending' ? ' fw-bold' : ''; ?>" style="white-space: normal;" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="extendingChoicesDropdown">
+        <li class="nav-item ms-2" id="topNavBar_API">
+            <a class="nav-link btn btn-outline-light border-0<?php echo $currentPage === 'index' || $currentPage === '' ? ' fw-bold active' : ''; ?>" href="./index.php">API</a>
+        </li>
+        <li class="nav-item ms-2 dropdown" id="topNavBar_Extending">
+            <a class="nav-link dropdown-toggle btn btn-outline-light border-0<?php echo $currentPage === 'extending' ? ' fw-bold active' : ''; ?>" style="white-space: normal;" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="extendingChoicesDropdown">
                 <?php echo _('Extending the API'); ?>
             </a>
             <div class="dropdown-menu dropdown-menu-left shadow animated--grow-in" aria-labelledby="extendingChoicesDropdown" id="extendingChoicesDropdownItems">
-                <a class="dropdown-item<?php echo isset($_GET['choice']) && $_GET['choice'] === 'widerRegion' ? ' active' : '' ?>" id="extendingChoiceWiderRegion" href="./extending.php?choice=widerRegion"><?php echo _('Create a Calendar for a Wider Region'); ?></a>
-                <a class="dropdown-item<?php echo isset($_GET['choice']) && $_GET['choice'] === 'national' ? ' active' : '' ?>" id="extendingChoiceNationalCalendar" href="./extending.php?choice=national"><?php echo _('Create a National Calendar'); ?></a>
-                <a class="dropdown-item<?php echo isset($_GET['choice']) && $_GET['choice'] === 'diocesan' ? ' active' : '' ?>" id="extendingChoiceDiocesanCalendar" href="./extending.php?choice=diocesan"><?php echo _('Create a Diocesan Calendar'); ?></a>
+                <a class="dropdown-item<?php echo isset($_GET['choice']) && $_GET['choice'] === 'widerRegion' ? ' fw-bold active' : '' ?>" id="extendingChoiceWiderRegion" href="./extending.php?choice=widerRegion"><?php echo _('Create a Calendar for a Wider Region'); ?></a>
+                <a class="dropdown-item<?php echo isset($_GET['choice']) && $_GET['choice'] === 'national' ? ' fw-bold active' : '' ?>" id="extendingChoiceNationalCalendar" href="./extending.php?choice=national"><?php echo _('Create a National Calendar'); ?></a>
+                <a class="dropdown-item<?php echo isset($_GET['choice']) && $_GET['choice'] === 'diocesan' ? ' fw-bold active' : '' ?>" id="extendingChoiceDiocesanCalendar" href="./extending.php?choice=diocesan"><?php echo _('Create a Diocesan Calendar'); ?></a>
             </div>
         </li>
-        <li class="nav-item ms-2<?php echo $currentPage == 'usage' ? ' active' : ''; ?>" id="topNavBar_Usage"><a class="nav-link btn btn-outline-light border-0<?php echo $currentPage == 'usage' ? ' fw-bold' : ''; ?>" href="./usage.php"><?php echo _('Usage'); ?></a></li>
-        <li class="nav-item ms-2<?php echo $currentPage == 'translations' ? ' active' : ''; ?>" id="topNavBar_Translations"><a class="nav-link btn btn-outline-light border-0<?php echo $currentPage == 'translations' ? ' fw-bold' : ''; ?>" href="./translations.php"><?php echo _('Translations'); ?></a></li>
-        <li class="nav-item ms-2<?php echo $currentPage == 'decrees' ? ' active' : ''; ?>" id="topNavBar_Decrees"><a class="nav-link btn btn-outline-light border-0<?php echo $currentPage == 'decrees' ? ' fw-bold' : ''; ?>" href="./decrees.php"><?php echo _('Decrees'); ?></a></li>
-        <li class="nav-item ms-2<?php echo $currentPage == 'about' ? ' active' : ''; ?>" id="topNavBar_AboutUs"><a class="nav-link btn btn-outline-light border-0<?php echo $currentPage == 'about' ? ' fw-bold' : ''; ?>" href="./about.php"><?php echo _('About us'); ?></a></li>
+        <li class="nav-item ms-2" id="topNavBar_Usage">
+            <a class="nav-link btn btn-outline-light border-0<?php echo in_array($currentPage, ['usage', 'examples', 'liturgyOfAnyDay'], true) ? ' fw-bold active' : ''; ?>" href="./usage.php"><?php echo _('Usage'); ?></a>
+        </li>
+        <li class="nav-item ms-2" id="topNavBar_Translations">
+            <a class="nav-link btn btn-outline-light border-0<?php echo $currentPage === 'translations' ? ' fw-bold active' : ''; ?>" href="./translations.php"><?php echo _('Translations'); ?></a>
+        </li>
+        <li class="nav-item ms-2" id="topNavBar_Decrees">
+            <a class="nav-link btn btn-outline-light border-0<?php echo $currentPage === 'decrees' ? ' fw-bold active' : ''; ?>" href="./decrees.php"><?php echo _('Decrees'); ?></a>
+        </li>
+        <li class="nav-item ms-2" id="topNavBar_AboutUs">
+            <a class="nav-link btn btn-outline-light border-0<?php echo $currentPage === 'about' ? ' fw-bold active' : ''; ?>" href="./about.php"><?php echo _('About us'); ?></a>
+        </li>
     </ul>
     <ul class="navbar-nav ms-auto">
         <!-- Authentication Status -->
@@ -97,15 +107,15 @@ asort($langsAssoc);
                         </a>
                     </div>
                     <!-- <hr> -->
-                    <a class="nav-link<?php echo in_array($currentPage, ['', 'index']) ? ' active' : '' ?>" href="/">
+                    <a class="nav-link<?php echo in_array($currentPage, ['', 'index'], true) ? ' active' : '' ?>" href="/">
                         <i class="sb-nav-link-icon fas fa-fw fa-cross"></i>
                         <span><?php echo _('Home'); ?></span>
                     </a>
                     <!-- <hr> -->
-                    <div class="sb-sidenav-menu-heading<?php echo in_array($currentPage, ['', 'index', 'extending']) ? ' text-white' : '' ?>">
+                    <div class="sb-sidenav-menu-heading<?php echo in_array($currentPage, ['', 'index', 'extending'], true) ? ' text-white' : ''; ?>">
                         <?php echo 'API'; ?>
                     </div>
-                    <a class="nav-link<?php echo $currentPage === 'extending' ? ' active' : '' ?>" href="extending.php?choice=diocesan">
+                    <a class="nav-link<?php echo $currentPage === 'extending' ? ' active' : ''; ?>" href="extending.php?choice=diocesan">
                         <i class="sb-nav-link-icon fas fa-fw fa-folder"></i>
                         <span><?php echo _('Extending the API'); ?></span>
                     </a>
@@ -114,10 +124,10 @@ asort($langsAssoc);
                         <span><?php echo _('Documentation'); ?></span>
                     </a>
                     <!-- <hr> -->
-                    <div class="sb-sidenav-menu-heading<?php echo $currentPage === 'usage' ? ' text-white' : '' ?>">
+                    <div class="sb-sidenav-menu-heading<?php echo in_array($currentPage, ['usage', 'examples', 'liturgyOfAnyDay'], true) ? ' text-white' : '' ?>">
                         <?php echo _('Examples of Usage'); ?>
                     </div>
-                    <a class="nav-link" href="usage.php#webCalendar">
+                    <a class="nav-link<?php echo $currentPage === 'examples' ? ' active' : ''; ?>" href="usage.php#webCalendar">
                         <i class="sb-nav-link-icon fas fa-fw fa-folder"></i>
                         <span><?php echo _('Web calendar'); ?></span>
                     </a>
@@ -125,11 +135,11 @@ asort($langsAssoc);
                         <i class="sb-nav-link-icon fas fa-fw fa-folder"></i>
                         <span><?php echo _('Calendar subscription'); ?></span>
                     </a>
-                    <a class="nav-link" href="usage.php#datesOfEaster">
+                    <a class="nav-link<?php echo $currentPage === 'easter' ? ' active' : ''; ?>" href="usage.php#datesOfEaster">
                         <i class="sb-nav-link-icon fas fa-fw fa-folder"></i>
                         <span><?php echo _('Dates of Easter'); ?></span>
                     </a>
-                    <a class="nav-link" href="usage.php#liturgyOfTheDay">
+                    <a class="nav-link<?php echo $currentPage === 'liturgyOfAnyDay' ? ' active' : ''; ?>" href="usage.php#liturgyOfTheDay">
                         <i class="sb-nav-link-icon fas fa-fw fa-folder"></i>
                         <span><?php echo _('Liturgy of the Day'); ?></span>
                     </a>

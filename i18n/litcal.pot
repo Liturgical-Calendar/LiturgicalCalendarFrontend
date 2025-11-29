@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 04:08+0000\n"
+"POT-Creation-Date: 2025-11-29 12:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -95,11 +95,11 @@ msgstr ""
 msgid "Request parameters available on all %1$s paths"
 msgstr ""
 
-#: index.php:60 usage.php:13 examples.php:102 liturgyOfAnyDay.php:18
+#: index.php:60 usage.php:13 examples.php:98 liturgyOfAnyDay.php:18
 msgid "General Roman Calendar"
 msgstr ""
 
-#: index.php:69 layout/header.php:96
+#: index.php:69 layout/header.php:106
 msgid "Catholic Liturgical Calendar"
 msgstr ""
 
@@ -206,7 +206,7 @@ msgstr ""
 msgid "Example usage of the API"
 msgstr ""
 
-#: usage.php:27 layout/header.php:122
+#: usage.php:27 layout/header.php:132
 msgid "Web calendar"
 msgstr ""
 
@@ -248,7 +248,7 @@ msgstr ""
 msgid "View FullCalendar (messages first)"
 msgstr ""
 
-#: usage.php:74 layout/header.php:126
+#: usage.php:74 layout/header.php:136
 msgid "Calendar subscription"
 msgstr ""
 
@@ -385,7 +385,7 @@ msgid ""
 "more \"beautified\" for Outlook."
 msgstr ""
 
-#: usage.php:175 layout/header.php:130
+#: usage.php:175 layout/header.php:140
 msgid "Dates of Easter"
 msgstr ""
 
@@ -397,7 +397,7 @@ msgstr ""
 msgid "Calculate the Dates of Easter"
 msgstr ""
 
-#: usage.php:197 layout/header.php:134
+#: usage.php:197 layout/header.php:144
 msgid "Liturgy of the Day"
 msgstr ""
 
@@ -633,7 +633,7 @@ msgstr ""
 msgid "Remove existing data"
 msgstr ""
 
-#: extending.php:244 layout/header.php:28
+#: extending.php:244 layout/header.php:30
 msgid "Create a Calendar for a Wider Region"
 msgstr ""
 
@@ -645,7 +645,7 @@ msgstr ""
 msgid "National Calendar"
 msgstr ""
 
-#: extending.php:290 layout/header.php:29
+#: extending.php:290 layout/header.php:31
 msgid "Create a National Calendar"
 msgstr ""
 
@@ -733,7 +733,7 @@ msgid "Optional memorials"
 msgstr ""
 
 #: extending.php:499 extending.php:520 extending.php:541 extending.php:562
-#: layout/header.php:30
+#: layout/header.php:32
 msgid "Create a Diocesan Calendar"
 msgstr ""
 
@@ -862,7 +862,7 @@ msgstr ""
 msgid "Liturgical Calendar as an HTML table produced by Javascript"
 msgstr ""
 
-#: examples.php:140
+#: examples.php:136
 #, php-format
 msgid "Example '%s' not found"
 msgstr ""
@@ -1351,44 +1351,44 @@ msgstr ""
 msgid "Common (or Proper)"
 msgstr ""
 
-#: layout/header.php:25 layout/header.php:110
+#: layout/header.php:27 layout/header.php:120
 msgid "Extending the API"
 msgstr ""
 
-#: layout/header.php:33
+#: layout/header.php:36
 msgid "Usage"
 msgstr ""
 
-#: layout/header.php:34
+#: layout/header.php:39
 msgid "Translations"
 msgstr ""
 
-#: layout/header.php:35
+#: layout/header.php:42
 msgid "Decrees"
 msgstr ""
 
-#: layout/header.php:36
+#: layout/header.php:45
 msgid "About us"
 msgstr ""
 
-#: layout/header.php:41 layout/header.php:43 includes/login-modal.php:35
+#: layout/header.php:51 layout/header.php:53 includes/login-modal.php:35
 #: includes/login-modal.php:292
 msgid "Login"
 msgstr ""
 
-#: layout/header.php:50 layout/header.php:52
+#: layout/header.php:60 layout/header.php:62
 msgid "Logout"
 msgstr ""
 
-#: layout/header.php:102
+#: layout/header.php:112
 msgid "Home"
 msgstr ""
 
-#: layout/header.php:114
+#: layout/header.php:124
 msgid "Documentation"
 msgstr ""
 
-#: layout/header.php:118
+#: layout/header.php:128
 msgid "Examples of Usage"
 msgstr ""
 

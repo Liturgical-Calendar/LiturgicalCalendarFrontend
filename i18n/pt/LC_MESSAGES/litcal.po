@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 04:08+0000\n"
+"POT-Creation-Date: 2025-11-29 11:41+0000\n"
 "PO-Revision-Date: 2025-11-29 04:20+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
@@ -122,11 +122,11 @@ msgstr "Parâmetros de solicitação disponíveis no caminho base %s"
 msgid "Request parameters available on all %1$s paths"
 msgstr "Parâmetros de solicitação disponíveis em todos os caminhos %1$s"
 
-#: index.php:60 usage.php:13 examples.php:102 liturgyOfAnyDay.php:18
+#: index.php:60 usage.php:13 examples.php:101 liturgyOfAnyDay.php:18
 msgid "General Roman Calendar"
 msgstr "Calendário Romano Geral"
 
-#: index.php:69 layout/header.php:96
+#: index.php:69 layout/header.php:106
 msgid "Catholic Liturgical Calendar"
 msgstr "Calendário Litúrgico Católico"
 
@@ -258,7 +258,7 @@ msgstr "Exemplos"
 msgid "Example usage of the API"
 msgstr "Exemplo de uso da API"
 
-#: usage.php:27 layout/header.php:122
+#: usage.php:27 layout/header.php:132
 msgid "Web calendar"
 msgstr "Calendário web"
 
@@ -306,7 +306,7 @@ msgstr "Ver FullCalendar"
 msgid "View FullCalendar (messages first)"
 msgstr "Ver FullCalendar (mensagens primeiro)"
 
-#: usage.php:74 layout/header.php:126
+#: usage.php:74 layout/header.php:136
 msgid "Calendar subscription"
 msgstr "Assinatura de calendário"
 
@@ -478,7 +478,7 @@ msgstr ""
 "do evento, então as descrições dos eventos fornecidas pela URL de assinatura "
 "são um pouco mais \"embelezadas\" para o Outlook."
 
-#: usage.php:175 layout/header.php:130
+#: usage.php:175 layout/header.php:140
 msgid "Dates of Easter"
 msgstr "Datas da Páscoa"
 
@@ -490,7 +490,7 @@ msgstr "Exemplo de exibição da data da Páscoa de 1583 a 9999"
 msgid "Calculate the Dates of Easter"
 msgstr "Calcular as Datas da Páscoa"
 
-#: usage.php:197 layout/header.php:134
+#: usage.php:197 layout/header.php:144
 msgid "Liturgy of the Day"
 msgstr "Liturgia do Dia"
 
@@ -748,7 +748,7 @@ msgstr "Localização atual"
 msgid "Remove existing data"
 msgstr "Remover dados existentes"
 
-#: extending.php:244 layout/header.php:28
+#: extending.php:244 layout/header.php:30
 msgid "Create a Calendar for a Wider Region"
 msgstr "Crie um Calendário para uma Região mais ampla"
 
@@ -760,7 +760,7 @@ msgstr "Salvar Dados do Calendário da Região mais ampla"
 msgid "National Calendar"
 msgstr "Calendário Nacional"
 
-#: extending.php:290 layout/header.php:29
+#: extending.php:290 layout/header.php:31
 msgid "Create a National Calendar"
 msgstr "Crie um calendário nacional"
 
@@ -851,7 +851,7 @@ msgid "Optional memorials"
 msgstr "Memórias opcionais"
 
 #: extending.php:499 extending.php:520 extending.php:541 extending.php:562
-#: layout/header.php:30
+#: layout/header.php:32
 msgid "Create a Diocesan Calendar"
 msgstr "Crie um calendário diocesano"
 
@@ -992,7 +992,7 @@ msgstr "Calendário litúrgico - Sobre nós"
 msgid "Liturgical Calendar as an HTML table produced by Javascript"
 msgstr "Calendário Litúrgico como uma tabela HTML produzida por Javascript"
 
-#: examples.php:140
+#: examples.php:139
 #, php-format
 msgid "Example '%s' not found"
 msgstr "Exemplo '%s' não encontrado"
@@ -1550,44 +1550,44 @@ msgstr "Grau"
 msgid "Common (or Proper)"
 msgstr "Comum (ou Próprio)"
 
-#: layout/header.php:25 layout/header.php:110
+#: layout/header.php:27 layout/header.php:120
 msgid "Extending the API"
 msgstr "Extensão da API"
 
-#: layout/header.php:33
+#: layout/header.php:36
 msgid "Usage"
 msgstr "Uso"
 
-#: layout/header.php:34
+#: layout/header.php:39
 msgid "Translations"
 msgstr "Traduções"
 
-#: layout/header.php:35
+#: layout/header.php:42
 msgid "Decrees"
 msgstr "Decretos"
 
-#: layout/header.php:36
+#: layout/header.php:45
 msgid "About us"
 msgstr "Sobre nós"
 
-#: layout/header.php:41 layout/header.php:43 includes/login-modal.php:35
+#: layout/header.php:51 layout/header.php:53 includes/login-modal.php:35
 #: includes/login-modal.php:292
 msgid "Login"
 msgstr "Login"
 
-#: layout/header.php:50 layout/header.php:52
+#: layout/header.php:60 layout/header.php:62
 msgid "Logout"
 msgstr "Sair"
 
-#: layout/header.php:102
+#: layout/header.php:112
 msgid "Home"
 msgstr "Início"
 
-#: layout/header.php:114
+#: layout/header.php:124
 msgid "Documentation"
 msgstr "Documentação"
 
-#: layout/header.php:118
+#: layout/header.php:128
 msgid "Examples of Usage"
 msgstr "Exemplos de Uso"
 

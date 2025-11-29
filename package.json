@@ -2,7 +2,7 @@
   "name": "liturgical-calendar-frontend",
   "packageManager": "yarn@4.9.2",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "scripts": {
     "lint": "eslint .",
@@ -17,7 +17,9 @@
     "test:ci:chromium": "CI=true playwright test --project=chromium",
     "test:install": "playwright install --with-deps",
     "tsc": "tsc",
-    "typecheck": "tsc -p e2e/tsconfig.json --noEmit"
+    "typecheck": "tsc -p e2e/tsconfig.json --noEmit",
+    "lint:md": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#.yarn\" \"#**/vendor/**\"",
+    "lint:md:fix": "markdownlint-cli2 --fix \"**/*.md\" \"#node_modules\" \"#.yarn\" \"#**/vendor/**\""
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
@@ -26,6 +28,7 @@
     "dotenv": "^16.4.5",
     "eslint": "^9.32.0",
     "globals": "^16.3.0",
+    "markdownlint-cli2": "^0.19.1",
     "typescript": "^5.9.3"
   }
 }
