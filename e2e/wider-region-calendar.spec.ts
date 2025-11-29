@@ -33,6 +33,9 @@ test.describe('Wider Region Calendar Form', () => {
     });
 
     test('should have wider region datalist with options', async ({ page }) => {
+        // Wait for the form to be ready first
+        await page.waitForSelector('#widerRegionCalendarName', { state: 'visible' });
+
         // Verify the datalist exists
         const datalist = page.locator('#WiderRegionsList');
         await expect(datalist).toBeAttached();
