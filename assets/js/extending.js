@@ -1648,10 +1648,12 @@ const fetchEventsAndCalendarData = () => {
             console.log(`API.path is ${API.path} (category is ${API.category} and key is ${API.key}).`);
             API.locale = likelyLanguage(API.key);
             console.log(`likelyLanguage = ${API.locale} (nation is ${API.key})`);
-            headers.append('Accept-Language', API.locale);
+            if (API.locale) {
+                headers.append('Accept-Language', API.locale.replaceAll('_', '-'));
+            }
         }
     } else {
-        if (API.locale !== '') {
+        if (API.locale) {
             headers.append('Accept-Language', API.locale.replaceAll('_', '-'));
         }
     }
@@ -2057,9 +2059,11 @@ const deleteCalendarConfirmClicked = () => {
     API.category = document.querySelector('.regionalNationalCalendarName').dataset.category;
     API.key = document.querySelector('.regionalNationalCalendarName').value;
     const baseHeaders = new Headers({
-        'Accept': 'application/json',
-        'Accept-Language': API.locale
+        'Accept': 'application/json'
     });
+    if (API.locale) {
+        baseHeaders.append('Accept-Language', API.locale.replaceAll('_', '-'));
+    }
 
     const makeDeleteRequest = () => makeAuthenticatedRequest('DELETE', API.path, { headers: baseHeaders });
 
@@ -2451,8 +2455,8 @@ const serializeRegionalNationalDataClicked = (ev) => {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
     });
-    if (API.locale !== '') {
-        baseHeaders.append('Accept-Language', API.locale);
+    if (API.locale) {
+        baseHeaders.append('Accept-Language', API.locale.replaceAll('_', '-'));
     }
 
     const makeRequest = () => makeAuthenticatedRequest(API.method, API.path, {
@@ -2720,9 +2724,11 @@ const loadDiocesanCalendarData = () => {
     //let dioceseMetadata = LitCalMetadata.diocesan_calendars.filter(item => item.calendar_id === API.key)[0];
     API.locale = document.querySelector('.currentLocalizationChoices').value;
     const headers = new Headers({
-        'Accept': 'application/json',
-        'Accept-Language': API.locale
+        'Accept': 'application/json'
     });
+    if (API.locale) {
+        headers.append('Accept-Language', API.locale.replaceAll('_', '-'));
+    }
     const request = new Request(API.path, {
         method: 'GET',
         headers
@@ -3289,8 +3295,8 @@ const saveDiocesanCalendar_btnClicked = () => {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         });
-        if (API.locale !== '') {
-            headers.append('Accept-Language', API.locale);
+        if (API.locale) {
+            headers.append('Accept-Language', API.locale.replaceAll('_', '-'));
         }
 
         const selectedOptions = document.querySelector('#diocesanCalendarLocales').selectedOptions;
