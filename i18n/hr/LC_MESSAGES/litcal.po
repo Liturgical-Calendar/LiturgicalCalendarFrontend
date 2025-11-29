@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-29 04:08+0000\n"
-"PO-Revision-Date: 2025-11-25 10:14+0000\n"
+"PO-Revision-Date: 2025-11-29 04:21+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
@@ -1192,7 +1192,7 @@ msgstr ""
 
 #: decrees.php:154
 msgid "Read the Decree"
-msgstr "Pročitaj Dekret"
+msgstr "Pročitaj dekret"
 
 #: src/LitCommon.php:58
 msgid "Proper"
@@ -1472,7 +1472,7 @@ msgid ""
 "calendar for the Netherlands to this project with all related translations"
 msgstr ""
 "Udruga za latinsku liturgiju Nizozemske, pridonijela nacionalnim kalendarom "
-"za Nizozemsku s u svim povezanim prijevodima"
+"za Nizozemsku sa svim povezanim prijevodima"
 
 #: src/Utilities.php:144
 msgid ""
@@ -1603,7 +1603,7 @@ msgstr "Sakrij lozinku"
 #, php-format
 msgid ""
 "Your session will expire in less than %d minute(s). Please save your work."
-msgstr ""
+msgstr "Vaša će sesija isteći za manje od %d minute. Molimo spremite svoj rad."
 
 #: includes/login-modal.php:129
 msgid "Session Expiring"
