@@ -334,7 +334,7 @@ test.describe('Wider Region Calendar Form', () => {
         console.log('newLiturgicalEventActionPrompt modal opened');
 
         // Type a new event name to create a brand new liturgical event
-        const newEventName = 'Oceania Regional Saint';
+        const newEventName = `${regionToCreate} Regional Saint`;
         const eventInput = page.locator('#newLiturgicalEventActionPrompt .existingLiturgicalEventName');
         await eventInput.fill(newEventName);
         await eventInput.dispatchEvent('change');
