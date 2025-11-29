@@ -26,6 +26,15 @@ export async function gitRestoreApiData(): Promise<void> {
     console.log('CLEANUP: git restore and clean completed');
 }
 
+/**
+ * Captured request data from interceptDataRequests
+ */
+export interface CapturedRequest {
+    url: string;
+    method: string;
+    payload: any;
+}
+
 export interface ExtendingPageFixtures {
     extendingPage: ExtendingPageHelper;
 }
@@ -211,37 +220,69 @@ export class ExtendingPageHelper {
     }
 
     /**
-     * Intercept PUT/PATCH requests to /data/** endpoints and capture payload.
+     * Intercept PUT/PATCH requests to /data/** endpoints and capture payloads.
      * Used for validating form submissions in CREATE/UPDATE tests.
-     * @returns Object with getters for captured payload and method
+     * @param urlFilter - Optional URL substring or RegExp to filter captured requests
+     * @returns Object with methods to access captured requests
      */
-    async interceptDataRequests(): Promise<{
+    async interceptDataRequests(urlFilter?: string | RegExp): Promise<{
         getPayload: () => any;
         getMethod: () => string | null;
+        getAllRequests: () => CapturedRequest[];
+        getRequestByUrl: (urlMatch: string | RegExp) => CapturedRequest | undefined;
     }> {
-        let capturedPayload: any = null;
-        let capturedMethod: string | null = null;
+        const capturedRequests: CapturedRequest[] = [];
 
         await this.page.route('**/data/**', async (route, request) => {
             if (['PUT', 'PATCH'].includes(request.method())) {
-                capturedMethod = request.method();
+                const url = request.url();
+
+                // Apply URL filter if provided
+                if (urlFilter) {
+                    const matches = typeof urlFilter === 'string'
+                        ? url.includes(urlFilter)
+                        : urlFilter.test(url);
+                    if (!matches) {
+                        await route.continue();
+                        return;
+                    }
+                }
+
                 const postData = request.postData();
+                let payload: any = null;
                 if (postData) {
                     try {
-                        capturedPayload = JSON.parse(postData);
+                        payload = JSON.parse(postData);
                     } catch (e) {
                         // Fail fast with clear error instead of swallowing parse errors
                         const errorMsg = e instanceof Error ? e.message : String(e);
                         throw new Error(`JSON.parse failed for request payload. Error: ${errorMsg}. Raw postData: ${postData?.substring(0, 500)}`);
                     }
                 }
+
+                capturedRequests.push({
+                    url,
+                    method: request.method(),
+                    payload
+                });
             }
             await route.continue();
         });
 
         return {
-            getPayload: () => capturedPayload,
-            getMethod: () => capturedMethod
+            // Backward compatible: get last captured payload/method
+            getPayload: () => capturedRequests.length > 0
+                ? capturedRequests[capturedRequests.length - 1].payload
+                : null,
+            getMethod: () => capturedRequests.length > 0
+                ? capturedRequests[capturedRequests.length - 1].method
+                : null,
+            // New: access all captured requests
+            getAllRequests: () => capturedRequests,
+            // New: find specific request by URL
+            getRequestByUrl: (urlMatch: string | RegExp) => capturedRequests.find(r =>
+                typeof urlMatch === 'string' ? r.url.includes(urlMatch) : urlMatch.test(r.url)
+            )
         };
     }
 
