@@ -1,5 +1,5 @@
 import { test as base, expect, Page } from '@playwright/test';
-import { exec } from 'child_process';
+import { execFile } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
 
@@ -7,6 +7,19 @@ import * as fs from 'fs';
  * Test fixtures for LiturgicalCalendar extending.php form tests.
  * Provides helper methods for common form interactions.
  */
+
+/**
+ * Run a git command using execFile to avoid shell injection.
+ * @param args - Array of git arguments (without 'git' itself)
+ * @returns Promise that resolves to null on success, or error message on failure
+ */
+function runGitCommand(args: string[]): Promise<string | null> {
+    return new Promise((resolve) => {
+        execFile('git', args, (err) => {
+            resolve(err?.message || null);
+        });
+    });
+}
 
 /**
  * Restore and clean API sourcedata directory using git.
@@ -27,14 +40,18 @@ export async function gitRestoreApiData(): Promise<void> {
         throw new Error(`CLEANUP FAILED: "${apiPath}" is not a git repository (no .git directory). Check API_REPO_PATH environment variable.`);
     }
 
-    const error = await new Promise<string | null>((resolve) => {
-        exec(`git -C "${apiPath}" restore jsondata/sourcedata/ && git -C "${apiPath}" clean -fd jsondata/sourcedata/`, (err: any) => {
-            resolve(err?.message || null);
-        });
-    });
-    if (error) {
-        throw new Error(`CLEANUP FAILED: git restore/clean failed for path "${apiPath}". Manual cleanup required. Error: ${error}`);
+    // Run git restore (revert modified tracked files)
+    const restoreError = await runGitCommand(['-C', apiPath, 'restore', 'jsondata/sourcedata/']);
+    if (restoreError) {
+        throw new Error(`CLEANUP FAILED: git restore failed for path "${apiPath}". Manual cleanup required. Error: ${restoreError}`);
     }
+
+    // Run git clean (remove untracked files/directories)
+    const cleanError = await runGitCommand(['-C', apiPath, 'clean', '-fd', 'jsondata/sourcedata/']);
+    if (cleanError) {
+        throw new Error(`CLEANUP FAILED: git clean failed for path "${apiPath}". Manual cleanup required. Error: ${cleanError}`);
+    }
+
     console.log('CLEANUP: git restore and clean completed');
 }
 
