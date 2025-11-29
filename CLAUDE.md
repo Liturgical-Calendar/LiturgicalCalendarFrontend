@@ -48,12 +48,31 @@ composer install
 ### Environment Configuration
 
 1. Copy `.env.example` to `.env.development`
-2. Configure API connection:
+2. Configure the environment variables:
 
    ```env
+   # Application environment (development, staging, production)
+   APP_ENV=development
+
+   # API connection settings
    API_PROTOCOL=http
    API_HOST=localhost
    API_PORT=8000
+   API_BASE_PATH=/
+
+   # Debug mode (enables additional logging)
+   DEBUG_MODE=false
+
+   # Frontend URL (used by Playwright tests)
+   FRONTEND_URL=http://localhost:3000
+
+   # Path to API repository (optional, for CI mode tests)
+   # API_REPO_PATH=/path/to/LiturgicalCalendarAPI
+
+   # Test credentials for E2E tests (required for Playwright)
+   # These must match a valid user in the API database
+   TEST_USERNAME=testuser
+   TEST_PASSWORD=testpassword
    ```
 
 ### Running the Development Server
@@ -91,7 +110,7 @@ The symlink is gitignored. When `APP_ENV=development`, the import map in `layout
 
 ### Available Scripts
 
-All linting and quality scripts are defined in `composer.json`:
+Linting and quality scripts are defined in both `composer.json` (PHP) and `package.json` (TypeScript/JavaScript):
 
 ```bash
 # PHP Syntax Checking
@@ -102,7 +121,7 @@ composer lint                # Check code standards
 composer lint:fix            # Auto-fix code standard violations
 
 # PHPStan Static Analysis
-composer analyse             # Run PHPStan level 1 analysis
+composer analyse             # Run PHPStan level 7 analysis
 
 # Markdown Linting
 composer lint:md             # Check markdown files
@@ -110,6 +129,25 @@ composer lint:md:fix         # Auto-fix markdown issues
 
 # Tests
 composer test                # Run PHPUnit tests (when available)
+```
+
+**TypeScript/JavaScript Scripts** (defined in `package.json`):
+
+```bash
+# TypeScript Type Checking
+yarn typecheck               # Type check e2e test files (uses e2e/tsconfig.json)
+yarn tsc                     # Run TypeScript compiler directly
+
+# Playwright E2E Tests
+yarn test                    # Run all Playwright tests
+yarn test:chromium           # Run tests in Chromium only
+yarn test:ci:chromium        # Run tests in CI mode (Chromium)
+yarn test:headed             # Run tests with browser visible
+yarn test:ui                 # Run tests with Playwright UI
+yarn test:report             # Show test report
+
+# ESLint
+yarn lint                    # Lint JavaScript files
 ```
 
 ### Before Committing
@@ -134,6 +172,9 @@ composer lint:md
 # 5. Verify JavaScript syntax (if modified)
 node --check assets/js/extending.js
 node --check assets/js/auth.js
+
+# 6. Type check e2e tests (if modified)
+yarn typecheck
 ```
 
 ### Git Hooks (CaptainHook)
@@ -306,7 +347,7 @@ composer lint:md:fix     # Auto-fix most issues (but not indentation)
 - `examples/` - Symlink to separate repository at workspace root
 - `.intelephense-helper.php` - IDE helper
 
-**Level**: 1 (can be increased as code quality improves)
+**Level**: 7
 
 ## Authentication
 
@@ -320,10 +361,12 @@ The frontend implements JWT authentication for administrative features:
 
 **Key Features**:
 
-- JWT token storage (sessionStorage/localStorage)
+- HttpOnly cookie-based authentication (preferred, more secure)
+- localStorage/sessionStorage fallback for backwards compatibility
 - Automatic token refresh
 - Session expiry warnings
 - Protected UI elements with `data-requires-auth` attribute
+- `checkAuthAsync()` for server-side session verification with HttpOnly cookies
 
 See `docs/AUTHENTICATION_ROADMAP.md` for detailed implementation notes.
 
@@ -523,11 +566,190 @@ const apiUrl = `${BaseUrl}/calendar?year=2024`;
 
 ## Testing
 
-Currently, the project has minimal automated tests. When adding tests:
+### PHP Unit Tests
 
-1. Place test files in `tests/` directory
-2. Run with `composer test`
-3. Follow PHPUnit conventions
+Place PHP test files in `tests/` directory and run with `composer test`.
+
+### E2E Tests (Playwright)
+
+The project uses Playwright for end-to-end testing of the `extending.php` forms. These tests verify that form
+submissions produce payloads matching the API contract (fixtures).
+
+**Test Files:**
+
+```text
+e2e/
+├── auth.setup.ts              # Authentication setup (runs before all tests)
+├── fixtures.ts                # Test fixtures and ExtendingPageHelper class
+├── national-calendar.spec.ts  # National Calendar form tests
+├── wider-region-calendar.spec.ts  # Wider Region Calendar form tests
+├── diocesan-calendar.spec.ts  # Diocesan Calendar form tests
+└── tsconfig.json              # TypeScript config for tests
+```
+
+**Prerequisites:**
+
+1. **Node.js and Yarn** - The project uses Yarn 4.x
+2. **Test user credentials** - A valid user must exist in the API for authentication
+
+**Environment Configuration:**
+
+Add these variables to your `.env.development` file:
+
+```env
+# Playwright test configuration
+FRONTEND_URL=http://localhost:3000
+TEST_USERNAME=your_test_username
+TEST_PASSWORD=your_test_password
+```
+
+**Installing Test Dependencies:**
+
+```bash
+yarn install
+yarn test:install  # Downloads browser binaries with dependencies
+```
+
+**Running Tests:**
+
+```bash
+# CI mode - automatically starts API and frontend servers (recommended)
+yarn test:ci                # All browsers, auto-starts servers
+yarn test:ci:chromium       # Chromium only, auto-starts servers (fastest for CI)
+
+# Manual mode - requires servers already running
+yarn test                   # All browsers
+yarn test:chromium          # Chromium only (fastest)
+yarn test:firefox           # Firefox only
+yarn test:webkit            # WebKit only
+
+# Interactive/debugging modes
+yarn test:ui                # Interactive UI for debugging
+yarn test:headed            # Run with visible browser
+
+# View results
+yarn test:report            # Open HTML test report
+```
+
+**CI Mode vs Manual Mode:**
+
+- **CI mode** (`yarn test:ci`): Automatically starts both API (port 8000) and frontend (port 3000) servers before
+  tests and stops them after. Ideal for CI/CD pipelines and fresh environments.
+- **Manual mode** (`yarn test`): Requires servers to be running beforehand. Useful during development when you
+  already have servers running.
+
+**Test Coverage:**
+
+The tests validate:
+
+1. **Form Loading** - All form elements are present and visible
+2. **Validation** - Required fields are enforced, valid values accepted
+3. **Payload Structure** - PUT/PATCH requests match API contract:
+   - `NationalCalendarPayload` structure (litcal, settings, metadata, i18n)
+   - `WiderRegionPayload` structure (litcal, national_calendars, metadata, i18n)
+   - `DiocesanCalendarPayload` structure (litcal, settings, metadata)
+
+**Valid Test Data:**
+
+When writing tests that need real diocese/calendar data:
+
+- **Diocese data**: Valid diocese names and IDs are in `LiturgicalCalendarAPI/jsondata/world_dioceses.json`
+- **Format**: `{ "country_iso": "us", "dioceses": [{ "diocese_name": "Boston", "diocese_id": "boston_us" }] }`
+- **National calendars**: USA, IT, DE, FR, etc. (2-letter ISO codes, uppercase)
+- **Wider regions**: Americas, Europe, Asia, Africa, Oceania
+
+**Troubleshooting:**
+
+- **Authentication failures**: Ensure `TEST_USERNAME` and `TEST_PASSWORD` are set and valid
+- **Port already in use**: Kill existing processes with `lsof -ti:8000 | xargs kill -9` and `lsof -ti:3000 | xargs kill -9`
+- **Connection refused** (manual mode): Verify both API (port 8000) and frontend (port 3000) are running
+- **WebKit missing libraries**: On Linux, some WebKit dependencies may be missing; use `yarn test:chromium` instead
+- **Timeout errors**: Increase timeout in `playwright.config.ts` or check network latency
+- **Server startup issues in CI mode**: Check that `../LiturgicalCalendarAPI` directory exists and has `composer.json`
+
+### Writing E2E Tests for Calendar CRUD Operations
+
+When writing Playwright tests for calendar CREATE/UPDATE/DELETE operations, understand the important schema
+differences between calendar types.
+
+**Calendar Schema Differences:**
+
+The API validates payloads against different JSON schemas depending on calendar type. Key differences in the
+`litcal` array actions:
+
+| Calendar Type | Allowed Actions in `litcal[].metadata.action`                        |
+|---------------|----------------------------------------------------------------------|
+| National      | `setProperty`, `createNew`, `moveFeast`, `makeDoctor`, `makePatron`  |
+| Wider Region  | `createNew`, `makePatron` only (NOT `setProperty`)                   |
+| Diocesan      | `createNew`, `makePatron` only (NOT `setProperty`)                   |
+
+**Important:** WiderRegion and Diocesan schemas only accept `createNew` or `makePatron` actions. Using
+`setProperty` (which is valid for National Calendar) will cause a 422 schema validation error.
+
+**Route Interception for Payload Capture (Not Modification):**
+
+Tests should properly fill in forms rather than modifying payloads via route interception. Use `page.route()`
+only to **capture** payloads for verification, not to modify them:
+
+```typescript
+let capturedPayload: any = null;
+let capturedMethod: string | null = null;
+
+await page.route('**/data/**', async (route, request) => {
+    if (['PUT', 'PATCH'].includes(request.method())) {
+        capturedMethod = request.method();
+        const postData = request.postData();
+        if (postData) {
+            capturedPayload = JSON.parse(postData);
+            console.log(`CAPTURED PAYLOAD: ${postData}`);
+        }
+    }
+    await route.continue();  // Always continue without modification
+});
+```
+
+**Required Form Fields for CREATE Tests:**
+
+For `createNew` action, ensure the test properly fills all required fields:
+
+1. **Common selection**: Select a value other than "Proper" (e.g., "Martyrs") to avoid adding `readings`
+   property which is not allowed by WiderRegion/Diocesan schemas (`additionalProperties: false`)
+
+2. **Decree URL and Langs** (WiderRegion/Diocesan only): Fill `.litEventDecreeURL` and `.litEventDecreeLangs`
+   fields - these are required by the schema's `MetadataCreateNew` definition:
+
+   ```typescript
+   const decreeUrlInput = row.querySelector('.litEventDecreeURL') as HTMLInputElement;
+   decreeUrlInput.value = 'https://www.vatican.va/content/francesco/en/decree.html';
+
+   const decreeLangsInput = row.querySelector('.litEventDecreeLangs') as HTMLInputElement;
+   decreeLangsInput.value = 'en=en';  // Format: KEY=value pairs
+   ```
+
+3. **Bootstrap-multiselect for locales**: Use `.multiselect('select', [...])` to select locales, then
+   fill name fields for each locale
+
+**WiderRegion-Specific Considerations:**
+
+1. **Valid region names**: WiderRegion names must be one of: `Americas`, `Europe`, `Asia`, `Africa`,
+   `Oceania`. Random/unique names will fail validation.
+
+2. **Finding available regions**: Query the `/calendars` API to find existing wider regions, then use
+   a region that doesn't have data:
+
+   ```typescript
+   const calendarsResponse = await page.request.get(`${apiBaseUrl}/calendars`);
+   const calendarsData = await calendarsResponse.json();
+   const existingRegionIds = calendarsData.litcal_metadata?.wider_regions_keys || [];
+
+   const validRegions = ['Americas', 'Europe', 'Africa', 'Oceania', 'Asia'];
+   const regionToCreate = validRegions.find(r => !existingRegionIds.includes(r));
+   ```
+
+3. **i18n validation**: The `i18n` object must have keys matching `metadata.locales`. If tests fail with
+   "i18n object must have the same keys as found in the metadata.locales array", ensure the test fills
+   name fields for all selected locales (each locale has a corresponding name field like
+   `.litEventName_${locale}`).
 
 ## Troubleshooting
 

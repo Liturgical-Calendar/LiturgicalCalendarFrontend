@@ -187,7 +187,7 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
                 <div class="modal-header">
                     <h5 class="modal-title" id="setPropertyActionModalLabel"><?php echo _('Change name or grade of existing liturgical event') ?></h5>
                 </div>
-                <?php Utilities::generateModalBody(true, true); ?>
+                <?php Utilities::generateActionPromptModalBody(true, true); ?>
                 <div class="modal-footer">
                     <button type="button" id="setPropertyButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-edit me-2"></i>Set Property</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _('Cancel') ?></button>
@@ -203,7 +203,7 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
                 <div class="modal-header">
                     <h5 class="modal-title" id="moveLiturgicalEventActionModalLabel"><?php echo _('Move liturgical event to new date') ?></h5>
                 </div>
-                <?php Utilities::generateModalBody(true, false); ?>
+                <?php Utilities::generateActionPromptModalBody(true, false); ?>
                 <div class="modal-footer">
                     <button type="button" id="moveLiturgicalEventButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-day me-2"></i><?php echo _('Move liturgical event') ?></button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _('Cancel') ?></button>
@@ -219,7 +219,7 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
                 <div class="modal-header">
                     <h5 class="modal-title" id="newLiturgicalEventActionModalLabel"><?php echo _('Create a new liturgical event') ?></h5>
                 </div>
-                <?php Utilities::generateModalBody(false, false); ?>
+                <?php Utilities::generateActionPromptModalBody(false, false); ?>
                 <div class="modal-footer">
                     <button type="button" id="newLiturgicalEventFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus me-2"></i><?php echo _('New liturgical event from existing') ?></button>
                     <button type="button" id="newLiturgicalEventExNovoButton" class="btn btn-primary actionPromptButton"><i class="fas fa-calendar-plus me-2"></i><?php echo _('New liturgical event ex novo') ?></button>
@@ -236,7 +236,7 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
                 <div class="modal-header">
                     <h5 class="modal-title" id="makeDoctorActionModalLabel"><?php echo _('Designate Doctor of the Church from existing liturgical event') ?></h5>
                 </div>
-                <?php Utilities::generateModalBody(true, false); ?>
+                <?php Utilities::generateActionPromptModalBody(true, false); ?>
                 <div class="modal-footer">
                     <button type="button" id="designateDoctorButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-user-graduate me-2"></i><?php echo _('Designate Doctor of the Church') ?></button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _('Cancel') ?></button>

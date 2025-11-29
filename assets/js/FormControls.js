@@ -447,7 +447,7 @@ class FormControls {
 
                 const exactDateLabel = document.createElement('label');
                 exactDateLabel.className = 'btn btn-outline-info';
-                exactDateLabel.setAttribute('for', `exactDate${FormControls.uniqid}`);
+                exactDateLabel.htmlFor = `exactDate${FormControls.uniqid}`;
                 exactDateLabel.title = 'month and day';
                 exactDateLabel.innerHTML = `<i class="fas fa-calendar-day me-2"></i>exact date`;
                 radioGroupDiv.appendChild(exactDateLabel);
@@ -464,7 +464,7 @@ class FormControls {
 
                 const relativeDateLabel = document.createElement('label');
                 relativeDateLabel.className = 'btn btn-outline-info';
-                relativeDateLabel.setAttribute('for', `relativeDate${FormControls.uniqid}`);
+                relativeDateLabel.htmlFor = `relativeDate${FormControls.uniqid}`;
                 relativeDateLabel.title = 'php strtotime';
                 relativeDateLabel.innerHTML = `relative date<i class="fas fa-comment ms-2"></i>`;
                 radioGroupDiv.appendChild(relativeDateLabel);
@@ -507,7 +507,7 @@ class FormControls {
             eventNameFormGroup.appendChild(eventKeyInput);
         }
         const nameLabel = document.createElement('label');
-        nameLabel.for = `onTheFly${FormControls.uniqid}Name`;
+        nameLabel.htmlFor = `onTheFly${FormControls.uniqid}Name`;
         nameLabel.innerText = Messages[ "Name" ];
         eventNameFormGroup.appendChild(nameLabel);
 
@@ -531,7 +531,7 @@ class FormControls {
             const fromYearFormGroup = document.createElement('div');
             fromYearFormGroup.className = 'form-group col-sm-1';
             const fromYearLabel = document.createElement('label');
-            fromYearLabel.for = `onTheFly${FormControls.uniqid}FromYear`;
+            fromYearLabel.htmlFor = `onTheFly${FormControls.uniqid}FromYear`;
             fromYearLabel.innerText = Messages[ "Since" ];
             fromYearFormGroup.appendChild(fromYearLabel);
 
@@ -553,7 +553,7 @@ class FormControls {
             const untilYearFormGroup = document.createElement('div');
             untilYearFormGroup.className = 'form-group col-sm-1';
             const untilYearLabel = document.createElement('label');
-            untilYearLabel.for = `onTheFly${FormControls.uniqid}UntilYear`;
+            untilYearLabel.htmlFor = `onTheFly${FormControls.uniqid}UntilYear`;
             untilYearLabel.innerText = Messages[ "Until" ];
             untilYearFormGroup.appendChild(untilYearLabel);
 
@@ -580,7 +580,7 @@ class FormControls {
         const colorFormGroup = document.createElement('div');
         colorFormGroup.className = 'form-group col-sm-2';
         const colorLabel = document.createElement('label');
-        colorLabel.for = `onTheFly${FormControls.uniqid}Color`;
+        colorLabel.htmlFor = `onTheFly${FormControls.uniqid}Color`;
         colorLabel.innerText = Messages[ "Liturgical color" ];
         colorFormGroup.appendChild(colorLabel);
 
@@ -628,7 +628,7 @@ class FormControls {
         const dayInput = document.createElement('input');
         if( liturgical_event !== null && 'strtotime' in liturgical_event ) {
             dayFormGroup.className = 'form-group col-sm-2';
-            dayLabel.for = `onTheFly${FormControls.uniqid}Strtotime`;
+            dayLabel.htmlFor = `onTheFly${FormControls.uniqid}Strtotime`;
             dayLabel.innerText = 'Relative date';
             dayFormGroup.appendChild(dayLabel);
 
@@ -640,7 +640,7 @@ class FormControls {
             controlsRow.appendChild(dayFormGroup);
         } else {
             dayFormGroup.className = 'form-group col-sm-1';
-            dayLabel.for = `onTheFly${FormControls.uniqid}Day`;
+            dayLabel.htmlFor = `onTheFly${FormControls.uniqid}Day`;
             dayLabel.innerText = Messages[ "Day" ];
             dayFormGroup.appendChild(dayLabel);
 
@@ -657,7 +657,7 @@ class FormControls {
             monthFormGroup.className = 'form-group col-sm-1';
 
             const monthLabel = document.createElement('label');
-            monthLabel.for = `onTheFly${FormControls.uniqid}Month`;
+            monthLabel.htmlFor = `onTheFly${FormControls.uniqid}Month`;
             monthLabel.innerText = Messages[ "Month" ];
             monthFormGroup.appendChild(monthLabel);
 
@@ -687,7 +687,7 @@ class FormControls {
             const eventKeyFormGroup = document.createElement('div');
             eventKeyFormGroup.className = 'form-group col-sm-2';
             const eventKeyLabel = document.createElement('label');
-            eventKeyLabel.for = `onTheFly${FormControls.uniqid}EventKey`;
+            eventKeyLabel.htmlFor = `onTheFly${FormControls.uniqid}EventKey`;
             eventKeyLabel.innerText = Messages[ "EventKey" ];
             eventKeyFormGroup.appendChild(eventKeyLabel);
 
@@ -731,7 +731,7 @@ class FormControls {
                 const tr = document.createElement('tr');
                 const labelCell = document.createElement('td');
                 const label = document.createElement('label');
-                label.for = `onTheFly${FormControls.uniqid}Readings_${prop}`;
+                label.htmlFor = `onTheFly${FormControls.uniqid}Readings_${prop}`;
                 label.innerText = prop;
                 labelCell.appendChild(label);
                 tr.appendChild(labelCell);
@@ -771,7 +771,7 @@ class FormControls {
             const reasonFormGroup = document.createElement('div');
             reasonFormGroup.className = 'form-group col-sm-6';
             const reasonLabel = document.createElement('label');
-            reasonLabel.for = `onTheFly${FormControls.uniqid}Reason`;
+            reasonLabel.htmlFor = `onTheFly${FormControls.uniqid}Reason`;
             reasonLabel.innerText = Messages[ "Reason" ];
             reasonFormGroup.appendChild(reasonLabel);
 
@@ -791,7 +791,7 @@ class FormControls {
             const missalFormGroup = document.createElement('div');
             missalFormGroup.className = 'form-group col-sm-6';
             const missalLabel = document.createElement('label');
-            missalLabel.for = `onTheFly${FormControls.uniqid}Missal`;
+            missalLabel.htmlFor = `onTheFly${FormControls.uniqid}Missal`;
             missalLabel.innerText = Messages[ "Missal" ];
             missalFormGroup.appendChild(missalLabel);
 
@@ -818,7 +818,7 @@ class FormControls {
             const decreeUrlFormGroup = document.createElement('div');
             decreeUrlFormGroup.className = 'form-group col-sm-6';
             const decreeUrlLabel = document.createElement('label');
-            decreeUrlLabel.for = `onTheFly${FormControls.uniqid}DecreeURL`;
+            decreeUrlLabel.htmlFor = `onTheFly${FormControls.uniqid}DecreeURL`;
             decreeUrlLabel.innerText = Messages[ "Decree URL" ];
             const i = document.createElement('i');
             i.className = 'fas fa-info-circle ms-2';
@@ -843,7 +843,7 @@ class FormControls {
             const decreeLangsFormGroup = document.createElement('div');
             decreeLangsFormGroup.className = 'form-group col-sm-6';
             const decreeLangsLabel = document.createElement('label');
-            decreeLangsLabel.for = `onTheFly${FormControls.uniqid}DecreeLangs`;
+            decreeLangsLabel.htmlFor = `onTheFly${FormControls.uniqid}DecreeLangs`;
             decreeLangsLabel.innerText = Messages[ "Decree Langs" ];
             const i = document.createElement('i');
             i.className = 'fas fa-info-circle ms-2';
