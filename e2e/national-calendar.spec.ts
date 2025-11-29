@@ -289,7 +289,7 @@ test.describe('National Calendar Form', () => {
         // This ensures the async fetchRegionCalendarData and all related requests are done
         console.log('Waiting for network idle...');
         await page.waitForLoadState('networkidle', { timeout: 30000 }).catch(() => {
-            console.log('Network idle timeout - continuing anyway');
+            console.warn('Network idle timeout after 30s - continuing, but this may indicate slow API or network issues');
         });
 
         // Wait for save button to be attached (indicates form is ready)
