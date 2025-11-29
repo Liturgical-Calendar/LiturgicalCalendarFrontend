@@ -801,6 +801,124 @@ For full cookie-only authentication (removing client-side token storage):
 3. Remove `getToken()` usage in Authorization headers (cookies sent automatically)
 4. Update auto-refresh to rely on server-side cookie expiry
 
+### Phase 2.5: Full Cookie-Only Authentication (Planned)
+
+**Status:** Not started
+
+**Overview:**
+Migrate the frontend to use HttpOnly cookies exclusively, removing client-side token storage in localStorage/sessionStorage. This provides maximum security against XSS attacks.
+
+**Current State (Hybrid Approach):**
+
+- API sets HttpOnly cookies on login
+- Frontend also stores tokens in localStorage/sessionStorage
+- Requests include both cookies (automatic) and Authorization headers (manual)
+- `Auth.isAuthenticated()` reads from local storage for quick sync checks
+
+**Target State (Cookie-Only):**
+
+- API sets HttpOnly cookies on login (no change)
+- Frontend does NOT store tokens locally
+- Requests rely solely on automatic cookie transmission
+- `Auth.isAuthenticated()` becomes async, using `/auth/me` endpoint
+
+**Files to Modify:**
+
+1. **`assets/js/auth.js`**
+   - Remove `setToken()` and `setRefreshToken()` calls after login
+   - Remove `getToken()` and `getRefreshToken()` methods (or deprecate)
+   - Update `isAuthenticated()` to use cached `/auth/me` response
+   - Add cache layer for `checkAuthAsync()` to avoid excessive API calls
+
+2. **`assets/js/extending.js`**
+   - Remove `addAuthHeader()` calls - cookies sent automatically
+   - Update all authenticated fetch calls to use `credentials: 'include'`
+   - Handle auth state changes based on server responses, not local tokens
+
+3. **`includes/login-modal.php`**
+   - Remove token storage after successful login
+   - Rely on cookie being set by API
+
+4. **`layout/header.php`**
+   - Update auth status check to use async `checkAuthAsync()`
+
+**Implementation Steps:**
+
+1. Add auth state caching in `auth.js`:
+
+   ```javascript
+   Auth._cachedAuthState = null;
+   Auth._cacheExpiry = 0;
+
+   Auth.isAuthenticatedCached = function() {
+       const now = Date.now();
+       if (this._cachedAuthState && now < this._cacheExpiry) {
+           return this._cachedAuthState.authenticated;
+       }
+       return null; // Cache expired, need async check
+   };
+
+   Auth.updateAuthCache = async function() {
+       const state = await this.checkAuthAsync();
+       this._cachedAuthState = state;
+       this._cacheExpiry = Date.now() + 60000; // Cache for 1 minute
+       return state;
+   };
+   ```
+
+2. Update authenticated requests:
+
+   ```javascript
+   // Before (hybrid)
+   const headers = new Headers({ 'Accept': 'application/json' });
+   headers.append('Authorization', `Bearer ${Auth.getToken()}`);
+   fetch(url, { method: 'POST', headers, body });
+
+   // After (cookie-only)
+   fetch(url, {
+       method: 'POST',
+       credentials: 'include',  // Cookies sent automatically
+       headers: { 'Accept': 'application/json' },
+       body
+   });
+   ```
+
+3. Update auth state checks:
+
+   ```javascript
+   // Before (sync)
+   if (Auth.isAuthenticated()) {
+       showProtectedUI();
+   }
+
+   // After (async with cache)
+   const cachedAuth = Auth.isAuthenticatedCached();
+   if (cachedAuth !== null) {
+       if (cachedAuth) showProtectedUI();
+   } else {
+       const authState = await Auth.updateAuthCache();
+       if (authState?.authenticated) showProtectedUI();
+   }
+   ```
+
+**Security Benefits:**
+
+- **XSS-proof** - No tokens in JavaScript-accessible storage
+- **Simpler code** - No manual header management
+- **Automatic refresh** - Browser handles cookie transmission
+
+**Trade-offs:**
+
+- Requires async auth checks (can be mitigated with caching)
+- Cross-tab auth state sync requires polling or BroadcastChannel API
+- Slightly more API calls for auth state verification
+
+**Testing:**
+
+- E2E tests already use hybrid approach with `credentials: 'include'`
+- After migration, E2E tests can remove localStorage token storage
+- Verify all CRUD operations work with cookie-only auth
+
 ### Phase 3: User Experience Enhancements
 
 #### 3.1 Permission-Based UI
@@ -1145,6 +1263,7 @@ describe('Auth module', () => {
 | Phase 1   | Basic JWT authentication                   | 2-3 weeks        | COMPLETE    |
 | Phase 2   | Enhanced security (CSRF, auto-refresh)     | 1 week           | COMPLETE    |
 | Phase 2.4 | HttpOnly Cookie Authentication             | 1-2 days         | COMPLETE    |
+| Phase 2.5 | Full Cookie-Only Authentication            | 1 week           | Planned     |
 | Phase 3   | UX enhancements (warnings, permission UI)  | 1 week           | Not started |
 | Phase 4   | Future enhancements (RBAC, MFA, OAuth)     | As needed        | Future      |
 

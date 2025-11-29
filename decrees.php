@@ -122,6 +122,14 @@ try {
                 $ActionCardTitle = $RowActionTitle[$decree['metadata']['action']] ?? '???';
                 if ($decree['metadata']['action'] === 'setProperty') {
                     if (!isset($decree['metadata']['property'])) {
+                        $errorMsg     = 'Decree data integrity error - missing "property" field for setProperty action';
+                        $errorContext = [
+                            'decree_id' => $decreeID,
+                            'metadata'  => $decree['metadata']
+                        ];
+                        if (isset($logger)) {
+                            $logger->error($errorMsg, $errorContext);
+                        }
                         throw new \RuntimeException(
                             'Decree with action "setProperty" is missing required "property" field: ' . $decreeID
                         );

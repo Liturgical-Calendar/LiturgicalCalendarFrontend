@@ -10,9 +10,9 @@
                 "action": "composer parallel-lint",
                 "conditions": [
                     {
-                        "exec": "\\CaptainHook\\App\\Hook\\Condition\\FileStaged\\ThatIs",
+                        "exec": "\\CaptainHook\\App\\Hook\\Condition\\FileStaged\\OfType",
                         "args": [
-                            {"ofType": "php"}
+                            "php"
                         ]
                     }
                 ]
@@ -29,9 +29,9 @@
                 "action": "composer lint",
                 "conditions": [
                     {
-                        "exec": "\\CaptainHook\\App\\Hook\\Condition\\FileStaged\\ThatIs",
+                        "exec": "\\CaptainHook\\App\\Hook\\Condition\\FileStaged\\OfType",
                         "args": [
-                            {"ofType": "php"}
+                            "php"
                         ]
                     }
                 ]

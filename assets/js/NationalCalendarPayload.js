@@ -668,7 +668,7 @@ class NationalCalendarPayloadMetadata {
      * @param {Object} metadata The object passed to the constructor.
      * @param {string} metadata.nation A two-letter country ISO code (capital letters).
      * @param {string[]} metadata.locales An array of valid locale codes, must not be empty.
-     * @param {string} metadata.wider_region One of `Americas`, `Europe`, `Asia`, `Africa`, `Oceania`, `Middle East`, or `Antarctica`.
+     * @param {string} metadata.wider_region One of `Americas`, `Europe`, `Asia`, `Africa`, or `Oceania`.
      * @param {string[]} metadata.missals An array of valid Roman Missal identifiers.
      *
      * @throws {Error} If any parameter does not meet the specified criteria.
@@ -703,9 +703,9 @@ class NationalCalendarPayloadMetadata {
         if (typeof metadata.wider_region !== 'string') {
             throw new Error('`metadata.wider_region` parameter must be a string');
         }
-        const re2 = /^(Americas|Europe|Asia|Africa|Oceania|Middle East|Antarctica)$/;
+        const re2 = /^(Americas|Europe|Asia|Africa|Oceania)$/;
         if (false === re2.test(metadata.wider_region)) {
-            throw new Error('`metadata.wider_region` parameter must be one of `Americas`, `Europe`, `Asia`, `Africa`, `Oceania`, `Middle East`, or `Antarctica`');
+            throw new Error('`metadata.wider_region` parameter must be one of `Americas`, `Europe`, `Asia`, `Africa`, or `Oceania`');
         }
         if (false === Array.isArray(metadata.missals)) {
             throw new Error('`metadata.missals` parameter must be an array');
