@@ -23,7 +23,8 @@ const authFile = path.join(__dirname, '.auth/user.json');
  */
 setup('authenticate', async ({ page }) => {
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-    const apiUrl = `${process.env.API_PROTOCOL || 'http'}://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || '8000'}`;
+    // Use URL class for validation and proper encoding
+    const apiUrl = new URL(`${process.env.API_PROTOCOL || 'http'}://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || '8000'}`).origin;
     const username = process.env.TEST_USERNAME;
     const password = process.env.TEST_PASSWORD;
 
