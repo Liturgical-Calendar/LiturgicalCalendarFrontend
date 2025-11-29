@@ -33,7 +33,7 @@ asort($langsAssoc);
             </div>
         </li>
         <li class="nav-item ms-2" id="topNavBar_Usage">
-            <a class="nav-link btn btn-outline-light border-0<?php echo $currentPage === 'usage' || $currentPage === 'examples' ? ' fw-bold active' : ''; ?>" href="./usage.php"><?php echo _('Usage'); ?></a>
+            <a class="nav-link btn btn-outline-light border-0<?php echo in_array($currentPage, ['usage', 'examples', 'liturgyOfAnyDay'], true) ? ' fw-bold active' : ''; ?>" href="./usage.php"><?php echo _('Usage'); ?></a>
         </li>
         <li class="nav-item ms-2" id="topNavBar_Translations">
             <a class="nav-link btn btn-outline-light border-0<?php echo $currentPage === 'translations' ? ' fw-bold active' : ''; ?>" href="./translations.php"><?php echo _('Translations'); ?></a>
