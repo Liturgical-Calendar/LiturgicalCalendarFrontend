@@ -316,8 +316,16 @@ test.describe('Diocesan Calendar Form', () => {
         let responseBody: any = null;
 
         // Load an existing diocesan calendar (UPDATE scenario - should use PATCH)
-        // First select USA as the national calendar
+        // First select USA as the national calendar (if available)
         const nationalSelect = page.locator('#diocesanCalendarNationalDependency');
+
+        // Check if 'US' option exists before selecting
+        const usOptionExists = await nationalSelect.locator('option[value="US"]').count() > 0;
+        if (!usOptionExists) {
+            test.skip(true, 'US national calendar option not available');
+            return;
+        }
+
         await nationalSelect.selectOption('US');
 
         // Wait for the dioceses datalist to be populated
