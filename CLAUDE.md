@@ -751,20 +751,6 @@ For `createNew` action, ensure the test properly fills all required fields:
    name fields for all selected locales (each locale has a corresponding name field like
    `.litEventName_${locale}`).
 
-**Known Issues in extending.js:**
-
-During E2E test development, the following bug was discovered and fixed:
-
-- **Missing `API.locale` in `buildWiderRegionPayload()`** (line ~2210): The `buildWiderRegionPayload()`
-  function did not set `API.locale`, unlike `buildNationalCalendarPayload()` (line ~2182). This caused
-  i18n validation errors when creating wider region calendars. The fix was to add:
-
-  ```javascript
-  API.locale = document.querySelector('.currentLocalizationChoices').value;
-  ```
-
-  This ensures the locale is properly captured in the payload for i18n validation.
-
 ## Troubleshooting
 
 ### API Connection Issues
