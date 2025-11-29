@@ -109,7 +109,7 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
     <?php include_once('./layout/header.php'); ?>
     <h1>Liturgical Calendar project Administration tools</h1>
     <div class="form-group col-md">
-        <label>Select JSON file to manage:</label>
+        <label for="jsonFileSelect">Select JSON file to manage:</label>
         <select class="form-select" id="jsonFileSelect">
             <option value="api/dev/jsondata/sourcedata/missals/propriumdesanctis_1970/propriumdesanctis_1970.json">Editio Typica 1970</option>
             <option value="api/dev/jsondata/sourcedata/missals/propriumdesanctis_2002/propriumdesanctis_2002.json">Editio Typica Tertia 2002</option>

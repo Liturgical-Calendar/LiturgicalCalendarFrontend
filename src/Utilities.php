@@ -235,8 +235,8 @@ class Utilities
             </div>';
         if ($hasPropertyChange) {
             $modalBody .= '<div class="form-group col col-md-6">
-                <label for="propertyToChange" class="fw-bold">' . _('Property to change') . ':</label>
-                <select class="form-select" id="propertyToChange" name="propertyToChange">
+                <label for="propertyToChange_' . $actionPromptModalIdCounter . '" class="fw-bold">' . _('Property to change') . ':</label>
+                <select class="form-select" id="propertyToChange_' . $actionPromptModalIdCounter . '" name="propertyToChange">
                     <option value="name">' . _('Name') . '</option>
                     <option value="grade">' . _('Grade') . '</option>
                 </select>

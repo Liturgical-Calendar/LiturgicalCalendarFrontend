@@ -295,7 +295,7 @@ if (isset($_GET['choice'])) {
                                 <h3 id="nationalCalendarSettingsTitle" class="text-center"><?php echo _('National calendar settings') ?><i class="fas fa-info-circle ms-4 d-inline-block text-black" style="--bs-text-opacity: .3;" role="button" title="please keep in mind that the first step to creating a national calendar, is to translate the already existing calendar data into the correct language. This can be done on the LitCal translation server (see above for details)"></i></h3>
                                 <form id="nationalCalendarSettingsForm" class="row justify-content-center align-items-baseline needs-validation" novalidate>
                                     <div class="form-group col col-md-3">
-                                        <label><?php echo _('EPIPHANY') ?></label>
+                                        <label for="nationalCalendarSettingEpiphany"><?php echo _('EPIPHANY') ?></label>
                                         <select class="form-select" id="nationalCalendarSettingEpiphany">
                                             <option value=""></option>
                                             <option value="JAN6"><?php echo _('January 6') ?></option>
@@ -303,7 +303,7 @@ if (isset($_GET['choice'])) {
                                         </select>
                                     </div>
                                     <div class="form-group col col-md-2">
-                                        <label><?php echo _('ASCENSION') ?></label>
+                                        <label for="nationalCalendarSettingAscension"><?php echo _('ASCENSION') ?></label>
                                         <select class="form-select" id="nationalCalendarSettingAscension">
                                             <option value=""></option>
                                             <option value="THURSDAY"><?php echo $thursday ?></option>
@@ -311,7 +311,7 @@ if (isset($_GET['choice'])) {
                                         </select>
                                     </div>
                                     <div class="form-group col col-md-2">
-                                        <label><?php echo _('CORPUS CHRISTI') ?></label>
+                                        <label for="nationalCalendarSettingCorpusChristi"><?php echo _('CORPUS CHRISTI') ?></label>
                                         <select class="form-select" id="nationalCalendarSettingCorpusChristi">
                                             <option value=""></option>
                                             <option value="THURSDAY"><?php echo $thursday ?></option>
@@ -319,14 +319,14 @@ if (isset($_GET['choice'])) {
                                         </select>
                                     </div>
                                     <div class="form-group col col-md-2">
-                                        <label><?php echo _('ETERNAL HIGH PRIEST') ?></label>
+                                        <label for="nationalCalendarSettingHighPriest"><?php echo _('ETERNAL HIGH PRIEST') ?></label>
                                         <div class="form-check form-switch">
                                             <input class="form-check-input fs-2" type="checkbox" role="switch" id="nationalCalendarSettingHighPriest" style="margin-left: -1.25em; margin-top: 0.075em;">
                                             <i class="fas fa-info-circle ms-4 d-inline-block text-black" style="--bs-text-opacity: .3;" role="button" title="In 2012, Pope Benedict XVI gave faculty to the Episcopal Conferences to insert the Feast of Jesus Christ Eternal High Priest in their own liturgical calendars on the Thursday after Pentecost."></i>
                                         </div>
                                     </div>
                                     <div class="form-group col col-md-3">
-                                        <label><?php echo _('LOCALES') ?></label>
+                                        <label for="nationalCalendarLocales"><?php echo _('LOCALES') ?></label>
                                         <select class="form-select calendarLocales" id="nationalCalendarLocales" multiple="multiple">
                                         <?php
                                         foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
@@ -433,7 +433,7 @@ if (isset($_GET['choice'])) {
                         </div>
                         <div class="row justify-content-center align-items-baseline">
                             <div class="form-group col col-md-3">
-                                <label><?php echo '<b>' . ucwords(strtolower(_('LOCALES'))) . ':</b>' ?></label>
+                                <label for="diocesanCalendarLocales"><?php echo '<b>' . ucwords(strtolower(_('LOCALES'))) . ':</b>' ?></label>
                                 <select class="form-select calendarLocales" id="diocesanCalendarLocales" multiple="multiple">
                                 <?php
                                 foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
@@ -591,7 +591,7 @@ if (isset($_GET['choice'])) {
                     <p id="diocesanOverridesTitle" class="text-center"><?php echo _('Diocesan overrides to the national calendar for …') ?></p>
                     <form id="diocesanOverridesForm" class="row justify-content-center needs-validation" novalidate>
                         <div class="form-group col col-md-3">
-                            <label><?php echo _('EPIPHANY') ?></label>
+                            <label for="diocesanCalendarOverrideEpiphany"><?php echo _('EPIPHANY') ?></label>
                             <select class="form-select" id="diocesanCalendarOverrideEpiphany">
                                 <option value=""></option>
                                 <option value="JAN6"><?php echo _('January 6') ?></option>
@@ -599,7 +599,7 @@ if (isset($_GET['choice'])) {
                             </select>
                         </div>
                         <div class="form-group col col-md-3">
-                            <label><?php echo _('ASCENSION') ?></label>
+                            <label for="diocesanCalendarOverrideAscension"><?php echo _('ASCENSION') ?></label>
                             <select class="form-select" id="diocesanCalendarOverrideAscension">
                                 <option value=""></option>
                                 <option value="THURSDAY"><?php echo $thursday ?></option>
@@ -607,7 +607,7 @@ if (isset($_GET['choice'])) {
                             </select>
                         </div>
                         <div class="form-group col col-md-3">
-                            <label><?php echo _('CORPUS CHRISTI') ?></label>
+                            <label for="diocesanCalendarOverrideCorpusChristi"><?php echo _('CORPUS CHRISTI') ?></label>
                             <select class="form-select" id="diocesanCalendarOverrideCorpusChristi">
                                 <option value=""></option>
                                 <option value="THURSDAY"><?php echo $thursday ?></option>
