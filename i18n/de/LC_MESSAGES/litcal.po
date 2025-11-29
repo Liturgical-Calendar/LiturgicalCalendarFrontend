@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 11:41+0000\n"
+"POT-Creation-Date: 2025-11-29 12:09+0000\n"
 "PO-Revision-Date: 2025-11-29 05:10+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
@@ -126,7 +126,7 @@ msgstr "Anforderungsparameter verfügbar auf dem Basis-%s-Pfad"
 msgid "Request parameters available on all %1$s paths"
 msgstr "Anforderungsparameter verfügbar auf allen %1$s Pfaden"
 
-#: index.php:60 usage.php:13 examples.php:101 liturgyOfAnyDay.php:18
+#: index.php:60 usage.php:13 examples.php:98 liturgyOfAnyDay.php:18
 msgid "General Roman Calendar"
 msgstr "Allgemeiner Römischer Kalender"
 
@@ -1004,7 +1004,7 @@ msgstr "Liturgischer Kalender - Über uns"
 msgid "Liturgical Calendar as an HTML table produced by Javascript"
 msgstr "Liturgischer Kalender als HTML-Tabelle, erstellt mit Javascript"
 
-#: examples.php:139
+#: examples.php:136
 #, php-format
 msgid "Example '%s' not found"
 msgstr "Beispiel '%s' nicht gefunden"
