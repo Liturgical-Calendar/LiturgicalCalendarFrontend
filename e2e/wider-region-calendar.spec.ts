@@ -241,14 +241,11 @@ test.describe('Wider Region Calendar Form', () => {
             if (toastContainer) toastContainer.remove();
         });
 
-        // Wait for locales dropdown to have options
+        // Wait for locales dropdown to have options (fail fast if this doesn't happen)
         await page.waitForFunction(() => {
             const select = document.querySelector('#widerRegionLocales') as HTMLSelectElement;
             return select && select.options.length > 0;
-        }, { timeout: 10000 }).catch((e) => {
-            console.warn('Locales dropdown wait timed out - proceeding anyway:', e.message);
-        });
-
+        }, { timeout: 10000 });
         console.log('Locales dropdown populated');
 
         // STEP 1: Select locales BEFORE creating the liturgical event
