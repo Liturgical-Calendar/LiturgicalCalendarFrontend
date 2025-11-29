@@ -503,7 +503,7 @@ class FormControls {
             eventKeyInput.type = 'hidden';
             eventKeyInput.className = 'litEventEventKey';
             eventKeyInput.id = `onTheFly${FormControls.uniqid}EventKey`;
-            eventKeyInput.value = liturgical_event ? liturgical_event.event_key : '';
+            eventKeyInput.value = liturgical_event?.event_key ?? '';
             eventNameFormGroup.appendChild(eventKeyInput);
         }
         const nameLabel = document.createElement('label');
@@ -515,7 +515,7 @@ class FormControls {
         nameInput.type = 'text';
         nameInput.className = 'form-control litEvent litEventName';
         nameInput.id = `onTheFly${FormControls.uniqid}Name`;
-        nameInput.value = liturgical_event ? liturgical_event.name : '';
+        nameInput.value = liturgical_event?.name ?? '';
         nameInput.disabled = FormControls.settings.nameField === false;
         eventNameFormGroup.appendChild(nameInput);
         const nameInputInvalidFeedback = document.createElement('div');
@@ -649,7 +649,7 @@ class FormControls {
             dayInput.max = liturgical_event ? getMonthMaxDay(liturgical_event.month) : 31;
             dayInput.className = 'form-control litEvent litEventDay';
             dayInput.id = `onTheFly${FormControls.uniqid}Day`;
-            dayInput.value = liturgical_event ? liturgical_event.day : '';
+            dayInput.value = liturgical_event?.day ?? '';
             dayFormGroup.appendChild(dayInput);
             controlsRow.appendChild(dayFormGroup);
 
@@ -695,7 +695,7 @@ class FormControls {
             eventKeyInput.type = 'text';
             eventKeyInput.className = 'form-control litEvent litEventEventKey';
             eventKeyInput.id = `onTheFly${FormControls.uniqid}EventKey`;
-            eventKeyInput.value = liturgical_event ? liturgical_event.event_key : '';
+            eventKeyInput.value = liturgical_event?.event_key ?? '';
             eventKeyFormGroup.appendChild(eventKeyInput);
             controlsRow.appendChild(eventKeyFormGroup);
         }
