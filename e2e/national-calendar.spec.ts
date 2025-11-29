@@ -243,12 +243,15 @@ test.describe('National Calendar Form', () => {
         console.log('Toast dismissed, waiting for locales dropdown...');
 
         // Wait for locales dropdown to have options
-        await page.waitForFunction(() => {
+        const localesPopulated = await page.waitForFunction(() => {
             const select = document.querySelector('#nationalCalendarLocales') as HTMLSelectElement;
             return select && select.options.length > 0;
-        }, { timeout: 10000 }).catch(() => {
-            console.log('Locales dropdown wait timed out');
-        });
+        }, { timeout: 10000 })
+            .then(() => true)
+            .catch(() => false);
+        if (!localesPopulated) {
+            console.warn('Locales dropdown wait timed out - continuing');
+        }
 
         // Check available options
         const localeOptions = await page.evaluate(() => {
