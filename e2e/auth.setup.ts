@@ -14,6 +14,12 @@ const authFile = path.join(__dirname, '.auth/user.json');
  *
  * Playwright's storageState captures both cookies and localStorage, persisting
  * them across test runs.
+ *
+ * NOTE: The localStorage/sessionStorage token storage inherits XSS exposure risks,
+ * similar to the main app's assets/js/auth.js. This is intentional for backward
+ * compatibility with the current frontend implementation. See docs/AUTHENTICATION_ROADMAP.md
+ * Phase 2.5 for the plan to migrate to full cookie-only authentication, which will
+ * allow removing these storage writes once the frontend stops reading tokens from storage.
  */
 setup('authenticate', async ({ page }) => {
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
@@ -68,6 +74,12 @@ setup('authenticate', async ({ page }) => {
 
     if (!loginResponse.ok) {
         throw new Error(`Login failed: ${loginResponse.status} - ${loginResponse.error}`);
+    }
+
+    // Assert access_token is present - fail fast on schema/contract regressions
+    // rather than surfacing later via 401s in actual tests
+    if (!loginResponse.data?.access_token) {
+        throw new Error('Login response missing access_token - API contract may have changed');
     }
 
     // Verify authentication by making a request to an authenticated endpoint
