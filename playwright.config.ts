@@ -77,7 +77,9 @@ export default defineConfig({
     webServer: [
         {
             // Start API server first (foreground mode for Playwright)
-            command: 'PHP_CLI_SERVER_WORKERS=6 php -S localhost:8000 -t public',
+            // NOTE: PHP_CLI_SERVER_WORKERS=6 uses POSIX-style env assignment (Linux/macOS only)
+            // For Windows, use cross-env or set the env var separately
+            command: `PHP_CLI_SERVER_WORKERS=6 php -S ${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || '8000'} -t public`,
             cwd: process.env.API_REPO_PATH || path.resolve(__dirname, '../LiturgicalCalendarAPI'),
             url: `${process.env.API_PROTOCOL || 'http'}://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || '8000'}/calendars`,
             reuseExistingServer: !process.env.CI,
@@ -87,7 +89,8 @@ export default defineConfig({
         },
         {
             // Start frontend server
-            command: 'php -S localhost:3000',
+            // Extract host:port from FRONTEND_URL or use defaults
+            command: `php -S ${new URL(process.env.FRONTEND_URL || 'http://localhost:3000').host}`,
             url: process.env.FRONTEND_URL || 'http://localhost:3000',
             reuseExistingServer: !process.env.CI,
             timeout: 60 * 1000,
