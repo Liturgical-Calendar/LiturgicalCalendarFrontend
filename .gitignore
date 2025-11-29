@@ -68,9 +68,6 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
-# Yarn install state (machine-specific optimization cache)
-.yarn/install-state.gz
-
 # dotenv environment variables file
 .env
 .env.test
