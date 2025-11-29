@@ -214,6 +214,7 @@ test.describe('National Calendar Form', () => {
         let createResponseBody: any = null;
 
         // Capture console logs and errors for debugging
+        // Note: Listeners are automatically cleaned up when page closes at test end
         page.on('console', msg => console.log(`Browser console [${msg.type()}]: ${msg.text()}`));
         page.on('pageerror', err => console.log(`Browser error: ${err.message}`));
 

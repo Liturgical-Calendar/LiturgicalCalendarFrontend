@@ -187,6 +187,7 @@ test.describe('Wider Region Calendar Form', () => {
         // in the datalist but doesn't have calendar data yet. Then it DELETEs to clean up.
 
         // Capture console logs and errors early for debugging
+        // Note: Listeners are automatically cleaned up when page closes at test end
         page.on('console', msg => console.log(`Browser console [${msg.type()}]: ${msg.text()}`));
         page.on('pageerror', err => console.log(`Browser error: ${err.message}`));
 
