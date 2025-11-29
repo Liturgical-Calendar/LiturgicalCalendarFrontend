@@ -271,39 +271,9 @@ test.describe('Diocesan Calendar Form', () => {
         expect(capturedPayload.metadata.diocese_name).toBe(dioceseToCreate.name);
 
         // CLEANUP: DELETE the created diocese and verify 200 response
-        console.log(`CLEANUP: Deleting diocese ${dioceseToCreate.key}...`);
-
-        // Get the auth token from localStorage (Playwright stores it there)
-        const token = await page.evaluate(() => {
-            return localStorage.getItem('litcal_jwt_token') || sessionStorage.getItem('litcal_jwt_token');
-        });
-
-        // Get API base URL for DELETE request
-        const apiBaseUrl = await extendingPage.getApiBaseUrl();
-
-        // Make DELETE request
-        const deleteResponse = await page.request.delete(
-            `${apiBaseUrl}/data/diocese/${dioceseToCreate.key}`,
-            {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/json'
-                }
-            }
-        );
-
-        const deleteStatus = deleteResponse.status();
-        let deleteResponseBody: any = null;
-        try {
-            deleteResponseBody = await deleteResponse.json();
-        } catch {
-            deleteResponseBody = await deleteResponse.text();
-        }
-
-        // Verify DELETE response is 200 OK with success message
-        expect(deleteStatus).toBe(200);
-        expect(deleteResponseBody).toHaveProperty('success');
-        console.log(`DELETE response: ${deleteStatus} - ${JSON.stringify(deleteResponseBody)}`);
+        const deleteResult = await extendingPage.deleteCalendar('diocese', dioceseToCreate.key);
+        expect(deleteResult.status).toBe(200);
+        expect(deleteResult.body).toHaveProperty('success');
     });
 
     test('should UPDATE (PATCH) existing diocesan calendar and verify 201 response', async ({ page, extendingPage }) => {

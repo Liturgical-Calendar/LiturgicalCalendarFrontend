@@ -321,6 +321,59 @@ export class ExtendingPageHelper {
     }
 
     /**
+     * Delete a calendar via the API and verify success.
+     * Centralizes the DELETE cleanup pattern used after CREATE tests.
+     * @param type - Calendar type: 'nation', 'diocese', or 'widerregion'
+     * @param key - The calendar identifier (e.g., 'US', 'boston_us', 'Americas')
+     * @returns Object with status, body, and success flag
+     */
+    async deleteCalendar(type: 'nation' | 'diocese' | 'widerregion', key: string): Promise<{
+        status: number;
+        body: any;
+        success: boolean;
+    }> {
+        console.log(`CLEANUP: Deleting ${type} calendar ${key}...`);
+
+        // Get the auth token from localStorage/sessionStorage
+        const token = await this.page.evaluate(() => {
+            return localStorage.getItem('litcal_jwt_token') || sessionStorage.getItem('litcal_jwt_token');
+        });
+
+        if (!token) {
+            throw new Error('No auth token found in localStorage/sessionStorage for DELETE request');
+        }
+
+        const apiBaseUrl = await this.getApiBaseUrl();
+
+        // Make DELETE request
+        const response = await this.page.request.delete(
+            `${apiBaseUrl}/data/${type}/${key}`,
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json'
+                }
+            }
+        );
+
+        const status = response.status();
+        let body: any = null;
+        try {
+            body = await response.json();
+        } catch {
+            body = await response.text();
+        }
+
+        console.log(`DELETE response: ${status} - ${JSON.stringify(body)}`);
+
+        return {
+            status,
+            body,
+            success: status === 200 && body?.success !== undefined
+        };
+    }
+
+    /**
      * Check if form has validation errors
      */
     async hasValidationErrors(): Promise<boolean> {

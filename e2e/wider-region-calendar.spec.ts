@@ -640,36 +640,10 @@ test.describe('Wider Region Calendar Form', () => {
             console.warn('CLEANUP: Could not determine region key for deletion');
             return;
         }
-        console.log(`CLEANUP: Deleting wider region calendar ${createdRegionKey}...`);
 
-        // Get the auth token from localStorage (Playwright stores it there)
-        const token = await page.evaluate(() => {
-            return localStorage.getItem('litcal_jwt_token') || sessionStorage.getItem('litcal_jwt_token');
-        });
-
-        // Make DELETE request
-        const deleteResponse = await page.request.delete(
-            `${apiBaseUrl}/data/widerregion/${createdRegionKey}`,
-            {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/json'
-                }
-            }
-        );
-
-        const deleteStatus = deleteResponse.status();
-        let deleteResponseBody: any = null;
-        try {
-            deleteResponseBody = await deleteResponse.json();
-        } catch {
-            deleteResponseBody = await deleteResponse.text();
-        }
-
-        // Verify DELETE response is 200 OK with success message
-        expect(deleteStatus).toBe(200);
-        expect(deleteResponseBody).toHaveProperty('success');
-        console.log(`DELETE response: ${deleteStatus} - ${JSON.stringify(deleteResponseBody)}`);
+        const deleteResult = await extendingPage.deleteCalendar('widerregion', createdRegionKey);
+        expect(deleteResult.status).toBe(200);
+        expect(deleteResult.body).toHaveProperty('success');
     });
 
     test('should require wider region name', async ({ page }) => {
