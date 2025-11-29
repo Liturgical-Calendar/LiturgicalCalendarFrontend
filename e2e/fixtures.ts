@@ -388,10 +388,14 @@ export class ExtendingPageHelper {
 
         console.log(`DELETE response: ${status} - ${JSON.stringify(body)}`);
 
+        // Check for successful response:
+        // - Status must be 200
+        // - Body must have a truthy 'success' property (string message or boolean true)
+        // This correctly rejects { success: false } or { success: '' }
         return {
             status,
             body,
-            success: status === 200 && body?.success !== undefined
+            success: status === 200 && !!body?.success
         };
     }
 
