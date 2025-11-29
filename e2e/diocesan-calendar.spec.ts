@@ -297,6 +297,9 @@ test.describe('Diocesan Calendar Form', () => {
         // Pick a random nation for better coverage across test runs
         const randomIndex = Math.floor(Math.random() * nationsWithDioceses.length);
         const selectedNation = nationsWithDioceses[randomIndex];
+        // Log index for reproducibility - to reproduce a failure, use: nationsWithDioceses[<index>]
+        console.log(`REPRODUCIBILITY: Selected nation index ${randomIndex} of ${nationsWithDioceses.length} = ${selectedNation}`);
+        console.log(`REPRODUCIBILITY: Available nations: [${nationsWithDioceses.join(', ')}]`);
 
         const nationalSelect = page.locator('#diocesanCalendarNationalDependency');
 
@@ -307,7 +310,7 @@ test.describe('Diocesan Calendar Form', () => {
             return;
         }
 
-        console.log(`Selected nation for UPDATE test: ${selectedNation} (from ${nationsWithDioceses.length} available)`);
+        console.log(`Selected nation for UPDATE test: ${selectedNation}`);
         await nationalSelect.selectOption(selectedNation);
 
         // Wait for the dioceses datalist to be populated
