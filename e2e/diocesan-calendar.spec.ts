@@ -454,6 +454,142 @@ test.describe('Diocesan Calendar Form - Validation', () => {
         await extendingPage.goToDiocesanCalendar();
     });
 
+    test('should reject CREATE (PUT) with empty litcal array', async ({ page, extendingPage }) => {
+        // This test verifies that the backend rejects diocesan calendar payloads
+        // with empty litcal arrays. A diocesan calendar MUST have at least one
+        // liturgical event defined.
+
+        // Get existing diocesan calendar IDs to find a diocese without calendar data
+        const existingDioceseIds = await extendingPage.getExistingDiocesanCalendarIds();
+
+        // Select first available national calendar
+        const nationalSelect = page.locator('#diocesanCalendarNationalDependency');
+        const options = await nationalSelect.locator('option').all();
+        let selectedNation = '';
+        for (const option of options) {
+            const value = await option.getAttribute('value');
+            if (value && value.length > 0) {
+                selectedNation = value;
+                break;
+            }
+        }
+
+        if (!selectedNation) {
+            test.skip(true, 'No national calendars available');
+            return;
+        }
+
+        await nationalSelect.selectOption(selectedNation);
+
+        // Wait for the dioceses datalist to be populated
+        await page.waitForFunction(() => {
+            const datalist = document.querySelector('#DiocesesList');
+            return datalist && datalist.querySelectorAll('option[data-value]').length > 0;
+        }, { timeout: 15000 });
+
+        // Get all diocese options from the datalist and find one without calendar data
+        const availableDioceses = await page.evaluate(() => {
+            const datalist = document.querySelector('#DiocesesList');
+            if (!datalist) return [];
+            return Array.from(datalist.querySelectorAll('option[data-value]')).map(opt => ({
+                name: opt.getAttribute('value') || '',
+                key: opt.getAttribute('data-value') || ''
+            }));
+        });
+
+        // Find a diocese that's in the datalist but NOT in existing calendars
+        const dioceseToCreate = availableDioceses.find(d => !existingDioceseIds.includes(d.key));
+
+        if (!dioceseToCreate) {
+            test.skip(true, `All dioceses for ${selectedNation} already have calendar data`);
+            return;
+        }
+
+        console.log(`Testing empty litcal rejection for: ${dioceseToCreate.name} (${dioceseToCreate.key})`);
+
+        // Wait for locale options to be populated
+        await page.waitForFunction(() => {
+            const localesSelect = document.querySelector('#diocesanCalendarLocales') as HTMLSelectElement;
+            return localesSelect && localesSelect.options.length > 0;
+        }, { timeout: 10000 });
+
+        // Select at least one locale (required for saving)
+        const localesSelect = page.locator('#diocesanCalendarLocales');
+        const firstLocale = await localesSelect.locator('option').first().getAttribute('value');
+        if (firstLocale) {
+            await localesSelect.selectOption(firstLocale);
+        }
+
+        // Ensure the current localization is set
+        const currentLocalization = page.locator('#currentLocalizationDiocesan');
+        const firstLocalizationOption = await currentLocalization.locator('option').first().getAttribute('value');
+        if (firstLocalizationOption) {
+            await currentLocalization.selectOption(firstLocalizationOption);
+        }
+
+        // Ensure timezone is selected
+        const timezoneSelect = page.locator('#diocesanCalendarTimezone');
+        const firstTimezone = await timezoneSelect.locator('option[value]:not([value=""])').first().getAttribute('value');
+        if (firstTimezone) {
+            await timezoneSelect.selectOption(firstTimezone);
+        }
+
+        // Fill in diocese name (but DO NOT fill in any liturgical events)
+        const dioceseInput = page.locator('#diocesanCalendarDioceseName');
+        await dioceseInput.fill(dioceseToCreate.name);
+        await dioceseInput.dispatchEvent('change');
+
+        // Wait for the form to process the change
+        await page.waitForTimeout(500);
+
+        // Set up request interception to capture the payload
+        const { getPayload, getMethod } = await extendingPage.interceptDataRequests();
+
+        // Dismiss any toast messages that might be blocking
+        await page.locator('.toast-container, #toast-container').evaluate(el => el?.remove()).catch(() => {});
+
+        // Click the save button (this should send a payload with empty litcal)
+        const saveButton = page.locator('#saveDiocesanCalendar_btn');
+        await expect(saveButton).toBeVisible({ timeout: 10000 });
+        await expect(saveButton).toBeEnabled({ timeout: 15000 });
+        await saveButton.click({ force: true });
+
+        // Wait for the response
+        const response = await page.waitForResponse(
+            response => response.url().includes('/data/') && ['PUT', 'PATCH'].includes(response.request().method()),
+            { timeout: 15000 }
+        );
+
+        const responseStatus = response.status();
+        let responseBody: any = null;
+        try {
+            responseBody = await response.json();
+        } catch {
+            responseBody = await response.text();
+        }
+
+        // Verify the HTTP method is PUT (CREATE attempt)
+        expect(getMethod()).toBe('PUT');
+        console.log(`HTTP method used: ${getMethod()}`);
+
+        // Verify the payload has an empty litcal array
+        const capturedPayload = getPayload();
+        expect(capturedPayload).not.toBeNull();
+        expect(capturedPayload).toHaveProperty('litcal');
+        expect(Array.isArray(capturedPayload.litcal)).toBe(true);
+        expect(capturedPayload.litcal.length).toBe(0);
+        console.log(`Payload litcal length: ${capturedPayload.litcal.length}`);
+
+        // Verify the backend REJECTS this payload (should be 422 Unprocessable Entity or 400 Bad Request)
+        expect([400, 422]).toContain(responseStatus);
+        console.log(`Backend correctly rejected empty litcal with status: ${responseStatus}`);
+        console.log(`Response body: ${JSON.stringify(responseBody)}`);
+
+        // Verify the response contains an error message (RFC 9110 format uses 'detail', legacy uses 'error')
+        const hasErrorMessage = responseBody.hasOwnProperty('error') || responseBody.hasOwnProperty('detail');
+        expect(hasErrorMessage).toBe(true);
+    });
+
     test('should show validation error when submitting without required fields', async ({ page }) => {
         // Wait for page to fully load
         await page.waitForTimeout(1000);
