@@ -178,73 +178,16 @@ function requireAuth(callback) {
 }
 
 /**
- * CSRF Protection Helpers
- *
- * Note: JWT tokens in headers provide CSRF protection by default,
- * but these helpers add defense-in-depth if the API implements CSRF tokens.
- * Integrated into all authenticated requests via makeAuthenticatedRequest().
- */
-
-/**
- * Get CSRF token from meta tag or API endpoint
- *
- * @returns {Promise<string|null>} CSRF token or null if not available
- */
-async function getCsrfToken() {
-    // Check for CSRF token in meta tag
-    const metaToken = document.querySelector('meta[name="csrf-token"]');
-    if (metaToken) {
-        return metaToken.getAttribute('content');
-    }
-
-    // If API supports CSRF endpoint, fetch it
-    // Note: This endpoint may not be implemented yet
-    try {
-        if (typeof BaseUrl === 'undefined') {
-            return null;
-        }
-        const response = await fetch(`${BaseUrl}/auth/csrf`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            }
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            return data.csrf_token || null;
-        }
-    } catch (error) {
-        console.debug('CSRF endpoint not available:', error.message);
-    }
-
-    return null;
-}
-
-/**
- * Add CSRF token to headers if available
- * Optional defense-in-depth measure
- *
- * @param {Headers} headers - Headers object to modify
- * @returns {Promise<Headers>} Modified headers with CSRF token (if available)
- */
-async function addCsrfHeader(headers) {
-    const csrfToken = await getCsrfToken();
-    if (csrfToken) {
-        headers.append('X-CSRF-Token', csrfToken);
-    }
-    return headers;
-}
-
-/**
  * Authenticated Request Helper
  *
- * Makes an authenticated HTTP request with Authorization and CSRF headers.
+ * Makes an authenticated HTTP request with Authorization header.
  * This helper abstracts the common pattern of:
  * - Cloning base headers to avoid mutation
  * - Adding Authorization header from JWT token
- * - Adding CSRF token for defense-in-depth
  * - Making the fetch request
+ *
+ * Note: The API uses HttpOnly cookies with SameSite protection for CSRF defense,
+ * so explicit CSRF tokens are not needed.
  *
  * Use this for DELETE, PUT, PATCH, POST requests that require authentication.
  * Pair with handleAuthError for automatic retry on 401/403.
@@ -272,9 +215,8 @@ const makeAuthenticatedRequest = async (method, url, options = {}) => {
     // Clone headers to avoid mutation of the base headers
     const requestHeaders = new Headers(headers);
 
-    // Add authentication headers
+    // Add authentication header
     addAuthHeader(requestHeaders);
-    await addCsrfHeader(requestHeaders);
 
     // Build fetch options
     const fetchOptions = {
