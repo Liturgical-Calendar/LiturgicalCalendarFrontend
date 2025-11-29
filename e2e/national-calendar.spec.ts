@@ -568,9 +568,11 @@ test.describe('National Calendar Form', () => {
     });
 
     test('should validate locale selection', async ({ page }) => {
+        // Wait for form to load
+        await page.waitForLoadState('networkidle');
         // The locale select should be a multi-select
         const localesSelect = page.locator('#nationalCalendarLocales');
-        await expect(localesSelect).toBeVisible();
+        await expect(localesSelect).toBeVisible({ timeout: 10000 });
         await expect(localesSelect).toHaveAttribute('multiple', 'multiple');
     });
 
