@@ -1666,16 +1666,18 @@ const fetchEventsAndCalendarData = () => {
         ? `${EventsUrl}`
         : `${EventsUrl}/${API.category}/${API.key}`;
 
-    // Only fetch events if we don't already have them, and if they are available
-    if (
-        false === EventsCollection.has(eventsUrlForCurrentCategory)
-        || false === EventsCollection.get(eventsUrlForCurrentCategory).has(API.locale)
-        || (eventsUrlForCurrentCategory === EventsUrl && LitCalMetadata.locales.includes(API.locale))
-    ) {
-        console.log(`EventsCollection.has(eventsUrlForCurrentCategory): ${EventsCollection.has(eventsUrlForCurrentCategory)}`);
-        console.log(`EventsCollection.get(eventsUrlForCurrentCategory).has(API.locale): ${EventsCollection.has(eventsUrlForCurrentCategory) && EventsCollection.get(eventsUrlForCurrentCategory).has(API.locale)}`);
-        console.log(`eventsUrlForCurrentCategory === EventsUrl && LitCalMetadata.locales.includes(API.locale): ${eventsUrlForCurrentCategory === EventsUrl && LitCalMetadata.locales.includes(API.locale)}`);
-        console.log('If either of the first two conditions is false, or the third condition is true, then we procced to fetch events...');
+    // Only fetch events if we don't already have them, and (for the base URL) only for supported locales
+    const missingForLocale =
+        !EventsCollection.has(eventsUrlForCurrentCategory) ||
+        !EventsCollection.get(eventsUrlForCurrentCategory).has(API.locale);
+    const localeAvailableForBase =
+        eventsUrlForCurrentCategory !== EventsUrl ||
+        LitCalMetadata.locales.includes(API.locale);
+
+    if (missingForLocale && localeAvailableForBase) {
+        console.log(`missingForLocale: ${missingForLocale}`);
+        console.log(`localeAvailableForBase: ${localeAvailableForBase}`);
+        console.log('Data is missing and locale is available, proceeding to fetch events...');
         if (false === EventsCollection.has(eventsUrlForCurrentCategory)) {
             EventsCollection.set(eventsUrlForCurrentCategory, new Map());
         }
