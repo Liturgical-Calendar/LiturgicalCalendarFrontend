@@ -390,36 +390,39 @@ test.describe('Diocesan Calendar Form', () => {
         }
         needsGitRestore = responseStatus === 201;
 
-        // Verify the HTTP method is PATCH (UPDATE)
-        expect(getMethod()).toBe('PATCH');
-        console.log(`HTTP method used: ${getMethod()}`);
+        // Wrap assertions in try/finally to ensure cleanup runs even if assertions fail
+        try {
+            // Verify the HTTP method is PATCH (UPDATE)
+            expect(getMethod()).toBe('PATCH');
+            console.log(`HTTP method used: ${getMethod()}`);
 
-        // Verify response status is 201
-        expect(responseStatus).toBe(201);
-        expect(responseBody).toHaveProperty('success');
-        console.log(`UPDATE (PATCH) response: ${responseStatus} - ${JSON.stringify(responseBody)}`);
+            // Verify response status is 201
+            expect(responseStatus).toBe(201);
+            expect(responseBody).toHaveProperty('success');
+            console.log(`UPDATE (PATCH) response: ${responseStatus} - ${JSON.stringify(responseBody)}`);
 
-        // Validate payload structure
-        const capturedPayload = getPayload();
-        expect(capturedPayload).not.toBeNull();
-        // Validate DiocesanCalendarPayload structure
-        expect(capturedPayload).toHaveProperty('litcal');
-        expect(capturedPayload).toHaveProperty('metadata');
+            // Validate payload structure
+            const capturedPayload = getPayload();
+            expect(capturedPayload).not.toBeNull();
+            // Validate DiocesanCalendarPayload structure
+            expect(capturedPayload).toHaveProperty('litcal');
+            expect(capturedPayload).toHaveProperty('metadata');
 
-        // Validate litcal is an array
-        expect(Array.isArray(capturedPayload.litcal)).toBe(true);
+            // Validate litcal is an array
+            expect(Array.isArray(capturedPayload.litcal)).toBe(true);
 
-        // Validate metadata structure
-        expect(capturedPayload.metadata).toHaveProperty('diocese_id');
-        expect(capturedPayload.metadata).toHaveProperty('diocese_name');
-        expect(capturedPayload.metadata).toHaveProperty('nation');
+            // Validate metadata structure
+            expect(capturedPayload.metadata).toHaveProperty('diocese_id');
+            expect(capturedPayload.metadata).toHaveProperty('diocese_name');
+            expect(capturedPayload.metadata).toHaveProperty('nation');
 
-        // Validate nation is a 2-letter ISO code
-        expect(capturedPayload.metadata.nation).toMatch(/^[A-Z]{2}$/);
-
-        // CLEANUP: Revert changes using git restore AND git clean in the API folder
-        if (needsGitRestore) {
-            await gitRestoreApiData();
+            // Validate nation is a 2-letter ISO code
+            expect(capturedPayload.metadata.nation).toMatch(/^[A-Z]{2}$/);
+        } finally {
+            // CLEANUP: Revert changes using git restore AND git clean in the API folder
+            if (needsGitRestore) {
+                await gitRestoreApiData();
+            }
         }
     });
 });

@@ -104,64 +104,67 @@ test.describe('National Calendar Form', () => {
             console.log('No PUT/PATCH response received:', e);
         }
 
-        // Verify the HTTP method is PATCH (UPDATE)
-        expect(getMethod()).toBe('PATCH');
-        console.log(`HTTP method used: ${getMethod()}`);
+        // Wrap assertions in try/finally to ensure cleanup runs even if assertions fail
+        try {
+            // Verify the HTTP method is PATCH (UPDATE)
+            expect(getMethod()).toBe('PATCH');
+            console.log(`HTTP method used: ${getMethod()}`);
 
-        // Verify response status is 201
-        expect(responseStatus).toBe(201);
-        expect(responseBody).toHaveProperty('success');
-        console.log(`UPDATE (PATCH) response: ${responseStatus} - ${JSON.stringify(responseBody)}`);
+            // Verify response status is 201
+            expect(responseStatus).toBe(201);
+            expect(responseBody).toHaveProperty('success');
+            console.log(`UPDATE (PATCH) response: ${responseStatus} - ${JSON.stringify(responseBody)}`);
 
-        // Validate payload structure
-        const capturedPayload = getPayload();
-        expect(capturedPayload).not.toBeNull();
-        // Validate NationalCalendarPayload structure
-        expect(capturedPayload).toHaveProperty('litcal');
-        expect(capturedPayload).toHaveProperty('settings');
-        expect(capturedPayload).toHaveProperty('metadata');
-        expect(capturedPayload).toHaveProperty('i18n');
+            // Validate payload structure
+            const capturedPayload = getPayload();
+            expect(capturedPayload).not.toBeNull();
+            // Validate NationalCalendarPayload structure
+            expect(capturedPayload).toHaveProperty('litcal');
+            expect(capturedPayload).toHaveProperty('settings');
+            expect(capturedPayload).toHaveProperty('metadata');
+            expect(capturedPayload).toHaveProperty('i18n');
 
-        // Validate litcal is an array
-        expect(Array.isArray(capturedPayload.litcal)).toBe(true);
+            // Validate litcal is an array
+            expect(Array.isArray(capturedPayload.litcal)).toBe(true);
 
-        // Validate settings structure
-        expect(capturedPayload.settings).toHaveProperty('epiphany');
-        expect(capturedPayload.settings).toHaveProperty('ascension');
-        expect(capturedPayload.settings).toHaveProperty('corpus_christi');
+            // Validate settings structure
+            expect(capturedPayload.settings).toHaveProperty('epiphany');
+            expect(capturedPayload.settings).toHaveProperty('ascension');
+            expect(capturedPayload.settings).toHaveProperty('corpus_christi');
 
-        // Validate settings values
-        expect(['JAN6', 'SUNDAY_JAN2_JAN8']).toContain(capturedPayload.settings.epiphany);
-        expect(['THURSDAY', 'SUNDAY']).toContain(capturedPayload.settings.ascension);
-        expect(['THURSDAY', 'SUNDAY']).toContain(capturedPayload.settings.corpus_christi);
+            // Validate settings values
+            expect(['JAN6', 'SUNDAY_JAN2_JAN8']).toContain(capturedPayload.settings.epiphany);
+            expect(['THURSDAY', 'SUNDAY']).toContain(capturedPayload.settings.ascension);
+            expect(['THURSDAY', 'SUNDAY']).toContain(capturedPayload.settings.corpus_christi);
 
-        // Validate metadata structure
-        expect(capturedPayload.metadata).toHaveProperty('nation');
-        expect(capturedPayload.metadata).toHaveProperty('locales');
-        expect(capturedPayload.metadata).toHaveProperty('wider_region');
-        expect(capturedPayload.metadata).toHaveProperty('missals');
+            // Validate metadata structure
+            expect(capturedPayload.metadata).toHaveProperty('nation');
+            expect(capturedPayload.metadata).toHaveProperty('locales');
+            expect(capturedPayload.metadata).toHaveProperty('wider_region');
+            expect(capturedPayload.metadata).toHaveProperty('missals');
 
-        // Validate nation is a 2-letter ISO code
-        expect(capturedPayload.metadata.nation).toMatch(/^[A-Z]{2}$/);
+            // Validate nation is a 2-letter ISO code
+            expect(capturedPayload.metadata.nation).toMatch(/^[A-Z]{2}$/);
 
-        // Validate locales is a non-empty array
-        expect(Array.isArray(capturedPayload.metadata.locales)).toBe(true);
-        expect(capturedPayload.metadata.locales.length).toBeGreaterThan(0);
+            // Validate locales is a non-empty array
+            expect(Array.isArray(capturedPayload.metadata.locales)).toBe(true);
+            expect(capturedPayload.metadata.locales.length).toBeGreaterThan(0);
 
-        // Validate wider_region is one of the allowed values
-        expect(VALID_WIDER_REGIONS).toContain(capturedPayload.metadata.wider_region);
+            // Validate wider_region is one of the allowed values
+            expect(VALID_WIDER_REGIONS).toContain(capturedPayload.metadata.wider_region);
 
-        // Validate missals is an array
-        expect(Array.isArray(capturedPayload.metadata.missals)).toBe(true);
+            // Validate missals is an array
+            expect(Array.isArray(capturedPayload.metadata.missals)).toBe(true);
 
-        // Validate i18n has keys matching locales
-        const i18nKeys = Object.keys(capturedPayload.i18n).sort();
-        const localesSorted = [...capturedPayload.metadata.locales].sort();
-        expect(i18nKeys).toEqual(localesSorted);
-
-        // CLEANUP: Revert changes using git restore AND git clean in the API folder
-        if (needsGitRestore) {
-            await gitRestoreApiData();
+            // Validate i18n has keys matching locales
+            const i18nKeys = Object.keys(capturedPayload.i18n).sort();
+            const localesSorted = [...capturedPayload.metadata.locales].sort();
+            expect(i18nKeys).toEqual(localesSorted);
+        } finally {
+            // CLEANUP: Revert changes using git restore AND git clean in the API folder
+            if (needsGitRestore) {
+                await gitRestoreApiData();
+            }
         }
     });
 

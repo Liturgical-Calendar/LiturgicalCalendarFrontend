@@ -124,52 +124,55 @@ test.describe('Wider Region Calendar Form', () => {
         }
         needsGitRestore = responseStatus === 201;
 
-        // Verify the HTTP method is PATCH (UPDATE)
-        expect(getMethod()).toBe('PATCH');
-        console.log(`HTTP method used: ${getMethod()}`);
+        // Wrap assertions in try/finally to ensure cleanup runs even if assertions fail
+        try {
+            // Verify the HTTP method is PATCH (UPDATE)
+            expect(getMethod()).toBe('PATCH');
+            console.log(`HTTP method used: ${getMethod()}`);
 
-        // Verify response status is 201
-        expect(responseStatus).toBe(201);
-        expect(responseBody).toHaveProperty('success');
-        console.log(`UPDATE (PATCH) response: ${responseStatus} - ${JSON.stringify(responseBody)}`);
+            // Verify response status is 201
+            expect(responseStatus).toBe(201);
+            expect(responseBody).toHaveProperty('success');
+            console.log(`UPDATE (PATCH) response: ${responseStatus} - ${JSON.stringify(responseBody)}`);
 
-        // Validate payload structure
-        const capturedPayload = getPayload();
-        expect(capturedPayload).not.toBeNull();
-        // Validate WiderRegionPayload structure
-        expect(capturedPayload).toHaveProperty('litcal');
-        expect(capturedPayload).toHaveProperty('national_calendars');
-        expect(capturedPayload).toHaveProperty('metadata');
-        expect(capturedPayload).toHaveProperty('i18n');
+            // Validate payload structure
+            const capturedPayload = getPayload();
+            expect(capturedPayload).not.toBeNull();
+            // Validate WiderRegionPayload structure
+            expect(capturedPayload).toHaveProperty('litcal');
+            expect(capturedPayload).toHaveProperty('national_calendars');
+            expect(capturedPayload).toHaveProperty('metadata');
+            expect(capturedPayload).toHaveProperty('i18n');
 
-        // Validate litcal is an array
-        expect(Array.isArray(capturedPayload.litcal)).toBe(true);
+            // Validate litcal is an array
+            expect(Array.isArray(capturedPayload.litcal)).toBe(true);
 
-        // Validate national_calendars is an object
-        expect(typeof capturedPayload.national_calendars).toBe('object');
+            // Validate national_calendars is an object
+            expect(typeof capturedPayload.national_calendars).toBe('object');
 
-        // Validate metadata structure
-        expect(capturedPayload.metadata).toHaveProperty('locales');
-        expect(capturedPayload.metadata).toHaveProperty('wider_region');
+            // Validate metadata structure
+            expect(capturedPayload.metadata).toHaveProperty('locales');
+            expect(capturedPayload.metadata).toHaveProperty('wider_region');
 
-        // Validate locales is a non-empty array
-        expect(Array.isArray(capturedPayload.metadata.locales)).toBe(true);
-        expect(capturedPayload.metadata.locales.length).toBeGreaterThan(0);
+            // Validate locales is a non-empty array
+            expect(Array.isArray(capturedPayload.metadata.locales)).toBe(true);
+            expect(capturedPayload.metadata.locales.length).toBeGreaterThan(0);
 
-        // Validate wider_region is a string
-        expect(typeof capturedPayload.metadata.wider_region).toBe('string');
+            // Validate wider_region is a string
+            expect(typeof capturedPayload.metadata.wider_region).toBe('string');
 
-        // Validate i18n is an object
-        expect(typeof capturedPayload.i18n).toBe('object');
+            // Validate i18n is an object
+            expect(typeof capturedPayload.i18n).toBe('object');
 
-        // Validate i18n has keys matching locales
-        const i18nKeys = Object.keys(capturedPayload.i18n).sort();
-        const localesSorted = [...capturedPayload.metadata.locales].sort();
-        expect(i18nKeys).toEqual(localesSorted);
-
-        // CLEANUP: Revert changes using git restore AND git clean in the API folder
-        if (needsGitRestore) {
-            await gitRestoreApiData();
+            // Validate i18n has keys matching locales
+            const i18nKeys = Object.keys(capturedPayload.i18n).sort();
+            const localesSorted = [...capturedPayload.metadata.locales].sort();
+            expect(i18nKeys).toEqual(localesSorted);
+        } finally {
+            // CLEANUP: Revert changes using git restore AND git clean in the API folder
+            if (needsGitRestore) {
+                await gitRestoreApiData();
+            }
         }
     });
 
