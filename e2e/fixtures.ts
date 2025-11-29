@@ -242,10 +242,12 @@ export class ExtendingPageHelper {
         getMethod: () => string | null;
         getAllRequests: () => CapturedRequest[];
         getRequestByUrl: (urlMatch: string | RegExp) => CapturedRequest | undefined;
+        unroute: () => Promise<void>;
     }> {
         const capturedRequests: CapturedRequest[] = [];
+        const pattern = '**/data/**';
 
-        await this.page.route('**/data/**', async (route, request) => {
+        const handler = async (route: import('@playwright/test').Route, request: import('@playwright/test').Request) => {
             if (['PUT', 'PATCH'].includes(request.method())) {
                 const url = request.url();
 
@@ -279,7 +281,8 @@ export class ExtendingPageHelper {
                 });
             }
             await route.continue();
-        });
+        };
+        await this.page.route(pattern, handler);
 
         return {
             // Backward compatible: get last captured payload/method
@@ -294,7 +297,9 @@ export class ExtendingPageHelper {
             // New: find specific request by URL
             getRequestByUrl: (urlMatch: string | RegExp) => capturedRequests.find(r =>
                 typeof urlMatch === 'string' ? r.url.includes(urlMatch) : urlMatch.test(r.url)
-            )
+            ),
+            // Cleanup: remove the route handler
+            unroute: () => this.page.unroute(pattern, handler)
         };
     }
 
