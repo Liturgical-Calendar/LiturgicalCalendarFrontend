@@ -428,14 +428,8 @@ test.describe('National Calendar Form', () => {
                 corpusChristiEl.dispatchEvent(new Event('change', { bubbles: true }));
             }
 
-            // Enable save button
-            const saveBtn = document.querySelector('.serializeRegionalNationalData') as HTMLButtonElement;
-            if (saveBtn) {
-                saveBtn.disabled = false;
-            }
-
-            // Get values BEFORE clicking (for logging)
-            const values = {
+            // Get values for logging (don't force enable or click here)
+            return {
                 widerRegion: widerRegionInput?.value || '',
                 selectedLocales: selectedLocales,
                 currentLocale: currentLocaleSelect?.value || '',
@@ -443,14 +437,14 @@ test.describe('National Calendar Form', () => {
                 ascension: ascensionEl?.value || '',
                 corpusChristi: corpusChristiEl?.value || ''
             };
-
-            // Click the save button immediately - synchronously in the same JS execution
-            if (saveBtn) {
-                saveBtn.click();
-            }
-
-            return values;
         });
+
+        // Wait for save button to be enabled by frontend validation
+        const saveButton = page.locator('.serializeRegionalNationalData');
+        await expect(saveButton).toBeEnabled({ timeout: 10000 });
+
+        // Click save button
+        await saveButton.click();
 
         console.log(`Form values set and save clicked: ${JSON.stringify(formValuesSet)}`);
 
