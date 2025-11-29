@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-27 03:29+0000\n"
-"PO-Revision-Date: 2025-11-25 07:36+0000\n"
+"POT-Creation-Date: 2025-11-29 04:08+0000\n"
+"PO-Revision-Date: 2025-11-29 04:20+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -582,7 +582,7 @@ msgstr ""
 msgid "Event key"
 msgstr "Evenementsleutel"
 
-#: extending.php:126 admin.php:63 src/Utilities.php:236 src/FormControls.php:53
+#: extending.php:126 admin.php:63 src/Utilities.php:240 src/FormControls.php:53
 msgid "Name"
 msgstr "Naam"
 
@@ -1220,7 +1220,7 @@ msgstr ""
 "Momenteel zijn deze eindpunten alleen-lezen. Er zijn momenteel <b>%1$d "
 "decreten</b> gedefinieerd op het eindpunt %2$s."
 
-#: decrees.php:141
+#: decrees.php:154
 msgid "Read the Decree"
 msgstr "Lees het Decreet"
 
@@ -1467,7 +1467,7 @@ msgid "celebration with precedence over solemnities"
 msgstr "viering met voorrang op hoogfeesten"
 
 #. translators: 1. BibleGet github url 2. Liturgical Calendar github url
-#: src/Utilities.php:115
+#: src/Utilities.php:117
 #, php-format
 msgid ""
 "Priest in the Diocese of Rome, author of the <a href=\"%1$s\" "
@@ -1478,7 +1478,7 @@ msgstr ""
 "target=\"_blank\">BibleGet-project</a> en van het <a href=\"%2$s\" "
 "target=\"_blank\">Liturgische Kalender-project</a>"
 
-#: src/Utilities.php:124
+#: src/Utilities.php:126
 msgid ""
 "Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, "
 "Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
@@ -1490,7 +1490,7 @@ msgstr ""
 "Isidore Guild voor katholieke IT-professionals, heeft bijgedragen aan de "
 "bootstrap-thema's van de projectwebsite"
 
-#: src/Utilities.php:130
+#: src/Utilities.php:132
 msgid ""
 "Full stack web developer, contributed to the generation of the Open API "
 "documentation"
@@ -1498,7 +1498,7 @@ msgstr ""
 "Full stack webontwikkelaar, heeft bijgedragen aan de totstandkoming van de "
 "Open API-documentatie"
 
-#: src/Utilities.php:136
+#: src/Utilities.php:138
 msgid ""
 "Latin Liturgy Association of the Netherlands, contributed the national "
 "calendar for the Netherlands to this project with all related translations"
@@ -1506,7 +1506,7 @@ msgstr ""
 "Latijnse Liturgie Vereniging van Nederland, droeg de nationale kalender voor "
 "Nederland bij aan dit project met alle bijbehorende vertalingen"
 
-#: src/Utilities.php:142
+#: src/Utilities.php:144
 msgid ""
 "Senior software engineer at Strava, author of the ConfessIt app, contributed "
 "to the structuring of the JSON responses of the Liturgical Calendar API"
@@ -1514,7 +1514,7 @@ msgstr ""
 "Senior software engineer bij Strava, auteur van de ConfessIt-app, droeg bij "
 "aan de structuur van de JSON-antwoorden van de Liturgische Kalender API"
 
-#: src/Utilities.php:148
+#: src/Utilities.php:150
 msgid ""
 "Software Engineer and contributor to Salt + Light Television, contributed "
 "information about the dioceses of Latin rite"
@@ -1522,7 +1522,7 @@ msgstr ""
 "Software Engineer en medewerker van Salt + Light Television, leverde "
 "informatie over de bisdommen van de Latijnse ritus"
 
-#: src/Utilities.php:154
+#: src/Utilities.php:156
 msgid ""
 "Chancellor of the Diocese of Charlottetown, contributed liturgical calendar "
 "data for Canada in both English and French"
@@ -1530,30 +1530,30 @@ msgstr ""
 "Kanselier van het bisdom Charlottetown, droeg bij aan liturgische "
 "kalendergegevens voor Canada in zowel het Engels als het Frans"
 
-#: src/Utilities.php:222
+#: src/Utilities.php:226
 msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
 msgstr ""
 "Dit liturgisch evenement lijkt niet te bestaan. Kies een waarde uit de lijst."
 
-#: src/Utilities.php:223
+#: src/Utilities.php:227
 msgid "This liturgical event does not exist, so it will be created."
 msgstr "Dit liturgisch evenement bestaat niet, het zal worden aangemaakt."
 
-#: src/Utilities.php:228
+#: src/Utilities.php:232
 msgid "Choose from existing liturgical events"
 msgstr "Kies uit bestaande liturgische evenementen"
 
-#: src/Utilities.php:228
+#: src/Utilities.php:232
 msgid "Choose from existing liturgical events (or create a new one)"
 msgstr "Kies uit bestaande liturgische evenementen (of maak een nieuwe aan)"
 
-#: src/Utilities.php:234
+#: src/Utilities.php:238
 msgid "Property to change"
 msgstr "Eigenschap wijzigen"
 
-#: src/Utilities.php:237 src/FormControls.php:171
+#: src/Utilities.php:241 src/FormControls.php:171
 msgid "Grade"
 msgstr "Graad"
 
@@ -1635,6 +1635,8 @@ msgstr "Wachtwoord verbergen"
 msgid ""
 "Your session will expire in less than %d minute(s). Please save your work."
 msgstr ""
+"Je sessie verloopt over minder dan %d minuut/minuten. Sla je werk op, "
+"alsjeblieft."
 
 #: includes/login-modal.php:129
 msgid "Session Expiring"
