@@ -385,6 +385,7 @@ test.describe('Wider Region Calendar Form', () => {
             };
         });
         console.log(`CreateNew row fields filled: ${JSON.stringify(rowFieldsResult)}`);
+        expect(rowFieldsResult.success, 'Failed to fill createNew row fields').toBe(true);
 
         // Select "Martyrs" from the Common bootstrap-multiselect (not "Proper" which triggers readings addition)
         // The multiselect is within the createNew row - find the btn-group that follows the hidden select
@@ -421,6 +422,8 @@ test.describe('Wider Region Calendar Form', () => {
             return { found: false, reason: 'no Martyrs checkbox', availableValues: values };
         });
         console.log(`Common "Martyrs" selection: ${JSON.stringify(commonSelection)}`);
+        // Assert common selection worked (Martyrs checkbox should be found in the multiselect)
+        expect(commonSelection.found, `Common selection failed: ${JSON.stringify(commonSelection)}`).toBe(true);
 
         // Close the dropdown
         await page.keyboard.press('Escape');
@@ -459,6 +462,7 @@ test.describe('Wider Region Calendar Form', () => {
             };
         });
         console.log(`Decree fields filled: ${JSON.stringify(decreeFieldsResult)}`);
+        expect(decreeFieldsResult.success, 'Failed to fill decree fields').toBe(true);
 
         // Dismiss any toast messages that may have appeared
         await page.evaluate(() => {
@@ -516,6 +520,7 @@ test.describe('Wider Region Calendar Form', () => {
             };
         });
         console.log(`All locale name fields filled: ${JSON.stringify(nameFieldsResult)}`);
+        expect(nameFieldsResult.success, 'Failed to fill locale name fields').toBe(true);
 
         // Wait for save button to be ready
         await expect(page.locator('#serializeWiderRegionData')).toBeEnabled({ timeout: 10000 });
@@ -621,6 +626,13 @@ test.describe('Wider Region Calendar Form', () => {
 
         console.log(`Original payload i18n keys: [${originalI18nKeys.join(', ')}]`);
         console.log(`Metadata locales: [${metadataLocales.join(', ')}]`);
+
+        // Validate i18n keys match metadata.locales (same assertion as UPDATE test)
+        if (hasI18n) {
+            const i18nKeysSorted = [...originalI18nKeys].sort();
+            const localesSorted = [...metadataLocales].sort();
+            expect(i18nKeysSorted).toEqual(localesSorted);
+        }
 
         // Store the region key for cleanup
         if (!createdRegionKey && capturedPayload.metadata?.wider_region) {
