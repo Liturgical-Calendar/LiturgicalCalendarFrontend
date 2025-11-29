@@ -544,10 +544,11 @@ test.describe('Wider Region Calendar Form', () => {
             const toastContainer = document.querySelector('#toast-container');
             if (toastContainer) toastContainer.remove();
 
-            // Re-enable save button if it got disabled
             const saveBtn = document.querySelector('#serializeWiderRegionData') as HTMLButtonElement;
             if (saveBtn) {
-                saveBtn.disabled = false;
+                if (saveBtn.disabled) {
+                    console.warn('Save button was unexpectedly disabled - form may not be ready');
+                }
                 saveBtn.click();
             }
         });
