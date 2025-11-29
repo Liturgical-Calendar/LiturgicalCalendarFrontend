@@ -9,7 +9,7 @@ foreach ($langsAvailable as $lang) {
 }
 asort($langsAssoc);
 ?>
-<!-- Topbar --><!-- Current page: <?php echo $currentPage; ?> -->
+<!-- Topbar -->
 <nav class="sb-topnav navbar navbar-expand navbar-light bg-white shadow">
     <!-- Navbar Brand -->
     <a class="navbar-brand ps-3" href="/">Navbar</a>

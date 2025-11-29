@@ -63,6 +63,9 @@ class CurrentEndpoint {
 const updateSubscriptionURL = () => {
     const calendarSelect = document.getElementById('calendarSelect');
     const calSubscriptionUrl = document.getElementById('calSubscriptionUrl');
+    if (!calendarSelect || !calSubscriptionUrl) {
+        return;
+    }
     CurrentEndpoint.calendarId = calendarSelect.value;
     const selectedOption = calendarSelect.options[calendarSelect.selectedIndex];
     switch (selectedOption?.dataset.calendartype) {
@@ -112,8 +115,9 @@ const updateNavHighlight = (sectionId, isActive) => {
     });
 
     // Add text-white to matching nav link if section is active
+    // Using $= (ends with) selector for exact hash matching at end of href
     if (isActive) {
-        document.querySelectorAll(`a.nav-link[href*="${hash}"] i, a.nav-link[href*="${hash}"] span`).forEach(el => {
+        document.querySelectorAll(`a.nav-link[href$="${hash}"] i, a.nav-link[href$="${hash}"] span`).forEach(el => {
             el.classList.add('text-white');
         });
     }
@@ -124,7 +128,7 @@ const updateNavHighlight = (sectionId, isActive) => {
  */
 const handleHashChange = () => {
     if (location.hash) {
-        console.log(location.hash);
+        //console.log(location.hash);
         const collapseEl = document.querySelector(location.hash + '.collapse');
         if (collapseEl) {
             // Use getOrCreateInstance to avoid conflicts with Bootstrap's native handling
