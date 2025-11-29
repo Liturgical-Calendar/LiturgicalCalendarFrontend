@@ -620,16 +620,25 @@ const domContentLoadedCallback = () => {
         },
         maxHeight: 200,
         enableCaseInsensitiveFiltering: true,
+        /**
+         * Called when the user selects a new option in the multiselect element.
+         *
+         * @param {object} option - the selected option element (as a jQuery element)
+         * @param {boolean} checked - whether the option is checked or not
+         */
         onChange: (option, checked) => {
-            if (false === checked && document.querySelector('.currentLocalizationChoices').value === option[0].value) {
+            /** @var {HTMLOptionElement} optionElement */
+            const optionElement = option[0];
+            if (false === checked && document.querySelector('.currentLocalizationChoices').value === optionElement.value) {
                 alert('You cannot remove the current localization. In order to remove this locale, you must first switch to a different current localization.');
-                $(option).prop('selected', !checked);
+                option.prop('selected', !checked);
                 $('.calendarLocales').multiselect('refresh');
                 return;
             }
-            console.log('option:', option, 'checked:', checked);
-            const selectEl = option[0].parentElement;
-            selectEl.dispatchEvent(new CustomEvent('change', {
+            /** @var {HTMLSelectElement} selectElement */
+            const selectElement = optionElement.closest('select');
+            console.log('optionElement:', optionElement, 'checked:', checked, 'selectEl:', selectElement);
+            selectElement.dispatchEvent(new CustomEvent('change', {
                 bubbles: true,
                 cancelable: true
               }));
@@ -1681,30 +1690,35 @@ const emptyStringPercentage = (translations) => {
  */
 const fetchEventsAndCalendarData = () => {
     document.querySelector('#overlay').classList.remove('hidden');
-    const headers = {
+    const headers = new Headers({
         'Accept': 'application/json'
-    };
+    });
 
     if ( API.category === 'nation' ) {
         const selectedNationalCalendar = LitCalMetadata.national_calendars.filter(item => item.calendar_id === API.key);
         if (selectedNationalCalendar.length > 0) {
             const currentSelectedLocale = document.querySelector('.currentLocalizationChoices').value;
             API.locale = selectedNationalCalendar[0].locales.includes(currentSelectedLocale) ? currentSelectedLocale : selectedNationalCalendar[0].locales[0];
-            headers['Accept-Language'] = API.locale.replaceAll('_', '-');
+            headers.append('Accept-Language', API.locale.replaceAll('_', '-'));
         } else {
             // The selected national calendar does not exist
             // Filter possible locales by nation
             console.log(`API.path is ${API.path} (category is ${API.category} and key is ${API.key}).`);
             API.locale = likelyLanguage(API.key);
             console.log(`likelyLanguage = ${API.locale} (nation is ${API.key})`);
-            headers['Accept-Language'] = API.locale;
+            headers.append('Accept-Language', API.locale);
         }
     } else {
-        headers['Accept-Language'] = API.locale.replaceAll('_', '-');
+        if (API.locale !== '') {
+            headers.append('Accept-Language', API.locale.replaceAll('_', '-'));
+        }
     }
     console.log(`API.path is ${API.path} (category is ${API.category} and key is ${API.key}). Locale set to ${API.locale === '' ? ' (empty string)' : API.locale}. Now checking if a calendar already exists...`);
 
-    const eventsUrlForCurrentCategory = API.category === 'widerregion' || (API.category === 'nation' && false === LitCalMetadata.national_calendars_keys.includes(API.key))
+    const eventsUrlForCurrentCategory = (
+        API.category === 'widerregion'
+        || (API.category === 'nation' && false === LitCalMetadata.national_calendars_keys.includes(API.key))
+    )
         ? `${EventsUrl}`
         : `${EventsUrl}/${API.category}/${API.key}`;
 
