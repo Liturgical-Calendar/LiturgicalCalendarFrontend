@@ -153,6 +153,23 @@ export class ExtendingPageHelper {
     }
 
     /**
+     * Get nation codes that have existing diocesan calendars.
+     * @returns Array of unique 2-letter ISO nation codes with existing diocesan data
+     */
+    async getNationsWithExistingDiocesanCalendars(): Promise<string[]> {
+        const apiBaseUrl = await this.getApiBaseUrl();
+        const response = await this.page.request.get(`${apiBaseUrl}/calendars`);
+        const data = await response.json();
+
+        const diocesanCalendars: Array<{ calendar_id: string; nation: string }> =
+            data.litcal_metadata?.diocesan_calendars || [];
+
+        // Extract unique nation codes
+        const nations = [...new Set(diocesanCalendars.map(d => d.nation))];
+        return nations;
+    }
+
+    /**
      * Wait for API response after form submission
      */
     async waitForApiResponse(urlPattern: RegExp | string, timeout = 30000) {

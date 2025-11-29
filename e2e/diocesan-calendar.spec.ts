@@ -316,17 +316,29 @@ test.describe('Diocesan Calendar Form', () => {
         let responseBody: any = null;
 
         // Load an existing diocesan calendar (UPDATE scenario - should use PATCH)
-        // First select USA as the national calendar (if available)
-        const nationalSelect = page.locator('#diocesanCalendarNationalDependency');
+        // Dynamically discover a nation with existing diocesan calendars
+        const nationsWithDioceses = await extendingPage.getNationsWithExistingDiocesanCalendars();
 
-        // Check if 'US' option exists before selecting
-        const usOptionExists = await nationalSelect.locator('option[value="US"]').count() > 0;
-        if (!usOptionExists) {
-            test.skip(true, 'US national calendar option not available');
+        if (nationsWithDioceses.length === 0) {
+            test.skip(true, 'No nations with existing diocesan calendars found');
             return;
         }
 
-        await nationalSelect.selectOption('US');
+        // Pick a random nation for better coverage across test runs
+        const randomIndex = Math.floor(Math.random() * nationsWithDioceses.length);
+        const selectedNation = nationsWithDioceses[randomIndex];
+
+        const nationalSelect = page.locator('#diocesanCalendarNationalDependency');
+
+        // Check if the selected nation option exists in the dropdown
+        const nationOptionExists = await nationalSelect.locator(`option[value="${selectedNation}"]`).count() > 0;
+        if (!nationOptionExists) {
+            test.skip(true, `Nation "${selectedNation}" not available in dropdown`);
+            return;
+        }
+
+        console.log(`Selected nation for UPDATE test: ${selectedNation} (from ${nationsWithDioceses.length} available)`);
+        await nationalSelect.selectOption(selectedNation);
 
         // Wait for the dioceses datalist to be populated
         await page.waitForFunction(() => {
@@ -344,14 +356,14 @@ test.describe('Diocesan Calendar Form', () => {
             }));
         });
 
-        // Get existing US diocesan calendar IDs using the shared helper
-        const existingDioceseIds = await extendingPage.getExistingDiocesanCalendarIds('US');
+        // Get existing diocesan calendar IDs for the selected nation
+        const existingDioceseIds = await extendingPage.getExistingDiocesanCalendarIds(selectedNation);
 
         // Find a diocese that exists in the datalist AND has existing calendar data
         const dioceseToUpdate = availableDioceses.find(d => existingDioceseIds.includes(d.key));
 
         if (!dioceseToUpdate) {
-            test.skip(true, `No US dioceses with existing calendar data found`);
+            test.skip(true, `No ${selectedNation} dioceses with existing calendar data found`);
             return;
         }
 
@@ -364,7 +376,6 @@ test.describe('Diocesan Calendar Form', () => {
         await dioceseInput.evaluate(el => el.dispatchEvent(new Event('change', { bubbles: true })));
 
         // Wait for the diocese data to be fully loaded by checking for populated form fields
-        // The Boston diocese has "Dedication of the Cathedral of the Holy Cross" as a feast
         await page.waitForFunction(() => {
             // Check for any litEventName input that has content (indicating data was loaded)
             const inputs = document.querySelectorAll('input.litEventName');
