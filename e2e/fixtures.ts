@@ -1,6 +1,7 @@
 import { test as base, expect, Page } from '@playwright/test';
 import { exec } from 'child_process';
 import * as path from 'path';
+import * as fs from 'fs';
 
 /**
  * Test fixtures for LiturgicalCalendar extending.php form tests.
@@ -11,10 +12,21 @@ import * as path from 'path';
  * Restore and clean API sourcedata directory using git.
  * This reverts modified tracked files and removes untracked files/directories.
  * Used for cleanup after CREATE tests that modify API data.
- * @throws Error if git restore/clean fails
+ * @throws Error if path is invalid, not a git repo, or git restore/clean fails
  */
 export async function gitRestoreApiData(): Promise<void> {
     const apiPath = process.env.API_REPO_PATH || path.resolve(__dirname, '../../LiturgicalCalendarAPI');
+
+    // Safety check: verify path exists and is a git repository
+    // This prevents accidental cleanup if API_REPO_PATH is misconfigured
+    if (!fs.existsSync(apiPath)) {
+        throw new Error(`CLEANUP FAILED: API path "${apiPath}" does not exist. Check API_REPO_PATH environment variable.`);
+    }
+    const gitDir = path.join(apiPath, '.git');
+    if (!fs.existsSync(gitDir)) {
+        throw new Error(`CLEANUP FAILED: "${apiPath}" is not a git repository (no .git directory). Check API_REPO_PATH environment variable.`);
+    }
+
     const error = await new Promise<string | null>((resolve) => {
         exec(`git -C "${apiPath}" restore jsondata/sourcedata/ && git -C "${apiPath}" clean -fd jsondata/sourcedata/`, (err: any) => {
             resolve(err?.message || null);
