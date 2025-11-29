@@ -588,7 +588,7 @@ class FormControls {
         colorSelect.className = 'form-select litEvent litEventColor';
         colorSelect.id = `onTheFly${FormControls.uniqid}Color`;
         colorSelect.multiple = 'multiple';
-        colorSelect.readOnly = FormControls.settings.colorField === false;
+        colorSelect.disabled = FormControls.settings.colorField === false;
 
         const whiteOption = document.createElement('option');
         whiteOption.value = 'white';
@@ -664,7 +664,7 @@ class FormControls {
             const monthSelect = document.createElement('select');
             monthSelect.className = 'form-select litEvent litEventMonth';
             monthSelect.id = `onTheFly${FormControls.uniqid}Month`;
-            monthSelect.readOnly = FormControls.settings.monthField === false;
+            monthSelect.disabled = FormControls.settings.monthField === false;
 
             const formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
             for (let i = 0; i < 12; i++) {
@@ -965,7 +965,7 @@ class FormControls {
             : [];
         formRow += `<div class="form-group col-sm-2">
         <label for="onTheFly${FormControls.uniqid}Color">${Messages[ "Liturgical color" ]}</label>
-        <select class="form-select litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple"${FormControls.settings.colorField === false ? ' readonly' : ''} />
+        <select class="form-select litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple"${FormControls.settings.colorField === false ? ' disabled' : ''} />
         <option value="white"${selectedColors.includes("white") ? ' selected' : '' }>${Messages[ "white" ].toUpperCase()}</option>
         <option value="red"${selectedColors.includes("red") ? ' selected' : '' }>${Messages[ "red" ].toUpperCase()}</option>
         <option value="purple"${selectedColors.includes("purple") ? ' selected' : '' }>${Messages[ "purple" ].toUpperCase()}</option>
@@ -996,7 +996,7 @@ class FormControls {
 
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}Month">${Messages[ "Month" ]}</label>
-            <select class="form-select litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month"${FormControls.settings.monthField === false ?  'readonly' : '' } >`;
+            <select class="form-select litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month"${FormControls.settings.monthField === false ? ' disabled' : '' } >`;
 
             let formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
             for (let i = 0; i < 12; i++) {
