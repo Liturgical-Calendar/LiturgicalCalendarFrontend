@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-29 04:08+0000\n"
-"PO-Revision-Date: 2025-11-25 10:01+0000\n"
+"PO-Revision-Date: 2025-11-29 04:21+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hu/>\n"
@@ -1613,7 +1613,7 @@ msgstr "Jelszó elrejtése"
 #, php-format
 msgid ""
 "Your session will expire in less than %d minute(s). Please save your work."
-msgstr ""
+msgstr "A munkamenet %d perc múlva lejár. Kérjük, mentse a munkáját."
 
 #: includes/login-modal.php:129
 msgid "Session Expiring"
