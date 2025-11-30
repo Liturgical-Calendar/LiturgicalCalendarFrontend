@@ -32,10 +32,10 @@ if (!Utilities::authenticated(AUTH_USERS)) {
 $FormControls = new FormControls($i18n);
 
 $messages = array_merge($messages, [
-    'commonsTemplate'               => $FormControls->getCommonsTemplate(),
-    'gradeTemplate'                 => $FormControls->getGradeTemplate(),
-    'LOCALE'                        => $i18n->LOCALE,
-    'LOCALE_WITH_REGION'            => $i18n->LOCALE_WITH_REGION,
+    'commonsTemplate'    => $FormControls->getCommonsTemplate(),
+    'gradeTemplate'      => $FormControls->getGradeTemplate(),
+    'LOCALE'             => $i18n->LOCALE,
+    'LOCALE_WITH_REGION' => $i18n->LOCALE_WITH_REGION,
     //'AvailableLocales'              => $SystemLocalesWithoutRegion,
     //'AvailableLocalesWithRegion'    => $SystemLocalesWithRegion,
     //'CountriesWithCatholicDioceses' => $CountriesWithCatholicDioceses,

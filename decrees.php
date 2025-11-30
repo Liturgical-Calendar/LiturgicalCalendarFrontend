@@ -1,6 +1,7 @@
 <?php
 include_once 'includes/common.php'; // provides $i18n and all API URLs
 include_once 'includes/messages.php'; // centralized translation strings
+include_once 'includes/functions.php'; // helper functions including messagesPlural()
 
 use LiturgicalCalendar\Frontend\ApiClient;
 
@@ -140,11 +141,11 @@ try {
                     . "<p class='card-text'>{$decreeDescription}<a href='{$decreeUrl}' class='ms-2' target='_blank'>" . $messages['ReadDecreeLink'] . '</a></p>'
                     . '<div class="row gx-2 align-items-baseline">'
                     . '<div class="form-group col-sm-4">'
-                    . "<label for='event_key_{$decreeID}' class='event_key'>" . $messages['EventKey'] . "</label>"
+                    . "<label for='event_key_{$decreeID}' class='event_key'>" . $messages['EventKey'] . '</label>'
                     . "<input type='text' class='form-control event_key' id='event_key_{$decreeID}' value='{$decreeLitEventKey}' list='existingLiturgicalEventsList' disabled>"
                     . '</div>'
                     . '<div class="form-group col-sm-2">'
-                    . "<label for='since_year_{$decreeID}' class='since_year'>" . $messages['To take effect in the year'] . "</label>"
+                    . "<label for='since_year_{$decreeID}' class='since_year'>" . $messages['To take effect in the year'] . '</label>'
                     . "<input type='number' class='form-control since_year' id='since_year_{$decreeID}' value='{$decree['metadata']['since_year']}' min='{$minYear}' disabled>"
                     . '</div>'
                     . '</div>'
