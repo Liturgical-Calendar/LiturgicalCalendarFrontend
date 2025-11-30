@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-30 10:05+0000\n"
-"PO-Revision-Date: 2025-11-29 05:10+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2025-12-01 10:45+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hu/>\n"
 "Language: hu\n"
@@ -243,29 +243,27 @@ msgstr "Siker"
 #. translators: notification title
 #: usage.php:13
 msgid "Error"
-msgstr ""
+msgstr "Hiba"
 
 #. translators: notification message
 #: usage.php:15
 msgid "Copy not supported"
-msgstr ""
+msgstr "Másolás nem támogatott"
 
 #. translators: notification message
 #: usage.php:17
 msgid "URL was copied to the clipboard"
-msgstr ""
+msgstr "URL másolva a vágólapra"
 
 #. translators: notification message
 #: usage.php:19
-#, fuzzy
-#| msgid "Click on the link above to copy it to the clipboard."
 msgid "Failed to copy URL to clipboard"
-msgstr "Kattints a fenti linkre, hogy másold a vágólapra."
+msgstr "URL vágólapra másolása sikertelen volt"
 
 #. translators: notification message
 #: usage.php:21
 msgid "Please select and copy manually"
-msgstr ""
+msgstr "Kérlek, válassz ki és másolj manuálisan"
 
 #. translators: part of page title - section showing usage examples
 #: usage.php:31
@@ -350,10 +348,8 @@ msgstr "Naptár-előfizetés URL"
 
 #. translators: tooltip for clickable URL - instructs user to click to copy
 #: usage.php:151
-#, fuzzy
-#| msgid "Click on the link above to copy it the clipboard."
 msgid "Click to copy to the clipboard!"
-msgstr "Kattints a fenti linkre, hogy másold a vágólapra."
+msgstr "Kattints a vágólapra másoláshoz!"
 
 #. translators: instruction step for calendar subscription - clicking to copy URL
 #: usage.php:174 usage.php:196 usage.php:237
@@ -544,10 +540,8 @@ msgstr "A húsvét dátumai"
 
 #. translators: subtitle after card header - describes the example UI
 #: usage.php:286
-#, fuzzy
-#| msgid "Examples of Usage"
 msgid "Example interface"
-msgstr "Használati példák"
+msgstr "Példa interfész"
 
 #. translators: description of Easter date calculation range - 1583 is when Gregorian calendar started
 #: usage.php:292
@@ -582,24 +576,24 @@ msgid ""
 "Four feeds to choose from, according to timezone within the USA. The "
 "calendar is the national liturgical calendar for the United States."
 msgstr ""
+"Négy hírcsatorna közül választhat, USA időzónák szerint. A naptár az "
+"Egyesült Államok nemzeti liturgikus naptára."
 
 #. translators: tooltip for Italy Alexa skill - single feed with national calendar
 #: usage.php:338
-#, fuzzy
-#| msgid "Diocesan overrides to the national calendar for …"
 msgid "Single feed with the national liturgical calendar for Italy."
-msgstr "Egyházmegyei eltérési lehetőségek az országos naptárhoz képest …"
+msgstr "Egyszeri hírcsatorna Olaszország nemzeti liturgikus naptárával."
 
 #. translators: tooltip for Rome Diocese Alexa skill - specific to Diocese of Rome
 #: usage.php:344
 msgid ""
 "Single feed with the liturgical calendar specific to the Diocese of Rome."
-msgstr ""
+msgstr "Egyszeri hírcsatorna Róma Egyházmegye sajátos liturgikus naptárával."
 
 #. translators: card header - Amazon Alexa conversational skill (not flash briefing)
 #: usage.php:355
 msgid "Alexa interactive skill"
-msgstr ""
+msgstr "Alexa interaktív készség"
 
 #. translators: status indicator for features not yet available
 #: usage.php:361 usage.php:375
@@ -609,7 +603,7 @@ msgstr "Fejlesztés alatt"
 #. translators: card header - Google Assistant voice application
 #: usage.php:369
 msgid "Google Assistant app"
-msgstr ""
+msgstr "Google Assistant alkalmazás"
 
 #. translators: card header - tool to look up liturgy for any date
 #. translators: button text to go to liturgy lookup page
@@ -1376,12 +1370,12 @@ msgstr "Időzóna"
 #. translators: form field label for selecting JSON file in admin
 #: includes/messages.php:39
 msgid "Select JSON file to manage"
-msgstr ""
+msgstr "JSON fájl kiválasztása kezelésre"
 
 #. translators: form field label for year the decree takes effect
 #: includes/messages.php:41
 msgid "To take effect in the year"
-msgstr ""
+msgstr "Érvénybe lép az évben"
 
 #. translators: form row title for designating a Doctor of the Church
 #: includes/messages.php:61
@@ -1450,8 +1444,6 @@ msgstr "Liturgikus esemény áthelyezése új dátumra"
 
 #. translators: button description for creating new liturgical event
 #: includes/messages.php:95
-#, fuzzy
-#| msgid "Create a new liturgical event"
 msgid "Create new liturgical event"
 msgstr "Új liturgikus esemény létrehozása"
 
@@ -1472,8 +1464,6 @@ msgstr "Létező adatok eltávolítása"
 
 #. translators: button label for setting a property
 #: includes/messages.php:109
-#, fuzzy
-#| msgid "Set property"
 msgid "Set Property"
 msgstr "Tulajdonság beállítása"
 
@@ -1515,21 +1505,17 @@ msgstr "Olvasd el a rendeletet"
 #. translators: button label for adding a column in admin table
 #: includes/messages.php:125
 msgid "Add Column"
-msgstr ""
+msgstr "Oszlop hozzáadása"
 
 #. translators: button label for saving data in admin
 #: includes/messages.php:127
-#, fuzzy
-#| msgid "Calendar data"
 msgid "Save data"
-msgstr "Naptár adatai"
+msgstr "Adat mentése"
 
 #. translators: button title for adding a decree
 #: includes/messages.php:129
-#, fuzzy
-#| msgid "Decrees"
 msgid "Add Decree"
-msgstr "Rendeletek"
+msgstr "Rendelet hozzáadása"
 
 #. translators: page title for extending calendars
 #: includes/messages.php:135
@@ -1543,10 +1529,8 @@ msgstr "Általános római naptár - Rendeletek"
 
 #. translators: page title for admin tools
 #: includes/messages.php:139
-#, fuzzy
-#| msgid "Administrator Login"
 msgid "Administration tools"
-msgstr "Adminisztrátori bejelentkezés"
+msgstr "Adminisztrációs eszközök"
 
 #. translators: main heading for extending page
 #: includes/messages.php:145
@@ -1565,10 +1549,8 @@ msgstr ""
 
 #. translators: main heading for admin page
 #: includes/messages.php:149
-#, fuzzy
-#| msgid "Liturgical Calendar - About us"
 msgid "Liturgical Calendar project Administration tools"
-msgstr "Liturgikus Naptár - Rólunk"
+msgstr "Liturgikus naptár projekt adminisztrációs eszközök"
 
 #. translators: introductory paragraph about decrees
 #: includes/messages.php:151
@@ -1810,24 +1792,18 @@ msgstr "Nemzeti naptári adatok mentése"
 
 #. translators: button to save diocesan calendar data
 #: includes/messages.php:267
-#, fuzzy
-#| msgid "Save National Calendar Data"
 msgid "Save Diocesan Calendar Data"
-msgstr "Nemzeti naptári adatok mentése"
+msgstr "Egyházmegyei naptár adatok mentése"
 
 #. translators: modal title for changing name or grade
 #: includes/messages.php:273
-#, fuzzy
-#| msgid "Change name or grade of existing liturgical event"
 msgid "Change the name or grade of an existing liturgical event"
-msgstr "Meglévő liturgikus esemény neve vagy fokozata módosítása"
+msgstr "Meglévő liturgikus esemény nevének vagy fokozatának módosítása"
 
 #. translators: modal title for moving event
 #: includes/messages.php:275
-#, fuzzy
-#| msgid "Move liturgical event to new date"
 msgid "Move a liturgical event to a new date"
-msgstr "Liturgikus esemény áthelyezése új dátumra"
+msgstr "Egy liturgikus esemény áthelyezése új dátumra"
 
 #. translators: modal title for creating new event
 #: includes/messages.php:277
@@ -1884,19 +1860,15 @@ msgstr ""
 
 #. translators: tooltip explaining the first step to create a national calendar
 #: includes/messages.php:303
-#, fuzzy
-#| msgid ""
-#| "The first step in creating a national or diocesan calendar, is to "
-#| "translate the data for the General Roman Calendar into the language for "
-#| "that nation or diocese."
 msgid ""
 "please keep in mind that the first step to creating a national calendar, is "
 "to translate the already existing calendar data into the correct language. "
 "This can be done on the LitCal translation server (see above for details)"
 msgstr ""
-"Az első lépés egy nemzeti vagy egyházmegyei naptár létrehozásában, hogy a "
-"Római Általános Naptár adatait lefordítsd az adott nemzet vagy egyházmegye "
-"nyelvére."
+"kérlek, tartsd szem előtt, hogy egy nemzeti naptár létrehozásának első "
+"lépése az, hogy a már meglévő naptár adatokat lefordítsd a megfelelő "
+"nyelvre. Ezt a LitCal fordítószerveren lehet megtenni "
+"(lásd a fenti részleteket)"
 
 #. translators: tooltip explaining the Eternal High Priest feast
 #: includes/messages.php:305
@@ -1905,6 +1877,9 @@ msgid ""
 "insert the Feast of Jesus Christ Eternal High Priest in their own liturgical "
 "calendars on the Thursday after Pentecost."
 msgstr ""
+"2012-ben XVI. Benedek pápa felhatalmazást adott a Püspöki Konferenciáknak, "
+"hogy saját liturgikus naptárukban beilleszthessék Jézus Krisztus, az örök "
+"Főpap ünnepét Pünkösd utáni csütörtökre."
 
 #. translators: tooltip explaining published Roman Missals selection
 #: includes/messages.php:307
@@ -1915,6 +1890,10 @@ msgid ""
 "Missal is not in the list, it has not been incorporated into the LitCal "
 "engine)"
 msgstr ""
+"ha ennek a nemzetnek a Misszáléban a Szentek sajátjából már bekerült adatok "
+"szerepelnek a fő LitCal motorban, kiválaszthatod a Misszálét a listából, "
+"hogy társíthasd a Nemzeti Naptárhoz "
+"(ha a Misszálé nincs a listán, akkor nem került be a LitCal motorba)"
 
 #. translators: tooltip explaining wider region association
 #: includes/messages.php:309
@@ -1923,23 +1902,24 @@ msgid ""
 "been defined, you can associate the Wider Region data with the National "
 "Calendar here"
 msgstr ""
+"ha már van definiált Adat egy Szélesebb Régióra, amely az adott Nemzeti "
+"Naptárra vonatkozik, itt társíthatod a Szélesebb Régió adatait a Nemzeti "
+"Naptárral."
 
 #. translators: screen reader text for previous button
 #: includes/messages.php:315
 msgid "Previous"
-msgstr ""
+msgstr "Előző"
 
 #. translators: screen reader text for next button
 #: includes/messages.php:317
 msgid "Next"
-msgstr ""
+msgstr "Következő"
 
 #. translators: aria-label for diocesan calendar definition navigation
 #: includes/messages.php:319
-#, fuzzy
-#| msgid "Delete diocesan calendar"
 msgid "Diocesan calendar definition"
-msgstr "Egyházmegyei naptár törlése"
+msgstr "Egyházmegyei naptár meghatározása"
 
 #~ msgid ""
 #~ "A Liturgical Calendar API from which you can retrieve data for the "
