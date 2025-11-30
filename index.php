@@ -1,6 +1,6 @@
 <?php
 
-include_once 'common.php'; // provides $i18n and all API URLs
+include_once 'includes/common.php'; // provides $i18n and all API URLs
 
 $API_DESCRIPTION = _('Collection of Liturgical events for any given year between 1970 and 9999.') . ' ' .
     sprintf(

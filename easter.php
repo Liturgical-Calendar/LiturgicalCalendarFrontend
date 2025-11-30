@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 use LiturgicalCalendar\Frontend\ApiClient;
 use LiturgicalCalendar\Frontend\Utilities;
 
-include_once 'common.php';
+include_once 'includes/common.php';
 
 $resourceBundleLocales = ResourceBundle::getLocales('');
 if ($resourceBundleLocales === false) {

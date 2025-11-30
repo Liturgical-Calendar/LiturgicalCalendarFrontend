@@ -108,7 +108,6 @@ api/*
 *.php
 !about.php
 !admin.php
-!common.php
 !decrees.php
 !easter.php
 !examples.php

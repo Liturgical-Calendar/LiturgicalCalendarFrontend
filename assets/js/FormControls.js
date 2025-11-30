@@ -97,8 +97,8 @@ const RowAction = Object.freeze({
 /**
  * An enumeration of possible form row titles based on the RowAction. Produces the string key for localization purposes.
  * @readonly
- * @enum {('Designate patron'|'Designate Doctor'|'Change name or grade'|'Move event'|'New event'|'New event')} RowActionTitle
- * @property {String} RowAction.MakePatron - Designate a liturgical event as a patron saint ('Designate patron')
+ * @enum {('PatronButton'|'Designate Doctor'|'Change name or grade'|'Move event'|'New event'|'New event')} RowActionTitle
+ * @property {String} RowAction.MakePatron - Designate a liturgical event as a patron saint ('PatronButton')
  * @property {String} RowAction.MakeDoctor - Designate a liturgical event as a doctor of the Church ('Designate Doctor')
  * @property {String} RowAction.SetProperty - Set the name, grade, color, or readings of a liturgical event ('Change name or grade')
  * @property {String} RowAction.SetNameProperty - Set the name of a liturgical event ('Change name')
@@ -108,14 +108,14 @@ const RowAction = Object.freeze({
  * @property {String} RowAction.CreateNewFromExisting - Create a new liturgical event using an existing one as a template ('New event')
  */
 const RowActionTitle = Object.freeze({
-    [RowAction.MakePatron]:            'Designate patron',
+    [RowAction.MakePatron]:            'PatronButton',
     [RowAction.MakeDoctor]:            'Designate Doctor',
     [RowAction.SetProperty]:           'Change name or grade',
     [RowAction.SetNameProperty]:       'Change name',
     [RowAction.SetGradeProperty]:      'Change grade',
-    [RowAction.MoveEvent]:             'Move event',
-    [RowAction.CreateNew]:             'New event',
-    [RowAction.CreateNewFromExisting]: 'New event',
+    [RowAction.MoveEvent]:             'Move liturgical event',
+    [RowAction.CreateNew]:             'New liturgical event',
+    [RowAction.CreateNewFromExisting]: 'New liturgical event',
 });
 
 /**
@@ -398,21 +398,21 @@ class FormControls {
                 };
                 if (LiturgicalEventCollectionKeys.includes(liturgical_event.event_key)) {
                     const knownEvent = LiturgicalEventCollection.filter(fest => fest.event_key === liturgical_event.event_key)[0];
-                    if(  false === 'name' in liturgical_event && 'name' in knownEvent ) {
+                    if(  false === ('name' in liturgical_event) && ('name' in knownEvent) ) {
                         liturgical_event.name = knownEvent.name;
                     }
-                    if ( false === 'strtotime' in liturgical_event ) {
-                        if ( false === 'day' in liturgical_event && 'day' in knownEvent ) {
+                    if ( false === ('strtotime' in liturgical_event) ) {
+                        if ( false === ('day' in liturgical_event) && ('day' in knownEvent) ) {
                             liturgical_event.day = knownEvent.day;
                         }
-                        if ( false === 'month' in liturgical_event && 'month' in knownEvent ) {
+                        if ( false === ('month' in liturgical_event) && ('month' in knownEvent) ) {
                             liturgical_event.month = knownEvent.month;
                         }
                     }
-                    if ( false === 'grade' in liturgical_event && 'grade' in knownEvent ) {
+                    if ( false === ('grade' in liturgical_event) && ('grade' in knownEvent) ) {
                         liturgical_event.grade = knownEvent.grade;
                     }
-                    if ( false === 'color' in liturgical_event && 'color' in knownEvent ) {
+                    if ( false === ('color' in liturgical_event) && ('color' in knownEvent) ) {
                         liturgical_event.color = knownEvent.color;
                     }
                 }
@@ -442,7 +442,7 @@ class FormControls {
                 exactDateRadio.id = `exactDate${FormControls.uniqid}`;
                 exactDateRadio.autocomplete = 'off';
                 exactDateRadio.setAttribute('data-row-uniqid', FormControls.uniqid);
-                exactDateRadio.checked = false === isStrToTime;
+                exactDateRadio.checked = !isStrToTime;
                 radioGroupDiv.appendChild(exactDateRadio);
 
                 const exactDateLabel = document.createElement('label');
@@ -889,26 +889,26 @@ class FormControls {
                     ...element.liturgical_event,
                     ...element.metadata
                 };
-                if( false === 'until_year' in liturgical_event ) {
+                if( false === ('until_year' in liturgical_event) ) {
                     liturgical_event.until_year = '';
                 }
             }
             if (LiturgicalEventCollectionKeys.includes(liturgical_event.event_key)) {
                 let event = LiturgicalEventCollection.find(fest => fest.event_key === liturgical_event.event_key) || {};
-                if( false === 'color' in liturgical_event ) {
+                if( false === ('color' in liturgical_event) ) {
                     liturgical_event.color = 'color' in event ? event.color : [];
                 }
-                if( false === 'name' in liturgical_event ) {
+                if( false === ('name' in liturgical_event) ) {
                     if( 'name' in event ) {
                         liturgical_event.name = event.name;
                     }
                 }
-                if( false === 'day' in liturgical_event ) {
+                if( false === ('day' in liturgical_event) ) {
                     if( 'day' in event ) {
                         liturgical_event.day = event.day;
                     }
                 }
-                if( false === 'month' in liturgical_event ) {
+                if( false === ('month' in liturgical_event) ) {
                     console.log( 'liturgical_event does not have a month property, now trying to retrieve info...' );
                     if( 'month' in event ) {
                         liturgical_event.month = event.month;

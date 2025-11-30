@@ -54,7 +54,7 @@ Then navigate to `localhost:3000` in your browser, and you should see a running 
 
 This application uses a **hybrid approach** for security headers:
 
-- **PHP** sets dynamic headers that require environment variables (see `common.php:57-83`)
+- **PHP** sets dynamic headers that require environment variables (see `includes/common.php:57-83`)
   - `Content-Security-Policy` (includes dynamic API URL from `.env`)
   - `Strict-Transport-Security` (requires HTTPS detection)
 
@@ -117,7 +117,7 @@ add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
 add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
 ```
 
-In this case, you can remove the HSTS header from `common.php` (lines 77-81).
+In this case, you can remove the HSTS header from `includes/common.php` (lines 77-81).
 
 #### Why Hybrid Approach?
 
@@ -127,7 +127,7 @@ In this case, you can remove the HSTS header from `common.php` (lines 77-81).
 
 ### Cookie Security (SameSite Protection)
 
-The application implements **SameSite cookie protection** to prevent CSRF attacks (see `common.php:91-139`).
+The application implements **SameSite cookie protection** to prevent CSRF attacks (see `includes/common.php:91-139`).
 
 **Current Implementation:**
 

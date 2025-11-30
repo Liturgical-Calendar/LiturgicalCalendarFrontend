@@ -2,10 +2,19 @@
 
 use LiturgicalCalendar\Components\CalendarSelect;
 
-include_once 'common.php';
+include_once 'includes/common.php';
 
 $CalendarSelect  = new CalendarSelect(['locale' => $i18n->LOCALE]);
 $API_DESCRIPTION = _('A Liturgical Calendar API from which you can retrieve data for the Liturgical events of any given year from 1970 onwards, whether for the Universal or General Roman Calendar or for derived National and Diocesan calendars');
+
+$messages = [
+    'Success'                   => _('Success'),
+    'Error'                     => _('Error'),
+    'Copy not supported'        => _('Copy not supported'),
+    'URL copied to clipboard'   => _('URL was copied to the clipboard'),
+    'Failed to copy URL'        => _('Failed to copy URL to clipboard'),
+    'Select and copy manually'  => _('Please select and copy manually'),
+];
 
 ?><!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
@@ -254,6 +263,9 @@ $API_DESCRIPTION = _('A Liturgical Calendar API from which you can retrieve data
             </div>
         </div>
 
+    <script>
+        const Messages = <?php echo json_encode($messages, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+    </script>
     <?php include_once('./layout/footer.php'); ?>
 
 </body>

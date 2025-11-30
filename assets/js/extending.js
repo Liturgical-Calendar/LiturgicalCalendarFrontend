@@ -1823,16 +1823,18 @@ const retrieveExistingLiturgicalEvent = (actionButtonId, eventKey) => {
 /**
  * Configures form settings based on action button and property to change
  * @param {string} actionButtonId - The ID of the clicked action button
+ * @param {HTMLDivElement} modal - The div corresponding to the action modal
  * @returns {string|null} The property to change, or null if not applicable
  */
-const configureFormSettings = (actionButtonId) => {
+const configureFormSettings = (actionButtonId, modal) => {
     FormControls.settings.decreeUrlFieldShow = true;
     FormControls.settings.decreeLangMapFieldShow = document.querySelector('.regionalNationalCalendarName').id === 'widerRegionCalendarName';
     setFormSettings(actionButtonId);
     console.log(`FormControls.action = ${FormControls.action}, actionButtonId = ${actionButtonId}`);
 
     if (actionButtonId === 'setPropertyButton') {
-        const propertyToChange = document.querySelector('#propertyToChange').value;
+        const propertyToChangeInput = modal.querySelector(`[id^="propertyToChange"]`);
+        const propertyToChange = propertyToChangeInput ? propertyToChangeInput.value : '';
         setFormSettingsForProperty(propertyToChange);
         return propertyToChange;
     }
@@ -1996,7 +1998,7 @@ const actionPromptButtonClicked = (ev) => {
     const existingLiturgicalEvent = retrieveExistingLiturgicalEvent(actionButtonId, eventKey);
 
     // Configure form settings and get property to change (if applicable)
-    const propertyToChange = configureFormSettings(actionButtonId);
+    const propertyToChange = configureFormSettings(actionButtonId, modal);
 
     // Create form row with appropriate data
     const {fragment, controlsRow} = createFormRowWithEvent(

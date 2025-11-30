@@ -518,7 +518,7 @@ function updateAuthUI() {
 **Files Modified:**
 
 - `assets/js/auth.js` - Added auto-refresh and expiry warning methods
-- `common.php` - Added dynamic CSP headers, HSTS, and SameSite cookie protection
+- `includes/common.php` - Added dynamic CSP headers, HSTS, and SameSite cookie protection
 - `README.md` - Added Production Deployment section with nginx and cookie security configuration
 
 ---
@@ -574,7 +574,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 **Files Modified:**
 
-- `common.php:91-139` - SameSite cookie configuration and helper function
+- `includes/common.php:91-139` - SameSite cookie configuration and helper function
 - `README.md` - Cookie Security documentation
 
 **SameSite Cookie Protection implemented** (instead of traditional CSRF tokens):
@@ -589,7 +589,7 @@ document.addEventListener('DOMContentLoaded', () => {
 **Implementation:**
 
 ```php
-// common.php - Automatic session cookie protection
+// includes/common.php - Automatic session cookie protection
 $isHttps = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
 
 // Configure PHP session cookies with SameSite protection
@@ -651,7 +651,7 @@ function setSecureCookie(
 **CSP Headers Implemented:**
 
 ```php
-// common.php - Dynamic CSP header
+// includes/common.php - Dynamic CSP header
 header("Content-Security-Policy: " .
     "default-src 'self'; " .
     "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com; " .

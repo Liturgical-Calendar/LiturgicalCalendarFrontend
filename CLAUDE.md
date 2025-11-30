@@ -374,7 +374,7 @@ See `docs/AUTHENTICATION_ROADMAP.md` for detailed implementation notes.
 
 ### Including Common Files
 
-Most pages include `common.php` which sets up:
+Most pages include `includes/common.php` which sets up:
 
 - Environment variables
 - API configuration
