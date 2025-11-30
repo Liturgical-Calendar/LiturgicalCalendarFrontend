@@ -4,21 +4,21 @@ use LiturgicalCalendar\Components\CalendarSelect;
 
 include_once 'includes/common.php';
 
-$CalendarSelect  = new CalendarSelect(['locale' => $i18n->LOCALE]);
+$CalendarSelect = new CalendarSelect(['locale' => $i18n->LOCALE]);
 
 $messages = [
     /** translators: notification title */
-    'Success'                   => _('Success'),
+    'Success'                  => _('Success'),
     /** translators: notification title */
-    'Error'                     => _('Error'),
+    'Error'                    => _('Error'),
     /** translators: notification message */
-    'Copy not supported'        => _('Copy not supported'),
+    'Copy not supported'       => _('Copy not supported'),
     /** translators: notification message */
-    'URL copied to clipboard'   => _('URL was copied to the clipboard'),
+    'URL copied to clipboard'  => _('URL was copied to the clipboard'),
     /** translators: notification message */
-    'Failed to copy URL'        => _('Failed to copy URL to clipboard'),
+    'Failed to copy URL'       => _('Failed to copy URL to clipboard'),
     /** translators: notification message */
-    'Select and copy manually'  => _('Please select and copy manually'),
+    'Select and copy manually' => _('Please select and copy manually'),
 ];
 
 ?><!doctype html>
