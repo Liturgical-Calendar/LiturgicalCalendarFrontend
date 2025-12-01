@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-30 10:05+0000\n"
-"PO-Revision-Date: 2025-12-01 10:45+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2025-12-01 11:15+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hu/>\n"
 "Language: hu\n"
@@ -1375,7 +1375,7 @@ msgstr "JSON fájl kiválasztása kezelésre"
 #. translators: form field label for year the decree takes effect
 #: includes/messages.php:41
 msgid "To take effect in the year"
-msgstr "Érvénybe lép az évben"
+msgstr "Hatálybalépés éve"
 
 #. translators: form row title for designating a Doctor of the Church
 #: includes/messages.php:61
@@ -1793,7 +1793,7 @@ msgstr "Nemzeti naptári adatok mentése"
 #. translators: button to save diocesan calendar data
 #: includes/messages.php:267
 msgid "Save Diocesan Calendar Data"
-msgstr "Egyházmegyei naptár adatok mentése"
+msgstr "Egyházmegyei naptári adatok mentése"
 
 #. translators: modal title for changing name or grade
 #: includes/messages.php:273
