@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-30 10:05+0000\n"
-"PO-Revision-Date: 2025-12-01 11:15+0000\n"
+"PO-Revision-Date: 2025-12-01 13:28+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
@@ -383,7 +383,8 @@ msgid ""
 "Once subscribed, your calendar will be populated with the events from the "
 "subscription URL."
 msgstr ""
-"Nakon prijave, tvoj će kalendar biti popunjen događajima iz pretplate URL-a."
+"Nakon što se pretplatiš, tvoj kalendar će biti ispunjen događajima s URL-a "
+"pretplate."
 
 #. translators: info about Google Calendar's polling frequency
 #: usage.php:184 usage.php:224
@@ -1130,8 +1131,8 @@ msgid ""
 "Senior software engineer at Strava, author of the ConfessIt app, contributed "
 "to the structuring of the JSON responses of the Liturgical Calendar API"
 msgstr ""
-"Viši softverski inženjer u Strava, autor aplikacije ConfessIt, sudjelovao u "
-"strukturiranju JSON odgovora Liturgijskog kalendara API-ja"
+"Viši softverski inženjer u Strava, autor aplikacije ConfessIt, sudjelovao je "
+"u strukturiranju JSON odgovora API-ja Liturgijskog kalendara"
 
 #: src/Utilities.php:150
 msgid ""
@@ -1209,7 +1210,7 @@ msgstr "Do"
 
 #: src/FormControls.php:124
 msgid "Common (or Proper)"
-msgstr "Opće (ili posebno)"
+msgstr "Zajedničko (ili vlastito)"
 
 #: layout/header.php:27 layout/header.php:120
 msgid "Extending the API"
