@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-30 10:05+0000\n"
-"PO-Revision-Date: 2025-12-01 11:15+0000\n"
+"PO-Revision-Date: 2025-12-01 13:28+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
@@ -265,7 +265,7 @@ msgstr "Defuit URL in clipboardium effingere"
 #. translators: notification message
 #: usage.php:21
 msgid "Please select and copy manually"
-msgstr "Quaeso ad manu selectam effinge"
+msgstr "Quaeso manu selige et effinge"
 
 #. translators: part of page title - section showing usage examples
 #: usage.php:31
@@ -1708,7 +1708,7 @@ msgstr "Sollemnitates"
 #. translators: tab label for feasts section
 #: includes/messages.php:227
 msgid "Feasts"
-msgstr "Festuum"
+msgstr "Festæ"
 
 #. translators: tab label for memorials section
 #: includes/messages.php:229
