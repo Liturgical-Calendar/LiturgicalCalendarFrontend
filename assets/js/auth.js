@@ -326,26 +326,41 @@ const Auth = {
 
     /**
      * Check if user is authenticated (synchronous, uses cache)
-     * Returns null if cache is expired, allowing caller to decide whether to fetch
+     * Returns null if auth state is unknown (never checked or cache expired)
      *
-     * @returns {boolean|null} True/false if cache valid, null if cache expired
+     * Three possible return values:
+     * - true: definitely logged in (server confirmed)
+     * - false: definitely logged out (server confirmed)
+     * - null: unknown (never checked or cache expired)
+     *
+     * @returns {boolean|null} True/false if auth state known, null if unknown
      */
     isAuthenticatedCached() {
         const now = Date.now();
 
         // Check if cache is valid
-        if (this._cachedAuthState && now < this._cacheExpiry) {
+        if (this._cachedAuthState !== null && now < this._cacheExpiry) {
             return this._cachedAuthState.authenticated === true;
         }
 
-        // Cache expired or empty
+        // Cache expired or never populated - auth state unknown
         return null;
+    },
+
+    /**
+     * Check if auth state is known (has been checked with server)
+     *
+     * @returns {boolean} True if auth state is known (cached), false if unknown
+     */
+    isAuthStateKnown() {
+        const now = Date.now();
+        return this._cachedAuthState !== null && now < this._cacheExpiry;
     },
 
     /**
      * Update the auth cache by fetching from /auth/me
      *
-     * @returns {Promise<Object|null>} Auth state object or null if not authenticated
+     * @returns {Promise<Object>} Auth state object with authenticated property
      */
     async updateAuthCache() {
         const state = await this.checkAuthAsync();
@@ -358,11 +373,15 @@ const Auth = {
      * Check authentication state with the server
      * Calls /auth/me endpoint to verify session (works with HttpOnly cookies)
      *
-     * @returns {Promise<Object|null>} User info object or null if not authenticated
+     * Always returns an object with authenticated property:
+     * - { authenticated: true, username, roles, exp, ... } if logged in
+     * - { authenticated: false } if not logged in or on error
+     *
+     * @returns {Promise<Object>} Auth state object (never null)
      */
     async checkAuthAsync() {
         if (!this._validateBaseUrl('checkAuthAsync')) {
-            return null;
+            return { authenticated: false };
         }
 
         try {
@@ -375,14 +394,14 @@ const Auth = {
             });
 
             if (!response.ok) {
-                return null;
+                return { authenticated: false };
             }
 
             const data = await response.json();
-            return data.authenticated ? data : null;
+            return data.authenticated ? data : { authenticated: false };
         } catch (error) {
             console.error('Auth check failed:', error);
-            return null;
+            return { authenticated: false };
         }
     },
 
