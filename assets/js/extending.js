@@ -132,8 +132,21 @@ function showLoginModal(callback) {
 }
 
 /**
+ * Maximum number of auth retry attempts before giving up
+ * Prevents infinite recursion if server consistently returns 401
+ */
+const MAX_AUTH_RETRIES = 2;
+
+/**
+ * Track retry counts per callback to prevent infinite recursion
+ * Uses WeakMap to allow garbage collection of callback functions
+ */
+const authRetryCounters = new WeakMap();
+
+/**
  * Handle authentication errors from API responses
  * Attempts to refresh token on 401, or prompts for login
+ * Caps retries to prevent infinite recursion on persistent 401s
  *
  * @param {Response} response - Fetch API response object
  * @param {Function} retryCallback - Function to retry the original request
@@ -142,13 +155,27 @@ function showLoginModal(callback) {
  */
 async function handleAuthError(response, retryCallback) {
     if (response.status === 401) {
+        // Check retry count to prevent infinite recursion
+        const retryCount = authRetryCounters.get(retryCallback) || 0;
+        if (retryCount >= MAX_AUTH_RETRIES) {
+            authRetryCounters.delete(retryCallback);
+            toastr.error('Authentication failed after multiple attempts. Please try logging in again.', 'Authentication Error');
+            showLoginModal(retryCallback);
+            throw new Error('Authentication failed after maximum retries');
+        }
+
         // Token expired, try to refresh
         try {
+            authRetryCounters.set(retryCallback, retryCount + 1);
             await Auth.refreshToken();
             // Retry the original request
-            return retryCallback();
+            const result = await retryCallback();
+            // Success - clear retry counter
+            authRetryCounters.delete(retryCallback);
+            return result;
         } catch (error) {
             // Refresh failed, prompt for login
+            authRetryCounters.delete(retryCallback);
             console.error('Token refresh failed:', error.message);
             showLoginModal(retryCallback);
             throw new Error('Authentication required');
