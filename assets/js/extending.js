@@ -98,20 +98,37 @@ const initialHeaders = new Headers({
 /**
  * Show login modal and execute callback after successful authentication
  *
+ * Note: This is a fallback implementation. The canonical showLoginModal()
+ * is defined in login-modal.php which properly handles the callback.
+ * This fallback only runs if login-modal.php hasn't loaded yet.
+ *
  * @param {Function} callback - Function to execute after successful login
  */
 function showLoginModal(callback) {
+    // Check if the canonical implementation from login-modal.php is available
+    // It will have loginSuccessCallback in its closure, which we can detect
+    // by checking if the function has already been defined with different content
     const modalEl = document.getElementById('loginModal');
     if (!modalEl) {
         console.error('Login modal element #loginModal not found');
         return;
     }
 
-    // Store callback to execute after successful login
-    window.postLoginCallback = callback;
+    // Store callback globally so login-modal.php's handleLogin can invoke it
+    // The login-modal.php implementation checks loginSuccessCallback first,
+    // but we set this as a fallback in case of script loading order issues
+    if (typeof callback === 'function') {
+        window.postLoginCallback = callback;
+    }
 
-    const loginModal = new bootstrap.Modal(modalEl);
-    loginModal.show();
+    // Try to use existing modal instance if available
+    const existingModal = bootstrap.Modal.getInstance(modalEl);
+    if (existingModal) {
+        existingModal.show();
+    } else {
+        const loginModal = new bootstrap.Modal(modalEl);
+        loginModal.show();
+    }
 }
 
 /**

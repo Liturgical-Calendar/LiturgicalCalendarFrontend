@@ -285,10 +285,14 @@ async function handleLogin() {
             console.log('Login successful');
         }
 
-        // Call success callback if provided
+        // Call success callback if provided (check both module-scoped and global fallback)
         if (loginSuccessCallback) {
             loginSuccessCallback();
             loginSuccessCallback = null;
+        } else if (typeof window.postLoginCallback === 'function') {
+            // Fallback for callbacks set by extending.js before login-modal.php loaded
+            window.postLoginCallback();
+            window.postLoginCallback = null;
         }
     } catch (error) {
         errorDiv.textContent = error.message || <?php echo json_encode(_('Login failed. Please check your credentials.')); ?>;
