@@ -226,8 +226,11 @@ const makeAuthenticatedRequest = async (method, url, options = {}) => {
         credentials: 'include' // Include HttpOnly cookies for authentication
     };
 
-    // Add body if provided
+    // Add body if provided (JSON-only - fail fast for unsupported types)
     if (body !== undefined && body !== null) {
+        if (body instanceof FormData || body instanceof URLSearchParams || body instanceof Blob) {
+            throw new Error('makeAuthenticatedRequest: pass pre-built Request for non-JSON bodies');
+        }
         fetchOptions.body = typeof body === 'string' ? body : JSON.stringify(body);
     }
 
