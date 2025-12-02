@@ -373,15 +373,16 @@ const Auth = {
      * Check authentication state with the server
      * Calls /auth/me endpoint to verify session (works with HttpOnly cookies)
      *
-     * Always returns an object with authenticated property:
+     * Returns an object with authenticated property:
      * - { authenticated: true, username, roles, exp, ... } if logged in
-     * - { authenticated: false } if not logged in or on error
+     * - { authenticated: false } if not logged in
+     * - { authenticated: false, error: true } if network/API error occurred
      *
      * @returns {Promise<Object>} Auth state object (never null)
      */
     async checkAuthAsync() {
         if (!this._validateBaseUrl('checkAuthAsync')) {
-            return { authenticated: false };
+            return { authenticated: false, error: true };
         }
 
         try {
@@ -401,7 +402,7 @@ const Auth = {
             return data.authenticated ? data : { authenticated: false };
         } catch (error) {
             console.error('Auth check failed:', error);
-            return { authenticated: false };
+            return { authenticated: false, error: true };
         }
     },
 
