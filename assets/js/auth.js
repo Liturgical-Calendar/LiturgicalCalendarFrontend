@@ -304,21 +304,17 @@ const Auth = {
     /**
      * Check if user is authenticated (synchronous, uses cache)
      *
-     * Returns the cached authentication state. If cache is expired or empty,
-     * returns false. For authoritative checks, use checkAuthAsync().
+     * Returns the "last known good" authentication state from cache.
+     * This method ignores cache expiry to prevent UI flicker when cache
+     * expires but user is still logged in.
      *
-     * @returns {boolean} True if authenticated according to cache
+     * For staleness-aware checks, use isAuthenticatedCached() which returns
+     * null when cache is expired. For authoritative server checks, use checkAuthAsync().
+     *
+     * @returns {boolean} True if last known state was authenticated, false otherwise
      */
     isAuthenticated() {
-        const now = Date.now();
-
-        // Check if cache is valid
-        if (this._cachedAuthState && now < this._cacheExpiry) {
-            return this._cachedAuthState.authenticated === true;
-        }
-
-        // Cache expired or empty - return false, caller should use checkAuthAsync()
-        return false;
+        return Boolean(this._cachedAuthState?.authenticated);
     },
 
     /**
