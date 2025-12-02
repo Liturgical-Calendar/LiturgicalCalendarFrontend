@@ -808,6 +808,9 @@ Before submitting changes:
 
 The pre-commit hooks will automatically check code quality, but it's good practice to run the scripts manually first.
 
+**Pull Request Target:** PRs should always target the `development` branch, not `main`. The `main` branch is reserved
+for production releases.
+
 **IMPORTANT: Do not push immediately after committing.** This project uses CodeRabbit for automated code review,
 which has rate limiting. Wait for the user to explicitly request a push, or batch multiple commits before pushing
 to avoid overwhelming CodeRabbit.
