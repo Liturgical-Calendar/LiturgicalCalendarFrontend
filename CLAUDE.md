@@ -351,7 +351,7 @@ composer lint:md:fix     # Auto-fix most issues (but not indentation)
 
 ## Authentication
 
-The frontend implements JWT authentication for administrative features:
+The frontend implements JWT authentication for administrative features using **cookie-only authentication**:
 
 **Files**:
 
@@ -361,12 +361,15 @@ The frontend implements JWT authentication for administrative features:
 
 **Key Features**:
 
-- HttpOnly cookie-based authentication (preferred, more secure)
-- localStorage/sessionStorage fallback for backwards compatibility
-- Automatic token refresh
+- HttpOnly cookie-based authentication (tokens never exposed to JavaScript)
+- Auth state caching via `checkAuthAsync()` to minimize `/auth/me` calls
+- Automatic token refresh via HttpOnly refresh token cookie
 - Session expiry warnings
 - Protected UI elements with `data-requires-auth` attribute
-- `checkAuthAsync()` for server-side session verification with HttpOnly cookies
+- Three-state auth detection: unknown (null), logged out (false), logged in (true)
+
+**Note:** The frontend does not use Authorization headers or localStorage/sessionStorage for tokens. The API's
+Authorization header support exists only for backwards compatibility with third-party clients.
 
 See `docs/AUTHENTICATION_ROADMAP.md` for detailed implementation notes.
 
@@ -386,22 +389,22 @@ Most pages include `includes/common.php` which sets up:
 
 The frontend communicates with the API using:
 
-- Fetch API
-- JWT authentication headers (for protected endpoints)
+- Fetch API with `credentials: 'include'` for automatic cookie transmission
+- HttpOnly cookies for JWT authentication (no manual token handling)
 - JSON/XML response parsing
 
-Example:
+Example (authenticated request):
 
 ```javascript
-const headers = {
-    'Accept': 'application/json'
-};
-if (Auth.isAuthenticated()) {
-    headers['Authorization'] = `Bearer ${Auth.getToken()}`;
-}
-
-const response = await fetch(apiUrl, { headers });
+const response = await fetch(apiUrl, {
+    method: 'POST',
+    headers: { 'Accept': 'application/json' },
+    credentials: 'include'  // Sends HttpOnly cookies automatically
+});
 ```
+
+**Note:** Do not use `Auth.getToken()` or Authorization headers - these methods are deprecated.
+The API reads tokens from HttpOnly cookies automatically.
 
 ### Liturgy of Any Day Page
 
