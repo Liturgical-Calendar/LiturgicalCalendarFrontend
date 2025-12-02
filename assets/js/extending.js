@@ -1273,12 +1273,12 @@ const addLocalizationInputs = (controlsRow, uniqid, metadata) => {
 };
 
 /**
- * Initialize color multiselect for a form row
+ * Initialize color multiselect for a form row with existing data
  *
  * @param {HTMLElement} controlsRow - The form row element
  * @param {Object} liturgicalEvent - The liturgical event data
  */
-const initializeColorMultiselect = (controlsRow, liturgicalEvent) => {
+const initializeColorMultiselectFromData = (controlsRow, liturgicalEvent) => {
     $(controlsRow.querySelector('.litEventColor')).multiselect({
         buttonWidth: '100%',
         buttonClass: 'form-select',
@@ -1361,7 +1361,7 @@ const processLitcalFormElement = (el) => {
     }
 
     addLocalizationInputs(controlsRow, currentUniqid, el.metadata);
-    initializeColorMultiselect(controlsRow, el.liturgical_event);
+    initializeColorMultiselectFromData(controlsRow, el.liturgical_event);
     initializeFormRowFields(controlsRow, currentUniqid, el);
 };
 
