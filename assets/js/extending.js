@@ -105,12 +105,19 @@ const initialHeaders = new Headers({
  * @param {Function} callback - Function to execute after successful login
  */
 function showLoginModal(callback) {
-    // Check if the canonical implementation from login-modal.php is available
-    // It will have loginSuccessCallback in its closure, which we can detect
-    // by checking if the function has already been defined with different content
     const modalEl = document.getElementById('loginModal');
     if (!modalEl) {
         console.error('Login modal element #loginModal not found');
+        toastr.error('Login functionality is not available. Please reload the page.', 'Configuration Error');
+        return;
+    }
+
+    // Check if login modal is properly wired up (login-modal.php loaded)
+    const loginSubmitBtn = document.getElementById('loginSubmit');
+    const loginForm = document.getElementById('loginForm');
+    if (!loginSubmitBtn || !loginForm) {
+        console.error('Login modal is present but not properly configured (missing form elements)');
+        toastr.error('Login functionality is not properly configured. Please reload the page.', 'Configuration Error');
         return;
     }
 
