@@ -6,7 +6,8 @@ region. These events are automatically applied to all national calendars belongi
 ## Prerequisites
 
 1. **Authentication** - You must be logged in with valid credentials
-2. **Translations** - The General Roman Calendar should be translated into the required language(s)
+2. **Translations** - The General Roman Calendar should be translated into the language(s) for the Wider Region
+   (see [Translations](../translations.php) page)
 
 ## Accessing the Form
 
@@ -56,7 +57,7 @@ Use the action buttons at the bottom of the form to add events:
 
 Click **Designate patron** to add a patron saint for the wider region:
 
-1. Select an existing liturgical event from the dropdown (type to search)
+1. If the patron saint already exists in the General Roman Calendar, select the corresponding entry from the dropdown (type to search)
 2. Set the **Since** year (when the patronage was established)
 3. Enter the **Decree URL** (link to the official decree document). Optionally, if the URL contains a `%s`
    placeholder for the language, configure **Language Mappings** to map standard ISO locale codes to the

@@ -5,19 +5,18 @@ const authFile = path.join(__dirname, '.auth/user.json');
 
 /**
  * Response shape from /auth/login endpoint.
- * Matches the API's JSON schema for authentication responses.
+ * The API sets HttpOnly cookies for authentication; the response body
+ * contains metadata but tokens are not exposed to JavaScript.
  */
-interface LoginTokenData {
-    access_token: string;
-    refresh_token?: string;
-    token_type?: string;
+interface LoginResponseData {
+    message?: string;
     expires_in?: number;
 }
 
 interface LoginSuccessResult {
     ok: true;
     status: number;
-    data: LoginTokenData;
+    data: LoginResponseData;
 }
 
 interface LoginErrorResult {
@@ -40,20 +39,12 @@ interface AuthCheckResult {
 /**
  * Authentication setup for Playwright tests.
  *
- * Uses a hybrid approach for maximum compatibility:
- * 1. HttpOnly cookie-based authentication (preferred, more secure) - cookies are set
- *    by the API and automatically included in subsequent requests via credentials: 'include'
- * 2. Token storage in localStorage/sessionStorage - required because the frontend's
- *    JavaScript code reads tokens from storage to build Authorization headers
+ * Uses HttpOnly cookie-based authentication:
+ * - The API sets HttpOnly cookies (litcal_access_token, litcal_refresh_token) on login
+ * - Cookies are automatically included in subsequent requests via credentials: 'include'
+ * - Tokens are never exposed to JavaScript, eliminating XSS token theft risks
  *
- * Playwright's storageState captures both cookies and localStorage, persisting
- * them across test runs.
- *
- * NOTE: The localStorage/sessionStorage token storage inherits XSS exposure risks,
- * similar to the main app's assets/js/auth.js. This is intentional for backward
- * compatibility with the current frontend implementation. See docs/AUTHENTICATION_ROADMAP.md
- * Phase 2.5 for the plan to migrate to full cookie-only authentication, which will
- * allow removing these storage writes once the frontend stops reading tokens from storage.
+ * Playwright's storageState captures cookies, persisting them across test runs.
  */
 setup('authenticate', async ({ page }) => {
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
@@ -70,12 +61,11 @@ setup('authenticate', async ({ page }) => {
     await page.goto(`${frontendUrl}/extending.php?choice=national`);
     await page.waitForLoadState('networkidle');
 
-    // Authenticate via fetch with credentials: 'include' to ensure cookies are set
-    // Also capture the token response for localStorage storage
+    // Authenticate via fetch with credentials: 'include' to ensure HttpOnly cookies are set
     const loginResponse: LoginResult = await page.evaluate(async (credentials) => {
         const response = await fetch(`${credentials.apiUrl}/auth/login`, {
             method: 'POST',
-            credentials: 'include', // Include cookies for HttpOnly cookie authentication
+            credentials: 'include', // Required for HttpOnly cookie authentication
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
@@ -92,18 +82,6 @@ setup('authenticate', async ({ page }) => {
         }
 
         const data = await response.json();
-
-        // Store tokens in localStorage/sessionStorage for frontend JavaScript compatibility
-        // The frontend's auth.js reads from these to build Authorization headers
-        if (data.access_token) {
-            localStorage.setItem('litcal_jwt_token', data.access_token);
-            sessionStorage.setItem('litcal_jwt_token', data.access_token);
-        }
-        if (data.refresh_token) {
-            localStorage.setItem('litcal_refresh_token', data.refresh_token);
-            sessionStorage.setItem('litcal_refresh_token', data.refresh_token);
-        }
-
         return { ok: true, status: response.status, data };
     }, { apiUrl, username, password });
 
@@ -111,14 +89,8 @@ setup('authenticate', async ({ page }) => {
         throw new Error(`Login failed: ${loginResponse.status} - ${loginResponse.error}`);
     }
 
-    // Assert access_token is present - fail fast on schema/contract regressions
-    // rather than surfacing later via 401s in actual tests
-    if (!loginResponse.data?.access_token) {
-        throw new Error('Login response missing access_token - API contract may have changed');
-    }
-
     // Verify authentication by making a request to an authenticated endpoint
-    // This verifies both cookie-based auth and that tokens are properly stored
+    // This verifies that HttpOnly cookies were set correctly
     const authCheck: AuthCheckResult = await page.evaluate(async (apiUrl) => {
         try {
             const response = await fetch(`${apiUrl}/auth/me`, {
@@ -136,8 +108,8 @@ setup('authenticate', async ({ page }) => {
 
     expect(authCheck.ok).toBe(true);
 
-    // Save the authentication state (includes cookies and localStorage)
+    // Save the authentication state (includes HttpOnly cookies)
     await page.context().storageState({ path: authFile });
 
-    console.log('Authentication setup complete');
+    console.log('Authentication setup complete - cookies saved to storageState');
 });

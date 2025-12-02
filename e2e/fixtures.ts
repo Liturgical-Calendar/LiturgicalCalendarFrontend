@@ -167,6 +167,60 @@ export class ExtendingPageHelper {
     }
 
     /**
+     * Get available translation locales from LitCalMetadata.
+     * These are the locales for which the General Roman Calendar has been translated.
+     * @returns Array of locale codes (e.g., ['en', 'it', 'fr', 'es', 'de', ...])
+     */
+    async getAvailableTranslations(): Promise<string[]> {
+        return this.page.evaluate(() => {
+            // LitCalMetadata is a global variable set by the frontend from /calendars API
+            const metadata = (window as any).LitCalMetadata;
+            return metadata && metadata.locales ? metadata.locales : [];
+        });
+    }
+
+    /**
+     * Check if a locale has available translations.
+     * @param locale - The locale to check (e.g., 'en', 'fr', 'pt')
+     * @returns True if translations are available
+     */
+    async hasTranslationsForLocale(locale: string): Promise<boolean> {
+        const availableTranslations = await this.getAvailableTranslations();
+        // Check for exact match or language prefix match (e.g., 'pt' matches 'pt_BR')
+        const langPrefix = locale.split(/[-_]/)[0].toLowerCase();
+        return availableTranslations.some(t => {
+            const tPrefix = t.split(/[-_]/)[0].toLowerCase();
+            return t.toLowerCase() === locale.toLowerCase() || tPrefix === langPrefix;
+        });
+    }
+
+    /**
+     * Wait for action buttons to be enabled (indicating translations are available).
+     * @param timeout - Maximum time to wait in milliseconds
+     * @returns True if buttons are enabled, false if they're disabled (translations missing)
+     */
+    async waitForActionButtonsEnabled(timeout = 10000): Promise<boolean> {
+        try {
+            await this.page.waitForFunction(() => {
+                const buttons = document.querySelectorAll('.litcalActionButton');
+                return buttons.length > 0 && Array.from(buttons).every(btn => !(btn as HTMLButtonElement).disabled);
+            }, { timeout });
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    /**
+     * Check if a "missing translations" toast is visible.
+     * @returns True if the missing translations toast is present
+     */
+    async hasMissingTranslationsToast(): Promise<boolean> {
+        const toast = this.page.locator('[data-toast-type="missing-translations"]');
+        return toast.isVisible().catch(() => false);
+    }
+
+    /**
      * Get existing diocesan calendar IDs from the /calendars API.
      * @param nationFilter - Optional 2-letter ISO code to filter by nation
      * @returns Array of diocesan calendar IDs
@@ -345,6 +399,11 @@ export class ExtendingPageHelper {
     /**
      * Delete a calendar via the API and verify success.
      * Centralizes the DELETE cleanup pattern used after CREATE tests.
+     *
+     * Uses HttpOnly cookie-based authentication:
+     * - Cookies are automatically included via Playwright's storageState
+     * - No need for Authorization header or localStorage/sessionStorage access
+     *
      * @param type - Calendar type: 'nation', 'diocese', or 'widerregion'
      * @param key - The calendar identifier (e.g., 'US', 'boston_us', 'Americas')
      * @returns Object with status, body, and success flag
@@ -356,46 +415,40 @@ export class ExtendingPageHelper {
     }> {
         console.log(`CLEANUP: Deleting ${type} calendar ${key}...`);
 
-        // Get the auth token from localStorage/sessionStorage
-        const token = await this.page.evaluate(() => {
-            return localStorage.getItem('litcal_jwt_token') || sessionStorage.getItem('litcal_jwt_token');
-        });
-
-        if (!token) {
-            throw new Error('No auth token found in localStorage/sessionStorage for DELETE request');
-        }
-
         const apiBaseUrl = await this.getApiBaseUrl();
 
-        // Make DELETE request
-        const response = await this.page.request.delete(
-            `${apiBaseUrl}/data/${type}/${key}`,
-            {
+        // Make DELETE request via page.evaluate with credentials: 'include'
+        // This ensures HttpOnly cookies are sent with the request
+        const result = await this.page.evaluate(async ({ apiBaseUrl, type, key }) => {
+            const response = await fetch(`${apiBaseUrl}/data/${type}/${key}`, {
+                method: 'DELETE',
+                credentials: 'include',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
                     'Accept': 'application/json'
                 }
+            });
+
+            const status = response.status;
+            let body: any = null;
+            try {
+                body = await response.json();
+            } catch {
+                body = await response.text();
             }
-        );
 
-        const status = response.status();
-        let body: any = null;
-        try {
-            body = await response.json();
-        } catch {
-            body = await response.text();
-        }
+            return { status, body };
+        }, { apiBaseUrl, type, key });
 
-        console.log(`DELETE response: ${status} - ${JSON.stringify(body)}`);
+        console.log(`DELETE response: ${result.status} - ${JSON.stringify(result.body)}`);
 
         // Check for successful response:
         // - Status must be 200
         // - Body must have a truthy 'success' property (string message or boolean true)
         // This correctly rejects { success: false } or { success: '' }
         return {
-            status,
-            body,
-            success: status === 200 && !!body?.success
+            status: result.status,
+            body: result.body,
+            success: result.status === 200 && !!result.body?.success
         };
     }
 

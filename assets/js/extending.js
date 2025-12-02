@@ -1497,7 +1497,7 @@ const updateRegionalCalendarForm = (data) => {
 const fetchRegionalCalendarData = (headers) => {
     // Only fetch data for calendars that already exist
     let calendarExists = false;
-    console.log(`fetchRegionCalendarData: API.category: ${API.category}, API.key: ${API.key}`);
+    console.log(`fetchRegionCalendarData: API.category: <${API.category}>, API.key: <${API.key}>`);
     if (API.category === 'nation') {
         calendarExists = LitCalMetadata.national_calendars_keys.includes(API.key);
         console.log(`LitCalMetadata.national_calendars_keys.includes(API.key): ${LitCalMetadata.national_calendars_keys.includes(API.key)}`);
@@ -1546,7 +1546,9 @@ const fetchRegionalCalendarData = (headers) => {
                 return Promise.reject(response);
             }
         }).then(updateRegionalCalendarForm).catch(error => {
+            // This should never be the case, since we are already checking if `calendarExists` before fetching
             if (404 === error.status || 400 === error.status) {
+                console.log('%c No calendar data was found, we must be creating a new calendar. Setting API.method to PUT. ', 'background: #fbff00ff; color: #000000ff; font-weight: bold; padding: 2px 1px;');
                 API.method = 'PUT';
                 error.json().then(json => {
                     const message = `${error.status} ${json.status} ${json.response}: ${json.description}<br />The Data File for the ${API.category} ${API.key} does not exist yet. Not that it's a big deal, just go ahead and create it now!`;
@@ -1587,6 +1589,7 @@ const fetchRegionalCalendarData = (headers) => {
             //document.querySelector('#overlay').classList.add('hidden');
         });
     } else {
+        console.log(`%c No calendar found on path ${API.path} with key ${API.key}, we must be creating a new calendar. Setting API.method to PUT. `, 'background: #fbff00ff; color: #000000ff; font-weight: bold; padding: 2px 1px;');
         API.method = 'PUT';
         const message = `The Data File for the ${API.category} ${API.key} does not exist yet. Not that it's a big deal, just go ahead and create it now!`;
         toastr["warning"](message, "Warning").attr('data-toast-type', 'calendar-not-found');
@@ -1683,9 +1686,9 @@ const setApiLocaleAndHeaders = (headers) => {
                 ? currentSelectedLocale
                 : selectedNationalCalendar[0].locales[0];
         } else {
-            console.log(`API.path is ${API.path} (category is ${API.category} and key is ${API.key}).`);
+            console.log(`Could not find a national calendar with key ${API.key}; API.path is ${API.path} (category is ${API.category} and key is ${API.key}).`);
             API.locale = likelyLanguage(API.key);
-            console.log(`likelyLanguage = ${API.locale} (nation is ${API.key})`);
+            console.log(`likelyLanguage = ${API.locale} (nation is ${API.key}), we have set API.locale to the likelyLanguage for fetch calls`);
         }
     }
 
@@ -1709,22 +1712,38 @@ const getEventsUrlForCategory = () => {
 /**
  * Check if events should be fetched for the current locale
  *
- * @param {string} eventsUrl - The events URL to check
- * @returns {boolean} True if events should be fetched
+ * @param {string} eventsUrlParam - The events URL to check
+ * @returns {{shouldFetch: boolean, isBlocked: boolean, reason: string}} Object with fetch decision and blocking status
  */
-const shouldFetchEvents = (eventsUrl) => {
-    const missingForLocale = !EventsCollection.has(eventsUrl) || !EventsCollection.get(eventsUrl).has(API.locale);
-    const localeAvailableForBase = eventsUrl !== EventsUrl || LitCalMetadata.locales.includes(API.locale);
-    return missingForLocale && localeAvailableForBase;
+const shouldFetchEvents = (eventsUrlParam) => {
+    const missingForLocale = !EventsCollection.has(eventsUrlParam) || !EventsCollection.get(eventsUrlParam).has(API.locale);
+    console.log(`shouldFetchEvents: are we missing an events catalog for ${eventsUrlParam} and for locale ${API.locale}?`, missingForLocale);
+
+    // Check if we're fetching from the base General Roman Calendar
+    const isFetchingFromBase = eventsUrlParam === EventsUrl;
+    // Check if the locale is available for the General Roman Calendar
+    const localeAvailableForBase = !isFetchingFromBase || LitCalMetadata.locales.includes(API.locale);
+    console.log(`shouldFetchEvents: are we either attempting to fetch an events catalog that is not the General Roman Calendar, or does the General Roman Calendar support the locale <${API.locale}>?`, localeAvailableForBase);
+
+    const shouldFetch = missingForLocale && localeAvailableForBase;
+    console.log(`shouldFetchEvents: verdict on whether we should attempt to fetch events = `, shouldFetch);
+
+    // Determine if we're blocked: we need events but they're not available because translations are missing
+    const isBlocked = missingForLocale && isFetchingFromBase && !LitCalMetadata.locales.includes(API.locale);
+    const reason = isBlocked
+        ? `The General Roman Calendar has not yet been translated into the locale "${API.locale}". Please translate the General Roman Calendar via the Weblate translation server before creating a calendar for this locale.`
+        : '';
+
+    return { shouldFetch, isBlocked, reason };
 };
 
 /**
  * Process events response and update collections
  *
  * @param {Object} json - The events response JSON
- * @param {string} eventsUrl - The events URL used for the request
+ * @param {string} eventsUrlParam - The events URL used for the request
  */
-const processEventsResponse = (json, eventsUrl) => {
+const processEventsResponse = (json, eventsUrlParam) => {
     const eventsMap = new Map(json.litcal_events.map(el => [el.event_key, el?.name ?? '']));
     const emptyPercentage = emptyStringPercentage(eventsMap);
 
@@ -1735,13 +1754,13 @@ const processEventsResponse = (json, eventsUrl) => {
         console.log(`More than 50% of event names are translated, translated string percentage = ${100 - emptyPercentage}%`);
     }
 
-    EventsCollection.get(eventsUrl).set(API.locale, json.litcal_events.map(el => LiturgicalEvent.fromObject(el)));
-    EventsCollectionKeys.set(eventsUrl, json.litcal_events.map(el => el.event_key));
-    EventsLoader.lastRequestPath = eventsUrl;
+    EventsCollection.get(eventsUrlParam).set(API.locale, json.litcal_events.map(el => LiturgicalEvent.fromObject(el)));
+    EventsCollectionKeys.set(eventsUrlParam, json.litcal_events.map(el => el.event_key));
+    EventsLoader.lastRequestPath = eventsUrlParam;
     EventsLoader.lastRequestLocale = API.locale;
 
-    console.log('EventsLoader.lastRequestPath:', eventsUrl, 'EventsLoader.lastRequestLocale:', API.locale, 'EventsCollection:', EventsCollection);
-    document.querySelector('#existingLiturgicalEventsList').innerHTML = EventsCollection.get(eventsUrl).get(API.locale)
+    console.log('EventsLoader.lastRequestPath: <', eventsUrlParam, '>, EventsLoader.lastRequestLocale: <', API.locale, '>, EventsCollection: ', EventsCollection);
+    document.querySelector('#existingLiturgicalEventsList').innerHTML = EventsCollection.get(eventsUrlParam).get(API.locale)
         .map(el => `<option value="${el.event_key}">${el.name}</option>`).join('\n');
 };
 
@@ -1755,12 +1774,29 @@ const fetchEventsAndCalendarData = () => {
     const headers = new Headers({ 'Accept': 'application/json' });
 
     setApiLocaleAndHeaders(headers);
-    console.log(`API.path is ${API.path} (category is ${API.category} and key is ${API.key}). Locale set to ${API.locale === '' ? ' (empty string)' : API.locale}. Now checking if a calendar already exists...`);
+    console.log(`fetchEventsAndCalendarData: API.path is now <${API.path}> (category is <${API.category}> and key is <${API.key}>). Locale set to ${API.locale === '' ? ' (empty string)' : `<${API.locale}>`}. Now checking if a calendar already exists...`);
 
     const eventsUrl = getEventsUrlForCategory();
+    console.log(`fetchEventsAndCalendarData: eventsUrl is <${eventsUrl}>`);
 
-    if (shouldFetchEvents(eventsUrl)) {
-        console.log('Data is missing and locale is available, proceeding to fetch events...');
+    const { shouldFetch, isBlocked, reason } = shouldFetchEvents(eventsUrl);
+
+    if (isBlocked) {
+        console.error('Cannot proceed: translations missing for locale', API.locale);
+        toastr['error'](reason, 'Missing Translations').attr('data-toast-type', 'missing-translations');
+        // Disable all action buttons since we can't proceed without translations
+        document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = true);
+        document.querySelectorAll('.actionPromptButton').forEach(btn => btn.disabled = true);
+        document.querySelector('.serializeRegionalNationalData')?.setAttribute('disabled', 'disabled');
+        document.querySelector('#overlay').classList.add('hidden');
+        return;
+    }
+
+    // Re-enable action buttons since translations are available
+    document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = false);
+
+    if (shouldFetch) {
+        console.log('Calendar data is missing but locale is available, proceeding to fetch events...');
         if (!EventsCollection.has(eventsUrl)) {
             EventsCollection.set(eventsUrl, new Map());
         }
@@ -1771,6 +1807,7 @@ const fetchEventsAndCalendarData = () => {
             .catch(error => console.error(error))
             .finally(() => fetchRegionalCalendarData(headers));
     } else {
+        console.log(`Events already available for locale ${API.locale}, proceeding to fetch calendar data...`);
         fetchRegionalCalendarData(headers);
     }
 }
@@ -1790,6 +1827,7 @@ const regionalNationalCalendarNameChanged = (ev) => {
     API.category = ev.target.dataset.category;
     // our proxy will take care of splitting locale from wider region, when we are setting a wider region key
     API.key = ev.target.value;
+    console.log(`regionalNationalCalendarNameChanged called, API.category set to ${API.category} and API.key set to ${API.key}. Proceeding to call fetchEventsAndCalendarData...`);
     fetchEventsAndCalendarData();
 }
 
@@ -1871,10 +1909,22 @@ const retrieveExistingLiturgicalEvent = (actionButtonId, eventKey) => {
         && EventsLoader.lastRequestPath !== ''
         && EventsLoader.lastRequestLocale !== ''
     ) {
-        return EventsCollection.get(EventsLoader.lastRequestPath)
+        console.log('EventsLoader.lastRequestPath', EventsLoader.lastRequestPath, 'EventsLoader.lastRequestLocale', EventsLoader.lastRequestLocale);
+        if (
+            !EventsCollection.has(EventsLoader.lastRequestPath)
+            || !EventsCollection.get(EventsLoader.lastRequestPath).has(EventsLoader.lastRequestLocale)
+        ) {
+            throw new Error('Localized liturgical events not found for locale ' + EventsLoader.lastRequestLocale + ' on the API path ' + EventsLoader.lastRequestPath);
+        }
+        const existingAndLocalizedLiturgicalEvent = EventsCollection.get(EventsLoader.lastRequestPath)
             .get(EventsLoader.lastRequestLocale)
             .find(liturgical_event => liturgical_event.event_key === eventKey);
+        if (!(existingAndLocalizedLiturgicalEvent instanceof LiturgicalEvent)) {
+            throw new Error(`Localized liturgical event with key ${eventKey} not found in the events collection`);
+        }
+        return existingAndLocalizedLiturgicalEvent;
     }
+    console.log('actionButtonId = <', actionButtonId, '>, EventsLoader.lastRequestPath = <', EventsLoader.lastRequestPath, '>, EventsLoader.lastRequestLocale = <', EventsLoader.lastRequestLocale, '>');
     return undefined;
 };
 
@@ -2051,9 +2101,21 @@ const actionPromptButtonClicked = (ev) => {
     const actionButtonId = ev.target.id;
     const liturgicalEventInputVal = escapeHtml(modalForm.querySelector('.existingLiturgicalEventName').value);
     const eventKey = actionButtonId === 'newLiturgicalEventExNovoButton' ? '' : liturgicalEventInputVal;
+    console.log('actionPromptButtonClicked! actionButtonId = <', actionButtonId, '>, liturgicalEventInputVal = <', liturgicalEventInputVal, '>, eventKey = <', eventKey, '>');
 
     // Retrieve existing liturgical event from collection
-    const existingLiturgicalEvent = retrieveExistingLiturgicalEvent(actionButtonId, eventKey);
+    let existingLiturgicalEvent;
+    try {
+        existingLiturgicalEvent = retrieveExistingLiturgicalEvent(actionButtonId, eventKey);
+    } catch (error) {
+        console.error('Failed to retrieve liturgical event:', error);
+        toastr["error"](
+            error.message + '. Please ensure the liturgical event is translated via the Weblate translation server before proceeding.',
+            "Missing Translation Data"
+        );
+        bootstrap.Modal.getInstance(modal).hide();
+        return;
+    }
 
     // Configure form settings and get property to change (if applicable)
     const propertyToChange = configureFormSettings(actionButtonId, modal);
@@ -2492,73 +2554,80 @@ const serializeRegionalNationalDataClicked = (ev) => {
     }
 
     document.querySelector('#overlay').classList.remove('hidden');
-    API.category = ev.target.dataset.category;
 
-    // Build payload based on calendar category
-    let payload;
-    switch (API.category) {
-        case 'nation':
-            payload = buildNationalCalendarPayload();
-            break;
-        case 'widerregion':
-            payload = buildWiderRegionPayload();
-            break;
-    }
+    try {
+        API.category = ev.target.dataset.category;
 
-    // Process form rows to populate liturgical calendar data
-    payload = buildLitcalDataFromRows(payload);
+        // Build payload based on calendar category
+        let payload;
+        switch (API.category) {
+            case 'nation':
+                payload = buildNationalCalendarPayload();
+                break;
+            case 'widerregion':
+                payload = buildWiderRegionPayload();
+                break;
+        }
 
-    console.log('payload so far:', payload);
-    const finalPayload = API.category === 'nation'
-        ? Object.freeze(new NationalCalendarPayload(payload.litcal, payload.settings, payload.metadata, payload.i18n))
-        : Object.freeze(new WiderRegionPayload(payload.litcal, payload.national_calendars, payload.metadata, payload.i18n));
+        // Process form rows to populate liturgical calendar data
+        payload = buildLitcalDataFromRows(payload);
 
-    const baseHeaders = new Headers({
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-    });
-    if (API.locale) {
-        baseHeaders.append('Accept-Language', API.locale.replaceAll('_', '-'));
-    }
+        console.log('payload so far:', payload);
+        const finalPayload = API.category === 'nation'
+            ? Object.freeze(new NationalCalendarPayload(payload.litcal, payload.settings, payload.metadata, payload.i18n))
+            : Object.freeze(new WiderRegionPayload(payload.litcal, payload.national_calendars, payload.metadata, payload.i18n));
 
-    const makeRequest = () => makeAuthenticatedRequest(API.method, API.path, {
-        body: finalPayload,
-        headers: baseHeaders
-    });
-
-    console.log('we are ready to make the request');
-    console.log('final payload:', finalPayload);
-    console.log('json stringified payload:', JSON.stringify(finalPayload));
-
-    // Wrap the entire save flow so retry after login goes through all handlers
-    const runSaveFlow = () => {
-        return makeRequest()
-        .then(async response => {
-            // Handle auth errors
-            if (response.status === 401 || response.status === 403) {
-                return await handleAuthError(response, runSaveFlow);
-            }
-            if (!response.ok) {
-                return response.json().then(err => { throw err; });
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Data returned from save action:', data);
-            toastr["success"]("National Calendar was created or updated successfully", "Success");
-        })
-        .catch(error => {
-            // Handle different error response shapes
-            const status = error && error.status ? `${error.status}: ` : '';
-            const body = error?.error || error?.message || 'An error occurred';
-            toastr["error"](status + body, "Error");
-        }).finally(() => {
-            document.querySelector('#overlay').classList.add('hidden');
+        const baseHeaders = new Headers({
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
         });
-    };
+        if (API.locale) {
+            baseHeaders.append('Accept-Language', API.locale.replaceAll('_', '-'));
+        }
 
-    // Start the save flow
-    runSaveFlow();
+        const makeRequest = () => makeAuthenticatedRequest(API.method, API.path, {
+            body: finalPayload,
+            headers: baseHeaders
+        });
+
+        console.log('we are ready to make the request');
+        console.log('final payload:', finalPayload);
+        console.log('json stringified payload:', JSON.stringify(finalPayload));
+
+        // Wrap the entire save flow so retry after login goes through all handlers
+        const runSaveFlow = () => {
+            return makeRequest()
+            .then(async response => {
+                // Handle auth errors
+                if (response.status === 401 || response.status === 403) {
+                    return await handleAuthError(response, runSaveFlow);
+                }
+                if (!response.ok) {
+                    return response.json().then(err => { throw err; });
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Data returned from save action:', data);
+                toastr["success"]("National Calendar was created or updated successfully", "Success");
+            })
+            .catch(error => {
+                // Handle different error response shapes
+                const status = error && error.status ? `${error.status}: ` : '';
+                const body = error?.error || error?.message || 'An error occurred';
+                toastr["error"](status + body, "Error");
+            }).finally(() => {
+                document.querySelector('#overlay').classList.add('hidden');
+            });
+        };
+
+        // Start the save flow
+        runSaveFlow();
+    } catch (error) {
+        console.error('Error building calendar payload:', error);
+        toastr["error"](error.message || 'Failed to build calendar data', "Error");
+        document.querySelector('#overlay').classList.add('hidden');
+    }
 }
 
 /**
@@ -3620,6 +3689,7 @@ document.addEventListener('change', (ev) => {
         }
     }
     if (ev.target.classList.contains('regionalNationalCalendarName')) {
+        console.log('%c wider region or national calendar selection has changed ', 'background: #fbff00ff; color: #000000ff; font-weight: bold; padding: 2px 1px;');
         regionalNationalCalendarNameChanged(ev);
     }
     if (ev.target.classList.contains('calendarLocales')) {
