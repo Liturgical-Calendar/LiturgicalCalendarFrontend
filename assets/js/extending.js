@@ -117,14 +117,13 @@ function showLoginModal(callback) {
 /**
  * Add Authorization header to protected requests
  *
+ * @deprecated This function is no longer used. Authentication is now handled
+ *             via HttpOnly cookies with credentials: 'include' in fetch requests.
  * @param {Headers} headers - Headers object to modify
- * @returns {Headers} Modified headers with Authorization token
+ * @returns {Headers} Unmodified headers (no-op for backwards compatibility)
  */
 function addAuthHeader(headers) {
-    const token = Auth.getToken();
-    if (token) {
-        headers.append('Authorization', `Bearer ${token}`);
-    }
+    console.warn('addAuthHeader() is deprecated. Authentication is now handled via HttpOnly cookies.');
     return headers;
 }
 
@@ -180,14 +179,15 @@ function requireAuth(callback) {
 /**
  * Authenticated Request Helper
  *
- * Makes an authenticated HTTP request with Authorization header.
+ * Makes an authenticated HTTP request using HttpOnly cookies.
  * This helper abstracts the common pattern of:
  * - Cloning base headers to avoid mutation
- * - Adding Authorization header from JWT token
+ * - Including credentials for cookie-based authentication
  * - Making the fetch request
  *
  * Note: The API uses HttpOnly cookies with SameSite protection for CSRF defense,
- * so explicit CSRF tokens are not needed.
+ * so explicit CSRF tokens are not needed. Authentication is handled automatically
+ * via cookies set by the /auth/login endpoint.
  *
  * Use this for DELETE, PUT, PATCH, POST requests that require authentication.
  * Pair with handleAuthError for automatic retry on 401/403.
@@ -215,13 +215,11 @@ const makeAuthenticatedRequest = async (method, url, options = {}) => {
     // Clone headers to avoid mutation of the base headers
     const requestHeaders = new Headers(headers);
 
-    // Add authentication header
-    addAuthHeader(requestHeaders);
-
-    // Build fetch options
+    // Build fetch options with credentials for cookie-based auth
     const fetchOptions = {
         method,
-        headers: requestHeaders
+        headers: requestHeaders,
+        credentials: 'include' // Include HttpOnly cookies for authentication
     };
 
     // Add body if provided

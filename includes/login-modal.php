@@ -46,12 +46,19 @@ let expiryWarningShown = false;
 
 /**
  * Initialize authentication UI components
+ * Uses async initialization to wait for auth cache to be populated
  */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     // Guard against missing Auth dependency
     if (typeof Auth === 'undefined') {
         console.error('Auth module not loaded - authentication UI will not function');
         return;
+    }
+
+    // Wait for auth cache to be populated (auth.js may have already done this)
+    // If cache is empty, fetch auth state from server
+    if (Auth.isAuthenticatedCached() === null) {
+        await Auth.updateAuthCache();
     }
 
     updateAuthUI();

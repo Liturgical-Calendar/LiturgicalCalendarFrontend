@@ -1,21 +1,38 @@
 /**
  * Authentication helper module for JWT token management
- * Handles login, logout, token storage, and automatic token refresh
+ * Handles login, logout, and authentication state management
  *
- * Supports both HttpOnly cookie-based authentication (preferred, more secure)
- * and localStorage/sessionStorage fallback for backwards compatibility.
- *
- * For cookie-based auth, use checkAuthAsync() to verify authentication state
- * with the server, as HttpOnly cookies cannot be read by JavaScript.
+ * Uses HttpOnly cookie-based authentication exclusively.
+ * Cookies are set by the API and cannot be read by JavaScript.
+ * Use checkAuthAsync() or isAuthenticatedCached() to verify authentication state.
  *
  * @module Auth
  */
 const Auth = {
     /**
      * Storage keys for JWT and refresh tokens
+     * @deprecated These are no longer used. Tokens are stored in HttpOnly cookies only.
      */
     TOKEN_KEY: 'litcal_jwt_token',
     REFRESH_KEY: 'litcal_refresh_token',
+
+    /**
+     * Cached authentication state from /auth/me endpoint
+     * @private
+     */
+    _cachedAuthState: null,
+
+    /**
+     * Cache expiry timestamp (milliseconds since epoch)
+     * @private
+     */
+    _cacheExpiry: 0,
+
+    /**
+     * Cache duration in milliseconds (1 minute)
+     * @private
+     */
+    _cacheDuration: 60000,
 
     /**
      * Interval IDs for auto-refresh and expiry warning timers
@@ -53,10 +70,13 @@ const Auth = {
     /**
      * Login with username and password
      *
+     * The API sets HttpOnly cookies for the tokens automatically.
+     * No client-side token storage is performed.
+     *
      * @param {string} username - User's username
      * @param {string} password - User's password
-     * @param {boolean} rememberMe - Store token persistently in localStorage
-     * @returns {Promise<Object>} Authentication response with token
+     * @param {boolean} rememberMe - Passed to API to control cookie persistence
+     * @returns {Promise<Object>} Authentication response
      * @throws {Error} When login fails
      */
     async login(username, password, rememberMe = false) {
@@ -72,7 +92,7 @@ const Auth = {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify({ username, password })
+                body: JSON.stringify({ username, password, remember_me: rememberMe })
             });
 
             if (!response.ok) {
@@ -91,14 +111,15 @@ const Auth = {
             }
 
             const data = await response.json();
-            this.setToken(data.access_token, rememberMe);
 
-            if (data.refresh_token) {
-                this.setRefreshToken(data.refresh_token, rememberMe);
-            }
+            // Update auth cache immediately after successful login
+            await this.updateAuthCache();
 
-            // Ensure auto-refresh is running after a successful login
-            this.startAutoRefresh();
+            // Clear any legacy tokens from localStorage/sessionStorage
+            this.clearTokens();
+
+            // Start expiry warning timer based on cached auth state
+            this.startExpiryWarningFromCache();
 
             return data;
         } catch (error) {
@@ -110,11 +131,14 @@ const Auth = {
     /**
      * Store JWT token
      *
+     * @deprecated Tokens are now stored in HttpOnly cookies only.
+     *             This method is kept for clearing legacy tokens.
      * @param {string} token - JWT access token
      * @param {boolean} persistent - Store in localStorage (true) or sessionStorage (false)
      * @returns {boolean} True if storage succeeded, false if storage is unavailable
      */
     setToken(token, persistent = false) {
+        console.warn('Auth.setToken() is deprecated. Tokens are now stored in HttpOnly cookies only.');
         try {
             const storage = persistent ? localStorage : sessionStorage;
             const otherStorage = persistent ? sessionStorage : localStorage;
@@ -135,9 +159,12 @@ const Auth = {
     /**
      * Get stored JWT token
      *
+     * @deprecated Tokens are now stored in HttpOnly cookies only.
+     *             Use isAuthenticated() or checkAuthAsync() instead.
      * @returns {string|null} JWT token or null if not found/unavailable
      */
     getToken() {
+        console.warn('Auth.getToken() is deprecated. Tokens are now stored in HttpOnly cookies only.');
         try {
             return localStorage.getItem(this.TOKEN_KEY) ||
                    sessionStorage.getItem(this.TOKEN_KEY);
@@ -150,12 +177,12 @@ const Auth = {
 
     /**
      * Check if tokens are stored persistently (in localStorage)
-     * Specifically checks where the refresh token is stored since that's
-     * what determines persistence during token refresh operations
      *
+     * @deprecated Tokens are now stored in HttpOnly cookies only.
      * @returns {boolean} True if refresh token is in localStorage, false otherwise/unavailable
      */
     isPersistentStorage() {
+        console.warn('Auth.isPersistentStorage() is deprecated. Tokens are now stored in HttpOnly cookies only.');
         try {
             return localStorage.getItem(this.REFRESH_KEY) !== null;
         } catch (e) {
@@ -168,11 +195,14 @@ const Auth = {
     /**
      * Store refresh token
      *
+     * @deprecated Tokens are now stored in HttpOnly cookies only.
+     *             This method is kept for clearing legacy tokens.
      * @param {string} token - Refresh token
      * @param {boolean} persistent - Store in localStorage (true) or sessionStorage (false)
      * @returns {boolean} True if storage succeeded, false if storage is unavailable
      */
     setRefreshToken(token, persistent = false) {
+        console.warn('Auth.setRefreshToken() is deprecated. Tokens are now stored in HttpOnly cookies only.');
         try {
             const storage = persistent ? localStorage : sessionStorage;
             const otherStorage = persistent ? sessionStorage : localStorage;
@@ -193,9 +223,12 @@ const Auth = {
     /**
      * Get refresh token
      *
+     * @deprecated Tokens are now stored in HttpOnly cookies only.
+     *             Use isAuthenticated() or checkAuthAsync() instead.
      * @returns {string|null} Refresh token or null if not found/unavailable
      */
     getRefreshToken() {
+        console.warn('Auth.getRefreshToken() is deprecated. Tokens are now stored in HttpOnly cookies only.');
         try {
             return localStorage.getItem(this.REFRESH_KEY) ||
                    sessionStorage.getItem(this.REFRESH_KEY);
@@ -207,9 +240,15 @@ const Auth = {
     },
 
     /**
-     * Remove all tokens (logout)
+     * Remove all legacy tokens from localStorage/sessionStorage
+     * Also clears the auth cache
      */
     clearTokens() {
+        // Clear auth cache
+        this._cachedAuthState = null;
+        this._cacheExpiry = 0;
+
+        // Clear legacy tokens from storage
         try {
             localStorage.removeItem(this.TOKEN_KEY);
             sessionStorage.removeItem(this.TOKEN_KEY);
@@ -224,13 +263,20 @@ const Auth = {
 
     /**
      * Decode and get JWT token payload
-     * Internal helper to centralize JWT parsing logic
      *
+     * @deprecated Tokens are now stored in HttpOnly cookies only.
+     *             Use checkAuthAsync() to get user info from the server.
      * @returns {Object|null} Decoded JWT payload or null if invalid/missing
      * @private
      */
     getPayload() {
+        console.warn('Auth.getPayload() is deprecated. Use checkAuthAsync() instead.');
+        // Suppress the deprecation warning from getToken() since we're already warning here
+        const originalWarn = console.warn;
+        console.warn = () => {};
         const token = this.getToken();
+        console.warn = originalWarn;
+
         if (!token) return null;
 
         try {
@@ -259,19 +305,53 @@ const Auth = {
     },
 
     /**
-     * Check if user is authenticated
-     * Validates token existence and expiration from local storage
+     * Check if user is authenticated (synchronous, uses cache)
      *
-     * For HttpOnly cookie authentication, use checkAuthAsync() for authoritative check
+     * Returns the cached authentication state. If cache is expired or empty,
+     * returns false. For authoritative checks, use checkAuthAsync().
      *
-     * @returns {boolean} True if authenticated with valid token
+     * @returns {boolean} True if authenticated according to cache
      */
     isAuthenticated() {
-        const payload = this.getPayload();
-        if (!payload) return false;
+        const now = Date.now();
 
-        const now = Math.floor(Date.now() / 1000);
-        return payload.exp > now;
+        // Check if cache is valid
+        if (this._cachedAuthState && now < this._cacheExpiry) {
+            return this._cachedAuthState.authenticated === true;
+        }
+
+        // Cache expired or empty - return false, caller should use checkAuthAsync()
+        return false;
+    },
+
+    /**
+     * Check if user is authenticated (synchronous, uses cache)
+     * Returns null if cache is expired, allowing caller to decide whether to fetch
+     *
+     * @returns {boolean|null} True/false if cache valid, null if cache expired
+     */
+    isAuthenticatedCached() {
+        const now = Date.now();
+
+        // Check if cache is valid
+        if (this._cachedAuthState && now < this._cacheExpiry) {
+            return this._cachedAuthState.authenticated === true;
+        }
+
+        // Cache expired or empty
+        return null;
+    },
+
+    /**
+     * Update the auth cache by fetching from /auth/me
+     *
+     * @returns {Promise<Object|null>} Auth state object or null if not authenticated
+     */
+    async updateAuthCache() {
+        const state = await this.checkAuthAsync();
+        this._cachedAuthState = state;
+        this._cacheExpiry = Date.now() + this._cacheDuration;
+        return state;
     },
 
     /**
@@ -329,8 +409,12 @@ const Auth = {
 
     /**
      * Internal method to perform the actual token refresh
+     *
+     * The API reads the refresh token from HttpOnly cookies and sets
+     * new access/refresh tokens as HttpOnly cookies in the response.
+     *
      * @private
-     * @returns {Promise<string>} New access token
+     * @returns {Promise<boolean>} True if refresh succeeded
      * @throws {Error} When refresh fails
      */
     async _doRefreshToken() {
@@ -338,23 +422,14 @@ const Auth = {
             throw new Error('API base URL is not configured');
         }
 
-        const refreshToken = this.getRefreshToken();
-        if (!refreshToken) {
-            throw new Error('No refresh token available');
-        }
-
-        // Detect which storage tier is currently being used
-        const isPersistent = this.isPersistentStorage();
-
         try {
             const response = await fetch(`${BaseUrl}/auth/refresh`, {
                 method: 'POST',
                 credentials: 'include', // Include cookies for cross-origin requests
                 headers: {
-                    'Content-Type': 'application/json',
                     'Accept': 'application/json'
-                },
-                body: JSON.stringify({ refresh_token: refreshToken })
+                }
+                // No body needed - refresh token is read from HttpOnly cookie
             });
 
             if (!response.ok) {
@@ -372,19 +447,15 @@ const Auth = {
                 throw new Error(message);
             }
 
-            const data = await response.json();
-
-            // If logout started during the refresh, skip storage writes
+            // If logout started during the refresh, don't update cache
             if (this._isLoggingOut) {
-                return data.access_token;
+                return true;
             }
 
-            // Write refreshed tokens back to the same storage tier
-            this.setToken(data.access_token, isPersistent);
-            if (data.refresh_token) {
-                this.setRefreshToken(data.refresh_token, isPersistent);
-            }
-            return data.access_token;
+            // Update auth cache after successful refresh
+            await this.updateAuthCache();
+
+            return true;
         } catch (error) {
             if (!this._isLoggingOut) {
                 this.clearTokens();
@@ -432,8 +503,7 @@ const Auth = {
     /**
      * Auto-refresh tokens before expiry
      * Checks every minute and refreshes if less than 5 minutes until expiry.
-     * Only attempts refresh if a refresh token is available; access-token-only
-     * sessions will simply expire naturally without forced logout.
+     * Uses cached auth state to determine expiry time.
      */
     startAutoRefresh() {
         // Prevent multiple concurrent intervals
@@ -445,18 +515,12 @@ const Auth = {
         const checkInterval = 60000; // Check every minute
 
         this._autoRefreshInterval = setInterval(async () => {
-            if (!this.isAuthenticated()) return;
-
-            // Skip refresh attempt if no refresh token available
-            // This prevents clearing valid access tokens in access-token-only sessions
-            if (!this.getRefreshToken()) return;
-
-            const payload = this.getPayload();
-            if (!payload) return;
+            // Check cached auth state
+            if (!this._cachedAuthState || !this._cachedAuthState.exp) return;
 
             try {
                 const now = Math.floor(Date.now() / 1000);
-                const timeUntilExpiry = payload.exp - now;
+                const timeUntilExpiry = this._cachedAuthState.exp - now;
 
                 // Refresh if less than 5 minutes until expiry
                 if (timeUntilExpiry < 300 && timeUntilExpiry > 0) {
@@ -494,14 +558,12 @@ const Auth = {
         }
 
         this._expiryWarningInterval = setInterval(() => {
-            if (!this.isAuthenticated()) return;
-
-            const payload = this.getPayload();
-            if (!payload) return;
+            // Check cached auth state
+            if (!this._cachedAuthState || !this._cachedAuthState.exp) return;
 
             try {
                 const now = Math.floor(Date.now() / 1000);
-                const timeUntilExpiry = payload.exp - now;
+                const timeUntilExpiry = this._cachedAuthState.exp - now;
 
                 // Warn if less than 2 minutes until expiry
                 if (timeUntilExpiry > 0 && timeUntilExpiry < 120) {
@@ -511,6 +573,18 @@ const Auth = {
                 console.error('Expiry warning check failed:', error);
             }
         }, 30000); // Check every 30 seconds
+    },
+
+    /**
+     * Start expiry warning using cached auth state
+     * Called after login to set up warnings based on token expiry
+     */
+    startExpiryWarningFromCache() {
+        // The actual warning callback will be set up by login-modal.php
+        // This method just ensures we have the cached state ready
+        if (!this._cachedAuthState) {
+            console.warn('Cannot start expiry warning: no cached auth state');
+        }
     },
 
     /**
@@ -534,40 +608,41 @@ const Auth = {
 
     /**
      * Check user permissions (for future RBAC implementation)
+     * Uses cached auth state from /auth/me endpoint
      *
      * @param {string} permission - Permission to check
      * @returns {boolean} True if user has the permission
      */
     hasPermission(permission) {
-        const payload = this.getPayload();
-        if (!payload) return false;
+        if (!this._cachedAuthState || !this._cachedAuthState.authenticated) return false;
 
-        return payload.permissions && payload.permissions.includes(permission);
+        const permissions = this._cachedAuthState.permissions;
+        return permissions && permissions.includes(permission);
     },
 
     /**
      * Check user role (for future RBAC implementation)
+     * Uses cached auth state from /auth/me endpoint
      *
      * @param {string} role - Role to check
      * @returns {boolean} True if user has the role
      */
     hasRole(role) {
-        const payload = this.getPayload();
-        if (!payload) return false;
+        if (!this._cachedAuthState || !this._cachedAuthState.authenticated) return false;
 
-        return payload.role === role || (payload.roles && payload.roles.includes(role));
+        const roles = this._cachedAuthState.roles;
+        return roles && roles.includes(role);
     },
 
     /**
-     * Get username from token
+     * Get username from cached auth state
      *
      * @returns {string|null} Username or null if not authenticated
      */
     getUsername() {
-        const payload = this.getPayload();
-        if (!payload) return null;
+        if (!this._cachedAuthState || !this._cachedAuthState.authenticated) return null;
 
-        return payload.sub || payload.username || null;
+        return this._cachedAuthState.username || null;
     }
 };
 
@@ -576,9 +651,13 @@ if (window.location.protocol !== 'https:' && window.location.hostname !== 'local
     console.warn('Authentication over HTTP is insecure. Use HTTPS in production.');
 }
 
-// Start auto-refresh on page load if authenticated
-document.addEventListener('DOMContentLoaded', () => {
-    if (Auth.isAuthenticated()) {
+// Initialize auth state on page load
+document.addEventListener('DOMContentLoaded', async () => {
+    // Fetch auth state from server to populate cache
+    const authState = await Auth.updateAuthCache();
+
+    if (authState && authState.authenticated) {
+        // Start auto-refresh if authenticated
         Auth.startAutoRefresh();
     }
 });
