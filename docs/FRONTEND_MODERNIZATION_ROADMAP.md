@@ -1509,6 +1509,540 @@ Based on your input:
 
 ---
 
+## Unified Administration Interface
+
+This section outlines the roadmap for consolidating administrative features into a unified, login-protected interface.
+
+### Current State Analysis
+
+The frontend currently has **multiple separate administrative interfaces** spread across two repositories:
+
+**LiturgicalCalendarFrontend:**
+
+| Page            | Purpose                                      | Auth Method        | Status      |
+|-----------------|----------------------------------------------|--------------------|-------------|
+| `extending.php` | Create/edit national, diocesan, wider region | JWT (modern)       | Active      |
+| `admin.php`     | Edit missals, decrees JSON files             | HTTP Basic (legacy)| Limited use |
+| `decrees.php`   | View decrees from API                        | None (read-only)   | Read-only   |
+
+**UnitTestInterface (separate repository):**
+
+| Page            | Purpose                                      | Auth Method        | Status      |
+|-----------------|----------------------------------------------|--------------------|-------------|
+| `index.php`     | Run unit tests via WebSocket, view results   | HTTP Basic (legacy)| Active      |
+| `admin.php`     | Create/edit unit test definitions            | HTTP Basic (legacy)| Active      |
+| `resources.php` | Validate source data against JSON schemas    | HTTP Basic (legacy)| Active      |
+
+**Current Problems:**
+
+1. **Fragmented Navigation** - Users must know specific URLs to access admin features
+2. **Inconsistent Authentication** - `admin.php` uses HTTP Basic while `extending.php` uses JWT
+3. **Limited Decrees Management** - `decrees.php` is read-only, no CRUD operations
+4. **No Unified Dashboard** - No single entry point for administrative tasks
+5. **Duplicate UI Code** - Similar modals and forms across pages
+6. **Separate Repository** - UnitTestInterface is a separate codebase requiring separate deployment
+7. **Duplicate Dependencies** - Both repos use `liturgical-calendar/components` PHP library
+
+### Goals
+
+1. **Unified Entry Point** - Single `/admin` or `/dashboard` route for all administrative functions
+2. **Consistent JWT Authentication** - All admin features behind login
+3. **Role-Based Access** - Future support for different permission levels
+4. **Modern UI/UX** - Sidebar navigation, breadcrumbs, consistent styling
+5. **Full CRUD for All Data Types** - Including decrees (when API supports it)
+
+### Proposed Architecture
+
+#### Option A: SPA-Style Admin (Recommended for Modern Stack)
+
+If adopting a modern framework (see platform options above), build a dedicated admin SPA:
+
+```text
+/admin                    → Admin Dashboard (login required)
+├── /admin/calendars      → Calendar Management Hub
+│   ├── /national         → National Calendar CRUD
+│   ├── /diocesan         → Diocesan Calendar CRUD
+│   └── /wider-region     → Wider Region Calendar CRUD
+├── /admin/missals        → Roman Missal Data Editor
+├── /admin/decrees        → Decree Management (view now, edit when API ready)
+└── /admin/settings       → User settings, API configuration
+```
+
+#### Option B: Enhanced PHP with Admin Layout (Incremental Improvement)
+
+Keep the current PHP stack but consolidate with a shared admin layout:
+
+```text
+/admin.php                → Admin Dashboard (redirect if not logged in)
+/admin.php?section=calendars&type=national
+/admin.php?section=calendars&type=diocesan
+/admin.php?section=calendars&type=widerRegion
+/admin.php?section=missals
+/admin.php?section=decrees
+```
+
+**Shared Admin Layout:**
+
+```php
+<!-- layout/admin-layout.php -->
+<div class="admin-container">
+    <aside class="admin-sidebar">
+        <nav class="admin-nav">
+            <a href="?section=dashboard" class="nav-link">Dashboard</a>
+            <a href="?section=calendars" class="nav-link">Calendars</a>
+            <a href="?section=missals" class="nav-link">Missals</a>
+            <a href="?section=decrees" class="nav-link">Decrees</a>
+        </nav>
+    </aside>
+    <main class="admin-content">
+        <?php include $contentTemplate; ?>
+    </main>
+</div>
+```
+
+### Implementation Phases
+
+#### Phase 1: Authentication Consolidation
+
+**Goal:** Migrate all admin pages to JWT authentication
+
+**Tasks:**
+
+1. Remove HTTP Basic authentication from `admin.php`
+2. Add JWT authentication check to all admin pages
+3. Redirect unauthenticated users to login modal or login page
+4. Add `data-requires-auth` attributes to all admin UI elements
+
+**Code Changes:**
+
+```php
+// Unified auth check for all admin pages (replace HTTP Basic in admin.php)
+<?php
+include_once 'includes/common.php';
+
+// Check for JWT cookie or redirect
+if (!isset($_COOKIE['litcal_access_token'])) {
+    // For API requests, return 401
+    if (str_contains($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json')) {
+        http_response_code(401);
+        echo json_encode(['error' => 'Authentication required']);
+        exit;
+    }
+    // For page requests, show login UI (handled client-side)
+}
+?>
+```
+
+**Estimated Effort:** 1-2 days
+
+---
+
+#### Phase 2: Admin Dashboard
+
+**Goal:** Create unified entry point with navigation
+
+**Tasks:**
+
+1. Create `/admin` route (either `admin/index.php` or enhanced `admin.php`)
+2. Implement sidebar navigation component
+3. Add quick stats dashboard (calendar counts, recent changes)
+4. Implement breadcrumb navigation
+
+**Dashboard Components:**
+
+```php
+<!-- admin/dashboard.php -->
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5>National Calendars</h5>
+                <p class="display-4"><?= count($nationalCalendars) ?></p>
+                <a href="?section=calendars&type=national">Manage →</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5>Diocesan Calendars</h5>
+                <p class="display-4"><?= count($diocesanCalendars) ?></p>
+                <a href="?section=calendars&type=diocesan">Manage →</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5>Decrees</h5>
+                <p class="display-4"><?= count($decrees) ?></p>
+                <a href="?section=decrees">View →</a>
+            </div>
+        </div>
+    </div>
+</div>
+```
+
+**Estimated Effort:** 3-5 days
+
+---
+
+#### Phase 3: Calendar Management Consolidation
+
+**Goal:** Merge `extending.php` functionality into admin interface
+
+**Tasks:**
+
+1. Refactor `extending.php` forms into modular PHP includes
+2. Create calendar type selector (national/diocesan/wider region)
+3. Implement tabbed interface or wizard for calendar creation
+4. Consolidate JavaScript into admin-specific module
+
+**Current extending.php Structure:**
+
+```text
+extending.php (monolithic)
+├── Wider Region Form (carousel slide 1)
+├── National Calendar Form (carousel slide 2)
+└── Diocesan Calendar Form (carousel slide 3)
+```
+
+**Proposed Modular Structure:**
+
+```text
+admin/
+├── calendars/
+│   ├── index.php          (calendar type selector)
+│   ├── national.php       (extracted from extending.php)
+│   ├── diocesan.php       (extracted from extending.php)
+│   └── wider-region.php   (extracted from extending.php)
+├── includes/
+│   ├── calendar-form-controls.php
+│   └── calendar-modals.php
+└── assets/js/
+    └── admin-calendars.js  (refactored from extending.js)
+```
+
+**Estimated Effort:** 1-2 weeks
+
+---
+
+#### Phase 4: Missals Management Modernization
+
+**Goal:** Modernize `admin.php` missal editor
+
+**Tasks:**
+
+1. Move missal editing into admin interface
+2. Replace HTTP Basic auth with JWT
+3. Improve table editing UX (inline editing, validation)
+4. Add missal-specific actions (add row, delete row, reorder)
+
+**Estimated Effort:** 3-5 days
+
+---
+
+#### Phase 5: Decrees Management
+
+**Goal:** Enable full CRUD for decrees (pending API support)
+
+**Current State:**
+
+- `decrees.php` is read-only
+- API `/decrees` endpoint returns decree data
+- No PUT/PATCH/DELETE support in API yet
+
+**Tasks:**
+
+1. Design decree editor UI (similar to calendar editor)
+2. Add "Add Decree" form modal
+3. Add "Edit Decree" inline or modal editing
+4. Implement when API supports write operations
+
+**Decree Editor UI:**
+
+```html
+<!-- Proposed decree card with edit capability -->
+<div class="card mb-3" id="decree-123">
+    <div class="card-header d-flex justify-content-between">
+        <h5>Prot. N. 123/20/L</h5>
+        <div class="btn-group" data-requires-auth>
+            <button class="btn btn-sm btn-outline-primary edit-decree">
+                <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger delete-decree">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    </div>
+    <!-- ... existing card body ... -->
+</div>
+```
+
+**Estimated Effort:** 1 week (UI), dependent on API
+
+---
+
+#### Phase 6: Settings & User Management
+
+**Goal:** Add admin settings and user management
+
+**Tasks:**
+
+1. Create settings page for API configuration
+2. Add user profile/password change (if supported by API)
+3. Implement audit log viewer (if API provides)
+4. Add locale/language preferences
+
+**Estimated Effort:** 3-5 days
+
+---
+
+#### Phase 7: Tests Management (UnitTestInterface Integration)
+
+**Goal:** Integrate the UnitTestInterface repository functionality into the unified admin dashboard
+
+**Current State:**
+
+The [UnitTestInterface](https://github.com/Liturgical-Calendar/UnitTestInterface) is a separate repository that provides:
+
+- **Test Runner** (`index.php`) - WebSocket-based test execution with real-time results
+- **Test Editor** (`admin.php`) - UI for creating/editing unit test definitions
+- **Resource Validation** (`resources.php`) - Source data validation against JSON schemas
+- HTTP Basic authentication (legacy)
+- Connects to API's `/tests` endpoint for test definitions
+- WebSocket communication with `LitCalTestServer.php` for test execution
+
+**Architecture:**
+
+```text
+UnitTestInterface (current)        →    Admin Dashboard (future)
+├── index.php (test runner)        →    /admin/tests/runner
+├── admin.php (test editor)        →    /admin/tests/editor
+└── resources.php (validation)     →    /admin/tests/validation
+```
+
+**Tasks:**
+
+1. **Migrate Test Runner UI**
+   - Port WebSocket connection logic to admin dashboard
+   - Create test results display component with real-time updates
+   - Implement test filtering (by calendar, category, status)
+   - Add progress indicators and summary statistics
+
+2. **Migrate Test Editor**
+   - Port `AssertionsBuilder.js` for test assertion creation
+   - Create test definition form (event selection, assertion types)
+   - Implement CRUD operations via API `/tests` endpoint
+   - Add test preview/dry-run capability
+
+3. **Migrate Source Validation**
+   - Port schema validation UI
+   - Add validation for all source data types:
+     - Calendar definitions (national, diocesan, wider region)
+     - Roman Missal data (Proprium de Sanctis)
+     - Decree data
+   - Display validation results with error details
+
+4. **Authentication Migration**
+   - Replace HTTP Basic auth with JWT
+   - Use shared auth module from admin dashboard
+
+**Test Editor UI Components:**
+
+```html
+<!-- Test Definition Form -->
+<div class="card">
+    <div class="card-header">
+        <h5>Define Unit Test</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <label>Calendar</label>
+                <select id="testCalendar" class="form-select">
+                    <!-- CalendarSelect component -->
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label>Liturgical Event</label>
+                <select id="testEvent" class="form-select">
+                    <!-- Event list from API -->
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label>Test Type</label>
+                <select id="testType" class="form-select">
+                    <option value="exactCorrespondence">Exact Date Match</option>
+                    <option value="eventExists">Event Exists</option>
+                    <option value="eventNotExists">Event Not Exists</option>
+                </select>
+            </div>
+        </div>
+        <!-- Assertions builder -->
+        <div id="assertionsContainer" class="mt-3">
+            <!-- Dynamic assertion rows -->
+        </div>
+    </div>
+</div>
+```
+
+**Test Runner UI:**
+
+```html
+<!-- Real-time Test Results -->
+<div class="test-results">
+    <div class="progress mb-3">
+        <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="stat-card bg-success text-white">
+                <h3 id="passedCount">0</h3>
+                <p>Passed</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card bg-danger text-white">
+                <h3 id="failedCount">0</h3>
+                <p>Failed</p>
+            </div>
+        </div>
+        <!-- ... -->
+    </div>
+    <div id="testResultsContainer">
+        <!-- WebSocket-populated test result cards -->
+    </div>
+</div>
+```
+
+**WebSocket Integration:**
+
+```javascript
+// Test runner WebSocket connection
+class TestRunner {
+    constructor(wsUrl) {
+        this.ws = new WebSocket(wsUrl);
+        this.ws.onmessage = this.handleResult.bind(this);
+    }
+
+    runTest(testDefinition) {
+        this.ws.send(JSON.stringify({
+            action: 'executeUnitTest',
+            ...testDefinition
+        }));
+    }
+
+    handleResult(event) {
+        const result = JSON.parse(event.data);
+        this.updateUI(result);
+    }
+}
+```
+
+**Estimated Effort:** 2-3 weeks
+
+**Benefits of Integration:**
+
+- Single authentication system (JWT)
+- Unified navigation and UI consistency
+- Shared components (CalendarSelect, event lists)
+- Centralized codebase maintenance
+- Better developer experience
+
+---
+
+### UI/UX Design Considerations
+
+#### Sidebar Navigation
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│ ☰ LitCal Admin                              [User ▼] [Exit] │
+├──────────────┬──────────────────────────────────────────────┤
+│              │                                              │
+│ Dashboard    │  Welcome, Admin                              │
+│              │                                              │
+│ ▼ Calendars  │  ┌──────────┐ ┌──────────┐ ┌──────────┐     │
+│   National   │  │ National │ │ Diocesan │ │  Wider   │     │
+│   Diocesan   │  │    12    │ │    45    │ │ Region 3 │     │
+│   Wider Rgn  │  └──────────┘ └──────────┘ └──────────┘     │
+│              │                                              │
+│ Missals      │  Recent Activity                            │
+│              │  • USA calendar updated (2 hours ago)       │
+│ Decrees      │  • Boston diocese added (yesterday)         │
+│              │  • Decree 123/20/L added (3 days ago)       │
+│ ▼ Tests      │                                              │
+│   Runner     │  Test Status                                │
+│   Editor     │  ┌──────────┐ ┌──────────┐                  │
+│   Validation │  │ ✓ 156    │ │ ✗ 3     │                  │
+│              │  │ Passed   │ │ Failed   │                  │
+│ ─────────────│  └──────────┘ └──────────┘                  │
+│ Settings     │                                              │
+│              │                                              │
+└──────────────┴──────────────────────────────────────────────┘
+```
+
+#### Responsive Design
+
+- Sidebar collapses to hamburger menu on mobile
+- Forms adapt to single-column on small screens
+- Tables become card-based on mobile
+
+#### Accessibility
+
+- All interactive elements keyboard-accessible
+- ARIA labels for screen readers
+- Sufficient color contrast
+- Focus indicators
+
+### Security Requirements
+
+1. **Authentication Required** - All admin routes require valid JWT
+2. **HTTPS Only** - Admin interface must use HTTPS in production
+3. **Session Timeout** - Auto-logout after inactivity (configurable)
+4. **CSRF Protection** - SameSite cookies (already implemented)
+5. **Audit Logging** - Log all write operations (future)
+
+### Migration Strategy
+
+#### Phased Rollout
+
+1. **Deploy Phase 1-2** - Auth consolidation + dashboard alongside existing pages
+2. **Redirect Legacy URLs** - Add deprecation notices to old pages
+3. **Deploy Phase 3-4** - Calendar and missal management
+4. **Deploy Phase 5-6** - Decrees and settings
+5. **Deploy Phase 7** - Tests management (UnitTestInterface integration)
+6. **Remove Legacy Pages** - After sufficient testing period
+7. **Archive UnitTestInterface** - Mark repository as deprecated/archived
+
+#### Backward Compatibility
+
+- Keep existing URL routes working during transition
+- Show deprecation warnings on old pages
+- Provide documentation for new admin interface
+- Redirect UnitTestInterface URLs to new admin routes
+
+### Success Metrics
+
+| Metric                           | Target                         |
+|----------------------------------|--------------------------------|
+| Single entry point for all admin | ✓ Unified `/admin` route       |
+| Consistent authentication        | ✓ JWT only, no HTTP Basic      |
+| Mobile-responsive admin UI       | ✓ All features work on mobile  |
+| Time to complete common tasks    | < current time                 |
+| User satisfaction                | Positive feedback              |
+
+### Dependencies
+
+- **API Decree CRUD** - Phase 5 blocked until API supports write operations
+- **Role-Based Access** - Phase 6 user management depends on API RBAC
+- **Audit Logging** - Depends on API logging infrastructure
+- **WebSocket Server** - Phase 7 requires API's `LitCalTestServer.php` WebSocket server
+- **API `/tests` Endpoint** - Phase 7 depends on test CRUD operations via API
+
+---
+
 ## Related Issues
 
 - API serialization coordination: See `LiturgicalCalendarAPI/docs/enhancements/SERIALIZATION_ROADMAP.md`

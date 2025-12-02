@@ -581,9 +581,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 **Rationale:**
 
-- Application uses JWT in Authorization headers (not cookies)
-- Traditional CSRF tokens are unnecessary for header-based auth
-- SameSite protection provides defense-in-depth for future cookie usage
+- Application now uses HttpOnly cookies for JWT tokens (as of Phase 2.5)
+- SameSite attribute provides built-in CSRF protection for cookie-based auth
+- Traditional CSRF tokens are unnecessary with SameSite cookies
 - Lightweight solution without server-side token generation complexity
 
 **Implementation:**
@@ -636,8 +636,7 @@ function setSecureCookie(
 - ✅ Automatic CSRF protection for all cookies
 - ✅ No server-side token storage or generation
 - ✅ No frontend token validation code needed
-- ✅ Future-proof for any cookie-based features
-- ✅ Works alongside JWT Authorization headers
+- ✅ Essential for HttpOnly cookie-based JWT authentication (Phase 2.5)
 
 #### 2.3 Content Security Policy ✅ COMPLETE
 
@@ -776,30 +775,15 @@ const response = await fetch(`${BaseUrl}/auth/login`, {
 });
 ```
 
-**Backwards Compatibility:**
+**API Backwards Compatibility:**
 
-The implementation maintains full backwards compatibility:
+The API maintains backwards compatibility for third-party clients:
 
 1. **API reads tokens from both sources** - Checks HttpOnly cookie first, falls back to Authorization header
-2. **API returns tokens in response body** - Clients can still use localStorage if preferred
-3. **Frontend stores tokens locally** - For quick client-side checks (expiry, username)
-4. **Hybrid approach** - HttpOnly cookies provide security, local storage provides convenience
+2. **API returns tokens in response body** - Third-party clients can still use their own storage
 
-**Security Benefits:**
-
-- ✅ **XSS Protection** - Tokens in HttpOnly cookies cannot be stolen via JavaScript injection
-- ✅ **CSRF Protection** - SameSite cookie attribute prevents cross-site request forgery
-- ✅ **Secure Flag** - Cookies only sent over HTTPS in production
-- ✅ **Path Restriction** - Refresh token cookie only sent to `/auth` endpoints
-
-**Migration Path:**
-
-For full cookie-only authentication (removing client-side token storage):
-
-1. Update `Auth.isAuthenticated()` to use `checkAuthAsync()` or cache server response
-2. Remove `setToken()` and `setRefreshToken()` calls after login
-3. Remove `getToken()` usage in Authorization headers (cookies sent automatically)
-4. Update auto-refresh to rely on server-side cookie expiry
+**Note:** As of Phase 2.5, the frontend no longer stores tokens in localStorage/sessionStorage.
+See Phase 2.5 below for the current cookie-only implementation.
 
 ### Phase 2.5: Full Cookie-Only Authentication ✅ COMPLETE
 
