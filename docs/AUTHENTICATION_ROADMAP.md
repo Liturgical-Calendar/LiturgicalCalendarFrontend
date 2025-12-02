@@ -881,58 +881,66 @@ function initPermissionUI() {
 
 #### 3.2 Session Expiry Warning
 
-Warn users before session expires:
+Warn users before session expires using cached auth state (cookie-only approach):
 
 ```javascript
 /**
  * Show warning before token expiry
+ * Uses cached auth state from /auth/me endpoint (expiry included in response)
+ *
+ * @param {Function} callback - Function to call with seconds until expiry
  */
-Auth.startExpiryWarning = function() {
-    setInterval(() => {
+Auth.startExpiryWarning = function(callback) {
+    this._expiryWarningInterval = setInterval(() => {
         if (!this.isAuthenticated()) return;
 
-        const token = this.getToken();
-        const payload = JSON.parse(atob(token.split('.')[1]));
+        // Get expiry from cached auth state (populated by /auth/me)
+        const exp = this._cachedAuthState?.exp;
+        if (!exp) return;
+
         const now = Math.floor(Date.now() / 1000);
-        const timeUntilExpiry = payload.exp - now;
+        const timeUntilExpiry = exp - now;
 
         // Warn if less than 2 minutes until expiry
         if (timeUntilExpiry > 0 && timeUntilExpiry < 120) {
-            showWarningToast('Your session will expire soon. Please save your work.');
+            callback(timeUntilExpiry);
         }
     }, 30000); // Check every 30 seconds
 };
 ```
 
+**Note:** With HttpOnly cookies, JavaScript cannot decode the token directly. The expiry time is
+obtained from the `/auth/me` endpoint response, which is cached in `_cachedAuthState`.
+
 ### Phase 4: Future Enhancements (Post-JWT)
+
+> **Note:** These are conceptual examples for future API features. All examples use the cookie-only
+> authentication model with cached auth state from `/auth/me`. The API would need to include
+> permissions/roles in the `/auth/me` response for these features to work.
 
 #### 4.1 Role-Based Access Control (RBAC)
 
-When the API implements RBAC:
+When the API implements RBAC (permissions/roles returned in `/auth/me` response):
 
 ```javascript
 /**
- * Check user permissions
+ * Check user permissions (uses cached auth state)
  */
 Auth.hasPermission = function(permission) {
     if (!this.isAuthenticated()) return false;
 
-    const token = this.getToken();
-    const payload = JSON.parse(atob(token.split('.')[1]));
-
-    return payload.permissions && payload.permissions.includes(permission);
+    const permissions = this._cachedAuthState?.permissions;
+    return permissions && permissions.includes(permission);
 };
 
 /**
- * Check user role
+ * Check user role (uses cached auth state)
  */
 Auth.hasRole = function(role) {
     if (!this.isAuthenticated()) return false;
 
-    const token = this.getToken();
-    const payload = JSON.parse(atob(token.split('.')[1]));
-
-    return payload.role === role || (payload.roles && payload.roles.includes(role));
+    const { role: userRole, roles } = this._cachedAuthState || {};
+    return userRole === role || (roles && roles.includes(role));
 };
 
 // Usage:
@@ -943,17 +951,19 @@ if (Auth.hasPermission('calendar:delete')) {
 
 #### 4.2 Multi-Factor Authentication (MFA)
 
-When the API adds MFA:
+When the API adds MFA (tokens set via HttpOnly cookies by the API):
 
 ```javascript
 /**
  * Handle MFA challenge
+ * API sets HttpOnly cookies on successful verification
  */
 async function handleMfaChallenge(challengeToken) {
     const code = await showMfaModal(); // Prompt user for MFA code
 
-    const response = await fetch(`${API.protocol}://${API.host}:${API.port}/auth/mfa/verify`, {
+    const response = await fetch(`${BaseUrl}/auth/mfa/verify`, {
         method: 'POST',
+        credentials: 'include', // Cookie-based auth
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -968,29 +978,32 @@ async function handleMfaChallenge(challengeToken) {
         throw new Error('MFA verification failed');
     }
 
-    const data = await response.json();
-    Auth.setToken(data.token);
-    return data;
+    // API sets HttpOnly cookies - update local cache
+    await Auth.updateAuthCache();
+    return await response.json();
 }
 ```
 
 #### 4.3 OAuth/OIDC Integration
 
-When integrating external identity providers:
+When integrating external identity providers (API sets HttpOnly cookies):
 
 ```javascript
 /**
  * OAuth login flow
  */
 Auth.loginWithOAuth = function(provider) {
-    const authUrl = `${API.protocol}://${API.host}:${API.port}/auth/oauth/${provider}`;
+    const authUrl = `${BaseUrl}/auth/oauth/${provider}`;
     const redirectUri = window.location.origin + '/auth/callback';
 
+    // Store return URL before redirect
+    sessionStorage.setItem('oauth_return_to', window.location.pathname);
     window.location.href = `${authUrl}?redirect_uri=${encodeURIComponent(redirectUri)}`;
 };
 
 /**
  * Handle OAuth callback
+ * API sets HttpOnly cookies on successful authentication
  */
 Auth.handleOAuthCallback = async function() {
     const params = new URLSearchParams(window.location.search);
@@ -1001,8 +1014,9 @@ Auth.handleOAuthCallback = async function() {
         throw new Error('No authorization code received');
     }
 
-    const response = await fetch(`${API.protocol}://${API.host}:${API.port}/auth/oauth/callback`, {
+    const response = await fetch(`${BaseUrl}/auth/oauth/callback`, {
         method: 'POST',
+        credentials: 'include', // Cookie-based auth
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -1010,8 +1024,12 @@ Auth.handleOAuthCallback = async function() {
         body: JSON.stringify({ code, state })
     });
 
-    const data = await response.json();
-    this.setToken(data.token);
+    if (!response.ok) {
+        throw new Error('OAuth authentication failed');
+    }
+
+    // API sets HttpOnly cookies - update local cache
+    await this.updateAuthCache();
 
     // Redirect to original page
     const returnTo = sessionStorage.getItem('oauth_return_to') || '/';
