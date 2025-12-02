@@ -118,9 +118,6 @@ const Auth = {
             // Clear any legacy tokens from localStorage/sessionStorage
             this.clearTokens();
 
-            // Start expiry warning timer based on cached auth state
-            this.startExpiryWarningFromCache();
-
             return data;
         } catch (error) {
             console.error('Login error:', error);
@@ -593,18 +590,6 @@ const Auth = {
                 console.error('Expiry warning check failed:', error);
             }
         }, 30000); // Check every 30 seconds
-    },
-
-    /**
-     * Start expiry warning using cached auth state
-     * Called after login to set up warnings based on token expiry
-     */
-    startExpiryWarningFromCache() {
-        // The actual warning callback will be set up by login-modal.php
-        // This method just ensures we have the cached state ready
-        if (!this._cachedAuthState) {
-            console.warn('Cannot start expiry warning: no cached auth state');
-        }
     },
 
     /**
