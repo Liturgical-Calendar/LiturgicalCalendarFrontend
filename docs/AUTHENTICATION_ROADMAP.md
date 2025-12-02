@@ -1040,37 +1040,44 @@ Auth.handleOAuthCallback = async function() {
 
 ### 1. Token Storage
 
-**Current Approach:** Hybrid - HttpOnly cookies (primary) + sessionStorage/localStorage (secondary)
+**Current Approach:** Cookie-only (HttpOnly secure cookies)
 
-**As of 2025-11-27**, the API now sets HttpOnly cookies for JWT tokens, providing defense-in-depth:
+**As of 2025-12-02**, the frontend uses HttpOnly cookies exclusively for token storage:
 
-| Storage Method  | XSS Safe | CSRF Safe | Cross-Tab | Use Case                           |
-| --------------- | -------- | --------- | --------- | ---------------------------------- |
-| HttpOnly Cookie | Yes      | SameSite  | Yes       | Primary token storage (secure)     |
-| sessionStorage  | No       | Yes       | No        | Quick client-side checks           |
-| localStorage    | No       | Yes       | Yes       | "Remember me" + client-side checks |
+| Storage Method  | XSS Safe | CSRF Safe | Cross-Tab | Status                        |
+| --------------- | -------- | --------- | --------- | ----------------------------- |
+| HttpOnly Cookie | Yes      | SameSite  | Yes       | Current - sole token storage  |
+| sessionStorage  | No       | Yes       | No        | Legacy - cleared on login     |
+| localStorage    | No       | Yes       | Yes       | Legacy - cleared on login     |
 
 **How it works:**
 
-1. **Login** - API sets HttpOnly cookies AND returns tokens in response body
-2. **Frontend** - Stores tokens in localStorage/sessionStorage for client-side convenience
-3. **API Requests** - Browser automatically sends HttpOnly cookies; frontend also sends Authorization header
-4. **API Validation** - Checks cookie first, falls back to Authorization header
+1. **Login** - API sets HttpOnly cookies; frontend clears any legacy localStorage/sessionStorage tokens
+2. **Auth State** - Frontend calls `/auth/me` endpoint and caches the response
+3. **API Requests** - Browser automatically sends HttpOnly cookies via `credentials: 'include'`
+4. **API Validation** - Reads token from HttpOnly cookie (falls back to Authorization header for backwards compatibility)
+
+**Cookie Configuration:**
+
+| Cookie           | Path    | SameSite | Secure     | HttpOnly |
+| ---------------- | ------- | -------- | ---------- | -------- |
+| `litcal_access`  | `/`     | Lax      | Yes (prod) | Yes      |
+| `litcal_refresh` | `/auth` | Strict   | Yes (prod) | Yes      |
 
 **Security Benefits:**
 
-- Even if XSS attack steals tokens from localStorage, the HttpOnly cookies remain secure
-- API can validate requests using the secure HttpOnly cookie
-- Attackers cannot forge requests without the HttpOnly cookie (SameSite protection)
+- ✅ **XSS-proof** - Tokens cannot be accessed by JavaScript
+- ✅ **CSRF protection** - SameSite attribute prevents cross-site request forgery
+- ✅ **Secure transmission** - Cookies only sent over HTTPS in production
+- ✅ **Path restriction** - Refresh token only sent to `/auth` endpoints
 
-**Future Enhancement:** Full cookie-only mode
+**Historical Note - Hybrid Approach (Phase 2.4, deprecated):**
 
-```javascript
-// For maximum security, remove client-side token storage entirely:
-// 1. Don't store tokens in localStorage/sessionStorage
-// 2. Use Auth.checkAuthAsync() for all auth state checks
-// 3. Let browser handle cookie transmission automatically
-```
+Prior to Phase 2.5, the frontend used a hybrid approach where the API set HttpOnly cookies AND
+returned tokens in the response body. The frontend stored tokens in localStorage/sessionStorage
+for client-side convenience, and requests included both cookies (automatic) and Authorization
+headers (manual). This was replaced with cookie-only authentication in Phase 2.5 for maximum
+XSS protection.
 
 ### 2. HTTPS Enforcement
 
@@ -1103,40 +1110,91 @@ if (window.location.protocol !== 'https:' && window.location.hostname !== 'local
 
 ### Manual Testing Checklist
 
-- [ ] Login flow with valid credentials
-- [ ] Login flow with invalid credentials
-- [ ] Token persistence (sessionStorage vs localStorage)
-- [ ] Authenticated DELETE request succeeds
+**Authentication Flow:**
+
+- [ ] Login flow with valid credentials sets HttpOnly cookies
+- [ ] Login flow with invalid credentials shows error, no cookies set
+- [ ] Login clears any legacy tokens from localStorage/sessionStorage
+- [ ] Logout clears HttpOnly cookies (verify via DevTools → Application → Cookies)
+- [ ] UI updates correctly based on auth state (login/logout buttons)
+
+**Cookie Behavior:**
+
+- [ ] Access token cookie has correct attributes (HttpOnly, SameSite=Lax, Secure in prod)
+- [ ] Refresh token cookie has correct attributes (HttpOnly, SameSite=Strict, Path=/auth)
+- [ ] Cookies are automatically sent with `credentials: 'include'` requests
+- [ ] Cross-origin requests include cookies when CORS is configured
+
+**Server-Side Session Validation:**
+
+- [ ] `/auth/me` returns authenticated state when valid cookie present
+- [ ] `/auth/me` returns `{ authenticated: false }` when no cookie or expired
+- [ ] Authenticated DELETE request succeeds (cookie sent automatically)
 - [ ] Authenticated POST request succeeds
 - [ ] Authenticated PATCH request succeeds
 - [ ] Unauthenticated write request fails with 401
-- [ ] Token expiry handling
-- [ ] Token refresh flow
-- [ ] Logout clears all tokens
-- [ ] UI updates correctly based on auth state
-- [ ] HTTPS enforcement (production only)
 
-### Automated Testing
+**Token Lifecycle:**
+
+- [ ] Token refresh works via HttpOnly cookie (no body needed)
+- [ ] Auto-refresh triggers before token expiry
+- [ ] Expiry warning shown when token near expiration
+- [ ] Session persists across page reloads (cookie retained)
+
+**Security:**
+
+- [ ] HTTPS enforcement warning shown on HTTP (non-localhost)
+- [ ] No tokens visible in JavaScript (localStorage/sessionStorage empty)
+- [ ] DevTools Network tab shows no Authorization headers (cookies only)
+
+### Automated Testing (E2E with Playwright)
 
 ```javascript
-// Example Jest test
-describe('Auth module', () => {
-    test('stores token in sessionStorage by default', () => {
-        Auth.setToken('test-token', false);
-        expect(sessionStorage.getItem(Auth.TOKEN_KEY)).toBe('test-token');
-        expect(localStorage.getItem(Auth.TOKEN_KEY)).toBeNull();
+// Example Playwright test for cookie-based auth
+test('login sets HttpOnly cookies', async ({ page, context }) => {
+    await page.goto('/extending.php');
+
+    // Perform login
+    await page.click('#loginBtn');
+    await page.fill('#loginUsername', 'testuser');
+    await page.fill('#loginPassword', 'testpassword');
+    await page.click('#loginSubmit');
+
+    // Verify cookies are set (HttpOnly cookies visible in context)
+    const cookies = await context.cookies();
+    const accessCookie = cookies.find(c => c.name === 'litcal_access');
+    const refreshCookie = cookies.find(c => c.name === 'litcal_refresh');
+
+    expect(accessCookie).toBeDefined();
+    expect(accessCookie.httpOnly).toBe(true);
+    expect(refreshCookie).toBeDefined();
+    expect(refreshCookie.httpOnly).toBe(true);
+
+    // Verify no tokens in localStorage/sessionStorage
+    const localStorageToken = await page.evaluate(() =>
+        localStorage.getItem('litcal_jwt_token')
+    );
+    expect(localStorageToken).toBeNull();
+});
+
+test('authenticated request uses cookies automatically', async ({ page }) => {
+    // Login first (sets cookies)
+    await loginAsTestUser(page);
+
+    // Intercept API request to verify no Authorization header
+    let authHeaderUsed = false;
+    await page.route('**/data/**', async (route, request) => {
+        if (request.headers()['authorization']) {
+            authHeaderUsed = true;
+        }
+        await route.continue();
     });
 
-    test('stores token in localStorage when persistent', () => {
-        Auth.setToken('test-token', true);
-        expect(localStorage.getItem(Auth.TOKEN_KEY)).toBe('test-token');
-    });
+    // Perform authenticated action
+    await performCalendarUpdate(page);
 
-    test('detects expired tokens', () => {
-        const expiredToken = createExpiredToken(); // Helper to create JWT with past exp
-        Auth.setToken(expiredToken);
-        expect(Auth.isAuthenticated()).toBe(false);
-    });
+    // Verify Authorization header was NOT used (cookies only)
+    expect(authHeaderUsed).toBe(false);
 });
 ```
 
