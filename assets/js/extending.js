@@ -115,19 +115,6 @@ function showLoginModal(callback) {
 }
 
 /**
- * Add Authorization header to protected requests
- *
- * @deprecated This function is no longer used. Authentication is now handled
- *             via HttpOnly cookies with credentials: 'include' in fetch requests.
- * @param {Headers} headers - Headers object to modify
- * @returns {Headers} Unmodified headers (no-op for backwards compatibility)
- */
-function addAuthHeader(headers) {
-    console.warn('addAuthHeader() is deprecated. Authentication is now handled via HttpOnly cookies.');
-    return headers;
-}
-
-/**
  * Handle authentication errors from API responses
  * Attempts to refresh token on 401, or prompts for login
  *
