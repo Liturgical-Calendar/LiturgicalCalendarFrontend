@@ -390,7 +390,7 @@ const Auth = {
      * Refresh access token using refresh token
      * Deduplicates concurrent refresh calls to prevent race conditions
      *
-     * @returns {Promise<string>} New access token
+     * @returns {Promise<boolean>} True if refresh succeeded
      * @throws {Error} When refresh fails
      */
     async refreshToken() {
