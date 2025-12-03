@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-30 10:05+0000\n"
+"POT-Creation-Date: 2025-12-03 03:09+0000\n"
 "PO-Revision-Date: 2025-12-02 14:22+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
@@ -17,8 +17,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && "
-"(n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 5.13.3\n"
 
 #: index.php:5
@@ -240,7 +240,7 @@ msgstr ""
 "lokalizacje mogą być równie dobrze wykonywane w aplikacji klienckiej."
 
 #. translators: notification title
-#: usage.php:11 includes/login-modal.php:276
+#: usage.php:11 includes/login-modal.php:307
 msgid "Success"
 msgstr "Sukces"
 
@@ -1262,7 +1262,7 @@ msgid "About us"
 msgstr "O nas"
 
 #: layout/header.php:51 layout/header.php:53 includes/login-modal.php:35
-#: includes/login-modal.php:292
+#: includes/login-modal.php:327
 msgid "Login"
 msgstr "Zaloguj się"
 
@@ -1294,7 +1294,7 @@ msgstr "Nazwa użytkownika"
 msgid "Password"
 msgstr "Hasło"
 
-#: includes/login-modal.php:19 includes/login-modal.php:112
+#: includes/login-modal.php:19 includes/login-modal.php:143
 msgid "Show password"
 msgstr "Pokaż hasło"
 
@@ -1307,38 +1307,46 @@ msgstr "Zapamiętaj mnie"
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: includes/login-modal.php:71
+#: includes/login-modal.php:79
+msgid "Unable to verify authentication status. The server may be unavailable."
+msgstr ""
+
+#: includes/login-modal.php:81
+msgid "Connection Issue"
+msgstr ""
+
+#: includes/login-modal.php:102
 msgid "Are you sure you want to logout?"
 msgstr "Czy na pewno chcesz się wylogować?"
 
-#: includes/login-modal.php:107
+#: includes/login-modal.php:138
 msgid "Hide password"
 msgstr "Ukryj hasło"
 
-#: includes/login-modal.php:122
+#: includes/login-modal.php:153
 #, php-format
 msgid ""
 "Your session will expire in less than %d minute(s). Please save your work."
 msgstr ""
 "Twoja sesja wygaśnie za mniej niż %d minut(y). Proszę zapisz swoją pracę."
 
-#: includes/login-modal.php:129
+#: includes/login-modal.php:160
 msgid "Session Expiring"
 msgstr "Sesja wygasa"
 
-#: includes/login-modal.php:230
+#: includes/login-modal.php:261
 msgid "Please enter both username and password"
 msgstr "Proszę podać zarówno nazwę użytkownika, jak i hasło"
 
-#: includes/login-modal.php:238
+#: includes/login-modal.php:269
 msgid "Logging in..."
 msgstr "Logowanie..."
 
-#: includes/login-modal.php:276
+#: includes/login-modal.php:307
 msgid "Login successful"
 msgstr "Logowanie zakończone sukcesem"
 
-#: includes/login-modal.php:287
+#: includes/login-modal.php:322
 msgid "Login failed. Please check your credentials."
 msgstr "Logowanie nieudane. Proszę sprawdzić swoje dane."
 

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-30 10:05+0000\n"
+"POT-Creation-Date: 2025-12-03 03:09+0000\n"
 "PO-Revision-Date: 2025-12-01 10:45+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -238,7 +238,7 @@ msgstr ""
 "noci, lokalizácie môžu byť vykonané rovnako dobre v klientskej aplikácii."
 
 #. translators: notification title
-#: usage.php:11 includes/login-modal.php:276
+#: usage.php:11 includes/login-modal.php:307
 msgid "Success"
 msgstr "Úspech"
 
@@ -1251,7 +1251,7 @@ msgid "About us"
 msgstr "O nás"
 
 #: layout/header.php:51 layout/header.php:53 includes/login-modal.php:35
-#: includes/login-modal.php:292
+#: includes/login-modal.php:327
 msgid "Login"
 msgstr "Prihlásenie"
 
@@ -1283,7 +1283,7 @@ msgstr "Používateľské meno"
 msgid "Password"
 msgstr "Heslo"
 
-#: includes/login-modal.php:19 includes/login-modal.php:112
+#: includes/login-modal.php:19 includes/login-modal.php:143
 msgid "Show password"
 msgstr "Zobraziť heslo"
 
@@ -1296,37 +1296,45 @@ msgstr "Zapamätať si ma"
 msgid "Cancel"
 msgstr "Zrušiť"
 
-#: includes/login-modal.php:71
+#: includes/login-modal.php:79
+msgid "Unable to verify authentication status. The server may be unavailable."
+msgstr ""
+
+#: includes/login-modal.php:81
+msgid "Connection Issue"
+msgstr ""
+
+#: includes/login-modal.php:102
 msgid "Are you sure you want to logout?"
 msgstr "Naozaj sa chceš odhlásiť?"
 
-#: includes/login-modal.php:107
+#: includes/login-modal.php:138
 msgid "Hide password"
 msgstr "Skryť heslo"
 
-#: includes/login-modal.php:122
+#: includes/login-modal.php:153
 #, php-format
 msgid ""
 "Your session will expire in less than %d minute(s). Please save your work."
 msgstr "Vaša relácia vyprší o menej ako %d minút. Uložte si svoju prácu."
 
-#: includes/login-modal.php:129
+#: includes/login-modal.php:160
 msgid "Session Expiring"
 msgstr "Platnosť relácie končí"
 
-#: includes/login-modal.php:230
+#: includes/login-modal.php:261
 msgid "Please enter both username and password"
 msgstr "Zadajte prosím používateľské meno a heslo"
 
-#: includes/login-modal.php:238
+#: includes/login-modal.php:269
 msgid "Logging in..."
 msgstr "Prihlasovanie..."
 
-#: includes/login-modal.php:276
+#: includes/login-modal.php:307
 msgid "Login successful"
 msgstr "Prihlásenie úspešné"
 
-#: includes/login-modal.php:287
+#: includes/login-modal.php:322
 msgid "Login failed. Please check your credentials."
 msgstr "Prihlásenie zlyhalo. Skontrolujte svoje prihlasovacie údaje."
 
@@ -1880,8 +1888,8 @@ msgid ""
 msgstr ""
 "ak už boli údaje z Vlastných sviatkov daného Misála pre túto krajinu "
 "zaradené do hlavného motora LitCal, môžete vybrať Misál z tohto zoznamu, aby "
-"ste ho priradili k tomuto Národnému kalendáru "
-"(ak Misál nie je v zozname, nebol zahrnutý do motora LitCal)"
+"ste ho priradili k tomuto Národnému kalendáru (ak Misál nie je v zozname, "
+"nebol zahrnutý do motora LitCal)"
 
 #. translators: tooltip explaining wider region association
 #: includes/messages.php:309

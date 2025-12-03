@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-30 10:05+0000\n"
+"POT-Creation-Date: 2025-12-03 03:09+0000\n"
 "PO-Revision-Date: 2025-12-01 13:28+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
@@ -238,7 +238,7 @@ msgstr ""
 "applicatione clientis aeque bene fieri possunt."
 
 #. translators: notification title
-#: usage.php:11 includes/login-modal.php:276
+#: usage.php:11 includes/login-modal.php:307
 msgid "Success"
 msgstr "Successus"
 
@@ -584,7 +584,8 @@ msgstr "Unicum alimentum cum calendario liturgico nationali pro Italia."
 #: usage.php:344
 msgid ""
 "Single feed with the liturgical calendar specific to the Diocese of Rome."
-msgstr "Unicum alimentum cum calendario liturgico specifico ad Dioecesim Romae."
+msgstr ""
+"Unicum alimentum cum calendario liturgico specifico ad Dioecesim Romae."
 
 #. translators: card header - Amazon Alexa conversational skill (not flash briefing)
 #: usage.php:355
@@ -1251,7 +1252,7 @@ msgid "About us"
 msgstr "De nobis"
 
 #: layout/header.php:51 layout/header.php:53 includes/login-modal.php:35
-#: includes/login-modal.php:292
+#: includes/login-modal.php:327
 msgid "Login"
 msgstr "Intra"
 
@@ -1283,7 +1284,7 @@ msgstr "Nomen usoris"
 msgid "Password"
 msgstr "Tessera"
 
-#: includes/login-modal.php:19 includes/login-modal.php:112
+#: includes/login-modal.php:19 includes/login-modal.php:143
 msgid "Show password"
 msgstr "Tesseram ostende"
 
@@ -1296,38 +1297,46 @@ msgstr "Memento mei"
 msgid "Cancel"
 msgstr "Cancella"
 
-#: includes/login-modal.php:71
+#: includes/login-modal.php:79
+msgid "Unable to verify authentication status. The server may be unavailable."
+msgstr ""
+
+#: includes/login-modal.php:81
+msgid "Connection Issue"
+msgstr ""
+
+#: includes/login-modal.php:102
 msgid "Are you sure you want to logout?"
 msgstr "Certus es ut discedas?"
 
-#: includes/login-modal.php:107
+#: includes/login-modal.php:138
 msgid "Hide password"
 msgstr "Tesseram absconde"
 
-#: includes/login-modal.php:122
+#: includes/login-modal.php:153
 #, php-format
 msgid ""
 "Your session will expire in less than %d minute(s). Please save your work."
 msgstr ""
 "Sessio tua infra minus quam %d minutas exspirabit. Quaeso serva opus tuum."
 
-#: includes/login-modal.php:129
+#: includes/login-modal.php:160
 msgid "Session Expiring"
 msgstr "Sessio exspirat"
 
-#: includes/login-modal.php:230
+#: includes/login-modal.php:261
 msgid "Please enter both username and password"
 msgstr "Quaeso et nomen usoris et tesseram inseras"
 
-#: includes/login-modal.php:238
+#: includes/login-modal.php:269
 msgid "Logging in..."
 msgstr "Intra..."
 
-#: includes/login-modal.php:276
+#: includes/login-modal.php:307
 msgid "Login successful"
 msgstr "Ingressus feliciter"
 
-#: includes/login-modal.php:287
+#: includes/login-modal.php:322
 msgid "Login failed. Please check your credentials."
 msgstr "Ingressus defecit. Quaeso tua testimonia reexamina."
 
@@ -1883,8 +1892,8 @@ msgid ""
 msgstr ""
 "si data ex Proprio Sanctorum Missalis particularis pro ista natione iam in "
 "machina principale LitCal incohata sunt, potes eligere Missale ex hoc indice "
-"ad illud conferendum cum hoc Calendario Nationali "
-"(si Missale in indice non est, non est incohatum in machina LitCal)"
+"ad illud conferendum cum hoc Calendario Nationali (si Missale in indice non "
+"est, non est incohatum in machina LitCal)"
 
 #. translators: tooltip explaining wider region association
 #: includes/messages.php:309

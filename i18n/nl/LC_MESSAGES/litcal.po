@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-30 10:05+0000\n"
+"POT-Creation-Date: 2025-12-03 03:09+0000\n"
 "PO-Revision-Date: 2025-12-01 10:45+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
@@ -243,7 +243,7 @@ msgstr ""
 "worden uitgevoerd."
 
 #. translators: notification title
-#: usage.php:11 includes/login-modal.php:276
+#: usage.php:11 includes/login-modal.php:307
 msgid "Success"
 msgstr "Succes"
 
@@ -596,7 +596,8 @@ msgstr "Enkele feed met de nationale liturgische kalender voor Italië."
 #: usage.php:344
 msgid ""
 "Single feed with the liturgical calendar specific to the Diocese of Rome."
-msgstr "Enkele feed met de liturgische kalender specifiek voor het bisdom Rome."
+msgstr ""
+"Enkele feed met de liturgische kalender specifiek voor het bisdom Rome."
 
 #. translators: card header - Amazon Alexa conversational skill (not flash briefing)
 #: usage.php:355
@@ -1270,7 +1271,7 @@ msgid "About us"
 msgstr "Over ons"
 
 #: layout/header.php:51 layout/header.php:53 includes/login-modal.php:35
-#: includes/login-modal.php:292
+#: includes/login-modal.php:327
 msgid "Login"
 msgstr "Inloggen"
 
@@ -1302,7 +1303,7 @@ msgstr "Gebruikersnaam"
 msgid "Password"
 msgstr "Wachtwoord"
 
-#: includes/login-modal.php:19 includes/login-modal.php:112
+#: includes/login-modal.php:19 includes/login-modal.php:143
 msgid "Show password"
 msgstr "Toon wachtwoord"
 
@@ -1315,15 +1316,23 @@ msgstr "Onthoud mij"
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: includes/login-modal.php:71
+#: includes/login-modal.php:79
+msgid "Unable to verify authentication status. The server may be unavailable."
+msgstr ""
+
+#: includes/login-modal.php:81
+msgid "Connection Issue"
+msgstr ""
+
+#: includes/login-modal.php:102
 msgid "Are you sure you want to logout?"
 msgstr "Weet je zeker dat je wilt uitloggen?"
 
-#: includes/login-modal.php:107
+#: includes/login-modal.php:138
 msgid "Hide password"
 msgstr "Wachtwoord verbergen"
 
-#: includes/login-modal.php:122
+#: includes/login-modal.php:153
 #, php-format
 msgid ""
 "Your session will expire in less than %d minute(s). Please save your work."
@@ -1331,23 +1340,23 @@ msgstr ""
 "Je sessie verloopt over minder dan %d minuut/minuten. Sla je werk op, "
 "alsjeblieft."
 
-#: includes/login-modal.php:129
+#: includes/login-modal.php:160
 msgid "Session Expiring"
 msgstr "Sessie verloopt"
 
-#: includes/login-modal.php:230
+#: includes/login-modal.php:261
 msgid "Please enter both username and password"
 msgstr "Voer zowel gebruikersnaam als wachtwoord in"
 
-#: includes/login-modal.php:238
+#: includes/login-modal.php:269
 msgid "Logging in..."
 msgstr "Inloggen..."
 
-#: includes/login-modal.php:276
+#: includes/login-modal.php:307
 msgid "Login successful"
 msgstr "Inloggen geslaagd"
 
-#: includes/login-modal.php:287
+#: includes/login-modal.php:322
 msgid "Login failed. Please check your credentials."
 msgstr "Inloggen mislukt. Controleer je inloggegevens."
 

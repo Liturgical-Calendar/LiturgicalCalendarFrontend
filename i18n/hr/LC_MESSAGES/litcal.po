@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-30 10:05+0000\n"
+"POT-Creation-Date: 2025-12-03 03:09+0000\n"
 "PO-Revision-Date: 2025-12-01 13:28+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
@@ -237,7 +237,7 @@ msgstr ""
 "lokalizacije se mogu izvršiti jednako dobro u klijentskoj aplikaciji."
 
 #. translators: notification title
-#: usage.php:11 includes/login-modal.php:276
+#: usage.php:11 includes/login-modal.php:307
 msgid "Success"
 msgstr "Uspješno"
 
@@ -1248,7 +1248,7 @@ msgid "About us"
 msgstr "O nama"
 
 #: layout/header.php:51 layout/header.php:53 includes/login-modal.php:35
-#: includes/login-modal.php:292
+#: includes/login-modal.php:327
 msgid "Login"
 msgstr "Prijava"
 
@@ -1280,7 +1280,7 @@ msgstr "Korisničko ime"
 msgid "Password"
 msgstr "Lozinka"
 
-#: includes/login-modal.php:19 includes/login-modal.php:112
+#: includes/login-modal.php:19 includes/login-modal.php:143
 msgid "Show password"
 msgstr "Prikaži lozinku"
 
@@ -1293,37 +1293,45 @@ msgstr "Zapamti me"
 msgid "Cancel"
 msgstr "Odustani"
 
-#: includes/login-modal.php:71
+#: includes/login-modal.php:79
+msgid "Unable to verify authentication status. The server may be unavailable."
+msgstr ""
+
+#: includes/login-modal.php:81
+msgid "Connection Issue"
+msgstr ""
+
+#: includes/login-modal.php:102
 msgid "Are you sure you want to logout?"
 msgstr "Jesi li siguran da se želiš odjaviti?"
 
-#: includes/login-modal.php:107
+#: includes/login-modal.php:138
 msgid "Hide password"
 msgstr "Sakrij lozinku"
 
-#: includes/login-modal.php:122
+#: includes/login-modal.php:153
 #, php-format
 msgid ""
 "Your session will expire in less than %d minute(s). Please save your work."
 msgstr "Vaša će sesija isteći za manje od %d minute. Molimo spremite svoj rad."
 
-#: includes/login-modal.php:129
+#: includes/login-modal.php:160
 msgid "Session Expiring"
 msgstr "Sesija istječe"
 
-#: includes/login-modal.php:230
+#: includes/login-modal.php:261
 msgid "Please enter both username and password"
 msgstr "Molimo unesite i korisničko ime i lozinku"
 
-#: includes/login-modal.php:238
+#: includes/login-modal.php:269
 msgid "Logging in..."
 msgstr "Prijava u tijeku..."
 
-#: includes/login-modal.php:276
+#: includes/login-modal.php:307
 msgid "Login successful"
 msgstr "Prijava uspješna"
 
-#: includes/login-modal.php:287
+#: includes/login-modal.php:322
 msgid "Login failed. Please check your credentials."
 msgstr "Prijava nije uspjela. Provjerite svoje podatke."
 
@@ -1883,8 +1891,8 @@ msgid ""
 msgstr ""
 "ako su podaci iz Vlastitog dijela svetaca za određeni Misal za ovu naciju "
 "već uključeni u glavni LitCal engine, možete odabrati Misal s ovog popisa da "
-"ga povežete s ovim Nacionalnim kalendarom "
-"(ako Misal nije na popisu, nije uključen u LitCal engine)"
+"ga povežete s ovim Nacionalnim kalendarom (ako Misal nije na popisu, nije "
+"uključen u LitCal engine)"
 
 #. translators: tooltip explaining wider region association
 #: includes/messages.php:309

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-30 10:05+0000\n"
+"POT-Creation-Date: 2025-12-03 03:09+0000\n"
 "PO-Revision-Date: 2025-12-01 10:45+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
@@ -241,7 +241,7 @@ msgstr ""
 "forma."
 
 #. translators: notification title
-#: usage.php:11 includes/login-modal.php:276
+#: usage.php:11 includes/login-modal.php:307
 msgid "Success"
 msgstr "Sucesso"
 
@@ -1268,7 +1268,7 @@ msgid "About us"
 msgstr "Sobre nós"
 
 #: layout/header.php:51 layout/header.php:53 includes/login-modal.php:35
-#: includes/login-modal.php:292
+#: includes/login-modal.php:327
 msgid "Login"
 msgstr "Login"
 
@@ -1300,7 +1300,7 @@ msgstr "Nome de usuário"
 msgid "Password"
 msgstr "Senha"
 
-#: includes/login-modal.php:19 includes/login-modal.php:112
+#: includes/login-modal.php:19 includes/login-modal.php:143
 msgid "Show password"
 msgstr "Mostrar senha"
 
@@ -1313,38 +1313,46 @@ msgstr "Lembrar de mim"
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: includes/login-modal.php:71
+#: includes/login-modal.php:79
+msgid "Unable to verify authentication status. The server may be unavailable."
+msgstr ""
+
+#: includes/login-modal.php:81
+msgid "Connection Issue"
+msgstr ""
+
+#: includes/login-modal.php:102
 msgid "Are you sure you want to logout?"
 msgstr "Tem certeza de que deseja sair?"
 
-#: includes/login-modal.php:107
+#: includes/login-modal.php:138
 msgid "Hide password"
 msgstr "Ocultar senha"
 
-#: includes/login-modal.php:122
+#: includes/login-modal.php:153
 #, php-format
 msgid ""
 "Your session will expire in less than %d minute(s). Please save your work."
 msgstr ""
 "Sua sessão expirará em menos de %d minuto(s). Por favor, salve seu trabalho."
 
-#: includes/login-modal.php:129
+#: includes/login-modal.php:160
 msgid "Session Expiring"
 msgstr "Sessão expirando"
 
-#: includes/login-modal.php:230
+#: includes/login-modal.php:261
 msgid "Please enter both username and password"
 msgstr "Por favor, insira tanto o nome de usuário quanto a senha"
 
-#: includes/login-modal.php:238
+#: includes/login-modal.php:269
 msgid "Logging in..."
 msgstr "Entrando..."
 
-#: includes/login-modal.php:276
+#: includes/login-modal.php:307
 msgid "Login successful"
 msgstr "Login bem-sucedido"
 
-#: includes/login-modal.php:287
+#: includes/login-modal.php:322
 msgid "Login failed. Please check your credentials."
 msgstr "Falha no login. Por favor, verifique suas credenciais."
 
@@ -1878,8 +1886,8 @@ msgid ""
 msgstr ""
 "por favor, tenha em mente que o primeiro passo para criar um calendário "
 "nacional é traduzir os dados do calendário já existentes para o idioma "
-"correto. Isto pode ser feito no servidor de tradução LitCal "
-"(veja acima para mais detalhes)"
+"correto. Isto pode ser feito no servidor de tradução LitCal (veja acima para "
+"mais detalhes)"
 
 #. translators: tooltip explaining the Eternal High Priest feast
 #: includes/messages.php:305
@@ -1903,8 +1911,8 @@ msgid ""
 msgstr ""
 "se dados do Próprio dos Santos de um determinado Missal desta nação já foram "
 "incorporados no motor principal do LitCal, você pode escolher o Missal desta "
-"lista para associá-lo a este Calendário Nacional "
-"(se o Missal não estiver na lista, não foi incorporado no motor LitCal)"
+"lista para associá-lo a este Calendário Nacional (se o Missal não estiver na "
+"lista, não foi incorporado no motor LitCal)"
 
 #. translators: tooltip explaining wider region association
 #: includes/messages.php:309

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-30 10:05+0000\n"
+"POT-Creation-Date: 2025-12-03 03:09+0000\n"
 "PO-Revision-Date: 2025-12-01 13:28+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
@@ -236,7 +236,7 @@ msgstr ""
 "kliens alkalmazásban ugyanúgy elvégezhetők."
 
 #. translators: notification title
-#: usage.php:11 includes/login-modal.php:276
+#: usage.php:11 includes/login-modal.php:307
 msgid "Success"
 msgstr "Siker"
 
@@ -1258,7 +1258,7 @@ msgid "About us"
 msgstr "Rólunk"
 
 #: layout/header.php:51 layout/header.php:53 includes/login-modal.php:35
-#: includes/login-modal.php:292
+#: includes/login-modal.php:327
 msgid "Login"
 msgstr "Bejelentkezés"
 
@@ -1290,7 +1290,7 @@ msgstr "Felhasználónév"
 msgid "Password"
 msgstr "Jelszó"
 
-#: includes/login-modal.php:19 includes/login-modal.php:112
+#: includes/login-modal.php:19 includes/login-modal.php:143
 msgid "Show password"
 msgstr "Jelszó megjelenítése"
 
@@ -1303,37 +1303,45 @@ msgstr "Emlékezz rám"
 msgid "Cancel"
 msgstr "Mégse"
 
-#: includes/login-modal.php:71
+#: includes/login-modal.php:79
+msgid "Unable to verify authentication status. The server may be unavailable."
+msgstr ""
+
+#: includes/login-modal.php:81
+msgid "Connection Issue"
+msgstr ""
+
+#: includes/login-modal.php:102
 msgid "Are you sure you want to logout?"
 msgstr "Biztosan ki szeretnél jelentkezni?"
 
-#: includes/login-modal.php:107
+#: includes/login-modal.php:138
 msgid "Hide password"
 msgstr "Jelszó elrejtése"
 
-#: includes/login-modal.php:122
+#: includes/login-modal.php:153
 #, php-format
 msgid ""
 "Your session will expire in less than %d minute(s). Please save your work."
 msgstr "A munkamenet %d percen belül lejár. Kérjük, mentse a munkáját."
 
-#: includes/login-modal.php:129
+#: includes/login-modal.php:160
 msgid "Session Expiring"
 msgstr "Lejár a munkamenet"
 
-#: includes/login-modal.php:230
+#: includes/login-modal.php:261
 msgid "Please enter both username and password"
 msgstr "Kérjük, adja meg mind a felhasználónevet, mind a jelszót"
 
-#: includes/login-modal.php:238
+#: includes/login-modal.php:269
 msgid "Logging in..."
 msgstr "Bejelentkezés..."
 
-#: includes/login-modal.php:276
+#: includes/login-modal.php:307
 msgid "Login successful"
 msgstr "Sikeres bejelentkezés"
 
-#: includes/login-modal.php:287
+#: includes/login-modal.php:322
 msgid "Login failed. Please check your credentials."
 msgstr "A bejelentkezés sikertelen. Kérjük, ellenőrizze a hitelesítő adatait."
 
@@ -1867,8 +1875,8 @@ msgid ""
 msgstr ""
 "kérlek, tartsd szem előtt, hogy egy nemzeti naptár létrehozásának első "
 "lépése az, hogy a már meglévő naptár adatokat lefordítsd a megfelelő "
-"nyelvre. Ezt a LitCal fordítószerveren lehet megtenni "
-"(lásd a fenti részleteket)"
+"nyelvre. Ezt a LitCal fordítószerveren lehet megtenni (lásd a fenti "
+"részleteket)"
 
 #. translators: tooltip explaining the Eternal High Priest feast
 #: includes/messages.php:305
@@ -1892,8 +1900,8 @@ msgid ""
 msgstr ""
 "ha ennek a nemzetnek a Misszáléban a Szentek sajátjából már bekerült adatok "
 "szerepelnek a fő LitCal motorban, kiválaszthatod a Misszálét a listából, "
-"hogy társíthasd a Nemzeti Naptárhoz "
-"(ha a Misszálé nincs a listán, akkor nem került be a LitCal motorba)"
+"hogy társíthasd a Nemzeti Naptárhoz (ha a Misszálé nincs a listán, akkor nem "
+"került be a LitCal motorba)"
 
 #. translators: tooltip explaining wider region association
 #: includes/messages.php:309
