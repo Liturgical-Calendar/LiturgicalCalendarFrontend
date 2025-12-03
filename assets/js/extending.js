@@ -70,6 +70,33 @@ const jsLocale = LOCALE.replace('_', '-');
 const snakeCaseToPascalCase = (str) => str.replace(/(^\w|[-_][a-z])/g, g => g.toUpperCase().replace(/[-_]/, ''));
 
 /**
+ * Extract a human-readable error message from various API error response shapes.
+ * Supports:
+ * - RFC 9110 Problem Details: { title, detail, status }
+ * - Custom API format: { response, description, status }
+ * - Simple format: { error, message, status }
+ * @param {object} error - The error object from API response
+ * @param {string} fallback - Fallback message if no recognizable shape
+ * @return {string} Formatted error message
+ */
+const extractErrorMessage = (error, fallback = 'An error occurred') => {
+    if (!error || typeof error !== 'object') {
+        return fallback;
+    }
+    // RFC 9110 Problem Details format (preferred)
+    if (error.detail) {
+        const title = error.title ? `${error.title}: ` : '';
+        return title + error.detail;
+    }
+    // Custom API format: { response, description }
+    if (error.response && error.description) {
+        return `${error.response}: ${error.description}`;
+    }
+    // Simple format: { error } or { message }
+    return error.error || error.message || fallback;
+};
+
+/**
  * Takes a string in snake_case and returns it in camelCase.
  * @param {string} str
  * @return {string}
@@ -2614,9 +2641,9 @@ const serializeRegionalNationalDataClicked = (ev) => {
                 toastr["success"]("National Calendar was created or updated successfully", "Success");
             })
             .catch(error => {
-                // Handle different error response shapes
+                // Handle different error response shapes (RFC 9110 Problem Details, custom API format, simple format)
                 const status = error && error.status ? `${error.status}: ` : '';
-                const body = error?.error || error?.message || 'An error occurred';
+                const body = extractErrorMessage(error);
                 toastr["error"](status + body, "Error");
             }).finally(() => {
                 document.querySelector('#overlay').classList.add('hidden');
@@ -3537,8 +3564,9 @@ const saveDiocesanCalendar_btnClicked = () => {
             })
             .catch(error => {
                 console.error('Error:', error);
+                // Handle different error response shapes (RFC 9110 Problem Details, custom API format, simple format)
                 const status = error && error.status ? `${error.status}: ` : '';
-                const message = error?.message || 'An error occurred';
+                const message = extractErrorMessage(error);
                 toastr["error"](status + message, "Error");
             }).finally(() => {
                 document.querySelector('#overlay').classList.add('hidden');
