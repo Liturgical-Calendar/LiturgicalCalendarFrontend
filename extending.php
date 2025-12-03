@@ -6,6 +6,7 @@ use LiturgicalCalendar\Frontend\Utilities;
 
 include_once 'includes/common.php'; // provides $i18n and all API URLs
 include_once 'includes/messages.php'; // translation strings
+/** @var array<string,string> $messages */
 
 $FormControls = new FormControls($i18n);
 
@@ -124,10 +125,10 @@ $DioceseGroupHelp     = $messages['DioceseGroupHelp'];
 
 
 $buttonGroup = '<hr><div class="d-flex justify-content-around">
-<button class="btn btn-sm btn-primary m-2" id="makePatronAction" data-bs-toggle="modal" data-bs-target="#makePatronActionPrompt"><i class="fas fa-user-graduate me-2"></i>' . $messages['PatronButton'] . '</button>
-<button class="btn btn-sm btn-primary m-2" id="setPropertyAction" data-bs-toggle="modal" data-bs-target="#setPropertyActionPrompt"><i class="fas fa-edit me-2"></i>' . $messages['SetPropertyButton'] . '</button>
-<button class="btn btn-sm btn-primary m-2" id="moveLiturgicalEventAction" data-bs-toggle="modal" data-bs-target="#moveLiturgicalEventActionPrompt"><i class="fas fa-calendar-day me-2"></i>' . $messages['MoveEventButton'] . '</button>
-<button class="btn btn-sm btn-primary m-2" id="newLiturgicalEventAction" data-bs-toggle="modal" data-bs-target="#newLiturgicalEventActionPrompt"><i class="far fa-calendar-plus me-2"></i>' . $messages['CreateEventButton'] . '</button>
+<button class="btn btn-sm btn-primary m-2 litcalActionButton" id="makePatronAction" data-requires-auth="true" data-bs-toggle="modal" data-bs-target="#makePatronActionPrompt"><i class="fas fa-user-graduate me-2"></i>' . $messages['PatronButton'] . '</button>
+<button class="btn btn-sm btn-primary m-2 litcalActionButton" id="setPropertyAction" data-requires-auth="true" data-bs-toggle="modal" data-bs-target="#setPropertyActionPrompt"><i class="fas fa-edit me-2"></i>' . $messages['SetPropertyButton'] . '</button>
+<button class="btn btn-sm btn-primary m-2 litcalActionButton" id="moveLiturgicalEventAction" data-requires-auth="true" data-bs-toggle="modal" data-bs-target="#moveLiturgicalEventActionPrompt"><i class="fas fa-calendar-day me-2"></i>' . $messages['MoveEventButton'] . '</button>
+<button class="btn btn-sm btn-primary m-2 litcalActionButton" id="newLiturgicalEventAction" data-requires-auth="true" data-bs-toggle="modal" data-bs-target="#newLiturgicalEventActionPrompt"><i class="far fa-calendar-plus me-2"></i>' . $messages['CreateEventButton'] . '</button>
 </div>';
 
 ?><!doctype html>
@@ -206,7 +207,7 @@ if (isset($_GET['choice'])) {
                             <?php echo $buttonGroup ?>
                         </div>
                         <div class="card-footer text-center">
-                            <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeWiderRegionData" data-category="widerregion" disabled>
+                            <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeWiderRegionData" data-requires-auth="true" data-category="widerregion" disabled>
                                 <i class="fas fa-save me-2"></i>
                                 <?php echo $messages['Save Wider Region Calendar Data']; ?>
                             </button>
@@ -337,7 +338,7 @@ if (isset($_GET['choice'])) {
                             <?php echo $buttonGroup ?>
                         </div>
                         <div class="card-footer text-center">
-                            <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeNationalCalendarData" data-category="nation" disabled>
+                            <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeNationalCalendarData" data-requires-auth="true" data-category="nation" disabled>
                                 <i class="fas fa-save me-2"></i>
                                 <?php echo $messages['Save National Calendar Data']; ?>
                             </button>
@@ -576,7 +577,7 @@ if (isset($_GET['choice'])) {
                 <div class="container">
                     <div class="row">
                         <div class="col text-center">
-                            <button class="btn btn-lg btn-primary m-1" id="saveDiocesanCalendar_btn">
+                            <button class="btn btn-lg btn-primary m-1" id="saveDiocesanCalendar_btn" data-requires-auth="true">
                                 <i class="fas fa-save me-2"></i>
                                 <?php echo $messages['Save Diocesan Calendar Data']; ?>
                             </button>

@@ -46,12 +46,43 @@ let expiryWarningShown = false;
 
 /**
  * Initialize authentication UI components
+ * Uses async initialization to wait for auth cache to be populated
  */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     // Guard against missing Auth dependency
     if (typeof Auth === 'undefined') {
         console.error('Auth module not loaded - authentication UI will not function');
         return;
+    }
+
+    // Wait for auth cache to be populated (auth.js may have already done this)
+    // If cache is empty, fetch auth state from server with retry and user feedback
+    if (Auth.isAuthenticatedCached() === null) {
+        const maxRetries = 2;
+        let authState = null;
+
+        for (let attempt = 0; attempt <= maxRetries; attempt++) {
+            authState = await Auth.updateAuthCache();
+
+            if (!authState.error) {
+                break; // Success - no network error
+            }
+
+            if (attempt < maxRetries) {
+                // Wait before retry (exponential backoff: 1s, 2s)
+                await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
+            }
+        }
+
+        // Show warning if auth check failed after all retries
+        if (authState && authState.error) {
+            const message = <?php echo json_encode(_('Unable to verify authentication status. The server may be unavailable.')); ?>;
+            if (typeof toastr !== 'undefined') {
+                toastr.warning(message, <?php echo json_encode(_('Connection Issue')); ?>);
+            } else {
+                console.warn(message);
+            }
+        }
     }
 
     updateAuthUI();
@@ -278,10 +309,14 @@ async function handleLogin() {
             console.log('Login successful');
         }
 
-        // Call success callback if provided
+        // Call success callback if provided (check both module-scoped and global fallback)
         if (loginSuccessCallback) {
             loginSuccessCallback();
             loginSuccessCallback = null;
+        } else if (typeof window.postLoginCallback === 'function') {
+            // Fallback for callbacks set by extending.js before login-modal.php loaded
+            window.postLoginCallback();
+            window.postLoginCallback = null;
         }
     } catch (error) {
         errorDiv.textContent = error.message || <?php echo json_encode(_('Login failed. Please check your credentials.')); ?>;
