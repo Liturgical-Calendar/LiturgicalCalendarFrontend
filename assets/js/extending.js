@@ -148,9 +148,10 @@ function showLoginModal(callback) {
         return;
     }
 
-    // Store callback globally so login-modal.php's handleLogin can invoke it
-    // The login-modal.php implementation checks loginSuccessCallback first,
-    // but we set this as a fallback in case of script loading order issues
+    // Store callback globally so login-modal.php's handleLogin can invoke it after successful login.
+    // The login-modal.php checks its local loginSuccessCallback first (set via setLoginSuccessCallback()),
+    // then falls back to window.postLoginCallback. Since this fallback showLoginModal doesn't call
+    // setLoginSuccessCallback(), we use window.postLoginCallback which login-modal.php reads.
     if (typeof callback === 'function') {
         window.postLoginCallback = callback;
     }
