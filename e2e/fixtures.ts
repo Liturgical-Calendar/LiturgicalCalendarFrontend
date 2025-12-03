@@ -429,11 +429,13 @@ export class ExtendingPageHelper {
             });
 
             const status = response.status;
-            let body: any = null;
+            // Read body as text first (can only consume response body once)
+            const text = await response.text();
+            let body: any = text;
             try {
-                body = await response.json();
+                body = JSON.parse(text);
             } catch {
-                body = await response.text();
+                // Keep raw text if JSON parsing fails
             }
 
             return { status, body };
