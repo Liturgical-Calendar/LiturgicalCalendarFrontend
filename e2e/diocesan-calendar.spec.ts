@@ -567,22 +567,18 @@ test.describe('Diocesan Calendar Form - Validation', () => {
         ]).catch(() => ({ type: 'timeout' as const }));
 
         if (result.type === 'error-toast') {
-            // Check if it's a "Failed to fetch" error (network/CORS issue)
+            // Check if it's a "Failed to fetch" error (network/CORS issue) - skip these
             const errorText = await page.locator('.toast-error, .toast.bg-danger').textContent();
             if (errorText?.includes('Failed to fetch')) {
                 test.skip(true, 'Network error (Failed to fetch) - possible CORS issue with empty litcal validation');
                 return;
             }
-            console.log(`Error toast detected: ${errorText}`);
+            // For other error toasts, fail the test to surface backend regressions
+            throw new Error(`Unexpected error toast: ${errorText}`);
         }
 
         if (result.type === 'timeout') {
             test.skip(true, 'No response received - request may have failed silently');
-            return;
-        }
-
-        if (result.type !== 'response') {
-            test.skip(true, `Unexpected result type: ${result.type}`);
             return;
         }
 
