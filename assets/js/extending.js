@@ -1750,17 +1750,24 @@ const shouldFetchEvents = (eventsUrlParam) => {
 
     // Check if we're fetching from the base General Roman Calendar
     const isFetchingFromBase = eventsUrlParam === EventsUrl;
-    // Check if the locale is available for the General Roman Calendar
-    const localeAvailableForBase = !isFetchingFromBase || LitCalMetadata.locales.includes(API.locale);
-    console.log(`shouldFetchEvents: are we either attempting to fetch an events catalog that is not the General Roman Calendar, or does the General Roman Calendar support the locale <${API.locale}>?`, localeAvailableForBase);
+
+    // For wider region calendars, we use regional locales (e.g., fr_CA, es_BO) but the General Roman Calendar
+    // is only translated into base locales (e.g., fr, es). So we need to check the base locale.
+    const baseLocale = API.locale.split(/[-_]/)[0];
+    const isWiderRegion = API.category === 'widerregion';
+
+    // Check if the locale (or base locale for wider regions) is available for the General Roman Calendar
+    const localeToCheck = (isFetchingFromBase && isWiderRegion) ? baseLocale : API.locale;
+    const localeAvailableForBase = !isFetchingFromBase || LitCalMetadata.locales.includes(localeToCheck);
+    console.log(`shouldFetchEvents: checking locale <${localeToCheck}> (isWiderRegion=${isWiderRegion}), available for General Roman Calendar?`, localeAvailableForBase);
 
     const shouldFetch = missingForLocale && localeAvailableForBase;
     console.log(`shouldFetchEvents: verdict on whether we should attempt to fetch events = `, shouldFetch);
 
     // Determine if we're blocked: we need events but they're not available because translations are missing
-    const isBlocked = missingForLocale && isFetchingFromBase && !LitCalMetadata.locales.includes(API.locale);
+    const isBlocked = missingForLocale && isFetchingFromBase && !LitCalMetadata.locales.includes(localeToCheck);
     const reason = isBlocked
-        ? `The General Roman Calendar has not yet been translated into the locale "${API.locale}". Please translate the General Roman Calendar via the Weblate translation server before creating a calendar for this locale.`
+        ? `The General Roman Calendar has not yet been translated into the locale "${localeToCheck}". Please translate the General Roman Calendar via the Weblate translation server before creating a calendar for this locale.`
         : '';
 
     return { shouldFetch, isBlocked, reason };
@@ -1830,7 +1837,18 @@ const fetchEventsAndCalendarData = () => {
             EventsCollection.set(eventsUrl, new Map());
         }
 
-        fetch(new Request(eventsUrl, { method: 'GET', headers }))
+        // For wider region calendars fetching from General Roman Calendar, use base locale
+        // (e.g., 'fr' instead of 'fr_CA') since that's what's available in translations
+        const isWiderRegion = API.category === 'widerregion';
+        const isFetchingFromBase = eventsUrl === EventsUrl;
+        const eventsHeaders = new Headers(headers);
+        if (isWiderRegion && isFetchingFromBase) {
+            const baseLocale = API.locale.split(/[-_]/)[0];
+            eventsHeaders.set('Accept-Language', baseLocale);
+            console.log(`fetchEventsAndCalendarData: using base locale <${baseLocale}> for General Roman Calendar events fetch`);
+        }
+
+        fetch(new Request(eventsUrl, { method: 'GET', headers: eventsHeaders }))
             .then(response => response.ok ? response.json() : Promise.reject(response))
             .then(json => processEventsResponse(json, eventsUrl))
             .catch(error => console.error(error))
