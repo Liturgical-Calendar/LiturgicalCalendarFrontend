@@ -1812,10 +1812,10 @@ const fetchEventsAndCalendarData = () => {
     setApiLocaleAndHeaders(headers);
     console.log(`fetchEventsAndCalendarData: API.path is now <${API.path}> (category is <${API.category}> and key is <${API.key}>). Locale set to ${API.locale === '' ? ' (empty string)' : `<${API.locale}>`}. Now checking if a calendar already exists...`);
 
-    const eventsUrl = getEventsUrlForCategory();
-    console.log(`fetchEventsAndCalendarData: eventsUrl is <${eventsUrl}>`);
+    const eventsUrlForCategory = getEventsUrlForCategory();
+    console.log(`fetchEventsAndCalendarData: eventsUrlForCategory is <${eventsUrlForCategory}>`);
 
-    const { shouldFetch, isBlocked, reason } = shouldFetchEvents(eventsUrl);
+    const { shouldFetch, isBlocked, reason } = shouldFetchEvents(eventsUrlForCategory);
 
     if (isBlocked) {
         console.error('Cannot proceed: translations missing for locale', API.locale);
@@ -1833,14 +1833,14 @@ const fetchEventsAndCalendarData = () => {
 
     if (shouldFetch) {
         console.log('Calendar data is missing but locale is available, proceeding to fetch events...');
-        if (!EventsCollection.has(eventsUrl)) {
-            EventsCollection.set(eventsUrl, new Map());
+        if (!EventsCollection.has(eventsUrlForCategory)) {
+            EventsCollection.set(eventsUrlForCategory, new Map());
         }
 
         // For wider region calendars fetching from General Roman Calendar, use base locale
         // (e.g., 'fr' instead of 'fr_CA') since that's what's available in translations
         const isWiderRegion = API.category === 'widerregion';
-        const isFetchingFromBase = eventsUrl === EventsUrl;
+        const isFetchingFromBase = eventsUrlForCategory === EventsUrl;
         const eventsHeaders = new Headers(headers);
         if (isWiderRegion && isFetchingFromBase) {
             const baseLocale = API.locale.split(/[-_]/)[0];
@@ -1848,9 +1848,9 @@ const fetchEventsAndCalendarData = () => {
             console.log(`fetchEventsAndCalendarData: using base locale <${baseLocale}> for General Roman Calendar events fetch`);
         }
 
-        fetch(new Request(eventsUrl, { method: 'GET', headers: eventsHeaders }))
+        fetch(new Request(eventsUrlForCategory, { method: 'GET', headers: eventsHeaders }))
             .then(response => response.ok ? response.json() : Promise.reject(response))
-            .then(json => processEventsResponse(json, eventsUrl))
+            .then(json => processEventsResponse(json, eventsUrlForCategory))
             .catch(error => console.error(error))
             .finally(() => fetchRegionalCalendarData(headers));
     } else {
