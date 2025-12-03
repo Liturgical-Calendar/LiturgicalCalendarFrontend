@@ -6,6 +6,7 @@ use LiturgicalCalendar\Frontend\Utilities;
 
 include_once 'includes/common.php'; // provides $i18n and all API URLs
 include_once 'includes/messages.php'; // translation strings
+/** @var array<string,string> $messages */
 
 $FormControls = new FormControls($i18n);
 
