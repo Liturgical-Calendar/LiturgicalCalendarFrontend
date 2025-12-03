@@ -1764,6 +1764,13 @@ const getEventsUrlForCategory = () => {
  * @returns {{shouldFetch: boolean, isBlocked: boolean, reason: string}} Object with fetch decision and blocking status
  */
 const shouldFetchEvents = (eventsUrlForCategory) => {
+    // If no locale has been selected yet, skip events fetch and do not block.
+    // This allows calendar metadata/forms to load while the user chooses a locale.
+    if (!API.locale) {
+        console.log('shouldFetchEvents: API.locale is empty; skipping events fetch and missing-translation checks until a locale is selected.');
+        return { shouldFetch: false, isBlocked: false, reason: '' };
+    }
+
     const missingForLocale = !EventsCollection.has(eventsUrlForCategory) || !EventsCollection.get(eventsUrlForCategory).has(API.locale);
     console.log(`shouldFetchEvents: are we missing an events catalog for ${eventsUrlForCategory} and for locale ${API.locale}?`, missingForLocale);
 
