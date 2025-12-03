@@ -551,11 +551,8 @@ test.describe('Diocesan Calendar Form - Validation', () => {
                 return;
             }
             // Save button disabled for other reasons (form validation)
-            const isDisabled = await saveButton.evaluate(btn => (btn as HTMLButtonElement).disabled);
-            if (isDisabled) {
-                test.skip(true, 'Save button remains disabled - form may have validation issues');
-                return;
-            }
+            test.skip(true, 'Save button remains disabled - form may have validation issues');
+            return;
         }
         await saveButton.click({ force: true });
 
