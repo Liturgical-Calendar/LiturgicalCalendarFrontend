@@ -1741,15 +1741,15 @@ const getEventsUrlForCategory = () => {
 /**
  * Check if events should be fetched for the current locale
  *
- * @param {string} eventsUrlParam - The events URL to check
+ * @param {string} eventsUrlForCategory - The events URL to check
  * @returns {{shouldFetch: boolean, isBlocked: boolean, reason: string}} Object with fetch decision and blocking status
  */
-const shouldFetchEvents = (eventsUrlParam) => {
-    const missingForLocale = !EventsCollection.has(eventsUrlParam) || !EventsCollection.get(eventsUrlParam).has(API.locale);
-    console.log(`shouldFetchEvents: are we missing an events catalog for ${eventsUrlParam} and for locale ${API.locale}?`, missingForLocale);
+const shouldFetchEvents = (eventsUrlForCategory) => {
+    const missingForLocale = !EventsCollection.has(eventsUrlForCategory) || !EventsCollection.get(eventsUrlForCategory).has(API.locale);
+    console.log(`shouldFetchEvents: are we missing an events catalog for ${eventsUrlForCategory} and for locale ${API.locale}?`, missingForLocale);
 
     // Check if we're fetching from the base General Roman Calendar
-    const isFetchingFromBase = eventsUrlParam === EventsUrl;
+    const isFetchingFromBase = eventsUrlForCategory === EventsUrl;
 
     // For wider region calendars, we use regional locales (e.g., fr_CA, es_BO) but the General Roman Calendar
     // is only translated into base locales (e.g., fr, es). So we need to check the base locale.
@@ -1777,9 +1777,9 @@ const shouldFetchEvents = (eventsUrlParam) => {
  * Process events response and update collections
  *
  * @param {Object} json - The events response JSON
- * @param {string} eventsUrlParam - The events URL used for the request
+ * @param {string} eventsUrlForCategory - The events URL used for the request
  */
-const processEventsResponse = (json, eventsUrlParam) => {
+const processEventsResponse = (json, eventsUrlForCategory) => {
     const eventsMap = new Map(json.litcal_events.map(el => [el.event_key, el?.name ?? '']));
     const emptyPercentage = emptyStringPercentage(eventsMap);
 
@@ -1790,13 +1790,13 @@ const processEventsResponse = (json, eventsUrlParam) => {
         console.log(`More than 50% of event names are translated, translated string percentage = ${100 - emptyPercentage}%`);
     }
 
-    EventsCollection.get(eventsUrlParam).set(API.locale, json.litcal_events.map(el => LiturgicalEvent.fromObject(el)));
-    EventsCollectionKeys.set(eventsUrlParam, json.litcal_events.map(el => el.event_key));
-    EventsLoader.lastRequestPath = eventsUrlParam;
+    EventsCollection.get(eventsUrlForCategory).set(API.locale, json.litcal_events.map(el => LiturgicalEvent.fromObject(el)));
+    EventsCollectionKeys.set(eventsUrlForCategory, json.litcal_events.map(el => el.event_key));
+    EventsLoader.lastRequestPath = eventsUrlForCategory;
     EventsLoader.lastRequestLocale = API.locale;
 
-    console.log('EventsLoader.lastRequestPath: <', eventsUrlParam, '>, EventsLoader.lastRequestLocale: <', API.locale, '>, EventsCollection: ', EventsCollection);
-    document.querySelector('#existingLiturgicalEventsList').innerHTML = EventsCollection.get(eventsUrlParam).get(API.locale)
+    console.log('EventsLoader.lastRequestPath: <', eventsUrlForCategory, '>, EventsLoader.lastRequestLocale: <', API.locale, '>, EventsCollection: ', EventsCollection);
+    document.querySelector('#existingLiturgicalEventsList').innerHTML = EventsCollection.get(eventsUrlForCategory).get(API.locale)
         .map(el => `<option value="${el.event_key}">${el.name}</option>`).join('\n');
 };
 
