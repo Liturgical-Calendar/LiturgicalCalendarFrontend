@@ -1290,14 +1290,20 @@ const addLocalizationInputs = (controlsRow, uniqid, metadata) => {
     if (!needsLocalization) return;
 
     const calendarLocales = document.querySelector('.calendarLocales');
-    if (calendarLocales.selectedOptions.length <= 1) return;
+    if (!calendarLocales || calendarLocales.selectedOptions.length <= 1) return;
 
-    const currentLocalization = document.querySelector('.currentLocalizationChoices').value;
+    const currentLocalization = document.querySelector('.currentLocalizationChoices')?.value;
+    if (!currentLocalization) return;
+
     const otherLocalizations = Array.from(calendarLocales.selectedOptions)
         .filter(({ value }) => value !== currentLocalization)
         .map(({ value }) => value);
 
     const nameInput = controlsRow.querySelector(`#onTheFly${uniqid}Name`);
+    if (!nameInput) {
+        console.warn('addLocalizationInputs: name input not found for uniqid', uniqid);
+        return;
+    }
     const otherLocalizationsInputs = otherLocalizations.map(loc => translationTemplate(API.path, loc, nameInput));
     nameInput.insertAdjacentHTML('afterend', otherLocalizationsInputs.join(''));
 };
@@ -1309,7 +1315,13 @@ const addLocalizationInputs = (controlsRow, uniqid, metadata) => {
  * @param {Object} liturgicalEvent - The liturgical event data
  */
 const initializeColorMultiselectFromData = (controlsRow, liturgicalEvent) => {
-    $(controlsRow.querySelector('.litEventColor')).multiselect({
+    const colorSelect = controlsRow.querySelector('.litEventColor');
+    if (!colorSelect) {
+        console.warn('initializeColorMultiselectFromData: .litEventColor not found in row');
+        return;
+    }
+
+    $(colorSelect).multiselect({
         buttonWidth: '100%',
         buttonClass: 'form-select',
         templates: {
@@ -1318,11 +1330,11 @@ const initializeColorMultiselectFromData = (controlsRow, liturgicalEvent) => {
     }).multiselect('deselectAll', false);
 
     if (liturgicalEvent.hasOwnProperty('color') && liturgicalEvent.color.length) {
-        $(controlsRow.querySelector('.litEventColor')).multiselect('select', liturgicalEvent.color);
+        $(colorSelect).multiselect('select', liturgicalEvent.color);
     }
 
     if (FormControls.settings.colorField === false) {
-        $(controlsRow.querySelector('.litEventColor')).multiselect('disable');
+        $(colorSelect).multiselect('disable');
     }
 };
 
@@ -1338,27 +1350,33 @@ const initializeFormRowFields = (controlsRow, uniqid, el) => {
 
     // Enable readings field for Proper common
     if (liturgical_event.hasOwnProperty('common') && liturgical_event.common.includes('Proper')) {
-        controlsRow.querySelector('.litEventReadings').disabled = false;
+        const readingsField = controlsRow.querySelector('.litEventReadings');
+        if (readingsField) readingsField.disabled = false;
     }
 
     // Set missal field
     if (FormControls.settings.missalFieldShow && metadata.hasOwnProperty('missal')) {
-        controlsRow.querySelector(`#onTheFly${uniqid}Missal`).value = metadata.missal;
+        const missalField = controlsRow.querySelector(`#onTheFly${uniqid}Missal`);
+        if (missalField) missalField.value = metadata.missal;
     }
 
     // Initialize common multiselect
     if (liturgical_event.hasOwnProperty('common') && FormControls.settings.commonFieldShow) {
         setCommonMultiselect(controlsRow, liturgical_event.common);
         if (FormControls.settings.commonField === false) {
-            $(controlsRow.querySelector(`#onTheFly${uniqid}Common`)).multiselect('disable');
+            const commonField = controlsRow.querySelector(`#onTheFly${uniqid}Common`);
+            if (commonField) $(commonField).multiselect('disable');
         }
     }
 
     // Set grade field
     if (FormControls.settings.gradeFieldShow) {
-        controlsRow.querySelector(`#onTheFly${uniqid}Grade`).value = liturgical_event.grade;
-        if (FormControls.settings.gradeField === false) {
-            controlsRow.querySelector(`#onTheFly${uniqid}Grade`).disabled = true;
+        const gradeField = controlsRow.querySelector(`#onTheFly${uniqid}Grade`);
+        if (gradeField) {
+            gradeField.value = liturgical_event.grade;
+            if (FormControls.settings.gradeField === false) {
+                gradeField.disabled = true;
+            }
         }
     }
 
