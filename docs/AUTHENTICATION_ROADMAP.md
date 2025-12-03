@@ -1061,10 +1061,10 @@ Auth.handleOAuthCallback = async function() {
 
 **Cookie Configuration:**
 
-| Cookie           | Path    | SameSite | Secure     | HttpOnly |
-| ---------------- | ------- | -------- | ---------- | -------- |
-| `litcal_access`  | `/`     | Lax      | Yes (prod) | Yes      |
-| `litcal_refresh` | `/auth` | Strict   | Yes (prod) | Yes      |
+| Cookie                 | Path    | SameSite | Secure     | HttpOnly |
+| ---------------------- | ------- | -------- | ---------- | -------- |
+| `litcal_access_token`  | `/`     | Lax      | Yes (prod) | Yes      |
+| `litcal_refresh_token` | `/auth` | Strict   | Yes (prod) | Yes      |
 
 **Security Benefits:**
 
@@ -1164,8 +1164,8 @@ test('login sets HttpOnly cookies', async ({ page, context }) => {
 
     // Verify cookies are set (HttpOnly cookies visible in context)
     const cookies = await context.cookies();
-    const accessCookie = cookies.find(c => c.name === 'litcal_access');
-    const refreshCookie = cookies.find(c => c.name === 'litcal_refresh');
+    const accessCookie = cookies.find(c => c.name === 'litcal_access_token');
+    const refreshCookie = cookies.find(c => c.name === 'litcal_refresh_token');
 
     expect(accessCookie).toBeDefined();
     expect(accessCookie.httpOnly).toBe(true);
