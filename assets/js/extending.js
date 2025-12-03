@@ -156,35 +156,37 @@ const authRetryCounters = new WeakMap();
  * Caps retries to prevent infinite recursion on persistent 401s
  *
  * @param {Response} response - Fetch API response object
- * @param {Function} retryCallback - Function to retry the original request
+ * @param {Function} retryRequest - Low-level function to retry the HTTP request (returns Promise<Response>)
+ * @param {Function} fullFlowCallback - Full flow function to run after interactive login
  * @returns {Promise<Response>} Original response or retried response
  * @throws {Error} When authentication fails or user lacks permission
  */
-async function handleAuthError(response, retryCallback) {
+async function handleAuthError(response, retryRequest, fullFlowCallback) {
     if (response.status === 401) {
         // Check retry count to prevent infinite recursion
-        const retryCount = authRetryCounters.get(retryCallback) || 0;
+        const retryCount = authRetryCounters.get(retryRequest) || 0;
         if (retryCount >= MAX_AUTH_RETRIES) {
-            authRetryCounters.delete(retryCallback);
+            authRetryCounters.delete(retryRequest);
             toastr.error('Authentication failed after multiple attempts. Please try logging in again.', 'Authentication Error');
-            showLoginModal(retryCallback);
+            // Show login modal with full flow callback for re-authentication
+            showLoginModal(fullFlowCallback);
             throw new Error('Authentication failed after maximum retries');
         }
 
         // Token expired, try to refresh
         try {
-            authRetryCounters.set(retryCallback, retryCount + 1);
+            authRetryCounters.set(retryRequest, retryCount + 1);
             await Auth.refreshToken();
-            // Retry the original request
-            const result = await retryCallback();
+            // Retry just the HTTP request (not the full flow) to get a fresh Response
+            const retriedResponse = await retryRequest();
             // Success - clear retry counter
-            authRetryCounters.delete(retryCallback);
-            return result;
+            authRetryCounters.delete(retryRequest);
+            return retriedResponse;
         } catch (error) {
-            // Refresh failed, prompt for login
-            authRetryCounters.delete(retryCallback);
+            // Refresh failed, prompt for login with full flow callback
+            authRetryCounters.delete(retryRequest);
             console.error('Token refresh failed:', error.message);
-            showLoginModal(retryCallback);
+            showLoginModal(fullFlowCallback);
             throw new Error('Authentication required');
         }
     } else if (response.status === 403) {
@@ -2194,9 +2196,9 @@ const deleteCalendarConfirmClicked = () => {
     // Wrap the entire delete flow so retry after login goes through all handlers
     const runDeleteFlow = () => {
         return makeDeleteRequest().then(async response => {
-            // Handle auth errors
+            // Handle auth errors - pass low-level request and full flow separately
             if (response.status === 401 || response.status === 403) {
-                return await handleAuthError(response, runDeleteFlow);
+                return await handleAuthError(response, makeDeleteRequest, runDeleteFlow);
             }
             return response;
         }).then(response => {
@@ -2598,9 +2600,9 @@ const serializeRegionalNationalDataClicked = (ev) => {
         const runSaveFlow = () => {
             return makeRequest()
             .then(async response => {
-                // Handle auth errors
+                // Handle auth errors - pass low-level request and full flow separately
                 if (response.status === 401 || response.status === 403) {
-                    return await handleAuthError(response, runSaveFlow);
+                    return await handleAuthError(response, makeRequest, runSaveFlow);
                 }
                 if (!response.ok) {
                     return response.json().then(err => { throw err; });
@@ -3283,9 +3285,9 @@ const deleteDiocesanCalendarConfirmClicked = () => {
     // Wrap the entire delete flow so retry after login goes through all handlers
     const runDeleteFlow = () => {
         return makeDeleteRequest().then(async response => {
-            // Handle auth errors
+            // Handle auth errors - pass low-level request and full flow separately
             if (response.status === 401 || response.status === 403) {
-                return await handleAuthError(response, runDeleteFlow);
+                return await handleAuthError(response, makeDeleteRequest, runDeleteFlow);
             }
             return response;
         }).then(response => {
@@ -3494,9 +3496,9 @@ const saveDiocesanCalendar_btnClicked = () => {
         const runSaveFlow = () => {
             return makeRequest()
             .then(async response => {
-                // Handle auth errors
+                // Handle auth errors - pass low-level request and full flow separately
                 if (response.status === 401 || response.status === 403) {
-                    return await handleAuthError(response, runSaveFlow);
+                    return await handleAuthError(response, makeRequest, runSaveFlow);
                 }
                 if (!response.ok) {
                     return response.json().then(err => { throw err; });
