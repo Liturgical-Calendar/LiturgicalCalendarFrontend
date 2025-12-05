@@ -9,6 +9,7 @@ const CalendarType = Object.freeze({
 
 /**
  * Represents the parameters for the API /calendar endpoint request
+ * Currently only used to serialize the calendar subscription URL?
  */
 class RequestPayload {
     static epiphany             = null;
@@ -17,12 +18,12 @@ class RequestPayload {
     static eternal_high_priest  = null;
     static locale               = null;
     static return_type          = 'ICS';
-    static year_type            = null;
+    static year_type            = 'CIVIL';
 }
 
 /**
  * Class CurrentEndpoint
- * Used to build the full endpoint URL for the API /calendar endpoint
+ * Used to build the full endpoint URL for the API /calendar endpoint (currently only used to serialize the calendar subscription URL?)
  * @param {string} calendarType The type of calendar (national, diocesan)
  * @param {string} calendarId The ID of the calendar
  * @param {string} calendarYear The year of the calendar
