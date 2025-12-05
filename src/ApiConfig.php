@@ -32,7 +32,7 @@ class ApiConfig
         $this->missalsUrl         = "{$this->apiBaseUrl}/missals";
         $this->decreesUrl         = "{$this->apiBaseUrl}/decrees";
         $this->regionalDataUrl    = "{$this->apiBaseUrl}/data";
-        $this->calSubscriptionUrl = "{$this->apiBaseUrl}/calendar?return_type=ICS";
+        $this->calSubscriptionUrl = "{$this->apiBaseUrl}/calendar?return_type=ICS&year_type=CIVIL";
     }
 
     /**
