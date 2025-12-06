@@ -621,20 +621,15 @@ let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($Liturgi
 <?php include_once('./includes/login-modal.php'); ?>
 
 <!-- DEFINE MAKE PATRON MODAL  -->
-<div class="modal fade actionPromptModal" id="makePatronActionPrompt" tabindex="-1" role="dialog" aria-labelledby="makePatronActionModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="makePatronActionModalLabel"><?php echo $messages['PatronButton']; ?></h5>
-            </div>
-            <?php Utilities::generateActionPromptModalBody(false, false); ?>
-            <div class="modal-footer">
-                <button type="button" id="designatePatronButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-user-graduate me-2"></i><?php echo $messages['PatronButton']; ?></button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo $messages['CancelButton']; ?></button>
-            </div>
-        </div>
-    </div>
-</div>
+<?php Utilities::generateActionPromptModal(
+    'makePatronActionPrompt',
+    'makePatronActionModalLabel',
+    $messages['PatronButton'],
+    false,
+    false,
+    [['id' => 'designatePatronButton', 'class' => 'btn btn-primary actionPromptButton', 'icon' => 'fas fa-user-graduate', 'label' => $messages['PatronButton'], 'disabled' => true]],
+    $messages['CancelButton']
+); ?>
 
 <!-- DEFINE SET PROPERTY MODAL  -->
 <?php Utilities::generateActionPromptModal(
