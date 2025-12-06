@@ -204,7 +204,7 @@ export class ExtendingPageHelper {
             await this.page.waitForFunction(() => {
                 const buttons = document.querySelectorAll('.litcalActionButton');
                 return buttons.length > 0 && Array.from(buttons).every(btn => !(btn as HTMLButtonElement).disabled);
-            }, { timeout });
+            }, undefined, { timeout });
             return true;
         } catch {
             return false;
@@ -524,7 +524,7 @@ export class ExtendingPageHelper {
             const exNovo = document.querySelector('#newLiturgicalEventExNovoButton') as HTMLButtonElement | null;
             const existing = document.querySelector('#newLiturgicalEventFromExistingButton') as HTMLButtonElement | null;
             return (exNovo && !exNovo.disabled) || (existing && !existing.disabled);
-        }, { timeout: 10000 });
+        }, undefined, { timeout: 10000 });
 
         // Click whichever button is enabled
         const exNovoEnabled = await this.page.evaluate(() => {
