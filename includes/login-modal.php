@@ -422,6 +422,10 @@ function showSessionExpiryToast(timeUntilExpiry) {
 
     // Initialize Bootstrap Toast if not already done
     if (!sessionExpiryToast) {
+        if (typeof bootstrap === 'undefined' || !bootstrap.Toast) {
+            console.error('Bootstrap Toast is not available - cannot show session expiry toast');
+            return;
+        }
         sessionExpiryToast = new bootstrap.Toast(toastElement);
     }
 
