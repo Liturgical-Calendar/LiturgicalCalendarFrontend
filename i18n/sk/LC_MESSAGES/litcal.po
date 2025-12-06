@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-06 05:22+0000\n"
-"PO-Revision-Date: 2025-12-01 10:45+0000\n"
+"PO-Revision-Date: 2025-12-06 05:43+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
@@ -1300,11 +1300,11 @@ msgstr "Zrušiť"
 
 #: includes/login-modal.php:79
 msgid "Unable to verify authentication status. The server may be unavailable."
-msgstr ""
+msgstr "Nie je možné overiť stav overenia. Server môže byť nedostupný."
 
 #: includes/login-modal.php:81
 msgid "Connection Issue"
-msgstr ""
+msgstr "Problém s pripojením"
 
 #: includes/login-modal.php:102
 msgid "Are you sure you want to logout?"
@@ -1315,15 +1315,13 @@ msgid "Hide password"
 msgstr "Skryť heslo"
 
 #: includes/login-modal.php:154 includes/login-modal.php:159
-#, fuzzy, php-format
-#| msgid ""
-#| "Your session will expire in less than %d minute(s). Please save your work."
+#, php-format
 msgid "Your session will expire in less than %d minute. Please save your work."
 msgid_plural ""
 "Your session will expire in less than %d minutes. Please save your work."
-msgstr[0] "Vaša relácia vyprší o menej ako %d minút. Uložte si svoju prácu."
-msgstr[1] "Vaša relácia vyprší o menej ako %d minút. Uložte si svoju prácu."
-msgstr[2] "Vaša relácia vyprší o menej ako %d minút. Uložte si svoju prácu."
+msgstr[0] "Vaša relácia vyprší za menej ako %d minútu. Uložte si svoju prácu."
+msgstr[1] ""
+msgstr[2] "Vaša relácia vyprší za menej ako %d minút. Uložte si svoju prácu."
 
 #: includes/login-modal.php:170
 msgid "Session Expiring"
@@ -1388,7 +1386,7 @@ msgstr "Nadobudnú účinnosť v roku"
 #. translators: notification title for warning messages
 #: includes/messages.php:51
 msgid "Warning"
-msgstr ""
+msgstr "Upozornenie"
 
 #. translators: form row title for designating a Doctor of the Church
 #: includes/messages.php:71
@@ -1871,7 +1869,7 @@ msgstr ""
 #. translators: help text shown when diocese input is disabled
 #: includes/messages.php:313
 msgid "Select a national calendar first to see available dioceses."
-msgstr ""
+msgstr "Najprv vyberte národný kalendár, aby ste videli dostupné diecézy."
 
 #. translators: tooltip explaining the Eternal High Priest feast
 #: includes/messages.php:315
