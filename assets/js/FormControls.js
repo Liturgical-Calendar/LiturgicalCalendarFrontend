@@ -328,7 +328,7 @@ class FormControls {
         let html = '';
         for (let i = 0; i < 12; i++) {
             const monthDate = new Date(Date.UTC(0, i, 2, 0, 0, 0));
-            html += `<option value=${i + 1}${selectedMonth === i + 1 ? ' selected' : ''}>${formatter.format(monthDate)}</option>`;
+            html += `<option value="${i + 1}"${selectedMonth === i + 1 ? ' selected' : ''}>${formatter.format(monthDate)}</option>`;
         }
         return html;
     }
