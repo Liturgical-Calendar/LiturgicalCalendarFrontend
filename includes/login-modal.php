@@ -395,6 +395,10 @@ function initPermissionUI() {
         } else if (formControlTags.includes(el.tagName)) {
             // For standalone form controls, just disable (don't hide)
             el.disabled = !isAuth;
+            // Handle bootstrap-multiselect elements
+            if (el.tagName === 'SELECT' && el.hasAttribute('multiple') && typeof $ !== 'undefined' && $.fn.multiselect) {
+                $(el).multiselect(isAuth ? 'enable' : 'disable');
+            }
         } else {
             // For other elements (buttons, etc.), hide/show and disable
             if (isAuth) {
