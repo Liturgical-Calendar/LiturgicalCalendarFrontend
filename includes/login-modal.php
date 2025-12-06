@@ -123,6 +123,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
             if (confirm(<?php echo json_encode(_('Are you sure you want to logout?')); ?>)) {
+                // Clear session expiry timeout to avoid confusing auto-logout message
+                if (sessionExpiryTimeout) {
+                    clearTimeout(sessionExpiryTimeout);
+                    sessionExpiryTimeout = null;
+                }
+                hideSessionExpiryToast();
                 await Auth.logout();
             }
         });
