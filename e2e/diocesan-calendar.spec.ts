@@ -35,10 +35,39 @@ test.describe('Diocesan Calendar Form', () => {
         await expect(nationalSelect).toHaveAttribute('required', '');
     });
 
-    test('should require diocese name', async ({ page }) => {
+    test('should require diocese name and be disabled until national calendar is selected', async ({ page }) => {
         // The diocese name input should be required
         const dioceseNameInput = page.locator('#diocesanCalendarDioceseName');
         await expect(dioceseNameInput).toHaveAttribute('required', '');
+
+        // Initially should be disabled (until national calendar is selected)
+        await expect(dioceseNameInput).toBeDisabled();
+
+        // Help text should be visible when disabled
+        const helpText = page.locator('#diocesanCalendarDioceseNameHelp');
+        await expect(helpText).toBeVisible();
+
+        // Select a national calendar
+        const nationalSelect = page.locator('#diocesanCalendarNationalDependency');
+        const options = await nationalSelect.locator('option').all();
+        let selectedValue = '';
+        for (const option of options) {
+            const value = await option.getAttribute('value');
+            if (value && value.length > 0) {
+                selectedValue = value;
+                break;
+            }
+        }
+
+        if (selectedValue) {
+            await nationalSelect.selectOption(selectedValue);
+
+            // After selecting national calendar, diocese input should be enabled
+            await expect(dioceseNameInput).toBeEnabled();
+
+            // Help text should be hidden
+            await expect(helpText).toHaveClass(/d-none/);
+        }
     });
 
     test('should have national calendar options in dependency dropdown', async ({ page }) => {
@@ -645,8 +674,28 @@ test.describe('Diocesan Calendar Form - Validation', () => {
     });
 
     test('should validate diocese name format', async ({ page }) => {
+        // First select a national calendar to enable the diocese input
+        const nationalSelect = page.locator('#diocesanCalendarNationalDependency');
+        const options = await nationalSelect.locator('option').all();
+        let selectedValue = '';
+        for (const option of options) {
+            const value = await option.getAttribute('value');
+            if (value && value.length > 0) {
+                selectedValue = value;
+                break;
+            }
+        }
+
+        if (!selectedValue) {
+            test.skip(true, 'No national calendars available');
+            return;
+        }
+
+        await nationalSelect.selectOption(selectedValue);
+
         // Diocese name input should accept valid names
         const dioceseNameInput = page.locator('#diocesanCalendarDioceseName');
+        await expect(dioceseNameInput).toBeEnabled();
         await dioceseNameInput.fill('Boston');
 
         // Should not show validation error

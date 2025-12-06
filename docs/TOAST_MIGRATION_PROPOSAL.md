@@ -72,17 +72,17 @@ toast({
 
 ### Available Options
 
-| Option      | Type    | Default       | Description                                       |
-|-------------|---------|---------------|---------------------------------------------------|
-| animation   | boolean | true          | Apply CSS fade transition                         |
-| autohide    | boolean | true          | Automatically dismiss after delay                 |
-| delay       | number  | 4000          | Delay in milliseconds before hiding               |
-| gap         | number  | 16            | Space between multiple toasts (px)                |
-| margin      | string  | '1rem'        | Margin from corner                                |
-| placement   | string  | 'top-right'   | Position: top-right, top-left, bottom-right, etc. |
-| classes     | string  | ''            | Additional CSS classes                            |
-| header      | string  | ''            | Header content (can include icon, title, time)    |
-| body        | string  | ''            | Main toast message                                |
+| Option    | Type             | Default     | Description                                                    |
+|-----------|------------------|-------------|----------------------------------------------------------------|
+| animation | boolean          | true        | Apply CSS fade transition                                      |
+| autohide  | boolean          | true        | Automatically dismiss after delay                              |
+| delay     | number           | 4000        | Delay in milliseconds before hiding                            |
+| gap       | number           | 16          | Space between multiple toasts (px)                             |
+| margin    | string           | '1rem'      | Margin from corner                                             |
+| placement | string           | 'top-right' | Position: top-right, top-left, bottom-right, etc.              |
+| classes   | string           | ''          | Additional CSS classes                                         |
+| header    | string \| object | ''          | Header as string, or object with `icon`, `title`, `closeBtn`   |
+| body      | string           | ''          | Main toast message                                             |
 
 ### Methods
 
@@ -108,86 +108,108 @@ This allows incremental migration without changing existing code immediately.
 /**
  * Toast notification wrapper providing toastr-compatible API
  * using use-bootstrap-toaster under the hood.
+ *
+ * Usage: <script src="/assets/js/toast-wrapper.js"></script>
+ * Then use: toastr.success('Message', 'Title') or toastr["success"]('Message')
  */
+(function(global) {
+    'use strict';
 
-// Icon mappings for each toast type (using Bootstrap Icons)
-const TOAST_CONFIG = {
-    success: {
-        icon: '<i class="bi bi-check-circle-fill text-success me-2"></i>',
-        classes: 'border-success',
-        headerClass: 'bg-success-subtle'
-    },
-    error: {
-        icon: '<i class="bi bi-x-circle-fill text-danger me-2"></i>',
-        classes: 'border-danger',
-        headerClass: 'bg-danger-subtle'
-    },
-    warning: {
-        icon: '<i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>',
-        classes: 'border-warning',
-        headerClass: 'bg-warning-subtle'
-    },
-    info: {
-        icon: '<i class="bi bi-info-circle-fill text-info me-2"></i>',
-        classes: 'border-info',
-        headerClass: 'bg-info-subtle'
-    }
-};
-
-/**
- * Show a toast notification
- * @param {string} type - Toast type: 'success', 'error', 'warning', 'info'
- * @param {string} message - Toast message body
- * @param {string} title - Toast header title
- * @param {object} options - Additional options
- * @returns {object} Toast instance with hide() method and DOM element
- */
-function showToast(type, message, title, options = {}) {
-    const config = TOAST_CONFIG[type] || TOAST_CONFIG.info;
-
-    const toastOptions = {
-        header: {
-            icon: config.icon,
-            title: title || type.charAt(0).toUpperCase() + type.slice(1),
-            closeBtn: true
+    // Icon mappings for each toast type (using Bootstrap Icons)
+    const TOAST_CONFIG = {
+        success: {
+            icon: '<i class="bi bi-check-circle-fill text-success me-2"></i>',
+            classes: 'border-success',
+            headerClass: 'bg-success-subtle'
         },
-        body: message,
-        classes: config.classes,
-        placement: 'top-right',
-        delay: type === 'error' ? 0 : 5000, // Errors don't auto-hide
-        autohide: type !== 'error',
-        ...options
-    };
-
-    const instance = toast(toastOptions);
-
-    // Return jQuery-like object for compatibility with .attr() calls
-    return {
-        hide: () => instance.hide(),
-        attr: (name, value) => {
-            if (instance.element) {
-                instance.element.setAttribute(name, value);
-            }
-            return this;
+        error: {
+            icon: '<i class="bi bi-x-circle-fill text-danger me-2"></i>',
+            classes: 'border-danger',
+            headerClass: 'bg-danger-subtle'
+        },
+        warning: {
+            icon: '<i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>',
+            classes: 'border-warning',
+            headerClass: 'bg-warning-subtle'
+        },
+        info: {
+            icon: '<i class="bi bi-info-circle-fill text-info me-2"></i>',
+            classes: 'border-info',
+            headerClass: 'bg-info-subtle'
         }
     };
-}
 
-// Export toastr-compatible API
-const toastrCompat = {
-    success: (message, title, options) => showToast('success', message, title, options),
-    error: (message, title, options) => showToast('error', message, title, options),
-    warning: (message, title, options) => showToast('warning', message, title, options),
-    info: (message, title, options) => showToast('info', message, title, options),
-    hide: () => toast.hide()
-};
+    /**
+     * Show a toast notification
+     * @param {string} type - Toast type: 'success', 'error', 'warning', 'info'
+     * @param {string} message - Toast message body
+     * @param {string} title - Toast header title
+     * @param {object} options - Additional options
+     * @returns {object} Toast instance with hide() method
+     */
+    function showToast(type, message, title, options) {
+        options = options || {};
+        const config = TOAST_CONFIG[type] || TOAST_CONFIG.info;
 
-// For backwards compatibility, also support toastr["type"] syntax
-export default new Proxy(toastrCompat, {
-    get(target, prop) {
-        return target[prop];
+        const toastOptions = {
+            header: {
+                icon: config.icon,
+                title: title || type.charAt(0).toUpperCase() + type.slice(1),
+                closeBtn: true
+            },
+            body: message,
+            classes: config.classes,
+            placement: 'top-right',
+            delay: type === 'error' ? 0 : 5000, // Errors don't auto-hide
+            autohide: type !== 'error'
+        };
+
+        // Merge user options
+        Object.keys(options).forEach(function(key) {
+            toastOptions[key] = options[key];
+        });
+
+        const instance = toast(toastOptions);
+
+        // Return object for compatibility; .attr() is a no-op since
+        // use-bootstrap-toaster doesn't expose DOM element directly
+        const result = {
+            hide: function() {
+                if (instance && typeof instance.hide === 'function') {
+                    instance.hide();
+                }
+            },
+            // Stub for legacy .attr() calls - returns self for chaining
+            attr: function() {
+                return result;
+            }
+        };
+
+        return result;
     }
-});
+
+    // toastr-compatible API attached to window
+    global.toastr = {
+        success: function(message, title, options) {
+            return showToast('success', message, title, options);
+        },
+        error: function(message, title, options) {
+            return showToast('error', message, title, options);
+        },
+        warning: function(message, title, options) {
+            return showToast('warning', message, title, options);
+        },
+        info: function(message, title, options) {
+            return showToast('info', message, title, options);
+        },
+        hide: function() {
+            if (typeof toast !== 'undefined' && typeof toast.hide === 'function') {
+                toast.hide();
+            }
+        }
+    };
+
+})(typeof window !== 'undefined' ? window : this);
 ```
 
 ### Phase 2: Add Bootstrap Icons

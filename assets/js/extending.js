@@ -354,7 +354,7 @@ Promise.all(fetchRequests).then(responses => {
         FormControls.missals = data[0].litcal_missals;
         const publishedRomanMissalsStr = MissalsIndex.map(({missal_id, name}) => !missal_id.startsWith('EDITIO_TYPICA_') ? `<option class="list-group-item" value="${missal_id}">${name}</option>` : null).join('')
         document.querySelector('#languageEditionRomanMissalList').insertAdjacentHTML('beforeend', publishedRomanMissalsStr);
-        toastr["success"]('Successfully retrieved data from /missals path', "Success");
+        toastr["success"]('Successfully retrieved data from /missals path', Messages['Success']);
     }
     if (choice === 'diocesan' && data[1]) {
         console.log('retrieved time zone data:');
@@ -362,17 +362,17 @@ Promise.all(fetchRequests).then(responses => {
         tzdata = data[1];
         const timezonesOptions = tzdata.map(tz => `<option value="${tz.name}" title="${tz.alternativeName} (${tz.mainCities.join(' - ')})">${tz.name} (${tz.abbreviation})</option>`);
         document.querySelector('#diocesanCalendarTimezone').innerHTML = timezonesOptions.length ? timezonesOptions.join('') : '<option value=""></option>';
-        toastr["success"]('Successfully retrieved time zone data', "Success");
+        toastr["success"]('Successfully retrieved time zone data', Messages['Success']);
     }
     else if (choice === 'national' && data[1]) {
         console.log('retrieved CLDR data:');
         console.log(data[1]);
         cldrData = data[1];
-        toastr["success"]('Successfully retrieved CLDR data', "Success");
+        toastr["success"]('Successfully retrieved CLDR data', Messages['Success']);
     }
 }).catch(error => {
     console.error(error);
-    toastr["error"](error, "Error");
+    toastr["error"](error, Messages['Error']);
 }).finally(() => {
     document.querySelector('#overlay').classList.add('hidden');
 });
@@ -1494,7 +1494,7 @@ const updateRegionalCalendarForm = (data) => {
                 )
             )
             .then(data => {
-                toastr["success"](`Calendar translation data retrieved successfully for calendar ${API.key} and locales ${otherLocalizations.join(', ')}`, "Success");
+                toastr["success"](`Calendar translation data retrieved successfully for calendar ${API.key} and locales ${otherLocalizations.join(', ')}`, Messages['Success']);
                 if (false === TranslationData.has(API.path)) {
                     TranslationData.set(API.path, new Map());
                 }
@@ -1600,7 +1600,7 @@ const fetchRegionalCalendarData = (headers) => {
                 API.method = 'PUT';
                 error.json().then(json => {
                     const message = `${error.status} ${json.status} ${json.response}: ${json.description}<br />The Data File for the ${API.category} ${API.key} does not exist yet. Not that it's a big deal, just go ahead and create it now!`;
-                    toastr["warning"](message, "Warning").attr('data-toast-type', 'calendar-not-found');
+                    toastr["warning"](message, Messages['Warning']).attr('data-toast-type', 'calendar-not-found');
                     console.warn(message);
                 });
                 switch(API.category) {
@@ -1628,7 +1628,7 @@ const fetchRegionalCalendarData = (headers) => {
                 /*error.json().then(json => {
                     console.error(json);
                     //We're taking for granted that the API is sending back a JSON object with status, response and description
-                    toastr["error"](json.status + ' ' + json.response + ': ' + json.description, "Error");
+                    toastr["error"](json.status + ' ' + json.response + ': ' + json.description, Messages['Error']);
                 });*/
             }
         }).finally(() => {
@@ -1640,7 +1640,7 @@ const fetchRegionalCalendarData = (headers) => {
         console.log(`%c No calendar found on path ${API.path} with key ${API.key}, we must be creating a new calendar. Setting API.method to PUT. `, 'background: #fbff00ff; color: #000000ff; font-weight: bold; padding: 2px 1px;');
         API.method = 'PUT';
         const message = `The Data File for the ${API.category} ${API.key} does not exist yet. Not that it's a big deal, just go ahead and create it now!`;
-        toastr["warning"](message, "Warning").attr('data-toast-type', 'calendar-not-found');
+        toastr["warning"](message, Messages['Warning']).attr('data-toast-type', 'calendar-not-found');
         console.warn(message);
         switch(API.category) {
             case 'widerregion':
@@ -2307,14 +2307,14 @@ const deleteCalendarConfirmClicked = () => {
                 document.querySelector('.regionalNationalCalendarName').value = '';
                 document.querySelector('.regionalNationalDataForm').innerHTML = '';
 
-                toastr["success"](`Calendar '${API.category}/${API.key}' was deleted successfully`, "Success");
+                toastr["success"](`Calendar '${API.category}/${API.key}' was deleted successfully`, Messages['Success']);
                 response.json().then(json => {
                     console.log(json);
                 });
             } else if (response.status === 400) {
                 response.json().then(json => {
                     console.error(`${response.status} ${json.response}: ${json.description}`);
-                    toastr["error"](`${response.status} ${json.response}: ${json.description}`, "Error");
+                    toastr["error"](`${response.status} ${json.response}: ${json.description}`, Messages['Error']);
                 });
             } else {
                 return Promise.reject(response);
@@ -2682,13 +2682,13 @@ const serializeRegionalNationalDataClicked = (ev) => {
             })
             .then(data => {
                 console.log('Data returned from save action:', data);
-                toastr["success"]("National Calendar was created or updated successfully", "Success");
+                toastr["success"]("National Calendar was created or updated successfully", Messages['Success']);
             })
             .catch(error => {
                 // Handle different error response shapes (RFC 9110 Problem Details, custom API format, simple format)
                 const status = error && error.status ? `${error.status}: ` : '';
                 const body = extractErrorMessage(error);
-                toastr["error"](status + body, "Error");
+                toastr["error"](status + body, Messages['Error']);
             }).finally(() => {
                 document.querySelector('#overlay').classList.add('hidden');
             });
@@ -2698,7 +2698,7 @@ const serializeRegionalNationalDataClicked = (ev) => {
         runSaveFlow();
     } catch (error) {
         console.error('Error building calendar payload:', error);
-        toastr["error"](error.message || 'Failed to build calendar data', "Error");
+        toastr["error"](error.message || 'Failed to build calendar data', Messages['Error']);
         document.querySelector('#overlay').classList.add('hidden');
     }
 }
@@ -2941,7 +2941,7 @@ const loadDiocesanCalendarData = () => {
         if (response.ok) {
             return response.json();
         } else if (response.status === 404) {
-            toastr["warning"](response.status + ' ' + response.statusText + ': ' + response.url + '<br />The Diocesan Calendar for ' + diocese + ' does not exist yet.', "Warning").attr('data-toast-type', 'calendar-not-found');
+            toastr["warning"](response.status + ' ' + response.statusText + ': ' + response.url + '<br />The Diocesan Calendar for ' + diocese + ' does not exist yet.', Messages['Warning']).attr('data-toast-type', 'calendar-not-found');
             console.log(response.status + ' ' + response.statusText + ': ' + response.url + 'The Diocesan Calendar for ' + diocese + ' does not exist yet.');
             API.method = 'PUT';
             return Promise.resolve({});
@@ -2955,7 +2955,7 @@ const loadDiocesanCalendarData = () => {
         }
         API.method = 'PATCH';
         console.log('retrieved diocesan data:', data);
-        toastr["success"]("Diocesan Calendar was retrieved successfully", "Success");
+        toastr["success"]("Diocesan Calendar was retrieved successfully", Messages['Success']);
         CalendarData = data;
         CalendarData.i18n = {};
         if (data.hasOwnProperty('settings')) {
@@ -2978,7 +2978,7 @@ const loadDiocesanCalendarData = () => {
             if (DataLoader.lastRequestPath !== API.path) {
                 // We are requesting a totally different calendar, we need to reload ALL i18n data
                 Promise.all(otherLocalizations.map(localization => fetch(API.path + '/' + localization).then(response => response.json()))).then(data => {
-                    toastr["success"]("Diocesan Calendar translation data was retrieved successfully", "Success");
+                    toastr["success"]("Diocesan Calendar translation data was retrieved successfully", Messages['Success']);
                     if (false === TranslationData.has(API.path)) {
                         TranslationData.set(API.path, new Map());
                     }
@@ -3015,7 +3015,7 @@ const loadDiocesanCalendarData = () => {
         if ( error instanceof Error && error.message.startsWith('404') ) { //we have already handled 404 Not Found above
             return;
         }
-        toastr["error"](error.message, "Error");
+        toastr["error"](error.message, Messages['Error']);
     }).finally(() => {
         document.querySelector('#overlay').classList.add('hidden');
     });
@@ -3186,8 +3186,40 @@ const diocesanCalendarNationalDependencyChanged = (ev) => {
         removePrompt.remove();
     }
 
-    // Reset selected diocese
-    document.getElementById('diocesanCalendarDioceseName').value = '';
+    // Reset selected diocese and toggle disabled state based on nation selection
+    const dioceseInput = document.getElementById('diocesanCalendarDioceseName');
+    const dioceseHelp = document.getElementById('diocesanCalendarDioceseNameHelp');
+    const diocesanCalendarGroup = document.getElementById('diocesanCalendarGroup');
+    const diocesanCalendarLocales = document.getElementById('diocesanCalendarLocales');
+    const currentLocalizationDiocesan = document.getElementById('currentLocalizationDiocesan');
+    const diocesanCalendarTimezone = document.getElementById('diocesanCalendarTimezone');
+
+    dioceseInput.value = '';
+    if (currentSelectedNation === '') {
+        // Disable nation-dependent inputs
+        dioceseInput.disabled = true;
+        dioceseHelp.classList.remove('d-none');
+        diocesanCalendarGroup.disabled = true;
+        diocesanCalendarLocales.disabled = true;
+        $(diocesanCalendarLocales).multiselect('disable');
+        currentLocalizationDiocesan.disabled = true;
+        diocesanCalendarTimezone.disabled = true;
+    } else {
+        // Enable nation-dependent inputs
+        dioceseInput.disabled = false;
+        dioceseHelp.classList.add('d-none');
+        diocesanCalendarGroup.disabled = false;
+        diocesanCalendarLocales.disabled = false;
+        $(diocesanCalendarLocales).multiselect('enable');
+        currentLocalizationDiocesan.disabled = false;
+        diocesanCalendarTimezone.disabled = false;
+    }
+
+    // Disable diocese-dependent sections (carousel, forms) when nation changes
+    // They will be re-enabled when a diocese is selected
+    document.getElementById('diocesanCalendarDefinitionCardLinks').classList.add('diocesan-disabled');
+    document.getElementById('carouselExampleIndicators').classList.add('diocesan-disabled');
+    document.getElementById('diocesanOverridesContainer').classList.add('diocesan-disabled');
 
     // Reset the list of dioceses for the current selected nation
     const diocesesForNation = Object.freeze(DiocesesList.find(item => item.country_iso.toUpperCase() === currentSelectedNation)?.dioceses ?? null);
@@ -3274,6 +3306,11 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
     if (selectedOption) {
         ev.target.classList.remove('is-invalid');
         resetOtherLocalizationInputs();
+
+        // Enable diocese-dependent sections (carousel, forms, overrides)
+        document.getElementById('diocesanCalendarDefinitionCardLinks').classList.remove('diocesan-disabled');
+        document.getElementById('carouselExampleIndicators').classList.remove('diocesan-disabled');
+        document.getElementById('diocesanOverridesContainer').classList.remove('diocesan-disabled');
         API.category = 'diocese';
         API.key = selectedOption.getAttribute('data-value');
         console.log('selected diocese with key = ' + API.key);
@@ -3312,6 +3349,10 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
         }
     } else {
         ev.target.classList.add('is-invalid');
+        // Keep diocese-dependent sections disabled when no valid diocese is selected
+        document.getElementById('diocesanCalendarDefinitionCardLinks').classList.add('diocesan-disabled');
+        document.getElementById('carouselExampleIndicators').classList.add('diocesan-disabled');
+        document.getElementById('diocesanOverridesContainer').classList.add('diocesan-disabled');
     }
 }
 
@@ -3398,14 +3439,14 @@ const deleteDiocesanCalendarConfirmClicked = () => {
             document.querySelector('#diocesanOverridesForm').reset();
             resetOtherLocalizationInputs();
 
-            toastr["success"](`Diocesan Calendar '${API.key}' was deleted successfully`, "Success");
+            toastr["success"](`Diocesan Calendar '${API.key}' was deleted successfully`, Messages['Success']);
             response.json().then(json => {
                 console.log(json);
             });
         } else if (response.status === 400) {
             response.json().then(json => {
                 console.error(`${response.status} ${json.response}: ${json.description}`);
-                toastr["error"](`${response.status} ${json.response}: ${json.description}`, "Error");
+                toastr["error"](`${response.status} ${json.response}: ${json.description}`, Messages['Error']);
             });
         } else {
             return Promise.reject(response);
@@ -3578,7 +3619,7 @@ const saveDiocesanCalendar_btnClicked = () => {
             })
             .then(responseData => {
             console.log('Data returned from save action:', responseData);
-            toastr["success"](responseData.success, "Success");
+            toastr["success"](responseData.success, Messages['Success']);
 
             document.querySelector('#removeExistingDiocesanDataBtn').disabled = false;
 
@@ -3611,7 +3652,7 @@ const saveDiocesanCalendar_btnClicked = () => {
                 // Handle different error response shapes (RFC 9110 Problem Details, custom API format, simple format)
                 const status = error && error.status ? `${error.status}: ` : '';
                 const message = extractErrorMessage(error);
-                toastr["error"](status + message, "Error");
+                toastr["error"](status + message, Messages['Error']);
             }).finally(() => {
                 document.querySelector('#overlay').classList.add('hidden');
             });
@@ -3763,7 +3804,7 @@ document.addEventListener('change', (ev) => {
         }
     }
     if (ev.target.classList.contains('regionalNationalCalendarName')) {
-        console.log('%c wider region or national calendar selection has changed ', 'background: #fbff00ff; color: #000000ff; font-weight: bold; padding: 2px 1px;');
+        console.log('wider region or national calendar selection has changed');
         regionalNationalCalendarNameChanged(ev);
     }
     if (ev.target.classList.contains('calendarLocales')) {

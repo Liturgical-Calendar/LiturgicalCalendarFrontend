@@ -154,6 +154,23 @@ const Auth = {
     },
 
     /**
+     * Internal method to retrieve raw token without deprecation warning.
+     * Used by deprecated methods that need token access without triggering nested warnings.
+     *
+     * @private
+     * @returns {string|null} JWT token or null if not found/unavailable
+     */
+    _getRawToken() {
+        try {
+            return localStorage.getItem(this.TOKEN_KEY) ||
+                   sessionStorage.getItem(this.TOKEN_KEY);
+        } catch (e) {
+            // Storage may be unavailable in hardened privacy modes
+            return null;
+        }
+    },
+
+    /**
      * Get stored JWT token
      *
      * @deprecated Tokens are now stored in HttpOnly cookies only.
@@ -162,14 +179,7 @@ const Auth = {
      */
     getToken() {
         console.warn('Auth.getToken() is deprecated. Tokens are now stored in HttpOnly cookies only.');
-        try {
-            return localStorage.getItem(this.TOKEN_KEY) ||
-                   sessionStorage.getItem(this.TOKEN_KEY);
-        } catch (e) {
-            // Storage may be unavailable in hardened privacy modes
-            console.warn('Unable to access token storage:', e.message);
-            return null;
-        }
+        return this._getRawToken();
     },
 
     /**
@@ -268,12 +278,7 @@ const Auth = {
      */
     getPayload() {
         console.warn('Auth.getPayload() is deprecated. Use checkAuthAsync() instead.');
-        // Suppress the deprecation warning from getToken() since we're already warning here
-        const originalWarn = console.warn;
-        console.warn = () => {};
-        const token = this.getToken();
-        console.warn = originalWarn;
-
+        const token = this._getRawToken();
         if (!token) return null;
 
         try {

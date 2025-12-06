@@ -34,7 +34,7 @@ Main PHP files: index.php, extending.php, admin.php, etc.
 
 ### Prerequisites
 
-- PHP >= 8.1
+- PHP >= 8.4
 - Composer
 - Node.js and npm (for markdown linting)
 - Access to LiturgicalCalendar API (default: <http://localhost:8000>)
@@ -213,7 +213,7 @@ vendor/bin/captainhook config:info
 
 **Key Rules**:
 
-- PHP >= 8.1 features encouraged
+- PHP >= 8.4 features encouraged
 - Short array syntax `[]` (not `array()`)
 - Single quotes for simple strings
 - 4-space indentation

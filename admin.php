@@ -3,6 +3,11 @@
 include_once 'includes/common.php'; // provides $i18n and all API URLs
 include_once 'includes/messages.php';
 
+// Defensive initialization: ensure $messages is an array before use
+if (!isset($messages) || !is_array($messages)) {
+    $messages = [];
+}
+
 use LiturgicalCalendar\Frontend\ApiClient;
 use LiturgicalCalendar\Frontend\FormControls;
 use LiturgicalCalendar\Frontend\Utilities;

@@ -368,15 +368,17 @@ if (isset($_GET['choice'])) {
                             </div>
                             <div class="form-group col col-md-3">
                                 <label for="diocesanCalendarDioceseName" class="fw-bold"><?php echo $messages['Diocese']; ?>:</label>
-                                <input list="DiocesesList" class="form-control" id="diocesanCalendarDioceseName" required>
-                                <div class="invalid-feedback"><?php echo $messages['Diocese not found']; ?></div>
+                                <input list="DiocesesList" class="form-control" id="diocesanCalendarDioceseName" required disabled>
+                                <small id="diocesanCalendarDioceseNameHelp" class="form-text text-muted">
+                                    <i class="fas fa-circle-info me-1"></i><?php echo $messages['Select a national calendar first']; ?>
+                                </small>
                                 <datalist id="DiocesesList">
                                     <option value=""></option>
                                 </datalist>
                             </div>
                             <div class="form-group col col-md-3">
                                 <label for="diocesanCalendarGroup" class="fw-bold"><?php echo $messages['Diocesan group']; ?>: <i class="fas fa-circle-info mx-2" title="<?php echo htmlspecialchars($DioceseGroupHelp, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></i></label>
-                                <input list="DiocesanGroupsList" class="form-control" id="diocesanCalendarGroup" aria-describedby="diocesanCalendarGroupHelp">
+                                <input list="DiocesanGroupsList" class="form-control" id="diocesanCalendarGroup" aria-describedby="diocesanCalendarGroupHelp" disabled>
                                 <datalist id="DiocesanGroupsList">
                                     <option value=""></option>
                                     <?php
@@ -391,7 +393,7 @@ if (isset($_GET['choice'])) {
                         <div class="row justify-content-center align-items-baseline">
                             <div class="form-group col col-md-3">
                                 <label for="diocesanCalendarLocales" class="fw-bold"><?php echo $messages['Locales']; ?>:</label>
-                                <select class="form-select calendarLocales" id="diocesanCalendarLocales" multiple="multiple">
+                                <select class="form-select calendarLocales" id="diocesanCalendarLocales" multiple="multiple" disabled>
                                 <?php
                                 foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
                                     echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
@@ -401,7 +403,7 @@ if (isset($_GET['choice'])) {
                             </div>
                             <div class="form-group col col-md-3">
                                 <label for="currentLocalizationDiocesan" class="fw-bold"><?php echo $messages['Current localization']; ?>:</label>
-                                <select class="form-select currentLocalizationChoices" id="currentLocalizationDiocesan">
+                                <select class="form-select currentLocalizationChoices" id="currentLocalizationDiocesan" disabled>
                                     <option value=""></option>
                                     <?php
                                     foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
@@ -412,7 +414,7 @@ if (isset($_GET['choice'])) {
                             </div>
                             <div class="form-group col col-md-3">
                                 <label for="diocesanCalendarTimezone" class="fw-bold"><?php echo $messages['Timezone']; ?></label>
-                                <select class="form-select" id="diocesanCalendarTimezone">
+                                <select class="form-select" id="diocesanCalendarTimezone" disabled>
                                     <option value=""></option>
                                 </select>
                             </div>
@@ -426,7 +428,7 @@ if (isset($_GET['choice'])) {
                     </form>
                 </div>
 
-                <nav aria-label="<?php echo $messages['Diocesan calendar definition']; ?>" id="diocesanCalendarDefinitionCardLinks">
+                <nav aria-label="<?php echo $messages['Diocesan calendar definition']; ?>" id="diocesanCalendarDefinitionCardLinks" class="diocesan-disabled">
                     <ul class="pagination pagination-lg justify-content-center m-1">
                         <li class="page-item disabled">
                             <a class="page-link diocesan-carousel-prev" href="#" tabindex="-1" aria-disabled="true" aria-label="<?php echo $messages['Previous']; ?>"><span aria-hidden="true">&laquo;</span></a>
@@ -441,7 +443,7 @@ if (isset($_GET['choice'])) {
                     </ul>
                 </nav>
 
-                <div id="carouselExampleIndicators" class="carousel slide" data-bs-interval="false">
+                <div id="carouselExampleIndicators" class="carousel slide diocesan-disabled" data-bs-interval="false">
                     <ol class="carousel-indicators">
                         <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></li>
                         <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" class=""></li>
@@ -536,15 +538,15 @@ if (isset($_GET['choice'])) {
                     </div>
                     <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-bs-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only"><?php echo $messages['Previous']; ?></span>
+                        <span class="visually-hidden"><?php echo $messages['Previous']; ?></span>
                     </a>
                     <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-bs-slide="next">
                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only"><?php echo $messages['Next']; ?></span>
+                        <span class="visually-hidden"><?php echo $messages['Next']; ?></span>
                     </a>
                 </div>
 
-                <div id="diocesanOverridesContainer" class="container">
+                <div id="diocesanOverridesContainer" class="container diocesan-disabled">
                     <p id="diocesanOverridesTitle" class="text-center"><?php echo $messages['Diocesan overrides']; ?></p>
                     <form id="diocesanOverridesForm" class="row justify-content-center needs-validation" novalidate>
                         <div class="form-group col col-md-3">
