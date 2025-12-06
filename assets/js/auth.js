@@ -116,7 +116,8 @@ const Auth = {
             await this.updateAuthCache();
 
             // Clear any legacy tokens from localStorage/sessionStorage
-            this.clearTokens();
+            // preserveCache=true keeps the freshly populated auth cache intact
+            this.clearTokens(true);
 
             return data;
         } catch (error) {
@@ -248,12 +249,15 @@ const Auth = {
 
     /**
      * Remove all legacy tokens from localStorage/sessionStorage
-     * Also clears the auth cache
+     *
+     * @param {boolean} preserveCache - If true, only clear legacy tokens without touching auth cache
      */
-    clearTokens() {
-        // Clear auth cache
-        this._cachedAuthState = null;
-        this._cacheExpiry = 0;
+    clearTokens(preserveCache = false) {
+        // Clear auth cache unless preserveCache is true
+        if (!preserveCache) {
+            this._cachedAuthState = null;
+            this._cacheExpiry = 0;
+        }
 
         // Clear legacy tokens from storage
         try {
