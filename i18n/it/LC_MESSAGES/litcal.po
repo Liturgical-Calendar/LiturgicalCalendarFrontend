@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-06 08:43+0000\n"
+"POT-Creation-Date: 2025-12-06 19:22+0000\n"
 "PO-Revision-Date: 2025-12-06 05:43+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
@@ -243,13 +243,13 @@ msgstr ""
 
 #. translators: notification title
 #. translators: notification title for successful operations
-#: usage.php:11 includes/login-modal.php:317 includes/messages.php:47
+#: usage.php:11 includes/login-modal.php:315 includes/messages.php:47
 msgid "Success"
 msgstr "Successo"
 
 #. translators: notification title
 #. translators: notification title for failed operations
-#: usage.php:13 includes/messages.php:49
+#: usage.php:13 includes/login-modal.php:499 includes/messages.php:49
 msgid "Error"
 msgstr "Errore"
 
@@ -1279,12 +1279,12 @@ msgstr "Decreti"
 msgid "About us"
 msgstr "Chi siamo"
 
-#: layout/header.php:51 layout/header.php:53 includes/login-modal.php:35
-#: includes/login-modal.php:337
+#: layout/header.php:51 layout/header.php:53 includes/login-modal.php:56
+#: includes/login-modal.php:335
 msgid "Login"
 msgstr "Effettua l'accesso"
 
-#: layout/header.php:60 layout/header.php:62
+#: layout/header.php:60 layout/header.php:62 includes/login-modal.php:12
 msgid "Logout"
 msgstr "Disconnetti"
 
@@ -1301,59 +1301,55 @@ msgid "Examples of Usage"
 msgstr "Esempi di Utilizzo"
 
 #: includes/login-modal.php:6
+msgid "Session Expiring"
+msgstr "Sessione in scadenza"
+
+#: includes/login-modal.php:15
+msgid "Extend Session"
+msgstr ""
+
+#: includes/login-modal.php:27
 msgid "Administrator Login"
 msgstr "Accesso Amministratore"
 
-#: includes/login-modal.php:12
+#: includes/login-modal.php:33
 msgid "Username"
 msgstr "Nome utente"
 
-#: includes/login-modal.php:16
+#: includes/login-modal.php:37
 msgid "Password"
 msgstr "Password"
 
-#: includes/login-modal.php:19 includes/login-modal.php:143
+#: includes/login-modal.php:40 includes/login-modal.php:172
 msgid "Show password"
 msgstr "Mostra password"
 
-#: includes/login-modal.php:26
+#: includes/login-modal.php:47
 msgid "Remember me"
 msgstr "Ricordami"
 
 #. translators: button label for canceling an action
-#: includes/login-modal.php:34 includes/messages.php:117
+#: includes/login-modal.php:55 includes/messages.php:117
 msgid "Cancel"
 msgstr "Annulla"
 
-#: includes/login-modal.php:79
+#: includes/login-modal.php:102
 msgid "Unable to verify authentication status. The server may be unavailable."
 msgstr ""
 "Impossibile verificare lo stato di autenticazione. Il server potrebbe non "
 "essere disponibile."
 
-#: includes/login-modal.php:81
+#: includes/login-modal.php:104
 msgid "Connection Issue"
 msgstr "Problema di connessione"
 
-#: includes/login-modal.php:102
+#: includes/login-modal.php:125 includes/login-modal.php:526
 msgid "Are you sure you want to logout?"
 msgstr "Sei sicuro di voler uscire?"
 
-#: includes/login-modal.php:138
+#: includes/login-modal.php:167
 msgid "Hide password"
 msgstr "Nascondi password"
-
-#: includes/login-modal.php:154 includes/login-modal.php:159
-#, php-format
-msgid "Your session will expire in less than %d minute. Please save your work."
-msgid_plural ""
-"Your session will expire in less than %d minutes. Please save your work."
-msgstr[0] "La tua sessione scadrà in meno di %d minuto. Salva il tuo lavoro."
-msgstr[1] "La tua sessione scadrà in meno di %d minuti. Salva il tuo lavoro."
-
-#: includes/login-modal.php:170
-msgid "Session Expiring"
-msgstr "Sessione in scadenza"
 
 #: includes/login-modal.php:271
 msgid "Please enter both username and password"
@@ -1363,13 +1359,54 @@ msgstr "Si prega di inserire sia il nome utente che la password"
 msgid "Logging in..."
 msgstr "Accesso in corso..."
 
-#: includes/login-modal.php:317
+#: includes/login-modal.php:315
 msgid "Login successful"
 msgstr "Accesso effettuato con successo"
 
-#: includes/login-modal.php:332
+#: includes/login-modal.php:330
 msgid "Login failed. Please check your credentials."
 msgstr "Accesso non riuscito. Controlla le tue credenziali."
+
+#: includes/login-modal.php:402 includes/login-modal.php:407
+#, fuzzy, php-format
+#| msgid ""
+#| "Your session will expire in less than %d minute. Please save your work."
+#| msgid_plural ""
+#| "Your session will expire in less than %d minutes. Please save your work."
+msgid "Your session will expire in less than %d minute."
+msgid_plural "Your session will expire in less than %d minutes."
+msgstr[0] "La tua sessione scadrà in meno di %d minuto. Salva il tuo lavoro."
+msgstr[1] "La tua sessione scadrà in meno di %d minuti. Salva il tuo lavoro."
+
+#: includes/login-modal.php:466
+#, fuzzy
+#| msgid "Extending the API"
+msgid "Extending..."
+msgstr "Estendi l'API"
+
+#: includes/login-modal.php:488
+msgid "Your session has been extended."
+msgstr ""
+
+#: includes/login-modal.php:489
+#, fuzzy
+#| msgid "Session Expiring"
+msgid "Session Extended"
+msgstr "Sessione in scadenza"
+
+#: includes/login-modal.php:498
+msgid "Failed to extend session. Please login again."
+msgstr ""
+
+#: includes/login-modal.php:551
+msgid "Your session has expired. Please login again."
+msgstr ""
+
+#: includes/login-modal.php:552
+#, fuzzy
+#| msgid "Session Expiring"
+msgid "Session Expired"
+msgstr "Sessione in scadenza"
 
 #. translators: form field label for the unique identifier of a liturgical event
 #: includes/messages.php:15
