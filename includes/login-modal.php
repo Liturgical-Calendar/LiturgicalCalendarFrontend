@@ -545,7 +545,7 @@ async function handleAutoLogout() {
         );
     }
 
-    // Clear tokens and reload (this will show the logged-out state)
+    // Clear tokens and stop timers (this will show the logged-out state)
     Auth.clearTokens();
     Auth.stopAllTimers();
 
