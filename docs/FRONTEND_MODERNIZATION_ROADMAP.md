@@ -1620,7 +1620,11 @@ Keep the current PHP stack but consolidate with a shared admin layout:
 <?php
 include_once 'includes/common.php';
 
-// Check for JWT cookie or redirect
+// Check for JWT cookie presence (quick gate)
+// Note: This only checks cookie existence. Full JWT validation (signature
+// verification, expiry, claims) is handled by the API middleware when the
+// frontend makes authenticated requests. The frontend should not attempt
+// to validate JWTs directly - it delegates all token validation to the API.
 if (!isset($_COOKIE['litcal_access_token'])) {
     // For API requests, return 401
     if (str_contains($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json')) {
