@@ -3804,7 +3804,7 @@ document.addEventListener('change', (ev) => {
         }
     }
     if (ev.target.classList.contains('regionalNationalCalendarName')) {
-        console.log('%c wider region or national calendar selection has changed ', 'background: #fbff00ff; color: #000000ff; font-weight: bold; padding: 2px 1px;');
+        console.log('wider region or national calendar selection has changed');
         regionalNationalCalendarNameChanged(ev);
     }
     if (ev.target.classList.contains('calendarLocales')) {
