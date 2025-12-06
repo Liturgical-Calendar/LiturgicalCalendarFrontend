@@ -97,6 +97,57 @@ const extractErrorMessage = (error, fallback = 'An error occurred') => {
 };
 
 /**
+ * Handles common delete response processing pattern.
+ * Runs cleanup callback on success, shows toastr, logs JSON, handles errors.
+ *
+ * @param {Response} response - The fetch response object
+ * @param {Function} onSuccessCleanup - Callback to run cleanup code on success
+ * @param {string} successMessage - Message to show on success
+ * @returns {Promise<void>}
+ */
+const handleDeleteResponse = async (response, onSuccessCleanup, successMessage) => {
+    if (response.ok) {
+        onSuccessCleanup();
+        toastr["success"](successMessage, Messages['Success']);
+        try {
+            const json = await response.json();
+            console.log(json);
+        } catch { /* empty or non-JSON body - ignore */ }
+    } else if (response.status === 400) {
+        const json = await response.json();
+        console.error(`${response.status} ${json.response}: ${json.description}`);
+        toastr["error"](`${response.status} ${json.response}: ${json.description}`, Messages['Error']);
+    } else {
+        return Promise.reject(response);
+    }
+};
+
+/**
+ * Builds a LitEvent object from form row inputs.
+ *
+ * @param {HTMLElement} row - The form row element
+ * @param {string} eventKey - The event key
+ * @param {string} eventName - The event name
+ * @returns {LitEvent} The constructed LitEvent object
+ */
+const buildLitEventFromRow = (row, eventKey, eventName) => {
+    const colorSelectedOptions = Array.from(row.querySelector('.litEventColor').selectedOptions);
+    const commonSelectedOptions = Array.from(row.querySelector('.litEventCommon').selectedOptions);
+    const day = parseInt(row.querySelector('.litEventDay').value, 10) || 1;
+    const month = parseInt(row.querySelector('.litEventMonth').value, 10) || 1;
+
+    return new LitEvent(
+        eventKey,
+        eventName,
+        colorSelectedOptions.map(({ value }) => value),
+        null,
+        commonSelectedOptions.map(({ value }) => value),
+        day,
+        month
+    );
+};
+
+/**
  * Takes a string in snake_case and returns it in camelCase.
  * @param {string} str
  * @return {string}
@@ -745,18 +796,7 @@ const createNewLiturgicalEvent = (row, card, newEventKey, eventName, targetInput
 
     if (existingEvent === null) {
         console.log('New event key is unique, creating event');
-        const colorSelectedOptions = Array.from(row.querySelector('.litEventColor').selectedOptions);
-        const commonSelectedOptions = Array.from(row.querySelector('.litEventCommon').selectedOptions);
-
-        const liturgical_event = new LitEvent(
-            newEventKey,
-            eventName,
-            colorSelectedOptions.map(({ value }) => value),
-            null,
-            commonSelectedOptions.map(({ value }) => value),
-            parseInt(row.querySelector('.litEventDay').value),
-            parseInt(row.querySelector('.litEventMonth').value)
-        );
+        const liturgical_event = buildLitEventFromRow(row, newEventKey, eventName);
 
         const metadata = {
             since_year: parseInt(row.querySelector('.litEventSinceYear').value),
@@ -828,19 +868,7 @@ const handleEventKeyCollision = (existingEvent, row, card, newEventKey, eventNam
     }
     targetInput.classList.remove('is-invalid');
 
-    const colorSelectedOptions = Array.from(row.querySelector('.litEventColor').selectedOptions);
-    const commonSelectedOptions = Array.from(row.querySelector('.litEventCommon').selectedOptions);
-
-    const liturgical_event = new LitEvent(
-        newEventKey,
-        eventName,
-        colorSelectedOptions.map(({ value }) => value),
-        null,
-        commonSelectedOptions.map(({ value }) => value),
-        parseInt(row.querySelector('.litEventDay').value),
-        parseInt(row.querySelector('.litEventMonth').value)
-    );
-
+    const liturgical_event = buildLitEventFromRow(row, newEventKey, eventName);
     const metadata = {
         since_year: until_year + 1,
         form_rownum: Array.from(card.querySelectorAll('.row')).indexOf(row)
@@ -2272,54 +2300,41 @@ const deleteCalendarConfirmClicked = () => {
                 return await handleAuthError(response, makeDeleteRequest, runDeleteFlow);
             }
             return response;
-        }).then(response => {
-            if (response.ok) {
-                switch ( API.category ) {
-                    case 'widerregion':
-                        LitCalMetadata.wider_regions = LitCalMetadata.wider_regions.filter(el => el.name !== API.key);
-                        LitCalMetadata.wider_regions_keys = LitCalMetadata.wider_regions_keys.filter(el => el !== API.key);
-                        break;
-                    case 'nation': {
-                        LitCalMetadata.national_calendars = LitCalMetadata.national_calendars.filter(el => el.calendar_id !== API.key);
-                        LitCalMetadata.national_calendars_keys = LitCalMetadata.national_calendars_keys.filter(el => el !== API.key);
-                        document.querySelector('#nationalCalendarSettingsForm').reset();
-                        document.querySelector('#publishedRomanMissalList').innerHTML = '';
-                        const localeOptions = Object.entries(AvailableLocalesWithRegion).map(([localeIso, localeDisplayName]) => {
-                            return `<option value="${localeIso}">${localeDisplayName}</option>`;
-                        });
-                        document.querySelector('#nationalCalendarLocales').innerHTML = localeOptions.join('\n');
-                        document.querySelector('.currentLocalizationChoices').innerHTML = localeOptions.join('\n');
-                        $('#nationalCalendarLocales').multiselect('rebuild');
+        }).then(response => handleDeleteResponse(response, () => {
+            switch ( API.category ) {
+                case 'widerregion':
+                    LitCalMetadata.wider_regions = LitCalMetadata.wider_regions.filter(el => el.name !== API.key);
+                    LitCalMetadata.wider_regions_keys = LitCalMetadata.wider_regions_keys.filter(el => el !== API.key);
+                    break;
+                case 'nation': {
+                    LitCalMetadata.national_calendars = LitCalMetadata.national_calendars.filter(el => el.calendar_id !== API.key);
+                    LitCalMetadata.national_calendars_keys = LitCalMetadata.national_calendars_keys.filter(el => el !== API.key);
+                    document.querySelector('#nationalCalendarSettingsForm').reset();
+                    document.querySelector('#publishedRomanMissalList').innerHTML = '';
+                    const localeOptions = Object.entries(AvailableLocalesWithRegion).map(([localeIso, localeDisplayName]) => {
+                        return `<option value="${localeIso}">${localeDisplayName}</option>`;
+                    });
+                    document.querySelector('#nationalCalendarLocales').innerHTML = localeOptions.join('\n');
+                    document.querySelector('.currentLocalizationChoices').innerHTML = localeOptions.join('\n');
+                    $('#nationalCalendarLocales').multiselect('rebuild');
 
-                        document.querySelectorAll('.regionalNationalSettingsForm .form-select:not([multiple])').forEach(formSelect => {
-                            formSelect.value = '';
-                            formSelect.dispatchEvent(new CustomEvent('change', {
-                                bubbles: true,
-                                cancelable: true
-                              }));
-                        });
-                        break;
-                    }
+                    document.querySelectorAll('.regionalNationalSettingsForm .form-select:not([multiple])').forEach(formSelect => {
+                        formSelect.value = '';
+                        formSelect.dispatchEvent(new CustomEvent('change', {
+                            bubbles: true,
+                            cancelable: true
+                          }));
+                    });
+                    break;
                 }
-
-                document.querySelector('#removeExistingCalendarDataBtn').disabled = true;
-                document.querySelector('#removeCalendarDataPrompt')?.remove();
-                document.querySelector('.regionalNationalCalendarName').value = '';
-                document.querySelector('.regionalNationalDataForm').innerHTML = '';
-
-                toastr["success"](`Calendar '${API.category}/${API.key}' was deleted successfully`, Messages['Success']);
-                response.json().then(json => {
-                    console.log(json);
-                });
-            } else if (response.status === 400) {
-                response.json().then(json => {
-                    console.error(`${response.status} ${json.response}: ${json.description}`);
-                    toastr["error"](`${response.status} ${json.response}: ${json.description}`, Messages['Error']);
-                });
-            } else {
-                return Promise.reject(response);
             }
-        }).catch(error => {
+
+            document.querySelector('#removeExistingCalendarDataBtn').disabled = true;
+            document.querySelector('#removeCalendarDataPrompt')?.remove();
+            document.querySelector('.regionalNationalCalendarName').value = '';
+            document.querySelector('.regionalNationalDataForm').innerHTML = '';
+        }, `Calendar '${API.category}/${API.key}' was deleted successfully`
+        )).catch(error => {
             console.error(error);
         }).finally(() => {
             document.querySelector('#overlay').classList.add('hidden');
@@ -3402,8 +3417,7 @@ const deleteDiocesanCalendarConfirmClicked = () => {
                 return await handleAuthError(response, makeDeleteRequest, runDeleteFlow);
             }
             return response;
-        }).then(response => {
-        if (response.ok) {
+        }).then(response => handleDeleteResponse(response, () => {
             LitCalMetadata.diocesan_calendars = LitCalMetadata.diocesan_calendars.filter(el => el.calendar_id !== API.key);
             LitCalMetadata.diocesan_calendars_keys = LitCalMetadata.diocesan_calendars_keys.filter(el => el !== API.key);
 
@@ -3438,20 +3452,8 @@ const deleteDiocesanCalendarConfirmClicked = () => {
             });
             document.querySelector('#diocesanOverridesForm').reset();
             resetOtherLocalizationInputs();
-
-            toastr["success"](`Diocesan Calendar '${API.key}' was deleted successfully`, Messages['Success']);
-            response.json().then(json => {
-                console.log(json);
-            });
-        } else if (response.status === 400) {
-            response.json().then(json => {
-                console.error(`${response.status} ${json.response}: ${json.description}`);
-                toastr["error"](`${response.status} ${json.response}: ${json.description}`, Messages['Error']);
-            });
-        } else {
-            return Promise.reject(response);
-        }
-        }).catch(error => {
+        }, `Diocesan Calendar '${API.key}' was deleted successfully`
+        )).catch(error => {
             console.error(error);
         }).finally(() => {
             document.querySelector('#overlay').classList.add('hidden');
