@@ -492,8 +492,14 @@ async function handleExtendSession() {
             );
         }
 
-        // Hide the warning and show login modal
+        // Hide the warning and stop all auth timers
         hideSessionExpiryToast();
+        if (sessionExpiryTimeout) {
+            clearTimeout(sessionExpiryTimeout);
+            sessionExpiryTimeout = null;
+        }
+        Auth.stopAllTimers();
+
         showLoginModal();
     } finally {
         // Reset button state
