@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-03 03:09+0000\n"
+"POT-Creation-Date: 2025-12-06 04:20+0000\n"
 "PO-Revision-Date: 2025-12-01 10:45+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -238,7 +238,7 @@ msgstr ""
 "noci, lokalizácie môžu byť vykonané rovnako dobre v klientskej aplikácii."
 
 #. translators: notification title
-#: usage.php:11 includes/login-modal.php:307
+#: usage.php:11 includes/login-modal.php:317
 msgid "Success"
 msgstr "Úspech"
 
@@ -1251,7 +1251,7 @@ msgid "About us"
 msgstr "O nás"
 
 #: layout/header.php:51 layout/header.php:53 includes/login-modal.php:35
-#: includes/login-modal.php:327
+#: includes/login-modal.php:337
 msgid "Login"
 msgstr "Prihlásenie"
 
@@ -1312,29 +1312,34 @@ msgstr "Naozaj sa chceš odhlásiť?"
 msgid "Hide password"
 msgstr "Skryť heslo"
 
-#: includes/login-modal.php:153
-#, php-format
-msgid ""
-"Your session will expire in less than %d minute(s). Please save your work."
-msgstr "Vaša relácia vyprší o menej ako %d minút. Uložte si svoju prácu."
+#: includes/login-modal.php:154 includes/login-modal.php:159
+#, fuzzy, php-format
+#| msgid ""
+#| "Your session will expire in less than %d minute(s). Please save your work."
+msgid "Your session will expire in less than %d minute. Please save your work."
+msgid_plural ""
+"Your session will expire in less than %d minutes. Please save your work."
+msgstr[0] "Vaša relácia vyprší o menej ako %d minút. Uložte si svoju prácu."
+msgstr[1] "Vaša relácia vyprší o menej ako %d minút. Uložte si svoju prácu."
+msgstr[2] "Vaša relácia vyprší o menej ako %d minút. Uložte si svoju prácu."
 
-#: includes/login-modal.php:160
+#: includes/login-modal.php:170
 msgid "Session Expiring"
 msgstr "Platnosť relácie končí"
 
-#: includes/login-modal.php:261
+#: includes/login-modal.php:271
 msgid "Please enter both username and password"
 msgstr "Zadajte prosím používateľské meno a heslo"
 
-#: includes/login-modal.php:269
+#: includes/login-modal.php:279
 msgid "Logging in..."
 msgstr "Prihlasovanie..."
 
-#: includes/login-modal.php:307
+#: includes/login-modal.php:317
 msgid "Login successful"
 msgstr "Prihlásenie úspešné"
 
-#: includes/login-modal.php:322
+#: includes/login-modal.php:332
 msgid "Login failed. Please check your credentials."
 msgstr "Prihlásenie zlyhalo. Skontrolujte svoje prihlasovacie údaje."
 

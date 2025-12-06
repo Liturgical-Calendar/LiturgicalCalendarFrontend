@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-03 03:09+0000\n"
+"POT-Creation-Date: 2025-12-06 04:20+0000\n"
 "PO-Revision-Date: 2025-12-02 14:22+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
@@ -240,7 +240,7 @@ msgstr ""
 "lokalizacje mogą być równie dobrze wykonywane w aplikacji klienckiej."
 
 #. translators: notification title
-#: usage.php:11 includes/login-modal.php:307
+#: usage.php:11 includes/login-modal.php:317
 msgid "Success"
 msgstr "Sukces"
 
@@ -1262,7 +1262,7 @@ msgid "About us"
 msgstr "O nas"
 
 #: layout/header.php:51 layout/header.php:53 includes/login-modal.php:35
-#: includes/login-modal.php:327
+#: includes/login-modal.php:337
 msgid "Login"
 msgstr "Zaloguj się"
 
@@ -1323,30 +1323,37 @@ msgstr "Czy na pewno chcesz się wylogować?"
 msgid "Hide password"
 msgstr "Ukryj hasło"
 
-#: includes/login-modal.php:153
-#, php-format
-msgid ""
-"Your session will expire in less than %d minute(s). Please save your work."
-msgstr ""
+#: includes/login-modal.php:154 includes/login-modal.php:159
+#, fuzzy, php-format
+#| msgid ""
+#| "Your session will expire in less than %d minute(s). Please save your work."
+msgid "Your session will expire in less than %d minute. Please save your work."
+msgid_plural ""
+"Your session will expire in less than %d minutes. Please save your work."
+msgstr[0] ""
+"Twoja sesja wygaśnie za mniej niż %d minut(y). Proszę zapisz swoją pracę."
+msgstr[1] ""
+"Twoja sesja wygaśnie za mniej niż %d minut(y). Proszę zapisz swoją pracę."
+msgstr[2] ""
 "Twoja sesja wygaśnie za mniej niż %d minut(y). Proszę zapisz swoją pracę."
 
-#: includes/login-modal.php:160
+#: includes/login-modal.php:170
 msgid "Session Expiring"
 msgstr "Sesja wygasa"
 
-#: includes/login-modal.php:261
+#: includes/login-modal.php:271
 msgid "Please enter both username and password"
 msgstr "Proszę podać zarówno nazwę użytkownika, jak i hasło"
 
-#: includes/login-modal.php:269
+#: includes/login-modal.php:279
 msgid "Logging in..."
 msgstr "Logowanie..."
 
-#: includes/login-modal.php:307
+#: includes/login-modal.php:317
 msgid "Login successful"
 msgstr "Logowanie zakończone sukcesem"
 
-#: includes/login-modal.php:322
+#: includes/login-modal.php:332
 msgid "Login failed. Please check your credentials."
 msgstr "Logowanie nieudane. Proszę sprawdzić swoje dane."
 

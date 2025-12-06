@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-03 03:09+0000\n"
+"POT-Creation-Date: 2025-12-06 04:20+0000\n"
 "PO-Revision-Date: 2025-12-01 10:45+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
@@ -243,7 +243,7 @@ msgstr ""
 "worden uitgevoerd."
 
 #. translators: notification title
-#: usage.php:11 includes/login-modal.php:307
+#: usage.php:11 includes/login-modal.php:317
 msgid "Success"
 msgstr "Succes"
 
@@ -1271,7 +1271,7 @@ msgid "About us"
 msgstr "Over ons"
 
 #: layout/header.php:51 layout/header.php:53 includes/login-modal.php:35
-#: includes/login-modal.php:327
+#: includes/login-modal.php:337
 msgid "Login"
 msgstr "Inloggen"
 
@@ -1332,31 +1332,37 @@ msgstr "Weet je zeker dat je wilt uitloggen?"
 msgid "Hide password"
 msgstr "Wachtwoord verbergen"
 
-#: includes/login-modal.php:153
-#, php-format
-msgid ""
-"Your session will expire in less than %d minute(s). Please save your work."
-msgstr ""
+#: includes/login-modal.php:154 includes/login-modal.php:159
+#, fuzzy, php-format
+#| msgid ""
+#| "Your session will expire in less than %d minute(s). Please save your work."
+msgid "Your session will expire in less than %d minute. Please save your work."
+msgid_plural ""
+"Your session will expire in less than %d minutes. Please save your work."
+msgstr[0] ""
+"Je sessie verloopt over minder dan %d minuut/minuten. Sla je werk op, "
+"alsjeblieft."
+msgstr[1] ""
 "Je sessie verloopt over minder dan %d minuut/minuten. Sla je werk op, "
 "alsjeblieft."
 
-#: includes/login-modal.php:160
+#: includes/login-modal.php:170
 msgid "Session Expiring"
 msgstr "Sessie verloopt"
 
-#: includes/login-modal.php:261
+#: includes/login-modal.php:271
 msgid "Please enter both username and password"
 msgstr "Voer zowel gebruikersnaam als wachtwoord in"
 
-#: includes/login-modal.php:269
+#: includes/login-modal.php:279
 msgid "Logging in..."
 msgstr "Inloggen..."
 
-#: includes/login-modal.php:307
+#: includes/login-modal.php:317
 msgid "Login successful"
 msgstr "Inloggen geslaagd"
 
-#: includes/login-modal.php:322
+#: includes/login-modal.php:332
 msgid "Login failed. Please check your credentials."
 msgstr "Inloggen mislukt. Controleer je inloggegevens."
 

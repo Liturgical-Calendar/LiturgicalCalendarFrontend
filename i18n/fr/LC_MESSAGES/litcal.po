@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-03 03:09+0000\n"
+"POT-Creation-Date: 2025-12-06 04:20+0000\n"
 "PO-Revision-Date: 2025-12-01 10:45+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
@@ -244,7 +244,7 @@ msgstr ""
 "par l'application cliente."
 
 #. translators: notification title
-#: usage.php:11 includes/login-modal.php:307
+#: usage.php:11 includes/login-modal.php:317
 msgid "Success"
 msgstr "Succès"
 
@@ -1285,7 +1285,7 @@ msgid "About us"
 msgstr "À propos de nous"
 
 #: layout/header.php:51 layout/header.php:53 includes/login-modal.php:35
-#: includes/login-modal.php:327
+#: includes/login-modal.php:337
 msgid "Login"
 msgstr "Connexion"
 
@@ -1346,31 +1346,37 @@ msgstr "Êtes-vous sûr de vouloir vous déconnecter ?"
 msgid "Hide password"
 msgstr "Masquer le mot de passe"
 
-#: includes/login-modal.php:153
-#, php-format
-msgid ""
-"Your session will expire in less than %d minute(s). Please save your work."
-msgstr ""
+#: includes/login-modal.php:154 includes/login-modal.php:159
+#, fuzzy, php-format
+#| msgid ""
+#| "Your session will expire in less than %d minute(s). Please save your work."
+msgid "Your session will expire in less than %d minute. Please save your work."
+msgid_plural ""
+"Your session will expire in less than %d minutes. Please save your work."
+msgstr[0] ""
+"Votre session expirera dans moins de %d minute(s). Veuillez enregistrer "
+"votre travail."
+msgstr[1] ""
 "Votre session expirera dans moins de %d minute(s). Veuillez enregistrer "
 "votre travail."
 
-#: includes/login-modal.php:160
+#: includes/login-modal.php:170
 msgid "Session Expiring"
 msgstr "Votre session va bientôt expirer"
 
-#: includes/login-modal.php:261
+#: includes/login-modal.php:271
 msgid "Please enter both username and password"
 msgstr "Veuillez entrer à la fois le nom d'utilisateur et le mot de passe"
 
-#: includes/login-modal.php:269
+#: includes/login-modal.php:279
 msgid "Logging in..."
 msgstr "Connexion en cours..."
 
-#: includes/login-modal.php:307
+#: includes/login-modal.php:317
 msgid "Login successful"
 msgstr "Connexion réussie"
 
-#: includes/login-modal.php:322
+#: includes/login-modal.php:332
 msgid "Login failed. Please check your credentials."
 msgstr "Échec de la connexion. Veuillez vérifier vos identifiants."
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-03 03:09+0000\n"
+"POT-Creation-Date: 2025-12-06 04:20+0000\n"
 "PO-Revision-Date: 2025-12-01 13:28+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
@@ -236,7 +236,7 @@ msgstr ""
 "kliens alkalmazásban ugyanúgy elvégezhetők."
 
 #. translators: notification title
-#: usage.php:11 includes/login-modal.php:307
+#: usage.php:11 includes/login-modal.php:317
 msgid "Success"
 msgstr "Siker"
 
@@ -1258,7 +1258,7 @@ msgid "About us"
 msgstr "Rólunk"
 
 #: layout/header.php:51 layout/header.php:53 includes/login-modal.php:35
-#: includes/login-modal.php:327
+#: includes/login-modal.php:337
 msgid "Login"
 msgstr "Bejelentkezés"
 
@@ -1319,29 +1319,33 @@ msgstr "Biztosan ki szeretnél jelentkezni?"
 msgid "Hide password"
 msgstr "Jelszó elrejtése"
 
-#: includes/login-modal.php:153
-#, php-format
-msgid ""
-"Your session will expire in less than %d minute(s). Please save your work."
-msgstr "A munkamenet %d percen belül lejár. Kérjük, mentse a munkáját."
+#: includes/login-modal.php:154 includes/login-modal.php:159
+#, fuzzy, php-format
+#| msgid ""
+#| "Your session will expire in less than %d minute(s). Please save your work."
+msgid "Your session will expire in less than %d minute. Please save your work."
+msgid_plural ""
+"Your session will expire in less than %d minutes. Please save your work."
+msgstr[0] "A munkamenet %d percen belül lejár. Kérjük, mentse a munkáját."
+msgstr[1] "A munkamenet %d percen belül lejár. Kérjük, mentse a munkáját."
 
-#: includes/login-modal.php:160
+#: includes/login-modal.php:170
 msgid "Session Expiring"
 msgstr "Lejár a munkamenet"
 
-#: includes/login-modal.php:261
+#: includes/login-modal.php:271
 msgid "Please enter both username and password"
 msgstr "Kérjük, adja meg mind a felhasználónevet, mind a jelszót"
 
-#: includes/login-modal.php:269
+#: includes/login-modal.php:279
 msgid "Logging in..."
 msgstr "Bejelentkezés..."
 
-#: includes/login-modal.php:307
+#: includes/login-modal.php:317
 msgid "Login successful"
 msgstr "Sikeres bejelentkezés"
 
-#: includes/login-modal.php:322
+#: includes/login-modal.php:332
 msgid "Login failed. Please check your credentials."
 msgstr "A bejelentkezés sikertelen. Kérjük, ellenőrizze a hitelesítő adatait."
 

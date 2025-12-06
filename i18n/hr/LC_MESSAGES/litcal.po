@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-03 03:09+0000\n"
+"POT-Creation-Date: 2025-12-06 04:20+0000\n"
 "PO-Revision-Date: 2025-12-01 13:28+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
@@ -237,7 +237,7 @@ msgstr ""
 "lokalizacije se mogu izvršiti jednako dobro u klijentskoj aplikaciji."
 
 #. translators: notification title
-#: usage.php:11 includes/login-modal.php:307
+#: usage.php:11 includes/login-modal.php:317
 msgid "Success"
 msgstr "Uspješno"
 
@@ -1248,7 +1248,7 @@ msgid "About us"
 msgstr "O nama"
 
 #: layout/header.php:51 layout/header.php:53 includes/login-modal.php:35
-#: includes/login-modal.php:327
+#: includes/login-modal.php:337
 msgid "Login"
 msgstr "Prijava"
 
@@ -1309,29 +1309,37 @@ msgstr "Jesi li siguran da se želiš odjaviti?"
 msgid "Hide password"
 msgstr "Sakrij lozinku"
 
-#: includes/login-modal.php:153
-#, php-format
-msgid ""
-"Your session will expire in less than %d minute(s). Please save your work."
-msgstr "Vaša će sesija isteći za manje od %d minute. Molimo spremite svoj rad."
+#: includes/login-modal.php:154 includes/login-modal.php:159
+#, fuzzy, php-format
+#| msgid ""
+#| "Your session will expire in less than %d minute(s). Please save your work."
+msgid "Your session will expire in less than %d minute. Please save your work."
+msgid_plural ""
+"Your session will expire in less than %d minutes. Please save your work."
+msgstr[0] ""
+"Vaša će sesija isteći za manje od %d minute. Molimo spremite svoj rad."
+msgstr[1] ""
+"Vaša će sesija isteći za manje od %d minute. Molimo spremite svoj rad."
+msgstr[2] ""
+"Vaša će sesija isteći za manje od %d minute. Molimo spremite svoj rad."
 
-#: includes/login-modal.php:160
+#: includes/login-modal.php:170
 msgid "Session Expiring"
 msgstr "Sesija istječe"
 
-#: includes/login-modal.php:261
+#: includes/login-modal.php:271
 msgid "Please enter both username and password"
 msgstr "Molimo unesite i korisničko ime i lozinku"
 
-#: includes/login-modal.php:269
+#: includes/login-modal.php:279
 msgid "Logging in..."
 msgstr "Prijava u tijeku..."
 
-#: includes/login-modal.php:307
+#: includes/login-modal.php:317
 msgid "Login successful"
 msgstr "Prijava uspješna"
 
-#: includes/login-modal.php:322
+#: includes/login-modal.php:332
 msgid "Login failed. Please check your credentials."
 msgstr "Prijava nije uspjela. Provjerite svoje podatke."
 
