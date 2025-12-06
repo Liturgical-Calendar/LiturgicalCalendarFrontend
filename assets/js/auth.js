@@ -165,7 +165,7 @@ const Auth = {
         try {
             return localStorage.getItem(this.TOKEN_KEY) ||
                    sessionStorage.getItem(this.TOKEN_KEY);
-        } catch (e) {
+        } catch {
             // Storage may be unavailable in hardened privacy modes
             return null;
         }
