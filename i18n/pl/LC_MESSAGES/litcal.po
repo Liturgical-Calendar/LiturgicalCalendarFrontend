@@ -9,16 +9,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-06 05:22+0000\n"
-"PO-Revision-Date: 2025-12-02 14:22+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2025-12-06 05:43+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && "
+"(n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 5.13.3\n"
 
 #: index.php:5
@@ -1312,10 +1312,11 @@ msgstr "Anuluj"
 #: includes/login-modal.php:79
 msgid "Unable to verify authentication status. The server may be unavailable."
 msgstr ""
+"Nie można zweryfikować statusu uwierzytelniania. Serwer może być niedostępny."
 
 #: includes/login-modal.php:81
 msgid "Connection Issue"
-msgstr ""
+msgstr "Problem z połączeniem"
 
 #: includes/login-modal.php:102
 msgid "Are you sure you want to logout?"
@@ -1326,18 +1327,14 @@ msgid "Hide password"
 msgstr "Ukryj hasło"
 
 #: includes/login-modal.php:154 includes/login-modal.php:159
-#, fuzzy, php-format
-#| msgid ""
-#| "Your session will expire in less than %d minute(s). Please save your work."
+#, php-format
 msgid "Your session will expire in less than %d minute. Please save your work."
 msgid_plural ""
 "Your session will expire in less than %d minutes. Please save your work."
 msgstr[0] ""
-"Twoja sesja wygaśnie za mniej niż %d minut(y). Proszę zapisz swoją pracę."
+"Twoja sesja wygaśnie za mniej niż %d minutę. Proszę zapisać swoją pracę."
 msgstr[1] ""
-"Twoja sesja wygaśnie za mniej niż %d minut(y). Proszę zapisz swoją pracę."
-msgstr[2] ""
-"Twoja sesja wygaśnie za mniej niż %d minut(y). Proszę zapisz swoją pracę."
+msgstr[2] "Twoja sesja wygaśnie za mniej niż %d minut. Proszę zapisać swoją pracę."
 
 #: includes/login-modal.php:170
 msgid "Session Expiring"
@@ -1402,7 +1399,7 @@ msgstr "Wejdzie w życie w roku"
 #. translators: notification title for warning messages
 #: includes/messages.php:51
 msgid "Warning"
-msgstr ""
+msgstr "Ostrzeżenie"
 
 #. translators: form row title for designating a Doctor of the Church
 #: includes/messages.php:71
@@ -1893,7 +1890,7 @@ msgstr ""
 #. translators: help text shown when diocese input is disabled
 #: includes/messages.php:313
 msgid "Select a national calendar first to see available dioceses."
-msgstr ""
+msgstr "Najpierw wybierz kalendarz narodowy, aby zobaczyć dostępne diecezje."
 
 #. translators: tooltip explaining the Eternal High Priest feast
 #: includes/messages.php:315
