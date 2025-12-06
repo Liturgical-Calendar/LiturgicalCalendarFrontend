@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-06 05:22+0000\n"
+"POT-Creation-Date: 2025-12-06 08:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1016,34 +1016,34 @@ msgid ""
 "data for Canada in both English and French"
 msgstr ""
 
-#: src/Utilities.php:226
+#: src/Utilities.php:267
 msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
 msgstr ""
 
-#: src/Utilities.php:227
+#: src/Utilities.php:268
 msgid "This liturgical event does not exist, so it will be created."
 msgstr ""
 
-#: src/Utilities.php:232
+#: src/Utilities.php:273
 msgid "Choose from existing liturgical events"
 msgstr ""
 
-#: src/Utilities.php:232
+#: src/Utilities.php:273
 msgid "Choose from existing liturgical events (or create a new one)"
 msgstr ""
 
-#: src/Utilities.php:238
+#: src/Utilities.php:279
 msgid "Property to change"
 msgstr ""
 
 #. translators: form field label for the name of a liturgical event
-#: src/Utilities.php:240 src/FormControls.php:53 includes/messages.php:17
+#: src/Utilities.php:281 src/FormControls.php:53 includes/messages.php:17
 msgid "Name"
 msgstr ""
 
-#: src/Utilities.php:241 src/FormControls.php:171
+#: src/Utilities.php:282 src/FormControls.php:171
 msgid "Grade"
 msgstr ""
 
