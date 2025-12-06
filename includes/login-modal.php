@@ -497,11 +497,11 @@ async function handleExtendSession() {
 
 /**
  * Handle the "Logout" button click from the session expiry warning
+ * Toast remains visible if user cancels, allowing them to extend session instead
  */
 async function handleSessionExpiryLogout() {
-    hideSessionExpiryToast();
-
     if (confirm(<?php echo json_encode(_('Are you sure you want to logout?')); ?>)) {
+        hideSessionExpiryToast();
         await Auth.logout();
     }
 }
