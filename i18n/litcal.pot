@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-29 12:09+0000\n"
+"POT-Creation-Date: 2025-12-06 05:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: index.php:5
 msgid ""
@@ -95,7 +96,8 @@ msgstr ""
 msgid "Request parameters available on all %1$s paths"
 msgstr ""
 
-#: index.php:60 usage.php:13 examples.php:98 liturgyOfAnyDay.php:18
+#. translators: part of page title - refers to the Catholic liturgical calendar
+#: index.php:60 usage.php:29 examples.php:98 liturgyOfAnyDay.php:18
 msgid "General Roman Calendar"
 msgstr ""
 
@@ -165,7 +167,8 @@ msgid ""
 "content types and responses are described here."
 msgstr ""
 
-#: index.php:160 usage.php:183
+#. translators: card header for Easter calculation tool
+#: index.php:160 usage.php:284
 msgid "Calculation of the Dates of Easter"
 msgstr ""
 
@@ -190,181 +193,244 @@ msgid ""
 "localizations can be done in a client application just as well."
 msgstr ""
 
-#: usage.php:8
-msgid ""
-"A Liturgical Calendar API from which you can retrieve data for the "
-"Liturgical events of any given year from 1970 onwards, whether for the "
-"Universal or General Roman Calendar or for derived National and Diocesan "
-"calendars"
+#. translators: notification title
+#. translators: notification title for successful operations
+#: usage.php:11 includes/login-modal.php:317 includes/messages.php:47
+msgid "Success"
 msgstr ""
 
-#: usage.php:13
+#. translators: notification title
+#. translators: notification title for failed operations
+#: usage.php:13 includes/messages.php:49
+msgid "Error"
+msgstr ""
+
+#. translators: notification message
+#: usage.php:15
+msgid "Copy not supported"
+msgstr ""
+
+#. translators: notification message
+#: usage.php:17
+msgid "URL was copied to the clipboard"
+msgstr ""
+
+#. translators: notification message
+#: usage.php:19
+msgid "Failed to copy URL to clipboard"
+msgstr ""
+
+#. translators: notification message
+#: usage.php:21
+msgid "Please select and copy manually"
+msgstr ""
+
+#. translators: part of page title - section showing usage examples
+#: usage.php:31
 msgid "Examples"
 msgstr ""
 
-#: usage.php:21
+#. translators: main page heading for the API usage examples page
+#: usage.php:42
 msgid "Example usage of the API"
 msgstr ""
 
-#: usage.php:27 layout/header.php:132
+#. translators: accordion section header - examples of web-based calendar displays
+#: usage.php:51 layout/header.php:132
 msgid "Web calendar"
 msgstr ""
 
-#: usage.php:39
+#. translators: description of PHP example - explains it uses a specific npm/composer package
+#: usage.php:66
 msgid ""
 "HTML presentation elaborated by PHP using the `@liturgical-calendar/"
 "components` package"
 msgstr ""
 
-#: usage.php:40
+#. translators: button text to view the PHP code example
+#: usage.php:70
 msgid "View PHP Example"
 msgstr ""
 
-#: usage.php:50
+#. translators: description of JavaScript example - explains it uses a specific ESM module
+#: usage.php:83
 msgid ""
 "HTML presentation elaborated by JavaScript using the `@liturgical-calendar/"
 "components-js` ESM module"
 msgstr ""
 
-#: usage.php:51
+#. translators: button text to view the JavaScript code example
+#: usage.php:87
 msgid "View JavaScript Example"
 msgstr ""
 
-#: usage.php:58
+#. translators: card header for FullCalendar example
+#: usage.php:97
 msgid "Calendar"
 msgstr ""
 
-#: usage.php:61
+#. translators: description of FullCalendar example - FullCalendar is a JavaScript library name
+#: usage.php:103
 msgid ""
 "FullCalendar representation elaborated by JavaScript using the `@liturgical-"
 "calendar/components-js` ESM module"
 msgstr ""
 
-#: usage.php:62
+#. translators: button text to view the FullCalendar example
+#: usage.php:107
 msgid "View FullCalendar"
 msgstr ""
 
-#: usage.php:63
+#. translators: button text for FullCalendar variant that shows messages/notifications first
+#: usage.php:111
 msgid "View FullCalendar (messages first)"
 msgstr ""
 
-#: usage.php:74 layout/header.php:136
+#. translators: accordion section header - subscribing to the calendar via iCal/ICS URL
+#: usage.php:125 layout/header.php:136
 msgid "Calendar subscription"
 msgstr ""
 
-#: usage.php:87
+#: usage.php:140
 msgid "Select calendar"
 msgstr ""
 
-#: usage.php:91
+#. translators: label above the iCal/ICS subscription URL
+#: usage.php:146
 msgid "Calendar subscription URL"
 msgstr ""
 
-#: usage.php:114 usage.php:127 usage.php:152
+#. translators: tooltip for clickable URL - instructs user to click to copy
+#: usage.php:151
+msgid "Click to copy to the clipboard!"
+msgstr ""
+
+#. translators: instruction step for calendar subscription - clicking to copy URL
+#: usage.php:174 usage.php:196 usage.php:237
 msgid "Click on the link above to copy it to the clipboard."
 msgstr ""
 
-#: usage.php:115
+#. translators: instruction step - %s is replaced with a link to calendar.google.com
+#: usage.php:176
 #, php-format
 msgid "Navigate to %s."
 msgstr ""
 
-#: usage.php:116
+#. translators: instruction step for Google Calendar - describes UI location
+#: usage.php:178
 msgid ""
 "At the bottom left corner of the screen, next to Other calendars, click on "
 "the + icon to add a new calendar, and choose <i><b>From URL</b></i>."
 msgstr ""
 
-#: usage.php:117 usage.php:129 usage.php:155
+#. translators: instruction step - pasting the copied URL
+#: usage.php:180 usage.php:200 usage.php:243
 msgid "Paste in the URL that you copied earlier."
 msgstr ""
 
-#: usage.php:118 usage.php:130 usage.php:142 usage.php:158
+#. translators: explanation of what happens after subscribing
+#: usage.php:182 usage.php:202 usage.php:222 usage.php:249
 msgid ""
 "Once subscribed, your calendar will be populated with the events from the "
 "subscription URL."
 msgstr ""
 
-#: usage.php:119 usage.php:143
+#. translators: info about Google Calendar's polling frequency
+#: usage.php:184 usage.php:224
 msgid "Google Calendar will poll the calendar URL every 8 hours."
 msgstr ""
 
-#: usage.php:120 usage.php:132 usage.php:144 usage.php:162
+#. translators: explanation about automatic updates via subscription
+#: usage.php:186 usage.php:206 usage.php:226 usage.php:257
 msgid ""
 "Since you have made a subscription, any updates in the Liturgical Calendar "
 "API will be propagated to your subscription."
 msgstr ""
 
-#: usage.php:121 usage.php:133 usage.php:145 usage.php:163
+#. translators: explanation about yearly calendar refresh behavior
+#: usage.php:188 usage.php:208 usage.php:228 usage.php:259
 msgid ""
 "You will only see events for the current year. On the first day of a new "
 "year however, new events will be created automatically for the new year."
 msgstr ""
 
-#: usage.php:122
+#. translators: info about cross-device availability for Google Calendar
+#: usage.php:190
 msgid ""
 "Once the calendar has been added from a desktop, it will become available "
 "for the same Gmail account on the Google Calendar app on a smartphone."
 msgstr ""
 
-#: usage.php:128
+#. translators: instruction step for iPhone - describes Settings menu path
+#: usage.php:198
 msgid ""
 "Go to <i><b>Phone Settings → Accounts → Add account → Other → Add Calendar</"
 "b></i>."
 msgstr ""
 
-#: usage.php:131
+#. translators: info about iPhone Calendar's polling frequency settings location
+#: usage.php:204
 msgid ""
 "The iPhone Calendar app will poll the calendar URL based on the settings at "
 "<i><b>Phone Settings → Accounts → Fetch New Data → Fetch</b></i>."
 msgstr ""
 
-#: usage.php:138
+#. translators: instruction for Android - %s is a link to the Google Calendar tab; prerequisite step
+#: usage.php:214
 #, php-format
 msgid ""
 "If you have not yet added the calendar subscription from the desktop version "
 "of Google Calendar, please do so now (see %s)."
 msgstr ""
 
-#: usage.php:139
+#. translators: instruction step for Android
+#: usage.php:216
 msgid "Open the Google Calendar app."
 msgstr ""
 
-#: usage.php:140
+#. translators: instruction step for Android - describes app Settings navigation
+#: usage.php:218
 msgid ""
 "Go to <i><b>Settings</b></i>, then under the account which you used for the "
 "Desktop version, click on the Calendar subscription name."
 msgstr ""
 
-#: usage.php:141
+#. translators: instruction step for Android - enabling sync
+#: usage.php:220
 msgid "Make sure <i><b>Synchronization</b></i> is turned on."
 msgstr ""
 
-#: usage.php:151
+#. translators: note about which Outlook version was tested
+#: usage.php:235
 msgid "tested with Outlook 2013"
 msgstr ""
 
-#: usage.php:153
+#. translators: instruction step for Outlook - switching views
+#: usage.php:239
 msgid "At the bottom of the screen, switch from Email view to Calendar view."
 msgstr ""
 
-#: usage.php:154
+#. translators: instruction step for Outlook - describes ribbon menu navigation
+#: usage.php:241
 msgid ""
 "On the ribbon of the Home menu item, click on <i><b>Open calendar → From the "
 "internet</b></i>."
 msgstr ""
 
-#: usage.php:156
+#. translators: instruction step for Outlook - checkbox option for polling interval
+#: usage.php:245
 msgid ""
 "On the following screen, check the checkbox along the lines of \"Poll this "
 "calendar in the interval suggested by the creator\"."
 msgstr ""
 
-#: usage.php:157
+#. translators: info about Outlook Calendar's polling frequency
+#: usage.php:247
 msgid "Outlook Calendar should now poll the calendar URL once a day."
 msgstr ""
 
-#: usage.php:159
+#. translators: instruction for Outlook - ensuring calendar is in correct folder for internet subscription
+#: usage.php:251
 msgid ""
 "Make sure the Calendar is created in the Other calendars folder; if you find "
 "it under the Personal calendars folder, drag it and drop it onto the Other "
@@ -372,450 +438,100 @@ msgid ""
 "internet calendar."
 msgstr ""
 
-#: usage.php:160
+#. translators: instruction for Outlook - how to manually refresh data
+#: usage.php:253
 msgid ""
 "You can manually fetch new data by clicking on <i><b>Send/receive all</b></"
 "i> (from the SEND/RECEIVE menu item)."
 msgstr ""
 
-#: usage.php:161
+#. translators: info about Outlook's HTML support in event descriptions
+#: usage.php:255
 msgid ""
 "Outlook Calendar supports a minimal amount of HTML in the event description, "
 "so the event descriptions provided by the subscription URL are a little bit "
 "more \"beautified\" for Outlook."
 msgstr ""
 
-#: usage.php:175 layout/header.php:140
+#. translators: accordion section header - Easter date calculation tool
+#: usage.php:273 layout/header.php:140
 msgid "Dates of Easter"
 msgstr ""
 
-#: usage.php:186
+#. translators: subtitle after card header - describes the example UI
+#: usage.php:286
+msgid "Example interface"
+msgstr ""
+
+#. translators: description of Easter date calculation range - 1583 is when Gregorian calendar started
+#: usage.php:292
 msgid "Example display of the date of Easter from 1583 to 9999"
 msgstr ""
 
-#: usage.php:187
+#. translators: button text to go to Easter date calculator
+#: usage.php:296
 msgid "Calculate the Dates of Easter"
 msgstr ""
 
-#: usage.php:197 layout/header.php:144
+#. translators: accordion section header - daily liturgy information and apps
+#: usage.php:309 layout/header.php:144
 msgid "Liturgy of the Day"
 msgstr ""
 
-#: usage.php:206
+#. translators: card header - Amazon Alexa flash briefing skill
+#: usage.php:321
 msgid "Alexa News Brief"
 msgstr ""
 
-#: usage.php:209
+#. translators: description of Alexa skill - flash briefing format
+#: usage.php:327
 msgid "Daily news brief with the liturgy of the day, as an Amazon Alexa skill"
 msgstr ""
 
-#: usage.php:228 usage.php:236
+#. translators: tooltip for USA Alexa skill - explains timezone options
+#: usage.php:332
+msgid ""
+"Four feeds to choose from, according to timezone within the USA. The "
+"calendar is the national liturgical calendar for the United States."
+msgstr ""
+
+#. translators: tooltip for Italy Alexa skill - single feed with national calendar
+#: usage.php:338
+msgid "Single feed with the national liturgical calendar for Italy."
+msgstr ""
+
+#. translators: tooltip for Rome Diocese Alexa skill - specific to Diocese of Rome
+#: usage.php:344
+msgid ""
+"Single feed with the liturgical calendar specific to the Diocese of Rome."
+msgstr ""
+
+#. translators: card header - Amazon Alexa conversational skill (not flash briefing)
+#: usage.php:355
+msgid "Alexa interactive skill"
+msgstr ""
+
+#. translators: status indicator for features not yet available
+#: usage.php:361 usage.php:375
 msgid "In development"
 msgstr ""
 
-#: usage.php:243 usage.php:247 liturgyOfAnyDay.php:18 liturgyOfAnyDay.php:26
+#. translators: card header - Google Assistant voice application
+#: usage.php:369
+msgid "Google Assistant app"
+msgstr ""
+
+#. translators: card header - tool to look up liturgy for any date
+#. translators: button text to go to liturgy lookup page
+#: usage.php:385 usage.php:395 liturgyOfAnyDay.php:18 liturgyOfAnyDay.php:26
 msgid "Liturgy of any day"
 msgstr ""
 
-#: usage.php:246
+#. translators: example use case for the liturgy lookup tool
+#: usage.php:391
 msgid ""
 "For example, you can find the liturgy of the day from the day of your "
 "baptism."
-msgstr ""
-
-#: extending.php:117
-msgid ""
-"The General Roman Calendar can be extended so as to create a National or "
-"Diocesan calendar. Diocesan calendars depend on National calendars, so the "
-"National calendar must first be created."
-msgstr ""
-
-#: extending.php:118 translations.php:9
-msgid ""
-"The first step in creating a national or diocesan calendar, is to translate "
-"the data for the General Roman Calendar into the language for that nation or "
-"diocese."
-msgstr ""
-
-#: extending.php:119
-msgid "(see <a href=\"translations.php\">Translations</a>)"
-msgstr ""
-
-#: extending.php:120
-msgid ""
-"A national calendar may have some liturgical events in common with other "
-"national calendars, for example the patron of a wider region."
-msgstr ""
-
-#: extending.php:121
-msgid ""
-"In this case, the liturgical events for the wider region should be defined "
-"separately, and the languages applicable to the wider region should be set; "
-"the wider region data will then be applied automatically to national "
-"calendars belonging to the wider region."
-msgstr ""
-
-#: extending.php:122
-msgid ""
-"If a group of dioceses decides to pool their Liturgical Calendar data, for "
-"example to print out one single yearly calendar with the data for all the "
-"dioceses in the group, the group can be defined or set here."
-msgstr ""
-
-#: extending.php:125 admin.php:62
-msgid "Event key"
-msgstr ""
-
-#: extending.php:126 admin.php:63 src/Utilities.php:240 src/FormControls.php:53
-msgid "Name"
-msgstr ""
-
-#: extending.php:127 admin.php:64 src/FormControls.php:60
-msgid "Day"
-msgstr ""
-
-#: extending.php:128 admin.php:65 src/FormControls.php:66
-msgid "Month"
-msgstr ""
-
-#: extending.php:129 extending.php:507
-msgid "Other Solemnity"
-msgstr ""
-
-#: extending.php:130 extending.php:528
-msgid "Other Feast"
-msgstr ""
-
-#: extending.php:131 extending.php:548 extending.php:549
-msgid "Other Memorial"
-msgstr ""
-
-#: extending.php:132 extending.php:569 extending.php:570
-msgid "Other Optional Memorial"
-msgstr ""
-
-#: extending.php:133
-msgid "Delete calendar"
-msgstr ""
-
-#: extending.php:134
-msgid "Delete diocesan calendar"
-msgstr ""
-
-#: extending.php:135
-msgid ""
-"If you choose to delete this calendar, the liturgical events defined for the "
-"calendar and the corresponding index entries will be removed and no longer "
-"available in the client applications."
-msgstr ""
-
-#: extending.php:136 admin.php:66 src/FormControls.php:92
-msgid "Liturgical color"
-msgstr ""
-
-#. translators: context = liturgical color
-#: extending.php:137 admin.php:67 src/LitColor.php:39 src/FormControls.php:94
-msgid "white"
-msgstr ""
-
-#. translators: context = liturgical color
-#: extending.php:138 admin.php:68 src/LitColor.php:42 src/FormControls.php:95
-msgid "red"
-msgstr ""
-
-#. translators: context = liturgical color
-#: extending.php:139 admin.php:69 src/LitColor.php:33 src/FormControls.php:97
-msgid "green"
-msgstr ""
-
-#. translators: context = liturgical color
-#: extending.php:140 admin.php:70 src/LitColor.php:36 src/FormControls.php:96
-msgid "purple"
-msgstr ""
-
-#. translators: context = liturgical color
-#: extending.php:141 admin.php:71 src/LitColor.php:45
-msgid "rose"
-msgstr ""
-
-#. translators: in reference to the first year from which this liturgical event takes place
-#: extending.php:143 admin.php:73 src/FormControls.php:104
-msgid "Since"
-msgstr ""
-
-#. translators: in reference to the year from which this liturgical event no longer needs to be dealt with
-#: extending.php:145 admin.php:75 src/FormControls.php:111
-msgid "Until"
-msgstr ""
-
-#. translators: label of the form row
-#: extending.php:147
-msgid "Patron or Patrons of the Wider Region"
-msgstr ""
-
-#. translators: label of the form row
-#: extending.php:149 admin.php:79 decrees.php:8
-msgid "New liturgical event"
-msgstr ""
-
-#. translators: label of the form row
-#: extending.php:151 decrees.php:12
-msgid "Change name"
-msgstr ""
-
-#. translators: label of the form row
-#: extending.php:153 decrees.php:14
-msgid "Change grade"
-msgstr ""
-
-#. translators: label of the form row
-#: extending.php:155 admin.php:83 admin.php:208 decrees.php:16
-msgid "Move liturgical event"
-msgstr ""
-
-#: extending.php:156 admin.php:84
-msgid "Decree URL"
-msgstr ""
-
-#: extending.php:157 admin.php:85
-msgid "Decree Language mappings"
-msgstr ""
-
-#: extending.php:158
-msgid "Missal"
-msgstr ""
-
-#: extending.php:159 admin.php:86
-msgid "Reason (in favor of liturgical event)"
-msgstr ""
-
-#: extending.php:171 extending.php:652 extending.php:656
-msgid "Designate patron"
-msgstr ""
-
-#: extending.php:172 extending.php:668 admin.php:94 admin.php:188
-msgid "Change name or grade of existing liturgical event"
-msgstr ""
-
-#: extending.php:173 extending.php:684 admin.php:95 admin.php:204
-msgid "Move liturgical event to new date"
-msgstr ""
-
-#: extending.php:174 extending.php:700 admin.php:96 admin.php:220
-msgid "Create a new liturgical event"
-msgstr ""
-
-#: extending.php:180
-msgid "General Roman Calendar - Extending"
-msgstr ""
-
-#: extending.php:188
-msgid "Extend the General Roman Calendar with National or Diocesan data"
-msgstr ""
-
-#: extending.php:199 extending.php:354
-msgid "Wider Region"
-msgstr ""
-
-#: extending.php:201 extending.php:269
-msgid "This value cannot be empty."
-msgstr ""
-
-#: extending.php:217
-msgid "Locales"
-msgstr ""
-
-#: extending.php:226 extending.php:367 extending.php:446
-msgid "Current localization"
-msgstr ""
-
-#: extending.php:238 extending.php:284 extending.php:465
-msgid "Remove existing data"
-msgstr ""
-
-#: extending.php:244 layout/header.php:30
-msgid "Create a Calendar for a Wider Region"
-msgstr ""
-
-#: extending.php:255
-msgid "Save Wider Region Calendar Data"
-msgstr ""
-
-#: extending.php:267
-msgid "National Calendar"
-msgstr ""
-
-#: extending.php:290 layout/header.php:31
-msgid "Create a National Calendar"
-msgstr ""
-
-#: extending.php:295
-msgid "National calendar settings"
-msgstr ""
-
-#: extending.php:298 extending.php:594
-msgid "EPIPHANY"
-msgstr ""
-
-#: extending.php:301 extending.php:597
-msgid "January 6"
-msgstr ""
-
-#: extending.php:302 extending.php:598
-msgid "Sunday between January 2 and January 8"
-msgstr ""
-
-#: extending.php:306 extending.php:602
-msgid "ASCENSION"
-msgstr ""
-
-#: extending.php:314 extending.php:610
-msgid "CORPUS CHRISTI"
-msgstr ""
-
-#: extending.php:322
-msgid "ETERNAL HIGH PRIEST"
-msgstr ""
-
-#: extending.php:329 extending.php:436
-msgid "LOCALES"
-msgstr ""
-
-#: extending.php:342
-msgid "Published Roman Missals"
-msgstr ""
-
-#: extending.php:345 extending.php:716
-msgid "Add Missal"
-msgstr ""
-
-#: extending.php:386
-msgid "Save National Calendar Data"
-msgstr ""
-
-#: extending.php:400
-msgid "Depends on national calendar"
-msgstr ""
-
-#: extending.php:413
-msgid "Diocese"
-msgstr ""
-
-#: extending.php:415
-msgid ""
-"This diocese does not seem to exist? Please choose from a value in the list "
-"to retrieve an existing diocese, or ignore if creating a new diocesan "
-"calendar."
-msgstr ""
-
-#: extending.php:421
-msgid "Diocesan group"
-msgstr ""
-
-#: extending.php:457
-msgid "Timezone"
-msgstr ""
-
-#: extending.php:477
-msgid "Solemnities"
-msgstr ""
-
-#: extending.php:478
-msgid "Feasts"
-msgstr ""
-
-#: extending.php:479
-msgid "Memorials"
-msgstr ""
-
-#: extending.php:480
-msgid "Optional memorials"
-msgstr ""
-
-#: extending.php:499 extending.php:520 extending.php:541 extending.php:562
-#: layout/header.php:32
-msgid "Create a Diocesan Calendar"
-msgstr ""
-
-#: extending.php:499
-msgid "Define the Solemnities"
-msgstr ""
-
-#: extending.php:505
-msgid ""
-"Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
-msgstr ""
-
-#: extending.php:506 extending.php:527
-msgid "Dedication of the Cathedral"
-msgstr ""
-
-#: extending.php:520
-msgid "Define the Feasts"
-msgstr ""
-
-#: extending.php:526
-msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
-msgstr ""
-
-#: extending.php:541
-msgid "Define the Memorials"
-msgstr ""
-
-#: extending.php:547
-msgid ""
-"Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
-msgstr ""
-
-#: extending.php:562
-msgid "Define the Optional Memorials"
-msgstr ""
-
-#: extending.php:568
-msgid ""
-"Saints whose veneration is local to the Place, Diocese, Region, Province or "
-"Territory"
-msgstr ""
-
-#: extending.php:591
-msgid "Diocesan overrides to the national calendar for …"
-msgstr ""
-
-#: extending.php:625
-msgid "SAVE DIOCESAN CALENDAR"
-msgstr ""
-
-#: extending.php:657 extending.php:673 extending.php:689 extending.php:705
-#: extending.php:729 admin.php:193 admin.php:209 admin.php:226 admin.php:242
-#: includes/login-modal.php:34
-msgid "Cancel"
-msgstr ""
-
-#: extending.php:672
-msgid "Set property"
-msgstr ""
-
-#: extending.php:688
-msgid "Move Liturgical Event"
-msgstr ""
-
-#: extending.php:704
-msgid "Create Liturgical Event"
-msgstr ""
-
-#: extending.php:721
-msgid "Choose from known Roman Missal language editions"
-msgstr ""
-
-#: extending.php:723
-msgid ""
-"This Missal is unknown to the Liturgical Calendar API. Please choose from a "
-"value in the list, or contact the curator of the API to have the Missal "
-"added to known language edition Missals."
-msgstr ""
-
-#: extending.php:728
-msgid "Add language edition Roman Missal"
 msgstr ""
 
 #: easter.php:63
@@ -865,6 +581,14 @@ msgstr ""
 #: examples.php:136
 #, php-format
 msgid "Example '%s' not found"
+msgstr ""
+
+#. translators: first step in creating a calendar - translation
+#: translations.php:9 includes/messages.php:171
+msgid ""
+"The first step in creating a national or diocesan calendar, is to translate "
+"the data for the General Roman Calendar into the language for that nation or "
+"diocese."
 msgstr ""
 
 #: translations.php:11
@@ -973,63 +697,34 @@ msgstr ""
 msgid "Project website"
 msgstr ""
 
-#. translators: label of the form row
-#: admin.php:77 admin.php:241 decrees.php:18
-msgid "Designate Doctor of the Church"
+#. translators: context = liturgical color
+#. translators: liturgical color - green
+#: src/LitColor.php:33 src/FormControls.php:97 includes/messages.php:61
+msgid "green"
 msgstr ""
 
-#. translators: label of the form row
-#: admin.php:81 decrees.php:10
-msgid "Change name or grade"
+#. translators: context = liturgical color
+#. translators: liturgical color - purple/violet
+#: src/LitColor.php:36 src/FormControls.php:96 includes/messages.php:63
+msgid "purple"
 msgstr ""
 
-#: admin.php:97 admin.php:237
-msgid "Designate Doctor of the Church from existing liturgical event"
+#. translators: context = liturgical color
+#. translators: liturgical color - white
+#: src/LitColor.php:39 src/FormControls.php:94 includes/messages.php:57
+msgid "white"
 msgstr ""
 
-#: admin.php:224
-msgid "New liturgical event from existing"
+#. translators: context = liturgical color
+#. translators: liturgical color - red
+#: src/LitColor.php:42 src/FormControls.php:95 includes/messages.php:59
+msgid "red"
 msgstr ""
 
-#: admin.php:225
-msgid "New liturgical event ex novo"
-msgstr ""
-
-#: decrees.php:59
-msgid "General Roman Calendar - Decrees"
-msgstr ""
-
-#: decrees.php:67
-msgid ""
-"Refine the General Roman Calendar with Decrees of the Dicastery for Divine "
-"Worship and the Discipline of the Sacraments"
-msgstr ""
-
-#: decrees.php:68
-msgid ""
-"The Liturgical Calendar is based off of both published Roman Missals, and "
-"Decrees of the Dicastery for Divine Worship and the Discipline of the "
-"Sacraments. These Decrees can refine the data from the Roman Missals, adding "
-"or removing or changing liturgical events, or instructing on how to handle "
-"any possible coincidences between mandatory celebrations."
-msgstr ""
-
-#: decrees.php:70
-msgid ""
-"Data for <b>Roman Missals</b> is handled by the <code>/missals</code> "
-"endpoint of the API, while data for <b>Decrees</b> is handled by the <code>/"
-"decrees</code> endpoint of the API."
-msgstr ""
-
-#: decrees.php:72
-#, php-format
-msgid ""
-"Currently, these endpoints are read-only. There are currently <b>%1$d "
-"Decrees</b> defined at the endpoint %2$s."
-msgstr ""
-
-#: decrees.php:154
-msgid "Read the Decree"
+#. translators: context = liturgical color
+#. translators: liturgical color - rose/pink
+#: src/LitColor.php:45 includes/messages.php:65
+msgid "rose"
 msgstr ""
 
 #: src/LitCommon.php:58
@@ -1343,8 +1038,38 @@ msgstr ""
 msgid "Property to change"
 msgstr ""
 
+#. translators: form field label for the name of a liturgical event
+#: src/Utilities.php:240 src/FormControls.php:53 includes/messages.php:17
+msgid "Name"
+msgstr ""
+
 #: src/Utilities.php:241 src/FormControls.php:171
 msgid "Grade"
+msgstr ""
+
+#. translators: form field label for the day of the month
+#: src/FormControls.php:60 includes/messages.php:19
+msgid "Day"
+msgstr ""
+
+#. translators: form field label for the month of the year
+#: src/FormControls.php:66 includes/messages.php:21
+msgid "Month"
+msgstr ""
+
+#. translators: form field label for liturgical color selection
+#: src/FormControls.php:92 includes/messages.php:23
+msgid "Liturgical color"
+msgstr ""
+
+#. translators: form field label - first year a liturgical event takes effect
+#: src/FormControls.php:104 includes/messages.php:25
+msgid "Since"
+msgstr ""
+
+#. translators: form field label - last year a liturgical event is observed
+#: src/FormControls.php:111 includes/messages.php:27
+msgid "Until"
 msgstr ""
 
 #: src/FormControls.php:124
@@ -1353,6 +1078,21 @@ msgstr ""
 
 #: layout/header.php:27 layout/header.php:120
 msgid "Extending the API"
+msgstr ""
+
+#. translators: card heading for creating wider region calendar
+#: layout/header.php:30 includes/messages.php:205
+msgid "Create a Calendar for a Wider Region"
+msgstr ""
+
+#. translators: card heading for creating national calendar
+#: layout/header.php:31 includes/messages.php:207
+msgid "Create a National Calendar"
+msgstr ""
+
+#. translators: card heading for creating diocesan calendar
+#: layout/header.php:32 includes/messages.php:209
+msgid "Create a Diocesan Calendar"
 msgstr ""
 
 #: layout/header.php:36
@@ -1372,7 +1112,7 @@ msgid "About us"
 msgstr ""
 
 #: layout/header.php:51 layout/header.php:53 includes/login-modal.php:35
-#: includes/login-modal.php:292
+#: includes/login-modal.php:337
 msgid "Login"
 msgstr ""
 
@@ -1404,7 +1144,7 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: includes/login-modal.php:19 includes/login-modal.php:112
+#: includes/login-modal.php:19 includes/login-modal.php:143
 msgid "Show password"
 msgstr ""
 
@@ -1412,40 +1152,587 @@ msgstr ""
 msgid "Remember me"
 msgstr ""
 
-#: includes/login-modal.php:71
+#. translators: button label for canceling an action
+#: includes/login-modal.php:34 includes/messages.php:117
+msgid "Cancel"
+msgstr ""
+
+#: includes/login-modal.php:79
+msgid "Unable to verify authentication status. The server may be unavailable."
+msgstr ""
+
+#: includes/login-modal.php:81
+msgid "Connection Issue"
+msgstr ""
+
+#: includes/login-modal.php:102
 msgid "Are you sure you want to logout?"
 msgstr ""
 
-#: includes/login-modal.php:107
+#: includes/login-modal.php:138
 msgid "Hide password"
 msgstr ""
 
-#: includes/login-modal.php:122
+#: includes/login-modal.php:154 includes/login-modal.php:159
 #, php-format
-msgid ""
-"Your session will expire in less than %d minute(s). Please save your work."
-msgstr ""
+msgid "Your session will expire in less than %d minute. Please save your work."
+msgid_plural ""
+"Your session will expire in less than %d minutes. Please save your work."
+msgstr[0] ""
+msgstr[1] ""
 
-#: includes/login-modal.php:129
+#: includes/login-modal.php:170
 msgid "Session Expiring"
 msgstr ""
 
-#: includes/login-modal.php:230
+#: includes/login-modal.php:271
 msgid "Please enter both username and password"
 msgstr ""
 
-#: includes/login-modal.php:238
+#: includes/login-modal.php:279
 msgid "Logging in..."
 msgstr ""
 
-#: includes/login-modal.php:276
+#: includes/login-modal.php:317
 msgid "Login successful"
 msgstr ""
 
-#: includes/login-modal.php:276
-msgid "Success"
+#: includes/login-modal.php:332
+msgid "Login failed. Please check your credentials."
 msgstr ""
 
-#: includes/login-modal.php:287
-msgid "Login failed. Please check your credentials."
+#. translators: form field label for the unique identifier of a liturgical event
+#: includes/messages.php:15
+msgid "Event key"
+msgstr ""
+
+#. translators: form field label for decree URL
+#: includes/messages.php:29
+msgid "Decree URL"
+msgstr ""
+
+#. translators: form field label for decree language mappings
+#: includes/messages.php:31
+msgid "Decree Language mappings"
+msgstr ""
+
+#. translators: form field label for Roman Missal selection
+#: includes/messages.php:33
+msgid "Missal"
+msgstr ""
+
+#. translators: form field label for move event reason
+#: includes/messages.php:35
+msgid "Reason (in favor of liturgical event)"
+msgstr ""
+
+#. translators: form field label for timezone selection
+#: includes/messages.php:37
+msgid "Timezone"
+msgstr ""
+
+#. translators: form field label for selecting JSON file in admin
+#: includes/messages.php:39
+msgid "Select JSON file to manage"
+msgstr ""
+
+#. translators: form field label for year the decree takes effect
+#: includes/messages.php:41
+msgid "To take effect in the year"
+msgstr ""
+
+#. translators: notification title for warning messages
+#: includes/messages.php:51
+msgid "Warning"
+msgstr ""
+
+#. translators: form row title for designating a Doctor of the Church
+#: includes/messages.php:71
+msgid "Designate Doctor of the Church"
+msgstr ""
+
+#. translators: form row title for creating a new liturgical event
+#: includes/messages.php:73
+msgid "New liturgical event"
+msgstr ""
+
+#. translators: form row title for changing the name of a liturgical event
+#: includes/messages.php:75
+msgid "Change name"
+msgstr ""
+
+#. translators: form row title for changing the grade of a liturgical event
+#: includes/messages.php:77
+msgid "Change grade"
+msgstr ""
+
+#. translators: form row title for changing name or grade
+#: includes/messages.php:79
+msgid "Change name or grade"
+msgstr ""
+
+#. translators: form row title for moving a liturgical event to a new date
+#: includes/messages.php:81
+msgid "Move liturgical event"
+msgstr ""
+
+#. translators: button text for adding a solemnity in diocesan calendar
+#: includes/messages.php:87
+msgid "Other Solemnity"
+msgstr ""
+
+#. translators: button text for adding a feast in diocesan calendar
+#: includes/messages.php:89
+msgid "Other Feast"
+msgstr ""
+
+#. translators: button text for adding a memorial in diocesan calendar
+#: includes/messages.php:91
+msgid "Other Memorial"
+msgstr ""
+
+#. translators: button text for adding an optional memorial in diocesan calendar
+#: includes/messages.php:93
+msgid "Other Optional Memorial"
+msgstr ""
+
+#. translators: button description for designating patron action
+#: includes/messages.php:99
+msgid "Designate patron"
+msgstr ""
+
+#. translators: button description for changing name or grade of existing event
+#: includes/messages.php:101
+msgid "Change name or grade of existing liturgical event"
+msgstr ""
+
+#. translators: button description for moving event to new date
+#: includes/messages.php:103
+msgid "Move liturgical event to new date"
+msgstr ""
+
+#. translators: button description for creating new liturgical event
+#: includes/messages.php:105
+msgid "Create new liturgical event"
+msgstr ""
+
+#. translators: button description for designating Doctor of the Church
+#: includes/messages.php:107
+msgid "Designate Doctor of the Church from existing liturgical event"
+msgstr ""
+
+#. translators: button label for deleting a calendar
+#: includes/messages.php:113
+msgid "Delete calendar"
+msgstr ""
+
+#. translators: button label for removing existing data
+#: includes/messages.php:115
+msgid "Remove existing data"
+msgstr ""
+
+#. translators: button label for setting a property
+#: includes/messages.php:119
+msgid "Set Property"
+msgstr ""
+
+#. translators: button label for moving a liturgical event
+#: includes/messages.php:121
+msgid "Move Liturgical Event"
+msgstr ""
+
+#. translators: button label for creating a liturgical event
+#: includes/messages.php:123
+msgid "Create Liturgical Event"
+msgstr ""
+
+#. translators: button label for creating event from existing
+#: includes/messages.php:125
+msgid "New liturgical event from existing"
+msgstr ""
+
+#. translators: button label for creating entirely new event
+#: includes/messages.php:127
+msgid "New liturgical event ex novo"
+msgstr ""
+
+#. translators: button label for adding a missal
+#: includes/messages.php:129
+msgid "Add Missal"
+msgstr ""
+
+#. translators: button label for adding language edition Roman Missal
+#: includes/messages.php:131
+msgid "Add language edition Roman Missal"
+msgstr ""
+
+#. translators: link text for reading a decree document
+#: includes/messages.php:133
+msgid "Read the Decree"
+msgstr ""
+
+#. translators: button label for adding a column in admin table
+#: includes/messages.php:135
+msgid "Add Column"
+msgstr ""
+
+#. translators: button label for saving data in admin
+#: includes/messages.php:137
+msgid "Save data"
+msgstr ""
+
+#. translators: button title for adding a decree
+#: includes/messages.php:139
+msgid "Add Decree"
+msgstr ""
+
+#. translators: page title for extending calendars
+#: includes/messages.php:145
+msgid "General Roman Calendar - Extending"
+msgstr ""
+
+#. translators: page title for decrees
+#: includes/messages.php:147
+msgid "General Roman Calendar - Decrees"
+msgstr ""
+
+#. translators: page title for admin tools
+#: includes/messages.php:149
+msgid "Administration tools"
+msgstr ""
+
+#. translators: main heading for extending page
+#: includes/messages.php:155
+msgid "Extend the General Roman Calendar with National or Diocesan data"
+msgstr ""
+
+#. translators: main heading for decrees page
+#: includes/messages.php:157
+msgid ""
+"Refine the General Roman Calendar with Decrees of the Dicastery for Divine "
+"Worship and the Discipline of the Sacraments"
+msgstr ""
+
+#. translators: main heading for admin page
+#: includes/messages.php:159
+msgid "Liturgical Calendar project Administration tools"
+msgstr ""
+
+#. translators: introductory paragraph about decrees
+#: includes/messages.php:161
+msgid ""
+"The Liturgical Calendar is based off of both published Roman Missals, and "
+"Decrees of the Dicastery for Divine Worship and the Discipline of the "
+"Sacraments. These Decrees can refine the data from the Roman Missals, adding "
+"or removing or changing liturgical events, or instructing on how to handle "
+"any possible coincidences between mandatory celebrations."
+msgstr ""
+
+#. translators: explanation about API endpoints for missals and decrees
+#: includes/messages.php:163
+msgid ""
+"Data for <b>Roman Missals</b> is handled by the <code>/missals</code> "
+"endpoint of the API, while data for <b>Decrees</b> is handled by the <code>/"
+"decrees</code> endpoint of the API."
+msgstr ""
+
+#. translators: explanation of how national/diocesan calendars work
+#: includes/messages.php:169
+msgid ""
+"The General Roman Calendar can be extended so as to create a National or "
+"Diocesan calendar. Diocesan calendars depend on National calendars, so the "
+"National calendar must first be created."
+msgstr ""
+
+#. translators: link to translations page
+#: includes/messages.php:173
+msgid "(see <a href=\"translations.php\">Translations</a>)"
+msgstr ""
+
+#. translators: explanation about shared events across calendars
+#: includes/messages.php:175
+msgid ""
+"A national calendar may have some liturgical events in common with other "
+"national calendars, for example the patron of a wider region."
+msgstr ""
+
+#. translators: explanation about wider region data
+#: includes/messages.php:177
+msgid ""
+"In this case, the liturgical events for the wider region should be defined "
+"separately, and the languages applicable to the wider region should be set; "
+"the wider region data will then be applied automatically to national "
+"calendars belonging to the wider region."
+msgstr ""
+
+#. translators: help text for diocesan group field
+#: includes/messages.php:179
+msgid ""
+"If a group of dioceses decides to pool their Liturgical Calendar data, for "
+"example to print out one single yearly calendar with the data for all the "
+"dioceses in the group, the group can be defined or set here."
+msgstr ""
+
+#. translators: label for wider region calendar name field
+#: includes/messages.php:185
+msgid "Wider Region"
+msgstr ""
+
+#. translators: label for national calendar name field
+#: includes/messages.php:187
+msgid "National Calendar"
+msgstr ""
+
+#. translators: label for diocesan calendar dependency
+#: includes/messages.php:189
+msgid "Depends on national calendar"
+msgstr ""
+
+#. translators: label for diocese name field
+#: includes/messages.php:191
+msgid "Diocese"
+msgstr ""
+
+#. translators: label for diocesan group field
+#: includes/messages.php:193
+msgid "Diocesan group"
+msgstr ""
+
+#. translators: label for locales selection
+#: includes/messages.php:195
+msgid "Locales"
+msgstr ""
+
+#. translators: label for current localization selection
+#: includes/messages.php:197
+msgid "Current localization"
+msgstr ""
+
+#. translators: label for published Roman Missals list
+#: includes/messages.php:199
+msgid "Published Roman Missals"
+msgstr ""
+
+#. translators: section heading for national calendar settings
+#: includes/messages.php:211
+msgid "National calendar settings"
+msgstr ""
+
+#. translators: heading for diocesan overrides section
+#: includes/messages.php:213
+msgid "Diocesan overrides to the national calendar for …"
+msgstr ""
+
+#. translators: label for Epiphany setting
+#: includes/messages.php:219
+msgid "EPIPHANY"
+msgstr ""
+
+#. translators: option for Epiphany on January 6
+#: includes/messages.php:221
+msgid "January 6"
+msgstr ""
+
+#. translators: option for Epiphany on Sunday
+#: includes/messages.php:223
+msgid "Sunday between January 2 and January 8"
+msgstr ""
+
+#. translators: label for Ascension setting
+#: includes/messages.php:225
+msgid "ASCENSION"
+msgstr ""
+
+#. translators: label for Corpus Christi setting
+#: includes/messages.php:227
+msgid "CORPUS CHRISTI"
+msgstr ""
+
+#. translators: label for Eternal High Priest setting
+#: includes/messages.php:229
+msgid "ETERNAL HIGH PRIEST"
+msgstr ""
+
+#. translators: tab label for solemnities section
+#: includes/messages.php:235
+msgid "Solemnities"
+msgstr ""
+
+#. translators: tab label for feasts section
+#: includes/messages.php:237
+msgid "Feasts"
+msgstr ""
+
+#. translators: tab label for memorials section
+#: includes/messages.php:239
+msgid "Memorials"
+msgstr ""
+
+#. translators: tab label for optional memorials section
+#: includes/messages.php:241
+msgid "Optional memorials"
+msgstr ""
+
+#. translators: subtitle for defining solemnities
+#: includes/messages.php:247
+msgid "Define the Solemnities"
+msgstr ""
+
+#. translators: subtitle for defining feasts
+#: includes/messages.php:249
+msgid "Define the Feasts"
+msgstr ""
+
+#. translators: subtitle for defining memorials
+#: includes/messages.php:251
+msgid "Define the Memorials"
+msgstr ""
+
+#. translators: subtitle for defining optional memorials
+#: includes/messages.php:253
+msgid "Define the Optional Memorials"
+msgstr ""
+
+#. translators: row title for principal patron solemnity
+#: includes/messages.php:259
+msgid ""
+"Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
+msgstr ""
+
+#. translators: row title for dedication of cathedral
+#: includes/messages.php:261
+msgid "Dedication of the Cathedral"
+msgstr ""
+
+#. translators: row title for patron feast
+#: includes/messages.php:263
+msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
+msgstr ""
+
+#. translators: row title for secondary patron memorial
+#: includes/messages.php:265
+msgid ""
+"Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
+msgstr ""
+
+#. translators: row title for local saints optional memorial
+#: includes/messages.php:267
+msgid ""
+"Saints whose veneration is local to the Place, Diocese, Region, Province or "
+"Territory"
+msgstr ""
+
+#. translators: button to save wider region calendar data
+#: includes/messages.php:273
+msgid "Save Wider Region Calendar Data"
+msgstr ""
+
+#. translators: button to save national calendar data
+#: includes/messages.php:275
+msgid "Save National Calendar Data"
+msgstr ""
+
+#. translators: button to save diocesan calendar data
+#: includes/messages.php:277
+msgid "Save Diocesan Calendar Data"
+msgstr ""
+
+#. translators: modal title for changing name or grade
+#: includes/messages.php:283
+msgid "Change the name or grade of an existing liturgical event"
+msgstr ""
+
+#. translators: modal title for moving event
+#: includes/messages.php:285
+msgid "Move a liturgical event to a new date"
+msgstr ""
+
+#. translators: modal title for creating new event
+#: includes/messages.php:287
+msgid "Create a new liturgical event"
+msgstr ""
+
+#. translators: modal title for choosing missal
+#: includes/messages.php:289
+msgid "Choose from known Roman Missal language editions"
+msgstr ""
+
+#. translators: modal title for deleting a diocesan calendar
+#: includes/messages.php:291
+msgid "Delete diocesan calendar"
+msgstr ""
+
+#. translators: validation error when field is empty
+#: includes/messages.php:297
+msgid "This value cannot be empty."
+msgstr ""
+
+#. translators: validation error for unknown missal
+#: includes/messages.php:299
+msgid ""
+"This Missal is unknown to the Liturgical Calendar API. Please choose from a "
+"value in the list, or contact the curator of the API to have the Missal "
+"added to known language edition Missals."
+msgstr ""
+
+#. translators: warning message when deleting a calendar
+#: includes/messages.php:305
+msgid ""
+"If you choose to delete this calendar, the liturgical events defined for the "
+"calendar and the corresponding index entries will be removed and no longer "
+"available in the client applications."
+msgstr ""
+
+#. translators: tooltip explaining the first step to create a national calendar
+#: includes/messages.php:311
+msgid ""
+"please keep in mind that the first step to creating a national calendar, is "
+"to translate the already existing calendar data into the correct language. "
+"This can be done on the LitCal translation server (see above for details)"
+msgstr ""
+
+#. translators: help text shown when diocese input is disabled
+#: includes/messages.php:313
+msgid "Select a national calendar first to see available dioceses."
+msgstr ""
+
+#. translators: tooltip explaining the Eternal High Priest feast
+#: includes/messages.php:315
+msgid ""
+"In 2012, Pope Benedict XVI gave faculty to the Episcopal Conferences to "
+"insert the Feast of Jesus Christ Eternal High Priest in their own liturgical "
+"calendars on the Thursday after Pentecost."
+msgstr ""
+
+#. translators: tooltip explaining published Roman Missals selection
+#: includes/messages.php:317
+msgid ""
+"if data from the Proper of Saints of a given Missal for this nation has "
+"already been incorporated into the main LitCal engine, you can choose the "
+"Missal from this list to associate it with this National Calendar (if the "
+"Missal is not in the list, it has not been incorporated into the LitCal "
+"engine)"
+msgstr ""
+
+#. translators: tooltip explaining wider region association
+#: includes/messages.php:319
+msgid ""
+"if data for a Wider Region that regards this National Calendar has already "
+"been defined, you can associate the Wider Region data with the National "
+"Calendar here"
+msgstr ""
+
+#. translators: screen reader text for previous button
+#: includes/messages.php:325
+msgid "Previous"
+msgstr ""
+
+#. translators: screen reader text for next button
+#: includes/messages.php:327
+msgid "Next"
+msgstr ""
+
+#. translators: aria-label for diocesan calendar definition navigation
+#: includes/messages.php:329
+msgid "Diocesan calendar definition"
 msgstr ""

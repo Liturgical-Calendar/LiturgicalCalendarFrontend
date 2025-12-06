@@ -10,7 +10,7 @@
  * Accept-Language headers automatically when listening to ApiOptions.
  */
 
-include_once 'common.php';
+include_once 'includes/common.php';
 
 ?><!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">

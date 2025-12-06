@@ -54,7 +54,7 @@ Then navigate to `localhost:3000` in your browser, and you should see a running 
 
 This application uses a **hybrid approach** for security headers:
 
-- **PHP** sets dynamic headers that require environment variables (see `common.php:57-83`)
+- **PHP** sets dynamic headers that require environment variables (see `includes/common.php:57-83`)
   - `Content-Security-Policy` (includes dynamic API URL from `.env`)
   - `Strict-Transport-Security` (requires HTTPS detection)
 
@@ -117,7 +117,7 @@ add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
 add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
 ```
 
-In this case, you can remove the HSTS header from `common.php` (lines 77-81).
+In this case, you can remove the HSTS header from `includes/common.php` (lines 77-81).
 
 #### Why Hybrid Approach?
 
@@ -125,24 +125,63 @@ In this case, you can remove the HSTS header from `common.php` (lines 77-81).
 - **nginx static headers** provide better performance for headers that don't change
 - This approach works in any environment (shared hosting, nginx, Apache, etc.)
 
-### Cookie Security (SameSite Protection)
+### Cookie-Based Authentication (HttpOnly JWT)
 
-The application implements **SameSite cookie protection** to prevent CSRF attacks (see `common.php:91-139`).
+The application uses **HttpOnly cookie-based JWT authentication** for secure token storage
+(see `assets/js/auth.js` and API documentation).
 
-**Current Implementation:**
+**How It Works:**
 
-- JWT tokens are stored in `localStorage`/`sessionStorage` (not cookies)
-- SameSite protection is configured for **future cookie usage**
-- PHP session cookies (if ever used) are automatically secured
+1. **Login**: User submits credentials to `/auth/login` API endpoint
+2. **Token Storage**: API sets HttpOnly cookies (`litcal_access_token`, `litcal_refresh_token`)
+3. **Authentication**: Frontend uses `credentials: 'include'` in fetch requests to automatically send cookies
+4. **Verification**: Use `Auth.checkAuthAsync()` to verify session with the server
 
-**Automatic Configuration:**
+**Security Features:**
 
-```php
-// Session cookies are configured with:
-session.cookie_httponly = 1    // Prevent JavaScript access
-session.cookie_samesite = Strict  // CSRF protection
-session.cookie_secure = 1      // HTTPS only (when HTTPS detected)
+| Flag       | Purpose                                              |
+|------------|------------------------------------------------------|
+| `HttpOnly` | Prevents JavaScript access (XSS protection)          |
+| `SameSite` | Prevents cross-site request forgery (CSRF protection)|
+| `Secure`   | Cookie only sent over HTTPS (when HTTPS detected)    |
+
+**Client-Side Authentication API (`assets/js/auth.js`):**
+
+```javascript
+// Check authentication state (async, server-verified)
+const authState = await Auth.checkAuthAsync();
+if (authState.authenticated) {
+    console.log('Logged in as:', authState.user.username);
+}
+
+// Synchronous check (uses cached state, may be stale)
+if (Auth.isAuthenticated()) {
+    // User was authenticated at last check
+}
+
+// Make authenticated requests (cookies sent automatically)
+const response = await fetch('/api/endpoint', {
+    method: 'POST',
+    credentials: 'include'  // Required for HttpOnly cookies
+});
 ```
+
+**Why HttpOnly Cookies Over localStorage/sessionStorage?**
+
+- ✅ **XSS Protection**: Tokens inaccessible to JavaScript (prevents token theft via XSS)
+- ✅ **CSRF Protection**: SameSite flag prevents cross-origin cookie transmission
+- ✅ **Automatic Transmission**: Browser handles cookie sending (no manual header management)
+- ✅ **Secure Refresh**: Refresh tokens are also HttpOnly (reduces risk of token theft/replay via XSS)
+- ✅ **Server-Side Validation**: Full JWT validation (signature, expiry, claims) done by API
+
+**Deprecated Methods:**
+
+The following `Auth` methods are deprecated and will return `null` or show warnings:
+
+- `Auth.getToken()` - Tokens no longer accessible to JavaScript
+- `Auth.getPayload()` - Use `checkAuthAsync()` for user info
+- `Auth.setToken()` - Tokens stored by API via Set-Cookie header
+- `Auth.setRefreshToken()` - Tokens stored by API via Set-Cookie header
 
 **Helper Function for Custom Cookies:**
 
@@ -157,22 +196,6 @@ setSecureCookie(
     sameSite: 'Lax'  // 'Strict', 'Lax', or 'None'
 );
 ```
-
-**SameSite Options:**
-
-- `Strict` (default) - Cookie only sent for same-site requests (maximum protection)
-- `Lax` - Cookie sent for top-level navigation (balance between security and usability)
-- `None` - Cookie sent for all requests (requires `Secure` flag, HTTPS only)
-
-**Why SameSite Over CSRF Tokens?**
-
-The application uses **Authorization headers** for JWT authentication, not cookies. SameSite protection provides:
-
-- ✅ Protection against CSRF attacks
-- ✅ Defense-in-depth for any future cookie usage
-- ✅ No additional server-side token generation needed
-- ✅ Lightweight protection without complexity
-- ✅ Automatic protection for PHP sessions
 
 ## Localization of the Frontend
 

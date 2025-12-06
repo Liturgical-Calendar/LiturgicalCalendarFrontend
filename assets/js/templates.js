@@ -26,14 +26,14 @@ const removeDiocesanCalendarModal = (diocese, messages) => {
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="removeDiocesanCalendarModalLabel">${messages[ "Delete diocesan calendar" ]} ${escapedDiocese}?</h5>
+        <h5 class="modal-title" id="removeDiocesanCalendarModalLabel">${messages[ "Modal - Delete diocesan calendar" ]} ${escapedDiocese}?</h5>
       </div>
       <div class="modal-body">
         ${messages[ "If you choose" ]}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-backspace me-2"></i>Cancel</button>
-        <button type="button" id="deleteDiocesanCalendarConfirm" class="btn btn-danger"><i class="far fa-trash-alt me-2"></i>Delete calendar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-backspace me-2"></i>${messages[ "CancelButton" ]}</button>
+        <button type="button" id="deleteDiocesanCalendarConfirm" class="btn btn-danger"><i class="far fa-trash-alt me-2"></i>${messages[ "DeleteCalendarButton" ]}</button>
       </div>
     </div>
   </div>
@@ -53,14 +53,14 @@ const removeCalendarModal = (calendar, messages) => {
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="removeCalendarModalLabel">${messages[ "Delete calendar" ]} ${escapedCalendar}?</h5>
+        <h5 class="modal-title" id="removeCalendarModalLabel">${messages[ "DeleteCalendarButton" ]} ${escapedCalendar}?</h5>
       </div>
       <div class="modal-body">
         ${messages[ "If you choose" ]}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-backspace me-2"></i>Cancel</button>
-        <button type="button" id="deleteCalendarConfirm" class="btn btn-danger"><i class="far fa-trash-alt me-2"></i>Delete calendar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-backspace me-2"></i>${messages[ "CancelButton" ]}</button>
+        <button type="button" id="deleteCalendarConfirm" class="btn btn-danger"><i class="far fa-trash-alt me-2"></i>${messages[ "DeleteCalendarButton" ]}</button>
       </div>
     </div>
   </div>

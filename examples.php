@@ -1,6 +1,6 @@
 <?php
 
-include_once('common.php');
+include_once('includes/common.php');
 
 $example     = isset($_GET['example']) ? $_GET['example'] : null;
 $safeExample = htmlspecialchars((string) $example, ENT_QUOTES, 'UTF-8');

@@ -9,6 +9,7 @@ const CalendarType = Object.freeze({
 
 /**
  * Represents the parameters for the API /calendar endpoint request
+ * Currently only used to serialize the calendar subscription URL?
  */
 class RequestPayload {
     static epiphany             = null;
@@ -17,12 +18,12 @@ class RequestPayload {
     static eternal_high_priest  = null;
     static locale               = null;
     static return_type          = 'ICS';
-    static year_type            = null;
+    static year_type            = 'CIVIL';
 }
 
 /**
  * Class CurrentEndpoint
- * Used to build the full endpoint URL for the API /calendar endpoint
+ * Used to build the full endpoint URL for the API /calendar endpoint (currently only used to serialize the calendar subscription URL?)
  * @param {string} calendarType The type of calendar (national, diocesan)
  * @param {string} calendarId The ID of the calendar
  * @param {string} calendarYear The year of the calendar
@@ -128,7 +129,6 @@ const updateNavHighlight = (sectionId, isActive) => {
  */
 const handleHashChange = () => {
     if (location.hash) {
-        //console.log(location.hash);
         const collapseEl = document.querySelector(location.hash + '.collapse');
         if (collapseEl) {
             // Use getOrCreateInstance to avoid conflicts with Bootstrap's native handling
@@ -151,11 +151,11 @@ const copyUrlToClipboard = () => {
     if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(urlText)
             .then(() => {
-                toastr.success('URL was copied to the clipboard', 'Success');
+                toastr.success(Messages['URL copied to clipboard'], Messages['Success']);
             })
             .catch(err => {
                 console.error('Failed to copy to clipboard:', err);
-                toastr.error('Failed to copy URL to clipboard', 'Error');
+                toastr.error(Messages['Failed to copy URL'], Messages['Error']);
             });
     } else {
         // Fallback for older browsers using execCommand
@@ -171,13 +171,13 @@ const copyUrlToClipboard = () => {
             document.body.removeChild(textarea);
 
             if (successful) {
-                toastr.success('URL was copied to the clipboard', 'Success');
+                toastr.success(Messages['URL copied to clipboard'], Messages['Success']);
             } else {
-                toastr.warning('Please select and copy manually', 'Copy not supported');
+                toastr.warning(Messages['Select and copy manually'], Messages['Copy not supported']);
             }
         } catch (err) {
             console.error('Fallback copy failed:', err);
-            toastr.warning('Please select and copy manually', 'Copy not supported');
+            toastr.warning(Messages['Select and copy manually'], Messages['Copy not supported']);
         }
     }
 };

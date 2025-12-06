@@ -20,7 +20,7 @@
 </div>
 <!-- End of Page Wrapper -->
 
-<!-- All API URLs and configuration are provided by common.php -->
+<!-- All API URLs and configuration are provided by includes/common.php -->
 <script>
 const AppEnv          = <?php echo json_encode($_ENV['APP_ENV'] ?? 'production'); ?>;
 const BaseUrl         = <?php echo json_encode($apiConfig->apiBaseUrl); ?>;

@@ -10,16 +10,16 @@
  * phpcs:disable PSR1.Files.SideEffects
  */
 
-include_once('vendor/autoload.php');
+include_once(dirname(__DIR__) . '/vendor/autoload.php');
 
+use Dotenv\Dotenv;
+use LiturgicalCalendar\Components\ApiClient;
+use LiturgicalCalendar\Components\Http\HttpClientFactory;
 use LiturgicalCalendar\Frontend\I18n;
 use LiturgicalCalendar\Frontend\ApiClient as FrontendHttpClient;
-use Dotenv\Dotenv;
 use Monolog\Logger;
 use Monolog\Level;
 use Monolog\Handler\StreamHandler;
-use LiturgicalCalendar\Components\Http\HttpClientFactory;
-use LiturgicalCalendar\Components\ApiClient;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Psr16Cache;
 
@@ -44,7 +44,7 @@ if (false === file_exists($ghReleaseCacheFile) || ( time() - filemtime($ghReleas
     }
 }
 
-$dotenv = Dotenv::createImmutable(__DIR__, ['.env', '.env.local', '.env.development', '.env.staging', '.env.production'], false);
+$dotenv = Dotenv::createImmutable(dirname(__DIR__), ['.env', '.env.local', '.env.development', '.env.staging', '.env.production'], false);
 $dotenv->ifPresent(['API_PROTOCOL', 'API_HOST', 'API_BASE_PATH'])->notEmpty();
 $dotenv->ifPresent(['API_PORT'])->isInteger();
 $dotenv->safeLoad();
@@ -190,7 +190,7 @@ $i18n = new I18n();
 // 1. Setup Logger (Monolog)
 
 $logger  = null;
-$logsDir = __DIR__ . '/logs';
+$logsDir = dirname(__DIR__) . '/logs';
 
 if (!is_dir($logsDir)) {
     if ($debugMode) {
@@ -224,7 +224,7 @@ if ($debugMode && $logger !== null) {
 }
 
 // 2. Setup Cache - Filesystem cache (if available) or ArrayCache fallback
-$cacheDir = __DIR__ . '/cache';
+$cacheDir = dirname(__DIR__) . '/cache';
 if (!is_dir($cacheDir)) {
     if (!mkdir($cacheDir, 0755, true)) {
         error_log('Failed to create cache directory: ' . $cacheDir);

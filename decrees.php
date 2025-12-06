@@ -1,22 +1,9 @@
 <?php
-include_once 'common.php'; // provides $i18n and all API URLs
+include_once 'includes/common.php'; // provides $i18n and all API URLs
+include_once 'includes/messages.php'; // centralized translation strings
+include_once 'includes/functions.php'; // helper functions including messagesPlural()
 
 use LiturgicalCalendar\Frontend\ApiClient;
-
-$messages = [
-    /**translators: label of the form row */
-    'New liturgical event'  => _('New liturgical event'),
-    /**translators: label of the form row */
-    'Change name or grade'  => _('Change name or grade'),
-    /**translators: label of the form row */
-    'Change name'           => _('Change name'),
-    /**translators: label of the form row */
-    'Change grade'          => _('Change grade'),
-    /**translators: label of the form row */
-    'Move liturgical event' => _('Move liturgical event'),
-    /**translators: label of the form row */
-    'Designate Doctor'      => _('Designate Doctor of the Church'),
-];
 
 $RowAction = [
     'SetProperty'      => 'setProperty',
@@ -56,7 +43,7 @@ try {
 ?><!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
     <head>
-        <title><?php echo _('General Roman Calendar - Decrees') ?></title>
+        <title><?php echo $messages['Page title - Decrees']; ?></title>
         <?php include_once('layout/head.php'); ?>
     </head>
     <body class="sb-nav-fixed">
@@ -64,12 +51,12 @@ try {
         <?php include_once('layout/header.php'); ?>
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-black" style="--bs-text-opacity: .6;"><?php echo _('Refine the General Roman Calendar with Decrees of the Dicastery for Divine Worship and the Discipline of the Sacraments'); ?></h1>
-        <p class="mb-1 small"><?php echo _('The Liturgical Calendar is based off of both published Roman Missals, and Decrees of the Dicastery for Divine Worship and the Discipline of the Sacraments. These Decrees can refine the data from the Roman Missals, adding or removing or changing liturgical events, or instructing on how to handle any possible coincidences between mandatory celebrations.'); ?></p>
+        <h1 class="h3 mb-2 text-black" style="--bs-text-opacity: .6;"><?php echo $messages['Decrees heading']; ?></h1>
+        <p class="mb-1 small"><?php echo $messages['Decrees intro']; ?></p>
         <p class="mb-1 small"><?php
-            echo _('Data for <b>Roman Missals</b> is handled by the <code>/missals</code> endpoint of the API, while data for <b>Decrees</b> is handled by the <code>/decrees</code> endpoint of the API.') . ' ';
+            echo $messages['Decrees API endpoints'] . ' ';
             echo sprintf(
-                _('Currently, these endpoints are read-only. There are currently <b>%1$d Decrees</b> defined at the endpoint %2$s.'),
+                messagesPlural('Decrees count', count($LitCalDecrees)),
                 count($LitCalDecrees),
                 "<a href=\"{$apiConfig->decreesUrl}\" target=\"_blank\">{$apiConfig->decreesUrl}</a>"
             );
@@ -151,14 +138,14 @@ try {
                     . "<h6 class='card-subtitle mb-2 text-muted d-flex justify-content-between'><div>{$decreeDate}</div><div>{$decreeID}</div></h6>"
                     . '</div>'
                     . "<div class='card-body'>"
-                    . "<p class='card-text'>{$decreeDescription}<a href='{$decreeUrl}' class='ms-2' target='_blank'>" . _('Read the Decree') . '</a></p>'
+                    . "<p class='card-text'>{$decreeDescription}<a href='{$decreeUrl}' class='ms-2' target='_blank'>" . $messages['ReadDecreeLink'] . '</a></p>'
                     . '<div class="row gx-2 align-items-baseline">'
                     . '<div class="form-group col-sm-4">'
-                    . "<label for='event_key_{$decreeID}' class='event_key'>Event Key</label>"
+                    . "<label for='event_key_{$decreeID}' class='event_key'>" . $messages['EventKey'] . '</label>'
                     . "<input type='text' class='form-control event_key' id='event_key_{$decreeID}' value='{$decreeLitEventKey}' list='existingLiturgicalEventsList' disabled>"
                     . '</div>'
                     . '<div class="form-group col-sm-2">'
-                    . "<label for='since_year_{$decreeID}' class='since_year'>To take effect in the year</label>"
+                    . "<label for='since_year_{$decreeID}' class='since_year'>" . $messages['To take effect in the year'] . '</label>'
                     . "<input type='number' class='form-control since_year' id='since_year_{$decreeID}' value='{$decree['metadata']['since_year']}' min='{$minYear}' disabled>"
                     . '</div>'
                     . '</div>'
@@ -167,7 +154,7 @@ try {
             }
 
             echo '<nav id="decreesNavBar" class="navbar navbar-expand-lg mt-3 mb-3 p-0" style="background-color: #e3f2fd;" data-bs-theme="light">';
-            echo '<ul class="nav nav-pills">' . implode('', $navItems) . '<button class="btn btn-primary btn-sm ms-3" title="Add Decree" id="addDecreeBtn" disabled>+</button>' . '</ul>';
+            echo '<ul class="nav nav-pills">' . implode('', $navItems) . '<button class="btn btn-primary btn-sm ms-3" title="' . $messages['AddDecreeButton'] . '" id="addDecreeBtn" disabled>+</button>' . '</ul>';
             echo '</nav>';
 
             echo '<div class="border" style="height: calc(100vh - 22rem); overflow-y: auto; box-shadow: inset 0px 0px 20px -6px rgba(0,0,0,0.3);" data-bs-spy="scroll" data-bs-target="#decreesNavBar" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true">';

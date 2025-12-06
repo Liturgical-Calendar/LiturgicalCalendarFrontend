@@ -6,9 +6,10 @@ optionally inherit events from a Wider Region calendar.
 ## Prerequisites
 
 1. **Authentication** - You must be logged in with valid credentials
-2. **Translations** - The General Roman Calendar must be translated into the required language(s)
+2. **Translations** - The General Roman Calendar must be translated into the language(s) for which the national calendar will be defined
    (see [Translations](../translations.php) page)
-3. **Wider Region (optional)** - If the nation belongs to a wider region with shared events, create that first
+3. **Wider Region (optional)** - If the nation belongs to a wider region with shared events (e.g. patron saint for the Wider Region),
+   ensure that the shared events are defined for the Wider Region first (don't define them at the national level).
 
 ## Accessing the Form
 

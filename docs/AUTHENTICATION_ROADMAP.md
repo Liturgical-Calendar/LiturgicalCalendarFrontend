@@ -9,7 +9,7 @@ This document outlines the plan for implementing JWT authentication in the Litur
 - [LiturgicalCalendarAPI#262](https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI/issues/262) - ✅ API JWT Implementation (Complete)
 - [LiturgicalCalendarFrontend#181](https://github.com/Liturgical-Calendar/LiturgicalCalendarFrontend/issues/181) - 🔄 Frontend JWT Client Implementation (In Progress)
 
-**Status:** Phase 1, Phase 2, and Phase 2.5 (HttpOnly Cookie Auth) complete - as of 2025-11-27
+**Status:** Phase 1, Phase 2, Phase 2.4 (HttpOnly Cookie Auth), and Phase 2.5 (Full Cookie-Only Auth) complete - as of 2025-12-02
 
 **API Readiness:**
 The LiturgicalCalendarAPI now has full JWT authentication implemented with HttpOnly cookie support:
@@ -518,7 +518,7 @@ function updateAuthUI() {
 **Files Modified:**
 
 - `assets/js/auth.js` - Added auto-refresh and expiry warning methods
-- `common.php` - Added dynamic CSP headers, HSTS, and SameSite cookie protection
+- `includes/common.php` - Added dynamic CSP headers, HSTS, and SameSite cookie protection
 - `README.md` - Added Production Deployment section with nginx and cookie security configuration
 
 ---
@@ -574,22 +574,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
 **Files Modified:**
 
-- `common.php:91-139` - SameSite cookie configuration and helper function
+- `includes/common.php:91-139` - SameSite cookie configuration and helper function
 - `README.md` - Cookie Security documentation
 
 **SameSite Cookie Protection implemented** (instead of traditional CSRF tokens):
 
 **Rationale:**
 
-- Application uses JWT in Authorization headers (not cookies)
-- Traditional CSRF tokens are unnecessary for header-based auth
-- SameSite protection provides defense-in-depth for future cookie usage
+- Application now uses HttpOnly cookies for JWT tokens (as of Phase 2.5)
+- SameSite attribute provides built-in CSRF protection for cookie-based auth
+- Traditional CSRF tokens are unnecessary with SameSite cookies
 - Lightweight solution without server-side token generation complexity
 
 **Implementation:**
 
 ```php
-// common.php - Automatic session cookie protection
+// includes/common.php - Automatic session cookie protection
 $isHttps = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on';
 
 // Configure PHP session cookies with SameSite protection
@@ -636,8 +636,7 @@ function setSecureCookie(
 - ✅ Automatic CSRF protection for all cookies
 - ✅ No server-side token storage or generation
 - ✅ No frontend token validation code needed
-- ✅ Future-proof for any cookie-based features
-- ✅ Works alongside JWT Authorization headers
+- ✅ Essential for HttpOnly cookie-based JWT authentication (Phase 2.5)
 
 #### 2.3 Content Security Policy ✅ COMPLETE
 
@@ -651,7 +650,7 @@ function setSecureCookie(
 **CSP Headers Implemented:**
 
 ```php
-// common.php - Dynamic CSP header
+// includes/common.php - Dynamic CSP header
 header("Content-Security-Policy: " .
     "default-src 'self'; " .
     "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com; " .
@@ -776,148 +775,80 @@ const response = await fetch(`${BaseUrl}/auth/login`, {
 });
 ```
 
-**Backwards Compatibility:**
+**API Backwards Compatibility:**
 
-The implementation maintains full backwards compatibility:
+The API maintains backwards compatibility for third-party clients:
 
 1. **API reads tokens from both sources** - Checks HttpOnly cookie first, falls back to Authorization header
-2. **API returns tokens in response body** - Clients can still use localStorage if preferred
-3. **Frontend stores tokens locally** - For quick client-side checks (expiry, username)
-4. **Hybrid approach** - HttpOnly cookies provide security, local storage provides convenience
+2. **API returns tokens in response body** - Third-party clients can still use their own storage
 
-**Security Benefits:**
+**Note:** As of Phase 2.5, the frontend no longer stores tokens in localStorage/sessionStorage.
+See Phase 2.5 below for the current cookie-only implementation.
 
-- ✅ **XSS Protection** - Tokens in HttpOnly cookies cannot be stolen via JavaScript injection
-- ✅ **CSRF Protection** - SameSite cookie attribute prevents cross-site request forgery
-- ✅ **Secure Flag** - Cookies only sent over HTTPS in production
-- ✅ **Path Restriction** - Refresh token cookie only sent to `/auth` endpoints
+### Phase 2.5: Full Cookie-Only Authentication ✅ COMPLETE
 
-**Migration Path:**
-
-For full cookie-only authentication (removing client-side token storage):
-
-1. Update `Auth.isAuthenticated()` to use `checkAuthAsync()` or cache server response
-2. Remove `setToken()` and `setRefreshToken()` calls after login
-3. Remove `getToken()` usage in Authorization headers (cookies sent automatically)
-4. Update auto-refresh to rely on server-side cookie expiry
-
-### Phase 2.5: Full Cookie-Only Authentication (Planned)
-
-**Status:** Not started
+**Implementation Date:** 2025-12-02
 
 **Overview:**
-Migrate the frontend to use HttpOnly cookies exclusively, removing client-side token storage in localStorage/sessionStorage. This provides maximum security against XSS attacks.
+Migrated the frontend to use HttpOnly cookies exclusively, removing client-side token storage in
+localStorage/sessionStorage. This provides maximum security against XSS attacks.
 
-**Current State (Hybrid Approach):**
-
-- API sets HttpOnly cookies on login
-- Frontend also stores tokens in localStorage/sessionStorage
-- Requests include both cookies (automatic) and Authorization headers (manual)
-- `Auth.isAuthenticated()` reads from local storage for quick sync checks
-
-**Target State (Cookie-Only):**
-
-- API sets HttpOnly cookies on login (no change)
-- Frontend does NOT store tokens locally
-- Requests rely solely on automatic cookie transmission
-- `Auth.isAuthenticated()` becomes async, using `/auth/me` endpoint
-
-**Files to Modify:**
+**Files Modified:**
 
 1. **`assets/js/auth.js`**
-   - Remove `setToken()` and `setRefreshToken()` calls after login
-   - Remove `getToken()` and `getRefreshToken()` methods (or deprecate)
-   - Update `isAuthenticated()` to use cached `/auth/me` response
-   - Add cache layer for `checkAuthAsync()` to avoid excessive API calls
+   - Added auth state caching (`_cachedAuthState`, `_cacheExpiry`, `_cacheDuration`)
+   - Added `isAuthenticatedCached()` method for synchronous cache checks
+   - Added `updateAuthCache()` method to fetch and cache auth state
+   - Updated `isAuthenticated()` to use cached auth state instead of localStorage
+   - Updated `login()` to not store tokens locally (relies on HttpOnly cookies)
+   - Updated `_doRefreshToken()` to not require body (API reads from cookie)
+   - Updated `startAutoRefresh()` and `startExpiryWarning()` to use cached auth state
+   - Updated `hasPermission()`, `hasRole()`, `getUsername()` to use cached auth state
+   - Deprecated `setToken()`, `getToken()`, `setRefreshToken()`, `getRefreshToken()`, `getPayload()`
+   - Updated DOMContentLoaded to initialize auth cache on page load
 
 2. **`assets/js/extending.js`**
-   - Remove `addAuthHeader()` calls - cookies sent automatically
-   - Update all authenticated fetch calls to use `credentials: 'include'`
-   - Handle auth state changes based on server responses, not local tokens
+   - Deprecated `addAuthHeader()` function (no longer needed)
+   - Updated `makeAuthenticatedRequest()` to use `credentials: 'include'` instead of Authorization header
 
 3. **`includes/login-modal.php`**
-   - Remove token storage after successful login
-   - Rely on cookie being set by API
+   - Updated DOMContentLoaded to be async and wait for auth cache population
+   - Uses `Auth.isAuthenticatedCached()` to check if cache needs population
 
-4. **`layout/header.php`**
-   - Update auth status check to use async `checkAuthAsync()`
+**How It Works:**
 
-**Implementation Steps:**
+1. **Page Load:**
+   - `auth.js` DOMContentLoaded calls `Auth.updateAuthCache()` to fetch `/auth/me`
+   - Cache is populated with auth state (authenticated, username, roles, exp)
+   - Auto-refresh timer is started if authenticated
 
-1. Add auth state caching in `auth.js`:
+2. **Auth State Checks:**
+   - `Auth.isAuthenticated()` returns cached state synchronously
+   - `Auth.isAuthenticatedCached()` returns `null` if cache expired (caller can decide to fetch)
+   - `Auth.updateAuthCache()` fetches fresh state from server
 
-   ```javascript
-   Auth._cachedAuthState = null;
-   Auth._cacheExpiry = 0;
+3. **Authenticated Requests:**
+   - All requests use `credentials: 'include'` to send HttpOnly cookies
+   - No Authorization headers needed - API reads token from cookie
+   - `makeAuthenticatedRequest()` helper handles this automatically
 
-   Auth.isAuthenticatedCached = function() {
-       const now = Date.now();
-       if (this._cachedAuthState && now < this._cacheExpiry) {
-           return this._cachedAuthState.authenticated;
-       }
-       return null; // Cache expired, need async check
-   };
-
-   Auth.updateAuthCache = async function() {
-       const state = await this.checkAuthAsync();
-       this._cachedAuthState = state;
-       this._cacheExpiry = Date.now() + 60000; // Cache for 1 minute
-       return state;
-   };
-   ```
-
-2. Update authenticated requests:
-
-   ```javascript
-   // Before (hybrid)
-   const headers = new Headers({ 'Accept': 'application/json' });
-   headers.append('Authorization', `Bearer ${Auth.getToken()}`);
-   fetch(url, { method: 'POST', headers, body });
-
-   // After (cookie-only)
-   fetch(url, {
-       method: 'POST',
-       credentials: 'include',  // Cookies sent automatically
-       headers: { 'Accept': 'application/json' },
-       body
-   });
-   ```
-
-3. Update auth state checks:
-
-   ```javascript
-   // Before (sync)
-   if (Auth.isAuthenticated()) {
-       showProtectedUI();
-   }
-
-   // After (async with cache)
-   const cachedAuth = Auth.isAuthenticatedCached();
-   if (cachedAuth !== null) {
-       if (cachedAuth) showProtectedUI();
-   } else {
-       const authState = await Auth.updateAuthCache();
-       if (authState?.authenticated) showProtectedUI();
-   }
-   ```
+4. **Token Refresh:**
+   - API reads refresh token from HttpOnly cookie
+   - New tokens are set as HttpOnly cookies in response
+   - Frontend just calls the endpoint and updates the cache
 
 **Security Benefits:**
 
-- **XSS-proof** - No tokens in JavaScript-accessible storage
-- **Simpler code** - No manual header management
-- **Automatic refresh** - Browser handles cookie transmission
+- ✅ **XSS-proof** - No tokens in JavaScript-accessible storage
+- ✅ **Simpler code** - No manual Authorization header management
+- ✅ **Automatic transmission** - Browser handles cookie sending
+- ✅ **Legacy cleanup** - Old tokens in localStorage/sessionStorage are cleared on login
 
-**Trade-offs:**
+**Migration Notes:**
 
-- Requires async auth checks (can be mitigated with caching)
-- Cross-tab auth state sync requires polling or BroadcastChannel API
-- Slightly more API calls for auth state verification
-
-**Testing:**
-
-- E2E tests already use hybrid approach with `credentials: 'include'`
-- After migration, E2E tests can remove localStorage token storage
-- Verify all CRUD operations work with cookie-only auth
+- Deprecated methods still exist but log warnings when called
+- Legacy tokens in localStorage/sessionStorage are cleared on successful login
+- Backwards compatible - API still accepts Authorization header as fallback
 
 ### Phase 3: User Experience Enhancements
 
@@ -950,58 +881,66 @@ function initPermissionUI() {
 
 #### 3.2 Session Expiry Warning
 
-Warn users before session expires:
+Warn users before session expires using cached auth state (cookie-only approach):
 
 ```javascript
 /**
  * Show warning before token expiry
+ * Uses cached auth state from /auth/me endpoint (expiry included in response)
+ *
+ * @param {Function} callback - Function to call with seconds until expiry
  */
-Auth.startExpiryWarning = function() {
-    setInterval(() => {
+Auth.startExpiryWarning = function(callback) {
+    this._expiryWarningInterval = setInterval(() => {
         if (!this.isAuthenticated()) return;
 
-        const token = this.getToken();
-        const payload = JSON.parse(atob(token.split('.')[1]));
+        // Get expiry from cached auth state (populated by /auth/me)
+        const exp = this._cachedAuthState?.exp;
+        if (!exp) return;
+
         const now = Math.floor(Date.now() / 1000);
-        const timeUntilExpiry = payload.exp - now;
+        const timeUntilExpiry = exp - now;
 
         // Warn if less than 2 minutes until expiry
         if (timeUntilExpiry > 0 && timeUntilExpiry < 120) {
-            showWarningToast('Your session will expire soon. Please save your work.');
+            callback(timeUntilExpiry);
         }
     }, 30000); // Check every 30 seconds
 };
 ```
 
+**Note:** With HttpOnly cookies, JavaScript cannot decode the token directly. The expiry time is
+obtained from the `/auth/me` endpoint response, which is cached in `_cachedAuthState`.
+
 ### Phase 4: Future Enhancements (Post-JWT)
+
+> **Note:** These are conceptual examples for future API features. All examples use the cookie-only
+> authentication model with cached auth state from `/auth/me`. The API would need to include
+> permissions/roles in the `/auth/me` response for these features to work.
 
 #### 4.1 Role-Based Access Control (RBAC)
 
-When the API implements RBAC:
+When the API implements RBAC (permissions/roles returned in `/auth/me` response):
 
 ```javascript
 /**
- * Check user permissions
+ * Check user permissions (uses cached auth state)
  */
 Auth.hasPermission = function(permission) {
     if (!this.isAuthenticated()) return false;
 
-    const token = this.getToken();
-    const payload = JSON.parse(atob(token.split('.')[1]));
-
-    return payload.permissions && payload.permissions.includes(permission);
+    const permissions = this._cachedAuthState?.permissions;
+    return permissions && permissions.includes(permission);
 };
 
 /**
- * Check user role
+ * Check user role (uses cached auth state)
  */
 Auth.hasRole = function(role) {
     if (!this.isAuthenticated()) return false;
 
-    const token = this.getToken();
-    const payload = JSON.parse(atob(token.split('.')[1]));
-
-    return payload.role === role || (payload.roles && payload.roles.includes(role));
+    const { role: userRole, roles } = this._cachedAuthState || {};
+    return userRole === role || (roles && roles.includes(role));
 };
 
 // Usage:
@@ -1012,17 +951,19 @@ if (Auth.hasPermission('calendar:delete')) {
 
 #### 4.2 Multi-Factor Authentication (MFA)
 
-When the API adds MFA:
+When the API adds MFA (tokens set via HttpOnly cookies by the API):
 
 ```javascript
 /**
  * Handle MFA challenge
+ * API sets HttpOnly cookies on successful verification
  */
 async function handleMfaChallenge(challengeToken) {
     const code = await showMfaModal(); // Prompt user for MFA code
 
-    const response = await fetch(`${API.protocol}://${API.host}:${API.port}/auth/mfa/verify`, {
+    const response = await fetch(`${BaseUrl}/auth/mfa/verify`, {
         method: 'POST',
+        credentials: 'include', // Cookie-based auth
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -1037,29 +978,32 @@ async function handleMfaChallenge(challengeToken) {
         throw new Error('MFA verification failed');
     }
 
-    const data = await response.json();
-    Auth.setToken(data.token);
-    return data;
+    // API sets HttpOnly cookies - update local cache
+    await Auth.updateAuthCache();
+    return await response.json();
 }
 ```
 
 #### 4.3 OAuth/OIDC Integration
 
-When integrating external identity providers:
+When integrating external identity providers (API sets HttpOnly cookies):
 
 ```javascript
 /**
  * OAuth login flow
  */
 Auth.loginWithOAuth = function(provider) {
-    const authUrl = `${API.protocol}://${API.host}:${API.port}/auth/oauth/${provider}`;
+    const authUrl = `${BaseUrl}/auth/oauth/${provider}`;
     const redirectUri = window.location.origin + '/auth/callback';
 
+    // Store return URL before redirect
+    sessionStorage.setItem('oauth_return_to', window.location.pathname);
     window.location.href = `${authUrl}?redirect_uri=${encodeURIComponent(redirectUri)}`;
 };
 
 /**
  * Handle OAuth callback
+ * API sets HttpOnly cookies on successful authentication
  */
 Auth.handleOAuthCallback = async function() {
     const params = new URLSearchParams(window.location.search);
@@ -1070,8 +1014,9 @@ Auth.handleOAuthCallback = async function() {
         throw new Error('No authorization code received');
     }
 
-    const response = await fetch(`${API.protocol}://${API.host}:${API.port}/auth/oauth/callback`, {
+    const response = await fetch(`${BaseUrl}/auth/oauth/callback`, {
         method: 'POST',
+        credentials: 'include', // Cookie-based auth
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -1079,8 +1024,12 @@ Auth.handleOAuthCallback = async function() {
         body: JSON.stringify({ code, state })
     });
 
-    const data = await response.json();
-    this.setToken(data.token);
+    if (!response.ok) {
+        throw new Error('OAuth authentication failed');
+    }
+
+    // API sets HttpOnly cookies - update local cache
+    await this.updateAuthCache();
 
     // Redirect to original page
     const returnTo = sessionStorage.getItem('oauth_return_to') || '/';
@@ -1093,37 +1042,44 @@ Auth.handleOAuthCallback = async function() {
 
 ### 1. Token Storage
 
-**Current Approach:** Hybrid - HttpOnly cookies (primary) + sessionStorage/localStorage (secondary)
+**Current Approach:** Cookie-only (HttpOnly secure cookies)
 
-**As of 2025-11-27**, the API now sets HttpOnly cookies for JWT tokens, providing defense-in-depth:
+**As of 2025-12-02**, the frontend uses HttpOnly cookies exclusively for token storage:
 
-| Storage Method  | XSS Safe | CSRF Safe | Cross-Tab | Use Case                           |
-| --------------- | -------- | --------- | --------- | ---------------------------------- |
-| HttpOnly Cookie | Yes      | SameSite  | Yes       | Primary token storage (secure)     |
-| sessionStorage  | No       | Yes       | No        | Quick client-side checks           |
-| localStorage    | No       | Yes       | Yes       | "Remember me" + client-side checks |
+| Storage Method  | XSS Safe | CSRF Safe | Cross-Tab | Status                        |
+| --------------- | -------- | --------- | --------- | ----------------------------- |
+| HttpOnly Cookie | Yes      | SameSite  | Yes       | Current - sole token storage  |
+| sessionStorage  | No       | Yes       | No        | Legacy - cleared on login     |
+| localStorage    | No       | Yes       | Yes       | Legacy - cleared on login     |
 
 **How it works:**
 
-1. **Login** - API sets HttpOnly cookies AND returns tokens in response body
-2. **Frontend** - Stores tokens in localStorage/sessionStorage for client-side convenience
-3. **API Requests** - Browser automatically sends HttpOnly cookies; frontend also sends Authorization header
-4. **API Validation** - Checks cookie first, falls back to Authorization header
+1. **Login** - API sets HttpOnly cookies; frontend clears any legacy localStorage/sessionStorage tokens
+2. **Auth State** - Frontend calls `/auth/me` endpoint and caches the response
+3. **API Requests** - Browser automatically sends HttpOnly cookies via `credentials: 'include'`
+4. **API Validation** - Reads token from HttpOnly cookie (falls back to Authorization header for backwards compatibility)
+
+**Cookie Configuration:**
+
+| Cookie                 | Path    | SameSite | Secure     | HttpOnly |
+| ---------------------- | ------- | -------- | ---------- | -------- |
+| `litcal_access_token`  | `/`     | Lax      | Yes (prod) | Yes      |
+| `litcal_refresh_token` | `/auth` | Strict   | Yes (prod) | Yes      |
 
 **Security Benefits:**
 
-- Even if XSS attack steals tokens from localStorage, the HttpOnly cookies remain secure
-- API can validate requests using the secure HttpOnly cookie
-- Attackers cannot forge requests without the HttpOnly cookie (SameSite protection)
+- ✅ **XSS-proof** - Tokens cannot be accessed by JavaScript
+- ✅ **CSRF protection** - SameSite attribute prevents cross-site request forgery
+- ✅ **Secure transmission** - Cookies only sent over HTTPS in production
+- ✅ **Path restriction** - Refresh token only sent to `/auth` endpoints
 
-**Future Enhancement:** Full cookie-only mode
+**Historical Note - Hybrid Approach (Phase 2.4, deprecated):**
 
-```javascript
-// For maximum security, remove client-side token storage entirely:
-// 1. Don't store tokens in localStorage/sessionStorage
-// 2. Use Auth.checkAuthAsync() for all auth state checks
-// 3. Let browser handle cookie transmission automatically
-```
+Prior to Phase 2.5, the frontend used a hybrid approach where the API set HttpOnly cookies AND
+returned tokens in the response body. The frontend stored tokens in localStorage/sessionStorage
+for client-side convenience, and requests included both cookies (automatic) and Authorization
+headers (manual). This was replaced with cookie-only authentication in Phase 2.5 for maximum
+XSS protection.
 
 ### 2. HTTPS Enforcement
 
@@ -1156,40 +1112,91 @@ if (window.location.protocol !== 'https:' && window.location.hostname !== 'local
 
 ### Manual Testing Checklist
 
-- [ ] Login flow with valid credentials
-- [ ] Login flow with invalid credentials
-- [ ] Token persistence (sessionStorage vs localStorage)
-- [ ] Authenticated DELETE request succeeds
+**Authentication Flow:**
+
+- [ ] Login flow with valid credentials sets HttpOnly cookies
+- [ ] Login flow with invalid credentials shows error, no cookies set
+- [ ] Login clears any legacy tokens from localStorage/sessionStorage
+- [ ] Logout clears HttpOnly cookies (verify via DevTools → Application → Cookies)
+- [ ] UI updates correctly based on auth state (login/logout buttons)
+
+**Cookie Behavior:**
+
+- [ ] Access token cookie has correct attributes (HttpOnly, SameSite=Lax, Secure in prod)
+- [ ] Refresh token cookie has correct attributes (HttpOnly, SameSite=Strict, Path=/auth)
+- [ ] Cookies are automatically sent with `credentials: 'include'` requests
+- [ ] Cross-origin requests include cookies when CORS is configured
+
+**Server-Side Session Validation:**
+
+- [ ] `/auth/me` returns authenticated state when valid cookie present
+- [ ] `/auth/me` returns `{ authenticated: false }` when no cookie or expired
+- [ ] Authenticated DELETE request succeeds (cookie sent automatically)
 - [ ] Authenticated POST request succeeds
 - [ ] Authenticated PATCH request succeeds
 - [ ] Unauthenticated write request fails with 401
-- [ ] Token expiry handling
-- [ ] Token refresh flow
-- [ ] Logout clears all tokens
-- [ ] UI updates correctly based on auth state
-- [ ] HTTPS enforcement (production only)
 
-### Automated Testing
+**Token Lifecycle:**
+
+- [ ] Token refresh works via HttpOnly cookie (no body needed)
+- [ ] Auto-refresh triggers before token expiry
+- [ ] Expiry warning shown when token near expiration
+- [ ] Session persists across page reloads (cookie retained)
+
+**Security:**
+
+- [ ] HTTPS enforcement warning shown on HTTP (non-localhost)
+- [ ] No tokens visible in JavaScript (localStorage/sessionStorage empty)
+- [ ] DevTools Network tab shows no Authorization headers (cookies only)
+
+### Automated Testing (E2E with Playwright)
 
 ```javascript
-// Example Jest test
-describe('Auth module', () => {
-    test('stores token in sessionStorage by default', () => {
-        Auth.setToken('test-token', false);
-        expect(sessionStorage.getItem(Auth.TOKEN_KEY)).toBe('test-token');
-        expect(localStorage.getItem(Auth.TOKEN_KEY)).toBeNull();
+// Example Playwright test for cookie-based auth
+test('login sets HttpOnly cookies', async ({ page, context }) => {
+    await page.goto('/extending.php');
+
+    // Perform login
+    await page.click('#loginBtn');
+    await page.fill('#loginUsername', 'testuser');
+    await page.fill('#loginPassword', 'testpassword');
+    await page.click('#loginSubmit');
+
+    // Verify cookies are set (HttpOnly cookies visible in context)
+    const cookies = await context.cookies();
+    const accessCookie = cookies.find(c => c.name === 'litcal_access_token');
+    const refreshCookie = cookies.find(c => c.name === 'litcal_refresh_token');
+
+    expect(accessCookie).toBeDefined();
+    expect(accessCookie.httpOnly).toBe(true);
+    expect(refreshCookie).toBeDefined();
+    expect(refreshCookie.httpOnly).toBe(true);
+
+    // Verify no tokens in localStorage/sessionStorage
+    const localStorageToken = await page.evaluate(() =>
+        localStorage.getItem('litcal_jwt_token')
+    );
+    expect(localStorageToken).toBeNull();
+});
+
+test('authenticated request uses cookies automatically', async ({ page }) => {
+    // Login first (sets cookies)
+    await loginAsTestUser(page);
+
+    // Intercept API request to verify no Authorization header
+    let authHeaderUsed = false;
+    await page.route('**/data/**', async (route, request) => {
+        if (request.headers()['authorization']) {
+            authHeaderUsed = true;
+        }
+        await route.continue();
     });
 
-    test('stores token in localStorage when persistent', () => {
-        Auth.setToken('test-token', true);
-        expect(localStorage.getItem(Auth.TOKEN_KEY)).toBe('test-token');
-    });
+    // Perform authenticated action
+    await performCalendarUpdate(page);
 
-    test('detects expired tokens', () => {
-        const expiredToken = createExpiredToken(); // Helper to create JWT with past exp
-        Auth.setToken(expiredToken);
-        expect(Auth.isAuthenticated()).toBe(false);
-    });
+    // Verify Authorization header was NOT used (cookies only)
+    expect(authHeaderUsed).toBe(false);
 });
 ```
 
@@ -1263,7 +1270,7 @@ describe('Auth module', () => {
 | Phase 1   | Basic JWT authentication                   | 2-3 weeks        | COMPLETE    |
 | Phase 2   | Enhanced security (CSRF, auto-refresh)     | 1 week           | COMPLETE    |
 | Phase 2.4 | HttpOnly Cookie Authentication             | 1-2 days         | COMPLETE    |
-| Phase 2.5 | Full Cookie-Only Authentication            | 1 week           | Planned     |
+| Phase 2.5 | Full Cookie-Only Authentication            | 1 week           | COMPLETE    |
 | Phase 3   | UX enhancements (warnings, permission UI)  | 1 week           | Not started |
 | Phase 4   | Future enhancements (RBAC, MFA, OAuth)     | As needed        | Future      |
 

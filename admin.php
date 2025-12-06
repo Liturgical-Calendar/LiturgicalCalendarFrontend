@@ -1,6 +1,12 @@
 <?php
 
-include_once('common.php'); // provides $i18n and all API URLs
+include_once 'includes/common.php'; // provides $i18n and all API URLs
+include_once 'includes/messages.php';
+
+// Defensive initialization: ensure $messages is an array before use
+if (!isset($messages) || !is_array($messages)) {
+    $messages = [];
+}
 
 use LiturgicalCalendar\Frontend\ApiClient;
 use LiturgicalCalendar\Frontend\FormControls;
@@ -30,6 +36,17 @@ if (!Utilities::authenticated(AUTH_USERS)) {
 
 $FormControls = new FormControls($i18n);
 
+$messages = array_merge($messages, [
+    'commonsTemplate'    => $FormControls->getCommonsTemplate(),
+    'gradeTemplate'      => $FormControls->getGradeTemplate(),
+    'LOCALE'             => $i18n->LOCALE,
+    'LOCALE_WITH_REGION' => $i18n->LOCALE_WITH_REGION,
+    //'AvailableLocales'              => $SystemLocalesWithoutRegion,
+    //'AvailableLocalesWithRegion'    => $SystemLocalesWithRegion,
+    //'CountriesWithCatholicDioceses' => $CountriesWithCatholicDioceses,
+    //'DiocesesList'                  => $CatholicDiocesesByNation
+]);
+
 /**
  * Fetch missals and events using Guzzle-based client
  */
@@ -55,61 +72,28 @@ try {
     die('Error fetching events from API: ' . $e->getMessage());
 }
 
-/**
- * Prepare our translations strings
- */
-$messages = [
-    'EventKey'              => _('Event key'),
-    'Name'                  => _('Name'),
-    'Day'                   => _('Day'),
-    'Month'                 => _('Month'),
-    'Liturgical color'      => _('Liturgical color'),
-    'white'                 => _('white'),
-    'red'                   => _('red'),
-    'green'                 => _('green'),
-    'purple'                => _('purple'),
-    'rose'                  => _('rose'),
-    /**translators: in reference to the first year from which this liturgical event takes place */
-    'Since'                 => _('Since'),
-    /**translators: in reference to the year from which this liturgical event no longer needs to be dealt with */
-    'Until'                 => _('Until'),
-    /**translators: label of the form row */
-    'Designate Doctor'      => _('Designate Doctor of the Church'),
-    /**translators: label of the form row */
-    'New liturgical event'  => _('New liturgical event'),
-    /**translators: label of the form row */
-    'Change name or grade'  => _('Change name or grade'),
-    /**translators: label of the form row */
-    'Move liturgical event' => _('Move liturgical event'),
-    'Decree URL'            => _('Decree URL'),
-    'Decree Langs'          => _('Decree Language mappings'),
-    'Reason'                => _('Reason (in favor of liturgical event)'),
-    'commonsTemplate'       => $FormControls->getCommonsTemplate(),
-    'gradeTemplate'         => $FormControls->getGradeTemplate(),
-    'LOCALE'                => $i18n->LOCALE,
-];
 
 $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
 <hr><div class="d-flex justify-content-around">
-<button class="btn btn-sm btn-primary m-2" id="setPropertyAction" data-bs-toggle="modal" data-bs-target="#setPropertyActionPrompt"><i class="fas fa-edit me-2"></i>' . _('Change name or grade of existing liturgical event') . '</button>
-<button class="btn btn-sm btn-primary m-2" id="moveLiturgicalEventAction" data-bs-toggle="modal" data-bs-target="#moveLiturgicalEventActionPrompt"><i class="fas fa-calendar-day me-2"></i>' . _('Move liturgical event to new date') . '</button>
-<button class="btn btn-sm btn-primary m-2" id="newLiturgicalEventAction" data-bs-toggle="modal" data-bs-target="#newLiturgicalEventActionPrompt"><i class="far fa-calendar-plus me-2"></i>' . _('Create a new liturgical event') . '</button>
-<button class="btn btn-sm btn-primary m-2" id="makeDoctorAction" data-bs-toggle="modal" data-bs-target="#makeDoctorActionPrompt"><i class="fas fa-user-graduate me-2"></i>' . _('Designate Doctor of the Church from existing liturgical event') . '</button>
+<button class="btn btn-sm btn-primary m-2" id="setPropertyAction" data-bs-toggle="modal" data-bs-target="#setPropertyActionPrompt"><i class="fas fa-edit me-2"></i>' . $messages['SetPropertyButton'] . '</button>
+<button class="btn btn-sm btn-primary m-2" id="moveLiturgicalEventAction" data-bs-toggle="modal" data-bs-target="#moveLiturgicalEventActionPrompt"><i class="fas fa-calendar-day me-2"></i>' . $messages['MoveEventButton'] . '</button>
+<button class="btn btn-sm btn-primary m-2" id="newLiturgicalEventAction" data-bs-toggle="modal" data-bs-target="#newLiturgicalEventActionPrompt"><i class="far fa-calendar-plus me-2"></i>' . $messages['Modal - Create new event'] . '</button>
+<button class="btn btn-sm btn-primary m-2" id="makeDoctorAction" data-bs-toggle="modal" data-bs-target="#makeDoctorActionPrompt"><i class="fas fa-user-graduate me-2"></i>' . $messages['MakeDoctorButton'] . '</button>
 </div>
 </div>';
 
 ?>
 <!DOCTYPE html>
 <head>
-    <title>Administration tools</title>
+    <title><?php echo $messages['Page title - Admin']; ?></title>
     <?php include_once('./layout/head.php'); ?>
 </head>
 
 <body>
     <?php include_once('./layout/header.php'); ?>
-    <h1>Liturgical Calendar project Administration tools</h1>
+    <h1><?php echo $messages['Admin heading']; ?></h1>
     <div class="form-group col-md">
-        <label for="jsonFileSelect">Select JSON file to manage:</label>
+        <label for="jsonFileSelect"><?php echo $messages['Select JSON file to manage']; ?>:</label>
         <select class="form-select" id="jsonFileSelect">
             <option value="api/dev/jsondata/sourcedata/missals/propriumdesanctis_1970/propriumdesanctis_1970.json">Editio Typica 1970</option>
             <option value="api/dev/jsondata/sourcedata/missals/propriumdesanctis_2002/propriumdesanctis_2002.json">Editio Typica Tertia 2002</option>
@@ -121,8 +105,8 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
         </select>
     </div>
     <div class="d-flex m-2 justify-content-end">
-        <button class="btn btn-primary me-2" id="addColumnBtn"><i class="fas fa-plus-square me-2"></i>Add Column<i class="fas fa-columns ms-2"></i></button>
-        <button class="btn btn-primary me-2" id="saveDataBtn"><i class="fas fa-save me-2"></i>Save data</button>
+        <button class="btn btn-primary me-2" id="addColumnBtn"><i class="fas fa-plus-square me-2"></i><?php echo $messages['AddColumnButton']; ?><i class="fas fa-columns ms-2"></i></button>
+        <button class="btn btn-primary me-2" id="saveDataBtn"><i class="fas fa-save me-2"></i><?php echo $messages['SaveDataButton']; ?></button>
     </div>
     <div id="tableContainer">
         <table class="table" id="jsonDataTbl">
@@ -185,12 +169,12 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="setPropertyActionModalLabel"><?php echo _('Change name or grade of existing liturgical event') ?></h5>
+                    <h5 class="modal-title" id="setPropertyActionModalLabel"><?php echo $messages['SetPropertyButton']; ?></h5>
                 </div>
                 <?php Utilities::generateActionPromptModalBody(true, true); ?>
                 <div class="modal-footer">
-                    <button type="button" id="setPropertyButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-edit me-2"></i>Set Property</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _('Cancel') ?></button>
+                    <button type="button" id="setPropertyButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-edit me-2"></i><?php echo $messages['SetPropertyLabel']; ?></button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo $messages['CancelButton']; ?></button>
                 </div>
             </div>
         </div>
@@ -201,12 +185,12 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="moveLiturgicalEventActionModalLabel"><?php echo _('Move liturgical event to new date') ?></h5>
+                    <h5 class="modal-title" id="moveLiturgicalEventActionModalLabel"><?php echo $messages['MoveEventButton']; ?></h5>
                 </div>
                 <?php Utilities::generateActionPromptModalBody(true, false); ?>
                 <div class="modal-footer">
-                    <button type="button" id="moveLiturgicalEventButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-day me-2"></i><?php echo _('Move liturgical event') ?></button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _('Cancel') ?></button>
+                    <button type="button" id="moveLiturgicalEventButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-day me-2"></i><?php echo $messages['MoveLiturgicalEventLabel']; ?></button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo $messages['CancelButton']; ?></button>
                 </div>
             </div>
         </div>
@@ -217,13 +201,13 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="newLiturgicalEventActionModalLabel"><?php echo _('Create a new liturgical event') ?></h5>
+                    <h5 class="modal-title" id="newLiturgicalEventActionModalLabel"><?php echo $messages['Modal - Create new event']; ?></h5>
                 </div>
                 <?php Utilities::generateActionPromptModalBody(false, false); ?>
                 <div class="modal-footer">
-                    <button type="button" id="newLiturgicalEventFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus me-2"></i><?php echo _('New liturgical event from existing') ?></button>
-                    <button type="button" id="newLiturgicalEventExNovoButton" class="btn btn-primary actionPromptButton"><i class="fas fa-calendar-plus me-2"></i><?php echo _('New liturgical event ex novo') ?></button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _('Cancel') ?></button>
+                    <button type="button" id="newLiturgicalEventFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus me-2"></i><?php echo $messages['NewEventFromExistingButton']; ?></button>
+                    <button type="button" id="newLiturgicalEventExNovoButton" class="btn btn-primary actionPromptButton"><i class="fas fa-calendar-plus me-2"></i><?php echo $messages['NewEventExNovoButton']; ?></button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo $messages['CancelButton']; ?></button>
                 </div>
             </div>
         </div>
@@ -234,12 +218,12 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="makeDoctorActionModalLabel"><?php echo _('Designate Doctor of the Church from existing liturgical event') ?></h5>
+                    <h5 class="modal-title" id="makeDoctorActionModalLabel"><?php echo $messages['MakeDoctorButton']; ?></h5>
                 </div>
                 <?php Utilities::generateActionPromptModalBody(true, false); ?>
                 <div class="modal-footer">
-                    <button type="button" id="designateDoctorButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-user-graduate me-2"></i><?php echo _('Designate Doctor of the Church') ?></button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo _('Cancel') ?></button>
+                    <button type="button" id="designateDoctorButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-user-graduate me-2"></i><?php echo $messages['Designate Doctor']; ?></button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo $messages['CancelButton']; ?></button>
                 </div>
             </div>
         </div>

@@ -2,7 +2,7 @@
 
 use LiturgicalCalendar\Frontend\Utilities;
 
-include_once 'common.php';
+include_once 'includes/common.php';
 
 $ABOUT_US = _('The Liturgical Calendar project is curated by a group of volunteer catholic programmers and experts in Catholic liturgy, seeking to serve the Church.');
 ?>
