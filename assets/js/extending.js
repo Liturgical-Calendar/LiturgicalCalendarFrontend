@@ -3186,8 +3186,40 @@ const diocesanCalendarNationalDependencyChanged = (ev) => {
         removePrompt.remove();
     }
 
-    // Reset selected diocese
-    document.getElementById('diocesanCalendarDioceseName').value = '';
+    // Reset selected diocese and toggle disabled state based on nation selection
+    const dioceseInput = document.getElementById('diocesanCalendarDioceseName');
+    const dioceseHelp = document.getElementById('diocesanCalendarDioceseNameHelp');
+    const diocesanCalendarGroup = document.getElementById('diocesanCalendarGroup');
+    const diocesanCalendarLocales = document.getElementById('diocesanCalendarLocales');
+    const currentLocalizationDiocesan = document.getElementById('currentLocalizationDiocesan');
+    const diocesanCalendarTimezone = document.getElementById('diocesanCalendarTimezone');
+
+    dioceseInput.value = '';
+    if (currentSelectedNation === '') {
+        // Disable nation-dependent inputs
+        dioceseInput.disabled = true;
+        dioceseHelp.classList.remove('d-none');
+        diocesanCalendarGroup.disabled = true;
+        diocesanCalendarLocales.disabled = true;
+        $(diocesanCalendarLocales).multiselect('disable');
+        currentLocalizationDiocesan.disabled = true;
+        diocesanCalendarTimezone.disabled = true;
+    } else {
+        // Enable nation-dependent inputs
+        dioceseInput.disabled = false;
+        dioceseHelp.classList.add('d-none');
+        diocesanCalendarGroup.disabled = false;
+        diocesanCalendarLocales.disabled = false;
+        $(diocesanCalendarLocales).multiselect('enable');
+        currentLocalizationDiocesan.disabled = false;
+        diocesanCalendarTimezone.disabled = false;
+    }
+
+    // Disable diocese-dependent sections (carousel, forms) when nation changes
+    // They will be re-enabled when a diocese is selected
+    document.getElementById('diocesanCalendarDefinitionCardLinks').classList.add('diocesan-disabled');
+    document.getElementById('carouselExampleIndicators').classList.add('diocesan-disabled');
+    document.getElementById('diocesanOverridesContainer').classList.add('diocesan-disabled');
 
     // Reset the list of dioceses for the current selected nation
     const diocesesForNation = Object.freeze(DiocesesList.find(item => item.country_iso.toUpperCase() === currentSelectedNation)?.dioceses ?? null);
@@ -3274,6 +3306,11 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
     if (selectedOption) {
         ev.target.classList.remove('is-invalid');
         resetOtherLocalizationInputs();
+
+        // Enable diocese-dependent sections (carousel, forms, overrides)
+        document.getElementById('diocesanCalendarDefinitionCardLinks').classList.remove('diocesan-disabled');
+        document.getElementById('carouselExampleIndicators').classList.remove('diocesan-disabled');
+        document.getElementById('diocesanOverridesContainer').classList.remove('diocesan-disabled');
         API.category = 'diocese';
         API.key = selectedOption.getAttribute('data-value');
         console.log('selected diocese with key = ' + API.key);
@@ -3312,6 +3349,10 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
         }
     } else {
         ev.target.classList.add('is-invalid');
+        // Keep diocese-dependent sections disabled when no valid diocese is selected
+        document.getElementById('diocesanCalendarDefinitionCardLinks').classList.add('diocesan-disabled');
+        document.getElementById('carouselExampleIndicators').classList.add('diocesan-disabled');
+        document.getElementById('diocesanOverridesContainer').classList.add('diocesan-disabled');
     }
 }
 

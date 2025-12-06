@@ -87,3 +87,10 @@
     font-weight: 400;
     font-style: normal;
 }
+
+/* Disabled state for diocesan calendar sections until diocese is selected */
+.diocesan-disabled {
+    pointer-events: none;
+    opacity: 0.5;
+    user-select: none;
+}

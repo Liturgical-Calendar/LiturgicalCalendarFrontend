@@ -285,8 +285,6 @@ $messages = [
     // =========================================================================
     /** translators: validation error when field is empty */
     'This value cannot be empty.'            => _('This value cannot be empty.'),
-    /** translators: validation error for unknown diocese */
-    'Diocese not found'                      => _('This diocese does not seem to exist? Please choose from a value in the list to retrieve an existing diocese, or ignore if creating a new diocesan calendar.'),
     /** translators: validation error for unknown missal */
     'Missal not found'                       => _('This Missal is unknown to the Liturgical Calendar API. Please choose from a value in the list, or contact the curator of the API to have the Missal added to known language edition Missals.'),
 
@@ -301,6 +299,8 @@ $messages = [
     // =========================================================================
     /** translators: tooltip explaining the first step to create a national calendar */
     'Tooltip - National calendar first step' => _('please keep in mind that the first step to creating a national calendar, is to translate the already existing calendar data into the correct language. This can be done on the LitCal translation server (see above for details)'),
+    /** translators: help text shown when diocese input is disabled */
+    'Select a national calendar first'       => _('Select a national calendar first to see available dioceses.'),
     /** translators: tooltip explaining the Eternal High Priest feast */
     'Tooltip - Eternal High Priest'          => _('In 2012, Pope Benedict XVI gave faculty to the Episcopal Conferences to insert the Feast of Jesus Christ Eternal High Priest in their own liturgical calendars on the Thursday after Pentecost.'),
     /** translators: tooltip explaining published Roman Missals selection */
