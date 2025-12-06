@@ -595,6 +595,11 @@ function expiryWarningCallback(timeUntilExpiry) {
  * Can be called after login to restart the warning system
  */
 function startSessionExpiryWarning() {
+    // Only start expiry warnings when authenticated
+    if (!Auth.isAuthenticated()) {
+        return;
+    }
+
     // Reset the warning flag
     expiryWarningShown = false;
 
