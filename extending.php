@@ -8,6 +8,11 @@ include_once 'includes/common.php'; // provides $i18n and all API URLs
 include_once 'includes/messages.php'; // translation strings
 /** @var array<string,string> $messages */
 
+// Defensive initialization: ensure $messages is an array before use
+if (!isset($messages) || !is_array($messages)) {
+    $messages = [];
+}
+
 $FormControls = new FormControls($i18n);
 
 $dayOfWeekFmt = IntlDateFormatter::create($i18n->LOCALE, IntlDateFormatter::FULL, IntlDateFormatter::NONE, 'UTC', IntlDateFormatter::GREGORIAN, 'EEEE');
