@@ -66,6 +66,7 @@ let loginModal = null;
 let loginSuccessCallback = null;
 let expiryWarningShown = false;
 let sessionExpiryToast = null;
+let sessionExpiryTimeout = null;
 
 /**
  * Initialize authentication UI components
@@ -300,11 +301,9 @@ async function handleLogin() {
         updateAuthUI();
         initPermissionUI();
 
-        // Reset expiry warning flag for new session
-        expiryWarningShown = false;
-
-        // Start auto-refresh for new session
+        // Start auto-refresh and expiry warning for new session
         Auth.startAutoRefresh();
+        startSessionExpiryWarning();
 
         // Show success message
         if (typeof toastr !== 'undefined') {
@@ -456,14 +455,21 @@ async function handleExtendSession() {
                 <?php echo json_encode(_('Extending...')); ?>;
         }
 
+        // Clear the auto-logout timeout
+        if (sessionExpiryTimeout) {
+            clearTimeout(sessionExpiryTimeout);
+            sessionExpiryTimeout = null;
+        }
+
         // Refresh the token
         await Auth.refreshToken();
 
         // Hide the warning toast
         hideSessionExpiryToast();
 
-        // Reset the warning flag so it can show again for the new session
-        expiryWarningShown = false;
+        // Restart auto-refresh and expiry warning for the new session
+        Auth.startAutoRefresh();
+        startSessionExpiryWarning();
 
         // Show success notification
         if (typeof toastr !== 'undefined') {
@@ -501,17 +507,109 @@ async function handleExtendSession() {
  */
 async function handleSessionExpiryLogout() {
     if (confirm(<?php echo json_encode(_('Are you sure you want to logout?')); ?>)) {
+        // Clear the auto-logout timeout
+        if (sessionExpiryTimeout) {
+            clearTimeout(sessionExpiryTimeout);
+            sessionExpiryTimeout = null;
+        }
         hideSessionExpiryToast();
         await Auth.logout();
     }
 }
 
 /**
+ * Handle automatic logout when session expires
+ * Called when user ignores the expiry warning
+ */
+async function handleAutoLogout() {
+    // Clear the timeout reference
+    sessionExpiryTimeout = null;
+
+    // Hide the warning toast
+    hideSessionExpiryToast();
+
+    // Show notification
+    if (typeof toastr !== 'undefined') {
+        toastr.warning(
+            <?php echo json_encode(_('Your session has expired. Please login again.')); ?>,
+            <?php echo json_encode(_('Session Expired')); ?>
+        );
+    }
+
+    // Clear tokens and reload (this will show the logged-out state)
+    Auth.clearTokens();
+    Auth.stopAllTimers();
+
+    // Update UI to show logged-out state
+    updateAuthUI();
+    initPermissionUI();
+}
+
+/**
+ * Expiry warning callback - handles the warning display and timers
+ * Extracted to a named function so it can be reused after re-login
+ *
+ * @param {number} timeUntilExpiry - Seconds until token expires
+ */
+function expiryWarningCallback(timeUntilExpiry) {
+    // Only show and set up timers once per expiry cycle
+    if (expiryWarningShown) {
+        // Update the message if toast is already visible
+        const messageElement = document.getElementById('sessionExpiryMessage');
+        if (messageElement) {
+            messageElement.textContent = formatExpiryMessage(timeUntilExpiry);
+        }
+        return;
+    }
+
+    expiryWarningShown = true;
+
+    // Stop auto-refresh - user must explicitly extend session
+    Auth.stopAutoRefresh();
+
+    // Set auto-logout timer for when the token actually expires
+    if (sessionExpiryTimeout) {
+        clearTimeout(sessionExpiryTimeout);
+    }
+    sessionExpiryTimeout = setTimeout(handleAutoLogout, timeUntilExpiry * 1000);
+
+    // Show the warning toast
+    showSessionExpiryToast(timeUntilExpiry);
+}
+
+/**
+ * Start or restart the session expiry warning timer
+ * Can be called after login to restart the warning system
+ */
+function startSessionExpiryWarning() {
+    // Reset the warning flag
+    expiryWarningShown = false;
+
+    // Clear any existing auto-logout timeout
+    if (sessionExpiryTimeout) {
+        clearTimeout(sessionExpiryTimeout);
+        sessionExpiryTimeout = null;
+    }
+
+    // Stop any existing expiry warning timer before starting a new one
+    Auth.stopExpiryWarning();
+
+    // Start the expiry warning timer with our callback
+    Auth.startExpiryWarning(expiryWarningCallback);
+}
+
+/**
  * Initialize the session expiry warning system
  * Sets up the Bootstrap Toast and its event handlers
+ *
+ * Flow:
+ * 1. Auto-refresh runs normally until warning threshold
+ * 2. When warning appears: stop auto-refresh, set auto-logout timer
+ * 3. User clicks "Extend": refresh token, restart auto-refresh
+ * 4. User does nothing: auto-logout when token expires
  */
 function initSessionExpiryWarning() {
-    // Set up event handlers for toast buttons
+    // Set up event handlers for toast buttons (only once)
     const extendButton = document.getElementById('sessionExpiryExtend');
     const logoutButton = document.getElementById('sessionExpiryLogout');
 
@@ -523,20 +621,17 @@ function initSessionExpiryWarning() {
         logoutButton.addEventListener('click', handleSessionExpiryLogout);
     }
 
-    // Start the expiry warning timer with our callback
-    Auth.startExpiryWarning((timeUntilExpiry) => {
-        // Only show once per expiry cycle
-        if (expiryWarningShown) {
-            // Update the message if toast is already visible
-            const messageElement = document.getElementById('sessionExpiryMessage');
-            if (messageElement) {
-                messageElement.textContent = formatExpiryMessage(timeUntilExpiry);
-            }
-            return;
-        }
+    // Handle toast dismissal via X button - reset so warning can reappear
+    const toastElement = document.getElementById('sessionExpiryToast');
+    if (toastElement) {
+        toastElement.addEventListener('hidden.bs.toast', () => {
+            // If dismissed without extending, allow warning to reappear
+            // but keep the auto-logout timer running
+            expiryWarningShown = false;
+        });
+    }
 
-        expiryWarningShown = true;
-        showSessionExpiryToast(timeUntilExpiry);
-    });
+    // Start the expiry warning timer
+    startSessionExpiryWarning();
 }
 </script>
