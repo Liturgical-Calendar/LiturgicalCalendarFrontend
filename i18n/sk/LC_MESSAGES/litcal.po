@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-06 05:22+0000\n"
+"POT-Creation-Date: 2025-12-06 08:43+0000\n"
 "PO-Revision-Date: 2025-12-06 05:43+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -1155,7 +1155,7 @@ msgstr ""
 "Kancelár diecézy Charlottetown prispel údajmi o liturgickom kalendári pre "
 "Kanadu v angličtine aj francúzštine"
 
-#: src/Utilities.php:226
+#: src/Utilities.php:267
 msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
@@ -1163,28 +1163,28 @@ msgstr ""
 "Zdá sa, že táto liturgická udalosť neexistuje. Prosím, vyberte hodnotu zo "
 "zoznamu."
 
-#: src/Utilities.php:227
+#: src/Utilities.php:268
 msgid "This liturgical event does not exist, so it will be created."
 msgstr "Táto liturgická udalosť neexistuje, preto sa vytvorí."
 
-#: src/Utilities.php:232
+#: src/Utilities.php:273
 msgid "Choose from existing liturgical events"
 msgstr "Vyber si z existujúcich liturgických udalostí"
 
-#: src/Utilities.php:232
+#: src/Utilities.php:273
 msgid "Choose from existing liturgical events (or create a new one)"
 msgstr "Vyber si zo súčasných liturgických udalostí (alebo si vytvor novú)"
 
-#: src/Utilities.php:238
+#: src/Utilities.php:279
 msgid "Property to change"
 msgstr "Vlastnosť na zmenu"
 
 #. translators: form field label for the name of a liturgical event
-#: src/Utilities.php:240 src/FormControls.php:53 includes/messages.php:17
+#: src/Utilities.php:281 src/FormControls.php:53 includes/messages.php:17
 msgid "Name"
 msgstr "Meno"
 
-#: src/Utilities.php:241 src/FormControls.php:171
+#: src/Utilities.php:282 src/FormControls.php:171
 msgid "Grade"
 msgstr "Stupeň"
 

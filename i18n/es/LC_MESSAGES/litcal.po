@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-06 05:22+0000\n"
+"POT-Creation-Date: 2025-12-06 08:43+0000\n"
 "PO-Revision-Date: 2025-12-06 05:43+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
@@ -1180,7 +1180,7 @@ msgstr ""
 "Canciller de la Diócesis de Charlottetown, contribuyó con datos del "
 "calendario litúrgico para Canadá en inglés y francés"
 
-#: src/Utilities.php:226
+#: src/Utilities.php:267
 msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
@@ -1188,28 +1188,28 @@ msgstr ""
 "Este evento litúrgico no parece existir. Por favor, elige un valor de la "
 "lista."
 
-#: src/Utilities.php:227
+#: src/Utilities.php:268
 msgid "This liturgical event does not exist, so it will be created."
 msgstr "Este evento litúrgico no existe, así que será creado."
 
-#: src/Utilities.php:232
+#: src/Utilities.php:273
 msgid "Choose from existing liturgical events"
 msgstr "Elige entre los eventos litúrgicos existentes"
 
-#: src/Utilities.php:232
+#: src/Utilities.php:273
 msgid "Choose from existing liturgical events (or create a new one)"
 msgstr "Elige entre los eventos litúrgicos existentes (o crea uno nuevo)"
 
-#: src/Utilities.php:238
+#: src/Utilities.php:279
 msgid "Property to change"
 msgstr "Propiedad a cambiar"
 
 #. translators: form field label for the name of a liturgical event
-#: src/Utilities.php:240 src/FormControls.php:53 includes/messages.php:17
+#: src/Utilities.php:281 src/FormControls.php:53 includes/messages.php:17
 msgid "Name"
 msgstr "Nombre"
 
-#: src/Utilities.php:241 src/FormControls.php:171
+#: src/Utilities.php:282 src/FormControls.php:171
 msgid "Grade"
 msgstr "Grado"
 
@@ -1346,7 +1346,8 @@ msgstr "Ocultar contraseña"
 msgid "Your session will expire in less than %d minute. Please save your work."
 msgid_plural ""
 "Your session will expire in less than %d minutes. Please save your work."
-msgstr[0] "Tu sesión expirará en menos de %d minuto. Por favor, guarda tu trabajo."
+msgstr[0] ""
+"Tu sesión expirará en menos de %d minuto. Por favor, guarda tu trabajo."
 msgstr[1] ""
 "Tu sesión expirará en menos de %d minutos. Por favor, guarda tu trabajo."
 

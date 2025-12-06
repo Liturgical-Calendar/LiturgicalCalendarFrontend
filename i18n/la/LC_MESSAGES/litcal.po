@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-06 05:22+0000\n"
+"POT-Creation-Date: 2025-12-06 08:43+0000\n"
 "PO-Revision-Date: 2025-12-06 05:43+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
@@ -1157,35 +1157,35 @@ msgstr ""
 "Cancellarius Dioecesis de Charlottetown, contulit data calendarii liturgici "
 "pro Canada in Anglico et Gallico"
 
-#: src/Utilities.php:226
+#: src/Utilities.php:267
 msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
 msgstr ""
 "Hic eventus liturgicus non videtur exsistere? Elige ex valore in indice."
 
-#: src/Utilities.php:227
+#: src/Utilities.php:268
 msgid "This liturgical event does not exist, so it will be created."
 msgstr "Hic eventus liturgicus non exsistit, ita creabitur."
 
-#: src/Utilities.php:232
+#: src/Utilities.php:273
 msgid "Choose from existing liturgical events"
 msgstr "Elige ex eventibus liturgicis exsistentibus"
 
-#: src/Utilities.php:232
+#: src/Utilities.php:273
 msgid "Choose from existing liturgical events (or create a new one)"
 msgstr "Elige ex eventibus liturgicis exsistentibus (vel novum crea)"
 
-#: src/Utilities.php:238
+#: src/Utilities.php:279
 msgid "Property to change"
 msgstr "Proprietas mutanda"
 
 #. translators: form field label for the name of a liturgical event
-#: src/Utilities.php:240 src/FormControls.php:53 includes/messages.php:17
+#: src/Utilities.php:281 src/FormControls.php:53 includes/messages.php:17
 msgid "Name"
 msgstr "Nomen"
 
-#: src/Utilities.php:241 src/FormControls.php:171
+#: src/Utilities.php:282 src/FormControls.php:171
 msgid "Grade"
 msgstr "Gradus"
 
@@ -1321,8 +1321,10 @@ msgstr "Tesseram absconde"
 msgid "Your session will expire in less than %d minute. Please save your work."
 msgid_plural ""
 "Your session will expire in less than %d minutes. Please save your work."
-msgstr[0] "Sessio tua expletur in minus quam %d minuta. Quaeso, serva opus tuum."
-msgstr[1] "Sessio tua expletur in minus quam %d minutis. Quaeso, serva opus tuum."
+msgstr[0] ""
+"Sessio tua expletur in minus quam %d minuta. Quaeso, serva opus tuum."
+msgstr[1] ""
+"Sessio tua expletur in minus quam %d minutis. Quaeso, serva opus tuum."
 
 #: includes/login-modal.php:170
 msgid "Session Expiring"
