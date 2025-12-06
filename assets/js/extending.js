@@ -109,9 +109,10 @@ const handleDeleteResponse = async (response, onSuccessCleanup, successMessage) 
     if (response.ok) {
         onSuccessCleanup();
         toastr["success"](successMessage, Messages['Success']);
-        response.json().then(json => {
+        try {
+            const json = await response.json();
             console.log(json);
-        });
+        } catch { /* empty or non-JSON body - ignore */ }
     } else if (response.status === 400) {
         const json = await response.json();
         console.error(`${response.status} ${json.response}: ${json.description}`);
