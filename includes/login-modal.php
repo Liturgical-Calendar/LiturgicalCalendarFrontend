@@ -530,7 +530,7 @@ async function handleSessionExpiryLogout() {
  * Handle automatic logout when session expires
  * Called when user ignores the expiry warning
  */
-async function handleAutoLogout() {
+function handleAutoLogout() {
     // Clear the timeout reference
     sessionExpiryTimeout = null;
 
