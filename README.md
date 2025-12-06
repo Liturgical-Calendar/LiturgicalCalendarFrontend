@@ -180,7 +180,8 @@ The following `Auth` methods are deprecated and will return `null` or show warni
 
 - `Auth.getToken()` - Tokens no longer accessible to JavaScript
 - `Auth.getPayload()` - Use `checkAuthAsync()` for user info
-- `Auth.storeTokens()` - Tokens stored by API via Set-Cookie header
+- `Auth.setToken()` - Tokens stored by API via Set-Cookie header
+- `Auth.setRefreshToken()` - Tokens stored by API via Set-Cookie header
 
 **Helper Function for Custom Cookies:**
 
