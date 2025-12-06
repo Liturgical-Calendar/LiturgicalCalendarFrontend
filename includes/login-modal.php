@@ -394,7 +394,9 @@ function initPermissionUI() {
  * @returns {string} Localized message
  */
 function formatExpiryMessage(seconds) {
-    const minutes = Math.ceil(seconds / 60);
+    // Clamp to minimum of 1 second to avoid "0 minutes" or negative values
+    const clampedSeconds = Math.max(1, Math.floor(seconds));
+    const minutes = Math.ceil(clampedSeconds / 60);
     // Use localized message template with proper singular/plural forms
     const singular = <?php echo json_encode(ngettext(
         'Your session will expire in less than %d minute.',
