@@ -130,10 +130,10 @@ $DioceseGroupHelp     = $messages['DioceseGroupHelp'];
 
 
 $buttonGroup = '<hr><div class="d-flex justify-content-around">
-<button class="btn btn-sm btn-primary m-2 litcalActionButton" id="makePatronAction" data-requires-auth="true" data-bs-toggle="modal" data-bs-target="#makePatronActionPrompt"><i class="fas fa-user-graduate me-2"></i>' . $messages['PatronButton'] . '</button>
-<button class="btn btn-sm btn-primary m-2 litcalActionButton" id="setPropertyAction" data-requires-auth="true" data-bs-toggle="modal" data-bs-target="#setPropertyActionPrompt"><i class="fas fa-edit me-2"></i>' . $messages['SetPropertyButton'] . '</button>
-<button class="btn btn-sm btn-primary m-2 litcalActionButton" id="moveLiturgicalEventAction" data-requires-auth="true" data-bs-toggle="modal" data-bs-target="#moveLiturgicalEventActionPrompt"><i class="fas fa-calendar-day me-2"></i>' . $messages['MoveEventButton'] . '</button>
-<button class="btn btn-sm btn-primary m-2 litcalActionButton" id="newLiturgicalEventAction" data-requires-auth="true" data-bs-toggle="modal" data-bs-target="#newLiturgicalEventActionPrompt"><i class="far fa-calendar-plus me-2"></i>' . $messages['CreateEventButton'] . '</button>
+<button class="btn btn-sm btn-primary m-2 d-none litcalActionButton" id="makePatronAction" data-requires-auth="true" data-bs-toggle="modal" data-bs-target="#makePatronActionPrompt"><i class="fas fa-user-graduate me-2"></i>' . $messages['PatronButton'] . '</button>
+<button class="btn btn-sm btn-primary m-2 d-none litcalActionButton" id="setPropertyAction" data-requires-auth="true" data-bs-toggle="modal" data-bs-target="#setPropertyActionPrompt"><i class="fas fa-edit me-2"></i>' . $messages['SetPropertyButton'] . '</button>
+<button class="btn btn-sm btn-primary m-2 d-none litcalActionButton" id="moveLiturgicalEventAction" data-requires-auth="true" data-bs-toggle="modal" data-bs-target="#moveLiturgicalEventActionPrompt"><i class="fas fa-calendar-day me-2"></i>' . $messages['MoveEventButton'] . '</button>
+<button class="btn btn-sm btn-primary m-2 d-none litcalActionButton" id="newLiturgicalEventAction" data-requires-auth="true" data-bs-toggle="modal" data-bs-target="#newLiturgicalEventActionPrompt"><i class="far fa-calendar-plus me-2"></i>' . $messages['CreateEventButton'] . '</button>
 </div>';
 
 ?><!doctype html>
@@ -177,7 +177,7 @@ if (isset($_GET['choice'])) {
                         <div class="col col-md-3">
                             <div>
                                 <label for="widerRegionLocales" class="fw-bold"><?php echo $messages['Locales']; ?></label>
-                                <select class="form-select calendarLocales" id="widerRegionLocales" data-requires-auth="true" multiple="multiple">
+                                <select class="form-select calendarLocales" id="widerRegionLocales" data-requires-auth="true" disabled multiple="multiple">
                                 <?php foreach ($SystemLocalesWithRegion as $locale => $lang_region) {
                                         echo "<option value='$locale'>$lang_region</option>";
                                 } ?>
@@ -186,7 +186,7 @@ if (isset($_GET['choice'])) {
                         </div>
                         <div class="col col-md-3">
                             <label for="currentLocalizationWiderRegion" class="fw-bold"><?php echo $messages['Current localization']; ?></label>
-                            <select class="form-select currentLocalizationChoices" id="currentLocalizationWiderRegion" data-requires-auth="true">
+                            <select class="form-select currentLocalizationChoices" id="currentLocalizationWiderRegion" data-requires-auth="true" disabled>
                                 <?php
                                 foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
                                     echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
@@ -195,7 +195,7 @@ if (isset($_GET['choice'])) {
                             </select>
                         </div>
                         <div class="col col-md-3">
-                            <button class="btn btn-danger" id="removeExistingCalendarDataBtn" data-requires-auth="true" disabled data-bs-toggle="modal" data-bs-target="#removeCalendarDataPrompt">
+                            <button class="btn btn-danger d-none" id="removeExistingCalendarDataBtn" data-requires-auth="true" disabled data-bs-toggle="modal" data-bs-target="#removeCalendarDataPrompt">
                                 <i class="far fa-trash-alt me-2"></i>
                                 <?php echo $messages['RemoveDataButton']; ?>
                             </button>
@@ -207,12 +207,12 @@ if (isset($_GET['choice'])) {
                         </div>
                         <div class="card-body">
                             <hr>
-                            <form class="needs-validation regionalNationalDataForm" id="widerRegionForm" data-requires-auth="true" novalidate>
+                            <form class="needs-validation regionalNationalDataForm opacity-50" id="widerRegionForm" data-requires-auth="true" novalidate>
                             </form>
                             <?php echo $buttonGroup ?>
                         </div>
                         <div class="card-footer text-center">
-                            <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeWiderRegionData" data-requires-auth="true" data-category="widerregion" disabled>
+                            <button class="btn btn-lg btn-primary m-2 d-none serializeRegionalNationalData" id="serializeWiderRegionData" data-requires-auth="true" data-category="widerregion" disabled>
                                 <i class="fas fa-save me-2"></i>
                                 <?php echo $messages['Save Wider Region Calendar Data']; ?>
                             </button>
@@ -241,7 +241,7 @@ if (isset($_GET['choice'])) {
                         </div>
                         <div class="form-group col col-md-3">
                             <label for="removeExistingCalendarDataBtn" class="fw-bold"></label>
-                            <button class="btn btn-danger m-2 form-control" id="removeExistingCalendarDataBtn" data-requires-auth="true" disabled data-bs-toggle="modal" data-bs-target="#removeCalendarDataPrompt">
+                            <button class="btn btn-danger m-2 d-none form-control" id="removeExistingCalendarDataBtn" data-requires-auth="true" disabled data-bs-toggle="modal" data-bs-target="#removeCalendarDataPrompt">
                                 <i class="far fa-trash-alt me-2"></i>
                                 <?php echo $messages['RemoveDataButton']; ?>
                             </button>
@@ -255,7 +255,7 @@ if (isset($_GET['choice'])) {
 
                             <div id="nationalCalendarSettingsContainer" class="container">
                                 <h3 id="nationalCalendarSettingsTitle" class="text-center"><?php echo $messages['National calendar settings']; ?><i class="fas fa-info-circle ms-4 d-inline-block text-black" style="--bs-text-opacity: .3;" role="button" title="<?php echo htmlspecialchars($messages['Tooltip - National calendar first step'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></i></h3>
-                                <form id="nationalCalendarSettingsForm" class="row justify-content-center align-items-baseline needs-validation" data-requires-auth="true" novalidate>
+                                <form id="nationalCalendarSettingsForm" class="row justify-content-center align-items-baseline needs-validation opacity-50" data-requires-auth="true" novalidate>
                                     <div class="form-group col col-md-3">
                                         <label for="nationalCalendarSettingEpiphany"><?php echo $messages['EPIPHANY']; ?></label>
                                         <select class="form-select" id="nationalCalendarSettingEpiphany">
@@ -338,12 +338,12 @@ if (isset($_GET['choice'])) {
                                 </form>
                             </div>
                             <hr>
-                            <form class="needs-validation regionalNationalDataForm" id="nationalCalendarForm" data-requires-auth="true" novalidate>
+                            <form class="needs-validation regionalNationalDataForm opacity-50" id="nationalCalendarForm" data-requires-auth="true" novalidate>
                             </form>
                             <?php echo $buttonGroup ?>
                         </div>
                         <div class="card-footer text-center">
-                            <button class="btn btn-lg btn-primary m-2 serializeRegionalNationalData" id="serializeNationalCalendarData" data-requires-auth="true" data-category="nation" disabled>
+                            <button class="btn btn-lg btn-primary m-2 d-none serializeRegionalNationalData" id="serializeNationalCalendarData" data-requires-auth="true" data-category="nation" disabled>
                                 <i class="fas fa-save me-2"></i>
                                 <?php echo $messages['Save National Calendar Data']; ?>
                             </button>
@@ -584,7 +584,7 @@ if (isset($_GET['choice'])) {
                 <div class="container">
                     <div class="row">
                         <div class="col text-center">
-                            <button class="btn btn-lg btn-primary m-1" id="saveDiocesanCalendar_btn" data-requires-auth="true">
+                            <button class="btn btn-lg btn-primary m-1 d-none" id="saveDiocesanCalendar_btn" data-requires-auth="true">
                                 <i class="fas fa-save me-2"></i>
                                 <?php echo $messages['Save Diocesan Calendar Data']; ?>
                             </button>
