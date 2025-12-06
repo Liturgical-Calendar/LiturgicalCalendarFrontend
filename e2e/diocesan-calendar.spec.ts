@@ -599,7 +599,10 @@ test.describe('Diocesan Calendar Form - Validation', () => {
             // Check if it's a "Failed to fetch" error (network/CORS issue) - skip these
             const errorText = await page.locator('.toast-error, .toast.bg-danger').textContent();
             if (errorText?.includes('Failed to fetch')) {
-                test.skip(true, 'Network error (Failed to fetch) - possible CORS issue with empty litcal validation');
+                // This occurs when the API returns an error response without proper CORS headers
+                // for credentialed requests. The API's error handling middleware needs to include
+                // Access-Control-Allow-Credentials: true and specific origin (not *) on error responses.
+                test.skip(true, 'Network error (Failed to fetch) - API CORS headers missing on error response');
                 return;
             }
             // For other error toasts, fail the test to surface backend regressions

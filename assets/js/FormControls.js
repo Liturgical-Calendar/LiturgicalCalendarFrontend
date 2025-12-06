@@ -46,6 +46,13 @@ const getMonthMaxDay = (month) => month === Month.FEBRUARY ? 28 : (MonthsOfThirt
 const DaysOfTheWeek = Object.freeze(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
 
 /**
+ * The four liturgical colors used in the Roman Rite.
+ * @readonly
+ * @type {readonly ['white', 'red', 'purple', 'green']}
+ */
+const LITURGICAL_COLORS = Object.freeze(['white', 'red', 'purple', 'green']);
+
+/**
  * A mapping of liturgical event ranks to numerical values for sorting purposes.
  * @readonly
  * @enum {(0|1|2|3|4|5|6|7)}
@@ -266,6 +273,67 @@ class FormControls {
     static index = null;
 
     /**
+     * Appends a color option to the given select element.
+     * @param {HTMLSelectElement} selectElement - The select element to append the option to.
+     * @param {string} colorValue - The color value (e.g., 'white', 'red', 'purple', 'green').
+     * @param {string[]} selectedColors - Array of currently selected color values.
+     * @static
+     */
+    static appendColorOption(selectElement, colorValue, selectedColors) {
+        const option = document.createElement('option');
+        option.value = colorValue;
+        option.innerText = (Messages[colorValue] ?? colorValue).toUpperCase();
+        option.selected = selectedColors.includes(colorValue);
+        selectElement.appendChild(option);
+    }
+
+    /**
+     * Populates a month select element with localized month options.
+     * @param {HTMLSelectElement} selectElement - The select element to populate.
+     * @param {number|null} selectedMonth - The month number (1-12) to select, or null for no selection.
+     * @static
+     */
+    static populateMonthOptions(selectElement, selectedMonth = null) {
+        const formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
+        for (let i = 0; i < 12; i++) {
+            const monthDate = new Date(Date.UTC(0, i, 2, 0, 0, 0));
+            const option = document.createElement('option');
+            option.value = i + 1;
+            option.selected = selectedMonth === i + 1;
+            option.innerText = formatter.format(monthDate);
+            selectElement.appendChild(option);
+        }
+    }
+
+    /**
+     * Generates HTML string for color options.
+     * @param {string[]} selectedColors - Array of currently selected color values.
+     * @returns {string} HTML string containing option elements.
+     * @static
+     */
+    static generateColorOptionsHtml(selectedColors = []) {
+        return LITURGICAL_COLORS.map(color =>
+            `<option value="${color}"${selectedColors.includes(color) ? ' selected' : ''}>${(Messages[color] ?? color).toUpperCase()}</option>`
+        ).join('');
+    }
+
+    /**
+     * Generates HTML string for month options.
+     * @param {number|null} selectedMonth - The month number (1-12) to select, or null for no selection.
+     * @returns {string} HTML string containing option elements.
+     * @static
+     */
+    static generateMonthOptionsHtml(selectedMonth = null) {
+        const formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
+        let html = '';
+        for (let i = 0; i < 12; i++) {
+            const monthDate = new Date(Date.UTC(0, i, 2, 0, 0, 0));
+            html += `<option value="${i + 1}"${selectedMonth === i + 1 ? ' selected' : ''}>${formatter.format(monthDate)}</option>`;
+        }
+        return html;
+    }
+
+    /**
      * Creates a form row for a new liturgical event on a diocesan calendar form.
      * It contains fields for name, day, month, common, color, since_year and until_year.
      * The fields shown depend on the settings in FormControls.settings.
@@ -302,15 +370,7 @@ class FormControls {
                 <label class="form-check-label" for="onTheFly${FormControls.uniqid}StrtotimeSwitch">Mobile</label>
                 <input class="form-check-input litEvent litEventStrtotimeSwitch" type="checkbox" data-bs-toggle="toggle" data-bs-size="xs" data-bs-onstyle="info" data-bs-offstyle="dark" role="switch" id="onTheFly${FormControls.uniqid}StrtotimeSwitch">
             </div></label>
-            <select class="form-select litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month">`;
-
-            let formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
-            for (let i = 0; i < 12; i++) {
-                let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
-                formRow += `<option value=${i + 1}>${formatter.format(month)}</option>`;
-            }
-
-            formRow += `</select>
+            <select class="form-select litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month">${FormControls.generateMonthOptionsHtml()}</select>
             </div>`;
         }
 
@@ -331,12 +391,7 @@ class FormControls {
         if (FormControls.settings.colorField) {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}Color">${Messages[ "Liturgical color" ]}</label>
-            <select class="form-select litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple" />
-            <option value="white" selected>${Messages[ "white" ].toUpperCase()}</option>
-            <option value="red">${Messages[ "red" ].toUpperCase()}</option>
-            <option value="purple">${Messages[ "purple" ].toUpperCase()}</option>
-            <option value="green">${Messages[ "green" ].toUpperCase()}</option>
-            </select>
+            <select class="form-select litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple" />${FormControls.generateColorOptionsHtml(['white'])}</select>
             </div>`;
         }
 
@@ -590,29 +645,7 @@ class FormControls {
         colorSelect.multiple = 'multiple';
         colorSelect.disabled = FormControls.settings.colorField === false;
 
-        const whiteOption = document.createElement('option');
-        whiteOption.value = 'white';
-        whiteOption.innerText = Messages[ "white" ].toUpperCase();
-        whiteOption.selected = selectedColors.includes("white");
-        colorSelect.appendChild(whiteOption);
-
-        const redOption = document.createElement('option');
-        redOption.value = 'red';
-        redOption.innerText = Messages[ "red" ].toUpperCase();
-        redOption.selected = selectedColors.includes("red");
-        colorSelect.appendChild(redOption);
-
-        const purpleOption = document.createElement('option');
-        purpleOption.value = 'purple';
-        purpleOption.innerText = Messages[ "purple" ].toUpperCase();
-        purpleOption.selected = selectedColors.includes("purple");
-        colorSelect.appendChild(purpleOption);
-
-        const greenOption = document.createElement('option');
-        greenOption.value = 'green';
-        greenOption.innerText = Messages[ "green" ].toUpperCase();
-        greenOption.selected = selectedColors.includes("green");
-        colorSelect.appendChild(greenOption);
+        LITURGICAL_COLORS.forEach(color => FormControls.appendColorOption(colorSelect, color, selectedColors));
 
         colorFormGroup.appendChild(colorSelect);
         controlsRow.appendChild(colorFormGroup);
@@ -666,15 +699,7 @@ class FormControls {
             monthSelect.id = `onTheFly${FormControls.uniqid}Month`;
             monthSelect.disabled = FormControls.settings.monthField === false;
 
-            const formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
-            for (let i = 0; i < 12; i++) {
-                let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
-                const monthOption = document.createElement('option');
-                monthOption.value = i + 1;
-                monthOption.selected = liturgical_event && liturgical_event.month === i+1;
-                monthOption.innerText = formatter.format(month);
-                monthSelect.appendChild(monthOption);
-            }
+            FormControls.populateMonthOptions(monthSelect, liturgical_event?.month ?? null);
 
             monthFormGroup.appendChild(monthSelect);
             controlsRow.appendChild(monthFormGroup);
@@ -965,12 +990,7 @@ class FormControls {
             : [];
         formRow += `<div class="form-group col-sm-2">
         <label for="onTheFly${FormControls.uniqid}Color">${Messages[ "Liturgical color" ]}</label>
-        <select class="form-select litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple"${FormControls.settings.colorField === false ? ' disabled' : ''} />
-        <option value="white"${selectedColors.includes("white") ? ' selected' : '' }>${Messages[ "white" ].toUpperCase()}</option>
-        <option value="red"${selectedColors.includes("red") ? ' selected' : '' }>${Messages[ "red" ].toUpperCase()}</option>
-        <option value="purple"${selectedColors.includes("purple") ? ' selected' : '' }>${Messages[ "purple" ].toUpperCase()}</option>
-        <option value="green"${selectedColors.includes("green") ? ' selected' : '' }>${Messages[ "green" ].toUpperCase()}</option>
-        </select>
+        <select class="form-select litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple"${FormControls.settings.colorField === false ? ' disabled' : ''} />${FormControls.generateColorOptionsHtml(selectedColors)}</select>
         </div>`;
 
         if( 'strtotime' in liturgical_event ) {
@@ -996,15 +1016,7 @@ class FormControls {
 
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}Month">${Messages[ "Month" ]}</label>
-            <select class="form-select litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month"${FormControls.settings.monthField === false ? ' disabled' : '' } >`;
-
-            let formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
-            for (let i = 0; i < 12; i++) {
-                let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
-                formRow += `<option value=${i + 1}${liturgical_event.month === i+1 ? ' selected' : '' }>${formatter.format(month)}</option>`;
-            }
-
-            formRow += `</select>
+            <select class="form-select litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month"${FormControls.settings.monthField === false ? ' disabled' : '' } >${FormControls.generateMonthOptionsHtml(liturgical_event.month)}</select>
             </div>`;
         }
 
