@@ -4,7 +4,6 @@
         <div class="toast-header bg-warning text-dark">
             <i class="fas fa-clock me-2"></i>
             <strong class="me-auto"><?php echo _('Session Expiring'); ?></strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
         <div class="toast-body bg-white text-dark">
             <p id="sessionExpiryMessage" class="mb-3"></p>
@@ -623,16 +622,6 @@ function initSessionExpiryWarning() {
 
     if (logoutButton) {
         logoutButton.addEventListener('click', handleSessionExpiryLogout);
-    }
-
-    // Handle toast dismissal via X button - reset so warning can reappear
-    const toastElement = document.getElementById('sessionExpiryToast');
-    if (toastElement) {
-        toastElement.addEventListener('hidden.bs.toast', () => {
-            // If dismissed without extending, allow warning to reappear
-            // but keep the auto-logout timer running
-            expiryWarningShown = false;
-        });
     }
 
     // Start the expiry warning timer
