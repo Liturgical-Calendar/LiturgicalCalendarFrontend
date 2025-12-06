@@ -149,8 +149,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Start session expiry warnings (debounced to show only once per expiry period)
     const formatExpiryMessage = (seconds) => {
         const minutes = Math.ceil(seconds / 60);
-        // Use localized message template
-        return <?php echo json_encode(_('Your session will expire in less than %d minute(s). Please save your work.')); ?>.replace('%d', minutes);
+        // Use localized message template with proper singular/plural forms
+        const singular = <?php echo json_encode(ngettext(
+            'Your session will expire in less than %d minute. Please save your work.',
+            'Your session will expire in less than %d minutes. Please save your work.',
+            1
+        )); ?>;
+        const plural = <?php echo json_encode(ngettext(
+            'Your session will expire in less than %d minute. Please save your work.',
+            'Your session will expire in less than %d minutes. Please save your work.',
+            2
+        )); ?>;
+        return (minutes === 1 ? singular : plural).replace('%d', minutes);
     };
 
     if (typeof toastr !== 'undefined') {
