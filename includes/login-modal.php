@@ -1,3 +1,25 @@
+<!-- Session Expiry Warning Toast -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1090;">
+    <div id="sessionExpiryToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+        <div class="toast-header bg-warning text-dark">
+            <i class="fas fa-clock me-2"></i>
+            <strong class="me-auto"><?php echo _('Session Expiring'); ?></strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            <p id="sessionExpiryMessage" class="mb-3"></p>
+            <div class="d-flex justify-content-end gap-2">
+                <button type="button" class="btn btn-sm btn-outline-secondary" id="sessionExpiryLogout">
+                    <i class="fas fa-sign-out-alt me-1"></i><?php echo _('Logout'); ?>
+                </button>
+                <button type="button" class="btn btn-sm btn-primary" id="sessionExpiryExtend">
+                    <i class="fas fa-refresh me-1"></i><?php echo _('Extend Session'); ?>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Login Modal for JWT Authentication -->
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -43,6 +65,7 @@
 let loginModal = null;
 let loginSuccessCallback = null;
 let expiryWarningShown = false;
+let sessionExpiryToast = null;
 
 /**
  * Initialize authentication UI components
@@ -146,37 +169,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Start session expiry warnings (debounced to show only once per expiry period)
-    const formatExpiryMessage = (seconds) => {
-        const minutes = Math.ceil(seconds / 60);
-        // Use localized message template with proper singular/plural forms
-        const singular = <?php echo json_encode(ngettext(
-            'Your session will expire in less than %d minute. Please save your work.',
-            'Your session will expire in less than %d minutes. Please save your work.',
-            1
-        )); ?>;
-        const plural = <?php echo json_encode(ngettext(
-            'Your session will expire in less than %d minute. Please save your work.',
-            'Your session will expire in less than %d minutes. Please save your work.',
-            2
-        )); ?>;
-        return (minutes === 1 ? singular : plural).replace('%d', minutes);
-    };
-
-    if (typeof toastr !== 'undefined') {
-        Auth.startExpiryWarning((timeUntilExpiry) => {
-            if (expiryWarningShown) return;
-            expiryWarningShown = true;
-            toastr.warning(formatExpiryMessage(timeUntilExpiry), <?php echo json_encode(_('Session Expiring')); ?>);
-        });
-    } else {
-        // Fallback to console if toastr is not available
-        Auth.startExpiryWarning((timeUntilExpiry) => {
-            if (expiryWarningShown) return;
-            expiryWarningShown = true;
-            console.warn('Session expiring:', formatExpiryMessage(timeUntilExpiry));
-        });
-    }
+    // Initialize session expiry warning toast and its event handlers
+    initSessionExpiryWarning();
 
     // Focus username input when login modal is shown
     const loginModalElement = document.getElementById('loginModal');
@@ -386,6 +380,163 @@ function initPermissionUI() {
             el.classList.add('d-none');
             el.disabled = true;
         }
+    });
+}
+
+/**
+ * Format the session expiry message with proper localization
+ *
+ * @param {number} seconds - Seconds until session expires
+ * @returns {string} Localized message
+ */
+function formatExpiryMessage(seconds) {
+    const minutes = Math.ceil(seconds / 60);
+    // Use localized message template with proper singular/plural forms
+    const singular = <?php echo json_encode(ngettext(
+        'Your session will expire in less than %d minute.',
+        'Your session will expire in less than %d minutes.',
+        1
+    )); ?>;
+    const plural = <?php echo json_encode(ngettext(
+        'Your session will expire in less than %d minute.',
+        'Your session will expire in less than %d minutes.',
+        2
+    )); ?>;
+    return (minutes === 1 ? singular : plural).replace('%d', minutes);
+}
+
+/**
+ * Show the session expiry warning toast
+ *
+ * @param {number} timeUntilExpiry - Seconds until session expires
+ */
+function showSessionExpiryToast(timeUntilExpiry) {
+    const toastElement = document.getElementById('sessionExpiryToast');
+    const messageElement = document.getElementById('sessionExpiryMessage');
+
+    if (!toastElement || !messageElement) {
+        console.warn('Session expiry toast elements not found');
+        return;
+    }
+
+    // Update the message with current time remaining
+    messageElement.textContent = formatExpiryMessage(timeUntilExpiry);
+
+    // Initialize Bootstrap Toast if not already done
+    if (!sessionExpiryToast) {
+        sessionExpiryToast = new bootstrap.Toast(toastElement);
+    }
+
+    // Show the toast
+    sessionExpiryToast.show();
+}
+
+/**
+ * Hide the session expiry warning toast
+ */
+function hideSessionExpiryToast() {
+    if (sessionExpiryToast) {
+        sessionExpiryToast.hide();
+    }
+}
+
+/**
+ * Handle the "Extend Session" button click
+ * Attempts to refresh the token and hides the warning on success
+ */
+async function handleExtendSession() {
+    const extendButton = document.getElementById('sessionExpiryExtend');
+    const originalContent = extendButton ? extendButton.innerHTML : '';
+
+    try {
+        // Show loading state
+        if (extendButton) {
+            extendButton.disabled = true;
+            extendButton.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>' +
+                <?php echo json_encode(_('Extending...')); ?>;
+        }
+
+        // Refresh the token
+        await Auth.refreshToken();
+
+        // Hide the warning toast
+        hideSessionExpiryToast();
+
+        // Reset the warning flag so it can show again for the new session
+        expiryWarningShown = false;
+
+        // Show success notification
+        if (typeof toastr !== 'undefined') {
+            toastr.success(
+                <?php echo json_encode(_('Your session has been extended.')); ?>,
+                <?php echo json_encode(_('Session Extended')); ?>
+            );
+        }
+    } catch (error) {
+        console.error('Failed to extend session:', error);
+
+        // Show error notification
+        if (typeof toastr !== 'undefined') {
+            toastr.error(
+                <?php echo json_encode(_('Failed to extend session. Please login again.')); ?>,
+                <?php echo json_encode(_('Error')); ?>
+            );
+        }
+
+        // Hide the warning and show login modal
+        hideSessionExpiryToast();
+        showLoginModal();
+    } finally {
+        // Reset button state
+        if (extendButton) {
+            extendButton.disabled = false;
+            extendButton.innerHTML = originalContent;
+        }
+    }
+}
+
+/**
+ * Handle the "Logout" button click from the session expiry warning
+ */
+async function handleSessionExpiryLogout() {
+    hideSessionExpiryToast();
+
+    if (confirm(<?php echo json_encode(_('Are you sure you want to logout?')); ?>)) {
+        await Auth.logout();
+    }
+}
+
+/**
+ * Initialize the session expiry warning system
+ * Sets up the Bootstrap Toast and its event handlers
+ */
+function initSessionExpiryWarning() {
+    // Set up event handlers for toast buttons
+    const extendButton = document.getElementById('sessionExpiryExtend');
+    const logoutButton = document.getElementById('sessionExpiryLogout');
+
+    if (extendButton) {
+        extendButton.addEventListener('click', handleExtendSession);
+    }
+
+    if (logoutButton) {
+        logoutButton.addEventListener('click', handleSessionExpiryLogout);
+    }
+
+    // Start the expiry warning timer with our callback
+    Auth.startExpiryWarning((timeUntilExpiry) => {
+        // Only show once per expiry cycle
+        if (expiryWarningShown) {
+            // Update the message if toast is already visible
+            const messageElement = document.getElementById('sessionExpiryMessage');
+            if (messageElement) {
+                messageElement.textContent = formatExpiryMessage(timeUntilExpiry);
+            }
+            return;
+        }
+
+        expiryWarningShown = true;
+        showSessionExpiryToast(timeUntilExpiry);
     });
 }
 </script>
