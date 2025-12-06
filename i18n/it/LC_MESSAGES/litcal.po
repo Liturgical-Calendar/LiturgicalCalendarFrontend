@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-06 05:22+0000\n"
-"PO-Revision-Date: 2025-12-01 11:15+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2025-12-06 05:43+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
 "Language: it\n"
@@ -1328,10 +1328,12 @@ msgstr "Annulla"
 #: includes/login-modal.php:79
 msgid "Unable to verify authentication status. The server may be unavailable."
 msgstr ""
+"Impossibile verificare lo stato di autenticazione. Il server potrebbe non "
+"essere disponibile."
 
 #: includes/login-modal.php:81
 msgid "Connection Issue"
-msgstr ""
+msgstr "Problema di connessione"
 
 #: includes/login-modal.php:102
 msgid "Are you sure you want to logout?"
@@ -1342,16 +1344,12 @@ msgid "Hide password"
 msgstr "Nascondi password"
 
 #: includes/login-modal.php:154 includes/login-modal.php:159
-#, fuzzy, php-format
-#| msgid ""
-#| "Your session will expire in less than %d minute(s). Please save your work."
+#, php-format
 msgid "Your session will expire in less than %d minute. Please save your work."
 msgid_plural ""
 "Your session will expire in less than %d minutes. Please save your work."
-msgstr[0] ""
-"La tua sessione scadrà tra meno di %d minuto/i. Salva il tuo lavoro."
-msgstr[1] ""
-"La tua sessione scadrà tra meno di %d minuto/i. Salva il tuo lavoro."
+msgstr[0] "La tua sessione scadrà in meno di %d minuto. Salva il tuo lavoro."
+msgstr[1] "La tua sessione scadrà in meno di %d minuti. Salva il tuo lavoro."
 
 #: includes/login-modal.php:170
 msgid "Session Expiring"
@@ -1416,7 +1414,7 @@ msgstr "Per entrare in vigore nell'anno"
 #. translators: notification title for warning messages
 #: includes/messages.php:51
 msgid "Warning"
-msgstr ""
+msgstr "Avviso"
 
 #. translators: form row title for designating a Doctor of the Church
 #: includes/messages.php:71
@@ -1908,6 +1906,7 @@ msgstr ""
 #: includes/messages.php:313
 msgid "Select a national calendar first to see available dioceses."
 msgstr ""
+"Seleziona prima un calendario nazionale per vedere le diocesi disponibili."
 
 #. translators: tooltip explaining the Eternal High Priest feast
 #: includes/messages.php:315
