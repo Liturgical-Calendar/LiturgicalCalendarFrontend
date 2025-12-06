@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-06 05:22+0000\n"
 "PO-Revision-Date: 2025-12-06 05:43+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
 "Language: la\n"
@@ -602,7 +602,7 @@ msgstr "In evolutione"
 #. translators: card header - Google Assistant voice application
 #: usage.php:369
 msgid "Google Assistant app"
-msgstr "Google Assistant app"
+msgstr "Applicātiō 'Google Assistant'"
 
 #. translators: card header - tool to look up liturgy for any date
 #. translators: button text to go to liturgy lookup page
