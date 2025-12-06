@@ -637,52 +637,37 @@ let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($Liturgi
 </div>
 
 <!-- DEFINE SET PROPERTY MODAL  -->
-<div class="modal fade actionPromptModal" id="setPropertyActionPrompt" tabindex="-1" role="dialog" aria-labelledby="setPropertyActionModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="setPropertyActionModalLabel"><?php echo $messages['Modal - Change name or grade']; ?></h5>
-            </div>
-            <?php Utilities::generateActionPromptModalBody(true, true); ?>
-            <div class="modal-footer">
-                <button type="button" id="setPropertyButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-edit me-2"></i><?php echo $messages['SetPropertyLabel']; ?></button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo $messages['CancelButton']; ?></button>
-            </div>
-        </div>
-    </div>
-</div>
+<?php Utilities::generateActionPromptModal(
+    'setPropertyActionPrompt',
+    'setPropertyActionModalLabel',
+    $messages['Modal - Change name or grade'],
+    true,
+    true,
+    [['id' => 'setPropertyButton', 'class' => 'btn btn-primary actionPromptButton', 'icon' => 'fas fa-edit', 'label' => $messages['SetPropertyLabel'], 'disabled' => true]],
+    $messages['CancelButton']
+); ?>
 
 <!-- DEFINE MOVE FESTIVITY MODAL  -->
-<div class="modal fade actionPromptModal" id="moveLiturgicalEventActionPrompt" tabindex="-1" role="dialog" aria-labelledby="moveLiturgicalEventActionModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="moveLiturgicalEventActionModalLabel"><?php echo $messages['Modal - Move event']; ?></h5>
-            </div>
-            <?php Utilities::generateActionPromptModalBody(true, false); ?>
-            <div class="modal-footer">
-                <button type="button" id="moveLiturgicalEventButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-day me-2"></i><?php echo $messages['MoveLiturgicalEventLabel']; ?></button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo $messages['CancelButton']; ?></button>
-            </div>
-        </div>
-    </div>
-</div>
+<?php Utilities::generateActionPromptModal(
+    'moveLiturgicalEventActionPrompt',
+    'moveLiturgicalEventActionModalLabel',
+    $messages['Modal - Move event'],
+    true,
+    false,
+    [['id' => 'moveLiturgicalEventButton', 'class' => 'btn btn-primary actionPromptButton', 'icon' => 'fas fa-calendar-day', 'label' => $messages['MoveLiturgicalEventLabel'], 'disabled' => true]],
+    $messages['CancelButton']
+); ?>
 
 <!-- DEFINE NEW FESTIVITY MODAL  -->
-<div class="modal fade actionPromptModal" id="newLiturgicalEventActionPrompt" tabindex="-1" role="dialog" aria-labelledby="newLiturgicalEventActionModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="newLiturgicalEventActionModalLabel"><?php echo $messages['Modal - Create new event']; ?></h5>
-            </div>
-            <?php Utilities::generateActionPromptModalBody(false, false); ?>
-            <div class="modal-footer">
-                <button type="button" id="newLiturgicalEventFromExistingButton" class="btn btn-primary actionPromptButton" disabled><i class="fas fa-calendar-plus me-2"></i><?php echo $messages['CreateLiturgicalEventLabel']; ?></button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo $messages['CancelButton']; ?></button>
-            </div>
-        </div>
-    </div>
-</div>
+<?php Utilities::generateActionPromptModal(
+    'newLiturgicalEventActionPrompt',
+    'newLiturgicalEventActionModalLabel',
+    $messages['Modal - Create new event'],
+    false,
+    false,
+    [['id' => 'newLiturgicalEventFromExistingButton', 'class' => 'btn btn-primary actionPromptButton', 'icon' => 'fas fa-calendar-plus', 'label' => $messages['CreateLiturgicalEventLabel'], 'disabled' => true]],
+    $messages['CancelButton']
+); ?>
 
 <!-- addPublishedRomanMissalPrompt -->
 <div class="modal fade" id="addPublishedRomanMissalPrompt" tabindex="-1" role="dialog" aria-labelledby="addPublishedRomanMissalLabel" aria-hidden="true">
