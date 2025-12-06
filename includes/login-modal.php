@@ -372,10 +372,12 @@ function updateAuthUI() {
  * Initialize permission-based UI elements
  * Hides/shows elements marked with data-requires-auth attribute
  * For form elements, disables all inputs within the form
+ * For form controls (input, select, textarea), just disables them
  */
 function initPermissionUI() {
     const protectedElements = document.querySelectorAll('[data-requires-auth]');
     const isAuth = Auth.isAuthenticated();
+    const formControlTags = ['INPUT', 'SELECT', 'TEXTAREA'];
 
     protectedElements.forEach(el => {
         if (el.tagName === 'FORM') {
@@ -390,6 +392,9 @@ function initPermissionUI() {
             } else {
                 el.classList.add('opacity-50');
             }
+        } else if (formControlTags.includes(el.tagName)) {
+            // For standalone form controls, just disable (don't hide)
+            el.disabled = !isAuth;
         } else {
             // For other elements (buttons, etc.), hide/show and disable
             if (isAuth) {
