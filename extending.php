@@ -195,7 +195,7 @@ if (isset($_GET['choice'])) {
                             </select>
                         </div>
                         <div class="col col-md-3">
-                            <button class="btn btn-danger" id="removeExistingCalendarDataBtn" disabled data-bs-toggle="modal" data-bs-target="#removeCalendarDataPrompt">
+                            <button class="btn btn-danger" id="removeExistingCalendarDataBtn" data-requires-auth="true" disabled data-bs-toggle="modal" data-bs-target="#removeCalendarDataPrompt">
                                 <i class="far fa-trash-alt me-2"></i>
                                 <?php echo $messages['RemoveDataButton']; ?>
                             </button>
@@ -207,7 +207,7 @@ if (isset($_GET['choice'])) {
                         </div>
                         <div class="card-body">
                             <hr>
-                            <form class="needs-validation regionalNationalDataForm" id="widerRegionForm" novalidate>
+                            <form class="needs-validation regionalNationalDataForm" id="widerRegionForm" data-requires-auth="true" novalidate>
                             </form>
                             <?php echo $buttonGroup ?>
                         </div>
@@ -241,7 +241,7 @@ if (isset($_GET['choice'])) {
                         </div>
                         <div class="form-group col col-md-3">
                             <label for="removeExistingCalendarDataBtn" class="fw-bold"></label>
-                            <button class="btn btn-danger m-2 form-control" id="removeExistingCalendarDataBtn" disabled data-bs-toggle="modal" data-bs-target="#removeCalendarDataPrompt">
+                            <button class="btn btn-danger m-2 form-control" id="removeExistingCalendarDataBtn" data-requires-auth="true" disabled data-bs-toggle="modal" data-bs-target="#removeCalendarDataPrompt">
                                 <i class="far fa-trash-alt me-2"></i>
                                 <?php echo $messages['RemoveDataButton']; ?>
                             </button>
@@ -255,7 +255,7 @@ if (isset($_GET['choice'])) {
 
                             <div id="nationalCalendarSettingsContainer" class="container">
                                 <h3 id="nationalCalendarSettingsTitle" class="text-center"><?php echo $messages['National calendar settings']; ?><i class="fas fa-info-circle ms-4 d-inline-block text-black" style="--bs-text-opacity: .3;" role="button" title="<?php echo htmlspecialchars($messages['Tooltip - National calendar first step'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></i></h3>
-                                <form id="nationalCalendarSettingsForm" class="row justify-content-center align-items-baseline needs-validation" novalidate>
+                                <form id="nationalCalendarSettingsForm" class="row justify-content-center align-items-baseline needs-validation" data-requires-auth="true" novalidate>
                                     <div class="form-group col col-md-3">
                                         <label for="nationalCalendarSettingEpiphany"><?php echo $messages['EPIPHANY']; ?></label>
                                         <select class="form-select" id="nationalCalendarSettingEpiphany">
@@ -338,7 +338,7 @@ if (isset($_GET['choice'])) {
                                 </form>
                             </div>
                             <hr>
-                            <form class="needs-validation regionalNationalDataForm" id="nationalCalendarForm" novalidate>
+                            <form class="needs-validation regionalNationalDataForm" id="nationalCalendarForm" data-requires-auth="true" novalidate>
                             </form>
                             <?php echo $buttonGroup ?>
                         </div>

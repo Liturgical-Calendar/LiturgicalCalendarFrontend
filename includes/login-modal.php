@@ -371,18 +371,34 @@ function updateAuthUI() {
 /**
  * Initialize permission-based UI elements
  * Hides/shows elements marked with data-requires-auth attribute
+ * For form elements, disables all inputs within the form
  */
 function initPermissionUI() {
     const protectedElements = document.querySelectorAll('[data-requires-auth]');
     const isAuth = Auth.isAuthenticated();
 
     protectedElements.forEach(el => {
-        if (isAuth) {
-            el.classList.remove('d-none');
-            el.disabled = false;
+        if (el.tagName === 'FORM') {
+            // For forms, disable/enable all form controls inside
+            const formControls = el.querySelectorAll('input, select, textarea, button');
+            formControls.forEach(control => {
+                control.disabled = !isAuth;
+            });
+            // Add visual indicator for disabled forms
+            if (isAuth) {
+                el.classList.remove('opacity-50');
+            } else {
+                el.classList.add('opacity-50');
+            }
         } else {
-            el.classList.add('d-none');
-            el.disabled = true;
+            // For other elements (buttons, etc.), hide/show and disable
+            if (isAuth) {
+                el.classList.remove('d-none');
+                el.disabled = false;
+            } else {
+                el.classList.add('d-none');
+                el.disabled = true;
+            }
         }
     });
 }
