@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-06 05:22+0000\n"
-"PO-Revision-Date: 2025-12-06 05:43+0000\n"
+"PO-Revision-Date: 2025-12-06 07:24+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -1441,7 +1441,7 @@ msgstr "Rang ändern"
 #. translators: form row title for changing name or grade
 #: includes/messages.php:79
 msgid "Change name or grade"
-msgstr "Name oder rang ändern"
+msgstr "Name oder Rang ändern"
 
 #. translators: form row title for moving a liturgical event to a new date
 #: includes/messages.php:81
