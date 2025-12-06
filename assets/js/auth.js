@@ -660,7 +660,13 @@ if (window.location.protocol !== 'https:' && window.location.hostname !== 'local
 // Initialize auth state on page load
 document.addEventListener('DOMContentLoaded', async () => {
     // Fetch auth state from server to populate cache
-    const authState = await Auth.updateAuthCache();
+    let authState;
+    try {
+        authState = await Auth.updateAuthCache();
+    } catch (error) {
+        console.warn('Failed to initialize auth state on page load:', error);
+        return;
+    }
 
     if (authState && authState.authenticated) {
         // Start auto-refresh if authenticated
