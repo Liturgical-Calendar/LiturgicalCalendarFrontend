@@ -266,6 +266,39 @@ class FormControls {
     static index = null;
 
     /**
+     * Appends a color option to the given select element.
+     * @param {HTMLSelectElement} selectElement - The select element to append the option to.
+     * @param {string} colorValue - The color value (e.g., 'white', 'red', 'purple', 'green').
+     * @param {string[]} selectedColors - Array of currently selected color values.
+     * @static
+     */
+    static appendColorOption(selectElement, colorValue, selectedColors) {
+        const option = document.createElement('option');
+        option.value = colorValue;
+        option.innerText = Messages[colorValue].toUpperCase();
+        option.selected = selectedColors.includes(colorValue);
+        selectElement.appendChild(option);
+    }
+
+    /**
+     * Populates a month select element with localized month options.
+     * @param {HTMLSelectElement} selectElement - The select element to populate.
+     * @param {number|null} selectedMonth - The month number (1-12) to select, or null for no selection.
+     * @static
+     */
+    static populateMonthOptions(selectElement, selectedMonth = null) {
+        const formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
+        for (let i = 0; i < 12; i++) {
+            const monthDate = new Date(Date.UTC(0, i, 2, 0, 0, 0));
+            const option = document.createElement('option');
+            option.value = i + 1;
+            option.selected = selectedMonth === i + 1;
+            option.innerText = formatter.format(monthDate);
+            selectElement.appendChild(option);
+        }
+    }
+
+    /**
      * Creates a form row for a new liturgical event on a diocesan calendar form.
      * It contains fields for name, day, month, common, color, since_year and until_year.
      * The fields shown depend on the settings in FormControls.settings.
@@ -590,29 +623,10 @@ class FormControls {
         colorSelect.multiple = 'multiple';
         colorSelect.disabled = FormControls.settings.colorField === false;
 
-        const whiteOption = document.createElement('option');
-        whiteOption.value = 'white';
-        whiteOption.innerText = Messages[ "white" ].toUpperCase();
-        whiteOption.selected = selectedColors.includes("white");
-        colorSelect.appendChild(whiteOption);
-
-        const redOption = document.createElement('option');
-        redOption.value = 'red';
-        redOption.innerText = Messages[ "red" ].toUpperCase();
-        redOption.selected = selectedColors.includes("red");
-        colorSelect.appendChild(redOption);
-
-        const purpleOption = document.createElement('option');
-        purpleOption.value = 'purple';
-        purpleOption.innerText = Messages[ "purple" ].toUpperCase();
-        purpleOption.selected = selectedColors.includes("purple");
-        colorSelect.appendChild(purpleOption);
-
-        const greenOption = document.createElement('option');
-        greenOption.value = 'green';
-        greenOption.innerText = Messages[ "green" ].toUpperCase();
-        greenOption.selected = selectedColors.includes("green");
-        colorSelect.appendChild(greenOption);
+        FormControls.appendColorOption(colorSelect, 'white', selectedColors);
+        FormControls.appendColorOption(colorSelect, 'red', selectedColors);
+        FormControls.appendColorOption(colorSelect, 'purple', selectedColors);
+        FormControls.appendColorOption(colorSelect, 'green', selectedColors);
 
         colorFormGroup.appendChild(colorSelect);
         controlsRow.appendChild(colorFormGroup);
@@ -666,15 +680,7 @@ class FormControls {
             monthSelect.id = `onTheFly${FormControls.uniqid}Month`;
             monthSelect.disabled = FormControls.settings.monthField === false;
 
-            const formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
-            for (let i = 0; i < 12; i++) {
-                let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
-                const monthOption = document.createElement('option');
-                monthOption.value = i + 1;
-                monthOption.selected = liturgical_event && liturgical_event.month === i+1;
-                monthOption.innerText = formatter.format(month);
-                monthSelect.appendChild(monthOption);
-            }
+            FormControls.populateMonthOptions(monthSelect, liturgical_event?.month ?? null);
 
             monthFormGroup.appendChild(monthSelect);
             controlsRow.appendChild(monthFormGroup);
