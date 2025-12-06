@@ -131,10 +131,19 @@ const handleDeleteResponse = async (response, onSuccessCleanup, successMessage) 
  * @returns {LitEvent} The constructed LitEvent object
  */
 const buildLitEventFromRow = (row, eventKey, eventName) => {
-    const colorSelectedOptions = Array.from(row.querySelector('.litEventColor').selectedOptions);
-    const commonSelectedOptions = Array.from(row.querySelector('.litEventCommon').selectedOptions);
-    const day = parseInt(row.querySelector('.litEventDay').value, 10) || 1;
-    const month = parseInt(row.querySelector('.litEventMonth').value, 10) || 1;
+    const colorSelect = row.querySelector('.litEventColor');
+    const commonSelect = row.querySelector('.litEventCommon');
+    const dayInput = row.querySelector('.litEventDay');
+    const monthInput = row.querySelector('.litEventMonth');
+
+    if (!colorSelect || !commonSelect || !dayInput || !monthInput) {
+        throw new Error('buildLitEventFromRow: missing expected form controls in row');
+    }
+
+    const colorSelectedOptions = Array.from(colorSelect.selectedOptions);
+    const commonSelectedOptions = Array.from(commonSelect.selectedOptions);
+    const day = parseInt(dayInput.value, 10) || 1;
+    const month = parseInt(monthInput.value, 10) || 1;
 
     return new LitEvent(
         eventKey,
