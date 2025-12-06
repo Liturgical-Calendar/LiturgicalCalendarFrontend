@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-06 05:22+0000\n"
 "PO-Revision-Date: 2025-12-06 05:43+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
 "Language: de\n"
@@ -1906,7 +1906,7 @@ msgstr ""
 "Bitte beachten, dass der erste Schritt zur Erstellung eines nationalen "
 "Kalenders darin besteht, die bereits vorhandenen Kalenderdaten in die "
 "korrekte Sprache zu übersetzen. Dies kann auf dem LitCal-Übersetzungsserver "
-"(siehe oben für Details) geschehen."
+"(siehe oben für Details) geschehen"
 
 #. translators: help text shown when diocese input is disabled
 #: includes/messages.php:313
@@ -1939,7 +1939,7 @@ msgstr ""
 "diese Nation bereits in die Haupt-Engine von LitCal integriert wurden, "
 "können Sie das Messbuch aus dieser Liste auswählen, um es mit diesem "
 "Nationalkalender zu verknüpfen (wenn das Messbuch nicht in der Liste ist, "
-"wurde es nicht in die LitCal-Engine integriert)."
+"wurde es nicht in die LitCal-Engine integriert)"
 
 #. translators: tooltip explaining wider region association
 #: includes/messages.php:319
