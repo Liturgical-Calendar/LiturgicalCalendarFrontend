@@ -6,7 +6,7 @@ use LiturgicalCalendar\Frontend\Utilities;
 
 include_once 'includes/common.php'; // provides $i18n and all API URLs
 include_once 'includes/messages.php'; // translation strings
-/** @var array<string,string> $messages */
+/** @var array<string,mixed> $messages */
 
 // Defensive initialization: ensure $messages is an array before use
 if (!isset($messages) || !is_array($messages)) {

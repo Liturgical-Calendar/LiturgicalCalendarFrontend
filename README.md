@@ -171,7 +171,7 @@ const response = await fetch('/api/endpoint', {
 - ✅ **XSS Protection**: Tokens inaccessible to JavaScript (prevents token theft via XSS)
 - ✅ **CSRF Protection**: SameSite flag prevents cross-origin cookie transmission
 - ✅ **Automatic Transmission**: Browser handles cookie sending (no manual header management)
-- ✅ **Secure Refresh**: Refresh tokens are also HttpOnly (prevents token replay attacks)
+- ✅ **Secure Refresh**: Refresh tokens are also HttpOnly (reduces risk of token theft/replay via XSS)
 - ✅ **Server-Side Validation**: Full JWT validation (signature, expiry, claims) done by API
 
 **Deprecated Methods:**
