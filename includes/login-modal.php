@@ -1,12 +1,12 @@
 <!-- Session Expiry Warning Toast -->
 <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1090;">
-    <div id="sessionExpiryToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+    <div id="sessionExpiryToast" class="toast bg-white text-dark border-warning" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
         <div class="toast-header bg-warning text-dark">
             <i class="fas fa-clock me-2"></i>
             <strong class="me-auto"><?php echo _('Session Expiring'); ?></strong>
             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
-        <div class="toast-body">
+        <div class="toast-body bg-white text-dark">
             <p id="sessionExpiryMessage" class="mb-3"></p>
             <div class="d-flex justify-content-end gap-2">
                 <button type="button" class="btn btn-sm btn-outline-secondary" id="sessionExpiryLogout">
