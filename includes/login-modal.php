@@ -552,12 +552,16 @@ async function handleAutoLogout() {
  * @param {number} timeUntilExpiry - Seconds until token expires
  */
 function expiryWarningCallback(timeUntilExpiry) {
-    // Only show and set up timers once per expiry cycle
     if (expiryWarningShown) {
         // Update the message if toast is already visible
         const messageElement = document.getElementById('sessionExpiryMessage');
         if (messageElement) {
             messageElement.textContent = formatExpiryMessage(timeUntilExpiry);
+        }
+        // Update the auto-logout timer to stay in sync with actual expiry time
+        if (sessionExpiryTimeout) {
+            clearTimeout(sessionExpiryTimeout);
+            sessionExpiryTimeout = setTimeout(handleAutoLogout, timeUntilExpiry * 1000);
         }
         return;
     }
