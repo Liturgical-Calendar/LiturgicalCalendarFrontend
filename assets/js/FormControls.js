@@ -46,6 +46,13 @@ const getMonthMaxDay = (month) => month === Month.FEBRUARY ? 28 : (MonthsOfThirt
 const DaysOfTheWeek = Object.freeze(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
 
 /**
+ * The four liturgical colors used in the Roman Rite.
+ * @readonly
+ * @type {readonly ['white', 'red', 'purple', 'green']}
+ */
+const LITURGICAL_COLORS = Object.freeze(['white', 'red', 'purple', 'green']);
+
+/**
  * A mapping of liturgical event ranks to numerical values for sorting purposes.
  * @readonly
  * @enum {(0|1|2|3|4|5|6|7)}
@@ -275,7 +282,7 @@ class FormControls {
     static appendColorOption(selectElement, colorValue, selectedColors) {
         const option = document.createElement('option');
         option.value = colorValue;
-        option.innerText = Messages[colorValue].toUpperCase();
+        option.innerText = (Messages[colorValue] ?? colorValue).toUpperCase();
         option.selected = selectedColors.includes(colorValue);
         selectElement.appendChild(option);
     }
@@ -305,9 +312,8 @@ class FormControls {
      * @static
      */
     static generateColorOptionsHtml(selectedColors = []) {
-        const colors = ['white', 'red', 'purple', 'green'];
-        return colors.map(color =>
-            `<option value="${color}"${selectedColors.includes(color) ? ' selected' : ''}>${Messages[color].toUpperCase()}</option>`
+        return LITURGICAL_COLORS.map(color =>
+            `<option value="${color}"${selectedColors.includes(color) ? ' selected' : ''}>${(Messages[color] ?? color).toUpperCase()}</option>`
         ).join('');
     }
 
@@ -639,10 +645,7 @@ class FormControls {
         colorSelect.multiple = 'multiple';
         colorSelect.disabled = FormControls.settings.colorField === false;
 
-        FormControls.appendColorOption(colorSelect, 'white', selectedColors);
-        FormControls.appendColorOption(colorSelect, 'red', selectedColors);
-        FormControls.appendColorOption(colorSelect, 'purple', selectedColors);
-        FormControls.appendColorOption(colorSelect, 'green', selectedColors);
+        LITURGICAL_COLORS.forEach(color => FormControls.appendColorOption(colorSelect, color, selectedColors));
 
         colorFormGroup.appendChild(colorSelect);
         controlsRow.appendChild(colorFormGroup);
