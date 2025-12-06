@@ -133,6 +133,8 @@ const handleDeleteResponse = async (response, onSuccessCleanup, successMessage) 
 const buildLitEventFromRow = (row, eventKey, eventName) => {
     const colorSelectedOptions = Array.from(row.querySelector('.litEventColor').selectedOptions);
     const commonSelectedOptions = Array.from(row.querySelector('.litEventCommon').selectedOptions);
+    const day = parseInt(row.querySelector('.litEventDay').value, 10) || 1;
+    const month = parseInt(row.querySelector('.litEventMonth').value, 10) || 1;
 
     return new LitEvent(
         eventKey,
@@ -140,8 +142,8 @@ const buildLitEventFromRow = (row, eventKey, eventName) => {
         colorSelectedOptions.map(({ value }) => value),
         null,
         commonSelectedOptions.map(({ value }) => value),
-        parseInt(row.querySelector('.litEventDay').value),
-        parseInt(row.querySelector('.litEventMonth').value)
+        day,
+        month
     );
 };
 
