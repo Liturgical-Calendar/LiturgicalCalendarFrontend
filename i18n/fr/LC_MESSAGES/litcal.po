@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-06 05:22+0000\n"
+"POT-Creation-Date: 2025-12-06 08:43+0000\n"
 "PO-Revision-Date: 2025-12-06 05:43+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
@@ -1187,7 +1187,7 @@ msgstr ""
 "Chancelier du diocèse de Charlottetown, a contribué les données du "
 "calendrier liturgique pour le Canada en anglais et en français"
 
-#: src/Utilities.php:226
+#: src/Utilities.php:267
 msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
@@ -1195,30 +1195,30 @@ msgstr ""
 "Cet événement liturgique ne semble pas exister ? Veuillez choisir une valeur "
 "dans la liste."
 
-#: src/Utilities.php:227
+#: src/Utilities.php:268
 msgid "This liturgical event does not exist, so it will be created."
 msgstr "Cet événement liturgique n'existe pas, il sera donc créé."
 
-#: src/Utilities.php:232
+#: src/Utilities.php:273
 msgid "Choose from existing liturgical events"
 msgstr "Choisissez parmi les événements liturgiques existants"
 
-#: src/Utilities.php:232
+#: src/Utilities.php:273
 msgid "Choose from existing liturgical events (or create a new one)"
 msgstr ""
 "Choisissez parmi les événements liturgiques existants (ou créez-en un "
 "nouveau)"
 
-#: src/Utilities.php:238
+#: src/Utilities.php:279
 msgid "Property to change"
 msgstr "Propriété à modifier"
 
 #. translators: form field label for the name of a liturgical event
-#: src/Utilities.php:240 src/FormControls.php:53 includes/messages.php:17
+#: src/Utilities.php:281 src/FormControls.php:53 includes/messages.php:17
 msgid "Name"
 msgstr "Nom"
 
-#: src/Utilities.php:241 src/FormControls.php:171
+#: src/Utilities.php:282 src/FormControls.php:171
 msgid "Grade"
 msgstr "Grade"
 
