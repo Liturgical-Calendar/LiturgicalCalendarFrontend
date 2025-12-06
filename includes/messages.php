@@ -41,6 +41,16 @@ $messages = [
     'To take effect in the year'             => _('To take effect in the year'),
 
     // =========================================================================
+    // Notification titles (used in toastr notifications)
+    // =========================================================================
+    /** translators: notification title for successful operations */
+    'Success'                                => _('Success'),
+    /** translators: notification title for failed operations */
+    'Error'                                  => _('Error'),
+    /** translators: notification title for warning messages */
+    'Warning'                                => _('Warning'),
+
+    // =========================================================================
     // Liturgical colors
     // =========================================================================
     /** translators: liturgical color - white */
