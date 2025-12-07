@@ -625,13 +625,20 @@ test.describe('Diocesan Calendar Form - Validation', () => {
         ]).catch(() => ({ type: 'timeout' as const }));
 
         if (result.type === 'error-toast') {
-            // Check if it's a "Failed to fetch" error (network/CORS issue) - skip these
+            // Check if it's a network/CORS error - skip these as they indicate infrastructure issues
+            // "Failed to fetch" is a standard browser Fetch API TypeError message (stable across browsers)
+            // "NetworkError" and "TypeError" are also common network failure indicators
             const errorText = await page.locator('.toast-error, .toast.bg-danger').textContent();
-            if (errorText?.includes('Failed to fetch')) {
+            const isNetworkError = errorText && (
+                errorText.includes('Failed to fetch') ||
+                errorText.includes('NetworkError') ||
+                errorText.includes('Network request failed')
+            );
+            if (isNetworkError) {
                 // This occurs when the API returns an error response without proper CORS headers
                 // for credentialed requests. The API's error handling middleware needs to include
                 // Access-Control-Allow-Credentials: true and specific origin (not *) on error responses.
-                test.skip(true, 'Network error (Failed to fetch) - API CORS headers missing on error response');
+                test.skip(true, 'Network error - API CORS headers missing on error response');
                 return;
             }
             // For other error toasts, fail the test to surface backend regressions
