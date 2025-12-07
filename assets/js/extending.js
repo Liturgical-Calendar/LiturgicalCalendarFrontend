@@ -1772,8 +1772,18 @@ const setApiLocaleAndHeaders = (headers) => {
                 : selectedNationalCalendar[0].locales[0];
         } else {
             console.log(`Could not find a national calendar with key ${API.key}; API.path is ${API.path} (category is ${API.category} and key is ${API.key}).`);
-            API.locale = likelyLanguage(API.key);
-            console.log(`likelyLanguage = ${API.locale} (nation is ${API.key}), we have set API.locale to the likelyLanguage for fetch calls`);
+            const likely = likelyLanguage(API.key);
+            // Check if the likely language is available before setting
+            const likelyWithRegion = `${likely}_${API.key}`;
+            if (Object.keys(AvailableLocalesWithRegion).includes(likelyWithRegion)) {
+                API.locale = likelyWithRegion;
+            } else if (Object.keys(AvailableLocales).includes(likely)) {
+                API.locale = likely;
+            } else {
+                // Locale not available - API.locale stays empty, will be handled by shouldFetchEvents
+                console.log(`likelyLanguage ${likely} is not available in translations`);
+            }
+            console.log(`likelyLanguage = ${likely} (nation is ${API.key}), API.locale set to ${API.locale || '(empty)'}`);
         }
     }
 
@@ -1803,7 +1813,18 @@ const getEventsUrlForCategory = () => {
 const shouldFetchEvents = (eventsUrlForCategory) => {
     // If no locale has been selected yet, skip events fetch and do not block.
     // This allows calendar metadata/forms to load while the user chooses a locale.
+    // Exception: for national calendars, empty locale means the likely language is not available.
     if (!API.locale) {
+        if (API.category === 'nation') {
+            // For national calendars, we always try to set a locale. If it's empty, the locale is not available.
+            const likelyLocale = likelyLanguage(API.key);
+            console.log(`shouldFetchEvents: API.locale is empty for national calendar ${API.key}; likely locale ${likelyLocale} is not available.`);
+            return {
+                shouldFetch: false,
+                isBlocked: true,
+                reason: `The General Roman Calendar has not yet been translated into the locale "${likelyLocale}". Please translate the General Roman Calendar via the Weblate translation server before creating a calendar for this locale.`
+            };
+        }
         console.log('shouldFetchEvents: API.locale is empty; skipping events fetch and missing-translation checks until a locale is selected.');
         return { shouldFetch: false, isBlocked: false, reason: '' };
     }
