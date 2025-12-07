@@ -85,6 +85,10 @@ test.describe('National Calendar Form', () => {
         // Wait for the save button to be enabled (form must be fully loaded)
         const saveButton = page.locator('#serializeNationalCalendarData');
         await expect(saveButton).toBeEnabled({ timeout: 15000 });
+
+        // Dismiss any toast notifications that might be blocking the button
+        await page.locator('#toast-container').evaluate(el => el?.remove()).catch(() => {});
+
         await saveButton.click();
 
         // Wait for the response and capture status

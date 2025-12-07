@@ -238,7 +238,8 @@ test.describe('Diocesan Calendar Form', () => {
         // Fill in diocese name from the found diocese (without existing calendar data)
         const dioceseInput = page.locator('#diocesanCalendarDioceseName');
         await dioceseInput.fill(dioceseToCreate.name);
-        await dioceseInput.dispatchEvent('change');
+        // Use bubbling event dispatch (same as UPDATE test)
+        await dioceseInput.evaluate(el => el.dispatchEvent(new Event('change', { bubbles: true })));
 
         // Wait for the form to process the change (network requests, datalist updates)
         await page.waitForLoadState('networkidle');
@@ -247,7 +248,27 @@ test.describe('Diocesan Calendar Form', () => {
         // This is required because empty form rows would fail API schema validation
         const principalPatronNameInput = page.locator('.carousel-item.active input.litEventName').first();
         await principalPatronNameInput.fill('Test Principal Patron');
-        await principalPatronNameInput.dispatchEvent('change');
+        // Use bubbling event dispatch to properly trigger litEventChanged handler
+        await principalPatronNameInput.evaluate(el => el.dispatchEvent(new Event('change', { bubbles: true })));
+
+        // Select "Martyrs" from the Common bootstrap-multiselect (not "Proper" which requires readings data)
+        const activeCarouselItem = page.locator('.carousel-item.active');
+        await activeCarouselItem.locator('.btn-group button.multiselect').first().click();
+        await page.waitForSelector('.multiselect-container.dropdown-menu.show', { timeout: 5000 });
+        // Deselect "Proper" and select "Martyrs", then dispatch change event on the select
+        await page.evaluate(() => {
+            const container = document.querySelector('.multiselect-container.dropdown-menu.show');
+            if (!container) return;
+            const properInput = container.querySelector('input[type="checkbox"][value="Proper"]') as HTMLInputElement;
+            if (properInput?.checked) properInput.click();
+            const martyrsInput = container.querySelector('input[type="checkbox"][value="Martyrs"]') as HTMLInputElement;
+            if (martyrsInput && !martyrsInput.checked) martyrsInput.click();
+        });
+        await page.keyboard.press('Escape');
+
+        // Dispatch change event on the Common select to trigger litEventCommonChangeHandler
+        const commonSelect = activeCarouselItem.locator('select.litEventCommon').first();
+        await commonSelect.evaluate(el => el.dispatchEvent(new Event('change', { bubbles: true })));
 
         // Set up request interception to capture the payload and method
         const { getPayload, getMethod } = await extendingPage.interceptDataRequests();
@@ -262,13 +283,21 @@ test.describe('Diocesan Calendar Form', () => {
         const saveButton = page.locator('#saveDiocesanCalendar_btn');
         await expect(saveButton).toBeVisible({ timeout: 10000 });
         await expect(saveButton).toBeEnabled({ timeout: 15000 });
-        await saveButton.click({ force: true });
 
-        // Wait for the CREATE response and capture status
-        const response = await page.waitForResponse(
+        // Set up response wait BEFORE clicking (Promise.all pattern to catch the response)
+        const responsePromise = page.waitForResponse(
             response => response.url().includes('/data/') && ['PUT', 'PATCH'].includes(response.request().method()),
             { timeout: 15000 }
         );
+
+        // Click via page.evaluate for reliable triggering (same as UPDATE test)
+        await page.evaluate(() => {
+            const btn = document.querySelector('#saveDiocesanCalendar_btn') as HTMLButtonElement;
+            if (btn) btn.click();
+        });
+
+        // Now await the response
+        const response = await responsePromise;
         createResponseStatus = response.status();
         try {
             createResponseBody = await response.json();

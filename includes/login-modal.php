@@ -398,8 +398,18 @@ function updateAuthUI() {
  *
  * Note: Some page-specific forms (e.g., #nationalCalendarSettingsForm) may not have
  * data-requires-auth and are handled by the auth:logout event in extending.js.
+ *
+ * IMPORTANT for mixed auth/non-auth forms: If a form has data-requires-auth but contains
+ * controls that should NOT be auto-enabled on login (e.g., they depend on translation
+ * availability or other conditions), mark those controls with their own data-requires-auth
+ * attribute so they are skipped during form control iteration.
  */
 function initPermissionUI() {
+    // Guard: ensure Auth module is available (safe for pages without auth.js)
+    if (typeof Auth === 'undefined') {
+        return;
+    }
+
     const protectedElements = document.querySelectorAll('[data-requires-auth]');
     const isAuth = Auth.isAuthenticated();
     const formControlTags = ['INPUT', 'SELECT', 'TEXTAREA'];
