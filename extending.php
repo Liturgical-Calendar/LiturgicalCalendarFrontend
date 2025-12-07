@@ -583,7 +583,7 @@ if (isset($_GET['choice'])) {
                 <div class="container">
                     <div class="row">
                         <div class="col text-center">
-                            <button class="btn btn-lg btn-primary m-1 d-none" id="saveDiocesanCalendar_btn" data-requires-auth="true">
+                            <button class="btn btn-lg btn-primary m-1 d-none" id="saveDiocesanCalendar_btn" data-requires-auth="true" disabled>
                                 <i class="fas fa-save me-2"></i>
                                 <?php echo $messages['Save Diocesan Calendar Data']; ?>
                             </button>

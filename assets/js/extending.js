@@ -3290,8 +3290,9 @@ const diocesanCalendarNationalDependencyChanged = (ev) => {
     console.log('National dependency changed', ev);
     const currentSelectedNation = ev.target.value;
 
-    // Disable "Remove diocesan data" button
+    // Disable "Remove diocesan data" and "Save diocesan data" buttons
     document.getElementById('removeExistingDiocesanDataBtn').disabled = true;
+    document.getElementById('saveDiocesanCalendar_btn').disabled = true;
 
     // The diocese remove prompt is created when existing Diocesan data is loaded
     const removePrompt = document.getElementById('removeDiocesanCalendarPrompt');
@@ -3424,6 +3425,10 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
         document.getElementById('diocesanCalendarDefinitionCardLinks').classList.remove('diocesan-disabled');
         document.getElementById('carouselExampleIndicators').classList.remove('diocesan-disabled');
         document.getElementById('diocesanOverridesContainer').classList.remove('diocesan-disabled');
+        // Enable save button if authenticated
+        if (Auth.isAuthenticated()) {
+            document.getElementById('saveDiocesanCalendar_btn').disabled = false;
+        }
         API.category = 'diocese';
         API.key = selectedOption.getAttribute('data-value');
         console.log('selected diocese with key = ' + API.key);
@@ -3466,6 +3471,8 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
         document.getElementById('diocesanCalendarDefinitionCardLinks').classList.add('diocesan-disabled');
         document.getElementById('carouselExampleIndicators').classList.add('diocesan-disabled');
         document.getElementById('diocesanOverridesContainer').classList.add('diocesan-disabled');
+        // Disable save button when no valid diocese is selected
+        document.getElementById('saveDiocesanCalendar_btn').disabled = true;
     }
 }
 
