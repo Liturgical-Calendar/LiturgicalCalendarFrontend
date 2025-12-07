@@ -294,7 +294,8 @@ class FormControls {
      * @static
      */
     static populateMonthOptions(selectElement, selectedMonth = null) {
-        const formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
+        const locale = FormControls.jsLocale || navigator.language || 'en';
+        const formatter = new Intl.DateTimeFormat(locale, { month: 'long' });
         for (let i = 0; i < 12; i++) {
             const monthDate = new Date(Date.UTC(0, i, 2, 0, 0, 0));
             const option = document.createElement('option');
@@ -324,7 +325,8 @@ class FormControls {
      * @static
      */
     static generateMonthOptionsHtml(selectedMonth = null) {
-        const formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
+        const locale = FormControls.jsLocale || navigator.language || 'en';
+        const formatter = new Intl.DateTimeFormat(locale, { month: 'long' });
         let html = '';
         for (let i = 0; i < 12; i++) {
             const monthDate = new Date(Date.UTC(0, i, 2, 0, 0, 0));
