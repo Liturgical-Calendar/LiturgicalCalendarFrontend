@@ -393,11 +393,14 @@ function initPermissionUI() {
                 el.classList.add('opacity-50');
             }
         } else if (formControlTags.includes(el.tagName)) {
-            // For standalone form controls, just disable (don't hide)
-            el.disabled = !isAuth;
-            // Handle bootstrap-multiselect elements
-            if (el.tagName === 'SELECT' && el.hasAttribute('multiple') && typeof $ !== 'undefined' && $.fn.multiselect) {
-                $(el).multiselect(isAuth ? 'enable' : 'disable');
+            // For standalone form controls, only disable when not authenticated
+            // Don't enable when authenticated - let other code manage that based on form state
+            if (!isAuth) {
+                el.disabled = true;
+                // Handle bootstrap-multiselect elements
+                if (el.tagName === 'SELECT' && el.hasAttribute('multiple') && typeof $ !== 'undefined' && $.fn.multiselect) {
+                    $(el).multiselect('disable');
+                }
             }
         } else {
             // For other elements (buttons, etc.), only control visibility
