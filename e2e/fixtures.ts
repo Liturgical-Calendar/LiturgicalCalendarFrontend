@@ -86,6 +86,7 @@ export class ExtendingPageHelper {
     async goToNationalCalendar() {
         await this.page.goto(`${this.baseUrl}/extending.php?choice=national`);
         await this.page.waitForLoadState('networkidle');
+        await this.waitForAuth();
     }
 
     /**
@@ -94,6 +95,7 @@ export class ExtendingPageHelper {
     async goToWiderRegionCalendar() {
         await this.page.goto(`${this.baseUrl}/extending.php?choice=widerRegion`);
         await this.page.waitForLoadState('networkidle');
+        await this.waitForAuth();
     }
 
     /**
@@ -102,6 +104,18 @@ export class ExtendingPageHelper {
     async goToDiocesanCalendar() {
         await this.page.goto(`${this.baseUrl}/extending.php?choice=diocesan`);
         await this.page.waitForLoadState('networkidle');
+        await this.waitForAuth();
+    }
+
+    /**
+     * Wait for auth check to complete and user to be authenticated.
+     * This waits for the user menu to be visible (indicating login was verified).
+     */
+    async waitForAuth() {
+        await this.page.waitForFunction(() => {
+            // @ts-ignore - Auth is a global object
+            return typeof Auth !== 'undefined' && Auth.isAuthenticated() === true;
+        }, { timeout: 10000 });
     }
 
     /**

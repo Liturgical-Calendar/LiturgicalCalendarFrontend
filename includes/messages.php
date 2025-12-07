@@ -49,6 +49,17 @@ $messages = [
     'Error'                                  => _('Error'),
     /** translators: notification title for warning messages */
     'Warning'                                => _('Warning'),
+    /** translators: notification title when translations are missing for a locale */
+    'Missing Translations'                   => _('Missing Translations'),
+
+    // =========================================================================
+    // Translation-related error messages
+    // =========================================================================
+    /** translators: error message when translations are missing. %s is the locale code (e.g., "en_US") */
+    'Cannot proceed: translations missing for locale' => _('Cannot proceed: translations missing for locale %s'),
+    /** translators: detailed explanation when General Roman Calendar translations are missing.
+        %s is the locale code. This message should mention Weblate as the translation server. */
+    'General Roman Calendar not translated' => _('The General Roman Calendar has not yet been translated into the locale "%s". Please translate the General Roman Calendar via the Weblate translation server before creating a calendar for this locale.'),
 
     // =========================================================================
     // Liturgical colors

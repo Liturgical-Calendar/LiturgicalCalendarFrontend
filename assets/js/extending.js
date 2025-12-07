@@ -1862,7 +1862,7 @@ const shouldFetchEvents = (eventsUrlForCategory) => {
     // Determine if we're blocked: we need events but they're not available because translations are missing
     const isBlocked = missingForLocale && isFetchingFromBase && !LitCalMetadata.locales.includes(localeToCheck);
     const reason = isBlocked
-        ? `The General Roman Calendar has not yet been translated into the locale "${localeToCheck}". Please translate the General Roman Calendar via the Weblate translation server before creating a calendar for this locale.`
+        ? Messages['General Roman Calendar not translated'].replace('%s', localeToCheck)
         : '';
 
     return { shouldFetch, isBlocked, reason };
@@ -1913,8 +1913,8 @@ const fetchEventsAndCalendarData = () => {
     const { shouldFetch, isBlocked, reason } = shouldFetchEvents(eventsUrlForCategory);
 
     if (isBlocked) {
-        console.error('Cannot proceed: translations missing for locale', API.locale);
-        toastr['error'](reason, 'Missing Translations').attr('data-toast-type', 'missing-translations');
+        console.error(Messages['Cannot proceed: translations missing for locale'].replace('%s', API.locale));
+        toastr['error'](reason, Messages['Missing Translations']).attr('data-toast-type', 'missing-translations');
         // Disable all action buttons since we can't proceed without translations
         document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = true);
         document.querySelectorAll('.actionPromptButton').forEach(btn => btn.disabled = true);
@@ -1941,7 +1941,8 @@ const fetchEventsAndCalendarData = () => {
     // Re-enable action buttons since translations are available
     document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = false);
     // Enable form controls for the current category (only if authenticated)
-    if (Auth.isAuthenticated()) {
+    // Guard for pages without auth.js
+    if (typeof Auth !== 'undefined' && Auth.isAuthenticated()) {
         if (API.category === 'widerregion') {
             document.querySelector('#widerRegionLocales').disabled = false;
             $('#widerRegionLocales').multiselect('enable');
@@ -3437,8 +3438,8 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
         document.getElementById('diocesanCalendarDefinitionCardLinks').classList.remove('diocesan-disabled');
         document.getElementById('carouselExampleIndicators').classList.remove('diocesan-disabled');
         document.getElementById('diocesanOverridesContainer').classList.remove('diocesan-disabled');
-        // Enable save button if authenticated
-        if (Auth.isAuthenticated()) {
+        // Enable save button if authenticated (guard for pages without auth.js)
+        if (typeof Auth !== 'undefined' && Auth.isAuthenticated()) {
             document.getElementById('saveDiocesanCalendar_btn').disabled = false;
         }
         API.category = 'diocese';
@@ -4004,18 +4005,23 @@ document.addEventListener('hidden.bs.modal', (ev) => {
  * Update extending.php-specific navbar authentication UI.
  *
  * Handles login button and user menu visibility in the navbar.
- * This duplicates some logic from login-modal.php's updateAuthUI() for
- * page-specific handling. Both handle navbar elements.
+ * This is functionally similar to login-modal.php's global updateAuthUI(),
+ * but is module-scoped to extending.js to avoid naming collisions.
  *
  * Note: This is different from initPermissionUI() (in login-modal.php) which
  * handles data-requires-auth protected elements throughout the page.
  *
  * For complete auth UI update on extending.php, you need:
- * 1. updateAuthUI() (this function) - navbar elements
+ * 1. syncExtendingNavbarAuth() (this function) - navbar elements
  * 2. initPermissionUI() - data-requires-auth elements
  * 3. auth:logout event listener - page-specific form resets
  */
-function updateAuthUI() {
+function syncExtendingNavbarAuth() {
+    // Guard: ensure Auth module is available (safe for pages without auth.js)
+    if (typeof Auth === 'undefined') {
+        return;
+    }
+
     const loginBtn = document.getElementById('loginBtn');
     const userMenu = document.getElementById('userMenu');
     const username = document.getElementById('username');
@@ -4059,9 +4065,9 @@ function cleanupModalBackdrop() {
 
 // Initialize Auth module and UI
 if (typeof Auth !== 'undefined') {
-    // Update navbar elements (login button vs user menu) - supplements login-modal.php's updateAuthUI()
+    // Update navbar elements (login button vs user menu)
     // Note: initPermissionUI() in login-modal.php handles data-requires-auth elements separately
-    updateAuthUI();
+    syncExtendingNavbarAuth();
 
     // Clean up backdrop when login modal is closed
     // (Login/logout button handlers and form submission are in login-modal.php)
