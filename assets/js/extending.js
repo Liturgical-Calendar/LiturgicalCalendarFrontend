@@ -1887,11 +1887,15 @@ const fetchEventsAndCalendarData = () => {
         document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = true);
         document.querySelectorAll('.actionPromptButton').forEach(btn => btn.disabled = true);
         document.querySelector('.serializeRegionalNationalData')?.setAttribute('disabled', 'disabled');
-        // Disable wider region form controls
+        // Disable form controls for the current category
         if (API.category === 'widerregion') {
             document.querySelector('#widerRegionLocales').disabled = true;
             $('#widerRegionLocales').multiselect('disable');
             document.querySelector('#currentLocalizationWiderRegion').disabled = true;
+        } else if (API.category === 'nation') {
+            document.querySelector('#nationalCalendarLocales').disabled = true;
+            $('#nationalCalendarLocales').multiselect('disable');
+            document.querySelector('#currentLocalizationNational').disabled = true;
         }
         document.querySelector('#overlay').classList.add('hidden');
         return;
@@ -1899,11 +1903,17 @@ const fetchEventsAndCalendarData = () => {
 
     // Re-enable action buttons since translations are available
     document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = false);
-    // Enable wider region form controls (only if authenticated)
-    if (API.category === 'widerregion' && Auth.isAuthenticated()) {
-        document.querySelector('#widerRegionLocales').disabled = false;
-        $('#widerRegionLocales').multiselect('enable');
-        document.querySelector('#currentLocalizationWiderRegion').disabled = false;
+    // Enable form controls for the current category (only if authenticated)
+    if (Auth.isAuthenticated()) {
+        if (API.category === 'widerregion') {
+            document.querySelector('#widerRegionLocales').disabled = false;
+            $('#widerRegionLocales').multiselect('enable');
+            document.querySelector('#currentLocalizationWiderRegion').disabled = false;
+        } else if (API.category === 'nation') {
+            document.querySelector('#nationalCalendarLocales').disabled = false;
+            $('#nationalCalendarLocales').multiselect('enable');
+            document.querySelector('#currentLocalizationNational').disabled = false;
+        }
     }
 
     if (shouldFetch) {

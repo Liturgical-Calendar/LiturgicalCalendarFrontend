@@ -289,7 +289,7 @@ if (isset($_GET['choice'])) {
                                     </div>
                                     <div class="form-group col col-md-3">
                                         <label for="nationalCalendarLocales" class="text-uppercase"><?php echo $messages['Locales']; ?></label>
-                                        <select class="form-select calendarLocales" id="nationalCalendarLocales" multiple="multiple">
+                                        <select class="form-select calendarLocales" id="nationalCalendarLocales" data-requires-auth="true" disabled multiple="multiple">
                                         <?php
                                         foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
                                             echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
@@ -327,7 +327,7 @@ if (isset($_GET['choice'])) {
                                     </div>
                                     <div class="form-group col col-md-3 mt-4">
                                         <label for="currentLocalizationNational"><?php echo $messages['Current localization']; ?></label>
-                                        <select class="form-select currentLocalizationChoices" id="currentLocalizationNational">
+                                        <select class="form-select currentLocalizationChoices" id="currentLocalizationNational" data-requires-auth="true" disabled>
                                             <?php
                                             foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
                                                 echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
