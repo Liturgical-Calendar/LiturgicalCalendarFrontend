@@ -9,7 +9,7 @@ This document outlines the plan for implementing JWT authentication in the Litur
 - [LiturgicalCalendarAPI#262](https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI/issues/262) - ✅ API JWT Implementation (Complete)
 - [LiturgicalCalendarFrontend#181](https://github.com/Liturgical-Calendar/LiturgicalCalendarFrontend/issues/181) - 🔄 Frontend JWT Client Implementation (In Progress)
 
-**Status:** Phase 1, Phase 2, Phase 2.4, Phase 2.5, and Phase 3.2 (Session Expiry Warning) complete - as of 2025-12-06
+**Status:** Phase 1, Phase 2, Phase 2.4, Phase 2.5, Phase 3.1, and Phase 3.2 (Session Expiry Warning) complete - as of 2025-12-06
 
 **API Readiness:**
 The LiturgicalCalendarAPI now has full JWT authentication implemented with HttpOnly cookie support:
