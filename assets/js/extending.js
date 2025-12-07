@@ -1954,6 +1954,10 @@ const fetchEventsAndCalendarData = () => {
  * @returns {void}
  */
 const regionalNationalCalendarNameChanged = (ev) => {
+    // Ignore empty values - wait for actual input
+    if (!ev.target.value.trim()) {
+        return;
+    }
     document.querySelector('#overlay').classList.remove('hidden');
     API.category = ev.target.dataset.category;
     // our proxy will take care of splitting locale from wider region, when we are setting a wider region key
