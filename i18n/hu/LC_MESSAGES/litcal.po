@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-07 08:23+0000\n"
-"PO-Revision-Date: 2025-12-07 10:23+0000\n"
+"PO-Revision-Date: 2025-12-07 11:03+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hu/>\n"
@@ -265,7 +265,7 @@ msgstr "URL vágólapra másolása sikertelen volt"
 #. translators: notification message
 #: usage.php:21
 msgid "Please select and copy manually"
-msgstr "Kérlek, válassz ki és másolj manuálisan"
+msgstr "Kérjük, válasszon ki és másolj manuálisan"
 
 #. translators: part of page title - section showing usage examples
 #: usage.php:31
@@ -1166,7 +1166,7 @@ msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
 msgstr ""
-"Úgy tűnik, hogy ez a liturgikus esemény nem létezik? Kérlek, válassz egy "
+"Úgy tűnik, hogy ez a liturgikus esemény nem létezik? Kérjük, válasszon egy "
 "értéket a listából."
 
 #: src/Utilities.php:268
@@ -1175,12 +1175,12 @@ msgstr "Ez a liturgikus esemény nem létezik, így létre fogjuk hozni."
 
 #: src/Utilities.php:273
 msgid "Choose from existing liturgical events"
-msgstr "Választhatsz meglévő liturgikus események közül"
+msgstr "Válasszon a meglévő liturgikus események közül"
 
 #: src/Utilities.php:273
 msgid "Choose from existing liturgical events (or create a new one)"
 msgstr ""
-"Választhatsz meglévő liturgikus események közül (vagy létrehozhatsz újat)"
+"Válasszon a meglévő liturgikus események közül (vagy létrehozhatsz újat)"
 
 #: src/Utilities.php:279
 msgid "Property to change"
@@ -1324,7 +1324,7 @@ msgstr "Kapcsolódási probléma"
 
 #: includes/login-modal.php:126 includes/login-modal.php:591
 msgid "Are you sure you want to logout?"
-msgstr "Biztosan ki szeretnél jelentkezni?"
+msgstr "Biztosan ki szeretne jelentkezni?"
 
 #: includes/login-modal.php:173
 msgid "Hide password"
@@ -1368,11 +1368,11 @@ msgstr "Munkamenet meghosszabbítva"
 #: includes/login-modal.php:563
 msgid "Failed to extend session. Please login again."
 msgstr ""
-"Nem sikerült meghosszabbítani a munkamenetet. Kérlek, jelentkezz be újra."
+"Nem sikerült meghosszabbítani a munkamenetet. Kérjük, jelentkezzen be újra."
 
 #: includes/login-modal.php:621
 msgid "Your session has expired. Please login again."
-msgstr "A munkamenet lejárt. Kérlek, jelentkezz be újra."
+msgstr "A munkamenet lejárt. Kérjük, jelentkezzen be újra."
 
 #: includes/login-modal.php:622
 msgid "Session Expired"
@@ -1426,7 +1426,7 @@ msgstr "Figyelmeztetés"
 #. translators: notification title when translations are missing for a locale
 #: includes/messages.php:53
 msgid "Missing Translations"
-msgstr "Fordítások hiányoznak"
+msgstr "Hiányzó fordítások"
 
 #. translators: error message when translations are missing. %s is the locale code (e.g., "en_US")
 #: includes/messages.php:59
@@ -1443,9 +1443,9 @@ msgid ""
 "\"%s\". Please translate the General Roman Calendar via the Weblate "
 "translation server before creating a calendar for this locale."
 msgstr ""
-"Az Általános Római Naptár még nincs lefordítva a(z) \"%s\" helyszínre. "
-"Kérlek, fordítsd le az Általános Római Naptárat a Weblate fordítási "
-"szerveren, mielőtt naptárat készítenél ehhez a helyszínhez."
+"Az Általános Római Naptár még nincs lefordítva a(z) \"%s\" nyelvi "
+"környezetre. Kérjük, a Weblate fordítási szerveren fordítsa le az Általános "
+"Római Naptárt, mielőtt naptárat készít ehhez a nyelvi környezethez."
 
 #. translators: form row title for designating a Doctor of the Church
 #: includes/messages.php:82
