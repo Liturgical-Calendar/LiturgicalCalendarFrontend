@@ -1814,15 +1814,14 @@ const shouldFetchEvents = (eventsUrlForCategory) => {
     // Check if we're fetching from the base General Roman Calendar
     const isFetchingFromBase = eventsUrlForCategory === EventsUrl;
 
-    // For wider region calendars, we use regional locales (e.g., fr_CA, es_BO) but the General Roman Calendar
-    // is only translated into base locales (e.g., fr, es). So we need to check the base locale.
+    // When fetching from the base General Roman Calendar, we need to check the base locale
+    // (e.g., 'fr' instead of 'fr_CA') since the General Roman Calendar is only translated into base locales.
     const baseLocale = API.locale.split(/[-_]/)[0];
-    const isWiderRegion = API.category === 'widerregion';
 
-    // Check if the locale (or base locale for wider regions) is available for the General Roman Calendar
-    const localeToCheck = (isFetchingFromBase && isWiderRegion) ? baseLocale : API.locale;
+    // Check if the locale (or base locale when fetching from base) is available for the General Roman Calendar
+    const localeToCheck = isFetchingFromBase ? baseLocale : API.locale;
     const localeAvailableForBase = !isFetchingFromBase || LitCalMetadata.locales.includes(localeToCheck);
-    console.log(`shouldFetchEvents: checking locale <${localeToCheck}> (isWiderRegion=${isWiderRegion}), available for General Roman Calendar?`, localeAvailableForBase);
+    console.log(`shouldFetchEvents: checking locale <${localeToCheck}> (isFetchingFromBase=${isFetchingFromBase}), available for General Roman Calendar?`, localeAvailableForBase);
 
     const shouldFetch = missingForLocale && localeAvailableForBase;
     console.log(`shouldFetchEvents: verdict on whether we should attempt to fetch events = `, shouldFetch);
