@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-07 08:23+0000\n"
-"PO-Revision-Date: 2025-12-07 10:23+0000\n"
+"PO-Revision-Date: 2025-12-07 10:37+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -1254,12 +1254,12 @@ msgstr "Erstelle einen Kalender für eine weitere Region"
 #. translators: card heading for creating national calendar
 #: layout/header.php:31 includes/messages.php:218
 msgid "Create a National Calendar"
-msgstr "Erstellen einen nationalen Kalender"
+msgstr "Erstelle einen nationalen Kalender"
 
 #. translators: card heading for creating diocesan calendar
 #: layout/header.php:32 includes/messages.php:220
 msgid "Create a Diocesan Calendar"
-msgstr "Erstellen einen Diözesankalender"
+msgstr "Erstelle einen Diözesankalender"
 
 #: layout/header.php:36
 msgid "Usage"
@@ -1534,7 +1534,7 @@ msgstr "Liturgisches Ereignis auf neues Datum verschieben"
 #. translators: button description for creating new liturgical event
 #: includes/messages.php:116
 msgid "Create new liturgical event"
-msgstr "Neues liturgisches Ereignis erstellen"
+msgstr "Erstelle neues liturgisches Ereignis"
 
 #. translators: button description for designating Doctor of the Church
 #: includes/messages.php:118
@@ -1564,7 +1564,7 @@ msgstr "Liturgisches Ereignis verschieben"
 #. translators: button label for creating a liturgical event
 #: includes/messages.php:134
 msgid "Create Liturgical Event"
-msgstr "Liturgisches Ereignis erstellen"
+msgstr "Erstelle Liturgisches Ereignis"
 
 #. translators: button label for creating event from existing
 #: includes/messages.php:136
@@ -1625,7 +1625,7 @@ msgstr "Verwaltungstools"
 #: includes/messages.php:166
 msgid "Extend the General Roman Calendar with National or Diocesan data"
 msgstr ""
-"Erweitern den Allgemeinen Römischen Kalender um nationale oder diözesane "
+"Erweitere den Allgemeinen Römischen Kalender um nationale oder diözesane "
 "Daten"
 
 #. translators: main heading for decrees page
