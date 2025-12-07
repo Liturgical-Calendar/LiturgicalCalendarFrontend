@@ -242,8 +242,9 @@ class Utilities
         echo '            <div class="modal-footer">';
         foreach ($buttons as $button) {
             $disabled = isset($button['disabled']) && $button['disabled'] ? ' disabled' : '';
+            $iconHtml = !empty($button['icon']) ? '<i class="' . $button['icon'] . ' me-2"></i>' : '';
             echo '<button type="button" id="' . $button['id'] . '" class="' . $button['class'] . '"' . $disabled . '>'
-                . '<i class="' . $button['icon'] . ' me-2"></i>' . $button['label'] . '</button>';
+                . $iconHtml . $button['label'] . '</button>';
         }
         echo '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'
             . '<i class="fas fa-window-close me-2"></i>' . $cancelLabel . '</button>';
