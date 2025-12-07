@@ -123,6 +123,29 @@ const handleDeleteResponse = async (response, onSuccessCleanup, successMessage) 
 };
 
 /**
+ * Toggles the disabled state and visual appearance of a form container.
+ * Sets opacity-50 class and disables/enables all form controls within.
+ *
+ * @param {string|HTMLElement} selectorOrElement - CSS selector or DOM element
+ * @param {boolean} enabled - true to enable, false to disable
+ */
+const setFormEnabled = (selectorOrElement, enabled) => {
+    const element = typeof selectorOrElement === 'string'
+        ? document.querySelector(selectorOrElement)
+        : selectorOrElement;
+    if (!element) return;
+
+    if (enabled) {
+        element.classList.remove('opacity-50');
+    } else {
+        element.classList.add('opacity-50');
+    }
+    element.querySelectorAll('input, select, button').forEach(el => {
+        el.disabled = !enabled;
+    });
+};
+
+/**
  * Builds a LitEvent object from form row inputs.
  *
  * @param {HTMLElement} row - The form row element
@@ -1929,10 +1952,7 @@ const fetchEventsAndCalendarData = () => {
             $('#nationalCalendarLocales').multiselect('disable');
             document.querySelector('#currentLocalizationNational').disabled = true;
             // Disable nationalCalendarSettingsForm controls
-            document.querySelector('#nationalCalendarSettingsForm').classList.add('opacity-50');
-            document.querySelectorAll('#nationalCalendarSettingsForm input, #nationalCalendarSettingsForm select, #nationalCalendarSettingsForm button').forEach(el => {
-                el.disabled = true;
-            });
+            setFormEnabled('#nationalCalendarSettingsForm', false);
         }
         document.querySelector('#overlay').classList.add('hidden');
         return;
@@ -1952,10 +1972,7 @@ const fetchEventsAndCalendarData = () => {
             $('#nationalCalendarLocales').multiselect('enable');
             document.querySelector('#currentLocalizationNational').disabled = false;
             // Enable nationalCalendarSettingsForm controls
-            document.querySelector('#nationalCalendarSettingsForm').classList.remove('opacity-50');
-            document.querySelectorAll('#nationalCalendarSettingsForm input, #nationalCalendarSettingsForm select, #nationalCalendarSettingsForm button').forEach(el => {
-                el.disabled = false;
-            });
+            setFormEnabled('#nationalCalendarSettingsForm', true);
         }
     }
 
@@ -2022,10 +2039,7 @@ const regionalNationalCalendarNameChanged = (ev) => {
             document.querySelector('#currentLocalizationWiderRegion').disabled = true;
         } else if (category === 'nation') {
             document.querySelector('#nationalCalendarSettingsForm').reset();
-            document.querySelector('#nationalCalendarSettingsForm').classList.add('opacity-50');
-            document.querySelectorAll('#nationalCalendarSettingsForm input, #nationalCalendarSettingsForm select, #nationalCalendarSettingsForm button').forEach(el => {
-                el.disabled = true;
-            });
+            setFormEnabled('#nationalCalendarSettingsForm', false);
             document.querySelector('#publishedRomanMissalList').innerHTML = '';
             $('#nationalCalendarLocales').multiselect('deselectAll', false).multiselect('disable');
             document.querySelector('#nationalCalendarLocales').disabled = true;
@@ -4080,13 +4094,7 @@ if (typeof Auth !== 'undefined') {
 // Handle auth:logout event to reset page-specific form controls not covered by data-requires-auth
 document.addEventListener('auth:logout', () => {
     // Reset national calendar settings form
-    const nationalSettingsForm = document.getElementById('nationalCalendarSettingsForm');
-    if (nationalSettingsForm) {
-        nationalSettingsForm.classList.add('opacity-50');
-        nationalSettingsForm.querySelectorAll('input, select, button').forEach(el => {
-            el.disabled = true;
-        });
-    }
+    setFormEnabled('#nationalCalendarSettingsForm', false);
 
     // Disable save diocesan calendar button
     const saveDiocesanBtn = document.getElementById('saveDiocesanCalendar_btn');
