@@ -255,7 +255,7 @@ if (isset($_GET['choice'])) {
 
                             <div id="nationalCalendarSettingsContainer" class="container">
                                 <h3 id="nationalCalendarSettingsTitle" class="text-center"><?php echo $messages['National calendar settings']; ?><i class="fas fa-info-circle ms-4 d-inline-block text-black" style="--bs-text-opacity: .3;" role="button" title="<?php echo htmlspecialchars($messages['Tooltip - National calendar first step'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></i></h3>
-                                <form id="nationalCalendarSettingsForm" class="row justify-content-center align-items-baseline needs-validation opacity-50" data-requires-auth="true" novalidate>
+                                <form id="nationalCalendarSettingsForm" class="row justify-content-center align-items-baseline needs-validation" novalidate>
                                     <div class="form-group col col-md-3">
                                         <label for="nationalCalendarSettingEpiphany"><?php echo $messages['EPIPHANY']; ?></label>
                                         <select class="form-select" id="nationalCalendarSettingEpiphany">
