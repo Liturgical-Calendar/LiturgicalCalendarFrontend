@@ -209,20 +209,32 @@ export class ExtendingPageHelper {
     }
 
     /**
-     * Wait for action buttons to be enabled (indicating translations are available).
+     * Wait for buttons matching a selector to be enabled.
+     * Useful for checking if translations are available or form controls are ready.
+     * @param selector - CSS selector for the buttons to check (default: '.litcalActionButton')
      * @param timeout - Maximum time to wait in milliseconds
-     * @returns True if buttons are enabled, false if they're disabled (translations missing)
+     * @returns True if all matching buttons are enabled, false if any are disabled or on timeout
      */
-    async waitForActionButtonsEnabled(timeout = 10000): Promise<boolean> {
+    async waitForButtonsEnabled(selector = '.litcalActionButton', timeout = 10000): Promise<boolean> {
         try {
-            await this.page.waitForFunction(() => {
-                const buttons = document.querySelectorAll('.litcalActionButton');
+            await this.page.waitForFunction((sel) => {
+                const buttons = document.querySelectorAll(sel);
                 return buttons.length > 0 && Array.from(buttons).every(btn => !(btn as HTMLButtonElement).disabled);
-            }, undefined, { timeout });
+            }, selector, { timeout });
             return true;
         } catch {
             return false;
         }
+    }
+
+    /**
+     * Wait for action buttons to be enabled (indicating translations are available).
+     * @param timeout - Maximum time to wait in milliseconds
+     * @returns True if buttons are enabled, false if they're disabled (translations missing)
+     * @deprecated Use waitForButtonsEnabled() with a selector instead
+     */
+    async waitForActionButtonsEnabled(timeout = 10000): Promise<boolean> {
+        return this.waitForButtonsEnabled('.litcalActionButton', timeout);
     }
 
     /**
@@ -469,6 +481,45 @@ export class ExtendingPageHelper {
     }
 
     /**
+     * Wait for a select element to have options populated.
+     * @param selector - CSS selector for the select element
+     * @param minOptions - Minimum number of options required (default: 1)
+     * @param timeout - Maximum time to wait in milliseconds
+     * @returns True if select has required options, false on timeout
+     */
+    async waitForSelectPopulated(selector: string, minOptions = 1, timeout = 15000): Promise<boolean> {
+        try {
+            await this.page.waitForFunction(({ sel, min }) => {
+                const select = document.querySelector(sel) as HTMLSelectElement;
+                return select && select.options.length >= min;
+            }, { sel: selector, min: minOptions }, { timeout });
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    /**
+     * Wait for a toast notification to appear.
+     * @param type - Toast type: 'success', 'error', 'warning', 'info', or custom selector
+     * @param timeout - Maximum time to wait in milliseconds
+     * @returns True if toast appeared, false on timeout
+     */
+    async waitForToast(type: 'success' | 'error' | 'warning' | 'info' | string = 'success', timeout = 10000): Promise<boolean> {
+        const selectorMap: Record<string, string> = {
+            success: '.toast-success, .toast.bg-success',
+            error: '.toast-error, .toast.bg-danger',
+            warning: '.toast-warning, .toast.bg-warning',
+            info: '.toast-info, .toast.bg-info'
+        };
+        const selector = selectorMap[type] || type;
+
+        return this.page.waitForSelector(selector, { timeout })
+            .then(() => true)
+            .catch(() => false);
+    }
+
+    /**
      * Wait for calendar data to fully load after selecting a calendar.
      * Waits for network idle, locales dropdown population, and optional success toast.
      * @param localesSelector - CSS selector for the locales dropdown (e.g., '#widerRegionLocales')
@@ -478,15 +529,10 @@ export class ExtendingPageHelper {
         await this.page.waitForLoadState('networkidle');
 
         // Wait for locales dropdown to be populated
-        await this.page.waitForFunction((selector) => {
-            const select = document.querySelector(selector) as HTMLSelectElement;
-            return select && select.options.length > 0;
-        }, localesSelector, { timeout });
+        await this.waitForSelectPopulated(localesSelector, 1, timeout);
 
         // Wait for success toast (non-blocking)
-        const toastAppeared = await this.page.waitForSelector('.toast-success, .toast.bg-success', { timeout: 10000 })
-            .then(() => true)
-            .catch(() => false);
+        const toastAppeared = await this.waitForToast('success', 10000);
         if (!toastAppeared) {
             console.warn('Success toast not detected within timeout - continuing');
         }
