@@ -1960,11 +1960,11 @@ const fetchEventsAndCalendarData = () => {
         return;
     }
 
-    // Re-enable action buttons since translations are available
-    document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = false);
-    // Enable form controls for the current category (only if authenticated)
+    // Re-enable action buttons and form controls (only if authenticated)
+    // All .litcalActionButton elements have data-requires-auth="true"
     // Guard for pages without auth.js
     if (typeof Auth !== 'undefined' && Auth.isAuthenticated()) {
+        document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = false);
         if (API.category === 'widerregion') {
             document.querySelector('#widerRegionLocales').disabled = false;
             $('#widerRegionLocales').multiselect('enable');
