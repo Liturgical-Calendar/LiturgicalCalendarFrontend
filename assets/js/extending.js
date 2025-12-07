@@ -4057,3 +4057,25 @@ if (typeof Auth !== 'undefined') {
         loginModalEl.addEventListener('hidden.bs.modal', cleanupModalBackdrop);
     }
 }
+
+// Handle auth:logout event to reset page-specific form controls
+document.addEventListener('auth:logout', () => {
+    // Reset national calendar settings form
+    const nationalSettingsForm = document.getElementById('nationalCalendarSettingsForm');
+    if (nationalSettingsForm) {
+        nationalSettingsForm.classList.add('opacity-50');
+        nationalSettingsForm.querySelectorAll('input, select, button').forEach(el => {
+            el.disabled = true;
+        });
+    }
+
+    // Disable save diocesan calendar button
+    const saveDiocesanBtn = document.getElementById('saveDiocesanCalendar_btn');
+    if (saveDiocesanBtn) {
+        saveDiocesanBtn.disabled = true;
+    }
+
+    // Disable action buttons
+    document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = true);
+    document.querySelector('.serializeRegionalNationalData')?.setAttribute('disabled', 'disabled');
+});

@@ -130,6 +130,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
                 hideSessionExpiryToast();
                 await Auth.logout();
+                // Update UI to show logged-out state
+                updateAuthUI();
+                initPermissionUI();
+                // Dispatch logout event for page-specific handlers
+                document.dispatchEvent(new CustomEvent('auth:logout'));
             }
         });
     }
@@ -561,6 +566,11 @@ async function handleSessionExpiryLogout() {
         }
         hideSessionExpiryToast();
         await Auth.logout();
+        // Update UI to show logged-out state
+        updateAuthUI();
+        initPermissionUI();
+        // Dispatch logout event for page-specific handlers
+        document.dispatchEvent(new CustomEvent('auth:logout'));
     }
 }
 
@@ -590,6 +600,8 @@ function handleAutoLogout() {
     // Update UI to show logged-out state
     updateAuthUI();
     initPermissionUI();
+    // Dispatch logout event for page-specific handlers
+    document.dispatchEvent(new CustomEvent('auth:logout'));
 }
 
 /**
