@@ -224,7 +224,7 @@ if (isset($_GET['choice'])) {
         case 'national':
             ?>
                 <div class="container-fluid">
-                    <form class="row justify-content-center needs-validation align-items-center regionalNationalSettingsForm" novalidate>
+                    <form class="row justify-content-center needs-validation align-items-end regionalNationalSettingsForm" novalidate>
                         <div class="form-group col col-md-3">
                             <label for="nationalCalendarName" class="fw-bold"><?php echo $messages['National Calendar']; ?></label>
                             <input list="nationalCalendarsList" class="form-control regionalNationalCalendarName" id="nationalCalendarName" data-category="nation" required>
@@ -239,9 +239,28 @@ if (isset($_GET['choice'])) {
                             ?>
                             </datalist>
                         </div>
-                        <div class="form-group col col-md-3">
-                            <label for="removeExistingCalendarDataBtn" class="fw-bold"></label>
-                            <button class="btn btn-danger m-2 d-none form-control" id="removeExistingCalendarDataBtn" data-requires-auth="true" disabled data-bs-toggle="modal" data-bs-target="#removeCalendarDataPrompt">
+                        <div class="col col-md-3">
+                            <div>
+                                <label for="nationalCalendarLocales" class="fw-bold"><?php echo $messages['Locales']; ?></label>
+                                <select class="form-select calendarLocales" id="nationalCalendarLocales" data-requires-auth="true" disabled multiple="multiple">
+                                <?php foreach ($SystemLocalesWithRegion as $locale => $lang_region) {
+                                        echo "<option value='$locale'>$lang_region</option>";
+                                } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col col-md-3">
+                            <label for="currentLocalizationNational" class="fw-bold"><?php echo $messages['Current localization']; ?></label>
+                            <select class="form-select currentLocalizationChoices" id="currentLocalizationNational" data-requires-auth="true" disabled>
+                                <?php
+                                foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
+                                    echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="col col-md-3">
+                            <button class="btn btn-danger d-none" id="removeExistingCalendarDataBtn" data-requires-auth="true" disabled data-bs-toggle="modal" data-bs-target="#removeCalendarDataPrompt">
                                 <i class="far fa-trash-alt me-2"></i>
                                 <?php echo $messages['RemoveDataButton']; ?>
                             </button>
@@ -287,16 +306,6 @@ if (isset($_GET['choice'])) {
                                             <i class="fas fa-info-circle ms-4 d-inline-block text-black" style="--bs-text-opacity: .3;" role="button" title="<?php echo htmlspecialchars($messages['Tooltip - Eternal High Priest'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></i>
                                         </div>
                                     </div>
-                                    <div class="form-group col col-md-3">
-                                        <label for="nationalCalendarLocales" class="text-uppercase"><?php echo $messages['Locales']; ?></label>
-                                        <select class="form-select calendarLocales" id="nationalCalendarLocales" data-requires-auth="true" disabled multiple="multiple">
-                                        <?php
-                                        foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
-                                            echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
-                                        }
-                                        ?>
-                                        </select>
-                                    </div>
 
                                     <div class="col col-md-6 mt-4">
                                         <div class="row mt-2">
@@ -324,16 +333,6 @@ if (isset($_GET['choice'])) {
                                         }
                                         ?>
                                         </datalist>
-                                    </div>
-                                    <div class="form-group col col-md-3 mt-4">
-                                        <label for="currentLocalizationNational"><?php echo $messages['Current localization']; ?></label>
-                                        <select class="form-select currentLocalizationChoices" id="currentLocalizationNational" data-requires-auth="true" disabled>
-                                            <?php
-                                            foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
-                                                echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
-                                            }
-                                            ?>
-                                        </select>
                                     </div>
                                 </form>
                             </div>
