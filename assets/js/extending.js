@@ -1772,18 +1772,24 @@ const setApiLocaleAndHeaders = (headers) => {
                 : selectedNationalCalendar[0].locales[0];
         } else {
             console.log(`Could not find a national calendar with key ${API.key}; API.path is ${API.path} (category is ${API.category} and key is ${API.key}).`);
-            const likely = likelyLanguage(API.key);
-            // Check if the likely language is available before setting
-            const likelyWithRegion = `${likely}_${API.key}`;
-            if (Object.keys(AvailableLocalesWithRegion).includes(likelyWithRegion)) {
-                API.locale = likelyWithRegion;
-            } else if (Object.keys(AvailableLocales).includes(likely)) {
-                API.locale = likely;
-            } else {
-                // Locale not available - API.locale stays empty, will be handled by shouldFetchEvents
-                console.log(`likelyLanguage ${likely} is not available in translations`);
+            let likely = null;
+            try {
+                likely = likelyLanguage(API.key);
+            } catch (err) {
+                console.warn('likelyLanguage failed for region', API.key, err);
             }
-            console.log(`likelyLanguage = ${likely} (nation is ${API.key}), API.locale set to ${API.locale || '(empty)'}`);
+
+            if (likely) {
+                const likelyWithRegion = `${likely}_${API.key}`;
+                if (Object.prototype.hasOwnProperty.call(AvailableLocalesWithRegion, likelyWithRegion)) {
+                    API.locale = likelyWithRegion;
+                } else if (Object.prototype.hasOwnProperty.call(AvailableLocales, likely)) {
+                    API.locale = likely;
+                } else {
+                    console.log(`likelyLanguage ${likely} is not available in translations`);
+                }
+            }
+            console.log(`likelyLanguage = ${likely ?? '(unknown)'} (nation is ${API.key}), API.locale set to ${API.locale || '(empty)'}`);
         }
     }
 
@@ -1817,12 +1823,18 @@ const shouldFetchEvents = (eventsUrlForCategory) => {
     if (!API.locale) {
         if (API.category === 'nation') {
             // For national calendars, we always try to set a locale. If it's empty, the locale is not available.
-            const likelyLocale = likelyLanguage(API.key);
+            let likelyLocale = null;
+            try {
+                likelyLocale = likelyLanguage(API.key);
+            } catch (err) {
+                console.warn('likelyLanguage failed for region', API.key, err);
+            }
+            const localeLabel = likelyLocale || API.key;
             console.log(`shouldFetchEvents: API.locale is empty for national calendar ${API.key}; likely locale ${likelyLocale} is not available.`);
             return {
                 shouldFetch: false,
                 isBlocked: true,
-                reason: `The General Roman Calendar has not yet been translated into the locale "${likelyLocale}". Please translate the General Roman Calendar via the Weblate translation server before creating a calendar for this locale.`
+                reason: `The General Roman Calendar has not yet been translated into the locale "${localeLabel}". Please translate the General Roman Calendar via the Weblate translation server before creating a calendar for this locale.`
             };
         }
         console.log('shouldFetchEvents: API.locale is empty; skipping events fetch and missing-translation checks until a locale is selected.');
