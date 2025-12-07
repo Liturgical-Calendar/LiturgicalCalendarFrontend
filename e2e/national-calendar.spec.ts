@@ -72,7 +72,7 @@ test.describe('National Calendar Form', () => {
         await expect(page.locator('#serializeNationalCalendarData')).toBeEnabled({ timeout: 10000 });
 
         // Dismiss any toast messages that might be blocking
-        await page.locator('.toast-container, #toast-container').evaluate(el => el?.remove()).catch(() => {});
+        await extendingPage.dismissToasts();
 
         // Track if we made changes that need to be reverted
         let needsGitRestore = false;
@@ -87,7 +87,7 @@ test.describe('National Calendar Form', () => {
         await expect(saveButton).toBeEnabled({ timeout: 15000 });
 
         // Dismiss any toast notifications that might be blocking the button
-        await page.locator('#toast-container').evaluate(el => el?.remove()).catch(() => {});
+        await extendingPage.dismissToasts();
 
         await saveButton.click();
 
