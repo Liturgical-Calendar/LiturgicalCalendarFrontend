@@ -1887,12 +1887,24 @@ const fetchEventsAndCalendarData = () => {
         document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = true);
         document.querySelectorAll('.actionPromptButton').forEach(btn => btn.disabled = true);
         document.querySelector('.serializeRegionalNationalData')?.setAttribute('disabled', 'disabled');
+        // Disable wider region form controls
+        if (API.category === 'widerregion') {
+            document.querySelector('#widerRegionLocales').disabled = true;
+            $('#widerRegionLocales').multiselect('disable');
+            document.querySelector('#currentLocalizationWiderRegion').disabled = true;
+        }
         document.querySelector('#overlay').classList.add('hidden');
         return;
     }
 
     // Re-enable action buttons since translations are available
     document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = false);
+    // Enable wider region form controls (only if authenticated)
+    if (API.category === 'widerregion' && Auth.isAuthenticated()) {
+        document.querySelector('#widerRegionLocales').disabled = false;
+        $('#widerRegionLocales').multiselect('enable');
+        document.querySelector('#currentLocalizationWiderRegion').disabled = false;
+    }
 
     if (shouldFetch) {
         console.log('Calendar data is missing but locale is available, proceeding to fetch events...');
