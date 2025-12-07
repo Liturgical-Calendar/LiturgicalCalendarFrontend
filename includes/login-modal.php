@@ -572,6 +572,7 @@ async function handleExtendSession() {
             sessionExpiryTimeout = null;
         }
         Auth.stopAllTimers();
+        Auth.clearTokens();
 
         showLoginModal();
     } finally {
