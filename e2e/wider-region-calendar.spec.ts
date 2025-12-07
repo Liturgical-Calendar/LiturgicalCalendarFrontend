@@ -643,21 +643,7 @@ test.describe('Wider Region Calendar Form - National Calendar Association', () =
     test('should show associated national calendars', async ({ page, extendingPage }) => {
         // Load Americas region
         await extendingPage.selectCalendar('#widerRegionCalendarName', 'Americas');
-        await page.waitForLoadState('networkidle');
-        // Wait for locales to be populated (indicates data has loaded)
-        await page.waitForFunction(() => {
-            const select = document.querySelector('#widerRegionLocales') as HTMLSelectElement;
-            return select && select.options.length > 0;
-        }, { timeout: 15000 });
-        // Wait for success toast indicating data was loaded
-        const toastAppeared = await page.waitForSelector('.toast-success, .toast.bg-success', { timeout: 10000 })
-            .then(() => true)
-            .catch(() => false);
-        if (!toastAppeared) {
-            console.warn('Success toast not detected within timeout - continuing');
-        }
-        // Wait for all remaining async operations to complete
-        await page.waitForLoadState('networkidle');
+        await extendingPage.waitForCalendarDataLoad('#widerRegionLocales');
 
         // The form should show which national calendars are associated with this wider region
         const nationalCalendarsSection = page.locator('#national_calendars');
