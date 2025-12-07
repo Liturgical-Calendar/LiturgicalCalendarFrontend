@@ -423,7 +423,7 @@ if (isset($_GET['choice'])) {
                                 </select>
                             </div>
                             <div class="col col-md-3 text-center align-self-end">
-                                <button class="btn btn-danger" id="removeExistingDiocesanDataBtn" disabled data-bs-toggle="modal" data-bs-target="#removeDiocesanCalendarPrompt">
+                                <button class="btn btn-danger d-none" id="removeExistingDiocesanDataBtn" data-requires-auth="true" disabled data-bs-toggle="modal" data-bs-target="#removeDiocesanCalendarPrompt">
                                     <i class="far fa-trash-alt me-2"></i>
                                     <?php echo $messages['RemoveDataButton']; ?>
                                 </button>
