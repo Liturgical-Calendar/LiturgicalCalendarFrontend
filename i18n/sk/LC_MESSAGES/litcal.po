@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-07 08:23+0000\n"
+"POT-Creation-Date: 2025-12-07 11:33+0000\n"
 "PO-Revision-Date: 2025-12-07 09:01+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -1155,7 +1155,7 @@ msgstr ""
 "Kancelár diecézy Charlottetown prispel údajmi o liturgickom kalendári pre "
 "Kanadu v angličtine aj francúzštine"
 
-#: src/Utilities.php:267
+#: src/Utilities.php:269
 msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
@@ -1163,28 +1163,28 @@ msgstr ""
 "Zdá sa, že táto liturgická udalosť neexistuje. Prosím, vyberte hodnotu zo "
 "zoznamu."
 
-#: src/Utilities.php:268
+#: src/Utilities.php:270
 msgid "This liturgical event does not exist, so it will be created."
 msgstr "Táto liturgická udalosť neexistuje, preto sa vytvorí."
 
-#: src/Utilities.php:273
+#: src/Utilities.php:275
 msgid "Choose from existing liturgical events"
 msgstr "Vyber si z existujúcich liturgických udalostí"
 
-#: src/Utilities.php:273
+#: src/Utilities.php:275
 msgid "Choose from existing liturgical events (or create a new one)"
 msgstr "Vyber si zo súčasných liturgických udalostí (alebo si vytvor novú)"
 
-#: src/Utilities.php:279
+#: src/Utilities.php:281
 msgid "Property to change"
 msgstr "Vlastnosť na zmenu"
 
 #. translators: form field label for the name of a liturgical event
-#: src/Utilities.php:281 src/FormControls.php:53 includes/messages.php:17
+#: src/Utilities.php:283 src/FormControls.php:53 includes/messages.php:17
 msgid "Name"
 msgstr "Meno"
 
-#: src/Utilities.php:282 src/FormControls.php:171
+#: src/Utilities.php:284 src/FormControls.php:171
 msgid "Grade"
 msgstr "Stupeň"
 
@@ -1314,7 +1314,7 @@ msgstr "Nie je možné overiť stav overenia. Server môže byť nedostupný."
 msgid "Connection Issue"
 msgstr "Problém s pripojením"
 
-#: includes/login-modal.php:126 includes/login-modal.php:591
+#: includes/login-modal.php:126 includes/login-modal.php:592
 msgid "Are you sure you want to logout?"
 msgstr "Naozaj sa chceš odhlásiť?"
 
@@ -1362,11 +1362,11 @@ msgstr "Relácia predĺžená"
 msgid "Failed to extend session. Please login again."
 msgstr "Nepodarilo sa predĺžiť reláciu. Prosím, prihláste sa znova."
 
-#: includes/login-modal.php:621
+#: includes/login-modal.php:622
 msgid "Your session has expired. Please login again."
 msgstr "Vaša relácia vypršala. Prosím, prihláste sa znova."
 
-#: includes/login-modal.php:622
+#: includes/login-modal.php:623
 msgid "Session Expired"
 msgstr "Relácia vypršala"
 

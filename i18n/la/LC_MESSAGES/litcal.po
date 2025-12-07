@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-07 08:23+0000\n"
+"POT-Creation-Date: 2025-12-07 11:33+0000\n"
 "PO-Revision-Date: 2025-12-07 08:41+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
@@ -1157,35 +1157,35 @@ msgstr ""
 "Cancellarius Dioecesis de Charlottetown, contulit data calendarii liturgici "
 "pro Canada in Anglico et Gallico"
 
-#: src/Utilities.php:267
+#: src/Utilities.php:269
 msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
 msgstr ""
 "Hic eventus liturgicus non videtur exsistere? Elige ex valore in indice."
 
-#: src/Utilities.php:268
+#: src/Utilities.php:270
 msgid "This liturgical event does not exist, so it will be created."
 msgstr "Hic eventus liturgicus non exsistit, ita creabitur."
 
-#: src/Utilities.php:273
+#: src/Utilities.php:275
 msgid "Choose from existing liturgical events"
 msgstr "Elige ex eventibus liturgicis exsistentibus"
 
-#: src/Utilities.php:273
+#: src/Utilities.php:275
 msgid "Choose from existing liturgical events (or create a new one)"
 msgstr "Elige ex eventibus liturgicis exsistentibus (vel novum crea)"
 
-#: src/Utilities.php:279
+#: src/Utilities.php:281
 msgid "Property to change"
 msgstr "Proprietas mutanda"
 
 #. translators: form field label for the name of a liturgical event
-#: src/Utilities.php:281 src/FormControls.php:53 includes/messages.php:17
+#: src/Utilities.php:283 src/FormControls.php:53 includes/messages.php:17
 msgid "Name"
 msgstr "Nomen"
 
-#: src/Utilities.php:282 src/FormControls.php:171
+#: src/Utilities.php:284 src/FormControls.php:171
 msgid "Grade"
 msgstr "Gradus"
 
@@ -1316,7 +1316,7 @@ msgstr ""
 msgid "Connection Issue"
 msgstr "Problema Connexionis"
 
-#: includes/login-modal.php:126 includes/login-modal.php:591
+#: includes/login-modal.php:126 includes/login-modal.php:592
 msgid "Are you sure you want to logout?"
 msgstr "Certus es ut discedas?"
 
@@ -1363,11 +1363,11 @@ msgstr "Sessio Extensa"
 msgid "Failed to extend session. Please login again."
 msgstr "Sessionem extendere non potuit. Quaeso iterum coniunge."
 
-#: includes/login-modal.php:621
+#: includes/login-modal.php:622
 msgid "Your session has expired. Please login again."
 msgstr "Sessio tua exspiravit. Quaeso iterum coniunge."
 
-#: includes/login-modal.php:622
+#: includes/login-modal.php:623
 msgid "Session Expired"
 msgstr "Sessio Exspiravit"
 

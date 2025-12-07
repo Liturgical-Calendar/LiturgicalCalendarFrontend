@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-07 08:23+0000\n"
+"POT-Creation-Date: 2025-12-07 11:33+0000\n"
 "PO-Revision-Date: 2025-12-07 10:37+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
@@ -1179,7 +1179,7 @@ msgstr ""
 "Kanzler der Diözese Charlottetown, hat liturgische Kalenderdaten für Kanada "
 "in Englisch und Französisch beigesteuert"
 
-#: src/Utilities.php:267
+#: src/Utilities.php:269
 msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
@@ -1187,29 +1187,29 @@ msgstr ""
 "Dieses liturgische Ereignis scheint nicht zu existieren. Bitte wähle einen "
 "Wert aus der Liste."
 
-#: src/Utilities.php:268
+#: src/Utilities.php:270
 msgid "This liturgical event does not exist, so it will be created."
 msgstr "Dieses liturgische Ereignis existiert nicht, also wird es erstellt."
 
-#: src/Utilities.php:273
+#: src/Utilities.php:275
 msgid "Choose from existing liturgical events"
 msgstr "Wähle aus vorhandenen liturgischen Ereignissen"
 
-#: src/Utilities.php:273
+#: src/Utilities.php:275
 msgid "Choose from existing liturgical events (or create a new one)"
 msgstr ""
 "Wähle aus bestehenden liturgischen Ereignissen (oder erstelle ein neues)"
 
-#: src/Utilities.php:279
+#: src/Utilities.php:281
 msgid "Property to change"
 msgstr "Zu ändernde Eigenschaft"
 
 #. translators: form field label for the name of a liturgical event
-#: src/Utilities.php:281 src/FormControls.php:53 includes/messages.php:17
+#: src/Utilities.php:283 src/FormControls.php:53 includes/messages.php:17
 msgid "Name"
 msgstr "Name"
 
-#: src/Utilities.php:282 src/FormControls.php:171
+#: src/Utilities.php:284 src/FormControls.php:171
 msgid "Grade"
 msgstr "Rang"
 
@@ -1341,7 +1341,7 @@ msgstr ""
 msgid "Connection Issue"
 msgstr "Verbindungsproblem"
 
-#: includes/login-modal.php:126 includes/login-modal.php:591
+#: includes/login-modal.php:126 includes/login-modal.php:592
 msgid "Are you sure you want to logout?"
 msgstr "Möchtest du dich wirklich abmelden?"
 
@@ -1388,11 +1388,11 @@ msgstr "Sitzung verlängert"
 msgid "Failed to extend session. Please login again."
 msgstr "Sitzung konnte nicht verlängert werden. Bitte erneut einloggen."
 
-#: includes/login-modal.php:621
+#: includes/login-modal.php:622
 msgid "Your session has expired. Please login again."
 msgstr "Deine Sitzung ist abgelaufen. Bitte erneut einloggen."
 
-#: includes/login-modal.php:622
+#: includes/login-modal.php:623
 msgid "Session Expired"
 msgstr "Sitzung abgelaufen"
 
@@ -1461,10 +1461,10 @@ msgid ""
 "\"%s\". Please translate the General Roman Calendar via the Weblate "
 "translation server before creating a calendar for this locale."
 msgstr ""
-"Der Allgemeine Römische Kalender wurde noch nicht in die Lokalisierung \"%s\""
-" übersetzt. Bitte übersetze den Allgemeinen Römischen Kalender über den "
-"Weblate-Übersetzungsserver, bevor du einen Kalender für diese Lokalisierung "
-"erstellst."
+"Der Allgemeine Römische Kalender wurde noch nicht in die Lokalisierung "
+"\"%s\" übersetzt. Bitte übersetze den Allgemeinen Römischen Kalender über "
+"den Weblate-Übersetzungsserver, bevor du einen Kalender für diese "
+"Lokalisierung erstellst."
 
 #. translators: form row title for designating a Doctor of the Church
 #: includes/messages.php:82

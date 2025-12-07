@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-07 08:23+0000\n"
+"POT-Creation-Date: 2025-12-07 11:33+0000\n"
 "PO-Revision-Date: 2025-12-07 08:41+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
@@ -1176,35 +1176,35 @@ msgstr ""
 "Kanselier van het bisdom Charlottetown, droeg bij aan liturgische "
 "kalendergegevens voor Canada in zowel het Engels als het Frans"
 
-#: src/Utilities.php:267
+#: src/Utilities.php:269
 msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
 msgstr ""
 "Dit liturgisch evenement lijkt niet te bestaan. Kies een waarde uit de lijst."
 
-#: src/Utilities.php:268
+#: src/Utilities.php:270
 msgid "This liturgical event does not exist, so it will be created."
 msgstr "Dit liturgisch evenement bestaat niet, het zal worden aangemaakt."
 
-#: src/Utilities.php:273
+#: src/Utilities.php:275
 msgid "Choose from existing liturgical events"
 msgstr "Kies uit bestaande liturgische evenementen"
 
-#: src/Utilities.php:273
+#: src/Utilities.php:275
 msgid "Choose from existing liturgical events (or create a new one)"
 msgstr "Kies uit bestaande liturgische evenementen (of maak een nieuwe aan)"
 
-#: src/Utilities.php:279
+#: src/Utilities.php:281
 msgid "Property to change"
 msgstr "Eigenschap wijzigen"
 
 #. translators: form field label for the name of a liturgical event
-#: src/Utilities.php:281 src/FormControls.php:53 includes/messages.php:17
+#: src/Utilities.php:283 src/FormControls.php:53 includes/messages.php:17
 msgid "Name"
 msgstr "Naam"
 
-#: src/Utilities.php:282 src/FormControls.php:171
+#: src/Utilities.php:284 src/FormControls.php:171
 msgid "Grade"
 msgstr "Graad"
 
@@ -1336,7 +1336,7 @@ msgstr ""
 msgid "Connection Issue"
 msgstr "Verbindingsprobleem"
 
-#: includes/login-modal.php:126 includes/login-modal.php:591
+#: includes/login-modal.php:126 includes/login-modal.php:592
 msgid "Are you sure you want to logout?"
 msgstr "Weet je zeker dat je wilt uitloggen?"
 
@@ -1383,11 +1383,11 @@ msgstr "Sessie verlengd"
 msgid "Failed to extend session. Please login again."
 msgstr "Kan sessie niet verlengen. Log opnieuw in."
 
-#: includes/login-modal.php:621
+#: includes/login-modal.php:622
 msgid "Your session has expired. Please login again."
 msgstr "Je sessie is verlopen. Log opnieuw in."
 
-#: includes/login-modal.php:622
+#: includes/login-modal.php:623
 msgid "Session Expired"
 msgstr "Sessie verlopen"
 
