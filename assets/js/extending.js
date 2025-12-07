@@ -115,8 +115,9 @@ const handleDeleteResponse = async (response, onSuccessCleanup, successMessage) 
         } catch { /* empty or non-JSON body - ignore */ }
     } else if (response.status === 400) {
         const json = await response.json();
-        console.error(`${response.status} ${json.response}: ${json.description}`);
-        toastr["error"](`${response.status} ${json.response}: ${json.description}`, Messages['Error']);
+        const errorMessage = extractErrorMessage(json, 'Bad request');
+        console.error(`${response.status} ${errorMessage}`);
+        toastr["error"](`${response.status} ${errorMessage}`, Messages['Error']);
     } else {
         return Promise.reject(response);
     }
