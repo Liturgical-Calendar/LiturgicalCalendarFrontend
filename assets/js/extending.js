@@ -1937,7 +1937,8 @@ const fetchEventsAndCalendarData = () => {
     const { shouldFetch, isBlocked, reason } = shouldFetchEvents(eventsUrlForCategory);
 
     if (isBlocked) {
-        console.error(Messages['Cannot proceed: translations missing for locale'].replace('%s', API.locale));
+        // Use reason for logging since it contains the locale label even when API.locale is empty
+        console.error(reason || Messages['Cannot proceed: translations missing for locale'].replace('%s', API.locale || API.key));
         toastr['error'](reason, Messages['Missing Translations']).attr('data-toast-type', 'missing-translations');
         // Disable all action buttons since we can't proceed without translations
         document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = true);
