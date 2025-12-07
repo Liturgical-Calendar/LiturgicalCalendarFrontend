@@ -1772,8 +1772,24 @@ const setApiLocaleAndHeaders = (headers) => {
                 : selectedNationalCalendar[0].locales[0];
         } else {
             console.log(`Could not find a national calendar with key ${API.key}; API.path is ${API.path} (category is ${API.category} and key is ${API.key}).`);
-            API.locale = likelyLanguage(API.key);
-            console.log(`likelyLanguage = ${API.locale} (nation is ${API.key}), we have set API.locale to the likelyLanguage for fetch calls`);
+            let likely = null;
+            try {
+                likely = likelyLanguage(API.key);
+            } catch (err) {
+                console.warn('likelyLanguage failed for region', API.key, err);
+            }
+
+            if (likely) {
+                const likelyWithRegion = `${likely}_${API.key}`;
+                if (Object.prototype.hasOwnProperty.call(AvailableLocalesWithRegion, likelyWithRegion)) {
+                    API.locale = likelyWithRegion;
+                } else if (Object.prototype.hasOwnProperty.call(AvailableLocales, likely)) {
+                    API.locale = likely;
+                } else {
+                    console.log(`likelyLanguage ${likely} is not available in translations`);
+                }
+            }
+            console.log(`likelyLanguage = ${likely ?? '(unknown)'} (nation is ${API.key}), API.locale set to ${API.locale || '(empty)'}`);
         }
     }
 
@@ -1803,7 +1819,24 @@ const getEventsUrlForCategory = () => {
 const shouldFetchEvents = (eventsUrlForCategory) => {
     // If no locale has been selected yet, skip events fetch and do not block.
     // This allows calendar metadata/forms to load while the user chooses a locale.
+    // Exception: for national calendars, empty locale means the likely language is not available.
     if (!API.locale) {
+        if (API.category === 'nation') {
+            // For national calendars, we always try to set a locale. If it's empty, the locale is not available.
+            let likelyLocale = null;
+            try {
+                likelyLocale = likelyLanguage(API.key);
+            } catch (err) {
+                console.warn('likelyLanguage failed for region', API.key, err);
+            }
+            const localeLabel = likelyLocale || API.key;
+            console.log(`shouldFetchEvents: API.locale is empty for national calendar ${API.key}; likely locale ${likelyLocale} is not available.`);
+            return {
+                shouldFetch: false,
+                isBlocked: true,
+                reason: `The General Roman Calendar has not yet been translated into the locale "${localeLabel}". Please translate the General Roman Calendar via the Weblate translation server before creating a calendar for this locale.`
+            };
+        }
         console.log('shouldFetchEvents: API.locale is empty; skipping events fetch and missing-translation checks until a locale is selected.');
         return { shouldFetch: false, isBlocked: false, reason: '' };
     }
@@ -1814,15 +1847,14 @@ const shouldFetchEvents = (eventsUrlForCategory) => {
     // Check if we're fetching from the base General Roman Calendar
     const isFetchingFromBase = eventsUrlForCategory === EventsUrl;
 
-    // For wider region calendars, we use regional locales (e.g., fr_CA, es_BO) but the General Roman Calendar
-    // is only translated into base locales (e.g., fr, es). So we need to check the base locale.
+    // When fetching from the base General Roman Calendar, we need to check the base locale
+    // (e.g., 'fr' instead of 'fr_CA') since the General Roman Calendar is only translated into base locales.
     const baseLocale = API.locale.split(/[-_]/)[0];
-    const isWiderRegion = API.category === 'widerregion';
 
-    // Check if the locale (or base locale for wider regions) is available for the General Roman Calendar
-    const localeToCheck = (isFetchingFromBase && isWiderRegion) ? baseLocale : API.locale;
+    // Check if the locale (or base locale when fetching from base) is available for the General Roman Calendar
+    const localeToCheck = isFetchingFromBase ? baseLocale : API.locale;
     const localeAvailableForBase = !isFetchingFromBase || LitCalMetadata.locales.includes(localeToCheck);
-    console.log(`shouldFetchEvents: checking locale <${localeToCheck}> (isWiderRegion=${isWiderRegion}), available for General Roman Calendar?`, localeAvailableForBase);
+    console.log(`shouldFetchEvents: checking locale <${localeToCheck}> (isFetchingFromBase=${isFetchingFromBase}), available for General Roman Calendar?`, localeAvailableForBase);
 
     const shouldFetch = missingForLocale && localeAvailableForBase;
     console.log(`shouldFetchEvents: verdict on whether we should attempt to fetch events = `, shouldFetch);
@@ -1887,12 +1919,44 @@ const fetchEventsAndCalendarData = () => {
         document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = true);
         document.querySelectorAll('.actionPromptButton').forEach(btn => btn.disabled = true);
         document.querySelector('.serializeRegionalNationalData')?.setAttribute('disabled', 'disabled');
+        // Disable form controls for the current category
+        if (API.category === 'widerregion') {
+            document.querySelector('#widerRegionLocales').disabled = true;
+            $('#widerRegionLocales').multiselect('disable');
+            document.querySelector('#currentLocalizationWiderRegion').disabled = true;
+        } else if (API.category === 'nation') {
+            document.querySelector('#nationalCalendarLocales').disabled = true;
+            $('#nationalCalendarLocales').multiselect('disable');
+            document.querySelector('#currentLocalizationNational').disabled = true;
+            // Disable nationalCalendarSettingsForm controls
+            document.querySelector('#nationalCalendarSettingsForm').classList.add('opacity-50');
+            document.querySelectorAll('#nationalCalendarSettingsForm input, #nationalCalendarSettingsForm select, #nationalCalendarSettingsForm button').forEach(el => {
+                el.disabled = true;
+            });
+        }
         document.querySelector('#overlay').classList.add('hidden');
         return;
     }
 
     // Re-enable action buttons since translations are available
     document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = false);
+    // Enable form controls for the current category (only if authenticated)
+    if (Auth.isAuthenticated()) {
+        if (API.category === 'widerregion') {
+            document.querySelector('#widerRegionLocales').disabled = false;
+            $('#widerRegionLocales').multiselect('enable');
+            document.querySelector('#currentLocalizationWiderRegion').disabled = false;
+        } else if (API.category === 'nation') {
+            document.querySelector('#nationalCalendarLocales').disabled = false;
+            $('#nationalCalendarLocales').multiselect('enable');
+            document.querySelector('#currentLocalizationNational').disabled = false;
+            // Enable nationalCalendarSettingsForm controls
+            document.querySelector('#nationalCalendarSettingsForm').classList.remove('opacity-50');
+            document.querySelectorAll('#nationalCalendarSettingsForm input, #nationalCalendarSettingsForm select, #nationalCalendarSettingsForm button').forEach(el => {
+                el.disabled = false;
+            });
+        }
+    }
 
     if (shouldFetch) {
         console.log('Calendar data is missing but locale is available, proceeding to fetch events...');
@@ -1933,8 +1997,45 @@ const fetchEventsAndCalendarData = () => {
  * @returns {void}
  */
 const regionalNationalCalendarNameChanged = (ev) => {
+    const category = ev.target.dataset.category;
+
+    // Handle empty values - reset forms and disable controls
+    if (!ev.target.value.trim()) {
+        console.log(`regionalNationalCalendarNameChanged: empty value for category ${category}, resetting forms and disabling controls`);
+
+        // Clear the event data form
+        document.querySelector('.regionalNationalDataForm').innerHTML = '';
+
+        // Disable action buttons
+        document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = true);
+        document.querySelector('#removeExistingCalendarDataBtn').disabled = true;
+        document.querySelector('.serializeRegionalNationalData')?.setAttribute('disabled', 'disabled');
+
+        // Remove any existing remove calendar modal
+        document.querySelector('#removeCalendarPrompt')?.remove();
+
+        // Category-specific resets
+        if (category === 'widerregion') {
+            $('#widerRegionLocales').multiselect('deselectAll', false).multiselect('disable');
+            document.querySelector('#widerRegionLocales').disabled = true;
+            document.querySelector('#currentLocalizationWiderRegion').disabled = true;
+        } else if (category === 'nation') {
+            document.querySelector('#nationalCalendarSettingsForm').reset();
+            document.querySelector('#nationalCalendarSettingsForm').classList.add('opacity-50');
+            document.querySelectorAll('#nationalCalendarSettingsForm input, #nationalCalendarSettingsForm select, #nationalCalendarSettingsForm button').forEach(el => {
+                el.disabled = true;
+            });
+            document.querySelector('#publishedRomanMissalList').innerHTML = '';
+            $('#nationalCalendarLocales').multiselect('deselectAll', false).multiselect('disable');
+            document.querySelector('#nationalCalendarLocales').disabled = true;
+            document.querySelector('#currentLocalizationNational').disabled = true;
+        }
+
+        return;
+    }
+
     document.querySelector('#overlay').classList.remove('hidden');
-    API.category = ev.target.dataset.category;
+    API.category = category;
     // our proxy will take care of splitting locale from wider region, when we are setting a wider region key
     API.key = ev.target.value;
     console.log(`regionalNationalCalendarNameChanged called, API.category set to ${API.category} and API.key set to ${API.key}. Proceeding to call fetchEventsAndCalendarData...`);
@@ -3201,8 +3302,9 @@ const diocesanCalendarNationalDependencyChanged = (ev) => {
     console.log('National dependency changed', ev);
     const currentSelectedNation = ev.target.value;
 
-    // Disable "Remove diocesan data" button
+    // Disable "Remove diocesan data" and "Save diocesan data" buttons
     document.getElementById('removeExistingDiocesanDataBtn').disabled = true;
+    document.getElementById('saveDiocesanCalendar_btn').disabled = true;
 
     // The diocese remove prompt is created when existing Diocesan data is loaded
     const removePrompt = document.getElementById('removeDiocesanCalendarPrompt');
@@ -3335,6 +3437,10 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
         document.getElementById('diocesanCalendarDefinitionCardLinks').classList.remove('diocesan-disabled');
         document.getElementById('carouselExampleIndicators').classList.remove('diocesan-disabled');
         document.getElementById('diocesanOverridesContainer').classList.remove('diocesan-disabled');
+        // Enable save button if authenticated
+        if (Auth.isAuthenticated()) {
+            document.getElementById('saveDiocesanCalendar_btn').disabled = false;
+        }
         API.category = 'diocese';
         API.key = selectedOption.getAttribute('data-value');
         console.log('selected diocese with key = ' + API.key);
@@ -3377,6 +3483,8 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
         document.getElementById('diocesanCalendarDefinitionCardLinks').classList.add('diocesan-disabled');
         document.getElementById('carouselExampleIndicators').classList.add('diocesan-disabled');
         document.getElementById('diocesanOverridesContainer').classList.add('diocesan-disabled');
+        // Disable save button when no valid diocese is selected
+        document.getElementById('saveDiocesanCalendar_btn').disabled = true;
     }
 }
 
@@ -3893,7 +4001,19 @@ document.addEventListener('hidden.bs.modal', (ev) => {
  */
 
 /**
- * Update UI elements based on authentication state
+ * Update extending.php-specific navbar authentication UI.
+ *
+ * Handles login button and user menu visibility in the navbar.
+ * This duplicates some logic from login-modal.php's updateAuthUI() for
+ * page-specific handling. Both handle navbar elements.
+ *
+ * Note: This is different from initPermissionUI() (in login-modal.php) which
+ * handles data-requires-auth protected elements throughout the page.
+ *
+ * For complete auth UI update on extending.php, you need:
+ * 1. updateAuthUI() (this function) - navbar elements
+ * 2. initPermissionUI() - data-requires-auth elements
+ * 3. auth:logout event listener - page-specific form resets
  */
 function updateAuthUI() {
     const loginBtn = document.getElementById('loginBtn');
@@ -3939,7 +4059,8 @@ function cleanupModalBackdrop() {
 
 // Initialize Auth module and UI
 if (typeof Auth !== 'undefined') {
-    // Update UI based on auth state
+    // Update navbar elements (login button vs user menu) - supplements login-modal.php's updateAuthUI()
+    // Note: initPermissionUI() in login-modal.php handles data-requires-auth elements separately
     updateAuthUI();
 
     // Clean up backdrop when login modal is closed
@@ -3949,3 +4070,25 @@ if (typeof Auth !== 'undefined') {
         loginModalEl.addEventListener('hidden.bs.modal', cleanupModalBackdrop);
     }
 }
+
+// Handle auth:logout event to reset page-specific form controls not covered by data-requires-auth
+document.addEventListener('auth:logout', () => {
+    // Reset national calendar settings form
+    const nationalSettingsForm = document.getElementById('nationalCalendarSettingsForm');
+    if (nationalSettingsForm) {
+        nationalSettingsForm.classList.add('opacity-50');
+        nationalSettingsForm.querySelectorAll('input, select, button').forEach(el => {
+            el.disabled = true;
+        });
+    }
+
+    // Disable save diocesan calendar button
+    const saveDiocesanBtn = document.getElementById('saveDiocesanCalendar_btn');
+    if (saveDiocesanBtn) {
+        saveDiocesanBtn.disabled = true;
+    }
+
+    // Disable action buttons
+    document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = true);
+    document.querySelector('.serializeRegionalNationalData')?.setAttribute('disabled', 'disabled');
+});
