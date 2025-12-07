@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-06 19:22+0000\n"
+"POT-Creation-Date: 2025-12-07 04:26+0000\n"
 "PO-Revision-Date: 2025-12-06 05:43+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
@@ -246,13 +246,13 @@ msgstr ""
 
 #. translators: notification title
 #. translators: notification title for successful operations
-#: usage.php:11 includes/login-modal.php:315 includes/messages.php:47
+#: usage.php:11 includes/login-modal.php:321 includes/messages.php:47
 msgid "Success"
 msgstr "Éxito"
 
 #. translators: notification title
 #. translators: notification title for failed operations
-#: usage.php:13 includes/login-modal.php:499 includes/messages.php:49
+#: usage.php:13 includes/login-modal.php:554 includes/messages.php:49
 msgid "Error"
 msgstr "Error"
 
@@ -1278,7 +1278,7 @@ msgid "About us"
 msgstr "Sobre nosotros"
 
 #: layout/header.php:51 layout/header.php:53 includes/login-modal.php:56
-#: includes/login-modal.php:335
+#: includes/login-modal.php:341
 msgid "Login"
 msgstr "Iniciar sesión"
 
@@ -1318,7 +1318,7 @@ msgstr "Nombre de usuario"
 msgid "Password"
 msgstr "Contraseña"
 
-#: includes/login-modal.php:40 includes/login-modal.php:172
+#: includes/login-modal.php:40 includes/login-modal.php:178
 msgid "Show password"
 msgstr "Mostrar contraseña"
 
@@ -1341,31 +1341,31 @@ msgstr ""
 msgid "Connection Issue"
 msgstr "Problema de conexión"
 
-#: includes/login-modal.php:125 includes/login-modal.php:526
+#: includes/login-modal.php:126 includes/login-modal.php:581
 msgid "Are you sure you want to logout?"
 msgstr "¿Estás seguro de que quieres cerrar sesión?"
 
-#: includes/login-modal.php:167
+#: includes/login-modal.php:173
 msgid "Hide password"
 msgstr "Ocultar contraseña"
 
-#: includes/login-modal.php:271
+#: includes/login-modal.php:277
 msgid "Please enter both username and password"
 msgstr "Por favor, introduce tanto el nombre de usuario como la contraseña"
 
-#: includes/login-modal.php:279
+#: includes/login-modal.php:285
 msgid "Logging in..."
 msgstr "Iniciando sesión..."
 
-#: includes/login-modal.php:315
+#: includes/login-modal.php:321
 msgid "Login successful"
 msgstr "Inicio de sesión exitoso"
 
-#: includes/login-modal.php:330
+#: includes/login-modal.php:336
 msgid "Login failed. Please check your credentials."
 msgstr "Error de inicio de sesión. Por favor, revisa tus credenciales."
 
-#: includes/login-modal.php:402 includes/login-modal.php:407
+#: includes/login-modal.php:457 includes/login-modal.php:462
 #, fuzzy, php-format
 #| msgid ""
 #| "Your session will expire in less than %d minute. Please save your work."
@@ -1378,31 +1378,31 @@ msgstr[0] ""
 msgstr[1] ""
 "Tu sesión expirará en menos de %d minutos. Por favor, guarda tu trabajo."
 
-#: includes/login-modal.php:466
+#: includes/login-modal.php:521
 #, fuzzy
 #| msgid "Extending the API"
 msgid "Extending..."
 msgstr "Extensión de la API"
 
-#: includes/login-modal.php:488
+#: includes/login-modal.php:543
 msgid "Your session has been extended."
 msgstr ""
 
-#: includes/login-modal.php:489
+#: includes/login-modal.php:544
 #, fuzzy
 #| msgid "Session Expiring"
 msgid "Session Extended"
 msgstr "Sesión a punto de expirar"
 
-#: includes/login-modal.php:498
+#: includes/login-modal.php:553
 msgid "Failed to extend session. Please login again."
 msgstr ""
 
-#: includes/login-modal.php:551
+#: includes/login-modal.php:611
 msgid "Your session has expired. Please login again."
 msgstr ""
 
-#: includes/login-modal.php:552
+#: includes/login-modal.php:612
 #, fuzzy
 #| msgid "Session Expiring"
 msgid "Session Expired"
