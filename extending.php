@@ -274,10 +274,10 @@ if (isset($_GET['choice'])) {
 
                             <div id="nationalCalendarSettingsContainer" class="container">
                                 <h3 id="nationalCalendarSettingsTitle" class="text-center"><?php echo $messages['National calendar settings']; ?><i class="fas fa-info-circle ms-4 d-inline-block text-black" style="--bs-text-opacity: .3;" role="button" title="<?php echo htmlspecialchars($messages['Tooltip - National calendar first step'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></i></h3>
-                                <form id="nationalCalendarSettingsForm" class="row justify-content-center align-items-baseline needs-validation" novalidate>
+                                <form id="nationalCalendarSettingsForm" class="row justify-content-center align-items-baseline needs-validation opacity-50" novalidate>
                                     <div class="form-group col col-md-3">
                                         <label for="nationalCalendarSettingEpiphany"><?php echo $messages['EPIPHANY']; ?></label>
-                                        <select class="form-select" id="nationalCalendarSettingEpiphany">
+                                        <select class="form-select" id="nationalCalendarSettingEpiphany" disabled>
                                             <option value=""></option>
                                             <option value="JAN6"><?php echo $messages['January 6']; ?></option>
                                             <option value="SUNDAY_JAN2_JAN8"><?php echo $messages['Sunday between January 2 and January 8']; ?></option>
@@ -285,7 +285,7 @@ if (isset($_GET['choice'])) {
                                     </div>
                                     <div class="form-group col col-md-2">
                                         <label for="nationalCalendarSettingAscension"><?php echo $messages['ASCENSION']; ?></label>
-                                        <select class="form-select" id="nationalCalendarSettingAscension">
+                                        <select class="form-select" id="nationalCalendarSettingAscension" disabled>
                                             <option value=""></option>
                                             <option value="THURSDAY"><?php echo $thursday ?></option>
                                             <option value="SUNDAY"><?php echo $sunday ?></option>
@@ -293,7 +293,7 @@ if (isset($_GET['choice'])) {
                                     </div>
                                     <div class="form-group col col-md-2">
                                         <label for="nationalCalendarSettingCorpusChristi"><?php echo $messages['CORPUS CHRISTI']; ?></label>
-                                        <select class="form-select" id="nationalCalendarSettingCorpusChristi">
+                                        <select class="form-select" id="nationalCalendarSettingCorpusChristi" disabled>
                                             <option value=""></option>
                                             <option value="THURSDAY"><?php echo $thursday ?></option>
                                             <option value="SUNDAY"><?php echo $sunday ?></option>
@@ -302,7 +302,7 @@ if (isset($_GET['choice'])) {
                                     <div class="form-group col col-md-2">
                                         <label for="nationalCalendarSettingHighPriest"><?php echo $messages['ETERNAL HIGH PRIEST']; ?></label>
                                         <div class="form-check form-switch">
-                                            <input class="form-check-input fs-2" type="checkbox" role="switch" id="nationalCalendarSettingHighPriest" style="margin-left: -1.25em; margin-top: 0.075em;">
+                                            <input class="form-check-input fs-2" type="checkbox" role="switch" id="nationalCalendarSettingHighPriest" disabled style="margin-left: -1.25em; margin-top: 0.075em;">
                                             <i class="fas fa-info-circle ms-4 d-inline-block text-black" style="--bs-text-opacity: .3;" role="button" title="<?php echo htmlspecialchars($messages['Tooltip - Eternal High Priest'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></i>
                                         </div>
                                     </div>
@@ -313,7 +313,7 @@ if (isset($_GET['choice'])) {
                                                 <label><i class="fas fa-info-circle me-2 text-black" style="--bs-text-opacity: .3;" role="button" title="<?php echo htmlspecialchars($messages['Tooltip - Published Roman Missals'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></i><?php echo $messages['Published Roman Missals']; ?></label>
                                             </div>
                                             <div class="col-4">
-                                                <button class="btn btn-sm btn-primary ms-2 mb-2" id="addPublishedRomanMissal" data-bs-toggle="modal" data-bs-target="#addPublishedRomanMissalPrompt" type="button"><i class="fas fa-plus me-2"></i><?php echo $messages['AddMissalButton']; ?></button>
+                                                <button class="btn btn-sm btn-primary ms-2 mb-2" id="addPublishedRomanMissal" disabled data-bs-toggle="modal" data-bs-target="#addPublishedRomanMissalPrompt" type="button"><i class="fas fa-plus me-2"></i><?php echo $messages['AddMissalButton']; ?></button>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -323,7 +323,7 @@ if (isset($_GET['choice'])) {
                                     </div>
                                     <div class="form-group col col-md-3 mt-4">
                                         <label for="associatedWiderRegion"><?php echo $messages['Wider Region']; ?><i class="fas fa-info-circle ms-2 text-black" style="--bs-text-opacity: .3;" role="button" title="<?php echo htmlspecialchars($messages['Tooltip - Wider Region association'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></i></label>
-                                        <input class="form-control" list="WiderRegionsList" id="associatedWiderRegion" />
+                                        <input class="form-control" list="WiderRegionsList" id="associatedWiderRegion" disabled />
                                         <datalist id="WiderRegionsList">
                                             <option value=""></option>
                                         <?php

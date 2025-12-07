@@ -1916,6 +1916,11 @@ const fetchEventsAndCalendarData = () => {
             document.querySelector('#nationalCalendarLocales').disabled = true;
             $('#nationalCalendarLocales').multiselect('disable');
             document.querySelector('#currentLocalizationNational').disabled = true;
+            // Disable nationalCalendarSettingsForm controls
+            document.querySelector('#nationalCalendarSettingsForm').classList.add('opacity-50');
+            document.querySelectorAll('#nationalCalendarSettingsForm input, #nationalCalendarSettingsForm select, #nationalCalendarSettingsForm button').forEach(el => {
+                el.disabled = true;
+            });
         }
         document.querySelector('#overlay').classList.add('hidden');
         return;
@@ -1933,6 +1938,11 @@ const fetchEventsAndCalendarData = () => {
             document.querySelector('#nationalCalendarLocales').disabled = false;
             $('#nationalCalendarLocales').multiselect('enable');
             document.querySelector('#currentLocalizationNational').disabled = false;
+            // Enable nationalCalendarSettingsForm controls
+            document.querySelector('#nationalCalendarSettingsForm').classList.remove('opacity-50');
+            document.querySelectorAll('#nationalCalendarSettingsForm input, #nationalCalendarSettingsForm select, #nationalCalendarSettingsForm button').forEach(el => {
+                el.disabled = false;
+            });
         }
     }
 
