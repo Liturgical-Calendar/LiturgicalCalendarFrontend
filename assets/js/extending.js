@@ -1985,12 +1985,45 @@ const fetchEventsAndCalendarData = () => {
  * @returns {void}
  */
 const regionalNationalCalendarNameChanged = (ev) => {
-    // Ignore empty values - wait for actual input
+    const category = ev.target.dataset.category;
+
+    // Handle empty values - reset forms and disable controls
     if (!ev.target.value.trim()) {
+        console.log(`regionalNationalCalendarNameChanged: empty value for category ${category}, resetting forms and disabling controls`);
+
+        // Clear the event data form
+        document.querySelector('.regionalNationalDataForm').innerHTML = '';
+
+        // Disable action buttons
+        document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = true);
+        document.querySelector('#removeExistingCalendarDataBtn').disabled = true;
+        document.querySelector('.serializeRegionalNationalData')?.setAttribute('disabled', 'disabled');
+
+        // Remove any existing remove calendar modal
+        document.querySelector('#removeCalendarPrompt')?.remove();
+
+        // Category-specific resets
+        if (category === 'widerregion') {
+            $('#widerRegionLocales').multiselect('deselectAll', false).multiselect('disable');
+            document.querySelector('#widerRegionLocales').disabled = true;
+            document.querySelector('#currentLocalizationWiderRegion').disabled = true;
+        } else if (category === 'nation') {
+            document.querySelector('#nationalCalendarSettingsForm').reset();
+            document.querySelector('#nationalCalendarSettingsForm').classList.add('opacity-50');
+            document.querySelectorAll('#nationalCalendarSettingsForm input, #nationalCalendarSettingsForm select, #nationalCalendarSettingsForm button').forEach(el => {
+                el.disabled = true;
+            });
+            document.querySelector('#publishedRomanMissalList').innerHTML = '';
+            $('#nationalCalendarLocales').multiselect('deselectAll', false).multiselect('disable');
+            document.querySelector('#nationalCalendarLocales').disabled = true;
+            document.querySelector('#currentLocalizationNational').disabled = true;
+        }
+
         return;
     }
+
     document.querySelector('#overlay').classList.remove('hidden');
-    API.category = ev.target.dataset.category;
+    API.category = category;
     // our proxy will take care of splitting locale from wider region, when we are setting a wider region key
     API.key = ev.target.value;
     console.log(`regionalNationalCalendarNameChanged called, API.category set to ${API.category} and API.key set to ${API.key}. Proceeding to call fetchEventsAndCalendarData...`);
