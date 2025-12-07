@@ -4001,7 +4001,19 @@ document.addEventListener('hidden.bs.modal', (ev) => {
  */
 
 /**
- * Update UI elements based on authentication state
+ * Update extending.php-specific navbar authentication UI.
+ *
+ * Handles login button and user menu visibility in the navbar.
+ * This duplicates some logic from login-modal.php's updateAuthUI() for
+ * page-specific handling. Both handle navbar elements.
+ *
+ * Note: This is different from initPermissionUI() (in login-modal.php) which
+ * handles data-requires-auth protected elements throughout the page.
+ *
+ * For complete auth UI update on extending.php, you need:
+ * 1. updateAuthUI() (this function) - navbar elements
+ * 2. initPermissionUI() - data-requires-auth elements
+ * 3. auth:logout event listener - page-specific form resets
  */
 function updateAuthUI() {
     const loginBtn = document.getElementById('loginBtn');
@@ -4047,7 +4059,8 @@ function cleanupModalBackdrop() {
 
 // Initialize Auth module and UI
 if (typeof Auth !== 'undefined') {
-    // Update UI based on auth state
+    // Update navbar elements (login button vs user menu) - supplements login-modal.php's updateAuthUI()
+    // Note: initPermissionUI() in login-modal.php handles data-requires-auth elements separately
     updateAuthUI();
 
     // Clean up backdrop when login modal is closed
@@ -4058,7 +4071,7 @@ if (typeof Auth !== 'undefined') {
     }
 }
 
-// Handle auth:logout event to reset page-specific form controls
+// Handle auth:logout event to reset page-specific form controls not covered by data-requires-auth
 document.addEventListener('auth:logout', () => {
     // Reset national calendar settings form
     const nationalSettingsForm = document.getElementById('nationalCalendarSettingsForm');

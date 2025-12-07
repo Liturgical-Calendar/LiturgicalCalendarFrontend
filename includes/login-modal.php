@@ -108,6 +108,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    // Initialize navbar UI based on current auth state (login button vs user menu)
     updateAuthUI();
 
     // Login button click handler
@@ -130,10 +131,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
                 hideSessionExpiryToast();
                 await Auth.logout();
-                // Update UI to show logged-out state
+                // Update navbar (login button vs user menu) and protected elements (data-requires-auth)
                 updateAuthUI();
                 initPermissionUI();
-                // Dispatch logout event for page-specific handlers
+                // Dispatch event for page-specific form resets (e.g., #nationalCalendarSettingsForm)
                 document.dispatchEvent(new CustomEvent('auth:logout'));
             }
         });
@@ -194,7 +195,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Initialize permission-based UI elements
+    // Initialize data-requires-auth elements (forms, buttons, etc.) based on current auth state
     initPermissionUI();
 });
 
@@ -307,7 +308,7 @@ async function handleLogin() {
             }
         }
 
-        // Update UI
+        // Update navbar (login button vs user menu) and enable data-requires-auth elements
         updateAuthUI();
         initPermissionUI();
 
@@ -342,7 +343,16 @@ async function handleLogin() {
 }
 
 /**
- * Update authentication UI based on auth state
+ * Update navbar authentication UI based on auth state.
+ *
+ * Handles visibility of login button and user menu in the navbar.
+ * This is separate from initPermissionUI() which handles data-requires-auth elements.
+ *
+ * Call this function together with initPermissionUI() after any auth state change
+ * (login, logout, token refresh) to ensure both navbar and protected elements are updated.
+ *
+ * Note: There is also an updateAuthUI() in extending.js that handles page-specific
+ * navbar elements. Both should be called after auth changes on the extending page.
  */
 function updateAuthUI() {
     const isAuth = Auth.isAuthenticated();
@@ -374,10 +384,20 @@ function updateAuthUI() {
 }
 
 /**
- * Initialize permission-based UI elements
- * Hides/shows elements marked with data-requires-auth attribute
- * For form elements, disables all inputs within the form
- * For form controls (input, select, textarea), just disables them
+ * Initialize permission-based UI elements marked with data-requires-auth attribute.
+ *
+ * Handles three types of elements differently:
+ * - FORM elements: Toggles opacity-50 class and disables/enables all child form controls
+ *   (skipping controls that have their own data-requires-auth attribute)
+ * - Form controls (INPUT, SELECT, TEXTAREA): Only disables when logged out; does NOT
+ *   enable when logged in, leaving domain-specific code to manage enabled state
+ * - Other elements (buttons, divs): Toggles d-none class for visibility
+ *
+ * This is separate from updateAuthUI() which handles navbar login/logout buttons.
+ * Call both functions together after any auth state change.
+ *
+ * Note: Some page-specific forms (e.g., #nationalCalendarSettingsForm) may not have
+ * data-requires-auth and are handled by the auth:logout event in extending.js.
  */
 function initPermissionUI() {
     const protectedElements = document.querySelectorAll('[data-requires-auth]');
@@ -566,10 +586,10 @@ async function handleSessionExpiryLogout() {
         }
         hideSessionExpiryToast();
         await Auth.logout();
-        // Update UI to show logged-out state
+        // Update navbar (login button vs user menu) and protected elements (data-requires-auth)
         updateAuthUI();
         initPermissionUI();
-        // Dispatch logout event for page-specific handlers
+        // Dispatch event for page-specific form resets (e.g., #nationalCalendarSettingsForm)
         document.dispatchEvent(new CustomEvent('auth:logout'));
     }
 }
@@ -597,10 +617,10 @@ function handleAutoLogout() {
     Auth.clearTokens();
     Auth.stopAllTimers();
 
-    // Update UI to show logged-out state
+    // Update navbar (login button vs user menu) and protected elements (data-requires-auth)
     updateAuthUI();
     initPermissionUI();
-    // Dispatch logout event for page-specific handlers
+    // Dispatch event for page-specific form resets (e.g., #nationalCalendarSettingsForm)
     document.dispatchEvent(new CustomEvent('auth:logout'));
 }
 
