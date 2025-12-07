@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-07 08:23+0000\n"
-"PO-Revision-Date: 2025-12-06 05:43+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2025-12-07 08:40+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
 "Language: fr\n"
@@ -1313,7 +1313,7 @@ msgstr "Votre session va bientôt expirer"
 
 #: includes/login-modal.php:15
 msgid "Extend Session"
-msgstr ""
+msgstr "Prolonger la session"
 
 #: includes/login-modal.php:27
 msgid "Administrator Login"
@@ -1375,49 +1375,35 @@ msgid "Login failed. Please check your credentials."
 msgstr "Échec de la connexion. Veuillez vérifier vos identifiants."
 
 #: includes/login-modal.php:467 includes/login-modal.php:472
-#, fuzzy, php-format
-#| msgid ""
-#| "Your session will expire in less than %d minute. Please save your work."
-#| msgid_plural ""
-#| "Your session will expire in less than %d minutes. Please save your work."
+#, php-format
 msgid "Your session will expire in less than %d minute."
 msgid_plural "Your session will expire in less than %d minutes."
 msgstr[0] ""
-"Votre session expirera dans moins d %d minute. Veuillez sauvegarder votre "
-"travail."
-msgstr[1] ""
-"Votre session expirera dans moins de %d minutes. Veuillez sauvegarder votre "
-"travail."
+msgstr[1] "Votre session expirera dans moins de %d minutes."
 
 #: includes/login-modal.php:531
-#, fuzzy
-#| msgid "Extending the API"
 msgid "Extending..."
-msgstr "Étendre l'API"
+msgstr "Prolongation..."
 
 #: includes/login-modal.php:553
 msgid "Your session has been extended."
-msgstr ""
+msgstr "Votre session a été prolongée."
 
 #: includes/login-modal.php:554
-#, fuzzy
-#| msgid "Session Expiring"
 msgid "Session Extended"
-msgstr "Votre session va bientôt expirer"
+msgstr "Session prolongée"
 
 #: includes/login-modal.php:563
 msgid "Failed to extend session. Please login again."
-msgstr ""
+msgstr "Échec de la prolongation de la session. Veuillez vous reconnecter."
 
 #: includes/login-modal.php:621
 msgid "Your session has expired. Please login again."
-msgstr ""
+msgstr "Votre session a expiré. Veuillez vous reconnecter."
 
 #: includes/login-modal.php:622
-#, fuzzy
-#| msgid "Session Expiring"
 msgid "Session Expired"
-msgstr "Votre session va bientôt expirer"
+msgstr "Session expirée"
 
 #. translators: form field label for the unique identifier of a liturgical event
 #: includes/messages.php:15
@@ -1466,16 +1452,14 @@ msgstr "Avertissement"
 
 #. translators: notification title when translations are missing for a locale
 #: includes/messages.php:53
-#, fuzzy
-#| msgid "Translations"
 msgid "Missing Translations"
-msgstr "Traductions"
+msgstr "Traductions manquantes"
 
 #. translators: error message when translations are missing. %s is the locale code (e.g., "en_US")
 #: includes/messages.php:59
 #, php-format
 msgid "Cannot proceed: translations missing for locale %s"
-msgstr ""
+msgstr "Impossible de continuer : traductions manquantes pour la locale %s"
 
 #. translators: detailed explanation when General Roman Calendar translations are missing.
 #. %s is the locale code. This message should mention Weblate as the translation server.
@@ -1486,6 +1470,9 @@ msgid ""
 "\"%s\". Please translate the General Roman Calendar via the Weblate "
 "translation server before creating a calendar for this locale."
 msgstr ""
+"Le Calendrier Romain Général n'a pas encore été traduit dans la locale \"%s\""
+". Veuillez traduire le Calendrier Romain Général via le serveur de "
+"traduction Weblate avant de créer un calendrier pour cette locale."
 
 #. translators: form row title for designating a Doctor of the Church
 #: includes/messages.php:82
