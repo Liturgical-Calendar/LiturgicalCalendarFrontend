@@ -400,13 +400,12 @@ function initPermissionUI() {
                 $(el).multiselect(isAuth ? 'enable' : 'disable');
             }
         } else {
-            // For other elements (buttons, etc.), hide/show and disable
+            // For other elements (buttons, etc.), only control visibility
+            // Don't touch disabled state - let other code manage that based on form state
             if (isAuth) {
                 el.classList.remove('d-none');
-                el.disabled = false;
             } else {
                 el.classList.add('d-none');
-                el.disabled = true;
             }
         }
     });
