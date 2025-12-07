@@ -133,6 +133,11 @@ const request = new Request(API.path, {
 
 #### 1.2 Token Management (`assets/js/auth.js`)
 
+> **⚠️ Historical Example:** The localStorage/sessionStorage token storage and `Authorization: Bearer` header
+> approach shown below was superseded by Phase 2.5's HttpOnly cookie-only flow. The current implementation
+> uses HttpOnly cookies set by the API, with `credentials: 'include'` on fetch requests. See Phase 2.5 for
+> the current approach.
+
 ```javascript
 /**
  * Authentication helper module
@@ -295,6 +300,10 @@ const Auth = {
 ```
 
 #### 1.3 Update Request Functions
+
+> **⚠️ Historical Example:** The `addAuthHeader()` function and explicit `Authorization: Bearer` header
+> approach shown below was superseded by Phase 2.5's HttpOnly cookie-only flow. The current implementation
+> simply uses `credentials: 'include'` on fetch requests and the API reads the token from HttpOnly cookies.
 
 **Modify `assets/js/extending.js`:**
 
