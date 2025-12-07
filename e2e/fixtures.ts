@@ -115,7 +115,7 @@ export class ExtendingPageHelper {
         await this.page.waitForFunction(() => {
             // @ts-ignore - Auth is a global object
             return typeof Auth !== 'undefined' && Auth.isAuthenticated() === true;
-        }, { timeout: 10000 });
+        }, undefined, { timeout: 10000 });
     }
 
     /**
