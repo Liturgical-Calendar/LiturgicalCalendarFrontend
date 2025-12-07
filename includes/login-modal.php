@@ -382,9 +382,12 @@ function initPermissionUI() {
     protectedElements.forEach(el => {
         if (el.tagName === 'FORM') {
             // For forms, disable/enable all form controls inside
+            // Skip controls that have their own data-requires-auth (they're handled separately)
             const formControls = el.querySelectorAll('input, select, textarea, button');
             formControls.forEach(control => {
-                control.disabled = !isAuth;
+                if (!control.hasAttribute('data-requires-auth')) {
+                    control.disabled = !isAuth;
+                }
             });
             // Add visual indicator for disabled forms
             if (isAuth) {
