@@ -114,8 +114,11 @@ const handleDeleteResponse = async (response, onSuccessCleanup, successMessage) 
             console.log(json);
         } catch { /* empty or non-JSON body - ignore */ }
     } else if (response.status === 400) {
-        const json = await response.json();
-        const errorMessage = extractErrorMessage(json, 'Bad request');
+        let errorMessage = 'Bad request';
+        try {
+            const json = await response.json();
+            errorMessage = extractErrorMessage(json, errorMessage);
+        } catch { /* non-JSON body - use default message */ }
         console.error(`${response.status} ${errorMessage}`);
         toastr["error"](`${response.status} ${errorMessage}`, Messages['Error']);
     } else {
@@ -1728,16 +1731,18 @@ const fetchRegionalCalendarData = (headers) => {
                 const currentLocalizationEl = document.querySelector('.currentLocalizationChoices');
                 currentLocalizationEl.innerHTML = LocalesForRegion.map(item => `<option value="${item[0]}">${item[1]}</option>`).join('');
                 // set as default currentLocalization the locale with greater percentage per population, of those that are available
-                const regionalLocales = LocalesForRegion.map(item => item[0].split('_')[0]);
-                let mostSpokenLanguage = null;
-                try {
-                    mostSpokenLanguage = likelyLanguage(API.key, regionalLocales);
-                } catch (err) {
-                    console.warn('likelyLanguage failed for region', API.key, err);
+                if (LocalesForRegion.length > 0) {
+                    const regionalLocales = LocalesForRegion.map(item => item[0].split('_')[0]);
+                    let mostSpokenLanguage = null;
+                    try {
+                        mostSpokenLanguage = likelyLanguage(API.key, regionalLocales);
+                    } catch (err) {
+                        console.warn('likelyLanguage failed for region', API.key, err);
+                    }
+                    // Fall back to first available locale if CLDR lookup failed
+                    const defaultLanguage = mostSpokenLanguage || regionalLocales[0];
+                    currentLocalizationEl.value = `${defaultLanguage}_${API.key}`;
                 }
-                // Fall back to first available locale if CLDR lookup failed
-                const defaultLanguage = mostSpokenLanguage || regionalLocales[0] || 'en';
-                currentLocalizationEl.value = `${defaultLanguage}_${API.key}`;
                 break;
             }
         }
@@ -2492,6 +2497,9 @@ const deleteCalendarConfirmClicked = () => {
         }, `Calendar '${API.category}/${API.key}' was deleted successfully`
         )).catch(error => {
             console.error(error);
+            // Show user-facing feedback for unexpected errors (404, 500, network failures, etc.)
+            const statusText = error?.status ? `${error.status} ${error.statusText || 'Error'}` : 'Network error';
+            toastr["error"](statusText, Messages['Error']);
         }).finally(() => {
             document.querySelector('#overlay').classList.add('hidden');
         });
@@ -3349,8 +3357,10 @@ const diocesanCalendarNationalDependencyChanged = (ev) => {
     const currentSelectedNation = ev.target.value;
 
     // Disable "Remove diocesan data" and "Save diocesan data" buttons
-    document.getElementById('removeExistingDiocesanDataBtn').disabled = true;
-    document.getElementById('saveDiocesanCalendar_btn').disabled = true;
+    const removeBtn = document.getElementById('removeExistingDiocesanDataBtn');
+    const saveBtn = document.getElementById('saveDiocesanCalendar_btn');
+    if (removeBtn) removeBtn.disabled = true;
+    if (saveBtn) saveBtn.disabled = true;
 
     // The diocese remove prompt is created when existing Diocesan data is loaded
     const removePrompt = document.getElementById('removeDiocesanCalendarPrompt');
@@ -3513,8 +3523,9 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
         document.getElementById('carouselExampleIndicators').classList.remove('diocesan-disabled');
         document.getElementById('diocesanOverridesContainer').classList.remove('diocesan-disabled');
         // Enable save button if authenticated (guard for pages without auth.js)
-        if (typeof Auth !== 'undefined' && Auth.isAuthenticated()) {
-            document.getElementById('saveDiocesanCalendar_btn').disabled = false;
+        const saveBtn = document.getElementById('saveDiocesanCalendar_btn');
+        if (saveBtn && typeof Auth !== 'undefined' && Auth.isAuthenticated()) {
+            saveBtn.disabled = false;
         }
         API.category = 'diocese';
         API.key = selectedOption.getAttribute('data-value');
@@ -3559,7 +3570,8 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
         document.getElementById('carouselExampleIndicators').classList.add('diocesan-disabled');
         document.getElementById('diocesanOverridesContainer').classList.add('diocesan-disabled');
         // Disable save button when no valid diocese is selected
-        document.getElementById('saveDiocesanCalendar_btn').disabled = true;
+        const saveBtnInvalid = document.getElementById('saveDiocesanCalendar_btn');
+        if (saveBtnInvalid) saveBtnInvalid.disabled = true;
     }
 }
 
@@ -3649,6 +3661,9 @@ const deleteDiocesanCalendarConfirmClicked = () => {
         }, `Diocesan Calendar '${API.key}' was deleted successfully`
         )).catch(error => {
             console.error(error);
+            // Show user-facing feedback for unexpected errors (404, 500, network failures, etc.)
+            const statusText = error?.status ? `${error.status} ${error.statusText || 'Error'}` : 'Network error';
+            toastr["error"](statusText, Messages['Error']);
         }).finally(() => {
             document.querySelector('#overlay').classList.add('hidden');
         });
@@ -3886,7 +3901,7 @@ const diocesanCalendarDefinitionsCardLinksClicked = (ev) => {
 }
 
 /**
- * Handles changes to liturgical_event selections in modals.
+ * Validates an action prompt input and updates the corresponding button state.
  *
  * When a liturgical_event name is changed (whether selected from a list or entered manually),
  * the 'was-validated' class is removed from the form in the modal.
@@ -3902,32 +3917,32 @@ const diocesanCalendarDefinitionsCardLinksClicked = (ev) => {
  * In a 'newLiturgicalEventActionPrompt' modal, the button id is 'newLiturgicalEventFromExistingButton' by default,
  * but will be changed to 'newLiturgicalEventExNovoButton' if the liturgical_event name is not found in the list.
  *
- * @param {Event} ev The event object for the change event.
+ * @param {HTMLInputElement} input - The input element to validate
  */
-const existingLiturgicalEventNameChanged = (ev) => {
-    const modal = ev.target.closest('.actionPromptModal');
+const validateActionPromptInput = (input) => {
+    const modal = input.closest('.actionPromptModal');
     const form  = modal.querySelector('form');
     form.classList.remove('was-validated');
 
     // #existingLiturgicalEventsList is a datalist element containing all existing liturgical_event names, and is not contained in the modal but in the main document
-    const option = document.querySelector(`#existingLiturgicalEventsList option[value="${ev.target.value}"]`);
+    const option = document.querySelector(`#existingLiturgicalEventsList option[value="${input.value}"]`);
     // if no option corresponding to the selected liturgical_event name is found, disable the submission buttons
-    const invalidState = !option && ev.target.required;
-    const warningState = !option && !ev.target.required;
-    ev.target.classList.toggle('is-invalid', invalidState);
-    if (!ev.target.required) {
+    const invalidState = !option && input.required;
+    const warningState = !option && !input.required;
+    input.classList.toggle('is-invalid', invalidState);
+    if (!input.required) {
         const warningEl = modal.querySelector('.text-warning');
         warningEl?.classList.toggle('d-block', warningState);
         warningEl?.classList.toggle('d-none', !warningState);
     }
     // Empty value should always be considered invalid, regardless of whether the input is required
-    const isEmpty = ev.target.value.trim() === '';
-    console.log(`input is required to have an existing value from the list: ${ev.target.required}, selected value: ${ev.target.value}, option found: ${!!option}, isEmpty: ${isEmpty}`);
+    const isEmpty = input.value.trim() === '';
+    console.log(`input is required to have an existing value from the list: ${input.required}, selected value: ${input.value}, option found: ${!!option}, isEmpty: ${isEmpty}`);
     console.log(`invalidState: ${invalidState}, warningState: ${warningState}`);
     switch (modal.id) {
         case 'makePatronActionPrompt':
             // Disable if empty OR if required and not in datalist
-            document.querySelector('#designatePatronButton').disabled = isEmpty || (ev.target.required && invalidState);
+            document.querySelector('#designatePatronButton').disabled = isEmpty || (input.required && invalidState);
             break;
         case 'setPropertyActionPrompt':
             document.querySelector('#setPropertyButton').disabled = invalidState;
@@ -3948,21 +3963,27 @@ const existingLiturgicalEventNameChanged = (ev) => {
             break;
         }
     }
+};
+
+/**
+ * Event handler for changes to the existing liturgical event name input.
+ * Delegates to validateActionPromptInput for the actual validation logic.
+ *
+ * @param {Event} ev - The input/change event
+ */
+const existingLiturgicalEventNameChanged = (ev) => {
+    validateActionPromptInput(ev.target);
 }
 
 /**
- * Re-validates all action prompt buttons by triggering the validation logic on each
+ * Re-validates all action prompt buttons by calling the validation logic on each
  * .existingLiturgicalEventName input. This ensures buttons are correctly enabled/disabled
  * based on whether the input has a valid value from the datalist.
  *
  * Call this when re-enabling controls after a translation-blocked state is resolved.
  */
 const revalidateActionPromptButtons = () => {
-    document.querySelectorAll('.existingLiturgicalEventName').forEach(input => {
-        // Pass a simple object with target property - existingLiturgicalEventNameChanged
-        // only reads ev.target, so a full Event instance is unnecessary
-        existingLiturgicalEventNameChanged({ target: input });
-    });
+    document.querySelectorAll('.existingLiturgicalEventName').forEach(validateActionPromptInput);
 };
 
 /**
