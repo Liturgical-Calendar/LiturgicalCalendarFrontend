@@ -490,8 +490,12 @@ export class ExtendingPageHelper {
     async waitForSelectPopulated(selector: string, minOptions = 1, timeout = 15000): Promise<boolean> {
         try {
             await this.page.waitForFunction(({ sel, min }) => {
-                const select = document.querySelector(sel) as HTMLSelectElement;
-                return select && select.options.length >= min;
+                const element = document.querySelector(sel);
+                // Defensive check: ensure element is actually a <select>
+                if (!element || element.tagName !== 'SELECT') {
+                    return false;
+                }
+                return (element as HTMLSelectElement).options.length >= min;
             }, { sel: selector, min: minOptions }, { timeout });
             return true;
         } catch {
@@ -594,9 +598,21 @@ export class ExtendingPageHelper {
             const btn = document.querySelector('#newLiturgicalEventExNovoButton') as HTMLButtonElement | null;
             return btn && !btn.disabled;
         });
+        const existingEnabled = await this.page.evaluate(() => {
+            const btn = document.querySelector('#newLiturgicalEventFromExistingButton') as HTMLButtonElement | null;
+            return btn && !btn.disabled;
+        });
+
+        // Defensive check: ensure at least one button is available
+        if (!exNovoEnabled && !existingEnabled) {
+            console.error('Neither #newLiturgicalEventExNovoButton nor #newLiturgicalEventFromExistingButton found or enabled');
+            throw new Error('Failed to find an enabled submit button in newLiturgicalEventActionPrompt modal');
+        }
+
         const submitSelector = exNovoEnabled
             ? '#newLiturgicalEventExNovoButton'
             : '#newLiturgicalEventFromExistingButton';
+        console.log(`Clicking submit button: ${submitSelector}`);
         await this.page.click(submitSelector);
 
         // Wait for modal to close and new row to appear
