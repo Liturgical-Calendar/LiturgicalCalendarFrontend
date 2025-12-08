@@ -1960,11 +1960,12 @@ const fetchEventsAndCalendarData = () => {
         return;
     }
 
-    // Re-enable action buttons and form controls (only if authenticated)
-    // All .litcalActionButton elements have data-requires-auth="true"
-    // Guard for pages without auth.js
+    // Re-enable controls that were disabled by the translation-blocked branch
+    // Auth-required controls (.litcalActionButton, .serializeRegionalNationalData) only for authenticated users
+    // Non-auth controls (.actionPromptButton) for all users, but respecting input validity
     if (typeof Auth !== 'undefined' && Auth.isAuthenticated()) {
         document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = false);
+        document.querySelector('.serializeRegionalNationalData')?.removeAttribute('disabled');
         if (API.category === 'widerregion') {
             document.querySelector('#widerRegionLocales').disabled = false;
             $('#widerRegionLocales').multiselect('enable');
@@ -1977,6 +1978,10 @@ const fetchEventsAndCalendarData = () => {
             setFormEnabled('#nationalCalendarSettingsForm', true);
         }
     }
+
+    // Re-validate action prompt buttons for all users (not auth-gated)
+    // This ensures buttons are enabled only when their associated inputs have valid values
+    revalidateActionPromptButtons();
 
     if (shouldFetch) {
         console.log('Calendar data is missing but locale is available, proceeding to fetch events...');
@@ -3885,6 +3890,22 @@ const existingLiturgicalEventNameChanged = (ev) => {
         }
     }
 }
+
+/**
+ * Re-validates all action prompt buttons by triggering the validation logic on each
+ * .existingLiturgicalEventName input. This ensures buttons are correctly enabled/disabled
+ * based on whether the input has a valid value from the datalist.
+ *
+ * Call this when re-enabling controls after a translation-blocked state is resolved.
+ */
+const revalidateActionPromptButtons = () => {
+    document.querySelectorAll('.existingLiturgicalEventName').forEach(input => {
+        // Create a synthetic change event to trigger validation
+        const event = new Event('change', { bubbles: true });
+        Object.defineProperty(event, 'target', { value: input, writable: false });
+        existingLiturgicalEventNameChanged(event);
+    });
+};
 
 /**
  * Handles clicks on the "Add language edition Roman Missal" button in the "Add Missal" modal.
