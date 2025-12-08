@@ -474,6 +474,16 @@ Promise.all(fetchRequests).then(responses => {
  */
 const sanitizeProxiedAPI = {
     get: (target, prop) => {
+        // Provide a clear() method to reset all fields to empty state
+        if (prop === 'clear') {
+            return () => {
+                target.category = '';
+                target.key = '';
+                target.path = '';
+                target.locale = '';
+                target.method = '';
+            };
+        }
         return Reflect.get(target, prop);
     },
     set: (target, prop, value) => {
@@ -2062,10 +2072,8 @@ const regionalNationalCalendarNameChanged = (ev) => {
         }
 
         // Clear API state so downstream auth/UI logic treats this as "no calendar selected"
-        API.category = '';
-        API.key = '';
-        API.locale = '';
-        API.path = '';
+        // Use API.clear() to bypass Proxy validation which rejects empty strings
+        API.clear();
 
         return;
     }
