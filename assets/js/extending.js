@@ -169,11 +169,12 @@ const buildLitEventFromRow = (row, eventKey, eventName) => {
     const day = parseInt(dayInput.value, 10) || 1;
     const month = parseInt(monthInput.value, 10) || 1;
 
+    // Grade is initialized to 0 (sentinel) and set later via updateEventGradeByCarousel
     return new LitEvent(
         eventKey,
         eventName,
         colorSelectedOptions.map(({ value }) => value),
-        null,
+        0,
         commonSelectedOptions.map(({ value }) => value),
         day,
         month
