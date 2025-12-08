@@ -4021,7 +4021,7 @@ document.addEventListener('hidden.bs.modal', (ev) => {
  * Update extending.php-specific navbar authentication UI.
  *
  * Handles login button and user menu visibility in the navbar.
- * This is functionally similar to login-modal.php's global updateAuthUI(),
+ * This is functionally similar to login-modal.php's global updateNavbarAuthUI(),
  * but is module-scoped to extending.js to avoid naming collisions.
  *
  * Note: This is different from initPermissionUI() (in login-modal.php) which

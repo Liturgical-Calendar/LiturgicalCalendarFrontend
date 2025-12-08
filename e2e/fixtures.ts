@@ -528,8 +528,11 @@ export class ExtendingPageHelper {
     async waitForCalendarDataLoad(localesSelector: string, timeout = 15000): Promise<void> {
         await this.page.waitForLoadState('networkidle');
 
-        // Wait for locales dropdown to be populated
-        await this.waitForSelectPopulated(localesSelector, 1, timeout);
+        // Wait for locales dropdown to be populated - fail fast if it doesn't populate
+        const populated = await this.waitForSelectPopulated(localesSelector, 1, timeout);
+        if (!populated) {
+            throw new Error(`Locales dropdown "${localesSelector}" was not populated within ${timeout}ms - calendar data may have failed to load`);
+        }
 
         // Wait for success toast (non-blocking)
         const toastAppeared = await this.waitForToast('success', 10000);
