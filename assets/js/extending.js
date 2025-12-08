@@ -1836,6 +1836,23 @@ const setApiLocaleAndHeaders = (headers) => {
                     console.log(`likelyLanguage ${likely} is not available in translations`);
                 }
             }
+
+            // Fallback when CLDR lookup fails or returns unavailable locale:
+            // Use first available locale for region, or current UI localization
+            if (!API.locale) {
+                const regionLocales = Object.keys(AvailableLocalesWithRegion).filter(loc => loc.endsWith(`_${API.key}`));
+                if (regionLocales.length > 0) {
+                    API.locale = regionLocales[0];
+                    console.log(`CLDR fallback: using first available region locale ${API.locale}`);
+                } else {
+                    // Last resort: use UI's current localization if it's a valid locale
+                    const uiLocale = document.querySelector('.currentLocalizationChoices')?.value;
+                    if (uiLocale && Object.prototype.hasOwnProperty.call(AvailableLocalesWithRegion, uiLocale)) {
+                        API.locale = uiLocale;
+                        console.log(`CLDR fallback: using UI localization ${API.locale}`);
+                    }
+                }
+            }
             console.log(`likelyLanguage = ${likely ?? '(unknown)'} (nation is ${API.key}), API.locale set to ${API.locale || '(empty)'}`);
         }
     }
@@ -3921,7 +3938,9 @@ const diocesanCalendarDefinitionsCardLinksClicked = (ev) => {
  */
 const validateActionPromptInput = (input) => {
     const modal = input.closest('.actionPromptModal');
-    const form  = modal.querySelector('form');
+    if (!modal) return;
+    const form = modal.querySelector('form');
+    if (!form) return;
     form.classList.remove('was-validated');
 
     // #existingLiturgicalEventsList is a datalist element containing all existing liturgical_event names, and is not contained in the modal but in the main document
