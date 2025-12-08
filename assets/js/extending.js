@@ -1858,7 +1858,7 @@ const shouldFetchEvents = (eventsUrlForCategory) => {
             return {
                 shouldFetch: false,
                 isBlocked: true,
-                reason: `The General Roman Calendar has not yet been translated into the locale "${localeLabel}". Please translate the General Roman Calendar via the Weblate translation server before creating a calendar for this locale.`
+                reason: Messages['General Roman Calendar not translated'].replace('%s', localeLabel)
             };
         }
         console.log('shouldFetchEvents: API.locale is empty; skipping events fetch and missing-translation checks until a locale is selected.');
@@ -1960,11 +1960,12 @@ const fetchEventsAndCalendarData = () => {
         return;
     }
 
-    // Re-enable action buttons and form controls (only if authenticated)
-    // All .litcalActionButton elements have data-requires-auth="true"
-    // Guard for pages without auth.js
+    // Re-enable controls that were disabled by the translation-blocked branch
+    // Auth-required controls (.litcalActionButton, .serializeRegionalNationalData) only for authenticated users
+    // Non-auth controls (.actionPromptButton) for all users, but respecting input validity
     if (typeof Auth !== 'undefined' && Auth.isAuthenticated()) {
         document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = false);
+        document.querySelector('.serializeRegionalNationalData')?.removeAttribute('disabled');
         if (API.category === 'widerregion') {
             document.querySelector('#widerRegionLocales').disabled = false;
             $('#widerRegionLocales').multiselect('enable');
@@ -1977,6 +1978,10 @@ const fetchEventsAndCalendarData = () => {
             setFormEnabled('#nationalCalendarSettingsForm', true);
         }
     }
+
+    // Re-validate action prompt buttons for all users (not auth-gated)
+    // This ensures buttons are enabled only when their associated inputs have valid values
+    revalidateActionPromptButtons();
 
     if (shouldFetch) {
         console.log('Calendar data is missing but locale is available, proceeding to fetch events...');
@@ -3860,11 +3865,14 @@ const existingLiturgicalEventNameChanged = (ev) => {
         warningEl?.classList.toggle('d-block', warningState);
         warningEl?.classList.toggle('d-none', !warningState);
     }
-    console.log(`input is required to have an existing value from the list: ${ev.target.required}, selected value: ${ev.target.value}, option found: ${!!option}`);
+    // Empty value should always be considered invalid, regardless of whether the input is required
+    const isEmpty = ev.target.value.trim() === '';
+    console.log(`input is required to have an existing value from the list: ${ev.target.required}, selected value: ${ev.target.value}, option found: ${!!option}, isEmpty: ${isEmpty}`);
     console.log(`invalidState: ${invalidState}, warningState: ${warningState}`);
     switch (modal.id) {
         case 'makePatronActionPrompt':
-            document.querySelector('#designatePatronButton').disabled = (ev.target.required ? invalidState : false);
+            // Disable if empty OR if required and not in datalist
+            document.querySelector('#designatePatronButton').disabled = isEmpty || (ev.target.required && invalidState);
             break;
         case 'setPropertyActionPrompt':
             document.querySelector('#setPropertyButton').disabled = invalidState;
@@ -3876,15 +3884,32 @@ const existingLiturgicalEventNameChanged = (ev) => {
             const actionPromptButton = modal.querySelector('.actionPromptButton');
             if (option) {
                 actionPromptButton.id = 'newLiturgicalEventFromExistingButton';
-                actionPromptButton.disabled = false;
+                actionPromptButton.disabled = isEmpty;
             } else {
                 actionPromptButton.id = 'newLiturgicalEventExNovoButton';
-                actionPromptButton.disabled = invalidState;
+                // Disable if empty OR if required and not in datalist
+                actionPromptButton.disabled = isEmpty || invalidState;
             }
             break;
         }
     }
 }
+
+/**
+ * Re-validates all action prompt buttons by triggering the validation logic on each
+ * .existingLiturgicalEventName input. This ensures buttons are correctly enabled/disabled
+ * based on whether the input has a valid value from the datalist.
+ *
+ * Call this when re-enabling controls after a translation-blocked state is resolved.
+ */
+const revalidateActionPromptButtons = () => {
+    document.querySelectorAll('.existingLiturgicalEventName').forEach(input => {
+        // Create a synthetic change event to trigger validation
+        const event = new Event('change', { bubbles: true });
+        Object.defineProperty(event, 'target', { value: input, writable: false });
+        existingLiturgicalEventNameChanged(event);
+    });
+};
 
 /**
  * Handles clicks on the "Add language edition Roman Missal" button in the "Add Missal" modal.
@@ -4095,6 +4120,9 @@ if (typeof Auth !== 'undefined') {
 
 // Handle auth:logout event to reset page-specific form controls not covered by data-requires-auth
 document.addEventListener('auth:logout', () => {
+    // Update extending.php navbar elements
+    syncExtendingNavbarAuth();
+
     // Reset national calendar settings form
     setFormEnabled('#nationalCalendarSettingsForm', false);
 
@@ -4107,4 +4135,36 @@ document.addEventListener('auth:logout', () => {
     // Disable action buttons
     document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = true);
     document.querySelector('.serializeRegionalNationalData')?.setAttribute('disabled', 'disabled');
+});
+
+// Handle auth:login event to enable page-specific form controls
+document.addEventListener('auth:login', () => {
+    // Update extending.php navbar elements
+    syncExtendingNavbarAuth();
+
+    // Enable national calendar settings form if a national calendar is selected
+    if (API.category === 'nation' && API.key) {
+        setFormEnabled('#nationalCalendarSettingsForm', true);
+    }
+
+    // Enable save diocesan calendar button if a valid diocese is selected
+    const dioceseNameInput = document.getElementById('diocesanCalendarDioceseName');
+    const saveDiocesanBtn = document.getElementById('saveDiocesanCalendar_btn');
+    if (saveDiocesanBtn && dioceseNameInput?.value.trim()) {
+        saveDiocesanBtn.disabled = false;
+    }
+
+    // Enable action buttons only if a calendar is selected
+    if (API.key) {
+        document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = false);
+    }
+
+    // Re-enable serialize button if there are form rows
+    const formRows = document.querySelectorAll('.regionalNationalDataForm .row');
+    if (formRows.length > 0) {
+        document.querySelector('.serializeRegionalNationalData')?.removeAttribute('disabled');
+    }
+
+    // Re-validate action prompt buttons based on current input values
+    revalidateActionPromptButtons();
 });

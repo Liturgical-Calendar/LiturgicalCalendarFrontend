@@ -311,6 +311,7 @@ async function handleLogin() {
         // Update navbar (login button vs user menu) and enable data-requires-auth elements
         updateNavbarAuthUI();
         initPermissionUI();
+        document.dispatchEvent(new CustomEvent('auth:login'));
 
         // Start auto-refresh and expiry warning for new session
         Auth.startAutoRefresh();
