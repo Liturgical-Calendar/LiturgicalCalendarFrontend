@@ -4120,6 +4120,9 @@ if (typeof Auth !== 'undefined') {
 
 // Handle auth:logout event to reset page-specific form controls not covered by data-requires-auth
 document.addEventListener('auth:logout', () => {
+    // Update extending.php navbar elements
+    syncExtendingNavbarAuth();
+
     // Reset national calendar settings form
     setFormEnabled('#nationalCalendarSettingsForm', false);
 
@@ -4132,4 +4135,36 @@ document.addEventListener('auth:logout', () => {
     // Disable action buttons
     document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = true);
     document.querySelector('.serializeRegionalNationalData')?.setAttribute('disabled', 'disabled');
+});
+
+// Handle auth:login event to enable page-specific form controls
+document.addEventListener('auth:login', () => {
+    // Update extending.php navbar elements
+    syncExtendingNavbarAuth();
+
+    // Enable national calendar settings form if a national calendar is selected
+    if (API.category === 'nation' && API.key) {
+        setFormEnabled('#nationalCalendarSettingsForm', true);
+    }
+
+    // Enable save diocesan calendar button if a valid diocese is selected
+    const dioceseNameInput = document.getElementById('diocesanCalendarDioceseName');
+    const saveDiocesanBtn = document.getElementById('saveDiocesanCalendar_btn');
+    if (saveDiocesanBtn && dioceseNameInput?.value.trim()) {
+        saveDiocesanBtn.disabled = false;
+    }
+
+    // Enable action buttons only if a calendar is selected
+    if (API.key) {
+        document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = false);
+    }
+
+    // Re-enable serialize button if there are form rows
+    const formRows = document.querySelectorAll('.regionalNationalDataForm .row');
+    if (formRows.length > 0) {
+        document.querySelector('.serializeRegionalNationalData')?.removeAttribute('disabled');
+    }
+
+    // Re-validate action prompt buttons based on current input values
+    revalidateActionPromptButtons();
 });
