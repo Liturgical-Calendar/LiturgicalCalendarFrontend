@@ -141,7 +141,7 @@ const setFormEnabled = (selectorOrElement, enabled) => {
     } else {
         element.classList.add('opacity-50');
     }
-    element.querySelectorAll('input, select, button').forEach(el => {
+    element.querySelectorAll('input, select, button, textarea').forEach(el => {
         el.disabled = !enabled;
     });
 };
@@ -2487,6 +2487,8 @@ const deleteCalendarConfirmClicked = () => {
             document.querySelector('#removeCalendarDataPrompt')?.remove();
             document.querySelector('.regionalNationalCalendarName').value = '';
             document.querySelector('.regionalNationalDataForm').innerHTML = '';
+            // Clear API state so auth:login handler doesn't act on deleted calendar
+            API.clear();
         }, `Calendar '${API.category}/${API.key}' was deleted successfully`
         )).catch(error => {
             console.error(error);
@@ -3613,6 +3615,8 @@ const deleteDiocesanCalendarConfirmClicked = () => {
             });
             document.querySelector('#diocesanOverridesForm').reset();
             resetOtherLocalizationInputs();
+            // Clear API state so auth:login handler doesn't act on deleted calendar
+            API.clear();
         }, `Diocesan Calendar '${API.key}' was deleted successfully`
         )).catch(error => {
             console.error(error);
