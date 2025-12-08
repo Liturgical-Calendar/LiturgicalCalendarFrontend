@@ -3911,10 +3911,9 @@ const existingLiturgicalEventNameChanged = (ev) => {
  */
 const revalidateActionPromptButtons = () => {
     document.querySelectorAll('.existingLiturgicalEventName').forEach(input => {
-        // Create a synthetic change event to trigger validation
-        const event = new Event('change', { bubbles: true });
-        Object.defineProperty(event, 'target', { value: input, writable: false });
-        existingLiturgicalEventNameChanged(event);
+        // Pass a simple object with target property - existingLiturgicalEventNameChanged
+        // only reads ev.target, so a full Event instance is unnecessary
+        existingLiturgicalEventNameChanged({ target: input });
     });
 };
 
