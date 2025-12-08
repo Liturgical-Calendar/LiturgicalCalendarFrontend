@@ -169,11 +169,12 @@ const buildLitEventFromRow = (row, eventKey, eventName) => {
     const day = parseInt(dayInput.value, 10) || 1;
     const month = parseInt(monthInput.value, 10) || 1;
 
+    // Grade is initialized to 0 (sentinel) and set later via updateEventGradeByCarousel
     return new LitEvent(
         eventKey,
         eventName,
         colorSelectedOptions.map(({ value }) => value),
-        null,
+        0,
         commonSelectedOptions.map(({ value }) => value),
         day,
         month
@@ -1718,8 +1719,15 @@ const fetchRegionalCalendarData = (headers) => {
                 currentLocalizationEl.innerHTML = LocalesForRegion.map(item => `<option value="${item[0]}">${item[1]}</option>`).join('');
                 // set as default currentLocalization the locale with greater percentage per population, of those that are available
                 const regionalLocales = LocalesForRegion.map(item => item[0].split('_')[0]);
-                const mostSpokenLanguage = likelyLanguage(API.key, regionalLocales);
-                currentLocalizationEl.value = `${mostSpokenLanguage}_${API.key}`;
+                let mostSpokenLanguage = null;
+                try {
+                    mostSpokenLanguage = likelyLanguage(API.key, regionalLocales);
+                } catch (err) {
+                    console.warn('likelyLanguage failed for region', API.key, err);
+                }
+                // Fall back to first available locale if CLDR lookup failed
+                const defaultLanguage = mostSpokenLanguage || regionalLocales[0] || 'en';
+                currentLocalizationEl.value = `${defaultLanguage}_${API.key}`;
                 break;
             }
         }
@@ -2052,6 +2060,12 @@ const regionalNationalCalendarNameChanged = (ev) => {
             document.querySelector('#nationalCalendarLocales').disabled = true;
             document.querySelector('#currentLocalizationNational').disabled = true;
         }
+
+        // Clear API state so downstream auth/UI logic treats this as "no calendar selected"
+        API.category = '';
+        API.key = '';
+        API.locale = '';
+        API.path = '';
 
         return;
     }
@@ -3904,10 +3918,9 @@ const existingLiturgicalEventNameChanged = (ev) => {
  */
 const revalidateActionPromptButtons = () => {
     document.querySelectorAll('.existingLiturgicalEventName').forEach(input => {
-        // Create a synthetic change event to trigger validation
-        const event = new Event('change', { bubbles: true });
-        Object.defineProperty(event, 'target', { value: input, writable: false });
-        existingLiturgicalEventNameChanged(event);
+        // Pass a simple object with target property - existingLiturgicalEventNameChanged
+        // only reads ev.target, so a full Event instance is unnecessary
+        existingLiturgicalEventNameChanged({ target: input });
     });
 };
 

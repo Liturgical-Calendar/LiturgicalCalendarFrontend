@@ -1013,7 +1013,7 @@ class FormControls {
 
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}Month">${Messages[ "Month" ]}</label>
-            <select class="form-select litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month"${FormControls.settings.monthField === false ? ' disabled' : '' } >${FormControls.generateMonthOptionsHtml(liturgical_event.month)}</select>
+            <select class="form-select litEvent litEventMonth" id="onTheFly${FormControls.uniqid}Month"${FormControls.settings.monthField === false ? ' disabled' : '' } >${FormControls.generateMonthOptionsHtml(liturgical_event?.month ?? null)}</select>
             </div>`;
         }
 
