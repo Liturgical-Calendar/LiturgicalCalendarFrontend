@@ -2061,6 +2061,12 @@ const regionalNationalCalendarNameChanged = (ev) => {
             document.querySelector('#currentLocalizationNational').disabled = true;
         }
 
+        // Clear API state so downstream auth/UI logic treats this as "no calendar selected"
+        API.category = '';
+        API.key = '';
+        API.locale = '';
+        API.path = '';
+
         return;
     }
 
