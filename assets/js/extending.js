@@ -4045,6 +4045,32 @@ document.addEventListener('hide.bs.modal', () => {
 
 document.addEventListener('hidden.bs.modal', (ev) => {
     if (ev.target.classList.contains('actionPromptModal')) {
+        // Reset form to default state
+        const form = ev.target.querySelector('form');
+        if (form) {
+            form.reset();
+            form.classList.remove('was-validated');
+        }
+
+        // Clear validation states on inputs
+        const existingEventInput = ev.target.querySelector('.existingLiturgicalEventName');
+        if (existingEventInput) {
+            existingEventInput.classList.remove('is-invalid');
+        }
+
+        // Hide warning messages
+        const warningEl = ev.target.querySelector('.text-warning');
+        if (warningEl) {
+            warningEl.classList.add('d-none');
+            warningEl.classList.remove('d-block');
+        }
+
+        // Re-disable action prompt buttons (they start disabled until valid input)
+        ev.target.querySelectorAll('.actionPromptButton').forEach(btn => {
+            btn.disabled = true;
+        });
+
+        // Focus on newly created row's name input if present
         console.log(`attempting to focus on input element with id: #onTheFly${FormControls.uniqid}Name`);
         const litEventNameElements = document.querySelectorAll(`.litEventName`);
         if (litEventNameElements.length > 0) {
