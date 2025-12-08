@@ -3865,11 +3865,14 @@ const existingLiturgicalEventNameChanged = (ev) => {
         warningEl?.classList.toggle('d-block', warningState);
         warningEl?.classList.toggle('d-none', !warningState);
     }
-    console.log(`input is required to have an existing value from the list: ${ev.target.required}, selected value: ${ev.target.value}, option found: ${!!option}`);
+    // Empty value should always be considered invalid, regardless of whether the input is required
+    const isEmpty = ev.target.value.trim() === '';
+    console.log(`input is required to have an existing value from the list: ${ev.target.required}, selected value: ${ev.target.value}, option found: ${!!option}, isEmpty: ${isEmpty}`);
     console.log(`invalidState: ${invalidState}, warningState: ${warningState}`);
     switch (modal.id) {
         case 'makePatronActionPrompt':
-            document.querySelector('#designatePatronButton').disabled = (ev.target.required ? invalidState : false);
+            // Disable if empty OR if required and not in datalist
+            document.querySelector('#designatePatronButton').disabled = isEmpty || (ev.target.required && invalidState);
             break;
         case 'setPropertyActionPrompt':
             document.querySelector('#setPropertyButton').disabled = invalidState;
@@ -3881,10 +3884,11 @@ const existingLiturgicalEventNameChanged = (ev) => {
             const actionPromptButton = modal.querySelector('.actionPromptButton');
             if (option) {
                 actionPromptButton.id = 'newLiturgicalEventFromExistingButton';
-                actionPromptButton.disabled = false;
+                actionPromptButton.disabled = isEmpty;
             } else {
                 actionPromptButton.id = 'newLiturgicalEventExNovoButton';
-                actionPromptButton.disabled = invalidState;
+                // Disable if empty OR if required and not in datalist
+                actionPromptButton.disabled = isEmpty || invalidState;
             }
             break;
         }
