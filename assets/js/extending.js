@@ -1718,8 +1718,15 @@ const fetchRegionalCalendarData = (headers) => {
                 currentLocalizationEl.innerHTML = LocalesForRegion.map(item => `<option value="${item[0]}">${item[1]}</option>`).join('');
                 // set as default currentLocalization the locale with greater percentage per population, of those that are available
                 const regionalLocales = LocalesForRegion.map(item => item[0].split('_')[0]);
-                const mostSpokenLanguage = likelyLanguage(API.key, regionalLocales);
-                currentLocalizationEl.value = `${mostSpokenLanguage}_${API.key}`;
+                let mostSpokenLanguage = null;
+                try {
+                    mostSpokenLanguage = likelyLanguage(API.key, regionalLocales);
+                } catch (err) {
+                    console.warn('likelyLanguage failed for region', API.key, err);
+                }
+                // Fall back to first available locale if CLDR lookup failed
+                const defaultLanguage = mostSpokenLanguage || regionalLocales[0] || 'en';
+                currentLocalizationEl.value = `${defaultLanguage}_${API.key}`;
                 break;
             }
         }
