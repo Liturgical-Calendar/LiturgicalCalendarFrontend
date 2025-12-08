@@ -1858,7 +1858,7 @@ const shouldFetchEvents = (eventsUrlForCategory) => {
             return {
                 shouldFetch: false,
                 isBlocked: true,
-                reason: `The General Roman Calendar has not yet been translated into the locale "${localeLabel}". Please translate the General Roman Calendar via the Weblate translation server before creating a calendar for this locale.`
+                reason: Messages['General Roman Calendar not translated'].replace('%s', localeLabel)
             };
         }
         console.log('shouldFetchEvents: API.locale is empty; skipping events fetch and missing-translation checks until a locale is selected.');
