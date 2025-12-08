@@ -3393,6 +3393,35 @@ const diocesanCalendarNationalDependencyChanged = (ev) => {
     document.getElementById('carouselExampleIndicators').classList.add('diocesan-disabled');
     document.getElementById('diocesanOverridesContainer').classList.add('diocesan-disabled');
 
+    // Reset carousel forms to clear any previously loaded diocesan data
+    document.querySelectorAll('.carousel-item form').forEach(form => {
+        form.reset();
+        const rows = form.querySelectorAll('.row');
+        // Keep first 3 rows (header rows), remove the rest (data rows)
+        for (let i = 3; i < rows.length; i++) {
+            rows[i].remove();
+        }
+        const dataGroupTitles = form.querySelectorAll('div.data-group-title');
+        for (let i = 0; i < dataGroupTitles.length; i++) {
+            dataGroupTitles[i].remove();
+        }
+        const litEventCommons = form.querySelectorAll('.litEventCommon');
+        for (let i = 0; i < litEventCommons.length; i++) {
+            $(litEventCommons[i]).multiselect('deselectAll', false).multiselect('select', 'Proper');
+        }
+        const litEventColors = form.querySelectorAll('.litEventColor');
+        for (let i = 0; i < litEventColors.length; i++) {
+            $(litEventColors[i]).multiselect('deselectAll', false).multiselect('select', 'white');
+        }
+        const litEventNames = form.querySelectorAll('.litEventName');
+        for (let i = 0; i < litEventNames.length; i++) {
+            litEventNames[i].setAttribute('data-valuewas', '');
+        }
+    });
+    document.querySelector('#diocesanOverridesForm').reset();
+    resetOtherLocalizationInputs();
+    API.clear();
+
     // Reset the list of dioceses for the current selected nation
     const diocesesForNation = Object.freeze(DiocesesList.find(item => item.country_iso.toUpperCase() === currentSelectedNation)?.dioceses ?? null);
     const diocesesListElement = document.getElementById('DiocesesList');
