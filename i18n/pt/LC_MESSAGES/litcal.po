@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-07 11:33+0000\n"
+"POT-Creation-Date: 2025-12-08 11:07+0000\n"
 "PO-Revision-Date: 2025-12-07 08:41+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
@@ -1333,7 +1333,7 @@ msgstr ""
 msgid "Connection Issue"
 msgstr "Problema de Conexão"
 
-#: includes/login-modal.php:126 includes/login-modal.php:592
+#: includes/login-modal.php:126 includes/login-modal.php:597
 msgid "Are you sure you want to logout?"
 msgstr "Tem certeza de que deseja sair?"
 
@@ -1380,11 +1380,11 @@ msgstr "Sessão estendida"
 msgid "Failed to extend session. Please login again."
 msgstr "Falha ao estender sessão. Por favor, faça login novamente."
 
-#: includes/login-modal.php:622
+#: includes/login-modal.php:627
 msgid "Your session has expired. Please login again."
 msgstr "Sua sessão expirou. Por favor, faça login novamente."
 
-#: includes/login-modal.php:623
+#: includes/login-modal.php:628
 msgid "Session Expired"
 msgstr "Sessão expirada"
 

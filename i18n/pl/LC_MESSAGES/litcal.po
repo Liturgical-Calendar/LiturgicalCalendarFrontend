@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-07 11:33+0000\n"
+"POT-Creation-Date: 2025-12-08 11:07+0000\n"
 "PO-Revision-Date: 2025-12-07 09:01+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
@@ -1326,7 +1326,7 @@ msgstr ""
 msgid "Connection Issue"
 msgstr "Problem z połączeniem"
 
-#: includes/login-modal.php:126 includes/login-modal.php:592
+#: includes/login-modal.php:126 includes/login-modal.php:597
 msgid "Are you sure you want to logout?"
 msgstr "Czy na pewno chcesz się wylogować?"
 
@@ -1374,11 +1374,11 @@ msgstr "Sesja przedłużona"
 msgid "Failed to extend session. Please login again."
 msgstr "Nie udało się przedłużyć sesji. Proszę zalogować się ponownie."
 
-#: includes/login-modal.php:622
+#: includes/login-modal.php:627
 msgid "Your session has expired. Please login again."
 msgstr "Twoja sesja wygasła. Proszę zalogować się ponownie."
 
-#: includes/login-modal.php:623
+#: includes/login-modal.php:628
 msgid "Session Expired"
 msgstr "Sesja wygasła"
 
