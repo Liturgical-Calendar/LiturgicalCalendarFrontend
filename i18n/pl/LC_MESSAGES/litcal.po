@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-08 11:07+0000\n"
+"POT-Creation-Date: 2025-12-08 13:34+0000\n"
 "PO-Revision-Date: 2025-12-07 09:01+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
@@ -241,13 +241,13 @@ msgstr ""
 
 #. translators: notification title
 #. translators: notification title for successful operations
-#: usage.php:11 includes/login-modal.php:321 includes/messages.php:47
+#: usage.php:11 includes/login-modal.php:322 includes/messages.php:47
 msgid "Success"
 msgstr "Sukces"
 
 #. translators: notification title
 #. translators: notification title for failed operations
-#: usage.php:13 includes/login-modal.php:564 includes/messages.php:49
+#: usage.php:13 includes/login-modal.php:565 includes/messages.php:49
 msgid "Error"
 msgstr "Błąd"
 
@@ -1264,7 +1264,7 @@ msgid "About us"
 msgstr "O nas"
 
 #: layout/header.php:51 layout/header.php:53 includes/login-modal.php:56
-#: includes/login-modal.php:341
+#: includes/login-modal.php:342
 msgid "Login"
 msgstr "Zaloguj się"
 
@@ -1326,7 +1326,7 @@ msgstr ""
 msgid "Connection Issue"
 msgstr "Problem z połączeniem"
 
-#: includes/login-modal.php:126 includes/login-modal.php:597
+#: includes/login-modal.php:126 includes/login-modal.php:598
 msgid "Are you sure you want to logout?"
 msgstr "Czy na pewno chcesz się wylogować?"
 
@@ -1342,15 +1342,15 @@ msgstr "Proszę podać zarówno nazwę użytkownika, jak i hasło"
 msgid "Logging in..."
 msgstr "Logowanie..."
 
-#: includes/login-modal.php:321
+#: includes/login-modal.php:322
 msgid "Login successful"
 msgstr "Logowanie zakończone sukcesem"
 
-#: includes/login-modal.php:336
+#: includes/login-modal.php:337
 msgid "Login failed. Please check your credentials."
 msgstr "Logowanie nieudane. Proszę sprawdzić swoje dane."
 
-#: includes/login-modal.php:467 includes/login-modal.php:472
+#: includes/login-modal.php:468 includes/login-modal.php:473
 #, php-format
 msgid "Your session will expire in less than %d minute."
 msgid_plural "Your session will expire in less than %d minutes."
@@ -1358,27 +1358,27 @@ msgstr[0] "Twoja sesja wygaśnie za mniej niż %d minutę."
 msgstr[1] "Twoja sesja wygaśnie za mniej niż %d minuty."
 msgstr[2] "Twoja sesja wygaśnie za mniej niż %d minut."
 
-#: includes/login-modal.php:531
+#: includes/login-modal.php:532
 msgid "Extending..."
 msgstr "Przedłużanie..."
 
-#: includes/login-modal.php:553
+#: includes/login-modal.php:554
 msgid "Your session has been extended."
 msgstr "Twoja sesja została przedłużona."
 
-#: includes/login-modal.php:554
+#: includes/login-modal.php:555
 msgid "Session Extended"
 msgstr "Sesja przedłużona"
 
-#: includes/login-modal.php:563
+#: includes/login-modal.php:564
 msgid "Failed to extend session. Please login again."
 msgstr "Nie udało się przedłużyć sesji. Proszę zalogować się ponownie."
 
-#: includes/login-modal.php:627
+#: includes/login-modal.php:628
 msgid "Your session has expired. Please login again."
 msgstr "Twoja sesja wygasła. Proszę zalogować się ponownie."
 
-#: includes/login-modal.php:628
+#: includes/login-modal.php:629
 msgid "Session Expired"
 msgstr "Sesja wygasła"
 
