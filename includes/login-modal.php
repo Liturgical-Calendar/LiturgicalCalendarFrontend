@@ -574,6 +574,11 @@ async function handleExtendSession() {
         Auth.stopAllTimers();
         Auth.clearTokens();
 
+        // Perform full logout sequence (same as handleAutoLogout)
+        updateNavbarAuthUI();
+        initPermissionUI();
+        document.dispatchEvent(new CustomEvent('auth:logout'));
+
         showLoginModal();
     } finally {
         // Reset button state
