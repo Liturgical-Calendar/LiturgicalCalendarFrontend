@@ -1805,6 +1805,50 @@ const emptyStringPercentage = (translations) => {
 
 
 /**
+ * Resolve locale for a new national calendar using CLDR data with fallbacks.
+ *
+ * @param {string} region - The region/nation code (e.g., 'US', 'IT')
+ * @returns {string|null} The resolved locale or null if none found
+ */
+const resolveNewNationalCalendarLocale = (region) => {
+    let likely = null;
+    try {
+        likely = likelyLanguage(region);
+    } catch (err) {
+        console.warn('likelyLanguage failed for region', region, err);
+    }
+
+    // Try CLDR-suggested language first
+    if (likely) {
+        const likelyWithRegion = `${likely}_${region}`;
+        if (Object.prototype.hasOwnProperty.call(AvailableLocalesWithRegion, likelyWithRegion)) {
+            return likelyWithRegion;
+        }
+        if (Object.prototype.hasOwnProperty.call(AvailableLocales, likely)) {
+            return likely;
+        }
+        console.log(`likelyLanguage ${likely} is not available in translations`);
+    }
+
+    // Fallback: first available locale for region
+    const regionLocales = Object.keys(AvailableLocalesWithRegion).filter(loc => loc.endsWith(`_${region}`));
+    if (regionLocales.length > 0) {
+        console.log(`CLDR fallback: using first available region locale ${regionLocales[0]}`);
+        return regionLocales[0];
+    }
+
+    // Last resort: UI's current localization
+    const uiLocale = document.querySelector('.currentLocalizationChoices')?.value;
+    if (uiLocale && Object.prototype.hasOwnProperty.call(AvailableLocalesWithRegion, uiLocale)) {
+        console.log(`CLDR fallback: using UI localization ${uiLocale}`);
+        return uiLocale;
+    }
+
+    console.log(`likelyLanguage = ${likely ?? '(unknown)'} (nation is ${region}), no locale resolved`);
+    return null;
+};
+
+/**
  * Set API locale and add Accept-Language header based on category
  *
  * @param {Headers} headers - Headers object to append Accept-Language to
@@ -1819,41 +1863,8 @@ const setApiLocaleAndHeaders = (headers) => {
                 : selectedNationalCalendar[0].locales[0];
         } else {
             console.log(`Could not find a national calendar with key ${API.key}; API.path is ${API.path} (category is ${API.category} and key is ${API.key}).`);
-            let likely = null;
-            try {
-                likely = likelyLanguage(API.key);
-            } catch (err) {
-                console.warn('likelyLanguage failed for region', API.key, err);
-            }
-
-            if (likely) {
-                const likelyWithRegion = `${likely}_${API.key}`;
-                if (Object.prototype.hasOwnProperty.call(AvailableLocalesWithRegion, likelyWithRegion)) {
-                    API.locale = likelyWithRegion;
-                } else if (Object.prototype.hasOwnProperty.call(AvailableLocales, likely)) {
-                    API.locale = likely;
-                } else {
-                    console.log(`likelyLanguage ${likely} is not available in translations`);
-                }
-            }
-
-            // Fallback when CLDR lookup fails or returns unavailable locale:
-            // Use first available locale for region, or current UI localization
-            if (!API.locale) {
-                const regionLocales = Object.keys(AvailableLocalesWithRegion).filter(loc => loc.endsWith(`_${API.key}`));
-                if (regionLocales.length > 0) {
-                    API.locale = regionLocales[0];
-                    console.log(`CLDR fallback: using first available region locale ${API.locale}`);
-                } else {
-                    // Last resort: use UI's current localization if it's a valid locale
-                    const uiLocale = document.querySelector('.currentLocalizationChoices')?.value;
-                    if (uiLocale && Object.prototype.hasOwnProperty.call(AvailableLocalesWithRegion, uiLocale)) {
-                        API.locale = uiLocale;
-                        console.log(`CLDR fallback: using UI localization ${API.locale}`);
-                    }
-                }
-            }
-            console.log(`likelyLanguage = ${likely ?? '(unknown)'} (nation is ${API.key}), API.locale set to ${API.locale || '(empty)'}`);
+            API.locale = resolveNewNationalCalendarLocale(API.key) || '';
+            console.log(`API.locale set to ${API.locale || '(empty)'}`);
         }
     }
 
@@ -3354,6 +3365,28 @@ const diocesanOvveridesDefined = () => {
 
 
 /**
+ * Enable or disable nation-dependent inputs on the diocesan calendar form.
+ *
+ * @param {boolean} enabled - true to enable inputs, false to disable
+ */
+const setDiocesanNationDependentInputsEnabled = (enabled) => {
+    const dioceseInput = document.getElementById('diocesanCalendarDioceseName');
+    const dioceseHelp = document.getElementById('diocesanCalendarDioceseNameHelp');
+    const diocesanCalendarGroup = document.getElementById('diocesanCalendarGroup');
+    const diocesanCalendarLocales = document.getElementById('diocesanCalendarLocales');
+    const currentLocalizationDiocesan = document.getElementById('currentLocalizationDiocesan');
+    const diocesanCalendarTimezone = document.getElementById('diocesanCalendarTimezone');
+
+    dioceseInput.disabled = !enabled;
+    dioceseHelp.classList.toggle('d-none', enabled);
+    diocesanCalendarGroup.disabled = !enabled;
+    diocesanCalendarLocales.disabled = !enabled;
+    $(diocesanCalendarLocales).multiselect(enabled ? 'enable' : 'disable');
+    currentLocalizationDiocesan.disabled = !enabled;
+    diocesanCalendarTimezone.disabled = !enabled;
+};
+
+/**
  * Event handlers for the calendar forms
  */
 
@@ -3386,33 +3419,8 @@ const diocesanCalendarNationalDependencyChanged = (ev) => {
     }
 
     // Reset selected diocese and toggle disabled state based on nation selection
-    const dioceseInput = document.getElementById('diocesanCalendarDioceseName');
-    const dioceseHelp = document.getElementById('diocesanCalendarDioceseNameHelp');
-    const diocesanCalendarGroup = document.getElementById('diocesanCalendarGroup');
-    const diocesanCalendarLocales = document.getElementById('diocesanCalendarLocales');
-    const currentLocalizationDiocesan = document.getElementById('currentLocalizationDiocesan');
-    const diocesanCalendarTimezone = document.getElementById('diocesanCalendarTimezone');
-
-    dioceseInput.value = '';
-    if (currentSelectedNation === '') {
-        // Disable nation-dependent inputs
-        dioceseInput.disabled = true;
-        dioceseHelp.classList.remove('d-none');
-        diocesanCalendarGroup.disabled = true;
-        diocesanCalendarLocales.disabled = true;
-        $(diocesanCalendarLocales).multiselect('disable');
-        currentLocalizationDiocesan.disabled = true;
-        diocesanCalendarTimezone.disabled = true;
-    } else {
-        // Enable nation-dependent inputs
-        dioceseInput.disabled = false;
-        dioceseHelp.classList.add('d-none');
-        diocesanCalendarGroup.disabled = false;
-        diocesanCalendarLocales.disabled = false;
-        $(diocesanCalendarLocales).multiselect('enable');
-        currentLocalizationDiocesan.disabled = false;
-        diocesanCalendarTimezone.disabled = false;
-    }
+    document.getElementById('diocesanCalendarDioceseName').value = '';
+    setDiocesanNationDependentInputsEnabled(currentSelectedNation !== '');
 
     // Disable diocese-dependent sections (carousel, forms) when nation changes
     // They will be re-enabled when a diocese is selected
