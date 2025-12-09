@@ -3968,8 +3968,8 @@ const validateActionPromptInput = (input) => {
     console.log(`invalidState: ${invalidState}, warningState: ${warningState}`);
     switch (modal.id) {
         case 'makePatronActionPrompt':
-            // Disable if empty OR if required and not in datalist
-            document.querySelector('#designatePatronButton').disabled = isEmpty || (input.required && invalidState);
+            // Disable if empty OR if not in datalist (when required)
+            document.querySelector('#designatePatronButton').disabled = isEmpty || invalidState;
             break;
         case 'setPropertyActionPrompt':
             document.querySelector('#setPropertyButton').disabled = invalidState;
