@@ -86,6 +86,7 @@ export class ExtendingPageHelper {
     async goToNationalCalendar() {
         await this.page.goto(`${this.baseUrl}/extending.php?choice=national`);
         await this.page.waitForLoadState('networkidle');
+        await this.waitForAuth();
     }
 
     /**
@@ -94,6 +95,7 @@ export class ExtendingPageHelper {
     async goToWiderRegionCalendar() {
         await this.page.goto(`${this.baseUrl}/extending.php?choice=widerRegion`);
         await this.page.waitForLoadState('networkidle');
+        await this.waitForAuth();
     }
 
     /**
@@ -102,6 +104,18 @@ export class ExtendingPageHelper {
     async goToDiocesanCalendar() {
         await this.page.goto(`${this.baseUrl}/extending.php?choice=diocesan`);
         await this.page.waitForLoadState('networkidle');
+        await this.waitForAuth();
+    }
+
+    /**
+     * Wait for auth check to complete and user to be authenticated.
+     * This waits for the user menu to be visible (indicating login was verified).
+     */
+    async waitForAuth() {
+        await this.page.waitForFunction(() => {
+            // @ts-ignore - Auth is a global object
+            return typeof Auth !== 'undefined' && Auth.isAuthenticated() === true;
+        }, undefined, { timeout: 10000 });
     }
 
     /**
@@ -195,20 +209,32 @@ export class ExtendingPageHelper {
     }
 
     /**
-     * Wait for action buttons to be enabled (indicating translations are available).
+     * Wait for buttons matching a selector to be enabled.
+     * Useful for checking if translations are available or form controls are ready.
+     * @param selector - CSS selector for the buttons to check (default: '.litcalActionButton')
      * @param timeout - Maximum time to wait in milliseconds
-     * @returns True if buttons are enabled, false if they're disabled (translations missing)
+     * @returns True if all matching buttons are enabled, false if any are disabled or on timeout
      */
-    async waitForActionButtonsEnabled(timeout = 10000): Promise<boolean> {
+    async waitForButtonsEnabled(selector = '.litcalActionButton', timeout = 10000): Promise<boolean> {
         try {
-            await this.page.waitForFunction(() => {
-                const buttons = document.querySelectorAll('.litcalActionButton');
+            await this.page.waitForFunction((sel) => {
+                const buttons = document.querySelectorAll(sel);
                 return buttons.length > 0 && Array.from(buttons).every(btn => !(btn as HTMLButtonElement).disabled);
-            }, { timeout });
+            }, selector, { timeout });
             return true;
         } catch {
             return false;
         }
+    }
+
+    /**
+     * Wait for action buttons to be enabled (indicating translations are available).
+     * @param timeout - Maximum time to wait in milliseconds
+     * @returns True if buttons are enabled, false if they're disabled (translations missing)
+     * @deprecated Use waitForButtonsEnabled() with a selector instead
+     */
+    async waitForActionButtonsEnabled(timeout = 10000): Promise<boolean> {
+        return this.waitForButtonsEnabled('.litcalActionButton', timeout);
     }
 
     /**
@@ -452,6 +478,149 @@ export class ExtendingPageHelper {
             body: result.body,
             success: result.status === 200 && !!result.body?.success
         };
+    }
+
+    /**
+     * Wait for a select element to have options populated.
+     * @param selector - CSS selector for the select element
+     * @param minOptions - Minimum number of options required (default: 1)
+     * @param timeout - Maximum time to wait in milliseconds
+     * @returns True if select has required options, false on timeout
+     */
+    async waitForSelectPopulated(selector: string, minOptions = 1, timeout = 15000): Promise<boolean> {
+        try {
+            await this.page.waitForFunction(({ sel, min }) => {
+                const element = document.querySelector(sel);
+                // Defensive check: ensure element is actually a <select>
+                if (!element || element.tagName !== 'SELECT') {
+                    return false;
+                }
+                return (element as HTMLSelectElement).options.length >= min;
+            }, { sel: selector, min: minOptions }, { timeout });
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    /**
+     * Wait for a toast notification to appear.
+     * @param type - Toast type: 'success', 'error', 'warning', 'info', or custom selector
+     * @param timeout - Maximum time to wait in milliseconds
+     * @returns True if toast appeared, false on timeout
+     */
+    async waitForToast(type: 'success' | 'error' | 'warning' | 'info' | string = 'success', timeout = 10000): Promise<boolean> {
+        const selectorMap: Record<string, string> = {
+            success: '.toast-success, .toast.bg-success',
+            error: '.toast-error, .toast.bg-danger',
+            warning: '.toast-warning, .toast.bg-warning',
+            info: '.toast-info, .toast.bg-info'
+        };
+        const selector = selectorMap[type] || type;
+
+        return this.page.waitForSelector(selector, { timeout })
+            .then(() => true)
+            .catch(() => false);
+    }
+
+    /**
+     * Wait for calendar data to fully load after selecting a calendar.
+     * Waits for network idle, locales dropdown population, and optional success toast.
+     * @param localesSelector - CSS selector for the locales dropdown (e.g., '#widerRegionLocales')
+     * @param timeout - Maximum time to wait for locales in milliseconds
+     */
+    async waitForCalendarDataLoad(localesSelector: string, timeout = 15000): Promise<void> {
+        await this.page.waitForLoadState('networkidle');
+
+        // Wait for locales dropdown to be populated - fail fast if it doesn't populate
+        const populated = await this.waitForSelectPopulated(localesSelector, 1, timeout);
+        if (!populated) {
+            throw new Error(`Locales dropdown "${localesSelector}" was not populated within ${timeout}ms - calendar data may have failed to load`);
+        }
+
+        // Wait for success toast (non-blocking)
+        const toastAppeared = await this.waitForToast('success', 10000);
+        if (!toastAppeared) {
+            console.warn('Success toast not detected within timeout - continuing');
+        }
+
+        // Final wait for any remaining async operations
+        await this.page.waitForLoadState('networkidle');
+    }
+
+    /**
+     * Create a new liturgical event via the modal dialog.
+     * Opens the modal programmatically, enters the event name, clicks the appropriate submit button,
+     * and waits for the new row to appear.
+     * @param eventName - The name for the new event
+     * @param formSelector - CSS selector for the form where the new row will appear (default: '.regionalNationalDataForm')
+     * @returns Promise that resolves when the new row is created
+     */
+    async createNewEventViaModal(eventName: string, formSelector = '.regionalNationalDataForm'): Promise<void> {
+        // Open the modal programmatically via Bootstrap API
+        const modalOpened = await this.page.evaluate(() => {
+            const modalEl = document.querySelector('#newLiturgicalEventActionPrompt');
+            if (!modalEl) {
+                console.error('Modal element #newLiturgicalEventActionPrompt not found in DOM');
+                return false;
+            }
+            // @ts-ignore - bootstrap is a global
+            if (typeof bootstrap === 'undefined') {
+                console.error('Bootstrap is not available');
+                return false;
+            }
+            // @ts-ignore - bootstrap is a global (checked above)
+            const modal = new bootstrap.Modal(modalEl);
+            modal.show();
+            return true;
+        });
+        if (!modalOpened) {
+            throw new Error('Failed to open newLiturgicalEventActionPrompt modal');
+        }
+        await this.page.waitForSelector('#newLiturgicalEventActionPrompt.show', { timeout: 5000 });
+        console.log('newLiturgicalEventActionPrompt modal opened');
+
+        // Fill in the event name
+        const eventInput = this.page.locator('#newLiturgicalEventActionPrompt .existingLiturgicalEventName');
+        await eventInput.fill(eventName);
+        await eventInput.dispatchEvent('change');
+        console.log(`Entered new event name: ${eventName}`);
+
+        // Wait for either submit button to be enabled
+        await this.page.waitForFunction(() => {
+            const exNovo = document.querySelector('#newLiturgicalEventExNovoButton') as HTMLButtonElement | null;
+            const existing = document.querySelector('#newLiturgicalEventFromExistingButton') as HTMLButtonElement | null;
+            return (exNovo && !exNovo.disabled) || (existing && !existing.disabled);
+        }, undefined, { timeout: 10000 });
+
+        // Click whichever button is enabled
+        const exNovoEnabled = await this.page.evaluate(() => {
+            const btn = document.querySelector('#newLiturgicalEventExNovoButton') as HTMLButtonElement | null;
+            return btn && !btn.disabled;
+        });
+        const existingEnabled = await this.page.evaluate(() => {
+            const btn = document.querySelector('#newLiturgicalEventFromExistingButton') as HTMLButtonElement | null;
+            return btn && !btn.disabled;
+        });
+
+        // Defensive check: ensure at least one button is available
+        if (!exNovoEnabled && !existingEnabled) {
+            console.error('Neither #newLiturgicalEventExNovoButton nor #newLiturgicalEventFromExistingButton found or enabled');
+            throw new Error('Failed to find an enabled submit button in newLiturgicalEventActionPrompt modal');
+        }
+
+        const submitSelector = exNovoEnabled
+            ? '#newLiturgicalEventExNovoButton'
+            : '#newLiturgicalEventFromExistingButton';
+        console.log(`Clicking submit button: ${submitSelector}`);
+        await this.page.click(submitSelector);
+
+        // Wait for modal to close and new row to appear
+        await this.page.waitForSelector('#newLiturgicalEventActionPrompt.show', { state: 'hidden', timeout: 5000 });
+        console.log('Modal closed, waiting for new row...');
+
+        await this.page.waitForSelector(`${formSelector} .row[data-action="createNew"]`, { timeout: 5000 });
+        console.log('New createNew row created');
     }
 
     /**

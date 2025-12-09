@@ -176,57 +176,73 @@ $isLocalhost = $_ENV['API_HOST'] === 'localhost' || $_ENV['API_HOST'] === '127.0
     };
 <?php endif; ?>
 
+    /**
+     * Helper to parse request and extract common flags/data for snippet generators.
+     * @param {Object} request - The Swagger request object
+     * @returns {Object} Parsed request data with flags and processed body
+     */
+    const parseRequestForSnippet = (request) => {
+      const url = new URL(request.get("url"));
+      let isMultipartFormDataRequest = false;
+      let isJsonBody = false;
+      let isJsonResponse = false;
+      let isXMLResponse = false;
+      let isYamlResponse = false;
+      let isICSResponse = false;
+      const headers = request.get("headers");
+      if (headers && headers.size) {
+        headers.map((val, key) => {
+          isMultipartFormDataRequest = isMultipartFormDataRequest || /^content-type$/i.test(key) && /^multipart\/form-data$/i.test(val);
+          isJsonBody = isJsonBody || /^content-type$/i.test(key) && /^application\/json$/i.test(val);
+          isJsonResponse = isJsonResponse || /^accept$/i.test(key) && /^application\/json$/i.test(val);
+          isXMLResponse = isXMLResponse || /^accept$/i.test(key) && /^application\/xml$/i.test(val);
+          isYamlResponse = isYamlResponse || /^accept$/i.test(key) && /^application\/yaml$/i.test(val);
+          isICSResponse = isICSResponse || /^accept$/i.test(key) && /^text\/calendar$/i.test(val);
+        });
+      }
+      let reqBody = request.get("body");
+      if (reqBody) {
+        if (isMultipartFormDataRequest && ["POST", "PUT", "PATCH"].includes(request.get("method"))) {
+          reqBody = null; // Signal unsupported
+        } else {
+          if (reqBody instanceof Map) {
+            // Extract from Map structure
+            const entries = Object.fromEntries(reqBody._list._tail.array.map(([v, k]) => [v, k]));
+            reqBody = entries.body || reqBody;
+          }
+          if (typeof reqBody !== "string") {
+            reqBody = JSON.stringify(reqBody);
+          }
+        }
+      } else if (request.get("method") === "POST") {
+        reqBody = "";
+      }
+      return {
+        url,
+        headers,
+        method: request.get("method"),
+        isMultipartFormDataRequest,
+        isJsonBody,
+        isJsonResponse,
+        isXMLResponse,
+        isYamlResponse,
+        isICSResponse,
+        reqBody
+      };
+    };
+
     const SnippetGeneratorNodeJsPlugin = {
       fn: {
         // use `requestSnippetGenerator_` + key from config (node_native) for generator fn
         requestSnippetGenerator_node_native: (request) => {
-          const url = new URL(request.get("url"));
-          let isMultipartFormDataRequest = false;
-          let isJsonBody = false;
-          let isJsonResponse = false;
-          let isXMLResponse = false;
-          let isYamlResponse = false;
-          let isICSResponse = false;
-          const headers = request.get("headers");
-          if (headers && headers.size) {
-            headers.map((val, key) => {
-              isMultipartFormDataRequest = isMultipartFormDataRequest || /^content-type$/i.test(key) && /^multipart\/form-data$/i.test(val);
-              isJsonBody = isJsonBody || /^content-type$/i.test(key) && /^application\/json$/i.test(val);
-              isJsonResponse = isJsonResponse || /^accept$/i.test(key) && /^application\/json$/i.test(val);
-              isXMLResponse = isXMLResponse || /^accept$/i.test(key) && /^application\/xml$/i.test(val);
-              isYamlResponse = isYamlResponse || /^accept$/i.test(key) && /^application\/yaml$/i.test(val);
-              isICSResponse = isICSResponse || /^accept$/i.test(key) && /^text\/calendar$/i.test(val);
-            });
+          const { url, headers, method, isMultipartFormDataRequest, isJsonBody, isJsonResponse, isXMLResponse, isYamlResponse, isICSResponse, reqBody: rawBody } = parseRequestForSnippet(request);
+          if (isMultipartFormDataRequest && rawBody === null) {
+            return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
           }
-          const packageStr = url.protocol === "https:" ? "https" : "http";
-          let reqBody = request.get("body");
-          if (reqBody) {
-            if (isMultipartFormDataRequest && ["POST", "PUT", "PATCH"].includes(request.get("method"))) {
-              return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
-            } else {
-              if (reqBody instanceof Map) {
-                const {
-                  body,
-                  credentials,
-                  curlOptions,
-                  headers,
-                  method,
-                  requestInterceptor,
-                  responseInterceptor,
-                  url
-                } = Object.fromEntries(reqBody._list._tail.array.map(([v, k]) => [v, k]));
-              } else {
-                if (typeof reqBody !== "string") {
-                  reqBody = JSON.stringify(reqBody);
-                }
-              }
-            }
-          } else if (!reqBody && request.get("method") === "POST") {
-            reqBody = "";
-          }
-          reqBody = (reqBody || "")
+          let reqBody = (rawBody || "")
               .replace(/\\n/g, "\n")
               .replace(/`/g, "\\`");
+          const packageStr = url.protocol === "https:" ? "https" : "http";
           const stringBody = `${isJsonBody ? 'JSON.stringify(' : `"`}` + reqBody + `${isJsonBody ? ')' : `"`}`;
           return `const HTTP = require("${packageStr}");
 ${isYamlResponse ? `// npm install yaml
@@ -269,50 +285,11 @@ req.end();`;
       fn: {
         // use `requestSnippetGenerator_` + key from config (node_native) for generator fn
         requestSnippetGenerator_js_fetch: (request) => {
-          const url = new URL(request.get("url"));
-          let isMultipartFormDataRequest = false;
-          let isJsonBody = false;
-          let isJsonResponse = false;
-          let isXMLResponse = false;
-          let isYamlResponse = false;
-          let isICSResponse = false;
-          const headers = request.get("headers");
-          if (headers && headers.size) {
-            headers.map((val, key) => {
-              isMultipartFormDataRequest = isMultipartFormDataRequest || /^content-type$/i.test(key) && /^multipart\/form-data$/i.test(val);
-              isJsonBody = isJsonBody || /^content-type$/i.test(key) && /^application\/json$/i.test(val);
-              isJsonResponse = isJsonResponse || /^accept$/i.test(key) && /^application\/json$/i.test(val);
-              isXMLResponse = isXMLResponse || /^accept$/i.test(key) && /^application\/xml$/i.test(val);
-              isYamlResponse = isYamlResponse || /^accept$/i.test(key) && /^application\/yaml$/i.test(val);
-              isICSResponse = isICSResponse || /^accept$/i.test(key) && /^text\/calendar$/i.test(val);
-            });
+          const { url, headers, method, isMultipartFormDataRequest, isJsonBody, isJsonResponse, isXMLResponse, isYamlResponse, isICSResponse, reqBody: rawBody } = parseRequestForSnippet(request);
+          if (isMultipartFormDataRequest && rawBody === null) {
+            return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
           }
-          let reqBody = request.get("body");
-          if (reqBody) {
-            if (isMultipartFormDataRequest && ["POST", "PUT", "PATCH"].includes(request.get("method"))) {
-              return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
-            } else {
-              if (reqBody instanceof Map) {
-                const {
-                  body,
-                  credentials,
-                  curlOptions,
-                  headers,
-                  method,
-                  requestInterceptor,
-                  responseInterceptor,
-                  url
-                } = Object.fromEntries(reqBody._list._tail.array.map(([v, k]) => [v, k]));
-              } else {
-                if (typeof reqBody !== "string") {
-                  reqBody = JSON.stringify(reqBody);
-                }
-              }
-            }
-          } else if (!reqBody && request.get("method") === "POST") {
-            reqBody = "";
-          }
-          reqBody = (reqBody || "")
+          let reqBody = (rawBody || "")
               .replace(/\\n/g, "\n")
               .replace(/`/g, "\\`");
           if(isJsonBody) {
@@ -353,51 +330,11 @@ fetch("${url}", options)
       fn: {
         // use `requestSnippetGenerator_` + key from config (node_native) for generator fn
         requestSnippetGenerator_python: (request) => {
-          const url = new URL(request.get("url"));
-          let isMultipartFormDataRequest = false;
-          let isJsonBody = false;
-          let isJsonResponse = false;
-          let isXMLResponse = false;
-          let isYamlResponse = false;
-          let isICSResponse = false;
-          const headers = request.get("headers");
-          if (headers && headers.size) {
-            headers.map((val, key) => {
-              isMultipartFormDataRequest = isMultipartFormDataRequest || /^content-type$/i.test(key) && /^multipart\/form-data$/i.test(val);
-              isJsonBody = isJsonBody || /^content-type$/i.test(key) && /^application\/json$/i.test(val);
-              isJsonResponse = isJsonResponse || /^accept$/i.test(key) && /^application\/json$/i.test(val);
-              isXMLResponse = isXMLResponse || /^accept$/i.test(key) && /^application\/xml$/i.test(val);
-              isYamlResponse = isYamlResponse || /^accept$/i.test(key) && /^application\/yaml$/i.test(val);
-              isICSResponse = isICSResponse || /^accept$/i.test(key) && /^text\/calendar$/i.test(val);
-            });
+          const { url, headers, method, isMultipartFormDataRequest, isJsonBody, isJsonResponse, isXMLResponse, isYamlResponse, isICSResponse, reqBody: rawBody } = parseRequestForSnippet(request);
+          if (isMultipartFormDataRequest && rawBody === null) {
+            return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
           }
-          let headersStr = '';
-          let reqBody = request.get("body");
-          if (reqBody) {
-            if (isMultipartFormDataRequest && ["POST", "PUT", "PATCH"].includes(request.get("method"))) {
-              return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
-            } else {
-              if (reqBody instanceof Map) {
-                const {
-                  body,
-                  credentials,
-                  curlOptions,
-                  headers,
-                  method,
-                  requestInterceptor,
-                  responseInterceptor,
-                  url
-                } = Object.fromEntries(reqBody._list._tail.array.map(([v, k]) => [v, k]));
-              } else {
-                if (typeof reqBody !== "string") {
-                  reqBody = JSON.stringify(reqBody);
-                }
-              }
-            }
-          } else if (!reqBody && request.get("method") === "POST") {
-            reqBody = "";
-          }
-          reqBody = isJsonBody ? reqBody.replaceAll(': true', ': True').replaceAll(': false', ': False') : reqBody;
+          let reqBody = isJsonBody ? (rawBody || '').replaceAll(': true', ': True').replaceAll(': false', ': False') : (rawBody || '');
           return `import requests
 
 url = "${url}"
@@ -415,38 +352,11 @@ data = response.json()`;
     SnippetGeneratorPHPPlugin = {
       fn: {
         requestSnippetGenerator_php: (request) => {
-          const url = new URL(request.get("url"));
-          let isMultipartFormDataRequest = false;
-          let isJsonBody = false;
-          let isJsonResponse = false;
-          let isXMLResponse = false;
-          let isYamlResponse = false;
-          let isICSResponse = false;
-          const headers = request.get("headers");
-          if (headers && headers.size) {
-            headers.map((val, key) => {
-              isMultipartFormDataRequest = isMultipartFormDataRequest || /^content-type$/i.test(key) && /^multipart\/form-data$/i.test(val);
-              isJsonBody = isJsonBody || /^content-type$/i.test(key) && /^application\/json$/i.test(val);
-              isJsonResponse = isJsonResponse || /^accept$/i.test(key) && /^application\/json$/i.test(val);
-              isXMLResponse = isXMLResponse || /^accept$/i.test(key) && /^application\/xml$/i.test(val);
-              isYamlResponse = isYamlResponse || /^accept$/i.test(key) && /^application\/yaml$/i.test(val);
-              isICSResponse = isICSResponse || /^accept$/i.test(key) && /^text\/calendar$/i.test(val);
-            });
+          const { url, headers, method, isMultipartFormDataRequest, isJsonBody, isJsonResponse, isXMLResponse, isYamlResponse, isICSResponse, reqBody } = parseRequestForSnippet(request);
+          if (isMultipartFormDataRequest && reqBody === null) {
+            return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
           }
           let headersStr = '';
-          let reqBody = request.get("body");
-          if (reqBody) {
-            if (isMultipartFormDataRequest && ["POST", "PUT", "PATCH"].includes(request.get("method"))) {
-              return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
-            } else {
-              if (typeof reqBody !== "string") {
-                reqBody = JSON.stringify(reqBody);
-              }
-            }
-          } else if (!reqBody && request.get("method") === "POST") {
-            reqBody = "";
-          }
-
           if (headers && headers.size) {
             headersStr = "$headers = [\n";
             headers.forEach((val, key) => {
@@ -498,38 +408,11 @@ if ($err) {
     SnippetGeneratorRubyPlugin = {
       fn: {
         requestSnippetGenerator_ruby: (request) => {
-          const url = new URL(request.get("url"));
-          let isMultipartFormDataRequest = false;
-          let isJsonBody = false;
-          let isJsonResponse = false;
-          let isXMLResponse = false;
-          let isYamlResponse = false;
-          let isICSResponse = false;
-          const headers = request.get("headers");
-          if (headers && headers.size) {
-            headers.map((val, key) => {
-              isMultipartFormDataRequest = isMultipartFormDataRequest || /^content-type$/i.test(key) && /^multipart\/form-data$/i.test(val);
-              isJsonBody = isJsonBody || /^content-type$/i.test(key) && /^application\/json$/i.test(val);
-              isJsonResponse = isJsonResponse || /^accept$/i.test(key) && /^application\/json$/i.test(val);
-              isXMLResponse = isXMLResponse || /^accept$/i.test(key) && /^application\/xml$/i.test(val);
-              isYamlResponse = isYamlResponse || /^accept$/i.test(key) && /^application\/yaml$/i.test(val);
-              isICSResponse = isICSResponse || /^accept$/i.test(key) && /^text\/calendar$/i.test(val);
-            });
+          const { url, headers, method, isMultipartFormDataRequest, isJsonBody, isJsonResponse, isXMLResponse, isYamlResponse, reqBody } = parseRequestForSnippet(request);
+          if (isMultipartFormDataRequest && reqBody === null) {
+            return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
           }
           let headersStr = '';
-          let reqBody = request.get("body");
-          if (reqBody) {
-            if (isMultipartFormDataRequest && ["POST", "PUT", "PATCH"].includes(request.get("method"))) {
-              return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
-            } else {
-              if (typeof reqBody !== "string") {
-                reqBody = JSON.stringify(reqBody);
-              }
-            }
-          } else if (!reqBody && request.get("method") === "POST") {
-            reqBody = "";
-          }
-
           if (headers && headers.size) {
             headersStr = "headers = {\n";
             headers.forEach((val, key) => {
@@ -538,7 +421,7 @@ if ($err) {
             headersStr = headersStr.trim().slice(0, -1); // Remove the last comma and newline
             headersStr += "\n}";
           }
-          const reqMethod = request.get("method")[0].toUpperCase() + request.get("method").slice(1).toLowerCase();
+          const reqMethod = method[0].toUpperCase() + method.slice(1).toLowerCase();
           return `# frozen_string_literal: true
 
 require 'net/http'
@@ -571,37 +454,11 @@ puts response.body` }`;
     SnippetGeneratorJavaPlugin = {
       fn: {
         requestSnippetGenerator_java: (request) => {
-          const url = new URL(request.get("url"));
-          let isMultipartFormDataRequest = false;
-          let isJsonBody = false;
-          let isJsonResponse = false;
-          let isXMLResponse = false;
-          let isYamlResponse = false;
-          let isICSResponse = false;
-          const headers = request.get("headers");
-          if (headers && headers.size) {
-            headers.map((val, key) => {
-              isMultipartFormDataRequest = isMultipartFormDataRequest || /^content-type$/i.test(key) && /^multipart\/form-data$/i.test(val);
-              isJsonBody = isJsonBody || /^content-type$/i.test(key) && /^application\/json$/i.test(val);
-              isJsonResponse = isJsonResponse || /^accept$/i.test(key) && /^application\/json$/i.test(val);
-              isXMLResponse = isXMLResponse || /^accept$/i.test(key) && /^application\/xml$/i.test(val);
-              isYamlResponse = isYamlResponse || /^accept$/i.test(key) && /^application\/yaml$/i.test(val);
-              isICSResponse = isICSResponse || /^accept$/i.test(key) && /^text\/calendar$/i.test(val);
-            });
+          const { url, headers, method, isMultipartFormDataRequest, isJsonBody, isJsonResponse, isYamlResponse, reqBody } = parseRequestForSnippet(request);
+          if (isMultipartFormDataRequest && reqBody === null) {
+            return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
           }
           let headersStr = '';
-          let reqBody = request.get("body");
-          if (reqBody) {
-            if (isMultipartFormDataRequest && ["POST", "PUT", "PATCH"].includes(request.get("method"))) {
-              return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
-            } else {
-              if (typeof reqBody !== "string") {
-                reqBody = JSON.stringify(reqBody);
-              }
-            }
-          } else if (!reqBody && request.get("method") === "POST") {
-            reqBody = "";
-          }
           let reqBodyJson = isJsonBody ? JSON.parse(reqBody) : null;
           reqBodyStr = isJsonBody
             ? `"{" +
@@ -633,7 +490,7 @@ public class Main {
     try {
       URL url = new URL("${url}");
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-      conn.setRequestMethod("${request.get("method")}");
+      conn.setRequestMethod("${method}");
 ${headersStr ? `
       ${headersStr}
 ` : ''}${reqBody ? `
@@ -671,38 +528,11 @@ ${headersStr ? `
     SnippetGeneratorGoPlugin = {
       fn: {
         requestSnippetGenerator_go: (request) => {
-          const url = new URL(request.get("url"));
-          let isMultipartFormDataRequest = false;
-          let isJsonBody = false;
-          let isJsonResponse = false;
-          let isXMLResponse = false;
-          let isYamlResponse = false;
-          let isICSResponse = false;
-          const headers = request.get("headers");
-          if (headers && headers.size) {
-            headers.map((val, key) => {
-              isMultipartFormDataRequest = isMultipartFormDataRequest || /^content-type$/i.test(key) && /^multipart\/form-data$/i.test(val);
-              isJsonBody = isJsonBody || /^content-type$/i.test(key) && /^application\/json$/i.test(val);
-              isJsonResponse = isJsonResponse || /^accept$/i.test(key) && /^application\/json$/i.test(val);
-              isXMLResponse = isXMLResponse || /^accept$/i.test(key) && /^application\/xml$/i.test(val);
-              isYamlResponse = isYamlResponse || /^accept$/i.test(key) && /^application\/yaml$/i.test(val);
-              isICSResponse = isICSResponse || /^accept$/i.test(key) && /^text\/calendar$/i.test(val);
-            });
+          const { url, headers, method, isMultipartFormDataRequest, isJsonBody, isJsonResponse, isXMLResponse, isYamlResponse, reqBody } = parseRequestForSnippet(request);
+          if (isMultipartFormDataRequest && reqBody === null) {
+            return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
           }
           let headersStr = '';
-          let reqBody = request.get("body");
-          if (reqBody) {
-            if (isMultipartFormDataRequest && ["POST", "PUT", "PATCH"].includes(request.get("method"))) {
-              return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
-            } else {
-              if (typeof reqBody !== "string") {
-                reqBody = JSON.stringify(reqBody);
-              }
-            }
-          } else if (!reqBody && request.get("method") === "POST") {
-            reqBody = "";
-          }
-
           if (headers && headers.size) {
             headersStr = `${headers.map((val, key) => `req.Header.Set("${key}", "${val}");`).valueSeq().join("\n  ")}`;
           }
@@ -722,7 +552,7 @@ import (${reqBody ? (isJsonBody ? `
 
 func main() {
   url := "${url}"
-  method := "${request.get("method")}"${reqBody ? `
+  method := "${method}"${reqBody ? `
 
   payload := ${isJsonBody ? `[]byte(\`${reqBody}\`)` : `strings.NewReader("${reqBody}")`}` : ''}
 
@@ -765,37 +595,13 @@ func main() {
     SnippetGeneratorCsPlugin = {
       fn: {
         requestSnippetGenerator_csharp: (request) => {
-          const url = new URL(request.get("url"));
-          let isMultipartFormDataRequest = false;
-          let isJsonBody = false;
-          let isJsonResponse = false;
-          let isXMLResponse = false;
-          let isYamlResponse = false;
-          let isICSResponse = false;
-          const headers = request.get("headers");
-
-          if (headers && headers.size) {
-            headers.map((val, key) => {
-              isMultipartFormDataRequest = isMultipartFormDataRequest || /^content-type$/i.test(key) && /^multipart\/form-data$/i.test(val);
-              isJsonBody = isJsonBody || /^content-type$/i.test(key) && /^application\/json$/i.test(val);
-              isJsonResponse = isJsonResponse || /^accept$/i.test(key) && /^application\/json$/i.test(val);
-              isXMLResponse = isXMLResponse || /^accept$/i.test(key) && /^application\/xml$/i.test(val);
-              isYamlResponse = isYamlResponse || /^accept$/i.test(key) && /^application\/yaml$/i.test(val);
-              isICSResponse = isICSResponse || /^accept$/i.test(key) && /^text\/calendar$/i.test(val);
-            });
+          const { url, method, isMultipartFormDataRequest, isJsonBody, isJsonResponse, isXMLResponse, isYamlResponse, reqBody } = parseRequestForSnippet(request);
+          if (isMultipartFormDataRequest && reqBody === null) {
+            return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
           }
-
-          let reqBody = request.get("body");
           let bodyStr = '';
           if (reqBody) {
-            if (isMultipartFormDataRequest && ["POST", "PUT", "PATCH"].includes(request.get("method"))) {
-              return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
-            } else {
-              if (typeof reqBody !== "string") {
-                reqBody = JSON.stringify(reqBody);
-              }
-              bodyStr = isJsonBody ? `@"${reqBody.replaceAll('"', '""') }"` : `"${reqBody}"`;
-            }
+            bodyStr = isJsonBody ? `@"${reqBody.replaceAll('"', '""') }"` : `"${reqBody}"`;
           }
 
           return `using System.Net.Http.Headers;${isJsonResponse ? `
@@ -809,8 +615,8 @@ class Program
     static async Task Main()
     {
         try
-        {${request.get("method") === 'GET' ? `
-            Stream responseBody = await client.GetStreamAsync("${url}");` : request.get("method") === 'POST' ? `
+        {${method === 'GET' ? `
+            Stream responseBody = await client.GetStreamAsync("${url}");` : method === 'POST' ? `
             var httpContent = new StringContent(${bodyStr});${isJsonBody ? `
             httpContent.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/json");` : `
             httpContent.Headers.ContentType = new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded");`}
@@ -842,38 +648,13 @@ class Program
     SnippetGeneratorVbNetPlugin = {
       fn: {
         requestSnippetGenerator_vb_net: (request) => {
-          const url = new URL(request.get("url"));
-          let isMultipartFormDataRequest = false;
-          let isJsonBody = false;
-          let isJsonResponse = false;
-          let isXMLResponse = false;
-          let isYamlResponse = false;
-          let isICSResponse = false;
-          const headers = request.get("headers");
-
-          if (headers && headers.size) {
-            headers.map((val, key) => {
-              isMultipartFormDataRequest = isMultipartFormDataRequest || /^content-type$/i.test(key) && /^multipart\/form-data$/i.test(val);
-              isJsonBody = isJsonBody || /^content-type$/i.test(key) && /^application\/json$/i.test(val);
-              isJsonResponse = isJsonResponse || /^accept$/i.test(key) && /^application\/json$/i.test(val);
-              isXMLResponse = isXMLResponse || /^accept$/i.test(key) && /^application\/xml$/i.test(val);
-              isYamlResponse = isYamlResponse || /^accept$/i.test(key) && /^application\/yaml$/i.test(val);
-              isICSResponse = isICSResponse || /^accept$/i.test(key) && /^text\/calendar$/i.test(val);
-            });
+          const { url, method, isMultipartFormDataRequest, isJsonBody, isJsonResponse, isXMLResponse, isYamlResponse, reqBody } = parseRequestForSnippet(request);
+          if (isMultipartFormDataRequest && reqBody === null) {
+            return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
           }
-
-          let reqBody = request.get("body");
           let bodyStr = '';
           if (reqBody) {
-            if (isMultipartFormDataRequest && ["POST", "PUT", "PATCH"].includes(request.get("method"))) {
-              return "throw new Error(\"Currently unsupported content-type: /^multipart\\/form-data$/i\");";
-            } else {
-              if (typeof reqBody !== "string") {
-                reqBody = JSON.stringify(reqBody);
-              }
-              bodyStr = isJsonBody ? `@"${reqBody.replaceAll('"', '""') }"` : `"${reqBody}"`;
-              //bodyStr = `Dim content = New StringContent("${reqBody}", Encoding.UTF8, "application/json")`;
-            }
+            bodyStr = isJsonBody ? `@"${reqBody.replaceAll('"', '""') }"` : `"${reqBody}"`;
           }
 
           return `Imports System.Net.Http.Headers${isJsonResponse ? `
@@ -885,8 +666,8 @@ Module Program
     Private ReadOnly client As New HttpClient()
 
     Async Function Main(args As String()) As Task
-        Try${request.get("method") === 'GET' ? `
-          Dim responseBody As Stream = Await client.GetStreamAsync("${url}");` : request.get("method") === 'POST' ? `
+        Try${method === 'GET' ? `
+          Dim responseBody As Stream = Await client.GetStreamAsync("${url}");` : method === 'POST' ? `
           Dim httpContent = New StringContent(${bodyStr});${isJsonBody ? `
           httpContent.Headers.ContentType = New MediaTypeWithQualityHeaderValue("application/json");` : `
           httpContent.Headers.ContentType = New MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded");`}

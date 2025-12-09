@@ -9,7 +9,7 @@ This document outlines the plan for implementing JWT authentication in the Litur
 - [LiturgicalCalendarAPI#262](https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI/issues/262) - ✅ API JWT Implementation (Complete)
 - [LiturgicalCalendarFrontend#181](https://github.com/Liturgical-Calendar/LiturgicalCalendarFrontend/issues/181) - 🔄 Frontend JWT Client Implementation (In Progress)
 
-**Status:** Phase 1, Phase 2, Phase 2.4 (HttpOnly Cookie Auth), and Phase 2.5 (Full Cookie-Only Auth) complete - as of 2025-12-02
+**Status:** Phase 1, Phase 2, Phase 2.4, Phase 2.5, Phase 3.1, and Phase 3.2 (Session Expiry Warning) complete - as of 2025-12-06
 
 **API Readiness:**
 The LiturgicalCalendarAPI now has full JWT authentication implemented with HttpOnly cookie support:
@@ -132,6 +132,11 @@ const request = new Request(API.path, {
 ```
 
 #### 1.2 Token Management (`assets/js/auth.js`)
+
+> **⚠️ Historical Example:** The localStorage/sessionStorage token storage and `Authorization: Bearer` header
+> approach shown below was superseded by Phase 2.5's HttpOnly cookie-only flow. The current implementation
+> uses HttpOnly cookies set by the API, with `credentials: 'include'` on fetch requests. See Phase 2.5 for
+> the current approach.
 
 ```javascript
 /**
@@ -295,6 +300,10 @@ const Auth = {
 ```
 
 #### 1.3 Update Request Functions
+
+> **⚠️ Historical Example:** The `addAuthHeader()` function and explicit `Authorization: Bearer` header
+> approach shown below was superseded by Phase 2.5's HttpOnly cookie-only flow. The current implementation
+> simply uses `credentials: 'include'` on fetch requests and the API reads the token from HttpOnly cookies.
 
 **Modify `assets/js/extending.js`:**
 
@@ -852,7 +861,9 @@ localStorage/sessionStorage. This provides maximum security against XSS attacks.
 
 ### Phase 3: User Experience Enhancements
 
-#### 3.1 Permission-Based UI
+#### 3.1 Permission-Based UI ✅ COMPLETE
+
+**Implementation Date:** 2025-11-23 (as part of Phase 1)
 
 Hide/show UI elements based on authentication:
 
@@ -879,34 +890,53 @@ function initPermissionUI() {
 // <button data-requires-auth class="d-none">Delete Calendar</button>
 ```
 
-#### 3.2 Session Expiry Warning
+#### 3.2 Session Expiry Warning ✅ COMPLETE
 
-Warn users before session expires using cached auth state (cookie-only approach):
+**Implementation Date:** 2025-12-06
 
-```javascript
-/**
- * Show warning before token expiry
- * Uses cached auth state from /auth/me endpoint (expiry included in response)
- *
- * @param {Function} callback - Function to call with seconds until expiry
- */
-Auth.startExpiryWarning = function(callback) {
-    this._expiryWarningInterval = setInterval(() => {
-        if (!this.isAuthenticated()) return;
+**Related Issue:** [#208](https://github.com/Liturgical-Calendar/LiturgicalCalendarFrontend/issues/208)
 
-        // Get expiry from cached auth state (populated by /auth/me)
-        const exp = this._cachedAuthState?.exp;
-        if (!exp) return;
+**Files Modified:**
 
-        const now = Math.floor(Date.now() / 1000);
-        const timeUntilExpiry = exp - now;
+- `includes/login-modal.php` - Added Bootstrap Toast with action buttons, session expiry warning handlers
 
-        // Warn if less than 2 minutes until expiry
-        if (timeUntilExpiry > 0 && timeUntilExpiry < 120) {
-            callback(timeUntilExpiry);
-        }
-    }, 30000); // Check every 30 seconds
-};
+**Features Implemented:**
+
+- ✅ Bootstrap Toast warning appears when session has < 2 minutes remaining
+- ✅ "Extend Session" button triggers token refresh
+- ✅ "Logout" button allows immediate logout from warning
+- ✅ Warning auto-dismisses after successful token refresh
+- ✅ Countdown updates while toast is visible
+- ✅ Warning only shows once per expiry cycle (resets after extension)
+- ✅ Success/error toastr notifications for user feedback
+- ✅ Proper localization with singular/plural forms
+
+**How It Works:**
+
+1. `Auth.startExpiryWarning()` is called on page load with a callback
+2. The callback checks `Auth._cachedAuthState.exp` every 30 seconds
+3. When < 2 minutes remain, the Bootstrap Toast is shown with action buttons
+4. User can click "Extend Session" to refresh the token, or "Logout" to end session
+5. After successful refresh, the toast is hidden and `expiryWarningShown` is reset
+
+**UI Component:**
+
+```html
+<!-- Session Expiry Warning Toast -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="sessionExpiryToast" class="toast" data-bs-autohide="false">
+        <div class="toast-header bg-warning text-dark">
+            <strong>Session Expiring</strong>
+        </div>
+        <div class="toast-body">
+            <p id="sessionExpiryMessage">Your session will expire in less than 2 minutes.</p>
+            <div class="d-flex justify-content-end gap-2">
+                <button id="sessionExpiryLogout">Logout</button>
+                <button id="sessionExpiryExtend">Extend Session</button>
+            </div>
+        </div>
+    </div>
+</div>
 ```
 
 **Note:** With HttpOnly cookies, JavaScript cannot decode the token directly. The expiry time is
@@ -1271,7 +1301,8 @@ test('authenticated request uses cookies automatically', async ({ page }) => {
 | Phase 2   | Enhanced security (CSRF, auto-refresh)     | 1 week           | COMPLETE    |
 | Phase 2.4 | HttpOnly Cookie Authentication             | 1-2 days         | COMPLETE    |
 | Phase 2.5 | Full Cookie-Only Authentication            | 1 week           | COMPLETE    |
-| Phase 3   | UX enhancements (warnings, permission UI)  | 1 week           | Not started |
+| Phase 3.1 | Permission-Based UI                        | -                | COMPLETE    |
+| Phase 3.2 | Session Expiry Warning                     | 1 day            | COMPLETE    |
 | Phase 4   | Future enhancements (RBAC, MFA, OAuth)     | As needed        | Future      |
 
 **Note:** Timeline assumes sequential implementation coordinated with API development.

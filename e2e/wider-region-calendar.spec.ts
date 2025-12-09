@@ -50,20 +50,7 @@ test.describe('Wider Region Calendar Form', () => {
         await extendingPage.selectCalendar('#widerRegionCalendarName', 'Americas');
 
         // Wait for data to load and locales to be populated
-        await page.waitForLoadState('networkidle');
-        await page.waitForFunction(() => {
-            const select = document.querySelector('#widerRegionLocales') as HTMLSelectElement;
-            return select && select.options.length > 0;
-        }, { timeout: 15000 });
-        // Wait for success toast indicating data was loaded
-        const toastAppeared = await page.waitForSelector('.toast-success, .toast.bg-success', { timeout: 10000 })
-            .then(() => true)
-            .catch(() => false);
-        if (!toastAppeared) {
-            console.warn('Success toast not detected within timeout - continuing');
-        }
-        // Wait for all remaining async operations to complete
-        await page.waitForLoadState('networkidle');
+        await extendingPage.waitForCalendarDataLoad('#widerRegionLocales');
 
         // Verify locales are populated
         const localesSelect = page.locator('#widerRegionLocales');
@@ -88,24 +75,10 @@ test.describe('Wider Region Calendar Form', () => {
 
         // Load an existing wider region calendar (UPDATE scenario - should use PATCH)
         await extendingPage.selectCalendar('#widerRegionCalendarName', 'Americas');
-        await page.waitForLoadState('networkidle');
-        // Wait for locales to be populated (indicates data has loaded)
-        await page.waitForFunction(() => {
-            const select = document.querySelector('#widerRegionLocales') as HTMLSelectElement;
-            return select && select.options.length > 0;
-        }, { timeout: 15000 });
-        // Wait for success toast indicating data was loaded
-        const toastAppeared = await page.waitForSelector('.toast-success, .toast.bg-success', { timeout: 10000 })
-            .then(() => true)
-            .catch(() => false);
-        if (!toastAppeared) {
-            console.warn('Success toast not detected within timeout - continuing');
-        }
-        // Wait for all remaining async operations to complete
-        await page.waitForLoadState('networkidle');
+        await extendingPage.waitForCalendarDataLoad('#widerRegionLocales');
 
         // Dismiss any toast messages that might be blocking
-        await page.locator('.toast-container, #toast-container').evaluate(el => el?.remove()).catch(() => {});
+        await extendingPage.dismissToasts();
 
         // Wait for action buttons to be enabled (indicates translations are available)
         const buttonsEnabled = await extendingPage.waitForActionButtonsEnabled(15000);
@@ -342,55 +315,10 @@ test.describe('Wider Region Calendar Form', () => {
         await extendingPage.dismissToasts();
 
         // STEP 2: Now create the liturgical event via modal
-        // Open the newLiturgicalEventActionPrompt modal to create a new liturgical event
         // We use "Create new" because makePatron requires translated values in the events catalog
         // WiderRegion schema allows 'createNew' or 'makePatron' actions (NOT setProperty)
-        await page.evaluate(() => {
-            const modalEl = document.querySelector('#newLiturgicalEventActionPrompt');
-            // @ts-ignore - bootstrap is a global
-            if (modalEl && typeof bootstrap !== 'undefined') {
-                // @ts-ignore - bootstrap is a global (checked above)
-                const modal = new bootstrap.Modal(modalEl);
-                modal.show();
-            }
-        });
-        await page.waitForSelector('#newLiturgicalEventActionPrompt.show', { timeout: 5000 });
-        console.log('newLiturgicalEventActionPrompt modal opened');
-
-        // Type a new event name to create a brand new liturgical event
         const newEventName = `${regionToCreate} Regional Saint`;
-        const eventInput = page.locator('#newLiturgicalEventActionPrompt .existingLiturgicalEventName');
-        await eventInput.fill(newEventName);
-        await eventInput.dispatchEvent('change');
-        console.log(`Entered new event name: ${newEventName}`);
-
-        // Wait for either submit button to be enabled
-        // Note: The button ID changes dynamically based on whether the event exists:
-        // - newLiturgicalEventFromExistingButton: if event exists in list
-        // - newLiturgicalEventExNovoButton: if creating a brand new event
-        await page.waitForFunction(() => {
-            const exNovo = document.querySelector('#newLiturgicalEventExNovoButton') as HTMLButtonElement | null;
-            const existing = document.querySelector('#newLiturgicalEventFromExistingButton') as HTMLButtonElement | null;
-            return (exNovo && !exNovo.disabled) || (existing && !existing.disabled);
-        }, { timeout: 10000 });
-
-        // Click whichever button is enabled
-        const exNovoEnabled = await page.evaluate(() => {
-            const btn = document.querySelector('#newLiturgicalEventExNovoButton') as HTMLButtonElement | null;
-            return btn && !btn.disabled;
-        });
-        const submitSelector = exNovoEnabled
-            ? '#newLiturgicalEventExNovoButton'
-            : '#newLiturgicalEventFromExistingButton';
-        await page.click(submitSelector);
-
-        // Wait for the modal to close and new row to appear
-        await page.waitForSelector('#newLiturgicalEventActionPrompt.show', { state: 'hidden', timeout: 5000 });
-        console.log('Modal closed, waiting for new row...');
-
-        // Wait for the new row with createNew action to appear in the form
-        await page.waitForSelector('.regionalNationalDataForm .row[data-action="createNew"]', { timeout: 5000 });
-        console.log('New createNew row created');
+        await extendingPage.createNewEventViaModal(newEventName);
 
         // Fill in the required fields for the createNew row (day, month, grade, name)
         const rowFieldsResult = await page.evaluate(() => {
@@ -715,21 +643,7 @@ test.describe('Wider Region Calendar Form - National Calendar Association', () =
     test('should show associated national calendars', async ({ page, extendingPage }) => {
         // Load Americas region
         await extendingPage.selectCalendar('#widerRegionCalendarName', 'Americas');
-        await page.waitForLoadState('networkidle');
-        // Wait for locales to be populated (indicates data has loaded)
-        await page.waitForFunction(() => {
-            const select = document.querySelector('#widerRegionLocales') as HTMLSelectElement;
-            return select && select.options.length > 0;
-        }, { timeout: 15000 });
-        // Wait for success toast indicating data was loaded
-        const toastAppeared = await page.waitForSelector('.toast-success, .toast.bg-success', { timeout: 10000 })
-            .then(() => true)
-            .catch(() => false);
-        if (!toastAppeared) {
-            console.warn('Success toast not detected within timeout - continuing');
-        }
-        // Wait for all remaining async operations to complete
-        await page.waitForLoadState('networkidle');
+        await extendingPage.waitForCalendarDataLoad('#widerRegionLocales');
 
         // The form should show which national calendars are associated with this wider region
         const nationalCalendarsSection = page.locator('#national_calendars');

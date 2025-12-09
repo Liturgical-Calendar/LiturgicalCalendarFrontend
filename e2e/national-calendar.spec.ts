@@ -72,7 +72,7 @@ test.describe('National Calendar Form', () => {
         await expect(page.locator('#serializeNationalCalendarData')).toBeEnabled({ timeout: 10000 });
 
         // Dismiss any toast messages that might be blocking
-        await page.locator('.toast-container, #toast-container').evaluate(el => el?.remove()).catch(() => {});
+        await extendingPage.dismissToasts();
 
         // Track if we made changes that need to be reverted
         let needsGitRestore = false;
@@ -85,6 +85,10 @@ test.describe('National Calendar Form', () => {
         // Wait for the save button to be enabled (form must be fully loaded)
         const saveButton = page.locator('#serializeNationalCalendarData');
         await expect(saveButton).toBeEnabled({ timeout: 15000 });
+
+        // Dismiss any toast notifications that might be blocking the button
+        await extendingPage.dismissToasts();
+
         await saveButton.click();
 
         // Wait for the response and capture status
@@ -318,66 +322,11 @@ test.describe('National Calendar Form', () => {
         // Dismiss any toast messages that might be blocking the modal button
         await extendingPage.dismissToasts();
 
-        // Open the newLiturgicalEventActionPrompt modal to create a new liturgical event
+        // Open the modal and create a new liturgical event
         // We use "Create new" instead of "setProperty" because setProperty requires
         // translated values to be available in the events catalog
-        const modalOpened = await page.evaluate(() => {
-            const modalEl = document.querySelector('#newLiturgicalEventActionPrompt');
-            if (!modalEl) {
-                console.error('Modal element #newLiturgicalEventActionPrompt not found in DOM');
-                return false;
-            }
-            // @ts-ignore - bootstrap is a global
-            if (typeof bootstrap === 'undefined') {
-                console.error('Bootstrap is not available');
-                return false;
-            }
-            // @ts-ignore - bootstrap is a global (checked above)
-            const modal = new bootstrap.Modal(modalEl);
-            modal.show();
-            return true;
-        });
-        if (!modalOpened) {
-            console.log('Modal element not found');
-        }
-        await page.waitForSelector('#newLiturgicalEventActionPrompt.show', { timeout: 5000 });
-        console.log('newLiturgicalEventActionPrompt modal opened');
-
-        // Type a new event name to create a brand new liturgical event
-        // The input is not required, so typing any name will enable the button
         const newEventName = 'Test National Saint';
-        const eventInput = page.locator('#newLiturgicalEventActionPrompt .existingLiturgicalEventName');
-        await eventInput.fill(newEventName);
-        await eventInput.dispatchEvent('change');
-        console.log(`Entered new event name: ${newEventName}`);
-
-        // Wait for either submit button to be enabled
-        // Note: The button ID changes dynamically based on whether the event exists:
-        // - newLiturgicalEventFromExistingButton: if event exists in list
-        // - newLiturgicalEventExNovoButton: if creating a brand new event
-        await page.waitForFunction(() => {
-            const exNovo = document.querySelector('#newLiturgicalEventExNovoButton') as HTMLButtonElement | null;
-            const existing = document.querySelector('#newLiturgicalEventFromExistingButton') as HTMLButtonElement | null;
-            return (exNovo && !exNovo.disabled) || (existing && !existing.disabled);
-        }, { timeout: 10000 });
-
-        // Click whichever button is enabled
-        const exNovoEnabled = await page.evaluate(() => {
-            const btn = document.querySelector('#newLiturgicalEventExNovoButton') as HTMLButtonElement | null;
-            return btn && !btn.disabled;
-        });
-        const submitSelector = exNovoEnabled
-            ? '#newLiturgicalEventExNovoButton'
-            : '#newLiturgicalEventFromExistingButton';
-        await page.click(submitSelector);
-
-        // Wait for the modal to close and new row to appear
-        await page.waitForSelector('#newLiturgicalEventActionPrompt.show', { state: 'hidden', timeout: 5000 });
-        console.log('Modal closed, waiting for new row...');
-
-        // Wait for the new row with createNew action to appear in the form
-        await page.waitForSelector('.regionalNationalDataForm .row[data-action="createNew"]', { timeout: 5000 });
-        console.log('New createNew row created');
+        await extendingPage.createNewEventViaModal(newEventName);
 
         // Fill in the required fields for the createNew row
         // The form requires: event_key, name, color, grade, day, month, common

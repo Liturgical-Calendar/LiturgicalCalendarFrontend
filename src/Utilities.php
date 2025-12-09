@@ -213,6 +213,49 @@ class Utilities
     }
 
     /**
+     * Generates a complete action prompt modal with header, body, and footer.
+     *
+     * @param string $id The modal ID attribute
+     * @param string $labelId The ID for the modal title element
+     * @param string $title The modal title text
+     * @param bool $bodyRequired Whether the liturgical event input requires an existing event
+     * @param bool $bodyHasPropertyChange Whether to show the "property to change" select
+     * @param array<int, array{id: string, class: string, icon: string, label: string, disabled?: bool}> $buttons Footer buttons config
+     * @param string $cancelLabel Label for the cancel button
+     */
+    public static function generateActionPromptModal(
+        string $id,
+        string $labelId,
+        string $title,
+        bool $bodyRequired,
+        bool $bodyHasPropertyChange,
+        array $buttons,
+        string $cancelLabel
+    ): void {
+        echo '<div class="modal fade actionPromptModal" id="' . $id . '" tabindex="-1" role="dialog" aria-labelledby="' . $labelId . '" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="' . $labelId . '">' . $title . '</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>';
+        self::generateActionPromptModalBody($bodyRequired, $bodyHasPropertyChange);
+        echo '            <div class="modal-footer">';
+        foreach ($buttons as $button) {
+            $disabled = isset($button['disabled']) && $button['disabled'] ? ' disabled' : '';
+            $iconHtml = !empty($button['icon']) ? '<i class="' . $button['icon'] . ' me-2"></i>' : '';
+            echo '<button type="button" id="' . $button['id'] . '" class="' . $button['class'] . '"' . $disabled . '>'
+                . $iconHtml . $button['label'] . '</button>';
+        }
+        echo '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'
+            . '<i class="fas fa-window-close me-2"></i>' . $cancelLabel . '</button>';
+        echo '</div>
+        </div>
+    </div>
+</div>';
+    }
+
+    /**
      * Generates the modal body for the modals that use the "Choose from existing liturgical events" input.
      *
      * @param bool $required Whether the liturgical event input is required to use a value from the existing liturgical events list.

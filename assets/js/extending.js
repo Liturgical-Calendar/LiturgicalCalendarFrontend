@@ -97,6 +97,94 @@ const extractErrorMessage = (error, fallback = 'An error occurred') => {
 };
 
 /**
+ * Handles common delete response processing pattern.
+ * Runs cleanup callback on success, shows toastr, logs JSON, handles errors.
+ *
+ * @param {Response} response - The fetch response object
+ * @param {Function} onSuccessCleanup - Callback to run cleanup code on success
+ * @param {string} successMessage - Message to show on success
+ * @returns {Promise<void>}
+ */
+const handleDeleteResponse = async (response, onSuccessCleanup, successMessage) => {
+    if (response.ok) {
+        onSuccessCleanup();
+        toastr["success"](successMessage, Messages['Success']);
+        try {
+            const json = await response.json();
+            console.log(json);
+        } catch { /* empty or non-JSON body - ignore */ }
+    } else if (response.status === 400) {
+        let errorMessage = 'Bad request';
+        try {
+            const json = await response.json();
+            errorMessage = extractErrorMessage(json, errorMessage);
+        } catch { /* non-JSON body - use default message */ }
+        console.error(`${response.status} ${errorMessage}`);
+        toastr["error"](`${response.status} ${errorMessage}`, Messages['Error']);
+    } else {
+        return Promise.reject(response);
+    }
+};
+
+/**
+ * Toggles the disabled state and visual appearance of a form container.
+ * Sets opacity-50 class and disables/enables all form controls within.
+ *
+ * @param {string|HTMLElement} selectorOrElement - CSS selector or DOM element
+ * @param {boolean} enabled - true to enable, false to disable
+ */
+const setFormEnabled = (selectorOrElement, enabled) => {
+    const element = typeof selectorOrElement === 'string'
+        ? document.querySelector(selectorOrElement)
+        : selectorOrElement;
+    if (!element) return;
+
+    if (enabled) {
+        element.classList.remove('opacity-50');
+    } else {
+        element.classList.add('opacity-50');
+    }
+    element.querySelectorAll('input, select, button, textarea').forEach(el => {
+        el.disabled = !enabled;
+    });
+};
+
+/**
+ * Builds a LitEvent object from form row inputs.
+ *
+ * @param {HTMLElement} row - The form row element
+ * @param {string} eventKey - The event key
+ * @param {string} eventName - The event name
+ * @returns {LitEvent} The constructed LitEvent object
+ */
+const buildLitEventFromRow = (row, eventKey, eventName) => {
+    const colorSelect = row.querySelector('.litEventColor');
+    const commonSelect = row.querySelector('.litEventCommon');
+    const dayInput = row.querySelector('.litEventDay');
+    const monthInput = row.querySelector('.litEventMonth');
+
+    if (!colorSelect || !commonSelect || !dayInput || !monthInput) {
+        throw new Error('buildLitEventFromRow: missing expected form controls in row');
+    }
+
+    const colorSelectedOptions = Array.from(colorSelect.selectedOptions);
+    const commonSelectedOptions = Array.from(commonSelect.selectedOptions);
+    const day = parseInt(dayInput.value, 10) || 1;
+    const month = parseInt(monthInput.value, 10) || 1;
+
+    // Grade is initialized to 0 (sentinel) and set later via updateEventGradeByCarousel
+    return new LitEvent(
+        eventKey,
+        eventName,
+        colorSelectedOptions.map(({ value }) => value),
+        0,
+        commonSelectedOptions.map(({ value }) => value),
+        day,
+        month
+    );
+};
+
+/**
  * Takes a string in snake_case and returns it in camelCase.
  * @param {string} str
  * @return {string}
@@ -389,6 +477,16 @@ Promise.all(fetchRequests).then(responses => {
  */
 const sanitizeProxiedAPI = {
     get: (target, prop) => {
+        // Provide a clear() method to reset all fields to empty state
+        if (prop === 'clear') {
+            return () => {
+                target.category = '';
+                target.key = '';
+                target.path = '';
+                target.locale = '';
+                target.method = '';
+            };
+        }
         return Reflect.get(target, prop);
     },
     set: (target, prop, value) => {
@@ -745,18 +843,7 @@ const createNewLiturgicalEvent = (row, card, newEventKey, eventName, targetInput
 
     if (existingEvent === null) {
         console.log('New event key is unique, creating event');
-        const colorSelectedOptions = Array.from(row.querySelector('.litEventColor').selectedOptions);
-        const commonSelectedOptions = Array.from(row.querySelector('.litEventCommon').selectedOptions);
-
-        const liturgical_event = new LitEvent(
-            newEventKey,
-            eventName,
-            colorSelectedOptions.map(({ value }) => value),
-            null,
-            commonSelectedOptions.map(({ value }) => value),
-            parseInt(row.querySelector('.litEventDay').value),
-            parseInt(row.querySelector('.litEventMonth').value)
-        );
+        const liturgical_event = buildLitEventFromRow(row, newEventKey, eventName);
 
         const metadata = {
             since_year: parseInt(row.querySelector('.litEventSinceYear').value),
@@ -828,19 +915,7 @@ const handleEventKeyCollision = (existingEvent, row, card, newEventKey, eventNam
     }
     targetInput.classList.remove('is-invalid');
 
-    const colorSelectedOptions = Array.from(row.querySelector('.litEventColor').selectedOptions);
-    const commonSelectedOptions = Array.from(row.querySelector('.litEventCommon').selectedOptions);
-
-    const liturgical_event = new LitEvent(
-        newEventKey,
-        eventName,
-        colorSelectedOptions.map(({ value }) => value),
-        null,
-        commonSelectedOptions.map(({ value }) => value),
-        parseInt(row.querySelector('.litEventDay').value),
-        parseInt(row.querySelector('.litEventMonth').value)
-    );
-
+    const liturgical_event = buildLitEventFromRow(row, newEventKey, eventName);
     const metadata = {
         since_year: until_year + 1,
         form_rownum: Array.from(card.querySelectorAll('.row')).indexOf(row)
@@ -1656,9 +1731,18 @@ const fetchRegionalCalendarData = (headers) => {
                 const currentLocalizationEl = document.querySelector('.currentLocalizationChoices');
                 currentLocalizationEl.innerHTML = LocalesForRegion.map(item => `<option value="${item[0]}">${item[1]}</option>`).join('');
                 // set as default currentLocalization the locale with greater percentage per population, of those that are available
-                const regionalLocales = LocalesForRegion.map(item => item[0].split('_')[0]);
-                const mostSpokenLanguage = likelyLanguage(API.key, regionalLocales);
-                currentLocalizationEl.value = `${mostSpokenLanguage}_${API.key}`;
+                if (LocalesForRegion.length > 0) {
+                    const regionalLocales = LocalesForRegion.map(item => item[0].split('_')[0]);
+                    let mostSpokenLanguage = null;
+                    try {
+                        mostSpokenLanguage = likelyLanguage(API.key, regionalLocales);
+                    } catch (err) {
+                        console.warn('likelyLanguage failed for region', API.key, err);
+                    }
+                    // Fall back to first available locale if CLDR lookup failed
+                    const defaultLanguage = mostSpokenLanguage || regionalLocales[0];
+                    currentLocalizationEl.value = `${defaultLanguage}_${API.key}`;
+                }
                 break;
             }
         }
@@ -1721,6 +1805,50 @@ const emptyStringPercentage = (translations) => {
 
 
 /**
+ * Resolve locale for a new national calendar using CLDR data with fallbacks.
+ *
+ * @param {string} region - The region/nation code (e.g., 'US', 'IT')
+ * @returns {string|null} The resolved locale or null if none found
+ */
+const resolveNewNationalCalendarLocale = (region) => {
+    let likely = null;
+    try {
+        likely = likelyLanguage(region);
+    } catch (err) {
+        console.warn('likelyLanguage failed for region', region, err);
+    }
+
+    // Try CLDR-suggested language first
+    if (likely) {
+        const likelyWithRegion = `${likely}_${region}`;
+        if (Object.prototype.hasOwnProperty.call(AvailableLocalesWithRegion, likelyWithRegion)) {
+            return likelyWithRegion;
+        }
+        if (Object.prototype.hasOwnProperty.call(AvailableLocales, likely)) {
+            return likely;
+        }
+        console.log(`likelyLanguage ${likely} is not available in translations`);
+    }
+
+    // Fallback: first available locale for region
+    const regionLocales = Object.keys(AvailableLocalesWithRegion).filter(loc => loc.endsWith(`_${region}`));
+    if (regionLocales.length > 0) {
+        console.log(`CLDR fallback: using first available region locale ${regionLocales[0]}`);
+        return regionLocales[0];
+    }
+
+    // Last resort: UI's current localization
+    const uiLocale = document.querySelector('.currentLocalizationChoices')?.value;
+    if (uiLocale && Object.prototype.hasOwnProperty.call(AvailableLocalesWithRegion, uiLocale)) {
+        console.log(`CLDR fallback: using UI localization ${uiLocale}`);
+        return uiLocale;
+    }
+
+    console.log(`likelyLanguage = ${likely ?? '(unknown)'} (nation is ${region}), no locale resolved`);
+    return null;
+};
+
+/**
  * Set API locale and add Accept-Language header based on category
  *
  * @param {Headers} headers - Headers object to append Accept-Language to
@@ -1735,8 +1863,8 @@ const setApiLocaleAndHeaders = (headers) => {
                 : selectedNationalCalendar[0].locales[0];
         } else {
             console.log(`Could not find a national calendar with key ${API.key}; API.path is ${API.path} (category is ${API.category} and key is ${API.key}).`);
-            API.locale = likelyLanguage(API.key);
-            console.log(`likelyLanguage = ${API.locale} (nation is ${API.key}), we have set API.locale to the likelyLanguage for fetch calls`);
+            API.locale = resolveNewNationalCalendarLocale(API.key) || '';
+            console.log(`API.locale set to ${API.locale || '(empty)'}`);
         }
     }
 
@@ -1766,7 +1894,24 @@ const getEventsUrlForCategory = () => {
 const shouldFetchEvents = (eventsUrlForCategory) => {
     // If no locale has been selected yet, skip events fetch and do not block.
     // This allows calendar metadata/forms to load while the user chooses a locale.
+    // Exception: for national calendars, empty locale means the likely language is not available.
     if (!API.locale) {
+        if (API.category === 'nation') {
+            // For national calendars, we always try to set a locale. If it's empty, the locale is not available.
+            let likelyLocale = null;
+            try {
+                likelyLocale = likelyLanguage(API.key);
+            } catch (err) {
+                console.warn('likelyLanguage failed for region', API.key, err);
+            }
+            const localeLabel = likelyLocale || API.key;
+            console.log(`shouldFetchEvents: API.locale is empty for national calendar ${API.key}; likely locale ${likelyLocale} is not available.`);
+            return {
+                shouldFetch: false,
+                isBlocked: true,
+                reason: Messages['General Roman Calendar not translated'].replace('%s', localeLabel)
+            };
+        }
         console.log('shouldFetchEvents: API.locale is empty; skipping events fetch and missing-translation checks until a locale is selected.');
         return { shouldFetch: false, isBlocked: false, reason: '' };
     }
@@ -1777,15 +1922,14 @@ const shouldFetchEvents = (eventsUrlForCategory) => {
     // Check if we're fetching from the base General Roman Calendar
     const isFetchingFromBase = eventsUrlForCategory === EventsUrl;
 
-    // For wider region calendars, we use regional locales (e.g., fr_CA, es_BO) but the General Roman Calendar
-    // is only translated into base locales (e.g., fr, es). So we need to check the base locale.
+    // When fetching from the base General Roman Calendar, we need to check the base locale
+    // (e.g., 'fr' instead of 'fr_CA') since the General Roman Calendar is only translated into base locales.
     const baseLocale = API.locale.split(/[-_]/)[0];
-    const isWiderRegion = API.category === 'widerregion';
 
-    // Check if the locale (or base locale for wider regions) is available for the General Roman Calendar
-    const localeToCheck = (isFetchingFromBase && isWiderRegion) ? baseLocale : API.locale;
+    // Check if the locale (or base locale when fetching from base) is available for the General Roman Calendar
+    const localeToCheck = isFetchingFromBase ? baseLocale : API.locale;
     const localeAvailableForBase = !isFetchingFromBase || LitCalMetadata.locales.includes(localeToCheck);
-    console.log(`shouldFetchEvents: checking locale <${localeToCheck}> (isWiderRegion=${isWiderRegion}), available for General Roman Calendar?`, localeAvailableForBase);
+    console.log(`shouldFetchEvents: checking locale <${localeToCheck}> (isFetchingFromBase=${isFetchingFromBase}), available for General Roman Calendar?`, localeAvailableForBase);
 
     const shouldFetch = missingForLocale && localeAvailableForBase;
     console.log(`shouldFetchEvents: verdict on whether we should attempt to fetch events = `, shouldFetch);
@@ -1793,7 +1937,7 @@ const shouldFetchEvents = (eventsUrlForCategory) => {
     // Determine if we're blocked: we need events but they're not available because translations are missing
     const isBlocked = missingForLocale && isFetchingFromBase && !LitCalMetadata.locales.includes(localeToCheck);
     const reason = isBlocked
-        ? `The General Roman Calendar has not yet been translated into the locale "${localeToCheck}". Please translate the General Roman Calendar via the Weblate translation server before creating a calendar for this locale.`
+        ? Messages['General Roman Calendar not translated'].replace('%s', localeToCheck)
         : '';
 
     return { shouldFetch, isBlocked, reason };
@@ -1844,18 +1988,51 @@ const fetchEventsAndCalendarData = () => {
     const { shouldFetch, isBlocked, reason } = shouldFetchEvents(eventsUrlForCategory);
 
     if (isBlocked) {
-        console.error('Cannot proceed: translations missing for locale', API.locale);
-        toastr['error'](reason, 'Missing Translations').attr('data-toast-type', 'missing-translations');
+        // Use reason for logging since it contains the locale label even when API.locale is empty
+        console.error(reason || Messages['Cannot proceed: translations missing for locale'].replace('%s', API.locale || API.key));
+        toastr['error'](reason, Messages['Missing Translations']).attr('data-toast-type', 'missing-translations');
         // Disable all action buttons since we can't proceed without translations
         document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = true);
         document.querySelectorAll('.actionPromptButton').forEach(btn => btn.disabled = true);
         document.querySelector('.serializeRegionalNationalData')?.setAttribute('disabled', 'disabled');
+        // Disable form controls for the current category
+        if (API.category === 'widerregion') {
+            document.querySelector('#widerRegionLocales').disabled = true;
+            $('#widerRegionLocales').multiselect('disable');
+            document.querySelector('#currentLocalizationWiderRegion').disabled = true;
+        } else if (API.category === 'nation') {
+            document.querySelector('#nationalCalendarLocales').disabled = true;
+            $('#nationalCalendarLocales').multiselect('disable');
+            document.querySelector('#currentLocalizationNational').disabled = true;
+            // Disable nationalCalendarSettingsForm controls
+            setFormEnabled('#nationalCalendarSettingsForm', false);
+        }
         document.querySelector('#overlay').classList.add('hidden');
         return;
     }
 
-    // Re-enable action buttons since translations are available
-    document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = false);
+    // Re-enable controls that were disabled by the translation-blocked branch
+    // Auth-required controls (.litcalActionButton, .serializeRegionalNationalData) only for authenticated users
+    // Non-auth controls (.actionPromptButton) for all users, but respecting input validity
+    if (typeof Auth !== 'undefined' && Auth.isAuthenticated()) {
+        document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = false);
+        document.querySelector('.serializeRegionalNationalData')?.removeAttribute('disabled');
+        if (API.category === 'widerregion') {
+            document.querySelector('#widerRegionLocales').disabled = false;
+            $('#widerRegionLocales').multiselect('enable');
+            document.querySelector('#currentLocalizationWiderRegion').disabled = false;
+        } else if (API.category === 'nation') {
+            document.querySelector('#nationalCalendarLocales').disabled = false;
+            $('#nationalCalendarLocales').multiselect('enable');
+            document.querySelector('#currentLocalizationNational').disabled = false;
+            // Enable nationalCalendarSettingsForm controls
+            setFormEnabled('#nationalCalendarSettingsForm', true);
+        }
+    }
+
+    // Re-validate action prompt buttons for all users (not auth-gated)
+    // This ensures buttons are enabled only when their associated inputs have valid values
+    revalidateActionPromptButtons();
 
     if (shouldFetch) {
         console.log('Calendar data is missing but locale is available, proceeding to fetch events...');
@@ -1896,8 +2073,46 @@ const fetchEventsAndCalendarData = () => {
  * @returns {void}
  */
 const regionalNationalCalendarNameChanged = (ev) => {
+    const category = ev.target.dataset.category;
+
+    // Handle empty values - reset forms and disable controls
+    if (!ev.target.value.trim()) {
+        console.log(`regionalNationalCalendarNameChanged: empty value for category ${category}, resetting forms and disabling controls`);
+
+        // Clear the event data form
+        document.querySelector('.regionalNationalDataForm').innerHTML = '';
+
+        // Disable action buttons
+        document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = true);
+        document.querySelector('#removeExistingCalendarDataBtn').disabled = true;
+        document.querySelector('.serializeRegionalNationalData')?.setAttribute('disabled', 'disabled');
+
+        // Remove any existing remove calendar modal
+        document.querySelector('#removeCalendarPrompt')?.remove();
+
+        // Category-specific resets
+        if (category === 'widerregion') {
+            $('#widerRegionLocales').multiselect('deselectAll', false).multiselect('disable');
+            document.querySelector('#widerRegionLocales').disabled = true;
+            document.querySelector('#currentLocalizationWiderRegion').disabled = true;
+        } else if (category === 'nation') {
+            document.querySelector('#nationalCalendarSettingsForm').reset();
+            setFormEnabled('#nationalCalendarSettingsForm', false);
+            document.querySelector('#publishedRomanMissalList').innerHTML = '';
+            $('#nationalCalendarLocales').multiselect('deselectAll', false).multiselect('disable');
+            document.querySelector('#nationalCalendarLocales').disabled = true;
+            document.querySelector('#currentLocalizationNational').disabled = true;
+        }
+
+        // Clear API state so downstream auth/UI logic treats this as "no calendar selected"
+        // Use API.clear() to bypass Proxy validation which rejects empty strings
+        API.clear();
+
+        return;
+    }
+
     document.querySelector('#overlay').classList.remove('hidden');
-    API.category = ev.target.dataset.category;
+    API.category = category;
     // our proxy will take care of splitting locale from wider region, when we are setting a wider region key
     API.key = ev.target.value;
     console.log(`regionalNationalCalendarNameChanged called, API.category set to ${API.category} and API.key set to ${API.key}. Proceeding to call fetchEventsAndCalendarData...`);
@@ -2272,55 +2487,47 @@ const deleteCalendarConfirmClicked = () => {
                 return await handleAuthError(response, makeDeleteRequest, runDeleteFlow);
             }
             return response;
-        }).then(response => {
-            if (response.ok) {
-                switch ( API.category ) {
-                    case 'widerregion':
-                        LitCalMetadata.wider_regions = LitCalMetadata.wider_regions.filter(el => el.name !== API.key);
-                        LitCalMetadata.wider_regions_keys = LitCalMetadata.wider_regions_keys.filter(el => el !== API.key);
-                        break;
-                    case 'nation': {
-                        LitCalMetadata.national_calendars = LitCalMetadata.national_calendars.filter(el => el.calendar_id !== API.key);
-                        LitCalMetadata.national_calendars_keys = LitCalMetadata.national_calendars_keys.filter(el => el !== API.key);
-                        document.querySelector('#nationalCalendarSettingsForm').reset();
-                        document.querySelector('#publishedRomanMissalList').innerHTML = '';
-                        const localeOptions = Object.entries(AvailableLocalesWithRegion).map(([localeIso, localeDisplayName]) => {
-                            return `<option value="${localeIso}">${localeDisplayName}</option>`;
-                        });
-                        document.querySelector('#nationalCalendarLocales').innerHTML = localeOptions.join('\n');
-                        document.querySelector('.currentLocalizationChoices').innerHTML = localeOptions.join('\n');
-                        $('#nationalCalendarLocales').multiselect('rebuild');
+        }).then(response => handleDeleteResponse(response, () => {
+            switch ( API.category ) {
+                case 'widerregion':
+                    LitCalMetadata.wider_regions = LitCalMetadata.wider_regions.filter(el => el.name !== API.key);
+                    LitCalMetadata.wider_regions_keys = LitCalMetadata.wider_regions_keys.filter(el => el !== API.key);
+                    break;
+                case 'nation': {
+                    LitCalMetadata.national_calendars = LitCalMetadata.national_calendars.filter(el => el.calendar_id !== API.key);
+                    LitCalMetadata.national_calendars_keys = LitCalMetadata.national_calendars_keys.filter(el => el !== API.key);
+                    document.querySelector('#nationalCalendarSettingsForm').reset();
+                    document.querySelector('#publishedRomanMissalList').innerHTML = '';
+                    const localeOptions = Object.entries(AvailableLocalesWithRegion).map(([localeIso, localeDisplayName]) => {
+                        return `<option value="${localeIso}">${localeDisplayName}</option>`;
+                    });
+                    document.querySelector('#nationalCalendarLocales').innerHTML = localeOptions.join('\n');
+                    document.querySelector('.currentLocalizationChoices').innerHTML = localeOptions.join('\n');
+                    $('#nationalCalendarLocales').multiselect('rebuild');
 
-                        document.querySelectorAll('.regionalNationalSettingsForm .form-select:not([multiple])').forEach(formSelect => {
-                            formSelect.value = '';
-                            formSelect.dispatchEvent(new CustomEvent('change', {
-                                bubbles: true,
-                                cancelable: true
-                              }));
-                        });
-                        break;
-                    }
+                    document.querySelectorAll('.regionalNationalSettingsForm .form-select:not([multiple])').forEach(formSelect => {
+                        formSelect.value = '';
+                        formSelect.dispatchEvent(new CustomEvent('change', {
+                            bubbles: true,
+                            cancelable: true
+                          }));
+                    });
+                    break;
                 }
-
-                document.querySelector('#removeExistingCalendarDataBtn').disabled = true;
-                document.querySelector('#removeCalendarDataPrompt')?.remove();
-                document.querySelector('.regionalNationalCalendarName').value = '';
-                document.querySelector('.regionalNationalDataForm').innerHTML = '';
-
-                toastr["success"](`Calendar '${API.category}/${API.key}' was deleted successfully`, Messages['Success']);
-                response.json().then(json => {
-                    console.log(json);
-                });
-            } else if (response.status === 400) {
-                response.json().then(json => {
-                    console.error(`${response.status} ${json.response}: ${json.description}`);
-                    toastr["error"](`${response.status} ${json.response}: ${json.description}`, Messages['Error']);
-                });
-            } else {
-                return Promise.reject(response);
             }
-        }).catch(error => {
+
+            document.querySelector('#removeExistingCalendarDataBtn').disabled = true;
+            document.querySelector('#removeCalendarDataPrompt')?.remove();
+            document.querySelector('.regionalNationalCalendarName').value = '';
+            document.querySelector('.regionalNationalDataForm').innerHTML = '';
+            // Clear API state so auth:login handler doesn't act on deleted calendar
+            API.clear();
+        }, `Calendar '${API.category}/${API.key}' was deleted successfully`
+        )).catch(error => {
             console.error(error);
+            // Show user-facing feedback for unexpected errors (404, 500, network failures, etc.)
+            const statusText = error?.status ? `${error.status} ${error.statusText || 'Error'}` : 'Network error';
+            toastr["error"](statusText, Messages['Error']);
         }).finally(() => {
             document.querySelector('#overlay').classList.add('hidden');
         });
@@ -3158,6 +3365,28 @@ const diocesanOvveridesDefined = () => {
 
 
 /**
+ * Enable or disable nation-dependent inputs on the diocesan calendar form.
+ *
+ * @param {boolean} enabled - true to enable inputs, false to disable
+ */
+const setDiocesanNationDependentInputsEnabled = (enabled) => {
+    const dioceseInput = document.getElementById('diocesanCalendarDioceseName');
+    const dioceseHelp = document.getElementById('diocesanCalendarDioceseNameHelp');
+    const diocesanCalendarGroup = document.getElementById('diocesanCalendarGroup');
+    const diocesanCalendarLocales = document.getElementById('diocesanCalendarLocales');
+    const currentLocalizationDiocesan = document.getElementById('currentLocalizationDiocesan');
+    const diocesanCalendarTimezone = document.getElementById('diocesanCalendarTimezone');
+
+    dioceseInput.disabled = !enabled;
+    dioceseHelp.classList.toggle('d-none', enabled);
+    diocesanCalendarGroup.disabled = !enabled;
+    diocesanCalendarLocales.disabled = !enabled;
+    $(diocesanCalendarLocales).multiselect(enabled ? 'enable' : 'disable');
+    currentLocalizationDiocesan.disabled = !enabled;
+    diocesanCalendarTimezone.disabled = !enabled;
+};
+
+/**
  * Event handlers for the calendar forms
  */
 
@@ -3177,8 +3406,11 @@ const diocesanCalendarNationalDependencyChanged = (ev) => {
     console.log('National dependency changed', ev);
     const currentSelectedNation = ev.target.value;
 
-    // Disable "Remove diocesan data" button
-    document.getElementById('removeExistingDiocesanDataBtn').disabled = true;
+    // Disable "Remove diocesan data" and "Save diocesan data" buttons
+    const removeBtn = document.getElementById('removeExistingDiocesanDataBtn');
+    const saveBtn = document.getElementById('saveDiocesanCalendar_btn');
+    if (removeBtn) removeBtn.disabled = true;
+    if (saveBtn) saveBtn.disabled = true;
 
     // The diocese remove prompt is created when existing Diocesan data is loaded
     const removePrompt = document.getElementById('removeDiocesanCalendarPrompt');
@@ -3187,39 +3419,43 @@ const diocesanCalendarNationalDependencyChanged = (ev) => {
     }
 
     // Reset selected diocese and toggle disabled state based on nation selection
-    const dioceseInput = document.getElementById('diocesanCalendarDioceseName');
-    const dioceseHelp = document.getElementById('diocesanCalendarDioceseNameHelp');
-    const diocesanCalendarGroup = document.getElementById('diocesanCalendarGroup');
-    const diocesanCalendarLocales = document.getElementById('diocesanCalendarLocales');
-    const currentLocalizationDiocesan = document.getElementById('currentLocalizationDiocesan');
-    const diocesanCalendarTimezone = document.getElementById('diocesanCalendarTimezone');
-
-    dioceseInput.value = '';
-    if (currentSelectedNation === '') {
-        // Disable nation-dependent inputs
-        dioceseInput.disabled = true;
-        dioceseHelp.classList.remove('d-none');
-        diocesanCalendarGroup.disabled = true;
-        diocesanCalendarLocales.disabled = true;
-        $(diocesanCalendarLocales).multiselect('disable');
-        currentLocalizationDiocesan.disabled = true;
-        diocesanCalendarTimezone.disabled = true;
-    } else {
-        // Enable nation-dependent inputs
-        dioceseInput.disabled = false;
-        dioceseHelp.classList.add('d-none');
-        diocesanCalendarGroup.disabled = false;
-        diocesanCalendarLocales.disabled = false;
-        $(diocesanCalendarLocales).multiselect('enable');
-        currentLocalizationDiocesan.disabled = false;
-        diocesanCalendarTimezone.disabled = false;
-    }
+    document.getElementById('diocesanCalendarDioceseName').value = '';
+    setDiocesanNationDependentInputsEnabled(currentSelectedNation !== '');
 
     // Disable diocese-dependent sections (carousel, forms) when nation changes
     // They will be re-enabled when a diocese is selected
     document.getElementById('diocesanCalendarDefinitionCardLinks').classList.add('diocesan-disabled');
     document.getElementById('carouselExampleIndicators').classList.add('diocesan-disabled');
     document.getElementById('diocesanOverridesContainer').classList.add('diocesan-disabled');
+
+    // Reset carousel forms to clear any previously loaded diocesan data
+    document.querySelectorAll('.carousel-item form').forEach(form => {
+        form.reset();
+        const rows = form.querySelectorAll('.row');
+        // Keep first 3 rows (header rows), remove the rest (data rows)
+        for (let i = 3; i < rows.length; i++) {
+            rows[i].remove();
+        }
+        const dataGroupTitles = form.querySelectorAll('div.data-group-title');
+        for (let i = 0; i < dataGroupTitles.length; i++) {
+            dataGroupTitles[i].remove();
+        }
+        const litEventCommons = form.querySelectorAll('.litEventCommon');
+        for (let i = 0; i < litEventCommons.length; i++) {
+            $(litEventCommons[i]).multiselect('deselectAll', false).multiselect('select', 'Proper');
+        }
+        const litEventColors = form.querySelectorAll('.litEventColor');
+        for (let i = 0; i < litEventColors.length; i++) {
+            $(litEventColors[i]).multiselect('deselectAll', false).multiselect('select', 'white');
+        }
+        const litEventNames = form.querySelectorAll('.litEventName');
+        for (let i = 0; i < litEventNames.length; i++) {
+            litEventNames[i].setAttribute('data-valuewas', '');
+        }
+    });
+    document.querySelector('#diocesanOverridesForm').reset();
+    resetOtherLocalizationInputs();
+    API.clear();
 
     // Reset the list of dioceses for the current selected nation
     const diocesesForNation = Object.freeze(DiocesesList.find(item => item.country_iso.toUpperCase() === currentSelectedNation)?.dioceses ?? null);
@@ -3311,6 +3547,11 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
         document.getElementById('diocesanCalendarDefinitionCardLinks').classList.remove('diocesan-disabled');
         document.getElementById('carouselExampleIndicators').classList.remove('diocesan-disabled');
         document.getElementById('diocesanOverridesContainer').classList.remove('diocesan-disabled');
+        // Enable save button if authenticated (guard for pages without auth.js)
+        const saveBtn = document.getElementById('saveDiocesanCalendar_btn');
+        if (saveBtn && typeof Auth !== 'undefined' && Auth.isAuthenticated()) {
+            saveBtn.disabled = false;
+        }
         API.category = 'diocese';
         API.key = selectedOption.getAttribute('data-value');
         console.log('selected diocese with key = ' + API.key);
@@ -3353,6 +3594,9 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
         document.getElementById('diocesanCalendarDefinitionCardLinks').classList.add('diocesan-disabled');
         document.getElementById('carouselExampleIndicators').classList.add('diocesan-disabled');
         document.getElementById('diocesanOverridesContainer').classList.add('diocesan-disabled');
+        // Disable save button when no valid diocese is selected
+        const saveBtnInvalid = document.getElementById('saveDiocesanCalendar_btn');
+        if (saveBtnInvalid) saveBtnInvalid.disabled = true;
     }
 }
 
@@ -3402,8 +3646,7 @@ const deleteDiocesanCalendarConfirmClicked = () => {
                 return await handleAuthError(response, makeDeleteRequest, runDeleteFlow);
             }
             return response;
-        }).then(response => {
-        if (response.ok) {
+        }).then(response => handleDeleteResponse(response, () => {
             LitCalMetadata.diocesan_calendars = LitCalMetadata.diocesan_calendars.filter(el => el.calendar_id !== API.key);
             LitCalMetadata.diocesan_calendars_keys = LitCalMetadata.diocesan_calendars_keys.filter(el => el !== API.key);
 
@@ -3438,21 +3681,14 @@ const deleteDiocesanCalendarConfirmClicked = () => {
             });
             document.querySelector('#diocesanOverridesForm').reset();
             resetOtherLocalizationInputs();
-
-            toastr["success"](`Diocesan Calendar '${API.key}' was deleted successfully`, Messages['Success']);
-            response.json().then(json => {
-                console.log(json);
-            });
-        } else if (response.status === 400) {
-            response.json().then(json => {
-                console.error(`${response.status} ${json.response}: ${json.description}`);
-                toastr["error"](`${response.status} ${json.response}: ${json.description}`, Messages['Error']);
-            });
-        } else {
-            return Promise.reject(response);
-        }
-        }).catch(error => {
+            // Clear API state so auth:login handler doesn't act on deleted calendar
+            API.clear();
+        }, `Diocesan Calendar '${API.key}' was deleted successfully`
+        )).catch(error => {
             console.error(error);
+            // Show user-facing feedback for unexpected errors (404, 500, network failures, etc.)
+            const statusText = error?.status ? `${error.status} ${error.statusText || 'Error'}` : 'Network error';
+            toastr["error"](statusText, Messages['Error']);
         }).finally(() => {
             document.querySelector('#overlay').classList.add('hidden');
         });
@@ -3690,7 +3926,7 @@ const diocesanCalendarDefinitionsCardLinksClicked = (ev) => {
 }
 
 /**
- * Handles changes to liturgical_event selections in modals.
+ * Validates an action prompt input and updates the corresponding button state.
  *
  * When a liturgical_event name is changed (whether selected from a list or entered manually),
  * the 'was-validated' class is removed from the form in the modal.
@@ -3706,29 +3942,34 @@ const diocesanCalendarDefinitionsCardLinksClicked = (ev) => {
  * In a 'newLiturgicalEventActionPrompt' modal, the button id is 'newLiturgicalEventFromExistingButton' by default,
  * but will be changed to 'newLiturgicalEventExNovoButton' if the liturgical_event name is not found in the list.
  *
- * @param {Event} ev The event object for the change event.
+ * @param {HTMLInputElement} input - The input element to validate
  */
-const existingLiturgicalEventNameChanged = (ev) => {
-    const modal = ev.target.closest('.actionPromptModal');
-    const form  = modal.querySelector('form');
+const validateActionPromptInput = (input) => {
+    const modal = input.closest('.actionPromptModal');
+    if (!modal) return;
+    const form = modal.querySelector('form');
+    if (!form) return;
     form.classList.remove('was-validated');
 
     // #existingLiturgicalEventsList is a datalist element containing all existing liturgical_event names, and is not contained in the modal but in the main document
-    const option = document.querySelector(`#existingLiturgicalEventsList option[value="${ev.target.value}"]`);
+    const option = document.querySelector(`#existingLiturgicalEventsList option[value="${input.value}"]`);
     // if no option corresponding to the selected liturgical_event name is found, disable the submission buttons
-    const invalidState = !option && ev.target.required;
-    const warningState = !option && !ev.target.required;
-    ev.target.classList.toggle('is-invalid', invalidState);
-    if (!ev.target.required) {
+    const invalidState = !option && input.required;
+    const warningState = !option && !input.required;
+    input.classList.toggle('is-invalid', invalidState);
+    if (!input.required) {
         const warningEl = modal.querySelector('.text-warning');
         warningEl?.classList.toggle('d-block', warningState);
         warningEl?.classList.toggle('d-none', !warningState);
     }
-    console.log(`input is required to have an existing value from the list: ${ev.target.required}, selected value: ${ev.target.value}, option found: ${!!option}`);
+    // Empty value should always be considered invalid, regardless of whether the input is required
+    const isEmpty = input.value.trim() === '';
+    console.log(`input is required to have an existing value from the list: ${input.required}, selected value: ${input.value}, option found: ${!!option}, isEmpty: ${isEmpty}`);
     console.log(`invalidState: ${invalidState}, warningState: ${warningState}`);
     switch (modal.id) {
         case 'makePatronActionPrompt':
-            document.querySelector('#designatePatronButton').disabled = (ev.target.required ? invalidState : false);
+            // Disable if empty OR if not in datalist (when required)
+            document.querySelector('#designatePatronButton').disabled = isEmpty || invalidState;
             break;
         case 'setPropertyActionPrompt':
             document.querySelector('#setPropertyButton').disabled = invalidState;
@@ -3740,15 +3981,37 @@ const existingLiturgicalEventNameChanged = (ev) => {
             const actionPromptButton = modal.querySelector('.actionPromptButton');
             if (option) {
                 actionPromptButton.id = 'newLiturgicalEventFromExistingButton';
-                actionPromptButton.disabled = false;
+                actionPromptButton.disabled = isEmpty;
             } else {
                 actionPromptButton.id = 'newLiturgicalEventExNovoButton';
-                actionPromptButton.disabled = invalidState;
+                // Disable if empty OR if required and not in datalist
+                actionPromptButton.disabled = isEmpty || invalidState;
             }
             break;
         }
     }
+};
+
+/**
+ * Event handler for changes to the existing liturgical event name input.
+ * Delegates to validateActionPromptInput for the actual validation logic.
+ *
+ * @param {Event} ev - The input/change event
+ */
+const existingLiturgicalEventNameChanged = (ev) => {
+    validateActionPromptInput(ev.target);
 }
+
+/**
+ * Re-validates all action prompt buttons by calling the validation logic on each
+ * .existingLiturgicalEventName input. This ensures buttons are correctly enabled/disabled
+ * based on whether the input has a valid value from the datalist.
+ *
+ * Call this when re-enabling controls after a translation-blocked state is resolved.
+ */
+const revalidateActionPromptButtons = () => {
+    document.querySelectorAll('.existingLiturgicalEventName').forEach(validateActionPromptInput);
+};
 
 /**
  * Handles clicks on the "Add language edition Roman Missal" button in the "Add Missal" modal.
@@ -3863,6 +4126,32 @@ document.addEventListener('hide.bs.modal', () => {
 
 document.addEventListener('hidden.bs.modal', (ev) => {
     if (ev.target.classList.contains('actionPromptModal')) {
+        // Reset form to default state
+        const form = ev.target.querySelector('form');
+        if (form) {
+            form.reset();
+            form.classList.remove('was-validated');
+        }
+
+        // Clear validation states on inputs
+        const existingEventInput = ev.target.querySelector('.existingLiturgicalEventName');
+        if (existingEventInput) {
+            existingEventInput.classList.remove('is-invalid');
+        }
+
+        // Hide warning messages
+        const warningEl = ev.target.querySelector('.text-warning');
+        if (warningEl) {
+            warningEl.classList.add('d-none');
+            warningEl.classList.remove('d-block');
+        }
+
+        // Re-disable action prompt buttons (they start disabled until valid input)
+        ev.target.querySelectorAll('.actionPromptButton').forEach(btn => {
+            btn.disabled = true;
+        });
+
+        // Focus on newly created row's name input if present
         console.log(`attempting to focus on input element with id: #onTheFly${FormControls.uniqid}Name`);
         const litEventNameElements = document.querySelectorAll(`.litEventName`);
         if (litEventNameElements.length > 0) {
@@ -3882,9 +4171,26 @@ document.addEventListener('hidden.bs.modal', (ev) => {
  */
 
 /**
- * Update UI elements based on authentication state
+ * Update extending.php-specific navbar authentication UI.
+ *
+ * Handles login button and user menu visibility in the navbar.
+ * This is functionally similar to login-modal.php's global updateNavbarAuthUI(),
+ * but is module-scoped to extending.js to avoid naming collisions.
+ *
+ * Note: This is different from initPermissionUI() (in login-modal.php) which
+ * handles data-requires-auth protected elements throughout the page.
+ *
+ * For complete auth UI update on extending.php, you need:
+ * 1. syncExtendingNavbarAuth() (this function) - navbar elements
+ * 2. initPermissionUI() - data-requires-auth elements
+ * 3. auth:logout event listener - page-specific form resets
  */
-function updateAuthUI() {
+function syncExtendingNavbarAuth() {
+    // Guard: ensure Auth module is available (safe for pages without auth.js)
+    if (typeof Auth === 'undefined') {
+        return;
+    }
+
     const loginBtn = document.getElementById('loginBtn');
     const userMenu = document.getElementById('userMenu');
     const username = document.getElementById('username');
@@ -3928,8 +4234,9 @@ function cleanupModalBackdrop() {
 
 // Initialize Auth module and UI
 if (typeof Auth !== 'undefined') {
-    // Update UI based on auth state
-    updateAuthUI();
+    // Update navbar elements (login button vs user menu)
+    // Note: initPermissionUI() in login-modal.php handles data-requires-auth elements separately
+    syncExtendingNavbarAuth();
 
     // Clean up backdrop when login modal is closed
     // (Login/logout button handlers and form submission are in login-modal.php)
@@ -3938,3 +4245,54 @@ if (typeof Auth !== 'undefined') {
         loginModalEl.addEventListener('hidden.bs.modal', cleanupModalBackdrop);
     }
 }
+
+// Handle auth:logout event to reset page-specific form controls not covered by data-requires-auth
+document.addEventListener('auth:logout', () => {
+    // Update extending.php navbar elements
+    syncExtendingNavbarAuth();
+
+    // Reset national calendar settings form
+    setFormEnabled('#nationalCalendarSettingsForm', false);
+
+    // Disable save diocesan calendar button
+    const saveDiocesanBtn = document.getElementById('saveDiocesanCalendar_btn');
+    if (saveDiocesanBtn) {
+        saveDiocesanBtn.disabled = true;
+    }
+
+    // Disable action buttons
+    document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = true);
+    document.querySelector('.serializeRegionalNationalData')?.setAttribute('disabled', 'disabled');
+});
+
+// Handle auth:login event to enable page-specific form controls
+document.addEventListener('auth:login', () => {
+    // Update extending.php navbar elements
+    syncExtendingNavbarAuth();
+
+    // Enable national calendar settings form if a national calendar is selected
+    if (API.category === 'nation' && API.key) {
+        setFormEnabled('#nationalCalendarSettingsForm', true);
+    }
+
+    // Enable save diocesan calendar button if a valid diocese is selected
+    const dioceseNameInput = document.getElementById('diocesanCalendarDioceseName');
+    const saveDiocesanBtn = document.getElementById('saveDiocesanCalendar_btn');
+    if (saveDiocesanBtn && dioceseNameInput?.value.trim()) {
+        saveDiocesanBtn.disabled = false;
+    }
+
+    // Enable action buttons only if a calendar is selected
+    if (API.key) {
+        document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = false);
+    }
+
+    // Re-enable serialize button if there are form rows
+    const formRows = document.querySelectorAll('.regionalNationalDataForm .row');
+    if (formRows.length > 0) {
+        document.querySelector('.serializeRegionalNationalData')?.removeAttribute('disabled');
+    }
+
+    // Re-validate action prompt buttons based on current input values
+    revalidateActionPromptButtons();
+});
