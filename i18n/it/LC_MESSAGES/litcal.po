@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-07 08:23+0000\n"
+"POT-Creation-Date: 2025-12-08 13:34+0000\n"
 "PO-Revision-Date: 2025-12-07 08:41+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
@@ -243,13 +243,13 @@ msgstr ""
 
 #. translators: notification title
 #. translators: notification title for successful operations
-#: usage.php:11 includes/login-modal.php:321 includes/messages.php:47
+#: usage.php:11 includes/login-modal.php:322 includes/messages.php:47
 msgid "Success"
 msgstr "Successo"
 
 #. translators: notification title
 #. translators: notification title for failed operations
-#: usage.php:13 includes/login-modal.php:564 includes/messages.php:49
+#: usage.php:13 includes/login-modal.php:565 includes/messages.php:49
 msgid "Error"
 msgstr "Errore"
 
@@ -1183,35 +1183,35 @@ msgstr ""
 "Cancelliere della Diocesi di Charlottetown, ha contribuito i dati del "
 "calendario liturgico per il Canada sia in inglese che in francese"
 
-#: src/Utilities.php:267
+#: src/Utilities.php:269
 msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
 msgstr ""
 "Questo evento liturgico non sembra esistere. Scegli un valore dalla lista."
 
-#: src/Utilities.php:268
+#: src/Utilities.php:270
 msgid "This liturgical event does not exist, so it will be created."
 msgstr "Questo evento liturgico non esiste, quindi verrà creato."
 
-#: src/Utilities.php:273
+#: src/Utilities.php:275
 msgid "Choose from existing liturgical events"
 msgstr "Scegli tra gli eventi liturgici esistenti"
 
-#: src/Utilities.php:273
+#: src/Utilities.php:275
 msgid "Choose from existing liturgical events (or create a new one)"
 msgstr "Scegli tra eventi liturgici esistenti (o creane uno nuovo)"
 
-#: src/Utilities.php:279
+#: src/Utilities.php:281
 msgid "Property to change"
 msgstr "Proprietà da modificare"
 
 #. translators: form field label for the name of a liturgical event
-#: src/Utilities.php:281 src/FormControls.php:53 includes/messages.php:17
+#: src/Utilities.php:283 src/FormControls.php:53 includes/messages.php:17
 msgid "Name"
 msgstr "Nome"
 
-#: src/Utilities.php:282 src/FormControls.php:171
+#: src/Utilities.php:284 src/FormControls.php:171
 msgid "Grade"
 msgstr "Grado"
 
@@ -1280,7 +1280,7 @@ msgid "About us"
 msgstr "Chi siamo"
 
 #: layout/header.php:51 layout/header.php:53 includes/login-modal.php:56
-#: includes/login-modal.php:341
+#: includes/login-modal.php:342
 msgid "Login"
 msgstr "Effettua l'accesso"
 
@@ -1343,7 +1343,7 @@ msgstr ""
 msgid "Connection Issue"
 msgstr "Problema di connessione"
 
-#: includes/login-modal.php:126 includes/login-modal.php:591
+#: includes/login-modal.php:126 includes/login-modal.php:598
 msgid "Are you sure you want to logout?"
 msgstr "Sei sicuro di voler uscire?"
 
@@ -1359,42 +1359,42 @@ msgstr "Si prega di inserire sia il nome utente che la password"
 msgid "Logging in..."
 msgstr "Accesso in corso..."
 
-#: includes/login-modal.php:321
+#: includes/login-modal.php:322
 msgid "Login successful"
 msgstr "Accesso effettuato con successo"
 
-#: includes/login-modal.php:336
+#: includes/login-modal.php:337
 msgid "Login failed. Please check your credentials."
 msgstr "Accesso non riuscito. Controlla le tue credenziali."
 
-#: includes/login-modal.php:467 includes/login-modal.php:472
+#: includes/login-modal.php:468 includes/login-modal.php:473
 #, php-format
 msgid "Your session will expire in less than %d minute."
 msgid_plural "Your session will expire in less than %d minutes."
 msgstr[0] "La tua sessione scadrà tra meno di %d minuto."
 msgstr[1] "La tua sessione scadrà tra meno di %d minuti."
 
-#: includes/login-modal.php:531
+#: includes/login-modal.php:532
 msgid "Extending..."
 msgstr "Estensione in corso..."
 
-#: includes/login-modal.php:553
+#: includes/login-modal.php:554
 msgid "Your session has been extended."
 msgstr "La tua sessione è stata estesa."
 
-#: includes/login-modal.php:554
+#: includes/login-modal.php:555
 msgid "Session Extended"
 msgstr "Sessione estesa"
 
-#: includes/login-modal.php:563
+#: includes/login-modal.php:564
 msgid "Failed to extend session. Please login again."
 msgstr "Estensione della sessione fallita. Effettua di nuovo il login."
 
-#: includes/login-modal.php:621
+#: includes/login-modal.php:628
 msgid "Your session has expired. Please login again."
 msgstr "La tua sessione è scaduta. Effettua di nuovo il login."
 
-#: includes/login-modal.php:622
+#: includes/login-modal.php:629
 msgid "Session Expired"
 msgstr "Sessione scaduta"
 
@@ -1463,9 +1463,9 @@ msgid ""
 "\"%s\". Please translate the General Roman Calendar via the Weblate "
 "translation server before creating a calendar for this locale."
 msgstr ""
-"Il Calendario Romano Generale non è stato ancora tradotto nella lingua \"%s\""
-". Traduci il Calendario Romano Generale tramite il server di traduzione "
-"Weblate prima di creare un calendario per questa lingua."
+"Il Calendario Romano Generale non è stato ancora tradotto nella lingua "
+"\"%s\". Traduci il Calendario Romano Generale tramite il server di "
+"traduzione Weblate prima di creare un calendario per questa lingua."
 
 #. translators: form row title for designating a Doctor of the Church
 #: includes/messages.php:82
