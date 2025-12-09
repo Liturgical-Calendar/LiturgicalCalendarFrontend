@@ -9,7 +9,7 @@ This document outlines the plan for implementing JWT authentication in the Litur
 - [LiturgicalCalendarAPI#262](https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI/issues/262) - ✅ API JWT Implementation (Complete)
 - [LiturgicalCalendarFrontend#181](https://github.com/Liturgical-Calendar/LiturgicalCalendarFrontend/issues/181) - 🔄 Frontend JWT Client Implementation (In Progress)
 
-**Status:** Phase 1, Phase 2, Phase 2.4, Phase 2.5, Phase 3.1, and Phase 3.2 (Session Expiry Warning) complete - as of 2025-12-06
+**Status:** Phase 1, Phase 2, Phase 2.4, Phase 2.5, Phase 3.1, Phase 3.2, and Phase 3.3 (Remember Me) complete - as of 2025-12-09
 
 **API Readiness:**
 The LiturgicalCalendarAPI now has full JWT authentication implemented with HttpOnly cookie support:
@@ -942,6 +942,45 @@ function initPermissionUI() {
 **Note:** With HttpOnly cookies, JavaScript cannot decode the token directly. The expiry time is
 obtained from the `/auth/me` endpoint response, which is cached in `_cachedAuthState`.
 
+#### 3.3 Remember Me Functionality ✅ COMPLETE
+
+**Implementation Date:** 2025-12-09
+
+**Related Issue:** [LiturgicalCalendarAPI#439](https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI/issues/439)
+
+**Overview:**
+The "Remember Me" checkbox now controls whether the refresh token cookie persists beyond the browser session.
+
+**Behavior:**
+
+| Remember Me         | Access Token Cookie                  | Refresh Token Cookie                       |
+|---------------------|--------------------------------------|--------------------------------------------|
+| Unchecked (default) | Persistent (short TTL, e.g., 1 hour) | Session cookie (deleted on browser close)  |
+| Checked             | Persistent (short TTL, e.g., 1 hour) | Persistent (long TTL, e.g., 7 days)        |
+
+**How It Works:**
+
+1. Frontend sends `remember_me: true/false` in the login request body
+2. API's `LoginHandler` reads the `remember_me` parameter
+3. `CookieHelper::setRefreshTokenCookie()` sets `Max-Age=0` (session cookie) when `remember_me` is false
+4. When `remember_me` is true, the refresh token cookie includes `Max-Age` and `Expires` headers
+
+**Files Modified (API):**
+
+- `src/Handlers/Auth/LoginHandler.php` - Reads `remember_me` from request body
+- `src/Http/CookieHelper.php` - Added `$rememberMe` parameter to `setRefreshTokenCookie()`
+- `jsondata/schemas/openapi.json` - Documented `remember_me` in `LoginRequest` schema
+
+**Frontend (already implemented):**
+
+- `assets/js/auth.js:95` - Sends `remember_me` parameter in login request
+- `includes/login-modal.php` - Checkbox captures user preference
+
+**User Experience:**
+
+- **Remember Me unchecked**: User must log in again after closing the browser
+- **Remember Me checked**: User stays logged in across browser sessions (until refresh token expires)
+
 ### Phase 4: Future Enhancements (Post-JWT)
 
 > **Note:** These are conceptual examples for future API features. All examples use the cookie-only
@@ -1277,7 +1316,7 @@ test('authenticated request uses cookies automatically', async ({ page }) => {
 2. **Token Lifetime**
    - What should be the default access token TTL? (15 minutes? 1 hour?)
    - What should be the refresh token TTL? (7 days? 30 days?)
-   - Should "Remember me" extend both or just refresh token?
+   - ✅ "Remember me" controls refresh token cookie persistence (see Phase 3.3)
 
 3. **Permissions**
    - Is simple authentication enough, or do we need role-based permissions from the start?
@@ -1303,6 +1342,7 @@ test('authenticated request uses cookies automatically', async ({ page }) => {
 | Phase 2.5 | Full Cookie-Only Authentication            | 1 week           | COMPLETE    |
 | Phase 3.1 | Permission-Based UI                        | -                | COMPLETE    |
 | Phase 3.2 | Session Expiry Warning                     | 1 day            | COMPLETE    |
+| Phase 3.3 | Remember Me Functionality                  | 1 day            | COMPLETE    |
 | Phase 4   | Future enhancements (RBAC, MFA, OAuth)     | As needed        | Future      |
 
 **Note:** Timeline assumes sequential implementation coordinated with API development.
