@@ -45,29 +45,20 @@ asort($langsAssoc);
             <a class="nav-link btn btn-outline-light border-0<?php echo $currentPage === 'about' ? ' fw-bold active' : ''; ?>" href="./about.php"><?php echo _('About us'); ?></a>
         </li>
     </ul>
-    <ul class="navbar-nav ms-auto">
-        <!-- Authentication Status -->
-        <li class="nav-item" id="authStatus">
-            <button class="nav-link btn btn-sm btn-outline-primary border-0 d-none" id="loginBtn" title="<?php echo _('Login'); ?>">
-                <i class="fas fa-sign-in-alt"></i>
-                <span class="d-none d-md-inline ms-1"><?php echo _('Login'); ?></span>
-            </button>
-            <div class="btn-group d-none" id="userMenu">
-                <button type="button" class="nav-link btn btn-sm btn-outline-success border-0" id="userInfo">
-                    <i class="fas fa-user"></i>
-                    <span class="d-none d-md-inline ms-1" id="username"></span>
-                </button>
-                <button type="button" class="nav-link btn btn-sm btn-outline-danger border-0" id="logoutBtn" title="<?php echo _('Logout'); ?>">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span class="d-none d-md-inline ms-1"><?php echo _('Logout'); ?></span>
-                </button>
-            </div>
+    <ul class="navbar-nav ms-auto align-items-center">
+        <!-- GitHub Link -->
+        <li class="nav-item">
+            <a class="nav-link" href="https://github.com/Liturgical-Calendar/" target="_blank"
+                title="<?php echo _('See the project repositories on GitHub'); ?>">
+                <i class="fab fa-github"></i>
+            </a>
         </li>
-
+        <li class="vr mx-2 d-none d-lg-block"></li>
+        <!-- Language Selector -->
         <li class="nav-item dropdown">
-            <!-- this should contain the value of the currently selected language, based on a cookie -->
-            <a class="nav-link dropdown-toggle btn btn-outline-light border-0" href="#" id="langChoicesDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <?php echo Locale::getDisplayLanguage($i18n->LOCALE, $i18n->LOCALE); ?>
+            <a class="nav-link dropdown-toggle" href="#" id="langChoicesDropdown" role="button"
+                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-globe me-1"></i><span class="d-none d-xxl-inline"><?php echo Locale::getDisplayLanguage($i18n->LOCALE, $i18n->LOCALE); ?></span>
             </a>
             <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in" aria-labelledby="langChoicesDropdown" id="langChoicesDropdownItems">
                 <?php
@@ -80,13 +71,29 @@ asort($langsAssoc);
                 ?>
             </div>
         </li>
-
+        <li class="vr mx-2 d-none d-lg-block"></li>
+        <!-- Admin Link -->
         <li class="nav-item">
-            <a class="nav-link btn btn-outline-light text-dark border-0"
-                href="https://github.com/Liturgical-Calendar/" target="_blank"
-                title="See the project repositories on GitHub">
-                <i class="fab fa-github"></i>
+            <a class="nav-link<?php echo $currentPage === 'admin' ? ' active' : ''; ?>"
+               href="./admin.php" title="<?php echo _('Admin'); ?>">
+                <i class="fas fa-cog"></i>
             </a>
+        </li>
+        <!-- Authentication Status: Login button shown by default, JS will toggle based on auth state -->
+        <li class="nav-item me-2" id="loginBtnContainer" data-requires-no-auth>
+            <button class="btn btn-outline-primary btn-sm" id="loginBtn" title="<?php echo _('Login'); ?>">
+                <i class="fas fa-sign-in-alt me-1"></i><span class="d-none d-sm-inline"><?php echo _('Login'); ?></span>
+            </button>
+        </li>
+        <li class="nav-item me-2 d-none" id="userMenuContainer" data-requires-auth>
+            <div class="btn-group" id="userMenu">
+                <span class="btn btn-outline-success btn-sm" id="userInfo">
+                    <i class="fas fa-user me-1"></i><span id="username" class="d-none d-sm-inline"></span>
+                </span>
+                <button class="btn btn-outline-danger btn-sm" id="logoutBtn" title="<?php echo _('Logout'); ?>">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
         </li>
     </ul>
 </nav>

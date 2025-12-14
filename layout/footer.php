@@ -78,6 +78,8 @@ if ( AppEnv === 'development' ) console.info({
 <!-- Custom scripts for all pages-->
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/common.js"></script>
+<script src="assets/js/auth.js"></script>
+<?php include_once('includes/login-modal.php'); ?>
 <?php
 $isDevelopment   = ( $_ENV['APP_ENV'] ?? 'production' ) === 'development';
 $componentsJsUrl = $isDevelopment

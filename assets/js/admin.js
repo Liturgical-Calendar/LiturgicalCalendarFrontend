@@ -8,7 +8,7 @@ import {
 } from './FormControls.js';
 
 import {
-    sanitizeInput
+    escapeHtml
 } from './templates.js';
 
 if ( typeof Messages === 'undefined' ) {
@@ -18,466 +18,703 @@ const { LOCALE } = Messages;
 FormControls.jsLocale = LOCALE.replace('_','-');
 FormControls.weekdayFormatter = new Intl.DateTimeFormat(FormControls.jsLocale, { weekday: "long" });
 
+// Cache DOM elements
+const jsonDataTbl = document.getElementById('jsonDataTbl');
+const jsonDataTblThead = jsonDataTbl.querySelector('thead tr');
+const jsonDataTblTbody = jsonDataTbl.querySelector('tbody');
+const jsonFileSelect = document.getElementById('jsonFileSelect');
+const saveDataBtn = document.getElementById('saveDataBtn');
+const addColumnBtn = document.getElementById('addColumnBtn');
+const tableContainer = document.getElementById('tableContainer');
+const memorialsFromDecreesBtnGrp = document.getElementById('memorialsFromDecreesBtnGrp');
+const memorialsFromDecreesForm = document.getElementById('memorialsFromDecreesForm');
+const existingLiturgicalEventsList = document.getElementById('existingLiturgicalEventsList');
+
+/**
+ * Helper function to create elements from HTML string
+ * Returns a DocumentFragment containing all parsed elements
+ * @param {string} html - HTML string
+ * @returns {DocumentFragment} - Document fragment with all children
+ */
+const createElementFromHTML = (html) => {
+    const template = document.createElement('template');
+    template.innerHTML = html.trim();
+    return template.content;
+};
+
+/**
+ * Helper function to show element with optional fade effect
+ * @param {HTMLElement} el - Element to show
+ * @param {boolean} fade - Whether to fade in
+ * @param {string} displayValue - CSS display value to use (default: 'block')
+ */
+const showElement = (el, fade = false, displayValue = 'block') => {
+    if (fade) {
+        el.style.opacity = '0';
+        el.style.display = displayValue;
+        el.classList.remove('d-none');
+        requestAnimationFrame(() => {
+            el.style.transition = 'opacity 0.3s ease-in';
+            el.style.opacity = '1';
+        });
+    } else {
+        el.style.display = displayValue;
+        el.classList.remove('d-none');
+    }
+};
+
+/**
+ * Helper function to hide element with optional fade effect
+ * @param {HTMLElement} el - Element to hide
+ * @param {boolean} fade - Whether to fade out
+ * @param {Function} callback - Callback after hiding
+ */
+const hideElement = (el, fade = false, callback = null) => {
+    if (fade) {
+        el.style.transition = 'opacity 0.3s ease-out';
+        el.style.opacity = '0';
+        setTimeout(() => {
+            el.style.display = 'none';
+            if (callback) callback();
+        }, 300);
+    } else {
+        el.style.display = 'none';
+        if (callback) callback();
+    }
+};
+
+/**
+ * Check if element is hidden
+ * @param {HTMLElement} el - Element to check
+ * @returns {boolean} - Whether element is hidden
+ */
+const isHidden = (el) => {
+    return el.style.display === 'none' || el.classList.contains('d-none') || window.getComputedStyle(el).display === 'none';
+};
+
 const createPropriumDeTemporeTable = ( data ) => {
-        const $theadRow = $('#jsonDataTbl thead tr');
-        $theadRow.empty();
-        const keys = Object.keys( data );
-        const thh = Object.keys( data[keys[0]] );
-        $theadRow.append(`<th>TAG</th>`);
+    jsonDataTblThead.innerHTML = '';
+    const keys = Object.keys( data );
+    const thh = Object.keys( data[keys[0]] );
+    jsonDataTblThead.insertAdjacentHTML('beforeend', '<th>TAG</th>');
+    thh.forEach(el => {
+        jsonDataTblThead.insertAdjacentHTML('beforeend', `<th>${el}</th>`);
+    });
+    let tbodyHtmlStrr = '';
+    keys.forEach(tag => {
+        let dataTag = data[tag];
+        let trHtmlStr = '';
         thh.forEach(el => {
-            $theadRow.append(`<th>${el}</th>`);
+            let tbodyHtmlStr = '';
+            let dataTagEl = dataTag[el];
+            const readingsProps = Object.keys( dataTagEl );
+            readingsProps.forEach(prop => {
+                tbodyHtmlStr += `<tr><td>${prop}</td><td>${dataTagEl[prop]}</td></tr>`;
+            });
+            trHtmlStr += `<td contenteditable="false"><table><tbody>${tbodyHtmlStr}</tbody></table></td>`;
         });
-        let tbodyHtmlStrr = '';
-        keys.forEach(tag => {
-            //let $tr = $('<tr>');
-            let dataTag = data[tag];
-            let trHtmlStr = '';
-            thh.forEach(el => {
-                let tbodyHtmlStr = '';
-                let dataTagEl = dataTag[el];
-                const readingsProps = Object.keys( dataTagEl );
-                readingsProps.forEach(prop => {
-                    tbodyHtmlStr += `<tr><td>${prop}</td><td>${dataTagEl[prop]}</td></tr>`;
+        tbodyHtmlStrr += `<tr><td contenteditable="false">${tag}</td>${trHtmlStr}</tr>`;
+    });
+    jsonDataTbl.classList.add('propriumDeTempore');
+    jsonDataTblTbody.insertAdjacentHTML('beforeend', tbodyHtmlStrr);
+};
+
+const createPropriumDeSanctisTable = ( data, jsonFile ) => {
+    jsonDataTblThead.innerHTML = '';
+    jsonDataTbl.classList.remove('propriumDeTempore');
+    // Check for national calendar missals (US, IT, etc.)
+    if( jsonFile.includes('/US_') || jsonFile.includes('/IT_') ) {
+        jsonDataTbl.classList.add('nationalCalendar');
+    } else {
+        jsonDataTbl.classList.remove('nationalCalendar');
+    }
+    // Filter out "calendar" property - not needed in the admin table
+    const keys = Object.keys( data[0] ).filter(key => key !== 'calendar');
+    keys.forEach((el) => {
+        jsonDataTblThead.insertAdjacentHTML('beforeend', `<th class="sticky-top" scope="col">${el}</th>`);
+    });
+    let tbodyHtmlStrr = '';
+    data.forEach(row => {
+        let trHtmlStr = '<tr>';
+        keys.forEach(prop => {
+            const value = row[prop];
+            if( Array.isArray( value ) ) {
+                trHtmlStr += `<td contenteditable="false">${value.join(',')}</td>`;
+            }
+            else if( typeof value === 'object' && value !== null ) {
+                console.log(`we have an object in key ${prop}:`);
+                console.log( value );
+                let htmlStr = '<table><tbody>';
+                Object.keys( value ).forEach(title => {
+                    let val = value[title];
+                    if( typeof val === 'object' ) {
+                        htmlStr += `<tr><td colspan="2" style="text-align:center;font-weight:bold;border:0;background-color:lightgray;">${title}</td></tr>`;
+                        Object.keys( val ).forEach(title2 => {
+                            let val2 = val[title2];
+                            htmlStr += `<tr><td>${title2}</td><td contenteditable="false">${val2}</td></tr>`;
+                        });
+                    } else {
+                        htmlStr += `<tr><td>${title}</td><td contenteditable="false">${val}</td></tr>`;
+                    }
                 });
-                trHtmlStr += `<td contenteditable="false"><table><tbody>${tbodyHtmlStr}</tbody></table></td>`;
-            });
-            //$('#jsonDataTbl tbody').append( `<tr><td contenteditable="false">${tag}</td>${trHtmlStr}</tr>` );
-            tbodyHtmlStrr += `<tr><td contenteditable="false">${tag}</td>${trHtmlStr}</tr>`;
+                htmlStr += '</tbody></table>';
+                trHtmlStr += `<td contenteditable="false">${htmlStr}</td>`;
+            } else if ( value === null ) {
+                trHtmlStr += `<td contenteditable="false">null</td>`;
+            } else if ( value === undefined ) {
+                trHtmlStr += `<td contenteditable="false">undefined</td>`;
+            } else {
+                trHtmlStr += `<td contenteditable="false">${value}</td>`;
+            }
         });
-        $('#jsonDataTbl').addClass('propriumDeTempore');
-        $('#jsonDataTbl tbody').append( tbodyHtmlStrr );
-    },
-    createPropriumDeSanctisTable = ( data, jsonFile ) => {
-        const $theadRow = $('#jsonDataTbl thead tr');
-        $theadRow.empty();
-        $('#jsonDataTbl').removeClass('propriumDeTempore');
-        let n;
-        if( jsonFile.includes('_US_') || jsonFile.includes('_IT_') ) {
-            $('#jsonDataTbl').addClass('nationalCalendar');
-            n = [10, 10, 14, 0, 5, 0, 25, 0, 6, 30];
-        } else {
-            $('#jsonDataTbl').removeClass('nationalCalendar');
-            n = [10, 10, 14, 5, 25, 0, 6, 30];
+        trHtmlStr += '</tr>';
+        tbodyHtmlStrr += trHtmlStr;
+    });
+    jsonDataTblTbody.insertAdjacentHTML('beforeend', tbodyHtmlStrr);
+};
+
+const createMemorialsFromDecreesInterface = ( data ) => {
+    saveDataBtn.disabled = true;
+    tableContainer.style.display = 'none';
+    addColumnBtn.style.display = 'none';
+    showElement(memorialsFromDecreesBtnGrp, true);
+    memorialsFromDecreesForm.innerHTML = '';
+    data.forEach((el) => {
+        let currentUniqid = FormControls.uniqid;
+        let existingLiturgicalEventKey = el.liturgical_event.hasOwnProperty( 'event_key' ) ? el.liturgical_event.event_key : null;
+        if( el.metadata.action === RowAction.CreateNew && LiturgicalEventCollectionKeys.includes( existingLiturgicalEventKey ) ) {
+            el.metadata.action = RowAction.CreateNewFromExisting;
         }
-        const keys = Object.keys( data[0] );
-        keys.forEach((el,i) => {
-            $theadRow.append(`<th class="sticky-top" style="width: ${n[i]}%;" scope="col">${el}</th>`);
-        });
-        let tbodyHtmlStrr = '';
-        data.forEach(row => {
-            //let $tr = $('<tr>');
-            let trHtmlStr = '<tr>';
-            keys.forEach(prop => {
-                if( Array.isArray( row[prop] ) ) {
-                    //console.log(`we have an array in key ${prop}:`);
-                    //console.log( row[prop] );
-                    trHtmlStr += `<td contenteditable="false">${row[prop].join(',')}</td>`;
-                }
-                else if( typeof row[prop] === 'object' && row[prop] !== null ) {
-                    console.log(`we have an object in key ${prop}:`);
-                    console.log( row[prop] );
-                    let htmlStr = '<table><tbody>';
-                    Object.keys( row[prop] ).forEach(title => {
-                        let val = row[prop][title];
-                        if( typeof val === 'object' ) {
-                            htmlStr += `<tr><td colspan="2" style="text-align:center;font-weight:bold;border:0;background-color:lightgray;">${title}</td></tr>`;
-                            Object.keys( val ).forEach(title2 => {
-                                let val2 = val[title2];
-                                htmlStr += `<tr><td>${title2}</td><td contenteditable="false">${val2}</td></tr>`;
-                            })
-                        } else {
-                            htmlStr += `<tr><td>${title}</td><td contenteditable="false">${val}</td></tr>`;
-                        }
-                    });
-                    htmlStr += '</tbody></table>';
-                    trHtmlStr += `<td contenteditable="false">${htmlStr}</td>`;
-                } else {
-                    trHtmlStr += `<td contenteditable="false">${row[prop]}</td>`;
-                }
-            });
-            trHtmlStr += '</tr>';
-            tbodyHtmlStrr += trHtmlStr;
-        });
-        $('#jsonDataTbl tbody').append(tbodyHtmlStrr);
-    },
-    createMemorialsFromDecreesInterface = ( data ) => {
-        $('#saveDataBtn').prop('disabled', true);
-        $('#tableContainer,#addColumnBtn').hide();
-        $('#memorialsFromDecreesBtnGrp').fadeIn( 'slow' );
-        $('#memorialsFromDecreesForm').empty();
-        data.forEach((el) => {
-            let currentUniqid = FormControls.uniqid;
-            //console.log( el );
-            let existingLiturgicalEventKey = el.liturgical_event.hasOwnProperty( 'event_key' ) ? el.liturgical_event.event_key : null;
-            if( el.metadata.action === RowAction.CreateNew && LiturgicalEventCollectionKeys.includes( existingLiturgicalEventKey ) ) {
-                el.metadata.action = RowAction.CreateNewFromExisting;
-            }
-            setFormSettings( el.metadata.action );
-            if( el.metadata.action === RowAction.SetProperty ) {
-                setFormSettingsForProperty( el.metadata.property );
-            }
+        setFormSettings( el.metadata.action );
+        if( el.metadata.action === RowAction.SetProperty ) {
+            setFormSettingsForProperty( el.metadata.property );
+        }
 
-            let $row = $(FormControls.CreateDoctorRow( el ));
-            $('#memorialsFromDecreesForm').append($row);
+        // Enable decree URL and language map fields for all decree rows
+        FormControls.settings.decreeUrlFieldShow = true;
+        FormControls.settings.decreeLangMapFieldShow = true;
 
-            let $formrow = $row.find('.form-group').closest('.row');
-            $formrow.data('action', el.metadata.action).attr('data-action', el.metadata.action);
+        // Build title with decree protocol and date info
+        let titleParts = [FormControls.title];
+        if (el.decree_protocol) {
+            titleParts.push(el.decree_protocol);
+        }
+        if (el.decree_date) {
+            titleParts.push(el.decree_date);
+        }
+        FormControls.title = titleParts.join(' - ');
+
+        const rowHtml = FormControls.CreateDoctorRow( el );
+        const rowFragment = createElementFromHTML(rowHtml);
+
+        // Query elements BEFORE appending (DocumentFragment becomes empty after append)
+        const formGroupEl = rowFragment.querySelector('.form-group');
+        const colorSelect = rowFragment.querySelector('.litEventColor');
+        const commonSelect = rowFragment.querySelector(`#onTheFly${currentUniqid}Common`);
+        const gradeSelect = rowFragment.querySelector(`#onTheFly${currentUniqid}Grade`);
+        const monthSelect = rowFragment.querySelector(`#onTheFly${currentUniqid}Month`);
+        const titleDiv = rowFragment.querySelector('.data-group-title')?.parentElement;
+
+        // Add decree description after the title if available
+        if (el.description && titleDiv) {
+            const descriptionP = document.createElement('p');
+            descriptionP.className = 'text-muted small mb-2';
+            descriptionP.textContent = el.description;
+            titleDiv.insertAdjacentElement('afterend', descriptionP);
+        }
+
+        // Now append - the fragment's contents are moved to the DOM
+        memorialsFromDecreesForm.appendChild(rowFragment);
+
+        // References obtained before append are still valid
+        const formrow = formGroupEl?.closest('.row');
+        if (formrow) {
+            formrow.dataset.action = el.metadata.action;
             if( el.metadata.action === RowAction.SetProperty ) {
-                $formrow.data('prop', el.metadata.property).attr('data-prop', el.metadata.property);
+                formrow.dataset.prop = el.metadata.property;
             }
             if( el.liturgical_event.hasOwnProperty('common') && el.liturgical_event.common.includes('Proper') ) {
-                $formrow.find('.litEventReadings').prop('disabled', false);
+                const litEventReadings = formrow.querySelector('.litEventReadings');
+                if (litEventReadings) litEventReadings.disabled = false;
             }
+        }
 
-            if( false === el.liturgical_event.hasOwnProperty( 'color' ) ) {
-                if( existingLiturgicalEventKey !== null ) {
-                    const fallbackEvent = LiturgicalEventCollection.find(ev => ev.event_key === existingLiturgicalEventKey);
-                    if( fallbackEvent && fallbackEvent.hasOwnProperty('color') ) {
-                        el.liturgical_event.color = fallbackEvent.color;
-                    }
+        if( false === el.liturgical_event.hasOwnProperty( 'color' ) ) {
+            if( existingLiturgicalEventKey !== null ) {
+                const fallbackEvent = LiturgicalEventCollection.find(ev => ev.event_key === existingLiturgicalEventKey);
+                if( fallbackEvent && fallbackEvent.hasOwnProperty('color') ) {
+                    el.liturgical_event.color = fallbackEvent.color;
                 }
             }
+        }
 
-            if( el.liturgical_event.hasOwnProperty( 'color' ) ) {
-                let colorVal = Array.isArray(el.liturgical_event.color) ? el.liturgical_event.color : el.liturgical_event.color.split(',');
-                $row.find('.litEventColor').multiselect({
-                    buttonWidth: '100%',
-                    buttonClass: 'form-select',
-                    templates: {
-                        button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
-                    },
-                }).multiselect('deselectAll', false).multiselect('select', colorVal);
-                if(FormControls.settings.colorField === false) {
-                    $row.find('.litEventColor').multiselect('disable');
+        if( el.liturgical_event.hasOwnProperty( 'color' ) && colorSelect ) {
+            let colorVal = Array.isArray(el.liturgical_event.color) ? el.liturgical_event.color : el.liturgical_event.color.split(',');
+            // jQuery needed for multiselect plugin
+            $(colorSelect).multiselect({
+                buttonWidth: '100%',
+                buttonClass: 'form-select',
+                templates: {
+                    button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+                },
+            }).multiselect('deselectAll', false).multiselect('select', colorVal);
+            if(FormControls.settings.colorField === false) {
+                $(colorSelect).multiselect('disable');
+            }
+        }
+
+        if( el.liturgical_event.hasOwnProperty( 'common' ) ) {
+            let common = Array.isArray( el.liturgical_event.common ) ? el.liturgical_event.common : el.liturgical_event.common.split(',');
+            if(FormControls.settings.commonFieldShow) {
+                // Pass a parent element that contains the common select
+                const rowEl = formGroupEl?.closest('.row') || memorialsFromDecreesForm;
+                setCommonMultiselect( rowEl, common );
+                if(FormControls.settings.commonField === false && commonSelect) {
+                    $(commonSelect).multiselect('disable');
                 }
             }
+        }
 
-            if( el.liturgical_event.hasOwnProperty( 'common' ) ) {
-                let common = Array.isArray( el.liturgical_event.common ) ? el.liturgical_event.common : el.liturgical_event.common.split(',');
-                if(FormControls.settings.commonFieldShow) {
-                    setCommonMultiselect( $row, common );
-                    if(FormControls.settings.commonField === false) {
-                        $row.find(`#onTheFly${currentUniqid}Common`).multiselect('disable');
-                    }
-                }
+        if(FormControls.settings.gradeFieldShow && gradeSelect) {
+            gradeSelect.value = el.liturgical_event.grade;
+            if(FormControls.settings.gradeField === false) {
+                gradeSelect.disabled = true;
             }
+        }
 
-            if(FormControls.settings.gradeFieldShow) {
-                $row.find(`#onTheFly${currentUniqid}Grade`).val(el.liturgical_event.grade);
-                if(FormControls.settings.gradeField === false) {
-                    $row.find(`#onTheFly${currentUniqid}Grade`).prop('disabled', true);
-                }
-            }
+        if(FormControls.settings.monthField === false && monthSelect) {
+            monthSelect.querySelectorAll(`option[value]:not([value="${el.liturgical_event.month}"])`).forEach(opt => {
+                opt.disabled = true;
+            });
+        }
+    });
+};
 
-            if(FormControls.settings.monthField === false) {
-                $row.find(`#onTheFly${currentUniqid}Month > option[value]:not([value=${el.liturgical_event.month}])`).prop('disabled',true);
-            }
-        });
+const jsonFileData = {};
 
-    },
-    jsonFileData = {};
-
-
-$(document).on('change', '#jsonFileSelect', () => {
-    let baseJsonFile = $('#jsonFileSelect :selected').text();
-    let jsonFile = sanitizeInput( $('#jsonFileSelect').val() );
+// Event: jsonFileSelect change
+jsonFileSelect.addEventListener('change', async () => {
+    const selectedOption = jsonFileSelect.options[jsonFileSelect.selectedIndex];
+    const baseJsonFile = selectedOption.text;
+    const jsonFile = escapeHtml( jsonFileSelect.value );
     // Fetch directly from the API (BaseUrl is set in the page from PHP config)
-    let jsonFileFull = BaseUrl + '/' + jsonFile;
-    //console.log(baseJsonFile);
+    const jsonFileFull = BaseUrl + '/' + jsonFile;
+
     if( false === jsonFileData.hasOwnProperty( baseJsonFile ) ) {
-        $.getJSON(jsonFileFull, data => {
-            //console.log(data);
+        try {
+            // GET requests for missals/decrees are public, no credentials needed
+            const response = await fetch(jsonFileFull, {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' }
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            let data = await response.json();
             console.log('storing data in script cache...');
-            if(/memorialsFromDecrees\.json$/.test(jsonFile)) {
+            // Handle API response format for decrees endpoint
+            if(jsonFile === 'decrees') {
+                // Decrees API returns { litcal_decrees: [...] }
+                if (data.litcal_decrees) {
+                    data = data.litcal_decrees;
+                }
                 // b - a for reverse sort: this is what we want, so the newer decrees will be on top
                 data.sort((a,b) => b.metadata.since_year - a.metadata.since_year);
             }
             jsonFileData[baseJsonFile] = data;
             handleJsonFileData( data, jsonFile );
-        });
+        } catch (error) {
+            console.error('Error fetching JSON file:', error);
+            if (typeof toastr !== 'undefined') {
+                toastr.error(`Failed to load ${baseJsonFile}: ${error.message}`);
+            }
+        }
     } else {
-        console.log( 'using stored data to avoid making another ajax call uselessly...' );
-        let data = jsonFileData[baseJsonFile];
+        console.log( 'using stored data to avoid making another fetch call uselessly...' );
+        const data = jsonFileData[baseJsonFile];
         handleJsonFileData( data, jsonFile );
     }
 });
 
 const handleJsonFileData = ( data, jsonFile ) => {
-    if(/memorialsFromDecrees\.json$/.test(jsonFile)) {
-        $('#jsonDataTbl tbody').empty();
+    // Check if this is the decrees endpoint
+    if(jsonFile === 'decrees') {
+        jsonDataTblTbody.innerHTML = '';
         createMemorialsFromDecreesInterface( data );
     } else {
-        if( $('#memorialsFromDecreesBtnGrp').is(':hidden') === false ) {
-            $('#memorialsFromDecreesForm').empty();
-            $('#memorialsFromDecreesBtnGrp').fadeOut( 'slow' );
+        if( !isHidden(memorialsFromDecreesBtnGrp) ) {
+            memorialsFromDecreesForm.innerHTML = '';
+            hideElement(memorialsFromDecreesBtnGrp, true);
         }
-        if( $( '#tableContainer' ).is(':hidden') ) {
+        if( isHidden(tableContainer) ) {
             console.log( 'tableContainer was hidden, now showing in order to repopulate...' );
-            $( '#tableContainer,#addColumnBtn' ).show(200, () => { createPropriumTable( data, jsonFile ) } );
+            showElement(tableContainer);
+            showElement(addColumnBtn);
+            setTimeout(() => createPropriumTable( data, jsonFile ), 200);
         } else {
             createPropriumTable( data, jsonFile );
         }
     }
-}
+};
 
 const createPropriumTable = ( data, jsonFile ) => {
-    $('#saveDataBtn').prop('disabled', false);
-    $('#jsonDataTbl tbody').empty();
+    saveDataBtn.disabled = false;
+    jsonDataTblTbody.innerHTML = '';
     if( Array.isArray(data) ) {
         createPropriumDeSanctisTable( data, jsonFile );
     } else {
         createPropriumDeTemporeTable( data );
     }
-}
+};
 
-//$(document).on('dblclick', '#jsonDataTbl th,#jsonDataTbl td', ev => {
-$(document).on('dblclick', '#jsonDataTbl table tr td:nth-child(2)', ev => {
-    $(ev.currentTarget).attr('contenteditable',true).addClass('bg-white').focus();
-});
-
-$(document).on('keydown', '#jsonDataTbl th,#jsonDataTbl td', ev => {
-    const key = ev.key;
-    if((key === "Enter" || key === "Escape") && $(ev.currentTarget).hasClass('bg-white') ) {
-        ev.preventDefault();
-        $(ev.currentTarget).attr('contenteditable',false).removeClass('bg-white');
+// Event: Double-click on table cells for editing
+jsonDataTbl.addEventListener('dblclick', (ev) => {
+    const target = ev.target;
+    if (target.matches('#jsonDataTbl table tr td:nth-child(2)')) {
+        target.setAttribute('contenteditable', 'true');
+        target.classList.add('bg-white');
+        target.focus();
     }
 });
 
-$(document).on('click', '#addColumnBtn', () => {
-    let column = prompt("Please enter the name for the new column (this will become the JSON property name):");
-
-    $('#jsonDataTbl thead tr').append(`<th>${column}</th>`);
-    $('#jsonDataTbl tbody tr').each((i,el) => { $(el).append('<td></td>'); });
+// Event: Keydown on table cells
+jsonDataTbl.addEventListener('keydown', (ev) => {
+    const target = ev.target;
+    if (target.matches('th, td')) {
+        const key = ev.key;
+        if((key === "Enter" || key === "Escape") && target.classList.contains('bg-white') ) {
+            ev.preventDefault();
+            target.setAttribute('contenteditable', 'false');
+            target.classList.remove('bg-white');
+        }
+    }
 });
 
-$(document).on('click', '#saveDataBtn', () => {
+// Event: Add column button
+addColumnBtn.addEventListener('click', () => {
+    const column = prompt("Please enter the name for the new column (this will become the JSON property name):");
+    if (column) {
+        jsonDataTblThead.insertAdjacentHTML('beforeend', `<th>${column}</th>`);
+        jsonDataTblTbody.querySelectorAll('tr').forEach(tr => {
+            tr.insertAdjacentHTML('beforeend', '<td></td>');
+        });
+    }
+});
+
+// Event: Save data button
+saveDataBtn.addEventListener('click', async () => {
     const jsonData = [];
     const props = [];
-    const intProps = [ "MONTH", "DAY", "GRADE" ];
+    const intProps = [ "month", "day", "grade" ];
 
-    $('#jsonDataTbl th').each((i,el) => {
-        props.push($(el).text());
+    jsonDataTbl.querySelectorAll('th').forEach(th => {
+        props.push(th.textContent);
     });
-    $('#jsonDataTbl > tbody > tr').each((i,el) => {
-        let newRow = {};
-        $(el).find('> td').each((i,el) => {
-            if( $(el).find('table').length ) {
-                let subJson = {};
-                let tdCount = $(el).find('table tr:first-child td').length;
+
+    jsonDataTblTbody.querySelectorAll(':scope > tr').forEach((tr, i) => {
+        const newRow = {};
+        tr.querySelectorAll(':scope > td').forEach((td, j) => {
+            const nestedTable = td.querySelector('table');
+            if( nestedTable ) {
+                const subJson = {};
+                const firstRowTds = nestedTable.querySelector('tr:first-child')?.querySelectorAll('td');
+                const tdCount = firstRowTds ? firstRowTds.length : 0;
                 if( tdCount > 1 ) {
-                    $(el).find('table tr').each((j,em) => {
-                        let prop    = $(em).find('td:first-child').text();
-                        let val     = $(em).find('td:last-child').text().replaceAll(' ',' ');
-                        val = val.replaceAll('\r','');
+                    nestedTable.querySelectorAll('tr').forEach(nestedTr => {
+                        const prop = nestedTr.querySelector('td:first-child')?.textContent || '';
+                        let val = nestedTr.querySelector('td:last-child')?.textContent || '';
+                        val = val.replaceAll(' ',' ').replaceAll('\r','');
                         subJson[prop] = val;
                     });
                 }
                 else if( tdCount === 1 ) {
                     let currentProperty;
-                    $(el).find('table tr').each((j,em) => {
-                        if( $(em).find('td').length === 1 ) {
-                            currentProperty = $(em).find('td').text();
+                    nestedTable.querySelectorAll('tr').forEach(nestedTr => {
+                        const tds = nestedTr.querySelectorAll('td');
+                        if( tds.length === 1 ) {
+                            currentProperty = tds[0].textContent;
                             subJson[currentProperty] = {};
                         }
                         else {
-                            let prop    = $(em).find('td:first-child').text();
-                            let val     = $(em).find('td:last-child').text().replaceAll(' ',' ');
-                            val = val.replaceAll('\r','');
+                            const prop = nestedTr.querySelector('td:first-child')?.textContent || '';
+                            let val = nestedTr.querySelector('td:last-child')?.textContent || '';
+                            val = val.replaceAll(' ',' ').replaceAll('\r','');
                             subJson[currentProperty][prop] = val;
                         }
                     });
                 }
-                newRow[props[i]] = subJson;
+                newRow[props[j]] = subJson;
             } else {
-                if(intProps.includes(props[i])) {
-                        newRow[props[i]] = parseInt($(el).text());
-                    } else{
-                        newRow[props[i]] = $(el).text();
-                    }
+                if(intProps.includes(props[j])) {
+                    newRow[props[j]] = parseInt(td.textContent);
+                } else {
+                    newRow[props[j]] = td.textContent;
                 }
+            }
         });
         jsonData.push(newRow);
     });
-    //navigator.clipboard.writeText( JSON.stringify(jsonData) );
-    //alert('JSON data copied to clipboard');
-    let filename = sanitizeInput( $('#jsonFileSelect').val() );
-    //JSON.stringify will automatically use DOS/Windows syntax \r\n
-    //which git will see as a change in the code from what was previously just \n
-    //so let's make sure we get rid of all \r's
-    let jsonstring = JSON.stringify(jsonData, null, 4).replace(/[\r]/g, '');
-    console.log('now writing jsonData to file ' + filename);
+
+    const endpoint = escapeHtml( jsonFileSelect.value );
+    const jsonstring = JSON.stringify(jsonData, null, 4).replace(/[\r]/g, '');
+    console.log('Attempting to save data to endpoint: ' + endpoint);
     console.log(jsonData);
-    $.ajax({
-        method: 'POST',
-        url: 'includes/writeJSONFile.php',
-        data: { filename: filename, jsondata: jsonstring },
-        success: data => {
-            //if( data === 'SUCCESS' )
-            console.log(data);
-            alert('Data was written with ' + data);
+
+    // Determine the API endpoint for saving
+    const apiUrl = BaseUrl + '/' + endpoint;
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: jsonstring,
+            credentials: 'include'
+        });
+
+        if (response.status === 405) {
+            // Method not allowed - API doesn't support write operations yet
+            if (typeof toastr !== 'undefined') {
+                toastr.warning('API write operations are not yet implemented. Changes cannot be saved.');
+            } else {
+                alert('API write operations are not yet implemented. Changes cannot be saved.');
+            }
+            return;
         }
-    });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(data);
+        if (typeof toastr !== 'undefined') {
+            toastr.success('Data saved successfully');
+        } else {
+            alert('Data saved successfully');
+        }
+    } catch (error) {
+        console.error('Error saving data:', error);
+        if (typeof toastr !== 'undefined') {
+            toastr.error('Failed to save data: ' + error.message);
+        } else {
+            alert('Failed to save data: ' + error.message);
+        }
+    }
 });
 
-$(document).on('click', '.actionPromptButton', ev => {
-    let currentUniqid = parseInt( FormControls.uniqid );
-    let $modal = $(ev.currentTarget).closest('.actionPromptModal');
-    let $modalForm = $modal.find('form');
-    let existingLiturgicalEventKey = sanitizeInput( $modalForm.find('.existingLiturgicalEventName').val() );
+// Event: Action prompt buttons (delegated)
+document.addEventListener('click', (ev) => {
+    const target = ev.target.closest('.actionPromptButton');
+    if (!target) return;
+
+    const currentUniqid = parseInt( FormControls.uniqid );
+    const modal = target.closest('.actionPromptModal');
+    const modalForm = modal.querySelector('form');
+    const existingEventInput = modalForm.querySelector('.existingLiturgicalEventName');
+    const existingLiturgicalEventKey = escapeHtml( existingEventInput?.value || '' );
     let propertyToChange;
-    //let buttonId = ev.currentTarget.id;
-    //console.log(buttonId + ' button was clicked');
 
     FormControls.settings.decreeUrlFieldShow = true;
-    FormControls.settings.decreeLangMapFieldShow = true; //TODO: check how this should be set, it's different than extending.js
+    FormControls.settings.decreeLangMapFieldShow = true;
 
-    setFormSettings( ev.currentTarget.id );
+    setFormSettings( target.id );
 
-    if( ev.currentTarget.id === 'setPropertyButton' ) {
-        propertyToChange = sanitizeInput( $('#propertyToChange').val() );
+    if( target.id === 'setPropertyButton' ) {
+        const propertySelect = document.getElementById('propertyToChange');
+        propertyToChange = escapeHtml( propertySelect?.value || '' );
         setFormSettingsForProperty( propertyToChange );
     }
 
-    let $row, litevent;
-    if( existingLiturgicalEventKey !== '' ) {
-        $row = $(FormControls.CreateDoctorRow( existingLiturgicalEventKey ));
-    } else {
-        $row = $(FormControls.CreateDoctorRow());
-    }
+    const rowHtml = existingLiturgicalEventKey !== ''
+        ? FormControls.CreateDoctorRow( existingLiturgicalEventKey )
+        : FormControls.CreateDoctorRow();
+    const rowFragment = createElementFromHTML(rowHtml);
 
-    $('#memorialsFromDecreesForm').prepend($row);
+    // Query elements BEFORE prepending (DocumentFragment becomes empty after prepend)
+    const formGroupEl = rowFragment.querySelector('.form-group');
+    const colorSelect = rowFragment.querySelector('.litEventColor');
+    const commonSelect = rowFragment.querySelector(`#onTheFly${currentUniqid}Common`);
+    const gradeSelect = rowFragment.querySelector(`#onTheFly${currentUniqid}Grade`);
 
-    $modal.modal('hide');
-    $row.find('.form-group').closest('.row').data('action', FormControls.action.description).attr('data-action', FormControls.action.description);
+    // Now prepend - the fragment's contents are moved to the DOM
+    memorialsFromDecreesForm.prepend(rowFragment);
 
-    if( FormControls.action.description === RowAction.SetProperty ) {
-        $row.find('.form-group').closest('.row').data('prop', propertyToChange).attr('data-prop', propertyToChange);
-    }
+    // Hide modal using Bootstrap 5 API
+    const bsModal = bootstrap.Modal.getInstance(modal);
+    if (bsModal) bsModal.hide();
 
-    $row.find('.litEventColor').multiselect({
-        buttonWidth: '100%',
-        buttonClass: 'form-select',
-        templates: {
-            button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+    // References obtained before prepend are still valid
+    const formrow = formGroupEl?.closest('.row');
+    if (formrow) {
+        formrow.dataset.action = FormControls.action.description;
+        if( FormControls.action.description === RowAction.SetProperty ) {
+            formrow.dataset.prop = propertyToChange;
         }
-    }).multiselect('deselectAll', false);
+    }
 
-    if(FormControls.settings.colorField === false) {
-        $row.find('.litEventColor').multiselect('disable');
+    // jQuery needed for multiselect plugin
+    if (colorSelect) {
+        $(colorSelect).multiselect({
+            buttonWidth: '100%',
+            buttonClass: 'form-select',
+            templates: {
+                button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+            }
+        }).multiselect('deselectAll', false);
+
+        if(FormControls.settings.colorField === false) {
+            $(colorSelect).multiselect('disable');
+        }
     }
 
     if(FormControls.settings.commonFieldShow) {
-        setCommonMultiselect( $row, null );
-        if(FormControls.settings.commonField === false) {
-            $row.find(`#onTheFly${currentUniqid}Common`).multiselect('disable');
+        const rowEl = formGroupEl?.closest('.row') || memorialsFromDecreesForm;
+        setCommonMultiselect( rowEl, null );
+        if(FormControls.settings.commonField === false && commonSelect) {
+            $(commonSelect).multiselect('disable');
         }
     }
 
-    if(FormControls.settings.gradeFieldShow && FormControls.settings.gradeField === false) {
-        $row.find(`#onTheFly${currentUniqid}Grade`).prop('disabled', true);
+    if(FormControls.settings.gradeFieldShow && FormControls.settings.gradeField === false && gradeSelect) {
+        gradeSelect.disabled = true;
     }
 
     if( existingLiturgicalEventKey !== '' ) {
         litevent = LiturgicalEventCollection.find(el => el.event_key === existingLiturgicalEventKey);
 
-        $row.find(`#onTheFly${currentUniqid}Grade`).val(litevent.GRADE);
-        $row.find(`#onTheFly${currentUniqid}Common`).multiselect('select', litevent.COMMON)
-        let colorVal = Array.isArray( litevent.COLOR ) ? litevent.COLOR : litevent.COLOR.split(',');
-        $row.find(`.litEventColor`).multiselect('select', colorVal);
+        const gradeSelect = row.querySelector(`#onTheFly${currentUniqid}Grade`);
+        if (gradeSelect) gradeSelect.value = litevent.GRADE;
+
+        const commonSelect = row.querySelector(`#onTheFly${currentUniqid}Common`);
+        if (commonSelect) $(commonSelect).multiselect('select', litevent.COMMON);
+
+        const colorVal = Array.isArray( litevent.COLOR ) ? litevent.COLOR : litevent.COLOR.split(',');
+        $(colorSelect).multiselect('select', colorVal);
 
         if(FormControls.settings.monthField === false) {
-            $row.find(`#onTheFly${currentUniqid}Month > option[value]:not([value=${litevent.MONTH}])`).prop('disabled',true);
+            const monthSelect = row.querySelector(`#onTheFly${currentUniqid}Month`);
+            if (monthSelect) {
+                monthSelect.querySelectorAll(`option[value]:not([value="${litevent.MONTH}"])`).forEach(opt => {
+                    opt.disabled = true;
+                });
+            }
         }
     }
-
 });
 
-$(document).on('change', '.existingLiturgicalEventName', ev => {
-    let $modal = $(ev.currentTarget).closest('.actionPromptModal');
-    let $form = $modal.find('form');
+// Event: Existing liturgical event name change (delegated)
+document.addEventListener('change', (ev) => {
+    const target = ev.target;
+    if (!target.classList.contains('existingLiturgicalEventName')) return;
+
+    const modal = target.closest('.actionPromptModal');
+    if (!modal) return;
+
+    const forms = modal.querySelectorAll('form');
     let disabledState;
 
-    $form.each((idx, el) => { $(el).removeClass('was-validated') });
+    forms.forEach(form => form.classList.remove('was-validated'));
 
-    const curTargVal = sanitizeInput( $(ev.currentTarget).val() );
+    const curTargVal = escapeHtml( target.value );
 
-    if ($('#existingLiturgicalEventsList').find('option[value="' + curTargVal + '"]').length > 0) {
+    if (existingLiturgicalEventsList.querySelector(`option[value="${curTargVal}"]`)) {
         disabledState = false;
-        if( $(ev.currentTarget).prop('required') ) {
-            $(ev.currentTarget).removeClass('is-invalid');
+        if( target.required ) {
+            target.classList.remove('is-invalid');
         }
     } else {
         disabledState = true;
-        if( $(ev.currentTarget).prop('required') ) {
-            $(ev.currentTarget).addClass('is-invalid');
+        if( target.required ) {
+            target.classList.add('is-invalid');
         }
     }
 
-    switch( $modal.attr("id") ) {
+    switch( modal.id ) {
         case 'makeDoctorActionPrompt':
-            $('#designateDoctorButton').prop('disabled', disabledState);
+            document.getElementById('designateDoctorButton').disabled = disabledState;
             break;
         case 'setPropertyActionPrompt':
-            $('#setPropertyButton').prop('disabled', disabledState);
+            document.getElementById('setPropertyButton').disabled = disabledState;
             break;
         case 'moveLiturgicalEventActionPrompt':
-            $('#moveLiturgicalEventButton').prop('disabled', disabledState);
+            document.getElementById('moveLiturgicalEventButton').disabled = disabledState;
             break;
         case 'newLiturgicalEventActionPrompt':
-            $('#newLiturgicalEventFromExistingButton').prop('disabled', disabledState);
-            $('#newLiturgicalEventExNovoButton').prop('disabled', !disabledState);
+            document.getElementById('newLiturgicalEventFromExistingButton').disabled = disabledState;
+            document.getElementById('newLiturgicalEventExNovoButton').disabled = !disabledState;
             break;
     }
 });
 
+// Event: Strtotime toggle button (delegated)
+document.addEventListener('click', (ev) => {
+    const target = ev.target.closest('.strtotime-toggle-btn');
+    if (!target) return;
 
-$(document).on('click', '.strtotime-toggle-btn', ev => {
-    const uniqid = parseInt( $(ev.currentTarget).attr('data-row-uniqid') );
-    const currentJsonFile = $('#jsonFileSelect :selected').text();
-    const eventKey = sanitizeInput( $(`#onTheFly${uniqid}EventKey`).val() );
-    const liturgicalEventData = jsonFileData[currentJsonFile].find(el => el.liturgical_event.event_key === eventKey);
+    const uniqid = parseInt( target.dataset.rowUniqid );
+    const selectedOption = jsonFileSelect.options[jsonFileSelect.selectedIndex];
+    const currentJsonFile = selectedOption.text;
+    const eventKeyInput = document.getElementById(`onTheFly${uniqid}EventKey`);
+    const eventKey = escapeHtml( eventKeyInput?.value || '' );
+    const liturgicalEventData = jsonFileData[currentJsonFile]?.find(el => el.liturgical_event.event_key === eventKey);
     const strtotime = typeof liturgicalEventData !== 'undefined' && liturgicalEventData.liturgical_event.hasOwnProperty('strtotime') ? liturgicalEventData.liturgical_event.strtotime : {};
-    // console.log('liturgicalEventData = ');
-    // console.log(liturgicalEventData);
-    // console.log('strtotime = ');
-    // console.log(strtotime);
-    if( $(ev.currentTarget).attr('aria-pressed') === 'true' ) {
-        $(ev.currentTarget).find('i').removeClass('fa-comment-slash').addClass('fa-comment');
-        $(ev.currentTarget).removeClass('btn-secondary').addClass('btn-info');
-        $(`#onTheFly${uniqid}Month`).closest('.form-group').remove();
-        let $dayFormGroup = $(`#onTheFly${uniqid}Day`).closest('.form-group');
-        let $strToTimeFormGroup = `<label for="onTheFly${uniqid}StrToTime-dayOfTheWeek">Explicatory date</label>
-        <select class="form-select litEvent litEventStrtotime" id="onTheFly${uniqid}StrToTime-dayOfTheWeek">`;
-        for (let i = 0; i < 7; i++ ) {
-            let dayOfTheWeek = new Date(Date.UTC(2000, 0, 2+i));
-            $strToTimeFormGroup += `<option value="${DaysOfTheWeek[i]}"${strtotime.hasOwnProperty('day_of_the_week') && strtotime.day_of_the_week === DaysOfTheWeek[i] ? ' selected': ''}>${FormControls.weekdayFormatter.format(dayOfTheWeek)}</option>`;
+
+    if( target.getAttribute('aria-pressed') === 'true' ) {
+        const icon = target.querySelector('i');
+        icon.classList.remove('fa-comment-slash');
+        icon.classList.add('fa-comment');
+        target.classList.remove('btn-secondary');
+        target.classList.add('btn-info');
+
+        const monthFormGroup = document.getElementById(`onTheFly${uniqid}Month`)?.closest('.form-group');
+        if (monthFormGroup) monthFormGroup.remove();
+
+        const dayFormGroup = document.getElementById(`onTheFly${uniqid}Day`)?.closest('.form-group');
+        if (dayFormGroup) {
+            let strToTimeFormGroup = `<label for="onTheFly${uniqid}StrToTime-dayOfTheWeek">Explicatory date</label>
+            <select class="form-select litEvent litEventStrtotime" id="onTheFly${uniqid}StrToTime-dayOfTheWeek">`;
+            for (let i = 0; i < 7; i++ ) {
+                const dayOfTheWeek = new Date(Date.UTC(2000, 0, 2+i));
+                strToTimeFormGroup += `<option value="${DaysOfTheWeek[i]}"${strtotime.hasOwnProperty('day_of_the_week') && strtotime.day_of_the_week === DaysOfTheWeek[i] ? ' selected': ''}>${FormControls.weekdayFormatter.format(dayOfTheWeek)}</option>`;
+            }
+            strToTimeFormGroup += `</select>
+            <select class="form-select litEvent litEventStrtotime" id="onTheFly${uniqid}StrToTime-relativeTime">
+                <option value="before"${strtotime.hasOwnProperty('relative_time') && strtotime.relative_time === 'before' ? ' selected': ''}>before</option>
+                <option value="after"${strtotime.hasOwnProperty('relative_time') && strtotime.relative_time === 'after' ? ' selected': ''}>after</option>
+            </select>
+            <input list="existingLiturgicalEventsList" class="form-control litEvent litEventStrtotime existingLiturgicalEventName" id="onTheFly${uniqid}StrToTime-eventKey" value="${strtotime.hasOwnProperty('event_key') ? strtotime.event_key : ''}" required>`;
+            dayFormGroup.innerHTML = strToTimeFormGroup;
+            dayFormGroup.classList.remove('col-sm-1');
+            dayFormGroup.classList.add('col-sm-2');
         }
-        $strToTimeFormGroup += `</select>
-        <select class="form-select litEvent litEventStrtotime" id="onTheFly${uniqid}StrToTime-relativeTime">
-            <option value="before"${strtotime.hasOwnProperty('relative_time') && strtotime.relative_time === 'before' ? ' selected': ''}>before</option>
-            <option value="after"${strtotime.hasOwnProperty('relative_time') && strtotime.relative_time === 'after' ? ' selected': ''}>after</option>
-        </select>
-        <input list="existingLiturgicalEventsList" class="form-control litEvent litEventStrtotime existingLiturgicalEventName" id="onTheFly${uniqid}StrToTime-eventKey" value="${strtotime.hasOwnProperty('event_key') ? strtotime.event_key : ''}" required>`;
-        $dayFormGroup.empty().removeClass('col-sm-1').addClass('col-sm-2').append($strToTimeFormGroup);
     } else {
-        $(ev.currentTarget).find('i').removeClass('fa-comment').addClass('fa-comment-slash');
-        $(ev.currentTarget).removeClass('btn-info').addClass('btn-secondary');
-        let $strToTimeFormGroup = $(`#onTheFly${uniqid}StrToTime-dayOfTheWeek`).closest('.form-group');
-        $strToTimeFormGroup.empty().removeClass('col-sm-2').addClass('col-sm-1').append(
-            `<label for="onTheFly${uniqid}Day">Day</label>
-            <input type="number" min="1" max="31" value="${typeof liturgicalEventData !== 'undefined' && liturgicalEventData.liturgical_event.hasOwnProperty('day') ? liturgicalEventData.liturgical_event.day : ''}" class="form-control litEvent litEventDay" id="onTheFly${uniqid}Day" />`
-        );
-        let formRow = `<div class="form-group col-sm-1">
-        <label for="onTheFly${uniqid}Month">${Messages[ "Month" ]}</label>
-        <select class="form-select litEvent litEventMonth" id="onTheFly${uniqid}Month" >`;
-        let formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
-        for (let i = 0; i < 12; i++) {
-            let month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
-            formRow += `<option value=${i + 1}${typeof liturgicalEventData !== 'undefined' && liturgicalEventData.liturgical_event.hasOwnProperty('month') && liturgicalEventData.liturgical_event.month === i+1 ? ' selected' : ''}>${formatter.format(month)}</option>`;
+        const icon = target.querySelector('i');
+        icon.classList.remove('fa-comment');
+        icon.classList.add('fa-comment-slash');
+        target.classList.remove('btn-info');
+        target.classList.add('btn-secondary');
+
+        const strToTimeFormGroup = document.getElementById(`onTheFly${uniqid}StrToTime-dayOfTheWeek`)?.closest('.form-group');
+        if (strToTimeFormGroup) {
+            strToTimeFormGroup.innerHTML = `<label for="onTheFly${uniqid}Day">Day</label>
+                <input type="number" min="1" max="31" value="${typeof liturgicalEventData !== 'undefined' && liturgicalEventData.liturgical_event.hasOwnProperty('day') ? liturgicalEventData.liturgical_event.day : ''}" class="form-control litEvent litEventDay" id="onTheFly${uniqid}Day" />`;
+            strToTimeFormGroup.classList.remove('col-sm-2');
+            strToTimeFormGroup.classList.add('col-sm-1');
+
+            const formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
+            let formRow = `<div class="form-group col-sm-1">
+            <label for="onTheFly${uniqid}Month">${Messages[ "Month" ]}</label>
+            <select class="form-select litEvent litEventMonth" id="onTheFly${uniqid}Month" >`;
+            for (let i = 0; i < 12; i++) {
+                const month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
+                formRow += `<option value=${i + 1}${typeof liturgicalEventData !== 'undefined' && liturgicalEventData.liturgical_event.hasOwnProperty('month') && liturgicalEventData.liturgical_event.month === i+1 ? ' selected' : ''}>${formatter.format(month)}</option>`;
+            }
+            formRow += `</select>
+            </div>`;
+            strToTimeFormGroup.insertAdjacentHTML('afterend', formRow);
         }
-        formRow += `</select>
-        </div>`;
-        $strToTimeFormGroup.after(formRow);
     }
 });
-

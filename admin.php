@@ -12,28 +12,6 @@ use LiturgicalCalendar\Frontend\ApiClient;
 use LiturgicalCalendar\Frontend\FormControls;
 use LiturgicalCalendar\Frontend\Utilities;
 
-if (false === file_exists('credentials.php')) {
-    die('missing credentials definition');
-}
-
-include_once('credentials.php');
-
-if (false === defined('AUTH_USERS')) {
-    die('missing AUTH_USERS definition');
-}
-
-if (false === is_array(AUTH_USERS) || 0 === count(AUTH_USERS)) {
-    die('AUTH_USERS must be an array');
-}
-
-
-if (!Utilities::authenticated(AUTH_USERS)) {
-    header('WWW-Authenticate: Basic realm="Please insert your credentials"');
-    header($_SERVER['SERVER_PROTOCOL'] . ' 401 Unauthorized');
-    echo 'You need a username and password to access this service.';
-    die();
-}
-
 $FormControls = new FormControls($i18n);
 
 $messages = array_merge($messages, [
@@ -63,7 +41,8 @@ if (empty($MissalData) || !is_array($firstMissalRecord)) {
     die('Unexpected missal data structure from API');
 }
 
-$thh = array_keys($firstMissalRecord);
+// Filter out "calendar" property - not needed in the admin table
+$thh = array_values(array_filter(array_keys($firstMissalRecord), fn($key) => $key !== 'calendar'));
 
 try {
     $eventsData                = $apiClient->fetchJsonWithKey($apiConfig->eventsUrl, 'litcal_events');
@@ -92,33 +71,39 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
 <body>
     <?php include_once('./layout/header.php'); ?>
     <h1><?php echo $messages['Admin heading']; ?></h1>
-    <div class="form-group col-md">
-        <label for="jsonFileSelect"><?php echo $messages['Select JSON file to manage']; ?>:</label>
-        <select class="form-select" id="jsonFileSelect">
-            <option value="api/dev/jsondata/sourcedata/missals/propriumdesanctis_1970/propriumdesanctis_1970.json">Editio Typica 1970</option>
-            <option value="api/dev/jsondata/sourcedata/missals/propriumdesanctis_2002/propriumdesanctis_2002.json">Editio Typica Tertia 2002</option>
-            <option value="api/dev/jsondata/sourcedata/missals/propriumdesanctis_2008/propriumdesanctis_2008.json">Editio Typica Tertia Emendata 2008</option>
-            <option value="api/dev/jsondata/sourcedata/missals/propriumdesanctis_IT_1983/propriumdesanctis_IT_1983.json">Messale Romano ed. 1983 pubblicata dalla CEI</option>
-            <option value="api/dev/jsondata/sourcedata/missals/propriumdesanctis_US_2011/propriumdesanctis_US_2011.json">2011 Roman Missal issued by the USCCB</option>
-            <option value="api/dev/jsondata/sourcedata/missals/propriumdetempore/propriumdetempore.json">propriumdetempore.json</option>
-            <option value="api/dev/jsondata/sourcedata/decrees/decrees.json">decrees.json</option>
-        </select>
+
+    <!-- Login required message (shown when not authenticated) -->
+    <div class="alert alert-info" id="loginRequiredMessage" data-requires-no-auth>
+        <i class="fas fa-info-circle me-2"></i>
+        <?php echo _('Please login to access the admin interface.'); ?>
     </div>
-    <div class="d-flex m-2 justify-content-end">
-        <button class="btn btn-primary me-2" id="addColumnBtn"><i class="fas fa-plus-square me-2"></i><?php echo $messages['AddColumnButton']; ?><i class="fas fa-columns ms-2"></i></button>
-        <button class="btn btn-primary me-2" id="saveDataBtn"><i class="fas fa-save me-2"></i><?php echo $messages['SaveDataButton']; ?></button>
-    </div>
-    <div id="tableContainer">
-        <table class="table" id="jsonDataTbl">
+
+    <!-- Admin interface (hidden until authenticated) -->
+    <div id="adminInterface" class="d-none" data-requires-auth="true">
+        <div class="row mb-3">
+            <div class="col-12 col-md-6 col-lg-4">
+                <label for="jsonFileSelect" class="form-label"><?php echo $messages['Select data source']; ?>:</label>
+                <select class="form-select" id="jsonFileSelect">
+                    <option value="missals/EDITIO_TYPICA_1970">Editio Typica 1970</option>
+                    <option value="missals/EDITIO_TYPICA_2002">Editio Typica Tertia 2002</option>
+                    <option value="missals/EDITIO_TYPICA_2008">Editio Typica Tertia Emendata 2008</option>
+                    <option value="missals/IT_1983">Messale Romano ed. 1983 pubblicata dalla CEI</option>
+                    <option value="missals/US_2011">2011 Roman Missal issued by the USCCB</option>
+                    <option value="decrees">Decrees</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-6 col-lg-8 d-flex align-items-end justify-content-end mt-2 mt-md-0">
+                <button class="btn btn-primary me-2" id="addColumnBtn"><i class="fas fa-plus-square me-2"></i><span class="d-none d-sm-inline"><?php echo $messages['AddColumnButton']; ?></span><i class="fas fa-columns ms-2"></i></button>
+                <button class="btn btn-primary" id="saveDataBtn"><i class="fas fa-save me-2"></i><span class="d-none d-sm-inline"><?php echo $messages['SaveDataButton']; ?></span></button>
+            </div>
+        </div>
+    <div id="tableContainer" class="table-responsive">
+        <table class="table table-sm" id="jsonDataTbl">
             <thead class="bg-secondary text-white sticky-top">
                 <tr><?php
-                $i = 0;
-                $n = [ 5, 5, 14, 5, 20, 0, 6, 30, 15 ];
                 foreach ($thh as $th) {
                     $safeTh = htmlspecialchars((string) $th, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-                    $width  = $n[$i] ?? 0;
-                    echo "<th class=\"sticky-top\" style=\"width: {$width}%;\" scope=\"col\">$safeTh</th>";
-                    $i++;
+                    echo "<th class=\"sticky-top\" scope=\"col\">$safeTh</th>";
                 }
                 ?></tr>
             </thead>
@@ -126,8 +111,9 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
                 <?php
                 foreach ($MissalData as $row) {
                     echo '<tr>';
-                    foreach ($row as $value) {
-                        if (is_array($value) && is_string(array_keys($value)[0])) {
+                    foreach ($thh as $key) {
+                        $value = $row[$key] ?? null;
+                        if (is_array($value) && !empty($value) && is_string(array_keys($value)[0])) {
                             echo "<td contenteditable='false'>";
                             echo '<table><tbody>';
                             foreach ($value as $title => $val) {
@@ -149,6 +135,8 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
                         } elseif (is_array($value)) {
                             $safeValue = htmlspecialchars(implode(',', $value), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                             echo "<td contenteditable='false'>" . $safeValue . '</td>';
+                        } elseif ($value === null) {
+                            echo "<td contenteditable='false'>null</td>";
                         } else {
                             $safeValue = htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                             echo "<td contenteditable='false'>$safeValue</td>";
@@ -220,6 +208,8 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
     }
     ?>
     </datalist>
+    </div><!-- end adminInterface -->
+
     <script>
         const Messages = <?php echo json_encode($messages, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
         const LiturgicalEventCollection = <?php echo json_encode($LiturgicalEventCollection, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
