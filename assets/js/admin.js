@@ -411,7 +411,7 @@ saveDataBtn.addEventListener('click', async () => {
         props.push(th.textContent);
     });
 
-    jsonDataTblTbody.querySelectorAll(':scope > tr').forEach((tr, i) => {
+    jsonDataTblTbody.querySelectorAll(':scope > tr').forEach((tr) => {
         const newRow = {};
         tr.querySelectorAll(':scope > td').forEach((td, j) => {
             const nestedTable = td.querySelector('table');
@@ -583,23 +583,25 @@ document.addEventListener('click', (ev) => {
     }
 
     if( existingLiturgicalEventKey !== '' ) {
-        litevent = LiturgicalEventCollection.find(el => el.event_key === existingLiturgicalEventKey);
+        const litevent = LiturgicalEventCollection.find(el => el.event_key === existingLiturgicalEventKey);
 
-        const gradeSelect = row.querySelector(`#onTheFly${currentUniqid}Grade`);
-        if (gradeSelect) gradeSelect.value = litevent.GRADE;
+        if (litevent) {
+            if (gradeSelect) gradeSelect.value = litevent.grade;
 
-        const commonSelect = row.querySelector(`#onTheFly${currentUniqid}Common`);
-        if (commonSelect) $(commonSelect).multiselect('select', litevent.COMMON);
+            if (commonSelect) $(commonSelect).multiselect('select', litevent.common);
 
-        const colorVal = Array.isArray( litevent.COLOR ) ? litevent.COLOR : litevent.COLOR.split(',');
-        $(colorSelect).multiselect('select', colorVal);
+            if (colorSelect && litevent.color) {
+                const colorVal = Array.isArray(litevent.color) ? litevent.color : litevent.color.split(',');
+                $(colorSelect).multiselect('select', colorVal);
+            }
 
-        if(FormControls.settings.monthField === false) {
-            const monthSelect = row.querySelector(`#onTheFly${currentUniqid}Month`);
-            if (monthSelect) {
-                monthSelect.querySelectorAll(`option[value]:not([value="${litevent.MONTH}"])`).forEach(opt => {
-                    opt.disabled = true;
-                });
+            if(FormControls.settings.monthField === false) {
+                const monthSelect = formrow?.querySelector(`#onTheFly${currentUniqid}Month`);
+                if (monthSelect) {
+                    monthSelect.querySelectorAll(`option[value]:not([value="${litevent.month}"])`).forEach(opt => {
+                        opt.disabled = true;
+                    });
+                }
             }
         }
     }
