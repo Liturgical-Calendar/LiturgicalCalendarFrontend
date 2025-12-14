@@ -109,21 +109,21 @@ const createPropriumDeTemporeTable = ( data ) => {
             let currentUniqid = FormControls.uniqid;
             //console.log( el );
             let existingLiturgicalEventKey = el.liturgical_event.hasOwnProperty( 'event_key' ) ? el.liturgical_event.event_key : null;
-            if( el.Metadata.action === RowAction.CreateNew && LiturgicalEventCollectionKeys.includes( existingLiturgicalEventKey ) ) {
-                el.Metadata.action = RowAction.CreateNewFromExisting;
+            if( el.metadata.action === RowAction.CreateNew && LiturgicalEventCollectionKeys.includes( existingLiturgicalEventKey ) ) {
+                el.metadata.action = RowAction.CreateNewFromExisting;
             }
-            setFormSettings( el.Metadata.action );
-            if( el.Metadata.action === RowAction.SetProperty ) {
-                setFormSettingsForProperty( el.Metadata.property );
+            setFormSettings( el.metadata.action );
+            if( el.metadata.action === RowAction.SetProperty ) {
+                setFormSettingsForProperty( el.metadata.property );
             }
 
             let $row = $(FormControls.CreateDoctorRow( el ));
             $('#memorialsFromDecreesForm').append($row);
 
             let $formrow = $row.find('.form-group').closest('.row');
-            $formrow.data('action', el.Metadata.action).attr('data-action', el.Metadata.action);
-            if( el.Metadata.action === RowAction.SetProperty ) {
-                $formrow.data('prop', el.Metadata.property).attr('data-prop', el.Metadata.property);
+            $formrow.data('action', el.metadata.action).attr('data-action', el.metadata.action);
+            if( el.metadata.action === RowAction.SetProperty ) {
+                $formrow.data('prop', el.metadata.property).attr('data-prop', el.metadata.property);
             }
             if( el.liturgical_event.hasOwnProperty('common') && el.liturgical_event.common.includes('Proper') ) {
                 $formrow.find('.litEventReadings').prop('disabled', false);
@@ -190,7 +190,7 @@ $(document).on('change', '#jsonFileSelect', () => {
             console.log('storing data in script cache...');
             if(/memorialsFromDecrees\.json$/.test(jsonFile)) {
                 // b - a for reverse sort: this is what we want, so the newer decrees will be on top
-                data.sort((a,b) => b.Metadata.sinceYear - a.Metadata.sinceYear);
+                data.sort((a,b) => b.metadata.since_year - a.metadata.since_year);
             }
             jsonFileData[baseJsonFile] = data;
             handleJsonFileData( data, jsonFile );
@@ -436,7 +436,7 @@ $(document).on('click', '.strtotime-toggle-btn', ev => {
     const currentJsonFile = $('#jsonFileSelect :selected').text();
     const eventKey = sanitizeInput( $(`#onTheFly${uniqid}EventKey`).val() );
     const liturgicalEventData = jsonFileData[currentJsonFile].find(el => el.liturgical_event.event_key === eventKey);
-    const strtotime = typeof liturgicalEventData !== 'undefined' && liturgicalEventData.Metadata.hasOwnProperty('strtotime') ? liturgicalEventData.Metadata.strtotime : {};
+    const strtotime = typeof liturgicalEventData !== 'undefined' && liturgicalEventData.liturgical_event.hasOwnProperty('strtotime') ? liturgicalEventData.liturgical_event.strtotime : {};
     // console.log('liturgicalEventData = ');
     // console.log(liturgicalEventData);
     // console.log('strtotime = ');
@@ -450,14 +450,14 @@ $(document).on('click', '.strtotime-toggle-btn', ev => {
         <select class="form-select litEvent litEventStrtotime" id="onTheFly${uniqid}StrToTime-dayOfTheWeek">`;
         for (let i = 0; i < 7; i++ ) {
             let dayOfTheWeek = new Date(Date.UTC(2000, 0, 2+i));
-            $strToTimeFormGroup += `<option value="${DaysOfTheWeek[i]}"${strtotime.hasOwnProperty('dayOfTheWeek') && strtotime.dayOfTheWeek === DaysOfTheWeek[i] ? ' selected': ''}>${FormControls.weekdayFormatter.format(dayOfTheWeek)}</option>`;
+            $strToTimeFormGroup += `<option value="${DaysOfTheWeek[i]}"${strtotime.hasOwnProperty('day_of_the_week') && strtotime.day_of_the_week === DaysOfTheWeek[i] ? ' selected': ''}>${FormControls.weekdayFormatter.format(dayOfTheWeek)}</option>`;
         }
         $strToTimeFormGroup += `</select>
         <select class="form-select litEvent litEventStrtotime" id="onTheFly${uniqid}StrToTime-relativeTime">
-            <option value="before"${strtotime.hasOwnProperty('relativeTime') && strtotime.relativeTime === 'before' ? ' selected': ''}>before</option>
-            <option value="after"${strtotime.hasOwnProperty('relativeTime') && strtotime.relativeTime === 'after' ? ' selected': ''}>after</option>
+            <option value="before"${strtotime.hasOwnProperty('relative_time') && strtotime.relative_time === 'before' ? ' selected': ''}>before</option>
+            <option value="after"${strtotime.hasOwnProperty('relative_time') && strtotime.relative_time === 'after' ? ' selected': ''}>after</option>
         </select>
-        <input list="existingLiturgicalEventsList" class="form-control litEvent litEventStrtotime existingLiturgicalEventName" id="onTheFly${uniqid}StrToTime-festivityKey" value="${strtotime.hasOwnProperty('festivityKey') ? strtotime.festivityKey : ''}" required>`;
+        <input list="existingLiturgicalEventsList" class="form-control litEvent litEventStrtotime existingLiturgicalEventName" id="onTheFly${uniqid}StrToTime-eventKey" value="${strtotime.hasOwnProperty('event_key') ? strtotime.event_key : ''}" required>`;
         $dayFormGroup.empty().removeClass('col-sm-1').addClass('col-sm-2').append($strToTimeFormGroup);
     } else {
         $(ev.currentTarget).find('i').removeClass('fa-comment').addClass('fa-comment-slash');
