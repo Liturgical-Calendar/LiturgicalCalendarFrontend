@@ -423,7 +423,8 @@ saveDataBtn.addEventListener('click', async () => {
                     nestedTable.querySelectorAll('tr').forEach(nestedTr => {
                         const prop = nestedTr.querySelector('td:first-child')?.textContent || '';
                         let val = nestedTr.querySelector('td:last-child')?.textContent || '';
-                        val = val.replaceAll(' ',' ').replaceAll('\r','');
+                        // Replace non-breaking spaces (U+00A0) with regular spaces and remove carriage returns
+                        val = val.replaceAll('\u00A0', ' ').replaceAll('\r', '');
                         subJson[prop] = val;
                     });
                 }
@@ -438,7 +439,8 @@ saveDataBtn.addEventListener('click', async () => {
                         else {
                             const prop = nestedTr.querySelector('td:first-child')?.textContent || '';
                             let val = nestedTr.querySelector('td:last-child')?.textContent || '';
-                            val = val.replaceAll(' ',' ').replaceAll('\r','');
+                            // Replace non-breaking spaces (U+00A0) with regular spaces and remove carriage returns
+                            val = val.replaceAll('\u00A0', ' ').replaceAll('\r', '');
                             subJson[currentProperty][prop] = val;
                         }
                     });
