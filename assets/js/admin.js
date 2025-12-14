@@ -11,11 +11,14 @@ import {
     escapeHtml
 } from './templates.js';
 
+// Debug flag - set to true for development logging
+const DEBUG = false;
+
 if ( typeof Messages === 'undefined' ) {
     throw new Error('Messages object not defined, should have been set in admin.php');
 }
 const { LOCALE } = Messages;
-FormControls.jsLocale = LOCALE.replace('_','-');
+FormControls.jsLocale = LOCALE.replaceAll('_', '-');
 FormControls.weekdayFormatter = new Intl.DateTimeFormat(FormControls.jsLocale, { weekday: "long" });
 
 // Cache DOM elements
@@ -58,6 +61,8 @@ const showElement = (el, fade = false, displayValue = 'block') => {
             el.style.opacity = '1';
         });
     } else {
+        el.style.transition = '';
+        el.style.opacity = '1';
         el.style.display = displayValue;
         el.classList.remove('d-none');
     }
@@ -75,9 +80,11 @@ const hideElement = (el, fade = false, callback = null) => {
         el.style.opacity = '0';
         setTimeout(() => {
             el.style.display = 'none';
+            el.style.transition = '';
             if (callback) callback();
         }, 300);
     } else {
+        el.style.transition = '';
         el.style.display = 'none';
         if (callback) callback();
     }
@@ -92,13 +99,168 @@ const isHidden = (el) => {
     return el.style.display === 'none' || el.classList.contains('d-none') || window.getComputedStyle(el).display === 'none';
 };
 
+/**
+ * Initialize color multiselect plugin on a select element
+ * @param {HTMLSelectElement} colorSelect - The color select element
+ * @param {boolean} disabled - Whether to disable the multiselect
+ */
+const initializeColorMultiselect = (colorSelect, disabled = false) => {
+    if (!colorSelect) return;
+    $(colorSelect).multiselect({
+        buttonWidth: '100%',
+        buttonClass: 'form-select',
+        templates: {
+            button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+        }
+    }).multiselect('deselectAll', false);
+    if (disabled) {
+        $(colorSelect).multiselect('disable');
+    }
+};
+
+/**
+ * Populate form fields from an existing liturgical event
+ * @param {Object} litevent - The liturgical event data
+ * @param {Object} elements - Object containing form elements {gradeSelect, commonSelect, colorSelect, monthSelect}
+ * @param {boolean} monthDisabled - Whether month field should have options disabled
+ */
+const populateFormFromEvent = (litevent, elements, monthDisabled = false) => {
+    if (!litevent) return;
+
+    const { gradeSelect, commonSelect, colorSelect, monthSelect } = elements;
+
+    if (gradeSelect) gradeSelect.value = litevent.grade;
+    if (commonSelect) $(commonSelect).multiselect('select', litevent.common);
+
+    if (colorSelect && litevent.color) {
+        const colorVal = Array.isArray(litevent.color) ? litevent.color : litevent.color.split(',');
+        $(colorSelect).multiselect('select', colorVal);
+    }
+
+    if (monthDisabled && monthSelect) {
+        monthSelect.querySelectorAll(`option[value]:not([value="${litevent.month}"])`).forEach(opt => {
+            opt.disabled = true;
+        });
+    }
+};
+
+/**
+ * Build strtotime form group HTML
+ * @param {number} uniqid - Unique ID for form elements
+ * @param {Object} strtotime - Strtotime data object
+ * @returns {string} HTML string for strtotime form group
+ */
+const buildStrtotimeFormGroup = (uniqid, strtotime = {}) => {
+    // Escape API-provided values to prevent XSS
+    const escapedEventKey = escapeHtml(strtotime.event_key || '');
+    const escapedDayOfWeek = escapeHtml(strtotime.day_of_the_week || '');
+    const escapedRelativeTime = escapeHtml(strtotime.relative_time || '');
+
+    let html = `<label for="onTheFly${uniqid}StrToTime-dayOfTheWeek">Explicatory date</label>
+        <select class="form-select litEvent litEventStrtotime" id="onTheFly${uniqid}StrToTime-dayOfTheWeek">`;
+    for (let i = 0; i < 7; i++) {
+        const dayOfTheWeek = new Date(Date.UTC(2000, 0, 2 + i));
+        const selected = escapedDayOfWeek === DaysOfTheWeek[i] ? ' selected' : '';
+        html += `<option value="${escapeHtml(DaysOfTheWeek[i])}"${selected}>${escapeHtml(FormControls.weekdayFormatter.format(dayOfTheWeek))}</option>`;
+    }
+    html += `</select>
+        <select class="form-select litEvent litEventStrtotime" id="onTheFly${uniqid}StrToTime-relativeTime">
+            <option value="before"${escapedRelativeTime === 'before' ? ' selected' : ''}>before</option>
+            <option value="after"${escapedRelativeTime === 'after' ? ' selected' : ''}>after</option>
+        </select>
+        <input list="existingLiturgicalEventsList" class="form-control litEvent litEventStrtotime existingLiturgicalEventName" id="onTheFly${uniqid}StrToTime-eventKey" value="${escapedEventKey}" required>`;
+    return html;
+};
+
+/**
+ * Build day/month form group HTML
+ * @param {number} uniqid - Unique ID for form elements
+ * @param {Object} liturgicalEventData - Liturgical event data
+ * @returns {Object} Object with {dayHtml, monthHtml}
+ */
+const buildDayMonthFormGroup = (uniqid, liturgicalEventData) => {
+    const eventData = liturgicalEventData?.liturgical_event || {};
+
+    // Escape API-provided values to prevent XSS
+    const escapedDay = escapeHtml(eventData.day ?? '');
+
+    const dayHtml = `<label for="onTheFly${uniqid}Day">Day</label>
+        <input type="number" min="1" max="31" value="${escapedDay}" class="form-control litEvent litEventDay" id="onTheFly${uniqid}Day" />`;
+
+    const formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
+    let monthHtml = `<div class="form-group col-sm-1">
+        <label for="onTheFly${uniqid}Month">${escapeHtml(Messages["Month"])}</label>
+        <select class="form-select litEvent litEventMonth" id="onTheFly${uniqid}Month" >`;
+    for (let i = 0; i < 12; i++) {
+        const month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
+        const selected = eventData.month === i + 1 ? ' selected' : '';
+        monthHtml += `<option value="${i + 1}"${selected}>${escapeHtml(formatter.format(month))}</option>`;
+    }
+    monthHtml += `</select></div>`;
+
+    return { dayHtml, monthHtml };
+};
+
+/**
+ * Toggle strtotime button appearance
+ * @param {HTMLElement} target - The button element
+ * @param {boolean} toActive - Whether to set to active (relative date) state
+ */
+const toggleStrtotimeButton = (target, toActive) => {
+    const icon = target.querySelector('i');
+    if (toActive) {
+        icon.classList.remove('fa-comment-slash');
+        icon.classList.add('fa-comment');
+        target.classList.remove('btn-secondary');
+        target.classList.add('btn-info');
+    } else {
+        icon.classList.remove('fa-comment');
+        icon.classList.add('fa-comment-slash');
+        target.classList.remove('btn-info');
+        target.classList.add('btn-secondary');
+    }
+};
+
+/**
+ * Switch form to strtotime (relative date) UI
+ * @param {number} uniqid - Unique ID for form elements
+ * @param {Object} strtotime - Strtotime data object
+ */
+const switchToStrtotimeUI = (uniqid, strtotime) => {
+    const monthFormGroup = document.getElementById(`onTheFly${uniqid}Month`)?.closest('.form-group');
+    if (monthFormGroup) monthFormGroup.remove();
+
+    const dayFormGroup = document.getElementById(`onTheFly${uniqid}Day`)?.closest('.form-group');
+    if (dayFormGroup) {
+        dayFormGroup.innerHTML = buildStrtotimeFormGroup(uniqid, strtotime);
+        dayFormGroup.classList.remove('col-sm-1');
+        dayFormGroup.classList.add('col-sm-2');
+    }
+};
+
+/**
+ * Switch form to fixed day/month UI
+ * @param {number} uniqid - Unique ID for form elements
+ * @param {Object} liturgicalEventData - Liturgical event data
+ */
+const switchToFixedDateUI = (uniqid, liturgicalEventData) => {
+    const strToTimeFormGroup = document.getElementById(`onTheFly${uniqid}StrToTime-dayOfTheWeek`)?.closest('.form-group');
+    if (strToTimeFormGroup) {
+        const { dayHtml, monthHtml } = buildDayMonthFormGroup(uniqid, liturgicalEventData);
+        strToTimeFormGroup.innerHTML = dayHtml;
+        strToTimeFormGroup.classList.remove('col-sm-2');
+        strToTimeFormGroup.classList.add('col-sm-1');
+        strToTimeFormGroup.insertAdjacentHTML('afterend', monthHtml);
+    }
+};
+
 const createPropriumDeTemporeTable = ( data ) => {
     jsonDataTblThead.innerHTML = '';
     const keys = Object.keys( data );
     const thh = Object.keys( data[keys[0]] );
     jsonDataTblThead.insertAdjacentHTML('beforeend', '<th>TAG</th>');
     thh.forEach(el => {
-        jsonDataTblThead.insertAdjacentHTML('beforeend', `<th>${el}</th>`);
+        jsonDataTblThead.insertAdjacentHTML('beforeend', `<th>${escapeHtml(el)}</th>`);
     });
     let tbodyHtmlStrr = '';
     keys.forEach(tag => {
@@ -109,11 +271,11 @@ const createPropriumDeTemporeTable = ( data ) => {
             let dataTagEl = dataTag[el];
             const readingsProps = Object.keys( dataTagEl );
             readingsProps.forEach(prop => {
-                tbodyHtmlStr += `<tr><td>${prop}</td><td>${dataTagEl[prop]}</td></tr>`;
+                tbodyHtmlStr += `<tr><td>${escapeHtml(prop)}</td><td>${escapeHtml(dataTagEl[prop])}</td></tr>`;
             });
             trHtmlStr += `<td contenteditable="false"><table><tbody>${tbodyHtmlStr}</tbody></table></td>`;
         });
-        tbodyHtmlStrr += `<tr><td contenteditable="false">${tag}</td>${trHtmlStr}</tr>`;
+        tbodyHtmlStrr += `<tr><td contenteditable="false">${escapeHtml(tag)}</td>${trHtmlStr}</tr>`;
     });
     jsonDataTbl.classList.add('propriumDeTempore');
     jsonDataTblTbody.insertAdjacentHTML('beforeend', tbodyHtmlStrr);
@@ -131,7 +293,7 @@ const createPropriumDeSanctisTable = ( data, jsonFile ) => {
     // Filter out "calendar" property - not needed in the admin table
     const keys = Object.keys( data[0] ).filter(key => key !== 'calendar');
     keys.forEach((el) => {
-        jsonDataTblThead.insertAdjacentHTML('beforeend', `<th class="sticky-top" scope="col">${el}</th>`);
+        jsonDataTblThead.insertAdjacentHTML('beforeend', `<th class="sticky-top" scope="col">${escapeHtml(el)}</th>`);
     });
     let tbodyHtmlStrr = '';
     data.forEach(row => {
@@ -139,22 +301,24 @@ const createPropriumDeSanctisTable = ( data, jsonFile ) => {
         keys.forEach(prop => {
             const value = row[prop];
             if( Array.isArray( value ) ) {
-                trHtmlStr += `<td contenteditable="false">${value.join(',')}</td>`;
+                trHtmlStr += `<td contenteditable="false">${escapeHtml(value.join(','))}</td>`;
             }
             else if( typeof value === 'object' && value !== null ) {
-                console.log(`we have an object in key ${prop}:`);
-                console.log( value );
+                if (DEBUG) {
+                    console.log(`we have an object in key ${prop}:`);
+                    console.log( value );
+                }
                 let htmlStr = '<table><tbody>';
                 Object.keys( value ).forEach(title => {
                     let val = value[title];
                     if( typeof val === 'object' ) {
-                        htmlStr += `<tr><td colspan="2" style="text-align:center;font-weight:bold;border:0;background-color:lightgray;">${title}</td></tr>`;
+                        htmlStr += `<tr><td colspan="2" style="text-align:center;font-weight:bold;border:0;background-color:lightgray;">${escapeHtml(title)}</td></tr>`;
                         Object.keys( val ).forEach(title2 => {
                             let val2 = val[title2];
-                            htmlStr += `<tr><td>${title2}</td><td contenteditable="false">${val2}</td></tr>`;
+                            htmlStr += `<tr><td>${escapeHtml(title2)}</td><td contenteditable="false">${escapeHtml(val2)}</td></tr>`;
                         });
                     } else {
-                        htmlStr += `<tr><td>${title}</td><td contenteditable="false">${val}</td></tr>`;
+                        htmlStr += `<tr><td>${escapeHtml(title)}</td><td contenteditable="false">${escapeHtml(val)}</td></tr>`;
                     }
                 });
                 htmlStr += '</tbody></table>';
@@ -164,7 +328,7 @@ const createPropriumDeSanctisTable = ( data, jsonFile ) => {
             } else if ( value === undefined ) {
                 trHtmlStr += `<td contenteditable="false">undefined</td>`;
             } else {
-                trHtmlStr += `<td contenteditable="false">${value}</td>`;
+                trHtmlStr += `<td contenteditable="false">${escapeHtml(value)}</td>`;
             }
         });
         trHtmlStr += '</tr>';
@@ -296,7 +460,7 @@ const jsonFileData = {};
 jsonFileSelect.addEventListener('change', async () => {
     const selectedOption = jsonFileSelect.options[jsonFileSelect.selectedIndex];
     const baseJsonFile = selectedOption.text;
-    const jsonFile = escapeHtml( jsonFileSelect.value );
+    const jsonFile = encodeURIComponent( jsonFileSelect.value );
     // Fetch directly from the API (BaseUrl is set in the page from PHP config)
     const jsonFileFull = BaseUrl + '/' + jsonFile;
 
@@ -311,7 +475,7 @@ jsonFileSelect.addEventListener('change', async () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             let data = await response.json();
-            console.log('storing data in script cache...');
+            if (DEBUG) console.log('storing data in script cache...');
             // Handle API response format for decrees endpoint
             if(jsonFile === 'decrees') {
                 // Decrees API returns { litcal_decrees: [...] }
@@ -330,7 +494,7 @@ jsonFileSelect.addEventListener('change', async () => {
             }
         }
     } else {
-        console.log( 'using stored data to avoid making another fetch call uselessly...' );
+        if (DEBUG) console.log( 'using stored data to avoid making another fetch call uselessly...' );
         const data = jsonFileData[baseJsonFile];
         handleJsonFileData( data, jsonFile );
     }
@@ -347,7 +511,7 @@ const handleJsonFileData = ( data, jsonFile ) => {
             hideElement(memorialsFromDecreesBtnGrp, true);
         }
         if( isHidden(tableContainer) ) {
-            console.log( 'tableContainer was hidden, now showing in order to repopulate...' );
+            if (DEBUG) console.log( 'tableContainer was hidden, now showing in order to repopulate...' );
             showElement(tableContainer);
             showElement(addColumnBtn);
             setTimeout(() => createPropriumTable( data, jsonFile ), 200);
@@ -447,20 +611,29 @@ saveDataBtn.addEventListener('click', async () => {
                 }
                 newRow[props[j]] = subJson;
             } else {
+                const cellText = td.textContent.trim();
                 if(intProps.includes(props[j])) {
-                    newRow[props[j]] = parseInt(td.textContent);
+                    // Handle empty, null, or undefined values
+                    if (cellText === '' || cellText.toLowerCase() === 'null' || cellText.toLowerCase() === 'undefined') {
+                        newRow[props[j]] = null;
+                    } else {
+                        const parsed = parseInt(cellText, 10);
+                        newRow[props[j]] = Number.isNaN(parsed) ? null : parsed;
+                    }
                 } else {
-                    newRow[props[j]] = td.textContent;
+                    newRow[props[j]] = cellText;
                 }
             }
         });
         jsonData.push(newRow);
     });
 
-    const endpoint = escapeHtml( jsonFileSelect.value );
+    const endpoint = encodeURIComponent( jsonFileSelect.value );
     const jsonstring = JSON.stringify(jsonData, null, 4).replace(/[\r]/g, '');
-    console.log('Attempting to save data to endpoint: ' + endpoint);
-    console.log(jsonData);
+    if (DEBUG) {
+        console.log('Attempting to save data to endpoint: ' + endpoint);
+        console.log(jsonData);
+    }
 
     // Determine the API endpoint for saving
     const apiUrl = BaseUrl + '/' + endpoint;
@@ -491,7 +664,7 @@ saveDataBtn.addEventListener('click', async () => {
         }
 
         const data = await response.json();
-        console.log(data);
+        if (DEBUG) console.log(data);
         if (typeof toastr !== 'undefined') {
             toastr.success('Data saved successfully');
         } else {
@@ -512,26 +685,26 @@ document.addEventListener('click', (ev) => {
     const target = ev.target.closest('.actionPromptButton');
     if (!target) return;
 
-    const currentUniqid = parseInt( FormControls.uniqid );
+    const currentUniqid = parseInt(FormControls.uniqid);
     const modal = target.closest('.actionPromptModal');
     const modalForm = modal.querySelector('form');
     const existingEventInput = modalForm.querySelector('.existingLiturgicalEventName');
-    const existingLiturgicalEventKey = escapeHtml( existingEventInput?.value || '' );
+    const existingLiturgicalEventKey = escapeHtml(existingEventInput?.value || '');
     let propertyToChange;
 
     FormControls.settings.decreeUrlFieldShow = true;
     FormControls.settings.decreeLangMapFieldShow = true;
+    setFormSettings(target.id);
 
-    setFormSettings( target.id );
-
-    if( target.id === 'setPropertyButton' ) {
+    if (target.id === 'setPropertyButton') {
         const propertySelect = document.getElementById('propertyToChange');
-        propertyToChange = escapeHtml( propertySelect?.value || '' );
-        setFormSettingsForProperty( propertyToChange );
+        propertyToChange = escapeHtml(propertySelect?.value || '');
+        setFormSettingsForProperty(propertyToChange);
     }
 
+    // Create form row
     const rowHtml = existingLiturgicalEventKey !== ''
-        ? FormControls.CreateDoctorRow( existingLiturgicalEventKey )
+        ? FormControls.CreateDoctorRow(existingLiturgicalEventKey)
         : FormControls.CreateDoctorRow();
     const rowFragment = createElementFromHTML(rowHtml);
 
@@ -541,71 +714,40 @@ document.addEventListener('click', (ev) => {
     const commonSelect = rowFragment.querySelector(`#onTheFly${currentUniqid}Common`);
     const gradeSelect = rowFragment.querySelector(`#onTheFly${currentUniqid}Grade`);
 
-    // Now prepend - the fragment's contents are moved to the DOM
+    // Prepend to form and hide modal
     memorialsFromDecreesForm.prepend(rowFragment);
-
-    // Hide modal using Bootstrap 5 API
     const bsModal = bootstrap.Modal.getInstance(modal);
     if (bsModal) bsModal.hide();
 
-    // References obtained before prepend are still valid
+    // Set data attributes on form row
     const formrow = formGroupEl?.closest('.row');
     if (formrow) {
-        formrow.dataset.action = FormControls.action.description;
-        if( FormControls.action.description === RowAction.SetProperty ) {
+        formrow.dataset.action = FormControls.action;
+        if (FormControls.action === RowAction.SetProperty) {
             formrow.dataset.prop = propertyToChange;
         }
     }
 
-    // jQuery needed for multiselect plugin
-    if (colorSelect) {
-        $(colorSelect).multiselect({
-            buttonWidth: '100%',
-            buttonClass: 'form-select',
-            templates: {
-                button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
-            }
-        }).multiselect('deselectAll', false);
+    // Initialize multiselects using helper function
+    initializeColorMultiselect(colorSelect, FormControls.settings.colorField === false);
 
-        if(FormControls.settings.colorField === false) {
-            $(colorSelect).multiselect('disable');
-        }
-    }
-
-    if(FormControls.settings.commonFieldShow) {
+    if (FormControls.settings.commonFieldShow) {
         const rowEl = formGroupEl?.closest('.row') || memorialsFromDecreesForm;
-        setCommonMultiselect( rowEl, null );
-        if(FormControls.settings.commonField === false && commonSelect) {
+        setCommonMultiselect(rowEl, null);
+        if (FormControls.settings.commonField === false && commonSelect) {
             $(commonSelect).multiselect('disable');
         }
     }
 
-    if(FormControls.settings.gradeFieldShow && FormControls.settings.gradeField === false && gradeSelect) {
+    if (FormControls.settings.gradeFieldShow && FormControls.settings.gradeField === false && gradeSelect) {
         gradeSelect.disabled = true;
     }
 
-    if( existingLiturgicalEventKey !== '' ) {
+    // Populate form from existing event using helper function
+    if (existingLiturgicalEventKey !== '') {
         const litevent = LiturgicalEventCollection.find(el => el.event_key === existingLiturgicalEventKey);
-
-        if (litevent) {
-            if (gradeSelect) gradeSelect.value = litevent.grade;
-
-            if (commonSelect) $(commonSelect).multiselect('select', litevent.common);
-
-            if (colorSelect && litevent.color) {
-                const colorVal = Array.isArray(litevent.color) ? litevent.color : litevent.color.split(',');
-                $(colorSelect).multiselect('select', colorVal);
-            }
-
-            if(FormControls.settings.monthField === false) {
-                const monthSelect = formrow?.querySelector(`#onTheFly${currentUniqid}Month`);
-                if (monthSelect) {
-                    monthSelect.querySelectorAll(`option[value]:not([value="${litevent.month}"])`).forEach(opt => {
-                        opt.disabled = true;
-                    });
-                }
-            }
-        }
+        const monthSelect = formrow?.querySelector(`#onTheFly${currentUniqid}Month`);
+        populateFormFromEvent(litevent, { gradeSelect, commonSelect, colorSelect, monthSelect }, FormControls.settings.monthField === false);
     }
 });
 
@@ -622,9 +764,11 @@ document.addEventListener('change', (ev) => {
 
     forms.forEach(form => form.classList.remove('was-validated'));
 
-    const curTargVal = escapeHtml( target.value );
+    // Check if value exists in datalist by iterating options (avoids selector injection)
+    const targetValue = target.value;
+    const optionExists = Array.from(existingLiturgicalEventsList.options).some(opt => opt.value === targetValue);
 
-    if (existingLiturgicalEventsList.querySelector(`option[value="${curTargVal}"]`)) {
+    if (optionExists) {
         disabledState = false;
         if( target.required ) {
             target.classList.remove('is-invalid');
@@ -658,67 +802,20 @@ document.addEventListener('click', (ev) => {
     const target = ev.target.closest('.strtotime-toggle-btn');
     if (!target) return;
 
-    const uniqid = parseInt( target.dataset.rowUniqid );
+    const uniqid = parseInt(target.dataset.rowUniqid);
     const selectedOption = jsonFileSelect.options[jsonFileSelect.selectedIndex];
     const currentJsonFile = selectedOption.text;
     const eventKeyInput = document.getElementById(`onTheFly${uniqid}EventKey`);
-    const eventKey = escapeHtml( eventKeyInput?.value || '' );
+    const eventKey = escapeHtml(eventKeyInput?.value || '');
     const liturgicalEventData = jsonFileData[currentJsonFile]?.find(el => el.liturgical_event.event_key === eventKey);
-    const strtotime = typeof liturgicalEventData !== 'undefined' && liturgicalEventData.liturgical_event.hasOwnProperty('strtotime') ? liturgicalEventData.liturgical_event.strtotime : {};
+    const strtotime = liturgicalEventData?.liturgical_event?.strtotime || {};
 
-    if( target.getAttribute('aria-pressed') === 'true' ) {
-        const icon = target.querySelector('i');
-        icon.classList.remove('fa-comment-slash');
-        icon.classList.add('fa-comment');
-        target.classList.remove('btn-secondary');
-        target.classList.add('btn-info');
+    const isActivating = target.getAttribute('aria-pressed') === 'true';
+    toggleStrtotimeButton(target, isActivating);
 
-        const monthFormGroup = document.getElementById(`onTheFly${uniqid}Month`)?.closest('.form-group');
-        if (monthFormGroup) monthFormGroup.remove();
-
-        const dayFormGroup = document.getElementById(`onTheFly${uniqid}Day`)?.closest('.form-group');
-        if (dayFormGroup) {
-            let strToTimeFormGroup = `<label for="onTheFly${uniqid}StrToTime-dayOfTheWeek">Explicatory date</label>
-            <select class="form-select litEvent litEventStrtotime" id="onTheFly${uniqid}StrToTime-dayOfTheWeek">`;
-            for (let i = 0; i < 7; i++ ) {
-                const dayOfTheWeek = new Date(Date.UTC(2000, 0, 2+i));
-                strToTimeFormGroup += `<option value="${DaysOfTheWeek[i]}"${strtotime.hasOwnProperty('day_of_the_week') && strtotime.day_of_the_week === DaysOfTheWeek[i] ? ' selected': ''}>${FormControls.weekdayFormatter.format(dayOfTheWeek)}</option>`;
-            }
-            strToTimeFormGroup += `</select>
-            <select class="form-select litEvent litEventStrtotime" id="onTheFly${uniqid}StrToTime-relativeTime">
-                <option value="before"${strtotime.hasOwnProperty('relative_time') && strtotime.relative_time === 'before' ? ' selected': ''}>before</option>
-                <option value="after"${strtotime.hasOwnProperty('relative_time') && strtotime.relative_time === 'after' ? ' selected': ''}>after</option>
-            </select>
-            <input list="existingLiturgicalEventsList" class="form-control litEvent litEventStrtotime existingLiturgicalEventName" id="onTheFly${uniqid}StrToTime-eventKey" value="${strtotime.hasOwnProperty('event_key') ? strtotime.event_key : ''}" required>`;
-            dayFormGroup.innerHTML = strToTimeFormGroup;
-            dayFormGroup.classList.remove('col-sm-1');
-            dayFormGroup.classList.add('col-sm-2');
-        }
+    if (isActivating) {
+        switchToStrtotimeUI(uniqid, strtotime);
     } else {
-        const icon = target.querySelector('i');
-        icon.classList.remove('fa-comment');
-        icon.classList.add('fa-comment-slash');
-        target.classList.remove('btn-info');
-        target.classList.add('btn-secondary');
-
-        const strToTimeFormGroup = document.getElementById(`onTheFly${uniqid}StrToTime-dayOfTheWeek`)?.closest('.form-group');
-        if (strToTimeFormGroup) {
-            strToTimeFormGroup.innerHTML = `<label for="onTheFly${uniqid}Day">Day</label>
-                <input type="number" min="1" max="31" value="${typeof liturgicalEventData !== 'undefined' && liturgicalEventData.liturgical_event.hasOwnProperty('day') ? liturgicalEventData.liturgical_event.day : ''}" class="form-control litEvent litEventDay" id="onTheFly${uniqid}Day" />`;
-            strToTimeFormGroup.classList.remove('col-sm-2');
-            strToTimeFormGroup.classList.add('col-sm-1');
-
-            const formatter = new Intl.DateTimeFormat(FormControls.jsLocale, { month: 'long' });
-            let formRow = `<div class="form-group col-sm-1">
-            <label for="onTheFly${uniqid}Month">${Messages[ "Month" ]}</label>
-            <select class="form-select litEvent litEventMonth" id="onTheFly${uniqid}Month" >`;
-            for (let i = 0; i < 12; i++) {
-                const month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
-                formRow += `<option value=${i + 1}${typeof liturgicalEventData !== 'undefined' && liturgicalEventData.liturgical_event.hasOwnProperty('month') && liturgicalEventData.liturgical_event.month === i+1 ? ' selected' : ''}>${formatter.format(month)}</option>`;
-            }
-            formRow += `</select>
-            </div>`;
-            strToTimeFormGroup.insertAdjacentHTML('afterend', formRow);
-        }
+        switchToFixedDateUI(uniqid, liturgicalEventData);
     }
 });
