@@ -50,11 +50,12 @@ $dotenv->ifPresent(['API_PORT'])->isInteger();
 $dotenv->safeLoad();
 
 // Set default environment variables if not already set
-$debugMode             = filter_var($_ENV['DEBUG_MODE'] ?? 'false', FILTER_VALIDATE_BOOLEAN);
-$_ENV['API_PROTOCOL']  = $_ENV['API_PROTOCOL'] ?? 'https';
-$_ENV['API_HOST']      = $_ENV['API_HOST'] ?? 'litcal.johnromanodorazio.com';
-$_ENV['API_PORT']      = $_ENV['API_PORT'] ?? '';
-$_ENV['API_BASE_PATH'] = $_ENV['API_BASE_PATH'] ?? '/api/dev';
+$debugMode                  = filter_var($_ENV['DEBUG_MODE'] ?? 'false', FILTER_VALIDATE_BOOLEAN);
+$_ENV['API_PROTOCOL']       = $_ENV['API_PROTOCOL'] ?? 'https';
+$_ENV['API_HOST']           = $_ENV['API_HOST'] ?? 'litcal.johnromanodorazio.com';
+$_ENV['API_PORT']           = $_ENV['API_PORT'] ?? '';
+$_ENV['API_BASE_PATH']      = $_ENV['API_BASE_PATH'] ?? '/api/dev';
+$_ENV['ACCURACY_TESTS_URL'] = $_ENV['ACCURACY_TESTS_URL'] ?? 'https://litcal-tests.johnromanodorazio.com';
 
 // Build Base API URL
 $apiPort    = !empty($_ENV['API_PORT']) ? ":{$_ENV['API_PORT']}" : '';
