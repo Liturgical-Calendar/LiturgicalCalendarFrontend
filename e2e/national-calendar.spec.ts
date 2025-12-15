@@ -527,6 +527,165 @@ test.describe('National Calendar Form', () => {
     });
 });
 
+test.describe('National Calendar Form - Action Buttons', () => {
+    test.beforeEach(async ({ extendingPage }) => {
+        await extendingPage.goToNationalCalendar();
+    });
+
+    test('should have all action buttons visible when calendar is loaded', async ({ page, extendingPage }) => {
+        // Load an existing calendar
+        await extendingPage.selectCalendar('#nationalCalendarName', 'US');
+        await page.waitForLoadState('networkidle');
+
+        // Wait for action buttons to be enabled (translations loaded)
+        await extendingPage.waitForButtonsEnabled('.litcalActionButton', 15000);
+
+        // Verify all action buttons are visible
+        await expect(page.locator('#makePatronAction')).toBeVisible();
+        await expect(page.locator('#setPropertyAction')).toBeVisible();
+        await expect(page.locator('#moveLiturgicalEventAction')).toBeVisible();
+        await expect(page.locator('#newLiturgicalEventAction')).toBeVisible();
+    });
+
+    test('Set Property button should open modal and add setProperty row', async ({ page, extendingPage }) => {
+        // Load an existing calendar
+        await extendingPage.selectCalendar('#nationalCalendarName', 'US');
+        await page.waitForLoadState('networkidle');
+
+        // Wait for existing events datalist to be populated
+        await page.waitForFunction(() => {
+            const datalist = document.querySelector('#existingLiturgicalEventsList');
+            return datalist && datalist.querySelectorAll('option').length > 0;
+        }, { timeout: 15000 });
+
+        // Wait for action buttons to be enabled
+        await extendingPage.waitForButtonsEnabled('.litcalActionButton', 15000);
+
+        // Dismiss any toasts
+        await extendingPage.dismissToasts();
+
+        // Get a random existing event name
+        const existingEventName = await extendingPage.getRandomExistingEventName();
+        if (!existingEventName) {
+            test.skip(true, 'No existing events in datalist');
+            return;
+        }
+        console.log(`Using existing event: ${existingEventName}`);
+
+        // Count existing setProperty rows before
+        const existingCount = await page.locator('.regionalNationalDataForm .row[data-action="setProperty"]').count();
+
+        // Use the setProperty modal helper
+        await extendingPage.setPropertyViaModal(existingEventName, 'name');
+
+        // Verify a new row was created (count increased)
+        const newCount = await page.locator('.regionalNationalDataForm .row[data-action="setProperty"]').count();
+        expect(newCount).toBeGreaterThan(existingCount);
+        console.log(`Set Property row successfully created (count: ${existingCount} -> ${newCount})`);
+    });
+
+    test('Move Event button should open modal and add moveEvent row', async ({ page, extendingPage }) => {
+        // Load an existing calendar
+        await extendingPage.selectCalendar('#nationalCalendarName', 'US');
+        await page.waitForLoadState('networkidle');
+
+        // Wait for existing events datalist to be populated
+        await page.waitForFunction(() => {
+            const datalist = document.querySelector('#existingLiturgicalEventsList');
+            return datalist && datalist.querySelectorAll('option').length > 0;
+        }, { timeout: 15000 });
+
+        // Wait for action buttons to be enabled
+        await extendingPage.waitForButtonsEnabled('.litcalActionButton', 15000);
+
+        // Dismiss any toasts
+        await extendingPage.dismissToasts();
+
+        // Get a random existing event name
+        const existingEventName = await extendingPage.getRandomExistingEventName();
+        if (!existingEventName) {
+            test.skip(true, 'No existing events in datalist');
+            return;
+        }
+        console.log(`Using existing event: ${existingEventName}`);
+
+        // Count existing moveEvent rows before
+        const existingCount = await page.locator('.regionalNationalDataForm .row[data-action="moveEvent"]').count();
+
+        // Use the moveEvent modal helper
+        await extendingPage.moveEventViaModal(existingEventName);
+
+        // Verify a new row was created (count increased)
+        const newCount = await page.locator('.regionalNationalDataForm .row[data-action="moveEvent"]').count();
+        expect(newCount).toBeGreaterThan(existingCount);
+        console.log(`Move Event row successfully created (count: ${existingCount} -> ${newCount})`);
+    });
+
+    test('Make Patron button should open modal and add makePatron row', async ({ page, extendingPage }) => {
+        // Load an existing calendar
+        await extendingPage.selectCalendar('#nationalCalendarName', 'US');
+        await page.waitForLoadState('networkidle');
+
+        // Wait for existing events datalist to be populated
+        await page.waitForFunction(() => {
+            const datalist = document.querySelector('#existingLiturgicalEventsList');
+            return datalist && datalist.querySelectorAll('option').length > 0;
+        }, { timeout: 15000 });
+
+        // Wait for action buttons to be enabled
+        await extendingPage.waitForButtonsEnabled('.litcalActionButton', 15000);
+
+        // Dismiss any toasts
+        await extendingPage.dismissToasts();
+
+        // Use a patron name (can be new or existing)
+        const patronName = 'Test National Patron';
+
+        // Count existing makePatron rows before
+        const existingCount = await page.locator('.regionalNationalDataForm .row[data-action="makePatron"]').count();
+
+        // Use the makePatron modal helper
+        await extendingPage.makePatronViaModal(patronName);
+
+        // Verify a new row was created (count increased)
+        const newCount = await page.locator('.regionalNationalDataForm .row[data-action="makePatron"]').count();
+        expect(newCount).toBeGreaterThan(existingCount);
+        console.log(`Make Patron row successfully created (count: ${existingCount} -> ${newCount})`);
+    });
+
+    test('Create New button should open modal and add createNew row', async ({ page, extendingPage }) => {
+        // Load an existing calendar
+        await extendingPage.selectCalendar('#nationalCalendarName', 'US');
+        await page.waitForLoadState('networkidle');
+
+        // Wait for existing events datalist to be populated
+        await page.waitForFunction(() => {
+            const datalist = document.querySelector('#existingLiturgicalEventsList');
+            return datalist && datalist.querySelectorAll('option').length > 0;
+        }, { timeout: 15000 });
+
+        // Wait for action buttons to be enabled
+        await extendingPage.waitForButtonsEnabled('.litcalActionButton', 15000);
+
+        // Dismiss any toasts
+        await extendingPage.dismissToasts();
+
+        // Use the createNew modal helper
+        const newEventName = 'Test New Saint';
+
+        // Count existing createNew rows before
+        const existingCount = await page.locator('.regionalNationalDataForm .row[data-action="createNew"]').count();
+
+        await extendingPage.createNewEventViaModal(newEventName);
+
+        // Verify a new row was created (count increased)
+        const newCount = await page.locator('.regionalNationalDataForm .row[data-action="createNew"]').count();
+        expect(newCount).toBeGreaterThan(existingCount);
+        console.log(`Create New row successfully created (count: ${existingCount} -> ${newCount})`);
+    });
+
+});
+
 test.describe('National Calendar Form - Validation', () => {
     test.beforeEach(async ({ extendingPage }) => {
         await extendingPage.goToNationalCalendar();
