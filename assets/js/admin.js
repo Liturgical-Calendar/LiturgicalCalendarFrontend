@@ -337,132 +337,191 @@ const createPropriumDeSanctisTable = ( data, jsonFile ) => {
     jsonDataTblTbody.insertAdjacentHTML('beforeend', tbodyHtmlStrr);
 };
 
-const createMemorialsFromDecreesInterface = ( data ) => {
+/**
+ * Prepare decree row metadata: determine action, configure form settings, build title
+ * @param {Object} el - Decree element data
+ * @returns {string|null} - Existing liturgical event key if found
+ */
+const prepareDecreeRowMetadata = (el) => {
+    const existingKey = el.liturgical_event.hasOwnProperty('event_key') ? el.liturgical_event.event_key : null;
+
+    // Adjust action if creating from existing event
+    if (el.metadata.action === RowAction.CreateNew && LiturgicalEventCollectionKeys.includes(existingKey)) {
+        el.metadata.action = RowAction.CreateNewFromExisting;
+    }
+
+    // Configure form settings based on action
+    setFormSettings(el.metadata.action);
+    if (el.metadata.action === RowAction.SetProperty) {
+        setFormSettingsForProperty(el.metadata.property);
+    }
+
+    // Enable decree URL and language map fields
+    FormControls.settings.decreeUrlFieldShow = true;
+    FormControls.settings.decreeLangMapFieldShow = true;
+
+    // Build title with decree protocol and date info
+    const titleParts = [FormControls.title];
+    if (el.decree_protocol) titleParts.push(el.decree_protocol);
+    if (el.decree_date) titleParts.push(el.decree_date);
+    FormControls.title = titleParts.join(' - ');
+
+    return existingKey;
+};
+
+/**
+ * Add decree description paragraph after the title element
+ * @param {Object} el - Decree element data
+ * @param {HTMLElement|null} titleDiv - Title div element
+ */
+const addDecreeDescription = (el, titleDiv) => {
+    if (el.description && titleDiv) {
+        const descriptionP = document.createElement('p');
+        descriptionP.className = 'text-muted small mb-2';
+        descriptionP.textContent = el.description;
+        titleDiv.insertAdjacentElement('afterend', descriptionP);
+    }
+};
+
+/**
+ * Configure row dataset attributes and enable readings field if needed
+ * @param {HTMLElement|null} formrow - Form row element
+ * @param {Object} el - Decree element data
+ */
+const configureDecreeRowDataset = (formrow, el) => {
+    if (!formrow) return;
+
+    formrow.dataset.action = el.metadata.action;
+    if (el.metadata.action === RowAction.SetProperty) {
+        formrow.dataset.prop = el.metadata.property;
+    }
+    if (el.liturgical_event.hasOwnProperty('common') && el.liturgical_event.common.includes('Proper')) {
+        const litEventReadings = formrow.querySelector('.litEventReadings');
+        if (litEventReadings) litEventReadings.disabled = false;
+    }
+};
+
+/**
+ * Apply color fallback from existing liturgical event if color not specified
+ * @param {Object} el - Decree element data
+ * @param {string|null} existingKey - Existing liturgical event key
+ */
+const applyColorFallback = (el, existingKey) => {
+    if (el.liturgical_event.hasOwnProperty('color') || existingKey === null) return;
+
+    const fallbackEvent = LiturgicalEventCollection.find(ev => ev.event_key === existingKey);
+    if (fallbackEvent && fallbackEvent.hasOwnProperty('color')) {
+        el.liturgical_event.color = fallbackEvent.color;
+    }
+};
+
+/**
+ * Initialize form field multiselects and values from decree data
+ * @param {Object} el - Decree element data
+ * @param {Object} elements - Object containing form elements (colorSelect, commonSelect, gradeSelect, monthSelect, formGroupEl)
+ */
+const initializeDecreeFormFields = (el, elements) => {
+    const { colorSelect, commonSelect, gradeSelect, monthSelect, formGroupEl } = elements;
+
+    // Initialize color multiselect
+    if (el.liturgical_event.hasOwnProperty('color') && colorSelect) {
+        const colorVal = Array.isArray(el.liturgical_event.color)
+            ? el.liturgical_event.color
+            : el.liturgical_event.color.split(',');
+        $(colorSelect).multiselect({
+            buttonWidth: '100%',
+            buttonClass: 'form-select',
+            templates: {
+                button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+            },
+        }).multiselect('deselectAll', false).multiselect('select', colorVal);
+        if (FormControls.settings.colorField === false) {
+            $(colorSelect).multiselect('disable');
+        }
+    }
+
+    // Initialize common multiselect
+    if (el.liturgical_event.hasOwnProperty('common') && FormControls.settings.commonFieldShow) {
+        const common = Array.isArray(el.liturgical_event.common)
+            ? el.liturgical_event.common
+            : el.liturgical_event.common.split(',');
+        const rowEl = formGroupEl?.closest('.row') || memorialsFromDecreesForm;
+        setCommonMultiselect(rowEl, common);
+        if (FormControls.settings.commonField === false && commonSelect) {
+            $(commonSelect).multiselect('disable');
+        }
+    }
+
+    // Initialize grade select
+    if (FormControls.settings.gradeFieldShow && gradeSelect) {
+        gradeSelect.value = el.liturgical_event.grade;
+        if (FormControls.settings.gradeField === false) {
+            gradeSelect.disabled = true;
+        }
+    }
+
+    // Disable non-matching month options if month field is locked
+    if (FormControls.settings.monthField === false && monthSelect) {
+        monthSelect.querySelectorAll(`option[value]:not([value="${el.liturgical_event.month}"])`).forEach(opt => {
+            opt.disabled = true;
+        });
+    }
+};
+
+const createMemorialsFromDecreesInterface = (data) => {
     saveDataBtn.disabled = true;
     tableContainer.style.display = 'none';
     addColumnBtn.style.display = 'none';
     showElement(memorialsFromDecreesBtnGrp, true);
     memorialsFromDecreesForm.innerHTML = '';
+
     data.forEach((el) => {
-        let currentUniqid = FormControls.uniqid;
-        let existingLiturgicalEventKey = el.liturgical_event.hasOwnProperty( 'event_key' ) ? el.liturgical_event.event_key : null;
-        if( el.metadata.action === RowAction.CreateNew && LiturgicalEventCollectionKeys.includes( existingLiturgicalEventKey ) ) {
-            el.metadata.action = RowAction.CreateNewFromExisting;
-        }
-        setFormSettings( el.metadata.action );
-        if( el.metadata.action === RowAction.SetProperty ) {
-            setFormSettingsForProperty( el.metadata.property );
-        }
+        const currentUniqid = FormControls.uniqid;
+        const existingKey = prepareDecreeRowMetadata(el);
 
-        // Enable decree URL and language map fields for all decree rows
-        FormControls.settings.decreeUrlFieldShow = true;
-        FormControls.settings.decreeLangMapFieldShow = true;
-
-        // Build title with decree protocol and date info
-        let titleParts = [FormControls.title];
-        if (el.decree_protocol) {
-            titleParts.push(el.decree_protocol);
-        }
-        if (el.decree_date) {
-            titleParts.push(el.decree_date);
-        }
-        FormControls.title = titleParts.join(' - ');
-
-        const rowHtml = FormControls.CreateDoctorRow( el );
+        // Create row HTML and fragment
+        const rowHtml = FormControls.CreateDoctorRow(el);
         const rowFragment = createElementFromHTML(rowHtml);
 
         // Query elements BEFORE appending (DocumentFragment becomes empty after append)
         const formGroupEl = rowFragment.querySelector('.form-group');
-        const colorSelect = rowFragment.querySelector('.litEventColor');
-        const commonSelect = rowFragment.querySelector(`#onTheFly${currentUniqid}Common`);
-        const gradeSelect = rowFragment.querySelector(`#onTheFly${currentUniqid}Grade`);
-        const monthSelect = rowFragment.querySelector(`#onTheFly${currentUniqid}Month`);
         const titleDiv = rowFragment.querySelector('.data-group-title')?.parentElement;
+        const elements = {
+            formGroupEl,
+            colorSelect: rowFragment.querySelector('.litEventColor'),
+            commonSelect: rowFragment.querySelector(`#onTheFly${currentUniqid}Common`),
+            gradeSelect: rowFragment.querySelector(`#onTheFly${currentUniqid}Grade`),
+            monthSelect: rowFragment.querySelector(`#onTheFly${currentUniqid}Month`)
+        };
 
-        // Add decree description after the title if available
-        if (el.description && titleDiv) {
-            const descriptionP = document.createElement('p');
-            descriptionP.className = 'text-muted small mb-2';
-            descriptionP.textContent = el.description;
-            titleDiv.insertAdjacentElement('afterend', descriptionP);
-        }
-
-        // Now append - the fragment's contents are moved to the DOM
+        addDecreeDescription(el, titleDiv);
         memorialsFromDecreesForm.appendChild(rowFragment);
 
-        // References obtained before append are still valid
+        // Configure row and initialize fields (references obtained before append are still valid)
         const formrow = formGroupEl?.closest('.row');
-        if (formrow) {
-            formrow.dataset.action = el.metadata.action;
-            if( el.metadata.action === RowAction.SetProperty ) {
-                formrow.dataset.prop = el.metadata.property;
-            }
-            if( el.liturgical_event.hasOwnProperty('common') && el.liturgical_event.common.includes('Proper') ) {
-                const litEventReadings = formrow.querySelector('.litEventReadings');
-                if (litEventReadings) litEventReadings.disabled = false;
-            }
-        }
-
-        if( false === el.liturgical_event.hasOwnProperty( 'color' ) ) {
-            if( existingLiturgicalEventKey !== null ) {
-                const fallbackEvent = LiturgicalEventCollection.find(ev => ev.event_key === existingLiturgicalEventKey);
-                if( fallbackEvent && fallbackEvent.hasOwnProperty('color') ) {
-                    el.liturgical_event.color = fallbackEvent.color;
-                }
-            }
-        }
-
-        if( el.liturgical_event.hasOwnProperty( 'color' ) && colorSelect ) {
-            let colorVal = Array.isArray(el.liturgical_event.color) ? el.liturgical_event.color : el.liturgical_event.color.split(',');
-            // jQuery needed for multiselect plugin
-            $(colorSelect).multiselect({
-                buttonWidth: '100%',
-                buttonClass: 'form-select',
-                templates: {
-                    button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
-                },
-            }).multiselect('deselectAll', false).multiselect('select', colorVal);
-            if(FormControls.settings.colorField === false) {
-                $(colorSelect).multiselect('disable');
-            }
-        }
-
-        if( el.liturgical_event.hasOwnProperty( 'common' ) ) {
-            let common = Array.isArray( el.liturgical_event.common ) ? el.liturgical_event.common : el.liturgical_event.common.split(',');
-            if(FormControls.settings.commonFieldShow) {
-                // Pass a parent element that contains the common select
-                const rowEl = formGroupEl?.closest('.row') || memorialsFromDecreesForm;
-                setCommonMultiselect( rowEl, common );
-                if(FormControls.settings.commonField === false && commonSelect) {
-                    $(commonSelect).multiselect('disable');
-                }
-            }
-        }
-
-        if(FormControls.settings.gradeFieldShow && gradeSelect) {
-            gradeSelect.value = el.liturgical_event.grade;
-            if(FormControls.settings.gradeField === false) {
-                gradeSelect.disabled = true;
-            }
-        }
-
-        if(FormControls.settings.monthField === false && monthSelect) {
-            monthSelect.querySelectorAll(`option[value]:not([value="${el.liturgical_event.month}"])`).forEach(opt => {
-                opt.disabled = true;
-            });
-        }
+        configureDecreeRowDataset(formrow, el);
+        applyColorFallback(el, existingKey);
+        initializeDecreeFormFields(el, elements);
     });
 };
 
 const jsonFileData = {};
 
+/**
+ * Encode URL path segments individually (preserves slashes, encodes each segment)
+ * @param {string} path - Path like "missals/EDITIO_TYPICA_1970"
+ * @returns {string} - Encoded path like "missals/EDITIO_TYPICA_1970" (segments encoded if needed)
+ */
+const encodePathSegments = (path) => path.split('/').map(encodeURIComponent).join('/');
+
 // Event: jsonFileSelect change
 jsonFileSelect.addEventListener('change', async () => {
     const selectedOption = jsonFileSelect.options[jsonFileSelect.selectedIndex];
     const baseJsonFile = selectedOption.text;
-    const jsonFile = encodeURIComponent( jsonFileSelect.value );
-    // Fetch directly from the API (BaseUrl is set in the page from PHP config)
-    const jsonFileFull = BaseUrl + '/' + jsonFile;
+    // Keep unencoded path for string checks (e.g., === 'decrees', includes('/US_'))
+    const jsonFile = jsonFileSelect.value;
+    // Encode path segments individually for URL construction (preserves slashes)
+    const jsonFileFull = BaseUrl + '/' + encodePathSegments(jsonFile);
 
     if( false === jsonFileData.hasOwnProperty( baseJsonFile ) ) {
         try {
@@ -477,7 +536,7 @@ jsonFileSelect.addEventListener('change', async () => {
             let data = await response.json();
             if (DEBUG) console.log('storing data in script cache...');
             // Handle API response format for decrees endpoint
-            if(jsonFile === 'decrees') {
+            if (jsonFile === 'decrees') {
                 // Decrees API returns { litcal_decrees: [...] }
                 if (data.litcal_decrees) {
                     data = data.litcal_decrees;
@@ -628,15 +687,16 @@ saveDataBtn.addEventListener('click', async () => {
         jsonData.push(newRow);
     });
 
-    const endpoint = encodeURIComponent( jsonFileSelect.value );
+    // Keep unencoded path for logging, encode segments for URL
+    const endpoint = jsonFileSelect.value;
     const jsonstring = JSON.stringify(jsonData, null, 4).replace(/[\r]/g, '');
     if (DEBUG) {
         console.log('Attempting to save data to endpoint: ' + endpoint);
         console.log(jsonData);
     }
 
-    // Determine the API endpoint for saving
-    const apiUrl = BaseUrl + '/' + endpoint;
+    // Determine the API endpoint for saving (encode path segments individually)
+    const apiUrl = BaseUrl + '/' + encodePathSegments(endpoint);
 
     try {
         const response = await fetch(apiUrl, {
@@ -685,11 +745,12 @@ document.addEventListener('click', (ev) => {
     const target = ev.target.closest('.actionPromptButton');
     if (!target) return;
 
-    const currentUniqid = parseInt(FormControls.uniqid);
+    const currentUniqid = parseInt(FormControls.uniqid, 10);
     const modal = target.closest('.actionPromptModal');
     const modalForm = modal.querySelector('form');
     const existingEventInput = modalForm.querySelector('.existingLiturgicalEventName');
-    const existingLiturgicalEventKey = escapeHtml(existingEventInput?.value || '');
+    // Use raw value for data lookups - escapeHtml is only for HTML output
+    const existingLiturgicalEventKey = existingEventInput?.value || '';
     let propertyToChange;
 
     FormControls.settings.decreeUrlFieldShow = true;
@@ -698,7 +759,8 @@ document.addEventListener('click', (ev) => {
 
     if (target.id === 'setPropertyButton') {
         const propertySelect = document.getElementById('propertyToChange');
-        propertyToChange = escapeHtml(propertySelect?.value || '');
+        // Use raw value for function arguments and dataset attributes
+        propertyToChange = propertySelect?.value || '';
         setFormSettingsForProperty(propertyToChange);
     }
 
@@ -802,11 +864,12 @@ document.addEventListener('click', (ev) => {
     const target = ev.target.closest('.strtotime-toggle-btn');
     if (!target) return;
 
-    const uniqid = parseInt(target.dataset.rowUniqid);
+    const uniqid = parseInt(target.dataset.rowUniqid, 10);
     const selectedOption = jsonFileSelect.options[jsonFileSelect.selectedIndex];
     const currentJsonFile = selectedOption.text;
     const eventKeyInput = document.getElementById(`onTheFly${uniqid}EventKey`);
-    const eventKey = escapeHtml(eventKeyInput?.value || '');
+    // Use raw value for data comparison - escapeHtml is only for HTML output, not data matching
+    const eventKey = eventKeyInput?.value || '';
     const liturgicalEventData = jsonFileData[currentJsonFile]?.find(el => el.liturgical_event.event_key === eventKey);
     const strtotime = liturgicalEventData?.liturgical_event?.strtotime || {};
 
