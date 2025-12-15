@@ -86,15 +86,21 @@ asort($langsAssoc);
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="langChoicesDropdown" role="button"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-globe me-1"></i><span class="d-lg-none d-xxl-inline"><?php echo Locale::getDisplayLanguage($i18n->LOCALE, $i18n->LOCALE); ?></span>
+                    <i class="fas fa-globe me-1"></i><span class="d-lg-none d-xxl-inline"><?php echo htmlspecialchars(Locale::getDisplayLanguage($i18n->LOCALE, $i18n->LOCALE), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="langChoicesDropdown" id="langChoicesDropdownItems">
                     <?php
                     foreach ($langsAssoc as $key => $lang) {
-                        $classList   = substr($i18n->LOCALE, 0, 2) === $key ? 'dropdown-item active' : 'dropdown-item';
-                        $isoLang     = strtoupper($key);
-                        $displayName = Locale::getDisplayLanguage($key, 'en');
-                        echo "<a class=\"$classList\" id=\"langChoice-$key\" href=\"#\" title=\"$displayName\"><span class=\"d-none d-md-inline\">$lang</span><span class=\"d-inline d-md-none\">$isoLang</span></a>";
+                        $classList      = substr($i18n->LOCALE, 0, 2) === $key ? 'dropdown-item active' : 'dropdown-item';
+                        $isoLang        = strtoupper($key);
+                        $displayName    = Locale::getDisplayLanguage($key, 'en');
+                        // Escape all values for safe HTML output
+                        $safeClass      = htmlspecialchars($classList, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                        $safeKey        = htmlspecialchars($key, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                        $safeTitle      = htmlspecialchars($displayName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                        $safeLang       = htmlspecialchars($lang, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                        $safeIsoLang    = htmlspecialchars($isoLang, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                        echo "<a class=\"$safeClass\" id=\"langChoice-$safeKey\" href=\"#\" title=\"$safeTitle\"><span class=\"d-none d-md-inline\">$safeLang</span><span class=\"d-inline d-md-none\">$safeIsoLang</span></a>";
                     }
                     ?>
                 </div>
