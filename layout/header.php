@@ -17,7 +17,8 @@ asort($langsAssoc);
     </a>
 
     <!-- Sidebar Toggle (Topbar) - only visible on lg+ screens where sidebar is shown -->
-    <button class="btn btn-link btn-sm d-none d-lg-inline-block sidebarToggle" id="sidebarToggle" title="<?php echo _('Toggle sidebar'); ?>">
+    <button class="btn btn-link btn-sm d-none d-lg-inline-block sidebarToggle" id="sidebarToggle"
+            title="<?php echo htmlspecialchars(_('Toggle sidebar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
         <i class="fas fa-table-columns"></i>
     </button>
 
@@ -86,7 +87,7 @@ asort($langsAssoc);
             <!-- GitHub Link -->
             <li class="nav-item">
                 <a class="nav-link" href="https://github.com/Liturgical-Calendar/" target="_blank"
-                    title="<?php echo _('See the project repositories on GitHub'); ?>">
+                   title="<?php echo htmlspecialchars(_('See the project repositories on GitHub'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                     <i class="fab fa-github me-1"></i><span class="d-lg-none d-xxl-inline">GitHub</span>
                 </a>
             </li>
@@ -122,13 +123,15 @@ asort($langsAssoc);
             <!-- Admin Link -->
             <li class="nav-item<?php echo $currentPage === 'admin' ? ' bg-info' : ''; ?>">
                 <a class="nav-link<?php echo $currentPage === 'admin' ? ' active' : ''; ?>"
-                   href="./admin.php" title="<?php echo _('Admin'); ?>">
+                   href="./admin.php"
+                   title="<?php echo htmlspecialchars(_('Admin'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                     <i class="fas fa-cog me-1"></i><span class="d-lg-none d-xxl-inline"><?php echo _('Admin'); ?></span>
                 </a>
             </li>
             <!-- Authentication Status: Login button shown by default, JS will toggle based on auth state -->
             <li class="nav-item me-lg-2" id="loginBtnContainer" data-requires-no-auth>
-                <button class="btn btn-outline-primary btn-sm" id="loginBtn" title="<?php echo _('Login'); ?>">
+                <button class="btn btn-outline-primary btn-sm" id="loginBtn"
+                        title="<?php echo htmlspecialchars(_('Login'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                     <i class="fas fa-sign-in-alt me-1"></i><span class="d-lg-none d-sm-inline"><?php echo _('Login'); ?></span>
                 </button>
             </li>
@@ -137,7 +140,8 @@ asort($langsAssoc);
                     <span class="btn btn-outline-success btn-sm" id="userInfo">
                         <i class="fas fa-user me-1"></i><span id="username" class="d-lg-none d-sm-inline"></span>
                     </span>
-                    <button class="btn btn-outline-danger btn-sm" id="logoutBtn" title="<?php echo _('Logout'); ?>">
+                    <button class="btn btn-outline-danger btn-sm" id="logoutBtn"
+                            title="<?php echo htmlspecialchars(_('Logout'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                         <i class="fas fa-sign-out-alt me-1"></i><span class="d-lg-none"><?php echo _('Logout'); ?></span>
                     </button>
                 </div>
