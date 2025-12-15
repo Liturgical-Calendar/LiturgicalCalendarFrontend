@@ -638,8 +638,8 @@ test.describe('National Calendar Form - Action Buttons', () => {
         // Dismiss any toasts
         await extendingPage.dismissToasts();
 
-        // Use a patron name (can be new or existing)
-        const patronName = 'Test National Patron';
+        // Use a unique patron name to avoid conflicts across test runs
+        const patronName = `TestPatron_${Date.now()}`;
 
         // Count existing makePatron rows before
         const existingCount = await page.locator('.regionalNationalDataForm .row[data-action="makePatron"]').count();
