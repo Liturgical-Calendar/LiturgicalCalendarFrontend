@@ -46,7 +46,8 @@ if (false === file_exists($ghReleaseCacheFile) || ( time() - filemtime($ghReleas
 
 $dotenv = Dotenv::createImmutable(dirname(__DIR__), ['.env', '.env.local', '.env.development', '.env.test', '.env.staging', '.env.production'], false);
 $dotenv->safeLoad();
-$dotenv->ifPresent(['API_PROTOCOL', 'API_HOST', 'API_BASE_PATH'])->notEmpty();
+$dotenv->ifPresent(['API_PROTOCOL', 'API_HOST'])->notEmpty();
+// API_BASE_PATH can be empty for local development
 $dotenv->ifPresent(['API_PORT'])->isInteger();
 $dotenv->ifPresent(['APP_ENV'])->notEmpty()->allowedValues(['development', 'test', 'staging', 'production']);
 
