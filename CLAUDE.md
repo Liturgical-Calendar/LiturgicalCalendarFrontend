@@ -58,7 +58,7 @@ composer install
    API_PROTOCOL=http
    API_HOST=localhost
    API_PORT=8000
-   API_BASE_PATH=/
+   API_BASE_PATH=
 
    # Debug mode (enables additional logging)
    DEBUG_MODE=false
