@@ -86,14 +86,18 @@ asort($langsAssoc);
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="langChoicesDropdown" role="button"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-globe me-1"></i><span class="d-lg-none d-xxl-inline"><?php echo htmlspecialchars(Locale::getDisplayLanguage($i18n->LOCALE, $i18n->LOCALE), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
+                    <i class="fas fa-globe me-1"></i><span class="d-lg-none d-xxl-inline"><?php
+                        $currentLangDisplay = Locale::getDisplayLanguage($i18n->LOCALE, $i18n->LOCALE);
+                        echo htmlspecialchars($currentLangDisplay !== false ? $currentLangDisplay : $i18n->LOCALE, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                    ?></span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="langChoicesDropdown" id="langChoicesDropdownItems">
                     <?php
                     foreach ($langsAssoc as $key => $lang) {
-                        $classList   = substr($i18n->LOCALE, 0, 2) === $key ? 'dropdown-item active' : 'dropdown-item';
-                        $isoLang     = strtoupper($key);
-                        $displayName = Locale::getDisplayLanguage($key, 'en');
+                        $classList         = substr($i18n->LOCALE, 0, 2) === $key ? 'dropdown-item active' : 'dropdown-item';
+                        $isoLang           = strtoupper($key);
+                        $displayNameResult = Locale::getDisplayLanguage($key, 'en');
+                        $displayName       = $displayNameResult !== false ? $displayNameResult : $key;
                         // Escape all values for safe HTML output
                         $safeClass   = htmlspecialchars($classList, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                         $safeKey     = htmlspecialchars($key, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
