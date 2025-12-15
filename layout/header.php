@@ -70,8 +70,17 @@ asort($langsAssoc);
         <ul class="navbar-nav align-items-center">
             <!-- Accuracy Tests Link -->
             <li class="nav-item">
-                <a class="nav-link" href="<?php echo htmlspecialchars($_ENV['ACCURACY_TESTS_URL']); ?>" title="<?php echo _('Accuracy Tests'); ?>">
-                    <i class="fas fa-arrow-up-right-from-square me-1"></i><span class="d-lg-none d-xxl-inline"><?php echo _('Accuracy Tests'); ?></span>
+                <?php
+                $accuracyTestsUrl   = $_ENV['ACCURACY_TESTS_URL'] ?? '';
+                $accuracyTestsLabel = _('Accuracy Tests');
+                ?>
+                <a class="nav-link"
+                   href="<?php echo htmlspecialchars($accuracyTestsUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"
+                   title="<?php echo htmlspecialchars($accuracyTestsLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                    <i class="fas fa-arrow-up-right-from-square me-1"></i>
+                    <span class="d-lg-none d-xxl-inline">
+                        <?php echo htmlspecialchars($accuracyTestsLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                    </span>
                 </a>
             </li>
             <!-- GitHub Link -->
