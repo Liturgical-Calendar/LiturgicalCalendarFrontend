@@ -102,7 +102,7 @@ asort($langsAssoc);
                         $safeClass   = htmlspecialchars($classList, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                         $safeKey     = htmlspecialchars($key, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                         $safeTitle   = htmlspecialchars($displayName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-                        $safeLang    = htmlspecialchars($lang, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                        $safeLang    = htmlspecialchars($lang !== false ? $lang : $displayName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                         $safeIsoLang = htmlspecialchars($isoLang, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                         echo "<a class=\"$safeClass\" id=\"langChoice-$safeKey\" href=\"#\" title=\"$safeTitle\"><span class=\"d-none d-md-inline\">$safeLang</span><span class=\"d-inline d-md-none\">$safeIsoLang</span></a>";
                     }
