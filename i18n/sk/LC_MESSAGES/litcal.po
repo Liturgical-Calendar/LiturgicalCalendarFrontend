@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-08 13:34+0000\n"
+"POT-Creation-Date: 2025-12-15 16:09+0000\n"
 "PO-Revision-Date: 2025-12-07 09:01+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -126,7 +126,7 @@ msgstr "Parametre požiadaviek dostupné na všetkých cestách %1$s"
 msgid "General Roman Calendar"
 msgstr "Všeobecný rímsky kalendár"
 
-#: index.php:69 layout/header.php:106
+#: index.php:69 layout/header.php:16 layout/header.php:167
 msgid "Catholic Liturgical Calendar"
 msgstr "Katolícky liturgický kalendár"
 
@@ -245,7 +245,7 @@ msgstr "Úspech"
 
 #. translators: notification title
 #. translators: notification title for failed operations
-#: usage.php:13 includes/login-modal.php:565 includes/messages.php:49
+#: usage.php:13 includes/login-modal.php:582 includes/messages.php:49
 msgid "Error"
 msgstr "Chyba"
 
@@ -280,7 +280,7 @@ msgid "Example usage of the API"
 msgstr "Príklad použitia API"
 
 #. translators: accordion section header - examples of web-based calendar displays
-#: usage.php:51 layout/header.php:132
+#: usage.php:51 layout/header.php:193
 msgid "Web calendar"
 msgstr "Webový kalendár"
 
@@ -337,7 +337,7 @@ msgid "View FullCalendar (messages first)"
 msgstr "Zobraziť celý kalendár (najprv správy)"
 
 #. translators: accordion section header - subscribing to the calendar via iCal/ICS URL
-#: usage.php:125 layout/header.php:136
+#: usage.php:125 layout/header.php:197
 msgid "Calendar subscription"
 msgstr "Predplatenie kalendára"
 
@@ -535,7 +535,7 @@ msgstr ""
 "viac \"skrášlené\"."
 
 #. translators: accordion section header - Easter date calculation tool
-#: usage.php:273 layout/header.php:140
+#: usage.php:273 layout/header.php:201
 msgid "Dates of Easter"
 msgstr "Dátumy Veľkej noci"
 
@@ -555,7 +555,7 @@ msgid "Calculate the Dates of Easter"
 msgstr "Vypočítaj dátumy Veľkej noci"
 
 #. translators: accordion section header - daily liturgy information and apps
-#: usage.php:309 layout/header.php:144
+#: usage.php:309 layout/header.php:205
 msgid "Liturgy of the Day"
 msgstr "Liturgia dňa"
 
@@ -1217,59 +1217,79 @@ msgstr "Až do"
 msgid "Common (or Proper)"
 msgstr "Bežné (alebo Vlastné)"
 
-#: layout/header.php:27 layout/header.php:120
+#: layout/header.php:21
+msgid "Toggle sidebar"
+msgstr ""
+
+#: layout/header.php:36
+msgid "API"
+msgstr ""
+
+#: layout/header.php:41 layout/header.php:181
 msgid "Extending the API"
 msgstr "Rozšírenie API"
 
 #. translators: card heading for creating wider region calendar
-#: layout/header.php:30 includes/messages.php:216
+#: layout/header.php:44 includes/messages.php:216
 msgid "Create a Calendar for a Wider Region"
 msgstr "Vytvoriť kalendár pre širší región"
 
 #. translators: card heading for creating national calendar
-#: layout/header.php:31 includes/messages.php:218
+#: layout/header.php:45 includes/messages.php:218
 msgid "Create a National Calendar"
 msgstr "Vytvoriť národný kalendár"
 
 #. translators: card heading for creating diocesan calendar
-#: layout/header.php:32 includes/messages.php:220
+#: layout/header.php:46 includes/messages.php:220
 msgid "Create a Diocesan Calendar"
 msgstr "Vytvoriť diecézny kalendár"
 
-#: layout/header.php:36
+#: layout/header.php:51
 msgid "Usage"
 msgstr "Použitie"
 
-#: layout/header.php:39
+#: layout/header.php:56
 msgid "Translations"
 msgstr "Preklady"
 
-#: layout/header.php:42
+#: layout/header.php:61
 msgid "Decrees"
 msgstr "Nariadenia"
 
-#: layout/header.php:45
+#: layout/header.php:66
 msgid "About us"
 msgstr "O nás"
 
-#: layout/header.php:51 layout/header.php:53 includes/login-modal.php:56
+#: layout/header.php:75
+msgid "Accuracy Tests"
+msgstr ""
+
+#: layout/header.php:92
+msgid "See the project repositories on GitHub"
+msgstr ""
+
+#: layout/header.php:129 layout/header.php:130
+msgid "Admin"
+msgstr ""
+
+#: layout/header.php:136 layout/header.php:137 includes/login-modal.php:56
 #: includes/login-modal.php:342
 msgid "Login"
 msgstr "Prihlásenie"
 
-#: layout/header.php:60 layout/header.php:62 includes/login-modal.php:12
+#: layout/header.php:146 layout/header.php:147 includes/login-modal.php:12
 msgid "Logout"
 msgstr "Odhlásenie"
 
-#: layout/header.php:112
+#: layout/header.php:173
 msgid "Home"
 msgstr "Domov"
 
-#: layout/header.php:124
+#: layout/header.php:185
 msgid "Documentation"
 msgstr "Dokumentácia"
 
-#: layout/header.php:128
+#: layout/header.php:189
 msgid "Examples of Usage"
 msgstr "Príklady použitia"
 
@@ -1314,7 +1334,7 @@ msgstr "Nie je možné overiť stav overenia. Server môže byť nedostupný."
 msgid "Connection Issue"
 msgstr "Problém s pripojením"
 
-#: includes/login-modal.php:126 includes/login-modal.php:598
+#: includes/login-modal.php:126 includes/login-modal.php:615
 msgid "Are you sure you want to logout?"
 msgstr "Naozaj sa chceš odhlásiť?"
 
@@ -1338,7 +1358,7 @@ msgstr "Prihlásenie úspešné"
 msgid "Login failed. Please check your credentials."
 msgstr "Prihlásenie zlyhalo. Skontrolujte svoje prihlasovacie údaje."
 
-#: includes/login-modal.php:468 includes/login-modal.php:473
+#: includes/login-modal.php:485 includes/login-modal.php:490
 #, php-format
 msgid "Your session will expire in less than %d minute."
 msgid_plural "Your session will expire in less than %d minutes."
@@ -1346,27 +1366,27 @@ msgstr[0] "Vaša relácia vyprší za menej ako %d minútu."
 msgstr[1] "Vaša relácia vyprší za menej ako %d minúty."
 msgstr[2] "Vaša relácia vyprší za menej ako %d minút."
 
-#: includes/login-modal.php:532
+#: includes/login-modal.php:549
 msgid "Extending..."
 msgstr "Predlžujem..."
 
-#: includes/login-modal.php:554
+#: includes/login-modal.php:571
 msgid "Your session has been extended."
 msgstr "Vaša relácia bola predĺžená."
 
-#: includes/login-modal.php:555
+#: includes/login-modal.php:572
 msgid "Session Extended"
 msgstr "Relácia predĺžená"
 
-#: includes/login-modal.php:564
+#: includes/login-modal.php:581
 msgid "Failed to extend session. Please login again."
 msgstr "Nepodarilo sa predĺžiť reláciu. Prosím, prihláste sa znova."
 
-#: includes/login-modal.php:628
+#: includes/login-modal.php:645
 msgid "Your session has expired. Please login again."
 msgstr "Vaša relácia vypršala. Prosím, prihláste sa znova."
 
-#: includes/login-modal.php:629
+#: includes/login-modal.php:646
 msgid "Session Expired"
 msgstr "Relácia vypršala"
 

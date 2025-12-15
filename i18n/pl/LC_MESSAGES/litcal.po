@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-08 13:34+0000\n"
+"POT-Creation-Date: 2025-12-15 16:09+0000\n"
 "PO-Revision-Date: 2025-12-07 09:01+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
@@ -126,7 +126,7 @@ msgstr "Dostępne parametry żądania na wszystkich ścieżkach %1$s"
 msgid "General Roman Calendar"
 msgstr "Kalendarz Rzymski Powszechny"
 
-#: index.php:69 layout/header.php:106
+#: index.php:69 layout/header.php:16 layout/header.php:167
 msgid "Catholic Liturgical Calendar"
 msgstr "Katolicki kalendarz liturgiczny"
 
@@ -247,7 +247,7 @@ msgstr "Sukces"
 
 #. translators: notification title
 #. translators: notification title for failed operations
-#: usage.php:13 includes/login-modal.php:565 includes/messages.php:49
+#: usage.php:13 includes/login-modal.php:582 includes/messages.php:49
 msgid "Error"
 msgstr "Błąd"
 
@@ -282,7 +282,7 @@ msgid "Example usage of the API"
 msgstr "Przykładowe użycie API"
 
 #. translators: accordion section header - examples of web-based calendar displays
-#: usage.php:51 layout/header.php:132
+#: usage.php:51 layout/header.php:193
 msgid "Web calendar"
 msgstr "Kalendarz internetowy"
 
@@ -339,7 +339,7 @@ msgid "View FullCalendar (messages first)"
 msgstr "Zobacz FullCalendar (najpierw wiadomości)"
 
 #. translators: accordion section header - subscribing to the calendar via iCal/ICS URL
-#: usage.php:125 layout/header.php:136
+#: usage.php:125 layout/header.php:197
 msgid "Calendar subscription"
 msgstr "Subskrypcja kalendarza"
 
@@ -539,7 +539,7 @@ msgstr ""
 "\"upiększone\" dla Outlooka."
 
 #. translators: accordion section header - Easter date calculation tool
-#: usage.php:273 layout/header.php:140
+#: usage.php:273 layout/header.php:201
 msgid "Dates of Easter"
 msgstr "Daty Wielkanocy"
 
@@ -559,7 +559,7 @@ msgid "Calculate the Dates of Easter"
 msgstr "Oblicz daty Wielkanocy"
 
 #. translators: accordion section header - daily liturgy information and apps
-#: usage.php:309 layout/header.php:144
+#: usage.php:309 layout/header.php:205
 msgid "Liturgy of the Day"
 msgstr "Liturgia dnia"
 
@@ -1228,59 +1228,79 @@ msgstr "Do"
 msgid "Common (or Proper)"
 msgstr "Wspólne (lub Własne)"
 
-#: layout/header.php:27 layout/header.php:120
+#: layout/header.php:21
+msgid "Toggle sidebar"
+msgstr ""
+
+#: layout/header.php:36
+msgid "API"
+msgstr ""
+
+#: layout/header.php:41 layout/header.php:181
 msgid "Extending the API"
 msgstr "Rozszerzanie API"
 
 #. translators: card heading for creating wider region calendar
-#: layout/header.php:30 includes/messages.php:216
+#: layout/header.php:44 includes/messages.php:216
 msgid "Create a Calendar for a Wider Region"
 msgstr "Utwórz kalendarz dla szerszego regionu"
 
 #. translators: card heading for creating national calendar
-#: layout/header.php:31 includes/messages.php:218
+#: layout/header.php:45 includes/messages.php:218
 msgid "Create a National Calendar"
 msgstr "Utwórz kalendarz narodowy"
 
 #. translators: card heading for creating diocesan calendar
-#: layout/header.php:32 includes/messages.php:220
+#: layout/header.php:46 includes/messages.php:220
 msgid "Create a Diocesan Calendar"
 msgstr "Utwórz kalendarz diecezjalny"
 
-#: layout/header.php:36
+#: layout/header.php:51
 msgid "Usage"
 msgstr "Użycie"
 
-#: layout/header.php:39
+#: layout/header.php:56
 msgid "Translations"
 msgstr "Tłumaczenia"
 
-#: layout/header.php:42
+#: layout/header.php:61
 msgid "Decrees"
 msgstr "Dekrety"
 
-#: layout/header.php:45
+#: layout/header.php:66
 msgid "About us"
 msgstr "O nas"
 
-#: layout/header.php:51 layout/header.php:53 includes/login-modal.php:56
+#: layout/header.php:75
+msgid "Accuracy Tests"
+msgstr ""
+
+#: layout/header.php:92
+msgid "See the project repositories on GitHub"
+msgstr ""
+
+#: layout/header.php:129 layout/header.php:130
+msgid "Admin"
+msgstr ""
+
+#: layout/header.php:136 layout/header.php:137 includes/login-modal.php:56
 #: includes/login-modal.php:342
 msgid "Login"
 msgstr "Zaloguj się"
 
-#: layout/header.php:60 layout/header.php:62 includes/login-modal.php:12
+#: layout/header.php:146 layout/header.php:147 includes/login-modal.php:12
 msgid "Logout"
 msgstr "Wyloguj się"
 
-#: layout/header.php:112
+#: layout/header.php:173
 msgid "Home"
 msgstr "Strona główna"
 
-#: layout/header.php:124
+#: layout/header.php:185
 msgid "Documentation"
 msgstr "Dokumentacja"
 
-#: layout/header.php:128
+#: layout/header.php:189
 msgid "Examples of Usage"
 msgstr "Przykłady użycia"
 
@@ -1326,7 +1346,7 @@ msgstr ""
 msgid "Connection Issue"
 msgstr "Problem z połączeniem"
 
-#: includes/login-modal.php:126 includes/login-modal.php:598
+#: includes/login-modal.php:126 includes/login-modal.php:615
 msgid "Are you sure you want to logout?"
 msgstr "Czy na pewno chcesz się wylogować?"
 
@@ -1350,7 +1370,7 @@ msgstr "Logowanie zakończone sukcesem"
 msgid "Login failed. Please check your credentials."
 msgstr "Logowanie nieudane. Proszę sprawdzić swoje dane."
 
-#: includes/login-modal.php:468 includes/login-modal.php:473
+#: includes/login-modal.php:485 includes/login-modal.php:490
 #, php-format
 msgid "Your session will expire in less than %d minute."
 msgid_plural "Your session will expire in less than %d minutes."
@@ -1358,27 +1378,27 @@ msgstr[0] "Twoja sesja wygaśnie za mniej niż %d minutę."
 msgstr[1] "Twoja sesja wygaśnie za mniej niż %d minuty."
 msgstr[2] "Twoja sesja wygaśnie za mniej niż %d minut."
 
-#: includes/login-modal.php:532
+#: includes/login-modal.php:549
 msgid "Extending..."
 msgstr "Przedłużanie..."
 
-#: includes/login-modal.php:554
+#: includes/login-modal.php:571
 msgid "Your session has been extended."
 msgstr "Twoja sesja została przedłużona."
 
-#: includes/login-modal.php:555
+#: includes/login-modal.php:572
 msgid "Session Extended"
 msgstr "Sesja przedłużona"
 
-#: includes/login-modal.php:564
+#: includes/login-modal.php:581
 msgid "Failed to extend session. Please login again."
 msgstr "Nie udało się przedłużyć sesji. Proszę zalogować się ponownie."
 
-#: includes/login-modal.php:628
+#: includes/login-modal.php:645
 msgid "Your session has expired. Please login again."
 msgstr "Twoja sesja wygasła. Proszę zalogować się ponownie."
 
-#: includes/login-modal.php:629
+#: includes/login-modal.php:646
 msgid "Session Expired"
 msgstr "Sesja wygasła"
 
