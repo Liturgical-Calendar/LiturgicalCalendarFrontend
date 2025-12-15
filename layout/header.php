@@ -69,12 +69,13 @@ asort($langsAssoc);
         </ul>
         <!-- Right side items -->
         <ul class="navbar-nav align-items-center">
+            <?php
+            $accuracyTestsUrl = $_ENV['ACCURACY_TESTS_URL'] ?? '';
+            if (!empty($accuracyTestsUrl)) {
+                $accuracyTestsLabel = _('Accuracy Tests');
+            ?>
             <!-- Accuracy Tests Link -->
             <li class="nav-item">
-                <?php
-                $accuracyTestsUrl   = $_ENV['ACCURACY_TESTS_URL'] ?? '';
-                $accuracyTestsLabel = _('Accuracy Tests');
-                ?>
                 <a class="nav-link"
                    href="<?php echo htmlspecialchars($accuracyTestsUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"
                    title="<?php echo htmlspecialchars($accuracyTestsLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
@@ -84,6 +85,7 @@ asort($langsAssoc);
                     </span>
                 </a>
             </li>
+            <?php } ?>
             <!-- GitHub Link -->
             <li class="nav-item">
                 <a class="nav-link" href="https://github.com/Liturgical-Calendar/" target="_blank"
