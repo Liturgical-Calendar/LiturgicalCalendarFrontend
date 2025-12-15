@@ -221,8 +221,10 @@ test.describe('Admin Page - Action Buttons (Decrees)', () => {
         const submitButton = page.locator('#setPropertyButton');
         await expect(submitButton).toBeEnabled();
 
-        // Close modal
-        await page.keyboard.press('Escape');
+        // Close modal by clicking the X button
+        const modal = page.locator('#setPropertyActionPrompt');
+        await modal.locator('button.btn-close').click();
+        await expect(modal).not.toHaveClass(/show/, { timeout: 5000 });
     });
 
     test('Move Event modal should enable submit when valid event selected', async ({ page, extendingPage }) => {
@@ -257,8 +259,10 @@ test.describe('Admin Page - Action Buttons (Decrees)', () => {
         const submitButton = page.locator('#moveLiturgicalEventButton');
         await expect(submitButton).toBeEnabled();
 
-        // Close modal
-        await page.keyboard.press('Escape');
+        // Close modal by clicking the X button
+        const modal = page.locator('#moveLiturgicalEventActionPrompt');
+        await modal.locator('button.btn-close').click();
+        await expect(modal).not.toHaveClass(/show/, { timeout: 5000 });
     });
 
     test('Designate Doctor modal should enable submit when valid event selected', async ({ page, extendingPage }) => {
@@ -296,6 +300,7 @@ test.describe('Admin Page - Action Buttons (Decrees)', () => {
         // Close modal by clicking the X button
         const modal = page.locator('#makeDoctorActionPrompt');
         await modal.locator('button.btn-close').click();
+        await expect(modal).not.toHaveClass(/show/, { timeout: 5000 });
     });
 });
 
