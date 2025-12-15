@@ -6,7 +6,9 @@
         <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpaceBeforeEquals"/>
         <exclude name="Generic.WhiteSpace.ScopeIndent.IncorrectExact"/>
     </rule>
-    <rule ref="Generic.Formatting.MultipleStatementAlignment"/>
+    <rule ref="Generic.Formatting.MultipleStatementAlignment">
+        <type>error</type>
+    </rule>
     <rule ref="Generic.WhiteSpace.ArbitraryParenthesesSpacing">
         <properties>
             <property name="ignoreNewlines" value="true" />

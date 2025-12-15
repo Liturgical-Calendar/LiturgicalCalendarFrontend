@@ -7,16 +7,8 @@
     table-layout: fixed;
 }
 
-#jsonDataTbl:not(.propriumDeTempore,.nationalCalendar) > thead > tr > th:nth-child(6),
-#jsonDataTbl:not(.propriumDeTempore,.nationalCalendar) > tbody > tr > td:nth-child(6),
-#jsonDataTbl.nationalCalendar > thead > tr > th:nth-child(4),
-#jsonDataTbl.nationalCalendar > tbody > tr > td:nth-child(4),
-#jsonDataTbl.nationalCalendar > thead > tr > th:nth-child(6),
-#jsonDataTbl.nationalCalendar > tbody > tr > td:nth-child(6),
-#jsonDataTbl.nationalCalendar > thead > tr > th:nth-child(8),
-#jsonDataTbl.nationalCalendar > tbody > tr > td:nth-child(8) {
-    visibility: hidden;
-}
+/* Note: "calendar" column is now filtered out from data in PHP/JS,
+   so we no longer need CSS to hide it */
 
 #jsonDataTbl table tr:first-child td {
     border-top: 0;

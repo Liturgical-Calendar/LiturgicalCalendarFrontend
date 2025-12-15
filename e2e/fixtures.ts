@@ -549,6 +549,146 @@ export class ExtendingPageHelper {
     }
 
     /**
+     * Private helper to open a modal, fill event name, and submit.
+     * Consolidates common modal interaction logic.
+     * @param config - Modal configuration options
+     */
+    private async openModalAndSubmit(config: {
+        modalId: string;
+        submitButtonId: string;
+        rowAction: string;
+        eventName: string;
+        formSelector: string;
+        additionalSetup?: () => Promise<void>;
+    }): Promise<void> {
+        const { modalId, submitButtonId, rowAction, eventName, formSelector, additionalSetup } = config;
+
+        // Open the modal programmatically via Bootstrap API
+        const modalOpened = await this.page.evaluate((id) => {
+            const modalEl = document.querySelector(id);
+            if (!modalEl) {
+                console.error(`Modal element ${id} not found in DOM`);
+                return false;
+            }
+            // @ts-ignore - bootstrap is a global
+            if (typeof bootstrap === 'undefined') {
+                console.error('Bootstrap is not available');
+                return false;
+            }
+            // @ts-ignore - bootstrap is a global
+            const modal = new bootstrap.Modal(modalEl);
+            modal.show();
+            return true;
+        }, modalId);
+
+        if (!modalOpened) {
+            throw new Error(`Failed to open ${modalId} modal`);
+        }
+        await this.page.waitForSelector(`${modalId}.show`, { timeout: 5000 });
+        console.log(`${modalId} modal opened`);
+
+        // Fill in the event name
+        const eventInput = this.page.locator(`${modalId} .existingLiturgicalEventName`);
+        await eventInput.fill(eventName);
+        await eventInput.dispatchEvent('change');
+        console.log(`Entered event name: ${eventName}`);
+
+        // Run additional setup if provided (e.g., property selection)
+        if (additionalSetup) {
+            await additionalSetup();
+        }
+
+        // Wait for submit button to be enabled
+        await this.page.waitForFunction((btnId) => {
+            const btn = document.querySelector(btnId) as HTMLButtonElement | null;
+            return btn && !btn.disabled;
+        }, submitButtonId, { timeout: 10000 });
+
+        // Click submit button
+        await this.page.click(submitButtonId);
+
+        // Wait for modal to close and row to appear
+        await this.page.waitForSelector(`${modalId}.show`, { state: 'hidden', timeout: 5000 });
+        console.log(`Modal closed, waiting for ${rowAction} row...`);
+
+        await this.page.waitForSelector(`${formSelector} .row[data-action="${rowAction}"]`, { timeout: 5000 });
+        console.log(`${rowAction} row created`);
+    }
+
+    /**
+     * Set property of an existing liturgical event via the modal dialog.
+     * Opens the modal, selects an existing event, chooses the property to change,
+     * and waits for the new row to appear.
+     * @param existingEventName - The name of an existing event from the datalist
+     * @param property - The property to change: 'name' or 'grade'
+     * @param formSelector - CSS selector for the form where the row will appear
+     * @returns Promise that resolves when the setProperty row is created
+     */
+    async setPropertyViaModal(existingEventName: string, property: 'name' | 'grade' = 'name', formSelector = '.regionalNationalDataForm'): Promise<void> {
+        await this.openModalAndSubmit({
+            modalId: '#setPropertyActionPrompt',
+            submitButtonId: '#setPropertyButton',
+            rowAction: 'setProperty',
+            eventName: existingEventName,
+            formSelector,
+            additionalSetup: async () => {
+                const propertySelect = this.page.locator('#setPropertyActionPrompt [name="propertyToChange"]');
+                await propertySelect.selectOption(property);
+                console.log(`Selected property to change: ${property}`);
+            }
+        });
+    }
+
+    /**
+     * Move an existing liturgical event via the modal dialog.
+     * Opens the modal, selects an existing event, and waits for the new row to appear.
+     * @param existingEventName - The name of an existing event from the datalist
+     * @param formSelector - CSS selector for the form where the row will appear
+     * @returns Promise that resolves when the moveFeast row is created
+     */
+    async moveEventViaModal(existingEventName: string, formSelector = '.regionalNationalDataForm'): Promise<void> {
+        await this.openModalAndSubmit({
+            modalId: '#moveLiturgicalEventActionPrompt',
+            submitButtonId: '#moveLiturgicalEventButton',
+            rowAction: 'moveEvent',
+            eventName: existingEventName,
+            formSelector
+        });
+    }
+
+    /**
+     * Designate an existing liturgical event as a patron via the modal dialog.
+     * Opens the modal, enters the event name, and waits for the new row to appear.
+     * @param eventName - The name for the patron event (can be new or existing)
+     * @param formSelector - CSS selector for the form where the row will appear
+     * @returns Promise that resolves when the makePatron row is created
+     */
+    async makePatronViaModal(eventName: string, formSelector = '.regionalNationalDataForm'): Promise<void> {
+        await this.openModalAndSubmit({
+            modalId: '#makePatronActionPrompt',
+            submitButtonId: '#designatePatronButton',
+            rowAction: 'makePatron',
+            eventName,
+            formSelector
+        });
+    }
+
+    /**
+     * Get a random event name from the existing liturgical events datalist.
+     * @returns Promise that resolves to an event name, or null if none available
+     */
+    async getRandomExistingEventName(): Promise<string | null> {
+        return this.page.evaluate(() => {
+            const datalist = document.querySelector('#existingLiturgicalEventsList');
+            if (!datalist) return null;
+            const options = datalist.querySelectorAll('option[value]');
+            if (options.length === 0) return null;
+            const randomIndex = Math.floor(Math.random() * options.length);
+            return options[randomIndex].getAttribute('value');
+        });
+    }
+
+    /**
      * Create a new liturgical event via the modal dialog.
      * Opens the modal programmatically, enters the event name, clicks the appropriate submit button,
      * and waits for the new row to appear.

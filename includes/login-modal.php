@@ -357,15 +357,15 @@ async function handleLogin() {
  */
 function updateNavbarAuthUI() {
     const isAuth = Auth.isAuthenticated();
-    const loginBtn = document.getElementById('loginBtn');
-    const userMenu = document.getElementById('userMenu');
+    const loginBtnContainer = document.getElementById('loginBtnContainer');
+    const userMenuContainer = document.getElementById('userMenuContainer');
 
     if (isAuth) {
-        if (loginBtn) {
-            loginBtn.classList.add('d-none');
+        if (loginBtnContainer) {
+            loginBtnContainer.classList.add('d-none');
         }
-        if (userMenu) {
-            userMenu.classList.remove('d-none');
+        if (userMenuContainer) {
+            userMenuContainer.classList.remove('d-none');
         }
 
         // Display username
@@ -375,24 +375,30 @@ function updateNavbarAuthUI() {
             usernameElement.textContent = username || 'Admin';
         }
     } else {
-        if (loginBtn) {
-            loginBtn.classList.remove('d-none');
+        if (loginBtnContainer) {
+            loginBtnContainer.classList.remove('d-none');
         }
-        if (userMenu) {
-            userMenu.classList.add('d-none');
+        if (userMenuContainer) {
+            userMenuContainer.classList.add('d-none');
         }
     }
 }
 
 /**
- * Initialize permission-based UI elements marked with data-requires-auth attribute.
+ * Initialize permission-based UI elements.
  *
- * Handles three types of elements differently:
+ * Handles elements with data-requires-auth (visible when authenticated) and
+ * data-requires-no-auth (visible when NOT authenticated).
+ *
+ * For data-requires-auth elements, handles three types differently:
  * - FORM elements: Toggles opacity-50 class and disables/enables all child form controls
  *   (skipping controls that have their own data-requires-auth attribute)
  * - Form controls (INPUT, SELECT, TEXTAREA): Only disables when logged out; does NOT
  *   enable when logged in, leaving domain-specific code to manage enabled state
  * - Other elements (buttons, divs): Toggles d-none class for visibility
+ *
+ * For data-requires-no-auth elements:
+ * - Shows when NOT authenticated, hides when authenticated
  *
  * This is separate from updateNavbarAuthUI() which handles navbar login/logout buttons.
  * Call both functions together after any auth state change.
@@ -411,10 +417,11 @@ function initPermissionUI() {
         return;
     }
 
-    const protectedElements = document.querySelectorAll('[data-requires-auth]');
     const isAuth = Auth.isAuthenticated();
     const formControlTags = ['INPUT', 'SELECT', 'TEXTAREA'];
 
+    // Handle data-requires-auth elements (visible when authenticated)
+    const protectedElements = document.querySelectorAll('[data-requires-auth]');
     protectedElements.forEach(el => {
         if (el.tagName === 'FORM') {
             // For forms, disable/enable all form controls inside
@@ -449,6 +456,16 @@ function initPermissionUI() {
             } else {
                 el.classList.add('d-none');
             }
+        }
+    });
+
+    // Handle data-requires-no-auth elements (visible when NOT authenticated)
+    const noAuthElements = document.querySelectorAll('[data-requires-no-auth]');
+    noAuthElements.forEach(el => {
+        if (isAuth) {
+            el.classList.add('d-none');
+        } else {
+            el.classList.remove('d-none');
         }
     });
 }
