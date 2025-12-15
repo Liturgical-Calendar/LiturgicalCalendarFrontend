@@ -7,10 +7,11 @@ include_once(dirname(__DIR__) . '/vendor/autoload.php');
 use Dotenv\Dotenv;
 
 // Load environment variables
-$dotenv = Dotenv::createImmutable(dirname(__DIR__), ['.env', '.env.local', '.env.development', '.env.staging', '.env.production'], false);
+$dotenv = Dotenv::createImmutable(dirname(__DIR__), ['.env', '.env.local', '.env.development', '.env.test', '.env.staging', '.env.production'], false);
+$dotenv->safeLoad();
 $dotenv->ifPresent(['API_PROTOCOL', 'API_HOST', 'API_BASE_PATH'])->notEmpty();
 $dotenv->ifPresent(['API_PORT'])->isInteger();
-$dotenv->safeLoad();
+$dotenv->ifPresent(['APP_ENV'])->notEmpty()->allowedValues(['development', 'test', 'staging', 'production']);
 
 // Set default environment variables if not already set
 $_ENV['API_PROTOCOL']  = $_ENV['API_PROTOCOL'] ?? 'https';
