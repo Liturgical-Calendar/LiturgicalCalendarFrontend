@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-15 16:09+0000\n"
-"PO-Revision-Date: 2025-12-07 08:41+0000\n"
+"PO-Revision-Date: 2025-12-16 15:50+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pt/>\n"
@@ -1236,11 +1236,11 @@ msgstr "Comum (ou Próprio)"
 
 #: layout/header.php:21
 msgid "Toggle sidebar"
-msgstr ""
+msgstr "Alternar barra lateral"
 
 #: layout/header.php:36
 msgid "API"
-msgstr ""
+msgstr "API"
 
 #: layout/header.php:41 layout/header.php:181
 msgid "Extending the API"
@@ -1279,15 +1279,15 @@ msgstr "Sobre nós"
 
 #: layout/header.php:75
 msgid "Accuracy Tests"
-msgstr ""
+msgstr "Testes de precisão"
 
 #: layout/header.php:92
 msgid "See the project repositories on GitHub"
-msgstr ""
+msgstr "Veja os repositórios do projeto no GitHub"
 
 #: layout/header.php:129 layout/header.php:130
 msgid "Admin"
-msgstr ""
+msgstr "Administração"
 
 #: layout/header.php:136 layout/header.php:137 includes/login-modal.php:56
 #: includes/login-modal.php:342
