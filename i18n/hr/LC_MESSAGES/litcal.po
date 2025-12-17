@@ -4,13 +4,14 @@
 # Lovro <development.lovro@gmail.com>, 2025.
 # OpenAI <noreply-mt-openai@weblate.org>, 2025.
 # "John R. D'Orazio" <priest@johnromanodorazio.com>, 2025.
+# Weblate Admin <admin@example.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-17 21:12+0000\n"
-"PO-Revision-Date: 2025-12-16 15:50+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2025-12-17 21:16+0000\n"
+"Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
 "Language: hr\n"
@@ -1426,10 +1427,8 @@ msgstr "Odaberite JSON datoteku za upravljanje"
 
 #. translators: form field label for selecting data source in admin
 #: includes/messages.php:41
-#, fuzzy
-#| msgid "Select calendar"
 msgid "Select data source"
-msgstr "Odaberite kalendar"
+msgstr "Odaberite izvor podataka"
 
 #. translators: form field label for year the decree takes effect
 #: includes/messages.php:43
