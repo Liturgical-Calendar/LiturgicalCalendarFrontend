@@ -23,11 +23,11 @@ Object.filter = (obj, predicate) =>
 
 $(document).on('click', '.sidebarToggle', event => {
     event.preventDefault();
-    if(document.body.classList.contains('sb-sidenav-collapsed') ) {
-        $('.sidebarToggle i').removeClass('fa-angle-right').addClass('fa-angle-left');
-    }
-    else {
-        $('.sidebarToggle i').removeClass('fa-angle-left').addClass('fa-angle-right');
-    }
+    // Only toggle icon direction for buttons with angle icons (sidebar bottom button)
+    // Leave the fa-table-columns icon (topnav button) unchanged
+    const isCollapsed = document.body.classList.contains('sb-sidenav-collapsed');
+    $('.sidebarToggle i.fa-angle-left, .sidebarToggle i.fa-angle-right')
+        .removeClass(isCollapsed ? 'fa-angle-right' : 'fa-angle-left')
+        .addClass(isCollapsed ? 'fa-angle-left' : 'fa-angle-right');
     document.body.classList.toggle('sb-sidenav-collapsed');
 });

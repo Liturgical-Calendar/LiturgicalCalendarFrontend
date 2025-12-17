@@ -44,17 +44,20 @@ if (false === file_exists($ghReleaseCacheFile) || ( time() - filemtime($ghReleas
     }
 }
 
-$dotenv = Dotenv::createImmutable(dirname(__DIR__), ['.env', '.env.local', '.env.development', '.env.staging', '.env.production'], false);
-$dotenv->ifPresent(['API_PROTOCOL', 'API_HOST', 'API_BASE_PATH'])->notEmpty();
-$dotenv->ifPresent(['API_PORT'])->isInteger();
+$dotenv = Dotenv::createImmutable(dirname(__DIR__), ['.env', '.env.local', '.env.development', '.env.test', '.env.staging', '.env.production'], false);
 $dotenv->safeLoad();
+$dotenv->ifPresent(['API_PROTOCOL', 'API_HOST'])->notEmpty();
+// API_BASE_PATH can be empty for local development
+$dotenv->ifPresent(['API_PORT'])->isInteger();
+$dotenv->ifPresent(['APP_ENV'])->notEmpty()->allowedValues(['development', 'test', 'staging', 'production']);
 
 // Set default environment variables if not already set
-$debugMode             = filter_var($_ENV['DEBUG_MODE'] ?? 'false', FILTER_VALIDATE_BOOLEAN);
-$_ENV['API_PROTOCOL']  = $_ENV['API_PROTOCOL'] ?? 'https';
-$_ENV['API_HOST']      = $_ENV['API_HOST'] ?? 'litcal.johnromanodorazio.com';
-$_ENV['API_PORT']      = $_ENV['API_PORT'] ?? '';
-$_ENV['API_BASE_PATH'] = $_ENV['API_BASE_PATH'] ?? '/api/dev';
+$debugMode                  = filter_var($_ENV['DEBUG_MODE'] ?? 'false', FILTER_VALIDATE_BOOLEAN);
+$_ENV['API_PROTOCOL']       = $_ENV['API_PROTOCOL'] ?? 'https';
+$_ENV['API_HOST']           = $_ENV['API_HOST'] ?? 'litcal.johnromanodorazio.com';
+$_ENV['API_PORT']           = $_ENV['API_PORT'] ?? '';
+$_ENV['API_BASE_PATH']      = $_ENV['API_BASE_PATH'] ?? '/api/dev';
+$_ENV['ACCURACY_TESTS_URL'] = $_ENV['ACCURACY_TESTS_URL'] ?? 'https://litcal-tests.johnromanodorazio.com';
 
 // Build Base API URL
 $apiPort    = !empty($_ENV['API_PORT']) ? ":{$_ENV['API_PORT']}" : '';

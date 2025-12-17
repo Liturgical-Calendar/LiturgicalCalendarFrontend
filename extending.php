@@ -622,10 +622,6 @@ let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($Liturgi
 </script>
 <?php include_once('./layout/footer.php'); ?>
 
-<!-- Authentication Module -->
-<script src="assets/js/auth.js"></script>
-<?php include_once('./includes/login-modal.php'); ?>
-
 <!-- DEFINE MAKE PATRON MODAL  -->
 <?php Utilities::generateActionPromptModal(
     'makePatronActionPrompt',

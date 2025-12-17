@@ -2,6 +2,10 @@ import {
     LiturgicalEvent
 } from './LiturgicalEvent.js';
 
+import {
+    escapeHtml
+} from './templates.js';
+
 
 /**
  * An enumeration of the months of the year.
@@ -947,7 +951,7 @@ class FormControls {
         }
 
         if (FormControls.title !== null) {
-            formRow += `<hr><div class="mt-4 d-flex justify-content-left"><h4 class="data-group-title">${FormControls.title}</h4>`;
+            formRow += `<hr><div class="mt-4 d-flex justify-content-left"><h4 class="data-group-title">${escapeHtml(FormControls.title)}</h4>`;
             if(FormControls.action === RowAction.CreateNew) {
                 if( 'strtotime' in liturgical_event ) {
                     formRow += `<button type="button" class="ms-auto btn btn-info strtotime-toggle-btn active" data-toggle="button" data-row-uniqid="${FormControls.uniqid}" aria-pressed="true" autocomplete="off"><i class="fas fa-comment me-2"></i>relative date</button>`;
@@ -962,24 +966,24 @@ class FormControls {
 
         formRow += `<div class="form-group col-sm-6">`;
         if(FormControls.settings.eventKeyField === false){
-            formRow += `<input type="hidden" class="litEventEventKey" id="onTheFly${FormControls.uniqid}EventKey" value="${liturgical_event.event_key ?? ''}" />`;
+            formRow += `<input type="hidden" class="litEventEventKey" id="onTheFly${FormControls.uniqid}EventKey" value="${escapeHtml(liturgical_event.event_key ?? '')}" />`;
         }
         formRow += `<label for="onTheFly${FormControls.uniqid}Name">${Messages[ "Name" ]}</label>
-        <input type="text" class="form-control litEvent litEventName${typeof liturgical_event.name==='undefined' ? ` is-invalid` : ``}" id="onTheFly${FormControls.uniqid}Name" value="${liturgical_event.name ?? ''}"${FormControls.settings.nameField === false ? ' readonly' : ''} />
+        <input type="text" class="form-control litEvent litEventName${typeof liturgical_event.name==='undefined' ? ` is-invalid` : ``}" id="onTheFly${FormControls.uniqid}Name" value="${escapeHtml(liturgical_event.name ?? '')}"${FormControls.settings.nameField === false ? ' readonly' : ''} />
         <div class="invalid-feedback">There is no locale data for this celebration in the current locale. Perhaps try a different locale?.</div>
         </div>`;
 
         if (FormControls.settings.fromYearField) {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}FromYear">${Messages[ "Since" ]}</label>
-            <input type="number" min="1582" max="9999" class="form-control litEvent litEventFromYear" id="onTheFly${FormControls.uniqid}FromYear" value="${liturgical_event.since_year ?? ''}" />
+            <input type="number" min="1582" max="9999" class="form-control litEvent litEventFromYear" id="onTheFly${FormControls.uniqid}FromYear" value="${escapeHtml(liturgical_event.since_year ?? '')}" />
             </div>`;
         }
 
         if (FormControls.settings.untilYearField) {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}UntilYear">${Messages[ "Until" ]}</label>
-            <input type="number" min="1582" max="9999" class="form-control litEvent litEventUntilYear" id="onTheFly${FormControls.uniqid}UntilYear" value="${liturgical_event.until_year ?? ''}" />
+            <input type="number" min="1582" max="9999" class="form-control litEvent litEventUntilYear" id="onTheFly${FormControls.uniqid}UntilYear" value="${escapeHtml(liturgical_event.until_year ?? '')}" />
             </div>`;
         }
 
@@ -1003,12 +1007,12 @@ class FormControls {
                 <option value="before"${liturgical_event.strtotime.relative_time === 'before' ? ' selected' : ''}>before</option>
                 <option value="after"${liturgical_event.strtotime.relative_time === 'after' ? ' selected' : ''}>after</option>
             </select>
-            <input list="existingLiturgicalEventsList" value="${liturgical_event.strtotime.liturgical_event_key}" class="form-control litEvent litEventStrtotime existingLiturgicalEventName" id="onTheFly${FormControls.uniqid}StrToTime-festivityKey" required>
+            <input list="existingLiturgicalEventsList" value="${escapeHtml(liturgical_event.strtotime.event_key ?? '')}" class="form-control litEvent litEventStrtotime existingLiturgicalEventName" id="onTheFly${FormControls.uniqid}StrToTime-eventKey" required>
             </div>`;
         } else {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}Day">${Messages[ "Day" ]}</label>
-            <input type="number" min="1" max="31" value="${liturgical_event?.day ?? ''}" class="form-control litEvent litEventDay" id="onTheFly${FormControls.uniqid}Day"${FormControls.settings.dayField === false ? ' disabled' : ''} />
+            <input type="number" min="1" max="31" value="${escapeHtml(liturgical_event?.day ?? '')}" class="form-control litEvent litEventDay" id="onTheFly${FormControls.uniqid}Day"${FormControls.settings.dayField === false ? ' disabled' : ''} />
             </div>`;
 
             formRow += `<div class="form-group col-sm-1">
@@ -1020,7 +1024,7 @@ class FormControls {
         if (FormControls.settings.eventKeyField) {
             formRow += `<div class="form-group col-sm-2">
             <label for="onTheFly${FormControls.uniqid}EventKey">${Messages[ "EventKey" ]}</label>
-            <input type="text" value="${liturgical_event.event_key ?? ''}" class="form-control litEvent litEventEventKey" id="onTheFly${FormControls.uniqid}EventKey" />
+            <input type="text" value="${escapeHtml(liturgical_event.event_key ?? '')}" class="form-control litEvent litEventEventKey" id="onTheFly${FormControls.uniqid}EventKey" />
             </div>`;
         }
 
@@ -1035,26 +1039,26 @@ class FormControls {
         if (FormControls.settings.readingsFieldShow) {
             const hasProper = liturgical_event?.common?.includes('Proper') === true;
             formRow += `<div class="col-sm-5"><table>`;
-            formRow += readingsProperties.map((prop,idx) => `<tr><td><label for="onTheFly${FormControls.uniqid}Readings_${prop}">${prop}</label></td><td style="padding-left: 15px;"><input type="text" class="form-control litEvent litEventReadings litEventReadings_${prop}" id="onTheFly${FormControls.uniqid}Readings_${prop}" ${hasProper ? '' : 'disabled'} value="${hasProper ? (liturgical_event?.readings?.[prop] || '') : ''}" /></td>${idx===0 ? `<td rowspan="5" style="vertical-align: top;"><i class="fas fa-info-circle m-2" style="color: #4e73df;" title="When the liturgical_event has its own Proper, then Readings can be defined, otherwise the readings will depend on the Common"></i>` : ``}</td></tr>`).join('');
+            formRow += readingsProperties.map((prop,idx) => `<tr><td><label for="onTheFly${FormControls.uniqid}Readings_${prop}">${escapeHtml(prop)}</label></td><td style="padding-left: 15px;"><input type="text" class="form-control litEvent litEventReadings litEventReadings_${escapeHtml(prop)}" id="onTheFly${FormControls.uniqid}Readings_${escapeHtml(prop)}" ${hasProper ? '' : 'disabled'} value="${hasProper ? escapeHtml(liturgical_event?.readings?.[prop] || '') : ''}" /></td>${idx===0 ? `<td rowspan="5" style="vertical-align: top;"><i class="fas fa-info-circle m-2" style="color: #4e73df;" title="When the liturgical_event has its own Proper, then Readings can be defined, otherwise the readings will depend on the Common"></i>` : ``}</td></tr>`).join('');
             formRow += `</table></div>`;
         }
 
         if (FormControls.settings.reasonFieldShow) {
             formRow += `<div class="form-group col-sm-6">
             <label for="onTheFly${FormControls.uniqid}Reason">${Messages[ "Reason" ]}</label>
-            <input type="text" value="${liturgical_event?.reason||''}" class="form-control litEvent litEventReason" id="onTheFly${FormControls.uniqid}Reason" />
+            <input type="text" value="${escapeHtml(liturgical_event?.reason || '')}" class="form-control litEvent litEventReason" id="onTheFly${FormControls.uniqid}Reason" />
             </div>`;
         }
 
         if(FormControls.settings.decreeUrlFieldShow) {
             formRow += `<div class="form-group col-sm-6">
             <label for="onTheFly${FormControls.uniqid}DecreeURL">${Messages[ "Decree URL" ]}<i class="ms-2 fas fa-info-circle" title="Use %s in place of the language code if using a language mapping"></i></label>
-            <input type="text" class="form-control litEvent litEventDecreeURL" value="${liturgical_event.url ?? ''}" />
+            <input type="text" class="form-control litEvent litEventDecreeURL" value="${escapeHtml(liturgical_event.url ?? '')}" />
             </div>`;
         }
 
         if(FormControls.settings.decreeLangMapFieldShow) {
-            let decreeLangs = liturgical_event.url_lang_map ? Object.keys(liturgical_event.url_lang_map).map(key => key+'='+liturgical_event.url_lang_map[key] ) : [];
+            let decreeLangs = liturgical_event.url_lang_map ? Object.keys(liturgical_event.url_lang_map).map(key => escapeHtml(key)+'='+escapeHtml(liturgical_event.url_lang_map[key]) ) : [];
             formRow += `<div class="form-group col-sm-4">
             <label for="onTheFly${FormControls.uniqid}DecreeLangs">${Messages[ "Decree Langs" ]}<i class="ms-2 fas fa-info-circle" title="Use a comma separated list of key=value pairings, e.g. DE=ge,EN=en. Key is uppercased two letter ISO code, value is (generally lowercased) two letter representation used within the actual URL"></i></label>
             <input type="text" class="form-control litEvent litEventDecreeLangs" value="${decreeLangs.join(',')}" />

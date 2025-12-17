@@ -37,6 +37,8 @@ $messages = [
     'Timezone'                                        => _('Timezone'),
     /** translators: form field label for selecting JSON file in admin */
     'Select JSON file to manage'                      => _('Select JSON file to manage'),
+    /** translators: form field label for selecting data source in admin */
+    'Select data source'                              => _('Select data source'),
     /** translators: form field label for year the decree takes effect */
     'To take effect in the year'                      => _('To take effect in the year'),
 
