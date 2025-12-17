@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-17 21:12+0000\n"
-"PO-Revision-Date: 2025-12-17 21:16+0000\n"
+"PO-Revision-Date: 2025-12-17 21:22+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
@@ -1253,7 +1253,7 @@ msgstr "Commun (ou Propre)"
 
 #: layout/header.php:21
 msgid "Toggle sidebar"
-msgstr "Basculer la barre latérale"
+msgstr "Afficher / masquer la barre latérale"
 
 #: layout/header.php:36
 msgid "API"
