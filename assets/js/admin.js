@@ -224,21 +224,24 @@ const buildDayMonthFormGroup = (uniqid, liturgicalEventData) => {
 };
 
 /**
- * Toggle strtotime button appearance
+ * Toggle strtotime button appearance and aria-pressed state
  * @param {HTMLElement} target - The button element
  * @param {boolean} toActive - Whether to set to active (relative date) state
  */
 const toggleStrtotimeButton = (target, toActive) => {
+    // Update aria-pressed to match the visual state for assistive technology
+    target.setAttribute('aria-pressed', toActive ? 'true' : 'false');
+
     const icon = target.querySelector('i');
     if (toActive) {
         icon.classList.remove('fa-comment-slash');
         icon.classList.add('fa-comment');
         target.classList.remove('btn-secondary');
-        target.classList.add('btn-info');
+        target.classList.add('btn-info', 'active');
     } else {
         icon.classList.remove('fa-comment');
         icon.classList.add('fa-comment-slash');
-        target.classList.remove('btn-info');
+        target.classList.remove('btn-info', 'active');
         target.classList.add('btn-secondary');
     }
 };
@@ -898,10 +901,12 @@ document.addEventListener('click', (ev) => {
     const liturgicalEventData = jsonFileData[currentJsonFile]?.find(el => el.liturgical_event.event_key === eventKey);
     const strtotime = liturgicalEventData?.liturgical_event?.strtotime || {};
 
-    const isActivating = target.getAttribute('aria-pressed') === 'true';
-    toggleStrtotimeButton(target, isActivating);
+    // Toggle: if currently active, switch to inactive and vice versa
+    const isCurrentlyActive = target.getAttribute('aria-pressed') === 'true';
+    const newActiveState = !isCurrentlyActive;
+    toggleStrtotimeButton(target, newActiveState);
 
-    if (isActivating) {
+    if (newActiveState) {
         switchToStrtotimeUI(uniqid, strtotime);
     } else {
         switchToFixedDateUI(uniqid, liturgicalEventData);
