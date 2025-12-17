@@ -67,6 +67,9 @@ const createElementFromHTML = (html) => {
     return template.content;
 };
 
+// Animation duration constant - keeps CSS transition and JS timeout in sync
+const FADE_DURATION_MS = 300;
+
 /**
  * Helper function to show element with optional fade effect
  * @param {HTMLElement} el - Element to show
@@ -79,7 +82,7 @@ const showElement = (el, fade = false, displayValue = 'block') => {
         el.style.display = displayValue;
         el.classList.remove('d-none');
         requestAnimationFrame(() => {
-            el.style.transition = 'opacity 0.3s ease-in';
+            el.style.transition = `opacity ${FADE_DURATION_MS}ms ease-in`;
             el.style.opacity = '1';
         });
     } else {
@@ -98,13 +101,13 @@ const showElement = (el, fade = false, displayValue = 'block') => {
  */
 const hideElement = (el, fade = false, callback = null) => {
     if (fade) {
-        el.style.transition = 'opacity 0.3s ease-out';
+        el.style.transition = `opacity ${FADE_DURATION_MS}ms ease-out`;
         el.style.opacity = '0';
         setTimeout(() => {
             el.style.display = 'none';
             el.style.transition = '';
             if (callback) callback();
-        }, 300);
+        }, FADE_DURATION_MS);
     } else {
         el.style.transition = '';
         el.style.display = 'none';
