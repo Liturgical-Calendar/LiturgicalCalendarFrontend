@@ -21,10 +21,16 @@ const { LOCALE } = Messages;
 FormControls.jsLocale = LOCALE.replaceAll('_', '-');
 FormControls.weekdayFormatter = new Intl.DateTimeFormat(FormControls.jsLocale, { weekday: "long" });
 
-// Cache DOM elements
+// Cache DOM elements with null checks
 const jsonDataTbl = document.getElementById('jsonDataTbl');
+if (!jsonDataTbl) {
+    throw new Error('Required element #jsonDataTbl not found in DOM');
+}
 const jsonDataTblThead = jsonDataTbl.querySelector('thead tr');
 const jsonDataTblTbody = jsonDataTbl.querySelector('tbody');
+if (!jsonDataTblThead || !jsonDataTblTbody) {
+    throw new Error('Required thead tr or tbody not found in #jsonDataTbl');
+}
 const jsonFileSelect = document.getElementById('jsonFileSelect');
 const saveDataBtn = document.getElementById('saveDataBtn');
 const addColumnBtn = document.getElementById('addColumnBtn');
@@ -32,6 +38,22 @@ const tableContainer = document.getElementById('tableContainer');
 const memorialsFromDecreesBtnGrp = document.getElementById('memorialsFromDecreesBtnGrp');
 const memorialsFromDecreesForm = document.getElementById('memorialsFromDecreesForm');
 const existingLiturgicalEventsList = document.getElementById('existingLiturgicalEventsList');
+
+// Verify all required elements exist
+const requiredElements = {
+    jsonFileSelect,
+    saveDataBtn,
+    addColumnBtn,
+    tableContainer,
+    memorialsFromDecreesBtnGrp,
+    memorialsFromDecreesForm,
+    existingLiturgicalEventsList
+};
+for (const [name, element] of Object.entries(requiredElements)) {
+    if (!element) {
+        throw new Error(`Required element #${name} not found in DOM`);
+    }
+}
 
 /**
  * Helper function to create elements from HTML string
@@ -617,9 +639,12 @@ jsonDataTbl.addEventListener('keydown', (ev) => {
 addColumnBtn.addEventListener('click', () => {
     const column = prompt("Please enter the name for the new column (this will become the JSON property name):");
     if (column) {
-        jsonDataTblThead.insertAdjacentHTML('beforeend', `<th>${column}</th>`);
+        const th = document.createElement('th');
+        th.textContent = column;
+        jsonDataTblThead.appendChild(th);
         jsonDataTblTbody.querySelectorAll('tr').forEach(tr => {
-            tr.insertAdjacentHTML('beforeend', '<td></td>');
+            const td = document.createElement('td');
+            tr.appendChild(td);
         });
     }
 });
