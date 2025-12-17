@@ -553,10 +553,10 @@ jsonFileSelect.addEventListener('change', async () => {
 
     if( false === jsonFileData.hasOwnProperty( baseJsonFile ) ) {
         try {
-            // GET requests for missals/decrees are public, no credentials needed
             const response = await fetch(jsonFileFull, {
                 method: 'GET',
-                headers: { 'Accept': 'application/json' }
+                headers: { 'Accept': 'application/json' },
+                credentials: 'include'
             });
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
