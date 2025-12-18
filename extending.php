@@ -188,7 +188,7 @@ if (isset($_GET['choice'])) {
                         <div class="col col-md-3">
                             <div>
                                 <label for="widerRegionLocales" class="fw-bold"><?php echo $messages['Locales']; ?></label>
-                                <select class="form-select calendarLocales" id="widerRegionLocales" data-requires-auth="true" disabled multiple="multiple">
+                                <select class="form-select calendarLocales" id="widerRegionLocales" data-requires-auth="true" disabled multiple="multiple" size="1">
                                 <?php foreach ($SystemLocalesWithRegion as $locale => $lang_region) {
                                         echo "<option value='$locale'>$lang_region</option>";
                                 } ?>
@@ -253,7 +253,7 @@ if (isset($_GET['choice'])) {
                         <div class="col col-md-3">
                             <div>
                                 <label for="nationalCalendarLocales" class="fw-bold"><?php echo $messages['Locales']; ?></label>
-                                <select class="form-select calendarLocales" id="nationalCalendarLocales" data-requires-auth="true" disabled multiple="multiple">
+                                <select class="form-select calendarLocales" id="nationalCalendarLocales" data-requires-auth="true" disabled multiple="multiple" size="1">
                                 <?php foreach ($SystemLocalesWithRegion as $locale => $lang_region) {
                                         echo "<option value='$locale'>$lang_region</option>";
                                 } ?>
@@ -415,7 +415,7 @@ if (isset($_GET['choice'])) {
                         <div class="row justify-content-center align-items-baseline">
                             <div class="form-group col col-md-3">
                                 <label for="diocesanCalendarLocales" class="fw-bold"><?php echo $messages['Locales']; ?>:</label>
-                                <select class="form-select calendarLocales" id="diocesanCalendarLocales" multiple="multiple" disabled>
+                                <select class="form-select calendarLocales" id="diocesanCalendarLocales" multiple="multiple" size="1" disabled>
                                 <?php
                                 foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
                                     echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
