@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-18 15:41+0000\n"
-"PO-Revision-Date: 2025-12-18 13:53+0000\n"
-"Last-Translator: Weblate Admin <admin@example.com>\n"
+"PO-Revision-Date: 2025-12-18 16:06+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
 "Language: la\n"
@@ -1231,24 +1231,18 @@ msgstr "Calendaria Particularia"
 
 #. translators: card heading for creating wider region calendar
 #: layout/header.php:44 includes/messages.php:224
-#, fuzzy
-#| msgid "Create a Calendar for a Wider Region"
 msgid "Define a Calendar for a Wider Region"
-msgstr "Crea Calendarium pro Regione Ampliori"
+msgstr "Definire Calendarum pro Regione Ampliore"
 
 #. translators: card heading for creating national calendar
 #: layout/header.php:45 includes/messages.php:226
-#, fuzzy
-#| msgid "Create a National Calendar"
 msgid "Define a National Calendar"
-msgstr "Crea Calendarium Nationale"
+msgstr "Define Calendarum Nationalem"
 
 #. translators: card heading for creating diocesan calendar
 #: layout/header.php:46 includes/messages.php:228
-#, fuzzy
-#| msgid "Create a Diocesan Calendar"
 msgid "Define a Diocesan Calendar"
-msgstr "Crea Calendarium Dioecesanum"
+msgstr "Define Calendarum Dioecesanum"
 
 #: layout/header.php:51
 msgid "Usage"
@@ -1613,10 +1607,8 @@ msgstr "Addere Decretum"
 
 #. translators: page title for particular calendars
 #: includes/messages.php:158
-#, fuzzy
-#| msgid "General Roman Calendar - Decrees"
 msgid "General Roman Calendar - Particular Calendars"
-msgstr "Calendarium Romanum Generale - Decreta"
+msgstr "Calendarium Romanum Generale - Calendaria Particularia"
 
 #. translators: page title for decrees
 #: includes/messages.php:160
@@ -1631,28 +1623,22 @@ msgstr "Instrumenta Administrationis"
 #. translators: main heading for particular calendars page
 #: includes/messages.php:168
 msgid "Define Particular Calendars based on the General Roman Calendar"
-msgstr ""
+msgstr "Define Calendaria Particularia secundum Calendarium Romanum Generale"
 
 #. translators: main heading for particular calendars page
 #: includes/messages.php:170
-#, fuzzy
-#| msgid "Create a Calendar for a Wider Region"
 msgid "Particular Calendars - Define Wider Region events"
-msgstr "Crea Calendarium pro Regione Ampliori"
+msgstr "Calendaria Particularia - Define eventus Regionis Amplioris"
 
 #. translators: main heading for particular calendars page
 #: includes/messages.php:172
-#, fuzzy
-#| msgid "Create a National Calendar"
 msgid "Particular Calendars - Define a National Calendar"
-msgstr "Crea Calendarium Nationale"
+msgstr "Calendaria Particularia - Define Calendarium Nationale"
 
 #. translators: main heading for particular calendars page
 #: includes/messages.php:174
-#, fuzzy
-#| msgid "Create a Diocesan Calendar"
 msgid "Particular Calendars - Define a Diocesan Calendar"
-msgstr "Crea Calendarium Dioecesanum"
+msgstr "Calendaria Particularia - Define Calendarium Dioecesanum"
 
 #. translators: main heading for decrees page
 #: includes/messages.php:176
@@ -1701,6 +1687,9 @@ msgid ""
 "Calendars</b>, which are established to meet the liturgical needs of a "
 "specific territory."
 msgstr ""
+"Calendarium Romanum Generale est fundamentum pro Calendariis Particularibus, "
+"quae constituuntur ad necessitates liturgicas peculiaris territorii "
+"complendas."
 
 #. translators: explanation about hierarchy of particular calendars
 #: includes/messages.php:190
@@ -1710,6 +1699,9 @@ msgid ""
 "Therefore, a National calendar must be defined before a Diocesan one can be "
 "established."
 msgstr ""
+"Haec calendaria sequuntur structuram hierarchicam: calendarium Dioecesanum "
+"data a suo respective calendario Nationali accipit et adhibet. Igitur, "
+"calendarium Nationale definiendum est priusquam Dioecesanum constitui possit."
 
 #: includes/messages.php:193
 #, php-format
@@ -1721,6 +1713,12 @@ msgid ""
 "Data from the wider region is then automatically integrated into all "
 "National calendars within that jurisdiction."
 msgstr ""
+"Primus gradus in hoc processu est curare ut Calendarium Romanum Generale in "
+"lingua locali praesto sit (vide %s). Cum plures nationes communes "
+"celebrationes liturgicas participant—sicut patronus regionis amplioris "
+"(exempli gratia, continens)—eventus hi ad gradum regionalem definiri debent. "
+"Data ex regione ampliore tunc automatice integrantur in omnia calendaria "
+"Nationalia intra illam iurisdictionem."
 
 #. translators: help text for diocesan group field
 #: includes/messages.php:198
