@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-18 13:34+0000\n"
-"PO-Revision-Date: 2025-12-18 13:21+0000\n"
+"PO-Revision-Date: 2025-12-18 13:53+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
@@ -1224,10 +1224,8 @@ msgid "API"
 msgstr "API"
 
 #: layout/header.php:41 layout/header.php:181
-#, fuzzy
-#| msgid "National Calendar"
 msgid "Particular Calendars"
-msgstr "Nacionalni kalendar"
+msgstr "Posebni kalendari"
 
 #. translators: card heading for creating wider region calendar
 #: layout/header.php:44 includes/messages.php:218
