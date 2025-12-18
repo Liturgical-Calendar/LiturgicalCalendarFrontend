@@ -397,7 +397,7 @@ class FormControls {
         if (FormControls.settings.colorField) {
             formRow += `<div class="form-group col-sm-1">
             <label for="onTheFly${FormControls.uniqid}Color">${Messages[ "Liturgical color" ]}</label>
-            <select class="form-select litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple" />${FormControls.generateColorOptionsHtml(['white'])}</select>
+            <select class="form-select litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple" size="1" />${FormControls.generateColorOptionsHtml(['white'])}</select>
             </div>`;
         }
 
@@ -991,7 +991,7 @@ class FormControls {
         const selectedColors = liturgical_event?.color ?? [];
         formRow += `<div class="form-group col-sm-2">
         <label for="onTheFly${FormControls.uniqid}Color">${Messages[ "Liturgical color" ]}</label>
-        <select class="form-select litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple"${FormControls.settings.colorField === false ? ' disabled' : ''} />${FormControls.generateColorOptionsHtml(selectedColors)}</select>
+        <select class="form-select litEvent litEventColor" id="onTheFly${FormControls.uniqid}Color" multiple="multiple" size="1"${FormControls.settings.colorField === false ? ' disabled' : ''} />${FormControls.generateColorOptionsHtml(selectedColors)}</select>
         </div>`;
 
         if( 'strtotime' in liturgical_event ) {
