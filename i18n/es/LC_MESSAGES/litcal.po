@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-18 15:41+0000\n"
-"PO-Revision-Date: 2025-12-18 13:53+0000\n"
-"Last-Translator: Weblate Admin <admin@example.com>\n"
+"PO-Revision-Date: 2025-12-18 16:06+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
 "Language: es\n"
@@ -1255,24 +1255,18 @@ msgstr "Calendarios particulares"
 
 #. translators: card heading for creating wider region calendar
 #: layout/header.php:44 includes/messages.php:224
-#, fuzzy
-#| msgid "Create a Calendar for a Wider Region"
 msgid "Define a Calendar for a Wider Region"
-msgstr "Crear un calendario para una jurisdicción más amplia"
+msgstr "Definir un Calendario para una Región Amplia"
 
 #. translators: card heading for creating national calendar
 #: layout/header.php:45 includes/messages.php:226
-#, fuzzy
-#| msgid "Create a National Calendar"
 msgid "Define a National Calendar"
-msgstr "Crear un calendario nacional"
+msgstr "Definir un Calendario Nacional"
 
 #. translators: card heading for creating diocesan calendar
 #: layout/header.php:46 includes/messages.php:228
-#, fuzzy
-#| msgid "Create a Diocesan Calendar"
 msgid "Define a Diocesan Calendar"
-msgstr "Crear un calendario diocesano"
+msgstr "Definir un Calendario Diocesano"
 
 #: layout/header.php:51
 msgid "Usage"
@@ -1638,10 +1632,8 @@ msgstr "Añadir Decreto"
 
 #. translators: page title for particular calendars
 #: includes/messages.php:158
-#, fuzzy
-#| msgid "General Roman Calendar - Decrees"
 msgid "General Roman Calendar - Particular Calendars"
-msgstr "Calendario Romano General - Decretos"
+msgstr "Calendario General Romano - Calendarios Particulares"
 
 #. translators: page title for decrees
 #: includes/messages.php:160
@@ -1657,27 +1649,22 @@ msgstr "Herramientas de administración"
 #: includes/messages.php:168
 msgid "Define Particular Calendars based on the General Roman Calendar"
 msgstr ""
+"Definir Calendarios Particulares basados en el Calendario General Romano"
 
 #. translators: main heading for particular calendars page
 #: includes/messages.php:170
-#, fuzzy
-#| msgid "Create a Calendar for a Wider Region"
 msgid "Particular Calendars - Define Wider Region events"
-msgstr "Crear un calendario para una jurisdicción más amplia"
+msgstr "Calendarios Particulares - Definir eventos de Región Amplia"
 
 #. translators: main heading for particular calendars page
 #: includes/messages.php:172
-#, fuzzy
-#| msgid "Create a National Calendar"
 msgid "Particular Calendars - Define a National Calendar"
-msgstr "Crear un calendario nacional"
+msgstr "Calendarios Particulares - Definir un Calendario Nacional"
 
 #. translators: main heading for particular calendars page
 #: includes/messages.php:174
-#, fuzzy
-#| msgid "Create a Diocesan Calendar"
 msgid "Particular Calendars - Define a Diocesan Calendar"
-msgstr "Crear un calendario diocesano"
+msgstr "Calendarios Particulares - Definir un Calendario Diocesano"
 
 #. translators: main heading for decrees page
 #: includes/messages.php:176
@@ -1726,6 +1713,9 @@ msgid ""
 "Calendars</b>, which are established to meet the liturgical needs of a "
 "specific territory."
 msgstr ""
+"El <b>Calendario General Romano</b> sirve como base para los <b>Calendarios "
+"Particulares</b>, que se establecen para satisfacer las necesidades "
+"litúrgicas de un territorio específico."
 
 #. translators: explanation about hierarchy of particular calendars
 #: includes/messages.php:190
@@ -1735,6 +1725,10 @@ msgid ""
 "Therefore, a National calendar must be defined before a Diocesan one can be "
 "established."
 msgstr ""
+"Estos calendarios siguen una estructura jerárquica: un <b>calendario "
+"diocesano</b> hereda y adapta los datos de su respectivo <b>calendario "
+"nacional</b>. Por lo tanto, se debe definir un calendario nacional antes de "
+"poder establecer uno diocesano."
 
 #: includes/messages.php:193
 #, php-format
@@ -1746,6 +1740,13 @@ msgid ""
 "Data from the wider region is then automatically integrated into all "
 "National calendars within that jurisdiction."
 msgstr ""
+"El primer paso en este proceso es asegurar que el <b>Calendario General "
+"Romano</b> esté disponible en el idioma local (ver %s). Cuando varias "
+"naciones comparten celebraciones litúrgicas comunes—como el patrón de una "
+"<b>región amplia</b> (por ejemplo, un continente)—estos eventos deben "
+"definirse a nivel regional. Los datos de la región amplia se integran "
+"automáticamente en todos los calendarios nacionales dentro de esa "
+"jurisdicción."
 
 #. translators: help text for diocesan group field
 #: includes/messages.php:198
