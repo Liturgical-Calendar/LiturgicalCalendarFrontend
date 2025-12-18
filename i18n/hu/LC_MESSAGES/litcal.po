@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-17 21:12+0000\n"
+"POT-Creation-Date: 2025-12-18 13:34+0000\n"
 "PO-Revision-Date: 2025-12-18 13:21+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
@@ -1234,8 +1234,10 @@ msgid "API"
 msgstr "API"
 
 #: layout/header.php:41 layout/header.php:181
-msgid "Extending the API"
-msgstr "Az API kiterjesztése"
+#, fuzzy
+#| msgid "National Calendar"
+msgid "Particular Calendars"
+msgstr "Nemzeti naptár"
 
 #. translators: card heading for creating wider region calendar
 #: layout/header.php:44 includes/messages.php:218
@@ -2012,6 +2014,9 @@ msgstr "Következő"
 #: includes/messages.php:342
 msgid "Diocesan calendar definition"
 msgstr "Egyházmegyei naptár meghatározása"
+
+#~ msgid "Extending the API"
+#~ msgstr "Az API kiterjesztése"
 
 #~ msgid ""
 #~ "This diocese does not seem to exist? Please choose from a value in the "
