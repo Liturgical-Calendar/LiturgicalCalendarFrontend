@@ -38,7 +38,7 @@ asort($langsAssoc);
             </li>
             <li class="nav-item dropdown<?php echo $currentPage === 'extending' ? ' bg-info' : ''; ?>" id="topNavBar_Extending">
                 <a class="nav-link dropdown-toggle<?php echo $currentPage === 'extending' ? ' active' : ''; ?>" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="extendingChoicesDropdown">
-                    <i class="fas fa-puzzle-piece me-1"></i><?php echo _('Extending the API'); ?>
+                    <i class="fas fa-layer-group me-1"></i><?php echo _('Particular Calendars'); ?>
                 </a>
                 <div class="dropdown-menu shadow" aria-labelledby="extendingChoicesDropdown" id="extendingChoicesDropdownItems">
                     <a class="dropdown-item<?php echo isset($_GET['choice']) && $_GET['choice'] === 'widerRegion' ? ' active' : ''; ?>" id="extendingChoiceWiderRegion" href="./extending.php?choice=widerRegion"><i class="fas fa-globe-americas me-2"></i><?php echo _('Create a Calendar for a Wider Region'); ?></a>
@@ -178,7 +178,7 @@ asort($langsAssoc);
                     </div>
                     <a class="nav-link<?php echo $currentPage === 'extending' ? ' active' : ''; ?>" href="extending.php?choice=diocesan">
                         <i class="sb-nav-link-icon fas fa-fw fa-folder"></i>
-                        <span><?php echo _('Extending the API'); ?></span>
+                        <span><?php echo _('Particular Calendars'); ?></span>
                     </a>
                     <a class="nav-link" href="/dist/">
                         <i class="sb-nav-link-icon fas fa-fw fa-folder"></i>
