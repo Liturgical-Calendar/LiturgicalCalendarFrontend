@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-17 21:12+0000\n"
-"PO-Revision-Date: 2025-12-17 21:16+0000\n"
+"POT-Creation-Date: 2025-12-18 13:34+0000\n"
+"PO-Revision-Date: 2025-12-18 13:53+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
@@ -1224,8 +1224,8 @@ msgid "API"
 msgstr "API"
 
 #: layout/header.php:41 layout/header.php:181
-msgid "Extending the API"
-msgstr "Proširivanje API-ja"
+msgid "Particular Calendars"
+msgstr "Posebni kalendari"
 
 #. translators: card heading for creating wider region calendar
 #: layout/header.php:44 includes/messages.php:218
@@ -1240,7 +1240,7 @@ msgstr "Izradi nacionalni kalendar"
 #. translators: card heading for creating diocesan calendar
 #: layout/header.php:46 includes/messages.php:222
 msgid "Create a Diocesan Calendar"
-msgstr "Kreiraj biskupijski kalendar"
+msgstr "Izradi biskupijski kalendar"
 
 #: layout/header.php:51
 msgid "Usage"
@@ -2003,6 +2003,9 @@ msgstr "Sljedeće"
 #: includes/messages.php:342
 msgid "Diocesan calendar definition"
 msgstr "Definicija dijecezanskog kalendara"
+
+#~ msgid "Extending the API"
+#~ msgstr "Proširivanje API-ja"
 
 #~ msgid ""
 #~ "This diocese does not seem to exist? Please choose from a value in the "
