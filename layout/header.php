@@ -41,9 +41,9 @@ asort($langsAssoc);
                     <i class="fas fa-layer-group me-1"></i><?php echo _('Particular Calendars'); ?>
                 </a>
                 <div class="dropdown-menu shadow" aria-labelledby="extendingChoicesDropdown" id="extendingChoicesDropdownItems">
-                    <a class="dropdown-item<?php echo isset($_GET['choice']) && $_GET['choice'] === 'widerRegion' ? ' active' : ''; ?>" id="extendingChoiceWiderRegion" href="./extending.php?choice=widerRegion"><i class="fas fa-globe-americas me-2"></i><?php echo _('Create a Calendar for a Wider Region'); ?></a>
-                    <a class="dropdown-item<?php echo isset($_GET['choice']) && $_GET['choice'] === 'national' ? ' active' : ''; ?>" id="extendingChoiceNationalCalendar" href="./extending.php?choice=national"><i class="fas fa-flag me-2"></i><?php echo _('Create a National Calendar'); ?></a>
-                    <a class="dropdown-item<?php echo isset($_GET['choice']) && $_GET['choice'] === 'diocesan' ? ' active' : ''; ?>" id="extendingChoiceDiocesanCalendar" href="./extending.php?choice=diocesan"><i class="fas fa-church me-2"></i><?php echo _('Create a Diocesan Calendar'); ?></a>
+                    <a class="dropdown-item<?php echo isset($_GET['choice']) && $_GET['choice'] === 'widerRegion' ? ' active' : ''; ?>" id="extendingChoiceWiderRegion" href="./extending.php?choice=widerRegion"><i class="fas fa-globe-americas me-2"></i><?php echo _('Define a Calendar for a Wider Region'); ?></a>
+                    <a class="dropdown-item<?php echo isset($_GET['choice']) && $_GET['choice'] === 'national' ? ' active' : ''; ?>" id="extendingChoiceNationalCalendar" href="./extending.php?choice=national"><i class="fas fa-flag me-2"></i><?php echo _('Define a National Calendar'); ?></a>
+                    <a class="dropdown-item<?php echo isset($_GET['choice']) && $_GET['choice'] === 'diocesan' ? ' active' : ''; ?>" id="extendingChoiceDiocesanCalendar" href="./extending.php?choice=diocesan"><i class="fas fa-church me-2"></i><?php echo _('Define a Diocesan Calendar'); ?></a>
                 </div>
             </li>
             <li class="nav-item<?php echo in_array($currentPage, ['usage', 'examples', 'liturgyOfAnyDay'], true) ? ' bg-info' : ''; ?>" id="topNavBar_Usage">

@@ -154,8 +154,8 @@ $messages = [
     // =========================================================================
     // Page titles
     // =========================================================================
-    /** translators: page title for extending calendars */
-    'Page title - Extending'                          => _('General Roman Calendar - Extending'),
+    /** translators: page title for particular calendars */
+    'Page title - Particular Calendars'               => _('General Roman Calendar - Particular Calendars'),
     /** translators: page title for decrees */
     'Page title - Decrees'                            => _('General Roman Calendar - Decrees'),
     /** translators: page title for admin tools */
@@ -164,8 +164,14 @@ $messages = [
     // =========================================================================
     // Page headings and introductory text
     // =========================================================================
-    /** translators: main heading for extending page */
-    'Extend heading'                                  => _('Extend the General Roman Calendar with National or Diocesan data'),
+    /** translators: main heading for particular calendars page */
+    'Particular Calendars heading'                    => _('Define Particular Calendars based on the General Roman Calendar'),
+    /** translators: main heading for particular calendars page */
+    'Particular Calendars wider region heading'       => _('Particular Calendars - Define Wider Region events'),
+    /** translators: main heading for particular calendars page */
+    'Particular Calendars national heading'           => _('Particular Calendars - Define a National Calendar'),
+    /** translators: main heading for particular calendars page */
+    'Particular Calendars diocesan heading'           => _('Particular Calendars - Define a Diocesan Calendar'),
     /** translators: main heading for decrees page */
     'Decrees heading'                                 => _('Refine the General Roman Calendar with Decrees of the Dicastery for Divine Worship and the Discipline of the Sacraments'),
     /** translators: main heading for admin page */
@@ -178,18 +184,18 @@ $messages = [
     // =========================================================================
     // Extending page - How-to explanations
     // =========================================================================
-    /** translators: explanation of how national/diocesan calendars work */
-    'API_EXTEND_HOWTO_A'                              => _('The General Roman Calendar can be extended so as to create a National or Diocesan calendar. Diocesan calendars depend on National calendars, so the National calendar must first be created.'),
-    /** translators: first step in creating a calendar - translation */
-    'API_EXTEND_HOWTO_A1'                             => _('The first step in creating a national or diocesan calendar, is to translate the data for the General Roman Calendar into the language for that nation or diocese.'),
-    /** translators: link to translations page */
-    'API_EXTEND_HOWTO_A1a'                            => _('(see <a href="translations.php">Translations</a>)'),
-    /** translators: explanation about shared events across calendars */
-    'API_EXTEND_HOWTO_A2'                             => _('A national calendar may have some liturgical events in common with other national calendars, for example the patron of a wider region.'),
-    /** translators: explanation about wider region data */
-    'API_EXTEND_HOWTO_A3'                             => _('In this case, the liturgical events for the wider region should be defined separately, and the languages applicable to the wider region should be set; the wider region data will then be applied automatically to national calendars belonging to the wider region.'),
+    /** translators: explanation about hierarchy of particular calendars */
+    'API_EXTEND_HOWTO_A0'                             => _('The <b>General Roman Calendar</b> serves as the foundation for <b>Particular Calendars</b>, which are established to meet the liturgical needs of a specific territory.'),
+    /** translators: explanation about hierarchy of particular calendars */
+    'API_EXTEND_HOWTO_A1'                             => _('These calendars follow a hierarchical structure: a <b>Diocesan calendar</b> inherits and adapts the data from its respective <b>National calendar</b>. Therefore, a National calendar must be defined before a Diocesan one can be established.'),
+    /** translators: explanation about hierarchy of particular calendars */
+    'API_EXTEND_HOWTO_A2'                             => sprintf(
+        _('The first step in this process is ensuring the <b>General Roman Calendar</b> is available in the local language (see %s). When multiple nations share common liturgical celebrations—such as the patron of a <b>wider region</b> (e.g., a continent)—these events should be defined at the regional level. Data from the wider region is then automatically integrated into all National calendars within that jurisdiction.'),
+        /** translators: link to translations page */
+        '<a href="translations.php">' . _('Translations') . '</a>'
+    ),
     /** translators: help text for diocesan group field */
-    'DioceseGroupHelp'                                => _('If a group of dioceses decides to pool their Liturgical Calendar data, for example to print out one single yearly calendar with the data for all the dioceses in the group, the group can be defined or set here.'),
+    'DioceseGroupHelp'                                 => _('If a group of dioceses decides to pool their Liturgical Calendar data, for example to print out one single yearly calendar with the data for all the dioceses in the group, the group can be defined or set here.'),
 
     // =========================================================================
     // Form section labels - Calendar types
@@ -215,11 +221,11 @@ $messages = [
     // Card/section headings
     // =========================================================================
     /** translators: card heading for creating wider region calendar */
-    'Create a Calendar for a Wider Region'            => _('Create a Calendar for a Wider Region'),
+    'Define a Calendar for a Wider Region'            => _('Define a Calendar for a Wider Region'),
     /** translators: card heading for creating national calendar */
-    'Create a National Calendar'                      => _('Create a National Calendar'),
+    'Define a National Calendar'                      => _('Define a National Calendar'),
     /** translators: card heading for creating diocesan calendar */
-    'Create a Diocesan Calendar'                      => _('Create a Diocesan Calendar'),
+    'Define a Diocesan Calendar'                      => _('Define a Diocesan Calendar'),
     /** translators: section heading for national calendar settings */
     'National calendar settings'                      => _('National calendar settings'),
     /** translators: heading for diocesan overrides section */
@@ -320,7 +326,7 @@ $messages = [
     // =========================================================================
     // Tooltip/help text
     // =========================================================================
-    /** translators: tooltip explaining the first step to create a national calendar */
+    /** translators: tooltip explaining the first step in defining a national calendar */
     'Tooltip - National calendar first step'          => _('please keep in mind that the first step to creating a national calendar, is to translate the already existing calendar data into the correct language. This can be done on the LitCal translation server (see above for details)'),
     /** translators: help text shown when diocese input is disabled */
     'Select a national calendar first'                => _('Select a national calendar first to see available dioceses.'),
