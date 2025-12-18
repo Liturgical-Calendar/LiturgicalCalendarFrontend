@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-17 21:12+0000\n"
-"PO-Revision-Date: 2025-12-17 21:22+0000\n"
+"PO-Revision-Date: 2025-12-18 13:21+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
@@ -1266,7 +1266,7 @@ msgstr "Étendre l'API"
 #. translators: card heading for creating wider region calendar
 #: layout/header.php:44 includes/messages.php:218
 msgid "Create a Calendar for a Wider Region"
-msgstr "Créez un calendrier pour une région élargie"
+msgstr "Créer un calendrier pour une région élargie"
 
 #. translators: card heading for creating national calendar
 #: layout/header.php:45 includes/messages.php:220
