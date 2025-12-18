@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-18 15:41+0000\n"
-"PO-Revision-Date: 2025-12-18 16:20+0000\n"
+"PO-Revision-Date: 2025-12-18 19:07+0000\n"
 "Last-Translator: Weblate Admin <admin@example.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
@@ -59,8 +59,8 @@ msgid ""
 "on the %1$s and %2$s routes."
 msgstr ""
 "Hi parametri utiles sunt ad eventus calendarii temperandos, cum nullum "
-"Calendarium Nationale vel Dioecesanum petitur. Cum Calendaria Nationalia et "
-"Dioecesana hos parametros in se habeant, parametri non praesto sunt in "
+"Calendarium Nationale vel Diœcesanum petitur. Cum Calendaria Nationalia et "
+"Diœcesana hos parametros in se habeant, parametri non praesto sunt in "
 "itineribus %1$s et %2$s."
 
 #: index.php:25
@@ -91,7 +91,7 @@ msgid ""
 msgstr ""
 "Praestat statuere locum utendo \"Accept-Language\" intestatione potius quam "
 "\"locale\" parametro. N.B. \"Accept-Language\" intestatio nullum effectum "
-"habebit cum calendarium Nationalis vel Dioecesanum petitur."
+"habebit cum calendarium Nationalis vel Diœcesanum petitur."
 
 #: index.php:38
 msgid ""
@@ -677,8 +677,8 @@ msgid ""
 "the data for the General Roman Calendar into the language for that nation or "
 "diocese."
 msgstr ""
-"Primus gradus in creando calendarium nationale vel dioecesanum est data pro "
-"Calendario Generali Romano in linguam illius nationis vel dioecesis "
+"Primus gradus in creando calendarium nationale vel diœcesanum est data pro "
+"Calendario Generali Romano in linguam illius nationis vel diœcesis "
 "transferre."
 
 #: translations.php:11
@@ -1638,7 +1638,7 @@ msgstr "Calendaria Particularia - Define Calendarium Nationale"
 #. translators: main heading for particular calendars page
 #: includes/messages.php:174
 msgid "Particular Calendars - Define a Diocesan Calendar"
-msgstr "Calendaria Particularia - Define Calendarium Dioecesanum"
+msgstr "Calendaria Particularia - Define Calendarium Diœcesanum"
 
 #. translators: main heading for decrees page
 #: includes/messages.php:176
@@ -1699,9 +1699,10 @@ msgid ""
 "Therefore, a National calendar must be defined before a Diocesan one can be "
 "established."
 msgstr ""
-"Haec calendaria sequuntur structuram hierarchicam: calendarium Dioecesanum "
-"data a suo respective calendario Nationali accipit et adhibet. Igitur, "
-"calendarium Nationale definiendum est priusquam Dioecesanum constitui possit."
+"Haec calendaria sequuntur structuram hierarchicam: <b>calendarium "
+"Diœcesanum</b> data a suo respective <b>calendario Nationali</b> accipit et "
+"adhibet. Igitur, calendarium Nationale definiendum est priusquam Diœcesanum "
+"constitui possit."
 
 #: includes/messages.php:193
 #, php-format
@@ -1922,7 +1923,7 @@ msgstr "Elige ex notis editionibus linguae Missalis Romani"
 #. translators: modal title for deleting a diocesan calendar
 #: includes/messages.php:310
 msgid "Delete diocesan calendar"
-msgstr "Dele calendarium dioecesanum"
+msgstr "Dele calendarium diœcesanum"
 
 #. translators: validation error when field is empty
 #: includes/messages.php:316
