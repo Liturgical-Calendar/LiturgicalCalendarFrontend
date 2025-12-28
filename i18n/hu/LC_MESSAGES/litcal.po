@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-28 18:15+0000\n"
-"PO-Revision-Date: 2025-12-28 15:29+0000\n"
+"PO-Revision-Date: 2025-12-28 18:58+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hu/>\n"
@@ -1616,7 +1616,7 @@ msgstr "Rendelet hozzáadása"
 #. translators: page title for particular calendars
 #: includes/messages.php:158
 msgid "General Roman Calendar - Particular Calendars"
-msgstr "Általános római naptár - Sajátos naptárak"
+msgstr "Általános római naptár - Partikuláris naptárak"
 
 #. translators: page title for decrees
 #: includes/messages.php:160
@@ -1631,22 +1631,23 @@ msgstr "Adminisztrációs eszközök"
 #. translators: main heading for particular calendars page
 #: includes/messages.php:168
 msgid "Define Particular Calendars based on the General Roman Calendar"
-msgstr "Állíts össze sajátos naptárakat az általános római naptár alapján"
+msgstr "Állíts össze partikuláris naptárakat az általános római naptár alapján"
 
 #. translators: main heading for particular calendars page
 #: includes/messages.php:170
 msgid "Particular Calendars - Define Wider Region events"
-msgstr "Sajátos naptárak - Határozz meg szélesebb régióhoz tartozó ünnepeket"
+msgstr ""
+"Partikuláris naptárak - Határozz meg szélesebb régióhoz tartozó ünnepeket"
 
 #. translators: main heading for particular calendars page
 #: includes/messages.php:172
 msgid "Particular Calendars - Define a National Calendar"
-msgstr "Sajátos naptárak - Határozz meg egy nemzeti naptárat"
+msgstr "Partikuláris naptárak - Határozz meg egy nemzeti naptárat"
 
 #. translators: main heading for particular calendars page
 #: includes/messages.php:174
 msgid "Particular Calendars - Define a Diocesan Calendar"
-msgstr "Sajátos naptárak - Határozz meg egy egyházmegyei naptárat"
+msgstr "Partikuláris naptárak - Határozz meg egy egyházmegyei naptárat"
 
 #. translators: main heading for decrees page
 #: includes/messages.php:176
@@ -1695,8 +1696,8 @@ msgid ""
 "Calendars</b>, which are established to meet the liturgical needs of a "
 "specific territory."
 msgstr ""
-"A <b>általános római naptár</b> alapul szolgál az <b>sajátos naptárak</b> "
-"számára, amelyeket egy adott terület liturgikus igényeinek kielégítésére "
+"Az <b>általános római naptár</b> alapul szolgál az <b>partikuláris naptárak</"
+"b> számára, amelyeket egy adott terület liturgikus igényeinek kielégítésére "
 "hoznak létre."
 
 #. translators: explanation about hierarchy of particular calendars
