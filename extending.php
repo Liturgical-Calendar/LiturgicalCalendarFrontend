@@ -121,15 +121,15 @@ $SystemLocalesWithoutRegion = array_reduce($SystemLocalesWithoutRegion, function
 }, []);
 $c->asort($SystemLocalesWithoutRegion);
 
-$API_EXTEND_HOWTO_A0  = $messages['API_EXTEND_HOWTO_A0'];
-$API_EXTEND_HOWTO_A1  = $messages['API_EXTEND_HOWTO_A1'];
-$API_EXTEND_HOWTO_A2  = $messages['API_EXTEND_HOWTO_A2'];
-$DioceseGroupHelp     = $messages['DioceseGroupHelp'];
+$API_EXTEND_HOWTO_A0 = $messages['API_EXTEND_HOWTO_A0'];
+$API_EXTEND_HOWTO_A1 = $messages['API_EXTEND_HOWTO_A1'];
+$API_EXTEND_HOWTO_A2 = $messages['API_EXTEND_HOWTO_A2'];
+$DioceseGroupHelp    = $messages['DioceseGroupHelp'];
 
-$WiderRegionHeading   = $messages['Particular Calendars wider region heading'];
-$NationalHeading      = $messages['Particular Calendars national heading'];
-$DiocesanHeading      = $messages['Particular Calendars diocesan heading'];
-$PageHeading          = isset($_GET['choice'])
+$WiderRegionHeading = $messages['Particular Calendars wider region heading'];
+$NationalHeading    = $messages['Particular Calendars national heading'];
+$DiocesanHeading    = $messages['Particular Calendars diocesan heading'];
+$PageHeading        = isset($_GET['choice'])
     ? match ($_GET['choice']) {
         'widerRegion' => $WiderRegionHeading,
         'national'    => $NationalHeading,

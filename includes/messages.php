@@ -187,7 +187,7 @@ $messages = [
     /** translators: explanation about hierarchy of particular calendars */
     'API_EXTEND_HOWTO_A0'                             => _('The <b>General Roman Calendar</b> serves as the foundation for <b>Particular Calendars</b>, which are established to meet the liturgical needs of a specific territory.'),
     /** translators: explanation about hierarchy of particular calendars */
-    'API_EXTEND_HOWTO_A1'                             => _('These calendars follow a hierarchical structure: a <b>Diocesan calendar</b> inherits and adapts the data from its respective <b>National calendar</b>. Therefore, a National calendar must be defined before a Diocesan one can be established.'),
+    'API_EXTEND_HOWTO_A1'                             => _('These calendars follow a hierarchical structure: a <b>Diocesan calendar</b> inherits and adapts the data from its respective <b>National calendar</b>. Therefore, a National calendar must be defined before a Diocesan calendar can be established.'),
     /** translators: explanation about hierarchy of particular calendars */
     'API_EXTEND_HOWTO_A2'                             => sprintf(
         _('The first step in this process is ensuring the <b>General Roman Calendar</b> is available in the local language (see %s). When multiple nations share common liturgical celebrations—such as the patron of a <b>wider region</b> (e.g., a continent)—these events should be defined at the regional level. Data from the wider region is then automatically integrated into all National calendars within that jurisdiction.'),
@@ -195,7 +195,7 @@ $messages = [
         '<a href="translations.php">' . _('Translations') . '</a>'
     ),
     /** translators: help text for diocesan group field */
-    'DioceseGroupHelp'                                 => _('If a group of dioceses decides to pool their Liturgical Calendar data, for example to print out one single yearly calendar with the data for all the dioceses in the group, the group can be defined or set here.'),
+    'DioceseGroupHelp'                                => _('If a group of dioceses decides to pool their Liturgical Calendar data, for example to print out one single yearly calendar with the data for all the dioceses in the group, the group can be defined or set here.'),
 
     // =========================================================================
     // Form section labels - Calendar types
