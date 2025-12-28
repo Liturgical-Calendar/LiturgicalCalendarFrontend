@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-28 19:06+0000\n"
-"PO-Revision-Date: 2025-12-28 15:29+0000\n"
+"PO-Revision-Date: 2025-12-28 23:31+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
@@ -1256,7 +1256,7 @@ msgstr "Calendarios particulares"
 #. translators: card heading for creating wider region calendar
 #: layout/header.php:48 includes/messages.php:224
 msgid "Define a Calendar for a Wider Region"
-msgstr "Definir un Calendario para una Región Amplia"
+msgstr "Definir un Calendario para una región más amplia"
 
 #. translators: card heading for creating national calendar
 #: layout/header.php:49 includes/messages.php:226
@@ -1654,7 +1654,7 @@ msgstr ""
 #. translators: main heading for particular calendars page
 #: includes/messages.php:170
 msgid "Particular Calendars - Define Wider Region events"
-msgstr "Calendarios Particulares - Definir eventos de Región Amplia"
+msgstr "Calendarios Particulares - Definir eventos de región más amplia"
 
 #. translators: main heading for particular calendars page
 #: includes/messages.php:172
@@ -1743,8 +1743,8 @@ msgstr ""
 "El primer paso en este proceso es asegurar que el <b>Calendario General "
 "Romano</b> esté disponible en el idioma local (ver %s). Cuando varias "
 "naciones comparten celebraciones litúrgicas comunes—como el patrón de una "
-"<b>región amplia</b> (por ejemplo, un continente)—estos eventos deben "
-"definirse a nivel regional. Los datos de la región amplia se integran "
+"<b>región más amplia</b> (por ejemplo, un continente)—estos eventos deben "
+"definirse a nivel regional. Los datos de la región más amplia se integran "
 "automáticamente en todos los calendarios nacionales dentro de esa "
 "jurisdicción."
 
@@ -2028,9 +2028,9 @@ msgid ""
 "been defined, you can associate the Wider Region data with the National "
 "Calendar here"
 msgstr ""
-"si ya se han definido los datos para una Región Ampliada que concierne a "
-"este Calendario Nacional, puedes asociar los datos de la Región Ampliada con "
-"el Calendario Nacional aquí"
+"si ya se han definido los datos para una región más amplia que concierne a "
+"este Calendario Nacional, puedes asociar los datos de la región más amplia "
+"con el Calendario Nacional aquí"
 
 #. translators: screen reader text for previous button
 #: includes/messages.php:344
