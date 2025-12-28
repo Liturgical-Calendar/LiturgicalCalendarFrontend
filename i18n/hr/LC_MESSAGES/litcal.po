@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-28 14:49+0000\n"
-"PO-Revision-Date: 2025-12-19 19:23+0000\n"
-"Last-Translator: Weblate Admin <admin@example.com>\n"
+"PO-Revision-Date: 2025-12-28 15:29+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
 "Language: hr\n"
@@ -1692,12 +1692,6 @@ msgstr ""
 
 #. translators: explanation about hierarchy of particular calendars
 #: includes/messages.php:190
-#, fuzzy
-#| msgid ""
-#| "These calendars follow a hierarchical structure: a <b>Diocesan calendar</"
-#| "b> inherits and adapts the data from its respective <b>National calendar</"
-#| "b>. Therefore, a National calendar must be defined before a Diocesan one "
-#| "can be established."
 msgid ""
 "These calendars follow a hierarchical structure: a <b>Diocesan calendar</b> "
 "inherits and adapts the data from its respective <b>National calendar</b>. "
@@ -1706,8 +1700,8 @@ msgid ""
 msgstr ""
 "Ovi kalendari slijede hijerarhijsku strukturu: <b>biskupijski kalendar</b> "
 "nasljeđuje i prilagođava podatke iz svog pripadajućeg <b>nacionalnog "
-"kalendara</b>. Stoga nacionalni kalendar mora biti definiran prije nego se "
-"biskupijski može uspostaviti."
+"kalendara</b>. Stoga, nacionalni kalendar mora biti definiran prije nego što "
+"se može uspostaviti biskupijski kalendar."
 
 #: includes/messages.php:193
 #, php-format
