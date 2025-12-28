@@ -10,16 +10,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-28 14:49+0000\n"
-"PO-Revision-Date: 2025-12-19 19:23+0000\n"
-"Last-Translator: Weblate Admin <admin@example.com>\n"
+"PO-Revision-Date: 2025-12-28 15:29+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && "
+"(n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 5.13.3\n"
 
 #: index.php:5
@@ -1708,22 +1708,16 @@ msgstr ""
 
 #. translators: explanation about hierarchy of particular calendars
 #: includes/messages.php:190
-#, fuzzy
-#| msgid ""
-#| "These calendars follow a hierarchical structure: a <b>Diocesan calendar</"
-#| "b> inherits and adapts the data from its respective <b>National calendar</"
-#| "b>. Therefore, a National calendar must be defined before a Diocesan one "
-#| "can be established."
 msgid ""
 "These calendars follow a hierarchical structure: a <b>Diocesan calendar</b> "
 "inherits and adapts the data from its respective <b>National calendar</b>. "
 "Therefore, a National calendar must be defined before a Diocesan calendar "
 "can be established."
 msgstr ""
-"Te kalendarze podążają za strukturą hierarchiczną: <b>kalendarz Diecezjalny</"
-"b> dziedziczy i adaptuje dane od odpowiedniego <b>kalendarza Narodowego</b>. "
-"Dlatego kalendarz Narodowy musi być zdefiniowany przed ustanowieniem "
-"kalendarza Diecezjalnego."
+"Te kalendarze mają strukturę hierarchiczną: <b>kalendarz diecezjalny</b> "
+"dziedziczy i dostosowuje dane z odpowiedniego <b>kalendarza narodowego</b>. "
+"Dlatego kalendarz narodowy musi być zdefiniowany, zanim można utworzyć "
+"kalendarz diecezjalny."
 
 #: includes/messages.php:193
 #, php-format
