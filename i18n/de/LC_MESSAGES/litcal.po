@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-28 19:06+0000\n"
-"PO-Revision-Date: 2025-12-28 23:31+0000\n"
+"PO-Revision-Date: 2025-12-28 23:57+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -1256,7 +1256,7 @@ msgstr "Partikularkalender"
 #. translators: card heading for creating wider region calendar
 #: layout/header.php:48 includes/messages.php:224
 msgid "Define a Calendar for a Wider Region"
-msgstr "Kalender für eine größere bereich definieren"
+msgstr "Kalender für eine größeren Bereich definieren"
 
 #. translators: card heading for creating national calendar
 #: layout/header.php:49 includes/messages.php:226
@@ -1656,7 +1656,7 @@ msgstr ""
 #. translators: main heading for particular calendars page
 #: includes/messages.php:170
 msgid "Particular Calendars - Define Wider Region events"
-msgstr "Partikularkalender - Ereignisse für größere bereich definieren"
+msgstr "Partikularkalender - Ereignisse für größeren Bereich definieren"
 
 #. translators: main heading for particular calendars page
 #: includes/messages.php:172
@@ -1746,9 +1746,9 @@ msgstr ""
 "Der erste Schritt in diesem Prozess ist sicherzustellen, dass der "
 "<b>Allgemeine Römische Kalender</b> in der lokalen Sprache verfügbar ist "
 "(siehe %s). Wenn mehrere Nationen gemeinsame liturgische Feiern haben—wie "
-"den Patron einer <b>größeren bereich</b> (z.B. eines Kontinents)—sollten "
+"den Patron einer <b>größeren Bereich</b> (z.B. eines Kontinents)—sollten "
 "diese Ereignisse auf regionaler Ebene definiert werden. Die Daten der "
-"größeren bereich werden dann automatisch in alle nationalen Kalender "
+"größeren Bereich werden dann automatisch in alle nationalen Kalender "
 "innerhalb dieser Gerichtsbarkeit integriert."
 
 #. translators: help text for diocesan group field
@@ -2038,8 +2038,8 @@ msgid ""
 "been defined, you can associate the Wider Region data with the National "
 "Calendar here"
 msgstr ""
-"wenn Daten für eine größerer bereich, die diesen Nationalkalender betrifft, "
-"bereits definiert sind, kannst du die Daten der größeren bereich hier mit "
+"wenn Daten für eine größeren Bereich, die diesen Nationalkalender betrifft, "
+"bereits definiert sind, kannst du die Daten der größeren Bereich hier mit "
 "dem Nationalkalender verknüpfen"
 
 #. translators: screen reader text for previous button
