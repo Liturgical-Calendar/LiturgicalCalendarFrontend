@@ -119,7 +119,7 @@ node --check assets/js/file.js  # Syntax check
 ### Before Committing
 
 ```bash
-composer parallel-lint && composer lint:fix && composer analyse && composer lint:md:fix
+composer parallel-lint && composer lint:fix && composer analyse && composer lint:md:fix && yarn typecheck && yarn format:md
 ```
 
 ### Git Hooks (CaptainHook)
