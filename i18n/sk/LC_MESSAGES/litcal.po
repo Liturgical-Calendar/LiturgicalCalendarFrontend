@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-28 18:15+0000\n"
+"POT-Creation-Date: 2025-12-28 19:06+0000\n"
 "PO-Revision-Date: 2025-12-28 15:29+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -822,25 +822,25 @@ msgstr "Webová stránka projektu"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - green
-#: src/LitColor.php:33 src/FormControls.php:97 includes/messages.php:74
+#: src/LitColor.php:33 src/FormControls.php:105 includes/messages.php:74
 msgid "green"
 msgstr "zelená"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - purple/violet
-#: src/LitColor.php:36 src/FormControls.php:96 includes/messages.php:76
+#: src/LitColor.php:36 src/FormControls.php:104 includes/messages.php:76
 msgid "purple"
 msgstr "fialová"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - white
-#: src/LitColor.php:39 src/FormControls.php:94 includes/messages.php:70
+#: src/LitColor.php:39 src/FormControls.php:102 includes/messages.php:70
 msgid "white"
 msgstr "biela"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - red
-#: src/LitColor.php:42 src/FormControls.php:95 includes/messages.php:72
+#: src/LitColor.php:42 src/FormControls.php:103 includes/messages.php:72
 msgid "red"
 msgstr "červená"
 
@@ -1179,40 +1179,40 @@ msgid "Property to change"
 msgstr "Vlastnosť na zmenu"
 
 #. translators: form field label for the name of a liturgical event
-#: src/Utilities.php:283 src/FormControls.php:53 includes/messages.php:17
+#: src/Utilities.php:283 src/FormControls.php:61 includes/messages.php:17
 msgid "Name"
 msgstr "Meno"
 
-#: src/Utilities.php:284 src/FormControls.php:171
+#: src/Utilities.php:284 src/FormControls.php:188
 msgid "Grade"
 msgstr "Stupeň"
 
 #. translators: form field label for the day of the month
-#: src/FormControls.php:60 includes/messages.php:19
+#: src/FormControls.php:68 includes/messages.php:19
 msgid "Day"
 msgstr "Deň"
 
 #. translators: form field label for the month of the year
-#: src/FormControls.php:66 includes/messages.php:21
+#: src/FormControls.php:74 includes/messages.php:21
 msgid "Month"
 msgstr "Mesiac"
 
 #. translators: form field label for liturgical color selection
-#: src/FormControls.php:92 includes/messages.php:23
+#: src/FormControls.php:100 includes/messages.php:23
 msgid "Liturgical color"
 msgstr "Liturgická farba"
 
 #. translators: form field label - first year a liturgical event takes effect
-#: src/FormControls.php:104 includes/messages.php:25
+#: src/FormControls.php:112 includes/messages.php:25
 msgid "Since"
 msgstr "Od"
 
 #. translators: form field label - last year a liturgical event is observed
-#: src/FormControls.php:111 includes/messages.php:27
+#: src/FormControls.php:119 includes/messages.php:27
 msgid "Until"
 msgstr "Až do"
 
-#: src/FormControls.php:124
+#: src/FormControls.php:141
 msgid "Common (or Proper)"
 msgstr "Bežné (alebo Vlastné)"
 
