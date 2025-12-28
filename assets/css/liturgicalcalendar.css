@@ -5,7 +5,19 @@ body {
 /* Responsive navbar styling */
 .sb-topnav .navbar-brand {
     font-size: 0.9rem;
-    white-space: nowrap;
+    white-space: normal;
+    line-height: 1.2;
+    display: flex;
+    align-items: center;
+}
+.sb-topnav .navbar-brand > i {
+    flex-shrink: 0;
+}
+/* On lg+ screens, limit brand width to leave room for sidebar toggle */
+@media (min-width: 992px) {
+    .sb-topnav .navbar-brand {
+        max-width: 220px;
+    }
 }
 
 .sb-topnav .navbar-toggler {
