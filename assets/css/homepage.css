@@ -25,3 +25,39 @@ a#transl-status-btn.btn.btn-light {
 a#transl-status-btn.btn.btn-light:hover {
     border: 3px solid orange;
 }
+
+/* Responsive API URL builder */
+#requestUrlBuilder {
+    align-items: stretch;
+}
+#requestUrlBuilder > div:first-child {
+    min-width: 0;
+    overflow: hidden;
+}
+#requestUrlBuilder > div:first-child > code:last-child {
+    word-break: break-all;
+    overflow-wrap: break-word;
+}
+#requestUrlBuilder > div:last-child {
+    display: flex;
+    align-items: stretch;
+}
+#requestUrlBuilder > div:last-child > a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+@media (max-width: 767.98px) {
+    #requestUrlBuilder {
+        flex-direction: column;
+    }
+    #requestUrlBuilder > div:first-child {
+        width: 100%;
+        margin-bottom: 0.5rem;
+        padding: 0.5rem;
+    }
+    #requestUrlBuilder > div:last-child {
+        width: 100%;
+    }
+}
