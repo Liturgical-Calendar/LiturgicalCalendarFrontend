@@ -35,14 +35,14 @@ asort($langsAssoc);
             <li class="nav-item<?php echo $currentPage === 'index' || $currentPage === '' ? ' bg-info' : ''; ?>" id="topNavBar_API">
                 <a class="nav-link<?php echo $currentPage === 'index' || $currentPage === '' ? ' active' : ''; ?>" href="./index.php"
                    title="<?php echo htmlspecialchars($apiLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-                    <i class="fas fa-server me-1"></i><?php echo $apiLabel; ?>
+                    <i class="fas fa-server me-1"></i><span class="nav-text"><?php echo $apiLabel; ?></span>
                 </a>
             </li>
             <?php $particularCalendarsLabel = _('Particular Calendars'); ?>
             <li class="nav-item dropdown<?php echo $currentPage === 'extending' ? ' bg-info' : ''; ?>" id="topNavBar_Extending">
                 <a class="nav-link dropdown-toggle<?php echo $currentPage === 'extending' ? ' active' : ''; ?>" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="extendingChoicesDropdown"
                    title="<?php echo htmlspecialchars($particularCalendarsLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-                    <i class="fas fa-layer-group me-1"></i><?php echo $particularCalendarsLabel; ?>
+                    <i class="fas fa-layer-group me-1"></i><span class="nav-text"><?php echo $particularCalendarsLabel; ?></span>
                 </a>
                 <div class="dropdown-menu shadow" aria-labelledby="extendingChoicesDropdown" id="extendingChoicesDropdownItems">
                     <a class="dropdown-item<?php echo isset($_GET['choice']) && $_GET['choice'] === 'widerRegion' ? ' active' : ''; ?>" id="extendingChoiceWiderRegion" href="./extending.php?choice=widerRegion"><i class="fas fa-globe-americas me-2"></i><?php echo _('Define a Calendar for a Wider Region'); ?></a>
@@ -54,28 +54,28 @@ asort($langsAssoc);
             <li class="nav-item<?php echo in_array($currentPage, ['usage', 'examples', 'liturgyOfAnyDay'], true) ? ' bg-info' : ''; ?>" id="topNavBar_Usage">
                 <a class="nav-link<?php echo in_array($currentPage, ['usage', 'examples', 'liturgyOfAnyDay'], true) ? ' active' : ''; ?>" href="./usage.php"
                    title="<?php echo htmlspecialchars($usageLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-                    <i class="fas fa-book-open me-1"></i><?php echo $usageLabel; ?>
+                    <i class="fas fa-book-open me-1"></i><span class="nav-text"><?php echo $usageLabel; ?></span>
                 </a>
             </li>
             <?php $translationsLabel = _('Translations'); ?>
             <li class="nav-item<?php echo $currentPage === 'translations' ? ' bg-info' : ''; ?>" id="topNavBar_Translations">
                 <a class="nav-link<?php echo $currentPage === 'translations' ? ' active' : ''; ?>" href="./translations.php"
                    title="<?php echo htmlspecialchars($translationsLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-                    <i class="fas fa-language me-1"></i><?php echo $translationsLabel; ?>
+                    <i class="fas fa-language me-1"></i><span class="nav-text"><?php echo $translationsLabel; ?></span>
                 </a>
             </li>
             <?php $decreesLabel = _('Decrees'); ?>
             <li class="nav-item<?php echo $currentPage === 'decrees' ? ' bg-info' : ''; ?>" id="topNavBar_Decrees">
                 <a class="nav-link<?php echo $currentPage === 'decrees' ? ' active' : ''; ?>" href="./decrees.php"
                    title="<?php echo htmlspecialchars($decreesLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-                    <i class="fas fa-gavel me-1"></i><?php echo $decreesLabel; ?>
+                    <i class="fas fa-gavel me-1"></i><span class="nav-text"><?php echo $decreesLabel; ?></span>
                 </a>
             </li>
             <?php $aboutUsLabel = _('About us'); ?>
             <li class="nav-item<?php echo $currentPage === 'about' ? ' bg-info' : ''; ?>" id="topNavBar_AboutUs">
                 <a class="nav-link<?php echo $currentPage === 'about' ? ' active' : ''; ?>" href="./about.php"
                    title="<?php echo htmlspecialchars($aboutUsLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-                    <i class="fas fa-info-circle me-1"></i><?php echo $aboutUsLabel; ?>
+                    <i class="fas fa-info-circle me-1"></i><span class="nav-text"><?php echo $aboutUsLabel; ?></span>
                 </a>
             </li>
         </ul>

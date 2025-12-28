@@ -40,23 +40,12 @@ body:not(.auth-ready) #userMenuContainer {
     padding: 0.5rem;
     white-space: nowrap;
 }
-/* On lg screens (992px-1199px), show only icons in main navbar */
-@media (min-width: 992px) and (max-width: 1199.98px) {
-    .sb-topnav .navbar-nav.me-auto .nav-link {
-        font-size: 0;
+/* On lg-xl screens (992px-1399px), show only icons in main navbar */
+@media (min-width: 992px) and (max-width: 1399.98px) {
+    .sb-topnav .navbar-nav.me-auto .nav-link .nav-text {
+        display: none;
     }
     .sb-topnav .navbar-nav.me-auto .nav-link > i {
-        font-size: 1rem;
-        margin-right: 0;
-    }
-}
-/* On xl screens (1200px-1399px), also show only icons in main navbar */
-@media (min-width: 1200px) and (max-width: 1399.98px) {
-    .sb-topnav .navbar-nav.me-auto .nav-link {
-        font-size: 0;
-    }
-    .sb-topnav .navbar-nav.me-auto .nav-link > i {
-        font-size: 1rem;
         margin-right: 0;
     }
 }
