@@ -121,22 +121,22 @@ $SystemLocalesWithoutRegion = array_reduce($SystemLocalesWithoutRegion, function
 }, []);
 $c->asort($SystemLocalesWithoutRegion);
 
-$API_EXTEND_HOWTO_A0 = $messages['API_EXTEND_HOWTO_A0'] ?? '';
-$API_EXTEND_HOWTO_A1 = $messages['API_EXTEND_HOWTO_A1'] ?? '';
-$API_EXTEND_HOWTO_A2 = $messages['API_EXTEND_HOWTO_A2'] ?? '';
-$DioceseGroupHelp    = $messages['DioceseGroupHelp']    ?? '';
+$API_EXTEND_HOWTO_A0 = $messages['API_EXTEND_HOWTO_A0'];
+$API_EXTEND_HOWTO_A1 = $messages['API_EXTEND_HOWTO_A1'];
+$API_EXTEND_HOWTO_A2 = $messages['API_EXTEND_HOWTO_A2'];
+$DioceseGroupHelp    = $messages['DioceseGroupHelp'];
 
-$WiderRegionHeading = $messages['Particular Calendars wider region heading'] ?? '';
-$NationalHeading    = $messages['Particular Calendars national heading']     ?? '';
-$DiocesanHeading    = $messages['Particular Calendars diocesan heading']     ?? '';
+$WiderRegionHeading = $messages['Particular Calendars wider region heading'];
+$NationalHeading    = $messages['Particular Calendars national heading'];
+$DiocesanHeading    = $messages['Particular Calendars diocesan heading'];
 $PageHeading        = isset($_GET['choice'])
     ? match ($_GET['choice']) {
         'widerRegion' => $WiderRegionHeading,
         'national'    => $NationalHeading,
         'diocesan'    => $DiocesanHeading,
-        default       => $messages['Particular Calendars heading'] ?? '',
+        default       => $messages['Particular Calendars heading'],
     }
-    : $messages['Particular Calendars heading'] ?? '';
+    : $messages['Particular Calendars heading'];
 
 $buttonGroup = '<hr><div class="d-flex justify-content-around">
 <button class="btn btn-sm btn-primary m-2 d-none litcalActionButton" id="makePatronAction" data-requires-auth="true" disabled data-bs-toggle="modal" data-bs-target="#makePatronActionPrompt"><i class="fas fa-user-graduate me-2"></i>' . $messages['PatronButton'] . '</button>
