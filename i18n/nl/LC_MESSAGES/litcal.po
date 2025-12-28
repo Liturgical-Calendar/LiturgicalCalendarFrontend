@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-28 18:15+0000\n"
-"PO-Revision-Date: 2025-12-28 15:29+0000\n"
+"PO-Revision-Date: 2025-12-28 18:58+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -1246,7 +1246,7 @@ msgstr "API"
 
 #: layout/header.php:41 layout/header.php:193
 msgid "Particular Calendars"
-msgstr "Particuliere kalenders"
+msgstr "Bijzondere Kalenders"
 
 #. translators: card heading for creating wider region calendar
 #: layout/header.php:48 includes/messages.php:224
