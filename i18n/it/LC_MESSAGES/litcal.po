@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-28 14:49+0000\n"
-"PO-Revision-Date: 2025-12-18 16:06+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2025-12-28 15:29+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
 "Language: it\n"
@@ -1720,12 +1720,6 @@ msgstr ""
 
 #. translators: explanation about hierarchy of particular calendars
 #: includes/messages.php:190
-#, fuzzy
-#| msgid ""
-#| "These calendars follow a hierarchical structure: a <b>Diocesan calendar</"
-#| "b> inherits and adapts the data from its respective <b>National calendar</"
-#| "b>. Therefore, a National calendar must be defined before a Diocesan one "
-#| "can be established."
 msgid ""
 "These calendars follow a hierarchical structure: a <b>Diocesan calendar</b> "
 "inherits and adapts the data from its respective <b>National calendar</b>. "
@@ -1733,9 +1727,9 @@ msgid ""
 "can be established."
 msgstr ""
 "Questi calendari seguono una struttura gerarchica: un <b>calendario "
-"diocesano</b> eredita e adatta i dati dal suo rispettivo <b>calendario "
+"diocesano</b> eredita e adatta i dati dal rispettivo <b>calendario "
 "nazionale</b>. Pertanto, un calendario nazionale deve essere definito prima "
-"che possa essere stabilito uno diocesano."
+"che possa essere stabilito un calendario diocesano."
 
 #: includes/messages.php:193
 #, php-format
