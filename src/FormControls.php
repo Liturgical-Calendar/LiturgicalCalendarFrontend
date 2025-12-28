@@ -29,7 +29,15 @@ class FormControls
         $this->LitGrade  = new LitGrade($i18n->LOCALE);
     }
 
-    //public function $this->i18n->__construct()
+    /**
+     * Render and output an HTML form row for defining a liturgical event.
+     *
+     * Builds a Bootstrap-aligned row of form controls (name, day, month with mobile toggle,
+     * proper/common selection, liturgical color, since/until years) and echoes the resulting HTML.
+     * Which controls are included is determined by FormControls::$settings.
+     *
+     * @param string|null $title Optional header label to render above the row; if omitted no header is rendered.
+     */
     public function createEventRow(?string $title = null): void
     {
         $uniqid  = uniqid();
@@ -118,6 +126,15 @@ class FormControls
         echo $formRow;
     }
 
+    /**
+     * HTML template for the "Common (or Proper)" multi-select form block, containing localized option entries.
+     *
+     * The returned string contains placeholders `{colWidth}` and `{uniqid}` that must be replaced by the caller
+     * before rendering. The template includes a label and a `<select>` element (multiple, size="1") populated
+     * with localized common/proper options.
+     *
+     * @return string The HTML fragment for the Common/Proper multi-select, with `{colWidth}` and `{uniqid}` placeholders.
+     */
     public function getCommonsTemplate(): string
     {
         return '<div class="form-group col-sm-{colWidth}">' .
