@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-28 19:06+0000\n"
-"PO-Revision-Date: 2025-12-28 15:29+0000\n"
+"PO-Revision-Date: 2025-12-28 23:57+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pt/>\n"
@@ -1248,7 +1248,7 @@ msgstr "Calendários particulares"
 #. translators: card heading for creating wider region calendar
 #: layout/header.php:48 includes/messages.php:224
 msgid "Define a Calendar for a Wider Region"
-msgstr "Definir um Calendário para uma Região Mais Ampla"
+msgstr "Definir um Calendário para uma região mais ampla"
 
 #. translators: card heading for creating national calendar
 #: layout/header.php:49 includes/messages.php:226
@@ -1580,7 +1580,7 @@ msgstr "Mover Evento Litúrgico"
 #. translators: button label for creating a liturgical event
 #: includes/messages.php:136
 msgid "Create Liturgical Event"
-msgstr "Crie Evento Litúrgico"
+msgstr "Criar Evento Litúrgico"
 
 #. translators: button label for creating event from existing
 #: includes/messages.php:138
@@ -1645,7 +1645,7 @@ msgstr "Definir Calendários Particulares com base no Calendário Romano Geral"
 #. translators: main heading for particular calendars page
 #: includes/messages.php:170
 msgid "Particular Calendars - Define Wider Region events"
-msgstr "Calendários Particulares - Definir eventos da Região Mais Ampla"
+msgstr "Calendários Particulares - Definir eventos da região mais ampla"
 
 #. translators: main heading for particular calendars page
 #: includes/messages.php:172
@@ -1906,7 +1906,7 @@ msgstr ""
 #. translators: button to save wider region calendar data
 #: includes/messages.php:292
 msgid "Save Wider Region Calendar Data"
-msgstr "Salvar Dados do Calendário da Região mais ampla"
+msgstr "Salvar Dados do Calendário da região mais ampla"
 
 #. translators: button to save national calendar data
 #: includes/messages.php:294
@@ -1931,7 +1931,7 @@ msgstr "Mover um evento litúrgico para uma nova data"
 #. translators: modal title for creating new event
 #: includes/messages.php:306
 msgid "Create a new liturgical event"
-msgstr "Crie um novo evento litúrgico"
+msgstr "Criar um novo evento litúrgico"
 
 #. translators: modal title for choosing missal
 #: includes/messages.php:308
@@ -2020,9 +2020,9 @@ msgid ""
 "been defined, you can associate the Wider Region data with the National "
 "Calendar here"
 msgstr ""
-"se os dados de uma Região Mais Ampla que dizem respeito a este Calendário "
-"Nacional já foram definidos, você pode associar os dados da Região Mais "
-"Ampla com o Calendário Nacional aqui"
+"se os dados de uma região mais ampla que dizem respeito a este Calendário "
+"Nacional já foram definidos, você pode associar os dados da região mais "
+"ampla com o Calendário Nacional aqui"
 
 #. translators: screen reader text for previous button
 #: includes/messages.php:344

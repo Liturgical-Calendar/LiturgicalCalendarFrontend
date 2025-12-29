@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-28 19:06+0000\n"
-"PO-Revision-Date: 2025-12-28 15:29+0000\n"
+"PO-Revision-Date: 2025-12-28 23:31+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
@@ -1809,7 +1809,7 @@ msgstr "Impostazioni del Calendario Nazionale"
 #. translators: heading for diocesan overrides section
 #: includes/messages.php:232
 msgid "Diocesan overrides to the national calendar for …"
-msgstr "Customizzazione diocesana rispetto al calendario nazionale per …"
+msgstr "Personalizzazione diocesana rispetto al calendario nazionale per …"
 
 #. translators: label for Epiphany setting
 #: includes/messages.php:238
@@ -2033,8 +2033,8 @@ msgid ""
 "been defined, you can associate the Wider Region data with the National "
 "Calendar here"
 msgstr ""
-"se sono già stati definiti dei dati per una Regione più Ampia riguardante "
-"questo Calendario Nazionale, puoi associare i dati della Regione più Ampia "
+"se sono già stati definiti dei dati per una regione più ampia riguardante "
+"questo Calendario Nazionale, puoi associare i dati della regione più ampia "
 "con il Calendario Nazionale qui"
 
 #. translators: screen reader text for previous button
