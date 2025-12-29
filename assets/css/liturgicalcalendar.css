@@ -1,11 +1,34 @@
+html {
+    scrollbar-gutter: stable;
+}
 body {
     font-family: 'Nunito', sans-serif !important;
 }
 
 /* Responsive navbar styling */
+.sb-topnav {
+    padding-right: 1rem;
+}
+/* Hide auth buttons until auth state is determined to prevent flash */
+body:not(.auth-ready) #loginBtnContainer,
+body:not(.auth-ready) #userMenuContainer {
+    visibility: hidden;
+}
 .sb-topnav .navbar-brand {
     font-size: 0.9rem;
-    white-space: nowrap;
+    white-space: normal;
+    line-height: 1.2;
+    display: flex;
+    align-items: center;
+}
+.sb-topnav .navbar-brand > i {
+    flex-shrink: 0;
+}
+/* On lg+ screens, limit brand width to leave room for sidebar toggle */
+@media (min-width: 992px) {
+    .sb-topnav .navbar-brand {
+        max-width: 220px;
+    }
 }
 
 .sb-topnav .navbar-toggler {
@@ -15,6 +38,30 @@ body {
 
 .sb-topnav .nav-link {
     padding: 0.5rem;
+    white-space: nowrap;
+}
+/* On lg-xl screens (992px-1399px), show only icons in main navbar */
+@media (min-width: 992px) and (max-width: 1399.98px) {
+    .sb-topnav .navbar-nav.me-auto .nav-link .nav-text {
+        display: none;
+    }
+    .sb-topnav .navbar-nav.me-auto .nav-link > i {
+        margin-right: 0;
+    }
+}
+/* On lower xxl screens (1400px-1599px), hide right navbar text */
+@media (min-width: 1400px) and (max-width: 1599.98px) {
+    .sb-topnav .navbar-nav:not(.me-auto) .nav-link > span {
+        display: none !important;
+    }
+    .sb-topnav .navbar-nav:not(.me-auto) .nav-link > i {
+        margin-right: 0;
+    }
+}
+/* Add spacing before login/logout button */
+#loginBtnContainer,
+#userMenuContainer {
+    margin-left: 0.5rem;
 }
 
 @media (max-width: 991.98px) {

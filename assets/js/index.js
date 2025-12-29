@@ -52,7 +52,8 @@ if (!BaseUrl) {
             apiOptions._yearInput._labelElement.insertAdjacentElement('beforeend', yearLabelAfter);
 
             const pathBuilder = new PathBuilder(apiOptions, calendarSelect);
-            pathBuilder.class('row ps-2')
+            pathBuilder.id('requestUrlBuilder')
+                .class('row ps-2')
                 .pathWrapperClass('col col-md-8 border border-secondary rounded bg-light d-flex align-items-center')
                 .buttonWrapperClass('col col-md-3')
                 .buttonClass('btn btn-primary')

@@ -121,13 +121,22 @@ $SystemLocalesWithoutRegion = array_reduce($SystemLocalesWithoutRegion, function
 }, []);
 $c->asort($SystemLocalesWithoutRegion);
 
-$API_EXTEND_HOWTO_A   = $messages['API_EXTEND_HOWTO_A'];
-$API_EXTEND_HOWTO_A1  = $messages['API_EXTEND_HOWTO_A1'];
-$API_EXTEND_HOWTO_A1a = $messages['API_EXTEND_HOWTO_A1a'];
-$API_EXTEND_HOWTO_A2  = $messages['API_EXTEND_HOWTO_A2'];
-$API_EXTEND_HOWTO_A3  = $messages['API_EXTEND_HOWTO_A3'];
-$DioceseGroupHelp     = $messages['DioceseGroupHelp'];
+$API_EXTEND_HOWTO_A0 = $messages['API_EXTEND_HOWTO_A0'];
+$API_EXTEND_HOWTO_A1 = $messages['API_EXTEND_HOWTO_A1'];
+$API_EXTEND_HOWTO_A2 = $messages['API_EXTEND_HOWTO_A2'];
+$DioceseGroupHelp    = $messages['DioceseGroupHelp'];
 
+$WiderRegionHeading = $messages['Particular Calendars wider region heading'];
+$NationalHeading    = $messages['Particular Calendars national heading'];
+$DiocesanHeading    = $messages['Particular Calendars diocesan heading'];
+$PageHeading        = isset($_GET['choice'])
+    ? match ($_GET['choice']) {
+        'widerRegion' => $WiderRegionHeading,
+        'national'    => $NationalHeading,
+        'diocesan'    => $DiocesanHeading,
+        default       => $messages['Particular Calendars heading'],
+    }
+    : $messages['Particular Calendars heading'];
 
 $buttonGroup = '<hr><div class="d-flex justify-content-around">
 <button class="btn btn-sm btn-primary m-2 d-none litcalActionButton" id="makePatronAction" data-requires-auth="true" disabled data-bs-toggle="modal" data-bs-target="#makePatronActionPrompt"><i class="fas fa-user-graduate me-2"></i>' . $messages['PatronButton'] . '</button>
@@ -139,7 +148,7 @@ $buttonGroup = '<hr><div class="d-flex justify-content-around">
 ?><!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
-    <title><?php echo $messages['Page title - Extending'] ?></title>
+    <title><?php echo $messages['Page title - Particular Calendars'] ?></title>
     <?php include_once('layout/head.php'); ?>
 </head>
 <body class="sb-nav-fixed">
@@ -147,8 +156,10 @@ $buttonGroup = '<hr><div class="d-flex justify-content-around">
     <?php include_once('layout/header.php'); ?>
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-black" style="--bs-text-opacity: .6;"><?php echo $messages['Extend heading']; ?></h1>
-        <p class="mb-1 lh-sm"><small><i><?php echo $API_EXTEND_HOWTO_A . ' ' . $API_EXTEND_HOWTO_A1 . ' ' . $API_EXTEND_HOWTO_A1a . ' ' . $API_EXTEND_HOWTO_A2 . ' ' . $API_EXTEND_HOWTO_A3; ?></i></small></p>
+        <h1 class="h3 mb-2 text-black" style="--bs-text-opacity: .6;"><?php
+            echo $PageHeading;
+        ?></h1>
+        <p class="mb-1 lh-sm"><small><i><?php echo $API_EXTEND_HOWTO_A0 . ' ' . $API_EXTEND_HOWTO_A1 . ' ' . $API_EXTEND_HOWTO_A2; ?></i></small></p>
 <?php
 if (isset($_GET['choice'])) {
     switch ($_GET['choice']) {
@@ -177,7 +188,7 @@ if (isset($_GET['choice'])) {
                         <div class="col col-md-3">
                             <div>
                                 <label for="widerRegionLocales" class="fw-bold"><?php echo $messages['Locales']; ?></label>
-                                <select class="form-select calendarLocales" id="widerRegionLocales" data-requires-auth="true" disabled multiple="multiple">
+                                <select class="form-select calendarLocales" id="widerRegionLocales" data-requires-auth="true" disabled multiple="multiple" size="1">
                                 <?php foreach ($SystemLocalesWithRegion as $locale => $lang_region) {
                                         echo "<option value='$locale'>$lang_region</option>";
                                 } ?>
@@ -203,7 +214,7 @@ if (isset($_GET['choice'])) {
                     </form>
                     <div class="card border-4 border-top-0 border-bottom-0 border-end-0 border-primary rounded-3 m-4">
                         <div class="card-header py-3">
-                            <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo $messages['Create a Calendar for a Wider Region']; ?></h4>
+                            <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo $messages['Define a Calendar for a Wider Region']; ?></h4>
                         </div>
                         <div class="card-body">
                             <hr>
@@ -242,7 +253,7 @@ if (isset($_GET['choice'])) {
                         <div class="col col-md-3">
                             <div>
                                 <label for="nationalCalendarLocales" class="fw-bold"><?php echo $messages['Locales']; ?></label>
-                                <select class="form-select calendarLocales" id="nationalCalendarLocales" data-requires-auth="true" disabled multiple="multiple">
+                                <select class="form-select calendarLocales" id="nationalCalendarLocales" data-requires-auth="true" disabled multiple="multiple" size="1">
                                 <?php foreach ($SystemLocalesWithRegion as $locale => $lang_region) {
                                         echo "<option value='$locale'>$lang_region</option>";
                                 } ?>
@@ -268,7 +279,7 @@ if (isset($_GET['choice'])) {
                     </form>
                     <div class="card border-4 border-top-0 border-bottom-0 border-end-0 border-primary rounded-3 m-4">
                         <div class="card-header py-3">
-                            <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo $messages['Create a National Calendar']; ?></h4>
+                            <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo $messages['Define a National Calendar']; ?></h4>
                         </div>
                         <div class="card-body">
 
@@ -404,7 +415,7 @@ if (isset($_GET['choice'])) {
                         <div class="row justify-content-center align-items-baseline">
                             <div class="form-group col col-md-3">
                                 <label for="diocesanCalendarLocales" class="fw-bold"><?php echo $messages['Locales']; ?>:</label>
-                                <select class="form-select calendarLocales" id="diocesanCalendarLocales" multiple="multiple" disabled>
+                                <select class="form-select calendarLocales" id="diocesanCalendarLocales" multiple="multiple" size="1" disabled>
                                 <?php
                                 foreach ($SystemLocalesWithRegion as $AvlLOCALE => $AvlLANGUAGE) {
                                     echo "<option value=\"{$AvlLOCALE}\">{$AvlLANGUAGE}</option>";
@@ -466,7 +477,7 @@ if (isset($_GET['choice'])) {
                             <div class="container-fluid">
                                 <div class="card border-4 border-top-0 border-bottom-0 border-end-0 border-primary rounded-3 my-4 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo $messages['Create a Diocesan Calendar']; ?>: <?php echo $messages['Define the Solemnities']; ?></h4>
+                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo $messages['Define a Diocesan Calendar']; ?>: <?php echo $messages['Define the Solemnities']; ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
@@ -487,7 +498,7 @@ if (isset($_GET['choice'])) {
                             <div class="container-fluid">
                                 <div class="card border-4 border-top-0 border-bottom-0 border-end-0 border-primary rounded-3 my-4 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo $messages['Create a Diocesan Calendar']; ?>: <?php echo $messages['Define the Feasts']; ?></h4>
+                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo $messages['Define a Diocesan Calendar']; ?>: <?php echo $messages['Define the Feasts']; ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
@@ -508,7 +519,7 @@ if (isset($_GET['choice'])) {
                             <div class="container-fluid">
                                 <div class="card border-4 border-top-0 border-bottom-0 border-end-0 border-primary rounded-3 my-4 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo $messages['Create a Diocesan Calendar']; ?>: <?php echo $messages['Define the Memorials']; ?></h4>
+                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo $messages['Define a Diocesan Calendar']; ?>: <?php echo $messages['Define the Memorials']; ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
@@ -529,7 +540,7 @@ if (isset($_GET['choice'])) {
                             <div class="container-fluid">
                                 <div class="card border-4 border-top-0 border-bottom-0 border-end-0 border-primary rounded-3 my-4 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo $messages['Create a Diocesan Calendar']; ?>: <?php echo $messages['Define the Optional Memorials']; ?></h4>
+                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo $messages['Define a Diocesan Calendar']; ?>: <?php echo $messages['Define the Optional Memorials']; ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">

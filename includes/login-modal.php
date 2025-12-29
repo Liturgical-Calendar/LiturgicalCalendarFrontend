@@ -110,6 +110,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Initialize navbar UI based on current auth state (login button vs user menu)
     updateNavbarAuthUI();
+    // Mark auth as ready to reveal the appropriate auth button (prevents flash)
+    document.body.classList.add('auth-ready');
 
     // Login button click handler
     const loginBtn = document.getElementById('loginBtn');
