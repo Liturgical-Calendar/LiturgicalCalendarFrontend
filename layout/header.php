@@ -52,13 +52,6 @@ asort($langsAssoc);
                     <i class="fas fa-language me-1"></i><span class="nav-text"><?php echo $translationsLabel; ?></span>
                 </a>
             </li>
-            <?php $decreesLabel = _('Decrees'); ?>
-            <li class="nav-item<?php echo $currentPage === 'decrees' ? ' bg-info' : ''; ?>" id="topNavBar_Decrees">
-                <a class="nav-link<?php echo $currentPage === 'decrees' ? ' active' : ''; ?>" href="./decrees.php"
-                   title="<?php echo htmlspecialchars($decreesLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-                    <i class="fas fa-gavel me-1"></i><span class="nav-text"><?php echo $decreesLabel; ?></span>
-                </a>
-            </li>
             <?php $aboutUsLabel = _('About us'); ?>
             <li class="nav-item<?php echo $currentPage === 'about' ? ' bg-info' : ''; ?>" id="topNavBar_AboutUs">
                 <a class="nav-link<?php echo $currentPage === 'about' ? ' active' : ''; ?>" href="./about.php"
