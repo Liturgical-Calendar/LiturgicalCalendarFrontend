@@ -8,6 +8,12 @@ include_once 'includes/common.php'; // provides $i18n and all API URLs
 include_once 'includes/messages.php'; // translation strings
 /** @var array<string,mixed> $messages */
 
+// Require authentication - redirect to home if not logged in
+if (!$authHelper->isAuthenticated) {
+    header('Location: /');
+    exit;
+}
+
 // Defensive initialization: ensure $messages is an array before use
 if (!isset($messages) || !is_array($messages)) {
     $messages = [];

@@ -11,6 +11,12 @@
 include_once 'includes/common.php';
 include_once 'includes/messages.php';
 
+// Require authentication - redirect to home if not logged in
+if (!$authHelper->isAuthenticated) {
+    header('Location: /');
+    exit;
+}
+
 ?>
 <!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">

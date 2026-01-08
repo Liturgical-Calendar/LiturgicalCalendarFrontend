@@ -487,8 +487,25 @@ const Auth = {
     },
 
     /**
+     * Admin pages that require authentication
+     * @private
+     */
+    _adminPages: ['admin-dashboard', 'missals-editor', 'extending'],
+
+    /**
+     * Check if current page is an admin page
+     * @private
+     * @returns {boolean} True if on an admin page
+     */
+    _isAdminPage() {
+        const currentPage = window.location.pathname.split('/').pop()?.replace('.php', '') || '';
+        return this._adminPages.includes(currentPage);
+    },
+
+    /**
      * Logout user
      * Calls logout endpoint and clears all tokens
+     * Redirects to home page if on an admin page, otherwise reloads
      *
      * @returns {Promise<void>}
      */
@@ -519,7 +536,13 @@ const Auth = {
         }
 
         this.clearTokens();
-        window.location.reload(); // Refresh to reset UI state
+
+        // Redirect to home if on admin page, otherwise reload
+        if (this._isAdminPage()) {
+            window.location.href = '/';
+        } else {
+            window.location.reload();
+        }
     },
 
     /**
