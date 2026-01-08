@@ -186,7 +186,16 @@ $apiConfig = \LiturgicalCalendar\Frontend\ApiConfig::getInstance($apiBaseUrl);
 
 // Initialize Auth helper (singleton) - validates JWT from HttpOnly cookie
 // This enables server-side auth detection, avoiding UI flash on page load
-$authHelper = \LiturgicalCalendar\Frontend\AuthHelper::getInstance();
+try {
+    $authHelper = \LiturgicalCalendar\Frontend\AuthHelper::getInstance();
+} catch (Throwable $e) {
+    error_log('Failed to initialize AuthHelper: ' . $e->getMessage());
+    // Create a fallback unauthenticated state
+    $authHelper = new class {
+        public bool $isAuthenticated = false;
+        public ?string $username     = null;
+    };
+}
 
 $i18n = new I18n();
 

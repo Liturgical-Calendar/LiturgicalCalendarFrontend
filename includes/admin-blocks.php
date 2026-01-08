@@ -80,8 +80,8 @@ foreach ($adminBlocks as $block) {
     $editUrl     = htmlspecialchars($block['editUrl'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     $permission  = htmlspecialchars($block['permission'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 
-    $viewLabel = _('View');
-    $editLabel = _('Edit');
+    $viewLabel = htmlspecialchars(_('View'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    $editLabel = htmlspecialchars(_('Edit'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     ?>
     <div class="col-12 col-md-6 col-lg-4 mb-4">
         <div class="card admin-block shadow h-100 border-<?php echo $color; ?>" data-block-id="<?php echo $id; ?>">

@@ -19,20 +19,20 @@ if (!$authHelper->isAuthenticated) {
 
 ?>
 <!doctype html>
-<html lang="<?php echo $i18n->LOCALE; ?>">
+<html lang="<?php echo htmlspecialchars($i18n->LOCALE, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
 <head>
-    <title><?php echo _('Admin Dashboard'); ?> - <?php echo _('Catholic Liturgical Calendar'); ?></title>
+    <title><?php echo htmlspecialchars(_('Admin Dashboard'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?> - <?php echo htmlspecialchars(_('Catholic Liturgical Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></title>
     <?php include_once('./layout/head.php'); ?>
 </head>
 <body class="sb-nav-fixed">
     <?php include_once('./layout/header.php'); ?>
 
     <h1 class="h3 mb-4 text-black admin-dashboard-heading" style="--bs-text-opacity: .6;">
-        <i class="fas fa-tachometer-alt me-2"></i><?php echo _('Admin Dashboard'); ?>
+        <i class="fas fa-tachometer-alt me-2"></i><?php echo htmlspecialchars(_('Admin Dashboard'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
     </h1>
 
     <p class="text-muted mb-4">
-        <?php echo _('Manage liturgical calendar data, Roman Missal information, and regional calendars.'); ?>
+        <?php echo htmlspecialchars(_('Manage liturgical calendar data, Roman Missal information, and regional calendars.'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
     </p>
 
     <div class="row" id="adminBlocks">

@@ -76,13 +76,14 @@
 .admin-block[data-permission-denied] {
     opacity: 0.6;
     cursor: not-allowed;
+    pointer-events: none;
 }
 
 .admin-block[data-permission-denied]:hover {
     transform: none;
 }
 
-.admin-block[data-permission-denied] .admin-block-actions .btn-primary {
+.admin-block[data-permission-denied] .admin-block-actions {
     display: none !important;
 }
 

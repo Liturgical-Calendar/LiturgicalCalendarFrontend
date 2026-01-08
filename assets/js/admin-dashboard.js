@@ -104,9 +104,9 @@ async function fetchIndividualCounts() {
                 // Count top-level array or object keys
                 count = Array.isArray(data) ? data.length : Object.keys(data).length;
             } else {
-                // Count items in specified key
+                // Count items in specified key (handle both arrays and objects)
                 const items = data[config.countKey];
-                count = Array.isArray(items) ? items.length : 0;
+                count = Array.isArray(items) ? items.length : (items ? Object.keys(items).length : 0);
             }
 
             updateCountBadge(blockId, count, config.unit);
@@ -189,7 +189,12 @@ async function initAdminDashboard() {
 
     // Wait for auth state and update permissions
     if (typeof Auth !== 'undefined') {
-        await Auth.updateAuthCache();
+        try {
+            await Auth.updateAuthCache();
+        } catch (error) {
+            console.warn('Failed to update auth cache:', error);
+        }
+        // Update permissions regardless of cache update success
         updateBlockPermissions();
     }
 }

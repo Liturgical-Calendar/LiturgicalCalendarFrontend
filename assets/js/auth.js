@@ -490,7 +490,7 @@ const Auth = {
      * Admin pages that require authentication
      * @private
      */
-    _adminPages: ['admin-dashboard', 'missals-editor', 'extending'],
+    _adminPages: ['admin-dashboard', 'missals-editor', 'extending', 'temporale', 'decrees'],
 
     /**
      * Check if current page is an admin page
@@ -498,7 +498,8 @@ const Auth = {
      * @returns {boolean} True if on an admin page
      */
     _isAdminPage() {
-        const currentPage = window.location.pathname.split('/').pop()?.replace('.php', '') || '';
+        const segments = window.location.pathname.split('/').filter(Boolean);
+        const currentPage = segments.pop()?.replace('.php', '') || '';
         return this._adminPages.includes(currentPage);
     },
 

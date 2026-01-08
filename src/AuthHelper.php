@@ -49,10 +49,12 @@ class AuthHelper
         } else {
             $this->isAuthenticated = true;
             $this->username        = isset($payload->sub) && is_string($payload->sub) ? $payload->sub : null;
-            $this->exp             = isset($payload->exp) ? (int) $payload->exp : null;
-            $this->roles           = isset($payload->roles) && is_array($payload->roles) ? $payload->roles : null;
+            $this->exp             = isset($payload->exp) && is_numeric($payload->exp) ? (int) $payload->exp : null;
+            $this->roles           = isset($payload->roles) && is_array($payload->roles)
+                ? array_values(array_filter($payload->roles, 'is_string'))
+                : null;
             $this->permissions     = isset($payload->permissions) && is_array($payload->permissions)
-                ? $payload->permissions
+                ? array_values(array_filter($payload->permissions, 'is_string'))
                 : null;
         }
     }
@@ -101,9 +103,9 @@ class AuthHelper
     public static function getInstance(?string $secret = null, string $algorithm = 'HS256'): self
     {
         if (self::$instance === null) {
-            // Try to get from environment if not provided
-            $secret    = $secret ?? ( $_ENV['JWT_SECRET'] ?? null );
-            $algorithm = $_ENV['JWT_ALGORITHM'] ?? $algorithm;
+            // Try to get from environment if not provided (use getenv for compatibility)
+            $secret    = $secret ?? ( getenv('JWT_SECRET') ?: null );
+            $algorithm = getenv('JWT_ALGORITHM') ?: $algorithm;
 
             // Ensure algorithm is a string
             if (!is_string($algorithm)) {
