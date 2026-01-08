@@ -188,7 +188,7 @@ $apiConfig = \LiturgicalCalendar\Frontend\ApiConfig::getInstance($apiBaseUrl);
 // This enables server-side auth detection, avoiding UI flash on page load
 try {
     $authHelper = \LiturgicalCalendar\Frontend\AuthHelper::getInstance();
-} catch (Throwable $e) {
+} catch (\Exception $e) {
     error_log('Failed to initialize AuthHelper: ' . $e->getMessage());
     // Create a fallback unauthenticated state matching AuthHelper's interface
     $authHelper = new class {
