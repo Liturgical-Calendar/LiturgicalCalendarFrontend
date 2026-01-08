@@ -40,7 +40,7 @@ const colorDisplay = {
     'red': { label: 'Red', class: 'bg-danger text-white' },
     'green': { label: 'Green', class: 'bg-success text-white' },
     'purple': { label: 'Purple', class: 'text-white', style: 'background-color: #800080;' },
-    'rose': { label: 'Rose', class: 'text-dark', style: 'background-color: #FF007F;' },
+    'rose': { label: 'Rose', class: 'text-dark', style: 'background-color: pink;' },
     'black': { label: 'Black', class: 'bg-dark text-white' }
 };
 
