@@ -172,6 +172,10 @@ async function fetchTemporaleEvents() {
         allEvents = data.events || [];
         filteredEvents = [...allEvents];
 
+        // Debug: log unique lectionary_category values
+        const categories = [...new Set(allEvents.map(e => e.lectionary_category))];
+        console.log('Unique lectionary_category values:', categories);
+
         updateTable();
         updateEventCount();
     } catch (error) {
