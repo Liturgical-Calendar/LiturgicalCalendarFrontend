@@ -1,22 +1,23 @@
 import { test, expect } from './fixtures';
 
 /**
- * Tests for the Admin page (admin.php)
+ * Tests for the Missals Editor page (missals-editor.php)
+ * Formerly admin.php - renamed to avoid confusion with admin-dashboard.php
  *
  * These tests verify that:
- * 1. The admin interface loads correctly when authenticated
+ * 1. The editor interface loads correctly when authenticated
  * 2. The data source dropdown works correctly
  * 3. When "Decrees" is selected, action buttons appear and function correctly
  * 4. Action buttons (Set property, Move event, Create new, Designate Doctor) work
  */
 
-test.describe('Admin Page - Authentication', () => {
+test.describe('Missals Editor - Authentication', () => {
     test('should show login required message when not authenticated', async ({ page }) => {
         // Clear storage state to simulate unauthenticated user
         await page.context().clearCookies();
 
         const baseUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-        await page.goto(`${baseUrl}/admin.php`);
+        await page.goto(`${baseUrl}/missals-editor.php`);
         await page.waitForLoadState('networkidle');
 
         // Login required message should be visible
@@ -30,7 +31,7 @@ test.describe('Admin Page - Authentication', () => {
 
     test('should show admin interface when authenticated', async ({ extendingPage, page }) => {
         const baseUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-        await page.goto(`${baseUrl}/admin.php`);
+        await page.goto(`${baseUrl}/missals-editor.php`);
         await page.waitForLoadState('networkidle');
 
         // Wait for auth to be checked
@@ -46,10 +47,10 @@ test.describe('Admin Page - Authentication', () => {
     });
 });
 
-test.describe('Admin Page - Data Source Selection', () => {
+test.describe('Missals Editor - Data Source Selection', () => {
     test.beforeEach(async ({ extendingPage, page }) => {
         const baseUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-        await page.goto(`${baseUrl}/admin.php`);
+        await page.goto(`${baseUrl}/missals-editor.php`);
         await page.waitForLoadState('networkidle');
         await extendingPage.waitForAuth();
     });
@@ -101,10 +102,10 @@ test.describe('Admin Page - Data Source Selection', () => {
     });
 });
 
-test.describe('Admin Page - Action Buttons (Decrees)', () => {
+test.describe('Missals Editor - Action Buttons (Decrees)', () => {
     test.beforeEach(async ({ extendingPage, page }) => {
         const baseUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-        await page.goto(`${baseUrl}/admin.php`);
+        await page.goto(`${baseUrl}/missals-editor.php`);
         await page.waitForLoadState('networkidle');
         await extendingPage.waitForAuth();
 
@@ -304,10 +305,10 @@ test.describe('Admin Page - Action Buttons (Decrees)', () => {
     });
 });
 
-test.describe('Admin Page - Save Functionality', () => {
+test.describe('Missals Editor - Save Functionality', () => {
     test.beforeEach(async ({ extendingPage, page }) => {
         const baseUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-        await page.goto(`${baseUrl}/admin.php`);
+        await page.goto(`${baseUrl}/missals-editor.php`);
         await page.waitForLoadState('networkidle');
         await extendingPage.waitForAuth();
     });

@@ -30,6 +30,7 @@ const MetadataUrl     = <?php echo json_encode($apiConfig->metadataUrl); ?>;
 const EventsUrl       = <?php echo json_encode($apiConfig->eventsUrl); ?>;
 const MissalsUrl      = <?php echo json_encode($apiConfig->missalsUrl); ?>;
 const DecreesUrl      = <?php echo json_encode($apiConfig->decreesUrl); ?>;
+const TemporaleUrl    = <?php echo json_encode($apiConfig->temporaleUrl); ?>;
 const RegionalDataUrl = <?php echo json_encode($apiConfig->regionalDataUrl); ?>;
 if ( AppEnv === 'development' ) console.info({
     'AppEnv': AppEnv,
@@ -40,6 +41,7 @@ if ( AppEnv === 'development' ) console.info({
     'EventsUrl': EventsUrl,
     'MissalsUrl': MissalsUrl,
     'DecreesUrl': DecreesUrl,
+    'TemporaleUrl': TemporaleUrl,
     'RegionalDataUrl': RegionalDataUrl
 });
 </script>
@@ -99,7 +101,7 @@ SCRIPT;
 //some assets are only needed on certain pages
 $pageName = basename($_SERVER['SCRIPT_FILENAME'], '.php');
 
-if (in_array($pageName, [ 'index', 'extending', 'usage', 'admin', 'examples' ])) {
+if (in_array($pageName, [ 'index', 'extending', 'usage', 'missals-editor', 'admin-dashboard', 'examples' ])) {
     echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@2.0.0/dist/js/bootstrap-multiselect.min.js"></script>';
     echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>';
 }

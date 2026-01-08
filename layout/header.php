@@ -78,6 +78,13 @@ asort($langsAssoc);
                     <i class="fas fa-info-circle me-1"></i><span class="nav-text"><?php echo $aboutUsLabel; ?></span>
                 </a>
             </li>
+            <?php $adminLabel = _('Admin'); ?>
+            <li class="nav-item<?php echo $currentPage === 'admin-dashboard' ? ' bg-info' : ''; ?> d-none" id="topNavBar_Admin" data-requires-auth>
+                <a class="nav-link<?php echo $currentPage === 'admin-dashboard' ? ' active' : ''; ?>" href="./admin-dashboard.php"
+                   title="<?php echo htmlspecialchars($adminLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                    <i class="fas fa-gear me-1"></i><span class="nav-text"><?php echo $adminLabel; ?></span>
+                </a>
+            </li>
         </ul>
         <!-- Right side items -->
         <ul class="navbar-nav align-items-center">

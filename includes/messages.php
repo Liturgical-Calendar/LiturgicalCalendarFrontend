@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Centralized translation strings for extending.php, decrees.php, and admin.php
+ * Centralized translation strings for extending.php, decrees.php, and missals-editor.php
  *
  * This file consolidates all gettext translations used across the calendar
  * definition pages to ensure consistency and easier maintenance.

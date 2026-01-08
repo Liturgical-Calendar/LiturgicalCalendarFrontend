@@ -107,8 +107,9 @@ api/*
 /examples
 *.php
 !about.php
-!admin.php
+!admin-dashboard.php
 !decrees.php
+!missals-editor.php
 !easter.php
 !examples.php
 !extending.php
