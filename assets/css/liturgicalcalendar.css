@@ -9,11 +9,6 @@ body {
 .sb-topnav {
     padding-right: 1rem;
 }
-/* Hide auth buttons until auth state is determined to prevent flash */
-body:not(.auth-ready) #loginBtnContainer,
-body:not(.auth-ready) #userMenuContainer {
-    visibility: hidden;
-}
 .sb-topnav .navbar-brand {
     font-size: 0.9rem;
     white-space: normal;
