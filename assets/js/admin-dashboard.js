@@ -5,11 +5,14 @@
  * for the unified admin dashboard.
  */
 
-/* global Auth, MetadataUrl, MissalsUrl, DecreesUrl, TemporaleUrl, RegionalDataUrl */
+/* global Auth, MetadataUrl, MissalsUrl, DecreesUrl, TemporaleUrl */
 
 /**
  * API endpoint configurations for fetching counts
  * Each entry maps a block ID to its API endpoint and the key containing the countable array
+ *
+ * Note: widerregion, national, and diocesan all use the same MetadataUrl endpoint,
+ * so they are fetched together in a single request for efficiency.
  */
 const countEndpoints = {
     temporale: {
@@ -23,25 +26,57 @@ const countEndpoints = {
     decrees: {
         url: typeof DecreesUrl !== 'undefined' ? DecreesUrl : null,
         countKey: 'litcal_decrees'
-    },
-    widerregion: {
-        url: typeof RegionalDataUrl !== 'undefined' ? `${RegionalDataUrl}?category=widerregion` : null,
-        countKey: 'wider_regions'
-    },
-    national: {
-        url: typeof MetadataUrl !== 'undefined' ? MetadataUrl : null,
-        countKey: 'national_calendars'
-    },
-    diocesan: {
-        url: typeof MetadataUrl !== 'undefined' ? MetadataUrl : null,
-        countKey: 'diocesan_calendars'
     }
 };
 
 /**
- * Fetch counts for all admin blocks
+ * Metadata endpoint count keys for calendar types
+ * These are all fetched from a single MetadataUrl request
  */
-async function fetchAllCounts() {
+const metadataCountKeys = {
+    widerregion: 'wider_regions',
+    national: 'national_calendars',
+    diocesan: 'diocesan_calendars'
+};
+
+/**
+ * Fetch counts from the metadata endpoint (wider region, national, diocesan)
+ * Makes a single request and extracts all three counts
+ */
+async function fetchMetadataCounts() {
+    if (typeof MetadataUrl === 'undefined' || !MetadataUrl) {
+        console.warn('MetadataUrl not configured');
+        Object.keys(metadataCountKeys).forEach(blockId => updateCountBadge(blockId, '?'));
+        return;
+    }
+
+    try {
+        const response = await fetch(MetadataUrl, {
+            headers: { 'Accept': 'application/json' }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Extract counts for each calendar type
+        Object.entries(metadataCountKeys).forEach(([blockId, countKey]) => {
+            const items = data[countKey];
+            const count = Array.isArray(items) ? items.length : (items ? Object.keys(items).length : 0);
+            updateCountBadge(blockId, count);
+        });
+    } catch (error) {
+        console.warn('Failed to fetch metadata counts:', error);
+        Object.keys(metadataCountKeys).forEach(blockId => updateCountBadge(blockId, '?'));
+    }
+}
+
+/**
+ * Fetch counts for individual endpoint blocks (temporale, sanctorale, decrees)
+ */
+async function fetchIndividualCounts() {
     const countPromises = Object.entries(countEndpoints).map(async ([blockId, config]) => {
         if (!config.url) {
             console.warn(`No URL configured for ${blockId}`);
@@ -78,6 +113,17 @@ async function fetchAllCounts() {
     });
 
     await Promise.allSettled(countPromises);
+}
+
+/**
+ * Fetch counts for all admin blocks
+ */
+async function fetchAllCounts() {
+    // Fetch metadata counts (single request for 3 calendar types) and individual counts in parallel
+    await Promise.all([
+        fetchMetadataCounts(),
+        fetchIndividualCounts()
+    ]);
 }
 
 /**
