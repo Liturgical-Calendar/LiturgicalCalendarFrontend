@@ -10,7 +10,7 @@ include_once 'includes/messages.php'; // translation strings
 
 // Require authentication - redirect to home if not logged in
 if (!$authHelper->isAuthenticated) {
-    header('Location: /');
+    header('Location: index.php');
     exit;
 }
 
