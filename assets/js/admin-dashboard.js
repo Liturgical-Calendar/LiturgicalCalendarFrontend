@@ -46,7 +46,7 @@ const metadataCountKeys = {
 async function fetchMetadataCounts() {
     if (typeof MetadataUrl === 'undefined' || !MetadataUrl) {
         console.warn('MetadataUrl not configured');
-        Object.keys(metadataCountKeys).forEach(blockId => updateCountBadge(blockId, '?'));
+        Object.keys(metadataCountKeys).forEach(blockId => updateCountBadge(blockId, '?', 'calendars'));
         return;
     }
 
@@ -60,16 +60,17 @@ async function fetchMetadataCounts() {
         }
 
         const data = await response.json();
+        const metadata = data.litcal_metadata || data;
 
         // Extract counts for each calendar type
         Object.entries(metadataCountKeys).forEach(([blockId, countKey]) => {
-            const items = data[countKey];
+            const items = metadata[countKey];
             const count = Array.isArray(items) ? items.length : (items ? Object.keys(items).length : 0);
-            updateCountBadge(blockId, count);
+            updateCountBadge(blockId, count, 'calendars');
         });
     } catch (error) {
         console.warn('Failed to fetch metadata counts:', error);
-        Object.keys(metadataCountKeys).forEach(blockId => updateCountBadge(blockId, '?'));
+        Object.keys(metadataCountKeys).forEach(blockId => updateCountBadge(blockId, '?', 'calendars'));
     }
 }
 
@@ -131,12 +132,15 @@ async function fetchAllCounts() {
  *
  * @param {string} blockId - The block identifier
  * @param {number|string} count - The count to display
+ * @param {string} unit - The unit label ('items' or 'calendars'), defaults to 'items'
  */
-function updateCountBadge(blockId, count) {
+function updateCountBadge(blockId, count, unit = 'items') {
     const badge = document.querySelector(`[data-count="${blockId}"]`);
     if (badge) {
         if (typeof count === 'number') {
-            badge.textContent = `${count} ${count === 1 ? 'item' : 'items'}`;
+            const singular = unit === 'calendars' ? 'calendar' : 'item';
+            const plural = unit === 'calendars' ? 'calendars' : 'items';
+            badge.textContent = `${count} ${count === 1 ? singular : plural}`;
         } else {
             badge.textContent = count;
         }
