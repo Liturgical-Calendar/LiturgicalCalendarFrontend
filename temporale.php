@@ -44,6 +44,12 @@ if (!$authHelper->isAuthenticated) {
         <div class="card-body">
             <div class="row g-3">
                 <div class="col-md-3">
+                    <label for="localeFilter" class="form-label"><?php echo htmlspecialchars(_('Language'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
+                    <select id="localeFilter" class="form-select" data-current-locale="<?php echo htmlspecialchars($i18n->LOCALE, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                        <option value=""><?php echo htmlspecialchars(_('Loading...'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                    </select>
+                </div>
+                <div class="col-md-3">
                     <label for="seasonFilter" class="form-label"><?php echo htmlspecialchars(_('Liturgical Season'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
                     <select id="seasonFilter" class="form-select">
                         <option value=""><?php echo htmlspecialchars(_('All Seasons'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
@@ -77,7 +83,9 @@ if (!$authHelper->isAuthenticated) {
                         <option value="feriale"><?php echo htmlspecialchars(_('Feriale'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                     </select>
                 </div>
-                <div class="col-md-3">
+            </div>
+            <div class="row g-3 mt-1">
+                <div class="col-md-6">
                     <label for="searchFilter" class="form-label"><?php echo htmlspecialchars(_('Search'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
                     <input type="text" id="searchFilter" class="form-control" placeholder="<?php echo htmlspecialchars(_('Search by name or key...'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                 </div>

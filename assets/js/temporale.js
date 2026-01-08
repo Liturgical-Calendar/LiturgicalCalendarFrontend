@@ -55,6 +55,70 @@ let allEvents = [];
 let filteredEvents = [];
 
 /**
+ * Currently selected locale
+ */
+let selectedLocale = '';
+
+/**
+ * Fetch available locales from API metadata
+ */
+async function fetchAvailableLocales() {
+    const localeSelect = document.getElementById('localeFilter');
+    if (!localeSelect) return;
+
+    // Get the current page locale from data attribute
+    const currentLocale = localeSelect.dataset.currentLocale || 'en';
+
+    if (typeof MetadataUrl === 'undefined' || !MetadataUrl) {
+        console.warn('MetadataUrl not configured, using current locale');
+        localeSelect.innerHTML = `<option value="${escapeHtml(currentLocale)}">${escapeHtml(currentLocale)}</option>`;
+        selectedLocale = currentLocale;
+        return;
+    }
+
+    try {
+        const response = await fetch(MetadataUrl, {
+            headers: { 'Accept': 'application/json' },
+            credentials: 'include'
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        const metadata = data.litcal_metadata || data;
+        const locales = metadata.locales || [];
+
+        // Build options with display names
+        localeSelect.innerHTML = locales.map(locale => {
+            // Try to get display name using Intl.DisplayNames
+            let displayName = locale;
+            try {
+                const displayNames = new Intl.DisplayNames([locale], { type: 'language' });
+                displayName = displayNames.of(locale.split('_')[0]) || locale;
+                // Capitalize first letter
+                displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+            } catch {
+                // Fallback to locale code
+            }
+            return `<option value="${escapeHtml(locale)}">${escapeHtml(displayName)} (${escapeHtml(locale)})</option>`;
+        }).join('');
+
+        // Try to select current locale, fallback to first matching language, then first option
+        const exactMatch = locales.find(l => l === currentLocale);
+        const langMatch = locales.find(l => l.split('_')[0] === currentLocale.split('_')[0]);
+        selectedLocale = exactMatch || langMatch || locales[0] || currentLocale;
+        localeSelect.value = selectedLocale;
+
+    } catch (error) {
+        console.warn('Failed to fetch locales:', error);
+        localeSelect.innerHTML = `<option value="${escapeHtml(currentLocale)}">${escapeHtml(currentLocale)}</option>`;
+        selectedLocale = currentLocale;
+    }
+}
+
+/**
  * Fetch temporale events from API
  */
 async function fetchTemporaleEvents() {
@@ -64,9 +128,28 @@ async function fetchTemporaleEvents() {
         return;
     }
 
+    // Show loading state
+    const tbody = document.getElementById('temporaleTableBody');
+    if (tbody) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7" class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }
+
     try {
+        const headers = { 'Accept': 'application/json' };
+        if (selectedLocale) {
+            headers['Accept-Language'] = selectedLocale;
+        }
+
         const response = await fetch(TemporaleUrl, {
-            headers: { 'Accept': 'application/json' },
+            headers,
             credentials: 'include'
         });
 
@@ -378,13 +461,31 @@ function exportJson() {
 }
 
 /**
+ * Handle locale change - re-fetch events with new locale
+ */
+function onLocaleChange() {
+    const localeSelect = document.getElementById('localeFilter');
+    if (localeSelect) {
+        selectedLocale = localeSelect.value;
+        fetchTemporaleEvents();
+    }
+}
+
+/**
  * Initialize the temporale viewer
  */
-function init() {
-    // Fetch events
-    fetchTemporaleEvents();
+async function init() {
+    // First fetch available locales, then fetch events
+    await fetchAvailableLocales();
+    await fetchTemporaleEvents();
 
-    // Attach filter event listeners
+    // Locale change listener - re-fetches events
+    const localeSelect = document.getElementById('localeFilter');
+    if (localeSelect) {
+        localeSelect.addEventListener('change', onLocaleChange);
+    }
+
+    // Attach filter event listeners (client-side filtering)
     const filterIds = ['seasonFilter', 'gradeFilter', 'categoryFilter'];
     filterIds.forEach(id => {
         const el = document.getElementById(id);
