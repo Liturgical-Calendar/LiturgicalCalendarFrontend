@@ -78,13 +78,6 @@ asort($langsAssoc);
                     <i class="fas fa-info-circle me-1"></i><span class="nav-text"><?php echo $aboutUsLabel; ?></span>
                 </a>
             </li>
-            <?php $adminLabel = _('Admin'); ?>
-            <li class="nav-item<?php echo $currentPage === 'admin-dashboard' ? ' bg-info' : ''; ?><?php echo $authHelper->isAuthenticated ? '' : ' d-none'; ?>" id="topNavBar_Admin" data-requires-auth>
-                <a class="nav-link<?php echo $currentPage === 'admin-dashboard' ? ' active' : ''; ?>" href="./admin-dashboard.php"
-                   title="<?php echo htmlspecialchars($adminLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-                    <i class="fas fa-gear me-1"></i><span class="nav-text"><?php echo $adminLabel; ?></span>
-                </a>
-            </li>
         </ul>
         <!-- Right side items -->
         <ul class="navbar-nav align-items-center">
@@ -158,6 +151,13 @@ asort($langsAssoc);
                         <i class="fas fa-sign-out-alt me-1"></i><span class="d-lg-none"><?php echo _('Logout'); ?></span>
                     </button>
                 </div>
+            </li>
+            <?php $adminLabel = _('Admin'); ?>
+            <li class="nav-item<?php echo $currentPage === 'admin-dashboard' ? ' bg-info' : ''; ?><?php echo $authHelper->isAuthenticated ? '' : ' d-none'; ?>" id="topNavBar_Admin" data-requires-auth>
+                <a class="nav-link<?php echo $currentPage === 'admin-dashboard' ? ' active' : ''; ?>" href="./admin-dashboard.php"
+                   title="<?php echo htmlspecialchars($adminLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                    <i class="fas fa-gear me-1"></i><span class="d-lg-none d-xxl-inline"><?php echo $adminLabel; ?></span>
+                </a>
             </li>
         </ul>
     </div>
