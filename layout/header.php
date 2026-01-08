@@ -38,18 +38,6 @@ asort($langsAssoc);
                     <i class="fas fa-server me-1"></i><span class="nav-text"><?php echo $apiLabel; ?></span>
                 </a>
             </li>
-            <?php $particularCalendarsLabel = _('Particular Calendars'); ?>
-            <li class="nav-item dropdown<?php echo $currentPage === 'extending' ? ' bg-info' : ''; ?>" id="topNavBar_Extending">
-                <a class="nav-link dropdown-toggle<?php echo $currentPage === 'extending' ? ' active' : ''; ?>" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="extendingChoicesDropdown"
-                   title="<?php echo htmlspecialchars($particularCalendarsLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-                    <i class="fas fa-layer-group me-1"></i><span class="nav-text"><?php echo $particularCalendarsLabel; ?></span>
-                </a>
-                <div class="dropdown-menu shadow" aria-labelledby="extendingChoicesDropdown" id="extendingChoicesDropdownItems">
-                    <a class="dropdown-item<?php echo isset($_GET['choice']) && $_GET['choice'] === 'widerRegion' ? ' active' : ''; ?>" id="extendingChoiceWiderRegion" href="./extending.php?choice=widerRegion"><i class="fas fa-globe-americas me-2"></i><?php echo _('Define a Calendar for a Wider Region'); ?></a>
-                    <a class="dropdown-item<?php echo isset($_GET['choice']) && $_GET['choice'] === 'national' ? ' active' : ''; ?>" id="extendingChoiceNationalCalendar" href="./extending.php?choice=national"><i class="fas fa-flag me-2"></i><?php echo _('Define a National Calendar'); ?></a>
-                    <a class="dropdown-item<?php echo isset($_GET['choice']) && $_GET['choice'] === 'diocesan' ? ' active' : ''; ?>" id="extendingChoiceDiocesanCalendar" href="./extending.php?choice=diocesan"><i class="fas fa-church me-2"></i><?php echo _('Define a Diocesan Calendar'); ?></a>
-                </div>
-            </li>
             <?php $usageLabel = _('Usage'); ?>
             <li class="nav-item<?php echo in_array($currentPage, ['usage', 'examples', 'liturgyOfAnyDay'], true) ? ' bg-info' : ''; ?>" id="topNavBar_Usage">
                 <a class="nav-link<?php echo in_array($currentPage, ['usage', 'examples', 'liturgyOfAnyDay'], true) ? ' active' : ''; ?>" href="./usage.php"
@@ -184,13 +172,9 @@ asort($langsAssoc);
                         <span><?php echo _('Home'); ?></span>
                     </a>
                     <!-- <hr> -->
-                    <div class="sb-sidenav-menu-heading<?php echo in_array($currentPage, ['', 'index', 'extending'], true) ? ' text-white' : ''; ?>">
+                    <div class="sb-sidenav-menu-heading<?php echo in_array($currentPage, ['', 'index'], true) ? ' text-white' : ''; ?>">
                         <?php echo 'API'; ?>
                     </div>
-                    <a class="nav-link<?php echo $currentPage === 'extending' ? ' active' : ''; ?>" href="extending.php?choice=diocesan">
-                        <i class="sb-nav-link-icon fas fa-fw fa-folder"></i>
-                        <span><?php echo _('Particular Calendars'); ?></span>
-                    </a>
                     <a class="nav-link" href="/dist/">
                         <i class="sb-nav-link-icon fas fa-fw fa-folder"></i>
                         <span><?php echo _('Documentation'); ?></span>
