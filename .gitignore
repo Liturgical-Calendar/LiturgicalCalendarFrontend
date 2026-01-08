@@ -115,6 +115,7 @@ api/*
 !extending.php
 !index.php
 !liturgyOfAnyDay.php
+!temporale.php
 !translations.php
 !usage.php
 !layout/*.php

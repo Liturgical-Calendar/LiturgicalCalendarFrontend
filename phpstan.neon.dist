@@ -13,6 +13,7 @@ parameters:
         - extending.php
         - index.php
         - liturgyOfAnyDay.php
+        - temporale.php
         - translations.php
         - usage.php
     excludePaths:
@@ -39,4 +40,5 @@ parameters:
                 - layout/footer.php
                 - layout/header.php
                 - liturgyOfAnyDay.php
+                - temporale.php
                 - usage.php
