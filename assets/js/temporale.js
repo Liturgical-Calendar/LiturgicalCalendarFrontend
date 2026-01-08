@@ -245,14 +245,6 @@ function updateTable() {
             </tr>
         `;
     }).join('');
-
-    // Attach event listeners for view buttons
-    document.querySelectorAll('.view-details-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const eventKey = btn.dataset.eventKey;
-            showEventDetails(eventKey);
-        });
-    });
 }
 
 /**
@@ -512,6 +504,17 @@ async function init() {
     // First fetch available locales, then fetch events
     await fetchAvailableLocales();
     await fetchTemporaleEvents();
+
+    // Event delegation for view details buttons (more efficient than per-button listeners)
+    const tbody = document.getElementById('temporaleTableBody');
+    if (tbody) {
+        tbody.addEventListener('click', (e) => {
+            const btn = e.target.closest('.view-details-btn');
+            if (btn) {
+                showEventDetails(btn.dataset.eventKey);
+            }
+        });
+    }
 
     // Locale change listener - re-fetches events
     const localeSelect = document.getElementById('localeFilter');
