@@ -80,7 +80,12 @@ if (!$authHelper->isAuthenticated) {
                     <select id="categoryFilter" class="form-select">
                         <option value=""><?php echo htmlspecialchars(_('All Categories'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                         <option value="dominicale_et_festivum"><?php echo htmlspecialchars(_('Dominicale et Festivum'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                        <option value="feriale"><?php echo htmlspecialchars(_('Feriale'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                        <option value="feriale_per_annum"><?php echo htmlspecialchars(_('Feriale per Annum'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                        <option value="feriale_tempus_adventus"><?php echo htmlspecialchars(_('Feriale Tempus Adventus'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                        <option value="feriale_tempus_nativitatis"><?php echo htmlspecialchars(_('Feriale Tempus Nativitatis'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                        <option value="feriale_tempus_quadragesimae"><?php echo htmlspecialchars(_('Feriale Tempus Quadragesimae'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                        <option value="feriale_tempus_paschatis"><?php echo htmlspecialchars(_('Feriale Tempus Paschatis'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                        <option value="sanctorum"><?php echo htmlspecialchars(_('Sanctorum'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                     </select>
                 </div>
             </div>

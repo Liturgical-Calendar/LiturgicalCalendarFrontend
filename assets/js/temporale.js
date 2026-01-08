@@ -87,11 +87,8 @@ async function fetchAvailableLocales() {
         }
 
         const data = await response.json();
-        console.log('Metadata response:', data);
         const metadata = data.litcal_metadata || data;
-        console.log('Extracted metadata:', metadata);
         const locales = metadata.locales || [];
-        console.log('Available locales:', locales);
 
         // Handle empty locales array
         if (locales.length === 0) {
@@ -171,10 +168,6 @@ async function fetchTemporaleEvents() {
         const data = await response.json();
         allEvents = data.events || [];
         filteredEvents = [...allEvents];
-
-        // Debug: log unique lectionary_category values
-        const categories = [...new Set(allEvents.map(e => e.lectionary_category))];
-        console.log('Unique lectionary_category values:', categories);
 
         updateTable();
         updateEventCount();
