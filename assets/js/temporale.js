@@ -4,8 +4,6 @@
  * Fetches and displays temporale events with filtering capabilities.
  */
 
-/* global TemporaleUrl */
-
 import { escapeHtml } from './templates.js';
 
 /**

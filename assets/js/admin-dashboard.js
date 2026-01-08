@@ -5,8 +5,6 @@
  * for the unified admin dashboard.
  */
 
-/* global Auth, MetadataUrl, MissalsUrl, DecreesUrl, TemporaleUrl */
-
 /**
  * API endpoint configurations for fetching counts
  * Each entry maps a block ID to its API endpoint and the key containing the countable array
