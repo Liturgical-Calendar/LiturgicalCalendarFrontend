@@ -370,7 +370,7 @@ function renderFlatReadings(readings) {
     return `
         <dl class="row mb-0">
             ${Object.entries(readings).map(([key, value]) => `
-                <dt class="col-sm-4">${escapeHtml(formatReadingKey(key))}</dt>
+                <dt class="col-sm-4 fw-bold">${escapeHtml(formatReadingKey(key))}</dt>
                 <dd class="col-sm-8">${escapeHtml(String(value) || '—')}</dd>
             `).join('')}
         </dl>
