@@ -1,8 +1,7 @@
 <?php
 $currentPage = basename($_SERVER['SCRIPT_FILENAME'], '.php');
 
-// Define admin pages for conditional sidebar rendering
-$adminPages  = ['admin-dashboard', 'missals-editor', 'extending', 'temporale', 'decrees'];
+// $adminPages is defined in includes/common.php for centralized maintenance
 $isAdminPage = in_array($currentPage, $adminPages, true);
 
 $i18nDirs       = glob('i18n/*', GLOB_ONLYDIR);

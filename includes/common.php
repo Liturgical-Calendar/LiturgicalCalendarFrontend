@@ -224,6 +224,15 @@ try {
 $i18n = new I18n();
 
 // ============================================================================
+// Admin Pages Configuration
+// ============================================================================
+// Centralized list of admin pages for auth checks and conditional UI rendering.
+// Keep in sync with assets/js/auth.js _adminPages array.
+// ============================================================================
+
+$adminPages = ['admin-dashboard', 'missals-editor', 'extending', 'temporale', 'decrees'];
+
+// ============================================================================
 // Setup PSR-Compliant HTTP Client with Production Features
 // ============================================================================
 

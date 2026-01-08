@@ -27,7 +27,7 @@ parameters:
         # PHPStan cannot detect this because it doesn't execute includes during static analysis.
         # These are FALSE POSITIVES - variables ARE defined at runtime.
         -
-            message: '#Variable \$(i18n|apiConfig|authHelper|messages) might not be defined\.#'
+            message: '#Variable \$(i18n|apiConfig|authHelper|messages|adminPages) might not be defined\.#'
             paths:
                 - about.php
                 - admin-dashboard.php
