@@ -349,6 +349,142 @@ let modalListenerAttached = false;
 let currentEventIndex = -1;
 
 /**
+ * Format a reading key for display (e.g., "FIRST_READING" -> "First Reading")
+ * @param {string} key - The reading key
+ * @returns {string}
+ */
+function formatReadingKey(key) {
+    return key
+        .replace(/_/g, ' ')
+        .replace(/annum /i, 'Year ')
+        .toLowerCase()
+        .replace(/\b\w/g, c => c.toUpperCase());
+}
+
+/**
+ * Render a flat readings object as a definition list
+ * @param {Object} readings - Object with reading keys and string values
+ * @returns {string}
+ */
+function renderFlatReadings(readings) {
+    return `
+        <dl class="row mb-0">
+            ${Object.entries(readings).map(([key, value]) => `
+                <dt class="col-sm-4">${escapeHtml(formatReadingKey(key))}</dt>
+                <dd class="col-sm-8">${escapeHtml(String(value) || '—')}</dd>
+            `).join('')}
+        </dl>
+    `;
+}
+
+/**
+ * Check if an object contains only string/primitive values (flat structure)
+ * @param {Object} obj
+ * @returns {boolean}
+ */
+function isFlatReadings(obj) {
+    return Object.values(obj).every(v => typeof v !== 'object' || v === null);
+}
+
+/**
+ * Build HTML for readings section, handling various structures:
+ * - Flat: { FIRST_READING: "...", RESPONSORIAL_PSALM: "...", ... }
+ * - Nested by year: { annum_a: {...}, annum_b: {...}, ... }
+ * - Nested by mass time: { VIGIL: {...}, NIGHT: {...}, DAWN: {...}, DAY: {...} }
+ * - Mixed: { annum_a: { VIGIL: {...}, ... }, ... }
+ * @param {Object} readings
+ * @returns {string}
+ */
+function buildReadingsHtml(readings) {
+    const keys = Object.keys(readings);
+    if (keys.length === 0) return '';
+
+    // Check if this is a flat structure (all values are strings/primitives)
+    if (isFlatReadings(readings)) {
+        return `
+            <h6 class="mt-4 mb-3"><i class="fas fa-book me-2"></i>Readings</h6>
+            ${renderFlatReadings(readings)}
+        `;
+    }
+
+    // Nested structure - use tabs for the top level
+    return `
+        <h6 class="mt-4 mb-3"><i class="fas fa-book me-2"></i>Readings</h6>
+        <ul class="nav nav-tabs" id="readingsTabs" role="tablist">
+            ${keys.map((key, idx) => `
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link ${idx === 0 ? 'active' : ''}" id="tab-${key}" data-bs-toggle="tab"
+                            data-bs-target="#pane-${key}" type="button" role="tab">
+                        ${escapeHtml(formatReadingKey(key))}
+                    </button>
+                </li>
+            `).join('')}
+        </ul>
+        <div class="tab-content border border-top-0 p-3" id="readingsTabContent">
+            ${keys.map((key, idx) => {
+                const value = readings[key];
+                let content;
+
+                if (typeof value !== 'object' || value === null) {
+                    // Primitive value (shouldn't happen at this level, but handle it)
+                    content = `<p>${escapeHtml(String(value) || '—')}</p>`;
+                } else if (isFlatReadings(value)) {
+                    // Second level is flat (e.g., VIGIL: { FIRST_READING: "...", ... })
+                    content = renderFlatReadings(value);
+                } else {
+                    // Third level nesting (e.g., annum_a: { VIGIL: { FIRST_READING: "...", ... }, ... })
+                    content = buildNestedReadingsTabs(value, key);
+                }
+
+                return `
+                    <div class="tab-pane fade ${idx === 0 ? 'show active' : ''}" id="pane-${key}" role="tabpanel">
+                        ${content}
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+}
+
+/**
+ * Build nested tabs for deeply nested readings (e.g., year > mass time > readings)
+ * @param {Object} readings
+ * @param {string} parentKey - Parent key for unique IDs
+ * @returns {string}
+ */
+function buildNestedReadingsTabs(readings, parentKey) {
+    const keys = Object.keys(readings);
+    if (keys.length === 0) return '';
+
+    return `
+        <ul class="nav nav-pills nav-fill mb-3" id="subTabs-${parentKey}" role="tablist">
+            ${keys.map((key, idx) => `
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link ${idx === 0 ? 'active' : ''}" id="subtab-${parentKey}-${key}"
+                            data-bs-toggle="pill" data-bs-target="#subpane-${parentKey}-${key}" type="button" role="tab">
+                        ${escapeHtml(formatReadingKey(key))}
+                    </button>
+                </li>
+            `).join('')}
+        </ul>
+        <div class="tab-content" id="subTabContent-${parentKey}">
+            ${keys.map((key, idx) => {
+                const value = readings[key];
+                const content = (typeof value === 'object' && value !== null)
+                    ? renderFlatReadings(value)
+                    : `<p>${escapeHtml(String(value) || '—')}</p>`;
+
+                return `
+                    <div class="tab-pane fade ${idx === 0 ? 'show active' : ''}" id="subpane-${parentKey}-${key}" role="tabpanel">
+                        ${content}
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+}
+
+/**
  * Render event details content in the modal body
  * @param {Object} event - The event object to render
  */
@@ -364,38 +500,8 @@ function renderEventDetails(event) {
 
     // Build readings section
     let readingsHtml = '';
-    if (event.readings) {
-        const years = Object.keys(event.readings);
-        if (years.length > 0) {
-            readingsHtml = `
-                <h6 class="mt-4 mb-3"><i class="fas fa-book me-2"></i>Readings</h6>
-                <ul class="nav nav-tabs" id="readingsTabs" role="tablist">
-                    ${years.map((year, idx) => `
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link ${idx === 0 ? 'active' : ''}" id="tab-${year}" data-bs-toggle="tab"
-                                    data-bs-target="#pane-${year}" type="button" role="tab">
-                                ${escapeHtml(year.replace('annum_', 'Year ').toUpperCase())}
-                            </button>
-                        </li>
-                    `).join('')}
-                </ul>
-                <div class="tab-content border border-top-0 p-3" id="readingsTabContent">
-                    ${years.map((year, idx) => {
-                        const readings = event.readings[year];
-                        return `
-                            <div class="tab-pane fade ${idx === 0 ? 'show active' : ''}" id="pane-${year}" role="tabpanel">
-                                <dl class="row mb-0">
-                                    ${Object.entries(readings).map(([key, value]) => `
-                                        <dt class="col-sm-4">${escapeHtml(key.replace(/_/g, ' '))}</dt>
-                                        <dd class="col-sm-8">${escapeHtml(value || '—')}</dd>
-                                    `).join('')}
-                                </dl>
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            `;
-        }
+    if (event.readings && typeof event.readings === 'object') {
+        readingsHtml = buildReadingsHtml(event.readings);
     }
 
     modalBody.innerHTML = `
