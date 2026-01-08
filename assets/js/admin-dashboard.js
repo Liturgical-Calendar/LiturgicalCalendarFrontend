@@ -53,8 +53,7 @@ async function fetchMetadataCounts() {
 
     try {
         const response = await fetch(MetadataUrl, {
-            headers: { 'Accept': 'application/json' },
-            credentials: 'include'
+            headers: { 'Accept': 'application/json' }
         });
 
         if (!response.ok) {
@@ -89,8 +88,7 @@ async function fetchIndividualCounts() {
 
         try {
             const response = await fetch(config.url, {
-                headers: { 'Accept': 'application/json' },
-                credentials: 'include'
+                headers: { 'Accept': 'application/json' }
             });
 
             if (!response.ok) {
