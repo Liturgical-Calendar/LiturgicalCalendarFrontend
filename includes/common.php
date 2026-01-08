@@ -184,6 +184,10 @@ if (file_exists($ghReleaseCacheFile)) {
 // Initialize API configuration (singleton)
 $apiConfig = \LiturgicalCalendar\Frontend\ApiConfig::getInstance($apiBaseUrl);
 
+// Initialize Auth helper (singleton) - validates JWT from HttpOnly cookie
+// This enables server-side auth detection, avoiding UI flash on page load
+$authHelper = \LiturgicalCalendar\Frontend\AuthHelper::getInstance();
+
 $i18n = new I18n();
 
 // ============================================================================

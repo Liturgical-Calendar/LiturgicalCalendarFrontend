@@ -79,7 +79,7 @@ asort($langsAssoc);
                 </a>
             </li>
             <?php $adminLabel = _('Admin'); ?>
-            <li class="nav-item<?php echo $currentPage === 'admin-dashboard' ? ' bg-info' : ''; ?> d-none" id="topNavBar_Admin" data-requires-auth>
+            <li class="nav-item<?php echo $currentPage === 'admin-dashboard' ? ' bg-info' : ''; ?><?php echo $authHelper->isAuthenticated ? '' : ' d-none'; ?>" id="topNavBar_Admin" data-requires-auth>
                 <a class="nav-link<?php echo $currentPage === 'admin-dashboard' ? ' active' : ''; ?>" href="./admin-dashboard.php"
                    title="<?php echo htmlspecialchars($adminLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                     <i class="fas fa-gear me-1"></i><span class="nav-text"><?php echo $adminLabel; ?></span>
@@ -141,25 +141,17 @@ asort($langsAssoc);
                 </div>
             </li>
             <li class="vr mx-2 d-none d-lg-block"></li>
-            <!-- Admin Link -->
-            <li class="nav-item<?php echo $currentPage === 'admin' ? ' bg-info' : ''; ?>">
-                <a class="nav-link<?php echo $currentPage === 'admin' ? ' active' : ''; ?>"
-                   href="./admin.php"
-                   title="<?php echo htmlspecialchars(_('Admin'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-                    <i class="fas fa-cog me-1"></i><span class="d-lg-none d-xxl-inline"><?php echo _('Admin'); ?></span>
-                </a>
-            </li>
-            <!-- Authentication Status: Login button shown by default, JS will toggle based on auth state -->
-            <li class="nav-item me-lg-2" id="loginBtnContainer" data-requires-no-auth>
+            <!-- Authentication Status: Server-side auth detection, JS handles dynamic updates -->
+            <li class="nav-item me-lg-2<?php echo $authHelper->isAuthenticated ? ' d-none' : ''; ?>" id="loginBtnContainer" data-requires-no-auth>
                 <button class="btn btn-outline-primary btn-sm" id="loginBtn"
                         title="<?php echo htmlspecialchars(_('Login'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                     <i class="fas fa-sign-in-alt me-1"></i><span class="d-lg-none d-sm-inline"><?php echo _('Login'); ?></span>
                 </button>
             </li>
-            <li class="nav-item me-lg-2 d-none" id="userMenuContainer" data-requires-auth>
+            <li class="nav-item me-lg-2<?php echo $authHelper->isAuthenticated ? '' : ' d-none'; ?>" id="userMenuContainer" data-requires-auth>
                 <div class="btn-group" id="userMenu">
                     <span class="btn btn-outline-success btn-sm" id="userInfo">
-                        <i class="fas fa-user me-1"></i><span id="username" class="d-lg-none d-sm-inline"></span>
+                        <i class="fas fa-user me-1"></i><span id="username" class="d-lg-none d-sm-inline"><?php echo $authHelper->username !== null ? htmlspecialchars($authHelper->username, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') : ''; ?></span>
                     </span>
                     <button class="btn btn-outline-danger btn-sm" id="logoutBtn"
                             title="<?php echo htmlspecialchars(_('Logout'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
