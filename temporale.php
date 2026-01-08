@@ -150,7 +150,24 @@ if (!$authHelper->isAuthenticated) {
                 <div class="modal-body" id="eventDetailsBody">
                     <!-- Populated by JavaScript -->
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer justify-content-between">
+                    <div class="btn-group" role="group" aria-label="<?php echo htmlspecialchars(_('Event navigation'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                        <button type="button" class="btn btn-outline-primary" id="firstEventBtn" disabled title="<?php echo htmlspecialchars(_('First'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                            <i class="fas fa-angles-left"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" id="prevEventBtn" disabled title="<?php echo htmlspecialchars(_('Previous'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" id="eventPositionBtn" disabled>
+                            <span id="eventPosition">0 / 0</span>
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" id="nextEventBtn" disabled title="<?php echo htmlspecialchars(_('Next'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" id="lastEventBtn" disabled title="<?php echo htmlspecialchars(_('Last'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                            <i class="fas fa-angles-right"></i>
+                        </button>
+                    </div>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo htmlspecialchars(_('Close'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></button>
                 </div>
             </div>

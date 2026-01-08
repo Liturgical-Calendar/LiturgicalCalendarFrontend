@@ -344,18 +344,17 @@ let lastFocusedElement = null;
 let modalListenerAttached = false;
 
 /**
- * Show event details in modal
- * @param {string} eventKey
+ * Current event index in filteredEvents array (for prev/next navigation)
  */
-function showEventDetails(eventKey) {
-    const event = allEvents.find(e => e.event_key === eventKey);
-    if (!event) return;
+let currentEventIndex = -1;
 
+/**
+ * Render event details content in the modal body
+ * @param {Object} event - The event object to render
+ */
+function renderEventDetails(event) {
     const modalBody = document.getElementById('eventDetailsBody');
     if (!modalBody) return;
-
-    // Store the element that triggered the modal for returning focus
-    lastFocusedElement = document.activeElement;
 
     const colorBadges = (event.color || []).map(c => {
         const colorInfo = colorDisplay[c] || { label: c, class: 'bg-secondary' };
@@ -451,6 +450,99 @@ function showEventDetails(eventKey) {
     if (modalTitle) {
         modalTitle.textContent = event.name || event.event_key;
     }
+}
+
+/**
+ * Update the state of navigation buttons and position counter
+ */
+function updateNavigationButtons() {
+    const firstBtn = document.getElementById('firstEventBtn');
+    const prevBtn = document.getElementById('prevEventBtn');
+    const nextBtn = document.getElementById('nextEventBtn');
+    const lastBtn = document.getElementById('lastEventBtn');
+    const positionEl = document.getElementById('eventPosition');
+
+    const isFirst = currentEventIndex <= 0;
+    const isLast = currentEventIndex >= filteredEvents.length - 1;
+
+    if (firstBtn) {
+        firstBtn.disabled = isFirst;
+    }
+    if (prevBtn) {
+        prevBtn.disabled = isFirst;
+    }
+    if (nextBtn) {
+        nextBtn.disabled = isLast;
+    }
+    if (lastBtn) {
+        lastBtn.disabled = isLast;
+    }
+    if (positionEl) {
+        positionEl.textContent = `${currentEventIndex + 1} / ${filteredEvents.length}`;
+    }
+}
+
+/**
+ * Show the first event in the modal
+ */
+function showFirstEvent() {
+    if (filteredEvents.length > 0) {
+        currentEventIndex = 0;
+        renderEventDetails(filteredEvents[currentEventIndex]);
+        updateNavigationButtons();
+    }
+}
+
+/**
+ * Show the previous event in the modal
+ */
+function showPreviousEvent() {
+    if (currentEventIndex > 0) {
+        currentEventIndex--;
+        renderEventDetails(filteredEvents[currentEventIndex]);
+        updateNavigationButtons();
+    }
+}
+
+/**
+ * Show the next event in the modal
+ */
+function showNextEvent() {
+    if (currentEventIndex < filteredEvents.length - 1) {
+        currentEventIndex++;
+        renderEventDetails(filteredEvents[currentEventIndex]);
+        updateNavigationButtons();
+    }
+}
+
+/**
+ * Show the last event in the modal
+ */
+function showLastEvent() {
+    if (filteredEvents.length > 0) {
+        currentEventIndex = filteredEvents.length - 1;
+        renderEventDetails(filteredEvents[currentEventIndex]);
+        updateNavigationButtons();
+    }
+}
+
+/**
+ * Show event details in modal
+ * @param {string} eventKey
+ */
+function showEventDetails(eventKey) {
+    // Find the event index in filteredEvents (for navigation)
+    currentEventIndex = filteredEvents.findIndex(e => e.event_key === eventKey);
+    if (currentEventIndex === -1) return;
+
+    const event = filteredEvents[currentEventIndex];
+
+    // Store the element that triggered the modal for returning focus
+    lastFocusedElement = document.activeElement;
+
+    // Render the event details
+    renderEventDetails(event);
+    updateNavigationButtons();
 
     // Get or create the modal instance (Bootstrap's built-in singleton pattern)
     const modalEl = document.getElementById('eventDetailsModal');
@@ -546,6 +638,24 @@ async function init() {
     const exportBtn = document.getElementById('exportBtn');
     if (exportBtn) {
         exportBtn.addEventListener('click', exportJson);
+    }
+
+    // Modal navigation buttons
+    const firstBtn = document.getElementById('firstEventBtn');
+    const prevBtn = document.getElementById('prevEventBtn');
+    const nextBtn = document.getElementById('nextEventBtn');
+    const lastBtn = document.getElementById('lastEventBtn');
+    if (firstBtn) {
+        firstBtn.addEventListener('click', showFirstEvent);
+    }
+    if (prevBtn) {
+        prevBtn.addEventListener('click', showPreviousEvent);
+    }
+    if (nextBtn) {
+        nextBtn.addEventListener('click', showNextEvent);
+    }
+    if (lastBtn) {
+        lastBtn.addEventListener('click', showLastEvent);
     }
 }
 
