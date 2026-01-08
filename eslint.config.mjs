@@ -29,6 +29,7 @@ export default defineConfig( [
         DecreesUrl: "readonly",
         TemporaleUrl: "readonly",
         RegionalDataUrl: "readonly",
+        AdminPages: "readonly",
         BaseUrl: "readonly",
         toastr: "readonly",
         bootstrap: "readonly",

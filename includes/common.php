@@ -227,7 +227,7 @@ $i18n = new I18n();
 // Admin Pages Configuration
 // ============================================================================
 // Centralized list of admin pages for auth checks and conditional UI rendering.
-// Keep in sync with assets/js/auth.js _adminPages array.
+// Exposed to JavaScript as AdminPages global via layout/footer.php.
 // ============================================================================
 
 $adminPages = ['admin-dashboard', 'missals-editor', 'extending', 'temporale', 'decrees'];

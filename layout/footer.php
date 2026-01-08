@@ -32,6 +32,7 @@ const MissalsUrl      = <?php echo json_encode($apiConfig->missalsUrl); ?>;
 const DecreesUrl      = <?php echo json_encode($apiConfig->decreesUrl); ?>;
 const TemporaleUrl    = <?php echo json_encode($apiConfig->temporaleUrl); ?>;
 const RegionalDataUrl = <?php echo json_encode($apiConfig->regionalDataUrl); ?>;
+const AdminPages      = <?php echo json_encode($adminPages); ?>;
 if ( AppEnv === 'development' ) console.info({
     'AppEnv': AppEnv,
     'BaseUrl': BaseUrl,
