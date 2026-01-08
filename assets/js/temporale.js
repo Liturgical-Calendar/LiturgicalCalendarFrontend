@@ -77,9 +77,9 @@ async function fetchAvailableLocales() {
     }
 
     try {
+        // Note: No credentials needed for public metadata endpoint
         const response = await fetch(MetadataUrl, {
-            headers: { 'Accept': 'application/json' },
-            credentials: 'include'
+            headers: { 'Accept': 'application/json' }
         });
 
         if (!response.ok) {
