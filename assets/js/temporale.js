@@ -190,7 +190,7 @@ function getGradeBadgeColor(grade) {
 function getSeasonBadgeColor(season) {
     const colors = {
         'ADVENT': 'purple',
-        'CHRISTMAS': 'light text-dark',
+        'CHRISTMAS': 'light text-dark border',
         'LENT': 'purple',
         'EASTER_TRIDUUM': 'danger',
         'EASTER': 'warning',
