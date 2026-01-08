@@ -66,7 +66,8 @@ async function fetchTemporaleEvents() {
 
     try {
         const response = await fetch(TemporaleUrl, {
-            headers: { 'Accept': 'application/json' }
+            headers: { 'Accept': 'application/json' },
+            credentials: 'include'
         });
 
         if (!response.ok) {
