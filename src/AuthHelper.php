@@ -103,9 +103,10 @@ class AuthHelper
     public static function getInstance(?string $secret = null, string $algorithm = 'HS256'): self
     {
         if (self::$instance === null) {
-            // Try to get from environment if not provided (use getenv for compatibility)
-            $secret    = $secret ?? ( getenv('JWT_SECRET') ?: null );
-            $algorithm = getenv('JWT_ALGORITHM') ?: $algorithm;
+            // Try to get from environment if not provided
+            // Check both $_ENV (phpdotenv) and getenv() for compatibility
+            $secret    = $secret ?? ( $_ENV['JWT_SECRET'] ?? getenv('JWT_SECRET') ?: null );
+            $algorithm = $_ENV['JWT_ALGORITHM'] ?? getenv('JWT_ALGORITHM') ?: $algorithm;
 
             // Ensure algorithm is a string
             if (!is_string($algorithm)) {
