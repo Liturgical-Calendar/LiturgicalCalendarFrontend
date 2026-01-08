@@ -35,7 +35,7 @@ if (!$authHelper->isAuthenticated) {
     </p>
 
     <!-- Filters -->
-    <div class="card shadow mb-4">
+    <div class="card shadow mb-4 temporale-filters">
         <div class="card-header py-3">
             <h6 class="m-0 fw-bold text-primary">
                 <i class="fas fa-filter me-2"></i><?php echo htmlspecialchars(_('Filters'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
