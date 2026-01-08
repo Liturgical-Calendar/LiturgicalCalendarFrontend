@@ -341,6 +341,16 @@ function applyFilters() {
 }
 
 /**
+ * Modal instance (reused to avoid multiple instances)
+ */
+let eventDetailsModal = null;
+
+/**
+ * Last focused element before modal opened (for returning focus)
+ */
+let lastFocusedElement = null;
+
+/**
  * Show event details in modal
  * @param {string} eventKey
  */
@@ -350,6 +360,9 @@ function showEventDetails(eventKey) {
 
     const modalBody = document.getElementById('eventDetailsBody');
     if (!modalBody) return;
+
+    // Store the element that triggered the modal for returning focus
+    lastFocusedElement = document.activeElement;
 
     const colorBadges = (event.color || []).map(c => {
         const colorInfo = colorDisplay[c] || { label: c, class: 'bg-secondary' };
@@ -446,9 +459,21 @@ function showEventDetails(eventKey) {
         modalTitle.textContent = event.name || event.event_key;
     }
 
-    // Show modal
-    const modal = new bootstrap.Modal(document.getElementById('eventDetailsModal'));
-    modal.show();
+    // Get or create the modal instance (reuse to avoid multiple instances)
+    const modalEl = document.getElementById('eventDetailsModal');
+    if (!eventDetailsModal) {
+        eventDetailsModal = new bootstrap.Modal(modalEl);
+
+        // Move focus out of modal before it's hidden to avoid aria-hidden warning
+        modalEl.addEventListener('hide.bs.modal', () => {
+            // Return focus to the element that opened the modal
+            if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+                lastFocusedElement.focus();
+            }
+        });
+    }
+
+    eventDetailsModal.show();
 }
 
 /**
