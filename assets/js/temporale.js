@@ -334,14 +334,14 @@ function applyFilters() {
 }
 
 /**
- * Modal instance (reused to avoid multiple instances)
- */
-let eventDetailsModal = null;
-
-/**
  * Last focused element before modal opened (for returning focus)
  */
 let lastFocusedElement = null;
+
+/**
+ * Flag to track if modal event listener has been attached
+ */
+let modalListenerAttached = false;
 
 /**
  * Show event details in modal
@@ -452,21 +452,22 @@ function showEventDetails(eventKey) {
         modalTitle.textContent = event.name || event.event_key;
     }
 
-    // Get or create the modal instance (reuse to avoid multiple instances)
+    // Get or create the modal instance (Bootstrap's built-in singleton pattern)
     const modalEl = document.getElementById('eventDetailsModal');
-    if (!eventDetailsModal) {
-        eventDetailsModal = new bootstrap.Modal(modalEl);
+    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
 
-        // Move focus out of modal before it's hidden to avoid aria-hidden warning
+    // Attach focus handler once to avoid aria-hidden warning on close
+    if (!modalListenerAttached) {
         modalEl.addEventListener('hide.bs.modal', () => {
             // Return focus to the element that opened the modal
             if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
                 lastFocusedElement.focus();
             }
         });
+        modalListenerAttached = true;
     }
 
-    eventDetailsModal.show();
+    modal.show();
 }
 
 /**
