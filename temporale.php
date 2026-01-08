@@ -92,7 +92,10 @@ if (!$authHelper->isAuthenticated) {
             <div class="row g-3 mt-1">
                 <div class="col-md-6">
                     <label for="searchFilter" class="form-label"><?php echo htmlspecialchars(_('Search'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
-                    <input type="text" id="searchFilter" class="form-control" placeholder="<?php echo htmlspecialchars(_('Search by name or key...'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                    <div class="input-group">
+                        <input type="search" id="searchFilter" class="form-control" placeholder="<?php echo htmlspecialchars(_('Search by name or key...'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    </div>
                 </div>
             </div>
         </div>
