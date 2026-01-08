@@ -166,10 +166,10 @@ function updateBlockPermissions() {
     const isAuth = typeof Auth !== 'undefined' && Auth.isAuthenticated();
 
     blocks.forEach(block => {
-        const editBtns = block.querySelectorAll('[data-requires-permission]');
+        const editBtns = block.querySelectorAll('[data-requires-auth]');
         editBtns.forEach(btn => {
             if (isAuth) {
-                // Future: check specific permission
+                // Future: check specific permission via data-requires-permission
                 // const perm = btn.dataset.requiresPermission;
                 // if (Auth.hasPermission(perm)) { ... }
                 btn.classList.remove('d-none');
