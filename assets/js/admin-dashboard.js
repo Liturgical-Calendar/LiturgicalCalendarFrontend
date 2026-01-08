@@ -52,6 +52,8 @@ async function fetchMetadataCounts() {
     }
 
     try {
+        // Public endpoint - credentials omitted to avoid CORS error
+        // (API returns Access-Control-Allow-Origin: * which is incompatible with credentials)
         const response = await fetch(MetadataUrl, {
             headers: { 'Accept': 'application/json' }
         });
@@ -87,6 +89,8 @@ async function fetchIndividualCounts() {
         }
 
         try {
+            // Public endpoint - credentials omitted to avoid CORS error
+            // (API returns Access-Control-Allow-Origin: * which is incompatible with credentials)
             const response = await fetch(config.url, {
                 headers: { 'Accept': 'application/json' }
             });

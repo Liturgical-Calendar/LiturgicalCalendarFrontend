@@ -77,7 +77,8 @@ async function fetchAvailableLocales() {
     }
 
     try {
-        // Note: No credentials needed for public metadata endpoint
+        // Public metadata endpoint - credentials omitted to avoid CORS error
+        // (API returns Access-Control-Allow-Origin: * which is incompatible with credentials)
         const response = await fetch(MetadataUrl, {
             headers: { 'Accept': 'application/json' }
         });
