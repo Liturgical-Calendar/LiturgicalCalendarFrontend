@@ -419,6 +419,13 @@ function initPermissionUI() {
         return;
     }
 
+    // Skip visibility changes if auth state is unknown (cache not yet populated).
+    // This preserves server-side rendered auth state and prevents UI flash.
+    // The function will be called again after login/logout when state is known.
+    if (!Auth.isAuthStateKnown()) {
+        return;
+    }
+
     const isAuth = Auth.isAuthenticated();
     const formControlTags = ['INPUT', 'SELECT', 'TEXTAREA'];
 
