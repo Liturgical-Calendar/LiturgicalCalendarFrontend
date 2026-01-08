@@ -17,15 +17,18 @@
 const countEndpoints = {
     temporale: {
         url: typeof TemporaleUrl !== 'undefined' ? TemporaleUrl : null,
-        countKey: 'events'
+        countKey: 'events',
+        unit: 'items'
     },
     sanctorale: {
         url: typeof MissalsUrl !== 'undefined' ? MissalsUrl : null,
-        countKey: null // Count top-level array
+        countKey: 'litcal_missals',
+        unit: 'editions'
     },
     decrees: {
         url: typeof DecreesUrl !== 'undefined' ? DecreesUrl : null,
-        countKey: 'litcal_decrees'
+        countKey: 'litcal_decrees',
+        unit: 'items'
     }
 };
 
@@ -81,7 +84,7 @@ async function fetchIndividualCounts() {
     const countPromises = Object.entries(countEndpoints).map(async ([blockId, config]) => {
         if (!config.url) {
             console.warn(`No URL configured for ${blockId}`);
-            updateCountBadge(blockId, '?');
+            updateCountBadge(blockId, '?', config.unit);
             return;
         }
 
@@ -106,10 +109,10 @@ async function fetchIndividualCounts() {
                 count = Array.isArray(items) ? items.length : 0;
             }
 
-            updateCountBadge(blockId, count);
+            updateCountBadge(blockId, count, config.unit);
         } catch (error) {
             console.warn(`Failed to fetch count for ${blockId}:`, error);
-            updateCountBadge(blockId, '?');
+            updateCountBadge(blockId, '?', config.unit);
         }
     });
 
@@ -128,19 +131,27 @@ async function fetchAllCounts() {
 }
 
 /**
+ * Unit labels for count badges
+ */
+const unitLabels = {
+    items: { singular: 'item', plural: 'items' },
+    calendars: { singular: 'calendar', plural: 'calendars' },
+    editions: { singular: 'edition', plural: 'editions' }
+};
+
+/**
  * Update the count badge for a specific block
  *
  * @param {string} blockId - The block identifier
  * @param {number|string} count - The count to display
- * @param {string} unit - The unit label ('items' or 'calendars'), defaults to 'items'
+ * @param {string} unit - The unit label ('items', 'calendars', or 'editions'), defaults to 'items'
  */
 function updateCountBadge(blockId, count, unit = 'items') {
     const badge = document.querySelector(`[data-count="${blockId}"]`);
     if (badge) {
         if (typeof count === 'number') {
-            const singular = unit === 'calendars' ? 'calendar' : 'item';
-            const plural = unit === 'calendars' ? 'calendars' : 'items';
-            badge.textContent = `${count} ${count === 1 ? singular : plural}`;
+            const labels = unitLabels[unit] || unitLabels.items;
+            badge.textContent = `${count} ${count === 1 ? labels.singular : labels.plural}`;
         } else {
             badge.textContent = count;
         }
