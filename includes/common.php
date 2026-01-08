@@ -190,10 +190,25 @@ try {
     $authHelper = \LiturgicalCalendar\Frontend\AuthHelper::getInstance();
 } catch (Throwable $e) {
     error_log('Failed to initialize AuthHelper: ' . $e->getMessage());
-    // Create a fallback unauthenticated state
+    // Create a fallback unauthenticated state matching AuthHelper's interface
     $authHelper = new class {
         public bool $isAuthenticated = false;
         public ?string $username     = null;
+        public ?int $exp             = null;
+        /** @var array<string>|null */
+        public ?array $roles = null;
+        /** @var array<string>|null */
+        public ?array $permissions = null;
+
+        public function hasRole(string $role): bool
+        {
+            return false;
+        }
+
+        public function hasPermission(string $permission): bool
+        {
+            return false;
+        }
     };
 }
 
