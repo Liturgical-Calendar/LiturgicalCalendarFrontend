@@ -192,13 +192,22 @@ try {
     error_log('Failed to initialize AuthHelper: ' . $e->getMessage());
     // Create a fallback unauthenticated state matching AuthHelper's interface
     $authHelper = new class {
-        public bool $isAuthenticated = false;
-        public ?string $username     = null;
-        public ?int $exp             = null;
+        public readonly bool $isAuthenticated;
+        public readonly ?string $username;
+        public readonly ?int $exp;
         /** @var array<string>|null */
-        public ?array $roles = null;
+        public readonly ?array $roles;
         /** @var array<string>|null */
-        public ?array $permissions = null;
+        public readonly ?array $permissions;
+
+        public function __construct()
+        {
+            $this->isAuthenticated = false;
+            $this->username        = null;
+            $this->exp             = null;
+            $this->roles           = null;
+            $this->permissions     = null;
+        }
 
         public function hasRole(string $role): bool
         {
