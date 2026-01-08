@@ -176,8 +176,8 @@ function getGradeBadgeColor(grade) {
         4: 'primary',
         3: 'success',
         2: 'secondary',
-        1: 'light text-dark',
-        0: 'light text-dark'
+        1: 'light text-dark border',
+        0: 'light text-dark border'
     };
     return colors[grade] || 'secondary';
 }
