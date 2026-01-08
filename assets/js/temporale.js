@@ -87,8 +87,19 @@ async function fetchAvailableLocales() {
         }
 
         const data = await response.json();
+        console.log('Metadata response:', data);
         const metadata = data.litcal_metadata || data;
+        console.log('Extracted metadata:', metadata);
         const locales = metadata.locales || [];
+        console.log('Available locales:', locales);
+
+        // Handle empty locales array
+        if (locales.length === 0) {
+            console.warn('No locales found in metadata, using current locale');
+            localeSelect.innerHTML = `<option value="${escapeHtml(currentLocale)}">${escapeHtml(currentLocale)}</option>`;
+            selectedLocale = currentLocale;
+            return;
+        }
 
         // Build options with display names
         localeSelect.innerHTML = locales.map(locale => {
