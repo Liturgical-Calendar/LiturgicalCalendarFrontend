@@ -158,8 +158,8 @@ if (!$authHelper->isAuthenticated) {
                         <button type="button" class="btn btn-outline-primary" id="prevEventBtn" disabled title="<?php echo htmlspecialchars(_('Previous'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                             <i class="fas fa-chevron-left"></i>
                         </button>
-                        <button type="button" class="btn btn-outline-secondary" id="eventPositionBtn" disabled>
-                            <span id="eventPosition">0 / 0</span>
+                        <button type="button" class="btn btn-outline-secondary" id="eventPositionBtn" disabled style="min-width: 6rem;">
+                            <span id="eventPosition" style="font-variant-numeric: tabular-nums;">0 / 0</span>
                         </button>
                         <button type="button" class="btn btn-outline-primary" id="nextEventBtn" disabled title="<?php echo htmlspecialchars(_('Next'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                             <i class="fas fa-chevron-right"></i>
