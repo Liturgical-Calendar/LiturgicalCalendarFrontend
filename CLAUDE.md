@@ -152,6 +152,8 @@ API requests use `credentials: 'include'` - the API reads tokens from HttpOnly c
 
 ### API Communication
 
+**Authenticated endpoints** (require JWT):
+
 ```javascript
 const response = await fetch(apiUrl, {
     method: 'POST',
@@ -159,6 +161,19 @@ const response = await fetch(apiUrl, {
     credentials: 'include'  // Sends HttpOnly cookies automatically
 });
 ```
+
+**Public endpoints** (MetadataUrl, MissalsUrl, DecreesUrl, TemporaleUrl):
+
+```javascript
+const response = await fetch(MetadataUrl, {
+    headers: { 'Accept': 'application/json' },
+    credentials: 'omit'  // Required: API returns Access-Control-Allow-Origin: *
+});
+```
+
+Public API endpoints use wildcard CORS (`Access-Control-Allow-Origin: *`) which is incompatible with
+`credentials: 'include'`. Browsers block credential requests to wildcard-CORS endpoints. Always use
+`credentials: 'omit'` explicitly for these endpoints to make the intent clear.
 
 ### Internationalization
 
