@@ -145,6 +145,5 @@ if (!$authHelper->isAuthenticated) {
     </div>
 
     <?php include_once('./layout/footer.php'); ?>
-    <script src="assets/js/temporale.js"></script>
 </body>
 </html>

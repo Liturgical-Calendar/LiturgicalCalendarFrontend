@@ -6,6 +6,8 @@
 
 /* global TemporaleUrl */
 
+import { escapeHtml } from './templates.js';
+
 /**
  * Grade labels for display
  */
@@ -102,16 +104,6 @@ function showError(message) {
     }
 }
 
-/**
- * Escape HTML to prevent XSS
- * @param {string} text
- * @returns {string}
- */
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
 
 /**
  * Update the events table with filtered data
