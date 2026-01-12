@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-28 19:06+0000\n"
+"POT-Creation-Date: 2026-01-12 17:17+0000\n"
 "PO-Revision-Date: 2025-12-28 23:32+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
@@ -123,10 +123,11 @@ msgstr "Parametri petitionis præsto in omnibus itineribus %1$s"
 
 #. translators: part of page title - refers to the Catholic liturgical calendar
 #: index.php:60 usage.php:29 examples.php:98 liturgyOfAnyDay.php:18
+#: layout/header.php:174
 msgid "General Roman Calendar"
 msgstr "Calendarium Romanum Generale"
 
-#: index.php:69 layout/header.php:16 layout/header.php:179
+#: index.php:69 layout/header.php:19 layout/header.php:162
 msgid "Catholic Liturgical Calendar"
 msgstr "Calendarium Liturgicum Catholicum"
 
@@ -217,12 +218,11 @@ msgid ""
 "Julian easter (observed by orthodox churches)."
 msgstr ""
 "Punctum exitus API simplex quod data de Diebus Paschæ reddit, tam "
-"Gregorianis quam Iulianis, ab anno MDLXXXIII "
-"(anno adoptionis Calendarii Gregoriani) usque ad MMMMMMMMMCMXCIX "
-"(maximum terminum qui in PHP 64-bit computari potest), utens adaptatione PHP "
-"algorithmi Meeus/Jones/Butcher pro Paschate Gregoriano "
-"(ab Ecclesia Catholica Romana observato) et algorithmi Meeus pro Paschate "
-"Iuliano (ab Ecclesiis Orthodoxis observato)."
+"Gregorianis quam Iulianis, ab anno MDLXXXIII (anno adoptionis Calendarii "
+"Gregoriani) usque ad MMMMMMMMMCMXCIX (maximum terminum qui in PHP 64-bit "
+"computari potest), utens adaptatione PHP algorithmi Meeus/Jones/Butcher pro "
+"Paschate Gregoriano (ab Ecclesia Catholica Romana observato) et algorithmi "
+"Meeus pro Paschate Iuliano (ab Ecclesiis Orthodoxis observato)."
 
 #: index.php:168
 msgid "Dates of Easter API endpoint"
@@ -240,13 +240,13 @@ msgstr ""
 
 #. translators: notification title
 #. translators: notification title for successful operations
-#: usage.php:11 includes/login-modal.php:324 includes/messages.php:49
+#: usage.php:11 includes/login-modal.php:325 includes/messages.php:49
 msgid "Success"
 msgstr "Successus"
 
 #. translators: notification title
 #. translators: notification title for failed operations
-#: usage.php:13 includes/login-modal.php:584 includes/messages.php:51
+#: usage.php:13 includes/login-modal.php:592 includes/messages.php:51
 msgid "Error"
 msgstr "Error"
 
@@ -281,7 +281,7 @@ msgid "Example usage of the API"
 msgstr "Exemplum usus API"
 
 #. translators: accordion section header - examples of web-based calendar displays
-#: usage.php:51 layout/header.php:205
+#: usage.php:51 layout/header.php:235
 msgid "Web calendar"
 msgstr "Calendarium web"
 
@@ -338,7 +338,7 @@ msgid "View FullCalendar (messages first)"
 msgstr "Vide FullCalendar (nuntii primum)"
 
 #. translators: accordion section header - subscribing to the calendar via iCal/ICS URL
-#: usage.php:125 layout/header.php:209
+#: usage.php:125 layout/header.php:239
 msgid "Calendar subscription"
 msgstr "Subscriptio calendarii"
 
@@ -485,8 +485,8 @@ msgid ""
 "On the ribbon of the Home menu item, click on <i><b>Open calendar → From the "
 "internet</b></i>."
 msgstr ""
-"In tænia item menu Domus, preme in <i><b>Aperire calendarium → Ex "
-"interrete</b></i>."
+"In tænia item menu Domus, preme in <i><b>Aperire calendarium → Ex interrete</"
+"b></i>."
 
 #. translators: instruction step for Outlook - checkbox option for polling interval
 #: usage.php:245
@@ -535,7 +535,7 @@ msgstr ""
 "magis \"ornatæ\" sunt pro Outlook."
 
 #. translators: accordion section header - Easter date calculation tool
-#: usage.php:273 layout/header.php:213
+#: usage.php:273 layout/header.php:243
 msgid "Dates of Easter"
 msgstr "Diei Paschæ"
 
@@ -556,7 +556,7 @@ msgid "Calculate the Dates of Easter"
 msgstr "Calculare Datas Paschatis"
 
 #. translators: accordion section header - daily liturgy information and apps
-#: usage.php:309 layout/header.php:217
+#: usage.php:309 layout/header.php:247
 msgid "Liturgy of the Day"
 msgstr "Liturgia Hodierna"
 
@@ -1101,9 +1101,9 @@ msgid ""
 "target=\"_blank\">BibleGet project</a> and of the <a href=\"%2$s\" "
 "target=\"_blank\">Liturgical Calendar project</a>"
 msgstr ""
-"Sacerdos in Diœcesi Romana, auctor propositi <a href=\"%1$s\" target="
-"\"_blank\">BibleGet</a> et propositi <a href=\"%2$s\" target=\"_blank\""
-">Calendarii Liturgici</a>"
+"Sacerdos in Diœcesi Romana, auctor propositi <a href=\"%1$s\" "
+"target=\"_blank\">BibleGet</a> et propositi <a href=\"%2$s\" "
+"target=\"_blank\">Calendarii Liturgici</a>"
 
 #: src/Utilities.php:126
 msgid ""
@@ -1218,80 +1218,100 @@ msgstr "Usque ad"
 msgid "Common (or Proper)"
 msgstr "Communis (vel Proprium)"
 
-#: layout/header.php:21
+#: layout/header.php:24
 msgid "Toggle sidebar"
 msgstr "Limen alterna"
 
-#: layout/header.php:34
+#: layout/header.php:37
 msgid "API"
 msgstr "API"
 
-#: layout/header.php:41 layout/header.php:193
-msgid "Particular Calendars"
-msgstr "Calendaria Particularia"
-
-#. translators: card heading for creating wider region calendar
-#: layout/header.php:48 includes/messages.php:224
-msgid "Define a Calendar for a Wider Region"
-msgstr "Define Calendarium pro Regione Ampliore"
-
-#. translators: card heading for creating national calendar
-#: layout/header.php:49 includes/messages.php:226
-msgid "Define a National Calendar"
-msgstr "Define Calendarium Nationale"
-
-#. translators: card heading for creating diocesan calendar
-#: layout/header.php:50 includes/messages.php:228
-msgid "Define a Diocesan Calendar"
-msgstr "Define Calendarium Diœcesanum"
-
-#: layout/header.php:53
+#: layout/header.php:44
 msgid "Usage"
 msgstr "Usus"
 
 #. translators: link to translations page
-#: layout/header.php:60 includes/messages.php:195
+#: layout/header.php:51 includes/messages.php:195
 msgid "Translations"
 msgstr "Translationes"
 
-#: layout/header.php:67
-msgid "Decrees"
-msgstr "Decreta"
-
-#: layout/header.php:74
+#: layout/header.php:58
 msgid "About us"
 msgstr "De nobis"
 
-#: layout/header.php:87
+#: layout/header.php:71
 msgid "Accuracy Tests"
 msgstr "Probationes accuratæ"
 
-#: layout/header.php:104
+#: layout/header.php:88
 msgid "See the project repositories on GitHub"
 msgstr "Vide repositoria proiecti in GitHub"
 
-#: layout/header.php:141 layout/header.php:142
-msgid "Admin"
-msgstr "Admin"
-
-#: layout/header.php:148 layout/header.php:149 includes/login-modal.php:56
-#: includes/login-modal.php:344
+#: layout/header.php:124 layout/header.php:125 includes/login-modal.php:56
+#: includes/login-modal.php:345
 msgid "Login"
 msgstr "Intra"
 
-#: layout/header.php:158 layout/header.php:159 includes/login-modal.php:12
+#: layout/header.php:134 layout/header.php:135 includes/login-modal.php:12
 msgid "Logout"
 msgstr "Exi"
 
-#: layout/header.php:185
+#: layout/header.php:139
+msgid "Admin"
+msgstr "Admin"
+
+#: layout/header.php:170
+msgid "Dashboard"
+msgstr ""
+
+#: layout/header.php:178
+msgid "Temporale"
+msgstr ""
+
+#: layout/header.php:182
+msgid "Sanctorale"
+msgstr ""
+
+#: layout/header.php:186
+msgid "Decrees"
+msgstr "Decreta"
+
+#: layout/header.php:190
+msgid "Particular Calendars"
+msgstr "Calendaria Particularia"
+
+#. translators: label for wider region calendar name field
+#: layout/header.php:198 includes/messages.php:204
+msgid "Wider Region"
+msgstr "Regio Latior"
+
+#: layout/header.php:202
+#, fuzzy
+#| msgid "National Calendar"
+msgid "National"
+msgstr "Calendarium Nationalis"
+
+#: layout/header.php:206
+#, fuzzy
+#| msgid "Diocese"
+msgid "Diocesan"
+msgstr "Diœcesis"
+
+#: layout/header.php:212
+#, fuzzy
+#| msgid "Project website"
+msgid "Back to Website"
+msgstr "Situs interretialis propositi"
+
+#: layout/header.php:219
 msgid "Home"
 msgstr "Domus"
 
-#: layout/header.php:197
+#: layout/header.php:227
 msgid "Documentation"
 msgstr "Documentatio"
 
-#: layout/header.php:201
+#: layout/header.php:231
 msgid "Examples of Usage"
 msgstr "Exempla Usus"
 
@@ -1337,7 +1357,7 @@ msgstr ""
 msgid "Connection Issue"
 msgstr "Problema Connexionis"
 
-#: includes/login-modal.php:128 includes/login-modal.php:617
+#: includes/login-modal.php:128 includes/login-modal.php:625
 msgid "Are you sure you want to logout?"
 msgstr "Certus es ut discedas?"
 
@@ -1345,50 +1365,50 @@ msgstr "Certus es ut discedas?"
 msgid "Hide password"
 msgstr "Tesseram absconde"
 
-#: includes/login-modal.php:279
+#: includes/login-modal.php:280
 msgid "Please enter both username and password"
 msgstr "Quæso et nomen usoris et tesseram inseras"
 
-#: includes/login-modal.php:287
+#: includes/login-modal.php:288
 msgid "Logging in..."
 msgstr "Intra..."
 
-#: includes/login-modal.php:324
+#: includes/login-modal.php:325
 msgid "Login successful"
 msgstr "Ingressus feliciter"
 
-#: includes/login-modal.php:339
+#: includes/login-modal.php:340
 msgid "Login failed. Please check your credentials."
 msgstr "Ingressus defecit. Quæso tua testimonia reexamina."
 
-#: includes/login-modal.php:487 includes/login-modal.php:492
+#: includes/login-modal.php:495 includes/login-modal.php:500
 #, php-format
 msgid "Your session will expire in less than %d minute."
 msgid_plural "Your session will expire in less than %d minutes."
 msgstr[0] "Sessio tua minus quam %d minuto exspirabit."
 msgstr[1] "Sessio tua minus quam %d minutis exspirabit."
 
-#: includes/login-modal.php:551
+#: includes/login-modal.php:559
 msgid "Extending..."
 msgstr "Extendens..."
 
-#: includes/login-modal.php:573
+#: includes/login-modal.php:581
 msgid "Your session has been extended."
 msgstr "Sessio tua extensa est."
 
-#: includes/login-modal.php:574
+#: includes/login-modal.php:582
 msgid "Session Extended"
 msgstr "Sessio Extensa"
 
-#: includes/login-modal.php:583
+#: includes/login-modal.php:591
 msgid "Failed to extend session. Please login again."
 msgstr "Sessionem extendere non potuit. Quæso iterum coniunge."
 
-#: includes/login-modal.php:647
+#: includes/login-modal.php:655
 msgid "Your session has expired. Please login again."
 msgstr "Sessio tua exspiravit. Quæso iterum coniunge."
 
-#: includes/login-modal.php:648
+#: includes/login-modal.php:656
 msgid "Session Expired"
 msgstr "Sessio Exspiravit"
 
@@ -1733,11 +1753,6 @@ msgstr ""
 "exempli gratia ut unum calendarium annuum cum data omnium diœcesium in cœtu "
 "imprimant, cœtus hic definiri vel constitui potest."
 
-#. translators: label for wider region calendar name field
-#: includes/messages.php:204
-msgid "Wider Region"
-msgstr "Regio Latior"
-
 #. translators: label for national calendar name field
 #: includes/messages.php:206
 msgid "National Calendar"
@@ -1772,6 +1787,21 @@ msgstr "Lingua electa"
 #: includes/messages.php:218
 msgid "Published Roman Missals"
 msgstr "Missalia Romana edita"
+
+#. translators: card heading for creating wider region calendar
+#: includes/messages.php:224
+msgid "Define a Calendar for a Wider Region"
+msgstr "Define Calendarium pro Regione Ampliore"
+
+#. translators: card heading for creating national calendar
+#: includes/messages.php:226
+msgid "Define a National Calendar"
+msgstr "Define Calendarium Nationale"
+
+#. translators: card heading for creating diocesan calendar
+#: includes/messages.php:228
+msgid "Define a Diocesan Calendar"
+msgstr "Define Calendarium Diœcesanum"
 
 #. translators: section heading for national calendar settings
 #: includes/messages.php:230
@@ -1857,7 +1887,8 @@ msgstr "Define Memorialia Optionalia"
 #: includes/messages.php:278
 msgid ""
 "Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
-msgstr "Patronus Principalis Loci, Diœcesis, Regionis, Provinciæ vel Territorii"
+msgstr ""
+"Patronus Principalis Loci, Diœcesis, Regionis, Provinciæ vel Territorii"
 
 #. translators: row title for dedication of cathedral
 #: includes/messages.php:280
@@ -1873,7 +1904,8 @@ msgstr "Patronus/Patroni Loci, Diœcesis, Regionis, Provinciæ vel Territorii"
 #: includes/messages.php:284
 msgid ""
 "Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
-msgstr "Patronus Secundarius Loci, Diœcesis, Regionis, Provinciæ vel Territorii"
+msgstr ""
+"Patronus Secundarius Loci, Diœcesis, Regionis, Provinciæ vel Territorii"
 
 #. translators: row title for local saints optional memorial
 #: includes/messages.php:286
