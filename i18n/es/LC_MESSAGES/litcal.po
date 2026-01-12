@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-28 19:06+0000\n"
+"POT-Creation-Date: 2026-01-12 17:17+0000\n"
 "PO-Revision-Date: 2025-12-28 23:31+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
@@ -127,10 +127,11 @@ msgstr "Parámetros de solicitud disponibles en todas las rutas %1$s"
 
 #. translators: part of page title - refers to the Catholic liturgical calendar
 #: index.php:60 usage.php:29 examples.php:98 liturgyOfAnyDay.php:18
+#: layout/header.php:174
 msgid "General Roman Calendar"
 msgstr "Calendario Romano General"
 
-#: index.php:69 layout/header.php:16 layout/header.php:179
+#: index.php:69 layout/header.php:19 layout/header.php:162
 msgid "Catholic Liturgical Calendar"
 msgstr "Calendario Litúrgico Católico"
 
@@ -246,13 +247,13 @@ msgstr ""
 
 #. translators: notification title
 #. translators: notification title for successful operations
-#: usage.php:11 includes/login-modal.php:324 includes/messages.php:49
+#: usage.php:11 includes/login-modal.php:325 includes/messages.php:49
 msgid "Success"
 msgstr "Éxito"
 
 #. translators: notification title
 #. translators: notification title for failed operations
-#: usage.php:13 includes/login-modal.php:584 includes/messages.php:51
+#: usage.php:13 includes/login-modal.php:592 includes/messages.php:51
 msgid "Error"
 msgstr "Error"
 
@@ -287,7 +288,7 @@ msgid "Example usage of the API"
 msgstr "Ejemplo de uso de la API"
 
 #. translators: accordion section header - examples of web-based calendar displays
-#: usage.php:51 layout/header.php:205
+#: usage.php:51 layout/header.php:235
 msgid "Web calendar"
 msgstr "Calendario web"
 
@@ -344,7 +345,7 @@ msgid "View FullCalendar (messages first)"
 msgstr "Ver FullCalendar (mensajes primero)"
 
 #. translators: accordion section header - subscribing to the calendar via iCal/ICS URL
-#: usage.php:125 layout/header.php:209
+#: usage.php:125 layout/header.php:239
 msgid "Calendar subscription"
 msgstr "Suscripción al calendario"
 
@@ -550,7 +551,7 @@ msgstr ""
 "suscripción están un poco más \"embellecidas\" para Outlook."
 
 #. translators: accordion section header - Easter date calculation tool
-#: usage.php:273 layout/header.php:213
+#: usage.php:273 layout/header.php:243
 msgid "Dates of Easter"
 msgstr "Fechas de Pascua"
 
@@ -570,7 +571,7 @@ msgid "Calculate the Dates of Easter"
 msgstr "Calcular las fechas de Pascua"
 
 #. translators: accordion section header - daily liturgy information and apps
-#: usage.php:309 layout/header.php:217
+#: usage.php:309 layout/header.php:247
 msgid "Liturgy of the Day"
 msgstr "Liturgia del día"
 
@@ -1241,80 +1242,100 @@ msgstr "Hasta"
 msgid "Common (or Proper)"
 msgstr "Común (o Propio)"
 
-#: layout/header.php:21
+#: layout/header.php:24
 msgid "Toggle sidebar"
 msgstr "Alternar barra lateral"
 
-#: layout/header.php:34
+#: layout/header.php:37
 msgid "API"
 msgstr "API"
 
-#: layout/header.php:41 layout/header.php:193
-msgid "Particular Calendars"
-msgstr "Calendarios particulares"
-
-#. translators: card heading for creating wider region calendar
-#: layout/header.php:48 includes/messages.php:224
-msgid "Define a Calendar for a Wider Region"
-msgstr "Definir un Calendario para una región más amplia"
-
-#. translators: card heading for creating national calendar
-#: layout/header.php:49 includes/messages.php:226
-msgid "Define a National Calendar"
-msgstr "Definir un Calendario Nacional"
-
-#. translators: card heading for creating diocesan calendar
-#: layout/header.php:50 includes/messages.php:228
-msgid "Define a Diocesan Calendar"
-msgstr "Definir un Calendario Diocesano"
-
-#: layout/header.php:53
+#: layout/header.php:44
 msgid "Usage"
 msgstr "Uso"
 
 #. translators: link to translations page
-#: layout/header.php:60 includes/messages.php:195
+#: layout/header.php:51 includes/messages.php:195
 msgid "Translations"
 msgstr "Traducciones"
 
-#: layout/header.php:67
-msgid "Decrees"
-msgstr "Decretos"
-
-#: layout/header.php:74
+#: layout/header.php:58
 msgid "About us"
 msgstr "Sobre nosotros"
 
-#: layout/header.php:87
+#: layout/header.php:71
 msgid "Accuracy Tests"
 msgstr "Pruebas de precisión"
 
-#: layout/header.php:104
+#: layout/header.php:88
 msgid "See the project repositories on GitHub"
 msgstr "Ver los repositorios del proyecto en GitHub"
 
-#: layout/header.php:141 layout/header.php:142
-msgid "Admin"
-msgstr "Administrador"
-
-#: layout/header.php:148 layout/header.php:149 includes/login-modal.php:56
-#: includes/login-modal.php:344
+#: layout/header.php:124 layout/header.php:125 includes/login-modal.php:56
+#: includes/login-modal.php:345
 msgid "Login"
 msgstr "Iniciar sesión"
 
-#: layout/header.php:158 layout/header.php:159 includes/login-modal.php:12
+#: layout/header.php:134 layout/header.php:135 includes/login-modal.php:12
 msgid "Logout"
 msgstr "Cerrar sesión"
 
-#: layout/header.php:185
+#: layout/header.php:139
+msgid "Admin"
+msgstr "Administrador"
+
+#: layout/header.php:170
+msgid "Dashboard"
+msgstr ""
+
+#: layout/header.php:178
+msgid "Temporale"
+msgstr ""
+
+#: layout/header.php:182
+msgid "Sanctorale"
+msgstr ""
+
+#: layout/header.php:186
+msgid "Decrees"
+msgstr "Decretos"
+
+#: layout/header.php:190
+msgid "Particular Calendars"
+msgstr "Calendarios particulares"
+
+#. translators: label for wider region calendar name field
+#: layout/header.php:198 includes/messages.php:204
+msgid "Wider Region"
+msgstr "Región más amplia"
+
+#: layout/header.php:202
+#, fuzzy
+#| msgid "National Calendar"
+msgid "National"
+msgstr "Calendario Nacional"
+
+#: layout/header.php:206
+#, fuzzy
+#| msgid "Diocese"
+msgid "Diocesan"
+msgstr "Diócesis"
+
+#: layout/header.php:212
+#, fuzzy
+#| msgid "Project website"
+msgid "Back to Website"
+msgstr "Sitio web del proyecto"
+
+#: layout/header.php:219
 msgid "Home"
 msgstr "Inicio"
 
-#: layout/header.php:197
+#: layout/header.php:227
 msgid "Documentation"
 msgstr "Documentación"
 
-#: layout/header.php:201
+#: layout/header.php:231
 msgid "Examples of Usage"
 msgstr "Ejemplos de uso"
 
@@ -1361,7 +1382,7 @@ msgstr ""
 msgid "Connection Issue"
 msgstr "Problema de conexión"
 
-#: includes/login-modal.php:128 includes/login-modal.php:617
+#: includes/login-modal.php:128 includes/login-modal.php:625
 msgid "Are you sure you want to logout?"
 msgstr "¿Estás seguro de que quieres cerrar sesión?"
 
@@ -1369,50 +1390,50 @@ msgstr "¿Estás seguro de que quieres cerrar sesión?"
 msgid "Hide password"
 msgstr "Ocultar contraseña"
 
-#: includes/login-modal.php:279
+#: includes/login-modal.php:280
 msgid "Please enter both username and password"
 msgstr "Por favor, introduce tanto el nombre de usuario como la contraseña"
 
-#: includes/login-modal.php:287
+#: includes/login-modal.php:288
 msgid "Logging in..."
 msgstr "Iniciando sesión..."
 
-#: includes/login-modal.php:324
+#: includes/login-modal.php:325
 msgid "Login successful"
 msgstr "Inicio de sesión exitoso"
 
-#: includes/login-modal.php:339
+#: includes/login-modal.php:340
 msgid "Login failed. Please check your credentials."
 msgstr "Error de inicio de sesión. Por favor, revisa tus credenciales."
 
-#: includes/login-modal.php:487 includes/login-modal.php:492
+#: includes/login-modal.php:495 includes/login-modal.php:500
 #, php-format
 msgid "Your session will expire in less than %d minute."
 msgid_plural "Your session will expire in less than %d minutes."
 msgstr[0] "Tu sesión expirará en menos de %d minuto."
 msgstr[1] "Tu sesión expirará en menos de %d minutos."
 
-#: includes/login-modal.php:551
+#: includes/login-modal.php:559
 msgid "Extending..."
 msgstr "Extendiendo..."
 
-#: includes/login-modal.php:573
+#: includes/login-modal.php:581
 msgid "Your session has been extended."
 msgstr "Tu sesión ha sido extendida."
 
-#: includes/login-modal.php:574
+#: includes/login-modal.php:582
 msgid "Session Extended"
 msgstr "Sesión extendida"
 
-#: includes/login-modal.php:583
+#: includes/login-modal.php:591
 msgid "Failed to extend session. Please login again."
 msgstr "Fallo al extender la sesión. Por favor, inicia sesión de nuevo."
 
-#: includes/login-modal.php:647
+#: includes/login-modal.php:655
 msgid "Your session has expired. Please login again."
 msgstr "Tu sesión ha expirado. Por favor, inicia sesión de nuevo."
 
-#: includes/login-modal.php:648
+#: includes/login-modal.php:656
 msgid "Session Expired"
 msgstr "Sesión expirada"
 
@@ -1759,11 +1780,6 @@ msgstr ""
 "por ejemplo, para imprimir un solo calendario anual con los datos de todas "
 "las diócesis del grupo, el grupo puede definirse o configurarse aquí."
 
-#. translators: label for wider region calendar name field
-#: includes/messages.php:204
-msgid "Wider Region"
-msgstr "Región más amplia"
-
 #. translators: label for national calendar name field
 #: includes/messages.php:206
 msgid "National Calendar"
@@ -1798,6 +1814,21 @@ msgstr "Localización actual"
 #: includes/messages.php:218
 msgid "Published Roman Missals"
 msgstr "Misales Romanos Publicados"
+
+#. translators: card heading for creating wider region calendar
+#: includes/messages.php:224
+msgid "Define a Calendar for a Wider Region"
+msgstr "Definir un Calendario para una región más amplia"
+
+#. translators: card heading for creating national calendar
+#: includes/messages.php:226
+msgid "Define a National Calendar"
+msgstr "Definir un Calendario Nacional"
+
+#. translators: card heading for creating diocesan calendar
+#: includes/messages.php:228
+msgid "Define a Diocesan Calendar"
+msgstr "Definir un Calendario Diocesano"
 
 #. translators: section heading for national calendar settings
 #: includes/messages.php:230
