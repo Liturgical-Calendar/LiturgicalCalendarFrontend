@@ -1,0 +1,108 @@
+/**
+ * Temporale Page Styles
+ */
+
+/* Table styling */
+#temporaleTable {
+    font-size: 0.9rem;
+}
+
+#temporaleTable th {
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+#temporaleTable td {
+    vertical-align: middle;
+}
+
+#temporaleTable code {
+    font-size: 0.85em;
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+}
+
+/* Badge colors for seasons */
+.badge.bg-purple {
+    background-color: #800080 !important;
+}
+
+/* Hover effect on table rows */
+#temporaleTable tbody tr:hover {
+    cursor: pointer;
+    background-color: rgba(0, 123, 255, 0.05);
+}
+
+/* Modal styling */
+#eventDetailsModal .modal-body {
+    min-height: 70vh;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+#eventDetailsModal .modal-body h6 {
+    color: #6c757d;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+#eventDetailsModal .modal-body p {
+    margin-bottom: 0;
+}
+
+#eventDetailsModal .modal-body code {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+}
+
+/* Readings tabs */
+#readingsTabs .nav-link {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+}
+
+#readingsTabContent dt {
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+#readingsTabContent dd {
+    color: #495057;
+}
+
+/* Filter card */
+.temporale-filters .card-header h6 {
+    display: flex;
+    align-items: center;
+}
+
+/* Loading state */
+#temporaleTableBody .spinner-border {
+    width: 2rem;
+    height: 2rem;
+}
+
+/* Event count badge */
+#eventCount {
+    font-weight: normal;
+    font-size: 0.8rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    #temporaleTable {
+        font-size: 0.8rem;
+    }
+
+    #temporaleTable .badge {
+        font-size: 0.7rem;
+    }
+
+    .view-details-btn {
+        padding: 0.2rem 0.4rem;
+    }
+}

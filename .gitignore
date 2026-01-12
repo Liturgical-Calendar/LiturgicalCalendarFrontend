@@ -107,13 +107,15 @@ api/*
 /examples
 *.php
 !about.php
-!admin.php
+!admin-dashboard.php
 !decrees.php
+!missals-editor.php
 !easter.php
 !examples.php
 !extending.php
 !index.php
 !liturgyOfAnyDay.php
+!temporale.php
 !translations.php
 !usage.php
 !layout/*.php

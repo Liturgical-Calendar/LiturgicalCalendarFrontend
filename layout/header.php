@@ -1,6 +1,9 @@
 <?php
 $currentPage = basename($_SERVER['SCRIPT_FILENAME'], '.php');
 
+// $adminPages is defined in includes/common.php for centralized maintenance
+$isAdminPage = in_array($currentPage, $adminPages, true);
+
 $i18nDirs       = glob('i18n/*', GLOB_ONLYDIR);
 $langsAvailable = ['en', ...array_map('basename', $i18nDirs !== false ? $i18nDirs : [])];
 $langsAssoc     = [];
@@ -38,18 +41,6 @@ asort($langsAssoc);
                     <i class="fas fa-server me-1"></i><span class="nav-text"><?php echo $apiLabel; ?></span>
                 </a>
             </li>
-            <?php $particularCalendarsLabel = _('Particular Calendars'); ?>
-            <li class="nav-item dropdown<?php echo $currentPage === 'extending' ? ' bg-info' : ''; ?>" id="topNavBar_Extending">
-                <a class="nav-link dropdown-toggle<?php echo $currentPage === 'extending' ? ' active' : ''; ?>" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="extendingChoicesDropdown"
-                   title="<?php echo htmlspecialchars($particularCalendarsLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-                    <i class="fas fa-layer-group me-1"></i><span class="nav-text"><?php echo $particularCalendarsLabel; ?></span>
-                </a>
-                <div class="dropdown-menu shadow" aria-labelledby="extendingChoicesDropdown" id="extendingChoicesDropdownItems">
-                    <a class="dropdown-item<?php echo isset($_GET['choice']) && $_GET['choice'] === 'widerRegion' ? ' active' : ''; ?>" id="extendingChoiceWiderRegion" href="./extending.php?choice=widerRegion"><i class="fas fa-globe-americas me-2"></i><?php echo _('Define a Calendar for a Wider Region'); ?></a>
-                    <a class="dropdown-item<?php echo isset($_GET['choice']) && $_GET['choice'] === 'national' ? ' active' : ''; ?>" id="extendingChoiceNationalCalendar" href="./extending.php?choice=national"><i class="fas fa-flag me-2"></i><?php echo _('Define a National Calendar'); ?></a>
-                    <a class="dropdown-item<?php echo isset($_GET['choice']) && $_GET['choice'] === 'diocesan' ? ' active' : ''; ?>" id="extendingChoiceDiocesanCalendar" href="./extending.php?choice=diocesan"><i class="fas fa-church me-2"></i><?php echo _('Define a Diocesan Calendar'); ?></a>
-                </div>
-            </li>
             <?php $usageLabel = _('Usage'); ?>
             <li class="nav-item<?php echo in_array($currentPage, ['usage', 'examples', 'liturgyOfAnyDay'], true) ? ' bg-info' : ''; ?>" id="topNavBar_Usage">
                 <a class="nav-link<?php echo in_array($currentPage, ['usage', 'examples', 'liturgyOfAnyDay'], true) ? ' active' : ''; ?>" href="./usage.php"
@@ -62,13 +53,6 @@ asort($langsAssoc);
                 <a class="nav-link<?php echo $currentPage === 'translations' ? ' active' : ''; ?>" href="./translations.php"
                    title="<?php echo htmlspecialchars($translationsLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                     <i class="fas fa-language me-1"></i><span class="nav-text"><?php echo $translationsLabel; ?></span>
-                </a>
-            </li>
-            <?php $decreesLabel = _('Decrees'); ?>
-            <li class="nav-item<?php echo $currentPage === 'decrees' ? ' bg-info' : ''; ?>" id="topNavBar_Decrees">
-                <a class="nav-link<?php echo $currentPage === 'decrees' ? ' active' : ''; ?>" href="./decrees.php"
-                   title="<?php echo htmlspecialchars($decreesLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-                    <i class="fas fa-gavel me-1"></i><span class="nav-text"><?php echo $decreesLabel; ?></span>
                 </a>
             </li>
             <?php $aboutUsLabel = _('About us'); ?>
@@ -134,31 +118,30 @@ asort($langsAssoc);
                 </div>
             </li>
             <li class="vr mx-2 d-none d-lg-block"></li>
-            <!-- Admin Link -->
-            <li class="nav-item<?php echo $currentPage === 'admin' ? ' bg-info' : ''; ?>">
-                <a class="nav-link<?php echo $currentPage === 'admin' ? ' active' : ''; ?>"
-                   href="./admin.php"
-                   title="<?php echo htmlspecialchars(_('Admin'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-                    <i class="fas fa-cog me-1"></i><span class="d-lg-none d-xxl-inline"><?php echo _('Admin'); ?></span>
-                </a>
-            </li>
-            <!-- Authentication Status: Login button shown by default, JS will toggle based on auth state -->
-            <li class="nav-item me-lg-2" id="loginBtnContainer" data-requires-no-auth>
+            <!-- Authentication Status: Server-side auth detection, JS handles dynamic updates -->
+            <li class="nav-item me-lg-2<?php echo $authHelper->isAuthenticated ? ' d-none' : ''; ?>" id="loginBtnContainer" data-requires-no-auth>
                 <button class="btn btn-outline-primary btn-sm" id="loginBtn"
                         title="<?php echo htmlspecialchars(_('Login'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                     <i class="fas fa-sign-in-alt me-1"></i><span class="d-lg-none d-sm-inline"><?php echo _('Login'); ?></span>
                 </button>
             </li>
-            <li class="nav-item me-lg-2 d-none" id="userMenuContainer" data-requires-auth>
+            <li class="nav-item me-lg-2<?php echo $authHelper->isAuthenticated ? '' : ' d-none'; ?>" id="userMenuContainer" data-requires-auth>
                 <div class="btn-group" id="userMenu">
                     <span class="btn btn-outline-success btn-sm" id="userInfo">
-                        <i class="fas fa-user me-1"></i><span id="username" class="d-lg-none d-sm-inline"></span>
+                        <i class="fas fa-user me-1"></i><span id="username" class="d-lg-none d-sm-inline"><?php echo $authHelper->username !== null ? htmlspecialchars($authHelper->username, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') : ''; ?></span>
                     </span>
                     <button class="btn btn-outline-danger btn-sm" id="logoutBtn"
                             title="<?php echo htmlspecialchars(_('Logout'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                         <i class="fas fa-sign-out-alt me-1"></i><span class="d-lg-none"><?php echo _('Logout'); ?></span>
                     </button>
                 </div>
+            </li>
+            <?php $adminLabel = _('Admin'); ?>
+            <li class="nav-item<?php echo $currentPage === 'admin-dashboard' ? ' bg-info' : ''; ?><?php echo $authHelper->isAuthenticated ? '' : ' d-none'; ?>" id="topNavBar_Admin" data-requires-auth>
+                <a class="nav-link<?php echo $currentPage === 'admin-dashboard' ? ' active' : ''; ?>" href="./admin-dashboard.php"
+                   title="<?php echo htmlspecialchars($adminLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                    <i class="fas fa-gear me-1"></i><span class="d-lg-none d-xxl-inline"><?php echo $adminLabel; ?></span>
+                </a>
             </li>
         </ul>
     </div>
@@ -179,24 +162,71 @@ asort($langsAssoc);
                             <?php echo _('Catholic Liturgical Calendar'); ?>
                         </a>
                     </div>
-                    <!-- <hr> -->
+
+                    <?php if ($isAdminPage) : ?>
+                    <!-- Admin Sidebar -->
+                    <a class="nav-link<?php echo $currentPage === 'admin-dashboard' ? ' active' : ''; ?>" href="admin-dashboard.php">
+                        <i class="sb-nav-link-icon fas fa-fw fa-tachometer-alt"></i>
+                        <span><?php echo _('Dashboard'); ?></span>
+                    </a>
+
+                    <div class="sb-sidenav-menu-heading text-white-50">
+                        <?php echo _('General Roman Calendar'); ?>
+                    </div>
+                    <a class="nav-link<?php echo $currentPage === 'temporale' ? ' active' : ''; ?>" href="temporale.php">
+                        <i class="sb-nav-link-icon fas fa-fw fa-calendar-alt text-primary"></i>
+                        <span><?php echo _('Temporale'); ?></span>
+                    </a>
+                    <a class="nav-link<?php echo $currentPage === 'missals-editor' ? ' active' : ''; ?>" href="missals-editor.php">
+                        <i class="sb-nav-link-icon fas fa-fw fa-book-open text-success"></i>
+                        <span><?php echo _('Sanctorale'); ?></span>
+                    </a>
+                    <a class="nav-link<?php echo $currentPage === 'decrees' ? ' active' : ''; ?>" href="decrees.php">
+                        <i class="sb-nav-link-icon fas fa-fw fa-gavel text-warning"></i>
+                        <span><?php echo _('Decrees'); ?></span>
+                    </a>
+
+                    <div class="sb-sidenav-menu-heading text-white-50">
+                        <?php echo _('Particular Calendars'); ?>
+                    </div>
+                        <?php
+                    // Get current choice parameter for extending.php active state
+                        $extendingChoice = $_GET['choice'] ?? '';
+                    ?>
+                    <a class="nav-link<?php echo $currentPage === 'extending' && $extendingChoice === 'widerRegion' ? ' active' : ''; ?>" href="extending.php?choice=widerRegion">
+                        <i class="sb-nav-link-icon fas fa-fw fa-globe-americas text-info"></i>
+                        <span><?php echo _('Wider Region'); ?></span>
+                    </a>
+                    <a class="nav-link<?php echo $currentPage === 'extending' && $extendingChoice === 'national' ? ' active' : ''; ?>" href="extending.php?choice=national">
+                        <i class="sb-nav-link-icon fas fa-fw fa-flag text-danger"></i>
+                        <span><?php echo _('National'); ?></span>
+                    </a>
+                    <a class="nav-link<?php echo $currentPage === 'extending' && $extendingChoice === 'diocesan' ? ' active' : ''; ?>" href="extending.php?choice=diocesan">
+                        <i class="sb-nav-link-icon fas fa-fw fa-church text-secondary"></i>
+                        <span><?php echo _('Diocesan'); ?></span>
+                    </a>
+
+                    <hr class="sidebar-divider my-2">
+                    <a class="nav-link" href="/">
+                        <i class="sb-nav-link-icon fas fa-fw fa-arrow-left"></i>
+                        <span><?php echo _('Back to Website'); ?></span>
+                    </a>
+
+                    <?php else : ?>
+                    <!-- Main Website Sidebar -->
                     <a class="nav-link<?php echo in_array($currentPage, ['', 'index'], true) ? ' active' : '' ?>" href="/">
                         <i class="sb-nav-link-icon fas fa-fw fa-cross"></i>
                         <span><?php echo _('Home'); ?></span>
                     </a>
-                    <!-- <hr> -->
-                    <div class="sb-sidenav-menu-heading<?php echo in_array($currentPage, ['', 'index', 'extending'], true) ? ' text-white' : ''; ?>">
+
+                    <div class="sb-sidenav-menu-heading<?php echo in_array($currentPage, ['', 'index'], true) ? ' text-white' : ''; ?>">
                         <?php echo 'API'; ?>
                     </div>
-                    <a class="nav-link<?php echo $currentPage === 'extending' ? ' active' : ''; ?>" href="extending.php?choice=diocesan">
-                        <i class="sb-nav-link-icon fas fa-fw fa-folder"></i>
-                        <span><?php echo _('Particular Calendars'); ?></span>
-                    </a>
                     <a class="nav-link" href="/dist/">
                         <i class="sb-nav-link-icon fas fa-fw fa-folder"></i>
                         <span><?php echo _('Documentation'); ?></span>
                     </a>
-                    <!-- <hr> -->
+
                     <div class="sb-sidenav-menu-heading<?php echo in_array($currentPage, ['usage', 'examples', 'liturgyOfAnyDay'], true) ? ' text-white' : '' ?>">
                         <?php echo _('Examples of Usage'); ?>
                     </div>
@@ -216,6 +246,7 @@ asort($langsAssoc);
                         <i class="sb-nav-link-icon fas fa-fw fa-folder"></i>
                         <span><?php echo _('Liturgy of the Day'); ?></span>
                     </a>
+                    <?php endif; ?>
 
                 </div>
             </div>

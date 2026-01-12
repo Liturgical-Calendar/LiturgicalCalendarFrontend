@@ -487,8 +487,22 @@ const Auth = {
     },
 
     /**
+     * Check if current page is an admin page
+     * Uses AdminPages global from footer.php (sourced from $adminPages in common.php)
+     * @private
+     * @returns {boolean} True if on an admin page
+     */
+    _isAdminPage() {
+        const segments = window.location.pathname.split('/').filter(Boolean);
+        const currentPage = segments.pop()?.replace('.php', '') || '';
+        const adminPages = typeof AdminPages !== 'undefined' ? AdminPages : [];
+        return adminPages.includes(currentPage);
+    },
+
+    /**
      * Logout user
      * Calls logout endpoint and clears all tokens
+     * Redirects to home page if on an admin page, otherwise reloads
      *
      * @returns {Promise<void>}
      */
@@ -519,7 +533,13 @@ const Auth = {
         }
 
         this.clearTokens();
-        window.location.reload(); // Refresh to reset UI state
+
+        // Redirect to home if on admin page, otherwise reload
+        if (this._isAdminPage()) {
+            window.location.href = '/';
+        } else {
+            window.location.reload();
+        }
     },
 
     /**

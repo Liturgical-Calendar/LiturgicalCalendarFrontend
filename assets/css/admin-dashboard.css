@@ -1,0 +1,110 @@
+/**
+ * Admin Dashboard Styles
+ *
+ * Styles for the unified admin dashboard with block button cards.
+ */
+
+/* Square block cards */
+.admin-block {
+    min-height: 220px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-top: 4px solid;
+}
+
+.admin-block:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Block icon container */
+.admin-block-icon {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Count badge */
+.admin-block-count .badge {
+    font-size: 0.85rem;
+    padding: 0.5em 1em;
+}
+
+.admin-block-count .spinner-border-sm {
+    width: 0.875rem;
+    height: 0.875rem;
+}
+
+/* Action buttons */
+.admin-block-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.admin-block-actions .btn {
+    min-width: 80px;
+}
+
+/* Color variants for block borders */
+.admin-block.border-primary {
+    border-top-color: var(--bs-primary);
+}
+
+.admin-block.border-success {
+    border-top-color: var(--bs-success);
+}
+
+.admin-block.border-warning {
+    border-top-color: var(--bs-warning);
+}
+
+.admin-block.border-info {
+    border-top-color: var(--bs-info);
+}
+
+.admin-block.border-danger {
+    border-top-color: var(--bs-danger);
+}
+
+.admin-block.border-secondary {
+    border-top-color: var(--bs-secondary);
+}
+
+/* RBAC visual states */
+.admin-block[data-permission-denied] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.admin-block[data-permission-denied]:hover {
+    transform: none;
+}
+
+.admin-block[data-permission-denied] .admin-block-actions {
+    display: none !important;
+}
+
+/* Dashboard heading */
+.admin-dashboard-heading {
+    border-bottom: 2px solid var(--bs-primary);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .admin-block {
+        min-height: 180px;
+    }
+
+    .admin-block-icon {
+        height: 50px;
+    }
+
+    .admin-block-icon i {
+        font-size: 2rem !important;
+    }
+}

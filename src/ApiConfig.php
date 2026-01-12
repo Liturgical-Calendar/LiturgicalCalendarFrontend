@@ -19,6 +19,7 @@ class ApiConfig
     public readonly string $eventsUrl;
     public readonly string $missalsUrl;
     public readonly string $decreesUrl;
+    public readonly string $temporaleUrl;
     public readonly string $regionalDataUrl;
     public readonly string $calSubscriptionUrl;
 
@@ -31,6 +32,7 @@ class ApiConfig
         $this->eventsUrl          = "{$this->apiBaseUrl}/events";
         $this->missalsUrl         = "{$this->apiBaseUrl}/missals";
         $this->decreesUrl         = "{$this->apiBaseUrl}/decrees";
+        $this->temporaleUrl       = "{$this->apiBaseUrl}/temporale";
         $this->regionalDataUrl    = "{$this->apiBaseUrl}/data";
         $this->calSubscriptionUrl = "{$this->apiBaseUrl}/calendar?return_type=ICS&year_type=CIVIL";
     }

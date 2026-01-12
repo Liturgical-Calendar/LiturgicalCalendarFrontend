@@ -184,7 +184,53 @@ if (file_exists($ghReleaseCacheFile)) {
 // Initialize API configuration (singleton)
 $apiConfig = \LiturgicalCalendar\Frontend\ApiConfig::getInstance($apiBaseUrl);
 
+// Initialize Auth helper (singleton) - validates JWT from HttpOnly cookie
+// This enables server-side auth detection, avoiding UI flash on page load
+try {
+    $authHelper = \LiturgicalCalendar\Frontend\AuthHelper::getInstance();
+} catch (\Exception $e) {
+    error_log('Failed to initialize AuthHelper: ' . $e->getMessage());
+    // Create a fallback unauthenticated state matching AuthHelper's interface
+    $authHelper = new class {
+        public readonly bool $isAuthenticated;
+        public readonly ?string $username;
+        public readonly ?int $exp;
+        /** @var array<string>|null */
+        public readonly ?array $roles;
+        /** @var array<string>|null */
+        public readonly ?array $permissions;
+
+        public function __construct()
+        {
+            $this->isAuthenticated = false;
+            $this->username        = null;
+            $this->exp             = null;
+            $this->roles           = null;
+            $this->permissions     = null;
+        }
+
+        public function hasRole(string $role): bool
+        {
+            return false;
+        }
+
+        public function hasPermission(string $permission): bool
+        {
+            return false;
+        }
+    };
+}
+
 $i18n = new I18n();
+
+// ============================================================================
+// Admin Pages Configuration
+// ============================================================================
+// Centralized list of admin pages for auth checks and conditional UI rendering.
+// Exposed to JavaScript as AdminPages global via layout/footer.php.
+// ============================================================================
+
+$adminPages = ['admin-dashboard', 'missals-editor', 'extending', 'temporale', 'decrees'];
 
 // ============================================================================
 // Setup PSR-Compliant HTTP Client with Production Features

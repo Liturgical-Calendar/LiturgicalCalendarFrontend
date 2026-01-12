@@ -5,13 +5,15 @@ parameters:
         - includes
         - layout
         - about.php
-        - admin.php
+        - admin-dashboard.php
+        - missals-editor.php
         - decrees.php
         - easter.php
         - examples.php
         - extending.php
         - index.php
         - liturgyOfAnyDay.php
+        - temporale.php
         - translations.php
         - usage.php
     excludePaths:
@@ -25,10 +27,11 @@ parameters:
         # PHPStan cannot detect this because it doesn't execute includes during static analysis.
         # These are FALSE POSITIVES - variables ARE defined at runtime.
         -
-            message: '#Variable \$(i18n|apiConfig) might not be defined\.#'
+            message: '#Variable \$(i18n|apiConfig|authHelper|messages|adminPages) might not be defined\.#'
             paths:
                 - about.php
-                - admin.php
+                - admin-dashboard.php
+                - missals-editor.php
                 - decrees.php
                 - easter.php
                 - examples.php
@@ -37,4 +40,5 @@ parameters:
                 - layout/footer.php
                 - layout/header.php
                 - liturgyOfAnyDay.php
+                - temporale.php
                 - usage.php
