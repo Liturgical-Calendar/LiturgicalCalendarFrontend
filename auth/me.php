@@ -14,6 +14,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\CachedKeySet;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\HttpFactory;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 // Load environment
 $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__), ['.env.local', '.env.development', '.env.production', '.env']);
@@ -35,12 +36,20 @@ function jsonResponse(array $data, int $statusCode = 200): void
     exit;
 }
 
-// Check for access token
+// Check for access token (proves user is authenticated)
 $accessToken = $_COOKIE['litcal_access_token'] ?? null;
 
 if ($accessToken === null) {
     jsonResponse(['authenticated' => false]);
 }
+
+// Get ID token for user profile information
+// ID token contains full user claims (preferred_username, email, name, etc.)
+// Access token typically only has minimal claims (sub)
+$idToken = $_COOKIE['litcal_id_token'] ?? null;
+
+// Use ID token if available, fall back to access token
+$tokenToValidate = $idToken ?? $accessToken;
 
 // Validate access token
 try {
@@ -61,17 +70,21 @@ try {
     $httpClient  = new Client();
     $httpFactory = new HttpFactory();
 
+    // Use filesystem cache for JWKS
+    $cacheDir = dirname(__DIR__) . '/cache';
+    $cache    = new FilesystemAdapter('jwks', 3600, $cacheDir);
+
     $keySet = new CachedKeySet(
         $jwksUri,
         $httpClient,
         $httpFactory,
-        null,
+        $cache,
         3600,
         true
     );
 
-    // Decode and validate token
-    $payload = JWT::decode($accessToken, $keySet);
+    // Decode and validate token (use ID token for user info if available)
+    $payload = JWT::decode($tokenToValidate, $keySet);
 
     // Validate issuer
     if (!isset($payload->iss) || $payload->iss !== $issuer) {

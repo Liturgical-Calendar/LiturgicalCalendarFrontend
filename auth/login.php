@@ -41,8 +41,16 @@ try {
         }
     }
 
+    // Get prompt parameter (login, consent, select_account, none)
+    // Use 'login' to force re-authentication even if Zitadel session exists
+    $prompt       = $_GET['prompt'] ?? null;
+    $validPrompts = ['login', 'consent', 'select_account', 'none'];
+    if ($prompt !== null && !in_array($prompt, $validPrompts, true)) {
+        $prompt = null;
+    }
+
     // Generate authorization URL and redirect
-    $authUrl = $oidcClient->getAuthorizationUrl([], $returnTo);
+    $authUrl = $oidcClient->getAuthorizationUrl([], $returnTo, $prompt);
     header('Location: ' . $authUrl);
     exit;
 } catch (Exception $e) {

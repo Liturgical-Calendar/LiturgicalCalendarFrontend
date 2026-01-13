@@ -33,6 +33,7 @@ const DecreesUrl      = <?php echo json_encode($apiConfig->decreesUrl); ?>;
 const TemporaleUrl    = <?php echo json_encode($apiConfig->temporaleUrl); ?>;
 const RegionalDataUrl = <?php echo json_encode($apiConfig->regionalDataUrl); ?>;
 const AdminPages      = <?php echo json_encode($adminPages); ?>;
+const OidcEnabled     = <?php echo json_encode(\LiturgicalCalendar\Frontend\OidcClient::isConfigured()); ?>;
 if ( AppEnv === 'development' ) console.info({
     'AppEnv': AppEnv,
     'BaseUrl': BaseUrl,
@@ -43,7 +44,8 @@ if ( AppEnv === 'development' ) console.info({
     'MissalsUrl': MissalsUrl,
     'DecreesUrl': DecreesUrl,
     'TemporaleUrl': TemporaleUrl,
-    'RegionalDataUrl': RegionalDataUrl
+    'RegionalDataUrl': RegionalDataUrl,
+    'OidcEnabled': OidcEnabled
 });
 </script>
 

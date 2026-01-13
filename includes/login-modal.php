@@ -117,7 +117,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loginBtn = document.getElementById('loginBtn');
     if (loginBtn) {
         loginBtn.addEventListener('click', () => {
-            showLoginModal();
+            if (Auth.getMode() === 'oidc') {
+                Auth.loginWithOidc();
+            } else {
+                showLoginModal();
+            }
         });
     }
 

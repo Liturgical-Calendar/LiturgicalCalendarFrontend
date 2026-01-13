@@ -8,6 +8,7 @@ use Firebase\JWT\CachedKeySet;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\HttpFactory;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 /**
  * OIDC Client for Zitadel authentication using PKCE flow.
@@ -104,9 +105,10 @@ class OidcClient
      *
      * @param array<string> $scopes Additional scopes beyond default
      * @param string|null $returnTo URL to redirect after login
+     * @param string|null $prompt OIDC prompt parameter (login, consent, select_account, none)
      * @return string Authorization URL
      */
-    public function getAuthorizationUrl(array $scopes = [], ?string $returnTo = null): string
+    public function getAuthorizationUrl(array $scopes = [], ?string $returnTo = null, ?string $prompt = null): string
     {
         $this->ensureSession();
 
@@ -150,6 +152,11 @@ class OidcClient
             'code_challenge'        => $codeChallenge,
             'code_challenge_method' => 'S256',
         ];
+
+        // Add prompt parameter if specified (login, consent, select_account, none)
+        if ($prompt !== null) {
+            $params['prompt'] = $prompt;
+        }
 
         return $authEndpoint . '?' . http_build_query($params);
     }
@@ -243,7 +250,10 @@ class OidcClient
     {
         $endSessionEndpoint = $this->getEndSessionEndpoint();
 
-        $params = [];
+        // Always include client_id for proper session identification
+        $params = [
+            'client_id' => $this->clientId,
+        ];
 
         if ($idTokenHint !== null) {
             $params['id_token_hint'] = $idTokenHint;
@@ -251,10 +261,6 @@ class OidcClient
 
         if ($postLogoutRedirectUri !== null) {
             $params['post_logout_redirect_uri'] = $postLogoutRedirectUri;
-        }
-
-        if (empty($params)) {
-            return $endSessionEndpoint;
         }
 
         return $endSessionEndpoint . '?' . http_build_query($params);
@@ -422,11 +428,15 @@ class OidcClient
         $httpClient  = new Client();
         $httpFactory = new HttpFactory();
 
+        // Use filesystem cache for JWKS
+        $cacheDir = dirname(__DIR__) . '/cache';
+        $cache    = new FilesystemAdapter('jwks', 3600, $cacheDir);
+
         return new CachedKeySet(
             $jwksUri,
             $httpClient,
             $httpFactory,
-            null,  // No cache for now
+            $cache,
             3600,  // Cache TTL
             true   // Rate limit
         );

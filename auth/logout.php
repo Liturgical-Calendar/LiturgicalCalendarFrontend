@@ -46,9 +46,48 @@ clearAuthCookie('litcal_access_token');
 clearAuthCookie('litcal_refresh_token');
 clearAuthCookie('litcal_id_token');
 
+// Destroy PHP session (used during OIDC flow for PKCE state)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+$_SESSION = [];
+if (ini_get('session.use_cookies')) {
+    $params = session_get_cookie_params();
+    setcookie(
+        session_name(),
+        '',
+        [
+            'expires'  => time() - 42000,
+            'path'     => $params['path'],
+            'domain'   => $params['domain'],
+            'secure'   => $params['secure'],
+            'httponly' => $params['httponly'],
+            'samesite' => $params['samesite'] ?? 'Lax',
+        ]
+    );
+}
+session_destroy();
+
 // Get post-logout redirect URL
 $frontendUrl           = $_ENV['FRONTEND_URL'] ?? getenv('FRONTEND_URL') ?: '';
 $postLogoutRedirectUri = $_GET['return_to'] ?? $frontendUrl;
+
+// Normalize URL: remove trailing slash to match Zitadel's configured URIs
+$postLogoutRedirectUri = rtrim($postLogoutRedirectUri, '/');
+
+// Ensure we have a valid redirect URL
+if (empty($postLogoutRedirectUri)) {
+    $postLogoutRedirectUri = rtrim($frontendUrl, '/');
+}
+
+// For OIDC logout, always use base frontend URL
+// Zitadel only has the base URL configured as post_logout_redirect_uri
+// Individual page URLs (user-profile.php, etc.) would cause "invalid redirect" errors
+$zitadelLogout = $_GET['zitadel'] ?? 'true';
+if ($zitadelLogout === 'true') {
+    // Use base frontend URL for Zitadel redirect
+    $postLogoutRedirectUri = rtrim($frontendUrl, '/');
+}
 
 // Validate post-logout redirect URL
 $parsed = parse_url($postLogoutRedirectUri);

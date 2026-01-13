@@ -15,6 +15,13 @@ use LiturgicalCalendar\Frontend\OidcClient;
 $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__), ['.env.local', '.env.development', '.env.production', '.env']);
 $dotenv->safeLoad();
 
+// Enable error display in development
+$appEnv = $_ENV['APP_ENV'] ?? getenv('APP_ENV') ?: 'production';
+if ($appEnv === 'development') {
+    ini_set('display_errors', '1');
+    error_reporting(E_ALL);
+}
+
 /**
  * Set authentication cookie.
  *
@@ -125,7 +132,18 @@ try {
     $redirectUrl = $returnTo ?? $frontendUrl;
     header('Location: ' . $redirectUrl);
     exit;
-} catch (Exception $e) {
+} catch (Throwable $e) {
     error_log('OIDC callback error: ' . $e->getMessage());
+
+    // In development, show the actual error
+    if ($appEnv === 'development') {
+        header('Content-Type: text/plain');
+        echo "OIDC Callback Error:\n\n";
+        echo "Message: " . $e->getMessage() . "\n\n";
+        echo "File: " . $e->getFile() . ":" . $e->getLine() . "\n\n";
+        echo "Trace:\n" . $e->getTraceAsString();
+        exit;
+    }
+
     redirectWithError('callback_error', 'Failed to complete authentication');
 }

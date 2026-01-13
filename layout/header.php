@@ -127,9 +127,10 @@ asort($langsAssoc);
             </li>
             <li class="nav-item me-lg-2<?php echo $authHelper->isAuthenticated ? '' : ' d-none'; ?>" id="userMenuContainer" data-requires-auth>
                 <div class="btn-group" id="userMenu">
-                    <span class="btn btn-outline-success btn-sm" id="userInfo">
+                    <a href="user-profile.php" class="btn btn-outline-success btn-sm" id="userInfo"
+                       title="<?php echo htmlspecialchars(_('View Profile'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                         <i class="fas fa-user me-1"></i><span id="username" class="d-lg-none d-sm-inline"><?php echo $authHelper->username !== null ? htmlspecialchars($authHelper->username, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') : ''; ?></span>
-                    </span>
+                    </a>
                     <button class="btn btn-outline-danger btn-sm" id="logoutBtn"
                             title="<?php echo htmlspecialchars(_('Logout'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                         <i class="fas fa-sign-out-alt me-1"></i><span class="d-lg-none"><?php echo _('Logout'); ?></span>
