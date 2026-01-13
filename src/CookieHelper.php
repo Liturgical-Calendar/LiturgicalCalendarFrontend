@@ -34,7 +34,7 @@ class CookieHelper
         setcookie($name, $value, [
             'expires'  => $expiry,
             'path'     => '/',
-            'domain'   => $domain ?: '',
+            'domain'   => $domain,
             'secure'   => $secure,
             'httponly' => true,
             'samesite' => $sameSite,
