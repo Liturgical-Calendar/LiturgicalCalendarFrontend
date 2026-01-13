@@ -26,13 +26,14 @@ header('Content-Type: application/json');
 /**
  * Send JSON response and exit.
  *
- * @param array $data Response data
+ * @param array<string, mixed> $data Response data
  * @param int $statusCode HTTP status code
+ * @throws \JsonException If JSON encoding fails
  */
 function jsonResponse(array $data, int $statusCode = 200): void
 {
     http_response_code($statusCode);
-    echo json_encode($data);
+    echo json_encode($data, JSON_THROW_ON_ERROR);
     exit;
 }
 
