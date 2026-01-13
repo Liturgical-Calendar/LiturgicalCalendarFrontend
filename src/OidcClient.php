@@ -315,6 +315,47 @@ class OidcClient
     }
 
     /**
+     * Validate any token (ID token or access token) with flexible audience checking.
+     *
+     * Unlike validateIdToken(), this method accepts additional valid audiences
+     * and returns null on failure instead of throwing exceptions.
+     *
+     * @param string $token Token to validate
+     * @param array<string> $additionalAudiences Additional valid audience values (e.g., project ID)
+     * @return object|null Decoded payload or null on validation failure
+     */
+    public function validateToken(string $token, array $additionalAudiences = []): ?object
+    {
+        try {
+            $keySet  = $this->getJwks();
+            $payload = JWT::decode($token, $keySet);
+
+            // Validate issuer
+            if (!isset($payload->iss) || $payload->iss !== $this->issuer) {
+                return null;
+            }
+
+            // Validate audience (clientId or any additional audience)
+            $validAudiences = array_merge([$this->clientId], $additionalAudiences);
+            $aud            = $payload->aud ?? null;
+
+            if (is_string($aud)) {
+                if (!in_array($aud, $validAudiences, true)) {
+                    return null;
+                }
+            } elseif (is_array($aud)) {
+                if (empty(array_intersect($aud, $validAudiences))) {
+                    return null;
+                }
+            }
+
+            return $payload;
+        } catch (\Exception) {
+            return null;
+        }
+    }
+
+    /**
      * Get user info from access token.
      *
      * @param string $accessToken Access token

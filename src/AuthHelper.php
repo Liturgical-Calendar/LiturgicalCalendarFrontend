@@ -4,14 +4,10 @@ namespace LiturgicalCalendar\Frontend;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use Firebase\JWT\CachedKeySet;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\SignatureInvalidException;
 use Firebase\JWT\BeforeValidException;
 use UnexpectedValueException;
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\HttpFactory;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 /**
  * Authentication Helper for server-side JWT validation
@@ -201,7 +197,8 @@ class AuthHelper
     /**
      * Try to validate OIDC token from Zitadel
      *
-     * Uses the ID token for user profile information (preferred_username, email, name, etc.)
+     * Uses OidcClient for JWKS handling and token validation.
+     * Prefers ID token for user profile information (preferred_username, email, name, etc.)
      * as the access token typically only contains minimal claims (sub).
      *
      * @param string $issuer Zitadel issuer URL
@@ -225,59 +222,18 @@ class AuthHelper
         $token = $idToken ?? $accessToken;
 
         try {
-            // Fetch JWKS from Zitadel
-            $jwksUri     = rtrim($issuer, '/') . '/oauth/v2/keys';
-            $httpClient  = new Client();
-            $httpFactory = new HttpFactory();
+            $oidcClient = OidcClient::fromEnv();
 
-            // Use filesystem cache for JWKS
-            $cacheDir = dirname(__DIR__) . '/cache';
-            $cache    = new FilesystemAdapter('jwks', 3600, $cacheDir);
-
-            $keySet = new CachedKeySet(
-                $jwksUri,
-                $httpClient,
-                $httpFactory,
-                $cache,
-                3600,
-                true
-            );
-
-            // Decode and validate token
-            $payload = JWT::decode($token, $keySet);
-
-            // Validate issuer
-            if (!isset($payload->iss) || $payload->iss !== $issuer) {
-                return null;
+            // Build list of valid audiences (clientId + projectId if configured)
+            $additionalAudiences = [];
+            $projectId           = $_ENV['ZITADEL_PROJECT_ID'] ?? getenv('ZITADEL_PROJECT_ID') ?: null;
+            if ($projectId !== null) {
+                $additionalAudiences[] = $projectId;
             }
 
-            // Validate audience (can be string or array)
-            $aud = $payload->aud ?? null;
-            if (is_string($aud) && $aud !== $clientId) {
-                // Check if it's the project ID instead
-                $projectId = $_ENV['ZITADEL_PROJECT_ID'] ?? getenv('ZITADEL_PROJECT_ID') ?: null;
-                if ($projectId === null || $aud !== $projectId) {
-                    return null;
-                }
-            } elseif (is_array($aud) && !in_array($clientId, $aud, true)) {
-                // Check if project ID is in audience
-                $projectId = $_ENV['ZITADEL_PROJECT_ID'] ?? getenv('ZITADEL_PROJECT_ID') ?: null;
-                if ($projectId === null || !in_array($projectId, $aud, true)) {
-                    return null;
-                }
-            }
-
-            return $payload;
-        } catch (ExpiredException) {
-            return null;
-        } catch (SignatureInvalidException) {
-            return null;
-        } catch (BeforeValidException) {
-            return null;
-        } catch (UnexpectedValueException) {
-            return null;
+            return $oidcClient->validateToken($token, $additionalAudiences);
         } catch (\Exception) {
-            // Network errors, JWKS fetch failures, etc.
+            // OidcClient instantiation or validation errors
             return null;
         }
     }
