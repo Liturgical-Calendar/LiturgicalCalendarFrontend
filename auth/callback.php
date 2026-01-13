@@ -105,9 +105,14 @@ try {
 
     if ($returnTo !== null) {
         $parsed = parse_url($returnTo);
-        if (isset($parsed['host'])) {
-            $frontendHost = parse_url($frontendUrl, PHP_URL_HOST);
-            if ($parsed['host'] !== $frontendHost) {
+        // Reject if URL has a host that doesn't match frontend, or has a scheme (protocol-relative URLs)
+        if (isset($parsed['scheme']) || isset($parsed['host'])) {
+            $frontendHost   = parse_url($frontendUrl, PHP_URL_HOST);
+            $frontendScheme = parse_url($frontendUrl, PHP_URL_SCHEME);
+            if (
+                ( $parsed['host'] ?? null ) !== $frontendHost ||
+                ( isset($parsed['scheme']) && $parsed['scheme'] !== $frontendScheme )
+            ) {
                 $returnTo = null;
             }
         }
