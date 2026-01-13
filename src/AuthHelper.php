@@ -157,6 +157,10 @@ class AuthHelper
     /**
      * Get the singleton instance
      *
+     * Note: This is a true singleton - parameters are only used on first instantiation.
+     * Subsequent calls return the cached instance regardless of parameters passed.
+     * Use reset() to clear the instance if different parameters are needed (e.g., in tests).
+     *
      * @param string|null $secret JWT signing secret (for legacy mode, from JWT_SECRET env var)
      * @param string $algorithm JWT algorithm (for legacy mode, from JWT_ALGORITHM env var, defaults to HS256)
      * @return self
