@@ -178,9 +178,9 @@ if (!$authHelper->isAuthenticated) {
                                         $minutes = floor(( $remaining % 3600 ) / 60);
                                         $seconds = $remaining % 60;
                                         if ($hours > 0) {
-                                            echo sprintf('%d:%02d:%02d', $hours, $minutes, $seconds);
+                                            echo sprintf('%1$d:%2$02d:%3$02d', $hours, $minutes, $seconds);
                                         } else {
-                                            echo sprintf('%d:%02d', $minutes, $seconds);
+                                            echo sprintf('%1$d:%2$02d', $minutes, $seconds);
                                         }
                                     } else {
                                         echo htmlspecialchars(_('Expired'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
