@@ -10,41 +10,19 @@
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 use LiturgicalCalendar\Frontend\OidcClient;
+use LiturgicalCalendar\Frontend\CookieHelper;
 
 // Load environment
 $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__), ['.env.local', '.env.development', '.env.production', '.env']);
 $dotenv->safeLoad();
 
-/**
- * Clear authentication cookie.
- *
- * @param string $name Cookie name
- */
-function clearAuthCookie(string $name): void
-{
-    $secure   = ( $_ENV['APP_ENV'] ?? getenv('APP_ENV') ?: 'development' ) !== 'development';
-    $sameSite = $secure ? 'Strict' : 'Lax';
-    $domain   = $_ENV['COOKIE_DOMAIN'] ?? getenv('COOKIE_DOMAIN') ?: '';
-
-    $options = [
-        'expires'  => time() - 3600,
-        'path'     => '/',
-        'domain'   => $domain ?: '',
-        'secure'   => $secure,
-        'httponly' => true,
-        'samesite' => $sameSite,
-    ];
-
-    setcookie($name, '', $options);
-}
-
 // Get ID token for Zitadel logout hint (if available)
 $idToken = $_COOKIE['litcal_id_token'] ?? null;
 
 // Clear all auth cookies
-clearAuthCookie('litcal_access_token');
-clearAuthCookie('litcal_refresh_token');
-clearAuthCookie('litcal_id_token');
+CookieHelper::clearAuthCookie('litcal_access_token');
+CookieHelper::clearAuthCookie('litcal_refresh_token');
+CookieHelper::clearAuthCookie('litcal_id_token');
 
 // Destroy PHP session (used during OIDC flow for PKCE state)
 if (session_status() === PHP_SESSION_NONE) {
