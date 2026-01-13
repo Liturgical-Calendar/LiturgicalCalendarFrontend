@@ -403,14 +403,21 @@ class OidcClient
             'preferred_username' => $payload->preferred_username ?? null,
         ];
 
-        // Extract Zitadel roles
+        // Extract Zitadel roles from both generic and project-specific claims
+        $roles    = [];
         $rolesKey = 'urn:zitadel:iam:org:project:roles';
-        if (isset($payload->{$rolesKey})) {
-            $rolesData     = (array) $payload->{$rolesKey};
-            $user['roles'] = array_keys($rolesData);
-        } else {
-            $user['roles'] = [];
+        if (isset($payload->{$rolesKey}) && is_object($payload->{$rolesKey})) {
+            $roles = array_keys((array) $payload->{$rolesKey});
         }
+        // Also check project-specific roles claim (matching auth/me.php behavior)
+        $projectId = $_ENV['ZITADEL_PROJECT_ID'] ?? getenv('ZITADEL_PROJECT_ID') ?: null;
+        if ($projectId !== null) {
+            $projectRolesKey = "urn:zitadel:iam:org:project:{$projectId}:roles";
+            if (isset($payload->{$projectRolesKey}) && is_object($payload->{$projectRolesKey})) {
+                $roles = array_merge($roles, array_keys((array) $payload->{$projectRolesKey}));
+            }
+        }
+        $user['roles'] = !empty($roles) ? array_values(array_unique($roles)) : [];
 
         return $user;
     }
