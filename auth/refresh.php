@@ -9,6 +9,7 @@
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 use LiturgicalCalendar\Frontend\OidcClient;
+use LiturgicalCalendar\Frontend\CookieHelper;
 
 // Load environment
 $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__), ['.env.local', '.env.development', '.env.production', '.env']);
@@ -22,31 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['error' => 'Method not allowed']);
     exit;
-}
-
-/**
- * Set authentication cookie.
- *
- * @param string $name Cookie name
- * @param string $value Cookie value
- * @param int $expiry Expiry timestamp
- */
-function setAuthCookie(string $name, string $value, int $expiry): void
-{
-    $secure   = ( $_ENV['APP_ENV'] ?? getenv('APP_ENV') ?: 'development' ) !== 'development';
-    $sameSite = $secure ? 'Strict' : 'Lax';
-    $domain   = $_ENV['COOKIE_DOMAIN'] ?? getenv('COOKIE_DOMAIN') ?: '';
-
-    $options = [
-        'expires'  => $expiry,
-        'path'     => '/',
-        'domain'   => $domain ?: '',
-        'secure'   => $secure,
-        'httponly' => true,
-        'samesite' => $sameSite,
-    ];
-
-    setcookie($name, $value, $options);
 }
 
 // Check for refresh token
@@ -85,15 +61,15 @@ try {
 
     // Set new cookies
     $accessExpiry = time() + $expiresIn;
-    setAuthCookie('litcal_access_token', $accessToken, $accessExpiry);
+    CookieHelper::setAuthCookie('litcal_access_token', $accessToken, $accessExpiry);
 
     if ($newRefreshToken !== null) {
         $refreshExpiry = time() + 604800;
-        setAuthCookie('litcal_refresh_token', $newRefreshToken, $refreshExpiry);
+        CookieHelper::setAuthCookie('litcal_refresh_token', $newRefreshToken, $refreshExpiry);
     }
 
     if ($idToken !== null) {
-        setAuthCookie('litcal_id_token', $idToken, $accessExpiry);
+        CookieHelper::setAuthCookie('litcal_id_token', $idToken, $accessExpiry);
     }
 
     echo json_encode([
@@ -105,9 +81,9 @@ try {
     error_log('Token refresh error: ' . $e->getMessage());
 
     // Clear cookies on refresh failure
-    setAuthCookie('litcal_access_token', '', time() - 3600);
-    setAuthCookie('litcal_refresh_token', '', time() - 3600);
-    setAuthCookie('litcal_id_token', '', time() - 3600);
+    CookieHelper::clearAuthCookie('litcal_access_token');
+    CookieHelper::clearAuthCookie('litcal_refresh_token');
+    CookieHelper::clearAuthCookie('litcal_id_token');
 
     http_response_code(401);
     echo json_encode([

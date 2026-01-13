@@ -10,6 +10,7 @@
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 use LiturgicalCalendar\Frontend\OidcClient;
+use LiturgicalCalendar\Frontend\CookieHelper;
 
 // Load environment
 $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__), ['.env.local', '.env.development', '.env.production', '.env']);
@@ -20,33 +21,6 @@ $appEnv = $_ENV['APP_ENV'] ?? getenv('APP_ENV') ?: 'production';
 if ($appEnv === 'development') {
     ini_set('display_errors', '1');
     error_reporting(E_ALL);
-}
-
-/**
- * Set authentication cookie.
- *
- * @param string $name Cookie name
- * @param string $value Cookie value
- * @param int $expiry Expiry timestamp
- */
-function setAuthCookie(string $name, string $value, int $expiry): void
-{
-    $secure   = ( $_ENV['APP_ENV'] ?? getenv('APP_ENV') ?: 'development' ) !== 'development';
-    $sameSite = $secure ? 'Strict' : 'Lax';
-
-    // Get cookie domain from environment if set
-    $domain = $_ENV['COOKIE_DOMAIN'] ?? getenv('COOKIE_DOMAIN') ?: '';
-
-    $options = [
-        'expires'  => $expiry,
-        'path'     => '/',
-        'domain'   => $domain ?: '',
-        'secure'   => $secure,
-        'httponly' => true,
-        'samesite' => $sameSite,
-    ];
-
-    setcookie($name, $value, $options);
 }
 
 /**
@@ -98,17 +72,17 @@ try {
 
     // Set HttpOnly cookies for tokens
     $accessExpiry = time() + $expiresIn;
-    setAuthCookie('litcal_access_token', $accessToken, $accessExpiry);
+    CookieHelper::setAuthCookie('litcal_access_token', $accessToken, $accessExpiry);
 
     if ($refreshToken !== null) {
         // Refresh token typically has longer expiry (7 days default)
         $refreshExpiry = time() + 604800;
-        setAuthCookie('litcal_refresh_token', $refreshToken, $refreshExpiry);
+        CookieHelper::setAuthCookie('litcal_refresh_token', $refreshToken, $refreshExpiry);
     }
 
     if ($idToken !== null) {
         // Store ID token for logout
-        setAuthCookie('litcal_id_token', $idToken, $accessExpiry);
+        CookieHelper::setAuthCookie('litcal_id_token', $idToken, $accessExpiry);
     }
 
     // Get return URL from session
