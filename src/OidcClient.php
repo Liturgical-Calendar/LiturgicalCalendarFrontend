@@ -305,7 +305,11 @@ class OidcClient
 
         // Validate nonce if in session
         $storedNonce = $_SESSION[self::SESSION_NONCE] ?? null;
-        if ($storedNonce !== null && isset($payload->nonce)) {
+        if ($storedNonce !== null) {
+            // If we have a stored nonce, the token must have a matching nonce
+            if (!isset($payload->nonce)) {
+                throw new \RuntimeException('Invalid ID token nonce');
+            }
             if (!hash_equals($storedNonce, $payload->nonce)) {
                 throw new \RuntimeException('Invalid ID token nonce');
             }
