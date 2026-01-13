@@ -40,7 +40,7 @@ if (!$authHelper->isAuthenticated) {
                 <div class="card-body">
                     <table class="table table-borderless mb-0">
                         <tbody>
-                            <?php if ($authHelper->name !== null): ?>
+                            <?php if ($authHelper->name !== null) : ?>
                             <tr>
                                 <th scope="row" class="text-muted" style="width: 40%;">
                                     <i class="fas fa-user me-2"></i><?php echo htmlspecialchars(_('Full Name'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
@@ -49,7 +49,7 @@ if (!$authHelper->isAuthenticated) {
                             </tr>
                             <?php endif; ?>
 
-                            <?php if ($authHelper->givenName !== null || $authHelper->familyName !== null): ?>
+                            <?php if ($authHelper->givenName !== null || $authHelper->familyName !== null) : ?>
                             <tr>
                                 <th scope="row" class="text-muted">
                                     <i class="fas fa-signature me-2"></i><?php echo htmlspecialchars(_('Given / Family Name'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
@@ -73,18 +73,18 @@ if (!$authHelper->isAuthenticated) {
                                 <td><?php echo htmlspecialchars($authHelper->username ?? '-', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></td>
                             </tr>
 
-                            <?php if ($authHelper->email !== null): ?>
+                            <?php if ($authHelper->email !== null) : ?>
                             <tr>
                                 <th scope="row" class="text-muted">
                                     <i class="fas fa-envelope me-2"></i><?php echo htmlspecialchars(_('Email'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                 </th>
                                 <td>
                                     <?php echo htmlspecialchars($authHelper->email, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                                    <?php if ($authHelper->emailVerified): ?>
+                                    <?php if ($authHelper->emailVerified) : ?>
                                         <span class="badge bg-success ms-2" title="<?php echo htmlspecialchars(_('Email verified'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                                             <i class="fas fa-check"></i>
                                         </span>
-                                    <?php else: ?>
+                                    <?php else : ?>
                                         <span class="badge bg-warning text-dark ms-2" title="<?php echo htmlspecialchars(_('Email not verified'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                                             <i class="fas fa-exclamation-triangle"></i>
                                         </span>
@@ -93,7 +93,7 @@ if (!$authHelper->isAuthenticated) {
                             </tr>
                             <?php endif; ?>
 
-                            <?php if ($authHelper->sub !== null): ?>
+                            <?php if ($authHelper->sub !== null) : ?>
                             <tr>
                                 <th scope="row" class="text-muted">
                                     <i class="fas fa-fingerprint me-2"></i><?php echo htmlspecialchars(_('User ID'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
@@ -106,7 +106,7 @@ if (!$authHelper->isAuthenticated) {
                 </div>
             </div>
 
-            <?php if ($authHelper->roles !== null && count($authHelper->roles) > 0): ?>
+            <?php if ($authHelper->roles !== null && count($authHelper->roles) > 0) : ?>
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
                     <h6 class="m-0 fw-bold text-primary">
@@ -115,7 +115,7 @@ if (!$authHelper->isAuthenticated) {
                 </div>
                 <div class="card-body">
                     <div class="d-flex flex-wrap gap-2">
-                        <?php foreach ($authHelper->roles as $role): ?>
+                        <?php foreach ($authHelper->roles as $role) : ?>
                             <span class="badge bg-primary fs-6">
                                 <i class="fas fa-shield-alt me-1"></i><?php echo htmlspecialchars($role, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                             </span>
@@ -125,7 +125,7 @@ if (!$authHelper->isAuthenticated) {
             </div>
             <?php endif; ?>
 
-            <?php if ($authHelper->permissions !== null && count($authHelper->permissions) > 0): ?>
+            <?php if ($authHelper->permissions !== null && count($authHelper->permissions) > 0) : ?>
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
                     <h6 class="m-0 fw-bold text-primary">
@@ -134,7 +134,7 @@ if (!$authHelper->isAuthenticated) {
                 </div>
                 <div class="card-body">
                     <div class="d-flex flex-wrap gap-2">
-                        <?php foreach ($authHelper->permissions as $permission): ?>
+                        <?php foreach ($authHelper->permissions as $permission) : ?>
                             <span class="badge bg-secondary fs-6">
                                 <i class="fas fa-lock-open me-1"></i><?php echo htmlspecialchars($permission, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                             </span>
@@ -153,7 +153,7 @@ if (!$authHelper->isAuthenticated) {
                 <div class="card-body">
                     <table class="table table-borderless mb-0">
                         <tbody>
-                            <?php if ($authHelper->exp !== null): ?>
+                            <?php if ($authHelper->exp !== null) : ?>
                             <tr>
                                 <th scope="row" class="text-muted" style="width: 40%;">
                                     <i class="fas fa-hourglass-end me-2"></i><?php echo htmlspecialchars(_('Session Expires'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
@@ -175,7 +175,7 @@ if (!$authHelper->isAuthenticated) {
                                     $remaining = $authHelper->exp - time();
                                     if ($remaining > 0) {
                                         $hours   = floor($remaining / 3600);
-                                        $minutes = floor(($remaining % 3600) / 60);
+                                        $minutes = floor(( $remaining % 3600 ) / 60);
                                         $seconds = $remaining % 60;
                                         if ($hours > 0) {
                                             echo sprintf('%d:%02d:%02d', $hours, $minutes, $seconds);

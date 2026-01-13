@@ -139,8 +139,8 @@ try {
     if ($appEnv === 'development') {
         header('Content-Type: text/plain');
         echo "OIDC Callback Error:\n\n";
-        echo "Message: " . $e->getMessage() . "\n\n";
-        echo "File: " . $e->getFile() . ":" . $e->getLine() . "\n\n";
+        echo 'Message: ' . $e->getMessage() . "\n\n";
+        echo 'File: ' . $e->getFile() . ':' . $e->getLine() . "\n\n";
         echo "Trace:\n" . $e->getTraceAsString();
         exit;
     }

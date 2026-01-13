@@ -72,7 +72,7 @@ class AuthHelper
             // OIDC token from Zitadel
             $this->isAuthenticated = true;
             // Prefer preferred_username, fall back to email, then sub
-            $this->username = $payload->preferred_username
+            $this->username      = $payload->preferred_username
                 ?? $payload->email
                 ?? $payload->sub
                 ?? null;
@@ -85,7 +85,7 @@ class AuthHelper
             $this->exp           = isset($payload->exp) && is_numeric($payload->exp) ? (int) $payload->exp : null;
 
             // Extract roles from Zitadel claims
-            $roles = [];
+            $roles    = [];
             $rolesKey = 'urn:zitadel:iam:org:project:roles';
             if (isset($payload->{$rolesKey}) && is_object($payload->{$rolesKey})) {
                 $roles = array_keys((array) $payload->{$rolesKey});
