@@ -201,7 +201,11 @@ class OidcClient
             ],
         ]);
 
-        $tokens = json_decode($response->getBody()->getContents(), true);
+        $body   = $response->getBody()->getContents();
+        $tokens = json_decode($body, true);
+        if (!is_array($tokens)) {
+            throw new \RuntimeException('Invalid token response from authorization server');
+        }
 
         // Validate ID token nonce
         if (isset($tokens['id_token'])) {
@@ -238,7 +242,13 @@ class OidcClient
             ],
         ]);
 
-        return json_decode($response->getBody()->getContents(), true);
+        $body   = $response->getBody()->getContents();
+        $tokens = json_decode($body, true);
+        if (!is_array($tokens)) {
+            throw new \RuntimeException('Invalid token response from authorization server');
+        }
+
+        return $tokens;
     }
 
     /**
@@ -321,7 +331,13 @@ class OidcClient
             ],
         ]);
 
-        return json_decode($response->getBody()->getContents(), true);
+        $body     = $response->getBody()->getContents();
+        $userInfo = json_decode($body, true);
+        if (!is_array($userInfo)) {
+            throw new \RuntimeException('Invalid user info response from authorization server');
+        }
+
+        return $userInfo;
     }
 
     /**
@@ -368,7 +384,13 @@ class OidcClient
         $client   = new Client();
         $response = $client->get($this->issuer . '/.well-known/openid-configuration');
 
-        $this->discoveryDoc = json_decode($response->getBody()->getContents(), true);
+        $body         = $response->getBody()->getContents();
+        $discoveryDoc = json_decode($body, true);
+        if (!is_array($discoveryDoc)) {
+            throw new \RuntimeException('Invalid discovery document from authorization server');
+        }
+
+        $this->discoveryDoc = $discoveryDoc;
 
         return $this->discoveryDoc;
     }
