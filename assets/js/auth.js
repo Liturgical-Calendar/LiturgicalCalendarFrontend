@@ -121,7 +121,16 @@ const Auth = {
      * @param {string} [returnTo] - URL to redirect after login (defaults to current page)
      */
     loginWithOidc(returnTo) {
-        const currentUrl = returnTo || window.location.href;
+        let currentUrl = returnTo || window.location.href;
+        // Ensure we only redirect to same origin (defense-in-depth)
+        try {
+            const url = new URL(currentUrl, window.location.origin);
+            if (url.origin !== window.location.origin) {
+                currentUrl = window.location.href;
+            }
+        } catch {
+            currentUrl = window.location.href;
+        }
         window.location.href = `/auth/login.php?return_to=${encodeURIComponent(currentUrl)}`;
     },
 
