@@ -373,14 +373,32 @@ class OidcClient
     /**
      * Get OIDC discovery document.
      *
+     * Uses filesystem cache to reduce external calls and latency.
+     *
      * @return array<string, mixed> Discovery document
      */
     public function getDiscoveryDocument(): array
     {
+        // Return in-memory cache if available
         if ($this->discoveryDoc !== null) {
             return $this->discoveryDoc;
         }
 
+        // Use filesystem cache
+        $cacheDir = dirname(__DIR__) . '/cache';
+        $cache    = new FilesystemAdapter('oidc_discovery', 3600, $cacheDir);
+        $cacheKey = 'discovery_' . md5($this->issuer);
+
+        $cacheItem = $cache->getItem($cacheKey);
+        if ($cacheItem->isHit()) {
+            $cached = $cacheItem->get();
+            if (is_array($cached)) {
+                $this->discoveryDoc = $cached;
+                return $this->discoveryDoc;
+            }
+        }
+
+        // Fetch from issuer
         $client   = new Client();
         $response = $client->get($this->issuer . '/.well-known/openid-configuration');
 
@@ -389,6 +407,11 @@ class OidcClient
         if (!is_array($discoveryDoc)) {
             throw new \RuntimeException('Invalid discovery document from authorization server');
         }
+
+        // Store in filesystem cache
+        $cacheItem->set($discoveryDoc);
+        $cacheItem->expiresAfter(3600);
+        $cache->save($cacheItem);
 
         $this->discoveryDoc = $discoveryDoc;
 
