@@ -17,8 +17,9 @@ $dotenv->safeLoad();
 
 // Check if OIDC is configured
 if (!OidcClient::isConfigured()) {
-    header('HTTP/1.1 503 Service Unavailable');
-    echo 'OIDC authentication is not configured';
+    header('Content-Type: application/json');
+    http_response_code(503);
+    echo json_encode(['error' => 'OIDC not configured']);
     exit;
 }
 
@@ -54,7 +55,9 @@ try {
     header('Location: ' . $authUrl);
     exit;
 } catch (Exception $e) {
-    header('HTTP/1.1 500 Internal Server Error');
-    echo 'Failed to initialize OIDC client: ' . htmlspecialchars($e->getMessage());
+    error_log('OIDC login error: ' . $e->getMessage());
+    header('Content-Type: application/json');
+    http_response_code(500);
+    echo json_encode(['error' => 'Failed to initialize OIDC client']);
     exit;
 }
