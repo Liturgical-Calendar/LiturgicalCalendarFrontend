@@ -11,6 +11,11 @@ namespace LiturgicalCalendar\Frontend;
 class CookieHelper
 {
     /**
+     * Refresh token lifetime in seconds (7 days).
+     */
+    public const REFRESH_TOKEN_LIFETIME = 604800;
+
+    /**
      * Set an authentication cookie with secure defaults.
      *
      * In production (non-development), cookies are set with Secure and SameSite=Strict.

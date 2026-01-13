@@ -75,8 +75,7 @@ try {
     CookieHelper::setAuthCookie('litcal_access_token', $accessToken, $accessExpiry);
 
     if ($refreshToken !== null) {
-        // Refresh token typically has longer expiry (7 days default)
-        $refreshExpiry = time() + 604800;
+        $refreshExpiry = time() + CookieHelper::REFRESH_TOKEN_LIFETIME;
         CookieHelper::setAuthCookie('litcal_refresh_token', $refreshToken, $refreshExpiry);
     }
 

@@ -64,7 +64,7 @@ try {
     CookieHelper::setAuthCookie('litcal_access_token', $accessToken, $accessExpiry);
 
     if ($newRefreshToken !== null) {
-        $refreshExpiry = time() + 604800;
+        $refreshExpiry = time() + CookieHelper::REFRESH_TOKEN_LIFETIME;
         CookieHelper::setAuthCookie('litcal_refresh_token', $newRefreshToken, $refreshExpiry);
     }
 
