@@ -80,8 +80,18 @@ try {
     }
 
     if ($idToken !== null) {
-        // Store ID token for logout
-        CookieHelper::setAuthCookie('litcal_id_token', $idToken, $accessExpiry);
+        // Extract expiry from ID token's exp claim
+        $idTokenParts = explode('.', $idToken);
+        if (count($idTokenParts) === 3) {
+            $idTokenPayload = json_decode(
+                base64_decode(strtr($idTokenParts[1], '-_', '+/')),
+                true
+            );
+            $idTokenExpiry  = isset($idTokenPayload['exp']) ? (int) $idTokenPayload['exp'] : $accessExpiry;
+        } else {
+            $idTokenExpiry = $accessExpiry;
+        }
+        CookieHelper::setAuthCookie('litcal_id_token', $idToken, $idTokenExpiry);
     }
 
     // Get return URL from session
