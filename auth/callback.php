@@ -87,7 +87,9 @@ try {
                 base64_decode(strtr($idTokenParts[1], '-_', '+/')),
                 true
             );
-            $idTokenExpiry  = isset($idTokenPayload['exp']) ? (int) $idTokenPayload['exp'] : $accessExpiry;
+            $idTokenExpiry  = is_array($idTokenPayload) && isset($idTokenPayload['exp'])
+                ? (int) $idTokenPayload['exp']
+                : $accessExpiry;
         } else {
             $idTokenExpiry = $accessExpiry;
         }
