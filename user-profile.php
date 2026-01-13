@@ -195,7 +195,7 @@ if (!$authHelper->isAuthenticated) {
             </div>
 
             <div class="d-flex gap-2">
-                <a href="admin-dashboard.php" class="btn btn-primary">
+                <a href="admin-dashboard.php" class="btn btn-primary" data-requires-auth>
                     <i class="fas fa-tachometer-alt me-2"></i><?php echo htmlspecialchars(_('Admin Dashboard'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                 </a>
                 <button type="button" class="btn btn-outline-danger" id="logoutBtnProfile">
