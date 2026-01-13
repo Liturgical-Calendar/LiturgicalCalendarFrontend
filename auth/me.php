@@ -12,6 +12,7 @@ require_once dirname(__DIR__) . '/vendor/autoload.php';
 use LiturgicalCalendar\Frontend\OidcClient;
 use Firebase\JWT\JWT;
 use Firebase\JWT\CachedKeySet;
+use Firebase\JWT\ExpiredException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\HttpFactory;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -145,7 +146,7 @@ try {
         'expires_at'      => $exp,
         'token_remaining' => max(0, $exp - time()),
     ]);
-} catch (Firebase\JWT\ExpiredException $e) {
+} catch (ExpiredException $e) {
     // Token expired - could try refresh here
     jsonResponse([
         'authenticated'  => false,
