@@ -118,6 +118,7 @@ api/*
 !temporale.php
 !translations.php
 !usage.php
+!auth/*.php
 !layout/*.php
 !src/*.php
 !dist/*.php
