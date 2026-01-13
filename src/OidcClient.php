@@ -24,6 +24,8 @@ class OidcClient
 
     /**
      * Cached discovery document.
+     *
+     * @var array<string, mixed>|null
      */
     private ?array $discoveryDoc = null;
 
@@ -166,7 +168,7 @@ class OidcClient
      *
      * @param string $code Authorization code
      * @param string $state State parameter from callback
-     * @return array Token response (access_token, id_token, refresh_token)
+     * @return array<string, mixed> Token response (access_token, id_token, refresh_token)
      * @throws \RuntimeException If exchange fails
      */
     public function exchangeCode(string $code, string $state): array
@@ -220,7 +222,7 @@ class OidcClient
      * Refresh access token using refresh token.
      *
      * @param string $refreshToken Refresh token
-     * @return array New token response
+     * @return array<string, mixed> New token response
      * @throws \RuntimeException If refresh fails
      */
     public function refreshToken(string $refreshToken): array
@@ -306,7 +308,7 @@ class OidcClient
      * Get user info from access token.
      *
      * @param string $accessToken Access token
-     * @return array User info
+     * @return array<string, mixed> User info
      */
     public function getUserInfo(string $accessToken): array
     {
@@ -326,7 +328,7 @@ class OidcClient
      * Extract user info from ID token payload.
      *
      * @param object $payload Decoded ID token payload
-     * @return array User info array
+     * @return array<string, mixed> User info array
      */
     public function extractUserFromIdToken(object $payload): array
     {
@@ -355,7 +357,7 @@ class OidcClient
     /**
      * Get OIDC discovery document.
      *
-     * @return array Discovery document
+     * @return array<string, mixed> Discovery document
      */
     public function getDiscoveryDocument(): array
     {
