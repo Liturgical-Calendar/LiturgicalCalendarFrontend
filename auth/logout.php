@@ -77,8 +77,6 @@ if (isset($parsed['host'])) {
 }
 
 // Check if we should also logout from Zitadel
-$zitadelLogout = $_GET['zitadel'] ?? 'true';
-
 if ($zitadelLogout === 'true' && OidcClient::isConfigured()) {
     try {
         $oidcClient = OidcClient::fromEnv();
