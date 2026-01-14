@@ -7,6 +7,7 @@ namespace LiturgicalCalendar\Frontend;
 use Firebase\JWT\CachedKeySet;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\HttpFactory;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
@@ -190,16 +191,29 @@ class OidcClient
         // Exchange code for tokens
         $tokenEndpoint = $this->getTokenEndpoint();
 
-        $client   = new Client();
-        $response = $client->post($tokenEndpoint, [
-            'form_params' => [
-                'grant_type'    => 'authorization_code',
-                'client_id'     => $this->clientId,
-                'code'          => $code,
-                'redirect_uri'  => $this->redirectUri,
-                'code_verifier' => $codeVerifier,
-            ],
-        ]);
+        $client = new Client();
+        try {
+            $response = $client->post($tokenEndpoint, [
+                'form_params' => [
+                    'grant_type'    => 'authorization_code',
+                    'client_id'     => $this->clientId,
+                    'code'          => $code,
+                    'redirect_uri'  => $this->redirectUri,
+                    'code_verifier' => $codeVerifier,
+                ],
+            ]);
+        } catch (RequestException $e) {
+            $message = 'Token exchange failed';
+            if ($e->hasResponse()) {
+                $response   = $e->getResponse();
+                $statusCode = $response->getStatusCode();
+                $body       = $response->getBody()->getContents();
+                $message    = "Token exchange failed (HTTP {$statusCode}): {$body}";
+            } else {
+                $message = 'Token exchange failed: ' . $e->getMessage();
+            }
+            throw new \RuntimeException($message, 0, $e);
+        }
 
         $body   = $response->getBody()->getContents();
         $tokens = json_decode($body, true);
@@ -233,14 +247,27 @@ class OidcClient
     {
         $tokenEndpoint = $this->getTokenEndpoint();
 
-        $client   = new Client();
-        $response = $client->post($tokenEndpoint, [
-            'form_params' => [
-                'grant_type'    => 'refresh_token',
-                'client_id'     => $this->clientId,
-                'refresh_token' => $refreshToken,
-            ],
-        ]);
+        $client = new Client();
+        try {
+            $response = $client->post($tokenEndpoint, [
+                'form_params' => [
+                    'grant_type'    => 'refresh_token',
+                    'client_id'     => $this->clientId,
+                    'refresh_token' => $refreshToken,
+                ],
+            ]);
+        } catch (RequestException $e) {
+            $message = 'Token refresh failed';
+            if ($e->hasResponse()) {
+                $response   = $e->getResponse();
+                $statusCode = $response->getStatusCode();
+                $body       = $response->getBody()->getContents();
+                $message    = "Token refresh failed (HTTP {$statusCode}): {$body}";
+            } else {
+                $message = 'Token refresh failed: ' . $e->getMessage();
+            }
+            throw new \RuntimeException($message, 0, $e);
+        }
 
         $body   = $response->getBody()->getContents();
         $tokens = json_decode($body, true);
