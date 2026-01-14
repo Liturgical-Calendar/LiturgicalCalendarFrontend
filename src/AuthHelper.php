@@ -170,7 +170,7 @@ class AuthHelper
 
             if ($issuer !== null && $clientId !== null) {
                 // Try OIDC validation first
-                $payload = self::tryValidateOidcToken($issuer, $clientId);
+                $payload = self::tryValidateOidcToken();
                 if ($payload !== null) {
                     self::$instance = new self($payload, true);
                     return self::$instance;
@@ -201,11 +201,9 @@ class AuthHelper
      * Prefers ID token for user profile information (preferred_username, email, name, etc.)
      * as the access token typically only contains minimal claims (sub).
      *
-     * @param string $issuer Zitadel issuer URL
-     * @param string $clientId Zitadel client ID
      * @return object|null Validated payload or null
      */
-    private static function tryValidateOidcToken(string $issuer, string $clientId): ?object
+    private static function tryValidateOidcToken(): ?object
     {
         // Check if access token exists (proves user is authenticated)
         $accessToken = $_COOKIE[self::ACCESS_TOKEN_COOKIE] ?? null;
