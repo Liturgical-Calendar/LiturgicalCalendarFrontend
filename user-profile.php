@@ -224,7 +224,7 @@ if (!$authHelper->isAuthenticated) {
         const sessionExp = <?php echo json_encode($authHelper->exp); ?>;
 
         if (timeRemainingEl && sessionExp) {
-            setInterval(function() {
+            const timerId = setInterval(function() {
                 const remaining = sessionExp - Math.floor(Date.now() / 1000);
                 if (remaining > 0) {
                     const hours = Math.floor(remaining / 3600);
@@ -238,6 +238,7 @@ if (!$authHelper->isAuthenticated) {
                 } else {
                     timeRemainingEl.textContent = <?php echo json_encode(_('Expired')); ?>;
                     timeRemainingEl.classList.add('text-danger', 'fw-bold');
+                    clearInterval(timerId);
                 }
             }, 1000);
         }
