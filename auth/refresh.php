@@ -69,19 +69,7 @@ try {
     }
 
     if ($idToken !== null) {
-        // Extract expiry from ID token's exp claim
-        $idTokenParts = explode('.', $idToken);
-        if (count($idTokenParts) === 3) {
-            $idTokenPayload = json_decode(
-                base64_decode(strtr($idTokenParts[1], '-_', '+/')),
-                true
-            );
-            $idTokenExpiry  = is_array($idTokenPayload) && isset($idTokenPayload['exp'])
-                ? (int) $idTokenPayload['exp']
-                : $accessExpiry;
-        } else {
-            $idTokenExpiry = $accessExpiry;
-        }
+        $idTokenExpiry = OidcClient::getIdTokenExpiry($idToken, $accessExpiry);
         CookieHelper::setAuthCookie('litcal_id_token', $idToken, $idTokenExpiry);
     }
 

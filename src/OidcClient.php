@@ -450,6 +450,33 @@ class OidcClient
     }
 
     /**
+     * Extract expiry timestamp from ID token's exp claim.
+     *
+     * Parses the JWT payload without validation to extract the expiry time.
+     * Falls back to the provided default expiry if parsing fails.
+     *
+     * @param string $idToken The ID token
+     * @param int $fallbackExpiry Fallback expiry timestamp if extraction fails
+     * @return int Expiry timestamp
+     */
+    public static function getIdTokenExpiry(string $idToken, int $fallbackExpiry): int
+    {
+        $parts = explode('.', $idToken);
+        if (count($parts) !== 3) {
+            return $fallbackExpiry;
+        }
+
+        $payload = json_decode(
+            base64_decode(strtr($parts[1], '-_', '+/')),
+            true
+        );
+
+        return is_array($payload) && isset($payload['exp'])
+            ? (int) $payload['exp']
+            : $fallbackExpiry;
+    }
+
+    /**
      * Get OIDC discovery document.
      *
      * Uses filesystem cache to reduce external calls and latency.
