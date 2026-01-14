@@ -42,8 +42,8 @@ session_start();
 
 // Check for error response from Zitadel
 if (isset($_GET['error'])) {
-    $error       = $_GET['error'];
-    $description = $_GET['error_description'] ?? 'Authentication failed';
+    $error       = substr((string) $_GET['error'], 0, 64);
+    $description = substr((string) ($_GET['error_description'] ?? 'Authentication failed'), 0, 256);
     redirectWithError($error, $description);
 }
 
