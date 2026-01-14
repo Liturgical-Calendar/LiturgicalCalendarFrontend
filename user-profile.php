@@ -170,7 +170,7 @@ if (!$authHelper->isAuthenticated) {
                                 <th scope="row" class="text-muted">
                                     <i class="fas fa-stopwatch me-2"></i><?php echo htmlspecialchars(_('Time Remaining'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                 </th>
-                                <td id="timeRemaining">
+                                <td id="timeRemaining" aria-live="off">
                                     <?php
                                     $remaining = $authHelper->exp - time();
                                     if ($remaining > 0) {
