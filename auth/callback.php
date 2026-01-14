@@ -23,16 +23,26 @@ if ($appEnv === 'development') {
     error_reporting(E_ALL);
 }
 
+// Validate FRONTEND_URL early - required for all redirects
+$frontendUrl = $_ENV['FRONTEND_URL'] ?? getenv('FRONTEND_URL') ?: '';
+if (empty($frontendUrl)) {
+    throw new RuntimeException('Missing required environment variable: FRONTEND_URL');
+}
+$parsedFrontend = parse_url($frontendUrl);
+if (!isset($parsedFrontend['scheme']) || !isset($parsedFrontend['host'])) {
+    throw new RuntimeException('FRONTEND_URL must be a valid absolute URL with scheme and host');
+}
+
 /**
  * Redirect with error.
  *
+ * @param string $frontendUrl Validated frontend URL
  * @param string $error Error code
  * @param string $description Error description
  */
-function redirectWithError(string $error, string $description): void
+function redirectWithError(string $frontendUrl, string $error, string $description): void
 {
-    $frontendUrl = $_ENV['FRONTEND_URL'] ?? getenv('FRONTEND_URL') ?: '';
-    $errorUrl    = rtrim($frontendUrl, '/') . '/?auth_error=' . urlencode($error) . '&error_description=' . urlencode($description);
+    $errorUrl = rtrim($frontendUrl, '/') . '/?auth_error=' . urlencode($error) . '&error_description=' . urlencode($description);
     header('Location: ' . $errorUrl);
     exit;
 }
@@ -44,12 +54,12 @@ session_start();
 if (isset($_GET['error'])) {
     $error       = substr((string) $_GET['error'], 0, 64);
     $description = substr((string) ($_GET['error_description'] ?? 'Authentication failed'), 0, 256);
-    redirectWithError($error, $description);
+    redirectWithError($frontendUrl, $error, $description);
 }
 
 // Verify required parameters
 if (!isset($_GET['code']) || !isset($_GET['state'])) {
-    redirectWithError('invalid_request', 'Missing code or state parameter');
+    redirectWithError($frontendUrl, 'invalid_request', 'Missing code or state parameter');
 }
 
 $code  = $_GET['code'];
@@ -62,7 +72,7 @@ try {
     $tokens = $oidcClient->exchangeCode($code, $state);
 
     if (!isset($tokens['access_token'])) {
-        redirectWithError('token_error', 'No access token received');
+        redirectWithError($frontendUrl, 'token_error', 'No access token received');
     }
 
     $accessToken  = $tokens['access_token'];
@@ -88,9 +98,7 @@ try {
     $returnTo = $_SESSION['oidc_return_to'] ?? null;
     unset($_SESSION['oidc_return_to']);
 
-    // Validate return URL
-    $frontendUrl = $_ENV['FRONTEND_URL'] ?? getenv('FRONTEND_URL') ?: '';
-
+    // Validate return URL against frontend URL (already validated at script start)
     if ($returnTo !== null) {
         $parsed = parse_url($returnTo);
         // Reject if URL has a host that doesn't match frontend, or has a scheme (protocol-relative URLs)
@@ -106,11 +114,8 @@ try {
         }
     }
 
-    // Redirect to return URL or home
+    // Redirect to return URL or frontend home (frontendUrl validated at script start)
     $redirectUrl = $returnTo ?? $frontendUrl;
-    if (empty($redirectUrl)) {
-        $redirectUrl = '/';
-    }
     header('Location: ' . $redirectUrl);
     exit;
 } catch (Throwable $e) {
@@ -126,5 +131,5 @@ try {
         exit;
     }
 
-    redirectWithError('callback_error', 'Failed to complete authentication');
+    redirectWithError($frontendUrl, 'callback_error', 'Failed to complete authentication');
 }
