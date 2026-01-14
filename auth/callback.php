@@ -108,6 +108,9 @@ try {
 
     // Redirect to return URL or home
     $redirectUrl = $returnTo ?? $frontendUrl;
+    if (empty($redirectUrl)) {
+        $redirectUrl = '/';
+    }
     header('Location: ' . $redirectUrl);
     exit;
 } catch (Throwable $e) {
