@@ -106,14 +106,17 @@ if (!$authHelper->isAuthenticated) {
                 </div>
             </div>
 
-            <?php if ($authHelper->roles !== null && count($authHelper->roles) > 0) : ?>
             <div class="card shadow mb-4">
-                <div class="card-header py-3">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
                     <h6 class="m-0 fw-bold text-primary">
                         <i class="fas fa-user-tag me-2"></i><?php echo htmlspecialchars(_('Roles'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                     </h6>
+                    <a href="request-access.php" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-plus me-1"></i><?php echo htmlspecialchars(_('Request Role'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                    </a>
                 </div>
                 <div class="card-body">
+                    <?php if ($authHelper->roles !== null && count($authHelper->roles) > 0) : ?>
                     <div class="d-flex flex-wrap gap-2">
                         <?php foreach ($authHelper->roles as $role) : ?>
                             <span class="badge bg-primary fs-6">
@@ -121,9 +124,13 @@ if (!$authHelper->isAuthenticated) {
                             </span>
                         <?php endforeach; ?>
                     </div>
+                    <?php else : ?>
+                    <p class="text-muted mb-0">
+                        <i class="fas fa-info-circle me-2"></i><?php echo htmlspecialchars(_('No roles assigned yet. Request a role to access additional features.'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                    </p>
+                    <?php endif; ?>
                 </div>
             </div>
-            <?php endif; ?>
 
             <?php if ($authHelper->permissions !== null && count($authHelper->permissions) > 0) : ?>
             <div class="card shadow mb-4">

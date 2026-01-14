@@ -94,9 +94,29 @@ try {
         CookieHelper::setAuthCookie('litcal_id_token', $idToken, $idTokenExpiry);
     }
 
+    // Check if user has any roles - if not, redirect to request-access page
+    $userRoles = [];
+    if ($idToken !== null) {
+        try {
+            $payload   = $oidcClient->validateIdToken($idToken);
+            $userInfo  = $oidcClient->extractUserFromIdToken($payload);
+            $userRoles = $userInfo['roles'] ?? [];
+        } catch (Throwable $e) {
+            // If we can't validate the token, we'll just proceed without role check
+            error_log('Could not extract roles from ID token: ' . $e->getMessage());
+        }
+    }
+
     // Get return URL from session
     $returnTo = $_SESSION['oidc_return_to'] ?? null;
     unset($_SESSION['oidc_return_to']);
+
+    // If user has no roles and no explicit return URL, redirect to request-access page
+    if (empty($userRoles) && $returnTo === null) {
+        $redirectUrl = rtrim($frontendUrl, '/') . '/request-access.php';
+        header('Location: ' . $redirectUrl);
+        exit;
+    }
 
     // Validate return URL against frontend URL (already validated at script start)
     if ($returnTo !== null) {

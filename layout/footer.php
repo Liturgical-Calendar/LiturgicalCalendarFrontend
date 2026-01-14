@@ -84,6 +84,19 @@ if ( AppEnv === 'development' ) console.info({
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/common.js"></script>
 <script src="assets/js/auth.js"></script>
+<script src="assets/js/notifications.js"></script>
+<!-- Notification translations for JavaScript -->
+<script>
+const NotificationTranslations = {
+    noNotifications: <?php echo json_encode(_('No pending requests')); ?>,
+    loadError: <?php echo json_encode(_('Could not load notifications')); ?>,
+    justNow: <?php echo json_encode(_('Just now')); ?>,
+    minutesAgo: <?php echo json_encode(_('min ago')); ?>,
+    hoursAgo: <?php echo json_encode(_('hours ago')); ?>,
+    daysAgo: <?php echo json_encode(_('days ago')); ?>,
+    requestedRole: <?php echo json_encode(_('Requested')); ?>
+};
+</script>
 <?php include_once('includes/login-modal.php'); ?>
 <?php
 $isDevelopment   = ( $_ENV['APP_ENV'] ?? 'production' ) === 'development';

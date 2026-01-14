@@ -118,6 +118,31 @@ asort($langsAssoc);
                 </div>
             </li>
             <li class="vr mx-2 d-none d-lg-block"></li>
+            <!-- Notifications (Admin only) -->
+            <li class="nav-item dropdown<?php echo ($authHelper->isAuthenticated && $authHelper->hasRole('admin')) ? '' : ' d-none'; ?>" id="notificationsContainer" data-requires-admin>
+                <a class="nav-link position-relative" href="#" id="notificationsDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    title="<?php echo htmlspecialchars(_('Notifications'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                    <i class="fas fa-bell"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none" id="notificationsBadge">
+                        0
+                    </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end shadow notifications-dropdown" aria-labelledby="notificationsDropdown" style="min-width: 320px;">
+                    <h6 class="dropdown-header">
+                        <i class="fas fa-bell me-2"></i><?php echo htmlspecialchars(_('Notifications'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                    </h6>
+                    <div id="notificationsList">
+                        <div class="dropdown-item text-muted text-center py-3">
+                            <i class="fas fa-spinner fa-spin me-2"></i><?php echo htmlspecialchars(_('Loading...'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                        </div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-center text-primary" href="admin-role-requests.php">
+                        <small><?php echo htmlspecialchars(_('View all requests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></small>
+                    </a>
+                </div>
+            </li>
             <!-- Authentication Status: Server-side auth detection, JS handles dynamic updates -->
             <li class="nav-item me-lg-2<?php echo $authHelper->isAuthenticated ? ' d-none' : ''; ?>" id="loginBtnContainer" data-requires-no-auth>
                 <button class="btn btn-outline-primary btn-sm" id="loginBtn"

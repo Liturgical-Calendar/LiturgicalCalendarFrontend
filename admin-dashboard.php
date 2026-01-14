@@ -17,6 +17,9 @@ if (!$authHelper->isAuthenticated) {
     exit;
 }
 
+// Check if user has admin role
+$isAdmin = $authHelper->roles !== null && in_array('admin', $authHelper->roles, true);
+
 ?>
 <!doctype html>
 <html lang="<?php echo htmlspecialchars($i18n->LOCALE, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
@@ -38,6 +41,51 @@ if (!$authHelper->isAuthenticated) {
     <div class="row" id="adminBlocks">
         <?php include_once('./includes/admin-blocks.php'); ?>
     </div>
+
+    <?php if ($isAdmin) : ?>
+    <hr class="my-4">
+    <h4 class="mb-3 text-black" style="--bs-text-opacity: .6;">
+        <i class="fas fa-user-shield me-2"></i><?php echo htmlspecialchars(_('Administration'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+    </h4>
+    <div class="row">
+        <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card admin-block shadow h-100 border-dark">
+                <div class="card-body text-center d-flex flex-column">
+                    <div class="admin-block-icon mb-3">
+                        <i class="fas fa-user-check fa-3x text-dark"></i>
+                    </div>
+                    <h5 class="card-title"><?php echo htmlspecialchars(_('Role Requests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></h5>
+                    <p class="card-text text-muted small flex-grow-1">
+                        <?php echo htmlspecialchars(_('Review and approve user role requests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                    </p>
+                    <div class="admin-block-actions mt-auto">
+                        <a href="admin-role-requests.php" class="btn btn-dark btn-sm">
+                            <i class="fas fa-tasks me-1"></i><?php echo htmlspecialchars(_('Manage'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card admin-block shadow h-100 border-dark">
+                <div class="card-body text-center d-flex flex-column">
+                    <div class="admin-block-icon mb-3">
+                        <i class="fas fa-users fa-3x text-dark"></i>
+                    </div>
+                    <h5 class="card-title"><?php echo htmlspecialchars(_('Users'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></h5>
+                    <p class="card-text text-muted small flex-grow-1">
+                        <?php echo htmlspecialchars(_('View users and manage their roles'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                    </p>
+                    <div class="admin-block-actions mt-auto">
+                        <a href="admin-users.php" class="btn btn-dark btn-sm">
+                            <i class="fas fa-users-cog me-1"></i><?php echo htmlspecialchars(_('Manage'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <?php include_once('./layout/footer.php'); ?>
 </body>

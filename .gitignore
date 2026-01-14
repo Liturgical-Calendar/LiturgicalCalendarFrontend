@@ -108,6 +108,8 @@ api/*
 *.php
 !about.php
 !admin-dashboard.php
+!admin-role-requests.php
+!admin-users.php
 !decrees.php
 !missals-editor.php
 !easter.php
