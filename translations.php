@@ -44,7 +44,7 @@ $API_EXTEND_HOWTO_5a = sprintf(
     $howto5aLink
 );
 
-// phpcs:disable Generic.Files.LineLength
+// phpcs:disable Generic.Files.LineLength.TooLong
 $API_EXTEND_HOWTO_6a = _('Translations of the above mentioned liturgical events MUST NOT be done simply based on the linguistic abilities of the translator, but MUST be taken from the Roman Missal used in the region for which the translation is accomplished.');
 $API_EXTEND_HOWTO_6b = _('Translations of the above mentioned liturgical events may change from one edition of the Roman Missal to the next; translators should simply use the most recent edition of the Roman Missal for their region as a reference.');
 $API_EXTEND_HOWTO_6c = _('This API intends to be historically correct as regards the calculation of the dates and the precedence of the liturgical events, but does not pretend historical accuracy as regards differences in the translations of the liturgical events over time.');
@@ -52,7 +52,7 @@ $API_EXTEND_HOWTO_6c = _('This API intends to be historically correct as regards
 $API_EXTEND_HOWTO_7 = _('National calendars and related translations must be defined using data from the translation of the Roman Missal used in the Region or in any case from decrees of the Episcopal Conference of the Region.');
 $API_EXTEND_HOWTO_8 = _('Anyone who intends on contributing to the translations is required to agree to these conditions.');
 $API_EXTEND_HOWTO_9 = _('If the translator is not an expert in liturgical science or does not have a role in a diocesan office for liturgy and worship, the translations will require overview by a liturgical expert before being incorporated into this project.');
-// phpcs:enable Generic.Files.LineLength
+// phpcs:enable Generic.Files.LineLength.TooLong
 
 $API_EXTEND_HOWTO_10 = _('The project website can also be translated into other languages. The translation strings can be found in the following translation components:');
 ?><!doctype html>
