@@ -438,5 +438,6 @@ document.addEventListener('authStateChange', (event) => {
         Notifications.init();
     } else {
         Notifications.stopPolling();
+        Notifications._initialized = false; // Allow re-initialization on next admin login
     }
 });
