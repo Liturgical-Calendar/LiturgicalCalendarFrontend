@@ -70,14 +70,14 @@ class FormControls
         }
 
         if (self::$settings['monthField']) {
-            $switchTitle     = 'switch on for mobile celebration as opposed to fixed date';
+            $switchTitle     = _('switch on for mobile celebration as opposed to fixed date');
             $switchDivClass  = 'form-check form-check-inline form-switch me-0 ps-5 pe-2 border border-2 border-secondary rounded bg-light';
             $switchInputAttr = 'data-bs-toggle="toggle" data-bs-size="xs" data-bs-onstyle="info" data-bs-offstyle="dark"';
             $formRow        .= '<div class="form-group col-sm-2">'
                 . '<label for="' . $uniqid . 'Month" class="d-flex justify-content-between align-items-end">'
                 . '<span class="month-label">' . _('Month') . '</span>'
                 . '<div class="' . $switchDivClass . '" title="' . $switchTitle . '">'
-                . '<label class="form-check-label" for="' . $uniqid . 'Strtotime">Mobile</label>'
+                . '<label class="form-check-label" for="' . $uniqid . 'Strtotime">' . _('Mobile') . '</label>'
                 . '<input class="form-check-input litEvent litEventStrtotimeSwitch" type="checkbox" '
                 . $switchInputAttr . ' role="switch" id="' . $uniqid . 'Strtotime">'
                 . '</div></label>'
