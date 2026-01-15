@@ -138,10 +138,10 @@ if (!$isAdmin) {
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         <i class="fas fa-times me-1"></i><?php echo htmlspecialchars(_('Cancel'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                     </button>
-                    <button type="button" class="btn btn-danger" id="rejectBtn">
+                    <button type="button" class="btn btn-danger" id="rejectBtn" data-requires-auth>
                         <i class="fas fa-times-circle me-1"></i><?php echo htmlspecialchars(_('Reject'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                     </button>
-                    <button type="button" class="btn btn-success" id="approveBtn">
+                    <button type="button" class="btn btn-success" id="approveBtn" data-requires-auth>
                         <i class="fas fa-check-circle me-1"></i><?php echo htmlspecialchars(_('Approve'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                     </button>
                 </div>
