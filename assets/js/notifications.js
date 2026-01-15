@@ -392,6 +392,11 @@ const Notifications = {
     }
 };
 
+// Clean up polling on page unload
+window.addEventListener('beforeunload', () => {
+    Notifications.stopPolling();
+});
+
 // Initialize after Auth is ready
 document.addEventListener('DOMContentLoaded', () => {
     // Check if notifications container exists and is visible (PHP determined user is admin)
