@@ -54,6 +54,10 @@ $API_EXTEND_HOWTO_8 = _('Anyone who intends on contributing to the translations 
 $API_EXTEND_HOWTO_9 = _('If the translator is not an expert in liturgical science or does not have a role in a diocesan office for liturgy and worship, the translations will require overview by a liturgical expert before being incorporated into this project.');
 // phpcs:enable Generic.Files.LineLength.TooLong
 
+$baseUrl = 'https://translate.johnromanodorazio.com/projects/liturgical-calendar/';
+$apiUrl  = $baseUrl . 'liturgical-calendar-api/';
+$icon    = '<i class="fas fa-up-right-from-square ms-2"></i>';
+
 $API_EXTEND_HOWTO_10 = _('The project website can also be translated into other languages. The translation strings can be found in the following translation components:');
 ?><!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
@@ -91,11 +95,6 @@ $API_EXTEND_HOWTO_10 = _('The project website can also be translated into other 
                 <div class="d-flex flex-column gap-3 flex-lg-row bg-secondary text-light p-4 m-2">
                     <div class="col-12 col-lg-3">
                         <p style="text-align:justify;"><?php echo $API_EXTEND_HOWTO_4; ?></p>
-                        <?php
-                        $baseUrl = 'https://translate.johnromanodorazio.com/projects/liturgical-calendar/';
-                        $apiUrl  = $baseUrl . 'liturgical-calendar-api/';
-                        $icon    = '<i class="fas fa-up-right-from-square ms-2"></i>';
-                        ?>
                         <ol class="mb-0">
                             <li><a href="<?php echo $apiUrl; ?>proprium-de-sanctis-1970/"
                                 target="_blank" class="text-light">
