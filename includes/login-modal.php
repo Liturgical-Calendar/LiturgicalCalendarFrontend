@@ -520,16 +520,16 @@ function formatExpiryMessage(seconds) {
     const minutes = Math.ceil(clampedSeconds / 60);
     // Use localized message template with proper singular/plural forms
     const singular = <?php echo json_encode(ngettext(
-        'Your session will expire in less than %d minute.',
-        'Your session will expire in less than %d minutes.',
+        'Your session will expire in less than %1$d minute.',
+        'Your session will expire in less than %1$d minutes.',
         1
     )); ?>;
     const plural = <?php echo json_encode(ngettext(
-        'Your session will expire in less than %d minute.',
-        'Your session will expire in less than %d minutes.',
+        'Your session will expire in less than %1$d minute.',
+        'Your session will expire in less than %1$d minutes.',
         2
     )); ?>;
-    return (minutes === 1 ? singular : plural).replace('%d', minutes);
+    return (minutes === 1 ? singular : plural).replace('%1$d', minutes);
 }
 
 /**
