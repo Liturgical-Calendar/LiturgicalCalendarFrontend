@@ -294,6 +294,8 @@ if (!$isAdmin) {
 
                 // Reload users after a short delay
                 setTimeout(() => {
+                    confirmRevokeBtn.disabled = false;
+                    confirmRevokeBtn.innerHTML = originalText;
                     revokeModal.hide();
                     loadUsers();
                 }, 1500);
