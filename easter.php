@@ -130,7 +130,7 @@ for ($i = 1583; $i <= 9999; $i++) {
     $EasterTableContainer .= '</div>';
 
     $lastCoincidenceStyle = 'text-align:center;width:40%;margin:0px auto;font-size:.7em;z-index:10;position:relative;';
-    $lastCoincidenceText  = 'The last coinciding Easter will be: ' . $responseData['lastCoincidenceString'];
+    $lastCoincidenceText  = _('The last coinciding Easter will be:') . ' ' . $responseData['lastCoincidenceString'];
     echo '<div style="' . $lastCoincidenceStyle . '"><i>' . $lastCoincidenceText . '</i></div>';
     echo $EasterTableContainer;
 ?>
