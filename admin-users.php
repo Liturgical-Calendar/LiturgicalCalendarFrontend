@@ -273,11 +273,16 @@ if (!$isAdmin) {
                     credentials: 'include'
                 });
 
-                const data = await response.json();
-
                 if (!response.ok) {
-                    throw new Error(data.message || data.error || 'Failed to revoke role');
+                    let errorMsg = 'Failed to revoke role';
+                    try {
+                        const data = await response.json();
+                        errorMsg = data.message || data.error || errorMsg;
+                    } catch (e) { /* non-JSON response */ }
+                    throw new Error(errorMsg);
                 }
+
+                const data = await response.json();
 
                 // Show success message
                 modalAlerts.innerHTML = `
