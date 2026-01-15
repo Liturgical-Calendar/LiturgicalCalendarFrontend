@@ -247,6 +247,8 @@ $isAdmin = $authHelper->hasRole('admin');
                 const roleName = roleNames[request.requested_role] || request.requested_role;
                 const dateObj = new Date(request.created_at);
                 const createdAt = isNaN(dateObj.getTime()) ? '—' : dateObj.toLocaleDateString();
+                // Validate request.id is a positive integer to prevent HTML/URL injection
+                const safeRequestId = Number.isInteger(request.id) && request.id > 0 ? request.id : '';
 
                 html += `
                     <tr>
@@ -260,7 +262,7 @@ $isAdmin = $authHelper->hasRole('admin');
                         <td><small>${createdAt}</small></td>
                         <td>
                             <button class="btn btn-outline-primary btn-sm review-btn"
-                                    data-request-id="${request.id}"
+                                    data-request-id="${safeRequestId}"
                                     data-user-name="${escapeHtml(request.user_name || request.user_email)}"
                                     data-user-email="${escapeHtml(request.user_email)}"
                                     data-role="${escapeHtml(request.requested_role)}"
@@ -368,7 +370,7 @@ $isAdmin = $authHelper->hasRole('admin');
             btnToUpdate.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>' + <?php echo json_encode(_('Processing...')); ?>;
 
             try {
-                const response = await fetch(`${ApiUrl}/admin/role-requests/${currentRequestId}/${action}`, {
+                const response = await fetch(`${ApiUrl}/admin/role-requests/${encodeURIComponent(currentRequestId)}/${action}`, {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
