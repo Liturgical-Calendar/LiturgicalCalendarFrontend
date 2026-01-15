@@ -50,23 +50,9 @@ const Notifications = {
         if (this._initialized) {
             return;
         }
-
         this._initialized = true;
         console.log('Notifications: Initializing (admin verified by PHP)');
-
-        // Fetch notifications immediately
-        this.fetchNotifications();
-
-        // Start polling
-        this.startPolling();
-
-        // Refresh on dropdown open (use Bootstrap 5 event)
-        const dropdownEl = document.getElementById('notificationsDropdown');
-        if (dropdownEl) {
-            dropdownEl.addEventListener('shown.bs.dropdown', () => {
-                this.fetchNotifications();
-            });
-        }
+        this._startNotificationServices();
     },
 
     /**
@@ -94,6 +80,14 @@ const Notifications = {
             container.classList.remove('d-none');
         }
 
+        this._startNotificationServices();
+    },
+
+    /**
+     * Start notification fetching and polling services
+     * @private
+     */
+    _startNotificationServices() {
         // Fetch notifications immediately
         this.fetchNotifications();
 
@@ -162,7 +156,7 @@ const Notifications = {
                 let errorText = '';
                 try {
                     errorText = await response.text();
-                } catch (e) {
+                } catch {
                     errorText = 'Could not read error response';
                 }
                 console.error('Notifications API error:', response.status, errorText);
@@ -241,10 +235,11 @@ const Notifications = {
         const roleName = this._roleNames[item.role] || item.role;
         const userName = this._escapeHtml(item.user_name || item.user_email || 'Unknown');
         const timeAgo = this._formatTimeAgo(item.created_at);
+        const safeUrl = this._sanitizeUrl(item.url);
 
         if (item.type === 'role_request') {
             return `
-                <a class="dropdown-item py-2" href="${item.url}">
+                <a class="dropdown-item py-2" href="${safeUrl}">
                     <div class="d-flex align-items-start">
                         <div class="flex-shrink-0">
                             <i class="fas fa-user-plus text-primary me-2"></i>
@@ -263,7 +258,7 @@ const Notifications = {
 
         // Default fallback for other notification types
         return `
-            <a class="dropdown-item py-2" href="${item.url || '#'}">
+            <a class="dropdown-item py-2" href="${safeUrl}">
                 <div class="small">${userName}</div>
                 <div class="small text-muted">${timeAgo}</div>
             </a>
@@ -347,6 +342,43 @@ const Notifications = {
     },
 
     /**
+     * Sanitize URL to prevent XSS via javascript:, data:, vbscript: schemes
+     * Only allows http, https, protocol-relative (//), and relative paths
+     * @param {string} url - URL to sanitize
+     * @returns {string} Sanitized URL safe for href attribute
+     * @private
+     */
+    _sanitizeUrl(url) {
+        if (!url || typeof url !== 'string') {
+            return '#';
+        }
+
+        // Trim and normalize
+        const trimmed = url.trim();
+
+        // Block dangerous schemes (case-insensitive, ignore whitespace)
+        const normalized = trimmed.toLowerCase().replace(/\s+/g, '');
+        const dangerousSchemes = ['javascript:', 'data:', 'vbscript:'];
+        for (const scheme of dangerousSchemes) {
+            if (normalized.startsWith(scheme)) {
+                return '#';
+            }
+        }
+
+        // Allow only safe schemes: http://, https://, protocol-relative (//), or relative paths
+        const isAbsolute = /^https?:\/\//i.test(trimmed);
+        const isProtocolRelative = trimmed.startsWith('//');
+        const isRelative = trimmed.startsWith('/') || trimmed.startsWith('./') || trimmed.startsWith('../') || !trimmed.includes(':');
+
+        if (!isAbsolute && !isProtocolRelative && !isRelative) {
+            return '#';
+        }
+
+        // HTML-escape the URL to prevent attribute injection
+        return this._escapeHtml(trimmed);
+    },
+
+    /**
      * Escape HTML entities
      * @param {string} text - Text to escape
      * @returns {string} Escaped text
@@ -376,14 +408,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Otherwise, wait for Auth to initialize and check auth state
-    const initNotifications = () => {
-        if (typeof Auth !== 'undefined' && Auth.isAuthenticated() && Auth.hasRole('admin')) {
-            Notifications.init();
+    // Use exponential backoff retry to handle variable Auth initialization times
+    const waitForAuth = (retries = 5, delay = 100) => {
+        if (typeof Auth !== 'undefined' && Auth.isAuthenticated()) {
+            if (Auth.hasRole('admin')) {
+                Notifications.init();
+            }
+        } else if (retries > 0) {
+            setTimeout(() => waitForAuth(retries - 1, delay * 2), delay);
         }
     };
-
-    // Wait for Auth to initialize from the async checkAuthAsync call
-    setTimeout(initNotifications, 500);
+    waitForAuth();
 });
 
 // Also listen for auth state changes (if user logs in after page load)

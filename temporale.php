@@ -20,7 +20,13 @@ if (!$authHelper->isAuthenticated) {
 <!doctype html>
 <html lang="<?php echo htmlspecialchars($i18n->LOCALE, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
 <head>
-    <title><?php echo htmlspecialchars(_('Temporale'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?> - <?php echo htmlspecialchars(_('Catholic Liturgical Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></title>
+    <title><?php
+        $temporaleTitle = _('Temporale');
+        $calendarTitle  = _('Catholic Liturgical Calendar');
+        echo htmlspecialchars($temporaleTitle, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        echo ' - ';
+        echo htmlspecialchars($calendarTitle, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    ?></title>
     <?php include_once('./layout/head.php'); ?>
     <link rel="stylesheet" href="assets/css/temporale.css">
 </head>
@@ -31,7 +37,11 @@ if (!$authHelper->isAuthenticated) {
         <i class="fas fa-calendar-alt me-2 text-primary"></i><?php echo htmlspecialchars(_('Temporale'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
     </h1>
     <p class="text-muted mb-4">
-        <?php echo htmlspecialchars(_('Proprium de Tempore - The temporal cycle of the liturgical year including Advent, Christmas, Lent, Easter Triduum, Easter, and Ordinary Time.'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+        <?php
+        // phpcs:ignore Generic.Files.LineLength
+        $temporaleDesc = _('Proprium de Tempore - The temporal cycle of the liturgical year including Advent, Christmas, Lent, Easter Triduum, Easter, and Ordinary Time.');
+        echo htmlspecialchars($temporaleDesc, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        ?>
     </p>
 
     <!-- Filters -->

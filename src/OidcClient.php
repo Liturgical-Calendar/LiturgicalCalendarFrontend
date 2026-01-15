@@ -396,12 +396,25 @@ class OidcClient
     {
         $userinfoEndpoint = $this->getUserinfoEndpoint();
 
-        $client   = new Client();
-        $response = $client->get($userinfoEndpoint, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $accessToken,
-            ],
-        ]);
+        $client = new Client();
+        try {
+            $response = $client->get($userinfoEndpoint, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $accessToken,
+                ],
+            ]);
+        } catch (RequestException $e) {
+            $message = 'Failed to fetch user info';
+            if ($e->hasResponse()) {
+                $response   = $e->getResponse();
+                $statusCode = $response->getStatusCode();
+                $body       = $response->getBody()->getContents();
+                $message    = "Failed to fetch user info (HTTP {$statusCode}): {$body}";
+            } else {
+                $message = 'Failed to fetch user info: ' . $e->getMessage();
+            }
+            throw new \RuntimeException($message, 0, $e);
+        }
 
         $body     = $response->getBody()->getContents();
         $userInfo = json_decode($body, true);
@@ -505,8 +518,20 @@ class OidcClient
         }
 
         // Fetch from issuer
-        $client   = new Client();
-        $response = $client->get($this->issuer . '/.well-known/openid-configuration');
+        $client = new Client();
+        try {
+            $response = $client->get($this->issuer . '/.well-known/openid-configuration');
+        } catch (RequestException $e) {
+            $message = 'Failed to fetch OIDC discovery document';
+            if ($e->hasResponse()) {
+                $response   = $e->getResponse();
+                $statusCode = $response->getStatusCode();
+                $message    = "Failed to fetch OIDC discovery document (HTTP {$statusCode})";
+            } else {
+                $message = 'Failed to fetch OIDC discovery document: ' . $e->getMessage();
+            }
+            throw new \RuntimeException($message, 0, $e);
+        }
 
         $body         = $response->getBody()->getContents();
         $discoveryDoc = json_decode($body, true);

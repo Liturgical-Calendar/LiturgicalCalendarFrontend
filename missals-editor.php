@@ -58,14 +58,27 @@ try {
 }
 
 
-$buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
-<hr><div class="d-flex justify-content-around">
-<button class="btn btn-sm btn-primary m-2" id="setPropertyAction" data-bs-toggle="modal" data-bs-target="#setPropertyActionPrompt"><i class="fas fa-edit me-2"></i>' . $messages['SetPropertyButton'] . '</button>
-<button class="btn btn-sm btn-primary m-2" id="moveLiturgicalEventAction" data-bs-toggle="modal" data-bs-target="#moveLiturgicalEventActionPrompt"><i class="fas fa-calendar-day me-2"></i>' . $messages['MoveEventButton'] . '</button>
-<button class="btn btn-sm btn-primary m-2" id="newLiturgicalEventAction" data-bs-toggle="modal" data-bs-target="#newLiturgicalEventActionPrompt"><i class="far fa-calendar-plus me-2"></i>' . $messages['Modal - Create new event'] . '</button>
-<button class="btn btn-sm btn-primary m-2" id="makeDoctorAction" data-bs-toggle="modal" data-bs-target="#makeDoctorActionPrompt"><i class="fas fa-user-graduate me-2"></i>' . $messages['MakeDoctorButton'] . '</button>
-</div>
-</div>';
+$btnClass        = 'btn btn-sm btn-primary m-2';
+$setPropertyBtn  = '<button class="' . $btnClass . '" id="setPropertyAction" ';
+$setPropertyBtn .= 'data-bs-toggle="modal" data-bs-target="#setPropertyActionPrompt">';
+$setPropertyBtn .= '<i class="fas fa-edit me-2"></i>' . $messages['SetPropertyButton'] . '</button>';
+
+$moveEventBtn  = '<button class="' . $btnClass . '" id="moveLiturgicalEventAction" ';
+$moveEventBtn .= 'data-bs-toggle="modal" data-bs-target="#moveLiturgicalEventActionPrompt">';
+$moveEventBtn .= '<i class="fas fa-calendar-day me-2"></i>' . $messages['MoveEventButton'] . '</button>';
+
+$newEventBtn  = '<button class="' . $btnClass . '" id="newLiturgicalEventAction" ';
+$newEventBtn .= 'data-bs-toggle="modal" data-bs-target="#newLiturgicalEventActionPrompt">';
+$newEventBtn .= '<i class="far fa-calendar-plus me-2"></i>' . $messages['Modal - Create new event'] . '</button>';
+
+$makeDoctorBtn  = '<button class="' . $btnClass . '" id="makeDoctorAction" ';
+$makeDoctorBtn .= 'data-bs-toggle="modal" data-bs-target="#makeDoctorActionPrompt">';
+$makeDoctorBtn .= '<i class="fas fa-user-graduate me-2"></i>' . $messages['MakeDoctorButton'] . '</button>';
+
+$buttonGroup = '<div id="memorialsFromDecreesBtnGrp">'
+    . '<hr><div class="d-flex justify-content-around">'
+    . $setPropertyBtn . $moveEventBtn . $newEventBtn . $makeDoctorBtn
+    . '</div></div>';
 
 ?>
 <!DOCTYPE html>
@@ -99,8 +112,15 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
                 </select>
             </div>
             <div class="col-12 col-md-6 col-lg-8 d-flex align-items-end justify-content-end mt-2 mt-md-0">
-                <button class="btn btn-primary me-2" id="addColumnBtn"><i class="fas fa-plus-square me-2"></i><span class="d-none d-sm-inline"><?php echo $messages['AddColumnButton']; ?></span><i class="fas fa-columns ms-2"></i></button>
-                <button class="btn btn-primary" id="saveDataBtn"><i class="fas fa-save me-2"></i><span class="d-none d-sm-inline"><?php echo $messages['SaveDataButton']; ?></span></button>
+                <button class="btn btn-primary me-2" id="addColumnBtn">
+                    <i class="fas fa-plus-square me-2"></i>
+                    <span class="d-none d-sm-inline"><?php echo $messages['AddColumnButton']; ?></span>
+                    <i class="fas fa-columns ms-2"></i>
+                </button>
+                <button class="btn btn-primary" id="saveDataBtn">
+                    <i class="fas fa-save me-2"></i>
+                    <span class="d-none d-sm-inline"><?php echo $messages['SaveDataButton']; ?></span>
+                </button>
             </div>
         </div>
     <div id="tableContainer" class="table-responsive">
@@ -188,8 +208,19 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
         false,
         false,
         [
-            ['id' => 'newLiturgicalEventFromExistingButton', 'class' => 'btn btn-primary actionPromptButton', 'icon' => 'fas fa-calendar-plus', 'label' => $messages['NewEventFromExistingButton'], 'disabled' => true],
-            ['id' => 'newLiturgicalEventExNovoButton', 'class' => 'btn btn-primary actionPromptButton', 'icon' => 'fas fa-calendar-plus', 'label' => $messages['NewEventExNovoButton']]
+            [
+                'id'       => 'newLiturgicalEventFromExistingButton',
+                'class'    => 'btn btn-primary actionPromptButton',
+                'icon'     => 'fas fa-calendar-plus',
+                'label'    => $messages['NewEventFromExistingButton'],
+                'disabled' => true
+            ],
+            [
+                'id'    => 'newLiturgicalEventExNovoButton',
+                'class' => 'btn btn-primary actionPromptButton',
+                'icon'  => 'fas fa-calendar-plus',
+                'label' => $messages['NewEventExNovoButton']
+            ]
         ],
         $messages['CancelButton']
     ); ?>
@@ -216,10 +247,14 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">
     </datalist>
     </div><!-- end adminInterface -->
 
+    <?php
+    $jsonFlags = JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
+    $eventKeys = array_column($LiturgicalEventCollection, 'event_key');
+    ?>
     <script>
-        const Messages = <?php echo json_encode($messages, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
-        const LiturgicalEventCollection = <?php echo json_encode($LiturgicalEventCollection, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
-        const LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($LiturgicalEventCollection, 'event_key'), JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+        const Messages = <?php echo json_encode($messages, $jsonFlags); ?>;
+        const LiturgicalEventCollection = <?php echo json_encode($LiturgicalEventCollection, $jsonFlags); ?>;
+        const LiturgicalEventCollectionKeys = <?php echo json_encode($eventKeys, $jsonFlags); ?>;
     </script>
 
     <?php include_once('./layout/footer.php'); ?>

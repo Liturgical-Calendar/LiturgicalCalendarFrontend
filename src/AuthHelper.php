@@ -94,7 +94,7 @@ class AuthHelper
                     $roles = array_merge($roles, array_keys((array) $payload->{$projectRolesKey}));
                 }
             }
-            $this->roles       = !empty($roles) ? array_unique($roles) : null;
+            $this->roles       = !empty($roles) ? array_values(array_unique($roles)) : null;
             $this->permissions = null; // OIDC doesn't have permissions claim
         } else {
             // Legacy JWT token

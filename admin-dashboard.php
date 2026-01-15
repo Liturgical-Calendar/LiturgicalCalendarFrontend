@@ -18,13 +18,19 @@ if (!$authHelper->isAuthenticated) {
 }
 
 // Check if user has admin role
-$isAdmin = $authHelper->roles !== null && in_array('admin', $authHelper->roles, true);
+$isAdmin = $authHelper->hasRole('admin');
 
 ?>
 <!doctype html>
 <html lang="<?php echo htmlspecialchars($i18n->LOCALE, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
 <head>
-    <title><?php echo htmlspecialchars(_('Admin Dashboard'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?> - <?php echo htmlspecialchars(_('Catholic Liturgical Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></title>
+    <title><?php
+        $dashboardTitle = _('Admin Dashboard');
+        $calendarTitle  = _('Catholic Liturgical Calendar');
+        echo htmlspecialchars($dashboardTitle, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        echo ' - ';
+        echo htmlspecialchars($calendarTitle, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    ?></title>
     <?php include_once('./layout/head.php'); ?>
 </head>
 <body class="sb-nav-fixed">

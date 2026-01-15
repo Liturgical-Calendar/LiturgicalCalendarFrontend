@@ -76,7 +76,10 @@ try {
     <link rel="stylesheet" href="assets/css/easter.css">
 </head>
 <body>
-    <div id="clipDiv" style="position:absolute;top:-500px;height:7em;z-index:0;background-image:linear-gradient(to bottom, rgba(255,255,255, 1), rgba(255,255,255, 1), rgba(255,255,255, 0) );left: 0px;width: 100%;"></div>
+    <div id="clipDiv"
+        style="position:absolute;top:-500px;height:7em;z-index:0;left:0px;width:100%;
+               background-image:linear-gradient(to bottom,rgba(255,255,255,1),rgba(255,255,255,1),rgba(255,255,255,0));">
+    </div>
     <div><a class="backNav" href="/">↩      <?php echo _('Go back'); ?>      ↩</a></div>
     <select id="langSelect">
         <?php
@@ -102,8 +105,12 @@ try {
     echo '<h3 style="text-align:center;">' . _('Easter Day Calculation in PHP (Years in which Julian and Gregorian easter coincide are marked in yellow)') . '</h3>';
 
     $EasterTableContainer  = '<div id="EasterTableContainer">';
-    $EasterTableContainer .= '<table style="width:60%;margin:30px auto;border:1px solid Blue;border-radius: 6px; padding:10px;background:LightBlue;">';
-    $EasterTableContainer .= '<thead><tr><th width="300">' . _('Gregorian Easter') . '</th><th width="300">' . _('Julian Easter') . '</th><th width="300">' . _('Julian Easter in Gregorian Calendar') . '</th></tr></thead>';
+    $tableStyle            = 'width:60%;margin:30px auto;border:1px solid Blue;border-radius:6px;padding:10px;background:LightBlue;';
+    $EasterTableContainer .= '<table style="' . $tableStyle . '">';
+    $gregEasterTh          = '<th width="300">' . _('Gregorian Easter') . '</th>';
+    $julEasterTh           = '<th width="300">' . _('Julian Easter') . '</th>';
+    $westJulEasterTh       = '<th width="300">' . _('Julian Easter in Gregorian Calendar') . '</th>';
+    $EasterTableContainer .= '<thead><tr>' . $gregEasterTh . $julEasterTh . $westJulEasterTh . '</tr></thead>';
     $EasterTableContainer .= '<tbody>';
     //$Y = (int)date("Y");
     //for($i=1997;$i<=2037;$i++){
@@ -112,13 +119,19 @@ for ($i = 1583; $i <= 9999; $i++) {
     $julianDateString        = $DatesOfEaster[$i - 1583]['julianDateString'];
     $westernJulianDateString = $DatesOfEaster[$i - 1583]['westernJulianDateString'];
 
-    $style_str             = $DatesOfEaster[$i - 1583]['coinciding'] ? ' style="background-color:Yellow;font-weight:bold;color:Blue;"' : '';
-    $EasterTableContainer .= '<tr' . $style_str . '><td width="300">' . $gregDateString . '</td><td width="300">' . $julianDateString . '</td><td width="300">' . $westernJulianDateString . '</td></tr>';
+    $coincidingStyle       = ' style="background-color:Yellow;font-weight:bold;color:Blue;"';
+    $style_str             = $DatesOfEaster[$i - 1583]['coinciding'] ? $coincidingStyle : '';
+    $td1                   = '<td width="300">' . $gregDateString . '</td>';
+    $td2                   = '<td width="300">' . $julianDateString . '</td>';
+    $td3                   = '<td width="300">' . $westernJulianDateString . '</td>';
+    $EasterTableContainer .= '<tr' . $style_str . '>' . $td1 . $td2 . $td3 . '</tr>';
 }
     $EasterTableContainer .= '</tbody></table>';
     $EasterTableContainer .= '</div>';
 
-    echo '<div style="text-align:center;width:40%;margin:0px auto;font-size:.7em;z-index:10;position:relative;"><i>The last coinciding Easter will be: ' . $responseData['lastCoincidenceString'] . '</i></div>';
+    $lastCoincidenceStyle = 'text-align:center;width:40%;margin:0px auto;font-size:.7em;z-index:10;position:relative;';
+    $lastCoincidenceText  = 'The last coinciding Easter will be: ' . $responseData['lastCoincidenceString'];
+    echo '<div style="' . $lastCoincidenceStyle . '"><i>' . $lastCoincidenceText . '</i></div>';
     echo $EasterTableContainer;
 ?>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

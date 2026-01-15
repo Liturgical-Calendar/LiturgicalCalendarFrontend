@@ -62,8 +62,8 @@ if (!isset($_GET['code']) || !isset($_GET['state'])) {
     redirectWithError($frontendUrl, 'invalid_request', 'Missing code or state parameter');
 }
 
-$code  = $_GET['code'];
-$state = $_GET['state'];
+$code  = substr((string) $_GET['code'], 0, 2048);
+$state = substr((string) $_GET['state'], 0, 512);
 
 try {
     $oidcClient = OidcClient::fromEnv();

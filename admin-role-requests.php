@@ -23,7 +23,13 @@ $isAdmin = $authHelper->roles !== null && in_array('admin', $authHelper->roles, 
 <!doctype html>
 <html lang="<?php echo htmlspecialchars($i18n->LOCALE, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
 <head>
-    <title><?php echo htmlspecialchars(_('Role Requests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?> - <?php echo htmlspecialchars(_('Catholic Liturgical Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></title>
+    <title><?php
+        $roleRequestsTitle = _('Role Requests');
+        $calendarTitle     = _('Catholic Liturgical Calendar');
+        echo htmlspecialchars($roleRequestsTitle, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        echo ' - ';
+        echo htmlspecialchars($calendarTitle, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    ?></title>
     <?php include_once('./layout/head.php'); ?>
 </head>
 <body class="sb-nav-fixed">
@@ -94,7 +100,7 @@ $isAdmin = $authHelper->roles !== null && in_array('admin', $authHelper->roles, 
     </div>
 
     <div class="d-flex gap-2">
-        <a href="admin-dashboard.php" class="btn btn-outline-secondary">
+        <a href="admin-dashboard.php" class="btn btn-outline-secondary" data-requires-auth>
             <i class="fas fa-arrow-left me-2"></i><?php echo htmlspecialchars(_('Back to Dashboard'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
         </a>
     </div>
@@ -115,8 +121,16 @@ $isAdmin = $authHelper->roles !== null && in_array('admin', $authHelper->roles, 
                     </div>
                     <hr>
                     <div class="mb-3">
-                        <label for="reviewNotes" class="form-label"><?php echo htmlspecialchars(_('Notes'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?> <span class="text-muted">(<?php echo htmlspecialchars(_('optional'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>)</span></label>
-                        <textarea class="form-control" id="reviewNotes" rows="3" placeholder="<?php echo htmlspecialchars(_('Add notes about your decision...'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></textarea>
+                        <label for="reviewNotes" class="form-label"><?php
+                            $notesLabel    = _('Notes');
+                            $optionalLabel = _('optional');
+                            echo htmlspecialchars($notesLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                        ?> <span class="text-muted">(<?php
+                            echo htmlspecialchars($optionalLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                        ?>)</span></label>
+                        <?php $placeholder = _('Add notes about your decision...'); ?>
+                        <textarea class="form-control" id="reviewNotes" rows="3"
+                            placeholder="<?php echo htmlspecialchars($placeholder, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></textarea>
                     </div>
                     <div id="modalAlerts"></div>
                 </div>
@@ -278,6 +292,14 @@ $isAdmin = $authHelper->roles !== null && in_array('admin', $authHelper->roles, 
             reviewNotes.value = '';
             modalAlerts.innerHTML = '';
 
+            // Escape all dataset-derived values to prevent XSS
+            // (browser decodes HTML entities from data-* attributes, so we must re-escape)
+            const userName = escapeHtml(data.userName || '');
+            const userEmail = escapeHtml(data.userEmail || '');
+            const roleName = escapeHtml(data.roleName || '');
+            const created = escapeHtml(data.created || '');
+            const justification = escapeHtml(data.justification || '');
+
             requestDetails.innerHTML = `
                 <table class="table table-borderless mb-0">
                     <tr>
@@ -285,28 +307,28 @@ $isAdmin = $authHelper->roles !== null && in_array('admin', $authHelper->roles, 
                             <i class="fas fa-user me-2"></i>${<?php echo json_encode(_('User')); ?>}
                         </th>
                         <td>
-                            <strong>${data.userName}</strong>
-                            <br><small class="text-muted">${data.userEmail}</small>
+                            <strong>${userName}</strong>
+                            <br><small class="text-muted">${userEmail}</small>
                         </td>
                     </tr>
                     <tr>
                         <th class="text-muted">
                             <i class="fas fa-user-tag me-2"></i>${<?php echo json_encode(_('Requested Role')); ?>}
                         </th>
-                        <td><span class="badge bg-primary">${data.roleName}</span></td>
+                        <td><span class="badge bg-primary">${roleName}</span></td>
                     </tr>
                     <tr>
                         <th class="text-muted">
                             <i class="fas fa-calendar me-2"></i>${<?php echo json_encode(_('Requested')); ?>}
                         </th>
-                        <td>${data.created}</td>
+                        <td>${created}</td>
                     </tr>
                     ${data.justification ? `
                     <tr>
                         <th class="text-muted">
                             <i class="fas fa-comment me-2"></i>${<?php echo json_encode(_('Justification')); ?>}
                         </th>
-                        <td><em>"${data.justification}"</em></td>
+                        <td><em>"${justification}"</em></td>
                     </tr>
                     ` : ''}
                 </table>

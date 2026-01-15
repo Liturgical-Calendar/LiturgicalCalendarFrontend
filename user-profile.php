@@ -19,7 +19,13 @@ if (!$authHelper->isAuthenticated) {
 <!doctype html>
 <html lang="<?php echo htmlspecialchars($i18n->LOCALE, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
 <head>
-    <title><?php echo htmlspecialchars(_('User Profile'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?> - <?php echo htmlspecialchars(_('Catholic Liturgical Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></title>
+    <title><?php
+        $profileTitle  = _('User Profile');
+        $calendarTitle = _('Catholic Liturgical Calendar');
+        echo htmlspecialchars($profileTitle, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        echo ' - ';
+        echo htmlspecialchars($calendarTitle, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    ?></title>
     <?php include_once('./layout/head.php'); ?>
 </head>
 <body class="sb-nav-fixed">
@@ -111,7 +117,7 @@ if (!$authHelper->isAuthenticated) {
                     <h6 class="m-0 fw-bold text-primary">
                         <i class="fas fa-user-tag me-2"></i><?php echo htmlspecialchars(_('Roles'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                     </h6>
-                    <a href="request-access.php" class="btn btn-outline-primary btn-sm">
+                    <a href="request-access.php" class="btn btn-outline-primary btn-sm" data-requires-auth>
                         <i class="fas fa-plus me-1"></i><?php echo htmlspecialchars(_('Request Role'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                     </a>
                 </div>
@@ -126,7 +132,10 @@ if (!$authHelper->isAuthenticated) {
                     </div>
                     <?php else : ?>
                     <p class="text-muted mb-0">
-                        <i class="fas fa-info-circle me-2"></i><?php echo htmlspecialchars(_('No roles assigned yet. Request a role to access additional features.'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                        <?php $noRolesMsg = _('No roles assigned yet. Request a role to access additional features.'); ?>
+                        <i class="fas fa-info-circle me-2"></i><?php
+                            echo htmlspecialchars($noRolesMsg, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                        ?>
                     </p>
                     <?php endif; ?>
                 </div>

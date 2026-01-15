@@ -17,7 +17,13 @@ if (!$authHelper->isAuthenticated) {
 }
 
 // Check if user has admin role
-$isAdmin = $authHelper->roles !== null && in_array('admin', $authHelper->roles, true);
+$isAdmin = $authHelper->hasRole('admin');
+
+// Redirect non-admins to dashboard
+if (!$isAdmin) {
+    header('Location: admin-dashboard.php');
+    exit;
+}
 
 ?>
 <!doctype html>
@@ -39,12 +45,6 @@ $isAdmin = $authHelper->roles !== null && in_array('admin', $authHelper->roles, 
         <i class="fas fa-users me-2"></i><?php echo htmlspecialchars(_('Users Management'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
     </h1>
 
-    <?php if (!$isAdmin) : ?>
-    <div class="alert alert-danger" role="alert">
-        <i class="fas fa-exclamation-triangle me-2"></i>
-        <?php echo htmlspecialchars(_('You do not have permission to access this page. Administrator role required.'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-    </div>
-    <?php else : ?>
     <p class="text-muted mb-4"><?php
         $manageUsersDesc = _('Manage users who have been granted roles in the system. You can view user information and revoke roles.');
         echo htmlspecialchars($manageUsersDesc, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
@@ -91,7 +91,7 @@ $isAdmin = $authHelper->roles !== null && in_array('admin', $authHelper->roles, 
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         <i class="fas fa-times me-1"></i><?php echo htmlspecialchars(_('Cancel'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                     </button>
-                    <button type="button" class="btn btn-danger" id="confirmRevokeBtn">
+                    <button type="button" class="btn btn-danger" id="confirmRevokeBtn" data-requires-auth>
                         <i class="fas fa-user-minus me-1"></i><?php echo htmlspecialchars(_('Revoke Role'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                     </button>
                 </div>
@@ -99,11 +99,8 @@ $isAdmin = $authHelper->roles !== null && in_array('admin', $authHelper->roles, 
         </div>
     </div>
 
-    <?php endif; ?>
-
     <?php include_once('./layout/footer.php'); ?>
 
-    <?php if ($isAdmin) : ?>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const ApiUrl = <?php echo json_encode($apiBaseUrl); ?>;
@@ -333,6 +330,5 @@ $isAdmin = $authHelper->roles !== null && in_array('admin', $authHelper->roles, 
         loadUsers();
     });
     </script>
-    <?php endif; ?>
 </body>
 </html>

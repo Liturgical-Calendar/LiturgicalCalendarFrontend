@@ -51,7 +51,7 @@ try {
     $tokens = $oidcClient->refreshToken($refreshToken);
 
     if (!isset($tokens['access_token'])) {
-        throw new Exception('No access token in refresh response');
+        throw new \Exception('No access token in refresh response');
     }
 
     $accessToken     = $tokens['access_token'];

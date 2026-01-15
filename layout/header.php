@@ -112,14 +112,16 @@ asort($langsAssoc);
                         $safeTitle   = htmlspecialchars($displayName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                         $safeLang    = htmlspecialchars($lang !== false ? $lang : $displayName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                         $safeIsoLang = htmlspecialchars($isoLang, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-                        echo "<a class=\"$safeClass\" id=\"langChoice-$safeKey\" href=\"#\" title=\"$safeTitle\"><span class=\"d-none d-md-inline\">$safeLang</span><span class=\"d-inline d-md-none\">$safeIsoLang</span></a>";
+                        echo "<a class=\"$safeClass\" id=\"langChoice-$safeKey\" href=\"#\" title=\"$safeTitle\">"
+                            . "<span class=\"d-none d-md-inline\">$safeLang</span>"
+                            . "<span class=\"d-inline d-md-none\">$safeIsoLang</span></a>";
                     }
                     ?>
                 </div>
             </li>
             <li class="vr mx-2 d-none d-lg-block"></li>
             <!-- Notifications (Admin only) -->
-            <li class="nav-item dropdown<?php echo ($authHelper->isAuthenticated && $authHelper->hasRole('admin')) ? '' : ' d-none'; ?>" id="notificationsContainer" data-requires-admin>
+            <li class="nav-item dropdown<?php echo ( $authHelper->isAuthenticated && $authHelper->hasRole('admin') ) ? '' : ' d-none'; ?>" id="notificationsContainer" data-requires-auth>
                 <a class="nav-link position-relative" href="#" id="notificationsDropdown" role="button"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                     title="<?php echo htmlspecialchars(_('Notifications'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
@@ -154,7 +156,11 @@ asort($langsAssoc);
                 <div class="btn-group" id="userMenu">
                     <a href="user-profile.php" class="btn btn-outline-success btn-sm" id="userInfo"
                        title="<?php echo htmlspecialchars(_('View Profile'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-                        <i class="fas fa-user me-1"></i><span id="username" class="d-lg-none d-sm-inline"><?php echo $authHelper->username !== null ? htmlspecialchars($authHelper->username, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') : ''; ?></span>
+                        <i class="fas fa-user me-1"></i><span id="username" class="d-lg-none d-sm-inline"><?php
+                            if ($authHelper->username !== null) {
+                                echo htmlspecialchars($authHelper->username, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                            }
+                        ?></span>
                     </a>
                     <button class="btn btn-outline-danger btn-sm" id="logoutBtn"
                             title="<?php echo htmlspecialchars(_('Logout'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
