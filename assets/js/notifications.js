@@ -316,11 +316,17 @@ const Notifications = {
         if (diffMins < 1) {
             return this._getTranslation('justNow', 'Just now');
         } else if (diffMins < 60) {
-            return `${diffMins} ${this._getTranslation('minutesAgo', 'min ago')}`;
+            const key = diffMins === 1 ? 'minuteAgo' : 'minutesAgo';
+            const fallback = diffMins === 1 ? 'min ago' : 'mins ago';
+            return `${diffMins} ${this._getTranslation(key, fallback)}`;
         } else if (diffHours < 24) {
-            return `${diffHours} ${this._getTranslation('hoursAgo', 'hours ago')}`;
+            const key = diffHours === 1 ? 'hourAgo' : 'hoursAgo';
+            const fallback = diffHours === 1 ? 'hour ago' : 'hours ago';
+            return `${diffHours} ${this._getTranslation(key, fallback)}`;
         } else if (diffDays < 7) {
-            return `${diffDays} ${this._getTranslation('daysAgo', 'days ago')}`;
+            const key = diffDays === 1 ? 'dayAgo' : 'daysAgo';
+            const fallback = diffDays === 1 ? 'day ago' : 'days ago';
+            return `${diffDays} ${this._getTranslation(key, fallback)}`;
         } else {
             return date.toLocaleDateString();
         }
