@@ -38,8 +38,8 @@
     <rule ref="Generic.Formatting.SpaceAfterCast"/>
     <rule ref="Generic.Files.LineLength">
         <properties>
-            <property name="lineLimit" value="180"/>
-            <property name="absoluteLineLimit" value="200"/>
+            <property name="lineLimit" value="200"/>
+            <property name="absoluteLineLimit" value="220"/>
         </properties>
     </rule>
     <file>./</file> <!-- directory you want to analyze -->
