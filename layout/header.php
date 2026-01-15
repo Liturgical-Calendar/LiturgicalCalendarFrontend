@@ -171,12 +171,13 @@ asort($langsAssoc);
                     </a>
                     <?php
                     // Build inline logout handler for OIDC mode (works before JS loads)
-                    $logoutConfirmMsg = htmlspecialchars(_('Are you sure you want to logout?'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                    // Use json_encode for proper JavaScript string escaping
+                    $logoutConfirmMsg = json_encode(_('Are you sure you want to logout?'));
                     ?>
                     <button class="btn btn-outline-danger btn-sm" id="logoutBtn"
                             title="<?php echo htmlspecialchars(_('Logout'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"
                             <?php if ($oidcEnabled) : ?>
-                            onclick="if(confirm('<?php echo $logoutConfirmMsg; ?>')){window.location.href='/auth/logout.php?zitadel=true&return_to='+encodeURIComponent(window.location.href)}"
+                            onclick="if(confirm(<?php echo $logoutConfirmMsg; ?>)){window.location.href='/auth/logout.php?zitadel=true&return_to='+encodeURIComponent(window.location.href)}"
                             <?php endif; ?>>
                         <i class="fas fa-sign-out-alt me-1"></i><span class="d-lg-none"><?php echo _('Logout'); ?></span>
                     </button>
