@@ -146,9 +146,16 @@ asort($langsAssoc);
                 </div>
             </li>
             <!-- Authentication Status: Server-side auth detection, JS handles dynamic updates -->
+            <?php
+            // Determine if OIDC is enabled for inline onclick handler
+            $oidcEnabled = \LiturgicalCalendar\Frontend\OidcClient::isConfigured();
+            ?>
             <li class="nav-item me-lg-2<?php echo $authHelper->isAuthenticated ? ' d-none' : ''; ?>" id="loginBtnContainer" data-requires-no-auth>
                 <button class="btn btn-outline-primary btn-sm" id="loginBtn"
-                        title="<?php echo htmlspecialchars(_('Login'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                        title="<?php echo htmlspecialchars(_('Login'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"
+                        <?php if ($oidcEnabled) : ?>
+                        onclick="window.location.href='/auth/login.php?return_to='+encodeURIComponent(window.location.href)"
+                        <?php endif; ?>>
                     <i class="fas fa-sign-in-alt me-1"></i><span class="d-lg-none d-sm-inline"><?php echo _('Login'); ?></span>
                 </button>
             </li>
@@ -162,8 +169,15 @@ asort($langsAssoc);
                             }
                         ?></span>
                     </a>
+                    <?php
+                    // Build inline logout handler for OIDC mode (works before JS loads)
+                    $logoutConfirmMsg = htmlspecialchars(_('Are you sure you want to logout?'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                    ?>
                     <button class="btn btn-outline-danger btn-sm" id="logoutBtn"
-                            title="<?php echo htmlspecialchars(_('Logout'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                            title="<?php echo htmlspecialchars(_('Logout'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"
+                            <?php if ($oidcEnabled) : ?>
+                            onclick="if(confirm('<?php echo $logoutConfirmMsg; ?>')){window.location.href='/auth/logout.php?zitadel=true&return_to='+encodeURIComponent(window.location.href)}"
+                            <?php endif; ?>>
                         <i class="fas fa-sign-out-alt me-1"></i><span class="d-lg-none"><?php echo _('Logout'); ?></span>
                     </button>
                 </div>

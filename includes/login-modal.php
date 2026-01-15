@@ -69,49 +69,22 @@ let sessionExpiryTimeout = null;
 
 /**
  * Initialize authentication UI components
- * Uses async initialization to wait for auth cache to be populated
+ *
+ * IMPORTANT: Click handlers are attached IMMEDIATELY when DOM is ready to ensure
+ * buttons are interactive right away. The async auth cache population happens
+ * separately and updates the UI when complete.
  */
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
     // Guard against missing Auth dependency
     if (typeof Auth === 'undefined') {
         console.error('Auth module not loaded - authentication UI will not function');
         return;
     }
 
-    // Wait for auth cache to be populated (auth.js may have already done this)
-    // If cache is empty, fetch auth state from server with retry and user feedback
-    if (Auth.isAuthenticatedCached() === null) {
-        const maxRetries = 2;
-        let authState = null;
-
-        for (let attempt = 0; attempt <= maxRetries; attempt++) {
-            authState = await Auth.updateAuthCache();
-
-            if (!authState.error) {
-                break; // Success - no network error
-            }
-
-            if (attempt < maxRetries) {
-                // Wait before retry (exponential backoff: 1s, 2s)
-                await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
-            }
-        }
-
-        // Show warning if auth check failed after all retries
-        if (authState && authState.error) {
-            const message = <?php echo json_encode(_('Unable to verify authentication status. The server may be unavailable.')); ?>;
-            if (typeof toastr !== 'undefined') {
-                toastr.warning(message, <?php echo json_encode(_('Connection Issue')); ?>);
-            } else {
-                console.warn(message);
-            }
-        }
-    }
-
-    // Initialize navbar UI based on current auth state (login button vs user menu)
-    updateNavbarAuthUI();
-    // Mark auth as ready to reveal the appropriate auth button (prevents flash)
-    document.body.classList.add('auth-ready');
+    // =======================================================================
+    // PHASE 1: Attach all click handlers IMMEDIATELY (no async waiting)
+    // This ensures buttons are interactive as soon as the page loads
+    // =======================================================================
 
     // Login button click handler
     const loginBtn = document.getElementById('loginBtn');
@@ -187,9 +160,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Initialize session expiry warning toast and its event handlers
-    initSessionExpiryWarning();
-
     // Focus username input when login modal is shown
     const loginModalElement = document.getElementById('loginModal');
     if (loginModalElement) {
@@ -201,9 +171,63 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Initialize data-requires-auth elements (forms, buttons, etc.) based on current auth state
-    // Don't force update - preserve server-side rendered auth state on initial load
-    initPermissionUI();
+    // Initialize session expiry warning toast event handlers (buttons only, no timers yet)
+    const extendButton = document.getElementById('sessionExpiryExtend');
+    const logoutToastButton = document.getElementById('sessionExpiryLogout');
+    if (extendButton) {
+        extendButton.addEventListener('click', handleExtendSession);
+    }
+    if (logoutToastButton) {
+        logoutToastButton.addEventListener('click', handleSessionExpiryLogout);
+    }
+
+    // =======================================================================
+    // PHASE 2: Async auth cache population (runs in background)
+    // UI is already interactive; this just updates state when ready
+    // =======================================================================
+    (async () => {
+        // Wait for auth cache to be populated (auth.js may have already done this)
+        // If cache is empty, fetch auth state from server with retry and user feedback
+        if (Auth.isAuthenticatedCached() === null) {
+            const maxRetries = 2;
+            let authState = null;
+
+            for (let attempt = 0; attempt <= maxRetries; attempt++) {
+                authState = await Auth.updateAuthCache();
+
+                if (!authState.error) {
+                    break; // Success - no network error
+                }
+
+                if (attempt < maxRetries) {
+                    // Wait before retry (exponential backoff: 1s, 2s)
+                    await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
+                }
+            }
+
+            // Show warning if auth check failed after all retries
+            if (authState && authState.error) {
+                const message = <?php echo json_encode(_('Unable to verify authentication status. The server may be unavailable.')); ?>;
+                if (typeof toastr !== 'undefined') {
+                    toastr.warning(message, <?php echo json_encode(_('Connection Issue')); ?>);
+                } else {
+                    console.warn(message);
+                }
+            }
+        }
+
+        // Initialize navbar UI based on current auth state (login button vs user menu)
+        updateNavbarAuthUI();
+        // Mark auth as ready to reveal the appropriate auth button (prevents flash)
+        document.body.classList.add('auth-ready');
+
+        // Start session expiry warning timer (only if authenticated)
+        startSessionExpiryWarning();
+
+        // Initialize data-requires-auth elements (forms, buttons, etc.) based on current auth state
+        // Don't force update - preserve server-side rendered auth state on initial load
+        initPermissionUI();
+    })();
 });
 
 /**
@@ -736,7 +760,8 @@ function startSessionExpiryWarning() {
 
 /**
  * Initialize the session expiry warning system
- * Sets up the Bootstrap Toast and its event handlers
+ * Note: Button event handlers are set up in the DOMContentLoaded Phase 1
+ * This function is kept for backwards compatibility but just calls startSessionExpiryWarning()
  *
  * Flow:
  * 1. Auto-refresh runs normally until warning threshold
@@ -745,18 +770,6 @@ function startSessionExpiryWarning() {
  * 4. User does nothing: auto-logout when token expires
  */
 function initSessionExpiryWarning() {
-    // Set up event handlers for toast buttons (only once)
-    const extendButton = document.getElementById('sessionExpiryExtend');
-    const logoutButton = document.getElementById('sessionExpiryLogout');
-
-    if (extendButton) {
-        extendButton.addEventListener('click', handleExtendSession);
-    }
-
-    if (logoutButton) {
-        logoutButton.addEventListener('click', handleSessionExpiryLogout);
-    }
-
     // Start the expiry warning timer
     startSessionExpiryWarning();
 }
