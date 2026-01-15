@@ -6,6 +6,8 @@ parameters:
         - layout
         - about.php
         - admin-dashboard.php
+        - admin-role-requests.php
+        - admin-users.php
         - missals-editor.php
         - decrees.php
         - easter.php
@@ -27,10 +29,12 @@ parameters:
         # PHPStan cannot detect this because it doesn't execute includes during static analysis.
         # These are FALSE POSITIVES - variables ARE defined at runtime.
         -
-            message: '#Variable \$(i18n|apiConfig|authHelper|messages|adminPages) might not be defined\.#'
+            message: '#Variable \$(i18n|apiConfig|apiBaseUrl|authHelper|messages|adminPages) might not be defined\.#'
             paths:
                 - about.php
                 - admin-dashboard.php
+                - admin-role-requests.php
+                - admin-users.php
                 - missals-editor.php
                 - decrees.php
                 - easter.php
@@ -41,4 +45,5 @@ parameters:
                 - layout/header.php
                 - liturgyOfAnyDay.php
                 - temporale.php
+                - translations.php
                 - usage.php
