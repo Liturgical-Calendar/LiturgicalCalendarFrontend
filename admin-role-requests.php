@@ -17,7 +17,7 @@ if (!$authHelper->isAuthenticated) {
 }
 
 // Check if user has admin role
-$isAdmin = $authHelper->roles !== null && in_array('admin', $authHelper->roles, true);
+$isAdmin = $authHelper->hasRole('admin');
 
 ?>
 <!doctype html>
@@ -245,7 +245,8 @@ $isAdmin = $authHelper->roles !== null && in_array('admin', $authHelper->roles, 
 
             for (const request of requests) {
                 const roleName = roleNames[request.requested_role] || request.requested_role;
-                const createdAt = new Date(request.created_at).toLocaleDateString();
+                const dateObj = new Date(request.created_at);
+                const createdAt = isNaN(dateObj.getTime()) ? '—' : dateObj.toLocaleDateString();
 
                 html += `
                     <tr>
