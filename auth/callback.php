@@ -59,10 +59,10 @@ function redirectWithError(string $frontendUrl, string $error, string $descripti
 function sanitizeErrorMessage(string $message): string
 {
     // Redact JWT-like tokens (three base64 segments separated by dots)
-    $message = preg_replace('/eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/', '[REDACTED_JWT]', $message);
+    $message = preg_replace('/eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/', '[REDACTED_JWT]', $message) ?? $message;
 
     // Redact long alphanumeric strings that look like tokens/secrets (32+ chars)
-    $message = preg_replace('/[A-Za-z0-9_-]{32,}/', '[REDACTED_TOKEN]', $message);
+    $message = preg_replace('/[A-Za-z0-9_-]{32,}/', '[REDACTED_TOKEN]', $message) ?? $message;
 
     // Truncate very long messages
     if (strlen($message) > 1000) {
