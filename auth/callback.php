@@ -47,6 +47,31 @@ function redirectWithError(string $frontendUrl, string $error, string $descripti
     exit;
 }
 
+/**
+ * Sanitize error message for development display.
+ *
+ * Redacts potential secrets (tokens, keys, long alphanumeric strings) while
+ * keeping the message useful for debugging.
+ *
+ * @param string $message The error message to sanitize
+ * @return string Sanitized message
+ */
+function sanitizeErrorMessage(string $message): string
+{
+    // Redact JWT-like tokens (three base64 segments separated by dots)
+    $message = preg_replace('/eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/', '[REDACTED_JWT]', $message);
+
+    // Redact long alphanumeric strings that look like tokens/secrets (32+ chars)
+    $message = preg_replace('/[A-Za-z0-9_-]{32,}/', '[REDACTED_TOKEN]', $message);
+
+    // Truncate very long messages
+    if (strlen($message) > 1000) {
+        $message = substr($message, 0, 1000) . '... [truncated]';
+    }
+
+    return $message;
+}
+
 // Start session for PKCE state
 session_start();
 
@@ -141,13 +166,13 @@ try {
 } catch (Throwable $e) {
     error_log('OIDC callback error: ' . $e->getMessage());
 
-    // In development, show the actual error
+    // In development, show sanitized error (redact potential secrets from upstream services)
     if ($appEnv === 'development') {
         header('Content-Type: text/plain');
         echo "OIDC Callback Error:\n\n";
-        echo 'Message: ' . $e->getMessage() . "\n\n";
+        echo 'Message: ' . sanitizeErrorMessage($e->getMessage()) . "\n\n";
         echo 'File: ' . $e->getFile() . ':' . $e->getLine() . "\n\n";
-        echo "Trace:\n" . $e->getTraceAsString();
+        echo "Trace:\n" . sanitizeErrorMessage($e->getTraceAsString());
         exit;
     }
 
