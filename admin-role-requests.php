@@ -19,6 +19,12 @@ if (!$authHelper->isAuthenticated) {
 // Check if user has admin role
 $isAdmin = $authHelper->hasRole('admin');
 
+// Redirect non-admins to dashboard
+if (!$isAdmin) {
+    header('Location: admin-dashboard.php');
+    exit;
+}
+
 ?>
 <!doctype html>
 <html lang="<?php echo htmlspecialchars($i18n->LOCALE, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
@@ -39,12 +45,6 @@ $isAdmin = $authHelper->hasRole('admin');
         <i class="fas fa-user-check me-2"></i><?php echo htmlspecialchars(_('Role Requests Management'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
     </h1>
 
-    <?php if (!$isAdmin) : ?>
-    <div class="alert alert-danger" role="alert">
-        <i class="fas fa-exclamation-triangle me-2"></i>
-        <?php echo htmlspecialchars(_('You do not have permission to access this page. Administrator role required.'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-    </div>
-    <?php else : ?>
     <!-- Stats Cards -->
     <div class="row mb-4">
         <div class="col-md-4 mb-3 mb-md-0">
@@ -149,11 +149,8 @@ $isAdmin = $authHelper->hasRole('admin');
         </div>
     </div>
 
-    <?php endif; ?>
-
     <?php include_once('./layout/footer.php'); ?>
 
-    <?php if ($isAdmin) : ?>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const ApiUrl = <?php echo json_encode($apiBaseUrl); ?>;
@@ -439,6 +436,5 @@ $isAdmin = $authHelper->hasRole('admin');
         loadRequests();
     });
     </script>
-    <?php endif; ?>
 </body>
 </html>
