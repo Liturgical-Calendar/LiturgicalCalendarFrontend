@@ -186,47 +186,53 @@ document.addEventListener('DOMContentLoaded', () => {
     // UI is already interactive; this just updates state when ready
     // =======================================================================
     (async () => {
-        // Wait for auth cache to be populated (auth.js may have already done this)
-        // If cache is empty, fetch auth state from server with retry and user feedback
-        if (Auth.isAuthenticatedCached() === null) {
-            const maxRetries = 2;
-            let authState = null;
+        try {
+            // Wait for auth cache to be populated (auth.js may have already done this)
+            // If cache is empty, fetch auth state from server with retry and user feedback
+            if (Auth.isAuthenticatedCached() === null) {
+                const maxRetries = 2;
+                let authState = null;
 
-            for (let attempt = 0; attempt <= maxRetries; attempt++) {
-                authState = await Auth.updateAuthCache();
+                for (let attempt = 0; attempt <= maxRetries; attempt++) {
+                    authState = await Auth.updateAuthCache();
 
-                if (!authState.error) {
-                    break; // Success - no network error
+                    if (!authState.error) {
+                        break; // Success - no network error
+                    }
+
+                    if (attempt < maxRetries) {
+                        // Wait before retry (exponential backoff: 1s, 2s)
+                        await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
+                    }
                 }
 
-                if (attempt < maxRetries) {
-                    // Wait before retry (exponential backoff: 1s, 2s)
-                    await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
+                // Show warning if auth check failed after all retries
+                if (authState && authState.error) {
+                    const message = <?php echo json_encode(_('Unable to verify authentication status. The server may be unavailable.')); ?>;
+                    if (typeof toastr !== 'undefined') {
+                        toastr.warning(message, <?php echo json_encode(_('Connection Issue')); ?>);
+                    } else {
+                        console.warn(message);
+                    }
                 }
             }
 
-            // Show warning if auth check failed after all retries
-            if (authState && authState.error) {
-                const message = <?php echo json_encode(_('Unable to verify authentication status. The server may be unavailable.')); ?>;
-                if (typeof toastr !== 'undefined') {
-                    toastr.warning(message, <?php echo json_encode(_('Connection Issue')); ?>);
-                } else {
-                    console.warn(message);
-                }
-            }
+            // Initialize navbar UI based on current auth state (login button vs user menu)
+            updateNavbarAuthUI();
+            // Mark auth as ready to reveal the appropriate auth button (prevents flash)
+            document.body.classList.add('auth-ready');
+
+            // Start session expiry warning timer (only if authenticated)
+            startSessionExpiryWarning();
+
+            // Initialize data-requires-auth elements (forms, buttons, etc.) based on current auth state
+            // Don't force update - preserve server-side rendered auth state on initial load
+            initPermissionUI();
+        } catch (error) {
+            console.error('Phase 2 auth initialization failed:', error);
+            // Still mark auth-ready to prevent infinite loading state
+            document.body.classList.add('auth-ready');
         }
-
-        // Initialize navbar UI based on current auth state (login button vs user menu)
-        updateNavbarAuthUI();
-        // Mark auth as ready to reveal the appropriate auth button (prevents flash)
-        document.body.classList.add('auth-ready');
-
-        // Start session expiry warning timer (only if authenticated)
-        startSessionExpiryWarning();
-
-        // Initialize data-requires-auth elements (forms, buttons, etc.) based on current auth state
-        // Don't force update - preserve server-side rendered auth state on initial load
-        initPermissionUI();
     })();
 });
 
