@@ -166,7 +166,7 @@ const UI = {
         const isApproved = status === 'approved';
         const isRejected = status === 'rejected';
         const isRevoked = status === 'revoked';
-        const isPending = status === 'pending';
+        const _isPending = status === 'pending'; // eslint-disable-line no-unused-vars
         const canEdit = !isRevoked; // Can edit unless revoked
 
         return `
