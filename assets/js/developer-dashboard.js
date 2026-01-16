@@ -608,7 +608,7 @@ const DeveloperDashboard = {
      * @param {string} uuid - Application UUID
      */
     async loadKeysForApp(uuid) {
-        const collapse = document.querySelector(`.keys-collapse[data-app-uuid="${uuid}"]`);
+        const collapse = document.querySelector(`.keys-collapse[data-app-uuid="${CSS.escape(uuid)}"]`);
         const container = collapse?.querySelector('.keys-container');
         if (!container) return;
 
@@ -834,7 +834,7 @@ const DeveloperDashboard = {
             await this.loadApplications();
 
             // Re-expand the keys collapse for this app
-            const collapse = document.querySelector(`.keys-collapse[data-app-uuid="${uuid}"]`);
+            const collapse = document.querySelector(`.keys-collapse[data-app-uuid="${CSS.escape(uuid)}"]`);
             if (collapse) {
                 const bsCollapse = new bootstrap.Collapse(collapse, { toggle: false });
                 bsCollapse.show();
