@@ -686,10 +686,10 @@ const DeveloperDashboard = {
 
             if (uuid) {
                 await ApplicationsAPI.updateApplication(uuid, data);
-                UI.showToast('Application updated successfully', 'success');
+                UI.showToast(UI.i18n.applicationUpdated, 'success');
             } else {
                 await ApplicationsAPI.createApplication(data);
-                UI.showToast('Application created successfully', 'success');
+                UI.showToast(UI.i18n.applicationCreated, 'success');
             }
 
             // Wait for modal to fully hide before refreshing the list
@@ -757,12 +757,12 @@ const DeveloperDashboard = {
 
             if (action.type === 'app') {
                 await ApplicationsAPI.deleteApplication(action.uuid);
-                UI.showToast('Application deleted successfully', 'success');
+                UI.showToast(UI.i18n.applicationDeleted, 'success');
                 await hideModal();
                 await this.loadApplications();
             } else if (action.type === 'key') {
                 await ApplicationsAPI.revokeKey(action.uuid, action.keyId);
-                UI.showToast('API key revoked successfully', 'success');
+                UI.showToast(UI.i18n.keyRevoked, 'success');
                 await hideModal();
                 await this.loadKeysForApp(action.uuid);
             }
@@ -865,7 +865,7 @@ const DeveloperDashboard = {
             // Refresh keys list
             await this.loadKeysForApp(uuid);
 
-            UI.showToast('API key rotated successfully', 'success');
+            UI.showToast(UI.i18n.keyRotated, 'success');
         } catch (error) {
             console.error('Failed to rotate key:', error);
             UI.showToast(UI.i18n.errorGeneratingKey, 'danger');
