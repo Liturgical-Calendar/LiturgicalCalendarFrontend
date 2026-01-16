@@ -777,13 +777,14 @@ function startSessionExpiryWarning() {
 /**
  * Initialize the session expiry warning system
  * Note: Button event handlers are set up in the DOMContentLoaded Phase 1
- * This function is kept for backwards compatibility but just calls startSessionExpiryWarning()
  *
  * Flow:
  * 1. Auto-refresh runs normally until warning threshold
  * 2. When warning appears: stop auto-refresh, set auto-logout timer
  * 3. User clicks "Extend": refresh token, restart auto-refresh
  * 4. User does nothing: auto-logout when token expires
+ *
+ * @deprecated Use startSessionExpiryWarning() instead. Kept for backwards compatibility.
  */
 function initSessionExpiryWarning() {
     // Start the expiry warning timer
