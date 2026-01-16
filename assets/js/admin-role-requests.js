@@ -188,6 +188,7 @@ AdminRoleRequests.getRoleName = function(role) {
 // Add i18n aliases for generic messages
 Object.defineProperty(AdminRoleRequests, 'config', {
     get() {
+        if (this._config) return this._config;
         const config = window.AdminRoleRequestsConfig;
         if (config && !config.i18n.noPendingItems) {
             config.i18n.noPendingItems = config.i18n.noPendingRequests;
@@ -196,8 +197,7 @@ Object.defineProperty(AdminRoleRequests, 'config', {
         return config;
     },
     set(value) {
-        // Allow setting during init
-        Object.defineProperty(this, '_config', { value, writable: true });
+        this._config = value;
     }
 });
 

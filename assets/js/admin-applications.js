@@ -194,6 +194,7 @@ const AdminApplications = createAdminModule({
 // Add i18n aliases for generic messages
 Object.defineProperty(AdminApplications, 'config', {
     get() {
+        if (this._config) return this._config;
         const config = window.AdminApplicationsConfig;
         if (config && !config.i18n.noPendingItems) {
             config.i18n.noPendingItems = config.i18n.noPendingApplications;
@@ -202,8 +203,7 @@ Object.defineProperty(AdminApplications, 'config', {
         return config;
     },
     set(value) {
-        // Allow setting during init
-        Object.defineProperty(this, '_config', { value, writable: true });
+        this._config = value;
     }
 });
 
