@@ -347,13 +347,15 @@ const UI = {
             const expires = key.expires_at ? new Date(key.expires_at).toLocaleDateString() : this.i18n.never;
             const lastUsed = key.last_used_at ? new Date(key.last_used_at).toLocaleDateString() : this.i18n.neverUsed;
             const keyName = key.name || `${key.key_prefix}...`;
+            const safeKeyPrefix = this.escapeHtml(key.key_prefix);
+            const safeKeyId = this.escapeHtml(String(key.id));
 
             return `
-                <tr data-key-id="${key.id}">
+                <tr data-key-id="${safeKeyId}">
                     <td>
                         <span class="key-name">${this.escapeHtml(keyName)}</span>
                         <br>
-                        <code class="key-prefix">${key.key_prefix}...</code>
+                        <code class="key-prefix">${safeKeyPrefix}...</code>
                     </td>
                     <td><span class="key-scope ${scopeClass}">${scopeLabel}</span></td>
                     <td class="text-nowrap">${key.rate_limit_per_hour} ${this.i18n.requestsPerHour}</td>
@@ -361,11 +363,11 @@ const UI = {
                     <td class="text-nowrap">${lastUsed}</td>
                     <td class="key-actions">
                         <button type="button" class="btn btn-outline-warning btn-sm btn-rotate-key"
-                                data-uuid="${safeAppUuid}" data-key-id="${key.id}" title="${this.i18n.rotate}">
+                                data-uuid="${safeAppUuid}" data-key-id="${safeKeyId}" title="${this.escapeHtml(this.i18n.rotate)}">
                             <i class="fas fa-sync-alt"></i>
                         </button>
                         <button type="button" class="btn btn-outline-danger btn-sm btn-revoke-key"
-                                data-uuid="${safeAppUuid}" data-key-id="${key.id}" title="${this.i18n.revoke}">
+                                data-uuid="${safeAppUuid}" data-key-id="${safeKeyId}" title="${this.escapeHtml(this.i18n.revoke)}">
                             <i class="fas fa-ban"></i>
                         </button>
                     </td>
