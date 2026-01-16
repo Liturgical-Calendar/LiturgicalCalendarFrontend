@@ -498,11 +498,16 @@ const DeveloperDashboard = {
         }
         this._initialized = true;
 
-        // Initialize Bootstrap modals
-        this.modals.app = new bootstrap.Modal(document.getElementById('appModal'));
-        this.modals.key = new bootstrap.Modal(document.getElementById('keyModal'));
-        this.modals.keyDisplay = new bootstrap.Modal(document.getElementById('keyDisplayModal'));
-        this.modals.delete = new bootstrap.Modal(document.getElementById('deleteModal'));
+        // Initialize Bootstrap modals with null checks
+        const appModalEl = document.getElementById('appModal');
+        const keyModalEl = document.getElementById('keyModal');
+        const keyDisplayModalEl = document.getElementById('keyDisplayModal');
+        const deleteModalEl = document.getElementById('deleteModal');
+
+        if (appModalEl) this.modals.app = new bootstrap.Modal(appModalEl);
+        if (keyModalEl) this.modals.key = new bootstrap.Modal(keyModalEl);
+        if (keyDisplayModalEl) this.modals.keyDisplay = new bootstrap.Modal(keyDisplayModalEl);
+        if (deleteModalEl) this.modals.delete = new bootstrap.Modal(deleteModalEl);
 
         // Bind event handlers
         this.bindEvents();
