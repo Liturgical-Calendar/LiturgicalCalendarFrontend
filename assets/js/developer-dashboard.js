@@ -679,7 +679,7 @@ const DeveloperDashboard = {
 
         const spinner = saveBtn.querySelector('.spinner-border');
         saveBtn.disabled = true;
-        spinner.classList.remove('d-none');
+        spinner?.classList.remove('d-none');
 
         try {
             const data = { name, description, website };
@@ -704,7 +704,7 @@ const DeveloperDashboard = {
             UI.showToast(UI.i18n.errorSaving, 'danger');
         } finally {
             saveBtn.disabled = false;
-            spinner.classList.add('d-none');
+            spinner?.classList.add('d-none');
         }
     },
 
@@ -746,7 +746,7 @@ const DeveloperDashboard = {
         const deleteBtn = document.getElementById('btnConfirmDelete');
         const spinner = deleteBtn.querySelector('.spinner-border');
         deleteBtn.disabled = true;
-        spinner.classList.remove('d-none');
+        spinner?.classList.remove('d-none');
 
         try {
             const modalEl = document.getElementById('deleteModal');
@@ -771,7 +771,7 @@ const DeveloperDashboard = {
             UI.showToast(UI.i18n.errorDeleting, 'danger');
         } finally {
             deleteBtn.disabled = false;
-            spinner.classList.add('d-none');
+            spinner?.classList.add('d-none');
             this._isDeleting = false;
         }
     },
@@ -802,7 +802,7 @@ const DeveloperDashboard = {
         const generateBtn = document.getElementById('btnGenerateKey');
         const spinner = generateBtn.querySelector('.spinner-border');
         generateBtn.disabled = true;
-        spinner.classList.remove('d-none');
+        spinner?.classList.remove('d-none');
 
         try {
             const data = {
@@ -844,7 +844,7 @@ const DeveloperDashboard = {
             UI.showToast(UI.i18n.errorGeneratingKey, 'danger');
         } finally {
             generateBtn.disabled = false;
-            spinner.classList.add('d-none');
+            spinner?.classList.add('d-none');
         }
     },
 
