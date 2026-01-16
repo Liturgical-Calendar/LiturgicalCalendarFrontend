@@ -165,11 +165,17 @@ function createAdminModule(options) { // eslint-disable-line no-unused-vars
                 revoked: this.items.revoked.length
             };
 
-            document.getElementById('pendingCount').textContent = finalCounts.pending ?? 0;
-            document.getElementById('approvedCount').textContent = finalCounts.approved ?? 0;
-            document.getElementById('rejectedCount').textContent = finalCounts.rejected ?? 0;
-            document.getElementById('revokedCount').textContent = finalCounts.revoked ?? 0;
-            document.getElementById('pendingBadge').textContent = finalCounts.pending ?? 0;
+            const pendingCountEl = document.getElementById('pendingCount');
+            const approvedCountEl = document.getElementById('approvedCount');
+            const rejectedCountEl = document.getElementById('rejectedCount');
+            const revokedCountEl = document.getElementById('revokedCount');
+            const pendingBadgeEl = document.getElementById('pendingBadge');
+
+            if (pendingCountEl) pendingCountEl.textContent = finalCounts.pending ?? 0;
+            if (approvedCountEl) approvedCountEl.textContent = finalCounts.approved ?? 0;
+            if (rejectedCountEl) rejectedCountEl.textContent = finalCounts.rejected ?? 0;
+            if (revokedCountEl) revokedCountEl.textContent = finalCounts.revoked ?? 0;
+            if (pendingBadgeEl) pendingBadgeEl.textContent = finalCounts.pending ?? 0;
         },
 
         /**
