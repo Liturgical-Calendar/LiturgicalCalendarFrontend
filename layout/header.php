@@ -196,11 +196,11 @@ asort($langsAssoc);
                 </a>
             </li>
             <?php
-            $adminLabel    = _('Admin');
+            $adminLabel      = _('Admin');
             $isAdminOrEditor = $authHelper->hasRole('admin')
                 || $authHelper->hasRole('calendar_editor')
                 || $authHelper->hasRole('test_editor');
-            $showAdminNav  = $authHelper->isAuthenticated && $isAdminOrEditor;
+            $showAdminNav    = $authHelper->isAuthenticated && $isAdminOrEditor;
             ?>
             <li class="nav-item<?php echo $currentPage === 'admin-dashboard' ? ' bg-info' : ''; ?><?php echo $showAdminNav ? '' : ' d-none'; ?>"
                 id="topNavBar_Admin" data-requires-auth data-requires-role="admin,calendar_editor,test_editor">
@@ -230,70 +230,70 @@ asort($langsAssoc);
                     </div>
 
                     <?php if ($isAdminPage) : ?>
-                    <?php
-                    // Check if user has calendar-related roles
-                    $sidebarHasCalendarRole = $authHelper->hasRole('admin')
-                        || $authHelper->hasRole('calendar_editor')
-                        || $authHelper->hasRole('test_editor');
-                    ?>
-                    <!-- Admin/Developer Sidebar -->
-                    <?php if ($sidebarHasCalendarRole) : ?>
-                    <a class="nav-link<?php echo $currentPage === 'admin-dashboard' ? ' active' : ''; ?>" href="admin-dashboard.php">
-                        <i class="sb-nav-link-icon fas fa-fw fa-tachometer-alt"></i>
-                        <span><?php echo _('Dashboard'); ?></span>
-                    </a>
-                    <?php endif; ?>
+                        <?php
+                        // Check if user has calendar-related roles
+                        $sidebarHasCalendarRole = $authHelper->hasRole('admin')
+                            || $authHelper->hasRole('calendar_editor')
+                            || $authHelper->hasRole('test_editor');
+                        ?>
+                        <!-- Admin/Developer Sidebar -->
+                        <?php if ($sidebarHasCalendarRole) : ?>
+                            <a class="nav-link<?php echo $currentPage === 'admin-dashboard' ? ' active' : ''; ?>" href="admin-dashboard.php">
+                                <i class="sb-nav-link-icon fas fa-fw fa-tachometer-alt"></i>
+                                <span><?php echo _('Dashboard'); ?></span>
+                            </a>
+                        <?php endif; ?>
 
-                    <?php if ($authHelper->hasRole('developer')) : ?>
-                    <a class="nav-link<?php echo $currentPage === 'developer-dashboard' ? ' active' : ''; ?>" href="developer-dashboard.php">
-                        <i class="sb-nav-link-icon fas fa-fw fa-code text-info"></i>
-                        <span><?php echo _('Developer'); ?></span>
-                    </a>
-                    <?php endif; ?>
+                        <?php if ($authHelper->hasRole('developer')) : ?>
+                            <a class="nav-link<?php echo $currentPage === 'developer-dashboard' ? ' active' : ''; ?>" href="developer-dashboard.php">
+                                <i class="sb-nav-link-icon fas fa-fw fa-code text-info"></i>
+                                <span><?php echo _('Developer'); ?></span>
+                            </a>
+                        <?php endif; ?>
 
-                    <?php if ($sidebarHasCalendarRole) : ?>
-                    <div class="sb-sidenav-menu-heading text-white-50">
-                        <?php echo _('General Roman Calendar'); ?>
-                    </div>
-                    <a class="nav-link<?php echo $currentPage === 'temporale' ? ' active' : ''; ?>" href="temporale.php">
-                        <i class="sb-nav-link-icon fas fa-fw fa-calendar-alt text-primary"></i>
-                        <span><?php echo _('Temporale'); ?></span>
-                    </a>
-                    <a class="nav-link<?php echo $currentPage === 'missals-editor' ? ' active' : ''; ?>" href="missals-editor.php">
-                        <i class="sb-nav-link-icon fas fa-fw fa-book-open text-success"></i>
-                        <span><?php echo _('Sanctorale'); ?></span>
-                    </a>
-                    <a class="nav-link<?php echo $currentPage === 'decrees' ? ' active' : ''; ?>" href="decrees.php">
-                        <i class="sb-nav-link-icon fas fa-fw fa-gavel text-warning"></i>
-                        <span><?php echo _('Decrees'); ?></span>
-                    </a>
+                        <?php if ($sidebarHasCalendarRole) : ?>
+                            <div class="sb-sidenav-menu-heading text-white-50">
+                                <?php echo _('General Roman Calendar'); ?>
+                            </div>
+                            <a class="nav-link<?php echo $currentPage === 'temporale' ? ' active' : ''; ?>" href="temporale.php">
+                                <i class="sb-nav-link-icon fas fa-fw fa-calendar-alt text-primary"></i>
+                                <span><?php echo _('Temporale'); ?></span>
+                            </a>
+                            <a class="nav-link<?php echo $currentPage === 'missals-editor' ? ' active' : ''; ?>" href="missals-editor.php">
+                                <i class="sb-nav-link-icon fas fa-fw fa-book-open text-success"></i>
+                                <span><?php echo _('Sanctorale'); ?></span>
+                            </a>
+                            <a class="nav-link<?php echo $currentPage === 'decrees' ? ' active' : ''; ?>" href="decrees.php">
+                                <i class="sb-nav-link-icon fas fa-fw fa-gavel text-warning"></i>
+                                <span><?php echo _('Decrees'); ?></span>
+                            </a>
 
-                    <div class="sb-sidenav-menu-heading text-white-50">
-                        <?php echo _('Particular Calendars'); ?>
-                    </div>
-                    <?php
-                    // Get current choice parameter for extending.php active state
-                    $extendingChoice = $_GET['choice'] ?? '';
-                    ?>
-                    <a class="nav-link<?php echo $currentPage === 'extending' && $extendingChoice === 'widerRegion' ? ' active' : ''; ?>" href="extending.php?choice=widerRegion">
-                        <i class="sb-nav-link-icon fas fa-fw fa-globe-americas text-info"></i>
-                        <span><?php echo _('Wider Region'); ?></span>
-                    </a>
-                    <a class="nav-link<?php echo $currentPage === 'extending' && $extendingChoice === 'national' ? ' active' : ''; ?>" href="extending.php?choice=national">
-                        <i class="sb-nav-link-icon fas fa-fw fa-flag text-danger"></i>
-                        <span><?php echo _('National'); ?></span>
-                    </a>
-                    <a class="nav-link<?php echo $currentPage === 'extending' && $extendingChoice === 'diocesan' ? ' active' : ''; ?>" href="extending.php?choice=diocesan">
-                        <i class="sb-nav-link-icon fas fa-fw fa-church text-secondary"></i>
-                        <span><?php echo _('Diocesan'); ?></span>
-                    </a>
-                    <?php endif; // end $sidebarHasCalendarRole ?>
+                            <div class="sb-sidenav-menu-heading text-white-50">
+                                <?php echo _('Particular Calendars'); ?>
+                            </div>
+                            <?php
+                            // Get current choice parameter for extending.php active state
+                            $extendingChoice = $_GET['choice'] ?? '';
+                            ?>
+                            <a class="nav-link<?php echo $currentPage === 'extending' && $extendingChoice === 'widerRegion' ? ' active' : ''; ?>" href="extending.php?choice=widerRegion">
+                                <i class="sb-nav-link-icon fas fa-fw fa-globe-americas text-info"></i>
+                                <span><?php echo _('Wider Region'); ?></span>
+                            </a>
+                            <a class="nav-link<?php echo $currentPage === 'extending' && $extendingChoice === 'national' ? ' active' : ''; ?>" href="extending.php?choice=national">
+                                <i class="sb-nav-link-icon fas fa-fw fa-flag text-danger"></i>
+                                <span><?php echo _('National'); ?></span>
+                            </a>
+                            <a class="nav-link<?php echo $currentPage === 'extending' && $extendingChoice === 'diocesan' ? ' active' : ''; ?>" href="extending.php?choice=diocesan">
+                                <i class="sb-nav-link-icon fas fa-fw fa-church text-secondary"></i>
+                                <span><?php echo _('Diocesan'); ?></span>
+                            </a>
+                        <?php endif; // end $sidebarHasCalendarRole ?>
 
-                    <hr class="sidebar-divider my-2">
-                    <a class="nav-link" href="/">
-                        <i class="sb-nav-link-icon fas fa-fw fa-arrow-left"></i>
-                        <span><?php echo _('Back to Website'); ?></span>
-                    </a>
+                        <hr class="sidebar-divider my-2">
+                        <a class="nav-link" href="/">
+                            <i class="sb-nav-link-icon fas fa-fw fa-arrow-left"></i>
+                            <span><?php echo _('Back to Website'); ?></span>
+                        </a>
 
                     <?php else : ?>
                     <!-- Main Website Sidebar -->
