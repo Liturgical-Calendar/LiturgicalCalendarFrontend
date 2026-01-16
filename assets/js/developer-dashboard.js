@@ -172,7 +172,6 @@ const UI = {
         const isApproved = status === 'approved';
         const isRejected = status === 'rejected';
         const isRevoked = status === 'revoked';
-        const _isPending = status === 'pending'; // eslint-disable-line no-unused-vars
         const canEdit = !isRevoked; // Can edit unless revoked
 
         // Escape values used in HTML attributes to prevent injection
