@@ -168,7 +168,6 @@ const UI = {
         const keyCount = app.key_count || 0;
         const keyLabel = keyCount === 1 ? this.i18n.key : this.i18n.keys;
         const createdDate = app.created_at ? new Date(app.created_at).toLocaleDateString() : '-';
-        const collapseId = `keys-${app.uuid}`;
         const status = app.status || 'approved'; // Default to approved for backward compatibility
         const isApproved = status === 'approved';
         const isRejected = status === 'rejected';
@@ -176,23 +175,28 @@ const UI = {
         const _isPending = status === 'pending'; // eslint-disable-line no-unused-vars
         const canEdit = !isRevoked; // Can edit unless revoked
 
+        // Escape values used in HTML attributes to prevent injection
+        const safeUuid = this.escapeHtml(app.uuid);
+        const safeStatus = this.escapeHtml(status);
+        const collapseId = `keys-${safeUuid}`;
+
         return `
-            <div class="card app-card shadow-sm mb-3" data-app-uuid="${app.uuid}" data-status="${status}">
+            <div class="card app-card shadow-sm mb-3" data-app-uuid="${safeUuid}" data-status="${safeStatus}">
                 <div class="card-header d-flex justify-content-between align-items-start">
                     <div>
                         <h5 class="mb-1">
                             ${this.escapeHtml(app.name)}
                             ${this.renderStatusBadge(status)}
                         </h5>
-                        <div class="app-uuid">${app.uuid}</div>
+                        <div class="app-uuid">${safeUuid}</div>
                     </div>
                     <div class="app-actions">
                         ${canEdit ? `
-                            <button type="button" class="btn btn-outline-primary btn-sm btn-edit-app" data-uuid="${app.uuid}" title="${this.i18n.edit}">
+                            <button type="button" class="btn btn-outline-primary btn-sm btn-edit-app" data-uuid="${safeUuid}" title="${this.escapeHtml(this.i18n.edit)}">
                                 <i class="fas fa-edit"></i>
                             </button>
                         ` : ''}
-                        <button type="button" class="btn btn-outline-danger btn-sm btn-delete-app" data-uuid="${app.uuid}" data-name="${this.escapeHtml(app.name)}" title="${this.i18n.delete}">
+                        <button type="button" class="btn btn-outline-danger btn-sm btn-delete-app" data-uuid="${safeUuid}" data-name="${this.escapeHtml(app.name)}" title="${this.escapeHtml(this.i18n.delete)}">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                     </div>
@@ -225,7 +229,7 @@ const UI = {
 
                     ${isRejected ? `
                         <div class="mt-3">
-                            <button type="button" class="btn btn-warning btn-resubmit" data-uuid="${app.uuid}">
+                            <button type="button" class="btn btn-warning btn-resubmit" data-uuid="${safeUuid}">
                                 <i class="fas fa-redo me-1"></i>${this.i18n.resubmit}
                             </button>
                         </div>
@@ -241,11 +245,11 @@ const UI = {
                                     ${this.i18n.apiKeys}
                                     <span class="badge bg-secondary key-count-badge">${keyCount}</span>
                                 </button>
-                                <button type="button" class="btn btn-sm btn-primary btn-generate-key" data-uuid="${app.uuid}">
+                                <button type="button" class="btn btn-sm btn-primary btn-generate-key" data-uuid="${safeUuid}">
                                     <i class="fas fa-plus me-1"></i>${this.i18n.generateKey}
                                 </button>
                             </div>
-                            <div class="collapse keys-collapse" id="${collapseId}" data-app-uuid="${app.uuid}">
+                            <div class="collapse keys-collapse" id="${collapseId}" data-app-uuid="${safeUuid}">
                                 <div class="keys-container mt-3">
                                     <div class="text-center text-muted small py-2">
                                         <i class="fas fa-info-circle me-1"></i>
