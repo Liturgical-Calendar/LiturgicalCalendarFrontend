@@ -87,7 +87,10 @@ if (!$isDeveloper) {
                     <form id="appForm">
                         <input type="hidden" id="appUuid" value="">
                         <div class="mb-3">
-                            <label for="appName" class="form-label"><?php echo htmlspecialchars(_('Application Name'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?> <span class="text-danger">*</span></label>
+                            <label for="appName" class="form-label">
+                                <?php echo htmlspecialchars(_('Application Name'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                <span class="text-danger">*</span>
+                            </label>
                             <input type="text" class="form-control" id="appName" required maxlength="100">
                             <div class="form-text"><?php echo htmlspecialchars(_('A descriptive name for your application.'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
                         </div>
@@ -129,7 +132,8 @@ if (!$isDeveloper) {
                         <input type="hidden" id="keyAppUuid" value="">
                         <div class="mb-3">
                             <label for="keyName" class="form-label"><?php echo htmlspecialchars(_('Key Name'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
-                            <input type="text" class="form-control" id="keyName" maxlength="100" placeholder="<?php echo htmlspecialchars(_('e.g., Production, Development'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                            <input type="text" class="form-control" id="keyName" maxlength="100"
+                                placeholder="<?php echo htmlspecialchars(_('e.g., Production, Development'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                             <div class="form-text"><?php echo htmlspecialchars(_('Optional name to identify this key.'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
                         </div>
                         <div class="mb-3">
@@ -138,7 +142,9 @@ if (!$isDeveloper) {
                                 <option value="read"><?php echo htmlspecialchars(_('Read-only'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                                 <option value="write"><?php echo htmlspecialchars(_('Read and Write'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                             </select>
-                            <div class="form-text"><?php echo htmlspecialchars(_('Read-only keys can only access public endpoints. Write keys can modify data.'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
+                            <div class="form-text">
+                                <?php echo htmlspecialchars(_('Read-only keys can only access public endpoints. Write keys can modify data.'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="keyExpires" class="form-label"><?php echo htmlspecialchars(_('Expiration Date'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
@@ -203,7 +209,8 @@ if (!$isDeveloper) {
                     <h5 class="modal-title" id="deleteModalLabel">
                         <i class="fas fa-exclamation-triangle me-2"></i><?php echo htmlspecialchars(_('Confirm Delete'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                     </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="<?php echo htmlspecialchars(_('Close'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="<?php echo htmlspecialchars(_('Close'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></button>
                 </div>
                 <div class="modal-body">
                     <p id="deleteMessage"><?php echo htmlspecialchars(_('Are you sure you want to delete this item?'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></p>
