@@ -186,8 +186,8 @@ if (!$authHelper->isAuthenticated) {
                                 <th scope="row" class="text-muted">
                                     <i class="fas fa-stopwatch me-2"></i><?php echo htmlspecialchars(_('Time Remaining'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                 </th>
-                                <td id="timeRemaining" aria-live="off">
-                                    <?php
+                                <td>
+                                    <span id="timeRemaining" aria-hidden="true"><?php
                                     $remaining = $authHelper->exp - time();
                                     if ($remaining > 0) {
                                         $hours   = floor($remaining / 3600);
@@ -201,7 +201,8 @@ if (!$authHelper->isAuthenticated) {
                                     } else {
                                         echo htmlspecialchars(_('Expired'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                                     }
-                                    ?>
+                                    ?></span>
+                                    <span id="timeRemainingAnnounce" class="visually-hidden" aria-live="polite"></span>
                                 </td>
                             </tr>
                             <?php endif; ?>
@@ -249,9 +250,22 @@ if (!$authHelper->isAuthenticated) {
 
         // Update time remaining every second
         const timeRemainingEl = document.getElementById('timeRemaining');
+        const announceEl = document.getElementById('timeRemainingAnnounce');
         const sessionExp = <?php echo json_encode($authHelper->exp); ?>;
 
         if (timeRemainingEl && sessionExp) {
+            // Track which milestones have been announced to avoid repetition
+            const announcedMilestones = new Set();
+            const milestones = [300, 60, 30]; // 5 minutes, 1 minute, 30 seconds
+
+            // Announcement messages
+            const announceMessages = {
+                300: <?php echo json_encode(_('Session expires in 5 minutes')); ?>,
+                60: <?php echo json_encode(_('Session expires in 1 minute')); ?>,
+                30: <?php echo json_encode(_('Session expires in 30 seconds')); ?>,
+                0: <?php echo json_encode(_('Session expired')); ?>
+            };
+
             const timerId = setInterval(function() {
                 const remaining = sessionExp - Math.floor(Date.now() / 1000);
                 if (remaining > 0) {
@@ -263,9 +277,24 @@ if (!$authHelper->isAuthenticated) {
                     } else {
                         timeRemainingEl.textContent = minutes + ':' + String(seconds).padStart(2, '0');
                     }
+
+                    // Announce at meaningful intervals for screen readers
+                    if (announceEl) {
+                        for (const milestone of milestones) {
+                            if (remaining <= milestone && !announcedMilestones.has(milestone)) {
+                                announcedMilestones.add(milestone);
+                                announceEl.textContent = announceMessages[milestone];
+                                break;
+                            }
+                        }
+                    }
                 } else {
                     timeRemainingEl.textContent = <?php echo json_encode(_('Expired')); ?>;
                     timeRemainingEl.classList.add('text-danger', 'fw-bold');
+                    if (announceEl && !announcedMilestones.has(0)) {
+                        announcedMilestones.add(0);
+                        announceEl.textContent = announceMessages[0];
+                    }
                     clearInterval(timerId);
                 }
             }, 1000);
