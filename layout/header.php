@@ -165,7 +165,7 @@ asort($langsAssoc);
                        title="<?php echo htmlspecialchars(_('View Profile'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                         <i class="fas fa-user me-1"></i><span id="username" class="d-lg-none d-sm-inline"><?php
                             if ($authHelper->username !== null) {
-                                echo htmlspecialchars($authHelper->username, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                            echo htmlspecialchars($authHelper->username, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                             }
                         ?></span>
                     </a>
@@ -183,8 +183,27 @@ asort($langsAssoc);
                     </button>
                 </div>
             </li>
-            <?php $adminLabel = _('Admin'); ?>
-            <li class="nav-item<?php echo $currentPage === 'admin-dashboard' ? ' bg-info' : ''; ?><?php echo $authHelper->isAuthenticated ? '' : ' d-none'; ?>" id="topNavBar_Admin" data-requires-auth>
+            <?php
+            $developerLabel   = _('Developer');
+            $isDeveloperPage  = $currentPage === 'developer-dashboard';
+            $showDeveloperNav = $authHelper->isAuthenticated && $authHelper->hasRole('developer');
+            ?>
+            <li class="nav-item<?php echo $isDeveloperPage ? ' bg-info' : ''; ?><?php echo $showDeveloperNav ? '' : ' d-none'; ?>"
+                id="topNavBar_Developer" data-requires-auth data-requires-role="developer">
+                <a class="nav-link<?php echo $currentPage === 'developer-dashboard' ? ' active' : ''; ?>" href="./developer-dashboard.php"
+                   title="<?php echo htmlspecialchars($developerLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                    <i class="fas fa-code me-1"></i><span class="d-lg-none d-xxl-inline"><?php echo $developerLabel; ?></span>
+                </a>
+            </li>
+            <?php
+            $adminLabel    = _('Admin');
+            $isAdminOrEditor = $authHelper->hasRole('admin')
+                || $authHelper->hasRole('calendar_editor')
+                || $authHelper->hasRole('test_editor');
+            $showAdminNav  = $authHelper->isAuthenticated && $isAdminOrEditor;
+            ?>
+            <li class="nav-item<?php echo $currentPage === 'admin-dashboard' ? ' bg-info' : ''; ?><?php echo $showAdminNav ? '' : ' d-none'; ?>"
+                id="topNavBar_Admin" data-requires-auth data-requires-role="admin,calendar_editor,test_editor">
                 <a class="nav-link<?php echo $currentPage === 'admin-dashboard' ? ' active' : ''; ?>" href="./admin-dashboard.php"
                    title="<?php echo htmlspecialchars($adminLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                     <i class="fas fa-gear me-1"></i><span class="d-lg-none d-xxl-inline"><?php echo $adminLabel; ?></span>
@@ -211,12 +230,28 @@ asort($langsAssoc);
                     </div>
 
                     <?php if ($isAdminPage) : ?>
-                    <!-- Admin Sidebar -->
+                    <?php
+                    // Check if user has calendar-related roles
+                    $sidebarHasCalendarRole = $authHelper->hasRole('admin')
+                        || $authHelper->hasRole('calendar_editor')
+                        || $authHelper->hasRole('test_editor');
+                    ?>
+                    <!-- Admin/Developer Sidebar -->
+                    <?php if ($sidebarHasCalendarRole) : ?>
                     <a class="nav-link<?php echo $currentPage === 'admin-dashboard' ? ' active' : ''; ?>" href="admin-dashboard.php">
                         <i class="sb-nav-link-icon fas fa-fw fa-tachometer-alt"></i>
                         <span><?php echo _('Dashboard'); ?></span>
                     </a>
+                    <?php endif; ?>
 
+                    <?php if ($authHelper->hasRole('developer')) : ?>
+                    <a class="nav-link<?php echo $currentPage === 'developer-dashboard' ? ' active' : ''; ?>" href="developer-dashboard.php">
+                        <i class="sb-nav-link-icon fas fa-fw fa-code text-info"></i>
+                        <span><?php echo _('Developer'); ?></span>
+                    </a>
+                    <?php endif; ?>
+
+                    <?php if ($sidebarHasCalendarRole) : ?>
                     <div class="sb-sidenav-menu-heading text-white-50">
                         <?php echo _('General Roman Calendar'); ?>
                     </div>
@@ -236,9 +271,9 @@ asort($langsAssoc);
                     <div class="sb-sidenav-menu-heading text-white-50">
                         <?php echo _('Particular Calendars'); ?>
                     </div>
-                        <?php
+                    <?php
                     // Get current choice parameter for extending.php active state
-                        $extendingChoice = $_GET['choice'] ?? '';
+                    $extendingChoice = $_GET['choice'] ?? '';
                     ?>
                     <a class="nav-link<?php echo $currentPage === 'extending' && $extendingChoice === 'widerRegion' ? ' active' : ''; ?>" href="extending.php?choice=widerRegion">
                         <i class="sb-nav-link-icon fas fa-fw fa-globe-americas text-info"></i>
@@ -252,6 +287,7 @@ asort($langsAssoc);
                         <i class="sb-nav-link-icon fas fa-fw fa-church text-secondary"></i>
                         <span><?php echo _('Diocesan'); ?></span>
                     </a>
+                    <?php endif; // end $sidebarHasCalendarRole ?>
 
                     <hr class="sidebar-divider my-2">
                     <a class="nav-link" href="/">

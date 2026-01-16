@@ -487,9 +487,19 @@ function initPermissionUI(forceUpdate = false) {
                 }
             }
         } else {
-            // For other elements (buttons, etc.), only control visibility
+            // For other elements (buttons, nav items, etc.), control visibility
             // Don't touch disabled state - let other code manage that based on form state
-            if (isAuth) {
+            // Check for role requirements if data-requires-role is present
+            const requiredRoles = el.dataset.requiresRole;
+            let hasRequiredRole = true;
+
+            if (requiredRoles && isAuth) {
+                // Check if user has at least one of the required roles (comma-separated)
+                const roleList = requiredRoles.split(',').map(r => r.trim());
+                hasRequiredRole = roleList.some(role => Auth.hasRole(role));
+            }
+
+            if (isAuth && hasRequiredRole) {
                 el.classList.remove('d-none');
             } else {
                 el.classList.add('d-none');

@@ -8,6 +8,7 @@ parameters:
         - admin-dashboard.php
         - admin-role-requests.php
         - admin-users.php
+        - developer-dashboard.php
         - missals-editor.php
         - decrees.php
         - easter.php
@@ -35,6 +36,7 @@ parameters:
                 - admin-dashboard.php
                 - admin-role-requests.php
                 - admin-users.php
+                - developer-dashboard.php
                 - missals-editor.php
                 - decrees.php
                 - easter.php

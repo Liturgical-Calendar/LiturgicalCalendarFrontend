@@ -210,10 +210,22 @@ if (!$authHelper->isAuthenticated) {
                 </div>
             </div>
 
-            <div class="d-flex gap-2">
+            <?php
+            $hasCalendarRole = $authHelper->hasRole('admin')
+                || $authHelper->hasRole('calendar_editor')
+                || $authHelper->hasRole('test_editor');
+            ?>
+            <div class="d-flex gap-2 flex-wrap">
+                <?php if ($hasCalendarRole) : ?>
                 <a href="admin-dashboard.php" class="btn btn-primary" data-requires-auth>
                     <i class="fas fa-tachometer-alt me-2"></i><?php echo htmlspecialchars(_('Admin Dashboard'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                 </a>
+                <?php endif; ?>
+                <?php if ($authHelper->hasRole('developer')) : ?>
+                <a href="developer-dashboard.php" class="btn btn-info" data-requires-auth>
+                    <i class="fas fa-code me-2"></i><?php echo htmlspecialchars(_('Developer Dashboard'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                </a>
+                <?php endif; ?>
                 <button type="button" class="btn btn-outline-danger" id="logoutBtnProfile">
                     <i class="fas fa-sign-out-alt me-2"></i><?php echo htmlspecialchars(_('Logout'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                 </button>
