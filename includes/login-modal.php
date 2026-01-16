@@ -464,8 +464,9 @@ function initPermissionUI(forceUpdate = false) {
     const isAuth = Auth.isAuthenticated();
     const formControlTags = ['INPUT', 'SELECT', 'TEXTAREA'];
 
-    // Handle data-requires-auth elements (visible when authenticated)
-    const protectedElements = document.querySelectorAll('[data-requires-auth]');
+    // Handle data-requires-auth and data-requires-role elements (visible when authenticated)
+    // Include [data-requires-role] to ensure role-gated elements are always auth-protected
+    const protectedElements = document.querySelectorAll('[data-requires-auth], [data-requires-role]');
     protectedElements.forEach(el => {
         if (el.tagName === 'FORM') {
             // For forms, disable/enable all form controls inside
