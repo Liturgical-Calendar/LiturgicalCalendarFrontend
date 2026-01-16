@@ -329,6 +329,7 @@ const UI = {
             `;
         }
 
+        const safeAppUuid = this.escapeHtml(appUuid);
         const rows = keys.map(key => {
             const scopeClass = key.scope === 'write' ? 'key-scope-write' : 'key-scope-read';
             const scopeLabel = key.scope === 'write' ? this.i18n.write : this.i18n.read;
@@ -349,11 +350,11 @@ const UI = {
                     <td class="text-nowrap">${lastUsed}</td>
                     <td class="key-actions">
                         <button type="button" class="btn btn-outline-warning btn-sm btn-rotate-key"
-                                data-uuid="${appUuid}" data-key-id="${key.id}" title="${this.i18n.rotate}">
+                                data-uuid="${safeAppUuid}" data-key-id="${key.id}" title="${this.i18n.rotate}">
                             <i class="fas fa-sync-alt"></i>
                         </button>
                         <button type="button" class="btn btn-outline-danger btn-sm btn-revoke-key"
-                                data-uuid="${appUuid}" data-key-id="${key.id}" title="${this.i18n.revoke}">
+                                data-uuid="${safeAppUuid}" data-key-id="${key.id}" title="${this.i18n.revoke}">
                             <i class="fas fa-ban"></i>
                         </button>
                     </td>
