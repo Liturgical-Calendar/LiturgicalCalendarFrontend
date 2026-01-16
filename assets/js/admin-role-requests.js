@@ -5,8 +5,6 @@
  * Uses the shared admin module base factory.
  */
 
-/* global createAdminModule */
-
 const AdminRoleRequests = createAdminModule({
     configName: 'AdminRoleRequestsConfig',
     entityName: 'role requests',

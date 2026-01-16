@@ -39,6 +39,7 @@ export default defineConfig( [
         Auth: "readonly",
         OidcEnabled: "readonly",
         NotificationTranslations: "readonly",
+        createAdminModule: "readonly",
       }
     },
     rules: {

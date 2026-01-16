@@ -5,8 +5,6 @@
  * Uses the shared admin module base factory.
  */
 
-/* global createAdminModule */
-
 const AdminApplications = createAdminModule({
     configName: 'AdminApplicationsConfig',
     entityName: 'applications',
