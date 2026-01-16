@@ -20,9 +20,14 @@ if (!$authHelper->isAuthenticated) {
 // Check if user has admin role
 $isAdmin = $authHelper->hasRole('admin');
 
-// Redirect non-admins to dashboard
-if (!$isAdmin) {
-    header('Location: admin-dashboard.php');
+// Check if user has any calendar-related role (admin, calendar_editor, or test_editor)
+$hasCalendarRole = $isAdmin
+    || $authHelper->hasRole('calendar_editor')
+    || $authHelper->hasRole('test_editor');
+
+// If user only has developer role (no calendar-related roles), redirect to developer dashboard
+if (!$hasCalendarRole) {
+    header('Location: developer-dashboard.php');
     exit;
 }
 
