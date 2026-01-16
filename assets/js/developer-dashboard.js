@@ -26,7 +26,14 @@ const ApplicationsAPI = {
             credentials: 'include' // Send HttpOnly cookies
         };
 
-        const response = await fetch(url, { ...defaultOptions, ...options });
+        const response = await fetch(url, {
+            ...defaultOptions,
+            ...options,
+            headers: {
+                ...defaultOptions.headers,
+                ...options.headers
+            }
+        });
 
         if (!response.ok) {
             const error = await response.json().catch(() => ({}));
