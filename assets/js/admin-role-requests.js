@@ -63,7 +63,7 @@ const AdminRoleRequests = createAdminModule({
                     <strong>${this.escapeHtml(req.user_name || '-')}</strong>
                     ${req.user_email ? `<br><small class="text-muted">${this.escapeHtml(req.user_email)}</small>` : ''}
                 </td>
-                <td><span class="badge bg-info">${roleName}</span></td>
+                <td><span class="badge bg-info">${this.escapeHtml(roleName)}</span></td>
                 <td><small>${requestedDate}</small></td>
                 ${status !== 'pending' ? `<td><small>${reviewedDate}</small></td>` : ''}
                 <td>
@@ -103,7 +103,7 @@ const AdminRoleRequests = createAdminModule({
                     <th class="text-muted">
                         <i class="fas fa-user-tag me-2"></i>${this.config.i18n.requestedRole}
                     </th>
-                    <td><span class="badge bg-info">${roleName}</span></td>
+                    <td><span class="badge bg-info">${this.escapeHtml(roleName)}</span></td>
                 </tr>
         `;
 
