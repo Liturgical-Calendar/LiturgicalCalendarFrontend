@@ -121,7 +121,7 @@ if (!$isAdmin) {
             </button>
         </li>
         <li class="nav-item ms-auto">
-            <button class="btn btn-outline-primary btn-sm" id="refreshBtn">
+            <button class="btn btn-outline-primary btn-sm" id="refreshBtn" data-requires-auth>
                 <i class="fas fa-sync-alt me-1"></i><?php echo htmlspecialchars(_('Refresh'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
             </button>
         </li>
