@@ -79,7 +79,8 @@ const AdminApplications = createAdminModule({
                 <td>
                     <button class="btn btn-outline-primary btn-sm review-btn"
                             data-app-id="${safeAppId}"
-                            data-app-status="${status}">
+                            data-app-status="${status}"
+                            data-requires-auth>
                         <i class="fas fa-eye me-1"></i>${this.config.i18n.review}
                     </button>
                 </td>
