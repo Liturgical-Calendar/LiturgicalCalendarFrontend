@@ -48,6 +48,7 @@ $hasRoles = $authHelper->roles !== null && count($authHelper->roles) > 0;
     ?>
     <title><?php echo $requestAccessTitle; ?> - <?php echo $calendarTitle; ?></title>
     <?php include_once('./layout/head.php'); ?>
+    <link rel="stylesheet" href="assets/css/request-access.css">
 </head>
 <body class="sb-nav-fixed">
     <?php include_once('./layout/header.php'); ?>
@@ -388,19 +389,5 @@ $hasRoles = $authHelper->roles !== null && count($authHelper->roles) > 0;
         await loadExistingRequests();
     });
     </script>
-
-    <style>
-    .role-option .form-check-input {
-        margin-top: 0.75rem;
-    }
-    .role-option .card {
-        cursor: pointer;
-        transition: border-color 0.15s ease-in-out;
-    }
-    .role-option .card:hover:not(.opacity-50) {
-        border-color: var(--bs-primary) !important;
-        border-width: 1px !important;
-    }
-    </style>
 </body>
 </html>
