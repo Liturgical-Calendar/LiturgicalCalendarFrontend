@@ -69,7 +69,8 @@ const AdminRoleRequests = createAdminModule({
                 <td>
                     <button class="btn btn-outline-primary btn-sm review-btn"
                             data-req-id="${safeReqId}"
-                            data-req-status="${status}">
+                            data-req-status="${status}"
+                            data-requires-auth>
                         <i class="fas fa-eye me-1"></i>${this.config.i18n.review}
                     </button>
                 </td>
