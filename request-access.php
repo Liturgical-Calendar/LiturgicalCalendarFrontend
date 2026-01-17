@@ -181,7 +181,8 @@ $hasRoles = $authHelper->roles !== null && count($authHelper->roles) > 0;
         const statusInfo = {
             'pending': { class: 'bg-warning text-dark', icon: 'fas fa-clock', text: <?php echo json_encode(_('Pending')); ?> },
             'approved': { class: 'bg-success', icon: 'fas fa-check', text: <?php echo json_encode(_('Approved')); ?> },
-            'rejected': { class: 'bg-danger', icon: 'fas fa-times', text: <?php echo json_encode(_('Rejected')); ?> }
+            'rejected': { class: 'bg-danger', icon: 'fas fa-times', text: <?php echo json_encode(_('Rejected')); ?> },
+            'revoked': { class: 'bg-secondary', icon: 'fas fa-ban', text: <?php echo json_encode(_('Revoked')); ?> }
         };
 
         /**
