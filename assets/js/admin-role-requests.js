@@ -187,15 +187,14 @@ AdminRoleRequests.getRoleName = function(role) {
 // Add i18n aliases for generic messages
 Object.defineProperty(AdminRoleRequests, 'config', {
     get() {
-        if (this._config) return this._config;
-        const config = window.AdminRoleRequestsConfig;
-        if (config && !config.i18n.noPendingItems) {
-            config.i18n.noPendingItems = config.i18n.noPendingRequests;
-            config.i18n.noItems = config.i18n.noRequests;
-        }
-        return config;
+        return this._config || window.AdminRoleRequestsConfig;
     },
     set(value) {
+        // Add i18n aliases when config is set
+        if (value && value.i18n && !value.i18n.noPendingItems) {
+            value.i18n.noPendingItems = value.i18n.noPendingRequests;
+            value.i18n.noItems = value.i18n.noRequests;
+        }
         this._config = value;
     }
 });

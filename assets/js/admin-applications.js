@@ -199,15 +199,14 @@ const AdminApplications = createAdminModule({
 // Add i18n aliases for generic messages
 Object.defineProperty(AdminApplications, 'config', {
     get() {
-        if (this._config) return this._config;
-        const config = window.AdminApplicationsConfig;
-        if (config && !config.i18n.noPendingItems) {
-            config.i18n.noPendingItems = config.i18n.noPendingApplications;
-            config.i18n.noItems = config.i18n.noApplications;
-        }
-        return config;
+        return this._config || window.AdminApplicationsConfig;
     },
     set(value) {
+        // Add i18n aliases when config is set
+        if (value && value.i18n && !value.i18n.noPendingItems) {
+            value.i18n.noPendingItems = value.i18n.noPendingApplications;
+            value.i18n.noItems = value.i18n.noApplications;
+        }
         this._config = value;
     }
 });
