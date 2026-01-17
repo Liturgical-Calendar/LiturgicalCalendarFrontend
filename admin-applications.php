@@ -250,7 +250,11 @@ if (!$isAdmin) {
                 statusPending: <?php echo json_encode(_('Pending')); ?>,
                 statusApproved: <?php echo json_encode(_('Approved')); ?>,
                 statusRejected: <?php echo json_encode(_('Rejected')); ?>,
-                statusRevoked: <?php echo json_encode(_('Revoked')); ?>
+                statusRevoked: <?php echo json_encode(_('Revoked')); ?>,
+                // Scope labels
+                requestedScope: <?php echo json_encode(_('Requested Scope')); ?>,
+                scopeRead: <?php echo json_encode(_('Read-only')); ?>,
+                scopeWrite: <?php echo json_encode(_('Read & Write')); ?>
             }
         };
     </script>

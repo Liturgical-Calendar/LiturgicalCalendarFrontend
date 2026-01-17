@@ -154,6 +154,12 @@ const AdminApplications = createAdminModule({
                 </tr>
                 <tr>
                     <th class="text-muted">
+                        <i class="fas fa-shield-alt me-2"></i>${this.config.i18n.requestedScope}
+                    </th>
+                    <td>${this.renderScopeBadge(app.requested_scope)}</td>
+                </tr>
+                <tr>
+                    <th class="text-muted">
                         <i class="fas fa-calendar me-2"></i>${this.config.i18n.created}
                     </th>
                     <td>${createdDate}</td>

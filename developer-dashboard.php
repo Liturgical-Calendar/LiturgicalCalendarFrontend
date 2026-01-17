@@ -104,6 +104,27 @@ if (!$isDeveloper) {
                             <input type="url" class="form-control" id="appWebsite" placeholder="https://example.com">
                             <div class="form-text"><?php echo htmlspecialchars(_('Optional URL to your application or project.'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
                         </div>
+                        <div class="mb-3" id="appScopeSection">
+                            <label class="form-label">
+                                <?php echo htmlspecialchars(_('Access Scope'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="appScope" id="scopeRead" value="read" checked>
+                                <label class="form-check-label" for="scopeRead">
+                                    <i class="fas fa-eye me-1 text-info"></i><?php echo htmlspecialchars(_('Read-only'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                    <small class="text-muted d-block"><?php echo htmlspecialchars(_('Can only read calendar data'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></small>
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="appScope" id="scopeWrite" value="write">
+                                <label class="form-check-label" for="scopeWrite">
+                                    <i class="fas fa-edit me-1 text-warning"></i><?php echo htmlspecialchars(_('Read & Write'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                    <small class="text-muted d-block"><?php echo htmlspecialchars(_('Can read and modify calendar data'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></small>
+                                </label>
+                            </div>
+                            <div class="form-text"><?php echo htmlspecialchars(_('Choose the level of access your application needs. This cannot be changed after approval.'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -284,7 +305,14 @@ if (!$isDeveloper) {
                 cannotGenerateKeys: <?php echo json_encode(_('API keys can only be generated for approved applications.')); ?>,
                 revokedMessage: <?php echo json_encode(_('This application has been revoked. Contact an administrator for assistance.')); ?>,
                 resubmitSuccess: <?php echo json_encode(_('Application resubmitted for review.')); ?>,
-                resubmitError: <?php echo json_encode(_('Failed to resubmit application. Please try again.')); ?>
+                resubmitError: <?php echo json_encode(_('Failed to resubmit application. Please try again.')); ?>,
+                // Scope-related
+                accessScope: <?php echo json_encode(_('Access Scope')); ?>,
+                readOnly: <?php echo json_encode(_('Read-only')); ?>,
+                readWrite: <?php echo json_encode(_('Read & Write')); ?>,
+                canOnlyRead: <?php echo json_encode(_('Can only read calendar data')); ?>,
+                canReadAndWrite: <?php echo json_encode(_('Can read and modify calendar data')); ?>,
+                scopeReadOnlyRestriction: <?php echo json_encode(_('This application has read-only access. Only read-scope API keys can be generated.')); ?>
             }
         };
     </script>

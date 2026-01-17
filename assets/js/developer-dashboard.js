@@ -218,6 +218,9 @@ const UI = {
                             <i class="fas fa-calendar-alt"></i>
                             ${this.i18n.created}: ${createdDate}
                         </div>
+                        <div class="app-metadata-item">
+                            ${this.renderScopeBadge(app.requested_scope || 'read')}
+                        </div>
                         ${isApproved ? `
                             <div class="app-metadata-item">
                                 <i class="fas fa-key"></i>
@@ -277,6 +280,17 @@ const UI = {
 
         const config = statusConfig[status] || statusConfig.pending;
         return `<span class="badge ${config.class} ms-2"><i class="fas ${config.icon} me-1"></i>${config.label}</span>`;
+    },
+
+    /**
+     * Render scope badge for application access level
+     * @param {string} scope - Application requested scope ('read' or 'write')
+     */
+    renderScopeBadge(scope) {
+        if (scope === 'write') {
+            return `<span class="badge bg-warning text-dark"><i class="fas fa-edit me-1"></i>${this.i18n.readWrite || 'Read & Write'}</span>`;
+        }
+        return `<span class="badge bg-info"><i class="fas fa-eye me-1"></i>${this.i18n.readOnly || 'Read-only'}</span>`;
     },
 
     /**
@@ -641,6 +655,17 @@ const DeveloperDashboard = {
         document.getElementById('appDescription').value = app?.description || '';
         document.getElementById('appWebsite').value = app?.website || '';
 
+        // Show scope section only for new applications (cannot be changed after creation)
+        const scopeSection = document.getElementById('appScopeSection');
+        if (scopeSection) {
+            scopeSection.style.display = isEdit ? 'none' : 'block';
+            if (!isEdit) {
+                // Reset to read scope for new applications
+                const scopeRead = document.getElementById('scopeRead');
+                if (scopeRead) scopeRead.checked = true;
+            }
+        }
+
         this.modals.app.show();
         document.getElementById('appName').focus();
     },
@@ -688,6 +713,9 @@ const DeveloperDashboard = {
                 await ApplicationsAPI.updateApplication(uuid, data);
                 UI.showToast(UI.i18n.applicationUpdated, 'success');
             } else {
+                // Include requested_scope for new applications
+                const scopeRadio = document.querySelector('input[name="appScope"]:checked');
+                data.requested_scope = scopeRadio ? scopeRadio.value : 'read';
                 await ApplicationsAPI.createApplication(data);
                 UI.showToast(UI.i18n.applicationCreated, 'success');
             }
@@ -785,6 +813,35 @@ const DeveloperDashboard = {
         document.getElementById('keyName').value = '';
         document.getElementById('keyScope').value = 'read';
         document.getElementById('keyExpires').value = '';
+
+        // Get the application's requested_scope to restrict key scope options
+        const app = this.applications.find(a => a.uuid === uuid);
+        const requestedScope = app?.requested_scope || 'read';
+        const keyScopeSelect = document.getElementById('keyScope');
+
+        if (keyScopeSelect) {
+            const writeOption = keyScopeSelect.querySelector('option[value="write"]');
+            if (writeOption) {
+                // Disable write option if application only has read access
+                writeOption.disabled = requestedScope === 'read';
+            }
+            // Always start with read selected
+            keyScopeSelect.value = 'read';
+        }
+
+        // Show a warning if the application is read-only
+        const keyModalBody = document.querySelector('#keyModal .modal-body');
+        const existingWarning = keyModalBody?.querySelector('.scope-restriction-warning');
+        if (existingWarning) {
+            existingWarning.remove();
+        }
+
+        if (requestedScope === 'read' && keyModalBody) {
+            const warningDiv = document.createElement('div');
+            warningDiv.className = 'alert alert-info scope-restriction-warning mb-3';
+            warningDiv.innerHTML = `<i class="fas fa-info-circle me-2"></i>${UI.escapeHtml(UI.i18n.scopeReadOnlyRestriction)}`;
+            keyModalBody.insertBefore(warningDiv, keyModalBody.firstChild);
+        }
 
         this.modals.key.show();
         document.getElementById('keyName').focus();

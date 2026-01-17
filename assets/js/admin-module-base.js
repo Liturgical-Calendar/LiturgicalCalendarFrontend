@@ -397,6 +397,20 @@ function createAdminModule(options) { // eslint-disable-line no-unused-vars
         },
 
         /**
+         * Render a scope badge for application access level
+         * @param {string} scope - Scope value ('read' or 'write')
+         * @returns {string} HTML badge
+         */
+        renderScopeBadge(scope) {
+            const scopeRead = this.config.i18n.scopeRead || 'Read-only';
+            const scopeWrite = this.config.i18n.scopeWrite || 'Read & Write';
+            if (scope === 'write') {
+                return `<span class="badge bg-warning text-dark"><i class="fas fa-edit me-1"></i>${scopeWrite}</span>`;
+            }
+            return `<span class="badge bg-info"><i class="fas fa-eye me-1"></i>${scopeRead}</span>`;
+        },
+
+        /**
          * Format a date for display
          * @param {string|null} dateStr - ISO date string
          * @returns {string} Formatted date or '-'
