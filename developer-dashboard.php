@@ -57,7 +57,7 @@ if (!$isDeveloper) {
             <h5 class="m-0 fw-bold text-primary">
                 <i class="fas fa-cubes me-2"></i><?php echo htmlspecialchars(_('My Applications'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
             </h5>
-            <button type="button" class="btn btn-primary btn-sm" id="btnNewApp">
+            <button type="button" class="btn btn-primary btn-sm" id="btnNewApp" data-requires-auth>
                 <i class="fas fa-plus me-1"></i><?php echo htmlspecialchars(_('New Application'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
             </button>
         </div>
