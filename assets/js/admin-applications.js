@@ -120,12 +120,18 @@ const AdminApplications = createAdminModule({
         }
 
         if (app.website) {
+            const websiteTrimmed = app.website.trim();
+            const websiteLower = websiteTrimmed.toLowerCase();
+            const isValidScheme = websiteLower.startsWith('http://') || websiteLower.startsWith('https://');
+            const websiteContent = isValidScheme
+                ? `<a href="${this.escapeHtml(websiteTrimmed)}" target="_blank" rel="noopener">${this.escapeHtml(websiteTrimmed)}</a>`
+                : this.escapeHtml(websiteTrimmed);
             html += `
                 <tr>
                     <th class="text-muted">
                         <i class="fas fa-globe me-2"></i>${this.config.i18n.website}
                     </th>
-                    <td><a href="${this.escapeHtml(app.website)}" target="_blank" rel="noopener">${this.escapeHtml(app.website)}</a></td>
+                    <td>${websiteContent}</td>
                 </tr>
             `;
         }
