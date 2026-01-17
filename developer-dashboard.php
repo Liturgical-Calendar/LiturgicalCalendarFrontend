@@ -253,7 +253,7 @@ if (!$isDeveloper) {
                 created: <?php echo json_encode(_('Created')); ?>,
                 keys: <?php echo json_encode(_('keys')); ?>,
                 key: <?php echo json_encode(_('key')); ?>,
-                deleteAppConfirm: <?php echo json_encode(_('Are you sure you want to delete the application "%s"? This will also revoke all associated API keys.')); ?>,
+                deleteAppConfirm: <?php echo json_encode(_('Are you sure you want to delete the application "%1$s"? This will also revoke all associated API keys.')); ?>,
                 revokeKeyConfirm: <?php echo json_encode(_('Are you sure you want to revoke this API key? Applications using this key will no longer be able to authenticate.')); ?>,
                 errorLoading: <?php echo json_encode(_('Failed to load applications. Please try again.')); ?>,
                 errorSaving: <?php echo json_encode(_('Failed to save application. Please try again.')); ?>,
