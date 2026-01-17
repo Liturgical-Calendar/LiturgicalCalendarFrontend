@@ -251,6 +251,7 @@ if (!$hasCalendarRole) {
                 justification: <?php echo json_encode(_('Justification')); ?>,
                 reviewedAt: <?php echo json_encode(_('Reviewed At')); ?>,
                 reviewNotes: <?php echo json_encode(_('Review Notes')); ?>,
+                status: <?php echo json_encode(_('Status')); ?>,
                 // Role names
                 roleDeveloper: <?php echo json_encode(_('Developer')); ?>,
                 roleCalendarEditor: <?php echo json_encode(_('Calendar Editor')); ?>,

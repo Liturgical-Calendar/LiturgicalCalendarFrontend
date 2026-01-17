@@ -122,7 +122,7 @@ const AdminRoleRequests = createAdminModule({
         html += `
                 <tr>
                     <th class="text-muted">
-                        <i class="fas fa-info-circle me-2"></i>Status
+                        <i class="fas fa-info-circle me-2"></i>${this.config.i18n.status || 'Status'}
                     </th>
                     <td>${this.renderStatusBadge(status)}</td>
                 </tr>
