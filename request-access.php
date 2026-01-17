@@ -353,8 +353,10 @@ $hasRoles = $authHelper->roles !== null && count($authHelper->roles) > 0;
          * Show alert message
          */
         function showAlert(type, message) {
+            const allowedTypes = ['success', 'danger', 'warning', 'info', 'primary', 'secondary', 'light', 'dark'];
+            const safeType = allowedTypes.includes(type) ? type : 'info';
             formAlerts.innerHTML = `
-                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                <div class="alert alert-${safeType} alert-dismissible fade show" role="alert">
                     ${escapeHtml(message)}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
