@@ -121,7 +121,7 @@ asort($langsAssoc);
             </li>
             <li class="vr mx-2 d-none d-lg-block"></li>
             <!-- Notifications (Admin only) -->
-            <li class="nav-item dropdown<?php echo ( $authHelper->isAuthenticated && $authHelper->hasRole('admin') ) ? '' : ' d-none'; ?>" id="notificationsContainer" data-requires-auth>
+            <li class="nav-item dropdown<?php echo ( $authHelper->isAuthenticated && $authHelper->hasRole('admin') ) ? '' : ' d-none'; ?>" id="notificationsContainer" data-requires-role="admin">
                 <a class="nav-link position-relative" href="#" id="notificationsDropdown" role="button"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                     title="<?php echo htmlspecialchars(_('Notifications'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
