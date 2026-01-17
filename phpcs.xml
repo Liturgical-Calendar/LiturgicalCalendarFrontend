@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <ruleset name="PHP_CodeSniffer">
     <rule ref="PSR12"> <!-- ruleset standard -->
-        <exclude name="Generic.Files.LineLength"/>
         <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace"/>
         <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpaceBeforeEquals"/>
         <exclude name="Generic.WhiteSpace.ScopeIndent.IncorrectExact"/>
@@ -37,6 +36,12 @@
     <rule ref="Generic.WhiteSpace.SpreadOperatorSpacingAfter"/>
     <rule ref="Generic.ControlStructures.InlineControlStructure"/>
     <rule ref="Generic.Formatting.SpaceAfterCast"/>
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="200"/>
+            <property name="absoluteLineLimit" value="220"/>
+        </properties>
+    </rule>
     <file>./</file> <!-- directory you want to analyze -->
     <exclude-pattern>/vendor/</exclude-pattern>
     <exclude-pattern>/examples</exclude-pattern>

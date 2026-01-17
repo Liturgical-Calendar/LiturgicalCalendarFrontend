@@ -1,0 +1,17 @@
+/**
+ * Request Access Page Styles
+ */
+
+.role-option .form-check-input {
+    margin-top: 0.75rem;
+}
+
+.role-option .card {
+    cursor: pointer;
+    transition: border-color 0.15s ease-in-out;
+}
+
+.role-option .card:hover:not(.opacity-50) {
+    border-color: var(--bs-primary) !important;
+    border-width: 1px !important;
+}

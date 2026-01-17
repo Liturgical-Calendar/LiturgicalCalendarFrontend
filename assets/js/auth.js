@@ -1,9 +1,13 @@
 /**
- * Authentication helper module for JWT token management
+ * Authentication helper module for JWT/OIDC token management
  * Handles login, logout, and authentication state management
  *
+ * Supports two authentication modes:
+ * 1. Legacy JWT: Direct API authentication (username/password to API)
+ * 2. OIDC: Redirect to Zitadel for authentication (PKCE flow)
+ *
  * Uses HttpOnly cookie-based authentication exclusively.
- * Cookies are set by the API and cannot be read by JavaScript.
+ * Cookies are set by the API/Frontend and cannot be read by JavaScript.
  * Use checkAuthAsync() or isAuthenticatedCached() to verify authentication state.
  *
  * @module Auth
@@ -15,6 +19,13 @@ const Auth = {
      */
     TOKEN_KEY: 'litcal_jwt_token',
     REFRESH_KEY: 'litcal_refresh_token',
+
+    /**
+     * Authentication mode: 'oidc' or 'legacy'
+     * Set via Auth.setMode() or detected automatically from config
+     * @private
+     */
+    _authMode: null,
 
     /**
      * Cached authentication state from /auth/me endpoint
@@ -65,6 +76,62 @@ const Auth = {
             return false;
         }
         return true;
+    },
+
+    /**
+     * Set the authentication mode
+     * @param {'oidc'|'legacy'} mode - Authentication mode to use
+     */
+    setMode(mode) {
+        if (mode !== 'oidc' && mode !== 'legacy') {
+            console.warn('Auth.setMode: Invalid mode. Use "oidc" or "legacy"');
+            return;
+        }
+        this._authMode = mode;
+    },
+
+    /**
+     * Get the current authentication mode
+     * Auto-detects from global OidcEnabled if not explicitly set
+     * @returns {'oidc'|'legacy'} Current authentication mode
+     */
+    getMode() {
+        if (this._authMode !== null) {
+            return this._authMode;
+        }
+        // Auto-detect from global config (set in PHP templates)
+        if (typeof OidcEnabled !== 'undefined' && OidcEnabled) {
+            return 'oidc';
+        }
+        return 'legacy';
+    },
+
+    /**
+     * Check if OIDC mode is enabled
+     * @returns {boolean} True if using OIDC authentication
+     */
+    isOidcMode() {
+        return this.getMode() === 'oidc';
+    },
+
+    /**
+     * Redirect to OIDC login page
+     * Use this for OIDC mode instead of login() with credentials
+     *
+     * @param {string} [returnTo] - URL to redirect after login (defaults to current page)
+     */
+    loginWithOidc(returnTo) {
+        let currentUrl = returnTo || window.location.href;
+        // Ensure we only redirect to same origin (defense-in-depth)
+        try {
+            const url = new URL(currentUrl, window.location.origin);
+            if (url.origin !== window.location.origin) {
+                currentUrl = window.location.href;
+            }
+        } catch {
+            currentUrl = window.location.href;
+        }
+        window.location.href = `/auth/login.php?return_to=${encodeURIComponent(currentUrl)}`;
     },
 
     /**
@@ -375,20 +442,32 @@ const Auth = {
      * Check authentication state with the server
      * Calls /auth/me endpoint to verify session (works with HttpOnly cookies)
      *
+     * In OIDC mode, uses Frontend's /auth/me.php endpoint.
+     * In legacy mode, uses API's /auth/me endpoint.
+     *
      * Returns an object with authenticated property:
-     * - { authenticated: true, username, roles, exp, ... } if logged in
+     * - { authenticated: true, user, roles, exp, ... } if logged in
      * - { authenticated: false } if not logged in
      * - { authenticated: false, error: true } if network/API error occurred
      *
      * @returns {Promise<Object>} Auth state object (never null)
      */
     async checkAuthAsync() {
-        if (!this._validateBaseUrl('checkAuthAsync')) {
-            return { authenticated: false, error: true };
+        // Determine endpoint based on auth mode
+        let authMeUrl;
+        if (this.isOidcMode()) {
+            // OIDC mode: use Frontend's auth endpoint
+            authMeUrl = '/auth/me.php';
+        } else {
+            // Legacy mode: use API's auth endpoint
+            if (!this._validateBaseUrl('checkAuthAsync')) {
+                return { authenticated: false, error: true };
+            }
+            authMeUrl = `${BaseUrl}/auth/me`;
         }
 
         try {
-            const response = await fetch(`${BaseUrl}/auth/me`, {
+            const response = await fetch(authMeUrl, {
                 method: 'GET',
                 credentials: 'include', // Include cookies for cross-origin requests
                 headers: {
@@ -401,7 +480,25 @@ const Auth = {
             }
 
             const data = await response.json();
-            return data.authenticated ? data : { authenticated: false };
+
+            // Normalize response format between OIDC and legacy
+            if (data.authenticated) {
+                // For OIDC, user info is in data.user
+                // For legacy, user info is at top level
+                const normalized = {
+                    authenticated: true,
+                    username: data.user?.preferred_username || data.user?.email || data.username,
+                    email: data.user?.email || data.email,
+                    name: data.user?.name || data.name,
+                    roles: data.user?.roles || data.roles || [],
+                    permissions: data.permissions || [],
+                    exp: data.expires_at || data.exp,
+                    sub: data.user?.sub || data.sub,
+                };
+                return normalized;
+            }
+
+            return { authenticated: false, ...data };
         } catch (error) {
             console.error('Auth check failed:', error);
             return { authenticated: false, error: true };
@@ -432,20 +529,32 @@ const Auth = {
     /**
      * Internal method to perform the actual token refresh
      *
-     * The API reads the refresh token from HttpOnly cookies and sets
-     * new access/refresh tokens as HttpOnly cookies in the response.
+     * In OIDC mode, uses Frontend's /auth/refresh.php endpoint.
+     * In legacy mode, uses API's /auth/refresh endpoint.
+     *
+     * The refresh token is read from HttpOnly cookies and new tokens
+     * are set as HttpOnly cookies in the response.
      *
      * @private
      * @returns {Promise<boolean>} True if refresh succeeded
      * @throws {Error} When refresh fails
      */
     async _doRefreshToken() {
-        if (!this._validateBaseUrl('_doRefreshToken')) {
-            throw new Error('API base URL is not configured');
+        // Determine endpoint based on auth mode
+        let refreshUrl;
+        if (this.isOidcMode()) {
+            // OIDC mode: use Frontend's refresh endpoint
+            refreshUrl = '/auth/refresh.php';
+        } else {
+            // Legacy mode: use API's refresh endpoint
+            if (!this._validateBaseUrl('_doRefreshToken')) {
+                throw new Error('API base URL is not configured');
+            }
+            refreshUrl = `${BaseUrl}/auth/refresh`;
         }
 
         try {
-            const response = await fetch(`${BaseUrl}/auth/refresh`, {
+            const response = await fetch(refreshUrl, {
                 method: 'POST',
                 credentials: 'include', // Include cookies for cross-origin requests
                 headers: {
@@ -502,11 +611,17 @@ const Auth = {
     /**
      * Logout user
      * Calls logout endpoint and clears all tokens
-     * Redirects to home page if on an admin page, otherwise reloads
      *
+     * In OIDC mode, redirects to Frontend's logout endpoint which handles
+     * Zitadel session termination.
+     * In legacy mode, calls API's logout endpoint.
+     *
+     * After logout, redirects to home page if on an admin page, otherwise reloads.
+     *
+     * @param {boolean} [logoutFromZitadel=true] - In OIDC mode, also logout from Zitadel
      * @returns {Promise<void>}
      */
-    async logout() {
+    async logout(logoutFromZitadel = true) {
         // Set flag immediately to prevent in-flight refresh from writing tokens
         this._isLoggingOut = true;
 
@@ -516,8 +631,18 @@ const Auth = {
         // Null out any pending refresh promise to prevent token writes
         this._refreshPromise = null;
 
-        // Attempt server logout to clear HttpOnly cookies
-        // The server will read the token from cookie, so we don't need to send it in header
+        // Clear local state first
+        this.clearTokens();
+
+        // In OIDC mode, redirect to Frontend's logout endpoint
+        if (this.isOidcMode()) {
+            const returnTo = this._isAdminPage() ? '/' : window.location.href;
+            const zitadelParam = logoutFromZitadel ? 'true' : 'false';
+            window.location.href = `/auth/logout.php?zitadel=${zitadelParam}&return_to=${encodeURIComponent(returnTo)}`;
+            return;
+        }
+
+        // Legacy mode: attempt server logout to clear HttpOnly cookies
         if (this._validateBaseUrl('logout')) {
             try {
                 await fetch(`${BaseUrl}/auth/logout`, {
@@ -531,8 +656,6 @@ const Auth = {
                 console.error('Logout error:', error);
             }
         }
-
-        this.clearTokens();
 
         // Redirect to home if on admin page, otherwise reload
         if (this._isAdminPage()) {

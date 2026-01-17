@@ -37,6 +37,9 @@ export default defineConfig( [
         LITCAL_LOCALE: "writable",
         currentLocale: "writable",
         Auth: "readonly",
+        OidcEnabled: "readonly",
+        NotificationTranslations: "readonly",
+        createAdminModule: "readonly",
       }
     },
     rules: {

@@ -123,6 +123,7 @@ class Utilities
             ],
             'MIKETRUSO'      => [
                 'website' => Utilities::formatNameWithUrl('https://www.miketruso.com/', 'Mike Truso'),
+                // phpcs:ignore Generic.Files.LineLength
                 'note'    => _('Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild for Catholic IT Professionals, contributed the bootstrap theming of the project website'),
                 'img'     => './assets/img/miketruso_512x512.jpg',
                 'icon'    => 'fa-code'
@@ -179,7 +180,10 @@ class Utilities
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="row no-gutters align-items-center">
-                                <div class="col-auto mr-2"><img height="125" width="125" class="img-profile rounded-circle mx-auto img-fluid" src="' . ( $cardInfo['img'] ?? './assets/img/default_125x125.jpg' ) . '"></div>
+                                <div class="col-auto mr-2">
+                                    <img height="125" width="125" class="img-profile rounded-circle mx-auto img-fluid"
+                                        src="' . ( $cardInfo['img'] ?? './assets/img/default_125x125.jpg' ) . '">
+                                </div>
                                 <div class="col">' . $cardInfo['website'] . $cardInfo['note'] . '</div>
                             </div>
                         </div>
@@ -269,11 +273,17 @@ class Utilities
             ? '<div class="invalid-feedback">' . _('This liturgical event does not seem to exist? Please choose from a value in the list.') . '</div>'
             : '<div class="form-text text-warning d-none">' . _('This liturgical event does not exist, so it will be created.') . '</div>';
 
-        $modalBody = '<div class="modal-body">
+        $labelForId = 'existingLiturgicalEventName_' . $actionPromptModalIdCounter;
+        $labelText  = $required
+            ? _('Choose from existing liturgical events')
+            : _('Choose from existing liturgical events (or create a new one)');
+        $inputAttr  = $required ? ' required' : '';
+        $modalBody  = '<div class="modal-body">
         <form class="row justify-content-left needs-validation" novalidate>
             <div class="form-group col col-md-10">
-                <label for="existingLiturgicalEventName_' . $actionPromptModalIdCounter . '" class="fw-bold">' . ( $required ? _('Choose from existing liturgical events') : _('Choose from existing liturgical events (or create a new one)') ) . ':</label>
-                <input list="existingLiturgicalEventsList" class="form-control existingLiturgicalEventName" id="existingLiturgicalEventName_' . $actionPromptModalIdCounter . '"' . ( $required ? ' required' : '' ) . '>
+                <label for="' . $labelForId . '" class="fw-bold">' . $labelText . ':</label>
+                <input list="existingLiturgicalEventsList" class="form-control existingLiturgicalEventName"
+                    id="' . $labelForId . '"' . $inputAttr . '>
                 ' . $feedbackDiv . '
             </div>';
         if ($hasPropertyChange) {

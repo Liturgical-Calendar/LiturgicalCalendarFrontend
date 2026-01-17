@@ -4,5 +4,7 @@
     "phpcs.ignorePatterns": [
         "**/vendor/*"
     ],
-    "phpcs.phpcbfOnSave": true,
+    "phpcs.phpcbfSaveOnFix": true,
+    "phpcs.phpcbfShowDiff": true,
+    "phpcs.phpcbfDiffInline": true,
 }

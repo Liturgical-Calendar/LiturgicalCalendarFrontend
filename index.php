@@ -16,22 +16,27 @@ $API_DESCRIPTION = _('Collection of Liturgical events for any given year between
         '<b><code>/{YEAR}</code></b>'
     );
 
+// phpcs:disable Generic.Files.LineLength
 $firstAfterA = sprintf(
     /**translators: 1. /calendar/nation/{NATION}, 2. /calendar/diocese/{DIOCESE} */
     _('These parameters are useful for tweaking the calendar results, when no National or Diocesan calendar is requested. Since National and Diocesan calendars have these parameters built in, the parameters are not available on the %1$s and %2$s routes.'),
     '<b><code>/calendar/nation/{NATION}</code></b>',
     '<b><code>/calendar/diocese/{DIOCESE}</code></b>'
 );
+// phpcs:enable Generic.Files.LineLength
 $firstAfterB = _('N.B. When none of these parameters are set, the API will use the defaults as in use in the Vatican.');
 $firstAfter  = "<div class=\"row mb-4\"><small class=\"text-muted\"><i>$firstAfterA<br>$firstAfterB</i></small></div>";
 
+// phpcs:disable Generic.Files.LineLength
 $secondAfterA = sprintf(
     /**translators: 1. /calendar */
     _('These request parameters can always be set, whether we are requesting the base %1$s resource or any resource below the %1$s path. National and Diocesan calendars do not have these parameters built-in.'),
     '<b><code>/calendar</code></b>'
 );
+// phpcs:enable Generic.Files.LineLength
 $secondAfter = "<div class=\"row mb-4\"><small class=\"text-muted\"><i>$secondAfterA</i></small></div>";
 
+// phpcs:ignore Generic.Files.LineLength
 $localeLabelAfterA = _('It is preferable to set the locale using the Accept-Language header rather than using the locale parameter. N.B. The Accept-Language header will have no effect when a National or Diocesan calendar is requested.');
 $localeLabelAfter  = "<i class=\"fas fa-circle-info ms-2\" data-bs-toggle=\"tooltip\" data-bs-title=\"$localeLabelAfterA\" role=\"button\" id=\"localeLabelAfter\"></i>";
 
@@ -108,9 +113,13 @@ $formLabelB = sprintf(
         <div class="col-md-6">
             <div class="card shadow m-2">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary"><?php echo _('Liturgical Calendar Validator'); ?><i class="fas fa-flask-vial float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <?php echo _('Liturgical Calendar Validator'); ?>
+                        <i class="fas fa-flask-vial float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i>
+                    </h6>
                 </div>
                 <div class="card-body">
+                    <?php // phpcs:ignore Generic.Files.LineLength ?>
                     <div><?php echo _('In order to verify that the liturgical data produced by the API is correct, there is a Unit Test interface that can run predefined tests against the JSON responses produced by the API starting from the year 1970 and going up to 25 years from the current year.'); ?></div>
                     <div class="text-center mb-2"><a href="https://litcal-tests.johnromanodorazio.com/" class="btn btn-primary mt-2"><?php echo _('Liturgical Calendar Validator'); ?></a></div>
                     <small class="text-muted">
@@ -157,7 +166,10 @@ $formLabelB = sprintf(
             </div>
             <div class="card shadow m-2">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary"><?php echo _('Calculation of the Dates of Easter'); ?>: API<i class="fas fa-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i></h6>
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <?php echo _('Calculation of the Dates of Easter'); ?>: API
+                        <i class="fas fa-code float-end fa-2x text-black" style="--bs-text-opacity: .15;"></i>
+                    </h6>
                 </div>
                 <div class="card-body">
                     <?php $EASTER_CALCULATOR_API = _('A simple API endpoint that returns data about the Dates of Easter, both Gregorian and Julian, ' .

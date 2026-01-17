@@ -144,12 +144,18 @@ $PageHeading        = isset($_GET['choice'])
     }
     : $messages['Particular Calendars heading'];
 
-$buttonGroup = '<hr><div class="d-flex justify-content-around">
-<button class="btn btn-sm btn-primary m-2 d-none litcalActionButton" id="makePatronAction" data-requires-auth="true" disabled data-bs-toggle="modal" data-bs-target="#makePatronActionPrompt"><i class="fas fa-user-graduate me-2"></i>' . $messages['PatronButton'] . '</button>
-<button class="btn btn-sm btn-primary m-2 d-none litcalActionButton" id="setPropertyAction" data-requires-auth="true" disabled data-bs-toggle="modal" data-bs-target="#setPropertyActionPrompt"><i class="fas fa-edit me-2"></i>' . $messages['SetPropertyButton'] . '</button>
-<button class="btn btn-sm btn-primary m-2 d-none litcalActionButton" id="moveLiturgicalEventAction" data-requires-auth="true" disabled data-bs-toggle="modal" data-bs-target="#moveLiturgicalEventActionPrompt"><i class="fas fa-calendar-day me-2"></i>' . $messages['MoveEventButton'] . '</button>
-<button class="btn btn-sm btn-primary m-2 d-none litcalActionButton" id="newLiturgicalEventAction" data-requires-auth="true" disabled data-bs-toggle="modal" data-bs-target="#newLiturgicalEventActionPrompt"><i class="far fa-calendar-plus me-2"></i>' . $messages['CreateEventButton'] . '</button>
-</div>';
+$btnClass    = 'btn btn-sm btn-primary m-2 d-none litcalActionButton';
+$btnAttrs    = 'data-requires-auth="true" disabled data-bs-toggle="modal"';
+$buttonGroup = '<hr><div class="d-flex justify-content-around">'
+    . '<button class="' . $btnClass . '" id="makePatronAction" ' . $btnAttrs . ' data-bs-target="#makePatronActionPrompt">'
+    . '<i class="fas fa-user-graduate me-2"></i>' . $messages['PatronButton'] . '</button>'
+    . '<button class="' . $btnClass . '" id="setPropertyAction" ' . $btnAttrs . ' data-bs-target="#setPropertyActionPrompt">'
+    . '<i class="fas fa-edit me-2"></i>' . $messages['SetPropertyButton'] . '</button>'
+    . '<button class="' . $btnClass . '" id="moveLiturgicalEventAction" ' . $btnAttrs . ' data-bs-target="#moveLiturgicalEventActionPrompt">'
+    . '<i class="fas fa-calendar-day me-2"></i>' . $messages['MoveEventButton'] . '</button>'
+    . '<button class="' . $btnClass . '" id="newLiturgicalEventAction" ' . $btnAttrs . ' data-bs-target="#newLiturgicalEventActionPrompt">'
+    . '<i class="far fa-calendar-plus me-2"></i>' . $messages['CreateEventButton'] . '</button>'
+    . '</div>';
 
 ?><!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
@@ -212,7 +218,9 @@ if (isset($_GET['choice'])) {
                             </select>
                         </div>
                         <div class="col col-md-3">
-                            <button class="btn btn-danger d-none" id="removeExistingCalendarDataBtn" data-requires-auth="true" disabled data-bs-toggle="modal" data-bs-target="#removeCalendarDataPrompt">
+                            <button class="btn btn-danger d-none" id="removeExistingCalendarDataBtn"
+                                data-requires-auth="true" disabled
+                                data-bs-toggle="modal" data-bs-target="#removeCalendarDataPrompt">
                                 <i class="far fa-trash-alt me-2"></i>
                                 <?php echo $messages['RemoveDataButton']; ?>
                             </button>
@@ -220,7 +228,11 @@ if (isset($_GET['choice'])) {
                     </form>
                     <div class="card border-4 border-top-0 border-bottom-0 border-end-0 border-primary rounded-3 m-4">
                         <div class="card-header py-3">
-                            <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo $messages['Define a Calendar for a Wider Region']; ?></h4>
+                            <h4 class="m-0 fw-bold text-primary">
+                                <i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4"
+                                    style="--bs-text-opacity: .1;"></i><?php
+                                    echo $messages['Define a Calendar for a Wider Region'];
+                                ?></h4>
                         </div>
                         <div class="card-body">
                             <hr>
@@ -229,7 +241,9 @@ if (isset($_GET['choice'])) {
                             <?php echo $buttonGroup ?>
                         </div>
                         <div class="card-footer text-center">
-                            <button class="btn btn-lg btn-primary m-2 d-none serializeRegionalNationalData" id="serializeWiderRegionData" data-requires-auth="true" data-category="widerregion" disabled>
+                            <button class="btn btn-lg btn-primary m-2 d-none serializeRegionalNationalData"
+                                id="serializeWiderRegionData" data-requires-auth="true"
+                                data-category="widerregion" disabled>
                                 <i class="fas fa-save me-2"></i>
                                 <?php echo $messages['Save Wider Region Calendar Data']; ?>
                             </button>
@@ -277,7 +291,9 @@ if (isset($_GET['choice'])) {
                             </select>
                         </div>
                         <div class="col col-md-3">
-                            <button class="btn btn-danger d-none" id="removeExistingCalendarDataBtn" data-requires-auth="true" disabled data-bs-toggle="modal" data-bs-target="#removeCalendarDataPrompt">
+                            <button class="btn btn-danger d-none" id="removeExistingCalendarDataBtn"
+                                data-requires-auth="true" disabled
+                                data-bs-toggle="modal" data-bs-target="#removeCalendarDataPrompt">
                                 <i class="far fa-trash-alt me-2"></i>
                                 <?php echo $messages['RemoveDataButton']; ?>
                             </button>
@@ -285,12 +301,25 @@ if (isset($_GET['choice'])) {
                     </form>
                     <div class="card border-4 border-top-0 border-bottom-0 border-end-0 border-primary rounded-3 m-4">
                         <div class="card-header py-3">
-                            <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo $messages['Define a National Calendar']; ?></h4>
+                            <h4 class="m-0 fw-bold text-primary">
+                                <i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4"
+                                    style="--bs-text-opacity: .1;"></i><?php
+                                    echo $messages['Define a National Calendar'];
+                                ?></h4>
                         </div>
                         <div class="card-body">
 
                             <div id="nationalCalendarSettingsContainer" class="container">
-                                <h3 id="nationalCalendarSettingsTitle" class="text-center"><?php echo $messages['National calendar settings']; ?><i class="fas fa-info-circle ms-4 d-inline-block text-black" style="--bs-text-opacity: .3;" role="button" title="<?php echo htmlspecialchars($messages['Tooltip - National calendar first step'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></i></h3>
+                                <?php $tooltip = htmlspecialchars(
+                                    $messages['Tooltip - National calendar first step'],
+                                    ENT_QUOTES | ENT_SUBSTITUTE,
+                                    'UTF-8'
+                                ); ?>
+                                <h3 id="nationalCalendarSettingsTitle" class="text-center"><?php
+                                    echo $messages['National calendar settings'];
+                                ?><i class="fas fa-info-circle ms-4 d-inline-block text-black"
+                                    style="--bs-text-opacity: .3;" role="button"
+                                    title="<?php echo $tooltip; ?>"></i></h3>
                                 <!-- NOTE: This form intentionally does NOT have data-requires-auth because its enabled
                                      state depends on BOTH authentication AND translation availability. The form is
                                      enabled/disabled via extending.js based on:
@@ -326,18 +355,41 @@ if (isset($_GET['choice'])) {
                                     <div class="form-group col col-md-2">
                                         <label for="nationalCalendarSettingHighPriest"><?php echo $messages['ETERNAL HIGH PRIEST']; ?></label>
                                         <div class="form-check form-switch">
-                                            <input class="form-check-input fs-2" type="checkbox" role="switch" id="nationalCalendarSettingHighPriest" disabled style="margin-left: -1.25em; margin-top: 0.075em;">
-                                            <i class="fas fa-info-circle ms-4 d-inline-block text-black" style="--bs-text-opacity: .3;" role="button" title="<?php echo htmlspecialchars($messages['Tooltip - Eternal High Priest'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></i>
+                                            <input class="form-check-input fs-2" type="checkbox" role="switch"
+                                                id="nationalCalendarSettingHighPriest" disabled
+                                                style="margin-left: -1.25em; margin-top: 0.075em;">
+                                            <?php $hpTooltip = htmlspecialchars(
+                                                $messages['Tooltip - Eternal High Priest'],
+                                                ENT_QUOTES | ENT_SUBSTITUTE,
+                                                'UTF-8'
+                                            ); ?>
+                                            <i class="fas fa-info-circle ms-4 d-inline-block text-black"
+                                                style="--bs-text-opacity: .3;" role="button"
+                                                title="<?php echo $hpTooltip; ?>"></i>
                                         </div>
                                     </div>
 
                                     <div class="col col-md-6 mt-4">
                                         <div class="row mt-2">
                                             <div class="col-5">
-                                                <label><i class="fas fa-info-circle me-2 text-black" style="--bs-text-opacity: .3;" role="button" title="<?php echo htmlspecialchars($messages['Tooltip - Published Roman Missals'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></i><?php echo $messages['Published Roman Missals']; ?></label>
+                                                <?php $missalsTooltip = htmlspecialchars(
+                                                    $messages['Tooltip - Published Roman Missals'],
+                                                    ENT_QUOTES | ENT_SUBSTITUTE,
+                                                    'UTF-8'
+                                                ); ?>
+                                                <label><i class="fas fa-info-circle me-2 text-black"
+                                                    style="--bs-text-opacity: .3;" role="button"
+                                                    title="<?php echo $missalsTooltip; ?>"></i><?php
+                                                    echo $messages['Published Roman Missals'];
+                                                ?></label>
                                             </div>
                                             <div class="col-4">
-                                                <button class="btn btn-sm btn-primary ms-2 mb-2" id="addPublishedRomanMissal" disabled data-bs-toggle="modal" data-bs-target="#addPublishedRomanMissalPrompt" type="button"><i class="fas fa-plus me-2"></i><?php echo $messages['AddMissalButton']; ?></button>
+                                                <button class="btn btn-sm btn-primary ms-2 mb-2" id="addPublishedRomanMissal"
+                                                    disabled data-bs-toggle="modal"
+                                                    data-bs-target="#addPublishedRomanMissalPrompt" type="button">
+                                                    <i class="fas fa-plus me-2"></i><?php
+                                                        echo $messages['AddMissalButton'];
+                                                    ?></button>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -346,7 +398,16 @@ if (isset($_GET['choice'])) {
                                         </div>
                                     </div>
                                     <div class="form-group col col-md-3 mt-4">
-                                        <label for="associatedWiderRegion"><?php echo $messages['Wider Region']; ?><i class="fas fa-info-circle ms-2 text-black" style="--bs-text-opacity: .3;" role="button" title="<?php echo htmlspecialchars($messages['Tooltip - Wider Region association'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></i></label>
+                                        <?php $wrTooltip = htmlspecialchars(
+                                            $messages['Tooltip - Wider Region association'],
+                                            ENT_QUOTES | ENT_SUBSTITUTE,
+                                            'UTF-8'
+                                        ); ?>
+                                        <label for="associatedWiderRegion"><?php
+                                            echo $messages['Wider Region'];
+                                        ?><i class="fas fa-info-circle ms-2 text-black"
+                                            style="--bs-text-opacity: .3;" role="button"
+                                            title="<?php echo $wrTooltip; ?>"></i></label>
                                         <input class="form-control" list="WiderRegionsList" id="associatedWiderRegion" disabled />
                                         <datalist id="WiderRegionsList">
                                             <option value=""></option>
@@ -366,7 +427,9 @@ if (isset($_GET['choice'])) {
                             <?php echo $buttonGroup ?>
                         </div>
                         <div class="card-footer text-center">
-                            <button class="btn btn-lg btn-primary m-2 d-none serializeRegionalNationalData" id="serializeNationalCalendarData" data-requires-auth="true" data-category="nation" disabled>
+                            <button class="btn btn-lg btn-primary m-2 d-none serializeRegionalNationalData"
+                                id="serializeNationalCalendarData" data-requires-auth="true"
+                                data-category="nation" disabled>
                                 <i class="fas fa-save me-2"></i>
                                 <?php echo $messages['Save National Calendar Data']; ?>
                             </button>
@@ -405,7 +468,11 @@ if (isset($_GET['choice'])) {
                                 </datalist>
                             </div>
                             <div class="form-group col col-md-3">
-                                <label for="diocesanCalendarGroup" class="fw-bold"><?php echo $messages['Diocesan group']; ?>: <i class="fas fa-circle-info mx-2" title="<?php echo htmlspecialchars($DioceseGroupHelp, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></i></label>
+                                <?php $dgTooltip = htmlspecialchars($DioceseGroupHelp, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                <label for="diocesanCalendarGroup" class="fw-bold"><?php
+                                    echo $messages['Diocesan group'];
+                                ?>: <i class="fas fa-circle-info mx-2"
+                                    title="<?php echo $dgTooltip; ?>"></i></label>
                                 <input list="DiocesanGroupsList" class="form-control" id="diocesanCalendarGroup" aria-describedby="diocesanCalendarGroupHelp" disabled>
                                 <datalist id="DiocesanGroupsList">
                                     <option value=""></option>
@@ -447,7 +514,9 @@ if (isset($_GET['choice'])) {
                                 </select>
                             </div>
                             <div class="col col-md-3 text-center align-self-end">
-                                <button class="btn btn-danger d-none" id="removeExistingDiocesanDataBtn" data-requires-auth="true" disabled data-bs-toggle="modal" data-bs-target="#removeDiocesanCalendarPrompt">
+                                <button class="btn btn-danger d-none" id="removeExistingDiocesanDataBtn"
+                                    data-requires-auth="true" disabled
+                                    data-bs-toggle="modal" data-bs-target="#removeDiocesanCalendarPrompt">
                                     <i class="far fa-trash-alt me-2"></i>
                                     <?php echo $messages['RemoveDataButton']; ?>
                                 </button>
@@ -459,7 +528,9 @@ if (isset($_GET['choice'])) {
                 <nav aria-label="<?php echo $messages['Diocesan calendar definition']; ?>" id="diocesanCalendarDefinitionCardLinks" class="diocesan-disabled">
                     <ul class="pagination pagination-lg justify-content-center m-1">
                         <li class="page-item disabled">
-                            <a class="page-link diocesan-carousel-prev" href="#" tabindex="-1" aria-disabled="true" aria-label="<?php echo $messages['Previous']; ?>"><span aria-hidden="true">&laquo;</span></a>
+                            <a class="page-link diocesan-carousel-prev" href="#" tabindex="-1"
+                                aria-disabled="true" aria-label="<?php echo $messages['Previous']; ?>">
+                                <span aria-hidden="true">&laquo;</span></a>
                         </li>
                         <li class="page-item active"><a class="page-link" href="#" data-bs-slide-to="0"><?php echo $messages['Solemnities']; ?></a></li>
                         <li class="page-item"><a class="page-link" href="#" data-bs-slide-to="1"><?php echo $messages['Feasts']; ?></a></li>
@@ -483,7 +554,11 @@ if (isset($_GET['choice'])) {
                             <div class="container-fluid">
                                 <div class="card border-4 border-top-0 border-bottom-0 border-end-0 border-primary rounded-3 my-4 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo $messages['Define a Diocesan Calendar']; ?>: <?php echo $messages['Define the Solemnities']; ?></h4>
+                                        <h4 class="m-0 fw-bold text-primary">
+                                            <i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4"
+                                                style="--bs-text-opacity: .1;"></i><?php
+                                                echo $messages['Define a Diocesan Calendar'];
+                                            ?>: <?php echo $messages['Define the Solemnities']; ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
@@ -504,7 +579,11 @@ if (isset($_GET['choice'])) {
                             <div class="container-fluid">
                                 <div class="card border-4 border-top-0 border-bottom-0 border-end-0 border-primary rounded-3 my-4 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo $messages['Define a Diocesan Calendar']; ?>: <?php echo $messages['Define the Feasts']; ?></h4>
+                                        <h4 class="m-0 fw-bold text-primary">
+                                            <i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4"
+                                                style="--bs-text-opacity: .1;"></i><?php
+                                                echo $messages['Define a Diocesan Calendar'];
+                                            ?>: <?php echo $messages['Define the Feasts']; ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
@@ -525,7 +604,11 @@ if (isset($_GET['choice'])) {
                             <div class="container-fluid">
                                 <div class="card border-4 border-top-0 border-bottom-0 border-end-0 border-primary rounded-3 my-4 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo $messages['Define a Diocesan Calendar']; ?>: <?php echo $messages['Define the Memorials']; ?></h4>
+                                        <h4 class="m-0 fw-bold text-primary">
+                                            <i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4"
+                                                style="--bs-text-opacity: .1;"></i><?php
+                                                echo $messages['Define a Diocesan Calendar'];
+                                            ?>: <?php echo $messages['Define the Memorials']; ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
@@ -546,7 +629,11 @@ if (isset($_GET['choice'])) {
                             <div class="container-fluid">
                                 <div class="card border-4 border-top-0 border-bottom-0 border-end-0 border-primary rounded-3 my-4 mx-5">
                                     <div class="card-header py-3">
-                                        <h4 class="m-0 fw-bold text-primary"><i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4" style="--bs-text-opacity: .1;"></i><?php echo $messages['Define a Diocesan Calendar']; ?>: <?php echo $messages['Define the Optional Memorials']; ?></h4>
+                                        <h4 class="m-0 fw-bold text-primary">
+                                            <i class="fas fa-place-of-worship fa-2x text-black d-inline-block me-4"
+                                                style="--bs-text-opacity: .1;"></i><?php
+                                                echo $messages['Define a Diocesan Calendar'];
+                                            ?>: <?php echo $messages['Define the Optional Memorials']; ?></h4>
                                     </div>
                                     <div class="card-body">
                                         <!--<div class="row no-gutters align-items-center">
@@ -679,7 +766,15 @@ let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($Liturgi
     $messages['Modal - Create new event'],
     false,
     false,
-    [['id' => 'newLiturgicalEventFromExistingButton', 'class' => 'btn btn-primary actionPromptButton', 'icon' => 'fas fa-calendar-plus', 'label' => $messages['CreateLiturgicalEventLabel'], 'disabled' => true]],
+    [
+        [
+            'id'       => 'newLiturgicalEventFromExistingButton',
+            'class'    => 'btn btn-primary actionPromptButton',
+            'icon'     => 'fas fa-calendar-plus',
+            'label'    => $messages['CreateLiturgicalEventLabel'],
+            'disabled' => true
+        ]
+    ],
     $messages['CancelButton']
 ); ?>
 
@@ -700,7 +795,9 @@ let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($Liturgi
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" id="addLanguageEditionRomanMissal" class="btn btn-primary" disabled><i class="fas fa-calendar-plus me-2"></i><?php echo $messages['AddMissalEditionButton']; ?></button>
+                <button type="button" id="addLanguageEditionRomanMissal" class="btn btn-primary" disabled>
+                    <i class="fas fa-calendar-plus me-2"></i><?php echo $messages['AddMissalEditionButton']; ?>
+                </button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-window-close me-2"></i><?php echo $messages['CancelButton']; ?></button>
             </div>
         </div>

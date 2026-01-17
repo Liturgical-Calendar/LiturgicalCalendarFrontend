@@ -154,10 +154,14 @@ try {
             }
 
             echo '<nav id="decreesNavBar" class="navbar navbar-expand-lg mt-3 mb-3 p-0" style="background-color: #e3f2fd;" data-bs-theme="light">';
-            echo '<ul class="nav nav-pills">' . implode('', $navItems) . '<button class="btn btn-primary btn-sm ms-3" title="' . $messages['AddDecreeButton'] . '" id="addDecreeBtn" disabled>+</button>' . '</ul>';
+            echo '<ul class="nav nav-pills">' . implode('', $navItems)
+                . '<button class="btn btn-primary btn-sm ms-3" title="' . $messages['AddDecreeButton']
+                . '" id="addDecreeBtn" disabled>+</button>' . '</ul>';
             echo '</nav>';
 
-            echo '<div class="border" style="height: calc(100vh - 22rem); overflow-y: auto; box-shadow: inset 0px 0px 20px -6px rgba(0,0,0,0.3);" data-bs-spy="scroll" data-bs-target="#decreesNavBar" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true">';
+            echo '<div class="border" style="height: calc(100vh - 22rem); overflow-y: auto; '
+                . 'box-shadow: inset 0px 0px 20px -6px rgba(0,0,0,0.3);" data-bs-spy="scroll" '
+                . 'data-bs-target="#decreesNavBar" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true">';
             echo implode('', $cardItems);
             echo '</div>';
 
