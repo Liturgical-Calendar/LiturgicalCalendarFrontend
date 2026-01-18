@@ -3,15 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Gábor <pleineux@gmail.com>, 2025.
 # OpenAI <noreply-mt-openai@weblate.org>, 2025, 2026.
-# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2025.
+# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2025, 2026.
 # Weblate Admin <admin@example.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-18 02:48+0000\n"
-"PO-Revision-Date: 2026-01-18 03:51+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2026-01-18 04:24+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hu/>\n"
 "Language: hu\n"
@@ -1686,7 +1686,7 @@ msgstr "Állíts össze partikuláris naptárakat az általános római naptár 
 #: includes/messages.php:172
 msgid "Particular Calendars - Define Wider Region events"
 msgstr ""
-"Partikuláris naptárak - Határozz meg szélesebb régióhoz tartozó ünnepeket"
+"Partikuláris naptárak – A tágabb régióhoz tartozó események meghatározása"
 
 #. translators: main heading for particular calendars page
 #: includes/messages.php:174
