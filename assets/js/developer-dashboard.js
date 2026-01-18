@@ -288,7 +288,7 @@ const UI = {
      */
     renderScopeBadge(scope) {
         if (scope === 'write') {
-            return `<span class="badge bg-warning text-dark"><i class="fas fa-edit me-1"></i>${this.i18n.readWrite || 'Read & Write'}</span>`;
+            return `<span class="badge bg-primary"><i class="fas fa-edit me-1"></i>${this.i18n.readWrite || 'Read & Write'}</span>`;
         }
         return `<span class="badge bg-info"><i class="fas fa-eye me-1"></i>${this.i18n.readOnly || 'Read-only'}</span>`;
     },

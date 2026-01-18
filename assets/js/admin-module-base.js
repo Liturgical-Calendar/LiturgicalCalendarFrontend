@@ -409,7 +409,7 @@ function createAdminModule(options) { // eslint-disable-line no-unused-vars
             const scopeRead = this.config.i18n.scopeRead || 'Read-only';
             const scopeWrite = this.config.i18n.scopeWrite || 'Read & Write';
             if (scope === 'write') {
-                return `<span class="badge bg-warning text-dark"><i class="fas fa-edit me-1"></i>${scopeWrite}</span>`;
+                return `<span class="badge bg-primary"><i class="fas fa-edit me-1"></i>${scopeWrite}</span>`;
             }
             return `<span class="badge bg-info"><i class="fas fa-eye me-1"></i>${scopeRead}</span>`;
         },

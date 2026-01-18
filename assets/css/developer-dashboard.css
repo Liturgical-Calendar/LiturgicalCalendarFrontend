@@ -85,8 +85,8 @@
 }
 
 .keys-table .key-scope-write {
-    background-color: rgba(var(--bs-warning-rgb), 0.15);
-    color: var(--bs-warning);
+    background-color: rgba(var(--bs-primary-rgb), 0.15);
+    color: var(--bs-primary);
 }
 
 .keys-table .key-actions {
