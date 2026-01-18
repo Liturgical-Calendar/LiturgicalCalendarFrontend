@@ -7,6 +7,8 @@
  * definition pages to ensure consistency and easier maintenance.
  */
 
+// phpcs:disable Generic.Files.LineLength
+
 $messages = [
     // =========================================================================
     // Form field labels
@@ -347,3 +349,5 @@ $messages = [
     /** translators: aria-label for diocesan calendar definition navigation */
     'Diocesan calendar definition'                    => _('Diocesan calendar definition'),
 ];
+
+// phpcs:enable Generic.Files.LineLength

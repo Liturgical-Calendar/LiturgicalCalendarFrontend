@@ -1,0 +1,255 @@
+/**
+ * Developer Dashboard Styles
+ *
+ * Styles for the developer dashboard with application cards and API key management.
+ */
+
+/* Dashboard heading */
+.developer-dashboard-heading {
+    border-bottom: 2px solid var(--bs-primary);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Application cards */
+.app-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-left: 4px solid var(--bs-primary);
+}
+
+.app-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1) !important;
+}
+
+.app-card .card-header {
+    background-color: rgba(var(--bs-primary-rgb), 0.05);
+}
+
+.app-card .app-uuid {
+    font-family: var(--bs-font-monospace);
+    font-size: 0.75rem;
+    color: var(--bs-secondary);
+}
+
+/* Application actions */
+.app-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.app-actions .btn {
+    min-width: 80px;
+}
+
+/* API Keys table */
+.keys-table {
+    margin-bottom: 0;
+}
+
+.keys-table th {
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.keys-table td {
+    vertical-align: middle;
+}
+
+.keys-table .key-prefix {
+    font-family: var(--bs-font-monospace);
+    background-color: var(--bs-gray-100);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.85rem;
+}
+
+.keys-table .key-name {
+    font-weight: 500;
+}
+
+.keys-table .key-scope {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.keys-table .key-scope-read {
+    background-color: rgba(var(--bs-info-rgb), 0.15);
+    color: var(--bs-info);
+}
+
+.keys-table .key-scope-write {
+    background-color: rgba(var(--bs-primary-rgb), 0.15);
+    color: var(--bs-primary);
+}
+
+.keys-table .key-actions {
+    white-space: nowrap;
+}
+
+.keys-table .key-actions .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+/* Keys section within app card */
+.keys-section {
+    border-top: 1px solid var(--bs-border-color);
+    padding-top: 1rem;
+    margin-top: 1rem;
+}
+
+.keys-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.keys-section-header h6 {
+    margin: 0;
+    color: var(--bs-secondary);
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.empty-state .empty-icon {
+    font-size: 4rem;
+    color: var(--bs-secondary);
+    opacity: 0.5;
+    margin-bottom: 1rem;
+}
+
+.empty-state h5 {
+    color: var(--bs-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+    color: var(--bs-gray-600);
+    margin-bottom: 1.5rem;
+}
+
+/* Key display in modal */
+#generatedKeyDisplay {
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .app-actions {
+        flex-direction: column;
+    }
+
+    .app-actions .btn {
+        width: 100%;
+    }
+
+    .keys-table {
+        font-size: 0.85rem;
+    }
+
+    .keys-table .key-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .keys-table .key-actions .btn {
+        width: 100%;
+    }
+
+    .keys-section-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
+}
+
+/* Loading state */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+/* Application metadata */
+.app-metadata {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--bs-secondary);
+}
+
+.app-metadata-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.app-metadata-item i {
+    opacity: 0.7;
+}
+
+/* Website link */
+.app-website-link {
+    color: var(--bs-primary);
+    text-decoration: none;
+}
+
+.app-website-link:hover {
+    text-decoration: underline;
+}
+
+/* Collapsible keys section */
+.keys-collapse {
+    overflow: hidden;
+}
+
+/* Toggle button for keys */
+.btn-toggle-keys {
+    transition: all 0.2s ease;
+}
+
+.btn-toggle-keys i {
+    transition: transform 0.2s ease;
+}
+
+.btn-toggle-keys[aria-expanded="true"] i {
+    transform: rotate(180deg);
+}
+
+/* Key count badge */
+.key-count-badge {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    margin-left: 0.5rem;
+}
+
+/* Toast notifications */
+.toast-container {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 1100;
+}

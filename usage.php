@@ -155,21 +155,34 @@ $messages = [
                                 </div>
                                 <ul class="nav nav-tabs mt-4" role="tablist">
                                     <li class="nav-item">
-                                        <button class="nav-link active" id="gcal-tab" data-bs-toggle="tab" data-bs-target="#gcal" role="tab" aria-controls="gcal" aria-selected="true"><i class="fab fa-google me-2"></i>&nbsp;Google Calendar</button>
+                                        <button class="nav-link active" id="gcal-tab" data-bs-toggle="tab"
+                                            data-bs-target="#gcal" role="tab" aria-controls="gcal"
+                                            aria-selected="true">
+                                            <i class="fab fa-google me-2"></i>&nbsp;Google Calendar</button>
                                     </li>
                                     <li class="nav-item">
-                                        <button class="nav-link" id="iphone-tab" data-bs-toggle="tab" data-bs-target="#iphone" role="tab" aria-controls="iphone" aria-selected="false"><i class="fab fa-apple me-2"></i>&nbsp;iPhone</button>
+                                        <button class="nav-link" id="iphone-tab" data-bs-toggle="tab"
+                                            data-bs-target="#iphone" role="tab" aria-controls="iphone"
+                                            aria-selected="false">
+                                            <i class="fab fa-apple me-2"></i>&nbsp;iPhone</button>
                                     </li>
                                     <li class="nav-item">
-                                        <button class="nav-link" id="android-tab" data-bs-toggle="tab" data-bs-target="#android" role="tab" aria-controls="android" aria-selected="false"><i class="fab fa-android me-2"></i>&nbsp;Android</button>
+                                        <button class="nav-link" id="android-tab" data-bs-toggle="tab"
+                                            data-bs-target="#android" role="tab" aria-controls="android"
+                                            aria-selected="false">
+                                            <i class="fab fa-android me-2"></i>&nbsp;Android</button>
                                     </li>
                                     <li class="nav-item">
-                                        <button class="nav-link" id="msoutlook-tab" data-bs-toggle="tab" data-bs-target="#msoutlook" role="tab" aria-controls="msoutlook" aria-selected="false"><i class="fab fa-microsoft me-2"></i>&nbsp;Microsoft Outlook</button>
+                                        <button class="nav-link" id="msoutlook-tab" data-bs-toggle="tab"
+                                            data-bs-target="#msoutlook" role="tab" aria-controls="msoutlook"
+                                            aria-selected="false">
+                                            <i class="fab fa-microsoft me-2"></i>&nbsp;Microsoft Outlook</button>
                                     </li>
                                 </ul>
                                 <div class="tab-content" id="myTabContent">
                                     <div class="tab-pane fade p-4 border-left border-right border-bottom show active" id="gcal" role="tabpanel" aria-labelledby="gcal-tab">
                                     <?php
+                                        // phpcs:disable Generic.Files.LineLength
                                         /** translators: instruction step for calendar subscription - clicking to copy URL */
                                         echo '<p>' . _('Click on the link above to copy it to the clipboard.') . '</p>';
                                         /** translators: instruction step - %s is replaced with a link to calendar.google.com */
@@ -257,6 +270,7 @@ $messages = [
                                         echo '<p>' . _('Since you have made a subscription, any updates in the Liturgical Calendar API will be propagated to your subscription.') . '</p>';
                                         /** translators: explanation about yearly calendar refresh behavior */
                                         echo '<p>' . _('You will only see events for the current year. On the first day of a new year however, new events will be created automatically for the new year.') . '</p>';
+                                        // phpcs:enable Generic.Files.LineLength
                                     ?>
                                     </div>
                                 </div>

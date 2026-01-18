@@ -16,17 +16,28 @@ use UnexpectedValueException;
  * authentication state before page render. This eliminates the flash/delay
  * that occurs when relying solely on client-side JavaScript authentication checks.
  *
- * The JWT secret must match the one used by the API to sign tokens.
+ * Supports two authentication modes:
+ * - OIDC: Validates tokens from Zitadel using JWKS (RS256)
+ * - Legacy: Validates tokens signed with JWT_SECRET (HS256)
+ *
+ * OIDC mode is used when ZITADEL_ISSUER and ZITADEL_CLIENT_ID are configured.
  */
 class AuthHelper
 {
     private const ACCESS_TOKEN_COOKIE  = 'litcal_access_token';
+    private const ID_TOKEN_COOKIE      = 'litcal_id_token';
     private const SUPPORTED_ALGORITHMS = ['HS256', 'HS384', 'HS512'];
 
     private static ?self $instance = null;
 
     public readonly bool $isAuthenticated;
     public readonly ?string $username;
+    public readonly ?string $email;
+    public readonly ?string $name;
+    public readonly ?string $givenName;
+    public readonly ?string $familyName;
+    public readonly ?string $sub;
+    public readonly bool $emailVerified;
     public readonly ?int $exp;
     /** @var array<string>|null */
     public readonly ?array $roles;
@@ -37,18 +48,64 @@ class AuthHelper
      * Private constructor - use getInstance() to get the singleton
      *
      * @param object|null $payload Validated JWT payload, or null if not authenticated
+     * @param bool $isOidc Whether this is an OIDC token (different claim structure)
      */
-    private function __construct(?object $payload)
+    private function __construct(?object $payload, bool $isOidc = false)
     {
         if ($payload === null) {
             $this->isAuthenticated = false;
             $this->username        = null;
+            $this->email           = null;
+            $this->name            = null;
+            $this->givenName       = null;
+            $this->familyName      = null;
+            $this->sub             = null;
+            $this->emailVerified   = false;
             $this->exp             = null;
             $this->roles           = null;
             $this->permissions     = null;
+        } elseif ($isOidc) {
+            // OIDC token from Zitadel
+            $this->isAuthenticated = true;
+            // Prefer preferred_username, fall back to email, then sub
+            $this->username      = $payload->preferred_username
+                ?? $payload->email
+                ?? $payload->sub
+                ?? null;
+            $this->email         = $payload->email ?? null;
+            $this->name          = $payload->name ?? null;
+            $this->givenName     = $payload->given_name ?? null;
+            $this->familyName    = $payload->family_name ?? null;
+            $this->sub           = $payload->sub ?? null;
+            $this->emailVerified = $payload->email_verified ?? false;
+            $this->exp           = isset($payload->exp) && is_numeric($payload->exp) ? (int) $payload->exp : null;
+
+            // Extract roles from Zitadel claims
+            $roles    = [];
+            $rolesKey = 'urn:zitadel:iam:org:project:roles';
+            if (isset($payload->{$rolesKey}) && is_object($payload->{$rolesKey})) {
+                $roles = array_keys((array) $payload->{$rolesKey});
+            }
+            // Also check project-specific roles claim
+            $projectId = $_ENV['ZITADEL_PROJECT_ID'] ?? getenv('ZITADEL_PROJECT_ID') ?: null;
+            if ($projectId !== null) {
+                $projectRolesKey = "urn:zitadel:iam:org:project:{$projectId}:roles";
+                if (isset($payload->{$projectRolesKey}) && is_object($payload->{$projectRolesKey})) {
+                    $roles = array_merge($roles, array_keys((array) $payload->{$projectRolesKey}));
+                }
+            }
+            $this->roles       = !empty($roles) ? array_values(array_unique($roles)) : null;
+            $this->permissions = null; // OIDC doesn't have permissions claim
         } else {
+            // Legacy JWT token
             $this->isAuthenticated = true;
             $this->username        = isset($payload->sub) && is_string($payload->sub) ? $payload->sub : null;
+            $this->email           = null; // Legacy tokens don't have email
+            $this->name            = null;
+            $this->givenName       = null;
+            $this->familyName      = null;
+            $this->sub             = isset($payload->sub) && is_string($payload->sub) ? $payload->sub : null;
+            $this->emailVerified   = false;
             $this->exp             = isset($payload->exp) && is_numeric($payload->exp) ? (int) $payload->exp : null;
             $this->roles           = isset($payload->roles) && is_array($payload->roles)
                 ? array_values(array_filter($payload->roles, 'is_string'))
@@ -96,15 +153,31 @@ class AuthHelper
     /**
      * Get the singleton instance
      *
-     * @param string|null $secret JWT signing secret (required on first call, from JWT_SECRET env var)
-     * @param string $algorithm JWT algorithm (from JWT_ALGORITHM env var, defaults to HS256)
+     * Note: This is a true singleton - parameters are only used on first instantiation.
+     * Subsequent calls return the cached instance regardless of parameters passed.
+     * Use reset() to clear the instance if different parameters are needed (e.g., in tests).
+     *
+     * @param string|null $secret JWT signing secret (for legacy mode, from JWT_SECRET env var)
+     * @param string $algorithm JWT algorithm (for legacy mode, from JWT_ALGORITHM env var, defaults to HS256)
      * @return self
      */
     public static function getInstance(?string $secret = null, string $algorithm = 'HS256'): self
     {
         if (self::$instance === null) {
-            // Try to get from environment if not provided
-            // Check both $_ENV (phpdotenv) and getenv() for compatibility
+            // Check if OIDC is configured
+            $issuer   = $_ENV['ZITADEL_ISSUER'] ?? getenv('ZITADEL_ISSUER') ?: null;
+            $clientId = $_ENV['ZITADEL_CLIENT_ID'] ?? getenv('ZITADEL_CLIENT_ID') ?: null;
+
+            if ($issuer !== null && $clientId !== null) {
+                // Try OIDC validation first
+                $payload = self::tryValidateOidcToken();
+                if ($payload !== null) {
+                    self::$instance = new self($payload, true);
+                    return self::$instance;
+                }
+            }
+
+            // Fall back to legacy JWT validation
             $secret    = $secret ?? ( $_ENV['JWT_SECRET'] ?? getenv('JWT_SECRET') ?: null );
             $algorithm = $_ENV['JWT_ALGORITHM'] ?? getenv('JWT_ALGORITHM') ?: $algorithm;
 
@@ -115,10 +188,52 @@ class AuthHelper
 
             // Attempt to validate token and create instance
             $payload        = self::tryValidateFromCookie($secret, $algorithm);
-            self::$instance = new self($payload);
+            self::$instance = new self($payload, false);
         }
 
         return self::$instance;
+    }
+
+    /**
+     * Try to validate OIDC token from Zitadel
+     *
+     * Uses OidcClient for JWKS handling and token validation.
+     * Prefers ID token for user profile information (preferred_username, email, name, etc.)
+     * as the access token typically only contains minimal claims (sub).
+     *
+     * @return object|null Validated payload or null
+     */
+    private static function tryValidateOidcToken(): ?object
+    {
+        // Check if access token exists (proves user is authenticated)
+        $accessToken = $_COOKIE[self::ACCESS_TOKEN_COOKIE] ?? null;
+        if ($accessToken === null || $accessToken === '') {
+            return null;
+        }
+
+        // Get ID token for user profile information
+        // ID token contains full user claims (preferred_username, email, name, etc.)
+        // Access token typically only has minimal claims (sub)
+        $idToken = $_COOKIE[self::ID_TOKEN_COOKIE] ?? null;
+
+        // Use ID token if available, fall back to access token
+        $token = $idToken ?? $accessToken;
+
+        try {
+            $oidcClient = OidcClient::fromEnv();
+
+            // Build list of valid audiences (clientId + projectId if configured)
+            $additionalAudiences = [];
+            $projectId           = $_ENV['ZITADEL_PROJECT_ID'] ?? getenv('ZITADEL_PROJECT_ID') ?: null;
+            if ($projectId !== null) {
+                $additionalAudiences[] = $projectId;
+            }
+
+            return $oidcClient->validateToken($token, $additionalAudiences);
+        } catch (\Exception) {
+            // OidcClient instantiation or validation errors
+            return null;
+        }
     }
 
     /**

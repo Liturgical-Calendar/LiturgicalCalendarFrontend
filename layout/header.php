@@ -112,32 +112,98 @@ asort($langsAssoc);
                         $safeTitle   = htmlspecialchars($displayName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                         $safeLang    = htmlspecialchars($lang !== false ? $lang : $displayName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                         $safeIsoLang = htmlspecialchars($isoLang, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-                        echo "<a class=\"$safeClass\" id=\"langChoice-$safeKey\" href=\"#\" title=\"$safeTitle\"><span class=\"d-none d-md-inline\">$safeLang</span><span class=\"d-inline d-md-none\">$safeIsoLang</span></a>";
+                        echo "<a class=\"$safeClass\" id=\"langChoice-$safeKey\" href=\"#\" title=\"$safeTitle\">"
+                            . "<span class=\"d-none d-md-inline\">$safeLang</span>"
+                            . "<span class=\"d-inline d-md-none\">$safeIsoLang</span></a>";
                     }
                     ?>
                 </div>
             </li>
             <li class="vr mx-2 d-none d-lg-block"></li>
+            <!-- Notifications (Admin only) -->
+            <li class="nav-item dropdown<?php echo ( $authHelper->isAuthenticated && $authHelper->hasRole('admin') ) ? '' : ' d-none'; ?>" id="notificationsContainer" data-requires-role="admin">
+                <a class="nav-link position-relative" href="#" id="notificationsDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    title="<?php echo htmlspecialchars(_('Notifications'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                    <i class="fas fa-bell"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none" id="notificationsBadge">
+                        0
+                    </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end shadow notifications-dropdown" aria-labelledby="notificationsDropdown" style="min-width: 320px;">
+                    <h6 class="dropdown-header">
+                        <i class="fas fa-bell me-2"></i><?php echo htmlspecialchars(_('Notifications'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                    </h6>
+                    <div id="notificationsList">
+                        <div class="dropdown-item text-muted text-center py-3">
+                            <i class="fas fa-spinner fa-spin me-2"></i><?php echo htmlspecialchars(_('Loading...'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                        </div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-center text-primary" href="admin-dashboard.php">
+                        <small><?php echo htmlspecialchars(_('View all requests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></small>
+                    </a>
+                </div>
+            </li>
             <!-- Authentication Status: Server-side auth detection, JS handles dynamic updates -->
+            <?php
+            // Determine if OIDC is enabled for inline onclick handler
+            $oidcEnabled = \LiturgicalCalendar\Frontend\OidcClient::isConfigured();
+            ?>
             <li class="nav-item me-lg-2<?php echo $authHelper->isAuthenticated ? ' d-none' : ''; ?>" id="loginBtnContainer" data-requires-no-auth>
                 <button class="btn btn-outline-primary btn-sm" id="loginBtn"
-                        title="<?php echo htmlspecialchars(_('Login'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                        title="<?php echo htmlspecialchars(_('Login'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"
+                        <?php if ($oidcEnabled) : ?>
+                        onclick="window.location.href='/auth/login.php?return_to='+encodeURIComponent(window.location.href)"
+                        <?php endif; ?>>
                     <i class="fas fa-sign-in-alt me-1"></i><span class="d-lg-none d-sm-inline"><?php echo _('Login'); ?></span>
                 </button>
             </li>
             <li class="nav-item me-lg-2<?php echo $authHelper->isAuthenticated ? '' : ' d-none'; ?>" id="userMenuContainer" data-requires-auth>
                 <div class="btn-group" id="userMenu">
-                    <span class="btn btn-outline-success btn-sm" id="userInfo">
-                        <i class="fas fa-user me-1"></i><span id="username" class="d-lg-none d-sm-inline"><?php echo $authHelper->username !== null ? htmlspecialchars($authHelper->username, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') : ''; ?></span>
-                    </span>
+                    <a href="user-profile.php" class="btn btn-outline-success btn-sm" id="userInfo"
+                       title="<?php echo htmlspecialchars(_('View Profile'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                        <i class="fas fa-user me-1"></i><span id="username" class="d-lg-none d-sm-inline"><?php
+                            if ($authHelper->username !== null) {
+                            echo htmlspecialchars($authHelper->username, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                            }
+                        ?></span>
+                    </a>
+                    <?php
+                    // Build inline logout handler for OIDC mode (works before JS loads)
+                    // Use json_encode for proper JavaScript string escaping
+                    $logoutConfirmMsg = json_encode(_('Are you sure you want to logout?'));
+                    ?>
                     <button class="btn btn-outline-danger btn-sm" id="logoutBtn"
-                            title="<?php echo htmlspecialchars(_('Logout'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                            title="<?php echo htmlspecialchars(_('Logout'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"
+                            <?php if ($oidcEnabled) : ?>
+                            onclick="if(confirm(<?php echo $logoutConfirmMsg; ?>)){window.location.href='/auth/logout.php?zitadel=true&return_to='+encodeURIComponent(window.location.href)}"
+                            <?php endif; ?>>
                         <i class="fas fa-sign-out-alt me-1"></i><span class="d-lg-none"><?php echo _('Logout'); ?></span>
                     </button>
                 </div>
             </li>
-            <?php $adminLabel = _('Admin'); ?>
-            <li class="nav-item<?php echo $currentPage === 'admin-dashboard' ? ' bg-info' : ''; ?><?php echo $authHelper->isAuthenticated ? '' : ' d-none'; ?>" id="topNavBar_Admin" data-requires-auth>
+            <?php
+            $developerLabel   = _('Developer');
+            $isDeveloperPage  = $currentPage === 'developer-dashboard';
+            $showDeveloperNav = $authHelper->isAuthenticated && $authHelper->hasRole('developer');
+            ?>
+            <li class="nav-item<?php echo $isDeveloperPage ? ' bg-info' : ''; ?><?php echo $showDeveloperNav ? '' : ' d-none'; ?>"
+                id="topNavBar_Developer" data-requires-auth data-requires-role="developer">
+                <a class="nav-link<?php echo $currentPage === 'developer-dashboard' ? ' active' : ''; ?>" href="./developer-dashboard.php"
+                   title="<?php echo htmlspecialchars($developerLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                    <i class="fas fa-code me-1"></i><span class="d-lg-none d-xxl-inline"><?php echo $developerLabel; ?></span>
+                </a>
+            </li>
+            <?php
+            $adminLabel      = _('Admin');
+            $isAdminOrEditor = $authHelper->hasRole('admin')
+                || $authHelper->hasRole('calendar_editor')
+                || $authHelper->hasRole('test_editor');
+            $showAdminNav    = $authHelper->isAuthenticated && $isAdminOrEditor;
+            ?>
+            <li class="nav-item<?php echo $currentPage === 'admin-dashboard' ? ' bg-info' : ''; ?><?php echo $showAdminNav ? '' : ' d-none'; ?>"
+                id="topNavBar_Admin" data-requires-auth data-requires-role="admin,calendar_editor,test_editor">
                 <a class="nav-link<?php echo $currentPage === 'admin-dashboard' ? ' active' : ''; ?>" href="./admin-dashboard.php"
                    title="<?php echo htmlspecialchars($adminLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                     <i class="fas fa-gear me-1"></i><span class="d-lg-none d-xxl-inline"><?php echo $adminLabel; ?></span>
@@ -164,53 +230,70 @@ asort($langsAssoc);
                     </div>
 
                     <?php if ($isAdminPage) : ?>
-                    <!-- Admin Sidebar -->
-                    <a class="nav-link<?php echo $currentPage === 'admin-dashboard' ? ' active' : ''; ?>" href="admin-dashboard.php">
-                        <i class="sb-nav-link-icon fas fa-fw fa-tachometer-alt"></i>
-                        <span><?php echo _('Dashboard'); ?></span>
-                    </a>
-
-                    <div class="sb-sidenav-menu-heading text-white-50">
-                        <?php echo _('General Roman Calendar'); ?>
-                    </div>
-                    <a class="nav-link<?php echo $currentPage === 'temporale' ? ' active' : ''; ?>" href="temporale.php">
-                        <i class="sb-nav-link-icon fas fa-fw fa-calendar-alt text-primary"></i>
-                        <span><?php echo _('Temporale'); ?></span>
-                    </a>
-                    <a class="nav-link<?php echo $currentPage === 'missals-editor' ? ' active' : ''; ?>" href="missals-editor.php">
-                        <i class="sb-nav-link-icon fas fa-fw fa-book-open text-success"></i>
-                        <span><?php echo _('Sanctorale'); ?></span>
-                    </a>
-                    <a class="nav-link<?php echo $currentPage === 'decrees' ? ' active' : ''; ?>" href="decrees.php">
-                        <i class="sb-nav-link-icon fas fa-fw fa-gavel text-warning"></i>
-                        <span><?php echo _('Decrees'); ?></span>
-                    </a>
-
-                    <div class="sb-sidenav-menu-heading text-white-50">
-                        <?php echo _('Particular Calendars'); ?>
-                    </div>
                         <?php
-                    // Get current choice parameter for extending.php active state
-                        $extendingChoice = $_GET['choice'] ?? '';
-                    ?>
-                    <a class="nav-link<?php echo $currentPage === 'extending' && $extendingChoice === 'widerRegion' ? ' active' : ''; ?>" href="extending.php?choice=widerRegion">
-                        <i class="sb-nav-link-icon fas fa-fw fa-globe-americas text-info"></i>
-                        <span><?php echo _('Wider Region'); ?></span>
-                    </a>
-                    <a class="nav-link<?php echo $currentPage === 'extending' && $extendingChoice === 'national' ? ' active' : ''; ?>" href="extending.php?choice=national">
-                        <i class="sb-nav-link-icon fas fa-fw fa-flag text-danger"></i>
-                        <span><?php echo _('National'); ?></span>
-                    </a>
-                    <a class="nav-link<?php echo $currentPage === 'extending' && $extendingChoice === 'diocesan' ? ' active' : ''; ?>" href="extending.php?choice=diocesan">
-                        <i class="sb-nav-link-icon fas fa-fw fa-church text-secondary"></i>
-                        <span><?php echo _('Diocesan'); ?></span>
-                    </a>
+                        // Check if user has calendar-related roles
+                        $sidebarHasCalendarRole = $authHelper->hasRole('admin')
+                            || $authHelper->hasRole('calendar_editor')
+                            || $authHelper->hasRole('test_editor');
+                        ?>
+                        <!-- Admin/Developer Sidebar -->
+                        <?php if ($sidebarHasCalendarRole) : ?>
+                            <a class="nav-link<?php echo $currentPage === 'admin-dashboard' ? ' active' : ''; ?>" href="admin-dashboard.php">
+                                <i class="sb-nav-link-icon fas fa-fw fa-tachometer-alt"></i>
+                                <span><?php echo _('Dashboard'); ?></span>
+                            </a>
+                        <?php endif; ?>
 
-                    <hr class="sidebar-divider my-2">
-                    <a class="nav-link" href="/">
-                        <i class="sb-nav-link-icon fas fa-fw fa-arrow-left"></i>
-                        <span><?php echo _('Back to Website'); ?></span>
-                    </a>
+                        <?php if ($authHelper->hasRole('developer')) : ?>
+                            <a class="nav-link<?php echo $currentPage === 'developer-dashboard' ? ' active' : ''; ?>" href="developer-dashboard.php">
+                                <i class="sb-nav-link-icon fas fa-fw fa-code text-info"></i>
+                                <span><?php echo _('Developer'); ?></span>
+                            </a>
+                        <?php endif; ?>
+
+                        <?php if ($sidebarHasCalendarRole) : ?>
+                            <div class="sb-sidenav-menu-heading text-white-50">
+                                <?php echo _('General Roman Calendar'); ?>
+                            </div>
+                            <a class="nav-link<?php echo $currentPage === 'temporale' ? ' active' : ''; ?>" href="temporale.php">
+                                <i class="sb-nav-link-icon fas fa-fw fa-calendar-alt text-primary"></i>
+                                <span><?php echo _('Temporale'); ?></span>
+                            </a>
+                            <a class="nav-link<?php echo $currentPage === 'missals-editor' ? ' active' : ''; ?>" href="missals-editor.php">
+                                <i class="sb-nav-link-icon fas fa-fw fa-book-open text-success"></i>
+                                <span><?php echo _('Sanctorale'); ?></span>
+                            </a>
+                            <a class="nav-link<?php echo $currentPage === 'decrees' ? ' active' : ''; ?>" href="decrees.php">
+                                <i class="sb-nav-link-icon fas fa-fw fa-gavel text-warning"></i>
+                                <span><?php echo _('Decrees'); ?></span>
+                            </a>
+
+                            <div class="sb-sidenav-menu-heading text-white-50">
+                                <?php echo _('Particular Calendars'); ?>
+                            </div>
+                            <?php
+                            // Get current choice parameter for extending.php active state
+                            $extendingChoice = $_GET['choice'] ?? '';
+                            ?>
+                            <a class="nav-link<?php echo $currentPage === 'extending' && $extendingChoice === 'widerRegion' ? ' active' : ''; ?>" href="extending.php?choice=widerRegion">
+                                <i class="sb-nav-link-icon fas fa-fw fa-globe-americas text-info"></i>
+                                <span><?php echo _('Wider Region'); ?></span>
+                            </a>
+                            <a class="nav-link<?php echo $currentPage === 'extending' && $extendingChoice === 'national' ? ' active' : ''; ?>" href="extending.php?choice=national">
+                                <i class="sb-nav-link-icon fas fa-fw fa-flag text-danger"></i>
+                                <span><?php echo _('National'); ?></span>
+                            </a>
+                            <a class="nav-link<?php echo $currentPage === 'extending' && $extendingChoice === 'diocesan' ? ' active' : ''; ?>" href="extending.php?choice=diocesan">
+                                <i class="sb-nav-link-icon fas fa-fw fa-church text-secondary"></i>
+                                <span><?php echo _('Diocesan'); ?></span>
+                            </a>
+                        <?php endif; // end $sidebarHasCalendarRole ?>
+
+                        <hr class="sidebar-divider my-2">
+                        <a class="nav-link" href="/">
+                            <i class="sb-nav-link-icon fas fa-fw fa-arrow-left"></i>
+                            <span><?php echo _('Back to Website'); ?></span>
+                        </a>
 
                     <?php else : ?>
                     <!-- Main Website Sidebar -->

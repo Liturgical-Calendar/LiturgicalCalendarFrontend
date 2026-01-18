@@ -194,6 +194,12 @@ try {
     $authHelper = new class {
         public readonly bool $isAuthenticated;
         public readonly ?string $username;
+        public readonly ?string $email;
+        public readonly ?string $name;
+        public readonly ?string $givenName;
+        public readonly ?string $familyName;
+        public readonly ?string $sub;
+        public readonly bool $emailVerified;
         public readonly ?int $exp;
         /** @var array<string>|null */
         public readonly ?array $roles;
@@ -204,6 +210,12 @@ try {
         {
             $this->isAuthenticated = false;
             $this->username        = null;
+            $this->email           = null;
+            $this->name            = null;
+            $this->givenName       = null;
+            $this->familyName      = null;
+            $this->sub             = null;
+            $this->emailVerified   = false;
             $this->exp             = null;
             $this->roles           = null;
             $this->permissions     = null;
@@ -230,7 +242,7 @@ $i18n = new I18n();
 // Exposed to JavaScript as AdminPages global via layout/footer.php.
 // ============================================================================
 
-$adminPages = ['admin-dashboard', 'missals-editor', 'extending', 'temporale', 'decrees'];
+$adminPages = ['admin-dashboard', 'missals-editor', 'extending', 'temporale', 'decrees', 'admin-users', 'admin-role-requests', 'admin-applications', 'developer-dashboard'];
 
 // ============================================================================
 // Setup PSR-Compliant HTTP Client with Production Features
