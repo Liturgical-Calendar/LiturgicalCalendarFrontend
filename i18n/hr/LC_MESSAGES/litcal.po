@@ -3,15 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Lovro <development.lovro@gmail.com>, 2025.
 # OpenAI <noreply-mt-openai@weblate.org>, 2025, 2026.
-# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2025.
+# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2025, 2026.
 # Weblate Admin <admin@example.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-18 02:48+0000\n"
-"PO-Revision-Date: 2026-01-18 03:51+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2026-01-18 04:24+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
 "Language: hr\n"
@@ -1411,8 +1411,8 @@ msgstr "Prijava nije uspjela. Provjerite svoje podatke."
 #, php-format
 msgid "Your session will expire in less than %1$d minute."
 msgid_plural "Your session will expire in less than %1$d minutes."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Vaša sesija istječe za manje od %1$d minutu."
+msgstr[1] "Vaša sesija istječe za manje od %1$d minute."
 msgstr[2] "Vaša sesija istječe za manje od %1$d minuta."
 
 #: includes/login-modal.php:604
