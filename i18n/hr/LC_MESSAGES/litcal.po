@@ -2,7 +2,7 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # Lovro <development.lovro@gmail.com>, 2025.
-# OpenAI <noreply-mt-openai@weblate.org>, 2025.
+# OpenAI <noreply-mt-openai@weblate.org>, 2025, 2026.
 # "John R. D'Orazio" <priest@johnromanodorazio.com>, 2025.
 # Weblate Admin <admin@example.com>, 2025.
 msgid ""
@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-18 02:48+0000\n"
-"PO-Revision-Date: 2025-12-28 15:29+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2026-01-18 03:51+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
 "Language: hr\n"
@@ -653,7 +653,7 @@ msgstr "Julijanski Uskrs u gregorijanskom kalendaru"
 
 #: easter.php:133
 msgid "The last coinciding Easter will be:"
-msgstr ""
+msgstr "Posljednje podudaranje Uskrsa bit će:"
 
 #: about.php:7
 msgid ""
@@ -1198,7 +1198,7 @@ msgstr "Dan"
 
 #: src/FormControls.php:73
 msgid "switch on for mobile celebration as opposed to fixed date"
-msgstr ""
+msgstr "uključiti za mobilno slavlje umjesto fiksnog datuma"
 
 #. translators: form field label for the month of the year
 #: src/FormControls.php:78 includes/messages.php:23
@@ -1207,7 +1207,7 @@ msgstr "Mjesec"
 
 #: src/FormControls.php:80
 msgid "Mobile"
-msgstr ""
+msgstr "Mobilni"
 
 #. translators: form field label for liturgical color selection
 #: src/FormControls.php:106 includes/messages.php:25
@@ -1259,17 +1259,15 @@ msgstr "Pogledaj spremišta projekta na GitHubu"
 
 #: layout/header.php:127 layout/header.php:135
 msgid "Notifications"
-msgstr ""
+msgstr "Obavijesti"
 
 #: layout/header.php:139
-#, fuzzy
-#| msgid "Extending..."
 msgid "Loading..."
-msgstr "Produžavanje..."
+msgstr "Učitavam..."
 
 #: layout/header.php:144
 msgid "View all requests"
-msgstr ""
+msgstr "Pregledaj sve zahtjeve"
 
 #: layout/header.php:155 layout/header.php:159 includes/login-modal.php:56
 #: includes/login-modal.php:379
@@ -1278,7 +1276,7 @@ msgstr "Prijava"
 
 #: layout/header.php:165
 msgid "View Profile"
-msgstr ""
+msgstr "Pogledaj profil"
 
 #: layout/header.php:175 includes/login-modal.php:105
 #: includes/login-modal.php:670
@@ -1290,10 +1288,8 @@ msgid "Logout"
 msgstr "Odjava"
 
 #: layout/header.php:187 layout/header.php:250
-#, fuzzy
-#| msgid "In development"
 msgid "Developer"
-msgstr "U razvoju"
+msgstr "Programer"
 
 #: layout/header.php:199
 msgid "Admin"
@@ -1301,15 +1297,15 @@ msgstr "Administracija"
 
 #: layout/header.php:243
 msgid "Dashboard"
-msgstr ""
+msgstr "Nadzorna ploča"
 
 #: layout/header.php:260
 msgid "Temporale"
-msgstr ""
+msgstr "Prolazni dio"
 
 #: layout/header.php:264
 msgid "Sanctorale"
-msgstr ""
+msgstr "Svetkovine"
 
 #: layout/header.php:268
 msgid "Decrees"
@@ -1325,22 +1321,16 @@ msgid "Wider Region"
 msgstr "Šira regija"
 
 #: layout/header.php:284
-#, fuzzy
-#| msgid "National Calendar"
 msgid "National"
-msgstr "Nacionalni kalendar"
+msgstr "Nacionalni"
 
 #: layout/header.php:288
-#, fuzzy
-#| msgid "Diocese"
 msgid "Diocesan"
-msgstr "Biskupija"
+msgstr "Biskupijski"
 
 #: layout/header.php:295
-#, fuzzy
-#| msgid "Project website"
 msgid "Back to Website"
-msgstr "Web stranica projekta"
+msgstr "Povratak na web stranicu"
 
 #: layout/header.php:302
 msgid "Home"
@@ -1418,14 +1408,12 @@ msgid "Login failed. Please check your credentials."
 msgstr "Prijava nije uspjela. Provjerite svoje podatke."
 
 #: includes/login-modal.php:540 includes/login-modal.php:545
-#, fuzzy, php-format
-#| msgid "Your session will expire in less than %d minute."
-#| msgid_plural "Your session will expire in less than %d minutes."
+#, php-format
 msgid "Your session will expire in less than %1$d minute."
 msgid_plural "Your session will expire in less than %1$d minutes."
-msgstr[0] "Vaša će sesija isteći za manje od %d minute."
-msgstr[1] "Vaša će sesija isteći za manje od %d minute."
-msgstr[2] "Vaša će sesija isteći za manje od %d minuta."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] "Vaša sesija istječe za manje od %1$d minuta."
 
 #: includes/login-modal.php:604
 msgid "Extending..."
