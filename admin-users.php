@@ -46,21 +46,41 @@ if (!$isAdmin) {
     </h1>
 
     <p class="text-muted mb-4"><?php
-        $manageUsersDesc = _('Manage users who have been granted roles in the system. You can view user information and revoke roles.');
+        $manageUsersDesc = _('Manage users in the system. You can view user information and revoke roles from users who have them.');
         echo htmlspecialchars($manageUsersDesc, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     ?></p>
 
-    <!-- Users Table Card -->
+    <!-- Refresh Button -->
+    <div class="mb-3">
+        <button class="btn btn-outline-primary btn-sm" id="refreshBtn">
+            <i class="fas fa-sync-alt me-1"></i><?php echo htmlspecialchars(_('Refresh'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+        </button>
+    </div>
+
+    <!-- Users with Roles Card -->
     <div class="card shadow mb-4">
-        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <div class="card-header py-3">
             <h6 class="m-0 fw-bold text-primary">
-                <i class="fas fa-users me-2"></i><?php echo htmlspecialchars(_('Users with Roles'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                <i class="fas fa-user-shield me-2"></i><?php echo htmlspecialchars(_('Users with Roles'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                <span class="badge bg-primary ms-2" id="usersWithRolesCount">0</span>
             </h6>
-            <button class="btn btn-outline-primary btn-sm" id="refreshBtn">
-                <i class="fas fa-sync-alt me-1"></i><?php echo htmlspecialchars(_('Refresh'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-            </button>
         </div>
-        <div class="card-body" id="usersTableBody">
+        <div class="card-body" id="usersWithRolesTableBody">
+            <div class="text-center text-muted">
+                <i class="fas fa-spinner fa-spin me-2"></i><?php echo htmlspecialchars(_('Loading...'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users without Roles Card -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 fw-bold text-secondary">
+                <i class="fas fa-user me-2"></i><?php echo htmlspecialchars(_('Users without Roles'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                <span class="badge bg-secondary ms-2" id="usersWithoutRolesCount">0</span>
+            </h6>
+        </div>
+        <div class="card-body" id="usersWithoutRolesTableBody">
             <div class="text-center text-muted">
                 <i class="fas fa-spinner fa-spin me-2"></i><?php echo htmlspecialchars(_('Loading...'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
             </div>
@@ -104,7 +124,10 @@ if (!$isAdmin) {
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const ApiUrl = <?php echo json_encode($apiBaseUrl); ?>;
-        const usersTableBody = document.getElementById('usersTableBody');
+        const usersWithRolesTableBody = document.getElementById('usersWithRolesTableBody');
+        const usersWithoutRolesTableBody = document.getElementById('usersWithoutRolesTableBody');
+        const usersWithRolesCount = document.getElementById('usersWithRolesCount');
+        const usersWithoutRolesCount = document.getElementById('usersWithoutRolesCount');
         const refreshBtn = document.getElementById('refreshBtn');
         const revokeModal = new bootstrap.Modal(document.getElementById('revokeModal'));
         const revokeConfirmText = document.getElementById('revokeConfirmText');
@@ -123,15 +146,18 @@ if (!$isAdmin) {
             'test_editor': <?php echo json_encode(_('Accuracy Test Editor')); ?>
         };
 
+        const loadingHtml = `
+            <div class="text-center text-muted">
+                <i class="fas fa-spinner fa-spin me-2"></i>${<?php echo json_encode(_('Loading...')); ?>}
+            </div>
+        `;
+
         /**
          * Load users from the API
          */
         async function loadUsers() {
-            usersTableBody.innerHTML = `
-                <div class="text-center text-muted">
-                    <i class="fas fa-spinner fa-spin me-2"></i>${<?php echo json_encode(_('Loading...')); ?>}
-                </div>
-            `;
+            usersWithRolesTableBody.innerHTML = loadingHtml;
+            usersWithoutRolesTableBody.innerHTML = loadingHtml;
 
             try {
                 const response = await fetch(ApiUrl + '/admin/users', {
@@ -145,26 +171,35 @@ if (!$isAdmin) {
                 }
 
                 const data = await response.json();
-                displayUsers(data.users || []);
+
+                // Update counts
+                usersWithRolesCount.textContent = data.totalWithRoles || 0;
+                usersWithoutRolesCount.textContent = data.totalWithoutRoles || 0;
+
+                // Display both user groups
+                displayUsersWithRoles(data.usersWithRoles || []);
+                displayUsersWithoutRoles(data.usersWithoutRoles || []);
             } catch (error) {
                 console.error('Error loading users:', error);
-                usersTableBody.innerHTML = `
+                const errorHtml = `
                     <div class="alert alert-danger mb-0">
                         <i class="fas fa-exclamation-triangle me-2"></i>
                         ${<?php echo json_encode(_('Failed to load users. Please try again later.')); ?>}
                     </div>
                 `;
+                usersWithRolesTableBody.innerHTML = errorHtml;
+                usersWithoutRolesTableBody.innerHTML = errorHtml;
             }
         }
 
         /**
-         * Display users in a table
+         * Display users with roles in a table
          */
-        function displayUsers(users) {
+        function displayUsersWithRoles(users) {
             if (users.length === 0) {
-                usersTableBody.innerHTML = `
+                usersWithRolesTableBody.innerHTML = `
                     <div class="text-center text-muted py-4">
-                        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                        <i class="fas fa-user-shield fa-3x text-muted mb-3"></i>
                         <p class="mb-0">${<?php echo json_encode(_('No users with roles found.')); ?>}</p>
                     </div>
                 `;
@@ -184,31 +219,27 @@ if (!$isAdmin) {
             `;
 
             for (const user of users) {
-                const displayName = user.displayName || user.preferredLoginName || user.userId;
+                const displayName = user.displayName || user.username || user.userId;
                 const email = user.email || '';
 
                 // Build roles badges with revoke buttons
                 let rolesHtml = '';
-                if (user.roles && user.roles.length > 0) {
-                    for (const role of user.roles) {
-                        const roleName = roleNames[role] || role;
-                        const badgeClass = role === 'admin' ? 'bg-danger' : 'bg-primary';
-                        rolesHtml += `
-                            <span class="badge ${badgeClass} me-1 mb-1">
-                                ${escapeHtml(roleName)}
-                                <button type="button" class="btn-close btn-close-white ms-1 revoke-btn"
-                                        style="font-size: 0.6em;"
-                                        data-user-id="${escapeHtml(user.userId)}"
-                                        data-role="${escapeHtml(role)}"
-                                        data-user-name="${escapeHtml(displayName)}"
-                                        data-role-name="${escapeHtml(roleName)}"
-                                        title="${<?php echo json_encode(_('Revoke this role')); ?>}">
-                                </button>
-                            </span>
-                        `;
-                    }
-                } else {
-                    rolesHtml = `<span class="text-muted">${<?php echo json_encode(_('No roles')); ?>}</span>`;
+                for (const role of user.roles) {
+                    const roleName = roleNames[role] || role;
+                    const badgeClass = role === 'admin' ? 'bg-danger' : 'bg-primary';
+                    rolesHtml += `
+                        <span class="badge ${badgeClass} me-1 mb-1">
+                            ${escapeHtml(roleName)}
+                            <button type="button" class="btn-close btn-close-white ms-1 revoke-btn"
+                                    style="font-size: 0.6em;"
+                                    data-user-id="${escapeHtml(user.userId)}"
+                                    data-role="${escapeHtml(role)}"
+                                    data-user-name="${escapeHtml(displayName)}"
+                                    data-role-name="${escapeHtml(roleName)}"
+                                    title="${<?php echo json_encode(_('Revoke this role')); ?>}">
+                            </button>
+                        </span>
+                    `;
                 }
 
                 html += `
@@ -226,7 +257,7 @@ if (!$isAdmin) {
             }
 
             html += '</tbody></table></div>';
-            usersTableBody.innerHTML = html;
+            usersWithRolesTableBody.innerHTML = html;
 
             // Add event listeners to revoke buttons
             document.querySelectorAll('.revoke-btn').forEach(btn => {
@@ -236,6 +267,61 @@ if (!$isAdmin) {
                     openRevokeModal(this.dataset);
                 });
             });
+        }
+
+        /**
+         * Display users without roles in a table
+         */
+        function displayUsersWithoutRoles(users) {
+            if (users.length === 0) {
+                usersWithoutRolesTableBody.innerHTML = `
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-user fa-3x text-muted mb-3"></i>
+                        <p class="mb-0">${<?php echo json_encode(_('No users without roles found.')); ?>}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '<div class="table-responsive"><table class="table table-hover mb-0">';
+            html += `
+                <thead>
+                    <tr>
+                        <th>${<?php echo json_encode(_('User')); ?>}</th>
+                        <th>${<?php echo json_encode(_('Email Verified')); ?>}</th>
+                        <th>${<?php echo json_encode(_('User ID')); ?>}</th>
+                    </tr>
+                </thead>
+                <tbody>
+            `;
+
+            for (const user of users) {
+                const displayName = user.displayName || user.username || user.userId;
+                const email = user.email || '';
+                const emailVerified = user.emailVerified === true;
+
+                const verifiedBadge = emailVerified
+                    ? `<span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>${<?php echo json_encode(_('Verified')); ?>}</span>`
+                    : `<span class="badge bg-warning text-dark"><i class="fas fa-exclamation-circle me-1"></i>${<?php echo json_encode(_('Not Verified')); ?>}</span>`;
+
+                html += `
+                    <tr>
+                        <td>
+                            <strong>${escapeHtml(displayName)}</strong>
+                            ${email ? `<br><small class="text-muted">${escapeHtml(email)}</small>` : ''}
+                        </td>
+                        <td>
+                            ${verifiedBadge}
+                        </td>
+                        <td>
+                            <small class="text-muted">${escapeHtml(user.userId)}</small>
+                        </td>
+                    </tr>
+                `;
+            }
+
+            html += '</tbody></table></div>';
+            usersWithoutRolesTableBody.innerHTML = html;
         }
 
         /**
