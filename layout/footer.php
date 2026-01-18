@@ -33,6 +33,7 @@ const DecreesUrl      = <?php echo json_encode($apiConfig->decreesUrl); ?>;
 const TemporaleUrl    = <?php echo json_encode($apiConfig->temporaleUrl); ?>;
 const RegionalDataUrl = <?php echo json_encode($apiConfig->regionalDataUrl); ?>;
 const AdminPages      = <?php echo json_encode($adminPages); ?>;
+const OidcEnabled     = <?php echo json_encode(\LiturgicalCalendar\Frontend\OidcClient::isConfigured()); ?>;
 if ( AppEnv === 'development' ) console.info({
     'AppEnv': AppEnv,
     'BaseUrl': BaseUrl,
@@ -43,7 +44,8 @@ if ( AppEnv === 'development' ) console.info({
     'MissalsUrl': MissalsUrl,
     'DecreesUrl': DecreesUrl,
     'TemporaleUrl': TemporaleUrl,
-    'RegionalDataUrl': RegionalDataUrl
+    'RegionalDataUrl': RegionalDataUrl,
+    'OidcEnabled': OidcEnabled
 });
 </script>
 
@@ -82,6 +84,19 @@ if ( AppEnv === 'development' ) console.info({
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/common.js"></script>
 <script src="assets/js/auth.js"></script>
+<script src="assets/js/notifications.js"></script>
+<!-- Notification translations for JavaScript -->
+<script>
+const NotificationTranslations = {
+    noNotifications: <?php echo json_encode(_('No pending requests')); ?>,
+    loadError: <?php echo json_encode(_('Could not load notifications')); ?>,
+    justNow: <?php echo json_encode(_('Just now')); ?>,
+    minutesAgo: <?php echo json_encode(_('min ago')); ?>,
+    hoursAgo: <?php echo json_encode(_('hours ago')); ?>,
+    daysAgo: <?php echo json_encode(_('days ago')); ?>,
+    requestedRole: <?php echo json_encode(_('Requested')); ?>
+};
+</script>
 <?php include_once('includes/login-modal.php'); ?>
 <?php
 $isDevelopment   = ( $_ENV['APP_ENV'] ?? 'production' ) === 'development';
@@ -104,7 +119,9 @@ $pageName = basename($_SERVER['SCRIPT_FILENAME'], '.php');
 
 if (in_array($pageName, [ 'index', 'extending', 'usage', 'missals-editor', 'admin-dashboard', 'examples' ])) {
     echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@2.0.0/dist/js/bootstrap-multiselect.min.js"></script>';
-    echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>';
+    echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" '
+        . 'integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" '
+        . 'crossorigin="anonymous" referrerpolicy="no-referrer"></script>';
 }
 
 //don't include the importmap on the examples page, it has it's own importmap
@@ -112,7 +129,14 @@ if ('examples' !== $pageName) {
     echo $componentsJsImportMap;
 }
 
+//load admin module base for admin pages that use it
+if (in_array($pageName, ['admin-applications', 'admin-role-requests'])) {
+    echo '<script src="assets/js/admin-module-base.js"></script>';
+}
+
 //include any script that has the same name as the current page
 if (file_exists("assets/js/{$pageName}.js")) {
-    echo "<script type=\"module\" src=\"assets/js/{$pageName}.js\"></script>";
+    // Admin modules use the base factory, so they're regular scripts, not modules
+    $scriptType = in_array($pageName, ['admin-applications', 'admin-role-requests']) ? '' : ' type="module"';
+    echo "<script{$scriptType} src=\"assets/js/{$pageName}.js\"></script>";
 }
