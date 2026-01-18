@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-12 17:17+0000\n"
+"POT-Creation-Date: 2026-01-18 02:48+0000\n"
 "PO-Revision-Date: 2025-12-28 15:29+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -50,7 +50,7 @@ msgstr ""
 "cesty %1$s. Ak nie je špecifikovaný, API predvolene použije aktuálny rok."
 
 #. translators: 1. /calendar/nation/{NATION}, 2. /calendar/diocese/{DIOCESE}
-#: index.php:21
+#: index.php:22
 #, php-format
 msgid ""
 "These parameters are useful for tweaking the calendar results, when no "
@@ -63,7 +63,7 @@ msgstr ""
 "kalendáre majú tieto parametre zabudované, parametre nie sú dostupné na "
 "trasách %1$s a %2$s."
 
-#: index.php:25
+#: index.php:27
 msgid ""
 "N.B. When none of these parameters are set, the API will use the defaults as "
 "in use in the Vatican."
@@ -72,7 +72,7 @@ msgstr ""
 "predvolené hodnoty používané vo Vatikáne."
 
 #. translators: 1. /calendar
-#: index.php:30
+#: index.php:33
 #, php-format
 msgid ""
 "These request parameters can always be set, whether we are requesting the "
@@ -83,7 +83,7 @@ msgstr ""
 "zdroj %1$s alebo akýkoľvek zdroj pod cestou %1$s. Národné a diecézne "
 "kalendáre tieto parametre nemajú zabudované."
 
-#: index.php:35
+#: index.php:40
 msgid ""
 "It is preferable to set the locale using the Accept-Language header rather "
 "than using the locale parameter. N.B. The Accept-Language header will have "
@@ -93,7 +93,7 @@ msgstr ""
 "parametra locale. Upozornenie: Hlavička Accept-Language nebude mať žiadny "
 "vplyv, keď sa žiada o národný alebo diecézny kalendár."
 
-#: index.php:38
+#: index.php:43
 msgid ""
 "It is preferable to request the response content type using the Accept "
 "header rather than using the return_type parameter."
@@ -101,7 +101,7 @@ msgstr ""
 "Je lepšie požiadať o typ obsahu odpovede pomocou hlavičky Accept než pomocou "
 "parametra return_type."
 
-#: index.php:41
+#: index.php:46
 msgid ""
 "When not specified, the API will default to the current year. Try "
 "specifically setting the year by changing the value here."
@@ -110,38 +110,38 @@ msgstr ""
 "konkrétne nastaviť rok zmenou hodnoty tu."
 
 #. translators: %s = '/calendar'
-#: index.php:46
+#: index.php:51
 #, php-format
 msgid "Request parameters available on the base %s path"
 msgstr "Dostupné parametre požiadaviek na základnej ceste %s"
 
 #. translators: 1. /calendar
-#: index.php:52
+#: index.php:57
 #, php-format
 msgid "Request parameters available on all %1$s paths"
 msgstr "Parametre požiadaviek dostupné na všetkých cestách %1$s"
 
 #. translators: part of page title - refers to the Catholic liturgical calendar
-#: index.php:60 usage.php:29 examples.php:98 liturgyOfAnyDay.php:18
-#: layout/header.php:174
+#: index.php:65 usage.php:29 examples.php:98 liturgyOfAnyDay.php:18
+#: layout/header.php:256
 msgid "General Roman Calendar"
 msgstr "Všeobecný rímsky kalendár"
 
-#: index.php:69 layout/header.php:19 layout/header.php:162
+#: index.php:74 layout/header.php:19 layout/header.php:228
 msgid "Catholic Liturgical Calendar"
 msgstr "Katolícky liturgický kalendár"
 
 #. translators: 1. /calendar
-#: index.php:79
+#: index.php:84
 #, php-format
 msgid "API %1$s endpoint"
 msgstr "API %1$s koncový bod"
 
-#: index.php:88
+#: index.php:93
 msgid "Path builder"
 msgstr "Staviteľ cesty"
 
-#: index.php:102
+#: index.php:107
 msgid ""
 "URL of the API request based on selected options. The button is set to the "
 "same URL, click on it to see results."
@@ -149,11 +149,11 @@ msgstr ""
 "URL požiadavky API na základe vybraných možností. Tlačidlo je nastavené na "
 "rovnakú URL, kliknite naň, aby ste videli výsledky."
 
-#: index.php:111 index.php:115
+#: index.php:117 index.php:124
 msgid "Liturgical Calendar Validator"
 msgstr "Overovač liturgického kalendára"
 
-#: index.php:114
+#: index.php:123
 msgid ""
 "In order to verify that the liturgical data produced by the API is correct, "
 "there is a Unit Test interface that can run predefined tests against the "
@@ -165,7 +165,7 @@ msgstr ""
 "JSON odpovediam vytvoreným API od roku 1970 až do 25 rokov od aktuálneho "
 "roku."
 
-#: index.php:119
+#: index.php:128
 #, php-format
 msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
@@ -174,28 +174,28 @@ msgstr ""
 "Jednotkové testy sú definované v priečinku %s v repozitári Liturgického "
 "kalendára API."
 
-#: index.php:123
+#: index.php:132
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
 msgstr "Rozhranie jednotkového testu je spravované v samostatnom úložisku: %s."
 
-#: index.php:132
+#: index.php:141
 msgid "Translation Tool"
 msgstr "Nástroj na preklad"
 
-#: index.php:138 index.php:141
+#: index.php:147 index.php:150
 msgid "Translations status"
 msgstr "Stav prekladov"
 
-#: index.php:149
+#: index.php:158
 msgid "Open API Schema"
 msgstr "Otvoriť schému API"
 
-#: index.php:152
+#: index.php:161
 msgid "Swagger / Open API Documentation"
 msgstr "Swagger / Open API Dokumentácia"
 
-#: index.php:154
+#: index.php:163
 msgid ""
 "All of the available API routes with their supported methods, parameters, "
 "content types and responses are described here."
@@ -204,11 +204,11 @@ msgstr ""
 "obsahu a odpoveďami sú popísané tu."
 
 #. translators: card header for Easter calculation tool
-#: index.php:160 usage.php:284
+#: index.php:170 usage.php:298
 msgid "Calculation of the Dates of Easter"
 msgstr "Výpočet dátumov Veľkej noci"
 
-#: index.php:163
+#: index.php:175
 msgid ""
 "A simple API endpoint that returns data about the Dates of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -224,11 +224,11 @@ msgstr ""
 "gregoriánsku Veľkú noc (pozorovanú rímskokatolíckou cirkvou) a Meeusovho "
 "algoritmu pre juliánsku Veľkú noc (pozorovanú pravoslávnymi cirkvami)."
 
-#: index.php:168
+#: index.php:180
 msgid "Dates of Easter API endpoint"
 msgstr "API endpoint Dátumy Veľkej noci"
 
-#: index.php:170
+#: index.php:182
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
@@ -240,13 +240,13 @@ msgstr ""
 
 #. translators: notification title
 #. translators: notification title for successful operations
-#: usage.php:11 includes/login-modal.php:325 includes/messages.php:49
+#: usage.php:11 includes/login-modal.php:359 includes/messages.php:51
 msgid "Success"
 msgstr "Úspech"
 
 #. translators: notification title
 #. translators: notification title for failed operations
-#: usage.php:13 includes/login-modal.php:592 includes/messages.php:51
+#: usage.php:13 includes/login-modal.php:637 includes/messages.php:53
 msgid "Error"
 msgstr "Chyba"
 
@@ -281,7 +281,7 @@ msgid "Example usage of the API"
 msgstr "Príklad použitia API"
 
 #. translators: accordion section header - examples of web-based calendar displays
-#: usage.php:51 layout/header.php:235
+#: usage.php:51 layout/header.php:318
 msgid "Web calendar"
 msgstr "Webový kalendár"
 
@@ -338,7 +338,7 @@ msgid "View FullCalendar (messages first)"
 msgstr "Zobraziť celý kalendár (najprv správy)"
 
 #. translators: accordion section header - subscribing to the calendar via iCal/ICS URL
-#: usage.php:125 layout/header.php:239
+#: usage.php:125 layout/header.php:322
 msgid "Calendar subscription"
 msgstr "Predplatenie kalendára"
 
@@ -357,18 +357,18 @@ msgid "Click to copy to the clipboard!"
 msgstr "Kliknite, aby ste skopírovali do schránky!"
 
 #. translators: instruction step for calendar subscription - clicking to copy URL
-#: usage.php:174 usage.php:196 usage.php:237
+#: usage.php:187 usage.php:209 usage.php:250
 msgid "Click on the link above to copy it to the clipboard."
 msgstr "Kliknite na odkaz vyššie, aby ste ho skopírovali do schránky."
 
 #. translators: instruction step - %s is replaced with a link to calendar.google.com
-#: usage.php:176
+#: usage.php:189
 #, php-format
 msgid "Navigate to %s."
 msgstr "Prejdite na %s."
 
 #. translators: instruction step for Google Calendar - describes UI location
-#: usage.php:178
+#: usage.php:191
 msgid ""
 "At the bottom left corner of the screen, next to Other calendars, click on "
 "the + icon to add a new calendar, and choose <i><b>From URL</b></i>."
@@ -377,12 +377,12 @@ msgstr ""
 "si pridal nový kalendár, a vyber <i><b>Z URL</b></i>."
 
 #. translators: instruction step - pasting the copied URL
-#: usage.php:180 usage.php:200 usage.php:243
+#: usage.php:193 usage.php:213 usage.php:256
 msgid "Paste in the URL that you copied earlier."
 msgstr "Prilepte URL, ktorý ste skopírovali skôr."
 
 #. translators: explanation of what happens after subscribing
-#: usage.php:182 usage.php:202 usage.php:222 usage.php:249
+#: usage.php:195 usage.php:215 usage.php:235 usage.php:262
 msgid ""
 "Once subscribed, your calendar will be populated with the events from the "
 "subscription URL."
@@ -391,12 +391,12 @@ msgstr ""
 "predplatného."
 
 #. translators: info about Google Calendar's polling frequency
-#: usage.php:184 usage.php:224
+#: usage.php:197 usage.php:237
 msgid "Google Calendar will poll the calendar URL every 8 hours."
 msgstr "Google Kalendár bude kontrolovať URL kalendára každých 8 hodín."
 
 #. translators: explanation about automatic updates via subscription
-#: usage.php:186 usage.php:206 usage.php:226 usage.php:257
+#: usage.php:199 usage.php:219 usage.php:239 usage.php:270
 msgid ""
 "Since you have made a subscription, any updates in the Liturgical Calendar "
 "API will be propagated to your subscription."
@@ -405,7 +405,7 @@ msgstr ""
 "budú propagované do vášho predplatného."
 
 #. translators: explanation about yearly calendar refresh behavior
-#: usage.php:188 usage.php:208 usage.php:228 usage.php:259
+#: usage.php:201 usage.php:221 usage.php:241 usage.php:272
 msgid ""
 "You will only see events for the current year. On the first day of a new "
 "year however, new events will be created automatically for the new year."
@@ -414,7 +414,7 @@ msgstr ""
 "automaticky vytvoria nové udalosti pre nový rok."
 
 #. translators: info about cross-device availability for Google Calendar
-#: usage.php:190
+#: usage.php:203
 msgid ""
 "Once the calendar has been added from a desktop, it will become available "
 "for the same Gmail account on the Google Calendar app on a smartphone."
@@ -423,7 +423,7 @@ msgstr ""
 "aplikácii Google Kalendár na smartfóne."
 
 #. translators: instruction step for iPhone - describes Settings menu path
-#: usage.php:198
+#: usage.php:211
 msgid ""
 "Go to <i><b>Phone Settings → Accounts → Add account → Other → Add Calendar</"
 "b></i>."
@@ -432,7 +432,7 @@ msgstr ""
 "kalendár</b></i>."
 
 #. translators: info about iPhone Calendar's polling frequency settings location
-#: usage.php:204
+#: usage.php:217
 msgid ""
 "The iPhone Calendar app will poll the calendar URL based on the settings at "
 "<i><b>Phone Settings → Accounts → Fetch New Data → Fetch</b></i>."
@@ -442,7 +442,7 @@ msgstr ""
 "b></i>."
 
 #. translators: instruction for Android - %s is a link to the Google Calendar tab; prerequisite step
-#: usage.php:214
+#: usage.php:227
 #, php-format
 msgid ""
 "If you have not yet added the calendar subscription from the desktop version "
@@ -452,12 +452,12 @@ msgstr ""
 "urobte tak teraz (pozrite %s)."
 
 #. translators: instruction step for Android
-#: usage.php:216
+#: usage.php:229
 msgid "Open the Google Calendar app."
 msgstr "Otvorte aplikáciu Google Kalendár."
 
 #. translators: instruction step for Android - describes app Settings navigation
-#: usage.php:218
+#: usage.php:231
 msgid ""
 "Go to <i><b>Settings</b></i>, then under the account which you used for the "
 "Desktop version, click on the Calendar subscription name."
@@ -466,22 +466,22 @@ msgstr ""
 "verziu pre počítač, kliknite na názov predplatného kalendára."
 
 #. translators: instruction step for Android - enabling sync
-#: usage.php:220
+#: usage.php:233
 msgid "Make sure <i><b>Synchronization</b></i> is turned on."
 msgstr "Uisti sa, že <i><b>Synchronizácia</b></i> je zapnutá."
 
 #. translators: note about which Outlook version was tested
-#: usage.php:235
+#: usage.php:248
 msgid "tested with Outlook 2013"
 msgstr "testované s Outlookom 2013"
 
 #. translators: instruction step for Outlook - switching views
-#: usage.php:239
+#: usage.php:252
 msgid "At the bottom of the screen, switch from Email view to Calendar view."
 msgstr "V dolnej časti obrazovky prepnite z pohľadu Email na pohľad Kalendár."
 
 #. translators: instruction step for Outlook - describes ribbon menu navigation
-#: usage.php:241
+#: usage.php:254
 msgid ""
 "On the ribbon of the Home menu item, click on <i><b>Open calendar → From the "
 "internet</b></i>."
@@ -490,7 +490,7 @@ msgstr ""
 "b></i>."
 
 #. translators: instruction step for Outlook - checkbox option for polling interval
-#: usage.php:245
+#: usage.php:258
 msgid ""
 "On the following screen, check the checkbox along the lines of \"Poll this "
 "calendar in the interval suggested by the creator\"."
@@ -499,12 +499,12 @@ msgstr ""
 "tento kalendár v intervale navrhnutom tvorcom\"."
 
 #. translators: info about Outlook Calendar's polling frequency
-#: usage.php:247
+#: usage.php:260
 msgid "Outlook Calendar should now poll the calendar URL once a day."
 msgstr "Outlook Kalendár by mal teraz kontrolovať URL kalendára raz denne."
 
 #. translators: instruction for Outlook - ensuring calendar is in correct folder for internet subscription
-#: usage.php:251
+#: usage.php:264
 msgid ""
 "Make sure the Calendar is created in the Other calendars folder; if you find "
 "it under the Personal calendars folder, drag it and drop it onto the Other "
@@ -516,7 +516,7 @@ msgstr ""
 "kalendáre, aby bol považovaný za internetový kalendár na odber."
 
 #. translators: instruction for Outlook - how to manually refresh data
-#: usage.php:253
+#: usage.php:266
 msgid ""
 "You can manually fetch new data by clicking on <i><b>Send/receive all</b></"
 "i> (from the SEND/RECEIVE menu item)."
@@ -525,7 +525,7 @@ msgstr ""
 "b></i> (z položky menu ODOSLAŤ/PRIJÍMAŤ)."
 
 #. translators: info about Outlook's HTML support in event descriptions
-#: usage.php:255
+#: usage.php:268
 msgid ""
 "Outlook Calendar supports a minimal amount of HTML in the event description, "
 "so the event descriptions provided by the subscription URL are a little bit "
@@ -536,42 +536,42 @@ msgstr ""
 "viac \"skrášlené\"."
 
 #. translators: accordion section header - Easter date calculation tool
-#: usage.php:273 layout/header.php:243
+#: usage.php:287 layout/header.php:326
 msgid "Dates of Easter"
 msgstr "Dátumy Veľkej noci"
 
 #. translators: subtitle after card header - describes the example UI
-#: usage.php:286
+#: usage.php:300
 msgid "Example interface"
 msgstr "Príklad rozhrania"
 
 #. translators: description of Easter date calculation range - 1583 is when Gregorian calendar started
-#: usage.php:292
+#: usage.php:306
 msgid "Example display of the date of Easter from 1583 to 9999"
 msgstr "Príklad zobrazenia dátumu Veľkej noci od roku 1583 do roku 9999"
 
 #. translators: button text to go to Easter date calculator
-#: usage.php:296
+#: usage.php:310
 msgid "Calculate the Dates of Easter"
 msgstr "Vypočítaj dátumy Veľkej noci"
 
 #. translators: accordion section header - daily liturgy information and apps
-#: usage.php:309 layout/header.php:247
+#: usage.php:323 layout/header.php:330
 msgid "Liturgy of the Day"
 msgstr "Liturgia dňa"
 
 #. translators: card header - Amazon Alexa flash briefing skill
-#: usage.php:321
+#: usage.php:335
 msgid "Alexa News Brief"
 msgstr "Alexa Novinky"
 
 #. translators: description of Alexa skill - flash briefing format
-#: usage.php:327
+#: usage.php:341
 msgid "Daily news brief with the liturgy of the day, as an Amazon Alexa skill"
 msgstr "Denný spravodajský prehľad s liturgiou dňa, ako zručnosť Amazon Alexa"
 
 #. translators: tooltip for USA Alexa skill - explains timezone options
-#: usage.php:332
+#: usage.php:346
 msgid ""
 "Four feeds to choose from, according to timezone within the USA. The "
 "calendar is the national liturgical calendar for the United States."
@@ -580,39 +580,39 @@ msgstr ""
 "liturgickým kalendárom pre Spojené štáty."
 
 #. translators: tooltip for Italy Alexa skill - single feed with national calendar
-#: usage.php:338
+#: usage.php:352
 msgid "Single feed with the national liturgical calendar for Italy."
 msgstr "Jediný zdroj s národným liturgickým kalendárom pre Taliansko."
 
 #. translators: tooltip for Rome Diocese Alexa skill - specific to Diocese of Rome
-#: usage.php:344
+#: usage.php:358
 msgid ""
 "Single feed with the liturgical calendar specific to the Diocese of Rome."
 msgstr "Jediný zdroj s liturgickým kalendárom špecifickým pre Rímsku diecézu."
 
 #. translators: card header - Amazon Alexa conversational skill (not flash briefing)
-#: usage.php:355
+#: usage.php:369
 msgid "Alexa interactive skill"
 msgstr "Interaktívna zručnosť Alexa"
 
 #. translators: status indicator for features not yet available
-#: usage.php:361 usage.php:375
+#: usage.php:375 usage.php:389
 msgid "In development"
 msgstr "Vo vývoji"
 
 #. translators: card header - Google Assistant voice application
-#: usage.php:369
+#: usage.php:383
 msgid "Google Assistant app"
 msgstr "Aplikácia Google Assistant"
 
 #. translators: card header - tool to look up liturgy for any date
 #. translators: button text to go to liturgy lookup page
-#: usage.php:385 usage.php:395 liturgyOfAnyDay.php:18 liturgyOfAnyDay.php:26
+#: usage.php:399 usage.php:409 liturgyOfAnyDay.php:18 liturgyOfAnyDay.php:26
 msgid "Liturgy of any day"
 msgstr "Liturgia ktoréhokoľvek dňa"
 
 #. translators: example use case for the liturgy lookup tool
-#: usage.php:391
+#: usage.php:405
 msgid ""
 "For example, you can find the liturgy of the day from the day of your "
 "baptism."
@@ -622,15 +622,15 @@ msgstr "Napríklad, môžete nájsť liturgiu dňa z dňa vášho krstu."
 msgid "Date of Easter from 1583 to 9999"
 msgstr "Dátum Veľkej noci od roku 1583 do roku 9999"
 
-#: easter.php:80
+#: easter.php:83
 msgid "Go back"
 msgstr "Vráť sa späť"
 
-#: easter.php:95
+#: easter.php:98
 msgid "Century"
 msgstr "Storočie"
 
-#: easter.php:102
+#: easter.php:105
 msgid ""
 "Easter Day Calculation in PHP (Years in which Julian and Gregorian easter "
 "coincide are marked in yellow)"
@@ -638,17 +638,21 @@ msgstr ""
 "Výpočet Veľkonočného dňa v PHP (Roky, v ktorých sa Julian a Gregoriánska "
 "Veľká noc zhodujú, sú označené žltou farbou)"
 
-#: easter.php:106
+#: easter.php:110
 msgid "Gregorian Easter"
 msgstr "Gregoriánska Veľká noc"
 
-#: easter.php:106
+#: easter.php:111
 msgid "Julian Easter"
 msgstr "Juliánska Veľká noc"
 
-#: easter.php:106
+#: easter.php:112
 msgid "Julian Easter in Gregorian Calendar"
 msgstr "Juliánska Veľká noc v gregoriánskom kalendári"
+
+#: easter.php:133
+msgid "The last coinciding Easter will be:"
+msgstr ""
 
 #: about.php:7
 msgid ""
@@ -672,7 +676,7 @@ msgstr "Liturgický kalendár ako HTML tabuľka vytvorená pomocou Javascriptu"
 msgid "Example '%s' not found"
 msgstr "Príklad '%s' nebol nájdený"
 
-#: translations.php:9
+#: translations.php:5
 msgid ""
 "The first step in creating a national or diocesan calendar, is to translate "
 "the data for the General Roman Calendar into the language for that nation or "
@@ -682,7 +686,7 @@ msgstr ""
 "údaje z Všeobecného rímskeho kalendára do jazyka pre daný národ alebo "
 "diecézu."
 
-#: translations.php:11
+#: translations.php:9
 #, php-format
 msgid ""
 "This can be done on the <a href=\"%1$s\" target=\"_blank\">LitCal "
@@ -691,7 +695,7 @@ msgstr ""
 "Toto sa dá urobiť na serveri <a href=\"%1$s\" target=\"_blank\">LitCal pre "
 "preklady %2$s</a>."
 
-#: translations.php:15
+#: translations.php:14
 msgid ""
 "If you would like to contribute to the translations of the Liturgical data "
 "for your region, please feel free to create an account on the translation "
@@ -704,7 +708,8 @@ msgstr ""
 msgid "Specifically, the components which require translation are:"
 msgstr "Konkrétne komponenty, ktoré si vyžadujú preklad, sú:"
 
-#. translators: 1 = name of the translation component ("API strings"), 2 = names of the categories, 3 = name of a category ("Calendar messages")
+#. translators: 1 = name of the translation component ("API strings"),
+#. 2 = names of the categories, 3 = name of a category ("Calendar messages")
 #: translations.php:20
 #, php-format
 msgid ""
@@ -727,7 +732,7 @@ msgstr ""
 "pre údaje kalendára, sú užitočné pre pochopenie, odkiaľ pochádzajú výsledky "
 "aktuálneho výpočtu."
 
-#: translations.php:27
+#: translations.php:49
 #, php-format
 msgid ""
 "If translating liturgical calendar data for a European country, you will "
@@ -736,7 +741,7 @@ msgstr ""
 "Ak budeš prekladať údaje z liturgického kalendára pre európsku krajinu, "
 "budeš chcieť preložiť aj komponent %1$s."
 
-#: translations.php:31
+#: translations.php:54
 msgid ""
 "Translations of the above mentioned liturgical events MUST NOT be done "
 "simply based on the linguistic abilities of the translator, but MUST be "
@@ -747,7 +752,7 @@ msgstr ""
 "základe jazykových schopností prekladateľa, ale MUSIA byť prevzaté z "
 "Rímskeho misála používaného v oblasti, pre ktorú je preklad určený."
 
-#: translations.php:32
+#: translations.php:55
 msgid ""
 "Translations of the above mentioned liturgical events may change from one "
 "edition of the Roman Missal to the next; translators should simply use the "
@@ -757,7 +762,7 @@ msgstr ""
 "edície Rímskeho misála k druhej; prekladatelia by mali jednoducho použiť "
 "najnovšiu edíciu Rímskeho misála pre svoj región ako referenciu."
 
-#: translations.php:33
+#: translations.php:56
 msgid ""
 "This API intends to be historically correct as regards the calculation of "
 "the dates and the precedence of the liturgical events, but does not pretend "
@@ -768,7 +773,7 @@ msgstr ""
 "precedenciu liturgických udalostí, ale nepredstiera historickú presnosť, "
 "pokiaľ ide o rozdiely v prekladoch liturgických udalostí v priebehu času."
 
-#: translations.php:35
+#: translations.php:58
 msgid ""
 "National calendars and related translations must be defined using data from "
 "the translation of the Roman Missal used in the Region or in any case from "
@@ -778,7 +783,7 @@ msgstr ""
 "prekladu Rímskeho misála používaného v regióne alebo v každom prípade z "
 "dekrétov Biskupskej konferencie regiónu."
 
-#: translations.php:36
+#: translations.php:59
 msgid ""
 "Anyone who intends on contributing to the translations is required to agree "
 "to these conditions."
@@ -786,7 +791,7 @@ msgstr ""
 "Každý, kto má v úmysle prispieť k prekladom, je povinný súhlasiť s týmito "
 "podmienkami."
 
-#: translations.php:37
+#: translations.php:60
 msgid ""
 "If the translator is not an expert in liturgical science or does not have a "
 "role in a diocesan office for liturgy and worship, the translations will "
@@ -797,7 +802,7 @@ msgstr ""
 "diecéznej kancelárii pre liturgiu a bohoslužby, preklady budú vyžadovať "
 "prehľad liturgického odborníka pred ich začlenením do tohto projektu."
 
-#: translations.php:39
+#: translations.php:67
 msgid ""
 "The project website can also be translated into other languages. The "
 "translation strings can be found in the following translation components:"
@@ -805,49 +810,49 @@ msgstr ""
 "Webová stránka projektu môže byť preložená aj do iných jazykov. Prekladové "
 "reťazce nájdete v nasledujúcich prekladových komponentoch:"
 
-#: translations.php:43
+#: translations.php:72
 msgid "Translating the Calendar"
 msgstr "Preklad kalendára"
 
-#: translations.php:51
+#: translations.php:80
 msgid "Translating the Liturgical Calendar project"
 msgstr "Preklad projektu Liturgický kalendár"
 
-#: translations.php:55
+#: translations.php:87
 msgid "Calendar data"
 msgstr "Údaje kalendára"
 
-#: translations.php:58
+#: translations.php:94
 msgid "Project website"
 msgstr "Webová stránka projektu"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - green
-#: src/LitColor.php:33 src/FormControls.php:105 includes/messages.php:74
+#: src/LitColor.php:33 src/FormControls.php:111 includes/messages.php:76
 msgid "green"
 msgstr "zelená"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - purple/violet
-#: src/LitColor.php:36 src/FormControls.php:104 includes/messages.php:76
+#: src/LitColor.php:36 src/FormControls.php:110 includes/messages.php:78
 msgid "purple"
 msgstr "fialová"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - white
-#: src/LitColor.php:39 src/FormControls.php:102 includes/messages.php:70
+#: src/LitColor.php:39 src/FormControls.php:108 includes/messages.php:72
 msgid "white"
 msgstr "biela"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - red
-#: src/LitColor.php:42 src/FormControls.php:103 includes/messages.php:72
+#: src/LitColor.php:42 src/FormControls.php:109 includes/messages.php:74
 msgid "red"
 msgstr "červená"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - rose/pink
-#: src/LitColor.php:45 includes/messages.php:78
+#: src/LitColor.php:45 includes/messages.php:80
 msgid "rose"
 msgstr "ružová"
 
@@ -1105,7 +1110,7 @@ msgstr ""
 "target=\"_blank\">BibleGet</a> a projektu <a href=\"%2$s\" "
 "target=\"_blank\">Liturgický kalendár</a>"
 
-#: src/Utilities.php:126
+#: src/Utilities.php:127
 msgid ""
 "Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, "
 "Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild "
@@ -1117,13 +1122,13 @@ msgstr ""
 "katolíckych IT profesionálov, prispel k bootstrapovému dizajnu webovej "
 "stránky projektu"
 
-#: src/Utilities.php:132
+#: src/Utilities.php:133
 msgid ""
 "Full stack web developer, contributed to the generation of the Open API "
 "documentation"
 msgstr "Full stack web developer, prispel k vytvoreniu dokumentácie Open API"
 
-#: src/Utilities.php:138
+#: src/Utilities.php:139
 msgid ""
 "Latin Liturgy Association of the Netherlands, contributed the national "
 "calendar for the Netherlands to this project with all related translations"
@@ -1131,7 +1136,7 @@ msgstr ""
 "Latinská liturgická asociácia Holandska prispela do tohto projektu národným "
 "kalendárom pre Holandsko so všetkými súvisiacimi prekladmi"
 
-#: src/Utilities.php:144
+#: src/Utilities.php:145
 msgid ""
 "Senior software engineer at Strava, author of the ConfessIt app, contributed "
 "to the structuring of the JSON responses of the Liturgical Calendar API"
@@ -1139,7 +1144,7 @@ msgstr ""
 "Senior softvérový inžinier v Strave, autor aplikácie ConfessIt, prispel k "
 "štruktúrovaniu JSON odpovedí Liturgického kalendára API"
 
-#: src/Utilities.php:150
+#: src/Utilities.php:151
 msgid ""
 "Software Engineer and contributor to Salt + Light Television, contributed "
 "information about the dioceses of Latin rite"
@@ -1147,7 +1152,7 @@ msgstr ""
 "Softvérový inžinier a prispievateľ do Salt + Light Television, prispel "
 "informáciami o diecézach latinského obradu"
 
-#: src/Utilities.php:156
+#: src/Utilities.php:157
 msgid ""
 "Chancellor of the Diocese of Charlottetown, contributed liturgical calendar "
 "data for Canada in both English and French"
@@ -1155,7 +1160,7 @@ msgstr ""
 "Kancelár diecézy Charlottetown prispel údajmi o liturgickom kalendári pre "
 "Kanadu v angličtine aj francúzštine"
 
-#: src/Utilities.php:269
+#: src/Utilities.php:273
 msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
@@ -1163,57 +1168,65 @@ msgstr ""
 "Zdá sa, že táto liturgická udalosť neexistuje. Prosím, vyberte hodnotu zo "
 "zoznamu."
 
-#: src/Utilities.php:270
+#: src/Utilities.php:274
 msgid "This liturgical event does not exist, so it will be created."
 msgstr "Táto liturgická udalosť neexistuje, preto sa vytvorí."
 
-#: src/Utilities.php:275
+#: src/Utilities.php:278
 msgid "Choose from existing liturgical events"
 msgstr "Vyber si z existujúcich liturgických udalostí"
 
-#: src/Utilities.php:275
+#: src/Utilities.php:279
 msgid "Choose from existing liturgical events (or create a new one)"
 msgstr "Vyber si zo súčasných liturgických udalostí (alebo si vytvor novú)"
 
-#: src/Utilities.php:281
+#: src/Utilities.php:291
 msgid "Property to change"
 msgstr "Vlastnosť na zmenu"
 
 #. translators: form field label for the name of a liturgical event
-#: src/Utilities.php:283 src/FormControls.php:61 includes/messages.php:17
+#: src/Utilities.php:293 src/FormControls.php:61 includes/messages.php:19
 msgid "Name"
 msgstr "Meno"
 
-#: src/Utilities.php:284 src/FormControls.php:188
+#: src/Utilities.php:294 src/FormControls.php:194
 msgid "Grade"
 msgstr "Stupeň"
 
 #. translators: form field label for the day of the month
-#: src/FormControls.php:68 includes/messages.php:19
+#: src/FormControls.php:68 includes/messages.php:21
 msgid "Day"
 msgstr "Deň"
 
+#: src/FormControls.php:73
+msgid "switch on for mobile celebration as opposed to fixed date"
+msgstr ""
+
 #. translators: form field label for the month of the year
-#: src/FormControls.php:74 includes/messages.php:21
+#: src/FormControls.php:78 includes/messages.php:23
 msgid "Month"
 msgstr "Mesiac"
 
+#: src/FormControls.php:80
+msgid "Mobile"
+msgstr ""
+
 #. translators: form field label for liturgical color selection
-#: src/FormControls.php:100 includes/messages.php:23
+#: src/FormControls.php:106 includes/messages.php:25
 msgid "Liturgical color"
 msgstr "Liturgická farba"
 
 #. translators: form field label - first year a liturgical event takes effect
-#: src/FormControls.php:112 includes/messages.php:25
+#: src/FormControls.php:118 includes/messages.php:27
 msgid "Since"
 msgstr "Od"
 
 #. translators: form field label - last year a liturgical event is observed
-#: src/FormControls.php:119 includes/messages.php:27
+#: src/FormControls.php:125 includes/messages.php:29
 msgid "Until"
 msgstr "Až do"
 
-#: src/FormControls.php:141
+#: src/FormControls.php:147
 msgid "Common (or Proper)"
 msgstr "Bežné (alebo Vlastné)"
 
@@ -1230,7 +1243,7 @@ msgid "Usage"
 msgstr "Použitie"
 
 #. translators: link to translations page
-#: layout/header.php:51 includes/messages.php:195
+#: layout/header.php:51 includes/messages.php:197
 msgid "Translations"
 msgstr "Preklady"
 
@@ -1246,71 +1259,100 @@ msgstr "Testy presnosti"
 msgid "See the project repositories on GitHub"
 msgstr "Pozri si projektové repozitáre na GitHube"
 
-#: layout/header.php:124 layout/header.php:125 includes/login-modal.php:56
-#: includes/login-modal.php:345
+#: layout/header.php:127 layout/header.php:135
+msgid "Notifications"
+msgstr ""
+
+#: layout/header.php:139
+#, fuzzy
+#| msgid "Extending..."
+msgid "Loading..."
+msgstr "Predlžujem..."
+
+#: layout/header.php:144
+msgid "View all requests"
+msgstr ""
+
+#: layout/header.php:155 layout/header.php:159 includes/login-modal.php:56
+#: includes/login-modal.php:379
 msgid "Login"
 msgstr "Prihlásenie"
 
-#: layout/header.php:134 layout/header.php:135 includes/login-modal.php:12
+#: layout/header.php:165
+msgid "View Profile"
+msgstr ""
+
+#: layout/header.php:175 includes/login-modal.php:105
+#: includes/login-modal.php:670
+msgid "Are you sure you want to logout?"
+msgstr "Naozaj sa chceš odhlásiť?"
+
+#: layout/header.php:178 layout/header.php:182 includes/login-modal.php:12
 msgid "Logout"
 msgstr "Odhlásenie"
 
-#: layout/header.php:139
+#: layout/header.php:187 layout/header.php:250
+#, fuzzy
+#| msgid "In development"
+msgid "Developer"
+msgstr "Vo vývoji"
+
+#: layout/header.php:199
 msgid "Admin"
 msgstr "Administrátor"
 
-#: layout/header.php:170
+#: layout/header.php:243
 msgid "Dashboard"
 msgstr ""
 
-#: layout/header.php:178
+#: layout/header.php:260
 msgid "Temporale"
 msgstr ""
 
-#: layout/header.php:182
+#: layout/header.php:264
 msgid "Sanctorale"
 msgstr ""
 
-#: layout/header.php:186
+#: layout/header.php:268
 msgid "Decrees"
 msgstr "Nariadenia"
 
-#: layout/header.php:190
+#: layout/header.php:272
 msgid "Particular Calendars"
 msgstr "Partikulárne kalendáre"
 
 #. translators: label for wider region calendar name field
-#: layout/header.php:198 includes/messages.php:204
+#: layout/header.php:280 includes/messages.php:206
 msgid "Wider Region"
 msgstr "Širší región"
 
-#: layout/header.php:202
+#: layout/header.php:284
 #, fuzzy
 #| msgid "National Calendar"
 msgid "National"
 msgstr "Národný kalendár"
 
-#: layout/header.php:206
+#: layout/header.php:288
 #, fuzzy
 #| msgid "Diocese"
 msgid "Diocesan"
 msgstr "Diecéza"
 
-#: layout/header.php:212
+#: layout/header.php:295
 #, fuzzy
 #| msgid "Project website"
 msgid "Back to Website"
 msgstr "Webová stránka projektu"
 
-#: layout/header.php:219
+#: layout/header.php:302
 msgid "Home"
 msgstr "Domov"
 
-#: layout/header.php:227
+#: layout/header.php:310
 msgid "Documentation"
 msgstr "Dokumentácia"
 
-#: layout/header.php:231
+#: layout/header.php:314
 msgid "Examples of Usage"
 msgstr "Príklady použitia"
 
@@ -1334,7 +1376,7 @@ msgstr "Používateľské meno"
 msgid "Password"
 msgstr "Heslo"
 
-#: includes/login-modal.php:40 includes/login-modal.php:180
+#: includes/login-modal.php:40 includes/login-modal.php:157
 msgid "Show password"
 msgstr "Zobraziť heslo"
 
@@ -1343,138 +1385,136 @@ msgid "Remember me"
 msgstr "Zapamätať si ma"
 
 #. translators: button label for canceling an action
-#: includes/login-modal.php:55 includes/messages.php:130
+#: includes/login-modal.php:55 includes/messages.php:132
 msgid "Cancel"
 msgstr "Zrušiť"
 
-#: includes/login-modal.php:102
-msgid "Unable to verify authentication status. The server may be unavailable."
-msgstr "Nie je možné overiť stav overenia. Server môže byť nedostupný."
-
-#: includes/login-modal.php:104
-msgid "Connection Issue"
-msgstr "Problém s pripojením"
-
-#: includes/login-modal.php:128 includes/login-modal.php:625
-msgid "Are you sure you want to logout?"
-msgstr "Naozaj sa chceš odhlásiť?"
-
-#: includes/login-modal.php:175
+#: includes/login-modal.php:152
 msgid "Hide password"
 msgstr "Skryť heslo"
 
-#: includes/login-modal.php:280
+#: includes/login-modal.php:211
+msgid "Unable to verify authentication status. The server may be unavailable."
+msgstr "Nie je možné overiť stav overenia. Server môže byť nedostupný."
+
+#: includes/login-modal.php:213
+msgid "Connection Issue"
+msgstr "Problém s pripojením"
+
+#: includes/login-modal.php:314
 msgid "Please enter both username and password"
 msgstr "Zadajte prosím používateľské meno a heslo"
 
-#: includes/login-modal.php:288
+#: includes/login-modal.php:322
 msgid "Logging in..."
 msgstr "Prihlasovanie..."
 
-#: includes/login-modal.php:325
+#: includes/login-modal.php:359
 msgid "Login successful"
 msgstr "Prihlásenie úspešné"
 
-#: includes/login-modal.php:340
+#: includes/login-modal.php:374
 msgid "Login failed. Please check your credentials."
 msgstr "Prihlásenie zlyhalo. Skontrolujte svoje prihlasovacie údaje."
 
-#: includes/login-modal.php:495 includes/login-modal.php:500
-#, php-format
-msgid "Your session will expire in less than %d minute."
-msgid_plural "Your session will expire in less than %d minutes."
+#: includes/login-modal.php:540 includes/login-modal.php:545
+#, fuzzy, php-format
+#| msgid "Your session will expire in less than %d minute."
+#| msgid_plural "Your session will expire in less than %d minutes."
+msgid "Your session will expire in less than %1$d minute."
+msgid_plural "Your session will expire in less than %1$d minutes."
 msgstr[0] "Vaša relácia vyprší za menej ako %d minútu."
 msgstr[1] "Vaša relácia vyprší za menej ako %d minúty."
 msgstr[2] "Vaša relácia vyprší za menej ako %d minút."
 
-#: includes/login-modal.php:559
+#: includes/login-modal.php:604
 msgid "Extending..."
 msgstr "Predlžujem..."
 
-#: includes/login-modal.php:581
+#: includes/login-modal.php:626
 msgid "Your session has been extended."
 msgstr "Vaša relácia bola predĺžená."
 
-#: includes/login-modal.php:582
+#: includes/login-modal.php:627
 msgid "Session Extended"
 msgstr "Relácia predĺžená"
 
-#: includes/login-modal.php:591
+#: includes/login-modal.php:636
 msgid "Failed to extend session. Please login again."
 msgstr "Nepodarilo sa predĺžiť reláciu. Prosím, prihláste sa znova."
 
-#: includes/login-modal.php:655
+#: includes/login-modal.php:700
 msgid "Your session has expired. Please login again."
 msgstr "Vaša relácia vypršala. Prosím, prihláste sa znova."
 
-#: includes/login-modal.php:656
+#: includes/login-modal.php:701
 msgid "Session Expired"
 msgstr "Relácia vypršala"
 
 #. translators: form field label for the unique identifier of a liturgical event
-#: includes/messages.php:15
+#: includes/messages.php:17
 msgid "Event key"
 msgstr "Kľúč udalosti"
 
 #. translators: form field label for decree URL
-#: includes/messages.php:29
+#: includes/messages.php:31
 msgid "Decree URL"
 msgstr "Dekrét URL"
 
 #. translators: form field label for decree language mappings
-#: includes/messages.php:31
+#: includes/messages.php:33
 msgid "Decree Language mappings"
 msgstr "Jazykové mapovania dekrétov"
 
 #. translators: form field label for Roman Missal selection
-#: includes/messages.php:33
+#: includes/messages.php:35
 msgid "Missal"
 msgstr "Misál"
 
 #. translators: form field label for move event reason
-#: includes/messages.php:35
+#: includes/messages.php:37
 msgid "Reason (in favor of liturgical event)"
 msgstr "Dôvod (v prospech liturgickej udalosti)"
 
 #. translators: form field label for timezone selection
-#: includes/messages.php:37
+#: includes/messages.php:39
 msgid "Timezone"
 msgstr "Časové pásmo"
 
 #. translators: form field label for selecting JSON file in admin
-#: includes/messages.php:39
+#: includes/messages.php:41
 msgid "Select JSON file to manage"
 msgstr "Vyber súbor JSON na správu"
 
 #. translators: form field label for selecting data source in admin
-#: includes/messages.php:41
+#: includes/messages.php:43
 msgid "Select data source"
 msgstr "Vyber zdroj dát"
 
 #. translators: form field label for year the decree takes effect
-#: includes/messages.php:43
+#: includes/messages.php:45
 msgid "To take effect in the year"
 msgstr "Nadobudnú účinnosť v roku"
 
 #. translators: notification title for warning messages
-#: includes/messages.php:53
+#: includes/messages.php:55
 msgid "Warning"
 msgstr "Upozornenie"
 
 #. translators: notification title when translations are missing for a locale
-#: includes/messages.php:55
+#: includes/messages.php:57
 msgid "Missing Translations"
 msgstr "Chýbajú preklady"
 
 #. translators: error message when translations are missing. %s is the locale code (e.g., "en_US")
-#: includes/messages.php:61
+#: includes/messages.php:63
 #, php-format
 msgid "Cannot proceed: translations missing for locale %s"
 msgstr "Nie je možné pokračovať: chýbajú preklady pre jazyk %s"
 
 #. translators: detailed explanation when General Roman Calendar translations are missing.
 #. %s is the locale code. This message should mention Weblate as the translation server.
-#: includes/messages.php:64
+#: includes/messages.php:66
 #, php-format
 msgid ""
 "The General Roman Calendar has not yet been translated into the locale "
@@ -1486,183 +1526,183 @@ msgstr ""
 "Weblate pred vytvorením kalendára pre tento jazyk."
 
 #. translators: form row title for designating a Doctor of the Church
-#: includes/messages.php:84
+#: includes/messages.php:86
 msgid "Designate Doctor of the Church"
 msgstr "Designovať Učiteľa Cirkvi"
 
 #. translators: form row title for creating a new liturgical event
-#: includes/messages.php:86
+#: includes/messages.php:88
 msgid "New liturgical event"
 msgstr "Nová liturgická udalosť"
 
 #. translators: form row title for changing the name of a liturgical event
-#: includes/messages.php:88
+#: includes/messages.php:90
 msgid "Change name"
 msgstr "Zmeniť meno"
 
 #. translators: form row title for changing the grade of a liturgical event
-#: includes/messages.php:90
+#: includes/messages.php:92
 msgid "Change grade"
 msgstr "Zmeniť stupeň"
 
 #. translators: form row title for changing name or grade
-#: includes/messages.php:92
+#: includes/messages.php:94
 msgid "Change name or grade"
 msgstr "Zmeniť meno alebo stupeň"
 
 #. translators: form row title for moving a liturgical event to a new date
-#: includes/messages.php:94
+#: includes/messages.php:96
 msgid "Move liturgical event"
 msgstr "Presunúť liturgickú udalosť"
 
 #. translators: button text for adding a solemnity in diocesan calendar
-#: includes/messages.php:100
+#: includes/messages.php:102
 msgid "Other Solemnity"
 msgstr "Iná slávnosť"
 
 #. translators: button text for adding a feast in diocesan calendar
-#: includes/messages.php:102
+#: includes/messages.php:104
 msgid "Other Feast"
 msgstr "Iný sviatok"
 
 #. translators: button text for adding a memorial in diocesan calendar
-#: includes/messages.php:104
+#: includes/messages.php:106
 msgid "Other Memorial"
 msgstr "Iná pamiatka"
 
 #. translators: button text for adding an optional memorial in diocesan calendar
-#: includes/messages.php:106
+#: includes/messages.php:108
 msgid "Other Optional Memorial"
 msgstr "Iná ľubovoľná spomienka"
 
 #. translators: button description for designating patron action
-#: includes/messages.php:112
+#: includes/messages.php:114
 msgid "Designate patron"
 msgstr "Určiť patróna"
 
 #. translators: button description for changing name or grade of existing event
-#: includes/messages.php:114
+#: includes/messages.php:116
 msgid "Change name or grade of existing liturgical event"
 msgstr "Zmeň názov alebo stupeň existujúcej liturgickej udalosti"
 
 #. translators: button description for moving event to new date
-#: includes/messages.php:116
+#: includes/messages.php:118
 msgid "Move liturgical event to new date"
 msgstr "Presuň liturgickú udalosť na nový dátum"
 
 #. translators: button description for creating new liturgical event
-#: includes/messages.php:118
+#: includes/messages.php:120
 msgid "Create new liturgical event"
 msgstr "Vytvoriť novú liturgickú udalosť"
 
 #. translators: button description for designating Doctor of the Church
-#: includes/messages.php:120
+#: includes/messages.php:122
 msgid "Designate Doctor of the Church from existing liturgical event"
 msgstr "Designovať Učiteľa Cirkvi z existujúcej liturgickej udalosti"
 
 #. translators: button label for deleting a calendar
-#: includes/messages.php:126
+#: includes/messages.php:128
 msgid "Delete calendar"
 msgstr "Odstrániť kalendár"
 
 #. translators: button label for removing existing data
-#: includes/messages.php:128
+#: includes/messages.php:130
 msgid "Remove existing data"
 msgstr "Odstrániť existujúce údaje"
 
 #. translators: button label for setting a property
-#: includes/messages.php:132
+#: includes/messages.php:134
 msgid "Set Property"
 msgstr "Nastaviť vlastnosť"
 
 #. translators: button label for moving a liturgical event
-#: includes/messages.php:134
+#: includes/messages.php:136
 msgid "Move Liturgical Event"
 msgstr "Premiestni liturgickú udalosť"
 
 #. translators: button label for creating a liturgical event
-#: includes/messages.php:136
+#: includes/messages.php:138
 msgid "Create Liturgical Event"
 msgstr "Vytvoriť liturgickú udalosť"
 
 #. translators: button label for creating event from existing
-#: includes/messages.php:138
+#: includes/messages.php:140
 msgid "New liturgical event from existing"
 msgstr "Nová liturgická udalosť z existujúcej"
 
 #. translators: button label for creating entirely new event
-#: includes/messages.php:140
+#: includes/messages.php:142
 msgid "New liturgical event ex novo"
 msgstr "Nová liturgická udalosť ex novo"
 
 #. translators: button label for adding a missal
-#: includes/messages.php:142
+#: includes/messages.php:144
 msgid "Add Missal"
 msgstr "Pridať Misál"
 
 #. translators: button label for adding language edition Roman Missal
-#: includes/messages.php:144
+#: includes/messages.php:146
 msgid "Add language edition Roman Missal"
 msgstr "Pridať jazykovú edíciu Rímskeho misála"
 
 #. translators: link text for reading a decree document
-#: includes/messages.php:146
+#: includes/messages.php:148
 msgid "Read the Decree"
 msgstr "Prečítať dekrét"
 
 #. translators: button label for adding a column in admin table
-#: includes/messages.php:148
+#: includes/messages.php:150
 msgid "Add Column"
 msgstr "Pridať stĺpec"
 
 #. translators: button label for saving data in admin
-#: includes/messages.php:150
+#: includes/messages.php:152
 msgid "Save data"
 msgstr "Uložiť údaje"
 
 #. translators: button title for adding a decree
-#: includes/messages.php:152
+#: includes/messages.php:154
 msgid "Add Decree"
 msgstr "Pridať dekrét"
 
 #. translators: page title for particular calendars
-#: includes/messages.php:158
+#: includes/messages.php:160
 msgid "General Roman Calendar - Particular Calendars"
 msgstr "Všeobecný rímsky kalendár - Partikulárne kalendáre"
 
 #. translators: page title for decrees
-#: includes/messages.php:160
+#: includes/messages.php:162
 msgid "General Roman Calendar - Decrees"
 msgstr "Všeobecný rímsky kalendár - Dekréty"
 
 #. translators: page title for admin tools
-#: includes/messages.php:162
+#: includes/messages.php:164
 msgid "Administration tools"
 msgstr "Nástroje správy"
 
 #. translators: main heading for particular calendars page
-#: includes/messages.php:168
+#: includes/messages.php:170
 msgid "Define Particular Calendars based on the General Roman Calendar"
 msgstr ""
 "Definovať partikulárne kalendáre na základe Všeobecného rímskeho kalendára"
 
 #. translators: main heading for particular calendars page
-#: includes/messages.php:170
+#: includes/messages.php:172
 msgid "Particular Calendars - Define Wider Region events"
 msgstr "Partikulárne kalendáre - Definovať udalosti pre širší región"
 
 #. translators: main heading for particular calendars page
-#: includes/messages.php:172
+#: includes/messages.php:174
 msgid "Particular Calendars - Define a National Calendar"
 msgstr "Partikulárne kalendáre - Definovať národný kalendár"
 
 #. translators: main heading for particular calendars page
-#: includes/messages.php:174
+#: includes/messages.php:176
 msgid "Particular Calendars - Define a Diocesan Calendar"
 msgstr "Partikulárne kalendáre - Definovať diecézny kalendár"
 
 #. translators: main heading for decrees page
-#: includes/messages.php:176
+#: includes/messages.php:178
 msgid ""
 "Refine the General Roman Calendar with Decrees of the Dicastery for Divine "
 "Worship and the Discipline of the Sacraments"
@@ -1671,12 +1711,12 @@ msgstr ""
 "disciplínu sviatostí"
 
 #. translators: main heading for admin page
-#: includes/messages.php:178
+#: includes/messages.php:180
 msgid "Liturgical Calendar project Administration tools"
 msgstr "Nástroje správy projektu Liturgický kalendár"
 
 #. translators: introductory paragraph about decrees
-#: includes/messages.php:180
+#: includes/messages.php:182
 msgid ""
 "The Liturgical Calendar is based off of both published Roman Missals, and "
 "Decrees of the Dicastery for Divine Worship and the Discipline of the "
@@ -1691,7 +1731,7 @@ msgstr ""
 "koincidencie medzi povinnými slávnosťami."
 
 #. translators: explanation about API endpoints for missals and decrees
-#: includes/messages.php:182
+#: includes/messages.php:184
 msgid ""
 "Data for <b>Roman Missals</b> is handled by the <code>/missals</code> "
 "endpoint of the API, while data for <b>Decrees</b> is handled by the <code>/"
@@ -1702,7 +1742,7 @@ msgstr ""
 "<code>/decrees</code>."
 
 #. translators: explanation about hierarchy of particular calendars
-#: includes/messages.php:188
+#: includes/messages.php:190
 msgid ""
 "The <b>General Roman Calendar</b> serves as the foundation for <b>Particular "
 "Calendars</b>, which are established to meet the liturgical needs of a "
@@ -1713,7 +1753,7 @@ msgstr ""
 "konkrétneho územia."
 
 #. translators: explanation about hierarchy of particular calendars
-#: includes/messages.php:190
+#: includes/messages.php:192
 msgid ""
 "These calendars follow a hierarchical structure: a <b>Diocesan calendar</b> "
 "inherits and adapts the data from its respective <b>National calendar</b>. "
@@ -1725,7 +1765,7 @@ msgstr ""
 "Preto je potrebné najskôr definovať Národný kalendár predtým, ako možno "
 "vytvoriť Diecézny kalendár."
 
-#: includes/messages.php:193
+#: includes/messages.php:195
 #, php-format
 msgid ""
 "The first step in this process is ensuring the <b>General Roman Calendar</b> "
@@ -1743,7 +1783,7 @@ msgstr ""
 "integrované do všetkých národných kalendárov v tejto jurisdikcii."
 
 #. translators: help text for diocesan group field
-#: includes/messages.php:198
+#: includes/messages.php:200
 msgid ""
 "If a group of dioceses decides to pool their Liturgical Calendar data, for "
 "example to print out one single yearly calendar with the data for all the "
@@ -1754,159 +1794,159 @@ msgstr ""
 "v skupine, skupina môže byť definovaná alebo nastavená tu."
 
 #. translators: label for national calendar name field
-#: includes/messages.php:206
+#: includes/messages.php:208
 msgid "National Calendar"
 msgstr "Národný kalendár"
 
 #. translators: label for diocesan calendar dependency
-#: includes/messages.php:208
+#: includes/messages.php:210
 msgid "Depends on national calendar"
 msgstr "Závisí od národného kalendára"
 
 #. translators: label for diocese name field
-#: includes/messages.php:210
+#: includes/messages.php:212
 msgid "Diocese"
 msgstr "Diecéza"
 
 #. translators: label for diocesan group field
-#: includes/messages.php:212
+#: includes/messages.php:214
 msgid "Diocesan group"
 msgstr "Diecézna skupina"
 
 #. translators: label for locales selection
-#: includes/messages.php:214
+#: includes/messages.php:216
 msgid "Locales"
 msgstr "Jazyky"
 
 #. translators: label for current localization selection
-#: includes/messages.php:216
+#: includes/messages.php:218
 msgid "Current localization"
 msgstr "Aktuálna lokalizácia"
 
 #. translators: label for published Roman Missals list
-#: includes/messages.php:218
+#: includes/messages.php:220
 msgid "Published Roman Missals"
 msgstr "Publikované rímske misály"
 
 #. translators: card heading for creating wider region calendar
-#: includes/messages.php:224
+#: includes/messages.php:226
 msgid "Define a Calendar for a Wider Region"
 msgstr "Definovať kalendár pre širší región"
 
 #. translators: card heading for creating national calendar
-#: includes/messages.php:226
+#: includes/messages.php:228
 msgid "Define a National Calendar"
 msgstr "Definovať národný kalendár"
 
 #. translators: card heading for creating diocesan calendar
-#: includes/messages.php:228
+#: includes/messages.php:230
 msgid "Define a Diocesan Calendar"
 msgstr "Definovať diecézny kalendár"
 
 #. translators: section heading for national calendar settings
-#: includes/messages.php:230
+#: includes/messages.php:232
 msgid "National calendar settings"
 msgstr "Nastavenia národného kalendára"
 
 #. translators: heading for diocesan overrides section
-#: includes/messages.php:232
+#: includes/messages.php:234
 msgid "Diocesan overrides to the national calendar for …"
 msgstr "Diecézne výnimky z národného kalendára pre …"
 
 #. translators: label for Epiphany setting
-#: includes/messages.php:238
+#: includes/messages.php:240
 msgid "EPIPHANY"
 msgstr "Zjavenie Pána"
 
 #. translators: option for Epiphany on January 6
-#: includes/messages.php:240
+#: includes/messages.php:242
 msgid "January 6"
 msgstr "6. januára"
 
 #. translators: option for Epiphany on Sunday
-#: includes/messages.php:242
+#: includes/messages.php:244
 msgid "Sunday between January 2 and January 8"
 msgstr "Nedeľa medzi 2. januárom a 8. januárom"
 
 #. translators: label for Ascension setting
-#: includes/messages.php:244
+#: includes/messages.php:246
 msgid "ASCENSION"
 msgstr "Nanebovstúpenie"
 
 #. translators: label for Corpus Christi setting
-#: includes/messages.php:246
+#: includes/messages.php:248
 msgid "CORPUS CHRISTI"
 msgstr "Sviatok Božieho Tela"
 
 #. translators: label for Eternal High Priest setting
-#: includes/messages.php:248
+#: includes/messages.php:250
 msgid "ETERNAL HIGH PRIEST"
 msgstr "VEČNÝ VEĽKŇAZ"
 
 #. translators: tab label for solemnities section
-#: includes/messages.php:254
+#: includes/messages.php:256
 msgid "Solemnities"
 msgstr "Slávnosti"
 
 #. translators: tab label for feasts section
-#: includes/messages.php:256
+#: includes/messages.php:258
 msgid "Feasts"
 msgstr "Sviatky"
 
 #. translators: tab label for memorials section
-#: includes/messages.php:258
+#: includes/messages.php:260
 msgid "Memorials"
 msgstr "Pamätné dni"
 
 #. translators: tab label for optional memorials section
-#: includes/messages.php:260
+#: includes/messages.php:262
 msgid "Optional memorials"
 msgstr "Ľubovoľné spomienky"
 
 #. translators: subtitle for defining solemnities
-#: includes/messages.php:266
+#: includes/messages.php:268
 msgid "Define the Solemnities"
 msgstr "Definícia slávností"
 
 #. translators: subtitle for defining feasts
-#: includes/messages.php:268
+#: includes/messages.php:270
 msgid "Define the Feasts"
 msgstr "Definuj sviatky"
 
 #. translators: subtitle for defining memorials
-#: includes/messages.php:270
+#: includes/messages.php:272
 msgid "Define the Memorials"
 msgstr "Definuj pamätné dni"
 
 #. translators: subtitle for defining optional memorials
-#: includes/messages.php:272
+#: includes/messages.php:274
 msgid "Define the Optional Memorials"
 msgstr "Definuj voliteľné spomienky"
 
 #. translators: row title for principal patron solemnity
-#: includes/messages.php:278
+#: includes/messages.php:280
 msgid ""
 "Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr "Hlavný patrón(i) miesta, diecézy, regiónu, provincie alebo územia"
 
 #. translators: row title for dedication of cathedral
-#: includes/messages.php:280
+#: includes/messages.php:282
 msgid "Dedication of the Cathedral"
 msgstr "Posviacka katedrály"
 
 #. translators: row title for patron feast
-#: includes/messages.php:282
+#: includes/messages.php:284
 msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr "Patrón(i) miesta, diecézy, regiónu, provincie alebo územia"
 
 #. translators: row title for secondary patron memorial
-#: includes/messages.php:284
+#: includes/messages.php:286
 msgid ""
 "Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr "Sekundárny patrón(i) miesta, diecézy, regiónu, provincie alebo územia"
 
 #. translators: row title for local saints optional memorial
-#: includes/messages.php:286
+#: includes/messages.php:288
 msgid ""
 "Saints whose veneration is local to the Place, Diocese, Region, Province or "
 "Territory"
@@ -1915,52 +1955,52 @@ msgstr ""
 "alebo územie"
 
 #. translators: button to save wider region calendar data
-#: includes/messages.php:292
+#: includes/messages.php:294
 msgid "Save Wider Region Calendar Data"
 msgstr "Uložiť údaje kalendára širšieho regiónu"
 
 #. translators: button to save national calendar data
-#: includes/messages.php:294
+#: includes/messages.php:296
 msgid "Save National Calendar Data"
 msgstr "Uložiť údaje národného kalendára"
 
 #. translators: button to save diocesan calendar data
-#: includes/messages.php:296
+#: includes/messages.php:298
 msgid "Save Diocesan Calendar Data"
 msgstr "Uložiť údaje diecézneho kalendára"
 
 #. translators: modal title for changing name or grade
-#: includes/messages.php:302
+#: includes/messages.php:304
 msgid "Change the name or grade of an existing liturgical event"
 msgstr "Zmeniť názov alebo stupeň existujúcej liturgickej udalosti"
 
 #. translators: modal title for moving event
-#: includes/messages.php:304
+#: includes/messages.php:306
 msgid "Move a liturgical event to a new date"
 msgstr "Premiestniť liturgickú udalosť na nový dátum"
 
 #. translators: modal title for creating new event
-#: includes/messages.php:306
+#: includes/messages.php:308
 msgid "Create a new liturgical event"
 msgstr "Vytvoriť novú liturgickú udalosť"
 
 #. translators: modal title for choosing missal
-#: includes/messages.php:308
+#: includes/messages.php:310
 msgid "Choose from known Roman Missal language editions"
 msgstr "Vyberte si z dostupných jazykových vydaní Rímskeho misála"
 
 #. translators: modal title for deleting a diocesan calendar
-#: includes/messages.php:310
+#: includes/messages.php:312
 msgid "Delete diocesan calendar"
 msgstr "Odstrániť diecézny kalendár"
 
 #. translators: validation error when field is empty
-#: includes/messages.php:316
+#: includes/messages.php:318
 msgid "This value cannot be empty."
 msgstr "Táto hodnota nemôže byť prázdna."
 
 #. translators: validation error for unknown missal
-#: includes/messages.php:318
+#: includes/messages.php:320
 msgid ""
 "This Missal is unknown to the Liturgical Calendar API. Please choose from a "
 "value in the list, or contact the curator of the API to have the Missal "
@@ -1971,7 +2011,7 @@ msgstr ""
 "známych jazykových vydaní misálov."
 
 #. translators: warning message when deleting a calendar
-#: includes/messages.php:324
+#: includes/messages.php:326
 msgid ""
 "If you choose to delete this calendar, the liturgical events defined for the "
 "calendar and the corresponding index entries will be removed and no longer "
@@ -1982,7 +2022,7 @@ msgstr ""
 "v klientských aplikáciách."
 
 #. translators: tooltip explaining the first step in defining a national calendar
-#: includes/messages.php:330
+#: includes/messages.php:332
 msgid ""
 "please keep in mind that the first step to creating a national calendar, is "
 "to translate the already existing calendar data into the correct language. "
@@ -1993,12 +2033,12 @@ msgstr ""
 "urobiť na serveri LitCal pre preklady (pozri podrobnosti vyššie)"
 
 #. translators: help text shown when diocese input is disabled
-#: includes/messages.php:332
+#: includes/messages.php:334
 msgid "Select a national calendar first to see available dioceses."
 msgstr "Najprv vyberte národný kalendár, aby ste videli dostupné diecézy."
 
 #. translators: tooltip explaining the Eternal High Priest feast
-#: includes/messages.php:334
+#: includes/messages.php:336
 msgid ""
 "In 2012, Pope Benedict XVI gave faculty to the Episcopal Conferences to "
 "insert the Feast of Jesus Christ Eternal High Priest in their own liturgical "
@@ -2009,7 +2049,7 @@ msgstr ""
 "štvrtok po Turícach."
 
 #. translators: tooltip explaining published Roman Missals selection
-#: includes/messages.php:336
+#: includes/messages.php:338
 msgid ""
 "if data from the Proper of Saints of a given Missal for this nation has "
 "already been incorporated into the main LitCal engine, you can choose the "
@@ -2023,7 +2063,7 @@ msgstr ""
 "nebol zahrnutý do motora LitCal)"
 
 #. translators: tooltip explaining wider region association
-#: includes/messages.php:338
+#: includes/messages.php:340
 msgid ""
 "if data for a Wider Region that regards this National Calendar has already "
 "been defined, you can associate the Wider Region data with the National "
@@ -2033,17 +2073,17 @@ msgstr ""
 "kalendára, môžete tu priradiť údaje širšieho regiónu k národnému kalendáru"
 
 #. translators: screen reader text for previous button
-#: includes/messages.php:344
+#: includes/messages.php:346
 msgid "Previous"
 msgstr "Predchádzajúce"
 
 #. translators: screen reader text for next button
-#: includes/messages.php:346
+#: includes/messages.php:348
 msgid "Next"
 msgstr "Ďalšie"
 
 #. translators: aria-label for diocesan calendar definition navigation
-#: includes/messages.php:348
+#: includes/messages.php:350
 msgid "Diocesan calendar definition"
 msgstr "Definícia diecézneho kalendára"
 
