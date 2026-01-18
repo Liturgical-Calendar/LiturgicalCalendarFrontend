@@ -232,12 +232,12 @@ const Notifications = {
      * @private
      */
     _renderNotificationItem(item) {
-        const roleName = this._roleNames[item.role] || item.role;
-        const userName = this._escapeHtml(item.user_name || item.user_email || 'Unknown');
         const timeAgo = this._formatTimeAgo(item.created_at);
         const safeUrl = this._sanitizeUrl(item.url);
 
         if (item.type === 'role_request') {
+            const roleName = this._roleNames[item.role] || item.role;
+            const userName = this._escapeHtml(item.user_name || item.user_email || 'Unknown');
             return `
                 <a class="dropdown-item py-2" href="${safeUrl}">
                     <div class="d-flex align-items-start">
@@ -256,10 +256,34 @@ const Notifications = {
             `;
         }
 
+        if (item.type === 'application') {
+            const appName = this._escapeHtml(item.app_name || 'Unknown');
+            const scopeLabel = item.requested_scope === 'write'
+                ? this._getTranslation('scopeReadWrite', 'Read & Write')
+                : this._getTranslation('scopeReadOnly', 'Read-only');
+            return `
+                <a class="dropdown-item py-2" href="${safeUrl}">
+                    <div class="d-flex align-items-start">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-cube text-success me-2"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="small fw-bold">${appName}</div>
+                            <div class="small text-muted">
+                                ${this._getTranslation('newApplication', 'New application')}: ${this._escapeHtml(scopeLabel)}
+                            </div>
+                            <div class="small text-muted">${timeAgo}</div>
+                        </div>
+                    </div>
+                </a>
+            `;
+        }
+
         // Default fallback for other notification types
+        const displayName = this._escapeHtml(item.user_name || item.app_name || 'Unknown');
         return `
             <a class="dropdown-item py-2" href="${safeUrl}">
-                <div class="small">${userName}</div>
+                <div class="small">${displayName}</div>
                 <div class="small text-muted">${timeAgo}</div>
             </a>
         `;

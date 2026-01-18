@@ -140,7 +140,7 @@ asort($langsAssoc);
                         </div>
                     </div>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-center text-primary" href="admin-role-requests.php">
+                    <a class="dropdown-item text-center text-primary" href="admin-dashboard.php">
                         <small><?php echo htmlspecialchars(_('View all requests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></small>
                     </a>
                 </div>
