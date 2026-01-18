@@ -123,7 +123,10 @@ if (!$isDeveloper) {
                                     <small class="text-muted d-block"><?php echo htmlspecialchars(_('Can read and modify calendar data'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></small>
                                 </label>
                             </div>
-                            <div class="form-text"><?php echo htmlspecialchars(_('Choose the level of access your application needs. This cannot be changed after approval.'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
+                            <div class="form-text"><?php
+                                $scopeHelp = _('Choose the level of access your application needs. This cannot be changed after approval.');
+                                echo htmlspecialchars($scopeHelp, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                            ?></div>
                         </div>
                     </form>
                 </div>
@@ -131,7 +134,9 @@ if (!$isDeveloper) {
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo htmlspecialchars(_('Cancel'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></button>
                     <button type="button" class="btn btn-primary" id="btnSaveApp">
                         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                        <i class="fas fa-paper-plane me-1" id="btnSaveAppIcon"></i><span id="btnSaveAppText"><?php echo htmlspecialchars(_('Submit Request'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
+                        <i class="fas fa-paper-plane me-1" id="btnSaveAppIcon"></i><span id="btnSaveAppText"><?php
+                            echo htmlspecialchars(_('Submit Request'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                        ?></span>
                     </button>
                 </div>
             </div>

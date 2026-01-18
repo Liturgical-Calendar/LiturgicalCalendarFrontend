@@ -38,6 +38,7 @@ export default defineConfig( [
         currentLocale: "writable",
         Auth: "readonly",
         OidcEnabled: "readonly",
+        Notifications: "readonly",
         NotificationTranslations: "readonly",
         createAdminModule: "readonly",
       }
