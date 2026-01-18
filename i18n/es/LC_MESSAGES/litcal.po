@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Ubuntu <priest@johnromanodorazio.com>, 2021.
 # John R. D'Orazio <priest@johnromanodorazio.com>, 2022.
-# OpenAI <noreply-mt-openai@weblate.org>, 2024, 2025.
+# OpenAI <noreply-mt-openai@weblate.org>, 2024, 2025, 2026.
 # "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024, 2025.
 # Weblate Admin <admin@example.com>, 2024, 2025.
 # Miguel Galvez <miggalvez@gmail.com>, 2025.
@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-18 02:48+0000\n"
-"PO-Revision-Date: 2025-12-28 23:31+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2026-01-18 03:51+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
 "Language: es\n"
@@ -670,7 +670,7 @@ msgstr "Pascua Juliana en el Calendario Gregoriano"
 
 #: easter.php:133
 msgid "The last coinciding Easter will be:"
-msgstr ""
+msgstr "La última coincidencia de Pascua será:"
 
 #: about.php:7
 msgid ""
@@ -1225,7 +1225,7 @@ msgstr "Día"
 
 #: src/FormControls.php:73
 msgid "switch on for mobile celebration as opposed to fixed date"
-msgstr ""
+msgstr "activar para celebraciones móviles en lugar de fecha fija"
 
 #. translators: form field label for the month of the year
 #: src/FormControls.php:78 includes/messages.php:23
@@ -1234,7 +1234,7 @@ msgstr "Mes"
 
 #: src/FormControls.php:80
 msgid "Mobile"
-msgstr ""
+msgstr "Móvil"
 
 #. translators: form field label for liturgical color selection
 #: src/FormControls.php:106 includes/messages.php:25
@@ -1286,17 +1286,15 @@ msgstr "Ver los repositorios del proyecto en GitHub"
 
 #: layout/header.php:127 layout/header.php:135
 msgid "Notifications"
-msgstr ""
+msgstr "Notificaciones"
 
 #: layout/header.php:139
-#, fuzzy
-#| msgid "Extending..."
 msgid "Loading..."
-msgstr "Extendiendo..."
+msgstr "Cargando..."
 
 #: layout/header.php:144
 msgid "View all requests"
-msgstr ""
+msgstr "Ver todas las solicitudes"
 
 #: layout/header.php:155 layout/header.php:159 includes/login-modal.php:56
 #: includes/login-modal.php:379
@@ -1305,7 +1303,7 @@ msgstr "Iniciar sesión"
 
 #: layout/header.php:165
 msgid "View Profile"
-msgstr ""
+msgstr "Ver perfil"
 
 #: layout/header.php:175 includes/login-modal.php:105
 #: includes/login-modal.php:670
@@ -1317,10 +1315,8 @@ msgid "Logout"
 msgstr "Cerrar sesión"
 
 #: layout/header.php:187 layout/header.php:250
-#, fuzzy
-#| msgid "In development"
 msgid "Developer"
-msgstr "En desarrollo"
+msgstr "Desarrollador"
 
 #: layout/header.php:199
 msgid "Admin"
@@ -1328,15 +1324,15 @@ msgstr "Administrador"
 
 #: layout/header.php:243
 msgid "Dashboard"
-msgstr ""
+msgstr "Tablero"
 
 #: layout/header.php:260
 msgid "Temporale"
-msgstr ""
+msgstr "Temporal"
 
 #: layout/header.php:264
 msgid "Sanctorale"
-msgstr ""
+msgstr "Santoral"
 
 #: layout/header.php:268
 msgid "Decrees"
@@ -1352,22 +1348,16 @@ msgid "Wider Region"
 msgstr "Región más amplia"
 
 #: layout/header.php:284
-#, fuzzy
-#| msgid "National Calendar"
 msgid "National"
-msgstr "Calendario Nacional"
+msgstr "Nacional"
 
 #: layout/header.php:288
-#, fuzzy
-#| msgid "Diocese"
 msgid "Diocesan"
-msgstr "Diócesis"
+msgstr "Diocesano"
 
 #: layout/header.php:295
-#, fuzzy
-#| msgid "Project website"
 msgid "Back to Website"
-msgstr "Sitio web del proyecto"
+msgstr "Volver al sitio web"
 
 #: layout/header.php:302
 msgid "Home"
@@ -1445,13 +1435,11 @@ msgid "Login failed. Please check your credentials."
 msgstr "Error de inicio de sesión. Por favor, revisa tus credenciales."
 
 #: includes/login-modal.php:540 includes/login-modal.php:545
-#, fuzzy, php-format
-#| msgid "Your session will expire in less than %d minute."
-#| msgid_plural "Your session will expire in less than %d minutes."
+#, php-format
 msgid "Your session will expire in less than %1$d minute."
 msgid_plural "Your session will expire in less than %1$d minutes."
-msgstr[0] "Tu sesión expirará en menos de %d minuto."
-msgstr[1] "Tu sesión expirará en menos de %d minutos."
+msgstr[0] "Tu sesión expirará en menos de %1$d minuto."
+msgstr[1] "Tu sesión expirará en menos de %1$d minutos."
 
 #: includes/login-modal.php:604
 msgid "Extending..."
