@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-18 02:48+0000\n"
-"PO-Revision-Date: 2026-01-18 04:24+0000\n"
+"PO-Revision-Date: 2026-01-18 13:59+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hu/>\n"
@@ -1208,7 +1208,7 @@ msgstr "Nap"
 
 #: src/FormControls.php:73
 msgid "switch on for mobile celebration as opposed to fixed date"
-msgstr "kapcsolja be a mobilos ünnepléshez, ellentétben a fix dátummal"
+msgstr "Kapcsolja be mozgó liturgikus ünnepléshez (fix dátum helyett)"
 
 #. translators: form field label for the month of the year
 #: src/FormControls.php:78 includes/messages.php:23
@@ -1217,7 +1217,7 @@ msgstr "Hónap"
 
 #: src/FormControls.php:80
 msgid "Mobile"
-msgstr "Mobil"
+msgstr "Mozgó"
 
 #. translators: form field label for liturgical color selection
 #: src/FormControls.php:106 includes/messages.php:25
@@ -1774,7 +1774,7 @@ msgid ""
 msgstr ""
 "A folyamat első lépése az <b>általános római naptár</b> elérhetőségének "
 "biztosítása a helyi nyelven (lásd: %s). Amikor több nemzet osztozik közös "
-"liturgikus ünnepeken - mint például egy <b>szélesebb régió</b> védőszentje "
+"liturgikus ünnepeken - mint például egy <b>tágabb régió</b> védőszentje "
 "(pl. egy kontinens) -, ezeket az ünnepeket regionális szinten kell "
 "meghatározni. Az így létrejött adatok automatikusan integrálódnak az adott "
 "terület összes nemzeti naptárába."
@@ -1829,7 +1829,7 @@ msgstr "Megjelent Római Misékönyvek"
 #. translators: card heading for creating wider region calendar
 #: includes/messages.php:226
 msgid "Define a Calendar for a Wider Region"
-msgstr "Határozz meg egy naptárat egy szélesebb régió számára"
+msgstr "A tágabb régió számára naptár meghatározása"
 
 #. translators: card heading for creating national calendar
 #: includes/messages.php:228
@@ -1956,7 +1956,7 @@ msgstr ""
 #. translators: button to save wider region calendar data
 #: includes/messages.php:294
 msgid "Save Wider Region Calendar Data"
-msgstr "Szélesebb régió naptári adatainak mentése"
+msgstr "A tágabb régió naptári adatainak mentése"
 
 #. translators: button to save national calendar data
 #: includes/messages.php:296
@@ -2070,9 +2070,8 @@ msgid ""
 "been defined, you can associate the Wider Region data with the National "
 "Calendar here"
 msgstr ""
-"ha már van definiált Adat egy Szélesebb Régióra, amely az adott Nemzeti "
-"Naptárra vonatkozik, itt társíthatod a Szélesebb Régió adatait a Nemzeti "
-"Naptárral."
+"ha már létezik az adott nemzeti naptárra vonatkozó, definiált adat egy "
+"tágabb régióra, itt társíthatod a tágabb régió adatait a nemzeti naptárral"
 
 #. translators: screen reader text for previous button
 #: includes/messages.php:346
