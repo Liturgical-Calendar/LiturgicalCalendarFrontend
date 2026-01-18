@@ -94,6 +94,14 @@ if (!$authHelper->isAuthenticated) {
                                         <span class="badge bg-warning text-dark ms-2" title="<?php echo htmlspecialchars(_('Email not verified'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                                             <i class="fas fa-exclamation-triangle"></i>
                                         </span>
+                                        <button type="button" class="btn btn-outline-primary btn-sm ms-2" id="resendVerificationBtn">
+                                            <i class="fas fa-paper-plane me-1"></i><?php echo htmlspecialchars(_('Resend verification'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-success btn-sm ms-2" id="refreshSessionBtn"
+                                                title="<?php echo htmlspecialchars(_('Click after verifying your email to update your session'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                                            <i class="fas fa-sync-alt me-1"></i><?php echo htmlspecialchars(_('Refresh session'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                        </button>
+                                        <div id="resendVerificationAlert" class="mt-2"></div>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -254,6 +262,8 @@ if (!$authHelper->isAuthenticated) {
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const ApiUrl = <?php echo json_encode($apiBaseUrl); ?>;
+
         // Logout button handler
         const logoutBtn = document.getElementById('logoutBtnProfile');
         if (logoutBtn) {
@@ -262,6 +272,91 @@ if (!$authHelper->isAuthenticated) {
                     await Auth.logout();
                 }
             });
+        }
+
+        // Refresh session button handler
+        const refreshSessionBtn = document.getElementById('refreshSessionBtn');
+        if (refreshSessionBtn) {
+            refreshSessionBtn.addEventListener('click', async function() {
+                refreshSessionBtn.disabled = true;
+                const originalHtml = refreshSessionBtn.innerHTML;
+                refreshSessionBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>' + <?php echo json_encode(_('Refreshing...')); ?>;
+
+                try {
+                    const success = await Auth.refreshToken();
+                    if (success) {
+                        // Reload page to show updated verification status
+                        window.location.reload();
+                    } else {
+                        throw new Error(<?php echo json_encode(_('Session refresh failed')); ?>);
+                    }
+                } catch (error) {
+                    console.error('Error refreshing session:', error);
+                    alert(error.message || <?php echo json_encode(_('Failed to refresh session. Please try logging out and back in.')); ?>);
+                    refreshSessionBtn.disabled = false;
+                    refreshSessionBtn.innerHTML = originalHtml;
+                }
+            });
+        }
+
+        // Resend verification email button handler
+        const resendBtn = document.getElementById('resendVerificationBtn');
+        const resendAlert = document.getElementById('resendVerificationAlert');
+        if (resendBtn && resendAlert) {
+            resendBtn.addEventListener('click', async function() {
+                resendBtn.disabled = true;
+                const originalHtml = resendBtn.innerHTML;
+                resendBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>' + <?php echo json_encode(_('Sending...')); ?>;
+                resendAlert.innerHTML = '';
+
+                try {
+                    const response = await fetch(ApiUrl + '/auth/email-verification/resend', {
+                        method: 'POST',
+                        headers: { 'Accept': 'application/json' },
+                        credentials: 'include'
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.message || data.error || <?php echo json_encode(_('Failed to send verification email')); ?>);
+                    }
+
+                    const successMsg = <?php echo json_encode(_('Verification email sent. After clicking the verification link, use the "Refresh session" button to update your status.')); ?>;
+                    resendAlert.innerHTML = `
+                        <div class="alert alert-success alert-dismissible fade show py-2" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            ${escapeHtml(data.message || successMsg)}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    `;
+                    // Keep button disabled for 60 seconds to prevent spam
+                    setTimeout(() => {
+                        resendBtn.disabled = false;
+                        resendBtn.innerHTML = originalHtml;
+                    }, 60000);
+                } catch (error) {
+                    console.error('Error resending verification:', error);
+                    resendAlert.innerHTML = `
+                        <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            ${escapeHtml(error.message || <?php echo json_encode(_('Failed to send verification email. Please try again.')); ?>)}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    `;
+                    resendBtn.disabled = false;
+                    resendBtn.innerHTML = originalHtml;
+                }
+            });
+        }
+
+        /**
+         * Escape HTML entities
+         */
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
         // Update time remaining every second
