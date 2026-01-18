@@ -351,6 +351,10 @@ function createAdminModule(options) { // eslint-disable-line no-unused-vars
                 setTimeout(() => {
                     this.modals.review.hide();
                     this.loadItems();
+                    // Refresh notifications to update the bell icon count
+                    if (typeof Notifications !== 'undefined' && Notifications.fetchNotifications) {
+                        Notifications.fetchNotifications();
+                    }
                 }, 1500);
             } catch (error) {
                 console.error(`Error processing ${entityName}:`, error);
