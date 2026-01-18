@@ -5,14 +5,14 @@
 # Milan Šalka <salka.milan@googlemail.com>, 2024.
 # Weblate Admin <admin@example.com>, 2024, 2025.
 # Lovro <development.lovro@gmail.com>, 2025.
-# OpenAI <noreply-mt-openai@weblate.org>, 2025.
+# OpenAI <noreply-mt-openai@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-18 02:48+0000\n"
-"PO-Revision-Date: 2025-12-28 15:29+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2026-01-18 03:51+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
 "Language: sk\n"
@@ -652,7 +652,7 @@ msgstr "Juliánska Veľká noc v gregoriánskom kalendári"
 
 #: easter.php:133
 msgid "The last coinciding Easter will be:"
-msgstr ""
+msgstr "Posledná zhodujúca sa Veľká noc bude:"
 
 #: about.php:7
 msgid ""
@@ -1200,7 +1200,7 @@ msgstr "Deň"
 
 #: src/FormControls.php:73
 msgid "switch on for mobile celebration as opposed to fixed date"
-msgstr ""
+msgstr "zapnúť mobilnú oslavu namiesto pevného dátumu"
 
 #. translators: form field label for the month of the year
 #: src/FormControls.php:78 includes/messages.php:23
@@ -1209,7 +1209,7 @@ msgstr "Mesiac"
 
 #: src/FormControls.php:80
 msgid "Mobile"
-msgstr ""
+msgstr "Mobilné"
 
 #. translators: form field label for liturgical color selection
 #: src/FormControls.php:106 includes/messages.php:25
@@ -1261,17 +1261,15 @@ msgstr "Pozri si projektové repozitáre na GitHube"
 
 #: layout/header.php:127 layout/header.php:135
 msgid "Notifications"
-msgstr ""
+msgstr "Oznámenia"
 
 #: layout/header.php:139
-#, fuzzy
-#| msgid "Extending..."
 msgid "Loading..."
-msgstr "Predlžujem..."
+msgstr "Načítava sa..."
 
 #: layout/header.php:144
 msgid "View all requests"
-msgstr ""
+msgstr "Zobraziť všetky žiadosti"
 
 #: layout/header.php:155 layout/header.php:159 includes/login-modal.php:56
 #: includes/login-modal.php:379
@@ -1280,7 +1278,7 @@ msgstr "Prihlásenie"
 
 #: layout/header.php:165
 msgid "View Profile"
-msgstr ""
+msgstr "Zobraziť profil"
 
 #: layout/header.php:175 includes/login-modal.php:105
 #: includes/login-modal.php:670
@@ -1292,10 +1290,8 @@ msgid "Logout"
 msgstr "Odhlásenie"
 
 #: layout/header.php:187 layout/header.php:250
-#, fuzzy
-#| msgid "In development"
 msgid "Developer"
-msgstr "Vo vývoji"
+msgstr "Vývojár"
 
 #: layout/header.php:199
 msgid "Admin"
@@ -1303,15 +1299,15 @@ msgstr "Administrátor"
 
 #: layout/header.php:243
 msgid "Dashboard"
-msgstr ""
+msgstr "Panel"
 
 #: layout/header.php:260
 msgid "Temporale"
-msgstr ""
+msgstr "Časové obdobie"
 
 #: layout/header.php:264
 msgid "Sanctorale"
-msgstr ""
+msgstr "Sviatky svätých"
 
 #: layout/header.php:268
 msgid "Decrees"
@@ -1327,22 +1323,16 @@ msgid "Wider Region"
 msgstr "Širší región"
 
 #: layout/header.php:284
-#, fuzzy
-#| msgid "National Calendar"
 msgid "National"
-msgstr "Národný kalendár"
+msgstr "Národné"
 
 #: layout/header.php:288
-#, fuzzy
-#| msgid "Diocese"
 msgid "Diocesan"
-msgstr "Diecéza"
+msgstr "Diecézne"
 
 #: layout/header.php:295
-#, fuzzy
-#| msgid "Project website"
 msgid "Back to Website"
-msgstr "Webová stránka projektu"
+msgstr "Späť na webovú stránku"
 
 #: layout/header.php:302
 msgid "Home"
@@ -1418,14 +1408,12 @@ msgid "Login failed. Please check your credentials."
 msgstr "Prihlásenie zlyhalo. Skontrolujte svoje prihlasovacie údaje."
 
 #: includes/login-modal.php:540 includes/login-modal.php:545
-#, fuzzy, php-format
-#| msgid "Your session will expire in less than %d minute."
-#| msgid_plural "Your session will expire in less than %d minutes."
+#, php-format
 msgid "Your session will expire in less than %1$d minute."
 msgid_plural "Your session will expire in less than %1$d minutes."
-msgstr[0] "Vaša relácia vyprší za menej ako %d minútu."
-msgstr[1] "Vaša relácia vyprší za menej ako %d minúty."
-msgstr[2] "Vaša relácia vyprší za menej ako %d minút."
+msgstr[0] "Vaša relácia vyprší za menej než %1$d minútu."
+msgstr[1] ""
+msgstr[2] "Vaša relácia vyprší za menej než %1$d minút."
 
 #: includes/login-modal.php:604
 msgid "Extending..."
