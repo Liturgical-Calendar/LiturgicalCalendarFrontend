@@ -131,7 +131,7 @@ if (!$isDeveloper) {
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo htmlspecialchars(_('Cancel'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></button>
                     <button type="button" class="btn btn-primary" id="btnSaveApp">
                         <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                        <i class="fas fa-save me-1"></i><?php echo htmlspecialchars(_('Save'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                        <i class="fas fa-paper-plane me-1" id="btnSaveAppIcon"></i><span id="btnSaveAppText"><?php echo htmlspecialchars(_('Submit Request'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
                     </button>
                 </div>
             </div>
@@ -312,7 +312,10 @@ if (!$isDeveloper) {
                 readWrite: <?php echo json_encode(_('Read & Write')); ?>,
                 canOnlyRead: <?php echo json_encode(_('Can only read calendar data')); ?>,
                 canReadAndWrite: <?php echo json_encode(_('Can read and modify calendar data')); ?>,
-                scopeReadOnlyRestriction: <?php echo json_encode(_('This application has read-only access. Only read-scope API keys can be generated.')); ?>
+                scopeReadOnlyRestriction: <?php echo json_encode(_('This application has read-only access. Only read-scope API keys can be generated.')); ?>,
+                // Button labels
+                submitRequest: <?php echo json_encode(_('Submit Request')); ?>,
+                save: <?php echo json_encode(_('Save')); ?>
             }
         };
     </script>

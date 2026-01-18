@@ -666,6 +666,16 @@ const DeveloperDashboard = {
             }
         }
 
+        // Update button text and icon based on new vs edit
+        const btnText = document.getElementById('btnSaveAppText');
+        const btnIcon = document.getElementById('btnSaveAppIcon');
+        if (btnText) {
+            btnText.textContent = isEdit ? UI.i18n.save : UI.i18n.submitRequest;
+        }
+        if (btnIcon) {
+            btnIcon.className = isEdit ? 'fas fa-save me-1' : 'fas fa-paper-plane me-1';
+        }
+
         this.modals.app.show();
         document.getElementById('appName').focus();
     },
