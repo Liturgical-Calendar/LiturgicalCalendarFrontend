@@ -74,7 +74,7 @@ if (!$isDeveloper) {
     </div>
 
     <!-- New/Edit Application Modal -->
-    <div class="modal fade" id="appModal" tabindex="-1" aria-labelledby="appModalLabel" aria-hidden="true">
+    <div class="modal fade" id="appModal" tabindex="-1" aria-labelledby="appModalLabel">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -139,7 +139,7 @@ if (!$isDeveloper) {
     </div>
 
     <!-- Generate API Key Modal -->
-    <div class="modal fade" id="keyModal" tabindex="-1" aria-labelledby="keyModalLabel" aria-hidden="true">
+    <div class="modal fade" id="keyModal" tabindex="-1" aria-labelledby="keyModalLabel">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -186,7 +186,7 @@ if (!$isDeveloper) {
     </div>
 
     <!-- API Key Display Modal -->
-    <div class="modal fade" id="keyDisplayModal" tabindex="-1" aria-labelledby="keyDisplayModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal fade" id="keyDisplayModal" tabindex="-1" aria-labelledby="keyDisplayModalLabel" data-bs-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-success text-white">
@@ -223,7 +223,7 @@ if (!$isDeveloper) {
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white">

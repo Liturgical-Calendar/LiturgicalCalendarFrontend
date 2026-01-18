@@ -236,7 +236,7 @@ class Utilities
         array $buttons,
         string $cancelLabel
     ): void {
-        echo '<div class="modal fade actionPromptModal" id="' . $id . '" tabindex="-1" role="dialog" aria-labelledby="' . $labelId . '" aria-hidden="true">
+        echo '<div class="modal fade actionPromptModal" id="' . $id . '" tabindex="-1" role="dialog" aria-labelledby="' . $labelId . '">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">

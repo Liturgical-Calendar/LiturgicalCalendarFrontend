@@ -779,7 +779,7 @@ let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($Liturgi
 ); ?>
 
 <!-- addPublishedRomanMissalPrompt -->
-<div class="modal fade" id="addPublishedRomanMissalPrompt" tabindex="-1" role="dialog" aria-labelledby="addPublishedRomanMissalLabel" aria-hidden="true">
+<div class="modal fade" id="addPublishedRomanMissalPrompt" tabindex="-1" role="dialog" aria-labelledby="addPublishedRomanMissalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">

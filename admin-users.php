@@ -74,7 +74,7 @@ if (!$isAdmin) {
     </div>
 
     <!-- Revoke Role Confirmation Modal -->
-    <div class="modal fade" id="revokeModal" tabindex="-1" aria-labelledby="revokeModalLabel" aria-hidden="true">
+    <div class="modal fade" id="revokeModal" tabindex="-1" aria-labelledby="revokeModalLabel">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

@@ -20,7 +20,7 @@
 </div>
 
 <!-- Login Modal for JWT Authentication -->
-<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
