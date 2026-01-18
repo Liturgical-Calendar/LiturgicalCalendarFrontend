@@ -16,6 +16,12 @@ if (!$authHelper->isAuthenticated) {
     exit;
 }
 
+// Require verified email - redirect to profile if email not verified
+if (!$authHelper->emailVerified) {
+    header('Location: user-profile.php');
+    exit;
+}
+
 // Valid roles that can be requested
 $validRoles = [
     'developer'       => [

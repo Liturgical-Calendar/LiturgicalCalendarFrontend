@@ -117,11 +117,27 @@ if (!$authHelper->isAuthenticated) {
                     <h6 class="m-0 fw-bold text-primary">
                         <i class="fas fa-user-tag me-2"></i><?php echo htmlspecialchars(_('Roles'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                     </h6>
+                    <?php if ($authHelper->emailVerified) : ?>
                     <a href="request-access.php" class="btn btn-outline-primary btn-sm" data-requires-auth>
                         <i class="fas fa-plus me-1"></i><?php echo htmlspecialchars(_('Request Role'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                     </a>
+                    <?php else : ?>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" disabled
+                            title="<?php echo htmlspecialchars(_('Email verification required'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                        <i class="fas fa-plus me-1"></i><?php echo htmlspecialchars(_('Request Role'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                    </button>
+                    <?php endif; ?>
                 </div>
                 <div class="card-body">
+                    <?php if (!$authHelper->emailVerified) : ?>
+                    <div class="alert alert-warning mb-3">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <?php
+                        $verifyEmailMsg = _('You must verify your email address before you can request a role. Please check your inbox for a verification email.');
+                        echo htmlspecialchars($verifyEmailMsg, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                        ?>
+                    </div>
+                    <?php endif; ?>
                     <?php if ($authHelper->roles !== null && count($authHelper->roles) > 0) : ?>
                     <div class="d-flex flex-wrap gap-2">
                         <?php foreach ($authHelper->roles as $role) : ?>
