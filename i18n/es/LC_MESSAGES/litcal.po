@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-02 19:00+0000\n"
-"PO-Revision-Date: 2026-01-18 03:51+0000\n"
+"PO-Revision-Date: 2026-04-02 19:50+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13.3\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #: index.php:5
 msgid ""
@@ -1144,16 +1144,12 @@ msgstr ""
 "tematización de bootstrap del sitio web del proyecto"
 
 #: src/Utilities.php:134
-#, fuzzy
-#| msgid ""
-#| "Full stack web developer, contributed to the generation of the Open API "
-#| "documentation"
 msgid ""
 "Full stack web developer based in Eaton, IN (USA), contributed to the "
 "generation of the Open API documentation"
 msgstr ""
-"Desarrollador web full stack, contribuyó a la generación de la documentación "
-"de Open API"
+"Desarrollador web full stack con base en Eaton, IN (EE.UU.), contribuyó a la "
+"generación de la documentación de Open API"
 
 #: src/Utilities.php:140
 msgid ""
@@ -1165,42 +1161,30 @@ msgstr ""
 "traducciones relacionadas"
 
 #: src/Utilities.php:146
-#, fuzzy
-#| msgid ""
-#| "Senior software engineer at Strava, author of the ConfessIt app, "
-#| "contributed to the structuring of the JSON responses of the Liturgical "
-#| "Calendar API"
 msgid ""
 "Senior software engineer at Strava, based in Denver, CO (USA), author of the "
 "ConfessIt app, contributed to the structuring of the JSON responses of the "
 "Liturgical Calendar API"
 msgstr ""
-"Ingeniero de software senior en Strava, autor de la aplicación ConfessIt, "
-"contribuyó a la estructuración de las respuestas JSON de la API del "
-"Calendario Litúrgico"
+"Ingeniero de software senior en Strava, con sede en Denver, CO (EE.UU.), "
+"autor de la app ConfessIt, contribuyó a la estructuración de las respuestas "
+"JSON del API del Calendario Litúrgico"
 
 #: src/Utilities.php:153
-#, fuzzy
-#| msgid ""
-#| "Software Engineer and contributor to Salt + Light Television, contributed "
-#| "information about the dioceses of Latin rite"
 msgid ""
 "Software Engineer based in Toronto (Canada), contributor to Salt + Light "
 "Television, contributed information about the dioceses of Latin rite"
 msgstr ""
-"Ingeniero de software y colaborador de Salt + Light Television, aportó "
-"información sobre las diócesis de rito latino"
+"Ingeniero de software con base en Toronto (Canadá), colaborador de Salt + "
+"Light Television, contribuyó con información sobre las diócesis de rito "
+"latino"
 
 #: src/Utilities.php:159
-#, fuzzy
-#| msgid ""
-#| "Chancellor of the Diocese of Charlottetown, contributed liturgical "
-#| "calendar data for Canada in both English and French"
 msgid ""
 "Chancellor of the Diocese of Charlottetown (Canada), contributed liturgical "
 "calendar data for Canada in both English and French"
 msgstr ""
-"Canciller de la Diócesis de Charlottetown, contribuyó con datos del "
+"Canciller de la Diócesis de Charlottetown (Canadá), contribuyó con datos del "
 "calendario litúrgico para Canadá en inglés y francés"
 
 #: src/Utilities.php:165
@@ -1208,6 +1192,9 @@ msgid ""
 "Software Engineer based in Columbus, OH (USA), Founding Software Engineer at "
 "Truthly, former FOCUS missionary, contributed lectionary data"
 msgstr ""
+"Ingeniero de software con base en Columbus, OH (EE.UU.), ingeniero de "
+"software fundador en Truthly, ex misionero de FOCUS, contribuyó con datos "
+"del leccionario"
 
 #: src/Utilities.php:281
 msgid ""
