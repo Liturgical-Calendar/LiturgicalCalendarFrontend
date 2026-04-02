@@ -110,7 +110,7 @@ class Utilities
     private static function getCardInfo(string $who): array
     {
         $cards = [
-            'DONJOHN'        => [
+            'JOHNDORAZIO'    => [
                 'website' => Utilities::formatNameWithUrl('https://www.johnromanodorazio.com', 'John Romano D\'Orazio'),
                 'note'    => sprintf(
                     /**translators: 1. BibleGet github url 2. Liturgical Calendar github url */
@@ -118,45 +118,53 @@ class Utilities
                     'https://github.com/BibleGet-I-O',
                     'https://github.com/Liturgical-Calendar'
                 ),
-                'img'     => './assets/img/johndorazio_512x512.jpg',
+                'img'     => './assets/img/john_dorazio_512x512.jpg',
                 'icon'    => 'fa-cross'
             ],
             'MIKETRUSO'      => [
                 'website' => Utilities::formatNameWithUrl('https://www.miketruso.com/', 'Mike Truso'),
                 // phpcs:ignore Generic.Files.LineLength
-                'note'    => _('Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, Senior Software Engineer at Agile Orbit, founder of the St. Isidore Guild for Catholic IT Professionals, contributed the bootstrap theming of the project website'),
-                'img'     => './assets/img/miketruso_512x512.jpg',
+                'note'    => _('Software Developer based in St. Paul, MN (USA), Co-Founder at JobPost, Senior Software Engineer at Agile Orbit,'
+                            . ' founder of the St. Isidore Guild for Catholic IT Professionals, contributed the bootstrap theming of the project website'),
+                'img'     => './assets/img/mike_truso_512x512.jpg',
                 'icon'    => 'fa-code'
             ],
             'MICHAELSHELTON' => [
                 'website' => Utilities::formatNameWithUrl('https://www.linkedin.com/in/michaelrshelton/', 'Michael Shelton'),
-                'note'    => _('Full stack web developer, contributed to the generation of the Open API documentation'),
-                'img'     => './assets/img/michaelshelton_512x512.jpg',
+                'note'    => _('Full stack web developer based in Eaton, IN (USA), contributed to the generation of the Open API documentation'),
+                'img'     => './assets/img/michael_shelton_512x512.jpg',
                 'icon'    => 'fa-code'
             ],
             'STEVENVANROODE' => [
                 'website' => Utilities::formatNameWithUrl('https://www.latijnseliturgie.nl/', 'Steven van Roode'),
                 'note'    => _('Latin Liturgy Association of the Netherlands, contributed the national calendar for the Netherlands to this project with all related translations'),
-                'img'     => './assets/img/stevenvanroode_512x512.jpg',
+                'img'     => './assets/img/steven_vanroode_512x512.jpg',
                 'icon'    => 'fa-music'
             ],
             'MIKEKASBERG'    => [
                 'website' => Utilities::formatNameWithUrl('https://www.mikekasberg.com/', 'Mike Kasberg'),
-                'note'    => _('Senior software engineer at Strava, author of the ConfessIt app, contributed to the structuring of the JSON responses of the Liturgical Calendar API'),
-                'img'     => './assets/img/mikekasberg_512x512.jpg',
+                'note'    => _('Senior software engineer at Strava, based in Denver, CO (USA), author of the ConfessIt app,'
+                                . ' contributed to the structuring of the JSON responses of the Liturgical Calendar API'),
+                'img'     => './assets/img/mike_kasberg_512x512.jpg',
                 'icon'    => 'fa-code'
             ],
             'GABRIELCHOW'    => [
                 'website' => Utilities::formatNameWithUrl('https://gcatholic.org/', 'Gabriel Chow'),
-                'note'    => _('Software Engineer and contributor to Salt + Light Television, contributed information about the dioceses of Latin rite'),
+                'note'    => _('Software Engineer based in Toronto (Canada), contributor to Salt + Light Television, contributed information about the dioceses of Latin rite'),
                 'img'     => './assets/img/gabrielchow_512x512.webp',
                 'icon'    => 'fa-code'
             ],
             'CHRISSHERREN'   => [
                 'website' => Utilities::formatNameWithUrl('https://dioceseofcharlottetown.com/priests/', 'Chris Sherren'),
-                'note'    => _('Chancellor of the Diocese of Charlottetown, contributed liturgical calendar data for Canada in both English and French'),
-                'img'     => './assets/img/chrissherren_504x504.jpg',
+                'note'    => _('Chancellor of the Diocese of Charlottetown (Canada), contributed liturgical calendar data for Canada in both English and French'),
+                'img'     => './assets/img/chris_sherren_504x504.jpg',
                 'icon'    => 'fa-cross'
+            ],
+            'MATTHEWAYERS'   => [
+                'website' => Utilities::formatNameWithUrl('https://www.linkedin.com/in/matthewa26/', 'Matthew Ayers'),
+                'note'    => _('Software Engineer based in Columbus, OH (USA), Founding Software Engineer at Truthly, former FOCUS missionary, contributed lectionary data'),
+                'img'     => './assets/img/matthew_ayers_512x512.webp',
+                'icon'    => 'fa-code'
             ]
         ];
         if (!isset($cards[$who])) {
