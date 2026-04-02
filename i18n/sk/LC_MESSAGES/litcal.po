@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-02 19:00+0000\n"
-"PO-Revision-Date: 2026-01-18 03:51+0000\n"
+"PO-Revision-Date: 2026-04-02 19:50+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 5.13.3\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #: index.php:5
 msgid ""
@@ -1123,14 +1123,12 @@ msgstr ""
 "stránky projektu"
 
 #: src/Utilities.php:134
-#, fuzzy
-#| msgid ""
-#| "Full stack web developer, contributed to the generation of the Open API "
-#| "documentation"
 msgid ""
 "Full stack web developer based in Eaton, IN (USA), contributed to the "
 "generation of the Open API documentation"
-msgstr "Full stack web developer, prispel k vytvoreniu dokumentácie Open API"
+msgstr ""
+"Vývojár webových aplikácií na plný úväzok so sídlom v Eaton, IN (USA), "
+"prispel k vytvoreniu dokumentácie Open API"
 
 #: src/Utilities.php:140
 msgid ""
@@ -1141,48 +1139,38 @@ msgstr ""
 "kalendárom pre Holandsko so všetkými súvisiacimi prekladmi"
 
 #: src/Utilities.php:146
-#, fuzzy
-#| msgid ""
-#| "Senior software engineer at Strava, author of the ConfessIt app, "
-#| "contributed to the structuring of the JSON responses of the Liturgical "
-#| "Calendar API"
 msgid ""
 "Senior software engineer at Strava, based in Denver, CO (USA), author of the "
 "ConfessIt app, contributed to the structuring of the JSON responses of the "
 "Liturgical Calendar API"
 msgstr ""
-"Senior softvérový inžinier v Strave, autor aplikácie ConfessIt, prispel k "
-"štruktúrovaniu JSON odpovedí Liturgického kalendára API"
+"Senior softvérový inžinier v Strava, so sídlom v Denver, CO (USA), autor "
+"aplikácie ConfessIt, prispel k štruktúrovaniu JSON odpovedí Liturgického "
+"kalendára API"
 
 #: src/Utilities.php:153
-#, fuzzy
-#| msgid ""
-#| "Software Engineer and contributor to Salt + Light Television, contributed "
-#| "information about the dioceses of Latin rite"
 msgid ""
 "Software Engineer based in Toronto (Canada), contributor to Salt + Light "
 "Television, contributed information about the dioceses of Latin rite"
 msgstr ""
-"Softvérový inžinier a prispievateľ do Salt + Light Television, prispel "
-"informáciami o diecézach latinského obradu"
+"Softvérový inžinier so sídlom v Toronte (Kanada), prispievateľ do Salt + "
+"Light Television, prispel informáciami o diecézach latinského obradu"
 
 #: src/Utilities.php:159
-#, fuzzy
-#| msgid ""
-#| "Chancellor of the Diocese of Charlottetown, contributed liturgical "
-#| "calendar data for Canada in both English and French"
 msgid ""
 "Chancellor of the Diocese of Charlottetown (Canada), contributed liturgical "
 "calendar data for Canada in both English and French"
 msgstr ""
-"Kancelár diecézy Charlottetown prispel údajmi o liturgickom kalendári pre "
-"Kanadu v angličtine aj francúzštine"
+"Kancelár diecézy Charlottetown (Kanada), poskytol údaje o liturgickom "
+"kalendári pre Kanadu v angličtine aj vo francúzštine"
 
 #: src/Utilities.php:165
 msgid ""
 "Software Engineer based in Columbus, OH (USA), Founding Software Engineer at "
 "Truthly, former FOCUS missionary, contributed lectionary data"
 msgstr ""
+"Softvérový inžinier so sídlom v Columbuse, OH (USA), zakladajúci softvérový "
+"inžinier v Truthly, bývalý misionár FOCUS, prispel údajmi o lekcionári"
 
 #: src/Utilities.php:281
 msgid ""
