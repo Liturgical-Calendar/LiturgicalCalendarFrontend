@@ -22,7 +22,7 @@ $ABOUT_US = _('The Liturgical Calendar project is curated by a group of voluntee
         <p><?php echo $ABOUT_US; ?></p>
 
         <div class="row">
-            <?php Utilities::generateCard('DONJOHN'); ?>
+            <?php Utilities::generateCard('JOHNDORAZIO'); ?>
             <?php Utilities::generateCard('MIKETRUSO'); ?>
         </div>
 
@@ -38,6 +38,7 @@ $ABOUT_US = _('The Liturgical Calendar project is curated by a group of voluntee
 
         <div class="row">
             <?php Utilities::generateCard('CHRISSHERREN'); ?>
+            <?php Utilities::generateCard('MATTHEWAYERS'); ?>
         </div>
 
     <?php include_once('./layout/footer.php'); ?>
