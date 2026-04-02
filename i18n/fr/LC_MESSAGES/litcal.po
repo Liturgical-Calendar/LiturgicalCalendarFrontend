@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-18 02:48+0000\n"
+"POT-Creation-Date: 2026-04-02 19:00+0000\n"
 "PO-Revision-Date: 2026-01-18 13:59+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
@@ -1151,15 +1151,19 @@ msgstr ""
 "St. Isidore pour les professionnels catholiques de l'informatique, a "
 "contribué à la thématisation bootstrap du site web du projet"
 
-#: src/Utilities.php:133
+#: src/Utilities.php:134
+#, fuzzy
+#| msgid ""
+#| "Full stack web developer, contributed to the generation of the Open API "
+#| "documentation"
 msgid ""
-"Full stack web developer, contributed to the generation of the Open API "
-"documentation"
+"Full stack web developer based in Eaton, IN (USA), contributed to the "
+"generation of the Open API documentation"
 msgstr ""
 "Développeur web full stack, a contribué à la création de la documentation "
 "Open API"
 
-#: src/Utilities.php:139
+#: src/Utilities.php:140
 msgid ""
 "Latin Liturgy Association of the Netherlands, contributed the national "
 "calendar for the Netherlands to this project with all related translations"
@@ -1167,32 +1171,52 @@ msgstr ""
 "Association de la liturgie latine des Pays-Bas, a contribué à ce projet le "
 "calendrier national des Pays-Bas avec toutes les traductions associées"
 
-#: src/Utilities.php:145
+#: src/Utilities.php:146
+#, fuzzy
+#| msgid ""
+#| "Senior software engineer at Strava, author of the ConfessIt app, "
+#| "contributed to the structuring of the JSON responses of the Liturgical "
+#| "Calendar API"
 msgid ""
-"Senior software engineer at Strava, author of the ConfessIt app, contributed "
-"to the structuring of the JSON responses of the Liturgical Calendar API"
+"Senior software engineer at Strava, based in Denver, CO (USA), author of the "
+"ConfessIt app, contributed to the structuring of the JSON responses of the "
+"Liturgical Calendar API"
 msgstr ""
 "Ingénieur logiciel senior chez Strava, auteur de l'application ConfessIt, a "
 "contribué à la structuration des réponses JSON de l'API du Calendrier "
 "Liturgique"
 
-#: src/Utilities.php:151
+#: src/Utilities.php:153
+#, fuzzy
+#| msgid ""
+#| "Software Engineer and contributor to Salt + Light Television, contributed "
+#| "information about the dioceses of Latin rite"
 msgid ""
-"Software Engineer and contributor to Salt + Light Television, contributed "
-"information about the dioceses of Latin rite"
+"Software Engineer based in Toronto (Canada), contributor to Salt + Light "
+"Television, contributed information about the dioceses of Latin rite"
 msgstr ""
 "Ingénieur logiciel et collaborateur de Sel + Lumière Télévision, a contribué "
 "des informations sur les diocèses de rite latin"
 
-#: src/Utilities.php:157
+#: src/Utilities.php:159
+#, fuzzy
+#| msgid ""
+#| "Chancellor of the Diocese of Charlottetown, contributed liturgical "
+#| "calendar data for Canada in both English and French"
 msgid ""
-"Chancellor of the Diocese of Charlottetown, contributed liturgical calendar "
-"data for Canada in both English and French"
+"Chancellor of the Diocese of Charlottetown (Canada), contributed liturgical "
+"calendar data for Canada in both English and French"
 msgstr ""
 "Chancelier du diocèse de Charlottetown, a contribué les données du "
 "calendrier liturgique pour le Canada en anglais et en français"
 
-#: src/Utilities.php:273
+#: src/Utilities.php:165
+msgid ""
+"Software Engineer based in Columbus, OH (USA), Founding Software Engineer at "
+"Truthly, former FOCUS missionary, contributed lectionary data"
+msgstr ""
+
+#: src/Utilities.php:281
 msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
@@ -1200,30 +1224,30 @@ msgstr ""
 "Cet événement liturgique ne semble pas exister ? Veuillez choisir une valeur "
 "dans la liste."
 
-#: src/Utilities.php:274
+#: src/Utilities.php:282
 msgid "This liturgical event does not exist, so it will be created."
 msgstr "Cet événement liturgique n'existe pas, il sera donc créé."
 
-#: src/Utilities.php:278
+#: src/Utilities.php:286
 msgid "Choose from existing liturgical events"
 msgstr "Choisissez parmi les événements liturgiques existants"
 
-#: src/Utilities.php:279
+#: src/Utilities.php:287
 msgid "Choose from existing liturgical events (or create a new one)"
 msgstr ""
 "Choisissez parmi les événements liturgiques existants (ou créez-en un "
 "nouveau)"
 
-#: src/Utilities.php:291
+#: src/Utilities.php:299
 msgid "Property to change"
 msgstr "Propriété à modifier"
 
 #. translators: form field label for the name of a liturgical event
-#: src/Utilities.php:293 src/FormControls.php:61 includes/messages.php:19
+#: src/Utilities.php:301 src/FormControls.php:61 includes/messages.php:19
 msgid "Name"
 msgstr "Nom"
 
-#: src/Utilities.php:294 src/FormControls.php:194
+#: src/Utilities.php:302 src/FormControls.php:194
 msgid "Grade"
 msgstr "Grade"
 
