@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-02 19:00+0000\n"
-"PO-Revision-Date: 2026-01-18 04:24+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2026-04-02 19:50+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
 "Language: hr\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.13.3\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #: index.php:5
 msgid ""
@@ -1120,15 +1120,12 @@ msgstr ""
 "katoličke IT profesionalce, pridonio bootstrap temama web stranice projekta"
 
 #: src/Utilities.php:134
-#, fuzzy
-#| msgid ""
-#| "Full stack web developer, contributed to the generation of the Open API "
-#| "documentation"
 msgid ""
 "Full stack web developer based in Eaton, IN (USA), contributed to the "
 "generation of the Open API documentation"
 msgstr ""
-"Full stack web programer, pridonio generiranju dokumentacije Open API-ja"
+"Full stack web developer smješten u Eatonu, IN (SAD), doprinio je izradi "
+"Open API dokumentacije"
 
 #: src/Utilities.php:140
 msgid ""
@@ -1139,48 +1136,38 @@ msgstr ""
 "za Nizozemsku sa svim povezanim prijevodima"
 
 #: src/Utilities.php:146
-#, fuzzy
-#| msgid ""
-#| "Senior software engineer at Strava, author of the ConfessIt app, "
-#| "contributed to the structuring of the JSON responses of the Liturgical "
-#| "Calendar API"
 msgid ""
 "Senior software engineer at Strava, based in Denver, CO (USA), author of the "
 "ConfessIt app, contributed to the structuring of the JSON responses of the "
 "Liturgical Calendar API"
 msgstr ""
-"Viši softverski inženjer u Strava, autor aplikacije ConfessIt, sudjelovao je "
-"u strukturiranju JSON odgovora API-ja Liturgijskog kalendara"
+"Viši softverski inženjer u Stravi, smješten u Denveru, CO (SAD), autor "
+"aplikacije ConfessIt, doprinio je strukturiranju JSON odgovora Liturgijskog "
+"kalendarskog API-ja"
 
 #: src/Utilities.php:153
-#, fuzzy
-#| msgid ""
-#| "Software Engineer and contributor to Salt + Light Television, contributed "
-#| "information about the dioceses of Latin rite"
 msgid ""
 "Software Engineer based in Toronto (Canada), contributor to Salt + Light "
 "Television, contributed information about the dioceses of Latin rite"
 msgstr ""
-"Softverski inženjer i suradnik Salt + Light Televizije, pridonio "
-"informacijama o biskupijama latinskog obreda"
+"Softverski inženjer smješten u Torontu (Kanada), suradnik Salt + Light "
+"Televizije, dao je informacije o latinskim biskupijama"
 
 #: src/Utilities.php:159
-#, fuzzy
-#| msgid ""
-#| "Chancellor of the Diocese of Charlottetown, contributed liturgical "
-#| "calendar data for Canada in both English and French"
 msgid ""
 "Chancellor of the Diocese of Charlottetown (Canada), contributed liturgical "
 "calendar data for Canada in both English and French"
 msgstr ""
-"Kancelar Biskupije Charlottetown, pridonio podacima liturgijskog kalendara "
-"za Kanadu na engleskom i francuskom"
+"Kancelar Biskupije Charlottetown (Kanada), pridonio podatcima o liturgijskom "
+"kalendaru za Kanadu na engleskom i francuskom jeziku"
 
 #: src/Utilities.php:165
 msgid ""
 "Software Engineer based in Columbus, OH (USA), Founding Software Engineer at "
 "Truthly, former FOCUS missionary, contributed lectionary data"
 msgstr ""
+"Softverski inženjer smješten u Columbusu, OH (SAD), osnivač softverski "
+"inženjer u Truthlyju, bivši FOCUS misionar, pridonio podacima o lekcionaru"
 
 #: src/Utilities.php:281
 msgid ""
