@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-18 02:48+0000\n"
-"PO-Revision-Date: 2026-01-18 03:51+0000\n"
+"POT-Creation-Date: 2026-04-02 19:00+0000\n"
+"PO-Revision-Date: 2026-04-02 19:50+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13.3\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #: index.php:5
 msgid ""
@@ -1141,15 +1141,15 @@ msgstr ""
 "Isidore Guild voor katholieke IT-professionals, heeft bijgedragen aan de "
 "bootstrap-thema's van de projectwebsite"
 
-#: src/Utilities.php:133
+#: src/Utilities.php:134
 msgid ""
-"Full stack web developer, contributed to the generation of the Open API "
-"documentation"
+"Full stack web developer based in Eaton, IN (USA), contributed to the "
+"generation of the Open API documentation"
 msgstr ""
-"Full stack webontwikkelaar, heeft bijgedragen aan de totstandkoming van de "
-"Open API-documentatie"
+"Full stack webontwikkelaar gevestigd in Eaton, IN (VS), heeft bijgedragen "
+"aan de generatie van de Open API-documentatie"
 
-#: src/Utilities.php:139
+#: src/Utilities.php:140
 msgid ""
 "Latin Liturgy Association of the Netherlands, contributed the national "
 "calendar for the Netherlands to this project with all related translations"
@@ -1157,59 +1157,69 @@ msgstr ""
 "Latijnse Liturgie Vereniging van Nederland, droeg de nationale kalender voor "
 "Nederland bij aan dit project met alle bijbehorende vertalingen"
 
-#: src/Utilities.php:145
+#: src/Utilities.php:146
 msgid ""
-"Senior software engineer at Strava, author of the ConfessIt app, contributed "
-"to the structuring of the JSON responses of the Liturgical Calendar API"
+"Senior software engineer at Strava, based in Denver, CO (USA), author of the "
+"ConfessIt app, contributed to the structuring of the JSON responses of the "
+"Liturgical Calendar API"
 msgstr ""
-"Senior software engineer bij Strava, auteur van de ConfessIt-app, droeg bij "
-"aan de structuur van de JSON-antwoorden van de Liturgische Kalender API"
+"Senior software-ingenieur bij Strava, gevestigd in Denver, CO (VS), auteur "
+"van de ConfessIt-app, heeft bijgedragen aan de structurering van de JSON-"
+"reacties van de Liturgical Calendar API"
 
-#: src/Utilities.php:151
+#: src/Utilities.php:153
 msgid ""
-"Software Engineer and contributor to Salt + Light Television, contributed "
-"information about the dioceses of Latin rite"
+"Software Engineer based in Toronto (Canada), contributor to Salt + Light "
+"Television, contributed information about the dioceses of Latin rite"
 msgstr ""
-"Software Engineer en medewerker van Salt + Light Television, leverde "
-"informatie over de bisdommen van de Latijnse ritus"
+"Software Engineer gevestigd in Toronto (Canada), bijdrager aan Salt + Light "
+"Television, leverde informatie over de diocesen van de Latijnse ritus"
 
-#: src/Utilities.php:157
+#: src/Utilities.php:159
 msgid ""
-"Chancellor of the Diocese of Charlottetown, contributed liturgical calendar "
-"data for Canada in both English and French"
+"Chancellor of the Diocese of Charlottetown (Canada), contributed liturgical "
+"calendar data for Canada in both English and French"
 msgstr ""
-"Kanselier van het bisdom Charlottetown, droeg bij aan liturgische "
-"kalendergegevens voor Canada in zowel het Engels als het Frans"
+"Kanselier van het Bisdom Charlottetown (Canada), heeft liturgische "
+"kalendergegevens voor Canada bijgedragen in zowel het Engels als het Frans"
 
-#: src/Utilities.php:273
+#: src/Utilities.php:165
+msgid ""
+"Software Engineer based in Columbus, OH (USA), Founding Software Engineer at "
+"Truthly, former FOCUS missionary, contributed lectionary data"
+msgstr ""
+"Software Engineer gevestigd in Columbus, OH (VS), Founding Software Engineer "
+"bij Truthly, voormalig FOCUS-missionaris, leverde lectionariumgegevens"
+
+#: src/Utilities.php:281
 msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
 msgstr ""
 "Dit liturgisch evenement lijkt niet te bestaan. Kies een waarde uit de lijst."
 
-#: src/Utilities.php:274
+#: src/Utilities.php:282
 msgid "This liturgical event does not exist, so it will be created."
 msgstr "Dit liturgisch evenement bestaat niet, het zal worden aangemaakt."
 
-#: src/Utilities.php:278
+#: src/Utilities.php:286
 msgid "Choose from existing liturgical events"
 msgstr "Kies uit bestaande liturgische evenementen"
 
-#: src/Utilities.php:279
+#: src/Utilities.php:287
 msgid "Choose from existing liturgical events (or create a new one)"
 msgstr "Kies uit bestaande liturgische evenementen (of maak een nieuwe aan)"
 
-#: src/Utilities.php:291
+#: src/Utilities.php:299
 msgid "Property to change"
 msgstr "Eigenschap wijzigen"
 
 #. translators: form field label for the name of a liturgical event
-#: src/Utilities.php:293 src/FormControls.php:61 includes/messages.php:19
+#: src/Utilities.php:301 src/FormControls.php:61 includes/messages.php:19
 msgid "Name"
 msgstr "Naam"
 
-#: src/Utilities.php:294 src/FormControls.php:194
+#: src/Utilities.php:302 src/FormControls.php:194
 msgid "Grade"
 msgstr "Graad"
 
