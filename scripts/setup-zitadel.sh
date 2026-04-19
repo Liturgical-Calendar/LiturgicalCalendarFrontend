@@ -359,7 +359,7 @@ main() {
     # Create Frontend OIDC app
     echo
     FRONTEND_CREDS=$(create_oidc_app "$PAT" "$PROJECT_ID" "LiturgicalCalendar Frontend" \
-        "http://localhost:${FRONTEND_PORT}/auth/callback" \
+        "http://localhost:${FRONTEND_PORT}/auth/callback.php" \
         "http://localhost:${FRONTEND_PORT}")
     FRONTEND_CLIENT_ID=$(echo "$FRONTEND_CREDS" | cut -d: -f1)
     FRONTEND_CLIENT_SECRET=$(echo "$FRONTEND_CREDS" | cut -d: -f2)
