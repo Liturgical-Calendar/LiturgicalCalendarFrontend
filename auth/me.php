@@ -10,12 +10,6 @@
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 use LiturgicalCalendar\Frontend\OidcClient;
-use Firebase\JWT\JWT;
-use Firebase\JWT\CachedKeySet;
-use Firebase\JWT\ExpiredException;
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\HttpFactory;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 // Load environment
 $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__), ['.env.local', '.env.development', '.env.production', '.env']);
@@ -56,86 +50,27 @@ $tokenToValidate = $idToken ?? $accessToken;
 // Validate access token
 try {
     if (!OidcClient::isConfigured()) {
-        // If OIDC is not configured, we can't validate the token
-        // This shouldn't happen in practice if user has a token
         jsonResponse([
             'authenticated' => false,
             'error'         => 'OIDC not configured',
         ]);
     }
 
-    $issuer   = $_ENV['ZITADEL_ISSUER'] ?? getenv('ZITADEL_ISSUER') ?: '';
-    $clientId = $_ENV['ZITADEL_CLIENT_ID'] ?? getenv('ZITADEL_CLIENT_ID') ?: '';
+    $oidcClient = OidcClient::fromEnv();
+    $projectId  = $_ENV['ZITADEL_PROJECT_ID'] ?? getenv('ZITADEL_PROJECT_ID') ?: null;
+    $additionalAudiences = $projectId !== null ? [$projectId] : [];
 
-    // Fetch JWKS
-    $jwksUri     = rtrim($issuer, '/') . '/oauth/v2/keys';
-    $httpClient  = new Client();
-    $httpFactory = new HttpFactory();
-
-    // Use filesystem cache for JWKS
-    $cacheDir = dirname(__DIR__) . '/cache';
-    $cache    = new FilesystemAdapter('jwks', 3600, $cacheDir);
-
-    $keySet = new CachedKeySet(
-        $jwksUri,
-        $httpClient,
-        $httpFactory,
-        $cache,
-        3600,
-        true
-    );
-
-    // Decode and validate token (use ID token for user info if available)
-    $payload = JWT::decode($tokenToValidate, $keySet);
-
-    // Validate issuer
-    if (!isset($payload->iss) || $payload->iss !== $issuer) {
+    // Validate token using OidcClient (handles internal URL routing for Docker)
+    $payload = $oidcClient->validateToken($tokenToValidate, $additionalAudiences);
+    if ($payload === null) {
         jsonResponse([
             'authenticated' => false,
-            'error'         => 'Invalid token issuer',
+            'error'         => 'Token validation failed',
         ]);
     }
 
-    // Validate audience
-    $aud = $payload->aud ?? null;
-    if (is_string($aud) && $aud !== $clientId) {
-        jsonResponse([
-            'authenticated' => false,
-            'error'         => 'Invalid token audience',
-        ]);
-    } elseif (is_array($aud) && !in_array($clientId, $aud, true)) {
-        jsonResponse([
-            'authenticated' => false,
-            'error'         => 'Invalid token audience',
-        ]);
-    }
-
-    // Extract user info
-    $user = [
-        'sub'                => $payload->sub ?? null,
-        'email'              => $payload->email ?? null,
-        'email_verified'     => $payload->email_verified ?? false,
-        'name'               => $payload->name ?? null,
-        'given_name'         => $payload->given_name ?? null,
-        'family_name'        => $payload->family_name ?? null,
-        'preferred_username' => $payload->preferred_username ?? null,
-    ];
-
-    // Extract roles from Zitadel claims
-    $roles    = [];
-    $rolesKey = 'urn:zitadel:iam:org:project:roles';
-    if (isset($payload->{$rolesKey}) && is_object($payload->{$rolesKey})) {
-        $roles = array_keys((array) $payload->{$rolesKey});
-    }
-    // Also check project-specific roles claim (matching AuthHelper behavior)
-    $projectId = $_ENV['ZITADEL_PROJECT_ID'] ?? getenv('ZITADEL_PROJECT_ID') ?: null;
-    if ($projectId !== null) {
-        $projectRolesKey = "urn:zitadel:iam:org:project:{$projectId}:roles";
-        if (isset($payload->{$projectRolesKey}) && is_object($payload->{$projectRolesKey})) {
-            $roles = array_merge($roles, array_keys((array) $payload->{$projectRolesKey}));
-        }
-    }
-    $user['roles'] = !empty($roles) ? array_values(array_unique($roles)) : [];
+    // Extract user info using OidcClient
+    $user = $oidcClient->extractUserFromIdToken($payload);
 
     // Check token expiry
     $exp = $payload->exp ?? 0;
@@ -145,13 +80,6 @@ try {
         'user'            => $user,
         'expires_at'      => $exp,
         'token_remaining' => max(0, $exp - time()),
-    ]);
-} catch (ExpiredException $e) {
-    // Token expired - could try refresh here
-    jsonResponse([
-        'authenticated'  => false,
-        'error'          => 'Token expired',
-        'should_refresh' => true,
     ]);
 } catch (Exception $e) {
     error_log('Auth/me error: ' . $e->getMessage());
