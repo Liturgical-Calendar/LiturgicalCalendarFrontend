@@ -8,7 +8,10 @@ use Firebase\JWT\CachedKeySet;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\HttpFactory;
+use Psr\Http\Message\RequestInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 /**
@@ -668,8 +671,19 @@ class OidcClient
         $jwksUri = $doc['jwks_uri'] ?? $this->issuer . '/oauth/v2/keys';
         $jwksUri = $this->rewriteEndpoint($jwksUri);
 
-        $serverBase  = $this->getServerBaseUrl();
-        $httpClient  = new Client(!empty($serverBase['headers']) ? ['headers' => $serverBase['headers']] : []);
+        $serverBase = $this->getServerBaseUrl();
+        if (!empty($serverBase['headers'])) {
+            // CachedKeySet uses PSR-18 sendRequest() which doesn't apply Guzzle's
+            // default headers. Use middleware to inject the Host header on every request.
+            $hostHeader = $serverBase['headers']['Host'] ?? null;
+            $stack      = HandlerStack::create();
+            $stack->push(Middleware::mapRequest(function (RequestInterface $request) use ($hostHeader) {
+                return $hostHeader !== null ? $request->withHeader('Host', $hostHeader) : $request;
+            }));
+            $httpClient = new Client(['handler' => $stack]);
+        } else {
+            $httpClient = new Client();
+        }
         $httpFactory = new HttpFactory();
 
         // Use filesystem cache for JWKS
