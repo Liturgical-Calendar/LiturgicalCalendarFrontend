@@ -31,13 +31,9 @@ RETRY_INTERVAL=5
 PROJECT_NAME="LiturgicalCalendar"
 ROLES=("admin" "developer" "calendar_editor" "test_editor")
 
-# Output files
+# Directories
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 FRONTEND_DIR="${SCRIPT_DIR}/.."
-FRONTEND_ENV_FILE="${FRONTEND_DIR}/.env"
-# API and Tests repos are siblings of the frontend repo
-API_ENV_FILE="${FRONTEND_DIR}/../LiturgicalCalendarAPI/.env"
-TESTS_ENV_FILE="${FRONTEND_DIR}/../UnitTestInterface/.env"
 
 # Parse command line arguments
 UPDATE_ENV="${UPDATE_ENV:-false}"
@@ -185,13 +181,29 @@ create_roles() {
     done
 }
 
+# Function to resolve the best .env file for a given directory.
+# Checks for .env.local, .env.development, and .env in order of priority.
+# Returns the path to the first existing file, or empty if none found.
+resolve_env_file() {
+    local base_dir="$1"
+    for variant in ".env.local" ".env.development" ".env"; do
+        if [ -f "${base_dir}/${variant}" ]; then
+            echo "${base_dir}/${variant}"
+            return 0
+        fi
+    done
+    echo ""
+}
+
 # Function to get existing client secret from .env file
 get_existing_client_secret() {
     local client_id="$1"
     local existing_secret=""
 
-    for env_file in "$FRONTEND_ENV_FILE" "$API_ENV_FILE" "$TESTS_ENV_FILE"; do
-        if [ -f "$env_file" ]; then
+    for base_dir in "$FRONTEND_DIR" "${FRONTEND_DIR}/../LiturgicalCalendarAPI" "${FRONTEND_DIR}/../UnitTestInterface"; do
+        local env_file
+        env_file=$(resolve_env_file "$base_dir")
+        if [ -n "$env_file" ]; then
             local env_client_id=$(grep "^ZITADEL_CLIENT_ID=" "$env_file" 2>/dev/null | cut -d= -f2)
             if [ "$env_client_id" = "$client_id" ]; then
                 existing_secret=$(grep "^ZITADEL_CLIENT_SECRET=" "$env_file" 2>/dev/null | cut -d= -f2)
@@ -221,11 +233,11 @@ create_oidc_app() {
         -H "Content-Type: application/json" \
         -d '{}')
 
-    existing_id=$(echo "$existing" | jq -r --arg name "$app_name" '.result[] | select(.name == $name) | .id // empty')
+    existing_id=$(echo "$existing" | jq -r --arg name "$app_name" '(.result // [])[] | select(.name == $name) | .id // empty')
 
     if [ -n "$existing_id" ]; then
         echo -e "${YELLOW}App already exists, getting client ID...${NC}" >&2
-        client_id=$(echo "$existing" | jq -r --arg name "$app_name" '.result[] | select(.name == $name) | .oidcConfig.clientId // empty')
+        client_id=$(echo "$existing" | jq -r --arg name "$app_name" '(.result // [])[] | select(.name == $name) | .oidcConfig.clientId // empty')
 
         # Check if we have an existing secret
         existing_secret=$(get_existing_client_secret "$client_id")
@@ -373,41 +385,26 @@ main() {
     if [[ "$UPDATE_ENV" == "true" ]]; then
         echo -e "${YELLOW}Updating environment files...${NC}"
 
-        # Update API .env
-        if [ -f "$API_ENV_FILE" ] || [ -f "${API_ENV_FILE}.local" ]; then
-            local api_target="${API_ENV_FILE}"
-            [ -f "${API_ENV_FILE}.local" ] && api_target="${API_ENV_FILE}.local"
-            update_env_file "$api_target" "ZITADEL_ISSUER" "${ZITADEL_URL}"
-            update_env_file "$api_target" "ZITADEL_CLIENT_ID" "$FRONTEND_CLIENT_ID"
-            update_env_file "$api_target" "ZITADEL_PROJECT_ID" "$PROJECT_ID"
-            echo -e "${GREEN}Updated: $api_target${NC}"
-        else
-            echo -e "${YELLOW}Skipped API .env (not found): $API_ENV_FILE${NC}"
-        fi
-
-        # Update Frontend .env
-        if [ -f "$FRONTEND_ENV_FILE" ] || [ -f "${FRONTEND_ENV_FILE}.local" ]; then
-            local frontend_target="${FRONTEND_ENV_FILE}"
-            [ -f "${FRONTEND_ENV_FILE}.local" ] && frontend_target="${FRONTEND_ENV_FILE}.local"
-            update_env_file "$frontend_target" "ZITADEL_ISSUER" "${ZITADEL_URL}"
-            update_env_file "$frontend_target" "ZITADEL_CLIENT_ID" "$FRONTEND_CLIENT_ID"
-            update_env_file "$frontend_target" "ZITADEL_PROJECT_ID" "$PROJECT_ID"
-            echo -e "${GREEN}Updated: $frontend_target${NC}"
-        else
-            echo -e "${YELLOW}Skipped Frontend .env (not found): $FRONTEND_ENV_FILE${NC}"
-        fi
-
-        # Update Tests .env
-        if [ -f "$TESTS_ENV_FILE" ] || [ -f "${TESTS_ENV_FILE}.local" ]; then
-            local tests_target="${TESTS_ENV_FILE}"
-            [ -f "${TESTS_ENV_FILE}.local" ] && tests_target="${TESTS_ENV_FILE}.local"
-            update_env_file "$tests_target" "ZITADEL_ISSUER" "${ZITADEL_URL}"
-            update_env_file "$tests_target" "ZITADEL_CLIENT_ID" "$FRONTEND_CLIENT_ID"
-            update_env_file "$tests_target" "ZITADEL_PROJECT_ID" "$PROJECT_ID"
-            echo -e "${GREEN}Updated: $tests_target${NC}"
-        else
-            echo -e "${YELLOW}Skipped Tests .env (not found): $TESTS_ENV_FILE${NC}"
-        fi
+        # Update each project's .env file (finds .env.local, .env.development, or .env)
+        local projects=(
+            "API:${FRONTEND_DIR}/../LiturgicalCalendarAPI"
+            "Frontend:${FRONTEND_DIR}"
+            "Tests:${FRONTEND_DIR}/../UnitTestInterface"
+        )
+        for entry in "${projects[@]}"; do
+            local label="${entry%%:*}"
+            local dir="${entry#*:}"
+            local target
+            target=$(resolve_env_file "$dir")
+            if [ -n "$target" ]; then
+                update_env_file "$target" "ZITADEL_ISSUER" "${ZITADEL_URL}"
+                update_env_file "$target" "ZITADEL_CLIENT_ID" "$FRONTEND_CLIENT_ID"
+                update_env_file "$target" "ZITADEL_PROJECT_ID" "$PROJECT_ID"
+                echo -e "${GREEN}Updated ${label}: $target${NC}"
+            else
+                echo -e "${YELLOW}Skipped ${label} (no .env file found in $dir)${NC}"
+            fi
+        done
 
         echo
         echo -e "${GREEN}Environment files updated!${NC}"
