@@ -385,6 +385,13 @@ main() {
     if [[ "$UPDATE_ENV" == "true" ]]; then
         echo -e "${YELLOW}Updating environment files...${NC}"
 
+        # Update docker-compose .env file (read automatically by docker compose for variable substitution)
+        local compose_env="${FRONTEND_DIR}/.env"
+        update_env_file "$compose_env" "ZITADEL_ISSUER" "${ZITADEL_URL}"
+        update_env_file "$compose_env" "ZITADEL_CLIENT_ID" "$FRONTEND_CLIENT_ID"
+        update_env_file "$compose_env" "ZITADEL_PROJECT_ID" "$PROJECT_ID"
+        echo -e "${GREEN}Updated compose .env: $compose_env${NC}"
+
         # Update each project's .env file (finds .env.local, .env.development, or .env)
         local projects=(
             "API:${FRONTEND_DIR}/../LiturgicalCalendarAPI"
