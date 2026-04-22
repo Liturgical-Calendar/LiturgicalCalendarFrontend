@@ -214,6 +214,8 @@ services:
     image: litcal-tests:latest
     build: https://github.com/Liturgical-Calendar/UnitTestInterface.git#main
     restart: unless-stopped
+    extra_hosts:
+      - "localhost:host-gateway"
     environment:
       APP_ENV: production
       API_PROTOCOL: http

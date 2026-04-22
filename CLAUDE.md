@@ -15,6 +15,10 @@ gh pr create --base development
 gh pr create --base main
 ```
 
+**Never skip git hooks.** Do not use `--no-verify` when committing. Pre-commit hooks run `composer lint` and
+`composer lint:md` to enforce code standards. If a hook fails, fix the issue and create a new commit — do not
+bypass the hook.
+
 **Do not push immediately after committing.** This project uses CodeRabbit for automated code review with rate
 limiting. Wait for the user to explicitly request a push, or batch multiple commits before pushing.
 

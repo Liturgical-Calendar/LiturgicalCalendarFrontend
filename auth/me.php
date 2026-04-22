@@ -56,8 +56,8 @@ try {
         ]);
     }
 
-    $oidcClient = OidcClient::fromEnv();
-    $projectId  = $_ENV['ZITADEL_PROJECT_ID'] ?? getenv('ZITADEL_PROJECT_ID') ?: null;
+    $oidcClient          = OidcClient::fromEnv();
+    $projectId           = $_ENV['ZITADEL_PROJECT_ID'] ?? getenv('ZITADEL_PROJECT_ID') ?: null;
     $additionalAudiences = $projectId !== null ? [$projectId] : [];
 
     // Validate token using OidcClient (handles internal URL routing for Docker)

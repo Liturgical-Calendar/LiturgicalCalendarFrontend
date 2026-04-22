@@ -21,7 +21,6 @@ NC='\033[0m' # No Color
 
 # Configuration
 ZITADEL_URL="${ZITADEL_URL:-http://localhost:8080}"
-ZITADEL_DATA_VOLUME="${ZITADEL_DATA_VOLUME:-liturgicalcalendarfrontend_zitadel_data}"
 FRONTEND_PORT="${FRONTEND_PORT:-3000}"
 TESTS_PORT="${TESTS_PORT:-3003}"
 MAX_RETRIES=30
@@ -95,11 +94,12 @@ wait_for_zitadel() {
     exit 1
 }
 
-# Function to get the admin PAT from the Docker volume
+# Function to get the admin PAT from the running Zitadel container
 get_admin_pat() {
     echo -e "${YELLOW}Getting admin PAT from Zitadel...${NC}" >&2
+    cd "$FRONTEND_DIR"
     for i in $(seq 1 $MAX_RETRIES); do
-        PAT=$(docker run --rm -v "${ZITADEL_DATA_VOLUME}:/data" alpine cat /data/admin.pat 2>/dev/null || true)
+        PAT=$(docker compose exec -T zitadel cat /zitadel-data/admin.pat 2>/dev/null || true)
         if [ -n "$PAT" ] && [ ${#PAT} -gt 10 ]; then
             echo -e "${GREEN}Admin PAT retrieved successfully${NC}" >&2
             echo "$PAT"
@@ -255,6 +255,9 @@ create_oidc_app() {
                 -H "Authorization: Bearer $pat" \
                 -H "Content-Type: application/json")
             client_secret=$(echo "$secret_result" | jq -r '.clientSecret // empty')
+            if [ -z "$client_secret" ]; then
+                echo -e "${YELLOW}No client secret returned (expected for PKCE apps)${NC}" >&2
+            fi
         fi
 
         # Update config
@@ -362,7 +365,6 @@ main() {
         "http://localhost:${FRONTEND_PORT}/auth/callback.php" \
         "http://localhost:${FRONTEND_PORT}")
     FRONTEND_CLIENT_ID=$(echo "$FRONTEND_CREDS" | cut -d: -f1)
-    FRONTEND_CLIENT_SECRET=$(echo "$FRONTEND_CREDS" | cut -d: -f2)
 
     echo
     echo -e "${BLUE}========================================${NC}"
@@ -372,7 +374,6 @@ main() {
     echo -e "${GREEN}Zitadel Credentials:${NC}"
     echo -e "  Project ID:      ${PROJECT_ID}"
     echo -e "  Client ID:       ${FRONTEND_CLIENT_ID}"
-    echo -e "  Client Secret:   ${FRONTEND_CLIENT_SECRET}"
     echo -e "  Service Token:   ${PAT}"
     echo
     echo -e "${GREEN}Roles created:${NC}"
