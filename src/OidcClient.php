@@ -206,7 +206,7 @@ class OidcClient
         $tokenEndpoint = $this->getTokenEndpoint();
 
         $serverBase = $this->getServerBaseUrl();
-        $client     = new Client();
+        $client     = new Client(['connect_timeout' => 2, 'timeout' => 10]);
         try {
             $response = $client->post($tokenEndpoint, [
                 'headers'     => $serverBase['headers'],
@@ -264,7 +264,7 @@ class OidcClient
         $tokenEndpoint = $this->getTokenEndpoint();
 
         $serverBase = $this->getServerBaseUrl();
-        $client     = new Client();
+        $client     = new Client(['connect_timeout' => 2, 'timeout' => 10]);
         try {
             $response = $client->post($tokenEndpoint, [
                 'headers'     => $serverBase['headers'],
@@ -415,7 +415,7 @@ class OidcClient
         $userinfoEndpoint = $this->getUserinfoEndpoint();
 
         $serverBase = $this->getServerBaseUrl();
-        $client     = new Client();
+        $client     = new Client(['connect_timeout' => 2, 'timeout' => 10]);
         try {
             $response = $client->get($userinfoEndpoint, [
                 'headers' => array_merge($serverBase['headers'], [
@@ -581,7 +581,7 @@ class OidcClient
 
         // Fetch from issuer (using internal URL if configured)
         $serverBase = $this->getServerBaseUrl();
-        $client     = new Client();
+        $client     = new Client(['connect_timeout' => 2, 'timeout' => 10]);
         try {
             $response = $client->get($serverBase['url'] . '/.well-known/openid-configuration', [
                 'headers' => $serverBase['headers'],
@@ -680,9 +680,9 @@ class OidcClient
             $stack->push(Middleware::mapRequest(function (RequestInterface $request) use ($hostHeader) {
                 return $hostHeader !== null ? $request->withHeader('Host', $hostHeader) : $request;
             }));
-            $httpClient = new Client(['handler' => $stack]);
+            $httpClient = new Client(['handler' => $stack, 'connect_timeout' => 2, 'timeout' => 10]);
         } else {
-            $httpClient = new Client();
+            $httpClient = new Client(['connect_timeout' => 2, 'timeout' => 10]);
         }
         $httpFactory = new HttpFactory();
 

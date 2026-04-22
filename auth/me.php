@@ -39,15 +39,7 @@ if ($accessToken === null) {
     jsonResponse(['authenticated' => false]);
 }
 
-// Get ID token for user profile information
-// ID token contains full user claims (preferred_username, email, name, etc.)
-// Access token typically only has minimal claims (sub)
-$idToken = $_COOKIE['litcal_id_token'] ?? null;
-
-// Use ID token if available, fall back to access token
-$tokenToValidate = $idToken ?? $accessToken;
-
-// Validate access token
+// Validate access token as the primary proof of authentication
 try {
     if (!OidcClient::isConfigured()) {
         jsonResponse([
@@ -60,20 +52,25 @@ try {
     $projectId           = $_ENV['ZITADEL_PROJECT_ID'] ?? getenv('ZITADEL_PROJECT_ID') ?: null;
     $additionalAudiences = $projectId !== null ? [$projectId] : [];
 
-    // Validate token using OidcClient (handles internal URL routing for Docker)
-    $payload = $oidcClient->validateToken($tokenToValidate, $additionalAudiences);
-    if ($payload === null) {
+    // Validate access token (handles internal URL routing for Docker)
+    $accessPayload = $oidcClient->validateToken($accessToken, $additionalAudiences);
+    if ($accessPayload === null) {
         jsonResponse([
             'authenticated' => false,
             'error'         => 'Token validation failed',
         ]);
     }
 
-    // Extract user info using OidcClient
-    $user = $oidcClient->extractUserFromIdToken($payload);
+    // Use ID token for richer profile claims if available, fall back to access token
+    $idToken     = $_COOKIE['litcal_id_token'] ?? null;
+    $idPayload   = $idToken !== null ? $oidcClient->validateToken($idToken, $additionalAudiences) : null;
+    $claimSource = $idPayload ?? $accessPayload;
 
-    // Check token expiry
-    $exp = $payload->exp ?? 0;
+    // Extract user info from the best available token
+    $user = $oidcClient->extractUserFromIdToken($claimSource);
+
+    // Use access token expiry for session timing
+    $exp = $accessPayload->exp ?? 0;
 
     jsonResponse([
         'authenticated'   => true,

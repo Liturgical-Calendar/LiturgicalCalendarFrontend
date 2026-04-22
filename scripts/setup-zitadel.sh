@@ -83,7 +83,7 @@ recreate_app_containers() {
 wait_for_zitadel() {
     echo -e "${YELLOW}Waiting for Zitadel to be ready...${NC}"
     for i in $(seq 1 $MAX_RETRIES); do
-        if curl -s "${ZITADEL_URL}/debug/healthz" > /dev/null 2>&1; then
+        if curl -sf "${ZITADEL_URL}/debug/healthz" > /dev/null 2>&1; then
             echo -e "${GREEN}Zitadel is ready!${NC}"
             return 0
         fi
@@ -302,7 +302,7 @@ create_oidc_app() {
     client_id=$(echo "$result" | jq -r '.clientId // empty')
     client_secret=$(echo "$result" | jq -r '.clientSecret // empty')
 
-    if [ -n "$client_id" ] && [ -n "$client_secret" ]; then
+    if [ -n "$client_id" ]; then
         echo -e "${GREEN}App created successfully${NC}" >&2
         echo "${client_id}:${client_secret}"
     else
@@ -374,7 +374,7 @@ main() {
     echo -e "${GREEN}Zitadel Credentials:${NC}"
     echo -e "  Project ID:      ${PROJECT_ID}"
     echo -e "  Client ID:       ${FRONTEND_CLIENT_ID}"
-    echo -e "  Service Token:   ${PAT}"
+    echo -e "  Service Token:   ***${PAT: -4} (retrieve from Zitadel container: docker compose exec zitadel cat /zitadel-data/admin.pat)"
     echo
     echo -e "${GREEN}Roles created:${NC}"
     for role in "${ROLES[@]}"; do

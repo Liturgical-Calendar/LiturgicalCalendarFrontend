@@ -7,7 +7,7 @@
 #   2. Configure Zitadel (creates project, roles, OIDC apps):
 #        ./scripts/setup-zitadel.sh --update-env
 #   3. Restart app services to pick up new credentials:
-#        docker compose up -d --force-recreate litcal-frontend litcal-tests
+#        docker compose up -d --force-recreate litcal-api litcal-frontend litcal-tests
 #
 #   Or do it all in one step:
 #        ./scripts/setup-zitadel.sh --update-env --docker-init
@@ -104,8 +104,8 @@ services:
     volumes:
       - zitadel_data:/zitadel-data
     ports:
-      - "8080:8080"
-      - "8081:3000"
+      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:8081:3000"
     networks:
       - litcal
     depends_on:
@@ -145,7 +145,7 @@ services:
     image: adminer:latest
     restart: unless-stopped
     ports:
-      - "${ADMINER_PORT:-8088}:8080"
+      - "127.0.0.1:${ADMINER_PORT:-8088}:8080"
     environment:
       ADMINER_DEFAULT_SERVER: db
       ADMINER_DESIGN: lucas-sandery
@@ -173,8 +173,8 @@ services:
       ZITADEL_CLIENT_ID: ${ZITADEL_CLIENT_ID:-}
       ZITADEL_PROJECT_ID: ${ZITADEL_PROJECT_ID:-}
     ports:
-      - "${API_PORT:-8000}:8000"
-      - "${WS_PORT:-8082}:8082"
+      - "127.0.0.1:${API_PORT:-8000}:8000"
+      - "127.0.0.1:${WS_PORT:-8082}:8082"
     networks:
       - litcal
     # Run both the HTTP server and the WebSocket server
@@ -204,7 +204,7 @@ services:
       ZITADEL_CLIENT_ID: ${ZITADEL_CLIENT_ID:-}
       ZITADEL_PROJECT_ID: ${ZITADEL_PROJECT_ID:-}
     ports:
-      - "${FRONTEND_PORT:-3000}:3000"
+      - "127.0.0.1:${FRONTEND_PORT:-3000}:3000"
     networks:
       - litcal
     depends_on:
@@ -230,7 +230,7 @@ services:
       ZITADEL_CLIENT_ID: ${ZITADEL_CLIENT_ID:-}
       ZITADEL_PROJECT_ID: ${ZITADEL_PROJECT_ID:-}
     ports:
-      - "${TESTS_PORT:-3003}:3003"
+      - "127.0.0.1:${TESTS_PORT:-3003}:3003"
     networks:
       - litcal
     depends_on:
