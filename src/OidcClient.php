@@ -675,10 +675,10 @@ class OidcClient
         if (!empty($serverBase['headers'])) {
             // CachedKeySet uses PSR-18 sendRequest() which doesn't apply Guzzle's
             // default headers. Use middleware to inject the Host header on every request.
-            $hostHeader = $serverBase['headers']['Host'] ?? null;
+            $hostHeader = $serverBase['headers']['Host'];
             $stack      = HandlerStack::create();
             $stack->push(Middleware::mapRequest(function (RequestInterface $request) use ($hostHeader) {
-                return $hostHeader !== null ? $request->withHeader('Host', $hostHeader) : $request;
+                return $request->withHeader('Host', $hostHeader);
             }));
             $httpClient = new Client(['handler' => $stack, 'connect_timeout' => 2, 'timeout' => 10]);
         } else {

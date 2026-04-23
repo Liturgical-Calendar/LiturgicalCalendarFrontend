@@ -710,6 +710,8 @@ main() {
     ADMIN_USER_ID=$(echo "$root_user_result" | jq -r '.result[0].userId // empty')
     if [ -n "$ADMIN_USER_ID" ]; then
         assign_project_role "$PAT" "$PROJECT_ID" "$ORG_ID" "$ADMIN_USER_ID" "admin"
+    else
+        echo -e "${YELLOW}Warning: root user not found — admin role not assigned (Zitadel: ${ZITADEL_URL}, Project: ${PROJECT_ID})${NC}" >&2
     fi
 
     # Create test service account
@@ -726,7 +728,6 @@ main() {
         "http://localhost:${FRONTEND_PORT}/auth/callback.php" \
         "http://localhost:${FRONTEND_PORT}")
     FRONTEND_CLIENT_ID=$(echo "$FRONTEND_CREDS" | cut -d: -f1)
-    FRONTEND_CLIENT_SECRET=$(echo "$FRONTEND_CREDS" | cut -d: -f2-)
 
     # Create Tests OIDC app
     echo
@@ -734,7 +735,6 @@ main() {
         "http://localhost:${TESTS_PORT}/auth/callback.php" \
         "http://localhost:${TESTS_PORT}")
     TESTS_CLIENT_ID=$(echo "$TESTS_CREDS" | cut -d: -f1)
-    TESTS_CLIENT_SECRET=$(echo "$TESTS_CREDS" | cut -d: -f2-)
 
     echo
     echo -e "${BLUE}========================================${NC}"
