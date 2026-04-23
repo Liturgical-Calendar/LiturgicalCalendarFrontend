@@ -342,10 +342,10 @@ create_oidc_app() {
                     \"postLogoutRedirectUris\": [\"$post_logout_uri\"],
                     \"responseTypes\": [\"OIDC_RESPONSE_TYPE_CODE\"],
                     \"grantTypes\": [\"OIDC_GRANT_TYPE_AUTHORIZATION_CODE\", \"OIDC_GRANT_TYPE_REFRESH_TOKEN\"],
-                    \"application_type\": \"OIDC_APP_TYPE_WEB\",
+                    \"applicationType\": \"OIDC_APP_TYPE_WEB\",
                     \"authMethodType\": \"OIDC_AUTH_METHOD_TYPE_NONE\",
                     \"accessTokenType\": \"OIDC_TOKEN_TYPE_JWT\",
-                    \"development_mode\": true,
+                    \"developmentMode\": true,
                     \"idTokenRoleAssertion\": true,
                     \"accessTokenRoleAssertion\": true,
                     \"idTokenUserinfoAssertion\": true
@@ -379,10 +379,10 @@ create_oidc_app() {
                 \"postLogoutRedirectUris\": [\"$post_logout_uri\"],
                 \"responseTypes\": [\"OIDC_RESPONSE_TYPE_CODE\"],
                 \"grantTypes\": [\"OIDC_GRANT_TYPE_AUTHORIZATION_CODE\", \"OIDC_GRANT_TYPE_REFRESH_TOKEN\"],
-                \"application_type\": \"OIDC_APP_TYPE_WEB\",
+                \"applicationType\": \"OIDC_APP_TYPE_WEB\",
                 \"authMethodType\": \"OIDC_AUTH_METHOD_TYPE_NONE\",
                 \"accessTokenType\": \"OIDC_TOKEN_TYPE_JWT\",
-                \"development_mode\": true,
+                \"developmentMode\": true,
                 \"idTokenRoleAssertion\": true,
                 \"idTokenUserinfoAssertion\": true
             }
@@ -706,7 +706,7 @@ main() {
         -H "Authorization: Bearer $PAT" \
         -H "Connect-Protocol-Version: 1" \
         -H "Content-Type: application/json" \
-        -d '{"queries": [{"user_name_query": {"userName": "root", "method": "TEXT_QUERY_METHOD_STARTS_WITH"}}]}')
+        -d "{\"queries\": [{\"user_name_query\": {\"userName\": \"root\", \"method\": \"TEXT_QUERY_METHOD_STARTS_WITH\"}}, {\"organization_id_query\": {\"organizationId\": \"${ORG_ID}\"}}]}")
     ADMIN_USER_ID=$(echo "$root_user_result" | jq -r '.result[0].userId // empty')
     if [ -n "$ADMIN_USER_ID" ]; then
         assign_project_role "$PAT" "$PROJECT_ID" "$ORG_ID" "$ADMIN_USER_ID" "admin"
