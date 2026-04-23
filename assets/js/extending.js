@@ -1214,38 +1214,56 @@ const litEventStrtotimeSwitchHandler = (ev) => {
         const litEvent = CalendarData.litcal.find(item => item.liturgical_event.event_key === eventKey) ?? null;
         if (litEvent !== null) {
             if (false === ev.target.checked) {
-                delete litEvent.liturgical_event.strtotime;
-                litEvent.liturgical_event.day = 1;
-                litEvent.liturgical_event.month = 1;
+                // Switching from strtotime to day/month: save strtotime value, restore previous day/month
                 const strToTimeFormGroup = ev.target.closest('.form-group');
+                const litEventStrtotime = strToTimeFormGroup.querySelector('.litEventStrtotime');
+                const strtotimeVal = litEventStrtotime.value;
+                const previousDayMonth = strToTimeFormGroup.dataset.valuewas || '1-1';
+                const dayMonthParts = previousDayMonth.split('-');
+                const restoredDay = parseInt(dayMonthParts[0]) || 1;
+                const restoredMonth = parseInt(dayMonthParts[1]) || 1;
+
+                delete litEvent.liturgical_event.strtotime;
+                litEvent.liturgical_event.day = restoredDay;
+                litEvent.liturgical_event.month = restoredMonth;
+
                 strToTimeFormGroup.classList.remove('col-sm-3');
                 strToTimeFormGroup.classList.add('col-sm-2');
-                const litEventStrtotime = strToTimeFormGroup.querySelector('.litEventStrtotime');
+                strToTimeFormGroup.setAttribute('data-valuewas', strtotimeVal);
                 const dayId = litEventStrtotime.id.replace('Strtotime', 'Day');
                 const monthId = litEventStrtotime.id.replace('Strtotime', 'Month');
                 strToTimeFormGroup.insertAdjacentHTML('beforebegin', `<div class="form-group col-sm-1">
-                <label for="${dayId}">${Messages[ "Day" ]}</label><input type="number" min="1" max="31" value="1" class="form-control litEvent litEventDay" id="${dayId}" />
+                <label for="${dayId}">${Messages[ "Day" ]}</label><input type="number" min="1" max="31" value="${restoredDay}" class="form-control litEvent litEventDay" id="${dayId}" />
                 </div>`);
                 litEventStrtotime.remove();
                 let formRow = `<select class="form-select litEvent litEventMonth" id="${monthId}">`;
                 const formatter = new Intl.DateTimeFormat(jsLocale, { month: 'long' });
                 for (let i = 0; i < 12; i++) {
                     const month = new Date(Date.UTC(0, i, 2, 0, 0, 0));
-                    formRow += `<option value=${i + 1}>${formatter.format(month)}</option>`;
+                    formRow += `<option value=${i + 1}${i + 1 === restoredMonth ? ' selected' : ''}>${formatter.format(month)}</option>`;
                 }
                 formRow += `</select>`;
                 strToTimeFormGroup.insertAdjacentHTML('beforeend', formRow);
                 strToTimeFormGroup.querySelector('.month-label').textContent = Messages[ 'Month' ];
                 strToTimeFormGroup.querySelector('.month-label').setAttribute('for', monthId);
             } else {
-                delete litEvent.liturgical_event.day;
-                delete litEvent.liturgical_event.month;
-                litEvent.liturgical_event.strtotime = '';
-
-                const dayFormGroup = row.querySelector('.litEventDay').closest('.form-group');
-                dayFormGroup.remove();
+                // Switching from day/month to strtotime: save day/month values, restore previous strtotime
+                const dayInput = row.querySelector('.litEventDay');
+                const monthSelect = row.querySelector('.litEventMonth');
+                const dayVal = dayInput ? dayInput.value : '1';
+                const monthVal = monthSelect ? monthSelect.value : '1';
 
                 const litEventMonthFormGrp = ev.target.closest('.form-group');
+                const previousStrtotime = litEventMonthFormGrp.dataset.valuewas || '';
+
+                delete litEvent.liturgical_event.day;
+                delete litEvent.liturgical_event.month;
+                litEvent.liturgical_event.strtotime = previousStrtotime;
+
+                const dayFormGroup = dayInput.closest('.form-group');
+                litEventMonthFormGrp.setAttribute('data-valuewas', `${dayVal}-${monthVal}`);
+                dayFormGroup.remove();
+
                 const litEventMonth = litEventMonthFormGrp.querySelector('.litEventMonth');
                 const strtotimeId = litEventMonth.id.replace('Month', 'Strtotime');
                 litEventMonthFormGrp.classList.remove('col-sm-2');
@@ -1253,7 +1271,7 @@ const litEventStrtotimeSwitchHandler = (ev) => {
                 litEventMonth.remove();
                 litEventMonthFormGrp.querySelector('.month-label').textContent = 'Relative date';
                 litEventMonthFormGrp.querySelector('.month-label').setAttribute('for', strtotimeId);
-                litEventMonthFormGrp.insertAdjacentHTML('beforeend', `<input type="text" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" class="form-control litEvent litEventStrtotime" id="${strtotimeId}" />`);
+                litEventMonthFormGrp.insertAdjacentHTML('beforeend', `<input type="text" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" class="form-control litEvent litEventStrtotime" id="${strtotimeId}" value="${escapeHtml(previousStrtotime)}" />`);
             }
         }
     } else {
@@ -2134,7 +2152,7 @@ const datetypeToggleBtnClicked = (ev) => {
         const valueWas = dayFormGroup.dataset.valuewas;
         const strToTimeTemplate = `<label for="onTheFly${uniqid}Strtotime">Relative date</label>
             <input type="text" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!"
-                value="${valueWas}" class="form-control litEvent litEventStrtotime" id="onTheFly${uniqid}Strtotime"
+                value="${escapeHtml(valueWas || '')}" class="form-control litEvent litEventStrtotime" id="onTheFly${uniqid}Strtotime"
             />`;
         dayFormGroup.innerHTML = '';
         dayFormGroup.classList.remove('col-sm-1');
