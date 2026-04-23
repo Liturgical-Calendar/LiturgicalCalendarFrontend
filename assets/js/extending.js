@@ -2152,7 +2152,7 @@ const datetypeToggleBtnClicked = (ev) => {
         const valueWas = dayFormGroup.dataset.valuewas;
         const strToTimeTemplate = `<label for="onTheFly${uniqid}Strtotime">Relative date</label>
             <input type="text" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!"
-                value="${valueWas}" class="form-control litEvent litEventStrtotime" id="onTheFly${uniqid}Strtotime"
+                value="${escapeHtml(valueWas || '')}" class="form-control litEvent litEventStrtotime" id="onTheFly${uniqid}Strtotime"
             />`;
         dayFormGroup.innerHTML = '';
         dayFormGroup.classList.remove('col-sm-1');
