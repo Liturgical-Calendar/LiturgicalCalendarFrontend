@@ -51,8 +51,9 @@ services:
   zitadel:
     image: ghcr.io/zitadel/zitadel:latest
     restart: unless-stopped
-    command: 'start-from-init --masterkey "MasterkeyNeedsToHave32Characters"'
+    command: 'start-from-init'
     environment:
+      ZITADEL_MASTERKEY: ${ZITADEL_MASTERKEY:-MasterkeyNeedsToHave32Characters}
       ZITADEL_EXTERNALDOMAIN: localhost
       ZITADEL_EXTERNALPORT: 8080
       ZITADEL_EXTERNALSECURE: false
@@ -185,6 +186,12 @@ services:
     image: litcal-api:latest
     build: https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI.git#development
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8000/calendars > /dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     environment:
       APP_ENV: development
       API_PROTOCOL: http
@@ -221,6 +228,8 @@ services:
     image: litcal-frontend:latest
     build: https://github.com/Liturgical-Calendar/LiturgicalCalendarFrontend.git#development
     restart: unless-stopped
+    extra_hosts:
+      - "localhost:host-gateway"
     environment:
       APP_ENV: production
       API_PROTOCOL: http
@@ -238,7 +247,8 @@ services:
     networks:
       - litcal
     depends_on:
-      - litcal-api
+      litcal-api:
+        condition: service_healthy
 
   litcal-tests:
     image: litcal-tests:latest
@@ -264,7 +274,8 @@ services:
     networks:
       - litcal
     depends_on:
-      - litcal-api
+      litcal-api:
+        condition: service_healthy
 
 networks:
   litcal:
