@@ -91,20 +91,28 @@ wait_for_zitadel() {
     exit 1
 }
 
-# Function to get the admin PAT from the running Zitadel container
+# Function to get the admin PAT from the running Zitadel container.
+# Uses docker cp since the Zitadel container image has no shell utilities (cat, ls, etc.).
 get_admin_pat() {
     echo -e "${YELLOW}Getting admin PAT from Zitadel...${NC}" >&2
     cd "$PROJECT_DIR"
+    local container_name
+    container_name=$(docker compose ps -q zitadel 2>/dev/null)
+    local tmp_pat="/tmp/zitadel-admin-$$.pat"
     for i in $(seq 1 $MAX_RETRIES); do
-        PAT=$(docker compose exec -T zitadel cat /zitadel-data/admin.pat 2>/dev/null || true)
-        if [ -n "$PAT" ] && [ ${#PAT} -gt 10 ]; then
-            echo -e "${GREEN}Admin PAT retrieved successfully${NC}" >&2
-            echo "$PAT"
-            return 0
+        if [ -n "$container_name" ] && docker cp "${container_name}:/zitadel-data/admin.pat" "$tmp_pat" 2>/dev/null; then
+            PAT=$(cat "$tmp_pat" 2>/dev/null || true)
+            rm -f "$tmp_pat"
+            if [ -n "$PAT" ] && [ ${#PAT} -gt 10 ]; then
+                echo -e "${GREEN}Admin PAT retrieved successfully${NC}" >&2
+                echo "$PAT"
+                return 0
+            fi
         fi
         echo "  Attempt $i/$MAX_RETRIES - PAT not available yet..." >&2
         sleep $RETRY_INTERVAL
     done
+    rm -f "$tmp_pat"
     echo -e "${RED}Failed to get admin PAT${NC}" >&2
     exit 1
 }
@@ -388,6 +396,8 @@ create_oidc_app() {
             }
         }")
 
+    local app_id
+    app_id=$(echo "$result" | jq -r '.applicationId // empty')
     local client_id
     client_id=$(echo "$result" | jq -r '.oidcConfiguration.clientId // .clientId // empty')
     local client_secret
@@ -395,6 +405,13 @@ create_oidc_app() {
 
     if [ -n "$client_id" ]; then
         echo -e "${GREEN}App created successfully${NC}" >&2
+        # CreateApplication ignores accessTokenRoleAssertion, so set it via UpdateApplication
+        curl -s -X POST "${ZITADEL_URL}/zitadel.application.v2.ApplicationService/UpdateApplication" \
+            -H "Authorization: Bearer $pat" \
+            -H "Connect-Protocol-Version: 1" \
+            -H "Content-Type: application/json" \
+            -d "{\"projectId\": \"${project_id}\", \"applicationId\": \"${app_id}\", \"oidcConfiguration\": {\"accessTokenRoleAssertion\": true}}" > /dev/null
+        echo -e "${GREEN}Enabled accessTokenRoleAssertion${NC}" >&2
         echo "${client_id}:${client_secret}"
     else
         echo -e "${RED}Failed to create app: $result${NC}" >&2
@@ -761,6 +778,14 @@ main() {
     # Update .env files
     if [[ "$UPDATE_ENV" == "true" ]]; then
         echo -e "${YELLOW}Updating environment files...${NC}"
+
+        # Update docker-compose .env file (read automatically by docker compose for variable substitution)
+        local compose_env="${PROJECT_DIR}/.env"
+        update_env_file "$compose_env" "ZITADEL_ISSUER" "${ZITADEL_URL}"
+        update_env_file "$compose_env" "ZITADEL_CLIENT_ID" "$FRONTEND_CLIENT_ID"
+        update_env_file "$compose_env" "ZITADEL_PROJECT_ID" "$PROJECT_ID"
+        update_env_file "$compose_env" "ZITADEL_MACHINE_TOKEN" "$SERVICE_ACCOUNT_PAT"
+        echo -e "${GREEN}Updated compose .env: $compose_env${NC}"
 
         # Update each project's .env file (finds .env.local, .env.development, or .env)
         local projects=(
