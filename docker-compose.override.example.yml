@@ -1,0 +1,24 @@
+# Docker Compose Override Example
+# Copy this file to docker-compose.override.yml to build from local repos
+# instead of GitHub. Only include the services you want to override.
+#
+# Usage:
+#   cp docker-compose.override.example.yml docker-compose.override.yml
+#   # Edit to keep only the services you need
+#   docker compose up --build
+#
+# The override file is automatically merged with docker-compose.yml.
+# Services not listed here continue to build from GitHub.
+
+services:
+  litcal-api:
+    build:
+      context: ../LiturgicalCalendarAPI
+
+  litcal-frontend:
+    build:
+      context: .
+
+  litcal-tests:
+    build:
+      context: ../UnitTestInterface

@@ -8,7 +8,10 @@ use Firebase\JWT\CachedKeySet;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\HttpFactory;
+use Psr\Http\Message\RequestInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 /**
@@ -22,6 +25,14 @@ class OidcClient
     private string $issuer;
     private string $clientId;
     private string $redirectUri;
+
+    /**
+     * Internal URL for server-side requests to Zitadel.
+     * When running in Docker, Zitadel may not be reachable at the public issuer URL
+     * from within the container. Set ZITADEL_INTERNAL_URL to the Docker service name
+     * (e.g., http://zitadel:8080) to route server-side requests internally.
+     */
+    private ?string $internalUrl;
 
     /**
      * Cached discovery document.
@@ -52,11 +63,12 @@ class OidcClient
      * @param string $clientId Zitadel client ID
      * @param string $redirectUri Callback URL for code exchange
      */
-    public function __construct(string $issuer, string $clientId, string $redirectUri)
+    public function __construct(string $issuer, string $clientId, string $redirectUri, ?string $internalUrl = null)
     {
         $this->issuer      = rtrim($issuer, '/');
         $this->clientId    = $clientId;
         $this->redirectUri = $redirectUri;
+        $this->internalUrl = $internalUrl !== null ? rtrim($internalUrl, '/') : null;
     }
 
     /**
@@ -87,7 +99,9 @@ class OidcClient
             }
         }
 
-        return new self($issuer, $clientId, $redirectUri);
+        $internalUrl = $_ENV['ZITADEL_INTERNAL_URL'] ?? getenv('ZITADEL_INTERNAL_URL') ?: null;
+
+        return new self($issuer, $clientId, $redirectUri, $internalUrl ?: null);
     }
 
     /**
@@ -191,9 +205,11 @@ class OidcClient
         // Exchange code for tokens
         $tokenEndpoint = $this->getTokenEndpoint();
 
-        $client = new Client();
+        $serverBase = $this->getServerBaseUrl();
+        $client     = new Client(['connect_timeout' => 2, 'timeout' => 10]);
         try {
             $response = $client->post($tokenEndpoint, [
+                'headers'     => $serverBase['headers'],
                 'form_params' => [
                     'grant_type'    => 'authorization_code',
                     'client_id'     => $this->clientId,
@@ -247,9 +263,11 @@ class OidcClient
     {
         $tokenEndpoint = $this->getTokenEndpoint();
 
-        $client = new Client();
+        $serverBase = $this->getServerBaseUrl();
+        $client     = new Client(['connect_timeout' => 2, 'timeout' => 10]);
         try {
             $response = $client->post($tokenEndpoint, [
+                'headers'     => $serverBase['headers'],
                 'form_params' => [
                     'grant_type'    => 'refresh_token',
                     'client_id'     => $this->clientId,
@@ -396,12 +414,13 @@ class OidcClient
     {
         $userinfoEndpoint = $this->getUserinfoEndpoint();
 
-        $client = new Client();
+        $serverBase = $this->getServerBaseUrl();
+        $client     = new Client(['connect_timeout' => 2, 'timeout' => 10]);
         try {
             $response = $client->get($userinfoEndpoint, [
-                'headers' => [
+                'headers' => array_merge($serverBase['headers'], [
                     'Authorization' => 'Bearer ' . $accessToken,
-                ],
+                ]),
             ]);
         } catch (RequestException $e) {
             $message = 'Failed to fetch user info';
@@ -490,6 +509,49 @@ class OidcClient
     }
 
     /**
+     * Get the base URL for server-side HTTP requests to Zitadel.
+     * Uses the internal URL if configured (for Docker), otherwise falls back to the public issuer.
+     * When using an internal URL, requests include a Host header matching the public issuer
+     * so that Zitadel's domain validation succeeds.
+     *
+     * @return array{url: string, headers: array<string, string>}
+     */
+    private function getServerBaseUrl(): array
+    {
+        if ($this->internalUrl !== null) {
+            $parsedIssuer = parse_url($this->issuer);
+            $host         = $parsedIssuer['host'] ?? 'localhost';
+            if (isset($parsedIssuer['port'])) {
+                $host .= ':' . $parsedIssuer['port'];
+            }
+            return [
+                'url'     => $this->internalUrl,
+                'headers' => ['Host' => $host],
+            ];
+        }
+        return [
+            'url'     => $this->issuer,
+            'headers' => [],
+        ];
+    }
+
+    /**
+     * Rewrite an endpoint URL for server-side access.
+     * When an internal URL is configured, replaces the issuer base with the internal URL
+     * so that server-side requests route through the Docker network.
+     *
+     * @param string $endpointUrl The endpoint URL from the discovery document
+     * @return string The rewritten URL (or original if no internal URL configured)
+     */
+    private function rewriteEndpoint(string $endpointUrl): string
+    {
+        if ($this->internalUrl !== null && str_starts_with($endpointUrl, $this->issuer)) {
+            return $this->internalUrl . substr($endpointUrl, strlen($this->issuer));
+        }
+        return $endpointUrl;
+    }
+
+    /**
      * Get OIDC discovery document.
      *
      * Uses filesystem cache to reduce external calls and latency.
@@ -517,10 +579,13 @@ class OidcClient
             }
         }
 
-        // Fetch from issuer
-        $client = new Client();
+        // Fetch from issuer (using internal URL if configured)
+        $serverBase = $this->getServerBaseUrl();
+        $client     = new Client(['connect_timeout' => 2, 'timeout' => 10]);
         try {
-            $response = $client->get($this->issuer . '/.well-known/openid-configuration');
+            $response = $client->get($serverBase['url'] . '/.well-known/openid-configuration', [
+                'headers' => $serverBase['headers'],
+            ]);
         } catch (RequestException $e) {
             $message = 'Failed to fetch OIDC discovery document';
             if ($e->hasResponse()) {
@@ -567,8 +632,9 @@ class OidcClient
      */
     public function getTokenEndpoint(): string
     {
-        $doc = $this->getDiscoveryDocument();
-        return $doc['token_endpoint'] ?? $this->issuer . '/oauth/v2/token';
+        $doc      = $this->getDiscoveryDocument();
+        $endpoint = $doc['token_endpoint'] ?? $this->issuer . '/oauth/v2/token';
+        return $this->rewriteEndpoint($endpoint);
     }
 
     /**
@@ -578,8 +644,9 @@ class OidcClient
      */
     public function getUserinfoEndpoint(): string
     {
-        $doc = $this->getDiscoveryDocument();
-        return $doc['userinfo_endpoint'] ?? $this->issuer . '/oidc/v1/userinfo';
+        $doc      = $this->getDiscoveryDocument();
+        $endpoint = $doc['userinfo_endpoint'] ?? $this->issuer . '/oidc/v1/userinfo';
+        return $this->rewriteEndpoint($endpoint);
     }
 
     /**
@@ -602,8 +669,21 @@ class OidcClient
     {
         $doc     = $this->getDiscoveryDocument();
         $jwksUri = $doc['jwks_uri'] ?? $this->issuer . '/oauth/v2/keys';
+        $jwksUri = $this->rewriteEndpoint($jwksUri);
 
-        $httpClient  = new Client();
+        $serverBase = $this->getServerBaseUrl();
+        if (!empty($serverBase['headers'])) {
+            // CachedKeySet uses PSR-18 sendRequest() which doesn't apply Guzzle's
+            // default headers. Use middleware to inject the Host header on every request.
+            $hostHeader = $serverBase['headers']['Host'];
+            $stack      = HandlerStack::create();
+            $stack->push(Middleware::mapRequest(function (RequestInterface $request) use ($hostHeader) {
+                return $request->withHeader('Host', $hostHeader);
+            }));
+            $httpClient = new Client(['handler' => $stack, 'connect_timeout' => 2, 'timeout' => 10]);
+        } else {
+            $httpClient = new Client(['connect_timeout' => 2, 'timeout' => 10]);
+        }
         $httpFactory = new HttpFactory();
 
         // Use filesystem cache for JWKS

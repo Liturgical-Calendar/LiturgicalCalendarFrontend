@@ -150,6 +150,13 @@ phpunit.xml
 # Development symlink to local liturgy-components-js
 /assets/components-js
 
+# Docker Compose override (local builds)
+docker-compose.override.yml
+
+# Zitadel setup script generated files
+*.pat
+test-service-account-key.json
+
 # Playwright
 /playwright-report/
 /playwright/.cache/
