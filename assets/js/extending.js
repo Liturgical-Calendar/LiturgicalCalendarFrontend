@@ -1271,7 +1271,7 @@ const litEventStrtotimeSwitchHandler = (ev) => {
                 litEventMonth.remove();
                 litEventMonthFormGrp.querySelector('.month-label').textContent = 'Relative date';
                 litEventMonthFormGrp.querySelector('.month-label').setAttribute('for', strtotimeId);
-                litEventMonthFormGrp.insertAdjacentHTML('beforeend', `<input type="text" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" class="form-control litEvent litEventStrtotime" id="${strtotimeId}" value="${previousStrtotime.replace(/"/g, '&quot;')}" />`);
+                litEventMonthFormGrp.insertAdjacentHTML('beforeend', `<input type="text" placeholder="e.g. fourth thursday of november" title="e.g. fourth thursday of november | php strtotime syntax supported here!" class="form-control litEvent litEventStrtotime" id="${strtotimeId}" value="${escapeHtml(previousStrtotime)}" />`);
             }
         }
     } else {
