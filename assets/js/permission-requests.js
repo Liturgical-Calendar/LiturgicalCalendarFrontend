@@ -392,7 +392,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         try {
             const body = {
                 requested_role: requestedRole,
-                permissions: permissions
+                permissions: permissions,
+                email: config.userEmail || null,
+                name: config.userName || null
             };
 
             if (justification) {

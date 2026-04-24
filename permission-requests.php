@@ -156,6 +156,8 @@ if (!$authHelper->emailVerified) {
     <script>
         window.AccessRequestsConfig = {
             apiUrl: <?php echo json_encode($apiBaseUrl); ?>,
+            userEmail: <?php echo json_encode($authHelper->email ?? ''); ?>,
+            userName: <?php echo json_encode($authHelper->name ?? $authHelper->username ?? ''); ?>,
             i18n: {
                 loading: <?php echo json_encode(_('Loading...')); ?>,
                 noRequests: <?php echo json_encode(_('You have not made any access requests yet.')); ?>,
