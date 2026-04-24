@@ -54,12 +54,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Relation display names and badge classes
     const relationNames = {
+        'admin': config.i18n.admin,
         'viewer': config.i18n.viewer,
         'editor': config.i18n.editor,
         'deleter': config.i18n.deleter
     };
 
     const relationBadgeClasses = {
+        'admin': 'bg-dark',
         'viewer': 'bg-info',
         'editor': 'bg-primary',
         'deleter': 'bg-danger'
@@ -759,11 +761,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             );
 
-            const data = await response.json();
-
             if (!response.ok) {
-                throw new Error(data.message || data.error || 'Request failed');
+                let errorMsg = 'Request failed';
+                try {
+                    const errData = await response.json();
+                    errorMsg = errData.message || errData.error || errorMsg;
+                } catch (e) { /* non-JSON error response */ }
+                throw new Error(errorMsg);
             }
+
+            const data = await response.json();
 
             const successMessages = {
                 approve: permReqI18n.approveSuccess,

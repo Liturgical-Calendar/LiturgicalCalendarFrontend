@@ -368,6 +368,7 @@ if (!$isAdmin) {
                 widerRegion: <?php echo json_encode(_('Wider Region')); ?>,
                 testDefinition: <?php echo json_encode(_('Test Definition')); ?>,
                 // Relation display names
+                admin: <?php echo json_encode(_('Admin')); ?>,
                 viewer: <?php echo json_encode(_('Viewer')); ?>,
                 editor: <?php echo json_encode(_('Editor')); ?>,
                 deleter: <?php echo json_encode(_('Deleter')); ?>,
