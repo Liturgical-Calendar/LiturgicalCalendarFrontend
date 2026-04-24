@@ -330,14 +330,7 @@ asort($langsAssoc);
                         <span><?php echo _('Liturgy of the Day'); ?></span>
                     </a>
 
-                        <?php if ($authHelper->isAuthenticated) : ?>
-                        <hr class="sidebar-divider my-2">
-                        <a class="nav-link<?php echo $currentPage === 'permission-requests' ? ' active' : ''; ?>" href="permission-requests.php"
-                           data-requires-auth>
-                            <i class="sb-nav-link-icon fas fa-fw fa-key text-warning"></i>
-                            <span><?php echo _('Access Requests'); ?></span>
-                        </a>
-                        <?php endif; ?>
+                        <?php // Access Requests page accessible via profile menu → Request Access ?>
                     <?php endif; ?>
 
                 </div>
