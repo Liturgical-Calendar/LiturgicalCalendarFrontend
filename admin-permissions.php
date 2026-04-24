@@ -238,8 +238,8 @@ if (!$isAdmin) {
                     <div id="permReqModalAlerts"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-1"></i><?php echo htmlspecialchars(_('Close'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                    <button type="button" class="btn btn-success d-none" id="permReqApproveBtn" data-requires-auth>
+                        <i class="fas fa-check-circle me-1"></i><?php echo htmlspecialchars(_('Approve'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                     </button>
                     <button type="button" class="btn btn-danger d-none" id="permReqRejectBtn" data-requires-auth>
                         <i class="fas fa-times-circle me-1"></i><?php echo htmlspecialchars(_('Reject'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
@@ -247,8 +247,8 @@ if (!$isAdmin) {
                     <button type="button" class="btn btn-warning d-none" id="permReqRevokeBtn" data-requires-auth>
                         <i class="fas fa-ban me-1"></i><?php echo htmlspecialchars(_('Revoke'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                     </button>
-                    <button type="button" class="btn btn-success d-none" id="permReqApproveBtn" data-requires-auth>
-                        <i class="fas fa-check-circle me-1"></i><?php echo htmlspecialchars(_('Approve'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i><?php echo htmlspecialchars(_('Close'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                     </button>
                 </div>
             </div>
