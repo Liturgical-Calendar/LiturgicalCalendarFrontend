@@ -11,6 +11,15 @@
 # Services not listed here continue to build from GitHub.
 
 services:
+  # These services use the same image as litcal-api — override build context together
+  db-init:
+    build:
+      context: ../LiturgicalCalendarAPI
+
+  openfga-setup:
+    build:
+      context: ../LiturgicalCalendarAPI
+
   litcal-api:
     build:
       context: ../LiturgicalCalendarAPI
