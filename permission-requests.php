@@ -164,10 +164,7 @@ if (!$authHelper->emailVerified) {
                 failedToSubmit: <?php echo json_encode(_('Failed to submit request. Please try again.')); ?>,
                 submitting: <?php echo json_encode(_('Submitting...')); ?>,
                 submitRequest: <?php echo json_encode(_('Submit Request')); ?>,
-                selectRole: <?php echo json_encode(_('Please select a role.')); ?>,
                 allFieldsRequired: <?php echo json_encode(_('Object type, object ID, and relation are required.')); ?>,
-                requested: <?php echo json_encode(_('Requested')); ?>,
-                adminNotes: <?php echo json_encode(_('Admin notes')); ?>,
                 unknownError: <?php echo json_encode(_('Unknown error')); ?>,
                 // Table headers
                 objectType: <?php echo json_encode(_('Object Type')); ?>,

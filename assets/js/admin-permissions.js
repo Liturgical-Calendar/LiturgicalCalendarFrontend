@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 try {
                     const data = await response.json();
                     errorMsg = data.message || data.error || errorMsg;
-                } catch (e) { /* non-JSON response */ }
+                } catch { /* non-JSON response */ }
                 throw new Error(errorMsg);
             }
 
@@ -356,7 +356,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 try {
                     const data = await response.json();
                     errorMsg = data.message || data.error || errorMsg;
-                } catch (e) { /* non-JSON response */ }
+                } catch { /* non-JSON response */ }
                 throw new Error(errorMsg);
             }
 
@@ -423,11 +423,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    // Object type and relation display name maps (reuse from above)
-    const permReqRelationNames = {
-        ...relationNames,
-        'admin': 'Admin'
-    };
+    // Relation display names reuse the main map (which includes admin from i18n)
+    const permReqRelationNames = relationNames;
 
     const permReqRelationBadgeClasses = {
         ...relationBadgeClasses,
@@ -442,7 +439,6 @@ document.addEventListener('DOMContentLoaded', function() {
         revoked: []
     };
     let currentPermReqId = null;
-    let currentPermReqStatus = null;
 
     const permReqReviewModal = new bootstrap.Modal(document.getElementById('permReqReviewModal'));
 
@@ -623,7 +619,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!item) return;
 
         currentPermReqId = reqId;
-        currentPermReqStatus = status;
 
         // Reset modal state
         document.getElementById('permReqReviewNotes').value = '';
@@ -766,7 +761,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 try {
                     const errData = await response.json();
                     errorMsg = errData.message || errData.error || errorMsg;
-                } catch (e) { /* non-JSON error response */ }
+                } catch { /* non-JSON error response */ }
                 throw new Error(errorMsg);
             }
 

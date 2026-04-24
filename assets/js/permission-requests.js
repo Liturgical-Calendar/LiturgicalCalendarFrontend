@@ -228,12 +228,16 @@ document.addEventListener('DOMContentLoaded', async function() {
                 body: JSON.stringify(body)
             });
 
-            const data = await response.json();
-
             if (!response.ok) {
-                throw new Error(data.message || data.error || data.detail || config.i18n.failedToSubmit);
+                let errorMsg = config.i18n.failedToSubmit;
+                try {
+                    const errData = await response.json();
+                    errorMsg = errData.message || errData.error || errData.detail || errorMsg;
+                } catch { /* non-JSON error response */ }
+                throw new Error(errorMsg);
             }
 
+            const data = await response.json();
             showAlert('success', data.message || config.i18n.submitSuccess);
 
             // Reset form and reload requests
