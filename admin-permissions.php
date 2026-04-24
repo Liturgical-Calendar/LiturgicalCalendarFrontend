@@ -130,11 +130,11 @@ if (!$isAdmin) {
         </div>
     </div>
 
-    <!-- Permission Requests Review Section -->
+    <!-- Access Requests Review Section -->
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 fw-bold text-primary">
-                <i class="fas fa-inbox me-2"></i><?php echo htmlspecialchars(_('Permission Requests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                <i class="fas fa-inbox me-2"></i><?php echo htmlspecialchars(_('Access Requests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                 <span class="badge bg-warning text-dark ms-2" id="permRequestsCount">0</span>
             </h6>
             <div>
@@ -144,7 +144,7 @@ if (!$isAdmin) {
             </div>
         </div>
 
-        <!-- Filter Tabs for Permission Requests -->
+        <!-- Filter Tabs for Access Requests -->
         <div class="card-body pb-0">
             <ul class="nav nav-tabs" id="permRequestStatusTabs" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -175,7 +175,7 @@ if (!$isAdmin) {
             </ul>
         </div>
 
-        <!-- Tab Content for Permission Requests -->
+        <!-- Tab Content for Access Requests -->
         <div class="tab-content" id="permRequestTabContent">
             <div class="tab-pane fade show active" id="permReq-pending-panel" role="tabpanel" aria-labelledby="permReq-pending-tab">
                 <div class="card-body" id="permReqPendingBody">
@@ -208,13 +208,13 @@ if (!$isAdmin) {
         </div>
     </div>
 
-    <!-- Permission Request Review Modal -->
+    <!-- Access Request Review Modal -->
     <div class="modal fade" id="permReqReviewModal" tabindex="-1" aria-labelledby="permReqReviewModalLabel">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="permReqReviewModalLabel">
-                        <i class="fas fa-key me-2"></i><?php echo htmlspecialchars(_('Review Permission Request'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                        <i class="fas fa-key me-2"></i><?php echo htmlspecialchars(_('Review Access Request'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?php echo htmlspecialchars(_('Close'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></button>
                 </div>
@@ -376,19 +376,21 @@ if (!$isAdmin) {
                 deleter: <?php echo json_encode(_('Deleter')); ?>,
                 // Validation
                 allFieldsRequired: <?php echo json_encode(_('All fields are required.')); ?>,
-                // Permission requests review section
-                permReq: {
+                // Access requests review section
+                accessReq: {
                     loading: <?php echo json_encode(_('Loading...')); ?>,
                     noRequests: <?php echo json_encode(_('No requests found.')); ?>,
-                    noPendingRequests: <?php echo json_encode(_('No pending permission requests. All caught up!')); ?>,
-                    failedToLoad: <?php echo json_encode(_('Failed to load permission requests. Please try again later.')); ?>,
+                    noPendingRequests: <?php echo json_encode(_('No pending access requests. All caught up!')); ?>,
+                    failedToLoad: <?php echo json_encode(_('Failed to load access requests. Please try again later.')); ?>,
                     processing: <?php echo json_encode(_('Processing...')); ?>,
-                    approveSuccess: <?php echo json_encode(_('Permission request approved successfully.')); ?>,
-                    rejectSuccess: <?php echo json_encode(_('Permission request rejected.')); ?>,
-                    revokeSuccess: <?php echo json_encode(_('Permission revoked successfully.')); ?>,
+                    approveSuccess: <?php echo json_encode(_('Access request approved successfully.')); ?>,
+                    rejectSuccess: <?php echo json_encode(_('Access request rejected.')); ?>,
+                    revokeSuccess: <?php echo json_encode(_('Access revoked successfully.')); ?>,
                     failedToProcess: <?php echo json_encode(_('Failed to process request. Please try again.')); ?>,
                     // Labels
                     user: <?php echo json_encode(_('User')); ?>,
+                    role: <?php echo json_encode(_('Role')); ?>,
+                    permissions: <?php echo json_encode(_('Permissions')); ?>,
                     objectType: <?php echo json_encode(_('Object Type')); ?>,
                     objectId: <?php echo json_encode(_('Object ID')); ?>,
                     relation: <?php echo json_encode(_('Relation')); ?>,
@@ -401,6 +403,10 @@ if (!$isAdmin) {
                     reviewNotes: <?php echo json_encode(_('Review Notes')); ?>,
                     status: <?php echo json_encode(_('Status')); ?>,
                     requested: <?php echo json_encode(_('Requested')); ?>,
+                    // Role display names
+                    calendarEditor: <?php echo json_encode(_('Calendar Editor')); ?>,
+                    testEditor: <?php echo json_encode(_('Accuracy Test Editor')); ?>,
+                    developer: <?php echo json_encode(_('Developer')); ?>,
                     // Status labels
                     statusPending: <?php echo json_encode(_('Pending')); ?>,
                     statusApproved: <?php echo json_encode(_('Approved')); ?>,

@@ -414,38 +414,69 @@ document.addEventListener('DOMContentLoaded', function() {
     loadPermissions();
 
     // ========================================================================
-    // Permission Requests Review Section
+    // Access Requests Review Section
     // ========================================================================
 
-    const permReqI18n = config.i18n.permReq;
-    if (!permReqI18n) {
-        console.warn('Permission requests i18n config not found');
+    const accessReqI18n = config.i18n.accessReq;
+    if (!accessReqI18n) {
+        console.warn('Access requests i18n config not found');
         return;
     }
 
-    // Relation display names reuse the main map (which includes admin from i18n)
-    const permReqRelationNames = relationNames;
+    // Role display names for access requests
+    const accessReqRoleNames = {
+        'calendar_editor': accessReqI18n.calendarEditor,
+        'test_editor': accessReqI18n.testEditor,
+        'developer': accessReqI18n.developer
+    };
 
-    const permReqRelationBadgeClasses = {
+    // Relation display names reuse the main map (which includes admin from i18n)
+    const accessReqRelationNames = relationNames;
+
+    const accessReqRelationBadgeClasses = {
         ...relationBadgeClasses,
         'admin': 'bg-warning text-dark'
     };
 
-    // Permission requests state
-    let permReqItems = {
+    // Access requests state
+    let accessReqItems = {
         pending: [],
         approved: [],
         rejected: [],
         revoked: []
     };
-    let currentPermReqId = null;
+    let currentAccessReqId = null;
 
-    const permReqReviewModal = new bootstrap.Modal(document.getElementById('permReqReviewModal'));
+    const accessReqReviewModal = new bootstrap.Modal(document.getElementById('permReqReviewModal'));
 
     /**
-     * Load all permission requests from admin API
+     * Summarize a permissions array for table display
+     * @param {Array} permissions - Permission objects
+     * @returns {string} Summary HTML
      */
-    async function loadPermissionRequests() {
+    function summarizeAccessPermissions(permissions) {
+        if (!permissions || permissions.length === 0) {
+            return '-';
+        }
+        const parts = [];
+        for (const perm of permissions) {
+            const typeName = objectTypeNames[perm.object_type] || perm.object_type;
+            const relName = accessReqRelationNames[perm.relation] || perm.relation;
+            const badgeClass = accessReqRelationBadgeClasses[perm.relation] || 'bg-secondary';
+            parts.push(
+                '<span class="badge ' + badgeClass + ' me-1">'
+                + escapeHtml(relName)
+                + '</span> '
+                + escapeHtml(typeName) + ': <code>' + escapeHtml(perm.object_id) + '</code>'
+            );
+        }
+        return parts.join('<br>');
+    }
+
+    /**
+     * Load all access requests from admin API
+     */
+    async function loadAccessRequests() {
         const statuses = ['pending', 'approved', 'rejected', 'revoked'];
         const bodyPrefix = 'permReq';
 
@@ -454,28 +485,28 @@ document.addEventListener('DOMContentLoaded', function() {
             if (container) {
                 container.innerHTML = `
                     <div class="text-center text-muted">
-                        <i class="fas fa-spinner fa-spin me-2"></i>${permReqI18n.loading}
+                        <i class="fas fa-spinner fa-spin me-2"></i>${accessReqI18n.loading}
                     </div>
                 `;
             }
         });
 
         try {
-            const response = await fetch(config.apiUrl + '/admin/permission-requests', {
+            const response = await fetch(config.apiUrl + '/admin/access-requests', {
                 method: 'GET',
                 headers: { 'Accept': 'application/json' },
                 credentials: 'include'
             });
 
             if (!response.ok) {
-                throw new Error('Failed to load permission requests');
+                throw new Error('Failed to load access requests');
             }
 
             const data = await response.json();
 
             // Group requests by status
             const requests = data.requests || [];
-            permReqItems = {
+            accessReqItems = {
                 pending: requests.filter(function(r) { return r.status === 'pending'; }),
                 approved: requests.filter(function(r) { return r.status === 'approved'; }),
                 rejected: requests.filter(function(r) { return r.status === 'rejected'; }),
@@ -483,19 +514,19 @@ document.addEventListener('DOMContentLoaded', function() {
             };
 
             // Update counts
-            updatePermReqCounts();
+            updateAccessReqCounts();
 
             // Render active tab
-            renderPermReqActiveTab();
+            renderAccessReqActiveTab();
         } catch (error) {
-            console.error('Error loading permission requests:', error);
+            console.error('Error loading access requests:', error);
             statuses.forEach(function(status) {
                 const container = document.getElementById(bodyPrefix + status.charAt(0).toUpperCase() + status.slice(1) + 'Body');
                 if (container) {
                     container.innerHTML = `
                         <div class="alert alert-danger mb-0">
                             <i class="fas fa-exclamation-triangle me-2"></i>
-                            ${permReqI18n.failedToLoad}
+                            ${accessReqI18n.failedToLoad}
                         </div>
                     `;
                 }
@@ -504,34 +535,34 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
-     * Update permission request count displays
+     * Update access request count displays
      */
-    function updatePermReqCounts() {
+    function updateAccessReqCounts() {
         const countEl = document.getElementById('permRequestsCount');
         const pendingBadge = document.getElementById('permReqPendingBadge');
-        const totalPending = permReqItems.pending.length;
+        const totalPending = accessReqItems.pending.length;
         if (countEl) countEl.textContent = totalPending;
         if (pendingBadge) pendingBadge.textContent = totalPending;
     }
 
     /**
-     * Render the active permission requests tab
+     * Render the active access requests tab
      */
-    function renderPermReqActiveTab() {
+    function renderAccessReqActiveTab() {
         const activeTab = document.querySelector('#permRequestStatusTabs button.active');
         if (!activeTab) return;
 
         // Extract status from tab id: 'permReq-pending-tab' -> 'pending'
         const status = activeTab.id.replace('permReq-', '').replace('-tab', '');
-        renderPermReqList(status);
+        renderAccessReqList(status);
     }
 
     /**
-     * Render a user cell (name + email) for a permission request row.
-     * @param {Object} req - Permission request item
+     * Render a user cell (name + email) for an access request row.
+     * @param {Object} req - Access request item
      * @returns {string} HTML for the user cell
      */
-    function renderPermReqUserCell(req) {
+    function renderAccessReqUserCell(req) {
         let html = '<td><strong>' + escapeHtml(req.user_name || '-') + '</strong>';
         if (req.user_email) {
             html += '<br><small class="text-muted">' + escapeHtml(req.user_email) + '</small>';
@@ -540,15 +571,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
-     * Render a single permission request table row.
-     * @param {Object} req - Permission request item
+     * Render a single access request table row.
+     * @param {Object} req - Access request item
      * @param {string} status - Request status
      * @returns {string} HTML for the table row
      */
-    function renderPermReqRow(req, status) {
-        const objectTypeName = objectTypeNames[req.object_type] || req.object_type;
-        const relationName = permReqRelationNames[req.relation] || req.relation;
-        const badgeClass = permReqRelationBadgeClasses[req.relation] || 'bg-secondary';
+    function renderAccessReqRow(req, status) {
+        const roleName = accessReqRoleNames[req.requested_role] || req.requested_role;
         const requestedDate = req.created_at ? new Date(req.created_at).toLocaleDateString() : '-';
         const justification = req.justification
             ? (req.justification.length > 40
@@ -557,10 +586,9 @@ document.addEventListener('DOMContentLoaded', function() {
             : '-';
 
         let html = '<tr>';
-        html += renderPermReqUserCell(req);
-        html += '<td>' + escapeHtml(objectTypeName) + '</td>';
-        html += '<td><code>' + escapeHtml(req.object_id || '-') + '</code></td>';
-        html += '<td><span class="badge ' + badgeClass + '">' + escapeHtml(relationName) + '</span></td>';
+        html += renderAccessReqUserCell(req);
+        html += '<td><span class="badge bg-info">' + escapeHtml(roleName) + '</span></td>';
+        html += '<td>' + summarizeAccessPermissions(req.permissions) + '</td>';
         html += '<td><small class="text-muted fst-italic">' + justification + '</small></td>';
         html += '<td><small>' + requestedDate + '</small></td>';
         if (status !== 'pending') {
@@ -571,24 +599,24 @@ document.addEventListener('DOMContentLoaded', function() {
         html += '<button class="btn btn-outline-primary btn-sm permReq-review-btn" ';
         html += 'data-permreq-id="' + escapeHtml(String(req.id || '')) + '" ';
         html += 'data-permreq-status="' + status + '" data-requires-auth>';
-        html += '<i class="fas fa-eye me-1"></i>' + permReqI18n.review;
+        html += '<i class="fas fa-eye me-1"></i>' + accessReqI18n.review;
         html += '</button></td></tr>';
         return html;
     }
 
     /**
-     * Render permission request list for a specific status
+     * Render access request list for a specific status
      * @param {string} status - Request status
      */
-    function renderPermReqList(status) {
+    function renderAccessReqList(status) {
         const containerId = 'permReq' + status.charAt(0).toUpperCase() + status.slice(1) + 'Body';
         const container = document.getElementById(containerId);
         if (!container) return;
 
-        const items = permReqItems[status] || [];
+        const items = accessReqItems[status] || [];
 
         if (items.length === 0) {
-            const message = status === 'pending' ? permReqI18n.noPendingRequests : permReqI18n.noRequests;
+            const message = status === 'pending' ? accessReqI18n.noPendingRequests : accessReqI18n.noRequests;
             const icon = status === 'pending' ? 'check-circle text-success' : 'inbox';
             container.innerHTML = '<div class="text-center text-muted py-4">'
                 + '<i class="fas fa-' + icon + ' fa-3x mb-3"></i>'
@@ -597,20 +625,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         let html = '<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr>';
-        html += '<th>' + permReqI18n.user + '</th>';
-        html += '<th>' + permReqI18n.objectType + '</th>';
-        html += '<th>' + permReqI18n.objectId + '</th>';
-        html += '<th>' + permReqI18n.relation + '</th>';
-        html += '<th>' + permReqI18n.justification + '</th>';
-        html += '<th>' + permReqI18n.date + '</th>';
+        html += '<th>' + accessReqI18n.user + '</th>';
+        html += '<th>' + accessReqI18n.role + '</th>';
+        html += '<th>' + accessReqI18n.permissions + '</th>';
+        html += '<th>' + accessReqI18n.justification + '</th>';
+        html += '<th>' + accessReqI18n.date + '</th>';
         if (status !== 'pending') {
-            html += '<th>' + permReqI18n.reviewedAt + '</th>';
+            html += '<th>' + accessReqI18n.reviewedAt + '</th>';
         }
-        html += '<th>' + permReqI18n.actions + '</th>';
+        html += '<th>' + accessReqI18n.actions + '</th>';
         html += '</tr></thead><tbody>';
 
         for (const req of items) {
-            html += renderPermReqRow(req, status);
+            html += renderAccessReqRow(req, status);
         }
 
         html += '</tbody></table></div>';
@@ -618,21 +645,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         container.querySelectorAll('.permReq-review-btn').forEach(function(btn) {
             btn.addEventListener('click', function() {
-                openPermReqReviewModal(this.dataset.permreqId, this.dataset.permreqStatus);
+                openAccessReqReviewModal(this.dataset.permreqId, this.dataset.permreqStatus);
             });
         });
     }
 
     /**
-     * Open the review modal for a permission request
-     * @param {string} reqId - Request ID
-     * @param {string} status - Current status
-     */
-    /**
      * Build a detail row for the review modal table.
      * @param {string} icon - FontAwesome icon name
      * @param {string} label - Row label
-     * @param {string} value - Row value HTML (not escaped — caller must escape)
+     * @param {string} value - Row value HTML (not escaped - caller must escape)
      * @returns {string} HTML table row
      */
     function detailRow(icon, label, value) {
@@ -641,22 +663,20 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
-     * Render the detail table for a permission request in the review modal.
-     * @param {Object} item - Permission request item
+     * Render the detail table for an access request in the review modal.
+     * @param {Object} item - Access request item
      * @param {string} status - Current status
      * @returns {string} HTML for the detail table
      */
-    function renderPermReqDetails(item, status) {
-        const objectTypeName = objectTypeNames[item.object_type] || item.object_type;
-        const relationName = permReqRelationNames[item.relation] || item.relation;
-        const badgeClass = permReqRelationBadgeClasses[item.relation] || 'bg-secondary';
+    function renderAccessReqDetails(item, status) {
+        const roleName = accessReqRoleNames[item.requested_role] || item.requested_role;
         const requestedDate = item.created_at ? new Date(item.created_at).toLocaleDateString() : '-';
 
         const statusBadges = {
-            pending: '<span class="badge bg-warning text-dark"><i class="fas fa-clock me-1"></i>' + permReqI18n.statusPending + '</span>',
-            approved: '<span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>' + permReqI18n.statusApproved + '</span>',
-            rejected: '<span class="badge bg-danger"><i class="fas fa-times-circle me-1"></i>' + permReqI18n.statusRejected + '</span>',
-            revoked: '<span class="badge bg-secondary"><i class="fas fa-ban me-1"></i>' + permReqI18n.statusRevoked + '</span>'
+            pending: '<span class="badge bg-warning text-dark"><i class="fas fa-clock me-1"></i>' + accessReqI18n.statusPending + '</span>',
+            approved: '<span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>' + accessReqI18n.statusApproved + '</span>',
+            rejected: '<span class="badge bg-danger"><i class="fas fa-times-circle me-1"></i>' + accessReqI18n.statusRejected + '</span>',
+            revoked: '<span class="badge bg-secondary"><i class="fas fa-ban me-1"></i>' + accessReqI18n.statusRevoked + '</span>'
         };
 
         let userValue = '<strong>' + escapeHtml(item.user_name || '-') + '</strong>';
@@ -665,27 +685,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         let html = '<table class="table table-borderless mb-0">';
-        html += detailRow('user', permReqI18n.user, userValue);
-        html += detailRow('cube', permReqI18n.objectType, escapeHtml(objectTypeName));
-        html += detailRow('hashtag', permReqI18n.objectId, '<code>' + escapeHtml(item.object_id || '-') + '</code>');
-        html += detailRow('user-tag', permReqI18n.relation, '<span class="badge ' + badgeClass + '">' + escapeHtml(relationName) + '</span>');
+        html += detailRow('user', accessReqI18n.user, userValue);
+        html += detailRow('user-tag', accessReqI18n.role, '<span class="badge bg-info">' + escapeHtml(roleName) + '</span>');
+
+        // Permissions detail
+        if (item.permissions && item.permissions.length > 0) {
+            html += detailRow('key', accessReqI18n.permissions, summarizeAccessPermissions(item.permissions));
+        }
 
         if (item.justification) {
-            html += detailRow('comment', permReqI18n.justification, '<em>"' + escapeHtml(item.justification) + '"</em>');
+            html += detailRow('comment', accessReqI18n.justification, '<em>"' + escapeHtml(item.justification) + '"</em>');
         }
         if (item.credentials) {
-            html += detailRow('id-badge', permReqI18n.credentials, '<em>' + escapeHtml(item.credentials) + '</em>');
+            html += detailRow('id-badge', accessReqI18n.credentials, '<em>' + escapeHtml(item.credentials) + '</em>');
         }
 
-        html += detailRow('info-circle', permReqI18n.status, statusBadges[status] || status);
-        html += detailRow('calendar', permReqI18n.requested, requestedDate);
+        html += detailRow('info-circle', accessReqI18n.status, statusBadges[status] || status);
+        html += detailRow('calendar', accessReqI18n.requested, requestedDate);
 
         if (status !== 'pending' && item.reviewed_at) {
             const reviewedDate = new Date(item.reviewed_at).toLocaleDateString();
-            html += detailRow('calendar-check', permReqI18n.reviewedAt, reviewedDate);
+            html += detailRow('calendar-check', accessReqI18n.reviewedAt, reviewedDate);
         }
         if (item.review_notes) {
-            html += detailRow('sticky-note', permReqI18n.reviewNotes, '<em>"' + escapeHtml(item.review_notes) + '"</em>');
+            html += detailRow('sticky-note', accessReqI18n.reviewNotes, '<em>"' + escapeHtml(item.review_notes) + '"</em>');
         }
 
         html += '</table>';
@@ -725,31 +748,31 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
-     * Open the review modal for a permission request
+     * Open the review modal for an access request
      * @param {string} reqId - Request ID
      * @param {string} status - Current status
      */
-    function openPermReqReviewModal(reqId, status) {
-        const item = permReqItems[status]?.find(function(i) { return String(i.id) === String(reqId); });
+    function openAccessReqReviewModal(reqId, status) {
+        const item = accessReqItems[status]?.find(function(i) { return String(i.id) === String(reqId); });
         if (!item) return;
 
-        currentPermReqId = reqId;
+        currentAccessReqId = reqId;
 
         document.getElementById('permReqReviewNotes').value = '';
         document.getElementById('permReqModalAlerts').innerHTML = '';
 
         configureReviewModalButtons(status);
-        document.getElementById('permReqDetails').innerHTML = renderPermReqDetails(item, status);
+        document.getElementById('permReqDetails').innerHTML = renderAccessReqDetails(item, status);
 
-        permReqReviewModal.show();
+        accessReqReviewModal.show();
     }
 
     /**
-     * Process a permission request action (approve/reject/revoke)
+     * Process an access request action (approve/reject/revoke)
      * @param {string} action - Action to perform
      */
-    async function processPermReq(action) {
-        if (!currentPermReqId) return;
+    async function processAccessReq(action) {
+        if (!currentAccessReqId) return;
 
         const notes = document.getElementById('permReqReviewNotes').value.trim();
         const approveBtn = document.getElementById('permReqApproveBtn');
@@ -766,12 +789,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const originalText = btn?.innerHTML || '';
 
         if (btn) {
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>' + permReqI18n.processing;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>' + accessReqI18n.processing;
         }
 
         try {
             const response = await fetch(
-                config.apiUrl + '/admin/permission-requests/' + encodeURIComponent(currentPermReqId) + '/' + action,
+                config.apiUrl + '/admin/access-requests/' + encodeURIComponent(currentAccessReqId) + '/' + action,
                 {
                     method: 'POST',
                     headers: {
@@ -797,9 +820,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
 
             const successMessages = {
-                approve: permReqI18n.approveSuccess,
-                reject: permReqI18n.rejectSuccess,
-                revoke: permReqI18n.revokeSuccess
+                approve: accessReqI18n.approveSuccess,
+                reject: accessReqI18n.rejectSuccess,
+                revoke: accessReqI18n.revokeSuccess
             };
 
             modalAlerts.innerHTML = `
@@ -817,19 +840,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (btn) {
                     btn.innerHTML = originalText;
                 }
-                permReqReviewModal.hide();
-                loadPermissionRequests();
+                accessReqReviewModal.hide();
+                loadAccessRequests();
                 // Refresh notifications
                 if (typeof Notifications !== 'undefined' && Notifications.fetchNotifications) {
                     Notifications.fetchNotifications();
                 }
             }, 1500);
         } catch (error) {
-            console.error('Error processing permission request:', error);
+            console.error('Error processing access request:', error);
             modalAlerts.innerHTML = `
                 <div class="alert alert-danger">
                     <i class="fas fa-exclamation-triangle me-2"></i>
-                    ${escapeHtml(error.message || permReqI18n.failedToProcess)}
+                    ${escapeHtml(error.message || accessReqI18n.failedToProcess)}
                 </div>
             `;
             approveBtn.disabled = false;
@@ -841,32 +864,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Permission request event listeners
+    // Access request event listeners
     document.getElementById('permReqApproveBtn')?.addEventListener('click', function() {
-        processPermReq('approve');
+        processAccessReq('approve');
     });
     document.getElementById('permReqRejectBtn')?.addEventListener('click', function() {
-        processPermReq('reject');
+        processAccessReq('reject');
     });
     document.getElementById('permReqRevokeBtn')?.addEventListener('click', function() {
-        processPermReq('revoke');
+        processAccessReq('revoke');
     });
 
     document.getElementById('refreshPermRequestsBtn')?.addEventListener('click', function() {
         const icon = this.querySelector('i');
         icon?.classList.add('fa-spin');
-        loadPermissionRequests().finally(function() {
+        loadAccessRequests().finally(function() {
             icon?.classList.remove('fa-spin');
         });
     });
 
-    // Tab change events for permission requests
+    // Tab change events for access requests
     document.querySelectorAll('#permRequestStatusTabs button[data-bs-toggle="tab"]').forEach(function(tab) {
         tab.addEventListener('shown.bs.tab', function() {
-            renderPermReqActiveTab();
+            renderAccessReqActiveTab();
         });
     });
 
-    // Load permission requests on page load
-    loadPermissionRequests();
+    // Load access requests on page load
+    loadAccessRequests();
 });

@@ -1,21 +1,32 @@
 /**
- * Permission Requests Page JavaScript
+ * Access Requests Page JavaScript
  *
- * Handles the user-facing interface for requesting resource-level permissions
- * and viewing existing permission request status.
+ * Handles the user-facing interface for requesting access (role + permissions)
+ * via the unified /auth/access-requests endpoint, and viewing existing request status.
  */
 
 document.addEventListener('DOMContentLoaded', async function() {
-    const config = window.PermissionRequestsConfig;
+    const config = window.AccessRequestsConfig;
     if (!config) {
-        console.error('PermissionRequestsConfig not found');
+        console.error('AccessRequestsConfig not found');
         return;
     }
 
     const existingRequestsBody = document.getElementById('existingRequestsBody');
-    const permissionRequestForm = document.getElementById('permissionRequestForm');
+    const accessRequestForm = document.getElementById('accessRequestForm');
     const formAlerts = document.getElementById('formAlerts');
     const submitBtn = document.getElementById('submitBtn');
+    const requestedRoleSelect = document.getElementById('requestedRole');
+    const permissionsSection = document.getElementById('permissionsSection');
+    const permissionRows = document.getElementById('permissionRows');
+    const addPermissionBtn = document.getElementById('addPermissionBtn');
+
+    // Role display names
+    const roleNames = {
+        'calendar_editor': config.i18n.calendarEditor,
+        'test_editor': config.i18n.testEditor,
+        'developer': config.i18n.developer
+    };
 
     // Object type display names
     const objectTypeNames = {
@@ -48,6 +59,15 @@ document.addEventListener('DOMContentLoaded', async function() {
         'rejected': { class: 'bg-danger', icon: 'fas fa-times', text: config.i18n.statusRejected },
         'revoked': { class: 'bg-secondary', icon: 'fas fa-ban', text: config.i18n.statusRevoked }
     };
+
+    // Object types allowed per role
+    const roleObjectTypes = {
+        'calendar_editor': ['national_calendar', 'diocesan_calendar', 'wider_region'],
+        'test_editor': ['test_definition'],
+        'developer': ['national_calendar', 'diocesan_calendar', 'wider_region', 'test_definition']
+    };
+
+    let permissionRowCounter = 0;
 
     /**
      * Escape HTML entities
@@ -87,26 +107,192 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     /**
-     * Load existing permission requests for the current user
+     * Get allowed object types for the currently selected role
+     * @returns {string[]} Array of allowed object type keys
+     */
+    function getAllowedObjectTypes() {
+        const role = requestedRoleSelect.value;
+        return roleObjectTypes[role] || [];
+    }
+
+    /**
+     * Build the object type <option> elements for a permission row
+     * @returns {string} HTML options
+     */
+    function buildObjectTypeOptions() {
+        const allowed = getAllowedObjectTypes();
+        let html = '<option value="">' + escapeHtml(config.i18n.selectObjectType) + '</option>';
+        for (const type of allowed) {
+            html += '<option value="' + escapeHtml(type) + '">' + escapeHtml(objectTypeNames[type] || type) + '</option>';
+        }
+        return html;
+    }
+
+    /**
+     * Add a new permission row to the form
+     */
+    function addPermissionRow() {
+        permissionRowCounter++;
+        const rowId = 'permRow_' + permissionRowCounter;
+        const row = document.createElement('div');
+        row.className = 'card bg-light mb-2';
+        row.id = rowId;
+        row.innerHTML = `
+            <div class="card-body py-2 px-3">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label form-label-sm mb-1">${escapeHtml(config.i18n.objectType)}</label>
+                        <select class="form-select form-select-sm perm-object-type" required>
+                            ${buildObjectTypeOptions()}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label form-label-sm mb-1">${escapeHtml(config.i18n.objectId)}</label>
+                        <input type="text" class="form-control form-control-sm perm-object-id" required
+                            placeholder="${escapeHtml(config.i18n.objectIdPlaceholder)}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label form-label-sm mb-1">${escapeHtml(config.i18n.relation)}</label>
+                        <select class="form-select form-select-sm perm-relation" required>
+                            <option value="">${escapeHtml(config.i18n.selectRelation)}</option>
+                            <option value="admin">${escapeHtml(config.i18n.admin)}</option>
+                            <option value="viewer">${escapeHtml(config.i18n.viewer)}</option>
+                            <option value="editor">${escapeHtml(config.i18n.editor)}</option>
+                            <option value="deleter">${escapeHtml(config.i18n.deleter)}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-outline-danger btn-sm w-100 remove-perm-btn"
+                                title="${escapeHtml(config.i18n.remove)}">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        permissionRows.appendChild(row);
+
+        // Bind remove button
+        row.querySelector('.remove-perm-btn').addEventListener('click', function() {
+            row.remove();
+        });
+    }
+
+    /**
+     * Update the permissions section visibility and rebuild object type
+     * options based on selected role.
+     */
+    function updatePermissionsSection() {
+        const role = requestedRoleSelect.value;
+        if (role) {
+            permissionsSection.style.display = '';
+            // Rebuild object type options in existing rows
+            const selects = permissionRows.querySelectorAll('.perm-object-type');
+            const optionsHtml = buildObjectTypeOptions();
+            selects.forEach(function(sel) {
+                const currentVal = sel.value;
+                sel.innerHTML = optionsHtml;
+                // Try to restore the previous selection if still valid
+                if (currentVal) {
+                    const opt = sel.querySelector('option[value="' + currentVal + '"]');
+                    if (opt) {
+                        sel.value = currentVal;
+                    }
+                }
+            });
+            // Add an initial row if there are none
+            if (permissionRows.children.length === 0) {
+                addPermissionRow();
+            }
+        } else {
+            permissionsSection.style.display = 'none';
+        }
+    }
+
+    /**
+     * Collect permissions from the form rows
+     * @returns {Array|null} Array of permission objects, or null if validation fails
+     */
+    function collectPermissions() {
+        const rows = permissionRows.querySelectorAll('.card');
+        const permissions = [];
+
+        for (const row of rows) {
+            const objectType = row.querySelector('.perm-object-type').value;
+            const objectId = row.querySelector('.perm-object-id').value.trim();
+            const relation = row.querySelector('.perm-relation').value;
+
+            if (!objectType || !objectId || !relation) {
+                return null;
+            }
+
+            permissions.push({
+                object_type: objectType,
+                object_id: objectId,
+                relation: relation
+            });
+        }
+
+        return permissions;
+    }
+
+    /**
+     * Summarize a permissions array into a short display string
+     * @param {Array} permissions - Array of permission objects
+     * @returns {string} Summary HTML
+     */
+    function summarizePermissions(permissions) {
+        if (!permissions || permissions.length === 0) {
+            return '-';
+        }
+        const parts = [];
+        for (const perm of permissions) {
+            const typeName = objectTypeNames[perm.object_type] || perm.object_type;
+            const relName = relationNames[perm.relation] || perm.relation;
+            const badgeClass = relationBadgeClasses[perm.relation] || 'bg-secondary';
+            parts.push(
+                '<span class="badge ' + badgeClass + ' me-1">'
+                + escapeHtml(relName)
+                + '</span> '
+                + escapeHtml(typeName) + ': <code>' + escapeHtml(perm.object_id) + '</code>'
+            );
+        }
+        return parts.join('<br>');
+    }
+
+    // ========================================================================
+    // Event listeners
+    // ========================================================================
+
+    requestedRoleSelect.addEventListener('change', updatePermissionsSection);
+    addPermissionBtn.addEventListener('click', addPermissionRow);
+
+    // ========================================================================
+    // Load existing access requests
+    // ========================================================================
+
+    /**
+     * Load existing access requests for the current user
      */
     async function loadExistingRequests() {
         try {
-            const response = await fetch(config.apiUrl + '/auth/permission-requests', {
+            const response = await fetch(config.apiUrl + '/auth/access-requests', {
                 method: 'GET',
                 headers: { 'Accept': 'application/json' },
                 credentials: 'include'
             });
 
             if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                const errorMsg = errorData.detail || errorData.error || errorData.message || errorData.title || `HTTP ${response.status}`;
+                const errorData = await response.json().catch(function() { return {}; });
+                const errorMsg = errorData.detail || errorData.error || errorData.message || errorData.title || 'HTTP ' + response.status;
                 throw new Error(errorMsg);
             }
 
             const data = await response.json();
             displayExistingRequests(data.requests || []);
         } catch (error) {
-            console.error('Error loading permission requests:', error);
+            console.error('Error loading access requests:', error);
             const errorMessage = error.message || config.i18n.unknownError;
             existingRequestsBody.innerHTML = `
                 <div class="alert alert-warning mb-0">
@@ -119,8 +305,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     /**
-     * Display existing permission requests
-     * @param {Array} requests - Array of permission request objects
+     * Display existing access requests
+     * @param {Array} requests - Array of access request objects
      */
     function displayExistingRequests(requests) {
         if (requests.length === 0) {
@@ -137,14 +323,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         html += `
             <thead>
                 <tr>
-                    <th>${config.i18n.objectType}</th>
-                    <th>${config.i18n.objectId}</th>
-                    <th>${config.i18n.relation}</th>
-                    <th>${config.i18n.status}</th>
-                    <th>${config.i18n.justification}</th>
-                    <th>${config.i18n.reviewNotes}</th>
-                    <th>${config.i18n.submitted}</th>
-                    <th>${config.i18n.reviewed}</th>
+                    <th>${escapeHtml(config.i18n.role)}</th>
+                    <th>${escapeHtml(config.i18n.permissions)}</th>
+                    <th>${escapeHtml(config.i18n.status)}</th>
+                    <th>${escapeHtml(config.i18n.justification)}</th>
+                    <th>${escapeHtml(config.i18n.submitted)}</th>
+                    <th>${escapeHtml(config.i18n.reviewed)}</th>
                 </tr>
             </thead>
             <tbody>
@@ -152,9 +336,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         for (const request of requests) {
             const status = statusInfo[request.status] || statusInfo['pending'];
-            const objectTypeName = objectTypeNames[request.object_type] || request.object_type;
-            const relationName = relationNames[request.relation] || request.relation;
-            const badgeClass = relationBadgeClasses[request.relation] || 'bg-secondary';
+            const roleName = roleNames[request.requested_role] || request.requested_role;
             const justification = request.justification
                 ? (request.justification.length > 60
                     ? request.justification.substring(0, 60) + '...'
@@ -163,16 +345,14 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             html += `
                 <tr>
-                    <td>${escapeHtml(objectTypeName)}</td>
-                    <td><code>${escapeHtml(request.object_id || '-')}</code></td>
-                    <td><span class="badge ${badgeClass}">${escapeHtml(relationName)}</span></td>
+                    <td><span class="badge bg-info">${escapeHtml(roleName)}</span></td>
+                    <td>${summarizePermissions(request.permissions)}</td>
                     <td>
                         <span class="badge ${status.class}">
                             <i class="${status.icon} me-1"></i>${escapeHtml(status.text)}
                         </span>
                     </td>
                     <td><small class="text-muted fst-italic">${escapeHtml(justification)}</small></td>
-                    <td><small class="text-muted">${escapeHtml(request.review_notes || '-')}</small></td>
                     <td><small>${formatDate(request.created_at)}</small></td>
                     <td><small>${formatDate(request.reviewed_at)}</small></td>
                 </tr>
@@ -183,32 +363,36 @@ document.addEventListener('DOMContentLoaded', async function() {
         existingRequestsBody.innerHTML = html;
     }
 
-    /**
-     * Handle form submission
-     */
-    permissionRequestForm.addEventListener('submit', async function(e) {
+    // ========================================================================
+    // Form submission
+    // ========================================================================
+
+    accessRequestForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         formAlerts.innerHTML = '';
 
-        const objectType = document.getElementById('objectType').value;
-        const objectId = document.getElementById('objectId').value.trim();
-        const relation = document.getElementById('relation').value;
-        const justification = document.getElementById('justification').value.trim();
-        const credentials = document.getElementById('credentials').value.trim();
-
-        if (!objectType || !objectId || !relation) {
-            showAlert('danger', config.i18n.allFieldsRequired);
+        const requestedRole = requestedRoleSelect.value;
+        if (!requestedRole) {
+            showAlert('danger', config.i18n.roleRequired);
             return;
         }
+
+        const permissions = collectPermissions();
+        if (permissions === null) {
+            showAlert('danger', config.i18n.permissionIncomplete);
+            return;
+        }
+
+        const justification = document.getElementById('justification').value.trim();
+        const credentials = document.getElementById('credentials').value.trim();
 
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>' + escapeHtml(config.i18n.submitting);
 
         try {
             const body = {
-                object_type: objectType,
-                object_id: objectId,
-                relation: relation
+                requested_role: requestedRole,
+                permissions: permissions
             };
 
             if (justification) {
@@ -218,7 +402,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 body.credentials = credentials;
             }
 
-            const response = await fetch(config.apiUrl + '/auth/permission-requests', {
+            const response = await fetch(config.apiUrl + '/auth/access-requests', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -241,10 +425,13 @@ document.addEventListener('DOMContentLoaded', async function() {
             showAlert('success', data.message || config.i18n.submitSuccess);
 
             // Reset form and reload requests
-            permissionRequestForm.reset();
+            accessRequestForm.reset();
+            permissionRows.innerHTML = '';
+            permissionsSection.style.display = 'none';
+            permissionRowCounter = 0;
             await loadExistingRequests();
         } catch (error) {
-            console.error('Error submitting permission request:', error);
+            console.error('Error submitting access request:', error);
             showAlert('danger', error.message || config.i18n.failedToSubmit);
         } finally {
             submitBtn.disabled = false;
