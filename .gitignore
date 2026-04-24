@@ -109,6 +109,7 @@ api/*
 !about.php
 !admin-applications.php
 !admin-dashboard.php
+!admin-permissions.php
 !admin-role-requests.php
 !admin-users.php
 !decrees.php
