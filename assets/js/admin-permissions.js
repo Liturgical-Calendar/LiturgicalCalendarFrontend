@@ -810,6 +810,13 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
 
             setTimeout(function() {
+                // Restore button state before hiding modal
+                approveBtn.disabled = false;
+                rejectBtn.disabled = false;
+                revokeBtn.disabled = false;
+                if (btn) {
+                    btn.innerHTML = originalText;
+                }
                 permReqReviewModal.hide();
                 loadPermissionRequests();
                 // Refresh notifications
