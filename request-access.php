@@ -1,11 +1,17 @@
 <?php
 
 /**
- * Request Access Page
+ * Request Access Page (Legacy Redirect)
  *
- * Allows authenticated users to request a role (developer, calendar_editor, test_editor).
- * This page is shown after registration when a user has no roles assigned.
+ * This page has been replaced by the unified Access Requests page
+ * (permission-requests.php) which handles both roles and permissions.
  */
+
+header('Location: permission-requests.php');
+exit;
+
+// @codeCoverageIgnoreStart
+// Legacy code below kept for reference — no longer executed.
 
 include_once 'includes/common.php';
 include_once 'includes/messages.php';
