@@ -166,6 +166,8 @@ if (!$authHelper->emailVerified) {
                 failedToSubmit: <?php echo json_encode(_('Failed to submit request. Please try again.')); ?>,
                 submitting: <?php echo json_encode(_('Submitting...')); ?>,
                 submitRequest: <?php echo json_encode(_('Submit Request')); ?>,
+                resubmit: <?php echo json_encode(_('Resubmit')); ?>,
+                rejectionReason: <?php echo json_encode(_('Rejection reason')); ?>,
                 roleRequired: <?php echo json_encode(_('Please select a role.')); ?>,
                 permissionIncomplete: <?php echo json_encode(_('Each permission row must have object type, object ID, and relation filled in.')); ?>,
                 unknownError: <?php echo json_encode(_('Unknown error')); ?>,

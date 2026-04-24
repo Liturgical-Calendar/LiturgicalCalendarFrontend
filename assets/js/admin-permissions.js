@@ -740,8 +740,8 @@ document.addEventListener('DOMContentLoaded', function() {
             revokeBtn.classList.remove('d-none');
             notesSection?.classList.remove('d-none');
         } else if (status === 'rejected') {
-            approveBtn.classList.remove('d-none');
-            notesSection?.classList.remove('d-none');
+            // Rejected requests cannot be approved by admin — user must resubmit
+            notesSection?.classList.add('d-none');
         } else {
             notesSection?.classList.add('d-none');
         }

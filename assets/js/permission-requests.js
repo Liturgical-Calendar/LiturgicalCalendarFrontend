@@ -326,9 +326,9 @@ document.addEventListener('DOMContentLoaded', async function() {
                     <th>${escapeHtml(config.i18n.role)}</th>
                     <th>${escapeHtml(config.i18n.permissions)}</th>
                     <th>${escapeHtml(config.i18n.status)}</th>
-                    <th>${escapeHtml(config.i18n.justification)}</th>
+                    <th>${escapeHtml(config.i18n.reviewNotes)}</th>
                     <th>${escapeHtml(config.i18n.submitted)}</th>
-                    <th>${escapeHtml(config.i18n.reviewed)}</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -337,11 +337,22 @@ document.addEventListener('DOMContentLoaded', async function() {
         for (const request of requests) {
             const status = statusInfo[request.status] || statusInfo['pending'];
             const roleName = roleNames[request.requested_role] || request.requested_role;
-            const justification = request.justification
-                ? (request.justification.length > 60
-                    ? request.justification.substring(0, 60) + '...'
-                    : request.justification)
+            const reviewNotes = request.review_notes
+                ? (request.review_notes.length > 60
+                    ? request.review_notes.substring(0, 60) + '...'
+                    : request.review_notes)
                 : '-';
+
+            let actionHtml = '';
+            if (request.status === 'rejected') {
+                actionHtml = `
+                    <button class="btn btn-outline-warning btn-sm resubmit-btn"
+                            data-request-id="${escapeHtml(String(request.id))}"
+                            title="${escapeHtml(config.i18n.resubmit || 'Resubmit')}">
+                        <i class="fas fa-redo me-1"></i>${escapeHtml(config.i18n.resubmit || 'Resubmit')}
+                    </button>
+                `;
+            }
 
             html += `
                 <tr>
@@ -352,15 +363,77 @@ document.addEventListener('DOMContentLoaded', async function() {
                             <i class="${status.icon} me-1"></i>${escapeHtml(status.text)}
                         </span>
                     </td>
-                    <td><small class="text-muted fst-italic">${escapeHtml(justification)}</small></td>
+                    <td><small class="text-muted fst-italic">${escapeHtml(reviewNotes)}</small></td>
                     <td><small>${formatDate(request.created_at)}</small></td>
-                    <td><small>${formatDate(request.reviewed_at)}</small></td>
+                    <td>${actionHtml}</td>
                 </tr>
             `;
         }
 
         html += '</tbody></table></div>';
         existingRequestsBody.innerHTML = html;
+
+        // Bind resubmit buttons
+        existingRequestsBody.querySelectorAll('.resubmit-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                openResubmitForm(this.dataset.requestId, requests);
+            });
+        });
+    }
+
+    // Track resubmit state
+    let resubmitRequestId = null;
+
+    /**
+     * Open the form pre-filled with a rejected request's data for resubmission.
+     * @param {string} requestId - The request ID to resubmit
+     * @param {Array} requests - All requests (to find the one to resubmit)
+     */
+    function openResubmitForm(requestId, requests) {
+        const request = requests.find(function(r) { return String(r.id) === String(requestId); });
+        if (!request) return;
+
+        // Set the role (disable it — role can't change on resubmit)
+        requestedRoleSelect.value = request.requested_role;
+        requestedRoleSelect.disabled = true;
+
+        // Show permissions section and populate with existing permissions
+        updatePermissionsSection();
+        permissionRows.innerHTML = '';
+        permissionRowCounter = 0;
+
+        if (Array.isArray(request.permissions)) {
+            for (const perm of request.permissions) {
+                addPermissionRow();
+                const lastRow = permissionRows.lastElementChild;
+                if (lastRow) {
+                    const typeSelect = lastRow.querySelector('.perm-object-type');
+                    const idInput = lastRow.querySelector('.perm-object-id');
+                    const relSelect = lastRow.querySelector('.perm-relation');
+                    if (typeSelect) typeSelect.value = perm.object_type || '';
+                    if (idInput) idInput.value = perm.object_id || '';
+                    if (relSelect) relSelect.value = perm.relation || '';
+                }
+            }
+        }
+
+        // Pre-fill justification
+        const justificationEl = document.getElementById('justification');
+        if (justificationEl && request.justification) {
+            justificationEl.value = request.justification;
+        }
+
+        // Show rejection reason as alert
+        if (request.review_notes) {
+            showAlert('warning', (config.i18n.rejectionReason || 'Rejection reason') + ': ' + request.review_notes);
+        }
+
+        // Set resubmit mode
+        resubmitRequestId = requestId;
+        submitBtn.innerHTML = '<i class="fas fa-redo me-2"></i>' + escapeHtml(config.i18n.resubmit || 'Resubmit');
+
+        // Scroll to form
+        document.getElementById('accessRequestForm').scrollIntoView({ behavior: 'smooth' });
     }
 
     // ========================================================================
@@ -404,7 +477,12 @@ document.addEventListener('DOMContentLoaded', async function() {
                 body.credentials = credentials;
             }
 
-            const response = await fetch(config.apiUrl + '/auth/access-requests', {
+            // Determine endpoint: new request vs resubmit
+            const endpoint = resubmitRequestId
+                ? config.apiUrl + '/auth/access-requests/' + encodeURIComponent(resubmitRequestId) + '/resubmit'
+                : config.apiUrl + '/auth/access-requests';
+
+            const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -426,7 +504,10 @@ document.addEventListener('DOMContentLoaded', async function() {
             const data = await response.json();
             showAlert('success', data.message || config.i18n.submitSuccess);
 
-            // Reset form and reload requests
+            // Reset form and resubmit state
+            resubmitRequestId = null;
+            requestedRoleSelect.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>' + escapeHtml(config.i18n.submitRequest);
             accessRequestForm.reset();
             permissionRows.innerHTML = '';
             permissionsSection.style.display = 'none';
