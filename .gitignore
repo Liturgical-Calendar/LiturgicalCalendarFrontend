@@ -120,6 +120,7 @@ api/*
 !extending.php
 !index.php
 !liturgyOfAnyDay.php
+!permission-requests.php
 !request-access.php
 !temporale.php
 !translations.php
