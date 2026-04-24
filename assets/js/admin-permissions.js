@@ -527,6 +527,56 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
+     * Render a user cell (name + email) for a permission request row.
+     * @param {Object} req - Permission request item
+     * @returns {string} HTML for the user cell
+     */
+    function renderPermReqUserCell(req) {
+        let html = '<td><strong>' + escapeHtml(req.user_name || '-') + '</strong>';
+        if (req.user_email) {
+            html += '<br><small class="text-muted">' + escapeHtml(req.user_email) + '</small>';
+        }
+        return html + '</td>';
+    }
+
+    /**
+     * Render a single permission request table row.
+     * @param {Object} req - Permission request item
+     * @param {string} status - Request status
+     * @returns {string} HTML for the table row
+     */
+    function renderPermReqRow(req, status) {
+        const objectTypeName = objectTypeNames[req.object_type] || req.object_type;
+        const relationName = permReqRelationNames[req.relation] || req.relation;
+        const badgeClass = permReqRelationBadgeClasses[req.relation] || 'bg-secondary';
+        const requestedDate = req.created_at ? new Date(req.created_at).toLocaleDateString() : '-';
+        const justification = req.justification
+            ? (req.justification.length > 40
+                ? escapeHtml(req.justification.substring(0, 40)) + '...'
+                : escapeHtml(req.justification))
+            : '-';
+
+        let html = '<tr>';
+        html += renderPermReqUserCell(req);
+        html += '<td>' + escapeHtml(objectTypeName) + '</td>';
+        html += '<td><code>' + escapeHtml(req.object_id || '-') + '</code></td>';
+        html += '<td><span class="badge ' + badgeClass + '">' + escapeHtml(relationName) + '</span></td>';
+        html += '<td><small class="text-muted fst-italic">' + justification + '</small></td>';
+        html += '<td><small>' + requestedDate + '</small></td>';
+        if (status !== 'pending') {
+            const reviewedDate = req.reviewed_at ? new Date(req.reviewed_at).toLocaleDateString() : '-';
+            html += '<td><small>' + reviewedDate + '</small></td>';
+        }
+        html += '<td>';
+        html += '<button class="btn btn-outline-primary btn-sm permReq-review-btn" ';
+        html += 'data-permreq-id="' + escapeHtml(String(req.id || '')) + '" ';
+        html += 'data-permreq-status="' + status + '" data-requires-auth>';
+        html += '<i class="fas fa-eye me-1"></i>' + permReqI18n.review;
+        html += '</button></td></tr>';
+        return html;
+    }
+
+    /**
      * Render permission request list for a specific status
      * @param {string} status - Request status
      */
@@ -539,17 +589,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (items.length === 0) {
             const message = status === 'pending' ? permReqI18n.noPendingRequests : permReqI18n.noRequests;
-            container.innerHTML = `
-                <div class="text-center text-muted py-4">
-                    <i class="fas fa-${status === 'pending' ? 'check-circle text-success' : 'inbox'} fa-3x mb-3"></i>
-                    <p class="mb-0">${message}</p>
-                </div>
-            `;
+            const icon = status === 'pending' ? 'check-circle text-success' : 'inbox';
+            container.innerHTML = '<div class="text-center text-muted py-4">'
+                + '<i class="fas fa-' + icon + ' fa-3x mb-3"></i>'
+                + '<p class="mb-0">' + message + '</p></div>';
             return;
         }
 
-        let html = '<div class="table-responsive"><table class="table table-hover mb-0">';
-        html += '<thead><tr>';
+        let html = '<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr>';
         html += '<th>' + permReqI18n.user + '</th>';
         html += '<th>' + permReqI18n.objectType + '</th>';
         html += '<th>' + permReqI18n.objectId + '</th>';
@@ -563,45 +610,12 @@ document.addEventListener('DOMContentLoaded', function() {
         html += '</tr></thead><tbody>';
 
         for (const req of items) {
-            const objectTypeName = objectTypeNames[req.object_type] || req.object_type;
-            const relationName = permReqRelationNames[req.relation] || req.relation;
-            const badgeClass = permReqRelationBadgeClasses[req.relation] || 'bg-secondary';
-            const requestedDate = req.created_at ? new Date(req.created_at).toLocaleDateString() : '-';
-            const reviewedDate = req.reviewed_at ? new Date(req.reviewed_at).toLocaleDateString() : '-';
-            const justification = req.justification
-                ? (req.justification.length > 40
-                    ? escapeHtml(req.justification.substring(0, 40)) + '...'
-                    : escapeHtml(req.justification))
-                : '-';
-
-            html += '<tr>';
-            html += '<td><strong>' + escapeHtml(req.user_name || '-') + '</strong>';
-            if (req.user_email) {
-                html += '<br><small class="text-muted">' + escapeHtml(req.user_email) + '</small>';
-            }
-            html += '</td>';
-            html += '<td>' + escapeHtml(objectTypeName) + '</td>';
-            html += '<td><code>' + escapeHtml(req.object_id || '-') + '</code></td>';
-            html += '<td><span class="badge ' + badgeClass + '">' + escapeHtml(relationName) + '</span></td>';
-            html += '<td><small class="text-muted fst-italic">' + justification + '</small></td>';
-            html += '<td><small>' + requestedDate + '</small></td>';
-            if (status !== 'pending') {
-                html += '<td><small>' + reviewedDate + '</small></td>';
-            }
-            html += '<td>';
-            html += '<button class="btn btn-outline-primary btn-sm permReq-review-btn" ';
-            html += 'data-permreq-id="' + escapeHtml(String(req.id || '')) + '" ';
-            html += 'data-permreq-status="' + status + '" data-requires-auth>';
-            html += '<i class="fas fa-eye me-1"></i>' + permReqI18n.review;
-            html += '</button>';
-            html += '</td>';
-            html += '</tr>';
+            html += renderPermReqRow(req, status);
         }
 
         html += '</tbody></table></div>';
         container.innerHTML = html;
 
-        // Add event listeners
         container.querySelectorAll('.permReq-review-btn').forEach(function(btn) {
             btn.addEventListener('click', function() {
                 openPermReqReviewModal(this.dataset.permreqId, this.dataset.permreqStatus);
@@ -614,17 +628,75 @@ document.addEventListener('DOMContentLoaded', function() {
      * @param {string} reqId - Request ID
      * @param {string} status - Current status
      */
-    function openPermReqReviewModal(reqId, status) {
-        const item = permReqItems[status]?.find(function(i) { return String(i.id) === String(reqId); });
-        if (!item) return;
+    /**
+     * Build a detail row for the review modal table.
+     * @param {string} icon - FontAwesome icon name
+     * @param {string} label - Row label
+     * @param {string} value - Row value HTML (not escaped — caller must escape)
+     * @returns {string} HTML table row
+     */
+    function detailRow(icon, label, value) {
+        return '<tr><th class="text-muted" style="width: 35%;"><i class="fas fa-' + icon + ' me-2"></i>'
+            + label + '</th><td>' + value + '</td></tr>';
+    }
 
-        currentPermReqId = reqId;
+    /**
+     * Render the detail table for a permission request in the review modal.
+     * @param {Object} item - Permission request item
+     * @param {string} status - Current status
+     * @returns {string} HTML for the detail table
+     */
+    function renderPermReqDetails(item, status) {
+        const objectTypeName = objectTypeNames[item.object_type] || item.object_type;
+        const relationName = permReqRelationNames[item.relation] || item.relation;
+        const badgeClass = permReqRelationBadgeClasses[item.relation] || 'bg-secondary';
+        const requestedDate = item.created_at ? new Date(item.created_at).toLocaleDateString() : '-';
 
-        // Reset modal state
-        document.getElementById('permReqReviewNotes').value = '';
-        document.getElementById('permReqModalAlerts').innerHTML = '';
+        const statusBadges = {
+            pending: '<span class="badge bg-warning text-dark"><i class="fas fa-clock me-1"></i>' + permReqI18n.statusPending + '</span>',
+            approved: '<span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>' + permReqI18n.statusApproved + '</span>',
+            rejected: '<span class="badge bg-danger"><i class="fas fa-times-circle me-1"></i>' + permReqI18n.statusRejected + '</span>',
+            revoked: '<span class="badge bg-secondary"><i class="fas fa-ban me-1"></i>' + permReqI18n.statusRevoked + '</span>'
+        };
 
-        // Show/hide buttons based on status
+        let userValue = '<strong>' + escapeHtml(item.user_name || '-') + '</strong>';
+        if (item.user_email) {
+            userValue += '<br><small class="text-muted">' + escapeHtml(item.user_email) + '</small>';
+        }
+
+        let html = '<table class="table table-borderless mb-0">';
+        html += detailRow('user', permReqI18n.user, userValue);
+        html += detailRow('cube', permReqI18n.objectType, escapeHtml(objectTypeName));
+        html += detailRow('hashtag', permReqI18n.objectId, '<code>' + escapeHtml(item.object_id || '-') + '</code>');
+        html += detailRow('user-tag', permReqI18n.relation, '<span class="badge ' + badgeClass + '">' + escapeHtml(relationName) + '</span>');
+
+        if (item.justification) {
+            html += detailRow('comment', permReqI18n.justification, '<em>"' + escapeHtml(item.justification) + '"</em>');
+        }
+        if (item.credentials) {
+            html += detailRow('id-badge', permReqI18n.credentials, '<em>' + escapeHtml(item.credentials) + '</em>');
+        }
+
+        html += detailRow('info-circle', permReqI18n.status, statusBadges[status] || status);
+        html += detailRow('calendar', permReqI18n.requested, requestedDate);
+
+        if (status !== 'pending' && item.reviewed_at) {
+            const reviewedDate = new Date(item.reviewed_at).toLocaleDateString();
+            html += detailRow('calendar-check', permReqI18n.reviewedAt, reviewedDate);
+        }
+        if (item.review_notes) {
+            html += detailRow('sticky-note', permReqI18n.reviewNotes, '<em>"' + escapeHtml(item.review_notes) + '"</em>');
+        }
+
+        html += '</table>';
+        return html;
+    }
+
+    /**
+     * Configure review modal buttons based on request status.
+     * @param {string} status - Current request status
+     */
+    function configureReviewModalButtons(status) {
         const approveBtn = document.getElementById('permReqApproveBtn');
         const rejectBtn = document.getElementById('permReqRejectBtn');
         const revokeBtn = document.getElementById('permReqRevokeBtn');
@@ -650,67 +722,24 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             notesSection?.classList.add('d-none');
         }
+    }
 
-        // Render details
-        const detailsContainer = document.getElementById('permReqDetails');
-        const objectTypeName = objectTypeNames[item.object_type] || item.object_type;
-        const relationName = permReqRelationNames[item.relation] || item.relation;
-        const badgeClass = permReqRelationBadgeClasses[item.relation] || 'bg-secondary';
-        const requestedDate = item.created_at ? new Date(item.created_at).toLocaleDateString() : '-';
-        const reviewedDate = item.reviewed_at ? new Date(item.reviewed_at).toLocaleDateString() : '-';
+    /**
+     * Open the review modal for a permission request
+     * @param {string} reqId - Request ID
+     * @param {string} status - Current status
+     */
+    function openPermReqReviewModal(reqId, status) {
+        const item = permReqItems[status]?.find(function(i) { return String(i.id) === String(reqId); });
+        if (!item) return;
 
-        const statusBadges = {
-            pending: '<span class="badge bg-warning text-dark"><i class="fas fa-clock me-1"></i>' + permReqI18n.statusPending + '</span>',
-            approved: '<span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>' + permReqI18n.statusApproved + '</span>',
-            rejected: '<span class="badge bg-danger"><i class="fas fa-times-circle me-1"></i>' + permReqI18n.statusRejected + '</span>',
-            revoked: '<span class="badge bg-secondary"><i class="fas fa-ban me-1"></i>' + permReqI18n.statusRevoked + '</span>'
-        };
+        currentPermReqId = reqId;
 
-        let html = '<table class="table table-borderless mb-0">';
-        html += '<tr><th class="text-muted" style="width: 35%;"><i class="fas fa-user me-2"></i>' + permReqI18n.user + '</th>';
-        html += '<td><strong>' + escapeHtml(item.user_name || '-') + '</strong>';
-        if (item.user_email) {
-            html += '<br><small class="text-muted">' + escapeHtml(item.user_email) + '</small>';
-        }
-        html += '</td></tr>';
+        document.getElementById('permReqReviewNotes').value = '';
+        document.getElementById('permReqModalAlerts').innerHTML = '';
 
-        html += '<tr><th class="text-muted"><i class="fas fa-cube me-2"></i>' + permReqI18n.objectType + '</th>';
-        html += '<td>' + escapeHtml(objectTypeName) + '</td></tr>';
-
-        html += '<tr><th class="text-muted"><i class="fas fa-hashtag me-2"></i>' + permReqI18n.objectId + '</th>';
-        html += '<td><code>' + escapeHtml(item.object_id || '-') + '</code></td></tr>';
-
-        html += '<tr><th class="text-muted"><i class="fas fa-user-tag me-2"></i>' + permReqI18n.relation + '</th>';
-        html += '<td><span class="badge ' + badgeClass + '">' + escapeHtml(relationName) + '</span></td></tr>';
-
-        if (item.justification) {
-            html += '<tr><th class="text-muted"><i class="fas fa-comment me-2"></i>' + permReqI18n.justification + '</th>';
-            html += '<td><em>"' + escapeHtml(item.justification) + '"</em></td></tr>';
-        }
-
-        if (item.credentials) {
-            html += '<tr><th class="text-muted"><i class="fas fa-id-badge me-2"></i>' + permReqI18n.credentials + '</th>';
-            html += '<td><em>' + escapeHtml(item.credentials) + '</em></td></tr>';
-        }
-
-        html += '<tr><th class="text-muted"><i class="fas fa-info-circle me-2"></i>' + permReqI18n.status + '</th>';
-        html += '<td>' + (statusBadges[status] || status) + '</td></tr>';
-
-        html += '<tr><th class="text-muted"><i class="fas fa-calendar me-2"></i>' + permReqI18n.requested + '</th>';
-        html += '<td>' + requestedDate + '</td></tr>';
-
-        if (status !== 'pending' && item.reviewed_at) {
-            html += '<tr><th class="text-muted"><i class="fas fa-calendar-check me-2"></i>' + permReqI18n.reviewedAt + '</th>';
-            html += '<td>' + reviewedDate + '</td></tr>';
-        }
-
-        if (item.review_notes) {
-            html += '<tr><th class="text-muted"><i class="fas fa-sticky-note me-2"></i>' + permReqI18n.reviewNotes + '</th>';
-            html += '<td><em>"' + escapeHtml(item.review_notes) + '"</em></td></tr>';
-        }
-
-        html += '</table>';
-        detailsContainer.innerHTML = html;
+        configureReviewModalButtons(status);
+        document.getElementById('permReqDetails').innerHTML = renderPermReqDetails(item, status);
 
         permReqReviewModal.show();
     }
