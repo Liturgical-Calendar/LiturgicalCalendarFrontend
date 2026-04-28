@@ -133,8 +133,12 @@ default_modes:
 
 # initial prompt for the project. It will always be given to the LLM upon activating the project
 # (contrary to the memories, which are loaded on demand).
-initial_prompt: ""
-
+initial_prompt: |
+  - PRs target `development`, NEVER `main` (`gh pr create --base main` is rejected).
+  - Never `git commit --no-verify` — pre-commit hooks must pass.
+  - Dont push immediately after committing — CodeRabbit rate-limits. Batch commits or wait for explicit ask.
+  - gettext: ALWAYS use numbered placeholders (`%1$d`, `%2$s`); never positional (`%d`, `%s`) — translators must be able to reorder.
+  - Public API endpoints (Metadata, Missals, Decrees, Temporale) MUST use `credentials: omit` — they return wildcard CORS, incompatible with `credentials: include`.
 # time budget (seconds) per tool call for the retrieval of additional symbol information
 # such as docstrings or parameter information.
 # This overrides the corresponding setting in the global configuration; see the documentation there.
