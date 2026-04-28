@@ -2,7 +2,7 @@
 
 ## Top-level layout
 
-```
+```text
 LiturgicalCalendarFrontend/
 ├── assets/                # Static assets
 │   ├── css/               # Stylesheets

@@ -26,8 +26,6 @@ PHP-based **website frontend** that presents data from the Liturgical Calendar A
 
 ## Repo Location
 
-`/home/johnrdorazio/development/LiturgicalCalendar/LiturgicalCalendarFrontend`
-
 Companion repos in `LiturgicalCalendar/` parent:
 
 - `LiturgicalCalendarAPI` — PHP backend
