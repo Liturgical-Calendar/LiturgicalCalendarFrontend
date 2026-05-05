@@ -32,7 +32,7 @@ services:
   # ============================================================================
   db-init:
     image: litcal-api:latest
-    build: https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI.git#development
+    build: https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI.git#feat/openfga
     entrypoint: ["cp", "/var/www/html/infrastructure/init-db.sql", "/init/init-litcal.sql"]
     volumes:
       - db_init_scripts:/init
@@ -235,16 +235,13 @@ services:
       openfga-migrate:
         condition: service_completed_successfully
 
-  # OpenFGA Setup — create store and load authorization model from the API image
+  # OpenFGA Setup — create store and load authorization model from the API image.
+  # The API image bundles curl and jq, so no runtime install is needed here.
   openfga-setup:
     image: litcal-api:latest
-    entrypoint: ["/bin/bash", "-c"]
-    command:
-      - |
-        # Install curl and jq (not in the PHP CLI image by default)
-        apt-get update -qq && apt-get install -y -qq curl jq > /dev/null 2>&1
-        # Run the setup script (baked into the API image)
-        OPENFGA_API_URL=http://openfga:8080 bash /var/www/html/scripts/setup-openfga.sh
+    environment:
+      OPENFGA_API_URL: http://openfga:8080
+    entrypoint: ["bash", "/var/www/html/scripts/setup-openfga.sh"]
     networks:
       - litcal
     depends_on:
@@ -256,7 +253,7 @@ services:
   # ============================================================================
   litcal-api:
     image: litcal-api:latest
-    build: https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI.git#development
+    build: https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI.git#feat/openfga
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:8000/calendars > /dev/null"]
@@ -298,6 +295,10 @@ services:
     depends_on:
       zitadel:
         condition: service_healthy
+      openfga:
+        condition: service_healthy
+      openfga-setup:
+        condition: service_completed_successfully
 
   litcal-frontend:
     image: litcal-frontend:latest
