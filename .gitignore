@@ -159,6 +159,9 @@ docker-compose.override.yml
 *.pat
 test-service-account-key.json
 
+# Canonical setup-zitadel.sh extracted at runtime by scripts/setup-zitadel.sh
+scripts/.setup-zitadel.canonical.sh
+
 # Playwright
 /playwright-report/
 /playwright/.cache/
