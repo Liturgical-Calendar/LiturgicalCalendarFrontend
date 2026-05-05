@@ -162,3 +162,6 @@ test-service-account-key.json
 /playwright/.cache/
 /e2e/.auth/
 /test-results/
+
+# Local git worktrees
+.worktrees/
