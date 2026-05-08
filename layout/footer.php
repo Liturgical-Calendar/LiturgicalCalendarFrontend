@@ -84,6 +84,7 @@ if ( AppEnv === 'development' ) console.info({
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/common.js"></script>
 <script src="assets/js/auth.js"></script>
+<script src="assets/js/toast.js"></script>
 <script src="assets/js/notifications.js"></script>
 <!-- Notification translations for JavaScript -->
 <script>

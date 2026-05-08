@@ -270,42 +270,6 @@ if (!$authHelper->isAuthenticated) {
     document.addEventListener('DOMContentLoaded', function() {
         const ApiUrl = <?php echo json_encode($apiBaseUrl); ?>;
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text == null ? '' : String(text);
-            return div.innerHTML;
-        }
-
-        function showToast(type, message) {
-            let container = document.querySelector('.toast-container.profile-toasts');
-            if (!container) {
-                container = document.createElement('div');
-                container.className = 'toast-container profile-toasts position-fixed bottom-0 end-0 p-3';
-                container.style.zIndex = '1090';
-                document.body.appendChild(container);
-            }
-            const iconMap = {
-                success: 'fa-check-circle',
-                danger: 'fa-exclamation-circle',
-                warning: 'fa-exclamation-triangle',
-                info: 'fa-info-circle'
-            };
-            const icon = iconMap[type] || 'fa-info-circle';
-            const toastId = 'profileToast-' + Date.now();
-            container.insertAdjacentHTML('beforeend',
-                '<div id="' + toastId + '" class="toast align-items-center text-bg-' + type + ' border-0" role="alert" aria-live="assertive" aria-atomic="true">'
-                + '<div class="d-flex">'
-                +   '<div class="toast-body"><i class="fas ' + icon + ' me-2"></i>' + escapeHtml(message) + '</div>'
-                +   '<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>'
-                + '</div>'
-                + '</div>'
-            );
-            const toastEl = document.getElementById(toastId);
-            const toast = new bootstrap.Toast(toastEl, { autohide: true, delay: 5000 });
-            toast.show();
-            toastEl.addEventListener('hidden.bs.toast', function() { toastEl.remove(); });
-        }
-
         // Logout button handler
         const logoutBtn = document.getElementById('logoutBtnProfile');
         if (logoutBtn) {
@@ -334,7 +298,7 @@ if (!$authHelper->isAuthenticated) {
                     }
                 } catch (error) {
                     console.error('Error refreshing session:', error);
-                    showToast('danger', error.message || <?php echo json_encode(_('Failed to refresh session. Please try logging out and back in.')); ?>);
+                    showToast(error.message || <?php echo json_encode(_('Failed to refresh session. Please try logging out and back in.')); ?>, 'danger');
                     refreshSessionBtn.disabled = false;
                     refreshSessionBtn.innerHTML = originalHtml;
                 }
@@ -358,7 +322,7 @@ if (!$authHelper->isAuthenticated) {
                     }
                 } catch (error) {
                     console.error('Error refreshing session:', error);
-                    showToast('danger', error.message || <?php echo json_encode(_('Failed to refresh session. Please try logging out and back in.')); ?>);
+                    showToast(error.message || <?php echo json_encode(_('Failed to refresh session. Please try logging out and back in.')); ?>, 'danger');
                     refreshRolesBtn.disabled = false;
                     refreshRolesBtn.innerHTML = originalHtml;
                 }
