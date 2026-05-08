@@ -404,6 +404,32 @@ document.addEventListener('DOMContentLoaded', async function() {
     let resubmitRequestId = null;
 
     /**
+     * Populate the permission rows from a stored permissions array
+     * (used during resubmit pre-fill). Truncates to MAX_PERMISSIONS
+     * with a single warning if the stored array exceeds the cap.
+     * @param {Array|undefined} stored - Stored permissions from the request
+     */
+    function populateRowsFromStoredPermissions(stored) {
+        if (!Array.isArray(stored)) return;
+        if (stored.length > MAX_PERMISSIONS) {
+            const tmpl = config.i18n.permissionsTruncated
+                || 'This request had more than %d permissions; only the first %d are shown.';
+            showAlert('warning', tmpl.replace(/%d/g, String(MAX_PERMISSIONS)));
+        }
+        for (const perm of stored.slice(0, MAX_PERMISSIONS)) {
+            addPermissionRow();
+            const row = permissionRows.lastElementChild;
+            if (!row) continue;
+            const typeSelect = row.querySelector('.perm-object-type');
+            const idInput = row.querySelector('.perm-object-id');
+            const relSelect = row.querySelector('.perm-relation');
+            if (typeSelect) typeSelect.value = perm.object_type || '';
+            if (idInput) idInput.value = perm.object_id || '';
+            if (relSelect) relSelect.value = perm.relation || '';
+        }
+    }
+
+    /**
      * Open the form pre-filled with a rejected request's data for resubmission.
      * @param {string} requestId - The request ID to resubmit
      * @param {Array} requests - All requests (to find the one to resubmit)
@@ -416,31 +442,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         requestedRoleSelect.value = request.requested_role;
         requestedRoleSelect.disabled = true;
 
-        // Show permissions section and populate with existing permissions
+        // Reset and populate permissions
         updatePermissionsSection();
         permissionRows.innerHTML = '';
         permissionRowCounter = 0;
-
-        if (Array.isArray(request.permissions)) {
-            const perms = request.permissions.slice(0, MAX_PERMISSIONS);
-            if (request.permissions.length > MAX_PERMISSIONS) {
-                const tmpl = config.i18n.permissionsTruncated
-                    || 'This request had more than %d permissions; only the first %d are shown.';
-                showAlert('warning', tmpl.replace(/%d/g, String(MAX_PERMISSIONS)));
-            }
-            for (const perm of perms) {
-                addPermissionRow();
-                const lastRow = permissionRows.lastElementChild;
-                if (lastRow) {
-                    const typeSelect = lastRow.querySelector('.perm-object-type');
-                    const idInput = lastRow.querySelector('.perm-object-id');
-                    const relSelect = lastRow.querySelector('.perm-relation');
-                    if (typeSelect) typeSelect.value = perm.object_type || '';
-                    if (idInput) idInput.value = perm.object_id || '';
-                    if (relSelect) relSelect.value = perm.relation || '';
-                }
-            }
-        }
+        populateRowsFromStoredPermissions(request.permissions);
 
         // Pre-fill justification
         const justificationEl = document.getElementById('justification');
