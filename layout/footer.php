@@ -95,7 +95,8 @@ const NotificationTranslations = {
     minutesAgo: <?php echo json_encode(_('min ago')); ?>,
     hoursAgo: <?php echo json_encode(_('hours ago')); ?>,
     daysAgo: <?php echo json_encode(_('days ago')); ?>,
-    requestedRole: <?php echo json_encode(_('Requested')); ?>
+    requestedRole: <?php echo json_encode(_('Requested')); ?>,
+    requestedAccess: <?php echo json_encode(_('Requested access')); ?>
 };
 </script>
 <?php include_once('includes/login-modal.php'); ?>
