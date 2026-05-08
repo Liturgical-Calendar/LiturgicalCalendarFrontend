@@ -159,8 +159,12 @@ docker-compose.override.yml
 *.pat
 test-service-account-key.json
 
-# Canonical setup-zitadel.sh extracted at runtime by scripts/setup-zitadel.sh
+# Files extracted from the litcal-api Docker image at runtime
+# (canonical home is the API repo; carrying copies here would risk drift)
 scripts/.setup-zitadel.canonical.sh
+scripts/init-db.sql
+scripts/openfga-model.json
+scripts/setup-openfga.sh
 
 # Playwright
 /playwright-report/
