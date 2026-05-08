@@ -143,8 +143,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         const currentCount = permissionRows.querySelectorAll('.card').length;
         if (currentCount >= MAX_PERMISSIONS) {
             const tmpl = config.i18n.maxPermissionsReached
-                || 'You have reached the maximum of %d permissions per request.';
-            showAlert('warning', tmpl.replace('%d', String(MAX_PERMISSIONS)));
+                || 'You have reached the maximum of %1$d permissions per request.';
+            showAlert('warning', tmpl.replace(/%1\$d/g, String(MAX_PERMISSIONS)));
             updateAddPermissionBtnState();
             return;
         }
@@ -179,8 +179,9 @@ document.addEventListener('DOMContentLoaded', async function() {
                     </div>
                     <div class="col-md-2">
                         <button type="button" class="btn btn-outline-danger btn-sm w-100 remove-perm-btn"
-                                title="${escapeHtml(config.i18n.remove)}">
-                            <i class="fas fa-trash-alt"></i>
+                                title="${escapeHtml(config.i18n.remove)}"
+                                aria-label="${escapeHtml(config.i18n.remove)}">
+                            <i class="fas fa-trash-alt" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
@@ -235,6 +236,9 @@ document.addEventListener('DOMContentLoaded', async function() {
      */
     function collectPermissions() {
         const rows = permissionRows.querySelectorAll('.card');
+        if (rows.length === 0) {
+            return null;
+        }
         const permissions = [];
 
         for (const row of rows) {
@@ -413,8 +417,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (!Array.isArray(stored)) return;
         if (stored.length > MAX_PERMISSIONS) {
             const tmpl = config.i18n.permissionsTruncated
-                || 'This request had more than %d permissions; only the first %d are shown.';
-            showAlert('warning', tmpl.replace(/%d/g, String(MAX_PERMISSIONS)));
+                || 'This request had more than %1$d permissions; only the first %2$d are shown.';
+            showAlert('warning',
+                tmpl
+                    .replace(/%1\$d/g, String(stored.length))
+                    .replace(/%2\$d/g, String(MAX_PERMISSIONS))
+            );
         }
         for (const perm of stored.slice(0, MAX_PERMISSIONS)) {
             addPermissionRow();
@@ -549,7 +557,14 @@ document.addEventListener('DOMContentLoaded', async function() {
             showAlert('danger', error.message || config.i18n.failedToSubmit);
         } finally {
             submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>' + escapeHtml(config.i18n.submitRequest);
+            // Preserve resubmit-mode label if a resubmit failed; only restore the
+            // default Submit label after a successful submission (which has already
+            // cleared resubmitRequestId) or for a fresh submission.
+            if (resubmitRequestId) {
+                submitBtn.innerHTML = '<i class="fas fa-redo me-2"></i>' + escapeHtml(config.i18n.resubmit || 'Resubmit');
+            } else {
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>' + escapeHtml(config.i18n.submitRequest);
+            }
         }
     });
 
