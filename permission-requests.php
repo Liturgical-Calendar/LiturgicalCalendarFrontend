@@ -116,7 +116,7 @@ if (!$authHelper->emailVerified) {
                                 <?php echo htmlspecialchars($justificationLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                 <span class="text-muted fw-normal">(<?php echo htmlspecialchars($optionalLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>)</span>
                             </label>
-                            <textarea class="form-control" id="justification" name="justification" rows="3"
+                            <textarea class="form-control" id="justification" name="justification" rows="3" maxlength="2000"
                                 placeholder="<?php echo htmlspecialchars(_('Please describe why you need this access...'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></textarea>
                             <div class="form-text"><?php echo htmlspecialchars($justificationHelp, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
                         </div>
@@ -130,7 +130,7 @@ if (!$authHelper->emailVerified) {
                                 <?php echo htmlspecialchars($credentialsLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                 <span class="text-muted fw-normal">(<?php echo htmlspecialchars($optionalLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>)</span>
                             </label>
-                            <textarea class="form-control" id="credentials" name="credentials" rows="2"
+                            <textarea class="form-control" id="credentials" name="credentials" rows="2" maxlength="2000"
                                 placeholder="<?php echo htmlspecialchars(_('Any relevant credentials or references...'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></textarea>
                             <div class="form-text"><?php echo htmlspecialchars($credentialsHelp, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
                         </div>
@@ -170,6 +170,8 @@ if (!$authHelper->emailVerified) {
                 rejectionReason: <?php echo json_encode(_('Rejection reason')); ?>,
                 roleRequired: <?php echo json_encode(_('Please select a role.')); ?>,
                 permissionIncomplete: <?php echo json_encode(_('Each permission row must have object type, object ID, and relation filled in.')); ?>,
+                maxPermissionsReached: <?php echo json_encode(_('You have reached the maximum of %d permissions per request.')); ?>,
+                permissionsTruncated: <?php echo json_encode(_('This request had more than %d permissions; only the first %d are shown.')); ?>,
                 unknownError: <?php echo json_encode(_('Unknown error')); ?>,
                 // Table headers
                 role: <?php echo json_encode(_('Role')); ?>,

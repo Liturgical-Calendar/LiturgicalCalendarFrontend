@@ -148,7 +148,7 @@ $hasRoles = $authHelper->roles !== null && count($authHelper->roles) > 0;
                                 <span class="text-muted fw-normal">(<?php echo $optionalLabel; ?>)</span>
                             </label>
                             <textarea class="form-control" id="justification" name="justification"
-                                rows="3" placeholder="<?php echo $placeholderText; ?>"></textarea>
+                                rows="3" maxlength="2000" placeholder="<?php echo $placeholderText; ?>"></textarea>
                             <div class="form-text"><?php echo $helpText; ?></div>
                         </div>
 

@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     const permissionRows = document.getElementById('permissionRows');
     const addPermissionBtn = document.getElementById('addPermissionBtn');
 
+    // Mirror of API CreateAccessRequestBody.permissions maxItems
+    const MAX_PERMISSIONS = 50;
+
     // Role display names
     const roleNames = {
         'calendar_editor': config.i18n.calendarEditor,
@@ -131,7 +134,20 @@ document.addEventListener('DOMContentLoaded', async function() {
     /**
      * Add a new permission row to the form
      */
+    function updateAddPermissionBtnState() {
+        const currentCount = permissionRows.querySelectorAll('.card').length;
+        addPermissionBtn.disabled = currentCount >= MAX_PERMISSIONS;
+    }
+
     function addPermissionRow() {
+        const currentCount = permissionRows.querySelectorAll('.card').length;
+        if (currentCount >= MAX_PERMISSIONS) {
+            const tmpl = config.i18n.maxPermissionsReached
+                || 'You have reached the maximum of %d permissions per request.';
+            showAlert('warning', tmpl.replace('%d', String(MAX_PERMISSIONS)));
+            updateAddPermissionBtnState();
+            return;
+        }
         permissionRowCounter++;
         const rowId = 'permRow_' + permissionRowCounter;
         const row = document.createElement('div');
@@ -176,7 +192,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         // Bind remove button
         row.querySelector('.remove-perm-btn').addEventListener('click', function() {
             row.remove();
+            updateAddPermissionBtnState();
         });
+
+        updateAddPermissionBtnState();
     }
 
     /**
@@ -403,7 +422,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         permissionRowCounter = 0;
 
         if (Array.isArray(request.permissions)) {
-            for (const perm of request.permissions) {
+            const perms = request.permissions.slice(0, MAX_PERMISSIONS);
+            if (request.permissions.length > MAX_PERMISSIONS) {
+                const tmpl = config.i18n.permissionsTruncated
+                    || 'This request had more than %d permissions; only the first %d are shown.';
+                showAlert('warning', tmpl.replace(/%d/g, String(MAX_PERMISSIONS)));
+            }
+            for (const perm of perms) {
                 addPermissionRow();
                 const lastRow = permissionRows.lastElementChild;
                 if (lastRow) {
