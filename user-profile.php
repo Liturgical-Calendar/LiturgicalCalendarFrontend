@@ -385,7 +385,7 @@ if (!$authHelper->isAuthenticated) {
          */
         function escapeHtml(text) {
             const div = document.createElement('div');
-            div.textContent = text;
+            div.textContent = text == null ? '' : String(text);
             return div.innerHTML;
         }
 
