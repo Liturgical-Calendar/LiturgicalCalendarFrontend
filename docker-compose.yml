@@ -33,7 +33,7 @@ services:
   db-init:
     image: litcal-api:latest
     build: https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI.git#feat/openfga
-    entrypoint: ["cp", "/var/www/html/infrastructure/init-db.sql", "/init/init-litcal.sql"]
+    entrypoint: ["cp", "/var/www/html/scripts/init-db.sql", "/init/init-litcal.sql"]
     volumes:
       - db_init_scripts:/init
 
