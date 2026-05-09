@@ -256,6 +256,86 @@ composer lint:md:fix   # Markdown
 vendor/bin/captainhook install -f
 ```
 
+## Docker Stack Operations
+
+The local docker stack (`docker-compose.yml` plus `docker-compose.override.yml`) bundles
+Postgres, Zitadel, OpenFGA, the API (built from the local `../LiturgicalCalendarAPI` repo
+via the override), and the frontend. A few non-obvious workflows:
+
+### After `docker compose down -v` (clean slate)
+
+When you wipe volumes, Zitadel and OpenFGA come back empty. The local `.env`,
+`service-account.pat`, and `test-service-account-key.json` files still hold the OLD
+PAT/project/store IDs from before the wipe. You **must** re-bootstrap and recreate
+the dependent containers:
+
+```bash
+./scripts/setup-zitadel.sh --force-secrets --update-env
+docker compose up -d --force-recreate litcal-api litcal-frontend litcal-tests
+```
+
+Notes:
+
+- **Always pass `--force-secrets`** when Zitadel volumes were just wiped. Without it,
+  the script reuses the local `service-account.pat` which Zitadel no longer recognizes,
+  silently writing an invalid PAT to `.env`. (Tracked upstream in the API repo.)
+- **Recreate all three app containers**, not just `litcal-api`. The frontend and
+  tests containers also read `ZITADEL_CLIENT_ID`/`ZITADEL_PROJECT_ID` and will
+  serve stale values otherwise — login flow breaks because the OIDC client_id
+  doesn't exist in fresh Zitadel.
+- `litcal-api` healthcheck (`GET /calendars`) doesn't depend on Zitadel, so it
+  reports healthy even when its PAT is invalid. Verify Zitadel auth explicitly:
+
+  ```bash
+  docker compose exec litcal-api bash -c '
+    curl -sS -X POST http://zitadel:8080/management/v1/users/_search \
+      -H "Authorization: Bearer $ZITADEL_MACHINE_TOKEN" \
+      -H "Host: localhost" \
+      -H "Content-Type: application/json" \
+      -d "{\"limit\":1}" | head -c 200
+  '
+  ```
+
+  A 401 / `Errors.Token.Invalid` means the PAT is stale and you need
+  `--force-secrets`.
+
+### After re-running `setup-zitadel.sh`
+
+Same recreate step — `litcal-api litcal-frontend litcal-tests`. Compose only
+re-evaluates env from `.env` on container creation, not restart.
+
+### Single-file bind-mount inode-pinning gotcha
+
+`docker-compose.override.yml` (gitignored, local) bind-mounts each top-level PHP file
+individually so JS/CSS/PHP edits propagate to the container without a rebuild.
+Directory mounts (`./assets`, `./includes`, `./layout`, etc.) work cleanly: the
+directory inode is stable.
+
+**Top-level PHP files are mounted as individual files**, and Docker's single-file
+bind-mount pins the host inode at container start. When the Edit tool (or vim, or
+any editor using atomic temp+rename) writes to such a file, a new inode is created
+and the container keeps serving the OLD inode's content.
+
+If a top-level PHP edit doesn't appear in the browser:
+
+```bash
+docker compose up -d --force-recreate litcal-frontend
+```
+
+### Useful diagnostic commands
+
+```bash
+# What's actually in the container right now?
+docker compose exec litcal-frontend grep -c "<some-marker>" /var/www/html/some-file.php
+
+# Compare host vs container env values
+docker compose exec litcal-api bash -c 'echo "$ZITADEL_MACHINE_TOKEN"' | tail -c 12
+grep "^ZITADEL_MACHINE_TOKEN=" .env | tail -c 12
+
+# Confirm a service has come up healthy after recreate
+until docker compose ps litcal-api --format '{{.Status}}' | grep -q "healthy"; do sleep 1; done
+```
+
 ## Additional Documentation
 
 - [Parent monorepo CLAUDE.md](../CLAUDE.md) - Architecture and component library methods
