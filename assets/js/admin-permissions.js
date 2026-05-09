@@ -408,11 +408,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             `;
 
+            // If the API cascaded a role revoke (deleted the user's last
+            // in-scope tuple), the related access_requests have just been
+            // marked revoked too — refresh that section so it doesn't show
+            // stale "Approved" entries. Skip the extra fetch when nothing
+            // cascaded.
+            const cascaded = Array.isArray(data.cascaded_roles) && data.cascaded_roles.length > 0;
+
             setTimeout(function() {
                 confirmRevokeBtn.disabled = false;
                 confirmRevokeBtn.innerHTML = originalText;
                 revokeModal.hide();
                 loadPermissions();
+                if (cascaded) {
+                    loadAccessRequests();
+                }
             }, 1500);
         } catch (error) {
             console.error('Error revoking permission:', error);
