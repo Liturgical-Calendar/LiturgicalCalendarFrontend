@@ -35,6 +35,7 @@ if (!$authHelper->emailVerified) {
         echo htmlspecialchars($calendarTitle, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     ?></title>
     <?php include_once('./layout/head.php'); ?>
+    <link rel="stylesheet" href="assets/css/request-access.css">
 </head>
 <body class="sb-nav-fixed">
     <?php include_once('./layout/header.php'); ?>
@@ -73,21 +74,59 @@ if (!$authHelper->emailVerified) {
                     </h6>
                 </div>
                 <div class="card-body">
+                    <?php
+                    $validRoles = [
+                        'calendar_editor' => [
+                            'name'        => _('Calendar Editor'),
+                            'description' => _('Edit national and diocesan calendar data.'),
+                            'icon'        => 'fas fa-calendar-alt',
+                        ],
+                        'test_editor'     => [
+                            'name'        => _('Accuracy Test Editor'),
+                            'description' => _('Create and manage accuracy tests.'),
+                            'icon'        => 'fas fa-vial',
+                        ],
+                        'developer'       => [
+                            'name'        => _('Developer'),
+                            // phpcs:ignore Generic.Files.LineLength
+                            'description' => _('API consumer. Request access to all resources you may need — individual API keys can be scoped further at generation time.'),
+                            'icon'        => 'fas fa-code',
+                        ],
+                    ];
+                    ?>
                     <form id="accessRequestForm">
-                        <div class="mb-3">
-                            <label for="requestedRole" class="form-label fw-bold"><?php echo htmlspecialchars(_('Role'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
-                            <select class="form-select" id="requestedRole" name="requested_role" required>
-                                <option value=""><?php echo htmlspecialchars(_('Select a role...'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                                <option value="calendar_editor"><?php echo htmlspecialchars(_('Calendar Editor'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                                <option value="test_editor"><?php echo htmlspecialchars(_('Accuracy Test Editor'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                                <option value="developer"><?php echo htmlspecialchars(_('Developer'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                            </select>
-                            <div class="form-text"><?php
-                                $roleHelp = _('Select the role that best describes how you plan to use the system.');
-                                echo htmlspecialchars($roleHelp, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-                            ?></div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold"><?php echo htmlspecialchars(_('Select a Role'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
+                            <div class="row g-3">
+                                <?php foreach ($validRoles as $roleKey => $roleInfo) : ?>
+                                <div class="col-12">
+                                    <div class="form-check role-option">
+                                        <?php $safeRoleKey = htmlspecialchars($roleKey, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                        <input class="form-check-input" type="radio"
+                                            name="requested_role"
+                                            id="requestedRole_<?php echo $safeRoleKey; ?>"
+                                            value="<?php echo $safeRoleKey; ?>" required>
+                                        <label class="form-check-label w-100" for="requestedRole_<?php echo $safeRoleKey; ?>">
+                                            <div class="card border-0 bg-light">
+                                                <div class="card-body py-2">
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="<?php echo htmlspecialchars($roleInfo['icon'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?> fa-2x text-primary me-3" aria-hidden="true"></i>
+                                                        <div>
+                                                            <strong><?php echo htmlspecialchars($roleInfo['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></strong>
+                                                            <p class="mb-0 small text-muted"><?php echo htmlspecialchars($roleInfo['description'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
                         </div>
 
+                        <!-- Form body — hidden until a role card is selected -->
+                        <div id="requestFormBody" style="display: none;">
                         <!-- Permissions section -->
                         <div class="mb-3" id="permissionsSection" style="display: none;">
                             <label class="form-label fw-bold"><?php echo htmlspecialchars(_('Permissions'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
@@ -140,6 +179,7 @@ if (!$authHelper->emailVerified) {
                         <button type="submit" class="btn btn-primary" id="submitBtn" data-requires-auth>
                             <i class="fas fa-paper-plane me-2"></i><?php echo htmlspecialchars(_('Submit Request'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                         </button>
+                        </div><!-- /#requestFormBody -->
                     </form>
                 </div>
             </div>

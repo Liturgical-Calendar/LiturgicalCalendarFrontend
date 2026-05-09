@@ -16,8 +16,22 @@ document.addEventListener('DOMContentLoaded', async function() {
     const accessRequestForm = document.getElementById('accessRequestForm');
     const formAlerts = document.getElementById('formAlerts');
     const submitBtn = document.getElementById('submitBtn');
-    const requestedRoleSelect = document.getElementById('requestedRole');
+    const requestedRoleRadios = document.querySelectorAll('input[name="requested_role"]');
+    const requestFormBody = document.getElementById('requestFormBody');
     const permissionsSection = document.getElementById('permissionsSection');
+
+    function getRequestedRole() {
+        const checked = document.querySelector('input[name="requested_role"]:checked');
+        return checked ? checked.value : '';
+    }
+
+    function setRequestedRole(value) {
+        requestedRoleRadios.forEach(function(r) { r.checked = (r.value === value); });
+    }
+
+    function setRoleSelectionDisabled(disabled) {
+        requestedRoleRadios.forEach(function(r) { r.disabled = disabled; });
+    }
     const permissionRows = document.getElementById('permissionRows');
     const addPermissionBtn = document.getElementById('addPermissionBtn');
 
@@ -114,7 +128,7 @@ document.addEventListener('DOMContentLoaded', async function() {
      * @returns {string[]} Array of allowed object type keys
      */
     function getAllowedObjectTypes() {
-        const role = requestedRoleSelect.value;
+        const role = getRequestedRole();
         return roleObjectTypes[role] || [];
     }
 
@@ -204,8 +218,9 @@ document.addEventListener('DOMContentLoaded', async function() {
      * options based on selected role.
      */
     function updatePermissionsSection() {
-        const role = requestedRoleSelect.value;
+        const role = getRequestedRole();
         if (role) {
+            if (requestFormBody) requestFormBody.style.display = '';
             permissionsSection.style.display = '';
             // Rebuild object type options in existing rows
             const selects = permissionRows.querySelectorAll('.perm-object-type');
@@ -226,6 +241,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 addPermissionRow();
             }
         } else {
+            if (requestFormBody) requestFormBody.style.display = 'none';
             permissionsSection.style.display = 'none';
         }
     }
@@ -288,7 +304,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Event listeners
     // ========================================================================
 
-    requestedRoleSelect.addEventListener('change', updatePermissionsSection);
+    requestedRoleRadios.forEach(function(r) {
+        r.addEventListener('change', updatePermissionsSection);
+    });
     addPermissionBtn.addEventListener('click', addPermissionRow);
 
     // ========================================================================
@@ -447,8 +465,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (!request) return;
 
         // Set the role (disable it — role can't change on resubmit)
-        requestedRoleSelect.value = request.requested_role;
-        requestedRoleSelect.disabled = true;
+        setRequestedRole(request.requested_role);
+        setRoleSelectionDisabled(true);
 
         // Reset and populate permissions
         updatePermissionsSection();
@@ -533,19 +551,20 @@ document.addEventListener('DOMContentLoaded', async function() {
      */
     function resetFormAfterSuccess() {
         resubmitRequestId = null;
-        requestedRoleSelect.disabled = false;
+        setRoleSelectionDisabled(false);
         submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>' + escapeHtml(config.i18n.submitRequest);
         accessRequestForm.reset();
         permissionRows.innerHTML = '';
-        permissionsSection.style.display = 'none';
         permissionRowCounter = 0;
+        // Reset hides the form body + permissions section since no radio is checked.
+        updatePermissionsSection();
     }
 
     accessRequestForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         formAlerts.innerHTML = '';
 
-        const requestedRole = requestedRoleSelect.value;
+        const requestedRole = getRequestedRole();
         if (!requestedRole) {
             showAlert('danger', config.i18n.roleRequired);
             return;
