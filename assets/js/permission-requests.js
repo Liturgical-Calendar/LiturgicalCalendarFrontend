@@ -479,6 +479,68 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Form submission
     // ========================================================================
 
+    /**
+     * Build the request body for an access-request submission.
+     * @returns {Object} POST body
+     */
+    function buildRequestBody(requestedRole, permissions) {
+        const justification = document.getElementById('justification').value.trim();
+        const credentials = document.getElementById('credentials').value.trim();
+        const body = {
+            requested_role: requestedRole,
+            permissions: permissions,
+            email: config.userEmail || null,
+            name: config.userName || null
+        };
+        if (justification) body.justification = justification;
+        if (credentials) body.credentials = credentials;
+        return body;
+    }
+
+    /**
+     * POST the access request, handling new vs resubmit endpoints and
+     * non-OK responses uniformly. Throws Error on failure with a
+     * user-readable message; returns parsed JSON on success.
+     */
+    async function submitAccessRequest(body) {
+        const endpoint = resubmitRequestId
+            ? config.apiUrl + '/auth/access-requests/' + encodeURIComponent(resubmitRequestId) + '/resubmit'
+            : config.apiUrl + '/auth/access-requests';
+
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify(body)
+        });
+
+        if (!response.ok) {
+            let errorMsg = config.i18n.failedToSubmit;
+            try {
+                const errData = await response.json();
+                errorMsg = errData.message || errData.error || errData.detail || errorMsg;
+            } catch { /* non-JSON error response */ }
+            throw new Error(errorMsg);
+        }
+        return response.json();
+    }
+
+    /**
+     * Reset the form and resubmit state after a successful submission.
+     */
+    function resetFormAfterSuccess() {
+        resubmitRequestId = null;
+        requestedRoleSelect.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>' + escapeHtml(config.i18n.submitRequest);
+        accessRequestForm.reset();
+        permissionRows.innerHTML = '';
+        permissionsSection.style.display = 'none';
+        permissionRowCounter = 0;
+    }
+
     accessRequestForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         formAlerts.innerHTML = '';
@@ -495,62 +557,15 @@ document.addEventListener('DOMContentLoaded', async function() {
             return;
         }
 
-        const justification = document.getElementById('justification').value.trim();
-        const credentials = document.getElementById('credentials').value.trim();
+        const body = buildRequestBody(requestedRole, permissions);
 
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>' + escapeHtml(config.i18n.submitting);
 
         try {
-            const body = {
-                requested_role: requestedRole,
-                permissions: permissions,
-                email: config.userEmail || null,
-                name: config.userName || null
-            };
-
-            if (justification) {
-                body.justification = justification;
-            }
-            if (credentials) {
-                body.credentials = credentials;
-            }
-
-            // Determine endpoint: new request vs resubmit
-            const endpoint = resubmitRequestId
-                ? config.apiUrl + '/auth/access-requests/' + encodeURIComponent(resubmitRequestId) + '/resubmit'
-                : config.apiUrl + '/auth/access-requests';
-
-            const response = await fetch(endpoint, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
-                body: JSON.stringify(body)
-            });
-
-            if (!response.ok) {
-                let errorMsg = config.i18n.failedToSubmit;
-                try {
-                    const errData = await response.json();
-                    errorMsg = errData.message || errData.error || errData.detail || errorMsg;
-                } catch { /* non-JSON error response */ }
-                throw new Error(errorMsg);
-            }
-
-            const data = await response.json();
+            const data = await submitAccessRequest(body);
             showAlert('success', data.message || config.i18n.submitSuccess);
-
-            // Reset form and resubmit state
-            resubmitRequestId = null;
-            requestedRoleSelect.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>' + escapeHtml(config.i18n.submitRequest);
-            accessRequestForm.reset();
-            permissionRows.innerHTML = '';
-            permissionsSection.style.display = 'none';
-            permissionRowCounter = 0;
+            resetFormAfterSuccess();
             await loadExistingRequests();
         } catch (error) {
             console.error('Error submitting access request:', error);
