@@ -44,6 +44,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Current revoke target
     let currentRevoke = null;
 
+    // Map of zitadel userId → { userId, displayName, username, email, roles, ... }
+    // Populated by loadUserMap() and used by displayPermissions() to show
+    // human-readable user info instead of raw zitadel IDs in the tuple table.
+    let userMap = new Map();
+
     // Object type display names
     const objectTypeNames = {
         'national_calendar': config.i18n.nationalCalendar,
@@ -97,6 +102,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const queryString = params.toString();
         return queryString ? '?' + queryString : '';
+    }
+
+    /**
+     * Load the user list from /admin/users and rebuild userMap so
+     * displayPermissions() can show display name + email instead of
+     * the raw zitadel ID. Fails silently — on error userMap is left
+     * empty and tuples render with their raw IDs (the prior behavior).
+     */
+    async function loadUserMap() {
+        try {
+            // limit=1000 is the API maximum; sufficient for this project's scale.
+            const response = await fetch(config.apiUrl + '/admin/users?limit=1000', {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' },
+                credentials: 'include'
+            });
+            if (!response.ok) return;
+            const data = await response.json();
+            const users = [
+                ...(Array.isArray(data.usersWithRoles) ? data.usersWithRoles : []),
+                ...(Array.isArray(data.usersWithoutRoles) ? data.usersWithoutRoles : [])
+            ];
+            userMap = new Map(users.map(function (u) { return [u.userId, u]; }));
+        } catch (error) {
+            console.error('Failed to load user map for permissions display:', error);
+        }
     }
 
     /**
@@ -179,9 +210,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const relationName = relationNames[relation] || relation;
             const badgeClass = relationBadgeClasses[relation] || 'bg-secondary';
 
+            // API returns user as "user:<zitadel-id>"; strip the prefix for the userMap lookup.
+            const lookupId = user.startsWith('user:') ? user.slice('user:'.length) : user;
+            const userInfo = userMap.get(lookupId);
+            const userCellHtml = userInfo
+                ? `<strong>${escapeHtml(userInfo.displayName || userInfo.username || lookupId)}</strong>`
+                    + (userInfo.email ? `<br><small class="text-muted">${escapeHtml(userInfo.email)}</small>` : '')
+                : `<small class="text-muted font-monospace">${escapeHtml(user)}</small>`;
+
             html += `
                 <tr>
-                    <td><small class="text-muted">${escapeHtml(user)}</small></td>
+                    <td>${userCellHtml}</td>
                     <td>${escapeHtml(objectTypeName)}</td>
                     <td><code>${escapeHtml(objectId)}</code></td>
                     <td><span class="badge ${badgeClass}">${escapeHtml(relationName)}</span></td>
@@ -389,9 +428,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Event listeners
-    refreshBtn.addEventListener('click', function() {
+    refreshBtn.addEventListener('click', async function() {
         const icon = this.querySelector('i');
         icon.classList.add('fa-spin');
+        // Refresh user map first so newly-granted-to users appear with friendly names.
+        await loadUserMap();
         loadPermissions().finally(function() {
             icon.classList.remove('fa-spin');
         });
@@ -410,8 +451,8 @@ document.addEventListener('DOMContentLoaded', function() {
         loadPermissions();
     });
 
-    // Load permissions on page load
-    loadPermissions();
+    // Load user map and then permissions on page load
+    loadUserMap().then(loadPermissions);
 
     // ========================================================================
     // Access Requests Review Section
