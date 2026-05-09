@@ -883,6 +883,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 accessReqReviewModal.hide();
                 loadAccessRequests();
+                // Approving creates a tuple, revoking removes one; reject doesn't
+                // affect tuples but a re-fetch is cheap. Refresh userMap first so
+                // a freshly-promoted user appears with their friendly name.
+                loadUserMap().then(loadPermissions);
                 // Refresh notifications
                 if (typeof Notifications !== 'undefined' && Notifications.fetchNotifications) {
                     Notifications.fetchNotifications();
