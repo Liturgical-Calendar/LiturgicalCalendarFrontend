@@ -110,7 +110,8 @@ if (!$authHelper->emailVerified) {
                                             <div class="card border-0 bg-light">
                                                 <div class="card-body py-2">
                                                     <div class="d-flex align-items-center">
-                                                        <i class="<?php echo htmlspecialchars($roleInfo['icon'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?> fa-2x text-primary me-3" aria-hidden="true"></i>
+                                                        <?php $safeRoleIcon = htmlspecialchars($roleInfo['icon'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                                        <i class="<?php echo $safeRoleIcon; ?> fa-2x text-primary me-3" aria-hidden="true"></i>
                                                         <div>
                                                             <strong><?php echo htmlspecialchars($roleInfo['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></strong>
                                                             <p class="mb-0 small text-muted"><?php echo htmlspecialchars($roleInfo['description'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></p>
