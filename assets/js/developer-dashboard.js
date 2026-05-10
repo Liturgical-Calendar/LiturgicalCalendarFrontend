@@ -446,49 +446,6 @@ const UI = {
                 ${this.escapeHtml(message)}
             </div>
         `;
-    },
-
-    /**
-     * Show a toast notification
-     * @param {string} message - Message to display
-     * @param {string} type - Toast type (success, danger, warning, info)
-     */
-    showToast(message, type = 'success') {
-        let container = document.querySelector('.toast-container');
-        if (!container) {
-            container = document.createElement('div');
-            container.className = 'toast-container';
-            document.body.appendChild(container);
-        }
-
-        const toastId = `toast-${Date.now()}`;
-        const iconMap = {
-            success: 'fa-check-circle',
-            danger: 'fa-exclamation-circle',
-            warning: 'fa-exclamation-triangle',
-            info: 'fa-info-circle'
-        };
-
-        const toastHtml = `
-            <div id="${toastId}" class="toast align-items-center text-bg-${type} border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        <i class="fas ${iconMap[type] || 'fa-info-circle'} me-2"></i>
-                        ${this.escapeHtml(message)}
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-            </div>
-        `;
-
-        container.insertAdjacentHTML('beforeend', toastHtml);
-
-        const toastEl = document.getElementById(toastId);
-        const toast = new bootstrap.Toast(toastEl, { autohide: true, delay: 5000 });
-        toast.show();
-
-        // Remove from DOM after hidden
-        toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
     }
 };
 
@@ -721,13 +678,13 @@ const DeveloperDashboard = {
 
             if (uuid) {
                 await ApplicationsAPI.updateApplication(uuid, data);
-                UI.showToast(UI.i18n.applicationUpdated, 'success');
+                showToast(UI.i18n.applicationUpdated, 'success');
             } else {
                 // Include requested_scope for new applications
                 const scopeRadio = document.querySelector('input[name="appScope"]:checked');
                 data.requested_scope = scopeRadio ? scopeRadio.value : 'read';
                 await ApplicationsAPI.createApplication(data);
-                UI.showToast(UI.i18n.applicationCreated, 'success');
+                showToast(UI.i18n.applicationCreated, 'success');
             }
 
             // Wait for modal to fully hide before refreshing the list
@@ -739,7 +696,7 @@ const DeveloperDashboard = {
             await this.loadApplications();
         } catch (error) {
             console.error('Failed to save application:', error);
-            UI.showToast(UI.i18n.errorSaving, 'danger');
+            showToast(UI.i18n.errorSaving, 'danger');
         } finally {
             saveBtn.disabled = false;
             spinner?.classList.add('d-none');
@@ -795,18 +752,18 @@ const DeveloperDashboard = {
 
             if (action.type === 'app') {
                 await ApplicationsAPI.deleteApplication(action.uuid);
-                UI.showToast(UI.i18n.applicationDeleted, 'success');
+                showToast(UI.i18n.applicationDeleted, 'success');
                 await hideModal();
                 await this.loadApplications();
             } else if (action.type === 'key') {
                 await ApplicationsAPI.revokeKey(action.uuid, action.keyId);
-                UI.showToast(UI.i18n.keyRevoked, 'success');
+                showToast(UI.i18n.keyRevoked, 'success');
                 await hideModal();
                 await this.loadKeysForApp(action.uuid);
             }
         } catch (error) {
             console.error('Failed to delete:', error);
-            UI.showToast(UI.i18n.errorDeleting, 'danger');
+            showToast(UI.i18n.errorDeleting, 'danger');
         } finally {
             deleteBtn.disabled = false;
             spinner?.classList.add('d-none');
@@ -908,7 +865,7 @@ const DeveloperDashboard = {
             }
         } catch (error) {
             console.error('Failed to generate key:', error);
-            UI.showToast(UI.i18n.errorGeneratingKey, 'danger');
+            showToast(UI.i18n.errorGeneratingKey, 'danger');
         } finally {
             generateBtn.disabled = false;
             spinner?.classList.add('d-none');
@@ -932,10 +889,10 @@ const DeveloperDashboard = {
             // Refresh keys list
             await this.loadKeysForApp(uuid);
 
-            UI.showToast(UI.i18n.keyRotated, 'success');
+            showToast(UI.i18n.keyRotated, 'success');
         } catch (error) {
             console.error('Failed to rotate key:', error);
-            UI.showToast(UI.i18n.errorGeneratingKey, 'danger');
+            showToast(UI.i18n.errorGeneratingKey, 'danger');
         }
     },
 
@@ -946,11 +903,11 @@ const DeveloperDashboard = {
     async resubmitApplication(uuid) {
         try {
             await ApplicationsAPI.resubmitApplication(uuid);
-            UI.showToast(UI.i18n.resubmitSuccess, 'success');
+            showToast(UI.i18n.resubmitSuccess, 'success');
             await this.loadApplications();
         } catch (error) {
             console.error('Failed to resubmit application:', error);
-            UI.showToast(UI.i18n.resubmitError, 'danger');
+            showToast(UI.i18n.resubmitError, 'danger');
         }
     },
 

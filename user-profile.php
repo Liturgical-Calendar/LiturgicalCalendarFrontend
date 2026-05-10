@@ -125,16 +125,22 @@ if (!$authHelper->isAuthenticated) {
                     <h6 class="m-0 fw-bold text-primary">
                         <i class="fas fa-user-tag me-2"></i><?php echo htmlspecialchars(_('Roles'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                     </h6>
-                    <?php if ($authHelper->emailVerified) : ?>
-                    <a href="request-access.php" class="btn btn-outline-primary btn-sm" data-requires-auth>
-                        <i class="fas fa-plus me-1"></i><?php echo htmlspecialchars(_('Request Role'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                    </a>
-                    <?php else : ?>
-                    <button type="button" class="btn btn-outline-secondary btn-sm" disabled
-                            title="<?php echo htmlspecialchars(_('Email verification required'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-                        <i class="fas fa-plus me-1"></i><?php echo htmlspecialchars(_('Request Role'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                    </button>
-                    <?php endif; ?>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-outline-success btn-sm" id="refreshRolesBtn"
+                                title="<?php echo htmlspecialchars(_('Refresh session to see updated roles'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                            <i class="fas fa-sync-alt me-1"></i><?php echo htmlspecialchars(_('Refresh session'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                        </button>
+                        <?php if ($authHelper->emailVerified) : ?>
+                        <a href="request-access.php" class="btn btn-outline-primary btn-sm" data-requires-auth>
+                            <i class="fas fa-plus me-1"></i><?php echo htmlspecialchars(_('Request Role'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                        </a>
+                        <?php else : ?>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" disabled
+                                title="<?php echo htmlspecialchars(_('Email verification required'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                            <i class="fas fa-plus me-1"></i><?php echo htmlspecialchars(_('Request Role'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                        </button>
+                        <?php endif; ?>
+                    </div>
                 </div>
                 <div class="card-body">
                     <?php if (!$authHelper->emailVerified) : ?>
@@ -292,9 +298,33 @@ if (!$authHelper->isAuthenticated) {
                     }
                 } catch (error) {
                     console.error('Error refreshing session:', error);
-                    alert(error.message || <?php echo json_encode(_('Failed to refresh session. Please try logging out and back in.')); ?>);
+                    showToast(error.message || <?php echo json_encode(_('Failed to refresh session. Please try logging out and back in.')); ?>, 'danger');
                     refreshSessionBtn.disabled = false;
                     refreshSessionBtn.innerHTML = originalHtml;
+                }
+            });
+        }
+
+        // Refresh roles button handler (in Roles card header)
+        const refreshRolesBtn = document.getElementById('refreshRolesBtn');
+        if (refreshRolesBtn) {
+            refreshRolesBtn.addEventListener('click', async function() {
+                refreshRolesBtn.disabled = true;
+                const originalHtml = refreshRolesBtn.innerHTML;
+                refreshRolesBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>' + <?php echo json_encode(_('Refreshing...')); ?>;
+
+                try {
+                    const success = await Auth.refreshToken();
+                    if (success) {
+                        window.location.reload();
+                    } else {
+                        throw new Error(<?php echo json_encode(_('Session refresh failed')); ?>);
+                    }
+                } catch (error) {
+                    console.error('Error refreshing session:', error);
+                    showToast(error.message || <?php echo json_encode(_('Failed to refresh session. Please try logging out and back in.')); ?>, 'danger');
+                    refreshRolesBtn.disabled = false;
+                    refreshRolesBtn.innerHTML = originalHtml;
                 }
             });
         }
@@ -355,7 +385,7 @@ if (!$authHelper->isAuthenticated) {
          */
         function escapeHtml(text) {
             const div = document.createElement('div');
-            div.textContent = text;
+            div.textContent = text == null ? '' : String(text);
             return div.innerHTML;
         }
 

@@ -41,6 +41,7 @@ export default defineConfig( [
         Notifications: "readonly",
         NotificationTranslations: "readonly",
         createAdminModule: "readonly",
+        showToast: "readonly",
       }
     },
     rules: {

@@ -84,6 +84,7 @@ if ( AppEnv === 'development' ) console.info({
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/common.js"></script>
 <script src="assets/js/auth.js"></script>
+<script src="assets/js/toast.js"></script>
 <script src="assets/js/notifications.js"></script>
 <!-- Notification translations for JavaScript -->
 <script>
@@ -94,7 +95,8 @@ const NotificationTranslations = {
     minutesAgo: <?php echo json_encode(_('min ago')); ?>,
     hoursAgo: <?php echo json_encode(_('hours ago')); ?>,
     daysAgo: <?php echo json_encode(_('days ago')); ?>,
-    requestedRole: <?php echo json_encode(_('Requested')); ?>
+    requestedRole: <?php echo json_encode(_('Requested')); ?>,
+    requestedAccess: <?php echo json_encode(_('Requested access')); ?>
 };
 </script>
 <?php include_once('includes/login-modal.php'); ?>

@@ -41,8 +41,8 @@
         "post-update-cmd": [
             "LiturgicalCalendar\\Frontend\\Utilities::postInstall"
         ],
-        "lint": "phpcs || echo 'Linting failed. Please run composer lint:fix to fix the linting issues.'",
-        "lint:fix": "phpcbf || echo 'Lint fixing failed. Please check the linting failures and fix them manually.'",
+        "lint": "phpcs || ( echo 'Linting failed. Please run composer lint:fix to fix the linting issues.' && exit 1 )",
+        "lint:fix": "bash scripts/lint-fix.sh",
         "lint:md": "npx --yes markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#vendor\" \"#examples\" \"#.yarn\"",
         "lint:md:fix": "npx --yes markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#vendor\" \"#examples\" \"#.yarn\" --fix",
         "analyse": "phpstan analyse",

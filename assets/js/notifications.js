@@ -256,6 +256,27 @@ const Notifications = {
             `;
         }
 
+        if (item.type === 'access_request') {
+            const roleName = this._roleNames[item.role] || item.role;
+            const userName = this._escapeHtml(item.user_name || item.user_email || 'Unknown');
+            return `
+                <a class="dropdown-item py-2" href="${safeUrl}">
+                    <div class="d-flex align-items-start">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-key text-warning me-2"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="small fw-bold">${userName}</div>
+                            <div class="small text-muted">
+                                ${this._getTranslation('requestedAccess', 'Requested access')}: ${this._escapeHtml(roleName)}
+                            </div>
+                            <div class="small text-muted">${timeAgo}</div>
+                        </div>
+                    </div>
+                </a>
+            `;
+        }
+
         if (item.type === 'application') {
             const appName = this._escapeHtml(item.app_name || 'Unknown');
             const scopeLabel = item.requested_scope === 'write'

@@ -11,9 +11,22 @@
 # Services not listed here continue to build from GitHub.
 
 services:
+  # These services use the same image as litcal-api — override build context together
+  db-init:
+    build:
+      context: ../LiturgicalCalendarAPI
+
+  openfga-setup:
+    build:
+      context: ../LiturgicalCalendarAPI
+
   litcal-api:
     build:
       context: ../LiturgicalCalendarAPI
+    environment:
+      # Raise rate limit for development — the default 10 req/hour is too low
+      # for the healthcheck probe (fires every 10s)
+      UNAUTHENTICATED_RATE_LIMIT: 1000
 
   litcal-frontend:
     build:

@@ -329,6 +329,8 @@ asort($langsAssoc);
                         <i class="sb-nav-link-icon fas fa-fw fa-folder"></i>
                         <span><?php echo _('Liturgy of the Day'); ?></span>
                     </a>
+
+                        <?php // Access Requests page accessible via profile menu → Request Access ?>
                     <?php endif; ?>
 
                 </div>

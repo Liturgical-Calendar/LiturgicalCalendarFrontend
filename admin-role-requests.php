@@ -1,12 +1,16 @@
 <?php
 
 /**
- * Admin Role Requests Management Page
+ * Admin Role Requests Page (Legacy Redirect)
  *
- * Allows administrators to view and manage role requests.
- * Administrators can approve or reject pending role requests,
- * and view the history of approved/rejected requests.
+ * Role requests are now part of the unified Access Requests workflow.
+ * Redirects to admin-permissions.php which handles both roles and permissions.
  */
+
+header('Location: admin-permissions.php');
+exit;
+
+// @codeCoverageIgnoreStart
 
 include_once 'includes/common.php';
 include_once 'includes/messages.php';

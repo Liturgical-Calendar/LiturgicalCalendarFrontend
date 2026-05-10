@@ -42,6 +42,14 @@
             <property name="absoluteLineLimit" value="220"/>
         </properties>
     </rule>
+    <!-- auth/*.php are HTTP endpoint entry points that intentionally mix
+         function declarations (jsonResponse, redirectWithError) with side
+         effects (require_once, dotenv load, header() calls). PSR-1's
+         "no symbols + side effects" rule is the right default for library
+         code but doesn't fit endpoint files of this shape. -->
+    <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
+        <exclude-pattern>auth/*.php</exclude-pattern>
+    </rule>
     <file>./</file> <!-- directory you want to analyze -->
     <exclude-pattern>/vendor/</exclude-pattern>
     <exclude-pattern>/examples</exclude-pattern>

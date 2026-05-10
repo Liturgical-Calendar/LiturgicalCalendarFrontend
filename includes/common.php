@@ -242,7 +242,7 @@ $i18n = new I18n();
 // Exposed to JavaScript as AdminPages global via layout/footer.php.
 // ============================================================================
 
-$adminPages = ['admin-dashboard', 'missals-editor', 'extending', 'temporale', 'decrees', 'admin-users', 'admin-role-requests', 'admin-applications', 'developer-dashboard'];
+$adminPages = ['admin-dashboard', 'missals-editor', 'extending', 'temporale', 'decrees', 'admin-users', 'admin-role-requests', 'admin-applications', 'admin-permissions', 'developer-dashboard'];
 
 // ============================================================================
 // Setup PSR-Compliant HTTP Client with Production Features
