@@ -42,7 +42,7 @@
             "LiturgicalCalendar\\Frontend\\Utilities::postInstall"
         ],
         "lint": "phpcs || ( echo 'Linting failed. Please run composer lint:fix to fix the linting issues.' && exit 1 )",
-        "lint:fix": "phpcbf; rc=$?; if [ $rc -eq 0 ]; then exit 0; elif [ $rc -eq 1 ]; then echo 'Code has been auto-fixed. Please review the changes, re-stage files, and commit again.' >&2; exit 1; else echo 'Lint fixing failed: some issues could not be auto-fixed. Please fix them manually.' >&2; exit $rc; fi",
+        "lint:fix": "bash scripts/lint-fix.sh",
         "lint:md": "npx --yes markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#vendor\" \"#examples\" \"#.yarn\"",
         "lint:md:fix": "npx --yes markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#vendor\" \"#examples\" \"#.yarn\" --fix",
         "analyse": "phpstan analyse",
