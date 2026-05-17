@@ -13,7 +13,7 @@ use LiturgicalCalendar\Frontend\OidcClient;
 use LiturgicalCalendar\Frontend\CookieHelper;
 
 // Load environment
-$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__), ['.env.local', '.env.development', '.env.production', '.env']);
+$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__), ['.env.local', '.env.development', '.env.staging', '.env.production', '.env']);
 $dotenv->safeLoad();
 
 // Get ID token for Zitadel logout hint (if available)
