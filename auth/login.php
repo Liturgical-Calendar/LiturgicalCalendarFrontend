@@ -12,7 +12,7 @@ require_once dirname(__DIR__) . '/vendor/autoload.php';
 use LiturgicalCalendar\Frontend\OidcClient;
 
 // Load environment
-$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__), ['.env.local', '.env.development', '.env.production', '.env']);
+$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__), ['.env.local', '.env.development', '.env.staging', '.env.production', '.env']);
 $dotenv->safeLoad();
 
 // Check if OIDC is configured
