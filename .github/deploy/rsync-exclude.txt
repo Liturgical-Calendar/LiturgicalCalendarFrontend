@@ -17,6 +17,7 @@
 .serena/
 .worktrees/
 .claude/
+.intelephense-helper.php
 
 # --- IDE / local tooling ---
 .vscode/
@@ -41,7 +42,7 @@ phpstan-bootstrap.php
 phpunit.xml
 phpunit.xml.dist
 captainhook.json
-.markdownlint.yml
+.markdownlint.yaml
 eslint.config.mjs
 docker-compose.yml
 docker-compose.yaml
@@ -55,6 +56,7 @@ node_modules/
 .yarn/
 .yarnrc.yml
 .pnp.*
+.nvmrc
 package.json
 yarn.lock
 
@@ -62,6 +64,13 @@ yarn.lock
 scripts/
 
 # --- Composer install-time only (never read at runtime) ---
+# Both composer.json and composer.lock are consumed by `composer install`
+# on the runner, never re-read by the deployed frontend. (Unlike the API,
+# the frontend has no `Router::findProjectRoot()`-style runtime lookup that
+# uses composer.json as a project-root marker.) Once `composer install`
+# bakes the PSR-4 map into vendor/composer/autoload_psr4.php, vendor/
+# stands on its own.
+composer.json
 composer.lock
 
 # --- Project meta files ---
