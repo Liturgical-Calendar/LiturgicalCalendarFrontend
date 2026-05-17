@@ -38,8 +38,22 @@ jobs:
           set -euo pipefail
           case "${EVENT_NAME}" in
             workflow_dispatch)
+              # Force the canonical branch per target so a user with
+              # workflow_dispatch perms can't deploy an arbitrary branch
+              # (the UI lets them pick one, but we ignore it).
               TARGET="${INPUT_TARGET}"
-              REF="${GIT_REF#refs/heads/}"
+              case "${TARGET}" in
+                production) REF="main" ;;
+                staging)    REF="development" ;;
+                *)
+                  echo "::error::Unsupported workflow_dispatch target: ${TARGET}" >&2
+                  exit 1
+                  ;;
+              esac
+              SELECTED_REF="${GIT_REF#refs/heads/}"
+              if [ "${SELECTED_REF}" != "${REF}" ]; then
+                echo "::notice::workflow_dispatch was triggered from '${SELECTED_REF}', but ${TARGET} always deploys '${REF}'. Using '${REF}'."
+              fi
               ;;
             push)
               case "${GIT_REF}" in
@@ -76,6 +90,10 @@ jobs:
         env:
           APP_PATH: ${{ vars.VPS_APP_PATH }}
           APP_URL: ${{ vars.VPS_APP_URL }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USERNAME }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_SSH_KNOWN_HOSTS }}
           TARGET: ${{ needs.resolve.outputs.target }}
         run: |
           set -euo pipefail
@@ -86,6 +104,22 @@ jobs:
           fi
           if [ -z "${APP_URL}" ]; then
             echo "::error::Environment variable VPS_APP_URL is not set for '${TARGET}'." >&2
+            missing=1
+          fi
+          if [ -z "${VPS_HOST}" ]; then
+            echo "::error::Secret VPS_HOST is not set for '${TARGET}'." >&2
+            missing=1
+          fi
+          if [ -z "${VPS_USER}" ]; then
+            echo "::error::Secret VPS_USERNAME is not set for '${TARGET}'." >&2
+            missing=1
+          fi
+          if [ -z "${VPS_SSH_KEY}" ]; then
+            echo "::error::Secret VPS_SSH_PRIVATE_KEY is not set for '${TARGET}'." >&2
+            missing=1
+          fi
+          if [ -z "${VPS_KNOWN_HOSTS}" ]; then
+            echo "::error::Secret VPS_SSH_KNOWN_HOSTS is not set for '${TARGET}'. Refusing to deploy without a pinned host key." >&2
             missing=1
           fi
           [ "${missing}" -eq 0 ]

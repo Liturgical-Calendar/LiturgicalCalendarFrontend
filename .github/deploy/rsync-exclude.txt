@@ -69,11 +69,12 @@ CLAUDE.md
 CODE_OF_CONDUCT.md
 README.md
 
-# --- TRACKED EXAMPLE FILES (transferred + overwritten every deploy) ---
-# The "+" prefix is an rsync include-override: these rules must precede
-# the matching ".env.*" exclude below for first-match-wins to honor them.
-# We intentionally DO want .env.example and docker-compose.override.example.yml
-# to ship so admins can diff them against the live copies on the server.
+# --- TRACKED EXAMPLE FILE (transferred + overwritten every deploy) ---
+# The "+" prefix is an rsync include-override: this rule must precede the
+# matching ".env.*" exclude below for first-match-wins to honor it. We
+# intentionally DO want .env.example to ship and overwrite the server's
+# copy on every deploy so admins can diff it against .env.staging /
+# .env.production to spot new or deprecated environment variables.
 + .env.example
 
 # --- Zitadel / OpenFGA bootstrap artifacts (server has its own) ---
