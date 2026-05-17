@@ -1,0 +1,219 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Deployment target'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+        default: staging
+  push:
+    branches:
+      - development
+      - main
+
+concurrency:
+  group: deploy-${{ github.event_name == 'workflow_dispatch' && inputs.target || (github.ref == 'refs/heads/main' && 'production' || 'staging') }}
+  cancel-in-progress: false
+
+jobs:
+  resolve:
+    name: Resolve target
+    runs-on: ubuntu-latest
+    outputs:
+      target: ${{ steps.t.outputs.target }}
+      ref: ${{ steps.t.outputs.ref }}
+    steps:
+      - name: Pick target + ref
+        id: t
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_TARGET: ${{ inputs.target }}
+          GIT_REF: ${{ github.ref }}
+        run: |
+          set -euo pipefail
+          case "${EVENT_NAME}" in
+            workflow_dispatch)
+              TARGET="${INPUT_TARGET}"
+              REF="${GIT_REF#refs/heads/}"
+              ;;
+            push)
+              case "${GIT_REF}" in
+                refs/heads/main)        TARGET="production"; REF="main" ;;
+                refs/heads/development) TARGET="staging";    REF="development" ;;
+                *)
+                  echo "::error::Push to unsupported branch: ${GIT_REF}" >&2
+                  exit 1
+                  ;;
+              esac
+              ;;
+            *)
+              echo "::error::Unsupported event: ${EVENT_NAME}" >&2
+              exit 1
+              ;;
+          esac
+          {
+            echo "target=${TARGET}"
+            echo "ref=${REF}"
+          } >> "${GITHUB_OUTPUT}"
+          echo "::notice::Deploying ${TARGET} from ref=${REF}"
+
+  deploy:
+    name: Deploy ${{ needs.resolve.outputs.target }}
+    needs: resolve
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: ${{ needs.resolve.outputs.target }}
+    permissions:
+      contents: read
+
+    steps:
+      - name: Validate required environment configuration
+        env:
+          APP_PATH: ${{ vars.VPS_APP_PATH }}
+          APP_URL: ${{ vars.VPS_APP_URL }}
+          TARGET: ${{ needs.resolve.outputs.target }}
+        run: |
+          set -euo pipefail
+          missing=0
+          if [ -z "${APP_PATH}" ]; then
+            echo "::error::Environment variable VPS_APP_PATH is not set for '${TARGET}'." >&2
+            missing=1
+          fi
+          if [ -z "${APP_URL}" ]; then
+            echo "::error::Environment variable VPS_APP_URL is not set for '${TARGET}'." >&2
+            missing=1
+          fi
+          [ "${missing}" -eq 0 ]
+
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ needs.resolve.outputs.ref }}
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2
+        with:
+          php-version: '8.4'
+          extensions: intl, json, simplexml, dom, calendar, zip, gettext, curl, xml, mbstring
+          tools: composer:v2
+          coverage: none
+
+      - name: Install production dependencies
+        run: composer install --no-dev --optimize-autoloader --no-interaction --no-progress --no-scripts --no-plugins --prefer-dist
+
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.VPS_SSH_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SSH_KNOWN_HOSTS}" ]; then
+            echo "::error::Secret VPS_SSH_KNOWN_HOSTS is empty. Refusing to deploy without a pinned host key." >&2
+            exit 1
+          fi
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "${SSH_PRIVATE_KEY}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "${SSH_KNOWN_HOSTS}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Sanity-check pinned host key against DNS SSHFP records
+        env:
+          SSH_KNOWN_HOSTS: ${{ secrets.VPS_SSH_KNOWN_HOSTS }}
+          SSHFP_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          set -euo pipefail
+          if ! command -v dig >/dev/null; then
+            echo "::warning::dig not available; skipping SSHFP drift check."
+            exit 0
+          fi
+          PIN_FPS=$(printf '%s\n' "${SSH_KNOWN_HOSTS}" \
+            | awk '$2 ~ /^(ssh-|ecdsa-)/' \
+            | while read -r _host _alg keyb64 _; do
+                printf '%s' "$keyb64" | base64 -d 2>/dev/null | sha256sum | awk '{print toupper($1)}'
+              done \
+            | sort -u)
+          DNS_FPS=$(dig +short SSHFP "${SSHFP_HOST}" \
+            | awk '$2 == "2" {for (i=3; i<=NF; i++) printf "%s", $i; print ""}' \
+            | tr -d ' ' \
+            | tr 'a-f' 'A-F' \
+            | sort -u)
+          if [ -z "${DNS_FPS}" ]; then
+            echo "::warning::No SHA-256 SSHFP records found for ${SSHFP_HOST}; skipping drift check."
+            exit 0
+          fi
+          if [ -z "${PIN_FPS}" ]; then
+            echo "::warning::Could not derive any fingerprints from VPS_SSH_KNOWN_HOSTS; skipping drift check."
+            exit 0
+          fi
+          PIN_NOT_IN_DNS=$(comm -23 <(echo "${PIN_FPS}") <(echo "${DNS_FPS}"))
+          DNS_NOT_IN_PIN=$(comm -13 <(echo "${PIN_FPS}") <(echo "${DNS_FPS}"))
+          if [ -n "${PIN_NOT_IN_DNS}" ]; then
+            while IFS= read -r fp; do
+              echo "::warning::Pinned key SHA256:${fp} not in DNS SSHFP for ${SSHFP_HOST}."
+            done <<< "${PIN_NOT_IN_DNS}"
+          fi
+          if [ -n "${DNS_NOT_IN_PIN}" ]; then
+            while IFS= read -r fp; do
+              echo "::warning::DNS SSHFP advertises SHA256:${fp} not present in VPS_SSH_KNOWN_HOSTS."
+            done <<< "${DNS_NOT_IN_PIN}"
+          fi
+          if [ -z "${PIN_NOT_IN_DNS}" ] && [ -z "${DNS_NOT_IN_PIN}" ]; then
+            echo "Pin matches DNS SSHFP records."
+          fi
+
+      - name: Ensure deploy + cache + logs dirs exist
+        env:
+          VPS_USER: ${{ secrets.VPS_USERNAME }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ vars.VPS_SSH_PORT || '22' }}
+          DEPLOY_PATH: ${{ vars.VPS_APP_PATH }}
+        run: |
+          set -euo pipefail
+          remote_cmd=$(printf 'mkdir -p %q %q %q' \
+            "${DEPLOY_PATH}" \
+            "${DEPLOY_PATH}/cache" \
+            "${DEPLOY_PATH}/logs")
+          ssh -i ~/.ssh/deploy_key -p "${VPS_PORT}" \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile=~/.ssh/known_hosts \
+            -o ConnectTimeout=10 \
+            -o ServerAliveInterval=15 \
+            -o ServerAliveCountMax=2 \
+            "${VPS_USER}@${VPS_HOST}" \
+            "${remote_cmd}"
+
+      - name: Deploy via rsync
+        env:
+          VPS_USER: ${{ secrets.VPS_USERNAME }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ vars.VPS_SSH_PORT || '22' }}
+          DEPLOY_PATH: ${{ vars.VPS_APP_PATH }}
+        run: |
+          set -euo pipefail
+          rsync \
+            --archive --no-owner --no-group \
+            --compress --human-readable --verbose \
+            --delete --protect-args \
+            --exclude-from=.github/deploy/rsync-exclude.txt \
+            -e "ssh -i ~/.ssh/deploy_key -p ${VPS_PORT} -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=~/.ssh/known_hosts -o ConnectTimeout=10 -o ServerAliveInterval=15 -o ServerAliveCountMax=2" \
+            ./ "${VPS_USER}@${VPS_HOST}:${DEPLOY_PATH%/}/"
+
+      - name: Post-deploy health check
+        env:
+          APP_URL: ${{ vars.VPS_APP_URL }}
+        run: |
+          set -euo pipefail
+          curl -fsS --retry 3 --retry-delay 5 --max-time 15 \
+            "${APP_URL%/}/" -o /dev/null
+
+      - name: Clean up SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
