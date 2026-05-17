@@ -86,7 +86,36 @@ class OidcClient
         $this->clientId    = $clientId;
         $this->redirectUri = $redirectUri;
         $this->internalUrl = $internalUrl !== null ? rtrim($internalUrl, '/') : null;
-        $this->orgId       = $orgId !== null && $orgId !== '' ? $orgId : null;
+        $this->orgId       = self::normalizeOrgId($orgId);
+    }
+
+    /**
+     * Normalize and validate a Zitadel org ID.
+     *
+     * Trims whitespace (env values commonly arrive with stray padding from
+     * copy-paste), treats empty input as "not set", and rejects anything
+     * non-numeric — Zitadel IDs are snowflake-style 18-digit decimal
+     * strings, so a non-digit value can only be a misconfiguration and
+     * would silently produce a malformed `urn:zitadel:iam:org:id:<id>`
+     * scope that Zitadel rejects with a less helpful error.
+     *
+     * @throws \InvalidArgumentException If $orgId is non-empty but not all digits.
+     */
+    private static function normalizeOrgId(?string $orgId): ?string
+    {
+        if ($orgId === null) {
+            return null;
+        }
+        $trimmed = trim($orgId);
+        if ($trimmed === '') {
+            return null;
+        }
+        if (!ctype_digit($trimmed)) {
+            throw new \InvalidArgumentException(
+                'ZITADEL_ORG_ID must be a numeric Zitadel ID (snowflake), got: ' . $orgId
+            );
+        }
+        return $trimmed;
     }
 
     /**
