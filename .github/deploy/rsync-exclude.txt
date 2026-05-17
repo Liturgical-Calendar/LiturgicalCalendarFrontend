@@ -1,0 +1,101 @@
+# Patterns excluded from `rsync --delete` deploys.
+#
+# These patterns serve two purposes:
+#   1. Files matched here are NOT transferred from the runner.
+#   2. Files matched here are NOT removed on the destination by --delete.
+#
+# Anything that should live only on the server (env files, runtime
+# logs, server-managed state) MUST be listed here so it isn't wiped
+# on deploy.
+
+# --- VCS / CI / agent metadata ---
+.git/
+.github/
+.gitignore
+.gitattributes
+.editorconfig
+.serena/
+.worktrees/
+.claude/
+
+# --- IDE / local tooling ---
+.vscode/
+.idea/
+.phpunit.cache/
+.phpcs.cache
+
+# --- Tests, dev-only sources ---
+e2e/
+tests/
+playwright.config.ts
+playwright-report/
+test-results/
+docs/
+
+# --- Build / dev configuration with no runtime role ---
+phpcs.xml
+phpcs.xml.dist
+phpstan.neon
+phpstan.neon.dist
+phpstan-bootstrap.php
+phpunit.xml
+phpunit.xml.dist
+captainhook.json
+.markdownlint.yml
+eslint.config.mjs
+docker-compose.yml
+docker-compose.yaml
+docker-compose.override.yml
+docker-compose.override.example.yml
+Dockerfile
+.dockerignore
+
+# --- Node / Yarn (only used for E2E tests + markdown linting) ---
+node_modules/
+.yarn/
+.yarnrc.yml
+.pnp.*
+package.json
+yarn.lock
+
+# --- Local dev / one-shot setup scripts (not used in production) ---
+scripts/
+
+# --- Composer install-time only (never read at runtime) ---
+composer.lock
+
+# --- Project meta files ---
+CLAUDE.md
+CODE_OF_CONDUCT.md
+README.md
+
+# --- TRACKED EXAMPLE FILE (transferred + overwritten every deploy) ---
+# The "+" prefix is an rsync include-override: this rule must precede the
+# matching ".env.*" exclude below for first-match-wins to honor it. We
+# intentionally DO want .env.example to ship and overwrite the server's
+# copy on every deploy so admins can diff it against .env.staging /
+# .env.production to spot new or deprecated environment variables.
++ .env.example
+
+# --- Zitadel / OpenFGA bootstrap artifacts (server has its own) ---
+*.pat
+test-service-account-key.json
+
+# --- SERVER-MANAGED FILES (never transferred, never --delete) ---
+# These are server-only state: .env / .env.production / .env.staging
+# carry the live secrets, logs/ accumulates runtime logs. Both stay
+# untouched by rsync.
+.env
+.env.*
+logs/
+
+# --- RUNTIME CACHE (preserve server-side state) ---
+# Excludes contents only; the directory itself is created on the server
+# in a pre-rsync SSH-exec step so PHP can still write to it.
+/cache/*
+
+# --- Dev-only symlink to local liturgy-components-js checkout ---
+/assets/components-js
+
+# --- Generated data dir (gitignored locally, server-managed) ---
+/assets/json/
