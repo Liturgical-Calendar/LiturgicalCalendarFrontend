@@ -35,6 +35,16 @@ class OidcClient
     private ?string $internalUrl;
 
     /**
+     * Zitadel organization ID to scope login and registration to.
+     * When set, the `urn:zitadel:iam:org:id:<id>` scope is appended to every
+     * authorization request, forcing both login AND new-user registration
+     * into that specific org. Without it, Zitadel's hosted login lands new
+     * passkey registrations in the IAM-internal default org, which won't
+     * carry the project's RBAC roles.
+     */
+    private ?string $orgId;
+
+    /**
      * Cached discovery document.
      *
      * @var array<string, mixed>|null
@@ -62,13 +72,50 @@ class OidcClient
      * @param string $issuer Zitadel issuer URL
      * @param string $clientId Zitadel client ID
      * @param string $redirectUri Callback URL for code exchange
+     * @param string|null $internalUrl Internal URL for server-side requests
+     * @param string|null $orgId Zitadel org ID to scope login/registration to
      */
-    public function __construct(string $issuer, string $clientId, string $redirectUri, ?string $internalUrl = null)
-    {
+    public function __construct(
+        string $issuer,
+        string $clientId,
+        string $redirectUri,
+        ?string $internalUrl = null,
+        ?string $orgId = null
+    ) {
         $this->issuer      = rtrim($issuer, '/');
         $this->clientId    = $clientId;
         $this->redirectUri = $redirectUri;
         $this->internalUrl = $internalUrl !== null ? rtrim($internalUrl, '/') : null;
+        $this->orgId       = self::normalizeOrgId($orgId);
+    }
+
+    /**
+     * Normalize and validate a Zitadel org ID.
+     *
+     * Trims whitespace (env values commonly arrive with stray padding from
+     * copy-paste), treats empty input as "not set", and rejects anything
+     * non-numeric — Zitadel IDs are snowflake-style 18-digit decimal
+     * strings, so a non-digit value can only be a misconfiguration and
+     * would silently produce a malformed `urn:zitadel:iam:org:id:<id>`
+     * scope that Zitadel rejects with a less helpful error.
+     *
+     * @throws \InvalidArgumentException If $orgId is non-empty but not all digits.
+     */
+    private static function normalizeOrgId(?string $orgId): ?string
+    {
+        if ($orgId === null) {
+            return null;
+        }
+        $trimmed = trim($orgId);
+        if ($trimmed === '') {
+            return null;
+        }
+        if (!ctype_digit($trimmed)) {
+            throw new \InvalidArgumentException(
+                'ZITADEL_ORG_ID must be a numeric Zitadel ID (snowflake), got: ' . $orgId
+            );
+        }
+        return $trimmed;
     }
 
     /**
@@ -100,8 +147,9 @@ class OidcClient
         }
 
         $internalUrl = $_ENV['ZITADEL_INTERNAL_URL'] ?? getenv('ZITADEL_INTERNAL_URL') ?: null;
+        $orgId       = $_ENV['ZITADEL_ORG_ID'] ?? getenv('ZITADEL_ORG_ID') ?: null;
 
-        return new self($issuer, $clientId, $redirectUri, $internalUrl ?: null);
+        return new self($issuer, $clientId, $redirectUri, $internalUrl ?: null, $orgId ?: null);
     }
 
     /**
@@ -154,7 +202,15 @@ class OidcClient
             'offline_access',
             'urn:zitadel:iam:org:project:roles',
         ];
-        $allScopes     = array_unique(array_merge($defaultScopes, $scopes));
+
+        // Scope login/registration to a specific Zitadel org when configured.
+        // Without this, Zitadel's hosted login lands new passkey registrations
+        // in the IAM-internal default org, which carries no project roles.
+        if ($this->orgId !== null) {
+            $defaultScopes[] = 'urn:zitadel:iam:org:id:' . $this->orgId;
+        }
+
+        $allScopes = array_unique(array_merge($defaultScopes, $scopes));
 
         // Build authorization URL
         $authEndpoint = $this->getAuthorizationEndpoint();

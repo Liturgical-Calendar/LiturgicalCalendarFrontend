@@ -7,7 +7,12 @@ parameters:
         - about.php
         - admin-applications.php
         - admin-dashboard.php
-        - admin-role-requests.php
+        # admin-role-requests.php intentionally omitted: it's a legacy redirect
+        # stub (header()+exit on line 11) followed by ~260 lines of dead doc
+        # code preserved as historical reference. Analyzing it just produces
+        # noise — phpstan flags everything after the exit as unreachable, and
+        # since the dead code reaches no bootstrap-variable references, the
+        # corresponding ignoreErrors entry below also stays unmatched.
         - admin-users.php
         - developer-dashboard.php
         - missals-editor.php
@@ -37,7 +42,6 @@ parameters:
                 - about.php
                 - admin-applications.php
                 - admin-dashboard.php
-                - admin-role-requests.php
                 - admin-users.php
                 - developer-dashboard.php
                 - missals-editor.php
