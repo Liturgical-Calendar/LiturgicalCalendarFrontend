@@ -32,7 +32,7 @@ services:
   # ============================================================================
   db-init:
     image: litcal-api:latest
-    build: https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI.git#feat/openfga
+    build: https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI.git#development
     entrypoint: ["cp", "/var/www/html/scripts/init-db.sql", "/init/init-litcal.sql"]
     volumes:
       - db_init_scripts:/init
@@ -251,9 +251,35 @@ services:
   # ============================================================================
   # LiturgicalCalendar Application Services
   # ============================================================================
+  # One-shot Doctrine migrate runner for the litcal database.
+  # scripts/init-db.sql (run by db-init/db) is bootstrap-only — roles,
+  # databases, pgcrypto, empty doctrine_migration_versions tracking table.
+  # Application-table DDL (access_requests, applications, api_keys,
+  # audit_log, ...) lives in src/Migrations/ in the API repo and is
+  # applied by this service against the running db.
+  #
+  # Reuses the already-built litcal-api:latest image (same pattern as
+  # openfga-setup above). litcal-api gates on this completing so the
+  # HTTP server never serves traffic against an unmigrated schema.
+  litcal-migrate:
+    image: litcal-api:latest
+    command: ["php", "bin/doctrine-migrations", "migrate", "--no-interaction"]
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: litcal
+      DB_USER: litcal
+      DB_PASSWORD: litcal_secure_password
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - litcal
+    restart: "no"
+
   litcal-api:
     image: litcal-api:latest
-    build: https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI.git#feat/openfga
+    build: https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI.git#development
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:8000/calendars > /dev/null"]
@@ -298,6 +324,8 @@ services:
       openfga:
         condition: service_healthy
       openfga-setup:
+        condition: service_completed_successfully
+      litcal-migrate:
         condition: service_completed_successfully
 
   litcal-frontend:
