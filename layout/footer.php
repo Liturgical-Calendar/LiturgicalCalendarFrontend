@@ -96,7 +96,10 @@ const NotificationTranslations = {
     hoursAgo: <?php echo json_encode(_('hours ago')); ?>,
     daysAgo: <?php echo json_encode(_('days ago')); ?>,
     requestedRole: <?php echo json_encode(_('Requested')); ?>,
-    requestedAccess: <?php echo json_encode(_('Requested access')); ?>
+    requestedAccess: <?php echo json_encode(_('Requested access')); ?>,
+    yourRequestApproved: <?php echo json_encode(_('Your request was approved')); ?>,
+    yourRequestRejected: <?php echo json_encode(_('Your request was rejected')); ?>,
+    yourRequestRevoked: <?php echo json_encode(_('Your access was revoked')); ?>
 };
 </script>
 <?php include_once('includes/login-modal.php'); ?>

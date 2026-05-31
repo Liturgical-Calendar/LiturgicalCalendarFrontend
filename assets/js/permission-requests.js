@@ -395,8 +395,9 @@ document.addEventListener('DOMContentLoaded', async function() {
                 `;
             }
 
+            const safeRequestId = escapeHtml(String(request.id));
             html += `
-                <tr>
+                <tr id="request-${safeRequestId}">
                     <td><span class="badge bg-info">${escapeHtml(roleName)}</span></td>
                     <td>${summarizePermissions(request.permissions)}</td>
                     <td>
@@ -420,6 +421,26 @@ document.addEventListener('DOMContentLoaded', async function() {
                 openResubmitForm(this.dataset.requestId, requests);
             });
         });
+
+        scrollToAnchoredRequest();
+    }
+
+    /**
+     * If the page was loaded with `#request-<uuid>` (e.g. from a
+     * notification click-through), scroll the matching row into view and
+     * briefly highlight it. No-op if the anchor doesn't match a rendered
+     * row.
+     */
+    function scrollToAnchoredRequest() {
+        const hash = window.location.hash;
+        if (!hash.startsWith('#request-')) return;
+
+        const target = document.getElementById(hash.slice(1));
+        if (!target) return;
+
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        target.classList.add('table-warning');
+        setTimeout(() => target.classList.remove('table-warning'), 2500);
     }
 
     // Track resubmit state
