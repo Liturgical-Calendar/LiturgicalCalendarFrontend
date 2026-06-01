@@ -100,7 +100,9 @@ const NotificationTranslations = {
     requestedAccess: <?php echo json_encode(_('Requested access')); ?>,
     yourRequestApproved: <?php echo json_encode(_('Your request was approved')); ?>,
     yourRequestRejected: <?php echo json_encode(_('Your request was rejected')); ?>,
-    yourRequestRevoked: <?php echo json_encode(_('Your access was revoked')); ?>
+    yourRequestRevoked: <?php echo json_encode(_('Your access was revoked')); ?>,
+    onboardingInvite: <?php echo json_encode(_('Request access to start using the system')); ?>,
+    onboardingInviteCta: <?php echo json_encode(_('Get started')); ?>
 };
 </script>
 <?php include_once('includes/login-modal.php'); ?>

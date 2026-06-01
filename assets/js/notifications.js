@@ -131,11 +131,44 @@ const Notifications = {
             }
 
             const data = await response.json();
+
+            if (this._mode === 'user') {
+                const status = await this._fetchOnboardingStatus();
+                if (status.needs_access_request) {
+                    data.items = [{ type: 'onboarding_invite' }, ...(data.items || [])];
+                    data.unread_count = (data.unread_count || 0) + 1;
+                }
+            }
+
             this._cachedData = data;
             this.updateUI(data);
         } catch (error) {
             console.error('Failed to fetch notifications:', error);
             this.showEmpty();
+        }
+    },
+
+    /**
+     * Fetch the user's access-request status to decide whether to surface
+     * the synthetic onboarding-invite entry. Fail-safe: on any error,
+     * return `{needs_access_request: false}` so the bell still renders
+     * real notifications without the synthetic item.
+     * @private
+     */
+    async _fetchOnboardingStatus() {
+        try {
+            const response = await fetch(`${BaseUrl}/auth/access-requests/status`, {
+                method: 'GET',
+                credentials: 'include',
+                headers: { 'Accept': 'application/json' }
+            });
+            if (!response.ok) {
+                return { needs_access_request: false };
+            }
+            return await response.json();
+        } catch (error) {
+            console.warn('Notifications: onboarding status fetch failed', error);
+            return { needs_access_request: false };
         }
     },
 
@@ -221,6 +254,9 @@ const Notifications = {
     },
 
     _renderNotificationItem(item) {
+        if (item.type === 'onboarding_invite') {
+            return this._renderOnboardingInvite();
+        }
         if (item.type === 'access_request_reviewed') {
             return this._renderReviewedRequest(item);
         }
@@ -351,6 +387,35 @@ const Notifications = {
                         <div class="small text-muted">${roleName}</div>
                         ${reviewNotesHtml}
                         <div class="small text-muted">${timeAgo}</div>
+                    </div>
+                </div>
+            </a>
+        `;
+    },
+
+
+    /**
+     * Render the synthetic onboarding-invite item shown when the user has
+     * no roles, no pending requests, and no approved-but-unsynced requests
+     * (server-derived `needs_access_request === true` from
+     * `/auth/access-requests/status`). The entry self-clears once the user
+     * submits a request — no mark-as-seen call.
+     * @returns {string} HTML string
+     * @private
+     */
+    _renderOnboardingInvite() {
+        const safeUrl = this._sanitizeUrl('permission-requests.php');
+        const label = this._escapeHtml(this._getTranslation('onboardingInvite', 'Request access to start using the system'));
+        const cta = this._escapeHtml(this._getTranslation('onboardingInviteCta', 'Get started'));
+        return `
+            <a class="dropdown-item py-2 bg-light fw-semibold" href="${safeUrl}">
+                <div class="d-flex align-items-start">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-user-plus text-info me-2"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="small fw-bold">${label}</div>
+                        <div class="small text-primary">${cta} &rarr;</div>
                     </div>
                 </div>
             </a>
