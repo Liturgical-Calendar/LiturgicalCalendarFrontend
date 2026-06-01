@@ -120,8 +120,9 @@ asort($langsAssoc);
                 </div>
             </li>
             <li class="vr mx-2 d-none d-lg-block"></li>
-            <!-- Notifications (Admin only) -->
-            <li class="nav-item dropdown<?php echo ( $authHelper->isAuthenticated && $authHelper->hasRole('admin') ) ? '' : ' d-none'; ?>" id="notificationsContainer" data-requires-role="admin">
+            <!-- Notifications: admin sees pending review queue; regular users see access-request status changes -->
+            <?php $viewAllRequestsUrl = $authHelper->hasRole('admin') ? 'admin-dashboard.php' : 'permission-requests.php'; ?>
+            <li class="nav-item dropdown<?php echo $authHelper->isAuthenticated ? '' : ' d-none'; ?>" id="notificationsContainer" data-requires-auth>
                 <a class="nav-link position-relative" href="#" id="notificationsDropdown" role="button"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                     title="<?php echo htmlspecialchars(_('Notifications'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
@@ -140,7 +141,7 @@ asort($langsAssoc);
                         </div>
                     </div>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-center text-primary" href="admin-dashboard.php">
+                    <a class="dropdown-item text-center text-primary" href="<?php echo htmlspecialchars($viewAllRequestsUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                         <small><?php echo htmlspecialchars(_('View all requests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></small>
                     </a>
                 </div>

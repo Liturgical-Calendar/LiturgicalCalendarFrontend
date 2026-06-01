@@ -1,32 +1,34 @@
 /**
- * Admin Notifications Module
+ * Notifications Module
  *
- * Handles fetching and displaying admin notifications in the navbar.
- * Only active for users with the 'admin' role.
+ * Renders the navbar notification bell.
+ *
+ * Two modes, decided at init() based on Auth.hasRole('admin'):
+ *   - admin: polls /admin/notifications, shows pending review queue
+ *           (role_request | access_request | application items).
+ *           Badge = data.total (pending count).
+ *   - user:  polls /auth/notifications, shows reviewed-access events
+ *           (access_request_reviewed items). Badge = data.unread_count.
+ *           POSTs /auth/notifications/seen when dropdown opens, to clear
+ *           the unread badge.
  *
  * @module Notifications
  */
 const Notifications = {
-    /**
-     * Polling interval in milliseconds (5 minutes)
-     * @private
-     */
     _pollInterval: 5 * 60 * 1000,
-
-    /**
-     * Interval ID for polling
-     * @private
-     */
     _intervalId: null,
-
-    /**
-     * Cached notification data
-     * @private
-     */
     _cachedData: null,
 
     /**
-     * Role display names
+     * 'admin' | 'user' — fixed at init(). Drives endpoint, badge field,
+     * render branch, and whether to POST /seen on dropdown open.
+     * @private
+     */
+    _mode: null,
+
+    /**
+     * Role display names for admin-mode rendering. Also reused for
+     * user-mode rendering of requested_role labels.
      * @private
      */
     _roleNames: {
@@ -35,46 +37,27 @@ const Notifications = {
         'test_editor': 'Accuracy Test Editor'
     },
 
-    /**
-     * Flag to prevent double initialization
-     * @private
-     */
     _initialized: false,
 
     /**
-     * Initialize as admin (skip Auth.hasRole check)
-     * Used when PHP has already verified admin status
-     * @private
-     */
-    _initAsAdmin() {
-        if (this._initialized) {
-            return;
-        }
-        this._initialized = true;
-        console.log('Notifications: Initializing (admin verified by PHP)');
-        this._startNotificationServices();
-    },
-
-    /**
-     * Initialize notifications module
-     * Call this after Auth has initialized
+     * Initialize the notification bell for the current authenticated user.
+     * Caller is responsible for ensuring Auth is ready and the user is
+     * authenticated; this method picks the mode based on Auth.hasRole('admin').
      */
     init() {
-        // Prevent double initialization
         if (this._initialized) {
             return;
         }
-
-        // Only initialize for admin users
-        if (!Auth.hasRole('admin')) {
-            console.log('Notifications: User is not admin, skipping initialization');
+        if (typeof Auth === 'undefined' || !Auth.isAuthenticated()) {
             return;
         }
 
+        this._mode = Auth.hasRole('admin') ? 'admin' : 'user';
         this._initialized = true;
-        console.log('Notifications: Initializing for admin user');
+        console.log(`Notifications: Initializing in ${this._mode} mode`);
 
-        // Show the notifications container
+        // Container should already be visible from PHP for any authenticated
+        // user, but force it here in case auth state changed after page load.
         const container = document.getElementById('notificationsContainer');
         if (container) {
             container.classList.remove('d-none');
@@ -83,44 +66,30 @@ const Notifications = {
         this._startNotificationServices();
     },
 
-    /**
-     * Start notification fetching and polling services
-     * @private
-     */
     _startNotificationServices() {
-        // Fetch notifications immediately
         this.fetchNotifications();
-
-        // Start polling
         this.startPolling();
 
-        // Refresh on dropdown open (use Bootstrap 5 event)
         const dropdownEl = document.getElementById('notificationsDropdown');
         if (dropdownEl) {
             dropdownEl.addEventListener('shown.bs.dropdown', () => {
                 this.fetchNotifications();
+                if (this._mode === 'user') {
+                    this.markSeen();
+                }
             });
         }
     },
 
-    /**
-     * Start polling for new notifications
-     */
     startPolling() {
         if (this._intervalId !== null) {
             return;
         }
-
         this._intervalId = setInterval(() => {
-            if (Auth.hasRole('admin')) {
-                this.fetchNotifications();
-            }
+            this.fetchNotifications();
         }, this._pollInterval);
     },
 
-    /**
-     * Stop polling
-     */
     stopPolling() {
         if (this._intervalId !== null) {
             clearInterval(this._intervalId);
@@ -128,31 +97,28 @@ const Notifications = {
         }
     },
 
-    /**
-     * Fetch notifications from the API
-     */
     async fetchNotifications() {
-        console.log('Notifications: Fetching notifications...');
-
         if (typeof BaseUrl === 'undefined' || !BaseUrl) {
             console.error('Notifications: BaseUrl is not defined');
             this.showEmpty();
             return;
         }
+        if (this._mode === null) {
+            return;
+        }
+
+        const endpoint = this._mode === 'admin'
+            ? `${BaseUrl}/admin/notifications`
+            : `${BaseUrl}/auth/notifications`;
 
         try {
-            const response = await fetch(`${BaseUrl}/admin/notifications`, {
+            const response = await fetch(endpoint, {
                 method: 'GET',
                 credentials: 'include',
-                headers: {
-                    'Accept': 'application/json'
-                }
+                headers: { 'Accept': 'application/json' }
             });
 
-            console.log('Notifications: Response status:', response.status);
-
             if (!response.ok) {
-                // Try to get error details but don't fail if we can't
                 let errorText = '';
                 try {
                     errorText = await response.text();
@@ -165,29 +131,51 @@ const Notifications = {
             }
 
             const data = await response.json();
-            console.log('Notifications: Received data:', data);
             this._cachedData = data;
             this.updateUI(data);
         } catch (error) {
             console.error('Failed to fetch notifications:', error);
-            // Show empty state instead of error for better UX
             this.showEmpty();
         }
     },
 
     /**
-     * Update the UI with notification data
-     * @param {Object} data - Notification data from API
+     * Mark the user's inbox as seen. User mode only; fire-and-forget — a
+     * failure is reconciled by the next poll.
      */
+    async markSeen() {
+        if (this._mode !== 'user' || typeof BaseUrl === 'undefined' || !BaseUrl) {
+            return;
+        }
+        try {
+            const response = await fetch(`${BaseUrl}/auth/notifications/seen`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: '{}'
+            });
+            if (!response.ok) {
+                console.warn('Notifications: mark-seen failed', response.status);
+                return;
+            }
+            // Optimistically clear the badge; next poll confirms.
+            this.updateBadge(0);
+        } catch (error) {
+            console.warn('Notifications: mark-seen network error', error);
+        }
+    },
+
     updateUI(data) {
-        this.updateBadge(data.total || 0);
+        const count = this._mode === 'user'
+            ? (data.unread_count || 0)
+            : (data.total || 0);
+        this.updateBadge(count);
         this.updateList(data.items || []);
     },
 
-    /**
-     * Update the notification badge count
-     * @param {number} count - Total notification count
-     */
     updateBadge(count) {
         const badge = document.getElementById('notificationsBadge');
         if (!badge) return;
@@ -200,10 +188,6 @@ const Notifications = {
         }
     },
 
-    /**
-     * Update the notifications list dropdown
-     * @param {Array} items - Array of notification items
-     */
     updateList(items) {
         const list = document.getElementById('notificationsList');
         if (!list) return;
@@ -212,7 +196,7 @@ const Notifications = {
             list.innerHTML = `
                 <div class="dropdown-item text-muted text-center py-3">
                     <i class="fas fa-check-circle me-2 text-success"></i>
-                    ${this._getTranslation('noNotifications', 'No pending requests')}
+                    ${this._emptyText()}
                 </div>
             `;
             return;
@@ -226,12 +210,21 @@ const Notifications = {
     },
 
     /**
-     * Render a single notification item
-     * @param {Object} item - Notification item
-     * @returns {string} HTML string
+     * Empty-state text, mode-aware: admin sees the pending-queue framing,
+     * user sees an inbox framing.
      * @private
      */
+    _emptyText() {
+        return this._mode === 'user'
+            ? this._getTranslation('noNotificationsUser', 'No new notifications')
+            : this._getTranslation('noNotifications', 'No pending requests');
+    },
+
     _renderNotificationItem(item) {
+        if (item.type === 'access_request_reviewed') {
+            return this._renderReviewedRequest(item);
+        }
+
         const timeAgo = this._formatTimeAgo(item.created_at);
         const safeUrl = this._sanitizeUrl(item.url);
 
@@ -311,9 +304,59 @@ const Notifications = {
     },
 
     /**
-     * Show empty state in the dropdown (no pending notifications)
+     * Render a user-mode `access_request_reviewed` notification.
+     * @param {Object} item - { type, request_id, requested_role, status,
+     *   review_notes, reviewed_at, permissions, unread }
+     * @returns {string} HTML string
      * @private
      */
+    _renderReviewedRequest(item) {
+        const statusVisuals = {
+            approved: {
+                icon: 'fas fa-check-circle text-success',
+                label: this._getTranslation('yourRequestApproved', 'Your request was approved')
+            },
+            rejected: {
+                icon: 'fas fa-times-circle text-danger',
+                label: this._getTranslation('yourRequestRejected', 'Your request was rejected')
+            },
+            revoked: {
+                icon: 'fas fa-ban text-warning',
+                label: this._getTranslation('yourRequestRevoked', 'Your access was revoked')
+            }
+        };
+        let visuals = statusVisuals[item.status];
+        if (!visuals) {
+            console.warn(`Notifications: unknown status "${item.status}" for request ${item.request_id}; falling back to approved styling`);
+            visuals = statusVisuals.approved;
+        }
+
+        const timeAgo = this._formatTimeAgo(item.reviewed_at);
+        const requestId = String(item.request_id || '');
+        const safeUrl = this._sanitizeUrl(`permission-requests.php#request-${encodeURIComponent(requestId)}`);
+        const roleName = this._escapeHtml(this._roleNames[item.requested_role] || item.requested_role || '');
+        const reviewNotesHtml = item.review_notes
+            ? `<div class="small fst-italic text-muted">${this._escapeHtml(item.review_notes)}</div>`
+            : '';
+        const unreadClass = item.unread ? ' bg-light fw-semibold' : '';
+
+        return `
+            <a class="dropdown-item py-2${unreadClass}" href="${safeUrl}">
+                <div class="d-flex align-items-start">
+                    <div class="flex-shrink-0">
+                        <i class="${visuals.icon} me-2"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="small fw-bold">${this._escapeHtml(visuals.label)}</div>
+                        <div class="small text-muted">${roleName}</div>
+                        ${reviewNotesHtml}
+                        <div class="small text-muted">${timeAgo}</div>
+                    </div>
+                </div>
+            </a>
+        `;
+    },
+
     showEmpty() {
         const list = document.getElementById('notificationsList');
         if (!list) return;
@@ -321,15 +364,11 @@ const Notifications = {
         list.innerHTML = `
             <div class="dropdown-item text-muted text-center py-3">
                 <i class="fas fa-check-circle me-2 text-success"></i>
-                ${this._getTranslation('noNotifications', 'No pending requests')}
+                ${this._emptyText()}
             </div>
         `;
     },
 
-    /**
-     * Show error state in the dropdown
-     * @private
-     */
     showError() {
         const list = document.getElementById('notificationsList');
         if (!list) return;
@@ -342,12 +381,6 @@ const Notifications = {
         `;
     },
 
-    /**
-     * Format a timestamp as relative time
-     * @param {string} timestamp - ISO timestamp
-     * @returns {string} Relative time string
-     * @private
-     */
     _formatTimeAgo(timestamp) {
         if (!timestamp) return '';
 
@@ -377,15 +410,7 @@ const Notifications = {
         }
     },
 
-    /**
-     * Get translation string (with fallback)
-     * @param {string} key - Translation key
-     * @param {string} fallback - Fallback string
-     * @returns {string} Translated string or fallback
-     * @private
-     */
     _getTranslation(key, fallback) {
-        // Check if translations object exists (set via PHP)
         if (typeof NotificationTranslations !== 'undefined' && NotificationTranslations[key]) {
             return NotificationTranslations[key];
         }
@@ -393,10 +418,8 @@ const Notifications = {
     },
 
     /**
-     * Sanitize URL to prevent XSS via javascript:, data:, vbscript: schemes
-     * Only allows http, https, protocol-relative (//), and relative paths
-     * @param {string} url - URL to sanitize
-     * @returns {string} Sanitized URL safe for href attribute
+     * Sanitize URL to prevent XSS via javascript:, data:, vbscript: schemes.
+     * Only allows http, https, protocol-relative (//), and relative paths.
      * @private
      */
     _sanitizeUrl(url) {
@@ -404,10 +427,7 @@ const Notifications = {
             return '#';
         }
 
-        // Trim and normalize
         const trimmed = url.trim();
-
-        // Block dangerous schemes (case-insensitive, ignore whitespace)
         const normalized = trimmed.toLowerCase().replace(/\s+/g, '');
         const dangerousSchemes = ['javascript:', 'data:', 'vbscript:'];
         for (const scheme of dangerousSchemes) {
@@ -416,7 +436,6 @@ const Notifications = {
             }
         }
 
-        // Allow only safe schemes: http://, https://, protocol-relative (//), or relative paths
         const isAbsolute = /^https?:\/\//i.test(trimmed);
         const isProtocolRelative = trimmed.startsWith('//');
         const isRelative = trimmed.startsWith('/') || trimmed.startsWith('./') || trimmed.startsWith('../') || !trimmed.includes(':');
@@ -425,16 +444,9 @@ const Notifications = {
             return '#';
         }
 
-        // HTML-escape the URL to prevent attribute injection
         return this._escapeHtml(trimmed);
     },
 
-    /**
-     * Escape HTML entities
-     * @param {string} text - Text to escape
-     * @returns {string} Escaped text
-     * @private
-     */
     _escapeHtml(text) {
         if (!text) return '';
         const div = document.createElement('div');
@@ -443,33 +455,17 @@ const Notifications = {
     }
 };
 
-// Clean up polling on page unload
 window.addEventListener('beforeunload', () => {
     Notifications.stopPolling();
 });
 
-// Initialize after Auth is ready
 document.addEventListener('DOMContentLoaded', () => {
-    // Check if notifications container exists and is visible (PHP determined user is admin)
-    const container = document.getElementById('notificationsContainer');
-    const isVisibleFromPhp = container && !container.classList.contains('d-none');
-
-    // If PHP already determined user is admin, initialize immediately
-    if (isVisibleFromPhp) {
-        console.log('Notifications: Container visible from PHP, initializing...');
-        // Force initialization since PHP already verified admin status
-        Notifications._initialized = false; // Reset in case of reload
-        Notifications._initAsAdmin();
-        return;
-    }
-
-    // Otherwise, wait for Auth to initialize and check auth state
-    // Use exponential backoff retry to handle variable Auth initialization times
+    // PHP marks the bell visible for any authenticated user, but we still
+    // need Auth to be ready before we know admin-vs-user. Retry with
+    // exponential backoff to absorb variable Auth init timing.
     const waitForAuth = (retries = 5, delay = 100) => {
         if (typeof Auth !== 'undefined' && Auth.isAuthenticated()) {
-            if (Auth.hasRole('admin')) {
-                Notifications.init();
-            }
+            Notifications.init();
         } else if (retries > 0) {
             setTimeout(() => waitForAuth(retries - 1, delay * 2), delay);
         }
@@ -477,12 +473,12 @@ document.addEventListener('DOMContentLoaded', () => {
     waitForAuth();
 });
 
-// Also listen for auth state changes (if user logs in after page load)
 document.addEventListener('authStateChange', (event) => {
-    if (event.detail && event.detail.authenticated && Auth.hasRole('admin')) {
+    if (event.detail && event.detail.authenticated) {
         Notifications.init();
     } else {
         Notifications.stopPolling();
-        Notifications._initialized = false; // Allow re-initialization on next admin login
+        Notifications._initialized = false;
+        Notifications._mode = null;
     }
 });

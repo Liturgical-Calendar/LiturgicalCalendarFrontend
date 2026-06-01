@@ -90,13 +90,17 @@ if ( AppEnv === 'development' ) console.info({
 <script>
 const NotificationTranslations = {
     noNotifications: <?php echo json_encode(_('No pending requests')); ?>,
+    noNotificationsUser: <?php echo json_encode(_('No new notifications')); ?>,
     loadError: <?php echo json_encode(_('Could not load notifications')); ?>,
     justNow: <?php echo json_encode(_('Just now')); ?>,
     minutesAgo: <?php echo json_encode(_('min ago')); ?>,
     hoursAgo: <?php echo json_encode(_('hours ago')); ?>,
     daysAgo: <?php echo json_encode(_('days ago')); ?>,
     requestedRole: <?php echo json_encode(_('Requested')); ?>,
-    requestedAccess: <?php echo json_encode(_('Requested access')); ?>
+    requestedAccess: <?php echo json_encode(_('Requested access')); ?>,
+    yourRequestApproved: <?php echo json_encode(_('Your request was approved')); ?>,
+    yourRequestRejected: <?php echo json_encode(_('Your request was rejected')); ?>,
+    yourRequestRevoked: <?php echo json_encode(_('Your access was revoked')); ?>
 };
 </script>
 <?php include_once('includes/login-modal.php'); ?>
