@@ -156,6 +156,7 @@ const Notifications = {
      * @private
      */
     async _fetchOnboardingStatus() {
+        const safeDefault = { needs_access_request: false };
         try {
             const response = await fetch(`${BaseUrl}/auth/access-requests/status`, {
                 method: 'GET',
@@ -163,12 +164,19 @@ const Notifications = {
                 headers: { 'Accept': 'application/json' }
             });
             if (!response.ok) {
-                return { needs_access_request: false };
+                return safeDefault;
             }
-            return await response.json();
+            const payload = await response.json();
+            if (payload === null
+                || typeof payload !== 'object'
+                || Array.isArray(payload)
+                || typeof payload.needs_access_request !== 'boolean') {
+                return safeDefault;
+            }
+            return payload;
         } catch (error) {
             console.warn('Notifications: onboarding status fetch failed', error);
-            return { needs_access_request: false };
+            return safeDefault;
         }
     },
 
