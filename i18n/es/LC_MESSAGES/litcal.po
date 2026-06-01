@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-02 19:00+0000\n"
+"POT-Creation-Date: 2026-06-01 09:48-0400\n"
 "PO-Revision-Date: 2026-04-02 19:50+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
@@ -127,11 +127,11 @@ msgstr "Parámetros de solicitud disponibles en todas las rutas %1$s"
 
 #. translators: part of page title - refers to the Catholic liturgical calendar
 #: index.php:65 usage.php:29 examples.php:98 liturgyOfAnyDay.php:18
-#: layout/header.php:256
+#: layout/header.php:257
 msgid "General Roman Calendar"
 msgstr "Calendario Romano General"
 
-#: index.php:74 layout/header.php:19 layout/header.php:228
+#: index.php:74 layout/header.php:19 layout/header.php:229
 msgid "Catholic Liturgical Calendar"
 msgstr "Calendario Litúrgico Católico"
 
@@ -288,7 +288,7 @@ msgid "Example usage of the API"
 msgstr "Ejemplo de uso de la API"
 
 #. translators: accordion section header - examples of web-based calendar displays
-#: usage.php:51 layout/header.php:318
+#: usage.php:51 layout/header.php:319
 msgid "Web calendar"
 msgstr "Calendario web"
 
@@ -345,7 +345,7 @@ msgid "View FullCalendar (messages first)"
 msgstr "Ver FullCalendar (mensajes primero)"
 
 #. translators: accordion section header - subscribing to the calendar via iCal/ICS URL
-#: usage.php:125 layout/header.php:322
+#: usage.php:125 layout/header.php:323
 msgid "Calendar subscription"
 msgstr "Suscripción al calendario"
 
@@ -551,7 +551,7 @@ msgstr ""
 "suscripción están un poco más \"embellecidas\" para Outlook."
 
 #. translators: accordion section header - Easter date calculation tool
-#: usage.php:287 layout/header.php:326
+#: usage.php:287 layout/header.php:327
 msgid "Dates of Easter"
 msgstr "Fechas de Pascua"
 
@@ -571,7 +571,7 @@ msgid "Calculate the Dates of Easter"
 msgstr "Calcular las fechas de Pascua"
 
 #. translators: accordion section header - daily liturgy information and apps
-#: usage.php:323 layout/header.php:330
+#: usage.php:323 layout/header.php:331
 msgid "Liturgy of the Day"
 msgstr "Liturgia del día"
 
@@ -1295,90 +1295,90 @@ msgstr "Pruebas de precisión"
 msgid "See the project repositories on GitHub"
 msgstr "Ver los repositorios del proyecto en GitHub"
 
-#: layout/header.php:127 layout/header.php:135
+#: layout/header.php:128 layout/header.php:136
 msgid "Notifications"
 msgstr "Notificaciones"
 
-#: layout/header.php:139
+#: layout/header.php:140
 msgid "Loading..."
 msgstr "Cargando..."
 
-#: layout/header.php:144
+#: layout/header.php:145
 msgid "View all requests"
 msgstr "Ver todas las solicitudes"
 
-#: layout/header.php:155 layout/header.php:159 includes/login-modal.php:56
+#: layout/header.php:156 layout/header.php:160 includes/login-modal.php:56
 #: includes/login-modal.php:379
 msgid "Login"
 msgstr "Iniciar sesión"
 
-#: layout/header.php:165
+#: layout/header.php:166
 msgid "View Profile"
 msgstr "Ver perfil"
 
-#: layout/header.php:175 includes/login-modal.php:105
+#: layout/header.php:176 includes/login-modal.php:105
 #: includes/login-modal.php:670
 msgid "Are you sure you want to logout?"
 msgstr "¿Estás seguro de que quieres cerrar sesión?"
 
-#: layout/header.php:178 layout/header.php:182 includes/login-modal.php:12
+#: layout/header.php:179 layout/header.php:183 includes/login-modal.php:12
 msgid "Logout"
 msgstr "Cerrar sesión"
 
-#: layout/header.php:187 layout/header.php:250
+#: layout/header.php:188 layout/header.php:251
 msgid "Developer"
 msgstr "Desarrollador"
 
-#: layout/header.php:199
+#: layout/header.php:200
 msgid "Admin"
 msgstr "Administrador"
 
-#: layout/header.php:243
+#: layout/header.php:244
 msgid "Dashboard"
 msgstr "Tablero"
 
-#: layout/header.php:260
+#: layout/header.php:261
 msgid "Temporale"
 msgstr "Temporal"
 
-#: layout/header.php:264
+#: layout/header.php:265
 msgid "Sanctorale"
 msgstr "Santoral"
 
-#: layout/header.php:268
+#: layout/header.php:269
 msgid "Decrees"
 msgstr "Decretos"
 
-#: layout/header.php:272
+#: layout/header.php:273
 msgid "Particular Calendars"
 msgstr "Calendarios particulares"
 
 #. translators: label for wider region calendar name field
-#: layout/header.php:280 includes/messages.php:206
+#: layout/header.php:281 includes/messages.php:206
 msgid "Wider Region"
 msgstr "Región más amplia"
 
-#: layout/header.php:284
+#: layout/header.php:285
 msgid "National"
 msgstr "Nacional"
 
-#: layout/header.php:288
+#: layout/header.php:289
 msgid "Diocesan"
 msgstr "Diocesano"
 
-#: layout/header.php:295
+#: layout/header.php:296
 msgid "Back to Website"
 msgstr "Volver al sitio web"
 
-#: layout/header.php:302
+#: layout/header.php:303
 msgid "Home"
 msgstr "Inicio"
 
-#: layout/header.php:310
+#: layout/header.php:311
 msgid "Documentation"
 msgstr "Documentación"
 
-#: layout/header.php:314
+#: layout/header.php:315
 msgid "Examples of Usage"
 msgstr "Ejemplos de uso"
 
