@@ -90,6 +90,7 @@ if ( AppEnv === 'development' ) console.info({
 <script>
 const NotificationTranslations = {
     noNotifications: <?php echo json_encode(_('No pending requests')); ?>,
+    noNotificationsUser: <?php echo json_encode(_('No new notifications')); ?>,
     loadError: <?php echo json_encode(_('Could not load notifications')); ?>,
     justNow: <?php echo json_encode(_('Just now')); ?>,
     minutesAgo: <?php echo json_encode(_('min ago')); ?>,

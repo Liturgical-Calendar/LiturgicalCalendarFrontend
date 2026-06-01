@@ -196,7 +196,7 @@ const Notifications = {
             list.innerHTML = `
                 <div class="dropdown-item text-muted text-center py-3">
                     <i class="fas fa-check-circle me-2 text-success"></i>
-                    ${this._getTranslation('noNotifications', 'No pending requests')}
+                    ${this._emptyText()}
                 </div>
             `;
             return;
@@ -207,6 +207,17 @@ const Notifications = {
             html += this._renderNotificationItem(item);
         }
         list.innerHTML = html;
+    },
+
+    /**
+     * Empty-state text, mode-aware: admin sees the pending-queue framing,
+     * user sees an inbox framing.
+     * @private
+     */
+    _emptyText() {
+        return this._mode === 'user'
+            ? this._getTranslation('noNotificationsUser', 'No new notifications')
+            : this._getTranslation('noNotifications', 'No pending requests');
     },
 
     _renderNotificationItem(item) {
@@ -314,7 +325,11 @@ const Notifications = {
                 label: this._getTranslation('yourRequestRevoked', 'Your access was revoked')
             }
         };
-        const visuals = statusVisuals[item.status] || statusVisuals.approved;
+        let visuals = statusVisuals[item.status];
+        if (!visuals) {
+            console.warn(`Notifications: unknown status "${item.status}" for request ${item.request_id}; falling back to approved styling`);
+            visuals = statusVisuals.approved;
+        }
 
         const timeAgo = this._formatTimeAgo(item.reviewed_at);
         const requestId = String(item.request_id || '');
@@ -349,7 +364,7 @@ const Notifications = {
         list.innerHTML = `
             <div class="dropdown-item text-muted text-center py-3">
                 <i class="fas fa-check-circle me-2 text-success"></i>
-                ${this._getTranslation('noNotifications', 'No pending requests')}
+                ${this._emptyText()}
             </div>
         `;
     },
