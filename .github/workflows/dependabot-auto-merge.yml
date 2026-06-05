@@ -18,9 +18,16 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
+      # GITHUB_TOKEN cannot modify .github/workflows/* files (hard GitHub
+      # restriction — not a permissions: block setting). For Dependabot PRs
+      # that bump action versions, auto-merge therefore fails with
+      # "Tried to create or update workflow without `workflows` permission".
+      # Fall back through a fine-grained PAT (repo-scoped, Workflows: write)
+      # stored as WORKFLOW_AUTO_MERGE_PAT. When the secret is absent the
+      # workflow still works for non-workflow PRs.
       - name: Auto-merge minor and patch updates
         if: steps.metadata.outputs.update-type != 'version-update:semver-major'
         run: gh pr merge --auto --merge "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_AUTO_MERGE_PAT || secrets.GITHUB_TOKEN }}

@@ -1,0 +1,111 @@
+name: PAT expiration reminder
+
+# Reads .github/pat-expiry.txt weekly. If the WORKFLOW_AUTO_MERGE_PAT is
+# within THRESHOLD_DAYS of expiring, opens an issue (idempotent — does
+# not re-open while an issue for the same expiration date is still open).
+# Closes any stale open reminder whose title does not match the current
+# expiration date (so post-rotation the old issue auto-closes).
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Mondays 09:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Check PAT expiration and reconcile reminder issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          THRESHOLD_DAYS: '30'
+          EXPIRY_FILE: '.github/pat-expiry.txt'
+          ISSUE_LABEL: 'pat-expiry-reminder'
+        run: |
+          set -euo pipefail
+
+          if [ ! -f "$EXPIRY_FILE" ]; then
+            echo "::error file=$EXPIRY_FILE::expiry file not found"
+            exit 1
+          fi
+
+          EXPIRY=$(grep -v '^[[:space:]]*#' "$EXPIRY_FILE" \
+                   | grep -v '^[[:space:]]*$' \
+                   | head -1 \
+                   | tr -d '[:space:]')
+
+          if ! date -u -d "$EXPIRY" >/dev/null 2>&1; then
+            echo "::error file=$EXPIRY_FILE::invalid date '$EXPIRY' — expected YYYY-MM-DD"
+            exit 1
+          fi
+
+          DAYS_LEFT=$(( ( $(date -u -d "$EXPIRY" +%s) - $(date -u +%s) ) / 86400 ))
+          CURRENT_TITLE="Rotate WORKFLOW_AUTO_MERGE_PAT — expires $EXPIRY"
+
+          echo "Expiry: $EXPIRY ($DAYS_LEFT days remaining)"
+          echo "Current expected issue title: $CURRENT_TITLE"
+
+          # Close any stale open reminders whose title doesn't match the
+          # current expiry (e.g. left over from before a rotation).
+          mapfile -t STALE < <(
+            gh issue list --label "$ISSUE_LABEL" --state open \
+              --json number,title \
+              --jq ".[] | select(.title != \"$CURRENT_TITLE\") | .number"
+          )
+          for NUM in "${STALE[@]}"; do
+            echo "Closing stale reminder issue #$NUM"
+            gh issue close "$NUM" \
+              --comment "Closing — pat-expiry.txt has been updated to a new expiration date."
+          done
+
+          if [ "$DAYS_LEFT" -gt "$THRESHOLD_DAYS" ]; then
+            echo "More than $THRESHOLD_DAYS days remaining; no reminder needed."
+            exit 0
+          fi
+
+          EXISTING=$(gh issue list --label "$ISSUE_LABEL" --state open \
+                     --json title \
+                     --jq "[.[] | select(.title == \"$CURRENT_TITLE\")] | length")
+
+          if [ "$EXISTING" -gt 0 ]; then
+            echo "Reminder issue already open."
+            exit 0
+          fi
+
+          # Body uses a heredoc to keep newlines clean; only the validated
+          # EXPIRY and DAYS_LEFT values are interpolated, both already
+          # date-validated above.
+          BODY=$(cat <<EOF
+          The fine-grained PAT \`WORKFLOW_AUTO_MERGE_PAT\` (org-level secret) expires on **$EXPIRY** — $DAYS_LEFT day(s) from now.
+
+          Without this PAT the Dependabot auto-merge workflow will silently fail to merge any PR that touches \`.github/workflows/*\` (e.g. action-version bumps), since GITHUB_TOKEN cannot modify workflow files.
+
+          ## To rotate
+
+          1. Create a new fine-grained PAT at <https://github.com/settings/personal-access-tokens/new>
+             - Resource owner: **Liturgical-Calendar**
+             - Repository access: **Only select repositories** → \`LiturgicalCalendarFrontend\`
+             - Repository permissions:
+               - **Contents**: Read and write
+               - **Pull requests**: Read and write
+               - **Workflows**: Read and write
+             - Pick a new expiry (max 1 year)
+          2. Replace the secret value at <https://github.com/organizations/Liturgical-Calendar/settings/secrets/actions/WORKFLOW_AUTO_MERGE_PAT>
+          3. Update \`.github/pat-expiry.txt\` with the new expiration date and commit
+          4. This issue will auto-close on the next workflow run after step 3 lands
+
+          (Reminder posted by \`.github/workflows/pat-expiry-reminder.yml\`.)
+          EOF
+          )
+
+          gh issue create \
+            --title "$CURRENT_TITLE" \
+            --label "$ISSUE_LABEL" \
+            --body "$BODY"

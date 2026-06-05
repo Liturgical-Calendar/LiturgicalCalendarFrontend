@@ -1,0 +1,8 @@
+# Expiration date (YYYY-MM-DD) of the WORKFLOW_AUTO_MERGE_PAT org-level
+# secret. The .github/workflows/pat-expiry-reminder.yml workflow reads
+# this date weekly and opens an issue when <30 days remain.
+#
+# When you rotate the PAT, update this date in the same PR / commit so
+# the reminder issue auto-closes when the new file change merges (via
+# the workflow's stale-issue cleanup).
+2027-06-05
