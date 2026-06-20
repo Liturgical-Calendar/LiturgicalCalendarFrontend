@@ -66,8 +66,18 @@ try {
     $idPayload   = $idToken !== null ? $oidcClient->validateToken($idToken, $additionalAudiences) : null;
     $claimSource = $idPayload ?? $accessPayload;
 
-    // Extract user info from the best available token
+    // Extract user info from the best available token (ID token preferred for profile claims)
     $user = $oidcClient->extractUserFromIdToken($claimSource);
+
+    // Roles may be asserted into the access token, the ID token, or both, depending on the
+    // Zitadel "User roles inside ID Token" / "Assert roles on authentication" settings.
+    // Union roles from every available token so a single config toggle (or a token that only
+    // carries minimal claims) cannot silently leave the user with no roles.
+    $roles = $oidcClient->extractRolesFromToken($accessPayload);
+    if ($idPayload !== null) {
+        $roles = array_merge($roles, $oidcClient->extractRolesFromToken($idPayload));
+    }
+    $user['roles'] = array_values(array_unique($roles));
 
     // Use access token expiry for session timing
     $exp = $accessPayload->exp ?? 0;

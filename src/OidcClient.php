@@ -518,13 +518,34 @@ class OidcClient
             'preferred_username' => $payload->preferred_username ?? null,
         ];
 
-        // Extract Zitadel roles from both generic and project-specific claims
+        $user['roles'] = $this->extractRolesFromToken($payload);
+
+        return $user;
+    }
+
+    /**
+     * Extract Zitadel project roles from a validated token payload.
+     *
+     * Reads both the generic `urn:zitadel:iam:org:project:roles` claim and the
+     * project-specific `urn:zitadel:iam:org:project:{projectId}:roles` claim.
+     *
+     * Depending on the Zitadel configuration ("User roles inside ID Token" application
+     * setting vs "Assert roles on authentication" project setting), roles may be asserted
+     * into the ID token, the access token, or both. Callers should therefore union the
+     * result of this method across every available token so a single configuration toggle
+     * cannot silently leave a user with no roles.
+     *
+     * @param object $payload Decoded token payload (ID token or access token)
+     * @return array<int, string> Role keys, or empty array if none are present
+     */
+    public function extractRolesFromToken(object $payload): array
+    {
         $roles    = [];
         $rolesKey = 'urn:zitadel:iam:org:project:roles';
         if (isset($payload->{$rolesKey}) && is_object($payload->{$rolesKey})) {
             $roles = array_keys((array) $payload->{$rolesKey});
         }
-        // Also check project-specific roles claim (matching auth/me.php behavior)
+        // Also check the project-specific roles claim
         $projectId = $_ENV['ZITADEL_PROJECT_ID'] ?? getenv('ZITADEL_PROJECT_ID') ?: null;
         if ($projectId !== null) {
             $projectRolesKey = "urn:zitadel:iam:org:project:{$projectId}:roles";
@@ -532,9 +553,9 @@ class OidcClient
                 $roles = array_merge($roles, array_keys((array) $payload->{$projectRolesKey}));
             }
         }
-        $user['roles'] = !empty($roles) ? array_values(array_unique($roles)) : [];
 
-        return $user;
+        // array_keys on a cast object yields claim names (strings); normalize to a unique list.
+        return array_values(array_unique(array_map('strval', $roles)));
     }
 
     /**
