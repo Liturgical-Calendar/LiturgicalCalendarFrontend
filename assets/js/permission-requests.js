@@ -50,7 +50,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         'national_calendar': config.i18n.nationalCalendar,
         'diocesan_calendar': config.i18n.diocesanCalendar,
         'wider_region': config.i18n.widerRegion,
-        'test_definition': config.i18n.testDefinition
+        'test_definition': config.i18n.testDefinition,
+        'general_roman_calendar': config.i18n.generalRomanCalendar
     };
 
     // Relation display names
@@ -77,11 +78,20 @@ document.addEventListener('DOMContentLoaded', async function() {
         'revoked': { class: 'bg-secondary', icon: 'fas fa-ban', text: config.i18n.statusRevoked }
     };
 
+    // Fixed object-id choices for the General Roman Calendar type.
+    const GRC_OBJECT_IDS = [
+        { id: 'temporale',          label: config.i18n.grcTemporale },
+        { id: 'EDITIO_TYPICA_1970', label: config.i18n.grcSanctorale1970 },
+        { id: 'EDITIO_TYPICA_2002', label: config.i18n.grcSanctorale2002 },
+        { id: 'EDITIO_TYPICA_2008', label: config.i18n.grcSanctorale2008 },
+        { id: 'decrees',            label: config.i18n.grcDecrees }
+    ];
+
     // Object types allowed per role
     const roleObjectTypes = {
-        'calendar_editor': ['national_calendar', 'diocesan_calendar', 'wider_region'],
+        'calendar_editor': ['national_calendar', 'diocesan_calendar', 'wider_region', 'general_roman_calendar'],
         'test_editor': ['test_definition'],
-        'developer': ['national_calendar', 'diocesan_calendar', 'wider_region', 'test_definition']
+        'developer': ['national_calendar', 'diocesan_calendar', 'wider_region', 'test_definition', 'general_roman_calendar']
     };
 
     let permissionRowCounter = 0;
@@ -96,6 +106,41 @@ document.addEventListener('DOMContentLoaded', async function() {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    /**
+     * Swap the free-text Object ID input for a <select> when GRC is selected,
+     * and restore the free-text input for any other object type.
+     * The element is looked up live from the row so that repeated calls
+     * after a previous swap work correctly (no stale cached reference).
+     * @param {HTMLElement} row - The permission row (.card element)
+     * @param {string} objectType - The currently selected object type
+     */
+    function syncRowObjectIdField(row, objectType) {
+        const current = row.querySelector('.perm-object-id');
+        if (!current) return;
+        if (objectType === 'general_roman_calendar') {
+            if (current.tagName === 'SELECT') {
+                return;
+            }
+            const select = document.createElement('select');
+            select.className = 'form-select form-select-sm perm-object-id';
+            select.required = true;
+            for (const opt of GRC_OBJECT_IDS) {
+                const o = document.createElement('option');
+                o.value = opt.id;
+                o.textContent = opt.label;
+                select.appendChild(o);
+            }
+            current.replaceWith(select);
+        } else if (current.tagName === 'SELECT') {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'form-control form-control-sm perm-object-id';
+            input.required = true;
+            input.placeholder = config.i18n.objectIdPlaceholder || '';
+            current.replaceWith(input);
+        }
     }
 
     /**
@@ -210,6 +255,11 @@ document.addEventListener('DOMContentLoaded', async function() {
             updateAddPermissionBtnState();
         });
 
+        // Swap object-id control when type changes (GRC → <select>; others → <input>)
+        row.querySelector('.perm-object-type').addEventListener('change', function() {
+            syncRowObjectIdField(row, this.value);
+        });
+
         updateAddPermissionBtnState();
     }
 
@@ -235,6 +285,8 @@ document.addEventListener('DOMContentLoaded', async function() {
                         sel.value = currentVal;
                     }
                 }
+                // Sync object-id control in case the type was removed from the allowed list
+                syncRowObjectIdField(sel.closest('.card'), sel.value);
             });
             // Add an initial row if there are none
             if (permissionRows.children.length === 0) {
@@ -468,10 +520,13 @@ document.addEventListener('DOMContentLoaded', async function() {
             const row = permissionRows.lastElementChild;
             if (!row) continue;
             const typeSelect = row.querySelector('.perm-object-type');
-            const idInput = row.querySelector('.perm-object-id');
             const relSelect = row.querySelector('.perm-relation');
             if (typeSelect) typeSelect.value = perm.object_type || '';
-            if (idInput) idInput.value = perm.object_id || '';
+            // Sync the object-id control BEFORE setting its value; for GRC the
+            // input is replaced with a <select>, so re-query after the swap.
+            syncRowObjectIdField(row, perm.object_type || '');
+            const idField = row.querySelector('.perm-object-id');
+            if (idField) idField.value = perm.object_id || '';
             if (relSelect) relSelect.value = perm.relation || '';
         }
     }
