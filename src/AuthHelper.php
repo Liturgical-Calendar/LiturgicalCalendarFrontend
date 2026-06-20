@@ -49,8 +49,9 @@ class AuthHelper
      *
      * @param object|null $payload Validated JWT payload, or null if not authenticated
      * @param bool $isOidc Whether this is an OIDC token (different claim structure)
+     * @param array<int, string>|null $oidcRoles Roles unioned across the OIDC tokens (OIDC mode only)
      */
-    private function __construct(?object $payload, bool $isOidc = false)
+    private function __construct(?object $payload, bool $isOidc = false, ?array $oidcRoles = null)
     {
         if ($payload === null) {
             $this->isAuthenticated = false;
@@ -80,21 +81,9 @@ class AuthHelper
             $this->emailVerified = $payload->email_verified ?? false;
             $this->exp           = isset($payload->exp) && is_numeric($payload->exp) ? (int) $payload->exp : null;
 
-            // Extract roles from Zitadel claims
-            $roles    = [];
-            $rolesKey = 'urn:zitadel:iam:org:project:roles';
-            if (isset($payload->{$rolesKey}) && is_object($payload->{$rolesKey})) {
-                $roles = array_keys((array) $payload->{$rolesKey});
-            }
-            // Also check project-specific roles claim
-            $projectId = $_ENV['ZITADEL_PROJECT_ID'] ?? getenv('ZITADEL_PROJECT_ID') ?: null;
-            if ($projectId !== null) {
-                $projectRolesKey = "urn:zitadel:iam:org:project:{$projectId}:roles";
-                if (isset($payload->{$projectRolesKey}) && is_object($payload->{$projectRolesKey})) {
-                    $roles = array_merge($roles, array_keys((array) $payload->{$projectRolesKey}));
-                }
-            }
-            $this->roles       = !empty($roles) ? array_values(array_unique($roles)) : null;
+            // Roles are unioned across the ID and access tokens by tryValidateOidcToken(),
+            // since Zitadel may assert them into either token depending on configuration.
+            $this->roles       = !empty($oidcRoles) ? array_values(array_unique($oidcRoles)) : null;
             $this->permissions = null; // OIDC doesn't have permissions claim
         } else {
             // Legacy JWT token
@@ -170,9 +159,9 @@ class AuthHelper
 
             if ($issuer !== null && $clientId !== null) {
                 // Try OIDC validation first
-                $payload = self::tryValidateOidcToken();
-                if ($payload !== null) {
-                    self::$instance = new self($payload, true);
+                $oidc = self::tryValidateOidcToken();
+                if ($oidc !== null) {
+                    self::$instance = new self($oidc['payload'], true, $oidc['roles']);
                     return self::$instance;
                 }
             }
@@ -195,29 +184,30 @@ class AuthHelper
     }
 
     /**
-     * Try to validate OIDC token from Zitadel
+     * Try to validate the OIDC tokens from Zitadel.
      *
-     * Uses OidcClient for JWKS handling and token validation.
-     * Prefers ID token for user profile information (preferred_username, email, name, etc.)
-     * as the access token typically only contains minimal claims (sub).
+     * Uses OidcClient for JWKS handling and token validation. Prefers the ID token for user
+     * profile information (preferred_username, email, name, etc.) as the access token typically
+     * only contains minimal claims (sub). Roles are unioned across both tokens, since Zitadel may
+     * assert them into the ID token, the access token, or both depending on configuration.
      *
-     * @return object|null Validated payload or null
+     * @return array{payload: object, roles: array<int, string>}|null Profile payload and unioned
+     *                                                                 roles, or null if invalid
      */
-    private static function tryValidateOidcToken(): ?object
+    private static function tryValidateOidcToken(): ?array
     {
-        // Check if access token exists (proves user is authenticated)
+        // Access token must be present (proves the user is authenticated)
         $accessToken = $_COOKIE[self::ACCESS_TOKEN_COOKIE] ?? null;
         if ($accessToken === null || $accessToken === '') {
             return null;
         }
 
-        // Get ID token for user profile information
-        // ID token contains full user claims (preferred_username, email, name, etc.)
-        // Access token typically only has minimal claims (sub)
+        // ID token carries the richer profile claims (preferred_username, email, name, etc.);
+        // the access token typically only has minimal claims (sub).
         $idToken = $_COOKIE[self::ID_TOKEN_COOKIE] ?? null;
 
-        // Use ID token if available, fall back to access token
-        $token = $idToken ?? $accessToken;
+        // Prefer the ID token for the profile payload, fall back to the access token.
+        $profileToken = $idToken ?? $accessToken;
 
         try {
             $oidcClient = OidcClient::fromEnv();
@@ -229,7 +219,25 @@ class AuthHelper
                 $additionalAudiences[] = $projectId;
             }
 
-            return $oidcClient->validateToken($token, $additionalAudiences);
+            $profilePayload = $oidcClient->validateToken($profileToken, $additionalAudiences);
+            if ($profilePayload === null) {
+                return null;
+            }
+
+            // Union roles from every available token so a single Zitadel config toggle (or a
+            // token that only carries minimal claims) cannot silently leave the user with no roles.
+            $roles = $oidcClient->extractRolesFromToken($profilePayload);
+            if ($profileToken !== $accessToken) {
+                $accessPayload = $oidcClient->validateToken($accessToken, $additionalAudiences);
+                if ($accessPayload !== null) {
+                    $roles = array_merge($roles, $oidcClient->extractRolesFromToken($accessPayload));
+                }
+            }
+
+            return [
+                'payload' => $profilePayload,
+                'roles'   => array_values(array_unique($roles)),
+            ];
         } catch (\Exception) {
             // OidcClient instantiation or validation errors
             return null;
