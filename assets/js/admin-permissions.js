@@ -30,10 +30,50 @@ document.addEventListener('DOMContentLoaded', function() {
     const grantModal = new bootstrap.Modal(document.getElementById('grantModal'));
     const grantUser = document.getElementById('grantUser');
     const grantObjectType = document.getElementById('grantObjectType');
-    const grantObjectId = document.getElementById('grantObjectId');
+    // Note: the Object ID control is looked up live (document.getElementById) wherever it is
+    // used, because syncObjectIdField() swaps the input<->select element when the object type
+    // changes; a cached reference would go stale after that swap.
     const grantRelation = document.getElementById('grantRelation');
     const grantModalAlerts = document.getElementById('grantModalAlerts');
     const confirmGrantBtn = document.getElementById('confirmGrantBtn');
+
+    // Fixed object-id choices for the General Roman Calendar type.
+    const GRC_OBJECT_IDS = [
+        { id: 'temporale',          label: config.i18n.grcTemporale },
+        { id: 'EDITIO_TYPICA_1970', label: config.i18n.grcSanctorale1970 },
+        { id: 'EDITIO_TYPICA_2002', label: config.i18n.grcSanctorale2002 },
+        { id: 'EDITIO_TYPICA_2008', label: config.i18n.grcSanctorale2008 },
+        { id: 'decrees',            label: config.i18n.grcDecrees }
+    ];
+
+    // Swap the free-text Object ID input for a <select> when GRC is selected, and back otherwise.
+    function syncObjectIdField(objectType) {
+        const current = document.getElementById('grantObjectId');
+        if (objectType === 'general_roman_calendar') {
+            if (current.tagName === 'SELECT') {
+                return;
+            }
+            const select = document.createElement('select');
+            select.className = 'form-select';
+            select.id = 'grantObjectId';
+            select.required = true;
+            for (const opt of GRC_OBJECT_IDS) {
+                const o = document.createElement('option');
+                o.value = opt.id;
+                o.textContent = opt.label;
+                select.appendChild(o);
+            }
+            current.replaceWith(select);
+        } else if (current.tagName === 'SELECT') {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'form-control';
+            input.id = 'grantObjectId';
+            input.required = true;
+            input.placeholder = config.i18n.enterObjectId || '';
+            current.replaceWith(input);
+        }
+    }
 
     // Revoke modal elements
     const revokeModal = new bootstrap.Modal(document.getElementById('revokeModal'));
@@ -54,7 +94,8 @@ document.addEventListener('DOMContentLoaded', function() {
         'national_calendar': config.i18n.nationalCalendar,
         'diocesan_calendar': config.i18n.diocesanCalendar,
         'wider_region': config.i18n.widerRegion,
-        'test_definition': config.i18n.testDefinition
+        'test_definition': config.i18n.testDefinition,
+        'general_roman_calendar': config.i18n.generalRomanCalendar
     };
 
     // Relation display names and badge classes
@@ -256,7 +297,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function openGrantModal() {
         grantUser.value = '';
         grantObjectType.value = '';
-        grantObjectId.value = '';
+        syncObjectIdField('');
+        document.getElementById('grantObjectId').value = '';
         grantRelation.value = '';
         grantModalAlerts.innerHTML = '';
         grantModal.show();
@@ -268,7 +310,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function handleGrant() {
         const user = grantUser.value.trim();
         const objectType = grantObjectType.value;
-        const objectId = grantObjectId.value.trim();
+        const objectId = document.getElementById('grantObjectId').value.trim();
         const relation = grantRelation.value;
 
         if (!user || !objectType || !objectId || !relation) {
@@ -449,6 +491,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     grantPermissionBtn.addEventListener('click', openGrantModal);
+    grantObjectType.addEventListener('change', (e) => syncObjectIdField(e.target.value));
     confirmGrantBtn.addEventListener('click', handleGrant);
     confirmRevokeBtn.addEventListener('click', handleRevoke);
     applyFiltersBtn.addEventListener('click', loadPermissions);

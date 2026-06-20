@@ -285,6 +285,7 @@ if (!$isAdmin) {
                             <option value="diocesan_calendar"><?php echo htmlspecialchars(_('Diocesan Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                             <option value="wider_region"><?php echo htmlspecialchars(_('Wider Region'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                             <option value="test_definition"><?php echo htmlspecialchars(_('Test Definition'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                            <option value="general_roman_calendar"><?php echo htmlspecialchars(_('General Roman Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -369,6 +370,13 @@ if (!$isAdmin) {
                 diocesanCalendar: <?php echo json_encode(_('Diocesan Calendar')); ?>,
                 widerRegion: <?php echo json_encode(_('Wider Region')); ?>,
                 testDefinition: <?php echo json_encode(_('Test Definition')); ?>,
+                generalRomanCalendar: <?php echo json_encode(_('General Roman Calendar')); ?>,
+                grcTemporale: <?php echo json_encode(_('Temporale')); ?>,
+                grcSanctorale1970: <?php echo json_encode(_('Sanctorale — Editio Typica 1970')); ?>,
+                grcSanctorale2002: <?php echo json_encode(_('Sanctorale — Editio Typica 2002')); ?>,
+                grcSanctorale2008: <?php echo json_encode(_('Sanctorale — Editio Typica 2008')); ?>,
+                grcDecrees: <?php echo json_encode(_('Decrees of the Dicastery for Divine Worship')); ?>,
+                enterObjectId: <?php echo json_encode(_('Enter object ID...')); ?>,
                 // Relation display names
                 admin: <?php echo json_encode(_('Admin')); ?>,
                 viewer: <?php echo json_encode(_('Viewer')); ?>,
