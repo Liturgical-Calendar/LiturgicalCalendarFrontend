@@ -76,7 +76,7 @@ if (!$authHelper->isAuthenticated) {
                                 <th scope="row" class="text-muted">
                                     <i class="fas fa-at me-2"></i><?php echo htmlspecialchars(_('Username'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                 </th>
-                                <td><?php echo htmlspecialchars($authHelper->username ?? '-', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></td>
+                                <td class="text-break"><?php echo htmlspecialchars($authHelper->username ?? '-', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></td>
                             </tr>
 
                             <?php if ($authHelper->email !== null) : ?>
