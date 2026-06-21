@@ -71,6 +71,22 @@ export default defineConfig({
             },
             dependencies: ['setup'],
         },
+        {
+            // Unit/integration tests for the support modules (users/zitadel/fga/seed/cleanup).
+            // They run against the live stack but do NOT need the full seed, so no dependency.
+            name: 'rbac-support',
+            testMatch: /rbac\/support\/.*\.test\.ts/,
+        },
+        {
+            name: 'rbac-setup',
+            testMatch: /rbac\/rbac\.setup\.ts/,
+        },
+        {
+            name: 'rbac',
+            testMatch: /rbac\/.*\.spec\.ts/,
+            use: { ...devices['Desktop Chrome'] },
+            dependencies: ['rbac-setup'],
+        },
     ],
 
     /* Run servers before starting the tests */
