@@ -3,15 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Jarek Niewiadomski <jarekn2008@gmail.com>, 2025.
 # OpenAI <noreply-mt-openai@weblate.org>, 2025, 2026.
-# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2025.
+# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2025, 2026.
 # Weblate Admin <admin@example.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-21 11:05+0000\n"
-"PO-Revision-Date: 2026-06-21 11:36+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2026-06-21 15:13+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pl/>\n"
 "Language: pl\n"
@@ -2524,7 +2524,7 @@ msgstr "Żądanie dostępu odrzucone."
 
 #: admin-permissions.php:398
 msgid "Access revoked successfully."
-msgstr "Dostęp cofnął się pomyślnie."
+msgstr "Dostęp został pomyślnie cofnięty."
 
 #: admin-permissions.php:399 admin-applications.php:236
 #: admin-role-requests.php:246
@@ -2615,7 +2615,7 @@ msgid ""
 "keys can be scoped further at generation time."
 msgstr ""
 "Konsument API. Poproś o dostęp do wszystkich potrzebnych zasobów — "
-"indywidualne klucze API mogą być dalszy przy generowaniu."
+"poszczególne klucze API można dokładniej ograniczyć podczas generowania."
 
 #: permission-requests.php:99
 msgid "Select a Role"
@@ -3457,7 +3457,7 @@ msgstr "Informacje o koncie"
 
 #: user-profile.php:52
 msgid "Full Name"
-msgstr "Pełna nazwa"
+msgstr "Imię i nazwisko"
 
 #: user-profile.php:61
 msgid "Given / Family Name"
