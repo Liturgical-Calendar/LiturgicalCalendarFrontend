@@ -27,6 +27,11 @@
         },
         "files": ["src/pgettext.php"]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "LiturgicalCalendar\\Frontend\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "John R. D'Orazio",

@@ -131,6 +131,7 @@ api/*
 !src/*.php
 !dist/*.php
 !includes/*.php
+!tests/*.php
 
 .php-ini
 .php-version

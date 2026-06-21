@@ -45,6 +45,14 @@ class AuthHelper
     public readonly ?array $permissions;
 
     /**
+     * Memoized admin-scopes result for this request.
+     * Shape: array{is_resource_admin: bool, admin_scopes: list<array{object_type: string, object_id: string}>}
+     *
+     * @var array{is_resource_admin: bool, admin_scopes: array<int, array{object_type: string, object_id: string}>}|null
+     */
+    private ?array $adminScopesResult = null;
+
+    /**
      * Private constructor - use getInstance() to get the singleton
      *
      * @param object|null $payload Validated JWT payload, or null if not authenticated
@@ -299,6 +307,119 @@ class AuthHelper
             return false;
         }
         return in_array($permission, $this->permissions, true);
+    }
+
+    /**
+     * Whether the caller holds an OpenFGA `admin` tuple on at least one resource.
+     *
+     * Resolved once per request from GET /auth/admin-scopes (server-side, using
+     * the caller's session cookies). Fails closed: an unauthenticated caller or
+     * any API/parse error yields false.
+     */
+    public function isResourceAdmin(): bool
+    {
+        return $this->loadAdminScopes()['is_resource_admin'];
+    }
+
+    /**
+     * The caller's OpenFGA `admin` scopes.
+     *
+     * @return array<int, array{object_type: string, object_id: string}>
+     */
+    public function adminScopes(): array
+    {
+        return $this->loadAdminScopes()['admin_scopes'];
+    }
+
+    /**
+     * Resolve (and memoize) the admin-scopes result for this request.
+     *
+     * @return array{is_resource_admin: bool, admin_scopes: array<int, array{object_type: string, object_id: string}>}
+     */
+    private function loadAdminScopes(): array
+    {
+        if ($this->adminScopesResult !== null) {
+            return $this->adminScopesResult;
+        }
+
+        // Fail closed for unauthenticated callers — never hit the API.
+        if (!$this->isAuthenticated) {
+            return $this->adminScopesResult = ['is_resource_admin' => false, 'admin_scopes' => []];
+        }
+
+        $apiBaseUrl   = ApiConfig::getInstance()->apiBaseUrl;
+        $cookieHeader = self::buildCookieHeader();
+
+        return $this->adminScopesResult = self::fetchAdminScopes($apiBaseUrl, $cookieHeader);
+    }
+
+    /**
+     * Build a Cookie header from the session token cookies, to forward the
+     * caller's identity to the API on the server-to-server call.
+     */
+    private static function buildCookieHeader(): ?string
+    {
+        $parts = [];
+        foreach ([self::ACCESS_TOKEN_COOKIE, self::ID_TOKEN_COOKIE] as $name) {
+            $value = $_COOKIE[$name] ?? null;
+            if (is_string($value) && $value !== '') {
+                $parts[] = "{$name}={$value}";
+            }
+        }
+        return $parts === [] ? null : implode('; ', $parts);
+    }
+
+    /**
+     * Fetch and parse GET /auth/admin-scopes. Fails closed on any error.
+     *
+     * @param string $apiBaseUrl Base API URL (no trailing slash)
+     * @param string|null $cookieHeader Cookie header forwarding the caller's session
+     * @param \GuzzleHttp\Client|null $client Injectable client (tests)
+     * @return array{is_resource_admin: bool, admin_scopes: array<int, array{object_type: string, object_id: string}>}
+     */
+    public static function fetchAdminScopes(
+        string $apiBaseUrl,
+        ?string $cookieHeader,
+        ?\GuzzleHttp\Client $client = null
+    ): array {
+        $failClosed = ['is_resource_admin' => false, 'admin_scopes' => []];
+
+        $client ??= new \GuzzleHttp\Client(['timeout' => 5, 'connect_timeout' => 2, 'http_errors' => true]);
+
+        $headers = ['Accept' => 'application/json'];
+        if ($cookieHeader !== null) {
+            $headers['Cookie'] = $cookieHeader;
+        }
+
+        try {
+            $response = $client->get("{$apiBaseUrl}/auth/admin-scopes", ['headers' => $headers]);
+            $data     = json_decode((string) $response->getBody(), true);
+        } catch (\Throwable) {
+            return $failClosed;
+        }
+
+        if (!is_array($data)) {
+            return $failClosed;
+        }
+
+        $scopes = [];
+        if (isset($data['admin_scopes']) && is_array($data['admin_scopes'])) {
+            foreach ($data['admin_scopes'] as $scope) {
+                if (
+                    is_array($scope)
+                    && isset($scope['object_type'], $scope['object_id'])
+                    && is_string($scope['object_type'])
+                    && is_string($scope['object_id'])
+                ) {
+                    $scopes[] = ['object_type' => $scope['object_type'], 'object_id' => $scope['object_id']];
+                }
+            }
+        }
+
+        return [
+            'is_resource_admin' => (bool) ( $data['is_resource_admin'] ?? false ),
+            'admin_scopes'      => $scopes,
+        ];
     }
 
     /**
