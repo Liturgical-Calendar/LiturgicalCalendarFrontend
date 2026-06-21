@@ -1,5 +1,7 @@
-# Expiration date (YYYY-MM-DD) of the WORKFLOW_AUTO_MERGE_PAT org-level
-# secret. The .github/workflows/pat-expiry-reminder.yml workflow reads
+# Expiration date (YYYY-MM-DD) of the WORKFLOW_AUTO_MERGE_PAT fine-grained
+# PAT (stored as the org-level Actions secret WORKFLOW_AUTOMERGE_PAT — the
+# secret name workflows resolve differs from the PAT's display name).
+# The .github/workflows/pat-expiry-reminder.yml workflow reads
 # this date weekly and opens an issue when <30 days remain.
 #
 # When you rotate the PAT, update this date in the same PR / commit so
