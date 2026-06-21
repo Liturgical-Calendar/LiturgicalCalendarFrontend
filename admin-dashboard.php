@@ -140,6 +140,33 @@ if (!$hasCalendarRole) {
     </div>
     <?php endif; ?>
 
+    <?php if (!$isAdmin && $authHelper->isResourceAdmin()) : ?>
+    <hr class="my-4">
+    <h4 class="mb-3 text-black" style="--bs-text-opacity: .6;">
+        <i class="fas fa-user-shield me-2"></i><?php echo htmlspecialchars(_('Administration'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+    </h4>
+    <div class="row">
+        <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card admin-block shadow h-100 border-dark">
+                <div class="card-body text-center d-flex flex-column">
+                    <div class="admin-block-icon mb-3">
+                        <i class="fas fa-inbox fa-3x text-dark"></i>
+                    </div>
+                    <h5 class="card-title"><?php echo htmlspecialchars(_('Access Requests to Review'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></h5>
+                    <p class="card-text text-muted small flex-grow-1">
+                        <?php echo htmlspecialchars(_('Review and approve access requests for the resources you administer'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                    </p>
+                    <div class="admin-block-actions mt-auto">
+                        <a href="admin-permissions.php" class="btn btn-dark btn-sm">
+                            <i class="fas fa-tasks me-1"></i><?php echo htmlspecialchars(_('Review'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <?php include_once('./layout/footer.php'); ?>
 </body>
 </html>
