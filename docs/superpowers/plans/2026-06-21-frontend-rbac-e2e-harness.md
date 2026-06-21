@@ -27,6 +27,22 @@ Mailpit API (Phase 2), the project's `docker-compose` stack.
 - TypeScript strict: the suite typechecks under `e2e/tsconfig.json` (`yarn typecheck`).
 - Project role for non-super users is `calendar_editor`; `super-admin` gets the global `admin` role.
 
+## Environment status (pre-flight done 2026-06-21)
+
+- Run the **frontend** docker stack (`docker compose up -d` in the frontend dir; compose project
+  `liturgicalcalendarfrontend`) — NOT the API repo's stack. They share ports, so only one runs at a time.
+  Host ports: api 8000, frontend 3000, zitadel 8080, openfga 8083, mailpit 8025. WSL single-file
+  bind-mount flakes → `docker compose up -d --force-recreate litcal-frontend`.
+- Playwright runs on the **host** and loads `.env.development`. Already added there:
+  `ZITADEL_ORG_ID=372235991517298694` and `ZITADEL_MACHINE_TOKEN` (the `test-service-account` token).
+  Project/store/model IDs already match the running stack.
+- **Login mechanism (validated):** `/auth/login` only authenticates the configured admin, NOT Zitadel
+  users. Scoped users authenticate via a Zitadel **OIDC access token** in the `litcal_access_token` cookie
+  (validated by `OidcAuthMiddleware`); verify a user via the **frontend `/auth/me.php`** (the API's
+  `/auth/me` is HS256/admin-only). The headless token flow (session API + PKCE) is implemented in Task 5
+  and was proven end-to-end. The session API needs a `login-client` PAT minted at setup (Task 7). See the
+  `project_rbac_e2e_harness` memory for the full validated sequence.
+
 ---
 
 ### Task 1: Scaffold the `rbac` Playwright project
@@ -48,6 +64,12 @@ In the `projects` array, append:
 
 ```typescript
 {
+    // Unit/integration tests for the support modules (users/zitadel/fga/seed/cleanup).
+    // They run against the live stack but do NOT need the full seed, so no dependency.
+    name: 'rbac-support',
+    testMatch: /rbac\/support\/.*\.test\.ts/,
+},
+{
     name: 'rbac-setup',
     testMatch: /rbac\/rbac\.setup\.ts/,
 },
@@ -59,7 +81,8 @@ In the `projects` array, append:
 },
 ```
 
-(No global `storageState` here — rbac specs open contexts per user via the `actingAs` fixture in Task 8.)
+(No global `storageState` here — rbac specs open contexts per user via the `actingAs` fixture in Task 8.
+Support `*.test.ts` files run under `--project=rbac-support`; `*.spec.ts` under `--project=rbac`.)
 
 - [ ] **Step 2: Verify config still parses**
 
@@ -121,7 +144,7 @@ test('registration users are a subset not included in seeded ids', () => {
 
 - [ ] **Step 2: Run to verify it fails**
 
-Run: `yarn playwright test e2e/rbac/support/users.test.ts --project=rbac-setup`
+Run: `yarn playwright test e2e/rbac/support/users.test.ts --project=rbac-support`
 Expected: FAIL — cannot find module `./users`.
 
 - [ ] **Step 3: Implement `users.ts`**
@@ -147,27 +170,29 @@ export const USERS: Record<string, RbacUser> = {
     'super-admin': mk('super-admin', 'admin', null),
     'cei-admin': mk('cei-admin', 'calendar_editor', { relation: 'admin', objectType: 'national_calendar', objectId: 'IT' }),
     'cei-editor': mk('cei-editor', 'calendar_editor', { relation: 'editor', objectType: 'national_calendar', objectId: 'IT' }),
-    'usccb-admin': mk('usccb-admin', 'calendar_editor', { relation: 'admin', objectType: 'national_calendar', objectId: 'USA' }),
-    'usccb-editor': mk('usccb-editor', 'calendar_editor', { relation: 'editor', objectType: 'national_calendar', objectId: 'USA' }),
+    'usccb-admin': mk('usccb-admin', 'calendar_editor', { relation: 'admin', objectType: 'national_calendar', objectId: 'US' }),
+    'usccb-editor': mk('usccb-editor', 'calendar_editor', { relation: 'editor', objectType: 'national_calendar', objectId: 'US' }),
     'rome-admin': mk('rome-admin', 'calendar_editor', { relation: 'admin', objectType: 'diocesan_calendar', objectId: 'romamo_it' }),
     'rome-editor': mk('rome-editor', 'calendar_editor', { relation: 'editor', objectType: 'diocesan_calendar', objectId: 'romamo_it' }),
-    'grc-admin': mk('grc-admin', 'calendar_editor', { relation: 'admin', objectType: 'general_roman_calendar', objectId: 'GRC' }),
-    'grc-editor': mk('grc-editor', 'calendar_editor', { relation: 'editor', objectType: 'general_roman_calendar', objectId: 'GRC' }),
-    'europe-admin': mk('europe-admin', 'calendar_editor', { relation: 'admin', objectType: 'wider_region', objectId: 'EU' }),
-    'europe-editor': mk('europe-editor', 'calendar_editor', { relation: 'editor', objectType: 'wider_region', objectId: 'EU' }),
+    'grc-admin': mk('grc-admin', 'calendar_editor', { relation: 'admin', objectType: 'general_roman_calendar', objectId: 'temporale' }),
+    'grc-editor': mk('grc-editor', 'calendar_editor', { relation: 'editor', objectType: 'general_roman_calendar', objectId: 'temporale' }),
+    'europe-admin': mk('europe-admin', 'calendar_editor', { relation: 'admin', objectType: 'wider_region', objectId: 'Europe' }),
+    'europe-editor': mk('europe-editor', 'calendar_editor', { relation: 'editor', objectType: 'wider_region', objectId: 'Europe' }),
 };
 
 export const REGISTRATION_USER_IDS = ['cei-admin', 'usccb-editor'];
 export const SEEDED_USER_IDS = Object.keys(USERS).filter((id) => !REGISTRATION_USER_IDS.includes(id));
 ```
 
-> NOTE during execution: confirm the real object_ids (`EU` vs `Europe`; the GRC key + whether GRC is a
-> single resource or sub-resources `temporale`/`decrees`/Latin missals) against the API source data and
-> PR #339, and correct the matrix here — this is the single source of truth.
+> RESOLVED (verified against API source data + live stack, 2026-06-21): nation codes are `IT`/`US` (NOT
+> `USA`); wider_region is `Europe` (NOT `EU`); `general_roman_calendar` is one of the enumerated ids
+> `temporale,EDITIO_TYPICA_1970,EDITIO_TYPICA_2002,EDITIO_TYPICA_2008,decrees` (NOT `GRC`) — using
+> `temporale`; `diocesan_calendar:romamo_it` confirmed. Zitadel project roles `admin` + `calendar_editor`
+> both confirmed valid. This matrix is the single source of truth.
 
 - [ ] **Step 4: Run to verify it passes**
 
-Run: `yarn playwright test e2e/rbac/support/users.test.ts --project=rbac-setup`
+Run: `yarn playwright test e2e/rbac/support/users.test.ts --project=rbac-support`
 Expected: PASS (3 tests).
 
 - [ ] **Step 5: Commit**
@@ -192,12 +217,23 @@ git commit -m "test(rbac): user/permission seed matrix"
   (for role grants).
 - Produces a `ZitadelAdmin` class:
   - `findUserIdByEmail(email: string): Promise<string | null>`
+  - `findUserIdByUsername(userName: string): Promise<string | null>` — used to locate the `login-client`
+    machine user.
   - `createVerifiedUser(u: { email: string; password: string; firstName: string; lastName: string }):
     Promise<string>` — returns the new userId; email pre-verified, password set, not requiring change.
   - `grantProjectRole(userId: string, role: string): Promise<void>`
   - `deleteUser(userId: string): Promise<void>`
-  - all calls send `Authorization: Bearer <machine token>` and the org header
+  - `mintPat(userId: string): Promise<{ tokenId: string; token: string }>` — create a Personal Access
+    Token for a (machine) user via `POST /management/v1/users/{userId}/pats`.
+  - `deletePat(userId: string, tokenId: string): Promise<void>`
+  - all calls send `Authorization: Bearer <machine token>`, `Host: localhost` (Zitadel's ExternalDomain
+    is `localhost`; Node `fetch` CAN set the Host header), and the org header
     `x-zitadel-orgid: <ZITADEL_ORG_ID>`.
+
+> NOTE: The `ZITADEL_MACHINE_TOKEN` belongs to the `test-service-account` machine user. It can create
+> users / grant roles, but CANNOT create Zitadel sessions (lacks `IAM_LOGIN_CLIENT`). The login flow
+> (Task 5) needs a session-capable token; mint a fresh PAT for the `login-client` user with `mintPat`
+> and use that (the volume's `login-client.pat` is stale). Verified against the live stack 2026-06-21.
 
 - [ ] **Step 1: Write the failing test** (runs against the live Zitadel in the stack)
 
@@ -224,7 +260,7 @@ test('create, find, grant role, delete a verified user', async () => {
 
 - [ ] **Step 2: Run to verify it fails**
 
-Run: `yarn playwright test e2e/rbac/support/zitadel.test.ts --project=rbac-setup`
+Run: `yarn playwright test e2e/rbac/support/zitadel.test.ts --project=rbac-support`
 Expected: FAIL — cannot find module `./zitadel`.
 
 - [ ] **Step 3: Implement `zitadel.ts`**
@@ -250,6 +286,7 @@ export class ZitadelAdmin {
                 Authorization: `Bearer ${this.token}`,
                 'Content-Type': 'application/json',
                 'x-zitadel-orgid': this.orgId,
+                Host: 'localhost',
             },
             body: body === undefined ? undefined : JSON.stringify(body),
         });
@@ -285,6 +322,25 @@ export class ZitadelAdmin {
     async deleteUser(userId: string): Promise<void> {
         await this.req('DELETE', `/v2/users/${userId}`);
     }
+
+    async findUserIdByUsername(userName: string): Promise<string | null> {
+        const data = await this.req('POST', '/v2/users', {
+            queries: [{ userNameQuery: { userName } }],
+        });
+        const u = (data.result ?? [])[0];
+        return u?.userId ?? null;
+    }
+
+    async mintPat(userId: string): Promise<{ tokenId: string; token: string }> {
+        const data = await this.req('POST', `/management/v1/users/${userId}/pats`, {
+            expirationDate: '2030-01-01T00:00:00Z',
+        });
+        return { tokenId: data.tokenId as string, token: data.token as string };
+    }
+
+    async deletePat(userId: string, tokenId: string): Promise<void> {
+        await this.req('DELETE', `/management/v1/users/${userId}/pats/${tokenId}`);
+    }
 }
 ```
 
@@ -294,7 +350,7 @@ export class ZitadelAdmin {
 
 - [ ] **Step 4: Run to verify it passes**
 
-Run: `yarn playwright test e2e/rbac/support/zitadel.test.ts --project=rbac-setup`
+Run: `yarn playwright test e2e/rbac/support/zitadel.test.ts --project=rbac-support`
 Expected: PASS.
 
 - [ ] **Step 5: Commit**
@@ -346,7 +402,7 @@ test('write, check true, delete, check false (idempotent)', async () => {
 
 - [ ] **Step 2: Run to verify it fails**
 
-Run: `yarn playwright test e2e/rbac/support/fga.test.ts --project=rbac-setup`
+Run: `yarn playwright test e2e/rbac/support/fga.test.ts --project=rbac-support`
 Expected: FAIL — cannot find module `./fga`.
 
 - [ ] **Step 3: Implement `fga.ts`**
@@ -399,7 +455,7 @@ export class Fga {
 
 - [ ] **Step 4: Run to verify it passes**
 
-Run: `yarn playwright test e2e/rbac/support/fga.test.ts --project=rbac-setup`
+Run: `yarn playwright test e2e/rbac/support/fga.test.ts --project=rbac-support`
 Expected: PASS.
 
 - [ ] **Step 5: Commit**
@@ -424,8 +480,12 @@ git commit -m "test(rbac): openfga tuple client (write/delete/check)"
 - Produces:
   - `seedUser(id: string): Promise<string>` — upsert (delete-then-create) the Zitadel user, grant the
     role, write the FGA tuple (if any); returns the Zitadel userId.
-  - `loginAndSaveState(id: string, request: APIRequestContext, page: Page): Promise<void>` — log the
-    user in via `POST {api}/auth/login` and save `storageState` to `e2e/.auth/<id>.json`.
+  - `oidcLogin(email: string, password: string, loginClientToken: string): Promise<string>` — run the
+    headless Zitadel session→PKCE flow and return a Zitadel OIDC access token (JWT).
+  - `loginAndSaveState(id: string, loginClientToken: string): Promise<void>` — call `oidcLogin` and write
+    a Playwright `storageState` to `e2e/.auth/<id>.json` containing the `litcal_access_token` cookie
+    (domain `localhost`, HttpOnly). The `loginClientToken` is a session-capable PAT minted for the
+    `login-client` user in setup (Task 7).
 
 - [ ] **Step 1: Write the failing test**
 
@@ -450,17 +510,23 @@ test('seedUser creates user, grants role, writes scoped tuple', async () => {
 
 - [ ] **Step 2: Run to verify it fails**
 
-Run: `yarn playwright test e2e/rbac/support/seed.test.ts --project=rbac-setup`
+Run: `yarn playwright test e2e/rbac/support/seed.test.ts --project=rbac-support`
 Expected: FAIL — cannot find module `./seed`.
 
 - [ ] **Step 3: Implement `seed.ts`**
 
 ```typescript
-import { APIRequestContext, Page } from '@playwright/test';
 import * as path from 'path';
+import * as fs from 'fs';
+import * as crypto from 'crypto';
 import { USERS } from './users';
 import { ZitadelAdmin } from './zitadel';
 import { Fga } from './fga';
+
+const ISSUER = (process.env.ZITADEL_ISSUER || 'http://localhost:8080').replace(/\/$/, '');
+const CLIENT_ID = process.env.ZITADEL_CLIENT_ID!;            // Frontend OIDC client (authorization_code + PKCE)
+const REDIRECT_URI = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback.php`;
+const b64url = (b: Buffer) => b.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 
 export async function seedUser(id: string): Promise<string> {
     const u = USERS[id];
@@ -478,30 +544,84 @@ export async function seedUser(id: string): Promise<string> {
     return userId;
 }
 
-export async function loginAndSaveState(id: string, page: Page): Promise<void> {
+/**
+ * Obtain a Zitadel OIDC access token (JWT) for a user via the headless session→PKCE flow.
+ * `loginClientToken` is a session-capable PAT (minted for the `login-client` user in setup).
+ * Returns the access_token to be set as the `litcal_access_token` cookie.
+ */
+export async function oidcLogin(email: string, password: string, loginClientToken: string): Promise<string> {
+    const Hl = { Authorization: `Bearer ${loginClientToken}`, 'Content-Type': 'application/json', Host: 'localhost' };
+    const json = async (r: Response) => { const t = await r.text(); if (!r.ok) throw new Error(`${r.url} -> ${r.status}: ${t}`); return JSON.parse(t); };
+
+    // 1. Create a password-checked session (login-client token).
+    const s = await json(await fetch(`${ISSUER}/v2/sessions`, {
+        method: 'POST', headers: Hl,
+        body: JSON.stringify({ checks: { user: { loginName: email }, password: { password } } }),
+    }));
+
+    // 2. Start an OIDC auth request (Frontend client, PKCE S256) → 302 to login-v2 with ?authRequest=...
+    const verifier = b64url(crypto.randomBytes(32));
+    const challenge = b64url(crypto.createHash('sha256').update(verifier).digest());
+    const qs = new URLSearchParams({
+        response_type: 'code', client_id: CLIENT_ID, redirect_uri: REDIRECT_URI,
+        scope: 'openid profile email', code_challenge: challenge, code_challenge_method: 'S256', state: id_state(),
+    });
+    const authResp = await fetch(`${ISSUER}/oauth/v2/authorize?${qs}`, { headers: { Host: 'localhost' }, redirect: 'manual' });
+    const loc = authResp.headers.get('location') || '';
+    const arMatch = loc.match(/authRequest(?:Id)?=([^&]+)/);
+    if (!arMatch) throw new Error(`authorize did not return an authRequest id: ${authResp.status} ${loc}`);
+    const authRequestId = decodeURIComponent(arMatch[1]);
+
+    // 3. Finalize the auth request with the session (login-client token) → callbackUrl with ?code=
+    const fin = await json(await fetch(`${ISSUER}/v2/oidc/auth_requests/${authRequestId}`, {
+        method: 'POST', headers: Hl,
+        body: JSON.stringify({ session: { sessionId: s.sessionId, sessionToken: s.sessionToken } }),
+    }));
+    const codeMatch = String(fin.callbackUrl || '').match(/[?&]code=([^&]+)/);
+    if (!codeMatch) throw new Error(`finalize returned no code: ${JSON.stringify(fin)}`);
+    const code = decodeURIComponent(codeMatch[1]);
+
+    // 4. Exchange the code for tokens (public client, PKCE — no client secret).
+    const form = new URLSearchParams({ grant_type: 'authorization_code', code, redirect_uri: REDIRECT_URI, client_id: CLIENT_ID, code_verifier: verifier });
+    const tok = await json(await fetch(`${ISSUER}/oauth/v2/token`, {
+        method: 'POST', headers: { Host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' }, body: form,
+    }));
+    if (!tok.access_token) throw new Error(`token exchange returned no access_token: ${JSON.stringify(tok)}`);
+    return tok.access_token as string;
+}
+
+// state param need only be opaque/unique-ish; avoid Math.random for determinism-friendliness.
+function id_state(): string { return b64url(crypto.randomBytes(8)); }
+
+/**
+ * Log a user in headlessly and write a Playwright storageState file containing the
+ * `litcal_access_token` cookie. Cookie domain is `localhost` (port-agnostic) so it is sent to
+ * both the frontend (:3000) and the API (:8000). The real cookie is HttpOnly.
+ */
+export async function loginAndSaveState(id: string, loginClientToken: string): Promise<void> {
     const u = USERS[id];
-    const apiUrl = new URL(`${process.env.API_PROTOCOL || 'http'}://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || '8000'}`).origin;
-    await page.goto(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/`);
-    const ok = await page.evaluate(async (args) => {
-        const r = await fetch(`${args.apiUrl}/auth/login`, {
-            method: 'POST', credentials: 'include',
-            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify({ username: args.email, password: args.password }),
-        });
-        return r.ok;
-    }, { apiUrl, email: u.email, password: u.password });
-    if (!ok) throw new Error(`login failed for ${id}`);
-    await page.context().storageState({ path: path.join(__dirname, '..', '..', '.auth', `${id}.json`) });
+    const accessToken = await oidcLogin(u.email, u.password, loginClientToken);
+    const storageState = {
+        cookies: [{
+            name: 'litcal_access_token', value: accessToken, domain: 'localhost', path: '/',
+            expires: -1, httpOnly: true, secure: false, sameSite: 'Lax' as const,
+        }],
+        origins: [],
+    };
+    const authPath = path.join(__dirname, '..', '..', '.auth', `${id}.json`);
+    fs.mkdirSync(path.dirname(authPath), { recursive: true });
+    fs.writeFileSync(authPath, JSON.stringify(storageState, null, 2));
 }
 ```
 
-> NOTE during execution: confirm `POST /auth/login` accepts the Zitadel-registered email+password (the
-> existing `auth.setup.ts` uses an admin password login; verify the API resolves a Zitadel user login the
-> same way, or switch to the OIDC password-grant / a token exchange if needed).
+> Validated end-to-end against the live frontend stack on 2026-06-21 (session 201 → finalize 200 → token
+> 200; frontend `/auth/me.php` returns `{authenticated:true, roles:[...]}`). `/auth/login` was confirmed
+> NOT usable for Zitadel users (it only authenticates the configured admin). All Zitadel calls require the
+> `Host: localhost` header.
 
 - [ ] **Step 4: Run to verify it passes**
 
-Run: `yarn playwright test e2e/rbac/support/seed.test.ts --project=rbac-setup`
+Run: `yarn playwright test e2e/rbac/support/seed.test.ts --project=rbac-support`
 Expected: PASS.
 
 - [ ] **Step 5: Commit**
@@ -550,7 +670,7 @@ test('truncateAppTables runs without error', async () => {
 
 - [ ] **Step 2: Run to verify it fails**
 
-Run: `yarn playwright test e2e/rbac/support/cleanup.test.ts --project=rbac-setup`
+Run: `yarn playwright test e2e/rbac/support/cleanup.test.ts --project=rbac-support`
 Expected: FAIL — cannot find module `./cleanup`.
 
 - [ ] **Step 3: Implement `cleanup.ts`**
@@ -583,13 +703,13 @@ export async function deleteAllSeededUsers(): Promise<void> {
 }
 ```
 
-> NOTE during execution: confirm the notification-state table name (`user_notification_state` vs actual)
-> from the API migrations; correct the TRUNCATE list. Confirm the psql user/db (`litcal`/`litcal`) against
-> `docker-compose.yml`.
+> RESOLVED (verified against the live db 2026-06-21): db/user are `litcal`/`litcal`; tables
+> `access_requests`, `audit_log`, `user_notification_state` all exist. The TRUNCATE list and psql
+> user/db in the code above are correct as written.
 
 - [ ] **Step 4: Run to verify it passes**
 
-Run: `yarn playwright test e2e/rbac/support/cleanup.test.ts --project=rbac-setup`
+Run: `yarn playwright test e2e/rbac/support/cleanup.test.ts --project=rbac-support`
 Expected: PASS.
 
 - [ ] **Step 5: Commit**
@@ -621,14 +741,27 @@ import { test as setup } from '@playwright/test';
 import { truncateAppTables, deleteAllSeededUsers } from './support/cleanup';
 import { seedUser, loginAndSaveState } from './support/seed';
 import { SEEDED_USER_IDS } from './support/users';
+import { ZitadelAdmin } from './support/zitadel';
 
-setup('seed rbac users', async ({ page }) => {
+setup('seed rbac users', async () => {
     setup.setTimeout(180_000);
-    await deleteAllSeededUsers();
-    await truncateAppTables();
-    for (const id of SEEDED_USER_IDS) {
-        await seedUser(id);
-        await loginAndSaveState(id, page);
+    const z = new ZitadelAdmin();
+
+    // The session API needs IAM_LOGIN_CLIENT, which the machine token lacks. Mint a fresh,
+    // session-capable PAT for the `login-client` user and delete it when done.
+    const loginClientUserId = await z.findUserIdByUsername('login-client');
+    if (!loginClientUserId) throw new Error('login-client machine user not found in Zitadel');
+    const pat = await z.mintPat(loginClientUserId);
+
+    try {
+        await deleteAllSeededUsers();
+        await truncateAppTables();
+        for (const id of SEEDED_USER_IDS) {
+            await seedUser(id);
+            await loginAndSaveState(id, pat.token);
+        }
+    } finally {
+        await z.deletePat(loginClientUserId, pat.tokenId);
     }
 });
 ```
@@ -653,7 +786,7 @@ git commit -m "test(rbac): global setup seeds 9 users + saves sessions"
 **Files:**
 
 - Create: `e2e/rbac/support/actingAs.ts`
-- Test: `e2e/rbac/support/actingAs.test.ts`
+- Test: `e2e/rbac/support/actingAs.spec.ts`
 
 **Interfaces:**
 
@@ -667,18 +800,25 @@ git commit -m "test(rbac): global setup seeds 9 users + saves sessions"
 import { test, expect } from '@playwright/test';
 import { actingAs } from './actingAs';
 
-test('actingAs super-admin is authenticated', async ({ browser }) => {
+test('actingAs super-admin is authenticated with the admin role', async ({ browser }) => {
     const { context, page } = await actingAs(browser, 'super-admin');
-    const apiUrl = new URL(`${process.env.API_PROTOCOL || 'http'}://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || '8000'}`).origin;
-    const me = await page.evaluate(async (u) => (await fetch(`${u}/auth/me`, { credentials: 'include' })).status, apiUrl);
-    expect(me).toBe(200);
+    // In OIDC mode the frontend validates the litcal_access_token cookie via its own /auth/me.php
+    // (the API's /auth/me is HS256/admin-only and rejects Zitadel OIDC tokens).
+    await page.goto('/');
+    const me = await page.evaluate(async () => {
+        const r = await fetch('/auth/me.php', { credentials: 'include', headers: { Accept: 'application/json' } });
+        return { status: r.status, body: await r.json() };
+    });
+    expect(me.status).toBe(200);
+    expect(me.body.authenticated).toBe(true);
+    expect(me.body.user?.roles ?? me.body.roles).toContain('admin');
     await context.close();
 });
 ```
 
 - [ ] **Step 2: Run to verify it fails**
 
-Run: `yarn playwright test e2e/rbac/support/actingAs.test.ts --project=rbac`
+Run: `yarn playwright test e2e/rbac/support/actingAs.spec.ts --project=rbac`
 Expected: FAIL — cannot find module `./actingAs`.
 
 - [ ] **Step 3: Implement `actingAs.ts`**
@@ -696,13 +836,13 @@ export async function actingAs(browser: Browser, id: string): Promise<{ context:
 
 - [ ] **Step 4: Run to verify it passes**
 
-Run: `yarn playwright test e2e/rbac/support/actingAs.test.ts --project=rbac`
+Run: `yarn playwright test e2e/rbac/support/actingAs.spec.ts --project=rbac`
 Expected: PASS.
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add e2e/rbac/support/actingAs.ts e2e/rbac/support/actingAs.test.ts
+git add e2e/rbac/support/actingAs.ts e2e/rbac/support/actingAs.spec.ts
 git commit -m "test(rbac): actingAs fixture (per-user browser context)"
 ```
 
