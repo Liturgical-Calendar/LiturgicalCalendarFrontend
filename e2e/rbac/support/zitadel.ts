@@ -39,9 +39,14 @@ export class ZitadelAdmin {
             email: { email: u.email, isVerified: true },
             password: { password: u.password, changeRequired: false },
         });
-        // Zitadel's search projection is eventually consistent; wait until the new
-        // user is visible to findUserIdByEmail before returning.
-        await new Promise<void>(r => setTimeout(r, 200));
+        // Zitadel's search projection is eventually consistent; poll until the new
+        // user is visible to findUserIdByEmail before returning (max ~2.25 s).
+        const maxAttempts = 15;
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+            const found = await this.findUserIdByEmail(u.email);
+            if (found !== null) break;
+            await new Promise<void>(r => setTimeout(r, 150));
+        }
         return data.userId as string;
     }
 

@@ -22,6 +22,10 @@ setup('seed rbac users', async () => {
             await loginAndSaveState(id, pat.token);
         }
     } finally {
-        await z.deletePat(loginClientUserId, pat.tokenId);
+        try {
+            await z.deletePat(loginClientUserId, pat.tokenId);
+        } catch (e) {
+            console.warn('rbac.setup: failed to delete ephemeral PAT (token may persist):', e);
+        }
     }
 });
