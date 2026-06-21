@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-21 11:05+0000\n"
-"PO-Revision-Date: 2026-04-02 19:50+0000\n"
+"PO-Revision-Date: 2026-06-21 11:36+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
@@ -1384,61 +1384,59 @@ msgstr "Exempla Usus"
 
 #: layout/footer.php:92
 msgid "No pending requests"
-msgstr ""
+msgstr "Nulla petitionum pendet"
 
 #: layout/footer.php:93
-#, fuzzy
-#| msgid "Notifications"
 msgid "No new notifications"
-msgstr "Notitiae"
+msgstr "Nullae novae notificationes"
 
 #: layout/footer.php:94
 msgid "Could not load notifications"
-msgstr ""
+msgstr "Notificationes onerari non potuerunt"
 
 #: layout/footer.php:95
 msgid "Just now"
-msgstr ""
+msgstr "Modo nunc"
 
 #: layout/footer.php:96
 msgid "min ago"
-msgstr ""
+msgstr "min ante"
 
 #: layout/footer.php:97
 msgid "hours ago"
-msgstr ""
+msgstr "horis ante"
 
 #: layout/footer.php:98
 msgid "days ago"
-msgstr ""
+msgstr "diebus ante"
 
 #: layout/footer.php:99 admin-permissions.php:415 admin-role-requests.php:252
 msgid "Requested"
-msgstr ""
+msgstr "Petitio missa"
 
 #: layout/footer.php:100
 msgid "Requested access"
-msgstr ""
+msgstr "Accessus petitus"
 
 #: layout/footer.php:101
 msgid "Your request was approved"
-msgstr ""
+msgstr "Petitionis tuae approbatio est"
 
 #: layout/footer.php:102
 msgid "Your request was rejected"
-msgstr ""
+msgstr "Petitionis tuae reiectio est"
 
 #: layout/footer.php:103
 msgid "Your access was revoked"
-msgstr ""
+msgstr "Accessus tuus revocatus est"
 
 #: layout/footer.php:104
 msgid "Request access to start using the system"
-msgstr ""
+msgstr "Petitio accessus utendi systemate incipias"
 
 #: layout/footer.php:105
 msgid "Get started"
-msgstr ""
+msgstr "Incipe"
 
 #: includes/login-modal.php:6
 msgid "Session Expiring"
@@ -2177,156 +2175,144 @@ msgstr "Definitio calendarii diœcesani"
 
 #: includes/admin-blocks.php:16
 msgid "Proprium de Tempore - temporal cycle events"
-msgstr ""
+msgstr "Proprium de Tempore - cycli temporalis eventa"
 
 #: includes/admin-blocks.php:26
 msgid "Proprium de Sanctis - Roman Missal editions"
-msgstr ""
+msgstr "Proprium de Sanctis - editiones Missalis Romani"
 
 #: includes/admin-blocks.php:36
 msgid "Congregation for Divine Worship decrees"
-msgstr ""
+msgstr "Decreta Congregationis de Cultu Divino"
 
 #: includes/admin-blocks.php:46
 msgid "Shared events for geographical regions"
-msgstr ""
+msgstr "Eventa communia pro regionibus geographicis"
 
 #: includes/admin-blocks.php:56
-#, fuzzy
-#| msgid "National calendar settings"
 msgid "National calendars by Bishops Conferences"
-msgstr "Nationalia calendarii occasus"
+msgstr "Calendaria nationalia a Conferentiis Episcoporum"
 
 #: includes/admin-blocks.php:66
-#, fuzzy
-#| msgid "Diocesan calendar definition"
 msgid "Diocesan calendars by liturgical offices"
-msgstr "Definitio calendarii diœcesani"
+msgstr "Calendaria dioecesana ab officiis liturgicis"
 
 #: includes/admin-blocks.php:83
 msgid "View"
-msgstr ""
+msgstr "Visum"
 
 #: includes/admin-blocks.php:84 developer-dashboard.php:269
 msgid "Edit"
-msgstr ""
+msgstr "Recensere"
 
 #: admin-permissions.php:33 admin-permissions.php:45
 msgid "Permissions Management"
-msgstr ""
+msgstr "Permissorum Administratio"
 
 #: admin-permissions.php:49
 msgid ""
 "Manage fine-grained permissions for calendar resources. Grant or revoke user "
 "access to specific calendars and test definitions."
 msgstr ""
+"Subtilia permissa pro calendarii opibus administrare. Concedite vel revocate "
+"usoris accessum ad specificas calendaria et probationes definitionum."
 
 #: admin-permissions.php:57 temporale.php:51
 msgid "Filters"
-msgstr ""
+msgstr "Filtra"
 
 #: admin-permissions.php:63 admin-permissions.php:363 admin-permissions.php:401
 #: admin-applications.php:238 admin-role-requests.php:248 admin-users.php:213
 #: admin-users.php:290
-#, fuzzy
-#| msgid "Username"
 msgid "User"
-msgstr "Nomen usoris"
+msgstr "Usor"
 
 #: admin-permissions.php:66
 msgid "Filter by user ID..."
-msgstr ""
+msgstr "Filtra per usoris ID..."
 
 #: admin-permissions.php:69 admin-permissions.php:282 admin-permissions.php:364
 #: admin-permissions.php:404 permission-requests.php:227
 msgid "Object Type"
-msgstr ""
+msgstr "Objecti Typus"
 
 #: admin-permissions.php:72 admin-permissions.php:90
 msgid "All"
-msgstr ""
+msgstr "Omnia"
 
 #: admin-permissions.php:74 admin-permissions.php:286 admin-permissions.php:371
 #: permission-requests.php:236
-#, fuzzy
-#| msgid "Define a Diocesan Calendar"
 msgid "Diocesan Calendar"
-msgstr "Define Calendarium Diœcesanum"
+msgstr "Calendarium Dioecesanum"
 
 #: admin-permissions.php:76 admin-permissions.php:288 admin-permissions.php:373
 #: permission-requests.php:238
 msgid "Test Definition"
-msgstr ""
+msgstr "Definitio Probationis"
 
 #: admin-permissions.php:81 admin-permissions.php:293 admin-permissions.php:365
 #: admin-permissions.php:405 permission-requests.php:228
 msgid "Object ID"
-msgstr ""
+msgstr "Objecti ID"
 
 #: admin-permissions.php:84
 msgid "Filter by object ID..."
-msgstr ""
+msgstr "Filtra per objecti ID..."
 
 #: admin-permissions.php:87 admin-permissions.php:298 admin-permissions.php:366
 #: admin-permissions.php:406 permission-requests.php:229
-#, fuzzy
-#| msgid "National"
 msgid "Relation"
-msgstr "Nationalis"
+msgstr "Relatio"
 
 #: admin-permissions.php:92 admin-permissions.php:302 admin-permissions.php:384
 #: permission-requests.php:254
 msgid "Viewer"
-msgstr ""
+msgstr "Inspector"
 
 #: admin-permissions.php:93 admin-permissions.php:303 admin-permissions.php:385
 #: permission-requests.php:255
 msgid "Editor"
-msgstr ""
+msgstr "Recensitor"
 
 #: admin-permissions.php:94 admin-permissions.php:304 admin-permissions.php:386
 #: permission-requests.php:257
-#, fuzzy
-#| msgid "Delete calendar"
 msgid "Deleter"
-msgstr "Calendarium delere"
+msgstr "Deletor"
 
 #: admin-permissions.php:100
 msgid "Apply Filters"
-msgstr ""
+msgstr "Adhibe Filtra"
 
 #: admin-permissions.php:103
 msgid "Clear Filters"
-msgstr ""
+msgstr "Purge Filtra"
 
 #: admin-permissions.php:112 admin-permissions.php:271
 #: admin-permissions.php:314
 msgid "Grant Permission"
-msgstr ""
+msgstr "Permissum Concede"
 
 #: admin-permissions.php:115 admin-permissions.php:143
 #: admin-applications.php:125 admin-role-requests.php:135 admin-users.php:56
 msgid "Refresh"
-msgstr ""
+msgstr "Refice"
 
 #: admin-permissions.php:123
 msgid "Permission Tuples"
-msgstr ""
+msgstr "Permissiones Coniunctiones"
 
 #: admin-permissions.php:138 permission-requests.php:31
 #: permission-requests.php:44
 msgid "Access Requests"
-msgstr ""
+msgstr "Accessus Postulationes"
 
 #: admin-permissions.php:154 admin-permissions.php:421
 #: permission-requests.php:259 admin-applications.php:57
 #: admin-applications.php:101 admin-applications.php:250
 #: admin-role-requests.php:67 admin-role-requests.php:111
 #: admin-role-requests.php:264 developer-dashboard.php:303
-#, fuzzy
-#| msgid "Extending..."
 msgid "Pending"
-msgstr "Extendens..."
+msgstr "Pendentes"
 
 #: admin-permissions.php:161 admin-permissions.php:422
 #: permission-requests.php:260 admin-applications.php:68
@@ -2334,7 +2320,7 @@ msgstr "Extendens..."
 #: admin-role-requests.php:78 admin-role-requests.php:118
 #: admin-role-requests.php:265 developer-dashboard.php:304
 msgid "Approved"
-msgstr ""
+msgstr "Probatae"
 
 #: admin-permissions.php:167 admin-permissions.php:423
 #: permission-requests.php:261 admin-applications.php:79
@@ -2342,7 +2328,7 @@ msgstr ""
 #: admin-role-requests.php:89 admin-role-requests.php:124
 #: admin-role-requests.php:266 developer-dashboard.php:305
 msgid "Rejected"
-msgstr ""
+msgstr "Reiectae"
 
 #: admin-permissions.php:173 admin-permissions.php:424
 #: permission-requests.php:262 admin-applications.php:90
@@ -2350,11 +2336,11 @@ msgstr ""
 #: admin-role-requests.php:100 admin-role-requests.php:130
 #: admin-role-requests.php:267 developer-dashboard.php:306
 msgid "Revoked"
-msgstr ""
+msgstr "Revocatae"
 
 #: admin-permissions.php:218
 msgid "Review Access Request"
-msgstr ""
+msgstr "Recensere Accessum Postulationem"
 
 #: admin-permissions.php:220 admin-permissions.php:252
 #: admin-permissions.php:273 admin-permissions.php:329
@@ -2363,249 +2349,219 @@ msgstr ""
 #: developer-dashboard.php:154 developer-dashboard.php:239 temporale.php:161
 #: temporale.php:184
 msgid "Close"
-msgstr ""
+msgstr "Claude"
 
 #: admin-permissions.php:229 admin-applications.php:193
 #: admin-role-requests.php:203
 msgid "Notes"
-msgstr ""
+msgstr "Notae"
 
 #: admin-permissions.php:230 permission-requests.php:152
 #: admin-applications.php:194 admin-role-requests.php:204
-#, fuzzy
-#| msgid "National"
 msgid "optional"
-msgstr "Nationalis"
+msgstr "optional"
 
 #: admin-permissions.php:235 admin-applications.php:199
 #: admin-role-requests.php:209
 msgid "Add notes about your decision..."
-msgstr ""
+msgstr "Adde notas de tua decisione..."
 
 #: admin-permissions.php:243 admin-applications.php:216
 #: admin-role-requests.php:226
 msgid "Approve"
-msgstr ""
+msgstr "Proba"
 
 #: admin-permissions.php:246 admin-applications.php:210
 #: admin-role-requests.php:220
 msgid "Reject"
-msgstr ""
+msgstr "Reice"
 
 #: admin-permissions.php:249 admin-permissions.php:368
 #: admin-applications.php:213 admin-role-requests.php:223
 #: admin-role-requests.php:269 developer-dashboard.php:271
 msgid "Revoke"
-msgstr ""
+msgstr "Revoca"
 
 #: admin-permissions.php:261 admin-applications.php:172
 #: admin-role-requests.php:182 admin-users.php:92
-#, fuzzy
-#| msgid "Dashboard"
 msgid "Back to Dashboard"
-msgstr "Tabula moderatrix"
+msgstr "Redi ad Tabulam Principalem"
 
 #: admin-permissions.php:277 admin-users.php:215 admin-users.php:292
 #: user-profile.php:113
 msgid "User ID"
-msgstr ""
+msgstr "Usoris ID"
 
 #: admin-permissions.php:279
 msgid "Enter user ID..."
-msgstr ""
+msgstr "Intra usoris ID..."
 
 #: admin-permissions.php:284 permission-requests.php:230
 msgid "Select object type..."
-msgstr ""
+msgstr "Selige obiecti genus..."
 
 #: admin-permissions.php:295 admin-permissions.php:380
 msgid "Enter object ID..."
-msgstr ""
+msgstr "Intra obiecti ID..."
 
 #: admin-permissions.php:300 permission-requests.php:232
 msgid "Select relation..."
-msgstr ""
+msgstr "Select relation..."
 
 #: admin-permissions.php:327 admin-permissions.php:340
 msgid "Revoke Permission"
-msgstr ""
+msgstr "Revoca Permissionem"
 
 #: admin-permissions.php:353
 msgid "No permissions found."
-msgstr ""
+msgstr "Nullae permissiones inventae."
 
 #: admin-permissions.php:354
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to load permissions. Please try again later."
-msgstr "Sessionem extendere non potuit. Quæso iterum coniunge."
+msgstr "Onus permissionum defecit. Quaeso iterum conare postea."
 
 #: admin-permissions.php:355
 msgid "Permission granted successfully."
-msgstr ""
+msgstr "Permissio feliciter concessa."
 
 #: admin-permissions.php:356
 msgid "Permission revoked successfully."
-msgstr ""
+msgstr "Permissio feliciter revocata."
 
 #: admin-permissions.php:357
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to grant permission. Please try again."
-msgstr "Sessionem extendere non potuit. Quæso iterum coniunge."
+msgstr "Concessio permissionis defecit. Quaeso iterum conare."
 
 #: admin-permissions.php:358
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to revoke permission. Please try again."
-msgstr "Sessionem extendere non potuit. Quæso iterum coniunge."
+msgstr "Revocatio permissionis defecit. Quaeso iterum conare."
 
 #: admin-permissions.php:359
-#, fuzzy
-#| msgid "Loading..."
 msgid "Granting..."
-msgstr "Onus..."
+msgstr "Concedens..."
 
 #: admin-permissions.php:360 admin-users.php:353
-#, fuzzy
-#| msgid "Loading..."
 msgid "Revoking..."
-msgstr "Onus..."
+msgstr "Revocans..."
 
 #: admin-permissions.php:361
-#, fuzzy
-#| msgid "Are you sure you want to logout?"
 msgid "Are you sure you want to revoke this permission?"
-msgstr "Certus es ut discedas?"
+msgstr "Certusne es te velle hanc permissionem revocare?"
 
 #: admin-permissions.php:367 admin-permissions.php:410
 #: admin-applications.php:244 admin-role-requests.php:253 temporale.php:138
-#, fuzzy
-#| msgid "Notifications"
 msgid "Actions"
-msgstr "Notitiae"
+msgstr "Actiones"
 
 #: admin-permissions.php:376 permission-requests.php:242
 msgid "Sanctorale — Editio Typica 1970"
-msgstr ""
+msgstr "Sanctorale — Editio Typica 1970"
 
 #: admin-permissions.php:377 permission-requests.php:244
 msgid "Sanctorale — Editio Typica 2002"
-msgstr ""
+msgstr "Sanctorale — Editio Typica 2002"
 
 #: admin-permissions.php:378 permission-requests.php:246
 msgid "Sanctorale — Editio Typica 2008"
-msgstr ""
+msgstr "Sanctorale — Editio Typica 2008"
 
 #: admin-permissions.php:379 permission-requests.php:248
 msgid "Decrees of the Dicastery for Divine Worship"
-msgstr ""
+msgstr "Decreta Dicasterii pro Cultu Divino"
 
 #: admin-permissions.php:381 permission-requests.php:231
 msgid "Select object ID..."
-msgstr ""
+msgstr "Selecto objecto ID..."
 
 #: admin-permissions.php:388
 msgid "All fields are required."
-msgstr ""
+msgstr "Omnia campi necessaria sunt."
 
 #: admin-permissions.php:392 admin-role-requests.php:239
 msgid "No requests found."
-msgstr ""
+msgstr "Nullae petitiones inventae."
 
 #: admin-permissions.php:393
 msgid "No pending access requests. All caught up!"
-msgstr ""
+msgstr "Nullae petitiones accessus pendentes. Omnia praevisa!"
 
 #: admin-permissions.php:394
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to load access requests. Please try again later."
-msgstr "Sessionem extendere non potuit. Quæso iterum coniunge."
+msgstr "Defectum adhibere petitiones accessus. Quaeso iterum conare postea."
 
 #: admin-permissions.php:395 admin-applications.php:232
 #: admin-role-requests.php:242
-#, fuzzy
-#| msgid "Loading..."
 msgid "Processing..."
-msgstr "Onus..."
+msgstr "Processus..."
 
 #: admin-permissions.php:396
 msgid "Access request approved successfully."
-msgstr ""
+msgstr "Accessus postulatio feliciter approbata."
 
 #: admin-permissions.php:397
 msgid "Access request rejected."
-msgstr ""
+msgstr "Accessus postulatio reiecta."
 
 #: admin-permissions.php:398
 msgid "Access revoked successfully."
-msgstr ""
+msgstr "Accessus feliciter revocatus."
 
 #: admin-permissions.php:399 admin-applications.php:236
 #: admin-role-requests.php:246
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to process request. Please try again."
-msgstr "Sessionem extendere non potuit. Quæso iterum coniunge."
+msgstr "Defectum processus petitionis. Quaeso iterum conare."
 
 #: admin-permissions.php:402 permission-requests.php:219
 msgid "Role"
-msgstr ""
+msgstr "Munus"
 
 #: admin-permissions.php:403 permission-requests.php:133
 #: permission-requests.php:220 admin-dashboard.php:128 user-profile.php:178
 msgid "Permissions"
-msgstr ""
+msgstr "Potestates"
 
 #: admin-permissions.php:407 permission-requests.php:151
 #: permission-requests.php:222 admin-role-requests.php:255
-#, fuzzy
-#| msgid "Notifications"
 msgid "Justification"
-msgstr "Notitiae"
+msgstr "Iustificatio"
 
 #: admin-permissions.php:408 permission-requests.php:166
 msgid "Credentials"
-msgstr ""
+msgstr "Credentia"
 
 #: admin-permissions.php:409 admin-role-requests.php:251
 msgid "Date"
-msgstr ""
+msgstr "Dies"
 
 #: admin-permissions.php:411 admin-applications.php:245
 #: admin-role-requests.php:254
 msgid "Review"
-msgstr ""
+msgstr "Recensere"
 
 #: admin-permissions.php:412 admin-applications.php:247
 #: admin-role-requests.php:256
 msgid "Reviewed At"
-msgstr ""
+msgstr "Recensitum Ad"
 
 #: admin-permissions.php:413 permission-requests.php:223
 #: admin-applications.php:248 admin-role-requests.php:257
 msgid "Review Notes"
-msgstr ""
+msgstr "Recensere Notas"
 
 #: admin-permissions.php:414 permission-requests.php:221
 #: admin-applications.php:243 admin-role-requests.php:258
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: admin-permissions.php:417 permission-requests.php:80
 #: permission-requests.php:250 admin-role-requests.php:261 admin-users.php:145
-#, fuzzy
-#| msgid "Calendar data"
 msgid "Calendar Editor"
-msgstr "Data calendarii"
+msgstr "Editor Calendarii"
 
 #: admin-permissions.php:418 permission-requests.php:85
 #: permission-requests.php:251 admin-role-requests.php:262 admin-users.php:146
-#, fuzzy
-#| msgid "Accuracy Tests"
 msgid "Accuracy Test Editor"
-msgstr "Probationes accuratæ"
+msgstr "Editor Probatum Accurate"
 
 #: permission-requests.php:49
 msgid ""
@@ -2613,611 +2569,574 @@ msgid ""
 "the resource permissions you need. Your request will be reviewed by an "
 "administrator."
 msgstr ""
+"Postula accessum ad systema Calendarii Liturgici. Elige munus et specifice "
+"potentias quas indiges. Postulatio tua ab administratore recensenda erit."
 
 #: permission-requests.php:59
 msgid "Your Access Requests"
-msgstr ""
+msgstr "Tuae Petitiones Accessus"
 
 #: permission-requests.php:73
 msgid "Request Access"
-msgstr ""
+msgstr "Petere Accessum"
 
 #: permission-requests.php:81
-#, fuzzy
-#| msgid "Save Diocesan Calendar Data"
 msgid "Edit national and diocesan calendar data."
-msgstr "Serva data Calendarii Diœcesani"
+msgstr "Edit nationalem et dioecesanum calendarium notitia."
 
 #: permission-requests.php:86
 msgid "Create and manage accuracy tests."
-msgstr ""
+msgstr "Crea et gestiona probationes accuratae."
 
 #: permission-requests.php:92
 msgid ""
 "API consumer. Request access to all resources you may need — individual API "
 "keys can be scoped further at generation time."
 msgstr ""
+"API consumptor. Petere accessum ad omnes facultates quas possis opus habere "
+"— singulae claves API possunt plus determinatae esse tempore generationis."
 
 #: permission-requests.php:99
-#, fuzzy
-#| msgid "Select calendar"
 msgid "Select a Role"
-msgstr "Calendarium selige"
+msgstr "Selige munus"
 
 #: permission-requests.php:136
 msgid ""
 "Specify the resources you need access to. Add one or more permission rows."
 msgstr ""
+"Specifica facultates quibus te accedere indiges. Adde unam vel plures "
+"permissionum series."
 
 #: permission-requests.php:145
 msgid "Add Permission"
-msgstr ""
+msgstr "Adde Permissionem"
 
 #: permission-requests.php:153
 msgid ""
 "Providing a justification helps administrators review your request faster."
 msgstr ""
+"Praebere iustificationem adiuvat administratores tuum rogatum citius "
+"recognoscere."
 
 #: permission-requests.php:160
 msgid "Please describe why you need this access..."
-msgstr ""
+msgstr "Quaeso describe quare aditum hunc indigeas..."
 
 #: permission-requests.php:167
 msgid ""
 "Optionally provide any credentials or references that support your request."
 msgstr ""
+"Optionaliter praebere aliquas credenciales vel relationes quae tuum rogatum "
+"sustinent."
 
 #: permission-requests.php:174
 msgid "Any relevant credentials or references..."
-msgstr ""
+msgstr "Quaevis referenda credencialia vel relationes..."
 
 #: permission-requests.php:181 permission-requests.php:210
 #: developer-dashboard.php:138 developer-dashboard.php:322
 msgid "Submit Request"
-msgstr ""
+msgstr "Mitto rogatum"
 
 #: permission-requests.php:190
-#, fuzzy
-#| msgid "Back to Website"
 msgid "Back to Profile"
-msgstr "Revertere ad Situm"
+msgstr "Redi ad Profilem"
 
 #: permission-requests.php:205
 msgid "You have not made any access requests yet."
-msgstr ""
+msgstr "Nulla adhuc rogata accessus fecisti."
 
 #: permission-requests.php:206
 msgid "Could not load your existing requests."
-msgstr ""
+msgstr "Non poterat onus tuum existentia rogatus."
 
 #: permission-requests.php:207
 msgid "Your access request has been submitted successfully."
-msgstr ""
+msgstr "Tuum accessus rogatum feliciter submissum est."
 
 #: permission-requests.php:208
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to submit request. Please try again."
-msgstr "Sessionem extendere non potuit. Quæso iterum coniunge."
+msgstr "Consilium submittere non potuit. Quaeso iterum conare."
 
 #: permission-requests.php:209
 msgid "Submitting..."
-msgstr ""
+msgstr "Mittens..."
 
 #: permission-requests.php:211
 msgid "Resubmit"
-msgstr ""
+msgstr "Iterum submitte"
 
 #: permission-requests.php:212
 msgid "Rejection reason"
-msgstr ""
+msgstr "Causa repudii"
 
 #: permission-requests.php:213
-#, fuzzy
-#| msgid "Please select and copy manually"
 msgid "Please select a role."
-msgstr "Quæso manu selige et effinge"
+msgstr "Quaeso selige munus."
 
 #: permission-requests.php:214
 msgid ""
 "Each permission row must have object type, object ID, and relation filled in."
 msgstr ""
+"Unumquemque row permissionis typum obiecti, ID obiecti et relationem plenam "
+"habere debet."
 
 #: permission-requests.php:215
 #, php-format
 msgid "You have reached the maximum of %1$d permissions per request."
-msgstr ""
+msgstr "Ad maximum %1$d permissionum per petitionem pervenisti."
 
 #: permission-requests.php:216
 #, php-format
 msgid ""
 "This request had more than %1$d permissions; only the first %2$d are shown."
 msgstr ""
+"Haec petitio plures quam %1$d permissiones habuit; solum primae %2$d "
+"monstrantur."
 
 #: permission-requests.php:217
 msgid "Unknown error"
-msgstr ""
+msgstr "Error ignotus"
 
 #: permission-requests.php:224
 msgid "Submitted"
-msgstr ""
+msgstr "Submissum"
 
 #: permission-requests.php:225
 msgid "Reviewed"
-msgstr ""
+msgstr "Recensitum"
 
 #: permission-requests.php:233
 msgid "Remove"
-msgstr ""
+msgstr "Remove"
 
 #: permission-requests.php:264
 msgid "e.g. IT, USA, BOSTON, Americas..."
-msgstr ""
+msgstr "exempli gratia IT, USA, BOSTON, Americas..."
 
 #: admin-applications.php:33 admin-applications.php:45
 msgid "Application Management"
-msgstr ""
+msgstr "Administratio Applicationis"
 
 #: admin-applications.php:182
 msgid "Review Application"
-msgstr ""
+msgstr "Recensere Applicationem"
 
 #: admin-applications.php:229
 msgid "No applications found."
-msgstr ""
+msgstr "Nullae applicationes inventae sunt."
 
 #: admin-applications.php:230
 msgid "No pending applications. All caught up!"
-msgstr ""
+msgstr "Nullae applicationes pendentes. Omnia comprehensa!"
 
 #: admin-applications.php:231
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to load applications. Please try again later."
-msgstr "Sessionem extendere non potuit. Quæso iterum coniunge."
+msgstr "Applicationes onerare non potuit. Quaeso iterum conare."
 
 #: admin-applications.php:233
 msgid "Application approved successfully."
-msgstr ""
+msgstr "Applicatione prospere approbata."
 
 #: admin-applications.php:234
 msgid "Application rejected."
-msgstr ""
+msgstr "Applicatio reiecta."
 
 #: admin-applications.php:235
 msgid "Application revoked."
-msgstr ""
+msgstr "Applicatio remota."
 
 #: admin-applications.php:239 developer-dashboard.php:265
 msgid "Application"
-msgstr ""
+msgstr "Applicatio"
 
 #: admin-applications.php:240 developer-dashboard.php:98
-#, fuzzy
-#| msgid "Calendar subscription"
 msgid "Description"
-msgstr "Subscriptio calendarii"
+msgstr "Descriptio"
 
 #: admin-applications.php:241 developer-dashboard.php:299
-#, fuzzy
-#| msgid "Back to Website"
 msgid "Website"
-msgstr "Revertere ad Situm"
+msgstr "Situs interretialis"
 
 #: admin-applications.php:242 developer-dashboard.php:279
 msgid "Created"
-msgstr ""
+msgstr "Creatum"
 
 #: admin-applications.php:246
 msgid "Reviewed By"
-msgstr ""
+msgstr "Recensitum a"
 
 #: admin-applications.php:255
 msgid "Requested Scope"
-msgstr ""
+msgstr "Ambitus petitus"
 
 #: admin-applications.php:256 developer-dashboard.php:115
 #: developer-dashboard.php:168 developer-dashboard.php:316
 msgid "Read-only"
-msgstr ""
+msgstr "Sola lectio"
 
 #: admin-applications.php:257 developer-dashboard.php:122
 #: developer-dashboard.php:317
 msgid "Read & Write"
-msgstr ""
+msgstr "Lectio et scriptura"
 
 #: admin-dashboard.php:39 admin-dashboard.php:51 user-profile.php:252
-#, fuzzy
-#| msgid "Dashboard"
 msgid "Admin Dashboard"
-msgstr "Tabula moderatrix"
+msgstr "Tabula administrationis"
 
 #: admin-dashboard.php:55
 msgid ""
 "Manage liturgical calendar data, Roman Missal information, and regional "
 "calendars."
 msgstr ""
+"Curare datos calendarii liturgici, informationem Missalis Romani et "
+"calendaria regionalia."
 
 #: admin-dashboard.php:65
-#, fuzzy
-#| msgid "Administration tools"
 msgid "Administration"
-msgstr "Instrumenta Administrationis"
+msgstr "Administratio"
 
 #: admin-dashboard.php:74
-#, fuzzy
-#| msgid "Username"
 msgid "Users"
-msgstr "Nomen usoris"
+msgstr "Usores"
 
 #: admin-dashboard.php:76
 msgid "View users and manage their roles"
-msgstr ""
+msgstr "Visualizare usores et eorum munera regere"
 
 #: admin-dashboard.php:80 admin-dashboard.php:98 admin-dashboard.php:116
 #: admin-dashboard.php:134
 msgid "Manage"
-msgstr ""
+msgstr "Administrare"
 
 #: admin-dashboard.php:92 admin-role-requests.php:43
-#, fuzzy
-#| msgid "View all requests"
 msgid "Role Requests"
-msgstr "Omnes petitiones videre"
+msgstr "Munera postulationes"
 
 #: admin-dashboard.php:94
 msgid "Review and approve user role requests"
-msgstr ""
+msgstr "Recensere et approbare usoris officii postulationes"
 
 #: admin-dashboard.php:110
-#, fuzzy
-#| msgid "Notifications"
 msgid "Applications"
-msgstr "Notitiae"
+msgstr "Applicationes"
 
 #: admin-dashboard.php:112
 msgid "Review and approve developer applications"
-msgstr ""
+msgstr "Recensere et approbare programmatoris applicationes"
 
 #: admin-dashboard.php:130
 msgid "Manage fine-grained resource permissions"
-msgstr ""
+msgstr "Administrare subtilia permissiones facultatum"
 
 #: admin-role-requests.php:55
 msgid "Role Requests Management"
-msgstr ""
+msgstr "Administratio munerum postulationum"
 
 #: admin-role-requests.php:192
-#, fuzzy
-#| msgid "View all requests"
 msgid "Review Role Request"
-msgstr "Omnes petitiones videre"
+msgstr "Recensere Postulationem Muneris"
 
 #: admin-role-requests.php:240
 msgid "No pending role requests. All caught up!"
-msgstr ""
+msgstr "Nullae sunt pendentes muneris postulationes. Omnino confecta!"
 
 #: admin-role-requests.php:241
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to load role requests. Please try again later."
-msgstr "Sessionem extendere non potuit. Quæso iterum coniunge."
+msgstr "Defecit ad onerandas muneris postulationes. Quaeso iterum tenta."
 
 #: admin-role-requests.php:243
 msgid "Request approved successfully."
-msgstr ""
+msgstr "Postulatio feliciter approbata."
 
 #: admin-role-requests.php:244
 msgid "Request rejected."
-msgstr ""
+msgstr "Petitio reiecta est."
 
 #: admin-role-requests.php:245 admin-users.php:377
 msgid "Role revoked successfully."
-msgstr ""
+msgstr "Role feliciter revocatum."
 
 #: admin-role-requests.php:249
 msgid "Role Requested"
-msgstr ""
+msgstr "Role Petitum"
 
 #: admin-role-requests.php:250
 msgid "Requested Role"
-msgstr ""
+msgstr "Petitio Role"
 
 #: admin-users.php:33 admin-users.php:45
-#, fuzzy
-#| msgid "Username"
 msgid "Users Management"
-msgstr "Nomen usoris"
+msgstr "Usuarii Administratio"
 
 #: admin-users.php:49
 msgid ""
 "Manage users in the system. You can view user information and revoke roles "
 "from users who have them."
 msgstr ""
+"Utentes in systemate administres. Potes informationem utentium videre et "
+"roles a utentibus revocare qui eos habent."
 
 #: admin-users.php:64
 msgid "Users with Roles"
-msgstr ""
+msgstr "Utentes cum Rolis"
 
 #: admin-users.php:79
 msgid "Users without Roles"
-msgstr ""
+msgstr "Utentes sine Rolis"
 
 #: admin-users.php:102 admin-users.php:115
 msgid "Revoke Role"
-msgstr ""
+msgstr "Revoca Role"
 
 #: admin-users.php:143
-#, fuzzy
-#| msgid "Administrator Login"
 msgid "Administrator"
-msgstr "Ingressus Administratoris"
+msgstr "Administrator"
 
 #: admin-users.php:187
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to load users. Please try again later."
-msgstr "Sessionem extendere non potuit. Quæso iterum coniunge."
+msgstr "Instructum utentes onerare non potuit. Quaeso iterum conare postea."
 
 #: admin-users.php:203
 msgid "No users with roles found."
-msgstr ""
+msgstr "Nulli utentes cum rolos inventi sunt."
 
 #: admin-users.php:214 user-profile.php:126
 msgid "Roles"
-msgstr ""
+msgstr "Roles"
 
 #: admin-users.php:239
 msgid "Revoke this role"
-msgstr ""
+msgstr "Hoc role revoca"
 
 #: admin-users.php:280
 msgid "No users without roles found."
-msgstr ""
+msgstr "Nulli utentes sine rolos inventi sunt."
 
 #: admin-users.php:291
 msgid "Email Verified"
-msgstr ""
+msgstr "Email Verificatus"
 
 #: admin-users.php:304
 msgid "Verified"
-msgstr ""
+msgstr "Verificatus"
 
 #: admin-users.php:305
 msgid "Not Verified"
-msgstr ""
+msgstr "Non Verificatus"
 
 #: admin-users.php:336
-#, fuzzy
-#| msgid "Are you sure you want to logout?"
 msgid "Are you sure you want to revoke the role"
-msgstr "Certus es ut discedas?"
+msgstr "Certus es te velle revocare role"
 
 #: admin-users.php:338
 msgid "from user"
-msgstr ""
+msgstr "ab utente"
 
 #: admin-users.php:393
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to revoke role. Please try again."
-msgstr "Sessionem extendere non potuit. Quæso iterum coniunge."
+msgstr "Non potuit munus revocare. Quaeso, iterum conare."
 
 #: developer-dashboard.php:34 developer-dashboard.php:47 user-profile.php:257
-#, fuzzy
-#| msgid "Developer"
 msgid "Developer Dashboard"
-msgstr "Progressor"
+msgstr "Tabula Ducis Scriptoris"
 
 #: developer-dashboard.php:51
-#, fuzzy
-#| msgid ""
-#| "The unit tests are defined in the %s folder in the Liturgical Calendar "
-#| "API repository."
 msgid ""
 "Register applications and manage API keys for accessing the Liturgical "
 "Calendar API."
 msgstr ""
-"Probationes unitatis in fasciculo %s in reposito API Calendarii Liturgici "
-"definitæ sunt."
+"Applicationes registra et claves API aditus ad Calendarium Liturgicum API "
+"administra."
 
 #: developer-dashboard.php:58
 msgid "My Applications"
-msgstr ""
+msgstr "Meae Applicationes"
 
 #: developer-dashboard.php:61 developer-dashboard.php:82
 #: developer-dashboard.php:297
 msgid "New Application"
-msgstr ""
+msgstr "Nova Applicatio"
 
 #: developer-dashboard.php:70
-#, fuzzy
-#| msgid "Logging in..."
 msgid "Loading applications..."
-msgstr "Intra..."
+msgstr "Applicationes onerantes..."
 
 #: developer-dashboard.php:91
 msgid "Application Name"
-msgstr ""
+msgstr "Nomen Applicationis"
 
 #: developer-dashboard.php:95
 msgid "A descriptive name for your application."
-msgstr ""
+msgstr "Nomen descriptivum pro tua applicatione."
 
 #: developer-dashboard.php:100
 msgid "Optional description of what your application does."
-msgstr ""
+msgstr "Descriptio voluntaria quid tua applicatio faciat."
 
 #: developer-dashboard.php:103
 msgid "Website URL"
-msgstr ""
+msgstr "URL Situs"
 
 #: developer-dashboard.php:105
 msgid "Optional URL to your application or project."
-msgstr ""
+msgstr "URL optio ad applicationem tuam vel propositum tuum."
 
 #: developer-dashboard.php:109 developer-dashboard.php:315
 msgid "Access Scope"
-msgstr ""
+msgstr "Ambitus Accessus"
 
 #: developer-dashboard.php:116 developer-dashboard.php:318
-#, fuzzy
-#| msgid "Calendar data"
 msgid "Can only read calendar data"
-msgstr "Data calendarii"
+msgstr "Solo calendario legere potest"
 
 #: developer-dashboard.php:123 developer-dashboard.php:319
 msgid "Can read and modify calendar data"
-msgstr ""
+msgstr "Potest calendarium legere et mutare"
 
 #: developer-dashboard.php:127
 msgid ""
 "Choose the level of access your application needs. This cannot be changed "
 "after approval."
 msgstr ""
+"Elige gradum accessus quo applicatio tua indiget. Hoc post approbationem "
+"mutari non potest."
 
 #: developer-dashboard.php:152
 msgid "Generate API Key"
-msgstr ""
+msgstr "Clavem API Generate"
 
 #: developer-dashboard.php:160
-#, fuzzy
-#| msgid "Name"
 msgid "Key Name"
-msgstr "Nomen"
+msgstr "Nomen Clavis"
 
 #: developer-dashboard.php:162
 msgid "e.g., Production, Development"
-msgstr ""
+msgstr "exempli gratia, Productio, Progressio"
 
 #: developer-dashboard.php:163
 msgid "Optional name to identify this key."
-msgstr ""
+msgstr "Nomen optio ad hanc clavem cognoscendam."
 
 #: developer-dashboard.php:166 developer-dashboard.php:273
 msgid "Scope"
-msgstr ""
+msgstr "Ambitus"
 
 #: developer-dashboard.php:169
 msgid "Read and Write"
-msgstr ""
+msgstr "Legere et Scribere"
 
 #: developer-dashboard.php:172
 msgid ""
 "Read-only keys can only access public endpoints. Write keys can modify data."
 msgstr ""
+"Claves lectu solae possunt accedere ad terminos publicos. Claves scriptu "
+"possunt data modificare."
 
 #: developer-dashboard.php:176
 msgid "Expiration Date"
-msgstr ""
+msgstr "Dies Expirationis"
 
 #: developer-dashboard.php:178
 msgid "Optional. Leave empty for a key that never expires."
-msgstr ""
+msgstr "Optionalis. Relinque vacuum pro clave numquam exspirante."
 
 #: developer-dashboard.php:186 developer-dashboard.php:268
 msgid "Generate Key"
-msgstr ""
+msgstr "Gignere Clavem"
 
 #: developer-dashboard.php:199
 msgid "API Key Generated"
-msgstr ""
+msgstr "API Clavis Generata"
 
 #: developer-dashboard.php:205
 msgid "Important:"
-msgstr ""
+msgstr "Magnum Momentum:"
 
 #: developer-dashboard.php:206
 msgid "Copy this key now. For security reasons, it will not be shown again."
 msgstr ""
+"Copia hanc clavem nunc. Propter securitatem, haec iterum non ostendetur."
 
 #: developer-dashboard.php:209
 msgid "Your API Key:"
-msgstr ""
+msgstr "Tua API Clavis:"
 
 #: developer-dashboard.php:212
-#, fuzzy
-#| msgid "Click to copy to the clipboard!"
 msgid "Copy to clipboard"
-msgstr "Depreme ut ad tabulam scribendi effingas!"
+msgstr "Copia ad clipboard"
 
 #: developer-dashboard.php:218
-#, fuzzy
-#| msgid "URL was copied to the clipboard"
 msgid "API key copied to clipboard!"
-msgstr "URL in clipboardium exemplatum est"
+msgstr "API clavis ad clipboard copiata!"
 
 #: developer-dashboard.php:223
 msgid "Done"
-msgstr ""
+msgstr "Perfectum"
 
 #: developer-dashboard.php:236
 msgid "Confirm Delete"
-msgstr ""
+msgstr "Confirmare Deletionem"
 
 #: developer-dashboard.php:242
-#, fuzzy
-#| msgid "Are you sure you want to logout?"
 msgid "Are you sure you want to delete this item?"
-msgstr "Certus es ut discedas?"
+msgstr "Certe vis hunc item delere?"
 
 #: developer-dashboard.php:243
-#, fuzzy
-#| msgid "This value cannot be empty."
 msgid "This action cannot be undone."
-msgstr "Hoc valore vacuo esse non potest."
+msgstr "Hoc actum non potest retractari."
 
 #: developer-dashboard.php:249 developer-dashboard.php:270
 msgid "Delete"
-msgstr ""
+msgstr "Delere"
 
 #: developer-dashboard.php:263
 msgid "You have not registered any applications yet."
-msgstr ""
+msgstr "Nondum ullam applicationem adnotavisti."
 
 #: developer-dashboard.php:264
 msgid "Create your first application to get started."
-msgstr ""
+msgstr "Crea tuam applicationem primam ut incipias."
 
 #: developer-dashboard.php:266
 msgid "API Keys"
-msgstr ""
+msgstr "Claves API"
 
 #: developer-dashboard.php:267
 msgid "No API keys generated yet."
-msgstr ""
+msgstr "Nondum claves API generatae."
 
 #: developer-dashboard.php:272
 msgid "Rotate"
-msgstr ""
+msgstr "Rotare"
 
 #: developer-dashboard.php:274
 msgid "Rate Limit"
-msgstr ""
+msgstr "Limite Rationis"
 
 #: developer-dashboard.php:275
 msgid "Expires"
-msgstr ""
+msgstr "Exspirat"
 
 #: developer-dashboard.php:276
 msgid "Never"
-msgstr ""
+msgstr "Numquam"
 
 #: developer-dashboard.php:277
 msgid "Last Used"
-msgstr ""
+msgstr "Ultimum Usum"
 
 #: developer-dashboard.php:278
 msgid "Never used"
-msgstr ""
+msgstr "Numquam usum"
 
 #: developer-dashboard.php:280
 msgid "keys"
-msgstr ""
+msgstr "claves"
 
 #: developer-dashboard.php:281
 msgid "key"
-msgstr ""
+msgstr "clavis"
 
 #: developer-dashboard.php:282
 #, php-format
@@ -3225,467 +3144,416 @@ msgid ""
 "Are you sure you want to delete the application \"%1$s\"? This will also "
 "revoke all associated API keys."
 msgstr ""
+"Certe applicare \"%1$s\" deletum vis? Hoc quoque omnes claves API associatas "
+"revocabit."
 
 #: developer-dashboard.php:283
 msgid ""
 "Are you sure you want to revoke this API key? Applications using this key "
 "will no longer be able to authenticate."
 msgstr ""
+"Certe vis hanc clavem API revocare? Applicationes hoc clave utentes "
+"authenticare non poterunt."
 
 #: developer-dashboard.php:284
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to load applications. Please try again."
-msgstr "Sessionem extendere non potuit. Quæso iterum coniunge."
+msgstr "Non potuit applicare onus. Quaeso iterum conare."
 
 #: developer-dashboard.php:285
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to save application. Please try again."
-msgstr "Sessionem extendere non potuit. Quæso iterum coniunge."
+msgstr "Non potuit applicare servare. Quaeso iterum conare."
 
 #: developer-dashboard.php:286
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to delete. Please try again."
-msgstr "Sessionem extendere non potuit. Quæso iterum coniunge."
+msgstr "Non potuit delere. Quaeso iterum conare."
 
 #: developer-dashboard.php:287
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to generate API key. Please try again."
-msgstr "Sessionem extendere non potuit. Quæso iterum coniunge."
+msgstr "Non potuit generare clavem API. Quaeso iterum conare."
 
 #: developer-dashboard.php:289
 msgid "Application updated successfully."
-msgstr ""
+msgstr "Applaudatio feliciter renovata."
 
 #: developer-dashboard.php:290
 msgid "Application created successfully."
-msgstr ""
+msgstr "Applaudatio feliciter creata."
 
 #: developer-dashboard.php:291
 msgid "Application deleted successfully."
-msgstr ""
+msgstr "Applaudatio feliciter deleta."
 
 #: developer-dashboard.php:292
 msgid "API key revoked successfully."
-msgstr ""
+msgstr "Clavis API feliciter revocata."
 
 #: developer-dashboard.php:293
 msgid "API key rotated successfully."
-msgstr ""
+msgstr "Clavis API feliciter rotata."
 
 #: developer-dashboard.php:294
 msgid "Read"
-msgstr ""
+msgstr "Legere"
 
 #: developer-dashboard.php:295
 msgid "Write"
-msgstr ""
+msgstr "Scribe"
 
 #: developer-dashboard.php:296
 msgid "requests/hour"
-msgstr ""
+msgstr "postulata/hora"
 
 #: developer-dashboard.php:298
 msgid "Edit Application"
-msgstr ""
+msgstr "Editum Applicationem"
 
 #: developer-dashboard.php:300
 msgid "View Keys"
-msgstr ""
+msgstr "Vide Claves"
 
 #: developer-dashboard.php:301
 msgid "Hide Keys"
-msgstr ""
+msgstr "Occulta Claves"
 
 #: developer-dashboard.php:307
 msgid "Awaiting admin approval"
-msgstr ""
+msgstr "Exspectans approbationem administrativam"
 
 #: developer-dashboard.php:308
 msgid "Rejection Notes"
-msgstr ""
+msgstr "Rejectionum Annotationes"
 
 #: developer-dashboard.php:309
 msgid "Resubmit for Review"
-msgstr ""
+msgstr "Redde pro Recognitione"
 
 #: developer-dashboard.php:310
 msgid "API keys can only be generated for approved applications."
-msgstr ""
+msgstr "API claves tantum generari possunt pro approbatis applicationibus."
 
 #: developer-dashboard.php:311
 msgid ""
 "This application has been revoked. Contact an administrator for assistance."
-msgstr ""
+msgstr "Haec applicatio revocata est. Contacta administratorem pro auxilio."
 
 #: developer-dashboard.php:312
 msgid "Application resubmitted for review."
-msgstr ""
+msgstr "Applicatio reddita pro recognitione."
 
 #: developer-dashboard.php:313
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to resubmit application. Please try again."
-msgstr "Sessionem extendere non potuit. Quæso iterum coniunge."
+msgstr "Defecit rede posse applicationem. Iterum conare quaeso."
 
 #: developer-dashboard.php:320
 msgid ""
 "This application has read-only access. Only read-scope API keys can be "
 "generated."
 msgstr ""
+"Haec applicatio accessum tantum legendi habet. Tantum claves API lectiones "
+"ambitus generari possunt."
 
 #: developer-dashboard.php:323
-#, fuzzy
-#| msgid "Save data"
 msgid "Save"
-msgstr "Serva data"
+msgstr "Salva"
 
 #: missals-editor.php:97
 msgid "Please login to access the admin interface."
-msgstr ""
+msgstr "Login quaeso aditus ad interfaciem administrativam."
 
 #: temporale.php:42
 msgid ""
 "Proprium de Tempore - The temporal cycle of the liturgical year including "
 "Advent, Christmas, Lent, Easter Triduum, Easter, and Ordinary Time."
 msgstr ""
+"Proprium de Tempore - Ordo temporum liturgici anni comprehendo Adventum, "
+"Nativitatem, Quadragesimam, Triduum Paschale, Pascham, et Tempus Per Annum."
 
 #: temporale.php:57
 msgid "Language"
-msgstr ""
+msgstr "Lingua"
 
 #: temporale.php:63
-#, fuzzy
-#| msgid "Liturgical color"
 msgid "Liturgical Season"
-msgstr "Color liturgicus"
+msgstr "Tempus Liturgicum"
 
 #: temporale.php:65
 msgid "All Seasons"
-msgstr ""
+msgstr "Omnia Tempora"
 
 #: temporale.php:66
 msgid "Advent"
-msgstr ""
+msgstr "Adventus"
 
 #: temporale.php:67
 msgid "Christmas"
-msgstr ""
+msgstr "Nativitas"
 
 #: temporale.php:68
 msgid "Lent"
-msgstr ""
+msgstr "Quadragesima"
 
 #: temporale.php:69
 msgid "Easter Triduum"
-msgstr ""
+msgstr "Triduum Paschale"
 
 #: temporale.php:70
-#, fuzzy
-#| msgid "Julian Easter"
 msgid "Easter"
-msgstr "Pascha Iuliana"
+msgstr "Pascha"
 
 #: temporale.php:71
 msgid "Ordinary Time"
-msgstr ""
+msgstr "Tempus per Annum"
 
 #: temporale.php:77
-#, fuzzy
-#| msgid "Grade"
 msgid "All Grades"
-msgstr "Gradus"
+msgstr "Omnes Gradus"
 
 #: temporale.php:78
-#, fuzzy
-#| msgid "Other Solemnity"
 msgid "Higher Solemnity (7)"
-msgstr "Alia Sollemnitas"
+msgstr "Summum Sollemnitas (7)"
 
 #: temporale.php:79
-#, fuzzy
-#| msgid "Solemnities"
 msgid "Solemnity (6)"
-msgstr "Sollemnitates"
+msgstr "Sollemnitas (6)"
 
 #: temporale.php:80
 msgid "Feast of the Lord (5)"
-msgstr ""
+msgstr "Festum Domini (5)"
 
 #: temporale.php:81
-#, fuzzy
-#| msgid "Feasts"
 msgid "Feast (4)"
-msgstr "Festæ"
+msgstr "Festum (4)"
 
 #: temporale.php:82
-#, fuzzy
-#| msgid "Memorial"
 msgid "Memorial (3)"
-msgstr "Memoria obligatoria"
+msgstr "Memoria (3)"
 
 #: temporale.php:83
-#, fuzzy
-#| msgid "Optional memorial"
 msgid "Optional Memorial (2)"
-msgstr "Memoria ad libitum"
+msgstr "Memoria Optionalis (2)"
 
 #: temporale.php:84
-#, fuzzy
-#| msgid "Commemoration"
 msgid "Commemoration (1)"
-msgstr "Commemoratio"
+msgstr "Commemoratio (1)"
 
 #: temporale.php:85
-#, fuzzy
-#| msgid "weekday"
 msgid "Weekday (0)"
-msgstr "feria"
+msgstr "Feria (0)"
 
 #: temporale.php:89
 msgid "Lectionary Category"
-msgstr ""
+msgstr "Categoria Lectionum"
 
 #: temporale.php:91
 msgid "All Categories"
-msgstr ""
+msgstr "Omnes Categoriae"
 
 #: temporale.php:92
 msgid "Dominicale et Festivum"
-msgstr ""
+msgstr "Dominicale et Festivum"
 
 #: temporale.php:93
 msgid "Feriale per Annum"
-msgstr ""
+msgstr "Feriale per Annum"
 
 #: temporale.php:94
 msgid "Feriale Tempus Adventus"
-msgstr ""
+msgstr "Feriale Tempus Adventus"
 
 #: temporale.php:95
 msgid "Feriale Tempus Nativitatis"
-msgstr ""
+msgstr "Feriale Tempus Nativitatis"
 
 #: temporale.php:96
 msgid "Feriale Tempus Quadragesimae"
-msgstr ""
+msgstr "Feriale Tempus Quadragesimae"
 
 #: temporale.php:97
 msgid "Feriale Tempus Paschatis"
-msgstr ""
+msgstr "Feriale Tempus Paschatis"
 
 #: temporale.php:98
-#, fuzzy
-#| msgid "Sanctorale"
 msgid "Sanctorum"
-msgstr "Sanctorale"
+msgstr "Sanctorum"
 
 #: temporale.php:104
 msgid "Search"
-msgstr ""
+msgstr "Quaerere"
 
 #: temporale.php:106
 msgid "Search by name or key..."
-msgstr ""
+msgstr "Quaerere per nomen vel clavis..."
 
 #: temporale.php:118
-#, fuzzy
-#| msgid "Temporale"
 msgid "Temporale Events"
-msgstr "Tempus per annum"
+msgstr "Temporale Eventus"
 
 #: temporale.php:123
 msgid "Export JSON"
-msgstr ""
+msgstr "Exportare JSON"
 
 #: temporale.php:132
-#, fuzzy
-#| msgid "Event key"
 msgid "Event Key"
-msgstr "Clavis eventus"
+msgstr "Eventus Clavis"
 
 #: temporale.php:135
 msgid "Season"
-msgstr ""
+msgstr "Tempus"
 
 #: temporale.php:136
 msgid "Type"
-msgstr ""
+msgstr "Genus"
 
 #: temporale.php:137
 msgid "Color"
-msgstr ""
+msgstr "Color"
 
 #: temporale.php:160
-#, fuzzy
-#| msgid "Event key"
 msgid "Event Details"
-msgstr "Clavis eventus"
+msgstr "Eventus Singula"
 
 #: temporale.php:167
-#, fuzzy
-#| msgid "Current localization"
 msgid "Event navigation"
-msgstr "Lingua electa"
+msgstr "Eventus navigatio"
 
 #: temporale.php:168
 msgid "First"
-msgstr ""
+msgstr "Primum"
 
 #: temporale.php:180
 msgid "Last"
-msgstr ""
+msgstr "Ultimum"
 
 #: user-profile.php:23 user-profile.php:35
-#, fuzzy
-#| msgid "View Profile"
 msgid "User Profile"
-msgstr "Videre Profilum"
+msgstr "Usoris Profilum"
 
 #: user-profile.php:43
 msgid "Account Information"
-msgstr ""
+msgstr "Rationis Informatio"
 
 #: user-profile.php:52
-#, fuzzy
-#| msgid "Name"
 msgid "Full Name"
-msgstr "Nomen"
+msgstr "Nomen plenum"
 
 #: user-profile.php:61
 msgid "Given / Family Name"
-msgstr ""
+msgstr "Praenomen / Cognomen"
 
 #: user-profile.php:85
 msgid "Email"
-msgstr ""
+msgstr "Electronicae Litterae"
 
 #: user-profile.php:90
 msgid "Email verified"
-msgstr ""
+msgstr "Email verificata"
 
 #: user-profile.php:94
 msgid "Email not verified"
-msgstr ""
+msgstr "Email non verificata"
 
 #: user-profile.php:98
 msgid "Resend verification"
-msgstr ""
+msgstr "Invia nuovamente la verifica"
 
 #: user-profile.php:101
 msgid "Click after verifying your email to update your session"
 msgstr ""
+"Clicca dopo aver verificato il tuo email per aggiornare la sessionem tuam"
 
 #: user-profile.php:102 user-profile.php:131
 msgid "Refresh session"
-msgstr ""
+msgstr "Refove sessionis"
 
 #: user-profile.php:130
 msgid "Refresh session to see updated roles"
-msgstr ""
+msgstr "Refove sessionis ut officia renovata aspicias"
 
 #: user-profile.php:135 user-profile.php:140
 msgid "Request Role"
-msgstr ""
+msgstr "Petere munus"
 
 #: user-profile.php:139
 msgid "Email verification required"
-msgstr ""
+msgstr "Requiritur verificatio email"
 
 #: user-profile.php:150
 msgid ""
 "You must verify your email address before you can request a role. Please "
 "check your inbox for a verification email."
 msgstr ""
+"Debes confirmare inscriptionem tuam electronicam antequam munus petere "
+"possis. Quaeso inspice electronicam tuam ad verificationem."
 
 #: user-profile.php:165
 msgid "No roles assigned yet. Request a role to access additional features."
-msgstr ""
+msgstr "Nulla officia adhuc assignata. Pete munus aditus ad addita officia."
 
 #: user-profile.php:196
-#, fuzzy
-#| msgid "Session Expiring"
 msgid "Session Information"
-msgstr "Sessio exspirat"
+msgstr "Informatio Sessionis"
 
 #: user-profile.php:205
-#, fuzzy
-#| msgid "Session Expired"
 msgid "Session Expires"
-msgstr "Sessio Exspiravit"
+msgstr "Sessionis Exspirat"
 
 #: user-profile.php:217
 msgid "Time Remaining"
-msgstr ""
+msgstr "Tempus Reliquum"
 
 #: user-profile.php:232 user-profile.php:433
-#, fuzzy
-#| msgid "Session Expired"
 msgid "Expired"
-msgstr "Sessio Exspiravit"
+msgstr "Exspiravit"
 
 #: user-profile.php:289 user-profile.php:314
 msgid "Refreshing..."
-msgstr ""
+msgstr "Refrigerans..."
 
 #: user-profile.php:297 user-profile.php:321
 msgid "Session refresh failed"
-msgstr ""
+msgstr "Defectum refovendi sessionis"
 
 #: user-profile.php:301 user-profile.php:325
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to refresh session. Please try logging out and back in."
-msgstr "Sessionem extendere non potuit. Quæso iterum coniunge."
+msgstr ""
+"Defectum refovendi sessionis. Quaeso tenta renuntiare et iterum coniungere."
 
 #: user-profile.php:339
-#, fuzzy
-#| msgid "Extending..."
 msgid "Sending..."
-msgstr "Extendens..."
+msgstr "Mittens..."
 
 #: user-profile.php:352
 msgid "Failed to send verification email"
-msgstr ""
+msgstr "Defectum mittere email verificationis"
 
 #: user-profile.php:355
 msgid ""
 "Verification email sent. After clicking the verification link, use the "
 "\"Refresh session\" button to update your status."
 msgstr ""
+"Email verificationis missa. Postquam in vinculum verificationis clavis, "
+"utere puga \"Refove sessionis\" ad renovandum statum tuum."
 
 #: user-profile.php:373
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to send verification email. Please try again."
-msgstr "Sessionem extendere non potuit. Quæso iterum coniunge."
+msgstr ""
+"Missa ad confirmandum electronicam mittere non potuit. Quaeso iterum tenta."
 
 #: user-profile.php:404
-#, fuzzy
-#| msgid "Session Expiring"
 msgid "Session expires in 5 minutes"
-msgstr "Sessio exspirat"
+msgstr "Sessio expleta est post 5 minuta."
 
 #: user-profile.php:405
-#, fuzzy
-#| msgid "Session Expiring"
 msgid "Session expires in 1 minute"
-msgstr "Sessio exspirat"
+msgstr "Sessio expleta est post 1 minutum."
 
 #: user-profile.php:406
-#, fuzzy
-#| msgid "Session Expired"
 msgid "Session expires in 30 seconds"
-msgstr "Sessio Exspiravit"
+msgstr "Sessio expleta est post 30 secundas."
 
 #: user-profile.php:407
-#, fuzzy
-#| msgid "Session Expired"
 msgid "Session expired"
-msgstr "Sessio Exspiravit"
+msgstr "Sessio expleta est."
 
 #~ msgid "General Roman Calendar - Extending"
 #~ msgstr "Calendarium Romanum Generale - Extensio"
