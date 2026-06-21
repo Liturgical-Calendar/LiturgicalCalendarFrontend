@@ -52,12 +52,12 @@ const Notifications = {
         if (typeof Auth === 'undefined' || !Auth.isAuthenticated()) {
             return;
         }
+        this._initialized = true;
 
         // Global admins use the review queue; resource-admins do too, but the
         // API scopes /admin/notifications to the resources they administer.
         const isAdmin = Auth.hasRole('admin') || await Auth.isResourceAdmin();
         this._mode = isAdmin ? 'admin' : 'user';
-        this._initialized = true;
         console.log(`Notifications: Initializing in ${this._mode} mode`);
 
         // Container should already be visible from PHP for any authenticated
