@@ -458,6 +458,10 @@ const Notifications = {
         if (!timestamp) return '';
 
         const date = new Date(timestamp);
+        // Bail out on an unparseable timestamp so NaN diffs don't render as "NaN ...".
+        if (!Number.isFinite(date.getTime())) {
+            return '';
+        }
         const now = new Date();
         const diffMs = now.getTime() - date.getTime();
         const diffMins = Math.floor(diffMs / 60000);
@@ -470,7 +474,7 @@ const Notifications = {
         }
         // A week or more: fall back to an absolute, locale-formatted date.
         if (diffDays >= 7) {
-            return date.toLocaleDateString(this._localeTag());
+            return this._formatAbsoluteDate(date);
         }
 
         // Locale-aware relative time. Intl.RelativeTimeFormat applies the correct
@@ -505,6 +509,20 @@ const Notifications = {
             return new Intl.RelativeTimeFormat([this._localeTag(), 'en'], { numeric: 'always' });
         } catch {
             return new Intl.RelativeTimeFormat('en', { numeric: 'always' });
+        }
+    },
+
+    /**
+     * Locale-formatted absolute date, falling back to the runtime default
+     * locale if the page's lang tag is malformed (e.g. "en_US" instead of
+     * "en-US"), which would otherwise make toLocaleDateString throw a RangeError.
+     * @private
+     */
+    _formatAbsoluteDate(date) {
+        try {
+            return date.toLocaleDateString(this._localeTag());
+        } catch {
+            return date.toLocaleDateString();
         }
     },
 
