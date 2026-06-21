@@ -956,7 +956,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Approving creates a tuple, revoking removes one; reject doesn't
                 // affect tuples but a re-fetch is cheap. Refresh userMap first so
                 // a freshly-promoted user appears with their friendly name.
-                loadUserMap().then(loadPermissions);
+                // The FGA permissions table only exists for global admins; resource-admins
+                // have no such DOM, so skip its refresh (loadAccessRequests above already
+                // refreshed the review list they care about).
+                if (config.isGlobalAdmin) {
+                    loadUserMap().then(loadPermissions);
+                }
                 // Refresh notifications
                 if (typeof Notifications !== 'undefined' && Notifications.fetchNotifications) {
                     Notifications.fetchNotifications();
