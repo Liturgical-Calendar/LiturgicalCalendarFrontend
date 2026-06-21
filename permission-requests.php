@@ -228,6 +228,7 @@ if (!$authHelper->emailVerified) {
                 objectId: <?php echo json_encode(_('Object ID'), $jsonFlags); ?>,
                 relation: <?php echo json_encode(_('Relation'), $jsonFlags); ?>,
                 selectObjectType: <?php echo json_encode(_('Select object type...'), $jsonFlags); ?>,
+                selectObjectId: <?php echo json_encode(_('Select object ID...'), $jsonFlags); ?>,
                 selectRelation: <?php echo json_encode(_('Select relation...'), $jsonFlags); ?>,
                 remove: <?php echo json_encode(_('Remove'), $jsonFlags); ?>,
                 // Object type display names
@@ -235,6 +236,16 @@ if (!$authHelper->emailVerified) {
                 diocesanCalendar: <?php echo json_encode(_('Diocesan Calendar'), $jsonFlags); ?>,
                 widerRegion: <?php echo json_encode(_('Wider Region'), $jsonFlags); ?>,
                 testDefinition: <?php echo json_encode(_('Test Definition'), $jsonFlags); ?>,
+                generalRomanCalendar: <?php echo json_encode(_('General Roman Calendar'), $jsonFlags); ?>,
+                grcTemporale: <?php echo json_encode(_('Temporale'), $jsonFlags); ?>,
+                // phpcs:ignore Generic.Files.LineLength
+                grcSanctorale1970: <?php echo json_encode(_('Sanctorale — Editio Typica 1970'), $jsonFlags); ?>,
+                // phpcs:ignore Generic.Files.LineLength
+                grcSanctorale2002: <?php echo json_encode(_('Sanctorale — Editio Typica 2002'), $jsonFlags); ?>,
+                // phpcs:ignore Generic.Files.LineLength
+                grcSanctorale2008: <?php echo json_encode(_('Sanctorale — Editio Typica 2008'), $jsonFlags); ?>,
+                // phpcs:ignore Generic.Files.LineLength
+                grcDecrees: <?php echo json_encode(_('Decrees of the Dicastery for Divine Worship'), $jsonFlags); ?>,
                 // Role display names
                 calendarEditor: <?php echo json_encode(_('Calendar Editor'), $jsonFlags); ?>,
                 testEditor: <?php echo json_encode(_('Accuracy Test Editor'), $jsonFlags); ?>,
