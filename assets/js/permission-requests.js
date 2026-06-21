@@ -79,6 +79,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     };
 
     // Fixed object-id choices for the General Roman Calendar type.
+    // The five enumerated General Roman Calendar sub-resource ids.
+    // Keep in sync with the API constant AccessRequestRepository::GRC_OBJECT_IDS
+    // and the identical copy in assets/js/admin-permissions.js.
     const GRC_OBJECT_IDS = [
         { id: 'temporale',          label: config.i18n.grcTemporale },
         { id: 'EDITIO_TYPICA_1970', label: config.i18n.grcSanctorale1970 },
@@ -126,6 +129,14 @@ document.addEventListener('DOMContentLoaded', async function() {
             const select = document.createElement('select');
             select.className = 'form-select form-select-sm perm-object-id';
             select.required = true;
+            // Empty placeholder forces an explicit choice instead of silently defaulting to the
+            // first id (temporale); consistent with the object-type and relation selects.
+            const placeholder = document.createElement('option');
+            placeholder.value = '';
+            placeholder.textContent = config.i18n.selectObjectId || 'Select object ID...';
+            placeholder.disabled = true;
+            placeholder.selected = true;
+            select.appendChild(placeholder);
             for (const opt of GRC_OBJECT_IDS) {
                 const o = document.createElement('option');
                 o.value = opt.id;

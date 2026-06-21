@@ -228,6 +228,7 @@ if (!$authHelper->emailVerified) {
                 objectId: <?php echo json_encode(_('Object ID'), $jsonFlags); ?>,
                 relation: <?php echo json_encode(_('Relation'), $jsonFlags); ?>,
                 selectObjectType: <?php echo json_encode(_('Select object type...'), $jsonFlags); ?>,
+                selectObjectId: <?php echo json_encode(_('Select object ID...'), $jsonFlags); ?>,
                 selectRelation: <?php echo json_encode(_('Select relation...'), $jsonFlags); ?>,
                 remove: <?php echo json_encode(_('Remove'), $jsonFlags); ?>,
                 // Object type display names

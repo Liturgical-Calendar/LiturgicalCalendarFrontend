@@ -74,6 +74,7 @@ if (!$isAdmin) {
                         <option value="diocesan_calendar"><?php echo htmlspecialchars(_('Diocesan Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                         <option value="wider_region"><?php echo htmlspecialchars(_('Wider Region'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                         <option value="test_definition"><?php echo htmlspecialchars(_('Test Definition'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                        <option value="general_roman_calendar"><?php echo htmlspecialchars(_('General Roman Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                     </select>
                 </div>
                 <div class="col-md-3">
@@ -377,6 +378,7 @@ if (!$isAdmin) {
                 grcSanctorale2008: <?php echo json_encode(_('Sanctorale — Editio Typica 2008')); ?>,
                 grcDecrees: <?php echo json_encode(_('Decrees of the Dicastery for Divine Worship')); ?>,
                 enterObjectId: <?php echo json_encode(_('Enter object ID...')); ?>,
+                selectObjectId: <?php echo json_encode(_('Select object ID...')); ?>,
                 // Relation display names
                 admin: <?php echo json_encode(_('Admin')); ?>,
                 viewer: <?php echo json_encode(_('Viewer')); ?>,
