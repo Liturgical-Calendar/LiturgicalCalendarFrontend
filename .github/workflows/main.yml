@@ -29,20 +29,22 @@ jobs:
       # status checks). Open a PR instead and let auto-merge land it once
       # CodeQL + Analyze (javascript) go green on the .pot-only diff.
       #
-      # The PR MUST be created with a PAT (WORKFLOW_AUTO_MERGE_PAT), not the
+      # The PR MUST be created with a PAT (the WORKFLOW_AUTO_MERGE_PAT token,
+      # stored as the org Actions secret WORKFLOW_AUTOMERGE_PAT), not the
       # default GITHUB_TOKEN: GitHub deliberately does not trigger `pull_request`
       # workflow runs for PRs opened by GITHUB_TOKEN (recursion guard), so the
       # required status checks would never start and auto-merge would wait
       # forever. A PAT-authored PR triggers the checks normally. Falls back to
       # GITHUB_TOKEN when the secret is absent (same pattern as
-      # dependabot-auto-merge.yml). NOTE: WORKFLOW_AUTO_MERGE_PAT is rotated
-      # periodically (see the rotation-reminder workflow).
+      # dependabot-auto-merge.yml). NOTE: the PAT is rotated periodically (see
+      # the rotation-reminder workflow); `secrets.WORKFLOW_AUTOMERGE_PAT` is the
+      # secret name Actions resolves — it differs from the PAT's display name.
       - name: Open PR with regenerated POT
         if: ${{ steps.update_pot.outputs.POT_LINES_CHANGED > 0 }}
         id: create_pr
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
-          token: ${{ secrets.WORKFLOW_AUTO_MERGE_PAT || secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.WORKFLOW_AUTOMERGE_PAT || secrets.GITHUB_TOKEN }}
           branch: chore/regenerate-pot
           delete-branch: true
           add-paths: i18n/litcal.pot
@@ -58,6 +60,6 @@ jobs:
       - name: Enable auto-merge
         if: steps.create_pr.outputs.pull-request-number
         env:
-          GH_TOKEN: ${{ secrets.WORKFLOW_AUTO_MERGE_PAT || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_AUTOMERGE_PAT || secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ steps.create_pr.outputs.pull-request-number }}
         run: gh pr merge "$PR_NUMBER" --auto --merge

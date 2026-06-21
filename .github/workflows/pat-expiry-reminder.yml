@@ -83,7 +83,7 @@ jobs:
           # EXPIRY and DAYS_LEFT values are interpolated, both already
           # date-validated above.
           BODY=$(cat <<EOF
-          The fine-grained PAT \`WORKFLOW_AUTO_MERGE_PAT\` (org-level secret) expires on **$EXPIRY** — $DAYS_LEFT day(s) from now.
+          The fine-grained PAT \`WORKFLOW_AUTO_MERGE_PAT\` (stored as the org-level Actions secret \`WORKFLOW_AUTOMERGE_PAT\`) expires on **$EXPIRY** — $DAYS_LEFT day(s) from now.
 
           Without this PAT the Dependabot auto-merge workflow will silently fail to merge any PR that touches \`.github/workflows/*\` (e.g. action-version bumps), since GITHUB_TOKEN cannot modify workflow files.
 
@@ -97,7 +97,7 @@ jobs:
                - **Pull requests**: Read and write
                - **Workflows**: Read and write
              - Pick a new expiry (max 1 year)
-          2. Replace the secret value at <https://github.com/organizations/Liturgical-Calendar/settings/secrets/actions/WORKFLOW_AUTO_MERGE_PAT>
+          2. Replace the secret value at <https://github.com/organizations/Liturgical-Calendar/settings/secrets/actions/WORKFLOW_AUTOMERGE_PAT>
           3. Update \`.github/pat-expiry.txt\` with the new expiration date and commit
           4. This issue will auto-close on the next workflow run after step 3 lands
 
