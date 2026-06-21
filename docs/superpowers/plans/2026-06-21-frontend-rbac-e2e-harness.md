@@ -22,8 +22,9 @@ Mailpit API (Phase 2), the project's `docker-compose` stack.
 - Playwright runs **serial, single worker** (shared API/DB/FGA state) — keep `fullyParallel: false`.
 - All seeded users use email pattern `<user-id>+e2e@litcal.test` so cleanup targets only test users.
 - All seeded users live in the **LiturgicalCalendar Zitadel org** (id from `ZITADEL_ORG_ID`).
-- Reuse existing env: `API_PROTOCOL/HOST/PORT`, `FRONTEND_URL`, `ZITADEL_ISSUER`,
+- Reuse existing env: `API_PROTOCOL/HOST/PORT`, `FRONTEND_URL`, `ZITADEL_ISSUER`, `ZITADEL_CLIENT_ID`,
   `ZITADEL_MACHINE_TOKEN`, `ZITADEL_ORG_ID`, `OPENFGA_API_URL`, `OPENFGA_STORE_ID`, `OPENFGA_MODEL_ID`.
+  (`ZITADEL_CLIENT_ID` is the OIDC client reused for the headless PKCE login flow in Task 5.)
 - TypeScript strict: the suite typechecks under `e2e/tsconfig.json` (`yarn typecheck`).
 - Project role for non-super users is `calendar_editor`; `super-admin` gets the global `admin` role.
 
@@ -286,7 +287,7 @@ export class ZitadelAdmin {
                 Authorization: `Bearer ${this.token}`,
                 'Content-Type': 'application/json',
                 'x-zitadel-orgid': this.orgId,
-                Host: 'localhost',
+                Host: new URL(this.issuer).hostname,
             },
             body: body === undefined ? undefined : JSON.stringify(body),
         });
@@ -524,8 +525,13 @@ import { ZitadelAdmin } from './zitadel';
 import { Fga } from './fga';
 
 const ISSUER = (process.env.ZITADEL_ISSUER || 'http://localhost:8080').replace(/\/$/, '');
-const CLIENT_ID = process.env.ZITADEL_CLIENT_ID!;            // Frontend OIDC client (authorization_code + PKCE)
+// Reuse the existing Zitadel OIDC client (authorization_code + PKCE, public/no-secret) for the
+// headless login flow. We drive it server-side via the session API rather than a browser redirect.
+const CLIENT_ID = process.env.ZITADEL_CLIENT_ID!;
 const REDIRECT_URI = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback.php`;
+// Zitadel matches requests by its configured external domain; send Host = the issuer hostname
+// (port-stripped) rather than hardcoding 'localhost', so a non-localhost ZITADEL_ISSUER still works.
+const HOST = new URL(ISSUER).hostname;
 const b64url = (b: Buffer) => b.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 
 export async function seedUser(id: string): Promise<string> {
@@ -550,7 +556,7 @@ export async function seedUser(id: string): Promise<string> {
  * Returns the access_token to be set as the `litcal_access_token` cookie.
  */
 export async function oidcLogin(email: string, password: string, loginClientToken: string): Promise<string> {
-    const Hl = { Authorization: `Bearer ${loginClientToken}`, 'Content-Type': 'application/json', Host: 'localhost' };
+    const Hl = { Authorization: `Bearer ${loginClientToken}`, 'Content-Type': 'application/json', Host: HOST };
     const json = async (r: Response) => { const t = await r.text(); if (!r.ok) throw new Error(`${r.url} -> ${r.status}: ${t}`); return JSON.parse(t); };
 
     // 1. Create a password-checked session (login-client token).
@@ -566,7 +572,7 @@ export async function oidcLogin(email: string, password: string, loginClientToke
         response_type: 'code', client_id: CLIENT_ID, redirect_uri: REDIRECT_URI,
         scope: 'openid profile email', code_challenge: challenge, code_challenge_method: 'S256', state: id_state(),
     });
-    const authResp = await fetch(`${ISSUER}/oauth/v2/authorize?${qs}`, { headers: { Host: 'localhost' }, redirect: 'manual' });
+    const authResp = await fetch(`${ISSUER}/oauth/v2/authorize?${qs}`, { headers: { Host: HOST }, redirect: 'manual' });
     const loc = authResp.headers.get('location') || '';
     const arMatch = loc.match(/authRequest(?:Id)?=([^&]+)/);
     if (!arMatch) throw new Error(`authorize did not return an authRequest id: ${authResp.status} ${loc}`);
@@ -584,7 +590,7 @@ export async function oidcLogin(email: string, password: string, loginClientToke
     // 4. Exchange the code for tokens (public client, PKCE — no client secret).
     const form = new URLSearchParams({ grant_type: 'authorization_code', code, redirect_uri: REDIRECT_URI, client_id: CLIENT_ID, code_verifier: verifier });
     const tok = await json(await fetch(`${ISSUER}/oauth/v2/token`, {
-        method: 'POST', headers: { Host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' }, body: form,
+        method: 'POST', headers: { Host: HOST, 'Content-Type': 'application/x-www-form-urlencoded' }, body: form,
     }));
     if (!tok.access_token) throw new Error(`token exchange returned no access_token: ${JSON.stringify(tok)}`);
     return tok.access_token as string;

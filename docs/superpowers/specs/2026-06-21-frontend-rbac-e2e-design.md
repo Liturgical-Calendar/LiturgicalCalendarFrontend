@@ -67,22 +67,23 @@ e2e/
 All users live in the **LiturgicalCalendar Zitadel org**. Project role is `calendar_editor` unless noted.
 "FGA tuple" is the scoped permission written to OpenFGA.
 
-| User            | Zitadel role     | FGA tuple                                  | Scope            |
-|-----------------|------------------|--------------------------------------------|------------------|
-| `super-admin`   | `admin` (global) | —                                          | everything       |
-| `cei-admin`     | calendar_editor  | `admin`  @ `national_calendar:IT`          | IT national      |
-| `cei-editor`    | calendar_editor  | `editor` @ `national_calendar:IT`          | IT national      |
-| `usccb-admin`   | calendar_editor  | `admin`  @ `national_calendar:USA`         | USA national     |
-| `usccb-editor`  | calendar_editor  | `editor` @ `national_calendar:USA`         | USA national     |
-| `rome-admin`    | calendar_editor  | `admin`  @ `diocesan_calendar:romamo_it`   | Rome diocese     |
-| `rome-editor`   | calendar_editor  | `editor` @ `diocesan_calendar:romamo_it`   | Rome diocese     |
-| `grc-admin`     | calendar_editor  | `admin`  @ `general_roman_calendar`        | GRC (PR 339)     |
-| `grc-editor`    | calendar_editor  | `editor` @ `general_roman_calendar`        | GRC (PR 339)     |
-| `europe-admin`  | calendar_editor  | `admin`  @ `wider_region:EU`               | Europe region    |
-| `europe-editor` | calendar_editor  | `editor` @ `wider_region:EU`               | Europe region    |
+| User            | Zitadel role     | FGA tuple                                     | Scope         |
+| --------------- | ---------------- | --------------------------------------------- | ------------- |
+| `super-admin`   | `admin` (global) | —                                             | everything    |
+| `cei-admin`     | calendar_editor  | `admin` @ `national_calendar:IT`              | IT national   |
+| `cei-editor`    | calendar_editor  | `editor` @ `national_calendar:IT`             | IT national   |
+| `usccb-admin`   | calendar_editor  | `admin` @ `national_calendar:US`              | US national   |
+| `usccb-editor`  | calendar_editor  | `editor` @ `national_calendar:US`             | US national   |
+| `rome-admin`    | calendar_editor  | `admin` @ `diocesan_calendar:romamo_it`       | Rome diocese  |
+| `rome-editor`   | calendar_editor  | `editor` @ `diocesan_calendar:romamo_it`      | Rome diocese  |
+| `grc-admin`     | calendar_editor  | `admin` @ `general_roman_calendar:temporale`  | GRC temporale |
+| `grc-editor`    | calendar_editor  | `editor` @ `general_roman_calendar:temporale` | GRC temporale |
+| `europe-admin`  | calendar_editor  | `admin` @ `wider_region:Europe`               | Europe region |
+| `europe-editor` | calendar_editor  | `editor` @ `wider_region:Europe`              | Europe region |
 
-Exact object_ids (`EU` vs `Europe`, the GRC key and whether GRC has sub-resources such as `temporale` /
-`decrees` / Latin-edition missals) are pinned from the API source data and PR #339 during implementation.
+Object_ids are RESOLVED (verified against API source data + the live stack on 2026-06-21): national
+`IT`/`US`, `diocesan_calendar:romamo_it`, `wider_region:Europe`, and `general_roman_calendar:temporale`
+(GRC enumerated ids: `temporale,EDITIO_TYPICA_1970,EDITIO_TYPICA_2002,EDITIO_TYPICA_2008,decrees`).
 
 ## Seeding & registration mechanism
 
@@ -98,7 +99,7 @@ Exact object_ids (`EU` vs `Europe`, the GRC key and whether GRC has sub-resource
 ## Scenario specs
 
 Each spec is **independent**: it seeds its own precondition grants rather than depending on a prior spec
-having run, so order does not matter and any spec runs alone.
+having run, so specs can run in any order, including in isolation.
 
 1. **01 — cei-admin requests `admin`@IT** (real registration): register → request → assert **only
    super-admin** sees it (cei-admin is not yet an IT admin) → (a) super-admin rejects → (b) cei-admin
@@ -156,7 +157,8 @@ having run, so order does not matter and any spec runs alone.
    #633-tested `filterByAdminAccess`.
 3. **Real-registration specs** depend on the org-domain-suffix login-name setting (enabled) and a reachable
    Mailpit.
-4. **Europe / GRC object_ids** need pinning from the API source data and PR #339.
+4. **Europe / GRC object_ids** — RESOLVED (verified against the live stack 2026-06-21): `wider_region:Europe`
+   and `general_roman_calendar:temporale`. No longer a risk.
 
 ## Out of scope (this round)
 

@@ -11,7 +11,9 @@ export class ZitadelAdmin {
                 Authorization: `Bearer ${this.token}`,
                 'Content-Type': 'application/json',
                 'x-zitadel-orgid': this.orgId,
-                Host: 'localhost',
+                // Send Host = the issuer hostname (port-stripped) so a non-localhost
+                // ZITADEL_ISSUER still matches Zitadel's configured external domain.
+                Host: new URL(this.issuer).hostname,
             },
             body: body === undefined ? undefined : JSON.stringify(body),
         });
