@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 11:05+0000\n"
+"POT-Creation-Date: 2026-06-21 15:40+0000\n"
 "PO-Revision-Date: 2026-06-21 15:13+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
@@ -1417,43 +1417,31 @@ msgstr "Kon meldingen niet laden"
 msgid "Just now"
 msgstr "Zojuist"
 
-#: layout/footer.php:96
-msgid "min ago"
-msgstr "min geleden"
-
-#: layout/footer.php:97
-msgid "hours ago"
-msgstr "uren geleden"
-
-#: layout/footer.php:98
-msgid "days ago"
-msgstr "dagen geleden"
-
-#: layout/footer.php:99 admin-permissions.php:415 admin-role-requests.php:252
+#: layout/footer.php:96 admin-permissions.php:415 admin-role-requests.php:252
 msgid "Requested"
 msgstr "Aangevraagd"
 
-#: layout/footer.php:100
+#: layout/footer.php:97
 msgid "Requested access"
 msgstr "Toegang aangevraagd"
 
-#: layout/footer.php:101
+#: layout/footer.php:98
 msgid "Your request was approved"
 msgstr "Je verzoek is goedgekeurd"
 
-#: layout/footer.php:102
+#: layout/footer.php:99
 msgid "Your request was rejected"
 msgstr "Je verzoek is afgewezen"
 
-#: layout/footer.php:103
+#: layout/footer.php:100
 msgid "Your access was revoked"
 msgstr "Je toegang is ingetrokken"
 
-#: layout/footer.php:104
+#: layout/footer.php:101
 msgid "Request access to start using the system"
 msgstr "Vraag toegang aan om het systeem te gebruiken"
 
-#: layout/footer.php:105
+#: layout/footer.php:102
 msgid "Get started"
 msgstr "Aan de slag"
 
@@ -3275,7 +3263,8 @@ msgstr "Applicatie opnieuw ingediend voor beoordeling."
 
 #: developer-dashboard.php:313
 msgid "Failed to resubmit application. Please try again."
-msgstr "Het opnieuw indienen van de applicatie is mislukt. Probeer het opnieuw."
+msgstr ""
+"Het opnieuw indienen van de applicatie is mislukt. Probeer het opnieuw."
 
 #: developer-dashboard.php:320
 msgid ""
@@ -3602,6 +3591,15 @@ msgstr "Sessie verloopt over 30 seconden"
 #: user-profile.php:407
 msgid "Session expired"
 msgstr "Sessie verlopen"
+
+#~ msgid "min ago"
+#~ msgstr "min geleden"
+
+#~ msgid "hours ago"
+#~ msgstr "uren geleden"
+
+#~ msgid "days ago"
+#~ msgstr "dagen geleden"
 
 #~ msgid "General Roman Calendar - Extending"
 #~ msgstr "Algemene Romeinse kalender - Uitbreiding"

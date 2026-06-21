@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 11:05+0000\n"
+"POT-Creation-Date: 2026-06-21 15:40+0000\n"
 "PO-Revision-Date: 2026-06-21 11:36+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
@@ -1425,43 +1425,31 @@ msgstr "Impossibile caricare le notifiche"
 msgid "Just now"
 msgstr "Poco fa"
 
-#: layout/footer.php:96
-msgid "min ago"
-msgstr "min fa"
-
-#: layout/footer.php:97
-msgid "hours ago"
-msgstr "ore fa"
-
-#: layout/footer.php:98
-msgid "days ago"
-msgstr "giorni fa"
-
-#: layout/footer.php:99 admin-permissions.php:415 admin-role-requests.php:252
+#: layout/footer.php:96 admin-permissions.php:415 admin-role-requests.php:252
 msgid "Requested"
 msgstr "Richiesto"
 
-#: layout/footer.php:100
+#: layout/footer.php:97
 msgid "Requested access"
 msgstr "Accesso richiesto"
 
-#: layout/footer.php:101
+#: layout/footer.php:98
 msgid "Your request was approved"
 msgstr "La tua richiesta è stata approvata"
 
-#: layout/footer.php:102
+#: layout/footer.php:99
 msgid "Your request was rejected"
 msgstr "La tua richiesta è stata rifiutata"
 
-#: layout/footer.php:103
+#: layout/footer.php:100
 msgid "Your access was revoked"
 msgstr "Il tuo accesso è stato revocato"
 
-#: layout/footer.php:104
+#: layout/footer.php:101
 msgid "Request access to start using the system"
 msgstr "Richiedi l'accesso per iniziare a usare il sistema"
 
-#: layout/footer.php:105
+#: layout/footer.php:102
 msgid "Get started"
 msgstr "Inizia"
 
@@ -3609,6 +3597,15 @@ msgstr "La sessione scade tra 30 secondi"
 #: user-profile.php:407
 msgid "Session expired"
 msgstr "Sessione scaduta"
+
+#~ msgid "min ago"
+#~ msgstr "min fa"
+
+#~ msgid "hours ago"
+#~ msgstr "ore fa"
+
+#~ msgid "days ago"
+#~ msgstr "giorni fa"
 
 #~ msgid "General Roman Calendar - Extending"
 #~ msgstr "Calendario Romano Generale - Estensione"

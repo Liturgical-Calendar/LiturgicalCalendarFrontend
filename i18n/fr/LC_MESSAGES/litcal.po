@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 11:05+0000\n"
+"POT-Creation-Date: 2026-06-21 15:40+0000\n"
 "PO-Revision-Date: 2026-06-21 11:36+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
@@ -1431,43 +1431,31 @@ msgstr "Impossible de charger les notifications"
 msgid "Just now"
 msgstr "À l'instant"
 
-#: layout/footer.php:96
-msgid "min ago"
-msgstr "il y a min"
-
-#: layout/footer.php:97
-msgid "hours ago"
-msgstr "il y a heures"
-
-#: layout/footer.php:98
-msgid "days ago"
-msgstr "il y a jours"
-
-#: layout/footer.php:99 admin-permissions.php:415 admin-role-requests.php:252
+#: layout/footer.php:96 admin-permissions.php:415 admin-role-requests.php:252
 msgid "Requested"
 msgstr "Demandé"
 
-#: layout/footer.php:100
+#: layout/footer.php:97
 msgid "Requested access"
 msgstr "Accès demandé"
 
-#: layout/footer.php:101
+#: layout/footer.php:98
 msgid "Your request was approved"
 msgstr "Votre demande a été approuvée"
 
-#: layout/footer.php:102
+#: layout/footer.php:99
 msgid "Your request was rejected"
 msgstr "Votre demande a été rejetée"
 
-#: layout/footer.php:103
+#: layout/footer.php:100
 msgid "Your access was revoked"
 msgstr "Votre accès a été révoqué"
 
-#: layout/footer.php:104
+#: layout/footer.php:101
 msgid "Request access to start using the system"
 msgstr "Demander l'accès pour commencer à utiliser le système"
 
-#: layout/footer.php:105
+#: layout/footer.php:102
 msgid "Get started"
 msgstr "Commencer"
 
@@ -2535,7 +2523,8 @@ msgstr "Aucune demande d'accès en attente. Tout est à jour !"
 
 #: admin-permissions.php:394
 msgid "Failed to load access requests. Please try again later."
-msgstr "Échec du chargement des demandes d'accès. Veuillez réessayer plus tard."
+msgstr ""
+"Échec du chargement des demandes d'accès. Veuillez réessayer plus tard."
 
 #: admin-permissions.php:395 admin-applications.php:232
 #: admin-role-requests.php:242
@@ -2893,7 +2882,8 @@ msgstr "Aucune demande de rôle en attente. Tout est à jour !"
 
 #: admin-role-requests.php:241
 msgid "Failed to load role requests. Please try again later."
-msgstr "Échec du chargement des demandes de rôle. Veuillez réessayer plus tard."
+msgstr ""
+"Échec du chargement des demandes de rôle. Veuillez réessayer plus tard."
 
 #: admin-role-requests.php:243
 msgid "Request approved successfully."
@@ -3611,6 +3601,15 @@ msgstr "La session expire dans 30 secondes"
 #: user-profile.php:407
 msgid "Session expired"
 msgstr "Session expirée"
+
+#~ msgid "min ago"
+#~ msgstr "il y a min"
+
+#~ msgid "hours ago"
+#~ msgstr "il y a heures"
+
+#~ msgid "days ago"
+#~ msgstr "il y a jours"
 
 #~ msgid "General Roman Calendar - Extending"
 #~ msgstr "Calendrier Romain Général - Extension"

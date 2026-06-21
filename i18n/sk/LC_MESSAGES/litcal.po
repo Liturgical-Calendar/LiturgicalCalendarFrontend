@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 11:05+0000\n"
+"POT-Creation-Date: 2026-06-21 15:40+0000\n"
 "PO-Revision-Date: 2026-06-21 11:36+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -1399,43 +1399,31 @@ msgstr "Nepodarilo sa načítať notifikácie"
 msgid "Just now"
 msgstr "Práve teraz"
 
-#: layout/footer.php:96
-msgid "min ago"
-msgstr "pred minútou"
-
-#: layout/footer.php:97
-msgid "hours ago"
-msgstr "pred hodinami"
-
-#: layout/footer.php:98
-msgid "days ago"
-msgstr "pred dňami"
-
-#: layout/footer.php:99 admin-permissions.php:415 admin-role-requests.php:252
+#: layout/footer.php:96 admin-permissions.php:415 admin-role-requests.php:252
 msgid "Requested"
 msgstr "Požadované"
 
-#: layout/footer.php:100
+#: layout/footer.php:97
 msgid "Requested access"
 msgstr "Požadovaný prístup"
 
-#: layout/footer.php:101
+#: layout/footer.php:98
 msgid "Your request was approved"
 msgstr "Vaša žiadosť bola schválená"
 
-#: layout/footer.php:102
+#: layout/footer.php:99
 msgid "Your request was rejected"
 msgstr "Vaša žiadosť bola zamietnutá"
 
-#: layout/footer.php:103
+#: layout/footer.php:100
 msgid "Your access was revoked"
 msgstr "Váš prístup bol zrušený"
 
-#: layout/footer.php:104
+#: layout/footer.php:101
 msgid "Request access to start using the system"
 msgstr "Požiadajte o prístup na začatie používania systému"
 
-#: layout/footer.php:105
+#: layout/footer.php:102
 msgid "Get started"
 msgstr "Začať"
 
@@ -3553,6 +3541,15 @@ msgstr "Relácia vyprší o 30 sekúnd"
 #: user-profile.php:407
 msgid "Session expired"
 msgstr "Relácia vypršala"
+
+#~ msgid "min ago"
+#~ msgstr "pred minútou"
+
+#~ msgid "hours ago"
+#~ msgstr "pred hodinami"
+
+#~ msgid "days ago"
+#~ msgstr "pred dňami"
 
 #~ msgid "General Roman Calendar - Extending"
 #~ msgstr "Všeobecný rímsky kalendár - Rozšírenie"

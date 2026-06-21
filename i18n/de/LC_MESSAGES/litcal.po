@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 11:05+0000\n"
+"POT-Creation-Date: 2026-06-21 15:40+0000\n"
 "PO-Revision-Date: 2026-06-21 15:13+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
@@ -1424,43 +1424,31 @@ msgstr "Konnte Benachrichtigungen nicht laden"
 msgid "Just now"
 msgstr "Gerade eben"
 
-#: layout/footer.php:96
-msgid "min ago"
-msgstr "Min. her"
-
-#: layout/footer.php:97
-msgid "hours ago"
-msgstr "Stunden her"
-
-#: layout/footer.php:98
-msgid "days ago"
-msgstr "Tage her"
-
-#: layout/footer.php:99 admin-permissions.php:415 admin-role-requests.php:252
+#: layout/footer.php:96 admin-permissions.php:415 admin-role-requests.php:252
 msgid "Requested"
 msgstr "Angefordert"
 
-#: layout/footer.php:100
+#: layout/footer.php:97
 msgid "Requested access"
 msgstr "Zugriff angefordert"
 
-#: layout/footer.php:101
+#: layout/footer.php:98
 msgid "Your request was approved"
 msgstr "Deine Anfrage wurde genehmigt"
 
-#: layout/footer.php:102
+#: layout/footer.php:99
 msgid "Your request was rejected"
 msgstr "Deine Anfrage wurde abgelehnt"
 
-#: layout/footer.php:103
+#: layout/footer.php:100
 msgid "Your access was revoked"
 msgstr "Dein Zugriff wurde widerrufen"
 
-#: layout/footer.php:104
+#: layout/footer.php:101
 msgid "Request access to start using the system"
 msgstr "Zugriff anfordern, um das System zu nutzen"
 
-#: layout/footer.php:105
+#: layout/footer.php:102
 msgid "Get started"
 msgstr "Loslegen"
 
@@ -3612,6 +3600,15 @@ msgstr "Sitzung läuft in 30 Sekunden ab"
 #: user-profile.php:407
 msgid "Session expired"
 msgstr "Sitzung abgelaufen"
+
+#~ msgid "min ago"
+#~ msgstr "Min. her"
+
+#~ msgid "hours ago"
+#~ msgstr "Stunden her"
+
+#~ msgid "days ago"
+#~ msgstr "Tage her"
 
 #~ msgid "General Roman Calendar - Extending"
 #~ msgstr "Allgemeiner Römischer Kalender - Erweiterung"

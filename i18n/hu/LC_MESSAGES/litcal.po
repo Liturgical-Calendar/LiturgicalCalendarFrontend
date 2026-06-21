@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 11:05+0000\n"
+"POT-Creation-Date: 2026-06-21 15:40+0000\n"
 "PO-Revision-Date: 2026-06-21 15:13+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
@@ -1405,43 +1405,31 @@ msgstr "Értesítések betöltése nem sikerült"
 msgid "Just now"
 msgstr "Épp most"
 
-#: layout/footer.php:96
-msgid "min ago"
-msgstr "perce"
-
-#: layout/footer.php:97
-msgid "hours ago"
-msgstr "órája"
-
-#: layout/footer.php:98
-msgid "days ago"
-msgstr "napja"
-
-#: layout/footer.php:99 admin-permissions.php:415 admin-role-requests.php:252
+#: layout/footer.php:96 admin-permissions.php:415 admin-role-requests.php:252
 msgid "Requested"
 msgstr "Kérve"
 
-#: layout/footer.php:100
+#: layout/footer.php:97
 msgid "Requested access"
 msgstr "Hozzáférési kérelem"
 
-#: layout/footer.php:101
+#: layout/footer.php:98
 msgid "Your request was approved"
 msgstr "Kérelmed jóváhagyva"
 
-#: layout/footer.php:102
+#: layout/footer.php:99
 msgid "Your request was rejected"
 msgstr "Kérelmed elutasítva"
 
-#: layout/footer.php:103
+#: layout/footer.php:100
 msgid "Your access was revoked"
 msgstr "Hozzáférésed visszavonva"
 
-#: layout/footer.php:104
+#: layout/footer.php:101
 msgid "Request access to start using the system"
 msgstr "Kérj hozzáférést a rendszer használatának megkezdéséhez"
 
-#: layout/footer.php:105
+#: layout/footer.php:102
 msgid "Get started"
 msgstr "Kezdjük el"
 
@@ -3575,6 +3563,15 @@ msgstr "A munkamenet 30 másodperc múlva lejár"
 #: user-profile.php:407
 msgid "Session expired"
 msgstr "A munkamenet lejárt"
+
+#~ msgid "min ago"
+#~ msgstr "perce"
+
+#~ msgid "hours ago"
+#~ msgstr "órája"
+
+#~ msgid "days ago"
+#~ msgstr "napja"
 
 #~ msgid "General Roman Calendar - Extending"
 #~ msgstr "Általános római naptár - Kiterjesztés"
