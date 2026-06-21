@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-01 09:48-0400\n"
-"PO-Revision-Date: 2026-04-02 19:50+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"POT-Creation-Date: 2026-06-21 15:40+0000\n"
+"PO-Revision-Date: 2026-06-21 15:13+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hu/>\n"
 "Language: hu\n"
@@ -122,11 +122,16 @@ msgstr "Minden %1$s útvonalon elérhető kérési paraméterek"
 
 #. translators: part of page title - refers to the Catholic liturgical calendar
 #: index.php:65 usage.php:29 examples.php:98 liturgyOfAnyDay.php:18
-#: layout/header.php:257
+#: layout/header.php:257 admin-permissions.php:77 admin-permissions.php:289
+#: admin-permissions.php:374 permission-requests.php:239
 msgid "General Roman Calendar"
 msgstr "Általános római naptár"
 
 #: index.php:74 layout/header.php:19 layout/header.php:229
+#: admin-permissions.php:34 permission-requests.php:32
+#: admin-applications.php:34 admin-dashboard.php:40 admin-role-requests.php:44
+#: admin-users.php:34 developer-dashboard.php:35 temporale.php:25
+#: user-profile.php:24
 msgid "Catholic Liturgical Calendar"
 msgstr "Katolikus liturgikus naptár"
 
@@ -1204,10 +1209,12 @@ msgstr "Tulajdonság megváltoztatása"
 
 #. translators: form field label for the name of a liturgical event
 #: src/Utilities.php:301 src/FormControls.php:61 includes/messages.php:19
+#: temporale.php:133
 msgid "Name"
 msgstr "Név"
 
-#: src/Utilities.php:302 src/FormControls.php:194
+#: src/Utilities.php:302 src/FormControls.php:194 temporale.php:75
+#: temporale.php:134
 msgid "Grade"
 msgstr "Fokozat"
 
@@ -1281,7 +1288,18 @@ msgstr "Nézd meg a projekttárakat a GitHubon"
 msgid "Notifications"
 msgstr "Értesítések"
 
-#: layout/header.php:140
+#: layout/header.php:140 admin-permissions.php:129 admin-permissions.php:184
+#: admin-permissions.php:191 admin-permissions.php:198
+#: admin-permissions.php:205 admin-permissions.php:352
+#: admin-permissions.php:391 permission-requests.php:64
+#: permission-requests.php:204 admin-applications.php:136
+#: admin-applications.php:145 admin-applications.php:154
+#: admin-applications.php:163 admin-applications.php:228
+#: admin-role-requests.php:146 admin-role-requests.php:155
+#: admin-role-requests.php:164 admin-role-requests.php:173
+#: admin-role-requests.php:238 admin-users.php:70 admin-users.php:85
+#: admin-users.php:151 developer-dashboard.php:68 temporale.php:59
+#: temporale.php:145
 msgid "Loading..."
 msgstr "Betöltés..."
 
@@ -1299,19 +1317,23 @@ msgid "View Profile"
 msgstr "Profil megtekintése"
 
 #: layout/header.php:176 includes/login-modal.php:105
-#: includes/login-modal.php:670
+#: includes/login-modal.php:670 user-profile.php:277
 msgid "Are you sure you want to logout?"
 msgstr "Biztosan ki szeretne jelentkezni?"
 
 #: layout/header.php:179 layout/header.php:183 includes/login-modal.php:12
+#: user-profile.php:261
 msgid "Logout"
 msgstr "Kijelentkezés"
 
-#: layout/header.php:188 layout/header.php:251
+#: layout/header.php:188 layout/header.php:251 admin-permissions.php:419
+#: permission-requests.php:90 permission-requests.php:252
+#: admin-role-requests.php:260 admin-users.php:144
 msgid "Developer"
 msgstr "Fejlesztő"
 
-#: layout/header.php:200
+#: layout/header.php:200 admin-permissions.php:91 admin-permissions.php:301
+#: admin-permissions.php:383 permission-requests.php:256
 msgid "Admin"
 msgstr "Adminisztráció"
 
@@ -1319,15 +1341,16 @@ msgstr "Adminisztráció"
 msgid "Dashboard"
 msgstr "Irányítópult"
 
-#: layout/header.php:261
+#: layout/header.php:261 includes/admin-blocks.php:15 admin-permissions.php:375
+#: permission-requests.php:240 temporale.php:24 temporale.php:37
 msgid "Temporale"
 msgstr "Temporále"
 
-#: layout/header.php:265
+#: layout/header.php:265 includes/admin-blocks.php:25
 msgid "Sanctorale"
 msgstr "Szanctorále"
 
-#: layout/header.php:269
+#: layout/header.php:269 includes/admin-blocks.php:35
 msgid "Decrees"
 msgstr "Rendeletek"
 
@@ -1336,15 +1359,17 @@ msgid "Particular Calendars"
 msgstr "Partikuláris naptárak"
 
 #. translators: label for wider region calendar name field
-#: layout/header.php:281 includes/messages.php:206
+#: layout/header.php:281 includes/messages.php:206 includes/admin-blocks.php:45
+#: admin-permissions.php:75 admin-permissions.php:287 admin-permissions.php:372
+#: permission-requests.php:237
 msgid "Wider Region"
 msgstr "Tágabb régió"
 
-#: layout/header.php:285
+#: layout/header.php:285 includes/admin-blocks.php:55
 msgid "National"
 msgstr "Nemzeti"
 
-#: layout/header.php:289
+#: layout/header.php:289 includes/admin-blocks.php:65
 msgid "Diocesan"
 msgstr "Egyházmegyei"
 
@@ -1364,6 +1389,50 @@ msgstr "Dokumentáció"
 msgid "Examples of Usage"
 msgstr "Használati példák"
 
+#: layout/footer.php:92
+msgid "No pending requests"
+msgstr "Nincsenek függőben lévő kérések"
+
+#: layout/footer.php:93
+msgid "No new notifications"
+msgstr "Nincsenek új értesítések"
+
+#: layout/footer.php:94
+msgid "Could not load notifications"
+msgstr "Értesítések betöltése nem sikerült"
+
+#: layout/footer.php:95
+msgid "Just now"
+msgstr "Épp most"
+
+#: layout/footer.php:96 admin-permissions.php:415 admin-role-requests.php:252
+msgid "Requested"
+msgstr "Kérve"
+
+#: layout/footer.php:97
+msgid "Requested access"
+msgstr "Hozzáférési kérelem"
+
+#: layout/footer.php:98
+msgid "Your request was approved"
+msgstr "Kérelmed jóváhagyva"
+
+#: layout/footer.php:99
+msgid "Your request was rejected"
+msgstr "Kérelmed elutasítva"
+
+#: layout/footer.php:100
+msgid "Your access was revoked"
+msgstr "Hozzáférésed visszavonva"
+
+#: layout/footer.php:101
+msgid "Request access to start using the system"
+msgstr "Kérj hozzáférést a rendszer használatának megkezdéséhez"
+
+#: layout/footer.php:102
+msgid "Get started"
+msgstr "Kezdjük el"
+
 #: includes/login-modal.php:6
 msgid "Session Expiring"
 msgstr "Lejár a munkamenet"
@@ -1376,7 +1445,7 @@ msgstr "Munkamenet meghosszabbítása"
 msgid "Administrator Login"
 msgstr "Adminisztrátori bejelentkezés"
 
-#: includes/login-modal.php:33
+#: includes/login-modal.php:33 user-profile.php:77
 msgid "Username"
 msgstr "Felhasználónév"
 
@@ -1394,6 +1463,9 @@ msgstr "Emlékezz rám"
 
 #. translators: button label for canceling an action
 #: includes/login-modal.php:55 includes/messages.php:132
+#: admin-permissions.php:311 admin-permissions.php:337
+#: admin-applications.php:207 admin-users.php:112 developer-dashboard.php:134
+#: developer-dashboard.php:183 developer-dashboard.php:246
 msgid "Cancel"
 msgstr "Mégse"
 
@@ -1802,7 +1874,8 @@ msgstr ""
 "beállítani a csoportot."
 
 #. translators: label for national calendar name field
-#: includes/messages.php:208
+#: includes/messages.php:208 admin-permissions.php:73 admin-permissions.php:285
+#: admin-permissions.php:370 permission-requests.php:235
 msgid "National Calendar"
 msgstr "Nemzeti naptár"
 
@@ -2084,12 +2157,12 @@ msgstr ""
 "tágabb régióra, itt társíthatod a tágabb régió adatait a nemzeti naptárral"
 
 #. translators: screen reader text for previous button
-#: includes/messages.php:346
+#: includes/messages.php:346 temporale.php:171
 msgid "Previous"
 msgstr "Előző"
 
 #. translators: screen reader text for next button
-#: includes/messages.php:348
+#: includes/messages.php:348 temporale.php:177
 msgid "Next"
 msgstr "Következő"
 
@@ -2097,6 +2170,1408 @@ msgstr "Következő"
 #: includes/messages.php:350
 msgid "Diocesan calendar definition"
 msgstr "Egyházmegyei naptár meghatározása"
+
+#: includes/admin-blocks.php:16
+msgid "Proprium de Tempore - temporal cycle events"
+msgstr "Proprium de Tempore - időszaki ciklus eseményei"
+
+#: includes/admin-blocks.php:26
+msgid "Proprium de Sanctis - Roman Missal editions"
+msgstr "Proprium de Sanctis - Római Misekönyv kiadásai"
+
+#: includes/admin-blocks.php:36
+msgid "Congregation for Divine Worship decrees"
+msgstr "Istentiszteleti Kongregáció rendeletei"
+
+#: includes/admin-blocks.php:46
+msgid "Shared events for geographical regions"
+msgstr "Megosztott események földrajzi régiók szerint"
+
+#: includes/admin-blocks.php:56
+msgid "National calendars by Bishops Conferences"
+msgstr "Nemzeti naptárak a püspöki konferenciák által"
+
+#: includes/admin-blocks.php:66
+msgid "Diocesan calendars by liturgical offices"
+msgstr "Egyházmegyei naptárak liturgikus hivatalok szerint"
+
+#: includes/admin-blocks.php:83
+msgid "View"
+msgstr "Megtekintés"
+
+#: includes/admin-blocks.php:84 developer-dashboard.php:269
+msgid "Edit"
+msgstr "Szerkesztés"
+
+#: admin-permissions.php:33 admin-permissions.php:45
+msgid "Permissions Management"
+msgstr "Engedélyek kezelése"
+
+#: admin-permissions.php:49
+msgid ""
+"Manage fine-grained permissions for calendar resources. Grant or revoke user "
+"access to specific calendars and test definitions."
+msgstr ""
+"A naptárforrások részletes engedélyeinek kezelése. Felhasználók "
+"hozzáférésének megadása vagy visszavonása meghatározott naptárakhoz és "
+"tesztdefiníciókhoz."
+
+#: admin-permissions.php:57 temporale.php:51
+msgid "Filters"
+msgstr "Szűrők"
+
+#: admin-permissions.php:63 admin-permissions.php:363 admin-permissions.php:401
+#: admin-applications.php:238 admin-role-requests.php:248 admin-users.php:213
+#: admin-users.php:290
+msgid "User"
+msgstr "Felhasználó"
+
+#: admin-permissions.php:66
+msgid "Filter by user ID..."
+msgstr "Szűrés felhasználói azonosító alapján..."
+
+#: admin-permissions.php:69 admin-permissions.php:282 admin-permissions.php:364
+#: admin-permissions.php:404 permission-requests.php:227
+msgid "Object Type"
+msgstr "Objektumtípus"
+
+#: admin-permissions.php:72 admin-permissions.php:90
+msgid "All"
+msgstr "Összes"
+
+#: admin-permissions.php:74 admin-permissions.php:286 admin-permissions.php:371
+#: permission-requests.php:236
+msgid "Diocesan Calendar"
+msgstr "Egyházmegyei naptár"
+
+#: admin-permissions.php:76 admin-permissions.php:288 admin-permissions.php:373
+#: permission-requests.php:238
+msgid "Test Definition"
+msgstr "Tesztdefiníció"
+
+#: admin-permissions.php:81 admin-permissions.php:293 admin-permissions.php:365
+#: admin-permissions.php:405 permission-requests.php:228
+msgid "Object ID"
+msgstr "Objektumazonosító"
+
+#: admin-permissions.php:84
+msgid "Filter by object ID..."
+msgstr "Szűrés objektumazonosító alapján..."
+
+#: admin-permissions.php:87 admin-permissions.php:298 admin-permissions.php:366
+#: admin-permissions.php:406 permission-requests.php:229
+msgid "Relation"
+msgstr "Kapcsolat"
+
+#: admin-permissions.php:92 admin-permissions.php:302 admin-permissions.php:384
+#: permission-requests.php:254
+msgid "Viewer"
+msgstr "Megtekintő"
+
+#: admin-permissions.php:93 admin-permissions.php:303 admin-permissions.php:385
+#: permission-requests.php:255
+msgid "Editor"
+msgstr "Szerkesztő"
+
+#: admin-permissions.php:94 admin-permissions.php:304 admin-permissions.php:386
+#: permission-requests.php:257
+msgid "Deleter"
+msgstr "Törlő"
+
+#: admin-permissions.php:100
+msgid "Apply Filters"
+msgstr "Szűrők alkalmazása"
+
+#: admin-permissions.php:103
+msgid "Clear Filters"
+msgstr "Szűrők törlése"
+
+#: admin-permissions.php:112 admin-permissions.php:271
+#: admin-permissions.php:314
+msgid "Grant Permission"
+msgstr "Engedély megadása"
+
+#: admin-permissions.php:115 admin-permissions.php:143
+#: admin-applications.php:125 admin-role-requests.php:135 admin-users.php:56
+msgid "Refresh"
+msgstr "Frissítés"
+
+#: admin-permissions.php:123
+msgid "Permission Tuples"
+msgstr "Engedély Halmazok"
+
+#: admin-permissions.php:138 permission-requests.php:31
+#: permission-requests.php:44
+msgid "Access Requests"
+msgstr "Hozzáférési Kérelmek"
+
+#: admin-permissions.php:154 admin-permissions.php:421
+#: permission-requests.php:259 admin-applications.php:57
+#: admin-applications.php:101 admin-applications.php:250
+#: admin-role-requests.php:67 admin-role-requests.php:111
+#: admin-role-requests.php:264 developer-dashboard.php:303
+msgid "Pending"
+msgstr "Függőben"
+
+#: admin-permissions.php:161 admin-permissions.php:422
+#: permission-requests.php:260 admin-applications.php:68
+#: admin-applications.php:108 admin-applications.php:251
+#: admin-role-requests.php:78 admin-role-requests.php:118
+#: admin-role-requests.php:265 developer-dashboard.php:304
+msgid "Approved"
+msgstr "Jóváhagyott"
+
+#: admin-permissions.php:167 admin-permissions.php:423
+#: permission-requests.php:261 admin-applications.php:79
+#: admin-applications.php:114 admin-applications.php:252
+#: admin-role-requests.php:89 admin-role-requests.php:124
+#: admin-role-requests.php:266 developer-dashboard.php:305
+msgid "Rejected"
+msgstr "Elutasított"
+
+#: admin-permissions.php:173 admin-permissions.php:424
+#: permission-requests.php:262 admin-applications.php:90
+#: admin-applications.php:120 admin-applications.php:253
+#: admin-role-requests.php:100 admin-role-requests.php:130
+#: admin-role-requests.php:267 developer-dashboard.php:306
+msgid "Revoked"
+msgstr "Visszavonva"
+
+#: admin-permissions.php:218
+msgid "Review Access Request"
+msgstr "Hozzáférési Kérelmek Áttekintése"
+
+#: admin-permissions.php:220 admin-permissions.php:252
+#: admin-permissions.php:273 admin-permissions.php:329
+#: admin-applications.php:184 admin-role-requests.php:194
+#: admin-role-requests.php:217 admin-users.php:104 developer-dashboard.php:84
+#: developer-dashboard.php:154 developer-dashboard.php:239 temporale.php:161
+#: temporale.php:184
+msgid "Close"
+msgstr "Bezárás"
+
+#: admin-permissions.php:229 admin-applications.php:193
+#: admin-role-requests.php:203
+msgid "Notes"
+msgstr "Megjegyzések"
+
+#: admin-permissions.php:230 permission-requests.php:152
+#: admin-applications.php:194 admin-role-requests.php:204
+msgid "optional"
+msgstr "nem kötelező"
+
+#: admin-permissions.php:235 admin-applications.php:199
+#: admin-role-requests.php:209
+msgid "Add notes about your decision..."
+msgstr "Adjon hozzá megjegyzéseket a döntésével kapcsolatban..."
+
+#: admin-permissions.php:243 admin-applications.php:216
+#: admin-role-requests.php:226
+msgid "Approve"
+msgstr "Jóváhagy"
+
+#: admin-permissions.php:246 admin-applications.php:210
+#: admin-role-requests.php:220
+msgid "Reject"
+msgstr "Elutasít"
+
+#: admin-permissions.php:249 admin-permissions.php:368
+#: admin-applications.php:213 admin-role-requests.php:223
+#: admin-role-requests.php:269 developer-dashboard.php:271
+msgid "Revoke"
+msgstr "Visszavon"
+
+#: admin-permissions.php:261 admin-applications.php:172
+#: admin-role-requests.php:182 admin-users.php:92
+msgid "Back to Dashboard"
+msgstr "Vissza az Irányítópulthoz"
+
+#: admin-permissions.php:277 admin-users.php:215 admin-users.php:292
+#: user-profile.php:113
+msgid "User ID"
+msgstr "Felhasználói ID"
+
+#: admin-permissions.php:279
+msgid "Enter user ID..."
+msgstr "Adja meg a felhasználói ID-t..."
+
+#: admin-permissions.php:284 permission-requests.php:230
+msgid "Select object type..."
+msgstr "Válassza ki az objektum típusát..."
+
+#: admin-permissions.php:295 admin-permissions.php:380
+msgid "Enter object ID..."
+msgstr "Adja meg az objektum ID-t..."
+
+#: admin-permissions.php:300 permission-requests.php:232
+msgid "Select relation..."
+msgstr "Válasszon kapcsolatot..."
+
+#: admin-permissions.php:327 admin-permissions.php:340
+msgid "Revoke Permission"
+msgstr "Engedély visszavonása"
+
+#: admin-permissions.php:353
+msgid "No permissions found."
+msgstr "Nem találhatók engedélyek."
+
+#: admin-permissions.php:354
+msgid "Failed to load permissions. Please try again later."
+msgstr "Az engedélyek betöltése sikertelen. Kérlek, próbáld újra később."
+
+#: admin-permissions.php:355
+msgid "Permission granted successfully."
+msgstr "Az engedély sikeresen megadva."
+
+#: admin-permissions.php:356
+msgid "Permission revoked successfully."
+msgstr "Az engedély sikeresen visszavonva."
+
+#: admin-permissions.php:357
+msgid "Failed to grant permission. Please try again."
+msgstr "Az engedély megadása sikertelen. Kérlek, próbáld újra."
+
+#: admin-permissions.php:358
+msgid "Failed to revoke permission. Please try again."
+msgstr "Az engedély visszavonása sikertelen. Kérlek, próbáld újra."
+
+#: admin-permissions.php:359
+msgid "Granting..."
+msgstr "Engedély megadása folyamatban..."
+
+#: admin-permissions.php:360 admin-users.php:353
+msgid "Revoking..."
+msgstr "Visszavonás folyamatban..."
+
+#: admin-permissions.php:361
+msgid "Are you sure you want to revoke this permission?"
+msgstr "Biztosan vissza akarja vonni ezt az engedélyt?"
+
+#: admin-permissions.php:367 admin-permissions.php:410
+#: admin-applications.php:244 admin-role-requests.php:253 temporale.php:138
+msgid "Actions"
+msgstr "Műveletek"
+
+#: admin-permissions.php:376 permission-requests.php:242
+msgid "Sanctorale — Editio Typica 1970"
+msgstr "Sanctorale — Editio Typica 1970"
+
+#: admin-permissions.php:377 permission-requests.php:244
+msgid "Sanctorale — Editio Typica 2002"
+msgstr "Sanctorale — Editio Typica 2002"
+
+#: admin-permissions.php:378 permission-requests.php:246
+msgid "Sanctorale — Editio Typica 2008"
+msgstr "Sanctorale — Editio Typica 2008"
+
+#: admin-permissions.php:379 permission-requests.php:248
+msgid "Decrees of the Dicastery for Divine Worship"
+msgstr "A Istentiszteleti Kongregáció határozatai"
+
+#: admin-permissions.php:381 permission-requests.php:231
+msgid "Select object ID..."
+msgstr "Válasszon objektumazonosítót..."
+
+#: admin-permissions.php:388
+msgid "All fields are required."
+msgstr "Minden mező kitöltése kötelező."
+
+#: admin-permissions.php:392 admin-role-requests.php:239
+msgid "No requests found."
+msgstr "Nem találhatók kérelmek."
+
+#: admin-permissions.php:393
+msgid "No pending access requests. All caught up!"
+msgstr "Nincs függőben lévő hozzáférési kérelem. Minden beérkezett!"
+
+#: admin-permissions.php:394
+msgid "Failed to load access requests. Please try again later."
+msgstr ""
+"Nem sikerült betölteni a hozzáférési kérelmeket. Kérlek, próbáld meg később."
+
+#: admin-permissions.php:395 admin-applications.php:232
+#: admin-role-requests.php:242
+msgid "Processing..."
+msgstr "Feldolgozás..."
+
+#: admin-permissions.php:396
+msgid "Access request approved successfully."
+msgstr "A hozzáférési kérelem sikeresen jóváhagyva."
+
+#: admin-permissions.php:397
+msgid "Access request rejected."
+msgstr "A hozzáférési kérelmet elutasították."
+
+#: admin-permissions.php:398
+msgid "Access revoked successfully."
+msgstr "A hozzáférés sikeresen visszavonva."
+
+#: admin-permissions.php:399 admin-applications.php:236
+#: admin-role-requests.php:246
+msgid "Failed to process request. Please try again."
+msgstr "Kérelem feldolgozása sikertelen. Kérlek, próbáld meg újra."
+
+#: admin-permissions.php:402 permission-requests.php:219
+msgid "Role"
+msgstr "Szerep"
+
+#: admin-permissions.php:403 permission-requests.php:133
+#: permission-requests.php:220 admin-dashboard.php:128 user-profile.php:178
+msgid "Permissions"
+msgstr "Engedélyek"
+
+#: admin-permissions.php:407 permission-requests.php:151
+#: permission-requests.php:222 admin-role-requests.php:255
+msgid "Justification"
+msgstr "Indoklás"
+
+#: admin-permissions.php:408 permission-requests.php:166
+msgid "Credentials"
+msgstr "Hitelesítő adatok"
+
+#: admin-permissions.php:409 admin-role-requests.php:251
+msgid "Date"
+msgstr "Dátum"
+
+#: admin-permissions.php:411 admin-applications.php:245
+#: admin-role-requests.php:254
+msgid "Review"
+msgstr "Felülvizsgálat"
+
+#: admin-permissions.php:412 admin-applications.php:247
+#: admin-role-requests.php:256
+msgid "Reviewed At"
+msgstr "Felülvizsgálat időpontja"
+
+#: admin-permissions.php:413 permission-requests.php:223
+#: admin-applications.php:248 admin-role-requests.php:257
+msgid "Review Notes"
+msgstr "Felülvizsgálati megjegyzések"
+
+#: admin-permissions.php:414 permission-requests.php:221
+#: admin-applications.php:243 admin-role-requests.php:258
+msgid "Status"
+msgstr "Állapot"
+
+#: admin-permissions.php:417 permission-requests.php:80
+#: permission-requests.php:250 admin-role-requests.php:261 admin-users.php:145
+msgid "Calendar Editor"
+msgstr "Naptárszerkesztő"
+
+#: admin-permissions.php:418 permission-requests.php:85
+#: permission-requests.php:251 admin-role-requests.php:262 admin-users.php:146
+msgid "Accuracy Test Editor"
+msgstr "Pontossági teszt szerkesztője"
+
+#: permission-requests.php:49
+msgid ""
+"Request access to the Liturgical Calendar system. Select a role and specify "
+"the resource permissions you need. Your request will be reviewed by an "
+"administrator."
+msgstr ""
+"Kérj hozzáférést a Liturgikus Naptár rendszerhez. Válassz egy szerepet, és "
+"add meg azokat az erőforrás-engedélyeket, amelyekre szükséged van. A "
+"kérelmedet egy adminisztrátor fogja felülvizsgálni."
+
+#: permission-requests.php:59
+msgid "Your Access Requests"
+msgstr "Hozzáférési kérelmeid"
+
+#: permission-requests.php:73
+msgid "Request Access"
+msgstr "Hozzáférés kérése"
+
+#: permission-requests.php:81
+msgid "Edit national and diocesan calendar data."
+msgstr "Szerkeszd a nemzeti és egyházmegyei naptár adatokat."
+
+#: permission-requests.php:86
+msgid "Create and manage accuracy tests."
+msgstr "Hozz létre és kezelj pontossági teszteket."
+
+#: permission-requests.php:92
+msgid ""
+"API consumer. Request access to all resources you may need — individual API "
+"keys can be scoped further at generation time."
+msgstr ""
+"API fogyasztó. Kérj hozzáférést minden erőforráshoz, amire szükséged lehet - "
+"az egyedi API kulcsokat generáláskor tovább lehet korlátozni."
+
+#: permission-requests.php:99
+msgid "Select a Role"
+msgstr "Válassz szerepet"
+
+#: permission-requests.php:136
+msgid ""
+"Specify the resources you need access to. Add one or more permission rows."
+msgstr ""
+"Adja meg azokat az erőforrásokat, amelyekhez hozzáférésre van szüksége. Adj "
+"hozzá egy vagy több engedély sort."
+
+#: permission-requests.php:145
+msgid "Add Permission"
+msgstr "Engedély hozzáadása"
+
+#: permission-requests.php:153
+msgid ""
+"Providing a justification helps administrators review your request faster."
+msgstr ""
+"Az indoklás megadása segít az adminisztrátoroknak gyorsabban felülvizsgálni "
+"a kérésed."
+
+#: permission-requests.php:160
+msgid "Please describe why you need this access..."
+msgstr "Kérlek, írd le, miért szükséges ez a hozzáférés..."
+
+#: permission-requests.php:167
+msgid ""
+"Optionally provide any credentials or references that support your request."
+msgstr ""
+"Opcionálisan add meg a kérelmedet támogató hitelesítő adatokat vagy "
+"referenciákat."
+
+#: permission-requests.php:174
+msgid "Any relevant credentials or references..."
+msgstr "Bármilyen releváns hitelesítő adat vagy referencia..."
+
+#: permission-requests.php:181 permission-requests.php:210
+#: developer-dashboard.php:138 developer-dashboard.php:322
+msgid "Submit Request"
+msgstr "Kérelem benyújtása"
+
+#: permission-requests.php:190
+msgid "Back to Profile"
+msgstr "Vissza a profilhoz"
+
+#: permission-requests.php:205
+msgid "You have not made any access requests yet."
+msgstr "Még nem nyújtottál be hozzáférési kérelmet."
+
+#: permission-requests.php:206
+msgid "Could not load your existing requests."
+msgstr "Nem sikerült betölteni a meglévő kérelmeidet."
+
+#: permission-requests.php:207
+msgid "Your access request has been submitted successfully."
+msgstr "A hozzáférési kérelmed sikeresen benyújtásra került."
+
+#: permission-requests.php:208
+msgid "Failed to submit request. Please try again."
+msgstr "Nem sikerült benyújtani a kérelmet. Kérlek, próbáld újra."
+
+#: permission-requests.php:209
+msgid "Submitting..."
+msgstr "Beküldés folyamatban..."
+
+#: permission-requests.php:211
+msgid "Resubmit"
+msgstr "Újraküldés"
+
+#: permission-requests.php:212
+msgid "Rejection reason"
+msgstr "Elutasítás indoka"
+
+#: permission-requests.php:213
+msgid "Please select a role."
+msgstr "Kérlek, válassz egy szerepet."
+
+#: permission-requests.php:214
+msgid ""
+"Each permission row must have object type, object ID, and relation filled in."
+msgstr ""
+"Minden engedély sorában ki kell tölteni a tárgy típusát, a tárgy "
+"azonosítóját és a viszonyát."
+
+#: permission-requests.php:215
+#, php-format
+msgid "You have reached the maximum of %1$d permissions per request."
+msgstr "Elérted a maximális %1$d engedélyt kérésenként."
+
+#: permission-requests.php:216
+#, php-format
+msgid ""
+"This request had more than %1$d permissions; only the first %2$d are shown."
+msgstr ""
+"Ez a kérés több mint %1$d engedélyt tartalmazott; csak az első %2$d van "
+"megjelenítve."
+
+#: permission-requests.php:217
+msgid "Unknown error"
+msgstr "Ismeretlen hiba"
+
+#: permission-requests.php:224
+msgid "Submitted"
+msgstr "Beküldve"
+
+#: permission-requests.php:225
+msgid "Reviewed"
+msgstr "Felülvizsgálva"
+
+#: permission-requests.php:233
+msgid "Remove"
+msgstr "Eltávolítás"
+
+#: permission-requests.php:264
+msgid "e.g. IT, USA, BOSTON, Americas..."
+msgstr "például IT, USA, BOSTON, Amerika..."
+
+#: admin-applications.php:33 admin-applications.php:45
+msgid "Application Management"
+msgstr "Alkalmazáskezelés"
+
+#: admin-applications.php:182
+msgid "Review Application"
+msgstr "Alkalmazás felülvizsgálata"
+
+#: admin-applications.php:229
+msgid "No applications found."
+msgstr "Nincsenek alkalmazások."
+
+#: admin-applications.php:230
+msgid "No pending applications. All caught up!"
+msgstr "Nincsenek függőben lévő alkalmazások. Mindent átnéztél!"
+
+#: admin-applications.php:231
+msgid "Failed to load applications. Please try again later."
+msgstr "Az alkalmazások betöltése sikertelen. Kérlek, próbáld meg később újra."
+
+#: admin-applications.php:233
+msgid "Application approved successfully."
+msgstr "Az alkalmazás sikeresen elfogadva."
+
+#: admin-applications.php:234
+msgid "Application rejected."
+msgstr "Az alkalmazás elutasítva."
+
+#: admin-applications.php:235
+msgid "Application revoked."
+msgstr "Az alkalmazás visszavonva."
+
+#: admin-applications.php:239 developer-dashboard.php:265
+msgid "Application"
+msgstr "Alkalmazás"
+
+#: admin-applications.php:240 developer-dashboard.php:98
+msgid "Description"
+msgstr "Leírás"
+
+#: admin-applications.php:241 developer-dashboard.php:299
+msgid "Website"
+msgstr "Weboldal"
+
+#: admin-applications.php:242 developer-dashboard.php:279
+msgid "Created"
+msgstr "Létrehozva"
+
+#: admin-applications.php:246
+msgid "Reviewed By"
+msgstr "Átnézve"
+
+#: admin-applications.php:255
+msgid "Requested Scope"
+msgstr "Kért hatókör"
+
+#: admin-applications.php:256 developer-dashboard.php:115
+#: developer-dashboard.php:168 developer-dashboard.php:316
+msgid "Read-only"
+msgstr "Csak olvasható"
+
+#: admin-applications.php:257 developer-dashboard.php:122
+#: developer-dashboard.php:317
+msgid "Read & Write"
+msgstr "Olvasás és írás"
+
+#: admin-dashboard.php:39 admin-dashboard.php:51 user-profile.php:252
+msgid "Admin Dashboard"
+msgstr "Adminisztrátori irányítópult"
+
+#: admin-dashboard.php:55
+msgid ""
+"Manage liturgical calendar data, Roman Missal information, and regional "
+"calendars."
+msgstr ""
+"Liturgikus naptár adatok, Római Misekönyv információk és regionális naptárak "
+"kezelése."
+
+#: admin-dashboard.php:65
+msgid "Administration"
+msgstr "Adminisztráció"
+
+#: admin-dashboard.php:74
+msgid "Users"
+msgstr "Felhasználók"
+
+#: admin-dashboard.php:76
+msgid "View users and manage their roles"
+msgstr "Felhasználók megtekintése és szerepköreik kezelése"
+
+#: admin-dashboard.php:80 admin-dashboard.php:98 admin-dashboard.php:116
+#: admin-dashboard.php:134
+msgid "Manage"
+msgstr "Kezelés"
+
+#: admin-dashboard.php:92 admin-role-requests.php:43
+msgid "Role Requests"
+msgstr "Szerepkérések"
+
+#: admin-dashboard.php:94
+msgid "Review and approve user role requests"
+msgstr "Felhasználói szerepkérések áttekintése és jóváhagyása"
+
+#: admin-dashboard.php:110
+msgid "Applications"
+msgstr "Alkalmazások"
+
+#: admin-dashboard.php:112
+msgid "Review and approve developer applications"
+msgstr "Fejlesztői alkalmazások áttekintése és jóváhagyása"
+
+#: admin-dashboard.php:130
+msgid "Manage fine-grained resource permissions"
+msgstr "Finomhangolt erőforrás-hozzáférések kezelése"
+
+#: admin-role-requests.php:55
+msgid "Role Requests Management"
+msgstr "Szerepkérések kezelése"
+
+#: admin-role-requests.php:192
+msgid "Review Role Request"
+msgstr "Szerepkérés átnézése"
+
+#: admin-role-requests.php:240
+msgid "No pending role requests. All caught up!"
+msgstr "Nincs függőben lévő szerepkérés. Minden naprakész!"
+
+#: admin-role-requests.php:241
+msgid "Failed to load role requests. Please try again later."
+msgstr "Nem sikerült betölteni a szerepkéréseket. Kérlek, próbáld újra később."
+
+#: admin-role-requests.php:243
+msgid "Request approved successfully."
+msgstr "Kérelem sikeresen jóváhagyva."
+
+#: admin-role-requests.php:244
+msgid "Request rejected."
+msgstr "Kérelem elutasítva."
+
+#: admin-role-requests.php:245 admin-users.php:377
+msgid "Role revoked successfully."
+msgstr "Szerep sikeresen visszavonva."
+
+#: admin-role-requests.php:249
+msgid "Role Requested"
+msgstr "Kért szerep"
+
+#: admin-role-requests.php:250
+msgid "Requested Role"
+msgstr "Kért szerep"
+
+#: admin-users.php:33 admin-users.php:45
+msgid "Users Management"
+msgstr "Felhasználók kezelése"
+
+#: admin-users.php:49
+msgid ""
+"Manage users in the system. You can view user information and revoke roles "
+"from users who have them."
+msgstr ""
+"Felhasználók kezelése a rendszerben. Megtekintheti a felhasználói "
+"információkat és visszavonhatja a szerepeket azoktól a felhasználóktól, "
+"akiknek van szerepük."
+
+#: admin-users.php:64
+msgid "Users with Roles"
+msgstr "Felhasználók szerepekkel"
+
+#: admin-users.php:79
+msgid "Users without Roles"
+msgstr "Felhasználók szerepek nélkül"
+
+#: admin-users.php:102 admin-users.php:115
+msgid "Revoke Role"
+msgstr "Szerep visszavonása"
+
+#: admin-users.php:143
+msgid "Administrator"
+msgstr "Adminisztrátor"
+
+#: admin-users.php:187
+msgid "Failed to load users. Please try again later."
+msgstr ""
+"Nem sikerült betölteni a felhasználókat. Kérlek, próbáld meg később újra."
+
+#: admin-users.php:203
+msgid "No users with roles found."
+msgstr "Nem találhatók felhasználók szerepekkel."
+
+#: admin-users.php:214 user-profile.php:126
+msgid "Roles"
+msgstr "Szerepek"
+
+#: admin-users.php:239
+msgid "Revoke this role"
+msgstr "Ez a szerep visszavonása"
+
+#: admin-users.php:280
+msgid "No users without roles found."
+msgstr "Nem találhatók felhasználók szerepek nélkül."
+
+#: admin-users.php:291
+msgid "Email Verified"
+msgstr "E-mail hitelesítve"
+
+#: admin-users.php:304
+msgid "Verified"
+msgstr "Hitelesítve"
+
+#: admin-users.php:305
+msgid "Not Verified"
+msgstr "Nem hitelesítve"
+
+#: admin-users.php:336
+msgid "Are you sure you want to revoke the role"
+msgstr "Biztos vagy benne, hogy vissza akarod vonni a szerepet"
+
+#: admin-users.php:338
+msgid "from user"
+msgstr "a felhasználótól"
+
+#: admin-users.php:393
+msgid "Failed to revoke role. Please try again."
+msgstr "Nem sikerült visszavonni a szerepkört. Kérlek, próbáld újra."
+
+#: developer-dashboard.php:34 developer-dashboard.php:47 user-profile.php:257
+msgid "Developer Dashboard"
+msgstr "Fejlesztői Irányítópult"
+
+#: developer-dashboard.php:51
+msgid ""
+"Register applications and manage API keys for accessing the Liturgical "
+"Calendar API."
+msgstr ""
+"Alkalmazások regisztrálása és API kulcsok kezelése a Liturgikus Naptár API "
+"eléréséhez."
+
+#: developer-dashboard.php:58
+msgid "My Applications"
+msgstr "Saját Alkalmazások"
+
+#: developer-dashboard.php:61 developer-dashboard.php:82
+#: developer-dashboard.php:297
+msgid "New Application"
+msgstr "Új Alkalmazás"
+
+#: developer-dashboard.php:70
+msgid "Loading applications..."
+msgstr "Alkalmazások betöltése..."
+
+#: developer-dashboard.php:91
+msgid "Application Name"
+msgstr "Alkalmazás neve"
+
+#: developer-dashboard.php:95
+msgid "A descriptive name for your application."
+msgstr "Egy leíró név az alkalmazásod számára."
+
+#: developer-dashboard.php:100
+msgid "Optional description of what your application does."
+msgstr "Opcionális leírás arról, hogy mit csinál az alkalmazásod."
+
+#: developer-dashboard.php:103
+msgid "Website URL"
+msgstr "Weboldal URL"
+
+#: developer-dashboard.php:105
+msgid "Optional URL to your application or project."
+msgstr "Opcionális URL az alkalmazásodhoz vagy projekthez."
+
+#: developer-dashboard.php:109 developer-dashboard.php:315
+msgid "Access Scope"
+msgstr "Hozzáférési Szint"
+
+#: developer-dashboard.php:116 developer-dashboard.php:318
+msgid "Can only read calendar data"
+msgstr "Csak naptáradatok olvasása"
+
+#: developer-dashboard.php:123 developer-dashboard.php:319
+msgid "Can read and modify calendar data"
+msgstr "Naptáradatok olvasása és módosítása"
+
+#: developer-dashboard.php:127
+msgid ""
+"Choose the level of access your application needs. This cannot be changed "
+"after approval."
+msgstr ""
+"Válaszd ki, hogy milyen szintű hozzáférésre van szüksége az alkalmazásodnak. "
+"Ez az engedélyezés után nem módosítható."
+
+#: developer-dashboard.php:152
+msgid "Generate API Key"
+msgstr "API Kulcs Generálása"
+
+#: developer-dashboard.php:160
+msgid "Key Name"
+msgstr "Kulcs Neve"
+
+#: developer-dashboard.php:162
+msgid "e.g., Production, Development"
+msgstr "pl.: Production, Fejlesztés"
+
+#: developer-dashboard.php:163
+msgid "Optional name to identify this key."
+msgstr "Opcionális név a kulcs azonosításához."
+
+#: developer-dashboard.php:166 developer-dashboard.php:273
+msgid "Scope"
+msgstr "Hatókör"
+
+#: developer-dashboard.php:169
+msgid "Read and Write"
+msgstr "Olvasás és írás"
+
+#: developer-dashboard.php:172
+msgid ""
+"Read-only keys can only access public endpoints. Write keys can modify data."
+msgstr ""
+"Az olvasási kulcsok csak nyilvános végpontokhoz férhetnek hozzá. Az írási "
+"kulcsok módosítani tudják az adatokat."
+
+#: developer-dashboard.php:176
+msgid "Expiration Date"
+msgstr "Lejárati dátum"
+
+#: developer-dashboard.php:178
+msgid "Optional. Leave empty for a key that never expires."
+msgstr ""
+"Opcionális. Hagyja üresen, ha azt szeretné, hogy a kulcs örökké érvényes "
+"legyen."
+
+#: developer-dashboard.php:186 developer-dashboard.php:268
+msgid "Generate Key"
+msgstr "Kulcs generálása"
+
+#: developer-dashboard.php:199
+msgid "API Key Generated"
+msgstr "API kulcs generálva"
+
+#: developer-dashboard.php:205
+msgid "Important:"
+msgstr "Fontos:"
+
+#: developer-dashboard.php:206
+msgid "Copy this key now. For security reasons, it will not be shown again."
+msgstr ""
+"Most másolja le ezt a kulcsot. Biztonsági okokból többször nem lesz látható."
+
+#: developer-dashboard.php:209
+msgid "Your API Key:"
+msgstr "Az Ön API kulcsa:"
+
+#: developer-dashboard.php:212
+msgid "Copy to clipboard"
+msgstr "Másolás vágólapra"
+
+#: developer-dashboard.php:218
+msgid "API key copied to clipboard!"
+msgstr "API kulcs a vágólapra másolva!"
+
+#: developer-dashboard.php:223
+msgid "Done"
+msgstr "Kész"
+
+#: developer-dashboard.php:236
+msgid "Confirm Delete"
+msgstr "Törlés megerősítése"
+
+#: developer-dashboard.php:242
+msgid "Are you sure you want to delete this item?"
+msgstr "Biztosan törölni szeretné ezt az elemet?"
+
+#: developer-dashboard.php:243
+msgid "This action cannot be undone."
+msgstr "Ez a művelet nem vonható vissza."
+
+#: developer-dashboard.php:249 developer-dashboard.php:270
+msgid "Delete"
+msgstr "Törlés"
+
+#: developer-dashboard.php:263
+msgid "You have not registered any applications yet."
+msgstr "Még nem regisztráltál alkalmazásokat."
+
+#: developer-dashboard.php:264
+msgid "Create your first application to get started."
+msgstr "Hozd létre az első alkalmazásodat a kezdéshez."
+
+#: developer-dashboard.php:266
+msgid "API Keys"
+msgstr "API kulcsok"
+
+#: developer-dashboard.php:267
+msgid "No API keys generated yet."
+msgstr "Még nem lett API kulcs generálva."
+
+#: developer-dashboard.php:272
+msgid "Rotate"
+msgstr "Forgatás"
+
+#: developer-dashboard.php:274
+msgid "Rate Limit"
+msgstr "Korlát"
+
+#: developer-dashboard.php:275
+msgid "Expires"
+msgstr "Lejárat"
+
+#: developer-dashboard.php:276
+msgid "Never"
+msgstr "Soha"
+
+#: developer-dashboard.php:277
+msgid "Last Used"
+msgstr "Utoljára használt"
+
+#: developer-dashboard.php:278
+msgid "Never used"
+msgstr "Soha nem használt"
+
+#: developer-dashboard.php:280
+msgid "keys"
+msgstr "kulcsok"
+
+#: developer-dashboard.php:281
+msgid "key"
+msgstr "kulcs"
+
+#: developer-dashboard.php:282
+#, php-format
+msgid ""
+"Are you sure you want to delete the application \"%1$s\"? This will also "
+"revoke all associated API keys."
+msgstr ""
+"Biztosan törölni szeretnéd az alkalmazást, a(z) \"%1$s\"? Ez az összes "
+"kapcsolódó API kulcs visszavonását is eredményezi."
+
+#: developer-dashboard.php:283
+msgid ""
+"Are you sure you want to revoke this API key? Applications using this key "
+"will no longer be able to authenticate."
+msgstr ""
+"Biztosan vissza szeretnéd vonni ezt az API kulcsot? Az ezt a kulcsot "
+"használó alkalmazások többé nem fognak tudni hitelesíteni."
+
+#: developer-dashboard.php:284
+msgid "Failed to load applications. Please try again."
+msgstr "Az alkalmazások betöltése sikertelen. Kérlek, próbáld újra."
+
+#: developer-dashboard.php:285
+msgid "Failed to save application. Please try again."
+msgstr "Az alkalmazás mentése sikertelen. Kérlek, próbáld újra."
+
+#: developer-dashboard.php:286
+msgid "Failed to delete. Please try again."
+msgstr "Törlés sikertelen. Kérlek, próbáld újra."
+
+#: developer-dashboard.php:287
+msgid "Failed to generate API key. Please try again."
+msgstr "API kulcs generálása sikertelen. Kérlek, próbáld újra."
+
+#: developer-dashboard.php:289
+msgid "Application updated successfully."
+msgstr "Az alkalmazás sikeresen frissítve."
+
+#: developer-dashboard.php:290
+msgid "Application created successfully."
+msgstr "Az alkalmazás sikeresen létrehozva."
+
+#: developer-dashboard.php:291
+msgid "Application deleted successfully."
+msgstr "Az alkalmazás sikeresen törölve."
+
+#: developer-dashboard.php:292
+msgid "API key revoked successfully."
+msgstr "Az API kulcs sikeresen visszavonva."
+
+#: developer-dashboard.php:293
+msgid "API key rotated successfully."
+msgstr "Az API kulcs sikeresen megforgatva."
+
+#: developer-dashboard.php:294
+msgid "Read"
+msgstr "Olvasás"
+
+#: developer-dashboard.php:295
+msgid "Write"
+msgstr "Írás"
+
+#: developer-dashboard.php:296
+msgid "requests/hour"
+msgstr "kérések/óra"
+
+#: developer-dashboard.php:298
+msgid "Edit Application"
+msgstr "Alkalmazás szerkesztése"
+
+#: developer-dashboard.php:300
+msgid "View Keys"
+msgstr "Kulcsok megtekintése"
+
+#: developer-dashboard.php:301
+msgid "Hide Keys"
+msgstr "Kulcsok elrejtése"
+
+#: developer-dashboard.php:307
+msgid "Awaiting admin approval"
+msgstr "Adminisztrátori jóváhagyásra vár"
+
+#: developer-dashboard.php:308
+msgid "Rejection Notes"
+msgstr "Elutasítási megjegyzések"
+
+#: developer-dashboard.php:309
+msgid "Resubmit for Review"
+msgstr "Újbóli benyújtás felülvizsgálatra"
+
+#: developer-dashboard.php:310
+msgid "API keys can only be generated for approved applications."
+msgstr "API kulcsok csak jóváhagyott alkalmazásokhoz generálhatók."
+
+#: developer-dashboard.php:311
+msgid ""
+"This application has been revoked. Contact an administrator for assistance."
+msgstr ""
+"Ez az alkalmazás visszavonásra került. Segítségért fordulj egy "
+"adminisztrátorhoz."
+
+#: developer-dashboard.php:312
+msgid "Application resubmitted for review."
+msgstr "Az alkalmazás újra felülvizsgálatra benyújtva."
+
+#: developer-dashboard.php:313
+msgid "Failed to resubmit application. Please try again."
+msgstr "Nem sikerült az alkalmazást újból benyújtani. Kérjük, próbáld újra."
+
+#: developer-dashboard.php:320
+msgid ""
+"This application has read-only access. Only read-scope API keys can be "
+"generated."
+msgstr ""
+"Ez az alkalmazás csak olvasási hozzáféréssel rendelkezik. Csak olvasási jogú "
+"API kulcsok generálhatók."
+
+#: developer-dashboard.php:323
+msgid "Save"
+msgstr "Mentés"
+
+#: missals-editor.php:97
+msgid "Please login to access the admin interface."
+msgstr "Kérjük, lépj be az adminisztrátori felülethez való hozzáféréshez."
+
+#: temporale.php:42
+msgid ""
+"Proprium de Tempore - The temporal cycle of the liturgical year including "
+"Advent, Christmas, Lent, Easter Triduum, Easter, and Ordinary Time."
+msgstr ""
+"Proprium de Tempore - Az egyházi év időszaki ciklusa, beleértve az adventet, "
+"a karácsonyt, a nagyböjtöt, a húsvéti szentháromnapot, a húsvétot és az "
+"évközi időt."
+
+#: temporale.php:57
+msgid "Language"
+msgstr "Nyelv"
+
+#: temporale.php:63
+msgid "Liturgical Season"
+msgstr "Liturgikus évad"
+
+#: temporale.php:65
+msgid "All Seasons"
+msgstr "Minden időszak"
+
+#: temporale.php:66
+msgid "Advent"
+msgstr "Advent"
+
+#: temporale.php:67
+msgid "Christmas"
+msgstr "Karácsony"
+
+#: temporale.php:68
+msgid "Lent"
+msgstr "Nagyböjt"
+
+#: temporale.php:69
+msgid "Easter Triduum"
+msgstr "Húsvéti szent három nap"
+
+#: temporale.php:70
+msgid "Easter"
+msgstr "Húsvét"
+
+#: temporale.php:71
+msgid "Ordinary Time"
+msgstr "Évközi idő"
+
+#: temporale.php:77
+msgid "All Grades"
+msgstr "Minden fokozat"
+
+#: temporale.php:78
+msgid "Higher Solemnity (7)"
+msgstr "Főünnep (7)"
+
+#: temporale.php:79
+msgid "Solemnity (6)"
+msgstr "Ünnepélyesség (6)"
+
+#: temporale.php:80
+msgid "Feast of the Lord (5)"
+msgstr "Az Úr ünnepe (5)"
+
+#: temporale.php:81
+msgid "Feast (4)"
+msgstr "Ünnep (4)"
+
+#: temporale.php:82
+msgid "Memorial (3)"
+msgstr "Emléknap (3)"
+
+#: temporale.php:83
+msgid "Optional Memorial (2)"
+msgstr "Választható emléknap (2)"
+
+#: temporale.php:84
+msgid "Commemoration (1)"
+msgstr "Megemlékezés (1)"
+
+#: temporale.php:85
+msgid "Weekday (0)"
+msgstr "Hétköznap (0)"
+
+#: temporale.php:89
+msgid "Lectionary Category"
+msgstr "Olvasmánykategória"
+
+#: temporale.php:91
+msgid "All Categories"
+msgstr "Összes kategória"
+
+#: temporale.php:92
+msgid "Dominicale et Festivum"
+msgstr "Vasárnapi és ünnepi olvasmányok"
+
+#: temporale.php:93
+msgid "Feriale per Annum"
+msgstr "Hétköznapi olvasmányok"
+
+#: temporale.php:94
+msgid "Feriale Tempus Adventus"
+msgstr "Adventi időszak hétköznapi olvasmányai"
+
+#: temporale.php:95
+msgid "Feriale Tempus Nativitatis"
+msgstr "Karácsonyi időszak hétköznapi olvasmányai"
+
+#: temporale.php:96
+msgid "Feriale Tempus Quadragesimae"
+msgstr "Nagyböjt feriális idő"
+
+#: temporale.php:97
+msgid "Feriale Tempus Paschatis"
+msgstr "Húsvéti feriális idő"
+
+#: temporale.php:98
+msgid "Sanctorum"
+msgstr "Szentek"
+
+#: temporale.php:104
+msgid "Search"
+msgstr "Keresés"
+
+#: temporale.php:106
+msgid "Search by name or key..."
+msgstr "Keresés név vagy kulcsszó alapján..."
+
+#: temporale.php:118
+msgid "Temporale Events"
+msgstr "Időszakos események"
+
+#: temporale.php:123
+msgid "Export JSON"
+msgstr "JSON exportálása"
+
+#: temporale.php:132
+msgid "Event Key"
+msgstr "Eseménykulcs"
+
+#: temporale.php:135
+msgid "Season"
+msgstr "Évszak"
+
+#: temporale.php:136
+msgid "Type"
+msgstr "Típus"
+
+#: temporale.php:137
+msgid "Color"
+msgstr "Szín"
+
+#: temporale.php:160
+msgid "Event Details"
+msgstr "Esemény részletei"
+
+#: temporale.php:167
+msgid "Event navigation"
+msgstr "Navigáció az események között"
+
+#: temporale.php:168
+msgid "First"
+msgstr "Első"
+
+#: temporale.php:180
+msgid "Last"
+msgstr "Utolsó"
+
+#: user-profile.php:23 user-profile.php:35
+msgid "User Profile"
+msgstr "Felhasználói profil"
+
+#: user-profile.php:43
+msgid "Account Information"
+msgstr "Fiókadatok"
+
+#: user-profile.php:52
+msgid "Full Name"
+msgstr "Teljes név"
+
+#: user-profile.php:61
+msgid "Given / Family Name"
+msgstr "Kereszt- és vezetéknév"
+
+#: user-profile.php:85
+msgid "Email"
+msgstr "Email"
+
+#: user-profile.php:90
+msgid "Email verified"
+msgstr "Email ellenőrizve"
+
+#: user-profile.php:94
+msgid "Email not verified"
+msgstr "Email nincs ellenőrizve"
+
+#: user-profile.php:98
+msgid "Resend verification"
+msgstr "Ellenőrzés újbóli küldése"
+
+#: user-profile.php:101
+msgid "Click after verifying your email to update your session"
+msgstr "Kattints a frissítéshez az email ellenőrzése után"
+
+#: user-profile.php:102 user-profile.php:131
+msgid "Refresh session"
+msgstr "Munkamenet frissítése"
+
+#: user-profile.php:130
+msgid "Refresh session to see updated roles"
+msgstr "Munkamenet frissítése az új szerepkörök megtekintéséhez"
+
+#: user-profile.php:135 user-profile.php:140
+msgid "Request Role"
+msgstr "Szerepkör igénylése"
+
+#: user-profile.php:139
+msgid "Email verification required"
+msgstr "Email ellenőrzés szükséges"
+
+#: user-profile.php:150
+msgid ""
+"You must verify your email address before you can request a role. Please "
+"check your inbox for a verification email."
+msgstr ""
+"Az email címedet ellenőrizned kell, mielőtt szerepkört igényelhetsz. Kérlek, "
+"ellenőrizd a postaládádat egy ellenőrző email miatt."
+
+#: user-profile.php:165
+msgid "No roles assigned yet. Request a role to access additional features."
+msgstr ""
+"Még nincs szerepkör hozzárendelve. Igényelj egy szerepkört a további "
+"funkciók eléréséhez."
+
+#: user-profile.php:196
+msgid "Session Information"
+msgstr "Munkamenet információk"
+
+#: user-profile.php:205
+msgid "Session Expires"
+msgstr "Munkamenet lejárat"
+
+#: user-profile.php:217
+msgid "Time Remaining"
+msgstr "Hátralévő idő"
+
+#: user-profile.php:232 user-profile.php:433
+msgid "Expired"
+msgstr "Lejárt"
+
+#: user-profile.php:289 user-profile.php:314
+msgid "Refreshing..."
+msgstr "Frissítés..."
+
+#: user-profile.php:297 user-profile.php:321
+msgid "Session refresh failed"
+msgstr "A munkamenet frissítése sikertelen"
+
+#: user-profile.php:301 user-profile.php:325
+msgid "Failed to refresh session. Please try logging out and back in."
+msgstr ""
+"Nem sikerült frissíteni a munkamenetet. Próbálj meg kijelentkezni és újra "
+"bejelentkezni."
+
+#: user-profile.php:339
+msgid "Sending..."
+msgstr "Küldés..."
+
+#: user-profile.php:352
+msgid "Failed to send verification email"
+msgstr "Nem sikerült elküldeni az ellenőrző emailt"
+
+#: user-profile.php:355
+msgid ""
+"Verification email sent. After clicking the verification link, use the "
+"\"Refresh session\" button to update your status."
+msgstr ""
+"Ellenőrző email elküldve. A frissítéshez kattints az ellenőrző linkre, majd "
+"használd a \"Munkamenet frissítése\" gombot az állapotod frissítéséhez."
+
+#: user-profile.php:373
+msgid "Failed to send verification email. Please try again."
+msgstr "Nem sikerült elküldeni az ellenőrző e-mailt. Kérlek, próbáld újra."
+
+#: user-profile.php:404
+msgid "Session expires in 5 minutes"
+msgstr "A munkamenet 5 perc múlva lejár"
+
+#: user-profile.php:405
+msgid "Session expires in 1 minute"
+msgstr "A munkamenet 1 perc múlva lejár"
+
+#: user-profile.php:406
+msgid "Session expires in 30 seconds"
+msgstr "A munkamenet 30 másodperc múlva lejár"
+
+#: user-profile.php:407
+msgid "Session expired"
+msgstr "A munkamenet lejárt"
+
+#~ msgid "min ago"
+#~ msgstr "perce"
+
+#~ msgid "hours ago"
+#~ msgstr "órája"
+
+#~ msgid "days ago"
+#~ msgstr "napja"
 
 #~ msgid "General Roman Calendar - Extending"
 #~ msgstr "Általános római naptár - Kiterjesztés"

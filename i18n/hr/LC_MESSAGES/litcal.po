@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-01 09:48-0400\n"
-"PO-Revision-Date: 2026-04-02 19:50+0000\n"
+"POT-Creation-Date: 2026-06-21 15:40+0000\n"
+"PO-Revision-Date: 2026-06-21 11:36+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
@@ -123,11 +123,16 @@ msgstr "Parametri zahtjeva dostupni na svim stazama %1$s"
 
 #. translators: part of page title - refers to the Catholic liturgical calendar
 #: index.php:65 usage.php:29 examples.php:98 liturgyOfAnyDay.php:18
-#: layout/header.php:257
+#: layout/header.php:257 admin-permissions.php:77 admin-permissions.php:289
+#: admin-permissions.php:374 permission-requests.php:239
 msgid "General Roman Calendar"
 msgstr "Opći rimski kalendar"
 
 #: index.php:74 layout/header.php:19 layout/header.php:229
+#: admin-permissions.php:34 permission-requests.php:32
+#: admin-applications.php:34 admin-dashboard.php:40 admin-role-requests.php:44
+#: admin-users.php:34 developer-dashboard.php:35 temporale.php:25
+#: user-profile.php:24
 msgid "Catholic Liturgical Calendar"
 msgstr "Katolički liturgijski kalendar"
 
@@ -1195,10 +1200,12 @@ msgstr "Svojstvo za promjenu"
 
 #. translators: form field label for the name of a liturgical event
 #: src/Utilities.php:301 src/FormControls.php:61 includes/messages.php:19
+#: temporale.php:133
 msgid "Name"
 msgstr "Ime"
 
-#: src/Utilities.php:302 src/FormControls.php:194
+#: src/Utilities.php:302 src/FormControls.php:194 temporale.php:75
+#: temporale.php:134
 msgid "Grade"
 msgstr "Rang"
 
@@ -1272,7 +1279,18 @@ msgstr "Pogledaj spremišta projekta na GitHubu"
 msgid "Notifications"
 msgstr "Obavijesti"
 
-#: layout/header.php:140
+#: layout/header.php:140 admin-permissions.php:129 admin-permissions.php:184
+#: admin-permissions.php:191 admin-permissions.php:198
+#: admin-permissions.php:205 admin-permissions.php:352
+#: admin-permissions.php:391 permission-requests.php:64
+#: permission-requests.php:204 admin-applications.php:136
+#: admin-applications.php:145 admin-applications.php:154
+#: admin-applications.php:163 admin-applications.php:228
+#: admin-role-requests.php:146 admin-role-requests.php:155
+#: admin-role-requests.php:164 admin-role-requests.php:173
+#: admin-role-requests.php:238 admin-users.php:70 admin-users.php:85
+#: admin-users.php:151 developer-dashboard.php:68 temporale.php:59
+#: temporale.php:145
 msgid "Loading..."
 msgstr "Učitavam..."
 
@@ -1290,19 +1308,23 @@ msgid "View Profile"
 msgstr "Pogledaj profil"
 
 #: layout/header.php:176 includes/login-modal.php:105
-#: includes/login-modal.php:670
+#: includes/login-modal.php:670 user-profile.php:277
 msgid "Are you sure you want to logout?"
 msgstr "Jesi li siguran da se želiš odjaviti?"
 
 #: layout/header.php:179 layout/header.php:183 includes/login-modal.php:12
+#: user-profile.php:261
 msgid "Logout"
 msgstr "Odjava"
 
-#: layout/header.php:188 layout/header.php:251
+#: layout/header.php:188 layout/header.php:251 admin-permissions.php:419
+#: permission-requests.php:90 permission-requests.php:252
+#: admin-role-requests.php:260 admin-users.php:144
 msgid "Developer"
 msgstr "Programer"
 
-#: layout/header.php:200
+#: layout/header.php:200 admin-permissions.php:91 admin-permissions.php:301
+#: admin-permissions.php:383 permission-requests.php:256
 msgid "Admin"
 msgstr "Administracija"
 
@@ -1310,15 +1332,16 @@ msgstr "Administracija"
 msgid "Dashboard"
 msgstr "Nadzorna ploča"
 
-#: layout/header.php:261
+#: layout/header.php:261 includes/admin-blocks.php:15 admin-permissions.php:375
+#: permission-requests.php:240 temporale.php:24 temporale.php:37
 msgid "Temporale"
 msgstr "Prolazni dio"
 
-#: layout/header.php:265
+#: layout/header.php:265 includes/admin-blocks.php:25
 msgid "Sanctorale"
 msgstr "Svetkovine"
 
-#: layout/header.php:269
+#: layout/header.php:269 includes/admin-blocks.php:35
 msgid "Decrees"
 msgstr "Dekreti"
 
@@ -1327,15 +1350,17 @@ msgid "Particular Calendars"
 msgstr "Posebni kalendari"
 
 #. translators: label for wider region calendar name field
-#: layout/header.php:281 includes/messages.php:206
+#: layout/header.php:281 includes/messages.php:206 includes/admin-blocks.php:45
+#: admin-permissions.php:75 admin-permissions.php:287 admin-permissions.php:372
+#: permission-requests.php:237
 msgid "Wider Region"
 msgstr "Šira regija"
 
-#: layout/header.php:285
+#: layout/header.php:285 includes/admin-blocks.php:55
 msgid "National"
 msgstr "Nacionalni"
 
-#: layout/header.php:289
+#: layout/header.php:289 includes/admin-blocks.php:65
 msgid "Diocesan"
 msgstr "Biskupijski"
 
@@ -1355,6 +1380,50 @@ msgstr "Dokumentacija"
 msgid "Examples of Usage"
 msgstr "Primjeri uporabe"
 
+#: layout/footer.php:92
+msgid "No pending requests"
+msgstr "Nema zahtjeva na čekanju"
+
+#: layout/footer.php:93
+msgid "No new notifications"
+msgstr "Nema novih obavijesti"
+
+#: layout/footer.php:94
+msgid "Could not load notifications"
+msgstr "Nije moguće učitati obavijesti"
+
+#: layout/footer.php:95
+msgid "Just now"
+msgstr "Upravo sada"
+
+#: layout/footer.php:96 admin-permissions.php:415 admin-role-requests.php:252
+msgid "Requested"
+msgstr "Zahtjev poslano"
+
+#: layout/footer.php:97
+msgid "Requested access"
+msgstr "Zahtjev za pristupom poslan"
+
+#: layout/footer.php:98
+msgid "Your request was approved"
+msgstr "Vaš zahtjev je odobren"
+
+#: layout/footer.php:99
+msgid "Your request was rejected"
+msgstr "Vaš zahtjev je odbijen"
+
+#: layout/footer.php:100
+msgid "Your access was revoked"
+msgstr "Vaš pristup je ukinut"
+
+#: layout/footer.php:101
+msgid "Request access to start using the system"
+msgstr "Zatraži pristup za početak korištenja sustava"
+
+#: layout/footer.php:102
+msgid "Get started"
+msgstr "Započni"
+
 #: includes/login-modal.php:6
 msgid "Session Expiring"
 msgstr "Sesija istječe"
@@ -1367,7 +1436,7 @@ msgstr "Produži sesiju"
 msgid "Administrator Login"
 msgstr "Prijava administratora"
 
-#: includes/login-modal.php:33
+#: includes/login-modal.php:33 user-profile.php:77
 msgid "Username"
 msgstr "Korisničko ime"
 
@@ -1385,6 +1454,9 @@ msgstr "Zapamti me"
 
 #. translators: button label for canceling an action
 #: includes/login-modal.php:55 includes/messages.php:132
+#: admin-permissions.php:311 admin-permissions.php:337
+#: admin-applications.php:207 admin-users.php:112 developer-dashboard.php:134
+#: developer-dashboard.php:183 developer-dashboard.php:246
 msgid "Cancel"
 msgstr "Odustani"
 
@@ -1792,7 +1864,8 @@ msgstr ""
 "za sve biskupije u grupi, grupa se ovdje može definirati ili postaviti."
 
 #. translators: label for national calendar name field
-#: includes/messages.php:208
+#: includes/messages.php:208 admin-permissions.php:73 admin-permissions.php:285
+#: admin-permissions.php:370 permission-requests.php:235
 msgid "National Calendar"
 msgstr "Nacionalni kalendar"
 
@@ -2078,12 +2151,12 @@ msgstr ""
 "kalendarom"
 
 #. translators: screen reader text for previous button
-#: includes/messages.php:346
+#: includes/messages.php:346 temporale.php:171
 msgid "Previous"
 msgstr "Prethodno"
 
 #. translators: screen reader text for next button
-#: includes/messages.php:348
+#: includes/messages.php:348 temporale.php:177
 msgid "Next"
 msgstr "Sljedeće"
 
@@ -2091,6 +2164,1396 @@ msgstr "Sljedeće"
 #: includes/messages.php:350
 msgid "Diocesan calendar definition"
 msgstr "Definicija dijecezanskog kalendara"
+
+#: includes/admin-blocks.php:16
+msgid "Proprium de Tempore - temporal cycle events"
+msgstr "Proprium de Tempore - događaji vremenskog ciklusa"
+
+#: includes/admin-blocks.php:26
+msgid "Proprium de Sanctis - Roman Missal editions"
+msgstr "Proprium de Sanctis - izdanja Rimskog misala"
+
+#: includes/admin-blocks.php:36
+msgid "Congregation for Divine Worship decrees"
+msgstr "Dekreti Kongregacije za bogoštovlje"
+
+#: includes/admin-blocks.php:46
+msgid "Shared events for geographical regions"
+msgstr "Zajednički događaji za geografske regije"
+
+#: includes/admin-blocks.php:56
+msgid "National calendars by Bishops Conferences"
+msgstr "Nacionalni kalendari po biskupskim konferencijama"
+
+#: includes/admin-blocks.php:66
+msgid "Diocesan calendars by liturgical offices"
+msgstr "Biskupijski kalendari od liturgijskih ureda"
+
+#: includes/admin-blocks.php:83
+msgid "View"
+msgstr "Pogled"
+
+#: includes/admin-blocks.php:84 developer-dashboard.php:269
+msgid "Edit"
+msgstr "Uredi"
+
+#: admin-permissions.php:33 admin-permissions.php:45
+msgid "Permissions Management"
+msgstr "Upravljanje dozvolama"
+
+#: admin-permissions.php:49
+msgid ""
+"Manage fine-grained permissions for calendar resources. Grant or revoke user "
+"access to specific calendars and test definitions."
+msgstr ""
+"Upravljanje detaljnim dozvolama za kalendarske resurse. Dodjeljivanje ili "
+"oduzimanje pristupa korisnicima određenim kalendarima i definicijama testova."
+
+#: admin-permissions.php:57 temporale.php:51
+msgid "Filters"
+msgstr "Filteri"
+
+#: admin-permissions.php:63 admin-permissions.php:363 admin-permissions.php:401
+#: admin-applications.php:238 admin-role-requests.php:248 admin-users.php:213
+#: admin-users.php:290
+msgid "User"
+msgstr "Korisnik"
+
+#: admin-permissions.php:66
+msgid "Filter by user ID..."
+msgstr "Filtriraj prema korisničkom ID-u..."
+
+#: admin-permissions.php:69 admin-permissions.php:282 admin-permissions.php:364
+#: admin-permissions.php:404 permission-requests.php:227
+msgid "Object Type"
+msgstr "Tip objekta"
+
+#: admin-permissions.php:72 admin-permissions.php:90
+msgid "All"
+msgstr "Sve"
+
+#: admin-permissions.php:74 admin-permissions.php:286 admin-permissions.php:371
+#: permission-requests.php:236
+msgid "Diocesan Calendar"
+msgstr "Biskupijski kalendar"
+
+#: admin-permissions.php:76 admin-permissions.php:288 admin-permissions.php:373
+#: permission-requests.php:238
+msgid "Test Definition"
+msgstr "Definicija testa"
+
+#: admin-permissions.php:81 admin-permissions.php:293 admin-permissions.php:365
+#: admin-permissions.php:405 permission-requests.php:228
+msgid "Object ID"
+msgstr "ID objekta"
+
+#: admin-permissions.php:84
+msgid "Filter by object ID..."
+msgstr "Filtriraj prema ID-u objekta..."
+
+#: admin-permissions.php:87 admin-permissions.php:298 admin-permissions.php:366
+#: admin-permissions.php:406 permission-requests.php:229
+msgid "Relation"
+msgstr "Veza"
+
+#: admin-permissions.php:92 admin-permissions.php:302 admin-permissions.php:384
+#: permission-requests.php:254
+msgid "Viewer"
+msgstr "Promatrač"
+
+#: admin-permissions.php:93 admin-permissions.php:303 admin-permissions.php:385
+#: permission-requests.php:255
+msgid "Editor"
+msgstr "Uređivač"
+
+#: admin-permissions.php:94 admin-permissions.php:304 admin-permissions.php:386
+#: permission-requests.php:257
+msgid "Deleter"
+msgstr "Brisatelj"
+
+#: admin-permissions.php:100
+msgid "Apply Filters"
+msgstr "Primijeni filtere"
+
+#: admin-permissions.php:103
+msgid "Clear Filters"
+msgstr "Očisti filtere"
+
+#: admin-permissions.php:112 admin-permissions.php:271
+#: admin-permissions.php:314
+msgid "Grant Permission"
+msgstr "Dodijeli dopuštenje"
+
+#: admin-permissions.php:115 admin-permissions.php:143
+#: admin-applications.php:125 admin-role-requests.php:135 admin-users.php:56
+msgid "Refresh"
+msgstr "Osvježi"
+
+#: admin-permissions.php:123
+msgid "Permission Tuples"
+msgstr "Trokuti dozvola"
+
+#: admin-permissions.php:138 permission-requests.php:31
+#: permission-requests.php:44
+msgid "Access Requests"
+msgstr "Zahtjevi za pristup"
+
+#: admin-permissions.php:154 admin-permissions.php:421
+#: permission-requests.php:259 admin-applications.php:57
+#: admin-applications.php:101 admin-applications.php:250
+#: admin-role-requests.php:67 admin-role-requests.php:111
+#: admin-role-requests.php:264 developer-dashboard.php:303
+msgid "Pending"
+msgstr "Na čekanju"
+
+#: admin-permissions.php:161 admin-permissions.php:422
+#: permission-requests.php:260 admin-applications.php:68
+#: admin-applications.php:108 admin-applications.php:251
+#: admin-role-requests.php:78 admin-role-requests.php:118
+#: admin-role-requests.php:265 developer-dashboard.php:304
+msgid "Approved"
+msgstr "Odobreno"
+
+#: admin-permissions.php:167 admin-permissions.php:423
+#: permission-requests.php:261 admin-applications.php:79
+#: admin-applications.php:114 admin-applications.php:252
+#: admin-role-requests.php:89 admin-role-requests.php:124
+#: admin-role-requests.php:266 developer-dashboard.php:305
+msgid "Rejected"
+msgstr "Odbijeno"
+
+#: admin-permissions.php:173 admin-permissions.php:424
+#: permission-requests.php:262 admin-applications.php:90
+#: admin-applications.php:120 admin-applications.php:253
+#: admin-role-requests.php:100 admin-role-requests.php:130
+#: admin-role-requests.php:267 developer-dashboard.php:306
+msgid "Revoked"
+msgstr "Povučeno"
+
+#: admin-permissions.php:218
+msgid "Review Access Request"
+msgstr "Pregled zahtjeva za pristup"
+
+#: admin-permissions.php:220 admin-permissions.php:252
+#: admin-permissions.php:273 admin-permissions.php:329
+#: admin-applications.php:184 admin-role-requests.php:194
+#: admin-role-requests.php:217 admin-users.php:104 developer-dashboard.php:84
+#: developer-dashboard.php:154 developer-dashboard.php:239 temporale.php:161
+#: temporale.php:184
+msgid "Close"
+msgstr "Zatvori"
+
+#: admin-permissions.php:229 admin-applications.php:193
+#: admin-role-requests.php:203
+msgid "Notes"
+msgstr "Bilješke"
+
+#: admin-permissions.php:230 permission-requests.php:152
+#: admin-applications.php:194 admin-role-requests.php:204
+msgid "optional"
+msgstr "opcionalno"
+
+#: admin-permissions.php:235 admin-applications.php:199
+#: admin-role-requests.php:209
+msgid "Add notes about your decision..."
+msgstr "Dodaj bilješke o svojoj odluci..."
+
+#: admin-permissions.php:243 admin-applications.php:216
+#: admin-role-requests.php:226
+msgid "Approve"
+msgstr "Odobri"
+
+#: admin-permissions.php:246 admin-applications.php:210
+#: admin-role-requests.php:220
+msgid "Reject"
+msgstr "Odbij"
+
+#: admin-permissions.php:249 admin-permissions.php:368
+#: admin-applications.php:213 admin-role-requests.php:223
+#: admin-role-requests.php:269 developer-dashboard.php:271
+msgid "Revoke"
+msgstr "Povuci"
+
+#: admin-permissions.php:261 admin-applications.php:172
+#: admin-role-requests.php:182 admin-users.php:92
+msgid "Back to Dashboard"
+msgstr "Natrag na nadzornu ploču"
+
+#: admin-permissions.php:277 admin-users.php:215 admin-users.php:292
+#: user-profile.php:113
+msgid "User ID"
+msgstr "Korisnički ID"
+
+#: admin-permissions.php:279
+msgid "Enter user ID..."
+msgstr "Unesi korisnički ID..."
+
+#: admin-permissions.php:284 permission-requests.php:230
+msgid "Select object type..."
+msgstr "Odaberi tip objekta..."
+
+#: admin-permissions.php:295 admin-permissions.php:380
+msgid "Enter object ID..."
+msgstr "Unesi ID objekta..."
+
+#: admin-permissions.php:300 permission-requests.php:232
+msgid "Select relation..."
+msgstr "Odaberi odnos..."
+
+#: admin-permissions.php:327 admin-permissions.php:340
+msgid "Revoke Permission"
+msgstr "Povuci dopuštenje"
+
+#: admin-permissions.php:353
+msgid "No permissions found."
+msgstr "Nema pronađenih dopuštenja."
+
+#: admin-permissions.php:354
+msgid "Failed to load permissions. Please try again later."
+msgstr "Neuspješno učitavanje dopuštenja. Pokušajte ponovo kasnije."
+
+#: admin-permissions.php:355
+msgid "Permission granted successfully."
+msgstr "Dopuštenje uspješno odobreno."
+
+#: admin-permissions.php:356
+msgid "Permission revoked successfully."
+msgstr "Dopuštenje uspješno povučeno."
+
+#: admin-permissions.php:357
+msgid "Failed to grant permission. Please try again."
+msgstr "Neuspješno odobravanje dopuštenja. Pokušajte ponovo."
+
+#: admin-permissions.php:358
+msgid "Failed to revoke permission. Please try again."
+msgstr "Neuspješno povlačenje dopuštenja. Pokušajte ponovo."
+
+#: admin-permissions.php:359
+msgid "Granting..."
+msgstr "Odobravanje..."
+
+#: admin-permissions.php:360 admin-users.php:353
+msgid "Revoking..."
+msgstr "Povlačenje..."
+
+#: admin-permissions.php:361
+msgid "Are you sure you want to revoke this permission?"
+msgstr "Jeste li sigurni da želite povući ovo dopuštenje?"
+
+#: admin-permissions.php:367 admin-permissions.php:410
+#: admin-applications.php:244 admin-role-requests.php:253 temporale.php:138
+msgid "Actions"
+msgstr "Radnje"
+
+#: admin-permissions.php:376 permission-requests.php:242
+msgid "Sanctorale — Editio Typica 1970"
+msgstr "Sanctorale — Editio Typica 1970"
+
+#: admin-permissions.php:377 permission-requests.php:244
+msgid "Sanctorale — Editio Typica 2002"
+msgstr "Sanctorale — Editio Typica 2002"
+
+#: admin-permissions.php:378 permission-requests.php:246
+msgid "Sanctorale — Editio Typica 2008"
+msgstr "Sanctorale — Editio Typica 2008"
+
+#: admin-permissions.php:379 permission-requests.php:248
+msgid "Decrees of the Dicastery for Divine Worship"
+msgstr "Dekreti Dikasterija za božansko bogoštovlje"
+
+#: admin-permissions.php:381 permission-requests.php:231
+msgid "Select object ID..."
+msgstr "Odaberi ID objekta..."
+
+#: admin-permissions.php:388
+msgid "All fields are required."
+msgstr "Sva polja su obavezna."
+
+#: admin-permissions.php:392 admin-role-requests.php:239
+msgid "No requests found."
+msgstr "Nema pronađenih zahtjeva."
+
+#: admin-permissions.php:393
+msgid "No pending access requests. All caught up!"
+msgstr "Nema zahtjeva za pristup na čekanju. Sve je riješeno!"
+
+#: admin-permissions.php:394
+msgid "Failed to load access requests. Please try again later."
+msgstr ""
+"Nije uspjelo učitavanje zahtjeva za pristup. Molimo pokušajte ponovno "
+"kasnije."
+
+#: admin-permissions.php:395 admin-applications.php:232
+#: admin-role-requests.php:242
+msgid "Processing..."
+msgstr "Obrada..."
+
+#: admin-permissions.php:396
+msgid "Access request approved successfully."
+msgstr "Zahtjev za pristup uspješno odobren."
+
+#: admin-permissions.php:397
+msgid "Access request rejected."
+msgstr "Zahtjev za pristup odbijen."
+
+#: admin-permissions.php:398
+msgid "Access revoked successfully."
+msgstr "Pristup uspješno opozvan."
+
+#: admin-permissions.php:399 admin-applications.php:236
+#: admin-role-requests.php:246
+msgid "Failed to process request. Please try again."
+msgstr "Nije moguće obraditi zahtjev. Molimo pokušajte ponovno."
+
+#: admin-permissions.php:402 permission-requests.php:219
+msgid "Role"
+msgstr "Uloga"
+
+#: admin-permissions.php:403 permission-requests.php:133
+#: permission-requests.php:220 admin-dashboard.php:128 user-profile.php:178
+msgid "Permissions"
+msgstr "Dozvole"
+
+#: admin-permissions.php:407 permission-requests.php:151
+#: permission-requests.php:222 admin-role-requests.php:255
+msgid "Justification"
+msgstr "Obrazloženje"
+
+#: admin-permissions.php:408 permission-requests.php:166
+msgid "Credentials"
+msgstr "Povjerljive informacije"
+
+#: admin-permissions.php:409 admin-role-requests.php:251
+msgid "Date"
+msgstr "Datum"
+
+#: admin-permissions.php:411 admin-applications.php:245
+#: admin-role-requests.php:254
+msgid "Review"
+msgstr "Pregled"
+
+#: admin-permissions.php:412 admin-applications.php:247
+#: admin-role-requests.php:256
+msgid "Reviewed At"
+msgstr "Pregledano"
+
+#: admin-permissions.php:413 permission-requests.php:223
+#: admin-applications.php:248 admin-role-requests.php:257
+msgid "Review Notes"
+msgstr "Bilješke pregleda"
+
+#: admin-permissions.php:414 permission-requests.php:221
+#: admin-applications.php:243 admin-role-requests.php:258
+msgid "Status"
+msgstr "Status"
+
+#: admin-permissions.php:417 permission-requests.php:80
+#: permission-requests.php:250 admin-role-requests.php:261 admin-users.php:145
+msgid "Calendar Editor"
+msgstr "Urednik kalendara"
+
+#: admin-permissions.php:418 permission-requests.php:85
+#: permission-requests.php:251 admin-role-requests.php:262 admin-users.php:146
+msgid "Accuracy Test Editor"
+msgstr "Urednik točnostnog testa"
+
+#: permission-requests.php:49
+msgid ""
+"Request access to the Liturgical Calendar system. Select a role and specify "
+"the resource permissions you need. Your request will be reviewed by an "
+"administrator."
+msgstr ""
+"Zatraži pristup Liturgijskom kalendaru. Odaberi ulogu i naznači koja "
+"dopuštenja za resurse trebaš. Tvoj zahtjev će pregledati administrator."
+
+#: permission-requests.php:59
+msgid "Your Access Requests"
+msgstr "Tvoji zahtjevi za pristup"
+
+#: permission-requests.php:73
+msgid "Request Access"
+msgstr "Zahtjev za pristup"
+
+#: permission-requests.php:81
+msgid "Edit national and diocesan calendar data."
+msgstr "Uredi podatke o nacionalnim i dijecezanskim kalendarima."
+
+#: permission-requests.php:86
+msgid "Create and manage accuracy tests."
+msgstr "Kreiraj i upravljaj testovima točnosti."
+
+#: permission-requests.php:92
+msgid ""
+"API consumer. Request access to all resources you may need — individual API "
+"keys can be scoped further at generation time."
+msgstr ""
+"API korisnik. Zatraži pristup svim resursima koji ti mogu trebati — "
+"pojedinačni API ključevi mogu se dodatno specificirati prilikom generiranja."
+
+#: permission-requests.php:99
+msgid "Select a Role"
+msgstr "Odaberi ulogu"
+
+#: permission-requests.php:136
+msgid ""
+"Specify the resources you need access to. Add one or more permission rows."
+msgstr ""
+"Odredi resurse kojima trebaš pristup. Dodaj jedan ili više redaka s "
+"dozvolama."
+
+#: permission-requests.php:145
+msgid "Add Permission"
+msgstr "Dodaj dozvolu"
+
+#: permission-requests.php:153
+msgid ""
+"Providing a justification helps administrators review your request faster."
+msgstr ""
+"Navođenje razloga pomaže administratorima da brže pregledaju tvoj zahtjev."
+
+#: permission-requests.php:160
+msgid "Please describe why you need this access..."
+msgstr "Molimo, opiši zašto ti je potreban ovaj pristup..."
+
+#: permission-requests.php:167
+msgid ""
+"Optionally provide any credentials or references that support your request."
+msgstr ""
+"Opcionalno priloži sve vjerodajnice ili reference koje podržavaju tvoj "
+"zahtjev."
+
+#: permission-requests.php:174
+msgid "Any relevant credentials or references..."
+msgstr "Sve relevantne vjerodajnice ili reference..."
+
+#: permission-requests.php:181 permission-requests.php:210
+#: developer-dashboard.php:138 developer-dashboard.php:322
+msgid "Submit Request"
+msgstr "Pošalji zahtjev"
+
+#: permission-requests.php:190
+msgid "Back to Profile"
+msgstr "Natrag na profil"
+
+#: permission-requests.php:205
+msgid "You have not made any access requests yet."
+msgstr "Još nisi podnio nijedan zahtjev za pristup."
+
+#: permission-requests.php:206
+msgid "Could not load your existing requests."
+msgstr "Nije moguće učitati tvoje postojeće zahtjeve."
+
+#: permission-requests.php:207
+msgid "Your access request has been submitted successfully."
+msgstr "Tvoj zahtjev za pristup je uspješno podnesen."
+
+#: permission-requests.php:208
+msgid "Failed to submit request. Please try again."
+msgstr "Neuspjelo podnošenje zahtjeva. Molimo pokušaj ponovo."
+
+#: permission-requests.php:209
+msgid "Submitting..."
+msgstr "U podnošenju..."
+
+#: permission-requests.php:211
+msgid "Resubmit"
+msgstr "Ponovo pošalji"
+
+#: permission-requests.php:212
+msgid "Rejection reason"
+msgstr "Razlog odbijanja"
+
+#: permission-requests.php:213
+msgid "Please select a role."
+msgstr "Molimo, odaberi ulogu."
+
+#: permission-requests.php:214
+msgid ""
+"Each permission row must have object type, object ID, and relation filled in."
+msgstr ""
+"Svaki red dozvola mora imati popunjenu vrstu objekta, ID objekta i odnos."
+
+#: permission-requests.php:215
+#, php-format
+msgid "You have reached the maximum of %1$d permissions per request."
+msgstr "Dosegnut je maksimalan broj od %1$d dozvola po zahtjevu."
+
+#: permission-requests.php:216
+#, php-format
+msgid ""
+"This request had more than %1$d permissions; only the first %2$d are shown."
+msgstr ""
+"Ovaj zahtjev je imao više od %1$d dozvola; prikazane su samo prve %2$d."
+
+#: permission-requests.php:217
+msgid "Unknown error"
+msgstr "Nepoznata pogreška"
+
+#: permission-requests.php:224
+msgid "Submitted"
+msgstr "Poslano"
+
+#: permission-requests.php:225
+msgid "Reviewed"
+msgstr "Pregledano"
+
+#: permission-requests.php:233
+msgid "Remove"
+msgstr "Ukloni"
+
+#: permission-requests.php:264
+msgid "e.g. IT, USA, BOSTON, Americas..."
+msgstr "npr. IT, SAD, BOSTON, Amerike..."
+
+#: admin-applications.php:33 admin-applications.php:45
+msgid "Application Management"
+msgstr "Upravljanje aplikacijom"
+
+#: admin-applications.php:182
+msgid "Review Application"
+msgstr "Pregledaj aplikaciju"
+
+#: admin-applications.php:229
+msgid "No applications found."
+msgstr "Nema pronađenih aplikacija."
+
+#: admin-applications.php:230
+msgid "No pending applications. All caught up!"
+msgstr "Nema aplikacija na čekanju. Sve je pregledano!"
+
+#: admin-applications.php:231
+msgid "Failed to load applications. Please try again later."
+msgstr "Nije uspjelo učitavanje aplikacija. Molimo pokušajte kasnije."
+
+#: admin-applications.php:233
+msgid "Application approved successfully."
+msgstr "Aplikacija uspješno odobrena."
+
+#: admin-applications.php:234
+msgid "Application rejected."
+msgstr "Aplikacija odbijena."
+
+#: admin-applications.php:235
+msgid "Application revoked."
+msgstr "Aplikacija opozvana."
+
+#: admin-applications.php:239 developer-dashboard.php:265
+msgid "Application"
+msgstr "Aplikacija"
+
+#: admin-applications.php:240 developer-dashboard.php:98
+msgid "Description"
+msgstr "Opis"
+
+#: admin-applications.php:241 developer-dashboard.php:299
+msgid "Website"
+msgstr "Web stranica"
+
+#: admin-applications.php:242 developer-dashboard.php:279
+msgid "Created"
+msgstr "Stvoreno"
+
+#: admin-applications.php:246
+msgid "Reviewed By"
+msgstr "Pregledao"
+
+#: admin-applications.php:255
+msgid "Requested Scope"
+msgstr "Zatraženi opseg"
+
+#: admin-applications.php:256 developer-dashboard.php:115
+#: developer-dashboard.php:168 developer-dashboard.php:316
+msgid "Read-only"
+msgstr "Samo za čitanje"
+
+#: admin-applications.php:257 developer-dashboard.php:122
+#: developer-dashboard.php:317
+msgid "Read & Write"
+msgstr "Čitanje i pisanje"
+
+#: admin-dashboard.php:39 admin-dashboard.php:51 user-profile.php:252
+msgid "Admin Dashboard"
+msgstr "Administracijska nadzorna ploča"
+
+#: admin-dashboard.php:55
+msgid ""
+"Manage liturgical calendar data, Roman Missal information, and regional "
+"calendars."
+msgstr ""
+"Upravljanje podacima liturgijskog kalendara, informacije Rimskog misala i "
+"regionalni kalendari."
+
+#: admin-dashboard.php:65
+msgid "Administration"
+msgstr "Administracija"
+
+#: admin-dashboard.php:74
+msgid "Users"
+msgstr "Korisnici"
+
+#: admin-dashboard.php:76
+msgid "View users and manage their roles"
+msgstr "Pregled i upravljanje korisničkim ulogama"
+
+#: admin-dashboard.php:80 admin-dashboard.php:98 admin-dashboard.php:116
+#: admin-dashboard.php:134
+msgid "Manage"
+msgstr "Upravljanje"
+
+#: admin-dashboard.php:92 admin-role-requests.php:43
+msgid "Role Requests"
+msgstr "Zahtjevi za uloge"
+
+#: admin-dashboard.php:94
+msgid "Review and approve user role requests"
+msgstr "Pregled i odobravanje zahtjeva za korisničke uloge"
+
+#: admin-dashboard.php:110
+msgid "Applications"
+msgstr "Prijave"
+
+#: admin-dashboard.php:112
+msgid "Review and approve developer applications"
+msgstr "Pregled i odobrenje prijava za razvojne programere"
+
+#: admin-dashboard.php:130
+msgid "Manage fine-grained resource permissions"
+msgstr "Upravljanje dozvolama za resurse s finom granulacijom"
+
+#: admin-role-requests.php:55
+msgid "Role Requests Management"
+msgstr "Upravljanje zahtjevima za uloge"
+
+#: admin-role-requests.php:192
+msgid "Review Role Request"
+msgstr "Pregled zahtjeva za ulogu"
+
+#: admin-role-requests.php:240
+msgid "No pending role requests. All caught up!"
+msgstr "Nema zahtjeva za uloge na čekanju. Sve je riješeno!"
+
+#: admin-role-requests.php:241
+msgid "Failed to load role requests. Please try again later."
+msgstr ""
+"Nije uspjelo učitavanje zahtjeva za uloge. Molimo pokušajte ponovno kasnije."
+
+#: admin-role-requests.php:243
+msgid "Request approved successfully."
+msgstr "Zahtjev uspješno odobren."
+
+#: admin-role-requests.php:244
+msgid "Request rejected."
+msgstr "Zahtjev odbijen."
+
+#: admin-role-requests.php:245 admin-users.php:377
+msgid "Role revoked successfully."
+msgstr "Uloga uspješno opozvana."
+
+#: admin-role-requests.php:249
+msgid "Role Requested"
+msgstr "Zahtjevana uloga"
+
+#: admin-role-requests.php:250
+msgid "Requested Role"
+msgstr "Zahtijevana uloga"
+
+#: admin-users.php:33 admin-users.php:45
+msgid "Users Management"
+msgstr "Upravljanje korisnicima"
+
+#: admin-users.php:49
+msgid ""
+"Manage users in the system. You can view user information and revoke roles "
+"from users who have them."
+msgstr ""
+"Upravljajte korisnicima u sustavu. Možete pregledati informacije o "
+"korisnicima i opozvati uloge korisnicima koji ih imaju."
+
+#: admin-users.php:64
+msgid "Users with Roles"
+msgstr "Korisnici s ulogama"
+
+#: admin-users.php:79
+msgid "Users without Roles"
+msgstr "Korisnici bez uloga"
+
+#: admin-users.php:102 admin-users.php:115
+msgid "Revoke Role"
+msgstr "Opozovi ulogu"
+
+#: admin-users.php:143
+msgid "Administrator"
+msgstr "Administrator"
+
+#: admin-users.php:187
+msgid "Failed to load users. Please try again later."
+msgstr "Nije uspjelo učitavanje korisnika. Molimo pokušajte ponovo kasnije."
+
+#: admin-users.php:203
+msgid "No users with roles found."
+msgstr "Nisu pronađeni korisnici s ulogama."
+
+#: admin-users.php:214 user-profile.php:126
+msgid "Roles"
+msgstr "Uloge"
+
+#: admin-users.php:239
+msgid "Revoke this role"
+msgstr "Opozovi ovu ulogu"
+
+#: admin-users.php:280
+msgid "No users without roles found."
+msgstr "Nisu pronađeni korisnici bez uloga."
+
+#: admin-users.php:291
+msgid "Email Verified"
+msgstr "E-mail verificiran"
+
+#: admin-users.php:304
+msgid "Verified"
+msgstr "Verificiran"
+
+#: admin-users.php:305
+msgid "Not Verified"
+msgstr "Nije verificiran"
+
+#: admin-users.php:336
+msgid "Are you sure you want to revoke the role"
+msgstr "Jeste li sigurni da želite opozvati ulogu"
+
+#: admin-users.php:338
+msgid "from user"
+msgstr "od korisnika"
+
+#: admin-users.php:393
+msgid "Failed to revoke role. Please try again."
+msgstr "Neuspjeh pri opozivu uloge. Molimo pokušajte ponovo."
+
+#: developer-dashboard.php:34 developer-dashboard.php:47 user-profile.php:257
+msgid "Developer Dashboard"
+msgstr "Nadzorna ploča za programere"
+
+#: developer-dashboard.php:51
+msgid ""
+"Register applications and manage API keys for accessing the Liturgical "
+"Calendar API."
+msgstr ""
+"Registrirajte aplikacije i upravljajte API ključevima za pristup API-ju "
+"Liturgijskog kalendara."
+
+#: developer-dashboard.php:58
+msgid "My Applications"
+msgstr "Moje aplikacije"
+
+#: developer-dashboard.php:61 developer-dashboard.php:82
+#: developer-dashboard.php:297
+msgid "New Application"
+msgstr "Nova aplikacija"
+
+#: developer-dashboard.php:70
+msgid "Loading applications..."
+msgstr "Učitavanje aplikacija..."
+
+#: developer-dashboard.php:91
+msgid "Application Name"
+msgstr "Naziv aplikacije"
+
+#: developer-dashboard.php:95
+msgid "A descriptive name for your application."
+msgstr "Opisni naziv za vašu aplikaciju."
+
+#: developer-dashboard.php:100
+msgid "Optional description of what your application does."
+msgstr "Neobavezni opis onoga što vaša aplikacija radi."
+
+#: developer-dashboard.php:103
+msgid "Website URL"
+msgstr "URL web stranice"
+
+#: developer-dashboard.php:105
+msgid "Optional URL to your application or project."
+msgstr "Neobavezni URL vaše aplikacije ili projekta."
+
+#: developer-dashboard.php:109 developer-dashboard.php:315
+msgid "Access Scope"
+msgstr "Razina pristupa"
+
+#: developer-dashboard.php:116 developer-dashboard.php:318
+msgid "Can only read calendar data"
+msgstr "Može samo čitati podatke kalendara"
+
+#: developer-dashboard.php:123 developer-dashboard.php:319
+msgid "Can read and modify calendar data"
+msgstr "Može čitati i mijenjati podatke kalendara"
+
+#: developer-dashboard.php:127
+msgid ""
+"Choose the level of access your application needs. This cannot be changed "
+"after approval."
+msgstr ""
+"Odaberite razinu pristupa koju vaša aplikacija treba. Ovo se ne može "
+"promijeniti nakon odobrenja."
+
+#: developer-dashboard.php:152
+msgid "Generate API Key"
+msgstr "Generiraj API ključ"
+
+#: developer-dashboard.php:160
+msgid "Key Name"
+msgstr "Naziv ključa"
+
+#: developer-dashboard.php:162
+msgid "e.g., Production, Development"
+msgstr "npr., Produkcija, Razvoj"
+
+#: developer-dashboard.php:163
+msgid "Optional name to identify this key."
+msgstr "Neobavezni naziv za identifikaciju ovog ključa."
+
+#: developer-dashboard.php:166 developer-dashboard.php:273
+msgid "Scope"
+msgstr "Opseg"
+
+#: developer-dashboard.php:169
+msgid "Read and Write"
+msgstr "Čitanje i pisanje"
+
+#: developer-dashboard.php:172
+msgid ""
+"Read-only keys can only access public endpoints. Write keys can modify data."
+msgstr ""
+"Ključevi samo za čitanje mogu pristupiti javnim krajnjim točkama. Ključevi "
+"za pisanje mogu mijenjati podatke."
+
+#: developer-dashboard.php:176
+msgid "Expiration Date"
+msgstr "Datum isteka"
+
+#: developer-dashboard.php:178
+msgid "Optional. Leave empty for a key that never expires."
+msgstr "Opcionalno. Ostavite prazno za ključ koji nikada ne ističe."
+
+#: developer-dashboard.php:186 developer-dashboard.php:268
+msgid "Generate Key"
+msgstr "Generiraj ključ"
+
+#: developer-dashboard.php:199
+msgid "API Key Generated"
+msgstr "API ključ generiran"
+
+#: developer-dashboard.php:205
+msgid "Important:"
+msgstr "Važno:"
+
+#: developer-dashboard.php:206
+msgid "Copy this key now. For security reasons, it will not be shown again."
+msgstr ""
+"Kopiraj ovaj ključ sada. Iz sigurnosnih razloga, neće biti ponovno prikazan."
+
+#: developer-dashboard.php:209
+msgid "Your API Key:"
+msgstr "Vaš API ključ:"
+
+#: developer-dashboard.php:212
+msgid "Copy to clipboard"
+msgstr "Kopiraj u međuspremnik"
+
+#: developer-dashboard.php:218
+msgid "API key copied to clipboard!"
+msgstr "API ključ kopiran u međuspremnik!"
+
+#: developer-dashboard.php:223
+msgid "Done"
+msgstr "Gotovo"
+
+#: developer-dashboard.php:236
+msgid "Confirm Delete"
+msgstr "Potvrdi brisanje"
+
+#: developer-dashboard.php:242
+msgid "Are you sure you want to delete this item?"
+msgstr "Jeste li sigurni da želite izbrisati ovu stavku?"
+
+#: developer-dashboard.php:243
+msgid "This action cannot be undone."
+msgstr "Ova akcija se ne može poništiti."
+
+#: developer-dashboard.php:249 developer-dashboard.php:270
+msgid "Delete"
+msgstr "Izbriši"
+
+#: developer-dashboard.php:263
+msgid "You have not registered any applications yet."
+msgstr "Još niste registrirali nijednu aplikaciju."
+
+#: developer-dashboard.php:264
+msgid "Create your first application to get started."
+msgstr "Kreirajte vašu prvu aplikaciju da biste započeli."
+
+#: developer-dashboard.php:266
+msgid "API Keys"
+msgstr "API Ključevi"
+
+#: developer-dashboard.php:267
+msgid "No API keys generated yet."
+msgstr "Još nije generiran nijedan API ključ."
+
+#: developer-dashboard.php:272
+msgid "Rotate"
+msgstr "Rotiraj"
+
+#: developer-dashboard.php:274
+msgid "Rate Limit"
+msgstr "Ograničenje broja zahtjeva"
+
+#: developer-dashboard.php:275
+msgid "Expires"
+msgstr "Ističe"
+
+#: developer-dashboard.php:276
+msgid "Never"
+msgstr "Nikad"
+
+#: developer-dashboard.php:277
+msgid "Last Used"
+msgstr "Zadnje korišteno"
+
+#: developer-dashboard.php:278
+msgid "Never used"
+msgstr "Nikad korišteno"
+
+#: developer-dashboard.php:280
+msgid "keys"
+msgstr "ključevi"
+
+#: developer-dashboard.php:281
+msgid "key"
+msgstr "ključ"
+
+#: developer-dashboard.php:282
+#, php-format
+msgid ""
+"Are you sure you want to delete the application \"%1$s\"? This will also "
+"revoke all associated API keys."
+msgstr ""
+"Jesi li siguran da želiš izbrisati aplikaciju \"%1$s\"? Ovo će također "
+"opozvati sve povezane API ključeve."
+
+#: developer-dashboard.php:283
+msgid ""
+"Are you sure you want to revoke this API key? Applications using this key "
+"will no longer be able to authenticate."
+msgstr ""
+"Jesi li siguran da želiš opozvati ovaj API ključ? Aplikacije koje koriste "
+"ovaj ključ više se neće moći autentificirati."
+
+#: developer-dashboard.php:284
+msgid "Failed to load applications. Please try again."
+msgstr "Neuspjelo učitavanje aplikacija. Molimo pokušaj ponovno."
+
+#: developer-dashboard.php:285
+msgid "Failed to save application. Please try again."
+msgstr "Neuspjelo spremanje aplikacije. Molimo pokušaj ponovno."
+
+#: developer-dashboard.php:286
+msgid "Failed to delete. Please try again."
+msgstr "Neuspjelo brisanje. Molimo pokušaj ponovno."
+
+#: developer-dashboard.php:287
+msgid "Failed to generate API key. Please try again."
+msgstr "Neuspjelo generiranje API ključa. Molimo pokušaj ponovno."
+
+#: developer-dashboard.php:289
+msgid "Application updated successfully."
+msgstr "Aplikacija uspješno ažurirana."
+
+#: developer-dashboard.php:290
+msgid "Application created successfully."
+msgstr "Aplikacija uspješno stvorena."
+
+#: developer-dashboard.php:291
+msgid "Application deleted successfully."
+msgstr "Aplikacija uspješno obrisana."
+
+#: developer-dashboard.php:292
+msgid "API key revoked successfully."
+msgstr "API ključ uspješno opozvan."
+
+#: developer-dashboard.php:293
+msgid "API key rotated successfully."
+msgstr "API ključ uspješno rotiran."
+
+#: developer-dashboard.php:294
+msgid "Read"
+msgstr "Pročitaj"
+
+#: developer-dashboard.php:295
+msgid "Write"
+msgstr "Napiši"
+
+#: developer-dashboard.php:296
+msgid "requests/hour"
+msgstr "zahtjeva/sat"
+
+#: developer-dashboard.php:298
+msgid "Edit Application"
+msgstr "Uredi aplikaciju"
+
+#: developer-dashboard.php:300
+msgid "View Keys"
+msgstr "Pregledaj ključeve"
+
+#: developer-dashboard.php:301
+msgid "Hide Keys"
+msgstr "Sakrij ključeve"
+
+#: developer-dashboard.php:307
+msgid "Awaiting admin approval"
+msgstr "Čeka odobrenje administratora"
+
+#: developer-dashboard.php:308
+msgid "Rejection Notes"
+msgstr "Bilješke o odbijanju"
+
+#: developer-dashboard.php:309
+msgid "Resubmit for Review"
+msgstr "Ponovno pošalji na pregled"
+
+#: developer-dashboard.php:310
+msgid "API keys can only be generated for approved applications."
+msgstr "API ključevi mogu se generirati samo za odobrene aplikacije."
+
+#: developer-dashboard.php:311
+msgid ""
+"This application has been revoked. Contact an administrator for assistance."
+msgstr "Ova aplikacija je opozvana. Kontaktiraj administratora za pomoć."
+
+#: developer-dashboard.php:312
+msgid "Application resubmitted for review."
+msgstr "Aplikacija ponovno poslana na pregled."
+
+#: developer-dashboard.php:313
+msgid "Failed to resubmit application. Please try again."
+msgstr "Neuspjelo ponovno slanje aplikacije. Pokušaj ponovno."
+
+#: developer-dashboard.php:320
+msgid ""
+"This application has read-only access. Only read-scope API keys can be "
+"generated."
+msgstr ""
+"Ova aplikacija ima pristup samo za čitanje. API ključevi s opsegom za "
+"čitanje mogu se generirati."
+
+#: developer-dashboard.php:323
+msgid "Save"
+msgstr "Spremi"
+
+#: missals-editor.php:97
+msgid "Please login to access the admin interface."
+msgstr "Prijavi se za pristup administratorskom sučelju."
+
+#: temporale.php:42
+msgid ""
+"Proprium de Tempore - The temporal cycle of the liturgical year including "
+"Advent, Christmas, Lent, Easter Triduum, Easter, and Ordinary Time."
+msgstr ""
+"Proprium de Tempore - vremenski ciklus liturgijske godine koji uključuje "
+"Advent, Božić, Korizmu, Veliki tjedan, Uskrs i Obično vrijeme."
+
+#: temporale.php:57
+msgid "Language"
+msgstr "Jezik"
+
+#: temporale.php:63
+msgid "Liturgical Season"
+msgstr "Liturgijsko vrijeme"
+
+#: temporale.php:65
+msgid "All Seasons"
+msgstr "Sva vremena"
+
+#: temporale.php:66
+msgid "Advent"
+msgstr "Advent"
+
+#: temporale.php:67
+msgid "Christmas"
+msgstr "Božić"
+
+#: temporale.php:68
+msgid "Lent"
+msgstr "Korizma"
+
+#: temporale.php:69
+msgid "Easter Triduum"
+msgstr "Uskrsno trodnevlje"
+
+#: temporale.php:70
+msgid "Easter"
+msgstr "Uskrs"
+
+#: temporale.php:71
+msgid "Ordinary Time"
+msgstr "Vrijeme kroz godinu"
+
+#: temporale.php:77
+msgid "All Grades"
+msgstr "Sve razine"
+
+#: temporale.php:78
+msgid "Higher Solemnity (7)"
+msgstr "Viša svetkovina (7)"
+
+#: temporale.php:79
+msgid "Solemnity (6)"
+msgstr "Svetkovina (6)"
+
+#: temporale.php:80
+msgid "Feast of the Lord (5)"
+msgstr "Gospodnji blagdan (5)"
+
+#: temporale.php:81
+msgid "Feast (4)"
+msgstr "Blagdan (4)"
+
+#: temporale.php:82
+msgid "Memorial (3)"
+msgstr "Spomendan (3)"
+
+#: temporale.php:83
+msgid "Optional Memorial (2)"
+msgstr "Izborni spomendan (2)"
+
+#: temporale.php:84
+msgid "Commemoration (1)"
+msgstr "Komemoracija (1)"
+
+#: temporale.php:85
+msgid "Weekday (0)"
+msgstr "Dan kroz tjedan (0)"
+
+#: temporale.php:89
+msgid "Lectionary Category"
+msgstr "Kategorija lekcionara"
+
+#: temporale.php:91
+msgid "All Categories"
+msgstr "Sve kategorije"
+
+#: temporale.php:92
+msgid "Dominicale et Festivum"
+msgstr "Nedjeljni i blagdanski"
+
+#: temporale.php:93
+msgid "Feriale per Annum"
+msgstr "Kroz godinu kroz tjedan"
+
+#: temporale.php:94
+msgid "Feriale Tempus Adventus"
+msgstr "Kroz tjedan u došašću"
+
+#: temporale.php:95
+msgid "Feriale Tempus Nativitatis"
+msgstr "Kroz tjedan u božićnom vremenu"
+
+#: temporale.php:96
+msgid "Feriale Tempus Quadragesimae"
+msgstr "Ferialno Vrijeme Korizme"
+
+#: temporale.php:97
+msgid "Feriale Tempus Paschatis"
+msgstr "Ferialno Vrijeme Pashalnog Razdoblja"
+
+#: temporale.php:98
+msgid "Sanctorum"
+msgstr "Svetaca"
+
+#: temporale.php:104
+msgid "Search"
+msgstr "Pretraži"
+
+#: temporale.php:106
+msgid "Search by name or key..."
+msgstr "Pretraži po imenu ili ključnoj riječi..."
+
+#: temporale.php:118
+msgid "Temporale Events"
+msgstr "Događaji Temporale"
+
+#: temporale.php:123
+msgid "Export JSON"
+msgstr "Izvoz JSON"
+
+#: temporale.php:132
+msgid "Event Key"
+msgstr "Ključ Događaja"
+
+#: temporale.php:135
+msgid "Season"
+msgstr "Liturgijsko vrijeme"
+
+#: temporale.php:136
+msgid "Type"
+msgstr "Tip"
+
+#: temporale.php:137
+msgid "Color"
+msgstr "Boja"
+
+#: temporale.php:160
+msgid "Event Details"
+msgstr "Detalji Događaja"
+
+#: temporale.php:167
+msgid "Event navigation"
+msgstr "Navigacija Događajem"
+
+#: temporale.php:168
+msgid "First"
+msgstr "Prvo"
+
+#: temporale.php:180
+msgid "Last"
+msgstr "Zadnje"
+
+#: user-profile.php:23 user-profile.php:35
+msgid "User Profile"
+msgstr "Korisnički Profil"
+
+#: user-profile.php:43
+msgid "Account Information"
+msgstr "Podaci o Računu"
+
+#: user-profile.php:52
+msgid "Full Name"
+msgstr "Puno Ime"
+
+#: user-profile.php:61
+msgid "Given / Family Name"
+msgstr "Ime / Prezime"
+
+#: user-profile.php:85
+msgid "Email"
+msgstr "Email"
+
+#: user-profile.php:90
+msgid "Email verified"
+msgstr "E-pošta potvrđena"
+
+#: user-profile.php:94
+msgid "Email not verified"
+msgstr "E-pošta nije potvrđena"
+
+#: user-profile.php:98
+msgid "Resend verification"
+msgstr "Ponovno pošalji potvrdu"
+
+#: user-profile.php:101
+msgid "Click after verifying your email to update your session"
+msgstr "Klikni nakon što potvrdiš e-poštu da ažuriraš svoju sesiju"
+
+#: user-profile.php:102 user-profile.php:131
+msgid "Refresh session"
+msgstr "Osvježi sesiju"
+
+#: user-profile.php:130
+msgid "Refresh session to see updated roles"
+msgstr "Osvježi sesiju da vidiš ažurirane uloge"
+
+#: user-profile.php:135 user-profile.php:140
+msgid "Request Role"
+msgstr "Zatraži ulogu"
+
+#: user-profile.php:139
+msgid "Email verification required"
+msgstr "Potrebna potvrda e-pošte"
+
+#: user-profile.php:150
+msgid ""
+"You must verify your email address before you can request a role. Please "
+"check your inbox for a verification email."
+msgstr ""
+"Moraš potvrditi svoju e-mail adresu prije nego što možeš zatražiti ulogu. "
+"Provjeri svoju pristiglu poštu za e-mail s potvrdom."
+
+#: user-profile.php:165
+msgid "No roles assigned yet. Request a role to access additional features."
+msgstr ""
+"Još nisu dodijeljene uloge. Zatraži ulogu za pristup dodatnim značajkama."
+
+#: user-profile.php:196
+msgid "Session Information"
+msgstr "Informacije o sesiji"
+
+#: user-profile.php:205
+msgid "Session Expires"
+msgstr "Sesija ističe"
+
+#: user-profile.php:217
+msgid "Time Remaining"
+msgstr "Preostalo vrijeme"
+
+#: user-profile.php:232 user-profile.php:433
+msgid "Expired"
+msgstr "Isteklo"
+
+#: user-profile.php:289 user-profile.php:314
+msgid "Refreshing..."
+msgstr "Osvježavanje..."
+
+#: user-profile.php:297 user-profile.php:321
+msgid "Session refresh failed"
+msgstr "Nije uspjelo osvježavanje sesije"
+
+#: user-profile.php:301 user-profile.php:325
+msgid "Failed to refresh session. Please try logging out and back in."
+msgstr ""
+"Nije uspjelo osvježavanje sesije. Pokušaj se odjaviti i ponovno prijaviti."
+
+#: user-profile.php:339
+msgid "Sending..."
+msgstr "Slanje..."
+
+#: user-profile.php:352
+msgid "Failed to send verification email"
+msgstr "Slanje e-maila s potvrdom nije uspjelo"
+
+#: user-profile.php:355
+msgid ""
+"Verification email sent. After clicking the verification link, use the "
+"\"Refresh session\" button to update your status."
+msgstr ""
+"E-mail s potvrdom poslan. Nakon klika na poveznicu za potvrdu, koristi tipku "
+"\"Osvježi sesiju\" za ažuriranje statusa."
+
+#: user-profile.php:373
+msgid "Failed to send verification email. Please try again."
+msgstr "Nije uspjelo slanje verifikacijskog e-maila. Molim pokušajte ponovo."
+
+#: user-profile.php:404
+msgid "Session expires in 5 minutes"
+msgstr "Sesija ističe za 5 minuta"
+
+#: user-profile.php:405
+msgid "Session expires in 1 minute"
+msgstr "Sesija ističe za 1 minutu"
+
+#: user-profile.php:406
+msgid "Session expires in 30 seconds"
+msgstr "Sesija ističe za 30 sekundi"
+
+#: user-profile.php:407
+msgid "Session expired"
+msgstr "Sesija je istekla"
+
+#~ msgid "min ago"
+#~ msgstr "prije min"
+
+#~ msgid "hours ago"
+#~ msgstr "prije sati"
+
+#~ msgid "days ago"
+#~ msgstr "prije dana"
 
 #~ msgid "General Roman Calendar - Extending"
 #~ msgstr "Opći rimski kalendar - Proširenje"

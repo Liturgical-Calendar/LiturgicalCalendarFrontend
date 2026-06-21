@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-01 09:48-0400\n"
-"PO-Revision-Date: 2026-04-02 19:50+0000\n"
+"POT-Creation-Date: 2026-06-21 15:40+0000\n"
+"PO-Revision-Date: 2026-06-21 11:36+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
@@ -127,11 +127,16 @@ msgstr "Parámetros de solicitud disponibles en todas las rutas %1$s"
 
 #. translators: part of page title - refers to the Catholic liturgical calendar
 #: index.php:65 usage.php:29 examples.php:98 liturgyOfAnyDay.php:18
-#: layout/header.php:257
+#: layout/header.php:257 admin-permissions.php:77 admin-permissions.php:289
+#: admin-permissions.php:374 permission-requests.php:239
 msgid "General Roman Calendar"
 msgstr "Calendario Romano General"
 
 #: index.php:74 layout/header.php:19 layout/header.php:229
+#: admin-permissions.php:34 permission-requests.php:32
+#: admin-applications.php:34 admin-dashboard.php:40 admin-role-requests.php:44
+#: admin-users.php:34 developer-dashboard.php:35 temporale.php:25
+#: user-profile.php:24
 msgid "Catholic Liturgical Calendar"
 msgstr "Calendario Litúrgico Católico"
 
@@ -1222,10 +1227,12 @@ msgstr "Propiedad a cambiar"
 
 #. translators: form field label for the name of a liturgical event
 #: src/Utilities.php:301 src/FormControls.php:61 includes/messages.php:19
+#: temporale.php:133
 msgid "Name"
 msgstr "Nombre"
 
-#: src/Utilities.php:302 src/FormControls.php:194
+#: src/Utilities.php:302 src/FormControls.php:194 temporale.php:75
+#: temporale.php:134
 msgid "Grade"
 msgstr "Grado"
 
@@ -1299,7 +1306,18 @@ msgstr "Ver los repositorios del proyecto en GitHub"
 msgid "Notifications"
 msgstr "Notificaciones"
 
-#: layout/header.php:140
+#: layout/header.php:140 admin-permissions.php:129 admin-permissions.php:184
+#: admin-permissions.php:191 admin-permissions.php:198
+#: admin-permissions.php:205 admin-permissions.php:352
+#: admin-permissions.php:391 permission-requests.php:64
+#: permission-requests.php:204 admin-applications.php:136
+#: admin-applications.php:145 admin-applications.php:154
+#: admin-applications.php:163 admin-applications.php:228
+#: admin-role-requests.php:146 admin-role-requests.php:155
+#: admin-role-requests.php:164 admin-role-requests.php:173
+#: admin-role-requests.php:238 admin-users.php:70 admin-users.php:85
+#: admin-users.php:151 developer-dashboard.php:68 temporale.php:59
+#: temporale.php:145
 msgid "Loading..."
 msgstr "Cargando..."
 
@@ -1317,19 +1335,23 @@ msgid "View Profile"
 msgstr "Ver perfil"
 
 #: layout/header.php:176 includes/login-modal.php:105
-#: includes/login-modal.php:670
+#: includes/login-modal.php:670 user-profile.php:277
 msgid "Are you sure you want to logout?"
 msgstr "¿Estás seguro de que quieres cerrar sesión?"
 
 #: layout/header.php:179 layout/header.php:183 includes/login-modal.php:12
+#: user-profile.php:261
 msgid "Logout"
 msgstr "Cerrar sesión"
 
-#: layout/header.php:188 layout/header.php:251
+#: layout/header.php:188 layout/header.php:251 admin-permissions.php:419
+#: permission-requests.php:90 permission-requests.php:252
+#: admin-role-requests.php:260 admin-users.php:144
 msgid "Developer"
 msgstr "Desarrollador"
 
-#: layout/header.php:200
+#: layout/header.php:200 admin-permissions.php:91 admin-permissions.php:301
+#: admin-permissions.php:383 permission-requests.php:256
 msgid "Admin"
 msgstr "Administrador"
 
@@ -1337,15 +1359,16 @@ msgstr "Administrador"
 msgid "Dashboard"
 msgstr "Tablero"
 
-#: layout/header.php:261
+#: layout/header.php:261 includes/admin-blocks.php:15 admin-permissions.php:375
+#: permission-requests.php:240 temporale.php:24 temporale.php:37
 msgid "Temporale"
 msgstr "Temporal"
 
-#: layout/header.php:265
+#: layout/header.php:265 includes/admin-blocks.php:25
 msgid "Sanctorale"
 msgstr "Santoral"
 
-#: layout/header.php:269
+#: layout/header.php:269 includes/admin-blocks.php:35
 msgid "Decrees"
 msgstr "Decretos"
 
@@ -1354,15 +1377,17 @@ msgid "Particular Calendars"
 msgstr "Calendarios particulares"
 
 #. translators: label for wider region calendar name field
-#: layout/header.php:281 includes/messages.php:206
+#: layout/header.php:281 includes/messages.php:206 includes/admin-blocks.php:45
+#: admin-permissions.php:75 admin-permissions.php:287 admin-permissions.php:372
+#: permission-requests.php:237
 msgid "Wider Region"
 msgstr "Región más amplia"
 
-#: layout/header.php:285
+#: layout/header.php:285 includes/admin-blocks.php:55
 msgid "National"
 msgstr "Nacional"
 
-#: layout/header.php:289
+#: layout/header.php:289 includes/admin-blocks.php:65
 msgid "Diocesan"
 msgstr "Diocesano"
 
@@ -1382,6 +1407,50 @@ msgstr "Documentación"
 msgid "Examples of Usage"
 msgstr "Ejemplos de uso"
 
+#: layout/footer.php:92
+msgid "No pending requests"
+msgstr "No hay solicitudes pendientes"
+
+#: layout/footer.php:93
+msgid "No new notifications"
+msgstr "No hay nuevas notificaciones"
+
+#: layout/footer.php:94
+msgid "Could not load notifications"
+msgstr "No se pudieron cargar las notificaciones"
+
+#: layout/footer.php:95
+msgid "Just now"
+msgstr "Justo ahora"
+
+#: layout/footer.php:96 admin-permissions.php:415 admin-role-requests.php:252
+msgid "Requested"
+msgstr "Solicitado"
+
+#: layout/footer.php:97
+msgid "Requested access"
+msgstr "Acceso solicitado"
+
+#: layout/footer.php:98
+msgid "Your request was approved"
+msgstr "Tu solicitud fue aprobada"
+
+#: layout/footer.php:99
+msgid "Your request was rejected"
+msgstr "Tu solicitud fue rechazada"
+
+#: layout/footer.php:100
+msgid "Your access was revoked"
+msgstr "Tu acceso fue revocado"
+
+#: layout/footer.php:101
+msgid "Request access to start using the system"
+msgstr "Solicita acceso para empezar a usar el sistema"
+
+#: layout/footer.php:102
+msgid "Get started"
+msgstr "Comenzar"
+
 #: includes/login-modal.php:6
 msgid "Session Expiring"
 msgstr "Sesión a punto de expirar"
@@ -1394,7 +1463,7 @@ msgstr "Extender sesión"
 msgid "Administrator Login"
 msgstr "Inicio de sesión de Administrador"
 
-#: includes/login-modal.php:33
+#: includes/login-modal.php:33 user-profile.php:77
 msgid "Username"
 msgstr "Nombre de usuario"
 
@@ -1412,6 +1481,9 @@ msgstr "Recordarme"
 
 #. translators: button label for canceling an action
 #: includes/login-modal.php:55 includes/messages.php:132
+#: admin-permissions.php:311 admin-permissions.php:337
+#: admin-applications.php:207 admin-users.php:112 developer-dashboard.php:134
+#: developer-dashboard.php:183 developer-dashboard.php:246
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -1820,7 +1892,8 @@ msgstr ""
 "las diócesis del grupo, el grupo puede definirse o configurarse aquí."
 
 #. translators: label for national calendar name field
-#: includes/messages.php:208
+#: includes/messages.php:208 admin-permissions.php:73 admin-permissions.php:285
+#: admin-permissions.php:370 permission-requests.php:235
 msgid "National Calendar"
 msgstr "Calendario Nacional"
 
@@ -2103,12 +2176,12 @@ msgstr ""
 "con el Calendario Nacional aquí"
 
 #. translators: screen reader text for previous button
-#: includes/messages.php:346
+#: includes/messages.php:346 temporale.php:171
 msgid "Previous"
 msgstr "Anterior"
 
 #. translators: screen reader text for next button
-#: includes/messages.php:348
+#: includes/messages.php:348 temporale.php:177
 msgid "Next"
 msgstr "Siguiente"
 
@@ -2116,6 +2189,1413 @@ msgstr "Siguiente"
 #: includes/messages.php:350
 msgid "Diocesan calendar definition"
 msgstr "Definición del calendario diocesano"
+
+#: includes/admin-blocks.php:16
+msgid "Proprium de Tempore - temporal cycle events"
+msgstr "Proprio del Tiempo - eventos del ciclo temporal"
+
+#: includes/admin-blocks.php:26
+msgid "Proprium de Sanctis - Roman Missal editions"
+msgstr "Proprio de los Santos - ediciones del Misal Romano"
+
+#: includes/admin-blocks.php:36
+msgid "Congregation for Divine Worship decrees"
+msgstr "Decretos de la Congregación para el Culto Divino"
+
+#: includes/admin-blocks.php:46
+msgid "Shared events for geographical regions"
+msgstr "Eventos compartidos para regiones geográficas"
+
+#: includes/admin-blocks.php:56
+msgid "National calendars by Bishops Conferences"
+msgstr "Calendarios nacionales por Conferencias Episcopales"
+
+#: includes/admin-blocks.php:66
+msgid "Diocesan calendars by liturgical offices"
+msgstr "Calendarios diocesanos por oficinas litúrgicas"
+
+#: includes/admin-blocks.php:83
+msgid "View"
+msgstr "Ver"
+
+#: includes/admin-blocks.php:84 developer-dashboard.php:269
+msgid "Edit"
+msgstr "Editar"
+
+#: admin-permissions.php:33 admin-permissions.php:45
+msgid "Permissions Management"
+msgstr "Gestión de permisos"
+
+#: admin-permissions.php:49
+msgid ""
+"Manage fine-grained permissions for calendar resources. Grant or revoke user "
+"access to specific calendars and test definitions."
+msgstr ""
+"Gestiona permisos detallados para recursos de calendario. Concede o revoca "
+"el acceso de usuario a calendarios específicos y prueba definiciones."
+
+#: admin-permissions.php:57 temporale.php:51
+msgid "Filters"
+msgstr "Filtros"
+
+#: admin-permissions.php:63 admin-permissions.php:363 admin-permissions.php:401
+#: admin-applications.php:238 admin-role-requests.php:248 admin-users.php:213
+#: admin-users.php:290
+msgid "User"
+msgstr "Usuario"
+
+#: admin-permissions.php:66
+msgid "Filter by user ID..."
+msgstr "Filtrar por ID de usuario..."
+
+#: admin-permissions.php:69 admin-permissions.php:282 admin-permissions.php:364
+#: admin-permissions.php:404 permission-requests.php:227
+msgid "Object Type"
+msgstr "Tipo de objeto"
+
+#: admin-permissions.php:72 admin-permissions.php:90
+msgid "All"
+msgstr "Todos"
+
+#: admin-permissions.php:74 admin-permissions.php:286 admin-permissions.php:371
+#: permission-requests.php:236
+msgid "Diocesan Calendar"
+msgstr "Calendario Diocesano"
+
+#: admin-permissions.php:76 admin-permissions.php:288 admin-permissions.php:373
+#: permission-requests.php:238
+msgid "Test Definition"
+msgstr "Definición de Prueba"
+
+#: admin-permissions.php:81 admin-permissions.php:293 admin-permissions.php:365
+#: admin-permissions.php:405 permission-requests.php:228
+msgid "Object ID"
+msgstr "ID de objeto"
+
+#: admin-permissions.php:84
+msgid "Filter by object ID..."
+msgstr "Filtrar por ID de objeto..."
+
+#: admin-permissions.php:87 admin-permissions.php:298 admin-permissions.php:366
+#: admin-permissions.php:406 permission-requests.php:229
+msgid "Relation"
+msgstr "Relación"
+
+#: admin-permissions.php:92 admin-permissions.php:302 admin-permissions.php:384
+#: permission-requests.php:254
+msgid "Viewer"
+msgstr "Visualizador"
+
+#: admin-permissions.php:93 admin-permissions.php:303 admin-permissions.php:385
+#: permission-requests.php:255
+msgid "Editor"
+msgstr "Editor"
+
+#: admin-permissions.php:94 admin-permissions.php:304 admin-permissions.php:386
+#: permission-requests.php:257
+msgid "Deleter"
+msgstr "Eliminador"
+
+#: admin-permissions.php:100
+msgid "Apply Filters"
+msgstr "Aplicar filtros"
+
+#: admin-permissions.php:103
+msgid "Clear Filters"
+msgstr "Limpiar filtros"
+
+#: admin-permissions.php:112 admin-permissions.php:271
+#: admin-permissions.php:314
+msgid "Grant Permission"
+msgstr "Conceder permiso"
+
+#: admin-permissions.php:115 admin-permissions.php:143
+#: admin-applications.php:125 admin-role-requests.php:135 admin-users.php:56
+msgid "Refresh"
+msgstr "Actualizar"
+
+#: admin-permissions.php:123
+msgid "Permission Tuples"
+msgstr "Tuplas de permisos"
+
+#: admin-permissions.php:138 permission-requests.php:31
+#: permission-requests.php:44
+msgid "Access Requests"
+msgstr "Solicitudes de acceso"
+
+#: admin-permissions.php:154 admin-permissions.php:421
+#: permission-requests.php:259 admin-applications.php:57
+#: admin-applications.php:101 admin-applications.php:250
+#: admin-role-requests.php:67 admin-role-requests.php:111
+#: admin-role-requests.php:264 developer-dashboard.php:303
+msgid "Pending"
+msgstr "Pendiente"
+
+#: admin-permissions.php:161 admin-permissions.php:422
+#: permission-requests.php:260 admin-applications.php:68
+#: admin-applications.php:108 admin-applications.php:251
+#: admin-role-requests.php:78 admin-role-requests.php:118
+#: admin-role-requests.php:265 developer-dashboard.php:304
+msgid "Approved"
+msgstr "Aprobado"
+
+#: admin-permissions.php:167 admin-permissions.php:423
+#: permission-requests.php:261 admin-applications.php:79
+#: admin-applications.php:114 admin-applications.php:252
+#: admin-role-requests.php:89 admin-role-requests.php:124
+#: admin-role-requests.php:266 developer-dashboard.php:305
+msgid "Rejected"
+msgstr "Rechazado"
+
+#: admin-permissions.php:173 admin-permissions.php:424
+#: permission-requests.php:262 admin-applications.php:90
+#: admin-applications.php:120 admin-applications.php:253
+#: admin-role-requests.php:100 admin-role-requests.php:130
+#: admin-role-requests.php:267 developer-dashboard.php:306
+msgid "Revoked"
+msgstr "Revocado"
+
+#: admin-permissions.php:218
+msgid "Review Access Request"
+msgstr "Revisar solicitud de acceso"
+
+#: admin-permissions.php:220 admin-permissions.php:252
+#: admin-permissions.php:273 admin-permissions.php:329
+#: admin-applications.php:184 admin-role-requests.php:194
+#: admin-role-requests.php:217 admin-users.php:104 developer-dashboard.php:84
+#: developer-dashboard.php:154 developer-dashboard.php:239 temporale.php:161
+#: temporale.php:184
+msgid "Close"
+msgstr "Cerrar"
+
+#: admin-permissions.php:229 admin-applications.php:193
+#: admin-role-requests.php:203
+msgid "Notes"
+msgstr "Notas"
+
+#: admin-permissions.php:230 permission-requests.php:152
+#: admin-applications.php:194 admin-role-requests.php:204
+msgid "optional"
+msgstr "opcional"
+
+#: admin-permissions.php:235 admin-applications.php:199
+#: admin-role-requests.php:209
+msgid "Add notes about your decision..."
+msgstr "Añadir notas sobre tu decisión..."
+
+#: admin-permissions.php:243 admin-applications.php:216
+#: admin-role-requests.php:226
+msgid "Approve"
+msgstr "Aprobar"
+
+#: admin-permissions.php:246 admin-applications.php:210
+#: admin-role-requests.php:220
+msgid "Reject"
+msgstr "Rechazar"
+
+#: admin-permissions.php:249 admin-permissions.php:368
+#: admin-applications.php:213 admin-role-requests.php:223
+#: admin-role-requests.php:269 developer-dashboard.php:271
+msgid "Revoke"
+msgstr "Revocar"
+
+#: admin-permissions.php:261 admin-applications.php:172
+#: admin-role-requests.php:182 admin-users.php:92
+msgid "Back to Dashboard"
+msgstr "Volver al panel de control"
+
+#: admin-permissions.php:277 admin-users.php:215 admin-users.php:292
+#: user-profile.php:113
+msgid "User ID"
+msgstr "ID de usuario"
+
+#: admin-permissions.php:279
+msgid "Enter user ID..."
+msgstr "Introduce el ID de usuario..."
+
+#: admin-permissions.php:284 permission-requests.php:230
+msgid "Select object type..."
+msgstr "Seleccionar tipo de objeto..."
+
+#: admin-permissions.php:295 admin-permissions.php:380
+msgid "Enter object ID..."
+msgstr "Introduce el ID de objeto..."
+
+#: admin-permissions.php:300 permission-requests.php:232
+msgid "Select relation..."
+msgstr "Seleccionar relación..."
+
+#: admin-permissions.php:327 admin-permissions.php:340
+msgid "Revoke Permission"
+msgstr "Revocar permiso"
+
+#: admin-permissions.php:353
+msgid "No permissions found."
+msgstr "No se encontraron permisos."
+
+#: admin-permissions.php:354
+msgid "Failed to load permissions. Please try again later."
+msgstr "Error al cargar permisos. Por favor, inténtalo de nuevo más tarde."
+
+#: admin-permissions.php:355
+msgid "Permission granted successfully."
+msgstr "Permiso concedido exitosamente."
+
+#: admin-permissions.php:356
+msgid "Permission revoked successfully."
+msgstr "Permiso revocado con éxito."
+
+#: admin-permissions.php:357
+msgid "Failed to grant permission. Please try again."
+msgstr "Error al conceder permiso. Por favor, inténtalo de nuevo."
+
+#: admin-permissions.php:358
+msgid "Failed to revoke permission. Please try again."
+msgstr "Error al revocar permiso. Por favor, inténtalo de nuevo."
+
+#: admin-permissions.php:359
+msgid "Granting..."
+msgstr "Concediendo..."
+
+#: admin-permissions.php:360 admin-users.php:353
+msgid "Revoking..."
+msgstr "Revocando..."
+
+#: admin-permissions.php:361
+msgid "Are you sure you want to revoke this permission?"
+msgstr "¿Estás seguro de que quieres revocar este permiso?"
+
+#: admin-permissions.php:367 admin-permissions.php:410
+#: admin-applications.php:244 admin-role-requests.php:253 temporale.php:138
+msgid "Actions"
+msgstr "Acciones"
+
+#: admin-permissions.php:376 permission-requests.php:242
+msgid "Sanctorale — Editio Typica 1970"
+msgstr "Sanctorale — Editio Typica 1970"
+
+#: admin-permissions.php:377 permission-requests.php:244
+msgid "Sanctorale — Editio Typica 2002"
+msgstr "Sanctorale — Editio Typica 2002"
+
+#: admin-permissions.php:378 permission-requests.php:246
+msgid "Sanctorale — Editio Typica 2008"
+msgstr "Sanctorale — Editio Typica 2008"
+
+#: admin-permissions.php:379 permission-requests.php:248
+msgid "Decrees of the Dicastery for Divine Worship"
+msgstr "Decretos del Dicasterio para el Culto Divino"
+
+#: admin-permissions.php:381 permission-requests.php:231
+msgid "Select object ID..."
+msgstr "Seleccionar ID de objeto..."
+
+#: admin-permissions.php:388
+msgid "All fields are required."
+msgstr "Todos los campos son obligatorios."
+
+#: admin-permissions.php:392 admin-role-requests.php:239
+msgid "No requests found."
+msgstr "No se encontraron solicitudes."
+
+#: admin-permissions.php:393
+msgid "No pending access requests. All caught up!"
+msgstr "No hay solicitudes de acceso pendientes. ¡Todo al día!"
+
+#: admin-permissions.php:394
+msgid "Failed to load access requests. Please try again later."
+msgstr ""
+"Error al cargar las solicitudes de acceso. Por favor, inténtalo de nuevo más "
+"tarde."
+
+#: admin-permissions.php:395 admin-applications.php:232
+#: admin-role-requests.php:242
+msgid "Processing..."
+msgstr "Procesando..."
+
+#: admin-permissions.php:396
+msgid "Access request approved successfully."
+msgstr "Solicitud de acceso aprobada con éxito."
+
+#: admin-permissions.php:397
+msgid "Access request rejected."
+msgstr "Solicitud de acceso rechazada."
+
+#: admin-permissions.php:398
+msgid "Access revoked successfully."
+msgstr "Acceso revocado exitosamente."
+
+#: admin-permissions.php:399 admin-applications.php:236
+#: admin-role-requests.php:246
+msgid "Failed to process request. Please try again."
+msgstr "Error al procesar la solicitud. Por favor, inténtalo de nuevo."
+
+#: admin-permissions.php:402 permission-requests.php:219
+msgid "Role"
+msgstr "Rol"
+
+#: admin-permissions.php:403 permission-requests.php:133
+#: permission-requests.php:220 admin-dashboard.php:128 user-profile.php:178
+msgid "Permissions"
+msgstr "Permisos"
+
+#: admin-permissions.php:407 permission-requests.php:151
+#: permission-requests.php:222 admin-role-requests.php:255
+msgid "Justification"
+msgstr "Justificación"
+
+#: admin-permissions.php:408 permission-requests.php:166
+msgid "Credentials"
+msgstr "Credenciales"
+
+#: admin-permissions.php:409 admin-role-requests.php:251
+msgid "Date"
+msgstr "Fecha"
+
+#: admin-permissions.php:411 admin-applications.php:245
+#: admin-role-requests.php:254
+msgid "Review"
+msgstr "Revisión"
+
+#: admin-permissions.php:412 admin-applications.php:247
+#: admin-role-requests.php:256
+msgid "Reviewed At"
+msgstr "Revisado el"
+
+#: admin-permissions.php:413 permission-requests.php:223
+#: admin-applications.php:248 admin-role-requests.php:257
+msgid "Review Notes"
+msgstr "Notas de revisión"
+
+#: admin-permissions.php:414 permission-requests.php:221
+#: admin-applications.php:243 admin-role-requests.php:258
+msgid "Status"
+msgstr "Estado"
+
+#: admin-permissions.php:417 permission-requests.php:80
+#: permission-requests.php:250 admin-role-requests.php:261 admin-users.php:145
+msgid "Calendar Editor"
+msgstr "Editor de calendario"
+
+#: admin-permissions.php:418 permission-requests.php:85
+#: permission-requests.php:251 admin-role-requests.php:262 admin-users.php:146
+msgid "Accuracy Test Editor"
+msgstr "Editor de prueba de precisión"
+
+#: permission-requests.php:49
+msgid ""
+"Request access to the Liturgical Calendar system. Select a role and specify "
+"the resource permissions you need. Your request will be reviewed by an "
+"administrator."
+msgstr ""
+"Solicita acceso al sistema del Calendario Litúrgico. Selecciona un rol y "
+"especifica los permisos de recursos que necesitas. Tu solicitud será "
+"revisada por un administrador."
+
+#: permission-requests.php:59
+msgid "Your Access Requests"
+msgstr "Tus solicitudes de acceso"
+
+#: permission-requests.php:73
+msgid "Request Access"
+msgstr "Solicitar acceso"
+
+#: permission-requests.php:81
+msgid "Edit national and diocesan calendar data."
+msgstr "Edita datos del calendario nacional y diocesano."
+
+#: permission-requests.php:86
+msgid "Create and manage accuracy tests."
+msgstr "Crea y gestiona pruebas de precisión."
+
+#: permission-requests.php:92
+msgid ""
+"API consumer. Request access to all resources you may need — individual API "
+"keys can be scoped further at generation time."
+msgstr ""
+"Consumidor de API. Solicita acceso a todos los recursos que puedas "
+"necesitar: las claves API individuales pueden tener un alcance más "
+"específico en el momento de su generación."
+
+#: permission-requests.php:99
+msgid "Select a Role"
+msgstr "Seleccionar un rol"
+
+#: permission-requests.php:136
+msgid ""
+"Specify the resources you need access to. Add one or more permission rows."
+msgstr ""
+"Especifica los recursos a los que necesitas acceso. Añade una o más filas de "
+"permisos."
+
+#: permission-requests.php:145
+msgid "Add Permission"
+msgstr "Añadir permiso"
+
+#: permission-requests.php:153
+msgid ""
+"Providing a justification helps administrators review your request faster."
+msgstr ""
+"Proporcionar una justificación ayuda a los administradores a revisar tu "
+"solicitud más rápido."
+
+#: permission-requests.php:160
+msgid "Please describe why you need this access..."
+msgstr "Por favor, describe por qué necesitas este acceso..."
+
+#: permission-requests.php:167
+msgid ""
+"Optionally provide any credentials or references that support your request."
+msgstr ""
+"Opcionalmente, proporciona cualquier credencial o referencia que respalde tu "
+"solicitud."
+
+#: permission-requests.php:174
+msgid "Any relevant credentials or references..."
+msgstr "Cualquier credencial o referencia relevante..."
+
+#: permission-requests.php:181 permission-requests.php:210
+#: developer-dashboard.php:138 developer-dashboard.php:322
+msgid "Submit Request"
+msgstr "Enviar solicitud"
+
+#: permission-requests.php:190
+msgid "Back to Profile"
+msgstr "Volver al perfil"
+
+#: permission-requests.php:205
+msgid "You have not made any access requests yet."
+msgstr "No has realizado ninguna solicitud de acceso todavía."
+
+#: permission-requests.php:206
+msgid "Could not load your existing requests."
+msgstr "No se pudieron cargar tus solicitudes existentes."
+
+#: permission-requests.php:207
+msgid "Your access request has been submitted successfully."
+msgstr "Tu solicitud de acceso ha sido enviada con éxito."
+
+#: permission-requests.php:208
+msgid "Failed to submit request. Please try again."
+msgstr "No se pudo enviar la solicitud. Por favor, inténtalo de nuevo."
+
+#: permission-requests.php:209
+msgid "Submitting..."
+msgstr "Enviando..."
+
+#: permission-requests.php:211
+msgid "Resubmit"
+msgstr "Reenviar"
+
+#: permission-requests.php:212
+msgid "Rejection reason"
+msgstr "Razón del rechazo"
+
+#: permission-requests.php:213
+msgid "Please select a role."
+msgstr "Por favor selecciona un rol."
+
+#: permission-requests.php:214
+msgid ""
+"Each permission row must have object type, object ID, and relation filled in."
+msgstr ""
+"Cada fila de permisos debe tener el tipo de objeto, el ID del objeto y la "
+"relación completados."
+
+#: permission-requests.php:215
+#, php-format
+msgid "You have reached the maximum of %1$d permissions per request."
+msgstr "Has alcanzado el máximo de %1$d permisos por solicitud."
+
+#: permission-requests.php:216
+#, php-format
+msgid ""
+"This request had more than %1$d permissions; only the first %2$d are shown."
+msgstr ""
+"Esta solicitud tenía más de %1$d permisos; solo se muestran los primeros "
+"%2$d."
+
+#: permission-requests.php:217
+msgid "Unknown error"
+msgstr "Error desconocido"
+
+#: permission-requests.php:224
+msgid "Submitted"
+msgstr "Enviado"
+
+#: permission-requests.php:225
+msgid "Reviewed"
+msgstr "Revisado"
+
+#: permission-requests.php:233
+msgid "Remove"
+msgstr "Eliminar"
+
+#: permission-requests.php:264
+msgid "e.g. IT, USA, BOSTON, Americas..."
+msgstr "p. ej. IT, EE. UU., BOSTON, Américas..."
+
+#: admin-applications.php:33 admin-applications.php:45
+msgid "Application Management"
+msgstr "Gestión de Aplicaciones"
+
+#: admin-applications.php:182
+msgid "Review Application"
+msgstr "Revisión de la Aplicación"
+
+#: admin-applications.php:229
+msgid "No applications found."
+msgstr "No se encontraron aplicaciones."
+
+#: admin-applications.php:230
+msgid "No pending applications. All caught up!"
+msgstr "Sin aplicaciones pendientes. ¡Nada por hacer!"
+
+#: admin-applications.php:231
+msgid "Failed to load applications. Please try again later."
+msgstr ""
+"No se pudieron cargar las aplicaciones. Por favor, inténtalo de nuevo más "
+"tarde."
+
+#: admin-applications.php:233
+msgid "Application approved successfully."
+msgstr "Aplicación aprobada exitosamente."
+
+#: admin-applications.php:234
+msgid "Application rejected."
+msgstr "Aplicación rechazada."
+
+#: admin-applications.php:235
+msgid "Application revoked."
+msgstr "Aplicación revocada."
+
+#: admin-applications.php:239 developer-dashboard.php:265
+msgid "Application"
+msgstr "Aplicación"
+
+#: admin-applications.php:240 developer-dashboard.php:98
+msgid "Description"
+msgstr "Descripción"
+
+#: admin-applications.php:241 developer-dashboard.php:299
+msgid "Website"
+msgstr "Sitio web"
+
+#: admin-applications.php:242 developer-dashboard.php:279
+msgid "Created"
+msgstr "Creado"
+
+#: admin-applications.php:246
+msgid "Reviewed By"
+msgstr "Revisado por"
+
+#: admin-applications.php:255
+msgid "Requested Scope"
+msgstr "Alcance solicitado"
+
+#: admin-applications.php:256 developer-dashboard.php:115
+#: developer-dashboard.php:168 developer-dashboard.php:316
+msgid "Read-only"
+msgstr "Solo lectura"
+
+#: admin-applications.php:257 developer-dashboard.php:122
+#: developer-dashboard.php:317
+msgid "Read & Write"
+msgstr "Lectura y escritura"
+
+#: admin-dashboard.php:39 admin-dashboard.php:51 user-profile.php:252
+msgid "Admin Dashboard"
+msgstr "Panel de administración"
+
+#: admin-dashboard.php:55
+msgid ""
+"Manage liturgical calendar data, Roman Missal information, and regional "
+"calendars."
+msgstr ""
+"Gestionar datos del calendario litúrgico, información del Misal Romano y "
+"calendarios regionales."
+
+#: admin-dashboard.php:65
+msgid "Administration"
+msgstr "Administración"
+
+#: admin-dashboard.php:74
+msgid "Users"
+msgstr "Usuarios"
+
+#: admin-dashboard.php:76
+msgid "View users and manage their roles"
+msgstr "Ver usuarios y gestionar sus roles"
+
+#: admin-dashboard.php:80 admin-dashboard.php:98 admin-dashboard.php:116
+#: admin-dashboard.php:134
+msgid "Manage"
+msgstr "Gestionar"
+
+#: admin-dashboard.php:92 admin-role-requests.php:43
+msgid "Role Requests"
+msgstr "Solicitudes de roles"
+
+#: admin-dashboard.php:94
+msgid "Review and approve user role requests"
+msgstr "Revisar y aprobar solicitudes de roles de usuario"
+
+#: admin-dashboard.php:110
+msgid "Applications"
+msgstr "Aplicaciones"
+
+#: admin-dashboard.php:112
+msgid "Review and approve developer applications"
+msgstr "Revisar y aprobar solicitudes de desarrolladores"
+
+#: admin-dashboard.php:130
+msgid "Manage fine-grained resource permissions"
+msgstr "Gestionar permisos de recursos detallados"
+
+#: admin-role-requests.php:55
+msgid "Role Requests Management"
+msgstr "Gestión de solicitudes de roles"
+
+#: admin-role-requests.php:192
+msgid "Review Role Request"
+msgstr "Revisar solicitud de rol"
+
+#: admin-role-requests.php:240
+msgid "No pending role requests. All caught up!"
+msgstr "No hay solicitudes de roles pendientes. ¡Todo está al día!"
+
+#: admin-role-requests.php:241
+msgid "Failed to load role requests. Please try again later."
+msgstr ""
+"Error al cargar solicitudes de roles. Por favor, intenta de nuevo más tarde."
+
+#: admin-role-requests.php:243
+msgid "Request approved successfully."
+msgstr "Solicitud aprobada con éxito."
+
+#: admin-role-requests.php:244
+msgid "Request rejected."
+msgstr "Solicitud rechazada."
+
+#: admin-role-requests.php:245 admin-users.php:377
+msgid "Role revoked successfully."
+msgstr "Rol revocado con éxito."
+
+#: admin-role-requests.php:249
+msgid "Role Requested"
+msgstr "Rol solicitado"
+
+#: admin-role-requests.php:250
+msgid "Requested Role"
+msgstr "Rol solicitado"
+
+#: admin-users.php:33 admin-users.php:45
+msgid "Users Management"
+msgstr "Gestión de usuarios"
+
+#: admin-users.php:49
+msgid ""
+"Manage users in the system. You can view user information and revoke roles "
+"from users who have them."
+msgstr ""
+"Gestiona usuarios en el sistema. Puedes ver la información de los usuarios y "
+"revocar roles a aquellos que los tienen."
+
+#: admin-users.php:64
+msgid "Users with Roles"
+msgstr "Usuarios con roles"
+
+#: admin-users.php:79
+msgid "Users without Roles"
+msgstr "Usuarios sin roles"
+
+#: admin-users.php:102 admin-users.php:115
+msgid "Revoke Role"
+msgstr "Revocar rol"
+
+#: admin-users.php:143
+msgid "Administrator"
+msgstr "Administrador"
+
+#: admin-users.php:187
+msgid "Failed to load users. Please try again later."
+msgstr "Error al cargar usuarios. Por favor, inténtalo de nuevo más tarde."
+
+#: admin-users.php:203
+msgid "No users with roles found."
+msgstr "No se encontraron usuarios con roles."
+
+#: admin-users.php:214 user-profile.php:126
+msgid "Roles"
+msgstr "Roles"
+
+#: admin-users.php:239
+msgid "Revoke this role"
+msgstr "Revocar este rol"
+
+#: admin-users.php:280
+msgid "No users without roles found."
+msgstr "No se encontraron usuarios sin roles."
+
+#: admin-users.php:291
+msgid "Email Verified"
+msgstr "Correo verificado"
+
+#: admin-users.php:304
+msgid "Verified"
+msgstr "Verificado"
+
+#: admin-users.php:305
+msgid "Not Verified"
+msgstr "No verificado"
+
+#: admin-users.php:336
+msgid "Are you sure you want to revoke the role"
+msgstr "¿Estás seguro de que deseas revocar el rol"
+
+#: admin-users.php:338
+msgid "from user"
+msgstr "del usuario?"
+
+#: admin-users.php:393
+msgid "Failed to revoke role. Please try again."
+msgstr "No se pudo revocar el rol. Por favor, inténtalo de nuevo."
+
+#: developer-dashboard.php:34 developer-dashboard.php:47 user-profile.php:257
+msgid "Developer Dashboard"
+msgstr "Panel de desarrollador"
+
+#: developer-dashboard.php:51
+msgid ""
+"Register applications and manage API keys for accessing the Liturgical "
+"Calendar API."
+msgstr ""
+"Registrar aplicaciones y gestionar claves API para acceder a la API del "
+"Calendario Litúrgico."
+
+#: developer-dashboard.php:58
+msgid "My Applications"
+msgstr "Mis aplicaciones"
+
+#: developer-dashboard.php:61 developer-dashboard.php:82
+#: developer-dashboard.php:297
+msgid "New Application"
+msgstr "Nueva aplicación"
+
+#: developer-dashboard.php:70
+msgid "Loading applications..."
+msgstr "Cargando aplicaciones..."
+
+#: developer-dashboard.php:91
+msgid "Application Name"
+msgstr "Nombre de la aplicación"
+
+#: developer-dashboard.php:95
+msgid "A descriptive name for your application."
+msgstr "Un nombre descriptivo para tu aplicación."
+
+#: developer-dashboard.php:100
+msgid "Optional description of what your application does."
+msgstr "Descripción opcional de lo que hace tu aplicación."
+
+#: developer-dashboard.php:103
+msgid "Website URL"
+msgstr "URL del sitio web"
+
+#: developer-dashboard.php:105
+msgid "Optional URL to your application or project."
+msgstr "URL opcional de tu aplicación o proyecto."
+
+#: developer-dashboard.php:109 developer-dashboard.php:315
+msgid "Access Scope"
+msgstr "Alcance de acceso"
+
+#: developer-dashboard.php:116 developer-dashboard.php:318
+msgid "Can only read calendar data"
+msgstr "Solo puede leer datos del calendario"
+
+#: developer-dashboard.php:123 developer-dashboard.php:319
+msgid "Can read and modify calendar data"
+msgstr "Puede leer y modificar datos del calendario"
+
+#: developer-dashboard.php:127
+msgid ""
+"Choose the level of access your application needs. This cannot be changed "
+"after approval."
+msgstr ""
+"Elige el nivel de acceso que necesita tu aplicación. Esto no podrá "
+"modificarse después de la aprobación."
+
+#: developer-dashboard.php:152
+msgid "Generate API Key"
+msgstr "Generar clave API"
+
+#: developer-dashboard.php:160
+msgid "Key Name"
+msgstr "Nombre de la clave"
+
+#: developer-dashboard.php:162
+msgid "e.g., Production, Development"
+msgstr "Ej., Producción, Desarrollo"
+
+#: developer-dashboard.php:163
+msgid "Optional name to identify this key."
+msgstr "Nombre opcional para identificar esta clave."
+
+#: developer-dashboard.php:166 developer-dashboard.php:273
+msgid "Scope"
+msgstr "Ámbito"
+
+#: developer-dashboard.php:169
+msgid "Read and Write"
+msgstr "Leer y Escribir"
+
+#: developer-dashboard.php:172
+msgid ""
+"Read-only keys can only access public endpoints. Write keys can modify data."
+msgstr ""
+"Las claves de solo lectura solo pueden acceder a puntos de acceso públicos. "
+"Las claves de escritura pueden modificar datos."
+
+#: developer-dashboard.php:176
+msgid "Expiration Date"
+msgstr "Fecha de Vencimiento"
+
+#: developer-dashboard.php:178
+msgid "Optional. Leave empty for a key that never expires."
+msgstr "Opcional. Déjalo vacío para una clave que nunca expire."
+
+#: developer-dashboard.php:186 developer-dashboard.php:268
+msgid "Generate Key"
+msgstr "Generar Clave"
+
+#: developer-dashboard.php:199
+msgid "API Key Generated"
+msgstr "Clave API Generada"
+
+#: developer-dashboard.php:205
+msgid "Important:"
+msgstr "Importante:"
+
+#: developer-dashboard.php:206
+msgid "Copy this key now. For security reasons, it will not be shown again."
+msgstr ""
+"Copia esta clave ahora. Por razones de seguridad, no se mostrará de nuevo."
+
+#: developer-dashboard.php:209
+msgid "Your API Key:"
+msgstr "Tu Clave API:"
+
+#: developer-dashboard.php:212
+msgid "Copy to clipboard"
+msgstr "Copiar al portapapeles"
+
+#: developer-dashboard.php:218
+msgid "API key copied to clipboard!"
+msgstr "¡Clave API copiada al portapapeles!"
+
+#: developer-dashboard.php:223
+msgid "Done"
+msgstr "Listo"
+
+#: developer-dashboard.php:236
+msgid "Confirm Delete"
+msgstr "Confirmar Eliminación"
+
+#: developer-dashboard.php:242
+msgid "Are you sure you want to delete this item?"
+msgstr "¿Estás seguro de que deseas eliminar este elemento?"
+
+#: developer-dashboard.php:243
+msgid "This action cannot be undone."
+msgstr "Esta acción no se puede deshacer."
+
+#: developer-dashboard.php:249 developer-dashboard.php:270
+msgid "Delete"
+msgstr "Eliminar"
+
+#: developer-dashboard.php:263
+msgid "You have not registered any applications yet."
+msgstr "Aún no has registrado ninguna aplicación."
+
+#: developer-dashboard.php:264
+msgid "Create your first application to get started."
+msgstr "Crea tu primera aplicación para comenzar."
+
+#: developer-dashboard.php:266
+msgid "API Keys"
+msgstr "Claves API"
+
+#: developer-dashboard.php:267
+msgid "No API keys generated yet."
+msgstr "Aún no se han generado claves API."
+
+#: developer-dashboard.php:272
+msgid "Rotate"
+msgstr "Girar"
+
+#: developer-dashboard.php:274
+msgid "Rate Limit"
+msgstr "Límite de tasa"
+
+#: developer-dashboard.php:275
+msgid "Expires"
+msgstr "Expira"
+
+#: developer-dashboard.php:276
+msgid "Never"
+msgstr "Nunca"
+
+#: developer-dashboard.php:277
+msgid "Last Used"
+msgstr "Último uso"
+
+#: developer-dashboard.php:278
+msgid "Never used"
+msgstr "Nunca usado"
+
+#: developer-dashboard.php:280
+msgid "keys"
+msgstr "claves"
+
+#: developer-dashboard.php:281
+msgid "key"
+msgstr "clave"
+
+#: developer-dashboard.php:282
+#, php-format
+msgid ""
+"Are you sure you want to delete the application \"%1$s\"? This will also "
+"revoke all associated API keys."
+msgstr ""
+"¿Estás seguro de que quieres eliminar la aplicación \"%1$s\"? Esto también "
+"revocará todas las claves API asociadas."
+
+#: developer-dashboard.php:283
+msgid ""
+"Are you sure you want to revoke this API key? Applications using this key "
+"will no longer be able to authenticate."
+msgstr ""
+"¿Estás seguro de que quieres revocar esta clave API? Las aplicaciones que "
+"usen esta clave ya no podrán autenticarse."
+
+#: developer-dashboard.php:284
+msgid "Failed to load applications. Please try again."
+msgstr "Error al cargar las aplicaciones. Por favor, inténtalo de nuevo."
+
+#: developer-dashboard.php:285
+msgid "Failed to save application. Please try again."
+msgstr "Error al guardar la aplicación. Por favor, inténtalo de nuevo."
+
+#: developer-dashboard.php:286
+msgid "Failed to delete. Please try again."
+msgstr "Error al eliminar. Por favor, inténtalo de nuevo."
+
+#: developer-dashboard.php:287
+msgid "Failed to generate API key. Please try again."
+msgstr "Error al generar la clave API. Por favor, inténtalo de nuevo."
+
+#: developer-dashboard.php:289
+msgid "Application updated successfully."
+msgstr "Aplicación actualizada con éxito."
+
+#: developer-dashboard.php:290
+msgid "Application created successfully."
+msgstr "Aplicación creada con éxito."
+
+#: developer-dashboard.php:291
+msgid "Application deleted successfully."
+msgstr "Aplicación eliminada con éxito."
+
+#: developer-dashboard.php:292
+msgid "API key revoked successfully."
+msgstr "Clave API revocada con éxito."
+
+#: developer-dashboard.php:293
+msgid "API key rotated successfully."
+msgstr "Clave API girada con éxito."
+
+#: developer-dashboard.php:294
+msgid "Read"
+msgstr "Leer"
+
+#: developer-dashboard.php:295
+msgid "Write"
+msgstr "Escribir"
+
+#: developer-dashboard.php:296
+msgid "requests/hour"
+msgstr "solicitudes/hora"
+
+#: developer-dashboard.php:298
+msgid "Edit Application"
+msgstr "Editar aplicación"
+
+#: developer-dashboard.php:300
+msgid "View Keys"
+msgstr "Ver claves"
+
+#: developer-dashboard.php:301
+msgid "Hide Keys"
+msgstr "Ocultar claves"
+
+#: developer-dashboard.php:307
+msgid "Awaiting admin approval"
+msgstr "Esperando aprobación del administrador"
+
+#: developer-dashboard.php:308
+msgid "Rejection Notes"
+msgstr "Notas de rechazo"
+
+#: developer-dashboard.php:309
+msgid "Resubmit for Review"
+msgstr "Volver a enviar para revisión"
+
+#: developer-dashboard.php:310
+msgid "API keys can only be generated for approved applications."
+msgstr "Las claves API solo se pueden generar para aplicaciones aprobadas."
+
+#: developer-dashboard.php:311
+msgid ""
+"This application has been revoked. Contact an administrator for assistance."
+msgstr ""
+"Esta aplicación ha sido revocada. Contacta a un administrador para obtener "
+"ayuda."
+
+#: developer-dashboard.php:312
+msgid "Application resubmitted for review."
+msgstr "Aplicación reenviada para revisión."
+
+#: developer-dashboard.php:313
+msgid "Failed to resubmit application. Please try again."
+msgstr ""
+"No se pudo volver a enviar la aplicación. Por favor, inténtalo de nuevo."
+
+#: developer-dashboard.php:320
+msgid ""
+"This application has read-only access. Only read-scope API keys can be "
+"generated."
+msgstr ""
+"Esta aplicación tiene acceso de solo lectura. Solo se pueden generar claves "
+"API de alcance de lectura."
+
+#: developer-dashboard.php:323
+msgid "Save"
+msgstr "Guardar"
+
+#: missals-editor.php:97
+msgid "Please login to access the admin interface."
+msgstr "Por favor, inicia sesión para acceder a la interfaz de administración."
+
+#: temporale.php:42
+msgid ""
+"Proprium de Tempore - The temporal cycle of the liturgical year including "
+"Advent, Christmas, Lent, Easter Triduum, Easter, and Ordinary Time."
+msgstr ""
+"Proprium de Tempore - El ciclo temporal del año litúrgico incluyendo "
+"Adviento, Navidad, Cuaresma, Triduo Pascual, Pascua y Tiempo Ordinario."
+
+#: temporale.php:57
+msgid "Language"
+msgstr "Idioma"
+
+#: temporale.php:63
+msgid "Liturgical Season"
+msgstr "Estación litúrgica"
+
+#: temporale.php:65
+msgid "All Seasons"
+msgstr "Todas las estaciones"
+
+#: temporale.php:66
+msgid "Advent"
+msgstr "Adviento"
+
+#: temporale.php:67
+msgid "Christmas"
+msgstr "Navidad"
+
+#: temporale.php:68
+msgid "Lent"
+msgstr "Cuaresma"
+
+#: temporale.php:69
+msgid "Easter Triduum"
+msgstr "Triduo Pascual"
+
+#: temporale.php:70
+msgid "Easter"
+msgstr "Pascua"
+
+#: temporale.php:71
+msgid "Ordinary Time"
+msgstr "Tiempo Ordinario"
+
+#: temporale.php:77
+msgid "All Grades"
+msgstr "Todos los Grados"
+
+#: temporale.php:78
+msgid "Higher Solemnity (7)"
+msgstr "Solemnidad Mayor (7)"
+
+#: temporale.php:79
+msgid "Solemnity (6)"
+msgstr "Solemnidad (6)"
+
+#: temporale.php:80
+msgid "Feast of the Lord (5)"
+msgstr "Fiesta del Señor (5)"
+
+#: temporale.php:81
+msgid "Feast (4)"
+msgstr "Fiesta (4)"
+
+#: temporale.php:82
+msgid "Memorial (3)"
+msgstr "Memoria (3)"
+
+#: temporale.php:83
+msgid "Optional Memorial (2)"
+msgstr "Memoria Opcional (2)"
+
+#: temporale.php:84
+msgid "Commemoration (1)"
+msgstr "Conmemoración (1)"
+
+#: temporale.php:85
+msgid "Weekday (0)"
+msgstr "Día de semana (0)"
+
+#: temporale.php:89
+msgid "Lectionary Category"
+msgstr "Categoría Leccionario"
+
+#: temporale.php:91
+msgid "All Categories"
+msgstr "Todas las Categorías"
+
+#: temporale.php:92
+msgid "Dominicale et Festivum"
+msgstr "Dominical y Festivo"
+
+#: temporale.php:93
+msgid "Feriale per Annum"
+msgstr "Ferial por Año"
+
+#: temporale.php:94
+msgid "Feriale Tempus Adventus"
+msgstr "Ferial Tiempo de Adviento"
+
+#: temporale.php:95
+msgid "Feriale Tempus Nativitatis"
+msgstr "Ferial Tiempo de Navidad"
+
+#: temporale.php:96
+msgid "Feriale Tempus Quadragesimae"
+msgstr "Ferial del Tiempo de Cuaresma"
+
+#: temporale.php:97
+msgid "Feriale Tempus Paschatis"
+msgstr "Ferial del Tiempo Pascual"
+
+#: temporale.php:98
+msgid "Sanctorum"
+msgstr "Santos"
+
+#: temporale.php:104
+msgid "Search"
+msgstr "Buscar"
+
+#: temporale.php:106
+msgid "Search by name or key..."
+msgstr "Buscar por nombre o clave..."
+
+#: temporale.php:118
+msgid "Temporale Events"
+msgstr "Eventos Temporales"
+
+#: temporale.php:123
+msgid "Export JSON"
+msgstr "Exportar JSON"
+
+#: temporale.php:132
+msgid "Event Key"
+msgstr "Clave del Evento"
+
+#: temporale.php:135
+msgid "Season"
+msgstr "Temporada"
+
+#: temporale.php:136
+msgid "Type"
+msgstr "Tipo"
+
+#: temporale.php:137
+msgid "Color"
+msgstr "Color"
+
+#: temporale.php:160
+msgid "Event Details"
+msgstr "Detalles del Evento"
+
+#: temporale.php:167
+msgid "Event navigation"
+msgstr "Navegación de Eventos"
+
+#: temporale.php:168
+msgid "First"
+msgstr "Primero"
+
+#: temporale.php:180
+msgid "Last"
+msgstr "Último"
+
+#: user-profile.php:23 user-profile.php:35
+msgid "User Profile"
+msgstr "Perfil del Usuario"
+
+#: user-profile.php:43
+msgid "Account Information"
+msgstr "Información de la Cuenta"
+
+#: user-profile.php:52
+msgid "Full Name"
+msgstr "Nombre Completo"
+
+#: user-profile.php:61
+msgid "Given / Family Name"
+msgstr "Nombre / Apellido"
+
+#: user-profile.php:85
+msgid "Email"
+msgstr "Correo Electrónico"
+
+#: user-profile.php:90
+msgid "Email verified"
+msgstr "Correo electrónico verificado"
+
+#: user-profile.php:94
+msgid "Email not verified"
+msgstr "Correo electrónico no verificado"
+
+#: user-profile.php:98
+msgid "Resend verification"
+msgstr "Reenviar verificación"
+
+#: user-profile.php:101
+msgid "Click after verifying your email to update your session"
+msgstr ""
+"Haz clic después de verificar tu correo electrónico para actualizar tu sesión"
+
+#: user-profile.php:102 user-profile.php:131
+msgid "Refresh session"
+msgstr "Actualizar sesión"
+
+#: user-profile.php:130
+msgid "Refresh session to see updated roles"
+msgstr "Actualiza la sesión para ver los roles actualizados"
+
+#: user-profile.php:135 user-profile.php:140
+msgid "Request Role"
+msgstr "Solicitar rol"
+
+#: user-profile.php:139
+msgid "Email verification required"
+msgstr "Verificación de correo electrónico requerida"
+
+#: user-profile.php:150
+msgid ""
+"You must verify your email address before you can request a role. Please "
+"check your inbox for a verification email."
+msgstr ""
+"Debes verificar tu dirección de correo electrónico antes de poder solicitar "
+"un rol. Por favor, revisa tu bandeja de entrada para encontrar un correo de "
+"verificación."
+
+#: user-profile.php:165
+msgid "No roles assigned yet. Request a role to access additional features."
+msgstr ""
+"Ningún rol asignado todavía. Solicita un rol para acceder a características "
+"adicionales."
+
+#: user-profile.php:196
+msgid "Session Information"
+msgstr "Información de la sesión"
+
+#: user-profile.php:205
+msgid "Session Expires"
+msgstr "La sesión expira"
+
+#: user-profile.php:217
+msgid "Time Remaining"
+msgstr "Tiempo restante"
+
+#: user-profile.php:232 user-profile.php:433
+msgid "Expired"
+msgstr "Expirado"
+
+#: user-profile.php:289 user-profile.php:314
+msgid "Refreshing..."
+msgstr "Actualizando..."
+
+#: user-profile.php:297 user-profile.php:321
+msgid "Session refresh failed"
+msgstr "Error al actualizar la sesión"
+
+#: user-profile.php:301 user-profile.php:325
+msgid "Failed to refresh session. Please try logging out and back in."
+msgstr ""
+"Fallo al actualizar la sesión. Por favor intenta cerrar sesión e iniciar "
+"sesión de nuevo."
+
+#: user-profile.php:339
+msgid "Sending..."
+msgstr "Enviando..."
+
+#: user-profile.php:352
+msgid "Failed to send verification email"
+msgstr "Error al enviar el correo de verificación"
+
+#: user-profile.php:355
+msgid ""
+"Verification email sent. After clicking the verification link, use the "
+"\"Refresh session\" button to update your status."
+msgstr ""
+"Correo de verificación enviado. Después de hacer clic en el enlace de "
+"verificación, utiliza el botón \"Actualizar sesión\" para actualizar tu "
+"estado."
+
+#: user-profile.php:373
+msgid "Failed to send verification email. Please try again."
+msgstr ""
+"Error al enviar el correo electrónico de verificación. Por favor, inténtalo "
+"de nuevo."
+
+#: user-profile.php:404
+msgid "Session expires in 5 minutes"
+msgstr "La sesión expira en 5 minutos"
+
+#: user-profile.php:405
+msgid "Session expires in 1 minute"
+msgstr "La sesión expira en 1 minuto"
+
+#: user-profile.php:406
+msgid "Session expires in 30 seconds"
+msgstr "La sesión expira en 30 segundos"
+
+#: user-profile.php:407
+msgid "Session expired"
+msgstr "La sesión ha expirado"
+
+#~ msgid "min ago"
+#~ msgstr "min hace"
+
+#~ msgid "hours ago"
+#~ msgstr "hace horas"
+
+#~ msgid "days ago"
+#~ msgstr "hace días"
 
 #~ msgid "General Roman Calendar - Extending"
 #~ msgstr "Calendario Romano General - Extensión"
@@ -2270,9 +3750,6 @@ msgstr "Definición del calendario diocesano"
 #~ "los eventos litúrgicos de cualquier año a partir de 1970 hasta 9999, ya "
 #~ "sea para el Calendario Romano General o Universal o para los calendarios "
 #~ "nacionales y diocesanos derivados"
-
-#~ msgid "Definition"
-#~ msgstr "Definición"
 
 #~ msgid "Retrieve existing data"
 #~ msgstr "Carga datos existentes"
