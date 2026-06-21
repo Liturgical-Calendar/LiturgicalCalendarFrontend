@@ -41,11 +41,18 @@ export class ZitadelAdmin {
         });
         // Zitadel's search projection is eventually consistent; poll until the new
         // user is visible to findUserIdByEmail before returning (max ~2.25 s).
+        // Fail fast if it never appears: a user invisible to search after the full
+        // window would otherwise be silently skipped by findUserIdByEmail-based
+        // cleanup, orphaning it.
         const maxAttempts = 15;
+        let found: string | null = null;
         for (let attempt = 0; attempt < maxAttempts; attempt++) {
-            const found = await this.findUserIdByEmail(u.email);
+            found = await this.findUserIdByEmail(u.email);
             if (found !== null) break;
             await new Promise<void>(r => setTimeout(r, 150));
+        }
+        if (found === null) {
+            throw new Error(`createVerifiedUser: projection timed out — ${u.email} not visible to search after ${maxAttempts} attempts`);
         }
         return data.userId as string;
     }
@@ -76,8 +83,12 @@ export class ZitadelAdmin {
     }
 
     async mintPat(userId: string): Promise<{ tokenId: string; token: string }> {
+        // Short-lived PAT (6h) for the ephemeral setup flow: minimizes the blast
+        // radius if cleanup (deletePat) fails to remove it. The setup→test→cleanup
+        // cycle is minutes, so 6h is ample margin.
+        const expirationDate = new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString();
         const data = await this.req('POST', `/management/v1/users/${userId}/pats`, {
-            expirationDate: '2030-01-01T00:00:00Z',
+            expirationDate,
         });
         return { tokenId: data.tokenId as string, token: data.token as string };
     }

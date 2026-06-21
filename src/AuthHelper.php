@@ -416,8 +416,11 @@ class AuthHelper
             }
         }
 
+        // Strict, fail-closed: only an explicit JSON `true` counts as resource-admin.
+        // A non-boolean value (e.g. the string "false") or a missing key yields false,
+        // mirroring the per-scope type validation above.
         return [
-            'is_resource_admin' => (bool) ( $data['is_resource_admin'] ?? false ),
+            'is_resource_admin' => ( $data['is_resource_admin'] ?? false ) === true,
             'admin_scopes'      => $scopes,
         ];
     }

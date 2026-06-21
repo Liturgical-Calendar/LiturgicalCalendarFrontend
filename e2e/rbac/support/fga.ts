@@ -4,12 +4,20 @@ export class Fga {
     private model = process.env.OPENFGA_MODEL_ID!;
 
     private async post(path: string, body: unknown): Promise<{ status: number; text: string }> {
-        const res = await fetch(`${this.url}/stores/${this.store}${path}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body),
-        });
-        return { status: res.status, text: await res.text() };
+        // Abort after 10s so a hung OpenFGA call can't block setup/cleanup indefinitely.
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 10000);
+        try {
+            const res = await fetch(`${this.url}/stores/${this.store}${path}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+                signal: controller.signal,
+            });
+            return { status: res.status, text: await res.text() };
+        } finally {
+            clearTimeout(timeout);
+        }
     }
 
     async write(user: string, relation: string, object: string): Promise<void> {

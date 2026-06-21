@@ -820,11 +820,16 @@ const Auth = {
         }
 
         this._resourceAdminPromise = (async () => {
+            // Abort after 5s so a stalled endpoint can't hang the promise — and
+            // every concurrent caller awaiting it — indefinitely.
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000);
             try {
                 const response = await fetch(`${BaseUrl}/auth/admin-scopes`, {
                     method: 'GET',
                     credentials: 'include',
-                    headers: { 'Accept': 'application/json' }
+                    headers: { 'Accept': 'application/json' },
+                    signal: controller.signal
                 });
                 if (!response.ok) {
                     return false;
@@ -832,8 +837,11 @@ const Auth = {
                 const data = await response.json();
                 return Boolean(data.is_resource_admin);
             } catch (error) {
+                // AbortError (timeout) and network/parse errors all fail closed.
                 console.error('Auth.isResourceAdmin failed:', error);
                 return false;
+            } finally {
+                clearTimeout(timeoutId);
             }
         })();
 
