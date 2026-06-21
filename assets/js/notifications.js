@@ -42,9 +42,10 @@ const Notifications = {
     /**
      * Initialize the notification bell for the current authenticated user.
      * Caller is responsible for ensuring Auth is ready and the user is
-     * authenticated; this method picks the mode based on Auth.hasRole('admin').
+     * authenticated; this method picks the mode based on Auth.hasRole('admin')
+     * or Auth.isResourceAdmin() (resource-admins see the scoped review queue).
      */
-    init() {
+    async init() {
         if (this._initialized) {
             return;
         }
@@ -52,7 +53,10 @@ const Notifications = {
             return;
         }
 
-        this._mode = Auth.hasRole('admin') ? 'admin' : 'user';
+        // Global admins use the review queue; resource-admins do too, but the
+        // API scopes /admin/notifications to the resources they administer.
+        const isAdmin = Auth.hasRole('admin') || await Auth.isResourceAdmin();
+        this._mode = isAdmin ? 'admin' : 'user';
         this._initialized = true;
         console.log(`Notifications: Initializing in ${this._mode} mode`);
 
