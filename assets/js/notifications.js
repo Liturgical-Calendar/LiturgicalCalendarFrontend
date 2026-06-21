@@ -458,27 +458,70 @@ const Notifications = {
         if (!timestamp) return '';
 
         const date = new Date(timestamp);
+        // Bail out on an unparseable timestamp so NaN diffs don't render as "NaN ...".
+        if (!Number.isFinite(date.getTime())) {
+            return '';
+        }
         const now = new Date();
         const diffMs = now.getTime() - date.getTime();
         const diffMins = Math.floor(diffMs / 60000);
         const diffHours = Math.floor(diffMs / 3600000);
         const diffDays = Math.floor(diffMs / 86400000);
 
+        // Under a minute: a simple localized "Just now" (no count to pluralize).
         if (diffMins < 1) {
             return this._getTranslation('justNow', 'Just now');
-        } else if (diffMins < 60) {
-            const key = diffMins === 1 ? 'minuteAgo' : 'minutesAgo';
-            const fallback = diffMins === 1 ? 'min ago' : 'mins ago';
-            return `${diffMins} ${this._getTranslation(key, fallback)}`;
-        } else if (diffHours < 24) {
-            const key = diffHours === 1 ? 'hourAgo' : 'hoursAgo';
-            const fallback = diffHours === 1 ? 'hour ago' : 'hours ago';
-            return `${diffHours} ${this._getTranslation(key, fallback)}`;
-        } else if (diffDays < 7) {
-            const key = diffDays === 1 ? 'dayAgo' : 'daysAgo';
-            const fallback = diffDays === 1 ? 'day ago' : 'days ago';
-            return `${diffDays} ${this._getTranslation(key, fallback)}`;
-        } else {
+        }
+        // A week or more: fall back to an absolute, locale-formatted date.
+        if (diffDays >= 7) {
+            return this._formatAbsoluteDate(date);
+        }
+
+        // Locale-aware relative time. Intl.RelativeTimeFormat applies the correct
+        // singular/plural/other forms and word order per CLDR for every locale, so
+        // we no longer ship (and mis-translate) "min ago"/"hours ago" fragments.
+        const rtf = this._relativeTimeFormatter();
+        if (diffMins < 60) {
+            return rtf.format(-diffMins, 'minute');
+        }
+        if (diffHours < 24) {
+            return rtf.format(-diffHours, 'hour');
+        }
+        return rtf.format(-diffDays, 'day');
+    },
+
+    /**
+     * BCP-47 locale tag for Intl formatting, taken from the page's <html lang>.
+     * @private
+     */
+    _localeTag() {
+        return ( document.documentElement.lang || '' ).trim() || 'en';
+    },
+
+    /**
+     * Build an Intl.RelativeTimeFormat for the page locale, falling back to
+     * English when the locale has no relative-time data (e.g. Latin) or the tag
+     * is unusable.
+     * @private
+     */
+    _relativeTimeFormatter() {
+        try {
+            return new Intl.RelativeTimeFormat([this._localeTag(), 'en'], { numeric: 'always' });
+        } catch {
+            return new Intl.RelativeTimeFormat('en', { numeric: 'always' });
+        }
+    },
+
+    /**
+     * Locale-formatted absolute date, falling back to the runtime default
+     * locale if the page's lang tag is malformed (e.g. "en_US" instead of
+     * "en-US"), which would otherwise make toLocaleDateString throw a RangeError.
+     * @private
+     */
+    _formatAbsoluteDate(date) {
+        try {
+            return date.toLocaleDateString(this._localeTag());
+        } catch {
             return date.toLocaleDateString();
         }
     },
