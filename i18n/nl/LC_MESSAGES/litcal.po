@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-21 11:05+0000\n"
-"PO-Revision-Date: 2026-04-02 19:50+0000\n"
+"PO-Revision-Date: 2026-06-21 11:36+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -1403,61 +1403,59 @@ msgstr "Voorbeelden van gebruik"
 
 #: layout/footer.php:92
 msgid "No pending requests"
-msgstr ""
+msgstr "Geen openstaande verzoeken"
 
 #: layout/footer.php:93
-#, fuzzy
-#| msgid "Notifications"
 msgid "No new notifications"
-msgstr "Meldingen"
+msgstr "Geen nieuwe meldingen"
 
 #: layout/footer.php:94
 msgid "Could not load notifications"
-msgstr ""
+msgstr "Kon meldingen niet laden"
 
 #: layout/footer.php:95
 msgid "Just now"
-msgstr ""
+msgstr "Zojuist"
 
 #: layout/footer.php:96
 msgid "min ago"
-msgstr ""
+msgstr "min geleden"
 
 #: layout/footer.php:97
 msgid "hours ago"
-msgstr ""
+msgstr "uren geleden"
 
 #: layout/footer.php:98
 msgid "days ago"
-msgstr ""
+msgstr "dagen geleden"
 
 #: layout/footer.php:99 admin-permissions.php:415 admin-role-requests.php:252
 msgid "Requested"
-msgstr ""
+msgstr "Aangevraagd"
 
 #: layout/footer.php:100
 msgid "Requested access"
-msgstr ""
+msgstr "Toegang aangevraagd"
 
 #: layout/footer.php:101
 msgid "Your request was approved"
-msgstr ""
+msgstr "Je verzoek is goedgekeurd"
 
 #: layout/footer.php:102
 msgid "Your request was rejected"
-msgstr ""
+msgstr "Je verzoek is afgewezen"
 
 #: layout/footer.php:103
 msgid "Your access was revoked"
-msgstr ""
+msgstr "Je toegang is ingetrokken"
 
 #: layout/footer.php:104
 msgid "Request access to start using the system"
-msgstr ""
+msgstr "Vraag toegang aan om het systeem te gebruiken"
 
 #: layout/footer.php:105
 msgid "Get started"
-msgstr ""
+msgstr "Aan de slag"
 
 #: includes/login-modal.php:6
 msgid "Session Expiring"
@@ -2207,158 +2205,144 @@ msgstr "Definitie van diocesane kalender"
 
 #: includes/admin-blocks.php:16
 msgid "Proprium de Tempore - temporal cycle events"
-msgstr ""
+msgstr "Proprium de Tempore - tijdscyclus evenementen"
 
 #: includes/admin-blocks.php:26
 msgid "Proprium de Sanctis - Roman Missal editions"
-msgstr ""
+msgstr "Proprium de Sanctis - edities van het Romeins Missaal"
 
 #: includes/admin-blocks.php:36
 msgid "Congregation for Divine Worship decrees"
-msgstr ""
+msgstr "Decreten van de Congregatie voor de Goddelijke Eredienst"
 
 #: includes/admin-blocks.php:46
 msgid "Shared events for geographical regions"
-msgstr ""
+msgstr "Gedeelde evenementen voor geografische regio's"
 
 #: includes/admin-blocks.php:56
-#, fuzzy
-#| msgid "National calendar settings"
 msgid "National calendars by Bishops Conferences"
-msgstr "Nationale kalenderinstellingen"
+msgstr "Nationale kalenders door Bisschoppenconferenties"
 
 #: includes/admin-blocks.php:66
-#, fuzzy
-#| msgid "Diocesan calendar definition"
 msgid "Diocesan calendars by liturgical offices"
-msgstr "Definitie van diocesane kalender"
+msgstr "Diocesane kalenders door liturgische diensten"
 
 #: includes/admin-blocks.php:83
 msgid "View"
-msgstr ""
+msgstr "Bekijk"
 
 #: includes/admin-blocks.php:84 developer-dashboard.php:269
 msgid "Edit"
-msgstr ""
+msgstr "Bewerk"
 
 #: admin-permissions.php:33 admin-permissions.php:45
 msgid "Permissions Management"
-msgstr ""
+msgstr "Beheer van machtigingen"
 
 #: admin-permissions.php:49
 msgid ""
 "Manage fine-grained permissions for calendar resources. Grant or revoke user "
 "access to specific calendars and test definitions."
 msgstr ""
+"Beheer gedetailleerde machtigingen voor agenda-bronnen. Verleen of intrek "
+"toegang van gebruikers tot specifieke agenda's en testdefinities."
 
 #: admin-permissions.php:57 temporale.php:51
 msgid "Filters"
-msgstr ""
+msgstr "Filters"
 
 #: admin-permissions.php:63 admin-permissions.php:363 admin-permissions.php:401
 #: admin-applications.php:238 admin-role-requests.php:248 admin-users.php:213
 #: admin-users.php:290
-#, fuzzy
-#| msgid "Username"
 msgid "User"
-msgstr "Gebruikersnaam"
+msgstr "Gebruiker"
 
 #: admin-permissions.php:66
 msgid "Filter by user ID..."
-msgstr ""
+msgstr "Filter op gebruikers-ID..."
 
 #: admin-permissions.php:69 admin-permissions.php:282 admin-permissions.php:364
 #: admin-permissions.php:404 permission-requests.php:227
 msgid "Object Type"
-msgstr ""
+msgstr "Objecttype"
 
 #: admin-permissions.php:72 admin-permissions.php:90
 msgid "All"
-msgstr ""
+msgstr "Alle"
 
 #: admin-permissions.php:74 admin-permissions.php:286 admin-permissions.php:371
 #: permission-requests.php:236
-#, fuzzy
-#| msgid "Define a Diocesan Calendar"
 msgid "Diocesan Calendar"
-msgstr "Een diocesane kalender definiëren"
+msgstr "Diocesane kalender"
 
 #: admin-permissions.php:76 admin-permissions.php:288 admin-permissions.php:373
 #: permission-requests.php:238
-#, fuzzy
-#| msgid "Definition"
 msgid "Test Definition"
-msgstr "Definitie"
+msgstr "Testdefinitie"
 
 #: admin-permissions.php:81 admin-permissions.php:293 admin-permissions.php:365
 #: admin-permissions.php:405 permission-requests.php:228
 msgid "Object ID"
-msgstr ""
+msgstr "Object-ID"
 
 #: admin-permissions.php:84
 msgid "Filter by object ID..."
-msgstr ""
+msgstr "Filter op object-ID..."
 
 #: admin-permissions.php:87 admin-permissions.php:298 admin-permissions.php:366
 #: admin-permissions.php:406 permission-requests.php:229
-#, fuzzy
-#| msgid "National"
 msgid "Relation"
-msgstr "Nationaal"
+msgstr "Relatie"
 
 #: admin-permissions.php:92 admin-permissions.php:302 admin-permissions.php:384
 #: permission-requests.php:254
 msgid "Viewer"
-msgstr ""
+msgstr "Kijker"
 
 #: admin-permissions.php:93 admin-permissions.php:303 admin-permissions.php:385
 #: permission-requests.php:255
 msgid "Editor"
-msgstr ""
+msgstr "Redacteur"
 
 #: admin-permissions.php:94 admin-permissions.php:304 admin-permissions.php:386
 #: permission-requests.php:257
-#, fuzzy
-#| msgid "Delete calendar"
 msgid "Deleter"
-msgstr "Kalender verwijderen"
+msgstr "Verwijderaar"
 
 #: admin-permissions.php:100
 msgid "Apply Filters"
-msgstr ""
+msgstr "Pas filters toe"
 
 #: admin-permissions.php:103
 msgid "Clear Filters"
-msgstr ""
+msgstr "Wis filters"
 
 #: admin-permissions.php:112 admin-permissions.php:271
 #: admin-permissions.php:314
 msgid "Grant Permission"
-msgstr ""
+msgstr "Verleen toestemming"
 
 #: admin-permissions.php:115 admin-permissions.php:143
 #: admin-applications.php:125 admin-role-requests.php:135 admin-users.php:56
 msgid "Refresh"
-msgstr ""
+msgstr "Verversen"
 
 #: admin-permissions.php:123
 msgid "Permission Tuples"
-msgstr ""
+msgstr "Toestemmingstupels"
 
 #: admin-permissions.php:138 permission-requests.php:31
 #: permission-requests.php:44
 msgid "Access Requests"
-msgstr ""
+msgstr "Toegangsverzoeken"
 
 #: admin-permissions.php:154 admin-permissions.php:421
 #: permission-requests.php:259 admin-applications.php:57
 #: admin-applications.php:101 admin-applications.php:250
 #: admin-role-requests.php:67 admin-role-requests.php:111
 #: admin-role-requests.php:264 developer-dashboard.php:303
-#, fuzzy
-#| msgid "Extending..."
 msgid "Pending"
-msgstr "Bezig met verlengen..."
+msgstr "In behandeling"
 
 #: admin-permissions.php:161 admin-permissions.php:422
 #: permission-requests.php:260 admin-applications.php:68
@@ -2366,7 +2350,7 @@ msgstr "Bezig met verlengen..."
 #: admin-role-requests.php:78 admin-role-requests.php:118
 #: admin-role-requests.php:265 developer-dashboard.php:304
 msgid "Approved"
-msgstr ""
+msgstr "Goedgekeurd"
 
 #: admin-permissions.php:167 admin-permissions.php:423
 #: permission-requests.php:261 admin-applications.php:79
@@ -2374,7 +2358,7 @@ msgstr ""
 #: admin-role-requests.php:89 admin-role-requests.php:124
 #: admin-role-requests.php:266 developer-dashboard.php:305
 msgid "Rejected"
-msgstr ""
+msgstr "Afgewezen"
 
 #: admin-permissions.php:173 admin-permissions.php:424
 #: permission-requests.php:262 admin-applications.php:90
@@ -2382,11 +2366,11 @@ msgstr ""
 #: admin-role-requests.php:100 admin-role-requests.php:130
 #: admin-role-requests.php:267 developer-dashboard.php:306
 msgid "Revoked"
-msgstr ""
+msgstr "Ingetrokken"
 
 #: admin-permissions.php:218
 msgid "Review Access Request"
-msgstr ""
+msgstr "Toegangsverzoek beoordelen"
 
 #: admin-permissions.php:220 admin-permissions.php:252
 #: admin-permissions.php:273 admin-permissions.php:329
@@ -2395,249 +2379,219 @@ msgstr ""
 #: developer-dashboard.php:154 developer-dashboard.php:239 temporale.php:161
 #: temporale.php:184
 msgid "Close"
-msgstr ""
+msgstr "Sluiten"
 
 #: admin-permissions.php:229 admin-applications.php:193
 #: admin-role-requests.php:203
 msgid "Notes"
-msgstr ""
+msgstr "Notities"
 
 #: admin-permissions.php:230 permission-requests.php:152
 #: admin-applications.php:194 admin-role-requests.php:204
-#, fuzzy
-#| msgid "National"
 msgid "optional"
-msgstr "Nationaal"
+msgstr "optioneel"
 
 #: admin-permissions.php:235 admin-applications.php:199
 #: admin-role-requests.php:209
 msgid "Add notes about your decision..."
-msgstr ""
+msgstr "Voeg notities toe over je beslissing..."
 
 #: admin-permissions.php:243 admin-applications.php:216
 #: admin-role-requests.php:226
 msgid "Approve"
-msgstr ""
+msgstr "Goedkeuren"
 
 #: admin-permissions.php:246 admin-applications.php:210
 #: admin-role-requests.php:220
 msgid "Reject"
-msgstr ""
+msgstr "Afwijzen"
 
 #: admin-permissions.php:249 admin-permissions.php:368
 #: admin-applications.php:213 admin-role-requests.php:223
 #: admin-role-requests.php:269 developer-dashboard.php:271
 msgid "Revoke"
-msgstr ""
+msgstr "Intrekken"
 
 #: admin-permissions.php:261 admin-applications.php:172
 #: admin-role-requests.php:182 admin-users.php:92
-#, fuzzy
-#| msgid "Dashboard"
 msgid "Back to Dashboard"
-msgstr "Dashboard"
+msgstr "Terug naar Dashboard"
 
 #: admin-permissions.php:277 admin-users.php:215 admin-users.php:292
 #: user-profile.php:113
 msgid "User ID"
-msgstr ""
+msgstr "Gebruikers-ID"
 
 #: admin-permissions.php:279
 msgid "Enter user ID..."
-msgstr ""
+msgstr "Voer gebruikers-ID in..."
 
 #: admin-permissions.php:284 permission-requests.php:230
 msgid "Select object type..."
-msgstr ""
+msgstr "Selecteer objecttype..."
 
 #: admin-permissions.php:295 admin-permissions.php:380
 msgid "Enter object ID..."
-msgstr ""
+msgstr "Voer object-ID in..."
 
 #: admin-permissions.php:300 permission-requests.php:232
 msgid "Select relation..."
-msgstr ""
+msgstr "Selecteer relatie..."
 
 #: admin-permissions.php:327 admin-permissions.php:340
 msgid "Revoke Permission"
-msgstr ""
+msgstr "Toestemming intrekken"
 
 #: admin-permissions.php:353
 msgid "No permissions found."
-msgstr ""
+msgstr "Geen toestemmingen gevonden."
 
 #: admin-permissions.php:354
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to load permissions. Please try again later."
-msgstr "Kan sessie niet verlengen. Log opnieuw in."
+msgstr "Het laden van toestemmingen is mislukt. Probeer het later opnieuw."
 
 #: admin-permissions.php:355
 msgid "Permission granted successfully."
-msgstr ""
+msgstr "Toestemming succesvol verleend."
 
 #: admin-permissions.php:356
 msgid "Permission revoked successfully."
-msgstr ""
+msgstr "Toestemming succesvol ingetrokken."
 
 #: admin-permissions.php:357
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to grant permission. Please try again."
-msgstr "Kan sessie niet verlengen. Log opnieuw in."
+msgstr "Het verlenen van toestemming is mislukt. Probeer het opnieuw."
 
 #: admin-permissions.php:358
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to revoke permission. Please try again."
-msgstr "Kan sessie niet verlengen. Log opnieuw in."
+msgstr "Het intrekken van toestemming is mislukt. Probeer het opnieuw."
 
 #: admin-permissions.php:359
-#, fuzzy
-#| msgid "Loading..."
 msgid "Granting..."
-msgstr "Laden..."
+msgstr "Verlenen..."
 
 #: admin-permissions.php:360 admin-users.php:353
-#, fuzzy
-#| msgid "Loading..."
 msgid "Revoking..."
-msgstr "Laden..."
+msgstr "Intrekken..."
 
 #: admin-permissions.php:361
-#, fuzzy
-#| msgid "Are you sure you want to logout?"
 msgid "Are you sure you want to revoke this permission?"
-msgstr "Weet je zeker dat je wilt uitloggen?"
+msgstr "Weet je zeker dat je deze toestemming wilt intrekken?"
 
 #: admin-permissions.php:367 admin-permissions.php:410
 #: admin-applications.php:244 admin-role-requests.php:253 temporale.php:138
-#, fuzzy
-#| msgid "Notifications"
 msgid "Actions"
-msgstr "Meldingen"
+msgstr "Acties"
 
 #: admin-permissions.php:376 permission-requests.php:242
 msgid "Sanctorale — Editio Typica 1970"
-msgstr ""
+msgstr "Sanctorale — Editio Typica 1970"
 
 #: admin-permissions.php:377 permission-requests.php:244
 msgid "Sanctorale — Editio Typica 2002"
-msgstr ""
+msgstr "Sanctorale — Editio Typica 2002"
 
 #: admin-permissions.php:378 permission-requests.php:246
 msgid "Sanctorale — Editio Typica 2008"
-msgstr ""
+msgstr "Sanctorale — Editio Typica 2008"
 
 #: admin-permissions.php:379 permission-requests.php:248
 msgid "Decrees of the Dicastery for Divine Worship"
-msgstr ""
+msgstr "Decreten van het Dicasterie voor de Goddelijke Eredienst"
 
 #: admin-permissions.php:381 permission-requests.php:231
 msgid "Select object ID..."
-msgstr ""
+msgstr "Selecteer object-ID..."
 
 #: admin-permissions.php:388
 msgid "All fields are required."
-msgstr ""
+msgstr "Alle velden zijn verplicht."
 
 #: admin-permissions.php:392 admin-role-requests.php:239
 msgid "No requests found."
-msgstr ""
+msgstr "Geen verzoeken gevonden."
 
 #: admin-permissions.php:393
 msgid "No pending access requests. All caught up!"
-msgstr ""
+msgstr "Geen openstaande toegangsverzoeken. Helemaal bij!"
 
 #: admin-permissions.php:394
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to load access requests. Please try again later."
-msgstr "Kan sessie niet verlengen. Log opnieuw in."
+msgstr "Kon de toegangsverzoeken niet laden. Probeer het later opnieuw."
 
 #: admin-permissions.php:395 admin-applications.php:232
 #: admin-role-requests.php:242
-#, fuzzy
-#| msgid "Loading..."
 msgid "Processing..."
-msgstr "Laden..."
+msgstr "Bezig met verwerken..."
 
 #: admin-permissions.php:396
 msgid "Access request approved successfully."
-msgstr ""
+msgstr "Toegangsverzoek succesvol goedgekeurd."
 
 #: admin-permissions.php:397
 msgid "Access request rejected."
-msgstr ""
+msgstr "Toegangsverzoek afgewezen."
 
 #: admin-permissions.php:398
 msgid "Access revoked successfully."
-msgstr ""
+msgstr "Toegang succesvol ingetrokken."
 
 #: admin-permissions.php:399 admin-applications.php:236
 #: admin-role-requests.php:246
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to process request. Please try again."
-msgstr "Kan sessie niet verlengen. Log opnieuw in."
+msgstr "Kon verzoek niet verwerken. Probeer het opnieuw."
 
 #: admin-permissions.php:402 permission-requests.php:219
 msgid "Role"
-msgstr ""
+msgstr "Rol"
 
 #: admin-permissions.php:403 permission-requests.php:133
 #: permission-requests.php:220 admin-dashboard.php:128 user-profile.php:178
 msgid "Permissions"
-msgstr ""
+msgstr "Rechten"
 
 #: admin-permissions.php:407 permission-requests.php:151
 #: permission-requests.php:222 admin-role-requests.php:255
-#, fuzzy
-#| msgid "Notifications"
 msgid "Justification"
-msgstr "Meldingen"
+msgstr "Motivering"
 
 #: admin-permissions.php:408 permission-requests.php:166
 msgid "Credentials"
-msgstr ""
+msgstr "Referenties"
 
 #: admin-permissions.php:409 admin-role-requests.php:251
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #: admin-permissions.php:411 admin-applications.php:245
 #: admin-role-requests.php:254
 msgid "Review"
-msgstr ""
+msgstr "Beoordeling"
 
 #: admin-permissions.php:412 admin-applications.php:247
 #: admin-role-requests.php:256
 msgid "Reviewed At"
-msgstr ""
+msgstr "Beoordeeld op"
 
 #: admin-permissions.php:413 permission-requests.php:223
 #: admin-applications.php:248 admin-role-requests.php:257
 msgid "Review Notes"
-msgstr ""
+msgstr "Beoordelingsnotities"
 
 #: admin-permissions.php:414 permission-requests.php:221
 #: admin-applications.php:243 admin-role-requests.php:258
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: admin-permissions.php:417 permission-requests.php:80
 #: permission-requests.php:250 admin-role-requests.php:261 admin-users.php:145
-#, fuzzy
-#| msgid "Calendar data"
 msgid "Calendar Editor"
-msgstr "Kalendergegevens"
+msgstr "Kalender Editor"
 
 #: admin-permissions.php:418 permission-requests.php:85
 #: permission-requests.php:251 admin-role-requests.php:262 admin-users.php:146
-#, fuzzy
-#| msgid "Accuracy Tests"
 msgid "Accuracy Test Editor"
-msgstr "Nauwkeurigheidstests"
+msgstr "Nauwkeurigheidstest Editor"
 
 #: permission-requests.php:49
 msgid ""
@@ -2645,611 +2599,575 @@ msgid ""
 "the resource permissions you need. Your request will be reviewed by an "
 "administrator."
 msgstr ""
+"Vraag toegang aan tot het Liturgische Kalender systeem. Selecteer een rol en "
+"specificeer de benodigde bronrechten. Je verzoek zal door een administrator "
+"beoordeeld worden."
 
 #: permission-requests.php:59
 msgid "Your Access Requests"
-msgstr ""
+msgstr "Jouw Toegangsverzoeken"
 
 #: permission-requests.php:73
 msgid "Request Access"
-msgstr ""
+msgstr "Toegang Verzoeken"
 
 #: permission-requests.php:81
-#, fuzzy
-#| msgid "Save Diocesan Calendar Data"
 msgid "Edit national and diocesan calendar data."
-msgstr "Diocesane Kalendergegevens Opslaan"
+msgstr "Bewerk gegevens van nationale en diocesane kalenders."
 
 #: permission-requests.php:86
 msgid "Create and manage accuracy tests."
-msgstr ""
+msgstr "Maak en beheer nauwkeurigheidstests."
 
 #: permission-requests.php:92
 msgid ""
 "API consumer. Request access to all resources you may need — individual API "
 "keys can be scoped further at generation time."
 msgstr ""
+"API-gebruiker. Vraag toegang aan tot alle bronnen die je nodig hebt — "
+"individuele API-sleutels kunnen bij generatie verder worden beperkt."
 
 #: permission-requests.php:99
-#, fuzzy
-#| msgid "Select calendar"
 msgid "Select a Role"
-msgstr "Selecteer kalender"
+msgstr "Selecteer een rol"
 
 #: permission-requests.php:136
 msgid ""
 "Specify the resources you need access to. Add one or more permission rows."
 msgstr ""
+"Specificeer de middelen waartoe je toegang nodig hebt. Voeg een of meer "
+"toestemmingsrijen toe."
 
 #: permission-requests.php:145
 msgid "Add Permission"
-msgstr ""
+msgstr "Toestemming toevoegen"
 
 #: permission-requests.php:153
 msgid ""
 "Providing a justification helps administrators review your request faster."
 msgstr ""
+"Door een rechtvaardiging te geven, kunnen beheerders je verzoek sneller "
+"beoordelen."
 
 #: permission-requests.php:160
 msgid "Please describe why you need this access..."
-msgstr ""
+msgstr "Beschrijf waarom je deze toegang nodig hebt..."
 
 #: permission-requests.php:167
 msgid ""
 "Optionally provide any credentials or references that support your request."
 msgstr ""
+"Geef optioneel eventuele referenties of verwijzingen die je verzoek "
+"ondersteunen."
 
 #: permission-requests.php:174
 msgid "Any relevant credentials or references..."
-msgstr ""
+msgstr "Eventuele relevante referenties of verwijzingen..."
 
 #: permission-requests.php:181 permission-requests.php:210
 #: developer-dashboard.php:138 developer-dashboard.php:322
 msgid "Submit Request"
-msgstr ""
+msgstr "Verzoek indienen"
 
 #: permission-requests.php:190
-#, fuzzy
-#| msgid "Back to Website"
 msgid "Back to Profile"
-msgstr "Terug naar de website"
+msgstr "Terug naar profiel"
 
 #: permission-requests.php:205
 msgid "You have not made any access requests yet."
-msgstr ""
+msgstr "Je hebt nog geen toegang aangevraagd."
 
 #: permission-requests.php:206
 msgid "Could not load your existing requests."
-msgstr ""
+msgstr "Kon je bestaande verzoeken niet laden."
 
 #: permission-requests.php:207
 msgid "Your access request has been submitted successfully."
-msgstr ""
+msgstr "Je toegangsaanvraag is succesvol ingediend."
 
 #: permission-requests.php:208
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to submit request. Please try again."
-msgstr "Kan sessie niet verlengen. Log opnieuw in."
+msgstr "Aanvraag indienen mislukt. Probeer het opnieuw."
 
 #: permission-requests.php:209
 msgid "Submitting..."
-msgstr ""
+msgstr "Aan het indienen..."
 
 #: permission-requests.php:211
 msgid "Resubmit"
-msgstr ""
+msgstr "Opnieuw indienen"
 
 #: permission-requests.php:212
 msgid "Rejection reason"
-msgstr ""
+msgstr "Reden van afwijzing"
 
 #: permission-requests.php:213
-#, fuzzy
-#| msgid "Please select and copy manually"
 msgid "Please select a role."
-msgstr "Selecteer en kopieer alstublieft handmatig"
+msgstr "Selecteer een rol."
 
 #: permission-requests.php:214
 msgid ""
 "Each permission row must have object type, object ID, and relation filled in."
 msgstr ""
+"Elke machtigingsrij moet objecttype, object-ID en relatie ingevuld hebben."
 
 #: permission-requests.php:215
 #, php-format
 msgid "You have reached the maximum of %1$d permissions per request."
-msgstr ""
+msgstr "Je hebt het maximum van %1$d machtigingen per aanvraag bereikt."
 
 #: permission-requests.php:216
 #, php-format
 msgid ""
 "This request had more than %1$d permissions; only the first %2$d are shown."
 msgstr ""
+"Deze aanvraag had meer dan %1$d machtigingen; alleen de eerste %2$d worden "
+"getoond."
 
 #: permission-requests.php:217
 msgid "Unknown error"
-msgstr ""
+msgstr "Onbekende fout"
 
 #: permission-requests.php:224
 msgid "Submitted"
-msgstr ""
+msgstr "Ingediend"
 
 #: permission-requests.php:225
 msgid "Reviewed"
-msgstr ""
+msgstr "Beoordeeld"
 
 #: permission-requests.php:233
 msgid "Remove"
-msgstr ""
+msgstr "Verwijderen"
 
 #: permission-requests.php:264
 msgid "e.g. IT, USA, BOSTON, Americas..."
-msgstr ""
+msgstr "bv. IT, USA, BOSTON, Amerika..."
 
 #: admin-applications.php:33 admin-applications.php:45
 msgid "Application Management"
-msgstr ""
+msgstr "Applicatiebeheer"
 
 #: admin-applications.php:182
 msgid "Review Application"
-msgstr ""
+msgstr "Applicatie beoordelen"
 
 #: admin-applications.php:229
 msgid "No applications found."
-msgstr ""
+msgstr "Geen applicaties gevonden."
 
 #: admin-applications.php:230
 msgid "No pending applications. All caught up!"
-msgstr ""
+msgstr "Geen wachtende applicaties. Alles ingehaald!"
 
 #: admin-applications.php:231
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to load applications. Please try again later."
-msgstr "Kan sessie niet verlengen. Log opnieuw in."
+msgstr "Laden van applicaties mislukt. Probeer het later opnieuw."
 
 #: admin-applications.php:233
 msgid "Application approved successfully."
-msgstr ""
+msgstr "Applicatie succesvol goedgekeurd."
 
 #: admin-applications.php:234
 msgid "Application rejected."
-msgstr ""
+msgstr "Aanvraag afgewezen."
 
 #: admin-applications.php:235
 msgid "Application revoked."
-msgstr ""
+msgstr "Aanvraag ingetrokken."
 
 #: admin-applications.php:239 developer-dashboard.php:265
 msgid "Application"
-msgstr ""
+msgstr "Applicatie"
 
 #: admin-applications.php:240 developer-dashboard.php:98
-#, fuzzy
-#| msgid "Definition"
 msgid "Description"
-msgstr "Definitie"
+msgstr "Beschrijving"
 
 #: admin-applications.php:241 developer-dashboard.php:299
-#, fuzzy
-#| msgid "Back to Website"
 msgid "Website"
-msgstr "Terug naar de website"
+msgstr "Website"
 
 #: admin-applications.php:242 developer-dashboard.php:279
 msgid "Created"
-msgstr ""
+msgstr "Gemaakt"
 
 #: admin-applications.php:246
 msgid "Reviewed By"
-msgstr ""
+msgstr "Beoordeeld door"
 
 #: admin-applications.php:255
 msgid "Requested Scope"
-msgstr ""
+msgstr "Aangevraagde reikwijdte"
 
 #: admin-applications.php:256 developer-dashboard.php:115
 #: developer-dashboard.php:168 developer-dashboard.php:316
 msgid "Read-only"
-msgstr ""
+msgstr "Alleen-lezen"
 
 #: admin-applications.php:257 developer-dashboard.php:122
 #: developer-dashboard.php:317
 msgid "Read & Write"
-msgstr ""
+msgstr "Lezen & Schrijven"
 
 #: admin-dashboard.php:39 admin-dashboard.php:51 user-profile.php:252
-#, fuzzy
-#| msgid "Dashboard"
 msgid "Admin Dashboard"
-msgstr "Dashboard"
+msgstr "Beheerdersdashboard"
 
 #: admin-dashboard.php:55
 msgid ""
 "Manage liturgical calendar data, Roman Missal information, and regional "
 "calendars."
 msgstr ""
+"Liturgische kalendergegevens beheren, informatie uit het Romeins Missaal en "
+"regionale kalenders."
 
 #: admin-dashboard.php:65
-#, fuzzy
-#| msgid "Administration tools"
 msgid "Administration"
-msgstr "Beheerhulpmiddelen"
+msgstr "Administratie"
 
 #: admin-dashboard.php:74
-#, fuzzy
-#| msgid "Username"
 msgid "Users"
-msgstr "Gebruikersnaam"
+msgstr "Gebruikers"
 
 #: admin-dashboard.php:76
 msgid "View users and manage their roles"
-msgstr ""
+msgstr "Bekijk gebruikers en beheer hun rollen"
 
 #: admin-dashboard.php:80 admin-dashboard.php:98 admin-dashboard.php:116
 #: admin-dashboard.php:134
 msgid "Manage"
-msgstr ""
+msgstr "Beheren"
 
 #: admin-dashboard.php:92 admin-role-requests.php:43
-#, fuzzy
-#| msgid "View all requests"
 msgid "Role Requests"
-msgstr "Bekijk alle aanvragen"
+msgstr "Rolverzoeken"
 
 #: admin-dashboard.php:94
 msgid "Review and approve user role requests"
-msgstr ""
+msgstr "Beoordeel en keur gebruikersrolverzoeken goed"
 
 #: admin-dashboard.php:110
-#, fuzzy
-#| msgid "Notifications"
 msgid "Applications"
-msgstr "Meldingen"
+msgstr "Toepassingen"
 
 #: admin-dashboard.php:112
 msgid "Review and approve developer applications"
-msgstr ""
+msgstr "Beoordeel en keur ontwikkelaaraanvragen goed"
 
 #: admin-dashboard.php:130
 msgid "Manage fine-grained resource permissions"
-msgstr ""
+msgstr "Fijnmazige resourcepermissies beheren"
 
 #: admin-role-requests.php:55
 msgid "Role Requests Management"
-msgstr ""
+msgstr "Beheer van rolverzoeken"
 
 #: admin-role-requests.php:192
-#, fuzzy
-#| msgid "View all requests"
 msgid "Review Role Request"
-msgstr "Bekijk alle aanvragen"
+msgstr "Rolverzoek beoordelen"
 
 #: admin-role-requests.php:240
 msgid "No pending role requests. All caught up!"
-msgstr ""
+msgstr "Geen openstaande rolverzoeken. Helemaal bij!"
 
 #: admin-role-requests.php:241
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to load role requests. Please try again later."
-msgstr "Kan sessie niet verlengen. Log opnieuw in."
+msgstr "Laden van rolverzoeken mislukt. Probeer het later opnieuw."
 
 #: admin-role-requests.php:243
 msgid "Request approved successfully."
-msgstr ""
+msgstr "Aanvraag succesvol goedgekeurd."
 
 #: admin-role-requests.php:244
 msgid "Request rejected."
-msgstr ""
+msgstr "Verzoek afgewezen."
 
 #: admin-role-requests.php:245 admin-users.php:377
 msgid "Role revoked successfully."
-msgstr ""
+msgstr "Rol succesvol ingetrokken."
 
 #: admin-role-requests.php:249
 msgid "Role Requested"
-msgstr ""
+msgstr "Rol aangevraagd"
 
 #: admin-role-requests.php:250
 msgid "Requested Role"
-msgstr ""
+msgstr "Aangevraagde rol"
 
 #: admin-users.php:33 admin-users.php:45
-#, fuzzy
-#| msgid "Username"
 msgid "Users Management"
-msgstr "Gebruikersnaam"
+msgstr "Gebruikersbeheer"
 
 #: admin-users.php:49
 msgid ""
 "Manage users in the system. You can view user information and revoke roles "
 "from users who have them."
 msgstr ""
+"Beheer gebruikers in het systeem. Je kunt gebruikersinformatie bekijken en "
+"rollen intrekken van gebruikers die ze hebben."
 
 #: admin-users.php:64
 msgid "Users with Roles"
-msgstr ""
+msgstr "Gebruikers met rollen"
 
 #: admin-users.php:79
 msgid "Users without Roles"
-msgstr ""
+msgstr "Gebruikers zonder rollen"
 
 #: admin-users.php:102 admin-users.php:115
 msgid "Revoke Role"
-msgstr ""
+msgstr "Rol intrekken"
 
 #: admin-users.php:143
-#, fuzzy
-#| msgid "Administrator Login"
 msgid "Administrator"
-msgstr "Beheerder Inloggen"
+msgstr "Beheerder"
 
 #: admin-users.php:187
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to load users. Please try again later."
-msgstr "Kan sessie niet verlengen. Log opnieuw in."
+msgstr "Laden van gebruikers mislukt. Probeer het later opnieuw."
 
 #: admin-users.php:203
 msgid "No users with roles found."
-msgstr ""
+msgstr "Geen gebruikers met rollen gevonden."
 
 #: admin-users.php:214 user-profile.php:126
 msgid "Roles"
-msgstr ""
+msgstr "Rollen"
 
 #: admin-users.php:239
 msgid "Revoke this role"
-msgstr ""
+msgstr "Deze rol intrekken"
 
 #: admin-users.php:280
 msgid "No users without roles found."
-msgstr ""
+msgstr "Geen gebruikers zonder rollen gevonden."
 
 #: admin-users.php:291
 msgid "Email Verified"
-msgstr ""
+msgstr "E-mail geverifieerd"
 
 #: admin-users.php:304
 msgid "Verified"
-msgstr ""
+msgstr "Geverifieerd"
 
 #: admin-users.php:305
 msgid "Not Verified"
-msgstr ""
+msgstr "Niet geverifieerd"
 
 #: admin-users.php:336
-#, fuzzy
-#| msgid "Are you sure you want to logout?"
 msgid "Are you sure you want to revoke the role"
-msgstr "Weet je zeker dat je wilt uitloggen?"
+msgstr "Weet je zeker dat je de rol wilt intrekken"
 
 #: admin-users.php:338
 msgid "from user"
-msgstr ""
+msgstr "van gebruiker"
 
 #: admin-users.php:393
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to revoke role. Please try again."
-msgstr "Kan sessie niet verlengen. Log opnieuw in."
+msgstr "Niet gelukt om rol in te trekken. Probeer het opnieuw."
 
 #: developer-dashboard.php:34 developer-dashboard.php:47 user-profile.php:257
-#, fuzzy
-#| msgid "Developer"
 msgid "Developer Dashboard"
-msgstr "Ontwikkelaar"
+msgstr "Ontwikkelaarsdashboard"
 
 #: developer-dashboard.php:51
-#, fuzzy
-#| msgid ""
-#| "The unit tests are defined in the %s folder in the Liturgical Calendar "
-#| "API repository."
 msgid ""
 "Register applications and manage API keys for accessing the Liturgical "
 "Calendar API."
 msgstr ""
-"De unit tests zijn gedefinieerd in de %s map in de repository van de "
-"Liturgische Kalender API."
+"Registreer applicaties en beheer API-sleutels voor toegang tot de "
+"Liturgische Kalender-API."
 
 #: developer-dashboard.php:58
 msgid "My Applications"
-msgstr ""
+msgstr "Mijn applicaties"
 
 #: developer-dashboard.php:61 developer-dashboard.php:82
 #: developer-dashboard.php:297
 msgid "New Application"
-msgstr ""
+msgstr "Nieuwe applicatie"
 
 #: developer-dashboard.php:70
-#, fuzzy
-#| msgid "Logging in..."
 msgid "Loading applications..."
-msgstr "Inloggen..."
+msgstr "Toepassingen laden..."
 
 #: developer-dashboard.php:91
 msgid "Application Name"
-msgstr ""
+msgstr "Naam van de applicatie"
 
 #: developer-dashboard.php:95
 msgid "A descriptive name for your application."
-msgstr ""
+msgstr "Een beschrijvende naam voor je applicatie."
 
 #: developer-dashboard.php:100
 msgid "Optional description of what your application does."
-msgstr ""
+msgstr "Optionele beschrijving van wat je applicatie doet."
 
 #: developer-dashboard.php:103
 msgid "Website URL"
-msgstr ""
+msgstr "Website URL"
 
 #: developer-dashboard.php:105
 msgid "Optional URL to your application or project."
-msgstr ""
+msgstr "Optionele URL van je applicatie of project."
 
 #: developer-dashboard.php:109 developer-dashboard.php:315
 msgid "Access Scope"
-msgstr ""
+msgstr "Toegangsscope"
 
 #: developer-dashboard.php:116 developer-dashboard.php:318
-#, fuzzy
-#| msgid "Calendar data"
 msgid "Can only read calendar data"
-msgstr "Kalendergegevens"
+msgstr "Kan alleen kalendergegevens lezen"
 
 #: developer-dashboard.php:123 developer-dashboard.php:319
 msgid "Can read and modify calendar data"
-msgstr ""
+msgstr "Kan kalendergegevens lezen en wijzigen"
 
 #: developer-dashboard.php:127
 msgid ""
 "Choose the level of access your application needs. This cannot be changed "
 "after approval."
 msgstr ""
+"Kies het toegangsniveau dat je applicatie nodig heeft. Dit kan niet worden "
+"gewijzigd na goedkeuring."
 
 #: developer-dashboard.php:152
 msgid "Generate API Key"
-msgstr ""
+msgstr "Genereer API-sleutel"
 
 #: developer-dashboard.php:160
-#, fuzzy
-#| msgid "Name"
 msgid "Key Name"
-msgstr "Naam"
+msgstr "Sleutelnaam"
 
 #: developer-dashboard.php:162
 msgid "e.g., Production, Development"
-msgstr ""
+msgstr "bijv. Productie, Ontwikkeling"
 
 #: developer-dashboard.php:163
 msgid "Optional name to identify this key."
-msgstr ""
+msgstr "Optionele naam om deze sleutel te identificeren."
 
 #: developer-dashboard.php:166 developer-dashboard.php:273
 msgid "Scope"
-msgstr ""
+msgstr "Scope"
 
 #: developer-dashboard.php:169
 msgid "Read and Write"
-msgstr ""
+msgstr "Lezen en schrijven"
 
 #: developer-dashboard.php:172
 msgid ""
 "Read-only keys can only access public endpoints. Write keys can modify data."
 msgstr ""
+"Alleen-lezen-sleutels kunnen alleen openbare eindpunten openen. "
+"Schrijfsleutels kunnen gegevens wijzigen."
 
 #: developer-dashboard.php:176
 msgid "Expiration Date"
-msgstr ""
+msgstr "Vervaldatum"
 
 #: developer-dashboard.php:178
 msgid "Optional. Leave empty for a key that never expires."
-msgstr ""
+msgstr "Optioneel. Laat leeg voor een sleutel die nooit verloopt."
 
 #: developer-dashboard.php:186 developer-dashboard.php:268
 msgid "Generate Key"
-msgstr ""
+msgstr "Sleutel genereren"
 
 #: developer-dashboard.php:199
 msgid "API Key Generated"
-msgstr ""
+msgstr "API-sleutel gegenereerd"
 
 #: developer-dashboard.php:205
 msgid "Important:"
-msgstr ""
+msgstr "Belangrijk:"
 
 #: developer-dashboard.php:206
 msgid "Copy this key now. For security reasons, it will not be shown again."
 msgstr ""
+"Kopieer deze sleutel nu. Om veiligheidsredenen zal hij niet opnieuw worden "
+"getoond."
 
 #: developer-dashboard.php:209
 msgid "Your API Key:"
-msgstr ""
+msgstr "Je API-sleutel:"
 
 #: developer-dashboard.php:212
-#, fuzzy
-#| msgid "Click to copy to the clipboard!"
 msgid "Copy to clipboard"
-msgstr "Klik om naar het klembord te kopiëren!"
+msgstr "Kopiëren naar klembord"
 
 #: developer-dashboard.php:218
-#, fuzzy
-#| msgid "URL was copied to the clipboard"
 msgid "API key copied to clipboard!"
-msgstr "URL is naar het klembord gekopieerd"
+msgstr "API-sleutel gekopieerd naar klembord!"
 
 #: developer-dashboard.php:223
 msgid "Done"
-msgstr ""
+msgstr "Klaar"
 
 #: developer-dashboard.php:236
 msgid "Confirm Delete"
-msgstr ""
+msgstr "Verwijderen bevestigen"
 
 #: developer-dashboard.php:242
-#, fuzzy
-#| msgid "Are you sure you want to logout?"
 msgid "Are you sure you want to delete this item?"
-msgstr "Weet je zeker dat je wilt uitloggen?"
+msgstr "Weet je zeker dat je dit item wilt verwijderen?"
 
 #: developer-dashboard.php:243
-#, fuzzy
-#| msgid "This value cannot be empty."
 msgid "This action cannot be undone."
-msgstr "Deze waarde kan niet leeg zijn."
+msgstr "Deze actie kan niet ongedaan gemaakt worden."
 
 #: developer-dashboard.php:249 developer-dashboard.php:270
 msgid "Delete"
-msgstr ""
+msgstr "Verwijderen"
 
 #: developer-dashboard.php:263
 msgid "You have not registered any applications yet."
-msgstr ""
+msgstr "Je hebt nog geen toepassingen geregistreerd."
 
 #: developer-dashboard.php:264
 msgid "Create your first application to get started."
-msgstr ""
+msgstr "Maak je eerste toepassing om te beginnen."
 
 #: developer-dashboard.php:266
 msgid "API Keys"
-msgstr ""
+msgstr "API-sleutels"
 
 #: developer-dashboard.php:267
 msgid "No API keys generated yet."
-msgstr ""
+msgstr "Nog geen API-sleutels gegenereerd."
 
 #: developer-dashboard.php:272
 msgid "Rotate"
-msgstr ""
+msgstr "Draaien"
 
 #: developer-dashboard.php:274
 msgid "Rate Limit"
-msgstr ""
+msgstr "Verzoeklimiet"
 
 #: developer-dashboard.php:275
 msgid "Expires"
-msgstr ""
+msgstr "Verloopt"
 
 #: developer-dashboard.php:276
 msgid "Never"
-msgstr ""
+msgstr "Nooit"
 
 #: developer-dashboard.php:277
 msgid "Last Used"
-msgstr ""
+msgstr "Laatst gebruikt"
 
 #: developer-dashboard.php:278
 msgid "Never used"
-msgstr ""
+msgstr "Nooit gebruikt"
 
 #: developer-dashboard.php:280
 msgid "keys"
-msgstr ""
+msgstr "sleutels"
 
 #: developer-dashboard.php:281
 msgid "key"
-msgstr ""
+msgstr "sleutel"
 
 #: developer-dashboard.php:282
 #, php-format
@@ -3257,151 +3175,147 @@ msgid ""
 "Are you sure you want to delete the application \"%1$s\"? This will also "
 "revoke all associated API keys."
 msgstr ""
+"Weet je zeker dat je de applicatie \"%1$s\" wilt verwijderen? Hiermee worden "
+"ook alle bijbehorende API-sleutels ingetrokken."
 
 #: developer-dashboard.php:283
 msgid ""
 "Are you sure you want to revoke this API key? Applications using this key "
 "will no longer be able to authenticate."
 msgstr ""
+"Weet je zeker dat je deze API-sleutel wilt intrekken? Applicaties die deze "
+"sleutel gebruiken, kunnen zich niet langer authenticeren."
 
 #: developer-dashboard.php:284
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to load applications. Please try again."
-msgstr "Kan sessie niet verlengen. Log opnieuw in."
+msgstr "Toepassingen laden is mislukt. Probeer het opnieuw."
 
 #: developer-dashboard.php:285
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to save application. Please try again."
-msgstr "Kan sessie niet verlengen. Log opnieuw in."
+msgstr "Het opslaan van de applicatie is mislukt. Probeer het opnieuw."
 
 #: developer-dashboard.php:286
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to delete. Please try again."
-msgstr "Kan sessie niet verlengen. Log opnieuw in."
+msgstr "Verwijderen mislukt. Probeer het opnieuw."
 
 #: developer-dashboard.php:287
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to generate API key. Please try again."
-msgstr "Kan sessie niet verlengen. Log opnieuw in."
+msgstr "Genereren van API-sleutel mislukt. Probeer het opnieuw."
 
 #: developer-dashboard.php:289
 msgid "Application updated successfully."
-msgstr ""
+msgstr "Applicatie succesvol bijgewerkt."
 
 #: developer-dashboard.php:290
 msgid "Application created successfully."
-msgstr ""
+msgstr "Applicatie succesvol aangemaakt."
 
 #: developer-dashboard.php:291
 msgid "Application deleted successfully."
-msgstr ""
+msgstr "Applicatie succesvol verwijderd."
 
 #: developer-dashboard.php:292
 msgid "API key revoked successfully."
-msgstr ""
+msgstr "API-sleutel succesvol ingetrokken."
 
 #: developer-dashboard.php:293
 msgid "API key rotated successfully."
-msgstr ""
+msgstr "API-sleutel succesvol gedraaid."
 
 #: developer-dashboard.php:294
 msgid "Read"
-msgstr ""
+msgstr "Lezen"
 
 #: developer-dashboard.php:295
 msgid "Write"
-msgstr ""
+msgstr "Schrijf"
 
 #: developer-dashboard.php:296
 msgid "requests/hour"
-msgstr ""
+msgstr "verzoeken/uur"
 
 #: developer-dashboard.php:298
 msgid "Edit Application"
-msgstr ""
+msgstr "Bewerk Applicatie"
 
 #: developer-dashboard.php:300
 msgid "View Keys"
-msgstr ""
+msgstr "Bekijk Sleutels"
 
 #: developer-dashboard.php:301
 msgid "Hide Keys"
-msgstr ""
+msgstr "Verberg Sleutels"
 
 #: developer-dashboard.php:307
 msgid "Awaiting admin approval"
-msgstr ""
+msgstr "In afwachting van goedkeuring door beheerder"
 
 #: developer-dashboard.php:308
 msgid "Rejection Notes"
-msgstr ""
+msgstr "Afwijzingsnotities"
 
 #: developer-dashboard.php:309
 msgid "Resubmit for Review"
-msgstr ""
+msgstr "Opnieuw indienen ter beoordeling"
 
 #: developer-dashboard.php:310
 msgid "API keys can only be generated for approved applications."
 msgstr ""
+"API-sleutels kunnen alleen worden gegenereerd voor goedgekeurde applicaties."
 
 #: developer-dashboard.php:311
 msgid ""
 "This application has been revoked. Contact an administrator for assistance."
 msgstr ""
+"Deze applicatie is ingetrokken. Neem contact op met een beheerder voor hulp."
 
 #: developer-dashboard.php:312
 msgid "Application resubmitted for review."
-msgstr ""
+msgstr "Applicatie opnieuw ingediend voor beoordeling."
 
 #: developer-dashboard.php:313
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to resubmit application. Please try again."
-msgstr "Kan sessie niet verlengen. Log opnieuw in."
+msgstr "Het opnieuw indienen van de applicatie is mislukt. Probeer het opnieuw."
 
 #: developer-dashboard.php:320
 msgid ""
 "This application has read-only access. Only read-scope API keys can be "
 "generated."
 msgstr ""
+"Deze applicatie heeft alleen-lezen toegang. Alleen API-sleutels met "
+"leesrechten kunnen worden gegenereerd."
 
 #: developer-dashboard.php:323
-#, fuzzy
-#| msgid "Save data"
 msgid "Save"
-msgstr "Gegevens opslaan"
+msgstr "Opslaan"
 
 #: missals-editor.php:97
 msgid "Please login to access the admin interface."
-msgstr ""
+msgstr "Log in om toegang te krijgen tot de beheerdersinterface."
 
 #: temporale.php:42
 msgid ""
 "Proprium de Tempore - The temporal cycle of the liturgical year including "
 "Advent, Christmas, Lent, Easter Triduum, Easter, and Ordinary Time."
 msgstr ""
+"Proprium de Tempore - De tijdscyclus van het liturgische jaar inclusief "
+"Advent, Kerstmis, de Vastentijd, Paastriduüm, Pasen en Gewone Tijd."
 
 #: temporale.php:57
 msgid "Language"
-msgstr ""
+msgstr "Taal"
 
 #: temporale.php:63
-#, fuzzy
-#| msgid "Liturgical color"
 msgid "Liturgical Season"
-msgstr "Liturgische kleur"
+msgstr "Liturgisch Seizoen"
 
 #: temporale.php:65
 msgid "All Seasons"
-msgstr ""
+msgstr "Alle Seizoenen"
 
 #: temporale.php:66
 msgid "Advent"
-msgstr ""
+msgstr "Advent"
 
 #: temporale.php:67
 msgid "Christmas"
@@ -3503,219 +3417,191 @@ msgstr ""
 
 #: temporale.php:96
 msgid "Feriale Tempus Quadragesimae"
-msgstr ""
+msgstr "Feriale Tijd van de Veertigdagentijd"
 
 #: temporale.php:97
 msgid "Feriale Tempus Paschatis"
-msgstr ""
+msgstr "Feriale Tijd van Pasen"
 
 #: temporale.php:98
-#, fuzzy
-#| msgid "Sanctorale"
 msgid "Sanctorum"
-msgstr "Heiligenkalender"
+msgstr "Heiligen"
 
 #: temporale.php:104
 msgid "Search"
-msgstr ""
+msgstr "Zoeken"
 
 #: temporale.php:106
 msgid "Search by name or key..."
-msgstr ""
+msgstr "Zoek op naam of sleutel..."
 
 #: temporale.php:118
-#, fuzzy
-#| msgid "Temporale"
 msgid "Temporale Events"
-msgstr "Tijdelijk"
+msgstr "Tijdelijke Evenementen"
 
 #: temporale.php:123
 msgid "Export JSON"
-msgstr ""
+msgstr "Exporteren JSON"
 
 #: temporale.php:132
-#, fuzzy
-#| msgid "Event key"
 msgid "Event Key"
-msgstr "Evenementsleutel"
+msgstr "Evenement Sleutel"
 
 #: temporale.php:135
 msgid "Season"
-msgstr ""
+msgstr "Seizoen"
 
 #: temporale.php:136
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #: temporale.php:137
 msgid "Color"
-msgstr ""
+msgstr "Kleur"
 
 #: temporale.php:160
-#, fuzzy
-#| msgid "Event key"
 msgid "Event Details"
-msgstr "Evenementsleutel"
+msgstr "Evenementdetails"
 
 #: temporale.php:167
-#, fuzzy
-#| msgid "Current localization"
 msgid "Event navigation"
-msgstr "Huidige lokalisatie"
+msgstr "Evenementnavigatie"
 
 #: temporale.php:168
 msgid "First"
-msgstr ""
+msgstr "Eerste"
 
 #: temporale.php:180
 msgid "Last"
-msgstr ""
+msgstr "Laatste"
 
 #: user-profile.php:23 user-profile.php:35
-#, fuzzy
-#| msgid "View Profile"
 msgid "User Profile"
-msgstr "Bekijk profiel"
+msgstr "Gebruikersprofiel"
 
 #: user-profile.php:43
 msgid "Account Information"
-msgstr ""
+msgstr "Accountinformatie"
 
 #: user-profile.php:52
-#, fuzzy
-#| msgid "Name"
 msgid "Full Name"
-msgstr "Naam"
+msgstr "Volledige Naam"
 
 #: user-profile.php:61
 msgid "Given / Family Name"
-msgstr ""
+msgstr "Gegeven / Familienaam"
 
 #: user-profile.php:85
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #: user-profile.php:90
 msgid "Email verified"
-msgstr ""
+msgstr "E-mail geverifieerd"
 
 #: user-profile.php:94
 msgid "Email not verified"
-msgstr ""
+msgstr "E-mail niet geverifieerd"
 
 #: user-profile.php:98
 msgid "Resend verification"
-msgstr ""
+msgstr "Verificatie opnieuw verzenden"
 
 #: user-profile.php:101
 msgid "Click after verifying your email to update your session"
-msgstr ""
+msgstr "Klik na het verifiëren van je e-mail om je sessie bij te werken"
 
 #: user-profile.php:102 user-profile.php:131
 msgid "Refresh session"
-msgstr ""
+msgstr "Sessie vernieuwen"
 
 #: user-profile.php:130
 msgid "Refresh session to see updated roles"
-msgstr ""
+msgstr "Vernieuw de sessie om de bijgewerkte rollen te zien"
 
 #: user-profile.php:135 user-profile.php:140
 msgid "Request Role"
-msgstr ""
+msgstr "Rol aanvragen"
 
 #: user-profile.php:139
 msgid "Email verification required"
-msgstr ""
+msgstr "E-mailverificatie vereist"
 
 #: user-profile.php:150
 msgid ""
 "You must verify your email address before you can request a role. Please "
 "check your inbox for a verification email."
 msgstr ""
+"Je moet je e-mailadres verifiëren voordat je een rol kan aanvragen. "
+"Controleer je inbox voor een verificatie-e-mail."
 
 #: user-profile.php:165
 msgid "No roles assigned yet. Request a role to access additional features."
 msgstr ""
+"Nog geen rollen toegewezen. Vraag een rol aan om toegang te krijgen tot "
+"extra functies."
 
 #: user-profile.php:196
-#, fuzzy
-#| msgid "Session Expiring"
 msgid "Session Information"
-msgstr "Sessie verloopt"
+msgstr "Sessie-informatie"
 
 #: user-profile.php:205
-#, fuzzy
-#| msgid "Session Expired"
 msgid "Session Expires"
-msgstr "Sessie verlopen"
+msgstr "Sessie verloopt"
 
 #: user-profile.php:217
 msgid "Time Remaining"
-msgstr ""
+msgstr "Resterende tijd"
 
 #: user-profile.php:232 user-profile.php:433
-#, fuzzy
-#| msgid "Session Expired"
 msgid "Expired"
-msgstr "Sessie verlopen"
+msgstr "Verlopen"
 
 #: user-profile.php:289 user-profile.php:314
 msgid "Refreshing..."
-msgstr ""
+msgstr "Vernieuwen..."
 
 #: user-profile.php:297 user-profile.php:321
 msgid "Session refresh failed"
-msgstr ""
+msgstr "Vernieuwen van sessie mislukt"
 
 #: user-profile.php:301 user-profile.php:325
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to refresh session. Please try logging out and back in."
-msgstr "Kan sessie niet verlengen. Log opnieuw in."
+msgstr "Vernieuwen van sessie mislukt. Probeer uit- en weer in te loggen."
 
 #: user-profile.php:339
-#, fuzzy
-#| msgid "Extending..."
 msgid "Sending..."
-msgstr "Bezig met verlengen..."
+msgstr "Verzenden..."
 
 #: user-profile.php:352
 msgid "Failed to send verification email"
-msgstr ""
+msgstr "Versturen van verificatie-e-mail mislukt"
 
 #: user-profile.php:355
 msgid ""
 "Verification email sent. After clicking the verification link, use the "
 "\"Refresh session\" button to update your status."
 msgstr ""
+"Verificatie-e-mail verzonden. Na het klikken op de verificatielink, gebruik "
+"de knop \"Sessie vernieuwen\" om je status bij te werken."
 
 #: user-profile.php:373
-#, fuzzy
-#| msgid "Failed to extend session. Please login again."
 msgid "Failed to send verification email. Please try again."
-msgstr "Kan sessie niet verlengen. Log opnieuw in."
+msgstr "Verificatie-e-mail verzenden mislukt. Probeer het opnieuw."
 
 #: user-profile.php:404
-#, fuzzy
-#| msgid "Session Expiring"
 msgid "Session expires in 5 minutes"
-msgstr "Sessie verloopt"
+msgstr "Sessie verloopt over 5 minuten"
 
 #: user-profile.php:405
-#, fuzzy
-#| msgid "Session Expiring"
 msgid "Session expires in 1 minute"
-msgstr "Sessie verloopt"
+msgstr "Sessie verloopt over 1 minuut"
 
 #: user-profile.php:406
-#, fuzzy
-#| msgid "Session Expired"
 msgid "Session expires in 30 seconds"
-msgstr "Sessie verlopen"
+msgstr "Sessie verloopt over 30 seconden"
 
 #: user-profile.php:407
-#, fuzzy
-#| msgid "Session Expired"
 msgid "Session expired"
 msgstr "Sessie verlopen"
 
