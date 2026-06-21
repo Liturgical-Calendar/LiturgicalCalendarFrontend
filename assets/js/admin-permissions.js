@@ -27,7 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const filterRelation = document.getElementById('filterRelation');
 
     // Grant modal elements
-    const grantModal = new bootstrap.Modal(document.getElementById('grantModal'));
+    const grantModalEl = document.getElementById('grantModal');
+    const grantModal = grantModalEl ? new bootstrap.Modal(grantModalEl) : null;
     const grantUser = document.getElementById('grantUser');
     const grantObjectType = document.getElementById('grantObjectType');
     // Note: the Object ID control is looked up live (document.getElementById) wherever it is
@@ -87,7 +88,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Revoke modal elements
-    const revokeModal = new bootstrap.Modal(document.getElementById('revokeModal'));
+    const revokeModalEl = document.getElementById('revokeModal');
+    const revokeModal = revokeModalEl ? new bootstrap.Modal(revokeModalEl) : null;
     const revokeConfirmText = document.getElementById('revokeConfirmText');
     const revokeModalAlerts = document.getElementById('revokeModalAlerts');
     const confirmRevokeBtn = document.getElementById('confirmRevokeBtn');
@@ -490,33 +492,37 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Event listeners
-    refreshBtn.addEventListener('click', async function() {
-        const icon = this.querySelector('i');
-        icon.classList.add('fa-spin');
-        // Refresh user map first so newly-granted-to users appear with friendly names.
-        await loadUserMap();
-        loadPermissions().finally(function() {
-            icon.classList.remove('fa-spin');
+    // Event listeners — the FGA permission-tuple management section is
+    // global-admin-only; its DOM is absent for resource-admins, so skip its
+    // wiring and initial load entirely.
+    if (config.isGlobalAdmin) {
+        refreshBtn.addEventListener('click', async function() {
+            const icon = this.querySelector('i');
+            icon.classList.add('fa-spin');
+            // Refresh user map first so newly-granted-to users appear with friendly names.
+            await loadUserMap();
+            loadPermissions().finally(function() {
+                icon.classList.remove('fa-spin');
+            });
         });
-    });
 
-    grantPermissionBtn.addEventListener('click', openGrantModal);
-    grantObjectType.addEventListener('change', (e) => syncObjectIdField(e.target.value));
-    confirmGrantBtn.addEventListener('click', handleGrant);
-    confirmRevokeBtn.addEventListener('click', handleRevoke);
-    applyFiltersBtn.addEventListener('click', loadPermissions);
+        grantPermissionBtn.addEventListener('click', openGrantModal);
+        grantObjectType.addEventListener('change', (e) => syncObjectIdField(e.target.value));
+        confirmGrantBtn.addEventListener('click', handleGrant);
+        confirmRevokeBtn.addEventListener('click', handleRevoke);
+        applyFiltersBtn.addEventListener('click', loadPermissions);
 
-    clearFiltersBtn.addEventListener('click', function() {
-        filterUser.value = '';
-        filterObjectType.value = '';
-        filterObjectId.value = '';
-        filterRelation.value = '';
-        loadPermissions();
-    });
+        clearFiltersBtn.addEventListener('click', function() {
+            filterUser.value = '';
+            filterObjectType.value = '';
+            filterObjectId.value = '';
+            filterRelation.value = '';
+            loadPermissions();
+        });
 
-    // Load user map and then permissions on page load
-    loadUserMap().then(loadPermissions);
+        // Load user map and then permissions on page load
+        loadUserMap().then(loadPermissions);
+    }
 
     // ========================================================================
     // Access Requests Review Section

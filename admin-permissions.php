@@ -16,11 +16,14 @@ if (!$authHelper->isAuthenticated) {
     exit;
 }
 
-// Check if user has admin role
-$isAdmin = $authHelper->hasRole('admin');
+// Global admins manage everything; resource-admins may review the access
+// requests scoped to the resources they administer. The API enforces the
+// actual scoping — this gate only decides who the UI lets in.
+$isGlobalAdmin   = $authHelper->hasRole('admin');
+$isResourceAdmin = $authHelper->isResourceAdmin();
 
-// Redirect non-admins to dashboard
-if (!$isAdmin) {
+// Redirect users who are neither to the dashboard.
+if (!$isGlobalAdmin && !$isResourceAdmin) {
     header('Location: admin-dashboard.php');
     exit;
 }
@@ -50,6 +53,7 @@ if (!$isAdmin) {
         echo htmlspecialchars($managePermsDesc, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     ?></p>
 
+    <?php if ($isGlobalAdmin) : ?>
     <!-- Filter Controls -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -130,6 +134,7 @@ if (!$isAdmin) {
             </div>
         </div>
     </div>
+    <?php endif; ?>
 
     <!-- Access Requests Review Section -->
     <div class="card shadow mb-4">
@@ -262,6 +267,7 @@ if (!$isAdmin) {
         </a>
     </div>
 
+    <?php if ($isGlobalAdmin) : ?>
     <!-- Grant Permission Modal -->
     <div class="modal fade" id="grantModal" tabindex="-1" aria-labelledby="grantModalLabel">
         <div class="modal-dialog">
@@ -343,11 +349,13 @@ if (!$isAdmin) {
             </div>
         </div>
     </div>
+    <?php endif; ?>
 
     <!-- Config for JavaScript -->
     <script>
         window.AdminPermissionsConfig = {
             apiUrl: <?php echo json_encode($apiBaseUrl); ?>,
+            isGlobalAdmin: <?php echo json_encode($isGlobalAdmin); ?>,
             i18n: {
                 loading: <?php echo json_encode(_('Loading...')); ?>,
                 noPermissions: <?php echo json_encode(_('No permissions found.')); ?>,
