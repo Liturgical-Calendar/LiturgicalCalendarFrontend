@@ -691,9 +691,10 @@ import { Fga } from './fga';
 const exec = promisify(execFile);
 
 export async function truncateAppTables(): Promise<void> {
-    const apiPath = process.env.API_REPO_PATH || '../LiturgicalCalendarAPI';
+    // The active docker stack is the FRONTEND compose project (this repo root), not the API repo's.
+    // Run `docker compose exec` from the frontend repo root so it targets the running `db` service.
     const sql = 'TRUNCATE access_requests, audit_log, user_notification_state RESTART IDENTITY CASCADE;';
-    await exec('docker', ['compose', 'exec', '-T', 'db', 'psql', '-U', 'litcal', '-d', 'litcal', '-c', sql], { cwd: apiPath });
+    await exec('docker', ['compose', 'exec', '-T', 'db', 'psql', '-U', 'litcal', '-d', 'litcal', '-c', sql]);
 }
 
 export async function deleteAllSeededUsers(): Promise<void> {
