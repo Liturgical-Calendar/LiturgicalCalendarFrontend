@@ -39,17 +39,19 @@ export class ZitadelAdmin {
             email: { email: u.email, isVerified: true },
             password: { password: u.password, changeRequired: false },
         });
-        // Zitadel's search projection is eventually consistent; poll until the new
-        // user is visible to findUserIdByEmail before returning (max ~2.25 s).
-        // Fail fast if it never appears: a user invisible to search after the full
-        // window would otherwise be silently skipped by findUserIdByEmail-based
-        // cleanup, orphaning it.
-        const maxAttempts = 15;
+        // Zitadel's search projection (users14) is eventually consistent; poll until the
+        // new user is visible to findUserIdByEmail before returning. The window must
+        // absorb projection lag during the setup's delete-all-then-reseed churn, where a
+        // burst of user.removed/user.added events queues behind the search projection — a
+        // tight 2.25 s window flaked there. 40 × 250 ms = 10 s is generous but bounded.
+        // Fail fast if it never appears: a user invisible to search after the full window
+        // would otherwise be silently skipped by findUserIdByEmail-based cleanup, orphaning it.
+        const maxAttempts = 40;
         let found: string | null = null;
         for (let attempt = 0; attempt < maxAttempts; attempt++) {
             found = await this.findUserIdByEmail(u.email);
             if (found !== null) break;
-            await new Promise<void>(r => setTimeout(r, 150));
+            await new Promise<void>(r => setTimeout(r, 250));
         }
         if (found === null) {
             throw new Error(`createVerifiedUser: projection timed out — ${u.email} not visible to search after ${maxAttempts} attempts`);
@@ -65,6 +67,21 @@ export class ZitadelAdmin {
     }
 
     async deleteUser(userId: string): Promise<void> {
+        // Zitadel soft-deletes users but KEEPS the `usernames` unique-constraint reservation
+        // on the deleted user's username (which defaults to the email). A later re-create of
+        // the same email then fails with 409 "User already exists" even though no active user
+        // holds it — fragmenting the seed set on every delete→reseed cycle (the recurring
+        // rbac-setup flake). Rename the username to a unique throwaway BEFORE deleting, so the
+        // reservation that lingers is on the throwaway, freeing the real email for the next
+        // seed. (Verified: PUT /v2/users/human/{id} {username} releases the original reservation;
+        // re-creating the freed email then succeeds.) Best-effort: if the rename fails, fall
+        // through to the delete anyway — never worse than the un-renamed soft-delete.
+        const throwaway = `deleted-${userId}@litcal.invalid`;
+        try {
+            await this.req('PUT', `/v2/users/human/${userId}`, { username: throwaway });
+        } catch (e) {
+            console.warn(`deleteUser: username anonymize failed for ${userId} (constraint may linger): ${String(e)}`);
+        }
         await this.req('DELETE', `/v2/users/${userId}`);
         // Zitadel's search projection is eventually consistent; a brief pause ensures
         // callers can immediately call findUserIdByEmail and get a consistent result.
