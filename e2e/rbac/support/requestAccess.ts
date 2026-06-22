@@ -51,6 +51,12 @@ export async function submitAccessRequest(page: Page, opts: AccessRequestOptions
         await page.fill('#justification', opts.justification);
     }
 
+    // Wait for the initial request-list load to settle (the body shows a spinner until
+    // loadExistingRequests() renders the table or the empty state) so the count below
+    // reflects the rendered list, not the pre-fetch state — otherwise a user with an
+    // existing request could read a stale rowsBefore and flake the post-submit assertion.
+    await expect(page.locator('#existingRequestsBody .fa-spinner')).toHaveCount(0);
+
     // Capture the current request count, then submit and wait for the new pending request to
     // appear in the user's list. Success is durable here; the green toast is animated and is
     // cleared by the form reset that runs on success, so it's an unreliable signal.

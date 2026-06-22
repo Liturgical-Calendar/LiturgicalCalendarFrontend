@@ -41,6 +41,12 @@ export async function deleteAllSeededUsers(): Promise<void> {
  * (Untracked new files are not removed — scenario 10 edits existing calendar files.)
  */
 export async function gitRestoreApiData(): Promise<void> {
-    await exec('git', ['-C', API_REPO, 'checkout', '--', 'jsondata/sourcedata'], { timeout: 30000 })
-        .catch(() => {});
+    try {
+        await exec('git', ['-C', API_REPO, 'checkout', '--', 'jsondata/sourcedata'], { timeout: 30000 });
+    } catch (e) {
+        // A clean working tree exits 0 (no throw). A throw means a real failure (bad
+        // API_REPO_PATH, not a git repo, checkout error) that left scenario-10 edits
+        // unreverted — surface it rather than hiding a dirty tree across runs.
+        console.warn(`gitRestoreApiData: failed to restore API source data (edits may persist): ${String(e)}`);
+    }
 }
