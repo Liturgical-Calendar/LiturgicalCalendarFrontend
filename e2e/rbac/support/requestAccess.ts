@@ -15,6 +15,16 @@ import { expect, type Page } from '@playwright/test';
  *   - Justification: `#justification` (optional). Submit: `#submitBtn`.
  *   - Success: `#formAlerts .alert-success`; the new pending request also appears in
  *     `#existingRequestsBody` as `tr[id^="request-"]`.
+ *
+ * Resubmit flow (for a rejected request):
+ *   - The existing-requests table renders a `.resubmit-btn[data-request-id]` button
+ *     only when status === 'rejected'.
+ *   - Clicking it calls openResubmitForm() which pre-fills the form and switches
+ *     #submitBtn to Resubmit mode.
+ *   - Clicking #submitBtn then POSTs to /auth/access-requests/{id}/resubmit, which
+ *     returns the SAME request to pending (does NOT add a new row).
+ *   - Durable success signal: `.resubmit-btn` count drops to 0 (pending rows have no
+ *     resubmit button).
  */
 export interface AccessRequestOptions {
     requestedRole: string; // e.g. 'calendar_editor'
@@ -64,4 +74,34 @@ export async function submitAccessRequest(page: Page, opts: AccessRequestOptions
     const rowsBefore = await requestRows.count();
     await page.click('#submitBtn');
     await expect(requestRows).toHaveCount(rowsBefore + 1);
+}
+
+/**
+ * Resubmit the user's single rejected access request via the real UI flow on
+ * permission-requests.php. Navigates fresh, clicks the `.resubmit-btn`, then
+ * clicks `#submitBtn` (now in Resubmit mode). Waits for the row's status to
+ * return to pending (durable: `.resubmit-btn` disappears because only rejected
+ * rows carry it).
+ *
+ * Precondition: exactly one rejected request exists for this user (no pending
+ * requests). If the user has no rejected request the helper will throw with a
+ * meaningful Playwright assertion error.
+ */
+export async function resubmitAccessRequest(page: Page): Promise<void> {
+    await page.goto('/permission-requests.php');
+
+    // Wait for the existing-requests list to finish loading.
+    await expect(page.locator('#existingRequestsBody .fa-spinner')).toHaveCount(0);
+
+    // Click the resubmit button on the rejected row.
+    const resubmitBtn = page.locator('#existingRequestsBody .resubmit-btn').first();
+    await expect(resubmitBtn).toBeVisible();
+    await resubmitBtn.click();
+
+    // The form is now in resubmit mode; #submitBtn label changed to "Resubmit".
+    // Click it to POST /auth/access-requests/{id}/resubmit.
+    await page.click('#submitBtn');
+
+    // Durable success: the resubmit button disappears (the row is now pending, not rejected).
+    await expect(page.locator('#existingRequestsBody .resubmit-btn')).toHaveCount(0);
 }

@@ -347,7 +347,13 @@ class AuthHelper
             return $this->adminScopesResult = ['is_resource_admin' => false, 'admin_scopes' => []];
         }
 
-        $apiBaseUrl   = ApiConfig::getInstance()->apiBaseUrl;
+        // Prefer API_INTERNAL_URL for server-side Guzzle calls so that in Docker
+        // environments the request routes through the internal network (e.g. to
+        // 'litcal-api') rather than to the container's own loopback. This mirrors the
+        // ZITADEL_INTERNAL_URL pattern used by OidcClient. Falls back to the public
+        // apiBaseUrl when no internal override is configured.
+        $internalUrl  = $_ENV['API_INTERNAL_URL'] ?? getenv('API_INTERNAL_URL') ?: null;
+        $apiBaseUrl   = $internalUrl ? rtrim($internalUrl, '/') : ApiConfig::getInstance()->apiBaseUrl;
         $cookieHeader = self::buildCookieHeader();
 
         return $this->adminScopesResult = self::fetchAdminScopes($apiBaseUrl, $cookieHeader);
