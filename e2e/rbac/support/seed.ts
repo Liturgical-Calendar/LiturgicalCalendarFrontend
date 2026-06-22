@@ -116,3 +116,25 @@ export async function loginAndSaveState(id: string, loginClientToken: string): P
     fs.mkdirSync(path.dirname(authPath), { recursive: true });
     fs.writeFileSync(authPath, JSON.stringify(storageState, null, 2));
 }
+
+/**
+ * Provision a user on demand within a spec's precondition: create the Zitadel account + role
+ * (+ admin FGA tuple, for admin-relation users) AND write its login storageState so
+ * `actingAs(browser, userKey)` works. Factors the per-user logic of rbac.setup.ts, minting and
+ * deleting its own ephemeral login-client PAT. Use this for scenarios that need a
+ * REGISTRATION_USER (e.g. cei-admin) to already exist as a precondition — those users are not
+ * seeded by rbac.setup.ts. Idempotent on the user (seedUser deletes-existing-first).
+ */
+export async function seedAndLogin(userKey: string): Promise<string> {
+    const z = new ZitadelAdmin();
+    const loginClientUserId = await z.findUserIdByUsername('login-client');
+    if (!loginClientUserId) throw new Error('seedAndLogin: login-client machine user not found in Zitadel');
+    const pat = await z.mintPat(loginClientUserId);
+    try {
+        const userId = await seedUser(userKey);
+        await loginAndSaveState(userKey, pat.token);
+        return userId;
+    } finally {
+        await z.deletePat(loginClientUserId, pat.tokenId).catch(() => {});
+    }
+}
