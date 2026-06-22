@@ -44,7 +44,7 @@ export default defineConfig({
         // Setup project to authenticate
         {
             name: 'setup',
-            testMatch: /.*\.setup\.ts/,
+            testMatch: /auth\.setup\.ts/,
         },
         {
             name: 'chromium',
@@ -54,6 +54,7 @@ export default defineConfig({
                 storageState: 'e2e/.auth/user.json',
             },
             dependencies: ['setup'],
+            testIgnore: /rbac\//,
         },
         {
             name: 'firefox',
@@ -62,6 +63,7 @@ export default defineConfig({
                 storageState: 'e2e/.auth/user.json',
             },
             dependencies: ['setup'],
+            testIgnore: /rbac\//,
         },
         {
             name: 'webkit',
@@ -70,6 +72,23 @@ export default defineConfig({
                 storageState: 'e2e/.auth/user.json',
             },
             dependencies: ['setup'],
+            testIgnore: /rbac\//,
+        },
+        {
+            // Unit/integration tests for the support modules (users/zitadel/fga/seed/cleanup).
+            // They run against the live stack but do NOT need the full seed, so no dependency.
+            name: 'rbac-support',
+            testMatch: /rbac\/support\/.*\.test\.ts/,
+        },
+        {
+            name: 'rbac-setup',
+            testMatch: /rbac\/rbac\.setup\.ts/,
+        },
+        {
+            name: 'rbac',
+            testMatch: /rbac\/.*\.spec\.ts/,
+            use: { ...devices['Desktop Chrome'] },
+            dependencies: ['rbac-setup'],
         },
     ],
 

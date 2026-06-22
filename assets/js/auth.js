@@ -65,6 +65,18 @@ const Auth = {
     _isLoggingOut: false,
 
     /**
+     * Cached resource-admin result for this page load (null = not yet fetched).
+     * @private
+     */
+    _resourceAdminCache: null,
+
+    /**
+     * In-flight resource-admin fetch, to dedupe concurrent callers.
+     * @private
+     */
+    _resourceAdminPromise: null,
+
+    /**
      * Validate that BaseUrl is defined before making API calls
      * @private
      * @param {string} methodName - Name of the calling method for error messages
@@ -785,6 +797,60 @@ const Auth = {
 
         const roles = this._cachedAuthState.roles;
         return roles && roles.includes(role);
+    },
+
+    /**
+     * Check whether the caller is an OpenFGA resource-admin (holds an `admin`
+     * tuple on at least one resource) via GET /auth/admin-scopes.
+     *
+     * Result is cached for the page load and concurrent calls are deduped.
+     * Fails closed to false on any network/API error.
+     *
+     * @returns {Promise<boolean>} True if the caller is a resource-admin
+     */
+    async isResourceAdmin() {
+        if (this._resourceAdminCache !== null) {
+            return this._resourceAdminCache;
+        }
+        if (this._resourceAdminPromise !== null) {
+            return this._resourceAdminPromise;
+        }
+        if (!this._validateBaseUrl('isResourceAdmin')) {
+            return false;
+        }
+
+        this._resourceAdminPromise = (async () => {
+            // Abort after 5s so a stalled endpoint can't hang the promise — and
+            // every concurrent caller awaiting it — indefinitely.
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000);
+            try {
+                const response = await fetch(`${BaseUrl}/auth/admin-scopes`, {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: { 'Accept': 'application/json' },
+                    signal: controller.signal
+                });
+                if (!response.ok) {
+                    return false;
+                }
+                const data = await response.json();
+                return Boolean(data.is_resource_admin);
+            } catch (error) {
+                // AbortError (timeout) and network/parse errors all fail closed.
+                console.error('Auth.isResourceAdmin failed:', error);
+                return false;
+            } finally {
+                clearTimeout(timeoutId);
+            }
+        })();
+
+        try {
+            this._resourceAdminCache = await this._resourceAdminPromise;
+            return this._resourceAdminCache;
+        } finally {
+            this._resourceAdminPromise = null;
+        }
     },
 
     /**

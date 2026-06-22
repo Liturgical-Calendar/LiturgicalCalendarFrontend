@@ -27,6 +27,11 @@
         },
         "files": ["src/pgettext.php"]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "LiturgicalCalendar\\Frontend\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "John R. D'Orazio",
@@ -43,8 +48,8 @@
         ],
         "lint": "phpcs || ( echo 'Linting failed. Please run composer lint:fix to fix the linting issues.' && exit 1 )",
         "lint:fix": "bash scripts/lint-fix.sh",
-        "lint:md": "npx --yes markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#vendor\" \"#examples\" \"#.yarn\"",
-        "lint:md:fix": "npx --yes markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#vendor\" \"#examples\" \"#.yarn\" --fix",
+        "lint:md": "npx --yes markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#vendor\" \"#examples\" \"#.yarn\" \"#.superpowers\"",
+        "lint:md:fix": "npx --yes markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#vendor\" \"#examples\" \"#.yarn\" \"#.superpowers\" --fix",
         "analyse": "phpstan analyse",
         "parallel-lint": "parallel-lint --exclude .git --exclude vendor .",
         "test": "phpunit tests"

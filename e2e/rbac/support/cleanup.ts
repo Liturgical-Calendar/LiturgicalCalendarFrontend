@@ -1,0 +1,55 @@
+import { execFile } from 'child_process';
+import { promisify } from 'util';
+import * as path from 'path';
+import { USERS } from './users';
+import { ZitadelAdmin } from './zitadel';
+import { Fga } from './fga';
+
+const exec = promisify(execFile);
+
+// The local stack bind-mounts the API repo, so calendar edits made via extending.php land in
+// the host API repo's jsondata/sourcedata. Override with API_REPO_PATH if your checkout differs.
+const API_REPO = process.env.API_REPO_PATH || path.resolve(__dirname, '../../../../LiturgicalCalendarAPI');
+
+export async function truncateAppTables(): Promise<void> {
+    // The active docker stack is the FRONTEND compose project (this repo root), not the API repo's.
+    // Run `docker compose exec` from the frontend repo root so it targets the running `db` service.
+    const sql = 'TRUNCATE access_requests, audit_log, user_notification_state RESTART IDENTITY CASCADE;';
+    // 30s timeout so a stalled docker process can't hang the cleanup pipeline.
+    await exec('docker', ['compose', 'exec', '-T', 'db', 'psql', '-U', 'litcal', '-d', 'litcal', '-c', sql], { timeout: 30000 });
+}
+
+export async function deleteAllSeededUsers(): Promise<void> {
+    const z = new ZitadelAdmin();
+    const f = new Fga();
+    for (const id of Object.keys(USERS)) {
+        const u = USERS[id];
+        const zid = await z.findUserIdByEmail(u.email);
+        if (!zid) continue;
+        // Tolerant of tuples a scenario dynamically granted/revoked (Fga.delete already swallows
+        // not-found), but log real failures rather than swallowing them so a deletion that
+        // genuinely fails (and could contaminate later specs) is visible — while still letting
+        // the rest of the teardown continue.
+        if (u.fga) {
+            await f.delete(`user:${zid}`, u.fga.relation, `${u.fga.objectType}:${u.fga.objectId}`)
+                .catch((e) => console.warn(`cleanup: failed to delete tuple for ${u.email}:`, String(e)));
+        }
+        await z.deleteUser(zid).catch((e) => console.warn(`cleanup: failed to delete user ${u.email}:`, String(e)));
+    }
+}
+
+/**
+ * Revert calendar source-data edits made by scenario 10 (scoped data editing). `git checkout`
+ * discards unstaged modifications under jsondata/sourcedata; tolerant of nothing-to-restore.
+ * (Untracked new files are not removed — scenario 10 edits existing calendar files.)
+ */
+export async function gitRestoreApiData(): Promise<void> {
+    try {
+        await exec('git', ['-C', API_REPO, 'checkout', '--', 'jsondata/sourcedata'], { timeout: 30000 });
+    } catch (e) {
+        // A clean working tree exits 0 (no throw). A throw means a real failure (bad
+        // API_REPO_PATH, not a git repo, checkout error) that left scenario-10 edits
+        // unreverted — surface it rather than hiding a dirty tree across runs.
+        console.warn(`gitRestoreApiData: failed to restore API source data (edits may persist): ${String(e)}`);
+    }
+}

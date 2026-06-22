@@ -131,6 +131,7 @@ api/*
 !src/*.php
 !dist/*.php
 !includes/*.php
+!tests/*.php
 
 .php-ini
 .php-version
@@ -145,6 +146,7 @@ phpstan.neon
 !phpstan.neon.dist
 phpunit.xml
 !phpunit.xml.dist
+.phpunit.cache/
 /assets/json/
 
 /cache/
