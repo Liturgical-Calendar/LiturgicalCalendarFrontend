@@ -55,33 +55,28 @@ function statusBodySelector(status: string): string {
 
 /**
  * Navigate to the admin access-requests page, activate the given status tab,
- * and wait for the list to finish loading.
+ * and wait for the list XHR to complete — not just the spinner, which Bootstrap's
+ * shown.bs.tab can clear before the fetch resolves.
  *
- * Uses DOM-only synchronisation (network-idle + spinner-gone) rather than
- * waitForResponse: the XHR to /admin/access-requests consistently fires and
- * delivers data, but Playwright's waitForResponse does not intercept it in the
- * Docker test stack (likely due to the internal Docker bridge URL rewrite).
- * networkidle waits for all in-flight XHRs to settle; the spinner check then
- * confirms that loadAccessRequests() finished rendering.
- *
- * Note: loadAccessRequests() issues a SINGLE fetch for all statuses at once;
- * tab clicks only toggle visibility and do not trigger additional requests.
+ * loadAccessRequests() issues a SINGLE GET /admin/access-requests for all statuses
+ * on page init, so register the listener BEFORE goto to avoid missing it. Match on
+ * the GET method (not status 200) so even a non-200 resolves the wait rather than
+ * hanging. (A resource-admin only reaches this page — and fires this XHR — when
+ * AuthHelper resolves isResourceAdmin() true; that server-side admin-scopes call
+ * needs API_INTERNAL_URL in Docker, else the page redirects and no XHR fires.)
  */
 async function gotoAndWaitList(page: Page, status: string): Promise<void> {
-    await page.goto(PAGE_PATH, { waitUntil: 'domcontentloaded' });
+    const responseReady = page.waitForResponse(
+        r => r.url().includes('/admin/access-requests') && r.request().method() === 'GET',
+    );
+    await page.goto(PAGE_PATH);
     // For non-pending tabs, activate the correct tab so its body is visible
     // before we start reading the DOM (tab click is purely cosmetic, no fetch).
     if (status !== 'pending') {
         await page.click(statusTabSelector(status));
     }
-    // Wait for all XHRs fired during page init to settle, then confirm the
-    // target-status spinner is gone. Use an explicit 30 s timeout: the API can
-    // be slow under the test Docker stack.
-    await page.waitForLoadState('networkidle', { timeout: 30000 });
-    await expect(page.locator(`${statusBodySelector(status)} .fa-spinner`)).toHaveCount(
-        0,
-        { timeout: 30000 },
-    );
+    await responseReady;
+    await expect(page.locator(`${statusBodySelector(status)} .fa-spinner`)).toHaveCount(0);
 }
 
 /**
