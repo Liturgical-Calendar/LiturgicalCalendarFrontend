@@ -27,7 +27,12 @@ export async function seedUser(id: string): Promise<string> {
     }
     const userId = await z.createVerifiedUser({ email: u.email, password: u.password, firstName: u.id, lastName: 'E2E' });
     await z.grantProjectRole(userId, u.role);
-    if (u.fga) await f.write(`user:${userId}`, u.fga.relation, `${u.fga.objectType}:${u.fga.objectId}`);
+    // Seed the FGA tuple only for resource-admins. Editor grants are earned via the
+    // request-access UI in scenarios (the approval outcome), seeded per-spec where a
+    // scenario needs the grant as a precondition (see support/grant.ts).
+    if (u.fga?.relation === 'admin') {
+        await f.write(`user:${userId}`, u.fga.relation, `${u.fga.objectType}:${u.fga.objectId}`);
+    }
     return userId;
 }
 
