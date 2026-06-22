@@ -82,7 +82,16 @@ export class ZitadelAdmin {
         } catch (e) {
             console.warn(`deleteUser: username anonymize failed for ${userId} (constraint may linger): ${String(e)}`);
         }
-        await this.req('DELETE', `/v2/users/${userId}`);
+        try {
+            await this.req('DELETE', `/v2/users/${userId}`);
+        } catch (e) {
+            // 404 on DELETE means the user was already removed from the command store
+            // (possibly by a concurrent cleanup, or the search projection shows a stale
+            // ACTIVE entry whose aggregate was already deleted). Treat as a no-op: the
+            // goal (user absent) is already satisfied. Re-throw everything else.
+            if (!String(e).includes('-> 404:')) throw e;
+            console.warn(`deleteUser: DELETE returned 404 for ${userId} (already removed; projection drift)`);
+        }
         // Zitadel's search projection is eventually consistent; a brief pause ensures
         // callers can immediately call findUserIdByEmail and get a consistent result.
         await new Promise<void>(r => setTimeout(r, 200));
