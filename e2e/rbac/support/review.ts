@@ -55,18 +55,28 @@ function statusBodySelector(status: string): string {
 
 /**
  * Navigate to the admin access-requests page, activate the given status tab,
- * and wait for the list to finish loading (spinner disappears).
+ * and wait for the list to finish loading — anchored to the network response
+ * AND the spinner disappearing (belt-and-suspenders against the race where
+ * Bootstrap's shown.bs.tab can clear the spinner before the XHR resolves).
+ *
+ * Note: loadAccessRequests() issues a SINGLE fetch for all statuses at once;
+ * tab clicks only toggle visibility and do not trigger additional requests.
+ * We therefore always register the listener BEFORE page.goto to avoid missing
+ * the one fetch that fires during page initialisation.
  */
 async function gotoAndWaitList(page: Page, status: string): Promise<void> {
-    // Always navigate fresh so we read the current DB state.
+    // Register before navigation so we never miss the single all-statuses fetch.
+    const responseReady = page.waitForResponse(
+        r => r.url().includes('/admin/access-requests') && r.status() === 200,
+    );
     await page.goto(PAGE_PATH);
-
-    // The default active tab is 'pending'. For any other status, click its tab.
+    // For non-pending tabs, activate the correct tab so its body is visible
+    // before we start reading the DOM (tab click is purely cosmetic, no fetch).
     if (status !== 'pending') {
         await page.click(statusTabSelector(status));
     }
-
-    // Wait for the spinner inside the target body to disappear.
+    await responseReady;
+    // Belt-and-suspenders: confirm the target tab's spinner is also gone.
     await expect(page.locator(`${statusBodySelector(status)} .fa-spinner`)).toHaveCount(0);
 }
 
@@ -82,23 +92,24 @@ export async function requestVisible(
     await gotoAndWaitList(page, status);
     const count = await page
         .locator(`${statusBodySelector(status)} tr`)
-        .filter({ has: page.locator(`td small.text-muted:text-is("${q.requesterEmail}")`) })
+        .filter({ has: page.locator(`td:first-child small.text-muted:text-is("${q.requesterEmail}")`) })
         .count();
     return count > 0;
 }
 
 /**
- * Return the table-row Locator for a specific requester in the pending list.
- * Assumes the page is already on admin-permissions.php with the pending list
- * loaded; call `requestVisible` or `gotoAndWaitList` first.
+ * Return the table-row Locator for a specific requester in the given status list
+ * (defaults to 'pending'). Assumes the page is already on admin-permissions.php
+ * with the appropriate tab loaded; call `requestVisible` or `gotoAndWaitList` first.
  */
 export async function findRequestRow(
     page: Page,
-    q: { requesterEmail: string },
+    q: { requesterEmail: string; status?: string },
 ): Promise<Locator> {
+    const status = q.status ?? 'pending';
     return page
-        .locator(`${statusBodySelector('pending')} tr`)
-        .filter({ has: page.locator(`td small.text-muted:text-is("${q.requesterEmail}")`) });
+        .locator(`${statusBodySelector(status)} tr`)
+        .filter({ has: page.locator(`td:first-child small.text-muted:text-is("${q.requesterEmail}")`) });
 }
 
 /**
@@ -118,9 +129,10 @@ export async function actOnRequest(
     await gotoAndWaitList(page, fromStatus);
 
     // Find the row and click its review button.
+    // Scope to the first cell so the justification cell's small.text-muted doesn't match.
     const row = page
         .locator(`${statusBodySelector(fromStatus)} tr`)
-        .filter({ has: page.locator(`td small.text-muted:text-is("${q.requesterEmail}")`) });
+        .filter({ has: page.locator(`td:first-child small.text-muted:text-is("${q.requesterEmail}")`) });
     await expect(row).toBeVisible();
     await row.locator('.permReq-review-btn').click();
 
@@ -133,12 +145,14 @@ export async function actOnRequest(
         await page.fill('#permReqReviewNotes', q.notes);
     }
 
-    // Click the action button.
+    // Click the action button — assert it is visible first so an action that is
+    // invalid for the row's current status fails with a meaningful message.
     const actionBtnSelector: Record<string, string> = {
         approve: '#permReqApproveBtn',
         reject: '#permReqRejectBtn',
         revoke: '#permReqRevokeBtn',
     };
+    await expect(page.locator(actionBtnSelector[q.action])).toBeVisible();
     await page.click(actionBtnSelector[q.action]);
 
     // Wait for the modal to close (JS hides it after the 1500 ms success delay).
