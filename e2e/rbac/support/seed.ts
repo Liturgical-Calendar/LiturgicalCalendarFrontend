@@ -37,11 +37,17 @@ export async function seedUser(id: string): Promise<string> {
 }
 
 /**
- * Obtain a Zitadel OIDC access token (JWT) for a user via the headless session→PKCE flow.
+ * Obtain Zitadel OIDC tokens for a user via the headless session→PKCE flow.
  * `loginClientToken` is a session-capable PAT (minted for the `login-client` user in setup).
- * Returns the access_token to be set as the `litcal_access_token` cookie.
+ * Returns both the access_token and id_token; production's auth/callback.php sets BOTH as
+ * cookies, and AuthHelper's OIDC mode reads user claims (email_verified, name, …) from the
+ * id_token in preference to the access token — so the harness must carry the id_token too.
  */
-export async function oidcLogin(email: string, password: string, loginClientToken: string): Promise<string> {
+export async function oidcLogin(
+    email: string,
+    password: string,
+    loginClientToken: string,
+): Promise<{ accessToken: string; idToken: string | null }> {
     const Hl = { Authorization: `Bearer ${loginClientToken}`, 'Content-Type': 'application/json', Host: HOST };
     const json = async (r: Response) => { const t = await r.text(); if (!r.ok) throw new Error(`${r.url} -> ${r.status}: ${t}`); return JSON.parse(t); };
 
@@ -79,7 +85,7 @@ export async function oidcLogin(email: string, password: string, loginClientToke
         method: 'POST', headers: { Host: HOST, 'Content-Type': 'application/x-www-form-urlencoded' }, body: form,
     }));
     if (!tok.access_token) throw new Error(`token exchange returned no access_token: ${JSON.stringify(tok)}`);
-    return tok.access_token as string;
+    return { accessToken: tok.access_token as string, idToken: (tok.id_token ?? null) as string | null };
 }
 
 // state param need only be opaque/unique-ish; avoid Math.random for determinism-friendliness.
@@ -87,17 +93,23 @@ function id_state(): string { return b64url(crypto.randomBytes(8)); }
 
 /**
  * Log a user in headlessly and write a Playwright storageState file containing the
- * `litcal_access_token` cookie. Cookie domain is `localhost` (port-agnostic) so it is sent to
- * both the frontend (:3000) and the API (:8000). The real cookie is HttpOnly.
+ * `litcal_access_token` AND `litcal_id_token` cookies — mirroring production's
+ * auth/callback.php, which sets both. AuthHelper's OIDC mode prefers the id_token for
+ * user claims (email_verified, name, …), so omitting it leaves seeded users looking
+ * email-unverified (blocked from email-verified-gated pages like permission-requests.php).
+ * Cookie domain is `localhost` (port-agnostic) so cookies reach both the frontend (:3000)
+ * and the API (:8000). The real cookies are HttpOnly.
  */
 export async function loginAndSaveState(id: string, loginClientToken: string): Promise<void> {
     const u = USERS[id];
-    const accessToken = await oidcLogin(u.email, u.password, loginClientToken);
+    const { accessToken, idToken } = await oidcLogin(u.email, u.password, loginClientToken);
+    const cookieBase = {
+        domain: 'localhost', path: '/', expires: -1, httpOnly: true, secure: false, sameSite: 'Lax' as const,
+    };
+    const cookies = [{ name: 'litcal_access_token', value: accessToken, ...cookieBase }];
+    if (idToken) cookies.push({ name: 'litcal_id_token', value: idToken, ...cookieBase });
     const storageState = {
-        cookies: [{
-            name: 'litcal_access_token', value: accessToken, domain: 'localhost', path: '/',
-            expires: -1, httpOnly: true, secure: false, sameSite: 'Lax' as const,
-        }],
+        cookies,
         origins: [],
     };
     const authPath = path.join(__dirname, '..', '..', '.auth', `${id}.json`);
