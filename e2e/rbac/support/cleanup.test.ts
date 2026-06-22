@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { truncateAppTables, deleteAllSeededUsers } from './cleanup';
+import { truncateAppTables, deleteAllSeededUsers, gitRestoreApiData } from './cleanup';
 import { seedUser } from './seed';
 import { ZitadelAdmin } from './zitadel';
 import { USERS } from './users';
@@ -12,4 +12,10 @@ test('deleteAllSeededUsers removes a seeded user', async () => {
 
 test('truncateAppTables runs without error', async () => {
     await truncateAppTables();
+});
+
+test('gitRestoreApiData is exported and runs without throwing', async () => {
+    expect(typeof gitRestoreApiData).toBe('function');
+    // Tolerant no-op when the API repo's source data has no pending edits.
+    await gitRestoreApiData();
 });
