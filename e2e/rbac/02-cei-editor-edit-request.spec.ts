@@ -140,20 +140,27 @@ test('02 — cei-editor edit@IT: scoped review lifecycle', async ({ browser }) =
 });
 
 test.afterEach(async () => {
-    // Remove app-table rows created by this scenario.
-    await truncateAppTables();
-
-    // Revoke any FGA editor tuple that the approval may have written for cei-editor.
-    await revokeScope('cei-editor');
-
-    // Delete cei-admin — it was created on-demand by seedAndLogin and must be torn
-    // down so it does not bleed into other specs.
+    // Tear down everything this scenario created. Run every step regardless of individual
+    // failures (a thrown truncate must not skip the identity/tuple cleanup, or state leaks
+    // into other specs), and surface failures rather than swallowing them.
     const z = new ZitadelAdmin();
-    const ceiAdminId = await z.findUserIdByEmail(USERS['cei-admin'].email);
-    if (ceiAdminId) {
-        await z.deleteUser(ceiAdminId).catch(() => {});
-        await new Fga()
-            .delete(`user:${ceiAdminId}`, 'admin', 'national_calendar:IT')
-            .catch(() => {});
+    const ceiAdminId = await z.findUserIdByEmail(USERS['cei-admin'].email).catch(() => null);
+
+    const results = await Promise.allSettled([
+        truncateAppTables(), // app-table rows created by this scenario
+        revokeScope('cei-editor'), // FGA editor tuple the approval may have written
+        // cei-admin was created on-demand by seedAndLogin — delete it + its admin tuple.
+        ceiAdminId ? z.deleteUser(ceiAdminId) : Promise.resolve(),
+        ceiAdminId
+            ? new Fga().delete(`user:${ceiAdminId}`, 'admin', 'national_calendar:IT')
+            : Promise.resolve(),
+    ]);
+
+    const failures = results.filter((r) => r.status === 'rejected');
+    if (failures.length > 0) {
+        console.warn(
+            'scenario 02 afterEach: cleanup failures:',
+            failures.map((f) => String((f as PromiseRejectedResult).reason)),
+        );
     }
 });

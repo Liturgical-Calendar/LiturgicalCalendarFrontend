@@ -71,5 +71,8 @@ function extractVerificationUrl(body: string): string | null {
 }
 
 function decodeHtmlEntities(s: string): string {
-    return s.replace(/&amp;/g, '&').replace(/&#38;/g, '&');
+    // Single-pass replace of the two HTML encodings of '&'. Chained .replace() calls can
+    // double-unescape (e.g. "&amp;#38;" -> "&#38;" -> "&"); one alternation pass over the
+    // original string decodes each occurrence exactly once.
+    return s.replace(/&(amp|#38);/g, '&');
 }

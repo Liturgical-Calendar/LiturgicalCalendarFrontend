@@ -135,6 +135,10 @@ export async function seedAndLogin(userKey: string): Promise<string> {
         await loginAndSaveState(userKey, pat.token);
         return userId;
     } finally {
-        await z.deletePat(loginClientUserId, pat.tokenId).catch(() => {});
+        // Surface (don't swallow) a PAT-revocation failure so a leaked ephemeral token is
+        // visible, while still not masking a real error from the seeding above.
+        await z.deletePat(loginClientUserId, pat.tokenId).catch((e) =>
+            console.warn('seedAndLogin: failed to delete ephemeral PAT (token may persist):', String(e)),
+        );
     }
 }

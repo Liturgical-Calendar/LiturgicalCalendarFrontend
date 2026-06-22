@@ -27,11 +27,14 @@ export async function deleteAllSeededUsers(): Promise<void> {
         const zid = await z.findUserIdByEmail(u.email);
         if (!zid) continue;
         // Tolerant of tuples a scenario dynamically granted/revoked (Fga.delete already swallows
-        // not-found, but guard so one stray tuple can't abort the whole teardown).
+        // not-found), but log real failures rather than swallowing them so a deletion that
+        // genuinely fails (and could contaminate later specs) is visible — while still letting
+        // the rest of the teardown continue.
         if (u.fga) {
-            await f.delete(`user:${zid}`, u.fga.relation, `${u.fga.objectType}:${u.fga.objectId}`).catch(() => {});
+            await f.delete(`user:${zid}`, u.fga.relation, `${u.fga.objectType}:${u.fga.objectId}`)
+                .catch((e) => console.warn(`cleanup: failed to delete tuple for ${u.email}:`, String(e)));
         }
-        await z.deleteUser(zid).catch(() => {});
+        await z.deleteUser(zid).catch((e) => console.warn(`cleanup: failed to delete user ${u.email}:`, String(e)));
     }
 }
 
