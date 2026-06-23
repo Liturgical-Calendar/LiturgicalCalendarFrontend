@@ -12,16 +12,20 @@ import { seedAndLogin } from './support/seed';
  * Scenario 08 — negative authorization: out-of-scope resource-admin (cei-admin / admin@IT)
  *
  * Proves that an out-of-scope resource-admin cannot:
- *   (a) act on a USA-scoped pending access request via the API the UI uses —
- *       POST /admin/access-requests/{id}/approve|reject|revoke → 403 for all three
+ *   (a) act on a USA-scoped PENDING access request via the API the UI uses —
+ *       approve → 403, reject → 403, revoke → 400 (for revoke on a PENDING request the
+ *       state guard fires before the scope check); all three are non-2xx
+ *   (a′) revoke an APPROVED USA-scoped request → 403 — this reaches the authorization
+ *       branch that the pending-revoke 400 cannot exercise
  *   (b) see the USA-scoped request in their own review list
  *
  * Note (c): extending.php USA-edit denial (the plan's scope-c action-layer check) is
- *   the dedicated focus of scenario 10. The three 403s from (a) satisfy the "denied
- *   mutating action" requirement for this spec.
+ *   the dedicated focus of scenario 10. The denied mutating actions above satisfy the
+ *   "denied mutating action" requirement for this spec.
  *
- * Requester: grc-editor (editor@general_roman_calendar:temporale, no US scope).
- * The pending request (editor@national_calendar:US) is NEVER approved in this spec.
+ * Requester: grc-editor (editor@general_roman_calendar:temporale, no US scope). The
+ * request is approved by super-admin only at the end (Step 6) to set up the (a′) check;
+ * the resulting editor@national_calendar:US tuple is torn down in afterEach.
  *
  * Preconditions (seeded by rbac-setup):
  *   - super-admin: Zitadel admin role, no FGA scope (global reviewer)
@@ -150,6 +154,43 @@ test('08 — cei-admin cannot act on (403) or see USA-scoped access request', as
     } finally {
         await ceiadm2.context.close();
     }
+
+    // ── Step 6: super-admin APPROVES the request (state now permits revoke) ───
+    // Precondition for the real revoke-authz check below: a PENDING revoke is rejected on
+    // STATE (400, Step 3) before the scope check ever runs; only an APPROVED request reaches
+    // the authorization branch.
+    const saApprove = await actingAs(browser, 'super-admin');
+    try {
+        const r = await saApprove.page.request.post(
+            `${API_BASE}/admin/access-requests/${encodeURIComponent(reqId)}/approve`,
+            { headers: { Accept: 'application/json', 'Content-Type': 'application/json' }, data: { notes: 'ok' } },
+        );
+        expect(r.ok(), `super-admin approve should succeed; got ${r.status()}: ${await r.text()}`).toBe(true);
+    } finally {
+        await saApprove.context.close();
+    }
+    // Sanity: the approval granted grc-editor editor@national_calendar:US, so the request is
+    // genuinely APPROVED — the revoke below exercises the authz branch, not the state guard.
+    const grcId = await new ZitadelAdmin().findUserIdByEmail(USERS['grc-editor'].email);
+    expect(await new Fga().check(`user:${grcId}`, 'editor', 'national_calendar:US')).toBe(true);
+
+    // ── Step 7: (a′) cei-admin revokes the APPROVED request → 403 by SCOPE ────
+    // With the state guard satisfied (approved), the API reaches the authorization check,
+    // which denies out-of-scope cei-admin (admin@IT, not US) with 403 — the revoke-authz
+    // branch the pending-request 400 in Step 3 could not exercise.
+    const ceiadm3 = await actingAs(browser, 'cei-admin');
+    try {
+        const revokeApproved = await ceiadm3.page.request.post(
+            `${API_BASE}/admin/access-requests/${encodeURIComponent(reqId)}/revoke`,
+            { headers: { Accept: 'application/json', 'Content-Type': 'application/json' }, data: { notes: 'x' } },
+        );
+        expect(
+            revokeApproved.status(),
+            `revoke of an APPROVED request by out-of-scope cei-admin must hit the authz check → 403; got ${revokeApproved.status()}: ${await revokeApproved.text()}`,
+        ).toBe(403);
+    } finally {
+        await ceiadm3.context.close();
+    }
 });
 
 test.afterEach(async () => {
@@ -160,14 +201,18 @@ test.afterEach(async () => {
     const f = new Fga();
 
     const ceiAdminId = await z.findUserIdByEmail(USERS['cei-admin'].email).catch(() => null);
+    const grcEditorId = await z.findUserIdByEmail(USERS['grc-editor'].email).catch(() => null);
 
     await settleCleanup('scenario 08 afterEach', [
         truncateAppTables(), // access_requests + audit_log rows created by this scenario
-        // The request was never approved — no editor@US FGA tuple was written for grc-editor.
         // cei-admin was created on-demand by seedAndLogin — delete it + its admin@IT tuple.
         ceiAdminId ? z.deleteUser(ceiAdminId) : Promise.resolve(),
         ceiAdminId
             ? f.delete(`user:${ceiAdminId}`, 'admin', 'national_calendar:IT')
+            : Promise.resolve(),
+        // Step 6 approved the request → grc-editor earned editor@national_calendar:US; revoke it.
+        grcEditorId
+            ? f.delete(`user:${grcEditorId}`, 'editor', 'national_calendar:US')
             : Promise.resolve(),
     ]);
 });

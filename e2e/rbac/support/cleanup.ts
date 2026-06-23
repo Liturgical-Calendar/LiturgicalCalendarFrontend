@@ -44,14 +44,12 @@ export async function deleteAllSeededUsers(): Promise<void> {
  * (Untracked new files are not removed — scenario 10 edits existing calendar files.)
  */
 export async function gitRestoreApiData(): Promise<void> {
-    try {
-        await exec('git', ['-C', API_REPO, 'checkout', '--', 'jsondata/sourcedata'], { timeout: 30000 });
-    } catch (e) {
-        // A clean working tree exits 0 (no throw). A throw means a real failure (bad
-        // API_REPO_PATH, not a git repo, checkout error) that left scenario-10 edits
-        // unreverted — surface it rather than hiding a dirty tree across runs.
-        console.warn(`gitRestoreApiData: failed to restore API source data (edits may persist): ${String(e)}`);
-    }
+    // `git checkout -- jsondata/sourcedata` discards unstaged modifications; a clean tree
+    // exits 0 (no-op, no throw). A throw means a real failure (bad API_REPO_PATH, not a git
+    // repo, checkout error) that left scenario-10/11's IT edit unreverted — let it propagate
+    // so settleCleanup surfaces it on the run where it happened, rather than masking a dirty
+    // tree that bleeds into the next run.
+    await exec('git', ['-C', API_REPO, 'checkout', '--', 'jsondata/sourcedata'], { timeout: 30000 });
 }
 
 /**
@@ -59,7 +57,7 @@ export async function gitRestoreApiData(): Promise<void> {
  * then THROW if any rejected, so a genuine cleanup failure surfaces on the run where it happened
  * instead of silently leaving stale state that makes a LATER run pass vacuously. Ops should each be
  * tolerant of already-clean state (revokeScope / Fga.delete swallow not-found, gitRestoreApiData
- * warns on a clean tree) so only a real failure rejects and throws here.
+ * no-ops on a clean tree) so only a real failure rejects and throws here.
  */
 export async function settleCleanup(label: string, ops: Array<Promise<unknown>>): Promise<void> {
     const results = await Promise.allSettled(ops);

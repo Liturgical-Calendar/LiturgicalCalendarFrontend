@@ -57,10 +57,14 @@ const USCCB_EDITOR_AUTH = path.join(__dirname, '..', '.auth', 'usccb-editor.json
 async function purgeUsccbEditor(): Promise<void> {
     const z = new ZitadelAdmin();
     const f = new Fga();
-    const zid = await z.findUserIdByEmail(USERS['usccb-editor'].email).catch(() => null);
+    // findUserIdByEmail returns null when absent (no throw); Fga.delete tolerates not-found and
+    // deleteUser tolerates 404 internally. So we deliberately do NOT swallow here — a genuine
+    // failure (Zitadel/OpenFGA unreachable, unexpected status) propagates and surfaces (fails
+    // beforeAll, or via settleCleanup in teardown) instead of silently leaving stale state.
+    const zid = await z.findUserIdByEmail(USERS['usccb-editor'].email);
     if (zid) {
-        await f.delete(`user:${zid}`, 'editor', 'national_calendar:US').catch(() => {});
-        await z.deleteUser(zid).catch(() => {});
+        await f.delete(`user:${zid}`, 'editor', 'national_calendar:US');
+        await z.deleteUser(zid);
     }
     if (fs.existsSync(USCCB_EDITOR_AUTH)) {
         fs.rmSync(USCCB_EDITOR_AUTH);

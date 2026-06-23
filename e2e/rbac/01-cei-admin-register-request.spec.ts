@@ -45,10 +45,14 @@ const CEI_ADMIN_AUTH = path.join(__dirname, '..', '.auth', 'cei-admin.json');
 async function purgeCeiAdmin(): Promise<void> {
     const z = new ZitadelAdmin();
     const f = new Fga();
-    const zid = await z.findUserIdByEmail(USERS['cei-admin'].email).catch(() => null);
+    // findUserIdByEmail returns null when absent (no throw); Fga.delete tolerates not-found and
+    // deleteUser tolerates 404 internally. So we deliberately do NOT swallow here — a genuine
+    // failure (Zitadel/OpenFGA unreachable, unexpected status) propagates and surfaces (fails
+    // beforeAll, or via settleCleanup in teardown) instead of silently leaving stale state.
+    const zid = await z.findUserIdByEmail(USERS['cei-admin'].email);
     if (zid) {
-        await f.delete(`user:${zid}`, 'admin', 'national_calendar:IT').catch(() => {});
-        await z.deleteUser(zid).catch(() => {});
+        await f.delete(`user:${zid}`, 'admin', 'national_calendar:IT');
+        await z.deleteUser(zid);
     }
     if (fs.existsSync(CEI_ADMIN_AUTH)) {
         fs.rmSync(CEI_ADMIN_AUTH);

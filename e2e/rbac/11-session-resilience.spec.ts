@@ -143,12 +143,16 @@ test('11b — logout then login as a different user: no stale auth leakage', asy
         expect(aBody.user.email).toBe(USERS['super-admin'].email);
         expect(aBody.user.roles).toContain('admin');
 
-        // Logout == clearing the auth cookies (what /auth/logout.php does via Set-Cookie).
-        await a.context.clearCookies();
+        // Exercise the REAL logout endpoint (local-only via ?zitadel=false to skip the Zitadel
+        // end-session round-trip): it clears litcal_access_token / id_token / refresh_token via
+        // Set-Cookie, which the shared request-context cookie jar honors; page.request follows the
+        // post-logout redirect back to the frontend.
+        const logoutResp = await a.page.request.get(`${FRONTEND}/auth/logout.php?zitadel=false`);
+        expect(logoutResp.ok(), `/auth/logout.php should succeed; got ${logoutResp.status()}`).toBe(true);
 
         const meOut = await a.page.request.get(`${FRONTEND}/auth/me.php`);
         const outBody = await meOut.json();
-        expect(outBody.authenticated, 'context is unauthenticated after logout').toBe(false);
+        expect(outBody.authenticated, 'session is unauthenticated after real /auth/logout.php').toBe(false);
         expect(outBody.user, 'no stale user A identity after logout').toBeUndefined();
     } finally {
         await a.context.close();
