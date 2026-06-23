@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { actingAs } from './support/actingAs';
 import { grantScope, revokeScope } from './support/grant';
-import { truncateAppTables, gitRestoreApiData } from './support/cleanup';
+import { truncateAppTables, gitRestoreApiData, settleCleanup } from './support/cleanup';
 import { Fga } from './support/fga';
 import { ZitadelAdmin } from './support/zitadel';
 import { USERS } from './support/users';
@@ -57,7 +57,8 @@ const API_REPO = process.env.API_REPO_PATH || path.resolve(__dirname, '../../../
  * Build a canonical, schema-valid NationalCalendar PATCH body for IT by reading
  * the stored source files. This is exactly the structure extending.js assembles
  * (litcal/settings/metadata split out from the locale-keyed i18n map), so the
- * write is a genuine authorized round-trip of the existing definition.
+ * write is a genuine authorized round-trip of the existing definition
+ * (i18n limited to it_IT).
  */
 function buildItNationalPayload(): Record<string, unknown> {
     const itDir = path.join(API_REPO, 'jsondata', 'sourcedata', 'calendars', 'nations', 'IT');
@@ -99,16 +100,17 @@ test('10 — scoped data editing: cei-editor writes IT (ok) but is denied USA (4
     const cei = await actingAs(browser, 'cei-editor');
     try {
         // ── Step 1: IT edit → SUCCESS ────────────────────────────────────────
-        // PATCH the IT national-calendar definition (a faithful round-trip of the
-        // existing data). cei-editor holds editor@national_calendar:IT → authorized.
+        // PATCH the IT national-calendar definition (a round-trip of the existing
+        // litcal/settings/metadata (i18n limited to it_IT)). cei-editor holds
+        // editor@national_calendar:IT → authorized.
         const itResp = await cei.page.request.patch(
             `${API_BASE}/data/nation/IT`,
             { headers, data: body },
         );
         expect(
-            itResp.status(),
-            `PATCH /data/nation/IT should succeed (2xx) for cei-editor scoped to IT; got ${itResp.status()}: ${await itResp.text()}`,
-        ).toBe(201);
+            itResp.ok(),
+            'PATCH /data/nation/IT should succeed (2xx) for cei-editor scoped to IT; got ' + itResp.status() + ': ' + await itResp.text(),
+        ).toBe(true);
 
         // ── Step 2: USA edit → DENIED ────────────────────────────────────────
         // SAME user, SAME valid body, only the target scope differs. cei-editor
@@ -134,17 +136,9 @@ test.afterEach(async () => {
     //
     // gitRestoreApiData() reverts the IT PATCH's write to the bind-mounted API
     // source data — without it the IT.json edit would persist across runs.
-    const results = await Promise.allSettled([
+    await settleCleanup('scenario 10 afterEach', [
         gitRestoreApiData(), // revert the IT national-calendar source-file edit
         truncateAppTables(), // audit_log row written by the successful PATCH
         revokeScope('cei-editor'), // remove the editor@national_calendar:IT FGA tuple
     ]);
-
-    const failures = results.filter((r) => r.status === 'rejected');
-    if (failures.length > 0) {
-        console.warn(
-            'scenario 10 afterEach: cleanup failures:',
-            failures.map((f) => String((f as PromiseRejectedResult).reason)),
-        );
-    }
 });

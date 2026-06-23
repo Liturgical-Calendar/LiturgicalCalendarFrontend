@@ -53,3 +53,20 @@ export async function gitRestoreApiData(): Promise<void> {
         console.warn(`gitRestoreApiData: failed to restore API source data (edits may persist): ${String(e)}`);
     }
 }
+
+/**
+ * Run all cleanup operations to completion (Promise.allSettled — none short-circuits the others),
+ * then THROW if any rejected, so a genuine cleanup failure surfaces on the run where it happened
+ * instead of silently leaving stale state that makes a LATER run pass vacuously. Ops should each be
+ * tolerant of already-clean state (revokeScope / Fga.delete swallow not-found, gitRestoreApiData
+ * warns on a clean tree) so only a real failure rejects and throws here.
+ */
+export async function settleCleanup(label: string, ops: Array<Promise<unknown>>): Promise<void> {
+    const results = await Promise.allSettled(ops);
+    const failures = results
+        .filter((r): r is PromiseRejectedResult => r.status === 'rejected')
+        .map((r) => String(r.reason));
+    if (failures.length > 0) {
+        throw new Error(`${label} cleanup failed:\n  - ${failures.join('\n  - ')}`);
+    }
+}

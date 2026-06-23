@@ -5,7 +5,7 @@ import { actingAs } from './support/actingAs';
 import { registerAndVerify } from './support/register';
 import { submitAccessRequest, resubmitAccessRequest } from './support/requestAccess';
 import { requestVisible, actOnRequest } from './support/review';
-import { truncateAppTables } from './support/cleanup';
+import { truncateAppTables, settleCleanup } from './support/cleanup';
 import { Fga } from './support/fga';
 import { ZitadelAdmin } from './support/zitadel';
 import { USERS } from './support/users';
@@ -167,16 +167,8 @@ test.afterEach(async () => {
     // Tear down everything this scenario created so the spec is re-runnable from a clean
     // slate. Run every step regardless of individual failures (a thrown truncate must not
     // skip the identity/tuple cleanup, or state leaks into other specs).
-    const results = await Promise.allSettled([
+    await settleCleanup('scenario 01 afterEach', [
         truncateAppTables(), // app-table rows created by this scenario
         purgeCeiAdmin(), // cei-admin Zitadel account + admin@IT tuple + persisted auth file
     ]);
-
-    const failures = results.filter((r) => r.status === 'rejected');
-    if (failures.length > 0) {
-        console.warn(
-            'scenario 01 afterEach: cleanup failures:',
-            failures.map((f) => String((f as PromiseRejectedResult).reason)),
-        );
-    }
 });

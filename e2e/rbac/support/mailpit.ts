@@ -8,11 +8,11 @@
  *
  * `fetchImpl` is injectable so the unit test runs without a live Mailpit.
  */
-const MAILPIT_API_URL = (process.env.MAILPIT_API_URL || 'http://localhost:8025').replace(/\/$/, '');
+export const MAILPIT_API_URL = (process.env.MAILPIT_API_URL || 'http://localhost:8025').replace(/\/$/, '');
 
 type FetchLike = typeof fetch;
 
-interface MailpitListItem {
+export interface MailpitListItem {
     ID: string;
     To?: Array<{ Address?: string }>;
 }

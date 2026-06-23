@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { actingAs } from './support/actingAs';
 import { submitAccessRequest } from './support/requestAccess';
 import { requestVisible, findRequestRow } from './support/review';
-import { truncateAppTables } from './support/cleanup';
+import { truncateAppTables, settleCleanup } from './support/cleanup';
 import { Fga } from './support/fga';
 import { ZitadelAdmin } from './support/zitadel';
 import { USERS } from './support/users';
@@ -161,7 +161,7 @@ test.afterEach(async () => {
 
     const ceiAdminId = await z.findUserIdByEmail(USERS['cei-admin'].email).catch(() => null);
 
-    const results = await Promise.allSettled([
+    await settleCleanup('scenario 08 afterEach', [
         truncateAppTables(), // access_requests + audit_log rows created by this scenario
         // The request was never approved — no editor@US FGA tuple was written for grc-editor.
         // cei-admin was created on-demand by seedAndLogin — delete it + its admin@IT tuple.
@@ -170,12 +170,4 @@ test.afterEach(async () => {
             ? f.delete(`user:${ceiAdminId}`, 'admin', 'national_calendar:IT')
             : Promise.resolve(),
     ]);
-
-    const failures = results.filter((r) => r.status === 'rejected');
-    if (failures.length > 0) {
-        console.warn(
-            'scenario 08 afterEach: cleanup failures:',
-            failures.map((r) => String((r as PromiseRejectedResult).reason)),
-        );
-    }
 });

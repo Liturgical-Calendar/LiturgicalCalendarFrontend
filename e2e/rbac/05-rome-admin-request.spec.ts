@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { actingAs } from './support/actingAs';
 import { submitAccessRequest } from './support/requestAccess';
 import { requestVisible, actOnRequest } from './support/review';
-import { truncateAppTables } from './support/cleanup';
+import { truncateAppTables, settleCleanup } from './support/cleanup';
 import { Fga } from './support/fga';
 import { ZitadelAdmin } from './support/zitadel';
 import { USERS } from './support/users';
@@ -141,7 +141,7 @@ test.afterEach(async () => {
         z.findUserIdByEmail(USERS['cei-admin'].email).catch(() => null),
     ]);
 
-    const results = await Promise.allSettled([
+    await settleCleanup('scenario 05 afterEach', [
         truncateAppTables(), // app-table rows created by this scenario
         // Revoke the admin@romamo_it tuple the approval may have written for grc-editor
         grcEditorId
@@ -153,12 +153,4 @@ test.afterEach(async () => {
             ? f.delete(`user:${ceiAdminId}`, 'admin', 'national_calendar:IT')
             : Promise.resolve(),
     ]);
-
-    const failures = results.filter((r) => r.status === 'rejected');
-    if (failures.length > 0) {
-        console.warn(
-            'scenario 05 afterEach: cleanup failures:',
-            failures.map((r) => String((r as PromiseRejectedResult).reason)),
-        );
-    }
 });

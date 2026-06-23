@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { actingAs } from './support/actingAs';
 import { seedAndLogin } from './support/seed';
+import { settleCleanup } from './support/cleanup';
 import { ZitadelAdmin } from './support/zitadel';
 import { Fga } from './support/fga';
 import { USERS } from './support/users';
@@ -150,20 +151,12 @@ test.describe.serial('07 — dashboard card scoping matrix', () => {
         const f = new Fga();
         const ceiAdminId = await z.findUserIdByEmail(USERS['cei-admin'].email).catch(() => null);
 
-        const results = await Promise.allSettled([
+        await settleCleanup('scenario 07 afterAll', [
             ceiAdminId ? z.deleteUser(ceiAdminId) : Promise.resolve(),
             ceiAdminId
                 ? f.delete(`user:${ceiAdminId}`, 'admin', 'national_calendar:IT')
                 : Promise.resolve(),
             fs.promises.rm(path.join(__dirname, '..', '.auth', 'cei-admin.json'), { force: true }),
         ]);
-
-        const failures = results.filter((r) => r.status === 'rejected');
-        if (failures.length > 0) {
-            console.warn(
-                'scenario 07 afterAll: cleanup failures:',
-                failures.map((r) => String((r as PromiseRejectedResult).reason)),
-            );
-        }
     });
 });

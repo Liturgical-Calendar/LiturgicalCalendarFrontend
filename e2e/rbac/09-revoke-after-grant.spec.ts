@@ -6,7 +6,7 @@ import { submitAccessRequest } from './support/requestAccess';
 import { requestVisible, actOnRequest } from './support/review';
 import { revokeScope } from './support/grant';
 import { seedAndLogin } from './support/seed';
-import { truncateAppTables } from './support/cleanup';
+import { truncateAppTables, settleCleanup } from './support/cleanup';
 import { Fga } from './support/fga';
 import { ZitadelAdmin } from './support/zitadel';
 import { USERS } from './support/users';
@@ -159,7 +159,7 @@ test.afterEach(async () => {
     const z = new ZitadelAdmin();
     const ceiAdminId = await z.findUserIdByEmail(USERS['cei-admin'].email).catch(() => null);
 
-    const results = await Promise.allSettled([
+    await settleCleanup('scenario 09 afterEach', [
         truncateAppTables(), // app-table rows created by this scenario
         revokeScope('cei-editor'), // FGA editor tuple the approval may have written
         // cei-admin was created on-demand by seedAndLogin — delete it + its admin tuple.
@@ -169,12 +169,4 @@ test.afterEach(async () => {
             : Promise.resolve(),
         fs.promises.rm(path.join(__dirname, '..', '.auth', 'cei-admin.json'), { force: true }),
     ]);
-
-    const failures = results.filter((r) => r.status === 'rejected');
-    if (failures.length > 0) {
-        console.warn(
-            'scenario 09 afterEach: cleanup failures:',
-            failures.map((f) => String((f as PromiseRejectedResult).reason)),
-        );
-    }
 });

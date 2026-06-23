@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { actingAs } from './support/actingAs';
 import { grantScope, revokeScope } from './support/grant';
-import { truncateAppTables, gitRestoreApiData } from './support/cleanup';
+import { truncateAppTables, gitRestoreApiData, settleCleanup } from './support/cleanup';
 import { Fga } from './support/fga';
 import { ZitadelAdmin } from './support/zitadel';
 import { USERS } from './support/users';
@@ -259,17 +259,9 @@ test.afterEach(async () => {
     //   - truncateAppTables(): audit_log row written by the successful PATCH.
     //   - revokeScope('cei-editor'): remove the editor@national_calendar:IT FGA tuple
     //     (idempotent — tolerates already-revoked).
-    const results = await Promise.allSettled([
+    await settleCleanup('scenario 11 afterEach', [
         gitRestoreApiData(),
         truncateAppTables(),
         revokeScope('cei-editor'),
     ]);
-
-    const failures = results.filter((r) => r.status === 'rejected');
-    if (failures.length > 0) {
-        console.warn(
-            'scenario 11 afterEach: cleanup failures:',
-            failures.map((f) => String((f as PromiseRejectedResult).reason)),
-        );
-    }
 });
