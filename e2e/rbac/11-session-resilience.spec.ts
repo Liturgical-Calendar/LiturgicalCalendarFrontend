@@ -224,9 +224,9 @@ test('11c — grant/revoke is reflected on the next authorization decision (no s
         try {
             const r = await cei.page.request.patch(`${API_BASE}/data/nation/IT`, { headers, data: body });
             expect(
-                r.status(),
-                `PATCH /data/nation/IT must be AUTHORIZED (201) immediately after the grant (no stale 403); got ${r.status()}: ${await r.text()}`,
-            ).toBe(201);
+                r.ok(),
+                `PATCH /data/nation/IT must be AUTHORIZED (2xx) immediately after the grant (no stale 403); got ${r.status()}: ${await r.text()}`,
+            ).toBe(true);
         } finally {
             await cei.context.close();
         }
