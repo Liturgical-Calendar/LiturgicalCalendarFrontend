@@ -43,6 +43,14 @@ jobs:
           cp .env.example .env
           cp .env.example .env.development
 
+      - name: Build app images (sequential)
+        # litcal-api and litcal-frontend share a BuildKit `type=cache` apt mount;
+        # building them in parallel (as `up --build` / `build` do) collides on the
+        # apt lock ("Could not get lock /var/lib/apt/lists/lock"). Build one at a time.
+        run: |
+          docker compose build litcal-api
+          docker compose build litcal-frontend
+
       - name: Bring up the docker stack
         run: docker compose up -d --wait db zitadel openfga mailpit login litcal-api litcal-frontend
 
