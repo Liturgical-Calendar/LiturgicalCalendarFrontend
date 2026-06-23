@@ -97,9 +97,13 @@ jobs:
           yarn playwright install --with-deps chromium
 
       - name: Run RBAC E2E suite
-        # CI env intentionally UNSET so Playwright reuses the docker stack's
-        # api:8000 / frontend:3000 (reuseExistingServer: !CI) instead of starting
-        # its own php -S. --retries=2 absorbs the registration-spec timing flake.
+        # GitHub Actions sets CI=true automatically; override it to empty so
+        # reuseExistingServer (!CI) is TRUE and Playwright REUSES the docker stack's
+        # api:8000 / frontend:3000 instead of starting its own php -S (which collides
+        # on the port). --retries / --forbid-only restore the CI-mode behaviours that
+        # an empty CI would otherwise switch off.
+        env:
+          CI: ""
         run: yarn playwright test --project=rbac --retries=2 --forbid-only
 
       - name: Upload Playwright report
