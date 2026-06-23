@@ -1,22 +1,39 @@
 name: E2E
 
-# RBAC end-to-end Playwright suite against the full docker stack
+# End-to-end Playwright suite against the full docker stack
 # (Postgres + Zitadel + OpenFGA + Mailpit + API + frontend).
 #
-# FIRST ITERATION — manual-trigger only. This faithfully mirrors the known-good
-# local procedure (docker compose up -> setup-zitadel.sh -> .env.development
-# token/org-id sync -> yarn test), but the env contract (OPENFGA_*, the
-# host-reachable ZITADEL_ISSUER, healthcheck timing, the ~1.1 GB API image
-# build) needs validating against a real runner. Once it runs green a few
-# times, promote it: add `pull_request` + a nightly `schedule` trigger, and
-# (for PR runs) a compose override that builds litcal-frontend from the PR
-# checkout instead of GitHub#development.
+# The `project` workflow_dispatch input selects which Playwright project runs:
+#   rbac (default) — the scoped-admin-review RBAC suite (rbac-setup seeds users)
+#   chromium / firefox / webkit — the calendar-data form specs
+#       (national / diocesan / wider-region / missals; these depend on the
+#        `setup` project's /auth/login with TEST_USERNAME/TEST_PASSWORD)
+#   all — every project
+# Push-triggered iteration runs `rbac`.
+#
+# FIRST ITERATION — being validated against a real runner (env contract,
+# healthcheck timing, the ~1.1 GB API image build). Once green, promote it:
+# add `pull_request` + a nightly `schedule` trigger, and a compose override that
+# builds litcal-frontend from the PR checkout. NOTE: the calendar-form projects
+# predate the Zitadel-based auth, so they may need their test user / login flow
+# updated before they pass in CI.
 
 on:
   workflow_dispatch:
+    inputs:
+      project:
+        description: 'Playwright project to run'
+        type: choice
+        default: rbac
+        options:
+          - rbac
+          - chromium
+          - firefox
+          - webkit
+          - all
   # TEMPORARY (remove before merge): trigger on push to this PR branch so the
   # workflow can be iterated to green — workflow_dispatch isn't dispatchable
-  # until e2e.yml lands on the default branch.
+  # until e2e.yml lands on the default branch. Push runs default to `rbac`.
   push:
     branches: [ e2e/rbac-phase2-scenarios ]
 
@@ -28,8 +45,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  rbac-e2e:
-    name: RBAC E2E (Playwright + full docker stack)
+  e2e:
+    name: E2E (Playwright + full docker stack)
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -90,21 +107,35 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install dependencies + browser
+      - name: Install dependencies + browsers
+        env:
+          PROJECT: ${{ inputs.project || 'rbac' }}
         run: |
           corepack enable
           yarn install --immutable
-          yarn playwright install --with-deps chromium
+          case "$PROJECT" in
+            firefox) browsers=firefox ;;
+            webkit)  browsers=webkit ;;
+            all)     browsers="chromium firefox webkit" ;;
+            *)       browsers=chromium ;;   # rbac, chromium
+          esac
+          yarn playwright install --with-deps $browsers
 
-      - name: Run RBAC E2E suite
+      - name: Run E2E suite
         # GitHub Actions sets CI=true automatically; override it to empty so
         # reuseExistingServer (!CI) is TRUE and Playwright REUSES the docker stack's
-        # api:8000 / frontend:3000 instead of starting its own php -S (which collides
+        # api:8000 / frontend:3000 instead of starting its own server (which collides
         # on the port). --retries / --forbid-only restore the CI-mode behaviours that
         # an empty CI would otherwise switch off.
         env:
           CI: ""
-        run: yarn playwright test --project=rbac --retries=2 --forbid-only
+          PROJECT: ${{ inputs.project || 'rbac' }}
+        run: |
+          if [ "$PROJECT" = "all" ]; then
+            yarn playwright test --retries=2 --forbid-only
+          else
+            yarn playwright test --project="$PROJECT" --retries=2 --forbid-only
+          fi
 
       - name: Upload Playwright report
         if: ${{ !cancelled() }}
