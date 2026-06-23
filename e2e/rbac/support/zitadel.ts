@@ -67,33 +67,22 @@ export class ZitadelAdmin {
     }
 
     async deleteUser(userId: string): Promise<void> {
-        // Zitadel soft-deletes users but KEEPS the `usernames` unique-constraint reservation
-        // on the deleted user's username (which defaults to the email). A later re-create of
-        // the same email then fails with 409 "User already exists" even though no active user
-        // holds it — fragmenting the seed set on every delete→reseed cycle (the recurring
-        // rbac-setup flake). Rename the username to a unique throwaway BEFORE deleting, so the
-        // reservation that lingers is on the throwaway, freeing the real email for the next
-        // seed. (Verified: PUT /v2/users/human/{id} {username} releases the original reservation;
-        // re-creating the freed email then succeeds.) Best-effort: if the rename fails, fall
-        // through to the delete anyway — never worse than the un-renamed soft-delete.
-        const throwaway = `deleted-${userId}@litcal.invalid`;
-        try {
-            await this.req('PUT', `/v2/users/human/${userId}`, { username: throwaway });
-        } catch (e) {
-            console.warn(`deleteUser: username anonymize failed for ${userId} (constraint may linger): ${String(e)}`);
-        }
+        // Zitadel releases the user's username/email unique-constraint as part of the
+        // `user.removed` command, so a later re-create of the SAME email succeeds — no rename
+        // or constraint surgery is needed. (Verified empirically: create → plain DELETE →
+        // re-create the same email is clean; the constraint count returns to 0.)
+        //
+        // Tolerate a 404: the user may already be gone — a concurrent cleanup, or a stale
+        // search-projection entry whose command-store aggregate was already removed. The goal
+        // (user absent) is satisfied either way; re-throw anything that isn't a 404.
         try {
             await this.req('DELETE', `/v2/users/${userId}`);
         } catch (e) {
-            // 404 on DELETE means the user was already removed from the command store
-            // (possibly by a concurrent cleanup, or the search projection shows a stale
-            // ACTIVE entry whose aggregate was already deleted). Treat as a no-op: the
-            // goal (user absent) is already satisfied. Re-throw everything else.
             if (!String(e).includes('-> 404:')) throw e;
-            console.warn(`deleteUser: DELETE returned 404 for ${userId} (already removed; projection drift)`);
+            console.warn(`deleteUser: DELETE returned 404 for ${userId} (already removed)`);
         }
-        // Zitadel's search projection is eventually consistent; a brief pause ensures
-        // callers can immediately call findUserIdByEmail and get a consistent result.
+        // Zitadel's search projection is eventually consistent; a brief pause ensures callers
+        // can immediately call findUserIdByEmail and get a consistent result.
         await new Promise<void>(r => setTimeout(r, 200));
     }
 
