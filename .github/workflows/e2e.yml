@@ -96,10 +96,25 @@ jobs:
               printf '%s=%s\n' "$key" "$val" >> .env.development
             fi
           }
+          # OpenFGA store/model IDs: setup-zitadel writes them to compose .env but
+          # (like the Zitadel token) not to .env.development. Prefer .env; fall back to
+          # querying the running OpenFGA so the Fga helper gets a valid 26-char ULID.
+          ofga_store=$(grep '^OPENFGA_STORE_ID=' .env | cut -d= -f2- || true)
+          if [ -z "$ofga_store" ]; then
+            ofga_store=$(curl -sS http://localhost:8083/stores \
+              | python3 -c "import sys,json;s=json.load(sys.stdin).get('stores',[]);print(s[0]['id'] if s else '')")
+          fi
+          ofga_model=$(grep '^OPENFGA_MODEL_ID=' .env | cut -d= -f2- || true)
+          if [ -z "$ofga_model" ] && [ -n "$ofga_store" ]; then
+            ofga_model=$(curl -sS "http://localhost:8083/stores/$ofga_store/authorization-models" \
+              | python3 -c "import sys,json;m=json.load(sys.stdin).get('authorization_models',[]);print(m[0]['id'] if m else '')")
+          fi
           set_kv ZITADEL_MACHINE_TOKEN "$tok"
           set_kv ZITADEL_ORG_ID "$org"
           set_kv ZITADEL_ISSUER "http://localhost:8080"
           set_kv OPENFGA_API_URL "http://localhost:8083"
+          set_kv OPENFGA_STORE_ID "$ofga_store"
+          set_kv OPENFGA_MODEL_ID "$ofga_model"
           set_kv MAILPIT_API_URL "http://localhost:8025"
 
       - name: Set up Node
