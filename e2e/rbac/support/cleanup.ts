@@ -1,6 +1,7 @@
 import { execFile } from 'child_process';
 import { promisify } from 'util';
 import * as path from 'path';
+import * as fs from 'fs';
 import { USERS } from './users';
 import { ZitadelAdmin } from './zitadel';
 import { Fga } from './fga';
@@ -44,11 +45,12 @@ export async function deleteAllSeededUsers(): Promise<void> {
  * (Untracked new files are not removed — scenario 10 edits existing calendar files.)
  */
 export async function gitRestoreApiData(): Promise<void> {
-    // `git checkout -- jsondata/sourcedata` discards unstaged modifications; a clean tree
-    // exits 0 (no-op, no throw). A throw means a real failure (bad API_REPO_PATH, not a git
-    // repo, checkout error) that left scenario-10/11's IT edit unreverted — let it propagate
-    // so settleCleanup surfaces it on the run where it happened, rather than masking a dirty
-    // tree that bleeds into the next run.
+    // No-op when the API repo isn't a local git checkout — e.g. CI, where the API runs
+    // ONLY as a container and the calendar edits live in ephemeral container state, not in
+    // a host-tracked working tree (nothing to restore, and `git -C <absent>` would error).
+    // Where it IS present (local dev with the bind-mounted source), discard the edit and let
+    // a real `git checkout` failure propagate so settleCleanup surfaces a dirty tree.
+    if (!fs.existsSync(path.join(API_REPO, '.git'))) return;
     await exec('git', ['-C', API_REPO, 'checkout', '--', 'jsondata/sourcedata'], { timeout: 30000 });
 }
 
