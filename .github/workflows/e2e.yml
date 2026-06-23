@@ -1,0 +1,108 @@
+name: E2E
+
+# RBAC end-to-end Playwright suite against the full docker stack
+# (Postgres + Zitadel + OpenFGA + Mailpit + API + frontend).
+#
+# FIRST ITERATION — manual-trigger only. This faithfully mirrors the known-good
+# local procedure (docker compose up -> setup-zitadel.sh -> .env.development
+# token/org-id sync -> yarn test), but the env contract (OPENFGA_*, the
+# host-reachable ZITADEL_ISSUER, healthcheck timing, the ~1.1 GB API image
+# build) needs validating against a real runner. Once it runs green a few
+# times, promote it: add `pull_request` + a nightly `schedule` trigger, and
+# (for PR runs) a compose override that builds litcal-frontend from the PR
+# checkout instead of GitHub#development.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rbac-e2e:
+    name: RBAC E2E (Playwright + full docker stack)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Seed env files
+        # Both .env (compose) and .env.development (the host playwright process)
+        # are gitignored; seed them from the example. setup-zitadel.sh and the
+        # sync step below fill in the generated secrets.
+        run: |
+          cp .env.example .env
+          cp .env.example .env.development
+
+      - name: Bring up the docker stack
+        run: docker compose up -d --wait db zitadel openfga mailpit login litcal-api litcal-frontend
+
+      - name: Bootstrap Zitadel
+        run: ./scripts/setup-zitadel.sh --force-secrets --update-env
+
+      - name: Recreate app containers with fresh secrets
+        run: docker compose up -d --wait --force-recreate litcal-api litcal-frontend
+
+      - name: Sync Zitadel + OpenFGA creds into .env.development
+        # GOTCHA: setup-zitadel.sh --update-env writes ZITADEL_MACHINE_TOKEN only to
+        # the compose .env, not .env.development, and a fresh bootstrap mints a new
+        # org id. The host playwright process reads .env.development, so sync both,
+        # plus pin the host-reachable service URLs the helpers use.
+        run: |
+          set -euo pipefail
+          tok=$(grep '^ZITADEL_MACHINE_TOKEN=' .env | cut -d= -f2-)
+          org=$(curl -sS http://localhost:8080/auth/v1/users/me \
+                  -H "Authorization: Bearer $tok" -H "Host: localhost" \
+                | python3 -c "import sys,json;u=json.load(sys.stdin).get('user',{});print(u.get('details',{}).get('resourceOwner') or u.get('resourceOwner',''))")
+          set_kv() {
+            local key=$1 val=$2
+            if grep -q "^${key}=" .env.development; then
+              sed -i "s|^${key}=.*|${key}=${val}|" .env.development
+            else
+              printf '%s=%s\n' "$key" "$val" >> .env.development
+            fi
+          }
+          set_kv ZITADEL_MACHINE_TOKEN "$tok"
+          set_kv ZITADEL_ORG_ID "$org"
+          set_kv ZITADEL_ISSUER "http://localhost:8080"
+          set_kv OPENFGA_API_URL "http://localhost:8083"
+          set_kv MAILPIT_API_URL "http://localhost:8025"
+
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies + browser
+        run: |
+          corepack enable
+          yarn install --immutable
+          yarn playwright install --with-deps chromium
+
+      - name: Run RBAC E2E suite
+        # CI env intentionally UNSET so Playwright reuses the docker stack's
+        # api:8000 / frontend:3000 (reuseExistingServer: !CI) instead of starting
+        # its own php -S. --retries=2 absorbs the registration-spec timing flake.
+        run: yarn playwright test --project=rbac --retries=2 --forbid-only
+
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+      - name: Dump stack logs on failure
+        if: failure()
+        run: docker compose logs --no-color --tail 400
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v
