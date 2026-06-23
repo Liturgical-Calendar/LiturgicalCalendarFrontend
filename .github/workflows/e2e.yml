@@ -52,6 +52,17 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
+      - name: Checkout the API repo (calendar source data)
+        # Scenario 10 / 11c build their PATCH payload by reading the IT calendar JSON
+        # from the API repo's jsondata/sourcedata (and gitRestoreApiData reverts there
+        # locally). The docker stack runs the API as a container, but the host process
+        # still needs the source files — check out the same ref the stack builds from.
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: Liturgical-Calendar/LiturgicalCalendarAPI
+          ref: development
+          path: api-repo
+
       - name: Seed env files
         # Both .env (compose) and .env.development (the host playwright process)
         # are gitignored; seed them from the example. setup-zitadel.sh and the
@@ -146,6 +157,7 @@ jobs:
         env:
           CI: ""
           PROJECT: ${{ inputs.project || 'rbac' }}
+          API_REPO_PATH: ${{ github.workspace }}/api-repo
         run: |
           if [ "$PROJECT" = "all" ]; then
             yarn playwright test --retries=2 --forbid-only
