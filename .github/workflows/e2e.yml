@@ -14,6 +14,11 @@ name: E2E
 
 on:
   workflow_dispatch:
+  # TEMPORARY (remove before merge): trigger on push to this PR branch so the
+  # workflow can be iterated to green — workflow_dispatch isn't dispatchable
+  # until e2e.yml lands on the default branch.
+  push:
+    branches: [ e2e/rbac-phase2-scenarios ]
 
 permissions:
   contents: read
