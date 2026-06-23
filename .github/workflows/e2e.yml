@@ -74,48 +74,49 @@ jobs:
       - name: Bootstrap Zitadel
         run: ./scripts/setup-zitadel.sh --force-secrets --update-env
 
-      - name: Recreate app containers with fresh secrets
-        run: docker compose up -d --wait --force-recreate litcal-api litcal-frontend
-
-      - name: Sync Zitadel + OpenFGA creds into .env.development
-        # GOTCHA: setup-zitadel.sh --update-env writes ZITADEL_MACHINE_TOKEN only to
-        # the compose .env, not .env.development, and a fresh bootstrap mints a new
-        # org id. The host playwright process reads .env.development, so sync both,
-        # plus pin the host-reachable service URLs the helpers use.
+      - name: Resolve + propagate Zitadel & OpenFGA creds
+        # Two gotchas, both fatal in a from-scratch CI bootstrap:
+        #  1. openfga-setup creates the store INSIDE OpenFGA but does not write its id
+        #     to the host .env, so litcal-api's `OPENFGA_STORE_ID: ${OPENFGA_STORE_ID:-}`
+        #     stays EMPTY → the API queries an empty store → isResourceAdmin() is always
+        #     false → every resource-admin page redirects (no /admin/access-requests XHR).
+        #  2. setup-zitadel writes ZITADEL_MACHINE_TOKEN only to compose .env (not
+        #     .env.development), and a fresh bootstrap mints a new org id.
+        # So resolve the live store/model + token/org and write them to BOTH .env (the
+        # containers, picked up by the recreate below) AND .env.development (the host
+        # playwright process), plus the host-reachable URLs. THEN recreate.
         run: |
           set -euo pipefail
+          set_kv() {  # set_kv FILE KEY VALUE
+            local file=$1 key=$2 val=$3
+            if grep -q "^${key}=" "$file"; then
+              sed -i "s|^${key}=.*|${key}=${val}|" "$file"
+            else
+              printf '%s=%s\n' "$key" "$val" >> "$file"
+            fi
+          }
+          store=$(curl -sS http://localhost:8083/stores \
+            | python3 -c "import sys,json;s=json.load(sys.stdin).get('stores',[]);print(s[0]['id'] if s else '')")
+          model=$(curl -sS "http://localhost:8083/stores/$store/authorization-models" \
+            | python3 -c "import sys,json;m=json.load(sys.stdin).get('authorization_models',[]);print(m[0]['id'] if m else '')")
           tok=$(grep '^ZITADEL_MACHINE_TOKEN=' .env | cut -d= -f2-)
           org=$(curl -sS http://localhost:8080/auth/v1/users/me \
                   -H "Authorization: Bearer $tok" -H "Host: localhost" \
                 | python3 -c "import sys,json;u=json.load(sys.stdin).get('user',{});print(u.get('details',{}).get('resourceOwner') or u.get('resourceOwner',''))")
-          set_kv() {
-            local key=$1 val=$2
-            if grep -q "^${key}=" .env.development; then
-              sed -i "s|^${key}=.*|${key}=${val}|" .env.development
-            else
-              printf '%s=%s\n' "$key" "$val" >> .env.development
-            fi
-          }
-          # OpenFGA store/model IDs: setup-zitadel writes them to compose .env but
-          # (like the Zitadel token) not to .env.development. Prefer .env; fall back to
-          # querying the running OpenFGA so the Fga helper gets a valid 26-char ULID.
-          ofga_store=$(grep '^OPENFGA_STORE_ID=' .env | cut -d= -f2- || true)
-          if [ -z "$ofga_store" ]; then
-            ofga_store=$(curl -sS http://localhost:8083/stores \
-              | python3 -c "import sys,json;s=json.load(sys.stdin).get('stores',[]);print(s[0]['id'] if s else '')")
-          fi
-          ofga_model=$(grep '^OPENFGA_MODEL_ID=' .env | cut -d= -f2- || true)
-          if [ -z "$ofga_model" ] && [ -n "$ofga_store" ]; then
-            ofga_model=$(curl -sS "http://localhost:8083/stores/$ofga_store/authorization-models" \
-              | python3 -c "import sys,json;m=json.load(sys.stdin).get('authorization_models',[]);print(m[0]['id'] if m else '')")
-          fi
-          set_kv ZITADEL_MACHINE_TOKEN "$tok"
-          set_kv ZITADEL_ORG_ID "$org"
-          set_kv ZITADEL_ISSUER "http://localhost:8080"
-          set_kv OPENFGA_API_URL "http://localhost:8083"
-          set_kv OPENFGA_STORE_ID "$ofga_store"
-          set_kv OPENFGA_MODEL_ID "$ofga_model"
-          set_kv MAILPIT_API_URL "http://localhost:8025"
+          # Containers (.env): the API resolves admin scopes against this store/model.
+          set_kv .env OPENFGA_STORE_ID "$store"
+          set_kv .env OPENFGA_MODEL_ID "$model"
+          # Host playwright (.env.development): the helpers hit the host-exposed ports.
+          set_kv .env.development ZITADEL_MACHINE_TOKEN "$tok"
+          set_kv .env.development ZITADEL_ORG_ID "$org"
+          set_kv .env.development ZITADEL_ISSUER "http://localhost:8080"
+          set_kv .env.development OPENFGA_API_URL "http://localhost:8083"
+          set_kv .env.development OPENFGA_STORE_ID "$store"
+          set_kv .env.development OPENFGA_MODEL_ID "$model"
+          set_kv .env.development MAILPIT_API_URL "http://localhost:8025"
+
+      - name: Recreate app containers with the resolved creds
+        run: docker compose up -d --wait --force-recreate litcal-api litcal-frontend
 
       - name: Set up Node
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
