@@ -1,0 +1,70 @@
+name: Tests
+
+# Fast, service-free quality gates + unit tests on every PR/push.
+# (End-to-end Playwright tests, which need the full docker stack, run in the
+# separate "E2E" workflow.)
+
+on:
+  push:
+    branches: [ development, main ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  php:
+    name: PHP (parallel-lint · phpcs · phpstan · phpunit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.4'
+          coverage: none
+          tools: composer:v2
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Syntax check (php-parallel-lint)
+        run: composer parallel-lint
+
+      - name: Code style (phpcs)
+        run: composer lint
+
+      - name: Static analysis (phpstan)
+        run: composer analyse
+
+      - name: Unit tests (phpunit)
+        run: composer test
+
+  js:
+    name: JS (eslint · typecheck)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+
+      - name: Enable Corepack (Yarn 4)
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: ESLint
+        run: yarn lint
+
+      - name: Typecheck (e2e)
+        run: yarn typecheck
