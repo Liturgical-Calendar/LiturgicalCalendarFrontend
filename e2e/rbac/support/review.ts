@@ -66,8 +66,13 @@ function statusBodySelector(status: string): string {
  * needs API_INTERNAL_URL in Docker, else the page redirects and no XHR fires.)
  */
 async function gotoAndWaitList(page: Page, status: string): Promise<void> {
+    // Generous timeouts: under full back-to-back suite load (browser contention + API/projection
+    // lag from prior specs) the admin-list XHR and the post-render spinner removal can exceed
+    // Playwright's 5s default, which intermittently flaked the registration specs (01/04). These
+    // only raise the MAX wait — the fast path is unaffected.
     const responseReady = page.waitForResponse(
         r => r.url().includes('/admin/access-requests') && r.request().method() === 'GET',
+        { timeout: 20000 },
     );
     await page.goto(PAGE_PATH);
     // For non-pending tabs, activate the correct tab so its body is visible
@@ -76,7 +81,7 @@ async function gotoAndWaitList(page: Page, status: string): Promise<void> {
         await page.click(statusTabSelector(status));
     }
     await responseReady;
-    await expect(page.locator(`${statusBodySelector(status)} .fa-spinner`)).toHaveCount(0);
+    await expect(page.locator(`${statusBodySelector(status)} .fa-spinner`)).toHaveCount(0, { timeout: 15000 });
 }
 
 /**
@@ -157,8 +162,9 @@ export async function actOnRequest(
     // Wait for the modal to close (JS hides it after the 1500 ms success delay).
     await expect(modal).toBeHidden({ timeout: 10000 });
 
-    // Wait for the list to reload in the source-status body (spinner gone).
+    // Wait for the list to reload in the source-status body (spinner gone). Generous
+    // timeout: the post-action refresh can lag past the 5s default under full-suite load.
     await expect(
         page.locator(`${statusBodySelector(fromStatus)} .fa-spinner`),
-    ).toHaveCount(0);
+    ).toHaveCount(0, { timeout: 15000 });
 }

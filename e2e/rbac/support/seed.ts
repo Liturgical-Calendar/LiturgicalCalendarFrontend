@@ -47,14 +47,19 @@ export async function oidcLogin(
     email: string,
     password: string,
     loginClientToken: string,
+    userId?: string,
 ): Promise<{ accessToken: string; idToken: string | null }> {
     const Hl = { Authorization: `Bearer ${loginClientToken}`, 'Content-Type': 'application/json', Host: HOST };
     const json = async (r: Response) => { const t = await r.text(); if (!r.ok) throw new Error(`${r.url} -> ${r.status}: ${t}`); return JSON.parse(t); };
 
     // 1. Create a password-checked session (login-client token).
+    // Prefer userId when provided: avoids Zitadel search-projection phantom collisions where
+    // a stale entry for the same email coexists with the newly-created user. Falling back to
+    // loginName (email) is safe when no phantom is present.
+    const userCheck = userId ? { userId } : { loginName: email };
     const s = await json(await fetch(`${ISSUER}/v2/sessions`, {
         method: 'POST', headers: Hl,
-        body: JSON.stringify({ checks: { user: { loginName: email }, password: { password } } }),
+        body: JSON.stringify({ checks: { user: userCheck, password: { password } } }),
     }));
 
     // 2. Start an OIDC auth request (Frontend client, PKCE S256) → 302 to login-v2 with ?authRequest=...
@@ -100,9 +105,9 @@ function id_state(): string { return b64url(crypto.randomBytes(8)); }
  * Cookie domain is `localhost` (port-agnostic) so cookies reach both the frontend (:3000)
  * and the API (:8000). The real cookies are HttpOnly.
  */
-export async function loginAndSaveState(id: string, loginClientToken: string): Promise<void> {
+export async function loginAndSaveState(id: string, loginClientToken: string, userId?: string): Promise<void> {
     const u = USERS[id];
-    const { accessToken, idToken } = await oidcLogin(u.email, u.password, loginClientToken);
+    const { accessToken, idToken } = await oidcLogin(u.email, u.password, loginClientToken, userId);
     const cookieBase = {
         domain: 'localhost', path: '/', expires: -1, httpOnly: true, secure: false, sameSite: 'Lax' as const,
     };
@@ -132,7 +137,7 @@ export async function seedAndLogin(userKey: string): Promise<string> {
     const pat = await z.mintPat(loginClientUserId);
     try {
         const userId = await seedUser(userKey);
-        await loginAndSaveState(userKey, pat.token);
+        await loginAndSaveState(userKey, pat.token, userId);
         return userId;
     } finally {
         // Surface (don't swallow) a PAT-revocation failure so a leaked ephemeral token is

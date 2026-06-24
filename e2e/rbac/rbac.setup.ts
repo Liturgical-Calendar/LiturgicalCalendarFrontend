@@ -18,8 +18,8 @@ setup('seed rbac users', async () => {
         await deleteAllSeededUsers();
         await truncateAppTables();
         for (const id of SEEDED_USER_IDS) {
-            await seedUser(id);
-            await loginAndSaveState(id, pat.token);
+            const userId = await seedUser(id);
+            await loginAndSaveState(id, pat.token, userId);
         }
     } finally {
         try {

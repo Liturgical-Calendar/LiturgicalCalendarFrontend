@@ -39,17 +39,19 @@ export class ZitadelAdmin {
             email: { email: u.email, isVerified: true },
             password: { password: u.password, changeRequired: false },
         });
-        // Zitadel's search projection is eventually consistent; poll until the new
-        // user is visible to findUserIdByEmail before returning (max ~2.25 s).
-        // Fail fast if it never appears: a user invisible to search after the full
-        // window would otherwise be silently skipped by findUserIdByEmail-based
-        // cleanup, orphaning it.
-        const maxAttempts = 15;
+        // Zitadel's search projection (users14) is eventually consistent; poll until the
+        // new user is visible to findUserIdByEmail before returning. The window must
+        // absorb projection lag during the setup's delete-all-then-reseed churn, where a
+        // burst of user.removed/user.added events queues behind the search projection — a
+        // tight 2.25 s window flaked there. 40 × 250 ms = 10 s is generous but bounded.
+        // Fail fast if it never appears: a user invisible to search after the full window
+        // would otherwise be silently skipped by findUserIdByEmail-based cleanup, orphaning it.
+        const maxAttempts = 40;
         let found: string | null = null;
         for (let attempt = 0; attempt < maxAttempts; attempt++) {
             found = await this.findUserIdByEmail(u.email);
             if (found !== null) break;
-            await new Promise<void>(r => setTimeout(r, 150));
+            await new Promise<void>(r => setTimeout(r, 250));
         }
         if (found === null) {
             throw new Error(`createVerifiedUser: projection timed out — ${u.email} not visible to search after ${maxAttempts} attempts`);
@@ -65,9 +67,22 @@ export class ZitadelAdmin {
     }
 
     async deleteUser(userId: string): Promise<void> {
-        await this.req('DELETE', `/v2/users/${userId}`);
-        // Zitadel's search projection is eventually consistent; a brief pause ensures
-        // callers can immediately call findUserIdByEmail and get a consistent result.
+        // Zitadel releases the user's username/email unique-constraint as part of the
+        // `user.removed` command, so a later re-create of the SAME email succeeds — no rename
+        // or constraint surgery is needed. (Verified empirically: create → plain DELETE →
+        // re-create the same email is clean; the constraint count returns to 0.)
+        //
+        // Tolerate a 404: the user may already be gone — a concurrent cleanup, or a stale
+        // search-projection entry whose command-store aggregate was already removed. The goal
+        // (user absent) is satisfied either way; re-throw anything that isn't a 404.
+        try {
+            await this.req('DELETE', `/v2/users/${userId}`);
+        } catch (e) {
+            if (!String(e).includes('-> 404:')) throw e;
+            console.warn(`deleteUser: DELETE returned 404 for ${userId} (already removed)`);
+        }
+        // Zitadel's search projection is eventually consistent; a brief pause ensures callers
+        // can immediately call findUserIdByEmail and get a consistent result.
         await new Promise<void>(r => setTimeout(r, 200));
     }
 

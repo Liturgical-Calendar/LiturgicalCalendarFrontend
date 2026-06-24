@@ -1,0 +1,182 @@
+name: E2E
+
+# End-to-end Playwright suite against the full docker stack
+# (Postgres + Zitadel + OpenFGA + Mailpit + API + frontend).
+#
+# The `project` workflow_dispatch input selects which Playwright project runs:
+#   rbac (default) — the scoped-admin-review RBAC suite (rbac-setup seeds users)
+#   chromium / firefox / webkit — the calendar-data form specs
+#       (national / diocesan / wider-region / missals; these depend on the
+#        `setup` project's /auth/login with TEST_USERNAME/TEST_PASSWORD)
+#   all — every project
+# Push-triggered iteration runs `rbac`.
+#
+# FIRST ITERATION — being validated against a real runner (env contract,
+# healthcheck timing, the ~1.1 GB API image build). Once green, promote it:
+# add `pull_request` + a nightly `schedule` trigger, and a compose override that
+# builds litcal-frontend from the PR checkout. NOTE: the calendar-form projects
+# predate the Zitadel-based auth, so they may need their test user / login flow
+# updated before they pass in CI.
+
+on:
+  workflow_dispatch:
+    inputs:
+      project:
+        description: 'Playwright project to run'
+        type: choice
+        default: rbac
+        options:
+          - rbac
+          - chromium
+          - firefox
+          - webkit
+          - all
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    name: E2E (Playwright + full docker stack)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Checkout the API repo (calendar source data)
+        # Scenario 10 / 11c build their PATCH payload by reading the IT calendar JSON
+        # from the API repo's jsondata/sourcedata (and gitRestoreApiData reverts there
+        # locally). The docker stack runs the API as a container, but the host process
+        # still needs the source files — check out the same ref the stack builds from.
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: Liturgical-Calendar/LiturgicalCalendarAPI
+          ref: development
+          path: api-repo
+          persist-credentials: false
+
+      - name: Seed env files
+        # Both .env (compose) and .env.development (the host playwright process)
+        # are gitignored; seed them from the example. setup-zitadel.sh and the
+        # sync step below fill in the generated secrets.
+        run: |
+          cp .env.example .env
+          cp .env.example .env.development
+
+      - name: Build app images (sequential)
+        # litcal-api and litcal-frontend share a BuildKit `type=cache` apt mount;
+        # building them in parallel (as `up --build` / `build` do) collides on the
+        # apt lock ("Could not get lock /var/lib/apt/lists/lock"). Build one at a time.
+        run: |
+          docker compose build litcal-api
+          docker compose build litcal-frontend
+
+      - name: Bring up the docker stack
+        run: docker compose up -d --wait db zitadel openfga mailpit login litcal-api litcal-frontend
+
+      - name: Bootstrap Zitadel
+        run: ./scripts/setup-zitadel.sh --force-secrets --update-env
+
+      - name: Resolve + propagate Zitadel & OpenFGA creds
+        # Two gotchas, both fatal in a from-scratch CI bootstrap:
+        #  1. openfga-setup creates the store INSIDE OpenFGA but does not write its id
+        #     to the host .env, so litcal-api's `OPENFGA_STORE_ID: ${OPENFGA_STORE_ID:-}`
+        #     stays EMPTY → the API queries an empty store → isResourceAdmin() is always
+        #     false → every resource-admin page redirects (no /admin/access-requests XHR).
+        #  2. setup-zitadel writes ZITADEL_MACHINE_TOKEN only to compose .env (not
+        #     .env.development), and a fresh bootstrap mints a new org id.
+        # So resolve the live store/model + token/org and write them to BOTH .env (the
+        # containers, picked up by the recreate below) AND .env.development (the host
+        # playwright process), plus the host-reachable URLs. THEN recreate.
+        run: |
+          set -euo pipefail
+          set_kv() {  # set_kv FILE KEY VALUE
+            local file=$1 key=$2 val=$3
+            if grep -q "^${key}=" "$file"; then
+              sed -i "s|^${key}=.*|${key}=${val}|" "$file"
+            else
+              printf '%s=%s\n' "$key" "$val" >> "$file"
+            fi
+          }
+          store=$(curl -sS http://localhost:8083/stores \
+            | python3 -c "import sys,json;s=json.load(sys.stdin).get('stores',[]);print(s[0]['id'] if s else '')")
+          model=$(curl -sS "http://localhost:8083/stores/$store/authorization-models" \
+            | python3 -c "import sys,json;m=json.load(sys.stdin).get('authorization_models',[]);print(m[0]['id'] if m else '')")
+          tok=$(grep '^ZITADEL_MACHINE_TOKEN=' .env | cut -d= -f2-)
+          org=$(curl -sS http://localhost:8080/auth/v1/users/me \
+                  -H "Authorization: Bearer $tok" -H "Host: localhost" \
+                | python3 -c "import sys,json;u=json.load(sys.stdin).get('user',{});print(u.get('details',{}).get('resourceOwner') or u.get('resourceOwner',''))")
+          # Containers (.env): the API resolves admin scopes against this store/model.
+          set_kv .env OPENFGA_STORE_ID "$store"
+          set_kv .env OPENFGA_MODEL_ID "$model"
+          # Host playwright (.env.development): the helpers hit the host-exposed ports.
+          set_kv .env.development ZITADEL_MACHINE_TOKEN "$tok"
+          set_kv .env.development ZITADEL_ORG_ID "$org"
+          set_kv .env.development ZITADEL_ISSUER "http://localhost:8080"
+          set_kv .env.development OPENFGA_API_URL "http://localhost:8083"
+          set_kv .env.development OPENFGA_STORE_ID "$store"
+          set_kv .env.development OPENFGA_MODEL_ID "$model"
+          set_kv .env.development MAILPIT_API_URL "http://localhost:8025"
+
+      - name: Recreate app containers with the resolved creds
+        run: docker compose up -d --wait --force-recreate litcal-api litcal-frontend
+
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies + browsers
+        env:
+          PROJECT: ${{ inputs.project || 'rbac' }}
+        run: |
+          corepack enable
+          yarn install --immutable
+          case "$PROJECT" in
+            firefox) browsers=firefox ;;
+            webkit)  browsers=webkit ;;
+            all)     browsers="chromium firefox webkit" ;;
+            *)       browsers=chromium ;;   # rbac, chromium
+          esac
+          yarn playwright install --with-deps $browsers
+
+      - name: Run E2E suite
+        # GitHub Actions sets CI=true automatically; override it to empty so
+        # reuseExistingServer (!CI) is TRUE and Playwright REUSES the docker stack's
+        # api:8000 / frontend:3000 instead of starting its own server (which collides
+        # on the port). --retries / --forbid-only restore the CI-mode behaviours that
+        # an empty CI would otherwise switch off.
+        env:
+          CI: ""
+          PROJECT: ${{ inputs.project || 'rbac' }}
+          API_REPO_PATH: ${{ github.workspace }}/api-repo
+        run: |
+          if [ "$PROJECT" = "all" ]; then
+            yarn playwright test --retries=2 --forbid-only
+          else
+            yarn playwright test --project="$PROJECT" --retries=2 --forbid-only
+          fi
+
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+      - name: Dump stack logs on failure
+        if: failure()
+        run: docker compose logs --no-color --tail 400
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v
