@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-22 15:27+0000\n"
-"PO-Revision-Date: 2026-06-21 15:13+0000\n"
+"PO-Revision-Date: 2026-06-24 07:12+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -2848,14 +2848,12 @@ msgid "Manage fine-grained resource permissions"
 msgstr "Fijnmazige resourcepermissies beheren"
 
 #: admin-dashboard.php:155
-#, fuzzy
-#| msgid "Access Requests"
 msgid "Access Requests to Review"
-msgstr "Toegangsverzoeken"
+msgstr "Te beoordelen toegangsverzoeken"
 
 #: admin-dashboard.php:157
 msgid "Review and approve access requests for the resources you administer"
-msgstr ""
+msgstr "Beoordeel en keur toegangsverzoeken goed voor de bronnen die u beheert"
 
 #: admin-role-requests.php:55
 msgid "Role Requests Management"
