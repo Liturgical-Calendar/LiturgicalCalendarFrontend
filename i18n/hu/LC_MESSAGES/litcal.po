@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-22 15:27+0000\n"
-"PO-Revision-Date: 2026-06-21 15:13+0000\n"
+"PO-Revision-Date: 2026-06-24 07:12+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hu/>\n"
@@ -2831,14 +2831,14 @@ msgid "Manage fine-grained resource permissions"
 msgstr "Finomhangolt erőforrás-hozzáférések kezelése"
 
 #: admin-dashboard.php:155
-#, fuzzy
-#| msgid "Access Requests"
 msgid "Access Requests to Review"
-msgstr "Hozzáférési Kérelmek"
+msgstr "Elbírálandó hozzáférési kérelmek"
 
 #: admin-dashboard.php:157
 msgid "Review and approve access requests for the resources you administer"
 msgstr ""
+"Tekintse át és hagyja jóvá az Ön által kezelt erőforrásokra vonatkozó "
+"hozzáférési kérelmeket"
 
 #: admin-role-requests.php:55
 msgid "Role Requests Management"
