@@ -1,6 +1,7 @@
 import { execFile } from 'child_process';
 import { promisify } from 'util';
 import * as path from 'path';
+import * as fs from 'fs';
 import { USERS } from './users';
 import { ZitadelAdmin } from './zitadel';
 import { Fga } from './fga';
@@ -44,12 +45,28 @@ export async function deleteAllSeededUsers(): Promise<void> {
  * (Untracked new files are not removed — scenario 10 edits existing calendar files.)
  */
 export async function gitRestoreApiData(): Promise<void> {
-    try {
-        await exec('git', ['-C', API_REPO, 'checkout', '--', 'jsondata/sourcedata'], { timeout: 30000 });
-    } catch (e) {
-        // A clean working tree exits 0 (no throw). A throw means a real failure (bad
-        // API_REPO_PATH, not a git repo, checkout error) that left scenario-10 edits
-        // unreverted — surface it rather than hiding a dirty tree across runs.
-        console.warn(`gitRestoreApiData: failed to restore API source data (edits may persist): ${String(e)}`);
+    // No-op when the API repo isn't a local git checkout — e.g. CI, where the API runs
+    // ONLY as a container and the calendar edits live in ephemeral container state, not in
+    // a host-tracked working tree (nothing to restore, and `git -C <absent>` would error).
+    // Where it IS present (local dev with the bind-mounted source), discard the edit and let
+    // a real `git checkout` failure propagate so settleCleanup surfaces a dirty tree.
+    if (!fs.existsSync(path.join(API_REPO, '.git'))) return;
+    await exec('git', ['-C', API_REPO, 'checkout', '--', 'jsondata/sourcedata'], { timeout: 30000 });
+}
+
+/**
+ * Run all cleanup operations to completion (Promise.allSettled — none short-circuits the others),
+ * then THROW if any rejected, so a genuine cleanup failure surfaces on the run where it happened
+ * instead of silently leaving stale state that makes a LATER run pass vacuously. Ops should each be
+ * tolerant of already-clean state (revokeScope / Fga.delete swallow not-found, gitRestoreApiData
+ * no-ops on a clean tree) so only a real failure rejects and throws here.
+ */
+export async function settleCleanup(label: string, ops: Array<Promise<unknown>>): Promise<void> {
+    const results = await Promise.allSettled(ops);
+    const failures = results
+        .filter((r): r is PromiseRejectedResult => r.status === 'rejected')
+        .map((r) => String(r.reason));
+    if (failures.length > 0) {
+        throw new Error(`${label} cleanup failed:\n  - ${failures.join('\n  - ')}`);
     }
 }
