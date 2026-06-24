@@ -60,7 +60,7 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           repository: Liturgical-Calendar/LiturgicalCalendarAPI
-          ref: fix/router-self-url-wildcard-host  # TEMP: keep in sync with the docker build ref; revert to development before merge
+          ref: development
           path: api-repo
 
       - name: Seed env files

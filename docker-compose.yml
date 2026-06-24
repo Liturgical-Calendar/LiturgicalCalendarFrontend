@@ -32,7 +32,7 @@ services:
   # ============================================================================
   db-init:
     image: litcal-api:latest
-    build: https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI.git#fix/router-self-url-wildcard-host  # TEMP: verify Router self-URL fix; revert to #development before merge
+    build: https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI.git#development
     entrypoint: ["cp", "/var/www/html/scripts/init-db.sql", "/init/init-litcal.sql"]
     volumes:
       - db_init_scripts:/init
@@ -279,7 +279,7 @@ services:
 
   litcal-api:
     image: litcal-api:latest
-    build: https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI.git#fix/router-self-url-wildcard-host  # TEMP: verify Router self-URL fix; revert to #development before merge
+    build: https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI.git#development
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:8000/calendars > /dev/null"]
