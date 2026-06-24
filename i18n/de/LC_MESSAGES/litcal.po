@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-22 15:27+0000\n"
-"PO-Revision-Date: 2026-06-24 07:12+0000\n"
+"PO-Revision-Date: 2026-06-24 07:32+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -2869,8 +2869,7 @@ msgstr "Zu prüfende Zugriffsanfragen"
 #: admin-dashboard.php:157
 msgid "Review and approve access requests for the resources you administer"
 msgstr ""
-"Zugriffsanfragen für die von Ihnen verwalteten Ressourcen prüfen und "
-"genehmigen"
+"Zugriffsanfragen für die von dir verwalteten Ressourcen prüfen und genehmigen"
 
 #: admin-role-requests.php:55
 msgid "Role Requests Management"
