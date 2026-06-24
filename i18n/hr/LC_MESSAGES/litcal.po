@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-22 15:27+0000\n"
-"PO-Revision-Date: 2026-06-24 07:12+0000\n"
+"PO-Revision-Date: 2026-06-24 08:05+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
@@ -152,7 +152,7 @@ msgid ""
 "same URL, click on it to see results."
 msgstr ""
 "URL API zahtjeva temeljen na odabranim opcijama. Gumb je postavljen na isti "
-"URL, kliknite ga da biste vidjeli rezultate."
+"URL, klikni ga da vidiš rezultate."
 
 #: index.php:117 index.php:124
 msgid "Liturgical Calendar Validator"
@@ -273,7 +273,7 @@ msgstr "Nije uspjelo kopiranje URL-a u međuspremnik"
 #. translators: notification message
 #: usage.php:21
 msgid "Please select and copy manually"
-msgstr "Molimo odaberite i kopirajte ručno"
+msgstr "Odaberi i kopiraj ručno"
 
 #. translators: part of page title - section showing usage examples
 #: usage.php:31
@@ -349,7 +349,7 @@ msgstr "Pretplata na kalendar"
 
 #: usage.php:140
 msgid "Select calendar"
-msgstr "Odaberite kalendar"
+msgstr "Odaberi kalendar"
 
 #. translators: label above the iCal/ICS subscription URL
 #: usage.php:146
@@ -527,7 +527,7 @@ msgid ""
 "You can manually fetch new data by clicking on <i><b>Send/receive all</b></"
 "i> (from the SEND/RECEIVE menu item)."
 msgstr ""
-"Možete ručno dohvatiti nove podatke klikom na <i><b>Pošalji/primaj sve</b></"
+"Možeš ručno dohvatiti nove podatke klikom na <i><b>Pošalji/primaj sve</b></"
 "i> (iz stavke izbornika POŠALJI/PRIMI)."
 
 #. translators: info about Outlook's HTML support in event descriptions
@@ -622,7 +622,7 @@ msgstr "Liturgija bilo kojeg dana"
 msgid ""
 "For example, you can find the liturgy of the day from the day of your "
 "baptism."
-msgstr "Na primjer, možete pronaći liturgiju dana s dana vašeg krštenja."
+msgstr "Na primjer, možeš pronaći liturgiju dana s dana tvojeg krštenja."
 
 #: easter.php:63
 msgid "Date of Easter from 1583 to 9999"
@@ -705,8 +705,8 @@ msgid ""
 "for your region, please feel free to create an account on the translation "
 "server."
 msgstr ""
-"Ako želite pridonijeti prijevodima liturgijskih podataka za svoju regiju, "
-"slobodno otvorite račun na prijevodnom serveru."
+"Ako želiš pridonijeti prijevodima liturgijskih podataka za svoju regiju, "
+"slobodno otvori račun na prijevodnom serveru."
 
 #: translations.php:16
 msgid "Specifically, the components which require translation are:"
@@ -728,8 +728,8 @@ msgid ""
 "came from."
 msgstr ""
 "Ostali prijevodi potrebni za liturgijske kalendarske podatke nalaze se u "
-"%1$s prijevodnoj komponenti. Odabirom jezika na koji želite prevesti ovu "
-"komponentu, pronaći ćete oznake koje kategoriziraju stringove za prijevod u "
+"%1$s prijevodnoj komponenti. Odabirom jezika na koji želiš prevesti ovu "
+"komponentu, pronaći ćeš oznake koje kategoriziraju stringove za prijevod u "
 "sekciji \"Status stringa\". Kategorije koje su potrebne za dovršavanje "
 "podataka liturgijskog kalendara su: %2$s. Oznaka/kategorija %3$s sadrži "
 "poruke koje objašnjavaju kako je kalendar izračunat za određenu godinu; iako "
@@ -742,8 +742,8 @@ msgid ""
 "If translating liturgical calendar data for a European country, you will "
 "also want to translate the %1$s component."
 msgstr ""
-"Ako prevodite liturgijske kalendarske podatke za europsku zemlju, također "
-"biste trebali prevesti %1$s komponentu."
+"Ako prevodiš liturgijske kalendarske podatke za europsku zemlju, također "
+"trebaš prevesti %1$s komponentu."
 
 #: translations.php:54
 msgid ""
@@ -1179,8 +1179,7 @@ msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
 msgstr ""
-"Čini se da ovaj liturgijski događaj ne postoji? Molimo odaberite vrijednost "
-"s popisa."
+"Čini se da ovaj liturgijski događaj ne postoji? Odaberi vrijednost s popisa."
 
 #: src/Utilities.php:282
 msgid "This liturgical event does not exist, so it will be created."
@@ -1188,11 +1187,11 @@ msgstr "Ovaj liturgijski događaj ne postoji, stoga će biti stvoren."
 
 #: src/Utilities.php:286
 msgid "Choose from existing liturgical events"
-msgstr "Odaberite iz postojećih liturgijskih događaja"
+msgstr "Odaberi iz postojećih liturgijskih događaja"
 
 #: src/Utilities.php:287
 msgid "Choose from existing liturgical events (or create a new one)"
-msgstr "Odaberite iz postojećih liturgijskih događaja (ili stvorite novi)"
+msgstr "Odaberi iz postojećih liturgijskih događaja (ili stvori novi)"
 
 #: src/Utilities.php:299
 msgid "Property to change"
@@ -1406,15 +1405,15 @@ msgstr "Zahtjev za pristupom poslan"
 
 #: layout/footer.php:98
 msgid "Your request was approved"
-msgstr "Vaš zahtjev je odobren"
+msgstr "Tvoj zahtjev je odobren"
 
 #: layout/footer.php:99
 msgid "Your request was rejected"
-msgstr "Vaš zahtjev je odbijen"
+msgstr "Tvoj zahtjev je odbijen"
 
 #: layout/footer.php:100
 msgid "Your access was revoked"
-msgstr "Vaš pristup je ukinut"
+msgstr "Tvoj pristup je ukinut"
 
 #: layout/footer.php:101
 msgid "Request access to start using the system"
@@ -1476,7 +1475,7 @@ msgstr "Problem s vezom"
 
 #: includes/login-modal.php:314
 msgid "Please enter both username and password"
-msgstr "Molimo unesite i korisničko ime i lozinku"
+msgstr "Unesi i korisničko ime i lozinku"
 
 #: includes/login-modal.php:322
 msgid "Logging in..."
@@ -1488,15 +1487,15 @@ msgstr "Prijava uspješna"
 
 #: includes/login-modal.php:374
 msgid "Login failed. Please check your credentials."
-msgstr "Prijava nije uspjela. Provjerite svoje podatke."
+msgstr "Prijava nije uspjela. Provjeri svoje podatke."
 
 #: includes/login-modal.php:540 includes/login-modal.php:545
 #, php-format
 msgid "Your session will expire in less than %1$d minute."
 msgid_plural "Your session will expire in less than %1$d minutes."
-msgstr[0] "Vaša sesija istječe za manje od %1$d minutu."
-msgstr[1] "Vaša sesija istječe za manje od %1$d minute."
-msgstr[2] "Vaša sesija istječe za manje od %1$d minuta."
+msgstr[0] "Tvoja sesija istječe za manje od %1$d minutu."
+msgstr[1] "Tvoja sesija istječe za manje od %1$d minute."
+msgstr[2] "Tvoja sesija istječe za manje od %1$d minuta."
 
 #: includes/login-modal.php:604
 msgid "Extending..."
@@ -1504,7 +1503,7 @@ msgstr "Produžavanje..."
 
 #: includes/login-modal.php:626
 msgid "Your session has been extended."
-msgstr "Vaša sesija je produžena."
+msgstr "Tvoja sesija je produžena."
 
 #: includes/login-modal.php:627
 msgid "Session Extended"
@@ -1512,11 +1511,11 @@ msgstr "Sesija produžena"
 
 #: includes/login-modal.php:636
 msgid "Failed to extend session. Please login again."
-msgstr "Nije uspjelo produženje sesije. Molimo ponovno prijavite se."
+msgstr "Nije uspjelo produženje sesije. Ponovno se prijavi."
 
 #: includes/login-modal.php:700
 msgid "Your session has expired. Please login again."
-msgstr "Vaša je sesija istekla. Molimo ponovno prijavite se."
+msgstr "Tvoja je sesija istekla. Ponovno se prijavi."
 
 #: includes/login-modal.php:701
 msgid "Session Expired"
@@ -1555,12 +1554,12 @@ msgstr "Vremenska zona"
 #. translators: form field label for selecting JSON file in admin
 #: includes/messages.php:41
 msgid "Select JSON file to manage"
-msgstr "Odaberite JSON datoteku za upravljanje"
+msgstr "Odaberi JSON datoteku za upravljanje"
 
 #. translators: form field label for selecting data source in admin
 #: includes/messages.php:43
 msgid "Select data source"
-msgstr "Odaberite izvor podataka"
+msgstr "Odaberi izvor podataka"
 
 #. translators: form field label for year the decree takes effect
 #: includes/messages.php:45
@@ -1592,9 +1591,9 @@ msgid ""
 "\"%s\". Please translate the General Roman Calendar via the Weblate "
 "translation server before creating a calendar for this locale."
 msgstr ""
-"Opći rimski kalendar još nije preveden na lokalitet \"%s\". Molimo prevedite "
-"Opći rimski kalendar putem Weblate prevoditeljskog poslužitelja prije nego "
-"što izradite kalendar za ovaj lokalitet."
+"Opći rimski kalendar još nije preveden na lokalitet \"%s\". Prevedi Opći "
+"rimski kalendar putem Weblate prevoditeljskog poslužitelja prije nego što "
+"izradiš kalendar za ovaj lokalitet."
 
 #. translators: form row title for designating a Doctor of the Church
 #: includes/messages.php:86
@@ -2063,7 +2062,7 @@ msgstr "Stvori novi liturgijski događaj"
 #. translators: modal title for choosing missal
 #: includes/messages.php:310
 msgid "Choose from known Roman Missal language editions"
-msgstr "Odaberite iz poznatih jezičnih izdanja Rimskog misala"
+msgstr "Odaberi iz poznatih jezičnih izdanja Rimskog misala"
 
 #. translators: modal title for deleting a diocesan calendar
 #: includes/messages.php:312
@@ -2082,9 +2081,9 @@ msgid ""
 "value in the list, or contact the curator of the API to have the Missal "
 "added to known language edition Missals."
 msgstr ""
-"Ovaj misal nije poznat API-ju liturgijskog kalendara. Molimo odaberite "
-"vrijednost s popisa ili kontaktirajte kustosa API-ja kako bi se misal dodao "
-"u poznata jezična izdanja."
+"Ovaj misal nije poznat API-ju liturgijskog kalendara. Odaberi vrijednost s "
+"popisa ili kontaktiraj kustosa API-ja kako bi se misal dodao u poznata "
+"jezična izdanja."
 
 #. translators: warning message when deleting a calendar
 #: includes/messages.php:326
@@ -2093,7 +2092,7 @@ msgid ""
 "calendar and the corresponding index entries will be removed and no longer "
 "available in the client applications."
 msgstr ""
-"Ako odlučite izbrisati ovaj kalendar, liturgijski događaji definirani za "
+"Ako odlučiš izbrisati ovaj kalendar, liturgijski događaji definirani za "
 "kalendar i odgovarajući indeksni unosi bit će uklonjeni i više neće biti "
 "dostupni u klijentskim aplikacijama."
 
@@ -2111,8 +2110,7 @@ msgstr ""
 #. translators: help text shown when diocese input is disabled
 #: includes/messages.php:334
 msgid "Select a national calendar first to see available dioceses."
-msgstr ""
-"Najprije odaberite nacionalni kalendar da biste vidjeli dostupne biskupije."
+msgstr "Najprije odaberi nacionalni kalendar da vidiš dostupne biskupije."
 
 #. translators: tooltip explaining the Eternal High Priest feast
 #: includes/messages.php:336
@@ -2135,8 +2133,8 @@ msgid ""
 "engine)"
 msgstr ""
 "ako su podaci iz Vlastitog dijela svetaca za određeni Misal za ovu naciju "
-"već uključeni u glavni LitCal engine, možete odabrati Misal s ovog popisa da "
-"ga povežete s ovim Nacionalnim kalendarom (ako Misal nije na popisu, nije "
+"već uključeni u glavni LitCal engine, možeš odabrati Misal s ovog popisa da "
+"ga povežeš s ovim Nacionalnim kalendarom (ako Misal nije na popisu, nije "
 "uključen u LitCal engine)"
 
 #. translators: tooltip explaining wider region association
@@ -2147,8 +2145,7 @@ msgid ""
 "Calendar here"
 msgstr ""
 "ako su podaci za Širu regiju koji se odnose na ovaj Nacionalni kalendar već "
-"definirani, možete ovdje povezati podatke Šire regije s Nacionalnim "
-"kalendarom"
+"definirani, možeš ovdje povezati podatke Šire regije s Nacionalnim kalendarom"
 
 #. translators: screen reader text for previous button
 #: includes/messages.php:346 temporale.php:171
@@ -2438,7 +2435,7 @@ msgstr "Povlačenje..."
 
 #: admin-permissions.php:369
 msgid "Are you sure you want to revoke this permission?"
-msgstr "Jeste li sigurni da želite povući ovo dopuštenje?"
+msgstr "Jesi li siguran da želiš povući ovo dopuštenje?"
 
 #: admin-permissions.php:375 admin-permissions.php:418
 #: admin-applications.php:244 admin-role-requests.php:253 temporale.php:138
@@ -2826,7 +2823,7 @@ msgstr "Zahtjevi za pristup na pregled"
 
 #: admin-dashboard.php:157
 msgid "Review and approve access requests for the resources you administer"
-msgstr "Pregledajte i odobrite zahtjeve za pristup resursima kojima upravljate"
+msgstr "Pregledaj i odobri zahtjeve za pristup resursima kojima upravljaš"
 
 #: admin-role-requests.php:55
 msgid "Role Requests Management"
@@ -2874,8 +2871,8 @@ msgid ""
 "Manage users in the system. You can view user information and revoke roles "
 "from users who have them."
 msgstr ""
-"Upravljajte korisnicima u sustavu. Možete pregledati informacije o "
-"korisnicima i opozvati uloge korisnicima koji ih imaju."
+"Upravljaj korisnicima u sustavu. Možeš pregledati informacije o korisnicima "
+"i opozvati uloge korisnicima koji ih imaju."
 
 #: admin-users.php:64
 msgid "Users with Roles"
@@ -2927,7 +2924,7 @@ msgstr "Nije verificiran"
 
 #: admin-users.php:336
 msgid "Are you sure you want to revoke the role"
-msgstr "Jeste li sigurni da želite opozvati ulogu"
+msgstr "Jesi li siguran da želiš opozvati ulogu"
 
 #: admin-users.php:338
 msgid "from user"
@@ -2968,11 +2965,11 @@ msgstr "Naziv aplikacije"
 
 #: developer-dashboard.php:95
 msgid "A descriptive name for your application."
-msgstr "Opisni naziv za vašu aplikaciju."
+msgstr "Opisni naziv za tvoju aplikaciju."
 
 #: developer-dashboard.php:100
 msgid "Optional description of what your application does."
-msgstr "Neobavezni opis onoga što vaša aplikacija radi."
+msgstr "Neobavezni opis onoga što tvoja aplikacija radi."
 
 #: developer-dashboard.php:103
 msgid "Website URL"
@@ -2980,7 +2977,7 @@ msgstr "URL web stranice"
 
 #: developer-dashboard.php:105
 msgid "Optional URL to your application or project."
-msgstr "Neobavezni URL vaše aplikacije ili projekta."
+msgstr "Neobavezni URL tvoje aplikacije ili projekta."
 
 #: developer-dashboard.php:109 developer-dashboard.php:315
 msgid "Access Scope"
@@ -2999,7 +2996,7 @@ msgid ""
 "Choose the level of access your application needs. This cannot be changed "
 "after approval."
 msgstr ""
-"Odaberite razinu pristupa koju vaša aplikacija treba. Ovo se ne može "
+"Odaberi razinu pristupa koju tvoja aplikacija treba. Ovo se ne može "
 "promijeniti nakon odobrenja."
 
 #: developer-dashboard.php:152
@@ -3039,7 +3036,7 @@ msgstr "Datum isteka"
 
 #: developer-dashboard.php:178
 msgid "Optional. Leave empty for a key that never expires."
-msgstr "Opcionalno. Ostavite prazno za ključ koji nikada ne ističe."
+msgstr "Opcionalno. Ostavi prazno za ključ koji nikada ne ističe."
 
 #: developer-dashboard.php:186 developer-dashboard.php:268
 msgid "Generate Key"
@@ -3060,7 +3057,7 @@ msgstr ""
 
 #: developer-dashboard.php:209
 msgid "Your API Key:"
-msgstr "Vaš API ključ:"
+msgstr "Tvoj API ključ:"
 
 #: developer-dashboard.php:212
 msgid "Copy to clipboard"
@@ -3080,7 +3077,7 @@ msgstr "Potvrdi brisanje"
 
 #: developer-dashboard.php:242
 msgid "Are you sure you want to delete this item?"
-msgstr "Jeste li sigurni da želite izbrisati ovu stavku?"
+msgstr "Jesi li siguran da želiš izbrisati ovu stavku?"
 
 #: developer-dashboard.php:243
 msgid "This action cannot be undone."
@@ -3096,7 +3093,7 @@ msgstr "Još niste registrirali nijednu aplikaciju."
 
 #: developer-dashboard.php:264
 msgid "Create your first application to get started."
-msgstr "Kreirajte vašu prvu aplikaciju da biste započeli."
+msgstr "Kreiraj svoju prvu aplikaciju da započneš."
 
 #: developer-dashboard.php:266
 msgid "API Keys"
