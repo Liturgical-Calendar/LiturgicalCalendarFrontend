@@ -5,14 +5,14 @@
 # John R. D'Orazio <priest@johnromanodorazio.com>, 2022.
 # Weblate Admin <admin@example.com>, 2024, 2025.
 # OpenAI <noreply-mt-openai@weblate.org>, 2024, 2025, 2026.
-# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024, 2025.
+# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-22 15:27+0000\n"
-"PO-Revision-Date: 2026-06-21 11:36+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2026-06-24 07:12+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
 "Language: la\n"
@@ -2818,14 +2818,12 @@ msgid "Manage fine-grained resource permissions"
 msgstr "Administrare subtilia permissiones facultatum"
 
 #: admin-dashboard.php:155
-#, fuzzy
-#| msgid "Access Requests"
 msgid "Access Requests to Review"
-msgstr "Accessus Postulationes"
+msgstr "Postulationes accessus recognoscendae"
 
 #: admin-dashboard.php:157
 msgid "Review and approve access requests for the resources you administer"
-msgstr ""
+msgstr "Recognosce et proba postulationes accessus ad res quas administras"
 
 #: admin-role-requests.php:55
 msgid "Role Requests Management"
