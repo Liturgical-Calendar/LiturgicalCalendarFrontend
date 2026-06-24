@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-22 15:27+0000\n"
-"PO-Revision-Date: 2026-06-24 08:05+0000\n"
+"PO-Revision-Date: 2026-06-24 09:49+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
@@ -436,7 +436,7 @@ msgid ""
 msgstr ""
 "Une fois que tu as ajouté le calendrier à partir de la version de bureau de "
 "Google Agenda, il sera alors disponible pour le même compte Gmail sur "
-"l'application Android Google Calendar."
+"l'application Google Agenda sur un smartphone."
 
 #. translators: instruction step for iPhone - describes Settings menu path
 #: usage.php:211
