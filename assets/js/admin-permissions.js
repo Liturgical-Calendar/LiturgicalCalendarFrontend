@@ -5,6 +5,20 @@
  * Provides functionality for listing, granting, and revoking permissions.
  */
 
+import {
+    ApiClient,
+    CalendarSelect,
+    CalendarSelectFilter,
+} from '@liturgical-calendar/components-js';
+
+// Initialize the API client once; CalendarSelect requires this to have resolved.
+const apiClientReady = ApiClient.init(BaseUrl)
+    .then(function(client) { return client instanceof ApiClient ? client : false; })
+    .catch(function(err) {
+        console.error('Failed to initialize ApiClient for permission fields:', err);
+        return false;
+    });
+
 document.addEventListener('DOMContentLoaded', function() {
     const config = window.AdminPermissionsConfig;
     if (!config) {
@@ -50,40 +64,81 @@ document.addEventListener('DOMContentLoaded', function() {
         { id: 'decrees',            label: config.i18n.grcDecrees }
     ];
 
-    // Swap the free-text Object ID input for a <select> when GRC is selected, and back otherwise.
-    function syncObjectIdField(objectType) {
-        const current = document.getElementById('grantObjectId');
-        if (objectType === 'general_roman_calendar') {
-            if (current.tagName === 'SELECT') {
-                return;
-            }
-            const select = document.createElement('select');
-            select.className = 'form-select';
-            select.id = 'grantObjectId';
-            select.required = true;
-            // Empty placeholder forces an explicit choice instead of silently defaulting to the
-            // first id (temporale); consistent with the object-type and relation selects.
-            const placeholder = document.createElement('option');
-            placeholder.value = '';
-            placeholder.textContent = config.i18n.selectObjectId || 'Select object ID...';
-            placeholder.disabled = true;
-            placeholder.selected = true;
-            select.appendChild(placeholder);
-            for (const opt of GRC_OBJECT_IDS) {
-                const o = document.createElement('option');
-                o.value = opt.id;
-                o.textContent = opt.label;
-                select.appendChild(o);
-            }
-            current.replaceWith(select);
-        } else if (current.tagName === 'SELECT') {
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.className = 'form-control';
-            input.id = 'grantObjectId';
-            input.required = true;
-            input.placeholder = config.i18n.enterObjectId || '';
-            current.replaceWith(input);
+    // The five wider-region names (object_id for the wider_region scope).
+    // Keep in sync with the API; these are not localized (proper nouns).
+    const WIDER_REGIONS = ['Americas', 'Europe', 'Asia', 'Africa', 'Oceania'];
+
+    const NATIONAL_FILTER_TYPES = ['national_calendar', 'national_calendar_test'];
+    const DIOCESAN_FILTER_TYPES = ['diocesan_calendar', 'diocesan_calendar_test'];
+
+    /**
+     * Build a native <select class="form-select" id="grantObjectId"> for the three
+     * non-calendar scopes (wider_region / GRC / GRC test).
+     * @param {string} objectType - The currently selected object type
+     * @returns {HTMLSelectElement} The built select element
+     */
+    function buildStaticGrantObjectId(objectType) {
+        const select = document.createElement('select');
+        select.className = 'form-select';
+        select.id = 'grantObjectId';
+        select.required = true;
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = config.i18n.selectCalendarId || 'Select calendar ID...';
+        placeholder.disabled = true;
+        placeholder.selected = true;
+        select.appendChild(placeholder);
+
+        let entries = [];
+        if (objectType === 'wider_region') {
+            entries = WIDER_REGIONS.map(function(name) { return { value: name, label: name }; });
+        } else if (objectType === 'general_roman_calendar') {
+            entries = GRC_OBJECT_IDS.map(function(o) { return { value: o.id, label: o.label }; });
+        } else if (objectType === 'general_roman_calendar_test') {
+            entries = [
+                { value: 'general_roman_calendar', label: config.i18n.testsGeneralRoman }
+            ];
+        }
+        for (const e of entries) {
+            const o = document.createElement('option');
+            o.value = e.value;
+            o.textContent = e.label;
+            select.appendChild(o);
+        }
+        // Auto-select the single fixed GRC-test id.
+        if (objectType === 'general_roman_calendar_test') {
+            select.value = 'general_roman_calendar';
+        }
+        return select;
+    }
+
+    /**
+     * Swap the contents of #grantObjectIdMount.
+     * Calendar-backed scopes mount a CalendarSelect; the rest use a native select.
+     * @param {string} objectType - The currently selected object type
+     */
+    async function syncObjectIdField(objectType) {
+        const mount = document.getElementById('grantObjectIdMount');
+        if (!mount) return;
+        mount.innerHTML = '';
+        if (
+            NATIONAL_FILTER_TYPES.includes(objectType) ||
+            DIOCESAN_FILTER_TYPES.includes(objectType)
+        ) {
+            const client = await apiClientReady;
+            if (!client) return;
+            if (grantObjectType.value !== objectType) return; // scope changed again meanwhile
+            const filter = NATIONAL_FILTER_TYPES.includes(objectType)
+                ? CalendarSelectFilter.NATIONAL_CALENDARS
+                : CalendarSelectFilter.DIOCESAN_CALENDARS;
+            const calSelect = new CalendarSelect(LITCAL_LOCALE)
+                .filter(filter)
+                .allowNull(true)
+                .class('form-select')
+                .id('grantObjectId');
+            calSelect.appendTo(mount);
+        } else {
+            mount.appendChild(buildStaticGrantObjectId(objectType));
         }
     }
 
@@ -107,8 +162,10 @@ document.addEventListener('DOMContentLoaded', function() {
         'national_calendar': config.i18n.nationalCalendar,
         'diocesan_calendar': config.i18n.diocesanCalendar,
         'wider_region': config.i18n.widerRegion,
-        'test_definition': config.i18n.testDefinition,
-        'general_roman_calendar': config.i18n.generalRomanCalendar
+        'general_roman_calendar': config.i18n.generalRomanCalendar,
+        'national_calendar_test': config.i18n.testsNational,
+        'diocesan_calendar_test': config.i18n.testsDiocesan,
+        'general_roman_calendar_test': config.i18n.testsGeneralRoman
     };
 
     // Relation display names and badge classes
