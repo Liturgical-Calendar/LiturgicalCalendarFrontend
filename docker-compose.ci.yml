@@ -1,0 +1,19 @@
+# CI-only compose override for the E2E workflow (.github/workflows/e2e.yml).
+#
+# The base docker-compose.yml builds `litcal-frontend` from
+# github.com/Liturgical-Calendar/LiturgicalCalendarFrontend.git#development, so a
+# pull request's own frontend changes would NOT be exercised by the e2e suite.
+# This override rebuilds the frontend image from the checked-out repository (the
+# PR head on `pull_request`), mirroring how the API source data is checked out.
+#
+# `litcal-api` intentionally stays on the base `#development` build: a frontend PR
+# should run against the development API (the merge target), not a branch build.
+#
+# Applied via `COMPOSE_FILE: docker-compose.yml:docker-compose.ci.yml` in the
+# workflow. NOT auto-loaded locally — only `docker-compose.override.yml` is — so
+# local development is unaffected.
+services:
+  litcal-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
