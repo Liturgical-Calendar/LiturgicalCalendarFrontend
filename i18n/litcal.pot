@@ -3310,3 +3310,31 @@ msgstr ""
 #: user-profile.php:407
 msgid "Session expired"
 msgstr ""
+
+#: admin-permissions.php:300 admin-permissions.php:397 admin-permissions.php:427 permission-requests.php:234
+msgid "Calendar scope"
+msgstr ""
+
+#: admin-permissions.php:313 admin-permissions.php:398 admin-permissions.php:428 permission-requests.php:235
+msgid "Calendar ID"
+msgstr ""
+
+#: admin-permissions.php:302 permission-requests.php:236
+msgid "Select calendar scope..."
+msgstr ""
+
+#: admin-permissions.php:316 admin-permissions.php:399 admin-permissions.php:429 permission-requests.php:237
+msgid "Select calendar ID..."
+msgstr ""
+
+#: admin-permissions.php:80 admin-permissions.php:306 admin-permissions.php:400 admin-permissions.php:430 permission-requests.php:243
+msgid "National Calendar Tests"
+msgstr ""
+
+#: admin-permissions.php:81 admin-permissions.php:307 admin-permissions.php:401 admin-permissions.php:431 permission-requests.php:244
+msgid "Diocesan Calendar Tests"
+msgstr ""
+
+#: admin-permissions.php:82 admin-permissions.php:308 admin-permissions.php:402 admin-permissions.php:432 permission-requests.php:245
+msgid "General Roman Calendar Tests"
+msgstr ""

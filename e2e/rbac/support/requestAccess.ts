@@ -9,9 +9,8 @@ import { expect, type Page } from '@playwright/test';
  *   - Role: radios `input[name="requested_role"]`; checking one reveals
  *     `#permissionsSection` and auto-adds one permission row when none exist.
  *   - Permission row: `#permissionRows .card`, with `.perm-object-type` (select),
- *     `.perm-object-id` (text input — but swapped to a <select> when object-type is
- *     `general_roman_calendar`), and `.perm-relation` (select). Set object-type FIRST
- *     so the object-id control is in its final form before we fill it.
+ *     `.perm-object-id` (always a <select>), and `.perm-relation` (select). Set
+ *     object-type FIRST so the object-id control is populated before we select from it.
  *   - Justification: `#justification` (optional). Submit: `#submitBtn`.
  *   - Success: `#formAlerts .alert-success`; the new pending request also appears in
  *     `#existingRequestsBody` as `tr[id^="request-"]`.
@@ -29,7 +28,7 @@ import { expect, type Page } from '@playwright/test';
 export interface AccessRequestOptions {
     requestedRole: string; // e.g. 'calendar_editor'
     permission: {
-        objectType: 'national_calendar' | 'diocesan_calendar' | 'wider_region' | 'general_roman_calendar';
+        objectType: 'national_calendar' | 'diocesan_calendar' | 'wider_region' | 'general_roman_calendar' | 'national_calendar_test' | 'diocesan_calendar_test' | 'general_roman_calendar_test';
         objectId: string;
         relation: 'admin' | 'editor' | 'viewer' | 'deleter';
     };
@@ -45,15 +44,12 @@ export async function submitAccessRequest(page: Page, opts: AccessRequestOptions
     const row = page.locator('#permissionRows .card').first();
     await expect(row).toBeVisible();
 
-    // Object-type first — for GRC this swaps .perm-object-id from <input> to <select>.
+    // Object-type first — populates the object-id <select> options for this type.
     await row.locator('.perm-object-type').selectOption(opts.permission.objectType);
 
-    const idField = row.locator('.perm-object-id');
-    if (opts.permission.objectType === 'general_roman_calendar') {
-        await idField.selectOption(opts.permission.objectId);
-    } else {
-        await idField.fill(opts.permission.objectId);
-    }
+    const objectIdControl = row.locator('.perm-object-id');
+    await objectIdControl.waitFor({ state: 'visible' });
+    await objectIdControl.selectOption(opts.permission.objectId);
 
     await row.locator('.perm-relation').selectOption(opts.permission.relation);
 
