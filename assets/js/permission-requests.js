@@ -588,7 +588,7 @@ document.addEventListener('DOMContentLoaded', async function() {
      * with a single warning if the stored array exceeds the cap.
      * @param {Array|undefined} stored - Stored permissions from the request
      */
-    function populateRowsFromStoredPermissions(stored) {
+    async function populateRowsFromStoredPermissions(stored) {
         if (!Array.isArray(stored)) return;
         if (stored.length > MAX_PERMISSIONS) {
             const tmpl = config.i18n.permissionsTruncated
@@ -606,9 +606,9 @@ document.addEventListener('DOMContentLoaded', async function() {
             const typeSelect = row.querySelector('.perm-object-type');
             const relSelect = row.querySelector('.perm-relation');
             if (typeSelect) typeSelect.value = perm.object_type || '';
-            // Sync the object-id control BEFORE setting its value; for GRC the
-            // input is replaced with a <select>, so re-query after the swap.
-            syncRowObjectIdField(row, perm.object_type || '');
+            // Sync the object-id control (mounts a CalendarSelect for calendar
+            // scopes; await so the <select> exists before we set its value).
+            await syncRowObjectIdField(row, perm.object_type || '');
             const idField = row.querySelector('.perm-object-id');
             if (idField) idField.value = perm.object_id || '';
             if (relSelect) relSelect.value = perm.relation || '';
@@ -620,7 +620,7 @@ document.addEventListener('DOMContentLoaded', async function() {
      * @param {string} requestId - The request ID to resubmit
      * @param {Array} requests - All requests (to find the one to resubmit)
      */
-    function openResubmitForm(requestId, requests) {
+    async function openResubmitForm(requestId, requests) {
         const request = requests.find(function(r) { return String(r.id) === String(requestId); });
         if (!request) return;
 
@@ -632,7 +632,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         updatePermissionsSection();
         permissionRows.innerHTML = '';
         permissionRowCounter = 0;
-        populateRowsFromStoredPermissions(request.permissions);
+        await populateRowsFromStoredPermissions(request.permissions);
 
         // Pre-fill justification
         const justificationEl = document.getElementById('justification');
