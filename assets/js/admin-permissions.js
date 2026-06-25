@@ -380,7 +380,8 @@ document.addEventListener('DOMContentLoaded', function() {
     async function handleGrant() {
         const user = grantUser.value.trim();
         const objectType = grantObjectType.value;
-        const objectId = document.getElementById('grantObjectId').value.trim();
+        const objectIdEl = document.getElementById('grantObjectId');
+        const objectId = objectIdEl ? objectIdEl.value.trim() : '';
         const relation = grantRelation.value;
 
         if (!user || !objectType || !objectId || !relation) {
