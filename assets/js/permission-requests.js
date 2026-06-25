@@ -317,7 +317,11 @@ document.addEventListener('DOMContentLoaded', async function() {
                     </div>
                     <div class="col-md-3">
                         <label class="form-label form-label-sm mb-1">${escapeHtml(config.i18n.calendarId)}</label>
-                        <div class="perm-objid-mount"></div>
+                        <div class="perm-objid-mount">
+                            <select class="form-select form-select-sm perm-object-id" required>
+                                <option value="" disabled selected>${escapeHtml(config.i18n.selectCalendarId)}</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="col-md-2">
                         <button type="button" class="btn btn-outline-danger btn-sm w-100 remove-perm-btn"
