@@ -137,6 +137,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 .class('form-select')
                 .id('grantObjectId');
             calSelect.appendTo(mount);
+            // CalendarSelect's allowNull adds an empty option that semantically
+            // means "no nation/diocese" = General Roman Calendar, which is not a
+            // valid national/diocesan object_id. Turn it into a disabled
+            // placeholder so the user must pick a concrete calendar.
+            const calNullOpt = mount.querySelector('#grantObjectId option[value=""]');
+            if (calNullOpt) {
+                calNullOpt.textContent = config.i18n.selectCalendarId || 'Select calendar ID...';
+                calNullOpt.disabled = true;
+                calNullOpt.selected = true;
+            }
         } else {
             mount.appendChild(buildStaticGrantObjectId(objectType));
         }

@@ -1180,8 +1180,13 @@ msgstr ""
 msgid "Developer"
 msgstr ""
 
-#: layout/header.php:200 admin-permissions.php:95 admin-permissions.php:307
-#: admin-permissions.php:391 permission-requests.php:256
+#: layout/header.php:200
+msgid "Admin"
+msgstr ""
+
+#: admin-permissions.php:97 admin-permissions.php:293 admin-permissions.php:404
+#: permission-requests.php:259
+msgctxt "permission relation"
 msgid "Admin"
 msgstr ""
 

@@ -111,26 +111,29 @@ document.addEventListener('DOMContentLoaded', async function() {
     const WIDER_REGIONS = ['Americas', 'Europe', 'Asia', 'Africa', 'Oceania'];
 
     // Object types allowed per role (mirror AccessRequestRepository::ROLE_OBJECT_TYPES)
+    // Membership mirrors AccessRequestRepository::ROLE_OBJECT_TYPES (the API
+    // validates the SET, not the order). Display order is deliberate: the
+    // General Roman Calendar scope(s) come first.
     const roleObjectTypes = {
         'calendar_editor': [
+            'general_roman_calendar',
             'national_calendar',
             'diocesan_calendar',
-            'wider_region',
-            'general_roman_calendar'
+            'wider_region'
         ],
         'test_editor': [
+            'general_roman_calendar_test',
             'national_calendar_test',
-            'diocesan_calendar_test',
-            'general_roman_calendar_test'
+            'diocesan_calendar_test'
         ],
         'developer': [
+            'general_roman_calendar',
+            'general_roman_calendar_test',
             'national_calendar',
             'diocesan_calendar',
             'wider_region',
             'national_calendar_test',
-            'diocesan_calendar_test',
-            'general_roman_calendar_test',
-            'general_roman_calendar'
+            'diocesan_calendar_test'
         ]
     };
 
@@ -222,6 +225,17 @@ document.addEventListener('DOMContentLoaded', async function() {
                 .allowNull(true)
                 .class('form-select form-select-sm perm-object-id');
             calSelect.appendTo(mount);
+            // CalendarSelect's allowNull adds an empty option that semantically
+            // means "no nation/diocese" = General Roman Calendar, which is not a
+            // valid national/diocesan object_id. Turn it into a disabled
+            // placeholder so the user must pick a concrete calendar (Vatican
+            // included — it has its own national-style calendar).
+            const calNullOpt = mount.querySelector('.perm-object-id option[value=""]');
+            if (calNullOpt) {
+                calNullOpt.textContent = config.i18n.selectCalendarId || 'Select calendar ID...';
+                calNullOpt.disabled = true;
+                calNullOpt.selected = true;
+            }
         } else {
             mount.appendChild(buildStaticObjectIdSelect(objectType));
         }
