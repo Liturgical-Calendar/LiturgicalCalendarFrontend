@@ -3,22 +3,49 @@ name: E2E
 # End-to-end Playwright suite against the full docker stack
 # (Postgres + Zitadel + OpenFGA + Mailpit + API + frontend).
 #
+# Triggers:
+#   pull_request (frontend-affecting paths) — the PR's own frontend is built from
+#     the checkout via docker-compose.ci.yml (COMPOSE_FILE on the job). Draft PRs
+#     are skipped.
+#   schedule (nightly) — safety-net run on the default branch.
+#   workflow_dispatch — manual, with the `project` selector below.
+# Automated runs (pull_request / schedule) run the `rbac` project only.
+#
 # The `project` workflow_dispatch input selects which Playwright project runs:
 #   rbac (default) — the scoped-admin-review RBAC suite (rbac-setup seeds users)
 #   chromium / firefox / webkit — the calendar-data form specs
 #       (national / diocesan / wider-region / missals; these depend on the
-#        `setup` project's /auth/login with TEST_USERNAME/TEST_PASSWORD)
+#        `setup` project's /auth/login with TEST_USERNAME/TEST_PASSWORD, predate
+#        the Zitadel-based auth, and are NOT yet fixed for CI — see issue #353)
 #   all — every project
-# Push-triggered iteration runs `rbac`.
 #
-# FIRST ITERATION — being validated against a real runner (env contract,
-# healthcheck timing, the ~1.1 GB API image build). Once green, promote it:
-# add `pull_request` + a nightly `schedule` trigger, and a compose override that
-# builds litcal-frontend from the PR checkout. NOTE: the calendar-form projects
-# predate the Zitadel-based auth, so they may need their test user / login flow
-# updated before they pass in CI.
+# litcal-api builds from #development (the merge target); only litcal-frontend is
+# rebuilt from the checkout (docker-compose.ci.yml).
 
 on:
+  pull_request:
+    paths:
+      - 'assets/**'
+      - 'includes/**'
+      - 'layout/**'
+      - 'src/**'
+      - 'i18n/**'
+      - '*.php'
+      - 'e2e/**'
+      - 'scripts/**'
+      - 'Dockerfile'
+      - 'docker-compose.yml'
+      - 'docker-compose.ci.yml'
+      - 'playwright.config.ts'
+      - 'package.json'
+      - 'yarn.lock'
+      - '.pnp.cjs'
+      - 'composer.json'
+      - 'composer.lock'
+      - '.env.example'
+      - '.github/workflows/e2e.yml'
+  schedule:
+    - cron: '0 3 * * *'
   workflow_dispatch:
     inputs:
       project:
@@ -43,7 +70,14 @@ jobs:
   e2e:
     name: E2E (Playwright + full docker stack)
     runs-on: ubuntu-latest
+    # Skip draft PRs — the heavy full-stack run isn't worth it until ready for review.
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.draft == false }}
     timeout-minutes: 45
+    env:
+      # Build litcal-frontend from the checkout (the PR head) instead of the base
+      # compose's #development git build, so the PR's frontend is what's tested.
+      # See docker-compose.ci.yml. Applies to every `docker compose` call below.
+      COMPOSE_FILE: docker-compose.yml:docker-compose.ci.yml
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
