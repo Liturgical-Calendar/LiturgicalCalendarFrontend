@@ -1351,8 +1351,15 @@ msgstr "Abmelden"
 msgid "Developer"
 msgstr "Entwickler"
 
-#: layout/header.php:200 admin-permissions.php:95 admin-permissions.php:307
-#: admin-permissions.php:391 permission-requests.php:256
+#: layout/header.php:200
+msgid "Admin"
+msgstr "Admin"
+
+#: admin-permissions.php:97 admin-permissions.php:293 admin-permissions.php:404
+#: permission-requests.php:259
+#, fuzzy
+#| msgid "Admin"
+msgctxt "permission relation"
 msgid "Admin"
 msgstr "Admin"
 
@@ -2706,8 +2713,13 @@ msgid "Please select a role."
 msgstr "Bitte wähle eine Rolle aus."
 
 #: permission-requests.php:214
+#, fuzzy
+#| msgid ""
+#| "Each permission row must have object type, object ID, and relation filled "
+#| "in."
 msgid ""
-"Each permission row must have object type, object ID, and relation filled in."
+"Each permission row must have a calendar scope, calendar ID, and relation "
+"filled in."
 msgstr ""
 "Jede Berechtigungszeile muss ausgefüllte Felder für Objekttyp, Objekt-ID und "
 "Relation enthalten."
@@ -3609,6 +3621,54 @@ msgstr "Sitzung läuft in 30 Sekunden ab"
 #: user-profile.php:407
 msgid "Session expired"
 msgstr "Sitzung abgelaufen"
+
+#: admin-permissions.php:300 admin-permissions.php:397
+#: admin-permissions.php:427 permission-requests.php:234
+#, fuzzy
+#| msgid "Calendar"
+msgid "Calendar scope"
+msgstr "Kalender"
+
+#: admin-permissions.php:313 admin-permissions.php:398
+#: admin-permissions.php:428 permission-requests.php:235
+#, fuzzy
+#| msgid "Calendar"
+msgid "Calendar ID"
+msgstr "Kalender"
+
+#: admin-permissions.php:302 permission-requests.php:236
+#, fuzzy
+#| msgid "Select calendar"
+msgid "Select calendar scope..."
+msgstr "Kalender auswählen"
+
+#: admin-permissions.php:316 admin-permissions.php:399
+#: admin-permissions.php:429 permission-requests.php:237
+#, fuzzy
+#| msgid "Select calendar"
+msgid "Select calendar ID..."
+msgstr "Kalender auswählen"
+
+#: admin-permissions.php:80 admin-permissions.php:306 admin-permissions.php:400
+#: admin-permissions.php:430 permission-requests.php:243
+#, fuzzy
+#| msgid "National Calendar"
+msgid "National Calendar Tests"
+msgstr "Nationaler Kalender"
+
+#: admin-permissions.php:81 admin-permissions.php:307 admin-permissions.php:401
+#: admin-permissions.php:431 permission-requests.php:244
+#, fuzzy
+#| msgid "Diocesan Calendar"
+msgid "Diocesan Calendar Tests"
+msgstr "Diözesankalender"
+
+#: admin-permissions.php:82 admin-permissions.php:308 admin-permissions.php:402
+#: admin-permissions.php:432 permission-requests.php:245
+#, fuzzy
+#| msgid "General Roman Calendar"
+msgid "General Roman Calendar Tests"
+msgstr "Allgemeiner Römischer Kalender"
 
 #~ msgid "min ago"
 #~ msgstr "Min. her"

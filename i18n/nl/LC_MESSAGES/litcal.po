@@ -1344,8 +1344,15 @@ msgstr "Uitloggen"
 msgid "Developer"
 msgstr "Ontwikkelaar"
 
-#: layout/header.php:200 admin-permissions.php:95 admin-permissions.php:307
-#: admin-permissions.php:391 permission-requests.php:256
+#: layout/header.php:200
+msgid "Admin"
+msgstr "Beheer"
+
+#: admin-permissions.php:97 admin-permissions.php:293 admin-permissions.php:404
+#: permission-requests.php:259
+#, fuzzy
+#| msgid "Admin"
+msgctxt "permission relation"
 msgid "Admin"
 msgstr "Beheer"
 
@@ -2694,8 +2701,13 @@ msgid "Please select a role."
 msgstr "Selecteer een rol."
 
 #: permission-requests.php:214
+#, fuzzy
+#| msgid ""
+#| "Each permission row must have object type, object ID, and relation filled "
+#| "in."
 msgid ""
-"Each permission row must have object type, object ID, and relation filled in."
+"Each permission row must have a calendar scope, calendar ID, and relation "
+"filled in."
 msgstr ""
 "Elke machtigingsrij moet objecttype, object-ID en relatie ingevuld hebben."
 
@@ -2853,7 +2865,8 @@ msgstr "Te beoordelen toegangsverzoeken"
 
 #: admin-dashboard.php:157
 msgid "Review and approve access requests for the resources you administer"
-msgstr "Beoordeel en keur toegangsverzoeken goed voor de bronnen die je beheert"
+msgstr ""
+"Beoordeel en keur toegangsverzoeken goed voor de bronnen die je beheert"
 
 #: admin-role-requests.php:55
 msgid "Role Requests Management"
@@ -3599,6 +3612,54 @@ msgstr "Sessie verloopt over 30 seconden"
 #: user-profile.php:407
 msgid "Session expired"
 msgstr "Sessie verlopen"
+
+#: admin-permissions.php:300 admin-permissions.php:397
+#: admin-permissions.php:427 permission-requests.php:234
+#, fuzzy
+#| msgid "Calendar"
+msgid "Calendar scope"
+msgstr "Kalender"
+
+#: admin-permissions.php:313 admin-permissions.php:398
+#: admin-permissions.php:428 permission-requests.php:235
+#, fuzzy
+#| msgid "Calendar"
+msgid "Calendar ID"
+msgstr "Kalender"
+
+#: admin-permissions.php:302 permission-requests.php:236
+#, fuzzy
+#| msgid "Select calendar"
+msgid "Select calendar scope..."
+msgstr "Selecteer kalender"
+
+#: admin-permissions.php:316 admin-permissions.php:399
+#: admin-permissions.php:429 permission-requests.php:237
+#, fuzzy
+#| msgid "Select calendar"
+msgid "Select calendar ID..."
+msgstr "Selecteer kalender"
+
+#: admin-permissions.php:80 admin-permissions.php:306 admin-permissions.php:400
+#: admin-permissions.php:430 permission-requests.php:243
+#, fuzzy
+#| msgid "National Calendar"
+msgid "National Calendar Tests"
+msgstr "Nationale kalender"
+
+#: admin-permissions.php:81 admin-permissions.php:307 admin-permissions.php:401
+#: admin-permissions.php:431 permission-requests.php:244
+#, fuzzy
+#| msgid "Diocesan Calendar"
+msgid "Diocesan Calendar Tests"
+msgstr "Diocesane kalender"
+
+#: admin-permissions.php:82 admin-permissions.php:308 admin-permissions.php:402
+#: admin-permissions.php:432 permission-requests.php:245
+#, fuzzy
+#| msgid "General Roman Calendar"
+msgid "General Roman Calendar Tests"
+msgstr "Algemene Romeinse kalender"
 
 #~ msgid "min ago"
 #~ msgstr "min geleden"
