@@ -224,11 +224,7 @@ if (!$authHelper->emailVerified) {
                 submitted: <?php echo json_encode(_('Submitted'), $jsonFlags); ?>,
                 reviewed: <?php echo json_encode(_('Reviewed'), $jsonFlags); ?>,
                 // Permission form labels
-                objectType: <?php echo json_encode(_('Object Type'), $jsonFlags); ?>,
-                objectId: <?php echo json_encode(_('Object ID'), $jsonFlags); ?>,
                 relation: <?php echo json_encode(_('Relation'), $jsonFlags); ?>,
-                selectObjectType: <?php echo json_encode(_('Select object type...'), $jsonFlags); ?>,
-                selectObjectId: <?php echo json_encode(_('Select object ID...'), $jsonFlags); ?>,
                 selectRelation: <?php echo json_encode(_('Select relation...'), $jsonFlags); ?>,
                 remove: <?php echo json_encode(_('Remove'), $jsonFlags); ?>,
                 calendarScope: <?php echo json_encode(_('Calendar scope'), $jsonFlags); ?>,
@@ -266,9 +262,7 @@ if (!$authHelper->emailVerified) {
                 statusPending: <?php echo json_encode(_('Pending'), $jsonFlags); ?>,
                 statusApproved: <?php echo json_encode(_('Approved'), $jsonFlags); ?>,
                 statusRejected: <?php echo json_encode(_('Rejected'), $jsonFlags); ?>,
-                statusRevoked: <?php echo json_encode(_('Revoked'), $jsonFlags); ?>,
-                // Object ID placeholders
-                objectIdPlaceholder: <?php echo json_encode(_('e.g. IT, USA, BOSTON, Americas...'), $jsonFlags); ?>
+                statusRevoked: <?php echo json_encode(_('Revoked'), $jsonFlags); ?>
             }
         };
     </script>
