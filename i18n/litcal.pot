@@ -2454,7 +2454,8 @@ msgstr ""
 
 #: permission-requests.php:214
 msgid ""
-"Each permission row must have object type, object ID, and relation filled in."
+"Each permission row must have a calendar scope, calendar ID, and relation "
+"filled in."
 msgstr ""
 
 #: permission-requests.php:215

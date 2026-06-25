@@ -211,7 +211,7 @@ if (!$authHelper->emailVerified) {
                 resubmit: <?php echo json_encode(_('Resubmit'), $jsonFlags); ?>,
                 rejectionReason: <?php echo json_encode(_('Rejection reason'), $jsonFlags); ?>,
                 roleRequired: <?php echo json_encode(_('Please select a role.'), $jsonFlags); ?>,
-                permissionIncomplete: <?php echo json_encode(_('Each permission row must have object type, object ID, and relation filled in.'), $jsonFlags); ?>,
+                permissionIncomplete: <?php echo json_encode(_('Each permission row must have a calendar scope, calendar ID, and relation filled in.'), $jsonFlags); ?>,
                 maxPermissionsReached: <?php echo json_encode(_('You have reached the maximum of %1$d permissions per request.'), $jsonFlags); ?>,
                 permissionsTruncated: <?php echo json_encode(_('This request had more than %1$d permissions; only the first %2$d are shown.'), $jsonFlags); ?>,
                 unknownError: <?php echo json_encode(_('Unknown error'), $jsonFlags); ?>,
