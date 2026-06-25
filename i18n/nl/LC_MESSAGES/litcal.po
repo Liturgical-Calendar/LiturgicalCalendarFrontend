@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-25 19:33+0000\n"
-"PO-Revision-Date: 2026-06-24 07:32+0000\n"
+"PO-Revision-Date: 2026-06-26 20:52+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -2297,11 +2297,9 @@ msgstr "Relatie"
 
 #: admin-permissions.php:97 admin-permissions.php:293 admin-permissions.php:404
 #: permission-requests.php:259
-#, fuzzy
-#| msgid "Admin"
 msgctxt "permission relation"
 msgid "Admin"
-msgstr "Beheer"
+msgstr "Beheerder"
 
 #: admin-permissions.php:98 admin-permissions.php:294 admin-permissions.php:405
 #: permission-requests.php:257
