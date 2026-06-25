@@ -211,7 +211,7 @@ if (!$authHelper->emailVerified) {
                 resubmit: <?php echo json_encode(_('Resubmit'), $jsonFlags); ?>,
                 rejectionReason: <?php echo json_encode(_('Rejection reason'), $jsonFlags); ?>,
                 roleRequired: <?php echo json_encode(_('Please select a role.'), $jsonFlags); ?>,
-                permissionIncomplete: <?php echo json_encode(_('Each permission row must have object type, object ID, and relation filled in.'), $jsonFlags); ?>,
+                permissionIncomplete: <?php echo json_encode(_('Each permission row must have a calendar scope, calendar ID, and relation filled in.'), $jsonFlags); ?>,
                 maxPermissionsReached: <?php echo json_encode(_('You have reached the maximum of %1$d permissions per request.'), $jsonFlags); ?>,
                 permissionsTruncated: <?php echo json_encode(_('This request had more than %1$d permissions; only the first %2$d are shown.'), $jsonFlags); ?>,
                 unknownError: <?php echo json_encode(_('Unknown error'), $jsonFlags); ?>,
@@ -224,18 +224,21 @@ if (!$authHelper->emailVerified) {
                 submitted: <?php echo json_encode(_('Submitted'), $jsonFlags); ?>,
                 reviewed: <?php echo json_encode(_('Reviewed'), $jsonFlags); ?>,
                 // Permission form labels
-                objectType: <?php echo json_encode(_('Object Type'), $jsonFlags); ?>,
-                objectId: <?php echo json_encode(_('Object ID'), $jsonFlags); ?>,
                 relation: <?php echo json_encode(_('Relation'), $jsonFlags); ?>,
-                selectObjectType: <?php echo json_encode(_('Select object type...'), $jsonFlags); ?>,
-                selectObjectId: <?php echo json_encode(_('Select object ID...'), $jsonFlags); ?>,
                 selectRelation: <?php echo json_encode(_('Select relation...'), $jsonFlags); ?>,
                 remove: <?php echo json_encode(_('Remove'), $jsonFlags); ?>,
+                calendarScope: <?php echo json_encode(_('Calendar scope'), $jsonFlags); ?>,
+                calendarId: <?php echo json_encode(_('Calendar ID'), $jsonFlags); ?>,
+                selectCalendarScope: <?php echo json_encode(_('Select calendar scope...'), $jsonFlags); ?>,
+                selectCalendarId: <?php echo json_encode(_('Select calendar ID...'), $jsonFlags); ?>,
                 // Object type display names
                 nationalCalendar: <?php echo json_encode(_('National Calendar'), $jsonFlags); ?>,
                 diocesanCalendar: <?php echo json_encode(_('Diocesan Calendar'), $jsonFlags); ?>,
                 widerRegion: <?php echo json_encode(_('Wider Region'), $jsonFlags); ?>,
                 testDefinition: <?php echo json_encode(_('Test Definition'), $jsonFlags); ?>,
+                testsNational: <?php echo json_encode(_('National Calendar Tests'), $jsonFlags); ?>,
+                testsDiocesan: <?php echo json_encode(_('Diocesan Calendar Tests'), $jsonFlags); ?>,
+                testsGeneralRoman: <?php echo json_encode(_('General Roman Calendar Tests'), $jsonFlags); ?>,
                 generalRomanCalendar: <?php echo json_encode(_('General Roman Calendar'), $jsonFlags); ?>,
                 grcTemporale: <?php echo json_encode(_('Temporale'), $jsonFlags); ?>,
                 // phpcs:ignore Generic.Files.LineLength
@@ -253,15 +256,13 @@ if (!$authHelper->emailVerified) {
                 // Relation display names
                 viewer: <?php echo json_encode(_('Viewer'), $jsonFlags); ?>,
                 editor: <?php echo json_encode(_('Editor'), $jsonFlags); ?>,
-                admin: <?php echo json_encode(_('Admin'), $jsonFlags); ?>,
+                admin: <?php echo json_encode(pgettext('permission relation', 'Admin'), $jsonFlags); ?>,
                 deleter: <?php echo json_encode(_('Deleter'), $jsonFlags); ?>,
                 // Status labels
                 statusPending: <?php echo json_encode(_('Pending'), $jsonFlags); ?>,
                 statusApproved: <?php echo json_encode(_('Approved'), $jsonFlags); ?>,
                 statusRejected: <?php echo json_encode(_('Rejected'), $jsonFlags); ?>,
-                statusRevoked: <?php echo json_encode(_('Revoked'), $jsonFlags); ?>,
-                // Object ID placeholders
-                objectIdPlaceholder: <?php echo json_encode(_('e.g. IT, USA, BOSTON, Americas...'), $jsonFlags); ?>
+                statusRevoked: <?php echo json_encode(_('Revoked'), $jsonFlags); ?>
             }
         };
     </script>
