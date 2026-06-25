@@ -231,11 +231,18 @@ if (!$authHelper->emailVerified) {
                 selectObjectId: <?php echo json_encode(_('Select object ID...'), $jsonFlags); ?>,
                 selectRelation: <?php echo json_encode(_('Select relation...'), $jsonFlags); ?>,
                 remove: <?php echo json_encode(_('Remove'), $jsonFlags); ?>,
+                calendarScope: <?php echo json_encode(_('Calendar scope'), $jsonFlags); ?>,
+                calendarId: <?php echo json_encode(_('Calendar ID'), $jsonFlags); ?>,
+                selectCalendarScope: <?php echo json_encode(_('Select calendar scope...'), $jsonFlags); ?>,
+                selectCalendarId: <?php echo json_encode(_('Select calendar ID...'), $jsonFlags); ?>,
                 // Object type display names
                 nationalCalendar: <?php echo json_encode(_('National Calendar'), $jsonFlags); ?>,
                 diocesanCalendar: <?php echo json_encode(_('Diocesan Calendar'), $jsonFlags); ?>,
                 widerRegion: <?php echo json_encode(_('Wider Region'), $jsonFlags); ?>,
                 testDefinition: <?php echo json_encode(_('Test Definition'), $jsonFlags); ?>,
+                testsNational: <?php echo json_encode(_('National Calendar Tests'), $jsonFlags); ?>,
+                testsDiocesan: <?php echo json_encode(_('Diocesan Calendar Tests'), $jsonFlags); ?>,
+                testsGeneralRoman: <?php echo json_encode(_('General Roman Calendar Tests'), $jsonFlags); ?>,
                 generalRomanCalendar: <?php echo json_encode(_('General Roman Calendar'), $jsonFlags); ?>,
                 grcTemporale: <?php echo json_encode(_('Temporale'), $jsonFlags); ?>,
                 // phpcs:ignore Generic.Files.LineLength
