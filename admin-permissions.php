@@ -77,7 +77,9 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
                         <option value="national_calendar"><?php echo htmlspecialchars(_('National Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                         <option value="diocesan_calendar"><?php echo htmlspecialchars(_('Diocesan Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                         <option value="wider_region"><?php echo htmlspecialchars(_('Wider Region'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                        <option value="test_definition"><?php echo htmlspecialchars(_('Test Definition'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                        <option value="national_calendar_test"><?php echo htmlspecialchars(_('National Calendar Tests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                        <option value="diocesan_calendar_test"><?php echo htmlspecialchars(_('Diocesan Calendar Tests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                        <option value="general_roman_calendar_test"><?php echo htmlspecialchars(_('General Roman Calendar Tests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                         <option value="general_roman_calendar"><?php echo htmlspecialchars(_('General Roman Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                     </select>
                 </div>
@@ -285,22 +287,6 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
                             placeholder="<?php echo htmlspecialchars(_('Enter user ID...'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
                     </div>
                     <div class="mb-3">
-                        <label for="grantObjectType" class="form-label"><?php echo htmlspecialchars(_('Object Type'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
-                        <select class="form-select" id="grantObjectType" required>
-                            <option value=""><?php echo htmlspecialchars(_('Select object type...'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                            <option value="national_calendar"><?php echo htmlspecialchars(_('National Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                            <option value="diocesan_calendar"><?php echo htmlspecialchars(_('Diocesan Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                            <option value="wider_region"><?php echo htmlspecialchars(_('Wider Region'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                            <option value="test_definition"><?php echo htmlspecialchars(_('Test Definition'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                            <option value="general_roman_calendar"><?php echo htmlspecialchars(_('General Roman Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="grantObjectId" class="form-label"><?php echo htmlspecialchars(_('Object ID'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
-                        <input type="text" class="form-control" id="grantObjectId" required
-                            placeholder="<?php echo htmlspecialchars(_('Enter object ID...'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-                    </div>
-                    <div class="mb-3">
                         <label for="grantRelation" class="form-label"><?php echo htmlspecialchars(_('Relation'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
                         <select class="form-select" id="grantRelation" required>
                             <option value=""><?php echo htmlspecialchars(_('Select relation...'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
@@ -309,6 +295,27 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
                             <option value="editor"><?php echo htmlspecialchars(_('Editor'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                             <option value="deleter"><?php echo htmlspecialchars(_('Deleter'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                         </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="grantObjectType" class="form-label"><?php echo htmlspecialchars(_('Calendar scope'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
+                        <select class="form-select" id="grantObjectType" required>
+                            <option value=""><?php echo htmlspecialchars(_('Select calendar scope...'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                            <option value="national_calendar"><?php echo htmlspecialchars(_('National Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                            <option value="diocesan_calendar"><?php echo htmlspecialchars(_('Diocesan Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                            <option value="wider_region"><?php echo htmlspecialchars(_('Wider Region'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                            <option value="national_calendar_test"><?php echo htmlspecialchars(_('National Calendar Tests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                            <option value="diocesan_calendar_test"><?php echo htmlspecialchars(_('Diocesan Calendar Tests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                            <option value="general_roman_calendar_test"><?php echo htmlspecialchars(_('General Roman Calendar Tests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                            <option value="general_roman_calendar"><?php echo htmlspecialchars(_('General Roman Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="grantObjectId" class="form-label"><?php echo htmlspecialchars(_('Calendar ID'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
+                        <div id="grantObjectIdMount">
+                            <select class="form-select" id="grantObjectId" required>
+                                <option value="" disabled selected><?php echo htmlspecialchars(_('Select calendar ID...'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                            </select>
+                        </div>
                     </div>
                     <div id="grantModalAlerts"></div>
                 </div>
@@ -387,6 +394,12 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
                 grcDecrees: <?php echo json_encode(_('Decrees of the Dicastery for Divine Worship')); ?>,
                 enterObjectId: <?php echo json_encode(_('Enter object ID...')); ?>,
                 selectObjectId: <?php echo json_encode(_('Select object ID...')); ?>,
+                calendarScope: <?php echo json_encode(_('Calendar scope')); ?>,
+                calendarId: <?php echo json_encode(_('Calendar ID')); ?>,
+                selectCalendarId: <?php echo json_encode(_('Select calendar ID...')); ?>,
+                testsNational: <?php echo json_encode(_('National Calendar Tests')); ?>,
+                testsDiocesan: <?php echo json_encode(_('Diocesan Calendar Tests')); ?>,
+                testsGeneralRoman: <?php echo json_encode(_('General Roman Calendar Tests')); ?>,
                 // Relation display names
                 admin: <?php echo json_encode(_('Admin')); ?>,
                 viewer: <?php echo json_encode(_('Viewer')); ?>,
@@ -411,6 +424,12 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
                     permissions: <?php echo json_encode(_('Permissions')); ?>,
                     objectType: <?php echo json_encode(_('Object Type')); ?>,
                     objectId: <?php echo json_encode(_('Object ID')); ?>,
+                    calendarScope: <?php echo json_encode(_('Calendar scope')); ?>,
+                    calendarId: <?php echo json_encode(_('Calendar ID')); ?>,
+                    selectCalendarId: <?php echo json_encode(_('Select calendar ID...')); ?>,
+                    testsNational: <?php echo json_encode(_('National Calendar Tests')); ?>,
+                    testsDiocesan: <?php echo json_encode(_('Diocesan Calendar Tests')); ?>,
+                    testsGeneralRoman: <?php echo json_encode(_('General Roman Calendar Tests')); ?>,
                     relation: <?php echo json_encode(_('Relation')); ?>,
                     justification: <?php echo json_encode(_('Justification')); ?>,
                     credentials: <?php echo json_encode(_('Credentials')); ?>,
