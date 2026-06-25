@@ -5,6 +5,20 @@
  * via the unified /auth/access-requests endpoint, and viewing existing request status.
  */
 
+import {
+    ApiClient,
+    CalendarSelect,
+    CalendarSelectFilter,
+} from '@liturgical-calendar/components-js';
+
+// Initialize the API client once; CalendarSelect requires this to have resolved.
+const apiClientReady = ApiClient.init(BaseUrl)
+    .then(function(client) { return client instanceof ApiClient ? client : false; })
+    .catch(function(err) {
+        console.error('Failed to initialize ApiClient for permission fields:', err);
+        return false;
+    });
+
 document.addEventListener('DOMContentLoaded', async function() {
     const config = window.AccessRequestsConfig;
     if (!config) {
@@ -45,13 +59,15 @@ document.addEventListener('DOMContentLoaded', async function() {
         'developer': config.i18n.developer
     };
 
-    // Object type display names
+    // Object type ("Calendar scope") display names
     const objectTypeNames = {
         'national_calendar': config.i18n.nationalCalendar,
         'diocesan_calendar': config.i18n.diocesanCalendar,
         'wider_region': config.i18n.widerRegion,
-        'test_definition': config.i18n.testDefinition,
-        'general_roman_calendar': config.i18n.generalRomanCalendar
+        'general_roman_calendar': config.i18n.generalRomanCalendar,
+        'national_calendar_test': config.i18n.testsNational,
+        'diocesan_calendar_test': config.i18n.testsDiocesan,
+        'general_roman_calendar_test': config.i18n.testsGeneralRoman
     };
 
     // Relation display names
@@ -90,11 +106,35 @@ document.addEventListener('DOMContentLoaded', async function() {
         { id: 'decrees',            label: config.i18n.grcDecrees }
     ];
 
-    // Object types allowed per role
+    // The five wider-region names (object_id for the wider_region scope).
+    // Keep in sync with the API; these are not localized (proper nouns).
+    const WIDER_REGIONS = ['Americas', 'Europe', 'Asia', 'Africa', 'Oceania'];
+
+    // Object types allowed per role (mirror AccessRequestRepository::ROLE_OBJECT_TYPES)
+    // Membership mirrors AccessRequestRepository::ROLE_OBJECT_TYPES (the API
+    // validates the SET, not the order). Display order is deliberate: the
+    // General Roman Calendar scope(s) come first.
     const roleObjectTypes = {
-        'calendar_editor': ['national_calendar', 'diocesan_calendar', 'wider_region', 'general_roman_calendar'],
-        'test_editor': ['test_definition'],
-        'developer': ['national_calendar', 'diocesan_calendar', 'wider_region', 'test_definition', 'general_roman_calendar']
+        'calendar_editor': [
+            'general_roman_calendar',
+            'national_calendar',
+            'diocesan_calendar',
+            'wider_region'
+        ],
+        'test_editor': [
+            'general_roman_calendar_test',
+            'national_calendar_test',
+            'diocesan_calendar_test'
+        ],
+        'developer': [
+            'general_roman_calendar',
+            'general_roman_calendar_test',
+            'national_calendar',
+            'diocesan_calendar',
+            'wider_region',
+            'national_calendar_test',
+            'diocesan_calendar_test'
+        ]
     };
 
     let permissionRowCounter = 0;
@@ -111,46 +151,93 @@ document.addEventListener('DOMContentLoaded', async function() {
         return div.innerHTML;
     }
 
+    const NATIONAL_FILTER_TYPES = ['national_calendar', 'national_calendar_test'];
+    const DIOCESAN_FILTER_TYPES = ['diocesan_calendar', 'diocesan_calendar_test'];
+
     /**
-     * Swap the free-text Object ID input for a <select> when GRC is selected,
-     * and restore the free-text input for any other object type.
-     * The element is looked up live from the row so that repeated calls
-     * after a previous swap work correctly (no stale cached reference).
+     * Build a native <select class="form-select form-select-sm perm-object-id">
+     * for the three non-calendar scopes (wider_region / GRC / GRC test).
+     * @param {string} objectType - The currently selected object type
+     * @returns {HTMLSelectElement} The built select element
+     */
+    function buildStaticObjectIdSelect(objectType) {
+        const select = document.createElement('select');
+        select.className = 'form-select form-select-sm perm-object-id';
+        select.required = true;
+
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = config.i18n.selectCalendarId || 'Select calendar ID...';
+        placeholder.disabled = true;
+        placeholder.selected = true;
+        select.appendChild(placeholder);
+
+        let entries = [];
+        if (objectType === 'wider_region') {
+            entries = WIDER_REGIONS.map(function(name) { return { value: name, label: name }; });
+        } else if (objectType === 'general_roman_calendar') {
+            entries = GRC_OBJECT_IDS.map(function(o) { return { value: o.id, label: o.label }; });
+        } else if (objectType === 'general_roman_calendar_test') {
+            entries = [
+                { value: 'general_roman_calendar', label: config.i18n.testsGeneralRoman }
+            ];
+        }
+        for (const e of entries) {
+            const o = document.createElement('option');
+            o.value = e.value;
+            o.textContent = e.label;
+            select.appendChild(o);
+        }
+        // Auto-select the single fixed GRC-test id.
+        if (objectType === 'general_roman_calendar_test') {
+            select.value = 'general_roman_calendar';
+        }
+        return select;
+    }
+
+    /**
+     * Rebuild the Calendar ID control for a row based on the chosen scope.
+     * Calendar-backed scopes mount a CalendarSelect; the rest use a native select.
      * @param {HTMLElement} row - The permission row (.card element)
      * @param {string} objectType - The currently selected object type
      */
-    function syncRowObjectIdField(row, objectType) {
-        const current = row.querySelector('.perm-object-id');
-        if (!current) return;
-        if (objectType === 'general_roman_calendar') {
-            if (current.tagName === 'SELECT') {
-                return;
+    async function syncRowObjectIdField(row, objectType) {
+        const mount = row.querySelector('.perm-objid-mount');
+        if (!mount) return;
+        mount.innerHTML = '';
+
+        if (
+            NATIONAL_FILTER_TYPES.includes(objectType) ||
+            DIOCESAN_FILTER_TYPES.includes(objectType)
+        ) {
+            const client = await apiClientReady;
+            if (!client) return; // init failed; leave empty (validation will block submit)
+            // Guard against a rapid scope change that already replaced the mount.
+            if (
+                !row.isConnected ||
+                row.querySelector('.perm-object-type').value !== objectType
+            ) return;
+            const filter = NATIONAL_FILTER_TYPES.includes(objectType)
+                ? CalendarSelectFilter.NATIONAL_CALENDARS
+                : CalendarSelectFilter.DIOCESAN_CALENDARS;
+            const calSelect = new CalendarSelect(LITCAL_LOCALE)
+                .filter(filter)
+                .allowNull(true)
+                .class('form-select form-select-sm perm-object-id');
+            calSelect.appendTo(mount);
+            // CalendarSelect's allowNull adds an empty option that semantically
+            // means "no nation/diocese" = General Roman Calendar, which is not a
+            // valid national/diocesan object_id. Turn it into a disabled
+            // placeholder so the user must pick a concrete calendar (Vatican
+            // included — it has its own national-style calendar).
+            const calNullOpt = mount.querySelector('.perm-object-id option[value=""]');
+            if (calNullOpt) {
+                calNullOpt.textContent = config.i18n.selectCalendarId || 'Select calendar ID...';
+                calNullOpt.disabled = true;
+                calNullOpt.selected = true;
             }
-            const select = document.createElement('select');
-            select.className = 'form-select form-select-sm perm-object-id';
-            select.required = true;
-            // Empty placeholder forces an explicit choice instead of silently defaulting to the
-            // first id (temporale); consistent with the object-type and relation selects.
-            const placeholder = document.createElement('option');
-            placeholder.value = '';
-            placeholder.textContent = config.i18n.selectObjectId || 'Select object ID...';
-            placeholder.disabled = true;
-            placeholder.selected = true;
-            select.appendChild(placeholder);
-            for (const opt of GRC_OBJECT_IDS) {
-                const o = document.createElement('option');
-                o.value = opt.id;
-                o.textContent = opt.label;
-                select.appendChild(o);
-            }
-            current.replaceWith(select);
-        } else if (current.tagName === 'SELECT') {
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.className = 'form-control form-control-sm perm-object-id';
-            input.required = true;
-            input.placeholder = config.i18n.objectIdPlaceholder || '';
-            current.replaceWith(input);
+        } else {
+            mount.appendChild(buildStaticObjectIdSelect(objectType));
         }
     }
 
@@ -194,7 +281,7 @@ document.addEventListener('DOMContentLoaded', async function() {
      */
     function buildObjectTypeOptions() {
         const allowed = getAllowedObjectTypes();
-        let html = '<option value="">' + escapeHtml(config.i18n.selectObjectType) + '</option>';
+        let html = '<option value="">' + escapeHtml(config.i18n.selectCalendarScope) + '</option>';
         for (const type of allowed) {
             html += '<option value="' + escapeHtml(type) + '">' + escapeHtml(objectTypeNames[type] || type) + '</option>';
         }
@@ -226,17 +313,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         row.innerHTML = `
             <div class="card-body py-2 px-3">
                 <div class="row g-2 align-items-end">
-                    <div class="col-md-4">
-                        <label class="form-label form-label-sm mb-1">${escapeHtml(config.i18n.objectType)}</label>
-                        <select class="form-select form-select-sm perm-object-type" required>
-                            ${buildObjectTypeOptions()}
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label form-label-sm mb-1">${escapeHtml(config.i18n.objectId)}</label>
-                        <input type="text" class="form-control form-control-sm perm-object-id" required
-                            placeholder="${escapeHtml(config.i18n.objectIdPlaceholder)}">
-                    </div>
                     <div class="col-md-3">
                         <label class="form-label form-label-sm mb-1">${escapeHtml(config.i18n.relation)}</label>
                         <select class="form-select form-select-sm perm-relation" required>
@@ -246,6 +322,20 @@ document.addEventListener('DOMContentLoaded', async function() {
                             <option value="editor">${escapeHtml(config.i18n.editor)}</option>
                             <option value="deleter">${escapeHtml(config.i18n.deleter)}</option>
                         </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label form-label-sm mb-1">${escapeHtml(config.i18n.calendarScope)}</label>
+                        <select class="form-select form-select-sm perm-object-type" required>
+                            ${buildObjectTypeOptions()}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label form-label-sm mb-1">${escapeHtml(config.i18n.calendarId)}</label>
+                        <div class="perm-objid-mount">
+                            <select class="form-select form-select-sm perm-object-id" required>
+                                <option value="" disabled selected>${escapeHtml(config.i18n.selectCalendarId)}</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="col-md-2">
                         <button type="button" class="btn btn-outline-danger btn-sm w-100 remove-perm-btn"
@@ -322,7 +412,8 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         for (const row of rows) {
             const objectType = row.querySelector('.perm-object-type').value;
-            const objectId = row.querySelector('.perm-object-id').value.trim();
+            const objectIdEl = row.querySelector('.perm-object-id');
+            const objectId = objectIdEl ? objectIdEl.value.trim() : '';
             const relation = row.querySelector('.perm-relation').value;
 
             if (!objectType || !objectId || !relation) {
@@ -515,7 +606,7 @@ document.addEventListener('DOMContentLoaded', async function() {
      * with a single warning if the stored array exceeds the cap.
      * @param {Array|undefined} stored - Stored permissions from the request
      */
-    function populateRowsFromStoredPermissions(stored) {
+    async function populateRowsFromStoredPermissions(stored) {
         if (!Array.isArray(stored)) return;
         if (stored.length > MAX_PERMISSIONS) {
             const tmpl = config.i18n.permissionsTruncated
@@ -533,9 +624,9 @@ document.addEventListener('DOMContentLoaded', async function() {
             const typeSelect = row.querySelector('.perm-object-type');
             const relSelect = row.querySelector('.perm-relation');
             if (typeSelect) typeSelect.value = perm.object_type || '';
-            // Sync the object-id control BEFORE setting its value; for GRC the
-            // input is replaced with a <select>, so re-query after the swap.
-            syncRowObjectIdField(row, perm.object_type || '');
+            // Sync the object-id control (mounts a CalendarSelect for calendar
+            // scopes; await so the <select> exists before we set its value).
+            await syncRowObjectIdField(row, perm.object_type || '');
             const idField = row.querySelector('.perm-object-id');
             if (idField) idField.value = perm.object_id || '';
             if (relSelect) relSelect.value = perm.relation || '';
@@ -547,7 +638,7 @@ document.addEventListener('DOMContentLoaded', async function() {
      * @param {string} requestId - The request ID to resubmit
      * @param {Array} requests - All requests (to find the one to resubmit)
      */
-    function openResubmitForm(requestId, requests) {
+    async function openResubmitForm(requestId, requests) {
         const request = requests.find(function(r) { return String(r.id) === String(requestId); });
         if (!request) return;
 
@@ -559,7 +650,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         updatePermissionsSection();
         permissionRows.innerHTML = '';
         permissionRowCounter = 0;
-        populateRowsFromStoredPermissions(request.permissions);
+        await populateRowsFromStoredPermissions(request.permissions);
 
         // Pre-fill justification
         const justificationEl = document.getElementById('justification');
