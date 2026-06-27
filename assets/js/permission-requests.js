@@ -74,16 +74,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     const relationNames = {
         'viewer': config.i18n.viewer,
         'editor': config.i18n.editor,
-        'admin': config.i18n.admin,
-        'deleter': config.i18n.deleter
+        'admin': config.i18n.admin
     };
 
     // Relation badge classes
     const relationBadgeClasses = {
         'viewer': 'bg-info',
         'editor': 'bg-primary',
-        'admin': 'bg-warning text-dark',
-        'deleter': 'bg-danger'
+        'admin': 'bg-warning text-dark'
     };
 
     // Status display info
@@ -317,10 +315,9 @@ document.addEventListener('DOMContentLoaded', async function() {
                         <label class="form-label form-label-sm mb-1">${escapeHtml(config.i18n.relation)}</label>
                         <select class="form-select form-select-sm perm-relation" required>
                             <option value="">${escapeHtml(config.i18n.selectRelation)}</option>
-                            <option value="admin">${escapeHtml(config.i18n.admin)}</option>
                             <option value="viewer">${escapeHtml(config.i18n.viewer)}</option>
                             <option value="editor">${escapeHtml(config.i18n.editor)}</option>
-                            <option value="deleter">${escapeHtml(config.i18n.deleter)}</option>
+                            <option value="admin">${escapeHtml(config.i18n.admin)}</option>
                         </select>
                     </div>
                     <div class="col-md-4">

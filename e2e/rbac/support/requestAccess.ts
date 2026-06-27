@@ -30,7 +30,7 @@ export interface AccessRequestOptions {
     permission: {
         objectType: 'national_calendar' | 'diocesan_calendar' | 'wider_region' | 'general_roman_calendar' | 'national_calendar_test' | 'diocesan_calendar_test' | 'general_roman_calendar_test';
         objectId: string;
-        relation: 'admin' | 'editor' | 'viewer' | 'deleter';
+        relation: 'viewer' | 'editor' | 'admin';
     };
     justification?: string;
 }
