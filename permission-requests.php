@@ -257,7 +257,6 @@ if (!$authHelper->emailVerified) {
                 viewer: <?php echo json_encode(_('Viewer'), $jsonFlags); ?>,
                 editor: <?php echo json_encode(_('Editor'), $jsonFlags); ?>,
                 admin: <?php echo json_encode(pgettext('permission relation', 'Admin'), $jsonFlags); ?>,
-                deleter: <?php echo json_encode(_('Deleter'), $jsonFlags); ?>,
                 // Status labels
                 statusPending: <?php echo json_encode(_('Pending'), $jsonFlags); ?>,
                 statusApproved: <?php echo json_encode(_('Approved'), $jsonFlags); ?>,

@@ -94,10 +94,9 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
                     <label for="filterRelation" class="form-label"><?php echo htmlspecialchars($relationLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
                     <select class="form-select form-select-sm" id="filterRelation">
                         <option value=""><?php echo htmlspecialchars(_('All'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                        <option value="admin"><?php echo htmlspecialchars(pgettext('permission relation', 'Admin'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                         <option value="viewer"><?php echo htmlspecialchars(_('Viewer'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                         <option value="editor"><?php echo htmlspecialchars(_('Editor'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                        <option value="deleter"><?php echo htmlspecialchars(_('Deleter'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                        <option value="admin"><?php echo htmlspecialchars(pgettext('permission relation', 'Admin'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                     </select>
                 </div>
             </div>
@@ -290,10 +289,9 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
                         <label for="grantRelation" class="form-label"><?php echo htmlspecialchars(_('Relation'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
                         <select class="form-select" id="grantRelation" required>
                             <option value=""><?php echo htmlspecialchars(_('Select relation...'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                            <option value="admin"><?php echo htmlspecialchars(pgettext('permission relation', 'Admin'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                             <option value="viewer"><?php echo htmlspecialchars(_('Viewer'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                             <option value="editor"><?php echo htmlspecialchars(_('Editor'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                            <option value="deleter"><?php echo htmlspecialchars(_('Deleter'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                            <option value="admin"><?php echo htmlspecialchars(pgettext('permission relation', 'Admin'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -401,10 +399,9 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
                 testsDiocesan: <?php echo json_encode(_('Diocesan Calendar Tests')); ?>,
                 testsGeneralRoman: <?php echo json_encode(_('General Roman Calendar Tests')); ?>,
                 // Relation display names
-                admin: <?php echo json_encode(pgettext('permission relation', 'Admin')); ?>,
                 viewer: <?php echo json_encode(_('Viewer')); ?>,
                 editor: <?php echo json_encode(_('Editor')); ?>,
-                deleter: <?php echo json_encode(_('Deleter')); ?>,
+                admin: <?php echo json_encode(pgettext('permission relation', 'Admin')); ?>,
                 // Validation
                 allFieldsRequired: <?php echo json_encode(_('All fields are required.')); ?>,
                 // Access requests review section

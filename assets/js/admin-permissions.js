@@ -180,17 +180,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Relation display names and badge classes
     const relationNames = {
-        'admin': config.i18n.admin,
         'viewer': config.i18n.viewer,
         'editor': config.i18n.editor,
-        'deleter': config.i18n.deleter
+        'admin': config.i18n.admin
     };
 
     const relationBadgeClasses = {
-        'admin': 'bg-dark',
         'viewer': 'bg-info',
         'editor': 'bg-primary',
-        'deleter': 'bg-danger'
+        'admin': 'bg-dark'
     };
 
     /**
