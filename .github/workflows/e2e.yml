@@ -24,12 +24,16 @@ name: E2E
 
 on:
   pull_request:
+    # Frontend-affecting paths only. NB: i18n/** is intentionally NOT listed —
+    # translation-only PRs (e.g. Weblate) don't change E2E behaviour, so they
+    # skip the ~7-min full-stack run. Any translation-driven regression is still
+    # caught by the nightly `schedule` run below. (E2E is not a required check,
+    # so excluding a PR here never leaves it stuck waiting on a missing status.)
     paths:
       - 'assets/**'
       - 'includes/**'
       - 'layout/**'
       - 'src/**'
-      - 'i18n/**'
       - '*.php'
       - 'e2e/**'
       - 'scripts/**'
