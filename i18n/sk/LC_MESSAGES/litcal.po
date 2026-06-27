@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024, 2025.
+# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024, 2025, 2026.
 # Milan Šalka <salka.milan@googlemail.com>, 2024.
 # Weblate Admin <admin@example.com>, 2024, 2025.
 # Lovro <development.lovro@gmail.com>, 2025.
@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 15:40+0000\n"
-"PO-Revision-Date: 2026-06-21 11:36+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"POT-Creation-Date: 2026-06-27 09:50+0000\n"
+"PO-Revision-Date: 2026-06-26 20:52+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
 "Language: sk\n"
@@ -123,13 +123,13 @@ msgstr "Parametre požiadaviek dostupné na všetkých cestách %1$s"
 
 #. translators: part of page title - refers to the Catholic liturgical calendar
 #: index.php:65 usage.php:29 examples.php:98 liturgyOfAnyDay.php:18
-#: layout/header.php:257 admin-permissions.php:77 admin-permissions.php:289
-#: admin-permissions.php:374 permission-requests.php:239
+#: layout/header.php:257 admin-permissions.php:77 admin-permissions.php:301
+#: admin-permissions.php:387 permission-requests.php:242
 msgid "General Roman Calendar"
 msgstr "Všeobecný rímsky kalendár"
 
 #: index.php:74 layout/header.php:19 layout/header.php:229
-#: admin-permissions.php:34 permission-requests.php:32
+#: admin-permissions.php:37 permission-requests.php:32
 #: admin-applications.php:34 admin-dashboard.php:40 admin-role-requests.php:44
 #: admin-users.php:34 developer-dashboard.php:35 temporale.php:25
 #: user-profile.php:24
@@ -152,7 +152,7 @@ msgid ""
 "same URL, click on it to see results."
 msgstr ""
 "URL požiadavky API na základe vybraných možností. Tlačidlo je nastavené na "
-"rovnakú URL, kliknite naň, aby ste videli výsledky."
+"rovnakú URL, klikni naň, aby si videl výsledky."
 
 #: index.php:117 index.php:124
 msgid "Liturgical Calendar Validator"
@@ -359,18 +359,18 @@ msgstr "URL na prihlásenie sa na odber kalendára"
 #. translators: tooltip for clickable URL - instructs user to click to copy
 #: usage.php:151
 msgid "Click to copy to the clipboard!"
-msgstr "Kliknite, aby ste skopírovali do schránky!"
+msgstr "Klikni, aby si skopíroval do schránky!"
 
 #. translators: instruction step for calendar subscription - clicking to copy URL
 #: usage.php:187 usage.php:209 usage.php:250
 msgid "Click on the link above to copy it to the clipboard."
-msgstr "Kliknite na odkaz vyššie, aby ste ho skopírovali do schránky."
+msgstr "Klikni na odkaz vyššie, aby si ho skopíroval do schránky."
 
 #. translators: instruction step - %s is replaced with a link to calendar.google.com
 #: usage.php:189
 #, php-format
 msgid "Navigate to %s."
-msgstr "Prejdite na %s."
+msgstr "Prejdi na %s."
 
 #. translators: instruction step for Google Calendar - describes UI location
 #: usage.php:191
@@ -384,7 +384,7 @@ msgstr ""
 #. translators: instruction step - pasting the copied URL
 #: usage.php:193 usage.php:213 usage.php:256
 msgid "Paste in the URL that you copied earlier."
-msgstr "Prilepte URL, ktorý ste skopírovali skôr."
+msgstr "Prilep URL, ktorý si skopíroval skôr."
 
 #. translators: explanation of what happens after subscribing
 #: usage.php:195 usage.php:215 usage.php:235 usage.php:262
@@ -392,7 +392,7 @@ msgid ""
 "Once subscribed, your calendar will be populated with the events from the "
 "subscription URL."
 msgstr ""
-"Po prihlásení bude váš kalendár naplnený udalosťami z URL adresy "
+"Po prihlásení na odber bude tvoj kalendár naplnený udalosťami z URL adresy "
 "predplatného."
 
 #. translators: info about Google Calendar's polling frequency
@@ -406,8 +406,8 @@ msgid ""
 "Since you have made a subscription, any updates in the Liturgical Calendar "
 "API will be propagated to your subscription."
 msgstr ""
-"Keďže ste si predplatili, všetky aktualizácie v API liturgického kalendára "
-"budú propagované do vášho predplatného."
+"Keďže si si predplatil, všetky aktualizácie v API liturgického kalendára "
+"budú propagované do tvojho predplatného."
 
 #. translators: explanation about yearly calendar refresh behavior
 #: usage.php:201 usage.php:221 usage.php:241 usage.php:272
@@ -453,8 +453,8 @@ msgid ""
 "If you have not yet added the calendar subscription from the desktop version "
 "of Google Calendar, please do so now (see %s)."
 msgstr ""
-"Ak ste ešte nepridali odber kalendára z desktopovej verzie Google Kalendára, "
-"urobte tak teraz (pozrite %s)."
+"Ak si ešte nepridal odber kalendára z desktopovej verzie Google Kalendára, "
+"urob tak teraz (pozri %s)."
 
 #. translators: instruction step for Android
 #: usage.php:229
@@ -467,8 +467,8 @@ msgid ""
 "Go to <i><b>Settings</b></i>, then under the account which you used for the "
 "Desktop version, click on the Calendar subscription name."
 msgstr ""
-"Prejdite na <i><b>Nastavenia</b></i>, potom pod účtom, ktorý ste použili pre "
-"verziu pre počítač, kliknite na názov predplatného kalendára."
+"Prejdi na <i><b>Nastavenia</b></i>, potom pod účtom, ktorý si použil pre "
+"verziu pre počítač, klikni na názov predplatného kalendára."
 
 #. translators: instruction step for Android - enabling sync
 #: usage.php:233
@@ -483,7 +483,7 @@ msgstr "testované s Outlookom 2013"
 #. translators: instruction step for Outlook - switching views
 #: usage.php:252
 msgid "At the bottom of the screen, switch from Email view to Calendar view."
-msgstr "V dolnej časti obrazovky prepnite z pohľadu Email na pohľad Kalendár."
+msgstr "V dolnej časti obrazovky prepni z pohľadu Email na pohľad Kalendár."
 
 #. translators: instruction step for Outlook - describes ribbon menu navigation
 #: usage.php:254
@@ -500,8 +500,8 @@ msgid ""
 "On the following screen, check the checkbox along the lines of \"Poll this "
 "calendar in the interval suggested by the creator\"."
 msgstr ""
-"Na nasledujúcej obrazovke začiarknite políčko vedľa textu \"Kontrolovať "
-"tento kalendár v intervale navrhnutom tvorcom\"."
+"Na nasledujúcej obrazovke začiarkni políčko vedľa textu \"Kontrolovať tento "
+"kalendár v intervale navrhnutom tvorcom\"."
 
 #. translators: info about Outlook Calendar's polling frequency
 #: usage.php:260
@@ -516,8 +516,8 @@ msgid ""
 "calendars folder, so as to ensure that it is treated as a subscription "
 "internet calendar."
 msgstr ""
-"Uistite sa, že Kalendár je vytvorený v priečinku Ostatné kalendáre; ak ho "
-"nájdete v priečinku Osobné kalendáre, presuňte ho do priečinka Ostatné "
+"Uisti sa, že Kalendár je vytvorený v priečinku Ostatné kalendáre; ak ho "
+"nájdeš v priečinku Osobné kalendáre, presuň ho do priečinka Ostatné "
 "kalendáre, aby bol považovaný za internetový kalendár na odber."
 
 #. translators: instruction for Outlook - how to manually refresh data
@@ -526,7 +526,7 @@ msgid ""
 "You can manually fetch new data by clicking on <i><b>Send/receive all</b></"
 "i> (from the SEND/RECEIVE menu item)."
 msgstr ""
-"Nové údaje môžete manuálne načítať kliknutím na <i><b>Odoslať/prijať všetko</"
+"Nové údaje môžeš manuálne načítať kliknutím na <i><b>Odoslať/prijať všetko</"
 "b></i> (z položky menu ODOSLAŤ/PRIJÍMAŤ)."
 
 #. translators: info about Outlook's HTML support in event descriptions
@@ -621,7 +621,7 @@ msgstr "Liturgia ktoréhokoľvek dňa"
 msgid ""
 "For example, you can find the liturgy of the day from the day of your "
 "baptism."
-msgstr "Napríklad, môžete nájsť liturgiu dňa z dňa vášho krstu."
+msgstr "Napríklad, môžeš nájsť liturgiu dňa z dňa tvojho krstu."
 
 #: easter.php:63
 msgid "Date of Easter from 1583 to 9999"
@@ -706,8 +706,8 @@ msgid ""
 "for your region, please feel free to create an account on the translation "
 "server."
 msgstr ""
-"Ak by ste chceli prispieť k prekladom liturgických údajov pre váš región, "
-"neváhajte si vytvoriť účet na prekladateľskom serveri."
+"Ak by si chcel prispieť k prekladom liturgických údajov pre tvoj región, "
+"neváhaj si vytvoriť účet na prekladateľskom serveri."
 
 #: translations.php:16
 msgid "Specifically, the components which require translation are:"
@@ -729,8 +729,8 @@ msgid ""
 "came from."
 msgstr ""
 "Ďalšie preklady potrebné pre údaje Liturgického kalendára sa nachádzajú v "
-"prekladovej zložke %1$s. Po výbere jazyka, do ktorého chcete túto zložku "
-"preložiť, nájdete značky, ktoré kategorizujú reťazce na preklad v sekcii "
+"prekladovej zložke %1$s. Po výbere jazyka, do ktorého chceš túto zložku "
+"preložiť, nájdeš značky, ktoré kategorizujú reťazce na preklad v sekcii "
 "\"Stav reťazca\". Kategórie, ktoré sú potrebné na dokončenie údajov "
 "Liturgického kalendára, sú: %2$s. Značka / kategória %3$s sú správy, ktoré "
 "vysvetľujú, ako bol kalendár vypočítaný pre daný rok; hoci nie sú nevyhnutné "
@@ -813,7 +813,7 @@ msgid ""
 "translation strings can be found in the following translation components:"
 msgstr ""
 "Webová stránka projektu môže byť preložená aj do iných jazykov. Prekladové "
-"reťazce nájdete v nasledujúcich prekladových komponentoch:"
+"reťazce nájdeš v nasledujúcich prekladových komponentoch:"
 
 #: translations.php:72
 msgid "Translating the Calendar"
@@ -1282,10 +1282,10 @@ msgstr "Pozri si projektové repozitáre na GitHube"
 msgid "Notifications"
 msgstr "Oznámenia"
 
-#: layout/header.php:140 admin-permissions.php:129 admin-permissions.php:184
-#: admin-permissions.php:191 admin-permissions.php:198
-#: admin-permissions.php:205 admin-permissions.php:352
-#: admin-permissions.php:391 permission-requests.php:64
+#: layout/header.php:140 admin-permissions.php:134 admin-permissions.php:190
+#: admin-permissions.php:197 admin-permissions.php:204
+#: admin-permissions.php:211 admin-permissions.php:365
+#: admin-permissions.php:409 permission-requests.php:64
 #: permission-requests.php:204 admin-applications.php:136
 #: admin-applications.php:145 admin-applications.php:154
 #: admin-applications.php:163 admin-applications.php:228
@@ -1320,14 +1320,13 @@ msgstr "Naozaj sa chceš odhlásiť?"
 msgid "Logout"
 msgstr "Odhlásenie"
 
-#: layout/header.php:188 layout/header.php:251 admin-permissions.php:419
-#: permission-requests.php:90 permission-requests.php:252
+#: layout/header.php:188 layout/header.php:251 admin-permissions.php:443
+#: permission-requests.php:90 permission-requests.php:255
 #: admin-role-requests.php:260 admin-users.php:144
 msgid "Developer"
 msgstr "Vývojár"
 
-#: layout/header.php:200 admin-permissions.php:91 admin-permissions.php:301
-#: admin-permissions.php:383 permission-requests.php:256
+#: layout/header.php:200
 msgid "Admin"
 msgstr "Administrátor"
 
@@ -1335,8 +1334,8 @@ msgstr "Administrátor"
 msgid "Dashboard"
 msgstr "Panel"
 
-#: layout/header.php:261 includes/admin-blocks.php:15 admin-permissions.php:375
-#: permission-requests.php:240 temporale.php:24 temporale.php:37
+#: layout/header.php:261 includes/admin-blocks.php:15 admin-permissions.php:388
+#: permission-requests.php:243 temporale.php:24 temporale.php:37
 msgid "Temporale"
 msgstr "Časové obdobie"
 
@@ -1354,7 +1353,7 @@ msgstr "Partikulárne kalendáre"
 
 #. translators: label for wider region calendar name field
 #: layout/header.php:281 includes/messages.php:206 includes/admin-blocks.php:45
-#: admin-permissions.php:75 admin-permissions.php:287 admin-permissions.php:372
+#: admin-permissions.php:81 admin-permissions.php:305 admin-permissions.php:385
 #: permission-requests.php:237
 msgid "Wider Region"
 msgstr "Širší región"
@@ -1399,7 +1398,7 @@ msgstr "Nepodarilo sa načítať notifikácie"
 msgid "Just now"
 msgstr "Práve teraz"
 
-#: layout/footer.php:96 admin-permissions.php:415 admin-role-requests.php:252
+#: layout/footer.php:96 admin-permissions.php:439 admin-role-requests.php:252
 msgid "Requested"
 msgstr "Požadované"
 
@@ -1409,15 +1408,15 @@ msgstr "Požadovaný prístup"
 
 #: layout/footer.php:98
 msgid "Your request was approved"
-msgstr "Vaša žiadosť bola schválená"
+msgstr "Tvoja žiadosť bola schválená"
 
 #: layout/footer.php:99
 msgid "Your request was rejected"
-msgstr "Vaša žiadosť bola zamietnutá"
+msgstr "Tvoja žiadosť bola zamietnutá"
 
 #: layout/footer.php:100
 msgid "Your access was revoked"
-msgstr "Váš prístup bol zrušený"
+msgstr "Tvoj prístup bol zrušený"
 
 #: layout/footer.php:101
 msgid "Request access to start using the system"
@@ -1457,7 +1456,7 @@ msgstr "Zapamätať si ma"
 
 #. translators: button label for canceling an action
 #: includes/login-modal.php:55 includes/messages.php:132
-#: admin-permissions.php:311 admin-permissions.php:337
+#: admin-permissions.php:322 admin-permissions.php:348
 #: admin-applications.php:207 admin-users.php:112 developer-dashboard.php:134
 #: developer-dashboard.php:183 developer-dashboard.php:246
 msgid "Cancel"
@@ -1495,9 +1494,9 @@ msgstr "Prihlásenie zlyhalo. Skontrolujte svoje prihlasovacie údaje."
 #, php-format
 msgid "Your session will expire in less than %1$d minute."
 msgid_plural "Your session will expire in less than %1$d minutes."
-msgstr[0] "Vaša relácia vyprší za menej než %1$d minútu."
-msgstr[1] ""
-msgstr[2] "Vaša relácia vyprší za menej než %1$d minút."
+msgstr[0] "Tvoja relácia vyprší za menej než %1$d minútu."
+msgstr[1] "Tvoja relácia vyprší za menej než %1$d minúty."
+msgstr[2] "Tvoja relácia vyprší za menej než %1$d minút."
 
 #: includes/login-modal.php:604
 msgid "Extending..."
@@ -1505,7 +1504,7 @@ msgstr "Predlžujem..."
 
 #: includes/login-modal.php:626
 msgid "Your session has been extended."
-msgstr "Vaša relácia bola predĺžená."
+msgstr "Tvoja relácia bola predĺžená."
 
 #: includes/login-modal.php:627
 msgid "Session Extended"
@@ -1517,7 +1516,7 @@ msgstr "Nepodarilo sa predĺžiť reláciu. Prosím, prihláste sa znova."
 
 #: includes/login-modal.php:700
 msgid "Your session has expired. Please login again."
-msgstr "Vaša relácia vypršala. Prosím, prihláste sa znova."
+msgstr "Tvoja relácia vypršala. Prihlás sa znova."
 
 #: includes/login-modal.php:701
 msgid "Session Expired"
@@ -1866,8 +1865,8 @@ msgstr ""
 "v skupine, skupina môže byť definovaná alebo nastavená tu."
 
 #. translators: label for national calendar name field
-#: includes/messages.php:208 admin-permissions.php:73 admin-permissions.php:285
-#: admin-permissions.php:370 permission-requests.php:235
+#: includes/messages.php:208 admin-permissions.php:79 admin-permissions.php:303
+#: admin-permissions.php:383 permission-requests.php:235
 msgid "National Calendar"
 msgstr "Národný kalendár"
 
@@ -2101,14 +2100,14 @@ msgid ""
 "to translate the already existing calendar data into the correct language. "
 "This can be done on the LitCal translation server (see above for details)"
 msgstr ""
-"prosím majte na pamäti, že prvým krokom pri vytváraní národného kalendára je "
-"preloženie už existujúcich údajov kalendára do správneho jazyka. Môžete to "
+"maj na pamäti, že prvým krokom pri vytváraní národného kalendára je "
+"preloženie už existujúcich údajov kalendára do správneho jazyka. Môžeš to "
 "urobiť na serveri LitCal pre preklady (pozri podrobnosti vyššie)"
 
 #. translators: help text shown when diocese input is disabled
 #: includes/messages.php:334
 msgid "Select a national calendar first to see available dioceses."
-msgstr "Najprv vyberte národný kalendár, aby ste videli dostupné diecézy."
+msgstr "Najprv vyber národný kalendár, aby si videl dostupné diecézy."
 
 #. translators: tooltip explaining the Eternal High Priest feast
 #: includes/messages.php:336
@@ -2131,8 +2130,8 @@ msgid ""
 "engine)"
 msgstr ""
 "ak už boli údaje z Vlastných sviatkov daného Misála pre túto krajinu "
-"zaradené do hlavného motora LitCal, môžete vybrať Misál z tohto zoznamu, aby "
-"ste ho priradili k tomuto Národnému kalendáru (ak Misál nie je v zozname, "
+"zaradené do hlavného motora LitCal, môžeš vybrať Misál z tohto zoznamu, aby "
+"si ho priradil k tomuto Národnému kalendáru (ak Misál nie je v zozname, "
 "nebol zahrnutý do motora LitCal)"
 
 #. translators: tooltip explaining wider region association
@@ -2143,7 +2142,7 @@ msgid ""
 "Calendar here"
 msgstr ""
 "ak už boli definované údaje pre širší región, ktorý sa týka tohto národného "
-"kalendára, môžete tu priradiť údaje širšieho regiónu k národnému kalendáru"
+"kalendára, môžeš tu priradiť údaje širšieho regiónu k národnému kalendáru"
 
 #. translators: screen reader text for previous button
 #: includes/messages.php:346 temporale.php:171
@@ -2192,11 +2191,11 @@ msgstr "Zobraziť"
 msgid "Edit"
 msgstr "Upraviť"
 
-#: admin-permissions.php:33 admin-permissions.php:45
+#: admin-permissions.php:36 admin-permissions.php:48
 msgid "Permissions Management"
 msgstr "Správa povolení"
 
-#: admin-permissions.php:49
+#: admin-permissions.php:52
 msgid ""
 "Manage fine-grained permissions for calendar resources. Grant or revoke user "
 "access to specific calendars and test definitions."
@@ -2204,133 +2203,148 @@ msgstr ""
 "Spravuj detailné povolenia pre kalendárové zdroje. Udeľ alebo odober prístup "
 "používateľom k vybraným kalendárom a testuj definície."
 
-#: admin-permissions.php:57 temporale.php:51
+#: admin-permissions.php:61 temporale.php:51
 msgid "Filters"
 msgstr "Filtre"
 
-#: admin-permissions.php:63 admin-permissions.php:363 admin-permissions.php:401
+#: admin-permissions.php:67 admin-permissions.php:376 admin-permissions.php:419
 #: admin-applications.php:238 admin-role-requests.php:248 admin-users.php:213
 #: admin-users.php:290
 msgid "User"
 msgstr "Používateľ"
 
-#: admin-permissions.php:66
+#: admin-permissions.php:70
 msgid "Filter by user ID..."
 msgstr "Filtrovať podľa ID používateľa..."
 
-#: admin-permissions.php:69 admin-permissions.php:282 admin-permissions.php:364
-#: admin-permissions.php:404 permission-requests.php:227
+#: admin-permissions.php:73 admin-permissions.php:377 admin-permissions.php:422
 msgid "Object Type"
 msgstr "Typ objektu"
 
-#: admin-permissions.php:72 admin-permissions.php:90
+#: admin-permissions.php:76 admin-permissions.php:96
 msgid "All"
 msgstr "Všetko"
 
-#: admin-permissions.php:74 admin-permissions.php:286 admin-permissions.php:371
+#: admin-permissions.php:78 admin-permissions.php:302 admin-permissions.php:400
+#: admin-permissions.php:429 permission-requests.php:241
+#, fuzzy
+#| msgid "General Roman Calendar"
+msgid "General Roman Calendar Tests"
+msgstr "Všeobecný rímsky kalendár"
+
+#: admin-permissions.php:80 admin-permissions.php:304 admin-permissions.php:384
 #: permission-requests.php:236
 msgid "Diocesan Calendar"
 msgstr "Diecézny kalendár"
 
-#: admin-permissions.php:76 admin-permissions.php:288 admin-permissions.php:373
-#: permission-requests.php:238
-msgid "Test Definition"
-msgstr "Test definície"
+#: admin-permissions.php:82 admin-permissions.php:306 admin-permissions.php:398
+#: admin-permissions.php:427 permission-requests.php:239
+#, fuzzy
+#| msgid "National Calendar"
+msgid "National Calendar Tests"
+msgstr "Národný kalendár"
 
-#: admin-permissions.php:81 admin-permissions.php:293 admin-permissions.php:365
-#: admin-permissions.php:405 permission-requests.php:228
+#: admin-permissions.php:83 admin-permissions.php:307 admin-permissions.php:399
+#: admin-permissions.php:428 permission-requests.php:240
+#, fuzzy
+#| msgid "Diocesan Calendar"
+msgid "Diocesan Calendar Tests"
+msgstr "Diecézny kalendár"
+
+#: admin-permissions.php:87 admin-permissions.php:378 admin-permissions.php:423
 msgid "Object ID"
 msgstr "ID objektu"
 
-#: admin-permissions.php:84
+#: admin-permissions.php:90
 msgid "Filter by object ID..."
 msgstr "Filtrovať podľa ID objektu..."
 
-#: admin-permissions.php:87 admin-permissions.php:298 admin-permissions.php:366
-#: admin-permissions.php:406 permission-requests.php:229
+#: admin-permissions.php:93 admin-permissions.php:289 admin-permissions.php:379
+#: admin-permissions.php:430 permission-requests.php:227
 msgid "Relation"
 msgstr "Vzťah"
 
-#: admin-permissions.php:92 admin-permissions.php:302 admin-permissions.php:384
-#: permission-requests.php:254
+#: admin-permissions.php:97 admin-permissions.php:292 admin-permissions.php:402
+#: permission-requests.php:257
 msgid "Viewer"
 msgstr "Pozorovateľ"
 
-#: admin-permissions.php:93 admin-permissions.php:303 admin-permissions.php:385
-#: permission-requests.php:255
+#: admin-permissions.php:98 admin-permissions.php:293 admin-permissions.php:403
+#: permission-requests.php:258
 msgid "Editor"
 msgstr "Redaktor"
 
-#: admin-permissions.php:94 admin-permissions.php:304 admin-permissions.php:386
-#: permission-requests.php:257
-msgid "Deleter"
-msgstr "Odstraňovateľ"
+#: admin-permissions.php:99 admin-permissions.php:294 admin-permissions.php:404
+#: permission-requests.php:259
+msgctxt "permission relation"
+msgid "Admin"
+msgstr "Administrátor"
 
-#: admin-permissions.php:100
+#: admin-permissions.php:105
 msgid "Apply Filters"
 msgstr "Použiť filtre"
 
-#: admin-permissions.php:103
+#: admin-permissions.php:108
 msgid "Clear Filters"
 msgstr "Vymazať filtre"
 
-#: admin-permissions.php:112 admin-permissions.php:271
-#: admin-permissions.php:314
+#: admin-permissions.php:117 admin-permissions.php:278
+#: admin-permissions.php:325
 msgid "Grant Permission"
 msgstr "Udeľ povolenie"
 
-#: admin-permissions.php:115 admin-permissions.php:143
+#: admin-permissions.php:120 admin-permissions.php:149
 #: admin-applications.php:125 admin-role-requests.php:135 admin-users.php:56
 msgid "Refresh"
 msgstr "Obnoviť"
 
-#: admin-permissions.php:123
+#: admin-permissions.php:128
 msgid "Permission Tuples"
 msgstr "Povolenia"
 
-#: admin-permissions.php:138 permission-requests.php:31
+#: admin-permissions.php:144 permission-requests.php:31
 #: permission-requests.php:44
 msgid "Access Requests"
 msgstr "Žiadosti o prístup"
 
-#: admin-permissions.php:154 admin-permissions.php:421
-#: permission-requests.php:259 admin-applications.php:57
+#: admin-permissions.php:160 admin-permissions.php:445
+#: permission-requests.php:261 admin-applications.php:57
 #: admin-applications.php:101 admin-applications.php:250
 #: admin-role-requests.php:67 admin-role-requests.php:111
 #: admin-role-requests.php:264 developer-dashboard.php:303
 msgid "Pending"
 msgstr "Čakajúce"
 
-#: admin-permissions.php:161 admin-permissions.php:422
-#: permission-requests.php:260 admin-applications.php:68
+#: admin-permissions.php:167 admin-permissions.php:446
+#: permission-requests.php:262 admin-applications.php:68
 #: admin-applications.php:108 admin-applications.php:251
 #: admin-role-requests.php:78 admin-role-requests.php:118
 #: admin-role-requests.php:265 developer-dashboard.php:304
 msgid "Approved"
 msgstr "Schválené"
 
-#: admin-permissions.php:167 admin-permissions.php:423
-#: permission-requests.php:261 admin-applications.php:79
+#: admin-permissions.php:173 admin-permissions.php:447
+#: permission-requests.php:263 admin-applications.php:79
 #: admin-applications.php:114 admin-applications.php:252
 #: admin-role-requests.php:89 admin-role-requests.php:124
 #: admin-role-requests.php:266 developer-dashboard.php:305
 msgid "Rejected"
 msgstr "Zamietnuté"
 
-#: admin-permissions.php:173 admin-permissions.php:424
-#: permission-requests.php:262 admin-applications.php:90
+#: admin-permissions.php:179 admin-permissions.php:448
+#: permission-requests.php:264 admin-applications.php:90
 #: admin-applications.php:120 admin-applications.php:253
 #: admin-role-requests.php:100 admin-role-requests.php:130
 #: admin-role-requests.php:267 developer-dashboard.php:306
 msgid "Revoked"
 msgstr "Zrušené"
 
-#: admin-permissions.php:218
+#: admin-permissions.php:224
 msgid "Review Access Request"
 msgstr "Preskúmať žiadosť o prístup"
 
-#: admin-permissions.php:220 admin-permissions.php:252
-#: admin-permissions.php:273 admin-permissions.php:329
+#: admin-permissions.php:226 admin-permissions.php:258
+#: admin-permissions.php:280 admin-permissions.php:340
 #: admin-applications.php:184 admin-role-requests.php:194
 #: admin-role-requests.php:217 admin-users.php:104 developer-dashboard.php:84
 #: developer-dashboard.php:154 developer-dashboard.php:239 temporale.php:161
@@ -2338,215 +2352,242 @@ msgstr "Preskúmať žiadosť o prístup"
 msgid "Close"
 msgstr "Zatvoriť"
 
-#: admin-permissions.php:229 admin-applications.php:193
+#: admin-permissions.php:235 admin-applications.php:193
 #: admin-role-requests.php:203
 msgid "Notes"
 msgstr "Poznámky"
 
-#: admin-permissions.php:230 permission-requests.php:152
+#: admin-permissions.php:236 permission-requests.php:152
 #: admin-applications.php:194 admin-role-requests.php:204
 msgid "optional"
 msgstr "voliteľné"
 
-#: admin-permissions.php:235 admin-applications.php:199
+#: admin-permissions.php:241 admin-applications.php:199
 #: admin-role-requests.php:209
 msgid "Add notes about your decision..."
 msgstr "Pridať poznámky k vášmu rozhodnutiu..."
 
-#: admin-permissions.php:243 admin-applications.php:216
+#: admin-permissions.php:249 admin-applications.php:216
 #: admin-role-requests.php:226
 msgid "Approve"
 msgstr "Schváliť"
 
-#: admin-permissions.php:246 admin-applications.php:210
+#: admin-permissions.php:252 admin-applications.php:210
 #: admin-role-requests.php:220
 msgid "Reject"
 msgstr "Odmietnuť"
 
-#: admin-permissions.php:249 admin-permissions.php:368
+#: admin-permissions.php:255 admin-permissions.php:381
 #: admin-applications.php:213 admin-role-requests.php:223
 #: admin-role-requests.php:269 developer-dashboard.php:271
 msgid "Revoke"
 msgstr "Zrušiť"
 
-#: admin-permissions.php:261 admin-applications.php:172
+#: admin-permissions.php:267 admin-applications.php:172
 #: admin-role-requests.php:182 admin-users.php:92
 msgid "Back to Dashboard"
 msgstr "Späť na informačný panel"
 
-#: admin-permissions.php:277 admin-users.php:215 admin-users.php:292
+#: admin-permissions.php:284 admin-users.php:215 admin-users.php:292
 #: user-profile.php:113
 msgid "User ID"
 msgstr "ID používateľa"
 
-#: admin-permissions.php:279
+#: admin-permissions.php:286
 msgid "Enter user ID..."
 msgstr "Zadajte ID používateľa..."
 
-#: admin-permissions.php:284 permission-requests.php:230
-msgid "Select object type..."
-msgstr "Vyberte typ objektu..."
-
-#: admin-permissions.php:295 admin-permissions.php:380
-msgid "Enter object ID..."
-msgstr "Zadajte ID objektu..."
-
-#: admin-permissions.php:300 permission-requests.php:232
+#: admin-permissions.php:291 permission-requests.php:228
 msgid "Select relation..."
 msgstr "Vyber vzťah..."
 
-#: admin-permissions.php:327 admin-permissions.php:340
+#: admin-permissions.php:298 admin-permissions.php:395
+#: admin-permissions.php:424 permission-requests.php:230
+#, fuzzy
+#| msgid "Calendar"
+msgid "Calendar scope"
+msgstr "Kalendár"
+
+#: admin-permissions.php:300 permission-requests.php:232
+#, fuzzy
+#| msgid "Select calendar"
+msgid "Select calendar scope..."
+msgstr "Vyber kalendár"
+
+#: admin-permissions.php:311 admin-permissions.php:396
+#: admin-permissions.php:425 permission-requests.php:231
+#, fuzzy
+#| msgid "Calendar"
+msgid "Calendar ID"
+msgstr "Kalendár"
+
+#: admin-permissions.php:314 admin-permissions.php:397
+#: admin-permissions.php:426 permission-requests.php:233
+#, fuzzy
+#| msgid "Select calendar"
+msgid "Select calendar ID..."
+msgstr "Vyber kalendár"
+
+#: admin-permissions.php:338 admin-permissions.php:351
 msgid "Revoke Permission"
 msgstr "Odvolať povolenie"
 
-#: admin-permissions.php:353
+#: admin-permissions.php:366
 msgid "No permissions found."
 msgstr "Neboli nájdené žiadne povolenia."
 
-#: admin-permissions.php:354
+#: admin-permissions.php:367
 msgid "Failed to load permissions. Please try again later."
 msgstr "Nepodarilo sa načítať povolenia. Skúste to prosím neskôr znova."
 
-#: admin-permissions.php:355
+#: admin-permissions.php:368
 msgid "Permission granted successfully."
 msgstr "Povolenie bolo úspešne udelené."
 
-#: admin-permissions.php:356
+#: admin-permissions.php:369
 msgid "Permission revoked successfully."
 msgstr "Povolenie bolo úspešne odvolané."
 
-#: admin-permissions.php:357
+#: admin-permissions.php:370
 msgid "Failed to grant permission. Please try again."
 msgstr "Nepodarilo sa udeliť povolenie. Skúste to prosím znova."
 
-#: admin-permissions.php:358
+#: admin-permissions.php:371
 msgid "Failed to revoke permission. Please try again."
 msgstr "Nepodarilo sa odvolať povolenie. Skúste to prosím znova."
 
-#: admin-permissions.php:359
+#: admin-permissions.php:372
 msgid "Granting..."
 msgstr "Udeľovanie..."
 
-#: admin-permissions.php:360 admin-users.php:353
+#: admin-permissions.php:373 admin-users.php:353
 msgid "Revoking..."
 msgstr "Odvolávanie..."
 
-#: admin-permissions.php:361
+#: admin-permissions.php:374
 msgid "Are you sure you want to revoke this permission?"
-msgstr "Ste si istý, že chcete odvolať toto povolenie?"
+msgstr "Si si istý, že chceš odvolať toto povolenie?"
 
-#: admin-permissions.php:367 admin-permissions.php:410
+#: admin-permissions.php:380 admin-permissions.php:434
 #: admin-applications.php:244 admin-role-requests.php:253 temporale.php:138
 msgid "Actions"
 msgstr "Akcie"
 
-#: admin-permissions.php:376 permission-requests.php:242
+#: admin-permissions.php:386 permission-requests.php:238
+msgid "Test Definition"
+msgstr "Test definície"
+
+#: admin-permissions.php:389 permission-requests.php:245
 msgid "Sanctorale — Editio Typica 1970"
 msgstr "Sanctorále — Editio Typica 1970"
 
-#: admin-permissions.php:377 permission-requests.php:244
+#: admin-permissions.php:390 permission-requests.php:247
 msgid "Sanctorale — Editio Typica 2002"
 msgstr "Sanctorále — Editio Typica 2002"
 
-#: admin-permissions.php:378 permission-requests.php:246
+#: admin-permissions.php:391 permission-requests.php:249
 msgid "Sanctorale — Editio Typica 2008"
 msgstr "Sanctorále — Editio Typica 2008"
 
-#: admin-permissions.php:379 permission-requests.php:248
+#: admin-permissions.php:392 permission-requests.php:251
 msgid "Decrees of the Dicastery for Divine Worship"
 msgstr "Dekréty Dikastéria pre bohoslužbu"
 
-#: admin-permissions.php:381 permission-requests.php:231
+#: admin-permissions.php:393
+msgid "Enter object ID..."
+msgstr "Zadajte ID objektu..."
+
+#: admin-permissions.php:394
 msgid "Select object ID..."
 msgstr "Vyberte ID objektu..."
 
-#: admin-permissions.php:388
+#: admin-permissions.php:406
 msgid "All fields are required."
 msgstr "Všetky polia sú povinné."
 
-#: admin-permissions.php:392 admin-role-requests.php:239
+#: admin-permissions.php:410 admin-role-requests.php:239
 msgid "No requests found."
 msgstr "Nenájdené žiadne požiadavky."
 
-#: admin-permissions.php:393
+#: admin-permissions.php:411
 msgid "No pending access requests. All caught up!"
 msgstr "Žiadne čakajúce žiadosti o prístup. Všetko je vybavené!"
 
-#: admin-permissions.php:394
+#: admin-permissions.php:412
 msgid "Failed to load access requests. Please try again later."
 msgstr "Nepodarilo sa načítať požiadavky na prístup. Skúste to znova neskôr."
 
-#: admin-permissions.php:395 admin-applications.php:232
+#: admin-permissions.php:413 admin-applications.php:232
 #: admin-role-requests.php:242
 msgid "Processing..."
 msgstr "Spracovanie..."
 
-#: admin-permissions.php:396
+#: admin-permissions.php:414
 msgid "Access request approved successfully."
 msgstr "Požiadavka na prístup úspešne schválená."
 
-#: admin-permissions.php:397
+#: admin-permissions.php:415
 msgid "Access request rejected."
 msgstr "Požiadavka na prístup zamietnutá."
 
-#: admin-permissions.php:398
+#: admin-permissions.php:416
 msgid "Access revoked successfully."
 msgstr "Prístup úspešne odobratý."
 
-#: admin-permissions.php:399 admin-applications.php:236
+#: admin-permissions.php:417 admin-applications.php:236
 #: admin-role-requests.php:246
 msgid "Failed to process request. Please try again."
 msgstr "Nepodarilo sa spracovať požiadavku. Skúste to znova."
 
-#: admin-permissions.php:402 permission-requests.php:219
+#: admin-permissions.php:420 permission-requests.php:219
 msgid "Role"
 msgstr "Rola"
 
-#: admin-permissions.php:403 permission-requests.php:133
+#: admin-permissions.php:421 permission-requests.php:133
 #: permission-requests.php:220 admin-dashboard.php:128 user-profile.php:178
 msgid "Permissions"
 msgstr "Povolenia"
 
-#: admin-permissions.php:407 permission-requests.php:151
+#: admin-permissions.php:431 permission-requests.php:151
 #: permission-requests.php:222 admin-role-requests.php:255
 msgid "Justification"
 msgstr "Odôvodnenie"
 
-#: admin-permissions.php:408 permission-requests.php:166
+#: admin-permissions.php:432 permission-requests.php:166
 msgid "Credentials"
 msgstr "Prihlasovacie údaje"
 
-#: admin-permissions.php:409 admin-role-requests.php:251
+#: admin-permissions.php:433 admin-role-requests.php:251
 msgid "Date"
 msgstr "Dátum"
 
-#: admin-permissions.php:411 admin-applications.php:245
+#: admin-permissions.php:435 admin-applications.php:245 admin-dashboard.php:161
 #: admin-role-requests.php:254
 msgid "Review"
 msgstr "Kontrola"
 
-#: admin-permissions.php:412 admin-applications.php:247
+#: admin-permissions.php:436 admin-applications.php:247
 #: admin-role-requests.php:256
 msgid "Reviewed At"
 msgstr "Skontrolované dňa"
 
-#: admin-permissions.php:413 permission-requests.php:223
+#: admin-permissions.php:437 permission-requests.php:223
 #: admin-applications.php:248 admin-role-requests.php:257
 msgid "Review Notes"
 msgstr "Poznámky ku kontrole"
 
-#: admin-permissions.php:414 permission-requests.php:221
+#: admin-permissions.php:438 permission-requests.php:221
 #: admin-applications.php:243 admin-role-requests.php:258
 msgid "Status"
 msgstr "Stav"
 
-#: admin-permissions.php:417 permission-requests.php:80
-#: permission-requests.php:250 admin-role-requests.php:261 admin-users.php:145
+#: admin-permissions.php:441 permission-requests.php:80
+#: permission-requests.php:253 admin-role-requests.php:261 admin-users.php:145
 msgid "Calendar Editor"
 msgstr "Editor kalendára"
 
-#: admin-permissions.php:418 permission-requests.php:85
-#: permission-requests.php:251 admin-role-requests.php:262 admin-users.php:146
+#: admin-permissions.php:442 permission-requests.php:85
+#: permission-requests.php:254 admin-role-requests.php:262 admin-users.php:146
 msgid "Accuracy Test Editor"
 msgstr "Editor testu presnosti"
 
@@ -2556,13 +2597,13 @@ msgid ""
 "the resource permissions you need. Your request will be reviewed by an "
 "administrator."
 msgstr ""
-"Požiadajte o prístup do systému Liturgického kalendára. Vyberte úlohu a "
-"špecifikujte, aké povolenia k zdrojom potrebujete. Vaša požiadavka bude "
+"Požiadaj o prístup do systému Liturgického kalendára. Vyber rolu a "
+"špecifikuj, aké povolenia k zdrojom potrebuješ. Tvoja požiadavka bude "
 "skontrolovaná administrátorom."
 
 #: permission-requests.php:59
 msgid "Your Access Requests"
-msgstr "Vaše požiadavky na prístup"
+msgstr "Tvoje požiadavky na prístup"
 
 #: permission-requests.php:73
 msgid "Request Access"
@@ -2581,7 +2622,7 @@ msgid ""
 "API consumer. Request access to all resources you may need — individual API "
 "keys can be scoped further at generation time."
 msgstr ""
-"Spotrebiteľ API. Požiadajte o prístup ku všetkým zdrojom, ktoré môžete "
+"Spotrebiteľ API. Požiadaj o prístup ku všetkým zdrojom, ktoré môžeš "
 "potrebovať — jednotlivé API kľúče môžu byť ďalej pri generovaní obmedzené."
 
 #: permission-requests.php:99
@@ -2592,8 +2633,8 @@ msgstr "Vyberte rolu"
 msgid ""
 "Specify the resources you need access to. Add one or more permission rows."
 msgstr ""
-"Určite zdroje, ku ktorým potrebujete prístup. Pridajte jeden alebo viac "
-"riadkov povolení."
+"Urči zdroje, ku ktorým potrebuješ prístup. Pridaj jeden alebo viac riadkov "
+"povolení."
 
 #: permission-requests.php:145
 msgid "Add Permission"
@@ -2603,18 +2644,18 @@ msgstr "Pridať povolenie"
 msgid ""
 "Providing a justification helps administrators review your request faster."
 msgstr ""
-"Poskytnutie odôvodnenia pomáha administrátorom rýchlejšie posúdiť vašu "
+"Poskytnutie odôvodnenia pomáha administrátorom rýchlejšie posúdiť tvoju "
 "žiadosť."
 
 #: permission-requests.php:160
 msgid "Please describe why you need this access..."
-msgstr "Prosím, opíšte, prečo potrebujete tento prístup..."
+msgstr "Opíš, prečo potrebuješ tento prístup..."
 
 #: permission-requests.php:167
 msgid ""
 "Optionally provide any credentials or references that support your request."
 msgstr ""
-"Prípadne poskytnite akékoľvek poverenia alebo odkazy, ktoré podporujú vašu "
+"Prípadne poskytni akékoľvek poverenia alebo odkazy, ktoré podporujú tvoju "
 "žiadosť."
 
 #: permission-requests.php:174
@@ -2632,15 +2673,15 @@ msgstr "Späť na profil"
 
 #: permission-requests.php:205
 msgid "You have not made any access requests yet."
-msgstr "Zatiaľ ste neurobili žiadne žiadosti o prístup."
+msgstr "Zatiaľ si neurobil žiadne žiadosti o prístup."
 
 #: permission-requests.php:206
 msgid "Could not load your existing requests."
-msgstr "Nepodarilo sa načítať vaše existujúce žiadosti."
+msgstr "Nepodarilo sa načítať tvoje existujúce žiadosti."
 
 #: permission-requests.php:207
 msgid "Your access request has been submitted successfully."
-msgstr "Vaša žiadosť o prístup bola úspešne odoslaná."
+msgstr "Tvoja žiadosť o prístup bola úspešne odoslaná."
 
 #: permission-requests.php:208
 msgid "Failed to submit request. Please try again."
@@ -2663,15 +2704,20 @@ msgid "Please select a role."
 msgstr "Prosím, vyberte rolu."
 
 #: permission-requests.php:214
+#, fuzzy
+#| msgid ""
+#| "Each permission row must have object type, object ID, and relation filled "
+#| "in."
 msgid ""
-"Each permission row must have object type, object ID, and relation filled in."
+"Each permission row must have a calendar scope, calendar ID, and relation "
+"filled in."
 msgstr ""
 "Každý riadok povolenia musí mať vyplnený typ objektu, ID objektu a vzťah."
 
 #: permission-requests.php:215
 #, php-format
 msgid "You have reached the maximum of %1$d permissions per request."
-msgstr "Dosiahli ste maximum %1$d povolení na požiadavku."
+msgstr "Dosiahol si maximum %1$d povolení na požiadavku."
 
 #: permission-requests.php:216
 #, php-format
@@ -2692,13 +2738,9 @@ msgstr "Odoslané"
 msgid "Reviewed"
 msgstr "Recenzované"
 
-#: permission-requests.php:233
+#: permission-requests.php:229
 msgid "Remove"
 msgstr "Odstrániť"
-
-#: permission-requests.php:264
-msgid "e.g. IT, USA, BOSTON, Americas..."
-msgstr "napr. IT, USA, BOSTON, Amerika..."
 
 #: admin-applications.php:33 admin-applications.php:45
 msgid "Application Management"
@@ -2778,7 +2820,7 @@ msgstr ""
 "Spravovať údaje liturgického kalendára, informácie o Rímskom misáli a "
 "regionálnych kalendároch."
 
-#: admin-dashboard.php:65
+#: admin-dashboard.php:65 admin-dashboard.php:146
 msgid "Administration"
 msgstr "Administrácia"
 
@@ -2814,6 +2856,14 @@ msgstr "Preskúmanie a schválenie žiadostí vývojárov"
 #: admin-dashboard.php:130
 msgid "Manage fine-grained resource permissions"
 msgstr "Spravovať podrobné oprávnenia na zdroje"
+
+#: admin-dashboard.php:155
+msgid "Access Requests to Review"
+msgstr "Žiadosti o prístup na posúdenie"
+
+#: admin-dashboard.php:157
+msgid "Review and approve access requests for the resources you administer"
+msgstr "Posúď a schváľ žiadosti o prístup k zdrojom, ktoré spravuješ"
 
 #: admin-role-requests.php:55
 msgid "Role Requests Management"
@@ -2860,8 +2910,8 @@ msgid ""
 "Manage users in the system. You can view user information and revoke roles "
 "from users who have them."
 msgstr ""
-"Spravujte používateľov v systéme. Môžete si prezrieť informácie o "
-"používateľovi a odobrať roly používateľom, ktorí ich majú."
+"Spravuj používateľov v systéme. Môžeš si prezrieť informácie o používateľovi "
+"a odobrať roly používateľom, ktorí ich majú."
 
 #: admin-users.php:64
 msgid "Users with Roles"
@@ -2913,7 +2963,7 @@ msgstr "Neoverené"
 
 #: admin-users.php:336
 msgid "Are you sure you want to revoke the role"
-msgstr "Naozaj chcete odobrať rolu"
+msgstr "Naozaj chceš odobrať rolu"
 
 #: admin-users.php:338
 msgid "from user"
@@ -2954,11 +3004,11 @@ msgstr "Názov aplikácie"
 
 #: developer-dashboard.php:95
 msgid "A descriptive name for your application."
-msgstr "Popisný názov pre vašu aplikáciu."
+msgstr "Popisný názov pre tvoju aplikáciu."
 
 #: developer-dashboard.php:100
 msgid "Optional description of what your application does."
-msgstr "Voliteľný popis toho, čo vaša aplikácia robí."
+msgstr "Voliteľný popis toho, čo tvoja aplikácia robí."
 
 #: developer-dashboard.php:103
 msgid "Website URL"
@@ -2966,7 +3016,7 @@ msgstr "URL webovej stránky"
 
 #: developer-dashboard.php:105
 msgid "Optional URL to your application or project."
-msgstr "Voliteľná URL adresa pre vašu aplikáciu alebo projekt."
+msgstr "Voliteľná URL adresa pre tvoju aplikáciu alebo projekt."
 
 #: developer-dashboard.php:109 developer-dashboard.php:315
 msgid "Access Scope"
@@ -2985,8 +3035,8 @@ msgid ""
 "Choose the level of access your application needs. This cannot be changed "
 "after approval."
 msgstr ""
-"Vyberte úroveň prístupu, ktorú vaša aplikácia potrebuje. Toto sa po "
-"schválení nedá zmeniť."
+"Vyber úroveň prístupu, ktorú tvoja aplikácia potrebuje. Toto sa po schválení "
+"nedá zmeniť."
 
 #: developer-dashboard.php:152
 msgid "Generate API Key"
@@ -3047,7 +3097,7 @@ msgstr ""
 
 #: developer-dashboard.php:209
 msgid "Your API Key:"
-msgstr "Váš API kľúč:"
+msgstr "Tvoj API kľúč:"
 
 #: developer-dashboard.php:212
 msgid "Copy to clipboard"
@@ -3067,7 +3117,7 @@ msgstr "Potvrdiť zmazanie"
 
 #: developer-dashboard.php:242
 msgid "Are you sure you want to delete this item?"
-msgstr "Ste si istý, že chcete tento položku zmazať?"
+msgstr "Si si istý, že chceš túto položku zmazať?"
 
 #: developer-dashboard.php:243
 msgid "This action cannot be undone."
@@ -3079,7 +3129,7 @@ msgstr "Zmazať"
 
 #: developer-dashboard.php:263
 msgid "You have not registered any applications yet."
-msgstr "Zatiaľ ste neregistrovali žiadne aplikácie."
+msgstr "Zatiaľ si neregistroval žiadne aplikácie."
 
 #: developer-dashboard.php:264
 msgid "Create your first application to get started."
@@ -3131,7 +3181,7 @@ msgid ""
 "Are you sure you want to delete the application \"%1$s\"? This will also "
 "revoke all associated API keys."
 msgstr ""
-"Naozaj chcete odstrániť aplikáciu \"%1$s\"? Týmto krokom sa zrušia aj všetky "
+"Naozaj chceš odstrániť aplikáciu \"%1$s\"? Týmto krokom sa zrušia aj všetky "
 "pridružené API kľúče."
 
 #: developer-dashboard.php:283
@@ -3139,7 +3189,7 @@ msgid ""
 "Are you sure you want to revoke this API key? Applications using this key "
 "will no longer be able to authenticate."
 msgstr ""
-"Naozaj chcete zrušiť tento API kľúč? Aplikácie používajúce tento kľúč sa už "
+"Naozaj chceš zrušiť tento API kľúč? Aplikácie používajúce tento kľúč sa už "
 "nebudú môcť autentifikovať."
 
 #: developer-dashboard.php:284
@@ -3446,7 +3496,7 @@ msgstr "Znova poslať overenie"
 
 #: user-profile.php:101
 msgid "Click after verifying your email to update your session"
-msgstr "Kliknite po overení vášho emailu na aktualizáciu vašej relácie"
+msgstr "Klikni po overení tvojho emailu na aktualizáciu tvojej relácie"
 
 #: user-profile.php:102 user-profile.php:131
 msgid "Refresh session"
@@ -3454,7 +3504,7 @@ msgstr "Obnoviť reláciu"
 
 #: user-profile.php:130
 msgid "Refresh session to see updated roles"
-msgstr "Obnovte reláciu, aby ste videli aktualizované roly"
+msgstr "Obnov reláciu, aby si videl aktualizované roly"
 
 #: user-profile.php:135 user-profile.php:140
 msgid "Request Role"
@@ -3469,8 +3519,8 @@ msgid ""
 "You must verify your email address before you can request a role. Please "
 "check your inbox for a verification email."
 msgstr ""
-"Musíte overiť svoju emailovú adresu, aby ste mohli požiadať o rolu. "
-"Skontrolujte svoj inbox pre overovací email."
+"Musíš overiť svoju emailovú adresu, aby si mohol požiadať o rolu. Skontroluj "
+"svoj inbox pre overovací email."
 
 #: user-profile.php:165
 msgid "No roles assigned yet. Request a role to access additional features."
@@ -3519,8 +3569,8 @@ msgid ""
 "Verification email sent. After clicking the verification link, use the "
 "\"Refresh session\" button to update your status."
 msgstr ""
-"Overovací email bol odoslaný. Po kliknutí na overovací odkaz použite "
-"tlačidlo \"Obnoviť reláciu\" na aktualizáciu vášho statusu."
+"Overovací email bol odoslaný. Po kliknutí na overovací odkaz použi tlačidlo "
+"\"Obnoviť reláciu\" na aktualizáciu tvojho statusu."
 
 #: user-profile.php:373
 msgid "Failed to send verification email. Please try again."
@@ -3541,6 +3591,15 @@ msgstr "Relácia vyprší o 30 sekúnd"
 #: user-profile.php:407
 msgid "Session expired"
 msgstr "Relácia vypršala"
+
+#~ msgid "Deleter"
+#~ msgstr "Odstraňovateľ"
+
+#~ msgid "Select object type..."
+#~ msgstr "Vyberte typ objektu..."
+
+#~ msgid "e.g. IT, USA, BOSTON, Americas..."
+#~ msgstr "napr. IT, USA, BOSTON, Amerika..."
 
 #~ msgid "min ago"
 #~ msgstr "pred minútou"

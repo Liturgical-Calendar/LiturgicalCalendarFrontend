@@ -4,16 +4,16 @@
 # Ubuntu <priest@johnromanodorazio.com>, 2021.
 # John R. D'Orazio <priest@johnromanodorazio.com>, 2022.
 # OpenAI <noreply-mt-openai@weblate.org>, 2024, 2025, 2026.
-# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024, 2025.
+# "John R. D'Orazio" <priest@johnromanodorazio.com>, 2024, 2025, 2026.
 # Weblate Admin <admin@example.com>, 2024, 2025.
 # Miguel Galvez <miggalvez@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 15:40+0000\n"
-"PO-Revision-Date: 2026-06-21 11:36+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"POT-Creation-Date: 2026-06-27 09:50+0000\n"
+"PO-Revision-Date: 2026-06-26 20:52+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
 "Language: es\n"
@@ -127,13 +127,13 @@ msgstr "Parámetros de solicitud disponibles en todas las rutas %1$s"
 
 #. translators: part of page title - refers to the Catholic liturgical calendar
 #: index.php:65 usage.php:29 examples.php:98 liturgyOfAnyDay.php:18
-#: layout/header.php:257 admin-permissions.php:77 admin-permissions.php:289
-#: admin-permissions.php:374 permission-requests.php:239
+#: layout/header.php:257 admin-permissions.php:77 admin-permissions.php:301
+#: admin-permissions.php:387 permission-requests.php:242
 msgid "General Roman Calendar"
 msgstr "Calendario Romano General"
 
 #: index.php:74 layout/header.php:19 layout/header.php:229
-#: admin-permissions.php:34 permission-requests.php:32
+#: admin-permissions.php:37 permission-requests.php:32
 #: admin-applications.php:34 admin-dashboard.php:40 admin-role-requests.php:44
 #: admin-users.php:34 developer-dashboard.php:35 temporale.php:25
 #: user-profile.php:24
@@ -1306,10 +1306,10 @@ msgstr "Ver los repositorios del proyecto en GitHub"
 msgid "Notifications"
 msgstr "Notificaciones"
 
-#: layout/header.php:140 admin-permissions.php:129 admin-permissions.php:184
-#: admin-permissions.php:191 admin-permissions.php:198
-#: admin-permissions.php:205 admin-permissions.php:352
-#: admin-permissions.php:391 permission-requests.php:64
+#: layout/header.php:140 admin-permissions.php:134 admin-permissions.php:190
+#: admin-permissions.php:197 admin-permissions.php:204
+#: admin-permissions.php:211 admin-permissions.php:365
+#: admin-permissions.php:409 permission-requests.php:64
 #: permission-requests.php:204 admin-applications.php:136
 #: admin-applications.php:145 admin-applications.php:154
 #: admin-applications.php:163 admin-applications.php:228
@@ -1344,14 +1344,13 @@ msgstr "¿Estás seguro de que quieres cerrar sesión?"
 msgid "Logout"
 msgstr "Cerrar sesión"
 
-#: layout/header.php:188 layout/header.php:251 admin-permissions.php:419
-#: permission-requests.php:90 permission-requests.php:252
+#: layout/header.php:188 layout/header.php:251 admin-permissions.php:443
+#: permission-requests.php:90 permission-requests.php:255
 #: admin-role-requests.php:260 admin-users.php:144
 msgid "Developer"
 msgstr "Desarrollador"
 
-#: layout/header.php:200 admin-permissions.php:91 admin-permissions.php:301
-#: admin-permissions.php:383 permission-requests.php:256
+#: layout/header.php:200
 msgid "Admin"
 msgstr "Administrador"
 
@@ -1359,8 +1358,8 @@ msgstr "Administrador"
 msgid "Dashboard"
 msgstr "Tablero"
 
-#: layout/header.php:261 includes/admin-blocks.php:15 admin-permissions.php:375
-#: permission-requests.php:240 temporale.php:24 temporale.php:37
+#: layout/header.php:261 includes/admin-blocks.php:15 admin-permissions.php:388
+#: permission-requests.php:243 temporale.php:24 temporale.php:37
 msgid "Temporale"
 msgstr "Temporal"
 
@@ -1378,7 +1377,7 @@ msgstr "Calendarios particulares"
 
 #. translators: label for wider region calendar name field
 #: layout/header.php:281 includes/messages.php:206 includes/admin-blocks.php:45
-#: admin-permissions.php:75 admin-permissions.php:287 admin-permissions.php:372
+#: admin-permissions.php:81 admin-permissions.php:305 admin-permissions.php:385
 #: permission-requests.php:237
 msgid "Wider Region"
 msgstr "Región más amplia"
@@ -1423,7 +1422,7 @@ msgstr "No se pudieron cargar las notificaciones"
 msgid "Just now"
 msgstr "Justo ahora"
 
-#: layout/footer.php:96 admin-permissions.php:415 admin-role-requests.php:252
+#: layout/footer.php:96 admin-permissions.php:439 admin-role-requests.php:252
 msgid "Requested"
 msgstr "Solicitado"
 
@@ -1481,7 +1480,7 @@ msgstr "Recordarme"
 
 #. translators: button label for canceling an action
 #: includes/login-modal.php:55 includes/messages.php:132
-#: admin-permissions.php:311 admin-permissions.php:337
+#: admin-permissions.php:322 admin-permissions.php:348
 #: admin-applications.php:207 admin-users.php:112 developer-dashboard.php:134
 #: developer-dashboard.php:183 developer-dashboard.php:246
 msgid "Cancel"
@@ -1892,8 +1891,8 @@ msgstr ""
 "las diócesis del grupo, el grupo puede definirse o configurarse aquí."
 
 #. translators: label for national calendar name field
-#: includes/messages.php:208 admin-permissions.php:73 admin-permissions.php:285
-#: admin-permissions.php:370 permission-requests.php:235
+#: includes/messages.php:208 admin-permissions.php:79 admin-permissions.php:303
+#: admin-permissions.php:383 permission-requests.php:235
 msgid "National Calendar"
 msgstr "Calendario Nacional"
 
@@ -2222,11 +2221,11 @@ msgstr "Ver"
 msgid "Edit"
 msgstr "Editar"
 
-#: admin-permissions.php:33 admin-permissions.php:45
+#: admin-permissions.php:36 admin-permissions.php:48
 msgid "Permissions Management"
 msgstr "Gestión de permisos"
 
-#: admin-permissions.php:49
+#: admin-permissions.php:52
 msgid ""
 "Manage fine-grained permissions for calendar resources. Grant or revoke user "
 "access to specific calendars and test definitions."
@@ -2234,133 +2233,148 @@ msgstr ""
 "Gestiona permisos detallados para recursos de calendario. Concede o revoca "
 "el acceso de usuario a calendarios específicos y prueba definiciones."
 
-#: admin-permissions.php:57 temporale.php:51
+#: admin-permissions.php:61 temporale.php:51
 msgid "Filters"
 msgstr "Filtros"
 
-#: admin-permissions.php:63 admin-permissions.php:363 admin-permissions.php:401
+#: admin-permissions.php:67 admin-permissions.php:376 admin-permissions.php:419
 #: admin-applications.php:238 admin-role-requests.php:248 admin-users.php:213
 #: admin-users.php:290
 msgid "User"
 msgstr "Usuario"
 
-#: admin-permissions.php:66
+#: admin-permissions.php:70
 msgid "Filter by user ID..."
 msgstr "Filtrar por ID de usuario..."
 
-#: admin-permissions.php:69 admin-permissions.php:282 admin-permissions.php:364
-#: admin-permissions.php:404 permission-requests.php:227
+#: admin-permissions.php:73 admin-permissions.php:377 admin-permissions.php:422
 msgid "Object Type"
 msgstr "Tipo de objeto"
 
-#: admin-permissions.php:72 admin-permissions.php:90
+#: admin-permissions.php:76 admin-permissions.php:96
 msgid "All"
 msgstr "Todos"
 
-#: admin-permissions.php:74 admin-permissions.php:286 admin-permissions.php:371
+#: admin-permissions.php:78 admin-permissions.php:302 admin-permissions.php:400
+#: admin-permissions.php:429 permission-requests.php:241
+#, fuzzy
+#| msgid "General Roman Calendar"
+msgid "General Roman Calendar Tests"
+msgstr "Calendario Romano General"
+
+#: admin-permissions.php:80 admin-permissions.php:304 admin-permissions.php:384
 #: permission-requests.php:236
 msgid "Diocesan Calendar"
 msgstr "Calendario Diocesano"
 
-#: admin-permissions.php:76 admin-permissions.php:288 admin-permissions.php:373
-#: permission-requests.php:238
-msgid "Test Definition"
-msgstr "Definición de Prueba"
+#: admin-permissions.php:82 admin-permissions.php:306 admin-permissions.php:398
+#: admin-permissions.php:427 permission-requests.php:239
+#, fuzzy
+#| msgid "National Calendar"
+msgid "National Calendar Tests"
+msgstr "Calendario Nacional"
 
-#: admin-permissions.php:81 admin-permissions.php:293 admin-permissions.php:365
-#: admin-permissions.php:405 permission-requests.php:228
+#: admin-permissions.php:83 admin-permissions.php:307 admin-permissions.php:399
+#: admin-permissions.php:428 permission-requests.php:240
+#, fuzzy
+#| msgid "Diocesan Calendar"
+msgid "Diocesan Calendar Tests"
+msgstr "Calendario Diocesano"
+
+#: admin-permissions.php:87 admin-permissions.php:378 admin-permissions.php:423
 msgid "Object ID"
 msgstr "ID de objeto"
 
-#: admin-permissions.php:84
+#: admin-permissions.php:90
 msgid "Filter by object ID..."
 msgstr "Filtrar por ID de objeto..."
 
-#: admin-permissions.php:87 admin-permissions.php:298 admin-permissions.php:366
-#: admin-permissions.php:406 permission-requests.php:229
+#: admin-permissions.php:93 admin-permissions.php:289 admin-permissions.php:379
+#: admin-permissions.php:430 permission-requests.php:227
 msgid "Relation"
 msgstr "Relación"
 
-#: admin-permissions.php:92 admin-permissions.php:302 admin-permissions.php:384
-#: permission-requests.php:254
+#: admin-permissions.php:97 admin-permissions.php:292 admin-permissions.php:402
+#: permission-requests.php:257
 msgid "Viewer"
 msgstr "Visualizador"
 
-#: admin-permissions.php:93 admin-permissions.php:303 admin-permissions.php:385
-#: permission-requests.php:255
+#: admin-permissions.php:98 admin-permissions.php:293 admin-permissions.php:403
+#: permission-requests.php:258
 msgid "Editor"
 msgstr "Editor"
 
-#: admin-permissions.php:94 admin-permissions.php:304 admin-permissions.php:386
-#: permission-requests.php:257
-msgid "Deleter"
-msgstr "Eliminador"
+#: admin-permissions.php:99 admin-permissions.php:294 admin-permissions.php:404
+#: permission-requests.php:259
+msgctxt "permission relation"
+msgid "Admin"
+msgstr "Administrador"
 
-#: admin-permissions.php:100
+#: admin-permissions.php:105
 msgid "Apply Filters"
 msgstr "Aplicar filtros"
 
-#: admin-permissions.php:103
+#: admin-permissions.php:108
 msgid "Clear Filters"
 msgstr "Limpiar filtros"
 
-#: admin-permissions.php:112 admin-permissions.php:271
-#: admin-permissions.php:314
+#: admin-permissions.php:117 admin-permissions.php:278
+#: admin-permissions.php:325
 msgid "Grant Permission"
 msgstr "Conceder permiso"
 
-#: admin-permissions.php:115 admin-permissions.php:143
+#: admin-permissions.php:120 admin-permissions.php:149
 #: admin-applications.php:125 admin-role-requests.php:135 admin-users.php:56
 msgid "Refresh"
 msgstr "Actualizar"
 
-#: admin-permissions.php:123
+#: admin-permissions.php:128
 msgid "Permission Tuples"
 msgstr "Tuplas de permisos"
 
-#: admin-permissions.php:138 permission-requests.php:31
+#: admin-permissions.php:144 permission-requests.php:31
 #: permission-requests.php:44
 msgid "Access Requests"
 msgstr "Solicitudes de acceso"
 
-#: admin-permissions.php:154 admin-permissions.php:421
-#: permission-requests.php:259 admin-applications.php:57
+#: admin-permissions.php:160 admin-permissions.php:445
+#: permission-requests.php:261 admin-applications.php:57
 #: admin-applications.php:101 admin-applications.php:250
 #: admin-role-requests.php:67 admin-role-requests.php:111
 #: admin-role-requests.php:264 developer-dashboard.php:303
 msgid "Pending"
 msgstr "Pendiente"
 
-#: admin-permissions.php:161 admin-permissions.php:422
-#: permission-requests.php:260 admin-applications.php:68
+#: admin-permissions.php:167 admin-permissions.php:446
+#: permission-requests.php:262 admin-applications.php:68
 #: admin-applications.php:108 admin-applications.php:251
 #: admin-role-requests.php:78 admin-role-requests.php:118
 #: admin-role-requests.php:265 developer-dashboard.php:304
 msgid "Approved"
 msgstr "Aprobado"
 
-#: admin-permissions.php:167 admin-permissions.php:423
-#: permission-requests.php:261 admin-applications.php:79
+#: admin-permissions.php:173 admin-permissions.php:447
+#: permission-requests.php:263 admin-applications.php:79
 #: admin-applications.php:114 admin-applications.php:252
 #: admin-role-requests.php:89 admin-role-requests.php:124
 #: admin-role-requests.php:266 developer-dashboard.php:305
 msgid "Rejected"
 msgstr "Rechazado"
 
-#: admin-permissions.php:173 admin-permissions.php:424
-#: permission-requests.php:262 admin-applications.php:90
+#: admin-permissions.php:179 admin-permissions.php:448
+#: permission-requests.php:264 admin-applications.php:90
 #: admin-applications.php:120 admin-applications.php:253
 #: admin-role-requests.php:100 admin-role-requests.php:130
 #: admin-role-requests.php:267 developer-dashboard.php:306
 msgid "Revoked"
 msgstr "Revocado"
 
-#: admin-permissions.php:218
+#: admin-permissions.php:224
 msgid "Review Access Request"
 msgstr "Revisar solicitud de acceso"
 
-#: admin-permissions.php:220 admin-permissions.php:252
-#: admin-permissions.php:273 admin-permissions.php:329
+#: admin-permissions.php:226 admin-permissions.php:258
+#: admin-permissions.php:280 admin-permissions.php:340
 #: admin-applications.php:184 admin-role-requests.php:194
 #: admin-role-requests.php:217 admin-users.php:104 developer-dashboard.php:84
 #: developer-dashboard.php:154 developer-dashboard.php:239 temporale.php:161
@@ -2368,217 +2382,244 @@ msgstr "Revisar solicitud de acceso"
 msgid "Close"
 msgstr "Cerrar"
 
-#: admin-permissions.php:229 admin-applications.php:193
+#: admin-permissions.php:235 admin-applications.php:193
 #: admin-role-requests.php:203
 msgid "Notes"
 msgstr "Notas"
 
-#: admin-permissions.php:230 permission-requests.php:152
+#: admin-permissions.php:236 permission-requests.php:152
 #: admin-applications.php:194 admin-role-requests.php:204
 msgid "optional"
 msgstr "opcional"
 
-#: admin-permissions.php:235 admin-applications.php:199
+#: admin-permissions.php:241 admin-applications.php:199
 #: admin-role-requests.php:209
 msgid "Add notes about your decision..."
 msgstr "Añadir notas sobre tu decisión..."
 
-#: admin-permissions.php:243 admin-applications.php:216
+#: admin-permissions.php:249 admin-applications.php:216
 #: admin-role-requests.php:226
 msgid "Approve"
 msgstr "Aprobar"
 
-#: admin-permissions.php:246 admin-applications.php:210
+#: admin-permissions.php:252 admin-applications.php:210
 #: admin-role-requests.php:220
 msgid "Reject"
 msgstr "Rechazar"
 
-#: admin-permissions.php:249 admin-permissions.php:368
+#: admin-permissions.php:255 admin-permissions.php:381
 #: admin-applications.php:213 admin-role-requests.php:223
 #: admin-role-requests.php:269 developer-dashboard.php:271
 msgid "Revoke"
 msgstr "Revocar"
 
-#: admin-permissions.php:261 admin-applications.php:172
+#: admin-permissions.php:267 admin-applications.php:172
 #: admin-role-requests.php:182 admin-users.php:92
 msgid "Back to Dashboard"
 msgstr "Volver al panel de control"
 
-#: admin-permissions.php:277 admin-users.php:215 admin-users.php:292
+#: admin-permissions.php:284 admin-users.php:215 admin-users.php:292
 #: user-profile.php:113
 msgid "User ID"
 msgstr "ID de usuario"
 
-#: admin-permissions.php:279
+#: admin-permissions.php:286
 msgid "Enter user ID..."
 msgstr "Introduce el ID de usuario..."
 
-#: admin-permissions.php:284 permission-requests.php:230
-msgid "Select object type..."
-msgstr "Seleccionar tipo de objeto..."
-
-#: admin-permissions.php:295 admin-permissions.php:380
-msgid "Enter object ID..."
-msgstr "Introduce el ID de objeto..."
-
-#: admin-permissions.php:300 permission-requests.php:232
+#: admin-permissions.php:291 permission-requests.php:228
 msgid "Select relation..."
 msgstr "Seleccionar relación..."
 
-#: admin-permissions.php:327 admin-permissions.php:340
+#: admin-permissions.php:298 admin-permissions.php:395
+#: admin-permissions.php:424 permission-requests.php:230
+#, fuzzy
+#| msgid "Calendar"
+msgid "Calendar scope"
+msgstr "Calendario"
+
+#: admin-permissions.php:300 permission-requests.php:232
+#, fuzzy
+#| msgid "Select calendar"
+msgid "Select calendar scope..."
+msgstr "Seleccionar calendario"
+
+#: admin-permissions.php:311 admin-permissions.php:396
+#: admin-permissions.php:425 permission-requests.php:231
+#, fuzzy
+#| msgid "Calendar"
+msgid "Calendar ID"
+msgstr "Calendario"
+
+#: admin-permissions.php:314 admin-permissions.php:397
+#: admin-permissions.php:426 permission-requests.php:233
+#, fuzzy
+#| msgid "Select calendar"
+msgid "Select calendar ID..."
+msgstr "Seleccionar calendario"
+
+#: admin-permissions.php:338 admin-permissions.php:351
 msgid "Revoke Permission"
 msgstr "Revocar permiso"
 
-#: admin-permissions.php:353
+#: admin-permissions.php:366
 msgid "No permissions found."
 msgstr "No se encontraron permisos."
 
-#: admin-permissions.php:354
+#: admin-permissions.php:367
 msgid "Failed to load permissions. Please try again later."
 msgstr "Error al cargar permisos. Por favor, inténtalo de nuevo más tarde."
 
-#: admin-permissions.php:355
+#: admin-permissions.php:368
 msgid "Permission granted successfully."
 msgstr "Permiso concedido exitosamente."
 
-#: admin-permissions.php:356
+#: admin-permissions.php:369
 msgid "Permission revoked successfully."
 msgstr "Permiso revocado con éxito."
 
-#: admin-permissions.php:357
+#: admin-permissions.php:370
 msgid "Failed to grant permission. Please try again."
 msgstr "Error al conceder permiso. Por favor, inténtalo de nuevo."
 
-#: admin-permissions.php:358
+#: admin-permissions.php:371
 msgid "Failed to revoke permission. Please try again."
 msgstr "Error al revocar permiso. Por favor, inténtalo de nuevo."
 
-#: admin-permissions.php:359
+#: admin-permissions.php:372
 msgid "Granting..."
 msgstr "Concediendo..."
 
-#: admin-permissions.php:360 admin-users.php:353
+#: admin-permissions.php:373 admin-users.php:353
 msgid "Revoking..."
 msgstr "Revocando..."
 
-#: admin-permissions.php:361
+#: admin-permissions.php:374
 msgid "Are you sure you want to revoke this permission?"
 msgstr "¿Estás seguro de que quieres revocar este permiso?"
 
-#: admin-permissions.php:367 admin-permissions.php:410
+#: admin-permissions.php:380 admin-permissions.php:434
 #: admin-applications.php:244 admin-role-requests.php:253 temporale.php:138
 msgid "Actions"
 msgstr "Acciones"
 
-#: admin-permissions.php:376 permission-requests.php:242
+#: admin-permissions.php:386 permission-requests.php:238
+msgid "Test Definition"
+msgstr "Definición de Prueba"
+
+#: admin-permissions.php:389 permission-requests.php:245
 msgid "Sanctorale — Editio Typica 1970"
 msgstr "Sanctorale — Editio Typica 1970"
 
-#: admin-permissions.php:377 permission-requests.php:244
+#: admin-permissions.php:390 permission-requests.php:247
 msgid "Sanctorale — Editio Typica 2002"
 msgstr "Sanctorale — Editio Typica 2002"
 
-#: admin-permissions.php:378 permission-requests.php:246
+#: admin-permissions.php:391 permission-requests.php:249
 msgid "Sanctorale — Editio Typica 2008"
 msgstr "Sanctorale — Editio Typica 2008"
 
-#: admin-permissions.php:379 permission-requests.php:248
+#: admin-permissions.php:392 permission-requests.php:251
 msgid "Decrees of the Dicastery for Divine Worship"
 msgstr "Decretos del Dicasterio para el Culto Divino"
 
-#: admin-permissions.php:381 permission-requests.php:231
+#: admin-permissions.php:393
+msgid "Enter object ID..."
+msgstr "Introduce el ID de objeto..."
+
+#: admin-permissions.php:394
 msgid "Select object ID..."
 msgstr "Seleccionar ID de objeto..."
 
-#: admin-permissions.php:388
+#: admin-permissions.php:406
 msgid "All fields are required."
 msgstr "Todos los campos son obligatorios."
 
-#: admin-permissions.php:392 admin-role-requests.php:239
+#: admin-permissions.php:410 admin-role-requests.php:239
 msgid "No requests found."
 msgstr "No se encontraron solicitudes."
 
-#: admin-permissions.php:393
+#: admin-permissions.php:411
 msgid "No pending access requests. All caught up!"
 msgstr "No hay solicitudes de acceso pendientes. ¡Todo al día!"
 
-#: admin-permissions.php:394
+#: admin-permissions.php:412
 msgid "Failed to load access requests. Please try again later."
 msgstr ""
 "Error al cargar las solicitudes de acceso. Por favor, inténtalo de nuevo más "
 "tarde."
 
-#: admin-permissions.php:395 admin-applications.php:232
+#: admin-permissions.php:413 admin-applications.php:232
 #: admin-role-requests.php:242
 msgid "Processing..."
 msgstr "Procesando..."
 
-#: admin-permissions.php:396
+#: admin-permissions.php:414
 msgid "Access request approved successfully."
 msgstr "Solicitud de acceso aprobada con éxito."
 
-#: admin-permissions.php:397
+#: admin-permissions.php:415
 msgid "Access request rejected."
 msgstr "Solicitud de acceso rechazada."
 
-#: admin-permissions.php:398
+#: admin-permissions.php:416
 msgid "Access revoked successfully."
 msgstr "Acceso revocado exitosamente."
 
-#: admin-permissions.php:399 admin-applications.php:236
+#: admin-permissions.php:417 admin-applications.php:236
 #: admin-role-requests.php:246
 msgid "Failed to process request. Please try again."
 msgstr "Error al procesar la solicitud. Por favor, inténtalo de nuevo."
 
-#: admin-permissions.php:402 permission-requests.php:219
+#: admin-permissions.php:420 permission-requests.php:219
 msgid "Role"
 msgstr "Rol"
 
-#: admin-permissions.php:403 permission-requests.php:133
+#: admin-permissions.php:421 permission-requests.php:133
 #: permission-requests.php:220 admin-dashboard.php:128 user-profile.php:178
 msgid "Permissions"
 msgstr "Permisos"
 
-#: admin-permissions.php:407 permission-requests.php:151
+#: admin-permissions.php:431 permission-requests.php:151
 #: permission-requests.php:222 admin-role-requests.php:255
 msgid "Justification"
 msgstr "Justificación"
 
-#: admin-permissions.php:408 permission-requests.php:166
+#: admin-permissions.php:432 permission-requests.php:166
 msgid "Credentials"
 msgstr "Credenciales"
 
-#: admin-permissions.php:409 admin-role-requests.php:251
+#: admin-permissions.php:433 admin-role-requests.php:251
 msgid "Date"
 msgstr "Fecha"
 
-#: admin-permissions.php:411 admin-applications.php:245
+#: admin-permissions.php:435 admin-applications.php:245 admin-dashboard.php:161
 #: admin-role-requests.php:254
 msgid "Review"
 msgstr "Revisión"
 
-#: admin-permissions.php:412 admin-applications.php:247
+#: admin-permissions.php:436 admin-applications.php:247
 #: admin-role-requests.php:256
 msgid "Reviewed At"
 msgstr "Revisado el"
 
-#: admin-permissions.php:413 permission-requests.php:223
+#: admin-permissions.php:437 permission-requests.php:223
 #: admin-applications.php:248 admin-role-requests.php:257
 msgid "Review Notes"
 msgstr "Notas de revisión"
 
-#: admin-permissions.php:414 permission-requests.php:221
+#: admin-permissions.php:438 permission-requests.php:221
 #: admin-applications.php:243 admin-role-requests.php:258
 msgid "Status"
 msgstr "Estado"
 
-#: admin-permissions.php:417 permission-requests.php:80
-#: permission-requests.php:250 admin-role-requests.php:261 admin-users.php:145
+#: admin-permissions.php:441 permission-requests.php:80
+#: permission-requests.php:253 admin-role-requests.php:261 admin-users.php:145
 msgid "Calendar Editor"
 msgstr "Editor de calendario"
 
-#: admin-permissions.php:418 permission-requests.php:85
-#: permission-requests.php:251 admin-role-requests.php:262 admin-users.php:146
+#: admin-permissions.php:442 permission-requests.php:85
+#: permission-requests.php:254 admin-role-requests.php:262 admin-users.php:146
 msgid "Accuracy Test Editor"
 msgstr "Editor de prueba de precisión"
 
@@ -2696,8 +2737,13 @@ msgid "Please select a role."
 msgstr "Por favor selecciona un rol."
 
 #: permission-requests.php:214
+#, fuzzy
+#| msgid ""
+#| "Each permission row must have object type, object ID, and relation filled "
+#| "in."
 msgid ""
-"Each permission row must have object type, object ID, and relation filled in."
+"Each permission row must have a calendar scope, calendar ID, and relation "
+"filled in."
 msgstr ""
 "Cada fila de permisos debe tener el tipo de objeto, el ID del objeto y la "
 "relación completados."
@@ -2727,13 +2773,9 @@ msgstr "Enviado"
 msgid "Reviewed"
 msgstr "Revisado"
 
-#: permission-requests.php:233
+#: permission-requests.php:229
 msgid "Remove"
 msgstr "Eliminar"
-
-#: permission-requests.php:264
-msgid "e.g. IT, USA, BOSTON, Americas..."
-msgstr "p. ej. IT, EE. UU., BOSTON, Américas..."
 
 #: admin-applications.php:33 admin-applications.php:45
 msgid "Application Management"
@@ -2815,7 +2857,7 @@ msgstr ""
 "Gestionar datos del calendario litúrgico, información del Misal Romano y "
 "calendarios regionales."
 
-#: admin-dashboard.php:65
+#: admin-dashboard.php:65 admin-dashboard.php:146
 msgid "Administration"
 msgstr "Administración"
 
@@ -2851,6 +2893,15 @@ msgstr "Revisar y aprobar solicitudes de desarrolladores"
 #: admin-dashboard.php:130
 msgid "Manage fine-grained resource permissions"
 msgstr "Gestionar permisos de recursos detallados"
+
+#: admin-dashboard.php:155
+msgid "Access Requests to Review"
+msgstr "Solicitudes de acceso por revisar"
+
+#: admin-dashboard.php:157
+msgid "Review and approve access requests for the resources you administer"
+msgstr ""
+"Revisa y aprueba las solicitudes de acceso a los recursos que administras"
 
 #: admin-role-requests.php:55
 msgid "Role Requests Management"
@@ -3587,6 +3638,15 @@ msgstr "La sesión expira en 30 segundos"
 #: user-profile.php:407
 msgid "Session expired"
 msgstr "La sesión ha expirado"
+
+#~ msgid "Deleter"
+#~ msgstr "Eliminador"
+
+#~ msgid "Select object type..."
+#~ msgstr "Seleccionar tipo de objeto..."
+
+#~ msgid "e.g. IT, USA, BOSTON, Americas..."
+#~ msgstr "p. ej. IT, EE. UU., BOSTON, Américas..."
 
 #~ msgid "min ago"
 #~ msgstr "min hace"
