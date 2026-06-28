@@ -32,6 +32,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          # This job only reads files and calls `gh` (authed via GH_TOKEN env),
+          # never git over the remote — so don't leave the token in .git/config.
+          persist-credentials: false
 
       - name: Check whether the js-yaml override is still needed
         env:
