@@ -382,7 +382,13 @@ services:
       API_PORT: ${API_PORT:-8000}
       API_BASE_PATH: ""
       WS_PROTOCOL: ws
-      WS_HOST: localhost
+      # The browser builds the WebSocket URL from this value and connects from
+      # the host, NOT from inside the container — so it must be an address the
+      # host's browser can reach. The API container publishes 8082 on IPv4 only
+      # (127.0.0.1:8082). Modern Chrome resolves "localhost" to IPv6 ::1 first
+      # and (unlike HTTP) does not fall back to IPv4 for WebSockets, so
+      # ws://localhost:8082 fails. Pin to 127.0.0.1 to force the working IPv4 path.
+      WS_HOST: 127.0.0.1
       WS_PORT: ${WS_PORT:-8082}
       LITCAL_FRONTEND_URL: http://localhost:${FRONTEND_PORT:-3000}
       ZITADEL_ISSUER: ${ZITADEL_ISSUER:-}
