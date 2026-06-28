@@ -6,6 +6,10 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    # Wait 7 days before proposing updates to newly published versions, to
+    # reduce exposure to a compromised or yanked release (supply-chain).
+    cooldown:
+      default-days: 7
     # Raise pull requests for version updates
     # to composer packages against the `development` branch
     target-branch: "development"
@@ -17,6 +21,22 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
     target-branch: "development"
     labels:
       - "github-actions"
+
+  # npm/Yarn devDependencies (eslint, playwright, typescript, markdownlint-cli2, …).
+  # Yarn Berry is supported via package.json + yarn.lock. A bump of
+  # markdownlint-cli2 here is also what retires the temporary js-yaml resolutions
+  # override (see .github/workflows/js-yaml-resolution-reminder.yml).
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+    target-branch: "development"
+    labels:
+      - "javascript dependencies"
