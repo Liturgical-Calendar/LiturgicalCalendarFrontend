@@ -1,0 +1,120 @@
+name: js-yaml resolution reminder
+
+# package.json carries a temporary "resolutions": { "js-yaml": "^4.2.0" } override.
+# It exists only because every published markdownlint-cli2 release hard-pins
+# js-yaml to the exact version 4.1.1, which is vulnerable to GHSA-h67p-54hq-rp68
+# (quadratic-complexity DoS in merge-key handling, patched in 4.2.0). The override
+# forces a patched js-yaml regardless.
+#
+# Once markdownlint-cli2 itself requires js-yaml >= 4.2.0 (e.g. once the weekly npm
+# Dependabot bump lands a release that took the upstream fix), the override is dead
+# weight and should be removed. This job watches yarn.lock for that condition and
+# opens an idempotent reminder issue — so nobody has to remember. The reminder
+# auto-closes once the override is gone.
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Mondays 09:00 UTC
+  push:
+    branches: [development]
+    paths:
+      - package.json
+      - yarn.lock
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          # This job only reads files and calls `gh` (authed via GH_TOKEN env),
+          # never git over the remote — so don't leave the token in .git/config.
+          persist-credentials: false
+
+      - name: Check whether the js-yaml override is still needed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_LABEL: 'dependency-cleanup'
+        run: |
+          set -euo pipefail
+          TITLE='Remove the temporary js-yaml resolutions override'
+
+          # 1. Is the override still in package.json? If not, there is nothing to
+          #    chase — close any stale reminder and stop.
+          if ! jq -e '.resolutions["js-yaml"] // empty' package.json >/dev/null 2>&1; then
+            STATUS='absent'
+          else
+            # 2. What js-yaml does the locked markdownlint-cli2 itself require?
+            #    Read its dependency straight out of yarn.lock (Berry). The "@npm:"
+            #    anchor keeps us off markdownlint-cli2-formatter-default.
+            CONSTRAINT=$(awk '
+              /^"?markdownlint-cli2@npm:/ { inblk=1; next }
+              inblk && /^[^[:space:]]/   { inblk=0 }
+              inblk && /^[[:space:]]+js-yaml:/ {
+                line=$0
+                sub(/.*js-yaml:[[:space:]]*"?npm:/, "", line)
+                sub(/".*/, "", line)
+                print line; exit
+              }
+            ' yarn.lock)
+
+            if [ -z "${CONSTRAINT}" ]; then
+              STATUS='skip:markdownlint-cli2-js-yaml-not-found'
+            else
+              MM=$(printf '%s' "${CONSTRAINT}" | grep -oE '[0-9]+\.[0-9]+' | head -1)
+              MAJOR=${MM%%.*}; MINOR=${MM##*.}
+              if [ "${MAJOR}" -gt 4 ] || { [ "${MAJOR}" -eq 4 ] && [ "${MINOR}" -ge 2 ]; }; then
+                STATUS="stale:${CONSTRAINT}"   # markdownlint-cli2 is patched -> drop override
+              else
+                STATUS="needed:${CONSTRAINT}"  # still pins a vulnerable js-yaml
+              fi
+            fi
+          fi
+          echo "status: ${STATUS}"
+
+          EXISTING=$(gh issue list --label "${ISSUE_LABEL}" --state open \
+                     --json number,title \
+                     --jq "[.[] | select(.title == \"${TITLE}\")] | .[0].number // empty")
+
+          case "${STATUS}" in
+            stale:*)
+              if [ -n "${EXISTING}" ]; then
+                echo "Reminder already open (#${EXISTING})."
+                exit 0
+              fi
+              gh label create "${ISSUE_LABEL}" \
+                --description "Temporary dependency workaround that can now be removed" \
+                --color "0e8a16" --force >/dev/null 2>&1 || true
+              BODY=$(cat <<EOF
+          \`markdownlint-cli2\` now requires \`js-yaml@${STATUS#stale:}\`, which is at or past the
+          patched \`4.2.0\` for [GHSA-h67p-54hq-rp68](https://github.com/advisories/GHSA-h67p-54hq-rp68).
+          The \`"resolutions": { "js-yaml": "^4.2.0" }\` override in \`package.json\` is now redundant.
+
+          ## To resolve
+
+          1. Remove the \`resolutions.js-yaml\` entry from \`package.json\`.
+          2. Run \`yarn install\` to regenerate \`yarn.lock\` and \`.pnp.cjs\`.
+          3. Confirm \`yarn lint:md\` still runs, commit, and this issue auto-closes on the next run.
+
+          (Reminder posted by \`.github/workflows/js-yaml-resolution-reminder.yml\`.)
+          EOF
+          )
+              gh issue create --title "${TITLE}" --label "${ISSUE_LABEL}" --body "${BODY}"
+              ;;
+            *)
+              # absent / needed / skip -> override gone or still required; nothing to nag.
+              if [ -n "${EXISTING}" ]; then
+                echo "Closing reminder #${EXISTING} (status: ${STATUS})."
+                gh issue close "${EXISTING}" \
+                  --comment "Closing — js-yaml override status is now: ${STATUS}."
+              else
+                echo "No reminder needed (status: ${STATUS})."
+              fi
+              ;;
+          esac
