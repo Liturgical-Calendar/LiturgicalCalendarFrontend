@@ -33,8 +33,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'javascript' ]
-        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
+        # Use the unified 'javascript-typescript' identifier (CodeQL analyzes JS
+        # and TS as one language family). This also fixes the status-check name:
+        # the job reports as "Analyze (javascript-typescript)", which is the exact
+        # context the `development` branch protection requires. With the old
+        # 'javascript' value the job reported "Analyze (javascript)", so the
+        # required context was never satisfied and PRs sat permanently BLOCKED.
+        language: [ 'javascript-typescript' ]
+        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript-typescript', 'python', 'ruby' ]
         # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support
 
     steps:
