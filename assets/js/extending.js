@@ -303,7 +303,7 @@ async function handleAuthError(response, retryRequest, fullFlowCallback) {
             authRetryCounters.delete(retryRequest);
             console.error('Token refresh failed:', error.message);
             showLoginModal(fullFlowCallback);
-            throw new Error('Authentication required');
+            throw new Error('Authentication required', { cause: error });
         }
     } else if (response.status === 403) {
         toastr.error('You do not have permission to perform this action', 'Permission Denied');
@@ -1637,7 +1637,7 @@ const updateRegionalCalendarForm = (data) => {
  */
 const fetchRegionalCalendarData = (headers) => {
     // Only fetch data for calendars that already exist
-    let calendarExists = false;
+    let calendarExists;
     console.log(`fetchRegionCalendarData: API.category: <${API.category}>, API.key: <${API.key}>`);
     if (API.category === 'nation') {
         calendarExists = LitCalMetadata.national_calendars_keys.includes(API.key);
