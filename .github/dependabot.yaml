@@ -40,3 +40,17 @@ updates:
     target-branch: "development"
     labels:
       - "javascript dependencies"
+    # Batch npm updates into fewer PRs. Groups are matched in the order they are
+    # declared — a dependency joins the FIRST group whose patterns match — so the
+    # `eslint` group must precede the catch-all `dev-dependencies` group. eslint
+    # and @eslint/js share a hard major-version lock (@eslint/js@10's shared
+    # config references rules that only exist in eslint@10 core), so they must
+    # bump together in a single PR or the config fails to load.
+    groups:
+      eslint:
+        patterns:
+          - "eslint"
+          - "@eslint/*"
+      dev-dependencies:
+        patterns:
+          - "*"
