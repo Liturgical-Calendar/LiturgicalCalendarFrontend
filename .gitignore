@@ -41,6 +41,15 @@ build/Release
 node_modules/
 jspm_packages/
 
+# Yarn (node_modules linker) — ignore local state and any leftover PnP files
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
 # TypeScript v1 declaration files
 typings/
 
