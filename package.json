@@ -25,13 +25,13 @@
   "devDependencies": {
     "@eslint/js": "^9.32.0",
     "@playwright/test": "^1.61.0",
-    "@types/node": "^24.10.1",
-    "dotenv": "^16.4.5",
+    "@types/node": "^26.0.0",
+    "dotenv": "^17.4.2",
     "eslint": "^9.32.0",
-    "globals": "^16.3.0",
+    "globals": "^17.7.0",
     "markdownlint-cli2": "^0.22.1",
-    "prettier": "^3.4.2",
-    "typescript": "^5.9.3"
+    "prettier": "^3.8.4",
+    "typescript": "^6.0.3"
   },
   "resolutions": {
     "js-yaml": "^4.2.0"
