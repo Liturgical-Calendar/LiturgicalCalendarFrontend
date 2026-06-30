@@ -258,23 +258,47 @@ jobs:
           # Passenger-style file hand-off.
           #
           # Touching the file only proves we asked; the watcher deleting it is
-          # what proves the reload ran. So in the same remote shell we touch the
-          # sentinel and then poll until it disappears (up to ~60s), exiting
-          # non-zero on timeout so the deploy fails rather than silently
-          # continuing with a stale php-fpm.
-          remote_cmd=$(printf 'set -e; mkdir -p %q; touch %q; i=0; while [ "$i" -lt 30 ]; do [ -e %q ] || exit 0; sleep 2; i=$((i+1)); done; exit 1' \
-            "${DEPLOY_PATH}/tmp" \
-            "${DEPLOY_PATH}/tmp/restart.txt" \
-            "${DEPLOY_PATH}/tmp/restart.txt")
-          if ssh -i ~/.ssh/deploy_key -p "${VPS_PORT}" \
-            -o IdentitiesOnly=yes \
-            -o StrictHostKeyChecking=yes \
-            -o UserKnownHostsFile=~/.ssh/known_hosts \
-            -o ConnectTimeout=10 \
-            -o ServerAliveInterval=15 \
-            -o ServerAliveCountMax=2 \
-            "${VPS_USER}@${VPS_HOST}" \
-            "${remote_cmd}"; then
+          # what proves the reload ran. The chroot jail has no `sleep` binary
+          # (it does have `mkdir`/`touch`), so the wait loop runs HERE on the
+          # runner (full coreutils) rather than in the remote shell — the remote
+          # side only does `touch` and a `[ -e ]` builtin test. We poll until the
+          # sentinel disappears (up to ~60s), exiting non-zero on timeout so the
+          # deploy fails rather than silently continuing with a stale php-fpm.
+          ssh_opts=(
+            -i ~/.ssh/deploy_key
+            -p "${VPS_PORT}"
+            -o IdentitiesOnly=yes
+            -o StrictHostKeyChecking=yes
+            -o UserKnownHostsFile=~/.ssh/known_hosts
+            -o ConnectTimeout=10
+            -o ServerAliveInterval=15
+            -o ServerAliveCountMax=2
+          )
+          target="${VPS_USER}@${VPS_HOST}"
+          q_tmp=$(printf '%q' "${DEPLOY_PATH}/tmp")
+          q_sentinel=$(printf '%q' "${DEPLOY_PATH}/tmp/restart.txt")
+
+          # Drop the restart sentinel (one remote call; no remote `sleep` needed).
+          ssh "${ssh_opts[@]}" "${target}" "set -e; mkdir -p ${q_tmp}; touch ${q_sentinel}"
+
+          # Poll from the runner until the watcher removes it, bounded by a
+          # runner-side wall-clock deadline (~60s) — NOT by retry count — so slow
+          # reconnects can't stretch the wait far past the intended window. Each
+          # poll is additionally hard-capped with `timeout` (belt) on top of the
+          # ssh_opts ConnectTimeout / ServerAlive* settings (suspenders).
+          # `echo PRESENT/GONE` is a token so an SSH connection blip is retried
+          # rather than mistaken for "file gone".
+          reloaded=0
+          deadline=$(( $(date +%s) + 60 ))
+          while [ "$(date +%s)" -lt "${deadline}" ]; do
+            state=$(timeout 15 ssh "${ssh_opts[@]}" "${target}" "[ -e ${q_sentinel} ] && echo PRESENT || echo GONE") || { sleep 2; continue; }
+            if [ "${state}" = GONE ]; then
+              reloaded=1
+              break
+            fi
+            sleep 2
+          done
+          if [ "${reloaded}" = 1 ]; then
             echo "php-fpm reload sentinel consumed by the watcher; reload completed."
           else
             echo "::error::php-fpm reload not confirmed: ${DEPLOY_PATH}/tmp/restart.txt was not consumed within ~60s (or the signal connection failed)." >&2
