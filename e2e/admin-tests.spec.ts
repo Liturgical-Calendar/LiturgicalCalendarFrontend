@@ -49,3 +49,53 @@ test.describe('admin-tests gating (stubbed)', () => {
         await expect(page.getByRole('button', { name: 'Delete' })).toHaveCount(2);
     });
 });
+
+const grcEvents = {
+    litcal_events: [
+        { event_key: 'StIgnatiusOfLoyola', name: 'Saint Ignatius of Loyola', grade: 3, grade_lcl: 'Memorial', month: 7, day: 31 },
+    ],
+};
+
+async function stubEditor(page: Page, scopes: TestScopes): Promise<void> {
+    await stub(page, scopes);
+    await page.route('**/events**', (r: Route) => r.fulfill({ json: grcEvents }));
+}
+
+test.describe('admin-tests editor (stubbed)', () => {
+    test('create flow submits a PUT with a schema-shaped body', async ({ page }) => {
+        await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
+        let putBody: Record<string, unknown> | null = null;
+        await page.route('**/tests', (r: Route) => {
+            if (r.request().method() === 'PUT') {
+                putBody = r.request().postDataJSON() as Record<string, unknown>;
+                return r.fulfill({ json: { ...putBody } });
+            }
+            return r.fulfill({ json: sampleTests });
+        });
+        await page.goto('/admin-tests.php');
+        await page.locator('#createTestBtn').click();
+        await page.locator('#tt-exact').check({ force: true });
+        await page.locator('#testName').fill('StIgnatiusOfLoyolaTest');
+        await page.locator('#testEventKey').fill('StIgnatiusOfLoyola');
+        await page.locator('#testEventKey').dispatchEvent('change');
+        await page.locator('#saveTestBtn').click();
+        await expect.poll(() => putBody && putBody['name']).toBe('StIgnatiusOfLoyolaTest');
+        expect(putBody!['test_type']).toBe('exactCorrespondence');
+        expect((putBody!['assertions'] as unknown[]).length).toBeGreaterThan(0);
+        expect((putBody!['assertions'] as Array<{ assert: string }>)[0].assert).toBe('eventExists AND hasExpectedDate');
+    });
+
+    test('edit flow renders name read-only and submits PATCH', async ({ page }) => {
+        await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
+        let patched = false;
+        await page.route('**/tests/UsaNationalTest', (r: Route) => {
+            if (r.request().method() === 'PATCH') { patched = true; return r.fulfill({ json: {} }); }
+            return r.continue();
+        });
+        await page.goto('/admin-tests.php');
+        await page.locator('tr', { hasText: 'UsaNationalTest' }).getByRole('button', { name: 'Edit' }).click();
+        await expect(page.locator('#testName')).toHaveAttribute('readonly', '');
+        await page.locator('#saveTestBtn').click();
+        await expect.poll(() => patched).toBe(true);
+    });
+});

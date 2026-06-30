@@ -190,5 +190,228 @@ document.addEventListener('DOMContentLoaded', () => {
     // Expose internals for later tasks (editor/delete wiring appended below).
     window.__adminTests = { state, fetchJson, deriveScope, gateByScope, showModalAlert, loadTests, renderTableRows, AssertionsBuilder, TestType, CalendarSelect, CalendarSelectFilter, ApiClient };
 
+    // ---- editor -----------------------------------------------------------
+
+    const editorModalEl = document.getElementById('testEditorModal');
+    const editorModal = bootstrap.Modal.getOrCreateInstance(editorModalEl);
+    const builder = new AssertionsBuilder({ locale: config.locale });
+    let events = [];
+
+    function selectedTestType() {
+        return document.querySelector('input[name="testType"]:checked')?.value ?? TestType.ExactCorrespondence;
+    }
+
+    function selectedScope() {
+        const type = document.getElementById('testScopeType').value;
+        if (type === 'general_roman_calendar') return null;
+        const idEl = document.getElementById('testScopeId');
+        const id = idEl ? idEl.value : '';
+        return id ? { [type]: id } : null;
+    }
+
+    function eventsPath(appliesTo) {
+        if (appliesTo && appliesTo.diocesan_calendar) return `/events/diocese/${appliesTo.diocesan_calendar}`;
+        if (appliesTo && appliesTo.national_calendar) return `/events/nation/${appliesTo.national_calendar}`;
+        return '/events';
+    }
+
+    async function loadEvents(appliesTo) {
+        const res = await fetch(apiUrl + eventsPath(appliesTo), {
+            headers: { Accept: 'application/json', 'Accept-Language': config.locale },
+            credentials: 'include',
+        });
+        const json = await res.json();
+        events = json.litcal_events ?? [];
+        const datalist = document.getElementById('testEventKeyList');
+        datalist.innerHTML = '';
+        events.forEach((e) => {
+            const opt = document.createElement('option');
+            opt.value = e.event_key;
+            opt.textContent = `${e.name} (${e.grade_lcl})`;
+            if (e.month != null) opt.dataset.month = String(e.month);
+            if (e.day != null) opt.dataset.day = String(e.day);
+            if (e.grade != null) opt.dataset.grade = String(e.grade);
+            datalist.appendChild(opt);
+        });
+    }
+
+    function sliderYears() {
+        const a = Number(document.getElementById('lowerRange').value);
+        const b = Number(document.getElementById('upperRange').value);
+        return { minYear: Math.min(a, b), maxYear: Math.max(a, b) };
+    }
+
+    function renderYearGrid() {
+        const grid = document.getElementById('yearGrid');
+        const { minYear, maxYear } = sliderYears();
+        grid.innerHTML = '';
+        for (let y = minYear; y <= maxYear; y++) {
+            const span = document.createElement('span');
+            span.className = `testYearSpan year-${y}`;
+            span.dataset.year = String(y);
+            span.textContent = String(y);
+            grid.appendChild(span);
+        }
+    }
+
+    function regenerate() {
+        const event = events.find((e) => e.event_key === document.getElementById('testEventKey').value);
+        if (!event) return;
+        const { minYear, maxYear } = sliderYears();
+        const tt = selectedTestType();
+        builder.setMeta({ test_type: tt, applies_to: selectedScope() });
+        const pivot = (tt === TestType.ExactCorrespondenceSince || tt === TestType.ExactCorrespondenceUntil)
+            ? minYear
+            : null;
+        builder.generate({ event, minYear, maxYear, pivotYear: pivot });
+        document.getElementById('testDescription').value = builder.model.description;
+        document.getElementById('baseDate').value = event.month && event.day
+            ? `${minYear}-${String(event.month).padStart(2, '0')}-${String(event.day).padStart(2, '0')}`
+            : '';
+        builder.render(document.getElementById('assertionsContainer'));
+        renderYearGrid();
+    }
+
+    document.getElementById('testEventKey').addEventListener('change', regenerate);
+    document.querySelectorAll('input[name="testType"]').forEach((el) => el.addEventListener('change', regenerate));
+    document.getElementById('lowerRange').addEventListener('change', regenerate);
+    document.getElementById('upperRange').addEventListener('change', regenerate);
+
+    // sync slider CSS custom properties as the user drags
+    ['lowerRange', 'upperRange'].forEach((id, idx) => {
+        const el = document.getElementById(id);
+        el.addEventListener('input', () => {
+            const prop = idx === 0 ? '--value-a' : '--value-b';
+            const textProp = idx === 0 ? '--text-value-a' : '--text-value-b';
+            el.parentNode.style.setProperty(prop, el.value);
+            el.parentNode.style.setProperty(textProp, `"${el.value}"`);
+        });
+    });
+
+    // per-year card interactions (event-delegated on the assertions container)
+    const assertionsContainer = document.getElementById('assertionsContainer');
+    assertionsContainer.addEventListener('click', (ev) => {
+        const card = ev.target.closest('[data-year]');
+        if (!card) return;
+        const year = Number(card.dataset.year);
+        if (ev.target.closest('.toggleAssert')) {
+            builder.toggleAssert(year);
+            builder.render(assertionsContainer);
+        } else if (ev.target.closest('.comment')) {
+            document.getElementById('commentYear').value = String(year);
+            const a = builder.model.assertions.find((x) => x.year === year);
+            document.getElementById('commentText').value = a && 'comment' in a ? a.comment : '';
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('testCommentModal')).show();
+        }
+    });
+    assertionsContainer.addEventListener('change', (ev) => {
+        const card = ev.target.closest('[data-year]');
+        if (!card) return;
+        const year = Number(card.dataset.year);
+        if (ev.target.matches('.assertionText')) {
+            builder.setAssertionText(year, ev.target.value);
+        }
+    });
+    document.getElementById('saveCommentBtn').addEventListener('click', () => {
+        const year = Number(document.getElementById('commentYear').value);
+        builder.setComment(year, document.getElementById('commentText').value);
+        builder.render(assertionsContainer);
+        bootstrap.Modal.getInstance(document.getElementById('testCommentModal')).hide();
+    });
+
+    async function syncScopeIdField() {
+        const type = document.getElementById('testScopeType').value;
+        const mount = document.getElementById('testScopeIdMount');
+        mount.innerHTML = '';
+        if (type === 'national_calendar' || type === 'diocesan_calendar') {
+            const client = await ApiClient.init(apiUrl).catch(() => null);
+            if (!client) return;
+            const filter = type === 'national_calendar'
+                ? CalendarSelectFilter.NATIONAL_CALENDARS
+                : CalendarSelectFilter.DIOCESAN_CALENDARS;
+            const sel = new CalendarSelect(config.locale).filter(filter).allowNull(true).class('form-select').id('testScopeId');
+            sel.appendTo(mount);
+        }
+    }
+    document.getElementById('testScopeType').addEventListener('change', () => { syncScopeIdField(); regenerate(); });
+
+    function openEditor(test) {
+        state.editing = test ? test.name : null;
+        document.getElementById('testEditorAlerts').innerHTML = '';
+        const nameEl = document.getElementById('testName');
+        if (test) {
+            builder.load(test);
+            nameEl.value = test.name;
+            nameEl.setAttribute('readonly', '');
+            document.querySelector(`input[name="testType"][value="${test.test_type}"]`).checked = true;
+            document.getElementById('testEventKey').value = test.event_key;
+            document.getElementById('testDescription').value = test.description;
+            const scope = deriveScope(test.applies_to);
+            const typeSel = document.getElementById('testScopeType');
+            typeSel.value = scope.object_type === 'national_calendar_test' ? 'national_calendar'
+                : scope.object_type === 'diocesan_calendar_test' ? 'diocesan_calendar'
+                : 'general_roman_calendar';
+            loadEvents(test.applies_to).then(() => builder.render(assertionsContainer));
+        } else {
+            builder.load({ name: '', event_key: '', description: '', test_type: TestType.ExactCorrespondence, assertions: [] });
+            nameEl.value = '';
+            nameEl.removeAttribute('readonly');
+            document.getElementById('tt-exact').checked = true;
+            document.getElementById('testEventKey').value = '';
+            document.getElementById('testDescription').value = '';
+            document.getElementById('testScopeType').value = 'general_roman_calendar';
+            assertionsContainer.innerHTML = '';
+            loadEvents(null);
+        }
+        syncScopeIdField();
+        editorModal.show();
+    }
+
+    document.getElementById('createTestBtn').addEventListener('click', () => openEditor(null));
+    document.getElementById('testsTableBody').addEventListener('click', (ev) => {
+        const editBtn = ev.target.closest('.editTestBtn');
+        if (editBtn) {
+            const test = state.tests.find((t) => t.name === editBtn.dataset.name);
+            if (test) openEditor(test);
+        }
+    });
+
+    document.getElementById('saveTestBtn').addEventListener('click', async () => {
+        const btn = document.getElementById('saveTestBtn');
+        const nameEl = document.getElementById('testName');
+        if (!nameEl.checkValidity() || !document.getElementById('testEventKey').value) {
+            showModalAlert(editorModalEl, 'warning', i18n.requiredFields);
+            return;
+        }
+        builder.setMeta({
+            name: nameEl.value,
+            event_key: document.getElementById('testEventKey').value,
+            description: document.getElementById('testDescription').value,
+            test_type: selectedTestType(),
+            applies_to: selectedScope(),
+        });
+        const payload = builder.serialize();
+        btn.disabled = true;
+        const original = btn.textContent;
+        btn.textContent = i18n.saving;
+        try {
+            if (state.editing) {
+                await fetchJson('PATCH', `/tests/${encodeURIComponent(state.editing)}`, payload);
+            } else {
+                await fetchJson('PUT', '/tests', payload);
+            }
+            editorModal.hide();
+            await loadTests();
+        } catch (err) {
+            const msg = err.status === 403 ? i18n.denied403
+                : err.status === 409 ? i18n.conflict409
+                : (err.body && err.body.message) ? err.body.message : i18n.failedToLoad;
+            showModalAlert(editorModalEl, 'danger', msg);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = original;
+        }
+    });
+
     loadTests();
 });
