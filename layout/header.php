@@ -290,6 +290,16 @@ asort($langsAssoc);
                             </a>
                         <?php endif; // end $sidebarHasCalendarRole ?>
 
+                        <?php if ($authHelper->hasRole('test_editor') || $authHelper->hasRole('admin') || $authHelper->isResourceAdmin()) : ?>
+                        <div class="sb-sidenav-menu-heading text-white-50">
+                            <?php echo _('Accuracy Tests'); ?>
+                        </div>
+                        <a class="nav-link<?php echo $currentPage === 'admin-tests' ? ' active' : ''; ?>" href="admin-tests.php">
+                            <i class="sb-nav-link-icon fas fa-fw fa-vial text-info"></i>
+                            <span><?php echo _('Test Definitions'); ?></span>
+                        </a>
+                        <?php endif; ?>
+
                         <hr class="sidebar-divider my-2">
                         <a class="nav-link" href="/">
                             <i class="sb-nav-link-icon fas fa-fw fa-arrow-left"></i>
