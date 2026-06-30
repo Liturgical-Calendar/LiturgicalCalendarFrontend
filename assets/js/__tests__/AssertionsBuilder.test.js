@@ -114,3 +114,48 @@ describe('load + serialize round-trip', () => {
         expect(b.baseMonthDay).toEqual({ month: 7, day: 31 });
     });
 });
+
+const event = { event_key: 'StIgnatiusOfLoyola', name: 'Saint Ignatius of Loyola', grade: 3, grade_lcl: 'Memorial', month: 7, day: 31 };
+
+describe('generate', () => {
+    it('exactCorrespondence: every year asserts eventExists with a UTC midnight date', () => {
+        const b = new AssertionsBuilder({ locale: 'en' });
+        b.setMeta({ event_key: event.event_key, test_type: 'exactCorrespondence' });
+        b.generate({ event, minYear: 2023, maxYear: 2025 });
+        const out = b.serialize();
+        expect(out.assertions.map((a) => a.year)).toEqual([2023, 2024, 2025]);
+        expect(out.assertions.every((a) => a.assert === 'eventExists AND hasExpectedDate')).toBe(true);
+        expect(out.assertions[1].expected_value).toBe('2024-07-31T00:00:00+00:00');
+        expect(out.description).toBe("The Memorial of 'Saint Ignatius of Loyola' should fall on July 31");
+    });
+
+    it('exactCorrespondenceSince: years before the pivot assert eventNotExists', () => {
+        const b = new AssertionsBuilder();
+        b.setMeta({ event_key: event.event_key, test_type: 'exactCorrespondenceSince' });
+        b.generate({ event, minYear: 2024, maxYear: 2026, pivotYear: 2025 });
+        const out = b.serialize();
+        expect(out.year_since).toBe(2025);
+        expect(out.assertions.find((a) => a.year === 2024).assert).toBe('eventNotExists');
+        expect(out.assertions.find((a) => a.year === 2024).expected_value).toBe(null);
+        expect(out.assertions.find((a) => a.year === 2025).assert).toBe('eventExists AND hasExpectedDate');
+        expect(out.assertions.find((a) => a.year === 2024).assertion)
+            .toBe("The Memorial of 'Saint Ignatius of Loyola' should not exist on July 31");
+    });
+
+    it('exactCorrespondenceUntil: years after the pivot assert eventNotExists', () => {
+        const b = new AssertionsBuilder();
+        b.setMeta({ event_key: event.event_key, test_type: 'exactCorrespondenceUntil' });
+        b.generate({ event, minYear: 2024, maxYear: 2026, pivotYear: 2025 });
+        const out = b.serialize();
+        expect(out.year_until).toBe(2025);
+        expect(out.assertions.find((a) => a.year === 2026).assert).toBe('eventNotExists');
+        expect(out.assertions.find((a) => a.year === 2025).assert).toBe('eventExists AND hasExpectedDate');
+    });
+
+    it('skips excluded years', () => {
+        const b = new AssertionsBuilder();
+        b.setMeta({ event_key: event.event_key, test_type: 'exactCorrespondence' });
+        b.generate({ event, minYear: 2023, maxYear: 2025, excludedYears: [2024] });
+        expect(b.serialize().assertions.map((a) => a.year)).toEqual([2023, 2025]);
+    });
+});

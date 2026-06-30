@@ -128,4 +128,64 @@ export class AssertionsBuilder {
         if (Number.isNaN(d.getTime())) return null;
         return { month: d.getUTCMonth() + 1, day: d.getUTCDate() };
     }
+
+    /** Build description text from an event, e.g. "The Memorial of 'X' should fall on July 31". */
+    static #describe(event, locale) {
+        const grade = event.grade_lcl ?? '';
+        let onDate = 'the expected date';
+        if (event.month && event.day) {
+            const d = new Date(Date.UTC(1970, Number(event.month) - 1, Number(event.day)));
+            onDate = new Intl.DateTimeFormat(locale, { month: 'long', day: 'numeric', timeZone: 'UTC' }).format(d);
+        }
+        return `The ${grade} of '${event.name}' should fall on ${onDate}`;
+    }
+
+    /** RFC 3339 UTC-midnight string for an event's month/day in a given year. */
+    static #expectedValue(year, month, day) {
+        const iso = new Date(Date.UTC(year, Number(month) - 1, Number(day))).toISOString();
+        return `${iso.split('T')[0]}T00:00:00+00:00`;
+    }
+
+    /**
+     * Rebuild the assertions array from an event, a year range, and the test type.
+     * @param {{event:object, minYear:number, maxYear:number, pivotYear?:number|null, excludedYears?:number[]}} opts
+     */
+    generate({ event, minYear, maxYear, pivotYear = null, excludedYears = [] }) {
+        this.event = event;
+        this.baseMonthDay = (event.month && event.day)
+            ? { month: Number(event.month), day: Number(event.day) }
+            : null;
+        const description = AssertionsBuilder.#describe(event, this.locale);
+        this.model.description = description;
+        this.model.event_key = event.event_key;
+
+        this.model.year_since = null;
+        this.model.year_until = null;
+        if (this.model.test_type === TestType.ExactCorrespondenceSince) {
+            this.model.year_since = pivotYear;
+        } else if (this.model.test_type === TestType.ExactCorrespondenceUntil) {
+            this.model.year_until = pivotYear;
+        }
+
+        const notExistsAssertion = description.replace('should fall on', 'should not exist on');
+        const excluded = new Set(excludedYears.map(Number));
+        const assertions = [];
+        for (let year = minYear; year <= maxYear; year++) {
+            if (excluded.has(year)) continue;
+            let notExists = false;
+            if (this.model.test_type === TestType.ExactCorrespondenceSince && pivotYear !== null) {
+                notExists = year < pivotYear;
+            } else if (this.model.test_type === TestType.ExactCorrespondenceUntil && pivotYear !== null) {
+                notExists = year > pivotYear;
+            }
+            if (notExists || !this.baseMonthDay) {
+                assertions.push(new Assertion(year, null, AssertType.EventNotExists, notExistsAssertion));
+            } else {
+                const ev = AssertionsBuilder.#expectedValue(year, this.baseMonthDay.month, this.baseMonthDay.day);
+                assertions.push(new Assertion(year, ev, AssertType.EventTypeExact, description));
+            }
+        }
+        this.model.assertions = assertions;
+        return this;
+    }
 }
