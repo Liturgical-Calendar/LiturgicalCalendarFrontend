@@ -238,3 +238,101 @@ describe('render', () => {
         expect(card2025.querySelector('.editDate').classList.contains('disabled')).toBe(true);
     });
 });
+
+describe('coverage hardening', () => {
+    it('generate variableCorrespondence: all in-range years are eventExists', () => {
+        const event = { event_key: 'VEvent', name: 'Variable Event', grade: 3, grade_lcl: 'Memorial', month: 6, day: 15 };
+        const b = new AssertionsBuilder();
+        b.setMeta({ event_key: 'VEvent', test_type: 'variableCorrespondence' });
+        b.generate({ event, minYear: 2020, maxYear: 2022 });
+        const out = b.serialize();
+        expect(out.assertions.map((a) => a.year)).toEqual([2020, 2021, 2022]);
+        expect(out.assertions.every((a) => a.assert === 'eventExists AND hasExpectedDate')).toBe(true);
+        expect(out.assertions[0].expected_value).toBe('2020-06-15T00:00:00+00:00');
+        expect('year_since' in out).toBe(false);
+        expect('year_until' in out).toBe(false);
+    });
+
+    it('generate with an event lacking month/day forces every year to eventNotExists', () => {
+        const movable = { event_key: 'Movable', name: 'Movable Feast', grade: 6, grade_lcl: 'SOLEMNITY' };
+        const b = new AssertionsBuilder();
+        b.setMeta({ event_key: 'Movable', test_type: 'exactCorrespondence' });
+        b.generate({ event: movable, minYear: 2020, maxYear: 2021 });
+        expect(b.baseMonthDay).toBe(null);
+        const out = b.serialize();
+        expect(out.assertions.every((a) => a.assert === 'eventNotExists')).toBe(true);
+        expect(out.assertions.every((a) => a.expected_value === null)).toBe(true);
+    });
+
+    it('generate Since with a null pivot leaves all years eventExists and omits year_since', () => {
+        const event = { event_key: 'SEvent', name: 'Since Event', grade: 4, grade_lcl: 'FEAST', month: 3, day: 19 };
+        const b = new AssertionsBuilder();
+        b.setMeta({ event_key: 'SEvent', test_type: 'exactCorrespondenceSince' });
+        b.generate({ event, minYear: 2024, maxYear: 2025, pivotYear: null });
+        const out = b.serialize();
+        expect(out.assertions.every((a) => a.assert === 'eventExists AND hasExpectedDate')).toBe(true);
+        expect('year_since' in out).toBe(false);
+    });
+
+    it('setPivot on an Until test marks years after the pivot as eventNotExists', () => {
+        const event = { event_key: 'UEvent', name: 'Until Event', grade: 4, grade_lcl: 'FEAST', month: 5, day: 1 };
+        const b = new AssertionsBuilder();
+        b.setMeta({ event_key: 'UEvent', test_type: 'exactCorrespondenceUntil' });
+        b.generate({ event, minYear: 2024, maxYear: 2026, pivotYear: 2026 });
+        b.setPivot(2024);
+        expect(b.model.year_until).toBe(2024);
+        const at = (y) => b.model.assertions.find((a) => a.year === y);
+        expect(at(2024).assert).toBe('eventExists AND hasExpectedDate');
+        expect(at(2025).assert).toBe('eventNotExists');
+        expect(at(2025).expected_value).toBe(null);
+        expect(at(2026).assert).toBe('eventNotExists');
+    });
+
+    it('toggleAssert back to Exact keeps expected_value null when there is no base date', () => {
+        const b = new AssertionsBuilder();
+        b.load({
+            name: 'NoBaseTest',
+            event_key: 'NB',
+            description: "The FEAST of 'NB' should fall on July 4",
+            test_type: 'variableCorrespondence',
+            assertions: [
+                { year: 2024, expected_value: null, assert: 'eventNotExists', assertion: "The FEAST of 'NB' should not exist on July 4" },
+            ],
+        });
+        expect(b.baseMonthDay).toBe(null);
+        b.toggleAssert(2024);
+        const a = b.model.assertions.find((x) => x.year === 2024);
+        expect(a.assert).toBe('eventExists AND hasExpectedDate');
+        expect(a.expected_value).toBe(null);
+        expect(a.assertion).toContain('should fall on');
+    });
+
+    it('render exposes grid class, color classes, comment icon, textarea', () => {
+        const event = { event_key: 'REvent', name: 'Render Event', grade: 3, grade_lcl: 'Memorial', month: 7, day: 31 };
+        const b = new AssertionsBuilder();
+        b.setMeta({ event_key: 'REvent', test_type: 'variableCorrespondence' });
+        b.generate({ event, minYear: 2024, maxYear: 2025 });
+        b.toggleAssert(2025);                 // 2025 -> eventNotExists
+        b.setComment(2024, 'a note');         // 2024 has a comment
+        const container = document.createElement('div');
+        b.render(container);
+
+        expect(container.classList.contains('assertions-grid')).toBe(true);
+
+        const card2024 = container.querySelector('[data-year="2024"]');
+        const card2025 = container.querySelector('[data-year="2025"]');
+        expect(card2024.classList.contains('bg-success')).toBe(true);
+        expect(card2024.classList.contains('text-white')).toBe(true);
+        expect(card2025.classList.contains('bg-warning')).toBe(true);
+        expect(card2025.classList.contains('text-dark')).toBe(true);
+
+        // comment icon swap
+        expect(card2024.querySelector('.comment .fa-comment-dots')).not.toBeNull();
+        expect(card2025.querySelector('.comment .fa-comment-medical')).not.toBeNull();
+
+        // editable sentence is a textarea, not contenteditable
+        const ta = card2024.querySelector('textarea.assertionText');
+        expect(ta).not.toBeNull();
+        expect(ta.getAttribute('contenteditable')).toBe(null);
+    });
+});
