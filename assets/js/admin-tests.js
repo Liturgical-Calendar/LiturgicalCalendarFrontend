@@ -429,5 +429,39 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // ---- delete -----------------------------------------------------------
+
+    const deleteModalEl = document.getElementById('deleteTestModal');
+    const deleteModal = bootstrap.Modal.getOrCreateInstance(deleteModalEl);
+    let deleteTarget = null;
+
+    document.getElementById('testsTableBody').addEventListener('click', (ev) => {
+        const delBtn = ev.target.closest('.deleteTestBtn');
+        if (!delBtn) return;
+        deleteTarget = delBtn.dataset.name;
+        document.getElementById('deleteTestAlerts').innerHTML = '';
+        document.getElementById('deleteTestConfirmText').textContent = i18n.confirmDelete.replace('%s', deleteTarget);
+        deleteModal.show();
+    });
+
+    document.getElementById('confirmDeleteTestBtn').addEventListener('click', async () => {
+        if (!deleteTarget) return;
+        const btn = document.getElementById('confirmDeleteTestBtn');
+        btn.disabled = true;
+        const original = btn.textContent;
+        btn.textContent = i18n.deleting;
+        try {
+            await fetchJson('DELETE', `/tests/${encodeURIComponent(deleteTarget)}`);
+            deleteModal.hide();
+            await loadTests();
+        } catch (err) {
+            const msg = err.status === 403 ? i18n.denied403 : (err.body && err.body.message) ? err.body.message : i18n.failedToLoad;
+            showModalAlert(deleteModalEl, 'danger', msg);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = original;
+        }
+    });
+
     loadTests();
 });

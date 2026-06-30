@@ -99,3 +99,19 @@ test.describe('admin-tests editor (stubbed)', () => {
         await expect.poll(() => patched).toBe(true);
     });
 });
+
+test.describe('admin-tests delete (stubbed)', () => {
+    test('confirms and fires DELETE', async ({ page }) => {
+        await stub(page, { is_global_admin: true, editor: [], admin: [] });
+        let deleted = false;
+        await page.route('**/tests/GrcOnlyTest', (r) => {
+            if (r.request().method() === 'DELETE') { deleted = true; return r.fulfill({ json: {} }); }
+            return r.continue();
+        });
+        await page.goto('/admin-tests.php');
+        await page.locator('tr', { hasText: 'GrcOnlyTest' }).getByRole('button', { name: 'Delete' }).click();
+        await expect(page.locator('#deleteTestModal')).toBeVisible();
+        await page.locator('#confirmDeleteTestBtn').click();
+        await expect.poll(() => deleted).toBe(true);
+    });
+});
