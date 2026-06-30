@@ -159,3 +159,58 @@ describe('generate', () => {
         expect(b.serialize().assertions.map((a) => a.year)).toEqual([2023, 2025]);
     });
 });
+
+describe('mutators', () => {
+    const build = () => {
+        const b = new AssertionsBuilder();
+        b.setMeta({ test_type: 'variableCorrespondence' });
+        b.generate({ event, minYear: 2024, maxYear: 2026 });
+        return b;
+    };
+
+    it('toggleAssert flips eventExists -> eventNotExists and back', () => {
+        const b = build();
+        b.toggleAssert(2025);
+        let a = b.model.assertions.find((x) => x.year === 2025);
+        expect(a.assert).toBe('eventNotExists');
+        expect(a.expected_value).toBe(null);
+        expect(a.assertion).toContain('should not exist on');
+        b.toggleAssert(2025);
+        a = b.model.assertions.find((x) => x.year === 2025);
+        expect(a.assert).toBe('eventExists AND hasExpectedDate');
+        expect(a.expected_value).toBe('2025-07-31T00:00:00+00:00');
+        expect(a.assertion).toContain('should fall on');
+    });
+
+    it('setExpectedDate updates the RFC3339 value', () => {
+        const b = build();
+        b.setExpectedDate(2024, '2024-08-01T00:00:00+00:00');
+        expect(b.model.assertions.find((x) => x.year === 2024).expected_value).toBe('2024-08-01T00:00:00+00:00');
+    });
+
+    it('setAssertionText and setComment work; empty comment removes it', () => {
+        const b = build();
+        b.setAssertionText(2024, 'custom sentence');
+        expect(b.model.assertions.find((x) => x.year === 2024).assertion).toBe('custom sentence');
+        b.setComment(2024, 'a note');
+        expect(b.model.assertions.find((x) => x.year === 2024).comment).toBe('a note');
+        b.setComment(2024, '');
+        expect('comment' in b.model.assertions.find((x) => x.year === 2024)).toBe(false);
+    });
+
+    it('excludeYear removes the assertion', () => {
+        const b = build();
+        b.excludeYear(2025);
+        expect(b.model.assertions.map((x) => x.year)).toEqual([2024, 2026]);
+    });
+
+    it('setPivot re-splits a Since test', () => {
+        const b = new AssertionsBuilder();
+        b.setMeta({ test_type: 'exactCorrespondenceSince' });
+        b.generate({ event, minYear: 2024, maxYear: 2026, pivotYear: 2024 });
+        b.setPivot(2026);
+        expect(b.model.year_since).toBe(2026);
+        expect(b.model.assertions.find((x) => x.year === 2024).assert).toBe('eventNotExists');
+        expect(b.model.assertions.find((x) => x.year === 2026).assert).toBe('eventExists AND hasExpectedDate');
+    });
+});

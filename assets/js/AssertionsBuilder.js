@@ -188,4 +188,71 @@ export class AssertionsBuilder {
         this.model.assertions = assertions;
         return this;
     }
+
+    #find(year) {
+        return this.model.assertions.find((a) => a.year === year) ?? null;
+    }
+
+    toggleAssert(year) {
+        const a = this.#find(year);
+        if (!a) return this;
+        if (a.assert === AssertType.EventTypeExact) {
+            a.assert = AssertType.EventNotExists;
+            a.expected_value = null;
+            a.assertion = a.assertion.replace('should fall on', 'should not exist on');
+        } else {
+            a.assert = AssertType.EventTypeExact;
+            if (this.baseMonthDay) {
+                a.expected_value = AssertionsBuilder.#expectedValue(year, this.baseMonthDay.month, this.baseMonthDay.day);
+            }
+            a.assertion = a.assertion.replace('should not exist on', 'should fall on');
+        }
+        return this;
+    }
+
+    setExpectedDate(year, iso) {
+        const a = this.#find(year);
+        if (a) a.expected_value = iso;
+        return this;
+    }
+
+    setAssertionText(year, text) {
+        const a = this.#find(year);
+        if (a) a.assertion = text;
+        return this;
+    }
+
+    setComment(year, text) {
+        const a = this.#find(year);
+        if (!a) return this;
+        if (text === '' || text === null || text === undefined) {
+            delete a.comment;
+        } else {
+            a.comment = text;
+        }
+        return this;
+    }
+
+    excludeYear(year) {
+        this.model.assertions = this.model.assertions.filter((a) => a.year !== year);
+        return this;
+    }
+
+    setPivot(year) {
+        if (this.model.test_type === TestType.ExactCorrespondenceSince) {
+            this.model.year_since = year;
+        } else if (this.model.test_type === TestType.ExactCorrespondenceUntil) {
+            this.model.year_until = year;
+        }
+        this.model.assertions.forEach((a) => {
+            const notExists = this.model.test_type === TestType.ExactCorrespondenceSince
+                ? a.year < year
+                : a.year > year;
+            const isNot = a.assert === AssertType.EventNotExists;
+            if (notExists !== isNot) {
+                this.toggleAssert(a.year);
+            }
+        });
+        return this;
+    }
 }
