@@ -32,7 +32,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const res = await fetch(apiUrl + path, opts);
         const text = await res.text();
-        const data = text ? JSON.parse(text) : null;
+        let data = null;
+        try {
+            data = text ? JSON.parse(text) : null;
+        } catch {
+            // non-JSON body — data stays null
+        }
         if (!res.ok) {
             throw { status: res.status, body: data };
         }
@@ -57,8 +62,17 @@ document.addEventListener('DOMContentLoaded', () => {
     function showModalAlert(modalEl, type, message) {
         const area = modalEl.querySelector('[id$="Alerts"]');
         if (!area) return;
-        area.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">`
-            + `${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
+        area.innerHTML = '';
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type} alert-dismissible fade show`;
+        alert.setAttribute('role', 'alert');
+        alert.textContent = message;
+        const closeBtn = document.createElement('button');
+        closeBtn.type = 'button';
+        closeBtn.className = 'btn-close';
+        closeBtn.setAttribute('data-bs-dismiss', 'alert');
+        alert.appendChild(closeBtn);
+        area.appendChild(alert);
     }
 
     // ---- state ------------------------------------------------------------
@@ -106,19 +120,48 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         rows.forEach((t) => {
             const tr = document.createElement('tr');
-            const editBtn = canEdit(t)
-                ? `<button type="button" class="btn btn-sm btn-outline-primary editTestBtn" data-name="${t.name}"><i class="fas fa-pen"></i> ${i18n.edit}</button>`
-                : '';
-            const delBtn = canDelete(t)
-                ? `<button type="button" class="btn btn-sm btn-outline-danger deleteTestBtn ms-1" data-name="${t.name}"><i class="fas fa-trash"></i> ${i18n.delete}</button>`
-                : '';
-            tr.innerHTML = `
-                <td><code>${t.name}</code></td>
-                <td>${t.event_key}</td>
-                <td>${scopeLabel(t.applies_to)}</td>
-                <td>${t.test_type}</td>
-                <td>${yearRange(t)}</td>
-                <td class="text-end">${editBtn}${delBtn}</td>`;
+
+            const nameTd = document.createElement('td');
+            const code = document.createElement('code');
+            code.textContent = t.name;
+            nameTd.appendChild(code);
+
+            const eventTd = document.createElement('td');
+            eventTd.textContent = t.event_key;
+
+            const scopeTd = document.createElement('td');
+            scopeTd.textContent = scopeLabel(t.applies_to);
+
+            const typeTd = document.createElement('td');
+            typeTd.textContent = t.test_type;
+
+            const yearsTd = document.createElement('td');
+            yearsTd.textContent = yearRange(t);
+
+            const actionsTd = document.createElement('td');
+            actionsTd.className = 'text-end';
+            if (canEdit(t)) {
+                const editBtn = document.createElement('button');
+                editBtn.type = 'button';
+                editBtn.className = 'btn btn-sm btn-outline-primary editTestBtn';
+                editBtn.dataset.name = t.name;
+                const ei = document.createElement('i');
+                ei.className = 'fas fa-pen';
+                editBtn.append(ei, document.createTextNode(' ' + i18n.edit));
+                actionsTd.appendChild(editBtn);
+            }
+            if (canDelete(t)) {
+                const delBtn = document.createElement('button');
+                delBtn.type = 'button';
+                delBtn.className = 'btn btn-sm btn-outline-danger deleteTestBtn ms-1';
+                delBtn.dataset.name = t.name;
+                const di = document.createElement('i');
+                di.className = 'fas fa-trash';
+                delBtn.append(di, document.createTextNode(' ' + i18n.delete));
+                actionsTd.appendChild(delBtn);
+            }
+
+            tr.append(nameTd, eventTd, scopeTd, typeTd, yearsTd, actionsTd);
             tbody.appendChild(tr);
         });
     }

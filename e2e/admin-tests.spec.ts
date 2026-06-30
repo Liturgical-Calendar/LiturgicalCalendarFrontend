@@ -39,6 +39,7 @@ test.describe('admin-tests gating (stubbed)', () => {
         await expect(usaRow.getByRole('button', { name: 'Edit' })).toBeVisible();
         await expect(usaRow.getByRole('button', { name: 'Delete' })).toHaveCount(0);
         await expect(grcRow.getByRole('button', { name: 'Edit' })).toHaveCount(0);
+        await expect(grcRow.getByRole('button', { name: 'Delete' })).toHaveCount(0);
     });
 
     test('global admin sees Edit and Delete on every row', async ({ page }) => {
