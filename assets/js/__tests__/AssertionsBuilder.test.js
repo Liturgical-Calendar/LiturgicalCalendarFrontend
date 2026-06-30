@@ -214,3 +214,27 @@ describe('mutators', () => {
         expect(b.model.assertions.find((x) => x.year === 2026).assert).toBe('eventExists AND hasExpectedDate');
     });
 });
+
+describe('render', () => {
+    it('renders one card per assertion with textarea, toggle, and color classes', () => {
+        const b = new AssertionsBuilder();
+        b.setMeta({ test_type: 'variableCorrespondence' });
+        b.generate({ event, minYear: 2024, maxYear: 2025 });
+        b.toggleAssert(2025); // make 2025 eventNotExists
+        const container = document.createElement('div');
+        b.render(container);
+
+        const cards = container.querySelectorAll('[data-year]');
+        expect(cards).toHaveLength(2);
+
+        const card2024 = container.querySelector('[data-year="2024"]');
+        expect(card2024.querySelector('.assert').textContent).toBe('eventExists AND hasExpectedDate');
+        expect(card2024.querySelector('textarea.assertionText')).not.toBeNull();
+        expect(card2024.querySelector('.toggleAssert')).not.toBeNull();
+        expect(card2024.querySelector('.expectedValue').getAttribute('data-value')).toBe('2024-07-31T00:00:00+00:00');
+
+        const card2025 = container.querySelector('[data-year="2025"]');
+        expect(card2025.querySelector('.assert').textContent).toBe('eventNotExists');
+        expect(card2025.querySelector('.editDate').classList.contains('disabled')).toBe(true);
+    });
+});

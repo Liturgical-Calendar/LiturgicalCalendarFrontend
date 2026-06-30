@@ -255,4 +255,91 @@ export class AssertionsBuilder {
         });
         return this;
     }
+
+    #formatDate(iso) {
+        if (!iso) return '---';
+        const d = new Date(iso);
+        if (Number.isNaN(d.getTime())) return '---';
+        return new Intl.DateTimeFormat(this.locale, { dateStyle: 'medium', timeZone: 'UTC' }).format(d);
+    }
+
+    render(container) {
+        container.innerHTML = '';
+        container.classList.add('assertions-grid');
+
+        this.model.assertions.forEach((a) => {
+            const notExists = a.assert === AssertType.EventNotExists;
+            const bg = notExists ? 'bg-warning' : 'bg-success';
+            const fg = notExists ? 'text-dark' : 'text-white';
+
+            const card = document.createElement('div');
+            card.className = `assertion-card d-flex flex-column border ${bg} ${fg}`;
+            card.dataset.year = String(a.year);
+
+            const yearP = document.createElement('p');
+            yearP.className = 'text-center mb-0 fw-bold testYear';
+            yearP.textContent = String(a.year);
+            card.appendChild(yearP);
+
+            // ASSERT THAT row
+            const assertRow = document.createElement('div');
+            assertRow.className = 'd-flex justify-content-between align-items-center px-1 border-bottom';
+            const assertLabel = document.createElement('span');
+            assertLabel.className = 'fw-bold small';
+            assertLabel.textContent = 'ASSERT:';
+            const assertVal = document.createElement('span');
+            assertVal.className = 'assert small text-end';
+            assertVal.textContent = a.assert;
+            const toggleBtn = document.createElement('button');
+            toggleBtn.type = 'button';
+            toggleBtn.className = 'btn btn-xs btn-danger ms-1 toggleAssert';
+            toggleBtn.innerHTML = '<i class="fas fa-repeat" aria-hidden="true"></i>';
+            assertRow.append(assertLabel, assertVal, toggleBtn);
+            card.appendChild(assertRow);
+
+            // EXPECT VALUE row
+            const dateRow = document.createElement('div');
+            dateRow.className = 'd-flex justify-content-between align-items-center px-1 border-bottom';
+            const dateLabel = document.createElement('span');
+            dateLabel.className = 'fw-bold small';
+            dateLabel.textContent = 'DATE:';
+            const dateVal = document.createElement('span');
+            dateVal.className = 'expectedValue small';
+            dateVal.setAttribute('data-value', a.expected_value ?? '');
+            dateVal.textContent = this.#formatDate(a.expected_value);
+            const editBtn = document.createElement('button');
+            editBtn.type = 'button';
+            editBtn.className = `btn btn-xs editDate ms-1${a.expected_value ? ' btn-danger' : ' btn-secondary disabled'}`;
+            editBtn.disabled = !a.expected_value;
+            editBtn.innerHTML = '<i class="fas fa-pen-to-square" aria-hidden="true"></i>';
+            dateRow.append(dateLabel, dateVal, editBtn);
+            card.appendChild(dateRow);
+
+            // ASSERTION textarea + comment button
+            const textRow = document.createElement('div');
+            textRow.className = 'd-flex flex-column p-1';
+            const textHeader = document.createElement('div');
+            textHeader.className = 'd-flex justify-content-between align-items-center';
+            const textLabel = document.createElement('span');
+            textLabel.className = 'fw-bold small';
+            textLabel.textContent = 'ASSERTION:';
+            const hasComment = 'comment' in a;
+            const commentBtn = document.createElement('button');
+            commentBtn.type = 'button';
+            commentBtn.className = `btn btn-xs comment ms-1 ${hasComment ? 'btn-dark' : 'btn-secondary'}`;
+            commentBtn.title = hasComment ? a.comment : 'add a comment';
+            commentBtn.innerHTML = hasComment
+                ? '<i class="fas fa-comment-dots" aria-hidden="true"></i>'
+                : '<i class="fas fa-comment-medical" aria-hidden="true"></i>';
+            textHeader.append(textLabel, commentBtn);
+            const textarea = document.createElement('textarea');
+            textarea.className = 'form-control form-control-sm assertionText';
+            textarea.rows = 2;
+            textarea.value = a.assertion;
+            textRow.append(textHeader, textarea);
+            card.appendChild(textRow);
+
+            container.appendChild(card);
+        });
+    }
 }
