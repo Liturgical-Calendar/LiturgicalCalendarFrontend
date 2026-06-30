@@ -333,7 +333,21 @@ document.addEventListener('DOMContentLoaded', () => {
             sel.appendTo(mount);
         }
     }
-    document.getElementById('testScopeType').addEventListener('change', () => { syncScopeIdField(); regenerate(); });
+    // Reload the /events datalist for the currently selected scope, then rebuild
+    // the assertions. Used whenever the scope changes, since national/diocesan
+    // calendars expose events the General Roman list does not.
+    function reloadEventsThenRegenerate() {
+        return loadEvents(selectedScope())
+            .then(regenerate)
+            .catch((err) => showModalAlert(editorModalEl, 'danger', err.message ?? i18n.failedToLoad));
+    }
+    document.getElementById('testScopeType').addEventListener('change', () => {
+        syncScopeIdField();
+        reloadEventsThenRegenerate();
+    });
+    // When a specific national/diocesan calendar is picked in the mounted
+    // CalendarSelect, its change event bubbles to the mount — reload its events.
+    document.getElementById('testScopeIdMount').addEventListener('change', reloadEventsThenRegenerate);
 
     function openEditor(test) {
         state.editing = test ? test.name : null;
@@ -351,7 +365,9 @@ document.addEventListener('DOMContentLoaded', () => {
             typeSel.value = scope.object_type === 'national_calendar_test' ? 'national_calendar'
                 : scope.object_type === 'diocesan_calendar_test' ? 'diocesan_calendar'
                 : 'general_roman_calendar';
-            loadEvents(test.applies_to).then(() => builder.render(assertionsContainer));
+            loadEvents(test.applies_to)
+                .then(() => builder.render(assertionsContainer))
+                .catch((err) => showModalAlert(editorModalEl, 'danger', err.message ?? i18n.failedToLoad));
         } else {
             builder.load({ name: '', event_key: '', description: '', test_type: TestType.ExactCorrespondence, assertions: [] });
             nameEl.value = '';
@@ -361,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('testDescription').value = '';
             document.getElementById('testScopeType').value = 'general_roman_calendar';
             assertionsContainer.innerHTML = '';
-            loadEvents(null);
+            loadEvents(null).catch((err) => showModalAlert(editorModalEl, 'danger', err.message ?? i18n.failedToLoad));
         }
         syncScopeIdField();
         editorModal.show();
