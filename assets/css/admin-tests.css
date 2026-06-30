@@ -1,0 +1,42 @@
+@import url('multi-range-slider.css');
+
+/* Per-year assertion cards: native CSS grid (replaces Isotope fitRows). */
+.assertions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.5rem;
+}
+
+.assertion-card {
+    border-radius: 0.25rem;
+    overflow: hidden;
+}
+
+.assertion-card .assertionText {
+    resize: vertical;
+}
+
+/* Year-range overview grid (Sundays / excluded / pivot shading). */
+.year-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.year-grid .testYearSpan {
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.25rem;
+    cursor: default;
+    user-select: none;
+}
+
+.year-grid .testYearSpan.deleted {
+    opacity: 0.3;
+}
+
+.btn-xs {
+    padding: 0.1rem 0.3rem;
+    font-size: 0.75rem;
+    line-height: 1.2;
+}
