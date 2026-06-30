@@ -281,12 +281,17 @@ jobs:
           # Drop the restart sentinel (one remote call; no remote `sleep` needed).
           ssh "${ssh_opts[@]}" "${target}" "set -e; mkdir -p ${q_tmp}; touch ${q_sentinel}"
 
-          # Poll from the runner until the watcher removes it (~60s of polling).
+          # Poll from the runner until the watcher removes it, bounded by a
+          # runner-side wall-clock deadline (~60s) — NOT by retry count — so slow
+          # reconnects can't stretch the wait far past the intended window. Each
+          # poll is additionally hard-capped with `timeout` (belt) on top of the
+          # ssh_opts ConnectTimeout / ServerAlive* settings (suspenders).
           # `echo PRESENT/GONE` is a token so an SSH connection blip is retried
           # rather than mistaken for "file gone".
           reloaded=0
-          for _ in $(seq 1 30); do
-            state=$(ssh "${ssh_opts[@]}" "${target}" "[ -e ${q_sentinel} ] && echo PRESENT || echo GONE") || { sleep 2; continue; }
+          deadline=$(( $(date +%s) + 60 ))
+          while [ "$(date +%s)" -lt "${deadline}" ]; do
+            state=$(timeout 15 ssh "${ssh_opts[@]}" "${target}" "[ -e ${q_sentinel} ] && echo PRESENT || echo GONE") || { sleep 2; continue; }
             if [ "${state}" = GONE ]; then
               reloaded=1
               break
