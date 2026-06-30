@@ -7,6 +7,8 @@
   "scripts": {
     "lint": "eslint .",
     "test": "playwright test",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest",
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed",
     "test:chromium": "playwright test --project=chromium",
@@ -29,9 +31,11 @@
     "dotenv": "^17.4.2",
     "eslint": "^10.5.0",
     "globals": "^17.7.0",
+    "jsdom": "^25.0.1",
     "markdownlint-cli2": "^0.22.1",
     "prettier": "^3.8.4",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^2.1.8"
   },
   "resolutions": {
     "js-yaml": "^4.2.0"
