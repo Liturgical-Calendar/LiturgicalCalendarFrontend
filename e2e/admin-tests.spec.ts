@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page, type Route } from '@playwright/test';
 
 // Uses the shared authenticated storage state (e2e/.auth/user.json) from the
 // chromium project; that user is an admin in the dev environment.
@@ -9,5 +9,42 @@ test.describe('admin-tests page', () => {
         await expect(page.locator('#createTestBtn')).toBeVisible();
         await expect(page.locator('#testEditorModal')).toHaveCount(1);
         await expect(page.locator('#deleteTestModal')).toHaveCount(1);
+    });
+});
+
+const sampleTests = {
+    litcal_tests: [
+        { name: 'GrcOnlyTest', event_key: 'StX', description: 'd', test_type: 'exactCorrespondence', assertions: [{ year: 2024, expected_value: null, assert: 'eventNotExists', assertion: 'd' }] },
+        { name: 'UsaNationalTest', event_key: 'StY', description: 'd', test_type: 'exactCorrespondence', applies_to: { national_calendar: 'USA' }, assertions: [{ year: 2024, expected_value: null, assert: 'eventNotExists', assertion: 'd' }] },
+    ],
+};
+
+type TestScopes = { is_global_admin: boolean; editor: { object_type: string; object_id: string }[]; admin: { object_type: string; object_id: string }[] };
+
+async function stub(page: Page, scopes: TestScopes): Promise<void> {
+    await page.route('**/auth/test-scopes', (r: Route) => r.fulfill({ json: scopes }));
+    await page.route('**/auth/me', (r: Route) => r.fulfill({ json: { authenticated: true, roles: ['test_editor'] } }));
+    await page.route('**/tests', (r: Route) => {
+        if (r.request().method() === 'GET') return r.fulfill({ json: sampleTests });
+        return r.continue();
+    });
+}
+
+test.describe('admin-tests gating (stubbed)', () => {
+    test('scoped editor sees Edit only on the USA test, no Delete', async ({ page }) => {
+        await stub(page, { is_global_admin: false, editor: [{ object_type: 'national_calendar_test', object_id: 'USA' }], admin: [] });
+        await page.goto('/admin-tests.php');
+        const usaRow = page.locator('tr', { hasText: 'UsaNationalTest' });
+        const grcRow = page.locator('tr', { hasText: 'GrcOnlyTest' });
+        await expect(usaRow.getByRole('button', { name: 'Edit' })).toBeVisible();
+        await expect(usaRow.getByRole('button', { name: 'Delete' })).toHaveCount(0);
+        await expect(grcRow.getByRole('button', { name: 'Edit' })).toHaveCount(0);
+    });
+
+    test('global admin sees Edit and Delete on every row', async ({ page }) => {
+        await stub(page, { is_global_admin: true, editor: [], admin: [] });
+        await page.goto('/admin-tests.php');
+        await expect(page.getByRole('button', { name: 'Edit' })).toHaveCount(2);
+        await expect(page.getByRole('button', { name: 'Delete' })).toHaveCount(2);
     });
 });
