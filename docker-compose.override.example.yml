@@ -35,3 +35,17 @@ services:
   litcal-tests:
     build:
       context: ../UnitTestInterface
+    # Live-reload: mount source read-only so edits reflect without rebuilding the
+    # image (UnitTestInterface has no build step). vendor/ is deliberately NOT
+    # mounted so the image's `composer install` is used. Add new top-level pages
+    # or directories here if you create them.
+    volumes:
+      - ../UnitTestInterface/src:/var/www/html/src:ro
+      - ../UnitTestInterface/includes:/var/www/html/includes:ro
+      - ../UnitTestInterface/layout:/var/www/html/layout:ro
+      - ../UnitTestInterface/components:/var/www/html/components:ro
+      - ../UnitTestInterface/assets:/var/www/html/assets:ro
+      - ../UnitTestInterface/i18n:/var/www/html/i18n:ro
+      - ../UnitTestInterface/index.php:/var/www/html/index.php:ro
+      - ../UnitTestInterface/admin.php:/var/www/html/admin.php:ro
+      - ../UnitTestInterface/resources.php:/var/www/html/resources.php:ro
