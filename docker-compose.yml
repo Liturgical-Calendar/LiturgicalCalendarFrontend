@@ -277,6 +277,18 @@ services:
       - litcal
     restart: "no"
 
+  # Cache backend for the WebSocket test server's API-response cache (see litcal-api below).
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - litcal
+
   litcal-api:
     image: litcal-api:latest
     build: https://github.com/Liturgical-Calendar/LiturgicalCalendarAPI.git#development
@@ -317,6 +329,11 @@ services:
       OPENFGA_API_URL: http://openfga:8080
       OPENFGA_STORE_ID: ${OPENFGA_STORE_ID:-}
       OPENFGA_MODEL_ID: ${OPENFGA_MODEL_ID:-}
+      # The WebSocket test server (LitCalTestServer.php) caches API responses; Health.php prefers
+      # Redis and only falls back to APCu, which is disabled under the CLI SAPI the WS server runs
+      # on — so without Redis every request is a cache miss.
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     ports:
       - "127.0.0.1:${API_PORT:-8000}:8000"
       - "127.0.0.1:${WS_PORT:-8082}:8082"
@@ -337,6 +354,8 @@ services:
         condition: service_completed_successfully
       litcal-migrate:
         condition: service_completed_successfully
+      redis:
+        condition: service_healthy
 
   litcal-frontend:
     image: litcal-frontend:latest
