@@ -351,3 +351,20 @@ describe('coverage hardening', () => {
         expect(ta.getAttribute('contenteditable')).toBe(null);
     });
 });
+
+describe('locale normalization', () => {
+    it('accepts a gettext/ICU-style underscore locale (en_US) without throwing', () => {
+        // PHP \Locale::acceptFromHttp() yields en_US; Intl.DateTimeFormat throws
+        // a RangeError on underscore tags unless the builder normalizes to BCP-47.
+        const event = { event_key: 'LEvent', name: 'Locale Event', grade: 3, grade_lcl: 'Memorial', month: 7, day: 31 };
+        const b = new AssertionsBuilder({ locale: 'en_US' });
+        expect(b.locale).toBe('en-US');
+        b.setMeta({ event_key: 'LEvent', test_type: 'exactCorrespondence' });
+        expect(() => b.generate({ event, minYear: 2024, maxYear: 2025 })).not.toThrow();
+        const out = b.serialize();
+        expect(out.assertions).toHaveLength(2);
+        expect(out.description).toBe("The Memorial of 'Locale Event' should fall on July 31");
+        const container = document.createElement('div');
+        expect(() => b.render(container)).not.toThrow();
+    });
+});

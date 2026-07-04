@@ -301,7 +301,8 @@ if (!$isGlobalAdmin && !$hasTestEditor && !$isResourceAdmin) {
             apiUrl:        <?php echo json_encode($apiBaseUrl); ?>,
             isGlobalAdmin: <?php echo json_encode($isGlobalAdmin); ?>,
             hasTestEditor: <?php echo json_encode($hasTestEditor); ?>,
-            locale:        <?php echo json_encode($i18n->LOCALE); ?>,
+            <?php // BCP-47 (en-US), not gettext/ICU (en_US): Intl.DateTimeFormat rejects underscore tags. ?>
+            locale:        <?php echo json_encode(str_replace('_', '-', $i18n->LOCALE)); ?>,
             i18n: {
                 loading:             <?php echo json_encode(_('Loading...')); ?>,
                 noTests:             <?php echo json_encode(_('No tests found.')); ?>,

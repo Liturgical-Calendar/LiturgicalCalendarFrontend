@@ -56,7 +56,11 @@ const EMPTY_MODEL = () => ({
 
 export class AssertionsBuilder {
     constructor({ locale = 'en' } = {}) {
-        this.locale = locale;
+        // Normalize gettext/ICU-style locales (en_US) to BCP-47 (en-US):
+        // Intl.DateTimeFormat throws a RangeError on underscore tags, and the
+        // page locale originates from PHP's \Locale::acceptFromHttp(), which
+        // returns the underscore form.
+        this.locale = (locale || 'en').replace(/_/g, '-');
         this.model = EMPTY_MODEL();
         this.baseMonthDay = null;
         this.event = null;
