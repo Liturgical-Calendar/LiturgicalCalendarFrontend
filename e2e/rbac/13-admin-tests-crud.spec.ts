@@ -63,7 +63,9 @@ const API_BASE = `${process.env.API_PROTOCOL || 'http'}://${process.env.API_HOST
 let editorZitadelId: string | null = null;
 
 /** Path where actingAs(browser, EDITOR_USER_ID) expects the auth state file. */
-const authFilePath = path.join(__dirname, '..', '..', '.auth', `${EDITOR_USER_ID}.json`);
+// NB: this spec lives in e2e/rbac/ (one level above support/), so the shared
+// e2e/.auth/ directory that actingAs() reads from is '../.auth' — NOT '../../.auth'.
+const authFilePath = path.join(__dirname, '..', '.auth', `${EDITOR_USER_ID}.json`);
 
 // ── Spec ──────────────────────────────────────────────────────────────────────
 
@@ -217,7 +219,7 @@ test.describe('admin-tests CRUD (real RBAC)', () => {
             // session; a 404 (already deleted by Test 2) is a successful no-op.
             (async () => {
                 const api = await request.newContext({
-                    storageState: path.join(__dirname, '..', '..', '.auth', `${GLOBAL_ADMIN_ID}.json`),
+                    storageState: path.join(__dirname, '..', '.auth', `${GLOBAL_ADMIN_ID}.json`),
                 });
                 try {
                     await api.delete(`${API_BASE}/tests/${encodeURIComponent(TEST_NAME)}`);
