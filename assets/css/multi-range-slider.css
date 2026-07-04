@@ -21,6 +21,11 @@
 }
 
 .range-slider {
+  /* merged from the trailing duplicate .range-slider block (CodeFactor: no-duplicate-selectors) */
+  /*width: clamp(300px, 50vw, 800px);*/
+  width: 99%;
+  min-width: 200px;
+  margin-top: 25px;
   --primary-color: #0366d6;
   --value-offset-y: var(--ticks-gap);
   --value-active-color: white;
@@ -200,7 +205,6 @@
   position: absolute;
   left: 0;
   top: calc(50% - max(var(--track-height), var(--thumb-size)) / 2 + var(--ticks-gap) / 2 * var(--flip-y, -1));
-  cursor: -webkit-grab;
   cursor: grab;
   outline: none;
   background: none;
@@ -303,11 +307,4 @@
 .range-slider > input + output::after {
   content: var(--prefix, "") var(--text-value-b) var(--suffix, "");
   font: var(--value-font);
-}
-
-.range-slider {
-  /*width: clamp(300px, 50vw, 800px);*/
-  width: 99%;
-  min-width: 200px;
-  margin-top: 25px;
 }
