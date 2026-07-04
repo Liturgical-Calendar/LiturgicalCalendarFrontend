@@ -42,8 +42,11 @@ const NATION          = 'IT';
 const TEST_NAME       = 'PlaywrightScopedNationalTest';
 
 /** Event key present in the General Roman Calendar (and therefore in every national
- *  calendar that extends it). Avoids having to seed national-specific events. */
-const EVENT_KEY       = 'StIgnatiusOfLoyola';
+ *  calendar that extends it). Avoids having to seed national-specific events.
+ *  NB: the API's real key is `StIgnatiusLoyola` (no "Of") — see
+ *  jsondata/sourcedata/missals/propriumdesanctis_1970. An unmatched key makes the
+ *  editor silently skip generation and the API reject the empty payload with 400. */
+const EVENT_KEY       = 'StIgnatiusLoyola';
 
 /** Key used for `.auth/${id}.json` lookup by `actingAs`. Must be unique across
  *  all seeded users so it does not collide with rbac-setup-provisioned files. */
@@ -165,6 +168,11 @@ test.describe('admin-tests CRUD (real RBAC)', () => {
             // Fill the event key and dispatch the change event (triggers datalist reload).
             await tei.page.locator('#testEventKey').fill(EVENT_KEY);
             await tei.page.locator('#testEventKey').dispatchEvent('change');
+
+            // The editor auto-fills the description once the event key matches the
+            // loaded /events catalog — assert it BEFORE saving so a key/catalog
+            // mismatch fails here (the true cause) rather than at the row check.
+            await expect(tei.page.locator('#testDescription')).not.toHaveValue('');
 
             // Save → expect the new row to appear in the table.
             await tei.page.locator('#saveTestBtn').click();
