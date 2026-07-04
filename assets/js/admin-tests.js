@@ -8,7 +8,7 @@ import {
     CalendarSelect,
     CalendarSelectFilter,
 } from '@liturgical-calendar/components-js';
-import { AssertionsBuilder, TestType } from './AssertionsBuilder.js';
+import { AssertionsBuilder, TestType, AssertType } from './AssertionsBuilder.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const config = window.AdminTestsConfig;
@@ -252,6 +252,20 @@ document.addEventListener('DOMContentLoaded', () => {
             span.textContent = String(y);
             grid.appendChild(span);
         }
+        const pivot = builder.model.test_type === TestType.ExactCorrespondenceSince
+            ? builder.model.year_since
+            : builder.model.test_type === TestType.ExactCorrespondenceUntil
+                ? builder.model.year_until
+                : null;
+        if (pivot !== null) {
+            grid.querySelectorAll('.testYearSpan').forEach((span) => {
+                const y = Number(span.dataset.year);
+                if (y === pivot) span.classList.add('bg-info');
+                else if (builder.model.test_type === TestType.ExactCorrespondenceSince ? y < pivot : y > pivot) {
+                    span.classList.add('bg-warning');
+                }
+            });
+        }
     }
 
     function regenerate() {
@@ -302,6 +316,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const a = builder.model.assertions.find((x) => x.year === year);
             document.getElementById('commentText').value = a && 'comment' in a ? a.comment : '';
             bootstrap.Modal.getOrCreateInstance(document.getElementById('testCommentModal')).show();
+        } else if (ev.target.closest('.editDate')) {
+            const dateVal = card.querySelector('.expectedValue');
+            const current = (dateVal.getAttribute('data-value') || '').split('T')[0];
+            const input = document.createElement('input');
+            input.type = 'date';
+            input.className = 'form-control form-control-sm';
+            input.value = current;
+            dateVal.replaceChildren(input);
+            input.focus();
+            input.addEventListener('change', () => {
+                if (input.value) {
+                    builder.setExpectedDate(year, `${input.value}T00:00:00+00:00`);
+                }
+                builder.render(assertionsContainer);
+            });
+            input.addEventListener('blur', () => builder.render(assertionsContainer));
         }
     });
     assertionsContainer.addEventListener('change', (ev) => {
@@ -317,6 +347,38 @@ document.addEventListener('DOMContentLoaded', () => {
         builder.setComment(year, document.getElementById('commentText').value);
         builder.render(assertionsContainer);
         bootstrap.Modal.getInstance(document.getElementById('testCommentModal')).hide();
+    });
+
+    // The base date drives per-year expected values. For events without a fixed
+    // month/day (movable feasts) this is the ONLY way to seed dates: setting it
+    // updates baseMonthDay so toggleAssert can restore dates, and refreshes every
+    // eventExists assertion to the new month/day in its own year.
+    document.getElementById('baseDate').addEventListener('change', (ev) => {
+        const v = ev.target.value; // YYYY-MM-DD
+        if (!v) return;
+        const [, m, d] = v.split('-').map(Number);
+        builder.baseMonthDay = { month: m, day: d };
+        builder.model.assertions.forEach((a) => {
+            if (a.assert === AssertType.EventTypeExact) {
+                builder.setExpectedDate(
+                    a.year,
+                    `${String(a.year).padStart(4, '0')}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}T00:00:00+00:00`,
+                );
+            }
+        });
+        builder.render(assertionsContainer);
+    });
+
+    // For Since/Until types, clicking a year in the overview grid sets the pivot
+    // (year_since / year_until) and re-splits the assertions around it.
+    document.getElementById('yearGrid').addEventListener('click', (ev) => {
+        const span = ev.target.closest('.testYearSpan');
+        if (!span) return;
+        const tt = selectedTestType();
+        if (tt !== TestType.ExactCorrespondenceSince && tt !== TestType.ExactCorrespondenceUntil) return;
+        builder.setPivot(Number(span.dataset.year));
+        builder.render(assertionsContainer);
+        renderYearGrid();
     });
 
     async function syncScopeIdField() {
@@ -349,7 +411,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // CalendarSelect, its change event bubbles to the mount — reload its events.
     document.getElementById('testScopeIdMount').addEventListener('change', reloadEventsThenRegenerate);
 
-    function openEditor(test) {
+    async function openEditor(test) {
         state.editing = test ? test.name : null;
         document.getElementById('testEditorAlerts').innerHTML = '';
         const nameEl = document.getElementById('testName');
@@ -357,7 +419,8 @@ document.addEventListener('DOMContentLoaded', () => {
             builder.load(test);
             nameEl.value = test.name;
             nameEl.setAttribute('readonly', '');
-            document.querySelector(`input[name="testType"][value="${test.test_type}"]`).checked = true;
+            const typeRadio = document.querySelector(`input[name="testType"][value="${test.test_type}"]`);
+            if (typeRadio) typeRadio.checked = true;
             document.getElementById('testEventKey').value = test.event_key;
             document.getElementById('testDescription').value = test.description;
             const scope = deriveScope(test.applies_to);
@@ -365,6 +428,22 @@ document.addEventListener('DOMContentLoaded', () => {
             typeSel.value = scope.object_type === 'national_calendar_test' ? 'national_calendar'
                 : scope.object_type === 'diocesan_calendar_test' ? 'diocesan_calendar'
                 : 'general_roman_calendar';
+            // Fix 4: Seed slider from loaded test assertions before any slider change fires
+            const years = test.assertions.map((a) => a.year);
+            if (years.length) {
+                const lo = Math.min(...years);
+                const hi = Math.max(...years);
+                const lower = document.getElementById('lowerRange');
+                const upper = document.getElementById('upperRange');
+                lower.value = String(lo);
+                upper.value = String(hi);
+                const slider = lower.parentNode;
+                slider.style.setProperty('--value-a', String(lo));
+                slider.style.setProperty('--text-value-a', `"${lo}"`);
+                slider.style.setProperty('--value-b', String(hi));
+                slider.style.setProperty('--text-value-b', `"${hi}"`);
+                renderYearGrid();
+            }
             loadEvents(test.applies_to)
                 .then(() => builder.render(assertionsContainer))
                 .catch((err) => showModalAlert(editorModalEl, 'danger', err.message ?? i18n.failedToLoad));
@@ -379,7 +458,17 @@ document.addEventListener('DOMContentLoaded', () => {
             assertionsContainer.innerHTML = '';
             loadEvents(null).catch((err) => showModalAlert(editorModalEl, 'danger', err.message ?? i18n.failedToLoad));
         }
-        syncScopeIdField();
+        await syncScopeIdField();
+        if (test) {
+            // Preselect the loaded test's calendar in the freshly-mounted select so
+            // selectedScope() round-trips applies_to instead of silently rescoping
+            // the test to General Roman (or 403ing a scoped editor).
+            const scope = deriveScope(test.applies_to);
+            const idEl = document.getElementById('testScopeId');
+            if (idEl && scope.object_type !== 'general_roman_calendar_test') {
+                idEl.value = scope.object_id;
+            }
+        }
         editorModal.show();
     }
 
@@ -399,12 +488,13 @@ document.addEventListener('DOMContentLoaded', () => {
             showModalAlert(editorModalEl, 'warning', i18n.requiredFields);
             return;
         }
+        const scopePayload = selectedScope() ?? (state.editing ? builder.model.applies_to : null);
         builder.setMeta({
             name: nameEl.value,
             event_key: document.getElementById('testEventKey').value,
             description: document.getElementById('testDescription').value,
             test_type: selectedTestType(),
-            applies_to: selectedScope(),
+            applies_to: scopePayload,
         });
         const payload = builder.serialize();
         btn.disabled = true;

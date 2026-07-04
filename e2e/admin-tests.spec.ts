@@ -88,8 +88,13 @@ test.describe('admin-tests editor (stubbed)', () => {
     test('edit flow renders name read-only and submits PATCH', async ({ page }) => {
         await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
         let patched = false;
+        let patchBody: Record<string, unknown> | null = null;
         await page.route('**/tests/UsaNationalTest', (r: Route) => {
-            if (r.request().method() === 'PATCH') { patched = true; return r.fulfill({ json: {} }); }
+            if (r.request().method() === 'PATCH') {
+                patchBody = r.request().postDataJSON() as Record<string, unknown>;
+                patched = true;
+                return r.fulfill({ json: {} });
+            }
             return r.continue();
         });
         await page.goto('/admin-tests.php');
@@ -97,6 +102,7 @@ test.describe('admin-tests editor (stubbed)', () => {
         await expect(page.locator('#testName')).toHaveAttribute('readonly', '');
         await page.locator('#saveTestBtn').click();
         await expect.poll(() => patched).toBe(true);
+        expect(patchBody!.applies_to).toEqual({ national_calendar: 'USA' });
     });
 });
 
