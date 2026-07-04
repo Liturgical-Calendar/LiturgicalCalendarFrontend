@@ -216,9 +216,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadEvents(appliesTo) {
+        // The events catalog is public — omit credentials. EventsHandler serves a
+        // wildcard Access-Control-Allow-Origin, and browsers reject wildcard ACAO
+        // on credentialed requests (breaks the split-origin docker e2e stack).
         const res = await fetch(apiUrl + eventsPath(appliesTo), {
             headers: { Accept: 'application/json', 'Accept-Language': config.locale },
-            credentials: 'include',
         });
         const json = await res.json();
         events = json.litcal_events ?? [];
