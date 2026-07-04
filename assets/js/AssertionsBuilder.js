@@ -196,16 +196,22 @@ export class AssertionsBuilder {
     toggleAssert(year) {
         const a = this.#find(year);
         if (!a) return this;
+        // Rebuild the sentence from the canonical description (set by
+        // generate()/load()), never from a.assertion: the per-year text is
+        // user-editable via setAssertionText, so substring replacement on it
+        // silently no-ops once an editor rewrites the phrase, desyncing the
+        // text from assert/expected_value. Toggling always restores canon.
+        const canonical = this.model.description || a.assertion;
         if (a.assert === AssertType.EventTypeExact) {
             a.assert = AssertType.EventNotExists;
             a.expected_value = null;
-            a.assertion = a.assertion.replace('should fall on', 'should not exist on');
+            a.assertion = canonical.replace('should fall on', 'should not exist on');
         } else {
             a.assert = AssertType.EventTypeExact;
             if (this.baseMonthDay) {
                 a.expected_value = AssertionsBuilder.#expectedValue(year, this.baseMonthDay.month, this.baseMonthDay.day);
             }
-            a.assertion = a.assertion.replace('should not exist on', 'should fall on');
+            a.assertion = canonical.replace('should not exist on', 'should fall on');
         }
         return this;
     }

@@ -30,7 +30,16 @@ document.addEventListener('DOMContentLoaded', () => {
             opts.headers['Content-Type'] = 'application/json';
             opts.body = JSON.stringify(body);
         }
-        const res = await fetch(apiUrl + path, opts);
+        // Abort after 15s so a stalled Save/Delete can't hang its modal
+        // indefinitely (same AbortController pattern as auth.js admin-scopes).
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        let res;
+        try {
+            res = await fetch(apiUrl + path, { ...opts, signal: controller.signal });
+        } finally {
+            clearTimeout(timeoutId);
+        }
         const text = await res.text();
         let data = null;
         try {
@@ -39,7 +48,12 @@ document.addEventListener('DOMContentLoaded', () => {
             // non-JSON body — data stays null
         }
         if (!res.ok) {
-            throw { status: res.status, body: data };
+            // A real Error (not a plain object) so callers get a stack trace;
+            // status/body carry the API detail the catch handlers switch on.
+            const err = new Error(`HTTP ${res.status}: ${method} ${path}`);
+            err.status = res.status;
+            err.body = data;
+            throw err;
         }
         return data;
     }
@@ -201,12 +215,19 @@ document.addEventListener('DOMContentLoaded', () => {
         return document.querySelector('input[name="testType"]:checked')?.value ?? TestType.ExactCorrespondence;
     }
 
+    /**
+     * Three-state scope reading so the save flow can tell an explicit choice
+     * apart from an incomplete one:
+     *   null      — the user explicitly selected General Roman Calendar
+     *   undefined — a scoped type is selected but no calendar ID is picked yet
+     *   object    — a concrete { national_calendar | diocesan_calendar: id }
+     */
     function selectedScope() {
         const type = document.getElementById('testScopeType').value;
         if (type === 'general_roman_calendar') return null;
         const idEl = document.getElementById('testScopeId');
         const id = idEl ? idEl.value : '';
-        return id ? { [type]: id } : null;
+        return id ? { [type]: id } : undefined;
     }
 
     function eventsPath(appliesTo) {
@@ -222,6 +243,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const res = await fetch(apiUrl + eventsPath(appliesTo), {
             headers: { Accept: 'application/json', 'Accept-Language': config.locale },
         });
+        if (!res.ok) {
+            // Surface the failure to the callers' .catch/showModalAlert handlers
+            // instead of silently rendering an empty events datalist.
+            throw new Error(`${i18n.failedToLoad} (HTTP ${res.status})`);
+        }
         const json = await res.json();
         events = json.litcal_events ?? [];
         const datalist = document.getElementById('testEventKeyList');
@@ -490,7 +516,13 @@ document.addEventListener('DOMContentLoaded', () => {
             showModalAlert(editorModalEl, 'warning', i18n.requiredFields);
             return;
         }
-        const scopePayload = selectedScope() ?? (state.editing ? builder.model.applies_to : null);
+        // undefined = scoped type without an ID picked yet → when editing, keep
+        // the test's existing applies_to; null = explicit General Roman → clear
+        // any previous scope (this must NOT fall back to the old applies_to).
+        const chosen = selectedScope();
+        const scopePayload = chosen === undefined
+            ? (state.editing ? builder.model.applies_to : null)
+            : chosen;
         builder.setMeta({
             name: nameEl.value,
             event_key: document.getElementById('testEventKey').value,

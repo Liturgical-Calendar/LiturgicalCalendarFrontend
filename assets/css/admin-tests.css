@@ -1,4 +1,4 @@
-@import url('multi-range-slider.css');
+@import 'multi-range-slider.css';
 
 /* Per-year assertion cards: native CSS grid (replaces Isotope fitRows). */
 .assertions-grid {

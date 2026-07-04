@@ -182,6 +182,21 @@ describe('mutators', () => {
         expect(a.assertion).toContain('should fall on');
     });
 
+    it('toggleAssert rewrites canonical text even after a user edit (no substring dependency)', () => {
+        const b = build();
+        // Simulate a user rewriting the sentence so the "should fall on"
+        // phrase is gone — substring replacement would silently no-op here.
+        b.setAssertionText(2025, 'Totally custom sentence written by an editor');
+        b.toggleAssert(2025);
+        let a = b.model.assertions.find((x) => x.year === 2025);
+        expect(a.assert).toBe('eventNotExists');
+        expect(a.assertion).toContain('should not exist on');
+        b.toggleAssert(2025);
+        a = b.model.assertions.find((x) => x.year === 2025);
+        expect(a.assert).toBe('eventExists AND hasExpectedDate');
+        expect(a.assertion).toContain('should fall on');
+    });
+
     it('setExpectedDate updates the RFC3339 value', () => {
         const b = build();
         b.setExpectedDate(2024, '2024-08-01T00:00:00+00:00');

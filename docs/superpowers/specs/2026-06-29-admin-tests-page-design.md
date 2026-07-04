@@ -114,7 +114,8 @@ pages (which call `/auth/admin-scopes`) don't incur the extra OpenFGA `listObjec
   `load(testDefinition)` to populate, `serialize()` to produce the assertions array. The per-year
   assertion grid keyed by `test_type` (exact/variable correspondence) is preserved.
 - **List:** `GET /tests` → rows grouped by derived scope (General Roman / `national:<id>` /
-  `diocesan:<id>`), columns: name, event_key, description, scope, test_type, year range, actions.
+  `diocesan:<id>`), columns: name, event_key, scope, test_type, year range, actions (the
+  description is shown in the editor rather than as a table column, keeping rows scannable).
   A client-side name/scope filter keeps the list usable as it grows.
 - **Editor form fields:** `name`, `event_key` (datalist sourced from `GET /events`), `description`,
   `test_type`, **scope** (`applies_to`) via the dynamic `CalendarSelect`-by-type approach from
@@ -148,8 +149,10 @@ workflow, presented as a stepped modal:
    `eventNotExists`); an editable **assertion sentence**; and an optional **comment**
    (`fa-comment-medical` / `fa-comment-dots`). Per-type behavior: exact = uniform across years;
    since/until = years before/after the pivot forced to `eventNotExists`; variable = each year
-   toggled independently. A **year-grid overview** shades Sundays / excluded / pivot years and
-   supports click-to-exclude.
+   toggled independently. A **year-grid overview** shades the pivot year and the years it forces
+   to `eventNotExists`; for the *Since*/*Until* types, clicking a year sets the pivot.
+   (Click-to-exclude — editing the `excludes` list from the grid — is deferred to a follow-up;
+   the model and `generate()` already accept `excludedYears`.)
 
 **Modernizations vs. the original (preserve the look, reduce risk):**
 
