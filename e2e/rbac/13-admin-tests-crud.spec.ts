@@ -23,7 +23,7 @@
  *   - login-client: Zitadel machine user with IAM PAT-issuance rights.
  */
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import * as path from 'path';
 import * as fs from 'fs';
 import { actingAs } from './support/actingAs';
@@ -53,6 +53,11 @@ const EDITOR_PASSWORD = 'E2e-Test-Passw0rd!'; // shared test password (mirrors o
 
 /** Pre-seeded by rbac-setup; Zitadel `admin` role bypasses all API role checks. */
 const GLOBAL_ADMIN_ID = 'super-admin';
+
+/** API base URL — same env convention as spec 08; domain=localhost cookies in a
+ *  storageState are sent to the API port, so an authenticated request context
+ *  built from `.auth/super-admin.json` can call protected API routes directly. */
+const API_BASE = `${process.env.API_PROTOCOL || 'http'}://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || '8000'}`;
 
 // Resolved in beforeAll; used in afterAll cleanup even if a test partially fails.
 let editorZitadelId: string | null = null;
@@ -165,11 +170,14 @@ test.describe('admin-tests CRUD (real RBAC)', () => {
 
             // Out-of-scope gating (client-side FGA gate from GET /auth/test-scopes):
             // any existing general-roman-scoped row must NOT show an Edit button to
-            // this nationally-scoped editor.
-            const grcRow = tei.page.locator('tr', { hasText: 'general_roman' }).first();
-            if (await grcRow.count()) {
-                await expect(grcRow.getByRole('button', { name: 'Edit' })).toHaveCount(0);
-            }
+            // this nationally-scoped editor. The scope column renders the i18n label
+            // "General Roman Calendar" (not the object_type literal), and the API
+            // repo ships GRC-scoped definitions in jsondata/tests, so at least one
+            // such row must exist — assert it, so this gating check can never be
+            // silently skipped.
+            const grcRow = tei.page.locator('tr', { hasText: 'General Roman' }).first();
+            await expect(grcRow).toBeVisible();
+            await expect(grcRow.getByRole('button', { name: 'Edit' })).toHaveCount(0);
         } finally {
             await tei.context.close();
         }
@@ -182,6 +190,8 @@ test.describe('admin-tests CRUD (real RBAC)', () => {
         try {
             await adm.page.goto('/admin-tests.php');
             const row = adm.page.locator('tr', { hasText: TEST_NAME });
+            // Fail with a clear message if Test 1 did not create the row.
+            await expect(row).toBeVisible();
             await row.getByRole('button', { name: 'Delete' }).click();
             await adm.page.locator('#confirmDeleteTestBtn').click();
             await expect(adm.page.locator('tr', { hasText: TEST_NAME })).toHaveCount(0);
@@ -199,6 +209,22 @@ test.describe('admin-tests CRUD (real RBAC)', () => {
         const cleanupOps: Array<Promise<unknown>> = [
             // Purge audit_log rows written by the PUT /tests and DELETE /tests calls.
             truncateAppTables(),
+            // Best-effort removal of the created test definition via the API, so a
+            // failed Test 2 cannot orphan it. Test definitions are files under the
+            // API's jsondata/tests/ (not DB rows), so truncateAppTables cannot reach
+            // them — and a leftover file reds every subsequent run with a
+            // duplicate-name conflict on PUT /tests. Uses the pre-seeded super-admin
+            // session; a 404 (already deleted by Test 2) is a successful no-op.
+            (async () => {
+                const api = await request.newContext({
+                    storageState: path.join(__dirname, '..', '..', '.auth', `${GLOBAL_ADMIN_ID}.json`),
+                });
+                try {
+                    await api.delete(`${API_BASE}/tests/${encodeURIComponent(TEST_NAME)}`);
+                } finally {
+                    await api.dispose();
+                }
+            })(),
         ];
 
         // Remove the ephemeral test_editor user + FGA tuple.
