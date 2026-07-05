@@ -1,0 +1,132 @@
+# Admin-Tests Year-Grid Utilities — Design
+
+**Date:** 2026-07-05
+**Status:** Approved (brainstorming session)
+**Lands in:** PR #379 (`feat/admin-tests-phase2`), extending the phase-2 admin-tests page
+**Reference implementation:** `UnitTestInterface/assets/js/admin.js` (`generateYearSpanHtml`,
+`computeYearDateAttrs`, the `fa-circle-xmark` / `fa-hammer` / `.deleted` click handlers) and
+`UnitTestInterface/assets/css/admin.css` (`.testYearSpan.deleted` striped bar)
+
+## Problem
+
+Acceptance testing of the phase-2 test editor against the old UnitTestInterface editor found the
+year-grid overview incomplete:
+
+- no per-year **exclude** affordance (the ⓧ icon that collapses a year to a red/white striped bar,
+  click-to-restore);
+- no **hammer** affordance (pivot/toggle, with behavior that varies by test type);
+- no **Sunday highlighting** (`bg-light` + explanatory tooltip when the event's fixed date falls on
+  a Sunday in that year);
+- no explanation of what the background colors mean (the old UI never had one either — a legend is
+  a new addition).
+
+The model layer needs no schema work: `AssertionsBuilder` already round-trips `excludes`
+(`load()` → `setMeta()` → `serialize()`), `generate({ excludedYears })` skips excluded years, and
+the API's `LitCalTest` schema defines the `excludes` field.
+
+## Approach
+
+**State-first port** (approach A of the brainstorm). The grid remains a pure projection of
+`builder.model`; clicks mutate the model and re-render. The old UI's direct-DOM mutation approach
+was rejected because `serialize()` never reads the DOM in phase 2 — DOM-held exclusion state would
+silently not serialize, the same class of desync CodeRabbit review round 2 eliminated from
+`toggleAssert`.
+
+## Design
+
+### 1. Model layer — `AssertionsBuilder` additions
+
+- `excludeYear(year)` — adds `year` to `model.excludes` (kept sorted, deduped; array created if
+  `null`), removes that year's entry from `model.assertions`. Chainable, no-op for unknown years.
+- `includeYear(year)` — removes `year` from `model.excludes` (field returns to `null` when the
+  array empties), re-creates that year's assertion using the same rules as `generate()`:
+  `eventNotExists` when outside the pivot (`year_since`/`year_until`) or when `baseMonthDay` is
+  null, otherwise the exact-correspondence assertion with `expected_value` computed from
+  `baseMonthDay`. Assertions stay sorted by year. Chainable, no-op if the year is not excluded.
+- **Folded-in bug fix:** `regenerate()` in `admin-tests.js` currently calls `generate()` without
+  `excludedYears`, so any exclusions would be wiped whenever the event, test type, or slider
+  changes. It will pass `excludedYears: builder.model.excludes ?? []`.
+
+### 2. Grid rendering — `renderYearGrid()` extended
+
+Span anatomy: `[🔨?] YEAR [ⓧ]`.
+
+- Hammer (`fa-hammer me-1 opacity-50`, `title="set year"`): omitted for `exactCorrespondence`
+  (nothing to pivot or toggle), present for the other three types.
+- X-mark (`fa-circle-xmark ms-1 opacity-50`, `title="remove"`): always present on included years.
+- Excluded years render as `<span class="testYearSpan year-YYYY deleted">` — no text, no icons.
+  CSS ported to `assets/css/admin-tests.css`: red/white 45° `repeating-linear-gradient`, 3px wide,
+  32px tall, `cursor: not-allowed` (visually identical to the old UI; a `title` attribute such as
+  "2026 excluded — click to restore" is added as an accessibility improvement over the original).
+
+Background classes, all derived from state (never from sibling-sweeping the DOM):
+
+| Class / style        | Meaning                                                 | Derived from                                            |
+| -------------------- | ------------------------------------------------------- | ------------------------------------------------------- |
+| default (beige)      | year included, event asserted on its date               | assertion present, `assert = eventExists…`              |
+| `bg-light` + tooltip | event's fixed month/day falls on a **Sunday** that year | `builder.baseMonthDay` (port of `computeYearDateAttrs`) |
+| `bg-info`            | pivot year                                              | `model.year_since` / `model.year_until`                 |
+| `bg-warning`         | year asserted `eventNotExists`                          | that year's `assertion.assert`                          |
+| red/white stripes    | year excluded from the test                             | `model.excludes`                                        |
+
+`bg-warning` derivation from assertions replaces the old UI's previous/next-sibling class sweep —
+same visual result, single source of truth.
+
+### 3. Interactions — one delegated click handler on `#yearGrid`
+
+Replaces the current whole-span pivot click (ambiguous once spans contain two other targets):
+
+| Click target | Test type     | Action                                  |
+| ------------ | ------------- | --------------------------------------- |
+| 🔨 hammer    | Since / Until | `builder.setPivot(year)` (existing)     |
+| 🔨 hammer    | Variable      | `builder.toggleAssert(year)` (existing) |
+| ⓧ x-mark     | any           | `builder.excludeYear(year)`             |
+| striped bar  | any           | `builder.includeYear(year)`             |
+| span body    | any           | no action                               |
+
+Deliberate improvement over the original: the variable-type hammer is **two-way** (delegates to
+`toggleAssert`, which flips both directions), consistent with the per-card toggle buttons. The old
+UI's hammer only set `bg-warning` one-way.
+
+After every mutation both the grid **and** the assertion cards re-render
+(`builder.render(assertionsContainer)` + `renderYearGrid()`): an excluded year must have no card,
+and a restored year's card must reappear.
+
+### 4. Legend — chip row under the grid
+
+Static HTML in `admin-tests.php`, directly beneath `#yearGrid`; five entries, labels
+gettext-wrapped with `htmlspecialchars` escaping like the rest of the page:
+
+```text
+■ included   □ falls on Sunday   ■ pivot year   ■ event not expected   ┃ excluded (click to restore)
+```
+
+Swatches are small chips (`<span class="legend-chip …">`) that reuse the exact classes the grid
+spans use (`bg-light`, `bg-info`, `bg-warning`, `deleted`) so legend and grid cannot drift apart.
+To make that sharing possible, the ported striped-bar CSS must NOT be ID-scoped the way the
+original was (`#yearsToTestGrid > .testYearSpan.deleted`): `admin-tests.css` styles `.deleted` via
+a selector that matches both grid spans and legend chips (e.g. `.testYearSpan.deleted,
+.legend-chip.deleted`). Chip sizing lives in `admin-tests.css`.
+
+### 5. Error handling
+
+All interactions are pure client-side state changes — nothing network-touching. Guards: clicks
+resolving to a year with no matching assertion/exclusion are no-ops (same convention as
+`toggleAssert`); `excludeYear` on an already-excluded year and `includeYear` on a non-excluded
+year are no-ops.
+
+### 6. Testing
+
+- **Unit (Vitest):** `excludeYear`/`includeYear` round-trip (assertion removed and re-created with
+  pivot- and `baseMonthDay`-aware rules); `serialize()` emits `excludes` and drops the key when
+  empty; `generate()` + `regenerate()` wiring preserves exclusions across event/type/slider
+  changes; `render()`/grid derivation of `bg-warning` from assertions.
+- **E2E (chromium smoke spec):** exclude a year → its assertion card disappears and the span
+  becomes the striped bar → click the bar → card and full span return; legend row is visible.
+
+## Out of scope
+
+- Retiring the old UnitTestInterface editor (phase 3, separate repo).
+- Any API/schema change (none needed).
+- Isotope-style animated grid relayout (the old fade/relayout was an Isotope artifact; phase 2
+  uses native CSS grid).
