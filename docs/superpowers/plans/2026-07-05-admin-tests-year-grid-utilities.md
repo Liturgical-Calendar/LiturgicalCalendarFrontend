@@ -364,13 +364,14 @@ function renderYearGrid() {
 
 Background precedence (pivot > not-exists > Sunday) matches the old UI, where pivot/warning classes replaced `bg-light`.
 
-- [ ] **Step 4: Add the failing e2e test**
+- [ ] **Step 4: Add the rendering e2e test**
 
-Append to `e2e/admin-tests.spec.ts` (reuses the existing `stubEditor` helper and `grcEvents` fixture — StIgnatiusOfLoyola, July 31; note 2005-07-31 IS a Sunday):
+Append to `e2e/admin-tests.spec.ts` (reuses the existing `stubEditor` helper and `grcEvents` fixture — StIgnatiusOfLoyola, July 31; note 2005-07-31 IS a Sunday). This test covers
+ONLY rendering; the exclude/restore interaction test is added in Task 3, where the click handler exists — every commit stays green.
 
 ```typescript
 test.describe("admin-tests year grid (stubbed)", () => {
-  test("spans carry icons, Sunday highlighting, and exclude/restore round-trips", async ({
+  test("spans carry hammer/x icons and Sunday highlighting", async ({
     page,
   }) => {
     await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
@@ -386,30 +387,18 @@ test.describe("admin-tests year grid (stubbed)", () => {
     await expect(span2005.locator(".hammerYear")).toHaveCount(1);
     await expect(span2005.locator(".removeYear")).toHaveCount(1);
     await expect(span2005).toHaveClass(/bg-light/);
-
-    // exclude: card disappears, span collapses to the striped bar
-    await span2005.locator(".removeYear").click();
-    await expect(span2005).toHaveClass(/deleted/);
-    await expect(page.locator('.assertion-card[data-year="2005"]')).toHaveCount(
-      0,
-    );
-
-    // restore: card returns, stripes gone
-    await span2005.click();
-    await expect(span2005).not.toHaveClass(/deleted/);
-    await expect(page.locator('.assertion-card[data-year="2005"]')).toHaveCount(
-      1,
-    );
+    // exactCorrespondence type → hammer absent
+    await page.locator("#tt-exact").check({ force: true });
+    await expect(span2005.locator(".hammerYear")).toHaveCount(0);
+    await expect(span2005.locator(".removeYear")).toHaveCount(1);
   });
 });
 ```
 
-- [ ] **Step 5: Run the e2e test to verify current failure mode**
+- [ ] **Step 5: Run the e2e test to verify it passes**
 
 Run: `yarn playwright test e2e/admin-tests.spec.ts --project=chromium -g "year grid"`
-Expected: FAIL — `.hammerYear` count is 0 (icons not rendered yet by the running container if not yet synced, or exclusion does nothing because Task 3's handler is not written).
-Rendering assertions (icons, `bg-light`) should PASS after this task; the exclude/restore section FAILS until Task 3. That is the expected intermediate state — do not try to make
-the whole test pass in this task.
+Expected: PASS (rendering only — no interaction is exercised yet).
 
 - [ ] **Step 6: Syntax-check, lint, commit**
 
@@ -516,10 +505,44 @@ builder.generate({
 });
 ```
 
-- [ ] **Step 3: Run the Task 2 e2e test to verify it now fully passes**
+- [ ] **Step 3: Add the failing exclude/restore e2e test**
+
+Inside the `test.describe("admin-tests year grid (stubbed)", …)` block added in Task 2, add:
+
+```typescript
+  test("exclude collapses to the striped bar and restore brings the card back", async ({
+    page,
+  }) => {
+    await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
+    await page.goto("/admin-tests.php");
+    await page.locator("#createTestBtn").click();
+    await page.locator("#tt-variable").check({ force: true });
+    await page.locator("#testEventKey").fill("StIgnatiusOfLoyola");
+    await page.locator("#testEventKey").dispatchEvent("change");
+
+    const span2005 = page.locator("#yearGrid .testYearSpan.year-2005");
+    await expect(span2005).toBeVisible();
+
+    // exclude: card disappears, span collapses to the striped bar
+    await span2005.locator(".removeYear").click();
+    await expect(span2005).toHaveClass(/deleted/);
+    await expect(page.locator('.assertion-card[data-year="2005"]')).toHaveCount(
+      0,
+    );
+
+    // restore: card returns, stripes gone
+    await span2005.click();
+    await expect(span2005).not.toHaveClass(/deleted/);
+    await expect(page.locator('.assertion-card[data-year="2005"]')).toHaveCount(
+      1,
+    );
+  });
+```
 
 Run: `yarn playwright test e2e/admin-tests.spec.ts --project=chromium -g "year grid"`
-Expected: PASS (icons + Sunday class from Task 2, exclude/restore now wired).
+Expected: the new test FAILS before Steps 1-2 are applied (no click handler → span never gains `deleted`); after applying Steps 1-2 it PASSES. If you already applied Steps 1-2,
+verify the failure by `git stash`-ing the `admin-tests.js` change, running, then `git stash pop`.
+Final state: both year-grid tests PASS.
 
 - [ ] **Step 4: Run the full stubbed e2e file (regression: pivot flow, editor, delete)**
 
