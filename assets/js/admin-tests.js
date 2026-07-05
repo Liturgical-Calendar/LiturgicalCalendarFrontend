@@ -357,7 +357,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const pivot = (tt === TestType.ExactCorrespondenceSince || tt === TestType.ExactCorrespondenceUntil)
             ? minYear
             : null;
-        builder.generate({ event, minYear, maxYear, pivotYear: pivot });
+        // Preserve exclusions when the event/type/slider changes; generate()
+        // skips excluded years, so without this every regeneration would
+        // silently restore them.
+        builder.generate({
+            event,
+            minYear,
+            maxYear,
+            pivotYear: pivot,
+            excludedYears: builder.model.excludes ?? [],
+        });
         document.getElementById('testDescription').value = builder.model.description;
         document.getElementById('baseDate').value = event.month && event.day
             ? `${minYear}-${String(event.month).padStart(2, '0')}-${String(event.day).padStart(2, '0')}`
@@ -449,14 +458,32 @@ document.addEventListener('DOMContentLoaded', () => {
         builder.render(assertionsContainer);
     });
 
-    // For Since/Until types, clicking a year in the overview grid sets the pivot
-    // (year_since / year_until) and re-splits the assertions around it.
+    // Year-grid interactions (ported from UnitTestInterface, state-first):
+    //   hammer  → Since/Until: set the pivot; Variable: toggle that year
+    //   x-mark  → exclude the year (collapses to the striped bar)
+    //   striped bar → restore the year
+    //   span body   → no action (the icons are the affordances)
     document.getElementById('yearGrid').addEventListener('click', (ev) => {
         const span = ev.target.closest('.testYearSpan');
         if (!span) return;
-        const tt = selectedTestType();
-        if (tt !== TestType.ExactCorrespondenceSince && tt !== TestType.ExactCorrespondenceUntil) return;
-        builder.setPivot(Number(span.dataset.year));
+        const year = Number(span.dataset.year);
+        if (span.classList.contains('deleted')) {
+            builder.includeYear(year);
+        } else if (ev.target.closest('.removeYear')) {
+            builder.excludeYear(year);
+        } else if (ev.target.closest('.hammerYear')) {
+            const tt = selectedTestType();
+            if (
+                tt === TestType.ExactCorrespondenceSince ||
+                tt === TestType.ExactCorrespondenceUntil
+            ) {
+                builder.setPivot(year);
+            } else if (tt === TestType.VariableCorrespondence) {
+                builder.toggleAssert(year);
+            }
+        } else {
+            return;
+        }
         builder.render(assertionsContainer);
         renderYearGrid();
     });

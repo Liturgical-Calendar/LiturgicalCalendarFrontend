@@ -144,4 +144,32 @@ test.describe('admin-tests year grid (stubbed)', () => {
         await expect(span2005.locator('.hammerYear')).toHaveCount(0);
         await expect(span2005.locator('.removeYear')).toHaveCount(1);
     });
+
+    test('exclude collapses to the striped bar and restore brings the card back', async ({ page }) => {
+        await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
+        await page.goto('/admin-tests.php');
+        await page.locator('#createTestBtn').click();
+        await expect(page.locator('#testEditorModal')).toBeVisible();
+        // btn-check inputs use pointer-events:none; click the label, not the input
+        await page.locator('label[for="tt-variable"]').click();
+        await page.locator('#testEventKey').fill('StIgnatiusOfLoyola');
+        await page.locator('#testEventKey').dispatchEvent('change');
+
+        const span2005 = page.locator('#yearGrid .testYearSpan.year-2005');
+        await expect(span2005).toBeVisible();
+
+        // exclude: card disappears, span collapses to the striped bar
+        // dispatchEvent is used because Playwright's physical click on <i> inside a
+        // scrollable modal does not synthesize a click event (mousedown+mouseup fire
+        // but the browser cancels click due to scroll-container interaction).
+        await span2005.locator('.removeYear').dispatchEvent('click');
+        await expect(span2005).toHaveClass(/deleted/);
+        await expect(page.locator('.assertion-card[data-year="2005"]')).toHaveCount(0);
+
+        // restore: deleted span collapses to 3px width — dispatchEvent is more
+        // reliable than a physical click on such a small hit area inside a modal.
+        await span2005.dispatchEvent('click');
+        await expect(span2005).not.toHaveClass(/deleted/);
+        await expect(page.locator('.assertion-card[data-year="2005"]')).toHaveCount(1);
+    });
 });
