@@ -172,4 +172,15 @@ test.describe('admin-tests year grid (stubbed)', () => {
         await expect(span2005).not.toHaveClass(/deleted/);
         await expect(page.locator('.assertion-card[data-year="2005"]')).toHaveCount(1);
     });
+
+    test('legend row is visible with all five chips', async ({ page }) => {
+        await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
+        await page.goto('/admin-tests.php');
+        await page.locator('#createTestBtn').click();
+        await expect(page.locator('#testEditorModal')).toBeVisible();
+        const legend = page.locator('#yearGridLegend');
+        await expect(legend).toBeVisible();
+        await expect(legend.locator('.legend-chip')).toHaveCount(5);
+        await expect(legend.locator('.legend-chip.deleted')).toHaveCount(1);
+    });
 });

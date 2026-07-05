@@ -66,3 +66,19 @@
     font-size: 0.75rem;
     line-height: 1.2;
 }
+
+/* Legend chips reuse the exact grid classes so legend and grid cannot drift. */
+.legend-chip {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.25rem;
+    vertical-align: text-bottom;
+}
+
+.legend-chip.deleted {
+    width: 5px;
+    height: 1.25rem;
+    border: none;
+}
