@@ -368,3 +368,78 @@ describe('locale normalization', () => {
         expect(() => b.render(container)).not.toThrow();
     });
 });
+
+describe('excludeYear / includeYear', () => {
+    const build = () => {
+        const b = new AssertionsBuilder({ locale: 'en' });
+        b.setMeta({ event_key: event.event_key, test_type: 'exactCorrespondence' });
+        b.generate({ event, minYear: 2024, maxYear: 2026 });
+        return b;
+    };
+
+    it('excludeYear removes the assertion and records the exclusion (sorted, deduped)', () => {
+        const b = build();
+        b.excludeYear(2025).excludeYear(2024).excludeYear(2025);
+        expect(b.model.excludes).toEqual([2024, 2025]);
+        expect(b.model.assertions.map((a) => a.year)).toEqual([2026]);
+    });
+
+    it('excludeYear is a no-op for years without an assertion', () => {
+        const b = build();
+        b.excludeYear(1999);
+        expect(b.model.excludes).toBe(null);
+        expect(b.model.assertions).toHaveLength(3);
+    });
+
+    it('includeYear restores an exact assertion with expected_value from baseMonthDay', () => {
+        const b = build();
+        b.excludeYear(2025).includeYear(2025);
+        expect(b.model.excludes).toBe(null);
+        const a = b.model.assertions.find((x) => x.year === 2025);
+        expect(a.assert).toBe('eventExists AND hasExpectedDate');
+        expect(a.expected_value).toBe('2025-07-31T00:00:00+00:00');
+        expect(b.model.assertions.map((x) => x.year)).toEqual([2024, 2025, 2026]);
+    });
+
+    it('includeYear respects the since-pivot (restores eventNotExists before it)', () => {
+        const b = new AssertionsBuilder({ locale: 'en' });
+        b.setMeta({
+            event_key: event.event_key,
+            test_type: 'exactCorrespondenceSince',
+        });
+        b.generate({ event, minYear: 2024, maxYear: 2026, pivotYear: 2026 });
+        b.excludeYear(2024).includeYear(2024);
+        const a = b.model.assertions.find((x) => x.year === 2024);
+        expect(a.assert).toBe('eventNotExists');
+        expect(a.assertion).toContain('should not exist on');
+    });
+
+    it('serialize emits excludes while excluded and drops the key after restore', () => {
+        const b = build();
+        b.excludeYear(2026);
+        expect(b.serialize().excludes).toEqual([2026]);
+        b.includeYear(2026);
+        expect('excludes' in b.serialize()).toBe(false);
+    });
+
+    it('includeYear is a no-op when the year is not excluded', () => {
+        const b = build();
+        b.includeYear(2025);
+        expect(b.model.excludes).toBe(null);
+        expect(b.model.assertions).toHaveLength(3);
+    });
+
+    it('generate skips excludedYears so regeneration preserves exclusions', () => {
+        // model-level guarantee behind the regenerate() wiring in admin-tests.js
+        const b = build();
+        b.excludeYear(2025);
+        b.generate({
+            event,
+            minYear: 2024,
+            maxYear: 2026,
+            excludedYears: b.model.excludes ?? [],
+        });
+        expect(b.model.assertions.map((a) => a.year)).toEqual([2024, 2026]);
+        expect(b.model.excludes).toEqual([2025]);
+    });
+});

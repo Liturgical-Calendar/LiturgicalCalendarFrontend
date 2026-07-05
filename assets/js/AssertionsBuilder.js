@@ -243,11 +243,6 @@ export class AssertionsBuilder {
         return this;
     }
 
-    excludeYear(year) {
-        this.model.assertions = this.model.assertions.filter((a) => a.year !== year);
-        return this;
-    }
-
     setPivot(year) {
         if (this.model.test_type === TestType.ExactCorrespondenceSince) {
             this.model.year_since = year;
@@ -263,6 +258,59 @@ export class AssertionsBuilder {
                 this.toggleAssert(a.year);
             }
         });
+        return this;
+    }
+
+    /**
+     * Exclude a year from the test: record it in model.excludes (sorted,
+     * deduped) and drop its assertion. No-op if the year has no assertion.
+     */
+    excludeYear(year) {
+        const y = Number(year);
+        if (!this.model.assertions.some((a) => a.year === y)) return this;
+        const current = this.model.excludes ?? [];
+        if (!current.includes(y)) {
+            this.model.excludes = [...current, y].sort((a, b) => a - b);
+        }
+        this.model.assertions = this.model.assertions.filter((a) => a.year !== y);
+        return this;
+    }
+
+    /**
+     * Restore a previously excluded year, re-creating its assertion with the
+     * same rules generate() uses (pivot- and baseMonthDay-aware). excludes
+     * returns to null when the last exclusion is removed, so serialize()
+     * drops the key. No-op if the year is not excluded.
+     */
+    includeYear(year) {
+        const y = Number(year);
+        const current = this.model.excludes ?? [];
+        if (!current.includes(y)) return this;
+        const remaining = current.filter((x) => x !== y);
+        this.model.excludes = remaining.length ? remaining : null;
+
+        let notExists = false;
+        if (this.model.test_type === TestType.ExactCorrespondenceSince && this.model.year_since !== null) {
+            notExists = y < this.model.year_since;
+        } else if (this.model.test_type === TestType.ExactCorrespondenceUntil && this.model.year_until !== null) {
+            notExists = y > this.model.year_until;
+        }
+        const description = this.model.description;
+        if (notExists || !this.baseMonthDay) {
+            this.model.assertions.push(
+                new Assertion(y, null, AssertType.EventNotExists, description.replace('should fall on', 'should not exist on'))
+            );
+        } else {
+            this.model.assertions.push(
+                new Assertion(
+                    y,
+                    AssertionsBuilder.#expectedValue(y, this.baseMonthDay.month, this.baseMonthDay.day),
+                    AssertType.EventTypeExact,
+                    description
+                )
+            );
+        }
+        this.model.assertions.sort((a, b) => a.year - b.year);
         return this;
     }
 
