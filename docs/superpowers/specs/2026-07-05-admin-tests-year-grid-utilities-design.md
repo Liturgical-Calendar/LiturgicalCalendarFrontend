@@ -177,3 +177,23 @@ reduces to pivot > not-exists. Tooltip unchanged. Excluded (striped) years carry
 
 The Sunday legend chip now demonstrates the cross overlay (`legend-chip sunday`) instead of
 `bg-light`; label unchanged.
+
+## Revision 3 (2026-07-06) — base date derivation / storage / restoration
+
+Field finding: loading `NativityJohnBaptistTest` left the **Base date** field empty (the old
+UnitTestInterface shows June 24). The base date's lifecycle is now defined explicitly:
+
+- **Stored:** nowhere as a dedicated field. The base date is implicit in the assertions'
+  `expected_value` dates — every exact assertion shares the same month/day with a per-year year.
+- **Derived (model):** `load()` sets `builder.baseMonthDay` to the month/day of the first
+  assertion carrying an `expected_value` (existing `#deriveBaseMonthDay`); `null` when no
+  assertion has a date. `generate()` sets it from the event catalog's fixed `month`/`day`.
+- **Restored (UI):** `openEditor(test)` must populate `#baseDate` with
+  `${minAssertedYear}-MM-DD` from `builder.baseMonthDay` — the year component is presentational
+  only (the field's change handler expands month/day across every asserted year); empty when
+  `baseMonthDay` is `null`. This mirrors UnitTestInterface `admin.js:1070`
+  (`#baseDate.value = firstYear + monthDay`).
+- **Create flow:** unchanged — `regenerate()` seeds `#baseDate` from the selected event's fixed
+  month/day, or leaves it empty for movable feasts (the user sets it manually).
+- **Precedence:** on edit, the loaded assertions' dates are authoritative over the event
+  catalog's month/day (definitions may deliberately differ, and the catalog fetch is async).
