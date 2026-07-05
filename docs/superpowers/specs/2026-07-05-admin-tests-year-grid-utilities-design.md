@@ -130,3 +130,50 @@ year are no-ops.
 - Any API/schema change (none needed).
 - Isotope-style animated grid relayout (the old fade/relayout was an Isotope artifact; phase 2
   uses native CSS grid).
+
+## Revision 2 (2026-07-06) — field-test findings
+
+Manual smoke testing against real test definitions surfaced three changes (user-approved):
+
+### R2.1 Year exclusion is implicit — assertion absence is the source of truth
+
+Source test definitions encode year exclusion **implicitly**: e.g. `NativityJohnBaptistTest.json`
+(exactCorrespondence) asserts only 2022/2033/2044 — every other year in the span is excluded by
+omission. No definition in the corpus has an `excludes` field, the old UnitTestInterface never
+emitted one, and — decisively — the schema types `excludes` as `AppliesToOrExcludes` (the same
+shape as `applies_to`): it is **calendar-scope** exclusion metadata, not a year list. The original
+Task 1 design misused `model.excludes` as a year list, which `serialize()` would have emitted as a
+schema-invalid PATCH body (stubbed e2e never hit real validation).
+
+Fix — assertion absence becomes the single source of truth for year exclusion:
+
+- `excludeYear(y)`: removes the year's assertion; never touches `model.excludes`.
+- `includeYear(y)`: creates the assertion (pivot- and `baseMonthDay`-aware, `generate()` rules)
+  for any year lacking one; no `excludes` bookkeeping.
+- `renderYearGrid()`: a year renders striped iff it has no assertion.
+- `regenerate()`: derives `excludedYears` as the gaps inside the asserted span
+  (`[min(assertedYears), max(assertedYears)]` minus asserted years; empty when there are no
+  assertions yet, so the create flow is unaffected) — exclusions survive event/type/slider changes,
+  and slider-widening still auto-includes the newly visible years.
+- `model.excludes` reverts to schema semantics (calendar scope): loaded and serialized verbatim,
+  never mutated by year interactions.
+- Task 1's unit tests are rewritten to these semantics.
+
+This also fixes the reported "x only works in Since type": `excludeYear` guarded on assertion
+presence, so on sparse loaded tests the gap years' controls silently no-opped — not a type
+dependency.
+
+### R2.2 Sunday hint: additive cross overlay replaces bg-light
+
+`bg-light` sat at the bottom of a mutually-exclusive precedence (pivot > not-exists > Sunday), so
+the hint vanished exactly where most informative, and was nearly invisible anyway. Replaced by an
+**additive overlay**: spans (and the legend chip) get a `sunday` class whose `background-image`
+draws a centered upright cross (two linear-gradient bars) in semi-transparent liturgical red
+(`rgba(220, 53, 69, 0.30)`). Because `background-image` layers over `background-color`, the cross
+composes with beige/`bg-info`/`bg-warning` instead of competing. The background-color precedence
+reduces to pivot > not-exists. Tooltip unchanged. Excluded (striped) years carry no Sunday overlay.
+
+### R2.3 Legend
+
+The Sunday legend chip now demonstrates the cross overlay (`legend-chip sunday`) instead of
+`bg-light`; label unchanged.
