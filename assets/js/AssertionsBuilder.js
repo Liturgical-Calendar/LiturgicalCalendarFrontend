@@ -262,32 +262,28 @@ export class AssertionsBuilder {
     }
 
     /**
-     * Exclude a year from the test: record it in model.excludes (sorted,
-     * deduped) and drop its assertion. No-op if the year has no assertion.
+     * Exclude a year from the test by removing its assertion. Assertion
+     * absence is the single source of truth for year exclusion — model.excludes
+     * (a calendar-scope field, not a year list) is never mutated here.
+     * Chainable; no-op when the year has no assertion (including double-exclude).
      */
     excludeYear(year) {
         const y = Number(year);
         if (!this.model.assertions.some((a) => a.year === y)) return this;
-        const current = this.model.excludes ?? [];
-        if (!current.includes(y)) {
-            this.model.excludes = [...current, y].sort((a, b) => a - b);
-        }
         this.model.assertions = this.model.assertions.filter((a) => a.year !== y);
         return this;
     }
 
     /**
-     * Restore a previously excluded year, re-creating its assertion with the
-     * same rules generate() uses (pivot- and baseMonthDay-aware). excludes
-     * returns to null when the last exclusion is removed, so serialize()
-     * drops the key. No-op if the year is not excluded.
+     * Restore a year by creating its assertion with the same rules generate()
+     * uses (pivot- and baseMonthDay-aware). No-op when the year already has
+     * an assertion (assertion presence IS inclusion). Chainable. model.excludes
+     * is never mutated.
      */
     includeYear(year) {
         const y = Number(year);
-        const current = this.model.excludes ?? [];
-        if (!current.includes(y)) return this;
-        const remaining = current.filter((x) => x !== y);
-        this.model.excludes = remaining.length ? remaining : null;
+        // No-op if the year already has an assertion — assertion presence IS inclusion.
+        if (this.model.assertions.some((a) => a.year === y)) return this;
 
         let notExists = false;
         if (this.model.test_type === TestType.ExactCorrespondenceSince && this.model.year_since !== null) {

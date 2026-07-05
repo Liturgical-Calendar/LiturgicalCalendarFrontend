@@ -377,10 +377,10 @@ describe('excludeYear / includeYear', () => {
         return b;
     };
 
-    it('excludeYear removes the assertion and records the exclusion (sorted, deduped)', () => {
+    it('excludeYear removes the assertion; model.excludes stays null; chainable/dedup', () => {
         const b = build();
-        b.excludeYear(2025).excludeYear(2024).excludeYear(2025);
-        expect(b.model.excludes).toEqual([2024, 2025]);
+        b.excludeYear(2025).excludeYear(2024).excludeYear(2025); // second exclude of 2025 is a no-op
+        expect(b.model.excludes).toBe(null);
         expect(b.model.assertions.map((a) => a.year)).toEqual([2026]);
     });
 
@@ -391,7 +391,13 @@ describe('excludeYear / includeYear', () => {
         expect(b.model.assertions).toHaveLength(3);
     });
 
-    it('includeYear restores an exact assertion with expected_value from baseMonthDay', () => {
+    it('serialize() after excludeYear does not contain an excludes key (schema correctness)', () => {
+        const b = build();
+        b.excludeYear(2026);
+        expect('excludes' in b.serialize()).toBe(false);
+    });
+
+    it('includeYear restores an exact assertion with expected_value from baseMonthDay (exclude then include)', () => {
         const b = build();
         b.excludeYear(2025).includeYear(2025);
         expect(b.model.excludes).toBe(null);
@@ -401,12 +407,9 @@ describe('excludeYear / includeYear', () => {
         expect(b.model.assertions.map((x) => x.year)).toEqual([2024, 2025, 2026]);
     });
 
-    it('includeYear respects the since-pivot (restores eventNotExists before it)', () => {
+    it('includeYear respects the since-pivot (creates eventNotExists + "should not exist on" before pivot)', () => {
         const b = new AssertionsBuilder({ locale: 'en' });
-        b.setMeta({
-            event_key: event.event_key,
-            test_type: 'exactCorrespondenceSince',
-        });
+        b.setMeta({ event_key: event.event_key, test_type: 'exactCorrespondenceSince' });
         b.generate({ event, minYear: 2024, maxYear: 2026, pivotYear: 2026 });
         b.excludeYear(2024).includeYear(2024);
         const a = b.model.assertions.find((x) => x.year === 2024);
@@ -414,32 +417,51 @@ describe('excludeYear / includeYear', () => {
         expect(a.assertion).toContain('should not exist on');
     });
 
-    it('serialize emits excludes while excluded and drops the key after restore', () => {
+    it('includeYear is a no-op when the year already has an assertion', () => {
         const b = build();
-        b.excludeYear(2026);
-        expect(b.serialize().excludes).toEqual([2026]);
-        b.includeYear(2026);
-        expect('excludes' in b.serialize()).toBe(false);
-    });
-
-    it('includeYear is a no-op when the year is not excluded', () => {
-        const b = build();
-        b.includeYear(2025);
+        b.includeYear(2025); // 2025 already has an assertion — assertion presence IS inclusion
         expect(b.model.excludes).toBe(null);
         expect(b.model.assertions).toHaveLength(3);
     });
 
+    it('sparse-load: includeYear(2025) creates an assertion; model.excludes remains null; serialize has no excludes key', () => {
+        // Real-world case: source definitions like NativityJohnBaptistTest have
+        // assertions only for specific years (2022/2033/2044), every other year
+        // in the span is excluded by omission. model.excludes is never populated.
+        const b = new AssertionsBuilder({ locale: 'en' });
+        b.load({
+            name: 'SparseTest',
+            event_key: 'StIgnatiusOfLoyola',
+            description: "The Memorial of 'Saint Ignatius of Loyola' should fall on July 31",
+            test_type: 'exactCorrespondence',
+            assertions: [2022, 2033, 2044].map((year) => ({
+                year,
+                expected_value: `${year}-07-31T00:00:00+00:00`,
+                assert: 'eventExists AND hasExpectedDate',
+                assertion: "The Memorial of 'Saint Ignatius of Loyola' should fall on July 31",
+            })),
+        });
+        b.includeYear(2025);
+        expect(b.model.excludes).toBe(null);
+        const a = b.model.assertions.find((x) => x.year === 2025);
+        expect(a).not.toBeUndefined();
+        expect(a.assert).toBe('eventExists AND hasExpectedDate');
+        expect(a.expected_value).toBe('2025-07-31T00:00:00+00:00');
+        expect('excludes' in b.serialize()).toBe(false);
+    });
+
     it('generate skips excludedYears so regeneration preserves exclusions', () => {
-        // model-level guarantee behind the regenerate() wiring in admin-tests.js
+        // model-level guarantee behind regenerate() wiring; excludedYears are
+        // derived from asserted-span gaps (not model.excludes, which stays null).
         const b = build();
         b.excludeYear(2025);
         b.generate({
             event,
             minYear: 2024,
             maxYear: 2026,
-            excludedYears: b.model.excludes ?? [],
+            excludedYears: [2025], // derived from asserted span gaps, not model.excludes
         });
         expect(b.model.assertions.map((a) => a.year)).toEqual([2024, 2026]);
-        expect(b.model.excludes).toEqual([2025]);
+        expect(b.model.excludes).toBe(null);
     });
 });

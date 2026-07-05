@@ -138,7 +138,7 @@ test.describe('admin-tests year grid (stubbed)', () => {
         // variable type → hammer present; x always present; 2005-07-31 is a Sunday
         await expect(span2005.locator('.hammerYear')).toHaveCount(1);
         await expect(span2005.locator('.removeYear')).toHaveCount(1);
-        await expect(span2005).toHaveClass(/bg-light/);
+        await expect(span2005).toHaveClass(/sunday/);
         // exactCorrespondence type → hammer absent
         await page.locator('label[for="tt-exact"]').click();
         await expect(span2005.locator('.hammerYear')).toHaveCount(0);
@@ -173,6 +173,40 @@ test.describe('admin-tests year grid (stubbed)', () => {
         await expect(page.locator('.assertion-card[data-year="2005"]')).toHaveCount(1);
     });
 
+    test('sparse loaded test renders gap years striped and x works on asserted years', async ({ page }) => {
+        const sparse = {
+            litcal_tests: [{
+                name: 'SparseTest', event_key: 'StIgnatiusOfLoyola',
+                description: "The Memorial of 'Saint Ignatius of Loyola' should fall on July 31",
+                test_type: 'exactCorrespondence',
+                assertions: [2022, 2033, 2044].map((year) => ({
+                    year, expected_value: `${year}-07-31T00:00:00+00:00`,
+                    assert: 'eventExists AND hasExpectedDate',
+                    assertion: "The Memorial of 'Saint Ignatius of Loyola' should fall on July 31",
+                })),
+            }],
+        };
+        await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
+        // Register the sparse override AFTER stubEditor so it takes precedence
+        // (Playwright uses last-registered-first-matched for route handlers).
+        await page.route('**/tests', (r) => (r.request().method() === 'GET' ? r.fulfill({ json: sparse }) : r.continue()));
+        await page.goto('/admin-tests.php');
+        await page.locator('.editTestBtn[data-name="SparseTest"]').click();
+        await expect(page.locator('#testEditorModal')).toBeVisible();
+        // gap year renders striped, asserted year renders normally
+        await expect(page.locator('#yearGrid .testYearSpan.year-2025')).toHaveClass(/deleted/);
+        const span2033 = page.locator('#yearGrid .testYearSpan.year-2033');
+        await expect(span2033).not.toHaveClass(/deleted/);
+        // x-mark on an asserted year collapses it to the striped bar
+        await span2033.locator('.removeYear').dispatchEvent('click');
+        await expect(span2033).toHaveClass(/deleted/);
+        await expect(page.locator('.assertion-card[data-year="2033"]')).toHaveCount(0);
+        // clicking the striped gap year restores it
+        await page.locator('#yearGrid .testYearSpan.year-2025').dispatchEvent('click');
+        await expect(page.locator('#yearGrid .testYearSpan.year-2025')).not.toHaveClass(/deleted/);
+        await expect(page.locator('.assertion-card[data-year="2025"]')).toHaveCount(1);
+    });
+
     test('legend row is visible with all five chips', async ({ page }) => {
         await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
         await page.goto('/admin-tests.php');
@@ -182,5 +216,6 @@ test.describe('admin-tests year grid (stubbed)', () => {
         await expect(legend).toBeVisible();
         await expect(legend.locator('.legend-chip')).toHaveCount(5);
         await expect(legend.locator('.legend-chip.deleted')).toHaveCount(1);
+        await expect(legend.locator('.legend-chip.sunday')).toHaveCount(1);
     });
 });

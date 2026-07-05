@@ -82,3 +82,13 @@
     height: 1.25rem;
     border: none;
 }
+
+/* Sunday marker: additive upright cross drawn as a background-image so it
+   layers OVER the semantic background colors (beige/info/warning) instead of
+   competing with them in a precedence chain. */
+.year-grid .testYearSpan.sunday,
+.legend-chip.sunday {
+    background-image:
+        linear-gradient(to right, transparent 44%, rgba(220, 53, 69, 0.3) 44%, rgba(220, 53, 69, 0.3) 56%, transparent 56%),
+        linear-gradient(to bottom, transparent 44%, rgba(220, 53, 69, 0.3) 44%, rgba(220, 53, 69, 0.3) 56%, transparent 56%);
+}

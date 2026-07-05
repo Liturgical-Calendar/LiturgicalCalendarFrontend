@@ -296,7 +296,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const grid = document.getElementById('yearGrid');
         const { minYear, maxYear } = sliderYears();
         const tt = builder.model.test_type;
-        const excluded = new Set(builder.model.excludes ?? []);
+        // Excluded = assertion absence. The length guard prevents an all-striped
+        // grid in the create flow before the first generation.
+        const asserted = new Set(builder.model.assertions.map((a) => a.year));
         const notExists = new Set(
             builder.model.assertions
                 .filter((a) => a.assert === AssertType.EventNotExists)
@@ -314,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const span = document.createElement('span');
             span.className = `testYearSpan year-${y}`;
             span.dataset.year = String(y);
-            if (excluded.has(y)) {
+            if (builder.model.assertions.length > 0 && !asserted.has(y)) {
                 span.classList.add('deleted');
                 span.title = i18n.excludedRestore.replace('%s', String(y));
                 grid.appendChild(span);
@@ -337,13 +339,15 @@ document.addEventListener('DOMContentLoaded', () => {
             span.appendChild(xmark);
             const { title, sunday } = yearDateAttrs(y);
             if (title) span.title = title;
+            // Background-color precedence: pivot > not-exists. Sunday is an
+            // additive cross overlay (background-image) that composes over any
+            // background-color instead of competing in a precedence chain.
             if (y === pivot) {
                 span.classList.add('bg-info');
             } else if (notExists.has(y)) {
                 span.classList.add('bg-warning');
-            } else if (sunday) {
-                span.classList.add('bg-light');
             }
+            if (sunday) span.classList.add('sunday');
             grid.appendChild(span);
         }
     }
@@ -357,15 +361,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const pivot = (tt === TestType.ExactCorrespondenceSince || tt === TestType.ExactCorrespondenceUntil)
             ? minYear
             : null;
-        // Preserve exclusions when the event/type/slider changes; generate()
-        // skips excluded years, so without this every regeneration would
-        // silently restore them.
+        // Exclusions = assertion absence: derive excludedYears from gaps inside
+        // the asserted span so they survive event/type/slider changes. Years
+        // outside [lo, hi] are never added, so slider-widening auto-includes
+        // newly visible years.
+        const assertedYears = builder.model.assertions.map((a) => a.year);
+        const excludedYears = [];
+        if (assertedYears.length) {
+            const lo = Math.min(...assertedYears);
+            const hi = Math.max(...assertedYears);
+            const assertedSet = new Set(assertedYears);
+            for (let y = Math.max(minYear, lo); y <= Math.min(maxYear, hi); y++) {
+                if (!assertedSet.has(y)) excludedYears.push(y);
+            }
+        }
         builder.generate({
             event,
             minYear,
             maxYear,
             pivotYear: pivot,
-            excludedYears: builder.model.excludes ?? [],
+            excludedYears,
         });
         document.getElementById('testDescription').value = builder.model.description;
         document.getElementById('baseDate').value = event.month && event.day

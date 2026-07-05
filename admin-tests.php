@@ -211,7 +211,7 @@ if (!$isGlobalAdmin && !$hasTestEditor && !$isResourceAdmin) {
                             <div class="year-grid mt-2" id="yearGrid"></div>
                             <div class="d-flex flex-wrap align-items-center column-gap-3 row-gap-1 small text-muted mt-2" id="yearGridLegend">
                                 <span><span class="legend-chip me-1"></span><?php echo htmlspecialchars(_('included'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
-                                <span><span class="legend-chip bg-light me-1"></span><?php echo htmlspecialchars(_('falls on a Sunday'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
+                                <span><span class="legend-chip sunday me-1"></span><?php echo htmlspecialchars(_('falls on a Sunday'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
                                 <span><span class="legend-chip bg-info me-1"></span><?php echo htmlspecialchars(_('pivot year'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
                                 <span><span class="legend-chip bg-warning me-1"></span><?php echo htmlspecialchars(_('event not expected'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
                                 <span><span class="legend-chip deleted me-1"></span><?php echo htmlspecialchars(_('excluded — click to restore'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
