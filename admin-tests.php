@@ -320,7 +320,11 @@ if (!$isGlobalAdmin && !$hasTestEditor && !$isResourceAdmin) {
                 diocesanCalendar:    <?php echo json_encode(_('Diocesan Calendar')); ?>,
                 requiredFields:      <?php echo json_encode(_('Please fill in all required fields.')); ?>,
                 denied403:           <?php echo json_encode(_('You do not have permission to perform this action.')); ?>,
-                conflict409:         <?php echo json_encode(_('A test with that name already exists.')); ?>
+                conflict409:         <?php echo json_encode(_('A test with that name already exists.')); ?>,
+                setYear:             <?php echo json_encode(_('set year')); ?>,
+                removeYear:          <?php echo json_encode(_('remove')); ?>,
+                sundayInYear:        <?php echo json_encode(_('In the year %1$s, %2$s falls on a Sunday')); ?>,
+                excludedRestore:     <?php echo json_encode(_('%s excluded — click to restore')); ?>
             }
         };
     </script>

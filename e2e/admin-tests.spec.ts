@@ -121,3 +121,27 @@ test.describe('admin-tests delete (stubbed)', () => {
         await expect.poll(() => deleted).toBe(true);
     });
 });
+
+test.describe('admin-tests year grid (stubbed)', () => {
+    test('spans carry hammer/x icons and Sunday highlighting', async ({ page }) => {
+        await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
+        await page.goto('/admin-tests.php');
+        await page.locator('#createTestBtn').click();
+        await expect(page.locator('#testEditorModal')).toBeVisible();
+        // btn-check inputs use pointer-events:none; click the label, not the input
+        await page.locator('label[for="tt-variable"]').click();
+        await page.locator('#testEventKey').fill('StIgnatiusOfLoyola');
+        await page.locator('#testEventKey').dispatchEvent('change');
+
+        const span2005 = page.locator('#yearGrid .testYearSpan.year-2005');
+        await expect(span2005).toBeVisible();
+        // variable type → hammer present; x always present; 2005-07-31 is a Sunday
+        await expect(span2005.locator('.hammerYear')).toHaveCount(1);
+        await expect(span2005.locator('.removeYear')).toHaveCount(1);
+        await expect(span2005).toHaveClass(/bg-light/);
+        // exactCorrespondence type → hammer absent
+        await page.locator('label[for="tt-exact"]').click();
+        await expect(span2005.locator('.hammerYear')).toHaveCount(0);
+        await expect(span2005.locator('.removeYear')).toHaveCount(1);
+    });
+});

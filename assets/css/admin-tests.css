@@ -31,8 +31,34 @@
     user-select: none;
 }
 
+.year-grid .testYearSpan.deleted,
+.legend-chip.deleted {
+    background: repeating-linear-gradient(
+        45deg,
+        red,
+        red 5px,
+        white 8px,
+        white 12px
+    );
+    cursor: not-allowed;
+}
+
+/* The base .testYearSpan padding stays in effect, so the clickable area is
+   ~19px wide even though the visible stripe content is 3px (same as the
+   original, where the 3px width sat inside the span's 3px/5px padding). */
 .year-grid .testYearSpan.deleted {
-    opacity: 0.3;
+    width: 3px;
+    height: 32px;
+}
+
+.year-grid .testYearSpan .hammerYear,
+.year-grid .testYearSpan .removeYear {
+    cursor: pointer;
+}
+
+.year-grid .testYearSpan .hammerYear:hover,
+.year-grid .testYearSpan .removeYear:hover {
+    opacity: 1 !important;
 }
 
 .btn-xs {

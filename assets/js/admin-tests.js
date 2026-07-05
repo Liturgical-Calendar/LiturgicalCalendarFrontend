@@ -269,30 +269,82 @@ document.addEventListener('DOMContentLoaded', () => {
         return { minYear: Math.min(a, b), maxYear: Math.max(a, b) };
     }
 
+    /**
+     * Port of UnitTestInterface's computeYearDateAttrs: title + Sunday flag
+     * for the event's fixed date in the given year (empty when the event has
+     * no fixed month/day).
+     */
+    function yearDateAttrs(year) {
+        if (!builder.baseMonthDay) return { title: '', sunday: false };
+        const d = new Date(
+            Date.UTC(year, builder.baseMonthDay.month - 1, builder.baseMonthDay.day),
+        );
+        const sunday = d.getUTCDay() === 0;
+        const fmt = new Intl.DateTimeFormat(config.locale, {
+            dateStyle: 'long',
+            timeZone: 'UTC',
+        });
+        const title = sunday
+            ? i18n.sundayInYear
+                .replace('%1$s', String(year))
+                .replace('%2$s', fmt.format(d))
+            : fmt.format(d);
+        return { title, sunday };
+    }
+
     function renderYearGrid() {
         const grid = document.getElementById('yearGrid');
         const { minYear, maxYear } = sliderYears();
+        const tt = builder.model.test_type;
+        const excluded = new Set(builder.model.excludes ?? []);
+        const notExists = new Set(
+            builder.model.assertions
+                .filter((a) => a.assert === AssertType.EventNotExists)
+                .map((a) => a.year),
+        );
+        const pivot =
+            tt === TestType.ExactCorrespondenceSince
+                ? builder.model.year_since
+                : tt === TestType.ExactCorrespondenceUntil
+                    ? builder.model.year_until
+                    : null;
+        const showHammer = tt !== TestType.ExactCorrespondence;
         grid.innerHTML = '';
         for (let y = minYear; y <= maxYear; y++) {
             const span = document.createElement('span');
             span.className = `testYearSpan year-${y}`;
             span.dataset.year = String(y);
-            span.textContent = String(y);
+            if (excluded.has(y)) {
+                span.classList.add('deleted');
+                span.title = i18n.excludedRestore.replace('%s', String(y));
+                grid.appendChild(span);
+                continue;
+            }
+            if (showHammer) {
+                const hammer = document.createElement('i');
+                hammer.className = 'fas fa-hammer me-1 opacity-50 hammerYear';
+                hammer.setAttribute('role', 'button');
+                hammer.setAttribute('aria-hidden', 'true');
+                hammer.title = i18n.setYear;
+                span.appendChild(hammer);
+            }
+            span.appendChild(document.createTextNode(String(y)));
+            const xmark = document.createElement('i');
+            xmark.className = 'fas fa-circle-xmark ms-1 opacity-50 removeYear';
+            xmark.setAttribute('role', 'button');
+            xmark.setAttribute('aria-hidden', 'true');
+            xmark.title = i18n.removeYear;
+            span.appendChild(xmark);
+            const { title, sunday } = yearDateAttrs(y);
+            if (title) span.title = title;
+            if (y === pivot) {
+                span.classList.add('bg-info');
+            } else if (notExists.has(y)) {
+                span.classList.add('bg-warning');
+            } else if (sunday) {
+                span.classList.add('bg-light');
+            }
             grid.appendChild(span);
-        }
-        const pivot = builder.model.test_type === TestType.ExactCorrespondenceSince
-            ? builder.model.year_since
-            : builder.model.test_type === TestType.ExactCorrespondenceUntil
-                ? builder.model.year_until
-                : null;
-        if (pivot !== null) {
-            grid.querySelectorAll('.testYearSpan').forEach((span) => {
-                const y = Number(span.dataset.year);
-                if (y === pivot) span.classList.add('bg-info');
-                else if (builder.model.test_type === TestType.ExactCorrespondenceSince ? y < pivot : y > pivot) {
-                    span.classList.add('bg-warning');
-                }
-            });
         }
     }
 
