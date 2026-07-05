@@ -564,6 +564,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 slider.style.setProperty('--text-value-a', `"${lo}"`);
                 slider.style.setProperty('--value-b', String(hi));
                 slider.style.setProperty('--text-value-b', `"${hi}"`);
+                // Restore the base date from the loaded assertions (spec R3):
+                // load() derived baseMonthDay from the first dated assertion —
+                // authoritative over the event catalog's month/day. The year
+                // component is presentational only; the field's change handler
+                // expands month/day across every asserted year.
+                document.getElementById('baseDate').value = builder.baseMonthDay
+                    ? `${String(lo).padStart(4, '0')}-${String(builder.baseMonthDay.month).padStart(2, '0')}-${String(builder.baseMonthDay.day).padStart(2, '0')}`
+                    : '';
                 renderYearGrid();
             }
             loadEvents(test.applies_to)

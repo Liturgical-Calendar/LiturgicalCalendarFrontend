@@ -193,6 +193,9 @@ test.describe('admin-tests year grid (stubbed)', () => {
         await page.goto('/admin-tests.php');
         await page.locator('.editTestBtn[data-name="SparseTest"]').click();
         await expect(page.locator('#testEditorModal')).toBeVisible();
+        // base date restored from the loaded assertions (minAssertedYear-MM-DD,
+        // spec R3): first dated assertion is 2022-07-31
+        await expect(page.locator('#baseDate')).toHaveValue('2022-07-31');
         // gap year renders striped, asserted year renders normally
         await expect(page.locator('#yearGrid .testYearSpan.year-2025')).toHaveClass(/deleted/);
         const span2033 = page.locator('#yearGrid .testYearSpan.year-2033');
