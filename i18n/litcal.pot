@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-27 09:50+0000\n"
+"POT-Creation-Date: 2026-07-06 13:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -242,7 +242,7 @@ msgid "Example usage of the API"
 msgstr ""
 
 #. translators: accordion section header - examples of web-based calendar displays
-#: usage.php:51 layout/header.php:319
+#: usage.php:51 layout/header.php:329
 msgid "Web calendar"
 msgstr ""
 
@@ -293,7 +293,7 @@ msgid "View FullCalendar (messages first)"
 msgstr ""
 
 #. translators: accordion section header - subscribing to the calendar via iCal/ICS URL
-#: usage.php:125 layout/header.php:323
+#: usage.php:125 layout/header.php:333
 msgid "Calendar subscription"
 msgstr ""
 
@@ -460,7 +460,7 @@ msgid ""
 msgstr ""
 
 #. translators: accordion section header - Easter date calculation tool
-#: usage.php:287 layout/header.php:327
+#: usage.php:287 layout/header.php:337
 msgid "Dates of Easter"
 msgstr ""
 
@@ -480,7 +480,7 @@ msgid "Calculate the Dates of Easter"
 msgstr ""
 
 #. translators: accordion section header - daily liturgy information and apps
-#: usage.php:323 layout/header.php:331
+#: usage.php:323 layout/header.php:341
 msgid "Liturgy of the Day"
 msgstr ""
 
@@ -1124,7 +1124,7 @@ msgstr ""
 msgid "About us"
 msgstr ""
 
-#: layout/header.php:71
+#: layout/header.php:71 layout/header.php:295
 msgid "Accuracy Tests"
 msgstr ""
 
@@ -1220,19 +1220,23 @@ msgstr ""
 msgid "Diocesan"
 msgstr ""
 
-#: layout/header.php:296
+#: layout/header.php:299
+msgid "Test Definitions"
+msgstr ""
+
+#: layout/header.php:306
 msgid "Back to Website"
 msgstr ""
 
-#: layout/header.php:303
+#: layout/header.php:313
 msgid "Home"
 msgstr ""
 
-#: layout/header.php:311
+#: layout/header.php:321
 msgid "Documentation"
 msgstr ""
 
-#: layout/header.php:315
+#: layout/header.php:325
 msgid "Examples of Usage"
 msgstr ""
 
@@ -2348,7 +2352,7 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: admin-permissions.php:435 admin-applications.php:245 admin-dashboard.php:161
+#: admin-permissions.php:435 admin-applications.php:245 admin-dashboard.php:172
 #: admin-role-requests.php:254
 msgid "Review"
 msgstr ""
@@ -2588,7 +2592,7 @@ msgid ""
 "calendars."
 msgstr ""
 
-#: admin-dashboard.php:65 admin-dashboard.php:146
+#: admin-dashboard.php:65 admin-dashboard.php:147 admin-dashboard.php:157
 msgid "Administration"
 msgstr ""
 
@@ -2625,11 +2629,11 @@ msgstr ""
 msgid "Manage fine-grained resource permissions"
 msgstr ""
 
-#: admin-dashboard.php:155
+#: admin-dashboard.php:166
 msgid "Access Requests to Review"
 msgstr ""
 
-#: admin-dashboard.php:157
+#: admin-dashboard.php:168
 msgid "Review and approve access requests for the resources you administer"
 msgstr ""
 
