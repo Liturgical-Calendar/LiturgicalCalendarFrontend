@@ -122,16 +122,25 @@ test.describe('admin-tests delete (stubbed)', () => {
     });
 });
 
+/**
+ * Shared create-modal boilerplate for the year-grid tests: stub routes as a
+ * global admin, open the editor, pick the variable test type, and select an
+ * event so the grid regenerates.
+ */
+async function openVariableEditor(page: Page, eventKey: string): Promise<void> {
+    await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
+    await page.goto('/admin-tests.php');
+    await page.locator('#createTestBtn').click();
+    await expect(page.locator('#testEditorModal')).toBeVisible();
+    // btn-check inputs use pointer-events:none; click the label, not the input
+    await page.locator('label[for="tt-variable"]').click();
+    await page.locator('#testEventKey').fill(eventKey);
+    await page.locator('#testEventKey').dispatchEvent('change');
+}
+
 test.describe('admin-tests year grid (stubbed)', () => {
     test('spans carry hammer/x icons and Sunday highlighting', async ({ page }) => {
-        await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
-        await page.goto('/admin-tests.php');
-        await page.locator('#createTestBtn').click();
-        await expect(page.locator('#testEditorModal')).toBeVisible();
-        // btn-check inputs use pointer-events:none; click the label, not the input
-        await page.locator('label[for="tt-variable"]').click();
-        await page.locator('#testEventKey').fill('StIgnatiusOfLoyola');
-        await page.locator('#testEventKey').dispatchEvent('change');
+        await openVariableEditor(page, 'StIgnatiusOfLoyola');
 
         const span2005 = page.locator('#yearGrid .testYearSpan.year-2005');
         await expect(span2005).toBeVisible();
@@ -158,14 +167,7 @@ test.describe('admin-tests year grid (stubbed)', () => {
     });
 
     test('exclude collapses to the striped bar and restore brings the card back', async ({ page }) => {
-        await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
-        await page.goto('/admin-tests.php');
-        await page.locator('#createTestBtn').click();
-        await expect(page.locator('#testEditorModal')).toBeVisible();
-        // btn-check inputs use pointer-events:none; click the label, not the input
-        await page.locator('label[for="tt-variable"]').click();
-        await page.locator('#testEventKey').fill('StIgnatiusOfLoyola');
-        await page.locator('#testEventKey').dispatchEvent('change');
+        await openVariableEditor(page, 'StIgnatiusOfLoyola');
 
         const span2005 = page.locator('#yearGrid .testYearSpan.year-2005');
         await expect(span2005).toBeVisible();
