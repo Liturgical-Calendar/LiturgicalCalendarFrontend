@@ -328,7 +328,7 @@ if (!$isGlobalAdmin && !$hasTestEditor && !$isResourceAdmin) {
                 requiredFields:      <?php echo json_encode(_('Please fill in all required fields.')); ?>,
                 denied403:           <?php echo json_encode(_('You do not have permission to perform this action.')); ?>,
                 conflict409:         <?php echo json_encode(_('A test with that name already exists.')); ?>,
-                setYear:             <?php echo json_encode(_('set year')); ?>,
+                setYear:             <?php echo json_encode(_('set pivot year')); ?>,
                 toggleAssertion:     <?php echo json_encode(_('toggle assertion')); ?>,
                 removeYear:          <?php echo json_encode(_('remove')); ?>,
                 sundayInYear:        <?php echo json_encode(_('In the year %1$s, %2$s falls on a Sunday')); ?>,
