@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-27 09:50+0000\n"
+"POT-Creation-Date: 2026-07-06 13:09+0000\n"
 "PO-Revision-Date: 2026-06-26 20:52+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
@@ -289,7 +289,7 @@ msgid "Example usage of the API"
 msgstr "Exemplo de uso da API"
 
 #. translators: accordion section header - examples of web-based calendar displays
-#: usage.php:51 layout/header.php:319
+#: usage.php:51 layout/header.php:329
 msgid "Web calendar"
 msgstr "Calendário web"
 
@@ -346,7 +346,7 @@ msgid "View FullCalendar (messages first)"
 msgstr "Ver FullCalendar (mensagens primeiro)"
 
 #. translators: accordion section header - subscribing to the calendar via iCal/ICS URL
-#: usage.php:125 layout/header.php:323
+#: usage.php:125 layout/header.php:333
 msgid "Calendar subscription"
 msgstr "Assinatura de calendário"
 
@@ -548,7 +548,7 @@ msgstr ""
 "são um pouco mais \"embelezadas\" para o Outlook."
 
 #. translators: accordion section header - Easter date calculation tool
-#: usage.php:287 layout/header.php:327
+#: usage.php:287 layout/header.php:337
 msgid "Dates of Easter"
 msgstr "Datas da Páscoa"
 
@@ -568,7 +568,7 @@ msgid "Calculate the Dates of Easter"
 msgstr "Calcular as Datas da Páscoa"
 
 #. translators: accordion section header - daily liturgy information and apps
-#: usage.php:323 layout/header.php:331
+#: usage.php:323 layout/header.php:341
 msgid "Liturgy of the Day"
 msgstr "Liturgia do Dia"
 
@@ -1285,7 +1285,7 @@ msgstr "Traduções"
 msgid "About us"
 msgstr "Sobre nós"
 
-#: layout/header.php:71
+#: layout/header.php:71 layout/header.php:295
 msgid "Accuracy Tests"
 msgstr "Testes de precisão"
 
@@ -1381,19 +1381,25 @@ msgstr "Nacional"
 msgid "Diocesan"
 msgstr "Diocesano"
 
-#: layout/header.php:296
+#: layout/header.php:299
+#, fuzzy
+#| msgid "Test Definition"
+msgid "Test Definitions"
+msgstr "Definição de Teste"
+
+#: layout/header.php:306
 msgid "Back to Website"
 msgstr "Voltar ao Site"
 
-#: layout/header.php:303
+#: layout/header.php:313
 msgid "Home"
 msgstr "Início"
 
-#: layout/header.php:311
+#: layout/header.php:321
 msgid "Documentation"
 msgstr "Documentação"
 
-#: layout/header.php:315
+#: layout/header.php:325
 msgid "Examples of Usage"
 msgstr "Exemplos de Uso"
 
@@ -2584,7 +2590,7 @@ msgstr "Credenciais"
 msgid "Date"
 msgstr "Data"
 
-#: admin-permissions.php:435 admin-applications.php:245 admin-dashboard.php:161
+#: admin-permissions.php:435 admin-applications.php:245 admin-dashboard.php:172
 #: admin-role-requests.php:254
 msgid "Review"
 msgstr "Revisão"
@@ -2845,7 +2851,7 @@ msgstr ""
 "Gerenciar dados do calendário litúrgico, informações do Missal Romano e "
 "calendários regionais."
 
-#: admin-dashboard.php:65 admin-dashboard.php:146
+#: admin-dashboard.php:65 admin-dashboard.php:147 admin-dashboard.php:157
 msgid "Administration"
 msgstr "Administração"
 
@@ -2882,11 +2888,11 @@ msgstr "Revisar e aprovar aplicativos de desenvolvedores"
 msgid "Manage fine-grained resource permissions"
 msgstr "Gerenciar permissões granulares de recursos"
 
-#: admin-dashboard.php:155
+#: admin-dashboard.php:166
 msgid "Access Requests to Review"
 msgstr "Solicitações de acesso a analisar"
 
-#: admin-dashboard.php:157
+#: admin-dashboard.php:168
 msgid "Review and approve access requests for the resources you administer"
 msgstr "Analise e aprove as solicitações de acesso aos recursos que administra"
 
