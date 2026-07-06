@@ -209,7 +209,7 @@ if (!$isGlobalAdmin && !$hasTestEditor && !$isResourceAdmin) {
                                 <div class="range-slider__progress"></div>
                             </div>
                             <div class="year-grid mt-2" id="yearGrid"></div>
-                            <div class="d-flex flex-wrap align-items-center column-gap-3 row-gap-1 small text-muted mt-2" id="yearGridLegend">
+                            <div class="d-flex flex-wrap align-items-center gap-3 small text-muted mt-2" id="yearGridLegend">
                                 <span><span class="legend-chip me-1"></span><?php echo htmlspecialchars(_('included'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
                                 <span><span class="legend-chip sunday me-1"></span><?php echo htmlspecialchars(_('falls on a Sunday'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
                                 <span><span class="legend-chip bg-info me-1"></span><?php echo htmlspecialchars(_('pivot year'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
@@ -329,6 +329,7 @@ if (!$isGlobalAdmin && !$hasTestEditor && !$isResourceAdmin) {
                 denied403:           <?php echo json_encode(_('You do not have permission to perform this action.')); ?>,
                 conflict409:         <?php echo json_encode(_('A test with that name already exists.')); ?>,
                 setYear:             <?php echo json_encode(_('set year')); ?>,
+                toggleAssertion:     <?php echo json_encode(_('toggle assertion')); ?>,
                 removeYear:          <?php echo json_encode(_('remove')); ?>,
                 sundayInYear:        <?php echo json_encode(_('In the year %1$s, %2$s falls on a Sunday')); ?>,
                 excludedRestore:     <?php echo json_encode(_('%s excluded — click to restore')); ?>

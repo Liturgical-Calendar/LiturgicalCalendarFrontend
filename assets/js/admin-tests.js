@@ -323,12 +323,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 continue;
             }
             if (showHammer) {
-                const hammer = document.createElement('i');
-                hammer.className = 'fas fa-hammer me-1 opacity-50 hammerYear';
-                hammer.setAttribute('role', 'button');
-                hammer.setAttribute('aria-hidden', 'true');
-                hammer.title = i18n.setYear;
-                span.appendChild(hammer);
+                // Icon semantics per test type (spec R5): Since/Until = hammer
+                // ("set the pivot year"); Variable = fa-repeat ("toggle
+                // assertion", matching the per-year cards' toggle button). The
+                // behavioral hook class (hammerYear) is shared — only the
+                // visual icon and title differ.
+                const isVariable = tt === TestType.VariableCorrespondence;
+                const actionIcon = document.createElement('i');
+                actionIcon.className = `fas ${isVariable ? 'fa-repeat' : 'fa-hammer'} me-1 opacity-50 hammerYear`;
+                actionIcon.setAttribute('role', 'button');
+                actionIcon.setAttribute('aria-hidden', 'true');
+                actionIcon.title = isVariable ? i18n.toggleAssertion : i18n.setYear;
+                span.appendChild(actionIcon);
             }
             span.appendChild(document.createTextNode(String(y)));
             const xmark = document.createElement('i');

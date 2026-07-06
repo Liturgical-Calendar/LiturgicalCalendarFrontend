@@ -135,11 +135,19 @@ test.describe('admin-tests year grid (stubbed)', () => {
 
         const span2005 = page.locator('#yearGrid .testYearSpan.year-2005');
         await expect(span2005).toBeVisible();
-        // variable type → hammer present; x always present; 2005-07-31 is a Sunday
+        // variable type → action icon present as fa-repeat ("toggle assertion",
+        // same semantic as the card toggle — spec R5); x always present;
+        // 2005-07-31 is a Sunday
         await expect(span2005.locator('.hammerYear')).toHaveCount(1);
+        await expect(span2005.locator('.hammerYear.fa-repeat')).toHaveCount(1);
+        await expect(span2005.locator('.hammerYear.fa-hammer')).toHaveCount(0);
         await expect(span2005.locator('.removeYear')).toHaveCount(1);
         await expect(span2005).toHaveClass(/sunday/);
-        // exactCorrespondence type → hammer absent
+        // since type → the icon is the pivot hammer (spec R5)
+        await page.locator('label[for="tt-since"]').click();
+        await expect(span2005.locator('.hammerYear.fa-hammer')).toHaveCount(1);
+        await expect(span2005.locator('.hammerYear.fa-repeat')).toHaveCount(0);
+        // exactCorrespondence type → no action icon at all
         await page.locator('label[for="tt-exact"]').click();
         await expect(span2005.locator('.hammerYear')).toHaveCount(0);
         await expect(span2005.locator('.removeYear')).toHaveCount(1);

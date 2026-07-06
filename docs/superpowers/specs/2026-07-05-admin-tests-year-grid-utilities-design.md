@@ -231,3 +231,15 @@ invariant _assertions are always year-ordered_ (`generate()` already produces so
 `includeYear()` maintains it). This also repairs the R3.1 mode-derivation tiebreak, whose
 "earliest seen = earliest year" assumption was false on unsorted input. Serialization order
 follows the model, so re-saving a grouped legacy definition normalizes it — an intended cleanup.
+
+## Revision 5 (2026-07-06) — icon semantics per test type; legend spacing
+
+- **Grid action icon by test type:** the hammer's meaning is _set the pivot year_ — it only
+  applies to `exactCorrespondenceSince`/`Until`. For `variableCorrespondence` the action is
+  _toggle the assertion_, which the per-year cards already express with `fa-repeat` — the grid
+  now uses `fa-repeat` there too (new i18n title `toggleAssertion`), deviating deliberately from
+  the old UI (hammer everywhere) to preserve semantic consistency. The behavioral hook class
+  (`hammerYear`) and the click handler are unchanged — only the visual icon and title vary.
+- **Legend spacing:** the legend used `column-gap-3 row-gap-1`, which do not exist in the
+  Bootstrap 5.2.x bundled by startbootstrap-sb-admin@7.0.7 (they arrived in 5.3) — the chips
+  rendered clumped. Replaced with `gap-3`, which the bundle provides for flex containers.
