@@ -35,7 +35,7 @@
     "markdownlint-cli2": "^0.22.1",
     "prettier": "^3.8.4",
     "typescript": "^6.0.3",
-    "vitest": "^2.1.8"
+    "vitest": "^3.2.6"
   },
   "resolutions": {
     "js-yaml": "^4.2.0"
