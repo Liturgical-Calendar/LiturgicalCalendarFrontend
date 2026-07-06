@@ -77,9 +77,14 @@ export class AssertionsBuilder {
         this.model.excludes = def.excludes ?? null;
         this.model.year_since = def.year_since ?? null;
         this.model.year_until = def.year_until ?? null;
-        this.model.assertions = (def.assertions ?? []).map(
-            (a) => new Assertion(a.year, a.expected_value, a.assert, a.assertion, a.comment ?? null)
-        );
+        // Normalize to year order (spec R4): the corpus does not guarantee it
+        // (some definitions group assertions by assert type), and the model
+        // invariant is "assertions are always year-ordered" — generate()
+        // produces sorted output and includeYear() maintains it. This also
+        // keeps #deriveBaseMonthDay's earliest-year tiebreak honest.
+        this.model.assertions = (def.assertions ?? [])
+            .map((a) => new Assertion(a.year, a.expected_value, a.assert, a.assertion, a.comment ?? null))
+            .sort((a, b) => a.year - b.year);
         this.baseMonthDay = AssertionsBuilder.#deriveBaseMonthDay(this.model.assertions);
         return this;
     }

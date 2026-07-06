@@ -220,3 +220,14 @@ Rule:
 - The field **remains editable** as the escape hatch for custom pre-fill dates (and for
   all-transfer tests, where restoring toggled years at the transferred date requires setting it
   manually — old-UI-equivalent behavior, now documented).
+
+## Revision 4 (2026-07-06) — assertions normalized to year order at load
+
+Field finding: per-year cards appeared grouped by assert type. Cause: the corpus does not
+guarantee assertion order — e.g. `StJaneFrancesDeChantalTest` stores all `eventExists` assertions
+first, then the `eventNotExists` block — and `load()` preserved definition order (the old UI's
+Isotope layout masked this). Rule: `load()` sorts assertions by year, establishing the model
+invariant _assertions are always year-ordered_ (`generate()` already produces sorted output and
+`includeYear()` maintains it). This also repairs the R3.1 mode-derivation tiebreak, whose
+"earliest seen = earliest year" assumption was false on unsorted input. Serialization order
+follows the model, so re-saving a grouped legacy definition normalizes it — an intended cleanup.

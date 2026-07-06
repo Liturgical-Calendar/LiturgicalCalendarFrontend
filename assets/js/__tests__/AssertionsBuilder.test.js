@@ -132,6 +132,26 @@ describe('load + serialize round-trip', () => {
         expect(b.baseMonthDay).toEqual({ month: 6, day: 24 });
     });
 
+    it('load() sorts assertions by year (corpus may group by assert type)', () => {
+        // spec R4: e.g. StJaneFrancesDeChantalTest stores all eventExists
+        // assertions first, then the eventNotExists block — the model must
+        // normalize to year order so cards render chronologically.
+        const grouped = {
+            name: 'GroupedTest',
+            event_key: 'StJaneFrancesDeChantal',
+            description: 'x',
+            test_type: 'variableCorrespondence',
+            assertions: [
+                { year: 2001, expected_value: '2001-12-12T00:00:00+00:00', assert: 'eventExists AND hasExpectedDate', assertion: 'x' },
+                { year: 2010, expected_value: '2010-12-12T00:00:00+00:00', assert: 'eventExists AND hasExpectedDate', assertion: 'x' },
+                { year: 1971, expected_value: null, assert: 'eventNotExists', assertion: 'x' },
+                { year: 2005, expected_value: null, assert: 'eventNotExists', assertion: 'x' },
+            ],
+        };
+        const b = new AssertionsBuilder().load(grouped);
+        expect(b.model.assertions.map((a) => a.year)).toEqual([1971, 2001, 2005, 2010]);
+    });
+
     it('baseMonthDay mode tiebreak goes to the earliest year', () => {
         const tied = {
             name: 'TiedTest',
