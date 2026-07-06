@@ -125,12 +125,30 @@ export class AssertionsBuilder {
         return out;
     }
 
+    /**
+     * Mode (most frequent month/day) of the dated assertions, earliest-year
+     * tiebreak (spec R3.1). Transfer years (e.g. a June 24 solemnity
+     * anticipated to June 23) are outliers, so the majority reflects the
+     * canonical date better than the first assertion. The UI further prefers
+     * the event catalog's month/day when available; this is the fallback.
+     */
     static #deriveBaseMonthDay(assertions) {
-        const first = assertions.find((a) => a.expected_value);
-        if (!first) return null;
-        const d = new Date(first.expected_value);
-        if (Number.isNaN(d.getTime())) return null;
-        return { month: d.getUTCMonth() + 1, day: d.getUTCDate() };
+        const counts = new Map();
+        for (const a of assertions) {
+            if (!a.expected_value) continue;
+            const d = new Date(a.expected_value);
+            if (Number.isNaN(d.getTime())) continue;
+            const key = `${d.getUTCMonth() + 1}-${d.getUTCDate()}`;
+            const entry = counts.get(key);
+            if (entry) entry.count += 1;
+            else counts.set(key, { count: 1, month: d.getUTCMonth() + 1, day: d.getUTCDate() });
+        }
+        let best = null;
+        for (const entry of counts.values()) {
+            // strict > keeps the earliest-seen (earliest year) entry on ties
+            if (!best || entry.count > best.count) best = entry;
+        }
+        return best ? { month: best.month, day: best.day } : null;
     }
 
     /** Build description text from an event, e.g. "The Memorial of 'X' should fall on July 31". */

@@ -113,6 +113,39 @@ describe('load + serialize round-trip', () => {
         const b = new AssertionsBuilder().load(sampleExact);
         expect(b.baseMonthDay).toEqual({ month: 7, day: 31 });
     });
+
+    it('derives baseMonthDay as the MODE of dated assertions (transfer years are outliers)', () => {
+        // spec R3.1: a test mixing canonical (June 24) and transferred (June 23)
+        // dates must derive the canonical majority, not the first assertion.
+        const mixed = {
+            name: 'MixedTest',
+            event_key: 'NativityJohnBaptist',
+            description: "The Solemnity 'Nativity of John the Baptist' should fall on June 24",
+            test_type: 'exactCorrespondence',
+            assertions: [
+                { year: 2022, expected_value: '2022-06-23T00:00:00+00:00', assert: 'eventExists AND hasExpectedDate', assertion: 'x' },
+                { year: 2023, expected_value: '2023-06-24T00:00:00+00:00', assert: 'eventExists AND hasExpectedDate', assertion: 'x' },
+                { year: 2024, expected_value: '2024-06-24T00:00:00+00:00', assert: 'eventExists AND hasExpectedDate', assertion: 'x' },
+            ],
+        };
+        const b = new AssertionsBuilder().load(mixed);
+        expect(b.baseMonthDay).toEqual({ month: 6, day: 24 });
+    });
+
+    it('baseMonthDay mode tiebreak goes to the earliest year', () => {
+        const tied = {
+            name: 'TiedTest',
+            event_key: 'SomeEvent',
+            description: 'x',
+            test_type: 'exactCorrespondence',
+            assertions: [
+                { year: 2022, expected_value: '2022-06-23T00:00:00+00:00', assert: 'eventExists AND hasExpectedDate', assertion: 'x' },
+                { year: 2023, expected_value: '2023-06-24T00:00:00+00:00', assert: 'eventExists AND hasExpectedDate', assertion: 'x' },
+            ],
+        };
+        const b = new AssertionsBuilder().load(tied);
+        expect(b.baseMonthDay).toEqual({ month: 6, day: 23 });
+    });
 });
 
 const event = { event_key: 'StIgnatiusOfLoyola', name: 'Saint Ignatius of Loyola', grade: 3, grade_lcl: 'Memorial', month: 7, day: 31 };

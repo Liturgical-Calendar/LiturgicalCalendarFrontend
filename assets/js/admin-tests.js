@@ -564,18 +564,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 slider.style.setProperty('--text-value-a', `"${lo}"`);
                 slider.style.setProperty('--value-b', String(hi));
                 slider.style.setProperty('--text-value-b', `"${hi}"`);
-                // Restore the base date from the loaded assertions (spec R3):
-                // load() derived baseMonthDay from the first dated assertion —
-                // authoritative over the event catalog's month/day. The year
-                // component is presentational only; the field's change handler
-                // expands month/day across every asserted year.
+                // Provisional base date (spec R3/R3.1): load() derived
+                // baseMonthDay as the MODE of the dated assertions — shown
+                // until the events catalog resolves below, which is the
+                // authoritative source (the canonical date; assertions hold
+                // resolved, possibly transferred dates). The year component is
+                // presentational only; the field's change handler expands
+                // month/day across every asserted year.
                 document.getElementById('baseDate').value = builder.baseMonthDay
                     ? `${String(lo).padStart(4, '0')}-${String(builder.baseMonthDay.month).padStart(2, '0')}-${String(builder.baseMonthDay.day).padStart(2, '0')}`
                     : '';
                 renderYearGrid();
             }
             loadEvents(test.applies_to)
-                .then(() => builder.render(assertionsContainer))
+                .then(() => {
+                    // Catalog override (spec R3.1): the base date is a Sunday-
+                    // coincidence assist on the event's CANONICAL month/day, so
+                    // the catalog wins over the assertions-mode fallback when it
+                    // knows the event's fixed date. Set the field value and
+                    // builder.baseMonthDay directly — dispatching 'change' here
+                    // would rewrite every assertion's expected_value.
+                    const catalogEvent = events.find((e) => e.event_key === test.event_key);
+                    if (catalogEvent && catalogEvent.month && catalogEvent.day && years.length) {
+                        const lo = Math.min(...years);
+                        builder.baseMonthDay = { month: Number(catalogEvent.month), day: Number(catalogEvent.day) };
+                        document.getElementById('baseDate').value =
+                            `${String(lo).padStart(4, '0')}-${String(catalogEvent.month).padStart(2, '0')}-${String(catalogEvent.day).padStart(2, '0')}`;
+                        renderYearGrid(); // Sunday crosses re-derive from the canonical date
+                    }
+                    builder.render(assertionsContainer);
+                })
                 .catch((err) => showModalAlert(editorModalEl, 'danger', err.message ?? i18n.failedToLoad));
         } else {
             builder.load({ name: '', event_key: '', description: '', test_type: TestType.ExactCorrespondence, assertions: [] });

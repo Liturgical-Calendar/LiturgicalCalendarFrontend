@@ -179,8 +179,11 @@ test.describe('admin-tests year grid (stubbed)', () => {
                 name: 'SparseTest', event_key: 'StIgnatiusOfLoyola',
                 description: "The Memorial of 'Saint Ignatius of Loyola' should fall on July 31",
                 test_type: 'exactCorrespondence',
+                // deliberately transferred dates (July 30) that DISAGREE with the
+                // catalog's canonical July 31 — the base date must show the catalog
+                // value (spec R3.1: catalog wins over assertions-mode fallback)
                 assertions: [2022, 2033, 2044].map((year) => ({
-                    year, expected_value: `${year}-07-31T00:00:00+00:00`,
+                    year, expected_value: `${year}-07-30T00:00:00+00:00`,
                     assert: 'eventExists AND hasExpectedDate',
                     assertion: "The Memorial of 'Saint Ignatius of Loyola' should fall on July 31",
                 })),
@@ -193,8 +196,8 @@ test.describe('admin-tests year grid (stubbed)', () => {
         await page.goto('/admin-tests.php');
         await page.locator('.editTestBtn[data-name="SparseTest"]').click();
         await expect(page.locator('#testEditorModal')).toBeVisible();
-        // base date restored from the loaded assertions (minAssertedYear-MM-DD,
-        // spec R3): first dated assertion is 2022-07-31
+        // base date restored as minAssertedYear + the CATALOG's canonical
+        // month/day (spec R3.1) — July 31 wins over the assertions' July 30
         await expect(page.locator('#baseDate')).toHaveValue('2022-07-31');
         // gap year renders striped, asserted year renders normally
         await expect(page.locator('#yearGrid .testYearSpan.year-2025')).toHaveClass(/deleted/);
