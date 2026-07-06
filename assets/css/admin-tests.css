@@ -1,0 +1,112 @@
+@import 'multi-range-slider.css';
+
+/* Per-year assertion cards: native CSS grid (replaces Isotope fitRows). */
+.assertions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.5rem;
+}
+
+.assertion-card {
+    border-radius: 0.25rem;
+    overflow: hidden;
+}
+
+.assertion-card .assertionText {
+    resize: vertical;
+}
+
+/* Year-range overview grid (Sundays / excluded / pivot shading). */
+.year-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.year-grid .testYearSpan {
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.25rem;
+    cursor: default;
+    user-select: none;
+}
+
+.year-grid .testYearSpan.deleted,
+.legend-chip.deleted {
+    background: repeating-linear-gradient(
+        45deg,
+        red,
+        red 5px,
+        white 8px,
+        white 12px
+    );
+    cursor: not-allowed;
+}
+
+/* The base .testYearSpan padding stays in effect, so the clickable area is
+   ~19px wide even though the visible stripe content is 3px (same as the
+   original, where the 3px width sat inside the span's 3px/5px padding). */
+.year-grid .testYearSpan.deleted {
+    width: 3px;
+    height: 32px;
+}
+
+.year-grid .testYearSpan .hammerYear,
+.year-grid .testYearSpan .removeYear {
+    cursor: pointer;
+}
+
+.year-grid .testYearSpan .hammerYear:hover,
+.year-grid .testYearSpan .removeYear:hover {
+    opacity: 1 !important;
+}
+
+/* Pivot hammer (Since/Until only — spec R6): the pivot is an EXCLUSIVE state
+   (one per test), so the affordance reveals on span hover instead of sitting
+   on all thirty spans. Opacity (not display) keeps span geometry stable and
+   leaves the icon a functional tap target on touch devices. !important beats
+   Bootstrap's opacity-50 utility. The variable-type fa-repeat icon is per-year
+   state and stays always visible. */
+.year-grid .testYearSpan .hammerYear.fa-hammer {
+    opacity: 0 !important;
+}
+
+.year-grid .testYearSpan:hover .hammerYear.fa-hammer {
+    opacity: 0.5 !important;
+}
+
+.year-grid .testYearSpan .hammerYear.fa-hammer:hover {
+    opacity: 1 !important;
+}
+
+.btn-xs {
+    padding: 0.1rem 0.3rem;
+    font-size: 0.75rem;
+    line-height: 1.2;
+}
+
+/* Legend chips reuse the exact grid classes so legend and grid cannot drift. */
+.legend-chip {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.25rem;
+    vertical-align: text-bottom;
+}
+
+.legend-chip.deleted {
+    width: 5px;
+    height: 1.25rem;
+    border: none;
+}
+
+/* Sunday marker: additive upright cross drawn as a background-image so it
+   layers OVER the semantic background colors (beige/info/warning) instead of
+   competing with them in a precedence chain. */
+.year-grid .testYearSpan.sunday,
+.legend-chip.sunday {
+    background-image:
+        linear-gradient(to right, transparent 44%, rgba(220, 53, 69, 0.3) 44%, rgba(220, 53, 69, 0.3) 56%, transparent 56%),
+        linear-gradient(to bottom, transparent 44%, rgba(220, 53, 69, 0.3) 44%, rgba(220, 53, 69, 0.3) 56%, transparent 56%);
+}

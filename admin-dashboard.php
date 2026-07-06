@@ -137,6 +137,17 @@ if (!$hasCalendarRole) {
                 </div>
             </div>
         </div>
+        <?php include('./includes/admin-tests-card.php'); ?>
+    </div>
+    <?php endif; ?>
+
+    <?php if (!$isAdmin && $authHelper->hasRole('test_editor')) : ?>
+    <hr class="my-4">
+    <h4 class="mb-3 text-black" style="--bs-text-opacity: .6;">
+        <i class="fas fa-user-shield me-2"></i><?php echo htmlspecialchars(_('Administration'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+    </h4>
+    <div class="row">
+        <?php include('./includes/admin-tests-card.php'); ?>
     </div>
     <?php endif; ?>
 
