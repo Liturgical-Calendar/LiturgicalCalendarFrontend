@@ -24,21 +24,83 @@ services:
     build:
       context: ../LiturgicalCalendarAPI
     environment:
-      # Raise rate limit for development — the default 10 req/hour is too low
-      # for the healthcheck probe (fires every 10s)
-      UNAUTHENTICATED_RATE_LIMIT: 1000
+      # Shared JWT secret from .env — overrides the placeholder baked into the
+      # image's seeded .env.local so that host-side consumers of the API's JWT
+      # cookies (e.g. UnitTestInterface JwtAuth via .env.development) validate them.
+      JWT_SECRET: ${JWT_SECRET}
 
   litcal-frontend:
     build:
       context: .
+    environment:
+      # Shared JWT secret so the frontend's AuthHelper legacy-JWT fallback can
+      # validate access tokens issued by the API in development mode (ADMIN_USERNAME
+      # / ADMIN_PASSWORD_HASH not set → API falls back to HS256 with this secret).
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ALGORITHM: HS256
+    # Bind-mount source tree (read-only) so JS/CSS/PHP edits are picked up
+    # without a docker compose build. Mounts are intentionally explicit —
+    # mounting the whole project root would shadow the container's vendor/,
+    # cache/, logs/, and .env.local. All :ro so the container can never
+    # modify host files. Add new top-level pages or directories here if you
+    # create them.
+    # NOTE: single-FILE mounts pin the file's inode — editors/git operations
+    # that replace a mounted file leave the container serving the old content
+    # until the container is recreated
+    # (docker compose up -d --force-recreate litcal-frontend).
+    volumes:
+      - ./assets:/var/www/html/assets:ro
+      # Stacked sub-mount: the assets parent is :ro to keep the container from
+      # writing to host source files, but assets/json/ is a runtime cache
+      # (GitHub release info — see includes/common.php) that the container
+      # MUST write to. The host dir is gitignored, so writes are harmless.
+      - ./assets/json:/var/www/html/assets/json:rw
+      - ./auth:/var/www/html/auth:ro
+      - ./dist:/var/www/html/dist:ro
+      - ./i18n:/var/www/html/i18n:ro
+      - ./includes:/var/www/html/includes:ro
+      - ./layout:/var/www/html/layout:ro
+      - ./src:/var/www/html/src:ro
+      - ./about.php:/var/www/html/about.php:ro
+      - ./admin-applications.php:/var/www/html/admin-applications.php:ro
+      - ./admin-dashboard.php:/var/www/html/admin-dashboard.php:ro
+      - ./admin-permissions.php:/var/www/html/admin-permissions.php:ro
+      - ./admin-role-requests.php:/var/www/html/admin-role-requests.php:ro
+      - ./admin-users.php:/var/www/html/admin-users.php:ro
+      - ./admin-tests.php:/var/www/html/admin-tests.php:ro
+      - ./decrees.php:/var/www/html/decrees.php:ro
+      - ./developer-dashboard.php:/var/www/html/developer-dashboard.php:ro
+      - ./easter.php:/var/www/html/easter.php:ro
+      - ./examples.php:/var/www/html/examples.php:ro
+      - ./extending.php:/var/www/html/extending.php:ro
+      - ./index.php:/var/www/html/index.php:ro
+      - ./liturgyOfAnyDay.php:/var/www/html/liturgyOfAnyDay.php:ro
+      - ./missals-editor.php:/var/www/html/missals-editor.php:ro
+      - ./permission-requests.php:/var/www/html/permission-requests.php:ro
+      - ./request-access.php:/var/www/html/request-access.php:ro
+      - ./temporale.php:/var/www/html/temporale.php:ro
+      - ./translations.php:/var/www/html/translations.php:ro
+      - ./usage.php:/var/www/html/usage.php:ro
+      - ./user-profile.php:/var/www/html/user-profile.php:ro
 
   litcal-tests:
     build:
       context: ../UnitTestInterface
+    environment:
+      # Shared JWT secret from .env (same value as litcal-api) so the test UI's
+      # PHP-side JwtAuth can validate API-issued cookies (results.php etc.).
+      JWT_SECRET: ${JWT_SECRET}
+      # Server-side PHP -> API calls (admin.php) must route over the docker
+      # network; 'localhost' inside the container is its own loopback. Same
+      # pattern as litcal-frontend's API_INTERNAL_URL.
+      API_INTERNAL_URL: http://litcal-api:8000
     # Live-reload: mount source read-only so edits reflect without rebuilding the
     # image (UnitTestInterface has no build step). vendor/ is deliberately NOT
     # mounted so the image's `composer install` is used. Add new top-level pages
     # or directories here if you create them.
+    # NOTE: single-FILE mounts pin the file's inode — git operations that replace
+    # a mounted file leave the container serving the old content until the
+    # container is recreated (docker compose up -d --force-recreate litcal-tests).
     volumes:
       - ../UnitTestInterface/src:/var/www/html/src:ro
       - ../UnitTestInterface/includes:/var/www/html/includes:ro
@@ -49,3 +111,7 @@ services:
       - ../UnitTestInterface/index.php:/var/www/html/index.php:ro
       - ../UnitTestInterface/admin.php:/var/www/html/admin.php:ro
       - ../UnitTestInterface/resources.php:/var/www/html/resources.php:ro
+      - ../UnitTestInterface/results.php:/var/www/html/results.php:ro
+      # Persisted test runs — shared with the host checkout (rw: the endpoint
+      # saves/prunes run files here; the host dir is gitignored).
+      - ../UnitTestInterface/results:/var/www/html/results:rw
