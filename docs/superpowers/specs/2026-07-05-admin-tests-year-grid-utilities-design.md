@@ -197,3 +197,26 @@ UnitTestInterface shows June 24). The base date's lifecycle is now defined expli
   month/day, or leaves it empty for movable feasts (the user sets it manually).
 - **Precedence:** on edit, the loaded assertions' dates are authoritative over the event
   catalog's month/day (definitions may deliberately differ, and the catalog fetch is async).
+
+### R3.1 Correction (2026-07-06): base date derives from the CATALOG, not the assertions
+
+R3's "first dated assertion" rule was wrong in intent. The base date's purpose (user-clarified) is
+a **Sunday-coincidence assist on the canonical date** — "in which of these years does the event's
+canonical date fall on a Sunday" — plus a pre-fill helper for the assertion cards. The assertions
+hold _resolved_ dates (possibly transferred, e.g. NativityJohnBaptistTest asserts June 23 in
+anticipation years), so deriving the base from them inverts input and output. The old UI reads the
+event catalog's `data-month`/`data-day` (June 24) for exactly this reason.
+
+Rule:
+
+- **Edit path:** once the events fetch resolves, `#baseDate` = `minAssertedYear-MM-DD` from the
+  catalog entry for the test's `event_key`. Fallback when the event is absent from the catalog or
+  has no fixed date: the **mode** (most frequent month/day) of the dated assertions,
+  earliest-year tiebreak — strictly better than the old UI's `-01-01` fallback. Empty only when
+  neither source yields a date. `builder.baseMonthDay` is set to the same value **without**
+  firing the field's change handler (which would rewrite every assertion's date).
+- **Model:** `load()`'s internal fallback derivation upgrades from "first dated assertion" to the
+  same mode rule.
+- The field **remains editable** as the escape hatch for custom pre-fill dates (and for
+  all-transfer tests, where restoring toggled years at the transferred date requires setting it
+  manually — old-UI-equivalent behavior, now documented).
