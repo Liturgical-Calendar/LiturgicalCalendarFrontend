@@ -243,3 +243,13 @@ follows the model, so re-saving a grouped legacy definition normalizes it — an
 - **Legend spacing:** the legend used `column-gap-3 row-gap-1`, which do not exist in the
   Bootstrap 5.2.x bundled by startbootstrap-sb-admin@7.0.7 (they arrived in 5.3) — the chips
   rendered clumped. Replaced with `gap-3`, which the bundle provides for flex containers.
+
+## Revision 6 (2026-07-06) — pivot hammer revealed on hover
+
+The hammer's action is per-year ("make this year the pivot") but the state it sets is exclusive —
+one pivot per test — so rendering a permanent hammer on every span implies thirty independent
+states. The pivot hammer (`fa-hammer`, Since/Until only) is now invisible (`opacity: 0`) until the
+year span is hovered (`0.5`, then `1` on the icon itself). The variable-type `fa-repeat` icon
+stays always visible: toggling IS per-year state, matching the always-visible card toggle. Opacity
+(not `display`) preserves span geometry (no grid reflow on hover) and keeps the icon a functional
+tap target on touch devices; `!important` is required to beat Bootstrap's `opacity-50` utility.

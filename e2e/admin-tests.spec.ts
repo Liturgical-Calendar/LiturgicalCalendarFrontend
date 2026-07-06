@@ -143,10 +143,14 @@ test.describe('admin-tests year grid (stubbed)', () => {
         await expect(span2005.locator('.hammerYear.fa-hammer')).toHaveCount(0);
         await expect(span2005.locator('.removeYear')).toHaveCount(1);
         await expect(span2005).toHaveClass(/sunday/);
-        // since type → the icon is the pivot hammer (spec R5)
+        // since type → the icon is the pivot hammer (spec R5), hidden until
+        // the span is hovered (spec R6: pivot is an exclusive state)
         await page.locator('label[for="tt-since"]').click();
         await expect(span2005.locator('.hammerYear.fa-hammer')).toHaveCount(1);
         await expect(span2005.locator('.hammerYear.fa-repeat')).toHaveCount(0);
+        await expect(span2005.locator('.hammerYear.fa-hammer')).toHaveCSS('opacity', '0');
+        await span2005.hover();
+        await expect(span2005.locator('.hammerYear.fa-hammer')).toHaveCSS('opacity', '0.5');
         // exactCorrespondence type → no action icon at all
         await page.locator('label[for="tt-exact"]').click();
         await expect(span2005.locator('.hammerYear')).toHaveCount(0);

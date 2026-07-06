@@ -61,6 +61,24 @@
     opacity: 1 !important;
 }
 
+/* Pivot hammer (Since/Until only — spec R6): the pivot is an EXCLUSIVE state
+   (one per test), so the affordance reveals on span hover instead of sitting
+   on all thirty spans. Opacity (not display) keeps span geometry stable and
+   leaves the icon a functional tap target on touch devices. !important beats
+   Bootstrap's opacity-50 utility. The variable-type fa-repeat icon is per-year
+   state and stays always visible. */
+.year-grid .testYearSpan .hammerYear.fa-hammer {
+    opacity: 0 !important;
+}
+
+.year-grid .testYearSpan:hover .hammerYear.fa-hammer {
+    opacity: 0.5 !important;
+}
+
+.year-grid .testYearSpan .hammerYear.fa-hammer:hover {
+    opacity: 1 !important;
+}
+
 .btn-xs {
     padding: 0.1rem 0.3rem;
     font-size: 0.75rem;
