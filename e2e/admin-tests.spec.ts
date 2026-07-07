@@ -277,6 +277,19 @@ test.describe('admin-tests year grid (stubbed)', () => {
         await expect(editBtn).toBeEnabled();
     });
 
+    test('toggling a per-year card assert updates the year chip styling', async ({ page }) => {
+        await openVariableEditor(page, 'StIgnatiusOfLoyola');
+        const chip2005 = page.locator('#yearGrid .testYearSpan.year-2005');
+        // Exact assertion → "event expected" (no not-expected warning background).
+        await expect(chip2005).not.toHaveClass(/bg-warning/);
+        // Toggle the CARD's assert to eventNotExists → the chip must reflect it.
+        await page.locator('.assertion-card[data-year="2005"] .toggleAssert').dispatchEvent('click');
+        await expect(chip2005).toHaveClass(/bg-warning/);
+        // Toggle back to eventExists → the warning background clears.
+        await page.locator('.assertion-card[data-year="2005"] .toggleAssert').dispatchEvent('click');
+        await expect(chip2005).not.toHaveClass(/bg-warning/);
+    });
+
     test('exclude collapses to the striped bar and restore brings the card back', async ({ page }) => {
         await openVariableEditor(page, 'StIgnatiusOfLoyola');
 

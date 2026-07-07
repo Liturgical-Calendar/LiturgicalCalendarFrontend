@@ -422,6 +422,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (ev.target.closest('.toggleAssert')) {
             builder.toggleAssert(year);
             builder.render(assertionsContainer);
+            // The year chip's "event (not) expected" styling derives from the
+            // assertion's assert type, so re-render the grid to keep it in sync.
+            renderYearGrid();
         } else if (ev.target.closest('.comment')) {
             document.getElementById('commentYear').value = String(year);
             const a = builder.model.assertions.find((x) => x.year === year);
