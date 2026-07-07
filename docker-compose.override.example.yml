@@ -28,6 +28,21 @@ services:
       # image's seeded .env.local so that host-side consumers of the API's JWT
       # cookies (e.g. UnitTestInterface JwtAuth via .env.development) validate them.
       JWT_SECRET: ${JWT_SECRET}
+    # Live-reload the API source so PHP edits reflect without rebuilding the
+    # image. Explicit dir mounts (not the whole repo root) so vendor/, cache/,
+    # logs/, engineCache/ and the seeded .env.local stay as the image built them.
+    volumes:
+      # Code dirs the API never writes to → :ro. vendor/ is deliberately NOT
+      # mounted so the image's `composer install` (optimized autoloader) is used;
+      # adding a NEW class file may need a `composer dump-autoload` in-container.
+      - ../LiturgicalCalendarAPI/src:/var/www/html/src:ro
+      - ../LiturgicalCalendarAPI/public:/var/www/html/public:ro
+      # jsondata is :rw, NOT :ro. The API PERSISTS PUTed test definitions to
+      # jsondata/tests/<name>.json (TestsHandler::file_put_contents) and other
+      # source-data writes here; a :ro mount would fail those writes with a
+      # read-only-filesystem error. :rw lets writes land in the host repo (so
+      # authored tests can be committed) and reflects source-data edits live.
+      - ../LiturgicalCalendarAPI/jsondata:/var/www/html/jsondata:rw
 
   litcal-frontend:
     build:
@@ -61,6 +76,17 @@ services:
       - ./includes:/var/www/html/includes:ro
       - ./layout:/var/www/html/layout:ro
       - ./src:/var/www/html/src:ro
+      # The examples live in a separate repo, symlinked locally as the gitignored
+      # examples/ -> ../examples (absent from the image AND the mounts above).
+      # Mount that repo directly so examples.php's examples/* assets resolve —
+      # otherwise they 404 and are served as HTML, which breaks the JS example's
+      # module script (MIME error) and leaves the PHP example include empty.
+      # php/cache + php/logs are :rw carve-outs the PHP example writes to.
+      # (The PHP example additionally needs its own repo to honor API_INTERNAL_URL
+      # to reach the API server-side from inside the container.)
+      - ../examples:/var/www/html/examples:ro
+      - ../examples/php/cache:/var/www/html/examples/php/cache:rw
+      - ../examples/php/logs:/var/www/html/examples/php/logs:rw
       - ./about.php:/var/www/html/about.php:ro
       - ./admin-applications.php:/var/www/html/admin-applications.php:ro
       - ./admin-dashboard.php:/var/www/html/admin-dashboard.php:ro
