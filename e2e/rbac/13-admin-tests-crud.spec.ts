@@ -38,8 +38,10 @@ import { oidcLogin } from './support/seed';
  *  already references `national_calendar_test:IT`, keeping harness coverage consistent. */
 const NATION          = 'IT';
 
-/** Test name satisfying the API schema: `^(?:[a-z_]+?_){0,1}[A-Z][a-zA-Z1-9]+[0-9]{0,2}(?:_vigil)?Test$` */
-const TEST_NAME       = 'PlaywrightScopedNationalTest';
+/** Derived test name. The editor computes name = event_key + 'Test' (it is never
+ *  typed), so this MUST equal `${EVENT_KEY}Test`. Also satisfies the API schema
+ *  `^(?:[a-z_]+?_){0,1}[A-Z][a-zA-Z1-9]+[0-9]{0,2}(?:_vigil)?Test$`. */
+const TEST_NAME       = 'StIgnatiusLoyolaTest';
 
 /** Event key present in the General Roman Calendar (and therefore in every national
  *  calendar that extends it). Avoids having to seed national-specific events.
@@ -157,13 +159,12 @@ test.describe('admin-tests CRUD (real RBAC)', () => {
             // Open the create modal.
             await tei.page.locator('#createTestBtn').click();
             await tei.page.locator('#tt-exact').check({ force: true });
-            await tei.page.locator('#testName').fill(TEST_NAME);
 
-            // Select national_calendar scope. syncScopeIdField() asynchronously mounts
-            // a CalendarSelect with id="testScopeId" — wait for it before selecting.
-            await tei.page.locator('#testScopeType').selectOption('national_calendar');
-            await expect(tei.page.locator('#testScopeId')).toBeVisible();
-            await tei.page.locator('#testScopeId').selectOption(NATION);
+            // Scope is fixed for a single-scope editor: it renders as read-only static
+            // text (National Calendar: IT), pre-set — there is no scope-type/scope-id
+            // picker to choose, and no Name field (the name is derived).
+            await expect(tei.page.locator('#testScopeStatic')).toContainText(NATION);
+            await expect(tei.page.locator('#testName')).toHaveCount(0);
 
             // Fill the event key and dispatch the change event (triggers datalist reload).
             await tei.page.locator('#testEventKey').fill(EVENT_KEY);
@@ -171,8 +172,10 @@ test.describe('admin-tests CRUD (real RBAC)', () => {
 
             // The editor auto-fills the description once the event key matches the
             // loaded /events catalog — assert it BEFORE saving so a key/catalog
-            // mismatch fails here (the true cause) rather than at the row check.
+            // mismatch fails here (the true cause) rather than at the row check. The
+            // derived name (event_key + 'Test') is shown read-only under the field.
             await expect(tei.page.locator('#testDescription')).not.toHaveValue('');
+            await expect(tei.page.locator('#derivedTestName')).toContainText(TEST_NAME);
 
             // Save → expect the new row to appear in the table.
             await tei.page.locator('#saveTestBtn').click();
