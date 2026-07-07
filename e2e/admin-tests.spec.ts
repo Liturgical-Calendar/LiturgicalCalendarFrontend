@@ -259,6 +259,24 @@ test.describe('admin-tests year grid (stubbed)', () => {
         await expect(card2005Text).not.toHaveValue(/July 31/);
     });
 
+    test('toggling a dateless event assertion to Exact enables the date editor', async ({ page }) => {
+        await stub(page, { is_global_admin: true, editor: [], admin: [] });
+        // Event catalog whose event has NO fixed month/day (a movable feast).
+        await page.route('**/events**', (r: Route) => r.fulfill({ json: { litcal_events: [
+            { event_key: 'MovableFeastX', name: 'Movable Feast X', grade: 4, grade_lcl: 'Feast' },
+        ] } }));
+        await page.goto('/admin-tests.php');
+        await page.locator('#createTestBtn').click();
+        await expect(page.locator('#testEditorModal')).toBeVisible();
+        await page.locator('label[for="tt-variable"]').click();
+        await page.locator('#testEventKey').fill('MovableFeastX');
+        await page.locator('#testEventKey').dispatchEvent('change');
+        const editBtn = page.locator('.assertion-card[data-year="2005"] .editDate');
+        await expect(editBtn).toBeDisabled();
+        await page.locator('.assertion-card[data-year="2005"] .toggleAssert').dispatchEvent('click');
+        await expect(editBtn).toBeEnabled();
+    });
+
     test('exclude collapses to the striped bar and restore brings the card back', async ({ page }) => {
         await openVariableEditor(page, 'StIgnatiusOfLoyola');
 

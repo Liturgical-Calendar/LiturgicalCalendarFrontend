@@ -101,6 +101,25 @@ describe('rebaseDate', () => {
     });
 });
 
+describe('render date-editor enablement', () => {
+    it('enables the date editor for eventExists assertions (even value-less) and disables it for eventNotExists', () => {
+        const b = new AssertionsBuilder({ locale: 'en-US' });
+        b.model.assertions = [
+            // Dated assertion with no value yet (e.g. toggled to Exact for a
+            // movable feast) — the date editor must still be enabled.
+            new Assertion(2024, null, AssertType.EventTypeExact, 'x'),
+            new Assertion(2025, '2025-07-31T00:00:00+00:00', AssertType.EventTypeExact, 'x'),
+            new Assertion(2026, null, AssertType.EventNotExists, 'x'),
+        ];
+        const container = document.createElement('div');
+        b.render(container);
+        const editButtons = container.querySelectorAll('.assertion-card .editDate');
+        expect(editButtons[0].disabled).toBe(false); // Exact, no value → enabled
+        expect(editButtons[1].disabled).toBe(false); // Exact, valued → enabled
+        expect(editButtons[2].disabled).toBe(true);  // NotExists → disabled
+    });
+});
+
 describe('load + serialize round-trip', () => {
     it('round-trips an exactCorrespondence test (applies_to + comment preserved)', () => {
         const out = new AssertionsBuilder().load(sampleExact).serialize();

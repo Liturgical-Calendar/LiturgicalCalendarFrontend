@@ -420,8 +420,11 @@ export class AssertionsBuilder {
             dateVal.textContent = this.#formatDate(a.expected_value);
             const editBtn = document.createElement('button');
             editBtn.type = 'button';
-            editBtn.className = `btn btn-xs editDate ms-1${a.expected_value ? ' btn-danger' : ' btn-secondary disabled'}`;
-            editBtn.disabled = !a.expected_value;
+            // Enable date editing for any dated (eventExists) assertion, even when
+            // it has no value yet — e.g. toggled to Exact for a movable feast whose
+            // base date isn't set. Only eventNotExists (no date) disables it.
+            editBtn.className = `btn btn-xs editDate ms-1${notExists ? ' btn-secondary disabled' : ' btn-danger'}`;
+            editBtn.disabled = notExists;
             editBtn.innerHTML = '<i class="fas fa-pen-to-square" aria-hidden="true"></i>';
             dateRow.append(dateLabel, dateVal, editBtn);
             card.appendChild(dateRow);
