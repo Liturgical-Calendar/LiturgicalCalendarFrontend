@@ -478,6 +478,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         builder.render(assertionsContainer);
+        // The year-grid chips derive their Sunday overlay/title from
+        // baseMonthDay (via yearDateAttrs), so re-render the grid to recompute
+        // which years land on a Sunday for the new base date.
+        renderYearGrid();
     });
 
     // Year-grid interactions (ported from UnitTestInterface, state-first):
