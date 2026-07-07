@@ -27,14 +27,14 @@ $RowActionTitle = [
 $apiClient = new ApiClient($i18n->LOCALE);
 
 try {
-    $decreesData   = $apiClient->fetchJsonWithKey($apiConfig->decreesUrl, 'litcal_decrees');
+    $decreesData   = $apiClient->fetchJsonWithKey($apiConfig->toInternal($apiConfig->decreesUrl), 'litcal_decrees');
     $LitCalDecrees = $decreesData['litcal_decrees'];
 } catch (\RuntimeException $e) {
     die('Error fetching decrees from API: ' . $e->getMessage());
 }
 
 try {
-    $eventsData                = $apiClient->fetchJsonWithKey($apiConfig->eventsUrl, 'litcal_events');
+    $eventsData                = $apiClient->fetchJsonWithKey($apiConfig->toInternal($apiConfig->eventsUrl), 'litcal_events');
     $LiturgicalEventCollection = $eventsData['litcal_events'];
 } catch (\RuntimeException $e) {
     die('Error fetching events from API: ' . $e->getMessage());

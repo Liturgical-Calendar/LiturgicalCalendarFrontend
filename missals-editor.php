@@ -37,7 +37,7 @@ $messages = array_merge($messages, [
 $apiClient = new ApiClient($i18n->LOCALE);
 
 try {
-    $MissalData = $apiClient->fetchJson($apiConfig->missalsUrl . '/EDITIO_TYPICA_1970');
+    $MissalData = $apiClient->fetchJson($apiConfig->toInternal($apiConfig->missalsUrl) . '/EDITIO_TYPICA_1970');
 } catch (\RuntimeException $e) {
     die('Error fetching missals from API: ' . $e->getMessage());
 }
@@ -51,7 +51,7 @@ if (empty($MissalData) || !is_array($firstMissalRecord)) {
 $thh = array_values(array_filter(array_keys($firstMissalRecord), fn($key) => $key !== 'calendar'));
 
 try {
-    $eventsData                = $apiClient->fetchJsonWithKey($apiConfig->eventsUrl, 'litcal_events');
+    $eventsData                = $apiClient->fetchJsonWithKey($apiConfig->toInternal($apiConfig->eventsUrl), 'litcal_events');
     $LiturgicalEventCollection = $eventsData['litcal_events'];
 } catch (\RuntimeException $e) {
     die('Error fetching events from API: ' . $e->getMessage());
