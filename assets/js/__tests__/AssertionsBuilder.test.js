@@ -70,6 +70,56 @@ const sampleUntil = {
     ],
 };
 
+describe('rebaseDate', () => {
+    it('re-anchors baseMonthDay, description, dates, and per-year text', () => {
+        const b = new AssertionsBuilder({ locale: 'en-US' }).load(sampleExact);
+        b.rebaseDate({ month: 8, day: 6 });
+        expect(b.baseMonthDay).toEqual({ month: 8, day: 6 });
+        expect(b.model.description).toBe("The Memorial of 'Saint Ignatius of Loyola' should fall on August 6");
+        b.model.assertions.forEach((a) => {
+            expect(a.expected_value).toBe(`${a.year}-08-06T00:00:00+00:00`);
+            expect(a.assertion).toBe("The Memorial of 'Saint Ignatius of Loyola' should fall on August 6");
+        });
+    });
+
+    it('rewrites not-exists assertions to the new date but leaves them value-less', () => {
+        const b = new AssertionsBuilder({ locale: 'en-US' }).load(sampleSince);
+        b.rebaseDate({ month: 8, day: 6 });
+        const notExists = b.model.assertions.find((a) => a.assert === AssertType.EventNotExists);
+        expect(notExists.expected_value).toBeNull();
+        expect(notExists.assertion).toBe("The FEAST of 'Some Feast' should not exist on August 6");
+        const exists = b.model.assertions.find((a) => a.assert === AssertType.EventTypeExact);
+        expect(exists.expected_value).toBe('2026-08-06T00:00:00+00:00');
+        expect(exists.assertion).toBe("The FEAST of 'Some Feast' should fall on August 6");
+    });
+
+    it('ignores an incomplete month/day', () => {
+        const b = new AssertionsBuilder({ locale: 'en-US' }).load(sampleExact);
+        const before = b.serialize();
+        b.rebaseDate({ month: 8 });
+        expect(b.serialize()).toEqual(before);
+    });
+});
+
+describe('render date-editor enablement', () => {
+    it('enables the date editor for eventExists assertions (even value-less) and disables it for eventNotExists', () => {
+        const b = new AssertionsBuilder({ locale: 'en-US' });
+        b.model.assertions = [
+            // Dated assertion with no value yet (e.g. toggled to Exact for a
+            // movable feast) — the date editor must still be enabled.
+            new Assertion(2024, null, AssertType.EventTypeExact, 'x'),
+            new Assertion(2025, '2025-07-31T00:00:00+00:00', AssertType.EventTypeExact, 'x'),
+            new Assertion(2026, null, AssertType.EventNotExists, 'x'),
+        ];
+        const container = document.createElement('div');
+        b.render(container);
+        const editButtons = container.querySelectorAll('.assertion-card .editDate');
+        expect(editButtons[0].disabled).toBe(false); // Exact, no value → enabled
+        expect(editButtons[1].disabled).toBe(false); // Exact, valued → enabled
+        expect(editButtons[2].disabled).toBe(true);  // NotExists → disabled
+    });
+});
+
 describe('load + serialize round-trip', () => {
     it('round-trips an exactCorrespondence test (applies_to + comment preserved)', () => {
         const out = new AssertionsBuilder().load(sampleExact).serialize();

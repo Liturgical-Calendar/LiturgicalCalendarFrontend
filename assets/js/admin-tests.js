@@ -396,6 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderYearGrid();
     }
 
+    document.getElementById('testEventKey').addEventListener('input', updateDerivedName);
     document.getElementById('testEventKey').addEventListener('change', regenerate);
     document.querySelectorAll('input[name="testType"]').forEach((el) => el.addEventListener('change', regenerate));
     document.getElementById('lowerRange').addEventListener('change', regenerate);
@@ -421,6 +422,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (ev.target.closest('.toggleAssert')) {
             builder.toggleAssert(year);
             builder.render(assertionsContainer);
+            // The year chip's "event (not) expected" styling derives from the
+            // assertion's assert type, so re-render the grid to keep it in sync.
+            renderYearGrid();
         } else if (ev.target.closest('.comment')) {
             document.getElementById('commentYear').value = String(year);
             const a = builder.model.assertions.find((x) => x.year === year);
@@ -467,16 +471,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const v = ev.target.value; // YYYY-MM-DD
         if (!v) return;
         const [, m, d] = v.split('-').map(Number);
-        builder.baseMonthDay = { month: m, day: d };
-        builder.model.assertions.forEach((a) => {
-            if (a.assert === AssertType.EventTypeExact) {
-                builder.setExpectedDate(
-                    a.year,
-                    `${String(a.year).padStart(4, '0')}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}T00:00:00+00:00`,
-                );
-            }
-        });
+        // Re-anchor the model to the new base date: the expected dates, the
+        // suggested description, and every per-year assertion's suggested text
+        // all follow from the base month/day.
+        builder.rebaseDate({ month: m, day: d });
+        document.getElementById('testDescription').value = builder.model.description;
         builder.render(assertionsContainer);
+        // The year-grid chips derive their Sunday overlay/title from baseMonthDay
+        // (via yearDateAttrs), so re-render the grid too.
+        renderYearGrid();
     });
 
     // Year-grid interactions (ported from UnitTestInterface, state-first):
@@ -523,6 +526,116 @@ document.addEventListener('DOMContentLoaded', () => {
             sel.appendTo(mount);
         }
     }
+
+    // ---- Deterministic name + scope-constrained controls --------------------
+    // Convention (LitCalTest.json): a test's name is its event_key + 'Test'.
+    const TEST_NAME_RE = /^(?:[a-z_]+?_){0,1}[A-Z][a-zA-Z1-9]+[0-9]{0,2}(?:_vigil)?Test$/;
+
+    function derivedName() {
+        const ev = document.getElementById('testEventKey').value.trim();
+        return ev ? `${ev}Test` : '';
+    }
+    function updateDerivedName() {
+        const name = derivedName();
+        document.getElementById('derivedTestName').textContent =
+            name ? `${i18n.testNameLabel} ${name}` : '';
+    }
+
+    function scopeChoiceLabel(type, id) {
+        if (type === 'national_calendar') return `${i18n.nationalCalendar}: ${id}`;
+        if (type === 'diocesan_calendar') return `${i18n.diocesanCalendar}: ${id}`;
+        return i18n.generalRomanCalendar;
+    }
+
+    /** Deduped scopes the current non-admin user may author tests for. */
+    function authorizedScopeChoices() {
+        const seen = new Set();
+        const choices = [];
+        [...(state.scopes.editor || []), ...(state.scopes.admin || [])].forEach((s) => {
+            const key = `${s.object_type}:${s.object_id}`;
+            if (seen.has(key)) return;
+            seen.add(key);
+            const type = s.object_type === 'diocesan_calendar_test' ? 'diocesan_calendar'
+                : s.object_type === 'national_calendar_test' ? 'national_calendar'
+                    : 'general_roman_calendar';
+            choices.push({ type, id: s.object_id });
+        });
+        return choices;
+    }
+
+    // Configure the scope UI to one of three modes and guarantee that afterwards
+    // #testScopeType (value) and, for scoped types, #testScopeId (value) reflect
+    // the selection, so selectedScope() keeps working unchanged:
+    //   locked (edit)   → static text, scope pinned to the test's own scope
+    //   global admin    → full picker (type select + CalendarSelect)
+    //   one authorized  → static text, pinned to that single scope
+    //   many authorized → a select limited to those scopes
+    async function renderScopeControl(locked) {
+        const typeSel = document.getElementById('testScopeType');
+        const mount = document.getElementById('testScopeIdMount');
+        const staticEl = document.getElementById('testScopeStatic');
+        mount.innerHTML = '';
+        staticEl.textContent = '';
+        staticEl.classList.add('d-none');
+
+        const pin = (type, id) => {
+            typeSel.value = type;
+            typeSel.classList.add('d-none');
+            typeSel.disabled = true;
+            staticEl.textContent = scopeChoiceLabel(type, id);
+            staticEl.classList.remove('d-none');
+            if (type !== 'general_roman_calendar' && id) {
+                const hid = document.createElement('input');
+                hid.type = 'hidden';
+                hid.id = 'testScopeId';
+                hid.value = id;
+                mount.appendChild(hid);
+            }
+        };
+
+        if (locked) { pin(locked.type, locked.id); return; }
+
+        if (state.scopes.is_global_admin) {
+            typeSel.classList.remove('d-none');
+            typeSel.disabled = false;
+            await syncScopeIdField();
+            return;
+        }
+
+        const choices = authorizedScopeChoices();
+        if (choices.length <= 1) {
+            if (choices[0]) pin(choices[0].type, choices[0].id);
+            return;
+        }
+
+        // Multiple authorized scopes → a select limited to them. The pre-existing
+        // #testScopeIdMount 'change' listener reloads the events catalog; this
+        // listener only syncs the hidden scope fields, and being on the event
+        // target it fires before the mount's bubble-phase listener.
+        typeSel.classList.add('d-none');
+        typeSel.disabled = true;
+        const sel = document.createElement('select');
+        sel.className = 'form-select';
+        sel.id = 'scopeChoice';
+        choices.forEach((c, i) => {
+            const opt = document.createElement('option');
+            opt.value = String(i);
+            opt.textContent = scopeChoiceLabel(c.type, c.id);
+            sel.appendChild(opt);
+        });
+        const hid = document.createElement('input');
+        hid.type = 'hidden';
+        hid.id = 'testScopeId';
+        const applyChoice = () => {
+            const c = choices[Number(sel.value)] || choices[0];
+            typeSel.value = c.type;
+            hid.value = c.type === 'general_roman_calendar' ? '' : c.id;
+        };
+        sel.addEventListener('change', () => { applyChoice(); updateDerivedName(); });
+        mount.appendChild(sel);
+        mount.appendChild(hid);
+        applyChoice();
+    }
     // Reload the /events datalist for the currently selected scope, then rebuild
     // the assertions. Used whenever the scope changes, since national/diocesan
     // calendars expose events the General Roman list does not.
@@ -542,20 +655,17 @@ document.addEventListener('DOMContentLoaded', () => {
     async function openEditor(test) {
         state.editing = test ? test.name : null;
         document.getElementById('testEditorAlerts').innerHTML = '';
-        const nameEl = document.getElementById('testName');
+        const eventEl = document.getElementById('testEventKey');
         if (test) {
             builder.load(test);
-            nameEl.value = test.name;
-            nameEl.setAttribute('readonly', '');
             const typeRadio = document.querySelector(`input[name="testType"][value="${test.test_type}"]`);
             if (typeRadio) typeRadio.checked = true;
-            document.getElementById('testEventKey').value = test.event_key;
+            eventEl.value = test.event_key;
+            // Scope + event are the test's identity (name = event_key + 'Test'),
+            // so the event is read-only on edit. Scope is locked below.
+            eventEl.setAttribute('readonly', '');
+            updateDerivedName();
             document.getElementById('testDescription').value = test.description;
-            const scope = deriveScope(test.applies_to);
-            const typeSel = document.getElementById('testScopeType');
-            typeSel.value = scope.object_type === 'national_calendar_test' ? 'national_calendar'
-                : scope.object_type === 'diocesan_calendar_test' ? 'diocesan_calendar'
-                : 'general_roman_calendar';
             // Fix 4: Seed slider from loaded test assertions before any slider change fires
             const years = test.assertions.map((a) => a.year);
             if (years.length) {
@@ -603,26 +713,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch((err) => showModalAlert(editorModalEl, 'danger', err.message ?? i18n.failedToLoad));
         } else {
             builder.load({ name: '', event_key: '', description: '', test_type: TestType.ExactCorrespondence, assertions: [] });
-            nameEl.value = '';
-            nameEl.removeAttribute('readonly');
             document.getElementById('tt-exact').checked = true;
-            document.getElementById('testEventKey').value = '';
+            eventEl.value = '';
+            eventEl.removeAttribute('readonly');
+            updateDerivedName();
             document.getElementById('testDescription').value = '';
             document.getElementById('testScopeType').value = 'general_roman_calendar';
             assertionsContainer.innerHTML = '';
             loadEvents(null).catch((err) => showModalAlert(editorModalEl, 'danger', err.message ?? i18n.failedToLoad));
         }
-        await syncScopeIdField();
+        // Scope UI: locked to the test's own scope when editing; otherwise
+        // constrained to the user's permissions (full picker for global admins).
+        let lockedScope = null;
         if (test) {
-            // Preselect the loaded test's calendar in the freshly-mounted select so
-            // selectedScope() round-trips applies_to instead of silently rescoping
-            // the test to General Roman (or 403ing a scoped editor).
             const scope = deriveScope(test.applies_to);
-            const idEl = document.getElementById('testScopeId');
-            if (idEl && scope.object_type !== 'general_roman_calendar_test') {
-                idEl.value = scope.object_id;
-            }
+            lockedScope = {
+                type: scope.object_type === 'national_calendar_test' ? 'national_calendar'
+                    : scope.object_type === 'diocesan_calendar_test' ? 'diocesan_calendar'
+                        : 'general_roman_calendar',
+                id: scope.object_id,
+            };
         }
+        await renderScopeControl(lockedScope);
         editorModal.show();
     }
 
@@ -637,9 +749,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('saveTestBtn').addEventListener('click', async () => {
         const btn = document.getElementById('saveTestBtn');
-        const nameEl = document.getElementById('testName');
-        if (!nameEl.checkValidity() || !document.getElementById('testEventKey').value) {
-            showModalAlert(editorModalEl, 'warning', i18n.requiredFields);
+        const eventKey = document.getElementById('testEventKey').value.trim();
+        // Name is derived from the event key, never typed (schema convention
+        // name = event_key + 'Test'). On edit it's the immutable identifier.
+        const name = state.editing || `${eventKey}Test`;
+        const hasDescription = document.getElementById('testDescription').value.trim() !== '';
+        if (!eventKey || !hasDescription || !TEST_NAME_RE.test(name)) {
+            const msg = eventKey && !TEST_NAME_RE.test(name) ? i18n.invalidName : i18n.requiredFields;
+            showModalAlert(editorModalEl, 'warning', msg);
             return;
         }
         // undefined = scoped type without an ID picked yet → when editing, keep
@@ -650,8 +767,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ? (state.editing ? builder.model.applies_to : null)
             : chosen;
         builder.setMeta({
-            name: nameEl.value,
-            event_key: document.getElementById('testEventKey').value,
+            name,
+            event_key: eventKey,
             description: document.getElementById('testDescription').value,
             test_type: selectedTestType(),
             applies_to: scopePayload,
