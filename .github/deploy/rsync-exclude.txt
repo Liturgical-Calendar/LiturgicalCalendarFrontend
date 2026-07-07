@@ -115,3 +115,11 @@ logs/
 
 # --- Generated data dir (gitignored locally, server-managed) ---
 /assets/json/
+
+# --- Examples repo (separate public repo, deployed out-of-band) ---
+# examples/ is a gitignored local symlink to the sibling
+# Liturgical-Calendar/examples checkout, so it is absent from this repo's CI
+# checkout entirely. The deploy workflow syncs that repo into
+# ${DEPLOY_PATH}/examples/ in its own dedicated rsync step (see deploy.yaml).
+# Exclude it here so THIS rsync's --delete never wipes that server-side dir.
+/examples/
