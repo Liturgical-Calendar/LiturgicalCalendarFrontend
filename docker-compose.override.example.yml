@@ -28,6 +28,21 @@ services:
       # image's seeded .env.local so that host-side consumers of the API's JWT
       # cookies (e.g. UnitTestInterface JwtAuth via .env.development) validate them.
       JWT_SECRET: ${JWT_SECRET}
+    # Live-reload the API source so PHP edits reflect without rebuilding the
+    # image. Explicit dir mounts (not the whole repo root) so vendor/, cache/,
+    # logs/, engineCache/ and the seeded .env.local stay as the image built them.
+    volumes:
+      # Code dirs the API never writes to → :ro. vendor/ is deliberately NOT
+      # mounted so the image's `composer install` (optimized autoloader) is used;
+      # adding a NEW class file may need a `composer dump-autoload` in-container.
+      - ../LiturgicalCalendarAPI/src:/var/www/html/src:ro
+      - ../LiturgicalCalendarAPI/public:/var/www/html/public:ro
+      # jsondata is :rw, NOT :ro. The API PERSISTS PUTed test definitions to
+      # jsondata/tests/<name>.json (TestsHandler::file_put_contents) and other
+      # source-data writes here; a :ro mount would fail those writes with a
+      # read-only-filesystem error. :rw lets writes land in the host repo (so
+      # authored tests can be committed) and reflects source-data edits live.
+      - ../LiturgicalCalendarAPI/jsondata:/var/www/html/jsondata:rw
 
   litcal-frontend:
     build:
