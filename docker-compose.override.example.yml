@@ -76,6 +76,17 @@ services:
       - ./includes:/var/www/html/includes:ro
       - ./layout:/var/www/html/layout:ro
       - ./src:/var/www/html/src:ro
+      # The examples live in a separate repo, symlinked locally as the gitignored
+      # examples/ -> ../examples (absent from the image AND the mounts above).
+      # Mount that repo directly so examples.php's examples/* assets resolve —
+      # otherwise they 404 and are served as HTML, which breaks the JS example's
+      # module script (MIME error) and leaves the PHP example include empty.
+      # php/cache + php/logs are :rw carve-outs the PHP example writes to.
+      # (The PHP example additionally needs its own repo to honor API_INTERNAL_URL
+      # to reach the API server-side from inside the container.)
+      - ../examples:/var/www/html/examples:ro
+      - ../examples/php/cache:/var/www/html/examples/php/cache:rw
+      - ../examples/php/logs:/var/www/html/examples/php/logs:rw
       - ./about.php:/var/www/html/about.php:ro
       - ./admin-applications.php:/var/www/html/admin-applications.php:ro
       - ./admin-dashboard.php:/var/www/html/admin-dashboard.php:ro
