@@ -136,12 +136,14 @@ jobs:
       # production unless we deploy that repo alongside the frontend. Check it
       # out here into a sibling path (not examples/, to avoid any interaction
       # with the main rsync) and deploy it in a dedicated step further down.
-      # The examples repo has a single deploy ref (main) for both targets.
+      # Pinned to a commit SHA (not a branch) so staging and production always
+      # deploy the same examples revision and deploys stay reproducible; the repo
+      # has no release tags. Bump this SHA to roll examples forward.
       - name: Checkout examples repo
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           repository: Liturgical-Calendar/examples
-          ref: main
+          ref: 04c7fa436bb049e59546267518ac3dd72bff58c4 # main @ 2026-07-07
           path: examples-src
           persist-credentials: false
 
@@ -276,27 +278,14 @@ jobs:
           # already exists from the "Ensure ... dirs exist" step. This step owns
           # examples/ end-to-end, with its own --delete so files removed from the
           # examples repo are pruned here too — that is the "keep it up to date"
-          # half of the fix.
-          #
-          # Filters (first match wins):
-          #   - .git/.github/.vscode are dev/CI cruft — never ship them.
-          #   - .env.example ships (admins diff it), but real .env* are excluded
-          #     so --delete can't wipe the PHP example's server-side secrets.
-          #   - logs/ cache/ *.log are runtime state the PHP example creates as
-          #     the php-fpm user; excluded so --delete preserves them.
+          # half of the fix. Filter rules (VCS cruft, .env* handling, runtime
+          # state) live in a dedicated exclude file, mirroring the main rsync's
+          # --exclude-from convention.
           rsync \
             --archive --no-owner --no-group \
             --compress --human-readable --verbose \
             --delete --protect-args \
-            --exclude='.git/' \
-            --exclude='.github/' \
-            --exclude='.vscode/' \
-            --include='.env.example' \
-            --exclude='.env' \
-            --exclude='.env.*' \
-            --exclude='logs/' \
-            --exclude='cache/' \
-            --exclude='*.log' \
+            --exclude-from=.github/deploy/examples-rsync-exclude.txt \
             -e "ssh -i ~/.ssh/deploy_key -p ${VPS_PORT} -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile=~/.ssh/known_hosts -o ConnectTimeout=10 -o ServerAliveInterval=15 -o ServerAliveCountMax=2" \
             examples-src/ "${VPS_USER}@${VPS_HOST}:${DEPLOY_PATH%/}/examples/"
 

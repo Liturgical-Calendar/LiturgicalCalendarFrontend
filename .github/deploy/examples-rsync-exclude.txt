@@ -1,0 +1,24 @@
+# Filter rules for the examples-repo deploy rsync (examples-src/ -> examples/).
+#
+# Separate from rsync-exclude.txt on purpose: that file is the FRONTEND tree's
+# exclude list (and even excludes /examples/ itself), so it cannot be reused
+# for the examples tree. Same semantics as that file, though: first match wins,
+# and a "+ " prefix is an include-override (rsync honours +/- prefixes in an
+# --exclude-from file), so entries matched here are also protected from --delete.
+
+# --- VCS / CI / editor cruft — never ship ---
+.git/
+.github/
+.vscode/
+
+# --- .env.example ships (admins diff it); real .env* are excluded so --delete
+#     can't wipe the PHP example's server-side secrets ---
++ .env.example
+.env
+.env.*
+
+# --- Runtime state the PHP example creates as the php-fpm user; excluded so
+#     --delete preserves it server-side ---
+logs/
+cache/
+*.log
