@@ -234,22 +234,29 @@ test.describe('admin-tests year grid (stubbed)', () => {
         await expect(span2005.locator('.removeYear')).toHaveCount(1);
     });
 
-    test('changing the base date recalculates the Sunday chips', async ({ page }) => {
+    test('changing the base date re-anchors Sunday chips, description, and assertions', async ({ page }) => {
         await openVariableEditor(page, 'StIgnatiusOfLoyola');
 
-        // Default base date is 07-31: 2005-07-31 is a Sunday, 2006-07-31 is not.
+        // Default base date is 07-31: 2005-07-31 is a Sunday, 2006-07-31 is not,
+        // and the suggested text reads "... July 31".
         const span2005 = page.locator('#yearGrid .testYearSpan.year-2005');
         const span2006 = page.locator('#yearGrid .testYearSpan.year-2006');
         await expect(span2005).toHaveClass(/sunday/);
         await expect(span2006).not.toHaveClass(/sunday/);
+        await expect(page.locator('#testDescription')).toHaveValue(/July 31/);
 
         // Move the base date to 08-06 (only month/day matter): 2005-08-06 is a
-        // Saturday and 2006-08-06 is a Sunday, so the highlight must flip.
+        // Saturday and 2006-08-06 is a Sunday, so the highlight must flip, and the
+        // suggested description + each per-year card's assertion re-anchor to 08-06.
         await page.locator('#baseDate').fill('2005-08-06');
         await page.locator('#baseDate').dispatchEvent('change');
 
         await expect(span2005).not.toHaveClass(/sunday/);
         await expect(span2006).toHaveClass(/sunday/);
+        await expect(page.locator('#testDescription')).toHaveValue(/August 6/);
+        const card2005Text = page.locator('.assertion-card[data-year="2005"] .assertionText');
+        await expect(card2005Text).toHaveValue(/August 6/);
+        await expect(card2005Text).not.toHaveValue(/July 31/);
     });
 
     test('exclude collapses to the striped bar and restore brings the card back', async ({ page }) => {

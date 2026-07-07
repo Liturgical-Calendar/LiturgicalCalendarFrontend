@@ -156,14 +156,18 @@ export class AssertionsBuilder {
         return best ? { month: best.month, day: best.day } : null;
     }
 
+    /** Format a month/day as a locale month-name + day, e.g. "July 31". */
+    static #formatMonthDay(month, day, locale) {
+        const d = new Date(Date.UTC(1970, Number(month) - 1, Number(day)));
+        return new Intl.DateTimeFormat(locale, { month: 'long', day: 'numeric', timeZone: 'UTC' }).format(d);
+    }
+
     /** Build description text from an event, e.g. "The Memorial of 'X' should fall on July 31". */
     static #describe(event, locale) {
         const grade = event.grade_lcl ?? '';
-        let onDate = 'the expected date';
-        if (event.month && event.day) {
-            const d = new Date(Date.UTC(1970, Number(event.month) - 1, Number(event.day)));
-            onDate = new Intl.DateTimeFormat(locale, { month: 'long', day: 'numeric', timeZone: 'UTC' }).format(d);
-        }
+        const onDate = (event.month && event.day)
+            ? AssertionsBuilder.#formatMonthDay(event.month, event.day, locale)
+            : 'the expected date';
         return `The ${grade} of '${event.name}' should fall on ${onDate}`;
     }
 
@@ -246,6 +250,36 @@ export class AssertionsBuilder {
     setExpectedDate(year, iso) {
         const a = this.#find(year);
         if (a) a.expected_value = iso;
+        return this;
+    }
+
+    /**
+     * Re-anchor the whole model to a new base month/day — the effect of the
+     * editor's Base date field changing. Updates baseMonthDay (which drives the
+     * year-grid Sunday overlays), the canonical description's date phrase, and
+     * each assertion's expected_value (dated ones only) plus its suggested text.
+     * The per-year text is rebuilt from the canonical description, matching how
+     * generate()/toggleAssert() keep the sentence in step with assert/date.
+     */
+    rebaseDate({ month, day } = {}) {
+        const m = Number(month);
+        const d = Number(day);
+        if (!m || !d) return this;
+        this.baseMonthDay = { month: m, day: d };
+        const dateStr = AssertionsBuilder.#formatMonthDay(m, d, this.locale);
+        // model.description is the canonical positive form ("...should fall on X").
+        this.model.description = this.model.description.replace(/should fall on .*/, `should fall on ${dateStr}`);
+        const desc = this.model.description;
+        const notDesc = desc.replace('should fall on', 'should not exist on');
+        this.model.assertions.forEach((a) => {
+            if (a.assert === AssertType.EventTypeExact) {
+                a.expected_value = AssertionsBuilder.#expectedValue(a.year, m, d);
+                a.assertion = desc;
+            } else {
+                a.expected_value = null;
+                a.assertion = notDesc;
+            }
+        });
         return this;
     }
 

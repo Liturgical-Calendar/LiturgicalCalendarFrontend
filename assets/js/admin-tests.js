@@ -468,19 +468,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const v = ev.target.value; // YYYY-MM-DD
         if (!v) return;
         const [, m, d] = v.split('-').map(Number);
-        builder.baseMonthDay = { month: m, day: d };
-        builder.model.assertions.forEach((a) => {
-            if (a.assert === AssertType.EventTypeExact) {
-                builder.setExpectedDate(
-                    a.year,
-                    `${String(a.year).padStart(4, '0')}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}T00:00:00+00:00`,
-                );
-            }
-        });
+        // Re-anchor the model to the new base date: the expected dates, the
+        // suggested description, and every per-year assertion's suggested text
+        // all follow from the base month/day.
+        builder.rebaseDate({ month: m, day: d });
+        document.getElementById('testDescription').value = builder.model.description;
         builder.render(assertionsContainer);
-        // The year-grid chips derive their Sunday overlay/title from
-        // baseMonthDay (via yearDateAttrs), so re-render the grid to recompute
-        // which years land on a Sunday for the new base date.
+        // The year-grid chips derive their Sunday overlay/title from baseMonthDay
+        // (via yearDateAttrs), so re-render the grid too.
         renderYearGrid();
     });
 
