@@ -75,8 +75,11 @@ test.describe('admin-tests editor (stubbed)', () => {
         await page.goto('/admin-tests.php');
         await page.locator('#createTestBtn').click();
         await page.locator('#tt-exact').check({ force: true });
-        await page.locator('#testName').fill('StIgnatiusOfLoyolaTest');
+        // No Name input exists — the name is derived from the event key.
+        await expect(page.locator('#testName')).toHaveCount(0);
         await page.locator('#testEventKey').fill('StIgnatiusOfLoyola');
+        await page.locator('#testEventKey').dispatchEvent('input');
+        await expect(page.locator('#derivedTestName')).toContainText('StIgnatiusOfLoyolaTest');
         await page.locator('#testEventKey').dispatchEvent('change');
         await page.locator('#saveTestBtn').click();
         await expect.poll(() => putBody && putBody['name']).toBe('StIgnatiusOfLoyolaTest');
@@ -85,7 +88,7 @@ test.describe('admin-tests editor (stubbed)', () => {
         expect((putBody!['assertions'] as Array<{ assert: string }>)[0].assert).toBe('eventExists AND hasExpectedDate');
     });
 
-    test('edit flow renders name read-only and submits PATCH', async ({ page }) => {
+    test('edit flow locks scope + event and submits PATCH', async ({ page }) => {
         await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
         let patched = false;
         let patchBody: Record<string, unknown> | null = null;
@@ -99,10 +102,75 @@ test.describe('admin-tests editor (stubbed)', () => {
         });
         await page.goto('/admin-tests.php');
         await page.locator('tr', { hasText: 'UsaNationalTest' }).getByRole('button', { name: 'Edit' }).click();
-        await expect(page.locator('#testName')).toHaveAttribute('readonly', '');
+        // Name field is gone; scope + event are the locked identity of the test.
+        await expect(page.locator('#testName')).toHaveCount(0);
+        await expect(page.locator('#testEventKey')).toHaveAttribute('readonly', '');
+        await expect(page.locator('#testScopeStatic')).toContainText('USA');
+        await expect(page.locator('#testScopeType')).toBeHidden();
         await page.locator('#saveTestBtn').click();
         await expect.poll(() => patched).toBe(true);
         expect(patchBody!.applies_to).toEqual({ national_calendar: 'USA' });
+        expect(patchBody!.name).toBe('UsaNationalTest');
+    });
+});
+
+test.describe('admin-tests scope RBAC (stubbed)', () => {
+    test('single-scope editor: scope is static text (no picker), PUT carries it', async ({ page }) => {
+        await stubEditor(page, { is_global_admin: false, editor: [{ object_type: 'national_calendar_test', object_id: 'USA' }], admin: [] });
+        let putBody: Record<string, unknown> | null = null;
+        await page.route('**/tests', (r: Route) => {
+            if (r.request().method() === 'PUT') { putBody = r.request().postDataJSON() as Record<string, unknown>; return r.fulfill({ json: {} }); }
+            return r.fulfill({ json: sampleTests });
+        });
+        await page.goto('/admin-tests.php');
+        await page.locator('#createTestBtn').click();
+        await expect(page.locator('#testEditorModal')).toBeVisible();
+        // One authorized scope → static text, no scope-type select, no choice select.
+        await expect(page.locator('#testScopeStatic')).toContainText('USA');
+        await expect(page.locator('#testScopeType')).toBeHidden();
+        await expect(page.locator('#scopeChoice')).toHaveCount(0);
+        await page.locator('#tt-exact').check({ force: true });
+        await page.locator('#testEventKey').fill('StIgnatiusOfLoyola');
+        await page.locator('#testEventKey').dispatchEvent('change');
+        await page.locator('#saveTestBtn').click();
+        await expect.poll(() => putBody && putBody['applies_to']).toEqual({ national_calendar: 'USA' });
+    });
+
+    test('multi-scope editor: a select limited to the authorized scopes', async ({ page }) => {
+        await stubEditor(page, {
+            is_global_admin: false,
+            editor: [{ object_type: 'national_calendar_test', object_id: 'USA' }],
+            admin: [{ object_type: 'diocesan_calendar_test', object_id: 'romamo_it' }],
+        });
+        await page.goto('/admin-tests.php');
+        await page.locator('#createTestBtn').click();
+        await expect(page.locator('#testEditorModal')).toBeVisible();
+        // Several authorized scopes → a limited <select>, not static text or the full picker.
+        await expect(page.locator('#scopeChoice')).toBeVisible();
+        await expect(page.locator('#testScopeType')).toBeHidden();
+        await expect(page.locator('#scopeChoice option')).toHaveCount(2);
+        await expect(page.locator('#scopeChoice')).toContainText('USA');
+        await expect(page.locator('#scopeChoice')).toContainText('romamo_it');
+    });
+
+    test('editor fields follow the intended document order', async ({ page }) => {
+        await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
+        await page.goto('/admin-tests.php');
+        await page.locator('#createTestBtn').click();
+        await expect(page.locator('#testEditorModal')).toBeVisible();
+        // Scope → event → base date → test type → description → year grid → assertions.
+        const inOrder = await page.evaluate(() => {
+            const ids = ['testScopeType', 'testEventKey', 'baseDate', 'testTypeGroup', 'testDescription', 'yearGrid', 'assertionsContainer'];
+            const els = ids.map((id) => document.getElementById(id));
+            for (let i = 1; i < els.length; i++) {
+                const prev = els[i - 1];
+                const cur = els[i];
+                if (!prev || !cur) return false;
+                if (!(prev.compareDocumentPosition(cur) & Node.DOCUMENT_POSITION_FOLLOWING)) return false;
+            }
+            return true;
+        });
+        expect(inOrder).toBe(true);
     });
 });
 

@@ -125,8 +125,49 @@ if (!$isGlobalAdmin && !$hasTestEditor && !$isResourceAdmin) {
                 <div class="modal-body">
                     <div id="testEditorAlerts"></div>
                     <form id="testEditorForm" novalidate>
-                        <!-- Step 1: test type -->
-                        <div class="mb-3">
+                        <!-- Step 1: scope, liturgical event, base date -->
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="testScopeType">
+                                    <?php echo htmlspecialchars(_('Scope'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                </label>
+                                <select class="form-select" id="testScopeType">
+                                    <option value="general_roman_calendar">
+                                        <?php echo htmlspecialchars(_('General Roman Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                    </option>
+                                    <option value="national_calendar">
+                                        <?php echo htmlspecialchars(_('National Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                    </option>
+                                    <option value="diocesan_calendar">
+                                        <?php echo htmlspecialchars(_('Diocesan Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                    </option>
+                                </select>
+                                <!-- Static scope display for users whose scope is fixed (single-scope
+                                     editor/admin, or when editing an existing test). -->
+                                <div id="testScopeStatic" class="form-text fw-semibold d-none"></div>
+                                <div id="testScopeIdMount" class="mt-2"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="testEventKey">
+                                    <?php echo htmlspecialchars(_('Liturgical event'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                </label>
+                                <input type="text" class="form-control" id="testEventKey"
+                                    list="testEventKeyList" required />
+                                <datalist id="testEventKeyList"></datalist>
+                                <!-- Derived, read-only test name (name = event_key + 'Test'). -->
+                                <small id="derivedTestName" class="form-text text-muted"></small>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label" for="baseDate">
+                                    <?php echo htmlspecialchars(_('Base date'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                </label>
+                                <input type="date" class="form-control" id="baseDate"
+                                    min="1970-01-01" max="2050-12-31" />
+                            </div>
+                        </div>
+
+                        <!-- Step 2: test type -->
+                        <div class="mb-3 mt-3">
                             <label class="form-label fw-bold">
                                 <?php echo htmlspecialchars(_('Test type'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                             </label>
@@ -154,48 +195,15 @@ if (!$isGlobalAdmin && !$hasTestEditor && !$isResourceAdmin) {
                             </div>
                         </div>
 
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label" for="testName">
-                                    <?php echo htmlspecialchars(_('Name'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                                </label>
-                                <input type="text" class="form-control" id="testName"
-                                    pattern="^(?:[a-z_]+?_){0,1}[A-Z][a-zA-Z1-9]+[0-9]{0,2}(?:_vigil)?Test$" required />
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" for="testScopeType">
-                                    <?php echo htmlspecialchars(_('Scope'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                                </label>
-                                <select class="form-select" id="testScopeType">
-                                    <option value="general_roman_calendar">
-                                        <?php echo htmlspecialchars(_('General Roman Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                                    </option>
-                                    <option value="national_calendar">
-                                        <?php echo htmlspecialchars(_('National Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                                    </option>
-                                    <option value="diocesan_calendar">
-                                        <?php echo htmlspecialchars(_('Diocesan Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                                    </option>
-                                </select>
-                                <div id="testScopeIdMount" class="mt-2"></div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label" for="testEventKey">
-                                    <?php echo htmlspecialchars(_('Liturgical event'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                                </label>
-                                <input type="text" class="form-control" id="testEventKey"
-                                    list="testEventKeyList" required />
-                                <datalist id="testEventKeyList"></datalist>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label" for="testDescription">
-                                    <?php echo htmlspecialchars(_('Description'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                                </label>
-                                <textarea class="form-control" id="testDescription" rows="2" required></textarea>
-                            </div>
+                        <!-- Step 3: description -->
+                        <div class="mb-3">
+                            <label class="form-label" for="testDescription">
+                                <?php echo htmlspecialchars(_('Description'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                            </label>
+                            <textarea class="form-control" id="testDescription" rows="2" required></textarea>
                         </div>
 
-                        <!-- Step 3: year range -->
+                        <!-- Step 4: year range -->
                         <div class="mt-3">
                             <label class="form-label fw-bold">
                                 <?php echo htmlspecialchars(_('Year range'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
@@ -216,15 +224,6 @@ if (!$isGlobalAdmin && !$hasTestEditor && !$isResourceAdmin) {
                                 <span><span class="legend-chip bg-warning me-1"></span><?php echo htmlspecialchars(_('event not expected'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
                                 <span><span class="legend-chip deleted me-1"></span><?php echo htmlspecialchars(_('excluded — click to restore'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
                             </div>
-                        </div>
-
-                        <!-- Step 4: base date -->
-                        <div class="mt-3 col-md-4">
-                            <label class="form-label" for="baseDate">
-                                <?php echo htmlspecialchars(_('Base date'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                            </label>
-                            <input type="date" class="form-control" id="baseDate"
-                                min="1970-01-01" max="2050-12-31" />
                         </div>
 
                         <!-- Step 5: per-year assertions -->
@@ -332,7 +331,9 @@ if (!$isGlobalAdmin && !$hasTestEditor && !$isResourceAdmin) {
                 toggleAssertion:     <?php echo json_encode(_('toggle assertion')); ?>,
                 removeYear:          <?php echo json_encode(_('remove')); ?>,
                 sundayInYear:        <?php echo json_encode(_('In the year %1$s, %2$s falls on a Sunday')); ?>,
-                excludedRestore:     <?php echo json_encode(_('%s excluded — click to restore')); ?>
+                excludedRestore:     <?php echo json_encode(_('%s excluded — click to restore')); ?>,
+                testNameLabel:       <?php echo json_encode(_('Test name:')); ?>,
+                invalidName:         <?php echo json_encode(_('Select a valid liturgical event from the list.')); ?>
             }
         };
     </script>
