@@ -48,7 +48,7 @@ $apiClient = new ApiClient($currentLocale);
 
 try {
     $responseData  = $apiClient->fetchJsonWithKey(
-        $apiConfig->dateOfEasterUrl . '?locale=' . $currentLocale,
+        $apiConfig->toInternal($apiConfig->dateOfEasterUrl) . '?locale=' . $currentLocale,
         'litcal_easter'
     );
     $DatesOfEaster = $responseData['litcal_easter'];

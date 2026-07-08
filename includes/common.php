@@ -63,6 +63,17 @@ $_ENV['ACCURACY_TESTS_URL'] = $_ENV['ACCURACY_TESTS_URL'] ?? 'https://litcal-tes
 $apiPort    = !empty($_ENV['API_PORT']) ? ":{$_ENV['API_PORT']}" : '';
 $apiBaseUrl = rtrim("{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}{$apiPort}{$_ENV['API_BASE_PATH']}", '/');
 
+// Server-side (PHP) base API URL. The browser-facing $apiBaseUrl above uses
+// API_HOST (typically 'localhost'), which is not reachable from inside a
+// container; when API_INTERNAL_URL is set (e.g. http://litcal-api:8000 in the
+// Docker network) it must win for server-side requests. A no-op otherwise, so
+// standalone/production behaviour is unchanged. Mirrors AuthHelper's use of
+// API_INTERNAL_URL for its own server-side calls.
+$apiInternalUrl     = $_ENV['API_INTERNAL_URL'] ?? getenv('API_INTERNAL_URL');
+$apiInternalBaseUrl = ( is_string($apiInternalUrl) && $apiInternalUrl !== '' )
+    ? rtrim($apiInternalUrl . $_ENV['API_BASE_PATH'], '/')
+    : $apiBaseUrl;
+
 // ============================================================================
 // Security Headers - Hybrid Approach (nginx + PHP)
 // ============================================================================
@@ -182,7 +193,7 @@ if (file_exists($ghReleaseCacheFile)) {
 }
 
 // Initialize API configuration (singleton)
-$apiConfig = \LiturgicalCalendar\Frontend\ApiConfig::getInstance($apiBaseUrl);
+$apiConfig = \LiturgicalCalendar\Frontend\ApiConfig::getInstance($apiBaseUrl, $apiInternalBaseUrl);
 
 // Initialize Auth helper (singleton) - validates JWT from HttpOnly cookie
 // This enables server-side auth detection, avoiding UI flash on page load
@@ -323,6 +334,6 @@ $httpClient = HttpClientFactory::createProductionClient(
 
 // 4. Initialize ApiClient Singleton
 $apiClient = ApiClient::getInstance([
-    'apiUrl'     => $apiConfig->apiBaseUrl,
+    'apiUrl'     => $apiConfig->internalBaseUrl,
     'httpClient' => $httpClient
 ]);

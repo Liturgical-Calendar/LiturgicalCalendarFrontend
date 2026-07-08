@@ -13,6 +13,14 @@ class ApiConfig
     private static ?self $instance = null;
 
     public readonly string $apiBaseUrl;
+    /**
+     * Base URL for server-side (PHP) requests. Equal to $apiBaseUrl unless an
+     * internal URL is configured (e.g. inside a Docker network, where the
+     * browser-facing host 'localhost' is not reachable from the container).
+     * The *Url properties below stay browser-facing (they are emitted to JS and
+     * to user-facing links); use toInternal() to map one for a server-side call.
+     */
+    public readonly string $internalBaseUrl;
     public readonly string $dateOfEasterUrl;
     public readonly string $calendarUrl;
     public readonly string $metadataUrl;
@@ -23,9 +31,10 @@ class ApiConfig
     public readonly string $regionalDataUrl;
     public readonly string $calSubscriptionUrl;
 
-    private function __construct(string $apiBaseUrl)
+    private function __construct(string $apiBaseUrl, ?string $internalBaseUrl = null)
     {
         $this->apiBaseUrl         = rtrim($apiBaseUrl, '/');
+        $this->internalBaseUrl    = rtrim($internalBaseUrl ?? $apiBaseUrl, '/');
         $this->dateOfEasterUrl    = "{$this->apiBaseUrl}/easter";
         $this->calendarUrl        = "{$this->apiBaseUrl}/calendar";
         $this->metadataUrl        = "{$this->apiBaseUrl}/calendars";
@@ -38,6 +47,25 @@ class ApiConfig
     }
 
     /**
+     * Rewrite a browser-facing endpoint URL (one of the *Url properties, built
+     * from $apiBaseUrl) to its internal equivalent for a server-side request.
+     * A no-op when no internal URL is configured.
+     *
+     * @param string $url A URL that begins with $apiBaseUrl.
+     * @return string The same URL rebased onto $internalBaseUrl.
+     */
+    public function toInternal(string $url): string
+    {
+        if ($this->internalBaseUrl === $this->apiBaseUrl) {
+            return $url;
+        }
+        if (str_starts_with($url, $this->apiBaseUrl)) {
+            return $this->internalBaseUrl . substr($url, strlen($this->apiBaseUrl));
+        }
+        return $url;
+    }
+
+    /**
      * Get the singleton instance
      *
      * IMPORTANT: The first non-null $apiBaseUrl provided wins. Subsequent calls
@@ -46,10 +74,11 @@ class ApiConfig
      * To reconfigure, call reset() first (test environments only).
      *
      * @param string|null $apiBaseUrl Base API URL (required on first call)
+     * @param string|null $internalBaseUrl Server-side base URL (defaults to $apiBaseUrl)
      * @return self
      * @throws \RuntimeException if called without URL before initialization
      */
-    public static function getInstance(?string $apiBaseUrl = null): self
+    public static function getInstance(?string $apiBaseUrl = null, ?string $internalBaseUrl = null): self
     {
         if (self::$instance === null) {
             if ($apiBaseUrl === null) {
@@ -57,7 +86,7 @@ class ApiConfig
                     'ApiConfig must be initialized with a base URL on first call'
                 );
             }
-            self::$instance = new self($apiBaseUrl);
+            self::$instance = new self($apiBaseUrl, $internalBaseUrl);
         }
 
         return self::$instance;
