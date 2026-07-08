@@ -43,14 +43,14 @@ $c = new Collator($i18n->LOCALE);
 $apiClient = new ApiClient($i18n->LOCALE);
 
 try {
-    $metadataJson   = $apiClient->fetchJsonWithKey($apiConfig->metadataUrl, 'litcal_metadata');
+    $metadataJson   = $apiClient->fetchJsonWithKey($apiConfig->toInternal($apiConfig->metadataUrl), 'litcal_metadata');
     $LitCalMetadata = $metadataJson['litcal_metadata'];
 } catch (\RuntimeException $e) {
     die('Error fetching metadata from API: ' . $e->getMessage());
 }
 
 try {
-    $litEventsJson             = $apiClient->fetchJsonWithKey($apiConfig->eventsUrl, 'litcal_events');
+    $litEventsJson             = $apiClient->fetchJsonWithKey($apiConfig->toInternal($apiConfig->eventsUrl), 'litcal_events');
     $LiturgicalEventCollection = $litEventsJson['litcal_events'];
 } catch (\RuntimeException $e) {
     die('Error fetching events from API: ' . $e->getMessage());
