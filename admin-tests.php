@@ -187,11 +187,6 @@ if (!$isGlobalAdmin && !$hasTestEditor && !$isResourceAdmin) {
                                 <label class="btn btn-outline-primary" for="tt-until">
                                     <i class="fas fa-right-to-bracket me-1"></i><?php echo htmlspecialchars(_('Exact until year'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                 </label>
-                                <input type="radio" class="btn-check" name="testType" id="tt-variable"
-                                    value="variableCorrespondence" autocomplete="off">
-                                <label class="btn btn-outline-primary" for="tt-variable">
-                                    <i class="fas fa-square-root-variable me-1"></i><?php echo htmlspecialchars(_('Variable by year'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                                </label>
                             </div>
                         </div>
 
