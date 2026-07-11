@@ -102,7 +102,6 @@ services:
       - ./liturgyOfAnyDay.php:/var/www/html/liturgyOfAnyDay.php:ro
       - ./missals-editor.php:/var/www/html/missals-editor.php:ro
       - ./permission-requests.php:/var/www/html/permission-requests.php:ro
-      - ./request-access.php:/var/www/html/request-access.php:ro
       - ./temporale.php:/var/www/html/temporale.php:ro
       - ./translations.php:/var/www/html/translations.php:ro
       - ./usage.php:/var/www/html/usage.php:ro

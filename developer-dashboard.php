@@ -20,9 +20,9 @@ if (!$authHelper->isAuthenticated) {
 // Check if user has developer role
 $isDeveloper = $authHelper->hasRole('developer');
 
-// If not a developer, redirect to request-access page
+// If not a developer, redirect to the access requests page
 if (!$isDeveloper) {
-    header('Location: request-access.php');
+    header('Location: permission-requests.php');
     exit;
 }
 

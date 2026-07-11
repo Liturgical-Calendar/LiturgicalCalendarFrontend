@@ -131,7 +131,7 @@ if (!$authHelper->isAuthenticated) {
                             <i class="fas fa-sync-alt me-1"></i><?php echo htmlspecialchars(_('Refresh session'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                         </button>
                         <?php if ($authHelper->emailVerified) : ?>
-                        <a href="request-access.php" class="btn btn-outline-primary btn-sm" data-requires-auth>
+                        <a href="permission-requests.php" class="btn btn-outline-primary btn-sm" data-requires-auth>
                             <i class="fas fa-plus me-1"></i><?php echo htmlspecialchars(_('Request Role'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                         </a>
                         <?php else : ?>

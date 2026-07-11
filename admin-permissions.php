@@ -165,18 +165,21 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
                     <button class="nav-link" id="permReq-approved-tab" data-bs-toggle="tab" data-bs-target="#permReq-approved-panel"
                             type="button" role="tab" aria-controls="permReq-approved-panel" aria-selected="false">
                         <i class="fas fa-check-circle me-1"></i><?php echo htmlspecialchars(_('Approved'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                        <span class="badge bg-success ms-1" id="permReqApprovedBadge">0</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="permReq-rejected-tab" data-bs-toggle="tab" data-bs-target="#permReq-rejected-panel"
                             type="button" role="tab" aria-controls="permReq-rejected-panel" aria-selected="false">
                         <i class="fas fa-times-circle me-1"></i><?php echo htmlspecialchars(_('Rejected'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                        <span class="badge bg-danger ms-1" id="permReqRejectedBadge">0</span>
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="permReq-revoked-tab" data-bs-toggle="tab" data-bs-target="#permReq-revoked-panel"
                             type="button" role="tab" aria-controls="permReq-revoked-panel" aria-selected="false">
                         <i class="fas fa-ban me-1"></i><?php echo htmlspecialchars(_('Revoked'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                        <span class="badge bg-secondary ms-1" id="permReqRevokedBadge">0</span>
                     </button>
                 </li>
             </ul>
