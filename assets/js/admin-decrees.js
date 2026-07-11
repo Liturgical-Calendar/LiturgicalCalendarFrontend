@@ -758,15 +758,15 @@ async function loadDecrees(container, capabilities) {
 
 /**
  * Visibility matrix: for each action, which blocks are shown.
- * keys: i18n (needs-i18n block), readingsOnCreate (needs-readings block).
+ * keys: i18n (needs-i18n block), common (needs-common block), readingsOnCreate (needs-readings block).
  *
- * @type {Record<string, {i18n: boolean, readingsOnCreate: boolean}>}
+ * @type {Record<string, {i18n: boolean, common: boolean, readingsOnCreate: boolean}>}
  */
 const MATRIX = {
-    [DecreeAction.CreateNew]:        { i18n: true,  readingsOnCreate: true  },
-    [DecreeAction.MakeDoctor]:       { i18n: true,  readingsOnCreate: false },
-    [DecreeAction.SetPropertyName]:  { i18n: true,  readingsOnCreate: false },
-    [DecreeAction.SetPropertyGrade]: { i18n: false, readingsOnCreate: false },
+    [DecreeAction.CreateNew]:        { i18n: true,  common: true,  readingsOnCreate: true  },
+    [DecreeAction.MakeDoctor]:       { i18n: true,  common: true,  readingsOnCreate: false },
+    [DecreeAction.SetPropertyName]:  { i18n: true,  common: false, readingsOnCreate: false },
+    [DecreeAction.SetPropertyGrade]: { i18n: false, common: false, readingsOnCreate: false },
 };
 
 /**
@@ -778,7 +778,7 @@ const MATRIX = {
  * @param {HTMLElement} form  The form element containing the blocks
  */
 export function applyActionVisibility(action, form) {
-    const rule = MATRIX[action] ?? { i18n: false, readingsOnCreate: false };
+    const rule = MATRIX[action] ?? { i18n: false, common: false, readingsOnCreate: false };
 
     // createNew-only event details block
     const createNewBlocks = form.querySelectorAll('.action-createNew');
@@ -790,6 +790,12 @@ export function applyActionVisibility(action, form) {
     const gradeBlocks = form.querySelectorAll('.action-setPropertyGrade');
     gradeBlocks.forEach((el) => {
         el.classList.toggle('d-none', action !== DecreeAction.SetPropertyGrade);
+    });
+
+    // common block (needs-common) — shown for createNew and makeDoctor
+    const commonBlocks = form.querySelectorAll('.needs-common');
+    commonBlocks.forEach((el) => {
+        el.classList.toggle('d-none', !rule.common);
     });
 
     // i18n block (needs-i18n)

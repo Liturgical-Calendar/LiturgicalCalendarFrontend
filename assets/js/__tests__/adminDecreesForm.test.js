@@ -396,6 +396,11 @@ describe('applyActionVisibility', () => {
         gradeBlock.className = 'action-block action-setPropertyGrade';
         form.appendChild(gradeBlock);
 
+        // common block (needs-common) — starts hidden
+        const commonBlock = document.createElement('fieldset');
+        commonBlock.className = 'action-block needs-common d-none';
+        form.appendChild(commonBlock);
+
         // i18n block
         const i18nBlock = document.createElement('fieldset');
         i18nBlock.className = 'action-block needs-i18n';
@@ -409,42 +414,46 @@ describe('applyActionVisibility', () => {
         return form;
     }
 
-    it('createNew: shows createNew+i18n+readings, hides grade block', () => {
+    it('createNew: shows createNew+common+i18n+readings, hides grade block', () => {
         const form = buildBlockForm();
         applyActionVisibility(DecreeAction.CreateNew, form);
 
         expect(form.querySelector('.action-createNew').classList.contains('d-none')).toBe(false);
         expect(form.querySelector('.action-setPropertyGrade').classList.contains('d-none')).toBe(true);
+        expect(form.querySelector('.needs-common').classList.contains('d-none')).toBe(false);
         expect(form.querySelector('.needs-i18n').classList.contains('d-none')).toBe(false);
         expect(form.querySelector('.needs-readings').classList.contains('d-none')).toBe(false);
     });
 
-    it('makeDoctor: shows i18n, hides createNew+grade+readings blocks', () => {
+    it('makeDoctor: shows common+i18n, hides createNew+grade+readings blocks', () => {
         const form = buildBlockForm();
         applyActionVisibility(DecreeAction.MakeDoctor, form);
 
         expect(form.querySelector('.action-createNew').classList.contains('d-none')).toBe(true);
         expect(form.querySelector('.action-setPropertyGrade').classList.contains('d-none')).toBe(true);
+        expect(form.querySelector('.needs-common').classList.contains('d-none')).toBe(false);
         expect(form.querySelector('.needs-i18n').classList.contains('d-none')).toBe(false);
         expect(form.querySelector('.needs-readings').classList.contains('d-none')).toBe(true);
     });
 
-    it('setProperty:name: shows i18n, hides createNew+grade+readings blocks', () => {
+    it('setProperty:name: shows i18n, hides createNew+grade+common+readings blocks', () => {
         const form = buildBlockForm();
         applyActionVisibility(DecreeAction.SetPropertyName, form);
 
         expect(form.querySelector('.action-createNew').classList.contains('d-none')).toBe(true);
         expect(form.querySelector('.action-setPropertyGrade').classList.contains('d-none')).toBe(true);
+        expect(form.querySelector('.needs-common').classList.contains('d-none')).toBe(true);
         expect(form.querySelector('.needs-i18n').classList.contains('d-none')).toBe(false);
         expect(form.querySelector('.needs-readings').classList.contains('d-none')).toBe(true);
     });
 
-    it('setProperty:grade: hides createNew+i18n+readings, shows grade block', () => {
+    it('setProperty:grade: hides createNew+common+i18n+readings, shows grade block', () => {
         const form = buildBlockForm();
         applyActionVisibility(DecreeAction.SetPropertyGrade, form);
 
         expect(form.querySelector('.action-createNew').classList.contains('d-none')).toBe(true);
         expect(form.querySelector('.action-setPropertyGrade').classList.contains('d-none')).toBe(false);
+        expect(form.querySelector('.needs-common').classList.contains('d-none')).toBe(true);
         expect(form.querySelector('.needs-i18n').classList.contains('d-none')).toBe(true);
         expect(form.querySelector('.needs-readings').classList.contains('d-none')).toBe(true);
     });
@@ -455,6 +464,7 @@ describe('applyActionVisibility', () => {
 
         expect(form.querySelector('.action-createNew').classList.contains('d-none')).toBe(true);
         expect(form.querySelector('.action-setPropertyGrade').classList.contains('d-none')).toBe(true);
+        expect(form.querySelector('.needs-common').classList.contains('d-none')).toBe(true);
         expect(form.querySelector('.needs-i18n').classList.contains('d-none')).toBe(true);
         expect(form.querySelector('.needs-readings').classList.contains('d-none')).toBe(true);
     });

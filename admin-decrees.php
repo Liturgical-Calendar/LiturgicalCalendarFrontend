@@ -233,9 +233,9 @@ if (!$isAdmin && !$isCalendarEditor) {
                                 </div>
                             </div>
 
-                            <!-- Grade + color + common (event details) -->
+                            <!-- Grade + color (event details, createNew only) -->
                             <div class="row g-3">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label for="eventGradeCreate" class="form-label">
                                         <?php echo htmlspecialchars(_('Grade'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                     </label>
@@ -250,7 +250,7 @@ if (!$isAdmin && !$isCalendarEditor) {
                                         <option value="7"><?php echo htmlspecialchars(_('7 — Higher Solemnity'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                                     </select>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label for="eventColor" class="form-label">
                                         <?php echo htmlspecialchars(_('Color(s)'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                     </label>
@@ -265,28 +265,35 @@ if (!$isAdmin && !$isCalendarEditor) {
                                         <?php echo htmlspecialchars(_('Hold Ctrl/Cmd to select multiple'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <label for="eventCommon" class="form-label">
-                                        <?php echo htmlspecialchars(_('Common(s)'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                                    </label>
-                                    <input type="text" class="form-control" id="eventCommon" name="common_text"
-                                        list="commonDatalist"
-                                        placeholder="<?php echo htmlspecialchars(_('e.g. Pastors'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-                                    <datalist id="commonDatalist">
-                                        <option value="Proper"></option>
-                                        <option value="Pastors"></option>
-                                        <option value="Doctors"></option>
-                                        <option value="Martyrs"></option>
-                                        <option value="Virgins"></option>
-                                        <option value="Holy Men and Women"></option>
-                                    </datalist>
-                                    <div class="form-text">
-                                        <?php echo htmlspecialchars(
-                                            _('Separate multiple values with a comma'),
-                                            ENT_QUOTES | ENT_SUBSTITUTE,
-                                            'UTF-8'
-                                        ); ?>
-                                    </div>
+                            </div>
+                        </fieldset>
+
+                        <!-- ── common block (createNew + makeDoctor) ─────── -->
+                        <fieldset class="border rounded p-3 mb-3 action-block needs-common d-none">
+                            <legend class="float-none w-auto px-2 fs-6 fw-semibold">
+                                <?php echo htmlspecialchars(_('Common(s)'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                            </legend>
+                            <div class="col-md-6">
+                                <label for="eventCommon" class="form-label">
+                                    <?php echo htmlspecialchars(_('Common(s)'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                </label>
+                                <input type="text" class="form-control" id="eventCommon" name="common_text"
+                                    list="commonDatalist"
+                                    placeholder="<?php echo htmlspecialchars(_('e.g. Pastors'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                                <datalist id="commonDatalist">
+                                    <option value="Proper"></option>
+                                    <option value="Pastors"></option>
+                                    <option value="Doctors"></option>
+                                    <option value="Martyrs"></option>
+                                    <option value="Virgins"></option>
+                                    <option value="Holy Men and Women"></option>
+                                </datalist>
+                                <div class="form-text">
+                                    <?php echo htmlspecialchars(
+                                        _('Separate multiple values with a comma'),
+                                        ENT_QUOTES | ENT_SUBSTITUTE,
+                                        'UTF-8'
+                                    ); ?>
                                 </div>
                             </div>
                         </fieldset>

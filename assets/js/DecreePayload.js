@@ -120,6 +120,32 @@ export const validateDecreePayload = (payload, baseLocale, isCreate) => {
         errors.push('A grade change does not affect the event name: remove the i18n translations');
     }
 
+    // makeDoctor requires a non-empty common array (DTO: DecreeItemMakeDoctor requires common)
+    if (action === 'makeDoctor') {
+        const hasCommon = payload.liturgical_event
+            && Array.isArray(payload.liturgical_event.common)
+            && payload.liturgical_event.common.length > 0;
+        if (!hasCommon) {
+            errors.push('Action "makeDoctor" requires at least one common value (e.g. "Doctors")');
+        }
+    }
+
+    // createNew requires non-empty color and common arrays (DTO: DecreeItemCreateNew requires both)
+    if (action === 'createNew') {
+        const hasColor = payload.liturgical_event
+            && Array.isArray(payload.liturgical_event.color)
+            && payload.liturgical_event.color.length > 0;
+        if (!hasColor) {
+            errors.push('A new liturgical event must have at least one liturgical color selected');
+        }
+        const hasCommon = payload.liturgical_event
+            && Array.isArray(payload.liturgical_event.common)
+            && payload.liturgical_event.common.length > 0;
+        if (!hasCommon) {
+            errors.push('A new liturgical event must specify at least one common (e.g. "Pastors")');
+        }
+    }
+
     if (isCreate) {
         if (action === 'createNew' && !payload.readings) {
             errors.push('A new liturgical event must define its lectionary readings');

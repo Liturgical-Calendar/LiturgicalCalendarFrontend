@@ -135,4 +135,41 @@ describe('validateDecreePayload', () => {
         p.readings = { en: { first_reading: 'Genesis 1:1', gospel: 'John 1:1-14' } }; // inject forbidden field
         expect(validateDecreePayload(p, 'en', true).length).toBeGreaterThan(0);
     });
+
+    // --- makeDoctor common requirement ---
+
+    it('makeDoctor without common array → validation error', () => {
+        // buildDecreePayload omits common when the array is empty; inject empty common
+        // into the already-built payload to test the validator directly.
+        const p = buildDecreePayload({ ...createNewForm(), action: DecreeAction.MakeDoctor, common: [], readings: undefined });
+        // common is omitted by buildDecreePayload when empty — validator must catch the absence
+        const errors = validateDecreePayload(p, 'en', false);
+        expect(errors.some((e) => e.toLowerCase().includes('common'))).toBe(true);
+    });
+
+    it('makeDoctor with non-empty common → no common error', () => {
+        const p = buildDecreePayload({ ...createNewForm(), action: DecreeAction.MakeDoctor, common: ['Doctors'], readings: undefined });
+        const errors = validateDecreePayload(p, 'en', false);
+        expect(errors.every((e) => !e.toLowerCase().includes('common'))).toBe(true);
+    });
+
+    // --- createNew pre-checks for DTO-required fields ---
+
+    it('createNew without color → validation error', () => {
+        const p = buildDecreePayload({ ...createNewForm(), color: [] });
+        const errors = validateDecreePayload(p, 'en', true);
+        expect(errors.some((e) => e.toLowerCase().includes('color'))).toBe(true);
+    });
+
+    it('createNew without common → validation error', () => {
+        const p = buildDecreePayload({ ...createNewForm(), common: [] });
+        const errors = validateDecreePayload(p, 'en', true);
+        expect(errors.some((e) => e.toLowerCase().includes('common'))).toBe(true);
+    });
+
+    it('createNew with color and common → no color/common errors', () => {
+        const p = buildDecreePayload(createNewForm());
+        const errors = validateDecreePayload(p, 'en', true);
+        expect(errors.every((e) => !e.toLowerCase().includes('color') && !e.toLowerCase().includes('common'))).toBe(true);
+    });
 });
