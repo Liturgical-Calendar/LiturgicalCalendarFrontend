@@ -2,11 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { TestType, AssertType, LitGrade, Assertion } from '../AssertionsBuilder.js';
 
 describe('enums', () => {
-    it('exposes the four test types', () => {
+    it('exposes the three test types', () => {
         expect(TestType.ExactCorrespondence).toBe('exactCorrespondence');
         expect(TestType.ExactCorrespondenceSince).toBe('exactCorrespondenceSince');
         expect(TestType.ExactCorrespondenceUntil).toBe('exactCorrespondenceUntil');
-        expect(TestType.VariableCorrespondence).toBe('variableCorrespondence');
     });
 
     it('exposes the two assert types', () => {
@@ -150,12 +149,12 @@ describe('load + serialize round-trip', () => {
 
     it('setMeta updates name/description/event_key/test_type without touching assertions', () => {
         const b = new AssertionsBuilder().load(sampleExact);
-        b.setMeta({ name: 'RenamedTest', description: 'new desc', event_key: 'RenamedKeyEvent', test_type: 'variableCorrespondence' });
+        b.setMeta({ name: 'RenamedTest', description: 'new desc', event_key: 'RenamedKeyEvent', test_type: 'exactCorrespondenceSince' });
         const out = b.serialize();
         expect(out.name).toBe('RenamedTest');
         expect(out.description).toBe('new desc');
         expect(out.event_key).toBe('RenamedKeyEvent');
-        expect(out.test_type).toBe('variableCorrespondence');
+        expect(out.test_type).toBe('exactCorrespondenceSince');
         expect(out.assertions).toHaveLength(2);
     });
 
@@ -190,7 +189,7 @@ describe('load + serialize round-trip', () => {
             name: 'GroupedTest',
             event_key: 'StJaneFrancesDeChantal',
             description: 'x',
-            test_type: 'variableCorrespondence',
+            test_type: 'exactCorrespondence',
             assertions: [
                 { year: 2001, expected_value: '2001-12-12T00:00:00+00:00', assert: 'eventExists AND hasExpectedDate', assertion: 'x' },
                 { year: 2010, expected_value: '2010-12-12T00:00:00+00:00', assert: 'eventExists AND hasExpectedDate', assertion: 'x' },
@@ -266,7 +265,7 @@ describe('generate', () => {
 describe('mutators', () => {
     const build = () => {
         const b = new AssertionsBuilder();
-        b.setMeta({ test_type: 'variableCorrespondence' });
+        b.setMeta({ test_type: 'exactCorrespondence' });
         b.generate({ event, minYear: 2024, maxYear: 2026 });
         return b;
     };
@@ -336,7 +335,7 @@ describe('mutators', () => {
 describe('render', () => {
     it('renders one card per assertion with textarea, toggle, and color classes', () => {
         const b = new AssertionsBuilder();
-        b.setMeta({ test_type: 'variableCorrespondence' });
+        b.setMeta({ test_type: 'exactCorrespondence' });
         b.generate({ event, minYear: 2024, maxYear: 2025 });
         b.toggleAssert(2025); // make 2025 eventNotExists
         const container = document.createElement('div');
@@ -358,10 +357,10 @@ describe('render', () => {
 });
 
 describe('coverage hardening', () => {
-    it('generate variableCorrespondence: all in-range years are eventExists', () => {
+    it('generate exactCorrespondence: all in-range years are eventExists, no pivot keys', () => {
         const event = { event_key: 'VEvent', name: 'Variable Event', grade: 3, grade_lcl: 'Memorial', month: 6, day: 15 };
         const b = new AssertionsBuilder();
-        b.setMeta({ event_key: 'VEvent', test_type: 'variableCorrespondence' });
+        b.setMeta({ event_key: 'VEvent', test_type: 'exactCorrespondence' });
         b.generate({ event, minYear: 2020, maxYear: 2022 });
         const out = b.serialize();
         expect(out.assertions.map((a) => a.year)).toEqual([2020, 2021, 2022]);
@@ -412,7 +411,7 @@ describe('coverage hardening', () => {
             name: 'NoBaseTest',
             event_key: 'NB',
             description: "The FEAST of 'NB' should fall on July 4",
-            test_type: 'variableCorrespondence',
+            test_type: 'exactCorrespondence',
             assertions: [
                 { year: 2024, expected_value: null, assert: 'eventNotExists', assertion: "The FEAST of 'NB' should not exist on July 4" },
             ],
@@ -428,7 +427,7 @@ describe('coverage hardening', () => {
     it('render exposes grid class, color classes, comment icon, textarea', () => {
         const event = { event_key: 'REvent', name: 'Render Event', grade: 3, grade_lcl: 'Memorial', month: 7, day: 31 };
         const b = new AssertionsBuilder();
-        b.setMeta({ event_key: 'REvent', test_type: 'variableCorrespondence' });
+        b.setMeta({ event_key: 'REvent', test_type: 'exactCorrespondence' });
         b.generate({ event, minYear: 2024, maxYear: 2025 });
         b.toggleAssert(2025);                 // 2025 -> eventNotExists
         b.setComment(2024, 'a note');         // 2024 has a comment

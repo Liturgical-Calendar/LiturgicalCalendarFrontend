@@ -310,7 +310,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 : tt === TestType.ExactCorrespondenceUntil
                     ? builder.model.year_until
                     : null;
-        const showHammer = tt !== TestType.ExactCorrespondence;
         grid.innerHTML = '';
         for (let y = minYear; y <= maxYear; y++) {
             const span = document.createElement('span');
@@ -322,20 +321,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 grid.appendChild(span);
                 continue;
             }
-            if (showHammer) {
-                // Icon semantics per test type (spec R5): Since/Until = hammer
-                // ("set the pivot year"); Variable = fa-repeat ("toggle
-                // assertion", matching the per-year cards' toggle button). The
-                // behavioral hook class (hammerYear) is shared — only the
-                // visual icon and title differ.
-                const isVariable = tt === TestType.VariableCorrespondence;
-                const actionIcon = document.createElement('i');
-                actionIcon.className = `fas ${isVariable ? 'fa-repeat' : 'fa-hammer'} me-1 opacity-50 hammerYear`;
-                actionIcon.setAttribute('role', 'button');
-                actionIcon.setAttribute('aria-hidden', 'true');
-                actionIcon.title = isVariable ? i18n.toggleAssertion : i18n.setYear;
-                span.appendChild(actionIcon);
-            }
+            // Icon semantics per test type: Since/Until = hammer ("set the
+            // pivot year"); ExactCorrespondence = fa-repeat ("toggle
+            // assertion", matching the per-year cards' toggle button). The
+            // behavioral hook class (hammerYear) is shared — only the
+            // visual icon and title differ.
+            const isPivot = tt === TestType.ExactCorrespondenceSince || tt === TestType.ExactCorrespondenceUntil;
+            const actionIcon = document.createElement('i');
+            actionIcon.className = `fas ${isPivot ? 'fa-hammer' : 'fa-repeat'} me-1 opacity-50 hammerYear`;
+            actionIcon.setAttribute('role', 'button');
+            actionIcon.setAttribute('aria-hidden', 'true');
+            actionIcon.title = isPivot ? i18n.setYear : i18n.toggleAssertion;
+            span.appendChild(actionIcon);
             span.appendChild(document.createTextNode(String(y)));
             const xmark = document.createElement('i');
             xmark.className = 'fas fa-circle-xmark ms-1 opacity-50 removeYear';
@@ -483,7 +480,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Year-grid interactions (ported from UnitTestInterface, state-first):
-    //   hammer  → Since/Until: set the pivot; Variable: toggle that year
+    //   hammer  → Since/Until: set the pivot; ExactCorrespondence: toggle that year
     //   x-mark  → exclude the year (collapses to the striped bar)
     //   striped bar → restore the year
     //   span body   → no action (the icons are the affordances)
@@ -502,7 +499,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 tt === TestType.ExactCorrespondenceUntil
             ) {
                 builder.setPivot(year);
-            } else if (tt === TestType.VariableCorrespondence) {
+            } else {
                 builder.toggleAssert(year);
             }
         } else {
