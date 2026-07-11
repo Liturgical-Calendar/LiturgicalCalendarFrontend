@@ -2,7 +2,7 @@
  * Admin Decrees Management Module
  *
  * Handles capability detection via /admin/permissions/check and renders
- * the enriched read-only list of Dicastery for Divine Worship decrees.
+ * the enriched read-only list of Dicastery for Divine Worship decree definitions.
  * Edit/delete/create buttons are gated on canEdit/canAdmin capabilities.
  *
  * Task 4 wires the editor modal; Task 5 wires CRUD operations. This
@@ -14,6 +14,8 @@
  *
  * @module admin-decrees
  */
+
+import { DecreeAction, buildDecreePayload, validateDecreePayload } from './DecreePayload.js';
 
 const config = window.AdminDecreesConfig;
 
@@ -713,9 +715,535 @@ async function loadDecrees(container, capabilities) {
         allLocales = [requestLocale];
     }
 
+    // Store for modal use
+    modalAllLocales = allLocales;
+
     decrees.forEach((decree) => {
         renderDecreeCard(container, decree, capabilities, allLocales);
     });
+}
+
+// ---- editor modal ---------------------------------------------------------
+
+/**
+ * Visibility matrix: for each action, which blocks are shown.
+ * keys: i18n (needs-i18n block), readingsOnCreate (needs-readings block).
+ *
+ * @type {Record<string, {i18n: boolean, readingsOnCreate: boolean}>}
+ */
+const MATRIX = {
+    [DecreeAction.CreateNew]:        { i18n: true,  readingsOnCreate: true  },
+    [DecreeAction.MakeDoctor]:       { i18n: true,  readingsOnCreate: false },
+    [DecreeAction.SetPropertyName]:  { i18n: true,  readingsOnCreate: false },
+    [DecreeAction.SetPropertyGrade]: { i18n: false, readingsOnCreate: false },
+};
+
+/**
+ * Apply MATRIX visibility to modal blocks based on the selected action.
+ *
+ * Exported for unit testing.
+ *
+ * @param {string} action  One of the DecreeAction values
+ * @param {HTMLElement} form  The form element containing the blocks
+ */
+export function applyActionVisibility(action, form) {
+    const rule = MATRIX[action] ?? { i18n: false, readingsOnCreate: false };
+
+    // createNew-only event details block
+    const createNewBlocks = form.querySelectorAll('.action-createNew');
+    createNewBlocks.forEach((el) => {
+        el.classList.toggle('d-none', action !== DecreeAction.CreateNew);
+    });
+
+    // setProperty:grade-only block
+    const gradeBlocks = form.querySelectorAll('.action-setPropertyGrade');
+    gradeBlocks.forEach((el) => {
+        el.classList.toggle('d-none', action !== DecreeAction.SetPropertyGrade);
+    });
+
+    // i18n block (needs-i18n)
+    const i18nBlocks = form.querySelectorAll('.needs-i18n');
+    i18nBlocks.forEach((el) => {
+        el.classList.toggle('d-none', !rule.i18n);
+    });
+
+    // readings block (needs-readings)
+    const readingsBlocks = form.querySelectorAll('.needs-readings');
+    readingsBlocks.forEach((el) => {
+        el.classList.toggle('d-none', !rule.readingsOnCreate);
+    });
+}
+
+/**
+ * Locale list sourced from the /calendars metadata response.
+ * Populated after loadDecrees resolves; reused for i18n/readings locale selects.
+ *
+ * @type {string[]}
+ */
+let modalAllLocales = [];
+
+/**
+ * Build a locale <select> option list for an i18n row.
+ *
+ * @param {string[]} locales  Available locales
+ * @param {string}   [selected]  Pre-selected locale value
+ * @returns {HTMLSelectElement}
+ */
+function buildLocaleSelect(locales, selected) {
+    const sel = document.createElement('select');
+    sel.className = 'form-select form-select-sm';
+    sel.name = 'i18n_locale[]';
+
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = config.i18n.selectLocale;
+    sel.appendChild(placeholder);
+
+    locales.forEach((locale) => {
+        const opt = document.createElement('option');
+        opt.value = locale;
+        opt.textContent = locale;
+        if (locale === selected) opt.selected = true;
+        sel.appendChild(opt);
+    });
+    return sel;
+}
+
+/**
+ * Add an i18n row (locale + name) to #i18nRows.
+ *
+ * @param {HTMLElement} container  #i18nRows
+ * @param {string[]}    locales    Available locales
+ * @param {string}      [locale]   Pre-selected locale
+ * @param {string}      [name]     Pre-filled name
+ */
+function addI18nRow(container, locales, locale, name) {
+    const row = document.createElement('div');
+    row.className = 'row g-2 mb-2 i18n-row';
+
+    const localCol = document.createElement('div');
+    localCol.className = 'col-md-3';
+    const locSel = buildLocaleSelect(locales, locale);
+    localCol.appendChild(locSel);
+
+    const nameCol = document.createElement('div');
+    nameCol.className = 'col-md-8';
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.className = 'form-control form-control-sm';
+    nameInput.name = 'i18n_name[]';
+    nameInput.value = name ?? '';
+    nameCol.appendChild(nameInput);
+
+    const rmCol = document.createElement('div');
+    rmCol.className = 'col-md-1 d-flex align-items-center';
+    const rmBtn = document.createElement('button');
+    rmBtn.type = 'button';
+    rmBtn.className = 'btn btn-sm btn-outline-danger';
+    rmBtn.title = config.i18n.removeRow;
+    rmBtn.innerHTML = '<i class="fas fa-times"></i>';
+    rmBtn.addEventListener('click', () => row.remove());
+    rmCol.appendChild(rmBtn);
+
+    row.appendChild(localCol);
+    row.appendChild(nameCol);
+    row.appendChild(rmCol);
+    container.appendChild(row);
+}
+
+/**
+ * Build a readings group (per-locale) and append it to #readingsGroups.
+ *
+ * @param {HTMLElement} container  #readingsGroups
+ * @param {string[]}    locales    Available locales
+ * @param {string}      [locale]   Pre-selected locale
+ */
+function addReadingsGroup(container, locales, locale) {
+    const group = document.createElement('div');
+    group.className = 'border rounded p-3 mb-3 readings-group';
+
+    // Locale select header row
+    const headerRow = document.createElement('div');
+    headerRow.className = 'row g-2 mb-3 align-items-center';
+
+    const locCol = document.createElement('div');
+    locCol.className = 'col-md-4';
+    const locSel = buildLocaleSelect(locales, locale);
+    locSel.name = 'readings_locale[]';
+    locCol.appendChild(locSel);
+
+    const rmBtnCol = document.createElement('div');
+    rmBtnCol.className = 'col-md-auto ms-auto';
+    const rmBtn = document.createElement('button');
+    rmBtn.type = 'button';
+    rmBtn.className = 'btn btn-sm btn-outline-danger';
+    rmBtn.title = config.i18n.removeRow;
+    rmBtn.innerHTML = '<i class="fas fa-times"></i>';
+    rmBtn.addEventListener('click', () => group.remove());
+    rmBtnCol.appendChild(rmBtn);
+
+    headerRow.appendChild(locCol);
+    headerRow.appendChild(rmBtnCol);
+    group.appendChild(headerRow);
+
+    // Reading fields
+    const readingFields = [
+        { name: 'first_reading[]',      label: config.i18n.firstReading,      required: true  },
+        { name: 'responsorial_psalm[]', label: config.i18n.responsorialPsalm, required: true  },
+        { name: 'second_reading[]',     label: config.i18n.secondReading,     required: false },
+        { name: 'gospel_acclamation[]', label: config.i18n.gospelAcclamation, required: true  },
+        { name: 'gospel[]',             label: config.i18n.gospel,            required: true  },
+    ];
+
+    readingFields.forEach(({ name, label, required }) => {
+        const fieldRow = document.createElement('div');
+        fieldRow.className = 'row g-2 mb-2 align-items-center';
+
+        const labelCol = document.createElement('div');
+        labelCol.className = 'col-md-4';
+        const labelEl = document.createElement('label');
+        labelEl.className = 'col-form-label col-form-label-sm';
+        labelEl.textContent = label;
+        labelCol.appendChild(labelEl);
+
+        const inputCol = document.createElement('div');
+        inputCol.className = 'col-md-8';
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'form-control form-control-sm';
+        input.name = name;
+        if (!required) {
+            input.placeholder = `(${config.i18n.secondReading})`;
+        }
+        inputCol.appendChild(input);
+
+        fieldRow.appendChild(labelCol);
+        fieldRow.appendChild(inputCol);
+        group.appendChild(fieldRow);
+    });
+
+    container.appendChild(group);
+}
+
+/**
+ * Collect form values from a root element and return a plain object
+ * compatible with buildDecreePayload().
+ *
+ * Pure function — receives a root DOM element (the form or a wrapper),
+ * reads named inputs, and returns a plain-object form bag.
+ * Exported for unit testing.
+ *
+ * @param {HTMLElement} root
+ * @returns {{
+ *   action: string,
+ *   decree_id: string,
+ *   decree_date: string,
+ *   decree_protocol: string,
+ *   description: string,
+ *   event_key: string,
+ *   since_year: string,
+ *   url: string,
+ *   event_type: string,
+ *   day: string,
+ *   month: string,
+ *   strtotime: string,
+ *   grade: string,
+ *   color: string[],
+ *   common: string[],
+ *   i18n: Record<string, string>,
+ *   readings: Record<string, {first_reading: string, responsorial_psalm: string, second_reading?: string, gospel_acclamation: string, gospel: string}>
+ * }}
+ */
+export function collectFormValues(root) {
+    /** @param {string} name @returns {string} */
+    const val = (name) => {
+        const el = root.querySelector(`[name="${name}"]`);
+        return el ? el.value.trim() : '';
+    };
+
+    // Determine effective action (for grade, read from the visible block)
+    const action = val('action');
+
+    // Grade: action-createNew uses #eventGradeCreate, action-setPropertyGrade uses #eventGradeSet
+    let grade;
+    if (action === DecreeAction.SetPropertyGrade) {
+        grade = val('grade_set');
+    } else {
+        grade = val('grade');
+    }
+
+    // Color: multi-select
+    const colorEl = root.querySelector('[name="color"]');
+    const color = colorEl
+        ? Array.from(colorEl.selectedOptions).map((o) => o.value).filter(Boolean)
+        : [];
+
+    // Common: free-text with comma separation
+    const commonText = val('common_text');
+    const common = commonText
+        ? commonText.split(',').map((s) => s.trim()).filter(Boolean)
+        : [];
+
+    // i18n rows
+    const i18n = {};
+    // Base locale row (disabled select — read from the option text, not value)
+    const baseLocaleOpt = root.querySelector('#i18nBaseLocaleOption');
+    const baseLocaleValue = baseLocaleOpt ? baseLocaleOpt.value : '';
+    const baseNameInput = root.querySelector('.i18n-row[data-base-row="true"] [name="i18n_name[]"]');
+    if (baseLocaleValue && baseNameInput && baseNameInput.value.trim()) {
+        i18n[baseLocaleValue] = baseNameInput.value.trim();
+    }
+    // Additional i18n rows (not base)
+    const addlI18nRows = root.querySelectorAll('.i18n-row:not([data-base-row="true"])');
+    addlI18nRows.forEach((row) => {
+        const locSel = row.querySelector('[name="i18n_locale[]"]');
+        const nameInp = row.querySelector('[name="i18n_name[]"]');
+        const locale = locSel ? locSel.value : '';
+        const name = nameInp ? nameInp.value.trim() : '';
+        if (locale && name) {
+            i18n[locale] = name;
+        }
+    });
+
+    // Readings groups
+    const readings = {};
+    const readingGroups = root.querySelectorAll('.readings-group');
+    readingGroups.forEach((group) => {
+        const locSel = group.querySelector('[name="readings_locale[]"]');
+        const locale = locSel ? locSel.value : '';
+        if (!locale) return;
+
+        const getField = (name) => {
+            const inp = group.querySelector(`[name="${name}"]`);
+            return inp ? inp.value.trim() : '';
+        };
+
+        const entry = {
+            first_reading:      getField('first_reading[]'),
+            responsorial_psalm: getField('responsorial_psalm[]'),
+            gospel_acclamation: getField('gospel_acclamation[]'),
+            gospel:             getField('gospel[]'),
+        };
+        const secondReading = getField('second_reading[]');
+        if (secondReading) {
+            entry.second_reading = secondReading;
+        }
+        readings[locale] = entry;
+    });
+
+    return {
+        action,
+        decree_id:       val('decree_id'),
+        decree_date:     val('decree_date'),
+        decree_protocol: val('decree_protocol'),
+        description:     val('description'),
+        event_key:       val('event_key'),
+        since_year:      val('since_year'),
+        url:             val('url'),
+        event_type:      (() => {
+            const checked = root.querySelector('[name="event_type"]:checked');
+            return checked ? checked.value : 'fixed';
+        })(),
+        day:             val('day'),
+        month:           val('month'),
+        strtotime:       val('strtotime'),
+        grade,
+        color,
+        common,
+        i18n:            Object.keys(i18n).length > 0 ? i18n : undefined,
+        readings:        Object.keys(readings).length > 0 ? readings : undefined,
+    };
+}
+
+/**
+ * Stub save handler — replaced by Task 5.
+ * Declared async so callers can await it safely.
+ *
+ * @param {object}  payload   Built payload
+ * @param {boolean} isCreate  true when creating, false when updating
+ * @returns {Promise<void>}
+ */
+async function saveDecree(payload, isCreate) {
+    console.warn('saveDecree: save not wired yet', { payload, isCreate });
+}
+
+/**
+ * Open the editor modal for create or edit.
+ *
+ * @param {object|null} decree  Existing decree object (null for create)
+ * @param {string[]}    locales Available locales for i18n/readings selects
+ */
+function openEditorModal(decree, locales) {
+    const modal    = document.getElementById('decreeEditorModal');
+    const form     = document.getElementById('decreeEditorForm');
+    const alertBox = document.getElementById('decreeEditorAlerts');
+    const label    = document.getElementById('decreeEditorModalLabel');
+    const saveBtn  = document.getElementById('saveDecreeBtn');
+    const isCreate = !decree;
+
+    if (!modal || !form || !alertBox) return;
+
+    // Reset form and alerts
+    form.reset();
+    alertBox.innerHTML = '';
+
+    // Update modal title
+    if (label) {
+        label.textContent = isCreate ? config.i18n.newDecree : config.i18n.editDecree;
+    }
+
+    // Set base locale option value and text on the disabled select
+    const baseLocaleOpt = document.getElementById('i18nBaseLocaleOption');
+    const baseLocale = config.locale.replace(/-/g, '_');
+    if (baseLocaleOpt) {
+        baseLocaleOpt.value   = baseLocale;
+        baseLocaleOpt.textContent = baseLocale;
+    }
+
+    // Clear dynamic i18n rows (keep only base row)
+    const i18nRows = document.getElementById('i18nRows');
+    if (i18nRows) {
+        const addlRows = i18nRows.querySelectorAll('.i18n-row:not([data-base-row="true"])');
+        addlRows.forEach((r) => r.remove());
+    }
+
+    // Clear readings groups
+    const readingsGroups = document.getElementById('readingsGroups');
+    if (readingsGroups) {
+        readingsGroups.innerHTML = '';
+    }
+
+    // Pre-add a base-locale readings group for createNew
+    addReadingsGroup(readingsGroups, locales, baseLocale);
+
+    // Populate from existing decree if editing
+    if (decree) {
+        const setVal = (name, value) => {
+            const el = form.querySelector(`[name="${name}"]`);
+            if (el && value !== undefined && value !== null) el.value = value;
+        };
+
+        // decree_id is readonly when editing
+        const decreeIdEl = form.querySelector('[name="decree_id"]');
+        if (decreeIdEl) {
+            decreeIdEl.value    = decree.decree_id ?? '';
+            decreeIdEl.readOnly = true;
+        }
+
+        setVal('decree_date',     decree.decree_date);
+        setVal('decree_protocol', decree.decree_protocol);
+        setVal('description',     decree.description);
+
+        const ev = decree.liturgical_event;
+        if (ev) {
+            setVal('event_key', ev.event_key);
+            if (ev.grade !== undefined) {
+                setVal('grade',     ev.grade);
+                setVal('grade_set', ev.grade);
+            }
+            if (Array.isArray(ev.color)) {
+                const colorEl = form.querySelector('[name="color"]');
+                if (colorEl) {
+                    Array.from(colorEl.options).forEach((opt) => {
+                        opt.selected = ev.color.includes(opt.value);
+                    });
+                }
+            }
+        }
+
+        const meta = decree.metadata;
+        if (meta) {
+            if (meta.since_year) setVal('since_year', meta.since_year);
+            if (meta.url)        setVal('url',        meta.url);
+        }
+    } else {
+        // Creating: decree_id is editable
+        const decreeIdEl = form.querySelector('[name="decree_id"]');
+        if (decreeIdEl) decreeIdEl.readOnly = false;
+    }
+
+    // Apply initial visibility
+    const actionEl = form.querySelector('[name="action"]');
+    const initialAction = actionEl ? actionEl.value : DecreeAction.CreateNew;
+    applyActionVisibility(initialAction, form);
+
+    // Fixed/mobile radio toggle
+    const eventTypeRadios = form.querySelectorAll('[name="event_type"]');
+    const fixedDateInputs  = document.getElementById('fixedDateInputs');
+    const mobileDateInput  = document.getElementById('mobileDateInput');
+
+    const syncDateType = (value) => {
+        if (fixedDateInputs) fixedDateInputs.classList.toggle('d-none', value !== 'fixed');
+        if (mobileDateInput)  mobileDateInput.classList.toggle('d-none',  value !== 'mobile');
+    };
+    eventTypeRadios.forEach((radio) => {
+        radio.addEventListener('change', () => syncDateType(radio.value));
+    });
+    // Set initial state
+    const checkedRadio = form.querySelector('[name="event_type"]:checked');
+    syncDateType(checkedRadio ? checkedRadio.value : 'fixed');
+
+    // Add i18n row button
+    const addI18nBtn = document.getElementById('addI18nRow');
+    if (addI18nBtn) {
+        // Clone to remove old listeners
+        const newBtn = addI18nBtn.cloneNode(true);
+        addI18nBtn.parentNode.replaceChild(newBtn, addI18nBtn);
+        newBtn.addEventListener('click', () => {
+            const rows = document.getElementById('i18nRows');
+            if (rows) addI18nRow(rows, locales);
+        });
+    }
+
+    // Add readings group button
+    const addReadingsBtn = document.getElementById('addReadingsGroup');
+    if (addReadingsBtn) {
+        const newBtn = addReadingsBtn.cloneNode(true);
+        addReadingsBtn.parentNode.replaceChild(newBtn, addReadingsBtn);
+        newBtn.addEventListener('click', () => {
+            const groups = document.getElementById('readingsGroups');
+            if (groups) addReadingsGroup(groups, locales);
+        });
+    }
+
+    // Wire save button
+    if (saveBtn) {
+        const newSaveBtn = saveBtn.cloneNode(true);
+        saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+        newSaveBtn.addEventListener('click', async () => {
+            alertBox.innerHTML = '';
+            const formValues = collectFormValues(form);
+            const payload    = buildDecreePayload(formValues);
+            const baseLocale = config.locale.replace(/-/g, '_');
+            const errors     = validateDecreePayload(payload, baseLocale, isCreate);
+
+            if (errors.length > 0) {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-danger';
+                alertDiv.setAttribute('role', 'alert');
+                const heading = document.createElement('p');
+                heading.className = 'fw-semibold mb-1';
+                heading.textContent = config.i18n.validationErrors;
+                alertDiv.appendChild(heading);
+                const ul = document.createElement('ul');
+                ul.className = 'mb-0';
+                errors.forEach((msg) => {
+                    const li = document.createElement('li');
+                    li.textContent = msg;
+                    ul.appendChild(li);
+                });
+                alertDiv.appendChild(ul);
+                alertBox.appendChild(alertDiv);
+                return;
+            }
+
+            await saveDecree(payload, isCreate);
+        });
+    }
+
+    // Show modal via Bootstrap
+    const bsModal = bootstrap.Modal.getOrCreateInstance(modal);
+    bsModal.show();
 }
 
 // ---- module capabilities export -------------------------------------------
@@ -738,10 +1266,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const container  = document.getElementById('decreesContainer');
     const createBtn  = document.getElementById('btnCreateDecree');
+    const form       = document.getElementById('decreeEditorForm');
 
     if (!container) {
         console.error('decreesContainer not found');
         return;
+    }
+
+    // Wire action-change visibility toggling
+    if (form) {
+        const actionEl = form.querySelector('[name="action"]');
+        if (actionEl) {
+            actionEl.addEventListener('change', () => {
+                applyActionVisibility(actionEl.value, form);
+            });
+        }
     }
 
     const capabilities = await capabilitiesPromise;
@@ -755,7 +1294,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Show create button for editors
     if (capabilities.canEdit && createBtn) {
         createBtn.classList.remove('d-none');
+        createBtn.addEventListener('click', () => {
+            openEditorModal(null, modalAllLocales);
+        });
     }
+
+    // Wire edit buttons via event delegation on the container
+    container.addEventListener('click', (e) => {
+        const editBtn = e.target.closest('[data-action="edit"]');
+        if (editBtn && capabilities.canEdit) {
+            const decreeId = editBtn.getAttribute('data-decree-id');
+            // Task 5 will replace this stub with proper data lookup from the loaded list.
+            openEditorModal({ decree_id: decreeId }, modalAllLocales);
+        }
+    });
 
     await loadDecrees(container, capabilities);
 });

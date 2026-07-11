@@ -68,7 +68,7 @@ if (!$isAdmin && !$isCalendarEditor) {
     <!-- Decrees container -->
     <div id="decreesContainer" class="row g-3"></div>
 
-    <!-- Editor modal (form filled in by Task 4) -->
+    <!-- Editor modal -->
     <div class="modal fade" id="decreeEditorModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content">
@@ -80,8 +80,290 @@ if (!$isAdmin && !$isCalendarEditor) {
                         aria-label="<?php echo htmlspecialchars(_('Close'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></button>
                 </div>
                 <div class="modal-body">
-                    <!-- Task 4 will populate the form here -->
-                </div>
+
+                    <!-- Alert region for validation errors -->
+                    <div id="decreeEditorAlerts"></div>
+
+                    <form id="decreeEditorForm" novalidate>
+
+                        <!-- ── Action select ──────────────────────────────── -->
+                        <div class="mb-3">
+                            <label for="decreeAction" class="form-label">
+                                <?php echo htmlspecialchars(_('Action'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                            </label>
+                            <select class="form-select" id="decreeAction" name="action" required>
+                                <option value="createNew"><?php
+                                    echo htmlspecialchars(_('Create new event'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                ?></option>
+                                <option value="makeDoctor"><?php
+                                    echo htmlspecialchars(_('Make Doctor of the Church'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                ?></option>
+                                <option value="setProperty:name"><?php
+                                    echo htmlspecialchars(_('Set property: name'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                ?></option>
+                                <option value="setProperty:grade"><?php
+                                    echo htmlspecialchars(_('Set property: grade'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                ?></option>
+                            </select>
+                        </div>
+
+                        <!-- ── Common fields ──────────────────────────────── -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="decreeId" class="form-label">
+                                    <?php echo htmlspecialchars(_('Decree ID'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                </label>
+                                <input type="text" class="form-control" id="decreeId" name="decree_id"
+                                    pattern="^[A-Z][A-Za-z]+_(Upgrade|Create|NameChange|Doctor)$"
+                                    required>
+                                <div class="form-text">
+                                    <?php echo htmlspecialchars(
+                                        _('Format: PascalCaseName_(Upgrade|Create|NameChange|Doctor)'),
+                                        ENT_QUOTES | ENT_SUBSTITUTE,
+                                        'UTF-8'
+                                    ); ?>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="decreeDate" class="form-label">
+                                    <?php echo htmlspecialchars(_('Decree date'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                </label>
+                                <input type="date" class="form-control" id="decreeDate" name="decree_date">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="decreeProtocol" class="form-label">
+                                    <?php echo htmlspecialchars(_('Protocol'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                </label>
+                                <input type="text" class="form-control" id="decreeProtocol" name="decree_protocol"
+                                    placeholder="Prot. N. 000/25">
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="decreeEventKey" class="form-label">
+                                    <?php echo htmlspecialchars(_('Event key'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                </label>
+                                <input type="text" class="form-control" id="decreeEventKey" name="event_key">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="decreeSinceYear" class="form-label">
+                                    <?php echo htmlspecialchars(_('Since year'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                </label>
+                                <input type="number" class="form-control" id="decreeSinceYear" name="since_year"
+                                    min="1970" max="9999">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="decreeUrl" class="form-label">
+                                    <?php echo htmlspecialchars(_('Source URL'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                </label>
+                                <input type="url" class="form-control" id="decreeUrl" name="url"
+                                    placeholder="https://www.vatican.va/…">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="decreeDescription" class="form-label">
+                                <?php echo htmlspecialchars(_('Description'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                            </label>
+                            <textarea class="form-control" id="decreeDescription" name="description"
+                                rows="2"></textarea>
+                        </div>
+
+                        <!-- ── createNew-only block: event details ────────── -->
+                        <fieldset class="border rounded p-3 mb-3 action-block action-createNew">
+                            <legend class="float-none w-auto px-2 fs-6 fw-semibold">
+                                <?php echo htmlspecialchars(_('Event details'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                            </legend>
+
+                            <!-- Fixed / mobile date type -->
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <?php echo htmlspecialchars(_('Date type'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                </label>
+                                <div class="d-flex gap-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="event_type"
+                                            id="eventTypeFixed" value="fixed" checked>
+                                        <label class="form-check-label" for="eventTypeFixed">
+                                            <?php echo htmlspecialchars(_('Fixed'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="event_type"
+                                            id="eventTypeMobile" value="mobile">
+                                        <label class="form-check-label" for="eventTypeMobile">
+                                            <?php echo htmlspecialchars(_('Mobile'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Fixed date inputs -->
+                            <div class="row g-3 mb-3" id="fixedDateInputs">
+                                <div class="col-md-3">
+                                    <label for="eventDay" class="form-label">
+                                        <?php echo htmlspecialchars(_('Day'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                    </label>
+                                    <input type="number" class="form-control" id="eventDay" name="day"
+                                        min="1" max="31">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="eventMonth" class="form-label">
+                                        <?php echo htmlspecialchars(_('Month'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                    </label>
+                                    <input type="number" class="form-control" id="eventMonth" name="month"
+                                        min="1" max="12">
+                                </div>
+                            </div>
+
+                            <!-- Mobile date input -->
+                            <div class="mb-3 d-none" id="mobileDateInput">
+                                <label for="eventStrtotime" class="form-label">
+                                    <?php echo htmlspecialchars(_('Strtotime expression'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                </label>
+                                <input type="text" class="form-control" id="eventStrtotime" name="strtotime"
+                                    placeholder="Monday after Pentecost">
+                                <div class="form-text">
+                                    <?php echo htmlspecialchars(
+                                        _('PHP strtotime-compatible expression, e.g. "Monday after Pentecost"'),
+                                        ENT_QUOTES | ENT_SUBSTITUTE,
+                                        'UTF-8'
+                                    ); ?>
+                                </div>
+                            </div>
+
+                            <!-- Grade + color + common (event details) -->
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="eventGradeCreate" class="form-label">
+                                        <?php echo htmlspecialchars(_('Grade'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                    </label>
+                                    <select class="form-select" id="eventGradeCreate" name="grade">
+                                        <option value="0"><?php echo htmlspecialchars(_('0 — Weekday'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                        <option value="1"><?php echo htmlspecialchars(_('1 — Commemoration'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                        <option value="2" selected><?php echo htmlspecialchars(_('2 — Optional Memorial'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                        <option value="3"><?php echo htmlspecialchars(_('3 — Memorial'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                        <option value="4"><?php echo htmlspecialchars(_('4 — Feast'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                        <option value="5"><?php echo htmlspecialchars(_('5 — Feast of the Lord'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                        <option value="6"><?php echo htmlspecialchars(_('6 — Solemnity'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                        <option value="7"><?php echo htmlspecialchars(_('7 — Higher Solemnity'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="eventColor" class="form-label">
+                                        <?php echo htmlspecialchars(_('Color(s)'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                    </label>
+                                    <select class="form-select" id="eventColor" name="color" multiple size="5">
+                                        <option value="white"><?php echo htmlspecialchars(_('White'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                        <option value="red"><?php echo htmlspecialchars(_('Red'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                        <option value="green"><?php echo htmlspecialchars(_('Green'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                        <option value="purple"><?php echo htmlspecialchars(_('Purple'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                        <option value="rose"><?php echo htmlspecialchars(_('Rose'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                    </select>
+                                    <div class="form-text">
+                                        <?php echo htmlspecialchars(_('Hold Ctrl/Cmd to select multiple'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="eventCommon" class="form-label">
+                                        <?php echo htmlspecialchars(_('Common(s)'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                    </label>
+                                    <input type="text" class="form-control" id="eventCommon" name="common_text"
+                                        list="commonDatalist"
+                                        placeholder="<?php echo htmlspecialchars(_('e.g. Pastors'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+                                    <datalist id="commonDatalist">
+                                        <option value="Proper"></option>
+                                        <option value="Pastors"></option>
+                                        <option value="Doctors"></option>
+                                        <option value="Martyrs"></option>
+                                        <option value="Virgins"></option>
+                                        <option value="Holy Men and Women"></option>
+                                    </datalist>
+                                    <div class="form-text">
+                                        <?php echo htmlspecialchars(
+                                            _('Separate multiple values with a comma'),
+                                            ENT_QUOTES | ENT_SUBSTITUTE,
+                                            'UTF-8'
+                                        ); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <!-- ── setProperty:grade-only block ──────────────── -->
+                        <fieldset class="border rounded p-3 mb-3 action-block action-setPropertyGrade d-none">
+                            <legend class="float-none w-auto px-2 fs-6 fw-semibold">
+                                <?php echo htmlspecialchars(_('Grade'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                            </legend>
+                            <div class="col-md-4">
+                                <label for="eventGradeSet" class="form-label">
+                                    <?php echo htmlspecialchars(_('New grade'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                </label>
+                                <select class="form-select" id="eventGradeSet" name="grade_set">
+                                    <option value="0"><?php echo htmlspecialchars(_('0 — Weekday'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                    <option value="1"><?php echo htmlspecialchars(_('1 — Commemoration'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                    <option value="2"><?php echo htmlspecialchars(_('2 — Optional Memorial'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                    <option value="3" selected><?php echo htmlspecialchars(_('3 — Memorial'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                    <option value="4"><?php echo htmlspecialchars(_('4 — Feast'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                    <option value="5"><?php echo htmlspecialchars(_('5 — Feast of the Lord'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                    <option value="6"><?php echo htmlspecialchars(_('6 — Solemnity'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                    <option value="7"><?php echo htmlspecialchars(_('7 — Higher Solemnity'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                </select>
+                            </div>
+                        </fieldset>
+
+                        <!-- ── i18n block (needs-i18n) ────────────────────── -->
+                        <fieldset class="border rounded p-3 mb-3 action-block needs-i18n">
+                            <legend class="float-none w-auto px-2 fs-6 fw-semibold">
+                                <?php echo htmlspecialchars(_('Translations (i18n)'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                            </legend>
+
+                            <div id="i18nRows">
+                                <!-- Base locale row — pre-added and non-removable -->
+                                <div class="row g-2 mb-2 i18n-row" data-base-row="true">
+                                    <div class="col-md-3">
+                                        <select class="form-select form-select-sm" name="i18n_locale[]" disabled>
+                                            <option selected id="i18nBaseLocaleOption"></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control form-control-sm"
+                                            name="i18n_name[]"
+                                            placeholder="<?php echo htmlspecialchars(_('Name in base locale'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"
+                                            required>
+                                    </div>
+                                    <div class="col-md-1 d-flex align-items-center">
+                                        <span class="text-muted small">
+                                            <i class="fas fa-lock" title="<?php echo htmlspecialchars(_('Base locale — cannot be removed'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-sm btn-outline-secondary mt-2" id="addI18nRow">
+                                <i class="fas fa-plus me-1"></i><?php echo htmlspecialchars(_('Add translation'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                            </button>
+                        </fieldset>
+
+                        <!-- ── Readings block (needs-readings) ───────────── -->
+                        <fieldset class="border rounded p-3 mb-3 action-block needs-readings">
+                            <legend class="float-none w-auto px-2 fs-6 fw-semibold">
+                                <?php echo htmlspecialchars(_('Lectionary readings'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                            </legend>
+
+                            <div id="readingsGroups">
+                                <!-- Readings groups are added dynamically by JS.
+                                     A base-locale group is pre-added on modal open. -->
+                            </div>
+
+                            <button type="button" class="btn btn-sm btn-outline-secondary mt-2" id="addReadingsGroup">
+                                <i class="fas fa-plus me-1"></i><?php echo htmlspecialchars(_('Add readings for locale'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                            </button>
+                        </fieldset>
+
+                    </form>
+                </div><!-- /.modal-body -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         <?php echo htmlspecialchars(_('Cancel'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
@@ -130,17 +412,27 @@ if (!$isAdmin && !$isCalendarEditor) {
             isGlobalAdmin: <?php echo json_encode($isAdmin); ?>,
             userSub:       <?php echo json_encode($authHelper->sub ?? ''); ?>,
             i18n: {
-                loading:       <?php echo json_encode(_('Loading…')); ?>,
-                noAccess:      <?php echo json_encode(_('You do not have permission to view decrees administration.')); ?>,
-                loadFailed:    <?php echo json_encode(_('Could not load decrees from the API.')); ?>,
-                noDecrees:     <?php echo json_encode(_('No decrees found.')); ?>,
-                confirmDelete: <?php echo json_encode(_('Are you sure you want to delete this decree? This action cannot be undone.')); ?>,
-                created:       <?php echo json_encode(_('Decree created.')); ?>,
-                updated:       <?php echo json_encode(_('Decree updated.')); ?>,
-                deleted:       <?php echo json_encode(_('Decree deleted.')); ?>,
-                managePerms:   <?php echo json_encode(_('Manage permissions')); ?>,
-                translations:  <?php echo json_encode(_('Translations')); ?>,
-                readings:      <?php echo json_encode(_('Lectionary readings')); ?>
+                loading:           <?php echo json_encode(_('Loading…')); ?>,
+                noAccess:          <?php echo json_encode(_('You do not have permission to view decrees administration.')); ?>,
+                loadFailed:        <?php echo json_encode(_('Could not load decrees from the API.')); ?>,
+                noDecrees:         <?php echo json_encode(_('No decrees found.')); ?>,
+                confirmDelete:     <?php echo json_encode(_('Are you sure you want to delete this decree? This action cannot be undone.')); ?>,
+                created:           <?php echo json_encode(_('Decree created.')); ?>,
+                updated:           <?php echo json_encode(_('Decree updated.')); ?>,
+                deleted:           <?php echo json_encode(_('Decree deleted.')); ?>,
+                managePerms:       <?php echo json_encode(_('Manage permissions')); ?>,
+                translations:      <?php echo json_encode(_('Translations')); ?>,
+                readings:          <?php echo json_encode(_('Lectionary readings')); ?>,
+                newDecree:         <?php echo json_encode(_('New Decree')); ?>,
+                editDecree:        <?php echo json_encode(_('Edit Decree')); ?>,
+                selectLocale:      <?php echo json_encode(_('Select locale')); ?>,
+                removeRow:         <?php echo json_encode(_('Remove')); ?>,
+                firstReading:      <?php echo json_encode(_('First reading')); ?>,
+                responsorialPsalm: <?php echo json_encode(_('Responsorial psalm')); ?>,
+                secondReading:     <?php echo json_encode(_('Second reading (optional)')); ?>,
+                gospelAcclamation: <?php echo json_encode(_('Gospel acclamation')); ?>,
+                gospel:            <?php echo json_encode(_('Gospel')); ?>,
+                validationErrors:  <?php echo json_encode(_('Please fix the following errors before saving:')); ?>
             }
         };
     </script>
