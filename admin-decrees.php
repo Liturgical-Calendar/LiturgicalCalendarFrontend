@@ -128,6 +128,7 @@ if (!$isAdmin && !$isCalendarEditor) {
             <?php // BCP-47 (en-US), not gettext/ICU (en_US): Intl.DateTimeFormat rejects underscore tags. ?>
             locale:        <?php echo json_encode(str_replace('_', '-', $i18n->LOCALE)); ?>,
             isGlobalAdmin: <?php echo json_encode($isAdmin); ?>,
+            userSub:       <?php echo json_encode($authHelper->sub ?? ''); ?>,
             i18n: {
                 loading:       <?php echo json_encode(_('Loading…')); ?>,
                 noAccess:      <?php echo json_encode(_('You do not have permission to view decrees administration.')); ?>,
