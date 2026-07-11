@@ -16,7 +16,7 @@ parameters:
         - admin-users.php
         - developer-dashboard.php
         - missals-editor.php
-        - decrees.php
+        - admin-decrees.php
         - easter.php
         - examples.php
         - extending.php
@@ -45,7 +45,7 @@ parameters:
                 - admin-users.php
                 - developer-dashboard.php
                 - missals-editor.php
-                - decrees.php
+                - admin-decrees.php
                 - easter.php
                 - examples.php
                 - extending.php
