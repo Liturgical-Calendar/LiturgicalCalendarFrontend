@@ -1129,8 +1129,8 @@ export function reverseMapAction(action, property) {
  */
 function renderFetchError(alertBox, err) {
     const status = err.status;
-    const serverMsg = (err.body && typeof err.body === 'object' && typeof err.body.message === 'string')
-        ? err.body.message
+    const serverMsg = (err.body && typeof err.body === 'object' && typeof err.body.detail === 'string')
+        ? err.body.detail
         : (typeof err.body === 'string' ? err.body : null);
 
     const div = document.createElement('div');
@@ -1295,8 +1295,10 @@ function openEditorModal(decree, locales, capabilities) {
 
         // event_key is readonly when editing: PATCH must NOT change event_key
         // (API rejects with 400 and instructs DELETE + PUT instead).
+        // Only set readonly if the decree actually has a liturgical_event.event_key;
+        // if missing, leave it editable to allow assignment.
         const eventKeyEl = form.querySelector('[name="event_key"]');
-        if (eventKeyEl) {
+        if (eventKeyEl && decree.liturgical_event && decree.liturgical_event.event_key) {
             eventKeyEl.readOnly = true;
         }
 
@@ -1425,32 +1427,37 @@ function openEditorModal(decree, locales, capabilities) {
         const newSaveBtn = saveBtn.cloneNode(true);
         saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
         newSaveBtn.addEventListener('click', async () => {
-            alertBox.replaceChildren();
-            const formValues = collectFormValues(form);
-            const payload    = buildDecreePayload(formValues);
-            const errors     = validateDecreePayload(payload, baseLocale, isCreate);
+            newSaveBtn.disabled = true;
+            try {
+                alertBox.replaceChildren();
+                const formValues = collectFormValues(form);
+                const payload    = buildDecreePayload(formValues);
+                const errors     = validateDecreePayload(payload, baseLocale, isCreate);
 
-            if (errors.length > 0) {
-                const alertDiv = document.createElement('div');
-                alertDiv.className = 'alert alert-danger';
-                alertDiv.setAttribute('role', 'alert');
-                const heading = document.createElement('p');
-                heading.className = 'fw-semibold mb-1';
-                heading.textContent = config.i18n.validationErrors;
-                alertDiv.appendChild(heading);
-                const ul = document.createElement('ul');
-                ul.className = 'mb-0';
-                errors.forEach((msg) => {
-                    const li = document.createElement('li');
-                    li.textContent = msg;
-                    ul.appendChild(li);
-                });
-                alertDiv.appendChild(ul);
-                alertBox.appendChild(alertDiv);
-                return;
+                if (errors.length > 0) {
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert alert-danger';
+                    alertDiv.setAttribute('role', 'alert');
+                    const heading = document.createElement('p');
+                    heading.className = 'fw-semibold mb-1';
+                    heading.textContent = config.i18n.validationErrors;
+                    alertDiv.appendChild(heading);
+                    const ul = document.createElement('ul');
+                    ul.className = 'mb-0';
+                    errors.forEach((msg) => {
+                        const li = document.createElement('li');
+                        li.textContent = msg;
+                        ul.appendChild(li);
+                    });
+                    alertDiv.appendChild(ul);
+                    alertBox.appendChild(alertDiv);
+                    return;
+                }
+
+                await saveDecree(payload, isCreate, alertBox, capabilities);
+            } finally {
+                newSaveBtn.disabled = false;
             }
-
-            await saveDecree(payload, isCreate, alertBox, capabilities);
         });
     }
 
