@@ -756,10 +756,19 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function updateAccessReqCounts() {
         const countEl = document.getElementById('permRequestsCount');
-        const pendingBadge = document.getElementById('permReqPendingBadge');
         const totalPending = accessReqItems.pending.length;
         if (countEl) countEl.textContent = totalPending;
-        if (pendingBadge) pendingBadge.textContent = totalPending;
+
+        const badges = {
+            permReqPendingBadge: totalPending,
+            permReqApprovedBadge: accessReqItems.approved.length,
+            permReqRejectedBadge: accessReqItems.rejected.length,
+            permReqRevokedBadge: accessReqItems.revoked.length
+        };
+        for (const [id, count] of Object.entries(badges)) {
+            const badge = document.getElementById(id);
+            if (badge) badge.textContent = count;
+        }
     }
 
     /**

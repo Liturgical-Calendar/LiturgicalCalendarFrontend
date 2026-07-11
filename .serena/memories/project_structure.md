@@ -44,7 +44,7 @@ LiturgicalCalendarFrontend/
 - `decrees.php`, `translations.php`
 - `liturgyOfAnyDay.php`
 - `missals-editor.php` — missal editing
-- `request-access.php`, `permission-requests.php`, `admin-role-requests.php`
+- `permission-requests.php`
 - `admin-dashboard.php`, `admin-users.php`, `admin-applications.php`, `admin-permissions.php`
 - `developer-dashboard.php`
 - `user-profile.php`, `about.php`
