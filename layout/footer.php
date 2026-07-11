@@ -135,13 +135,13 @@ if ('examples' !== $pageName) {
 }
 
 //load admin module base for admin pages that use it
-if (in_array($pageName, ['admin-applications', 'admin-role-requests'])) {
+if ('admin-applications' === $pageName) {
     echo '<script src="assets/js/admin-module-base.js"></script>';
 }
 
 //include any script that has the same name as the current page
 if (file_exists("assets/js/{$pageName}.js")) {
     // Admin modules use the base factory, so they're regular scripts, not modules
-    $scriptType = in_array($pageName, ['admin-applications', 'admin-role-requests']) ? '' : ' type="module"';
+    $scriptType = 'admin-applications' === $pageName ? '' : ' type="module"';
     echo "<script{$scriptType} src=\"assets/js/{$pageName}.js\"></script>";
 }
