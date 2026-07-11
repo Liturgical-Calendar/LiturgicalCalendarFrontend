@@ -167,6 +167,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // human-readable user info instead of raw zitadel IDs in the tuple table.
     let userMap = new Map();
 
+    // Whether the /admin/users fetch succeeded at least once. Distinguishes
+    // "this user ID is not in Zitadel" (orphaned tuple — flag it) from
+    // "we couldn't load the user list at all" (don't flag anyone).
+    let userMapLoaded = false;
+
     // Object type display names
     const objectTypeNames = {
         'national_calendar': config.i18n.nationalCalendar,
@@ -244,6 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ...(Array.isArray(data.usersWithoutRoles) ? data.usersWithoutRoles : [])
             ];
             userMap = new Map(users.map(function (u) { return [u.userId, u]; }));
+            userMapLoaded = true;
         } catch (error) {
             console.error('Failed to load user map for permissions display:', error);
         }
@@ -288,6 +294,77 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
+     * Render the Subject cell for a permission tuple.
+     * The tuple subject is either a human ("user:<zitadel-id>") or another
+     * resource ("national_calendar:CA" powering e.g. wider_region membership).
+     * @param {string} subject - The tuple's user field
+     * @returns {string} HTML for the subject cell
+     */
+    function renderSubjectCell(subject) {
+        if (subject.startsWith('user:')) {
+            const lookupId = subject.slice('user:'.length);
+            const userInfo = userMap.get(lookupId);
+            if (userInfo) {
+                return `<strong>${escapeHtml(userInfo.displayName || userInfo.username || lookupId)}</strong>`
+                    + (userInfo.email ? `<br><small class="text-muted">${escapeHtml(userInfo.email)}</small>` : '');
+            }
+            // An ID missing from a successfully loaded user map means the
+            // Zitadel user no longer exists: an orphaned tuple (e.g. a grant
+            // that survived an identity-store reset). Flag it so admins spot
+            // and revoke it.
+            const orphanBadge = userMapLoaded
+                ? `<span class="badge bg-warning text-dark me-1">${escapeHtml(config.i18n.unknownUser)}</span>`
+                : '';
+            return orphanBadge
+                + `<small class="text-muted font-monospace">${escapeHtml(subject)}</small>`;
+        }
+        const colonIdx = subject.indexOf(':');
+        const subjType = colonIdx !== -1 ? subject.substring(0, colonIdx) : subject;
+        const subjId = colonIdx !== -1 ? subject.substring(colonIdx + 1) : '';
+        const subjTypeName = objectTypeNames[subjType] || subjType;
+        return `<span class="badge bg-secondary me-1">${escapeHtml(subjTypeName)}</span>`
+            + (subjId ? `<code>${escapeHtml(subjId)}</code>` : '');
+    }
+
+    /**
+     * Render a single permission tuple table row.
+     * @param {Object} tuple - Permission tuple
+     * @returns {string} HTML for the table row
+     */
+    function renderPermissionRow(tuple) {
+        const user = tuple.user || '';
+        const relation = tuple.relation || '';
+        // The API returns "object" as "type:id" (e.g., "national_calendar:IT")
+        const objectFull = tuple.object || '';
+        const colonIdx = objectFull.indexOf(':');
+        const objectType = colonIdx !== -1 ? objectFull.substring(0, colonIdx) : objectFull;
+        const objectId = colonIdx !== -1 ? objectFull.substring(colonIdx + 1) : '';
+
+        const objectTypeName = objectTypeNames[objectType] || objectType;
+        const relationName = relationNames[relation] || relation;
+        const badgeClass = relationBadgeClasses[relation] || 'bg-secondary';
+
+        return `
+            <tr>
+                <td>${renderSubjectCell(user)}</td>
+                <td>${escapeHtml(objectTypeName)}</td>
+                <td><code>${escapeHtml(objectId)}</code></td>
+                <td><span class="badge ${badgeClass}">${escapeHtml(relationName)}</span></td>
+                <td>
+                    <button class="btn btn-outline-danger btn-sm revoke-btn"
+                            data-user="${escapeHtml(user)}"
+                            data-object-type="${escapeHtml(objectType)}"
+                            data-object-id="${escapeHtml(objectId)}"
+                            data-relation="${escapeHtml(relation)}"
+                            data-requires-auth>
+                        <i class="fas fa-trash-alt me-1"></i>${config.i18n.revoke}
+                    </button>
+                </td>
+            </tr>
+        `;
+    }
+
+    /**
      * Display permissions in a table
      * @param {Array} tuples - Permission tuples
      */
@@ -306,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function() {
         html += `
             <thead>
                 <tr>
-                    <th>${config.i18n.user}</th>
+                    <th>${config.i18n.subject}</th>
                     <th>${config.i18n.objectType}</th>
                     <th>${config.i18n.objectId}</th>
                     <th>${config.i18n.relation}</th>
@@ -317,44 +394,7 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
 
         for (const tuple of tuples) {
-            const user = tuple.user || '';
-            const relation = tuple.relation || '';
-            // The API returns "object" as "type:id" (e.g., "national_calendar:IT")
-            const objectFull = tuple.object || '';
-            const colonIdx = objectFull.indexOf(':');
-            const objectType = colonIdx !== -1 ? objectFull.substring(0, colonIdx) : objectFull;
-            const objectId = colonIdx !== -1 ? objectFull.substring(colonIdx + 1) : '';
-
-            const objectTypeName = objectTypeNames[objectType] || objectType;
-            const relationName = relationNames[relation] || relation;
-            const badgeClass = relationBadgeClasses[relation] || 'bg-secondary';
-
-            // API returns user as "user:<zitadel-id>"; strip the prefix for the userMap lookup.
-            const lookupId = user.startsWith('user:') ? user.slice('user:'.length) : user;
-            const userInfo = userMap.get(lookupId);
-            const userCellHtml = userInfo
-                ? `<strong>${escapeHtml(userInfo.displayName || userInfo.username || lookupId)}</strong>`
-                    + (userInfo.email ? `<br><small class="text-muted">${escapeHtml(userInfo.email)}</small>` : '')
-                : `<small class="text-muted font-monospace">${escapeHtml(user)}</small>`;
-
-            html += `
-                <tr>
-                    <td>${userCellHtml}</td>
-                    <td>${escapeHtml(objectTypeName)}</td>
-                    <td><code>${escapeHtml(objectId)}</code></td>
-                    <td><span class="badge ${badgeClass}">${escapeHtml(relationName)}</span></td>
-                    <td>
-                        <button class="btn btn-outline-danger btn-sm revoke-btn"
-                                data-user="${escapeHtml(user)}"
-                                data-object-type="${escapeHtml(objectType)}"
-                                data-object-id="${escapeHtml(objectId)}"
-                                data-relation="${escapeHtml(relation)}"
-                                data-requires-auth>
-                            <i class="fas fa-trash-alt me-1"></i>${config.i18n.revoke}
-                        </button>
-                    </td>
-                </tr>
-            `;
+            html += renderPermissionRow(tuple);
         }
 
         html += '</tbody></table></div>';
@@ -476,7 +516,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         revokeConfirmText.innerHTML = `
             ${config.i18n.confirmRevoke}<br><br>
-            <strong>${config.i18n.user}:</strong> ${escapeHtml(data.user)}<br>
+            <strong>${config.i18n.subject}:</strong> ${escapeHtml(data.user)}<br>
             <strong>${config.i18n.objectType}:</strong> ${escapeHtml(objectTypeName)}<br>
             <strong>${config.i18n.objectId}:</strong> <code>${escapeHtml(data.objectId)}</code><br>
             <strong>${config.i18n.relation}:</strong> ${escapeHtml(relationName)}
