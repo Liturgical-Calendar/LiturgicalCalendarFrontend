@@ -102,8 +102,14 @@ export async function detectCapabilities() {
 
 // ---- grade / color label helpers ------------------------------------------
 
-/** @type {Record<number, string>} */
-const GRADE_LABELS = {
+/**
+ * Return grade labels from config.i18n.gradeLabels (server-localized), falling back
+ * to a built-in map if gradeLabels is not available (e.g. in tests).
+ *
+ * @param {number} grade
+ * @returns {string}
+ */
+const _FALLBACK_GRADE_LABELS = {
     7: 'Higher Solemnity',
     6: 'Solemnity',
     5: 'Feast of the Lord',
@@ -113,6 +119,18 @@ const GRADE_LABELS = {
     1: 'Commemoration',
     0: 'Weekday',
 };
+
+/**
+ * Get the grade label for a numeric grade value.
+ * Prefers config.i18n.gradeLabels (PHP-localized), falls back to built-in map.
+ *
+ * @param {number} grade
+ * @returns {string}
+ */
+function getGradeLabel(grade) {
+    const labels = (config && config.i18n && config.i18n.gradeLabels) ? config.i18n.gradeLabels : _FALLBACK_GRADE_LABELS;
+    return labels[grade] ?? `Grade ${grade}`;
+}
 
 /** Bootstrap bg- colour for each liturgical colour value. */
 const COLOR_BG = {
@@ -134,7 +152,7 @@ const COLOR_BG = {
  */
 export function gradeLabel(grade) {
     if (grade === undefined || grade === null) return '';
-    return GRADE_LABELS[grade] ?? `Grade ${grade}`;
+    return getGradeLabel(grade);
 }
 
 /**
@@ -329,7 +347,7 @@ function buildTranslationsPanel(panel, decreeId, reqLocale, reqName, allLocales)
                 const el = localeItems.get(locale);
                 if (el) {
                     el.className = 'text-danger small';
-                    el.textContent = '(error)';
+                    el.textContent = config.i18n.errorText ?? '(error)';
                 }
             });
         });
@@ -341,30 +359,26 @@ function buildTranslationsPanel(panel, decreeId, reqLocale, reqName, allLocales)
 /**
  * Build the lectionary readings collapsible panel.
  *
+ * Handles both flat shape {first_reading?, responsorial_psalm?, gospel_acclamation?, gospel?}
+ * (from a GET response) and locale-keyed shape {locale: {first_reading?, ...}}
+ * (from a prior write round-trip).
+ *
  * @param {HTMLElement} panel
- * @param {Record<string, {
- *   first_reading?: string,
- *   responsorial_psalm?: string,
- *   gospel_acclamation?: string,
- *   gospel?: string
- * }>} readings  The readings object keyed by locale
+ * @param {Record<string, unknown>} readings  The readings object (flat or locale-keyed)
  */
 function buildReadingsPanel(panel, readings) {
     const dl = document.createElement('dl');
     dl.className = 'row mb-0';
 
-    Object.entries(readings).forEach(([locale, localeReadings]) => {
-        if (!localeReadings || typeof localeReadings !== 'object') return;
-        const localeHeader = document.createElement('dt');
-        localeHeader.className = 'col-12 mt-2 text-muted small';
-        localeHeader.textContent = locale;
-        dl.appendChild(localeHeader);
+    const isFlat = 'first_reading' in readings || 'responsorial_psalm' in readings
+                   || 'gospel_acclamation' in readings || 'gospel' in readings;
 
+    const renderFields = (localeReadings) => {
         const fields = [
-            ['First Reading', localeReadings.first_reading],
-            ['Responsorial Psalm', localeReadings.responsorial_psalm],
-            ['Gospel Acclamation', localeReadings.gospel_acclamation],
-            ['Gospel', localeReadings.gospel],
+            [config.i18n.firstReading, localeReadings.first_reading],
+            [config.i18n.responsorialPsalm, localeReadings.responsorial_psalm],
+            [config.i18n.gospelAcclamation, localeReadings.gospel_acclamation],
+            [config.i18n.gospel, localeReadings.gospel],
         ];
         fields.forEach(([label, value]) => {
             if (!value) return;
@@ -377,7 +391,20 @@ function buildReadingsPanel(panel, readings) {
             dl.appendChild(dt);
             dl.appendChild(dd);
         });
-    });
+    };
+
+    if (isFlat) {
+        renderFields(readings);
+    } else {
+        Object.entries(readings).forEach(([locale, localeReadings]) => {
+            if (!localeReadings || typeof localeReadings !== 'object') return;
+            const localeHeader = document.createElement('dt');
+            localeHeader.className = 'col-12 mt-2 text-muted small';
+            localeHeader.textContent = locale;
+            dl.appendChild(localeHeader);
+            renderFields(localeReadings);
+        });
+    }
     panel.appendChild(dl);
 }
 
@@ -445,7 +472,7 @@ export function renderDecreeCard(container, decree, capabilities, allLocales) {
     editBtn.className = `btn btn-outline-primary${capabilities.canEdit ? '' : ' d-none'}`;
     editBtn.setAttribute('data-action', 'edit');
     editBtn.setAttribute('data-decree-id', decreeId);
-    editBtn.setAttribute('aria-label', 'Edit');
+    editBtn.setAttribute('aria-label', config.i18n.editAriaLabel ?? 'Edit');
     const editIcon = document.createElement('i');
     editIcon.className = 'fas fa-pencil-alt';
     editBtn.appendChild(editIcon);
@@ -456,7 +483,7 @@ export function renderDecreeCard(container, decree, capabilities, allLocales) {
     deleteBtn.className = `btn btn-outline-danger${capabilities.canAdmin ? '' : ' d-none'}`;
     deleteBtn.setAttribute('data-action', 'delete');
     deleteBtn.setAttribute('data-decree-id', decreeId);
-    deleteBtn.setAttribute('aria-label', 'Delete');
+    deleteBtn.setAttribute('aria-label', config.i18n.deleteAriaLabel ?? 'Delete');
     const deleteIcon = document.createElement('i');
     deleteIcon.className = 'fas fa-trash';
     deleteBtn.appendChild(deleteIcon);
@@ -536,7 +563,7 @@ export function renderDecreeCard(container, decree, capabilities, allLocales) {
     buildTranslationsPanel(
         transCollapse,
         decreeId,
-        config.locale.replace(/-/g, '_'),
+        config.locale.split('-')[0].toLowerCase(),
         eventName,
         allLocales
     );
@@ -694,10 +721,9 @@ async function loadDecrees(container, capabilities) {
         return;
     }
 
-    // The request locale in BCP-47 form (e.g. "en-US") — normalise to
-    // underscore form (e.g. "en_US") so it can be matched against the
-    // metadata locales list which uses underscore separators.
-    const requestLocale = config.locale.replace(/-/g, '_');
+    // The request locale in BCP-47 form (e.g. "en-US") — extract base language
+    // code (e.g. "en") so it can be matched against the metadata locales list.
+    const requestLocale = config.locale.split('-')[0].toLowerCase();
 
     // Build allLocales from metadata, deduplicating against the request locale
     // by comparing canonical (lowercase + underscore) forms, but keeping each
@@ -1196,7 +1222,9 @@ async function reloadDecrees(capabilities) {
 async function saveDecree(payload, isCreate, alertBox, capabilities) {
     const method = isCreate ? 'PUT' : 'PATCH';
     try {
-        await fetchJson(method, `/decrees/${encodeURIComponent(payload.decree_id)}`, payload);
+        await fetchJson(method, `/decrees/${encodeURIComponent(payload.decree_id)}`, payload, {
+            'Accept-Language': config.locale,
+        });
         // Close editor modal before showing toast (Bootstrap modal may steal focus)
         const modalEl = document.getElementById('decreeEditorModal');
         if (modalEl && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
@@ -1260,7 +1288,7 @@ function openEditorModal(decree, locales, capabilities) {
 
     // Set base locale option value and text on the disabled select
     const baseLocaleOpt = document.getElementById('i18nBaseLocaleOption');
-    const baseLocale = config.locale.replace(/-/g, '_');
+    const baseLocale = config.locale.split('-')[0].toLowerCase();
     if (baseLocaleOpt) {
         baseLocaleOpt.value       = baseLocale;
         baseLocaleOpt.textContent = baseLocale;
@@ -1298,8 +1326,8 @@ function openEditorModal(decree, locales, capabilities) {
         // Only set readonly if the decree actually has a liturgical_event.event_key;
         // if missing, leave it editable to allow assignment.
         const eventKeyEl = form.querySelector('[name="event_key"]');
-        if (eventKeyEl && decree.liturgical_event && decree.liturgical_event.event_key) {
-            eventKeyEl.readOnly = true;
+        if (eventKeyEl) {
+            eventKeyEl.readOnly = Boolean(decree && decree.liturgical_event && decree.liturgical_event.event_key);
         }
 
         setVal('decree_date',     decree.decree_date);
@@ -1334,6 +1362,28 @@ function openEditorModal(decree, locales, capabilities) {
                 }
             }
 
+            // Pre-fill day and month (fixed events)
+            if (ev.day !== undefined) setVal('day', ev.day);
+            if (ev.month !== undefined) setVal('month', ev.month);
+
+            // Pre-fill strtotime (mobile events)
+            if (ev.strtotime !== undefined) {
+                const strtotimeStr = (ev.strtotime !== null && typeof ev.strtotime === 'object')
+                    ? JSON.stringify(ev.strtotime)
+                    : String(ev.strtotime);
+                setVal('strtotime', strtotimeStr);
+            }
+
+            // Pre-select event_type radio (fixed or mobile)
+            const eventType = ev.type === 'mobile' ? 'mobile' : 'fixed';
+            const radioToCheck = form.querySelector(`[name="event_type"][value="${eventType}"]`);
+            if (radioToCheck) radioToCheck.checked = true;
+
+            // Pre-fill common
+            if (Array.isArray(ev.common) && ev.common.length > 0) {
+                setVal('common_text', ev.common.join(', '));
+            }
+
             // Pre-fill i18n base row with the request-locale name
             if (ev.name) {
                 const baseNameInput = i18nRows
@@ -1346,25 +1396,45 @@ function openEditorModal(decree, locales, capabilities) {
 
             // Pre-fill readings groups from liturgical_event.readings when present
             if (ev.readings && typeof ev.readings === 'object') {
-                Object.entries(ev.readings).forEach(([locale, localeReadings]) => {
-                    if (!localeReadings || typeof localeReadings !== 'object') return;
-                    if (readingsGroups) {
-                        addReadingsGroup(readingsGroups, locales, locale);
-                        // The group was just appended — grab it and fill in values
-                        const groups = readingsGroups.querySelectorAll('.readings-group');
-                        const group = groups[groups.length - 1];
-                        if (!group) return;
+                const isFlat = 'first_reading' in ev.readings || 'responsorial_psalm' in ev.readings
+                               || 'gospel_acclamation' in ev.readings || 'gospel' in ev.readings;
+                if (isFlat && readingsGroups) {
+                    // Flat shape (GET response): create one group for the base locale
+                    addReadingsGroup(readingsGroups, locales, baseLocale);
+                    const groups = readingsGroups.querySelectorAll('.readings-group');
+                    const group = groups[groups.length - 1];
+                    if (group) {
                         const fillField = (name, value) => {
                             const inp = group.querySelector(`[name="${name}"]`);
                             if (inp && value) inp.value = value;
                         };
-                        fillField('first_reading[]',      localeReadings.first_reading);
-                        fillField('responsorial_psalm[]', localeReadings.responsorial_psalm);
-                        fillField('second_reading[]',     localeReadings.second_reading);
-                        fillField('gospel_acclamation[]', localeReadings.gospel_acclamation);
-                        fillField('gospel[]',             localeReadings.gospel);
+                        fillField('first_reading[]',      ev.readings.first_reading);
+                        fillField('responsorial_psalm[]', ev.readings.responsorial_psalm);
+                        fillField('gospel_acclamation[]', ev.readings.gospel_acclamation);
+                        fillField('gospel[]',             ev.readings.gospel);
                     }
-                });
+                } else if (!isFlat) {
+                    // Locale-keyed shape (from a prior write round-trip)
+                    Object.entries(ev.readings).forEach(([locale, localeReadings]) => {
+                        if (!localeReadings || typeof localeReadings !== 'object') return;
+                        if (readingsGroups) {
+                            addReadingsGroup(readingsGroups, locales, locale);
+                            // The group was just appended — grab it and fill in values
+                            const groups = readingsGroups.querySelectorAll('.readings-group');
+                            const group = groups[groups.length - 1];
+                            if (!group) return;
+                            const fillField = (name, value) => {
+                                const inp = group.querySelector(`[name="${name}"]`);
+                                if (inp && value) inp.value = value;
+                            };
+                            fillField('first_reading[]',      localeReadings.first_reading);
+                            fillField('responsorial_psalm[]', localeReadings.responsorial_psalm);
+                            fillField('second_reading[]',     localeReadings.second_reading);
+                            fillField('gospel_acclamation[]', localeReadings.gospel_acclamation);
+                            fillField('gospel[]',             localeReadings.gospel);
+                        }
+                    });
+                }
             }
         }
     } else {

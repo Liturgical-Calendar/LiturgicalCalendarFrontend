@@ -437,7 +437,20 @@ if (!$isAdmin && !$isCalendarEditor) {
                 sourceLink:        <?php echo json_encode(_('Source')); ?>,
                 sessionExpired:    <?php echo json_encode(_('Your session has expired. Please log in again.')); ?>,
                 loginLink:         <?php echo json_encode(_('Log in')); ?>,
-                permissionDenied:  <?php echo json_encode(_('You do not have permission to perform this action.')); ?>
+                permissionDenied:  <?php echo json_encode(_('You do not have permission to perform this action.')); ?>,
+                editAriaLabel:     <?php echo json_encode(_('Edit')); ?>,
+                deleteAriaLabel:   <?php echo json_encode(_('Delete')); ?>,
+                errorText:         <?php echo json_encode(_('(error)')); ?>,
+                gradeLabels: {
+                    7: <?php echo json_encode(_('Higher Solemnity')); ?>,
+                    6: <?php echo json_encode(_('Solemnity')); ?>,
+                    5: <?php echo json_encode(_('Feast of the Lord')); ?>,
+                    4: <?php echo json_encode(_('Feast')); ?>,
+                    3: <?php echo json_encode(_('Memorial')); ?>,
+                    2: <?php echo json_encode(_('Optional Memorial')); ?>,
+                    1: <?php echo json_encode(_('Commemoration')); ?>,
+                    0: <?php echo json_encode(_('Weekday')); ?>
+                }
             }
         };
     </script>
