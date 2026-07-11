@@ -373,7 +373,8 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
                 revoking: <?php echo json_encode(_('Revoking...')); ?>,
                 confirmRevoke: <?php echo json_encode(_('Are you sure you want to revoke this permission?')); ?>,
                 // Table headers
-                user: <?php echo json_encode(_('User')); ?>,
+                subject: <?php echo json_encode(_('Subject')); ?>,
+                unknownUser: <?php echo json_encode(_('Unknown user')); ?>,
                 objectType: <?php echo json_encode(_('Object Type')); ?>,
                 objectId: <?php echo json_encode(_('Object ID')); ?>,
                 relation: <?php echo json_encode(_('Relation')); ?>,
