@@ -12,7 +12,9 @@
  */
 
 ?>
-<div class="col-12 col-md-6 col-lg-4 mb-4" data-fga-gate="general_roman_calendar:decrees">
+<div class="col-12 col-md-6 col-lg-4 mb-4"
+    data-fga-gate="general_roman_calendar:decrees"
+    data-user-sub="<?php echo htmlspecialchars($authHelper->sub ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
     <div class="card admin-block shadow h-100 border-dark">
         <div class="card-body text-center d-flex flex-column">
             <div class="admin-block-icon mb-3">
@@ -35,7 +37,7 @@
     'use strict';
     // Interim per-card FGA visibility check (Task 3 will batch these).
     // Global admins always see the card; for calendar_editors we confirm
-    // the viewer relation before showing the link.
+    // the viewer relation via /admin/permissions/check before showing the link.
     const isGlobalAdmin = <?php echo json_encode($isAdmin); ?>;
     if (isGlobalAdmin) {
         return; // always visible for global admins
@@ -45,15 +47,39 @@
         return;
     }
     const apiBase = <?php echo json_encode($apiBaseUrl); ?>;
-    const resource = card.dataset.fgaGate; // "general_roman_calendar:decrees"
-    fetch(apiBase + '/auth/decree-scopes', { credentials: 'include' })
-        .then(function (r) { return r.ok ? r.json() : null; })
+    const gate = card.dataset.fgaGate; // "general_roman_calendar:decrees"
+    const parts = gate.split(':');
+    const objectType = parts[0];
+    const objectId   = parts[1];
+    const userSub    = card.dataset.userSub;
+    const params     = new URLSearchParams({
+        user:        userSub,
+        object_type: objectType,
+        object_id:   objectId,
+        relation:    'viewer'
+    });
+    fetch(apiBase + '/admin/permissions/check?' + params.toString(), {
+        credentials: 'include',
+        headers: { 'Accept': 'application/json' }
+    })
+        .then(function (r) {
+            if (!r.ok) {
+                console.warn('[admin-decrees-card] permissions/check returned HTTP ' + r.status + ' — hiding card');
+                card.classList.add('d-none');
+                return null;
+            }
+            return r.json();
+        })
         .then(function (data) {
-            if (!data || !Array.isArray(data.scopes) || data.scopes.length === 0) {
+            if (data === null) {
+                return;
+            }
+            if (!data || data.allowed !== true) {
                 card.classList.add('d-none');
             }
         })
-        .catch(function () {
+        .catch(function (err) {
+            console.warn('[admin-decrees-card] permissions/check unreachable — hiding card', err);
             card.classList.add('d-none');
         });
 }());
