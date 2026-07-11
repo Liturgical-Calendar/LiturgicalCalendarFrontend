@@ -119,7 +119,7 @@ try {
         CookieHelper::setAuthCookie('litcal_id_token', $idToken, $idTokenExpiry);
     }
 
-    // Check if user has any roles - if not, redirect to request-access page
+    // Check if user has any roles - if not, redirect to the access requests page
     $userRoles = [];
     if ($idToken !== null) {
         try {
@@ -136,9 +136,9 @@ try {
     $returnTo = $_SESSION['oidc_return_to'] ?? null;
     unset($_SESSION['oidc_return_to']);
 
-    // If user has no roles and no explicit return URL, redirect to request-access page
+    // If user has no roles and no explicit return URL, redirect to the access requests page
     if (empty($userRoles) && $returnTo === null) {
-        $redirectUrl = rtrim($frontendUrl, '/') . '/request-access.php';
+        $redirectUrl = rtrim($frontendUrl, '/') . '/permission-requests.php';
         header('Location: ' . $redirectUrl);
         exit;
     }

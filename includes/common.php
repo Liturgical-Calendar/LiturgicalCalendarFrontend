@@ -260,7 +260,6 @@ $adminPages = [
     'temporale',
     'decrees',
     'admin-users',
-    'admin-role-requests',
     'admin-applications',
     'admin-permissions',
     'admin-tests',

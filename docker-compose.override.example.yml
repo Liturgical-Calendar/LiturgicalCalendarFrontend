@@ -91,7 +91,6 @@ services:
       - ./admin-applications.php:/var/www/html/admin-applications.php:ro
       - ./admin-dashboard.php:/var/www/html/admin-dashboard.php:ro
       - ./admin-permissions.php:/var/www/html/admin-permissions.php:ro
-      - ./admin-role-requests.php:/var/www/html/admin-role-requests.php:ro
       - ./admin-users.php:/var/www/html/admin-users.php:ro
       - ./admin-tests.php:/var/www/html/admin-tests.php:ro
       - ./decrees.php:/var/www/html/decrees.php:ro
@@ -103,7 +102,6 @@ services:
       - ./liturgyOfAnyDay.php:/var/www/html/liturgyOfAnyDay.php:ro
       - ./missals-editor.php:/var/www/html/missals-editor.php:ro
       - ./permission-requests.php:/var/www/html/permission-requests.php:ro
-      - ./request-access.php:/var/www/html/request-access.php:ro
       - ./temporale.php:/var/www/html/temporale.php:ro
       - ./translations.php:/var/www/html/translations.php:ro
       - ./usage.php:/var/www/html/usage.php:ro

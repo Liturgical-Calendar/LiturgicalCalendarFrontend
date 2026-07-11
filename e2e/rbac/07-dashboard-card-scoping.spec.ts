@@ -21,7 +21,7 @@ import { USERS } from './support/users';
  *   with ids: temporale, sanctorale, decrees, widerregion, national, diocesan.
  *
  *   Global admin section (admin-dashboard.php L62, gated on `$isAdmin`): contains the
- *   Users / Role Requests / Applications / Permissions cards. Unique durable markers:
+ *   Users / Applications / Permissions cards. Unique durable markers:
  *       a[href="admin-users.php"]          (only in the $isAdmin block)
  *       a[href="admin-applications.php"]   (only in the $isAdmin block)
  *   `a[href="admin-permissions.php"]` is NOT unique — it also backs the resource-admin
