@@ -47,11 +47,16 @@ vi.hoisted(() => {
             gospelAcclamation: 'Gospel acclamation',
             gospel:            'Gospel',
             validationErrors:  'Please fix the following errors:',
+            sinceYear:         'Since %s',
+            sourceLink:        'Source',
+            sessionExpired:    'Your session has expired. Please log in again.',
+            loginLink:         'Log in',
+            permissionDenied:  'You do not have permission to perform this action.',
         },
     };
 });
 
-import { collectFormValues, applyActionVisibility } from '../admin-decrees.js';
+import { collectFormValues, applyActionVisibility, reverseMapAction } from '../admin-decrees.js';
 import { DecreeAction } from '../DecreePayload.js';
 
 // ---- helpers ---------------------------------------------------------------
@@ -452,5 +457,27 @@ describe('applyActionVisibility', () => {
         expect(form.querySelector('.action-setPropertyGrade').classList.contains('d-none')).toBe(true);
         expect(form.querySelector('.needs-i18n').classList.contains('d-none')).toBe(true);
         expect(form.querySelector('.needs-readings').classList.contains('d-none')).toBe(true);
+    });
+});
+
+// ---- reverseMapAction tests -------------------------------------------------
+
+describe('reverseMapAction', () => {
+    it('returns the action unchanged when no property is present', () => {
+        expect(reverseMapAction('createNew', undefined)).toBe('createNew');
+        expect(reverseMapAction('makeDoctor', undefined)).toBe('makeDoctor');
+    });
+
+    it('combines action and property into compound form', () => {
+        expect(reverseMapAction('setProperty', 'grade')).toBe('setProperty:grade');
+        expect(reverseMapAction('setProperty', 'name')).toBe('setProperty:name');
+    });
+
+    it('round-trips through DecreeAction values', () => {
+        // Verify the output matches what the form select uses
+        expect(reverseMapAction('setProperty', 'grade')).toBe(DecreeAction.SetPropertyGrade);
+        expect(reverseMapAction('setProperty', 'name')).toBe(DecreeAction.SetPropertyName);
+        expect(reverseMapAction('createNew', undefined)).toBe(DecreeAction.CreateNew);
+        expect(reverseMapAction('makeDoctor', undefined)).toBe(DecreeAction.MakeDoctor);
     });
 });

@@ -587,7 +587,7 @@ export function renderDecreeCard(container, decree, capabilities, allLocales) {
 
     if (metadata && metadata.since_year) {
         const sinceSpan = document.createElement('span');
-        sinceSpan.textContent = `Since ${metadata.since_year}`;
+        sinceSpan.textContent = config.i18n.sinceYear.replace('%s', metadata.since_year);
         footer.appendChild(sinceSpan);
     }
 
@@ -599,7 +599,7 @@ export function renderDecreeCard(container, decree, capabilities, allLocales) {
         const linkIcon = document.createElement('i');
         linkIcon.className = 'fas fa-external-link-alt me-1';
         link.appendChild(linkIcon);
-        link.appendChild(document.createTextNode('Source'));
+        link.appendChild(document.createTextNode(config.i18n.sourceLink));
         footer.appendChild(link);
     }
 
@@ -718,7 +718,12 @@ async function loadDecrees(container, capabilities) {
     // Store for modal use
     modalAllLocales = allLocales;
 
+    // Build the decree map for edit pre-fill
+    decreeMap.clear();
     decrees.forEach((decree) => {
+        if (decree.decree_id) {
+            decreeMap.set(decree.decree_id, decree);
+        }
         renderDecreeCard(container, decree, capabilities, allLocales);
     });
 }
@@ -781,6 +786,14 @@ export function applyActionVisibility(action, form) {
  * @type {string[]}
  */
 let modalAllLocales = [];
+
+/**
+ * Map of decree_id → full decree object, populated by loadDecrees.
+ * Used by the edit button to pre-fill the editor modal without an extra fetch.
+ *
+ * @type {Map<string, object>}
+ */
+const decreeMap = new Map();
 
 /**
  * Build a locale <select> option list for an i18n row.
@@ -1055,25 +1068,178 @@ export function collectFormValues(root) {
     };
 }
 
+// ---- toast helper ------------------------------------------------------------
+
 /**
- * Stub save handler — replaced by Task 5.
- * Declared async so callers can await it safely.
+ * Show a brief Bootstrap toast with the given message.
+ * Falls back to a dismissible alert in #decreesContainer if the toast element
+ * is absent (no-Bootstrap environment, e.g. tests).
  *
- * @param {object}  payload   Built payload
- * @param {boolean} isCreate  true when creating, false when updating
+ * @param {string} message
+ */
+function showToast(message) {
+    const toastEl = document.getElementById('decreeToast');
+    if (toastEl && typeof bootstrap !== 'undefined' && bootstrap.Toast) {
+        const body = toastEl.querySelector('.toast-body');
+        if (body) body.textContent = message;
+        bootstrap.Toast.getOrCreateInstance(toastEl).show();
+    } else {
+        // Fallback: dismissible alert appended to the main container
+        const container = document.getElementById('decreesContainer');
+        if (container) showAlert(container, 'success', message);
+    }
+}
+
+// ---- action reverse-mapping helper ------------------------------------------
+
+/**
+ * Reverse-map metadata.action + metadata.property back to a DecreeAction value.
+ *
+ * API stores `{action: 'setProperty', property: 'grade'}` whereas the form
+ * select uses the compound value `'setProperty:grade'`. This function
+ * recombines them so the editor select can be pre-selected correctly.
+ *
+ * Exported for unit testing.
+ *
+ * @param {string}            action    metadata.action from the decree
+ * @param {string|undefined}  property  metadata.property from the decree
+ * @returns {string}  One of the DecreeAction values, or the bare action string
+ *                    when no matching compound form exists.
+ */
+export function reverseMapAction(action, property) {
+    if (property) {
+        return `${action}:${property}`;
+    }
+    return action;
+}
+
+// ---- CRUD operations ---------------------------------------------------------
+
+/**
+ * Render a modal error message for API failures.
+ *
+ * Status-specific messages:
+ * - 401: session-expired with a link back to the login page
+ * - 403: permission-denied message
+ * - 400 / 409: verbatim server text (specific enough to act on)
+ * - other: generic message + server text if available
+ *
+ * @param {HTMLElement} alertBox  The modal alert region element
+ * @param {Error & {status?: number, body?: unknown}} err  Error from fetchJson
+ */
+function renderFetchError(alertBox, err) {
+    const status = err.status;
+    const serverMsg = (err.body && typeof err.body === 'object' && typeof err.body.message === 'string')
+        ? err.body.message
+        : (typeof err.body === 'string' ? err.body : null);
+
+    const div = document.createElement('div');
+    div.className = 'alert alert-danger alert-dismissible fade show';
+    div.setAttribute('role', 'alert');
+
+    if (status === 401) {
+        div.textContent = config.i18n.sessionExpired + ' ';
+        const link = document.createElement('a');
+        link.href = 'index.php';
+        link.textContent = config.i18n.loginLink;
+        div.appendChild(link);
+    } else if (status === 403) {
+        div.textContent = config.i18n.permissionDenied;
+    } else if (status === 400 || status === 409) {
+        div.textContent = serverMsg ?? err.message;
+    } else {
+        div.textContent = err.message;
+        if (serverMsg) {
+            const detail = document.createElement('span');
+            detail.className = 'd-block small mt-1';
+            detail.textContent = serverMsg;
+            div.appendChild(detail);
+        }
+    }
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn-close';
+    btn.setAttribute('data-bs-dismiss', 'alert');
+    div.appendChild(btn);
+    alertBox.appendChild(div);
+}
+
+/**
+ * Reload the decrees list: clear the container and call loadDecrees again.
+ *
+ * @param {{canView: boolean, canEdit: boolean, canAdmin: boolean}} capabilities
+ */
+async function reloadDecrees(capabilities) {
+    const container = document.getElementById('decreesContainer');
+    if (!container) return;
+    container.replaceChildren();
+    await loadDecrees(container, capabilities);
+}
+
+/**
+ * Save a decree via PUT (create) or PATCH (update).
+ *
+ * On success: shows a toast, closes the modal, and reloads the list.
+ * On failure: renders the error in the modal alert region.
+ *
+ * IMPORTANT: PATCH must not change liturgical_event.event_key (the API
+ * rejects it with 400). The event_key input is made readonly in edit mode
+ * (see openEditorModal) to prevent this from being triggered accidentally.
+ *
+ * @param {object}  payload      Built payload from buildDecreePayload()
+ * @param {boolean} isCreate     true → PUT /decrees/{id} (201 expected)
+ * @param {HTMLElement} alertBox Modal alert region
+ * @param {{canView: boolean, canEdit: boolean, canAdmin: boolean}} capabilities
  * @returns {Promise<void>}
  */
-async function saveDecree(payload, isCreate) {
-    console.warn('saveDecree: save not wired yet', { payload, isCreate });
+async function saveDecree(payload, isCreate, alertBox, capabilities) {
+    const method = isCreate ? 'PUT' : 'PATCH';
+    try {
+        await fetchJson(method, `/decrees/${encodeURIComponent(payload.decree_id)}`, payload);
+        // Close editor modal before showing toast (Bootstrap modal may steal focus)
+        const modalEl = document.getElementById('decreeEditorModal');
+        if (modalEl && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            bootstrap.Modal.getOrCreateInstance(modalEl).hide();
+        }
+        showToast(isCreate ? config.i18n.created : config.i18n.updated);
+        await reloadDecrees(capabilities);
+    } catch (err) {
+        renderFetchError(alertBox, err);
+    }
+}
+
+/**
+ * Delete a decree after confirmation.
+ *
+ * @param {string} decreeId
+ * @param {HTMLElement} deleteAlertBox  The delete modal alert region
+ * @param {{canView: boolean, canEdit: boolean, canAdmin: boolean}} capabilities
+ * @returns {Promise<void>}
+ */
+async function deleteDecree(decreeId, deleteAlertBox, capabilities) {
+    try {
+        await fetchJson('DELETE', `/decrees/${encodeURIComponent(decreeId)}`);
+        // Close delete modal
+        const deleteModalEl = document.getElementById('decreeDeleteModal');
+        if (deleteModalEl && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            bootstrap.Modal.getOrCreateInstance(deleteModalEl).hide();
+        }
+        showToast(config.i18n.deleted);
+        await reloadDecrees(capabilities);
+    } catch (err) {
+        renderFetchError(deleteAlertBox, err);
+    }
 }
 
 /**
  * Open the editor modal for create or edit.
  *
- * @param {object|null} decree  Existing decree object (null for create)
- * @param {string[]}    locales Available locales for i18n/readings selects
+ * @param {object|null} decree       Existing decree object (null for create)
+ * @param {string[]}    locales      Available locales for i18n/readings selects
+ * @param {{canView: boolean, canEdit: boolean, canAdmin: boolean}} capabilities
  */
-function openEditorModal(decree, locales) {
+function openEditorModal(decree, locales, capabilities) {
     const modal    = document.getElementById('decreeEditorModal');
     const form     = document.getElementById('decreeEditorForm');
     const alertBox = document.getElementById('decreeEditorAlerts');
@@ -1085,7 +1251,7 @@ function openEditorModal(decree, locales) {
 
     // Reset form and alerts
     form.reset();
-    alertBox.innerHTML = '';
+    alertBox.replaceChildren();
 
     // Update modal title
     if (label) {
@@ -1096,7 +1262,7 @@ function openEditorModal(decree, locales) {
     const baseLocaleOpt = document.getElementById('i18nBaseLocaleOption');
     const baseLocale = config.locale.replace(/-/g, '_');
     if (baseLocaleOpt) {
-        baseLocaleOpt.value   = baseLocale;
+        baseLocaleOpt.value       = baseLocale;
         baseLocaleOpt.textContent = baseLocale;
     }
 
@@ -1110,11 +1276,8 @@ function openEditorModal(decree, locales) {
     // Clear readings groups
     const readingsGroups = document.getElementById('readingsGroups');
     if (readingsGroups) {
-        readingsGroups.innerHTML = '';
+        readingsGroups.replaceChildren();
     }
-
-    // Pre-add a base-locale readings group for createNew
-    addReadingsGroup(readingsGroups, locales, baseLocale);
 
     // Populate from existing decree if editing
     if (decree) {
@@ -1123,16 +1286,35 @@ function openEditorModal(decree, locales) {
             if (el && value !== undefined && value !== null) el.value = value;
         };
 
-        // decree_id is readonly when editing
+        // decree_id is readonly when editing (prevents PATCH from changing the ID)
         const decreeIdEl = form.querySelector('[name="decree_id"]');
         if (decreeIdEl) {
             decreeIdEl.value    = decree.decree_id ?? '';
             decreeIdEl.readOnly = true;
         }
 
+        // event_key is readonly when editing: PATCH must NOT change event_key
+        // (API rejects with 400 and instructs DELETE + PUT instead).
+        const eventKeyEl = form.querySelector('[name="event_key"]');
+        if (eventKeyEl) {
+            eventKeyEl.readOnly = true;
+        }
+
         setVal('decree_date',     decree.decree_date);
         setVal('decree_protocol', decree.decree_protocol);
         setVal('description',     decree.description);
+
+        // Pre-select action from metadata via reverse-mapping
+        const meta = decree.metadata;
+        if (meta) {
+            const actionValue = reverseMapAction(meta.action, meta.property);
+            const actionEl = form.querySelector('[name="action"]');
+            if (actionEl) {
+                actionEl.value = actionValue;
+            }
+            if (meta.since_year) setVal('since_year', meta.since_year);
+            if (meta.url)        setVal('url',        meta.url);
+        }
 
         const ev = decree.liturgical_event;
         if (ev) {
@@ -1149,17 +1331,49 @@ function openEditorModal(decree, locales) {
                     });
                 }
             }
-        }
 
-        const meta = decree.metadata;
-        if (meta) {
-            if (meta.since_year) setVal('since_year', meta.since_year);
-            if (meta.url)        setVal('url',        meta.url);
+            // Pre-fill i18n base row with the request-locale name
+            if (ev.name) {
+                const baseNameInput = i18nRows
+                    ? i18nRows.querySelector('.i18n-row[data-base-row="true"] [name="i18n_name[]"]')
+                    : null;
+                if (baseNameInput) {
+                    baseNameInput.value = ev.name;
+                }
+            }
+
+            // Pre-fill readings groups from liturgical_event.readings when present
+            if (ev.readings && typeof ev.readings === 'object') {
+                Object.entries(ev.readings).forEach(([locale, localeReadings]) => {
+                    if (!localeReadings || typeof localeReadings !== 'object') return;
+                    if (readingsGroups) {
+                        addReadingsGroup(readingsGroups, locales, locale);
+                        // The group was just appended — grab it and fill in values
+                        const groups = readingsGroups.querySelectorAll('.readings-group');
+                        const group = groups[groups.length - 1];
+                        if (!group) return;
+                        const fillField = (name, value) => {
+                            const inp = group.querySelector(`[name="${name}"]`);
+                            if (inp && value) inp.value = value;
+                        };
+                        fillField('first_reading[]',      localeReadings.first_reading);
+                        fillField('responsorial_psalm[]', localeReadings.responsorial_psalm);
+                        fillField('second_reading[]',     localeReadings.second_reading);
+                        fillField('gospel_acclamation[]', localeReadings.gospel_acclamation);
+                        fillField('gospel[]',             localeReadings.gospel);
+                    }
+                });
+            }
         }
     } else {
-        // Creating: decree_id is editable
+        // Creating: decree_id and event_key are editable
         const decreeIdEl = form.querySelector('[name="decree_id"]');
         if (decreeIdEl) decreeIdEl.readOnly = false;
+        const eventKeyEl = form.querySelector('[name="event_key"]');
+        if (eventKeyEl) eventKeyEl.readOnly = false;
+
+        // Pre-add a base-locale readings group for createNew
+        addReadingsGroup(readingsGroups, locales, baseLocale);
     }
 
     // Apply initial visibility
@@ -1211,10 +1425,9 @@ function openEditorModal(decree, locales) {
         const newSaveBtn = saveBtn.cloneNode(true);
         saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
         newSaveBtn.addEventListener('click', async () => {
-            alertBox.innerHTML = '';
+            alertBox.replaceChildren();
             const formValues = collectFormValues(form);
             const payload    = buildDecreePayload(formValues);
-            const baseLocale = config.locale.replace(/-/g, '_');
             const errors     = validateDecreePayload(payload, baseLocale, isCreate);
 
             if (errors.length > 0) {
@@ -1237,7 +1450,7 @@ function openEditorModal(decree, locales) {
                 return;
             }
 
-            await saveDecree(payload, isCreate);
+            await saveDecree(payload, isCreate, alertBox, capabilities);
         });
     }
 
@@ -1295,7 +1508,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (capabilities.canEdit && createBtn) {
         createBtn.classList.remove('d-none');
         createBtn.addEventListener('click', () => {
-            openEditorModal(null, modalAllLocales);
+            openEditorModal(null, modalAllLocales, capabilities);
         });
     }
 
@@ -1304,10 +1517,45 @@ document.addEventListener('DOMContentLoaded', async () => {
         const editBtn = e.target.closest('[data-action="edit"]');
         if (editBtn && capabilities.canEdit) {
             const decreeId = editBtn.getAttribute('data-decree-id');
-            // Task 5 will replace this stub with proper data lookup from the loaded list.
-            openEditorModal({ decree_id: decreeId }, modalAllLocales);
+            const decree   = decreeMap.get(decreeId) ?? { decree_id: decreeId };
+            openEditorModal(decree, modalAllLocales, capabilities);
         }
     });
+
+    // Wire delete buttons via event delegation (admin-only)
+    if (capabilities.canAdmin) {
+        const deleteModal      = document.getElementById('decreeDeleteModal');
+        const deleteConfirmBtn = document.getElementById('confirmDeleteDecreeBtn');
+        const deleteConfirmText = document.getElementById('decreeDeleteConfirmText');
+        const deleteAlertBox   = document.getElementById('decreeDeleteAlerts');
+
+        // Clicking a delete button opens the confirmation modal
+        container.addEventListener('click', (e) => {
+            const deleteBtn = e.target.closest('[data-action="delete"]');
+            if (!deleteBtn) return;
+            const decreeId = deleteBtn.getAttribute('data-decree-id');
+
+            if (deleteConfirmText) {
+                deleteConfirmText.textContent = `${config.i18n.confirmDelete} (${decreeId})`;
+            }
+            if (deleteAlertBox) {
+                deleteAlertBox.replaceChildren();
+            }
+
+            // Wire (or re-wire) the confirm button for this specific decree
+            if (deleteConfirmBtn) {
+                const newConfirmBtn = deleteConfirmBtn.cloneNode(true);
+                deleteConfirmBtn.parentNode.replaceChild(newConfirmBtn, deleteConfirmBtn);
+                newConfirmBtn.addEventListener('click', () => {
+                    deleteDecree(decreeId, deleteAlertBox, capabilities);
+                });
+            }
+
+            if (deleteModal && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                bootstrap.Modal.getOrCreateInstance(deleteModal).show();
+            }
+        });
+    }
 
     await loadDecrees(container, capabilities);
 });

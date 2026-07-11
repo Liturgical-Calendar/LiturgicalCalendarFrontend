@@ -314,7 +314,7 @@ if (!$isAdmin && !$isCalendarEditor) {
                         </fieldset>
 
                         <!-- ── i18n block (needs-i18n) ────────────────────── -->
-                        <fieldset class="border rounded p-3 mb-3 action-block needs-i18n">
+                        <fieldset class="border rounded p-3 mb-3 action-block needs-i18n d-none">
                             <legend class="float-none w-auto px-2 fs-6 fw-semibold">
                                 <?php echo htmlspecialchars(_('Translations (i18n)'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                             </legend>
@@ -347,7 +347,7 @@ if (!$isAdmin && !$isCalendarEditor) {
                         </fieldset>
 
                         <!-- ── Readings block (needs-readings) ───────────── -->
-                        <fieldset class="border rounded p-3 mb-3 action-block needs-readings">
+                        <fieldset class="border rounded p-3 mb-3 action-block needs-readings d-none">
                             <legend class="float-none w-auto px-2 fs-6 fw-semibold">
                                 <?php echo htmlspecialchars(_('Lectionary readings'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                             </legend>
@@ -432,7 +432,12 @@ if (!$isAdmin && !$isCalendarEditor) {
                 secondReading:     <?php echo json_encode(_('Second reading (optional)')); ?>,
                 gospelAcclamation: <?php echo json_encode(_('Gospel acclamation')); ?>,
                 gospel:            <?php echo json_encode(_('Gospel')); ?>,
-                validationErrors:  <?php echo json_encode(_('Please fix the following errors before saving:')); ?>
+                validationErrors:  <?php echo json_encode(_('Please fix the following errors before saving:')); ?>,
+                sinceYear:         <?php echo json_encode(_('Since %s')); ?>,
+                sourceLink:        <?php echo json_encode(_('Source')); ?>,
+                sessionExpired:    <?php echo json_encode(_('Your session has expired. Please log in again.')); ?>,
+                loginLink:         <?php echo json_encode(_('Log in')); ?>,
+                permissionDenied:  <?php echo json_encode(_('You do not have permission to perform this action.')); ?>
             }
         };
     </script>
