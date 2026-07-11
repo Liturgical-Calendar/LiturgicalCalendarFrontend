@@ -167,6 +167,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // human-readable user info instead of raw zitadel IDs in the tuple table.
     let userMap = new Map();
 
+    // Whether the /admin/users fetch succeeded at least once. Distinguishes
+    // "this user ID is not in Zitadel" (orphaned tuple — flag it) from
+    // "we couldn't load the user list at all" (don't flag anyone).
+    let userMapLoaded = false;
+
     // Object type display names
     const objectTypeNames = {
         'national_calendar': config.i18n.nationalCalendar,
@@ -244,6 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ...(Array.isArray(data.usersWithoutRoles) ? data.usersWithoutRoles : [])
             ];
             userMap = new Map(users.map(function (u) { return [u.userId, u]; }));
+            userMapLoaded = true;
         } catch (error) {
             console.error('Failed to load user map for permissions display:', error);
         }
@@ -306,7 +312,7 @@ document.addEventListener('DOMContentLoaded', function() {
         html += `
             <thead>
                 <tr>
-                    <th>${config.i18n.user}</th>
+                    <th>${config.i18n.subject}</th>
                     <th>${config.i18n.objectType}</th>
                     <th>${config.i18n.objectId}</th>
                     <th>${config.i18n.relation}</th>
@@ -329,13 +335,34 @@ document.addEventListener('DOMContentLoaded', function() {
             const relationName = relationNames[relation] || relation;
             const badgeClass = relationBadgeClasses[relation] || 'bg-secondary';
 
-            // API returns user as "user:<zitadel-id>"; strip the prefix for the userMap lookup.
-            const lookupId = user.startsWith('user:') ? user.slice('user:'.length) : user;
-            const userInfo = userMap.get(lookupId);
-            const userCellHtml = userInfo
-                ? `<strong>${escapeHtml(userInfo.displayName || userInfo.username || lookupId)}</strong>`
-                    + (userInfo.email ? `<br><small class="text-muted">${escapeHtml(userInfo.email)}</small>` : '')
-                : `<small class="text-muted font-monospace">${escapeHtml(user)}</small>`;
+            // The tuple subject is either a human ("user:<zitadel-id>") or another
+            // resource ("national_calendar:CA" powering e.g. wider_region membership).
+            let userCellHtml;
+            if (user.startsWith('user:')) {
+                const lookupId = user.slice('user:'.length);
+                const userInfo = userMap.get(lookupId);
+                if (userInfo) {
+                    userCellHtml = `<strong>${escapeHtml(userInfo.displayName || userInfo.username || lookupId)}</strong>`
+                        + (userInfo.email ? `<br><small class="text-muted">${escapeHtml(userInfo.email)}</small>` : '');
+                } else {
+                    // An ID missing from a successfully loaded user map means the
+                    // Zitadel user no longer exists: an orphaned tuple (e.g. a grant
+                    // that survived an identity-store reset). Flag it so admins spot
+                    // and revoke it.
+                    const orphanBadge = userMapLoaded
+                        ? `<span class="badge bg-warning text-dark me-1">${escapeHtml(config.i18n.unknownUser)}</span>`
+                        : '';
+                    userCellHtml = orphanBadge
+                        + `<small class="text-muted font-monospace">${escapeHtml(user)}</small>`;
+                }
+            } else {
+                const subjColonIdx = user.indexOf(':');
+                const subjType = subjColonIdx !== -1 ? user.substring(0, subjColonIdx) : user;
+                const subjId = subjColonIdx !== -1 ? user.substring(subjColonIdx + 1) : '';
+                const subjTypeName = objectTypeNames[subjType] || subjType;
+                userCellHtml = `<span class="badge bg-secondary me-1">${escapeHtml(subjTypeName)}</span>`
+                    + (subjId ? `<code>${escapeHtml(subjId)}</code>` : '');
+            }
 
             html += `
                 <tr>
@@ -476,7 +503,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         revokeConfirmText.innerHTML = `
             ${config.i18n.confirmRevoke}<br><br>
-            <strong>${config.i18n.user}:</strong> ${escapeHtml(data.user)}<br>
+            <strong>${config.i18n.subject}:</strong> ${escapeHtml(data.user)}<br>
             <strong>${config.i18n.objectType}:</strong> ${escapeHtml(objectTypeName)}<br>
             <strong>${config.i18n.objectId}:</strong> <code>${escapeHtml(data.objectId)}</code><br>
             <strong>${config.i18n.relation}:</strong> ${escapeHtml(relationName)}
