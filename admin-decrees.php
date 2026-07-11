@@ -133,6 +133,7 @@ if (!$isAdmin && !$isCalendarEditor) {
                 loading:       <?php echo json_encode(_('Loading…')); ?>,
                 noAccess:      <?php echo json_encode(_('You do not have permission to view decrees administration.')); ?>,
                 loadFailed:    <?php echo json_encode(_('Could not load decrees from the API.')); ?>,
+                noDecrees:     <?php echo json_encode(_('No decrees found.')); ?>,
                 confirmDelete: <?php echo json_encode(_('Are you sure you want to delete this decree? This action cannot be undone.')); ?>,
                 created:       <?php echo json_encode(_('Decree created.')); ?>,
                 updated:       <?php echo json_encode(_('Decree updated.')); ?>,

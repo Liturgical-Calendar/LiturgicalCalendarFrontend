@@ -534,7 +534,7 @@ export function renderDecreeCard(container, decree, capabilities, allLocales) {
     buildTranslationsPanel(
         transCollapse,
         decreeId,
-        config.locale.replace('-', '_'),
+        config.locale.replace(/-/g, '_'),
         eventName,
         allLocales
     );
@@ -618,7 +618,22 @@ export function renderDecreeCard(container, decree, capabilities, allLocales) {
 // ---- list loading ---------------------------------------------------------
 
 /**
+ * Canonical locale key for dedup comparisons: lowercase with underscores.
+ *
+ * @param {string} locale
+ * @returns {string}
+ */
+function canonicalLocale(locale) {
+    return locale.toLowerCase().replace(/-/g, '_');
+}
+
+/**
  * Fetch and render the full list of decrees.
+ *
+ * Fetches GET /decrees and GET /calendars in parallel. The /calendars
+ * response provides `litcal_metadata.locales` — the full list of supported
+ * locales used to populate the per-decree translations panel. Falls back to
+ * [requestLocale] when the metadata fetch fails.
  *
  * @param {HTMLElement} container
  * @param {{canView: boolean, canEdit: boolean, canAdmin: boolean}} capabilities
@@ -638,9 +653,26 @@ async function loadDecrees(container, capabilities) {
     spinner.appendChild(spinnerDiv);
     container.appendChild(spinner);
 
+    // Fetch /decrees (authenticated) and /calendars (public) in parallel.
+    // The /calendars endpoint needs no credentials and does not send cookies.
     let data;
+    let metadataLocales = null;
     try {
-        data = await fetchJson('GET', '/decrees');
+        const [decreesData, metaData] = await Promise.all([
+            fetchJson('GET', '/decrees'),
+            fetch(config.apiUrl + '/calendars', { headers: { Accept: 'application/json' } })
+                .then((r) => (r.ok ? r.json() : null))
+                .catch(() => null),
+        ]);
+        data = decreesData;
+        if (
+            metaData
+            && metaData.litcal_metadata
+            && Array.isArray(metaData.litcal_metadata.locales)
+            && metaData.litcal_metadata.locales.length > 0
+        ) {
+            metadataLocales = metaData.litcal_metadata.locales;
+        }
     } catch (err) {
         container.removeChild(spinner);
         showAlert(container, 'danger', config.i18n.loadFailed);
@@ -655,16 +687,31 @@ async function loadDecrees(container, capabilities) {
     if (decrees.length === 0) {
         const empty = document.createElement('div');
         empty.className = 'col-12 text-muted text-center py-4';
-        empty.textContent = 'No decrees found.';
+        empty.textContent = config.i18n.noDecrees;
         container.appendChild(empty);
         return;
     }
 
-    // Collect all supported locales for the translations panels
-    // (populated from available locale data if present, fallback to config.locale)
-    const allLocales = (data && Array.isArray(data.supported_locales))
-        ? data.supported_locales
-        : [config.locale.replace('-', '_')];
+    // The request locale in BCP-47 form (e.g. "en-US") — normalise to
+    // underscore form (e.g. "en_US") so it can be matched against the
+    // metadata locales list which uses underscore separators.
+    const requestLocale = config.locale.replace(/-/g, '_');
+
+    // Build allLocales from metadata, deduplicating against the request locale
+    // by comparing canonical (lowercase + underscore) forms, but keeping each
+    // entry's original value for the Accept-Language header.
+    let allLocales;
+    if (metadataLocales) {
+        const reqCanon = canonicalLocale(requestLocale);
+        // Include request locale first (original form), then all others whose
+        // canonical form differs from the request locale's canonical form.
+        allLocales = [
+            requestLocale,
+            ...metadataLocales.filter((l) => canonicalLocale(l) !== reqCanon),
+        ];
+    } else {
+        allLocales = [requestLocale];
+    }
 
     decrees.forEach((decree) => {
         renderDecreeCard(container, decree, capabilities, allLocales);
