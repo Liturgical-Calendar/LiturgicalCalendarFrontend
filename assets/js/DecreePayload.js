@@ -18,6 +18,49 @@ const splitAction = (action) => {
 };
 
 /**
+ * Parse a strtotime value: if it is a JSON string representing an object,
+ * return the parsed object; otherwise return the original value unchanged.
+ *
+ * @param {unknown} value  Raw strtotime value from the form field
+ * @returns {unknown}
+ */
+function parseStrtotime(value) {
+    if (typeof value === 'string') {
+        try {
+            const parsed = JSON.parse(value);
+            if (parsed !== null && typeof parsed === 'object') {
+                return parsed;
+            }
+        } catch {
+            // not JSON — keep as string
+        }
+    }
+    return value;
+}
+
+/**
+ * Build the liturgical_event shape for the createNew action.
+ * Includes date positioning (fixed day/month or mobile strtotime),
+ * grade, color, and common.
+ *
+ * @param {object} form  Form values bag from collectFormValues()
+ * @returns {object}
+ */
+function buildCreateNewEvent(form) {
+    const strtotimeValue = parseStrtotime(form.strtotime);
+    return {
+        event_key: form.event_key,
+        calendar: 'GENERAL ROMAN',
+        ...(form.event_type === 'mobile'
+            ? { strtotime: strtotimeValue, type: 'mobile' }
+            : { day: Number(form.day), month: Number(form.month), type: 'fixed' }),
+        ...(form.grade !== undefined ? { grade: Number(form.grade) } : {}),
+        ...(form.color && form.color.length > 0 ? { color: form.color } : {}),
+        ...(form.common && form.common.length > 0 ? { common: form.common } : {}),
+    };
+}
+
+/**
  * Build the per-action liturgical_event shape.
  *
  * @param {object} form        Form values bag from collectFormValues()
@@ -26,28 +69,7 @@ const splitAction = (action) => {
  */
 function buildLiturgicalEvent(form, fullAction) {
     if (fullAction === DecreeAction.CreateNew) {
-        // createNew: include day/month (fixed) or strtotime (mobile) + type + grade + color + common
-        let strtotimeValue = form.strtotime;
-        if (typeof strtotimeValue === 'string') {
-            try {
-                const parsed = JSON.parse(strtotimeValue);
-                if (parsed !== null && typeof parsed === 'object') {
-                    strtotimeValue = parsed;
-                }
-            } catch {
-                // not JSON — keep as string
-            }
-        }
-        return {
-            event_key: form.event_key,
-            calendar: 'GENERAL ROMAN',
-            ...(form.event_type === 'mobile'
-                ? { strtotime: strtotimeValue, type: 'mobile' }
-                : { day: Number(form.day), month: Number(form.month), type: 'fixed' }),
-            ...(form.grade !== undefined ? { grade: Number(form.grade) } : {}),
-            ...(form.color && form.color.length > 0 ? { color: form.color } : {}),
-            ...(form.common && form.common.length > 0 ? { common: form.common } : {}),
-        };
+        return buildCreateNewEvent(form);
     }
 
     if (fullAction === DecreeAction.SetPropertyGrade) {

@@ -1452,19 +1452,14 @@ function prefillReadingsGroups(readingsGroups, readings, locales, baseLocale) {
 }
 
 /**
- * Pre-fill the editor form from an existing decree object.
+ * Pre-fill the decree-level fields of the editor form (decree_id, event_key
+ * readonly state, date, protocol, description, and metadata action/since_year/url).
  *
  * @param {HTMLFormElement} form
  * @param {object}          decree
- * @param {string[]}        locales
- * @param {string}          baseLocale
+ * @param {Function}        setVal  `(name, value) => void` helper bound to `form`
  */
-function prefillFromDecree(form, decree, locales, baseLocale) {
-    const setVal = (name, value) => {
-        const el = form.querySelector(`[name="${name}"]`);
-        if (el && value !== undefined && value !== null) el.value = value;
-    };
-
+function prefillDecreeFields(form, decree, setVal) {
     // decree_id is readonly when editing (prevents PATCH from changing the ID)
     const decreeIdEl = form.querySelector('[name="decree_id"]');
     if (decreeIdEl) {
@@ -1494,53 +1489,91 @@ function prefillFromDecree(form, decree, locales, baseLocale) {
         if (meta.since_year) setVal('since_year', meta.since_year);
         if (meta.url)        setVal('url',        meta.url);
     }
+}
+
+/**
+ * Pre-fill the liturgical-event fields of the editor form (event_key value,
+ * grade/grade_set, color multi-select, day/month, strtotime with JSON round-trip,
+ * event_type radio, and common_text).
+ *
+ * @param {HTMLFormElement} form
+ * @param {object}          ev     `decree.liturgical_event`
+ * @param {Function}        setVal `(name, value) => void` helper bound to `form`
+ */
+function prefillEventFields(form, ev, setVal) {
+    setVal('event_key', ev.event_key);
+
+    if (ev.grade !== undefined) {
+        setVal('grade',     ev.grade);
+        setVal('grade_set', ev.grade);
+    }
+
+    if (Array.isArray(ev.color)) {
+        const colorEl = form.querySelector('[name="color"]');
+        if (colorEl) {
+            Array.from(colorEl.options).forEach((opt) => {
+                opt.selected = ev.color.includes(opt.value);
+            });
+        }
+    }
+
+    // Pre-fill day and month (fixed events)
+    if (ev.day !== undefined)   setVal('day',   ev.day);
+    if (ev.month !== undefined) setVal('month', ev.month);
+
+    // Pre-fill strtotime (mobile events); objects are round-tripped via JSON
+    if (ev.strtotime !== undefined) {
+        const strtotimeStr = (ev.strtotime !== null && typeof ev.strtotime === 'object')
+            ? JSON.stringify(ev.strtotime)
+            : String(ev.strtotime);
+        setVal('strtotime', strtotimeStr);
+    }
+
+    // Pre-select event_type radio (fixed or mobile)
+    const eventType = ev.type === 'mobile' ? 'mobile' : 'fixed';
+    const radioToCheck = form.querySelector(`[name="event_type"][value="${eventType}"]`);
+    if (radioToCheck) radioToCheck.checked = true;
+
+    // Pre-fill common
+    if (Array.isArray(ev.common) && ev.common.length > 0) {
+        setVal('common_text', ev.common.join(', '));
+    }
+}
+
+/**
+ * Pre-fill the base-locale i18n name row with the event name returned by the API.
+ *
+ * @param {object} ev  `decree.liturgical_event`
+ */
+function prefillI18nBaseRow(ev) {
+    if (!ev.name) return;
+    const i18nRows = document.getElementById('i18nRows');
+    const baseNameInput = i18nRows
+        ? i18nRows.querySelector('.i18n-row[data-base-row="true"] [name="i18n_name[]"]')
+        : null;
+    if (baseNameInput) baseNameInput.value = ev.name;
+}
+
+/**
+ * Pre-fill the editor form from an existing decree object.
+ *
+ * @param {HTMLFormElement} form
+ * @param {object}          decree
+ * @param {string[]}        locales
+ * @param {string}          baseLocale
+ */
+function prefillFromDecree(form, decree, locales, baseLocale) {
+    const setVal = (name, value) => {
+        const el = form.querySelector(`[name="${name}"]`);
+        if (el && value !== undefined && value !== null) el.value = value;
+    };
+
+    prefillDecreeFields(form, decree, setVal);
 
     const ev = decree.liturgical_event;
     if (ev) {
-        setVal('event_key', ev.event_key);
-        if (ev.grade !== undefined) {
-            setVal('grade',     ev.grade);
-            setVal('grade_set', ev.grade);
-        }
-        if (Array.isArray(ev.color)) {
-            const colorEl = form.querySelector('[name="color"]');
-            if (colorEl) {
-                Array.from(colorEl.options).forEach((opt) => {
-                    opt.selected = ev.color.includes(opt.value);
-                });
-            }
-        }
-
-        // Pre-fill day and month (fixed events)
-        if (ev.day !== undefined)   setVal('day',   ev.day);
-        if (ev.month !== undefined) setVal('month', ev.month);
-
-        // Pre-fill strtotime (mobile events)
-        if (ev.strtotime !== undefined) {
-            const strtotimeStr = (ev.strtotime !== null && typeof ev.strtotime === 'object')
-                ? JSON.stringify(ev.strtotime)
-                : String(ev.strtotime);
-            setVal('strtotime', strtotimeStr);
-        }
-
-        // Pre-select event_type radio (fixed or mobile)
-        const eventType = ev.type === 'mobile' ? 'mobile' : 'fixed';
-        const radioToCheck = form.querySelector(`[name="event_type"][value="${eventType}"]`);
-        if (radioToCheck) radioToCheck.checked = true;
-
-        // Pre-fill common
-        if (Array.isArray(ev.common) && ev.common.length > 0) {
-            setVal('common_text', ev.common.join(', '));
-        }
-
-        // Pre-fill i18n base row with the request-locale name
-        if (ev.name) {
-            const i18nRows = document.getElementById('i18nRows');
-            const baseNameInput = i18nRows
-                ? i18nRows.querySelector('.i18n-row[data-base-row="true"] [name="i18n_name[]"]')
-                : null;
-            if (baseNameInput) baseNameInput.value = ev.name;
-        }
+        prefillEventFields(form, ev, setVal);
+        prefillI18nBaseRow(ev, baseLocale);
 
         // Pre-fill readings groups from liturgical_event.readings when present
         const readingsGroups = document.getElementById('readingsGroups');
