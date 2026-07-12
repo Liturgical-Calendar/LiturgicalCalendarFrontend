@@ -23,19 +23,20 @@ const config = window.AdminDecreesConfig;
 // Copied verbatim from assets/js/admin-tests.js (adapted: uses config.apiUrl).
 
 /**
- * Fetch JSON from the API with credentials and a 15 s timeout.
+ * Fetch JSON from the API with a 15 s timeout.
  *
  * @param {string} method  HTTP method
  * @param {string} path    Path (appended to config.apiUrl)
  * @param {unknown} [body] Optional JSON body
  * @param {Record<string,string>} [extraHeaders] Additional request headers
+ * @param {'include'|'omit'} [credentials] Credentials mode (default: 'include')
  * @returns {Promise<unknown>} Parsed JSON body
  */
-async function fetchJson(method, path, body, extraHeaders) {
+async function fetchJson(method, path, body, extraHeaders, credentials = 'include') {
     const opts = {
         method,
         headers: { Accept: 'application/json', ...extraHeaders },
-        credentials: 'include',
+        credentials,
     };
     if (body !== undefined) {
         opts.headers['Content-Type'] = 'application/json';
@@ -328,9 +329,11 @@ function buildTranslationsPanel(panel, decreeId, reqLocale, reqName, allLocales)
                 }
                 return;
             }
+            // Per-locale decree fetch is public — omit credentials. DecreesHandler serves
+            // wildcard ACAO, and browsers reject wildcard ACAO on credentialed requests.
             fetchJson('GET', `/decrees/${encodeURIComponent(decreeId)}`, undefined, {
                 'Accept-Language': locale,
-            }).then((data) => {
+            }, 'omit').then((data) => {
                 const name = data
                     && typeof data === 'object'
                     && data.liturgical_event
@@ -695,15 +698,17 @@ async function loadDecrees(container, capabilities) {
     spinner.appendChild(spinnerDiv);
     container.appendChild(spinner);
 
-    // Fetch /decrees (authenticated) and /calendars (public) in parallel.
-    // The /calendars endpoint needs no credentials and does not send cookies.
+    // Fetch /decrees (public) and /calendars (public) in parallel.
+    // The /decrees endpoint is public — omit credentials. DecreesHandler serves a
+    // wildcard Access-Control-Allow-Origin, and browsers reject wildcard ACAO
+    // on credentialed requests.
     let data;
     let metadataLocales = null;
     try {
         const metaController = new AbortController();
         const metaTimeoutId = setTimeout(() => metaController.abort(), 15000);
         const [decreesData, metaData] = await Promise.all([
-            fetchJson('GET', '/decrees'),
+            fetchJson('GET', '/decrees', undefined, {}, 'omit'),
             fetch(config.apiUrl + '/calendars', {
                 credentials: 'omit',
                 headers:     { Accept: 'application/json' },
