@@ -240,6 +240,10 @@ if (!$isAdmin && !$isCalendarEditor) {
                             <?php endforeach; ?>
                         </datalist>
 
+                        <?php // Per-language Vatican-code datalists (#urlCodes-{iso}), filled by JS from
+                              // the current decrees' url_lang_map values (see rebuildUrlCodeDatalists). ?>
+                        <div id="urlCodeDatalists" hidden></div>
+
                         <!-- ── createNew-only block: event details ────────── -->
                         <fieldset class="border rounded p-3 mb-3 action-block action-createNew">
                             <legend class="float-none w-auto px-2 fs-6 fw-semibold">

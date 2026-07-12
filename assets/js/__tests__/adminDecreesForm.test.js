@@ -56,7 +56,13 @@ vi.hoisted(() => {
     };
 });
 
-import { collectFormValues, applyActionVisibility, reverseMapAction, addUrlLangRow } from '../admin-decrees.js';
+import {
+    collectFormValues,
+    applyActionVisibility,
+    reverseMapAction,
+    addUrlLangRow,
+    aggregateUrlCodeSuggestions,
+} from '../admin-decrees.js';
 import { DecreeAction } from '../DecreePayload.js';
 
 // ---- helpers ---------------------------------------------------------------
@@ -577,6 +583,46 @@ describe('addUrlLangRow — datalist-backed ISO input', () => {
         addUrlLangRow(container);
         expect(container.querySelector('[name="url_lang_iso[]"]').value).toBe('');
         expect(container.querySelector('[name="url_lang_code[]"]').value).toBe('');
+    });
+
+    it('binds the code field to the per-language datalist when one exists for the ISO', () => {
+        const dl = document.createElement('datalist');
+        dl.id = 'urlCodes-de';
+        document.body.appendChild(dl);
+        try {
+            const container = document.createElement('div');
+            addUrlLangRow(container, 'de', 'ge');
+            expect(container.querySelector('[name="url_lang_code[]"]').getAttribute('list')).toBe('urlCodes-de');
+        } finally {
+            dl.remove();
+        }
+    });
+
+    it('leaves the code field unbound when no per-language datalist exists', () => {
+        const container = document.createElement('div');
+        addUrlLangRow(container, 'zz', 'x'); // no #urlCodes-zz in the DOM
+        expect(container.querySelector('[name="url_lang_code[]"]').getAttribute('list')).toBeNull();
+    });
+});
+
+describe('aggregateUrlCodeSuggestions', () => {
+    it('collects distinct Vatican codes per ISO language, sorted', () => {
+        const decrees = [
+            { metadata: { url_lang_map: { de: 'ge', it: 'it' } } },
+            { metadata: { url_lang_map: { de: 'tedesca', it: 'it', la: 'lat' } } },
+            { metadata: { url_lang_map: { de: 'ge' } } }, // duplicate ge
+            { metadata: {} },                              // no map
+            { metadata: { url_lang_map: { de: '' } } },    // empty value ignored
+        ];
+        expect(aggregateUrlCodeSuggestions(decrees)).toEqual({
+            de: ['ge', 'tedesca'],
+            it: ['it'],
+            la: ['lat'],
+        });
+    });
+
+    it('returns an empty object when no decree carries a url_lang_map', () => {
+        expect(aggregateUrlCodeSuggestions([{ metadata: {} }, {}])).toEqual({});
     });
 });
 

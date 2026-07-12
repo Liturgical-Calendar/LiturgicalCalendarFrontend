@@ -1039,6 +1039,11 @@ async function loadDecrees(container, capabilities) {
     // Store for modal use
     modalAllLocales = allLocales;
 
+    // Aggregate known Vatican URL codes per language for the code datalists.
+    // Rebuilt on every load, so a code saved in a prior write shows up here.
+    urlCodeSuggestions = aggregateUrlCodeSuggestions(decrees);
+    rebuildUrlCodeDatalists();
+
     // Build the decree map for edit pre-fill
     decreeMap.clear();
     decrees.forEach((decree) => {
@@ -1121,6 +1126,63 @@ let modalAllLocales = [];
  * @type {Map<string, object>}
  */
 const decreeMap = new Map();
+
+/**
+ * Known Vatican URL codes per ISO 639-1 language, aggregated from the current
+ * decrees' url_lang_map values. Powers the per-language datalist on the code
+ * field so authors can reuse existing codes without being constrained to them;
+ * a newly-saved code appears here after the list reloads.
+ *
+ * @type {Record<string, string[]>}
+ */
+let urlCodeSuggestions = {};
+
+/**
+ * Aggregate the distinct Vatican URL codes used for each ISO 639-1 language
+ * across a decree list's url_lang_map entries.
+ *
+ * @param {object[]} decrees  Decrees from GET /decrees
+ * @returns {Record<string, string[]>}  iso → sorted distinct codes
+ */
+export function aggregateUrlCodeSuggestions(decrees) {
+    /** @type {Record<string, Set<string>>} */
+    const sets = {};
+    decrees.forEach((decree) => {
+        const map = decree && decree.metadata && decree.metadata.url_lang_map;
+        if (!map || typeof map !== 'object') return;
+        Object.entries(map).forEach(([iso, code]) => {
+            if (typeof code !== 'string' || code === '') return;
+            (sets[iso] ??= new Set()).add(code);
+        });
+    });
+    /** @type {Record<string, string[]>} */
+    const out = {};
+    Object.entries(sets).forEach(([iso, codes]) => {
+        out[iso] = [...codes].sort();
+    });
+    return out;
+}
+
+/**
+ * Rebuild the hidden per-language <datalist> elements (#urlCodes-{iso}) from
+ * urlCodeSuggestions so the url_lang_map code inputs can suggest existing codes.
+ */
+function rebuildUrlCodeDatalists() {
+    const host = document.getElementById('urlCodeDatalists');
+    if (!host) return;
+    host.replaceChildren();
+    Object.entries(urlCodeSuggestions).forEach(([iso, codes]) => {
+        if (!/^[a-z]{2}$/.test(iso)) return;
+        const dl = document.createElement('datalist');
+        dl.id = `urlCodes-${iso}`;
+        codes.forEach((code) => {
+            const opt = document.createElement('option');
+            opt.value = code;
+            dl.appendChild(opt);
+        });
+        host.appendChild(dl);
+    });
+}
 
 /**
  * Build a locale <select> option list for an i18n row.
@@ -1283,9 +1345,22 @@ export function addUrlLangRow(container, iso, code) {
     codeInput.type = 'text';
     codeInput.className = 'form-control form-control-sm';
     codeInput.name = 'url_lang_code[]';
+    codeInput.setAttribute('autocomplete', 'off');
     codeInput.placeholder = config.i18n.langCodeVatican;
     if (code) codeInput.value = code;
     codeCol.appendChild(codeInput);
+
+    // Point the code field at the per-language datalist (#urlCodes-{iso}) of
+    // historically-used Vatican codes, refreshed as the language changes.
+    const syncCodeList = () => {
+        const key = isoInput.value.trim().toLowerCase();
+        if (/^[a-z]{2}$/.test(key) && document.getElementById(`urlCodes-${key}`)) {
+            codeInput.setAttribute('list', `urlCodes-${key}`);
+        } else {
+            codeInput.removeAttribute('list');
+        }
+    };
+    syncCodeList();
 
     const rmCol = document.createElement('div');
     rmCol.className = 'col-auto';
@@ -1306,7 +1381,7 @@ export function addUrlLangRow(container, iso, code) {
 
     const form = container.closest('form');
     const refresh = () => { if (form) updateUrlPreview(form); };
-    isoInput.addEventListener('input', refresh);
+    isoInput.addEventListener('input', () => { syncCodeList(); refresh(); });
     codeInput.addEventListener('input', refresh);
     rmBtn.addEventListener('click', () => { row.remove(); refresh(); });
 }
