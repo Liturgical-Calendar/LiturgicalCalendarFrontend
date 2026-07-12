@@ -24,7 +24,11 @@
  *   - super-admin: Zitadel `admin` role (global bypass); `.auth/super-admin.json` pre-written.
  *   - cei-editor / usccb-admin / europe-editor / rome-editor: Zitadel `calendar_editor` role with a scope on
  *     a non-`general_roman_calendar` object; `.auth/<id>.json` pre-written.
- *   - env: OPENFGA_API_URL / OPENFGA_STORE_ID / OPENFGA_MODEL_ID (used by the Fga helper).
+ *   - The decrees catalog served by the API must contain at least one decree: the viewer/editor/admin
+ *     assertions use `.first()` locators against rendered cards and per-card edit/delete buttons.
+ *   - env for the Fga helper: OPENFGA_API_URL / OPENFGA_STORE_ID / OPENFGA_MODEL_ID.
+ *   - env for the ZitadelAdmin helper (subject resolution): ZITADEL_ISSUER / ZITADEL_MACHINE_TOKEN /
+ *     ZITADEL_ORG_ID / ZITADEL_PROJECT_ID.
  */
 
 import { test, expect, Browser } from '@playwright/test';
@@ -59,18 +63,25 @@ async function subOf(email: string): Promise<string> {
 const CARD = '#decreesContainer > .col-12[data-decree-id]';
 
 test.describe('admin-decrees capability matrix (real FGA)', () => {
+    /** Resolved Zitadel subjects, cached in beforeAll and reused for afterAll teardown. */
+    const grantedSubs = new Map<string, string>();
+
     test.beforeAll(async () => {
         test.setTimeout(60_000);
         const f = new Fga();
         for (const g of GRANTS) {
-            await f.write(`user:${await subOf(USERS[g.userKey].email)}`, g.relation, DECREES_OBJECT);
+            const sub = await subOf(USERS[g.userKey].email);
+            grantedSubs.set(g.userKey, sub);
+            await f.write(`user:${sub}`, g.relation, DECREES_OBJECT);
         }
     });
 
     test.afterAll(async () => {
         const f = new Fga();
         for (const g of GRANTS) {
-            const sub = await subOf(USERS[g.userKey].email).catch(() => null);
+            // Reuse the subject resolved in beforeAll; a second Zitadel lookup here could
+            // fail transiently and silently skip teardown, leaking the tuple.
+            const sub = grantedSubs.get(g.userKey);
             if (sub) await f.delete(`user:${sub}`, g.relation, DECREES_OBJECT).catch(() => {});
         }
     });
@@ -111,7 +122,9 @@ test.describe('admin-decrees capability matrix (real FGA)', () => {
             // Positive signals first (capability applied + cards rendered), then the negatives.
             await expect(s.page.locator('#btnCreateDecree')).toBeVisible();
             await expect(s.page.locator('[data-action="edit"]').first()).toBeVisible();
-            await expect(s.page.locator('[data-action="delete"]')).toHaveCount(0);
+            // Delete buttons are always rendered but d-none-gated on canAdmin, so assert
+            // none are visible (not that none exist).
+            await expect(s.page.locator('[data-action="delete"]:visible')).toHaveCount(0);
             await expect(s.page.locator('#lnkManagePermissions')).toBeHidden();
         } finally {
             await s.context.close();
@@ -123,8 +136,10 @@ test.describe('admin-decrees capability matrix (real FGA)', () => {
         try {
             await expect(s.page.locator(CARD).first()).toBeVisible(); // canView: cards render
             await expect(s.page.locator('#btnCreateDecree')).toBeHidden();
-            await expect(s.page.locator('[data-action="edit"]')).toHaveCount(0);
-            await expect(s.page.locator('[data-action="delete"]')).toHaveCount(0);
+            // Edit/delete buttons are always rendered but d-none-gated on canEdit/canAdmin,
+            // so assert none are visible (not that none exist).
+            await expect(s.page.locator('[data-action="edit"]:visible')).toHaveCount(0);
+            await expect(s.page.locator('[data-action="delete"]:visible')).toHaveCount(0);
             await expect(s.page.locator('#lnkManagePermissions')).toBeHidden();
         } finally {
             await s.context.close();

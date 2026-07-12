@@ -72,10 +72,18 @@ their own `sub`).
 
 Gating rules:
 
+- **Anonymous visitors are redirected off the page.** `admin-decrees.php` is an authenticated admin
+  surface; an unauthenticated visitor must not remain on it. The shared admin auth guard redirects them
+  away (to the login/home surface) before any decree UI renders, so capability detection only ever runs
+  for an authenticated caller.
 - **Dashboard card** (`admin-dashboard.php`): renders only when `isAdmin || (calendar_editor && FGA
   viewer-or-above)`; the same self-check the page uses. The card and page use the same scroll icon
   (`fa-scroll`).
 - **No access** (`!canView`): the page shows a muted "no permission" notice instead of cards.
+- **The "New Decree" button is gated on `canEdit`, not on mere authentication.** It deliberately omits
+  `data-requires-auth` (whose global handler would reveal it for any authenticated user); its visibility is
+  owned entirely by the capability logic — server-rendered `d-none`, revealed only when `canEdit` — keeping
+  it consistent with the `canEdit`-gated per-card Edit button.
 - **Manage permissions is page-level, not per-card.** Permissions are resource-level — one FGA object
   governs all decrees — so a per-card link wrongly implies per-decree grants. A single button beside
   "New Decree" (shown when `canAdmin`) deep-links to

@@ -60,7 +60,10 @@ if (!$isAdmin && !$isCalendarEditor) {
 
     <!-- Action buttons -->
     <div class="mb-4 d-flex flex-wrap gap-2 align-items-center">
-        <button type="button" class="btn btn-primary d-none" id="btnCreateDecree" data-requires-auth>
+        <?php // NB: no data-requires-auth here — that global handler reveals on *any* auth, but creating a
+              // decree requires the canEdit capability. Visibility is owned entirely by admin-decrees.js
+              // (server-rendered d-none by default; revealed only when canEdit). ?>
+        <button type="button" class="btn btn-primary d-none" id="btnCreateDecree">
             <i class="fas fa-plus me-1"></i><?php echo htmlspecialchars(_('New Decree'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
         </button>
         <?php // Permissions are resource-level (general_roman_calendar:decrees governs all decrees), hence one page-level link ?>

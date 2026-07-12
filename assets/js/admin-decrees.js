@@ -2489,6 +2489,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const capabilities = await capabilitiesPromise;
 
+    // The create button's visibility is owned entirely by capability logic (it has no
+    // data-requires-auth, so the global auth handler never touches it): server-rendered
+    // d-none by default, hidden here for viewers/no-access, revealed only for editors
+    // below. Runs before the no-access early return so it also covers that branch.
+    if (createBtn && !capabilities.canEdit) {
+        createBtn.classList.add('d-none');
+    }
+
     // No-access guard
     if (!capabilities.canView) {
         showAlert(container, 'warning', config.i18n.noAccess);
