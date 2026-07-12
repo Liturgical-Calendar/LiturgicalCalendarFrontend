@@ -697,6 +697,132 @@ function buildReadingsSection(body, readings, decreeId, allLocales) {
 }
 
 /**
+ * Lazily-built Intl.DisplayNames for the UI locale (language names), or false
+ * when the environment lacks Intl.DisplayNames.
+ *
+ * @type {Intl.DisplayNames|false|null}
+ */
+let langDisplayNames = null;
+
+/**
+ * Human-readable language name for an ISO 639-1 code in the UI locale, falling
+ * back to the uppercased code when it cannot be resolved.
+ *
+ * @param {string} iso
+ * @returns {string}
+ */
+function languageDisplayName(iso) {
+    if (langDisplayNames === null) {
+        try {
+            langDisplayNames = new Intl.DisplayNames([config.locale], { type: 'language' });
+        } catch {
+            langDisplayNames = false;
+        }
+    }
+    if (langDisplayNames) {
+        try {
+            return langDisplayNames.of(iso) || iso.toUpperCase();
+        } catch {
+            return iso.toUpperCase();
+        }
+    }
+    return iso.toUpperCase();
+}
+
+/**
+ * Return the URL only if it is an http(s) URL, else null (blocks javascript:
+ * and other unsafe schemes before assigning to href).
+ *
+ * @param {string} url
+ * @returns {string|null}
+ */
+function safeHttpUrl(url) {
+    try {
+        const parsed = new URL(url);
+        return (parsed.protocol === 'http:' || parsed.protocol === 'https:') ? url : null;
+    } catch {
+        return null;
+    }
+}
+
+/**
+ * Build an external-link anchor (new tab, noopener) with an optional leading
+ * icon and the given text.
+ *
+ * @param {string}  href
+ * @param {string}  text
+ * @param {boolean} [withIcon=false]
+ * @returns {HTMLAnchorElement}
+ */
+function buildExternalLink(href, text, withIcon = false) {
+    const a = document.createElement('a');
+    a.href = href;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    if (withIcon) {
+        const icon = document.createElement('i');
+        icon.className = 'fas fa-external-link-alt me-1';
+        a.appendChild(icon);
+    }
+    a.appendChild(document.createTextNode(text));
+    return a;
+}
+
+/**
+ * Build the source-link footer element for a decree's metadata:
+ * - No %s placeholder: a single "Source" link to the URL.
+ * - %s placeholder + url_lang_map: one link per language (the urls_langs),
+ *   each the URL with %s expanded to that language's Vatican code, labelled
+ *   with the language's display name.
+ * - %s placeholder but no map: a plain "Source" label (no dead link).
+ *
+ * @param {object} metadata  The decree metadata (url, url_lang_map)
+ * @returns {HTMLElement}
+ */
+function buildSourceLinks(metadata) {
+    const url = metadata.url;
+    const hasPlaceholder = url.includes('%s');
+    const langMap = (metadata.url_lang_map && typeof metadata.url_lang_map === 'object'
+        && Object.keys(metadata.url_lang_map).length > 0)
+        ? metadata.url_lang_map
+        : null;
+
+    // Single real URL (no placeholder): one "Source" link.
+    if (!hasPlaceholder) {
+        const safe = safeHttpUrl(url);
+        if (safe !== null) {
+            return buildExternalLink(safe, config.i18n.sourceLink, true);
+        }
+        const span = document.createElement('span');
+        span.textContent = config.i18n.sourceLink;
+        return span;
+    }
+
+    // Placeholder with a language map: list the per-language expanded URLs.
+    if (langMap) {
+        const wrap = document.createElement('span');
+        wrap.className = 'd-inline-flex flex-wrap gap-2 align-items-center';
+        const label = document.createElement('span');
+        const labelIcon = document.createElement('i');
+        labelIcon.className = 'fas fa-external-link-alt me-1';
+        label.appendChild(labelIcon);
+        label.appendChild(document.createTextNode(`${config.i18n.sourceLink}:`));
+        wrap.appendChild(label);
+        Object.entries(langMap).forEach(([iso, code]) => {
+            const safe = safeHttpUrl(url.replace(/%s/g, code));
+            if (safe === null) return;
+            wrap.appendChild(buildExternalLink(safe, languageDisplayName(iso)));
+        });
+        return wrap;
+    }
+
+    // Placeholder but no map: cannot expand to a real URL — plain label only.
+    const span = document.createElement('span');
+    span.textContent = config.i18n.sourceLink;
+    return span;
+}
+
+/**
  * Build the card footer element containing decree metadata (date, protocol,
  * since_year, source link).
  *
@@ -731,28 +857,7 @@ function buildCardFooter(decreeDate, protocol, metadata) {
     }
 
     if (metadata && metadata.url) {
-        let safeUrl = null;
-        try {
-            const parsed = new URL(metadata.url);
-            if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
-                safeUrl = metadata.url;
-            }
-        } catch {
-            // invalid URL — render as text only
-        }
-        if (safeUrl !== null) {
-            const link = document.createElement('a');
-            link.href = safeUrl;
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-            const linkIcon = document.createElement('i');
-            linkIcon.className = 'fas fa-external-link-alt me-1';
-            link.appendChild(linkIcon);
-            link.appendChild(document.createTextNode(config.i18n.sourceLink));
-            footer.appendChild(link);
-        } else {
-            footer.appendChild(document.createTextNode(config.i18n.sourceLink));
-        }
+        footer.appendChild(buildSourceLinks(metadata));
     }
 
     return footer;

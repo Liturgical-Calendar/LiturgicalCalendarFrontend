@@ -152,3 +152,43 @@ describe('renderDecreeCard: readings panel', () => {
         expect(container.querySelector('[data-bs-target^="#readings-"]')).toBeNull();
     });
 });
+
+describe('renderDecreeCard: source link(s)', () => {
+    const footerLinks = (container) => [...container.querySelector('.card-footer').querySelectorAll('a')];
+
+    it('renders a single Source link when the URL has no %s placeholder', () => {
+        const container = document.createElement('div');
+        renderDecreeCard(container, createNewDecree(), CAPS, ['en', 'it']);
+        const links = footerLinks(container);
+        expect(links).toHaveLength(1);
+        expect(links[0].textContent).toBe('Source');
+        expect(links[0].getAttribute('href')).toBe('https://www.vatican.va/x');
+    });
+
+    it('lists one per-language link (urls_langs) when the URL has %s and a url_lang_map', () => {
+        const decree = createNewDecree();
+        decree.metadata.url = 'https://www.vatican.va/content/john-paul-ii/%s/doc.html';
+        decree.metadata.url_lang_map = { en: 'en', it: 'it', de: 'ge' };
+        const container = document.createElement('div');
+        renderDecreeCard(container, decree, CAPS, ['en', 'it']);
+        const links = footerLinks(container);
+        expect(links).toHaveLength(3);
+        // every link expands %s — none still contains the placeholder
+        expect(links.every((a) => !a.getAttribute('href').includes('%s'))).toBe(true);
+        const byText = Object.fromEntries(links.map((a) => [a.textContent, a.getAttribute('href')]));
+        // labelled by language display name (Intl.DisplayNames, en-US locale)
+        expect(byText.English).toBe('https://www.vatican.va/content/john-paul-ii/en/doc.html');
+        expect(byText.Italian).toBe('https://www.vatican.va/content/john-paul-ii/it/doc.html');
+        expect(byText.German).toBe('https://www.vatican.va/content/john-paul-ii/ge/doc.html');
+    });
+
+    it('never emits a link whose href still contains the %s placeholder', () => {
+        const decree = createNewDecree();
+        decree.metadata.url = 'https://www.vatican.va/content/john-paul-ii/%s/doc.html';
+        decree.metadata.url_lang_map = { en: 'en' };
+        const container = document.createElement('div');
+        renderDecreeCard(container, decree, CAPS, ['en', 'it']);
+        const badLink = footerLinks(container).find((a) => a.getAttribute('href').includes('%s'));
+        expect(badLink).toBeUndefined();
+    });
+});
