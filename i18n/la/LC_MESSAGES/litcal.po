@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-11 13:20+0000\n"
+"POT-Creation-Date: 2026-07-12 21:13+0000\n"
 "PO-Revision-Date: 2026-06-26 20:52+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
@@ -2561,7 +2561,7 @@ msgstr "Credentia"
 msgid "Date"
 msgstr "Dies"
 
-#: admin-permissions.php:439 admin-applications.php:245 admin-dashboard.php:154
+#: admin-permissions.php:439 admin-applications.php:245 admin-dashboard.php:164
 msgid "Review"
 msgstr "Recensere"
 
@@ -2820,6 +2820,7 @@ msgstr ""
 "calendaria regionalia."
 
 #: admin-dashboard.php:65 admin-dashboard.php:129 admin-dashboard.php:139
+#: admin-dashboard.php:149
 msgid "Administration"
 msgstr "Administratio"
 
@@ -2847,11 +2848,11 @@ msgstr "Recensere et approbare programmatoris applicationes"
 msgid "Manage fine-grained resource permissions"
 msgstr "Administrare subtilia permissiones facultatum"
 
-#: admin-dashboard.php:148
+#: admin-dashboard.php:158
 msgid "Access Requests to Review"
 msgstr "Postulationes accessus recognoscendae"
 
-#: admin-dashboard.php:150
+#: admin-dashboard.php:160
 msgid "Review and approve access requests for the resources you administer"
 msgstr "Recognosce et proba postulationes accessus ad res quas administras"
 

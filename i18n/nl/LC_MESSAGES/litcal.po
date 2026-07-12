@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-11 13:20+0000\n"
+"POT-Creation-Date: 2026-07-12 21:13+0000\n"
 "PO-Revision-Date: 2026-06-26 20:52+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
@@ -2591,7 +2591,7 @@ msgstr "Referenties"
 msgid "Date"
 msgstr "Datum"
 
-#: admin-permissions.php:439 admin-applications.php:245 admin-dashboard.php:154
+#: admin-permissions.php:439 admin-applications.php:245 admin-dashboard.php:164
 msgid "Review"
 msgstr "Beoordeling"
 
@@ -2850,6 +2850,7 @@ msgstr ""
 "regionale kalenders."
 
 #: admin-dashboard.php:65 admin-dashboard.php:129 admin-dashboard.php:139
+#: admin-dashboard.php:149
 msgid "Administration"
 msgstr "Administratie"
 
@@ -2877,11 +2878,11 @@ msgstr "Beoordeel en keur ontwikkelaaraanvragen goed"
 msgid "Manage fine-grained resource permissions"
 msgstr "Fijnmazige resourcepermissies beheren"
 
-#: admin-dashboard.php:148
+#: admin-dashboard.php:158
 msgid "Access Requests to Review"
 msgstr "Te beoordelen toegangsverzoeken"
 
-#: admin-dashboard.php:150
+#: admin-dashboard.php:160
 msgid "Review and approve access requests for the resources you administer"
 msgstr ""
 "Beoordeel en keur toegangsverzoeken goed voor de bronnen die je beheert"
