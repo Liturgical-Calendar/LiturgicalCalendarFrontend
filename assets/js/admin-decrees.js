@@ -1725,8 +1725,9 @@ async function reloadDecrees(capabilities) {
  * On failure: renders the error in the modal alert region.
  *
  * IMPORTANT: PATCH must not change liturgical_event.event_key (the API
- * rejects it with 400). The event_key input is made readonly in edit mode
- * (see openEditorModal) to prevent this from being triggered accidentally.
+ * rejects it with 400). In edit mode event_key and action are shown as static
+ * hints, not editable fields (see prefillDecreeFields / showDecreeIdentityStatic),
+ * so the immutable values cannot be changed accidentally.
  *
  * @param {object}  payload      Built payload from buildDecreePayload()
  * @param {boolean} isCreate     true → PUT /decrees/{id} (201 expected)
@@ -1825,6 +1826,46 @@ function resetEditorForm(form, alertBox, label, isCreate, baseLocale) {
     if (urlLangRows) urlLangRows.replaceChildren();
     const urlLangPreview = document.getElementById('urlLangMapPreview');
     if (urlLangPreview) urlLangPreview.replaceChildren();
+
+    // Default to editable identity fields (create mode); edit mode swaps to static
+    showDecreeIdentityFields(form);
+}
+
+/**
+ * Show event_key and action as editable form controls (create mode): reveal
+ * the input/select and hide the static hints.
+ *
+ * @param {HTMLFormElement} form
+ */
+function showDecreeIdentityFields(form) {
+    const ekInput  = form.querySelector('#decreeEventKey');
+    const ekStatic = document.getElementById('decreeEventKeyStatic');
+    const actSel   = form.querySelector('#decreeAction');
+    const actStat  = document.getElementById('decreeActionStatic');
+    if (ekInput)  { ekInput.classList.remove('d-none'); ekInput.readOnly = false; }
+    if (ekStatic) { ekStatic.textContent = ''; ekStatic.classList.add('d-none'); }
+    if (actSel)   { actSel.classList.remove('d-none'); actSel.disabled = false; }
+    if (actStat)  { actStat.textContent = ''; actStat.classList.add('d-none'); }
+}
+
+/**
+ * Show event_key and action as static text hints (edit mode): hide the
+ * input/select and reveal the static hints. The input/select keep their
+ * name and value so collectFormValues still reads them for the PATCH.
+ *
+ * @param {HTMLFormElement} form
+ * @param {string}          eventKey     The immutable event_key
+ * @param {string}          actionLabel  The action's localized display label
+ */
+function showDecreeIdentityStatic(form, eventKey, actionLabel) {
+    const ekInput  = form.querySelector('#decreeEventKey');
+    const ekStatic = document.getElementById('decreeEventKeyStatic');
+    const actSel   = form.querySelector('#decreeAction');
+    const actStat  = document.getElementById('decreeActionStatic');
+    if (ekInput)  ekInput.classList.add('d-none');
+    if (ekStatic) { ekStatic.textContent = eventKey || '—'; ekStatic.classList.remove('d-none'); }
+    if (actSel)   actSel.classList.add('d-none');
+    if (actStat)  { actStat.textContent = actionLabel || '—'; actStat.classList.remove('d-none'); }
 }
 
 /**
@@ -1886,32 +1927,34 @@ function prefillDecreeFields(form, decree, setVal) {
     const idHint = document.getElementById('decreeIdHint');
     if (idHint) idHint.textContent = decree.decree_id || '—';
 
-    // event_key is readonly when editing: PATCH must NOT change event_key
-    // (API rejects with 400 and instructs DELETE + PUT instead).
-    // Only set readonly if the decree actually has a liturgical_event.event_key;
-    // if missing, leave it editable to allow assignment.
-    const eventKeyEl = form.querySelector('[name="event_key"]');
-    if (eventKeyEl) {
-        eventKeyEl.readOnly = Boolean(decree.liturgical_event && decree.liturgical_event.event_key);
-    }
+    // event_key is immutable on edit (PATCH must NOT change it; the API rejects
+    // with 400 and instructs DELETE + PUT instead). Keep its value in the input
+    // for the payload, but display it as a static hint rather than a field.
+    const eventKey = (decree.liturgical_event && decree.liturgical_event.event_key)
+        ? decree.liturgical_event.event_key
+        : '';
 
     setVal('decree_date',     decree.decree_date);
     setVal('decree_protocol', decree.decree_protocol);
     setVal('description',     decree.description);
 
-    // Pre-select the action and lock it: changing the action would change the
-    // derived decree_id, which a PATCH cannot do.
+    // Pre-select the action; it is immutable on edit (changing it would change
+    // the derived decree_id, which a PATCH cannot do). Shown as a static hint.
+    let actionLabel = '';
     const meta = decree.metadata;
     if (meta) {
         const actionValue = reverseMapAction(meta.action, meta.property);
         const actionEl = form.querySelector('[name="action"]');
         if (actionEl) {
-            actionEl.value    = actionValue;
-            actionEl.disabled = true;
+            actionEl.value = actionValue;
+            const selected = actionEl.selectedOptions && actionEl.selectedOptions[0];
+            actionLabel = selected ? selected.textContent.trim() : actionValue;
         }
         if (meta.since_year) setVal('since_year', meta.since_year);
         if (meta.url)        setVal('url',        meta.url);
     }
+
+    showDecreeIdentityStatic(form, eventKey, actionLabel);
 }
 
 /**
@@ -2203,14 +2246,9 @@ function openEditorModal(decree, locales, capabilities) {
     if (decree) {
         prefillFromDecree(form, decree, locales, baseLocale);
     } else {
-        // Creating: event_key and action are editable (both feed the derived
-        // decree_id); re-enable action in case a prior edit-open disabled it.
-        const eventKeyEl = form.querySelector('[name="event_key"]');
-        if (eventKeyEl) eventKeyEl.readOnly = false;
-        const actionEl = form.querySelector('[name="action"]');
-        if (actionEl) actionEl.disabled = false;
-
-        // Initialize the derived-id hint (empty event_key → placeholder)
+        // Creating: event_key and action are editable fields (both feed the
+        // derived decree_id); resetEditorForm already restored the field view.
+        // Initialize the derived-id hint (empty event_key → placeholder).
         syncDerivedDecreeId(form);
 
         // Pre-add a base-locale readings group for createNew

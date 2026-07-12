@@ -99,6 +99,8 @@ if (!$isAdmin && !$isCalendarEditor) {
                                 </label>
                                 <input type="text" class="form-control" id="decreeEventKey" name="event_key"
                                     placeholder="StMotherTeresa">
+                                <?php // On edit, event_key is immutable: shown as static text, not an editable field ?>
+                                <div class="form-control-plaintext py-0 font-monospace d-none" id="decreeEventKeyStatic"></div>
                             </div>
                             <div class="col-md-6">
                                 <label for="decreeAction" class="form-label">
@@ -118,6 +120,8 @@ if (!$isAdmin && !$isCalendarEditor) {
                                         echo htmlspecialchars(_('Set property: grade'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                                     ?></option>
                                 </select>
+                                <?php // On edit, the action is immutable: shown as static text, not an editable select ?>
+                                <div class="form-control-plaintext py-0 d-none" id="decreeActionStatic"></div>
                             </div>
                         </div>
 
