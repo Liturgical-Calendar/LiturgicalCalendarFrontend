@@ -1573,7 +1573,7 @@ function prefillFromDecree(form, decree, locales, baseLocale) {
     const ev = decree.liturgical_event;
     if (ev) {
         prefillEventFields(form, ev, setVal);
-        prefillI18nBaseRow(ev, baseLocale);
+        prefillI18nBaseRow(ev);
 
         // Pre-fill readings groups from liturgical_event.readings when present
         const readingsGroups = document.getElementById('readingsGroups');
