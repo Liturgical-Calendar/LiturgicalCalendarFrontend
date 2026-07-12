@@ -29,7 +29,6 @@ vi.hoisted(() => {
             noReadings: 'No readings defined for this locale yet',
             sinceYear: 'Since %s',
             sourceLink: 'Source',
-            managePerms: 'Manage permissions',
             editAriaLabel: 'Edit',
             deleteAriaLabel: 'Delete',
             errorText: '(error)',

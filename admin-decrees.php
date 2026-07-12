@@ -58,11 +58,16 @@ if (!$isAdmin && !$isCalendarEditor) {
         );
     ?></p>
 
-    <!-- Action button -->
-    <div class="mb-4">
+    <!-- Action buttons -->
+    <div class="mb-4 d-flex flex-wrap gap-2 align-items-center">
         <button type="button" class="btn btn-primary d-none" id="btnCreateDecree" data-requires-auth>
             <i class="fas fa-plus me-1"></i><?php echo htmlspecialchars(_('New Decree'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
         </button>
+        <?php // Permissions are resource-level (general_roman_calendar:decrees governs all decrees), hence one page-level link ?>
+        <a href="admin-permissions.php?object_type=general_roman_calendar&amp;object_id=decrees"
+           class="btn btn-outline-secondary d-none" id="lnkManagePermissions">
+            <i class="fas fa-user-shield me-1"></i><?php echo htmlspecialchars(_('Manage permissions'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+        </a>
     </div>
 
     <!-- Decrees container -->
@@ -427,7 +432,6 @@ if (!$isAdmin && !$isCalendarEditor) {
                 created:           <?php echo json_encode(_('Decree created.'), JSON_HEX_TAG); ?>,
                 updated:           <?php echo json_encode(_('Decree updated.'), JSON_HEX_TAG); ?>,
                 deleted:           <?php echo json_encode(_('Decree deleted.'), JSON_HEX_TAG); ?>,
-                managePerms:       <?php echo json_encode(_('Manage permissions'), JSON_HEX_TAG); ?>,
                 translations:      <?php echo json_encode(_('Translations'), JSON_HEX_TAG); ?>,
                 readings:          <?php echo json_encode(_('Lectionary readings'), JSON_HEX_TAG); ?>,
                 newDecree:         <?php echo json_encode(_('New Decree'), JSON_HEX_TAG); ?>,

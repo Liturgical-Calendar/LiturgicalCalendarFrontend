@@ -34,7 +34,6 @@ vi.hoisted(() => {
             created:           'Created.',
             updated:           'Updated.',
             deleted:           'Deleted.',
-            managePerms:       'Manage permissions',
             translations:      'Translations',
             readings:          'Lectionary readings',
             newDecree:         'New Decree',

@@ -698,15 +698,14 @@ function buildReadingsSection(body, readings, decreeId, allLocales) {
 
 /**
  * Build the card footer element containing decree metadata (date, protocol,
- * since_year, source link, permissions link).
+ * since_year, source link).
  *
  * @param {string|null|undefined} decreeDate
  * @param {string|null|undefined} protocol
  * @param {object|null|undefined} metadata
- * @param {{canView: boolean, canEdit: boolean, canAdmin: boolean}} capabilities
  * @returns {HTMLElement}
  */
-function buildCardFooter(decreeDate, protocol, metadata, capabilities) {
+function buildCardFooter(decreeDate, protocol, metadata) {
     const footer = document.createElement('div');
     footer.className = 'card-footer text-muted small d-flex flex-wrap gap-3 align-items-center';
 
@@ -754,16 +753,6 @@ function buildCardFooter(decreeDate, protocol, metadata, capabilities) {
         } else {
             footer.appendChild(document.createTextNode(config.i18n.sourceLink));
         }
-    }
-
-    if (capabilities.canAdmin) {
-        const permsLink = document.createElement('a');
-        permsLink.href = 'admin-permissions.php?object_type=general_roman_calendar&object_id=decrees';
-        const permsIcon = document.createElement('i');
-        permsIcon.className = 'fas fa-user-shield me-1';
-        permsLink.appendChild(permsIcon);
-        permsLink.appendChild(document.createTextNode(config.i18n.managePerms));
-        footer.appendChild(permsLink);
     }
 
     return footer;
@@ -833,7 +822,7 @@ export function renderDecreeCard(container, decree, capabilities, allLocales) {
         buildReadingsSection(body, hasReadings ? event.readings : null, decreeId, allLocales);
     }
 
-    card.appendChild(buildCardFooter(decreeDate, protocol, metadata, capabilities));
+    card.appendChild(buildCardFooter(decreeDate, protocol, metadata));
     container.appendChild(col);
 }
 
@@ -1865,6 +1854,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!capabilities.canView) {
         showAlert(container, 'warning', config.i18n.noAccess);
         return;
+    }
+
+    // Permissions are resource-level: one page-level manage link for FGA admins
+    const permsLink = document.getElementById('lnkManagePermissions');
+    if (capabilities.canAdmin && permsLink) {
+        permsLink.classList.remove('d-none');
     }
 
     // Show create button for editors
