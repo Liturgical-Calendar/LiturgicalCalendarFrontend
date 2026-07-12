@@ -91,79 +91,73 @@ if (!$isAdmin && !$isCalendarEditor) {
 
                     <form id="decreeEditorForm" novalidate>
 
-                        <!-- ── Action select ──────────────────────────────── -->
-                        <div class="mb-3">
-                            <label for="decreeAction" class="form-label">
-                                <?php echo htmlspecialchars(_('Action'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                            </label>
-                            <select class="form-select" id="decreeAction" name="action" required>
-                                <option value="createNew"><?php
-                                    echo htmlspecialchars(_('Create new event'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-                                ?></option>
-                                <option value="makeDoctor"><?php
-                                    echo htmlspecialchars(_('Make Doctor of the Church'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-                                ?></option>
-                                <option value="setProperty:name"><?php
-                                    echo htmlspecialchars(_('Set property: name'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-                                ?></option>
-                                <option value="setProperty:grade"><?php
-                                    echo htmlspecialchars(_('Set property: grade'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-                                ?></option>
-                            </select>
+                        <!-- ── Event key + action (decree_id is derived) ──── -->
+                        <div class="row g-3 mb-1">
+                            <div class="col-md-6">
+                                <label for="decreeEventKey" class="form-label">
+                                    <?php echo htmlspecialchars(_('Event key'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                </label>
+                                <input type="text" class="form-control" id="decreeEventKey" name="event_key"
+                                    placeholder="StMotherTeresa">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="decreeAction" class="form-label">
+                                    <?php echo htmlspecialchars(_('Action'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                </label>
+                                <select class="form-select" id="decreeAction" name="action" required>
+                                    <option value="createNew"><?php
+                                        echo htmlspecialchars(_('Create new event'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                    ?></option>
+                                    <option value="makeDoctor"><?php
+                                        echo htmlspecialchars(_('Make Doctor of the Church'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                    ?></option>
+                                    <option value="setProperty:name"><?php
+                                        echo htmlspecialchars(_('Set property: name'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                    ?></option>
+                                    <option value="setProperty:grade"><?php
+                                        echo htmlspecialchars(_('Set property: grade'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                    ?></option>
+                                </select>
+                            </div>
                         </div>
 
-                        <!-- ── Common fields ──────────────────────────────── -->
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-6">
-                                <label for="decreeId" class="form-label">
-                                    <?php echo htmlspecialchars(_('Decree ID'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                                </label>
-                                <input type="text" class="form-control" id="decreeId" name="decree_id"
-                                    pattern="^[A-Z][A-Za-z]+_(Upgrade|Create|NameChange|Doctor)$"
-                                    required>
-                                <div class="form-text">
-                                    <?php echo htmlspecialchars(
-                                        _('Format: PascalCaseName_(Upgrade|Create|NameChange|Doctor)'),
+                        <!-- Derived decree_id: shown as a hint, submitted via a hidden field -->
+                        <div class="mb-3">
+                            <div class="form-text mt-0">
+                                <?php echo htmlspecialchars(_('Decree ID'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>:
+                                <code id="decreeIdHint">—</code>
+                                <span class="text-muted">
+                                    (<?php echo htmlspecialchars(
+                                        _('generated automatically from the event key and action'),
                                         ENT_QUOTES | ENT_SUBSTITUTE,
                                         'UTF-8'
-                                    ); ?>
-                                </div>
+                                    ); ?>)
+                                </span>
                             </div>
-                            <div class="col-md-3">
+                            <input type="hidden" id="decreeId" name="decree_id">
+                        </div>
+
+                        <!-- ── Decree metadata: date, protocol, since year ── -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
                                 <label for="decreeDate" class="form-label">
                                     <?php echo htmlspecialchars(_('Decree date'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                 </label>
                                 <input type="date" class="form-control" id="decreeDate" name="decree_date">
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label for="decreeProtocol" class="form-label">
                                     <?php echo htmlspecialchars(_('Protocol'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                 </label>
                                 <input type="text" class="form-control" id="decreeProtocol" name="decree_protocol"
                                     placeholder="Prot. N. 000/25">
                             </div>
-                        </div>
-
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-6">
-                                <label for="decreeEventKey" class="form-label">
-                                    <?php echo htmlspecialchars(_('Event key'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                                </label>
-                                <input type="text" class="form-control" id="decreeEventKey" name="event_key">
-                            </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label for="decreeSinceYear" class="form-label">
                                     <?php echo htmlspecialchars(_('Since year'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                 </label>
                                 <input type="number" class="form-control" id="decreeSinceYear" name="since_year"
                                     min="1970" max="9999">
-                            </div>
-                            <div class="col-md-3">
-                                <label for="decreeUrl" class="form-label">
-                                    <?php echo htmlspecialchars(_('Source URL'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                                </label>
-                                <input type="url" class="form-control" id="decreeUrl" name="url"
-                                    placeholder="https://www.vatican.va/…">
                             </div>
                         </div>
 
@@ -174,6 +168,50 @@ if (!$isAdmin && !$isCalendarEditor) {
                             <textarea class="form-control" id="decreeDescription" name="description"
                                 rows="2"></textarea>
                         </div>
+
+                        <!-- ── Source URL (below description) ─────────────── -->
+                        <div class="mb-3">
+                            <label for="decreeUrl" class="form-label">
+                                <?php echo htmlspecialchars(_('Source URL'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                            </label>
+                            <input type="url" class="form-control" id="decreeUrl" name="url"
+                                placeholder="https://www.vatican.va/…">
+                            <div class="form-check form-switch mt-2">
+                                <input class="form-check-input" type="checkbox"
+                                    id="decreeUrlMultilang" name="url_multilang">
+                                <label class="form-check-label" for="decreeUrlMultilang">
+                                    <?php echo htmlspecialchars(
+                                        _('Source available in multiple languages'),
+                                        ENT_QUOTES | ENT_SUBSTITUTE,
+                                        'UTF-8'
+                                    ); ?>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- URL language-code map (revealed by the multilingual switch) -->
+                        <fieldset class="border rounded p-3 mb-3 d-none" id="urlLangMapBlock">
+                            <legend class="float-none w-auto px-2 fs-6 fw-semibold">
+                                <?php echo htmlspecialchars(_('Language URL codes'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                            </legend>
+                            <div class="form-text mt-0 mb-2">
+                                <?php echo htmlspecialchars(
+                                    _('Use %s in the URL above where the language code appears; each row maps a language to its Vatican URL code.'),
+                                    ENT_QUOTES | ENT_SUBSTITUTE,
+                                    'UTF-8'
+                                ); ?>
+                            </div>
+                            <div id="urlLangMapRows"></div>
+                            <button type="button" class="btn btn-sm btn-outline-secondary mt-2" id="addUrlLangRow">
+                                <i class="fas fa-plus me-1"></i><?php echo htmlspecialchars(_('Add language code'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                            </button>
+                            <div class="mt-3">
+                                <div class="fw-semibold small text-muted">
+                                    <?php echo htmlspecialchars(_('Preview'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                </div>
+                                <ul class="small text-muted mb-0 ps-3" id="urlLangMapPreview"></ul>
+                            </div>
+                        </fieldset>
 
                         <!-- ── createNew-only block: event details ────────── -->
                         <fieldset class="border rounded p-3 mb-3 action-block action-createNew">
@@ -444,6 +482,7 @@ if (!$isAdmin && !$isCalendarEditor) {
                 gospelAcclamation: <?php echo json_encode(_('Gospel acclamation'), JSON_HEX_TAG); ?>,
                 gospel:            <?php echo json_encode(_('Gospel'), JSON_HEX_TAG); ?>,
                 noReadings:        <?php echo json_encode(_('No readings defined for this locale yet'), JSON_HEX_TAG); ?>,
+                langCodeVatican:   <?php echo json_encode(_('Vatican URL code (e.g. ge, sp, po)'), JSON_HEX_TAG); ?>,
                 validationErrors:  <?php echo json_encode(_('Please fix the following errors before saving:'), JSON_HEX_TAG); ?>,
                 sinceYear:         <?php echo json_encode(_('Since %s'), JSON_HEX_TAG); ?>,
                 sourceLink:        <?php echo json_encode(_('Source'), JSON_HEX_TAG); ?>,

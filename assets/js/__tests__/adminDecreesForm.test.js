@@ -490,3 +490,70 @@ describe('reverseMapAction', () => {
         expect(reverseMapAction('makeDoctor', undefined)).toBe(DecreeAction.MakeDoctor);
     });
 });
+
+// ---- collectFormValues: url_lang_map ---------------------------------------
+
+/**
+ * Build a minimal form carrying a source URL, the multilingual switch, and
+ * any number of url_lang_map rows — the DOM subset collectFormValues reads
+ * for url_lang_map.
+ *
+ * @param {{multilang: boolean, url?: string, rows?: Array<[string,string]>}} opts
+ * @returns {HTMLFormElement}
+ */
+function buildUrlForm({ multilang, url = 'https://vatican.va/%s/doc.html', rows = [] }) {
+    const form = document.createElement('form');
+
+    const urlInput = document.createElement('input');
+    urlInput.name = 'url';
+    urlInput.value = url;
+    form.appendChild(urlInput);
+
+    const toggle = document.createElement('input');
+    toggle.type = 'checkbox';
+    toggle.name = 'url_multilang';
+    toggle.checked = multilang;
+    form.appendChild(toggle);
+
+    const rowsContainer = document.createElement('div');
+    rowsContainer.id = 'urlLangMapRows';
+    rows.forEach(([iso, code]) => {
+        const row = document.createElement('div');
+        row.className = 'url-lang-row';
+        const isoSel = document.createElement('select');
+        isoSel.name = 'url_lang_iso[]';
+        const opt = document.createElement('option');
+        opt.value = iso;
+        opt.selected = true;
+        isoSel.appendChild(opt);
+        const codeInp = document.createElement('input');
+        codeInp.name = 'url_lang_code[]';
+        codeInp.value = code;
+        row.appendChild(isoSel);
+        row.appendChild(codeInp);
+        rowsContainer.appendChild(row);
+    });
+    form.appendChild(rowsContainer);
+
+    return form;
+}
+
+describe('collectFormValues — url_lang_map', () => {
+    it('gathers url_lang_map when the multilingual switch is on', () => {
+        const form = buildUrlForm({ multilang: true, rows: [['en', 'en'], ['de', 'ge'], ['pt', 'po']] });
+        const v = collectFormValues(form);
+        expect(v.url_lang_map).toEqual({ en: 'en', de: 'ge', pt: 'po' });
+    });
+
+    it('returns undefined url_lang_map when the switch is off', () => {
+        const form = buildUrlForm({ multilang: false, rows: [['en', 'en'], ['de', 'ge']] });
+        const v = collectFormValues(form);
+        expect(v.url_lang_map).toBeUndefined();
+    });
+
+    it('ignores blank rows (missing iso or code)', () => {
+        const form = buildUrlForm({ multilang: true, rows: [['en', 'en'], ['', 'xx'], ['it', '']] });
+        const v = collectFormValues(form);
+        expect(v.url_lang_map).toEqual({ en: 'en' });
+    });
+});

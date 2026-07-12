@@ -15,7 +15,7 @@
  * @module admin-decrees
  */
 
-import { DecreeAction, buildDecreePayload, validateDecreePayload } from './DecreePayload.js';
+import { DecreeAction, buildDecreePayload, validateDecreePayload, deriveDecreeId } from './DecreePayload.js';
 
 const config = window.AdminDecreesConfig;
 
@@ -1088,6 +1088,146 @@ function addI18nRow(container, locales, locale, name) {
     container.appendChild(row);
 }
 
+// ---- derived decree_id + URL language-code map ----------------------------
+
+/**
+ * Recompute the derived decree_id ({event_key}_{suffix}) and mirror it into
+ * both the hidden `decree_id` field and the visible hint. No-op unless the
+ * form is in create mode — on edit, the decree_id is fixed to the existing
+ * value (see prefillDecreeFields) and must not be re-derived.
+ *
+ * @param {HTMLFormElement} form
+ */
+function syncDerivedDecreeId(form) {
+    if (form.dataset.mode !== 'create') return;
+    const eventKey = form.querySelector('[name="event_key"]')?.value.trim() ?? '';
+    const action   = form.querySelector('[name="action"]')?.value ?? '';
+    const id = deriveDecreeId(eventKey, action);
+    const hidden = form.querySelector('[name="decree_id"]');
+    if (hidden) hidden.value = id;
+    const hint = document.getElementById('decreeIdHint');
+    if (hint) hint.textContent = id || '—';
+}
+
+/**
+ * Deduplicated ISO 639-1 primary language subtags from a locale list
+ * (e.g. ['en-US', 'it', 'la'] → ['en', 'it', 'la']).
+ *
+ * @param {string[]} locales
+ * @returns {string[]}
+ */
+function primaryLangCodes(locales) {
+    const seen = new Set();
+    const codes = [];
+    locales.forEach((l) => {
+        const primary = l.split(/[-_]/)[0].toLowerCase();
+        if (primary && !seen.has(primary)) {
+            seen.add(primary);
+            codes.push(primary);
+        }
+    });
+    return codes;
+}
+
+/**
+ * Re-render the live URL preview: each url_lang_map row expands the `%s`
+ * placeholder in the source URL to its Vatican code. Skipped entirely when
+ * the URL has no `%s`.
+ *
+ * @param {HTMLFormElement} form
+ */
+function updateUrlPreview(form) {
+    const preview = document.getElementById('urlLangMapPreview');
+    if (!preview) return;
+    preview.replaceChildren();
+    const urlEl = form.querySelector('[name="url"]');
+    const url = urlEl ? urlEl.value.trim() : '';
+    if (!url.includes('%s')) return;
+    form.querySelectorAll('.url-lang-row').forEach((row) => {
+        const iso = row.querySelector('[name="url_lang_iso[]"]')?.value.trim();
+        const code = row.querySelector('[name="url_lang_code[]"]')?.value.trim();
+        if (!iso || !code) return;
+        const li = document.createElement('li');
+        const isoSpan = document.createElement('span');
+        isoSpan.className = 'text-muted me-1';
+        isoSpan.textContent = `${iso}:`;
+        li.appendChild(isoSpan);
+        li.appendChild(document.createTextNode(url.replace(/%s/g, code)));
+        preview.appendChild(li);
+    });
+}
+
+/**
+ * Add a url_lang_map row (ISO 639-1 language ▸ Vatican URL code) to
+ * #urlLangMapRows and wire preview refresh + removal.
+ *
+ * @param {HTMLElement} container  #urlLangMapRows
+ * @param {string[]}    isoCodes   Selectable ISO 639-1 codes
+ * @param {string}      [iso]      Pre-selected ISO code
+ * @param {string}      [code]     Pre-filled Vatican code
+ */
+function addUrlLangRow(container, isoCodes, iso, code) {
+    const row = document.createElement('div');
+    row.className = 'row g-2 mb-2 url-lang-row align-items-center';
+
+    const isoCol = document.createElement('div');
+    isoCol.className = 'col-md-3';
+    const isoSel = document.createElement('select');
+    isoSel.className = 'form-select form-select-sm';
+    isoSel.name = 'url_lang_iso[]';
+    const ph = document.createElement('option');
+    ph.value = '';
+    ph.textContent = config.i18n.selectLocale;
+    isoSel.appendChild(ph);
+    isoCodes.forEach((c) => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        if (c === iso) opt.selected = true;
+        isoSel.appendChild(opt);
+    });
+    isoCol.appendChild(isoSel);
+
+    const arrowCol = document.createElement('div');
+    arrowCol.className = 'col-auto text-muted';
+    const arrow = document.createElement('i');
+    arrow.className = 'fas fa-arrow-right';
+    arrowCol.appendChild(arrow);
+
+    const codeCol = document.createElement('div');
+    codeCol.className = 'col';
+    const codeInput = document.createElement('input');
+    codeInput.type = 'text';
+    codeInput.className = 'form-control form-control-sm';
+    codeInput.name = 'url_lang_code[]';
+    codeInput.placeholder = config.i18n.langCodeVatican;
+    if (code) codeInput.value = code;
+    codeCol.appendChild(codeInput);
+
+    const rmCol = document.createElement('div');
+    rmCol.className = 'col-auto';
+    const rmBtn = document.createElement('button');
+    rmBtn.type = 'button';
+    rmBtn.className = 'btn btn-sm btn-outline-danger';
+    rmBtn.title = config.i18n.removeRow;
+    const rmIcon = document.createElement('i');
+    rmIcon.className = 'fas fa-times';
+    rmBtn.appendChild(rmIcon);
+    rmCol.appendChild(rmBtn);
+
+    row.appendChild(isoCol);
+    row.appendChild(arrowCol);
+    row.appendChild(codeCol);
+    row.appendChild(rmCol);
+    container.appendChild(row);
+
+    const form = container.closest('form');
+    const refresh = () => { if (form) updateUrlPreview(form); };
+    isoSel.addEventListener('change', refresh);
+    codeInput.addEventListener('input', refresh);
+    rmBtn.addEventListener('click', () => { row.remove(); refresh(); });
+}
+
 /**
  * Build a readings group (per-locale) and append it to #readingsGroups.
  *
@@ -1270,6 +1410,20 @@ export function collectFormValues(root) {
         readings[locale] = entry;
     });
 
+    // url_lang_map: only when the multilingual switch is on. Each row maps an
+    // ISO 639-1 code to a Vatican URL code; blank rows are ignored.
+    const urlLangMap = {};
+    const multilangEl = root.querySelector('[name="url_multilang"]');
+    if (multilangEl && multilangEl.checked) {
+        root.querySelectorAll('.url-lang-row').forEach((row) => {
+            const isoEl = row.querySelector('[name="url_lang_iso[]"]');
+            const codeEl = row.querySelector('[name="url_lang_code[]"]');
+            const iso = isoEl ? isoEl.value.trim() : '';
+            const code = codeEl ? codeEl.value.trim() : '';
+            if (iso && code) urlLangMap[iso] = code;
+        });
+    }
+
     return {
         action,
         decree_id:       val('decree_id'),
@@ -1279,6 +1433,7 @@ export function collectFormValues(root) {
         event_key:       val('event_key'),
         since_year:      val('since_year'),
         url:             val('url'),
+        url_lang_map:    Object.keys(urlLangMap).length > 0 ? urlLangMap : undefined,
         event_type:      (() => {
             const checked = root.querySelector('[name="event_type"]:checked');
             return checked ? checked.value : 'fixed';
@@ -1496,6 +1651,20 @@ function resetEditorForm(form, alertBox, label, isCreate, baseLocale) {
     if (readingsGroups) {
         readingsGroups.replaceChildren();
     }
+
+    // Reset the derived decree_id hint
+    const idHint = document.getElementById('decreeIdHint');
+    if (idHint) idHint.textContent = '—';
+
+    // Reset the URL multilingual switch, its rows, and the preview
+    const multilangEl = document.getElementById('decreeUrlMultilang');
+    if (multilangEl) multilangEl.checked = false;
+    const urlLangBlock = document.getElementById('urlLangMapBlock');
+    if (urlLangBlock) urlLangBlock.classList.add('d-none');
+    const urlLangRows = document.getElementById('urlLangMapRows');
+    if (urlLangRows) urlLangRows.replaceChildren();
+    const urlLangPreview = document.getElementById('urlLangMapPreview');
+    if (urlLangPreview) urlLangPreview.replaceChildren();
 }
 
 /**
@@ -1550,12 +1719,12 @@ function prefillReadingsGroups(readingsGroups, readings, locales, baseLocale) {
  * @param {Function}        setVal  `(name, value) => void` helper bound to `form`
  */
 function prefillDecreeFields(form, decree, setVal) {
-    // decree_id is readonly when editing (prevents PATCH from changing the ID)
+    // decree_id is a hidden field + hint. On edit it is pinned to the existing
+    // value (the PATCH path param) and is never re-derived from event_key/action.
     const decreeIdEl = form.querySelector('[name="decree_id"]');
-    if (decreeIdEl) {
-        decreeIdEl.value    = decree.decree_id ?? '';
-        decreeIdEl.readOnly = true;
-    }
+    if (decreeIdEl) decreeIdEl.value = decree.decree_id ?? '';
+    const idHint = document.getElementById('decreeIdHint');
+    if (idHint) idHint.textContent = decree.decree_id || '—';
 
     // event_key is readonly when editing: PATCH must NOT change event_key
     // (API rejects with 400 and instructs DELETE + PUT instead).
@@ -1570,15 +1739,50 @@ function prefillDecreeFields(form, decree, setVal) {
     setVal('decree_protocol', decree.decree_protocol);
     setVal('description',     decree.description);
 
-    // Pre-select action from metadata via reverse-mapping
+    // Pre-select the action and lock it: changing the action would change the
+    // derived decree_id, which a PATCH cannot do.
     const meta = decree.metadata;
     if (meta) {
         const actionValue = reverseMapAction(meta.action, meta.property);
         const actionEl = form.querySelector('[name="action"]');
-        if (actionEl) actionEl.value = actionValue;
+        if (actionEl) {
+            actionEl.value    = actionValue;
+            actionEl.disabled = true;
+        }
         if (meta.since_year) setVal('since_year', meta.since_year);
         if (meta.url)        setVal('url',        meta.url);
     }
+}
+
+/**
+ * Pre-fill the URL multilingual switch and url_lang_map rows from a decree.
+ * Activated when the decree carries a url_lang_map (or its URL contains `%s`).
+ *
+ * @param {HTMLFormElement} form
+ * @param {object}          decree
+ * @param {string[]}        locales
+ */
+function prefillUrlLangMap(form, decree, locales) {
+    const meta = decree.metadata || {};
+    const langMap = (meta.url_lang_map && typeof meta.url_lang_map === 'object')
+        ? meta.url_lang_map
+        : null;
+    const hasPlaceholder = typeof meta.url === 'string' && meta.url.includes('%s');
+    if (!langMap && !hasPlaceholder) return;
+
+    const toggle = document.getElementById('decreeUrlMultilang');
+    const block  = document.getElementById('urlLangMapBlock');
+    const rows   = document.getElementById('urlLangMapRows');
+    if (toggle) toggle.checked = true;
+    if (block)  block.classList.remove('d-none');
+    if (rows) {
+        rows.replaceChildren();
+        const isoCodes = primaryLangCodes(locales);
+        if (langMap) {
+            Object.entries(langMap).forEach(([iso, code]) => addUrlLangRow(rows, isoCodes, iso, code));
+        }
+    }
+    updateUrlPreview(form);
 }
 
 /**
@@ -1659,6 +1863,7 @@ function prefillFromDecree(form, decree, locales, baseLocale) {
     };
 
     prefillDecreeFields(form, decree, setVal);
+    prefillUrlLangMap(form, decree, locales);
 
     const ev = decree.liturgical_event;
     if (ev) {
@@ -1728,6 +1933,51 @@ function wireEditorActions(form, saveBtn, alertBox, locales, baseLocale, isCreat
         });
     }
 
+    // URL multilingual switch (clone to remove old listeners). Reveals the
+    // url_lang_map editor and seeds a first empty row when turned on.
+    const multilangToggle = document.getElementById('decreeUrlMultilang');
+    if (multilangToggle) {
+        const newToggle = multilangToggle.cloneNode(true);
+        multilangToggle.parentNode.replaceChild(newToggle, multilangToggle);
+        newToggle.addEventListener('change', () => {
+            const block = document.getElementById('urlLangMapBlock');
+            const rows  = document.getElementById('urlLangMapRows');
+            if (block) block.classList.toggle('d-none', !newToggle.checked);
+            if (newToggle.checked && rows && rows.children.length === 0) {
+                addUrlLangRow(rows, primaryLangCodes(locales));
+            }
+            updateUrlPreview(form);
+        });
+    }
+
+    // Add url_lang_map row button (clone to remove old listeners)
+    const addUrlLangBtn = document.getElementById('addUrlLangRow');
+    if (addUrlLangBtn) {
+        const newBtn = addUrlLangBtn.cloneNode(true);
+        addUrlLangBtn.parentNode.replaceChild(newBtn, addUrlLangBtn);
+        newBtn.addEventListener('click', () => {
+            const rows = document.getElementById('urlLangMapRows');
+            if (rows) addUrlLangRow(rows, primaryLangCodes(locales));
+        });
+    }
+
+    // Refresh the URL preview when the source URL itself changes
+    const urlInput = form.querySelector('[name="url"]');
+    if (urlInput) {
+        const newUrlInput = urlInput.cloneNode(true);
+        urlInput.parentNode.replaceChild(newUrlInput, urlInput);
+        newUrlInput.addEventListener('input', () => updateUrlPreview(form));
+    }
+
+    // Keep the derived decree_id hint in sync as the event_key changes.
+    // (The action <select> is handled by the persistent listener wired at
+    // startup — see the DOMContentLoaded handler.) `oninput` assignment
+    // replaces rather than stacks, so re-opening the modal is safe.
+    const eventKeyInput = form.querySelector('[name="event_key"]');
+    if (eventKeyInput) {
+        eventKeyInput.oninput = () => syncDerivedDecreeId(form);
+    }
+
     // Wire save button (clone to remove old listeners)
     if (saveBtn) {
         const newSaveBtn = saveBtn.cloneNode(true);
@@ -1789,14 +2039,21 @@ function openEditorModal(decree, locales, capabilities) {
 
     resetEditorForm(form, alertBox, label, isCreate, baseLocale);
 
+    // Mode gates the derived-id sync: only create mode re-derives decree_id.
+    form.dataset.mode = isCreate ? 'create' : 'edit';
+
     if (decree) {
         prefillFromDecree(form, decree, locales, baseLocale);
     } else {
-        // Creating: decree_id and event_key are editable
-        const decreeIdEl = form.querySelector('[name="decree_id"]');
-        if (decreeIdEl) decreeIdEl.readOnly = false;
+        // Creating: event_key and action are editable (both feed the derived
+        // decree_id); re-enable action in case a prior edit-open disabled it.
         const eventKeyEl = form.querySelector('[name="event_key"]');
         if (eventKeyEl) eventKeyEl.readOnly = false;
+        const actionEl = form.querySelector('[name="action"]');
+        if (actionEl) actionEl.disabled = false;
+
+        // Initialize the derived-id hint (empty event_key → placeholder)
+        syncDerivedDecreeId(form);
 
         // Pre-add a base-locale readings group for createNew
         const readingsGroups = document.getElementById('readingsGroups');
@@ -1838,12 +2095,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // Wire action-change visibility toggling
+    // Wire action-change visibility toggling + derived decree_id sync
     if (form) {
         const actionEl = form.querySelector('[name="action"]');
         if (actionEl) {
             actionEl.addEventListener('change', () => {
                 applyActionVisibility(actionEl.value, form);
+                syncDerivedDecreeId(form);
             });
         }
     }

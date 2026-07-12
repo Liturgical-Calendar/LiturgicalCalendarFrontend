@@ -18,6 +18,36 @@ const splitAction = (action) => {
 };
 
 /**
+ * Deterministic decree_id suffix per action. The decree_id is never
+ * hand-entered: it is derived as `{event_key}_{suffix}`, matching the
+ * schema regex `^[A-Z][A-Za-z]+_(Upgrade|Create|NameChange|Doctor)$`.
+ * A grade change is always `_Upgrade` (no downgrades exist yet).
+ *
+ * @type {Readonly<Record<string, string>>}
+ */
+const ACTION_SUFFIX = Object.freeze({
+    [DecreeAction.CreateNew]:        'Create',
+    [DecreeAction.MakeDoctor]:       'Doctor',
+    [DecreeAction.SetPropertyName]:  'NameChange',
+    [DecreeAction.SetPropertyGrade]: 'Upgrade',
+});
+
+/**
+ * Derive the deterministic decree_id from an event_key and the compound
+ * action value. Returns '' when either input is missing/unknown so callers
+ * can render a placeholder without special-casing.
+ *
+ * @param {string} eventKey  PascalCase event key (e.g. 'StMotherTeresa')
+ * @param {string} action    Compound action (e.g. 'createNew', 'setProperty:grade')
+ * @returns {string}         e.g. 'StMotherTeresa_Create', or '' if underivable
+ */
+export const deriveDecreeId = (eventKey, action) => {
+    const suffix = ACTION_SUFFIX[action];
+    if (!eventKey || !suffix) return '';
+    return `${eventKey}_${suffix}`;
+};
+
+/**
  * Parse a strtotime value: if it is a JSON string representing an object,
  * return the parsed object; otherwise return the original value unchanged.
  *
@@ -114,11 +144,13 @@ function buildLiturgicalEvent(form, fullAction) {
  * @returns {object}
  */
 function buildMetadata(form, action, property) {
+    const hasLangMap = form.url_lang_map && Object.keys(form.url_lang_map).length > 0;
     return {
         action,
         ...(property ? { property } : {}),
         since_year: Number(form.since_year),
         url: form.url,
+        ...(hasLangMap ? { url_lang_map: form.url_lang_map } : {}),
     };
 }
 
@@ -191,6 +223,25 @@ function validateReadingsRules(payload, isCreate, errors) {
     }
 }
 
+/**
+ * Validate consistency between the source URL's %s placeholder and the
+ * url_lang_map. One without the other is almost always an authoring mistake.
+ *
+ * @param {object}   payload  Built payload
+ * @param {string[]} errors   Errors array to push into
+ */
+function validateUrlRules(payload, errors) {
+    const md = payload.metadata;
+    const hasMap = md.url_lang_map && Object.keys(md.url_lang_map).length > 0;
+    const hasPlaceholder = typeof md.url === 'string' && md.url.includes('%s');
+    if (hasMap && !hasPlaceholder) {
+        errors.push('The source URL must contain a "%s" placeholder when language URL codes are provided');
+    }
+    if (hasPlaceholder && !hasMap) {
+        errors.push('The source URL contains a "%s" placeholder but no language URL codes are defined');
+    }
+}
+
 export const validateDecreePayload = (payload, baseLocale, isCreate) => {
     const errors = [];
     const { action, property } = payload.metadata;
@@ -198,6 +249,7 @@ export const validateDecreePayload = (payload, baseLocale, isCreate) => {
         || (action === 'setProperty' && property === 'name');
 
     validateI18nRules(payload, nameBearing, baseLocale, errors);
+    validateUrlRules(payload, errors);
 
     // makeDoctor requires a non-empty common array (DTO: DecreeItemMakeDoctor requires common)
     if (action === 'makeDoctor') {

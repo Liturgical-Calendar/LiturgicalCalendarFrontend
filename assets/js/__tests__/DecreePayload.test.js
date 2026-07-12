@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { DecreeAction, buildDecreePayload, validateDecreePayload } from '../DecreePayload.js';
+import { DecreeAction, buildDecreePayload, validateDecreePayload, deriveDecreeId } from '../DecreePayload.js';
 
 const createNewForm = () => ({
     action: DecreeAction.CreateNew,
@@ -188,5 +188,65 @@ describe('validateDecreePayload', () => {
         const p = buildDecreePayload(createNewForm());
         const errors = validateDecreePayload(p, 'en', true);
         expect(errors.every((e) => !e.toLowerCase().includes('color') && !e.toLowerCase().includes('common'))).toBe(true);
+    });
+
+    // --- URL / url_lang_map consistency ---
+
+    it('flags a %s URL with no url_lang_map', () => {
+        const p = buildDecreePayload({ ...createNewForm(), url: 'https://vatican.va/%s/doc.html' });
+        const errors = validateDecreePayload(p, 'en', true);
+        expect(errors.some((e) => e.includes('%s'))).toBe(true);
+    });
+
+    it('flags a url_lang_map with no %s in the URL', () => {
+        const p = buildDecreePayload({
+            ...createNewForm(),
+            url: 'https://vatican.va/doc.html',
+            url_lang_map: { en: 'en', it: 'it' },
+        });
+        const errors = validateDecreePayload(p, 'en', true);
+        expect(errors.some((e) => e.includes('%s'))).toBe(true);
+    });
+
+    it('accepts a %s URL paired with a url_lang_map', () => {
+        const p = buildDecreePayload({
+            ...createNewForm(),
+            url: 'https://vatican.va/%s/doc.html',
+            url_lang_map: { en: 'en', de: 'ge' },
+        });
+        expect(validateDecreePayload(p, 'en', true)).toEqual([]);
+    });
+});
+
+describe('buildDecreePayload: url_lang_map metadata', () => {
+    it('includes url_lang_map in metadata when present', () => {
+        const p = buildDecreePayload({
+            ...createNewForm(),
+            url: 'https://vatican.va/%s/doc.html',
+            url_lang_map: { en: 'en', de: 'ge', pt: 'po' },
+        });
+        expect(p.metadata.url_lang_map).toEqual({ en: 'en', de: 'ge', pt: 'po' });
+    });
+
+    it('omits url_lang_map from metadata when absent or empty', () => {
+        const p1 = buildDecreePayload(createNewForm());
+        expect('url_lang_map' in p1.metadata).toBe(false);
+        const p2 = buildDecreePayload({ ...createNewForm(), url_lang_map: {} });
+        expect('url_lang_map' in p2.metadata).toBe(false);
+    });
+});
+
+describe('deriveDecreeId', () => {
+    it('derives the deterministic suffix per action', () => {
+        expect(deriveDecreeId('StMotherTeresa', DecreeAction.CreateNew)).toBe('StMotherTeresa_Create');
+        expect(deriveDecreeId('StThereseChildJesus', DecreeAction.MakeDoctor)).toBe('StThereseChildJesus_Doctor');
+        expect(deriveDecreeId('StMartha', DecreeAction.SetPropertyName)).toBe('StMartha_NameChange');
+        expect(deriveDecreeId('StMaryMagdalene', DecreeAction.SetPropertyGrade)).toBe('StMaryMagdalene_Upgrade');
+    });
+
+    it('returns empty string when event_key or action is missing/unknown', () => {
+        expect(deriveDecreeId('', DecreeAction.CreateNew)).toBe('');
+        expect(deriveDecreeId('StTest', '')).toBe('');
+        expect(deriveDecreeId('StTest', 'bogusAction')).toBe('');
     });
 });
