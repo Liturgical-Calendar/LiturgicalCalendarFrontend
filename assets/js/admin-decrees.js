@@ -292,6 +292,36 @@ function fetchEventForLocale(decreeId, locale) {
     return perDecree.get(locale);
 }
 
+/**
+ * Probe each locale's decree representation individually and assemble
+ * i18n (locale → name) and readings (locale → flat readings) maps. Used as the
+ * edit-modal fallback when the API returns no aggregated maps, so the editor
+ * shows the same per-locale translations/readings as the card panel.
+ *
+ * @param {string}   decreeId
+ * @param {string[]} locales
+ * @returns {Promise<{i18n: Record<string,string>, readings: Record<string,object>}>}
+ */
+async function probeLocaleMaps(decreeId, locales) {
+    /** @type {Record<string,string>} */
+    const i18n = {};
+    /** @type {Record<string,object>} */
+    const readings = {};
+    const results = await Promise.all(locales.map((loc) =>
+        fetchEventForLocale(decreeId, loc).then((ev) => [loc, ev]).catch(() => [loc, null])
+    ));
+    results.forEach(([loc, ev]) => {
+        if (ev && typeof ev.name === 'string' && ev.name !== '') {
+            i18n[loc] = ev.name;
+        }
+        if (ev && ev.readings && typeof ev.readings === 'object'
+            && Object.values(ev.readings).some((v) => typeof v === 'string' && v !== '')) {
+            readings[loc] = ev.readings;
+        }
+    });
+    return { i18n, readings };
+}
+
 // ---- translations panel ---------------------------------------------------
 
 /**
@@ -2323,6 +2353,15 @@ async function openEditorModal(decree, capabilities) {
             if (fetched && typeof fetched === 'object') full = fetched;
         } catch {
             // keep the cached decree
+        }
+        // If the API didn't return the aggregated maps (older deployment),
+        // synthesize them by probing each GRC-live locale individually — the
+        // same source the card Translations panel uses — so the editor shows
+        // per-locale translations/readings instead of only the base locale.
+        if (!full.i18n) {
+            const probeLocales = [...new Set([baseLocale, ...grcLiveLocales])];
+            const { i18n, readings } = await probeLocaleMaps(decree.decree_id, probeLocales);
+            full = { ...full, i18n, readings };
         }
         prefillFromDecree(form, full, baseLocale);
     } else {
