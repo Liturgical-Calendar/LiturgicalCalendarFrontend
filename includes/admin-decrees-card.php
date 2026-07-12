@@ -58,11 +58,15 @@
         object_id:   objectId,
         relation:    'viewer'
     });
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function () { controller.abort(); }, 15000);
     fetch(apiBase + '/admin/permissions/check?' + params.toString(), {
         credentials: 'include',
-        headers: { 'Accept': 'application/json' }
+        headers: { 'Accept': 'application/json' },
+        signal: controller.signal
     })
         .then(function (r) {
+            clearTimeout(timeoutId);
             if (!r.ok) {
                 console.warn('[admin-decrees-card] permissions/check returned HTTP ' + r.status + ' — hiding card');
                 card.classList.add('d-none');
@@ -79,6 +83,7 @@
             }
         })
         .catch(function (err) {
+            clearTimeout(timeoutId);
             console.warn('[admin-decrees-card] permissions/check unreachable — hiding card', err);
             card.classList.add('d-none');
         });

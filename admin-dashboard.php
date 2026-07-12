@@ -120,7 +120,6 @@ if (!$hasCalendarRole) {
             </div>
         </div>
         <?php include('./includes/admin-tests-card.php'); ?>
-        <?php include('./includes/admin-decrees-card.php'); ?>
     </div>
     <?php endif; ?>
 

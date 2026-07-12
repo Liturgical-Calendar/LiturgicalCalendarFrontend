@@ -619,15 +619,28 @@ export function renderDecreeCard(container, decree, capabilities, allLocales) {
     }
 
     if (metadata && metadata.url) {
-        const link = document.createElement('a');
-        link.href = metadata.url;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        const linkIcon = document.createElement('i');
-        linkIcon.className = 'fas fa-external-link-alt me-1';
-        link.appendChild(linkIcon);
-        link.appendChild(document.createTextNode(config.i18n.sourceLink));
-        footer.appendChild(link);
+        let safeUrl = null;
+        try {
+            const parsed = new URL(metadata.url);
+            if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+                safeUrl = metadata.url;
+            }
+        } catch {
+            // invalid URL — render as text only
+        }
+        if (safeUrl !== null) {
+            const link = document.createElement('a');
+            link.href = safeUrl;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            const linkIcon = document.createElement('i');
+            linkIcon.className = 'fas fa-external-link-alt me-1';
+            link.appendChild(linkIcon);
+            link.appendChild(document.createTextNode(config.i18n.sourceLink));
+            footer.appendChild(link);
+        } else {
+            footer.appendChild(document.createTextNode(config.i18n.sourceLink));
+        }
     }
 
     if (capabilities.canAdmin) {
@@ -687,11 +700,17 @@ async function loadDecrees(container, capabilities) {
     let data;
     let metadataLocales = null;
     try {
+        const metaController = new AbortController();
+        const metaTimeoutId = setTimeout(() => metaController.abort(), 15000);
         const [decreesData, metaData] = await Promise.all([
             fetchJson('GET', '/decrees'),
-            fetch(config.apiUrl + '/calendars', { headers: { Accept: 'application/json' } })
-                .then((r) => (r.ok ? r.json() : null))
-                .catch(() => null),
+            fetch(config.apiUrl + '/calendars', {
+                credentials: 'omit',
+                headers:     { Accept: 'application/json' },
+                signal:      metaController.signal,
+            })
+                .then((r) => { clearTimeout(metaTimeoutId); return r.ok ? r.json() : null; })
+                .catch(() => { clearTimeout(metaTimeoutId); return null; }),
         ]);
         data = decreesData;
         if (
@@ -886,7 +905,9 @@ function addI18nRow(container, locales, locale, name) {
     rmBtn.type = 'button';
     rmBtn.className = 'btn btn-sm btn-outline-danger';
     rmBtn.title = config.i18n.removeRow;
-    rmBtn.innerHTML = '<i class="fas fa-times"></i>';
+    const rmIcon1 = document.createElement('i');
+    rmIcon1.className = 'fas fa-times';
+    rmBtn.appendChild(rmIcon1);
     rmBtn.addEventListener('click', () => row.remove());
     rmCol.appendChild(rmBtn);
 
@@ -923,7 +944,9 @@ function addReadingsGroup(container, locales, locale) {
     rmBtn.type = 'button';
     rmBtn.className = 'btn btn-sm btn-outline-danger';
     rmBtn.title = config.i18n.removeRow;
-    rmBtn.innerHTML = '<i class="fas fa-times"></i>';
+    const rmIcon2 = document.createElement('i');
+    rmIcon2.className = 'fas fa-times';
+    rmBtn.appendChild(rmIcon2);
     rmBtn.addEventListener('click', () => group.remove());
     rmBtnCol.appendChild(rmBtn);
 
@@ -1333,7 +1356,7 @@ function openEditorModal(decree, locales, capabilities) {
         // if missing, leave it editable to allow assignment.
         const eventKeyEl = form.querySelector('[name="event_key"]');
         if (eventKeyEl) {
-            eventKeyEl.readOnly = Boolean(decree && decree.liturgical_event && decree.liturgical_event.event_key);
+            eventKeyEl.readOnly = Boolean(decree.liturgical_event && decree.liturgical_event.event_key);
         }
 
         setVal('decree_date',     decree.decree_date);
@@ -1538,8 +1561,9 @@ function openEditorModal(decree, locales, capabilities) {
     }
 
     // Show modal via Bootstrap
-    const bsModal = bootstrap.Modal.getOrCreateInstance(modal);
-    bsModal.show();
+    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+        bootstrap.Modal.getOrCreateInstance(modal).show();
+    }
 }
 
 // ---- module capabilities export -------------------------------------------

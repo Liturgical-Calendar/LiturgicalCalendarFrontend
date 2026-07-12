@@ -57,6 +57,23 @@ describe('buildDecreePayload', () => {
         expect(p.liturgical_event).not.toHaveProperty('month');
     });
 
+    it('parses a JSON-stringified strtotime object and returns it as an object', () => {
+        const strtotimeObj = { day_of_the_week: 'Monday', relative_time: 'after', event_key: 'Pentecost' };
+        const form = {
+            ...createNewForm(),
+            event_type: 'mobile',
+            strtotime: JSON.stringify(strtotimeObj),
+        };
+        delete form.day;
+        delete form.month;
+        const p = buildDecreePayload(form);
+        expect(p.liturgical_event.strtotime).toEqual(strtotimeObj);
+        expect(typeof p.liturgical_event.strtotime).toBe('object');
+        expect(p.liturgical_event.type).toBe('mobile');
+        expect(p.liturgical_event).not.toHaveProperty('day');
+        expect(p.liturgical_event).not.toHaveProperty('month');
+    });
+
     it('splits setProperty actions into action + property', () => {
         const p = buildDecreePayload({ ...createNewForm(), action: DecreeAction.SetPropertyGrade, i18n: undefined, readings: undefined });
         expect(p.metadata.action).toBe('setProperty');
