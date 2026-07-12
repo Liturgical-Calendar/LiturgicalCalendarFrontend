@@ -62,6 +62,8 @@ import {
     reverseMapAction,
     addUrlLangRow,
     aggregateUrlCodeSuggestions,
+    prefillI18nRows,
+    prefillReadingsGroups,
 } from '../admin-decrees.js';
 import { DecreeAction } from '../DecreePayload.js';
 
@@ -602,6 +604,85 @@ describe('addUrlLangRow — datalist-backed ISO input', () => {
         const container = document.createElement('div');
         addUrlLangRow(container, 'zz', 'x'); // no #urlCodes-zz in the DOM
         expect(container.querySelector('[name="url_lang_code[]"]').getAttribute('list')).toBeNull();
+    });
+});
+
+describe('prefillI18nRows — GRC-live minimum + all defined translations', () => {
+    const buildI18nContainer = () => {
+        const rows = document.createElement('div');
+        rows.id = 'i18nRows';
+        const baseRow = document.createElement('div');
+        baseRow.className = 'i18n-row';
+        baseRow.setAttribute('data-base-row', 'true');
+        const baseName = document.createElement('input');
+        baseName.name = 'i18n_name[]';
+        baseRow.appendChild(baseName);
+        rows.appendChild(baseRow);
+        document.body.appendChild(rows);
+        return { rows, baseName };
+    };
+
+    it('seeds the base row + a row per GRC-live locale and per defined translation', () => {
+        const { rows, baseName } = buildI18nContainer();
+        try {
+            // page locale en (base); GRC-live = en,fr,it,la,nl; defined adds es, pt
+            prefillI18nRows(
+                { en: 'Blessed…', it: 'Beata…', es: 'Santa…', pt: 'Abençoada…' },
+                'en',
+                '',
+                ['en', 'fr', 'it', 'la', 'nl'],
+            );
+            expect(baseName.value).toBe('Blessed…');
+            const addl = [...rows.querySelectorAll('.i18n-row:not([data-base-row="true"])')];
+            const byLocale = Object.fromEntries(addl.map((r) => [
+                r.querySelector('[name="i18n_locale[]"]').value,
+                r.querySelector('[name="i18n_name[]"]').value,
+            ]));
+            // fr/la/nl seeded empty (GRC-live minimum); it/es/pt carry their values
+            expect(Object.keys(byLocale).sort()).toEqual(['es', 'fr', 'it', 'la', 'nl', 'pt']);
+            expect(byLocale.it).toBe('Beata…');
+            expect(byLocale.es).toBe('Santa…');
+            expect(byLocale.fr).toBe('');
+            expect(byLocale.la).toBe('');
+        } finally {
+            rows.remove();
+        }
+    });
+
+    it('falls back to the single event name for the base row when the map lacks it', () => {
+        const { rows, baseName } = buildI18nContainer();
+        try {
+            prefillI18nRows(null, 'en', 'Fallback Name', ['en']);
+            expect(baseName.value).toBe('Fallback Name');
+        } finally {
+            rows.remove();
+        }
+    });
+});
+
+describe('prefillReadingsGroups — GRC-live minimum + defined readings', () => {
+    it('seeds a group per GRC-live locale plus each locale with readings', () => {
+        const groups = document.createElement('div');
+        groups.id = 'readingsGroups';
+        document.body.appendChild(groups);
+        try {
+            prefillReadingsGroups(
+                groups,
+                { en: { first_reading: 'Gen 1:1', gospel: 'John 1' }, es: { first_reading: 'Gen 1:1 es' } },
+                'en',
+                ['en', 'fr', 'it', 'la', 'nl'],
+            );
+            const locales = [...groups.querySelectorAll('[name="readings_locale[]"]')].map((i) => i.value);
+            // base (en) first, then GRC-live + defined unioned & sorted
+            expect(locales[0]).toBe('en');
+            expect(locales.slice(1).sort()).toEqual(['es', 'fr', 'it', 'la', 'nl']);
+            // en readings filled
+            const enGroup = [...groups.querySelectorAll('.readings-group')]
+                .find((g) => g.querySelector('[name="readings_locale[]"]').value === 'en');
+            expect(enGroup.querySelector('[name="first_reading[]"]').value).toBe('Gen 1:1');
+        } finally {
+            groups.remove();
+        }
     });
 });
 

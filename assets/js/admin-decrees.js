@@ -310,59 +310,62 @@ function buildTranslationsPanel(panel, decreeId, reqLocale, reqName, allLocales)
     list.className = 'list-group list-group-flush';
     panel.appendChild(list);
 
-    // Show already-known request locale immediately
-    const knownItem = document.createElement('li');
-    knownItem.className = 'list-group-item d-flex justify-content-between align-items-center';
-    const knownLocaleSpan = document.createElement('span');
-    knownLocaleSpan.className = 'text-muted small me-2';
-    knownLocaleSpan.textContent = reqLocale;
-    const knownNameSpan = document.createElement('span');
-    knownNameSpan.textContent = reqName;
-    knownItem.appendChild(knownLocaleSpan);
-    knownItem.appendChild(knownNameSpan);
-    list.appendChild(knownItem);
-
-    // For each other locale, create a placeholder item that fetches on expand
-    const otherLocales = allLocales.filter((l) => l !== reqLocale);
-    /** @type {Map<string, HTMLLIElement>} */
-    const localeItems = new Map();
-
-    otherLocales.forEach((locale) => {
+    const addItem = (locale, name, cls) => {
         const item = document.createElement('li');
         item.className = 'list-group-item d-flex justify-content-between align-items-center';
-        const localeSpan = document.createElement('span');
-        localeSpan.className = 'text-muted small me-2';
-        localeSpan.textContent = locale;
+        const locSpan = document.createElement('span');
+        locSpan.className = 'text-muted small me-2';
+        locSpan.textContent = locale;
         const nameSpan = document.createElement('span');
-        nameSpan.className = 'text-muted fst-italic small';
-        nameSpan.textContent = '…';
-        item.appendChild(localeSpan);
+        if (cls) nameSpan.className = cls;
+        nameSpan.textContent = name;
+        item.appendChild(locSpan);
         item.appendChild(nameSpan);
         list.appendChild(item);
-        localeItems.set(locale, nameSpan);
-    });
+        return nameSpan;
+    };
 
-    // Fetch names for other locales lazily when the panel is first shown
+    // Show the request-locale name immediately (already known from the list).
+    addItem(reqLocale, reqName);
+
+    // On first expand, fetch the enriched decree and list every defined
+    // translation from its i18n map. If the API returns no i18n map (older
+    // deployment), fall back to lazily probing the known locales one by one.
     let fetched = false;
     panel.addEventListener('show.bs.collapse', () => {
         if (fetched) return;
         fetched = true;
-        otherLocales.forEach((locale) => {
-            fetchEventForLocale(decreeId, locale).then((event) => {
-                const name = event && typeof event.name === 'string' ? event.name : '';
-                const el = localeItems.get(locale);
-                if (el) {
-                    el.className = '';
-                    el.textContent = name || '—';
+        fetchJson('GET', `/decrees/${encodeURIComponent(decreeId)}`, undefined, { 'Accept-Language': config.locale }, 'omit')
+            .then((data) => {
+                const i18n = data && typeof data === 'object' && data.i18n && typeof data.i18n === 'object'
+                    ? data.i18n
+                    : null;
+                if (i18n) {
+                    list.replaceChildren();
+                    const ordered = [reqLocale, ...Object.keys(i18n).filter((k) => k !== reqLocale).sort()];
+                    ordered.forEach((loc) => {
+                        const name = typeof i18n[loc] === 'string' && i18n[loc] !== ''
+                            ? i18n[loc]
+                            : ( loc === reqLocale ? reqName : '' );
+                        if (name) addItem(loc, name);
+                    });
+                    return;
                 }
-            }).catch(() => {
-                const el = localeItems.get(locale);
-                if (el) {
-                    el.className = 'text-danger small';
-                    el.textContent = config.i18n.errorText ?? '(error)';
-                }
+                // Fallback: probe the GRC-known locales individually.
+                allLocales.filter((l) => l !== reqLocale).forEach((locale) => {
+                    const nameSpan = addItem(locale, '…', 'text-muted fst-italic small');
+                    fetchEventForLocale(decreeId, locale).then((event) => {
+                        nameSpan.className = '';
+                        nameSpan.textContent = ( event && typeof event.name === 'string' ? event.name : '' ) || '—';
+                    }).catch(() => {
+                        nameSpan.className = 'text-danger small';
+                        nameSpan.textContent = config.i18n.errorText ?? '(error)';
+                    });
+                });
+            })
+            .catch(() => {
+                // Leave just the request-locale entry.
             });
-        });
     });
 }
 
@@ -979,7 +982,10 @@ async function loadDecrees(container, capabilities) {
         const metaController = new AbortController();
         const metaTimeoutId = setTimeout(() => metaController.abort(), 15000);
         const [decreesData, metaData] = await Promise.all([
-            fetchJson('GET', '/decrees', undefined, {}, 'omit'),
+            // Fetch names in the page UI locale so card names + translation-panel
+            // labels agree (without this the browser's own Accept-Language drives
+            // the response and the request-locale label can mismatch the value).
+            fetchJson('GET', '/decrees', undefined, { 'Accept-Language': config.locale }, 'omit'),
             fetch(config.apiUrl + '/calendars', {
                 credentials: 'omit',
                 headers:     { Accept: 'application/json' },
@@ -1036,8 +1042,9 @@ async function loadDecrees(container, capabilities) {
         allLocales = [requestLocale];
     }
 
-    // Store for modal use
-    modalAllLocales = allLocales;
+    // GRC-live locales (primary-language form) — the minimum set seeded as
+    // empty i18n/readings rows in the editor. Falls back to the request locale.
+    grcLiveLocales = [...new Set((metadataLocales ?? [requestLocale]).map(primaryLang))];
 
     // Aggregate known Vatican URL codes per language for the code datalists.
     // Rebuilt on every load, so a code saved in a prior write shows up here.
@@ -1112,12 +1119,23 @@ export function applyActionVisibility(action, form) {
 }
 
 /**
- * Locale list sourced from the /calendars metadata response.
- * Populated after loadDecrees resolves; reused for i18n/readings locale selects.
+ * GRC-live locales (primary-language form, e.g. ['en','fr','it','la','nl']),
+ * captured from /calendars metadata by loadDecrees. Seeded as the minimum set
+ * of i18n/readings rows in the editor.
  *
  * @type {string[]}
  */
-let modalAllLocales = [];
+let grcLiveLocales = [];
+
+/**
+ * Primary language subtag of a locale, lowercased (e.g. 'en-US' → 'en').
+ *
+ * @param {string} locale
+ * @returns {string}
+ */
+function primaryLang(locale) {
+    return String(locale).split(/[-_]/)[0].toLowerCase();
+}
 
 /**
  * Map of decree_id → full decree object, populated by loadDecrees.
@@ -1185,47 +1203,39 @@ function rebuildUrlCodeDatalists() {
 }
 
 /**
- * Build a locale <select> option list for an i18n row.
+ * Build a locale field (datalist-backed text input) for an i18n / readings row.
+ * Bound to #isoLangDatalist so any ISO 639-1 language is selectable — decree
+ * translations are not restricted to the General Roman Calendar's live locales.
  *
- * @param {string[]} locales  Available locales
- * @param {string}   [selected]  Pre-selected locale value
- * @returns {HTMLSelectElement}
+ * @param {string} [selected]  Pre-filled locale value
+ * @returns {HTMLInputElement}
  */
-function buildLocaleSelect(locales, selected) {
-    const sel = document.createElement('select');
-    sel.className = 'form-select form-select-sm';
-    sel.name = 'i18n_locale[]';
-
-    const placeholder = document.createElement('option');
-    placeholder.value = '';
-    placeholder.textContent = config.i18n.selectLocale;
-    sel.appendChild(placeholder);
-
-    locales.forEach((locale) => {
-        const opt = document.createElement('option');
-        opt.value = locale;
-        opt.textContent = locale;
-        if (locale === selected) opt.selected = true;
-        sel.appendChild(opt);
-    });
-    return sel;
+function buildLocaleField(selected) {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'form-control form-control-sm';
+    input.name = 'i18n_locale[]';
+    input.setAttribute('list', 'isoLangDatalist');
+    input.setAttribute('autocomplete', 'off');
+    input.placeholder = config.i18n.selectLocale;
+    if (selected) input.value = selected;
+    return input;
 }
 
 /**
  * Add an i18n row (locale + name) to #i18nRows.
  *
  * @param {HTMLElement} container  #i18nRows
- * @param {string[]}    locales    Available locales
- * @param {string}      [locale]   Pre-selected locale
+ * @param {string}      [locale]   Pre-filled locale
  * @param {string}      [name]     Pre-filled name
  */
-function addI18nRow(container, locales, locale, name) {
+function addI18nRow(container, locale, name) {
     const row = document.createElement('div');
     row.className = 'row g-2 mb-2 i18n-row';
 
     const localCol = document.createElement('div');
     localCol.className = 'col-md-3';
-    const locSel = buildLocaleSelect(locales, locale);
+    const locSel = buildLocaleField(locale);
     localCol.appendChild(locSel);
 
     const nameCol = document.createElement('div');
@@ -1390,20 +1400,19 @@ export function addUrlLangRow(container, iso, code) {
  * Build a readings group (per-locale) and append it to #readingsGroups.
  *
  * @param {HTMLElement} container  #readingsGroups
- * @param {string[]}    locales    Available locales
- * @param {string}      [locale]   Pre-selected locale
+ * @param {string}      [locale]   Pre-filled locale
  */
-function addReadingsGroup(container, locales, locale) {
+function addReadingsGroup(container, locale) {
     const group = document.createElement('div');
     group.className = 'border rounded p-3 mb-3 readings-group';
 
-    // Locale select header row
+    // Locale field header row
     const headerRow = document.createElement('div');
     headerRow.className = 'row g-2 mb-3 align-items-center';
 
     const locCol = document.createElement('div');
     locCol.className = 'col-md-4';
-    const locSel = buildLocaleSelect(locales, locale);
+    const locSel = buildLocaleField(locale);
     locSel.name = 'readings_locale[]';
     locCol.appendChild(locSel);
 
@@ -1877,10 +1886,7 @@ function showDecreeIdentityStatic(form, eventKey, actionLabel) {
  * @param {string[]}          locales         Available locales
  * @param {string}            baseLocale      Base locale for flat shape
  */
-function prefillReadingsGroups(readingsGroups, readings, locales, baseLocale) {
-    const isFlat = 'first_reading' in readings || 'responsorial_psalm' in readings
-                   || 'gospel_acclamation' in readings || 'gospel' in readings;
-
+export function prefillReadingsGroups(readingsGroups, readings, baseLocale, grcLive = grcLiveLocales) {
     const fillGroupFields = (group, localeReadings) => {
         const fillField = (name, value) => {
             const inp = group.querySelector(`[name="${name}"]`);
@@ -1893,22 +1899,51 @@ function prefillReadingsGroups(readingsGroups, readings, locales, baseLocale) {
         fillField('gospel[]',             localeReadings.gospel);
     };
 
-    if (isFlat) {
-        // Flat shape (GET response): create one group for the base locale
-        addReadingsGroup(readingsGroups, locales, baseLocale);
+    // Normalize a flat (single-locale) readings object to a locale-keyed map.
+    const src = readings && typeof readings === 'object' ? readings : {};
+    const isFlat = 'first_reading' in src || 'responsorial_psalm' in src
+                   || 'gospel_acclamation' in src || 'gospel' in src;
+    const map = isFlat ? { [baseLocale]: src } : src;
+
+    // Seed a group for every GRC-live locale (the minimum) plus every locale
+    // that actually has readings, base locale first, the rest sorted.
+    const others = new Set([...grcLive, ...Object.keys(map)]);
+    others.delete(baseLocale);
+    const ordered = [baseLocale, ...[...others].sort()];
+    ordered.forEach((locale) => {
+        addReadingsGroup(readingsGroups, locale);
         const groups = readingsGroups.querySelectorAll('.readings-group');
-        const group = groups[groups.length - 1];
-        if (group) fillGroupFields(group, readings);
-    } else {
-        // Locale-keyed shape (from a prior write round-trip)
-        Object.entries(readings).forEach(([locale, localeReadings]) => {
-            if (!localeReadings || typeof localeReadings !== 'object') return;
-            addReadingsGroup(readingsGroups, locales, locale);
-            const groups = readingsGroups.querySelectorAll('.readings-group');
-            const group = groups[groups.length - 1];
-            if (group) fillGroupFields(group, localeReadings);
-        });
+        const group  = groups[groups.length - 1];
+        const r      = map[locale];
+        if (group && r && typeof r === 'object') fillGroupFields(group, r);
+    });
+}
+
+/**
+ * Pre-fill the i18n rows: set the base-locale row and add one row per other
+ * locale in the GRC-live minimum set unioned with every locale that has a
+ * defined translation. Empty rows are seeded for locales without a translation.
+ *
+ * @param {Record<string,string>|null|undefined} i18nMap  locale → name
+ * @param {string}                               baseLocale
+ * @param {string}                               [fallbackName]  base-locale name when i18nMap lacks it
+ */
+export function prefillI18nRows(i18nMap, baseLocale, fallbackName, grcLive = grcLiveLocales) {
+    const i18nRows = document.getElementById('i18nRows');
+    if (!i18nRows) return;
+    const map = (i18nMap && typeof i18nMap === 'object') ? i18nMap : {};
+
+    const baseNameInput = i18nRows.querySelector('.i18n-row[data-base-row="true"] [name="i18n_name[]"]');
+    if (baseNameInput) {
+        const baseName = typeof map[baseLocale] === 'string' ? map[baseLocale] : '';
+        baseNameInput.value = baseName || fallbackName || '';
     }
+
+    const others = new Set([...grcLive, ...Object.keys(map)]);
+    others.delete(baseLocale);
+    [...others].sort().forEach((locale) => {
+        addI18nRow(i18nRows, locale, typeof map[locale] === 'string' ? map[locale] : '');
+    });
 }
 
 /**
@@ -2036,28 +2071,16 @@ function prefillEventFields(form, ev, setVal) {
 }
 
 /**
- * Pre-fill the base-locale i18n name row with the event name returned by the API.
- *
- * @param {object} ev  `decree.liturgical_event`
- */
-function prefillI18nBaseRow(ev) {
-    if (!ev.name) return;
-    const i18nRows = document.getElementById('i18nRows');
-    const baseNameInput = i18nRows
-        ? i18nRows.querySelector('.i18n-row[data-base-row="true"] [name="i18n_name[]"]')
-        : null;
-    if (baseNameInput) baseNameInput.value = ev.name;
-}
-
-/**
- * Pre-fill the editor form from an existing decree object.
+ * Pre-fill the editor form from an existing decree object. When the decree
+ * carries aggregated i18n/readings maps (from the enriched single-decree GET),
+ * every defined translation and readings locale is prefilled; otherwise it
+ * falls back to the single request-locale name/readings.
  *
  * @param {HTMLFormElement} form
  * @param {object}          decree
- * @param {string[]}        locales
  * @param {string}          baseLocale
  */
-function prefillFromDecree(form, decree, locales, baseLocale) {
+function prefillFromDecree(form, decree, baseLocale) {
     const setVal = (name, value) => {
         const el = form.querySelector(`[name="${name}"]`);
         if (el && value !== undefined && value !== null) el.value = value;
@@ -2069,13 +2092,19 @@ function prefillFromDecree(form, decree, locales, baseLocale) {
     const ev = decree.liturgical_event;
     if (ev) {
         prefillEventFields(form, ev, setVal);
-        prefillI18nBaseRow(ev);
+    }
 
-        // Pre-fill readings groups from liturgical_event.readings when present
-        const readingsGroups = document.getElementById('readingsGroups');
-        if (ev.readings && typeof ev.readings === 'object' && readingsGroups) {
-            prefillReadingsGroups(readingsGroups, ev.readings, locales, baseLocale);
-        }
+    // i18n rows: prefer the aggregated map, fall back to the single event name.
+    prefillI18nRows(decree.i18n, baseLocale, ev ? ev.name : '');
+
+    // Readings groups: prefer the aggregated readings map, fall back to the
+    // single request-locale flat readings on liturgical_event.
+    const readingsGroups = document.getElementById('readingsGroups');
+    if (readingsGroups) {
+        const readingsSource = (decree.readings && typeof decree.readings === 'object')
+            ? decree.readings
+            : ( ev && ev.readings && typeof ev.readings === 'object' ? ev.readings : {} );
+        prefillReadingsGroups(readingsGroups, readingsSource, baseLocale);
     }
 }
 
@@ -2086,12 +2115,11 @@ function prefillFromDecree(form, decree, locales, baseLocale) {
  * @param {HTMLFormElement} form
  * @param {HTMLElement|null} saveBtn
  * @param {HTMLElement}      alertBox
- * @param {string[]}         locales
  * @param {string}           baseLocale
  * @param {boolean}          isCreate
  * @param {{canView: boolean, canEdit: boolean, canAdmin: boolean}} capabilities
  */
-function wireEditorActions(form, saveBtn, alertBox, locales, baseLocale, isCreate, capabilities) {
+function wireEditorActions(form, saveBtn, alertBox, baseLocale, isCreate, capabilities) {
     // Apply initial visibility
     const actionEl = form.querySelector('[name="action"]');
     const initialAction = actionEl ? actionEl.value : DecreeAction.CreateNew;
@@ -2119,7 +2147,7 @@ function wireEditorActions(form, saveBtn, alertBox, locales, baseLocale, isCreat
         addI18nBtn.parentNode.replaceChild(newBtn, addI18nBtn);
         newBtn.addEventListener('click', () => {
             const rows = document.getElementById('i18nRows');
-            if (rows) addI18nRow(rows, locales);
+            if (rows) addI18nRow(rows);
         });
     }
 
@@ -2130,7 +2158,7 @@ function wireEditorActions(form, saveBtn, alertBox, locales, baseLocale, isCreat
         addReadingsBtn.parentNode.replaceChild(newBtn, addReadingsBtn);
         newBtn.addEventListener('click', () => {
             const groups = document.getElementById('readingsGroups');
-            if (groups) addReadingsGroup(groups, locales);
+            if (groups) addReadingsGroup(groups);
         });
     }
 
@@ -2226,7 +2254,7 @@ function wireEditorActions(form, saveBtn, alertBox, locales, baseLocale, isCreat
  * @param {string[]}    locales      Available locales for i18n/readings selects
  * @param {{canView: boolean, canEdit: boolean, canAdmin: boolean}} capabilities
  */
-function openEditorModal(decree, locales, capabilities) {
+async function openEditorModal(decree, capabilities) {
     const modal    = document.getElementById('decreeEditorModal');
     const form     = document.getElementById('decreeEditorForm');
     const alertBox = document.getElementById('decreeEditorAlerts');
@@ -2244,19 +2272,37 @@ function openEditorModal(decree, locales, capabilities) {
     form.dataset.mode = isCreate ? 'create' : 'edit';
 
     if (decree) {
-        prefillFromDecree(form, decree, locales, baseLocale);
+        // Fetch the enriched decree (all translations + readings across locales)
+        // so every defined translation can be prefilled. Fall back to the cached
+        // list entry (single request-locale name) if the fetch fails or an older
+        // API returns no i18n/readings maps.
+        let full = decree;
+        try {
+            const fetched = await fetchJson(
+                'GET',
+                `/decrees/${encodeURIComponent(decree.decree_id)}`,
+                undefined,
+                { 'Accept-Language': config.locale },
+                'omit'
+            );
+            if (fetched && typeof fetched === 'object') full = fetched;
+        } catch {
+            // keep the cached decree
+        }
+        prefillFromDecree(form, full, baseLocale);
     } else {
         // Creating: event_key and action are editable fields (both feed the
         // derived decree_id); resetEditorForm already restored the field view.
         // Initialize the derived-id hint (empty event_key → placeholder).
         syncDerivedDecreeId(form);
 
-        // Pre-add a base-locale readings group for createNew
+        // Seed the GRC-live minimum: empty i18n rows and readings groups.
+        prefillI18nRows(null, baseLocale, '');
         const readingsGroups = document.getElementById('readingsGroups');
-        addReadingsGroup(readingsGroups, locales, baseLocale);
+        if (readingsGroups) prefillReadingsGroups(readingsGroups, {}, baseLocale);
     }
 
-    wireEditorActions(form, saveBtn, alertBox, locales, baseLocale, isCreate, capabilities);
+    wireEditorActions(form, saveBtn, alertBox, baseLocale, isCreate, capabilities);
 
     // Show modal via Bootstrap
     if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
@@ -2320,7 +2366,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (capabilities.canEdit && createBtn) {
         createBtn.classList.remove('d-none');
         createBtn.addEventListener('click', () => {
-            openEditorModal(null, modalAllLocales, capabilities);
+            openEditorModal(null, capabilities);
         });
     }
 
@@ -2330,7 +2376,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (editBtn && capabilities.canEdit) {
             const decreeId = editBtn.getAttribute('data-decree-id');
             const decree   = decreeMap.get(decreeId) ?? { decree_id: decreeId };
-            openEditorModal(decree, modalAllLocales, capabilities);
+            openEditorModal(decree, capabilities);
         }
     });
 
