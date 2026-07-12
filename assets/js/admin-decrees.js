@@ -1166,7 +1166,7 @@ function updateUrlPreview(form) {
  * @param {string}      [iso]      Pre-selected ISO code
  * @param {string}      [code]     Pre-filled Vatican code
  */
-function addUrlLangRow(container, isoCodes, iso, code) {
+export function addUrlLangRow(container, isoCodes, iso, code) {
     const row = document.createElement('div');
     row.className = 'row g-2 mb-2 url-lang-row align-items-center';
 
@@ -1179,7 +1179,11 @@ function addUrlLangRow(container, isoCodes, iso, code) {
     ph.value = '';
     ph.textContent = config.i18n.selectLocale;
     isoSel.appendChild(ph);
-    isoCodes.forEach((c) => {
+    // A decree's url_lang_map may reference languages outside the GRC-supported
+    // locale set (e.g. de, es, pt); always include the pre-selected code so an
+    // edit round-trip never silently drops it.
+    const options = (iso && !isoCodes.includes(iso)) ? [iso, ...isoCodes] : isoCodes;
+    options.forEach((c) => {
         const opt = document.createElement('option');
         opt.value = c;
         opt.textContent = c;

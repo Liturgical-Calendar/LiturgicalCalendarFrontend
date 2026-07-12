@@ -40,6 +40,7 @@ vi.hoisted(() => {
             editDecree:        'Edit Decree',
             selectLocale:      'Select locale',
             removeRow:         'Remove',
+            langCodeVatican:   'Vatican URL code',
             firstReading:      'First reading',
             responsorialPsalm: 'Responsorial psalm',
             secondReading:     'Second reading (optional)',
@@ -55,7 +56,7 @@ vi.hoisted(() => {
     };
 });
 
-import { collectFormValues, applyActionVisibility, reverseMapAction } from '../admin-decrees.js';
+import { collectFormValues, applyActionVisibility, reverseMapAction, addUrlLangRow } from '../admin-decrees.js';
 import { DecreeAction } from '../DecreePayload.js';
 
 // ---- helpers ---------------------------------------------------------------
@@ -555,5 +556,25 @@ describe('collectFormValues — url_lang_map', () => {
         const form = buildUrlForm({ multilang: true, rows: [['en', 'en'], ['', 'xx'], ['it', '']] });
         const v = collectFormValues(form);
         expect(v.url_lang_map).toEqual({ en: 'en' });
+    });
+});
+
+describe('addUrlLangRow — out-of-list ISO preservation', () => {
+    it('keeps a pre-selected ISO code even when it is absent from the offered list', () => {
+        // Regression: a decree's url_lang_map may reference languages (de, es, pt)
+        // outside the GRC-supported locale set. The row must still select them,
+        // or an edit round-trip silently drops those mappings.
+        const container = document.createElement('div');
+        addUrlLangRow(container, ['en', 'it', 'la'], 'de', 'ge');
+        const isoSel = container.querySelector('[name="url_lang_iso[]"]');
+        expect(isoSel.value).toBe('de');
+        const codeInp = container.querySelector('[name="url_lang_code[]"]');
+        expect(codeInp.value).toBe('ge');
+    });
+
+    it('selects an in-list ISO code normally', () => {
+        const container = document.createElement('div');
+        addUrlLangRow(container, ['en', 'it', 'la'], 'it', 'it');
+        expect(container.querySelector('[name="url_lang_iso[]"]').value).toBe('it');
     });
 });
