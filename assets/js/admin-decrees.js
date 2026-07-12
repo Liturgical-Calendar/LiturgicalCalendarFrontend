@@ -412,46 +412,20 @@ function buildReadingsPanel(panel, readings) {
     panel.appendChild(dl);
 }
 
-// ---- card rendering -------------------------------------------------------
+// ---- card rendering helpers -----------------------------------------------
 
 /**
- * Build a Bootstrap card for a single decree and append it to the container.
+ * Build the card header element containing the event title, decree_id, and
+ * action buttons (edit/delete) gated on capabilities.
  *
- * Exported so Task 4/5 can call it after a create/update operation to refresh
- * a single card without re-rendering the whole list.
- *
- * @param {HTMLElement} container     The #decreesContainer element
- * @param {object}      decree        Decree object from GET /decrees
+ * @param {string} decreeId
+ * @param {string} eventName
  * @param {{canView: boolean, canEdit: boolean, canAdmin: boolean}} capabilities
- * @param {string[]}    allLocales    All supported locales for translations panel
+ * @returns {HTMLElement}
  */
-export function renderDecreeCard(container, decree, capabilities, allLocales) {
-    const {
-        decree_id: decreeId,
-        decree_date: decreeDate,
-        decree_protocol: protocol,
-        description,
-        liturgical_event: event,
-        metadata,
-    } = decree;
-
-    const eventName  = (event && event.name) ? event.name : decreeId;
-    const dateString = renderEventDate(event);
-
-    // ---- wrapper column
-    const col = document.createElement('div');
-    col.className = 'col-12';
-    col.setAttribute('data-decree-id', decreeId);
-
-    // ---- card
-    const card = document.createElement('div');
-    card.className = 'card shadow-sm';
-    col.appendChild(card);
-
-    // ---- card header: title + action buttons
+function buildCardHeader(decreeId, eventName, capabilities) {
     const header = document.createElement('div');
     header.className = 'card-header d-flex justify-content-between align-items-start gap-2';
-    card.appendChild(header);
 
     const titleBlock = document.createElement('div');
     titleBlock.className = 'flex-grow-1';
@@ -494,13 +468,16 @@ export function renderDecreeCard(container, decree, capabilities, allLocales) {
     btnGroup.appendChild(deleteBtn);
 
     header.appendChild(btnGroup);
+    return header;
+}
 
-    // ---- card body
-    const body = document.createElement('div');
-    body.className = 'card-body';
-    card.appendChild(body);
-
-    // Badges row: grade / color / type / common
+/**
+ * Build the badges row (grade, colors, type, common) for a liturgical event.
+ *
+ * @param {object|null|undefined} event  The liturgical_event object
+ * @returns {HTMLElement}
+ */
+function buildEventBadges(event) {
     const badgesDiv = document.createElement('div');
     badgesDiv.className = 'mb-2';
 
@@ -523,9 +500,17 @@ export function renderDecreeCard(container, decree, capabilities, allLocales) {
             event.common.forEach((c) => badgesDiv.appendChild(makeBadge(c, 'secondary')));
         }
     }
-    body.appendChild(badgesDiv);
+    return badgesDiv;
+}
 
-    // Date detail line
+/**
+ * Append the date line and description paragraph to a card body.
+ *
+ * @param {HTMLElement} body
+ * @param {string}      dateString  Result of renderEventDate(); empty string → skip
+ * @param {string|null|undefined} description
+ */
+function buildEventDetails(body, dateString, description) {
     if (dateString) {
         const dateLine = document.createElement('p');
         dateLine.className = 'mb-2 text-muted';
@@ -538,72 +523,92 @@ export function renderDecreeCard(container, decree, capabilities, allLocales) {
         body.appendChild(dateLine);
     }
 
-    // Description
     if (description) {
         const descEl = document.createElement('p');
         descEl.className = 'mb-2';
         descEl.textContent = description;
         body.appendChild(descEl);
     }
+}
 
-    // ---- translations collapsible (only for name-bearing decrees: a grade
-    // change does not touch the event name, so there is nothing to translate)
-    const meta = decree.metadata || {};
-    const nameBearing = meta.action === 'createNew' || meta.action === 'makeDoctor'
-        || ( meta.action === 'setProperty' && meta.property === 'name' );
-    if (nameBearing) {
-        const transCollapseId = `trans-${CSS.escape(decreeId)}`;
-        const transToggle = document.createElement('button');
-        transToggle.type = 'button';
-        transToggle.className = 'btn btn-sm btn-outline-secondary me-2 mb-2';
-        transToggle.setAttribute('data-bs-toggle', 'collapse');
-        transToggle.setAttribute('data-bs-target', `#${transCollapseId}`);
-        transToggle.setAttribute('aria-expanded', 'false');
-        transToggle.setAttribute('aria-controls', transCollapseId);
-        const transIcon = document.createElement('i');
-        transIcon.className = 'fas fa-language me-1';
-        transToggle.appendChild(transIcon);
-        transToggle.appendChild(document.createTextNode(config.i18n.translations));
-        body.appendChild(transToggle);
+/**
+ * Append the translations collapsible section to the card body.
+ * Only called for name-bearing decrees (createNew, makeDoctor, setProperty:name).
+ *
+ * @param {HTMLElement} body
+ * @param {string}      decreeId
+ * @param {string}      eventName
+ * @param {string[]}    allLocales
+ */
+function buildTranslationsSection(body, decreeId, eventName, allLocales) {
+    const transCollapseId = `trans-${CSS.escape(decreeId)}`;
+    const transToggle = document.createElement('button');
+    transToggle.type = 'button';
+    transToggle.className = 'btn btn-sm btn-outline-secondary me-2 mb-2';
+    transToggle.setAttribute('data-bs-toggle', 'collapse');
+    transToggle.setAttribute('data-bs-target', `#${transCollapseId}`);
+    transToggle.setAttribute('aria-expanded', 'false');
+    transToggle.setAttribute('aria-controls', transCollapseId);
+    const transIcon = document.createElement('i');
+    transIcon.className = 'fas fa-language me-1';
+    transToggle.appendChild(transIcon);
+    transToggle.appendChild(document.createTextNode(config.i18n.translations));
+    body.appendChild(transToggle);
 
-        const transCollapse = document.createElement('div');
-        transCollapse.className = 'collapse mb-2';
-        transCollapse.id = transCollapseId;
-        buildTranslationsPanel(
-            transCollapse,
-            decreeId,
-            config.locale.split('-')[0].toLowerCase(),
-            eventName,
-            allLocales
-        );
-        body.appendChild(transCollapse);
-    }
+    const transCollapse = document.createElement('div');
+    transCollapse.className = 'collapse mb-2';
+    transCollapse.id = transCollapseId;
+    buildTranslationsPanel(
+        transCollapse,
+        decreeId,
+        config.locale.split('-')[0].toLowerCase(),
+        eventName,
+        allLocales
+    );
+    body.appendChild(transCollapse);
+}
 
-    // ---- readings collapsible (only when readings exist)
-    if (event && event.readings && typeof event.readings === 'object'
-        && Object.keys(event.readings).length > 0) {
-        const readCollapseId = `readings-${CSS.escape(decreeId)}`;
-        const readToggle = document.createElement('button');
-        readToggle.type = 'button';
-        readToggle.className = 'btn btn-sm btn-outline-secondary mb-2';
-        readToggle.setAttribute('data-bs-toggle', 'collapse');
-        readToggle.setAttribute('data-bs-target', `#${readCollapseId}`);
-        readToggle.setAttribute('aria-expanded', 'false');
-        readToggle.setAttribute('aria-controls', readCollapseId);
-        const readIcon = document.createElement('i');
-        readIcon.className = 'fas fa-book-open me-1';
-        readToggle.appendChild(readIcon);
-        readToggle.appendChild(document.createTextNode(config.i18n.readings));
-        body.appendChild(readToggle);
+/**
+ * Append the readings collapsible section to the card body.
+ * Only called when the event has a non-empty readings object.
+ *
+ * @param {HTMLElement} body
+ * @param {object}      readings  The event.readings object
+ * @param {string}      decreeId
+ */
+function buildReadingsSection(body, readings, decreeId) {
+    const readCollapseId = `readings-${CSS.escape(decreeId)}`;
+    const readToggle = document.createElement('button');
+    readToggle.type = 'button';
+    readToggle.className = 'btn btn-sm btn-outline-secondary mb-2';
+    readToggle.setAttribute('data-bs-toggle', 'collapse');
+    readToggle.setAttribute('data-bs-target', `#${readCollapseId}`);
+    readToggle.setAttribute('aria-expanded', 'false');
+    readToggle.setAttribute('aria-controls', readCollapseId);
+    const readIcon = document.createElement('i');
+    readIcon.className = 'fas fa-book-open me-1';
+    readToggle.appendChild(readIcon);
+    readToggle.appendChild(document.createTextNode(config.i18n.readings));
+    body.appendChild(readToggle);
 
-        const readCollapse = document.createElement('div');
-        readCollapse.className = 'collapse mb-2';
-        readCollapse.id = readCollapseId;
-        buildReadingsPanel(readCollapse, event.readings);
-        body.appendChild(readCollapse);
-    }
+    const readCollapse = document.createElement('div');
+    readCollapse.className = 'collapse mb-2';
+    readCollapse.id = readCollapseId;
+    buildReadingsPanel(readCollapse, readings);
+    body.appendChild(readCollapse);
+}
 
-    // ---- card footer: metadata
+/**
+ * Build the card footer element containing decree metadata (date, protocol,
+ * since_year, source link, permissions link).
+ *
+ * @param {string|null|undefined} decreeDate
+ * @param {string|null|undefined} protocol
+ * @param {object|null|undefined} metadata
+ * @param {{canView: boolean, canEdit: boolean, canAdmin: boolean}} capabilities
+ * @returns {HTMLElement}
+ */
+function buildCardFooter(decreeDate, protocol, metadata, capabilities) {
     const footer = document.createElement('div');
     footer.className = 'card-footer text-muted small d-flex flex-wrap gap-3 align-items-center';
 
@@ -663,7 +668,71 @@ export function renderDecreeCard(container, decree, capabilities, allLocales) {
         footer.appendChild(permsLink);
     }
 
-    card.appendChild(footer);
+    return footer;
+}
+
+// ---- card rendering -------------------------------------------------------
+
+/**
+ * Build a Bootstrap card for a single decree and append it to the container.
+ *
+ * Exported so Task 4/5 can call it after a create/update operation to refresh
+ * a single card without re-rendering the whole list.
+ *
+ * @param {HTMLElement} container     The #decreesContainer element
+ * @param {object}      decree        Decree object from GET /decrees
+ * @param {{canView: boolean, canEdit: boolean, canAdmin: boolean}} capabilities
+ * @param {string[]}    allLocales    All supported locales for translations panel
+ */
+export function renderDecreeCard(container, decree, capabilities, allLocales) {
+    const {
+        decree_id: decreeId,
+        decree_date: decreeDate,
+        decree_protocol: protocol,
+        description,
+        liturgical_event: event,
+        metadata,
+    } = decree;
+
+    const eventName  = (event && event.name) ? event.name : decreeId;
+    const dateString = renderEventDate(event);
+
+    // ---- wrapper column
+    const col = document.createElement('div');
+    col.className = 'col-12';
+    col.setAttribute('data-decree-id', decreeId);
+
+    // ---- card
+    const card = document.createElement('div');
+    card.className = 'card shadow-sm';
+    col.appendChild(card);
+
+    card.appendChild(buildCardHeader(decreeId, eventName, capabilities));
+
+    // ---- card body
+    const body = document.createElement('div');
+    body.className = 'card-body';
+    card.appendChild(body);
+
+    body.appendChild(buildEventBadges(event));
+    buildEventDetails(body, dateString, description);
+
+    // ---- translations collapsible (only for name-bearing decrees: a grade
+    // change does not touch the event name, so there is nothing to translate)
+    const meta = decree.metadata || {};
+    const nameBearing = meta.action === 'createNew' || meta.action === 'makeDoctor'
+        || ( meta.action === 'setProperty' && meta.property === 'name' );
+    if (nameBearing) {
+        buildTranslationsSection(body, decreeId, eventName, allLocales);
+    }
+
+    // ---- readings collapsible (only when readings exist)
+    if (event && event.readings && typeof event.readings === 'object'
+        && Object.keys(event.readings).length > 0) {
+        buildReadingsSection(body, event.readings, decreeId);
+    }
+
+    card.appendChild(buildCardFooter(decreeDate, protocol, metadata, capabilities));
     container.appendChild(col);
 }
 
@@ -1302,34 +1371,25 @@ async function deleteDecree(decreeId, deleteAlertBox, capabilities) {
 }
 
 /**
- * Open the editor modal for create or edit.
+ * Reset the editor form to a clean state: clears the form, alerts, modal
+ * title, base-locale option, extra i18n rows, and readings groups.
  *
- * @param {object|null} decree       Existing decree object (null for create)
- * @param {string[]}    locales      Available locales for i18n/readings selects
- * @param {{canView: boolean, canEdit: boolean, canAdmin: boolean}} capabilities
+ * @param {HTMLFormElement} form
+ * @param {HTMLElement}     alertBox
+ * @param {HTMLElement|null} label
+ * @param {boolean}         isCreate
+ * @param {string}          baseLocale
  */
-function openEditorModal(decree, locales, capabilities) {
-    const modal    = document.getElementById('decreeEditorModal');
-    const form     = document.getElementById('decreeEditorForm');
-    const alertBox = document.getElementById('decreeEditorAlerts');
-    const label    = document.getElementById('decreeEditorModalLabel');
-    const saveBtn  = document.getElementById('saveDecreeBtn');
-    const isCreate = !decree;
-
-    if (!modal || !form || !alertBox) return;
-
-    // Reset form and alerts
+function resetEditorForm(form, alertBox, label, isCreate, baseLocale) {
     form.reset();
     alertBox.replaceChildren();
 
-    // Update modal title
     if (label) {
         label.textContent = isCreate ? config.i18n.newDecree : config.i18n.editDecree;
     }
 
     // Set base locale option value and text on the disabled select
     const baseLocaleOpt = document.getElementById('i18nBaseLocaleOption');
-    const baseLocale = config.locale.split('-')[0].toLowerCase();
     if (baseLocaleOpt) {
         baseLocaleOpt.value       = baseLocale;
         baseLocaleOpt.textContent = baseLocale;
@@ -1338,8 +1398,7 @@ function openEditorModal(decree, locales, capabilities) {
     // Clear dynamic i18n rows (keep only base row)
     const i18nRows = document.getElementById('i18nRows');
     if (i18nRows) {
-        const addlRows = i18nRows.querySelectorAll('.i18n-row:not([data-base-row="true"])');
-        addlRows.forEach((r) => r.remove());
+        i18nRows.querySelectorAll('.i18n-row:not([data-base-row="true"])').forEach((r) => r.remove());
     }
 
     // Clear readings groups
@@ -1347,148 +1406,163 @@ function openEditorModal(decree, locales, capabilities) {
     if (readingsGroups) {
         readingsGroups.replaceChildren();
     }
+}
 
-    // Populate from existing decree if editing
-    if (decree) {
-        const setVal = (name, value) => {
-            const el = form.querySelector(`[name="${name}"]`);
-            if (el && value !== undefined && value !== null) el.value = value;
+/**
+ * Fill in readings groups inside the editor from a readings object.
+ * Handles both flat (GET response) and locale-keyed (write round-trip) shapes.
+ *
+ * @param {HTMLElement}       readingsGroups  The #readingsGroups container
+ * @param {object}            readings        The event.readings object
+ * @param {string[]}          locales         Available locales
+ * @param {string}            baseLocale      Base locale for flat shape
+ */
+function prefillReadingsGroups(readingsGroups, readings, locales, baseLocale) {
+    const isFlat = 'first_reading' in readings || 'responsorial_psalm' in readings
+                   || 'gospel_acclamation' in readings || 'gospel' in readings;
+
+    const fillGroupFields = (group, localeReadings) => {
+        const fillField = (name, value) => {
+            const inp = group.querySelector(`[name="${name}"]`);
+            if (inp && value) inp.value = value;
         };
+        fillField('first_reading[]',      localeReadings.first_reading);
+        fillField('responsorial_psalm[]', localeReadings.responsorial_psalm);
+        fillField('second_reading[]',     localeReadings.second_reading);
+        fillField('gospel_acclamation[]', localeReadings.gospel_acclamation);
+        fillField('gospel[]',             localeReadings.gospel);
+    };
 
-        // decree_id is readonly when editing (prevents PATCH from changing the ID)
-        const decreeIdEl = form.querySelector('[name="decree_id"]');
-        if (decreeIdEl) {
-            decreeIdEl.value    = decree.decree_id ?? '';
-            decreeIdEl.readOnly = true;
-        }
-
-        // event_key is readonly when editing: PATCH must NOT change event_key
-        // (API rejects with 400 and instructs DELETE + PUT instead).
-        // Only set readonly if the decree actually has a liturgical_event.event_key;
-        // if missing, leave it editable to allow assignment.
-        const eventKeyEl = form.querySelector('[name="event_key"]');
-        if (eventKeyEl) {
-            eventKeyEl.readOnly = Boolean(decree.liturgical_event && decree.liturgical_event.event_key);
-        }
-
-        setVal('decree_date',     decree.decree_date);
-        setVal('decree_protocol', decree.decree_protocol);
-        setVal('description',     decree.description);
-
-        // Pre-select action from metadata via reverse-mapping
-        const meta = decree.metadata;
-        if (meta) {
-            const actionValue = reverseMapAction(meta.action, meta.property);
-            const actionEl = form.querySelector('[name="action"]');
-            if (actionEl) {
-                actionEl.value = actionValue;
-            }
-            if (meta.since_year) setVal('since_year', meta.since_year);
-            if (meta.url)        setVal('url',        meta.url);
-        }
-
-        const ev = decree.liturgical_event;
-        if (ev) {
-            setVal('event_key', ev.event_key);
-            if (ev.grade !== undefined) {
-                setVal('grade',     ev.grade);
-                setVal('grade_set', ev.grade);
-            }
-            if (Array.isArray(ev.color)) {
-                const colorEl = form.querySelector('[name="color"]');
-                if (colorEl) {
-                    Array.from(colorEl.options).forEach((opt) => {
-                        opt.selected = ev.color.includes(opt.value);
-                    });
-                }
-            }
-
-            // Pre-fill day and month (fixed events)
-            if (ev.day !== undefined) setVal('day', ev.day);
-            if (ev.month !== undefined) setVal('month', ev.month);
-
-            // Pre-fill strtotime (mobile events)
-            if (ev.strtotime !== undefined) {
-                const strtotimeStr = (ev.strtotime !== null && typeof ev.strtotime === 'object')
-                    ? JSON.stringify(ev.strtotime)
-                    : String(ev.strtotime);
-                setVal('strtotime', strtotimeStr);
-            }
-
-            // Pre-select event_type radio (fixed or mobile)
-            const eventType = ev.type === 'mobile' ? 'mobile' : 'fixed';
-            const radioToCheck = form.querySelector(`[name="event_type"][value="${eventType}"]`);
-            if (radioToCheck) radioToCheck.checked = true;
-
-            // Pre-fill common
-            if (Array.isArray(ev.common) && ev.common.length > 0) {
-                setVal('common_text', ev.common.join(', '));
-            }
-
-            // Pre-fill i18n base row with the request-locale name
-            if (ev.name) {
-                const baseNameInput = i18nRows
-                    ? i18nRows.querySelector('.i18n-row[data-base-row="true"] [name="i18n_name[]"]')
-                    : null;
-                if (baseNameInput) {
-                    baseNameInput.value = ev.name;
-                }
-            }
-
-            // Pre-fill readings groups from liturgical_event.readings when present
-            if (ev.readings && typeof ev.readings === 'object') {
-                const isFlat = 'first_reading' in ev.readings || 'responsorial_psalm' in ev.readings
-                               || 'gospel_acclamation' in ev.readings || 'gospel' in ev.readings;
-                if (isFlat && readingsGroups) {
-                    // Flat shape (GET response): create one group for the base locale
-                    addReadingsGroup(readingsGroups, locales, baseLocale);
-                    const groups = readingsGroups.querySelectorAll('.readings-group');
-                    const group = groups[groups.length - 1];
-                    if (group) {
-                        const fillField = (name, value) => {
-                            const inp = group.querySelector(`[name="${name}"]`);
-                            if (inp && value) inp.value = value;
-                        };
-                        fillField('first_reading[]',      ev.readings.first_reading);
-                        fillField('responsorial_psalm[]', ev.readings.responsorial_psalm);
-                        fillField('gospel_acclamation[]', ev.readings.gospel_acclamation);
-                        fillField('gospel[]',             ev.readings.gospel);
-                    }
-                } else if (!isFlat) {
-                    // Locale-keyed shape (from a prior write round-trip)
-                    Object.entries(ev.readings).forEach(([locale, localeReadings]) => {
-                        if (!localeReadings || typeof localeReadings !== 'object') return;
-                        if (readingsGroups) {
-                            addReadingsGroup(readingsGroups, locales, locale);
-                            // The group was just appended — grab it and fill in values
-                            const groups = readingsGroups.querySelectorAll('.readings-group');
-                            const group = groups[groups.length - 1];
-                            if (!group) return;
-                            const fillField = (name, value) => {
-                                const inp = group.querySelector(`[name="${name}"]`);
-                                if (inp && value) inp.value = value;
-                            };
-                            fillField('first_reading[]',      localeReadings.first_reading);
-                            fillField('responsorial_psalm[]', localeReadings.responsorial_psalm);
-                            fillField('second_reading[]',     localeReadings.second_reading);
-                            fillField('gospel_acclamation[]', localeReadings.gospel_acclamation);
-                            fillField('gospel[]',             localeReadings.gospel);
-                        }
-                    });
-                }
-            }
-        }
-    } else {
-        // Creating: decree_id and event_key are editable
-        const decreeIdEl = form.querySelector('[name="decree_id"]');
-        if (decreeIdEl) decreeIdEl.readOnly = false;
-        const eventKeyEl = form.querySelector('[name="event_key"]');
-        if (eventKeyEl) eventKeyEl.readOnly = false;
-
-        // Pre-add a base-locale readings group for createNew
+    if (isFlat) {
+        // Flat shape (GET response): create one group for the base locale
         addReadingsGroup(readingsGroups, locales, baseLocale);
+        const groups = readingsGroups.querySelectorAll('.readings-group');
+        const group = groups[groups.length - 1];
+        if (group) fillGroupFields(group, readings);
+    } else {
+        // Locale-keyed shape (from a prior write round-trip)
+        Object.entries(readings).forEach(([locale, localeReadings]) => {
+            if (!localeReadings || typeof localeReadings !== 'object') return;
+            addReadingsGroup(readingsGroups, locales, locale);
+            const groups = readingsGroups.querySelectorAll('.readings-group');
+            const group = groups[groups.length - 1];
+            if (group) fillGroupFields(group, localeReadings);
+        });
+    }
+}
+
+/**
+ * Pre-fill the editor form from an existing decree object.
+ *
+ * @param {HTMLFormElement} form
+ * @param {object}          decree
+ * @param {string[]}        locales
+ * @param {string}          baseLocale
+ */
+function prefillFromDecree(form, decree, locales, baseLocale) {
+    const setVal = (name, value) => {
+        const el = form.querySelector(`[name="${name}"]`);
+        if (el && value !== undefined && value !== null) el.value = value;
+    };
+
+    // decree_id is readonly when editing (prevents PATCH from changing the ID)
+    const decreeIdEl = form.querySelector('[name="decree_id"]');
+    if (decreeIdEl) {
+        decreeIdEl.value    = decree.decree_id ?? '';
+        decreeIdEl.readOnly = true;
     }
 
+    // event_key is readonly when editing: PATCH must NOT change event_key
+    // (API rejects with 400 and instructs DELETE + PUT instead).
+    // Only set readonly if the decree actually has a liturgical_event.event_key;
+    // if missing, leave it editable to allow assignment.
+    const eventKeyEl = form.querySelector('[name="event_key"]');
+    if (eventKeyEl) {
+        eventKeyEl.readOnly = Boolean(decree.liturgical_event && decree.liturgical_event.event_key);
+    }
+
+    setVal('decree_date',     decree.decree_date);
+    setVal('decree_protocol', decree.decree_protocol);
+    setVal('description',     decree.description);
+
+    // Pre-select action from metadata via reverse-mapping
+    const meta = decree.metadata;
+    if (meta) {
+        const actionValue = reverseMapAction(meta.action, meta.property);
+        const actionEl = form.querySelector('[name="action"]');
+        if (actionEl) actionEl.value = actionValue;
+        if (meta.since_year) setVal('since_year', meta.since_year);
+        if (meta.url)        setVal('url',        meta.url);
+    }
+
+    const ev = decree.liturgical_event;
+    if (ev) {
+        setVal('event_key', ev.event_key);
+        if (ev.grade !== undefined) {
+            setVal('grade',     ev.grade);
+            setVal('grade_set', ev.grade);
+        }
+        if (Array.isArray(ev.color)) {
+            const colorEl = form.querySelector('[name="color"]');
+            if (colorEl) {
+                Array.from(colorEl.options).forEach((opt) => {
+                    opt.selected = ev.color.includes(opt.value);
+                });
+            }
+        }
+
+        // Pre-fill day and month (fixed events)
+        if (ev.day !== undefined)   setVal('day',   ev.day);
+        if (ev.month !== undefined) setVal('month', ev.month);
+
+        // Pre-fill strtotime (mobile events)
+        if (ev.strtotime !== undefined) {
+            const strtotimeStr = (ev.strtotime !== null && typeof ev.strtotime === 'object')
+                ? JSON.stringify(ev.strtotime)
+                : String(ev.strtotime);
+            setVal('strtotime', strtotimeStr);
+        }
+
+        // Pre-select event_type radio (fixed or mobile)
+        const eventType = ev.type === 'mobile' ? 'mobile' : 'fixed';
+        const radioToCheck = form.querySelector(`[name="event_type"][value="${eventType}"]`);
+        if (radioToCheck) radioToCheck.checked = true;
+
+        // Pre-fill common
+        if (Array.isArray(ev.common) && ev.common.length > 0) {
+            setVal('common_text', ev.common.join(', '));
+        }
+
+        // Pre-fill i18n base row with the request-locale name
+        if (ev.name) {
+            const i18nRows = document.getElementById('i18nRows');
+            const baseNameInput = i18nRows
+                ? i18nRows.querySelector('.i18n-row[data-base-row="true"] [name="i18n_name[]"]')
+                : null;
+            if (baseNameInput) baseNameInput.value = ev.name;
+        }
+
+        // Pre-fill readings groups from liturgical_event.readings when present
+        const readingsGroups = document.getElementById('readingsGroups');
+        if (ev.readings && typeof ev.readings === 'object' && readingsGroups) {
+            prefillReadingsGroups(readingsGroups, ev.readings, locales, baseLocale);
+        }
+    }
+}
+
+/**
+ * Wire button event handlers for the editor modal: fixed/mobile toggle,
+ * add i18n row, add readings group, and save.
+ *
+ * @param {HTMLFormElement} form
+ * @param {HTMLElement|null} saveBtn
+ * @param {HTMLElement}      alertBox
+ * @param {string[]}         locales
+ * @param {string}           baseLocale
+ * @param {boolean}          isCreate
+ * @param {{canView: boolean, canEdit: boolean, canAdmin: boolean}} capabilities
+ */
+function wireEditorActions(form, saveBtn, alertBox, locales, baseLocale, isCreate, capabilities) {
     // Apply initial visibility
     const actionEl = form.querySelector('[name="action"]');
     const initialAction = actionEl ? actionEl.value : DecreeAction.CreateNew;
@@ -1506,14 +1580,12 @@ function openEditorModal(decree, locales, capabilities) {
     eventTypeRadios.forEach((radio) => {
         radio.addEventListener('change', () => syncDateType(radio.value));
     });
-    // Set initial state
     const checkedRadio = form.querySelector('[name="event_type"]:checked');
     syncDateType(checkedRadio ? checkedRadio.value : 'fixed');
 
-    // Add i18n row button
+    // Add i18n row button (clone to remove old listeners)
     const addI18nBtn = document.getElementById('addI18nRow');
     if (addI18nBtn) {
-        // Clone to remove old listeners
         const newBtn = addI18nBtn.cloneNode(true);
         addI18nBtn.parentNode.replaceChild(newBtn, addI18nBtn);
         newBtn.addEventListener('click', () => {
@@ -1522,7 +1594,7 @@ function openEditorModal(decree, locales, capabilities) {
         });
     }
 
-    // Add readings group button
+    // Add readings group button (clone to remove old listeners)
     const addReadingsBtn = document.getElementById('addReadingsGroup');
     if (addReadingsBtn) {
         const newBtn = addReadingsBtn.cloneNode(true);
@@ -1533,7 +1605,7 @@ function openEditorModal(decree, locales, capabilities) {
         });
     }
 
-    // Wire save button
+    // Wire save button (clone to remove old listeners)
     if (saveBtn) {
         const newSaveBtn = saveBtn.cloneNode(true);
         saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
@@ -1571,6 +1643,44 @@ function openEditorModal(decree, locales, capabilities) {
             }
         });
     }
+}
+
+/**
+ * Open the editor modal for create or edit.
+ *
+ * @param {object|null} decree       Existing decree object (null for create)
+ * @param {string[]}    locales      Available locales for i18n/readings selects
+ * @param {{canView: boolean, canEdit: boolean, canAdmin: boolean}} capabilities
+ */
+function openEditorModal(decree, locales, capabilities) {
+    const modal    = document.getElementById('decreeEditorModal');
+    const form     = document.getElementById('decreeEditorForm');
+    const alertBox = document.getElementById('decreeEditorAlerts');
+    const label    = document.getElementById('decreeEditorModalLabel');
+    const saveBtn  = document.getElementById('saveDecreeBtn');
+    const isCreate = !decree;
+
+    if (!modal || !form || !alertBox) return;
+
+    const baseLocale = config.locale.split('-')[0].toLowerCase();
+
+    resetEditorForm(form, alertBox, label, isCreate, baseLocale);
+
+    if (decree) {
+        prefillFromDecree(form, decree, locales, baseLocale);
+    } else {
+        // Creating: decree_id and event_key are editable
+        const decreeIdEl = form.querySelector('[name="decree_id"]');
+        if (decreeIdEl) decreeIdEl.readOnly = false;
+        const eventKeyEl = form.querySelector('[name="event_key"]');
+        if (eventKeyEl) eventKeyEl.readOnly = false;
+
+        // Pre-add a base-locale readings group for createNew
+        const readingsGroups = document.getElementById('readingsGroups');
+        addReadingsGroup(readingsGroups, locales, baseLocale);
+    }
+
+    wireEditorActions(form, saveBtn, alertBox, locales, baseLocale, isCreate, capabilities);
 
     // Show modal via Bootstrap
     if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {

@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @var bool   $isAdmin    Defined by the including page (admin-dashboard.php).
+ * @var string $apiBaseUrl Defined by includes/common.php.
+ */
+
+/**
  * "Decrees" dashboard card.
  * Rendered from admin-dashboard.php for both global admins (inside the admin
  * blocks grid) and scoped calendar_editors (in their own Administration section),

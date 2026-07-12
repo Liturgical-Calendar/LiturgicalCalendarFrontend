@@ -17,12 +17,14 @@ const splitAction = (action) => {
     return property ? { action: name, property } : { action: name };
 };
 
-export const buildDecreePayload = (form) => {
-    const { action, property } = splitAction(form.action);
-    const fullAction = form.action; // e.g. 'createNew', 'setProperty:grade', 'makeDoctor'
-
-    // Build per-action liturgical_event shapes
-    let liturgical_event;
+/**
+ * Build the per-action liturgical_event shape.
+ *
+ * @param {object} form        Form values bag from collectFormValues()
+ * @param {string} fullAction  Full action string (e.g. 'createNew', 'setProperty:grade')
+ * @returns {object}
+ */
+function buildLiturgicalEvent(form, fullAction) {
     if (fullAction === DecreeAction.CreateNew) {
         // createNew: include day/month (fixed) or strtotime (mobile) + type + grade + color + common
         let strtotimeValue = form.strtotime;
@@ -36,7 +38,7 @@ export const buildDecreePayload = (form) => {
                 // not JSON — keep as string
             }
         }
-        liturgical_event = {
+        return {
             event_key: form.event_key,
             calendar: 'GENERAL ROMAN',
             ...(form.event_type === 'mobile'
@@ -46,33 +48,63 @@ export const buildDecreePayload = (form) => {
             ...(form.color && form.color.length > 0 ? { color: form.color } : {}),
             ...(form.common && form.common.length > 0 ? { common: form.common } : {}),
         };
-    } else if (fullAction === DecreeAction.SetPropertyGrade) {
+    }
+
+    if (fullAction === DecreeAction.SetPropertyGrade) {
         // setProperty:grade: ONLY event_key, calendar, grade
-        liturgical_event = {
+        return {
             event_key: form.event_key,
             calendar: 'GENERAL ROMAN',
             ...(form.grade !== undefined ? { grade: Number(form.grade) } : {}),
         };
-    } else if (fullAction === DecreeAction.SetPropertyName) {
+    }
+
+    if (fullAction === DecreeAction.SetPropertyName) {
         // setProperty:name: ONLY event_key, calendar
-        liturgical_event = {
-            event_key: form.event_key,
-            calendar: 'GENERAL ROMAN',
-        };
-    } else if (fullAction === DecreeAction.MakeDoctor) {
-        // makeDoctor: ONLY event_key, calendar, common
-        liturgical_event = {
-            event_key: form.event_key,
-            calendar: 'GENERAL ROMAN',
-            ...(form.common && form.common.length > 0 ? { common: form.common } : {}),
-        };
-    } else {
-        // Fallback for unknown actions
-        liturgical_event = {
+        return {
             event_key: form.event_key,
             calendar: 'GENERAL ROMAN',
         };
     }
+
+    if (fullAction === DecreeAction.MakeDoctor) {
+        // makeDoctor: ONLY event_key, calendar, common
+        return {
+            event_key: form.event_key,
+            calendar: 'GENERAL ROMAN',
+            ...(form.common && form.common.length > 0 ? { common: form.common } : {}),
+        };
+    }
+
+    // Fallback for unknown actions
+    return {
+        event_key: form.event_key,
+        calendar: 'GENERAL ROMAN',
+    };
+}
+
+/**
+ * Build the metadata block for the payload.
+ *
+ * @param {object} form      Form values bag from collectFormValues()
+ * @param {string} action    Short action name (e.g. 'createNew', 'setProperty')
+ * @param {string} [property] Optional property (e.g. 'grade', 'name')
+ * @returns {object}
+ */
+function buildMetadata(form, action, property) {
+    return {
+        action,
+        ...(property ? { property } : {}),
+        since_year: Number(form.since_year),
+        url: form.url,
+    };
+}
+
+export const buildDecreePayload = (form) => {
+    const { action, property } = splitAction(form.action);
+    const fullAction = form.action; // e.g. 'createNew', 'setProperty:grade', 'makeDoctor'
+
+    const liturgical_event = buildLiturgicalEvent(form, fullAction);
 
     const payload = {
         decree_id: form.decree_id,
@@ -80,12 +112,7 @@ export const buildDecreePayload = (form) => {
         decree_protocol: form.decree_protocol,
         description: form.description,
         liturgical_event,
-        metadata: {
-            action,
-            ...(property ? { property } : {}),
-            since_year: Number(form.since_year),
-            url: form.url,
-        },
+        metadata: buildMetadata(form, action, property),
     };
 
     // i18n only for name-bearing actions (createNew, makeDoctor, setProperty:name)
@@ -104,21 +131,51 @@ export const buildDecreePayload = (form) => {
     return payload;
 };
 
-export const validateDecreePayload = (payload, baseLocale, isCreate) => {
-    const errors = [];
-    const { action, property } = payload.metadata;
-    const nameBearing = action === 'createNew' || action === 'makeDoctor'
-        || (action === 'setProperty' && property === 'name');
-
+/**
+ * Validate i18n requirements for name-bearing actions.
+ *
+ * @param {object}   payload     Built payload
+ * @param {boolean}  nameBearing True when the action touches the event name
+ * @param {string}   baseLocale  The user's base locale (must be present in i18n)
+ * @param {string[]} errors      Errors array to push into
+ */
+function validateI18nRules(payload, nameBearing, baseLocale, errors) {
     if (nameBearing) {
         if (!payload.i18n || Object.keys(payload.i18n).length === 0) {
-            errors.push(`Action "${action}" requires at least one translated event name (i18n)`);
+            errors.push(`Action "${payload.metadata.action}" requires at least one translated event name (i18n)`);
         } else if (!(baseLocale in payload.i18n)) {
             errors.push(`The i18n object must include an entry for your locale "${baseLocale}"`);
         }
     } else if (payload.i18n) {
         errors.push('A grade change does not affect the event name: remove the i18n translations');
     }
+}
+
+/**
+ * Validate readings requirements.
+ *
+ * @param {object}   payload   Built payload
+ * @param {boolean}  isCreate  True when creating (PUT), false when updating (PATCH)
+ * @param {string[]} errors    Errors array to push into
+ */
+function validateReadingsRules(payload, isCreate, errors) {
+    if (isCreate) {
+        if (payload.metadata.action === 'createNew' && !payload.readings) {
+            errors.push('A new liturgical event must define its lectionary readings');
+        }
+        if (payload.metadata.action !== 'createNew' && payload.readings) {
+            errors.push(`Action "${payload.metadata.action}" does not accept readings on creation; correct readings via an edit instead`);
+        }
+    }
+}
+
+export const validateDecreePayload = (payload, baseLocale, isCreate) => {
+    const errors = [];
+    const { action, property } = payload.metadata;
+    const nameBearing = action === 'createNew' || action === 'makeDoctor'
+        || (action === 'setProperty' && property === 'name');
+
+    validateI18nRules(payload, nameBearing, baseLocale, errors);
 
     // makeDoctor requires a non-empty common array (DTO: DecreeItemMakeDoctor requires common)
     if (action === 'makeDoctor') {
@@ -146,13 +203,7 @@ export const validateDecreePayload = (payload, baseLocale, isCreate) => {
         }
     }
 
-    if (isCreate) {
-        if (action === 'createNew' && !payload.readings) {
-            errors.push('A new liturgical event must define its lectionary readings');
-        }
-        if (action !== 'createNew' && payload.readings) {
-            errors.push(`Action "${action}" does not accept readings on creation; correct readings via an edit instead`);
-        }
-    }
+    validateReadingsRules(payload, isCreate, errors);
+
     return errors;
 };
