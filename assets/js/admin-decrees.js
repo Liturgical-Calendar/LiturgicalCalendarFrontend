@@ -1110,26 +1110,6 @@ function syncDerivedDecreeId(form) {
 }
 
 /**
- * Deduplicated ISO 639-1 primary language subtags from a locale list
- * (e.g. ['en-US', 'it', 'la'] → ['en', 'it', 'la']).
- *
- * @param {string[]} locales
- * @returns {string[]}
- */
-function primaryLangCodes(locales) {
-    const seen = new Set();
-    const codes = [];
-    locales.forEach((l) => {
-        const primary = l.split(/[-_]/)[0].toLowerCase();
-        if (primary && !seen.has(primary)) {
-            seen.add(primary);
-            codes.push(primary);
-        }
-    });
-    return codes;
-}
-
-/**
  * Re-render the live URL preview: each url_lang_map row expands the `%s`
  * placeholder in the source URL to its Vatican code. Skipped entirely when
  * the URL has no `%s`.
@@ -1161,36 +1141,30 @@ function updateUrlPreview(form) {
  * Add a url_lang_map row (ISO 639-1 language ▸ Vatican URL code) to
  * #urlLangMapRows and wire preview refresh + removal.
  *
+ * The language field is a datalist-backed text input (#isoLangDatalist,
+ * rendered server-side with every ISO 639-1 code labelled in the UI locale),
+ * so any two-letter code is selectable — searchable by code or by name —
+ * independent of the GRC-supported locale set.
+ *
  * @param {HTMLElement} container  #urlLangMapRows
- * @param {string[]}    isoCodes   Selectable ISO 639-1 codes
- * @param {string}      [iso]      Pre-selected ISO code
+ * @param {string}      [iso]      Pre-filled ISO 639-1 code
  * @param {string}      [code]     Pre-filled Vatican code
  */
-export function addUrlLangRow(container, isoCodes, iso, code) {
+export function addUrlLangRow(container, iso, code) {
     const row = document.createElement('div');
     row.className = 'row g-2 mb-2 url-lang-row align-items-center';
 
     const isoCol = document.createElement('div');
-    isoCol.className = 'col-md-3';
-    const isoSel = document.createElement('select');
-    isoSel.className = 'form-select form-select-sm';
-    isoSel.name = 'url_lang_iso[]';
-    const ph = document.createElement('option');
-    ph.value = '';
-    ph.textContent = config.i18n.selectLocale;
-    isoSel.appendChild(ph);
-    // A decree's url_lang_map may reference languages outside the GRC-supported
-    // locale set (e.g. de, es, pt); always include the pre-selected code so an
-    // edit round-trip never silently drops it.
-    const options = (iso && !isoCodes.includes(iso)) ? [iso, ...isoCodes] : isoCodes;
-    options.forEach((c) => {
-        const opt = document.createElement('option');
-        opt.value = c;
-        opt.textContent = c;
-        if (c === iso) opt.selected = true;
-        isoSel.appendChild(opt);
-    });
-    isoCol.appendChild(isoSel);
+    isoCol.className = 'col-md-4';
+    const isoInput = document.createElement('input');
+    isoInput.type = 'text';
+    isoInput.className = 'form-control form-control-sm';
+    isoInput.name = 'url_lang_iso[]';
+    isoInput.setAttribute('list', 'isoLangDatalist');
+    isoInput.setAttribute('autocomplete', 'off');
+    isoInput.placeholder = config.i18n.selectLocale;
+    if (iso) isoInput.value = iso;
+    isoCol.appendChild(isoInput);
 
     const arrowCol = document.createElement('div');
     arrowCol.className = 'col-auto text-muted';
@@ -1227,7 +1201,7 @@ export function addUrlLangRow(container, isoCodes, iso, code) {
 
     const form = container.closest('form');
     const refresh = () => { if (form) updateUrlPreview(form); };
-    isoSel.addEventListener('change', refresh);
+    isoInput.addEventListener('input', refresh);
     codeInput.addEventListener('input', refresh);
     rmBtn.addEventListener('click', () => { row.remove(); refresh(); });
 }
@@ -1422,9 +1396,11 @@ export function collectFormValues(root) {
         root.querySelectorAll('.url-lang-row').forEach((row) => {
             const isoEl = row.querySelector('[name="url_lang_iso[]"]');
             const codeEl = row.querySelector('[name="url_lang_code[]"]');
-            const iso = isoEl ? isoEl.value.trim() : '';
+            const iso = isoEl ? isoEl.value.trim().toLowerCase() : '';
             const code = codeEl ? codeEl.value.trim() : '';
-            if (iso && code) urlLangMap[iso] = code;
+            // Keep only valid two-letter ISO 639-1 keys (matches the API schema);
+            // free-typed text that never resolved to a code is dropped.
+            if (/^[a-z]{2}$/.test(iso) && code) urlLangMap[iso] = code;
         });
     }
 
@@ -1764,9 +1740,8 @@ function prefillDecreeFields(form, decree, setVal) {
  *
  * @param {HTMLFormElement} form
  * @param {object}          decree
- * @param {string[]}        locales
  */
-function prefillUrlLangMap(form, decree, locales) {
+function prefillUrlLangMap(form, decree) {
     const meta = decree.metadata || {};
     const langMap = (meta.url_lang_map && typeof meta.url_lang_map === 'object')
         ? meta.url_lang_map
@@ -1781,9 +1756,8 @@ function prefillUrlLangMap(form, decree, locales) {
     if (block)  block.classList.remove('d-none');
     if (rows) {
         rows.replaceChildren();
-        const isoCodes = primaryLangCodes(locales);
         if (langMap) {
-            Object.entries(langMap).forEach(([iso, code]) => addUrlLangRow(rows, isoCodes, iso, code));
+            Object.entries(langMap).forEach(([iso, code]) => addUrlLangRow(rows, iso, code));
         }
     }
     updateUrlPreview(form);
@@ -1867,7 +1841,7 @@ function prefillFromDecree(form, decree, locales, baseLocale) {
     };
 
     prefillDecreeFields(form, decree, setVal);
-    prefillUrlLangMap(form, decree, locales);
+    prefillUrlLangMap(form, decree);
 
     const ev = decree.liturgical_event;
     if (ev) {
@@ -1948,7 +1922,7 @@ function wireEditorActions(form, saveBtn, alertBox, locales, baseLocale, isCreat
             const rows  = document.getElementById('urlLangMapRows');
             if (block) block.classList.toggle('d-none', !newToggle.checked);
             if (newToggle.checked && rows && rows.children.length === 0) {
-                addUrlLangRow(rows, primaryLangCodes(locales));
+                addUrlLangRow(rows);
             }
             updateUrlPreview(form);
         });
@@ -1961,7 +1935,7 @@ function wireEditorActions(form, saveBtn, alertBox, locales, baseLocale, isCreat
         addUrlLangBtn.parentNode.replaceChild(newBtn, addUrlLangBtn);
         newBtn.addEventListener('click', () => {
             const rows = document.getElementById('urlLangMapRows');
-            if (rows) addUrlLangRow(rows, primaryLangCodes(locales));
+            if (rows) addUrlLangRow(rows);
         });
     }
 

@@ -213,6 +213,33 @@ if (!$isAdmin && !$isCalendarEditor) {
                             </div>
                         </fieldset>
 
+                        <?php
+                        // Datalist of every ISO 639-1 language, labelled in the UI locale.
+                        // Source-URL languages are independent of the GRC locale set, so the
+                        // editor offers any valid two-letter code, searchable by code or name.
+                        $isoLanguages = [];
+                        $langBundle   = \ResourceBundle::create('en', 'ICUDATA-lang');
+                        if (null !== $langBundle) {
+                            $languagesRes = $langBundle->get('Languages');
+                            if (null !== $languagesRes) {
+                                foreach ($languagesRes as $isoCode => $ignored) {
+                                    $isoCode = (string) $isoCode;
+                                    if (2 === strlen($isoCode) && ctype_alpha($isoCode)) {
+                                        $isoLanguages[$isoCode] = \Locale::getDisplayLanguage($isoCode, $i18n->LOCALE);
+                                    }
+                                }
+                            }
+                        }
+                        asort($isoLanguages, SORT_LOCALE_STRING);
+                        ?>
+                        <datalist id="isoLangDatalist">
+                            <?php foreach ($isoLanguages as $isoCode => $displayName) : ?>
+                                <option value="<?php echo htmlspecialchars($isoCode, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"><?php
+                                    echo htmlspecialchars($displayName . ' (' . $isoCode . ')', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                ?></option>
+                            <?php endforeach; ?>
+                        </datalist>
+
                         <!-- ── createNew-only block: event details ────────── -->
                         <fieldset class="border rounded p-3 mb-3 action-block action-createNew">
                             <legend class="float-none w-auto px-2 fs-6 fw-semibold">

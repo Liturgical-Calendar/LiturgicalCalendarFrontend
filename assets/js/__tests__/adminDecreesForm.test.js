@@ -559,22 +559,34 @@ describe('collectFormValues — url_lang_map', () => {
     });
 });
 
-describe('addUrlLangRow — out-of-list ISO preservation', () => {
-    it('keeps a pre-selected ISO code even when it is absent from the offered list', () => {
-        // Regression: a decree's url_lang_map may reference languages (de, es, pt)
-        // outside the GRC-supported locale set. The row must still select them,
-        // or an edit round-trip silently drops those mappings.
+describe('addUrlLangRow — datalist-backed ISO input', () => {
+    it('pre-fills any ISO code and its Vatican code via a datalist input', () => {
+        // Source-URL languages are independent of the GRC locale set: the row is
+        // a free text input bound to the global ISO 639-1 datalist, so even a
+        // language like ru (never in the GRC set) round-trips without loss.
         const container = document.createElement('div');
-        addUrlLangRow(container, ['en', 'it', 'la'], 'de', 'ge');
-        const isoSel = container.querySelector('[name="url_lang_iso[]"]');
-        expect(isoSel.value).toBe('de');
-        const codeInp = container.querySelector('[name="url_lang_code[]"]');
-        expect(codeInp.value).toBe('ge');
+        addUrlLangRow(container, 'ru', 'russian');
+        const isoInput = container.querySelector('[name="url_lang_iso[]"]');
+        expect(isoInput.value).toBe('ru');
+        expect(isoInput.getAttribute('list')).toBe('isoLangDatalist');
+        expect(container.querySelector('[name="url_lang_code[]"]').value).toBe('russian');
     });
 
-    it('selects an in-list ISO code normally', () => {
+    it('creates an empty row when no values are given', () => {
         const container = document.createElement('div');
-        addUrlLangRow(container, ['en', 'it', 'la'], 'it', 'it');
-        expect(container.querySelector('[name="url_lang_iso[]"]').value).toBe('it');
+        addUrlLangRow(container);
+        expect(container.querySelector('[name="url_lang_iso[]"]').value).toBe('');
+        expect(container.querySelector('[name="url_lang_code[]"]').value).toBe('');
+    });
+});
+
+describe('collectFormValues — ISO key validation', () => {
+    it('drops rows whose language field is not a two-letter ISO code', () => {
+        // A user may type a display name ("German") without picking a datalist
+        // option; such rows must not be sent as bogus url_lang_map keys.
+        const form = buildUrlForm({ multilang: true, rows: [['German', 'ge'], ['DE', 'ge2'], ['it', 'it']] });
+        const v = collectFormValues(form);
+        // 'German' dropped (not 2 letters); 'DE' lowercased to 'de'; 'it' kept
+        expect(v.url_lang_map).toEqual({ de: 'ge2', it: 'it' });
     });
 });
