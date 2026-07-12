@@ -120,9 +120,9 @@ api/*
 !admin-dashboard.php
 !admin-permissions.php
 !admin-role-requests.php
+!admin-decrees.php
 !admin-tests.php
 !admin-users.php
-!decrees.php
 !developer-dashboard.php
 !missals-editor.php
 !easter.php

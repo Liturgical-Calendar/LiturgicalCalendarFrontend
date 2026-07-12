@@ -92,8 +92,8 @@ services:
       - ./admin-dashboard.php:/var/www/html/admin-dashboard.php:ro
       - ./admin-permissions.php:/var/www/html/admin-permissions.php:ro
       - ./admin-users.php:/var/www/html/admin-users.php:ro
+      - ./admin-decrees.php:/var/www/html/admin-decrees.php:ro
       - ./admin-tests.php:/var/www/html/admin-tests.php:ro
-      - ./decrees.php:/var/www/html/decrees.php:ro
       - ./developer-dashboard.php:/var/www/html/developer-dashboard.php:ro
       - ./easter.php:/var/www/html/easter.php:ro
       - ./examples.php:/var/www/html/examples.php:ro
