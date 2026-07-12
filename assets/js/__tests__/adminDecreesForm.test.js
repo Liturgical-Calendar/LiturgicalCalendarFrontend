@@ -136,7 +136,9 @@ function buildForm({
 
     form.appendChild(field('day',   'number', day));
     form.appendChild(field('month', 'number', month));
-    form.appendChild(field('strtotime', 'text', eventType === 'mobile' ? 'Monday after Pentecost' : ''));
+    form.appendChild(field('strtotime_day_of_the_week', 'text', eventType === 'mobile' ? 'Monday' : ''));
+    form.appendChild(field('strtotime_relative_time',   'text', eventType === 'mobile' ? 'after' : ''));
+    form.appendChild(field('strtotime_event_key',       'text', eventType === 'mobile' ? 'Pentecost' : ''));
 
     // Grade (createNew)
     const gradeSel = document.createElement('select');
@@ -222,11 +224,15 @@ describe('collectFormValues — createNew', () => {
         expect(v.month).toBe('2');
     });
 
-    it('collects event_type=mobile with strtotime', () => {
+    it('collects event_type=mobile with a structured strtotime object', () => {
         const form = buildForm({ eventType: 'mobile' });
         const v = collectFormValues(form);
         expect(v.event_type).toBe('mobile');
-        expect(v.strtotime).toBe('Monday after Pentecost');
+        expect(v.strtotime).toEqual({
+            day_of_the_week: 'Monday',
+            relative_time: 'after',
+            event_key: 'Pentecost',
+        });
     });
 
     it('collects selected colors as array', () => {

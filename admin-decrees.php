@@ -296,19 +296,64 @@ if (!$isAdmin && !$isCalendarEditor) {
                             </div>
 
                             <!-- Mobile date input -->
+                            <?php
+                            // Localized weekday labels (English value, label in the UI locale). Reference
+                            // dates in the first week of Jan 2024: 2024-01-07 is a Sunday, 01-01 a Monday, etc.
+                            $weekdayRefs = [
+                                'Sunday'    => '2024-01-07',
+                                'Monday'    => '2024-01-01',
+                                'Tuesday'   => '2024-01-02',
+                                'Wednesday' => '2024-01-03',
+                                'Thursday'  => '2024-01-04',
+                                'Friday'    => '2024-01-05',
+                                'Saturday'  => '2024-01-06',
+                            ];
+                            $weekdayFmt  = new \IntlDateFormatter(
+                                $i18n->LOCALE,
+                                \IntlDateFormatter::FULL,
+                                \IntlDateFormatter::NONE,
+                                null,
+                                null,
+                                'EEEE'
+                            );
+                            ?>
                             <div class="mb-3 d-none" id="mobileDateInput">
-                                <label for="eventStrtotime" class="form-label">
-                                    <?php echo htmlspecialchars(_('Strtotime expression'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                <label class="form-label">
+                                    <?php echo htmlspecialchars(_('Relative date'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                 </label>
-                                <input type="text" class="form-control" id="eventStrtotime" name="strtotime"
-                                    placeholder="Monday after Pentecost">
+                                <div class="row g-2 align-items-center">
+                                    <div class="col-md-4">
+                                        <select class="form-select" id="eventStrtotimeDow" name="strtotime_day_of_the_week">
+                                            <?php foreach ($weekdayRefs as $dow => $refDate) :
+                                                $label = $weekdayFmt->format(new \DateTime($refDate)) ?: $dow;
+                                                ?>
+                                                <option value="<?php echo htmlspecialchars($dow, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"><?php
+                                                    echo htmlspecialchars(ucfirst((string) $label), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                                ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-select" id="eventStrtotimeRel" name="strtotime_relative_time">
+                                            <option value="before"><?php echo htmlspecialchars(_('before'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                            <option value="after"><?php echo htmlspecialchars(_('after'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control" id="eventStrtotimeEventKey"
+                                            name="strtotime_event_key" list="grcEventKeysDatalist"
+                                            autocomplete="off" placeholder="Pentecost">
+                                    </div>
+                                </div>
                                 <div class="form-text">
                                     <?php echo htmlspecialchars(
-                                        _('PHP strtotime-compatible expression, e.g. "Monday after Pentecost"'),
+                                        _('A day of the week relative to a liturgical event, e.g. "Monday after Pentecost".'),
                                         ENT_QUOTES | ENT_SUBSTITUTE,
                                         'UTF-8'
                                     ); ?>
                                 </div>
+                                <?php // Catalog of GRC event keys (value) + localized names (label), filled by JS from /events ?>
+                                <datalist id="grcEventKeysDatalist"></datalist>
                             </div>
 
                             <!-- Grade + color (event details, createNew only) -->

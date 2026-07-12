@@ -1233,6 +1233,35 @@ function rebuildUrlCodeDatalists() {
 }
 
 /**
+ * Fetch the GRC event catalog (GET /events) and populate #grcEventKeysDatalist
+ * with one option per event (value = event_key, label = "name (event_key)"), so
+ * the mobile relative-date anchor field is searchable by event key or by
+ * localized name. Best-effort: on failure the datalist is left empty and the
+ * field stays free text. Public read → credentials 'omit'.
+ */
+async function loadEventCatalog() {
+    const host = document.getElementById('grcEventKeysDatalist');
+    if (!host) return;
+    try {
+        const data = await fetchJson('GET', '/events', undefined, { 'Accept-Language': config.locale }, 'omit');
+        const events = data && Array.isArray(data.litcal_events) ? data.litcal_events : [];
+        const frag = document.createDocumentFragment();
+        events.forEach((e) => {
+            if (!e || typeof e.event_key !== 'string') return;
+            const opt = document.createElement('option');
+            opt.value = e.event_key;
+            opt.textContent = typeof e.name === 'string' && e.name !== ''
+                ? `${e.name} (${e.event_key})`
+                : e.event_key;
+            frag.appendChild(opt);
+        });
+        host.replaceChildren(frag);
+    } catch {
+        // leave the datalist empty; the anchor field remains usable as free text
+    }
+}
+
+/**
  * Build a locale field (datalist-backed text input) for an i18n / readings row.
  * Bound to #isoLangDatalist so any ISO 639-1 language is selectable — decree
  * translations are not restricted to the General Roman Calendar's live locales.
@@ -1668,7 +1697,13 @@ export function collectFormValues(root) {
         })(),
         day:             val('day'),
         month:           val('month'),
-        strtotime:       val('strtotime'),
+        // Mobile events use a structured relative-date object built from the
+        // three fields (day_of_the_week / relative_time / anchor event_key).
+        strtotime:       {
+            day_of_the_week: val('strtotime_day_of_the_week'),
+            relative_time:   val('strtotime_relative_time'),
+            event_key:       val('strtotime_event_key'),
+        },
         grade,
         color,
         common,
@@ -2110,12 +2145,13 @@ function prefillEventFields(form, ev, setVal) {
     if (ev.day !== undefined)   setVal('day',   ev.day);
     if (ev.month !== undefined) setVal('month', ev.month);
 
-    // Pre-fill strtotime (mobile events); objects are round-tripped via JSON
-    if (ev.strtotime !== undefined) {
-        const strtotimeStr = (ev.strtotime !== null && typeof ev.strtotime === 'object')
-            ? JSON.stringify(ev.strtotime)
-            : String(ev.strtotime);
-        setVal('strtotime', strtotimeStr);
+    // Pre-fill the structured relative-date fields (mobile events). Only the
+    // object form { day_of_the_week, relative_time, event_key } is supported by
+    // the editor; a legacy PHP-strtotime string cannot populate the dropdowns.
+    if (ev.strtotime !== null && typeof ev.strtotime === 'object') {
+        setVal('strtotime_day_of_the_week', ev.strtotime.day_of_the_week);
+        setVal('strtotime_relative_time',   ev.strtotime.relative_time);
+        setVal('strtotime_event_key',       ev.strtotime.event_key);
     }
 
     // Pre-select event_type radio (fixed or mobile)
@@ -2487,6 +2523,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 bootstrap.Modal.getOrCreateInstance(deleteModal).show();
             }
         });
+    }
+
+    // Editors get the GRC event catalog for the mobile relative-date anchor field.
+    if (capabilities.canEdit) {
+        loadEventCatalog();
     }
 
     await loadDecrees(container, capabilities);

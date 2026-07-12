@@ -48,41 +48,23 @@ export const deriveDecreeId = (eventKey, action) => {
 };
 
 /**
- * Parse a strtotime value: if it is a JSON string representing an object,
- * return the parsed object; otherwise return the original value unchanged.
- *
- * @param {unknown} value  Raw strtotime value from the form field
- * @returns {unknown}
- */
-function parseStrtotime(value) {
-    if (typeof value === 'string') {
-        try {
-            const parsed = JSON.parse(value);
-            if (parsed !== null && typeof parsed === 'object') {
-                return parsed;
-            }
-        } catch {
-            // not JSON — keep as string
-        }
-    }
-    return value;
-}
-
-/**
  * Build the liturgical_event shape for the createNew action.
  * Includes date positioning (fixed day/month or mobile strtotime),
  * grade, color, and common.
+ *
+ * `form.strtotime` is the structured relative-date object
+ * `{ day_of_the_week, relative_time, event_key }` collected from the three
+ * mobile-date fields (used only when event_type is 'mobile').
  *
  * @param {object} form  Form values bag from collectFormValues()
  * @returns {object}
  */
 function buildCreateNewEvent(form) {
-    const strtotimeValue = parseStrtotime(form.strtotime);
     return {
         event_key: form.event_key,
         calendar: 'GENERAL ROMAN',
         ...(form.event_type === 'mobile'
-            ? { strtotime: strtotimeValue, type: 'mobile' }
+            ? { strtotime: form.strtotime, type: 'mobile' }
             : { day: Number(form.day), month: Number(form.month), type: 'fixed' }),
         ...(form.grade !== undefined ? { grade: Number(form.grade) } : {}),
         ...(form.color && form.color.length > 0 ? { color: form.color } : {}),
@@ -274,6 +256,17 @@ export const validateDecreePayload = (payload, baseLocale, isCreate) => {
             && payload.liturgical_event.common.length > 0;
         if (!hasCommon) {
             errors.push('A new liturgical event must specify at least one common (e.g. "Pastors")');
+        }
+        // A mobile event's relative date needs all three strtotime fields
+        // (day_of_the_week, relative_time, event_key).
+        const ev = payload.liturgical_event;
+        if (ev && ev.type === 'mobile') {
+            const st = ev.strtotime;
+            const complete = st && typeof st === 'object'
+                && st.day_of_the_week && st.relative_time && st.event_key;
+            if (!complete) {
+                errors.push('A mobile event needs a day of the week, a relative time (before/after), and an anchor event');
+            }
         }
     }
 

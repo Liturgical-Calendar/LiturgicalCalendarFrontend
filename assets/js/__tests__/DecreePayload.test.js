@@ -43,33 +43,18 @@ describe('buildDecreePayload', () => {
         expect(p.i18n.en).toBe('Saint Test');
     });
 
-    it('builds a mobile createNew payload with strtotime and no day/month', () => {
-        const form = { ...createNewForm(), event_type: 'mobile', strtotime: 'Monday after Pentecost' };
-        delete form.day;
-        delete form.month;
-        const p = buildDecreePayload(form);
-        expect(p.liturgical_event.strtotime).toBe('Monday after Pentecost');
-        expect(p.liturgical_event.type).toBe('mobile');
-        expect(p.liturgical_event.grade).toBe(2);
-        expect(p.liturgical_event.color).toEqual(['white']);
-        expect(p.liturgical_event.common).toEqual(['Pastors']);
-        expect(p.liturgical_event).not.toHaveProperty('day');
-        expect(p.liturgical_event).not.toHaveProperty('month');
-    });
-
-    it('parses a JSON-stringified strtotime object and returns it as an object', () => {
+    it('builds a mobile createNew payload with the structured strtotime object and no day/month', () => {
         const strtotimeObj = { day_of_the_week: 'Monday', relative_time: 'after', event_key: 'Pentecost' };
-        const form = {
-            ...createNewForm(),
-            event_type: 'mobile',
-            strtotime: JSON.stringify(strtotimeObj),
-        };
+        const form = { ...createNewForm(), event_type: 'mobile', strtotime: strtotimeObj };
         delete form.day;
         delete form.month;
         const p = buildDecreePayload(form);
         expect(p.liturgical_event.strtotime).toEqual(strtotimeObj);
         expect(typeof p.liturgical_event.strtotime).toBe('object');
         expect(p.liturgical_event.type).toBe('mobile');
+        expect(p.liturgical_event.grade).toBe(2);
+        expect(p.liturgical_event.color).toEqual(['white']);
+        expect(p.liturgical_event.common).toEqual(['Pastors']);
         expect(p.liturgical_event).not.toHaveProperty('day');
         expect(p.liturgical_event).not.toHaveProperty('month');
     });
@@ -182,6 +167,30 @@ describe('validateDecreePayload', () => {
         const p = buildDecreePayload({ ...createNewForm(), common: [] });
         const errors = validateDecreePayload(p, 'en', true);
         expect(errors.some((e) => e.toLowerCase().includes('common'))).toBe(true);
+    });
+
+    it('mobile createNew with an incomplete strtotime → validation error', () => {
+        const form = {
+            ...createNewForm(),
+            event_type: 'mobile',
+            strtotime: { day_of_the_week: 'Monday', relative_time: '', event_key: '' },
+        };
+        delete form.day;
+        delete form.month;
+        const errors = validateDecreePayload(buildDecreePayload(form), 'en', true);
+        expect(errors.some((e) => e.toLowerCase().includes('mobile'))).toBe(true);
+    });
+
+    it('mobile createNew with a complete strtotime → no mobile error', () => {
+        const form = {
+            ...createNewForm(),
+            event_type: 'mobile',
+            strtotime: { day_of_the_week: 'Monday', relative_time: 'after', event_key: 'Pentecost' },
+        };
+        delete form.day;
+        delete form.month;
+        const errors = validateDecreePayload(buildDecreePayload(form), 'en', true);
+        expect(errors.every((e) => !e.toLowerCase().includes('mobile'))).toBe(true);
     });
 
     it('createNew with color and common → no color/common errors', () => {
