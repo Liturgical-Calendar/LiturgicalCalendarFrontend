@@ -96,6 +96,43 @@ describe('renderDecreeCard: translations toggle gating', () => {
     });
 });
 
+describe('renderDecreeCard: card title name fallback', () => {
+    // Real grade-change decrees carry no translatable name (the fixture's is
+    // removed here to match), so the title must come from the event catalog.
+    const namelessGradeChange = () => {
+        const d = gradeChangeDecree();
+        delete d.liturgical_event.name;
+        return d;
+    };
+
+    it('uses the event-catalog name as the title for a grade-change decree (no own name)', () => {
+        const container = document.createElement('div');
+        renderDecreeCard(container, namelessGradeChange(), CAPS, ['en', 'it'], {
+            StMaryMagdalene: 'Mary Magdalene (from catalog)',
+        });
+        const header = container.querySelector('.card-header');
+        expect(header.textContent).toContain('Mary Magdalene (from catalog)');
+    });
+
+    it('falls back to the decree_id when neither a name nor a catalog entry exists', () => {
+        const container = document.createElement('div');
+        renderDecreeCard(container, namelessGradeChange(), CAPS, ['en', 'it'], {});
+        const header = container.querySelector('.card-header');
+        expect(header.textContent).toContain('StMaryMagdalene_Upgrade');
+        expect(header.textContent).not.toContain('from catalog');
+    });
+
+    it('prefers the decree own name over the catalog for name-bearing decrees', () => {
+        const container = document.createElement('div');
+        renderDecreeCard(container, createNewDecree(), CAPS, ['en', 'it'], {
+            MaryMotherChurch: 'Catalog Name Should Not Win',
+        });
+        const header = container.querySelector('.card-header');
+        expect(header.textContent).toContain('Mary Mother of the Church');
+        expect(header.textContent).not.toContain('Catalog Name Should Not Win');
+    });
+});
+
 describe('renderDecreeCard: readings panel', () => {
     it('renders the page-locale readings in the active tab, including the optional second reading', () => {
         const container = document.createElement('div');

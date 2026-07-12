@@ -908,8 +908,9 @@ function buildCardFooter(decreeDate, protocol, metadata) {
  * @param {object}      decree        Decree object from GET /decrees
  * @param {{canView: boolean, canEdit: boolean, canAdmin: boolean}} capabilities
  * @param {string[]}    allLocales    All supported locales for translations panel
+ * @param {Record<string,string>} [eventNames]  event_key → localized name (GRC event catalog)
  */
-export function renderDecreeCard(container, decree, capabilities, allLocales) {
+export function renderDecreeCard(container, decree, capabilities, allLocales, eventNames = eventCatalogNames) {
     const {
         decree_id: decreeId,
         decree_date: decreeDate,
@@ -919,7 +920,13 @@ export function renderDecreeCard(container, decree, capabilities, allLocales) {
         metadata,
     } = decree;
 
-    const eventName  = (event && event.name) ? event.name : decreeId;
+    // Title: the decree's own translated event name, else the localized name from
+    // the GRC event catalog (grade-change decrees carry no translatable name of
+    // their own but reference an existing event), else the decree_id as last resort.
+    const catalogName = ( event && typeof event.event_key === 'string' && eventNames )
+        ? eventNames[event.event_key]
+        : undefined;
+    const eventName  = ( event && event.name ) ? event.name : ( catalogName || decreeId );
     const dateString = renderEventDate(event);
 
     // ---- wrapper column
@@ -1002,6 +1009,11 @@ async function loadDecrees(container, capabilities) {
     spinner.appendChild(spinnerDiv);
     container.appendChild(spinner);
 
+    // Kick off the GRC event catalog fetch concurrently (builds the event_key →
+    // name map used for card titles, and the anchor datalist). Awaited before
+    // rendering so grade-change decrees show a proper name rather than the id.
+    const eventCatalogPromise = loadEventCatalog();
+
     // Fetch /decrees (public) and /calendars (public) in parallel.
     // The /decrees endpoint is public — omit credentials. DecreesHandler serves a
     // wildcard Access-Control-Allow-Origin, and browsers reject wildcard ACAO
@@ -1080,6 +1092,10 @@ async function loadDecrees(container, capabilities) {
     // Rebuilt on every load, so a code saved in a prior write shows up here.
     urlCodeSuggestions = aggregateUrlCodeSuggestions(decrees);
     rebuildUrlCodeDatalists();
+
+    // Ensure the event-name catalog is ready so grade-change decrees render a
+    // proper title (their liturgical_event carries no name of its own).
+    await eventCatalogPromise;
 
     // Build the decree map for edit pre-fill
     decreeMap.clear();
@@ -1233,31 +1249,44 @@ function rebuildUrlCodeDatalists() {
 }
 
 /**
- * Fetch the GRC event catalog (GET /events) and populate #grcEventKeysDatalist
- * with one option per event (value = event_key, label = "name (event_key)"), so
- * the mobile relative-date anchor field is searchable by event key or by
- * localized name. Best-effort: on failure the datalist is left empty and the
- * field stays free text. Public read → credentials 'omit'.
+ * GRC event catalog names, keyed by event_key, localized to the page locale.
+ * Populated by loadEventCatalog from GET /events. Used as the card-title
+ * fallback for decrees whose liturgical_event has no name of its own (a grade
+ * change references an existing event and carries no translatable name).
+ *
+ * @type {Record<string, string>}
+ */
+let eventCatalogNames = {};
+
+/**
+ * Fetch the GRC event catalog (GET /events) and (a) build the eventCatalogNames
+ * map and (b) populate #grcEventKeysDatalist with one option per event
+ * (value = event_key, label = "name (event_key)"), so the mobile relative-date
+ * anchor field is searchable by event key or by localized name. Best-effort:
+ * on failure the map/datalist are left as-is. Public read → credentials 'omit'.
  */
 async function loadEventCatalog() {
-    const host = document.getElementById('grcEventKeysDatalist');
-    if (!host) return;
     try {
         const data = await fetchJson('GET', '/events', undefined, { 'Accept-Language': config.locale }, 'omit');
         const events = data && Array.isArray(data.litcal_events) ? data.litcal_events : [];
-        const frag = document.createDocumentFragment();
+        const names = {};
+        const host = document.getElementById('grcEventKeysDatalist');
+        const frag = host ? document.createDocumentFragment() : null;
         events.forEach((e) => {
             if (!e || typeof e.event_key !== 'string') return;
-            const opt = document.createElement('option');
-            opt.value = e.event_key;
-            opt.textContent = typeof e.name === 'string' && e.name !== ''
-                ? `${e.name} (${e.event_key})`
-                : e.event_key;
-            frag.appendChild(opt);
+            const hasName = typeof e.name === 'string' && e.name !== '';
+            if (hasName) names[e.event_key] = e.name;
+            if (frag) {
+                const opt = document.createElement('option');
+                opt.value = e.event_key;
+                opt.textContent = hasName ? `${e.name} (${e.event_key})` : e.event_key;
+                frag.appendChild(opt);
+            }
         });
-        host.replaceChildren(frag);
+        eventCatalogNames = names;
+        if (host && frag) host.replaceChildren(frag);
     } catch {
-        // leave the datalist empty; the anchor field remains usable as free text
+        // best-effort: leave the catalog map and datalist as they were
     }
 }
 
@@ -2525,10 +2554,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Editors get the GRC event catalog for the mobile relative-date anchor field.
-    if (capabilities.canEdit) {
-        loadEventCatalog();
-    }
-
+    // The GRC event catalog (anchor datalist + card-title name map) is loaded
+    // inside loadDecrees, so it is available to every viewer before cards render.
     await loadDecrees(container, capabilities);
 });
