@@ -26,6 +26,7 @@ vi.hoisted(() => {
             secondReading: 'Second reading (optional)',
             gospelAcclamation: 'Gospel acclamation',
             gospel: 'Gospel',
+            noReadings: 'No readings defined for this locale yet',
             sinceYear: 'Since %s',
             sourceLink: 'Source',
             managePerms: 'Manage permissions',
@@ -97,19 +98,56 @@ describe('renderDecreeCard: translations toggle gating', () => {
 });
 
 describe('renderDecreeCard: readings panel', () => {
-    it('renders flat readings including the optional second reading', () => {
+    it('renders the page-locale readings in the active tab, including the optional second reading', () => {
         const container = document.createElement('div');
         renderDecreeCard(container, createNewDecree(), CAPS, ['en', 'it']);
-        const panel = container.querySelector('[id^="readings-"]');
-        expect(panel).not.toBeNull();
-        expect(panel.textContent).toContain('Genesis 3: 9-15, 20|Acts 1: 12-14');
-        expect(panel.textContent).toContain('Second reading (optional)');
-        expect(panel.textContent).toContain('Acts 1: 12-14');
+        const activePane = container.querySelector('#readings-MaryMotherChurch_Create-en');
+        expect(activePane).not.toBeNull();
+        expect(activePane.classList.contains('active')).toBe(true);
+        expect(activePane.textContent).toContain('Genesis 3: 9-15, 20|Acts 1: 12-14');
+        expect(activePane.textContent).toContain('Second reading (optional)');
+        expect(activePane.textContent).toContain('Acts 1: 12-14');
         // empty gospel_acclamation is skipped
-        expect(panel.textContent).not.toContain('Gospel acclamation');
+        expect(activePane.textContent).not.toContain('Gospel acclamation');
     });
 
-    it('omits the readings toggle when the event has no readings', () => {
+    it('renders one tab per supported locale, non-active tabs lazy', () => {
+        const container = document.createElement('div');
+        renderDecreeCard(container, createNewDecree(), CAPS, ['en', 'it']);
+        const tabs = [...container.querySelectorAll('[data-bs-toggle="pill"]')];
+        expect(tabs.map((t) => t.textContent)).toEqual(['en', 'it']);
+        const itPane = container.querySelector('#readings-MaryMotherChurch_Create-it');
+        expect(itPane).not.toBeNull();
+        expect(itPane.classList.contains('active')).toBe(false);
+        // not fetched until the panel is first expanded
+        expect(itPane.textContent).toBe('…');
+    });
+
+    it('shows a muted note when the page-locale readings are all empty (untranslated locale)', () => {
+        const decree = createNewDecree();
+        decree.liturgical_event.readings = {
+            first_reading: '',
+            responsorial_psalm: '',
+            gospel_acclamation: '',
+            gospel: '',
+        };
+        const container = document.createElement('div');
+        renderDecreeCard(container, decree, CAPS, ['en', 'it']);
+        const activePane = container.querySelector('#readings-MaryMotherChurch_Create-en');
+        expect(activePane.textContent).toBe('No readings defined for this locale yet');
+    });
+
+    it('still shows the readings toggle for a createNew decree whose page-locale readings are missing', () => {
+        const decree = createNewDecree();
+        delete decree.liturgical_event.readings;
+        const container = document.createElement('div');
+        renderDecreeCard(container, decree, CAPS, ['en', 'it']);
+        expect(container.querySelector('[data-bs-target^="#readings-"]')).not.toBeNull();
+        const activePane = container.querySelector('#readings-MaryMotherChurch_Create-en');
+        expect(activePane.textContent).toBe('No readings defined for this locale yet');
+    });
+
+    it('omits the readings toggle for non-createNew decrees without readings', () => {
         const container = document.createElement('div');
         renderDecreeCard(container, gradeChangeDecree(), CAPS, ['en', 'it']);
         expect(container.querySelector('[data-bs-target^="#readings-"]')).toBeNull();

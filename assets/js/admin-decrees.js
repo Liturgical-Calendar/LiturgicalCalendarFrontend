@@ -250,15 +250,49 @@ function showAlert(container, type, message) {
     container.appendChild(div);
 }
 
-// ---- translations panel ---------------------------------------------------
+// ---- per-locale decree fetch cache ----------------------------------------
 
 /**
- * Translation cache: decree_id → locale → localized name.
- * The request-locale entry is pre-populated from the list response.
+ * Per-locale liturgical_event cache: decree_id → locale → Promise<object|null>.
+ * Shared by the translations and readings panels so a decree's representation
+ * in a given locale is fetched at most once, no matter which panel asks first.
  *
- * @type {Map<string, Map<string, string>>}
+ * @type {Map<string, Map<string, Promise<object|null>>>}
  */
-const translationCache = new Map();
+const eventLocaleCache = new Map();
+
+/**
+ * Fetch a decree's liturgical_event as localized for the given locale,
+ * deduplicating concurrent and repeated requests via eventLocaleCache.
+ * A failed fetch is evicted from the cache so a later expand can retry.
+ *
+ * @param {string} decreeId
+ * @param {string} locale
+ * @returns {Promise<object|null>}
+ */
+function fetchEventForLocale(decreeId, locale) {
+    if (!eventLocaleCache.has(decreeId)) {
+        eventLocaleCache.set(decreeId, new Map());
+    }
+    const perDecree = eventLocaleCache.get(decreeId);
+    if (!perDecree.has(locale)) {
+        // Per-locale decree fetch is public — omit credentials. DecreesHandler serves
+        // wildcard ACAO, and browsers reject wildcard ACAO on credentialed requests.
+        const promise = fetchJson('GET', `/decrees/${encodeURIComponent(decreeId)}`, undefined, {
+            'Accept-Language': locale,
+        }, 'omit').then((data) => (
+            data && typeof data === 'object'
+                && data.liturgical_event && typeof data.liturgical_event === 'object'
+                ? data.liturgical_event
+                : null
+        ));
+        promise.catch(() => perDecree.delete(locale));
+        perDecree.set(locale, promise);
+    }
+    return perDecree.get(locale);
+}
+
+// ---- translations panel ---------------------------------------------------
 
 /**
  * Populate the translations collapsible panel with the available locales.
@@ -272,13 +306,6 @@ const translationCache = new Map();
  * @param {string[]}      allLocales All supported locales to offer
  */
 function buildTranslationsPanel(panel, decreeId, reqLocale, reqName, allLocales) {
-    // Pre-populate request-locale in cache
-    if (!translationCache.has(decreeId)) {
-        translationCache.set(decreeId, new Map());
-    }
-    const cache = translationCache.get(decreeId);
-    cache.set(reqLocale, reqName);
-
     const list = document.createElement('ul');
     list.className = 'list-group list-group-flush';
     panel.appendChild(list);
@@ -321,26 +348,8 @@ function buildTranslationsPanel(panel, decreeId, reqLocale, reqName, allLocales)
         if (fetched) return;
         fetched = true;
         otherLocales.forEach((locale) => {
-            if (cache.has(locale)) {
-                const el = localeItems.get(locale);
-                if (el) {
-                    el.className = '';
-                    el.textContent = cache.get(locale);
-                }
-                return;
-            }
-            // Per-locale decree fetch is public — omit credentials. DecreesHandler serves
-            // wildcard ACAO, and browsers reject wildcard ACAO on credentialed requests.
-            fetchJson('GET', `/decrees/${encodeURIComponent(decreeId)}`, undefined, {
-                'Accept-Language': locale,
-            }, 'omit').then((data) => {
-                const name = data
-                    && typeof data === 'object'
-                    && data.liturgical_event
-                    && typeof data.liturgical_event.name === 'string'
-                    ? data.liturgical_event.name
-                    : '';
-                cache.set(locale, name);
+            fetchEventForLocale(decreeId, locale).then((event) => {
+                const name = event && typeof event.name === 'string' ? event.name : '';
                 const el = localeItems.get(locale);
                 if (el) {
                     el.className = '';
@@ -360,56 +369,137 @@ function buildTranslationsPanel(panel, decreeId, reqLocale, reqName, allLocales)
 // ---- readings panel -------------------------------------------------------
 
 /**
- * Build the lectionary readings collapsible panel.
+ * Render the flat readings fields of one locale into a tab pane,
+ * replacing any previous content (placeholder spinner or stale data).
+ * Empty fields are skipped; an entirely empty locale gets a muted note.
  *
- * Handles both flat shape {first_reading?, responsorial_psalm?, gospel_acclamation?, gospel?}
- * (from a GET response) and locale-keyed shape {locale: {first_reading?, ...}}
- * (from a prior write round-trip).
- *
- * @param {HTMLElement} panel
- * @param {Record<string, unknown>} readings  The readings object (flat or locale-keyed)
+ * @param {HTMLElement} pane
+ * @param {Record<string, unknown>|null|undefined} readings  Flat readings object for one locale
  */
-function buildReadingsPanel(panel, readings) {
+function renderReadingsFields(pane, readings) {
+    pane.replaceChildren();
     const dl = document.createElement('dl');
     dl.className = 'row mb-0';
-
-    const isFlat = 'first_reading' in readings || 'responsorial_psalm' in readings
-                   || 'gospel_acclamation' in readings || 'gospel' in readings;
-
-    const renderFields = (localeReadings) => {
-        const fields = [
-            [config.i18n.firstReading, localeReadings.first_reading],
-            [config.i18n.responsorialPsalm, localeReadings.responsorial_psalm],
-            [config.i18n.secondReading, localeReadings.second_reading],
-            [config.i18n.gospelAcclamation, localeReadings.gospel_acclamation],
-            [config.i18n.gospel, localeReadings.gospel],
-        ];
-        fields.forEach(([label, value]) => {
-            if (!value) return;
-            const dt = document.createElement('dt');
-            dt.className = 'col-sm-4 fw-normal text-muted';
-            dt.textContent = label;
-            const dd = document.createElement('dd');
-            dd.className = 'col-sm-8';
-            dd.textContent = value;
-            dl.appendChild(dt);
-            dl.appendChild(dd);
-        });
-    };
-
-    if (isFlat) {
-        renderFields(readings);
-    } else {
-        Object.entries(readings).forEach(([locale, localeReadings]) => {
-            if (!localeReadings || typeof localeReadings !== 'object') return;
-            const localeHeader = document.createElement('dt');
-            localeHeader.className = 'col-12 mt-2 text-muted small';
-            localeHeader.textContent = locale;
-            dl.appendChild(localeHeader);
-            renderFields(localeReadings);
-        });
+    const fields = readings && typeof readings === 'object'
+        ? [
+            [config.i18n.firstReading, readings.first_reading],
+            [config.i18n.responsorialPsalm, readings.responsorial_psalm],
+            [config.i18n.secondReading, readings.second_reading],
+            [config.i18n.gospelAcclamation, readings.gospel_acclamation],
+            [config.i18n.gospel, readings.gospel],
+        ]
+        : [];
+    fields.forEach(([label, value]) => {
+        if (!value) return;
+        const dt = document.createElement('dt');
+        dt.className = 'col-sm-4 fw-normal text-muted';
+        dt.textContent = label;
+        const dd = document.createElement('dd');
+        dd.className = 'col-sm-8';
+        dd.textContent = value;
+        dl.appendChild(dt);
+        dl.appendChild(dd);
+    });
+    if (dl.children.length === 0) {
+        const note = document.createElement('p');
+        note.className = 'text-muted fst-italic small mb-0';
+        note.textContent = config.i18n.noReadings ?? '—';
+        pane.appendChild(note);
+        return;
     }
-    panel.appendChild(dl);
+    pane.appendChild(dl);
+}
+
+/**
+ * Build the lectionary readings collapsible panel as a per-locale tabbed view.
+ *
+ * The request-locale tab is populated immediately from the list response;
+ * the other locales are fetched lazily (via the shared eventLocaleCache)
+ * the first time the panel is expanded — same pattern as the translations panel.
+ *
+ * @param {HTMLElement} panel
+ * @param {string}      decreeId
+ * @param {string}      reqLocale   Current page locale (readings already fetched)
+ * @param {Record<string, unknown>|null} reqReadings  Flat readings for reqLocale
+ * @param {string[]}    allLocales  All supported locales to offer as tabs
+ */
+function buildReadingsPanel(panel, decreeId, reqLocale, reqReadings, allLocales) {
+    const locales = allLocales.includes(reqLocale) ? allLocales : [reqLocale, ...allLocales];
+    const idBase  = `readings-${CSS.escape(decreeId)}`;
+
+    const nav = document.createElement('ul');
+    nav.className = 'nav nav-pills nav-sm mb-2';
+    nav.setAttribute('role', 'tablist');
+    panel.appendChild(nav);
+
+    const content = document.createElement('div');
+    content.className = 'tab-content';
+    panel.appendChild(content);
+
+    /** @type {Map<string, HTMLElement>} */
+    const localePanes = new Map();
+
+    locales.forEach((locale) => {
+        const active = locale === reqLocale;
+        const paneId = `${idBase}-${CSS.escape(locale)}`;
+
+        const navItem = document.createElement('li');
+        navItem.className = 'nav-item';
+        navItem.setAttribute('role', 'presentation');
+        const tabBtn = document.createElement('button');
+        tabBtn.type = 'button';
+        tabBtn.className = `nav-link py-0 px-2 small${active ? ' active' : ''}`;
+        tabBtn.id = `${paneId}-tab`;
+        tabBtn.setAttribute('data-bs-toggle', 'pill');
+        tabBtn.setAttribute('data-bs-target', `#${paneId}`);
+        tabBtn.setAttribute('role', 'tab');
+        tabBtn.setAttribute('aria-controls', paneId);
+        tabBtn.setAttribute('aria-selected', active ? 'true' : 'false');
+        tabBtn.textContent = locale;
+        navItem.appendChild(tabBtn);
+        nav.appendChild(navItem);
+
+        const pane = document.createElement('div');
+        pane.className = `tab-pane fade${active ? ' show active' : ''}`;
+        pane.id = paneId;
+        pane.setAttribute('role', 'tabpanel');
+        pane.setAttribute('aria-labelledby', `${paneId}-tab`);
+        content.appendChild(pane);
+        localePanes.set(locale, pane);
+
+        if (active) {
+            renderReadingsFields(pane, reqReadings);
+        } else {
+            const placeholder = document.createElement('span');
+            placeholder.className = 'text-muted fst-italic small';
+            placeholder.textContent = '…';
+            pane.appendChild(placeholder);
+        }
+    });
+
+    // Fetch readings for other locales lazily when the panel is first shown
+    let fetched = false;
+    panel.addEventListener('show.bs.collapse', () => {
+        if (fetched) return;
+        fetched = true;
+        locales.filter((l) => l !== reqLocale).forEach((locale) => {
+            fetchEventForLocale(decreeId, locale).then((event) => {
+                const pane = localePanes.get(locale);
+                if (pane) {
+                    renderReadingsFields(pane, event ? event.readings : null);
+                }
+            }).catch(() => {
+                const pane = localePanes.get(locale);
+                if (pane) {
+                    pane.replaceChildren();
+                    const err = document.createElement('span');
+                    err.className = 'text-danger small';
+                    err.textContent = config.i18n.errorText ?? '(error)';
+                    pane.appendChild(err);
+                }
+            });
+        });
+    });
 }
 
 // ---- card rendering helpers -----------------------------------------------
@@ -570,13 +660,15 @@ function buildTranslationsSection(body, decreeId, eventName, allLocales) {
 
 /**
  * Append the readings collapsible section to the card body.
- * Only called when the event has a non-empty readings object.
+ * Called for createNew decrees (readings are guaranteed by the write contract)
+ * and for any other decree whose event carries a readings object.
  *
  * @param {HTMLElement} body
- * @param {object}      readings  The event.readings object
+ * @param {object|null} readings    The event.readings object for the page locale
  * @param {string}      decreeId
+ * @param {string[]}    allLocales  All supported locales, one readings tab each
  */
-function buildReadingsSection(body, readings, decreeId) {
+function buildReadingsSection(body, readings, decreeId, allLocales) {
     const readCollapseId = `readings-${CSS.escape(decreeId)}`;
     const readToggle = document.createElement('button');
     readToggle.type = 'button';
@@ -594,7 +686,13 @@ function buildReadingsSection(body, readings, decreeId) {
     const readCollapse = document.createElement('div');
     readCollapse.className = 'collapse mb-2';
     readCollapse.id = readCollapseId;
-    buildReadingsPanel(readCollapse, readings);
+    buildReadingsPanel(
+        readCollapse,
+        decreeId,
+        config.locale.split('-')[0].toLowerCase(),
+        readings,
+        allLocales
+    );
     body.appendChild(readCollapse);
 }
 
@@ -726,10 +824,13 @@ export function renderDecreeCard(container, decree, capabilities, allLocales) {
         buildTranslationsSection(body, decreeId, eventName, allLocales);
     }
 
-    // ---- readings collapsible (only when readings exist)
-    if (event && event.readings && typeof event.readings === 'object'
-        && Object.keys(event.readings).length > 0) {
-        buildReadingsSection(body, event.readings, decreeId);
+    // ---- readings collapsible: always for createNew decrees (the write contract
+    // guarantees readings exist in at least the base locale, even when the page
+    // locale's translation is still empty), otherwise only when readings exist
+    const hasReadings = event && event.readings && typeof event.readings === 'object'
+        && Object.keys(event.readings).length > 0;
+    if (hasReadings || meta.action === 'createNew') {
+        buildReadingsSection(body, hasReadings ? event.readings : null, decreeId, allLocales);
     }
 
     card.appendChild(buildCardFooter(decreeDate, protocol, metadata, capabilities));

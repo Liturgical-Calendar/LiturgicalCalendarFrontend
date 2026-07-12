@@ -439,6 +439,7 @@ if (!$isAdmin && !$isCalendarEditor) {
                 secondReading:     <?php echo json_encode(_('Second reading (optional)'), JSON_HEX_TAG); ?>,
                 gospelAcclamation: <?php echo json_encode(_('Gospel acclamation'), JSON_HEX_TAG); ?>,
                 gospel:            <?php echo json_encode(_('Gospel'), JSON_HEX_TAG); ?>,
+                noReadings:        <?php echo json_encode(_('No readings defined for this locale yet'), JSON_HEX_TAG); ?>,
                 validationErrors:  <?php echo json_encode(_('Please fix the following errors before saving:'), JSON_HEX_TAG); ?>,
                 sinceYear:         <?php echo json_encode(_('Since %s'), JSON_HEX_TAG); ?>,
                 sourceLink:        <?php echo json_encode(_('Source'), JSON_HEX_TAG); ?>,
