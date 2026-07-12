@@ -258,7 +258,7 @@ $adminPages = [
     'missals-editor',
     'extending',
     'temporale',
-    'decrees',
+    'admin-decrees',
     'admin-users',
     'admin-applications',
     'admin-permissions',

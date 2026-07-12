@@ -143,5 +143,8 @@ if ('admin-applications' === $pageName) {
 if (file_exists("assets/js/{$pageName}.js")) {
     // Admin modules use the base factory, so they're regular scripts, not modules
     $scriptType = 'admin-applications' === $pageName ? '' : ' type="module"';
-    echo "<script{$scriptType} src=\"assets/js/{$pageName}.js\"></script>";
+    // filemtime cache-busting: browsers cache module scripts aggressively;
+    // without this, a rebuilt container can serve fresh HTML with stale JS
+    $scriptVersion = filemtime("assets/js/{$pageName}.js");
+    echo "<script{$scriptType} src=\"assets/js/{$pageName}.js?v={$scriptVersion}\"></script>";
 }

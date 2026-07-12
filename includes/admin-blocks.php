@@ -30,12 +30,12 @@ $adminBlocks = [
     ],
     [
         'id'          => 'decrees',
-        'icon'        => 'fa-gavel',
+        'icon'        => 'fa-scroll',
         'color'       => 'warning',
         'title'       => _('Decrees'),
         'description' => _('Congregation for Divine Worship decrees'),
-        'viewUrl'     => 'decrees.php',
-        'editUrl'     => 'decrees.php?edit=1',
+        'viewUrl'     => 'admin-decrees.php',
+        'editUrl'     => 'admin-decrees.php',
         'permission'  => 'decrees:write'
     ],
     [

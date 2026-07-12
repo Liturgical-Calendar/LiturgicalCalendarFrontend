@@ -264,8 +264,8 @@ asort($langsAssoc);
                                 <i class="sb-nav-link-icon fas fa-fw fa-book-open text-success"></i>
                                 <span><?php echo _('Sanctorale'); ?></span>
                             </a>
-                            <a class="nav-link<?php echo $currentPage === 'decrees' ? ' active' : ''; ?>" href="decrees.php">
-                                <i class="sb-nav-link-icon fas fa-fw fa-gavel text-warning"></i>
+                            <a class="nav-link<?php echo $currentPage === 'admin-decrees' ? ' active' : ''; ?>" href="admin-decrees.php">
+                                <i class="sb-nav-link-icon fas fa-fw fa-scroll text-warning"></i>
                                 <span><?php echo _('Decrees'); ?></span>
                             </a>
 

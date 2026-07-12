@@ -626,6 +626,19 @@ document.addEventListener('DOMContentLoaded', function() {
             loadPermissions();
         });
 
+        // Apply deep-link filters from URL query params before loading
+        (function applyDeepLinkFilters() {
+            const params = new URLSearchParams(window.location.search);
+            const qObjectType = params.get('object_type');
+            const qObjectId   = params.get('object_id');
+            if (qObjectType && filterObjectType) {
+                filterObjectType.value = qObjectType;
+            }
+            if (qObjectId && filterObjectId) {
+                filterObjectId.value = qObjectId;
+            }
+        })();
+
         // Load user map and then permissions on page load
         loadUserMap().then(loadPermissions);
     }
