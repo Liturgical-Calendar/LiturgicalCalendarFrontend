@@ -1500,6 +1500,35 @@ function addReadingsGroup(container, locale) {
  *   readings: Record<string, {first_reading: string, responsorial_psalm: string, second_reading?: string, gospel_acclamation: string, gospel: string}>
  * }}
  */
+/**
+ * Detect duplicate ISO codes among the url_lang_map rows (only when the
+ * multilingual switch is on). collectFormValues keys url_lang_map by ISO, so a
+ * repeated ISO would silently overwrite the earlier row's Vatican code; surface
+ * it as a blocking validation error instead.
+ *
+ * @param {HTMLElement} root  The form (or a wrapper)
+ * @returns {string[]}  one error message per duplicated ISO code
+ */
+export function findUrlLangDuplicateErrors(root) {
+    const multilangEl = root.querySelector('[name="url_multilang"]');
+    if (!multilangEl || !multilangEl.checked) return [];
+    const seen  = new Set();
+    const dupes = new Set();
+    root.querySelectorAll('.url-lang-row').forEach((row) => {
+        const isoEl = row.querySelector('[name="url_lang_iso[]"]');
+        const iso   = isoEl ? isoEl.value.trim().toLowerCase() : '';
+        if (!/^[a-z]{2}$/.test(iso)) return;
+        if (seen.has(iso)) {
+            dupes.add(iso);
+        } else {
+            seen.add(iso);
+        }
+    });
+    return [...dupes].map(
+        (iso) => `Duplicate language code "${iso}" in the source URL languages — each language may appear only once`
+    );
+}
+
 export function collectFormValues(root) {
     /** @param {string} name @returns {string} */
     const val = (name) => {
@@ -2217,7 +2246,13 @@ function wireEditorActions(form, saveBtn, alertBox, baseLocale, isCreate, capabi
                 alertBox.replaceChildren();
                 const formValues = collectFormValues(form);
                 const payload    = buildDecreePayload(formValues);
-                const errors     = validateDecreePayload(payload, baseLocale, isCreate);
+                // Duplicate url_lang_map ISO rows collapse silently in
+                // collectFormValues (later overwrites earlier), so surface them
+                // as a blocking validation error before submission.
+                const errors     = [
+                    ...findUrlLangDuplicateErrors(form),
+                    ...validateDecreePayload(payload, baseLocale, isCreate),
+                ];
 
                 if (errors.length > 0) {
                     const alertDiv = document.createElement('div');

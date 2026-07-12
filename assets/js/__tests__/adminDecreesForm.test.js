@@ -64,6 +64,7 @@ import {
     aggregateUrlCodeSuggestions,
     prefillI18nRows,
     prefillReadingsGroups,
+    findUrlLangDuplicateErrors,
 } from '../admin-decrees.js';
 import { DecreeAction } from '../DecreePayload.js';
 
@@ -564,6 +565,29 @@ describe('collectFormValues — url_lang_map', () => {
         const form = buildUrlForm({ multilang: true, rows: [['en', 'en'], ['', 'xx'], ['it', '']] });
         const v = collectFormValues(form);
         expect(v.url_lang_map).toEqual({ en: 'en' });
+    });
+});
+
+describe('findUrlLangDuplicateErrors', () => {
+    it('flags each ISO code used by more than one row', () => {
+        const form = buildUrlForm({
+            multilang: true,
+            rows: [['de', 'ge'], ['de', 'tedesca'], ['en', 'en'], ['pt', 'po'], ['pt', 'pt']],
+        });
+        const errors = findUrlLangDuplicateErrors(form);
+        expect(errors).toHaveLength(2);
+        expect(errors.some((e) => e.includes('"de"'))).toBe(true);
+        expect(errors.some((e) => e.includes('"pt"'))).toBe(true);
+    });
+
+    it('returns no errors when every ISO is unique', () => {
+        const form = buildUrlForm({ multilang: true, rows: [['de', 'ge'], ['en', 'en'], ['it', 'it']] });
+        expect(findUrlLangDuplicateErrors(form)).toEqual([]);
+    });
+
+    it('returns no errors when the multilingual switch is off', () => {
+        const form = buildUrlForm({ multilang: false, rows: [['de', 'ge'], ['de', 'tedesca']] });
+        expect(findUrlLangDuplicateErrors(form)).toEqual([]);
     });
 });
 
