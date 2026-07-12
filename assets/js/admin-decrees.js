@@ -1583,9 +1583,9 @@ export function findUrlLangDuplicateErrors(root) {
             seen.add(iso);
         }
     });
-    return [...dupes].map(
-        (iso) => `Duplicate language code "${iso}" in the source URL languages — each language may appear only once`
-    );
+    const template = config.i18n.duplicateLangCode
+        ?? 'Duplicate language code "%s" in the source URL languages — each language may appear only once';
+    return [...dupes].map((iso) => template.replace('%s', iso));
 }
 
 export function collectFormValues(root) {

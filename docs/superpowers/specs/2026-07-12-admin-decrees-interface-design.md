@@ -172,6 +172,26 @@ Selecting an action reveals exactly the blocks that action's payload allows:
 | `setProperty:name`  |               |        |       | ✓                   |                  |
 | `setProperty:grade` |               |        | ✓     |                     |                  |
 
+### Event details — fixed vs mobile date (createNew)
+
+A `createNew` event is positioned either by a **fixed** date (month + day) or as a **mobile** event with a
+relative date. A fixed/mobile radio toggles between:
+
+- **Fixed:** month and day number inputs.
+- **Mobile:** three structured inputs that build the relative-date object
+  `{ day_of_the_week, relative_time, event_key }` — never a free-text/JSON string:
+  - **day_of_the_week** — a `<select>` whose *values* are the English weekday names (the schema enum,
+    `Sunday`…`Saturday`) and whose *labels* are localized in the UI locale (server-rendered via
+    `IntlDateFormatter`).
+  - **relative_time** — a `<select>` of `before` / `after`.
+  - **event_key** — a datalist-backed input (`#grcEventKeysDatalist`) populated from the GRC event catalog
+    (`GET /events`), searchable by event key or localized name. The anchor is usually a temporale movable
+    feast (Pentecost, Easter, …); those are present because `/events` now includes the Temporale (see the
+    API companion spec).
+
+  All three are required for a mobile `createNew` (client-validated); the payload's `liturgical_event`
+  carries `strtotime` as the object and omits `month`/`day`.
+
 ### Translations (i18n) rows — GRC-live minimum + all defined
 
 - A locked **base row** for the page locale, plus one row per additional locale.
@@ -257,6 +277,8 @@ exported for testing.
 | Create / update / delete                        | `PUT`/`PATCH`/`DELETE /decrees/{id}` (JWT+FGA)   |
 | Capability detection (self-check)               | `GET /admin/permissions/check`                   |
 | GRC-live locale minimum                         | `GET /calendars` `litcal_metadata.locales`       |
+| Mobile relative-date anchor catalog             | `GET /events` (sanctorale + temporale anchors)   |
+| Persisting a translation in a new locale        | write path creates the missing sidecar file      |
 
 ## Conventions and gotchas
 
@@ -270,15 +292,18 @@ exported for testing.
 
 ## Decisions log
 
-| Decision                       | Choice                                                            |
-| ------------------------------ | ----------------------------------------------------------------- |
-| `decree_id` editability        | Derived from `event_key`+action; read-only hint, hidden field     |
-| Grade-change suffix            | Always `_Upgrade` (no downgrades yet; widening deferred)          |
-| Immutable identity on edit     | `event_key` + `action` shown as static hints, not disabled fields |
-| Source URL placement           | Below description                                                 |
-| `url_lang_map` language picker | ISO 639-1 datalist (any language), not GRC-restricted             |
-| `url_lang_map` token field     | Free text with dynamic per-language suggestion datalist           |
-| Duplicate `url_lang_map` ISO   | Blocking validation error at save                                 |
-| Translation/readings locales   | GRC-live minimum (empty rows) + all defined; any locale addable   |
-| Editor translation source      | Aggregated single-GET, with per-locale probing fallback           |
-| Manage-permissions link        | Page-level (resource-scoped), not per card                        |
+| Decision                       | Choice                                                                   |
+| ------------------------------ | ------------------------------------------------------------------------ |
+| `decree_id` editability        | Derived from `event_key`+action; read-only hint, hidden field            |
+| Grade-change suffix            | Always `_Upgrade` (no downgrades yet; widening deferred)                 |
+| Immutable identity on edit     | `event_key` + `action` shown as static hints, not disabled fields        |
+| Source URL placement           | Below description                                                        |
+| `url_lang_map` language picker | ISO 639-1 datalist (any language), not GRC-restricted                    |
+| `url_lang_map` token field     | Free text with dynamic per-language suggestion datalist                  |
+| Duplicate `url_lang_map` ISO   | Blocking validation error at save                                        |
+| Translation/readings locales   | GRC-live minimum (empty rows) + all defined; any locale addable          |
+| Editor translation source      | Aggregated single-GET, with per-locale probing fallback                  |
+| Manage-permissions link        | Page-level (resource-scoped), not per card                               |
+| Mobile date input              | Three structured fields (dow/relative/anchor), not a strtotime string    |
+| Weekday select                 | English values (schema enum), labels localized via `IntlDateFormatter`   |
+| Anchor event_key picker        | Datalist from `GET /events` (incl. temporale), searchable by key or name |

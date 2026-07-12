@@ -41,6 +41,7 @@ vi.hoisted(() => {
             selectLocale:      'Select locale',
             removeRow:         'Remove',
             langCodeVatican:   'Vatican URL code',
+            duplicateLangCode: 'Duplicate language code "%s" — each language may appear only once',
             firstReading:      'First reading',
             responsorialPsalm: 'Responsorial psalm',
             secondReading:     'Second reading (optional)',

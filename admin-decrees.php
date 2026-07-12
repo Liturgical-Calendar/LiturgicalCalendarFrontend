@@ -563,6 +563,8 @@ if (!$isAdmin && !$isCalendarEditor) {
                 gospel:            <?php echo json_encode(_('Gospel'), JSON_HEX_TAG); ?>,
                 noReadings:        <?php echo json_encode(_('No readings defined for this locale yet'), JSON_HEX_TAG); ?>,
                 langCodeVatican:   <?php echo json_encode(_('Vatican URL code (e.g. ge, sp, po)'), JSON_HEX_TAG); ?>,
+                <?php // %s is the duplicated ISO 639-1 language code ?>
+                duplicateLangCode: <?php echo json_encode(_('Duplicate language code "%s" in the source URL languages — each language may appear only once'), JSON_HEX_TAG); ?>,
                 validationErrors:  <?php echo json_encode(_('Please fix the following errors before saving:'), JSON_HEX_TAG); ?>,
                 sinceYear:         <?php echo json_encode(_('Since %s'), JSON_HEX_TAG); ?>,
                 sourceLink:        <?php echo json_encode(_('Source'), JSON_HEX_TAG); ?>,
