@@ -380,6 +380,7 @@ function buildReadingsPanel(panel, readings) {
         const fields = [
             [config.i18n.firstReading, localeReadings.first_reading],
             [config.i18n.responsorialPsalm, localeReadings.responsorial_psalm],
+            [config.i18n.secondReading, localeReadings.second_reading],
             [config.i18n.gospelAcclamation, localeReadings.gospel_acclamation],
             [config.i18n.gospel, localeReadings.gospel],
         ];
@@ -545,32 +546,38 @@ export function renderDecreeCard(container, decree, capabilities, allLocales) {
         body.appendChild(descEl);
     }
 
-    // ---- translations collapsible
-    const transCollapseId = `trans-${CSS.escape(decreeId)}`;
-    const transToggle = document.createElement('button');
-    transToggle.type = 'button';
-    transToggle.className = 'btn btn-sm btn-outline-secondary me-2 mb-2';
-    transToggle.setAttribute('data-bs-toggle', 'collapse');
-    transToggle.setAttribute('data-bs-target', `#${transCollapseId}`);
-    transToggle.setAttribute('aria-expanded', 'false');
-    transToggle.setAttribute('aria-controls', transCollapseId);
-    const transIcon = document.createElement('i');
-    transIcon.className = 'fas fa-language me-1';
-    transToggle.appendChild(transIcon);
-    transToggle.appendChild(document.createTextNode(config.i18n.translations));
-    body.appendChild(transToggle);
+    // ---- translations collapsible (only for name-bearing decrees: a grade
+    // change does not touch the event name, so there is nothing to translate)
+    const meta = decree.metadata || {};
+    const nameBearing = meta.action === 'createNew' || meta.action === 'makeDoctor'
+        || ( meta.action === 'setProperty' && meta.property === 'name' );
+    if (nameBearing) {
+        const transCollapseId = `trans-${CSS.escape(decreeId)}`;
+        const transToggle = document.createElement('button');
+        transToggle.type = 'button';
+        transToggle.className = 'btn btn-sm btn-outline-secondary me-2 mb-2';
+        transToggle.setAttribute('data-bs-toggle', 'collapse');
+        transToggle.setAttribute('data-bs-target', `#${transCollapseId}`);
+        transToggle.setAttribute('aria-expanded', 'false');
+        transToggle.setAttribute('aria-controls', transCollapseId);
+        const transIcon = document.createElement('i');
+        transIcon.className = 'fas fa-language me-1';
+        transToggle.appendChild(transIcon);
+        transToggle.appendChild(document.createTextNode(config.i18n.translations));
+        body.appendChild(transToggle);
 
-    const transCollapse = document.createElement('div');
-    transCollapse.className = 'collapse mb-2';
-    transCollapse.id = transCollapseId;
-    buildTranslationsPanel(
-        transCollapse,
-        decreeId,
-        config.locale.split('-')[0].toLowerCase(),
-        eventName,
-        allLocales
-    );
-    body.appendChild(transCollapse);
+        const transCollapse = document.createElement('div');
+        transCollapse.className = 'collapse mb-2';
+        transCollapse.id = transCollapseId;
+        buildTranslationsPanel(
+            transCollapse,
+            decreeId,
+            config.locale.split('-')[0].toLowerCase(),
+            eventName,
+            allLocales
+        );
+        body.appendChild(transCollapse);
+    }
 
     // ---- readings collapsible (only when readings exist)
     if (event && event.readings && typeof event.readings === 'object'

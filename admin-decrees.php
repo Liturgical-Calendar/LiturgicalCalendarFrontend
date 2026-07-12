@@ -461,7 +461,7 @@ if (!$isAdmin && !$isCalendarEditor) {
             }
         };
     </script>
-    <script type="module" src="assets/js/admin-decrees.js"></script>
+    <script type="module" src="assets/js/admin-decrees.js?v=<?php echo filemtime(__DIR__ . '/assets/js/admin-decrees.js'); ?>"></script>
 
     <?php include_once('./layout/footer.php'); ?>
 </body>
