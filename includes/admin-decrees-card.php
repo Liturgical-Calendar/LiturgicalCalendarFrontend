@@ -1,10 +1,6 @@
 <?php
 
 /**
- * @var bool $isAdmin Defined by the including page (admin-dashboard.php).
- */
-
-/**
  * "Decrees" dashboard card.
  * Rendered from admin-dashboard.php for both global admins (inside the admin
  * blocks grid) and scoped calendar_editors (in their own Administration section),
@@ -16,6 +12,7 @@
  */
 
 ?>
+
 <div class="col-12 col-md-6 col-lg-4 mb-4">
     <div class="card admin-block shadow h-100 border-dark">
         <div class="card-body text-center d-flex flex-column">

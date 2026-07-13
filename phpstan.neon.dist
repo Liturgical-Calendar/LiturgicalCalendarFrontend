@@ -64,7 +64,6 @@ parameters:
             message: '#Variable \$isAdmin might not be defined\.#'
             paths:
                 - includes/admin-blocks.php
-                - includes/admin-decrees-card.php
         -
             message: '#Variable \$authHelper might not be defined\.#'
             paths:
