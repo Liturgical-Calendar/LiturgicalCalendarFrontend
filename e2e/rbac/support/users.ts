@@ -4,7 +4,7 @@ export interface RbacUser {
     id: string;
     email: string;
     password: string;
-    role: 'admin' | 'calendar_editor';
+    role: 'admin' | 'calendar_editor' | 'test_editor';
     fga: { relation: RbacRelation; objectType: string; objectId: string } | null;
 }
 
@@ -26,6 +26,8 @@ export const USERS: Record<string, RbacUser> = {
     'grc-editor': mk('grc-editor', 'calendar_editor', { relation: 'editor', objectType: 'general_roman_calendar', objectId: 'temporale' }),
     'europe-admin': mk('europe-admin', 'calendar_editor', { relation: 'admin', objectType: 'wider_region', objectId: 'Europe' }),
     'europe-editor': mk('europe-editor', 'calendar_editor', { relation: 'editor', objectType: 'wider_region', objectId: 'Europe' }),
+    'tests-editor': mk('tests-editor', 'test_editor', { relation: 'editor', objectType: 'national_calendar_test', objectId: 'IT' }),
+    'tests-editor-noscope': mk('tests-editor-noscope', 'test_editor', null),
 };
 
 export const REGISTRATION_USER_IDS = ['cei-admin', 'usccb-editor'];
