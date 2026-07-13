@@ -2,13 +2,11 @@
 
 /**
  * "Decrees" dashboard card.
- * Rendered from admin-dashboard.php for both global admins (inside the admin
- * blocks grid) and scoped calendar_editors (in their own Administration section),
- * so the markup lives here once instead of being duplicated per branch.
+ * Rendered from admin-dashboard.php for scoped calendar_editors in their own Administration section.
+ * The markup lives here instead of being duplicated per branch.
  *
- * Visibility is now decided server-side in admin-dashboard.php via
+ * Visibility is decided server-side in admin-dashboard.php via
  * AuthHelper::canViewResource('general_roman_calendar', 'decrees').
- * Global admins always see the card.
  */
 
 ?>
