@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-12 21:13+0000\n"
+"POT-Creation-Date: 2026-07-14 11:34+0000\n"
 "PO-Revision-Date: 2026-06-26 20:52+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
@@ -1325,16 +1325,16 @@ msgstr "Administracija"
 msgid "Dashboard"
 msgstr "Nadzorna ploča"
 
-#: layout/header.php:261 includes/admin-blocks.php:15 admin-permissions.php:392
+#: layout/header.php:261 includes/admin-blocks.php:19 admin-permissions.php:392
 #: permission-requests.php:243 temporale.php:24 temporale.php:37
 msgid "Temporale"
 msgstr "Prolazni dio"
 
-#: layout/header.php:265 includes/admin-blocks.php:25
+#: layout/header.php:265 includes/admin-blocks.php:35
 msgid "Sanctorale"
 msgstr "Svetkovine"
 
-#: layout/header.php:269 includes/admin-blocks.php:35
+#: layout/header.php:269 includes/admin-blocks.php:45
 msgid "Decrees"
 msgstr "Dekreti"
 
@@ -1343,17 +1343,17 @@ msgid "Particular Calendars"
 msgstr "Posebni kalendari"
 
 #. translators: label for wider region calendar name field
-#: layout/header.php:281 includes/messages.php:206 includes/admin-blocks.php:45
+#: layout/header.php:281 includes/messages.php:206 includes/admin-blocks.php:59
 #: admin-permissions.php:81 admin-permissions.php:308 admin-permissions.php:389
 #: permission-requests.php:237
 msgid "Wider Region"
 msgstr "Šira regija"
 
-#: layout/header.php:285 includes/admin-blocks.php:55
+#: layout/header.php:285 includes/admin-blocks.php:69
 msgid "National"
 msgstr "Nacionalni"
 
-#: layout/header.php:289 includes/admin-blocks.php:65
+#: layout/header.php:289 includes/admin-blocks.php:79
 msgid "Diocesan"
 msgstr "Biskupijski"
 
@@ -2162,35 +2162,35 @@ msgstr "Sljedeće"
 msgid "Diocesan calendar definition"
 msgstr "Definicija dijecezanskog kalendara"
 
-#: includes/admin-blocks.php:16
+#: includes/admin-blocks.php:20
 msgid "Proprium de Tempore - temporal cycle events"
 msgstr "Proprium de Tempore - događaji vremenskog ciklusa"
 
-#: includes/admin-blocks.php:26
+#: includes/admin-blocks.php:36
 msgid "Proprium de Sanctis - Roman Missal editions"
 msgstr "Proprium de Sanctis - izdanja Rimskog misala"
 
-#: includes/admin-blocks.php:36
+#: includes/admin-blocks.php:46
 msgid "Congregation for Divine Worship decrees"
 msgstr "Dekreti Kongregacije za bogoštovlje"
 
-#: includes/admin-blocks.php:46
+#: includes/admin-blocks.php:60
 msgid "Shared events for geographical regions"
 msgstr "Zajednički događaji za geografske regije"
 
-#: includes/admin-blocks.php:56
+#: includes/admin-blocks.php:70
 msgid "National calendars by Bishops Conferences"
 msgstr "Nacionalni kalendari po biskupskim konferencijama"
 
-#: includes/admin-blocks.php:66
+#: includes/admin-blocks.php:80
 msgid "Diocesan calendars by liturgical offices"
 msgstr "Biskupijski kalendari od liturgijskih ureda"
 
-#: includes/admin-blocks.php:83
+#: includes/admin-blocks.php:101
 msgid "View"
 msgstr "Pogled"
 
-#: includes/admin-blocks.php:84 developer-dashboard.php:269
+#: includes/admin-blocks.php:102 developer-dashboard.php:269
 msgid "Edit"
 msgstr "Uredi"
 
@@ -2564,7 +2564,7 @@ msgstr "Povjerljive informacije"
 msgid "Date"
 msgstr "Datum"
 
-#: admin-permissions.php:439 admin-applications.php:245 admin-dashboard.php:164
+#: admin-permissions.php:439 admin-applications.php:245 admin-dashboard.php:168
 msgid "Review"
 msgstr "Pregled"
 
@@ -2819,8 +2819,8 @@ msgstr ""
 "Upravljanje podacima liturgijskog kalendara, informacije Rimskog misala i "
 "regionalni kalendari."
 
-#: admin-dashboard.php:65 admin-dashboard.php:129 admin-dashboard.php:139
-#: admin-dashboard.php:149
+#: admin-dashboard.php:65 admin-dashboard.php:129 admin-dashboard.php:143
+#: admin-dashboard.php:153
 msgid "Administration"
 msgstr "Administracija"
 
@@ -2848,11 +2848,11 @@ msgstr "Pregled i odobrenje prijava za razvojne programere"
 msgid "Manage fine-grained resource permissions"
 msgstr "Upravljanje dozvolama za resurse s finom granulacijom"
 
-#: admin-dashboard.php:158
+#: admin-dashboard.php:162
 msgid "Access Requests to Review"
 msgstr "Zahtjevi za pristup na pregled"
 
-#: admin-dashboard.php:160
+#: admin-dashboard.php:164
 msgid "Review and approve access requests for the resources you administer"
 msgstr "Pregledaj i odobri zahtjeve za pristup resursima kojima upravljaš"
 

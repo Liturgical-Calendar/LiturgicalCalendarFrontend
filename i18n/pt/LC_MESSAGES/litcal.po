@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-12 21:13+0000\n"
+"POT-Creation-Date: 2026-07-14 11:34+0000\n"
 "PO-Revision-Date: 2026-06-26 20:52+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
@@ -1344,16 +1344,16 @@ msgstr "Administração"
 msgid "Dashboard"
 msgstr "Painel de Controle"
 
-#: layout/header.php:261 includes/admin-blocks.php:15 admin-permissions.php:392
+#: layout/header.php:261 includes/admin-blocks.php:19 admin-permissions.php:392
 #: permission-requests.php:243 temporale.php:24 temporale.php:37
 msgid "Temporale"
 msgstr "Próprio do Tempo"
 
-#: layout/header.php:265 includes/admin-blocks.php:25
+#: layout/header.php:265 includes/admin-blocks.php:35
 msgid "Sanctorale"
 msgstr "Santoral"
 
-#: layout/header.php:269 includes/admin-blocks.php:35
+#: layout/header.php:269 includes/admin-blocks.php:45
 msgid "Decrees"
 msgstr "Decretos"
 
@@ -1362,17 +1362,17 @@ msgid "Particular Calendars"
 msgstr "Calendários particulares"
 
 #. translators: label for wider region calendar name field
-#: layout/header.php:281 includes/messages.php:206 includes/admin-blocks.php:45
+#: layout/header.php:281 includes/messages.php:206 includes/admin-blocks.php:59
 #: admin-permissions.php:81 admin-permissions.php:308 admin-permissions.php:389
 #: permission-requests.php:237
 msgid "Wider Region"
 msgstr "Região mais ampla"
 
-#: layout/header.php:285 includes/admin-blocks.php:55
+#: layout/header.php:285 includes/admin-blocks.php:69
 msgid "National"
 msgstr "Nacional"
 
-#: layout/header.php:289 includes/admin-blocks.php:65
+#: layout/header.php:289 includes/admin-blocks.php:79
 msgid "Diocesan"
 msgstr "Diocesano"
 
@@ -2181,35 +2181,35 @@ msgstr "Próximo"
 msgid "Diocesan calendar definition"
 msgstr "Definição de calendário diocesano"
 
-#: includes/admin-blocks.php:16
+#: includes/admin-blocks.php:20
 msgid "Proprium de Tempore - temporal cycle events"
 msgstr "Proprium de Tempore - eventos do ciclo temporal"
 
-#: includes/admin-blocks.php:26
+#: includes/admin-blocks.php:36
 msgid "Proprium de Sanctis - Roman Missal editions"
 msgstr "Proprium de Sanctis - edições do Missal Romano"
 
-#: includes/admin-blocks.php:36
+#: includes/admin-blocks.php:46
 msgid "Congregation for Divine Worship decrees"
 msgstr "Decretos da Congregação para o Culto Divino"
 
-#: includes/admin-blocks.php:46
+#: includes/admin-blocks.php:60
 msgid "Shared events for geographical regions"
 msgstr "Eventos compartilhados para as regiões geográficas"
 
-#: includes/admin-blocks.php:56
+#: includes/admin-blocks.php:70
 msgid "National calendars by Bishops Conferences"
 msgstr "Calendários nacionais por Conferências Episcopais"
 
-#: includes/admin-blocks.php:66
+#: includes/admin-blocks.php:80
 msgid "Diocesan calendars by liturgical offices"
 msgstr "Calendários diocesanos por escritórios litúrgicos"
 
-#: includes/admin-blocks.php:83
+#: includes/admin-blocks.php:101
 msgid "View"
 msgstr "Visualizar"
 
-#: includes/admin-blocks.php:84 developer-dashboard.php:269
+#: includes/admin-blocks.php:102 developer-dashboard.php:269
 msgid "Edit"
 msgstr "Editar"
 
@@ -2583,7 +2583,7 @@ msgstr "Credenciais"
 msgid "Date"
 msgstr "Data"
 
-#: admin-permissions.php:439 admin-applications.php:245 admin-dashboard.php:164
+#: admin-permissions.php:439 admin-applications.php:245 admin-dashboard.php:168
 msgid "Review"
 msgstr "Revisão"
 
@@ -2842,8 +2842,8 @@ msgstr ""
 "Gerenciar dados do calendário litúrgico, informações do Missal Romano e "
 "calendários regionais."
 
-#: admin-dashboard.php:65 admin-dashboard.php:129 admin-dashboard.php:139
-#: admin-dashboard.php:149
+#: admin-dashboard.php:65 admin-dashboard.php:129 admin-dashboard.php:143
+#: admin-dashboard.php:153
 msgid "Administration"
 msgstr "Administração"
 
@@ -2871,11 +2871,11 @@ msgstr "Revisar e aprovar aplicativos de desenvolvedores"
 msgid "Manage fine-grained resource permissions"
 msgstr "Gerenciar permissões granulares de recursos"
 
-#: admin-dashboard.php:158
+#: admin-dashboard.php:162
 msgid "Access Requests to Review"
 msgstr "Solicitações de acesso a analisar"
 
-#: admin-dashboard.php:160
+#: admin-dashboard.php:164
 msgid "Review and approve access requests for the resources you administer"
 msgstr "Analise e aprove as solicitações de acesso aos recursos que administra"
 
