@@ -19,8 +19,15 @@ import { USERS } from './support/users';
  *   2. Moves the request row to the 'revoked' status tab on admin-permissions.php.
  *   3. Shows the revoked badge on the requester's permission-requests.php.
  *   4. Does NOT remove the Zitadel calendar_editor role — so cei-editor still
- *      reaches admin-dashboard.php and sees all six calendar blocks (no scope-
- *      based card hiding: same behaviour documented in scenario 07).
+ *      reaches admin-dashboard.php throughout (before grant, after grant, and
+ *      after revoke). Per #399's relation-aware card gating (includes/admin-
+ *      blocks.php), cei-editor's only possible FGA grant is editor@
+ *      national_calendar:IT, which carries no viewer-or-above relation on
+ *      general_roman_calendar — so the temporale and decrees blocks are hidden
+ *      for cei-editor at every point in this lifecycle. The four unconditional
+ *      blocks (sanctorale/widerregion/national/diocesan) remain visible
+ *      throughout, unaffected by the grant/revoke (same matrix documented in
+ *      scenario 07).
  *
  * Preconditions (created on-demand):
  *   - cei-admin: Zitadel calendar_editor role, FGA admin@national_calendar:IT
@@ -39,13 +46,40 @@ import { USERS } from './support/users';
  *   dropdown.
  */
 
-const CALENDAR_BLOCK_IDS = [
-    'temporale', 'sanctorale', 'decrees', 'widerregion', 'national', 'diocesan',
+const ALWAYS_VISIBLE_BLOCK_IDS = [
+    'sanctorale', 'widerregion', 'national', 'diocesan',
 ] as const;
+
+const RELATION_GATED_BLOCK_IDS = ['temporale', 'decrees'] as const;
+
+// Asserts the #399 card matrix for cei-editor: the four unconditional blocks are
+// visible and temporale/decrees are hidden, regardless of the editor@
+// national_calendar:IT grant's lifecycle state (absent, active, or revoked) —
+// that grant never carries a general_roman_calendar relation.
+async function assertCeiEditorCardMatrix(browser: Parameters<typeof actingAs>[0]): Promise<void> {
+    const { context, page } = await actingAs(browser, 'cei-editor');
+    try {
+        await page.goto('/admin-dashboard.php');
+        await expect(page.locator('.admin-dashboard-heading')).toBeVisible();
+        for (const id of ALWAYS_VISIBLE_BLOCK_IDS) {
+            await expect(page.locator(`.admin-block[data-block-id="${id}"]`)).toBeVisible();
+        }
+        for (const id of RELATION_GATED_BLOCK_IDS) {
+            await expect(page.locator(`.admin-block[data-block-id="${id}"]`)).toHaveCount(0);
+        }
+    } finally {
+        await context.close();
+    }
+}
 
 test('09 — revoke-after-grant: FGA tuple removed and request shows revoked status', async ({ browser }) => {
     // ── Precondition: seed cei-admin (IT admin) ───────────────────────────────
     await seedAndLogin('cei-admin');
+
+    // ── Precondition check: before any grant, cei-editor already sees the #399
+    // matrix (temporale/decrees hidden) — establishes the baseline the grant/
+    // revoke lifecycle below must not disturb.
+    await assertCeiEditorCardMatrix(browser);
 
     // ── Step 1: cei-editor submits request for editor@national_calendar:IT ────
     const ceied = await actingAs(browser, 'cei-editor');
@@ -77,6 +111,11 @@ test('09 — revoke-after-grant: FGA tuple removed and request shows revoked sta
     expect(
         await new Fga().check(`user:${ceiEditorId}`, 'editor', 'national_calendar:IT'),
     ).toBe(true);
+
+    // ── Post-grant check: with the editor@national_calendar:IT tuple now active,
+    // the #399 matrix is unchanged — that relation doesn't touch
+    // general_roman_calendar, so temporale/decrees stay hidden.
+    await assertCeiEditorCardMatrix(browser);
 
     // ── Step 4: cei-admin revokes the grant ───────────────────────────────────
     const ceiadm2 = await actingAs(browser, 'cei-admin');
@@ -134,17 +173,18 @@ test('09 — revoke-after-grant: FGA tuple removed and request shows revoked sta
 
     // ── Step 9: Secondary — cei-editor still reaches dashboard (role intact) ──
     // Revoking the FGA tuple does NOT remove the Zitadel calendar_editor role.
-    // cei-editor therefore still passes the dashboard gate and sees all six
-    // calendar blocks (no scope-based card hiding — matches scenario 07 matrix).
+    // cei-editor therefore still passes the dashboard gate. Per #399, temporale
+    // and decrees remain hidden after revoke (cei-editor never held a relation
+    // on general_roman_calendar — only editor@national_calendar:IT, which was
+    // just revoked); the four unconditional blocks stay visible.
+    await assertCeiEditorCardMatrix(browser);
+
+    // The resource-admin "Access Requests to Review" card must NOT appear
+    // (cei-editor holds no admin FGA tuple).
     const ceied3 = await actingAs(browser, 'cei-editor');
     try {
         await ceied3.page.goto('/admin-dashboard.php');
         await expect(ceied3.page.locator('.admin-dashboard-heading')).toBeVisible();
-        for (const id of CALENDAR_BLOCK_IDS) {
-            await expect(ceied3.page.locator(`.admin-block[data-block-id="${id}"]`)).toBeVisible();
-        }
-        // The resource-admin "Access Requests to Review" card must NOT appear
-        // (cei-editor holds no admin FGA tuple).
         await expect(ceied3.page.locator('.admin-block:has(i.fa-inbox)')).toHaveCount(0);
     } finally {
         await ceied3.context.close();

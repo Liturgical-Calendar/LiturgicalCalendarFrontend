@@ -57,3 +57,14 @@ parameters:
                 - translations.php
                 - usage.php
                 - user-profile.php
+        # Included blocks pass variables from their includer (e.g., admin-blocks.php uses
+        # $isAdmin and $authHelper from admin-dashboard.php). PHPStan cannot detect this
+        # since it doesn't execute include statements. These are FALSE POSITIVES.
+        -
+            message: '#Variable \$isAdmin might not be defined\.#'
+            paths:
+                - includes/admin-blocks.php
+        -
+            message: '#Variable \$authHelper might not be defined\.#'
+            paths:
+                - includes/admin-blocks.php

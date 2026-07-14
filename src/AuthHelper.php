@@ -51,6 +51,12 @@ class AuthHelper
      * @var array{is_resource_admin: bool, admin_scopes: array<int, array{object_type: string, object_id: string}>}|null
      */
     private ?array $adminScopesResult = null;
+    /**
+     * Memoized dashboard-scopes result for this request.
+     *
+     * @var array{is_global_admin: bool, is_resource_admin: bool, admin_scopes: array<int, array{object_type: string, object_id: string}>, viewer_scopes: array<string, list<string>>}|null
+     */
+    private ?array $dashboardScopesResult = null;
 
     /**
      * Private constructor - use getInstance() to get the singleton
@@ -332,6 +338,64 @@ class AuthHelper
     }
 
     /**
+     * The caller's batched dashboard capability scopes, resolved once per request
+     * from GET /auth/dashboard-scopes (server-side, using the caller's session
+     * cookies). Lazy: the API is only contacted on first use. Fails closed.
+     *
+     * @return array{is_global_admin: bool, is_resource_admin: bool, admin_scopes: array<int, array{object_type: string, object_id: string}>, viewer_scopes: array<string, list<string>>}
+     */
+    public function dashboardScopes(): array
+    {
+        if ($this->dashboardScopesResult !== null) {
+            return $this->dashboardScopesResult;
+        }
+
+        if (!$this->isAuthenticated) {
+            return $this->dashboardScopesResult = [
+                'is_global_admin'   => false,
+                'is_resource_admin' => false,
+                'admin_scopes'      => [],
+                'viewer_scopes'     => [],
+            ];
+        }
+
+        $internalUrl = $_ENV['API_INTERNAL_URL'] ?? getenv('API_INTERNAL_URL') ?: null;
+        $apiBaseUrl  = $internalUrl ? rtrim($internalUrl, '/') : ApiConfig::getInstance()->apiBaseUrl;
+
+        return $this->dashboardScopesResult = self::fetchDashboardScopes($apiBaseUrl, self::buildCookieHeader());
+    }
+
+    /**
+     * Whether the caller can view (viewer-or-above) a specific OpenFGA object.
+     * Global admins (Zitadel role) always can — no API call is made for them.
+     */
+    public function canViewResource(string $objectType, string $objectId): bool
+    {
+        if ($this->hasRole('admin')) {
+            return true;
+        }
+        return in_array($objectId, $this->dashboardScopes()['viewer_scopes'][$objectType] ?? [], true);
+    }
+
+    /**
+     * Whether the caller can view (viewer-or-above) ANY object of any of the
+     * given OpenFGA object types. Global admins always can.
+     */
+    public function canViewAnyResourceOfType(string ...$objectTypes): bool
+    {
+        if ($this->hasRole('admin')) {
+            return true;
+        }
+        $viewerScopes = $this->dashboardScopes()['viewer_scopes'];
+        foreach ($objectTypes as $type) {
+            if (( $viewerScopes[$type] ?? [] ) !== []) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Resolve (and memoize) the admin-scopes result for this request.
      *
      * @return array{is_resource_admin: bool, admin_scopes: array<int, array{object_type: string, object_id: string}>}
@@ -428,6 +492,78 @@ class AuthHelper
         return [
             'is_resource_admin' => ( $data['is_resource_admin'] ?? false ) === true,
             'admin_scopes'      => $scopes,
+        ];
+    }
+
+    /**
+     * Fetch and parse GET /auth/dashboard-scopes. Fails closed on any error.
+     *
+     * @param string $apiBaseUrl Base API URL (no trailing slash)
+     * @param string|null $cookieHeader Cookie header forwarding the caller's session
+     * @param \GuzzleHttp\Client|null $client Injectable client (tests)
+     * @return array{is_global_admin: bool, is_resource_admin: bool, admin_scopes: array<int, array{object_type: string, object_id: string}>, viewer_scopes: array<string, list<string>>}
+     */
+    public static function fetchDashboardScopes(
+        string $apiBaseUrl,
+        ?string $cookieHeader,
+        ?\GuzzleHttp\Client $client = null
+    ): array {
+        $failClosed = [
+            'is_global_admin'   => false,
+            'is_resource_admin' => false,
+            'admin_scopes'      => [],
+            'viewer_scopes'     => [],
+        ];
+
+        $client ??= new \GuzzleHttp\Client(['timeout' => 5, 'connect_timeout' => 2, 'http_errors' => true]);
+
+        $headers = ['Accept' => 'application/json'];
+        if ($cookieHeader !== null) {
+            $headers['Cookie'] = $cookieHeader;
+        }
+
+        try {
+            $response = $client->get("{$apiBaseUrl}/auth/dashboard-scopes", ['headers' => $headers]);
+            $data     = json_decode((string) $response->getBody(), true);
+        } catch (\Throwable) {
+            return $failClosed;
+        }
+
+        if (!is_array($data)) {
+            return $failClosed;
+        }
+
+        $adminScopes = [];
+        if (isset($data['admin_scopes']) && is_array($data['admin_scopes'])) {
+            foreach ($data['admin_scopes'] as $scope) {
+                if (
+                    is_array($scope)
+                    && isset($scope['object_type'], $scope['object_id'])
+                    && is_string($scope['object_type'])
+                    && is_string($scope['object_id'])
+                ) {
+                    $adminScopes[] = ['object_type' => $scope['object_type'], 'object_id' => $scope['object_id']];
+                }
+            }
+        }
+
+        $viewerScopes = [];
+        if (isset($data['viewer_scopes']) && is_array($data['viewer_scopes'])) {
+            foreach ($data['viewer_scopes'] as $type => $ids) {
+                if (!is_string($type) || !is_array($ids)) {
+                    continue;
+                }
+                $viewerScopes[$type] = array_values(array_filter($ids, 'is_string'));
+            }
+        }
+
+        // Strict, fail-closed booleans: only an explicit JSON `true` counts,
+        // mirroring fetchAdminScopes().
+        return [
+            'is_global_admin'   => ( $data['is_global_admin'] ?? false ) === true,
+            'is_resource_admin' => ( $data['is_resource_admin'] ?? false ) === true,
+            'admin_scopes'      => $adminScopes,
+            'viewer_scopes'     => $viewerScopes,
         ];
     }
 
