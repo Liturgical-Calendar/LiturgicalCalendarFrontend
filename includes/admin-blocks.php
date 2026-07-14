@@ -5,6 +5,10 @@
  *
  * Renders the 6 admin section blocks for the unified admin dashboard.
  * Each block displays a title, description, count badge, and action buttons.
+ *
+ * Expects the following variables to be defined by the including page:
+ * - $isAdmin (bool): Whether the current user has the admin role.
+ * - $authHelper (AuthHelper): Authentication and authorization helper instance.
  */
 
 $adminBlocks = [
@@ -16,7 +20,13 @@ $adminBlocks = [
         'description' => _('Proprium de Tempore - temporal cycle events'),
         'viewUrl'     => 'temporale.php',
         'editUrl'     => 'temporale.php?edit=1',
-        'permission'  => 'temporale:write'
+        'permission'  => 'temporale:write',
+        // Relation-aware gating (#399): non-admins need the calendar_editor role AND
+        // viewer-or-above on general_roman_calendar:temporale.
+        'visible'     => $isAdmin || (
+            $authHelper->hasRole('calendar_editor')
+            && $authHelper->canViewResource('general_roman_calendar', 'temporale')
+        )
     ],
     [
         'id'          => 'sanctorale',
@@ -36,7 +46,11 @@ $adminBlocks = [
         'description' => _('Congregation for Divine Worship decrees'),
         'viewUrl'     => 'admin-decrees.php',
         'editUrl'     => 'admin-decrees.php',
-        'permission'  => 'decrees:write'
+        'permission'  => 'decrees:write',
+        'visible'     => $isAdmin || (
+            $authHelper->hasRole('calendar_editor')
+            && $authHelper->canViewResource('general_roman_calendar', 'decrees')
+        )
     ],
     [
         'id'          => 'widerregion',
@@ -71,6 +85,10 @@ $adminBlocks = [
 ];
 
 foreach ($adminBlocks as $block) {
+    if (( $block['visible'] ?? true ) === false) {
+        continue;
+    }
+
     $id          = htmlspecialchars($block['id'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     $icon        = htmlspecialchars($block['icon'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     $color       = htmlspecialchars($block['color'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');

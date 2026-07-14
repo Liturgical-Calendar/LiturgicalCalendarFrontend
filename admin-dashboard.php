@@ -123,7 +123,7 @@ if (!$hasCalendarRole) {
     </div>
     <?php endif; ?>
 
-    <?php if (!$isAdmin && $authHelper->hasRole('calendar_editor')) : ?>
+    <?php if (!$isAdmin && $authHelper->hasRole('calendar_editor') && $authHelper->canViewResource('general_roman_calendar', 'decrees')) : ?>
     <hr class="my-4">
     <h4 class="mb-3 text-black" style="--bs-text-opacity: .6;">
         <i class="fas fa-user-shield me-2"></i><?php echo htmlspecialchars(_('Administration'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
@@ -133,7 +133,11 @@ if (!$hasCalendarRole) {
     </div>
     <?php endif; ?>
 
-    <?php if (!$isAdmin && $authHelper->hasRole('test_editor')) : ?>
+    <?php if (
+    !$isAdmin
+    && $authHelper->hasRole('test_editor')
+    && $authHelper->canViewAnyResourceOfType('national_calendar_test', 'diocesan_calendar_test', 'general_roman_calendar_test')
+) : ?>
     <hr class="my-4">
     <h4 class="mb-3 text-black" style="--bs-text-opacity: .6;">
         <i class="fas fa-user-shield me-2"></i><?php echo htmlspecialchars(_('Administration'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
@@ -143,7 +147,7 @@ if (!$hasCalendarRole) {
     </div>
     <?php endif; ?>
 
-    <?php if (!$isAdmin && $authHelper->isResourceAdmin()) : ?>
+    <?php if (!$isAdmin && $authHelper->dashboardScopes()['is_resource_admin']) : ?>
     <hr class="my-4">
     <h4 class="mb-3 text-black" style="--bs-text-opacity: .6;">
         <i class="fas fa-user-shield me-2"></i><?php echo htmlspecialchars(_('Administration'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>

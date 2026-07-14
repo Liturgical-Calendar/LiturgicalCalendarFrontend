@@ -15,8 +15,7 @@ import { USERS } from './support/users';
  * durable DOM (data-block-id / href / icon-class locators), not text/toasts.
  *
  * ── Pinned selectors (derived from admin-dashboard.php + includes/admin-blocks.php) ──
- *   Calendar section (includes/admin-blocks.php, ALWAYS rendered for any calendar-role
- *   holder — see the gate below): six cards, each
+ *   Calendar section (includes/admin-blocks.php): six possible cards, each
  *       .admin-block[data-block-id="<id>"]
  *   with ids: temporale, sanctorale, decrees, widerregion, national, diocesan.
  *
@@ -25,44 +24,45 @@ import { USERS } from './support/users';
  *       a[href="admin-users.php"]          (only in the $isAdmin block)
  *       a[href="admin-applications.php"]   (only in the $isAdmin block)
  *   `a[href="admin-permissions.php"]` is NOT unique — it also backs the resource-admin
- *   review card (L160) — so it is deliberately not used to identify the global section.
+ *   review card (L167) — so it is deliberately not used to identify the global section.
  *
- *   Resource-admin review card (admin-dashboard.php L143, gated on
- *   `!$isAdmin && $authHelper->isResourceAdmin()`): the only `.admin-block` carrying the
- *   fa-inbox icon →
+ *   Resource-admin review card (admin-dashboard.php L150, gated on
+ *   `!$isAdmin && $authHelper->dashboardScopes()['is_resource_admin']`): the only
+ *   `.admin-block` carrying the fa-inbox icon →
  *       .admin-block:has(i.fa-inbox)        ("Access Requests to Review")
  *
- * ── Gating (admin-dashboard.php) ──
+ * ── Gating (admin-dashboard.php + includes/admin-blocks.php) ──
  *   - L15  unauthenticated            → redirect to index.php
  *   - L24  $hasCalendarRole = admin | calendar_editor | test_editor
  *   - L29  !$hasCalendarRole          → redirect to developer-dashboard.php
- *           ⇒ every user that REACHES the dashboard renders ALL SIX calendar cards.
  *   - L62  $isAdmin                   → global admin section (admin-users/applications/…)
- *   - L143 !$isAdmin && isResourceAdmin() → single "Access Requests to Review" card
- *   `isResourceAdmin()` (src/AuthHelper.php) is true when the user holds an `admin` FGA
- *   tuple on ANY resource (national/diocesan/general_roman/wider_region). All *-admin
- *   users hold such a tuple; cei-editor holds none (editor grants are earned via UI).
+ *   - L150 !$isAdmin && dashboardScopes()['is_resource_admin'] → "Access Requests to
+ *          Review" card
  *
- * ── Empirically-confirmed per-user matrix (durable DOM) ──
- *   user          | 6 calendar cards | global admin section | review card (fa-inbox)
- *   --------------|------------------|----------------------|-----------------------
- *   super-admin   | visible          | VISIBLE              | hidden (gated on !$isAdmin)
- *   cei-admin     | visible          | hidden               | VISIBLE
- *   cei-editor    | visible          | hidden               | hidden
- *   usccb-admin   | visible          | hidden               | VISIBLE
- *   grc-admin     | visible          | hidden               | VISIBLE
- *   europe-admin  | visible          | hidden               | VISIBLE
+ *   admin-blocks.php (#399, relation-aware gating): sanctorale/widerregion/national/
+ *   diocesan render unconditionally for any calendar-role holder. temporale and decrees,
+ *   however, are each independently narrowed to:
+ *       $isAdmin || ($authHelper->hasRole('calendar_editor') && canViewResource(...))
+ *   i.e. non-admins additionally need viewer-or-above on
+ *   general_roman_calendar:temporale (for the Temporale card) and
+ *   general_roman_calendar:decrees (for the Decrees card). `isResourceAdmin()`
+ *   (src/AuthHelper.php, via dashboardScopes()) is true when the user holds an `admin`
+ *   FGA tuple on ANY resource (national/diocesan/general_roman/wider_region).
  *
- * ── NOTE on "scope narrowing" (IT vs USA, romamo_it, GRC, Europe) ──
- *   The dashboard does NOT narrow calendar-CARD visibility by scope. admin-blocks.php
- *   renders all six cards unconditionally for every calendar-role holder, and the
- *   client JS (assets/js/admin-dashboard.js) only toggles per-card EDIT BUTTONS /
- *   COUNT BADGES, never the cards themselves. So cei-admin (IT), usccb-admin (US),
- *   grc-admin and europe-admin all see an IDENTICAL set of cards — scope enforcement
- *   lives downstream (extending.php / the API), not in card visibility. This spec
- *   therefore asserts the real, observable behaviour and explicitly verifies that all
- *   resource-admins see the same card set (no scope-based card hiding), rather than a
- *   per-scope card subset that the running app does not implement.
+ * ── NOTE on scope narrowing (issue #399) ──
+ *   Prior to #399, the dashboard did not narrow calendar-CARD visibility by scope at
+ *   all — all six cards rendered unconditionally for every calendar-role holder. The
+ *   server-side `/auth/dashboard-scopes` endpoint (AuthHelper::dashboardScopes()) now
+ *   narrows Temporale and Decrees specifically: a calendar_editor whose only FGA
+ *   relation is on a national/diocesan/wider_region object (e.g. cei-admin on IT,
+ *   usccb-admin on US, europe-admin on Europe) holds no viewer-or-above relation on
+ *   general_roman_calendar, so temporale and decrees are both hidden for them. Only
+ *   grc-admin (admin@general_roman_calendar:temporale) satisfies the Temporale gate —
+ *   an `admin` relation on an FGA object also satisfies viewer-or-above self-checks —
+ *   but even grc-admin's tuple is scoped to the `temporale` object id, not `decrees`,
+ *   so decrees remains hidden for grc-admin too. The remaining four blocks
+ *   (sanctorale/widerregion/national/diocesan) are unaffected by #399 and stay
+ *   role-gated only, so they render for every user in the matrix below.
  *
  * Preconditions (seeded by rbac-setup): super-admin, cei-editor, usccb-admin,
  *   grc-admin, europe-admin (.auth/<id>.json each).
@@ -70,8 +70,6 @@ import { USERS } from './support/users';
  *   rbac-setup; seedAndLogin provisions it (Zitadel account + admin@IT tuple + .auth),
  *   and afterAll purges it.
  */
-
-const CALENDAR_BLOCK_IDS = ['temporale', 'sanctorale', 'decrees', 'widerregion', 'national', 'diocesan'] as const;
 
 const SEL = {
     heading: '.admin-dashboard-heading',
@@ -82,17 +80,24 @@ const SEL = {
 } as const;
 
 interface Expected {
+    visibleBlocks: readonly string[];
+    hiddenBlocks: readonly string[];
     globalAdminSection: boolean; // Users + Applications cards ($isAdmin block)
     reviewCard: boolean; // "Access Requests to Review" (!$isAdmin && isResourceAdmin)
 }
 
+const ALWAYS_VISIBLE = ['sanctorale', 'widerregion', 'national', 'diocesan'] as const;
+
 const MATRIX: Record<string, Expected> = {
-    'super-admin': { globalAdminSection: true, reviewCard: false },
-    'cei-admin': { globalAdminSection: false, reviewCard: true },
-    'cei-editor': { globalAdminSection: false, reviewCard: false },
-    'usccb-admin': { globalAdminSection: false, reviewCard: true },
-    'grc-admin': { globalAdminSection: false, reviewCard: true },
-    'europe-admin': { globalAdminSection: false, reviewCard: true },
+    // Global admin: role bypasses all FGA gates — all six blocks.
+    'super-admin': { visibleBlocks: [...ALWAYS_VISIBLE, 'temporale', 'decrees'], hiddenBlocks: [], globalAdminSection: true, reviewCard: false },
+    // calendar_editors WITHOUT any general_roman_calendar relation: temporale + decrees hidden.
+    'cei-admin': { visibleBlocks: [...ALWAYS_VISIBLE], hiddenBlocks: ['temporale', 'decrees'], globalAdminSection: false, reviewCard: true },
+    'cei-editor': { visibleBlocks: [...ALWAYS_VISIBLE], hiddenBlocks: ['temporale', 'decrees'], globalAdminSection: false, reviewCard: false },
+    'usccb-admin': { visibleBlocks: [...ALWAYS_VISIBLE], hiddenBlocks: ['temporale', 'decrees'], globalAdminSection: false, reviewCard: true },
+    // admin@general_roman_calendar:temporale → temporale visible (viewer via admin), decrees still hidden.
+    'grc-admin': { visibleBlocks: [...ALWAYS_VISIBLE, 'temporale'], hiddenBlocks: ['decrees'], globalAdminSection: false, reviewCard: true },
+    'europe-admin': { visibleBlocks: [...ALWAYS_VISIBLE], hiddenBlocks: ['temporale', 'decrees'], globalAdminSection: false, reviewCard: true },
 };
 
 async function assertMatrix(page: Page, expected: Expected): Promise<void> {
@@ -102,9 +107,11 @@ async function assertMatrix(page: Page, expected: Expected): Promise<void> {
     // index.php / developer-dashboard.php) before asserting card visibility.
     await expect(page.locator(SEL.heading)).toBeVisible();
 
-    // All six calendar cards render for every calendar-role holder (no scope hiding).
-    for (const id of CALENDAR_BLOCK_IDS) {
+    for (const id of expected.visibleBlocks) {
         await expect(page.locator(SEL.calendarBlock(id))).toBeVisible();
+    }
+    for (const id of expected.hiddenBlocks) {
+        await expect(page.locator(SEL.calendarBlock(id))).toHaveCount(0);
     }
 
     // Global admin section (global FGA-tuple management): super-admin only.
