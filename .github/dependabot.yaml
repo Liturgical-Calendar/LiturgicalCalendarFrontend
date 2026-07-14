@@ -26,6 +26,16 @@ updates:
     target-branch: "development"
     labels:
       - "github-actions"
+    # Batch all action bumps into a single PR. Dependabot treats each action
+    # subpath (github/codeql-action/init, /autobuild, /analyze) as a separate
+    # dependency, so without a group each gets its own PR — and a lone
+    # codeql-action bump can never pass CI: the CodeQL workflow refuses to run
+    # mixed versions ("Loaded a configuration file for version X, but running
+    # version Y"). All three must bump together.
+    groups:
+      github-actions:
+        patterns:
+          - "*"
 
   # npm/Yarn devDependencies (eslint, playwright, typescript, markdownlint-cli2, …).
   # Yarn Berry is supported via package.json + yarn.lock. A bump of
