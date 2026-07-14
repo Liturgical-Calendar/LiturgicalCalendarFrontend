@@ -778,7 +778,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (state.editing) {
                 await fetchJson('PATCH', `/tests/${encodeURIComponent(state.editing)}`, payload);
             } else {
-                await fetchJson('PUT', '/tests', payload);
+                await fetchJson('PUT', `/tests/${encodeURIComponent(payload.name)}`, payload);
             }
             editorModal.hide();
             await loadTests();

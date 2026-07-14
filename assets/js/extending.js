@@ -500,22 +500,15 @@ const sanitizeProxiedAPI = {
         }
         switch (prop) {
             case 'path':
-                // the path will be set based on the method, category and key parameters
-                if (target.hasOwnProperty('method') && target['method'] === 'PUT') {
-                    if (target.hasOwnProperty('category') && target['category'] !== '') {
-                        value = `${RegionalDataUrl}/${target['category']}`;
-                    } else {
-                        value = `${RegionalDataUrl}`;
-                    }
+                // the path is based on category and key parameters, regardless of method
+                // (PUT creation now also targets a per-item URL: /{category}/{key})
+                if (target.hasOwnProperty('category') && target['category'] !== '' && target.hasOwnProperty('key') && target['key'] !== '') {
+                    value = `${RegionalDataUrl}/${target['category']}/${target['key']}`;
+                }
+                else if (target.hasOwnProperty('category') && target['category'] !== '') {
+                    value = `${RegionalDataUrl}/${target['category']}`;
                 } else {
-                    if (target.hasOwnProperty('category') && target['category'] !== '' && target.hasOwnProperty('key') && target['key'] !== '') {
-                        value = `${RegionalDataUrl}/${target['category']}/${target['key']}`;
-                    }
-                    else if (target.hasOwnProperty('category') && target['category'] !== '') {
-                        value = `${RegionalDataUrl}/${target['category']}`;
-                    } else {
-                        value = `${RegionalDataUrl}`;
-                    }
+                    value = `${RegionalDataUrl}`;
                 }
                 break;
             case 'category':
@@ -523,15 +516,13 @@ const sanitizeProxiedAPI = {
                     console.error(`property 'category' of this object must be one of the values 'widerregion', 'nation', or 'diocese'`);
                     return;
                 }
-                if (target.hasOwnProperty('method') && target['method'] === 'PUT') {
+                // the path is based on category and key, regardless of method
+                // (PUT creation now also targets a per-item URL: /{category}/{key})
+                if (target.hasOwnProperty('key') && target['key'] !== '') {
+                    target['path'] = `${RegionalDataUrl}/${value}/${target['key']}`;
+                }
+                else {
                     target['path'] = `${RegionalDataUrl}/${value}`;
-                } else {
-                    if (target.hasOwnProperty('key') && target['key'] !== '') {
-                        target['path'] = `${RegionalDataUrl}/${value}/${target['key']}`;
-                    }
-                    else {
-                        target['path'] = `${RegionalDataUrl}/${value}`;
-                    }
                 }
                 break;
             case 'key':
@@ -565,12 +556,10 @@ const sanitizeProxiedAPI = {
                     return;
                 }
 
+                // the path is based on category and key, regardless of method
+                // (PUT creation now also targets a per-item URL: /{category}/{key})
                 if (target.hasOwnProperty('category') && target['category'] !== '') {
-                    if (target.hasOwnProperty('method') && target['method'] === 'PUT') {
-                        target['path'] = `${RegionalDataUrl}/${target['category']}`;
-                    } else {
-                        target['path'] = `${RegionalDataUrl}/${target['category']}/${value}`;
-                    }
+                    target['path'] = `${RegionalDataUrl}/${target['category']}/${value}`;
                 }
                 break;
             case 'locale':
@@ -584,19 +573,15 @@ const sanitizeProxiedAPI = {
                     console.error(`property 'method=${value}' of this object is not a valid value, possible values are: 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'`);
                     return;
                 }
-                if (value === 'PUT') {
-                    if (target.hasOwnProperty('category') && target['category'] !== '') {
-                        target['path'] = `${RegionalDataUrl}/${target['category']}`;
-                    }
+                // the path is based on category and key, regardless of method
+                // (PUT creation now also targets a per-item URL: /{category}/{key})
+                if (target.hasOwnProperty('category') && target['category'] !== '' && target.hasOwnProperty('key') && target['key'] !== '') {
+                    target['path'] = `${RegionalDataUrl}/${target['category']}/${target['key']}`;
+                }
+                else if (target.hasOwnProperty('category') && target['category'] !== '') {
+                    target['path'] = `${RegionalDataUrl}/${target['category']}`;
                 } else {
-                    if (target.hasOwnProperty('category') && target['category'] !== '' && target.hasOwnProperty('key') && target['key'] !== '') {
-                        target['path'] = `${RegionalDataUrl}/${target['category']}/${target['key']}`;
-                    }
-                    else if (target.hasOwnProperty('category') && target['category'] !== '') {
-                        target['path'] = `${RegionalDataUrl}/${target['category']}`;
-                    } else {
-                        target['path'] = `${RegionalDataUrl}`;
-                    }
+                    target['path'] = `${RegionalDataUrl}`;
                 }
                 break;
             default:
