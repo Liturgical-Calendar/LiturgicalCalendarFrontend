@@ -467,6 +467,24 @@ Promise.all(fetchRequests).then(responses => {
 
 
 /**
+ * Build the RegionalData API path from the current category and key.
+ * The path is based on category and key, regardless of method
+ * (PUT creation also targets a per-item URL: /{category}/{key}).
+ * @param {string} category - the calendar category, or '' when not yet set
+ * @param {string} key - the calendar key, or '' when not yet set
+ * @returns {string} `${RegionalDataUrl}/{category}/{key}`, `${RegionalDataUrl}/{category}`, or `${RegionalDataUrl}`
+ */
+const buildRegionalDataPath = (category = '', key = '') => {
+    if (category !== '' && key !== '') {
+        return `${RegionalDataUrl}/${category}/${key}`;
+    }
+    if (category !== '') {
+        return `${RegionalDataUrl}/${category}`;
+    }
+    return `${RegionalDataUrl}`;
+};
+
+/**
  * Proxy sanitizer for the proxied API object. Sanitizes the values assigned to properties of the proxied API object.
  * @type {Proxy}
  * @prop {function} get - the getter for the proxy
@@ -500,30 +518,14 @@ const sanitizeProxiedAPI = {
         }
         switch (prop) {
             case 'path':
-                // the path is based on category and key parameters, regardless of method
-                // (PUT creation now also targets a per-item URL: /{category}/{key})
-                if (target.hasOwnProperty('category') && target['category'] !== '' && target.hasOwnProperty('key') && target['key'] !== '') {
-                    value = `${RegionalDataUrl}/${target['category']}/${target['key']}`;
-                }
-                else if (target.hasOwnProperty('category') && target['category'] !== '') {
-                    value = `${RegionalDataUrl}/${target['category']}`;
-                } else {
-                    value = `${RegionalDataUrl}`;
-                }
+                value = buildRegionalDataPath(target['category'] ?? '', target['key'] ?? '');
                 break;
             case 'category':
                 if (false === ['widerregion', 'nation', 'diocese'].includes(value)) {
                     console.error(`property 'category' of this object must be one of the values 'widerregion', 'nation', or 'diocese'`);
                     return;
                 }
-                // the path is based on category and key, regardless of method
-                // (PUT creation now also targets a per-item URL: /{category}/{key})
-                if (target.hasOwnProperty('key') && target['key'] !== '') {
-                    target['path'] = `${RegionalDataUrl}/${value}/${target['key']}`;
-                }
-                else {
-                    target['path'] = `${RegionalDataUrl}/${value}`;
-                }
+                target['path'] = buildRegionalDataPath(value, target['key'] ?? '');
                 break;
             case 'key':
                 if (target['category'] === 'widerregion') {
@@ -556,10 +558,9 @@ const sanitizeProxiedAPI = {
                     return;
                 }
 
-                // the path is based on category and key, regardless of method
-                // (PUT creation now also targets a per-item URL: /{category}/{key})
-                if (target.hasOwnProperty('category') && target['category'] !== '') {
-                    target['path'] = `${RegionalDataUrl}/${target['category']}/${value}`;
+                // only derive the path once a category has been set (a bare key has no URL shape)
+                if (( target['category'] ?? '' ) !== '') {
+                    target['path'] = buildRegionalDataPath(target['category'], value);
                 }
                 break;
             case 'locale':
@@ -573,16 +574,7 @@ const sanitizeProxiedAPI = {
                     console.error(`property 'method=${value}' of this object is not a valid value, possible values are: 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'`);
                     return;
                 }
-                // the path is based on category and key, regardless of method
-                // (PUT creation now also targets a per-item URL: /{category}/{key})
-                if (target.hasOwnProperty('category') && target['category'] !== '' && target.hasOwnProperty('key') && target['key'] !== '') {
-                    target['path'] = `${RegionalDataUrl}/${target['category']}/${target['key']}`;
-                }
-                else if (target.hasOwnProperty('category') && target['category'] !== '') {
-                    target['path'] = `${RegionalDataUrl}/${target['category']}`;
-                } else {
-                    target['path'] = `${RegionalDataUrl}`;
-                }
+                target['path'] = buildRegionalDataPath(target['category'] ?? '', target['key'] ?? '');
                 break;
             default:
                 console.error('unexpected property ' + prop + ' of type ' + typeof prop + ' on target of type ' + typeof target);
