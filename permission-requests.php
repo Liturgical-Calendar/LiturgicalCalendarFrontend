@@ -231,6 +231,8 @@ if (!$authHelper->emailVerified) {
                 calendarId: <?php echo json_encode(_('Calendar ID'), $jsonFlags); ?>,
                 selectCalendarScope: <?php echo json_encode(_('Select calendar scope...'), $jsonFlags); ?>,
                 selectCalendarId: <?php echo json_encode(_('Select calendar ID...'), $jsonFlags); ?>,
+                /** translators: shown in place of the calendar dropdown when the calendar list could not be loaded */
+                calendarIdLoadFailed: <?php echo json_encode(_('Could not load calendars — try reloading the page'), $jsonFlags); ?>,
                 // Object type display names
                 nationalCalendar: <?php echo json_encode(_('National Calendar'), $jsonFlags); ?>,
                 diocesanCalendar: <?php echo json_encode(_('Diocesan Calendar'), $jsonFlags); ?>,

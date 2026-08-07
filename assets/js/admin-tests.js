@@ -514,13 +514,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const mount = document.getElementById('testScopeIdMount');
         mount.innerHTML = '';
         if (type === 'national_calendar' || type === 'diocesan_calendar') {
-            const client = await ApiClient.init(apiUrl).catch(() => null);
-            if (!client) return;
-            const filter = type === 'national_calendar'
-                ? CalendarSelectFilter.NATIONAL_CALENDARS
-                : CalendarSelectFilter.DIOCESAN_CALENDARS;
-            const sel = new CalendarSelect(config.locale).filter(filter).allowNull(true).class('form-select').id('testScopeId');
-            sel.appendTo(mount);
+            // See permission-requests.js: swallowing a failure here leaves the
+            // mount empty, which is indistinguishable from "still loading".
+            try {
+                const client = await ApiClient.init(apiUrl).catch(() => null);
+                if (!client) throw new Error('ApiClient initialization failed');
+                const filter = type === 'national_calendar'
+                    ? CalendarSelectFilter.NATIONAL_CALENDARS
+                    : CalendarSelectFilter.DIOCESAN_CALENDARS;
+                const sel = new CalendarSelect(config.locale).filter(filter).allowNull(true).class('form-select').id('testScopeId');
+                sel.appendTo(mount);
+            } catch (err) {
+                console.error(`[admin-tests] Could not build the calendar select for scope type "${type}":`, err);
+                const failed = document.createElement('select');
+                failed.className = 'form-select is-invalid';
+                failed.id = 'testScopeId';
+                failed.disabled = true;
+                failed.dataset.loadFailed = 'true';
+                const opt = document.createElement('option');
+                opt.value = '';
+                opt.textContent = 'Could not load calendars — try reloading the page';
+                opt.selected = true;
+                failed.appendChild(opt);
+                mount.appendChild(failed);
+            }
         }
     }
 
