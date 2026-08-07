@@ -20,7 +20,7 @@ $JAVASCRIPT_EXAMPLE_CONTENTS = <<<EOT
 <script type="importmap">
     {
         "imports": {
-            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@1.4.0/+esm"
+            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@1.5.0/+esm"
         }
     }
 </script>
@@ -73,7 +73,7 @@ $FULLCALENDAR_EXAMPLE_CONTENTS = <<<EOT
             "@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.19",
             "@fullcalendar/list": "https://cdn.skypack.dev/@fullcalendar/list@6.1.19",
             "@fullcalendar/bootstrap5": "https://cdn.skypack.dev/@fullcalendar/bootstrap5@6.1.19",
-            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@1.4.0/+esm"
+            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@1.5.0/+esm"
         }
     }
 </script>
