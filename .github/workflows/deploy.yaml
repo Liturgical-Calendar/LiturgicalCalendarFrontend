@@ -125,7 +125,7 @@ jobs:
           [ "${missing}" -eq 0 ]
 
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ needs.resolve.outputs.ref }}
           persist-credentials: false
@@ -140,7 +140,7 @@ jobs:
       # deploy the same examples revision and deploys stay reproducible; the repo
       # has no release tags. Bump this SHA to roll examples forward.
       - name: Checkout examples repo
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: Liturgical-Calendar/examples
           ref: 04c7fa436bb049e59546267518ac3dd72bff58c4 # main @ 2026-07-07
