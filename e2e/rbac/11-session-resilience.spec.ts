@@ -68,7 +68,7 @@ const API_REPO = process.env.API_REPO_PATH || path.resolve(__dirname, '../../../
  * of the existing definition. Copied from scenario 10.
  */
 function buildItNationalPayload(): Record<string, unknown> {
-    const itDir = path.join(API_REPO, 'jsondata', 'sourcedata', 'calendars', 'nations', 'IT');
+    const itDir = path.join(API_REPO, 'jsondata', 'sourcedata', 'rite', 'roman', 'calendars', 'nations', 'IT');
     const def = JSON.parse(fs.readFileSync(path.join(itDir, 'IT.json'), 'utf8'));
     const i18nIt = JSON.parse(fs.readFileSync(path.join(itDir, 'i18n', 'it_IT.json'), 'utf8'));
     return {
