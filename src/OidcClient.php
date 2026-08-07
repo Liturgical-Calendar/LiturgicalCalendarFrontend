@@ -7,6 +7,7 @@ namespace LiturgicalCalendar\Frontend;
 use Firebase\JWT\CachedKeySet;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
@@ -274,17 +275,13 @@ class OidcClient
                     'code_verifier' => $codeVerifier,
                 ],
             ]);
+        } catch (BadResponseException $e) {
+            $errorResponse = $e->getResponse();
+            $statusCode    = $errorResponse->getStatusCode();
+            $body          = $errorResponse->getBody()->getContents();
+            throw new \RuntimeException("Token exchange failed (HTTP {$statusCode}): {$body}", 0, $e);
         } catch (RequestException $e) {
-            $message = 'Token exchange failed';
-            if ($e->hasResponse()) {
-                $response   = $e->getResponse();
-                $statusCode = $response->getStatusCode();
-                $body       = $response->getBody()->getContents();
-                $message    = "Token exchange failed (HTTP {$statusCode}): {$body}";
-            } else {
-                $message = 'Token exchange failed: ' . $e->getMessage();
-            }
-            throw new \RuntimeException($message, 0, $e);
+            throw new \RuntimeException('Token exchange failed: ' . $e->getMessage(), 0, $e);
         }
 
         $body   = $response->getBody()->getContents();
@@ -330,17 +327,13 @@ class OidcClient
                     'refresh_token' => $refreshToken,
                 ],
             ]);
+        } catch (BadResponseException $e) {
+            $errorResponse = $e->getResponse();
+            $statusCode    = $errorResponse->getStatusCode();
+            $body          = $errorResponse->getBody()->getContents();
+            throw new \RuntimeException("Token refresh failed (HTTP {$statusCode}): {$body}", 0, $e);
         } catch (RequestException $e) {
-            $message = 'Token refresh failed';
-            if ($e->hasResponse()) {
-                $response   = $e->getResponse();
-                $statusCode = $response->getStatusCode();
-                $body       = $response->getBody()->getContents();
-                $message    = "Token refresh failed (HTTP {$statusCode}): {$body}";
-            } else {
-                $message = 'Token refresh failed: ' . $e->getMessage();
-            }
-            throw new \RuntimeException($message, 0, $e);
+            throw new \RuntimeException('Token refresh failed: ' . $e->getMessage(), 0, $e);
         }
 
         $body   = $response->getBody()->getContents();
@@ -478,17 +471,13 @@ class OidcClient
                     'Authorization' => 'Bearer ' . $accessToken,
                 ]),
             ]);
+        } catch (BadResponseException $e) {
+            $errorResponse = $e->getResponse();
+            $statusCode    = $errorResponse->getStatusCode();
+            $body          = $errorResponse->getBody()->getContents();
+            throw new \RuntimeException("Failed to fetch user info (HTTP {$statusCode}): {$body}", 0, $e);
         } catch (RequestException $e) {
-            $message = 'Failed to fetch user info';
-            if ($e->hasResponse()) {
-                $response   = $e->getResponse();
-                $statusCode = $response->getStatusCode();
-                $body       = $response->getBody()->getContents();
-                $message    = "Failed to fetch user info (HTTP {$statusCode}): {$body}";
-            } else {
-                $message = 'Failed to fetch user info: ' . $e->getMessage();
-            }
-            throw new \RuntimeException($message, 0, $e);
+            throw new \RuntimeException('Failed to fetch user info: ' . $e->getMessage(), 0, $e);
         }
 
         $body     = $response->getBody()->getContents();
@@ -663,16 +652,13 @@ class OidcClient
             $response = $client->get($serverBase['url'] . '/.well-known/openid-configuration', [
                 'headers' => $serverBase['headers'],
             ]);
+        } catch (BadResponseException $e) {
+            // Deliberately no body here: the discovery document's error payload is
+            // not surfaced, matching the previous behaviour for this call.
+            $statusCode = $e->getResponse()->getStatusCode();
+            throw new \RuntimeException("Failed to fetch OIDC discovery document (HTTP {$statusCode})", 0, $e);
         } catch (RequestException $e) {
-            $message = 'Failed to fetch OIDC discovery document';
-            if ($e->hasResponse()) {
-                $response   = $e->getResponse();
-                $statusCode = $response->getStatusCode();
-                $message    = "Failed to fetch OIDC discovery document (HTTP {$statusCode})";
-            } else {
-                $message = 'Failed to fetch OIDC discovery document: ' . $e->getMessage();
-            }
-            throw new \RuntimeException($message, 0, $e);
+            throw new \RuntimeException('Failed to fetch OIDC discovery document: ' . $e->getMessage(), 0, $e);
         }
 
         $body         = $response->getBody()->getContents();
