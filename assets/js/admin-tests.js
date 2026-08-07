@@ -514,13 +514,38 @@ document.addEventListener('DOMContentLoaded', () => {
         const mount = document.getElementById('testScopeIdMount');
         mount.innerHTML = '';
         if (type === 'national_calendar' || type === 'diocesan_calendar') {
-            const client = await ApiClient.init(apiUrl).catch(() => null);
-            if (!client) return;
-            const filter = type === 'national_calendar'
-                ? CalendarSelectFilter.NATIONAL_CALENDARS
-                : CalendarSelectFilter.DIOCESAN_CALENDARS;
-            const sel = new CalendarSelect(config.locale).filter(filter).allowNull(true).class('form-select').id('testScopeId');
-            sel.appendTo(mount);
+            // See permission-requests.js: swallowing a failure here leaves the
+            // mount empty, which is indistinguishable from "still loading".
+            // A newer syncScopeIdField() may have run while we were awaiting, in
+            // which case it has already cleared the mount and rendered the control
+            // for the current scope. Appending anything now would stack a stale
+            // #testScopeId on top of it. Matches the guards in
+            // permission-requests.js and admin-permissions.js.
+            const isStale = () => document.getElementById('testScopeType')?.value !== type;
+            try {
+                const client = await ApiClient.init(apiUrl).catch(() => null);
+                if (!client) throw new Error('ApiClient initialization failed');
+                if (isStale()) return;
+                const filter = type === 'national_calendar'
+                    ? CalendarSelectFilter.NATIONAL_CALENDARS
+                    : CalendarSelectFilter.DIOCESAN_CALENDARS;
+                const sel = new CalendarSelect(config.locale).filter(filter).allowNull(true).class('form-select').id('testScopeId');
+                sel.appendTo(mount);
+            } catch (err) {
+                console.error(`[admin-tests] Could not build the calendar select for scope type "${type}":`, err);
+                if (isStale()) return;
+                const failed = document.createElement('select');
+                failed.className = 'form-select is-invalid';
+                failed.id = 'testScopeId';
+                failed.disabled = true;
+                failed.dataset.loadFailed = 'true';
+                const opt = document.createElement('option');
+                opt.value = '';
+                opt.textContent = 'Could not load calendars — try reloading the page';
+                opt.selected = true;
+                failed.appendChild(opt);
+                mount.appendChild(failed);
+            }
         }
     }
 

@@ -399,6 +399,8 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
                 calendarScope: <?php echo json_encode(_('Calendar scope')); ?>,
                 calendarId: <?php echo json_encode(_('Calendar ID')); ?>,
                 selectCalendarId: <?php echo json_encode(_('Select calendar ID...')); ?>,
+                /** translators: shown in place of the calendar dropdown when the calendar list could not be loaded */
+                calendarIdLoadFailed: <?php echo json_encode(_('Could not load calendars — try reloading the page')); ?>,
                 testsNational: <?php echo json_encode(_('National Calendar Tests')); ?>,
                 testsDiocesan: <?php echo json_encode(_('Diocesan Calendar Tests')); ?>,
                 testsGeneralRoman: <?php echo json_encode(_('General Roman Calendar Tests')); ?>,
@@ -428,6 +430,8 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
                     calendarScope: <?php echo json_encode(_('Calendar scope')); ?>,
                     calendarId: <?php echo json_encode(_('Calendar ID')); ?>,
                     selectCalendarId: <?php echo json_encode(_('Select calendar ID...')); ?>,
+                /** translators: shown in place of the calendar dropdown when the calendar list could not be loaded */
+                calendarIdLoadFailed: <?php echo json_encode(_('Could not load calendars — try reloading the page')); ?>,
                     testsNational: <?php echo json_encode(_('National Calendar Tests')); ?>,
                     testsDiocesan: <?php echo json_encode(_('Diocesan Calendar Tests')); ?>,
                     testsGeneralRoman: <?php echo json_encode(_('General Roman Calendar Tests')); ?>,

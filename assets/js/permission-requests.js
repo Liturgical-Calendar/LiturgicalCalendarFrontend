@@ -153,6 +153,30 @@ document.addEventListener('DOMContentLoaded', async function() {
     const DIOCESAN_FILTER_TYPES = ['diocesan_calendar', 'diocesan_calendar_test'];
 
     /**
+     * Build the stand-in control shown when the CalendarSelect cannot be built.
+     *
+     * It deliberately still carries `.perm-object-id`, so the control the rest of
+     * the form (and the E2E suite) waits for does appear. It is disabled and has
+     * no selectable value, so submit validation still blocks — but the failure
+     * now reads as "this broke" rather than as an element that never arrives.
+     * @returns {HTMLSelectElement} A disabled select carrying the failure notice
+     */
+    function buildObjectIdLoadFailure() {
+        const select = document.createElement('select');
+        select.className = 'form-select form-select-sm perm-object-id is-invalid';
+        select.required = true;
+        select.disabled = true;
+        select.dataset.loadFailed = 'true';
+
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.textContent = config.i18n.calendarIdLoadFailed || 'Could not load calendars — try reloading the page';
+        opt.selected = true;
+        select.appendChild(opt);
+        return select;
+    }
+
+    /**
      * Build a native <select class="form-select form-select-sm perm-object-id">
      * for the three non-calendar scopes (wider_region / GRC / GRC test).
      * @param {string} objectType - The currently selected object type
@@ -208,31 +232,45 @@ document.addEventListener('DOMContentLoaded', async function() {
             NATIONAL_FILTER_TYPES.includes(objectType) ||
             DIOCESAN_FILTER_TYPES.includes(objectType)
         ) {
-            const client = await apiClientReady;
-            if (!client) return; // init failed; leave empty (validation will block submit)
-            // Guard against a rapid scope change that already replaced the mount.
-            if (
-                !row.isConnected ||
-                row.querySelector('.perm-object-type').value !== objectType
-            ) return;
-            const filter = NATIONAL_FILTER_TYPES.includes(objectType)
-                ? CalendarSelectFilter.NATIONAL_CALENDARS
-                : CalendarSelectFilter.DIOCESAN_CALENDARS;
-            const calSelect = new CalendarSelect(LITCAL_LOCALE)
-                .filter(filter)
-                .allowNull(true)
-                .class('form-select form-select-sm perm-object-id');
-            calSelect.appendTo(mount);
-            // CalendarSelect's allowNull adds an empty option that semantically
-            // means "no nation/diocese" = General Roman Calendar, which is not a
-            // valid national/diocesan object_id. Turn it into a disabled
-            // placeholder so the user must pick a concrete calendar (Vatican
-            // included — it has its own national-style calendar).
-            const calNullOpt = mount.querySelector('.perm-object-id option[value=""]');
-            if (calNullOpt) {
-                calNullOpt.textContent = config.i18n.selectCalendarId || 'Select calendar ID...';
-                calNullOpt.disabled = true;
-                calNullOpt.selected = true;
+            // Everything from here can throw or reject: the API may be down, and
+            // CalendarSelect itself can fail while parsing calendar metadata. An
+            // unhandled rejection here leaves the mount empty, which looks
+            // identical to "still loading" — the control simply never appears and
+            // the only symptom is a Playwright waitFor timing out ten seconds
+            // later with nothing to point at. Fail loudly and visibly instead.
+            try {
+                const client = await apiClientReady;
+                if (!client) throw new Error('ApiClient initialization failed');
+                // Guard against a rapid scope change that already replaced the mount.
+                if (
+                    !row.isConnected ||
+                    row.querySelector('.perm-object-type').value !== objectType
+                ) return;
+                const filter = NATIONAL_FILTER_TYPES.includes(objectType)
+                    ? CalendarSelectFilter.NATIONAL_CALENDARS
+                    : CalendarSelectFilter.DIOCESAN_CALENDARS;
+                const calSelect = new CalendarSelect(LITCAL_LOCALE)
+                    .filter(filter)
+                    .allowNull(true)
+                    .class('form-select form-select-sm perm-object-id');
+                calSelect.appendTo(mount);
+                // CalendarSelect's allowNull adds an empty option that semantically
+                // means "no nation/diocese" = General Roman Calendar, which is not a
+                // valid national/diocesan object_id. Turn it into a disabled
+                // placeholder so the user must pick a concrete calendar (Vatican
+                // included — it has its own national-style calendar).
+                const calNullOpt = mount.querySelector('.perm-object-id option[value=""]');
+                if (calNullOpt) {
+                    calNullOpt.textContent = config.i18n.selectCalendarId || 'Select calendar ID...';
+                    calNullOpt.disabled = true;
+                    calNullOpt.selected = true;
+                }
+            } catch (err) {
+                console.error(
+                    `[permission-requests] Could not build the calendar select for object type "${objectType}":`,
+                    err
+                );
+                mount.appendChild(buildObjectIdLoadFailure());
             }
         } else {
             mount.appendChild(buildStaticObjectIdSelect(objectType));
