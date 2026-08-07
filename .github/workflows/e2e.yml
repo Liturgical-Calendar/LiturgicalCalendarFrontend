@@ -27,8 +27,15 @@ on:
     # Frontend-affecting paths only. NB: i18n/** is intentionally NOT listed —
     # translation-only PRs (e.g. Weblate) don't change E2E behaviour, so they
     # skip the ~7-min full-stack run. Any translation-driven regression is still
-    # caught by the nightly `schedule` run below. (E2E is not a required check,
-    # so excluding a PR here never leaves it stuck waiting on a missing status.)
+    # caught by the nightly `schedule` run below.
+    #
+    # "E2E (Playwright + full docker stack)" IS a required status check on
+    # `development`, so a PR excluded here would otherwise sit BLOCKED forever
+    # waiting on a context nothing ever reports. That is what
+    # e2e-required-skip.yml is for: it runs on the complement of this list and
+    # emits the same check name instantly. Exactly one of the two reports the
+    # required context for any given PR, so keep the two lists in sync — a path
+    # added here must also be added to that workflow's `paths-ignore`.
     paths:
       - 'assets/**'
       - 'includes/**'

@@ -125,27 +125,48 @@ document.addEventListener('DOMContentLoaded', function() {
             NATIONAL_FILTER_TYPES.includes(objectType) ||
             DIOCESAN_FILTER_TYPES.includes(objectType)
         ) {
-            const client = await apiClientReady;
-            if (!client) return;
-            if (grantObjectType.value !== objectType) return; // scope changed again meanwhile
-            const filter = NATIONAL_FILTER_TYPES.includes(objectType)
-                ? CalendarSelectFilter.NATIONAL_CALENDARS
-                : CalendarSelectFilter.DIOCESAN_CALENDARS;
-            const calSelect = new CalendarSelect(LITCAL_LOCALE)
-                .filter(filter)
-                .allowNull(true)
-                .class('form-select')
-                .id('grantObjectId');
-            calSelect.appendTo(mount);
-            // CalendarSelect's allowNull adds an empty option that semantically
-            // means "no nation/diocese" = General Roman Calendar, which is not a
-            // valid national/diocesan object_id. Turn it into a disabled
-            // placeholder so the user must pick a concrete calendar.
-            const calNullOpt = mount.querySelector('#grantObjectId option[value=""]');
-            if (calNullOpt) {
-                calNullOpt.textContent = config.i18n.selectCalendarId || 'Select calendar ID...';
-                calNullOpt.disabled = true;
-                calNullOpt.selected = true;
+            // See permission-requests.js: an unhandled rejection here leaves the
+            // mount empty, which is indistinguishable from "still loading". Fail
+            // loudly and leave a visible, disabled control behind instead.
+            try {
+                const client = await apiClientReady;
+                if (!client) throw new Error('ApiClient initialization failed');
+                if (grantObjectType.value !== objectType) return; // scope changed again meanwhile
+                const filter = NATIONAL_FILTER_TYPES.includes(objectType)
+                    ? CalendarSelectFilter.NATIONAL_CALENDARS
+                    : CalendarSelectFilter.DIOCESAN_CALENDARS;
+                const calSelect = new CalendarSelect(LITCAL_LOCALE)
+                    .filter(filter)
+                    .allowNull(true)
+                    .class('form-select')
+                    .id('grantObjectId');
+                calSelect.appendTo(mount);
+                // CalendarSelect's allowNull adds an empty option that semantically
+                // means "no nation/diocese" = General Roman Calendar, which is not a
+                // valid national/diocesan object_id. Turn it into a disabled
+                // placeholder so the user must pick a concrete calendar.
+                const calNullOpt = mount.querySelector('#grantObjectId option[value=""]');
+                if (calNullOpt) {
+                    calNullOpt.textContent = config.i18n.selectCalendarId || 'Select calendar ID...';
+                    calNullOpt.disabled = true;
+                    calNullOpt.selected = true;
+                }
+            } catch (err) {
+                console.error(
+                    `[admin-permissions] Could not build the calendar select for object type "${objectType}":`,
+                    err
+                );
+                const failed = document.createElement('select');
+                failed.className = 'form-select is-invalid';
+                failed.id = 'grantObjectId';
+                failed.disabled = true;
+                failed.dataset.loadFailed = 'true';
+                const opt = document.createElement('option');
+                opt.value = '';
+                opt.textContent = config.i18n.calendarIdLoadFailed || 'Could not load calendars — try reloading the page';
+                opt.selected = true;
+                failed.appendChild(opt);
+                mount.appendChild(failed);
             }
         } else {
             mount.appendChild(buildStaticGrantObjectId(objectType));
