@@ -102,6 +102,31 @@ class OidcClient
      *
      * @throws \InvalidArgumentException If $orgId is non-empty but not all digits.
      */
+    /**
+     * Reduce a response body to a bounded, sanitized preview safe to put in an
+     * exception message, mirroring the treatment in ApiClient.
+     *
+     * An error payload from the authorization server is unbounded and not under
+     * our control, and these messages travel onwards into logs and error pages.
+     * Interpolating it raw risks flooding a log with a single entry and carrying
+     * markup or control characters into wherever the message is rendered.
+     *
+     * @param string $body The raw response body.
+     * @return string Tag-stripped, whitespace-collapsed, at most 200 characters.
+     */
+    private static function errorBodyPreview(string $body): string
+    {
+        $preview = strip_tags($body);
+        $preview = preg_replace('/\s+/', ' ', $preview);
+        $preview = trim($preview ?? '');
+
+        if (strlen($preview) > 200) {
+            $preview = substr($preview, 0, 197) . '...';
+        }
+
+        return $preview;
+    }
+
     private static function normalizeOrgId(?string $orgId): ?string
     {
         if ($orgId === null) {
@@ -278,7 +303,7 @@ class OidcClient
         } catch (BadResponseException $e) {
             $errorResponse = $e->getResponse();
             $statusCode    = $errorResponse->getStatusCode();
-            $body          = $errorResponse->getBody()->getContents();
+            $body          = self::errorBodyPreview($errorResponse->getBody()->getContents());
             throw new \RuntimeException("Token exchange failed (HTTP {$statusCode}): {$body}", 0, $e);
         } catch (RequestException $e) {
             throw new \RuntimeException('Token exchange failed: ' . $e->getMessage(), 0, $e);
@@ -330,7 +355,7 @@ class OidcClient
         } catch (BadResponseException $e) {
             $errorResponse = $e->getResponse();
             $statusCode    = $errorResponse->getStatusCode();
-            $body          = $errorResponse->getBody()->getContents();
+            $body          = self::errorBodyPreview($errorResponse->getBody()->getContents());
             throw new \RuntimeException("Token refresh failed (HTTP {$statusCode}): {$body}", 0, $e);
         } catch (RequestException $e) {
             throw new \RuntimeException('Token refresh failed: ' . $e->getMessage(), 0, $e);
@@ -474,7 +499,7 @@ class OidcClient
         } catch (BadResponseException $e) {
             $errorResponse = $e->getResponse();
             $statusCode    = $errorResponse->getStatusCode();
-            $body          = $errorResponse->getBody()->getContents();
+            $body          = self::errorBodyPreview($errorResponse->getBody()->getContents());
             throw new \RuntimeException("Failed to fetch user info (HTTP {$statusCode}): {$body}", 0, $e);
         } catch (RequestException $e) {
             throw new \RuntimeException('Failed to fetch user info: ' . $e->getMessage(), 0, $e);
