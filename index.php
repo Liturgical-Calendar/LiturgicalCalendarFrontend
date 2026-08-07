@@ -92,6 +92,10 @@ $formLabelB = sprintf(
                         <h5 class="fw-bold"><?php
                             echo _('Path builder');
                         ?></h5>
+                        <!-- RiteSelect is rendered here by JS. It sits before the
+                             inputs that ApiOptions appends to this row, so the rite
+                             is chosen first and the rest of the path follows from it. -->
+                        <div class="form-group col col-md-3" id="riteSelectWrapper"></div>
                     </div>
                     <div class="row" id="requestParametersAllPaths">
                         <h5 class="fw-bold"><?php echo $formLabelB; ?></h5>
