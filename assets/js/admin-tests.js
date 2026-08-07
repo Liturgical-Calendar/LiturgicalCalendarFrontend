@@ -516,9 +516,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (type === 'national_calendar' || type === 'diocesan_calendar') {
             // See permission-requests.js: swallowing a failure here leaves the
             // mount empty, which is indistinguishable from "still loading".
+            // A newer syncScopeIdField() may have run while we were awaiting, in
+            // which case it has already cleared the mount and rendered the control
+            // for the current scope. Appending anything now would stack a stale
+            // #testScopeId on top of it. Matches the guards in
+            // permission-requests.js and admin-permissions.js.
+            const isStale = () => document.getElementById('testScopeType')?.value !== type;
             try {
                 const client = await ApiClient.init(apiUrl).catch(() => null);
                 if (!client) throw new Error('ApiClient initialization failed');
+                if (isStale()) return;
                 const filter = type === 'national_calendar'
                     ? CalendarSelectFilter.NATIONAL_CALENDARS
                     : CalendarSelectFilter.DIOCESAN_CALENDARS;
@@ -526,6 +533,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 sel.appendTo(mount);
             } catch (err) {
                 console.error(`[admin-tests] Could not build the calendar select for scope type "${type}":`, err);
+                if (isStale()) return;
                 const failed = document.createElement('select');
                 failed.className = 'form-select is-invalid';
                 failed.id = 'testScopeId';
