@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-14 11:34+0000\n"
+"POT-Creation-Date: 2026-08-07 19:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -120,17 +120,17 @@ msgstr ""
 msgid "Path builder"
 msgstr ""
 
-#: index.php:107
+#: index.php:111
 msgid ""
 "URL of the API request based on selected options. The button is set to the "
 "same URL, click on it to see results."
 msgstr ""
 
-#: index.php:117 index.php:124
+#: index.php:121 index.php:128
 msgid "Liturgical Calendar Validator"
 msgstr ""
 
-#: index.php:123
+#: index.php:127
 msgid ""
 "In order to verify that the liturgical data produced by the API is correct, "
 "there is a Unit Test interface that can run predefined tests against the "
@@ -138,46 +138,46 @@ msgid ""
 "to 25 years from the current year."
 msgstr ""
 
-#: index.php:128
+#: index.php:132
 #, php-format
 msgid ""
 "The unit tests are defined in the %s folder in the Liturgical Calendar API "
 "repository."
 msgstr ""
 
-#: index.php:132
+#: index.php:136
 #, php-format
 msgid "The unit test interface is curated in a repository of its own: %s."
 msgstr ""
 
-#: index.php:141
+#: index.php:145
 msgid "Translation Tool"
 msgstr ""
 
-#: index.php:147 index.php:150
+#: index.php:151 index.php:154
 msgid "Translations status"
 msgstr ""
 
-#: index.php:158
+#: index.php:162
 msgid "Open API Schema"
 msgstr ""
 
-#: index.php:161
+#: index.php:165
 msgid "Swagger / Open API Documentation"
 msgstr ""
 
-#: index.php:163
+#: index.php:167
 msgid ""
 "All of the available API routes with their supported methods, parameters, "
 "content types and responses are described here."
 msgstr ""
 
 #. translators: card header for Easter calculation tool
-#: index.php:170 usage.php:298
+#: index.php:174 usage.php:298
 msgid "Calculation of the Dates of Easter"
 msgstr ""
 
-#: index.php:175
+#: index.php:179
 msgid ""
 "A simple API endpoint that returns data about the Dates of Easter, both "
 "Gregorian and Julian, from 1583 (year of the adoption of the Gregorian "
@@ -187,11 +187,11 @@ msgid ""
 "Julian easter (observed by orthodox churches)."
 msgstr ""
 
-#: index.php:180
+#: index.php:184
 msgid "Dates of Easter API endpoint"
 msgstr ""
 
-#: index.php:182
+#: index.php:186
 msgid ""
 "Currently the data can be requested with almost any localization. In any "
 "case, since the API returns a UNIX timestamp for each date of Easter, "
