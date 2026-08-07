@@ -235,8 +235,53 @@ services:
       openfga-migrate:
         condition: service_completed_successfully
 
+  # Seeds the OpenFGA store + authorization model from cdcf-infra, which owns
+  # every model on the shared umbrella instance. Mirrors LiturgicalCalendarAPI's
+  # docker-compose.yml (authz-seed, added in 854032f2) — that repo intentionally
+  # keeps no model file: a second copy is what let a stale model silently revert
+  # the deployed one in August 2026. This stack keeps none either.
+  authz-seed:
+    image: alpine:3.21
+    restart: "no"
+    environment:
+      CDCF_INFRA_REF: "${CDCF_INFRA_REF:-main}"
+      # cdcf-infra's setup-openfga.sh requires a non-empty preshared key in the
+      # .env.local it sources regardless of target — it's only ever used as a
+      # single Bearer token, while OPENFGA_AUTHN_PRESHARED_KEYS is OpenFGA's own
+      # comma-separated list (<key1>[,<key2>]); the entrypoint below trims to
+      # the first key before writing .env.local. This stack's default
+      # OPENFGA_AUTHN_METHOD=none makes OpenFGA ignore the token entirely, so a
+      # placeholder is fine for local dev.
+      OPENFGA_PRESHARED_KEY: "${OPENFGA_AUTHN_PRESHARED_KEYS:-local-dev-preshared-key}"
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        set -eu
+        apk add --no-cache bash curl jq git >/dev/null
+        rm -rf /tmp/cdcf-infra
+        git clone --depth 1 --branch "$$CDCF_INFRA_REF" \
+          https://github.com/CatholicOS/cdcf-infra.git /tmp/cdcf-infra
+        cd /tmp/cdcf-infra/auth
+        OPENFGA_PRESHARED_KEY="$${OPENFGA_PRESHARED_KEY%%,*}"
+        cat > .env.local <<EOF
+        OPENFGA_API_URL=http://openfga:8080
+        OPENFGA_INTERNAL_URL=http://openfga:8080
+        OPENFGA_PRESHARED_KEY=$$OPENFGA_PRESHARED_KEY
+        EOF
+        ./setup-openfga.sh --target local --create-litcal-store
+    networks:
+      - litcal
+    depends_on:
+      openfga:
+        condition: service_healthy
+
   # OpenFGA Setup — create store and load authorization model from the API image.
   # The API image bundles curl and jq, so no runtime install is needed here.
+  # Since 854032f2 upstream, setup-openfga.sh only READS BACK an existing model
+  # (it no longer loads one) — so this must wait for authz-seed to have actually
+  # finished seeding it, not merely started, or it fails with "has no
+  # authorization model" (see frontend-e2e-diagnosis.md, "Fix attempt").
   openfga-setup:
     image: litcal-api:latest
     environment:
@@ -247,6 +292,8 @@ services:
     depends_on:
       openfga:
         condition: service_healthy
+      authz-seed:
+        condition: service_completed_successfully
 
   # ============================================================================
   # LiturgicalCalendar Application Services
