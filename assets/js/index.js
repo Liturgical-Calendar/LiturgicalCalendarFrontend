@@ -1,4 +1,4 @@
-import { ApiClient, CalendarSelect, ApiOptions, Input, ApiOptionsFilter, PathBuilder } from '@liturgical-calendar/components-js';
+import { ApiClient, CalendarSelect, RiteSelect, ApiOptions, Input, ApiOptionsFilter, PathBuilder } from '@liturgical-calendar/components-js';
 
 Input.setGlobalInputClass('form-select');
 Input.setGlobalLabelClass('form-label mb-1');
@@ -40,9 +40,30 @@ if (!BaseUrl) {
             .class('form-select')
             .insertAfter( apiOptions._calendarPathInput );
 
+            // Must be in the DOM before linkToCalendarSelect() below, which reads
+            // this element to attach the rite-change listener.
+            // No `text`: omitting it lets RiteSelect supply its own localized label
+            // (Messages[lang].SELECT_A_RITE), so this reads "Seleziona un rito" on the
+            // Italian page rather than the hardcoded English used for the calendar
+            // label below. Note the library only translates this key for en and it so
+            // far; every other locale still falls back to English.
+            const riteSelect = (new RiteSelect( LITCAL_LOCALE ))
+                .label({
+                    class: 'form-label mb-1',
+                    id: 'riteSelectLabel'
+                }).id('APIRiteSelect')
+                .class('form-select');
+            riteSelect.appendTo('#riteSelectWrapper');
+
             apiOptions.filter( ApiOptionsFilter.BASE_PATH ).appendTo('#requestParametersBasePath');
             apiOptions.filter( ApiOptionsFilter.ALL_PATHS ).appendTo('#requestParametersAllPaths');
-            apiOptions.linkToCalendarSelect( calendarSelect );
+            // Passing riteSelect marks the rite as explicit, so it is emitted as a
+            // path segment (/calendar/ambrosian/...) rather than left implicit, and
+            // rebuilds the calendar select whenever the rite changes. The Ambrosian
+            // rite has no national tier and fixes Epiphany, Ascension, Corpus Christi
+            // and the Eternal High Priest in its own books, so ApiOptions also
+            // disables those four inputs for as long as it is selected.
+            apiOptions.linkToCalendarSelect( calendarSelect, riteSelect );
 
             const localeLabelAfter = document.querySelector('#localeLabelAfter');
             const acceptLabelAfter = document.querySelector('#acceptLabelAfter');

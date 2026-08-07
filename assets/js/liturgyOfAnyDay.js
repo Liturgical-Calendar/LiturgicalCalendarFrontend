@@ -9,6 +9,7 @@
 import {
     ApiClient,
     CalendarSelect,
+    RiteSelect,
     ApiOptions,
     ApiOptionsFilter,
     LiturgyOfAnyDay
@@ -29,6 +30,20 @@ const translations = {
         sk: 'Vyberte kalendár',
         vi: 'Chọn lịch',
         id: 'Pilih kalender'
+    },
+    selectRite: {
+        en: 'Select a rite',
+        it: 'Seleziona un rito',
+        es: 'Seleccionar un rito',
+        fr: 'Sélectionner un rite',
+        de: 'Ritus auswählen',
+        pt: 'Selecionar um rito',
+        nl: 'Selecteer een ritus',
+        la: 'Elige ritum',
+        hu: 'Válasszon rítust',
+        sk: 'Vyberte rítus',
+        vi: 'Chọn nghi lễ',
+        id: 'Pilih ritus'
     },
     language: {
         en: 'Language',
@@ -103,6 +118,15 @@ const initializePage = async () => {
     // Get the base language for translations
     const lang = currentLocale.language;
 
+    // Create RiteSelect component. It must exist in the DOM before it is passed
+    // to linkToCalendarSelect() below, which reads its element to attach the
+    // rite-change listener.
+    const riteSelect = new RiteSelect( lang )
+        .class( 'form-select' )
+        .id( 'riteSelect' )
+        .label( { text: translations.selectRite[ lang ] || translations.selectRite.en, class: 'form-label' } );
+    riteSelect.appendTo( '#riteSelectContainer' );
+
     // Create CalendarSelect component
     const calendarSelect = new CalendarSelect( lang )
         .class( 'form-select' )
@@ -117,7 +141,11 @@ const initializePage = async () => {
     // Create ApiOptions with only the locale input filter
     const apiOptions = new ApiOptions( lang )
         .filter( ApiOptionsFilter.LOCALE_ONLY )
-        .linkToCalendarSelect( calendarSelect );
+        // Passing riteSelect makes the rite an explicit part of the endpoint and
+        // rebuilds the calendar select whenever the rite changes: the Ambrosian
+        // rite has no national tier and offers a different set of diocesan
+        // calendars, so a selection from one rite is never carried into another.
+        .linkToCalendarSelect( calendarSelect, riteSelect );
 
     // Configure the locale input before appending
     // Set defaultValue to currentLocale.language so it will be selected if available

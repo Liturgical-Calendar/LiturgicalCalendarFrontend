@@ -26,6 +26,8 @@ include_once 'includes/common.php';
         <h3 class="h3 mb-2 text-gray-800"><?php echo _('Liturgy of any day'); ?></h3>
         <div class="container">
             <div class="row">
+                <!-- RiteSelect will be rendered here by JS -->
+                <div class="form-group col-md" id="riteSelectContainer"></div>
                 <!-- CalendarSelect will be rendered here by JS -->
                 <div class="form-group col-md" id="calendarSelectContainer"></div>
                 <!-- LocaleInput from ApiOptions will be rendered here by JS -->
