@@ -186,3 +186,6 @@ scripts/setup-openfga.sh
 
 # Local git worktrees
 .worktrees/
+
+# Agent scratch space (SDD briefs, reports, review diffs) — never part of the repo
+.superpowers/
