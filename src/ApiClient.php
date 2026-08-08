@@ -3,6 +3,7 @@
 namespace LiturgicalCalendar\Frontend;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 
@@ -72,40 +73,51 @@ class ApiClient
             }
 
             return $data;
-        } catch (RequestException $e) {
-            $statusCode = $e->hasResponse() ? $e->getResponse()->getStatusCode() : 0;
+        // BadResponseException covers the "server answered, but with 4xx/5xx" case and
+        // is the only RequestException subclass that carries a response. Guzzle 8
+        // removed hasResponse()/getResponse() from RequestException itself, so the two
+        // cases are split rather than branched on. BadResponseException extends
+        // RequestException, so it must be caught first. This shape works on Guzzle 7
+        // and 8 alike.
+        } catch (BadResponseException $e) {
+            $response   = $e->getResponse();
+            $statusCode = $response->getStatusCode();
 
             // Build a safe, sanitized error message without leaking sensitive response data
             $safeMessage = 'HTTP request failed for ' . $url . ' (status ' . $statusCode . ')';
 
-            if ($e->hasResponse()) {
-                $responseBody = (string) $e->getResponse()->getBody();
+            $responseBody = (string) $response->getBody();
 
-                // Log full response body for debugging (capped at 2KB to prevent log flooding)
-                $logBody = strlen($responseBody) > 2048
-                    ? substr($responseBody, 0, 2048) . '... [truncated]'
-                    : $responseBody;
-                error_log('ApiClient error response from ' . $url . ': ' . $logBody);
+            // Log full response body for debugging (capped at 2KB to prevent log flooding)
+            $logBody = strlen($responseBody) > 2048
+                ? substr($responseBody, 0, 2048) . '... [truncated]'
+                : $responseBody;
+            error_log('ApiClient error response from ' . $url . ': ' . $logBody);
 
-                // Create sanitized preview for exception message
-                // Strip HTML tags and collapse whitespace
-                $preview = strip_tags($responseBody);
-                $preview = preg_replace('/\s+/', ' ', $preview);
-                $preview = trim($preview ?? '');
+            // Create sanitized preview for exception message
+            // Strip HTML tags and collapse whitespace
+            $preview = strip_tags($responseBody);
+            $preview = preg_replace('/\s+/', ' ', $preview);
+            $preview = trim($preview ?? '');
 
-                // Truncate to ~200 chars
-                if (strlen($preview) > 200) {
-                    $preview = substr($preview, 0, 197) . '...';
-                }
+            // Truncate to ~200 chars
+            if (strlen($preview) > 200) {
+                $preview = substr($preview, 0, 197) . '...';
+            }
 
-                if ($preview !== '') {
-                    $safeMessage .= ': ' . $preview;
-                }
-            } else {
-                $safeMessage .= ': ' . $e->getMessage();
+            if ($preview !== '') {
+                $safeMessage .= ': ' . $preview;
             }
 
             throw new \RuntimeException($safeMessage, $statusCode, $e);
+        } catch (RequestException $e) {
+            // No response was ever received (DNS, connect, TLS, timeout). Status 0
+            // preserves what hasResponse() === false previously reported.
+            throw new \RuntimeException(
+                'HTTP request failed for ' . $url . ' (status 0): ' . $e->getMessage(),
+                0,
+                $e
+            );
         } catch (GuzzleException $e) {
             throw new \RuntimeException(
                 'HTTP request failed for ' . $url . ': ' . $e->getMessage(),
