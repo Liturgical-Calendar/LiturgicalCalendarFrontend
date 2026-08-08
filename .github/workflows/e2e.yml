@@ -23,38 +23,27 @@ name: E2E
 # rebuilt from the checkout (docker-compose.ci.yml).
 
 on:
+  # Deliberately UNFILTERED. "E2E (Playwright + full docker stack)" is a required
+  # status check on `development`, and GitHub's branch protection cannot tell
+  # "skipped by path filter" from "still pending" — a path-filtered-away run
+  # leaves the PR BLOCKED forever waiting on a context nothing reports.
+  #
+  # This used to be solved with a companion workflow (e2e-required-skip.yml) that
+  # ran on `paths-ignore` and emitted the same check name instantly. That was
+  # unsound: `paths` and `paths-ignore` are NOT complements. `paths` fires when
+  # ANY changed file matches; `paths-ignore` fires when ANY changed file does
+  # NOT match. A PR touching both a listed file and an unlisted one satisfied
+  # both, so two runs published the same required context and the instant green
+  # could satisfy branch protection while the real suite was still running.
+  #
+  # Instead the workflow always triggers and the `changes` job below decides,
+  # in ONE place, whether the suite actually runs. Exactly one job ever reports
+  # the required context: the `required` aggregator at the bottom.
   pull_request:
-    # Frontend-affecting paths only. NB: i18n/** is intentionally NOT listed —
-    # translation-only PRs (e.g. Weblate) don't change E2E behaviour, so they
-    # skip the ~7-min full-stack run. Any translation-driven regression is still
-    # caught by the nightly `schedule` run below.
-    #
-    # "E2E (Playwright + full docker stack)" IS a required status check on
-    # `development`, so a PR excluded here would otherwise sit BLOCKED forever
-    # waiting on a context nothing ever reports. That is what
-    # e2e-required-skip.yml is for: it runs on the complement of this list and
-    # emits the same check name instantly. Exactly one of the two reports the
-    # required context for any given PR, so keep the two lists in sync — a path
-    # added here must also be added to that workflow's `paths-ignore`.
-    paths:
-      - 'assets/**'
-      - 'includes/**'
-      - 'layout/**'
-      - 'src/**'
-      - '*.php'
-      - 'e2e/**'
-      - 'scripts/**'
-      - 'Dockerfile'
-      - 'docker-compose.yml'
-      - 'docker-compose.ci.yml'
-      - 'playwright.config.ts'
-      - 'package.json'
-      - 'yarn.lock'
-      - '.pnp.cjs'
-      - 'composer.json'
-      - 'composer.lock'
-      - '.env.example'
-      - '.github/workflows/e2e.yml'
+    # ready_for_review matters: the suite is skipped for drafts, so without this
+    # a draft marked ready would keep whatever the aggregator last reported
+    # until the next push.
+    types: [opened, synchronize, reopened, ready_for_review]
   schedule:
     - cron: '0 3 * * *'
   workflow_dispatch:
@@ -78,11 +67,57 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  e2e:
-    name: E2E (Playwright + full docker stack)
+  changes:
+    name: Detect frontend changes
+    runs-on: ubuntu-latest
+    permissions:
+      # paths-filter has no checkout to diff against, so it reads the PR's file
+      # list from the API. Without this the step 403s and the gate never resolves.
+      contents: read
+      pull-requests: read
+    outputs:
+      # 'true' for any non-PR event (schedule / workflow_dispatch always run the
+      # suite in full), otherwise whatever the path filter decided.
+      frontend: ${{ github.event_name != 'pull_request' || steps.filter.outputs.frontend == 'true' }}
+    steps:
+      - name: Filter frontend-affecting paths
+        # The single source of truth for what "frontend-affecting" means.
+        # NB: i18n/** is intentionally absent — translation-only PRs (e.g. Weblate)
+        # don't change E2E behaviour, so they skip the ~7-min full-stack run. Any
+        # translation-driven regression is still caught by the nightly `schedule`.
+        id: filter
+        if: github.event_name == 'pull_request'
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        with:
+          filters: |
+            frontend:
+              - 'assets/**'
+              - 'includes/**'
+              - 'layout/**'
+              - 'src/**'
+              - '*.php'
+              - 'e2e/**'
+              - 'scripts/**'
+              - 'Dockerfile'
+              - 'docker-compose.yml'
+              - 'docker-compose.ci.yml'
+              - 'playwright.config.ts'
+              - 'package.json'
+              - 'yarn.lock'
+              - '.pnp.cjs'
+              - 'composer.json'
+              - 'composer.lock'
+              - '.env.example'
+              - '.github/workflows/e2e.yml'
+
+  suite:
+    name: E2E suite
+    needs: changes
     runs-on: ubuntu-latest
     # Skip draft PRs — the heavy full-stack run isn't worth it until ready for review.
-    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.draft == false }}
+    if: >-
+      needs.changes.outputs.frontend == 'true' &&
+      (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
     timeout-minutes: 45
     env:
       # Build litcal-frontend from the checkout (the PR head) instead of the base
@@ -244,3 +279,37 @@ jobs:
       - name: Tear down
         if: always()
         run: docker compose down -v
+
+  required:
+    # The ONLY job that reports the required "E2E (Playwright + full docker stack)"
+    # context. It always runs, so the context is always reported exactly once —
+    # whether the suite ran, was skipped as irrelevant, or was skipped as a draft.
+    name: E2E (Playwright + full docker stack)
+    needs: [changes, suite]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report the E2E gate
+        env:
+          FRONTEND: ${{ needs.changes.outputs.frontend }}
+          RESULT: ${{ needs.suite.result }}
+        run: |
+          # `skipped` is a pass: either no frontend-affecting path changed, or the
+          # PR is still a draft. Anything else (failure / cancelled) must fail the
+          # gate — never let a red or abandoned suite report green.
+          case "$RESULT" in
+            success)
+              echo "E2E suite passed."
+              ;;
+            skipped)
+              if [ "$FRONTEND" = 'true' ]; then
+                echo "Suite was skipped on a draft PR; nothing to verify yet."
+              else
+                echo "No frontend-affecting paths changed; full stack not required."
+              fi
+              ;;
+            *)
+              echo "E2E suite result: $RESULT"
+              exit 1
+              ;;
+          esac
