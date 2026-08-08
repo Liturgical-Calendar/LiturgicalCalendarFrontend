@@ -1,3 +1,27 @@
+# Normalize every text file to LF, in the repository and in the working tree.
+#
+# GitHub stores exactly the bytes that are committed — it does not convert line
+# endings on push or on display. Without this, a file first committed from a
+# CRLF editor keeps CRLF forever, and any later tool-driven edit rewrites the
+# whole file to LF: a one-line change then arrives as a diff touching every
+# line, burying the real edit and destroying `git blame` for that file. That is
+# exactly what happened to assets/js/usage.js.
+#
+# `eol=lf` also matters for scripts/*.sh: a CRLF shebang line makes the kernel
+# look for an interpreter with a trailing carriage return and fail.
+* text=auto eol=lf
+
+# Binary files, never converted. `text=auto` already detects each of these by
+# content, but declaring them means a heuristic miss can never corrupt one —
+# and the i18n .mo catalogs are compiled gettext output where a single
+# substituted byte silently breaks translations at runtime.
+*.png  binary
+*.jpg  binary
+*.webp binary
+*.ico  binary
+*.mo   binary
+
+# Yarn's vendored runtime: keep it out of language stats and out of diffs.
 /.yarn/**            linguist-vendored
 /.yarn/releases/*    binary
 /.yarn/plugins/**/*  binary
