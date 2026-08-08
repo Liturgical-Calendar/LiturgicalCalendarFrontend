@@ -7,11 +7,14 @@ namespace LiturgicalCalendar\Frontend;
 use Firebase\JWT\CachedKeySet;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\HttpFactory;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\StreamInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 /**
@@ -50,6 +53,13 @@ class OidcClient
      * @var array<string, mixed>|null
      */
     private ?array $discoveryDoc = null;
+
+    /**
+     * Maximum number of bytes read from an error response body before sanitizing
+     * it into a preview. Comfortably more than the 200-character preview needs,
+     * while keeping a hostile or runaway payload out of memory.
+     */
+    private const ERROR_BODY_READ_LIMIT = 8192;
 
     /**
      * Session key for PKCE code verifier.
@@ -116,6 +126,40 @@ class OidcClient
             );
         }
         return $trimmed;
+    }
+
+    /**
+     * Reduce a response body to a bounded, sanitized preview safe to put in an
+     * exception message, mirroring the treatment in ApiClient.
+     *
+     * An error payload from the authorization server is unbounded and not under
+     * our control, and these messages travel onwards into logs and error pages.
+     * Interpolating it raw risks flooding a log with a single entry and carrying
+     * markup or control characters into wherever the message is rendered, so the
+     * stream is read only up to a fixed limit and the slice is then sanitized.
+     *
+     * @param StreamInterface $body The response body stream.
+     * @return string Tag-stripped, whitespace-collapsed, control-byte-free, at most 200 characters.
+     */
+    private static function errorBodyPreview(StreamInterface $body): string
+    {
+        // Read a bounded slice rather than the whole stream: the payload is not
+        // under our control and only the first few hundred characters survive
+        // the truncation below anyway.
+        $raw = $body->read(self::ERROR_BODY_READ_LIMIT);
+
+        $preview = strip_tags($raw);
+        $preview = preg_replace('/\s+/', ' ', $preview);
+        // Drop C0/C1 control bytes that `\s` does not cover (NUL, ESC, DEL, ...),
+        // so ANSI escapes cannot reach a log viewer or terminal.
+        $preview = preg_replace('/[\x00-\x08\x0E-\x1F\x7F-\x9F]/', '', $preview ?? '');
+        $preview = trim($preview ?? '');
+
+        if (strlen($preview) > 200) {
+            $preview = substr($preview, 0, 197) . '...';
+        }
+
+        return $preview;
     }
 
     /**
@@ -274,17 +318,17 @@ class OidcClient
                     'code_verifier' => $codeVerifier,
                 ],
             ]);
+        } catch (BadResponseException $e) {
+            $errorResponse = $e->getResponse();
+            $statusCode    = $errorResponse->getStatusCode();
+            $body          = self::errorBodyPreview($errorResponse->getBody());
+            throw new \RuntimeException("Token exchange failed (HTTP {$statusCode}): {$body}", 0, $e);
         } catch (RequestException $e) {
-            $message = 'Token exchange failed';
-            if ($e->hasResponse()) {
-                $response   = $e->getResponse();
-                $statusCode = $response->getStatusCode();
-                $body       = $response->getBody()->getContents();
-                $message    = "Token exchange failed (HTTP {$statusCode}): {$body}";
-            } else {
-                $message = 'Token exchange failed: ' . $e->getMessage();
-            }
-            throw new \RuntimeException($message, 0, $e);
+            throw new \RuntimeException('Token exchange failed: ' . $e->getMessage(), 0, $e);
+        } catch (GuzzleException $e) {
+            // ConnectException (DNS, TLS, connect timeout) is a NetworkException,
+            // not a RequestException, so it needs this final catch to be wrapped.
+            throw new \RuntimeException('Token exchange failed: ' . $e->getMessage(), 0, $e);
         }
 
         $body   = $response->getBody()->getContents();
@@ -330,17 +374,15 @@ class OidcClient
                     'refresh_token' => $refreshToken,
                 ],
             ]);
+        } catch (BadResponseException $e) {
+            $errorResponse = $e->getResponse();
+            $statusCode    = $errorResponse->getStatusCode();
+            $body          = self::errorBodyPreview($errorResponse->getBody());
+            throw new \RuntimeException("Token refresh failed (HTTP {$statusCode}): {$body}", 0, $e);
         } catch (RequestException $e) {
-            $message = 'Token refresh failed';
-            if ($e->hasResponse()) {
-                $response   = $e->getResponse();
-                $statusCode = $response->getStatusCode();
-                $body       = $response->getBody()->getContents();
-                $message    = "Token refresh failed (HTTP {$statusCode}): {$body}";
-            } else {
-                $message = 'Token refresh failed: ' . $e->getMessage();
-            }
-            throw new \RuntimeException($message, 0, $e);
+            throw new \RuntimeException('Token refresh failed: ' . $e->getMessage(), 0, $e);
+        } catch (GuzzleException $e) {
+            throw new \RuntimeException('Token refresh failed: ' . $e->getMessage(), 0, $e);
         }
 
         $body   = $response->getBody()->getContents();
@@ -478,17 +520,15 @@ class OidcClient
                     'Authorization' => 'Bearer ' . $accessToken,
                 ]),
             ]);
+        } catch (BadResponseException $e) {
+            $errorResponse = $e->getResponse();
+            $statusCode    = $errorResponse->getStatusCode();
+            $body          = self::errorBodyPreview($errorResponse->getBody());
+            throw new \RuntimeException("Failed to fetch user info (HTTP {$statusCode}): {$body}", 0, $e);
         } catch (RequestException $e) {
-            $message = 'Failed to fetch user info';
-            if ($e->hasResponse()) {
-                $response   = $e->getResponse();
-                $statusCode = $response->getStatusCode();
-                $body       = $response->getBody()->getContents();
-                $message    = "Failed to fetch user info (HTTP {$statusCode}): {$body}";
-            } else {
-                $message = 'Failed to fetch user info: ' . $e->getMessage();
-            }
-            throw new \RuntimeException($message, 0, $e);
+            throw new \RuntimeException('Failed to fetch user info: ' . $e->getMessage(), 0, $e);
+        } catch (GuzzleException $e) {
+            throw new \RuntimeException('Failed to fetch user info: ' . $e->getMessage(), 0, $e);
         }
 
         $body     = $response->getBody()->getContents();
@@ -663,16 +703,15 @@ class OidcClient
             $response = $client->get($serverBase['url'] . '/.well-known/openid-configuration', [
                 'headers' => $serverBase['headers'],
             ]);
+        } catch (BadResponseException $e) {
+            // Deliberately no body here: the discovery document's error payload is
+            // not surfaced, matching the previous behaviour for this call.
+            $statusCode = $e->getResponse()->getStatusCode();
+            throw new \RuntimeException("Failed to fetch OIDC discovery document (HTTP {$statusCode})", 0, $e);
         } catch (RequestException $e) {
-            $message = 'Failed to fetch OIDC discovery document';
-            if ($e->hasResponse()) {
-                $response   = $e->getResponse();
-                $statusCode = $response->getStatusCode();
-                $message    = "Failed to fetch OIDC discovery document (HTTP {$statusCode})";
-            } else {
-                $message = 'Failed to fetch OIDC discovery document: ' . $e->getMessage();
-            }
-            throw new \RuntimeException($message, 0, $e);
+            throw new \RuntimeException('Failed to fetch OIDC discovery document: ' . $e->getMessage(), 0, $e);
+        } catch (GuzzleException $e) {
+            throw new \RuntimeException('Failed to fetch OIDC discovery document: ' . $e->getMessage(), 0, $e);
         }
 
         $body         = $response->getBody()->getContents();
