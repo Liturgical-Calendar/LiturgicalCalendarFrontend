@@ -117,7 +117,7 @@ const initializePage = async () => {
     const lang = currentLocale.language;
 
     // Create RiteSelect component. It must exist in the DOM before it is passed
-    // to linkToCalendarSelect() below, which reads its element to attach the
+    // to linkToRiteSelect() below, which reads its element to attach the
     // rite-change listener.
     const riteSelect = new RiteSelect( lang )
         .class( 'form-select' )
@@ -139,11 +139,15 @@ const initializePage = async () => {
     // Create ApiOptions with only the locale input filter
     const apiOptions = new ApiOptions( lang )
         .filter( ApiOptionsFilter.LOCALE_ONLY )
-        // Passing riteSelect makes the rite an explicit part of the endpoint and
+        // Linking the rite makes it an explicit part of the endpoint and
         // rebuilds the calendar select whenever the rite changes: the Ambrosian
         // rite has no national tier and offers a different set of diocesan
         // calendars, so a selection from one rite is never carried into another.
-        .linkToCalendarSelect( calendarSelect, riteSelect );
+        //
+        // Two calls rather than the deprecated second argument of
+        // linkToCalendarSelect(), which warns as of components-js 2.1.0.
+        .linkToCalendarSelect( calendarSelect )
+        .linkToRiteSelect( riteSelect );
 
     // Configure the locale input before appending
     // Set defaultValue to currentLocale.language so it will be selected if available
