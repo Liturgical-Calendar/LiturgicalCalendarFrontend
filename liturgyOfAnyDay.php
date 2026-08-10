@@ -38,6 +38,10 @@ include_once 'includes/common.php';
         </div>
         <?php include_once('./layout/footer.php'); ?>
         <script nomodule defer src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
-        <script type="module" src="assets/js/liturgyOfAnyDay.js"></script>
+        <?php /* assets/js/liturgyOfAnyDay.js is injected by layout/footer.php, which
+                 appends a filemtime cache-buster. Including it here as well loaded it
+                 under two different URLs — "…js" and "…js?v=…" — which the module
+                 registry treats as two modules, so the page initialized twice and
+                 rendered a second rite select, calendar select and widget. */ ?>
 </body>
 </html>
