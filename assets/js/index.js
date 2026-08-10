@@ -41,7 +41,7 @@ if (!BaseUrl) {
         .class('form-select')
         .insertAfter( apiOptions._calendarPathInput );
 
-        // Must be in the DOM before linkToCalendarSelect() below, which reads
+        // Must be in the DOM before linkToRiteSelect() below, which reads
         // this element to attach the rite-change listener.
         // No `text`: omitting it lets RiteSelect supply its own localized label
         // (Messages[lang].SELECT_A_RITE), so this reads "Seleziona un rito" on the

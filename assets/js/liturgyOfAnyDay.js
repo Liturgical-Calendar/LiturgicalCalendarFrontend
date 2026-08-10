@@ -117,7 +117,7 @@ const initializePage = async () => {
     const lang = currentLocale.language;
 
     // Create RiteSelect component. It must exist in the DOM before it is passed
-    // to linkToCalendarSelect() below, which reads its element to attach the
+    // to linkToRiteSelect() below, which reads its element to attach the
     // rite-change listener.
     const riteSelect = new RiteSelect( lang )
         .class( 'form-select' )
