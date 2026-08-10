@@ -41,7 +41,7 @@ if (!BaseUrl) {
         .class('form-select')
         .insertAfter( apiOptions._calendarPathInput );
 
-        // Must be in the DOM before linkToCalendarSelect() below, which reads
+        // Must be in the DOM before linkToRiteSelect() below, which reads
         // this element to attach the rite-change listener.
         // No `text`: omitting it lets RiteSelect supply its own localized label
         // (Messages[lang].SELECT_A_RITE), so this reads "Seleziona un rito" on the
@@ -58,13 +58,17 @@ if (!BaseUrl) {
 
         apiOptions.filter( ApiOptionsFilter.BASE_PATH ).appendTo('#requestParametersBasePath');
         apiOptions.filter( ApiOptionsFilter.ALL_PATHS ).appendTo('#requestParametersAllPaths');
-        // Passing riteSelect marks the rite as explicit, so it is emitted as a
-        // path segment (/calendar/ambrosian/...) rather than left implicit, and
+        // Linking the rite marks it as explicit, so it is emitted as a path
+        // segment (/calendar/ambrosian/...) rather than left implicit, and
         // rebuilds the calendar select whenever the rite changes. The Ambrosian
         // rite has no national tier and fixes Epiphany, Ascension, Corpus Christi
         // and the Eternal High Priest in its own books, so ApiOptions also
         // disables those four inputs for as long as it is selected.
-        apiOptions.linkToCalendarSelect( calendarSelect, riteSelect );
+        //
+        // Two calls rather than the deprecated second argument of
+        // linkToCalendarSelect(), which warns as of components-js 2.1.0. Order
+        // between them does not matter; whichever runs second completes the pair.
+        apiOptions.linkToCalendarSelect( calendarSelect ).linkToRiteSelect( riteSelect );
 
         const localeLabelAfter = document.querySelector('#localeLabelAfter');
         const acceptLabelAfter = document.querySelector('#acceptLabelAfter');

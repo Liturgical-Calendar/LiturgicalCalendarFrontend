@@ -143,7 +143,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: Liturgical-Calendar/examples
-          ref: 04c7fa436bb049e59546267518ac3dd72bff58c4 # main @ 2026-07-07
+          ref: cbfc60f0ac20a7a16ccca4dd4deda0758f6b1059 # main @ 2026-08-10
           path: examples-src
           persist-credentials: false
 
