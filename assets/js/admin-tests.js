@@ -7,6 +7,7 @@ import {
     ApiClient,
     CalendarSelect,
     CalendarSelectFilter,
+    RiteSelect,
 } from '@liturgical-calendar/components-js';
 import { AssertionsBuilder, TestType, AssertType } from './AssertionsBuilder.js';
 
@@ -202,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('filterTestScope').addEventListener('input', renderTableRows);
 
     // Expose internals for later tasks (editor/delete wiring appended below).
-    window.__adminTests = { state, fetchJson, deriveScope, gateByScope, showModalAlert, loadTests, renderTableRows, AssertionsBuilder, TestType, CalendarSelect, CalendarSelectFilter, ApiClient };
+    window.__adminTests = { state, fetchJson, deriveScope, gateByScope, showModalAlert, loadTests, renderTableRows, AssertionsBuilder, TestType, CalendarSelect, CalendarSelectFilter, RiteSelect, ApiClient };
 
     // ---- editor -----------------------------------------------------------
 
@@ -526,11 +527,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 const client = await ApiClient.init(apiUrl).catch(() => null);
                 if (!client) throw new Error('ApiClient initialization failed');
                 if (isStale()) return;
-                const filter = type === 'national_calendar'
+                const isNational = type === 'national_calendar';
+                const filter = isNational
                     ? CalendarSelectFilter.NATIONAL_CALENDARS
                     : CalendarSelectFilter.DIOCESAN_CALENDARS;
+                // The Ambrosian rite has no national tier: a `nations` filtered select
+                // under it holds only the rite-level calendar and hides itself, which
+                // would strand the admin with no way to fill a required field. So the
+                // rite select is offered for diocesan scopes only, where the Ambrosian
+                // rite does have calendars (Lugano, Bergamo, Milano, Novara).
+                //
+                // It must be in the DOM before linkToRiteSelect() below, which attaches
+                // its change listener to this element.
+                let riteSelect = null;
+                if (!isNational) {
+                    riteSelect = new RiteSelect(config.locale).class('form-select mb-2').id('testScopeRite');
+                    riteSelect.appendTo(mount);
+                }
                 const sel = new CalendarSelect(config.locale).filter(filter).allowNull(true).class('form-select').id('testScopeId');
                 sel.appendTo(mount);
+                if (riteSelect) {
+                    sel.linkToRiteSelect(riteSelect);
+                }
             } catch (err) {
                 console.error(`[admin-tests] Could not build the calendar select for scope type "${type}":`, err);
                 if (isStale()) return;
