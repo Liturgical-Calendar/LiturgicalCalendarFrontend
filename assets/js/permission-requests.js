@@ -9,11 +9,15 @@ import {
     ApiClient,
     CalendarSelect,
     CalendarSelectFilter,
+    RiteSelect,
 } from '@liturgical-calendar/components-js';
 
 // Initialize the API client once; CalendarSelect requires this to have resolved.
+// Since components-js 2.0.0 init() rejects on failure rather than resolving to
+// false, so the `instanceof` check it used to need is gone: the fulfilled value
+// is always a client. The catch still maps failure to false, which is what the
+// `if (!client)` guards below test for.
 const apiClientReady = ApiClient.init(BaseUrl)
-    .then(function(client) { return client instanceof ApiClient ? client : false; })
     .catch(function(err) {
         console.error('Failed to initialize ApiClient for permission fields:', err);
         return false;
@@ -246,9 +250,24 @@ document.addEventListener('DOMContentLoaded', async function() {
                     !row.isConnected ||
                     row.querySelector('.perm-object-type').value !== objectType
                 ) return;
-                const filter = NATIONAL_FILTER_TYPES.includes(objectType)
+                const isNational = NATIONAL_FILTER_TYPES.includes(objectType);
+                const filter = isNational
                     ? CalendarSelectFilter.NATIONAL_CALENDARS
                     : CalendarSelectFilter.DIOCESAN_CALENDARS;
+                // The Ambrosian rite has no national tier: a `nations` filtered select
+                // under it holds only the rite-level calendar and hides itself, which
+                // would strand the admin with no way to fill a required field. So the
+                // rite select is offered for diocesan scopes only, where the Ambrosian
+                // rite does have calendars (Lugano, Bergamo, Milano, Novara).
+                //
+                // It must be in the DOM before linkToRiteSelect() below, which attaches
+                // its change listener to this element.
+                let riteSelect = null;
+                if (!isNational) {
+                    riteSelect = new RiteSelect(LITCAL_LOCALE)
+                        .class('form-select form-select-sm mb-2 perm-object-rite');
+                    riteSelect.appendTo(mount);
+                }
                 const calSelect = new CalendarSelect(LITCAL_LOCALE)
                     .filter(filter)
                     .allowNull(true)
@@ -259,12 +278,22 @@ document.addEventListener('DOMContentLoaded', async function() {
                 // valid national/diocesan object_id. Turn it into a disabled
                 // placeholder so the user must pick a concrete calendar (Vatican
                 // included — it has its own national-style calendar).
-                const calNullOpt = mount.querySelector('.perm-object-id option[value=""]');
-                if (calNullOpt) {
-                    calNullOpt.textContent = config.i18n.selectCalendarId || 'Select calendar ID...';
-                    calNullOpt.disabled = true;
-                    calNullOpt.selected = true;
+                //
+                // Re-applied on every rite change: linkToRiteSelect() rebuilds the
+                // option list from scratch, which discards this customization.
+                const applyCalendarIdPlaceholder = () => {
+                    const calNullOpt = mount.querySelector('.perm-object-id option[value=""]');
+                    if (calNullOpt) {
+                        calNullOpt.textContent = config.i18n.selectCalendarId || 'Select calendar ID...';
+                        calNullOpt.disabled = true;
+                        calNullOpt.selected = true;
+                    }
+                };
+                if (riteSelect) {
+                    calSelect.linkToRiteSelect(riteSelect);
+                    riteSelect._domElement.addEventListener('change', applyCalendarIdPlaceholder);
                 }
+                applyCalendarIdPlaceholder();
             } catch (err) {
                 console.error(
                     `[permission-requests] Could not build the calendar select for object type "${objectType}":`,

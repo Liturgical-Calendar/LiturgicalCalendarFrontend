@@ -108,12 +108,10 @@ const translations = {
  */
 const initializePage = async () => {
     // Initialize ApiClient with the API URL from the global BaseUrl
+    // Since components-js 2.0.0 init() rejects rather than resolving to false, so
+    // the `instanceof` guard this used to need is gone; startPage() below catches
+    // the rejection.
     const apiClient = await ApiClient.init( BaseUrl );
-
-    if ( !( apiClient instanceof ApiClient ) ) {
-        console.error( 'Failed to initialize ApiClient' );
-        return;
-    }
 
     // Get the base language for translations
     const lang = currentLocale.language;
@@ -216,19 +214,40 @@ const initializePage = async () => {
 
     liturgyOfAnyDay.appendTo( '#liturgyOfAnyDayContainer' );
 
-    // Have ApiClient listen to CalendarSelect and ApiOptions
-    // This automatically handles Accept-Language headers based on locale selection
-    apiClient.listenTo( calendarSelect ).listenTo( apiOptions );
+    // Have ApiClient listen to CalendarSelect, RiteSelect and ApiOptions
+    // This automatically handles Accept-Language headers based on locale selection.
+    //
+    // riteSelect has to be wired here as well as passed to linkToCalendarSelect()
+    // above: that call rebuilds the calendar select on a rite change, but only the
+    // client turns the rite into a path segment. Without it the page offered a rite
+    // select that changed the calendar list while every request still went to
+    // /calendar/roman/.
+    apiClient.listenTo( calendarSelect ).listenTo( riteSelect ).listenTo( apiOptions );
 
     // Initial fetch - fetch the General Roman Calendar
     // Note: LiturgyOfAnyDay.listenTo() already configured ApiClient with the correct
     // year_type (LITURGICAL for Dec 31st to include vigil masses, CIVIL otherwise)
-    apiClient.fetchCalendar( selectedLocale );
+    //
+    // Since components-js 2.0.0 the fetch methods reject instead of logging and
+    // swallowing, so this promise is handled rather than left bare.
+    apiClient.fetchCalendar( selectedLocale ).catch( error => {
+        console.error( `Could not load the calendar: ${error.message}` );
+    } );
 };
 
-// Initialize when DOM is ready
+// Initialize when DOM is ready.
+//
+// initializePage() is async and, since components-js 2.0.0, ApiClient.init() and
+// the fetch methods reject on failure, so the returned promise is handled here
+// rather than left to surface as an unhandled rejection.
+const startPage = () => {
+    initializePage().catch( error => {
+        console.error( `Could not initialize the liturgy of any day page: ${error.message}` );
+    } );
+};
+
 if ( document.readyState === 'loading' ) {
-    document.addEventListener( 'DOMContentLoaded', initializePage );
+    document.addEventListener( 'DOMContentLoaded', startPage );
 } else {
-    initializePage();
+    startPage();
 }
