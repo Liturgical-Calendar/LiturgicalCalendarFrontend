@@ -221,6 +221,36 @@ rather than requested directly, skips its own autoloader and its own `ApiClient`
 both from the host. `includes/common.php` therefore keeps its `ApiClient::getInstance()` bootstrap, gated
 to `examples.php`. Do not remove the composer dependency — the example crashes without it.
 
+### Meta-components
+
+liturgy-components-js 2.2.0 ships two meta-components that bundle wiring this repo used to re-derive by
+hand:
+
+- **`DayViewer`** — the whole "liturgy of any day" page. Used by `assets/js/liturgyOfAnyDay.js`.
+- **`CalendarResourcePicker`** — a `RiteSelect` plus a filtered `CalendarSelect`, for choosing a national
+  or diocesan resource id.
+
+Prefer them over hand-wiring. A `RiteSelect` needs **two** wires — `linkToRiteSelect()` AND
+`apiClient.listenTo(riteSelect)` — and wiring only the first fails silently: the form reads `ambrosian`
+while every request still goes to `/calendar/roman/`. The meta-components own that.
+
+Two call sites stay hand-wired on purpose:
+
+- `assets/js/usage.js` — `CalendarResourcePicker` rejects `CalendarSelectFilter.NONE` and makes the
+  empty option a disabled placeholder. The subscription card needs an all-calendars list and a
+  _selectable_ empty option meaning the rite-level calendar. Asked upstream as
+  liturgy-components-js#42.
+- `assets/js/index.js` — a PathBuilder/API-explorer page; neither meta-component models it.
+
+**Theme bag notes:** The theme bag's keys are HTML roles (`select`, `label`, `input`, `wrapper`) with
+per-child overrides named for the public getters. Two sharp edges: `label()` is **one-shot**, so once the
+theme bag has themed a child, custom label text must go through the per-child `labelText` key rather than
+`viewer.<child>.label({ text })`, which throws; and `id()` is not one-shot. Separately,
+`Theme.resolveChildTheme()` currently forwards only `class`/`labelClass`/`labelText`/`wrapperClass`/`wrapper`,
+so the eight `LiturgyOfAnyDay` styling keys `DayViewer`'s own constructor tries to read are silently dropped
+— `assets/js/liturgyOfAnyDay.js` sets them post-mount instead. Filed upstream as liturgy-components-js#43;
+move them into the theme bag once that lands.
+
 ## E2E Tests (Playwright)
 
 Test files in `e2e/` verify form submissions match API contracts.
