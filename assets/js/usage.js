@@ -2,6 +2,12 @@ import {
     CalendarType,
     CurrentEndpoint,
 } from './subscriptionUrl.js';
+import {
+    ApiClient,
+    CalendarSelect,
+    RiteSelect,
+    Rite,
+} from '@liturgical-calendar/components-js';
 
 /**
  * Updates the text of the element with the id 'calSubscriptionUrl' to reflect the current value of CurrentEndpoint.
@@ -165,6 +171,52 @@ const handleCardHeaderClick = (ev) => {
     }
 };
 
+/**
+ * Builds the rite and calendar selects and wires them to the subscription URL.
+ *
+ * The two selects are linked so that changing the rite repartitions the calendar
+ * list: the Ambrosian rite has no national tier and a different set of diocesan
+ * calendars, so a selection under one rite is never carried into the other.
+ */
+const buildCalendarControls = async () => {
+    await ApiClient.init(BaseUrl);
+
+    CurrentEndpoint.rite = Rite.ROMAN;
+
+    const lang = currentLocale.language;
+
+    // Must be in the DOM before linkToRiteSelect() below, which reads its
+    // element to attach the rite-change listener.
+    const riteSelect = new RiteSelect(lang)
+        .class('form-select')
+        .id('riteSelect')
+        .label({ text: Messages['Select rite'], class: 'form-label' });
+    riteSelect.appendTo('#riteSelectContainer');
+
+    const calendarSelect = new CalendarSelect(lang)
+        .class('form-select')
+        .id('calendarSelect')
+        .label({ text: Messages['Select calendar'], class: 'form-label' })
+        .allowNull(true);
+    calendarSelect.appendTo('#calendarSelectContainer');
+
+    calendarSelect.linkToRiteSelect(riteSelect);
+
+    // Default to the rite-level calendar rather than the first nation, so the
+    // card opens on the General Roman Calendar.
+    calendarSelect._domElement.value = '';
+
+    document.getElementById('riteSelect').addEventListener('change', (ev) => {
+        CurrentEndpoint.rite = ev.target.value;
+        updateSubscriptionURL();
+    });
+    document
+        .getElementById('calendarSelect')
+        .addEventListener('change', updateSubscriptionURL);
+
+    updateSubscriptionURL();
+};
+
 // Initialize on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
     CurrentEndpoint.apiBase = CalendarUrl;
@@ -196,11 +248,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Event: Calendar select change
-    const calendarSelect = document.getElementById('calendarSelect');
-    if (calendarSelect) {
-        calendarSelect.addEventListener('change', updateSubscriptionURL);
-    }
+    // The selects are built asynchronously, so their change listeners are
+    // attached inside buildCalendarControls() once the elements exist.
+    buildCalendarControls().catch((error) => {
+        console.error(
+            `Could not build the calendar subscription controls: ${error.message}`,
+        );
+    });
 });
 
 // Handle hash changes
