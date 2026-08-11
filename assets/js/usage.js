@@ -1,62 +1,7 @@
-/**
- * Enum CalendarType
- * Used in building the endpoint URL for requests to the API /calendar endpoint
- */
-const CalendarType = Object.freeze({
-    NATIONAL: 'nation',
-    DIOCESAN: 'diocese'
-});
-
-/**
- * Represents the parameters for the API /calendar endpoint request
- * Currently only used to serialize the calendar subscription URL?
- */
-class RequestPayload {
-    static epiphany             = null;
-    static ascension            = null;
-    static corpus_christi       = null;
-    static eternal_high_priest  = null;
-    static locale               = null;
-    static return_type          = 'ICS';
-    static year_type            = 'CIVIL';
-}
-
-/**
- * Class CurrentEndpoint
- * Used to build the full endpoint URL for the API /calendar endpoint (currently only used to serialize the calendar subscription URL?)
- * @param {string} calendarType The type of calendar (national, diocesan)
- * @param {string} calendarId The ID of the calendar
- * @param {string} calendarYear The year of the calendar
- */
-class CurrentEndpoint {
-    /**
-     * The base URL of the API /calendar endpoint
-     * @returns {string} The base URL of the API /calendar endpoint
-     */
-    static get apiBase() {
-        return `${CalendarUrl}`;
-    }
-    static calendarType   = null;
-    static calendarId     = null;
-    static calendarYear   = null;
-    static serialize = () => {
-        let currentEndpoint = CurrentEndpoint.apiBase;
-        if (CurrentEndpoint.calendarType !== null && CurrentEndpoint.calendarId !== null) {
-            currentEndpoint += `/${CurrentEndpoint.calendarType}/${CurrentEndpoint.calendarId}`;
-        }
-        if (CurrentEndpoint.calendarYear !== null) {
-            currentEndpoint += `/${CurrentEndpoint.calendarYear}`;
-        }
-        const parameters = [];
-        for (const key in RequestPayload) {
-            if (RequestPayload[key] !== null && RequestPayload[key] !== '') {
-                parameters.push(key + '=' + encodeURIComponent(RequestPayload[key]));
-            }
-        }
-        const urlParams = parameters.length ? `?${parameters.join('&')}` : '';
-        return `${currentEndpoint}${urlParams}`;
-    };
-}
+import {
+    CalendarType,
+    CurrentEndpoint,
+} from './subscriptionUrl.js';
 
 /**
  * Updates the text of the element with the id 'calSubscriptionUrl' to reflect the current value of CurrentEndpoint.
@@ -222,6 +167,7 @@ const handleCardHeaderClick = (ev) => {
 
 // Initialize on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
+    CurrentEndpoint.apiBase = CalendarUrl;
     handleHashChange();
     updateSubscriptionURL();
 
