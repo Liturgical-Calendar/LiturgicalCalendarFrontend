@@ -1,257 +1,113 @@
 /**
- * Liturgy of Any Day - using liturgy-components-js library
+ * Liturgy of Any Day - using the DayViewer meta-component.
  *
- * This module uses the ApiClient, CalendarSelect, ApiOptions, and LiturgyOfAnyDay
- * components from the liturgy-components-js library. The ApiClient automatically handles
- * the Accept-Language header when listening to ApiOptions.
+ * DayViewer bundles the RiteSelect, CalendarSelect, ApiOptions locale input and
+ * LiturgyOfAnyDay widget that this page previously wired by hand, including the
+ * rite's two-wire requirement: linkToRiteSelect() alone rebuilds the calendar
+ * list but does NOT turn the rite into a path segment, so a hand-wired page can
+ * read `ambrosian` while every request still goes to /calendar/roman/.
+ *
+ * The label text that used to come from a hand-rolled 12-language map now comes
+ * from the library's own Messages, which covers 83 languages.
+ *
+ * `theme.liturgy` only forwards `class` to the widget: `Theme.resolveChildTheme()`
+ * copies through `class`/`labelClass`/`labelText`/`wrapperClass`/`wrapper` only, so
+ * any other `theme.liturgy.*` key -- `dateClass`, `dateControlsClass`,
+ * `eventsWrapperClass`, `eventClass`, `eventGradeClass`, `eventCommonClass`,
+ * `eventYearCycleClass` -- is silently dropped before it ever reaches
+ * `DayViewer`'s constructor, even though that constructor's own loop
+ * (DayViewer.js:196-209) tries to read exactly those keys from the resolved
+ * theme. Filed as liturgy-components-js#43: the resolver strips eight keys the
+ * constructor loop expects, making that loop unreachable code. The events
+ * wrapper needs the `card-body` class the old hand-wiring gave it --
+ * e2e/liturgyOfAnyDay.spec.ts locates rendered events via
+ * `#liturgyOfAnyDay > .card-body` -- and the other six reproduce the old page's
+ * Bootstrap styling, so all seven are set post-mount below, the same way the
+ * ids are. Once #43 lands, these can move back into `theme.liturgy`.
+ *
+ * The three date controls (`#day`, `#month`, the year input) hit a distinct,
+ * separate gap: DayViewer.js:214 resolves that child with role `'input'`, so it
+ * looks up `theme.input` -- `theme.select` is never consulted for it -- and
+ * DayViewer.js:240-247 shares ONE resolved object across all three controls, even
+ * though `#month` is a `<select>` needing `form-select` while the other two are
+ * `<input>`s needing `form-control`. Unlike #43, this isn't a key the resolver
+ * drops -- it's a role the theme bag has no way to express at all, since one
+ * resolved object can't hold two different class strings for the same key. So
+ * these three are also set post-mount, one call per control's actual tag.
  */
 
-import {
-    ApiClient,
-    CalendarSelect,
-    RiteSelect,
-    ApiOptions,
-    ApiOptionsFilter,
-    LiturgyOfAnyDay
-} from '@liturgical-calendar/components-js';
+import { ApiClient, DayViewer } from '@liturgical-calendar/components-js';
 
-// Simple translation maps (Messages is not exported from the library)
-const translations = {
-    selectCalendar: {
-        en: 'Select a calendar',
-        it: 'Seleziona un calendario',
-        es: 'Seleccionar un calendario',
-        fr: 'Sélectionner un calendrier',
-        de: 'Kalender auswählen',
-        pt: 'Selecionar um calendário',
-        nl: 'Selecteer een kalender',
-        la: 'Elige calendarium',
-        hu: 'Válasszon naptárat',
-        sk: 'Vyberte kalendár',
-        vi: 'Chọn lịch',
-        id: 'Pilih kalender'
-    },
-    selectRite: {
-        en: 'Select a rite',
-        it: 'Seleziona un rito',
-        es: 'Seleccionar un rito',
-        fr: 'Sélectionner un rite',
-        de: 'Ritus auswählen',
-        pt: 'Selecionar um rito',
-        nl: 'Selecteer een ritus',
-        la: 'Elige ritum',
-        hu: 'Válasszon rítust',
-        sk: 'Vyberte rítus',
-        vi: 'Chọn nghi lễ',
-        id: 'Pilih ritus'
-    },
-    language: {
-        en: 'Language',
-        it: 'Lingua',
-        es: 'Idioma',
-        fr: 'Langue',
-        de: 'Sprache',
-        pt: 'Língua',
-        nl: 'Taal',
-        la: 'Lingua',
-        hu: 'Nyelv',
-        sk: 'Jazyk',
-        vi: 'Ngôn ngữ',
-        id: 'Bahasa'
-    },
-    day: {
-        en: 'Day',
-        it: 'Giorno',
-        es: 'Día',
-        fr: 'Jour',
-        de: 'Tag',
-        pt: 'Dia',
-        nl: 'Dag',
-        la: 'Dies',
-        hu: 'Nap',
-        sk: 'Deň',
-        vi: 'Ngày',
-        id: 'Hari'
-    },
-    month: {
-        en: 'Month',
-        it: 'Mese',
-        es: 'Mes',
-        fr: 'Mois',
-        de: 'Monat',
-        pt: 'Mês',
-        nl: 'Maand',
-        la: 'Mensis',
-        hu: 'Hónap',
-        sk: 'Mesiac',
-        vi: 'Tháng',
-        id: 'Bulan'
-    },
-    year: {
-        en: 'Year',
-        it: 'Anno',
-        es: 'Año',
-        fr: 'Année',
-        de: 'Jahr',
-        pt: 'Ano',
-        nl: 'Jaar',
-        la: 'Annus',
-        hu: 'Év',
-        sk: 'Rok',
-        vi: 'Năm',
-        id: 'Tahun'
-    }
-};
-
-/**
- * Initialize the page with JS components
- */
 const initializePage = async () => {
-    // Initialize ApiClient with the API URL from the global BaseUrl
-    // Since components-js 2.0.0 init() rejects rather than resolving to false, so
-    // the `instanceof` guard this used to need is gone; startPage() below catches
-    // the rejection.
-    const apiClient = await ApiClient.init( BaseUrl );
+    const apiClient = await ApiClient.init(BaseUrl);
 
-    // Get the base language for translations
-    const lang = currentLocale.language;
+    const viewer = await DayViewer.mountInto(
+        {
+            rite: '#riteSelectContainer',
+            calendar: '#calendarSelectContainer',
+            locale: '#localeSelectContainer',
+            liturgy: '#liturgyOfAnyDayContainer',
+        },
+        {
+            locale: currentLocale.language,
+            apiClient,
+            // The widget's own "Liturgy of the Day" heading is redundant: the page
+            // already has an <h3> heading above these controls, exactly as the
+            // hand-wired version hid it via `_titleElement.style.display = 'none'`.
+            showTitle: false,
+            theme: {
+                select: 'form-select',
+                label: 'form-label',
+                liturgy: { class: 'card shadow m-2' },
+                dateControls: {
+                    labelClass: 'form-label',
+                    wrapperClass: 'col-md',
+                },
+            },
+            onError: (error) => {
+                console.error(`Liturgy of any day: ${error.message}`);
+                showToast(Messages['Failed to load'], 'danger');
+            },
+        },
+    );
 
-    // Create RiteSelect component. It must exist in the DOM before it is passed
-    // to linkToRiteSelect() below, which reads its element to attach the
-    // rite-change listener.
-    const riteSelect = new RiteSelect( lang )
-        .class( 'form-select' )
-        .id( 'riteSelect' )
-        .label( { text: translations.selectRite[ lang ] || translations.selectRite.en, class: 'form-label' } );
-    riteSelect.appendTo( '#riteSelectContainer' );
-
-    // Create CalendarSelect component
-    const calendarSelect = new CalendarSelect( lang )
-        .class( 'form-select' )
-        .id( 'calendarSelect' )
-        .label( { text: translations.selectCalendar[ lang ] || translations.selectCalendar.en, class: 'form-label' } )
-        .allowNull( true );
-    calendarSelect.appendTo( '#calendarSelectContainer' );
-
-    // Set CalendarSelect to General Roman Calendar (empty value) instead of Vatican
-    calendarSelect._domElement.value = '';
-
-    // Create ApiOptions with only the locale input filter
-    const apiOptions = new ApiOptions( lang )
-        .filter( ApiOptionsFilter.LOCALE_ONLY )
-        // Linking the rite makes it an explicit part of the endpoint and
-        // rebuilds the calendar select whenever the rite changes: the Ambrosian
-        // rite has no national tier and offers a different set of diocesan
-        // calendars, so a selection from one rite is never carried into another.
-        //
-        // Two calls rather than the deprecated second argument of
-        // linkToCalendarSelect(), which warns as of components-js 2.1.0.
-        .linkToCalendarSelect( calendarSelect )
-        .linkToRiteSelect( riteSelect );
-
-    // Configure the locale input before appending
-    // Set defaultValue to currentLocale.language so it will be selected if available
-    apiOptions._localeInput.id( 'apiOptionsLocale' );
-    apiOptions._localeInput.class( 'form-select' );
-    apiOptions._localeInput.labelClass( 'form-label' );
-    apiOptions._localeInput._labelElement.textContent = translations.language[ lang ] || translations.language.en;
-    apiOptions._localeInput.defaultValue( lang );
-
-    // Append the locale input to its container using the filter
-    apiOptions.appendTo( '#localeSelectContainer' );
-
-    // Try to select the current locale in LocaleInput, fallback to first option if not available
-    // First try exact match, then try matching just the language part (e.g., "en" matches "en_US")
-    const localeOptions = Array.from( apiOptions._localeInput._domElement.options );
-    const exactMatch = localeOptions.find( opt => opt.value === lang );
-    const languageMatch = localeOptions.find( opt => opt.value.split( /[-_]/ )[ 0 ] === lang );
-
-    let selectedLocale;
-    if ( exactMatch ) {
-        selectedLocale = exactMatch.value;
-    } else if ( languageMatch ) {
-        selectedLocale = languageMatch.value;
-    } else if ( localeOptions.length > 0 ) {
-        selectedLocale = localeOptions[ 0 ].value;
-    } else {
-        selectedLocale = lang; // Fallback to original lang if no options available
-    }
-    apiOptions._localeInput._domElement.value = selectedLocale;
-
-    // Create LiturgyOfAnyDay component
-    const liturgyOfAnyDay = new LiturgyOfAnyDay( { locale: lang } )
-        .id( 'liturgyOfAnyDay' )
-        .class( 'card shadow m-2' )
-        .dateClass( 'card-header py-3 d-flex justify-content-between align-items-center' )
-        .dateControlsClass( 'row g-3 p-3' )
-        .eventsWrapperClass( 'card-body' )
-        .eventClass( 'liturgy-event p-3 mb-2 rounded' )
-        .eventGradeClass( 'small' )
-        .eventCommonClass( 'small fst-italic' )
-        .eventYearCycleClass( 'small' )
-        .dayInputConfig( {
-            wrapper: 'div',
-            wrapperClass: 'col-md',
-            class: 'form-control',
-            labelClass: 'form-label',
-            labelText: translations.day[ lang ] || translations.day.en
-        } )
-        .monthInputConfig( {
-            wrapper: 'div',
-            wrapperClass: 'col-md',
-            class: 'form-select',
-            labelClass: 'form-label',
-            labelText: translations.month[ lang ] || translations.month.en
-        } )
-        .yearInputConfig( {
-            wrapper: 'div',
-            wrapperClass: 'col-md',
-            class: 'form-control',
-            labelClass: 'form-label',
-            labelText: translations.year[ lang ] || translations.year.en
-        } )
-        .buildDateControls()
-        .listenTo( apiClient );
-
-    // Hide the component's title since the page already has a heading
-    liturgyOfAnyDay._titleElement.style.display = 'none';
-
-    liturgyOfAnyDay.appendTo( '#liturgyOfAnyDayContainer' );
-
-    // Have ApiClient listen to CalendarSelect, RiteSelect and ApiOptions
-    // This automatically handles Accept-Language headers based on locale selection.
-    //
-    // riteSelect has to be wired here as well as passed to linkToCalendarSelect()
-    // above: that call rebuilds the calendar select on a rite change, but only the
-    // client turns the rite into a path segment. Without it the page offered a rite
-    // select that changed the calendar list while every request still went to
-    // /calendar/roman/.
-    apiClient.listenTo( calendarSelect ).listenTo( riteSelect ).listenTo( apiOptions );
-
-    // Initial fetch - fetch the General Roman Calendar
-    // Note: LiturgyOfAnyDay.listenTo() already configured ApiClient with the correct
-    // year_type (LITURGICAL for Dec 31st to include vigil masses, CIVIL otherwise)
-    //
-    // Since components-js 2.0.0 the fetch methods reject instead of logging and
-    // swallowing, so this promise is handled rather than left bare.
-    apiClient.fetchCalendar( selectedLocale ).catch( error => {
-        console.error( `Could not load the calendar: ${error.message}` );
-    } );
+    // ids are not theme keys, and id() is not one-shot -- unlike label(), which
+    // the theme bag has already called on each child.
+    viewer.riteSelect.id('riteSelect');
+    viewer.calendarSelect.id('calendarSelect');
+    viewer.localeInput.id('apiOptionsLocale');
+    viewer.liturgy.id('liturgyOfAnyDay');
+    // See the file-level note above (liturgy-components-js#43): none of these
+    // seven are reachable through the theme bag, so they are set post-mount,
+    // reproducing the classes the old hand-wired page set directly.
+    viewer.liturgy
+        .dateClass('card-header py-3 d-flex justify-content-between align-items-center')
+        .dateControlsClass('row g-3 p-3')
+        .eventsWrapperClass('card-body')
+        .eventClass('liturgy-event p-3 mb-2 rounded')
+        .eventGradeClass('small')
+        .eventCommonClass('small fst-italic')
+        .eventYearCycleClass('small');
+    // See the file-level note above: the date controls' role-shared theme
+    // object cannot express one class per tag, so each control's class is set
+    // post-mount, matching the old hand-wired page's Bootstrap classes.
+    viewer.liturgy
+        .dayInputConfig({ class: 'form-control' })
+        .monthInputConfig({ class: 'form-select' })
+        .yearInputConfig({ class: 'form-control' });
 };
 
-// Initialize when DOM is ready.
-//
-// initializePage() is async and, since components-js 2.0.0, ApiClient.init() and
-// the fetch methods reject on failure, so the returned promise is handled here
-// rather than left to surface as an unhandled rejection.
 const startPage = () => {
-    initializePage().catch( error => {
-        console.error( `Could not initialize the liturgy of any day page: ${error.message}` );
-    } );
+    initializePage().catch((error) => {
+        console.error(
+            `Could not initialize the liturgy of any day page: ${error.message}`,
+        );
+        showToast(Messages['Failed to load'], 'danger');
+    });
 };
 
-if ( document.readyState === 'loading' ) {
-    document.addEventListener( 'DOMContentLoaded', startPage );
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startPage);
 } else {
     startPage();
 }
