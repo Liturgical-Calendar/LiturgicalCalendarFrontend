@@ -295,6 +295,7 @@ Add to `assets/js/__tests__/subscriptionUrl.test.js`. Also add `CurrentEndpoint.
 describe('CurrentEndpoint rite segment', () => {
     beforeEach(reset);
 
+    // Removed during final review as tautological — see the note at Step 4.
     it('defaults to the roman rite', () => {
         expect(CurrentEndpoint.rite).toBe('roman');
     });
@@ -386,6 +387,12 @@ currentEndpoint += `/${CurrentEndpoint.rite}`;
 Run: `yarn test:unit assets/js/__tests__/subscriptionUrl.test.js`
 
 Expected: PASS, 11 tests.
+
+> **Superseded:** the file now holds **10**. The `'defaults to the roman rite'`
+> case below was removed during final review as tautological — `reset()` runs in
+> `beforeEach` and force-sets the very value the test asserted, so it could not
+> fail even if the class default changed. Task 2 did produce 11; the count
+> dropped afterwards.
 
 - [ ] **Step 5: Commit**
 
