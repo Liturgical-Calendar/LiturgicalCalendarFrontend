@@ -34,15 +34,19 @@ endpoints.
 **Interfaces:**
 
 - Produces (consumed by Task 4):
-  - `DecreeAction` — frozen enum `{ CreateNew: 'createNew', SetPropertyGrade: 'setProperty:grade', SetPropertyName: 'setProperty:name', MakeDoctor: 'makeDoctor' }`
-  - `buildDecreePayload(form)` — `form` is a plain object (see test below); returns the API payload object
-  - `validateDecreePayload(payload, baseLocale, isCreate)` — returns `string[]` of error messages (empty = valid), mirroring the server matrix
+    - `DecreeAction` — frozen enum `{ CreateNew: 'createNew', SetPropertyGrade: 'setProperty:grade', SetPropertyName: 'setProperty:name', MakeDoctor: 'makeDoctor' }`
+    - `buildDecreePayload(form)` — `form` is a plain object (see test below); returns the API payload object
+    - `validateDecreePayload(payload, baseLocale, isCreate)` — returns `string[]` of error messages (empty = valid), mirroring the server matrix
 
 - [ ] **Step 1: Write the failing tests**
 
 ```javascript
 import { describe, it, expect } from 'vitest';
-import { DecreeAction, buildDecreePayload, validateDecreePayload } from '../DecreePayload.js';
+import {
+    DecreeAction,
+    buildDecreePayload,
+    validateDecreePayload,
+} from '../DecreePayload.js';
 
 const createNewForm = () => ({
     action: DecreeAction.CreateNew,
@@ -83,7 +87,11 @@ describe('buildDecreePayload', () => {
     });
 
     it('builds a mobile createNew payload with strtotime and no day/month', () => {
-        const form = { ...createNewForm(), event_type: 'mobile', strtotime: 'Monday after Pentecost' };
+        const form = {
+            ...createNewForm(),
+            event_type: 'mobile',
+            strtotime: 'Monday after Pentecost',
+        };
         delete form.day;
         delete form.month;
         const p = buildDecreePayload(form);
@@ -92,7 +100,12 @@ describe('buildDecreePayload', () => {
     });
 
     it('splits setProperty actions into action + property', () => {
-        const p = buildDecreePayload({ ...createNewForm(), action: DecreeAction.SetPropertyGrade, i18n: undefined, readings: undefined });
+        const p = buildDecreePayload({
+            ...createNewForm(),
+            action: DecreeAction.SetPropertyGrade,
+            i18n: undefined,
+            readings: undefined,
+        });
         expect(p.metadata.action).toBe('setProperty');
         expect(p.metadata.property).toBe('grade');
         expect(p).not.toHaveProperty('i18n');
@@ -102,28 +115,49 @@ describe('buildDecreePayload', () => {
 
 describe('validateDecreePayload', () => {
     it('accepts a complete createNew payload on create', () => {
-        expect(validateDecreePayload(buildDecreePayload(createNewForm()), 'en', true)).toEqual([]);
+        expect(
+            validateDecreePayload(
+                buildDecreePayload(createNewForm()),
+                'en',
+                true,
+            ),
+        ).toEqual([]);
     });
 
     it('requires i18n with the base locale for name-bearing actions', () => {
-        const p = buildDecreePayload({ ...createNewForm(), i18n: { it: 'San Test' } });
+        const p = buildDecreePayload({
+            ...createNewForm(),
+            i18n: { it: 'San Test' },
+        });
         const errors = validateDecreePayload(p, 'en', true);
         expect(errors.some((e) => e.includes('en'))).toBe(true);
     });
 
     it('rejects i18n for setProperty:grade', () => {
-        const p = buildDecreePayload({ ...createNewForm(), action: DecreeAction.SetPropertyGrade, readings: undefined });
+        const p = buildDecreePayload({
+            ...createNewForm(),
+            action: DecreeAction.SetPropertyGrade,
+            readings: undefined,
+        });
         expect(validateDecreePayload(p, 'en', false).length).toBeGreaterThan(0);
     });
 
     it('requires readings on create only for createNew', () => {
-        const noReadings = buildDecreePayload({ ...createNewForm(), readings: undefined });
-        expect(validateDecreePayload(noReadings, 'en', true).length).toBeGreaterThan(0);
+        const noReadings = buildDecreePayload({
+            ...createNewForm(),
+            readings: undefined,
+        });
+        expect(
+            validateDecreePayload(noReadings, 'en', true).length,
+        ).toBeGreaterThan(0);
         expect(validateDecreePayload(noReadings, 'en', false)).toEqual([]);
     });
 
     it('rejects readings on create for makeDoctor', () => {
-        const p = buildDecreePayload({ ...createNewForm(), action: DecreeAction.MakeDoctor });
+        const p = buildDecreePayload({
+            ...createNewForm(),
+            action: DecreeAction.MakeDoctor,
+        });
         expect(validateDecreePayload(p, 'en', true).length).toBeGreaterThan(0);
     });
 });
@@ -143,10 +177,10 @@ Expected: FAIL — module not found.
  * remains authoritative; this exists for fast form feedback.
  */
 export const DecreeAction = Object.freeze({
-    CreateNew:        'createNew',
+    CreateNew: 'createNew',
     SetPropertyGrade: 'setProperty:grade',
-    SetPropertyName:  'setProperty:name',
-    MakeDoctor:       'makeDoctor',
+    SetPropertyName: 'setProperty:name',
+    MakeDoctor: 'makeDoctor',
 });
 
 const splitAction = (action) => {
@@ -161,7 +195,11 @@ export const buildDecreePayload = (form) => {
         calendar: 'GENERAL ROMAN',
         ...(form.event_type === 'mobile'
             ? { strtotime: form.strtotime, type: 'mobile' }
-            : { day: Number(form.day), month: Number(form.month), type: 'fixed' }),
+            : {
+                  day: Number(form.day),
+                  month: Number(form.month),
+                  type: 'fixed',
+              }),
         ...(form.grade !== undefined ? { grade: Number(form.grade) } : {}),
         ...(form.color ? { color: form.color } : {}),
         ...(form.common ? { common: form.common } : {}),
@@ -191,25 +229,37 @@ export const buildDecreePayload = (form) => {
 export const validateDecreePayload = (payload, baseLocale, isCreate) => {
     const errors = [];
     const { action, property } = payload.metadata;
-    const nameBearing = action === 'createNew' || action === 'makeDoctor'
-        || (action === 'setProperty' && property === 'name');
+    const nameBearing =
+        action === 'createNew' ||
+        action === 'makeDoctor' ||
+        (action === 'setProperty' && property === 'name');
 
     if (nameBearing) {
         if (!payload.i18n || Object.keys(payload.i18n).length === 0) {
-            errors.push(`Action "${action}" requires at least one translated event name (i18n)`);
+            errors.push(
+                `Action "${action}" requires at least one translated event name (i18n)`,
+            );
         } else if (!(baseLocale in payload.i18n)) {
-            errors.push(`The i18n object must include an entry for your locale "${baseLocale}"`);
+            errors.push(
+                `The i18n object must include an entry for your locale "${baseLocale}"`,
+            );
         }
     } else if (payload.i18n) {
-        errors.push('A grade change does not affect the event name: remove the i18n translations');
+        errors.push(
+            'A grade change does not affect the event name: remove the i18n translations',
+        );
     }
 
     if (isCreate) {
         if (action === 'createNew' && !payload.readings) {
-            errors.push('A new liturgical event must define its lectionary readings');
+            errors.push(
+                'A new liturgical event must define its lectionary readings',
+            );
         }
         if (action !== 'createNew' && payload.readings) {
-            errors.push(`Action "${action}" does not accept readings on creation; correct readings via an edit instead`);
+            errors.push(
+                `Action "${action}" does not accept readings on creation; correct readings via an edit instead`,
+            );
         }
     }
     return errors;
@@ -351,12 +401,23 @@ async function detectCapabilities() {
     if (config.isGlobalAdmin) {
         return { canView: true, canEdit: true, canAdmin: true };
     }
-    const check = (relation) => fetchJson(
-        'GET',
-        `/admin/permissions/check?object_type=general_roman_calendar&object_id=decrees&relation=${relation}`
-    ).then((r) => r.allowed === true).catch(() => false);
-    const [viewer, editor, admin] = await Promise.all([check('viewer'), check('editor'), check('admin')]);
-    return { canView: viewer || editor || admin, canEdit: editor || admin, canAdmin: admin };
+    const check = (relation) =>
+        fetchJson(
+            'GET',
+            `/admin/permissions/check?object_type=general_roman_calendar&object_id=decrees&relation=${relation}`,
+        )
+            .then((r) => r.allowed === true)
+            .catch(() => false);
+    const [viewer, editor, admin] = await Promise.all([
+        check('viewer'),
+        check('editor'),
+        check('admin'),
+    ]);
+    return {
+        canView: viewer || editor || admin,
+        canEdit: editor || admin,
+        canAdmin: admin,
+    };
 }
 ```
 
@@ -413,10 +474,10 @@ JS toggling: on `#decreeAction` change, show/hide blocks:
 
 ```javascript
 const MATRIX = {
-    'createNew':        { i18n: true,  readingsOnCreate: true  },
-    'makeDoctor':       { i18n: true,  readingsOnCreate: false },
-    'setProperty:name': { i18n: true,  readingsOnCreate: false },
-    'setProperty:grade':{ i18n: false, readingsOnCreate: false },
+    createNew: { i18n: true, readingsOnCreate: true },
+    makeDoctor: { i18n: true, readingsOnCreate: false },
+    'setProperty:name': { i18n: true, readingsOnCreate: false },
+    'setProperty:grade': { i18n: false, readingsOnCreate: false },
 };
 ```
 
@@ -453,7 +514,11 @@ git commit -m "feat: action-driven decree editor modal"
 ```javascript
 async function saveDecree(payload, isCreate) {
     const method = isCreate ? 'PUT' : 'PATCH';
-    await fetchJson(method, `/decrees/${encodeURIComponent(payload.decree_id)}`, payload);
+    await fetchJson(
+        method,
+        `/decrees/${encodeURIComponent(payload.decree_id)}`,
+        payload,
+    );
     showToast(isCreate ? config.i18n.created : config.i18n.updated);
     await reloadDecrees();
 }

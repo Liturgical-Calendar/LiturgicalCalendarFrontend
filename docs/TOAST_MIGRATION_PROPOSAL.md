@@ -8,10 +8,10 @@ This document proposes migrating from jQuery toastr to native Bootstrap toasts u
 The frontend currently uses the jQuery toastr plugin for toast notifications:
 
 ```javascript
-toastr["success"](message, title);
-toastr["error"](message, title);
-toastr["warning"](message, title);
-toastr["info"](message, title);
+toastr['success'](message, title);
+toastr['error'](message, title);
+toastr['warning'](message, title);
+toastr['info'](message, title);
 ```
 
 **Toastr advantages:**
@@ -66,23 +66,23 @@ toast({
     header: 'Success',
     body: 'Operation completed successfully',
     classes: 'bg-success text-white',
-    delay: 5000
+    delay: 5000,
 });
 ```
 
 ### Available Options
 
-| Option    | Type             | Default     | Description                                                    |
-|-----------|------------------|-------------|----------------------------------------------------------------|
-| animation | boolean          | true        | Apply CSS fade transition                                      |
-| autohide  | boolean          | true        | Automatically dismiss after delay                              |
-| delay     | number           | 4000        | Delay in milliseconds before hiding                            |
-| gap       | number           | 16          | Space between multiple toasts (px)                             |
-| margin    | string           | '1rem'      | Margin from corner                                             |
-| placement | string           | 'top-right' | Position: top-right, top-left, bottom-right, etc.              |
-| classes   | string           | ''          | Additional CSS classes                                         |
-| header    | string \| object | ''          | Header as string, or object with `icon`, `title`, `closeBtn`   |
-| body      | string           | ''          | Main toast message                                             |
+| Option    | Type             | Default     | Description                                                  |
+| --------- | ---------------- | ----------- | ------------------------------------------------------------ |
+| animation | boolean          | true        | Apply CSS fade transition                                    |
+| autohide  | boolean          | true        | Automatically dismiss after delay                            |
+| delay     | number           | 4000        | Delay in milliseconds before hiding                          |
+| gap       | number           | 16          | Space between multiple toasts (px)                           |
+| margin    | string           | '1rem'      | Margin from corner                                           |
+| placement | string           | 'top-right' | Position: top-right, top-left, bottom-right, etc.            |
+| classes   | string           | ''          | Additional CSS classes                                       |
+| header    | string \| object | ''          | Header as string, or object with `icon`, `title`, `closeBtn` |
+| body      | string           | ''          | Main toast message                                           |
 
 ### Methods
 
@@ -112,7 +112,7 @@ This allows incremental migration without changing existing code immediately.
  * Usage: <script src="/assets/js/toast-wrapper.js"></script>
  * Then use: toastr.success('Message', 'Title') or toastr["success"]('Message')
  */
-(function(global) {
+(function (global) {
     'use strict';
 
     // Icon mappings for each toast type (using Bootstrap Icons)
@@ -120,23 +120,23 @@ This allows incremental migration without changing existing code immediately.
         success: {
             icon: '<i class="bi bi-check-circle-fill text-success me-2"></i>',
             classes: 'border-success',
-            headerClass: 'bg-success-subtle'
+            headerClass: 'bg-success-subtle',
         },
         error: {
             icon: '<i class="bi bi-x-circle-fill text-danger me-2"></i>',
             classes: 'border-danger',
-            headerClass: 'bg-danger-subtle'
+            headerClass: 'bg-danger-subtle',
         },
         warning: {
             icon: '<i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>',
             classes: 'border-warning',
-            headerClass: 'bg-warning-subtle'
+            headerClass: 'bg-warning-subtle',
         },
         info: {
             icon: '<i class="bi bi-info-circle-fill text-info me-2"></i>',
             classes: 'border-info',
-            headerClass: 'bg-info-subtle'
-        }
+            headerClass: 'bg-info-subtle',
+        },
     };
 
     /**
@@ -155,17 +155,17 @@ This allows incremental migration without changing existing code immediately.
             header: {
                 icon: config.icon,
                 title: title || type.charAt(0).toUpperCase() + type.slice(1),
-                closeBtn: true
+                closeBtn: true,
             },
             body: message,
             classes: config.classes,
             placement: 'top-right',
             delay: type === 'error' ? 0 : 5000, // Errors don't auto-hide
-            autohide: type !== 'error'
+            autohide: type !== 'error',
         };
 
         // Merge user options
-        Object.keys(options).forEach(function(key) {
+        Object.keys(options).forEach(function (key) {
             toastOptions[key] = options[key];
         });
 
@@ -174,15 +174,15 @@ This allows incremental migration without changing existing code immediately.
         // Return object for compatibility; .attr() is a no-op since
         // use-bootstrap-toaster doesn't expose DOM element directly
         const result = {
-            hide: function() {
+            hide: function () {
                 if (instance && typeof instance.hide === 'function') {
                     instance.hide();
                 }
             },
             // Stub for legacy .attr() calls - returns self for chaining
-            attr: function() {
+            attr: function () {
                 return result;
-            }
+            },
         };
 
         return result;
@@ -190,25 +190,27 @@ This allows incremental migration without changing existing code immediately.
 
     // toastr-compatible API attached to window
     global.toastr = {
-        success: function(message, title, options) {
+        success: function (message, title, options) {
             return showToast('success', message, title, options);
         },
-        error: function(message, title, options) {
+        error: function (message, title, options) {
             return showToast('error', message, title, options);
         },
-        warning: function(message, title, options) {
+        warning: function (message, title, options) {
             return showToast('warning', message, title, options);
         },
-        info: function(message, title, options) {
+        info: function (message, title, options) {
             return showToast('info', message, title, options);
         },
-        hide: function() {
-            if (typeof toast !== 'undefined' && typeof toast.hide === 'function') {
+        hide: function () {
+            if (
+                typeof toast !== 'undefined' &&
+                typeof toast.hide === 'function'
+            ) {
                 toast.hide();
             }
-        }
+        },
     };
-
 })(typeof window !== 'undefined' ? window : this);
 ```
 
@@ -217,8 +219,10 @@ This allows incremental migration without changing existing code immediately.
 Ensure Bootstrap Icons are available. Add to `layout/header.php`:
 
 ```html
-<link rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+/>
 ```
 
 ### Phase 3: Update Script Includes
@@ -228,7 +232,10 @@ Replace toastr with the new wrapper in `layout/footer.php`:
 ```html
 <!-- Remove: -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+<link
+    href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+    rel="stylesheet"
+/>
 
 <!-- Add: -->
 <script src="https://cdn.jsdelivr.net/npm/use-bootstrap-toaster@1.0.3/dist/use-bootstrap-toaster.min.js"></script>
@@ -243,17 +250,20 @@ call sites to use the cleaner API directly:
 **Before (toastr):**
 
 ```javascript
-toastr["success"]('Calendar saved successfully', 'Success');
-toastr["error"](error.message, 'Error');
+toastr['success']('Calendar saved successfully', 'Success');
+toastr['error'](error.message, 'Error');
 ```
 
 **After (direct use-bootstrap-toaster):**
 
 ```javascript
 toast({
-    header: { icon: '<i class="bi bi-check-circle-fill"></i>', title: 'Success' },
+    header: {
+        icon: '<i class="bi bi-check-circle-fill"></i>',
+        title: 'Success',
+    },
     body: 'Calendar saved successfully',
-    classes: 'border-success'
+    classes: 'border-success',
 });
 ```
 
@@ -316,7 +326,7 @@ use-bootstrap-toaster supports the same browsers as Bootstrap 5:
 ## Timeline
 
 | Phase | Description                  | Effort    |
-|-------|------------------------------|-----------|
+| ----- | ---------------------------- | --------- |
 | 1     | Create compatibility wrapper | 2-3 hours |
 | 2     | Add Bootstrap Icons          | 15 min    |
 | 3     | Update script includes       | 30 min    |

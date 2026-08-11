@@ -56,9 +56,9 @@ PSR-4 root for `LiturgicalCalendar\Frontend\` namespace. Includes `Utilities` (w
 ## Auth flow (cookie-only JWT)
 
 - `assets/js/auth.js` — client module
-  - `Auth.checkAuthAsync()` — server-verified, async (preferred for UI gating)
-  - `Auth.isAuthenticated()` — sync, cached (may be stale)
-  - Deprecated: `getToken()`, `setToken()`, `getPayload()`, `setRefreshToken()` (HttpOnly = JS can't see tokens)
+    - `Auth.checkAuthAsync()` — server-verified, async (preferred for UI gating)
+    - `Auth.isAuthenticated()` — sync, cached (may be stale)
+    - Deprecated: `getToken()`, `setToken()`, `getPayload()`, `setRefreshToken()` (HttpOnly = JS can't see tokens)
 - `includes/login-modal.php` — login UI
 - `layout/header.php` — auth status in navbar
 - `data-requires-auth` attribute marks protected UI elements
@@ -67,8 +67,8 @@ PSR-4 root for `LiturgicalCalendar\Frontend\` namespace. Includes `Utilities` (w
 ## Security headers (hybrid PHP + nginx)
 
 - **PHP** (`includes/common.php` ~lines 57–83) sets dynamic headers needing env data:
-  - `Content-Security-Policy` (includes API URL)
-  - `Strict-Transport-Security` (when HTTPS detected)
+    - `Content-Security-Policy` (includes API URL)
+    - `Strict-Transport-Security` (when HTTPS detected)
 - **nginx** should set static headers: `X-Frame-Options DENY`, `X-Content-Type-Options nosniff`, `X-XSS-Protection 1; mode=block`, `Referrer-Policy strict-origin-when-cross-origin`, `Permissions-Policy geolocation=()…`
 - CSP `connect-src` allows: self, API URL, api.github.com, raw.githubusercontent.com (CLDR data), CDN domains for source maps + dynamic ESM imports
 
@@ -78,10 +78,10 @@ Playwright. `e2e/tsconfig.json` for TypeScript. Reports → `playwright-report/`
 
 ## Schema differences for calendar editors
 
-| Calendar Type | Allowed Actions                                                      |
-|---------------|----------------------------------------------------------------------|
-| National      | `setProperty`, `createNew`, `moveFeast`, `makeDoctor`, `makePatron`  |
-| Wider Region  | `createNew`, `makePatron` only                                       |
-| Diocesan      | `createNew`, `makePatron` only                                       |
+| Calendar Type | Allowed Actions                                                     |
+| ------------- | ------------------------------------------------------------------- |
+| National      | `setProperty`, `createNew`, `moveFeast`, `makeDoctor`, `makePatron` |
+| Wider Region  | `createNew`, `makePatron` only                                      |
+| Diocesan      | `createNew`, `makePatron` only                                      |
 
 WiderRegion names MUST be one of: `Americas`, `Europe`, `Asia`, `Africa`, `Oceania`.

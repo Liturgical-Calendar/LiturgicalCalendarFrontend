@@ -28,12 +28,12 @@ When you select an existing wider region:
 
 1. Locate the event row in the form
 2. Update the fields as needed:
-   - **Name** - Change the display name (for current locale)
-   - **Day/Month** - Modify the celebration date
-   - **Grade** - Change the celebration grade
-   - **Liturgical Color** - Update the color(s)
-   - **Common** - Modify the common of saints
-   - **Since/Until** - Adjust the year range
+    - **Name** - Change the display name (for current locale)
+    - **Day/Month** - Modify the celebration date
+    - **Grade** - Change the celebration grade
+    - **Liturgical Color** - Update the color(s)
+    - **Common** - Modify the common of saints
+    - **Since/Until** - Adjust the year range
 
 3. Click **Save Wider Region Calendar Data** to save changes
 
@@ -83,7 +83,7 @@ To edit event names in different languages:
 ## Form Behavior on Edit
 
 | Field                | Behavior                                         |
-|----------------------|--------------------------------------------------|
+| -------------------- | ------------------------------------------------ |
 | Wider Region         | Read-only (identifies the calendar being edited) |
 | Locales              | Can add or remove locales                        |
 | Current Localization | Can switch to edit different language versions   |

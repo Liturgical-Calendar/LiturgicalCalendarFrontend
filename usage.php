@@ -1,10 +1,10 @@
 <?php
 
-use LiturgicalCalendar\Components\CalendarSelect;
+/**
+ * Example usage of the API - includes the calendar subscription card.
+ */
 
 include_once 'includes/common.php';
-
-$CalendarSelect = new CalendarSelect(['locale' => $i18n->LOCALE]);
 
 $messages = [
     /** translators: notification title */
@@ -19,6 +19,12 @@ $messages = [
     'Failed to copy URL'       => _('Failed to copy URL to clipboard'),
     /** translators: notification message */
     'Select and copy manually' => _('Please select and copy manually'),
+    /** translators: label for dropdown to select which calendar to subscribe to */
+    'Select calendar'          => _('Select calendar'),
+    /** translators: label for dropdown to select the liturgical rite (Roman or Ambrosian) */
+    'Select rite'              => _('Select rite'),
+    /** translators: notification message shown when the calendar list fails to load */
+    'Failed to load calendars' => _('Could not load the calendar list. Please try again later.'),
 ];
 
 ?><!doctype html>
@@ -131,15 +137,8 @@ $messages = [
                         <div class="row">
                             <div class="col-lg">
                                 <div class="row">
-                                    <div class="form-group col-md"><?php
-                                    /** translators: label for dropdown to select which calendar to subscribe to */
-                                    echo $CalendarSelect
-                                        ->class('form-select')
-                                        ->id('calendarSelect')
-                                        ->label(true)
-                                        ->labelText(_('Select calendar'))
-                                        ->getSelect();
-                                    ?></div>
+                                    <div class="form-group col-md" id="riteSelectContainer"></div>
+                                    <div class="form-group col-md" id="calendarSelectContainer"></div>
                                 </div>
                                 <p class="mt-2 mb-1"><?php
                                     /** translators: label above the iCal/ICS subscription URL */

@@ -76,12 +76,12 @@ The national calendar will now inherit events from the new wider region (or no w
 
 1. Locate the event row in the form
 2. Update fields as needed:
-   - **Name** - Edit the display name
-   - **Day/Month** - Change the date
-   - **Grade** - Modify celebration grade
-   - **Liturgical Color** - Update colors
-   - **Common** - Change the common
-   - **Since/Until** - Adjust year range
+    - **Name** - Edit the display name
+    - **Day/Month** - Change the date
+    - **Grade** - Modify celebration grade
+    - **Liturgical Color** - Update colors
+    - **Common** - Change the common
+    - **Since/Until** - Adjust year range
 
 3. Save the calendar
 
@@ -115,7 +115,7 @@ To provide translations for different languages:
 ## Form Behavior on Edit
 
 | Field                | Behavior                                         |
-|----------------------|--------------------------------------------------|
+| -------------------- | ------------------------------------------------ |
 | National Calendar    | Read-only (identifies the calendar being edited) |
 | Settings             | Can be modified                                  |
 | Locales              | Can add or remove                                |

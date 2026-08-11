@@ -33,17 +33,20 @@ class ApiConfig
 
     private function __construct(string $apiBaseUrl, ?string $internalBaseUrl = null)
     {
-        $this->apiBaseUrl         = rtrim($apiBaseUrl, '/');
-        $this->internalBaseUrl    = rtrim($internalBaseUrl ?? $apiBaseUrl, '/');
-        $this->dateOfEasterUrl    = "{$this->apiBaseUrl}/easter";
-        $this->calendarUrl        = "{$this->apiBaseUrl}/calendar";
-        $this->metadataUrl        = "{$this->apiBaseUrl}/calendars";
-        $this->eventsUrl          = "{$this->apiBaseUrl}/events";
-        $this->missalsUrl         = "{$this->apiBaseUrl}/missals";
-        $this->decreesUrl         = "{$this->apiBaseUrl}/decrees";
-        $this->temporaleUrl       = "{$this->apiBaseUrl}/temporale";
-        $this->regionalDataUrl    = "{$this->apiBaseUrl}/data";
-        $this->calSubscriptionUrl = "{$this->apiBaseUrl}/calendar?return_type=ICS&year_type=CIVIL";
+        $this->apiBaseUrl      = rtrim($apiBaseUrl, '/');
+        $this->internalBaseUrl = rtrim($internalBaseUrl ?? $apiBaseUrl, '/');
+        $this->dateOfEasterUrl = "{$this->apiBaseUrl}/easter";
+        $this->calendarUrl     = "{$this->apiBaseUrl}/calendar";
+        $this->metadataUrl     = "{$this->apiBaseUrl}/calendars";
+        $this->eventsUrl       = "{$this->apiBaseUrl}/events";
+        $this->missalsUrl      = "{$this->apiBaseUrl}/missals";
+        $this->decreesUrl      = "{$this->apiBaseUrl}/decrees";
+        $this->temporaleUrl    = "{$this->apiBaseUrl}/temporale";
+        $this->regionalDataUrl = "{$this->apiBaseUrl}/data";
+        // The `roman` rite segment is explicit here on purpose: it must match the
+        // rite-explicit URL the JS produces after hydration, so a user who copies
+        // the URL before hydration finishes gets the same result as one who copies after.
+        $this->calSubscriptionUrl = "{$this->apiBaseUrl}/calendar/roman?return_type=ICS&year_type=CIVIL";
     }
 
     /**

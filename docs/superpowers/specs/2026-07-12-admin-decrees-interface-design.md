@@ -44,13 +44,13 @@ companion spec.
 - **ES modules** with named exports; pure logic (payload construction, the action↔suffix map, validation)
   lives in `DecreePayload.js` and is unit-tested in isolation.
 - **Localization:** all UI chrome uses gettext compiled into `AdminDecreesConfig.i18n`. Client-side
-  *validation-error* strings are currently English-only (they mirror the server's English messages and
+  _validation-error_ strings are currently English-only (they mirror the server's English messages and
   would move to gettext together).
 
 ## Locale handling
 
 - The page UI locale is `AdminDecreesConfig.locale` (BCP-47, e.g. `en-US`); its **primary subtag** (`en`)
-  is the *base locale* used throughout.
+  is the _base locale_ used throughout.
 - The decrees list is fetched with `Accept-Language: <page locale>` so card names — and the locale **labels**
   in the translations panel — agree. (Omitting the header lets the browser's own Accept-Language drive the
   response, which mislabels e.g. an Italian name as the `en` row.)
@@ -77,7 +77,7 @@ Gating rules:
   away (to the login/home surface) before any decree UI renders, so capability detection only ever runs
   for an authenticated caller.
 - **Dashboard card** (`admin-dashboard.php`): renders only when `isAdmin || (calendar_editor && FGA
-  viewer-or-above)`; the same self-check the page uses. The card and page use the same scroll icon
+viewer-or-above)`; the same self-check the page uses. The card and page use the same scroll icon
   (`fa-scroll`).
 - **No access** (`!canView`): the page shows a muted "no permission" notice instead of cards.
 - **The "New Decree" button is gated on `canEdit`, not on mere authentication.** It deliberately omits
@@ -118,7 +118,7 @@ the same URL). A locale with no readings shows a muted "No readings defined for 
 toggle always appears for `createNew` decrees (readings are guaranteed by the write contract), and otherwise
 only when the event carries readings.
 
-**Source links** (footer) — depends on the URL shape (see the API spec's *Metadata* section):
+**Source links** (footer) — depends on the URL shape (see the API spec's _Metadata_ section):
 
 - **No `%s` placeholder:** a single "Source" link to the URL.
 - **`%s` + `url_lang_map`:** one link per language (the `urls_langs`), each the URL with `%s` expanded to
@@ -173,12 +173,12 @@ both are editable fields. (This mirrors how the tests editor pins a locked scope
 
 Selecting an action reveals exactly the blocks that action's payload allows:
 
-| Action              | Event details | Common | Grade | Translations (i18n) | Readings         |
-| ------------------- |:-------------:|:------:|:-----:|:-------------------:|:----------------:|
-| `createNew`         | ✓             | ✓      |       | ✓                   | ✓ (required PUT) |
-| `makeDoctor`        |               | ✓      |       | ✓                   |                  |
-| `setProperty:name`  |               |        |       | ✓                   |                  |
-| `setProperty:grade` |               |        | ✓     |                     |                  |
+| Action              | Event details | Common | Grade | Translations (i18n) |     Readings     |
+| ------------------- | :-----------: | :----: | :---: | :-----------------: | :--------------: |
+| `createNew`         |       ✓       |   ✓    |       |          ✓          | ✓ (required PUT) |
+| `makeDoctor`        |               |   ✓    |       |          ✓          |                  |
+| `setProperty:name`  |               |        |       |          ✓          |                  |
+| `setProperty:grade` |               |        |   ✓   |                     |                  |
 
 ### Event details — fixed vs mobile date (createNew)
 
@@ -188,17 +188,17 @@ relative date. A fixed/mobile radio toggles between:
 - **Fixed:** month and day number inputs.
 - **Mobile:** three structured inputs that build the relative-date object
   `{ day_of_the_week, relative_time, event_key }` — never a free-text/JSON string:
-  - **day_of_the_week** — a `<select>` whose *values* are the English weekday names (the schema enum,
-    `Sunday`…`Saturday`) and whose *labels* are localized in the UI locale (server-rendered via
-    `IntlDateFormatter`).
-  - **relative_time** — a `<select>` of `before` / `after`.
-  - **event_key** — a datalist-backed input (`#grcEventKeysDatalist`) populated from the GRC event catalog
-    (`GET /events`), searchable by event key or localized name. The anchor is usually a temporale movable
-    feast (Pentecost, Easter, …); those are present because `/events` now includes the Temporale (see the
-    API companion spec).
+    - **day_of_the_week** — a `<select>` whose _values_ are the English weekday names (the schema enum,
+      `Sunday`…`Saturday`) and whose _labels_ are localized in the UI locale (server-rendered via
+      `IntlDateFormatter`).
+    - **relative_time** — a `<select>` of `before` / `after`.
+    - **event_key** — a datalist-backed input (`#grcEventKeysDatalist`) populated from the GRC event catalog
+      (`GET /events`), searchable by event key or localized name. The anchor is usually a temporale movable
+      feast (Pentecost, Easter, …); those are present because `/events` now includes the Temporale (see the
+      API companion spec).
 
-  All three are required for a mobile `createNew` (client-validated); the payload's `liturgical_event`
-  carries `strtotime` as the object and omits `month`/`day`.
+    All three are required for a mobile `createNew` (client-validated); the payload's `liturgical_event`
+    carries `strtotime` as the object and omits `month`/`day`.
 
 ### Translations (i18n) rows — GRC-live minimum + all defined
 
@@ -223,14 +223,14 @@ that has defined readings, base locale first. Locale fields are the same ISO dat
 - A single URL field, plus a **"Source available in multiple languages"** switch (default off).
 - **Off:** just the URL.
 - **On:** the URL takes a `%s` placeholder and a **`url_lang_map` editor** appears — dynamic rows of
-  *(ISO 639-1 language ▸ Vatican token)* with a live **preview** expanding `%s` per language.
-  - The **language** field is the `#isoLangDatalist` input (any ISO 639-1 code). A pre-selected code outside
-    the offered list is preserved (edit round-trips never silently drop a mapping).
-  - The **token** field is bound to a per-language suggestion datalist (`#urlCodes-{iso}`) built from the
-    Vatican tokens actually used for that language across current decrees (see below) — suggestions only,
-    never a constraint; it rebinds as the language changes.
-  - **Duplicate ISO** rows are detected at save time and block submission with a per-duplicate validation
-    error (they would otherwise silently overwrite).
+  _(ISO 639-1 language ▸ Vatican token)_ with a live **preview** expanding `%s` per language.
+    - The **language** field is the `#isoLangDatalist` input (any ISO 639-1 code). A pre-selected code outside
+      the offered list is preserved (edit round-trips never silently drop a mapping).
+    - The **token** field is bound to a per-language suggestion datalist (`#urlCodes-{iso}`) built from the
+      Vatican tokens actually used for that language across current decrees (see below) — suggestions only,
+      never a constraint; it rebinds as the language changes.
+    - **Duplicate ISO** rows are detected at save time and block submission with a per-duplicate validation
+      error (they would otherwise silently overwrite).
 - On **edit**, the switch auto-activates when the decree has a `url_lang_map` or a `%s` URL, and the rows
   are prefilled.
 

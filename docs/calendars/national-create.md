@@ -64,17 +64,17 @@ Toggle whether the Feast of Jesus Christ Eternal High Priest is celebrated:
 
 1. **Locales** - Select all language/region combinations supported by this national calendar.
    For example, for Canada, you might select:
-   - `en_CA` (English - Canada)
-   - `fr_CA` (French - Canada)
+    - `en_CA` (English - Canada)
+    - `fr_CA` (French - Canada)
 
 2. **Current Localization** - Choose the locale you're currently editing. The event name entered in the main
    Name field will be saved for this locale. If you have selected multiple locales, you must also fill in the
    event name for each additional locale in the corresponding translation fields that appear below the main
    Name field.
 
-   > **Note:** If you change the Current Localization after entering localized names, the fields will be
-   > reordered so that the newly selected locale becomes the main Name field, and the previous locale moves
-   > to the translation fields below.
+    > **Note:** If you change the Current Localization after entering localized names, the fields will be
+    > reordered so that the newly selected locale becomes the main Name field, and the previous locale moves
+    > to the translation fields below.
 
 ### Step 4: Add Published Roman Missals (Optional)
 
@@ -155,7 +155,7 @@ Click **Create a new liturgical event** to define a new event:
 ### Settings
 
 | Field                   | Required | Description                            |
-|-------------------------|----------|----------------------------------------|
+| ----------------------- | -------- | -------------------------------------- |
 | National Calendar       | Yes      | Country ISO code (e.g., US, IT, DE)    |
 | Epiphany                | No       | When Epiphany is celebrated            |
 | Ascension               | No       | When Ascension is celebrated           |
@@ -168,40 +168,40 @@ Click **Create a new liturgical event** to define a new event:
 
 ### Event Fields
 
-| Field                    | Required | Description                                          |
-|--------------------------|----------|------------------------------------------------------|
-| Event Key                | Yes      | Unique identifier (PascalCase)                       |
-| Name                     | Yes      | Display name in current locale                       |
-| Day                      | Yes      | Day of the month (1-31)                              |
-| Month                    | Yes      | Month (January-December)                             |
-| Grade                    | Yes      | Celebration grade                                    |
-| Liturgical Color         | Yes      | Color(s) for the celebration                         |
-| Common                   | No       | Common of saints category                            |
-| Since                    | Yes      | Year from which this takes effect                    |
-| Until                    | No       | Year until which this applies                        |
-| Decree URL               | Yes      | URL to official decree                               |
-| Decree Language Mappings | Yes      | Languages the decree is available in                 |
+| Field                    | Required | Description                          |
+| ------------------------ | -------- | ------------------------------------ |
+| Event Key                | Yes      | Unique identifier (PascalCase)       |
+| Name                     | Yes      | Display name in current locale       |
+| Day                      | Yes      | Day of the month (1-31)              |
+| Month                    | Yes      | Month (January-December)             |
+| Grade                    | Yes      | Celebration grade                    |
+| Liturgical Color         | Yes      | Color(s) for the celebration         |
+| Common                   | No       | Common of saints category            |
+| Since                    | Yes      | Year from which this takes effect    |
+| Until                    | No       | Year until which this applies        |
+| Decree URL               | Yes      | URL to official decree               |
+| Decree Language Mappings | Yes      | Languages the decree is available in |
 
 ## Available Actions
 
 National calendars support all action types:
 
-| Action           | Description                                           |
-|------------------|-------------------------------------------------------|
-| `makePatron`     | Designate an existing saint as national patron        |
-| `setProperty`    | Change the name or grade of an existing event         |
-| `moveFeast`      | Move an event to a different date                     |
-| `createNew`      | Create a new liturgical event                         |
-| `makeDoctor`     | Designate a saint as Doctor of the Church             |
+| Action        | Description                                    |
+| ------------- | ---------------------------------------------- |
+| `makePatron`  | Designate an existing saint as national patron |
+| `setProperty` | Change the name or grade of an existing event  |
+| `moveFeast`   | Move an event to a different date              |
+| `createNew`   | Create a new liturgical event                  |
+| `makeDoctor`  | Designate a saint as Doctor of the Church      |
 
 ## Example: Creating the USA National Calendar
 
 1. Select **US** from the National Calendar dropdown
 2. Configure settings:
-   - Epiphany: Sunday between January 2-8
-   - Ascension: Sunday
-   - Corpus Christi: Sunday
-   - Eternal High Priest: Disabled
+    - Epiphany: Sunday between January 2-8
+    - Ascension: Sunday
+    - Corpus Christi: Sunday
+    - Eternal High Priest: Disabled
 3. In Locales, select: `en_US`, `es_US`
 4. Set Current Localization to `en_US`
 5. Associate with **Americas** wider region

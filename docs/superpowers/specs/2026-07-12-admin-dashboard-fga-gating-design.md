@@ -40,10 +40,10 @@ Response shape:
 {
     "is_global_admin": false,
     "is_resource_admin": false,
-    "admin_scopes": [ { "object_type": "national_calendar", "object_id": "NL" } ],
+    "admin_scopes": [{ "object_type": "national_calendar", "object_id": "NL" }],
     "viewer_scopes": {
-        "general_roman_calendar": [ "temporale", "decrees" ],
-        "national_calendar_test": [ "NL" ],
+        "general_roman_calendar": ["temporale", "decrees"],
+        "national_calendar_test": ["NL"],
         "diocesan_calendar_test": [],
         "general_roman_calendar_test": []
     }
@@ -87,14 +87,14 @@ performs exactly **one**.
 
 ### Card gating matrix (non-admin rules; global admins always see their cards)
 
-| Card / block                                        | Visibility rule for non-admins                                            |
-|-----------------------------------------------------|---------------------------------------------------------------------------|
-| Temporale block (admin-blocks grid)                 | `calendar_editor` role AND viewer+ on `general_roman_calendar:temporale`  |
-| Decrees block (grid) and dedicated Decrees card     | `calendar_editor` role AND viewer+ on `general_roman_calendar:decrees`    |
-| Tests card                                          | `test_editor` role AND viewer+ on any `*_test` object                     |
-| Access Requests card                                | unchanged rule, read from `dashboardScopes()['is_resource_admin']`        |
-| Sanctorale, Wider Region, National, Diocesan blocks | unchanged (role-gated as today)                                           |
-| Users, Applications, Permissions cards              | unchanged (`isAdmin` only)                                                |
+| Card / block                                        | Visibility rule for non-admins                                           |
+| --------------------------------------------------- | ------------------------------------------------------------------------ |
+| Temporale block (admin-blocks grid)                 | `calendar_editor` role AND viewer+ on `general_roman_calendar:temporale` |
+| Decrees block (grid) and dedicated Decrees card     | `calendar_editor` role AND viewer+ on `general_roman_calendar:decrees`   |
+| Tests card                                          | `test_editor` role AND viewer+ on any `*_test` object                    |
+| Access Requests card                                | unchanged rule, read from `dashboardScopes()['is_resource_admin']`       |
+| Sanctorale, Wider Region, National, Diocesan blocks | unchanged (role-gated as today)                                          |
+| Users, Applications, Permissions cards              | unchanged (`isAdmin` only)                                               |
 
 ### Mechanics
 

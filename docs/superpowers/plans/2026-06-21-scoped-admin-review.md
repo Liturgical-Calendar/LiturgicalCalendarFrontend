@@ -65,12 +65,12 @@ Frontend (`/home/johnrdorazio/development/LiturgicalCalendar/LiturgicalCalendarF
   `listObjects(string $user, string $relation, string $type): array` (returns object IDs without type prefix, throws `\RuntimeException` on transport failure)
   and `check(string $user, string $relation, string $object): bool` (throws `\RuntimeException` on transport failure).
 - Produces (relied on by Tasks 2, 3, 4):
-  - `public const ADMIN_OBJECT_TYPES = ['national_calendar', 'diocesan_calendar', 'wider_region', 'general_roman_calendar'];`
-  - `__construct(OpenFgaClient $fgaClient)`
-  - `resolveScopes(string $sub): array` → returns `list<array{object_type: string, object_id: string}>`; fail-closed `[]` on any `\RuntimeException`.
-  - `filterByAdminAccess(array $requests, string $adminUserId): array` → returns the subset of `$requests` whose every permission targets a
-    resource the admin holds `admin` on; excludes empty-permission requests. Does NOT catch `\RuntimeException` (behavior-preserving).
-  - `administersAllResources(array $permissions, string $fgaUser, array &$cache): bool` → predicate; `$cache` is a by-reference `array<string, bool>` of `"{type}:{id}" => bool`.
+    - `public const ADMIN_OBJECT_TYPES = ['national_calendar', 'diocesan_calendar', 'wider_region', 'general_roman_calendar'];`
+    - `__construct(OpenFgaClient $fgaClient)`
+    - `resolveScopes(string $sub): array` → returns `list<array{object_type: string, object_id: string}>`; fail-closed `[]` on any `\RuntimeException`.
+    - `filterByAdminAccess(array $requests, string $adminUserId): array` → returns the subset of `$requests` whose every permission targets a
+      resource the admin holds `admin` on; excludes empty-permission requests. Does NOT catch `\RuntimeException` (behavior-preserving).
+    - `administersAllResources(array $permissions, string $fgaUser, array &$cache): bool` → predicate; `$cache` is a by-reference `array<string, bool>` of `"{type}:{id}" => bool`.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -1169,11 +1169,11 @@ git commit -m "feat(api): scope GET /admin/notifications for resource-admins"
 - Consumes: `GuzzleHttp\Client` (already a dependency), `$_COOKIE['litcal_access_token']`, `$_COOKIE['litcal_id_token']`,
   `LiturgicalCalendar\Frontend\ApiConfig::getInstance()->apiBaseUrl` (initialized in `includes/common.php`).
 - Produces (relied on by Tasks 7, 8):
-  - `public function isResourceAdmin(): bool`
-  - `public function adminScopes(): array` → `list<array{object_type: string, object_id: string}>`
-  - `public static function fetchAdminScopes(string $apiBaseUrl, ?string $cookieHeader, ?\GuzzleHttp\Client $client = null): array` →
-    `array{is_resource_admin: bool, admin_scopes: list<array{object_type: string, object_id: string}>}`;
-    fail-closed `['is_resource_admin' => false, 'admin_scopes' => []]` on any error.
+    - `public function isResourceAdmin(): bool`
+    - `public function adminScopes(): array` → `list<array{object_type: string, object_id: string}>`
+    - `public static function fetchAdminScopes(string $apiBaseUrl, ?string $cookieHeader, ?\GuzzleHttp\Client $client = null): array` →
+      `array{is_resource_admin: bool, admin_scopes: list<array{object_type: string, object_id: string}>}`;
+      fail-closed `['is_resource_admin' => false, 'admin_scopes' => []]` on any error.
 
 - [ ] **Step 1: Add the frontend test autoloading + PHPUnit config**
 
@@ -1639,27 +1639,27 @@ In `admin-permissions.php`, in the `window.AdminPermissionsConfig` object litera
 In `assets/js/admin-permissions.js`, replace line 30:
 
 ```javascript
-    const grantModal = new bootstrap.Modal(document.getElementById('grantModal'));
+const grantModal = new bootstrap.Modal(document.getElementById('grantModal'));
 ```
 
 with:
 
 ```javascript
-    const grantModalEl = document.getElementById('grantModal');
-    const grantModal = grantModalEl ? new bootstrap.Modal(grantModalEl) : null;
+const grantModalEl = document.getElementById('grantModal');
+const grantModal = grantModalEl ? new bootstrap.Modal(grantModalEl) : null;
 ```
 
 and replace line 90:
 
 ```javascript
-    const revokeModal = new bootstrap.Modal(document.getElementById('revokeModal'));
+const revokeModal = new bootstrap.Modal(document.getElementById('revokeModal'));
 ```
 
 with:
 
 ```javascript
-    const revokeModalEl = document.getElementById('revokeModal');
-    const revokeModal = revokeModalEl ? new bootstrap.Modal(revokeModalEl) : null;
+const revokeModalEl = document.getElementById('revokeModal');
+const revokeModal = revokeModalEl ? new bootstrap.Modal(revokeModalEl) : null;
 ```
 
 - [ ] **Step 6: Skip the FGA event-listener + load init for resource-admins**
@@ -1668,24 +1668,63 @@ In `assets/js/admin-permissions.js`, wrap the FGA event-listener registration an
 through the `loadUserMap().then(loadPermissions);` line, lines ~493–519) in a global-admin guard. Replace:
 
 ```javascript
-    // Event listeners
-    refreshBtn.addEventListener('click', async function() {
+// Event listeners
+refreshBtn.addEventListener('click', async function () {
+    const icon = this.querySelector('i');
+    icon.classList.add('fa-spin');
+    // Refresh user map first so newly-granted-to users appear with friendly names.
+    await loadUserMap();
+    loadPermissions().finally(function () {
+        icon.classList.remove('fa-spin');
+    });
+});
+
+grantPermissionBtn.addEventListener('click', openGrantModal);
+grantObjectType.addEventListener('change', (e) =>
+    syncObjectIdField(e.target.value),
+);
+confirmGrantBtn.addEventListener('click', handleGrant);
+confirmRevokeBtn.addEventListener('click', handleRevoke);
+applyFiltersBtn.addEventListener('click', loadPermissions);
+
+clearFiltersBtn.addEventListener('click', function () {
+    filterUser.value = '';
+    filterObjectType.value = '';
+    filterObjectId.value = '';
+    filterRelation.value = '';
+    loadPermissions();
+});
+
+// Load user map and then permissions on page load
+loadUserMap().then(loadPermissions);
+```
+
+with:
+
+```javascript
+// Event listeners — the FGA permission-tuple management section is
+// global-admin-only; its DOM is absent for resource-admins, so skip its
+// wiring and initial load entirely.
+if (config.isGlobalAdmin) {
+    refreshBtn.addEventListener('click', async function () {
         const icon = this.querySelector('i');
         icon.classList.add('fa-spin');
         // Refresh user map first so newly-granted-to users appear with friendly names.
         await loadUserMap();
-        loadPermissions().finally(function() {
+        loadPermissions().finally(function () {
             icon.classList.remove('fa-spin');
         });
     });
 
     grantPermissionBtn.addEventListener('click', openGrantModal);
-    grantObjectType.addEventListener('change', (e) => syncObjectIdField(e.target.value));
+    grantObjectType.addEventListener('change', (e) =>
+        syncObjectIdField(e.target.value),
+    );
     confirmGrantBtn.addEventListener('click', handleGrant);
     confirmRevokeBtn.addEventListener('click', handleRevoke);
     applyFiltersBtn.addEventListener('click', loadPermissions);
 
-    clearFiltersBtn.addEventListener('click', function() {
+    clearFiltersBtn.addEventListener('click', function () {
         filterUser.value = '';
         filterObjectType.value = '';
         filterObjectId.value = '';
@@ -1695,42 +1734,7 @@ through the `loadUserMap().then(loadPermissions);` line, lines ~493–519) in a 
 
     // Load user map and then permissions on page load
     loadUserMap().then(loadPermissions);
-```
-
-with:
-
-```javascript
-    // Event listeners — the FGA permission-tuple management section is
-    // global-admin-only; its DOM is absent for resource-admins, so skip its
-    // wiring and initial load entirely.
-    if (config.isGlobalAdmin) {
-        refreshBtn.addEventListener('click', async function() {
-            const icon = this.querySelector('i');
-            icon.classList.add('fa-spin');
-            // Refresh user map first so newly-granted-to users appear with friendly names.
-            await loadUserMap();
-            loadPermissions().finally(function() {
-                icon.classList.remove('fa-spin');
-            });
-        });
-
-        grantPermissionBtn.addEventListener('click', openGrantModal);
-        grantObjectType.addEventListener('change', (e) => syncObjectIdField(e.target.value));
-        confirmGrantBtn.addEventListener('click', handleGrant);
-        confirmRevokeBtn.addEventListener('click', handleRevoke);
-        applyFiltersBtn.addEventListener('click', loadPermissions);
-
-        clearFiltersBtn.addEventListener('click', function() {
-            filterUser.value = '';
-            filterObjectType.value = '';
-            filterObjectId.value = '';
-            filterRelation.value = '';
-            loadPermissions();
-        });
-
-        // Load user map and then permissions on page load
-        loadUserMap().then(loadPermissions);
-    }
+}
 ```
 
 - [ ] **Step 7: PHP lint + JS syntax check + ESLint**
