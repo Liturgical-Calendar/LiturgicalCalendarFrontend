@@ -62,7 +62,7 @@ DELETE /data?category=widerregion&key={region_name}
 ## What Gets Deleted
 
 | Data Type           | Deleted |
-|---------------------|---------|
+| ------------------- | ------- |
 | Liturgical events   | Yes     |
 | Event translations  | Yes     |
 | Metadata            | Yes     |

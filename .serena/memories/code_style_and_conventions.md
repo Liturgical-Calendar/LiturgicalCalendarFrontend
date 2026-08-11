@@ -40,8 +40,8 @@ sprintf(_('There are %d items at %s.'), $count, $url);
 ```javascript
 const response = await fetch(apiUrl, {
     method: 'POST',
-    headers: { 'Accept': 'application/json' },
-    credentials: 'include'           // sends HttpOnly cookies
+    headers: { Accept: 'application/json' },
+    credentials: 'include', // sends HttpOnly cookies
 });
 ```
 
@@ -49,8 +49,8 @@ const response = await fetch(apiUrl, {
 
 ```javascript
 const response = await fetch(MetadataUrl, {
-    headers: { 'Accept': 'application/json' },
-    credentials: 'omit'              // REQUIRED — API returns wildcard CORS
+    headers: { Accept: 'application/json' },
+    credentials: 'omit', // REQUIRED — API returns wildcard CORS
 });
 ```
 
@@ -79,11 +79,11 @@ Why: public endpoints return `Access-Control-Allow-Origin: *` which is incompati
 
 When `ApiClient` listens to `ApiOptions`, `Accept-Language` is set automatically from `_localeInput`.
 
-| Mode                                | Vatican meaning            |
-|-------------------------------------|----------------------------|
-| CalendarSelect standalone           | General Roman Calendar (user's locale, NOT forced Latin) |
-| With PathBuilder, `/calendar`       | General Roman Calendar      |
-| With PathBuilder, `/calendar/nation/VA` | Vatican (Latin)         |
+| Mode                                    | Vatican meaning                                          |
+| --------------------------------------- | -------------------------------------------------------- |
+| CalendarSelect standalone               | General Roman Calendar (user's locale, NOT forced Latin) |
+| With PathBuilder, `/calendar`           | General Roman Calendar                                   |
+| With PathBuilder, `/calendar/nation/VA` | Vatican (Latin)                                          |
 
 ## Naming
 

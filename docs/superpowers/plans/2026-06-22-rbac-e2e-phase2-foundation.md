@@ -36,19 +36,19 @@ frontend's `/auth/access-requests` + `/admin/access-requests` endpoints. Folds i
 ## Reference: existing harness interfaces (verified 2026-06-22)
 
 - `users.ts`: `RbacUser = { id, email, password, role: 'admin'|'calendar_editor', fga: { relation:
-  'admin'|'editor', objectType, objectId } | null }`; `USERS` (11 users); `REGISTRATION_USER_IDS =
-  ['cei-admin','usccb-editor']`; `SEEDED_USER_IDS = Object.keys(USERS).filter(id => !REGISTRATION_USER_IDS.includes(id))`.
+'admin'|'editor', objectType, objectId } | null }`; `USERS` (11 users); `REGISTRATION_USER_IDS =
+['cei-admin','usccb-editor']`; `SEEDED_USER_IDS = Object.keys(USERS).filter(id => !REGISTRATION_USER_IDS.includes(id))`.
 - `seed.ts`: `seedUser(id: string): Promise<string>` — deletes existing, `createVerifiedUser`,
   `grantProjectRole(userId, role)`, and **if `u.fga` writes the tuple** (this is what Task 1 changes);
   `oidcLogin(email, password, loginClientToken): Promise<string>`; `loginAndSaveState(id, loginClientToken):
-  Promise<void>` (writes `e2e/.auth/<id>.json`).
+Promise<void>` (writes `e2e/.auth/<id>.json`).
 - `fga.ts`: `class Fga { write(user, relation, object): Promise<void>; delete(user, relation, object):
-  Promise<void> (tolerates not-found); check(user, relation, object): Promise<boolean> }`. `object` form is
+Promise<void> (tolerates not-found); check(user, relation, object): Promise<boolean> }`. `object` form is
   `"{type}:{id}"`, `user` form is `"user:{zitadelId}"`.
 - `zitadel.ts`: `class ZitadelAdmin { createVerifiedUser({email,password,firstName,lastName}): Promise<string>;
-  findUserIdByEmail(email): Promise<string|null>; findUserIdByUsername(userName): Promise<string|null>;
-  grantProjectRole(userId, role): Promise<void>; deleteUser(userId): Promise<void>; mintPat(userId):
-  Promise<{tokenId, token}>; deletePat(userId, tokenId): Promise<void> }`. Private `req(method, path, body?)`.
+findUserIdByEmail(email): Promise<string|null>; findUserIdByUsername(userName): Promise<string|null>;
+grantProjectRole(userId, role): Promise<void>; deleteUser(userId): Promise<void>; mintPat(userId):
+Promise<{tokenId, token}>; deletePat(userId, tokenId): Promise<void> }`. Private `req(method, path, body?)`.
 - `actingAs.ts`: `actingAs(browser, userId): Promise<{ context: BrowserContext, page: Page }>` — builds a
   context from `e2e/.auth/<userId>.json`.
 - `cleanup.ts`: `truncateAppTables(): Promise<void>` (TRUNCATE access_requests, audit_log,
@@ -112,7 +112,13 @@ test('seedUser grants role for all; writes FGA tuple only for admins', async () 
     const e = USERS['cei-editor'].fga!;
     try {
         expect(editorId).toMatch(/^\d+$/);
-        expect(await f.check(`user:${editorId}`, e.relation, `${e.objectType}:${e.objectId}`)).toBe(false);
+        expect(
+            await f.check(
+                `user:${editorId}`,
+                e.relation,
+                `${e.objectType}:${e.objectId}`,
+            ),
+        ).toBe(false);
     } finally {
         await z.deleteUser(editorId).catch(() => {});
     }
@@ -121,10 +127,22 @@ test('seedUser grants role for all; writes FGA tuple only for admins', async () 
     const adminId = await seedUser('usccb-admin');
     const a = USERS['usccb-admin'].fga!;
     try {
-        expect(await f.check(`user:${adminId}`, a.relation, `${a.objectType}:${a.objectId}`)).toBe(true);
+        expect(
+            await f.check(
+                `user:${adminId}`,
+                a.relation,
+                `${a.objectType}:${a.objectId}`,
+            ),
+        ).toBe(true);
     } finally {
         await z.deleteUser(adminId).catch(() => {});
-        await f.delete(`user:${adminId}`, a.relation, `${a.objectType}:${a.objectId}`).catch(() => {});
+        await f
+            .delete(
+                `user:${adminId}`,
+                a.relation,
+                `${a.objectType}:${a.objectId}`,
+            )
+            .catch(() => {});
     }
 });
 ```
@@ -142,18 +160,27 @@ Operations" section first.)
 In `e2e/rbac/support/seed.ts`, change the tuple-write line in `seedUser` from:
 
 ```ts
-    if (u.fga) await f.write(`user:${userId}`, u.fga.relation, `${u.fga.objectType}:${u.fga.objectId}`);
+if (u.fga)
+    await f.write(
+        `user:${userId}`,
+        u.fga.relation,
+        `${u.fga.objectType}:${u.fga.objectId}`,
+    );
 ```
 
 to:
 
 ```ts
-    // Seed the FGA tuple only for resource-admins. Editor grants are earned via the
-    // request-access UI in scenarios (the approval outcome), seeded per-spec where a
-    // scenario needs the grant as a precondition (see support/grant.ts).
-    if (u.fga?.relation === 'admin') {
-        await f.write(`user:${userId}`, u.fga.relation, `${u.fga.objectType}:${u.fga.objectId}`);
-    }
+// Seed the FGA tuple only for resource-admins. Editor grants are earned via the
+// request-access UI in scenarios (the approval outcome), seeded per-spec where a
+// scenario needs the grant as a precondition (see support/grant.ts).
+if (u.fga?.relation === 'admin') {
+    await f.write(
+        `user:${userId}`,
+        u.fga.relation,
+        `${u.fga.objectType}:${u.fga.objectId}`,
+    );
+}
 ```
 
 - [ ] **Step 4: Run the test to verify it passes**
@@ -186,12 +213,12 @@ git commit -m "test(rbac): seed FGA tuples for admins only; editors earn grants 
 
 - Consumes: `Fga`, `ZitadelAdmin`, `USERS`, `findUserIdByEmail`.
 - Produces (relied on by every scenario spec):
-  - `grantScope(userKey: string, opts?: { role?: boolean }): Promise<void>` — write the FGA tuple defined for
-    `USERS[userKey].fga` for the currently-seeded Zitadel user with that email, and (default) ensure the
-    project role is granted. Idempotent (tolerant of "already exists").
-  - `revokeScope(userKey: string): Promise<void>` — delete that tuple (tolerant of "not found").
-  - `grantTuple(zitadelUserId: string, relation: string, objectType: string, objectId: string):
-    Promise<void>` — low-level write for ad-hoc tuples.
+    - `grantScope(userKey: string, opts?: { role?: boolean }): Promise<void>` — write the FGA tuple defined for
+      `USERS[userKey].fga` for the currently-seeded Zitadel user with that email, and (default) ensure the
+      project role is granted. Idempotent (tolerant of "already exists").
+    - `revokeScope(userKey: string): Promise<void>` — delete that tuple (tolerant of "not found").
+    - `grantTuple(zitadelUserId: string, relation: string, objectType: string, objectId: string):
+Promise<void>` — low-level write for ad-hoc tuples.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -205,22 +232,42 @@ import { Fga } from './fga';
 import { ZitadelAdmin } from './zitadel';
 import { USERS } from './users';
 
-test('grantScope writes the user\'s defined tuple; revokeScope removes it', async () => {
+test("grantScope writes the user's defined tuple; revokeScope removes it", async () => {
     const f = new Fga();
     const z = new ZitadelAdmin();
     // cei-editor is seeded WITHOUT its tuple (Task 1). grantScope adds it as a precondition.
     const id = await seedUser('cei-editor');
     const u = USERS['cei-editor'].fga!;
     try {
-        expect(await f.check(`user:${id}`, u.relation, `${u.objectType}:${u.objectId}`)).toBe(false);
+        expect(
+            await f.check(
+                `user:${id}`,
+                u.relation,
+                `${u.objectType}:${u.objectId}`,
+            ),
+        ).toBe(false);
         await grantScope('cei-editor');
-        expect(await f.check(`user:${id}`, u.relation, `${u.objectType}:${u.objectId}`)).toBe(true);
+        expect(
+            await f.check(
+                `user:${id}`,
+                u.relation,
+                `${u.objectType}:${u.objectId}`,
+            ),
+        ).toBe(true);
         await grantScope('cei-editor'); // idempotent — must not throw
         await revokeScope('cei-editor');
-        expect(await f.check(`user:${id}`, u.relation, `${u.objectType}:${u.objectId}`)).toBe(false);
+        expect(
+            await f.check(
+                `user:${id}`,
+                u.relation,
+                `${u.objectType}:${u.objectId}`,
+            ),
+        ).toBe(false);
     } finally {
         await z.deleteUser(id).catch(() => {});
-        await f.delete(`user:${id}`, u.relation, `${u.objectType}:${u.objectId}`).catch(() => {});
+        await f
+            .delete(`user:${id}`, u.relation, `${u.objectType}:${u.objectId}`)
+            .catch(() => {});
     }
 });
 ```
@@ -243,15 +290,26 @@ import { USERS } from './users';
  * Per-spec precondition seeding. Editors are not granted at setup (see seed.ts), so a
  * scenario that needs a user to already hold their scope seeds it here. Idempotent.
  */
-export async function grantScope(userKey: string, opts: { role?: boolean } = {}): Promise<void> {
+export async function grantScope(
+    userKey: string,
+    opts: { role?: boolean } = {},
+): Promise<void> {
     const u = USERS[userKey];
     if (!u?.fga) throw new Error(`grantScope: ${userKey} has no fga scope`);
     const z = new ZitadelAdmin();
     const f = new Fga();
     const zid = await z.findUserIdByEmail(u.email);
-    if (!zid) throw new Error(`grantScope: ${userKey} (${u.email}) is not seeded in Zitadel`);
-    if (opts.role !== false) await z.grantProjectRole(zid, u.role).catch(() => {}); // tolerate already-granted
-    await f.write(`user:${zid}`, u.fga.relation, `${u.fga.objectType}:${u.fga.objectId}`); // write tolerates dup
+    if (!zid)
+        throw new Error(
+            `grantScope: ${userKey} (${u.email}) is not seeded in Zitadel`,
+        );
+    if (opts.role !== false)
+        await z.grantProjectRole(zid, u.role).catch(() => {}); // tolerate already-granted
+    await f.write(
+        `user:${zid}`,
+        u.fga.relation,
+        `${u.fga.objectType}:${u.fga.objectId}`,
+    ); // write tolerates dup
 }
 
 export async function revokeScope(userKey: string): Promise<void> {
@@ -261,13 +319,26 @@ export async function revokeScope(userKey: string): Promise<void> {
     const f = new Fga();
     const zid = await z.findUserIdByEmail(u.email);
     if (!zid) return;
-    await f.delete(`user:${zid}`, u.fga.relation, `${u.fga.objectType}:${u.fga.objectId}`).catch(() => {});
+    await f
+        .delete(
+            `user:${zid}`,
+            u.fga.relation,
+            `${u.fga.objectType}:${u.fga.objectId}`,
+        )
+        .catch(() => {});
 }
 
 export async function grantTuple(
-    zitadelUserId: string, relation: string, objectType: string, objectId: string,
+    zitadelUserId: string,
+    relation: string,
+    objectType: string,
+    objectId: string,
 ): Promise<void> {
-    await new Fga().write(`user:${zitadelUserId}`, relation, `${objectType}:${objectId}`);
+    await new Fga().write(
+        `user:${zitadelUserId}`,
+        relation,
+        `${objectType}:${objectId}`,
+    );
 }
 ```
 
@@ -281,7 +352,7 @@ Expected: PASS.
 
 - [ ] **Step 5: Typecheck + lint**
 
-Run: `yarn typecheck && yarn lint`  → exit 0.
+Run: `yarn typecheck && yarn lint` → exit 0.
 
 - [ ] **Step 6: Commit**
 
@@ -304,9 +375,9 @@ git commit -m "feat(rbac): grant.ts per-spec precondition seeding helper"
   (`input[name="requested_role"]`, `#permissionsSection`, the add-permission controls, the submit button),
   which POSTs to `/auth/access-requests`.
 - Produces (relied on by scenario specs):
-  - `submitAccessRequest(page: Page, opts: { requestedRole: string; permission: { objectType: string;
-    objectId: string; relation: 'admin'|'editor' }; justification?: string }): Promise<void>` — drives the
-    permission-requests UI to submit one scoped request and resolves once the success state is visible.
+    - `submitAccessRequest(page: Page, opts: { requestedRole: string; permission: { objectType: string;
+objectId: string; relation: 'admin'|'editor' }; justification?: string }): Promise<void>` — drives the
+      permission-requests UI to submit one scoped request and resolves once the success state is visible.
 
 This helper drives the real UI (the design's chosen mechanism). The dynamic permission-builder field
 selectors (the add-permission row, the object-type/object-id/relation inputs, the submit button) must be
@@ -364,10 +435,10 @@ git commit -m "feat(rbac): requestAccess.ts — submit a pending request via the
 
 - Consumes: the Mailpit REST API (`GET /api/v1/messages`, `GET /api/v1/message/{ID}`), `MAILPIT_API_URL`.
 - Produces (relied on by scenarios 01/04):
-  - `waitForVerificationLink(toEmail: string, opts?: { timeoutMs?: number }): Promise<string>` — poll Mailpit
-    for the newest message to `toEmail`, extract the Zitadel verification URL from its body, return it. Throws
-    on timeout. Injectable fetch for the unit test: `waitForVerificationLink(toEmail, { fetchImpl })`.
-  - `latestMessageTo(toEmail: string, fetchImpl?): Promise<{ id: string; html: string; text: string } | null>`.
+    - `waitForVerificationLink(toEmail: string, opts?: { timeoutMs?: number }): Promise<string>` — poll Mailpit
+      for the newest message to `toEmail`, extract the Zitadel verification URL from its body, return it. Throws
+      on timeout. Injectable fetch for the unit test: `waitForVerificationLink(toEmail, { fetchImpl })`.
+    - `latestMessageTo(toEmail: string, fetchImpl?): Promise<{ id: string; html: string; text: string } | null>`.
 
 - [ ] **Step 1: Confirm the Mailpit base URL**
 
@@ -386,18 +457,38 @@ import { test, expect } from '@playwright/test';
 import { waitForVerificationLink } from './mailpit';
 
 test('waitForVerificationLink extracts the verification URL from the newest message', async () => {
-    const verifyUrl = 'http://localhost:8080/ui/v2/login/verify?code=ABC&userID=42';
+    const verifyUrl =
+        'http://localhost:8080/ui/v2/login/verify?code=ABC&userID=42';
     const fetchImpl = (async (url: string) => {
         if (url.includes('/api/v1/messages')) {
-            return new Response(JSON.stringify({ messages: [{ ID: 'm1', To: [{ Address: 'cei-admin+e2e@litcal.test' }] }] }), { status: 200 });
+            return new Response(
+                JSON.stringify({
+                    messages: [
+                        {
+                            ID: 'm1',
+                            To: [{ Address: 'cei-admin+e2e@litcal.test' }],
+                        },
+                    ],
+                }),
+                { status: 200 },
+            );
         }
         if (url.includes('/api/v1/message/m1')) {
-            return new Response(JSON.stringify({ HTML: `<a href="${verifyUrl}">Verify</a>`, Text: '' }), { status: 200 });
+            return new Response(
+                JSON.stringify({
+                    HTML: `<a href="${verifyUrl}">Verify</a>`,
+                    Text: '',
+                }),
+                { status: 200 },
+            );
         }
         return new Response('not found', { status: 404 });
     }) as unknown as typeof fetch;
 
-    const link = await waitForVerificationLink('cei-admin+e2e@litcal.test', { fetchImpl, timeoutMs: 1000 });
+    const link = await waitForVerificationLink('cei-admin+e2e@litcal.test', {
+        fetchImpl,
+        timeoutMs: 1000,
+    });
     expect(link).toBe(verifyUrl);
 });
 ```
@@ -444,13 +535,13 @@ git commit -m "feat(rbac): mailpit.ts verification-email retrieval"
 
 - Consumes: `Fga`, `ZitadelAdmin`, `USERS`, `execFile` (already used in `cleanup.ts`).
 - Produces:
-  - `deleteAllSeededUsers()` — extended so it deletes **every** FGA tuple a user could hold (both `admin` and
-    `editor` relations from the matrix), not only the matrix-defined one, since scenarios create editor tuples
-    dynamically. Implementation: for each seeded user, attempt `f.delete` for their matrix tuple (tolerant),
-    then delete the Zitadel user.
-  - `gitRestoreApiData(): Promise<void>` (NEW) — restore the API repo's calendar source data after scenario 10
-    edits it, via `git -C <API_REPO> checkout -- jsondata/sourcedata` (path confirmed in Step 1). 30s timeout,
-    tolerant of "nothing to restore".
+    - `deleteAllSeededUsers()` — extended so it deletes **every** FGA tuple a user could hold (both `admin` and
+      `editor` relations from the matrix), not only the matrix-defined one, since scenarios create editor tuples
+      dynamically. Implementation: for each seeded user, attempt `f.delete` for their matrix tuple (tolerant),
+      then delete the Zitadel user.
+    - `gitRestoreApiData(): Promise<void>` (NEW) — restore the API repo's calendar source data after scenario 10
+      edits it, via `git -C <API_REPO> checkout -- jsondata/sourcedata` (path confirmed in Step 1). 30s timeout,
+      tolerant of "nothing to restore".
 
 - [ ] **Step 1: Confirm the API source-data path + restore command**
 

@@ -25,7 +25,7 @@ The **frontend** is the only thing locking resource-admins out:
 
 - `admin-permissions.php` (the sole access-request review UI) redirects anyone without the global `admin`
   role (lines 20–26: `$isAdmin = $authHelper->hasRole('admin'); if (!$isAdmin) { header('Location:
-  admin-dashboard.php'); exit; }`).
+admin-dashboard.php'); exit; }`).
 - `admin-dashboard.php` renders the admin section (incl. the "Role Requests" / "Permissions" cards that
   link to `admin-permissions.php`) only inside `if ($isAdmin)` — so resource-admins see no entry point.
 - `notifications.js` fixes its mode at init to `Auth.hasRole('admin') ? 'admin' : 'user'`, so a
@@ -79,11 +79,9 @@ Response shape:
 
 ```json
 {
-  "is_global_admin": false,
-  "is_resource_admin": true,
-  "admin_scopes": [
-    { "object_type": "national_calendar", "object_id": "IT" }
-  ]
+    "is_global_admin": false,
+    "is_resource_admin": true,
+    "admin_scopes": [{ "object_type": "national_calendar", "object_id": "IT" }]
 }
 ```
 
@@ -173,7 +171,7 @@ still sees their own request outcomes on `permission-requests.php`). The `seen` 
 Hiding the FGA-tuple UI from resource-admins is **not** the security boundary — the API
 (`PermissionAdminHandler`, which already checks `isResourceAdmin` per tuple op) and the access-request
 admin endpoints (`filterByAdminAccess` / `requireAdminForAllResources`) remain the enforcement points. The
-frontend changes only widen *who the UI lets in* and *what it shows*; every privileged action is still
+frontend changes only widen _who the UI lets in_ and _what it shows_; every privileged action is still
 authorized server-side against OpenFGA. `/auth/admin-scopes` returns scopes for the authenticated caller
 only.
 

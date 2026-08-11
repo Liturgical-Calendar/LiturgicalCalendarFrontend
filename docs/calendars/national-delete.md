@@ -78,14 +78,14 @@ DELETE /data?category=nation&key={country_iso}
 
 ## What Gets Deleted
 
-| Data Type             | Deleted |
-|-----------------------|---------|
-| Liturgical events     | Yes     |
-| Event translations    | Yes     |
-| Calendar settings     | Yes     |
-| Locale associations   | Yes     |
-| Missal associations   | Yes     |
-| Wider region link     | Yes     |
+| Data Type           | Deleted |
+| ------------------- | ------- |
+| Liturgical events   | Yes     |
+| Event translations  | Yes     |
+| Calendar settings   | Yes     |
+| Locale associations | Yes     |
+| Missal associations | Yes     |
+| Wider region link   | Yes     |
 
 ## What Is NOT Deleted
 

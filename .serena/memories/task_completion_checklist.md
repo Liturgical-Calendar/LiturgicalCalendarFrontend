@@ -4,51 +4,51 @@ Run before declaring done / committing:
 
 1. **The all-in-one pre-commit oneliner** (from CLAUDE.md)
 
-   ```bash
-   composer parallel-lint && composer lint:fix && composer analyse && composer lint:md:fix && yarn typecheck && yarn format:md
-   ```
+    ```bash
+    composer parallel-lint && composer lint:fix && composer analyse && composer lint:md:fix && yarn typecheck && yarn format:md
+    ```
 
-   Or step-by-step:
+    Or step-by-step:
 
 2. **PHP**
 
-   ```bash
-   composer parallel-lint   # syntax check
-   composer lint:fix        # phpcbf (auto-fix style)
-   composer lint            # phpcs verification (won't fail loud — read output)
-   composer analyse         # phpstan level 7
-   composer test            # phpunit (if applicable)
-   ```
+    ```bash
+    composer parallel-lint   # syntax check
+    composer lint:fix        # phpcbf (auto-fix style)
+    composer lint            # phpcs verification (won't fail loud — read output)
+    composer analyse         # phpstan level 7
+    composer test            # phpunit (if applicable)
+    ```
 
 3. **Markdown**
 
-   ```bash
-   composer lint:md
-   composer lint:md:fix
-   yarn format:md           # prettier table alignment
-   ```
+    ```bash
+    composer lint:md
+    composer lint:md:fix
+    yarn format:md           # prettier table alignment
+    ```
 
 4. **JS / TS**
 
-   ```bash
-   yarn lint                # eslint
-   yarn typecheck           # tsc on e2e/
-   ```
+    ```bash
+    yarn lint                # eslint
+    yarn typecheck           # tsc on e2e/
+    ```
 
 5. **E2E (Playwright) — for UI changes**
 
-   ```bash
-   yarn test:ci:chromium    # auto-starts servers
-   ```
+    ```bash
+    yarn test:ci:chromium    # auto-starts servers
+    ```
 
 6. **Manual UI smoke test (rule from system prompt)** — actually start the dev server and exercise the feature in a browser:
 
-   ```bash
-   php -S localhost:3000
-   # browse to http://localhost:3000
-   ```
+    ```bash
+    php -S localhost:3000
+    # browse to http://localhost:3000
+    ```
 
-   Type-check / unit tests verify code, NOT feature behavior.
+    Type-check / unit tests verify code, NOT feature behavior.
 
 ## Pre-commit (CaptainHook) — DO NOT BYPASS
 

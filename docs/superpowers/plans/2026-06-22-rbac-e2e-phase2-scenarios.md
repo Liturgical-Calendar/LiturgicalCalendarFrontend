@@ -66,10 +66,12 @@ test.afterEach(async () => {
 - "FGA tuple + role now exist for user U at scope" — resolve the Zitadel id by email, then assert the tuple
   (`.toBe(true)`; after revoke, `.toBe(false)`):
 
-  ```ts
-  const zid = await new ZitadelAdmin().findUserIdByEmail(USERS[U].email);
-  expect(await new Fga().check(`user:${zid}`, relation, `${type}:${id}`)).toBe(true);
-  ```
+    ```ts
+    const zid = await new ZitadelAdmin().findUserIdByEmail(USERS[U].email);
+    expect(
+        await new Fga().check(`user:${zid}`, relation, `${type}:${id}`),
+    ).toBe(true);
+    ```
 
 - "Request has status S in the list" → `requestVisible(page, { requesterEmail, status: S })` (the review list
   supports a status filter via `GET /admin/access-requests?status=...`).
@@ -88,15 +90,15 @@ test.afterEach(async () => {
   (`loadAccessRequests()` → `GET /admin/access-requests`; the review list container; per-request rows;
   `#permReqReviewModal` with `#permReqDetails`, `#permReqNotesSection` (the notes textarea),
   `#permReqModalAlerts`; the approve/reject/revoke buttons; `processAccessReq(action)` → `POST
-  /admin/access-requests/{id}/{action}` with `notes`).
+/admin/access-requests/{id}/{action}` with `notes`).
 - Produces (relied on by Tasks 2–13):
-  - `requestVisible(page: Page, q: { requesterEmail: string; status?: string }): Promise<boolean>` — navigate/
-    reload the review list (optionally with the status filter) and return whether a row for that requester is
-    present.
-  - `findRequestRow(page: Page, q: { requesterEmail: string }): Promise<Locator>` — the row locator.
-  - `actOnRequest(page: Page, q: { requesterEmail: string; action: 'approve'|'reject'|'revoke'; notes?:
-    string }): Promise<void>` — open the row's review modal, fill notes if given, click the action button,
-    and await the success state + list refresh.
+    - `requestVisible(page: Page, q: { requesterEmail: string; status?: string }): Promise<boolean>` — navigate/
+      reload the review list (optionally with the status filter) and return whether a row for that requester is
+      present.
+    - `findRequestRow(page: Page, q: { requesterEmail: string }): Promise<Locator>` — the row locator.
+    - `actOnRequest(page: Page, q: { requesterEmail: string; action: 'approve'|'reject'|'revoke'; notes?:
+string }): Promise<void>` — open the row's review modal, fill notes if given, click the action button,
+      and await the success state + list refresh.
 
 - [ ] **Step 1: Pin the review-UI selectors**
 
@@ -152,7 +154,7 @@ present as a Zitadel account in this independent spec, create+login it first via
 Then:
 
 1. `actingAs('cei-editor')` → `submitAccessRequest(page, { requestedRole: 'calendar_editor', permission: {
-   objectType: 'national_calendar', objectId: 'IT', relation: 'editor' } })`.
+objectType: 'national_calendar', objectId: 'IT', relation: 'editor' } })`.
 2. Assert visibility: act as `super-admin` → `requestVisible(cei-editor)` true; act as `cei-admin` →
    `requestVisible(cei-editor)` true; act as `usccb-admin` → `requestVisible(cei-editor)` **false**.
 3. `cei-admin` rejects: `actOnRequest({ requesterEmail: cei-editor, action: 'reject', notes: 'fix scope' })`.
@@ -190,9 +192,9 @@ git commit -m "test(rbac): 02 — cei-editor edit@IT scoped review lifecycle"
 - Consumes: the registration entry point (from `request-access.php`/login — pinned in Step 1), `mailpit.ts`
   `waitForVerificationLink`, the cross-org env (`ZITADEL_ORG_ID`, org-domain-suffix login-name setting).
 - Produces (relied on by scenarios 01/04):
-  - `registerAndVerify(page: Page, user: { email: string; password: string; firstName: string; lastName:
-    string }): Promise<void>` — drive the Zitadel self-registration UI, retrieve the verification link from
-    Mailpit, complete verification, and leave the user able to log in.
+    - `registerAndVerify(page: Page, user: { email: string; password: string; firstName: string; lastName:
+string }): Promise<void>` — drive the Zitadel self-registration UI, retrieve the verification link from
+      Mailpit, complete verification, and leave the user able to log in.
 
 - [ ] **Step 1: Pin the registration flow**
 
@@ -203,11 +205,11 @@ given/family name), the submit control, and how the Zitadel verification email's
 email pattern `<id>+e2e@litcal.test`. Record as a header comment.
 
 - [ ] **Step 2: Implement `register.ts`** using the pinned selectors + `waitForVerificationLink(email)` to
-  fetch + visit/complete the verification link.
+      fetch + visit/complete the verification link.
 
 - [ ] **Step 3: Smoke-validate** in a temp spec: `registerAndVerify(page, USERS['cei-admin'])` then assert the
-  user can log in (e.g. `oidcLogin` succeeds, or `findUserIdByEmail` returns an id and a login lands an
-  authenticated `/auth/me.php`). Run → PASS. Delete temp spec. Clean up the created user.
+      user can log in (e.g. `oidcLogin` succeeds, or `findUserIdByEmail` returns an id and a login lands an
+      authenticated `/auth/me.php`). Run → PASS. Delete temp spec. Clean up the created user.
 
 - [ ] **Step 4: Typecheck + lint + commit**
 
@@ -229,7 +231,7 @@ git commit -m "feat(rbac): register.ts — Zitadel self-registration + Mailpit v
 
 1. `registerAndVerify(page, USERS['cei-admin'])`; log in (save state or drive login UI).
 2. As cei-admin, `submitAccessRequest(page, { requestedRole: 'calendar_editor', permission: { objectType:
-   'national_calendar', objectId: 'IT', relation: 'admin' } })`.
+'national_calendar', objectId: 'IT', relation: 'admin' } })`.
 3. Assert **only `super-admin`** sees it (cei-admin is not yet an IT admin): act as `super-admin` →
    `requestVisible(cei-admin)` true; act as `usccb-admin` → false. (cei-admin cannot review their own request
    into existence — they have no admin tuple yet.)
@@ -239,7 +241,7 @@ git commit -m "feat(rbac): register.ts — Zitadel self-registration + Mailpit v
 `afterEach`: `truncateAppTables()`; delete the cei-admin Zitadel user + its tuple (it was created in-spec).
 
 - [ ] **Step 2: Run** `yarn test --project=rbac e2e/rbac/01-cei-admin-register-request.spec.ts` → PASS
-  (iterate; registration is the most timing-sensitive — allow Mailpit polling).
+      (iterate; registration is the most timing-sensitive — allow Mailpit polling).
 
 - [ ] **Step 3: Typecheck + lint + commit**
 
@@ -254,16 +256,16 @@ git commit -m "test(rbac): 01 — cei-admin registration + admin@IT request life
 
 **Files:** Create `e2e/rbac/03-usccb-admin-request.spec.ts`
 
-- [ ] **Step 1: Write the spec.** usccb-admin is a seeded resource-admin (already admin@US). For a *pending*
-  admin@US **request**, use a not-yet-US-admin requester (per the original design's intent, usccb-admin
-  requesting *additional* admin scope; if that's not meaningful, request as a fresh applicant for admin@US).
-  Concretely: act as a seeded editor without US scope (e.g. `grc-editor`) and
-  `submitAccessRequest(... admin@national_calendar:US)`. Assert **`cei-admin` does NOT see it** (IT admin),
-  only `super-admin` does → `super-admin` approves → assert the tuple now exists for the requester.
-  `afterEach`: truncate + revoke the requester's US tuple.
+- [ ] **Step 1: Write the spec.** usccb-admin is a seeded resource-admin (already admin@US). For a _pending_
+      admin@US **request**, use a not-yet-US-admin requester (per the original design's intent, usccb-admin
+      requesting _additional_ admin scope; if that's not meaningful, request as a fresh applicant for admin@US).
+      Concretely: act as a seeded editor without US scope (e.g. `grc-editor`) and
+      `submitAccessRequest(... admin@national_calendar:US)`. Assert **`cei-admin` does NOT see it** (IT admin),
+      only `super-admin` does → `super-admin` approves → assert the tuple now exists for the requester.
+      `afterEach`: truncate + revoke the requester's US tuple.
 
-  (Resolve the "who requests admin@US" requester during impl so the request is in-scope for usccb-admin/
-  super-admin but out-of-scope for cei-admin — the assertion target is the cei-admin-can't-see scoping.)
+    (Resolve the "who requests admin@US" requester during impl so the request is in-scope for usccb-admin/
+    super-admin but out-of-scope for cei-admin — the assertion target is the cei-admin-can't-see scoping.)
 
 - [ ] **Step 2: Run → PASS.**
 - [ ] **Step 3: commit** `test(rbac): 03 — admin@USA request not visible to cei-admin`.
@@ -275,9 +277,9 @@ git commit -m "test(rbac): 01 — cei-admin registration + admin@IT request life
 **Files:** Create `e2e/rbac/04-usccb-editor-register-request.spec.ts`
 
 - [ ] **Step 1: Write the spec.** Precondition: seed `usccb-admin = admin@US` (already seeded at setup).
-  `registerAndVerify(page, USERS['usccb-editor'])` (registration user) → request `edit@US` → assert
-  `usccb-admin` + `super-admin` see it, `cei-admin` does not → `usccb-admin` grants → assert tuple+role exist
-  → `super-admin` sees the grant. `afterEach`: truncate + delete usccb-editor user/tuple.
+      `registerAndVerify(page, USERS['usccb-editor'])` (registration user) → request `edit@US` → assert
+      `usccb-admin` + `super-admin` see it, `cei-admin` does not → `usccb-admin` grants → assert tuple+role exist
+      → `super-admin` sees the grant. `afterEach`: truncate + delete usccb-editor user/tuple.
 - [ ] **Step 2: Run → PASS.**
 - [ ] **Step 3: commit** `test(rbac): 04 — usccb-editor registration + edit@USA grant`.
 
@@ -288,7 +290,7 @@ git commit -m "test(rbac): 01 — cei-admin registration + admin@IT request life
 **Files:** Create `e2e/rbac/05-rome-admin-request.spec.ts`
 
 - [ ] **Step 1:** Pending admin@`diocesan_calendar:romamo_it` request (requester per the same pattern as Task
-  5). Assert only `super-admin` sees it → grants → tuple exists. `afterEach`: truncate + revoke.
+      5). Assert only `super-admin` sees it → grants → tuple exists. `afterEach`: truncate + revoke.
 - [ ] **Step 2: Run → PASS.** **Step 3: commit** `test(rbac): 05 — admin@romamo_it request, super-admin only`.
 
 ---
@@ -298,8 +300,8 @@ git commit -m "test(rbac): 01 — cei-admin registration + admin@IT request life
 **Files:** Create `e2e/rbac/06-rome-editor-request.spec.ts`
 
 - [ ] **Step 1:** Precondition `rome-admin = admin@romamo_it` (seeded at setup). `actingAs('rome-editor')` →
-  request `edit@romamo_it` → assert `super-admin` + `rome-admin` see it, `cei-admin`/`usccb-admin` do not →
-  `rome-admin` grants → `super-admin` sees the grant. `afterEach`: truncate + `revokeScope('rome-editor')`.
+      request `edit@romamo_it` → assert `super-admin` + `rome-admin` see it, `cei-admin`/`usccb-admin` do not →
+      `rome-admin` grants → `super-admin` sees the grant. `afterEach`: truncate + `revokeScope('rome-editor')`.
 - [ ] **Step 2: Run → PASS.** **Step 3: commit** `test(rbac): 06 — rome-editor edit@romamo_it scoped review`.
 
 ---
@@ -312,14 +314,14 @@ git commit -m "test(rbac): 01 — cei-admin registration + admin@IT request life
 to Review" card (from `admin-dashboard.php`/`admin-blocks.php`), `Auth`/page DOM.
 
 - [ ] **Step 1: Pin the card selectors + per-role expectations.** Read `admin-dashboard.php` +
-  `admin-blocks.php`: record each card's `data-block-id`/href and the gating conditional (`$isAdmin`,
-  `$isResourceAdmin`, `$hasCalendarRole`, scope checks). Build the expected per-user matrix: which cards each
-  of `super-admin`, `cei-admin`, `cei-editor`, `usccb-admin`, `grc-admin`, `europe-admin` sees, scope
-  narrowing (National → IT vs USA; Diocesan → romamo_it; GRC; Europe), and that resource-admins see the
-  "Access Requests to Review" card while editors do not and the global FGA-tuple section is hidden.
+      `admin-blocks.php`: record each card's `data-block-id`/href and the gating conditional (`$isAdmin`,
+      `$isResourceAdmin`, `$hasCalendarRole`, scope checks). Build the expected per-user matrix: which cards each
+      of `super-admin`, `cei-admin`, `cei-editor`, `usccb-admin`, `grc-admin`, `europe-admin` sees, scope
+      narrowing (National → IT vs USA; Diocesan → romamo_it; GRC; Europe), and that resource-admins see the
+      "Access Requests to Review" card while editors do not and the global FGA-tuple section is hidden.
 - [ ] **Step 2: Write the spec** asserting the matrix per user (extends the existing
-  `00-smoke-dashboard-scoping.spec.ts` patterns; this is the full matrix). Precondition: `grantScope` for any
-  editor whose card-visibility depends on holding a scope. `afterEach`: revoke those.
+      `00-smoke-dashboard-scoping.spec.ts` patterns; this is the full matrix). Precondition: `grantScope` for any
+      editor whose card-visibility depends on holding a scope. `afterEach`: revoke those.
 - [ ] **Step 3: Run → PASS.** **Step 4: commit** `test(rbac): 07 — dashboard card scoping matrix`.
 
 ---
@@ -329,10 +331,10 @@ to Review" card (from `admin-dashboard.php`/`admin-blocks.php`), `Auth`/page DOM
 **Files:** Create `e2e/rbac/08-negative-auth.spec.ts`
 
 - [ ] **Step 1: Write the spec.** Seed a pending `edit@US` request (requester as in Task 5). As `cei-admin`
-  (IT admin): (a) attempt to approve the US request via the API the UI uses
-  (`POST /admin/access-requests/{id}/approve` through `page.request` with cei-admin's session) → expect 403;
-  (b) assert the US request is **not visible** in cei-admin's review list; (c) attempt to open a USA-scoped
-  dashboard card / edit the USA calendar via `extending.php` → denied/hidden. `afterEach`: truncate + revoke.
+      (IT admin): (a) attempt to approve the US request via the API the UI uses
+      (`POST /admin/access-requests/{id}/approve` through `page.request` with cei-admin's session) → expect 403;
+      (b) assert the US request is **not visible** in cei-admin's review list; (c) attempt to open a USA-scoped
+      dashboard card / edit the USA calendar via `extending.php` → denied/hidden. `afterEach`: truncate + revoke.
 - [ ] **Step 2: Run → PASS.** **Step 3: commit** `test(rbac): 08 — negative authorization (cei-admin vs USA)`.
 
 ---
@@ -342,12 +344,12 @@ to Review" card (from `admin-dashboard.php`/`admin-blocks.php`), `Auth`/page DOM
 **Files:** Create `e2e/rbac/09-revoke-after-grant.spec.ts`
 
 - [ ] **Step 1: Write the spec.** Precondition: `grantScope('cei-editor')` (cei-editor already edit@IT) and a
-  corresponding approved request row (seed via submit+approve, or seed the approved request). As `cei-admin`
-  (or `super-admin`), `actOnRequest({ requesterEmail: cei-editor, action: 'revoke', notes: 'revoked' })`.
-  Assert: the FGA tuple + role are **removed** (`Fga.check(...) === false`); cei-editor's dashboard cards for
-  IT disappear (act as cei-editor, assert the National-IT card is gone); a `revoked` notification is delivered
-  (assert via cei-editor's notification surface — `/auth/access-requests/status` or the bell — pin during
-  impl). `afterEach`: truncate + ensure tuple removed.
+      corresponding approved request row (seed via submit+approve, or seed the approved request). As `cei-admin`
+      (or `super-admin`), `actOnRequest({ requesterEmail: cei-editor, action: 'revoke', notes: 'revoked' })`.
+      Assert: the FGA tuple + role are **removed** (`Fga.check(...) === false`); cei-editor's dashboard cards for
+      IT disappear (act as cei-editor, assert the National-IT card is gone); a `revoked` notification is delivered
+      (assert via cei-editor's notification surface — `/auth/access-requests/status` or the bell — pin during
+      impl). `afterEach`: truncate + ensure tuple removed.
 - [ ] **Step 2: Run → PASS.** **Step 3: commit** `test(rbac): 09 — revoke-after-grant lifecycle`.
 
 ---
@@ -359,10 +361,10 @@ to Review" card (from `admin-dashboard.php`/`admin-blocks.php`), `Auth`/page DOM
 **Interfaces:** consumes `grantScope`, `actingAs`, `extending.php` edit flow, `gitRestoreApiData`.
 
 - [ ] **Step 1: Pin the `extending.php` edit flow** (calendar selection, an edit, save, success indicator) for
-  the IT national calendar; confirm the same against USA is blocked for a user scoped only to IT.
+      the IT national calendar; confirm the same against USA is blocked for a user scoped only to IT.
 - [ ] **Step 2: Write the spec.** Precondition `grantScope('cei-editor')` (edit@IT). As cei-editor: edit the
-  IT national calendar via `extending.php` → assert success; attempt the same edit against USA → assert
-  failure (403/hidden). `afterEach`: `truncateAppTables()`; `revokeScope('cei-editor')`; **`gitRestoreApiData()`**.
+      IT national calendar via `extending.php` → assert success; attempt the same edit against USA → assert
+      failure (403/hidden). `afterEach`: `truncateAppTables()`; `revokeScope('cei-editor')`; **`gitRestoreApiData()`**.
 - [ ] **Step 3: Run → PASS** (verify `gitRestoreApiData` reverts the edit — re-run must start clean).
 - [ ] **Step 4: commit** `test(rbac): 10 — scoped data editing (IT ok, USA denied)`.
 
@@ -373,10 +375,10 @@ to Review" card (from `admin-dashboard.php`/`admin-blocks.php`), `Auth`/page DOM
 **Files:** Create `e2e/rbac/11-session-resilience.spec.ts`
 
 - [ ] **Step 1: Write the spec.** (a) Cookie/session expiry + refresh mid-flow: clear/expire the
-  `litcal_access_token` cookie and assert the app refreshes or redirects to re-auth correctly; (b) logout then
-  log in as a different user (act as A, log out, act as B) — assert no stale auth state; (c) a grant/revoke is
-  reflected on the next `/auth/me` without stale caching: `grantScope`/`revokeScope` a user mid-session and
-  assert the change surfaces after a reload. `afterEach`: truncate + revoke any dynamic grants.
+      `litcal_access_token` cookie and assert the app refreshes or redirects to re-auth correctly; (b) logout then
+      log in as a different user (act as A, log out, act as B) — assert no stale auth state; (c) a grant/revoke is
+      reflected on the next `/auth/me` without stale caching: `grantScope`/`revokeScope` a user mid-session and
+      assert the change surfaces after a reload. `afterEach`: truncate + revoke any dynamic grants.
 - [ ] **Step 2: Run → PASS.** **Step 3: commit** `test(rbac): 11 — session/token resilience`.
 
 ---

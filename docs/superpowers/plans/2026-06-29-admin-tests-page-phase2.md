@@ -22,12 +22,12 @@ Per-row Edit/Delete buttons are gated against the caller's scopes from `GET /aut
   list `['admin-applications','admin-role-requests']`). `assets/css/admin-tests.css` is auto-loaded by `layout/head.php`. Do not edit footer/head
   loaders for these two files.
 - **Imports:** `import { ApiClient, CalendarSelect, CalendarSelectFilter } from '@liturgical-calendar/components-js';` and `import {
-  AssertionsBuilder, TestType, AssertType } from './AssertionsBuilder.js';`.
+AssertionsBuilder, TestType, AssertType } from './AssertionsBuilder.js';`.
 - **All API calls:** `credentials: 'include'`, `Accept: application/json`, and `Content-Type: application/json` on writes. Base URL from `window.AdminTestsConfig.apiUrl`.
 - **RFC 3339 dates:** `expected_value` is always `YYYY-MM-DDT00:00:00+00:00` (UTC midnight) or `null`. Compute via `new Date(Date.UTC(year, month-1,
-  day)).toISOString().split('T')[0] + 'T00:00:00+00:00'`.
+day)).toISOString().split('T')[0] + 'T00:00:00+00:00'`.
 - **Test name pattern (schema):** `^(?:[a-z_]+?_){0,1}[A-Z][a-zA-Z1-9]+[0-9]{0,2}(?:_vigil)?Test$`. `name` is the resource key for `PATCH/DELETE
-  /tests/{name}` → render it **read-only when editing**.
+/tests/{name}` → render it **read-only when editing**.
 - **Test types:** `exactCorrespondence`, `exactCorrespondenceSince` (requires `year_since`), `exactCorrespondenceUntil` (requires `year_until`),
   `variableCorrespondence`. Schema: `exactCorrespondence` and `variableCorrespondence` share the base shape (no pivot year); Since/Until each require
   their pivot year.
@@ -157,19 +157,30 @@ Create `assets/js/__tests__/AssertionsBuilder.test.js`:
 
 ```javascript
 import { describe, it, expect } from 'vitest';
-import { TestType, AssertType, LitGrade, Assertion } from '../AssertionsBuilder.js';
+import {
+    TestType,
+    AssertType,
+    LitGrade,
+    Assertion,
+} from '../AssertionsBuilder.js';
 
 describe('enums', () => {
     it('exposes the four test types', () => {
         expect(TestType.ExactCorrespondence).toBe('exactCorrespondence');
-        expect(TestType.ExactCorrespondenceSince).toBe('exactCorrespondenceSince');
-        expect(TestType.ExactCorrespondenceUntil).toBe('exactCorrespondenceUntil');
+        expect(TestType.ExactCorrespondenceSince).toBe(
+            'exactCorrespondenceSince',
+        );
+        expect(TestType.ExactCorrespondenceUntil).toBe(
+            'exactCorrespondenceUntil',
+        );
         expect(TestType.VariableCorrespondence).toBe('variableCorrespondence');
     });
 
     it('exposes the two assert types', () => {
         expect(AssertType.EventNotExists).toBe('eventNotExists');
-        expect(AssertType.EventTypeExact).toBe('eventExists AND hasExpectedDate');
+        expect(AssertType.EventTypeExact).toBe(
+            'eventExists AND hasExpectedDate',
+        );
     });
 
     it('maps liturgical grades to strings', () => {
@@ -185,7 +196,13 @@ describe('Assertion', () => {
     });
 
     it('keeps comment when provided', () => {
-        const a = new Assertion(2024, null, AssertType.EventNotExists, 'x', 'note');
+        const a = new Assertion(
+            2024,
+            null,
+            AssertType.EventNotExists,
+            'x',
+            'note',
+        );
         expect(a.comment).toBe('note');
     });
 });
@@ -210,10 +227,10 @@ Create `assets/js/AssertionsBuilder.js`:
  */
 
 export const TestType = Object.freeze({
-    ExactCorrespondence:      'exactCorrespondence',
+    ExactCorrespondence: 'exactCorrespondence',
     ExactCorrespondenceSince: 'exactCorrespondenceSince',
     ExactCorrespondenceUntil: 'exactCorrespondenceUntil',
-    VariableCorrespondence:   'variableCorrespondence',
+    VariableCorrespondence: 'variableCorrespondence',
 });
 
 export const AssertType = Object.freeze({
@@ -222,10 +239,24 @@ export const AssertType = Object.freeze({
 });
 
 export const LitGrade = Object.freeze({
-    WEEKDAY: 0, COMMEMORATION: 1, OPTIONAL_MEMORIAL: 2, MEMORIAL: 3,
-    FEAST: 4, FEAST_OF_THE_LORD: 5, SOLEMNITY: 6, HIGHER_SOLEMNITY: 7,
-    stringVals: ['weekday', 'commemoration', 'optional memorial', 'Memorial',
-        'FEAST', 'FEAST OF THE LORD', 'SOLEMNITY', 'HIGHER SOLEMNITY'],
+    WEEKDAY: 0,
+    COMMEMORATION: 1,
+    OPTIONAL_MEMORIAL: 2,
+    MEMORIAL: 3,
+    FEAST: 4,
+    FEAST_OF_THE_LORD: 5,
+    SOLEMNITY: 6,
+    HIGHER_SOLEMNITY: 7,
+    stringVals: [
+        'weekday',
+        'commemoration',
+        'optional memorial',
+        'Memorial',
+        'FEAST',
+        'FEAST OF THE LORD',
+        'SOLEMNITY',
+        'HIGHER SOLEMNITY',
+    ],
     toString: (n) => LitGrade.stringVals[parseInt(n, 10)],
 });
 
@@ -284,12 +315,26 @@ import { AssertionsBuilder } from '../AssertionsBuilder.js';
 const sampleExact = {
     name: 'StIgnatiusOfLoyolaTest',
     event_key: 'StIgnatiusOfLoyola',
-    description: "The Memorial of 'Saint Ignatius of Loyola' should fall on July 31",
+    description:
+        "The Memorial of 'Saint Ignatius of Loyola' should fall on July 31",
     test_type: 'exactCorrespondence',
     applies_to: { national_calendar: 'USA' },
     assertions: [
-        { year: 2024, expected_value: '2024-07-31T00:00:00+00:00', assert: 'eventExists AND hasExpectedDate', assertion: "The Memorial of 'Saint Ignatius of Loyola' should fall on July 31" },
-        { year: 2025, expected_value: '2025-07-31T00:00:00+00:00', assert: 'eventExists AND hasExpectedDate', assertion: "The Memorial of 'Saint Ignatius of Loyola' should fall on July 31", comment: 'note' },
+        {
+            year: 2024,
+            expected_value: '2024-07-31T00:00:00+00:00',
+            assert: 'eventExists AND hasExpectedDate',
+            assertion:
+                "The Memorial of 'Saint Ignatius of Loyola' should fall on July 31",
+        },
+        {
+            year: 2025,
+            expected_value: '2025-07-31T00:00:00+00:00',
+            assert: 'eventExists AND hasExpectedDate',
+            assertion:
+                "The Memorial of 'Saint Ignatius of Loyola' should fall on July 31",
+            comment: 'note',
+        },
     ],
 };
 
@@ -300,8 +345,18 @@ const sampleSince = {
     test_type: 'exactCorrespondenceSince',
     year_since: 2026,
     assertions: [
-        { year: 2025, expected_value: null, assert: 'eventNotExists', assertion: "The FEAST of 'Some Feast' should not exist on March 19" },
-        { year: 2026, expected_value: '2026-03-19T00:00:00+00:00', assert: 'eventExists AND hasExpectedDate', assertion: "The FEAST of 'Some Feast' should fall on March 19" },
+        {
+            year: 2025,
+            expected_value: null,
+            assert: 'eventNotExists',
+            assertion: "The FEAST of 'Some Feast' should not exist on March 19",
+        },
+        {
+            year: 2026,
+            expected_value: '2026-03-19T00:00:00+00:00',
+            assert: 'eventExists AND hasExpectedDate',
+            assertion: "The FEAST of 'Some Feast' should fall on March 19",
+        },
     ],
 };
 
@@ -317,11 +372,22 @@ describe('load + serialize round-trip', () => {
     });
 
     it('omits year_since/year_until/applies_to/excludes when not applicable', () => {
-        const out = new AssertionsBuilder().load({
-            name: 'BareTest', event_key: 'Bare', description: 'd',
-            test_type: 'exactCorrespondence',
-            assertions: [{ year: 2024, expected_value: null, assert: 'eventNotExists', assertion: 'd' }],
-        }).serialize();
+        const out = new AssertionsBuilder()
+            .load({
+                name: 'BareTest',
+                event_key: 'Bare',
+                description: 'd',
+                test_type: 'exactCorrespondence',
+                assertions: [
+                    {
+                        year: 2024,
+                        expected_value: null,
+                        assert: 'eventNotExists',
+                        assertion: 'd',
+                    },
+                ],
+            })
+            .serialize();
         expect('year_since' in out).toBe(false);
         expect('year_until' in out).toBe(false);
         expect('applies_to' in out).toBe(false);
@@ -330,7 +396,11 @@ describe('load + serialize round-trip', () => {
 
     it('setMeta updates name/description/event_key/test_type without touching assertions', () => {
         const b = new AssertionsBuilder().load(sampleExact);
-        b.setMeta({ name: 'RenamedTest', description: 'new desc', test_type: 'variableCorrespondence' });
+        b.setMeta({
+            name: 'RenamedTest',
+            description: 'new desc',
+            test_type: 'variableCorrespondence',
+        });
         const out = b.serialize();
         expect(out.name).toBe('RenamedTest');
         expect(out.description).toBe('new desc');
@@ -387,14 +457,30 @@ export class AssertionsBuilder {
         this.model.year_since = def.year_since ?? null;
         this.model.year_until = def.year_until ?? null;
         this.model.assertions = (def.assertions ?? []).map(
-            (a) => new Assertion(a.year, a.expected_value, a.assert, a.assertion, a.comment ?? null)
+            (a) =>
+                new Assertion(
+                    a.year,
+                    a.expected_value,
+                    a.assert,
+                    a.assertion,
+                    a.comment ?? null,
+                ),
         );
-        this.baseMonthDay = AssertionsBuilder.#deriveBaseMonthDay(this.model.assertions);
+        this.baseMonthDay = AssertionsBuilder.#deriveBaseMonthDay(
+            this.model.assertions,
+        );
         return this;
     }
 
     /** Update editor-form metadata (never touches the assertions array). */
-    setMeta({ name, event_key, description, test_type, applies_to, excludes } = {}) {
+    setMeta({
+        name,
+        event_key,
+        description,
+        test_type,
+        applies_to,
+        excludes,
+    } = {}) {
         if (name !== undefined) this.model.name = name;
         if (event_key !== undefined) this.model.event_key = event_key;
         if (description !== undefined) this.model.description = description;
@@ -415,10 +501,16 @@ export class AssertionsBuilder {
         };
         if (m.applies_to) out.applies_to = m.applies_to;
         if (m.excludes) out.excludes = m.excludes;
-        if (m.test_type === TestType.ExactCorrespondenceSince && m.year_since !== null) {
+        if (
+            m.test_type === TestType.ExactCorrespondenceSince &&
+            m.year_since !== null
+        ) {
             out.year_since = m.year_since;
         }
-        if (m.test_type === TestType.ExactCorrespondenceUntil && m.year_until !== null) {
+        if (
+            m.test_type === TestType.ExactCorrespondenceUntil &&
+            m.year_until !== null
+        ) {
             out.year_until = m.year_until;
         }
         out.assertions = m.assertions.map((a) => {
@@ -481,48 +573,93 @@ git commit -m "feat(admin-tests): AssertionsBuilder model load/setMeta/serialize
 Append to the test file:
 
 ```javascript
-const event = { event_key: 'StIgnatiusOfLoyola', name: 'Saint Ignatius of Loyola', grade: 3, grade_lcl: 'Memorial', month: 7, day: 31 };
+const event = {
+    event_key: 'StIgnatiusOfLoyola',
+    name: 'Saint Ignatius of Loyola',
+    grade: 3,
+    grade_lcl: 'Memorial',
+    month: 7,
+    day: 31,
+};
 
 describe('generate', () => {
     it('exactCorrespondence: every year asserts eventExists with a UTC midnight date', () => {
         const b = new AssertionsBuilder({ locale: 'en' });
-        b.setMeta({ event_key: event.event_key, test_type: 'exactCorrespondence' });
+        b.setMeta({
+            event_key: event.event_key,
+            test_type: 'exactCorrespondence',
+        });
         b.generate({ event, minYear: 2023, maxYear: 2025 });
         const out = b.serialize();
         expect(out.assertions.map((a) => a.year)).toEqual([2023, 2024, 2025]);
-        expect(out.assertions.every((a) => a.assert === 'eventExists AND hasExpectedDate')).toBe(true);
-        expect(out.assertions[1].expected_value).toBe('2024-07-31T00:00:00+00:00');
-        expect(out.description).toBe("The Memorial of 'Saint Ignatius of Loyola' should fall on July 31");
+        expect(
+            out.assertions.every(
+                (a) => a.assert === 'eventExists AND hasExpectedDate',
+            ),
+        ).toBe(true);
+        expect(out.assertions[1].expected_value).toBe(
+            '2024-07-31T00:00:00+00:00',
+        );
+        expect(out.description).toBe(
+            "The Memorial of 'Saint Ignatius of Loyola' should fall on July 31",
+        );
     });
 
     it('exactCorrespondenceSince: years before the pivot assert eventNotExists', () => {
         const b = new AssertionsBuilder();
-        b.setMeta({ event_key: event.event_key, test_type: 'exactCorrespondenceSince' });
+        b.setMeta({
+            event_key: event.event_key,
+            test_type: 'exactCorrespondenceSince',
+        });
         b.generate({ event, minYear: 2024, maxYear: 2026, pivotYear: 2025 });
         const out = b.serialize();
         expect(out.year_since).toBe(2025);
-        expect(out.assertions.find((a) => a.year === 2024).assert).toBe('eventNotExists');
-        expect(out.assertions.find((a) => a.year === 2024).expected_value).toBe(null);
-        expect(out.assertions.find((a) => a.year === 2025).assert).toBe('eventExists AND hasExpectedDate');
-        expect(out.assertions.find((a) => a.year === 2024).assertion)
-            .toBe("The Memorial of 'Saint Ignatius of Loyola' should not exist on July 31");
+        expect(out.assertions.find((a) => a.year === 2024).assert).toBe(
+            'eventNotExists',
+        );
+        expect(out.assertions.find((a) => a.year === 2024).expected_value).toBe(
+            null,
+        );
+        expect(out.assertions.find((a) => a.year === 2025).assert).toBe(
+            'eventExists AND hasExpectedDate',
+        );
+        expect(out.assertions.find((a) => a.year === 2024).assertion).toBe(
+            "The Memorial of 'Saint Ignatius of Loyola' should not exist on July 31",
+        );
     });
 
     it('exactCorrespondenceUntil: years after the pivot assert eventNotExists', () => {
         const b = new AssertionsBuilder();
-        b.setMeta({ event_key: event.event_key, test_type: 'exactCorrespondenceUntil' });
+        b.setMeta({
+            event_key: event.event_key,
+            test_type: 'exactCorrespondenceUntil',
+        });
         b.generate({ event, minYear: 2024, maxYear: 2026, pivotYear: 2025 });
         const out = b.serialize();
         expect(out.year_until).toBe(2025);
-        expect(out.assertions.find((a) => a.year === 2026).assert).toBe('eventNotExists');
-        expect(out.assertions.find((a) => a.year === 2025).assert).toBe('eventExists AND hasExpectedDate');
+        expect(out.assertions.find((a) => a.year === 2026).assert).toBe(
+            'eventNotExists',
+        );
+        expect(out.assertions.find((a) => a.year === 2025).assert).toBe(
+            'eventExists AND hasExpectedDate',
+        );
     });
 
     it('skips excluded years', () => {
         const b = new AssertionsBuilder();
-        b.setMeta({ event_key: event.event_key, test_type: 'exactCorrespondence' });
-        b.generate({ event, minYear: 2023, maxYear: 2025, excludedYears: [2024] });
-        expect(b.serialize().assertions.map((a) => a.year)).toEqual([2023, 2025]);
+        b.setMeta({
+            event_key: event.event_key,
+            test_type: 'exactCorrespondence',
+        });
+        b.generate({
+            event,
+            minYear: 2023,
+            maxYear: 2025,
+            excludedYears: [2024],
+        });
+        expect(b.serialize().assertions.map((a) => a.year)).toEqual([
+            2023, 2025,
+        ]);
     });
 });
 ```
@@ -655,17 +792,25 @@ describe('mutators', () => {
     it('setExpectedDate updates the RFC3339 value', () => {
         const b = build();
         b.setExpectedDate(2024, '2024-08-01T00:00:00+00:00');
-        expect(b.model.assertions.find((x) => x.year === 2024).expected_value).toBe('2024-08-01T00:00:00+00:00');
+        expect(
+            b.model.assertions.find((x) => x.year === 2024).expected_value,
+        ).toBe('2024-08-01T00:00:00+00:00');
     });
 
     it('setAssertionText and setComment work; empty comment removes it', () => {
         const b = build();
         b.setAssertionText(2024, 'custom sentence');
-        expect(b.model.assertions.find((x) => x.year === 2024).assertion).toBe('custom sentence');
+        expect(b.model.assertions.find((x) => x.year === 2024).assertion).toBe(
+            'custom sentence',
+        );
         b.setComment(2024, 'a note');
-        expect(b.model.assertions.find((x) => x.year === 2024).comment).toBe('a note');
+        expect(b.model.assertions.find((x) => x.year === 2024).comment).toBe(
+            'a note',
+        );
         b.setComment(2024, '');
-        expect('comment' in b.model.assertions.find((x) => x.year === 2024)).toBe(false);
+        expect(
+            'comment' in b.model.assertions.find((x) => x.year === 2024),
+        ).toBe(false);
     });
 
     it('excludeYear removes the assertion', () => {
@@ -680,8 +825,12 @@ describe('mutators', () => {
         b.generate({ event, minYear: 2024, maxYear: 2026, pivotYear: 2024 });
         b.setPivot(2026);
         expect(b.model.year_since).toBe(2026);
-        expect(b.model.assertions.find((x) => x.year === 2024).assert).toBe('eventNotExists');
-        expect(b.model.assertions.find((x) => x.year === 2026).assert).toBe('eventExists AND hasExpectedDate');
+        expect(b.model.assertions.find((x) => x.year === 2024).assert).toBe(
+            'eventNotExists',
+        );
+        expect(b.model.assertions.find((x) => x.year === 2026).assert).toBe(
+            'eventExists AND hasExpectedDate',
+        );
     });
 });
 ```
@@ -811,14 +960,22 @@ describe('render', () => {
         expect(cards).toHaveLength(2);
 
         const card2024 = container.querySelector('[data-year="2024"]');
-        expect(card2024.querySelector('.assert').textContent).toBe('eventExists AND hasExpectedDate');
+        expect(card2024.querySelector('.assert').textContent).toBe(
+            'eventExists AND hasExpectedDate',
+        );
         expect(card2024.querySelector('textarea.assertionText')).not.toBeNull();
         expect(card2024.querySelector('.toggleAssert')).not.toBeNull();
-        expect(card2024.querySelector('.expectedValue').getAttribute('data-value')).toBe('2024-07-31T00:00:00+00:00');
+        expect(
+            card2024.querySelector('.expectedValue').getAttribute('data-value'),
+        ).toBe('2024-07-31T00:00:00+00:00');
 
         const card2025 = container.querySelector('[data-year="2025"]');
-        expect(card2025.querySelector('.assert').textContent).toBe('eventNotExists');
-        expect(card2025.querySelector('.editDate').classList.contains('disabled')).toBe(true);
+        expect(card2025.querySelector('.assert').textContent).toBe(
+            'eventNotExists',
+        );
+        expect(
+            card2025.querySelector('.editDate').classList.contains('disabled'),
+        ).toBe(true);
     });
 });
 ```
@@ -1411,7 +1568,7 @@ git commit -m "feat(admin-tests): admin-tests.php page, nav link, dashboard card
 **Interfaces:**
 
 - Consumes: `window.AdminTestsConfig`; `GET /tests` → `{ litcal_tests: LitCalTest[] }`; `GET /auth/test-scopes` → `{ is_global_admin, editor:
-  [{object_type, object_id}], admin: [...] }`.
+[{object_type, object_id}], admin: [...] }`.
 - Produces: generic seam `fetchJson`, `gateByScope`, `deriveScope`, `renderTableRows`, `showModalAlert`; on load, fetches scopes + tests and renders
   rows with per-row Edit/Delete buttons gated by scope.
 
@@ -1422,36 +1579,82 @@ Append to `e2e/admin-tests.spec.ts`:
 ```typescript
 const sampleTests = {
     litcal_tests: [
-        { name: 'GrcOnlyTest', event_key: 'StX', description: 'd', test_type: 'exactCorrespondence', assertions: [{ year: 2024, expected_value: null, assert: 'eventNotExists', assertion: 'd' }] },
-        { name: 'UsaNationalTest', event_key: 'StY', description: 'd', test_type: 'exactCorrespondence', applies_to: { national_calendar: 'USA' }, assertions: [{ year: 2024, expected_value: null, assert: 'eventNotExists', assertion: 'd' }] },
+        {
+            name: 'GrcOnlyTest',
+            event_key: 'StX',
+            description: 'd',
+            test_type: 'exactCorrespondence',
+            assertions: [
+                {
+                    year: 2024,
+                    expected_value: null,
+                    assert: 'eventNotExists',
+                    assertion: 'd',
+                },
+            ],
+        },
+        {
+            name: 'UsaNationalTest',
+            event_key: 'StY',
+            description: 'd',
+            test_type: 'exactCorrespondence',
+            applies_to: { national_calendar: 'USA' },
+            assertions: [
+                {
+                    year: 2024,
+                    expected_value: null,
+                    assert: 'eventNotExists',
+                    assertion: 'd',
+                },
+            ],
+        },
     ],
 };
 
 async function stub(page, scopes) {
     await page.route('**/auth/test-scopes', (r) => r.fulfill({ json: scopes }));
-    await page.route('**/auth/me', (r) => r.fulfill({ json: { authenticated: true, roles: ['test_editor'] } }));
+    await page.route('**/auth/me', (r) =>
+        r.fulfill({ json: { authenticated: true, roles: ['test_editor'] } }),
+    );
     await page.route('**/tests', (r) => {
-        if (r.request().method() === 'GET') return r.fulfill({ json: sampleTests });
+        if (r.request().method() === 'GET')
+            return r.fulfill({ json: sampleTests });
         return r.continue();
     });
 }
 
 test.describe('admin-tests gating (stubbed)', () => {
-    test('scoped editor sees Edit only on the USA test, no Delete', async ({ page }) => {
-        await stub(page, { is_global_admin: false, editor: [{ object_type: 'national_calendar_test', object_id: 'USA' }], admin: [] });
+    test('scoped editor sees Edit only on the USA test, no Delete', async ({
+        page,
+    }) => {
+        await stub(page, {
+            is_global_admin: false,
+            editor: [
+                { object_type: 'national_calendar_test', object_id: 'USA' },
+            ],
+            admin: [],
+        });
         await page.goto('/admin-tests.php');
         const usaRow = page.locator('tr', { hasText: 'UsaNationalTest' });
         const grcRow = page.locator('tr', { hasText: 'GrcOnlyTest' });
-        await expect(usaRow.getByRole('button', { name: 'Edit' })).toBeVisible();
-        await expect(usaRow.getByRole('button', { name: 'Delete' })).toHaveCount(0);
-        await expect(grcRow.getByRole('button', { name: 'Edit' })).toHaveCount(0);
+        await expect(
+            usaRow.getByRole('button', { name: 'Edit' }),
+        ).toBeVisible();
+        await expect(
+            usaRow.getByRole('button', { name: 'Delete' }),
+        ).toHaveCount(0);
+        await expect(grcRow.getByRole('button', { name: 'Edit' })).toHaveCount(
+            0,
+        );
     });
 
     test('global admin sees Edit and Delete on every row', async ({ page }) => {
         await stub(page, { is_global_admin: true, editor: [], admin: [] });
         await page.goto('/admin-tests.php');
         await expect(page.getByRole('button', { name: 'Edit' })).toHaveCount(2);
-        await expect(page.getByRole('button', { name: 'Delete' })).toHaveCount(2);
+        await expect(page.getByRole('button', { name: 'Delete' })).toHaveCount(
+            2,
+        );
     });
 });
 ```
@@ -1508,23 +1711,37 @@ document.addEventListener('DOMContentLoaded', () => {
     /** Mirror TestScopeResolver: derive a test's scope object from applies_to. */
     function deriveScope(appliesTo) {
         if (appliesTo && appliesTo.diocesan_calendar) {
-            return { object_type: 'diocesan_calendar_test', object_id: appliesTo.diocesan_calendar };
+            return {
+                object_type: 'diocesan_calendar_test',
+                object_id: appliesTo.diocesan_calendar,
+            };
         }
         if (appliesTo && appliesTo.national_calendar) {
-            return { object_type: 'national_calendar_test', object_id: appliesTo.national_calendar };
+            return {
+                object_type: 'national_calendar_test',
+                object_id: appliesTo.national_calendar,
+            };
         }
-        return { object_type: 'general_roman_calendar_test', object_id: 'general_roman_calendar' };
+        return {
+            object_type: 'general_roman_calendar_test',
+            object_id: 'general_roman_calendar',
+        };
     }
 
     function gateByScope(scopeObj, scopes) {
-        return scopes.some((s) => s.object_type === scopeObj.object_type && s.object_id === scopeObj.object_id);
+        return scopes.some(
+            (s) =>
+                s.object_type === scopeObj.object_type &&
+                s.object_id === scopeObj.object_id,
+        );
     }
 
     function showModalAlert(modalEl, type, message) {
         const area = modalEl.querySelector('[id$="Alerts"]');
         if (!area) return;
-        area.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">`
-            + `${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
+        area.innerHTML =
+            `<div class="alert alert-${type} alert-dismissible fade show" role="alert">` +
+            `${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
     }
 
     // ---- state ------------------------------------------------------------
@@ -1537,31 +1754,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function scopeLabel(appliesTo) {
         const s = deriveScope(appliesTo);
-        if (s.object_type === 'national_calendar_test') return `${i18n.nationalCalendar}: ${s.object_id}`;
-        if (s.object_type === 'diocesan_calendar_test') return `${i18n.diocesanCalendar}: ${s.object_id}`;
+        if (s.object_type === 'national_calendar_test')
+            return `${i18n.nationalCalendar}: ${s.object_id}`;
+        if (s.object_type === 'diocesan_calendar_test')
+            return `${i18n.diocesanCalendar}: ${s.object_id}`;
         return i18n.generalRomanCalendar;
     }
 
     function yearRange(test) {
         const years = test.assertions.map((a) => a.year);
-        return years.length ? `${Math.min(...years)}–${Math.max(...years)}` : '';
+        return years.length
+            ? `${Math.min(...years)}–${Math.max(...years)}`
+            : '';
     }
 
     function canEdit(test) {
-        return state.scopes.is_global_admin || gateByScope(deriveScope(test.applies_to), state.scopes.editor);
+        return (
+            state.scopes.is_global_admin ||
+            gateByScope(deriveScope(test.applies_to), state.scopes.editor)
+        );
     }
 
     function canDelete(test) {
-        return state.scopes.is_global_admin || gateByScope(deriveScope(test.applies_to), state.scopes.admin);
+        return (
+            state.scopes.is_global_admin ||
+            gateByScope(deriveScope(test.applies_to), state.scopes.admin)
+        );
     }
 
     function renderTableRows() {
         const tbody = document.getElementById('testsTableBody');
-        const nameFilter = document.getElementById('filterTestName').value.trim().toLowerCase();
-        const scopeFilter = document.getElementById('filterTestScope').value.trim().toLowerCase();
+        const nameFilter = document
+            .getElementById('filterTestName')
+            .value.trim()
+            .toLowerCase();
+        const scopeFilter = document
+            .getElementById('filterTestScope')
+            .value.trim()
+            .toLowerCase();
         const rows = state.tests.filter((t) => {
-            const matchesName = !nameFilter || t.name.toLowerCase().includes(nameFilter);
-            const matchesScope = !scopeFilter || scopeLabel(t.applies_to).toLowerCase().includes(scopeFilter);
+            const matchesName =
+                !nameFilter || t.name.toLowerCase().includes(nameFilter);
+            const matchesScope =
+                !scopeFilter ||
+                scopeLabel(t.applies_to).toLowerCase().includes(scopeFilter);
             return matchesName && matchesScope;
         });
         document.getElementById('testsCount').textContent = String(rows.length);
@@ -1594,7 +1830,11 @@ document.addEventListener('DOMContentLoaded', () => {
         tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">${i18n.loading}</td></tr>`;
         try {
             const [scopes, testsResp] = await Promise.all([
-                fetchJson('GET', '/auth/test-scopes').catch(() => ({ is_global_admin: false, editor: [], admin: [] })),
+                fetchJson('GET', '/auth/test-scopes').catch(() => ({
+                    is_global_admin: false,
+                    editor: [],
+                    admin: [],
+                })),
                 fetchJson('GET', '/tests'),
             ]);
             state.scopes = scopes;
@@ -1606,12 +1846,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    document.getElementById('refreshTestsBtn').addEventListener('click', loadTests);
-    document.getElementById('filterTestName').addEventListener('input', renderTableRows);
-    document.getElementById('filterTestScope').addEventListener('input', renderTableRows);
+    document
+        .getElementById('refreshTestsBtn')
+        .addEventListener('click', loadTests);
+    document
+        .getElementById('filterTestName')
+        .addEventListener('input', renderTableRows);
+    document
+        .getElementById('filterTestScope')
+        .addEventListener('input', renderTableRows);
 
     // Expose internals for later tasks (editor/delete wiring appended below).
-    window.__adminTests = { state, fetchJson, deriveScope, gateByScope, showModalAlert, loadTests, renderTableRows, AssertionsBuilder, TestType, CalendarSelect, CalendarSelectFilter, ApiClient };
+    window.__adminTests = {
+        state,
+        fetchJson,
+        deriveScope,
+        gateByScope,
+        showModalAlert,
+        loadTests,
+        renderTableRows,
+        AssertionsBuilder,
+        TestType,
+        CalendarSelect,
+        CalendarSelectFilter,
+        ApiClient,
+    };
 
     loadTests();
 });
@@ -1646,7 +1905,7 @@ git commit -m "feat(admin-tests): admin-tests.js bootstrap, list, per-row scope 
 **Interfaces:**
 
 - Consumes: `AssertionsBuilder` (Tasks 1–5), `CalendarSelect`/`CalendarSelectFilter`/`ApiClient`, generic seam from Task 8; `GET /events[ /nation/{id}
-  | /diocese/{id} ]` → `{ litcal_events: [{event_key, name, grade, grade_lcl, month, day}] }`; `PUT /tests` (create), `PATCH /tests/{name}` (edit).
+| /diocese/{id} ]` → `{ litcal_events: [{event_key, name, grade, grade_lcl, month, day}] }`; `PUT /tests` (create), `PATCH /tests/{name}` (edit).
 - Produces: a working editor that opens for create/edit, builds the datalist + slider + per-year cards from the model, and submits. `name` is read-only when editing.
 
 - [ ] **Step 1: Write the failing create/edit specs**
@@ -1656,7 +1915,14 @@ Append to `e2e/admin-tests.spec.ts`:
 ```typescript
 const grcEvents = {
     litcal_events: [
-        { event_key: 'StIgnatiusOfLoyola', name: 'Saint Ignatius of Loyola', grade: 3, grade_lcl: 'Memorial', month: 7, day: 31 },
+        {
+            event_key: 'StIgnatiusOfLoyola',
+            name: 'Saint Ignatius of Loyola',
+            grade: 3,
+            grade_lcl: 'Memorial',
+            month: 7,
+            day: 31,
+        },
     ],
 };
 
@@ -1666,8 +1932,14 @@ async function stubEditor(page, scopes) {
 }
 
 test.describe('admin-tests editor (stubbed)', () => {
-    test('create flow submits a PUT with a schema-shaped body', async ({ page }) => {
-        await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
+    test('create flow submits a PUT with a schema-shaped body', async ({
+        page,
+    }) => {
+        await stubEditor(page, {
+            is_global_admin: true,
+            editor: [],
+            admin: [],
+        });
         let putBody = null;
         await page.route('**/tests', (r) => {
             if (r.request().method() === 'PUT') {
@@ -1683,21 +1955,37 @@ test.describe('admin-tests editor (stubbed)', () => {
         await page.locator('#testEventKey').fill('StIgnatiusOfLoyola');
         await page.locator('#testEventKey').dispatchEvent('change');
         await page.locator('#saveTestBtn').click();
-        await expect.poll(() => putBody && putBody.name).toBe('StIgnatiusOfLoyolaTest');
+        await expect
+            .poll(() => putBody && putBody.name)
+            .toBe('StIgnatiusOfLoyolaTest');
         expect(putBody.test_type).toBe('exactCorrespondence');
         expect(putBody.assertions.length).toBeGreaterThan(0);
-        expect(putBody.assertions[0].assert).toBe('eventExists AND hasExpectedDate');
+        expect(putBody.assertions[0].assert).toBe(
+            'eventExists AND hasExpectedDate',
+        );
     });
 
-    test('edit flow renders name read-only and submits PATCH', async ({ page }) => {
-        await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
+    test('edit flow renders name read-only and submits PATCH', async ({
+        page,
+    }) => {
+        await stubEditor(page, {
+            is_global_admin: true,
+            editor: [],
+            admin: [],
+        });
         let patched = false;
         await page.route('**/tests/UsaNationalTest', (r) => {
-            if (r.request().method() === 'PATCH') { patched = true; return r.fulfill({ json: {} }); }
+            if (r.request().method() === 'PATCH') {
+                patched = true;
+                return r.fulfill({ json: {} });
+            }
             return r.continue();
         });
         await page.goto('/admin-tests.php');
-        await page.locator('tr', { hasText: 'UsaNationalTest' }).getByRole('button', { name: 'Edit' }).click();
+        await page
+            .locator('tr', { hasText: 'UsaNationalTest' })
+            .getByRole('button', { name: 'Edit' })
+            .click();
         await expect(page.locator('#testName')).toHaveAttribute('readonly', '');
         await page.locator('#saveTestBtn').click();
         await expect.poll(() => patched).toBe(true);
@@ -1716,228 +2004,285 @@ Insert the following inside the `DOMContentLoaded` callback, before the final `l
 `config`, and the imported classes):
 
 ```javascript
-    // ---- editor -----------------------------------------------------------
+// ---- editor -----------------------------------------------------------
 
-    const editorModalEl = document.getElementById('testEditorModal');
-    const editorModal = bootstrap.Modal.getOrCreateInstance(editorModalEl);
-    const builder = new AssertionsBuilder({ locale: config.locale });
-    let events = [];
+const editorModalEl = document.getElementById('testEditorModal');
+const editorModal = bootstrap.Modal.getOrCreateInstance(editorModalEl);
+const builder = new AssertionsBuilder({ locale: config.locale });
+let events = [];
 
-    function selectedTestType() {
-        return document.querySelector('input[name="testType"]:checked')?.value ?? TestType.ExactCorrespondence;
+function selectedTestType() {
+    return (
+        document.querySelector('input[name="testType"]:checked')?.value ??
+        TestType.ExactCorrespondence
+    );
+}
+
+function selectedScope() {
+    const type = document.getElementById('testScopeType').value;
+    if (type === 'general_roman_calendar') return null;
+    const idEl = document.getElementById('testScopeId');
+    const id = idEl ? idEl.value : '';
+    return id ? { [type]: id } : null;
+}
+
+function eventsPath(appliesTo) {
+    if (appliesTo && appliesTo.diocesan_calendar)
+        return `/events/diocese/${appliesTo.diocesan_calendar}`;
+    if (appliesTo && appliesTo.national_calendar)
+        return `/events/nation/${appliesTo.national_calendar}`;
+    return '/events';
+}
+
+async function loadEvents(appliesTo) {
+    const res = await fetch(apiUrl + eventsPath(appliesTo), {
+        headers: {
+            Accept: 'application/json',
+            'Accept-Language': config.locale,
+        },
+        credentials: 'include',
+    });
+    const json = await res.json();
+    events = json.litcal_events ?? [];
+    const datalist = document.getElementById('testEventKeyList');
+    datalist.innerHTML = '';
+    events.forEach((e) => {
+        const opt = document.createElement('option');
+        opt.value = e.event_key;
+        opt.textContent = `${e.name} (${e.grade_lcl})`;
+        if (e.month != null) opt.dataset.month = String(e.month);
+        if (e.day != null) opt.dataset.day = String(e.day);
+        if (e.grade != null) opt.dataset.grade = String(e.grade);
+        datalist.appendChild(opt);
+    });
+}
+
+function sliderYears() {
+    const a = Number(document.getElementById('lowerRange').value);
+    const b = Number(document.getElementById('upperRange').value);
+    return { minYear: Math.min(a, b), maxYear: Math.max(a, b) };
+}
+
+function renderYearGrid() {
+    const grid = document.getElementById('yearGrid');
+    const { minYear, maxYear } = sliderYears();
+    grid.innerHTML = '';
+    for (let y = minYear; y <= maxYear; y++) {
+        const span = document.createElement('span');
+        span.className = `testYearSpan year-${y}`;
+        span.dataset.year = String(y);
+        span.textContent = String(y);
+        grid.appendChild(span);
     }
+}
 
-    function selectedScope() {
-        const type = document.getElementById('testScopeType').value;
-        if (type === 'general_roman_calendar') return null;
-        const idEl = document.getElementById('testScopeId');
-        const id = idEl ? idEl.value : '';
-        return id ? { [type]: id } : null;
-    }
-
-    function eventsPath(appliesTo) {
-        if (appliesTo && appliesTo.diocesan_calendar) return `/events/diocese/${appliesTo.diocesan_calendar}`;
-        if (appliesTo && appliesTo.national_calendar) return `/events/nation/${appliesTo.national_calendar}`;
-        return '/events';
-    }
-
-    async function loadEvents(appliesTo) {
-        const res = await fetch(apiUrl + eventsPath(appliesTo), {
-            headers: { Accept: 'application/json', 'Accept-Language': config.locale },
-            credentials: 'include',
-        });
-        const json = await res.json();
-        events = json.litcal_events ?? [];
-        const datalist = document.getElementById('testEventKeyList');
-        datalist.innerHTML = '';
-        events.forEach((e) => {
-            const opt = document.createElement('option');
-            opt.value = e.event_key;
-            opt.textContent = `${e.name} (${e.grade_lcl})`;
-            if (e.month != null) opt.dataset.month = String(e.month);
-            if (e.day != null) opt.dataset.day = String(e.day);
-            if (e.grade != null) opt.dataset.grade = String(e.grade);
-            datalist.appendChild(opt);
-        });
-    }
-
-    function sliderYears() {
-        const a = Number(document.getElementById('lowerRange').value);
-        const b = Number(document.getElementById('upperRange').value);
-        return { minYear: Math.min(a, b), maxYear: Math.max(a, b) };
-    }
-
-    function renderYearGrid() {
-        const grid = document.getElementById('yearGrid');
-        const { minYear, maxYear } = sliderYears();
-        grid.innerHTML = '';
-        for (let y = minYear; y <= maxYear; y++) {
-            const span = document.createElement('span');
-            span.className = `testYearSpan year-${y}`;
-            span.dataset.year = String(y);
-            span.textContent = String(y);
-            grid.appendChild(span);
-        }
-    }
-
-    function regenerate() {
-        const event = events.find((e) => e.event_key === document.getElementById('testEventKey').value);
-        if (!event) return;
-        const { minYear, maxYear } = sliderYears();
-        const tt = selectedTestType();
-        builder.setMeta({ test_type: tt, applies_to: selectedScope() });
-        const pivot = (tt === TestType.ExactCorrespondenceSince || tt === TestType.ExactCorrespondenceUntil)
+function regenerate() {
+    const event = events.find(
+        (e) => e.event_key === document.getElementById('testEventKey').value,
+    );
+    if (!event) return;
+    const { minYear, maxYear } = sliderYears();
+    const tt = selectedTestType();
+    builder.setMeta({ test_type: tt, applies_to: selectedScope() });
+    const pivot =
+        tt === TestType.ExactCorrespondenceSince ||
+        tt === TestType.ExactCorrespondenceUntil
             ? minYear
             : null;
-        builder.generate({ event, minYear, maxYear, pivotYear: pivot });
-        document.getElementById('testDescription').value = builder.model.description;
-        document.getElementById('baseDate').value = event.month && event.day
+    builder.generate({ event, minYear, maxYear, pivotYear: pivot });
+    document.getElementById('testDescription').value =
+        builder.model.description;
+    document.getElementById('baseDate').value =
+        event.month && event.day
             ? `${minYear}-${String(event.month).padStart(2, '0')}-${String(event.day).padStart(2, '0')}`
             : '';
-        builder.render(document.getElementById('assertionsContainer'));
-        renderYearGrid();
-    }
+    builder.render(document.getElementById('assertionsContainer'));
+    renderYearGrid();
+}
 
-    document.getElementById('testEventKey').addEventListener('change', regenerate);
-    document.querySelectorAll('input[name="testType"]').forEach((el) => el.addEventListener('change', regenerate));
-    document.getElementById('lowerRange').addEventListener('change', regenerate);
-    document.getElementById('upperRange').addEventListener('change', regenerate);
+document.getElementById('testEventKey').addEventListener('change', regenerate);
+document
+    .querySelectorAll('input[name="testType"]')
+    .forEach((el) => el.addEventListener('change', regenerate));
+document.getElementById('lowerRange').addEventListener('change', regenerate);
+document.getElementById('upperRange').addEventListener('change', regenerate);
 
-    // sync slider CSS custom properties as the user drags
-    ['lowerRange', 'upperRange'].forEach((id, idx) => {
-        const el = document.getElementById(id);
-        el.addEventListener('input', () => {
-            const prop = idx === 0 ? '--value-a' : '--value-b';
-            const textProp = idx === 0 ? '--text-value-a' : '--text-value-b';
-            el.parentNode.style.setProperty(prop, el.value);
-            el.parentNode.style.setProperty(textProp, `"${el.value}"`);
-        });
+// sync slider CSS custom properties as the user drags
+['lowerRange', 'upperRange'].forEach((id, idx) => {
+    const el = document.getElementById(id);
+    el.addEventListener('input', () => {
+        const prop = idx === 0 ? '--value-a' : '--value-b';
+        const textProp = idx === 0 ? '--text-value-a' : '--text-value-b';
+        el.parentNode.style.setProperty(prop, el.value);
+        el.parentNode.style.setProperty(textProp, `"${el.value}"`);
     });
+});
 
-    // per-year card interactions (event-delegated on the assertions container)
-    const assertionsContainer = document.getElementById('assertionsContainer');
-    assertionsContainer.addEventListener('click', (ev) => {
-        const card = ev.target.closest('[data-year]');
-        if (!card) return;
-        const year = Number(card.dataset.year);
-        if (ev.target.closest('.toggleAssert')) {
-            builder.toggleAssert(year);
-            builder.render(assertionsContainer);
-        } else if (ev.target.closest('.comment')) {
-            document.getElementById('commentYear').value = String(year);
-            const a = builder.model.assertions.find((x) => x.year === year);
-            document.getElementById('commentText').value = a && 'comment' in a ? a.comment : '';
-            bootstrap.Modal.getOrCreateInstance(document.getElementById('testCommentModal')).show();
-        }
-    });
-    assertionsContainer.addEventListener('change', (ev) => {
-        const card = ev.target.closest('[data-year]');
-        if (!card) return;
-        const year = Number(card.dataset.year);
-        if (ev.target.matches('.assertionText')) {
-            builder.setAssertionText(year, ev.target.value);
-        }
-    });
-    document.getElementById('saveCommentBtn').addEventListener('click', () => {
-        const year = Number(document.getElementById('commentYear').value);
-        builder.setComment(year, document.getElementById('commentText').value);
+// per-year card interactions (event-delegated on the assertions container)
+const assertionsContainer = document.getElementById('assertionsContainer');
+assertionsContainer.addEventListener('click', (ev) => {
+    const card = ev.target.closest('[data-year]');
+    if (!card) return;
+    const year = Number(card.dataset.year);
+    if (ev.target.closest('.toggleAssert')) {
+        builder.toggleAssert(year);
         builder.render(assertionsContainer);
-        bootstrap.Modal.getInstance(document.getElementById('testCommentModal')).hide();
-    });
+    } else if (ev.target.closest('.comment')) {
+        document.getElementById('commentYear').value = String(year);
+        const a = builder.model.assertions.find((x) => x.year === year);
+        document.getElementById('commentText').value =
+            a && 'comment' in a ? a.comment : '';
+        bootstrap.Modal.getOrCreateInstance(
+            document.getElementById('testCommentModal'),
+        ).show();
+    }
+});
+assertionsContainer.addEventListener('change', (ev) => {
+    const card = ev.target.closest('[data-year]');
+    if (!card) return;
+    const year = Number(card.dataset.year);
+    if (ev.target.matches('.assertionText')) {
+        builder.setAssertionText(year, ev.target.value);
+    }
+});
+document.getElementById('saveCommentBtn').addEventListener('click', () => {
+    const year = Number(document.getElementById('commentYear').value);
+    builder.setComment(year, document.getElementById('commentText').value);
+    builder.render(assertionsContainer);
+    bootstrap.Modal.getInstance(
+        document.getElementById('testCommentModal'),
+    ).hide();
+});
 
-    async function syncScopeIdField() {
-        const type = document.getElementById('testScopeType').value;
-        const mount = document.getElementById('testScopeIdMount');
-        mount.innerHTML = '';
-        if (type === 'national_calendar' || type === 'diocesan_calendar') {
-            const client = await ApiClient.init(apiUrl).catch(() => null);
-            if (!client) return;
-            const filter = type === 'national_calendar'
+async function syncScopeIdField() {
+    const type = document.getElementById('testScopeType').value;
+    const mount = document.getElementById('testScopeIdMount');
+    mount.innerHTML = '';
+    if (type === 'national_calendar' || type === 'diocesan_calendar') {
+        const client = await ApiClient.init(apiUrl).catch(() => null);
+        if (!client) return;
+        const filter =
+            type === 'national_calendar'
                 ? CalendarSelectFilter.NATIONAL_CALENDARS
                 : CalendarSelectFilter.DIOCESAN_CALENDARS;
-            const sel = new CalendarSelect(config.locale).filter(filter).allowNull(true).class('form-select').id('testScopeId');
-            sel.appendTo(mount);
-        }
+        const sel = new CalendarSelect(config.locale)
+            .filter(filter)
+            .allowNull(true)
+            .class('form-select')
+            .id('testScopeId');
+        sel.appendTo(mount);
     }
-    document.getElementById('testScopeType').addEventListener('change', () => { syncScopeIdField(); regenerate(); });
+}
+document.getElementById('testScopeType').addEventListener('change', () => {
+    syncScopeIdField();
+    regenerate();
+});
 
-    function openEditor(test) {
-        state.editing = test ? test.name : null;
-        document.getElementById('testEditorAlerts').innerHTML = '';
-        const nameEl = document.getElementById('testName');
-        if (test) {
-            builder.load(test);
-            nameEl.value = test.name;
-            nameEl.setAttribute('readonly', '');
-            document.querySelector(`input[name="testType"][value="${test.test_type}"]`).checked = true;
-            document.getElementById('testEventKey').value = test.event_key;
-            document.getElementById('testDescription').value = test.description;
-            const scope = deriveScope(test.applies_to);
-            const typeSel = document.getElementById('testScopeType');
-            typeSel.value = scope.object_type === 'national_calendar_test' ? 'national_calendar'
-                : scope.object_type === 'diocesan_calendar_test' ? 'diocesan_calendar'
-                : 'general_roman_calendar';
-            loadEvents(test.applies_to).then(() => builder.render(assertionsContainer));
-        } else {
-            builder.load({ name: '', event_key: '', description: '', test_type: TestType.ExactCorrespondence, assertions: [] });
-            nameEl.value = '';
-            nameEl.removeAttribute('readonly');
-            document.getElementById('tt-exact').checked = true;
-            document.getElementById('testEventKey').value = '';
-            document.getElementById('testDescription').value = '';
-            document.getElementById('testScopeType').value = 'general_roman_calendar';
-            assertionsContainer.innerHTML = '';
-            loadEvents(null);
-        }
-        syncScopeIdField();
-        editorModal.show();
-    }
-
-    document.getElementById('createTestBtn').addEventListener('click', () => openEditor(null));
-    document.getElementById('testsTableBody').addEventListener('click', (ev) => {
-        const editBtn = ev.target.closest('.editTestBtn');
-        if (editBtn) {
-            const test = state.tests.find((t) => t.name === editBtn.dataset.name);
-            if (test) openEditor(test);
-        }
-    });
-
-    document.getElementById('saveTestBtn').addEventListener('click', async () => {
-        const btn = document.getElementById('saveTestBtn');
-        const nameEl = document.getElementById('testName');
-        if (!nameEl.checkValidity() || !document.getElementById('testEventKey').value) {
-            showModalAlert(editorModalEl, 'warning', i18n.requiredFields);
-            return;
-        }
-        builder.setMeta({
-            name: nameEl.value,
-            event_key: document.getElementById('testEventKey').value,
-            description: document.getElementById('testDescription').value,
-            test_type: selectedTestType(),
-            applies_to: selectedScope(),
+function openEditor(test) {
+    state.editing = test ? test.name : null;
+    document.getElementById('testEditorAlerts').innerHTML = '';
+    const nameEl = document.getElementById('testName');
+    if (test) {
+        builder.load(test);
+        nameEl.value = test.name;
+        nameEl.setAttribute('readonly', '');
+        document.querySelector(
+            `input[name="testType"][value="${test.test_type}"]`,
+        ).checked = true;
+        document.getElementById('testEventKey').value = test.event_key;
+        document.getElementById('testDescription').value = test.description;
+        const scope = deriveScope(test.applies_to);
+        const typeSel = document.getElementById('testScopeType');
+        typeSel.value =
+            scope.object_type === 'national_calendar_test'
+                ? 'national_calendar'
+                : scope.object_type === 'diocesan_calendar_test'
+                  ? 'diocesan_calendar'
+                  : 'general_roman_calendar';
+        loadEvents(test.applies_to).then(() =>
+            builder.render(assertionsContainer),
+        );
+    } else {
+        builder.load({
+            name: '',
+            event_key: '',
+            description: '',
+            test_type: TestType.ExactCorrespondence,
+            assertions: [],
         });
-        const payload = builder.serialize();
-        btn.disabled = true;
-        const original = btn.textContent;
-        btn.textContent = i18n.saving;
-        try {
-            if (state.editing) {
-                await fetchJson('PATCH', `/tests/${encodeURIComponent(state.editing)}`, payload);
-            } else {
-                await fetchJson('PUT', '/tests', payload);
-            }
-            editorModal.hide();
-            await loadTests();
-        } catch (err) {
-            const msg = err.status === 403 ? i18n.denied403
-                : err.status === 409 ? i18n.conflict409
-                : (err.body && err.body.message) ? err.body.message : i18n.failedToLoad;
-            showModalAlert(editorModalEl, 'danger', msg);
-        } finally {
-            btn.disabled = false;
-            btn.textContent = original;
-        }
+        nameEl.value = '';
+        nameEl.removeAttribute('readonly');
+        document.getElementById('tt-exact').checked = true;
+        document.getElementById('testEventKey').value = '';
+        document.getElementById('testDescription').value = '';
+        document.getElementById('testScopeType').value =
+            'general_roman_calendar';
+        assertionsContainer.innerHTML = '';
+        loadEvents(null);
+    }
+    syncScopeIdField();
+    editorModal.show();
+}
+
+document
+    .getElementById('createTestBtn')
+    .addEventListener('click', () => openEditor(null));
+document.getElementById('testsTableBody').addEventListener('click', (ev) => {
+    const editBtn = ev.target.closest('.editTestBtn');
+    if (editBtn) {
+        const test = state.tests.find((t) => t.name === editBtn.dataset.name);
+        if (test) openEditor(test);
+    }
+});
+
+document.getElementById('saveTestBtn').addEventListener('click', async () => {
+    const btn = document.getElementById('saveTestBtn');
+    const nameEl = document.getElementById('testName');
+    if (
+        !nameEl.checkValidity() ||
+        !document.getElementById('testEventKey').value
+    ) {
+        showModalAlert(editorModalEl, 'warning', i18n.requiredFields);
+        return;
+    }
+    builder.setMeta({
+        name: nameEl.value,
+        event_key: document.getElementById('testEventKey').value,
+        description: document.getElementById('testDescription').value,
+        test_type: selectedTestType(),
+        applies_to: selectedScope(),
     });
+    const payload = builder.serialize();
+    btn.disabled = true;
+    const original = btn.textContent;
+    btn.textContent = i18n.saving;
+    try {
+        if (state.editing) {
+            await fetchJson(
+                'PATCH',
+                `/tests/${encodeURIComponent(state.editing)}`,
+                payload,
+            );
+        } else {
+            await fetchJson('PUT', '/tests', payload);
+        }
+        editorModal.hide();
+        await loadTests();
+    } catch (err) {
+        const msg =
+            err.status === 403
+                ? i18n.denied403
+                : err.status === 409
+                  ? i18n.conflict409
+                  : err.body && err.body.message
+                    ? err.body.message
+                    : i18n.failedToLoad;
+        showModalAlert(editorModalEl, 'danger', msg);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = original;
+    }
+});
 ```
 
 - [ ] **Step 4: Run the editor specs to verify they pass**
@@ -1978,11 +2323,17 @@ test.describe('admin-tests delete (stubbed)', () => {
         await stub(page, { is_global_admin: true, editor: [], admin: [] });
         let deleted = false;
         await page.route('**/tests/GrcOnlyTest', (r) => {
-            if (r.request().method() === 'DELETE') { deleted = true; return r.fulfill({ json: {} }); }
+            if (r.request().method() === 'DELETE') {
+                deleted = true;
+                return r.fulfill({ json: {} });
+            }
             return r.continue();
         });
         await page.goto('/admin-tests.php');
-        await page.locator('tr', { hasText: 'GrcOnlyTest' }).getByRole('button', { name: 'Delete' }).click();
+        await page
+            .locator('tr', { hasText: 'GrcOnlyTest' })
+            .getByRole('button', { name: 'Delete' })
+            .click();
         await expect(page.locator('#deleteTestModal')).toBeVisible();
         await page.locator('#confirmDeleteTestBtn').click();
         await expect.poll(() => deleted).toBe(true);
@@ -2000,33 +2351,44 @@ Expected: FAIL — Delete button does nothing.
 Insert before the final `loadTests();`:
 
 ```javascript
-    // ---- delete -----------------------------------------------------------
+// ---- delete -----------------------------------------------------------
 
-    const deleteModalEl = document.getElementById('deleteTestModal');
-    const deleteModal = bootstrap.Modal.getOrCreateInstance(deleteModalEl);
-    let deleteTarget = null;
+const deleteModalEl = document.getElementById('deleteTestModal');
+const deleteModal = bootstrap.Modal.getOrCreateInstance(deleteModalEl);
+let deleteTarget = null;
 
-    document.getElementById('testsTableBody').addEventListener('click', (ev) => {
-        const delBtn = ev.target.closest('.deleteTestBtn');
-        if (!delBtn) return;
-        deleteTarget = delBtn.dataset.name;
-        document.getElementById('deleteTestAlerts').innerHTML = '';
-        document.getElementById('deleteTestConfirmText').textContent = i18n.confirmDelete.replace('%s', deleteTarget);
-        deleteModal.show();
-    });
+document.getElementById('testsTableBody').addEventListener('click', (ev) => {
+    const delBtn = ev.target.closest('.deleteTestBtn');
+    if (!delBtn) return;
+    deleteTarget = delBtn.dataset.name;
+    document.getElementById('deleteTestAlerts').innerHTML = '';
+    document.getElementById('deleteTestConfirmText').textContent =
+        i18n.confirmDelete.replace('%s', deleteTarget);
+    deleteModal.show();
+});
 
-    document.getElementById('confirmDeleteTestBtn').addEventListener('click', async () => {
+document
+    .getElementById('confirmDeleteTestBtn')
+    .addEventListener('click', async () => {
         if (!deleteTarget) return;
         const btn = document.getElementById('confirmDeleteTestBtn');
         btn.disabled = true;
         const original = btn.textContent;
         btn.textContent = i18n.deleting;
         try {
-            await fetchJson('DELETE', `/tests/${encodeURIComponent(deleteTarget)}`);
+            await fetchJson(
+                'DELETE',
+                `/tests/${encodeURIComponent(deleteTarget)}`,
+            );
             deleteModal.hide();
             await loadTests();
         } catch (err) {
-            const msg = err.status === 403 ? i18n.denied403 : (err.body && err.body.message) ? err.body.message : i18n.failedToLoad;
+            const msg =
+                err.status === 403
+                    ? i18n.denied403
+                    : err.body && err.body.message
+                      ? err.body.message
+                      : i18n.failedToLoad;
             showModalAlert(deleteModalEl, 'danger', msg);
         } finally {
             btn.disabled = false;
@@ -2063,7 +2425,7 @@ git commit -m "feat(admin-tests): delete-confirm flow (DELETE /tests/{name})"
 **Interfaces:**
 
 - Consumes: the existing RBAC harness — `e2e/rbac/support/` (`actingAs`, `grant`, `seed`, `cleanup`) and the `rbac` Playwright project (`dependencies:
-  ['rbac-setup']`). Model on `e2e/rbac/12-test-editor-scoped-test-request.spec.ts`.
+['rbac-setup']`). Model on `e2e/rbac/12-test-editor-scoped-test-request.spec.ts`.
 - Produces: a real end-to-end spec where a seeded `test_editor` with a scoped FGA `editor` tuple creates/edits a test in their scope and is denied
   outside it; a global admin deletes.
 
@@ -2091,8 +2453,14 @@ import { grant } from './support/grant';
 // substitute the actual constants used by spec 12.
 
 test.describe('admin-tests CRUD (real RBAC)', () => {
-    test('scoped national test_editor can create within scope and is denied outside', async ({ page }) => {
-        await grant({ user: 'USCCB_EDITOR', relation: 'editor', object: 'national_calendar_test:USA' });
+    test('scoped national test_editor can create within scope and is denied outside', async ({
+        page,
+    }) => {
+        await grant({
+            user: 'USCCB_EDITOR',
+            relation: 'editor',
+            object: 'national_calendar_test:USA',
+        });
         await actingAs(page, 'USCCB_EDITOR');
 
         await page.goto('/admin-tests.php');
@@ -2108,12 +2476,16 @@ test.describe('admin-tests CRUD (real RBAC)', () => {
         await page.locator('#testEventKey').fill('StIgnatiusOfLoyola');
         await page.locator('#testEventKey').dispatchEvent('change');
         await page.locator('#saveTestBtn').click();
-        await expect(page.locator('tr', { hasText: 'PlaywrightUsaScopedTest' })).toBeVisible();
+        await expect(
+            page.locator('tr', { hasText: 'PlaywrightUsaScopedTest' }),
+        ).toBeVisible();
 
         // A General-Roman-scoped row offers no Edit button to this scoped editor
         const grcRow = page.locator('tr', { hasText: 'general_roman' }).first();
         if (await grcRow.count()) {
-            await expect(grcRow.getByRole('button', { name: 'Edit' })).toHaveCount(0);
+            await expect(
+                grcRow.getByRole('button', { name: 'Edit' }),
+            ).toHaveCount(0);
         }
     });
 
@@ -2123,7 +2495,9 @@ test.describe('admin-tests CRUD (real RBAC)', () => {
         const row = page.locator('tr', { hasText: 'PlaywrightUsaScopedTest' });
         await row.getByRole('button', { name: 'Delete' }).click();
         await page.locator('#confirmDeleteTestBtn').click();
-        await expect(page.locator('tr', { hasText: 'PlaywrightUsaScopedTest' })).toHaveCount(0);
+        await expect(
+            page.locator('tr', { hasText: 'PlaywrightUsaScopedTest' }),
+        ).toHaveCount(0);
     });
 });
 ```
@@ -2192,7 +2566,7 @@ git commit -m "docs(admin-tests): mark phase 2 plan steps complete"
 - Per-row Edit (editor scope) / Delete (admin scope) gating from `/auth/test-scopes`; API backstop (403 surfaced) → Tasks 8, 9, 10.
 - Ported editor: test-type buttons + icons (`fa-vial`/`fa-right-from-bracket`/`fa-right-to-bracket`/`fa-square-root-variable`), `/events` datalist
   with `data-month/day/grade`, base date, dual-range slider (`multi-range-slider.css` verbatim), per-year cards with `eventExists AND hasExpectedDate
-  ↔ eventNotExists` toggle + color coding → Tasks 3, 5, 6, 9.
+↔ eventNotExists` toggle + color coding → Tasks 3, 5, 6, 9.
 - Modernizations: Isotope dropped (native CSS grid), state-first (`serialize()` reads the model), `<textarea>` not contenteditable → Tasks 2–5 (+ Task 12 grep gate).
 - `name` read-only when editing; rename = delete+recreate → Task 9.
 - Create `PUT /tests`, edit `PATCH /tests/{name}`, delete `DELETE /tests/{name}` → Tasks 9, 10.

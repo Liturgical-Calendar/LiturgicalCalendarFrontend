@@ -287,52 +287,61 @@ if (!is_dir($logsDir)) {
     }
 }
 
-try {
-    $logger = new Logger('liturgical-calendar');
-    $logger->pushHandler(new StreamHandler(
-        $logsDir . '/litcal.log',
-        $debugMode ? Level::Debug : Level::Warning
-    ));
-    if ($debugMode) {
-        error_log('Logger initialized successfully');
+// The PHP components library is configured only for the embedded PHP example
+// (examples.php?example=PHP). That example detects it is being included rather
+// than requested directly, skips its own autoloader and its own
+// ApiClient::getInstance(), and resolves both from this host — see
+// examples/php/index.php. No other page consumes $logger, $cache or
+// $httpClient, and every page that declares $apiClient immediately reassigns
+// it with LiturgicalCalendar\Frontend\ApiClient, a different class.
+if ('examples' === basename($_SERVER['SCRIPT_FILENAME'], '.php')) {
+    try {
+        $logger = new Logger('liturgical-calendar');
+        $logger->pushHandler(new StreamHandler(
+            $logsDir . '/litcal.log',
+            $debugMode ? Level::Debug : Level::Warning
+        ));
+        if ($debugMode) {
+            error_log('Logger initialized successfully');
+        }
+        $logger->info('Logger initialized successfully');
+    } catch (Exception $e) {
+        error_log('Error creating logger: ' . $e->getMessage());
+        $logger = null;
     }
-    $logger->info('Logger initialized successfully');
-} catch (Exception $e) {
-    error_log('Error creating logger: ' . $e->getMessage());
-    $logger = null;
-}
 
-if ($debugMode && $logger !== null) {
-    $logger->debug('Debug mode enabled');
-}
-
-// 2. Setup Cache - Filesystem cache (if available) or ArrayCache fallback
-$cacheDir = dirname(__DIR__) . '/cache';
-if (!is_dir($cacheDir)) {
-    if (!mkdir($cacheDir, 0755, true)) {
-        error_log('Failed to create cache directory: ' . $cacheDir);
+    if ($debugMode && $logger !== null) {
+        $logger->debug('Debug mode enabled');
     }
+
+    // 2. Setup Cache - Filesystem cache (if available) or ArrayCache fallback
+    $cacheDir = dirname(__DIR__) . '/cache';
+    if (!is_dir($cacheDir)) {
+        if (!mkdir($cacheDir, 0755, true)) {
+            error_log('Failed to create cache directory: ' . $cacheDir);
+        }
+    }
+
+    $filesystemAdapter = new FilesystemAdapter(
+        'litcal',
+        3600 * 24,
+        $cacheDir
+    );
+
+    $cache = new Psr16Cache($filesystemAdapter);
+
+    // 3. Create Production-Ready HTTP Client
+    $httpClient = HttpClientFactory::createProductionClient(
+        cache: $cache,
+        logger: $logger,
+        cacheTtl: 3600 * 24,
+        maxRetries: 3,
+        failureThreshold: 5
+    );
+
+    // 4. Initialize ApiClient Singleton
+    $apiClient = ApiClient::getInstance([
+        'apiUrl'     => $apiConfig->internalBaseUrl,
+        'httpClient' => $httpClient
+    ]);
 }
-
-$filesystemAdapter = new FilesystemAdapter(
-    'litcal',
-    3600 * 24,
-    $cacheDir
-);
-
-$cache = new Psr16Cache($filesystemAdapter);
-
-// 3. Create Production-Ready HTTP Client
-$httpClient = HttpClientFactory::createProductionClient(
-    cache: $cache,
-    logger: $logger,
-    cacheTtl: 3600 * 24,
-    maxRetries: 3,
-    failureThreshold: 5
-);
-
-// 4. Initialize ApiClient Singleton
-$apiClient = ApiClient::getInstance([
-    'apiUrl'     => $apiConfig->internalBaseUrl,
-    'httpClient' => $httpClient
-]);

@@ -2,8 +2,8 @@
 
 **Code quality**
 
-| MAIN                                         | DEVELOPMENT                                |
-|:--------------------------------------------:|:------------------------------------------:|
+|                     MAIN                     |                DEVELOPMENT                 |
+| :------------------------------------------: | :----------------------------------------: |
 | [![CodeFactor][cf-main-badge]][cf-main-link] | [![CodeFactor][cf-dev-badge]][cf-dev-link] |
 
 This is the frontend website for the Liturgical Calendar API, using bootstrap theming.
@@ -55,8 +55,8 @@ Then navigate to `localhost:3000` in your browser, and you should see a running 
 This application uses a **hybrid approach** for security headers:
 
 - **PHP** sets dynamic headers that require environment variables (see `includes/common.php:57-83`)
-  - `Content-Security-Policy` (includes dynamic API URL from `.env`)
-  - `Strict-Transport-Security` (requires HTTPS detection)
+    - `Content-Security-Policy` (includes dynamic API URL from `.env`)
+    - `Strict-Transport-Security` (requires HTTPS detection)
 
 - **nginx** should set static security headers for better performance
 
@@ -139,11 +139,11 @@ The application uses **HttpOnly cookie-based JWT authentication** for secure tok
 
 **Security Features:**
 
-| Flag       | Purpose                                              |
-|------------|------------------------------------------------------|
-| `HttpOnly` | Prevents JavaScript access (XSS protection)          |
-| `SameSite` | Prevents cross-site request forgery (CSRF protection)|
-| `Secure`   | Cookie only sent over HTTPS (when HTTPS detected)    |
+| Flag       | Purpose                                               |
+| ---------- | ----------------------------------------------------- |
+| `HttpOnly` | Prevents JavaScript access (XSS protection)           |
+| `SameSite` | Prevents cross-site request forgery (CSRF protection) |
+| `Secure`   | Cookie only sent over HTTPS (when HTTPS detected)     |
 
 **Client-Side Authentication API (`assets/js/auth.js`):**
 
@@ -162,7 +162,7 @@ if (Auth.isAuthenticated()) {
 // Make authenticated requests (cookies sent automatically)
 const response = await fetch('/api/endpoint', {
     method: 'POST',
-    credentials: 'include'  // Required for HttpOnly cookies
+    credentials: 'include', // Required for HttpOnly cookies
 });
 ```
 

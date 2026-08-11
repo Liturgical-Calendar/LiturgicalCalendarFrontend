@@ -161,8 +161,8 @@ API requests use `credentials: 'include'` - the API reads tokens from HttpOnly c
 ```javascript
 const response = await fetch(apiUrl, {
     method: 'POST',
-    headers: { 'Accept': 'application/json' },
-    credentials: 'include'  // Sends HttpOnly cookies automatically
+    headers: { Accept: 'application/json' },
+    credentials: 'include', // Sends HttpOnly cookies automatically
 });
 ```
 
@@ -170,8 +170,8 @@ const response = await fetch(apiUrl, {
 
 ```javascript
 const response = await fetch(MetadataUrl, {
-    headers: { 'Accept': 'application/json' },
-    credentials: 'omit'  // Required: API returns Access-Control-Allow-Origin: *
+    headers: { Accept: 'application/json' },
+    credentials: 'omit', // Required: API returns Access-Control-Allow-Origin: *
 });
 ```
 
@@ -197,6 +197,29 @@ When `ApiClient` listens to `ApiOptions`, the `Accept-Language` header is set au
 
 - **CalendarSelect standalone**: Vatican = General Roman Calendar (user's locale, not forced Latin)
 - **With PathBuilder**: `/calendar` = General Roman, `/calendar/nation/VA` = Vatican (Latin)
+
+### Rite awareness
+
+The API routes a rite as a bare path segment between `calendar` and any nation or diocese pair —
+`/calendar/ambrosian/diocese/lugano_ch`. There is no `/calendar/rite/{rite}` spelling and no query
+parameter.
+
+`usage.php` emits the segment for **every** rite, `roman` included, so users transition onto
+rite-explicit URLs. The implicit spelling keeps resolving, so subscription URLs already pasted into
+calendar apps are unaffected.
+
+The Ambrosian rite has no national tier and its own set of diocesan calendars (`milano_it`, `bergam_it`,
+`novara_it`, `lugano_ch`), so a `CalendarSelect` must be linked to a `RiteSelect` — via
+`calendarSelect.linkToRiteSelect(riteSelect)`, or `ApiOptions.linkToCalendarSelect().linkToRiteSelect()`
+when an `ApiOptions` form is already present — to repartition its list when the rite changes.
+
+### PHP vs JS components
+
+Frontend pages use **liturgy-components-js**. The PHP library (`liturgical-calendar/components`) is a
+dependency solely for the embedded PHP example: `examples/php/index.php` detects that it is being included
+rather than requested directly, skips its own autoloader and its own `ApiClient` singleton, and resolves
+both from the host. `includes/common.php` therefore keeps its `ApiClient::getInstance()` bootstrap, gated
+to `examples.php`. Do not remove the composer dependency — the example crashes without it.
 
 ## E2E Tests (Playwright)
 
@@ -227,11 +250,11 @@ TEST_PASSWORD=your_test_password
 
 ### Calendar Schema Differences
 
-| Calendar Type | Allowed Actions                                                      |
-|---------------|----------------------------------------------------------------------|
-| National      | `setProperty`, `createNew`, `moveFeast`, `makeDoctor`, `makePatron`  |
-| Wider Region  | `createNew`, `makePatron` only                                       |
-| Diocesan      | `createNew`, `makePatron` only                                       |
+| Calendar Type | Allowed Actions                                                     |
+| ------------- | ------------------------------------------------------------------- |
+| National      | `setProperty`, `createNew`, `moveFeast`, `makeDoctor`, `makePatron` |
+| Wider Region  | `createNew`, `makePatron` only                                      |
+| Diocesan      | `createNew`, `makePatron` only                                      |
 
 WiderRegion names must be: `Americas`, `Europe`, `Asia`, `Africa`, or `Oceania`.
 
@@ -286,18 +309,18 @@ Notes:
 - `litcal-api` healthcheck (`GET /calendars`) doesn't depend on Zitadel, so it
   reports healthy even when its PAT is invalid. Verify Zitadel auth explicitly:
 
-  ```bash
-  docker compose exec litcal-api bash -c '
-    curl -sS -X POST http://zitadel:8080/management/v1/users/_search \
-      -H "Authorization: Bearer $ZITADEL_MACHINE_TOKEN" \
-      -H "Host: localhost" \
-      -H "Content-Type: application/json" \
-      -d "{\"limit\":1}" | head -c 200
-  '
-  ```
+    ```bash
+    docker compose exec litcal-api bash -c '
+      curl -sS -X POST http://zitadel:8080/management/v1/users/_search \
+        -H "Authorization: Bearer $ZITADEL_MACHINE_TOKEN" \
+        -H "Host: localhost" \
+        -H "Content-Type: application/json" \
+        -d "{\"limit\":1}" | head -c 200
+    '
+    ```
 
-  A 401 / `Errors.Token.Invalid` means the PAT is stale and you need
-  `--force-secrets`.
+    A 401 / `Errors.Token.Invalid` means the PAT is stale and you need
+    `--force-secrets`.
 
 ### After re-running `setup-zitadel.sh`
 

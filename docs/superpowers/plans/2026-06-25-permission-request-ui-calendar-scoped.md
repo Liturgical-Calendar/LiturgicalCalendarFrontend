@@ -43,26 +43,26 @@ gates.
   `LITCAL_LOCALE` / `currentLocale` are existing globals.
 - **Object-type sets must mirror the API verbatim**
   (`AccessRequestRepository::ROLE_OBJECT_TYPES`, post-merge of API PR #666):
-  - `calendar_editor`: `national_calendar`, `diocesan_calendar`, `wider_region`,
-    `general_roman_calendar`
-  - `test_editor`: `national_calendar_test`, `diocesan_calendar_test`,
-    `general_roman_calendar_test`
-  - `developer`: `national_calendar`, `diocesan_calendar`, `wider_region`,
-    `national_calendar_test`, `diocesan_calendar_test`,
-    `general_roman_calendar_test`, `general_roman_calendar`
+    - `calendar_editor`: `national_calendar`, `diocesan_calendar`, `wider_region`,
+      `general_roman_calendar`
+    - `test_editor`: `national_calendar_test`, `diocesan_calendar_test`,
+      `general_roman_calendar_test`
+    - `developer`: `national_calendar`, `diocesan_calendar`, `wider_region`,
+      `national_calendar_test`, `diocesan_calendar_test`,
+      `general_roman_calendar_test`, `general_roman_calendar`
 - **Scope → Calendar ID source:**
-  - `national_calendar`, `national_calendar_test` →
-    `CalendarSelect().filter(CalendarSelectFilter.NATIONAL_CALENDARS)` (option
-    value = nation code, e.g. `IT`)
-  - `diocesan_calendar`, `diocesan_calendar_test` →
-    `CalendarSelect().filter(CalendarSelectFilter.DIOCESAN_CALENDARS)` (option
-    value = diocese calendar_id, grouped by nation)
-  - `wider_region` → static `['Americas','Europe','Asia','Africa','Oceania']`
-    (value = label = name)
-  - `general_roman_calendar` → static `GRC_OBJECT_IDS` (`temporale`,
-    `EDITIO_TYPICA_1970`, `EDITIO_TYPICA_2002`, `EDITIO_TYPICA_2008`, `decrees`)
-  - `general_roman_calendar_test` → single fixed option value
-    `general_roman_calendar` (auto-selected)
+    - `national_calendar`, `national_calendar_test` →
+      `CalendarSelect().filter(CalendarSelectFilter.NATIONAL_CALENDARS)` (option
+      value = nation code, e.g. `IT`)
+    - `diocesan_calendar`, `diocesan_calendar_test` →
+      `CalendarSelect().filter(CalendarSelectFilter.DIOCESAN_CALENDARS)` (option
+      value = diocese calendar_id, grouped by nation)
+    - `wider_region` → static `['Americas','Europe','Asia','Africa','Oceania']`
+      (value = label = name)
+    - `general_roman_calendar` → static `GRC_OBJECT_IDS` (`temporale`,
+      `EDITIO_TYPICA_1970`, `EDITIO_TYPICA_2002`, `EDITIO_TYPICA_2008`, `decrees`)
+    - `general_roman_calendar_test` → single fixed option value
+      `general_roman_calendar` (auto-selected)
 - **`GRC_OBJECT_IDS` keys** must stay in sync with API
   `AccessRequestRepository::GRC_OBJECT_IDS`. They remain duplicated in
   `permission-requests.js` and `admin-permissions.js` (existing convention, with
@@ -147,18 +147,21 @@ At the very top of the file (module top-level, before the existing IIFE), add:
 
 ```js
 import {
-  ApiClient,
-  CalendarSelect,
-  CalendarSelectFilter,
-} from "@liturgical-calendar/components-js";
+    ApiClient,
+    CalendarSelect,
+    CalendarSelectFilter,
+} from '@liturgical-calendar/components-js';
 
 // Initialize the API client once; CalendarSelect requires this to have resolved.
 const apiClientReady = ApiClient.init(BaseUrl)
-  .then((client) => (client instanceof ApiClient ? client : false))
-  .catch((err) => {
-    console.error("Failed to initialize ApiClient for permission fields:", err);
-    return false;
-  });
+    .then((client) => (client instanceof ApiClient ? client : false))
+    .catch((err) => {
+        console.error(
+            'Failed to initialize ApiClient for permission fields:',
+            err,
+        );
+        return false;
+    });
 ```
 
 - [ ] **Step 2: Replace `objectTypeNames` and `roleObjectTypes` with the scoped
@@ -169,13 +172,13 @@ Replace the `objectTypeNames` block (lines 49-55) with:
 ```js
 // Object type ("Calendar scope") display names
 const objectTypeNames = {
-  national_calendar: config.i18n.nationalCalendar,
-  diocesan_calendar: config.i18n.diocesanCalendar,
-  wider_region: config.i18n.widerRegion,
-  general_roman_calendar: config.i18n.generalRomanCalendar,
-  national_calendar_test: config.i18n.testsNational,
-  diocesan_calendar_test: config.i18n.testsDiocesan,
-  general_roman_calendar_test: config.i18n.testsGeneralRoman,
+    national_calendar: config.i18n.nationalCalendar,
+    diocesan_calendar: config.i18n.diocesanCalendar,
+    wider_region: config.i18n.widerRegion,
+    general_roman_calendar: config.i18n.generalRomanCalendar,
+    national_calendar_test: config.i18n.testsNational,
+    diocesan_calendar_test: config.i18n.testsDiocesan,
+    general_roman_calendar_test: config.i18n.testsGeneralRoman,
 };
 ```
 
@@ -184,26 +187,26 @@ Replace `roleObjectTypes` (lines 94-98) with the API-mirrored sets:
 ```js
 // Object types allowed per role (mirror AccessRequestRepository::ROLE_OBJECT_TYPES)
 const roleObjectTypes = {
-  calendar_editor: [
-    "national_calendar",
-    "diocesan_calendar",
-    "wider_region",
-    "general_roman_calendar",
-  ],
-  test_editor: [
-    "national_calendar_test",
-    "diocesan_calendar_test",
-    "general_roman_calendar_test",
-  ],
-  developer: [
-    "national_calendar",
-    "diocesan_calendar",
-    "wider_region",
-    "national_calendar_test",
-    "diocesan_calendar_test",
-    "general_roman_calendar_test",
-    "general_roman_calendar",
-  ],
+    calendar_editor: [
+        'national_calendar',
+        'diocesan_calendar',
+        'wider_region',
+        'general_roman_calendar',
+    ],
+    test_editor: [
+        'national_calendar_test',
+        'diocesan_calendar_test',
+        'general_roman_calendar_test',
+    ],
+    developer: [
+        'national_calendar',
+        'diocesan_calendar',
+        'wider_region',
+        'national_calendar_test',
+        'diocesan_calendar_test',
+        'general_roman_calendar_test',
+        'general_roman_calendar',
+    ],
 };
 ```
 
@@ -213,7 +216,7 @@ add the wider-region constant:
 ```js
 // The five wider-region names (object_id for the wider_region scope).
 // Keep in sync with the API; these are not localized (proper nouns).
-const WIDER_REGIONS = ["Americas", "Europe", "Asia", "Africa", "Oceania"];
+const WIDER_REGIONS = ['Americas', 'Europe', 'Asia', 'Africa', 'Oceania'];
 ```
 
 - [ ] **Step 3: Replace `syncRowObjectIdField` with the hybrid builder**
@@ -224,47 +227,50 @@ three static scopes build a native `<select>`. Both end with an element carrying
 class `perm-object-id` inside the row's `.perm-objid-mount` cell.
 
 ```js
-const NATIONAL_FILTER_TYPES = ["national_calendar", "national_calendar_test"];
-const DIOCESAN_FILTER_TYPES = ["diocesan_calendar", "diocesan_calendar_test"];
+const NATIONAL_FILTER_TYPES = ['national_calendar', 'national_calendar_test'];
+const DIOCESAN_FILTER_TYPES = ['diocesan_calendar', 'diocesan_calendar_test'];
 
 /**
  * Build a native <select class="form-select form-select-sm perm-object-id">
  * for the three non-calendar scopes (wider_region / GRC / GRC test).
  */
 function buildStaticObjectIdSelect(objectType) {
-  const select = document.createElement("select");
-  select.className = "form-select form-select-sm perm-object-id";
-  select.required = true;
+    const select = document.createElement('select');
+    select.className = 'form-select form-select-sm perm-object-id';
+    select.required = true;
 
-  const placeholder = document.createElement("option");
-  placeholder.value = "";
-  placeholder.textContent =
-    config.i18n.selectCalendarId || "Select calendar ID...";
-  placeholder.disabled = true;
-  placeholder.selected = true;
-  select.appendChild(placeholder);
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent =
+        config.i18n.selectCalendarId || 'Select calendar ID...';
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    select.appendChild(placeholder);
 
-  let entries = [];
-  if (objectType === "wider_region") {
-    entries = WIDER_REGIONS.map((name) => ({ value: name, label: name }));
-  } else if (objectType === "general_roman_calendar") {
-    entries = GRC_OBJECT_IDS.map((o) => ({ value: o.id, label: o.label }));
-  } else if (objectType === "general_roman_calendar_test") {
-    entries = [
-      { value: "general_roman_calendar", label: config.i18n.testsGeneralRoman },
-    ];
-  }
-  for (const e of entries) {
-    const o = document.createElement("option");
-    o.value = e.value;
-    o.textContent = e.label;
-    select.appendChild(o);
-  }
-  // Auto-select the single fixed GRC-test id.
-  if (objectType === "general_roman_calendar_test") {
-    select.value = "general_roman_calendar";
-  }
-  return select;
+    let entries = [];
+    if (objectType === 'wider_region') {
+        entries = WIDER_REGIONS.map((name) => ({ value: name, label: name }));
+    } else if (objectType === 'general_roman_calendar') {
+        entries = GRC_OBJECT_IDS.map((o) => ({ value: o.id, label: o.label }));
+    } else if (objectType === 'general_roman_calendar_test') {
+        entries = [
+            {
+                value: 'general_roman_calendar',
+                label: config.i18n.testsGeneralRoman,
+            },
+        ];
+    }
+    for (const e of entries) {
+        const o = document.createElement('option');
+        o.value = e.value;
+        o.textContent = e.label;
+        select.appendChild(o);
+    }
+    // Auto-select the single fixed GRC-test id.
+    if (objectType === 'general_roman_calendar_test') {
+        select.value = 'general_roman_calendar';
+    }
+    return select;
 }
 
 /**
@@ -272,33 +278,33 @@ function buildStaticObjectIdSelect(objectType) {
  * Calendar-backed scopes mount a CalendarSelect; the rest use a native select.
  */
 async function syncRowObjectIdField(row, objectType) {
-  const mount = row.querySelector(".perm-objid-mount");
-  if (!mount) return;
-  mount.innerHTML = "";
+    const mount = row.querySelector('.perm-objid-mount');
+    if (!mount) return;
+    mount.innerHTML = '';
 
-  if (
-    NATIONAL_FILTER_TYPES.includes(objectType) ||
-    DIOCESAN_FILTER_TYPES.includes(objectType)
-  ) {
-    const client = await apiClientReady;
-    if (!client) return; // init failed; leave empty (validation will block submit)
-    // Guard against a rapid scope change that already replaced the mount.
     if (
-      !row.isConnected ||
-      row.querySelector(".perm-object-type").value !== objectType
-    )
-      return;
-    const filter = NATIONAL_FILTER_TYPES.includes(objectType)
-      ? CalendarSelectFilter.NATIONAL_CALENDARS
-      : CalendarSelectFilter.DIOCESAN_CALENDARS;
-    const calSelect = new CalendarSelect(LITCAL_LOCALE)
-      .filter(filter)
-      .allowNull(true)
-      .class("form-select form-select-sm perm-object-id");
-    calSelect.appendTo(mount);
-  } else {
-    mount.appendChild(buildStaticObjectIdSelect(objectType));
-  }
+        NATIONAL_FILTER_TYPES.includes(objectType) ||
+        DIOCESAN_FILTER_TYPES.includes(objectType)
+    ) {
+        const client = await apiClientReady;
+        if (!client) return; // init failed; leave empty (validation will block submit)
+        // Guard against a rapid scope change that already replaced the mount.
+        if (
+            !row.isConnected ||
+            row.querySelector('.perm-object-type').value !== objectType
+        )
+            return;
+        const filter = NATIONAL_FILTER_TYPES.includes(objectType)
+            ? CalendarSelectFilter.NATIONAL_CALENDARS
+            : CalendarSelectFilter.DIOCESAN_CALENDARS;
+        const calSelect = new CalendarSelect(LITCAL_LOCALE)
+            .filter(filter)
+            .allowNull(true)
+            .class('form-select form-select-sm perm-object-id');
+        calSelect.appendTo(mount);
+    } else {
+        mount.appendChild(buildStaticObjectIdSelect(objectType));
+    }
 }
 ```
 
@@ -357,9 +363,9 @@ the new key:
 
 ```js
 let html =
-  '<option value="">' +
-  escapeHtml(config.i18n.selectCalendarScope) +
-  "</option>";
+    '<option value="">' +
+    escapeHtml(config.i18n.selectCalendarScope) +
+    '</option>';
 ```
 
 - [ ] **Step 6: Guard `collectPermissions` against an unpopulated Calendar ID**
@@ -368,8 +374,8 @@ In `collectPermissions()` (lines ~316-340), replace the object-id read so a row
 with no chosen Calendar ID is treated as invalid rather than throwing:
 
 ```js
-const objectIdEl = row.querySelector(".perm-object-id");
-const objectId = objectIdEl ? objectIdEl.value.trim() : "";
+const objectIdEl = row.querySelector('.perm-object-id');
+const objectId = objectIdEl ? objectIdEl.value.trim() : '';
 ```
 
 (Leave the subsequent
@@ -501,67 +507,70 @@ with `.class('form-select').id('grantObjectId')`; static scopes build a native
 `<select id="grantObjectId" class="form-select">`:
 
 ```js
-const NATIONAL_FILTER_TYPES = ["national_calendar", "national_calendar_test"];
-const DIOCESAN_FILTER_TYPES = ["diocesan_calendar", "diocesan_calendar_test"];
+const NATIONAL_FILTER_TYPES = ['national_calendar', 'national_calendar_test'];
+const DIOCESAN_FILTER_TYPES = ['diocesan_calendar', 'diocesan_calendar_test'];
 
 function buildStaticGrantObjectId(objectType) {
-  const select = document.createElement("select");
-  select.className = "form-select";
-  select.id = "grantObjectId";
-  select.required = true;
-  const placeholder = document.createElement("option");
-  placeholder.value = "";
-  placeholder.textContent =
-    config.i18n.selectCalendarId || "Select calendar ID...";
-  placeholder.disabled = true;
-  placeholder.selected = true;
-  select.appendChild(placeholder);
+    const select = document.createElement('select');
+    select.className = 'form-select';
+    select.id = 'grantObjectId';
+    select.required = true;
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent =
+        config.i18n.selectCalendarId || 'Select calendar ID...';
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    select.appendChild(placeholder);
 
-  let entries = [];
-  if (objectType === "wider_region") {
-    entries = WIDER_REGIONS.map((name) => ({ value: name, label: name }));
-  } else if (objectType === "general_roman_calendar") {
-    entries = GRC_OBJECT_IDS.map((o) => ({ value: o.id, label: o.label }));
-  } else if (objectType === "general_roman_calendar_test") {
-    entries = [
-      { value: "general_roman_calendar", label: config.i18n.testsGeneralRoman },
-    ];
-  }
-  for (const e of entries) {
-    const o = document.createElement("option");
-    o.value = e.value;
-    o.textContent = e.label;
-    select.appendChild(o);
-  }
-  if (objectType === "general_roman_calendar_test") {
-    select.value = "general_roman_calendar";
-  }
-  return select;
+    let entries = [];
+    if (objectType === 'wider_region') {
+        entries = WIDER_REGIONS.map((name) => ({ value: name, label: name }));
+    } else if (objectType === 'general_roman_calendar') {
+        entries = GRC_OBJECT_IDS.map((o) => ({ value: o.id, label: o.label }));
+    } else if (objectType === 'general_roman_calendar_test') {
+        entries = [
+            {
+                value: 'general_roman_calendar',
+                label: config.i18n.testsGeneralRoman,
+            },
+        ];
+    }
+    for (const e of entries) {
+        const o = document.createElement('option');
+        o.value = e.value;
+        o.textContent = e.label;
+        select.appendChild(o);
+    }
+    if (objectType === 'general_roman_calendar_test') {
+        select.value = 'general_roman_calendar';
+    }
+    return select;
 }
 
 async function syncObjectIdField(objectType) {
-  const mount = document.getElementById("grantObjectIdMount");
-  if (!mount) return;
-  mount.innerHTML = "";
-  if (
-    NATIONAL_FILTER_TYPES.includes(objectType) ||
-    DIOCESAN_FILTER_TYPES.includes(objectType)
-  ) {
-    const client = await apiClientReady;
-    if (!client) return;
-    if (grantObjectType.value !== objectType) return; // scope changed again meanwhile
-    const filter = NATIONAL_FILTER_TYPES.includes(objectType)
-      ? CalendarSelectFilter.NATIONAL_CALENDARS
-      : CalendarSelectFilter.DIOCESAN_CALENDARS;
-    new CalendarSelect(LITCAL_LOCALE)
-      .filter(filter)
-      .allowNull(true)
-      .class("form-select")
-      .id("grantObjectId")
-      .appendTo(mount);
-  } else {
-    mount.appendChild(buildStaticGrantObjectId(objectType));
-  }
+    const mount = document.getElementById('grantObjectIdMount');
+    if (!mount) return;
+    mount.innerHTML = '';
+    if (
+        NATIONAL_FILTER_TYPES.includes(objectType) ||
+        DIOCESAN_FILTER_TYPES.includes(objectType)
+    ) {
+        const client = await apiClientReady;
+        if (!client) return;
+        if (grantObjectType.value !== objectType) return; // scope changed again meanwhile
+        const filter = NATIONAL_FILTER_TYPES.includes(objectType)
+            ? CalendarSelectFilter.NATIONAL_CALENDARS
+            : CalendarSelectFilter.DIOCESAN_CALENDARS;
+        new CalendarSelect(LITCAL_LOCALE)
+            .filter(filter)
+            .allowNull(true)
+            .class('form-select')
+            .id('grantObjectId')
+            .appendTo(mount);
+    } else {
+        mount.appendChild(buildStaticGrantObjectId(objectType));
+    }
 }
 ```
 
@@ -604,13 +613,13 @@ git commit -m "feat(admin-permissions): hybrid CalendarSelect/static grant Calen
 In `e2e/rbac/support/requestAccess.ts`, extend the union:
 
 ```ts
-objectType: "national_calendar" |
-  "diocesan_calendar" |
-  "wider_region" |
-  "general_roman_calendar" |
-  "national_calendar_test" |
-  "diocesan_calendar_test" |
-  "general_roman_calendar_test";
+objectType: 'national_calendar' |
+    'diocesan_calendar' |
+    'wider_region' |
+    'general_roman_calendar' |
+    'national_calendar_test' |
+    'diocesan_calendar_test' |
+    'general_roman_calendar_test';
 ```
 
 - [ ] **Step 2: Ensure the object-id interaction uses `selectOption`**
@@ -620,8 +629,8 @@ In `submitAccessRequest` (lines ~39-77), the Calendar ID control is now always a
 `.fill()`s `.perm-object-id`, change it to wait for the option then select it:
 
 ```ts
-const objectIdControl = row.locator(".perm-object-id");
-await objectIdControl.waitFor({ state: "visible" });
+const objectIdControl = row.locator('.perm-object-id');
+await objectIdControl.waitFor({ state: 'visible' });
 await objectIdControl.selectOption(opts.permission.objectId);
 ```
 

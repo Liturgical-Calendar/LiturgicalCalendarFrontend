@@ -483,24 +483,24 @@ Three edits:
 
 1. In the `use` block, next to the existing `AdminScopesHandler` import, add:
 
-   ```php
-   use LiturgicalCalendar\Api\Handlers\Auth\DashboardScopesHandler;
-   ```
+    ```php
+    use LiturgicalCalendar\Api\Handlers\Auth\DashboardScopesHandler;
+    ```
 
 2. In the auth dispatch chain, after the `test-scopes` elseif (~line 371-375):
 
-   ```php
-                       } elseif ($authRoute === 'dashboard-scopes') {
-                           // GET /auth/dashboard-scopes - Batched admin/viewer scopes for the frontend admin dashboard
-                           $dashboardScopesHandler = new DashboardScopesHandler();
-                           $this->handler          = $dashboardScopesHandler;
-   ```
+    ```php
+                        } elseif ($authRoute === 'dashboard-scopes') {
+                            // GET /auth/dashboard-scopes - Batched admin/viewer scopes for the frontend admin dashboard
+                            $dashboardScopesHandler = new DashboardScopesHandler();
+                            $this->handler          = $dashboardScopesHandler;
+    ```
 
 3. In the OIDC-protected auth route list (~line 622), add `'dashboard-scopes'`:
 
-   ```php
-   in_array($requestPathParts[0], ['access-requests', 'email-verification', 'notifications', 'admin-scopes', 'test-scopes', 'dashboard-scopes'], true)
-   ```
+    ```php
+    in_array($requestPathParts[0], ['access-requests', 'email-verification', 'notifications', 'admin-scopes', 'test-scopes', 'dashboard-scopes'], true)
+    ```
 
 - [ ] **Step 5: Run tests to verify they pass, plus static analysis and lint**
 
@@ -647,11 +647,11 @@ git commit -m "docs(openapi): document GET /auth/dashboard-scopes"
 - Consumes: `GET {apiBase}/auth/dashboard-scopes` (Task 2 shape); existing private `buildCookieHeader()`,
   `ApiConfig::getInstance()->apiBaseUrl`, `API_INTERNAL_URL` env override.
 - Produces (Task 5 consumes exactly these):
-  - `public function dashboardScopes(): array` —
-    `array{is_global_admin: bool, is_resource_admin: bool, admin_scopes: array<int, array{object_type: string, object_id: string}>, viewer_scopes: array<string, list<string>>}`
-  - `public function canViewResource(string $objectType, string $objectId): bool`
-  - `public function canViewAnyResourceOfType(string ...$objectTypes): bool`
-  - `public static function fetchDashboardScopes(string $apiBaseUrl, ?string $cookieHeader, ?\GuzzleHttp\Client $client = null): array`
+    - `public function dashboardScopes(): array` —
+      `array{is_global_admin: bool, is_resource_admin: bool, admin_scopes: array<int, array{object_type: string, object_id: string}>, viewer_scopes: array<string, list<string>>}`
+    - `public function canViewResource(string $objectType, string $objectId): bool`
+    - `public function canViewAnyResourceOfType(string ...$objectTypes): bool`
+    - `public static function fetchDashboardScopes(string $apiBaseUrl, ?string $cookieHeader, ?\GuzzleHttp\Client $client = null): array`
 
 - [ ] **Step 1: Create the branch**
 
@@ -1094,7 +1094,7 @@ fail. FGA tuples ARE evaluated live, so tuple grants at runtime remain fine.
 Widen the role union:
 
 ```ts
-    role: 'admin' | 'calendar_editor' | 'test_editor';
+role: 'admin' | 'calendar_editor' | 'test_editor';
 ```
 
 (also update the `mk()` parameter type if it repeats the union). Add to `USERS`:
@@ -1120,30 +1120,65 @@ interface Expected {
     reviewCard: boolean;
 }
 
-const ALWAYS_VISIBLE = ['sanctorale', 'widerregion', 'national', 'diocesan'] as const;
+const ALWAYS_VISIBLE = [
+    'sanctorale',
+    'widerregion',
+    'national',
+    'diocesan',
+] as const;
 
 const MATRIX: Record<string, Expected> = {
     // Global admin: role bypasses all FGA gates — all six blocks.
-    'super-admin': { visibleBlocks: [...ALWAYS_VISIBLE, 'temporale', 'decrees'], hiddenBlocks: [], globalAdminSection: true, reviewCard: false },
+    'super-admin': {
+        visibleBlocks: [...ALWAYS_VISIBLE, 'temporale', 'decrees'],
+        hiddenBlocks: [],
+        globalAdminSection: true,
+        reviewCard: false,
+    },
     // calendar_editors WITHOUT any general_roman_calendar relation: temporale + decrees hidden.
-    'cei-admin': { visibleBlocks: [...ALWAYS_VISIBLE], hiddenBlocks: ['temporale', 'decrees'], globalAdminSection: false, reviewCard: true },
-    'cei-editor': { visibleBlocks: [...ALWAYS_VISIBLE], hiddenBlocks: ['temporale', 'decrees'], globalAdminSection: false, reviewCard: false },
-    'usccb-admin': { visibleBlocks: [...ALWAYS_VISIBLE], hiddenBlocks: ['temporale', 'decrees'], globalAdminSection: false, reviewCard: true },
+    'cei-admin': {
+        visibleBlocks: [...ALWAYS_VISIBLE],
+        hiddenBlocks: ['temporale', 'decrees'],
+        globalAdminSection: false,
+        reviewCard: true,
+    },
+    'cei-editor': {
+        visibleBlocks: [...ALWAYS_VISIBLE],
+        hiddenBlocks: ['temporale', 'decrees'],
+        globalAdminSection: false,
+        reviewCard: false,
+    },
+    'usccb-admin': {
+        visibleBlocks: [...ALWAYS_VISIBLE],
+        hiddenBlocks: ['temporale', 'decrees'],
+        globalAdminSection: false,
+        reviewCard: true,
+    },
     // admin@general_roman_calendar:temporale → temporale visible (viewer via admin), decrees still hidden.
-    'grc-admin': { visibleBlocks: [...ALWAYS_VISIBLE, 'temporale'], hiddenBlocks: ['decrees'], globalAdminSection: false, reviewCard: true },
-    'europe-admin': { visibleBlocks: [...ALWAYS_VISIBLE], hiddenBlocks: ['temporale', 'decrees'], globalAdminSection: false, reviewCard: true },
+    'grc-admin': {
+        visibleBlocks: [...ALWAYS_VISIBLE, 'temporale'],
+        hiddenBlocks: ['decrees'],
+        globalAdminSection: false,
+        reviewCard: true,
+    },
+    'europe-admin': {
+        visibleBlocks: [...ALWAYS_VISIBLE],
+        hiddenBlocks: ['temporale', 'decrees'],
+        globalAdminSection: false,
+        reviewCard: true,
+    },
 };
 ```
 
 In `assertMatrix()`, replace the six-card loop with:
 
 ```ts
-    for (const id of expected.visibleBlocks) {
-        await expect(page.locator(SEL.calendarBlock(id))).toBeVisible();
-    }
-    for (const id of expected.hiddenBlocks) {
-        await expect(page.locator(SEL.calendarBlock(id))).toHaveCount(0);
-    }
+for (const id of expected.visibleBlocks) {
+    await expect(page.locator(SEL.calendarBlock(id))).toBeVisible();
+}
+for (const id of expected.hiddenBlocks) {
+    await expect(page.locator(SEL.calendarBlock(id))).toHaveCount(0);
+}
 ```
 
 Rewrite the header comment's "NOTE on scope narrowing" section: the dashboard NOW narrows Temporale/Decrees block
@@ -1184,7 +1219,9 @@ test.describe.serial('15 — dashboard Tests-card matrix', () => {
         await revokeScope('tests-editor');
     });
 
-    test('test_editor WITH a test scope sees the Tests card', async ({ browser }) => {
+    test('test_editor WITH a test scope sees the Tests card', async ({
+        browser,
+    }) => {
         const page = await actingAs(browser, 'tests-editor');
         await page.goto('/admin-dashboard.php');
         await expect(page.locator(HEADING)).toBeVisible();
@@ -1192,7 +1229,9 @@ test.describe.serial('15 — dashboard Tests-card matrix', () => {
         await page.context().close();
     });
 
-    test('test_editor WITHOUT a test scope does NOT see the Tests card', async ({ browser }) => {
+    test('test_editor WITHOUT a test scope does NOT see the Tests card', async ({
+        browser,
+    }) => {
         const page = await actingAs(browser, 'tests-editor-noscope');
         await page.goto('/admin-dashboard.php');
         await expect(page.locator(HEADING)).toBeVisible();

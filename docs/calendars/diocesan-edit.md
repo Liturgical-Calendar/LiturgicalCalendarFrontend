@@ -62,11 +62,11 @@ Navigate to the appropriate tab (Solemnities, Feasts, Memorials, Optional Memori
 
 1. Locate the event row to modify
 2. Update fields as needed:
-   - **Event Key** - Change the identifier
-   - **Name** - Edit the display name (for current locale)
-   - **Day/Month** - Change the celebration date
-   - **Since** - Modify the start year
-   - **Until** - Set or change the end year
+    - **Event Key** - Change the identifier
+    - **Name** - Edit the display name (for current locale)
+    - **Day/Month** - Change the celebration date
+    - **Since** - Modify the start year
+    - **Until** - Set or change the end year
 
 3. Save the calendar
 
@@ -106,7 +106,7 @@ To provide translations in different languages:
 ## Form Behavior on Edit
 
 | Field                        | Behavior                                         |
-|------------------------------|--------------------------------------------------|
+| ---------------------------- | ------------------------------------------------ |
 | Depends on national calendar | Can be changed (affects inheritance)             |
 | Diocese                      | Read-only (identifies the calendar being edited) |
 | Diocesan group               | Can be modified                                  |
@@ -142,11 +142,11 @@ PATCH /data?category=diocesan&nation={nation_iso}&diocese={diocese_id}
 4. Click on **Memorials** tab in the carousel
 5. Click the **+** button to add a new row
 6. Enter the memorial details:
-   - Event Key: `StPatrickOfBoston`
-   - Name: St. Patrick
-   - Day: 17
-   - Month: March
-   - Since: 2024
+    - Event Key: `StPatrickOfBoston`
+    - Name: St. Patrick
+    - Day: 17
+    - Month: March
+    - Since: 2024
 7. Click **SAVE DIOCESAN CALENDAR**
 
 ## Example: Adding Spanish Translations

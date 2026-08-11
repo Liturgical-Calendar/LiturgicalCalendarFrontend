@@ -1,62 +1,13 @@
-/**
- * Enum CalendarType
- * Used in building the endpoint URL for requests to the API /calendar endpoint
- */
-const CalendarType = Object.freeze({
-    NATIONAL: 'nation',
-    DIOCESAN: 'diocese'
-});
-
-/**
- * Represents the parameters for the API /calendar endpoint request
- * Currently only used to serialize the calendar subscription URL?
- */
-class RequestPayload {
-    static epiphany             = null;
-    static ascension            = null;
-    static corpus_christi       = null;
-    static eternal_high_priest  = null;
-    static locale               = null;
-    static return_type          = 'ICS';
-    static year_type            = 'CIVIL';
-}
-
-/**
- * Class CurrentEndpoint
- * Used to build the full endpoint URL for the API /calendar endpoint (currently only used to serialize the calendar subscription URL?)
- * @param {string} calendarType The type of calendar (national, diocesan)
- * @param {string} calendarId The ID of the calendar
- * @param {string} calendarYear The year of the calendar
- */
-class CurrentEndpoint {
-    /**
-     * The base URL of the API /calendar endpoint
-     * @returns {string} The base URL of the API /calendar endpoint
-     */
-    static get apiBase() {
-        return `${CalendarUrl}`;
-    }
-    static calendarType   = null;
-    static calendarId     = null;
-    static calendarYear   = null;
-    static serialize = () => {
-        let currentEndpoint = CurrentEndpoint.apiBase;
-        if (CurrentEndpoint.calendarType !== null && CurrentEndpoint.calendarId !== null) {
-            currentEndpoint += `/${CurrentEndpoint.calendarType}/${CurrentEndpoint.calendarId}`;
-        }
-        if (CurrentEndpoint.calendarYear !== null) {
-            currentEndpoint += `/${CurrentEndpoint.calendarYear}`;
-        }
-        const parameters = [];
-        for (const key in RequestPayload) {
-            if (RequestPayload[key] !== null && RequestPayload[key] !== '') {
-                parameters.push(key + '=' + encodeURIComponent(RequestPayload[key]));
-            }
-        }
-        const urlParams = parameters.length ? `?${parameters.join('&')}` : '';
-        return `${currentEndpoint}${urlParams}`;
-    };
-}
+import {
+    CalendarType,
+    CurrentEndpoint,
+} from './subscriptionUrl.js';
+import {
+    ApiClient,
+    CalendarSelect,
+    RiteSelect,
+    Rite,
+} from '@liturgical-calendar/components-js';
 
 /**
  * Updates the text of the element with the id 'calSubscriptionUrl' to reflect the current value of CurrentEndpoint.
@@ -70,10 +21,10 @@ const updateSubscriptionURL = () => {
     CurrentEndpoint.calendarId = calendarSelect.value;
     const selectedOption = calendarSelect.options[calendarSelect.selectedIndex];
     switch (selectedOption?.dataset.calendartype) {
-        case 'nationalcalendar':
+        case 'national':
             CurrentEndpoint.calendarType = CalendarType.NATIONAL;
             break;
-        case 'diocesancalendar':
+        case 'diocesan':
             CurrentEndpoint.calendarType = CalendarType.DIOCESAN;
             break;
         default:
@@ -220,8 +171,55 @@ const handleCardHeaderClick = (ev) => {
     }
 };
 
+/**
+ * Builds the rite and calendar selects and wires them to the subscription URL.
+ *
+ * The two selects are linked so that changing the rite repartitions the calendar
+ * list: the Ambrosian rite has no national tier and a different set of diocesan
+ * calendars, so a selection under one rite is never carried into the other.
+ */
+const buildCalendarControls = async () => {
+    await ApiClient.init(BaseUrl);
+
+    CurrentEndpoint.rite = Rite.ROMAN;
+
+    const lang = currentLocale.language;
+
+    // Must be in the DOM before linkToRiteSelect() below, which reads its
+    // element to attach the rite-change listener.
+    const riteSelect = new RiteSelect(lang)
+        .class('form-select')
+        .id('riteSelect')
+        .label({ text: Messages['Select rite'], class: 'form-label' });
+    riteSelect.appendTo('#riteSelectContainer');
+
+    const calendarSelect = new CalendarSelect(lang)
+        .class('form-select')
+        .id('calendarSelect')
+        .label({ text: Messages['Select calendar'], class: 'form-label' })
+        .allowNull(true);
+    calendarSelect.appendTo('#calendarSelectContainer');
+
+    calendarSelect.linkToRiteSelect(riteSelect);
+
+    // Default to the rite-level calendar rather than the first nation, so the
+    // card opens on the General Roman Calendar.
+    calendarSelect._domElement.value = '';
+
+    document.getElementById('riteSelect').addEventListener('change', (ev) => {
+        CurrentEndpoint.rite = ev.target.value;
+        updateSubscriptionURL();
+    });
+    document
+        .getElementById('calendarSelect')
+        .addEventListener('change', updateSubscriptionURL);
+
+    updateSubscriptionURL();
+};
+
 // Initialize on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
+    CurrentEndpoint.apiBase = CalendarUrl;
     handleHashChange();
     updateSubscriptionURL();
 
@@ -250,11 +248,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Event: Calendar select change
-    const calendarSelect = document.getElementById('calendarSelect');
-    if (calendarSelect) {
-        calendarSelect.addEventListener('change', updateSubscriptionURL);
-    }
+    // The selects are built asynchronously, so their change listeners are
+    // attached inside buildCalendarControls() once the elements exist.
+    buildCalendarControls().catch((error) => {
+        console.error(
+            `Could not build the calendar subscription controls: ${error.message}`,
+        );
+        toastr.error(Messages['Failed to load calendars'], Messages['Error']);
+    });
 });
 
 // Handle hash changes
