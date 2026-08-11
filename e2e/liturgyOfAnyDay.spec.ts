@@ -215,3 +215,53 @@ test.describe('liturgyOfAnyDay - renders events', () => {
             .not.toBe(before);
     });
 });
+
+test.describe('liturgyOfAnyDay - styling', () => {
+    // Regression guard for the post-mount `*InputConfig()` calls in
+    // assets/js/liturgyOfAnyDay.js: DayViewer shares one resolved theme object
+    // across all three date controls, so nothing in the theme bag can give
+    // `#month` (a `<select>`) a different class than `#day`/the year input
+    // (both `<input>`s). Verified live before the fix: all three rendered with
+    // `class=""`.
+    test('the date controls carry their Bootstrap classes', async ({ page }) => {
+        await openPage(page);
+        await expect(page.locator('#day')).toHaveClass(/form-control/);
+        await expect(page.locator('#month')).toHaveClass(/form-select/);
+        // The year input's id carries a library-generated suffix (`#year-2`)
+        // that is explicitly non-contractual, so it is located by position
+        // instead of by id: it is the last `type="number"` input in the widget.
+        const yearInput = page
+            .locator('#liturgyOfAnyDay input[type="number"]')
+            .last();
+        await expect(yearInput).toHaveClass(/form-control/);
+    });
+
+    test('the date header and a rendered event carry their theme classes', async ({
+        page,
+    }) => {
+        await openPage(page);
+        await expect(
+            page.locator('#liturgyOfAnyDay > .card-header'),
+        ).toHaveClass(/card-header/);
+        const eventsWrapper = page.locator('#liturgyOfAnyDay > .card-body');
+        await expect
+            .poll(() => eventsWrapper.locator('h3').count(), { timeout: 20000 })
+            .toBeGreaterThan(0);
+        await expect(
+            eventsWrapper.locator('.liturgy-event').first(),
+        ).toHaveClass(/liturgy-event/);
+    });
+});
+
+test.describe('liturgyOfAnyDay - localization', () => {
+    // The library's Messages cover 83 languages; this guards against the whole
+    // page silently falling back to English. "Giorno" was read off the live
+    // page with `currentLocale=it` set (see final-fix-report.md), not guessed.
+    test('the it locale renders localized labels', async ({ page, context }) => {
+        await context.addCookies([
+            { name: 'currentLocale', value: 'it', url: BASE },
+        ]);
+        await openPage(page);
+        await expect(page.locator('label[for="day"]')).toHaveText('Giorno');
+    });
+});
