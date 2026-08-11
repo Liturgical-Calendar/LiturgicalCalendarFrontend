@@ -234,13 +234,27 @@ Prefer them over hand-wiring. A `RiteSelect` needs **two** wires — `linkToRite
 `apiClient.listenTo(riteSelect)` — and wiring only the first fails silently: the form reads `ambrosian`
 while every request still goes to `/calendar/roman/`. The meta-components own that.
 
-Two call sites stay hand-wired on purpose:
+Five call sites still hand-wire a `RiteSelect` plus a `CalendarSelect`. They fall into two groups, and
+the difference matters: one group is a permanent exception, the other is simply not converted yet.
+
+**Permanently hand-wired — do not "fix" these:**
 
 - `assets/js/usage.js` — `CalendarResourcePicker` rejects `CalendarSelectFilter.NONE` and makes the
   empty option a disabled placeholder. The subscription card needs an all-calendars list and a
   _selectable_ empty option meaning the rite-level calendar. Asked upstream as
   liturgy-components-js#42.
 - `assets/js/index.js` — a PathBuilder/API-explorer page; neither meta-component models it.
+
+**Awaiting migration to `CalendarResourcePicker`** — these three are picker-shaped and should be
+converted, just not yet. Treat their current hand-wiring as debt, not as a pattern to copy:
+
+- `assets/js/admin-permissions.js` — the permission-grant resource-id picker.
+- `assets/js/permission-requests.js` — the permission-request picker, including a hand-rolled
+  `is-invalid` failure control the component now provides.
+- `assets/js/admin-tests.js` — the test-scope picker.
+
+The first two are RBAC-critical and covered only by the `rbac` e2e project, which is why they were
+deferred to their own PR rather than bundled with the `DayViewer` conversion.
 
 **Theme bag notes:** The theme bag's keys are HTML roles (`select`, `label`, `input`, `wrapper`) with
 per-child overrides named for the public getters. Two sharp edges: `label()` is **one-shot**, so once the

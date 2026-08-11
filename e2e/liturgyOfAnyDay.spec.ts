@@ -132,6 +132,49 @@ test.describe('liturgyOfAnyDay - the rite reaches the request', () => {
             urls.some((u) => /\/calendar\/roman\/(nation|diocese)\//.test(u)),
         ).toBe(false);
     });
+
+    // The test above only reaches the rite-LEVEL calendar (`/calendar/ambrosian`).
+    // This one exercises the combination, where the rite segment and the diocese
+    // segment must both land in the right order: an Ambrosian diocese is only
+    // routable as /calendar/ambrosian/diocese/{id}, and /calendar/diocese/{id}
+    // is a 400. usage.spec.ts covers that shape for the URL *builder*; this page
+    // actually fetches it through ApiClient, which is a different code path.
+    test('an ambrosian diocese is fetched under the rite and renders events', async ({
+        page,
+    }) => {
+        await openPage(page);
+        const urls: string[] = [];
+        page.on('request', (r) => {
+            if (r.url().includes('/calendar')) urls.push(r.url());
+        });
+
+        await page.selectOption('#riteSelect', 'ambrosian');
+        await page.selectOption('#calendarSelect', 'lugano_ch');
+
+        await expect
+            .poll(
+                () =>
+                    urls.some((u) =>
+                        /\/calendar\/ambrosian\/diocese\/lugano_ch(\/|\?|$)/.test(
+                            u,
+                        ),
+                    ),
+                { timeout: 20000 },
+            )
+            .toBe(true);
+        // The rite-less spelling the API rejects with a 400.
+        expect(urls.some((u) => /\/calendar\/diocese\//.test(u))).toBe(false);
+
+        // And the fetched calendar actually rendered — a <h3> exists in the
+        // events wrapper only when a genuine event was rendered.
+        await expect
+            .poll(
+                () =>
+                    page.locator('#liturgyOfAnyDay > .card-body h3').count(),
+                { timeout: 20000 },
+            )
+            .toBeGreaterThan(0);
+    });
 });
 
 test.describe('liturgyOfAnyDay - renders events', () => {

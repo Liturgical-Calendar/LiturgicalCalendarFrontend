@@ -29,7 +29,8 @@ Three things in our file are now library responsibilities:
 1. **Convert `liturgyOfAnyDay.js` to `DayViewer.mountInto()` with a slots object.**
 2. **Write `e2e/liturgyOfAnyDay.spec.ts` FIRST**, as a characterization test against the current
    hand-wired page, then convert and prove it still passes.
-3. **Surface mount failures to the user** via `toastr`, not console-only as today.
+3. **Surface mount failures to the user** via `showToast(message, 'danger')`, not console-only as
+   today. Not `toastr` — see Error handling for why it is unavailable on this page.
 4. **`usage.js` and `index.js` stay hand-wired** (see Out of scope).
 
 ## Why the deletions are safe
@@ -45,7 +46,9 @@ Each removal is backed by a checked fact, not an assumption:
 
 ## Current configuration to preserve
 
-`liturgyOfAnyDay.php` is **not** modified — its four containers already match `DayViewer`'s slot names.
+`liturgyOfAnyDay.php`'s four containers already match `DayViewer`'s slot names, so the markup itself is
+untouched. The file gains only the `$messages` block and the `const Messages` script that Error handling
+below requires — see that section for the exact pattern.
 
 | Slot       | Container                   | Today                                                                                                               |
 | ---------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------- |
