@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 14:41+0000\n"
+"POT-Creation-Date: 2026-08-11 22:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -97,7 +97,7 @@ msgid "Request parameters available on all %1$s paths"
 msgstr ""
 
 #. translators: part of page title - refers to the Catholic liturgical calendar
-#: index.php:65 usage.php:35 examples.php:98 liturgyOfAnyDay.php:18
+#: index.php:65 usage.php:35 examples.php:98 liturgyOfAnyDay.php:23
 #: layout/header.php:257 admin-permissions.php:77 admin-permissions.php:304
 #: admin-permissions.php:391 permission-requests.php:244
 msgid "General Roman Calendar"
@@ -539,7 +539,7 @@ msgstr ""
 
 #. translators: card header - tool to look up liturgy for any date
 #. translators: button text to go to liturgy lookup page
-#: usage.php:398 usage.php:408 liturgyOfAnyDay.php:18 liturgyOfAnyDay.php:26
+#: usage.php:398 usage.php:408 liturgyOfAnyDay.php:23 liturgyOfAnyDay.php:31
 msgid "Liturgy of any day"
 msgstr ""
 
@@ -715,6 +715,11 @@ msgstr ""
 
 #: translations.php:94
 msgid "Project website"
+msgstr ""
+
+#. translators: error shown when the liturgy page's calendar controls fail to load
+#: liturgyOfAnyDay.php:17
+msgid "Could not load the liturgy controls. Please try again later."
 msgstr ""
 
 #. translators: context = liturgical color
