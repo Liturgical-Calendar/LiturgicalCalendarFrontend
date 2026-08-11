@@ -198,6 +198,29 @@ When `ApiClient` listens to `ApiOptions`, the `Accept-Language` header is set au
 - **CalendarSelect standalone**: Vatican = General Roman Calendar (user's locale, not forced Latin)
 - **With PathBuilder**: `/calendar` = General Roman, `/calendar/nation/VA` = Vatican (Latin)
 
+### Rite awareness
+
+The API routes a rite as a bare path segment between `calendar` and any nation or diocese pair —
+`/calendar/ambrosian/diocese/lugano_ch`. There is no `/calendar/rite/{rite}` spelling and no query
+parameter.
+
+`usage.php` emits the segment for **every** rite, `roman` included, so users transition onto
+rite-explicit URLs. The implicit spelling keeps resolving, so subscription URLs already pasted into
+calendar apps are unaffected.
+
+The Ambrosian rite has no national tier and its own set of diocesan calendars (`milano_it`, `bergam_it`,
+`novara_it`, `lugano_ch`), so a `CalendarSelect` must be linked to a `RiteSelect` — via
+`calendarSelect.linkToRiteSelect(riteSelect)`, or `ApiOptions.linkToCalendarSelect().linkToRiteSelect()`
+when an `ApiOptions` form is already present — to repartition its list when the rite changes.
+
+### PHP vs JS components
+
+Frontend pages use **liturgy-components-js**. The PHP library (`liturgical-calendar/components`) is a
+dependency solely for the embedded PHP example: `examples/php/index.php` detects that it is being included
+rather than requested directly, skips its own autoloader and its own `ApiClient` singleton, and resolves
+both from the host. `includes/common.php` therefore keeps its `ApiClient::getInstance()` bootstrap, gated
+to `examples.php`. Do not remove the composer dependency — the example crashes without it.
+
 ## E2E Tests (Playwright)
 
 Test files in `e2e/` verify form submissions match API contracts.

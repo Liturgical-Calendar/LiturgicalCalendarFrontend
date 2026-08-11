@@ -16,7 +16,7 @@ PHP-based **website frontend** that presents data from the Liturgical Calendar A
 
 - **PHP >= 8.4** (composer package `liturgical-calendar/frontend`, namespace `LiturgicalCalendar\Frontend\` → `src/`)
 - Bootstrap UI theme, vanilla ES6+ JavaScript (no SPA framework)
-- **liturgy-components-js** (sister project) — frontend components, loaded via npm CDNs (jsDelivr, cdnjs, unpkg, skypack) or local symlink in dev
+- **liturgy-components-js** (sister project) — frontend components, loaded via npm CDNs (jsDelivr, cdnjs, unpkg, skypack) or local symlink in dev; used for all frontend pages; the PHP library (`liturgical-calendar/components`) is a dependency solely for the embedded example in `examples/php/index.php`
 - PHP deps: `liturgical-calendar/components` ^4.2, `vlucas/phpdotenv`, `monolog/monolog`, `symfony/cache`, `guzzlehttp/guzzle`, `firebase/php-jwt`
 - Quality: PHPUnit 11/12, PHPStan **level 7**, PHP_CodeSniffer (PSR-12, modified)
 - E2E tests: **Playwright** + TypeScript
