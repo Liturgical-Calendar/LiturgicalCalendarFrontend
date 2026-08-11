@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 14:41+0000\n"
+"POT-Creation-Date: 2026-08-11 22:55+0000\n"
 "PO-Revision-Date: 2026-06-26 20:52+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
@@ -124,7 +124,7 @@ msgid "Request parameters available on all %1$s paths"
 msgstr "Aanvraagparameters beschikbaar op alle paden %1$s"
 
 #. translators: part of page title - refers to the Catholic liturgical calendar
-#: index.php:65 usage.php:35 examples.php:98 liturgyOfAnyDay.php:18
+#: index.php:65 usage.php:35 examples.php:98 liturgyOfAnyDay.php:23
 #: layout/header.php:257 admin-permissions.php:77 admin-permissions.php:304
 #: admin-permissions.php:391 permission-requests.php:244
 msgid "General Roman Calendar"
@@ -638,7 +638,7 @@ msgstr "Google Assistent app"
 
 #. translators: card header - tool to look up liturgy for any date
 #. translators: button text to go to liturgy lookup page
-#: usage.php:398 usage.php:408 liturgyOfAnyDay.php:18 liturgyOfAnyDay.php:26
+#: usage.php:398 usage.php:408 liturgyOfAnyDay.php:23 liturgyOfAnyDay.php:31
 msgid "Liturgy of any day"
 msgstr "Liturgie van elke dag"
 
@@ -863,6 +863,13 @@ msgstr "Kalendergegevens"
 #: translations.php:94
 msgid "Project website"
 msgstr "Projectwebsite"
+
+#. translators: error shown when the liturgy page's calendar controls fail to load
+#: liturgyOfAnyDay.php:17
+#, fuzzy
+#| msgid "Failed to load users. Please try again later."
+msgid "Could not load the liturgy controls. Please try again later."
+msgstr "Laden van gebruikers mislukt. Probeer het later opnieuw."
 
 #. translators: context = liturgical color
 #. translators: liturgical color - green
