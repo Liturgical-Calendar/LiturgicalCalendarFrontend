@@ -70,10 +70,10 @@ const updateSubscriptionURL = () => {
     CurrentEndpoint.calendarId = calendarSelect.value;
     const selectedOption = calendarSelect.options[calendarSelect.selectedIndex];
     switch (selectedOption?.dataset.calendartype) {
-        case 'nationalcalendar':
+        case 'national':
             CurrentEndpoint.calendarType = CalendarType.NATIONAL;
             break;
-        case 'diocesancalendar':
+        case 'diocesan':
             CurrentEndpoint.calendarType = CalendarType.DIOCESAN;
             break;
         default:

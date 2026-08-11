@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9096c5c1d86ac1a64bb6dc2beda26d93",
+    "content-hash": "a16edaee7e6729f1afa368fec0d729f3",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -464,23 +464,23 @@
         },
         {
             "name": "liturgical-calendar/components",
-            "version": "v3.3.1",
+            "version": "v4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Liturgical-Calendar/liturgy-components-php.git",
-                "reference": "60fe997dea2e89868b6cba8b7f2bcf0cbdd5c3e1"
+                "reference": "b4e5602efe5a9654fcb323c9047b891de29f25fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Liturgical-Calendar/liturgy-components-php/zipball/60fe997dea2e89868b6cba8b7f2bcf0cbdd5c3e1",
-                "reference": "60fe997dea2e89868b6cba8b7f2bcf0cbdd5c3e1",
+                "url": "https://api.github.com/repos/Liturgical-Calendar/liturgy-components-php/zipball/b4e5602efe5a9654fcb323c9047b891de29f25fd",
+                "reference": "b4e5602efe5a9654fcb323c9047b891de29f25fd",
                 "shasum": ""
             },
             "require": {
                 "ext-intl": "*",
                 "ext-json": "*",
                 "nyholm/psr7": "^1.0",
-                "php": ">=8.1",
+                "php": ">=8.2",
                 "psr/cache": "^3.0",
                 "psr/http-client": "^1.0",
                 "psr/http-factory": "^1.0",
@@ -525,9 +525,9 @@
             "description": "Reusable frontend components for the Liturgical Calendar API",
             "support": {
                 "issues": "https://github.com/Liturgical-Calendar/liturgy-components-php/issues",
-                "source": "https://github.com/Liturgical-Calendar/liturgy-components-php/tree/v3.3.1"
+                "source": "https://github.com/Liturgical-Calendar/liturgy-components-php/tree/v4.2.0"
             },
-            "time": "2025-12-10T08:23:56+00:00"
+            "time": "2026-08-10T23:28:41+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -4300,5 +4300,5 @@
         "php": ">=8.4"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
