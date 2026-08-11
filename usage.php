@@ -23,6 +23,8 @@ $messages = [
     'Select calendar'          => _('Select calendar'),
     /** translators: label for dropdown to select the liturgical rite (Roman or Ambrosian) */
     'Select rite'              => _('Select rite'),
+    /** translators: notification message shown when the calendar list fails to load */
+    'Failed to load calendars' => _('Could not load the calendar list. Please try again later.'),
 ];
 
 ?><!doctype html>

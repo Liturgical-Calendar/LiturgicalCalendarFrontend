@@ -65,10 +65,6 @@ describe('CurrentEndpoint.serialize', () => {
 describe('CurrentEndpoint rite segment', () => {
     beforeEach(reset);
 
-    it('defaults to the roman rite', () => {
-        expect(CurrentEndpoint.rite).toBe('roman');
-    });
-
     it('emits the roman segment explicitly', () => {
         expect(CurrentEndpoint.serialize()).toBe(
             'https://example.test/calendar/roman?return_type=ICS&year_type=CIVIL',

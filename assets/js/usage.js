@@ -254,6 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error(
             `Could not build the calendar subscription controls: ${error.message}`,
         );
+        toastr.error(Messages['Failed to load calendars'], Messages['Error']);
     });
 });
 
