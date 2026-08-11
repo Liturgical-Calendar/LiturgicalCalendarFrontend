@@ -12,6 +12,11 @@
 
 include_once 'includes/common.php';
 
+$messages = [
+    /** translators: error shown when the liturgy page's calendar controls fail to load */
+    'Failed to load' => _('Could not load the liturgy controls. Please try again later.'),
+];
+
 ?><!doctype html>
 <html lang="<?php echo $i18n->LOCALE; ?>">
 <head>
@@ -36,6 +41,10 @@ include_once 'includes/common.php';
             <!-- LiturgyOfAnyDay component will be rendered here by JS -->
             <div id="liturgyOfAnyDayContainer"></div>
         </div>
+
+    <script>
+        const Messages = <?php echo json_encode($messages, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+    </script>
         <?php include_once('./layout/footer.php'); ?>
         <script nomodule defer src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
         <?php /* assets/js/liturgyOfAnyDay.js is injected by layout/footer.php, which
