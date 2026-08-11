@@ -35,19 +35,19 @@ for that region.
 
 1. **Locales** - Select all language/region combinations that should be supported for this wider region calendar.
    For example, for the Americas region, you might select:
-   - `en_US` (English - United States)
-   - `es_MX` (Spanish - Mexico)
-   - `pt_BR` (Portuguese - Brazil)
-   - `fr_CA` (French - Canada)
+    - `en_US` (English - United States)
+    - `es_MX` (Spanish - Mexico)
+    - `pt_BR` (Portuguese - Brazil)
+    - `fr_CA` (French - Canada)
 
 2. **Current Localization** - Choose the locale you're currently editing. The event name entered in the main
    Name field will be saved for this locale. If you have selected multiple locales, you must also fill in the
    event name for each additional locale in the corresponding translation fields that appear below the main
    Name field.
 
-   > **Note:** If you change the Current Localization after entering localized names, the fields will be
-   > reordered so that the newly selected locale becomes the main Name field, and the previous locale moves
-   > to the translation fields below.
+    > **Note:** If you change the Current Localization after entering localized names, the fields will be
+    > reordered so that the newly selected locale becomes the main Name field, and the previous locale moves
+    > to the translation fields below.
 
 ### Step 3: Add Liturgical Events
 
@@ -89,7 +89,7 @@ Click **Create a new liturgical event** to define a new event:
 ## Form Fields Reference
 
 | Field                    | Required | Description                                                  |
-|--------------------------|----------|--------------------------------------------------------------|
+| ------------------------ | -------- | ------------------------------------------------------------ |
 | Wider Region             | Yes      | The region name (Americas, Europe, Asia, Africa, Oceania)    |
 | Locales                  | Yes      | Supported language/region combinations                       |
 | Current Localization     | Yes      | The locale being edited                                      |
@@ -109,10 +109,10 @@ Click **Create a new liturgical event** to define a new event:
 
 For wider region calendars, the following actions are supported:
 
-| Action            | Description                                    |
-|-------------------|------------------------------------------------|
-| `makePatron`      | Designate an existing saint as patron          |
-| `createNew`       | Create a new liturgical event                  |
+| Action       | Description                           |
+| ------------ | ------------------------------------- |
+| `makePatron` | Designate an existing saint as patron |
+| `createNew`  | Create a new liturgical event         |
 
 > **Note:** The `setProperty` and `moveFeast` actions are **not available** for wider region calendars. These
 > actions are only supported by national calendars.

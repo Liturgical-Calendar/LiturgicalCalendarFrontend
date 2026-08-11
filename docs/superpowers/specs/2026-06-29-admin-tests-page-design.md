@@ -40,7 +40,7 @@ only the live test **runner**.
 - **An editor already exists** in `UnitTestInterface/admin.php` + `assets/js/admin.js`
   (`AccuracyTestDefinition`, save via `PUT /tests` create / `PATCH /tests/{name}` update) +
   `assets/js/AssertionsBuilder.js` (the per-year assertion grid). No DELETE in that UI today.
-- **Frontend admin conventions.** The closest analog to a form-CRUD admin page is the *bespoke*
+- **Frontend admin conventions.** The closest analog to a form-CRUD admin page is the _bespoke_
   `admin-permissions.js` (create via `POST`, delete via `DELETE`, dynamic `CalendarSelect`-by-type
   fields, scope gating via an `isGlobalAdmin` config flag + the resource-admin distinction). The
   `createAdminModule` factory (`admin-module-base.js`) is **status-workflow-specific**
@@ -51,7 +51,7 @@ only the live test **runner**.
 
 ## Decisions
 
-1. **Scope:** CRUD of test *definitions* only; the runner stays in UnitTestInterface.
+1. **Scope:** CRUD of test _definitions_ only; the runner stays in UnitTestInterface.
 2. **Permission UX:** Hybrid — list/view all tests for any authenticated user; gate edit/delete
    buttons per-row using the caller's exact scopes; API is the hard backstop.
 3. **Old editor:** Retire the editing UI in `UnitTestInterface/admin.php` (single source of truth).
@@ -76,20 +76,24 @@ pages (which call `/auth/admin-scopes`) don't incur the extra OpenFGA `listObjec
 - **Service:** extend `ResourceAdminService` with
   `resolveTestScopes(string $sub): array{editor: list<Scope>, admin: list<Scope>}`, looping the
   three test object types `['national_calendar_test','diocesan_calendar_test',
-  'general_roman_calendar_test']` and calling the existing
+'general_roman_calendar_test']` and calling the existing
   `OpenFgaClient::listObjects($fgaUser, 'editor'|'admin', $type)` (`OpenFgaClient.php:299–328`).
   `editor` ⊇ `admin` because the model defines `editor = this ∪ computedUserset(admin)`.
 - **Route:** add `GET /auth/test-scopes` behind the same JWT/OIDC auth middleware as
   `/auth/admin-scopes` (authenticated; returns the caller's scopes only — no elevation).
 - **Response:**
 
-  ```json
-  {
-    "is_global_admin": false,
-    "editor": [{ "object_type": "national_calendar_test", "object_id": "USA" }],
-    "admin":  [{ "object_type": "diocesan_calendar_test", "object_id": "..." }]
-  }
-  ```
+    ```json
+    {
+        "is_global_admin": false,
+        "editor": [
+            { "object_type": "national_calendar_test", "object_id": "USA" }
+        ],
+        "admin": [
+            { "object_type": "diocesan_calendar_test", "object_id": "..." }
+        ]
+    }
+    ```
 
 - **Grounding:** test scopes are **independent** of calendar scopes in the current OpenFGA model
   (`scripts/openfga-model.json` test types use only `this` + same-type `computedUserset`; no
@@ -106,10 +110,10 @@ pages (which call `/auth/admin-scopes`) don't incur the extra OpenFGA `listObjec
 - **`assets/js/admin-tests.js`** — bespoke module (initialized on `DOMContentLoaded`), importing
   `ApiClient` / `CalendarSelect` / `CalendarSelectFilter` like `admin-permissions.js`. Internally
   organized as:
-  - **Generic seam** (extraction candidates for the future factory): `fetchJson(method, path,
-    body)`, `renderTable(rows, columns)`, `showModalAlert(...)`, `gateByScope(...)`,
-    auth/scope bootstrap (`/auth/me` + `/auth/test-scopes`).
-  - **Test-specific:** scope grouping for the list, the editor form, and `AssertionsBuilder` glue.
+    - **Generic seam** (extraction candidates for the future factory): `fetchJson(method, path,
+body)`, `renderTable(rows, columns)`, `showModalAlert(...)`, `gateByScope(...)`,
+      auth/scope bootstrap (`/auth/me` + `/auth/test-scopes`).
+    - **Test-specific:** scope grouping for the list, the editor form, and `AssertionsBuilder` glue.
 - **`assets/js/AssertionsBuilder.js`** — ported from UnitTestInterface with a tight interface:
   `load(testDefinition)` to populate, `serialize()` to produce the assertions array. The per-year
   assertion grid keyed by `test_type` (exact/variable correspondence) is preserved.
@@ -139,7 +143,7 @@ workflow, presented as a stepped modal:
    auto-fills the description and feeds the base date + Sunday highlighting.
 3. **Year range** — the dual-range slider ported as-is from UnitTestInterface
    (`assets/css/multi-range-slider.css`), bounded 1970–2050, feeding `year_since`/`year_until` (for
-   the *Since*/*Until* types) and the set of years to assert on.
+   the _Since_/_Until_ types) and the set of years to assert on.
 4. **Base date** — `<input type=date>` pre-filled from the event's fixed `month`/`day` (or Jan 1 of
    the first year); expands to per-year `expected_value` (RFC 3339,
    `YYYY-MM-DDT00:00:00+00:00`).
@@ -150,7 +154,7 @@ workflow, presented as a stepped modal:
    (`fa-comment-medical` / `fa-comment-dots`). Per-type behavior: exact = uniform across years;
    since/until = years before/after the pivot forced to `eventNotExists`; variable = each year
    toggled independently. A **year-grid overview** shades the pivot year and the years it forces
-   to `eventNotExists`; for the *Since*/*Until* types, clicking a year sets the pivot.
+   to `eventNotExists`; for the _Since_/_Until_ types, clicking a year sets the pivot.
    (Click-to-exclude — editing the `excludes` list from the grid — is deferred to a follow-up;
    the model and `generate()` already accept `excludedYears`.)
 
@@ -219,7 +223,7 @@ Reuses Bootstrap 5 + FontAwesome (already present in the frontend).
 
 - **Coordinated admin-page form-CRUD factory.** decrees/missals/calendars admin are piecemeal and
   incomplete; `admin-tests` is built with a clean generic/specific seam so it can serve as a clean
-  reference example. A unified factory (covering form-CRUD *and* the existing status-workflow
+  reference example. A unified factory (covering form-CRUD _and_ the existing status-workflow
   pattern) is a separate initiative with its own spec, studying all real pages — not designed from
   this one example.
 - **Pooling calendar-editor and test-editor scopes.** Test-editor scopes are independent of
@@ -237,7 +241,7 @@ Reuses Bootstrap 5 + FontAwesome (already present in the frontend).
 - `event_key` datalist depends on `GET /events` returning the event catalog for the chosen scope;
   confirm the shape/locale handling when wiring the field.
 - Renaming a test is not an in-place edit — `name` is the resource key for `PATCH/DELETE
-  /tests/{name}`, so a rename is delete + recreate. The editor must render `name` read-only when
+/tests/{name}`, so a rename is delete + recreate. The editor must render `name` read-only when
   editing an existing test.
 - (Resolved) Year-range control: port the original custom dual-range slider
   (`multi-range-slider.css`) as-is to preserve the familiar feel — carried over verbatim alongside

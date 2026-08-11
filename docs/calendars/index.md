@@ -79,12 +79,12 @@ A Diocesan calendar defines diocese-specific liturgical events. It must be assoc
 
 All calendar types support these operations for liturgical events:
 
-| Operation           | Description                                           |
-|---------------------|-------------------------------------------------------|
-| **Designate Patron**| Add a patron saint for the region/nation/diocese      |
-| **Create New Event**| Define a new liturgical event                         |
-| **Change Property** | Modify the name or grade of an existing event         |
-| **Move Event**      | Change the date of an existing liturgical event       |
+| Operation            | Description                                      |
+| -------------------- | ------------------------------------------------ |
+| **Designate Patron** | Add a patron saint for the region/nation/diocese |
+| **Create New Event** | Define a new liturgical event                    |
+| **Change Property**  | Modify the name or grade of an existing event    |
+| **Move Event**       | Change the date of an existing liturgical event  |
 
 > **Note:** Not all operations are available for all calendar types. See the specific documentation for each
 > calendar type for details.

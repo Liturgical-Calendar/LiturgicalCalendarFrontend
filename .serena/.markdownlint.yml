@@ -1,6 +1,11 @@
 # Relax markdownlint rules for Serena memory files only.
 # Memories are AI-consumed structured notes — long lines, language-less
 # fence blocks for plain output, and dense tables are intentional.
+#
+# Inherits the repo config rather than replacing it: markdownlint-cli2 applies
+# the nearest config only, so without this the repo's MD007 indent would revert
+# to the default 2 here and fight `yarn format:md`.
+extends: ../.markdownlint.yaml
 MD013: false  # line-length
 MD040: false  # fenced-code-language
 MD060: false  # table-column-style

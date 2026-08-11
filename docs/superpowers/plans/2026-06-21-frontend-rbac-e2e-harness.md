@@ -109,11 +109,11 @@ git commit -m "test(rbac): scaffold rbac Playwright project"
 **Interfaces:**
 
 - Produces:
-  - `type RbacUser = { id: string; email: string; password: string; role: 'admin' | 'calendar_editor';
-    fga: { relation: 'admin' | 'editor'; objectType: string; objectId: string } | null }`
-  - `const USERS: Record<string, RbacUser>` keyed by id (`super-admin`, `cei-admin`, …, `europe-editor`)
-  - `const SEEDED_USER_IDS: string[]` and `const REGISTRATION_USER_IDS: string[]` (`cei-admin`,
-    `usccb-editor`) — the two whose specs use real registration (their seeding is skipped in setup).
+    - `type RbacUser = { id: string; email: string; password: string; role: 'admin' | 'calendar_editor';
+fga: { relation: 'admin' | 'editor'; objectType: string; objectId: string } | null }`
+    - `const USERS: Record<string, RbacUser>` keyed by id (`super-admin`, `cei-admin`, …, `europe-editor`)
+    - `const SEEDED_USER_IDS: string[]` and `const REGISTRATION_USER_IDS: string[]` (`cei-admin`,
+      `usccb-editor`) — the two whose specs use real registration (their seeding is skipped in setup).
 
 - [ ] **Step 1: Write the failing test**
 
@@ -139,7 +139,8 @@ test('only super-admin holds the global admin role; others are calendar_editor',
 
 test('registration users are a subset not included in seeded ids', () => {
     expect(REGISTRATION_USER_IDS).toEqual(['cei-admin', 'usccb-editor']);
-    for (const id of REGISTRATION_USER_IDS) expect(SEEDED_USER_IDS).not.toContain(id);
+    for (const id of REGISTRATION_USER_IDS)
+        expect(SEEDED_USER_IDS).not.toContain(id);
 });
 ```
 
@@ -158,31 +159,81 @@ export interface RbacUser {
     email: string;
     password: string;
     role: 'admin' | 'calendar_editor';
-    fga: { relation: RbacRelation; objectType: string; objectId: string } | null;
+    fga: {
+        relation: RbacRelation;
+        objectType: string;
+        objectId: string;
+    } | null;
 }
 
 const pw = 'E2e-Test-Passw0rd!'; // shared test password; users live only in the test org
 
-function mk(id: string, role: RbacUser['role'], fga: RbacUser['fga']): RbacUser {
+function mk(
+    id: string,
+    role: RbacUser['role'],
+    fga: RbacUser['fga'],
+): RbacUser {
     return { id, email: `${id}+e2e@litcal.test`, password: pw, role, fga };
 }
 
 export const USERS: Record<string, RbacUser> = {
     'super-admin': mk('super-admin', 'admin', null),
-    'cei-admin': mk('cei-admin', 'calendar_editor', { relation: 'admin', objectType: 'national_calendar', objectId: 'IT' }),
-    'cei-editor': mk('cei-editor', 'calendar_editor', { relation: 'editor', objectType: 'national_calendar', objectId: 'IT' }),
-    'usccb-admin': mk('usccb-admin', 'calendar_editor', { relation: 'admin', objectType: 'national_calendar', objectId: 'US' }),
-    'usccb-editor': mk('usccb-editor', 'calendar_editor', { relation: 'editor', objectType: 'national_calendar', objectId: 'US' }),
-    'rome-admin': mk('rome-admin', 'calendar_editor', { relation: 'admin', objectType: 'diocesan_calendar', objectId: 'romamo_it' }),
-    'rome-editor': mk('rome-editor', 'calendar_editor', { relation: 'editor', objectType: 'diocesan_calendar', objectId: 'romamo_it' }),
-    'grc-admin': mk('grc-admin', 'calendar_editor', { relation: 'admin', objectType: 'general_roman_calendar', objectId: 'temporale' }),
-    'grc-editor': mk('grc-editor', 'calendar_editor', { relation: 'editor', objectType: 'general_roman_calendar', objectId: 'temporale' }),
-    'europe-admin': mk('europe-admin', 'calendar_editor', { relation: 'admin', objectType: 'wider_region', objectId: 'Europe' }),
-    'europe-editor': mk('europe-editor', 'calendar_editor', { relation: 'editor', objectType: 'wider_region', objectId: 'Europe' }),
+    'cei-admin': mk('cei-admin', 'calendar_editor', {
+        relation: 'admin',
+        objectType: 'national_calendar',
+        objectId: 'IT',
+    }),
+    'cei-editor': mk('cei-editor', 'calendar_editor', {
+        relation: 'editor',
+        objectType: 'national_calendar',
+        objectId: 'IT',
+    }),
+    'usccb-admin': mk('usccb-admin', 'calendar_editor', {
+        relation: 'admin',
+        objectType: 'national_calendar',
+        objectId: 'US',
+    }),
+    'usccb-editor': mk('usccb-editor', 'calendar_editor', {
+        relation: 'editor',
+        objectType: 'national_calendar',
+        objectId: 'US',
+    }),
+    'rome-admin': mk('rome-admin', 'calendar_editor', {
+        relation: 'admin',
+        objectType: 'diocesan_calendar',
+        objectId: 'romamo_it',
+    }),
+    'rome-editor': mk('rome-editor', 'calendar_editor', {
+        relation: 'editor',
+        objectType: 'diocesan_calendar',
+        objectId: 'romamo_it',
+    }),
+    'grc-admin': mk('grc-admin', 'calendar_editor', {
+        relation: 'admin',
+        objectType: 'general_roman_calendar',
+        objectId: 'temporale',
+    }),
+    'grc-editor': mk('grc-editor', 'calendar_editor', {
+        relation: 'editor',
+        objectType: 'general_roman_calendar',
+        objectId: 'temporale',
+    }),
+    'europe-admin': mk('europe-admin', 'calendar_editor', {
+        relation: 'admin',
+        objectType: 'wider_region',
+        objectId: 'Europe',
+    }),
+    'europe-editor': mk('europe-editor', 'calendar_editor', {
+        relation: 'editor',
+        objectType: 'wider_region',
+        objectId: 'Europe',
+    }),
 };
 
 export const REGISTRATION_USER_IDS = ['cei-admin', 'usccb-editor'];
-export const SEEDED_USER_IDS = Object.keys(USERS).filter((id) => !REGISTRATION_USER_IDS.includes(id));
+export const SEEDED_USER_IDS = Object.keys(USERS).filter(
+    (id) => !REGISTRATION_USER_IDS.includes(id),
+);
 ```
 
 > RESOLVED (verified against API source data + live stack, 2026-06-21): nation codes are `IT`/`US` (NOT
@@ -217,19 +268,19 @@ git commit -m "test(rbac): user/permission seed matrix"
 - Consumes: env `ZITADEL_ISSUER`, `ZITADEL_MACHINE_TOKEN`, `ZITADEL_ORG_ID`, and `ZITADEL_PROJECT_ID`
   (for role grants).
 - Produces a `ZitadelAdmin` class:
-  - `findUserIdByEmail(email: string): Promise<string | null>`
-  - `findUserIdByUsername(userName: string): Promise<string | null>` — used to locate the `login-client`
-    machine user.
-  - `createVerifiedUser(u: { email: string; password: string; firstName: string; lastName: string }):
-    Promise<string>` — returns the new userId; email pre-verified, password set, not requiring change.
-  - `grantProjectRole(userId: string, role: string): Promise<void>`
-  - `deleteUser(userId: string): Promise<void>`
-  - `mintPat(userId: string): Promise<{ tokenId: string; token: string }>` — create a Personal Access
-    Token for a (machine) user via `POST /management/v1/users/{userId}/pats`.
-  - `deletePat(userId: string, tokenId: string): Promise<void>`
-  - all calls send `Authorization: Bearer <machine token>`, `Host: localhost` (Zitadel's ExternalDomain
-    is `localhost`; Node `fetch` CAN set the Host header), and the org header
-    `x-zitadel-orgid: <ZITADEL_ORG_ID>`.
+    - `findUserIdByEmail(email: string): Promise<string | null>`
+    - `findUserIdByUsername(userName: string): Promise<string | null>` — used to locate the `login-client`
+      machine user.
+    - `createVerifiedUser(u: { email: string; password: string; firstName: string; lastName: string }):
+Promise<string>` — returns the new userId; email pre-verified, password set, not requiring change.
+    - `grantProjectRole(userId: string, role: string): Promise<void>`
+    - `deleteUser(userId: string): Promise<void>`
+    - `mintPat(userId: string): Promise<{ tokenId: string; token: string }>` — create a Personal Access
+      Token for a (machine) user via `POST /management/v1/users/{userId}/pats`.
+    - `deletePat(userId: string, tokenId: string): Promise<void>`
+    - all calls send `Authorization: Bearer <machine token>`, `Host: localhost` (Zitadel's ExternalDomain
+      is `localhost`; Node `fetch` CAN set the Host header), and the org header
+      `x-zitadel-orgid: <ZITADEL_ORG_ID>`.
 
 > NOTE: The `ZITADEL_MACHINE_TOKEN` belongs to the `test-service-account` machine user. It can create
 > users / grant roles, but CANNOT create Zitadel sessions (lacks `IAM_LOGIN_CLIENT`). The login flow
@@ -249,7 +300,12 @@ test('create, find, grant role, delete a verified user', async () => {
     const existing = await z.findUserIdByEmail(email);
     if (existing) await z.deleteUser(existing);
 
-    const id = await z.createVerifiedUser({ email, password: 'E2e-Test-Passw0rd!', firstName: 'Zit', lastName: 'Probe' });
+    const id = await z.createVerifiedUser({
+        email,
+        password: 'E2e-Test-Passw0rd!',
+        firstName: 'Zit',
+        lastName: 'Probe',
+    });
     expect(id).toMatch(/^\d+$/);
     expect(await z.findUserIdByEmail(email)).toBe(id);
 
@@ -280,7 +336,11 @@ export class ZitadelAdmin {
     private orgId = process.env.ZITADEL_ORG_ID!;
     private projectId = process.env.ZITADEL_PROJECT_ID!;
 
-    private async req(method: string, path: string, body?: unknown): Promise<any> {
+    private async req(
+        method: string,
+        path: string,
+        body?: unknown,
+    ): Promise<any> {
         const res = await fetch(`${this.issuer}${path}`, {
             method,
             headers: {
@@ -292,7 +352,10 @@ export class ZitadelAdmin {
             body: body === undefined ? undefined : JSON.stringify(body),
         });
         const text = await res.text();
-        if (!res.ok) throw new Error(`Zitadel ${method} ${path} -> ${res.status}: ${text}`);
+        if (!res.ok)
+            throw new Error(
+                `Zitadel ${method} ${path} -> ${res.status}: ${text}`,
+            );
         return text ? JSON.parse(text) : {};
     }
 
@@ -304,7 +367,12 @@ export class ZitadelAdmin {
         return u?.userId ?? null;
     }
 
-    async createVerifiedUser(u: { email: string; password: string; firstName: string; lastName: string }): Promise<string> {
+    async createVerifiedUser(u: {
+        email: string;
+        password: string;
+        firstName: string;
+        lastName: string;
+    }): Promise<string> {
         const data = await this.req('POST', '/v2/users/human', {
             profile: { givenName: u.firstName, familyName: u.lastName },
             email: { email: u.email, isVerified: true },
@@ -333,14 +401,21 @@ export class ZitadelAdmin {
     }
 
     async mintPat(userId: string): Promise<{ tokenId: string; token: string }> {
-        const data = await this.req('POST', `/management/v1/users/${userId}/pats`, {
-            expirationDate: '2030-01-01T00:00:00Z',
-        });
+        const data = await this.req(
+            'POST',
+            `/management/v1/users/${userId}/pats`,
+            {
+                expirationDate: '2030-01-01T00:00:00Z',
+            },
+        );
         return { tokenId: data.tokenId as string, token: data.token as string };
     }
 
     async deletePat(userId: string, tokenId: string): Promise<void> {
-        await this.req('DELETE', `/management/v1/users/${userId}/pats/${tokenId}`);
+        await this.req(
+            'DELETE',
+            `/management/v1/users/${userId}/pats/${tokenId}`,
+        );
     }
 }
 ```
@@ -374,12 +449,12 @@ git commit -m "test(rbac): zitadel admin client (create/find/grant/delete user)"
 
 - Consumes: env `OPENFGA_API_URL`, `OPENFGA_STORE_ID`, `OPENFGA_MODEL_ID`.
 - Produces a `Fga` class:
-  - `write(user: string, relation: string, object: string): Promise<void>` (idempotent — ignores
-    `already exists`)
-  - `delete(user: string, relation: string, object: string): Promise<void>` (idempotent — ignores
-    `not found`)
-  - `check(user: string, relation: string, object: string): Promise<boolean>`
-  - where `user` is `user:<zitadelUserId>` and `object` is `<objectType>:<objectId>`.
+    - `write(user: string, relation: string, object: string): Promise<void>` (idempotent — ignores
+      `already exists`)
+    - `delete(user: string, relation: string, object: string): Promise<void>` (idempotent — ignores
+      `not found`)
+    - `check(user: string, relation: string, object: string): Promise<boolean>`
+    - where `user` is `user:<zitadelUserId>` and `object` is `<objectType>:<objectId>`.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -414,7 +489,10 @@ export class Fga {
     private store = process.env.OPENFGA_STORE_ID!;
     private model = process.env.OPENFGA_MODEL_ID!;
 
-    private async post(path: string, body: unknown): Promise<{ status: number; text: string }> {
+    private async post(
+        path: string,
+        body: unknown,
+    ): Promise<{ status: number; text: string }> {
         const res = await fetch(`${this.url}/stores/${this.store}${path}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -433,7 +511,11 @@ export class Fga {
         }
     }
 
-    async delete(user: string, relation: string, object: string): Promise<void> {
+    async delete(
+        user: string,
+        relation: string,
+        object: string,
+    ): Promise<void> {
         const r = await this.post('/write', {
             deletes: { tuple_keys: [{ user, relation, object }] },
             authorization_model_id: this.model,
@@ -443,12 +525,17 @@ export class Fga {
         }
     }
 
-    async check(user: string, relation: string, object: string): Promise<boolean> {
+    async check(
+        user: string,
+        relation: string,
+        object: string,
+    ): Promise<boolean> {
         const r = await this.post('/check', {
             tuple_key: { user, relation, object },
             authorization_model_id: this.model,
         });
-        if (r.status >= 400) throw new Error(`FGA check ${r.status}: ${r.text}`);
+        if (r.status >= 400)
+            throw new Error(`FGA check ${r.status}: ${r.text}`);
         return JSON.parse(r.text).allowed === true;
     }
 }
@@ -479,14 +566,14 @@ git commit -m "test(rbac): openfga tuple client (write/delete/check)"
 
 - Consumes: `USERS`, `ZitadelAdmin`, `Fga`.
 - Produces:
-  - `seedUser(id: string): Promise<string>` — upsert (delete-then-create) the Zitadel user, grant the
-    role, write the FGA tuple (if any); returns the Zitadel userId.
-  - `oidcLogin(email: string, password: string, loginClientToken: string): Promise<string>` — run the
-    headless Zitadel session→PKCE flow and return a Zitadel OIDC access token (JWT).
-  - `loginAndSaveState(id: string, loginClientToken: string): Promise<void>` — call `oidcLogin` and write
-    a Playwright `storageState` to `e2e/.auth/<id>.json` containing the `litcal_access_token` cookie
-    (domain `localhost`, HttpOnly). The `loginClientToken` is a session-capable PAT minted for the
-    `login-client` user in setup (Task 7).
+    - `seedUser(id: string): Promise<string>` — upsert (delete-then-create) the Zitadel user, grant the
+      role, write the FGA tuple (if any); returns the Zitadel userId.
+    - `oidcLogin(email: string, password: string, loginClientToken: string): Promise<string>` — run the
+      headless Zitadel session→PKCE flow and return a Zitadel OIDC access token (JWT).
+    - `loginAndSaveState(id: string, loginClientToken: string): Promise<void>` — call `oidcLogin` and write
+      a Playwright `storageState` to `e2e/.auth/<id>.json` containing the `litcal_access_token` cookie
+      (domain `localhost`, HttpOnly). The `loginClientToken` is a session-capable PAT minted for the
+      `login-client` user in setup (Task 7).
 
 - [ ] **Step 1: Write the failing test**
 
@@ -502,7 +589,13 @@ test('seedUser creates user, grants role, writes scoped tuple', async () => {
     expect(id).toMatch(/^\d+$/);
     const f = new Fga();
     const u = USERS['cei-editor'].fga!;
-    expect(await f.check(`user:${id}`, u.relation, `${u.objectType}:${u.objectId}`)).toBe(true);
+    expect(
+        await f.check(
+            `user:${id}`,
+            u.relation,
+            `${u.objectType}:${u.objectId}`,
+        ),
+    ).toBe(true);
     // cleanup
     await new ZitadelAdmin().deleteUser(id);
     await f.delete(`user:${id}`, u.relation, `${u.objectType}:${u.objectId}`);
@@ -524,7 +617,10 @@ import { USERS } from './users';
 import { ZitadelAdmin } from './zitadel';
 import { Fga } from './fga';
 
-const ISSUER = (process.env.ZITADEL_ISSUER || 'http://localhost:8080').replace(/\/$/, '');
+const ISSUER = (process.env.ZITADEL_ISSUER || 'http://localhost:8080').replace(
+    /\/$/,
+    '',
+);
 // Reuse the existing Zitadel OIDC client (authorization_code + PKCE, public/no-secret) for the
 // headless login flow. We drive it server-side via the session API rather than a browser redirect.
 const CLIENT_ID = process.env.ZITADEL_CLIENT_ID!;
@@ -532,7 +628,12 @@ const REDIRECT_URI = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/aut
 // Zitadel matches requests by its configured external domain; send Host = the issuer hostname
 // (port-stripped) rather than hardcoding 'localhost', so a non-localhost ZITADEL_ISSUER still works.
 const HOST = new URL(ISSUER).hostname;
-const b64url = (b: Buffer) => b.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+const b64url = (b: Buffer) =>
+    b
+        .toString('base64')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=+$/, '');
 
 export async function seedUser(id: string): Promise<string> {
     const u = USERS[id];
@@ -541,12 +642,27 @@ export async function seedUser(id: string): Promise<string> {
 
     const existing = await z.findUserIdByEmail(u.email);
     if (existing) {
-        if (u.fga) await f.delete(`user:${existing}`, u.fga.relation, `${u.fga.objectType}:${u.fga.objectId}`);
+        if (u.fga)
+            await f.delete(
+                `user:${existing}`,
+                u.fga.relation,
+                `${u.fga.objectType}:${u.fga.objectId}`,
+            );
         await z.deleteUser(existing);
     }
-    const userId = await z.createVerifiedUser({ email: u.email, password: u.password, firstName: u.id, lastName: 'E2E' });
+    const userId = await z.createVerifiedUser({
+        email: u.email,
+        password: u.password,
+        firstName: u.id,
+        lastName: 'E2E',
+    });
     await z.grantProjectRole(userId, u.role);
-    if (u.fga) await f.write(`user:${userId}`, u.fga.relation, `${u.fga.objectType}:${u.fga.objectId}`);
+    if (u.fga)
+        await f.write(
+            `user:${userId}`,
+            u.fga.relation,
+            `${u.fga.objectType}:${u.fga.objectId}`,
+        );
     return userId;
 }
 
@@ -555,63 +671,131 @@ export async function seedUser(id: string): Promise<string> {
  * `loginClientToken` is a session-capable PAT (minted for the `login-client` user in setup).
  * Returns the access_token to be set as the `litcal_access_token` cookie.
  */
-export async function oidcLogin(email: string, password: string, loginClientToken: string): Promise<string> {
-    const Hl = { Authorization: `Bearer ${loginClientToken}`, 'Content-Type': 'application/json', Host: HOST };
-    const json = async (r: Response) => { const t = await r.text(); if (!r.ok) throw new Error(`${r.url} -> ${r.status}: ${t}`); return JSON.parse(t); };
+export async function oidcLogin(
+    email: string,
+    password: string,
+    loginClientToken: string,
+): Promise<string> {
+    const Hl = {
+        Authorization: `Bearer ${loginClientToken}`,
+        'Content-Type': 'application/json',
+        Host: HOST,
+    };
+    const json = async (r: Response) => {
+        const t = await r.text();
+        if (!r.ok) throw new Error(`${r.url} -> ${r.status}: ${t}`);
+        return JSON.parse(t);
+    };
 
     // 1. Create a password-checked session (login-client token).
-    const s = await json(await fetch(`${ISSUER}/v2/sessions`, {
-        method: 'POST', headers: Hl,
-        body: JSON.stringify({ checks: { user: { loginName: email }, password: { password } } }),
-    }));
+    const s = await json(
+        await fetch(`${ISSUER}/v2/sessions`, {
+            method: 'POST',
+            headers: Hl,
+            body: JSON.stringify({
+                checks: { user: { loginName: email }, password: { password } },
+            }),
+        }),
+    );
 
     // 2. Start an OIDC auth request (Frontend client, PKCE S256) → 302 to login-v2 with ?authRequest=...
     const verifier = b64url(crypto.randomBytes(32));
-    const challenge = b64url(crypto.createHash('sha256').update(verifier).digest());
+    const challenge = b64url(
+        crypto.createHash('sha256').update(verifier).digest(),
+    );
     const qs = new URLSearchParams({
-        response_type: 'code', client_id: CLIENT_ID, redirect_uri: REDIRECT_URI,
-        scope: 'openid profile email', code_challenge: challenge, code_challenge_method: 'S256', state: id_state(),
+        response_type: 'code',
+        client_id: CLIENT_ID,
+        redirect_uri: REDIRECT_URI,
+        scope: 'openid profile email',
+        code_challenge: challenge,
+        code_challenge_method: 'S256',
+        state: id_state(),
     });
-    const authResp = await fetch(`${ISSUER}/oauth/v2/authorize?${qs}`, { headers: { Host: HOST }, redirect: 'manual' });
+    const authResp = await fetch(`${ISSUER}/oauth/v2/authorize?${qs}`, {
+        headers: { Host: HOST },
+        redirect: 'manual',
+    });
     const loc = authResp.headers.get('location') || '';
     const arMatch = loc.match(/authRequest(?:Id)?=([^&]+)/);
-    if (!arMatch) throw new Error(`authorize did not return an authRequest id: ${authResp.status} ${loc}`);
+    if (!arMatch)
+        throw new Error(
+            `authorize did not return an authRequest id: ${authResp.status} ${loc}`,
+        );
     const authRequestId = decodeURIComponent(arMatch[1]);
 
     // 3. Finalize the auth request with the session (login-client token) → callbackUrl with ?code=
-    const fin = await json(await fetch(`${ISSUER}/v2/oidc/auth_requests/${authRequestId}`, {
-        method: 'POST', headers: Hl,
-        body: JSON.stringify({ session: { sessionId: s.sessionId, sessionToken: s.sessionToken } }),
-    }));
+    const fin = await json(
+        await fetch(`${ISSUER}/v2/oidc/auth_requests/${authRequestId}`, {
+            method: 'POST',
+            headers: Hl,
+            body: JSON.stringify({
+                session: {
+                    sessionId: s.sessionId,
+                    sessionToken: s.sessionToken,
+                },
+            }),
+        }),
+    );
     const codeMatch = String(fin.callbackUrl || '').match(/[?&]code=([^&]+)/);
-    if (!codeMatch) throw new Error(`finalize returned no code: ${JSON.stringify(fin)}`);
+    if (!codeMatch)
+        throw new Error(`finalize returned no code: ${JSON.stringify(fin)}`);
     const code = decodeURIComponent(codeMatch[1]);
 
     // 4. Exchange the code for tokens (public client, PKCE — no client secret).
-    const form = new URLSearchParams({ grant_type: 'authorization_code', code, redirect_uri: REDIRECT_URI, client_id: CLIENT_ID, code_verifier: verifier });
-    const tok = await json(await fetch(`${ISSUER}/oauth/v2/token`, {
-        method: 'POST', headers: { Host: HOST, 'Content-Type': 'application/x-www-form-urlencoded' }, body: form,
-    }));
-    if (!tok.access_token) throw new Error(`token exchange returned no access_token: ${JSON.stringify(tok)}`);
+    const form = new URLSearchParams({
+        grant_type: 'authorization_code',
+        code,
+        redirect_uri: REDIRECT_URI,
+        client_id: CLIENT_ID,
+        code_verifier: verifier,
+    });
+    const tok = await json(
+        await fetch(`${ISSUER}/oauth/v2/token`, {
+            method: 'POST',
+            headers: {
+                Host: HOST,
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: form,
+        }),
+    );
+    if (!tok.access_token)
+        throw new Error(
+            `token exchange returned no access_token: ${JSON.stringify(tok)}`,
+        );
     return tok.access_token as string;
 }
 
 // state param need only be opaque/unique-ish; avoid Math.random for determinism-friendliness.
-function id_state(): string { return b64url(crypto.randomBytes(8)); }
+function id_state(): string {
+    return b64url(crypto.randomBytes(8));
+}
 
 /**
  * Log a user in headlessly and write a Playwright storageState file containing the
  * `litcal_access_token` cookie. Cookie domain is `localhost` (port-agnostic) so it is sent to
  * both the frontend (:3000) and the API (:8000). The real cookie is HttpOnly.
  */
-export async function loginAndSaveState(id: string, loginClientToken: string): Promise<void> {
+export async function loginAndSaveState(
+    id: string,
+    loginClientToken: string,
+): Promise<void> {
     const u = USERS[id];
     const accessToken = await oidcLogin(u.email, u.password, loginClientToken);
     const storageState = {
-        cookies: [{
-            name: 'litcal_access_token', value: accessToken, domain: 'localhost', path: '/',
-            expires: -1, httpOnly: true, secure: false, sameSite: 'Lax' as const,
-        }],
+        cookies: [
+            {
+                name: 'litcal_access_token',
+                value: accessToken,
+                domain: 'localhost',
+                path: '/',
+                expires: -1,
+                httpOnly: true,
+                secure: false,
+                sameSite: 'Lax' as const,
+            },
+        ],
         origins: [],
     };
     const authPath = path.join(__dirname, '..', '..', '.auth', `${id}.json`);
@@ -649,10 +833,10 @@ git commit -m "test(rbac): seed one user (zitadel + role + fga tuple)"
 **Interfaces:**
 
 - Produces:
-  - `truncateAppTables(): Promise<void>` — `docker compose exec -T db psql` TRUNCATE of
-    `access_requests`, `audit_log`, and the user-notification-state table.
-  - `deleteAllSeededUsers(): Promise<void>` — for each id in `USERS`, find by email, delete the Zitadel
-    user and its FGA tuple if present.
+    - `truncateAppTables(): Promise<void>` — `docker compose exec -T db psql` TRUNCATE of
+      `access_requests`, `audit_log`, and the user-notification-state table.
+    - `deleteAllSeededUsers(): Promise<void>` — for each id in `USERS`, find by email, delete the Zitadel
+      user and its FGA tuple if present.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -666,7 +850,9 @@ import { USERS } from './users';
 test('deleteAllSeededUsers removes a seeded user', async () => {
     await seedUser('rome-editor');
     await deleteAllSeededUsers();
-    expect(await new ZitadelAdmin().findUserIdByEmail(USERS['rome-editor'].email)).toBeNull();
+    expect(
+        await new ZitadelAdmin().findUserIdByEmail(USERS['rome-editor'].email),
+    ).toBeNull();
 });
 
 test('truncateAppTables runs without error', async () => {
@@ -693,8 +879,21 @@ const exec = promisify(execFile);
 export async function truncateAppTables(): Promise<void> {
     // The active docker stack is the FRONTEND compose project (this repo root), not the API repo's.
     // Run `docker compose exec` from the frontend repo root so it targets the running `db` service.
-    const sql = 'TRUNCATE access_requests, audit_log, user_notification_state RESTART IDENTITY CASCADE;';
-    await exec('docker', ['compose', 'exec', '-T', 'db', 'psql', '-U', 'litcal', '-d', 'litcal', '-c', sql]);
+    const sql =
+        'TRUNCATE access_requests, audit_log, user_notification_state RESTART IDENTITY CASCADE;';
+    await exec('docker', [
+        'compose',
+        'exec',
+        '-T',
+        'db',
+        'psql',
+        '-U',
+        'litcal',
+        '-d',
+        'litcal',
+        '-c',
+        sql,
+    ]);
 }
 
 export async function deleteAllSeededUsers(): Promise<void> {
@@ -704,7 +903,12 @@ export async function deleteAllSeededUsers(): Promise<void> {
         const u = USERS[id];
         const zid = await z.findUserIdByEmail(u.email);
         if (!zid) continue;
-        if (u.fga) await f.delete(`user:${zid}`, u.fga.relation, `${u.fga.objectType}:${u.fga.objectId}`);
+        if (u.fga)
+            await f.delete(
+                `user:${zid}`,
+                u.fga.relation,
+                `${u.fga.objectType}:${u.fga.objectId}`,
+            );
         await z.deleteUser(zid);
     }
 }
@@ -757,7 +961,8 @@ setup('seed rbac users', async () => {
     // The session API needs IAM_LOGIN_CLIENT, which the machine token lacks. Mint a fresh,
     // session-capable PAT for the `login-client` user and delete it when done.
     const loginClientUserId = await z.findUserIdByUsername('login-client');
-    if (!loginClientUserId) throw new Error('login-client machine user not found in Zitadel');
+    if (!loginClientUserId)
+        throw new Error('login-client machine user not found in Zitadel');
     const pat = await z.mintPat(loginClientUserId);
 
     try {
@@ -807,13 +1012,18 @@ git commit -m "test(rbac): global setup seeds 9 users + saves sessions"
 import { test, expect } from '@playwright/test';
 import { actingAs } from './actingAs';
 
-test('actingAs super-admin is authenticated with the admin role', async ({ browser }) => {
+test('actingAs super-admin is authenticated with the admin role', async ({
+    browser,
+}) => {
     const { context, page } = await actingAs(browser, 'super-admin');
     // In OIDC mode the frontend validates the litcal_access_token cookie via its own /auth/me.php
     // (the API's /auth/me is HS256/admin-only and rejects Zitadel OIDC tokens).
     await page.goto('/');
     const me = await page.evaluate(async () => {
-        const r = await fetch('/auth/me.php', { credentials: 'include', headers: { Accept: 'application/json' } });
+        const r = await fetch('/auth/me.php', {
+            credentials: 'include',
+            headers: { Accept: 'application/json' },
+        });
         return { status: r.status, body: await r.json() };
     });
     expect(me.status).toBe(200);
@@ -834,8 +1044,13 @@ Expected: FAIL — cannot find module `./actingAs`.
 import { Browser, BrowserContext, Page } from '@playwright/test';
 import * as path from 'path';
 
-export async function actingAs(browser: Browser, id: string): Promise<{ context: BrowserContext; page: Page }> {
-    const context = await browser.newContext({ storageState: path.join(__dirname, '..', '..', '.auth', `${id}.json`) });
+export async function actingAs(
+    browser: Browser,
+    id: string,
+): Promise<{ context: BrowserContext; page: Page }> {
+    const context = await browser.newContext({
+        storageState: path.join(__dirname, '..', '..', '.auth', `${id}.json`),
+    });
     const page = await context.newPage();
     return { context, page };
 }
@@ -863,7 +1078,7 @@ git commit -m "test(rbac): actingAs fixture (per-user browser context)"
 
 **Interfaces:**
 
-- Consumes: `actingAs`. Asserts the harness produces *differently-scoped* sessions by checking the admin
+- Consumes: `actingAs`. Asserts the harness produces _differently-scoped_ sessions by checking the admin
   dashboard for two users.
 
 - [ ] **Step 1: Write the spec (the deliverable)**
@@ -872,7 +1087,9 @@ git commit -m "test(rbac): actingAs fixture (per-user browser context)"
 import { test, expect } from '@playwright/test';
 import { actingAs } from './support/actingAs';
 
-test('super-admin sees the admin section; cei-editor does not', async ({ browser }) => {
+test('super-admin sees the admin section; cei-editor does not', async ({
+    browser,
+}) => {
     const sa = await actingAs(browser, 'super-admin');
     await sa.page.goto('/admin-dashboard.php');
     // super-admin sees the admin-only section (Users/Permissions); use a stable selector present only for admins
@@ -884,7 +1101,9 @@ test('super-admin sees the admin section; cei-editor does not', async ({ browser
     // a calendar_editor (non-admin) must NOT see the admin-only Users link
     await expect(ed.page.locator('a[href="admin-users.php"]')).toHaveCount(0);
     // but DOES see editor cards (e.g. National)
-    await expect(ed.page.locator('.admin-block[data-block-id="national"]')).toBeVisible();
+    await expect(
+        ed.page.locator('.admin-block[data-block-id="national"]'),
+    ).toBeVisible();
     await ed.context.close();
 });
 ```

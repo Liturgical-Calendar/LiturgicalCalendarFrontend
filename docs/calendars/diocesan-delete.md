@@ -70,14 +70,14 @@ DELETE /data?category=diocesan&nation={nation_iso}&diocese={diocese_id}
 
 ## What Gets Deleted
 
-| Data Type              | Deleted |
-|------------------------|---------|
-| Liturgical events      | Yes     |
-| Event translations     | Yes     |
-| Diocesan group link    | Yes     |
-| Diocesan overrides     | Yes     |
-| Locale associations    | Yes     |
-| Timezone setting       | Yes     |
+| Data Type           | Deleted |
+| ------------------- | ------- |
+| Liturgical events   | Yes     |
+| Event translations  | Yes     |
+| Diocesan group link | Yes     |
+| Diocesan overrides  | Yes     |
+| Locale associations | Yes     |
+| Timezone setting    | Yes     |
 
 ## What Is NOT Deleted
 

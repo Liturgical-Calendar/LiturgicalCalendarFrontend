@@ -79,10 +79,10 @@ Scopes come from `GET /auth/test-scopes` as
 
 - **Global admin** → current full picker (scope-type select + `CalendarSelect`).
 - **Non-global admin** → authorized scopes = `editor ∪ admin` (deduped):
-  - **Exactly one** authorized scope → render it as **static read-only text**
-    (e.g. "Diocese: rotter_nl"), pre-set as the scope. No control.
-  - **Several** → a `<select>` limited to just those authorized scopes (not the
-    full calendar catalog).
+    - **Exactly one** authorized scope → render it as **static read-only text**
+      (e.g. "Diocese: rotter_nl"), pre-set as the scope. No control.
+    - **Several** → a `<select>` limited to just those authorized scopes (not the
+      full calendar catalog).
 
 The selected scope still feeds `selectedScope()` / the save payload's `applies_to`.
 

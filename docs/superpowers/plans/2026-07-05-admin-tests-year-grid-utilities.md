@@ -43,79 +43,84 @@ PHP/gettext for markup + i18n.
 Append to `assets/js/__tests__/AssertionsBuilder.test.js` (the `event` fixture — `{ event_key: 'StIgnatiusOfLoyola', …, month: 7, day: 31 }` — is already defined at module level):
 
 ```javascript
-describe("excludeYear / includeYear", () => {
-  const build = () => {
-    const b = new AssertionsBuilder({ locale: "en" });
-    b.setMeta({ event_key: event.event_key, test_type: "exactCorrespondence" });
-    b.generate({ event, minYear: 2024, maxYear: 2026 });
-    return b;
-  };
+describe('excludeYear / includeYear', () => {
+    const build = () => {
+        const b = new AssertionsBuilder({ locale: 'en' });
+        b.setMeta({
+            event_key: event.event_key,
+            test_type: 'exactCorrespondence',
+        });
+        b.generate({ event, minYear: 2024, maxYear: 2026 });
+        return b;
+    };
 
-  it("excludeYear removes the assertion and records the exclusion (sorted, deduped)", () => {
-    const b = build();
-    b.excludeYear(2025).excludeYear(2024).excludeYear(2025);
-    expect(b.model.excludes).toEqual([2024, 2025]);
-    expect(b.model.assertions.map((a) => a.year)).toEqual([2026]);
-  });
-
-  it("excludeYear is a no-op for years without an assertion", () => {
-    const b = build();
-    b.excludeYear(1999);
-    expect(b.model.excludes).toBe(null);
-    expect(b.model.assertions).toHaveLength(3);
-  });
-
-  it("includeYear restores an exact assertion with expected_value from baseMonthDay", () => {
-    const b = build();
-    b.excludeYear(2025).includeYear(2025);
-    expect(b.model.excludes).toBe(null);
-    const a = b.model.assertions.find((x) => x.year === 2025);
-    expect(a.assert).toBe("eventExists AND hasExpectedDate");
-    expect(a.expected_value).toBe("2025-07-31T00:00:00+00:00");
-    expect(b.model.assertions.map((x) => x.year)).toEqual([2024, 2025, 2026]);
-  });
-
-  it("includeYear respects the since-pivot (restores eventNotExists before it)", () => {
-    const b = new AssertionsBuilder({ locale: "en" });
-    b.setMeta({
-      event_key: event.event_key,
-      test_type: "exactCorrespondenceSince",
+    it('excludeYear removes the assertion and records the exclusion (sorted, deduped)', () => {
+        const b = build();
+        b.excludeYear(2025).excludeYear(2024).excludeYear(2025);
+        expect(b.model.excludes).toEqual([2024, 2025]);
+        expect(b.model.assertions.map((a) => a.year)).toEqual([2026]);
     });
-    b.generate({ event, minYear: 2024, maxYear: 2026, pivotYear: 2026 });
-    b.excludeYear(2024).includeYear(2024);
-    const a = b.model.assertions.find((x) => x.year === 2024);
-    expect(a.assert).toBe("eventNotExists");
-    expect(a.assertion).toContain("should not exist on");
-  });
 
-  it("serialize emits excludes while excluded and drops the key after restore", () => {
-    const b = build();
-    b.excludeYear(2026);
-    expect(b.serialize().excludes).toEqual([2026]);
-    b.includeYear(2026);
-    expect("excludes" in b.serialize()).toBe(false);
-  });
-
-  it("includeYear is a no-op when the year is not excluded", () => {
-    const b = build();
-    b.includeYear(2025);
-    expect(b.model.excludes).toBe(null);
-    expect(b.model.assertions).toHaveLength(3);
-  });
-
-  it("generate skips excludedYears so regeneration preserves exclusions", () => {
-    // model-level guarantee behind the regenerate() wiring in admin-tests.js
-    const b = build();
-    b.excludeYear(2025);
-    b.generate({
-      event,
-      minYear: 2024,
-      maxYear: 2026,
-      excludedYears: b.model.excludes ?? [],
+    it('excludeYear is a no-op for years without an assertion', () => {
+        const b = build();
+        b.excludeYear(1999);
+        expect(b.model.excludes).toBe(null);
+        expect(b.model.assertions).toHaveLength(3);
     });
-    expect(b.model.assertions.map((a) => a.year)).toEqual([2024, 2026]);
-    expect(b.model.excludes).toEqual([2025]);
-  });
+
+    it('includeYear restores an exact assertion with expected_value from baseMonthDay', () => {
+        const b = build();
+        b.excludeYear(2025).includeYear(2025);
+        expect(b.model.excludes).toBe(null);
+        const a = b.model.assertions.find((x) => x.year === 2025);
+        expect(a.assert).toBe('eventExists AND hasExpectedDate');
+        expect(a.expected_value).toBe('2025-07-31T00:00:00+00:00');
+        expect(b.model.assertions.map((x) => x.year)).toEqual([
+            2024, 2025, 2026,
+        ]);
+    });
+
+    it('includeYear respects the since-pivot (restores eventNotExists before it)', () => {
+        const b = new AssertionsBuilder({ locale: 'en' });
+        b.setMeta({
+            event_key: event.event_key,
+            test_type: 'exactCorrespondenceSince',
+        });
+        b.generate({ event, minYear: 2024, maxYear: 2026, pivotYear: 2026 });
+        b.excludeYear(2024).includeYear(2024);
+        const a = b.model.assertions.find((x) => x.year === 2024);
+        expect(a.assert).toBe('eventNotExists');
+        expect(a.assertion).toContain('should not exist on');
+    });
+
+    it('serialize emits excludes while excluded and drops the key after restore', () => {
+        const b = build();
+        b.excludeYear(2026);
+        expect(b.serialize().excludes).toEqual([2026]);
+        b.includeYear(2026);
+        expect('excludes' in b.serialize()).toBe(false);
+    });
+
+    it('includeYear is a no-op when the year is not excluded', () => {
+        const b = build();
+        b.includeYear(2025);
+        expect(b.model.excludes).toBe(null);
+        expect(b.model.assertions).toHaveLength(3);
+    });
+
+    it('generate skips excludedYears so regeneration preserves exclusions', () => {
+        // model-level guarantee behind the regenerate() wiring in admin-tests.js
+        const b = build();
+        b.excludeYear(2025);
+        b.generate({
+            event,
+            minYear: 2024,
+            maxYear: 2026,
+            excludedYears: b.model.excludes ?? [],
+        });
+        expect(b.model.assertions.map((a) => a.year)).toEqual([2024, 2026]);
+        expect(b.model.excludes).toEqual([2025]);
+    });
 });
 ```
 
@@ -238,7 +243,7 @@ In `assets/css/admin-tests.css`, replace:
 
 ```css
 .year-grid .testYearSpan.deleted {
-  opacity: 0.3;
+    opacity: 0.3;
 }
 ```
 
@@ -247,32 +252,32 @@ with (striped-bar values ported verbatim from `UnitTestInterface/assets/css/admi
 ```css
 .year-grid .testYearSpan.deleted,
 .legend-chip.deleted {
-  background: repeating-linear-gradient(
-    45deg,
-    red,
-    red 5px,
-    white 8px,
-    white 12px
-  );
-  cursor: not-allowed;
+    background: repeating-linear-gradient(
+        45deg,
+        red,
+        red 5px,
+        white 8px,
+        white 12px
+    );
+    cursor: not-allowed;
 }
 
 /* The base .testYearSpan padding stays in effect, so the clickable area is
    ~19px wide even though the visible stripe content is 3px (same as the
    original, where the 3px width sat inside the span's 3px/5px padding). */
 .year-grid .testYearSpan.deleted {
-  width: 3px;
-  height: 32px;
+    width: 3px;
+    height: 32px;
 }
 
 .year-grid .testYearSpan .hammerYear,
 .year-grid .testYearSpan .removeYear {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .year-grid .testYearSpan .hammerYear:hover,
 .year-grid .testYearSpan .removeYear:hover {
-  opacity: 1 !important;
+    opacity: 1 !important;
 }
 ```
 
@@ -288,77 +293,81 @@ In `assets/js/admin-tests.js`, replace the whole current `renderYearGrid()` func
  * no fixed month/day).
  */
 function yearDateAttrs(year) {
-  if (!builder.baseMonthDay) return { title: "", sunday: false };
-  const d = new Date(
-    Date.UTC(year, builder.baseMonthDay.month - 1, builder.baseMonthDay.day),
-  );
-  const sunday = d.getUTCDay() === 0;
-  const fmt = new Intl.DateTimeFormat(config.locale, {
-    dateStyle: "long",
-    timeZone: "UTC",
-  });
-  const title = sunday
-    ? i18n.sundayInYear
-        .replace("%1$s", String(year))
-        .replace("%2$s", fmt.format(d))
-    : fmt.format(d);
-  return { title, sunday };
+    if (!builder.baseMonthDay) return { title: '', sunday: false };
+    const d = new Date(
+        Date.UTC(
+            year,
+            builder.baseMonthDay.month - 1,
+            builder.baseMonthDay.day,
+        ),
+    );
+    const sunday = d.getUTCDay() === 0;
+    const fmt = new Intl.DateTimeFormat(config.locale, {
+        dateStyle: 'long',
+        timeZone: 'UTC',
+    });
+    const title = sunday
+        ? i18n.sundayInYear
+              .replace('%1$s', String(year))
+              .replace('%2$s', fmt.format(d))
+        : fmt.format(d);
+    return { title, sunday };
 }
 
 function renderYearGrid() {
-  const grid = document.getElementById("yearGrid");
-  const { minYear, maxYear } = sliderYears();
-  const tt = builder.model.test_type;
-  const excluded = new Set(builder.model.excludes ?? []);
-  const notExists = new Set(
-    builder.model.assertions
-      .filter((a) => a.assert === AssertType.EventNotExists)
-      .map((a) => a.year),
-  );
-  const pivot =
-    tt === TestType.ExactCorrespondenceSince
-      ? builder.model.year_since
-      : tt === TestType.ExactCorrespondenceUntil
-        ? builder.model.year_until
-        : null;
-  const showHammer = tt !== TestType.ExactCorrespondence;
-  grid.innerHTML = "";
-  for (let y = minYear; y <= maxYear; y++) {
-    const span = document.createElement("span");
-    span.className = `testYearSpan year-${y}`;
-    span.dataset.year = String(y);
-    if (excluded.has(y)) {
-      span.classList.add("deleted");
-      span.title = i18n.excludedRestore.replace("%s", String(y));
-      grid.appendChild(span);
-      continue;
+    const grid = document.getElementById('yearGrid');
+    const { minYear, maxYear } = sliderYears();
+    const tt = builder.model.test_type;
+    const excluded = new Set(builder.model.excludes ?? []);
+    const notExists = new Set(
+        builder.model.assertions
+            .filter((a) => a.assert === AssertType.EventNotExists)
+            .map((a) => a.year),
+    );
+    const pivot =
+        tt === TestType.ExactCorrespondenceSince
+            ? builder.model.year_since
+            : tt === TestType.ExactCorrespondenceUntil
+              ? builder.model.year_until
+              : null;
+    const showHammer = tt !== TestType.ExactCorrespondence;
+    grid.innerHTML = '';
+    for (let y = minYear; y <= maxYear; y++) {
+        const span = document.createElement('span');
+        span.className = `testYearSpan year-${y}`;
+        span.dataset.year = String(y);
+        if (excluded.has(y)) {
+            span.classList.add('deleted');
+            span.title = i18n.excludedRestore.replace('%s', String(y));
+            grid.appendChild(span);
+            continue;
+        }
+        if (showHammer) {
+            const hammer = document.createElement('i');
+            hammer.className = 'fas fa-hammer me-1 opacity-50 hammerYear';
+            hammer.setAttribute('role', 'button');
+            hammer.setAttribute('aria-hidden', 'true');
+            hammer.title = i18n.setYear;
+            span.appendChild(hammer);
+        }
+        span.appendChild(document.createTextNode(String(y)));
+        const xmark = document.createElement('i');
+        xmark.className = 'fas fa-circle-xmark ms-1 opacity-50 removeYear';
+        xmark.setAttribute('role', 'button');
+        xmark.setAttribute('aria-hidden', 'true');
+        xmark.title = i18n.removeYear;
+        span.appendChild(xmark);
+        const { title, sunday } = yearDateAttrs(y);
+        if (title) span.title = title;
+        if (y === pivot) {
+            span.classList.add('bg-info');
+        } else if (notExists.has(y)) {
+            span.classList.add('bg-warning');
+        } else if (sunday) {
+            span.classList.add('bg-light');
+        }
+        grid.appendChild(span);
     }
-    if (showHammer) {
-      const hammer = document.createElement("i");
-      hammer.className = "fas fa-hammer me-1 opacity-50 hammerYear";
-      hammer.setAttribute("role", "button");
-      hammer.setAttribute("aria-hidden", "true");
-      hammer.title = i18n.setYear;
-      span.appendChild(hammer);
-    }
-    span.appendChild(document.createTextNode(String(y)));
-    const xmark = document.createElement("i");
-    xmark.className = "fas fa-circle-xmark ms-1 opacity-50 removeYear";
-    xmark.setAttribute("role", "button");
-    xmark.setAttribute("aria-hidden", "true");
-    xmark.title = i18n.removeYear;
-    span.appendChild(xmark);
-    const { title, sunday } = yearDateAttrs(y);
-    if (title) span.title = title;
-    if (y === pivot) {
-      span.classList.add("bg-info");
-    } else if (notExists.has(y)) {
-      span.classList.add("bg-warning");
-    } else if (sunday) {
-      span.classList.add("bg-light");
-    }
-    grid.appendChild(span);
-  }
 }
 ```
 
@@ -370,28 +379,32 @@ Append to `e2e/admin-tests.spec.ts` (reuses the existing `stubEditor` helper and
 ONLY rendering; the exclude/restore interaction test is added in Task 3, where the click handler exists — every commit stays green.
 
 ```typescript
-test.describe("admin-tests year grid (stubbed)", () => {
-  test("spans carry hammer/x icons and Sunday highlighting", async ({
-    page,
-  }) => {
-    await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
-    await page.goto("/admin-tests.php");
-    await page.locator("#createTestBtn").click();
-    await page.locator("#tt-variable").check({ force: true });
-    await page.locator("#testEventKey").fill("StIgnatiusOfLoyola");
-    await page.locator("#testEventKey").dispatchEvent("change");
+test.describe('admin-tests year grid (stubbed)', () => {
+    test('spans carry hammer/x icons and Sunday highlighting', async ({
+        page,
+    }) => {
+        await stubEditor(page, {
+            is_global_admin: true,
+            editor: [],
+            admin: [],
+        });
+        await page.goto('/admin-tests.php');
+        await page.locator('#createTestBtn').click();
+        await page.locator('#tt-variable').check({ force: true });
+        await page.locator('#testEventKey').fill('StIgnatiusOfLoyola');
+        await page.locator('#testEventKey').dispatchEvent('change');
 
-    const span2005 = page.locator("#yearGrid .testYearSpan.year-2005");
-    await expect(span2005).toBeVisible();
-    // variable type → hammer present; x always present; 2005-07-31 is a Sunday
-    await expect(span2005.locator(".hammerYear")).toHaveCount(1);
-    await expect(span2005.locator(".removeYear")).toHaveCount(1);
-    await expect(span2005).toHaveClass(/bg-light/);
-    // exactCorrespondence type → hammer absent
-    await page.locator("#tt-exact").check({ force: true });
-    await expect(span2005.locator(".hammerYear")).toHaveCount(0);
-    await expect(span2005.locator(".removeYear")).toHaveCount(1);
-  });
+        const span2005 = page.locator('#yearGrid .testYearSpan.year-2005');
+        await expect(span2005).toBeVisible();
+        // variable type → hammer present; x always present; 2005-07-31 is a Sunday
+        await expect(span2005.locator('.hammerYear')).toHaveCount(1);
+        await expect(span2005.locator('.removeYear')).toHaveCount(1);
+        await expect(span2005).toHaveClass(/bg-light/);
+        // exactCorrespondence type → hammer absent
+        await page.locator('#tt-exact').check({ force: true });
+        await expect(span2005.locator('.hammerYear')).toHaveCount(0);
+        await expect(span2005.locator('.removeYear')).toHaveCount(1);
+    });
 });
 ```
 
@@ -418,7 +431,7 @@ git commit -m "feat(admin-tests): year-grid icons, Sunday highlighting, striped 
 **Files:**
 
 - Modify: `assets/js/admin-tests.js` — replace the existing `#yearGrid` click handler (the block starting with the comment `// For Since/Until types, clicking a year in the
-  overview grid sets the pivot`), and one line in `regenerate()`
+overview grid sets the pivot`), and one line in `regenerate()`
 
 **Interfaces:**
 
@@ -433,18 +446,18 @@ In `assets/js/admin-tests.js`, replace this entire existing block:
 ```javascript
 // For Since/Until types, clicking a year in the overview grid sets the pivot
 // (year_since / year_until) and re-splits the assertions around it.
-document.getElementById("yearGrid").addEventListener("click", (ev) => {
-  const span = ev.target.closest(".testYearSpan");
-  if (!span) return;
-  const tt = selectedTestType();
-  if (
-    tt !== TestType.ExactCorrespondenceSince &&
-    tt !== TestType.ExactCorrespondenceUntil
-  )
-    return;
-  builder.setPivot(Number(span.dataset.year));
-  builder.render(assertionsContainer);
-  renderYearGrid();
+document.getElementById('yearGrid').addEventListener('click', (ev) => {
+    const span = ev.target.closest('.testYearSpan');
+    if (!span) return;
+    const tt = selectedTestType();
+    if (
+        tt !== TestType.ExactCorrespondenceSince &&
+        tt !== TestType.ExactCorrespondenceUntil
+    )
+        return;
+    builder.setPivot(Number(span.dataset.year));
+    builder.render(assertionsContainer);
+    renderYearGrid();
 });
 ```
 
@@ -456,29 +469,29 @@ with:
 //   x-mark  → exclude the year (collapses to the striped bar)
 //   striped bar → restore the year
 //   span body   → no action (the icons are the affordances)
-document.getElementById("yearGrid").addEventListener("click", (ev) => {
-  const span = ev.target.closest(".testYearSpan");
-  if (!span) return;
-  const year = Number(span.dataset.year);
-  if (span.classList.contains("deleted")) {
-    builder.includeYear(year);
-  } else if (ev.target.closest(".removeYear")) {
-    builder.excludeYear(year);
-  } else if (ev.target.closest(".hammerYear")) {
-    const tt = selectedTestType();
-    if (
-      tt === TestType.ExactCorrespondenceSince ||
-      tt === TestType.ExactCorrespondenceUntil
-    ) {
-      builder.setPivot(year);
-    } else if (tt === TestType.VariableCorrespondence) {
-      builder.toggleAssert(year);
+document.getElementById('yearGrid').addEventListener('click', (ev) => {
+    const span = ev.target.closest('.testYearSpan');
+    if (!span) return;
+    const year = Number(span.dataset.year);
+    if (span.classList.contains('deleted')) {
+        builder.includeYear(year);
+    } else if (ev.target.closest('.removeYear')) {
+        builder.excludeYear(year);
+    } else if (ev.target.closest('.hammerYear')) {
+        const tt = selectedTestType();
+        if (
+            tt === TestType.ExactCorrespondenceSince ||
+            tt === TestType.ExactCorrespondenceUntil
+        ) {
+            builder.setPivot(year);
+        } else if (tt === TestType.VariableCorrespondence) {
+            builder.toggleAssert(year);
+        }
+    } else {
+        return;
     }
-  } else {
-    return;
-  }
-  builder.render(assertionsContainer);
-  renderYearGrid();
+    builder.render(assertionsContainer);
+    renderYearGrid();
 });
 ```
 
@@ -497,11 +510,11 @@ to:
 // skips excluded years, so without this every regeneration would
 // silently restore them.
 builder.generate({
-  event,
-  minYear,
-  maxYear,
-  pivotYear: pivot,
-  excludedYears: builder.model.excludes ?? [],
+    event,
+    minYear,
+    maxYear,
+    pivotYear: pivot,
+    excludedYears: builder.model.excludes ?? [],
 });
 ```
 
@@ -510,33 +523,33 @@ builder.generate({
 Inside the `test.describe("admin-tests year grid (stubbed)", …)` block added in Task 2, add:
 
 ```typescript
-  test("exclude collapses to the striped bar and restore brings the card back", async ({
+test('exclude collapses to the striped bar and restore brings the card back', async ({
     page,
-  }) => {
+}) => {
     await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
-    await page.goto("/admin-tests.php");
-    await page.locator("#createTestBtn").click();
-    await page.locator("#tt-variable").check({ force: true });
-    await page.locator("#testEventKey").fill("StIgnatiusOfLoyola");
-    await page.locator("#testEventKey").dispatchEvent("change");
+    await page.goto('/admin-tests.php');
+    await page.locator('#createTestBtn').click();
+    await page.locator('#tt-variable').check({ force: true });
+    await page.locator('#testEventKey').fill('StIgnatiusOfLoyola');
+    await page.locator('#testEventKey').dispatchEvent('change');
 
-    const span2005 = page.locator("#yearGrid .testYearSpan.year-2005");
+    const span2005 = page.locator('#yearGrid .testYearSpan.year-2005');
     await expect(span2005).toBeVisible();
 
     // exclude: card disappears, span collapses to the striped bar
-    await span2005.locator(".removeYear").click();
+    await span2005.locator('.removeYear').click();
     await expect(span2005).toHaveClass(/deleted/);
     await expect(page.locator('.assertion-card[data-year="2005"]')).toHaveCount(
-      0,
+        0,
     );
 
     // restore: card returns, stripes gone
     await span2005.click();
     await expect(span2005).not.toHaveClass(/deleted/);
     await expect(page.locator('.assertion-card[data-year="2005"]')).toHaveCount(
-      1,
+        1,
     );
-  });
+});
 ```
 
 Run: `yarn playwright test e2e/admin-tests.spec.ts --project=chromium -g "year grid"`
@@ -596,18 +609,18 @@ Append to `assets/css/admin-tests.css` (AFTER the shared `.deleted` rule from Ta
 ```css
 /* Legend chips reuse the exact grid classes so legend and grid cannot drift. */
 .legend-chip {
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
-  border: 1px solid var(--bs-border-color);
-  border-radius: 0.25rem;
-  vertical-align: text-bottom;
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.25rem;
+    vertical-align: text-bottom;
 }
 
 .legend-chip.deleted {
-  width: 5px;
-  height: 1.25rem;
-  border: none;
+    width: 5px;
+    height: 1.25rem;
+    border: none;
 }
 ```
 
@@ -616,14 +629,14 @@ Append to `assets/css/admin-tests.css` (AFTER the shared `.deleted` rule from Ta
 Inside the `test.describe('admin-tests year grid (stubbed)', …)` block from Task 2, add:
 
 ```typescript
-test("legend row is visible with all five chips", async ({ page }) => {
-  await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
-  await page.goto("/admin-tests.php");
-  await page.locator("#createTestBtn").click();
-  const legend = page.locator("#yearGridLegend");
-  await expect(legend).toBeVisible();
-  await expect(legend.locator(".legend-chip")).toHaveCount(5);
-  await expect(legend.locator(".legend-chip.deleted")).toHaveCount(1);
+test('legend row is visible with all five chips', async ({ page }) => {
+    await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
+    await page.goto('/admin-tests.php');
+    await page.locator('#createTestBtn').click();
+    const legend = page.locator('#yearGridLegend');
+    await expect(legend).toBeVisible();
+    await expect(legend.locator('.legend-chip')).toHaveCount(5);
+    await expect(legend.locator('.legend-chip.deleted')).toHaveCount(1);
 });
 ```
 

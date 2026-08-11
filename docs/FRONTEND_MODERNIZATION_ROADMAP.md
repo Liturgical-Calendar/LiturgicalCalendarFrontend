@@ -233,11 +233,13 @@ import { LitElement, html, css } from 'https://cdn.jsdelivr.net/npm/lit@3/+esm';
 export class CalendarSelector extends LitElement {
     static properties = {
         calendars: { type: Array },
-        selected: { type: String }
+        selected: { type: String },
     };
 
     static styles = css`
-        select { @apply form-control; }
+        select {
+            @apply form-control;
+        }
     `;
 
     constructor() {
@@ -251,19 +253,26 @@ export class CalendarSelector extends LitElement {
     render() {
         return html`
             <select @change=${this.#handleChange}>
-                ${this.calendars.map(cal => html`
-                    <option value=${cal.id} ?selected=${cal.id === this.selected}>
-                        ${cal.name}
-                    </option>
-                `)}
+                ${this.calendars.map(
+                    (cal) => html`
+                        <option
+                            value=${cal.id}
+                            ?selected=${cal.id === this.selected}
+                        >
+                            ${cal.name}
+                        </option>
+                    `,
+                )}
             </select>
         `;
     }
 
     #handleChange(e) {
-        this.dispatchEvent(new CustomEvent('calendar-selected', {
-            detail: { calendarId: e.target.value }
-        }));
+        this.dispatchEvent(
+            new CustomEvent('calendar-selected', {
+                detail: { calendarId: e.target.value },
+            }),
+        );
     }
 }
 
@@ -819,14 +828,14 @@ in the top candidate frameworks to evaluate them against real requirements.
 
 **Evaluation Criteria**:
 
-| Criterion            | Weight | Description                              |
-|----------------------|--------|------------------------------------------|
-| i18n Support         | 25%    | Weblate integration, ICU language support|
-| Developer Familiarity| 20%    | Likelihood of attracting contributors    |
-| Form Handling        | 20%    | Complex form support, validation         |
-| Schema Integration   | 15%    | Coupling with API JSON schemas           |
-| Maintainability      | 10%    | Code organization, testing               |
-| Build Complexity     | 10%    | Development and deployment simplicity    |
+| Criterion             | Weight | Description                               |
+| --------------------- | ------ | ----------------------------------------- |
+| i18n Support          | 25%    | Weblate integration, ICU language support |
+| Developer Familiarity | 20%    | Likelihood of attracting contributors     |
+| Form Handling         | 20%    | Complex form support, validation          |
+| Schema Integration    | 15%    | Coupling with API JSON schemas            |
+| Maintainability       | 10%    | Code organization, testing                |
+| Build Complexity      | 10%    | Development and deployment simplicity     |
 
 **PoC Scope**: Each proof-of-concept should implement:
 
@@ -848,7 +857,7 @@ i18n is a critical requirement. The application must support:
 ### Weblate-Compatible Formats
 
 | Format                | Weblate Support | Frameworks                   |
-|-----------------------|-----------------|------------------------------|
+| --------------------- | --------------- | ---------------------------- |
 | gettext (`.po`/`.mo`) | Excellent       | Laravel, PHP, Python         |
 | i18next JSON          | Excellent       | Next.js, Nuxt.js, React, Vue |
 | JSON (nested)         | Good            | Most JS frameworks           |
@@ -991,7 +1000,7 @@ export default defineNuxtConfig({
         defaultLocale: 'en',
         lazy: true,
         langDir: 'locales/',
-    }
+    },
 });
 ```
 
@@ -1050,7 +1059,7 @@ module.exports = withNextIntl({
     i18n: {
         locales: ['en', 'it', 'la'],
         defaultLocale: 'en',
-    }
+    },
 });
 ```
 
@@ -1067,7 +1076,7 @@ module.exports = withNextIntl({
 ### i18n Comparison Matrix
 
 | Feature           | Laravel + gettext | Next.js + next-intl | Nuxt.js + @nuxtjs/i18n |
-|-------------------|-------------------|---------------------|------------------------|
+| ----------------- | ----------------- | ------------------- | ---------------------- |
 | Weblate Format    | `.po`/`.mo`       | JSON                | JSON                   |
 | ICU MessageFormat | Via php-intl      | Full support        | Full support           |
 | Pluralization     | gettext native    | ICU plural rules    | ICU plural rules       |
@@ -1192,12 +1201,12 @@ class StoreDiocesanCalendarRequest extends FormRequest
 
 To attract contributors, framework popularity matters:
 
-| Framework        | GitHub Stars    | NPM Downloads/week | Stack Overflow Questions |
-|------------------|-----------------|--------------------| -------------------------|
-| React/Next.js    | 120k+ / 120k+   | 25M+               | 450k+                    |
-| Vue/Nuxt.js      | 46k+ / 52k+     | 5M+                | 100k+                    |
-| Laravel          | 77k+            | N/A (PHP)          | 180k+                    |
-| Svelte/SvelteKit | 77k+ / 17k+     | 800k+              | 15k+                     |
+| Framework        | GitHub Stars  | NPM Downloads/week | Stack Overflow Questions |
+| ---------------- | ------------- | ------------------ | ------------------------ |
+| React/Next.js    | 120k+ / 120k+ | 25M+               | 450k+                    |
+| Vue/Nuxt.js      | 46k+ / 52k+   | 5M+                | 100k+                    |
+| Laravel          | 77k+          | N/A (PHP)          | 180k+                    |
+| Svelte/SvelteKit | 77k+ / 17k+   | 800k+              | 15k+                     |
 
 **Analysis**:
 
@@ -1229,11 +1238,11 @@ Use the Tailwind Play CDN for development - no build step required:
                         violet: '#800080',
                         rose: '#ff007f',
                         black: '#000000',
-                    }
-                }
-            }
-        }
-    }
+                    },
+                },
+            },
+        },
+    };
 </script>
 ```
 
@@ -1250,7 +1259,7 @@ This is a one-time build, not a continuous compilation requirement.
 ### Component Libraries for Web Components
 
 | Library                     | Description                          | Build Required     |
-|-----------------------------|--------------------------------------|--------------------|
+| --------------------------- | ------------------------------------ | ------------------ |
 | **Shoelace**                | Full UI library, Shadcn-like quality | No (CDN available) |
 | **Spectrum Web Components** | Adobe's design system                | No (CDN available) |
 | **Lion Web Components**     | ING Bank's accessible components     | No                 |
@@ -1268,8 +1277,14 @@ developer experience for Web Components:
 
 ```html
 <!-- Shoelace via CDN - no build required -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2/cdn/themes/light.css" />
-<script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2/cdn/shoelace-autoloader.js"></script>
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2/cdn/themes/light.css"
+/>
+<script
+    type="module"
+    src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2/cdn/shoelace-autoloader.js"
+></script>
 
 <!-- Use components -->
 <sl-button variant="primary">Save Calendar</sl-button>
@@ -1433,7 +1448,7 @@ for better integration and type safety.
 ### Final Comparison (Top 3 Candidates for PoC)
 
 | Criterion              | Weight | Laravel + Livewire | Next.js (React)     | Nuxt.js (Vue)   |
-|------------------------|--------|--------------------| --------------------|-----------------|
+| ---------------------- | ------ | ------------------ | ------------------- | --------------- |
 | i18n / Weblate Support | 25%    | 9 (gettext)        | 10 (JSON)           | 10 (JSON)       |
 | Developer Familiarity  | 20%    | 8 (PHP devs)       | 10 (largest)        | 7               |
 | Form Handling          | 20%    | 10                 | 9 (React Hook Form) | 9 (VeeValidate) |
@@ -1497,7 +1512,7 @@ But the PoC process will reveal practical considerations that scores can't captu
 Based on your input:
 
 | Question              | Answer                                             |
-|-----------------------|----------------------------------------------------|
+| --------------------- | -------------------------------------------------- |
 | Team Experience       | Some React experience                              |
 | External Contributors | None currently                                     |
 | Timeline              | No pressure, take time needed                      |
@@ -1519,19 +1534,19 @@ The frontend currently has **multiple separate administrative interfaces** sprea
 
 **LiturgicalCalendarFrontend:**
 
-| Page            | Purpose                                      | Auth Method        | Status      |
-|-----------------|----------------------------------------------|--------------------|-------------|
-| `extending.php` | Create/edit national, diocesan, wider region | JWT (modern)       | Active      |
-| `admin.php`     | Edit missals, decrees JSON files             | HTTP Basic (legacy)| Limited use |
-| `decrees.php`   | View decrees from API                        | None (read-only)   | Read-only   |
+| Page            | Purpose                                      | Auth Method         | Status      |
+| --------------- | -------------------------------------------- | ------------------- | ----------- |
+| `extending.php` | Create/edit national, diocesan, wider region | JWT (modern)        | Active      |
+| `admin.php`     | Edit missals, decrees JSON files             | HTTP Basic (legacy) | Limited use |
+| `decrees.php`   | View decrees from API                        | None (read-only)    | Read-only   |
 
 **UnitTestInterface (separate repository):**
 
-| Page            | Purpose                                      | Auth Method        | Status      |
-|-----------------|----------------------------------------------|--------------------|-------------|
-| `index.php`     | Run unit tests via WebSocket, view results   | HTTP Basic (legacy)| Active      |
-| `admin.php`     | Create/edit unit test definitions            | HTTP Basic (legacy)| Active      |
-| `resources.php` | Validate source data against JSON schemas    | HTTP Basic (legacy)| Active      |
+| Page            | Purpose                                    | Auth Method         | Status |
+| --------------- | ------------------------------------------ | ------------------- | ------ |
+| `index.php`     | Run unit tests via WebSocket, view results | HTTP Basic (legacy) | Active |
+| `admin.php`     | Create/edit unit test definitions          | HTTP Basic (legacy) | Active |
+| `resources.php` | Validate source data against JSON schemas  | HTTP Basic (legacy) | Active |
 
 **Current Problems:**
 
@@ -1829,28 +1844,28 @@ UnitTestInterface (current)        →    Admin Dashboard (future)
 **Tasks:**
 
 1. **Migrate Test Runner UI**
-   - Port WebSocket connection logic to admin dashboard
-   - Create test results display component with real-time updates
-   - Implement test filtering (by calendar, category, status)
-   - Add progress indicators and summary statistics
+    - Port WebSocket connection logic to admin dashboard
+    - Create test results display component with real-time updates
+    - Implement test filtering (by calendar, category, status)
+    - Add progress indicators and summary statistics
 
 2. **Migrate Test Editor**
-   - Port `AssertionsBuilder.js` for test assertion creation
-   - Create test definition form (event selection, assertion types)
-   - Implement CRUD operations via API `/tests` endpoint
-   - Add test preview/dry-run capability
+    - Port `AssertionsBuilder.js` for test assertion creation
+    - Create test definition form (event selection, assertion types)
+    - Implement CRUD operations via API `/tests` endpoint
+    - Add test preview/dry-run capability
 
 3. **Migrate Source Validation**
-   - Port schema validation UI
-   - Add validation for all source data types:
-     - Calendar definitions (national, diocesan, wider region)
-     - Roman Missal data (Proprium de Sanctis)
-     - Decree data
-   - Display validation results with error details
+    - Port schema validation UI
+    - Add validation for all source data types:
+        - Calendar definitions (national, diocesan, wider region)
+        - Roman Missal data (Proprium de Sanctis)
+        - Decree data
+    - Display validation results with error details
 
 4. **Authentication Migration**
-   - Replace HTTP Basic auth with JWT
-   - Use shared auth module from admin dashboard
+    - Replace HTTP Basic auth with JWT
+    - Use shared auth module from admin dashboard
 
 **Test Editor UI Components:**
 
@@ -1877,7 +1892,9 @@ UnitTestInterface (current)        →    Admin Dashboard (future)
             <div class="col-md-4">
                 <label>Test Type</label>
                 <select id="testType" class="form-select">
-                    <option value="exactCorrespondence">Exact Date Match</option>
+                    <option value="exactCorrespondence">
+                        Exact Date Match
+                    </option>
                     <option value="eventExists">Event Exists</option>
                     <option value="eventNotExists">Event Not Exists</option>
                 </select>
@@ -1931,10 +1948,12 @@ class TestRunner {
     }
 
     runTest(testDefinition) {
-        this.ws.send(JSON.stringify({
-            action: 'executeUnitTest',
-            ...testDefinition
-        }));
+        this.ws.send(
+            JSON.stringify({
+                action: 'executeUnitTest',
+                ...testDefinition,
+            }),
+        );
     }
 
     handleResult(event) {
@@ -2029,13 +2048,13 @@ class TestRunner {
 
 ### Success Metrics
 
-| Metric                           | Target                         |
-|----------------------------------|--------------------------------|
-| Single entry point for all admin | ✓ Unified `/admin` route       |
-| Consistent authentication        | ✓ JWT only, no HTTP Basic      |
-| Mobile-responsive admin UI       | ✓ All features work on mobile  |
-| Time to complete common tasks    | < current time                 |
-| User satisfaction                | Positive feedback              |
+| Metric                           | Target                        |
+| -------------------------------- | ----------------------------- |
+| Single entry point for all admin | ✓ Unified `/admin` route      |
+| Consistent authentication        | ✓ JWT only, no HTTP Basic     |
+| Mobile-responsive admin UI       | ✓ All features work on mobile |
+| Time to complete common tasks    | < current time                |
+| User satisfaction                | Positive feedback             |
 
 ### Dependencies
 

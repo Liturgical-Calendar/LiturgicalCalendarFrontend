@@ -119,42 +119,42 @@ Leave these empty to use the national calendar settings.
 
 ### Settings
 
-| Field                       | Required | Description                                    |
-|-----------------------------|----------|------------------------------------------------|
-| Depends on national calendar| Yes      | Parent national calendar                       |
-| Diocese                     | Yes      | Diocese name                                   |
-| Diocesan group              | No       | Group for pooling calendar data                |
-| Locales                     | Yes      | Supported languages                            |
-| Current Localization        | Yes      | Language being edited                          |
-| Timezone                    | Yes      | Diocese timezone                               |
+| Field                        | Required | Description                     |
+| ---------------------------- | -------- | ------------------------------- |
+| Depends on national calendar | Yes      | Parent national calendar        |
+| Diocese                      | Yes      | Diocese name                    |
+| Diocesan group               | No       | Group for pooling calendar data |
+| Locales                      | Yes      | Supported languages             |
+| Current Localization         | Yes      | Language being edited           |
+| Timezone                     | Yes      | Diocese timezone                |
 
 ### Event Fields
 
-| Field      | Required | Description                               |
-|------------|----------|-------------------------------------------|
-| Event Key  | Yes      | Unique identifier for the event           |
-| Name       | Yes      | Display name in current locale            |
-| Day        | Yes      | Day of the month (1-31)                   |
-| Month      | Yes      | Month (January-December)                  |
-| Since      | Yes      | Year from which event takes effect        |
-| Until      | No       | Year until which event applies            |
+| Field     | Required | Description                        |
+| --------- | -------- | ---------------------------------- |
+| Event Key | Yes      | Unique identifier for the event    |
+| Name      | Yes      | Display name in current locale     |
+| Day       | Yes      | Day of the month (1-31)            |
+| Month     | Yes      | Month (January-December)           |
+| Since     | Yes      | Year from which event takes effect |
+| Until     | No       | Year until which event applies     |
 
 ### Override Settings
 
-| Field         | Required | Description                              |
-|---------------|----------|------------------------------------------|
-| Epiphany      | No       | Override national Epiphany setting       |
-| Ascension     | No       | Override national Ascension setting      |
-| Corpus Christi| No       | Override national Corpus Christi setting |
+| Field          | Required | Description                              |
+| -------------- | -------- | ---------------------------------------- |
+| Epiphany       | No       | Override national Epiphany setting       |
+| Ascension      | No       | Override national Ascension setting      |
+| Corpus Christi | No       | Override national Corpus Christi setting |
 
 ## Available Actions
 
 Diocesan calendars support these actions:
 
-| Action        | Description                                   |
-|---------------|-----------------------------------------------|
-| `makePatron`  | Designate a saint as diocesan patron          |
-| `createNew`   | Create a new liturgical event                 |
+| Action       | Description                          |
+| ------------ | ------------------------------------ |
+| `makePatron` | Designate a saint as diocesan patron |
+| `createNew`  | Create a new liturgical event        |
 
 > **Note:** The `setProperty` and `moveFeast` actions are **not available** for diocesan calendars.
 > These are only supported by national calendars.
@@ -169,8 +169,8 @@ Diocesan calendars support these actions:
 6. Set Current Localization to `en_US`
 7. Select timezone: **America/New_York**
 8. In Solemnities tab:
-   - Add principal patron
-   - Add cathedral dedication date
+    - Add principal patron
+    - Add cathedral dedication date
 9. Navigate through Feasts, Memorials, Optional Memorials tabs to add events
 10. Configure any diocesan overrides if needed
 11. Click **SAVE DIOCESAN CALENDAR**

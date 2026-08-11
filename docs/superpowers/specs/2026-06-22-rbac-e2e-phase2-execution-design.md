@@ -15,11 +15,11 @@ resource-admin scoping the scoped-admin-review feature now enables. The suite fo
 
 ## Why this is now buildable
 
-The original design's scenarios assumed resource-admins could *review through the UI*. They could not — the
+The original design's scenarios assumed resource-admins could _review through the UI_. They could not — the
 frontend locked them out — which is why Phase 2 paused to build the scoped-admin-review feature. That
 feature is now merged (API on `development` via #656; frontend on #345), so every scenario that depends on a
 resource-admin seeing/acting on a scoped request is unblocked. This document records the decisions that turn
-the original design into an executable plan; the scenario *intent* is unchanged from the original design.
+the original design into an executable plan; the scenario _intent_ is unchanged from the original design.
 
 ## Decisions (this round)
 
@@ -35,8 +35,8 @@ the original design into an executable plan; the scenario *intent* is unchanged 
 
 ## Seeding model
 
-Three user classes in the `users.ts` matrix (11 users — unchanged matrix; what changes is *what gets
-seeded when*):
+Three user classes in the `users.ts` matrix (11 users — unchanged matrix; what changes is _what gets
+seeded when_):
 
 The 11 users split by **how they enter the system** (the two `REGISTRATION_USER_IDS` —
 `cei-admin`, `usccb-editor` — are never seeded; everyone else is) and **whether their FGA grant is seeded
@@ -48,10 +48,10 @@ or earned via the UI**:
   `calendar_editor` role + login + their `admin` FGA tuple (stable, seeded at setup; lets them review).
 - **Seeded requester-editors** — `cei-editor`, `rome-editor`, `grc-editor`, `europe-editor`. Seeded:
   account + `calendar_editor` role + login, **no FGA tuple**. Grant is earned via `request-access.php`
-  in-spec (the approval outcome); a spec needing it as a *precondition* (e.g. scenario 10) seeds it
+  in-spec (the approval outcome); a spec needing it as a _precondition_ (e.g. scenario 10) seeds it
   explicitly.
 - **Registration users** — `cei-admin`, `usccb-editor`. **Not seeded at all**: they drive the real Zitadel
-  self-registration UI + Mailpit verification in-spec (scenarios 01/04). When a *later* spec needs
+  self-registration UI + Mailpit verification in-spec (scenarios 01/04). When a _later_ spec needs
   `cei-admin` to already be an IT admin (e.g. scenario 02), it seeds `cei-admin = admin@IT` as a
   precondition.
 
@@ -71,7 +71,7 @@ leaves the two registration users untouched.
    address, extract the verification link. Used by the 2 real-registration scenarios. **Highest-risk piece**
    (real registration UI + cross-org Zitadel fix + email round-trip).
 4. **`cleanup.ts`** (extend) — beyond truncating `access_requests`/`audit_log`/`user_notification_state`
-   and deleting seeded users + their *seeded* tuples, it must remove FGA tuples + role grants **created
+   and deleting seeded users + their _seeded_ tuples, it must remove FGA tuples + role grants **created
    during specs** (approval outcomes) and run `gitRestoreApiData()` to revert scenario 10's calendar edits.
    Approach: derive tuples-to-delete from the matrix + any per-spec grants, and reset API source data via the
    existing git-restore mechanism the original design references.
@@ -88,7 +88,7 @@ independent and seeds its own preconditions.
 2. **02 — `cei-editor` requests `edit`@IT** (precond: seed `cei-admin = admin@IT`). Assert **both**
    `super-admin` and `cei-admin` see it via the scoped review UI, `usccb-admin` does **not** → cei-admin
    rejects → super-admin sees the rejection → cei-editor revises → cei-admin grants → super-admin sees the
-   grant. *(Exercises the scoped-admin-review feature head-on.)*
+   grant. _(Exercises the scoped-admin-review feature head-on.)_
 3. **03 — `usccb-admin` requests `admin`@USA** (real or seeded-precondition admin). Assert **`cei-admin`
    does NOT see it**, only `super-admin` → super-admin grants.
 4. **04 — `usccb-editor` requests `edit`@USA (real registration).** Register via UI + Mailpit → request →

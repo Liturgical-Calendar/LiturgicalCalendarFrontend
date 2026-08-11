@@ -75,17 +75,17 @@ is needed. Following the `liturgyOfAnyDay.js` precedent:
 const apiClient = await ApiClient.init(BaseUrl);
 
 const riteSelect = new RiteSelect(lang)
-  .class("form-select")
-  .id("riteSelect")
-  .label({ text: Messages["Select rite"], class: "form-label" });
-riteSelect.appendTo("#riteSelectContainer");
+    .class('form-select')
+    .id('riteSelect')
+    .label({ text: Messages['Select rite'], class: 'form-label' });
+riteSelect.appendTo('#riteSelectContainer');
 
 const calendarSelect = new CalendarSelect(lang)
-  .class("form-select")
-  .id("calendarSelect")
-  .label({ text: Messages["Select calendar"], class: "form-label" })
-  .allowNull(true);
-calendarSelect.appendTo("#calendarSelectContainer");
+    .class('form-select')
+    .id('calendarSelect')
+    .label({ text: Messages['Select calendar'], class: 'form-label' })
+    .allowNull(true);
+calendarSelect.appendTo('#calendarSelectContainer');
 
 calendarSelect.linkToRiteSelect(riteSelect);
 ```

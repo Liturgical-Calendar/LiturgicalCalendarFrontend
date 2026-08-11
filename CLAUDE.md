@@ -161,8 +161,8 @@ API requests use `credentials: 'include'` - the API reads tokens from HttpOnly c
 ```javascript
 const response = await fetch(apiUrl, {
     method: 'POST',
-    headers: { 'Accept': 'application/json' },
-    credentials: 'include'  // Sends HttpOnly cookies automatically
+    headers: { Accept: 'application/json' },
+    credentials: 'include', // Sends HttpOnly cookies automatically
 });
 ```
 
@@ -170,8 +170,8 @@ const response = await fetch(apiUrl, {
 
 ```javascript
 const response = await fetch(MetadataUrl, {
-    headers: { 'Accept': 'application/json' },
-    credentials: 'omit'  // Required: API returns Access-Control-Allow-Origin: *
+    headers: { Accept: 'application/json' },
+    credentials: 'omit', // Required: API returns Access-Control-Allow-Origin: *
 });
 ```
 
@@ -227,11 +227,11 @@ TEST_PASSWORD=your_test_password
 
 ### Calendar Schema Differences
 
-| Calendar Type | Allowed Actions                                                      |
-|---------------|----------------------------------------------------------------------|
-| National      | `setProperty`, `createNew`, `moveFeast`, `makeDoctor`, `makePatron`  |
-| Wider Region  | `createNew`, `makePatron` only                                       |
-| Diocesan      | `createNew`, `makePatron` only                                       |
+| Calendar Type | Allowed Actions                                                     |
+| ------------- | ------------------------------------------------------------------- |
+| National      | `setProperty`, `createNew`, `moveFeast`, `makeDoctor`, `makePatron` |
+| Wider Region  | `createNew`, `makePatron` only                                      |
+| Diocesan      | `createNew`, `makePatron` only                                      |
 
 WiderRegion names must be: `Americas`, `Europe`, `Asia`, `Africa`, or `Oceania`.
 
@@ -286,18 +286,18 @@ Notes:
 - `litcal-api` healthcheck (`GET /calendars`) doesn't depend on Zitadel, so it
   reports healthy even when its PAT is invalid. Verify Zitadel auth explicitly:
 
-  ```bash
-  docker compose exec litcal-api bash -c '
-    curl -sS -X POST http://zitadel:8080/management/v1/users/_search \
-      -H "Authorization: Bearer $ZITADEL_MACHINE_TOKEN" \
-      -H "Host: localhost" \
-      -H "Content-Type: application/json" \
-      -d "{\"limit\":1}" | head -c 200
-  '
-  ```
+    ```bash
+    docker compose exec litcal-api bash -c '
+      curl -sS -X POST http://zitadel:8080/management/v1/users/_search \
+        -H "Authorization: Bearer $ZITADEL_MACHINE_TOKEN" \
+        -H "Host: localhost" \
+        -H "Content-Type: application/json" \
+        -d "{\"limit\":1}" | head -c 200
+    '
+    ```
 
-  A 401 / `Errors.Token.Invalid` means the PAT is stale and you need
-  `--force-secrets`.
+    A 401 / `Errors.Token.Invalid` means the PAT is stale and you need
+    `--force-secrets`.
 
 ### After re-running `setup-zitadel.sh`
 

@@ -70,7 +70,7 @@ concurrent agents", "API runs in Docker", and the WebSocket gotchas.
 - **Editor to port:** in the UnitTestInterface repo — `admin.php`, `assets/js/admin.js`,
   `assets/js/AssertionsBuilder.js`, `assets/css/multi-range-slider.css`, `components/NewTestModal.php`.
   Assertion shape: `{year:int, expected_value:RFC3339|null, assert:'eventNotExists'|'eventExists
-  AND hasExpectedDate', assertion:string, comment?:string}`. `LitCalTest` fields: `name`,
+AND hasExpectedDate', assertion:string, comment?:string}`. `LitCalTest` fields: `name`,
   `event_key`, `description`, `test_type` (`exactCorrespondence`|`variableCorrespondence`),
   `assertions`, `applies_to`/`excludes`, `year_since`/`year_until`. Schema:
   API repo `jsondata/schemas/LitCalTest.json`.

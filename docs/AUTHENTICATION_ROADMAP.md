@@ -32,29 +32,29 @@ The frontend can now proceed with implementing JWT client support as outlined in
 The frontend currently performs the following write operations that will require authentication once the API implements JWT protection:
 
 1. **Calendar Deletion** (`assets/js/extending.js:1740`)
-   - `DELETE` requests to remove wider region, national, or diocesan calendar definitions
-   - Function: `deleteCalendarConfirmClicked()`
+    - `DELETE` requests to remove wider region, national, or diocesan calendar definitions
+    - Function: `deleteCalendarConfirmClicked()`
 
 2. **Calendar Creation** (`assets/js/extending.js:2090`)
-   - `POST` requests to create new calendar definitions
-   - Function: `formSubmit()` with `formAction === 'CREATE_CALENDAR'`
+    - `POST` requests to create new calendar definitions
+    - Function: `formSubmit()` with `formAction === 'CREATE_CALENDAR'`
 
 3. **Calendar Updates** (`assets/js/extending.js:2929`)
-   - `PATCH`/`PUT` requests to modify existing calendar definitions
-   - Function: `formSubmit()` with `formAction === 'UPDATE_CALENDAR'`
+    - `PATCH`/`PUT` requests to modify existing calendar definitions
+    - Function: `formSubmit()` with `formAction === 'UPDATE_CALENDAR'`
 
 ### Current Request Pattern
 
 ```javascript
 const headers = new Headers({
-    'Accept': 'application/json',
-    'Accept-Language': API.locale
+    Accept: 'application/json',
+    'Accept-Language': API.locale,
 });
 
 const request = new Request(API.path, {
     method: 'DELETE', // or 'POST', 'PATCH'
     headers: headers,
-    body: formData
+    body: formData,
 });
 ```
 
@@ -99,35 +99,70 @@ const request = new Request(API.path, {
 ```html
 <!-- templates/partials/login-modal.php -->
 <div class="modal fade" id="loginModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Administrator Login</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <form id="loginForm">
-          <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control" id="username" required>
-          </div>
-          <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" required>
-          </div>
-          <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" id="rememberMe">
-            <label class="form-check-label" for="rememberMe">Remember me</label>
-          </div>
-          <div class="alert alert-danger d-none" id="loginError"></div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" id="loginSubmit">Login</button>
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Administrator Login</h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm">
+                    <div class="mb-3">
+                        <label for="username" class="form-label"
+                            >Username</label
+                        >
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="username"
+                            required
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label"
+                            >Password</label
+                        >
+                        <input
+                            type="password"
+                            class="form-control"
+                            id="password"
+                            required
+                        />
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input
+                            type="checkbox"
+                            class="form-check-input"
+                            id="rememberMe"
+                        />
+                        <label class="form-check-label" for="rememberMe"
+                            >Remember me</label
+                        >
+                    </div>
+                    <div
+                        class="alert alert-danger d-none"
+                        id="loginError"
+                    ></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-primary" id="loginSubmit">
+                    Login
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 ```
 
@@ -154,14 +189,17 @@ const Auth = {
      */
     async login(username, password, rememberMe = false) {
         try {
-            const response = await fetch(`${API.protocol}://${API.host}:${API.port}/auth/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+            const response = await fetch(
+                `${API.protocol}://${API.host}:${API.port}/auth/login`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                    },
+                    body: JSON.stringify({ username, password }),
                 },
-                body: JSON.stringify({ username, password })
-            });
+            );
 
             if (!response.ok) {
                 const error = await response.json();
@@ -194,8 +232,10 @@ const Auth = {
      * Get stored JWT token
      */
     getToken() {
-        return localStorage.getItem(this.TOKEN_KEY) ||
-               sessionStorage.getItem(this.TOKEN_KEY);
+        return (
+            localStorage.getItem(this.TOKEN_KEY) ||
+            sessionStorage.getItem(this.TOKEN_KEY)
+        );
     },
 
     /**
@@ -210,8 +250,10 @@ const Auth = {
      * Get refresh token
      */
     getRefreshToken() {
-        return localStorage.getItem(this.REFRESH_KEY) ||
-               sessionStorage.getItem(this.REFRESH_KEY);
+        return (
+            localStorage.getItem(this.REFRESH_KEY) ||
+            sessionStorage.getItem(this.REFRESH_KEY)
+        );
     },
 
     /**
@@ -251,14 +293,17 @@ const Auth = {
         }
 
         try {
-            const response = await fetch(`${API.protocol}://${API.host}:${API.port}/auth/refresh`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+            const response = await fetch(
+                `${API.protocol}://${API.host}:${API.port}/auth/refresh`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                    },
+                    body: JSON.stringify({ refresh_token: refreshToken }),
                 },
-                body: JSON.stringify({ refresh_token: refreshToken })
-            });
+            );
 
             if (!response.ok) {
                 throw new Error('Token refresh failed');
@@ -281,13 +326,16 @@ const Auth = {
 
         if (token) {
             try {
-                await fetch(`${API.protocol}://${API.host}:${API.port}/auth/logout`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Accept': 'application/json'
-                    }
-                });
+                await fetch(
+                    `${API.protocol}://${API.host}:${API.port}/auth/logout`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            Accept: 'application/json',
+                        },
+                    },
+                );
             } catch (error) {
                 console.error('Logout error:', error);
             }
@@ -295,7 +343,7 @@ const Auth = {
 
         this.clearTokens();
         window.location.reload(); // Refresh to reset UI state
-    }
+    },
 };
 ```
 
@@ -352,8 +400,8 @@ function deleteCalendarConfirmClicked() {
     }
 
     const headers = new Headers({
-        'Accept': 'application/json',
-        'Accept-Language': API.locale
+        Accept: 'application/json',
+        'Accept-Language': API.locale,
     });
 
     // Add JWT token
@@ -366,20 +414,22 @@ function deleteCalendarConfirmClicked() {
     const request = new Request(API.path, {
         method: 'DELETE',
         headers: headers,
-        body: formData
+        body: formData,
     });
 
     fetch(request)
-        .then(response => handleAuthError(response, () => deleteCalendarConfirmClicked()))
-        .then(response => response.json())
-        .then(data => {
+        .then((response) =>
+            handleAuthError(response, () => deleteCalendarConfirmClicked()),
+        )
+        .then((response) => response.json())
+        .then((data) => {
             // Handle success
             if (data.status === 'success') {
                 showSuccessMessage('Calendar deleted successfully');
                 // Refresh calendar list
             }
         })
-        .catch(error => {
+        .catch((error) => {
             showErrorMessage(error.message);
         });
 }
@@ -402,8 +452,8 @@ function formSubmit(ev) {
 
     const formData = new FormData(ev.target);
     const headers = new Headers({
-        'Accept': 'application/json',
-        'Accept-Language': API.locale
+        Accept: 'application/json',
+        'Accept-Language': API.locale,
     });
 
     // Add JWT token for write operations
@@ -416,16 +466,16 @@ function formSubmit(ev) {
     const request = new Request(API.path, {
         method: method,
         headers: headers,
-        body: formData
+        body: formData,
     });
 
     fetch(request)
-        .then(response => handleAuthError(response, () => formSubmit(ev)))
-        .then(response => response.json())
-        .then(data => {
+        .then((response) => handleAuthError(response, () => formSubmit(ev)))
+        .then((response) => response.json())
+        .then((data) => {
             // Handle success
         })
-        .catch(error => {
+        .catch((error) => {
             showErrorMessage(error.message);
         });
 }
@@ -434,7 +484,9 @@ function formSubmit(ev) {
  * Show login modal
  */
 function showLoginModal(onSuccess = null) {
-    const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+    const loginModal = new bootstrap.Modal(
+        document.getElementById('loginModal'),
+    );
 
     document.getElementById('loginSubmit').onclick = async () => {
         const username = document.getElementById('username').value;
@@ -466,55 +518,69 @@ function showLoginModal(onSuccess = null) {
 ```html
 <!-- templates/partials/navbar.php -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <!-- ... existing nav items ... -->
+    <!-- ... existing nav items ... -->
 
-  <div class="navbar-nav ms-auto">
-    <div id="authStatus">
-      <!-- Logged out state -->
-      <button type="button" class="btn btn-sm btn-outline-primary d-none" id="loginBtn">
-        Login
-      </button>
+    <div class="navbar-nav ms-auto">
+        <div id="authStatus">
+            <!-- Logged out state -->
+            <button
+                type="button"
+                class="btn btn-sm btn-outline-primary d-none"
+                id="loginBtn"
+            >
+                Login
+            </button>
 
-      <!-- Logged in state -->
-      <div class="dropdown d-none" id="userMenu">
-        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-          <i class="bi bi-person-circle"></i> <span id="username"></span>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end">
-          <li><button class="dropdown-item" id="logoutBtn">Logout</button></li>
-        </ul>
-      </div>
+            <!-- Logged in state -->
+            <div class="dropdown d-none" id="userMenu">
+                <button
+                    class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                >
+                    <i class="bi bi-person-circle"></i>
+                    <span id="username"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <button class="dropdown-item" id="logoutBtn">
+                            Logout
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
-  </div>
 </nav>
 
 <script>
-// Update auth UI on page load
-document.addEventListener('DOMContentLoaded', () => {
-    updateAuthUI();
+    // Update auth UI on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        updateAuthUI();
 
-    document.getElementById('loginBtn').onclick = () => showLoginModal();
-    document.getElementById('logoutBtn').onclick = () => Auth.logout();
-});
+        document.getElementById('loginBtn').onclick = () => showLoginModal();
+        document.getElementById('logoutBtn').onclick = () => Auth.logout();
+    });
 
-function updateAuthUI() {
-    const isAuth = Auth.isAuthenticated();
-    const loginBtn = document.getElementById('loginBtn');
-    const userMenu = document.getElementById('userMenu');
+    function updateAuthUI() {
+        const isAuth = Auth.isAuthenticated();
+        const loginBtn = document.getElementById('loginBtn');
+        const userMenu = document.getElementById('userMenu');
 
-    if (isAuth) {
-        loginBtn.classList.add('d-none');
-        userMenu.classList.remove('d-none');
+        if (isAuth) {
+            loginBtn.classList.add('d-none');
+            userMenu.classList.remove('d-none');
 
-        // Decode token to get username (if stored in JWT)
-        const token = Auth.getToken();
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        document.getElementById('username').textContent = payload.sub || 'Admin';
-    } else {
-        loginBtn.classList.remove('d-none');
-        userMenu.classList.add('d-none');
+            // Decode token to get username (if stored in JWT)
+            const token = Auth.getToken();
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            document.getElementById('username').textContent =
+                payload.sub || 'Admin';
+        } else {
+            loginBtn.classList.remove('d-none');
+            userMenu.classList.add('d-none');
+        }
     }
-}
 </script>
 ```
 
@@ -548,7 +614,7 @@ Silent token refresh before expiry implemented:
 /**
  * Auto-refresh tokens before expiry
  */
-Auth.startAutoRefresh = function() {
+Auth.startAutoRefresh = function () {
     const checkInterval = 60000; // Check every minute
 
     setInterval(async () => {
@@ -775,12 +841,12 @@ Access-Control-Allow-Credentials: true
 // All auth-related fetch calls now include credentials
 const response = await fetch(`${BaseUrl}/auth/login`, {
     method: 'POST',
-    credentials: 'include',  // Include cookies in cross-origin requests
+    credentials: 'include', // Include cookies in cross-origin requests
     headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        Accept: 'application/json',
     },
-    body: JSON.stringify({ username, password })
+    body: JSON.stringify({ username, password }),
 });
 ```
 
@@ -805,46 +871,46 @@ localStorage/sessionStorage. This provides maximum security against XSS attacks.
 **Files Modified:**
 
 1. **`assets/js/auth.js`**
-   - Added auth state caching (`_cachedAuthState`, `_cacheExpiry`, `_cacheDuration`)
-   - Added `isAuthenticatedCached()` method for synchronous cache checks
-   - Added `updateAuthCache()` method to fetch and cache auth state
-   - Updated `isAuthenticated()` to use cached auth state instead of localStorage
-   - Updated `login()` to not store tokens locally (relies on HttpOnly cookies)
-   - Updated `_doRefreshToken()` to not require body (API reads from cookie)
-   - Updated `startAutoRefresh()` and `startExpiryWarning()` to use cached auth state
-   - Updated `hasPermission()`, `hasRole()`, `getUsername()` to use cached auth state
-   - Deprecated `setToken()`, `getToken()`, `setRefreshToken()`, `getRefreshToken()`, `getPayload()`
-   - Updated DOMContentLoaded to initialize auth cache on page load
+    - Added auth state caching (`_cachedAuthState`, `_cacheExpiry`, `_cacheDuration`)
+    - Added `isAuthenticatedCached()` method for synchronous cache checks
+    - Added `updateAuthCache()` method to fetch and cache auth state
+    - Updated `isAuthenticated()` to use cached auth state instead of localStorage
+    - Updated `login()` to not store tokens locally (relies on HttpOnly cookies)
+    - Updated `_doRefreshToken()` to not require body (API reads from cookie)
+    - Updated `startAutoRefresh()` and `startExpiryWarning()` to use cached auth state
+    - Updated `hasPermission()`, `hasRole()`, `getUsername()` to use cached auth state
+    - Deprecated `setToken()`, `getToken()`, `setRefreshToken()`, `getRefreshToken()`, `getPayload()`
+    - Updated DOMContentLoaded to initialize auth cache on page load
 
 2. **`assets/js/extending.js`**
-   - Deprecated `addAuthHeader()` function (no longer needed)
-   - Updated `makeAuthenticatedRequest()` to use `credentials: 'include'` instead of Authorization header
+    - Deprecated `addAuthHeader()` function (no longer needed)
+    - Updated `makeAuthenticatedRequest()` to use `credentials: 'include'` instead of Authorization header
 
 3. **`includes/login-modal.php`**
-   - Updated DOMContentLoaded to be async and wait for auth cache population
-   - Uses `Auth.isAuthenticatedCached()` to check if cache needs population
+    - Updated DOMContentLoaded to be async and wait for auth cache population
+    - Uses `Auth.isAuthenticatedCached()` to check if cache needs population
 
 **How It Works:**
 
 1. **Page Load:**
-   - `auth.js` DOMContentLoaded calls `Auth.updateAuthCache()` to fetch `/auth/me`
-   - Cache is populated with auth state (authenticated, username, roles, exp)
-   - Auto-refresh timer is started if authenticated
+    - `auth.js` DOMContentLoaded calls `Auth.updateAuthCache()` to fetch `/auth/me`
+    - Cache is populated with auth state (authenticated, username, roles, exp)
+    - Auto-refresh timer is started if authenticated
 
 2. **Auth State Checks:**
-   - `Auth.isAuthenticated()` returns cached state synchronously
-   - `Auth.isAuthenticatedCached()` returns `null` if cache expired (caller can decide to fetch)
-   - `Auth.updateAuthCache()` fetches fresh state from server
+    - `Auth.isAuthenticated()` returns cached state synchronously
+    - `Auth.isAuthenticatedCached()` returns `null` if cache expired (caller can decide to fetch)
+    - `Auth.updateAuthCache()` fetches fresh state from server
 
 3. **Authenticated Requests:**
-   - All requests use `credentials: 'include'` to send HttpOnly cookies
-   - No Authorization headers needed - API reads token from cookie
-   - `makeAuthenticatedRequest()` helper handles this automatically
+    - All requests use `credentials: 'include'` to send HttpOnly cookies
+    - No Authorization headers needed - API reads token from cookie
+    - `makeAuthenticatedRequest()` helper handles this automatically
 
 4. **Token Refresh:**
-   - API reads refresh token from HttpOnly cookie
-   - New tokens are set as HttpOnly cookies in response
-   - Frontend just calls the endpoint and updates the cache
+    - API reads refresh token from HttpOnly cookie
+    - New tokens are set as HttpOnly cookies in response
+    - Frontend just calls the endpoint and updates the cache
 
 **Security Benefits:**
 
@@ -875,7 +941,7 @@ function initPermissionUI() {
     const protectedElements = document.querySelectorAll('[data-requires-auth]');
     const isAuth = Auth.isAuthenticated();
 
-    protectedElements.forEach(el => {
+    protectedElements.forEach((el) => {
         if (isAuth) {
             el.classList.remove('d-none');
             el.disabled = false;
@@ -929,7 +995,9 @@ function initPermissionUI() {
             <strong>Session Expiring</strong>
         </div>
         <div class="toast-body">
-            <p id="sessionExpiryMessage">Your session will expire in less than 2 minutes.</p>
+            <p id="sessionExpiryMessage">
+                Your session will expire in less than 2 minutes.
+            </p>
             <div class="d-flex justify-content-end gap-2">
                 <button id="sessionExpiryLogout">Logout</button>
                 <button id="sessionExpiryExtend">Extend Session</button>
@@ -953,10 +1021,10 @@ The "Remember Me" checkbox now controls whether the refresh token cookie persist
 
 **Behavior:**
 
-| Remember Me         | Access Token Cookie                  | Refresh Token Cookie                       |
-|---------------------|--------------------------------------|--------------------------------------------|
-| Unchecked (default) | Persistent (short TTL, e.g., 1 hour) | Session cookie (deleted on browser close)  |
-| Checked             | Persistent (short TTL, e.g., 1 hour) | Persistent (long TTL, e.g., 7 days)        |
+| Remember Me         | Access Token Cookie                  | Refresh Token Cookie                      |
+| ------------------- | ------------------------------------ | ----------------------------------------- |
+| Unchecked (default) | Persistent (short TTL, e.g., 1 hour) | Session cookie (deleted on browser close) |
+| Checked             | Persistent (short TTL, e.g., 1 hour) | Persistent (long TTL, e.g., 7 days)       |
 
 **How It Works:**
 
@@ -995,7 +1063,7 @@ When the API implements RBAC (permissions/roles returned in `/auth/me` response)
 /**
  * Check user permissions (uses cached auth state)
  */
-Auth.hasPermission = function(permission) {
+Auth.hasPermission = function (permission) {
     if (!this.isAuthenticated()) return false;
 
     const permissions = this._cachedAuthState?.permissions;
@@ -1005,7 +1073,7 @@ Auth.hasPermission = function(permission) {
 /**
  * Check user role (uses cached auth state)
  */
-Auth.hasRole = function(role) {
+Auth.hasRole = function (role) {
     if (!this.isAuthenticated()) return false;
 
     const { role: userRole, roles } = this._cachedAuthState || {};
@@ -1035,12 +1103,12 @@ async function handleMfaChallenge(challengeToken) {
         credentials: 'include', // Cookie-based auth
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            Accept: 'application/json',
         },
         body: JSON.stringify({
             challenge_token: challengeToken,
-            code: code
-        })
+            code: code,
+        }),
     });
 
     if (!response.ok) {
@@ -1061,7 +1129,7 @@ When integrating external identity providers (API sets HttpOnly cookies):
 /**
  * OAuth login flow
  */
-Auth.loginWithOAuth = function(provider) {
+Auth.loginWithOAuth = function (provider) {
     const authUrl = `${BaseUrl}/auth/oauth/${provider}`;
     const redirectUri = window.location.origin + '/auth/callback';
 
@@ -1074,7 +1142,7 @@ Auth.loginWithOAuth = function(provider) {
  * Handle OAuth callback
  * API sets HttpOnly cookies on successful authentication
  */
-Auth.handleOAuthCallback = async function() {
+Auth.handleOAuthCallback = async function () {
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
     const state = params.get('state');
@@ -1088,9 +1156,9 @@ Auth.handleOAuthCallback = async function() {
         credentials: 'include', // Cookie-based auth
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            Accept: 'application/json',
         },
-        body: JSON.stringify({ code, state })
+        body: JSON.stringify({ code, state }),
     });
 
     if (!response.ok) {
@@ -1115,11 +1183,11 @@ Auth.handleOAuthCallback = async function() {
 
 **As of 2025-12-02**, the frontend uses HttpOnly cookies exclusively for token storage:
 
-| Storage Method  | XSS Safe | CSRF Safe | Cross-Tab | Status                        |
-| --------------- | -------- | --------- | --------- | ----------------------------- |
-| HttpOnly Cookie | Yes      | SameSite  | Yes       | Current - sole token storage  |
-| sessionStorage  | No       | Yes       | No        | Legacy - cleared on login     |
-| localStorage    | No       | Yes       | Yes       | Legacy - cleared on login     |
+| Storage Method  | XSS Safe | CSRF Safe | Cross-Tab | Status                       |
+| --------------- | -------- | --------- | --------- | ---------------------------- |
+| HttpOnly Cookie | Yes      | SameSite  | Yes       | Current - sole token storage |
+| sessionStorage  | No       | Yes       | No        | Legacy - cleared on login    |
+| localStorage    | No       | Yes       | Yes       | Legacy - cleared on login    |
 
 **How it works:**
 
@@ -1156,8 +1224,13 @@ XSS protection.
 
 ```javascript
 // Add check in auth.js
-if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
-    console.warn('Authentication over HTTP is insecure. Use HTTPS in production.');
+if (
+    window.location.protocol !== 'https:' &&
+    window.location.hostname !== 'localhost'
+) {
+    console.warn(
+        'Authentication over HTTP is insecure. Use HTTPS in production.',
+    );
 }
 ```
 
@@ -1233,8 +1306,10 @@ test('login sets HttpOnly cookies', async ({ page, context }) => {
 
     // Verify cookies are set (HttpOnly cookies visible in context)
     const cookies = await context.cookies();
-    const accessCookie = cookies.find(c => c.name === 'litcal_access_token');
-    const refreshCookie = cookies.find(c => c.name === 'litcal_refresh_token');
+    const accessCookie = cookies.find((c) => c.name === 'litcal_access_token');
+    const refreshCookie = cookies.find(
+        (c) => c.name === 'litcal_refresh_token',
+    );
 
     expect(accessCookie).toBeDefined();
     expect(accessCookie.httpOnly).toBe(true);
@@ -1243,7 +1318,7 @@ test('login sets HttpOnly cookies', async ({ page, context }) => {
 
     // Verify no tokens in localStorage/sessionStorage
     const localStorageToken = await page.evaluate(() =>
-        localStorage.getItem('litcal_jwt_token')
+        localStorage.getItem('litcal_jwt_token'),
     );
     expect(localStorageToken).toBeNull();
 });
@@ -1309,22 +1384,22 @@ test('authenticated request uses cookies automatically', async ({ page }) => {
 ## Open Questions
 
 1. **User Management**
-   - Who creates the first admin user? (API seed script?)
-   - How do we handle password resets without email infrastructure?
-   - Should we implement account lockout after failed login attempts?
+    - Who creates the first admin user? (API seed script?)
+    - How do we handle password resets without email infrastructure?
+    - Should we implement account lockout after failed login attempts?
 
 2. **Token Lifetime**
-   - What should be the default access token TTL? (15 minutes? 1 hour?)
-   - What should be the refresh token TTL? (7 days? 30 days?)
-   - ✅ "Remember me" controls refresh token cookie persistence (see Phase 3.3)
+    - What should be the default access token TTL? (15 minutes? 1 hour?)
+    - What should be the refresh token TTL? (7 days? 30 days?)
+    - ✅ "Remember me" controls refresh token cookie persistence (see Phase 3.3)
 
 3. **Permissions**
-   - Is simple authentication enough, or do we need role-based permissions from the start?
-   - Who should have access to which calendars (all vs. specific nations/dioceses)?
+    - Is simple authentication enough, or do we need role-based permissions from the start?
+    - Who should have access to which calendars (all vs. specific nations/dioceses)?
 
 4. **Backward Compatibility**
-   - Should we version the API (/v1/ vs /v2/) when adding auth?
-   - How long to support unauthenticated writes (if at all)?
+    - Should we version the API (/v1/ vs /v2/) when adding auth?
+    - How long to support unauthenticated writes (if at all)?
 
 ## Related Documentation
 
@@ -1334,15 +1409,15 @@ test('authenticated request uses cookies automatically', async ({ page }) => {
 
 ## Timeline
 
-| Phase     | Description                                | Estimated Effort | Status      |
-| --------- | ------------------------------------------ | ---------------- | ----------- |
-| Phase 1   | Basic JWT authentication                   | 2-3 weeks        | COMPLETE    |
-| Phase 2   | Enhanced security (CSRF, auto-refresh)     | 1 week           | COMPLETE    |
-| Phase 2.4 | HttpOnly Cookie Authentication             | 1-2 days         | COMPLETE    |
-| Phase 2.5 | Full Cookie-Only Authentication            | 1 week           | COMPLETE    |
-| Phase 3.1 | Permission-Based UI                        | -                | COMPLETE    |
-| Phase 3.2 | Session Expiry Warning                     | 1 day            | COMPLETE    |
-| Phase 3.3 | Remember Me Functionality                  | 1 day            | COMPLETE    |
-| Phase 4   | Future enhancements (RBAC, MFA, OAuth)     | As needed        | Future      |
+| Phase     | Description                            | Estimated Effort | Status   |
+| --------- | -------------------------------------- | ---------------- | -------- |
+| Phase 1   | Basic JWT authentication               | 2-3 weeks        | COMPLETE |
+| Phase 2   | Enhanced security (CSRF, auto-refresh) | 1 week           | COMPLETE |
+| Phase 2.4 | HttpOnly Cookie Authentication         | 1-2 days         | COMPLETE |
+| Phase 2.5 | Full Cookie-Only Authentication        | 1 week           | COMPLETE |
+| Phase 3.1 | Permission-Based UI                    | -                | COMPLETE |
+| Phase 3.2 | Session Expiry Warning                 | 1 day            | COMPLETE |
+| Phase 3.3 | Remember Me Functionality              | 1 day            | COMPLETE |
+| Phase 4   | Future enhancements (RBAC, MFA, OAuth) | As needed        | Future   |
 
 **Note:** Timeline assumes sequential implementation coordinated with API development.
