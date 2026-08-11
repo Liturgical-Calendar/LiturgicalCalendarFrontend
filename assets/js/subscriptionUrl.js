@@ -36,12 +36,29 @@ class RequestPayload {
 class CurrentEndpoint {
     /** @type {string} Set by usage.js from the CalendarUrl global; already ends in `/calendar`. */
     static apiBase = '';
+
+    /**
+     * The liturgical rite, as a plain string (`'roman'` / `'ambrosian'`) rather
+     * than the components-js `Rite` enum, which this module cannot import.
+     *
+     * Emitted unconditionally, `roman` included. The API's
+     * `Router::extractRiteSegment()` accepts the explicit spelling and treats
+     * `/calendar/roman/nation/IT` and `/calendar/nation/IT` as the same request,
+     * so rite-explicit URLs are the default from here on and users transition
+     * onto them. URLs already pasted into calendar apps keep resolving.
+     *
+     * @type {string}
+     */
+    static rite = 'roman';
     static calendarType = null;
     static calendarId = null;
     static calendarYear = null;
 
     static serialize = () => {
         let currentEndpoint = CurrentEndpoint.apiBase;
+        // Before the calendar segment, never after: apiBase already ends in
+        // `/calendar`, and `/calendar/nation/IT/roman` is not a route.
+        currentEndpoint += `/${CurrentEndpoint.rite}`;
         if (
             CurrentEndpoint.calendarType !== null &&
             CurrentEndpoint.calendarId !== null
