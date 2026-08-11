@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-07 19:47+0000\n"
+"POT-Creation-Date: 2026-08-11 14:41+0000\n"
 "PO-Revision-Date: 2026-06-26 20:52+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
@@ -123,7 +123,7 @@ msgid "Request parameters available on all %1$s paths"
 msgstr "Parâmetros de solicitação disponíveis em todos os caminhos %1$s"
 
 #. translators: part of page title - refers to the Catholic liturgical calendar
-#: index.php:65 usage.php:29 examples.php:98 liturgyOfAnyDay.php:18
+#: index.php:65 usage.php:35 examples.php:98 liturgyOfAnyDay.php:18
 #: layout/header.php:257 admin-permissions.php:77 admin-permissions.php:304
 #: admin-permissions.php:391 permission-requests.php:244
 msgid "General Roman Calendar"
@@ -210,7 +210,7 @@ msgstr ""
 "tipos de conteúdo e respostas são descritas aqui."
 
 #. translators: card header for Easter calculation tool
-#: index.php:174 usage.php:298
+#: index.php:174 usage.php:297
 msgid "Calculation of the Dates of Easter"
 msgstr "Cálculo das Datas da Páscoa"
 
@@ -277,23 +277,42 @@ msgstr "Falha ao copiar URL para a área de transferência"
 msgid "Please select and copy manually"
 msgstr "Por favor, selecione e copie manualmente"
 
+#. translators: label for dropdown to select which calendar to subscribe to
+#: usage.php:23
+msgid "Select calendar"
+msgstr "Selecionar calendário"
+
+#. translators: label for dropdown to select the liturgical rite (Roman or Ambrosian)
+#: usage.php:25
+#, fuzzy
+#| msgid "Select a Role"
+msgid "Select rite"
+msgstr "Selecionar um Papel"
+
+#. translators: notification message shown when the calendar list fails to load
+#: usage.php:27
+#, fuzzy
+#| msgid "Failed to load users. Please try again later."
+msgid "Could not load the calendar list. Please try again later."
+msgstr "Falha ao carregar usuários. Por favor, tente novamente mais tarde."
+
 #. translators: part of page title - section showing usage examples
-#: usage.php:31
+#: usage.php:37
 msgid "Examples"
 msgstr "Exemplos"
 
 #. translators: main page heading for the API usage examples page
-#: usage.php:42
+#: usage.php:48
 msgid "Example usage of the API"
 msgstr "Exemplo de uso da API"
 
 #. translators: accordion section header - examples of web-based calendar displays
-#: usage.php:51 layout/header.php:329
+#: usage.php:57 layout/header.php:329
 msgid "Web calendar"
 msgstr "Calendário web"
 
 #. translators: description of PHP example - explains it uses a specific npm/composer package
-#: usage.php:66
+#: usage.php:72
 msgid ""
 "HTML presentation elaborated by PHP using the `@liturgical-calendar/"
 "components` package"
@@ -302,12 +321,12 @@ msgstr ""
 "components`"
 
 #. translators: button text to view the PHP code example
-#: usage.php:70
+#: usage.php:76
 msgid "View PHP Example"
 msgstr "Ver Exemplo PHP"
 
 #. translators: description of JavaScript example - explains it uses a specific ESM module
-#: usage.php:83
+#: usage.php:89
 msgid ""
 "HTML presentation elaborated by JavaScript using the `@liturgical-calendar/"
 "components-js` ESM module"
@@ -316,17 +335,17 @@ msgstr ""
 "calendar/components-js`"
 
 #. translators: button text to view the JavaScript code example
-#: usage.php:87
+#: usage.php:93
 msgid "View JavaScript Example"
 msgstr "Ver exemplo de JavaScript"
 
 #. translators: card header for FullCalendar example
-#: usage.php:97
+#: usage.php:103
 msgid "Calendar"
 msgstr "Calendário"
 
 #. translators: description of FullCalendar example - FullCalendar is a JavaScript library name
-#: usage.php:103
+#: usage.php:109
 msgid ""
 "FullCalendar representation elaborated by JavaScript using the `@liturgical-"
 "calendar/components-js` ESM module"
@@ -335,47 +354,43 @@ msgstr ""
 "`@liturgical-calendar/components-js`"
 
 #. translators: button text to view the FullCalendar example
-#: usage.php:107
+#: usage.php:113
 msgid "View FullCalendar"
 msgstr "Ver FullCalendar"
 
 #. translators: button text for FullCalendar variant that shows messages/notifications first
-#: usage.php:111
+#: usage.php:117
 msgid "View FullCalendar (messages first)"
 msgstr "Ver FullCalendar (mensagens primeiro)"
 
 #. translators: accordion section header - subscribing to the calendar via iCal/ICS URL
-#: usage.php:125 layout/header.php:333
+#: usage.php:131 layout/header.php:333
 msgid "Calendar subscription"
 msgstr "Assinatura de calendário"
 
-#: usage.php:140
-msgid "Select calendar"
-msgstr "Selecionar calendário"
-
 #. translators: label above the iCal/ICS subscription URL
-#: usage.php:146
+#: usage.php:145
 msgid "Calendar subscription URL"
 msgstr "URL de assinatura do calendário"
 
 #. translators: tooltip for clickable URL - instructs user to click to copy
-#: usage.php:151
+#: usage.php:150
 msgid "Click to copy to the clipboard!"
 msgstr "Clique para copiar para a área de transferência!"
 
 #. translators: instruction step for calendar subscription - clicking to copy URL
-#: usage.php:187 usage.php:209 usage.php:250
+#: usage.php:186 usage.php:208 usage.php:249
 msgid "Click on the link above to copy it to the clipboard."
 msgstr "Clique no link acima para copiá-lo para a área de transferência."
 
 #. translators: instruction step - %s is replaced with a link to calendar.google.com
-#: usage.php:189
+#: usage.php:188
 #, php-format
 msgid "Navigate to %s."
 msgstr "Navegue para %s."
 
 #. translators: instruction step for Google Calendar - describes UI location
-#: usage.php:191
+#: usage.php:190
 msgid ""
 "At the bottom left corner of the screen, next to Other calendars, click on "
 "the + icon to add a new calendar, and choose <i><b>From URL</b></i>."
@@ -384,12 +399,12 @@ msgstr ""
 "ícone + para adicionar um novo calendário e escolha <i><b>De URL</b></i>."
 
 #. translators: instruction step - pasting the copied URL
-#: usage.php:193 usage.php:213 usage.php:256
+#: usage.php:192 usage.php:212 usage.php:255
 msgid "Paste in the URL that you copied earlier."
 msgstr "Cole a URL que você copiou anteriormente."
 
 #. translators: explanation of what happens after subscribing
-#: usage.php:195 usage.php:215 usage.php:235 usage.php:262
+#: usage.php:194 usage.php:214 usage.php:234 usage.php:261
 msgid ""
 "Once subscribed, your calendar will be populated with the events from the "
 "subscription URL."
@@ -398,12 +413,12 @@ msgstr ""
 "assinatura."
 
 #. translators: info about Google Calendar's polling frequency
-#: usage.php:197 usage.php:237
+#: usage.php:196 usage.php:236
 msgid "Google Calendar will poll the calendar URL every 8 hours."
 msgstr "O Google Calendar verificará o URL do calendário a cada 8 horas."
 
 #. translators: explanation about automatic updates via subscription
-#: usage.php:199 usage.php:219 usage.php:239 usage.php:270
+#: usage.php:198 usage.php:218 usage.php:238 usage.php:269
 msgid ""
 "Since you have made a subscription, any updates in the Liturgical Calendar "
 "API will be propagated to your subscription."
@@ -412,7 +427,7 @@ msgstr ""
 "Litúrgico serão propagadas para sua assinatura."
 
 #. translators: explanation about yearly calendar refresh behavior
-#: usage.php:201 usage.php:221 usage.php:241 usage.php:272
+#: usage.php:200 usage.php:220 usage.php:240 usage.php:271
 msgid ""
 "You will only see events for the current year. On the first day of a new "
 "year however, new events will be created automatically for the new year."
@@ -421,7 +436,7 @@ msgstr ""
 "no entanto, novos eventos serão criados automaticamente para o novo ano."
 
 #. translators: info about cross-device availability for Google Calendar
-#: usage.php:203
+#: usage.php:202
 msgid ""
 "Once the calendar has been added from a desktop, it will become available "
 "for the same Gmail account on the Google Calendar app on a smartphone."
@@ -430,7 +445,7 @@ msgstr ""
 "para a mesma conta do Gmail no aplicativo Google Calendar em um smartphone."
 
 #. translators: instruction step for iPhone - describes Settings menu path
-#: usage.php:211
+#: usage.php:210
 msgid ""
 "Go to <i><b>Phone Settings → Accounts → Add account → Other → Add Calendar</"
 "b></i>."
@@ -439,7 +454,7 @@ msgstr ""
 "Adicionar Calendário</b></i>."
 
 #. translators: info about iPhone Calendar's polling frequency settings location
-#: usage.php:217
+#: usage.php:216
 msgid ""
 "The iPhone Calendar app will poll the calendar URL based on the settings at "
 "<i><b>Phone Settings → Accounts → Fetch New Data → Fetch</b></i>."
@@ -449,7 +464,7 @@ msgstr ""
 "Dados → Buscar</b></i>."
 
 #. translators: instruction for Android - %s is a link to the Google Calendar tab; prerequisite step
-#: usage.php:227
+#: usage.php:226
 #, php-format
 msgid ""
 "If you have not yet added the calendar subscription from the desktop version "
@@ -459,12 +474,12 @@ msgstr ""
 "Google Calendar, faça isso agora (veja %s)."
 
 #. translators: instruction step for Android
-#: usage.php:229
+#: usage.php:228
 msgid "Open the Google Calendar app."
 msgstr "Abra o aplicativo Google Calendar."
 
 #. translators: instruction step for Android - describes app Settings navigation
-#: usage.php:231
+#: usage.php:230
 msgid ""
 "Go to <i><b>Settings</b></i>, then under the account which you used for the "
 "Desktop version, click on the Calendar subscription name."
@@ -473,24 +488,24 @@ msgstr ""
 "versão Desktop, clique no nome da assinatura do Calendário."
 
 #. translators: instruction step for Android - enabling sync
-#: usage.php:233
+#: usage.php:232
 msgid "Make sure <i><b>Synchronization</b></i> is turned on."
 msgstr "Certifique-se de que <i><b>Sincronização</b></i> esteja ativada."
 
 #. translators: note about which Outlook version was tested
-#: usage.php:248
+#: usage.php:247
 msgid "tested with Outlook 2013"
 msgstr "testado com Outlook 2013"
 
 #. translators: instruction step for Outlook - switching views
-#: usage.php:252
+#: usage.php:251
 msgid "At the bottom of the screen, switch from Email view to Calendar view."
 msgstr ""
 "Na parte inferior da tela, mude da visualização de Email para a visualização "
 "de Calendário."
 
 #. translators: instruction step for Outlook - describes ribbon menu navigation
-#: usage.php:254
+#: usage.php:253
 msgid ""
 "On the ribbon of the Home menu item, click on <i><b>Open calendar → From the "
 "internet</b></i>."
@@ -499,7 +514,7 @@ msgstr ""
 "→ Da internet</b></i>."
 
 #. translators: instruction step for Outlook - checkbox option for polling interval
-#: usage.php:258
+#: usage.php:257
 msgid ""
 "On the following screen, check the checkbox along the lines of \"Poll this "
 "calendar in the interval suggested by the creator\"."
@@ -508,13 +523,13 @@ msgstr ""
 "calendário no intervalo sugerido pelo criador\"."
 
 #. translators: info about Outlook Calendar's polling frequency
-#: usage.php:260
+#: usage.php:259
 msgid "Outlook Calendar should now poll the calendar URL once a day."
 msgstr ""
 "O Outlook Calendar deve agora verificar a URL do calendário uma vez por dia."
 
 #. translators: instruction for Outlook - ensuring calendar is in correct folder for internet subscription
-#: usage.php:264
+#: usage.php:263
 msgid ""
 "Make sure the Calendar is created in the Other calendars folder; if you find "
 "it under the Personal calendars folder, drag it and drop it onto the Other "
@@ -527,7 +542,7 @@ msgstr ""
 "calendário de assinatura da internet."
 
 #. translators: instruction for Outlook - how to manually refresh data
-#: usage.php:266
+#: usage.php:265
 msgid ""
 "You can manually fetch new data by clicking on <i><b>Send/receive all</b></"
 "i> (from the SEND/RECEIVE menu item)."
@@ -536,7 +551,7 @@ msgstr ""
 "tudo</b></i> (no item de menu ENVIAR/RECEBER)."
 
 #. translators: info about Outlook's HTML support in event descriptions
-#: usage.php:268
+#: usage.php:267
 msgid ""
 "Outlook Calendar supports a minimal amount of HTML in the event description, "
 "so the event descriptions provided by the subscription URL are a little bit "
@@ -547,44 +562,44 @@ msgstr ""
 "são um pouco mais \"embelezadas\" para o Outlook."
 
 #. translators: accordion section header - Easter date calculation tool
-#: usage.php:287 layout/header.php:337
+#: usage.php:286 layout/header.php:337
 msgid "Dates of Easter"
 msgstr "Datas da Páscoa"
 
 #. translators: subtitle after card header - describes the example UI
-#: usage.php:300
+#: usage.php:299
 msgid "Example interface"
 msgstr "Interface de exemplo"
 
 #. translators: description of Easter date calculation range - 1583 is when Gregorian calendar started
-#: usage.php:306
+#: usage.php:305
 msgid "Example display of the date of Easter from 1583 to 9999"
 msgstr "Exemplo de exibição da data da Páscoa de 1583 a 9999"
 
 #. translators: button text to go to Easter date calculator
-#: usage.php:310
+#: usage.php:309
 msgid "Calculate the Dates of Easter"
 msgstr "Calcular as Datas da Páscoa"
 
 #. translators: accordion section header - daily liturgy information and apps
-#: usage.php:323 layout/header.php:341
+#: usage.php:322 layout/header.php:341
 msgid "Liturgy of the Day"
 msgstr "Liturgia do Dia"
 
 #. translators: card header - Amazon Alexa flash briefing skill
-#: usage.php:335
+#: usage.php:334
 msgid "Alexa News Brief"
 msgstr "Notícias do Alexa"
 
 #. translators: description of Alexa skill - flash briefing format
-#: usage.php:341
+#: usage.php:340
 msgid "Daily news brief with the liturgy of the day, as an Amazon Alexa skill"
 msgstr ""
 "Resumo diário de notícias com a liturgia do dia, como uma habilidade do "
 "Amazon Alexa"
 
 #. translators: tooltip for USA Alexa skill - explains timezone options
-#: usage.php:346
+#: usage.php:345
 msgid ""
 "Four feeds to choose from, according to timezone within the USA. The "
 "calendar is the national liturgical calendar for the United States."
@@ -593,39 +608,39 @@ msgstr ""
 "calendário é o calendário litúrgico nacional dos Estados Unidos."
 
 #. translators: tooltip for Italy Alexa skill - single feed with national calendar
-#: usage.php:352
+#: usage.php:351
 msgid "Single feed with the national liturgical calendar for Italy."
 msgstr "Feed único com o calendário litúrgico nacional da Itália."
 
 #. translators: tooltip for Rome Diocese Alexa skill - specific to Diocese of Rome
-#: usage.php:358
+#: usage.php:357
 msgid ""
 "Single feed with the liturgical calendar specific to the Diocese of Rome."
 msgstr "Feed único com o calendário litúrgico específico da Diocese de Roma."
 
 #. translators: card header - Amazon Alexa conversational skill (not flash briefing)
-#: usage.php:369
+#: usage.php:368
 msgid "Alexa interactive skill"
 msgstr "Skill interativa do Alexa"
 
 #. translators: status indicator for features not yet available
-#: usage.php:375 usage.php:389
+#: usage.php:374 usage.php:388
 msgid "In development"
 msgstr "Em desenvolvimento"
 
 #. translators: card header - Google Assistant voice application
-#: usage.php:383
+#: usage.php:382
 msgid "Google Assistant app"
 msgstr "App do Google Assistant"
 
 #. translators: card header - tool to look up liturgy for any date
 #. translators: button text to go to liturgy lookup page
-#: usage.php:399 usage.php:409 liturgyOfAnyDay.php:18 liturgyOfAnyDay.php:26
+#: usage.php:398 usage.php:408 liturgyOfAnyDay.php:18 liturgyOfAnyDay.php:26
 msgid "Liturgy of any day"
 msgstr "Liturgia de qualquer dia"
 
 #. translators: example use case for the liturgy lookup tool
-#: usage.php:405
+#: usage.php:404
 msgid ""
 "For example, you can find the liturgy of the day from the day of your "
 "baptism."
