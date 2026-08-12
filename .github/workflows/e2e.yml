@@ -9,7 +9,12 @@ name: E2E
 #     are skipped.
 #   schedule (nightly) — safety-net run on the default branch.
 #   workflow_dispatch — manual, with the `project` selector below.
-# Automated runs (pull_request / schedule) run the `rbac` project only.
+# Automated runs (pull_request / schedule) run `rbac` + `chromium-ci` — the
+# `automated` selector below. They used to run `rbac` alone, which meant the
+# whole chromium project was guarded by nothing: `inputs` is empty for a
+# schedule event, so the cron fell through the same `|| 'rbac'` default as
+# everything else. `chromium-ci` is the subset of those specs that passes
+# today; see playwright.config.ts for what is still excluded and why.
 #
 # The `project` workflow_dispatch input selects which Playwright project runs:
 #   rbac (default) — the scoped-admin-review RBAC suite (rbac-setup seeds users)
@@ -51,9 +56,17 @@ on:
       project:
         description: 'Playwright project to run'
         type: choice
-        default: rbac
+        default: automated
         options:
+          # What pull_request and schedule run: rbac + chromium-ci. Kept as the
+          # dispatch default too, so a manual run reproduces CI unless you ask
+          # for something else.
+          - automated
           - rbac
+          # The full chromium project. Most of it fails today -- four specs are
+          # blocked on the auth migration in issue #448, and admin-tests has 7
+          # pre-existing failures -- which is why automated runs take the
+          # chromium-ci subset instead. Dispatch this deliberately.
           - chromium
           - firefox
           - webkit
@@ -214,7 +227,7 @@ jobs:
 
       - name: Install dependencies + browsers
         env:
-          PROJECT: ${{ inputs.project || 'rbac' }}
+          PROJECT: ${{ inputs.project || 'automated' }}
         run: |
           corepack enable
           yarn install --immutable
@@ -222,7 +235,7 @@ jobs:
             firefox) browsers=firefox ;;
             webkit)  browsers=webkit ;;
             all)     browsers="chromium firefox webkit" ;;
-            *)       browsers=chromium ;;   # rbac, chromium
+            *)       browsers=chromium ;;   # automated, rbac, chromium, chromium-ci
           esac
           yarn playwright install --with-deps $browsers
 
@@ -234,14 +247,24 @@ jobs:
         # an empty CI would otherwise switch off.
         env:
           CI: ""
-          PROJECT: ${{ inputs.project || 'rbac' }}
+          PROJECT: ${{ inputs.project || 'automated' }}
           API_REPO_PATH: ${{ github.workspace }}/api-repo
         run: |
-          if [ "$PROJECT" = "all" ]; then
-            yarn playwright test --retries=2 --forbid-only
-          else
-            yarn playwright test --project="$PROJECT" --retries=2 --forbid-only
-          fi
+          case "$PROJECT" in
+            all)
+              yarn playwright test --retries=2 --forbid-only
+              ;;
+            automated)
+              # What pull_request and schedule run. `rbac` is the long-standing
+              # suite; `chromium-ci` is the subset of the chromium specs that
+              # passes today (see playwright.config.ts for what is excluded and
+              # why). Both are needed: neither covers the other's pages.
+              yarn playwright test --project=rbac --project=chromium-ci --retries=2 --forbid-only
+              ;;
+            *)
+              yarn playwright test --project="$PROJECT" --retries=2 --forbid-only
+              ;;
+          esac
 
       - name: Upload Playwright report
         if: ${{ !cancelled() }}

@@ -56,6 +56,31 @@ export default defineConfig({
             dependencies: ['setup'],
             testIgnore: /rbac\//,
         },
+        // The subset of the `chromium` specs that CI can run green TODAY, so the
+        // automated triggers guard something instead of nothing.
+        //
+        // It exists as its own project rather than a `--grep` in the workflow so
+        // that the CI-ready set is declared in one reviewable place, and adding a
+        // spec to CI is a one-line change here.
+        //
+        // Deliberately NO `storageState` and NO `dependencies: ['setup']`: every
+        // spec listed here is for a page that needs no login. That also makes this
+        // project immune to the auth breakage tracked in issue #448, which is what
+        // keeps the rest of `chromium` out of CI.
+        //
+        // Everything still excluded, and why — re-check before adding any of them:
+        //   diocesan-calendar, national-calendar, wider-region-calendar,
+        //   missals-editor  — call waitForAuth(); blocked on #448.
+        //   admin-tests     — 7 of 17 fail for an unrelated, PRE-EXISTING reason
+        //                     (verified identical on 780921d0, before any of this
+        //                     work). Needs its own diagnosis, not inclusion here.
+        {
+            name: 'chromium-ci',
+            testMatch: /(usage|liturgyOfAnyDay)\.spec\.ts/,
+            use: {
+                ...devices['Desktop Chrome'],
+            },
+        },
         {
             name: 'firefox',
             use: {
