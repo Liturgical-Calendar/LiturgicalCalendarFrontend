@@ -1,0 +1,14 @@
+# Prettier reads .gitignore automatically (since 3.0 its default --ignore-path is
+# ['.gitignore', '.prettierignore']), so every generated directory is already
+# excluded — node_modules, vendor, examples, .superpowers, playwright-report and
+# test-results all live in .gitignore. Verified: an intentionally malformed
+# test-results/**.md is reported by `prettier --check` from a tracked path and
+# silently skipped from the gitignored one.
+#
+# Only what .gitignore cannot express for us belongs here.
+
+# Partially gitignored: `.gitignore` has `.yarn/*` with negations re-including
+# patches, plugins, releases, sdks and versions, so those subdirectories would
+# otherwise stay in scope. Mirrors the `ignores` entry in .markdownlint-cli2.jsonc
+# so both tools agree on the file set.
+.yarn/

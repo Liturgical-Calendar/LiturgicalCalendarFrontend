@@ -1,0 +1,27 @@
+// Runner options for markdownlint-cli2. Rule configuration lives in
+// .markdownlint.yaml, which is still read — this file only controls WHICH files
+// get linted.
+//
+// It exists so the composer and yarn scripts stop each carrying their own
+// hand-maintained exclusion list. They had already drifted apart (issue #447):
+// `#vendor` vs `#**/vendor/**`, `#examples` in one and not the other, and later
+// `#playwright-report`/`#test-results` in composer only — which meant
+// `composer lint:md` reported 46 files clean while `yarn lint:md` reported 52
+// files with errors, on the same working tree.
+{
+    // Honour .gitignore. This is the substantive fix: every generated directory
+    // that accumulates markdown is already gitignored, so none of them has to be
+    // enumerated here, and a NEW one never breaks the pre-commit hook.
+    //
+    // Playwright is the recurring offender — a single run writes
+    // test-results/*/error-context.md and playwright-report/data/*.md, which used
+    // to block every commit touching markdown until they were deleted by hand.
+    "gitignore": true,
+
+    // .yarn is the one exclusion .gitignore cannot express for us: it is only
+    // PARTIALLY ignored (.gitignore has `.yarn/*` with negations re-including
+    // patches, plugins, releases, sdks and versions), so `gitignore: true` alone
+    // would leave the re-included subdirectories in scope. They hold no markdown
+    // today; this keeps it that way by intent rather than by luck.
+    "ignores": [".yarn/**"]
+}

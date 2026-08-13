@@ -107,10 +107,14 @@ composer lint                # Check code standards (PSR-12)
 composer lint:fix            # Auto-fix code standards
 composer analyse             # PHPStan level 7
 
-# Markdown
+# Markdown (yarn lint:md / lint:md:fix are the same commands)
 composer lint:md             # Check markdown
 composer lint:md:fix         # Auto-fix markdown
 yarn format:md               # Format with prettier (aligns tables)
+# Which files get linted is config, not script arguments: .markdownlint-cli2.jsonc
+# sets "gitignore": true (rules stay in .markdownlint.yaml), and prettier reads
+# .gitignore plus .prettierignore. Do not add inline exclusion globs to the
+# composer/yarn scripts — that is how they drifted apart in issue #447.
 
 # JavaScript/TypeScript
 yarn typecheck               # Type check e2e tests
