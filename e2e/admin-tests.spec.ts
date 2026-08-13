@@ -76,8 +76,10 @@ test.describe('admin-tests editor (stubbed)', () => {
     test('create flow submits a PUT with a schema-shaped body', async ({ page }) => {
         await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
         let putBody: Record<string, unknown> | null = null;
+        let putUrl: string | null = null;
         await page.route(TESTS_ROUTE, (r: Route) => {
             if (r.request().method() === 'PUT') {
+                putUrl = r.request().url();
                 putBody = r.request().postDataJSON() as Record<string, unknown>;
                 return r.fulfill({ json: { ...putBody } });
             }
@@ -94,6 +96,11 @@ test.describe('admin-tests editor (stubbed)', () => {
         await page.locator('#testEventKey').dispatchEvent('change');
         await page.locator('#saveTestBtn').click();
         await expect.poll(() => putBody && putBody['name']).toBe('StIgnatiusOfLoyolaTest');
+        // Pin the PATH, not just the body. TESTS_ROUTE deliberately matches both /tests
+        // and /tests/{name} so one handler can serve the collection GET as well, which
+        // means a regression back to PUT-ing the collection would otherwise still be
+        // intercepted and still pass — the very drift #453 was about.
+        expect(putUrl).toMatch(/\/tests\/StIgnatiusOfLoyolaTest$/);
         expect(putBody!['test_type']).toBe('exactCorrespondence');
         expect((putBody!['assertions'] as unknown[]).length).toBeGreaterThan(0);
         expect((putBody!['assertions'] as Array<{ assert: string }>)[0].assert).toBe('eventExists AND hasExpectedDate');
@@ -129,8 +136,9 @@ test.describe('admin-tests scope RBAC (stubbed)', () => {
     test('single-scope editor: scope is static text (no picker), PUT carries it', async ({ page }) => {
         await stubEditor(page, { is_global_admin: false, editor: [{ object_type: 'national_calendar_test', object_id: 'USA' }], admin: [] });
         let putBody: Record<string, unknown> | null = null;
+        let putUrl: string | null = null;
         await page.route(TESTS_ROUTE, (r: Route) => {
-            if (r.request().method() === 'PUT') { putBody = r.request().postDataJSON() as Record<string, unknown>; return r.fulfill({ json: {} }); }
+            if (r.request().method() === 'PUT') { putUrl = r.request().url(); putBody = r.request().postDataJSON() as Record<string, unknown>; return r.fulfill({ json: {} }); }
             return r.fulfill({ json: sampleTests });
         });
         await page.goto('/admin-tests.php');
@@ -145,6 +153,9 @@ test.describe('admin-tests scope RBAC (stubbed)', () => {
         await page.locator('#testEventKey').dispatchEvent('change');
         await page.locator('#saveTestBtn').click();
         await expect.poll(() => putBody && putBody['applies_to']).toEqual({ national_calendar: 'USA' });
+        // As above: TESTS_ROUTE matches the collection path too, so assert the write
+        // actually went to the name-scoped endpoint.
+        expect(putUrl).toMatch(/\/tests\/StIgnatiusOfLoyolaTest$/);
     });
 
     test('multi-scope editor: a select limited to the authorized scopes', async ({ page }) => {
