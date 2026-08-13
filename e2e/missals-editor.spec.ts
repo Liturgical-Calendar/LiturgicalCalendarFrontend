@@ -12,7 +12,7 @@ import { test, expect } from './fixtures';
  */
 
 test.describe('Missals Editor - Authentication', () => {
-    test('should show login required message when not authenticated', async ({ page }) => {
+    test('should redirect to the home page when not authenticated', async ({ page }) => {
         // Clear storage state to simulate unauthenticated user
         await page.context().clearCookies();
 
@@ -20,13 +20,14 @@ test.describe('Missals Editor - Authentication', () => {
         await page.goto(`${baseUrl}/missals-editor.php`);
         await page.waitForLoadState('networkidle');
 
-        // Login required message should be visible
-        const loginMessage = page.locator('#loginRequiredMessage');
-        await expect(loginMessage).toBeVisible();
+        // missals-editor.php guards itself server-side: an unauthenticated request never
+        // renders the editor at all, it is redirected to index.php. This used to assert a
+        // client-side #loginRequiredMessage instead, which the redirect made unreachable —
+        // the markup existed but no request could ever reach it.
+        await expect(page).toHaveURL(/\/index\.php(?:[?#]|$)/);
 
-        // Admin interface should be hidden
-        const adminInterface = page.locator('#adminInterface');
-        await expect(adminInterface).toHaveClass(/d-none/);
+        // ...and none of the editor is served.
+        await expect(page.locator('#adminInterface')).toHaveCount(0);
     });
 
     test('should show admin interface when authenticated', async ({ extendingPage, page }) => {
@@ -40,10 +41,6 @@ test.describe('Missals Editor - Authentication', () => {
         // Admin interface should be visible
         const adminInterface = page.locator('#adminInterface');
         await expect(adminInterface).not.toHaveClass(/d-none/);
-
-        // Login required message should be hidden
-        const loginMessage = page.locator('#loginRequiredMessage');
-        await expect(loginMessage).toHaveAttribute('data-requires-no-auth', '');
     });
 });
 

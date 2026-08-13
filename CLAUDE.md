@@ -77,8 +77,6 @@ API_PROTOCOL=http
 API_HOST=localhost
 API_PORT=8000
 FRONTEND_URL=http://localhost:3000
-TEST_USERNAME=testuser
-TEST_PASSWORD=testpassword
 ```
 
 ### Running the Development Server
@@ -288,9 +286,19 @@ Requires in `.env.development`:
 
 ```env
 FRONTEND_URL=http://localhost:3000
-TEST_USERNAME=your_test_username
-TEST_PASSWORD=your_test_password
 ```
+
+The **authenticated** projects additionally need the `ZITADEL_*` settings, because their setup
+seeds a Zitadel user and logs it in through the OIDC flow rather than using test credentials
+against the API's legacy HS256 `/auth/login`, whose tokens `auth/me.php` could never accept
+(issue #448):
+
+- `chromium`, `chromium-ci-auth`, `firefox`, `webkit` — via `e2e/auth.setup.ts`
+- `rbac` — via `e2e/rbac/rbac.setup.ts`
+
+`chromium-ci` needs none of them: it declares no `storageState` and no `setup` dependency, so it
+runs without Zitadel. That is deliberate — it keeps the login-free specs green even when Zitadel
+is unavailable.
 
 ### Calendar Schema Differences
 

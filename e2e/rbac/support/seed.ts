@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as crypto from 'crypto';
-import { USERS } from './users';
+import { USERS, type RbacUser } from './users';
 import { ZitadelAdmin } from './zitadel';
 import { Fga } from './fga';
 
@@ -15,8 +15,16 @@ const REDIRECT_URI = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/aut
 const HOST = new URL(ISSUER).hostname;
 const b64url = (b: Buffer) => b.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 
-export async function seedUser(id: string): Promise<string> {
-    const u = USERS[id];
+/**
+ * Provision a user in Zitadel: delete any account already holding the email, create a verified
+ * one, grant its project role, and — for resource-admins only — write its FGA tuple.
+ *
+ * Takes the record rather than a USERS key so an identity that is deliberately NOT a USERS
+ * member can be seeded too. That matters because rbac.setup.ts calls deleteAllSeededUsers(),
+ * which iterates Object.keys(USERS): anything in that map is deleted at the start of an rbac
+ * run. See E2E_ADMIN in e2e/auth.setup.ts, which must survive one.
+ */
+export async function seedUserRecord(u: RbacUser): Promise<string> {
     const z = new ZitadelAdmin();
     const f = new Fga();
 
@@ -34,6 +42,11 @@ export async function seedUser(id: string): Promise<string> {
         await f.write(`user:${userId}`, u.fga.relation, `${u.fga.objectType}:${u.fga.objectId}`);
     }
     return userId;
+}
+
+/** seedUserRecord() addressed by USERS key. */
+export async function seedUser(id: string): Promise<string> {
+    return seedUserRecord(USERS[id]);
 }
 
 /**
@@ -104,9 +117,17 @@ function id_state(): string { return b64url(crypto.randomBytes(8)); }
  * email-unverified (blocked from email-verified-gated pages like permission-requests.php).
  * Cookie domain is `localhost` (port-agnostic) so cookies reach both the frontend (:3000)
  * and the API (:8000). The real cookies are HttpOnly.
+ *
+ * Takes the record rather than a USERS key, and accepts an explicit output path, so a caller
+ * outside the rbac suite can drive the same flow to a different destination — e2e/auth.setup.ts
+ * writes the shared `e2e/.auth/user.json` the chromium projects declare as their storageState.
  */
-export async function loginAndSaveState(id: string, loginClientToken: string, userId?: string): Promise<void> {
-    const u = USERS[id];
+export async function loginAndSaveStateAs(
+    u: RbacUser,
+    loginClientToken: string,
+    userId?: string,
+    authPath?: string,
+): Promise<void> {
     const { accessToken, idToken } = await oidcLogin(u.email, u.password, loginClientToken, userId);
     const cookieBase = {
         domain: 'localhost', path: '/', expires: -1, httpOnly: true, secure: false, sameSite: 'Lax' as const,
@@ -117,9 +138,14 @@ export async function loginAndSaveState(id: string, loginClientToken: string, us
         cookies,
         origins: [],
     };
-    const authPath = path.join(__dirname, '..', '..', '.auth', `${id}.json`);
-    fs.mkdirSync(path.dirname(authPath), { recursive: true });
-    fs.writeFileSync(authPath, JSON.stringify(storageState, null, 2));
+    const target = authPath ?? path.join(__dirname, '..', '..', '.auth', `${u.id}.json`);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.writeFileSync(target, JSON.stringify(storageState, null, 2));
+}
+
+/** loginAndSaveStateAs() addressed by USERS key, writing `e2e/.auth/{id}.json`. */
+export async function loginAndSaveState(id: string, loginClientToken: string, userId?: string): Promise<void> {
+    return loginAndSaveStateAs(USERS[id], loginClientToken, userId);
 }
 
 /**

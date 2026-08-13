@@ -9,6 +9,7 @@
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
+use LiturgicalCalendar\Frontend\AuthHelper;
 use LiturgicalCalendar\Frontend\OidcClient;
 
 // Load environment
@@ -41,10 +42,47 @@ if ($accessToken === null) {
 
 // Validate access token as the primary proof of authentication
 try {
+    // Legacy (pre-Zitadel) deployments: with no OIDC configuration there is no JWKS to
+    // validate against, so fall back to the HS256/JWT_SECRET path. This mirrors
+    // AuthHelper::getInstance(), whose OIDC branch is gated on the SAME two variables and
+    // which falls through to legacy validation when they are absent.
+    //
+    // Without this the two paths disagree: drop Zitadel and AuthHelper would authenticate
+    // the user server-side and render the page, while this endpoint told the client that
+    // nobody was logged in — the client/server split diagnosed in issue #448, reached
+    // through configuration rather than through token shape.
+    //
+    // Deliberately NOT a fallback for the case where OIDC IS configured but validation
+    // fails. That would let any JWT_SECRET-signed token satisfy a live Zitadel deployment.
     if (!OidcClient::isConfigured()) {
+        $auth = AuthHelper::getInstance();
+
+        if (!$auth->isAuthenticated) {
+            jsonResponse([
+                'authenticated' => false,
+                'error'         => 'Token validation failed',
+            ]);
+        }
+
+        $legacyExp = $auth->exp ?? 0;
+
+        // Same key set as OidcClient::extractUserFromIdToken(), so assets/js/auth.js sees one
+        // shape regardless of which validation path produced it. Legacy tokens carry only
+        // `sub`, `roles` and `exp`; the OIDC-only profile claims stay null.
         jsonResponse([
-            'authenticated' => false,
-            'error'         => 'OIDC not configured',
+            'authenticated'   => true,
+            'user'            => [
+                'sub'                => $auth->sub,
+                'email'              => $auth->email,
+                'email_verified'     => $auth->emailVerified,
+                'name'               => $auth->name,
+                'given_name'         => $auth->givenName,
+                'family_name'        => $auth->familyName,
+                'preferred_username' => $auth->username,
+                'roles'              => $auth->roles ?? [],
+            ],
+            'expires_at'      => $legacyExp,
+            'token_remaining' => max(0, $legacyExp - time()),
         ]);
     }
 

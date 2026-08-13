@@ -556,7 +556,10 @@ jsonFileSelect.addEventListener('change', async () => {
             const response = await fetch(jsonFileFull, {
                 method: 'GET',
                 headers: { 'Accept': 'application/json' },
-                credentials: 'include'
+                // MissalsUrl and DecreesUrl are public reads answering with
+                // Access-Control-Allow-Origin: *, which browsers refuse to pair with
+                // credentials: 'include'. The PUT below is the authenticated call.
+                credentials: 'omit'
             });
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
