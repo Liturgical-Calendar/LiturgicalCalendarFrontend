@@ -68,9 +68,12 @@ Required `.env.development` keys for E2E:
 
 ```
 FRONTEND_URL=http://localhost:3000
-TEST_USERNAME=…
-TEST_PASSWORD=…
+ZITADEL_ISSUER=…
+ZITADEL_CLIENT_ID=…
 ```
+
+`auth.setup.ts` seeds a Zitadel administrator and logs it in through the OIDC flow, so
+there are no TEST_USERNAME/TEST_PASSWORD credentials any more (issue #448).
 
 ## Pre-commit "everything-green" oneliner
 

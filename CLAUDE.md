@@ -77,8 +77,6 @@ API_PROTOCOL=http
 API_HOST=localhost
 API_PORT=8000
 FRONTEND_URL=http://localhost:3000
-TEST_USERNAME=testuser
-TEST_PASSWORD=testpassword
 ```
 
 ### Running the Development Server
@@ -288,9 +286,12 @@ Requires in `.env.development`:
 
 ```env
 FRONTEND_URL=http://localhost:3000
-TEST_USERNAME=your_test_username
-TEST_PASSWORD=your_test_password
 ```
+
+Plus the `ZITADEL_*` settings, which every project now depends on: `e2e/auth.setup.ts` seeds a
+Zitadel administrator and logs it in through the OIDC flow rather than using test credentials
+against the API's legacy HS256 `/auth/login`, whose tokens `auth/me.php` could never accept
+(issue #448).
 
 ### Calendar Schema Differences
 

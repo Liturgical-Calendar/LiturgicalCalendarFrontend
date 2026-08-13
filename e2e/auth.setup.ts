@@ -1,115 +1,88 @@
 import { test as setup, expect } from '@playwright/test';
 import path from 'path';
+import { seedUserRecord, loginAndSaveStateAs } from './rbac/support/seed';
+import { ZitadelAdmin } from './rbac/support/zitadel';
+import type { RbacUser } from './rbac/support/users';
 
-const authFile = path.join(__dirname, '.auth/user.json');
-
-/**
- * Response shape from /auth/login endpoint.
- * The API sets HttpOnly cookies for authentication; the response body
- * contains metadata but tokens are not exposed to JavaScript.
- */
-interface LoginResponseData {
-    message?: string;
-    expires_in?: number;
-}
-
-interface LoginSuccessResult {
-    ok: true;
-    status: number;
-    data: LoginResponseData;
-}
-
-interface LoginErrorResult {
-    ok: false;
-    status: number;
-    error: string;
-}
-
-type LoginResult = LoginSuccessResult | LoginErrorResult;
+const authFile = path.join(__dirname, '.auth', 'user.json');
 
 /**
- * Response shape from /auth/me endpoint check.
- */
-interface AuthCheckResult {
-    ok: boolean;
-    status: number;
-    error?: string;
-}
-
-/**
- * Authentication setup for Playwright tests.
+ * The single administrator identity the calendar-data specs act as.
  *
- * Uses HttpOnly cookie-based authentication:
- * - The API sets HttpOnly cookies (litcal_access_token, litcal_refresh_token) on login
- * - Cookies are automatically included in subsequent requests via credentials: 'include'
- * - Tokens are never exposed to JavaScript, eliminating XSS token theft risks
+ * Zitadel role `admin`, no FGA tuple. That is sufficient for the specs' real PUT/PATCH writes
+ * because the API's OpenFgaAuthorizationMiddleware bypasses every OpenFGA check for holders of
+ * the `admin` role, so no per-calendar scoping has to be seeded here.
  *
- * Playwright's storageState captures cookies, persisting them across test runs.
+ * DELIBERATELY NOT a member of USERS. rbac.setup.ts opens with deleteAllSeededUsers(), which
+ * iterates Object.keys(USERS) and deletes each one — so any identity in that map is destroyed
+ * at the start of an rbac run. The `automated` CI selector runs rbac alongside the chromium
+ * projects, which is exactly when that would bite. Keeping this record out of USERS makes the
+ * collision structurally impossible rather than a matter of project ordering.
  */
-setup('authenticate', async ({ page }) => {
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-    // Use URL class for validation and proper encoding
-    const apiUrl = new URL(`${process.env.API_PROTOCOL || 'http'}://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || '8000'}`).origin;
-    const username = process.env.TEST_USERNAME;
-    const password = process.env.TEST_PASSWORD;
+const E2E_ADMIN: RbacUser = {
+    id: 'e2e-chromium-admin',
+    email: 'e2e-chromium-admin+e2e@litcal.test',
+    password: 'E2e-Test-Passw0rd!',
+    role: 'admin',
+    fga: null,
+};
 
-    if (!username || !password) {
-        throw new Error('TEST_USERNAME and TEST_PASSWORD must be set in environment variables');
+/**
+ * Authentication setup for the calendar-data Playwright specs.
+ *
+ * Seeds a Zitadel administrator and logs it in through the real OIDC flow — session API →
+ * PKCE authorize → auth-request finalize → token exchange — then writes the resulting
+ * `litcal_access_token` / `litcal_id_token` cookies to the storageState the chromium projects
+ * declare. This is the same machinery the rbac suite uses (support/seed.ts), so there is one
+ * login implementation rather than two.
+ *
+ * It replaces a login against the API's legacy HS256 `POST /auth/login`. That endpoint's tokens
+ * could never satisfy auth/me.php, which validates through JWKS, so Auth.isAuthenticated()
+ * stayed false in the browser and every calendar-data spec timed out in waitForAuth() — even
+ * though the same token was accepted server-side by AuthHelper. See issue #448.
+ */
+setup('authenticate', async ({ browser }) => {
+    setup.setTimeout(120_000);
+
+    const z = new ZitadelAdmin();
+
+    // The session API needs IAM_LOGIN_CLIENT, which the machine token lacks. Mint a fresh,
+    // session-capable PAT for the `login-client` user and delete it when done.
+    const loginClientUserId = await z.findUserIdByUsername('login-client');
+    if (!loginClientUserId) throw new Error('auth.setup: login-client machine user not found in Zitadel');
+    const pat = await z.mintPat(loginClientUserId);
+
+    try {
+        const userId = await seedUserRecord(E2E_ADMIN);
+        await loginAndSaveStateAs(E2E_ADMIN, pat.token, userId, authFile);
+    } finally {
+        // Surface (don't swallow) a revocation failure so a leaked ephemeral token is visible,
+        // while still not masking a real error from the seeding above.
+        await z.deletePat(loginClientUserId, pat.tokenId).catch((e) =>
+            console.warn('auth.setup: failed to delete ephemeral PAT (token may persist):', String(e)),
+        );
     }
 
-    // First, navigate to the frontend to establish the browser context
-    await page.goto(`${frontendUrl}/extending.php?choice=national`);
-    await page.waitForLoadState('networkidle');
-
-    // Authenticate via fetch with credentials: 'include' to ensure HttpOnly cookies are set
-    const loginResponse: LoginResult = await page.evaluate(async (credentials) => {
-        const response = await fetch(`${credentials.apiUrl}/auth/login`, {
-            method: 'POST',
-            credentials: 'include', // Required for HttpOnly cookie authentication
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                username: credentials.username,
-                password: credentials.password
+    // Prove the saved state actually authenticates the *browser*, which is what the specs need.
+    // Without this the setup passes on a token the client-side check rejects, and the failure
+    // resurfaces as 52 separate waitForAuth() timeouts with no indication of the real cause —
+    // precisely how #448 presented.
+    const context = await browser.newContext({ storageState: authFile });
+    try {
+        const page = await context.newPage();
+        await page.goto(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/extending.php?choice=national`);
+        await expect
+            .poll(() => page.evaluate(() => {
+                // @ts-ignore - Auth is a global object
+                return typeof Auth !== 'undefined' && Auth.isAuthenticated() === true;
+            }), {
+                timeout: 15_000,
+                message: 'saved storageState did not authenticate the browser (auth/me.php rejected the token)',
             })
-        });
-
-        if (!response.ok) {
-            const text = await response.text();
-            return { ok: false, status: response.status, error: text };
-        }
-
-        const data = await response.json();
-        return { ok: true, status: response.status, data };
-    }, { apiUrl, username, password });
-
-    if (!loginResponse.ok) {
-        throw new Error(`Login failed: ${loginResponse.status} - ${loginResponse.error}`);
+            .toBe(true);
+    } finally {
+        await context.close();
     }
 
-    // Verify authentication by making a request to an authenticated endpoint
-    // This verifies that HttpOnly cookies were set correctly
-    const authCheck: AuthCheckResult = await page.evaluate(async (apiUrl) => {
-        try {
-            const response = await fetch(`${apiUrl}/auth/me`, {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-            return { ok: response.ok, status: response.status };
-        } catch (e) {
-            return { ok: false, status: 0, error: String(e) };
-        }
-    }, apiUrl);
-
-    expect(authCheck.ok).toBe(true);
-
-    // Save the authentication state (includes HttpOnly cookies)
-    await page.context().storageState({ path: authFile });
-
-    console.log('Authentication setup complete - cookies saved to storageState');
+    console.log(`Authentication setup complete — ${E2E_ADMIN.email} logged in via Zitadel OIDC, state saved to ${authFile}`);
 });
