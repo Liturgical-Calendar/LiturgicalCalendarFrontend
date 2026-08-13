@@ -21,6 +21,17 @@ const sampleTests = {
 
 type TestScopes = { is_global_admin: boolean; editor: { object_type: string; object_id: string }[]; admin: { object_type: string; object_id: string }[] };
 
+/**
+ * Matches BOTH `/tests` (the collection the page GETs to fill its list) and
+ * `/tests/{name}` (what create PUTs and edit PATCHes to, admin-tests.js:822-824).
+ *
+ * A glob of `**​/tests` misses the name-scoped path, which is not a benign miss: the
+ * request escapes the stub entirely and reaches the real API, so a "stubbed" create
+ * test both asserts against a null body and can write through to real data. A glob of
+ * `**​/tests/**` has the mirror problem — it would stop matching the collection GET.
+ */
+const TESTS_ROUTE = /\/tests(?:\/[^/?#]+)?(?:[?#]|$)/;
+
 async function stub(page: Page, scopes: TestScopes): Promise<void> {
     await page.route('**/auth/test-scopes', (r: Route) => r.fulfill({ json: scopes }));
     await page.route('**/auth/me', (r: Route) => r.fulfill({ json: { authenticated: true, roles: ['test_editor'] } }));
@@ -65,7 +76,7 @@ test.describe('admin-tests editor (stubbed)', () => {
     test('create flow submits a PUT with a schema-shaped body', async ({ page }) => {
         await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
         let putBody: Record<string, unknown> | null = null;
-        await page.route('**/tests', (r: Route) => {
+        await page.route(TESTS_ROUTE, (r: Route) => {
             if (r.request().method() === 'PUT') {
                 putBody = r.request().postDataJSON() as Record<string, unknown>;
                 return r.fulfill({ json: { ...putBody } });
@@ -118,7 +129,7 @@ test.describe('admin-tests scope RBAC (stubbed)', () => {
     test('single-scope editor: scope is static text (no picker), PUT carries it', async ({ page }) => {
         await stubEditor(page, { is_global_admin: false, editor: [{ object_type: 'national_calendar_test', object_id: 'USA' }], admin: [] });
         let putBody: Record<string, unknown> | null = null;
-        await page.route('**/tests', (r: Route) => {
+        await page.route(TESTS_ROUTE, (r: Route) => {
             if (r.request().method() === 'PUT') { putBody = r.request().postDataJSON() as Record<string, unknown>; return r.fulfill({ json: {} }); }
             return r.fulfill({ json: sampleTests });
         });
@@ -192,28 +203,33 @@ test.describe('admin-tests delete (stubbed)', () => {
 
 /**
  * Shared create-modal boilerplate for the year-grid tests: stub routes as a
- * global admin, open the editor, pick the variable test type, and select an
- * event so the grid regenerates.
+ * global admin, open the editor, pick the exactCorrespondence test type, and select
+ * an event so the grid regenerates.
+ *
+ * This used to pick a `tt-variable` control. Commit 2db2eb92 merged
+ * variableCorrespondence INTO exactCorrespondence, removing that control (the page
+ * now offers only tt-exact / tt-since / tt-until), and the merged type carries the
+ * former variable behaviour — see the icon semantics asserted below.
  */
-async function openVariableEditor(page: Page, eventKey: string): Promise<void> {
+async function openExactEditor(page: Page, eventKey: string): Promise<void> {
     await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
     await page.goto('/admin-tests.php');
     await page.locator('#createTestBtn').click();
     await expect(page.locator('#testEditorModal')).toBeVisible();
     // btn-check inputs use pointer-events:none; click the label, not the input
-    await page.locator('label[for="tt-variable"]').click();
+    await page.locator('label[for="tt-exact"]').click();
     await page.locator('#testEventKey').fill(eventKey);
     await page.locator('#testEventKey').dispatchEvent('change');
 }
 
 test.describe('admin-tests year grid (stubbed)', () => {
     test('spans carry hammer/x icons and Sunday highlighting', async ({ page }) => {
-        await openVariableEditor(page, 'StIgnatiusOfLoyola');
+        await openExactEditor(page, 'StIgnatiusOfLoyola');
 
         const span2005 = page.locator('#yearGrid .testYearSpan.year-2005');
         await expect(span2005).toBeVisible();
-        // variable type → action icon present as fa-repeat ("toggle assertion",
-        // same semantic as the card toggle — spec R5); x always present;
+        // exactCorrespondence (non-pivot) → action icon is fa-repeat ("toggle
+        // assertion", same semantic as the card toggle — spec R5); x always present;
         // 2005-07-31 is a Sunday
         await expect(span2005.locator('.hammerYear')).toHaveCount(1);
         await expect(span2005.locator('.hammerYear.fa-repeat')).toHaveCount(1);
@@ -228,14 +244,22 @@ test.describe('admin-tests year grid (stubbed)', () => {
         await expect(span2005.locator('.hammerYear.fa-hammer')).toHaveCSS('opacity', '0');
         await span2005.hover();
         await expect(span2005.locator('.hammerYear.fa-hammer')).toHaveCSS('opacity', '0.5');
-        // exactCorrespondence type → no action icon at all
+        // until type → the other pivot type, same hammer affordance
+        await page.locator('label[for="tt-until"]').click();
+        await expect(span2005.locator('.hammerYear.fa-hammer')).toHaveCount(1);
+        await expect(span2005.locator('.hammerYear.fa-repeat')).toHaveCount(0);
+        // back to exactCorrespondence → the non-pivot repeat icon returns, and unlike
+        // the hammer it is not hover-gated (only .fa-hammer is opacity-0 until hover).
+        // This assertion used to expect NO icon at all, which was the pre-2db2eb92
+        // behaviour: the merge gave exactCorrespondence the former variable semantics.
         await page.locator('label[for="tt-exact"]').click();
-        await expect(span2005.locator('.hammerYear')).toHaveCount(0);
+        await expect(span2005.locator('.hammerYear.fa-repeat')).toHaveCount(1);
+        await expect(span2005.locator('.hammerYear.fa-hammer')).toHaveCount(0);
         await expect(span2005.locator('.removeYear')).toHaveCount(1);
     });
 
     test('changing the base date re-anchors Sunday chips, description, and assertions', async ({ page }) => {
-        await openVariableEditor(page, 'StIgnatiusOfLoyola');
+        await openExactEditor(page, 'StIgnatiusOfLoyola');
 
         // Default base date is 07-31: 2005-07-31 is a Sunday, 2006-07-31 is not,
         // and the suggested text reads "... July 31".
@@ -268,7 +292,7 @@ test.describe('admin-tests year grid (stubbed)', () => {
         await page.goto('/admin-tests.php');
         await page.locator('#createTestBtn').click();
         await expect(page.locator('#testEditorModal')).toBeVisible();
-        await page.locator('label[for="tt-variable"]').click();
+        await page.locator('label[for="tt-exact"]').click();
         await page.locator('#testEventKey').fill('MovableFeastX');
         await page.locator('#testEventKey').dispatchEvent('change');
         const editBtn = page.locator('.assertion-card[data-year="2005"] .editDate');
@@ -278,7 +302,7 @@ test.describe('admin-tests year grid (stubbed)', () => {
     });
 
     test('toggling a per-year card assert updates the year chip styling', async ({ page }) => {
-        await openVariableEditor(page, 'StIgnatiusOfLoyola');
+        await openExactEditor(page, 'StIgnatiusOfLoyola');
         const chip2005 = page.locator('#yearGrid .testYearSpan.year-2005');
         // Exact assertion → "event expected" (no not-expected warning background).
         await expect(chip2005).not.toHaveClass(/bg-warning/);
@@ -291,7 +315,7 @@ test.describe('admin-tests year grid (stubbed)', () => {
     });
 
     test('exclude collapses to the striped bar and restore brings the card back', async ({ page }) => {
-        await openVariableEditor(page, 'StIgnatiusOfLoyola');
+        await openExactEditor(page, 'StIgnatiusOfLoyola');
 
         const span2005 = page.locator('#yearGrid .testYearSpan.year-2005');
         await expect(span2005).toBeVisible();
