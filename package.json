@@ -20,9 +20,9 @@
     "test:install": "playwright install --with-deps",
     "tsc": "tsc",
     "typecheck": "tsc -p e2e/tsconfig.json --noEmit",
-    "lint:md": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#.yarn\" \"#**/vendor/**\" \"#.superpowers\"",
-    "lint:md:fix": "markdownlint-cli2 --fix \"**/*.md\" \"#node_modules\" \"#.yarn\" \"#**/vendor/**\" \"#.superpowers\"",
-    "format:md": "prettier --write \"**/*.md\" \"!node_modules/**\" \"!.yarn/**\" \"!**/vendor/**\" \"!.superpowers/**\" \"!playwright-report/**\" \"!test-results/**\""
+    "lint:md": "markdownlint-cli2 \"**/*.md\"",
+    "lint:md:fix": "markdownlint-cli2 --fix \"**/*.md\"",
+    "format:md": "prettier --write \"**/*.md\""
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
