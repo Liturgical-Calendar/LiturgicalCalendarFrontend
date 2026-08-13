@@ -95,9 +95,41 @@ failure domains stay separate.
    `TEST_USERNAME` / `TEST_PASSWORD` and issue #353.
 6. Remove dead `TEST_USERNAME` / `TEST_PASSWORD` from `.env.example` and `CLAUDE.md`.
 
+## Found during implementation
+
+Fixing the auth migration made `missals-editor` reachable for the first time, and it immediately
+failed 10 of 14. Neither cause was auth; both were pre-existing bugs that #448 had been hiding,
+in the same way #453's failures hid behind `admin-tests`. Both are fixed here, because
+`missals-editor` cannot join CI otherwise.
+
+- **`assets/js/missals-editor.js`** sent `credentials: 'include'` on the data-source read. Both
+  `MissalsUrl` and `DecreesUrl` answer with `Access-Control-Allow-Origin: *`, which browsers
+  refuse to pair with credentialed requests — exactly the rule the frontend `CLAUDE.md` states.
+  The fetch never resolved, so selecting "Decrees" left the action buttons hidden and the editor
+  silently did nothing. Anywhere the frontend and API are cross-origin, that data source was
+  broken. One word; it fixed 9 of the 10 failures.
+- **`missals-editor.spec.ts:15`** asserted an unauthenticated visitor sees `#loginRequiredMessage`.
+  `missals-editor.php` redirects such a request to `index.php` before rendering anything, so that
+  markup could never be served — dead code, asserted by a test. The assertion now checks the
+  redirect and the markup is removed.
+
 ## Acceptance
 
 - `yarn test:chromium` authenticates through Zitadel with no call to the API's HS256 `/auth/login`.
 - The four migrated specs pass, including the `201`-asserting write tests.
 - `rbac` and `chromium-ci` remain green, and `rbac-setup` cannot delete the chromium identity.
 - Automated coverage rises from 54 to 106 tests.
+
+## Verified
+
+Against the local docker stack, after repairing two unrelated local-environment faults (Zitadel had
+no host port binding because NVIDIA Broadcast held `127.0.0.1:8080`; `.env`/`.env.development`
+pointed at an OpenFGA store that no longer existed).
+
+- `--project=setup` passes, including its new in-browser `Auth.isAuthenticated()` assertion.
+- `--project=chromium-ci-auth` — 52 tests, all passing (3 skipped by design).
+- `--project=chromium-ci` — 22 passing, unchanged.
+- `--project=rbac` — 32 passing, so the `seed.ts` refactor is behaviour-preserving.
+- `auth/me.php` exercised directly in both configurations: with OIDC unconfigured a valid HS256
+  token authenticates and a malformed one does not; with OIDC configured the **same** token is
+  rejected, confirming the fallback did not widen the live-deployment surface.
