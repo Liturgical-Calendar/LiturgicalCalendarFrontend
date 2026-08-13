@@ -68,13 +68,9 @@ export default defineConfig({
         // project immune to the auth breakage tracked in issue #448, which is what
         // keeps the rest of `chromium` out of CI.
         //
-        // Everything still excluded, and why — re-check before adding any of them:
-        //   admin-tests     — 7 of 17 fail for an unrelated, PRE-EXISTING reason
-        //                     (verified identical on 780921d0, before any of this
-        //                     work). Tracked in issue #453, not fixed here.
-        // The four specs that used to sit in this list — diocesan-calendar,
-        // national-calendar, wider-region-calendar, missals-editor — were blocked
-        // on #448 and now run in `chromium-ci-auth` below.
+        // Nothing is excluded from CI any more: every other chromium spec needs a
+        // login and so lives in `chromium-ci-auth` below. Keep that split intact —
+        // a spec belongs here ONLY if its page renders without authentication.
         {
             name: 'chromium-ci',
             testMatch: /(usage|liturgyOfAnyDay)\.spec\.ts/,
@@ -84,17 +80,20 @@ export default defineConfig({
         },
         // The auth-requiring counterpart to `chromium-ci`: the four calendar-data
         // specs that issue #448 blocked, unblocked by auth.setup.ts's migration to
-        // the Zitadel OIDC flow.
+        // the Zitadel OIDC flow, plus admin-tests (issue #453).
         //
         // Kept as a SEPARATE project rather than merged into `chromium-ci`, because
         // half of that project's value is declaring no storageState: a Zitadel
         // outage cannot take those 22 tests down alongside `rbac`. Folding these
-        // four in would hand that property back.
+        // in would hand that property back.
         //
-        // Not the `chromium` project either — that one also selects admin-tests.
+        // admin-tests belongs HERE, not in `chromium-ci`, even though it stubs
+        // /auth/me and /auth/test-scopes: those are client-side route interceptions
+        // and cannot reach admin-tests.php's server-side guard, which 302s an
+        // unauthenticated request to index.php before any markup renders.
         {
             name: 'chromium-ci-auth',
-            testMatch: /(diocesan-calendar|national-calendar|wider-region-calendar|missals-editor)\.spec\.ts/,
+            testMatch: /(diocesan-calendar|national-calendar|wider-region-calendar|missals-editor|admin-tests)\.spec\.ts/,
             use: {
                 ...devices['Desktop Chrome'],
                 storageState: 'e2e/.auth/user.json',

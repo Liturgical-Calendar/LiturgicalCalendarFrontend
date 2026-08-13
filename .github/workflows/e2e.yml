@@ -25,8 +25,9 @@ name: E2E
 #       logs it in through the real OIDC flow; it no longer uses the API's
 #       legacy HS256 /auth/login, whose tokens auth/me.php could never accept
 #       (issue #448).
-#   chromium / firefox / webkit — the full per-browser projects, which still
-#       include admin-tests and its pre-existing failures (issue #453)
+#   chromium / firefox / webkit — the full per-browser projects. `chromium` is
+#       now the same set as chromium-ci + chromium-ci-auth combined; firefox and
+#       webkit are the cross-browser sweep, which automated runs do not cover.
 #   all — every project
 #
 # litcal-api builds from #development (the merge target); only litcal-frontend is
@@ -70,10 +71,10 @@ on:
           - rbac
           - chromium-ci
           - chromium-ci-auth
-          # The full chromium project. Still fails today: it also selects
-          # admin-tests, whose 7 failures are pre-existing and tracked in issue
-          # #453, which is why automated runs take the two subsets above
-          # instead. Dispatch this deliberately.
+          # The full chromium project — now equivalent to chromium-ci plus
+          # chromium-ci-auth, since #453 closed the last exclusion. Automated
+          # runs still take the two subsets, so a Zitadel outage cannot fail
+          # the login-free specs along with the rest.
           - chromium
           - firefox
           - webkit
