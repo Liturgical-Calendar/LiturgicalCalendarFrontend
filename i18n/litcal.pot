@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 22:55+0000\n"
+"POT-Creation-Date: 2026-08-13 11:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3015,10 +3015,6 @@ msgstr ""
 
 #: developer-dashboard.php:323
 msgid "Save"
-msgstr ""
-
-#: missals-editor.php:97
-msgid "Please login to access the admin interface."
 msgstr ""
 
 #: temporale.php:42
