@@ -56,6 +56,50 @@ export default defineConfig({
             dependencies: ['setup'],
             testIgnore: /rbac\//,
         },
+        // The subset of the `chromium` specs that CI can run green TODAY, so the
+        // automated triggers guard something instead of nothing.
+        //
+        // It exists as its own project rather than a `--grep` in the workflow so
+        // that the CI-ready set is declared in one reviewable place, and adding a
+        // spec to CI is a one-line change here.
+        //
+        // Deliberately NO `storageState` and NO `dependencies: ['setup']`: every
+        // spec listed here is for a page that needs no login. That also makes this
+        // project immune to the auth breakage tracked in issue #448, which is what
+        // keeps the rest of `chromium` out of CI.
+        //
+        // Nothing is excluded from CI any more: every other chromium spec needs a
+        // login and so lives in `chromium-ci-auth` below. Keep that split intact —
+        // a spec belongs here ONLY if its page renders without authentication.
+        {
+            name: 'chromium-ci',
+            testMatch: /(usage|liturgyOfAnyDay)\.spec\.ts/,
+            use: {
+                ...devices['Desktop Chrome'],
+            },
+        },
+        // The auth-requiring counterpart to `chromium-ci`: the four calendar-data
+        // specs that issue #448 blocked, unblocked by auth.setup.ts's migration to
+        // the Zitadel OIDC flow, plus admin-tests (issue #453).
+        //
+        // Kept as a SEPARATE project rather than merged into `chromium-ci`, because
+        // half of that project's value is declaring no storageState: a Zitadel
+        // outage cannot take those 22 tests down alongside `rbac`. Folding these
+        // in would hand that property back.
+        //
+        // admin-tests belongs HERE, not in `chromium-ci`, even though it stubs
+        // /auth/me and /auth/test-scopes: those are client-side route interceptions
+        // and cannot reach admin-tests.php's server-side guard, which 302s an
+        // unauthenticated request to index.php before any markup renders.
+        {
+            name: 'chromium-ci-auth',
+            testMatch: /(diocesan-calendar|national-calendar|wider-region-calendar|missals-editor|admin-tests)\.spec\.ts/,
+            use: {
+                ...devices['Desktop Chrome'],
+                storageState: 'e2e/.auth/user.json',
+            },
+            dependencies: ['setup'],
+        },
         {
             name: 'firefox',
             use: {

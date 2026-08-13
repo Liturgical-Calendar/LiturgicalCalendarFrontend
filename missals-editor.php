@@ -91,11 +91,8 @@ $buttonGroup = '<div id="memorialsFromDecreesBtnGrp">'
     <?php include_once('./layout/header.php'); ?>
     <h1><?php echo $messages['Admin heading']; ?></h1>
 
-    <!-- Login required message (shown when not authenticated) -->
-    <div class="alert alert-info" id="loginRequiredMessage" data-requires-no-auth>
-        <i class="fas fa-info-circle me-2"></i>
-        <?php echo _('Please login to access the admin interface.'); ?>
-    </div>
+    <!-- No login-required message here: the guard at the top of this file redirects
+         unauthenticated visitors to index.php, so such a message could never render. -->
 
     <!-- Admin interface (hidden until authenticated) -->
     <div id="adminInterface" class="d-none" data-requires-auth="true">

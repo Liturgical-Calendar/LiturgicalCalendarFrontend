@@ -9,14 +9,25 @@ name: E2E
 #     are skipped.
 #   schedule (nightly) — safety-net run on the default branch.
 #   workflow_dispatch — manual, with the `project` selector below.
-# Automated runs (pull_request / schedule) run the `rbac` project only.
+# Automated runs (pull_request / schedule) run `rbac` + `chromium-ci` +
+# `chromium-ci-auth` — the `automated` selector below. They used to run `rbac`
+# alone, which meant the whole chromium project was guarded by nothing: `inputs`
+# is empty for a schedule event, so the cron fell through the same `|| 'rbac'`
+# default as everything else. See playwright.config.ts for what is still
+# excluded and why.
 #
 # The `project` workflow_dispatch input selects which Playwright project runs:
-#   rbac (default) — the scoped-admin-review RBAC suite (rbac-setup seeds users)
-#   chromium / firefox / webkit — the calendar-data form specs
-#       (national / diocesan / wider-region / missals; these depend on the
-#        `setup` project's /auth/login with TEST_USERNAME/TEST_PASSWORD, predate
-#        the Zitadel-based auth, and are NOT yet fixed for CI — see issue #353)
+#   automated (default) — what pull_request and schedule run
+#   rbac — the scoped-admin-review RBAC suite (rbac-setup seeds users)
+#   chromium-ci — the chromium specs needing no login (usage, liturgyOfAnyDay)
+#   chromium-ci-auth — the calendar-data form specs (national / diocesan /
+#       wider-region / missals). The `setup` project seeds a Zitadel admin and
+#       logs it in through the real OIDC flow; it no longer uses the API's
+#       legacy HS256 /auth/login, whose tokens auth/me.php could never accept
+#       (issue #448).
+#   chromium / firefox / webkit — the full per-browser projects. `chromium` is
+#       now the same set as chromium-ci + chromium-ci-auth combined; firefox and
+#       webkit are the cross-browser sweep, which automated runs do not cover.
 #   all — every project
 #
 # litcal-api builds from #development (the merge target); only litcal-frontend is
@@ -51,9 +62,19 @@ on:
       project:
         description: 'Playwright project to run'
         type: choice
-        default: rbac
+        default: automated
         options:
+          # What pull_request and schedule run: rbac + chromium-ci +
+          # chromium-ci-auth. Kept as the dispatch default too, so a manual run
+          # reproduces CI unless you ask for something else.
+          - automated
           - rbac
+          - chromium-ci
+          - chromium-ci-auth
+          # The full chromium project — now equivalent to chromium-ci plus
+          # chromium-ci-auth, since #453 closed the last exclusion. Automated
+          # runs still take the two subsets, so a Zitadel outage cannot fail
+          # the login-free specs along with the rest.
           - chromium
           - firefox
           - webkit
@@ -214,7 +235,7 @@ jobs:
 
       - name: Install dependencies + browsers
         env:
-          PROJECT: ${{ inputs.project || 'rbac' }}
+          PROJECT: ${{ inputs.project || 'automated' }}
         run: |
           corepack enable
           yarn install --immutable
@@ -222,7 +243,7 @@ jobs:
             firefox) browsers=firefox ;;
             webkit)  browsers=webkit ;;
             all)     browsers="chromium firefox webkit" ;;
-            *)       browsers=chromium ;;   # rbac, chromium
+            *)       browsers=chromium ;;   # automated, rbac, chromium, chromium-ci
           esac
           yarn playwright install --with-deps $browsers
 
@@ -234,14 +255,25 @@ jobs:
         # an empty CI would otherwise switch off.
         env:
           CI: ""
-          PROJECT: ${{ inputs.project || 'rbac' }}
+          PROJECT: ${{ inputs.project || 'automated' }}
           API_REPO_PATH: ${{ github.workspace }}/api-repo
         run: |
-          if [ "$PROJECT" = "all" ]; then
-            yarn playwright test --retries=2 --forbid-only
-          else
-            yarn playwright test --project="$PROJECT" --retries=2 --forbid-only
-          fi
+          case "$PROJECT" in
+            all)
+              yarn playwright test --retries=2 --forbid-only
+              ;;
+            automated)
+              # What pull_request and schedule run. `rbac` is the long-standing
+              # suite; `chromium-ci` is the login-free chromium specs and
+              # `chromium-ci-auth` the calendar-data ones behind auth.setup.ts.
+              # All three are needed: none covers another's pages. See
+              # playwright.config.ts for what is still excluded and why.
+              yarn playwright test --project=rbac --project=chromium-ci --project=chromium-ci-auth --retries=2 --forbid-only
+              ;;
+            *)
+              yarn playwright test --project="$PROJECT" --retries=2 --forbid-only
+              ;;
+          esac
 
       - name: Upload Playwright report
         if: ${{ !cancelled() }}
