@@ -69,17 +69,37 @@ export default defineConfig({
         // keeps the rest of `chromium` out of CI.
         //
         // Everything still excluded, and why — re-check before adding any of them:
-        //   diocesan-calendar, national-calendar, wider-region-calendar,
-        //   missals-editor  — call waitForAuth(); blocked on #448.
         //   admin-tests     — 7 of 17 fail for an unrelated, PRE-EXISTING reason
         //                     (verified identical on 780921d0, before any of this
-        //                     work). Needs its own diagnosis, not inclusion here.
+        //                     work). Tracked in issue #453, not fixed here.
+        // The four specs that used to sit in this list — diocesan-calendar,
+        // national-calendar, wider-region-calendar, missals-editor — were blocked
+        // on #448 and now run in `chromium-ci-auth` below.
         {
             name: 'chromium-ci',
             testMatch: /(usage|liturgyOfAnyDay)\.spec\.ts/,
             use: {
                 ...devices['Desktop Chrome'],
             },
+        },
+        // The auth-requiring counterpart to `chromium-ci`: the four calendar-data
+        // specs that issue #448 blocked, unblocked by auth.setup.ts's migration to
+        // the Zitadel OIDC flow.
+        //
+        // Kept as a SEPARATE project rather than merged into `chromium-ci`, because
+        // half of that project's value is declaring no storageState: a Zitadel
+        // outage cannot take those 22 tests down alongside `rbac`. Folding these
+        // four in would hand that property back.
+        //
+        // Not the `chromium` project either — that one also selects admin-tests.
+        {
+            name: 'chromium-ci-auth',
+            testMatch: /(diocesan-calendar|national-calendar|wider-region-calendar|missals-editor)\.spec\.ts/,
+            use: {
+                ...devices['Desktop Chrome'],
+                storageState: 'e2e/.auth/user.json',
+            },
+            dependencies: ['setup'],
         },
         {
             name: 'firefox',
