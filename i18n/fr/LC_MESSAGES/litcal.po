@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 22:55+0000\n"
+"POT-Creation-Date: 2026-08-13 11:48+0000\n"
 "PO-Revision-Date: 2026-06-26 20:52+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
@@ -3331,10 +3331,6 @@ msgstr ""
 msgid "Save"
 msgstr "Enregistrer"
 
-#: missals-editor.php:97
-msgid "Please login to access the admin interface."
-msgstr "Connecte-toi pour accéder à l'interface administrateur."
-
 #: temporale.php:42
 msgid ""
 "Proprium de Tempore - The temporal cycle of the liturgical year including "
@@ -3631,6 +3627,9 @@ msgstr "La session expire dans 30 secondes"
 #: user-profile.php:407
 msgid "Session expired"
 msgstr "Session expirée"
+
+#~ msgid "Please login to access the admin interface."
+#~ msgstr "Connecte-toi pour accéder à l'interface administrateur."
 
 #~ msgid "Role Requests"
 #~ msgstr "Demandes de rôle"
