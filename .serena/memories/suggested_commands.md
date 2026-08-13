@@ -68,12 +68,19 @@ Required `.env.development` keys for E2E:
 
 ```
 FRONTEND_URL=http://localhost:3000
+```
+
+The **authenticated** projects (`chromium`, `chromium-ci-auth`, `firefox`, `webkit` via
+`auth.setup.ts`; `rbac` via `rbac.setup.ts`) additionally need:
+
+```
 ZITADEL_ISSUER=…
 ZITADEL_CLIENT_ID=…
 ```
 
-`auth.setup.ts` seeds a Zitadel administrator and logs it in through the OIDC flow, so
-there are no TEST_USERNAME/TEST_PASSWORD credentials any more (issue #448).
+Their setup seeds a Zitadel user and logs it in through the OIDC flow, so there are no
+TEST_USERNAME/TEST_PASSWORD credentials any more (issue #448). `chromium-ci` declares no
+storageState and no setup dependency, so it runs without Zitadel.
 
 ## Pre-commit "everything-green" oneliner
 

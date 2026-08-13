@@ -288,10 +288,17 @@ Requires in `.env.development`:
 FRONTEND_URL=http://localhost:3000
 ```
 
-Plus the `ZITADEL_*` settings, which every project now depends on: `e2e/auth.setup.ts` seeds a
-Zitadel administrator and logs it in through the OIDC flow rather than using test credentials
+The **authenticated** projects additionally need the `ZITADEL_*` settings, because their setup
+seeds a Zitadel user and logs it in through the OIDC flow rather than using test credentials
 against the API's legacy HS256 `/auth/login`, whose tokens `auth/me.php` could never accept
-(issue #448).
+(issue #448):
+
+- `chromium`, `chromium-ci-auth`, `firefox`, `webkit` — via `e2e/auth.setup.ts`
+- `rbac` — via `e2e/rbac/rbac.setup.ts`
+
+`chromium-ci` needs none of them: it declares no `storageState` and no `setup` dependency, so it
+runs without Zitadel. That is deliberate — it keeps the login-free specs green even when Zitadel
+is unavailable.
 
 ### Calendar Schema Differences
 
