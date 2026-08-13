@@ -39,7 +39,8 @@ composer test              # phpunit tests
 ## Markdown
 
 ```bash
-composer lint:md           # markdownlint-cli2 over **/*.md (excl. node_modules, vendor, examples, .yarn)
+composer lint:md           # markdownlint-cli2 over **/*.md; exclusions live in .markdownlint-cli2.jsonc
+                           # ("gitignore": true), NOT inline in the script — same for yarn lint:md
 composer lint:md:fix
 yarn format:md             # prettier — formats tables / spacing
 ```
