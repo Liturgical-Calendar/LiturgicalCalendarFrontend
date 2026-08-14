@@ -1,38 +1,7 @@
 import {
-    CalendarType,
-    CurrentEndpoint,
-} from './subscriptionUrl.js';
-import {
     ApiClient,
-    CalendarSelect,
-    RiteSelect,
-    Rite,
+    SubscriptionBuilder,
 } from '@liturgical-calendar/components-js';
-
-/**
- * Updates the text of the element with the id 'calSubscriptionUrl' to reflect the current value of CurrentEndpoint.
- */
-const updateSubscriptionURL = () => {
-    const calendarSelect = document.getElementById('calendarSelect');
-    const calSubscriptionUrl = document.getElementById('calSubscriptionUrl');
-    if (!calendarSelect || !calSubscriptionUrl) {
-        return;
-    }
-    CurrentEndpoint.calendarId = calendarSelect.value;
-    const selectedOption = calendarSelect.options[calendarSelect.selectedIndex];
-    switch (selectedOption?.dataset.calendartype) {
-        case 'national':
-            CurrentEndpoint.calendarType = CalendarType.NATIONAL;
-            break;
-        case 'diocesan':
-            CurrentEndpoint.calendarType = CalendarType.DIOCESAN;
-            break;
-        default:
-            CurrentEndpoint.calendarId = null;
-            CurrentEndpoint.calendarType = null;
-    }
-    calSubscriptionUrl.textContent = CurrentEndpoint.serialize();
-};
 
 // Toastr configuration
 toastr.options = {
@@ -93,74 +62,6 @@ const handleHashChange = () => {
 };
 
 /**
- * Copies URL to clipboard with fallback for older browsers
- */
-const copyUrlToClipboard = () => {
-    const urlText = document.getElementById('calSubscriptionUrl').textContent;
-
-    // Check if modern clipboard API is available
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(urlText)
-            .then(() => {
-                toastr.success(Messages['URL copied to clipboard'], Messages['Success']);
-            })
-            .catch(err => {
-                console.error('Failed to copy to clipboard:', err);
-                toastr.error(Messages['Failed to copy URL'], Messages['Error']);
-            });
-    } else {
-        // Fallback for older browsers using execCommand
-        try {
-            // Create a temporary textarea, copy, then remove
-            const textarea = document.createElement('textarea');
-            textarea.value = urlText;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            textarea.select();
-            const successful = document.execCommand('copy');
-            document.body.removeChild(textarea);
-
-            if (successful) {
-                toastr.success(Messages['URL copied to clipboard'], Messages['Success']);
-            } else {
-                toastr.warning(Messages['Select and copy manually'], Messages['Copy not supported']);
-            }
-        } catch (err) {
-            console.error('Fallback copy failed:', err);
-            toastr.warning(Messages['Select and copy manually'], Messages['Copy not supported']);
-        }
-    }
-};
-
-/**
- * Selects the URL text on mouseup for easy copying
- */
-const selectUrlOnMouseUp = () => {
-    const calSubscriptionUrl = document.getElementById('calSubscriptionUrl');
-    if (window.getSelection && document.createRange) {
-        const sel = window.getSelection();
-        if (sel.toString() === '') {
-            // No text selection - select all content after brief delay
-            setTimeout(() => {
-                const range = document.createRange();
-                range.selectNodeContents(calSubscriptionUrl);
-                sel.removeAllRanges();
-                sel.addRange(range);
-            }, 1);
-        }
-    } else if (document.selection) {
-        // Older IE fallback
-        const sel = document.selection.createRange();
-        if (sel.text === '') {
-            const range = document.body.createTextRange();
-            range.moveToElementText(calSubscriptionUrl);
-            range.select();
-        }
-    }
-};
-
-/**
  * Handles navigation to collapse sections from card header buttons
  * @param {Event} ev - The click event
  */
@@ -172,63 +73,69 @@ const handleCardHeaderClick = (ev) => {
 };
 
 /**
- * Builds the rite and calendar selects and wires them to the subscription URL.
+ * Builds the subscription card's controls and its rendered subscription URL.
  *
- * The two selects are linked so that changing the rite repartitions the calendar
- * list: the Ambrosian rite has no national tier and a different set of diocesan
- * calendars, so a selection under one rite is never carried into the other.
+ * `SubscriptionBuilder` replaces what this file used to assemble by hand: the rite
+ * and calendar selects, the rite -> calendar link that repartitions the calendar
+ * list (the Ambrosian rite has no national tier and a different set of diocesan
+ * calendars, so a selection under one rite is never carried into the other), the
+ * `CurrentEndpoint` bookkeeping that turned those two selections into a URL, and
+ * the clipboard handling below it. It also adds a locale select this card did not
+ * have, so a subscriber can pick the feed's language.
+ *
+ * It never fetches: building and copying a subscription URL needs the calendar's
+ * shape, not its data, so `apiClient` is passed only to bind the selects to that
+ * client's API base -- the same `/calendars` metadata request as before.
+ *
+ * The URL itself is unchanged: `SubscriptionUrl` pins `return_type=ICS`,
+ * `year_type=CIVIL` and an explicit rite segment, which is exactly what
+ * `ApiConfig::$calSubscriptionUrl` renders server-side for the placeholder.
  */
 const buildCalendarControls = async () => {
-    await ApiClient.init(BaseUrl);
+    const apiClient = await ApiClient.init(BaseUrl);
 
-    CurrentEndpoint.rite = Rite.ROMAN;
+    const subscriptionBuilder = await SubscriptionBuilder.mountInto(
+        {
+            controls: '#subscriptionControls',
+            url: '#calSubscriptionUrlWrapper',
+        },
+        {
+            locale: currentLocale.language,
+            apiClient,
+            copyIcon: '<i class="fas fa-clipboard float-end text-info"></i>',
+            onCopy: (ok) => {
+                if (ok) {
+                    toastr.success(Messages['URL copied to clipboard'], Messages['Success']);
+                } else {
+                    toastr.error(Messages['Failed to copy URL'], Messages['Error']);
+                }
+            },
+            theme: {
+                select: 'form-select',
+                label: 'form-label',
+                // Flat `wrapper`, so all three controls -- rite, calendar and, since
+                // 2.7.0, the locale input -- get a Bootstrap column. Nothing below
+                // reaches for those inputs' wrappers again: `Input.wrapper()` is
+                // one-shot since 2.6.0, and this bag has already spent that call.
+                wrapper: 'form-group col-md',
+                // `w-100` because the copy control is a <button>, which unlike the
+                // <div> this replaces does not fill its container on its own.
+                subscriptionUrl: {
+                    class: 'w-100 text-center bg-light border border-info rounded p-2'
+                }
+            },
+        },
+    );
 
-    const lang = currentLocale.language;
-
-    // Must be in the DOM before linkToRiteSelect() below, which reads its
-    // element to attach the rite-change listener.
-    const riteSelect = new RiteSelect(lang)
-        .class('form-select')
-        .id('riteSelect')
-        .label({ text: Messages['Select rite'], class: 'form-label' });
-    riteSelect.appendTo('#riteSelectContainer');
-
-    const calendarSelect = new CalendarSelect(lang)
-        .class('form-select')
-        .id('calendarSelect')
-        .label({ text: Messages['Select calendar'], class: 'form-label' })
-        .allowNull(true);
-    calendarSelect.appendTo('#calendarSelectContainer');
-
-    calendarSelect.linkToRiteSelect(riteSelect);
-
-    // Default to the rite-level calendar rather than the first nation, so the
-    // card opens on the General Roman Calendar.
-    calendarSelect._domElement.value = '';
-
-    document.getElementById('riteSelect').addEventListener('change', (ev) => {
-        CurrentEndpoint.rite = ev.target.value;
-        updateSubscriptionURL();
-    });
-    document
-        .getElementById('calendarSelect')
-        .addEventListener('change', updateSubscriptionURL);
-
-    updateSubscriptionURL();
+    // ids are not theme keys, and id() is not one-shot. e2e/usage.spec.ts selects
+    // on both of these.
+    subscriptionBuilder.riteSelect.id('riteSelect');
+    subscriptionBuilder.calendarSelect.id('calendarSelect');
 };
 
 // Initialize on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
-    CurrentEndpoint.apiBase = CalendarUrl;
     handleHashChange();
-    updateSubscriptionURL();
-
-    // Event: Click on subscription URL wrapper to copy
-    const calSubscriptionUrlWrapper = document.getElementById('calSubscriptionUrlWrapper');
-    if (calSubscriptionUrlWrapper) {
-        calSubscriptionUrlWrapper.addEventListener('click', copyUrlToClipboard);
-        calSubscriptionUrlWrapper.addEventListener('mouseup', selectUrlOnMouseUp);
-    }
 
     // Event: Click on card header buttons in examples section
     const examplesOfUsage = document.getElementById('examplesOfUsage');

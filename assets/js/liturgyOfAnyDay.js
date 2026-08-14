@@ -10,30 +10,27 @@
  * The label text that used to come from a hand-rolled 12-language map now comes
  * from the library's own Messages, which covers 83 languages.
  *
- * `theme.liturgy` only forwards `class` to the widget: `Theme.resolveChildTheme()`
- * copies through `class`/`labelClass`/`labelText`/`wrapperClass`/`wrapper` only, so
- * any other `theme.liturgy.*` key -- `dateClass`, `dateControlsClass`,
- * `eventsWrapperClass`, `eventClass`, `eventGradeClass`, `eventCommonClass`,
- * `eventYearCycleClass` -- is silently dropped before it ever reaches
- * `DayViewer`'s constructor, even though that constructor's own loop
- * (DayViewer.js:196-209) tries to read exactly those keys from the resolved
- * theme. Filed as liturgy-components-js#43: the resolver strips eight keys the
- * constructor loop expects, making that loop unreachable code. The events
- * wrapper needs the `card-body` class the old hand-wiring gave it --
- * e2e/liturgyOfAnyDay.spec.ts locates rendered events via
- * `#liturgyOfAnyDay > .card-body` -- and the other six reproduce the old page's
- * Bootstrap styling, so all seven are set post-mount below, the same way the
- * ids are. Once #43 lands, these can move back into `theme.liturgy`.
+ * The widget's own styling now goes through `theme.liturgy`. It could not before:
+ * `Theme.resolveChildTheme()` used to copy through
+ * `class`/`labelClass`/`labelText`/`wrapperClass`/`wrapper` only, so `dateClass`,
+ * `dateControlsClass`, `eventsWrapperClass`, `eventClass`, `eventGradeClass`,
+ * `eventCommonClass` and `eventYearCycleClass` were dropped before reaching
+ * `DayViewer`'s constructor, whose own loop reads exactly those keys -- filed as
+ * liturgy-components-js#43 and fixed in 2.3.0, which gave the resolver a
+ * `liturgy` role carrying all eight. They were set post-mount until then.
  *
- * The three date controls (`#day`, `#month`, the year input) hit a distinct,
- * separate gap: DayViewer.js:214 resolves that child with role `'input'`, so it
- * looks up `theme.input` -- `theme.select` is never consulted for it -- and
- * DayViewer.js:240-247 shares ONE resolved object across all three controls, even
- * though `#month` is a `<select>` needing `form-select` while the other two are
- * `<input>`s needing `form-control`. Unlike #43, this isn't a key the resolver
- * drops -- it's a role the theme bag has no way to express at all, since one
- * resolved object can't hold two different class strings for the same key. So
- * these three are also set post-mount, one call per control's actual tag.
+ * The three date controls (`#day`, `#month`, the year input) hit a distinct gap
+ * that is still open: `DayViewer` resolves that child with role `'input'`, so it
+ * looks up `theme.input` -- `theme.select` is never consulted for it -- and it
+ * shares ONE resolved object across all three controls, even though `#month` is a
+ * `<select>` needing `form-select` while the other two are `<input>`s needing
+ * `form-control`. Unlike #43, this isn't a key the resolver drops -- it's a role
+ * the theme bag has no way to express at all, since one resolved object can't hold
+ * two different class strings for the same key. 2.6.1 left `dateControls`
+ * deliberately unchanged for this reason. So these three stay set post-mount, one
+ * call per control's actual tag, passing only `class`: `dayInputConfig()` and its
+ * siblings call `Input.wrapper()` only when handed a `wrapper` key, and since
+ * 2.6.0 a second `wrapper()` call on the same input throws.
  */
 
 import { ApiClient, DayViewer } from '@liturgical-calendar/components-js';
@@ -58,7 +55,18 @@ const initializePage = async () => {
             theme: {
                 select: 'form-select',
                 label: 'form-label',
-                liturgy: { class: 'card shadow m-2' },
+                liturgy: {
+                    class: 'card shadow m-2',
+                    dateClass: 'card-header py-3 d-flex justify-content-between align-items-center',
+                    dateControlsClass: 'row g-3 p-3',
+                    // e2e/liturgyOfAnyDay.spec.ts locates rendered events via
+                    // `#liturgyOfAnyDay > .card-body`, so this class is load-bearing.
+                    eventsWrapperClass: 'card-body',
+                    eventClass: 'liturgy-event p-3 mb-2 rounded',
+                    eventGradeClass: 'small',
+                    eventCommonClass: 'small fst-italic',
+                    eventYearCycleClass: 'small'
+                },
                 dateControls: {
                     labelClass: 'form-label',
                     wrapperClass: 'col-md',
@@ -77,17 +85,6 @@ const initializePage = async () => {
     viewer.calendarSelect.id('calendarSelect');
     viewer.localeInput.id('apiOptionsLocale');
     viewer.liturgy.id('liturgyOfAnyDay');
-    // See the file-level note above (liturgy-components-js#43): none of these
-    // seven are reachable through the theme bag, so they are set post-mount,
-    // reproducing the classes the old hand-wired page set directly.
-    viewer.liturgy
-        .dateClass('card-header py-3 d-flex justify-content-between align-items-center')
-        .dateControlsClass('row g-3 p-3')
-        .eventsWrapperClass('card-body')
-        .eventClass('liturgy-event p-3 mb-2 rounded')
-        .eventGradeClass('small')
-        .eventCommonClass('small fst-italic')
-        .eventYearCycleClass('small');
     // See the file-level note above: the date controls' role-shared theme
     // object cannot express one class per tag, so each control's class is set
     // post-mount, matching the old hand-wired page's Bootstrap classes.
