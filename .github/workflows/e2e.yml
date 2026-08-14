@@ -146,6 +146,14 @@ jobs:
     if: >-
       needs.changes.outputs.frontend == 'true' &&
       (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
+    # 45 covers the nightly, which is the long one. Measured from a scheduled run:
+    # ~4.3 min fixed setup (the sequential image build is 3 min of it), 26 s to
+    # install chromium, 2.6 min for `automated`'s 121 tests, 25 s teardown -- 7.8 min
+    # total. The nightly adds firefox and webkit: 301 tests rather than 121, and three
+    # browsers to install rather than one, which projects to ~13 min, ~16 with a 50%
+    # margin, and ~26 in the pathological case where every added test fails and burns
+    # both `--retries`. Re-measure if the suite grows a lot or the image build stops
+    # being cached.
     timeout-minutes: 45
     env:
       # Build litcal-frontend from the checkout (the PR head) instead of the base
