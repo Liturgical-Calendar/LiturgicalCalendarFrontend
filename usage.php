@@ -136,21 +136,26 @@ $messages = [
                     <div class="accordion-body">
                         <div class="row">
                             <div class="col-lg">
-                                <div class="row">
-                                    <div class="form-group col-md" id="riteSelectContainer"></div>
-                                    <div class="form-group col-md" id="calendarSelectContainer"></div>
-                                </div>
+                                <!-- SubscriptionBuilder mounts the rite, calendar and locale
+                                     selects into this one row. Their Bootstrap columns come from
+                                     the theme bag's flat `wrapper` key, not from markup: the
+                                     component offers one `controls` slot, not a slot per select. -->
+                                <div class="row" id="subscriptionControls"></div>
                                 <p class="mt-2 mb-1"><?php
                                     /** translators: label above the iCal/ICS subscription URL */
                                     echo _('Calendar subscription URL');
                                 ?></p>
-                                <div class="text-center bg-light border border-info rounded p-2" role="button"
-                                     title="<?php
-                                        /** translators: tooltip for clickable URL - instructs user to click to copy */
-                                        echo _('Click to copy to the clipboard!');
-                                     ?>" id="calSubscriptionUrlWrapper">
-                                     <code id="calSubscriptionUrl"><?php echo $apiConfig->calSubscriptionUrl; ?></code>
-                                     <i class="fas fa-clipboard float-end text-info"></i>
+                                <!-- The server-rendered URL is a pre-hydration placeholder, kept
+                                     for the reason ApiConfig::$calSubscriptionUrl documents: a
+                                     reader who copies before the JS mounts must get the same URL
+                                     as one who copies after. SubscriptionUrl.appendTo() calls
+                                     replaceChildren(), so the copy button replaces it on mount.
+                                     The copy affordance and its tooltip belong to the component
+                                     now, localized from the library's own catalogue -- and it is
+                                     a real <button>, where this was a div[role="button"] with no
+                                     tabindex and no key handler. -->
+                                <div id="calSubscriptionUrlWrapper">
+                                    <code><?php echo $apiConfig->calSubscriptionUrl; ?></code>
                                 </div>
                                 <ul class="nav nav-tabs mt-4" role="tablist">
                                     <li class="nav-item">

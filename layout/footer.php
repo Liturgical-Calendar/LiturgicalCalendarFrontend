@@ -107,7 +107,7 @@ const NotificationTranslations = {
 $isDevelopment   = ( $_ENV['APP_ENV'] ?? 'production' ) === 'development';
 $componentsJsUrl = $isDevelopment
     ? './assets/components-js/index.js'
-    : 'https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@2.2.0/+esm';
+    : 'https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@2.7.0/+esm';
 
 $componentsJsImportMap = <<<SCRIPT
 <script type="importmap">
