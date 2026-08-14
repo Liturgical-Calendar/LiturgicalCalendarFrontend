@@ -7,17 +7,21 @@ name: E2E
 #   pull_request (frontend-affecting paths) — the PR's own frontend is built from
 #     the checkout via docker-compose.ci.yml (COMPOSE_FILE on the job). Draft PRs
 #     are skipped.
-#   schedule (nightly) — safety-net run on the default branch.
+#   schedule (nightly) — safety-net run on the default branch, and the only
+#     automated run that covers firefox and webkit.
 #   workflow_dispatch — manual, with the `project` selector below.
-# Automated runs (pull_request / schedule) run `rbac` + `chromium-ci` +
-# `chromium-ci-auth` — the `automated` selector below. They used to run `rbac`
-# alone, which meant the whole chromium project was guarded by nothing: `inputs`
-# is empty for a schedule event, so the cron fell through the same `|| 'rbac'`
-# default as everything else. See playwright.config.ts for what is still
-# excluded and why.
+# pull_request runs `rbac` + `chromium-ci` + `chromium-ci-auth` — the `automated`
+# selector below. They used to run `rbac` alone, which meant the whole chromium
+# project was guarded by nothing: `inputs` is empty for a schedule event, so the
+# cron fell through the same `|| 'rbac'` default as everything else. Note that
+# `inputs` is empty for a schedule event, which is why the cron is selected on
+# `github.event_name` rather than on an input default. See playwright.config.ts
+# for what is still excluded and why.
 #
 # The `project` workflow_dispatch input selects which Playwright project runs:
-#   automated (default) — what pull_request and schedule run
+#   automated (default) — what pull_request runs
+#   automated-nightly — what the cron runs: `automated` plus firefox and webkit.
+#       Selected automatically for schedule events; also dispatchable by hand.
 #   rbac — the scoped-admin-review RBAC suite (rbac-setup seeds users)
 #   chromium-ci — the chromium specs needing no login (usage, liturgyOfAnyDay)
 #   chromium-ci-auth — the calendar-data form specs (national / diocesan /
@@ -27,7 +31,8 @@ name: E2E
 #       (issue #448).
 #   chromium / firefox / webkit — the full per-browser projects. `chromium` is
 #       now the same set as chromium-ci + chromium-ci-auth combined; firefox and
-#       webkit are the cross-browser sweep, which automated runs do not cover.
+#       webkit are the cross-browser sweep, which PR runs do not cover — the
+#       nightly does. Dispatch one of these to check a PR before merging.
 #   all — every project
 #
 # litcal-api builds from #development (the merge target); only litcal-frontend is
@@ -64,10 +69,12 @@ on:
         type: choice
         default: automated
         options:
-          # What pull_request and schedule run: rbac + chromium-ci +
-          # chromium-ci-auth. Kept as the dispatch default too, so a manual run
-          # reproduces CI unless you ask for something else.
+          # What pull_request runs: rbac + chromium-ci + chromium-ci-auth. Kept
+          # as the dispatch default too, so a manual run reproduces a PR's own
+          # checks unless you ask for something else.
           - automated
+          # What the nightly cron runs: the above plus firefox and webkit.
+          - automated-nightly
           - rbac
           - chromium-ci
           - chromium-ci-auth
@@ -235,15 +242,21 @@ jobs:
 
       - name: Install dependencies + browsers
         env:
-          PROJECT: ${{ inputs.project || 'automated' }}
+          PROJECT: ${{ inputs.project || (github.event_name == 'schedule' && 'automated-nightly' || 'automated') }}
         run: |
           corepack enable
           yarn install --immutable
+          # chromium is in every set on purpose. The `setup` project pins no
+          # browser, so it runs on Playwright's default -- chromium -- and the
+          # firefox and webkit projects both declare `dependencies: ['setup']`.
+          # Installing firefox alone therefore fails in setup, before a single
+          # firefox test runs, with chromium's executable reported missing.
           case "$PROJECT" in
-            firefox) browsers=firefox ;;
-            webkit)  browsers=webkit ;;
-            all)     browsers="chromium firefox webkit" ;;
-            *)       browsers=chromium ;;   # automated, rbac, chromium, chromium-ci
+            firefox)            browsers="chromium firefox" ;;
+            webkit)             browsers="chromium webkit" ;;
+            all)                browsers="chromium firefox webkit" ;;
+            automated-nightly)  browsers="chromium firefox webkit" ;;
+            *)                  browsers=chromium ;;   # automated, rbac, chromium, chromium-ci
           esac
           yarn playwright install --with-deps $browsers
 
@@ -255,7 +268,7 @@ jobs:
         # an empty CI would otherwise switch off.
         env:
           CI: ""
-          PROJECT: ${{ inputs.project || 'automated' }}
+          PROJECT: ${{ inputs.project || (github.event_name == 'schedule' && 'automated-nightly' || 'automated') }}
           API_REPO_PATH: ${{ github.workspace }}/api-repo
         run: |
           case "$PROJECT" in
@@ -263,12 +276,23 @@ jobs:
               yarn playwright test --retries=2 --forbid-only
               ;;
             automated)
-              # What pull_request and schedule run. `rbac` is the long-standing
-              # suite; `chromium-ci` is the login-free chromium specs and
+              # What pull_request runs. `rbac` is the long-standing suite;
+              # `chromium-ci` is the login-free chromium specs and
               # `chromium-ci-auth` the calendar-data ones behind auth.setup.ts.
               # All three are needed: none covers another's pages. See
               # playwright.config.ts for what is still excluded and why.
               yarn playwright test --project=rbac --project=chromium-ci --project=chromium-ci-auth --retries=2 --forbid-only
+              ;;
+            automated-nightly)
+              # What the cron runs: everything `automated` runs, plus the
+              # cross-browser sweep. Nightly rather than per-PR because it
+              # roughly triples install and run time, and this workflow reports a
+              # REQUIRED status check -- the cost belongs on the safety net, not
+              # on every PR. A firefox/webkit-only failure therefore surfaces
+              # within a day of merge rather than at review time; run
+              # `workflow_dispatch` with project=firefox/webkit/all to check a PR
+              # before merging when it touches anything browser-sensitive.
+              yarn playwright test --project=rbac --project=chromium-ci --project=chromium-ci-auth --project=firefox --project=webkit --retries=2 --forbid-only
               ;;
             *)
               yarn playwright test --project="$PROJECT" --retries=2 --forbid-only
