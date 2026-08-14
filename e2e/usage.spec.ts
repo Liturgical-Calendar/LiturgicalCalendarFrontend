@@ -19,8 +19,12 @@ async function openSubscriptionCard(page: Page): Promise<void> {
     await page.waitForSelector('#riteSelect', { state: 'visible' });
 }
 
+// SubscriptionBuilder renders the URL inside a <code> within its own copy
+// <button>, and that <code> carries no id by design -- the component documents
+// styling it with a descendant selector -- so this reaches it through the mount
+// slot rather than through the id the hand-rolled card used to set.
 const subscriptionUrl = (page: Page) =>
-    page.locator('#calSubscriptionUrl').innerText();
+    page.locator('#calSubscriptionUrlWrapper code').innerText();
 
 test.describe('usage.php - calendar subscription URL', () => {
     test('both selects render client-side', async ({ page }) => {

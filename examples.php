@@ -6,11 +6,16 @@ $example     = isset($_GET['example']) ? $_GET['example'] : null;
 $safeExample = htmlspecialchars((string) $example, ENT_QUOTES, 'UTF-8');
 $h2          = _('Liturgical Calendar as an HTML table produced by Javascript');
 
+// Keep this markup in step with examples/javascript/index.html, which is the same page
+// standalone: the examples/ directory is a symlink to the examples repo, so main.js is
+// always that repo's current copy while this host markup is a separate, local duplicate.
+// Two rows, as there: the rite, calendar, locale, year type and year inputs land in
+// #calendarOptions, and the five General Roman parameters in #generalRomanOptions.
 $JAVASCRIPT_EXAMPLE_CONTENTS = <<<EOT
 <form id="litcalForm">
-    <div class="row mb-4" id="calendarOptions">
-        <h2>{$h2}</h2>
-    </div>
+    <h2 class="mb-4">{$h2}</h2>
+    <div class="row mb-3" id="calendarOptions"></div>
+    <div class="row mb-4" id="generalRomanOptions"></div>
 </form>
 <div id="litcalWebcalendar"></div>
 <table id="LitCalMessages">
@@ -20,7 +25,7 @@ $JAVASCRIPT_EXAMPLE_CONTENTS = <<<EOT
 <script type="importmap">
     {
         "imports": {
-            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@2.2.0/+esm"
+            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@2.7.0/+esm"
         }
     }
 </script>
@@ -45,6 +50,8 @@ $FULLCALENDAR_CALENDAR_FIRST = <<<EOT
 </table>
 EOT;
 
+// Keep this markup in step with examples/fullcalendar/month-view.html and messages.html,
+// which are the same page standalone, for the same reason as the JavaScript example above.
 $FULLCALENDAR_EXAMPLE_CONTENTS = <<<EOT
 <div id="spinnerWrapper">
     <div class="lds-roller">
@@ -60,7 +67,8 @@ $FULLCALENDAR_EXAMPLE_CONTENTS = <<<EOT
 </div>
 
 <header>
-    <div id="calendarOptions" class="row mb-4"></div>
+    <div id="calendarOptions" class="row mb-3"></div>
+    <div id="generalRomanOptions" class="row mb-4"></div>
 </header>
 
 {INTERPOLATE}
@@ -73,7 +81,7 @@ $FULLCALENDAR_EXAMPLE_CONTENTS = <<<EOT
             "@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.19",
             "@fullcalendar/list": "https://cdn.skypack.dev/@fullcalendar/list@6.1.19",
             "@fullcalendar/bootstrap5": "https://cdn.skypack.dev/@fullcalendar/bootstrap5@6.1.19",
-            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@2.2.0/+esm"
+            "@liturgical-calendar/components-js": "https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@2.7.0/+esm"
         }
     }
 </script>

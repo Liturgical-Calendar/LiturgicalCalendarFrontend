@@ -15,7 +15,10 @@
   content: "\f106";
 }
 
-#calSubscriptionUrlWrapper {
+/* The copy control is SubscriptionBuilder's own <button>, mounted into this
+   wrapper alongside a visually-hidden aria-live region, so the flex layout belongs
+   on the button rather than on the wrapper element it replaced. */
+#calSubscriptionUrlWrapper button {
   display: flex;
   align-items: center;
   justify-content: space-between;
