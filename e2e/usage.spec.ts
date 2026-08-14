@@ -23,8 +23,13 @@ async function openSubscriptionCard(page: Page): Promise<void> {
 // <button>, and that <code> carries no id by design -- the component documents
 // styling it with a descendant selector -- so this reaches it through the mount
 // slot rather than through the id the hand-rolled card used to set.
-const subscriptionUrl = (page: Page) =>
-    page.locator('#calSubscriptionUrlWrapper code').innerText();
+//
+// textContent, not innerText: innerText is layout-dependent and WebKit returns
+// an empty string for it here, the <code> now sitting inside the component's
+// own <button> rather than in a plain div. The assertions want the URL string,
+// which is textContent's job anyway.
+const subscriptionUrl = async (page: Page) =>
+    (await page.locator('#calSubscriptionUrlWrapper code').textContent()) ?? '';
 
 test.describe('usage.php - calendar subscription URL', () => {
     test('both selects render client-side', async ({ page }) => {
