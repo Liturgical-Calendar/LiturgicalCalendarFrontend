@@ -99,6 +99,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
+     * The `{ type, id }` pair renderScopeControl()'s `pin()` needs to lock the
+     * scope UI to an existing test's own scope, for the editor's "editing"
+     * path. `id` MUST be a bare calendar id: it ends up in #testScopeId and
+     * from there in selectedScope()'s `{ [type]: id }`, which becomes
+     * `applies_to.national_calendar` / `applies_to.diocesan_calendar` on save
+     * — never the rite-qualified FGA object id deriveScope() returns.
+     *
+     * @param {object} appliesTo - A test's `applies_to`.
+     * @returns {{type: string, id: string}} The locked scope for the editor UI.
+     */
+    function deriveLockedScope(appliesTo) {
+        const scope = deriveScope(appliesTo);
+        return {
+            type: scope.object_type === 'national_calendar_test' ? 'national_calendar'
+                : scope.object_type === 'diocesan_calendar_test' ? 'diocesan_calendar'
+                    : 'general_roman_calendar',
+            id: bareCalendarId(scope.object_type, scope.object_id),
+        };
+    }
+
+    /**
      * Whether one of the caller's granted scopes covers this test's scope.
      *
      * Tolerant of both pre-migration forms, because a grant written before
@@ -255,7 +276,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('filterTestScope').addEventListener('input', renderTableRows);
 
     // Expose internals for later tasks (editor/delete wiring appended below).
-    window.__adminTests = { state, fetchJson, deriveScope, gateByScope, showModalAlert, loadTests, renderTableRows, AssertionsBuilder, TestType, CalendarSelect, CalendarSelectFilter, RiteSelect, ApiClient };
+    window.__adminTests = { state, fetchJson, deriveScope, deriveLockedScope, gateByScope, showModalAlert, loadTests, renderTableRows, AssertionsBuilder, TestType, CalendarSelect, CalendarSelectFilter, RiteSelect, ApiClient };
+    // selectedScope and authorizedScopeChoices are defined further down in
+    // this closure; attached to the same exposed object once available so
+    // tests can reach them without a full DOM/component round-trip through
+    // openEditor()/renderScopeControl().
 
     // ---- editor -----------------------------------------------------------
 
@@ -282,6 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = idEl ? idEl.value : '';
         return id ? { [type]: id } : undefined;
     }
+    window.__adminTests.selectedScope = selectedScope;
 
     function eventsPath(appliesTo) {
         if (appliesTo && appliesTo.diocesan_calendar) return `/events/diocese/${appliesTo.diocesan_calendar}`;
@@ -650,10 +676,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const type = s.object_type === 'diocesan_calendar_test' ? 'diocesan_calendar'
                 : s.object_type === 'national_calendar_test' ? 'national_calendar'
                     : 'general_roman_calendar';
-            choices.push({ type, id: s.object_id });
+            // `applies_to` (via #testScopeId → selectedScope()) holds bare
+            // calendar ids, never FGA object ids — strip the rite qualifier
+            // s.object_id carries (e.g. `roman/USA`) before it reaches there.
+            choices.push({ type, id: bareCalendarId(s.object_type, s.object_id) });
         });
         return choices;
     }
+    window.__adminTests.authorizedScopeChoices = authorizedScopeChoices;
 
     // Configure the scope UI to one of three modes and guarantee that afterwards
     // #testScopeType (value) and, for scoped types, #testScopeId (value) reflect
@@ -818,13 +848,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // constrained to the user's permissions (full picker for global admins).
         let lockedScope = null;
         if (test) {
-            const scope = deriveScope(test.applies_to);
-            lockedScope = {
-                type: scope.object_type === 'national_calendar_test' ? 'national_calendar'
-                    : scope.object_type === 'diocesan_calendar_test' ? 'diocesan_calendar'
-                        : 'general_roman_calendar',
-                id: scope.object_id,
-            };
+            lockedScope = deriveLockedScope(test.applies_to);
         }
         await renderScopeControl(lockedScope);
         editorModal.show();
