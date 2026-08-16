@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-14 01:34+0000\n"
+"POT-Creation-Date: 2026-08-16 23:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2357,7 +2357,7 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: admin-permissions.php:443 admin-applications.php:245 admin-dashboard.php:168
+#: admin-permissions.php:443 admin-applications.php:245 admin-dashboard.php:171
 msgid "Review"
 msgstr ""
 
@@ -2595,8 +2595,8 @@ msgid ""
 "calendars."
 msgstr ""
 
-#: admin-dashboard.php:65 admin-dashboard.php:129 admin-dashboard.php:143
-#: admin-dashboard.php:153
+#: admin-dashboard.php:65 admin-dashboard.php:129 admin-dashboard.php:146
+#: admin-dashboard.php:156
 msgid "Administration"
 msgstr ""
 
@@ -2624,11 +2624,11 @@ msgstr ""
 msgid "Manage fine-grained resource permissions"
 msgstr ""
 
-#: admin-dashboard.php:162
+#: admin-dashboard.php:165
 msgid "Access Requests to Review"
 msgstr ""
 
-#: admin-dashboard.php:164
+#: admin-dashboard.php:167
 msgid "Review and approve access requests for the resources you administer"
 msgstr ""
 
