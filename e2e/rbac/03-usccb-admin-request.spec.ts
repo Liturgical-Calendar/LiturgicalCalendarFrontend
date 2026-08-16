@@ -98,7 +98,7 @@ test('03 — admin@USA request not visible to cei-admin (out-of-scope IT admin)'
     const zid = await z.findUserIdByEmail(USERS['grc-editor'].email);
     expect(zid).not.toBeNull();
     expect(
-        await new Fga().check(`user:${zid}`, 'admin', 'national_calendar:US'),
+        await new Fga().check(`user:${zid}`, 'admin', 'national_calendar:roman/US'),
     ).toBe(true);
 
     // ── Step 5: Durable DOM evidence — super-admin sees the approval ──────────
@@ -132,12 +132,12 @@ test.afterEach(async () => {
         truncateAppTables(), // app-table rows created by this scenario
         // Revoke the admin@US tuple the approval may have written for grc-editor
         grcEditorId
-            ? f.delete(`user:${grcEditorId}`, 'admin', 'national_calendar:US')
+            ? f.delete(`user:${grcEditorId}`, 'admin', 'national_calendar:roman/US')
             : Promise.resolve(),
         // cei-admin was created on-demand by seedAndLogin — delete it + its admin@IT tuple
         ceiAdminId ? z.deleteUser(ceiAdminId) : Promise.resolve(),
         ceiAdminId
-            ? f.delete(`user:${ceiAdminId}`, 'admin', 'national_calendar:IT')
+            ? f.delete(`user:${ceiAdminId}`, 'admin', 'national_calendar:roman/IT')
             : Promise.resolve(),
     ]);
 });

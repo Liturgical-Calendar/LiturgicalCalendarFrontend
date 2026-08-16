@@ -51,7 +51,7 @@ async function purgeCeiAdmin(): Promise<void> {
     // beforeAll, or via settleCleanup in teardown) instead of silently leaving stale state.
     const zid = await z.findUserIdByEmail(USERS['cei-admin'].email);
     if (zid) {
-        await f.delete(`user:${zid}`, 'admin', 'national_calendar:IT');
+        await f.delete(`user:${zid}`, 'admin', 'national_calendar:roman/IT');
         await z.deleteUser(zid);
     }
     if (fs.existsSync(CEI_ADMIN_AUTH)) {
@@ -153,7 +153,7 @@ test('01 — cei-admin registers + admin@IT: scoped review lifecycle', async ({ 
     const zid = await z.findUserIdByEmail(cei.email);
     expect(zid).not.toBeNull();
     expect(
-        await new Fga().check(`user:${zid}`, 'admin', 'national_calendar:IT'),
+        await new Fga().check(`user:${zid}`, 'admin', 'national_calendar:roman/IT'),
     ).toBe(true);
 
     // ── Step 8: super-admin sees the approval (durable DOM evidence of the grant) ─

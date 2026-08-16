@@ -161,7 +161,7 @@ test.describe.serial('07 — dashboard card scoping matrix', () => {
         await settleCleanup('scenario 07 afterAll', [
             ceiAdminId ? z.deleteUser(ceiAdminId) : Promise.resolve(),
             ceiAdminId
-                ? f.delete(`user:${ceiAdminId}`, 'admin', 'national_calendar:IT')
+                ? f.delete(`user:${ceiAdminId}`, 'admin', 'national_calendar:roman/IT')
                 : Promise.resolve(),
             fs.promises.rm(path.join(__dirname, '..', '.auth', 'cei-admin.json'), { force: true }),
         ]);

@@ -82,11 +82,11 @@ test('10 — scoped data editing: cei-editor writes IT (ok) but is denied USA (4
     const ceiEditorId = await z.findUserIdByEmail(USERS['cei-editor'].email);
     expect(ceiEditorId).not.toBeNull();
     expect(
-        await new Fga().check(`user:${ceiEditorId}`, 'editor', 'national_calendar:IT'),
+        await new Fga().check(`user:${ceiEditorId}`, 'editor', 'national_calendar:roman/IT'),
     ).toBe(true);
     // ...and does NOT exist for the USA calendar (cei-editor holds no US scope).
     expect(
-        await new Fga().check(`user:${ceiEditorId}`, 'editor', 'national_calendar:US'),
+        await new Fga().check(`user:${ceiEditorId}`, 'editor', 'national_calendar:roman/US'),
     ).toBe(false);
 
     const headers = {

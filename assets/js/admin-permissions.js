@@ -11,6 +11,7 @@ import {
     CalendarSelectFilter,
     RiteSelect,
 } from '@liturgical-calendar/components-js';
+import { qualifyObjectId } from './riteScopedObjectId.js';
 
 // Initialize the API client once; CalendarSelect requires this to have resolved.
 // Since components-js 2.0.0 init() rejects on failure rather than resolving to
@@ -482,6 +483,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const objectType = grantObjectType.value;
         const objectIdEl = document.getElementById('grantObjectId');
         const objectId = objectIdEl ? objectIdEl.value.trim() : '';
+        const objectRiteEl = document.getElementById('grantObjectRite');
+        const objectRite = objectRiteEl ? objectRiteEl.value : undefined;
         const relation = grantRelation.value;
 
         if (!user || !objectType || !objectId || !relation) {
@@ -509,7 +512,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify({
                     user: user,
                     object_type: objectType,
-                    object_id: objectId,
+                    // The CalendarSelect's option values are bare calendar ids;
+                    // the API authorizes against rite-qualified ones for every
+                    // type that names a calendar (LiturgicalCalendarAPI #786).
+                    // #grantObjectRite is the RiteSelect the diocesan calendar
+                    // list is filtered by, so it carries the diocese's announced
+                    // rite; national / wider-region scopes have no rite select
+                    // and are pinned to `roman` structurally.
+                    object_id: qualifyObjectId(objectType, objectId, objectRite),
                     relation: relation
                 })
             });

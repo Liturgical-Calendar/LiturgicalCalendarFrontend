@@ -206,7 +206,7 @@ test('11c — grant/revoke is reflected on the next authorization decision (no s
     const body = buildItNationalPayload();
 
     // ── Phase 1 — NO scope: FGA false + the IT write is DENIED (403) ─────────
-    expect(await fga.check(subject, 'editor', 'national_calendar:IT')).toBe(false);
+    expect(await fga.check(subject, 'editor', 'national_calendar:roman/IT')).toBe(false);
     {
         const cei = await actingAs(browser, 'cei-editor');
         try {
@@ -222,7 +222,7 @@ test('11c — grant/revoke is reflected on the next authorization decision (no s
 
     // ── Phase 2 — GRANT mid-session: FGA true + the very next write is AUTHORIZED (201) ─
     await grantScope('cei-editor');
-    expect(await fga.check(subject, 'editor', 'national_calendar:IT')).toBe(true);
+    expect(await fga.check(subject, 'editor', 'national_calendar:roman/IT')).toBe(true);
     {
         const cei = await actingAs(browser, 'cei-editor');
         try {
@@ -238,7 +238,7 @@ test('11c — grant/revoke is reflected on the next authorization decision (no s
 
     // ── Phase 3 — REVOKE mid-session: FGA false + the next write is DENIED again (403) ─
     await revokeScope('cei-editor');
-    expect(await fga.check(subject, 'editor', 'national_calendar:IT')).toBe(false);
+    expect(await fga.check(subject, 'editor', 'national_calendar:roman/IT')).toBe(false);
     {
         const cei = await actingAs(browser, 'cei-editor');
         try {

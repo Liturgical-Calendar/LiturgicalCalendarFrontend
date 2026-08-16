@@ -172,7 +172,7 @@ test('08 — cei-admin cannot act on (403) or see USA-scoped access request', as
     // Sanity: the approval granted grc-editor editor@national_calendar:US, so the request is
     // genuinely APPROVED — the revoke below exercises the authz branch, not the state guard.
     const grcId = await new ZitadelAdmin().findUserIdByEmail(USERS['grc-editor'].email);
-    expect(await new Fga().check(`user:${grcId}`, 'editor', 'national_calendar:US')).toBe(true);
+    expect(await new Fga().check(`user:${grcId}`, 'editor', 'national_calendar:roman/US')).toBe(true);
 
     // ── Step 7: (a′) cei-admin revokes the APPROVED request → 403 by SCOPE ────
     // With the state guard satisfied (approved), the API reaches the authorization check,
@@ -208,11 +208,11 @@ test.afterEach(async () => {
         // cei-admin was created on-demand by seedAndLogin — delete it + its admin@IT tuple.
         ceiAdminId ? z.deleteUser(ceiAdminId) : Promise.resolve(),
         ceiAdminId
-            ? f.delete(`user:${ceiAdminId}`, 'admin', 'national_calendar:IT')
+            ? f.delete(`user:${ceiAdminId}`, 'admin', 'national_calendar:roman/IT')
             : Promise.resolve(),
         // Step 6 approved the request → grc-editor earned editor@national_calendar:US; revoke it.
         grcEditorId
-            ? f.delete(`user:${grcEditorId}`, 'editor', 'national_calendar:US')
+            ? f.delete(`user:${grcEditorId}`, 'editor', 'national_calendar:roman/US')
             : Promise.resolve(),
     ]);
 });
