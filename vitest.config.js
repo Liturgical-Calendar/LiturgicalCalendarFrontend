@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
@@ -9,10 +10,12 @@ export default defineConfig({
             // admin-permissions.js, permission-requests.js), so tests need
             // something on disk for Vite to resolve — see the stub's own
             // header comment for why its exports are inert stand-ins.
-            '@liturgical-calendar/components-js': new URL(
-                './assets/js/__tests__/stubs/components-js.js',
-                import.meta.url
-            ).pathname,
+            // fileURLToPath, not URL.pathname: the latter percent-encodes spaces
+            // and keeps the leading slash on Windows drive letters, so a checkout
+            // under such a path would fail to resolve.
+            '@liturgical-calendar/components-js': fileURLToPath(
+                new URL('./assets/js/__tests__/stubs/components-js.js', import.meta.url)
+            ),
         },
     },
     test: {

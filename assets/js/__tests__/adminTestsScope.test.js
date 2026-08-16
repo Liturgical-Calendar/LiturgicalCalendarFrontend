@@ -182,6 +182,40 @@ describe('admin-tests.js — bare vs. rite-qualified calendar ids', () => {
         choices.forEach((c) => expect(c.id).not.toContain('/'));
     });
 
+    it('authorizedScopeChoices() collapses a legacy bare grant and its migrated twin into one choice', async () => {
+        // The API's tuple migration is copy-then-prune, so during the migration
+        // window BOTH forms of the same grant exist in the store. Deduping on the
+        // raw object_id would key them separately and offer the user the same
+        // calendar twice, with two identical "USA" labels and no way to tell them
+        // apart. Dedupe must therefore run on the normalized id.
+        const api = await loadAdminTests();
+        api.state.scopes = {
+            is_global_admin: false,
+            editor: [
+                { object_type: 'national_calendar_test', object_id: 'USA', relation: 'editor' },
+                { object_type: 'national_calendar_test', object_id: 'roman/USA', relation: 'editor' },
+            ],
+            admin: [],
+        };
+        const choices = api.authorizedScopeChoices();
+        expect(choices).toEqual([{ type: 'national_calendar', id: 'USA' }]);
+    });
+
+    it('authorizedScopeChoices() keeps distinct calendars that share a bare id across types', async () => {
+        // Guard against over-collapsing: normalizing the id must not merge two
+        // genuinely different scopes that happen to share a bare id.
+        const api = await loadAdminTests();
+        api.state.scopes = {
+            is_global_admin: false,
+            editor: [
+                { object_type: 'national_calendar_test', object_id: 'roman/US', relation: 'editor' },
+                { object_type: 'diocesan_calendar_test', object_id: 'roman/US', relation: 'editor' },
+            ],
+            admin: [],
+        };
+        expect(api.authorizedScopeChoices()).toHaveLength(2);
+    });
+
     it('deriveLockedScope() (the editor "edit" path) also strips the rite qualifier', async () => {
         const api = await loadAdminTests();
         expect(api.deriveLockedScope({ rite: 'roman', national_calendar: 'USA' }))

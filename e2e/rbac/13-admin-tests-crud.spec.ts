@@ -100,6 +100,11 @@ test.describe('admin-tests CRUD (real RBAC)', () => {
             if (staleId) {
                 await f.delete(`user:${staleId}`, 'editor', `national_calendar_test:roman/${NATION}`)
                     .catch(() => {}); // tolerate already-absent tuple
+                // A run from before the rite-qualification migration seeded the
+                // legacy bare form. Clean that up too, or a stale unqualified
+                // tuple survives teardown and leaks into the next run.
+                await f.delete(`user:${staleId}`, 'editor', `national_calendar_test:${NATION}`)
+                    .catch(() => {}); // tolerate already-absent tuple
                 await z.deleteUser(staleId);
             }
 

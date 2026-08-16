@@ -13,6 +13,14 @@
 import { vi } from 'vitest';
 
 class ChainableStub {
+    // The real components expose the mounted element as `_domElement`, and
+    // permission-requests.js and admin-permissions.js both attach a `change`
+    // listener to a RiteSelect's. Without an inert stand-in here, any test that
+    // reaches those rite-linked paths dies on `addEventListener` of undefined
+    // rather than on whatever it was actually asserting. appendTo() is a no-op,
+    // so this stays available afterwards.
+    _domElement = { addEventListener() {} };
+
     filter() { return this; }
     allowNull() { return this; }
     class() { return this; }

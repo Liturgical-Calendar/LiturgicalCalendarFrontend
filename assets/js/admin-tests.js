@@ -670,16 +670,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const seen = new Set();
         const choices = [];
         [...(state.scopes.editor || []), ...(state.scopes.admin || [])].forEach((s) => {
-            const key = `${s.object_type}:${s.object_id}`;
-            if (seen.has(key)) return;
-            seen.add(key);
             const type = s.object_type === 'diocesan_calendar_test' ? 'diocesan_calendar'
                 : s.object_type === 'national_calendar_test' ? 'national_calendar'
                     : 'general_roman_calendar';
             // `applies_to` (via #testScopeId → selectedScope()) holds bare
             // calendar ids, never FGA object ids — strip the rite qualifier
             // s.object_id carries (e.g. `roman/USA`) before it reaches there.
-            choices.push({ type, id: bareCalendarId(s.object_type, s.object_id) });
+            const id = bareCalendarId(s.object_type, s.object_id);
+            // Dedupe on the NORMALIZED id, not the raw object_id. The API's tuple
+            // migration is copy-then-prune, so during the migration window a legacy
+            // bare grant (`national_calendar_test:USA`) and its migrated twin
+            // (`national_calendar_test:roman/USA`) both exist — two tuples naming
+            // one calendar. Keying on the raw id would offer the user the same
+            // calendar twice, with identical labels.
+            const key = `${type}:${id}`;
+            if (seen.has(key)) return;
+            seen.add(key);
+            choices.push({ type, id });
         });
         return choices;
     }
