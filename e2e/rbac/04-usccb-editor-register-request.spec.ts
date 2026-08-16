@@ -63,7 +63,7 @@ async function purgeUsccbEditor(): Promise<void> {
     // beforeAll, or via settleCleanup in teardown) instead of silently leaving stale state.
     const zid = await z.findUserIdByEmail(USERS['usccb-editor'].email);
     if (zid) {
-        await f.delete(`user:${zid}`, 'editor', 'national_calendar:US');
+        await f.delete(`user:${zid}`, 'editor', 'national_calendar:roman/US');
         await z.deleteUser(zid);
     }
     if (fs.existsSync(USCCB_EDITOR_AUTH)) {
@@ -148,7 +148,7 @@ test('04 — usccb-editor registers + editor@US: resource-admin grant', async ({
     const zid = await z.findUserIdByEmail(editor.email);
     expect(zid).not.toBeNull();
     expect(
-        await new Fga().check(`user:${zid}`, 'editor', 'national_calendar:US'),
+        await new Fga().check(`user:${zid}`, 'editor', 'national_calendar:roman/US'),
     ).toBe(true);
 
     // ── Step 6: super-admin sees the approval (durable DOM evidence of the grant) ─
@@ -176,7 +176,7 @@ test.afterEach(async () => {
         // cei-admin was created on-demand by seedAndLogin — delete it + its admin@IT tuple.
         ceiAdminId ? z.deleteUser(ceiAdminId) : Promise.resolve(),
         ceiAdminId
-            ? new Fga().delete(`user:${ceiAdminId}`, 'admin', 'national_calendar:IT')
+            ? new Fga().delete(`user:${ceiAdminId}`, 'admin', 'national_calendar:roman/IT')
             : Promise.resolve(),
     ]);
 });

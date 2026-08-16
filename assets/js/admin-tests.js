@@ -10,6 +10,7 @@ import {
     RiteSelect,
 } from '@liturgical-calendar/components-js';
 import { AssertionsBuilder, TestType, AssertType } from './AssertionsBuilder.js';
+import { ROMAN_RITE, bareCalendarId, qualifyObjectId, sameObjectId } from './riteScopedObjectId.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const config = window.AdminTestsConfig;
@@ -59,19 +60,64 @@ document.addEventListener('DOMContentLoaded', () => {
         return data;
     }
 
-    /** Mirror TestScopeResolver: derive a test's scope object from applies_to. */
+    /**
+     * Mirror TestScopeResolver::mapAppliesTo(): derive a test's scope object
+     * from applies_to.
+     *
+     *   { rite, diocesan_calendar } → diocesan_calendar_test:<rite>/<id>
+     *   { rite, national_calendar } → national_calendar_test:<rite>/<id>
+     *   { rite }                    → rite_calendar_test:<rite>
+     *   absent                      → rite_calendar_test:roman
+     *
+     * `rite_calendar_test` generalises the old `general_roman_calendar_test`,
+     * whose fixed id `general_roman_calendar` denoted exactly the Roman
+     * rite-level calendar; gateByScope() below still honours that older type so
+     * pre-migration grants keep authorizing.
+     */
     function deriveScope(appliesTo) {
+        const rite = (appliesTo && appliesTo.rite) || ROMAN_RITE;
         if (appliesTo && appliesTo.diocesan_calendar) {
-            return { object_type: 'diocesan_calendar_test', object_id: appliesTo.diocesan_calendar };
+            return {
+                object_type: 'diocesan_calendar_test',
+                object_id: qualifyObjectId('diocesan_calendar_test', appliesTo.diocesan_calendar, rite),
+            };
         }
         if (appliesTo && appliesTo.national_calendar) {
-            return { object_type: 'national_calendar_test', object_id: appliesTo.national_calendar };
+            // qualifyObjectId() pins national scopes to `roman` whatever the
+            // test declares: the Ambrosian rite has no national tier, and the
+            // API rejects `national_calendar_test:ambrosian/*` outright. A test
+            // carrying that impossible pair is gated shut rather than matched
+            // against a scope that could never have been granted.
+            return {
+                object_type: 'national_calendar_test',
+                object_id: qualifyObjectId('national_calendar_test', appliesTo.national_calendar, rite),
+            };
         }
-        return { object_type: 'general_roman_calendar_test', object_id: 'general_roman_calendar' };
+        // No calendar named: the scope is the rite-level calendar, whose id IS
+        // the rite — bare, not rite-qualified.
+        return { object_type: 'rite_calendar_test', object_id: rite };
     }
 
+    /**
+     * Whether one of the caller's granted scopes covers this test's scope.
+     *
+     * Tolerant of both pre-migration forms, because a grant written before
+     * LiturgicalCalendarAPI #785 is still live and still authorizes on the API
+     * side: an unqualified `national_calendar_test:IT` is read as Roman, and
+     * `general_roman_calendar_test:general_roman_calendar` is the Roman
+     * rite-level calendar under its former type name.
+     */
     function gateByScope(scopeObj, scopes) {
-        return scopes.some((s) => s.object_type === scopeObj.object_type && s.object_id === scopeObj.object_id);
+        return scopes.some((s) => {
+            if (
+                scopeObj.object_type === 'rite_calendar_test'
+                && s.object_type === 'general_roman_calendar_test'
+            ) {
+                return scopeObj.object_id === ROMAN_RITE;
+            }
+            return s.object_type === scopeObj.object_type
+                && sameObjectId(scopeObj.object_type, s.object_id, scopeObj.object_id);
+        });
     }
 
     function showModalAlert(modalEl, type, message) {
@@ -100,8 +146,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function scopeLabel(appliesTo) {
         const s = deriveScope(appliesTo);
-        if (s.object_type === 'national_calendar_test') return `${i18n.nationalCalendar}: ${s.object_id}`;
-        if (s.object_type === 'diocesan_calendar_test') return `${i18n.diocesanCalendar}: ${s.object_id}`;
+        // Labels show the bare calendar id: the `roman/` in `roman/IT` is an
+        // authorization-model detail, not something to put in front of a user.
+        if (s.object_type === 'national_calendar_test') {
+            return `${i18n.nationalCalendar}: ${bareCalendarId(s.object_type, s.object_id)}`;
+        }
+        if (s.object_type === 'diocesan_calendar_test') {
+            return `${i18n.diocesanCalendar}: ${bareCalendarId(s.object_type, s.object_id)}`;
+        }
         return i18n.generalRomanCalendar;
     }
 
