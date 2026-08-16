@@ -8,8 +8,70 @@ import {
     CalendarSelect,
     CalendarSelectFilter,
     RiteSelect,
+    Rite,
 } from '@liturgical-calendar/components-js';
 import { AssertionsBuilder, TestType, AssertType } from './AssertionsBuilder.js';
+
+/**
+ * Splits a rite-qualified OpenFGA object id (`TestScopeResolver::qualify()` /
+ * `RiteScopedObjectId`, e.g. `roman/US`, `ambrosian/lugano_ch`) back into its
+ * rite and bare calendar id.
+ *
+ * A bare id with no `/` is a pre-migration legacy tuple, always Roman — the
+ * Ambrosian rite only gained test scopes once ids started carrying a rite
+ * prefix, so an unqualified id predates Ambrosian support entirely.
+ *
+ * Exported (rather than nested in the DOMContentLoaded closure, like every
+ * other helper in this module) purely so it is unit-testable in isolation —
+ * mirrors the pattern admin-decrees.js already uses for its pure helpers.
+ *
+ * @param {string} rawId
+ * @returns {{rite: string, id: string}}
+ */
+export function parseScopedId(rawId) {
+    const idx = rawId.indexOf('/');
+    if (idx === -1) return { rite: Rite.ROMAN, id: rawId };
+    return { rite: rawId.slice(0, idx), id: rawId.slice(idx + 1) };
+}
+
+/**
+ * Reads the admin-tests scope picker's current selection and builds the
+ * `applies_to` scope object a create/update payload must carry.
+ *
+ * `applies_to.rite` is REQUIRED by `LitCalTest.json` (API #785) — omitting it
+ * (or omitting `applies_to` altogether for the General Roman case) is a 422.
+ * The rite is never guessed: General Roman is definitionally Roman; a
+ * national calendar is always Roman (the Ambrosian rite has no national
+ * tier — `RiteProperties[Rite.AMBROSIAN].hasNationalTier === false`); a
+ * diocesan calendar's rite is read from whatever announced it — the linked
+ * `RiteSelect` (`#testScopeRite`) when the full picker is showing one, or a
+ * hidden `#testScopeRite` mirror the locked/pinned scope paths set from the
+ * server-supplied `applies_to.rite` or the FGA scope's own rite-qualified id.
+ *
+ * Exported for the same testability reason as {@link parseScopedId}.
+ *
+ * Three-state return so the save flow can tell an explicit choice apart from
+ * an incomplete one:
+ *   undefined — a scoped type is selected but no calendar ID is picked yet
+ *   object    — a concrete scope: `{ rite }` for General Roman, or
+ *               `{ rite, national_calendar | diocesan_calendar: id }`
+ *
+ * @returns {undefined|{rite: string, national_calendar?: string, diocesan_calendar?: string}}
+ */
+export function selectedScope() {
+    const type = document.getElementById('testScopeType').value;
+    if (type === 'general_roman_calendar') return { rite: Rite.ROMAN };
+    const idEl = document.getElementById('testScopeId');
+    const id = idEl ? idEl.value : '';
+    if (!id) return undefined;
+    if (type === 'diocesan_calendar') {
+        const riteEl = document.getElementById('testScopeRite');
+        return { rite: riteEl ? riteEl.value : Rite.ROMAN, diocesan_calendar: id };
+    }
+    // national_calendar: the Ambrosian rite has no national tier, so every
+    // national calendar is Roman.
+    return { rite: Rite.ROMAN, national_calendar: id };
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     const config = window.AdminTestsConfig;
@@ -214,21 +276,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function selectedTestType() {
         return document.querySelector('input[name="testType"]:checked')?.value ?? TestType.ExactCorrespondence;
-    }
-
-    /**
-     * Three-state scope reading so the save flow can tell an explicit choice
-     * apart from an incomplete one:
-     *   null      — the user explicitly selected General Roman Calendar
-     *   undefined — a scoped type is selected but no calendar ID is picked yet
-     *   object    — a concrete { national_calendar | diocesan_calendar: id }
-     */
-    function selectedScope() {
-        const type = document.getElementById('testScopeType').value;
-        if (type === 'general_roman_calendar') return null;
-        const idEl = document.getElementById('testScopeId');
-        const id = idEl ? idEl.value : '';
-        return id ? { [type]: id } : undefined;
     }
 
     function eventsPath(appliesTo) {
@@ -598,7 +645,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const type = s.object_type === 'diocesan_calendar_test' ? 'diocesan_calendar'
                 : s.object_type === 'national_calendar_test' ? 'national_calendar'
                     : 'general_roman_calendar';
-            choices.push({ type, id: s.object_id });
+            // national_calendar_test / diocesan_calendar_test object ids are
+            // rite-qualified (TestScopeResolver::qualify(), e.g. `roman/US`,
+            // `ambrosian/lugano_ch`); general_roman_calendar_test keeps its
+            // fixed bare id (it isn't a calendar id at all).
+            const { rite, id } = type === 'general_roman_calendar'
+                ? { rite: Rite.ROMAN, id: s.object_id }
+                : parseScopedId(s.object_id);
+            choices.push({ type, id, rite });
         });
         return choices;
     }
@@ -618,7 +672,11 @@ document.addEventListener('DOMContentLoaded', () => {
         staticEl.textContent = '';
         staticEl.classList.add('d-none');
 
-        const pin = (type, id) => {
+        // `rite` mirrors the locked/pinned scope's rite into a hidden
+        // `#testScopeRite` input, the same id the linked RiteSelect uses in the
+        // full-picker (global admin) path — so selectedScope() can read it
+        // uniformly regardless of which of the three scope-UI modes rendered it.
+        const pin = (type, id, rite) => {
             typeSel.value = type;
             typeSel.classList.add('d-none');
             typeSel.disabled = true;
@@ -630,10 +688,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 hid.id = 'testScopeId';
                 hid.value = id;
                 mount.appendChild(hid);
+                const hidRite = document.createElement('input');
+                hidRite.type = 'hidden';
+                hidRite.id = 'testScopeRite';
+                hidRite.value = rite || Rite.ROMAN;
+                mount.appendChild(hidRite);
             }
         };
 
-        if (locked) { pin(locked.type, locked.id); return; }
+        if (locked) { pin(locked.type, locked.id, locked.rite); return; }
 
         if (state.scopes.is_global_admin) {
             typeSel.classList.remove('d-none');
@@ -644,7 +707,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const choices = authorizedScopeChoices();
         if (choices.length <= 1) {
-            if (choices[0]) pin(choices[0].type, choices[0].id);
+            if (choices[0]) pin(choices[0].type, choices[0].id, choices[0].rite);
             return;
         }
 
@@ -666,14 +729,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const hid = document.createElement('input');
         hid.type = 'hidden';
         hid.id = 'testScopeId';
+        const hidRite = document.createElement('input');
+        hidRite.type = 'hidden';
+        hidRite.id = 'testScopeRite';
         const applyChoice = () => {
             const c = choices[Number(sel.value)] || choices[0];
             typeSel.value = c.type;
             hid.value = c.type === 'general_roman_calendar' ? '' : c.id;
+            hidRite.value = c.rite;
         };
         sel.addEventListener('change', () => { applyChoice(); updateDerivedName(); });
         mount.appendChild(sel);
         mount.appendChild(hid);
+        mount.appendChild(hidRite);
         applyChoice();
     }
     // Reload the /events datalist for the currently selected scope, then rebuild
@@ -772,6 +840,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     : scope.object_type === 'diocesan_calendar_test' ? 'diocesan_calendar'
                         : 'general_roman_calendar',
                 id: scope.object_id,
+                // Straight from the server-supplied test, not re-derived: this is
+                // the one scope-UI path where the ground truth is already in hand.
+                rite: (test.applies_to && test.applies_to.rite) ? test.applies_to.rite : Rite.ROMAN,
             };
         }
         await renderScopeControl(lockedScope);
@@ -800,8 +871,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         // undefined = scoped type without an ID picked yet → when editing, keep
-        // the test's existing applies_to; null = explicit General Roman → clear
-        // any previous scope (this must NOT fall back to the old applies_to).
+        // the test's existing applies_to; when creating, fall back to null
+        // (an incomplete scope pick should fail loudly, not silently resolve
+        // to General Roman). Every other return from selectedScope() is
+        // already a concrete, rite-carrying applies_to object.
         const chosen = selectedScope();
         const scopePayload = chosen === undefined
             ? (state.editing ? builder.model.applies_to : null)
