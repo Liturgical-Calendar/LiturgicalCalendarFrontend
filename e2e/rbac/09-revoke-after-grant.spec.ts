@@ -109,7 +109,7 @@ test('09 — revoke-after-grant: FGA tuple removed and request shows revoked sta
     const ceiEditorId = await z.findUserIdByEmail(USERS['cei-editor'].email);
     expect(ceiEditorId).not.toBeNull();
     expect(
-        await new Fga().check(`user:${ceiEditorId}`, 'editor', 'national_calendar:IT'),
+        await new Fga().check(`user:${ceiEditorId}`, 'editor', 'national_calendar:roman/IT'),
     ).toBe(true);
 
     // ── Post-grant check: with the editor@national_calendar:IT tuple now active,
@@ -131,7 +131,7 @@ test('09 — revoke-after-grant: FGA tuple removed and request shows revoked sta
 
     // ── Step 5: CORE — FGA tuple is REMOVED ──────────────────────────────────
     expect(
-        await new Fga().check(`user:${ceiEditorId}`, 'editor', 'national_calendar:IT'),
+        await new Fga().check(`user:${ceiEditorId}`, 'editor', 'national_calendar:roman/IT'),
     ).toBe(false);
 
     // ── Step 6: CORE — request row appears in 'revoked' tab (admin view) ─────
@@ -205,7 +205,7 @@ test.afterEach(async () => {
         // cei-admin was created on-demand by seedAndLogin — delete it + its admin tuple.
         ceiAdminId ? z.deleteUser(ceiAdminId) : Promise.resolve(),
         ceiAdminId
-            ? new Fga().delete(`user:${ceiAdminId}`, 'admin', 'national_calendar:IT')
+            ? new Fga().delete(`user:${ceiAdminId}`, 'admin', 'national_calendar:roman/IT')
             : Promise.resolve(),
         fs.promises.rm(path.join(__dirname, '..', '.auth', 'cei-admin.json'), { force: true }),
     ]);

@@ -122,7 +122,7 @@ test('02 — cei-editor edit@IT: scoped review lifecycle', async ({ browser }) =
     const zid = await z.findUserIdByEmail(USERS['cei-editor'].email);
     expect(zid).not.toBeNull();
     expect(
-        await new Fga().check(`user:${zid}`, 'editor', 'national_calendar:IT'),
+        await new Fga().check(`user:${zid}`, 'editor', 'national_calendar:roman/IT'),
     ).toBe(true);
 
     // ── Step 8: super-admin sees the approval ─────────────────────────────────
@@ -152,7 +152,7 @@ test.afterEach(async () => {
         // cei-admin was created on-demand by seedAndLogin — delete it + its admin tuple.
         ceiAdminId ? z.deleteUser(ceiAdminId) : Promise.resolve(),
         ceiAdminId
-            ? new Fga().delete(`user:${ceiAdminId}`, 'admin', 'national_calendar:IT')
+            ? new Fga().delete(`user:${ceiAdminId}`, 'admin', 'national_calendar:roman/IT')
             : Promise.resolve(),
     ]);
 

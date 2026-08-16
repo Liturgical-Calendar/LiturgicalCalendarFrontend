@@ -11,6 +11,7 @@ import {
     CalendarSelectFilter,
     RiteSelect,
 } from '@liturgical-calendar/components-js';
+import { qualifyObjectId, splitObjectId } from './riteScopedObjectId.js';
 
 // Initialize the API client once; CalendarSelect requires this to have resolved.
 // Since components-js 2.0.0 init() rejects on failure rather than resolving to
@@ -484,9 +485,18 @@ document.addEventListener('DOMContentLoaded', async function() {
                 return null;
             }
 
+            // The CalendarSelect's option values are bare calendar ids, but the
+            // API validates a rite-qualified object id for every type that names
+            // a calendar (`AccessRequestRepository::isValidObjectIdForType()`),
+            // so qualify on the way out. The rite comes from the RiteSelect this
+            // row mounts for diocesan scopes — the same select the diocese list
+            // was filtered by, so it IS the diocese's announced rite, never a
+            // guess. National/wider-region scopes have no rite select and
+            // qualifyObjectId() pins them to `roman` structurally.
+            const riteEl = row.querySelector('.perm-object-rite');
             permissions.push({
                 object_type: objectType,
-                object_id: objectId,
+                object_id: qualifyObjectId(objectType, objectId, riteEl ? riteEl.value : undefined),
                 relation: relation
             });
         }
@@ -691,8 +701,21 @@ document.addEventListener('DOMContentLoaded', async function() {
             // Sync the object-id control (mounts a CalendarSelect for calendar
             // scopes; await so the <select> exists before we set its value).
             await syncRowObjectIdField(row, perm.object_type || '');
+            // A stored object_id is rite-qualified (`ambrosian/lugano_ch`), while
+            // the CalendarSelect's option values are bare — so split, restore the
+            // rite first, then the calendar. splitObjectId() tolerates a legacy
+            // bare id from a request stored before the API migration.
+            const { rite, id } = splitObjectId(perm.object_type || '', perm.object_id || '');
+            const riteField = row.querySelector('.perm-object-rite');
+            if (riteField && riteField.value !== rite) {
+                riteField.value = rite;
+                // linkToRiteSelect() rebuilds the calendar options from this
+                // event; without it the diocese list still holds the old rite's
+                // dioceses and the assignment below silently selects nothing.
+                riteField.dispatchEvent(new Event('change'));
+            }
             const idField = row.querySelector('.perm-object-id');
-            if (idField) idField.value = perm.object_id || '';
+            if (idField) idField.value = id;
             if (relSelect) relSelect.value = perm.relation || '';
         }
     }
