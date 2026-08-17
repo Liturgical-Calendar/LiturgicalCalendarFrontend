@@ -8,9 +8,51 @@ import {
     CalendarSelect,
     CalendarSelectFilter,
     RiteSelect,
+    Rite,
 } from '@liturgical-calendar/components-js';
 import { AssertionsBuilder, TestType, AssertType } from './AssertionsBuilder.js';
-import { ROMAN_RITE, bareCalendarId, qualifyObjectId, sameObjectId } from './riteScopedObjectId.js';
+import { ROMAN_RITE, bareCalendarId, qualifyObjectId, sameObjectId, splitObjectId } from './riteScopedObjectId.js';
+
+/**
+ * Reads the admin-tests scope picker's current selection and builds the
+ * `applies_to` scope object a create/update payload must carry.
+ *
+ * `applies_to.rite` is REQUIRED by `LitCalTest.json` (API #785) — omitting it
+ * (or omitting `applies_to` altogether for the General Roman case) is a 422.
+ * The rite is never guessed: General Roman is definitionally Roman; a
+ * national calendar is always Roman (the Ambrosian rite has no national
+ * tier — `RiteProperties[Rite.AMBROSIAN].hasNationalTier === false`); a
+ * diocesan calendar's rite is read from whatever announced it — the linked
+ * `RiteSelect` (`#testScopeRite`) when the full picker is showing one, or a
+ * hidden `#testScopeRite` mirror the locked/pinned scope paths set from the
+ * server-supplied `applies_to.rite` or the FGA scope's own rite-qualified id.
+ *
+ * Exported (rather than nested in the DOMContentLoaded closure, like every
+ * other helper in this module) purely so it is unit-testable in isolation —
+ * mirrors the pattern admin-decrees.js already uses for its pure helpers.
+ *
+ * Three-state return so the save flow can tell an explicit choice apart from
+ * an incomplete one:
+ *   undefined — a scoped type is selected but no calendar ID is picked yet
+ *   object    — a concrete scope: `{ rite }` for General Roman, or
+ *               `{ rite, national_calendar | diocesan_calendar: id }`
+ *
+ * @returns {undefined|{rite: string, national_calendar?: string, diocesan_calendar?: string}}
+ */
+export function selectedScope() {
+    const type = document.getElementById('testScopeType').value;
+    if (type === 'general_roman_calendar') return { rite: Rite.ROMAN };
+    const idEl = document.getElementById('testScopeId');
+    const id = idEl ? idEl.value : '';
+    if (!id) return undefined;
+    if (type === 'diocesan_calendar') {
+        const riteEl = document.getElementById('testScopeRite');
+        return { rite: riteEl ? riteEl.value : Rite.ROMAN, diocesan_calendar: id };
+    }
+    // national_calendar: the Ambrosian rite has no national tier, so every
+    // national calendar is Roman.
+    return { rite: Rite.ROMAN, national_calendar: id };
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     const config = window.AdminTestsConfig;
@@ -116,6 +158,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 : scope.object_type === 'diocesan_calendar_test' ? 'diocesan_calendar'
                     : 'general_roman_calendar',
             id: bareCalendarId(scope.object_type, scope.object_id),
+            // Straight from the server-supplied test, not re-derived: this is the
+            // one scope-UI path where the ground truth is already in hand. It has
+            // to survive into #testScopeRite, because on save it addresses the
+            // test (/tests/{rite}/{name}) as well as populating applies_to.rite.
+            rite: (appliesTo && appliesTo.rite) || ROMAN_RITE,
         };
     }
 
@@ -191,6 +238,26 @@ document.addEventListener('DOMContentLoaded', () => {
         return state.scopes.is_global_admin || gateByScope(deriveScope(test.applies_to), state.scopes.admin);
     }
 
+    /**
+     * The rite a test belongs to. `applies_to.rite` is required by
+     * `LitCalTest.json`, but tests written before that requirement are still on
+     * disk, and the API resolves those to the Roman partition — so mirror that
+     * fallback rather than refusing to address them.
+     */
+    function testRite(test) {
+        return (test && test.applies_to && test.applies_to.rite) || ROMAN_RITE;
+    }
+
+    /**
+     * A single test's address. The rite segment is REQUIRED (API #787): the
+     * corpus is partitioned by rite, so a name alone no longer identifies a
+     * test — `/tests/{name}` is a 400, and on writes the FGA scope resolver
+     * fails closed with a 403 before the body is ever validated.
+     */
+    function testPath(rite, name) {
+        return `/tests/${encodeURIComponent(rite)}/${encodeURIComponent(name)}`;
+    }
+
     function renderTableRows() {
         const tbody = document.getElementById('testsTableBody');
         const nameFilter = document.getElementById('filterTestName').value.trim().toLowerCase();
@@ -233,6 +300,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 editBtn.type = 'button';
                 editBtn.className = 'btn btn-sm btn-outline-primary editTestBtn';
                 editBtn.dataset.name = t.name;
+                // Name alone is ambiguous now that the corpus is partitioned by
+                // rite: the same test name can exist under both. Carry the rite
+                // so the row resolves to exactly the test it renders.
+                editBtn.dataset.rite = testRite(t);
                 const ei = document.createElement('i');
                 ei.className = 'fas fa-pen';
                 editBtn.append(ei, document.createTextNode(' ' + i18n.edit));
@@ -243,6 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 delBtn.type = 'button';
                 delBtn.className = 'btn btn-sm btn-outline-danger deleteTestBtn ms-1';
                 delBtn.dataset.name = t.name;
+                delBtn.dataset.rite = testRite(t);
                 const di = document.createElement('i');
                 di.className = 'fas fa-trash';
                 delBtn.append(di, document.createTextNode(' ' + i18n.delete));
@@ -276,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('filterTestScope').addEventListener('input', renderTableRows);
 
     // Expose internals for later tasks (editor/delete wiring appended below).
-    window.__adminTests = { state, fetchJson, deriveScope, deriveLockedScope, gateByScope, showModalAlert, loadTests, renderTableRows, AssertionsBuilder, TestType, CalendarSelect, CalendarSelectFilter, RiteSelect, ApiClient };
+    window.__adminTests = { state, fetchJson, deriveScope, deriveLockedScope, gateByScope, showModalAlert, loadTests, renderTableRows, testPath, AssertionsBuilder, TestType, CalendarSelect, CalendarSelectFilter, RiteSelect, ApiClient };
     // selectedScope and authorizedScopeChoices are defined further down in
     // this closure; attached to the same exposed object once available so
     // tests can reach them without a full DOM/component round-trip through
@@ -293,20 +365,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return document.querySelector('input[name="testType"]:checked')?.value ?? TestType.ExactCorrespondence;
     }
 
-    /**
-     * Three-state scope reading so the save flow can tell an explicit choice
-     * apart from an incomplete one:
-     *   null      — the user explicitly selected General Roman Calendar
-     *   undefined — a scoped type is selected but no calendar ID is picked yet
-     *   object    — a concrete { national_calendar | diocesan_calendar: id }
-     */
-    function selectedScope() {
-        const type = document.getElementById('testScopeType').value;
-        if (type === 'general_roman_calendar') return null;
-        const idEl = document.getElementById('testScopeId');
-        const id = idEl ? idEl.value : '';
-        return id ? { [type]: id } : undefined;
-    }
+    // selectedScope() now lives at module scope (it has to emit a rite, and a
+    // pure function is the only way to test that without a DOM round-trip);
+    // re-exposed here so the window.__adminTests seam keeps working.
     window.__adminTests.selectedScope = selectedScope;
 
     function eventsPath(appliesTo) {
@@ -676,7 +737,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // `applies_to` (via #testScopeId → selectedScope()) holds bare
             // calendar ids, never FGA object ids — strip the rite qualifier
             // s.object_id carries (e.g. `roman/USA`) before it reaches there.
-            const id = bareCalendarId(s.object_type, s.object_id);
+            // The rite it was stripped of is kept: it is the only place the
+            // rite of an authorized scope is known, and #testScopeRite has to
+            // carry it back into applies_to.rite and the request path on save.
+            const { rite, id } = splitObjectId(s.object_type, s.object_id);
             // Dedupe on the NORMALIZED id, not the raw object_id. The API's tuple
             // migration is copy-then-prune, so during the migration window a legacy
             // bare grant (`national_calendar_test:USA`) and its migrated twin
@@ -686,7 +750,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const key = `${type}:${id}`;
             if (seen.has(key)) return;
             seen.add(key);
-            choices.push({ type, id });
+            choices.push({ type, id, rite });
         });
         return choices;
     }
@@ -707,7 +771,11 @@ document.addEventListener('DOMContentLoaded', () => {
         staticEl.textContent = '';
         staticEl.classList.add('d-none');
 
-        const pin = (type, id) => {
+        // `rite` mirrors the locked/pinned scope's rite into a hidden
+        // `#testScopeRite` input, the same id the linked RiteSelect uses in the
+        // full-picker (global admin) path — so selectedScope() can read it
+        // uniformly regardless of which of the three scope-UI modes rendered it.
+        const pin = (type, id, rite) => {
             typeSel.value = type;
             typeSel.classList.add('d-none');
             typeSel.disabled = true;
@@ -719,10 +787,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 hid.id = 'testScopeId';
                 hid.value = id;
                 mount.appendChild(hid);
+                const hidRite = document.createElement('input');
+                hidRite.type = 'hidden';
+                hidRite.id = 'testScopeRite';
+                hidRite.value = rite || Rite.ROMAN;
+                mount.appendChild(hidRite);
             }
         };
 
-        if (locked) { pin(locked.type, locked.id); return; }
+        if (locked) { pin(locked.type, locked.id, locked.rite); return; }
 
         if (state.scopes.is_global_admin) {
             typeSel.classList.remove('d-none');
@@ -733,7 +806,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const choices = authorizedScopeChoices();
         if (choices.length <= 1) {
-            if (choices[0]) pin(choices[0].type, choices[0].id);
+            if (choices[0]) pin(choices[0].type, choices[0].id, choices[0].rite);
             return;
         }
 
@@ -755,14 +828,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const hid = document.createElement('input');
         hid.type = 'hidden';
         hid.id = 'testScopeId';
+        const hidRite = document.createElement('input');
+        hidRite.type = 'hidden';
+        hidRite.id = 'testScopeRite';
         const applyChoice = () => {
             const c = choices[Number(sel.value)] || choices[0];
             typeSel.value = c.type;
             hid.value = c.type === 'general_roman_calendar' ? '' : c.id;
+            hidRite.value = c.rite;
         };
         sel.addEventListener('change', () => { applyChoice(); updateDerivedName(); });
         mount.appendChild(sel);
         mount.appendChild(hid);
+        mount.appendChild(hidRite);
         applyChoice();
     }
     // Reload the /events datalist for the currently selected scope, then rebuild
@@ -865,10 +943,43 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('testsTableBody').addEventListener('click', (ev) => {
         const editBtn = ev.target.closest('.editTestBtn');
         if (editBtn) {
-            const test = state.tests.find((t) => t.name === editBtn.dataset.name);
+            const test = state.tests.find(
+                (t) => t.name === editBtn.dataset.name && testRite(t) === editBtn.dataset.rite
+            );
             if (test) openEditor(test);
         }
     });
+
+    /**
+     * The warning to show instead of saving, or null when the editor is
+     * fillable-and-filled. Only the derived name can be *invalid* (as opposed
+     * to missing), so an empty event key reads as "required", not "malformed".
+     */
+    function editorValidationMessage(eventKey, name, hasDescription) {
+        if (eventKey && !TEST_NAME_RE.test(name)) return i18n.invalidName;
+        if (!eventKey || !hasDescription || !TEST_NAME_RE.test(name)) return i18n.requiredFields;
+        return null;
+    }
+
+    /**
+     * The `applies_to` to send. `selectedScope()` returns undefined for a scoped
+     * type with no calendar ID picked yet → when editing, keep the test's
+     * existing scope; when creating, fall back to null so an incomplete pick
+     * fails loudly at the API rather than silently resolving to General Roman.
+     * Every other return is already a concrete, rite-carrying scope object.
+     */
+    function scopePayloadForSave() {
+        const chosen = selectedScope();
+        if (chosen !== undefined) return chosen;
+        return state.editing ? builder.model.applies_to : null;
+    }
+
+    /** The most specific message we can show for a failed create/update. */
+    function saveErrorMessage(err) {
+        if (err.status === 403) return i18n.denied403;
+        if (err.status === 409) return i18n.conflict409;
+        return (err.body && err.body.message) ? err.body.message : i18n.failedToLoad;
+    }
 
     document.getElementById('saveTestBtn').addEventListener('click', async () => {
         const btn = document.getElementById('saveTestBtn');
@@ -877,18 +988,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // name = event_key + 'Test'). On edit it's the immutable identifier.
         const name = state.editing || `${eventKey}Test`;
         const hasDescription = document.getElementById('testDescription').value.trim() !== '';
-        if (!eventKey || !hasDescription || !TEST_NAME_RE.test(name)) {
-            const msg = eventKey && !TEST_NAME_RE.test(name) ? i18n.invalidName : i18n.requiredFields;
-            showModalAlert(editorModalEl, 'warning', msg);
+        const invalid = editorValidationMessage(eventKey, name, hasDescription);
+        if (invalid) {
+            showModalAlert(editorModalEl, 'warning', invalid);
             return;
         }
-        // undefined = scoped type without an ID picked yet → when editing, keep
-        // the test's existing applies_to; null = explicit General Roman → clear
-        // any previous scope (this must NOT fall back to the old applies_to).
-        const chosen = selectedScope();
-        const scopePayload = chosen === undefined
-            ? (state.editing ? builder.model.applies_to : null)
-            : chosen;
+        const scopePayload = scopePayloadForSave();
         builder.setMeta({
             name,
             event_key: eventKey,
@@ -897,22 +1002,21 @@ document.addEventListener('DOMContentLoaded', () => {
             applies_to: scopePayload,
         });
         const payload = builder.serialize();
+        // The path segment and applies_to.rite must name the same rite — the API
+        // rejects a write whose address contradicts its body, since the directory
+        // is the address and applies_to is the content. Reading the rite off the
+        // payload we are about to send is what keeps the two from diverging.
+        const rite = (scopePayload && scopePayload.rite) || ROMAN_RITE;
         btn.disabled = true;
         const original = btn.textContent;
         btn.textContent = i18n.saving;
         try {
-            if (state.editing) {
-                await fetchJson('PATCH', `/tests/${encodeURIComponent(state.editing)}`, payload);
-            } else {
-                await fetchJson('PUT', `/tests/${encodeURIComponent(payload.name)}`, payload);
-            }
+            const method = state.editing ? 'PATCH' : 'PUT';
+            await fetchJson(method, testPath(rite, state.editing || payload.name), payload);
             editorModal.hide();
             await loadTests();
         } catch (err) {
-            const msg = err.status === 403 ? i18n.denied403
-                : err.status === 409 ? i18n.conflict409
-                : (err.body && err.body.message) ? err.body.message : i18n.failedToLoad;
-            showModalAlert(editorModalEl, 'danger', msg);
+            showModalAlert(editorModalEl, 'danger', saveErrorMessage(err));
         } finally {
             btn.disabled = false;
             btn.textContent = original;
@@ -924,11 +1028,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const deleteModalEl = document.getElementById('deleteTestModal');
     const deleteModal = bootstrap.Modal.getOrCreateInstance(deleteModalEl);
     let deleteTarget = null;
+    let deleteTargetRite = ROMAN_RITE;
 
     document.getElementById('testsTableBody').addEventListener('click', (ev) => {
         const delBtn = ev.target.closest('.deleteTestBtn');
         if (!delBtn) return;
         deleteTarget = delBtn.dataset.name;
+        deleteTargetRite = delBtn.dataset.rite || ROMAN_RITE;
         document.getElementById('deleteTestAlerts').innerHTML = '';
         document.getElementById('deleteTestConfirmText').textContent = i18n.confirmDelete.replace('%s', deleteTarget);
         deleteModal.show();
@@ -941,7 +1047,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const original = btn.textContent;
         btn.textContent = i18n.deleting;
         try {
-            await fetchJson('DELETE', `/tests/${encodeURIComponent(deleteTarget)}`);
+            await fetchJson('DELETE', testPath(deleteTargetRite, deleteTarget));
             deleteModal.hide();
             await loadTests();
         } catch (err) {
