@@ -271,6 +271,31 @@ export class ExtendingPageHelper {
     }
 
     /**
+     * Get existing diocesan calendars with the locales each announces.
+     *
+     * `locales` is what makes a diocese interesting to the UPDATE spec: a
+     * multi-locale calendar is the only kind whose editor has to load secondary
+     * translations before a save is safe, so that is the case worth pinning a
+     * test to rather than leaving to a random pick (issue #462).
+     *
+     * @returns Array of `{ calendar_id, nation, locales }` for every diocesan calendar
+     */
+    async getExistingDiocesanCalendars(): Promise<Array<{ calendar_id: string; nation: string; locales: string[] }>> {
+        const apiBaseUrl = await this.getApiBaseUrl();
+        const response = await this.page.request.get(`${apiBaseUrl}/calendars`);
+        const data = await response.json();
+
+        const diocesanCalendars: Array<{ calendar_id: string; nation: string; locales?: string[] }> =
+            data.litcal_metadata?.diocesan_calendars || [];
+
+        return diocesanCalendars.map(d => ({
+            calendar_id: d.calendar_id,
+            nation: d.nation,
+            locales: d.locales ?? [],
+        }));
+    }
+
+    /**
      * Get nation codes that have existing diocesan calendars.
      * @returns Array of unique 2-letter ISO nation codes with existing diocesan data
      */
