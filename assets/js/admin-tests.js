@@ -348,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('filterTestScope').addEventListener('input', renderTableRows);
 
     // Expose internals for later tasks (editor/delete wiring appended below).
-    window.__adminTests = { state, fetchJson, deriveScope, deriveLockedScope, gateByScope, showModalAlert, loadTests, renderTableRows, AssertionsBuilder, TestType, CalendarSelect, CalendarSelectFilter, RiteSelect, ApiClient };
+    window.__adminTests = { state, fetchJson, deriveScope, deriveLockedScope, gateByScope, showModalAlert, loadTests, renderTableRows, testPath, AssertionsBuilder, TestType, CalendarSelect, CalendarSelectFilter, RiteSelect, ApiClient };
     // selectedScope and authorizedScopeChoices are defined further down in
     // this closure; attached to the same exposed object once available so
     // tests can reach them without a full DOM/component round-trip through

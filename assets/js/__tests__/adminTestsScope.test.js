@@ -19,7 +19,7 @@
  * window.__adminTests.
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 // vi.hoisted() runs before module imports — admin-tests.js reads
 // window.AdminTestsConfig at DOMContentLoaded time (not at import time), but
@@ -261,5 +261,110 @@ describe('admin-tests.js — bare vs. rite-qualified calendar ids', () => {
         // Bare id again. No #testScopeRite is mounted here, so the rite falls back
         // to Roman — admin-tests-scope.test.js covers the rite-carrying variants.
         expect(api.selectedScope()).toEqual({ rite: 'roman', diocesan_calendar: 'lugano_ch' });
+    });
+});
+
+/**
+ * Regression coverage for API #792 landing on top of this branch: the corpus
+ * is now partitioned by rite, so `/tests/{name}` alone no longer addresses a
+ * single test — `DELETE /tests/{name}` is a 400, and PUT/PATCH 403 with
+ * "Cannot resolve authorization scope" from the FGA middleware before the
+ * body is even validated. `testPath()` and the three write call sites that
+ * use it (create, update, delete) must emit `/tests/{rite}/{name}`.
+ *
+ * These exercise the real click handlers (not a reimplementation of their
+ * logic), the same way the rest of this file drives admin-tests.js through
+ * its DOM — the thing worth catching here is a call site that stops
+ * threading the rite through `testPath()`, not just `testPath()` itself.
+ */
+describe('admin-tests.js — write paths address /tests/{rite}/{name}', () => {
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    /**
+     * fetchJson() closes over the ambient `fetch`, not anything reachable
+     * through window.__adminTests, so only stubbing the global reaches it.
+     * Installed AFTER loadAdminTests() so the fire-and-forget initial
+     * loadTests() call it triggers runs against whatever `fetch` (or lack of
+     * one) the previous test left behind — exactly what every other test in
+     * this file already tolerates.
+     */
+    function stubFetch() {
+        const fetchMock = vi.fn().mockResolvedValue({ ok: true, status: 200, text: async () => '{}' });
+        vi.stubGlobal('fetch', fetchMock);
+        return fetchMock;
+    }
+
+    it('testPath() addresses a single test as /tests/{rite}/{name}', async () => {
+        const api = await loadAdminTests();
+        expect(api.testPath('roman', 'StIgnatiusOfLoyolaTest')).toBe('/tests/roman/StIgnatiusOfLoyolaTest');
+        expect(api.testPath('ambrosian', 'SomeTest')).toBe('/tests/ambrosian/SomeTest');
+    });
+
+    it('create (PUT) addresses the new test at /tests/{rite}/{name} for the chosen scope', async () => {
+        const api = await loadAdminTests();
+        const fetchMock = stubFetch();
+
+        // testScopeType defaults to its first <option>, general_roman_calendar
+        // (FIXTURE_HTML sets no explicit selection) — selectedScope() resolves
+        // that to rite 'roman'.
+        expect(api.state.editing).toBeNull();
+        document.getElementById('testEventKey').value = 'StIgnatiusOfLoyola';
+        document.getElementById('testDescription').value = 'A test.';
+
+        document.getElementById('saveTestBtn').click();
+        await vi.waitFor(() => {
+            expect(fetchMock.mock.calls.some(([, opts]) => opts?.method === 'PUT')).toBe(true);
+        });
+
+        const [url] = fetchMock.mock.calls.find(([, opts]) => opts?.method === 'PUT');
+        expect(url).toBe('http://localhost:8000/tests/roman/StIgnatiusOfLoyolaTest');
+    });
+
+    it('update (PATCH) addresses the existing test at /tests/{rite}/{name} for the diocesan scope\'s rite', async () => {
+        const api = await loadAdminTests();
+        const fetchMock = stubFetch();
+
+        api.state.editing = 'SomeAmbrosianTest';
+        document.getElementById('testEventKey').value = 'SomeEventKey';
+        document.getElementById('testDescription').value = 'A test.';
+        document.getElementById('testScopeType').value = 'diocesan_calendar';
+        const idEl = document.createElement('input');
+        idEl.id = 'testScopeId';
+        idEl.value = 'lugano_ch';
+        document.getElementById('testScopeIdMount').appendChild(idEl);
+        const riteEl = document.createElement('input');
+        riteEl.id = 'testScopeRite';
+        riteEl.value = 'ambrosian';
+        document.getElementById('testScopeIdMount').appendChild(riteEl);
+
+        document.getElementById('saveTestBtn').click();
+        await vi.waitFor(() => {
+            expect(fetchMock.mock.calls.some(([, opts]) => opts?.method === 'PATCH')).toBe(true);
+        });
+
+        const [url] = fetchMock.mock.calls.find(([, opts]) => opts?.method === 'PATCH');
+        expect(url).toBe('http://localhost:8000/tests/ambrosian/SomeAmbrosianTest');
+    });
+
+    it('delete addresses the target test at /tests/{rite}/{name}, sourced from the row\'s data-rite', async () => {
+        await loadAdminTests();
+        const fetchMock = stubFetch();
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'deleteTestBtn';
+        delBtn.dataset.name = 'SomeAmbrosianTest';
+        delBtn.dataset.rite = 'ambrosian';
+        document.getElementById('testsTableBody').appendChild(delBtn);
+        delBtn.click();
+        document.getElementById('confirmDeleteTestBtn').click();
+
+        await vi.waitFor(() => {
+            expect(fetchMock.mock.calls.some(([, opts]) => opts?.method === 'DELETE')).toBe(true);
+        });
+
+        const [url] = fetchMock.mock.calls.find(([, opts]) => opts?.method === 'DELETE');
+        expect(url).toBe('http://localhost:8000/tests/ambrosian/SomeAmbrosianTest');
     });
 });
