@@ -109,6 +109,53 @@ test.describe('Wider Region Calendar Form', () => {
             return;
         }
 
+        // Ordering assertion for issue #465: by the moment Save becomes enabled, the
+        // secondary-locale inputs must already exist. The serializer builds
+        // `payload.i18n` from those fields, so enabling Save any earlier permits a write
+        // carrying fewer locales than `metadata.locales` declares, which the API rejects
+        // with a 422. Every wider region is multi-locale (Americas declares 23), so this
+        // is always meaningful here.
+        //
+        // A single page.evaluate() takes a point-in-time snapshot with no auto-retry,
+        // deliberately: the translations do arrive eventually even when Save was enabled
+        // too early, so a waiting assertion would pass either way. The i18n/locales check
+        // further down catches the same defect from the payload side, but only if the
+        // click lands inside the race window — the incidental waits above usually close
+        // it, which is what kept this latent instead of a visible flake.
+        //
+        // The full locale SET is compared, not merely a positive count: the payload needs
+        // every declared locale, so partial localization must not pass. Ids are used
+        // rather than the app's own `.calendarLocales` / `.regionalNationalDataForm`
+        // class selectors because each of those matches three and two elements
+        // respectively (wider region, national, diocesan), so `querySelector` resolves
+        // them by document order. For this flow the first match is the wider-region one
+        // either way, but naming it leaves nothing to infer.
+        const localeInputs = await page.evaluate(() => {
+            const selected = Array.from(
+                (document.querySelector('#widerRegionLocales') as HTMLSelectElement).selectedOptions
+            ).map(option => option.value);
+            const current = (document.querySelector('#currentLocalizationWiderRegion') as HTMLSelectElement).value;
+            // One input per (event, locale) pair, so de-duplicate to a locale set.
+            const present = Array.from(new Set(
+                Array.from(document.querySelectorAll('#widerRegionForm input[data-locale]'))
+                    .map(input => (input as HTMLElement).dataset.locale)
+            ));
+            return {
+                expected: selected.filter(locale => locale !== current).sort(),
+                present: present.sort()
+            };
+        });
+        // Guards the assertion below against passing vacuously if the form ever loads
+        // with a single locale selected — every wider region declares several.
+        expect(
+            localeInputs.expected.length,
+            'this scenario must have secondary locales for the assertion below to mean anything'
+        ).toBeGreaterThan(0);
+        expect(
+            localeInputs.present,
+            'inputs for EVERY secondary locale must exist before Save is enabled (issue #465)'
+        ).toEqual(localeInputs.expected);
+
         // Click the save button using page.evaluate for more reliable triggering
         await page.evaluate(() => {
             const btn = document.querySelector('#serializeWiderRegionData') as HTMLButtonElement;

@@ -1550,6 +1550,7 @@ const updateRegionalCalendarForm = (data) => {
     /**
      * Load translation data
      */
+    let translationsLoaded = Promise.resolve();
     if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
         const currentLocalization = document.querySelector('.currentLocalizationChoices').value;
         const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
@@ -1557,11 +1558,8 @@ const updateRegionalCalendarForm = (data) => {
                                     .map(({ value }) => value);
         console.log('otherLocalizations:', otherLocalizations);
         if (DataLoader.lastRequestPath !== API.path) {
-            document.querySelector('#overlay').classList.remove('hidden');
-            Promise.all(
-                otherLocalizations.map(
-                    localization => fetch(API.path + '/' + localization).then(response => response.json())
-                )
+            translationsLoaded = Promise.all(
+                otherLocalizations.map(localization => fetchLocalization(API.path, localization))
             )
             .then(data => {
                 toastr["success"](`Calendar translation data retrieved successfully for calendar ${API.key} and locales ${otherLocalizations.join(', ')}`, Messages['Success']);
@@ -1575,8 +1573,6 @@ const updateRegionalCalendarForm = (data) => {
                 refreshOtherLocalizationInputs(otherLocalizations);
                 DataLoader.lastRequestPath = API.path;
                 DataLoader.lastRequestLocale = currentLocalization;
-            }).finally(() => {
-                document.querySelector('#overlay').classList.add('hidden');
             });
         } else {
             // We are requesting the same calendar, just with a different locale
@@ -1584,8 +1580,7 @@ const updateRegionalCalendarForm = (data) => {
             if (DataLoader.allLocalesLoaded.hasOwnProperty(API.path)) {
                 refreshOtherLocalizationInputs(otherLocalizations);
             } else {
-                document.querySelector('#overlay').classList.remove('hidden');
-                fetch(API.path + '/' + DataLoader.lastRequestLocale).then(response => response.json()).then(localizationData => {
+                translationsLoaded = fetchLocalization(API.path, DataLoader.lastRequestLocale).then(localizationData => {
                     if (false === TranslationData.has(API.path)) {
                         TranslationData.set(API.path, new Map());
                     }
@@ -1593,16 +1588,29 @@ const updateRegionalCalendarForm = (data) => {
                     console.log('TranslationData:', TranslationData);
                     refreshOtherLocalizationInputs(otherLocalizations);
                     DataLoader.allLocalesLoaded[API.path] = true;
-                }).finally(() => {
-                    document.querySelector('#overlay').classList.add('hidden');
                 });
             }
         }
-    } else {
-        document.querySelector('#overlay').classList.add('hidden');
     }
 
-    document.querySelector('.serializeRegionalNationalData').disabled = false;
+    // Save must not become available until every locale the calendar declares has its
+    // inputs on the page. The serializer builds `payload.i18n` from the
+    // `input[data-locale]` fields refreshOtherLocalizationInputs() creates, so enabling
+    // it any earlier lets the user submit fewer locales than `metadata.locales`
+    // announces — which the API rejects (issue #465, and #462 for the diocesan twin).
+    //
+    // On failure Save stays disabled, deliberately: the payload really would be
+    // incomplete, so the useful outcome is an error the user can see rather than a
+    // button that produces a rejected write. The rejection is handled here rather than
+    // propagated because the caller's `.catch()` interprets failures as data-fetch
+    // failures (inspecting `error.status` for the create-new-calendar case) and would
+    // mis-handle a translation error.
+    return translationsLoaded.then(() => {
+        document.querySelector('.serializeRegionalNationalData').disabled = false;
+    }).catch(error => {
+        toastr["error"](error.message, Messages['Error']);
+        console.error(error);
+    });
 }
 
 /**
@@ -1702,9 +1710,14 @@ const fetchRegionalCalendarData = (headers) => {
                 });*/
             }
         }).finally(() => {
-            // Leave this commented out for now, we don't want to remove the overlay until all locales are loaded,
-            // see updateRegionalCalendarForm()
-            //document.querySelector('#overlay').classList.add('hidden');
+            // Safe to hide here now: updateRegionalCalendarForm() returns its
+            // translations promise, so this `.finally()` does not run until the
+            // secondary locales are loaded. It previously could not — hence the
+            // hide being commented out — which left the overlay stuck up on the
+            // two paths that never reached updateRegionalCalendarForm()'s own
+            // per-branch hides: a cached `allLocalesLoaded` calendar, and the
+            // 404 create-a-new-calendar case handled in the `.catch()` above.
+            document.querySelector('#overlay').classList.add('hidden');
         });
     } else {
         console.log(`%c No calendar found on path ${API.path} with key ${API.key}, we must be creating a new calendar. Setting API.method to PUT. `, 'background: #fbff00ff; color: #000000ff; font-weight: bold; padding: 2px 1px;');
