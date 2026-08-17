@@ -3114,6 +3114,39 @@ const populateRowWithEventData = (row, liturgical_event, metadata) => {
 };
 
 /**
+ * Fetches one secondary localization of the calendar at `path`.
+ *
+ * The `response.ok` check matters more than it looks. These translations feed
+ * TranslationData, from which refreshOtherLocalizationInputs() fills the
+ * `input[data-locale]` fields, from which the save handler builds `payload.i18n`.
+ * A problem+json error body parses perfectly well as JSON, so without this check a
+ * failed fetch would be stored as if it were translations and the resulting blank
+ * inputs would be saved as real — but empty — translation strings. Throwing instead
+ * routes it to the caller's `.catch()`, which surfaces a toast.
+ *
+ * The message deliberately does not begin with the status code: the diocesan
+ * `.catch()` swallows messages starting with '404' (its own already-handled
+ * not-found case), which would silence a 404 from this endpoint too.
+ *
+ * `credentials: 'omit'` is required, not incidental. Only PUT/PATCH/DELETE on
+ * `/data` are authenticated; GET is public and answers with
+ * `Access-Control-Allow-Origin: *`, and browsers refuse to pair a wildcard ACAO
+ * with a credentialed request. See CLAUDE.md, "API Communication".
+ *
+ * @param {string} path - The calendar's API path (`API.path`).
+ * @param {string} localization - The locale to fetch, e.g. `fr_CA`.
+ * @returns {Promise<Object>} The parsed localization data.
+ */
+const fetchLocalization = (path, localization) => fetch(`${path}/${localization}`, {
+    credentials: 'omit'
+}).then(response => {
+    if (false === response.ok) {
+        throw new Error(`Could not load the ${localization} translation (HTTP ${response.status} ${response.statusText})`);
+    }
+    return response.json();
+});
+
+/**
  * Handles retrieving the Diocesan Calendar data and related i18n data from the API.
  * @function
  */
@@ -3185,7 +3218,7 @@ const loadDiocesanCalendarData = () => {
                                         .map(({ value }) => value);
             if (DataLoader.lastRequestPath !== API.path) {
                 // We are requesting a totally different calendar, we need to reload ALL i18n data
-                translationsLoaded = Promise.all(otherLocalizations.map(localization => fetch(API.path + '/' + localization).then(response => response.json()))).then(data => {
+                translationsLoaded = Promise.all(otherLocalizations.map(localization => fetchLocalization(API.path, localization))).then(data => {
                     toastr["success"]("Diocesan Calendar translation data was retrieved successfully", Messages['Success']);
                     if (false === TranslationData.has(API.path)) {
                         TranslationData.set(API.path, new Map());
@@ -3205,7 +3238,7 @@ const loadDiocesanCalendarData = () => {
                 if (DataLoader.allLocalesLoaded.hasOwnProperty(API.path)) {
                     refreshOtherLocalizationInputs(otherLocalizations);
                 } else {
-                    translationsLoaded = fetch(API.path + '/' + DataLoader.lastRequestLocale).then(response => response.json()).then(localizationData => {
+                    translationsLoaded = fetchLocalization(API.path, DataLoader.lastRequestLocale).then(localizationData => {
                         if (false === TranslationData.has(API.path)) {
                             TranslationData.set(API.path, new Map());
                         }
