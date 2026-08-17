@@ -124,12 +124,15 @@ test.describe('Wider Region Calendar Form', () => {
         // it, which is what kept this latent instead of a visible flake.
         //
         // The full locale SET is compared, not merely a positive count: the payload needs
-        // every declared locale, so partial localization must not pass. Ids are used
-        // rather than the app's own `.calendarLocales` / `.regionalNationalDataForm`
-        // class selectors because each of those matches three and two elements
-        // respectively (wider region, national, diocesan), so `querySelector` resolves
-        // them by document order. For this flow the first match is the wider-region one
-        // either way, but naming it leaves nothing to infer.
+        // every declared locale, so partial localization must not pass.
+        //
+        // Ids rather than the app's own `.calendarLocales` /
+        // `.regionalNationalDataForm` class selectors, simply because naming the
+        // wider-region controls states which card this scenario is on. Those classes are
+        // unambiguous at runtime — extending.php's `switch ($_GET['choice'])` (:176)
+        // emits exactly one of the wider-region, national and diocesan cards per
+        // request, so only one element ever carries each class, which is what lets
+        // extending.js drive all three cards through unscoped `querySelector` calls.
         const localeInputs = await page.evaluate(() => {
             const selected = Array.from(
                 (document.querySelector('#widerRegionLocales') as HTMLSelectElement).selectedOptions
