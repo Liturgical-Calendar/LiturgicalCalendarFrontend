@@ -109,7 +109,7 @@ test('06 — rome-editor edit@romamo_it: rome-admin approves; scoped visibility'
     const zid = await z.findUserIdByEmail(USERS['rome-editor'].email);
     expect(zid).not.toBeNull();
     expect(
-        await new Fga().check(`user:${zid}`, 'editor', 'diocesan_calendar:romamo_it'),
+        await new Fga().check(`user:${zid}`, 'editor', 'diocesan_calendar:roman/romamo_it'),
     ).toBe(true);
 
     // ── Step 5: Durable DOM evidence — super-admin sees the approved row ──────
@@ -142,7 +142,7 @@ test.afterEach(async () => {
         // cei-admin was created on-demand by seedAndLogin — delete it + its admin@IT tuple
         ceiAdminId ? z.deleteUser(ceiAdminId) : Promise.resolve(),
         ceiAdminId
-            ? f.delete(`user:${ceiAdminId}`, 'admin', 'national_calendar:IT')
+            ? f.delete(`user:${ceiAdminId}`, 'admin', 'national_calendar:roman/IT')
             : Promise.resolve(),
     ]);
 });

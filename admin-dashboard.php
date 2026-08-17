@@ -136,7 +136,10 @@ if (!$hasCalendarRole) {
     <?php if (
     !$isAdmin
     && $authHelper->hasRole('test_editor')
-    && $authHelper->canViewAnyResourceOfType('national_calendar_test', 'diocesan_calendar_test', 'general_roman_calendar_test')
+    // `rite_calendar_test` generalises `general_roman_calendar_test` (API #785): its id is the
+    // rite itself, so `rite_calendar_test:ambrosian` is a scope only it can express. The older
+    // type stays listed because pre-migration grants still carry it.
+    && $authHelper->canViewAnyResourceOfType('national_calendar_test', 'diocesan_calendar_test', 'rite_calendar_test', 'general_roman_calendar_test')
 ) : ?>
     <hr class="my-4">
     <h4 class="mb-3 text-black" style="--bs-text-opacity: .6;">

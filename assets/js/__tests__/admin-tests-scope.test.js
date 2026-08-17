@@ -9,18 +9,18 @@
  * an npm dependency of this project (it's wired in at runtime via the
  * browser importmap in layout/footer.php — see CLAUDE.md's "Component
  * Library Methods" section). vitest.config.js aliases that bare specifier to
- * a minimal test stub (`__mocks__/liturgical-calendar-components-js.js`) so
- * this file can be imported directly; the stub's `Rite` enum mirrors the
- * real package's `Rite.ROMAN = 'roman'` / `Rite.AMBROSIAN = 'ambrosian'`
+ * a minimal test stub (`stubs/components-js.js`) so this file can be imported
+ * directly; the stub's `Rite` enum mirrors the real package's
+ * `Rite.ROMAN = 'roman'` / `Rite.AMBROSIAN = 'ambrosian'`
  * (liturgy-components-js/src/Enums.js).
  *
- * `selectedScope()` and `parseScopedId()` are exported from admin-tests.js
- * at module scope specifically so they're unit-testable this way — every
- * other helper in the file is nested inside the `DOMContentLoaded` closure
- * and requires the full admin-tests.php page DOM to exercise.
+ * `selectedScope()` is exported from admin-tests.js at module scope
+ * specifically so it's unit-testable this way — every other helper in the
+ * file is nested inside the `DOMContentLoaded` closure and requires the full
+ * admin-tests.php page DOM to exercise.
  */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { selectedScope, parseScopedId } from '../admin-tests.js';
+import { selectedScope } from '../admin-tests.js';
 
 /** Builds a minimal DOM fixture mirroring the admin-tests.php scope picker. */
 function setScopeDom({ type, id, rite } = {}) {
@@ -79,16 +79,5 @@ describe('selectedScope()', () => {
     it('a scoped type with no calendar ID picked yet is incomplete (undefined)', () => {
         setScopeDom({ type: 'diocesan_calendar', id: '' });
         expect(selectedScope()).toBeUndefined();
-    });
-});
-
-describe('parseScopedId()', () => {
-    it('splits a rite-qualified id (TestScopeResolver::qualify() format)', () => {
-        expect(parseScopedId('roman/US')).toEqual({ rite: 'roman', id: 'US' });
-        expect(parseScopedId('ambrosian/lugano_ch')).toEqual({ rite: 'ambrosian', id: 'lugano_ch' });
-    });
-
-    it('defaults a bare, unqualified legacy id to Roman', () => {
-        expect(parseScopedId('US')).toEqual({ rite: 'roman', id: 'US' });
     });
 });

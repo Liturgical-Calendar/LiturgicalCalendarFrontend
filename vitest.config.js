@@ -1,17 +1,20 @@
-import { defineConfig } from 'vitest/config';
 import { fileURLToPath } from 'node:url';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
     resolve: {
         alias: {
-            // `@liturgical-calendar/components-js` is not an npm dependency
-            // (it's wired in at runtime via the browser importmap — see
-            // layout/footer.php); alias it to a minimal test stub so files
-            // that import it (admin-tests.js, admin-permissions.js,
-            // permission-requests.js) can be unit tested directly. See the
-            // stub's own doc comment for details.
+            // In the browser this resolves via the import map in
+            // layout/footer.php (a build artifact not present in this
+            // checkout). Modules under test import it directly (admin-tests.js,
+            // admin-permissions.js, permission-requests.js), so tests need
+            // something on disk for Vite to resolve — see the stub's own
+            // header comment for why its exports are inert stand-ins.
+            // fileURLToPath, not URL.pathname: the latter percent-encodes spaces
+            // and keeps the leading slash on Windows drive letters, so a checkout
+            // under such a path would fail to resolve.
             '@liturgical-calendar/components-js': fileURLToPath(
-                new URL('./assets/js/__tests__/__mocks__/liturgical-calendar-components-js.js', import.meta.url),
+                new URL('./assets/js/__tests__/stubs/components-js.js', import.meta.url)
             ),
         },
     },

@@ -98,6 +98,11 @@ test.describe('admin-tests CRUD (real RBAC)', () => {
             // previous failed run so re-runs start from a clean slate.
             const staleId = await z.findUserIdByEmail(EDITOR_EMAIL);
             if (staleId) {
+                await f.delete(`user:${staleId}`, 'editor', `national_calendar_test:roman/${NATION}`)
+                    .catch(() => {}); // tolerate already-absent tuple
+                // A run from before the rite-qualification migration seeded the
+                // legacy bare form. Clean that up too, or a stale unqualified
+                // tuple survives teardown and leaks into the next run.
                 await f.delete(`user:${staleId}`, 'editor', `national_calendar_test:${NATION}`)
                     .catch(() => {}); // tolerate already-absent tuple
                 await z.deleteUser(staleId);
@@ -117,7 +122,7 @@ test.describe('admin-tests CRUD (real RBAC)', () => {
             // 2. Write the FGA `editor` tuple on national_calendar_test:IT.
             //    Mirrors the tuple that the access-request approval flow would write
             //    after a `test_editor` request is reviewed (see spec 12 for that flow).
-            await f.write(`user:${editorZitadelId}`, 'editor', `national_calendar_test:${NATION}`);
+            await f.write(`user:${editorZitadelId}`, 'editor', `national_calendar_test:roman/${NATION}`);
 
             // 3. Headless OIDC login → write .auth/test-editor-it.json.
             //    Mirrors the logic in loginAndSaveState() from support/seed.ts.
@@ -233,7 +238,11 @@ test.describe('admin-tests CRUD (real RBAC)', () => {
                     storageState: path.join(__dirname, '..', '.auth', `${GLOBAL_ADMIN_ID}.json`),
                 });
                 try {
-                    await api.delete(`${API_BASE}/tests/${encodeURIComponent(TEST_NAME)}`);
+                    // The rite segment is mandatory (API #787): the rite-less form
+                    // is a 400, so without it this cleanup silently no-ops and the
+                    // leftover file reds the next run. The test is created under a
+                    // national scope, and only the Roman rite has a national tier.
+                    await api.delete(`${API_BASE}/tests/roman/${encodeURIComponent(TEST_NAME)}`);
                 } finally {
                     await api.dispose();
                 }
@@ -246,7 +255,7 @@ test.describe('admin-tests CRUD (real RBAC)', () => {
         if (uid) {
             // Fga.delete tolerates "not found" — safe if test 2 already deleted the tuple.
             cleanupOps.push(
-                f.delete(`user:${uid}`, 'editor', `national_calendar_test:${NATION}`),
+                f.delete(`user:${uid}`, 'editor', `national_calendar_test:roman/${NATION}`),
             );
             // ZitadelAdmin.deleteUser tolerates 404 — safe on re-runs where the user is absent.
             cleanupOps.push(z.deleteUser(uid));
