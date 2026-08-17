@@ -3172,6 +3172,12 @@ const loadDiocesanCalendarData = () => {
             }
         }
         fillDiocesanFormWithData(data);
+        // The secondary-locale fetches MUST stay in the outer chain. The `.finally()`
+        // below hides #overlay, and the save handler builds `payload.i18n` by reading
+        // the `input[data-locale]` fields that refreshOtherLocalizationInputs() adds
+        // here. Let the overlay lift first and a save lands with one locale in `i18n`
+        // while `metadata.locales` announces two, which the API rejects (issue #462).
+        let translationsLoaded = Promise.resolve();
         if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
             const currentLocalization = document.querySelector('.currentLocalizationChoices').value;
             const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
@@ -3179,7 +3185,7 @@ const loadDiocesanCalendarData = () => {
                                         .map(({ value }) => value);
             if (DataLoader.lastRequestPath !== API.path) {
                 // We are requesting a totally different calendar, we need to reload ALL i18n data
-                Promise.all(otherLocalizations.map(localization => fetch(API.path + '/' + localization).then(response => response.json()))).then(data => {
+                translationsLoaded = Promise.all(otherLocalizations.map(localization => fetch(API.path + '/' + localization).then(response => response.json()))).then(data => {
                     toastr["success"]("Diocesan Calendar translation data was retrieved successfully", Messages['Success']);
                     if (false === TranslationData.has(API.path)) {
                         TranslationData.set(API.path, new Map());
@@ -3199,7 +3205,7 @@ const loadDiocesanCalendarData = () => {
                 if (DataLoader.allLocalesLoaded.hasOwnProperty(API.path)) {
                     refreshOtherLocalizationInputs(otherLocalizations);
                 } else {
-                    fetch(API.path + '/' + DataLoader.lastRequestLocale).then(response => response.json()).then(localizationData => {
+                    translationsLoaded = fetch(API.path + '/' + DataLoader.lastRequestLocale).then(response => response.json()).then(localizationData => {
                         if (false === TranslationData.has(API.path)) {
                             TranslationData.set(API.path, new Map());
                         }
@@ -3213,6 +3219,9 @@ const loadDiocesanCalendarData = () => {
         }
 
         setFocusFirstTabWithData();
+        // Returned, not awaited inline, so focus still moves as soon as the primary
+        // locale is on screen — only the overlay waits for the translations.
+        return translationsLoaded;
     }).catch(error => {
         if ( error instanceof Error && error.message.startsWith('404') ) { //we have already handled 404 Not Found above
             return;
