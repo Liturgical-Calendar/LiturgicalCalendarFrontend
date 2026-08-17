@@ -109,6 +109,25 @@ test.describe('Wider Region Calendar Form', () => {
             return;
         }
 
+        // Ordering assertion for issue #465: by the moment Save becomes enabled, the
+        // secondary-locale inputs must already exist. The serializer builds
+        // `payload.i18n` from those fields, so enabling Save any earlier permits a write
+        // carrying fewer locales than `metadata.locales` declares, which the API rejects
+        // with a 422. Every wider region is multi-locale (Americas declares 23), so this
+        // is always meaningful here.
+        //
+        // count() takes a point-in-time snapshot with no auto-retry, deliberately: the
+        // translations do arrive eventually even when Save was enabled too early, so a
+        // waiting assertion would pass either way. The i18n/locales check further down
+        // catches the same defect from the payload side, but only if the click lands
+        // inside the race window — the incidental waits above usually close it, which is
+        // what kept this latent instead of a visible flake.
+        const localeInputCount = await page.locator('input[data-locale]').count();
+        expect(
+            localeInputCount,
+            'secondary-locale inputs must exist before Save is enabled (issue #465)'
+        ).toBeGreaterThan(0);
+
         // Click the save button using page.evaluate for more reliable triggering
         await page.evaluate(() => {
             const btn = document.querySelector('#serializeWiderRegionData') as HTMLButtonElement;
