@@ -950,6 +950,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    /**
+     * The warning to show instead of saving, or null when the editor is
+     * fillable-and-filled. Only the derived name can be *invalid* (as opposed
+     * to missing), so an empty event key reads as "required", not "malformed".
+     */
+    function editorValidationMessage(eventKey, name, hasDescription) {
+        if (eventKey && !TEST_NAME_RE.test(name)) return i18n.invalidName;
+        if (!eventKey || !hasDescription || !TEST_NAME_RE.test(name)) return i18n.requiredFields;
+        return null;
+    }
+
+    /**
+     * The `applies_to` to send. `selectedScope()` returns undefined for a scoped
+     * type with no calendar ID picked yet → when editing, keep the test's
+     * existing scope; when creating, fall back to null so an incomplete pick
+     * fails loudly at the API rather than silently resolving to General Roman.
+     * Every other return is already a concrete, rite-carrying scope object.
+     */
+    function scopePayloadForSave() {
+        const chosen = selectedScope();
+        if (chosen !== undefined) return chosen;
+        return state.editing ? builder.model.applies_to : null;
+    }
+
+    /** The most specific message we can show for a failed create/update. */
+    function saveErrorMessage(err) {
+        if (err.status === 403) return i18n.denied403;
+        if (err.status === 409) return i18n.conflict409;
+        return (err.body && err.body.message) ? err.body.message : i18n.failedToLoad;
+    }
+
     document.getElementById('saveTestBtn').addEventListener('click', async () => {
         const btn = document.getElementById('saveTestBtn');
         const eventKey = document.getElementById('testEventKey').value.trim();
@@ -957,20 +988,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // name = event_key + 'Test'). On edit it's the immutable identifier.
         const name = state.editing || `${eventKey}Test`;
         const hasDescription = document.getElementById('testDescription').value.trim() !== '';
-        if (!eventKey || !hasDescription || !TEST_NAME_RE.test(name)) {
-            const msg = eventKey && !TEST_NAME_RE.test(name) ? i18n.invalidName : i18n.requiredFields;
-            showModalAlert(editorModalEl, 'warning', msg);
+        const invalid = editorValidationMessage(eventKey, name, hasDescription);
+        if (invalid) {
+            showModalAlert(editorModalEl, 'warning', invalid);
             return;
         }
-        // undefined = scoped type without an ID picked yet → when editing, keep
-        // the test's existing applies_to; when creating, fall back to null
-        // (an incomplete scope pick should fail loudly, not silently resolve
-        // to General Roman). Every other return from selectedScope() is
-        // already a concrete, rite-carrying applies_to object.
-        const chosen = selectedScope();
-        const scopePayload = chosen === undefined
-            ? (state.editing ? builder.model.applies_to : null)
-            : chosen;
+        const scopePayload = scopePayloadForSave();
         builder.setMeta({
             name,
             event_key: eventKey,
@@ -983,23 +1006,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // rejects a write whose address contradicts its body, since the directory
         // is the address and applies_to is the content. Reading the rite off the
         // payload we are about to send is what keeps the two from diverging.
-        const rite = scopePayload && scopePayload.rite ? scopePayload.rite : ROMAN_RITE;
+        const rite = (scopePayload && scopePayload.rite) || ROMAN_RITE;
         btn.disabled = true;
         const original = btn.textContent;
         btn.textContent = i18n.saving;
         try {
-            if (state.editing) {
-                await fetchJson('PATCH', testPath(rite, state.editing), payload);
-            } else {
-                await fetchJson('PUT', testPath(rite, payload.name), payload);
-            }
+            const method = state.editing ? 'PATCH' : 'PUT';
+            await fetchJson(method, testPath(rite, state.editing || payload.name), payload);
             editorModal.hide();
             await loadTests();
         } catch (err) {
-            const msg = err.status === 403 ? i18n.denied403
-                : err.status === 409 ? i18n.conflict409
-                : (err.body && err.body.message) ? err.body.message : i18n.failedToLoad;
-            showModalAlert(editorModalEl, 'danger', msg);
+            showModalAlert(editorModalEl, 'danger', saveErrorMessage(err));
         } finally {
             btn.disabled = false;
             btn.textContent = original;
