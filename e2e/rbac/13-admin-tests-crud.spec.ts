@@ -238,7 +238,11 @@ test.describe('admin-tests CRUD (real RBAC)', () => {
                     storageState: path.join(__dirname, '..', '.auth', `${GLOBAL_ADMIN_ID}.json`),
                 });
                 try {
-                    await api.delete(`${API_BASE}/tests/${encodeURIComponent(TEST_NAME)}`);
+                    // The rite segment is mandatory (API #787): the rite-less form
+                    // is a 400, so without it this cleanup silently no-ops and the
+                    // leftover file reds the next run. The test is created under a
+                    // national scope, and only the Roman rite has a national tier.
+                    await api.delete(`${API_BASE}/tests/roman/${encodeURIComponent(TEST_NAME)}`);
                 } finally {
                     await api.dispose();
                 }

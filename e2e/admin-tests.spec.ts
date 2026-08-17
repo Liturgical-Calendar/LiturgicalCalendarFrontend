@@ -23,14 +23,18 @@ type TestScopes = { is_global_admin: boolean; editor: { object_type: string; obj
 
 /**
  * Matches BOTH `/tests` (the collection the page GETs to fill its list) and
- * `/tests/{name}` (what create PUTs and edit PATCHes to, admin-tests.js:822-824).
+ * `/tests/{rite}/{name}` (what create PUTs and edit PATCHes to, see testPath()
+ * in admin-tests.js). The rite segment is required on every item path since API
+ * #787 partitioned the corpus by rite; the one-segment form is still matched so
+ * a regression back to `/tests/{name}` is caught by the URL assertions below
+ * rather than escaping the stub.
  *
- * A glob of `**​/tests` misses the name-scoped path, which is not a benign miss: the
+ * A glob of `**​/tests` misses the item paths, which is not a benign miss: the
  * request escapes the stub entirely and reaches the real API, so a "stubbed" create
  * test both asserts against a null body and can write through to real data. A glob of
  * `**​/tests/**` has the mirror problem — it would stop matching the collection GET.
  */
-const TESTS_ROUTE = /\/tests(?:\/[^/?#]+)?(?:[?#]|$)/;
+const TESTS_ROUTE = /\/tests(?:\/[^/?#]+){0,2}(?:[?#]|$)/;
 
 async function stub(page: Page, scopes: TestScopes): Promise<void> {
     await page.route('**/auth/test-scopes', (r: Route) => r.fulfill({ json: scopes }));
@@ -96,11 +100,12 @@ test.describe('admin-tests editor (stubbed)', () => {
         await page.locator('#testEventKey').dispatchEvent('change');
         await page.locator('#saveTestBtn').click();
         await expect.poll(() => putBody && putBody['name']).toBe('StIgnatiusOfLoyolaTest');
-        // Pin the PATH, not just the body. TESTS_ROUTE deliberately matches both /tests
-        // and /tests/{name} so one handler can serve the collection GET as well, which
-        // means a regression back to PUT-ing the collection would otherwise still be
-        // intercepted and still pass — the very drift #453 was about.
-        expect(putUrl).toMatch(/\/tests\/StIgnatiusOfLoyolaTest$/);
+        // Pin the PATH, not just the body. TESTS_ROUTE deliberately matches the
+        // collection and the item paths alike so one handler can serve the collection
+        // GET as well, which means a regression back to PUT-ing the collection — or
+        // back to the rite-less /tests/{name} the API now 400s — would otherwise still
+        // be intercepted and still pass. That drift is what #453 was about.
+        expect(putUrl).toMatch(/\/tests\/roman\/StIgnatiusOfLoyolaTest$/);
         expect(putBody!['test_type']).toBe('exactCorrespondence');
         expect((putBody!['assertions'] as unknown[]).length).toBeGreaterThan(0);
         expect((putBody!['assertions'] as Array<{ assert: string }>)[0].assert).toBe('eventExists AND hasExpectedDate');
@@ -110,7 +115,9 @@ test.describe('admin-tests editor (stubbed)', () => {
         await stubEditor(page, { is_global_admin: true, editor: [], admin: [] });
         let patched = false;
         let patchBody: Record<string, unknown> | null = null;
-        await page.route('**/tests/UsaNationalTest', (r: Route) => {
+        // The sample test declares no applies_to.rite (a pre-#787 file), so the page
+        // addresses it under the Roman partition — the same fallback the API applies.
+        await page.route('**/tests/roman/UsaNationalTest', (r: Route) => {
             if (r.request().method() === 'PATCH') {
                 patchBody = r.request().postDataJSON() as Record<string, unknown>;
                 patched = true;
@@ -127,7 +134,9 @@ test.describe('admin-tests editor (stubbed)', () => {
         await expect(page.locator('#testScopeType')).toBeHidden();
         await page.locator('#saveTestBtn').click();
         await expect.poll(() => patched).toBe(true);
-        expect(patchBody!.applies_to).toEqual({ national_calendar: 'USA' });
+        // `rite` is REQUIRED by LitCalTest.json (API #785) — a body without it is a
+        // 422. It stays `roman` here because the Ambrosian rite has no national tier.
+        expect(patchBody!.applies_to).toEqual({ rite: 'roman', national_calendar: 'USA' });
         expect(patchBody!.name).toBe('UsaNationalTest');
     });
 });
@@ -152,10 +161,10 @@ test.describe('admin-tests scope RBAC (stubbed)', () => {
         await page.locator('#testEventKey').fill('StIgnatiusOfLoyola');
         await page.locator('#testEventKey').dispatchEvent('change');
         await page.locator('#saveTestBtn').click();
-        await expect.poll(() => putBody && putBody['applies_to']).toEqual({ national_calendar: 'USA' });
+        await expect.poll(() => putBody && putBody['applies_to']).toEqual({ rite: 'roman', national_calendar: 'USA' });
         // As above: TESTS_ROUTE matches the collection path too, so assert the write
-        // actually went to the name-scoped endpoint.
-        expect(putUrl).toMatch(/\/tests\/StIgnatiusOfLoyolaTest$/);
+        // actually went to the rite-qualified item endpoint.
+        expect(putUrl).toMatch(/\/tests\/roman\/StIgnatiusOfLoyolaTest$/);
     });
 
     test('multi-scope editor: a select limited to the authorized scopes', async ({ page }) => {
@@ -200,7 +209,7 @@ test.describe('admin-tests delete (stubbed)', () => {
     test('confirms and fires DELETE', async ({ page }) => {
         await stub(page, { is_global_admin: true, editor: [], admin: [] });
         let deleted = false;
-        await page.route('**/tests/GrcOnlyTest', (r) => {
+        await page.route('**/tests/roman/GrcOnlyTest', (r) => {
             if (r.request().method() === 'DELETE') { deleted = true; return r.fulfill({ json: {} }); }
             return r.continue();
         });

@@ -48,3 +48,13 @@ export const CalendarSelectFilter = Object.freeze({
 export const ApiClient = {
     init: vi.fn(() => Promise.resolve(null)),
 };
+
+// Mirrors liturgy-components-js/src/Enums.js exactly. Unlike the classes above,
+// this one carries real values: admin-tests.js reads Rite.ROMAN as the default
+// rite for a scope that names none, and puts it in the request path and the
+// `applies_to.rite` payload — an inert stand-in would silently change what the
+// tests assert.
+export const Rite = Object.freeze({
+    ROMAN: 'roman',
+    AMBROSIAN: 'ambrosian',
+});
