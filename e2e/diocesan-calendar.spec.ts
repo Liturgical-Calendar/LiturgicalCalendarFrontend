@@ -343,21 +343,29 @@ test.describe('Diocesan Calendar Form', () => {
         let responseStatus: number | null = null;
         let responseBody: any = null;
 
-        // Load an existing diocesan calendar (UPDATE scenario - should use PATCH)
-        // Dynamically discover a nation with existing diocesan calendars
-        const nationsWithDioceses = await extendingPage.getNationsWithExistingDiocesanCalendars();
+        // Load an existing diocesan calendar (UPDATE scenario - should use PATCH).
+        //
+        // The nation is chosen deterministically, preferring one whose diocese
+        // announces more than one locale. A random pick used to decide whether this
+        // spec exercised the multi-locale editor path at all, which is what turned
+        // issue #462 into an intermittent ~40% failure instead of a standing red:
+        // only the multi-locale path loads secondary translations, and only that
+        // path could submit an `i18n` narrower than `metadata.locales`. Preferring
+        // it means a regression there fails every run, not two runs in five.
+        const existingDioceses = await extendingPage.getExistingDiocesanCalendars();
 
-        if (nationsWithDioceses.length === 0) {
+        if (existingDioceses.length === 0) {
             test.skip(true, 'No nations with existing diocesan calendars found');
             return;
         }
 
-        // Pick a random nation for better coverage across test runs
-        const randomIndex = Math.floor(Math.random() * nationsWithDioceses.length);
-        const selectedNation = nationsWithDioceses[randomIndex];
-        // Log index for reproducibility - to reproduce a failure, use: nationsWithDioceses[<index>]
-        console.log(`REPRODUCIBILITY: Selected nation index ${randomIndex} of ${nationsWithDioceses.length} = ${selectedNation}`);
-        console.log(`REPRODUCIBILITY: Available nations: [${nationsWithDioceses.join(', ')}]`);
+        const multiLocaleDioceses = existingDioceses.filter(d => d.locales.length > 1);
+        // Sorted so the fallback is stable too — an arbitrary-but-fixed choice beats
+        // whatever order the API happened to return.
+        const nationsWithDioceses = [...new Set(existingDioceses.map(d => d.nation))].sort();
+        const preferredNations = [...new Set(multiLocaleDioceses.map(d => d.nation))].sort();
+        const selectedNation = preferredNations[0] ?? nationsWithDioceses[0];
+        console.log(`Selected nation ${selectedNation} (multi-locale nations: [${preferredNations.join(', ')}], all: [${nationsWithDioceses.join(', ')}])`);
 
         const nationalSelect = page.locator('#diocesanCalendarNationalDependency');
 
@@ -387,18 +395,23 @@ test.describe('Diocesan Calendar Form', () => {
             }));
         });
 
-        // Get existing diocesan calendar IDs for the selected nation
-        const existingDioceseIds = await extendingPage.getExistingDiocesanCalendarIds(selectedNation);
+        // Existing calendars for the selected nation, multi-locale ones first — same
+        // reason as the nation choice above: that is the path worth exercising.
+        const nationDioceses = existingDioceses.filter(d => d.nation === selectedNation);
+        const preferredIds = nationDioceses.filter(d => d.locales.length > 1).map(d => d.calendar_id);
+        const existingDioceseIds = nationDioceses.map(d => d.calendar_id);
 
         // Find a diocese that exists in the datalist AND has existing calendar data
-        const dioceseToUpdate = availableDioceses.find(d => existingDioceseIds.includes(d.key));
+        const dioceseToUpdate = availableDioceses.find(d => preferredIds.includes(d.key))
+            ?? availableDioceses.find(d => existingDioceseIds.includes(d.key));
 
         if (!dioceseToUpdate) {
             test.skip(true, `No ${selectedNation} dioceses with existing calendar data found`);
             return;
         }
 
-        console.log(`Selected diocese for UPDATE test: ${dioceseToUpdate.name} (${dioceseToUpdate.key})`);
+        const expectedLocales = nationDioceses.find(d => d.calendar_id === dioceseToUpdate.key)?.locales ?? [];
+        console.log(`Selected diocese for UPDATE test: ${dioceseToUpdate.name} (${dioceseToUpdate.key}), locales [${expectedLocales.join(', ')}]`);
 
         const dioceseInput = page.locator('#diocesanCalendarDioceseName');
         await dioceseInput.fill(dioceseToUpdate.name);
@@ -417,6 +430,31 @@ test.describe('Diocesan Calendar Form', () => {
             }
             return false;
         }, { timeout: 15000 });
+
+        // The check above is satisfied by the PRIMARY locale alone, so on a
+        // multi-locale calendar it returns while the secondary-locale translations
+        // may still be in flight. #overlay is the app's own "editor is ready"
+        // signal, so wait for that instead — it is shown synchronously at the top of
+        // loadDiocesanCalendarData(), and the wait above guarantees we are already
+        // past that point. `networkidle` below is not a substitute: the translation
+        // fetches are kicked off from a `.then()` and can start after the network
+        // first goes idle.
+        await expect(page.locator('#overlay')).toHaveClass(/hidden/, { timeout: 15000 });
+
+        // Ordering assertion, and the regression test for issue #462: by the time
+        // the overlay lifts, the secondary-locale inputs must already exist. They are
+        // what the save handler reads to build `payload.i18n`, so if the overlay
+        // lifts first, a save submits fewer locales than `metadata.locales` announces
+        // and the API rejects it. count() takes a point-in-time snapshot with no
+        // auto-retry — waiting here would defeat the purpose, since the translations
+        // do eventually arrive even when the overlay lifted too early.
+        if (expectedLocales.length > 1) {
+            const localeInputCount = await page.locator('input[data-locale]').count();
+            expect(
+                localeInputCount,
+                'secondary-locale inputs must be present before the overlay lifts (issue #462)'
+            ).toBeGreaterThan(0);
+        }
 
         // Wait for network activity to complete
         await page.waitForLoadState('networkidle');
@@ -476,6 +514,14 @@ test.describe('Diocesan Calendar Form', () => {
 
             // Validate nation is a 2-letter ISO code
             expect(capturedPayload.metadata.nation).toMatch(/^[A-Z]{2}$/);
+
+            // The contract DiocesanData::validateTranslations() enforces: `i18n` must
+            // key exactly the locales `metadata.locales` announces. Asserting it on
+            // the captured body pins issue #462 to the payload itself, independently
+            // of any timing — a short `i18n` is what made the API 500.
+            expect(capturedPayload).toHaveProperty('i18n');
+            expect(Object.keys(capturedPayload.i18n).sort())
+                .toEqual([...capturedPayload.metadata.locales].sort());
         } finally {
             // CLEANUP: Revert changes using git restore AND git clean in the API folder
             if (needsGitRestore) {
