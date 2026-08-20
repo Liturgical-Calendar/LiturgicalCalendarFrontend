@@ -118,24 +118,33 @@ services:
       # network; 'localhost' inside the container is its own loopback. Same
       # pattern as litcal-frontend's API_INTERNAL_URL.
       API_INTERNAL_URL: http://litcal-api:8000
-    # Live-reload: mount source read-only so edits reflect without rebuilding the
-    # image (UnitTestInterface has no build step). vendor/ is deliberately NOT
-    # mounted so the image's `composer install` is used. Add new top-level pages
-    # or directories here if you create them.
-    # NOTE: single-FILE mounts pin the file's inode — git operations that replace
-    # a mounted file leave the container serving the old content until the
-    # container is recreated (docker compose up -d --force-recreate litcal-tests).
+    # Live-reload: mount the repo ROOT read-only so edits reflect without rebuilding
+    # the image (UnitTestInterface has no build step). No per-page entries to
+    # maintain — a new top-level page is picked up with no change here.
+    #
+    # The root, deliberately, rather than a mount per file. A single-FILE bind pins
+    # that file's inode, and git REPLACES files rather than editing them in place —
+    # so a branch switch left the container serving stale content, and when the
+    # inode was swapped outright the container failed to start at all
+    # ("error mounting ... no such file or directory"). Binding the directory pins
+    # the directory's inode instead, which git never replaces, so index.php,
+    # resources.php and assets/ all hot-reload across branch switches with no
+    # `--force-recreate`.
+    #
+    # Two paths are shadowed back out of that root mount:
     volumes:
-      - ../UnitTestInterface/src:/var/www/html/src:ro
-      - ../UnitTestInterface/includes:/var/www/html/includes:ro
-      - ../UnitTestInterface/layout:/var/www/html/layout:ro
-      - ../UnitTestInterface/components:/var/www/html/components:ro
-      - ../UnitTestInterface/assets:/var/www/html/assets:ro
-      - ../UnitTestInterface/i18n:/var/www/html/i18n:ro
-      - ../UnitTestInterface/index.php:/var/www/html/index.php:ro
-      - ../UnitTestInterface/admin.php:/var/www/html/admin.php:ro
-      - ../UnitTestInterface/resources.php:/var/www/html/resources.php:ro
-      - ../UnitTestInterface/results.php:/var/www/html/results.php:ro
+      - ../UnitTestInterface:/var/www/html:ro
+      # The image's `composer install --no-dev --optimize-autoloader` result, kept
+      # in preference to the host's vendor/ (which carries dev dependencies and is
+      # built against the host's PHP). An anonymous volume initialises from the
+      # image, so it shadows the host directory without hiding it from the host.
+      - /var/www/html/vendor
+      # `php -S` serves any file under the docroot, dotfiles included, so the root
+      # mount would publish the host's .env.development — which holds JWT_SECRET —
+      # at http://localhost:3003/.env.development. Shadow it with an empty file.
+      # Config still arrives via `environment:` above; phpdotenv's immutable loader
+      # cannot override a variable Docker has already set, so nothing is lost.
+      - /dev/null:/var/www/html/.env.development:ro
       # Persisted test runs — shared with the host checkout (rw: the endpoint
       # saves/prunes run files here; the host dir is gitignored).
       - ../UnitTestInterface/results:/var/www/html/results:rw
