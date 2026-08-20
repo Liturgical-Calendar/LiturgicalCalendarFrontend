@@ -3,38 +3,28 @@
 /**
  * Development server router for `php -S`.
  *
- * PHP's built-in web server serves any file under the document root verbatim,
- * dotfiles included. That is harmless when the docroot is a built artefact, but
- * the docker dev stack bind-mounts this repository root — so without this router
- * `GET /.env.local` returns the file byte for byte, `JWT_SECRET` and all, and
- * `GET /.git/config` exposes the repository's git metadata. Both were reachable
- * on http://localhost:3000 before this file existed.
+ * Refuses any request whose path contains a dot-prefixed segment, so the
+ * bind-mounted repository root does not expose `.env*` or `.git/` over HTTP.
+ * See {@see \LiturgicalCalendar\Frontend\DevServerRouter} for the reasoning and
+ * for the percent-decoding this depends on.
  *
- * Any path segment beginning with a dot is refused. Everything else returns
- * false, which hands the request back to the built-in server unchanged — real
- * files are still served, and an unknown path still falls back to index.php
- * exactly as it did before.
+ * Everything else returns false, handing the request back to the built-in
+ * server unchanged — real files are still served, and an unknown path still
+ * falls back to index.php exactly as before.
  *
  * Wired up by `command:` in docker-compose.override.yml rather than by the
- * Dockerfile, so the image is untouched; see that file for the rationale.
+ * Dockerfile, so the image is untouched.
  *
  * @see https://www.php.net/manual/en/features.commandline.webserver.php
  */
 
-$path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+require_once __DIR__ . '/vendor/autoload.php';
 
-// parse_url() returns false on a seriously malformed URI; treat that as unroutable
-// rather than letting it fall through to the default handler.
-if (!is_string($path)) {
-    http_response_code(400);
+use LiturgicalCalendar\Frontend\DevServerRouter;
+
+if (DevServerRouter::isForbidden($_SERVER['REQUEST_URI'] ?? '/')) {
+    http_response_code(404);
     return true;
-}
-
-foreach (explode('/', $path) as $segment) {
-    if ($segment !== '' && str_starts_with($segment, '.')) {
-        http_response_code(404);
-        return true;
-    }
 }
 
 return false;
