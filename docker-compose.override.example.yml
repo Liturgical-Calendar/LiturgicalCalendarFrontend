@@ -53,60 +53,48 @@ services:
       # / ADMIN_PASSWORD_HASH not set → API falls back to HS256 with this secret).
       JWT_SECRET: ${JWT_SECRET}
       JWT_ALGORITHM: HS256
-    # Bind-mount source tree (read-only) so JS/CSS/PHP edits are picked up
-    # without a docker compose build. Mounts are intentionally explicit —
-    # mounting the whole project root would shadow the container's vendor/,
-    # cache/, logs/, and .env.local. All :ro so the container can never
-    # modify host files. Add new top-level pages or directories here if you
-    # create them.
-    # NOTE: single-FILE mounts pin the file's inode — editors/git operations
-    # that replace a mounted file leave the container serving the old content
-    # until the container is recreated
-    # (docker compose up -d --force-recreate litcal-frontend).
+    # Wire in the dev-server router (see router.php). `command:` rather than a
+    # Dockerfile CMD change, so the image stays untouched: `php -S` serves any file
+    # under the docroot verbatim, dotfiles included, and the root mount below puts
+    # this whole repository there — .env.local, .env*.bak.*, .git and all. The
+    # router 404s any path segment starting with a dot and defers everything else
+    # to the built-in handler, so real files and the index.php fallback are
+    # unchanged.
+    command: ["php", "-S", "0.0.0.0:3000", "-t", "/var/www/html", "router.php"]
+    # Live-reload: mount the repo ROOT read-only so edits reflect without rebuilding
+    # the image. No per-page entries to maintain — a new top-level page is picked up
+    # with no change here.
+    #
+    # The root, deliberately, rather than a mount per file. A single-FILE bind pins
+    # that file's inode, and git REPLACES files rather than editing them in place —
+    # so a branch switch left the container serving stale content, and when the
+    # inode was swapped outright the container failed to start at all
+    # ("error mounting ... no such file or directory"). Binding the directory pins
+    # the directory's inode instead, which git never replaces. Same fix as
+    # litcal-tests (#472); see #473 for why this service needed more care.
+    #
+    # The hand-maintained list this replaces had already drifted: it still mounted
+    # decrees.php, renamed to admin-decrees.php long ago, so one real page silently
+    # served the image's copy and docker kept recreating an empty decrees.php/
+    # directory in the repo root.
     volumes:
-      - ./assets:/var/www/html/assets:ro
-      # Stacked sub-mount: the assets parent is :ro to keep the container from
-      # writing to host source files, but assets/json/ is a runtime cache
-      # (GitHub release info — see includes/common.php) that the container
-      # MUST write to. The host dir is gitignored, so writes are harmless.
+      - .:/var/www/html:ro
+      # The image's `composer install` result, kept in preference to the host's
+      # vendor/ (dev dependencies, built against the host's PHP). An anonymous
+      # volume initialises from the image, shadowing the host directory.
+      - /var/www/html/vendor
+      # Runtime write targets. The root mount above is :ro so the container can
+      # never modify host source; these three are the carve-outs it must write to.
+      # assets/json is a GitHub release-info cache (see includes/common.php); the
+      # examples ones are the PHP example's cache and logs. All gitignored.
       - ./assets/json:/var/www/html/assets/json:rw
-      - ./auth:/var/www/html/auth:ro
-      - ./dist:/var/www/html/dist:ro
-      - ./i18n:/var/www/html/i18n:ro
-      - ./includes:/var/www/html/includes:ro
-      - ./layout:/var/www/html/layout:ro
-      - ./src:/var/www/html/src:ro
-      # The examples live in a separate repo, symlinked locally as the gitignored
-      # examples/ -> ../examples (absent from the image AND the mounts above).
-      # Mount that repo directly so examples.php's examples/* assets resolve —
-      # otherwise they 404 and are served as HTML, which breaks the JS example's
-      # module script (MIME error) and leaves the PHP example include empty.
-      # php/cache + php/logs are :rw carve-outs the PHP example writes to.
-      # (The PHP example additionally needs its own repo to honor API_INTERNAL_URL
-      # to reach the API server-side from inside the container.)
-      - ../examples:/var/www/html/examples:ro
       - ../examples/php/cache:/var/www/html/examples/php/cache:rw
       - ../examples/php/logs:/var/www/html/examples/php/logs:rw
-      - ./about.php:/var/www/html/about.php:ro
-      - ./admin-applications.php:/var/www/html/admin-applications.php:ro
-      - ./admin-dashboard.php:/var/www/html/admin-dashboard.php:ro
-      - ./admin-permissions.php:/var/www/html/admin-permissions.php:ro
-      - ./admin-users.php:/var/www/html/admin-users.php:ro
-      - ./admin-decrees.php:/var/www/html/admin-decrees.php:ro
-      - ./admin-tests.php:/var/www/html/admin-tests.php:ro
-      - ./developer-dashboard.php:/var/www/html/developer-dashboard.php:ro
-      - ./easter.php:/var/www/html/easter.php:ro
-      - ./examples.php:/var/www/html/examples.php:ro
-      - ./extending.php:/var/www/html/extending.php:ro
-      - ./index.php:/var/www/html/index.php:ro
-      - ./liturgyOfAnyDay.php:/var/www/html/liturgyOfAnyDay.php:ro
-      - ./missals-editor.php:/var/www/html/missals-editor.php:ro
-      - ./permission-requests.php:/var/www/html/permission-requests.php:ro
-      - ./temporale.php:/var/www/html/temporale.php:ro
-      - ./translations.php:/var/www/html/translations.php:ro
-      - ./usage.php:/var/www/html/usage.php:ro
-      - ./user-profile.php:/var/www/html/user-profile.php:ro
-
+      # The examples live in a separate repo, symlinked here as the gitignored
+      # examples/ -> ../examples. A bind mount does not follow that symlink into
+      # the container, so the target still needs mounting explicitly or
+      # examples.php's assets 404.
+      - ../examples:/var/www/html/examples:ro
   litcal-tests:
     build:
       context: ../UnitTestInterface
