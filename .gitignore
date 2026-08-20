@@ -192,3 +192,6 @@ scripts/setup-openfga.sh
 
 # Agent scratch space (SDD briefs, reports, review diffs) — never part of the repo
 .superpowers/
+
+# Semgrep Guardian plugin scaffolding (empty local placeholder, no shared rules)
+.semgrep/
