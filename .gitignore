@@ -136,6 +136,9 @@ api/*
 !translations.php
 !usage.php
 !user-profile.php
+# Dev-server router for `php -S`, wired up by docker-compose.override.yml's
+# `command:`. Tracked so anyone copying the example override gets it (#473).
+!router.php
 !auth/*.php
 !layout/*.php
 !src/*.php
