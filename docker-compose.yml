@@ -376,7 +376,7 @@ services:
       OPENFGA_API_URL: http://openfga:8080
       OPENFGA_STORE_ID: ${OPENFGA_STORE_ID:-}
       OPENFGA_MODEL_ID: ${OPENFGA_MODEL_ID:-}
-      # The WebSocket test server (LitCalTestServer.php) caches API responses; Health.php prefers
+      # The WebSocket test server (bin/LitCalTestServer.php) caches API responses; Health.php prefers
       # Redis and only falls back to APCu, which is disabled under the CLI SAPI the WS server runs
       # on — so without Redis every request is a cache miss.
       REDIS_HOST: redis
@@ -389,7 +389,7 @@ services:
     # Run both the HTTP server and the WebSocket server
     command: >
       bash -c "
-        php public/LitCalTestServer.php &
+        php bin/LitCalTestServer.php &
         php -S 0.0.0.0:8000 -t /var/www/html/public
       "
     depends_on:

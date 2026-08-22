@@ -37,6 +37,11 @@ services:
       # adding a NEW class file may need a `composer dump-autoload` in-container.
       - ../LiturgicalCalendarAPI/src:/var/www/html/src:ro
       - ../LiturgicalCalendarAPI/public:/var/www/html/public:ro
+      # bin/ holds the WebSocket server entrypoint (bin/LitCalTestServer.php). It moved out of
+      # public/ in API #857 — it is a CLI entrypoint, not a web one — so without this mount the
+      # container starts the WS server from the image while every other API dir is live-reloaded,
+      # and a local edit to it silently has no effect.
+      - ../LiturgicalCalendarAPI/bin:/var/www/html/bin:ro
       # jsondata is :rw, NOT :ro. The API PERSISTS PUTed test definitions to
       # jsondata/tests/<name>.json (TestsHandler::file_put_contents) and other
       # source-data writes here; a :ro mount would fail those writes with a
