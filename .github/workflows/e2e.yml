@@ -225,7 +225,12 @@ jobs:
           model=$(curl -sS "http://localhost:8083/stores/$store/authorization-models" \
             | python3 -c "import sys,json;m=json.load(sys.stdin).get('authorization_models',[]);print(m[0]['id'] if m else '')")
           tok=$(grep '^ZITADEL_MACHINE_TOKEN=' .env | cut -d= -f2-)
-          org=$(curl -sS http://localhost:8080/auth/v1/users/me \
+          # Host-facing Zitadel URLs track ZITADEL_PORT, the same variable
+          # docker-compose.yml publishes on. The `Host: localhost` header below is
+          # separate and stays portless: it matches ZITADEL_EXTERNALDOMAIN, which
+          # does not move.
+          zitadel="http://localhost:${ZITADEL_PORT:-8080}"
+          org=$(curl -sS "$zitadel/auth/v1/users/me" \
                   -H "Authorization: Bearer $tok" -H "Host: localhost" \
                 | python3 -c "import sys,json;u=json.load(sys.stdin).get('user',{});print(u.get('details',{}).get('resourceOwner') or u.get('resourceOwner',''))")
           # Containers (.env): the API resolves admin scopes against this store/model.
@@ -234,7 +239,7 @@ jobs:
           # Host playwright (.env.development): the helpers hit the host-exposed ports.
           set_kv .env.development ZITADEL_MACHINE_TOKEN "$tok"
           set_kv .env.development ZITADEL_ORG_ID "$org"
-          set_kv .env.development ZITADEL_ISSUER "http://localhost:8080"
+          set_kv .env.development ZITADEL_ISSUER "$zitadel"
           set_kv .env.development OPENFGA_API_URL "http://localhost:8083"
           set_kv .env.development OPENFGA_STORE_ID "$store"
           set_kv .env.development OPENFGA_MODEL_ID "$model"

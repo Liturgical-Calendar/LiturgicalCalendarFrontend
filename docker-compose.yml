@@ -72,7 +72,7 @@ services:
     command: 'start-from-init --masterkey "${ZITADEL_MASTERKEY:-MasterkeyNeedsToHave32Characters}"'
     environment:
       ZITADEL_EXTERNALDOMAIN: localhost
-      ZITADEL_EXTERNALPORT: 8080
+      ZITADEL_EXTERNALPORT: ${ZITADEL_PORT:-8080}
       ZITADEL_EXTERNALSECURE: false
       ZITADEL_TLS_ENABLED: false
 
@@ -96,10 +96,10 @@ services:
 
       # Enable Login V2
       ZITADEL_DEFAULTINSTANCE_FEATURES_LOGINV2_REQUIRED: true
-      ZITADEL_DEFAULTINSTANCE_FEATURES_LOGINV2_BASEURI: http://localhost:8081/ui/v2/login
-      ZITADEL_OIDC_DEFAULTLOGINURLV2: http://localhost:8081/ui/v2/login/login?authRequest=
-      ZITADEL_OIDC_DEFAULTLOGOUTURLV2: http://localhost:8081/ui/v2/login/logout?post_logout_redirect=
-      ZITADEL_SAML_DEFAULTLOGINURLV2: http://localhost:8081/ui/v2/login/login?samlRequest=
+      ZITADEL_DEFAULTINSTANCE_FEATURES_LOGINV2_BASEURI: http://localhost:${ZITADEL_LOGIN_PORT:-8081}/ui/v2/login
+      ZITADEL_OIDC_DEFAULTLOGINURLV2: http://localhost:${ZITADEL_LOGIN_PORT:-8081}/ui/v2/login/login?authRequest=
+      ZITADEL_OIDC_DEFAULTLOGOUTURLV2: http://localhost:${ZITADEL_LOGIN_PORT:-8081}/ui/v2/login/logout?post_logout_redirect=
+      ZITADEL_SAML_DEFAULTLOGINURLV2: http://localhost:${ZITADEL_LOGIN_PORT:-8081}/ui/v2/login/login?samlRequest=
 
       # Admin machine user (PAT for setup script)
       ZITADEL_FIRSTINSTANCE_PATPATH: /zitadel-data/admin.pat
@@ -132,8 +132,8 @@ services:
     volumes:
       - zitadel_data:/zitadel-data
     ports:
-      - "127.0.0.1:8080:8080"
-      - "127.0.0.1:8081:3000"
+      - "127.0.0.1:${ZITADEL_PORT:-8080}:8080"
+      - "127.0.0.1:${ZITADEL_LOGIN_PORT:-8081}:3000"
     networks:
       - litcal
     depends_on:
@@ -159,6 +159,10 @@ services:
     image: ghcr.io/zitadel/zitadel-login:latest
     restart: unless-stopped
     environment:
+      # NOT ${ZITADEL_PORT}. `network_mode: service:zitadel` below puts this container in
+      # Zitadel's own network namespace, so `localhost:8080` here is Zitadel's *container*
+      # port, which never moves. Parameterizing it would break the login UI the moment
+      # ZITADEL_PORT was overridden.
       ZITADEL_API_URL: http://localhost:8080
       NEXT_PUBLIC_BASE_PATH: /ui/v2/login
       ZITADEL_SERVICE_USER_TOKEN_FILE: /zitadel-data/login-client.pat
@@ -368,7 +372,7 @@ services:
       DB_NAME: litcal
       DB_USER: litcal
       DB_PASSWORD: litcal_secure_password
-      ZITADEL_ISSUER: http://localhost:8080
+      ZITADEL_ISSUER: ${ZITADEL_ISSUER:-http://localhost:${ZITADEL_PORT:-8080}}
       ZITADEL_INTERNAL_URL: http://zitadel:8080
       ZITADEL_CLIENT_ID: ${ZITADEL_CLIENT_ID:-}
       ZITADEL_PROJECT_ID: ${ZITADEL_PROJECT_ID:-}
@@ -423,7 +427,7 @@ services:
       API_INTERNAL_URL: ${API_INTERNAL_URL:-http://litcal-api:8000}
       FRONTEND_URL: http://localhost:${FRONTEND_PORT:-3000}
       ACCURACY_TESTS_URL: http://localhost:${TESTS_PORT:-3003}
-      ZITADEL_ISSUER: http://localhost:8080
+      ZITADEL_ISSUER: ${ZITADEL_ISSUER:-http://localhost:${ZITADEL_PORT:-8080}}
       ZITADEL_INTERNAL_URL: http://zitadel:8080
       ZITADEL_CLIENT_ID: ${ZITADEL_CLIENT_ID:-}
       ZITADEL_PROJECT_ID: ${ZITADEL_PROJECT_ID:-}
@@ -457,7 +461,7 @@ services:
       WS_HOST: 127.0.0.1
       WS_PORT: ${WS_PORT:-8082}
       LITCAL_FRONTEND_URL: http://localhost:${FRONTEND_PORT:-3000}
-      ZITADEL_ISSUER: ${ZITADEL_ISSUER:-}
+      ZITADEL_ISSUER: ${ZITADEL_ISSUER:-http://localhost:${ZITADEL_PORT:-8080}}
       ZITADEL_CLIENT_ID: ${ZITADEL_CLIENT_ID:-}
       ZITADEL_PROJECT_ID: ${ZITADEL_PROJECT_ID:-}
     ports:
