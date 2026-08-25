@@ -462,6 +462,12 @@ services:
       WS_PORT: ${WS_PORT:-8082}
       LITCAL_FRONTEND_URL: http://localhost:${FRONTEND_PORT:-3000}
       ZITADEL_ISSUER: ${ZITADEL_ISSUER:-http://localhost:${ZITADEL_PORT:-8080}}
+      # ZITADEL_ISSUER above is the address the BROWSER uses. This one is how litcal-tests
+      # reaches Zitadel from inside the network for its back-channel OIDC calls (discovery and
+      # the token exchange) — without it those resolve `localhost` to this container. Its two
+      # sibling services already carry it; litcal-tests needs it now that it is an OIDC client
+      # in its own right.
+      ZITADEL_INTERNAL_URL: http://zitadel:8080
       ZITADEL_CLIENT_ID: ${ZITADEL_CLIENT_ID:-}
       ZITADEL_PROJECT_ID: ${ZITADEL_PROJECT_ID:-}
     ports:
