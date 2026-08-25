@@ -468,7 +468,12 @@ services:
       # sibling services already carry it; litcal-tests needs it now that it is an OIDC client
       # in its own right.
       ZITADEL_INTERNAL_URL: http://zitadel:8080
-      ZITADEL_CLIENT_ID: ${ZITADEL_CLIENT_ID:-}
+      # litcal-tests has its OWN Zitadel client ("LiturgicalCalendar Tests"), because its callback
+      # URL is on its own port and Zitadel rejects a redirect_uri that is not registered against the
+      # client making the request. Falling back to ZITADEL_CLIENT_ID keeps a stack that has not been
+      # re-provisioned booting, but that value is the Frontend's client and its login will fail with
+      # "The requested redirect_uri is missing in the client configuration".
+      ZITADEL_CLIENT_ID: ${ZITADEL_TESTS_CLIENT_ID:-${ZITADEL_CLIENT_ID:-}}
       ZITADEL_PROJECT_ID: ${ZITADEL_PROJECT_ID:-}
     ports:
       - "127.0.0.1:${TESTS_PORT:-3003}:3003"
