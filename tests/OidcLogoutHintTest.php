@@ -76,6 +76,24 @@ final class OidcLogoutHintTest extends TestCase
         $this->assertStringContainsString('id_token_hint=', $url);
     }
 
+    /**
+     * CodeRabbit on #480. A present-but-invalid `azp` is not an absent one: the single-valued `aud`
+     * fallback is licensed only by `azp` being missing entirely. Without this distinction a token with
+     * `azp: ""` and a matching `aud` forwards the hint, on a token whose authorized party is demonstrably
+     * not us.
+     */
+    public function testRejectsPresentButInvalidAzpEvenWithMatchingAudience(): void
+    {
+        foreach ([['azp' => '', 'aud' => self::OURS], ['azp' => null, 'aud' => self::OURS], ['azp' => 12345, 'aud' => self::OURS]] as $claims) {
+            $url = $this->client()->getLogoutUrl($this->token($claims), 'https://front.example.test/');
+            $this->assertStringNotContainsString(
+                'id_token_hint',
+                $url,
+                'a present but invalid azp must not fall through to the aud fallback: ' . json_encode($claims)
+            );
+        }
+    }
+
     public function testRejectsMultiValuedAudienceWhenAzpAbsent(): void
     {
         // No authorized party is named, so this cannot be shown to be ours. Guessing would reintroduce
