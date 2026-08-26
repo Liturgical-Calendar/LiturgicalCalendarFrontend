@@ -410,7 +410,17 @@ class OidcClient
             'client_id' => $this->clientId,
         ];
 
-        if ($idTokenHint !== null) {
+        // The hint is forwarded ONLY when this client is the one it was minted for. Sibling sites share a
+        // cookie domain, so the ID token in our cookie is frequently theirs: a user who logged in on
+        // UnitTestInterface arrives here already authenticated, carrying UTI's token. Passing that
+        // alongside our own `client_id` makes Zitadel refuse the whole request --
+        //
+        //     {"error":"invalid_request","error_description":"client_id does not match azp of id_token_hint"}
+        //
+        // -- and the user cannot log out at all. Dropping the hint costs only the provider's certainty
+        // about which session to end; it still has the browser's own session cookie, and `client_id` still
+        // lets it validate `post_logout_redirect_uri` against this application.
+        if ($idTokenHint !== null && '' !== $idTokenHint && $this->wasIssuedToThisClient($idTokenHint)) {
             $params['id_token_hint'] = $idTokenHint;
         }
 
@@ -419,6 +429,38 @@ class OidcClient
         }
 
         return $endSessionEndpoint . '?' . http_build_query($params);
+    }
+
+    /**
+     * Whether an ID token names this client as its authorized party.
+     *
+     * The claim is read WITHOUT verifying the signature, deliberately: the answer is only used to decide
+     * whether to hand the token back to the provider that issued it, which then verifies it properly.
+     * Nothing here trusts the contents -- a forged `azp` would buy an attacker a hint Zitadel rejects.
+     *
+     * `azp` is required whenever the audience has more than one value; where it is absent, a single-valued
+     * `aud` carries the same meaning. A multi-valued `aud` with no `azp` is not treated as ours: it does
+     * not identify an authorized party, and guessing would reintroduce the bug this prevents.
+     */
+    private function wasIssuedToThisClient(string $idToken): bool
+    {
+        $claims = JwtSegments::payload($idToken);
+        if (null === $claims) {
+            return false;
+        }
+
+        // Presence is tested with array_key_exists() rather than by coercing the value, because the
+        // fallback below is licensed only by `azp` being ABSENT. A token carrying `azp: ""` (or null, or
+        // a non-string) has an authorized party that simply is not us, and letting it fall through to a
+        // matching single-valued `aud` would forward a hint on a token we cannot show is ours -- which is
+        // the failure this guard exists to prevent.
+        if (array_key_exists('azp', $claims)) {
+            $azp = $claims['azp'];
+            return is_string($azp) && '' !== $azp && $azp === $this->clientId;
+        }
+
+        $aud = $claims['aud'] ?? null;
+        return is_string($aud) && $aud === $this->clientId;
     }
 
     /**
