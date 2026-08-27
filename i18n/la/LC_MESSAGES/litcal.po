@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-27 21:21+0000\n"
-"PO-Revision-Date: 2026-08-27 21:30+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2026-08-27 22:33+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
 "Language: la\n"
@@ -2220,7 +2220,7 @@ msgstr "Administrare"
 
 #: includes/admin-tests-card.php:19
 msgid "Manage liturgical accuracy tests"
-msgstr "Cura probas accuratae liturgicae"
+msgstr "Administra probationes accuratas liturgicas"
 
 #: admin-decrees.php:55
 msgid "Create, edit and delete decrees of the Dicastery for Divine Worship."
@@ -2305,7 +2305,7 @@ msgstr "generatum automatice ex eventu clave et actu"
 
 #: admin-decrees.php:216
 msgid "Decree date"
-msgstr "Decretum date"
+msgstr "Dies decreti"
 
 #: admin-decrees.php:222
 msgid "Protocol"
@@ -2322,7 +2322,7 @@ msgstr "Descriptio"
 
 #: admin-decrees.php:247
 msgid "Source URL"
-msgstr "Source URL"
+msgstr "URL fontis"
 
 #: admin-decrees.php:256
 msgid "Source available in multiple languages"
@@ -2838,7 +2838,7 @@ msgstr "Intra usoris ID..."
 
 #: admin-permissions.php:294 permission-requests.php:228
 msgid "Select relation..."
-msgstr "Select relation..."
+msgstr "Elige relationem..."
 
 #: admin-permissions.php:301 admin-permissions.php:405
 #: admin-permissions.php:436 permission-requests.php:230
@@ -2942,7 +2942,7 @@ msgstr "Intra obiecti ID..."
 
 #: admin-permissions.php:404
 msgid "Select object ID..."
-msgstr "Selecto objecto ID..."
+msgstr "Elige ID obiecti..."
 
 #: admin-permissions.php:409 admin-permissions.php:440
 #: permission-requests.php:235
@@ -2951,7 +2951,7 @@ msgstr "Calendaria onerari non potuerunt — conare paginam iterum onerare"
 
 #: admin-permissions.php:418
 msgid "All fields are required."
-msgstr "Omnia campi necessaria sunt."
+msgstr "Omnes campi necessarii sunt."
 
 #: admin-permissions.php:422
 msgid "No requests found."
@@ -3033,7 +3033,7 @@ msgstr "Editor Calendarii"
 #: admin-permissions.php:456 permission-requests.php:85
 #: permission-requests.php:256 admin-users.php:146
 msgid "Accuracy Test Editor"
-msgstr "Editor Probatum Accurate"
+msgstr "Editor Probationum Accuratarum"
 
 #: admin-tests.php:54
 msgid "Create, edit, and delete liturgical accuracy test definitions."
@@ -3054,11 +3054,11 @@ msgstr "USA, dioecesis id, ..."
 
 #: admin-tests.php:82
 msgid "New Test"
-msgstr "Novum Experimentum"
+msgstr "Nova Probatio"
 
 #: admin-tests.php:92
 msgid "Tests"
-msgstr "Experimenta"
+msgstr "Probationes"
 
 #: admin-tests.php:101
 msgid "Event"
@@ -3115,7 +3115,7 @@ msgstr "cadit in Dominica"
 
 #: admin-tests.php:218
 msgid "pivot year"
-msgstr "annus pivot"
+msgstr "annus cardo"
 
 #: admin-tests.php:219
 msgid "event not expected"
@@ -3202,7 +3202,7 @@ msgstr "In anno %1$s, %2$s incidit in Dominica"
 #: admin-tests.php:329
 #, php-format
 msgid "%s excluded — click to restore"
-msgstr "%s exclusus — click ut restituatur"
+msgstr "%s exclusus — preme ut restituatur"
 
 #: admin-tests.php:330
 msgid "Test name:"
