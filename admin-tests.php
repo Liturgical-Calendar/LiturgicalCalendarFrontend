@@ -79,7 +79,11 @@ if (!$isGlobalAdmin && !$hasTestEditor && !$isResourceAdmin) {
                         <i class="fas fa-rotate"></i> <?php echo htmlspecialchars(_('Refresh'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                     </button>
                     <button type="button" class="btn btn-primary" id="createTestBtn" data-requires-auth>
-                        <i class="fas fa-plus"></i> <?php echo htmlspecialchars(_('New Test'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                        <i class="fas fa-plus"></i> <?php
+                            /* translators: "test" here is an accuracy-test definition checking the calendar produces the expected
+                               result, not a scientific experiment or an examination */
+                            echo htmlspecialchars(_('New Test'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                        ?>
                     </button>
                 </div>
             </div>
@@ -89,7 +93,11 @@ if (!$isGlobalAdmin && !$hasTestEditor && !$isResourceAdmin) {
     <!-- Tests table -->
     <div class="card shadow mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <span><?php echo htmlspecialchars(_('Tests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
+            <span><?php
+                /* translators: accuracy-test definitions checking the calendar produces the expected results, not scientific experiments
+                   or examinations */
+                echo htmlspecialchars(_('Tests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            ?></span>
             <span class="badge bg-secondary" id="testsCount">0</span>
         </div>
         <div class="card-body">
@@ -213,11 +221,27 @@ if (!$isGlobalAdmin && !$hasTestEditor && !$isResourceAdmin) {
                             </div>
                             <div class="year-grid mt-2" id="yearGrid"></div>
                             <div class="d-flex flex-wrap align-items-center gap-3 small text-muted mt-2" id="yearGridLegend">
-                                <span><span class="legend-chip me-1"></span><?php echo htmlspecialchars(_('event expected'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
+                                <span><span class="legend-chip me-1"></span><?php
+                                    /* translators: year-grid legend: the test asserts the liturgical event DOES occur in that year */
+                                    echo htmlspecialchars(_('event expected'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                ?></span>
                                 <span><span class="legend-chip sunday me-1"></span><?php echo htmlspecialchars(_('falls on a Sunday'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
-                                <span><span class="legend-chip bg-info me-1"></span><?php echo htmlspecialchars(_('pivot year'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
-                                <span><span class="legend-chip bg-warning me-1"></span><?php echo htmlspecialchars(_('event not expected'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
-                                <span><span class="legend-chip deleted me-1"></span><?php echo htmlspecialchars(_('excluded — click to restore'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></span>
+                                <span><span class="legend-chip bg-info me-1"></span><?php
+                                    /* translators: the boundary year of an accuracy test: for a "since" test the first year the event is
+                                       expected to exist, for an "until" test the last. Years beyond it are asserted NOT to
+                                       occur. A domain term - not a hinge, turning point or midpoint. Use ONE term for it
+                                       throughout */
+                                    echo htmlspecialchars(_('pivot year'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                ?></span>
+                                <span><span class="legend-chip bg-warning me-1"></span><?php
+                                    /* translators: year-grid legend: the test asserts the liturgical event does NOT occur in that year */
+                                    echo htmlspecialchars(_('event not expected'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                ?></span>
+                                <span><span class="legend-chip deleted me-1"></span><?php
+                                    /* translators: year-grid legend for years left out of the test. "click" is the mouse action - it
+                                       needs translating too */
+                                    echo htmlspecialchars(_('excluded — click to restore'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                ?></span>
                             </div>
                         </div>
 
@@ -322,11 +346,23 @@ if (!$isGlobalAdmin && !$hasTestEditor && !$isResourceAdmin) {
                 requiredFields:      <?php echo json_encode(_('Please fill in all required fields.')); ?>,
                 denied403:           <?php echo json_encode(_('You do not have permission to perform this action.')); ?>,
                 conflict409:         <?php echo json_encode(_('A test with that name already exists.')); ?>,
-                setYear:             <?php echo json_encode(_('set pivot year')); ?>,
-                toggleAssertion:     <?php echo json_encode(_('toggle assertion')); ?>,
+                setYear:             <?php
+                    /* translators: action label for the same boundary year; use the same term as the "pivot year" legend chip */
+                    echo json_encode(_('set pivot year'));
+                ?>,
+                toggleAssertion:     <?php
+                    /* translators: an assertion is one expected-result check for a single year of the test */
+                    echo json_encode(_('toggle assertion'));
+                ?>,
                 removeYear:          <?php echo json_encode(_('remove')); ?>,
-                sundayInYear:        <?php echo json_encode(_('In the year %1$s, %2$s falls on a Sunday')); ?>,
-                excludedRestore:     <?php echo json_encode(_('%s excluded — click to restore')); ?>,
+                sundayInYear:        <?php
+                    /* translators: %1$s is a year, %2$s is the name of a liturgical event. Keep both placeholders and their order */
+                    echo json_encode(_('In the year %1$s, %2$s falls on a Sunday'));
+                ?>,
+                excludedRestore:     <?php
+                    /* translators: %s is a year, e.g. 2015. "click" is the mouse action - it needs translating too */
+                    echo json_encode(_('%s excluded — click to restore'));
+                ?>,
                 testNameLabel:       <?php echo json_encode(_('Test name:')); ?>,
                 invalidName:         <?php echo json_encode(_('Select a valid liturgical event from the list.')); ?>
             }
