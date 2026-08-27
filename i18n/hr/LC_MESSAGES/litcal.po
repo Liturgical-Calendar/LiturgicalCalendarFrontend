@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-16 23:44+0000\n"
-"PO-Revision-Date: 2026-08-27 20:40+0000\n"
+"PO-Revision-Date: 2026-08-27 20:48+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
@@ -2298,7 +2298,7 @@ msgstr "Očisti filtere"
 #: admin-permissions.php:117 admin-permissions.php:281
 #: admin-permissions.php:328
 msgid "Grant Permission"
-msgstr "Dodijeli dopuštenje"
+msgstr "Dodijeli dozvolu"
 
 #: admin-permissions.php:120 admin-permissions.php:149
 #: admin-applications.php:125 admin-users.php:56
@@ -2418,31 +2418,31 @@ msgstr "Odaberi ID kalendara..."
 
 #: admin-permissions.php:341 admin-permissions.php:354
 msgid "Revoke Permission"
-msgstr "Povuci dopuštenje"
+msgstr "Povuci dozvolu"
 
 #: admin-permissions.php:369
 msgid "No permissions found."
-msgstr "Nema pronađenih dopuštenja."
+msgstr "Nema pronađenih dozvola."
 
 #: admin-permissions.php:370
 msgid "Failed to load permissions. Please try again later."
-msgstr "Neuspješno učitavanje dopuštenja. Pokušajte ponovo kasnije."
+msgstr "Neuspješno učitavanje dozvola. Pokušajte ponovo kasnije."
 
 #: admin-permissions.php:371
 msgid "Permission granted successfully."
-msgstr "Dopuštenje uspješno odobreno."
+msgstr "Dozvola uspješno odobrena."
 
 #: admin-permissions.php:372
 msgid "Permission revoked successfully."
-msgstr "Dopuštenje uspješno povučeno."
+msgstr "Dozvola uspješno povučena."
 
 #: admin-permissions.php:373
 msgid "Failed to grant permission. Please try again."
-msgstr "Neuspješno odobravanje dopuštenja. Pokušajte ponovo."
+msgstr "Neuspješno odobravanje dozvole. Pokušajte ponovo."
 
 #: admin-permissions.php:374
 msgid "Failed to revoke permission. Please try again."
-msgstr "Neuspješno povlačenje dopuštenja. Pokušajte ponovo."
+msgstr "Neuspješno povlačenje dozvole. Pokušajte ponovo."
 
 #: admin-permissions.php:375
 msgid "Granting..."
@@ -2454,7 +2454,7 @@ msgstr "Povlačenje..."
 
 #: admin-permissions.php:377
 msgid "Are you sure you want to revoke this permission?"
-msgstr "Jesi li siguran da želiš povući ovo dopuštenje?"
+msgstr "Jesi li siguran da želiš povući ovu dozvolu?"
 
 #: admin-permissions.php:379
 msgid "Subject"
@@ -2596,8 +2596,8 @@ msgid ""
 "the resource permissions you need. Your request will be reviewed by an "
 "administrator."
 msgstr ""
-"Zatraži pristup Liturgijskom kalendaru. Odaberi ulogu i naznači koja "
-"dopuštenja za resurse trebaš. Tvoj zahtjev će pregledati administrator."
+"Zatraži pristup Liturgijskom kalendaru. Odaberi ulogu i naznači koje dozvole "
+"za resurse trebaš. Tvoj zahtjev će pregledati administrator."
 
 #: permission-requests.php:59
 msgid "Your Access Requests"
