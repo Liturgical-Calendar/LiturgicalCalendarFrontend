@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-16 23:44+0000\n"
-"PO-Revision-Date: 2026-08-27 20:03+0000\n"
+"PO-Revision-Date: 2026-08-27 20:08+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
@@ -287,7 +287,7 @@ msgstr "Elige ritum"
 #. translators: notification message shown when the calendar list fails to load
 #: usage.php:27
 msgid "Could not load the calendar list. Please try again later."
-msgstr "Non potuit oneri calendarii album. Quaeso, conare iterum postea."
+msgstr "Index calendariorum onerari non potuit. Quaeso, postea iterum conare."
 
 #. translators: part of page title - section showing usage examples
 #: usage.php:37
@@ -839,7 +839,8 @@ msgstr "Situs interretialis propositi"
 #. translators: error shown when the liturgy page's calendar controls fail to load
 #: liturgyOfAnyDay.php:17
 msgid "Could not load the liturgy controls. Please try again later."
-msgstr "Non potuit oneri liturgiae imperium. Quaeso, conare iterum postea."
+msgstr ""
+"Instrumenta liturgica onerari non potuerunt. Quaeso, postea iterum conare."
 
 #. translators: context = liturgical color
 #. translators: liturgical color - green
@@ -2497,7 +2498,7 @@ msgstr "Selecto objecto ID..."
 #: admin-permissions.php:403 admin-permissions.php:434
 #: permission-requests.php:235
 msgid "Could not load calendars — try reloading the page"
-msgstr "Non potuit oneri calendaria — conare reload paginam"
+msgstr "Calendaria onerari non potuerunt — conare paginam iterum onerare"
 
 #: admin-permissions.php:412
 msgid "All fields are required."
