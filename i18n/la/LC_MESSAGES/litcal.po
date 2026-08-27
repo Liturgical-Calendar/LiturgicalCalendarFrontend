@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-27 21:21+0000\n"
+"POT-Creation-Date: 2026-08-27 22:58+0000\n"
 "PO-Revision-Date: 2026-08-27 22:33+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
@@ -124,7 +124,7 @@ msgstr "Parametri petitionis præsto in omnibus itineribus %1$s"
 #. translators: part of page title - refers to the Catholic liturgical calendar
 #: index.php:65 usage.php:35 examples.php:106 liturgyOfAnyDay.php:23
 #: layout/header.php:257 admin-permissions.php:77 admin-permissions.php:304
-#: admin-permissions.php:397 admin-tests.php:136 admin-tests.php:319
+#: admin-permissions.php:397 admin-tests.php:144 admin-tests.php:343
 #: permission-requests.php:244
 msgid "General Roman Calendar"
 msgstr "Calendarium Romanum Generale"
@@ -1081,7 +1081,10 @@ msgid "weekday"
 msgstr "feria"
 
 #. translators: liturgical rank. Keep Capitalized
-#: src/LitGrade.php:105 admin-decrees.php:658
+#. translators: liturgical grade 1 of 7. These eight labels form a strict precedence ladder; each must be rendered
+#. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
+#. by one rank before
+#: src/LitGrade.php:105 admin-decrees.php:714
 msgid "Commemoration"
 msgstr "Commemoratio"
 
@@ -1091,7 +1094,10 @@ msgid "Optional memorial"
 msgstr "Memoria ad libitum"
 
 #. translators: liturgical rank. Keep Capitalized
-#: src/LitGrade.php:111 admin-decrees.php:656
+#. translators: liturgical grade 3 of 7. These eight labels form a strict precedence ladder; each must be rendered
+#. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
+#. by one rank before
+#: src/LitGrade.php:111 admin-decrees.php:702
 msgid "Memorial"
 msgstr "Memoria obligatoria"
 
@@ -1214,17 +1220,17 @@ msgstr "Proprietas mutanda"
 
 #. translators: form field label for the name of a liturgical event
 #: src/Utilities.php:301 src/FormControls.php:61 includes/messages.php:19
-#: admin-tests.php:100 temporale.php:135
+#: admin-tests.php:108 temporale.php:135
 msgid "Name"
 msgstr "Nomen"
 
-#: src/Utilities.php:302 src/FormControls.php:194 admin-decrees.php:429
-#: admin-decrees.php:493 temporale.php:75 temporale.php:136
+#: src/Utilities.php:302 src/FormControls.php:194 admin-decrees.php:447
+#: admin-decrees.php:515 temporale.php:75 temporale.php:136
 msgid "Grade"
 msgstr "Gradus"
 
 #. translators: form field label for the day of the month
-#: src/FormControls.php:68 includes/messages.php:21 admin-decrees.php:352
+#: src/FormControls.php:68 includes/messages.php:21 admin-decrees.php:370
 msgid "Day"
 msgstr "Dies"
 
@@ -1233,11 +1239,11 @@ msgid "switch on for mobile celebration as opposed to fixed date"
 msgstr "excita pro celebratione mobili pro contrario ad diem fixum"
 
 #. translators: form field label for the month of the year
-#: src/FormControls.php:78 includes/messages.php:23 admin-decrees.php:359
+#: src/FormControls.php:78 includes/messages.php:23 admin-decrees.php:377
 msgid "Month"
 msgstr "Mensis"
 
-#: src/FormControls.php:80 admin-decrees.php:342
+#: src/FormControls.php:80 admin-decrees.php:360
 msgid "Mobile"
 msgstr "Mobilis"
 
@@ -1273,7 +1279,7 @@ msgid "Usage"
 msgstr "Usus"
 
 #. translators: link to translations page
-#: layout/header.php:51 includes/messages.php:197 admin-decrees.php:619
+#: layout/header.php:51 includes/messages.php:197 admin-decrees.php:641
 msgid "Translations"
 msgstr "Translationes"
 
@@ -1296,7 +1302,7 @@ msgstr "Notitiae"
 #: layout/header.php:140 admin-permissions.php:134 admin-permissions.php:193
 #: admin-permissions.php:200 admin-permissions.php:207
 #: admin-permissions.php:214 admin-permissions.php:368
-#: admin-permissions.php:421 admin-tests.php:308 permission-requests.php:64
+#: admin-permissions.php:421 admin-tests.php:332 permission-requests.php:64
 #: permission-requests.php:204 admin-applications.php:136
 #: admin-applications.php:145 admin-applications.php:154
 #: admin-applications.php:163 admin-applications.php:228 admin-users.php:70
@@ -1468,9 +1474,9 @@ msgid "Remember me"
 msgstr "Memento mei"
 
 #. translators: button label for canceling an action
-#: includes/login-modal.php:55 includes/messages.php:132 admin-decrees.php:565
-#: admin-decrees.php:592 admin-permissions.php:325 admin-permissions.php:351
-#: admin-tests.php:235 admin-tests.php:262 admin-tests.php:289
+#: includes/login-modal.php:55 includes/messages.php:132 admin-decrees.php:587
+#: admin-decrees.php:614 admin-permissions.php:325 admin-permissions.php:351
+#: admin-tests.php:259 admin-tests.php:286 admin-tests.php:313
 #: admin-applications.php:207 admin-users.php:112 developer-dashboard.php:134
 #: developer-dashboard.php:183 developer-dashboard.php:246
 msgid "Cancel"
@@ -1537,7 +1543,7 @@ msgid "Session Expired"
 msgstr "Sessio Exspiravit"
 
 #. translators: form field label for the unique identifier of a liturgical event
-#: includes/messages.php:17 admin-decrees.php:162 temporale.php:134
+#: includes/messages.php:17 admin-decrees.php:171 temporale.php:134
 msgid "Event key"
 msgstr "Clavis eventus"
 
@@ -1879,7 +1885,7 @@ msgstr ""
 
 #. translators: label for national calendar name field
 #: includes/messages.php:208 admin-permissions.php:79 admin-permissions.php:306
-#: admin-permissions.php:393 admin-tests.php:139 admin-tests.php:320
+#: admin-permissions.php:393 admin-tests.php:147 admin-tests.php:344
 #: permission-requests.php:237
 msgid "National Calendar"
 msgstr "Calendarium Nationalis"
@@ -2204,7 +2210,7 @@ msgstr "Calendaria dioecesana ab officiis liturgicis"
 msgid "View"
 msgstr "Visum"
 
-#: includes/admin-blocks.php:102 admin-decrees.php:648 admin-tests.php:316
+#: includes/admin-blocks.php:102 admin-decrees.php:670 admin-tests.php:340
 #: developer-dashboard.php:269
 msgid "Edit"
 msgstr "Recensere"
@@ -2226,7 +2232,7 @@ msgstr "Administra probationes accuratas liturgicas"
 msgid "Create, edit and delete decrees of the Dicastery for Divine Worship."
 msgstr "Crea, edita et dele decreta Dicasterii pro Cultu Divino."
 
-#: admin-decrees.php:67 admin-decrees.php:621
+#: admin-decrees.php:67 admin-decrees.php:643
 msgid "New Decree"
 msgstr "Novum Decretum"
 
@@ -2250,89 +2256,97 @@ msgstr "Filtrare per annum"
 msgid "Any year"
 msgstr "Quilibet annus"
 
-#: admin-decrees.php:106
+#. translators: "action" here is the decree's action type (create new event / make Doctor of the Church / set
+#. property), not a deed or legal action
+#: admin-decrees.php:109
 msgid "Filter by action"
 msgstr "Filtrare per actionem"
 
-#: admin-decrees.php:109
+#. translators: the unfiltered choice in the decree action filter; see the note on "Filter by action"
+#: admin-decrees.php:115
 msgid "Any action"
 msgstr "Quilibet actus"
 
-#: admin-decrees.php:111 admin-decrees.php:179
+#: admin-decrees.php:118 admin-decrees.php:188
 msgid "Create new event"
 msgstr "Crea novum eventum"
 
-#: admin-decrees.php:114 admin-decrees.php:182
+#. translators: declares an existing saint a Doctor of the Church - the liturgical title (Latin "Doctor Ecclesiae"),
+#. never an academic doctorate, and not "manufacture"
+#: admin-decrees.php:123 admin-decrees.php:191
 msgid "Make Doctor of the Church"
 msgstr "Fac Doctor Ecclesiae"
 
-#: admin-decrees.php:117 admin-decrees.php:185
+#: admin-decrees.php:126 admin-decrees.php:194
 msgid "Set property: name"
 msgstr "Statue proprietas: nomen"
 
-#: admin-decrees.php:120 admin-decrees.php:188
+#: admin-decrees.php:129 admin-decrees.php:197
 msgid "Set property: grade"
 msgstr "Statue proprietas: gradus"
 
-#: admin-decrees.php:126
+#: admin-decrees.php:135
 msgid "Clear"
 msgstr "Mundare"
 
-#: admin-decrees.php:140
+#: admin-decrees.php:149
 msgid "Decree"
 msgstr "Decretum"
 
-#: admin-decrees.php:143 admin-decrees.php:584 admin-permissions.php:229
+#: admin-decrees.php:152 admin-decrees.php:606 admin-permissions.php:229
 #: admin-permissions.php:261 admin-permissions.php:283
-#: admin-permissions.php:343 admin-tests.php:123 admin-tests.php:254
-#: admin-tests.php:281 admin-applications.php:184 admin-users.php:104
+#: admin-permissions.php:343 admin-tests.php:131 admin-tests.php:278
+#: admin-tests.php:305 admin-applications.php:184 admin-users.php:104
 #: developer-dashboard.php:84 developer-dashboard.php:154
 #: developer-dashboard.php:239 temporale.php:163 temporale.php:186
 msgid "Close"
 msgstr "Claude"
 
-#: admin-decrees.php:175
+#: admin-decrees.php:184
 msgid "Action"
 msgstr "Actus"
 
-#: admin-decrees.php:199
+#: admin-decrees.php:208
 msgid "Decree ID"
 msgstr "Decretum ID"
 
-#: admin-decrees.php:203
+#: admin-decrees.php:212
 msgid "generated automatically from the event key and action"
 msgstr "generatum automatice ex eventu clave et actu"
 
-#: admin-decrees.php:216
+#. translators: the date the decree was signed; label for a date field
+#: admin-decrees.php:227
 msgid "Decree date"
 msgstr "Dies decreti"
 
-#: admin-decrees.php:222
+#: admin-decrees.php:234
 msgid "Protocol"
 msgstr "Protocol"
 
-#: admin-decrees.php:229
+#. translators: the year from which the decree takes effect; label for a numeric year field
+#: admin-decrees.php:243
 msgid "Since year"
 msgstr "Ab anno"
 
-#: admin-decrees.php:238 admin-tests.php:196 admin-applications.php:240
+#: admin-decrees.php:253 admin-tests.php:204 admin-applications.php:240
 #: developer-dashboard.php:98
 msgid "Description"
 msgstr "Descriptio"
 
-#: admin-decrees.php:247
+#. translators: web address of the published decree; label for a URL field
+#: admin-decrees.php:264
 msgid "Source URL"
 msgstr "URL fontis"
 
-#: admin-decrees.php:256
+#: admin-decrees.php:274
 msgid "Source available in multiple languages"
 msgstr "Fons praesto in linguis multiplicibus"
 
-#: admin-decrees.php:267
+#: admin-decrees.php:285
 msgid "Language URL codes"
 msgstr "URL linguarum codices"
 
-#: admin-decrees.php:271
+#: admin-decrees.php:289
 #, php-format
 msgid ""
 "Use %s in the URL above where the language code appears; each row maps a "
@@ -2341,39 +2355,39 @@ msgstr ""
 "Utere %s in URL supra ubi linguae codex apparet; unaquaeque linea mappat "
 "linguam ad suum Vaticanum URL codicem."
 
-#: admin-decrees.php:278
+#: admin-decrees.php:296
 msgid "Add language code"
 msgstr "Addere linguae codicem"
 
-#: admin-decrees.php:282
+#: admin-decrees.php:300
 msgid "Preview"
 msgstr "Praevisio"
 
-#: admin-decrees.php:322
+#: admin-decrees.php:340
 msgid "Event details"
 msgstr "Eventus singularia"
 
-#: admin-decrees.php:328
+#: admin-decrees.php:346
 msgid "Date type"
 msgstr "Typus diei"
 
-#: admin-decrees.php:335
+#: admin-decrees.php:353
 msgid "Fixed"
 msgstr "Fixum"
 
-#: admin-decrees.php:390
+#: admin-decrees.php:408
 msgid "Relative date"
 msgstr "Relativa dies"
 
-#: admin-decrees.php:406
+#: admin-decrees.php:424
 msgid "before"
 msgstr "ante"
 
-#: admin-decrees.php:407
+#: admin-decrees.php:425
 msgid "after"
 msgstr "post"
 
-#: admin-decrees.php:418
+#: admin-decrees.php:436
 msgid ""
 "A day of the week relative to a liturgical event, e.g. \"Monday after "
 "Pentecost\"."
@@ -2381,193 +2395,195 @@ msgstr ""
 "Dies hebdomadis ad eventum liturgicum relativus, e.g. \"Dies Lunae post "
 "Pentecosten\"."
 
-#: admin-decrees.php:432 admin-decrees.php:500
+#: admin-decrees.php:450 admin-decrees.php:522
 msgid "0 — Weekday"
 msgstr "0 — Feria"
 
-#: admin-decrees.php:433 admin-decrees.php:501
+#: admin-decrees.php:451 admin-decrees.php:523
 msgid "1 — Commemoration"
 msgstr "1 — Commemoratio"
 
-#: admin-decrees.php:434 admin-decrees.php:502
+#: admin-decrees.php:452 admin-decrees.php:524
 msgid "2 — Optional Memorial"
 msgstr "2 — Memoria Optionalis"
 
-#: admin-decrees.php:435 admin-decrees.php:503
+#: admin-decrees.php:453 admin-decrees.php:525
 msgid "3 — Memorial"
 msgstr "3 — Memoria"
 
-#: admin-decrees.php:436 admin-decrees.php:504
+#: admin-decrees.php:454 admin-decrees.php:526
 msgid "4 — Feast"
 msgstr "4 — Festum"
 
-#: admin-decrees.php:437 admin-decrees.php:505
+#: admin-decrees.php:455 admin-decrees.php:527
 msgid "5 — Feast of the Lord"
 msgstr "5 — Festum Domini"
 
-#: admin-decrees.php:438 admin-decrees.php:506
+#: admin-decrees.php:456 admin-decrees.php:528
 msgid "6 — Solemnity"
 msgstr "6 — Sollemnitas"
 
-#: admin-decrees.php:439 admin-decrees.php:507
+#: admin-decrees.php:457 admin-decrees.php:529
 msgid "7 — Higher Solemnity"
 msgstr "7 — Maior Sollemnitas"
 
-#: admin-decrees.php:444
+#: admin-decrees.php:462
 msgid "Color(s)"
 msgstr "Color(es)"
 
-#: admin-decrees.php:447
+#: admin-decrees.php:465
 msgid "White"
 msgstr "Albus"
 
-#: admin-decrees.php:448
+#: admin-decrees.php:466
 msgid "Red"
 msgstr "Rubeus"
 
-#: admin-decrees.php:449
+#: admin-decrees.php:467
 msgid "Green"
 msgstr "Viridis"
 
-#: admin-decrees.php:450
+#: admin-decrees.php:468
 msgid "Purple"
 msgstr "Purpureus"
 
-#: admin-decrees.php:451
+#: admin-decrees.php:469
 msgid "Rose"
 msgstr "Rosaceus"
 
-#: admin-decrees.php:454
+#: admin-decrees.php:472
 msgid "Hold Ctrl/Cmd to select multiple"
 msgstr "Preme Ctrl/Cmd ut plura seligas"
 
-#: admin-decrees.php:463 admin-decrees.php:467
+#. translators: the liturgical Common (Commune sanctorum) a celebration is taken from - e.g. Pastors,
+#. Martyrs, Doctors. NOT "common" meaning ordinary or generic
+#: admin-decrees.php:484 admin-decrees.php:489
 msgid "Common(s)"
 msgstr "Communis"
 
-#: admin-decrees.php:471
+#: admin-decrees.php:493
 msgid "e.g. Pastors"
 msgstr "Exempli gratia Pastores"
 
-#: admin-decrees.php:482
+#: admin-decrees.php:504
 msgid "Separate multiple values with a comma"
 msgstr "Separe plures valores cum comma"
 
-#: admin-decrees.php:497
+#: admin-decrees.php:519
 msgid "New grade"
 msgstr "Novus gradus"
 
-#: admin-decrees.php:515
+#: admin-decrees.php:537
 msgid "Translations (i18n)"
 msgstr "Translationes (i18n)"
 
-#: admin-decrees.php:529
+#: admin-decrees.php:551
 msgid "Name in base locale"
 msgstr "Nomen in lingua fundamenti"
 
-#: admin-decrees.php:534
+#: admin-decrees.php:556
 msgid "Base locale — cannot be removed"
 msgstr "Lingua fundamenti — removeri non potest"
 
-#: admin-decrees.php:541
+#: admin-decrees.php:563
 msgid "Add translation"
 msgstr "Addere translationem"
 
-#: admin-decrees.php:548 admin-decrees.php:620
+#: admin-decrees.php:570 admin-decrees.php:642
 msgid "Lectionary readings"
 msgstr "Lectiones lectionarii"
 
-#: admin-decrees.php:557
+#: admin-decrees.php:579
 msgid "Add readings for locale"
 msgstr "Addere lectiones pro localitate"
 
-#: admin-decrees.php:568 admin-tests.php:238 developer-dashboard.php:323
+#: admin-decrees.php:590 admin-tests.php:262 developer-dashboard.php:323
 msgid "Save"
 msgstr "Salva"
 
-#: admin-decrees.php:581
+#: admin-decrees.php:603
 msgid "Delete Decree"
 msgstr "Decretum delere"
 
-#: admin-decrees.php:595 admin-decrees.php:649 admin-tests.php:292
-#: admin-tests.php:317 developer-dashboard.php:249 developer-dashboard.php:270
+#: admin-decrees.php:617 admin-decrees.php:671 admin-tests.php:316
+#: admin-tests.php:341 developer-dashboard.php:249 developer-dashboard.php:270
 msgid "Delete"
 msgstr "Delere"
 
-#: admin-decrees.php:611
+#: admin-decrees.php:633
 msgid "Loading…"
 msgstr "Onus…"
 
-#: admin-decrees.php:612
+#: admin-decrees.php:634
 msgid "You do not have permission to view decrees administration."
 msgstr "Non habes potestatem ad videndum administrationem decretorum."
 
-#: admin-decrees.php:613
+#: admin-decrees.php:635
 msgid "Could not load decrees from the API."
 msgstr "Decreta ab API onerare non potuit."
 
-#: admin-decrees.php:614
+#: admin-decrees.php:636
 msgid "No decrees found."
 msgstr "Nulla decreta inventa sunt."
 
-#: admin-decrees.php:615
+#: admin-decrees.php:637
 msgid ""
 "Are you sure you want to delete this decree? This action cannot be undone."
 msgstr "Certe vis hoc decretum delere? Haec actio revocari non potest."
 
-#: admin-decrees.php:616
+#: admin-decrees.php:638
 msgid "Decree created."
 msgstr "Decretum creatum."
 
-#: admin-decrees.php:617
+#: admin-decrees.php:639
 msgid "Decree updated."
 msgstr "Decretum actualizatum."
 
-#: admin-decrees.php:618
+#: admin-decrees.php:640
 msgid "Decree deleted."
 msgstr "Decretum deletum."
 
-#: admin-decrees.php:622
+#: admin-decrees.php:644
 msgid "Edit Decree"
 msgstr "Decretum recensere"
 
-#: admin-decrees.php:623
+#: admin-decrees.php:645
 msgid "Select locale"
 msgstr "Locale eligere"
 
-#: admin-decrees.php:624 permission-requests.php:229
+#: admin-decrees.php:646 permission-requests.php:229
 msgid "Remove"
 msgstr "Remove"
 
-#: admin-decrees.php:625
+#: admin-decrees.php:647
 msgid "First reading"
 msgstr "Prima lectio"
 
-#: admin-decrees.php:626
+#: admin-decrees.php:648
 msgid "Responsorial psalm"
 msgstr "Psalmus responsorius"
 
-#: admin-decrees.php:627
+#: admin-decrees.php:649
 msgid "Second reading (optional)"
 msgstr "Secunda lectio (optional)"
 
-#: admin-decrees.php:628
+#: admin-decrees.php:650
 msgid "Gospel acclamation"
 msgstr "Acclamatio evangelica"
 
-#: admin-decrees.php:629
+#: admin-decrees.php:651
 msgid "Gospel"
 msgstr "Evangelium"
 
-#: admin-decrees.php:630
+#: admin-decrees.php:652
 msgid "No readings defined for this locale yet"
 msgstr "Nondum lectiones pro hac localitate definitae sunt"
 
-#: admin-decrees.php:631
+#: admin-decrees.php:653
 msgid "Vatican URL code (e.g. ge, sp, po)"
 msgstr "Codex URL Vaticani (exempli gratia ge, sp, po)"
 
-#: admin-decrees.php:633
+#: admin-decrees.php:655
 #, php-format
 msgid ""
 "Duplicate language code \"%s\" in the source URL languages — each language "
@@ -2576,36 +2592,36 @@ msgstr ""
 "Codex linguae duplicatus \"%s\" in URL fontium linguarum — unaquaeque lingua "
 "semel tantum apparere potest"
 
-#: admin-decrees.php:634
+#: admin-decrees.php:656
 msgid "Please fix the following errors before saving:"
 msgstr "Quaeso emenda errores antequam serves:"
 
-#: admin-decrees.php:635
+#: admin-decrees.php:657
 #, php-format
 msgid "Since %s"
 msgstr "Ex quo %s"
 
-#: admin-decrees.php:636
+#: admin-decrees.php:658
 msgid "Source"
 msgstr "Fons"
 
-#: admin-decrees.php:637
+#: admin-decrees.php:659
 msgid "Your session has expired. Please log in again."
 msgstr "Sessio tua exspiravit. Quaeso iterum inire."
 
-#: admin-decrees.php:638
+#: admin-decrees.php:660
 msgid "Log in"
 msgstr "Inire"
 
-#: admin-decrees.php:639 admin-tests.php:323
+#: admin-decrees.php:661 admin-tests.php:347
 msgid "You do not have permission to perform this action."
 msgstr "Non habes permissionem ad hanc actionem perficiendam."
 
-#: admin-decrees.php:640
+#: admin-decrees.php:662
 msgid "Not in the General Roman Calendar — a new event will be created."
 msgstr "Non in Calendario Romano Generali — novus eventus creatur."
 
-#: admin-decrees.php:642
+#: admin-decrees.php:664
 #, php-format
 msgid ""
 "Already in the General Roman Calendar as \"%s\" — choose a different event "
@@ -2613,46 +2629,64 @@ msgid ""
 msgstr ""
 "Iam in Calendario Romano Generali ut \"%s\" — elige alium clavem eventus."
 
-#: admin-decrees.php:643
+#: admin-decrees.php:665
 msgid ""
 "Not in the General Roman Calendar — this decree will not match any event."
 msgstr ""
 "Non in Calendario Romano Generali — hoc decretum nulli eventui conveniet."
 
-#: admin-decrees.php:645
+#: admin-decrees.php:667
 #, php-format
 msgid "Matches \"%s\" in the General Roman Calendar."
 msgstr "Convenit \"%s\" in Calendario Romano Generali."
 
-#: admin-decrees.php:647
+#: admin-decrees.php:669
 msgid "No decrees match the current search and filters."
 msgstr "Nulla decreta quaerenti ac filtris respondent."
 
-#: admin-decrees.php:650
+#: admin-decrees.php:672
 msgid "(error)"
 msgstr "(error)"
 
-#: admin-decrees.php:652
+#. translators: liturgical grade 7 of 7. These eight labels form a strict precedence ladder; each must be rendered
+#. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
+#. by one rank before
+#: admin-decrees.php:678
 msgid "Higher Solemnity"
 msgstr "Sollemnitas Maior"
 
-#: admin-decrees.php:653
+#. translators: liturgical grade 6 of 7. These eight labels form a strict precedence ladder; each must be rendered
+#. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
+#. by one rank before
+#: admin-decrees.php:684
 msgid "Solemnity"
 msgstr "Sollemnitas"
 
-#: admin-decrees.php:654
+#. translators: liturgical grade 5 of 7. These eight labels form a strict precedence ladder; each must be rendered
+#. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
+#. by one rank before
+#: admin-decrees.php:690
 msgid "Feast of the Lord"
 msgstr "Festum Domini"
 
-#: admin-decrees.php:655
+#. translators: liturgical grade 4 of 7. These eight labels form a strict precedence ladder; each must be rendered
+#. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
+#. by one rank before
+#: admin-decrees.php:696
 msgid "Feast"
 msgstr "Festum"
 
-#: admin-decrees.php:657
+#. translators: liturgical grade 2 of 7. These eight labels form a strict precedence ladder; each must be rendered
+#. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
+#. by one rank before
+#: admin-decrees.php:708
 msgid "Optional Memorial"
 msgstr "Memoria Optionalis"
 
-#: admin-decrees.php:659
+#. translators: liturgical grade 0 of 7. These eight labels form a strict precedence ladder; each must be rendered
+#. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
+#. by one rank before
+#: admin-decrees.php:720
 msgid "Weekday"
 msgstr "Feria"
 
@@ -2695,7 +2729,7 @@ msgid "General Roman Calendar Tests"
 msgstr "Probationes Calendarii Romani Generalis"
 
 #: admin-permissions.php:80 admin-permissions.php:307 admin-permissions.php:394
-#: admin-tests.php:142 admin-tests.php:321 permission-requests.php:238
+#: admin-tests.php:150 admin-tests.php:345 permission-requests.php:238
 msgid "Diocesan Calendar"
 msgstr "Calendarium Dioecesanum"
 
@@ -2911,12 +2945,12 @@ msgstr "Subiectum"
 msgid "Unknown user"
 msgstr "Usor ignotus"
 
-#: admin-permissions.php:390 admin-permissions.php:448 admin-tests.php:105
+#: admin-permissions.php:390 admin-permissions.php:448 admin-tests.php:113
 #: admin-applications.php:244 temporale.php:140
 msgid "Actions"
 msgstr "Actiones"
 
-#: admin-permissions.php:396 admin-tests.php:120 permission-requests.php:240
+#: admin-permissions.php:396 admin-tests.php:128 permission-requests.php:240
 msgid "Test Definition"
 msgstr "Definitio Probationis"
 
@@ -3052,163 +3086,179 @@ msgstr "Filtra per ambitum"
 msgid "USA, diocese id, ..."
 msgstr "USA, dioecesis id, ..."
 
-#: admin-tests.php:82
+#. translators: "test" here is an accuracy-test definition checking the calendar produces the expected
+#. result, not a scientific experiment or an examination
+#: admin-tests.php:85
 msgid "New Test"
 msgstr "Nova Probatio"
 
-#: admin-tests.php:92
+#. translators: accuracy-test definitions checking the calendar produces the expected results, not scientific experiments
+#. or examinations
+#: admin-tests.php:99
 msgid "Tests"
 msgstr "Probationes"
 
-#: admin-tests.php:101
+#: admin-tests.php:109
 msgid "Event"
 msgstr "Res"
 
-#: admin-tests.php:102 admin-tests.php:132 developer-dashboard.php:166
+#: admin-tests.php:110 admin-tests.php:140 developer-dashboard.php:166
 #: developer-dashboard.php:273
 msgid "Scope"
 msgstr "Ambitus"
 
-#: admin-tests.php:103 temporale.php:138
+#: admin-tests.php:111 temporale.php:138
 msgid "Type"
 msgstr "Genus"
 
-#: admin-tests.php:104
+#: admin-tests.php:112
 msgid "Years"
 msgstr "Anni"
 
-#: admin-tests.php:152
+#: admin-tests.php:160
 msgid "Liturgical event"
 msgstr "Eventus liturgicus"
 
-#: admin-tests.php:162
+#: admin-tests.php:170
 msgid "Base date"
 msgstr "Data fundamentalis"
 
-#: admin-tests.php:172
+#: admin-tests.php:180
 msgid "Test type"
 msgstr "Genus experimenti"
 
-#: admin-tests.php:178
+#: admin-tests.php:186
 msgid "Exact date"
 msgstr "Exacta data"
 
-#: admin-tests.php:183
+#: admin-tests.php:191
 msgid "Exact since year"
 msgstr "Exacta ab anno"
 
-#: admin-tests.php:188
+#: admin-tests.php:196
 msgid "Exact until year"
 msgstr "Exacta usque ad annum"
 
-#: admin-tests.php:204
+#: admin-tests.php:212
 msgid "Year range"
 msgstr "Intervallum annorum"
 
-#: admin-tests.php:216
+#. translators: year-grid legend: the test asserts the liturgical event DOES occur in that year
+#: admin-tests.php:226
 msgid "event expected"
 msgstr "eventus expectatus"
 
-#: admin-tests.php:217
+#: admin-tests.php:228
 msgid "falls on a Sunday"
 msgstr "cadit in Dominica"
 
-#: admin-tests.php:218
+#. translators: the boundary year of an accuracy test: for a "since" test the first year the event is
+#. expected to exist, for an "until" test the last. Years beyond it are asserted NOT to
+#. occur. A domain term - not a hinge, turning point or midpoint. Use ONE term for it
+#. throughout
+#: admin-tests.php:234
 msgid "pivot year"
 msgstr "annus cardo"
 
-#: admin-tests.php:219
+#. translators: year-grid legend: the test asserts the liturgical event does NOT occur in that year
+#: admin-tests.php:238
 msgid "event not expected"
 msgstr "eventus non expectatus"
 
-#: admin-tests.php:220
+#. translators: year-grid legend for years left out of the test. "click" is the mouse action - it
+#. needs translating too
+#: admin-tests.php:243
 msgid "excluded — click to restore"
 msgstr "exclusus — preme ad restituendum"
 
-#: admin-tests.php:227
+#: admin-tests.php:251
 msgid "Per-year assertions"
 msgstr "Aserta per-annum"
 
-#: admin-tests.php:251
+#: admin-tests.php:275
 msgid "Assertion comment"
 msgstr "Commentarius assertionis"
 
-#: admin-tests.php:265
+#: admin-tests.php:289
 msgid "Save comment"
 msgstr "Serva commentarium"
 
-#: admin-tests.php:278
+#: admin-tests.php:302
 msgid "Delete Test"
 msgstr "Dele Experimentum"
 
-#: admin-tests.php:309
+#: admin-tests.php:333
 msgid "No tests found."
 msgstr "Nihil inventum experimentorum."
 
-#: admin-tests.php:310
+#: admin-tests.php:334
 msgid "Failed to load tests. Please try again later."
 msgstr "Fallo ad experimenta oneranda. Quaeso iterum conare postea."
 
-#: admin-tests.php:311
+#: admin-tests.php:335
 msgid "Test created successfully."
 msgstr "Experimentum feliciter creatum."
 
-#: admin-tests.php:312
+#: admin-tests.php:336
 msgid "Test updated successfully."
 msgstr "Experimentum feliciter renovatum."
 
-#: admin-tests.php:313
+#: admin-tests.php:337
 msgid "Test deleted successfully."
 msgstr "Experimentum feliciter deletum."
 
-#: admin-tests.php:314
+#: admin-tests.php:338
 msgid "Saving..."
 msgstr "Servans..."
 
-#: admin-tests.php:315
+#: admin-tests.php:339
 msgid "Deleting..."
 msgstr "Delens..."
 
-#: admin-tests.php:318
+#: admin-tests.php:342
 #, php-format
 msgid "Are you sure you want to delete the test \"%s\"?"
 msgstr "Certus es ut experientiam \"%s\" delere vis?"
 
-#: admin-tests.php:322
+#: admin-tests.php:346
 msgid "Please fill in all required fields."
 msgstr "Quaeso imple omnes campos necessarios."
 
-#: admin-tests.php:324
+#: admin-tests.php:348
 msgid "A test with that name already exists."
 msgstr "Experimentum cum hoc nomine iam exstat."
 
-#: admin-tests.php:325
+#. translators: action label for the same boundary year; use the same term as the "pivot year" legend chip
+#: admin-tests.php:351
 msgid "set pivot year"
 msgstr "pone annum pivotalem"
 
-#: admin-tests.php:326
+#. translators: an assertion is one expected-result check for a single year of the test
+#: admin-tests.php:355
 msgid "toggle assertion"
 msgstr "assertionem commuta"
 
-#: admin-tests.php:327
+#: admin-tests.php:357
 msgid "remove"
 msgstr "remove"
 
-#: admin-tests.php:328
+#. translators: %1$s is a year, %2$s is the name of a liturgical event. Keep both placeholders and their order
+#: admin-tests.php:360
 #, php-format
 msgid "In the year %1$s, %2$s falls on a Sunday"
 msgstr "In anno %1$s, %2$s incidit in Dominica"
 
-#: admin-tests.php:329
+#. translators: %s is a year, e.g. 2015. "click" is the mouse action - it needs translating too
+#: admin-tests.php:364
 #, php-format
 msgid "%s excluded — click to restore"
 msgstr "%s exclusus — preme ut restituatur"
 
-#: admin-tests.php:330
+#: admin-tests.php:366
 msgid "Test name:"
 msgstr "Nomen Experimentum:"
 
-#: admin-tests.php:331
+#: admin-tests.php:367
 msgid "Select a valid liturgical event from the list."
 msgstr "Elige validum eventum liturgicum ex indice."
 
