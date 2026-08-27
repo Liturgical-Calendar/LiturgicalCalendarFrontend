@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-16 23:44+0000\n"
-"PO-Revision-Date: 2026-06-26 20:52+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2026-08-27 19:05+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
 "Language: sk\n"
@@ -281,17 +281,13 @@ msgstr "Vyber kalendár"
 
 #. translators: label for dropdown to select the liturgical rite (Roman or Ambrosian)
 #: usage.php:25
-#, fuzzy
-#| msgid "Select a Role"
 msgid "Select rite"
-msgstr "Vyberte rolu"
+msgstr "Vyberte obrad"
 
 #. translators: notification message shown when the calendar list fails to load
 #: usage.php:27
-#, fuzzy
-#| msgid "Failed to load users. Please try again later."
 msgid "Could not load the calendar list. Please try again later."
-msgstr "Nepodarilo sa načítať používateľov. Skúste to znova neskôr."
+msgstr "Zoznam kalendárov sa nepodarilo načítať. Skúste to znova neskôr."
 
 #. translators: part of page title - section showing usage examples
 #: usage.php:37
@@ -842,10 +838,8 @@ msgstr "Webová stránka projektu"
 
 #. translators: error shown when the liturgy page's calendar controls fail to load
 #: liturgyOfAnyDay.php:17
-#, fuzzy
-#| msgid "Failed to load users. Please try again later."
 msgid "Could not load the liturgy controls. Please try again later."
-msgstr "Nepodarilo sa načítať používateľov. Skúste to znova neskôr."
+msgstr "Ovládacie prvky liturgie sa nepodarilo načítať. Skúste to znova neskôr."
 
 #. translators: context = liturgical color
 #. translators: liturgical color - green
@@ -1379,10 +1373,8 @@ msgid "Diocesan"
 msgstr "Diecézne"
 
 #: layout/header.php:299
-#, fuzzy
-#| msgid "Test Definition"
 msgid "Test Definitions"
-msgstr "Test definície"
+msgstr "Definície testov"
 
 #: layout/header.php:306
 msgid "Back to Website"
@@ -2244,10 +2236,8 @@ msgstr "Všetko"
 
 #: admin-permissions.php:78 admin-permissions.php:305 admin-permissions.php:406
 #: admin-permissions.php:437 permission-requests.php:243
-#, fuzzy
-#| msgid "General Roman Calendar"
 msgid "General Roman Calendar Tests"
-msgstr "Všeobecný rímsky kalendár"
+msgstr "Testy všeobecného rímskeho kalendára"
 
 #: admin-permissions.php:80 admin-permissions.php:307 admin-permissions.php:388
 #: permission-requests.php:238
@@ -2256,17 +2246,13 @@ msgstr "Diecézny kalendár"
 
 #: admin-permissions.php:82 admin-permissions.php:309 admin-permissions.php:404
 #: admin-permissions.php:435 permission-requests.php:241
-#, fuzzy
-#| msgid "National Calendar"
 msgid "National Calendar Tests"
-msgstr "Národný kalendár"
+msgstr "Testy národného kalendára"
 
 #: admin-permissions.php:83 admin-permissions.php:310 admin-permissions.php:405
 #: admin-permissions.php:436 permission-requests.php:242
-#, fuzzy
-#| msgid "Diocesan Calendar"
 msgid "Diocesan Calendar Tests"
-msgstr "Diecézny kalendár"
+msgstr "Testy diecézneho kalendára"
 
 #: admin-permissions.php:87 admin-permissions.php:382 admin-permissions.php:429
 msgid "Object ID"
@@ -2409,30 +2395,22 @@ msgstr "Vyber vzťah..."
 
 #: admin-permissions.php:301 admin-permissions.php:399
 #: admin-permissions.php:430 permission-requests.php:230
-#, fuzzy
-#| msgid "Calendar"
 msgid "Calendar scope"
-msgstr "Kalendár"
+msgstr "Rozsah kalendára"
 
 #: admin-permissions.php:303 permission-requests.php:232
-#, fuzzy
-#| msgid "Select calendar"
 msgid "Select calendar scope..."
-msgstr "Vyber kalendár"
+msgstr "Vybrať rozsah kalendára..."
 
 #: admin-permissions.php:314 admin-permissions.php:400
 #: admin-permissions.php:431 permission-requests.php:231
-#, fuzzy
-#| msgid "Calendar"
 msgid "Calendar ID"
-msgstr "Kalendár"
+msgstr "ID kalendára"
 
 #: admin-permissions.php:317 admin-permissions.php:401
 #: admin-permissions.php:432 permission-requests.php:233
-#, fuzzy
-#| msgid "Select calendar"
 msgid "Select calendar ID..."
-msgstr "Vyber kalendár"
+msgstr "Vybrať ID kalendára..."
 
 #: admin-permissions.php:341 admin-permissions.php:354
 msgid "Revoke Permission"
@@ -2475,16 +2453,12 @@ msgid "Are you sure you want to revoke this permission?"
 msgstr "Si si istý, že chceš odvolať toto povolenie?"
 
 #: admin-permissions.php:379
-#, fuzzy
-#| msgid "Object ID"
 msgid "Subject"
-msgstr "ID objektu"
+msgstr "Predmet"
 
 #: admin-permissions.php:380
-#, fuzzy
-#| msgid "Unknown error"
 msgid "Unknown user"
-msgstr "Neznáma chyba"
+msgstr "Neznámy užívateľ"
 
 #: admin-permissions.php:384 admin-permissions.php:442
 #: admin-applications.php:244 temporale.php:138
@@ -2522,7 +2496,7 @@ msgstr "Vyberte ID objektu..."
 #: admin-permissions.php:403 admin-permissions.php:434
 #: permission-requests.php:235
 msgid "Could not load calendars — try reloading the page"
-msgstr ""
+msgstr "Kalendáre sa nepodarilo načítať — skúste obnoviť stránku"
 
 #: admin-permissions.php:412
 msgid "All fields are required."
@@ -2723,15 +2697,12 @@ msgid "Please select a role."
 msgstr "Prosím, vyberte rolu."
 
 #: permission-requests.php:214
-#, fuzzy
-#| msgid ""
-#| "Each permission row must have object type, object ID, and relation filled "
-#| "in."
 msgid ""
 "Each permission row must have a calendar scope, calendar ID, and relation "
 "filled in."
 msgstr ""
-"Každý riadok povolenia musí mať vyplnený typ objektu, ID objektu a vzťah."
+"Každý riadok s povoleniami musí mať vyplnený rozsah kalendára, ID kalendára "
+"a vzťah."
 
 #: permission-requests.php:215
 #, php-format
