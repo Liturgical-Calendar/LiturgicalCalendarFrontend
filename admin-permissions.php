@@ -376,7 +376,13 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
                 revoking: <?php echo json_encode(_('Revoking...')); ?>,
                 confirmRevoke: <?php echo json_encode(_('Are you sure you want to revoke this permission?')); ?>,
                 // Table headers
-                subject: <?php echo json_encode(_('Subject')); ?>,
+                subject: <?php
+                    /* translators: permissions table column heading for the principal a permission is
+                       granted TO — an OpenFGA tuple subject, i.e. a user. Not the thing the permission
+                       applies to: that is the adjacent "Object Type" / "Object ID". Several locales have
+                       rendered this as "topic" or "email subject line", which collides with those columns. */
+                    echo json_encode(_('Subject'));
+                ?>,
                 unknownUser: <?php echo json_encode(_('Unknown user')); ?>,
                 objectType: <?php echo json_encode(_('Object Type')); ?>,
                 objectId: <?php echo json_encode(_('Object ID')); ?>,
