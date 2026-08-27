@@ -520,6 +520,9 @@ $formControls = new \LiturgicalCalendar\Frontend\FormControls($i18n);
                                 <?php echo htmlspecialchars(_('Lectionary readings'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                             </legend>
 
+                            <?php // Filled by admin-decrees.js: which shape the selected grade calls for. ?>
+                            <div class="form-text mb-3" id="readingsShapeHint"></div>
+
                             <div id="readingsGroups">
                                 <!-- Readings groups are added dynamically by JS.
                                      A base-locale group is pre-added on modal open. -->
@@ -596,7 +599,16 @@ $formControls = new \LiturgicalCalendar\Frontend\FormControls($i18n);
                 removeRow:         <?php echo json_encode(_('Remove'), JSON_HEX_TAG); ?>,
                 firstReading:      <?php echo json_encode(_('First reading'), JSON_HEX_TAG); ?>,
                 responsorialPsalm: <?php echo json_encode(_('Responsorial psalm'), JSON_HEX_TAG); ?>,
-                secondReading:     <?php echo json_encode(_('Second reading (optional)'), JSON_HEX_TAG); ?>,
+                secondReading:     <?php echo json_encode(_('Second reading'), JSON_HEX_TAG); ?>,
+                <?php // Shown under the readings legend; the shape follows the selected grade. ?>
+                readingsShapeFerial:  <?php echo json_encode(
+                    _('Feast and below take the ferial readings: first reading, responsorial psalm, gospel acclamation and gospel.'),
+                    JSON_HEX_TAG
+                ); ?>,
+                readingsShapeFestive: <?php echo json_encode(
+                    _('Feast of the Lord and above take the festive readings, which also require a second reading.'),
+                    JSON_HEX_TAG
+                ); ?>,
                 gospelAcclamation: <?php echo json_encode(_('Gospel acclamation'), JSON_HEX_TAG); ?>,
                 gospel:            <?php echo json_encode(_('Gospel'), JSON_HEX_TAG); ?>,
                 noReadings:        <?php echo json_encode(_('No readings defined for this locale yet'), JSON_HEX_TAG); ?>,
