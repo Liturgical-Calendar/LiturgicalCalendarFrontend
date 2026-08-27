@@ -30,6 +30,10 @@ if (!$isAdmin && !$isCalendarEditor) {
     exit;
 }
 
+// Shared source of the localized month / grade / color / common option lists,
+// so the decree editor offers exactly what the diocesan calendar form does.
+$formControls = new \LiturgicalCalendar\Frontend\FormControls($i18n);
+
 ?>
 <!doctype html>
 <html lang="<?php echo htmlspecialchars($i18n->LOCALE, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
@@ -369,15 +373,17 @@ if (!$isAdmin && !$isCalendarEditor) {
                                     <label for="eventDay" class="form-label">
                                         <?php echo htmlspecialchars(_('Day'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                     </label>
+                                    <?php // Defaults to 1, matching the month select's January: a fixed date always needs both. ?>
                                     <input type="number" class="form-control" id="eventDay" name="day"
-                                        min="1" max="31">
+                                        min="1" max="31" value="1">
                                 </div>
                                 <div class="col-md-3">
                                     <label for="eventMonth" class="form-label">
                                         <?php echo htmlspecialchars(_('Month'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                     </label>
-                                    <input type="number" class="form-control" id="eventMonth" name="month"
-                                        min="1" max="12">
+                                    <select class="form-select" id="eventMonth" name="month">
+                                        <?php echo $formControls->getMonthOptionsHtml(1); ?>
+                                    </select>
                                 </div>
                             </div>
 
@@ -447,30 +453,17 @@ if (!$isAdmin && !$isCalendarEditor) {
                                         <?php echo htmlspecialchars(_('Grade'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                     </label>
                                     <select class="form-select" id="eventGradeCreate" name="grade">
-                                        <option value="0"><?php echo htmlspecialchars(_('0 — Weekday'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                                        <option value="1"><?php echo htmlspecialchars(_('1 — Commemoration'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                                        <option value="2" selected><?php echo htmlspecialchars(_('2 — Optional Memorial'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                                        <option value="3"><?php echo htmlspecialchars(_('3 — Memorial'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                                        <option value="4"><?php echo htmlspecialchars(_('4 — Feast'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                                        <option value="5"><?php echo htmlspecialchars(_('5 — Feast of the Lord'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                                        <option value="6"><?php echo htmlspecialchars(_('6 — Solemnity'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                                        <option value="7"><?php echo htmlspecialchars(_('7 — Higher Solemnity'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                        <?php echo $formControls->getGradeOptionsHtml(\LiturgicalCalendar\Frontend\LitGrade::MEMORIAL_OPT); ?>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="eventColor" class="form-label">
                                         <?php echo htmlspecialchars(_('Color(s)'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                     </label>
-                                    <select class="form-select" id="eventColor" name="color" multiple size="5">
-                                        <option value="white"><?php echo htmlspecialchars(_('White'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                                        <option value="red"><?php echo htmlspecialchars(_('Red'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                                        <option value="green"><?php echo htmlspecialchars(_('Green'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                                        <option value="purple"><?php echo htmlspecialchars(_('Purple'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                                        <option value="rose"><?php echo htmlspecialchars(_('Rose'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                    <?php // Enhanced into a bootstrap-multiselect by admin-decrees.js (same widget as the diocesan calendar form). ?>
+                                    <select class="form-select litEventColor" id="eventColor" name="color" multiple="multiple" size="1">
+                                        <?php echo $formControls->getColorOptionsHtml([\LiturgicalCalendar\Frontend\LitColor::WHITE]); ?>
                                     </select>
-                                    <div class="form-text">
-                                        <?php echo htmlspecialchars(_('Hold Ctrl/Cmd to select multiple'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
-                                    </div>
                                 </div>
                             </div>
                         </fieldset>
@@ -486,26 +479,12 @@ if (!$isAdmin && !$isCalendarEditor) {
                             </legend>
                             <div class="col-md-6">
                                 <label for="eventCommon" class="form-label">
-                                    <?php echo htmlspecialchars(_('Common(s)'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                    <?php echo htmlspecialchars(_('Common (or Proper)'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                 </label>
-                                <input type="text" class="form-control" id="eventCommon" name="common_text"
-                                    list="commonDatalist"
-                                    placeholder="<?php echo htmlspecialchars(_('e.g. Pastors'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
-                                <datalist id="commonDatalist">
-                                    <option value="Proper"></option>
-                                    <option value="Pastors"></option>
-                                    <option value="Doctors"></option>
-                                    <option value="Martyrs"></option>
-                                    <option value="Virgins"></option>
-                                    <option value="Holy Men and Women"></option>
-                                </datalist>
-                                <div class="form-text">
-                                    <?php echo htmlspecialchars(
-                                        _('Separate multiple values with a comma'),
-                                        ENT_QUOTES | ENT_SUBSTITUTE,
-                                        'UTF-8'
-                                    ); ?>
-                                </div>
+                                <?php // Enhanced into a bootstrap-multiselect by admin-decrees.js (same widget as the diocesan calendar form). ?>
+                                <select class="form-select litEventCommon" id="eventCommon" name="common" multiple="multiple" size="1">
+                                    <?php echo $formControls->getCommonsOptionsHtml([\LiturgicalCalendar\Frontend\LitCommon::PROPRIO]); ?>
+                                </select>
                             </div>
                         </fieldset>
 
@@ -519,14 +498,7 @@ if (!$isAdmin && !$isCalendarEditor) {
                                     <?php echo htmlspecialchars(_('New grade'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                 </label>
                                 <select class="form-select" id="eventGradeSet" name="grade_set">
-                                    <option value="0"><?php echo htmlspecialchars(_('0 — Weekday'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                                    <option value="1"><?php echo htmlspecialchars(_('1 — Commemoration'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                                    <option value="2"><?php echo htmlspecialchars(_('2 — Optional Memorial'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                                    <option value="3" selected><?php echo htmlspecialchars(_('3 — Memorial'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                                    <option value="4"><?php echo htmlspecialchars(_('4 — Feast'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                                    <option value="5"><?php echo htmlspecialchars(_('5 — Feast of the Lord'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                                    <option value="6"><?php echo htmlspecialchars(_('6 — Solemnity'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                                    <option value="7"><?php echo htmlspecialchars(_('7 — Higher Solemnity'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                    <?php echo $formControls->getGradeOptionsHtml(\LiturgicalCalendar\Frontend\LitGrade::MEMORIAL); ?>
                                 </select>
                             </div>
                         </fieldset>
@@ -569,6 +541,9 @@ if (!$isAdmin && !$isCalendarEditor) {
                             <legend class="float-none w-auto px-2 fs-6 fw-semibold">
                                 <?php echo htmlspecialchars(_('Lectionary readings'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                             </legend>
+
+                            <?php // Filled by admin-decrees.js: which shape the selected grade calls for. ?>
+                            <div class="form-text mb-3" id="readingsShapeHint"></div>
 
                             <div id="readingsGroups">
                                 <!-- Readings groups are added dynamically by JS.
@@ -646,7 +621,16 @@ if (!$isAdmin && !$isCalendarEditor) {
                 removeRow:         <?php echo json_encode(_('Remove'), JSON_HEX_TAG); ?>,
                 firstReading:      <?php echo json_encode(_('First reading'), JSON_HEX_TAG); ?>,
                 responsorialPsalm: <?php echo json_encode(_('Responsorial psalm'), JSON_HEX_TAG); ?>,
-                secondReading:     <?php echo json_encode(_('Second reading (optional)'), JSON_HEX_TAG); ?>,
+                secondReading:     <?php echo json_encode(_('Second reading'), JSON_HEX_TAG); ?>,
+                <?php // Shown under the readings legend; the shape follows the selected grade. ?>
+                readingsShapeFerial:  <?php echo json_encode(
+                    _('Feast and below take the ferial readings: first reading, responsorial psalm, gospel acclamation and gospel.'),
+                    JSON_HEX_TAG
+                ); ?>,
+                readingsShapeFestive: <?php echo json_encode(
+                    _('Feast of the Lord and above take the festive readings, which also require a second reading.'),
+                    JSON_HEX_TAG
+                ); ?>,
                 gospelAcclamation: <?php echo json_encode(_('Gospel acclamation'), JSON_HEX_TAG); ?>,
                 gospel:            <?php echo json_encode(_('Gospel'), JSON_HEX_TAG); ?>,
                 noReadings:        <?php echo json_encode(_('No readings defined for this locale yet'), JSON_HEX_TAG); ?>,

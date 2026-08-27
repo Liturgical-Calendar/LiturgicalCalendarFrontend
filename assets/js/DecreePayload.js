@@ -12,6 +12,30 @@ export const DecreeAction = Object.freeze({
     MakeDoctor: 'makeDoctor',
 });
 
+/**
+ * Lowest grade that takes the festive lectionary shape (LitGrade::FEAST_LORD).
+ *
+ * The API's CommonDef schema admits two shapes for an ordinary celebration:
+ * `ReadingsFerial` (first reading, psalm, acclamation, gospel — and
+ * `additionalProperties: false`, so no second reading) and `ReadingsFestive`,
+ * which *requires* a second reading. Which one applies follows the grade:
+ * Feast and below are ferial, Feast of the Lord and above are festive.
+ *
+ * @type {number}
+ */
+export const FESTIVE_GRADE_MIN = 5;
+
+/**
+ * Whether a grade takes the festive lectionary shape (i.e. has a second reading).
+ *
+ * @param {number|string|undefined|null} grade  A liturgical grade (0-7)
+ * @returns {boolean}  True for Feast of the Lord and above
+ */
+export const isFestiveGrade = (grade) => {
+    const value = Number(grade);
+    return Number.isFinite(value) && value >= FESTIVE_GRADE_MIN;
+};
+
 const splitAction = (action) => {
     const [name, property] = action.split(':');
     return property ? { action: name, property } : { action: name };
@@ -206,6 +230,32 @@ function validateReadingsRules(payload, isCreate, errors) {
 }
 
 /**
+ * Validate the lectionary shape against the grade.
+ *
+ * A ferial celebration (Feast and below) has no second reading; a festive one
+ * (Feast of the Lord and above) must have one. Both directions are errors:
+ * ReadingsFerial forbids the field outright, ReadingsFestive requires it.
+ *
+ * @param {object}   payload  Built payload
+ * @param {string[]} errors   Errors array to push into
+ */
+function validateReadingsShape(payload, errors) {
+    if (payload.metadata.action !== 'createNew' || !payload.readings) return;
+
+    const grade   = payload.liturgical_event ? payload.liturgical_event.grade : undefined;
+    const festive = isFestiveGrade(grade);
+
+    Object.entries(payload.readings).forEach(([locale, readings]) => {
+        const hasSecond = typeof readings?.second_reading === 'string' && readings.second_reading !== '';
+        if (festive && !hasSecond) {
+            errors.push(`Festive readings (grade ${grade}) require a second reading — none given for "${locale}"`);
+        } else if (!festive && hasSecond) {
+            errors.push(`Ferial readings (grade ${grade}) have no second reading — remove the one given for "${locale}"`);
+        }
+    });
+}
+
+/**
  * Validate consistency between the source URL's %s placeholder and the
  * url_lang_map. One without the other is almost always an authoring mistake.
  *
@@ -232,6 +282,7 @@ export const validateDecreePayload = (payload, baseLocale, isCreate) => {
 
     validateI18nRules(payload, nameBearing, baseLocale, errors);
     validateUrlRules(payload, errors);
+    validateReadingsShape(payload, errors);
 
     // makeDoctor requires a non-empty common array (DTO: DecreeItemMakeDoctor requires common)
     if (action === 'makeDoctor') {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { DecreeAction, buildDecreePayload, validateDecreePayload, deriveDecreeId } from '../DecreePayload.js';
+import { DecreeAction, buildDecreePayload, validateDecreePayload, deriveDecreeId, isFestiveGrade } from '../DecreePayload.js';
 
 const createNewForm = () => ({
     action: DecreeAction.CreateNew,
@@ -138,6 +138,57 @@ describe('validateDecreePayload', () => {
         expect(validateDecreePayload(p, 'en', true).length).toBeGreaterThan(0);
     });
 
+    // --- lectionary shape follows the grade ---
+
+    const festiveReadings = {
+        en: {
+            first_reading: 'Genesis 1:1',
+            responsorial_psalm: 'Psalm 1',
+            second_reading: 'Romans 8:1',
+            gospel_acclamation: 'John 1:1',
+            gospel: 'John 1:1-14',
+        },
+    };
+
+    it('ferial grade with ferial readings → no shape error', () => {
+        const p = buildDecreePayload({ ...createNewForm(), grade: 4 });
+        expect(validateDecreePayload(p, 'en', true)).toEqual([]);
+    });
+
+    it('ferial grade with a second reading → shape error', () => {
+        const p = buildDecreePayload({ ...createNewForm(), grade: 4, readings: festiveReadings });
+        expect(validateDecreePayload(p, 'en', true).some((e) => e.includes('Ferial readings'))).toBe(true);
+    });
+
+    it('festive grade with a second reading → no shape error', () => {
+        const p = buildDecreePayload({ ...createNewForm(), grade: 5, readings: festiveReadings });
+        expect(validateDecreePayload(p, 'en', true)).toEqual([]);
+    });
+
+    it('festive grade without a second reading → shape error', () => {
+        const p = buildDecreePayload({ ...createNewForm(), grade: 6 });
+        expect(validateDecreePayload(p, 'en', true).some((e) => e.includes('Festive readings'))).toBe(true);
+    });
+
+    it('festive grade with an empty second reading → shape error', () => {
+        const readings = { en: { ...festiveReadings.en, second_reading: '' } };
+        const p = buildDecreePayload({ ...createNewForm(), grade: 7, readings });
+        expect(validateDecreePayload(p, 'en', true).some((e) => e.includes('Festive readings'))).toBe(true);
+    });
+
+    it('reports the shape error per locale', () => {
+        const readings = { en: festiveReadings.en, it: festiveReadings.en };
+        const p = buildDecreePayload({ ...createNewForm(), grade: 3, readings });
+        const errors = validateDecreePayload(p, 'en', true).filter((e) => e.includes('Ferial readings'));
+        expect(errors).toHaveLength(2);
+    });
+
+    it('does not apply the shape rule to non-createNew actions', () => {
+        const p = buildDecreePayload({ ...createNewForm(), action: DecreeAction.MakeDoctor, grade: 6 });
+        p.readings = festiveReadings; // injected: buildDecreePayload strips readings for makeDoctor
+        expect(validateDecreePayload(p, 'en', false).some((e) => e.includes('readings'))).toBe(false);
+    });
+
     // --- makeDoctor common requirement ---
 
     it('makeDoctor without common array → validation error', () => {
@@ -257,5 +308,24 @@ describe('deriveDecreeId', () => {
         expect(deriveDecreeId('', DecreeAction.CreateNew)).toBe('');
         expect(deriveDecreeId('StTest', '')).toBe('');
         expect(deriveDecreeId('StTest', 'bogusAction')).toBe('');
+    });
+});
+
+describe('isFestiveGrade', () => {
+    it('is false for Feast and below, true for Feast of the Lord and above', () => {
+        expect([0, 1, 2, 3, 4].map(isFestiveGrade)).toEqual([false, false, false, false, false]);
+        expect([5, 6, 7].map(isFestiveGrade)).toEqual([true, true, true]);
+    });
+
+    it('accepts the string values a <select> yields', () => {
+        expect(isFestiveGrade('4')).toBe(false);
+        expect(isFestiveGrade('5')).toBe(true);
+    });
+
+    it('is false for missing or non-numeric grades', () => {
+        expect(isFestiveGrade(undefined)).toBe(false);
+        expect(isFestiveGrade(null)).toBe(false);
+        expect(isFestiveGrade('')).toBe(false);
+        expect(isFestiveGrade('nope')).toBe(false);
     });
 });

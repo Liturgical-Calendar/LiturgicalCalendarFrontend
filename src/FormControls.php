@@ -2,11 +2,74 @@
 
 namespace LiturgicalCalendar\Frontend;
 
+use LiturgicalCalendar\Frontend\LitColor;
 use LiturgicalCalendar\Frontend\LitCommon;
 use LiturgicalCalendar\Frontend\LitGrade;
 
 class FormControls
 {
+    /**
+     * Liturgical colors in the order they are offered in the UI.
+     *
+     * LitColor::$values is keyed for validation, not for display; this is the
+     * presentation order (most frequent first) shared by every color select.
+     *
+     * @var array<int, string>
+     */
+    public const COLOR_ORDER = [
+        LitColor::WHITE,
+        LitColor::RED,
+        LitColor::PURPLE,
+        LitColor::GREEN,
+        LitColor::ROSE
+    ];
+
+    /**
+     * Common (or Proper) values in the order they are offered in the UI.
+     *
+     * Unlike LitCommon::$values (a flat validation list), this keeps the
+     * `General:Specific` compound keys the API expects and groups each
+     * specific common directly under its general one.
+     *
+     * @var array<int, string>
+     */
+    public const COMMON_ORDER = [
+        'Proper',
+        'Blessed Virgin Mary',
+        'Martyrs',
+        'Martyrs:For One Martyr',
+        'Martyrs:For Several Martyrs',
+        'Martyrs:For Missionary Martyrs',
+        'Martyrs:For One Missionary Martyr',
+        'Martyrs:For Several Missionary Martyrs',
+        'Martyrs:For a Virgin Martyr',
+        'Martyrs:For a Holy Woman Martyr',
+        'Pastors',
+        'Pastors:For a Pope',
+        'Pastors:For a Bishop',
+        'Pastors:For One Pastor',
+        'Pastors:For Several Pastors',
+        'Pastors:For Missionaries',
+        'Pastors:For Founders of a Church',
+        'Pastors:For Several Founders',
+        'Pastors:For One Founder',
+        'Doctors',
+        'Virgins',
+        'Virgins:For One Virgin',
+        'Virgins:For Several Virgins',
+        'Holy Men and Women',
+        'Holy Men and Women:For One Saint',
+        'Holy Men and Women:For Several Saints',
+        'Holy Men and Women:For Religious',
+        'Holy Men and Women:For an Abbot',
+        'Holy Men and Women:For a Monk',
+        'Holy Men and Women:For a Nun',
+        'Holy Men and Women:For Educators',
+        'Holy Men and Women:For Holy Women',
+        'Holy Men and Women:For Those Who Practiced Works of Mercy',
+        'Dedication of a Church'
+    ];
+
     /** @var array<string, bool> */
     public static array $settings = [
         'nameField'      => true,
@@ -81,15 +144,8 @@ class FormControls
                 . '<input class="form-check-input litEvent litEventStrtotimeSwitch" type="checkbox" '
                 . $switchInputAttr . ' role="switch" id="' . $uniqid . 'Strtotime">'
                 . '</div></label>'
-                . '<select class="form-select litEvent litEventMonth" id="' . $uniqid . 'Month">';
-            $formatter       = new \IntlDateFormatter($this->i18n->LOCALE, \IntlDateFormatter::FULL, \IntlDateFormatter::NONE);
-            $formatter->setPattern('MMMM');
-            for ($i = 1; $i <= 12; $i++) {
-                $month = \DateTime::createFromFormat('n j', $i . ' 15', new \DateTimeZone('UTC'));
-                if ($month !== false) {
-                    $formRow .= "<option value={$i}>" . $formatter->format($month) . '</option>';
-                }
-            }
+                . '<select class="form-select litEvent litEventMonth" id="' . $uniqid . 'Month">'
+                . $this->getMonthOptionsHtml();
 
             $formRow .= '</select>' .
             '</div>';
@@ -105,10 +161,7 @@ class FormControls
             $formRow .= '<div class="form-group col-sm-1">' .
             "<label for=\"{$uniqid}Color\">" . _('Liturgical color') . '</label>' .
             "<select class=\"form-select litEvent litEventColor\" id=\"{$uniqid}Color\" multiple=\"multiple\" size=\"1\">" .
-            '<option value="white" selected>' . strtoupper(_('white')) . '</option>' .
-            '<option value="red">' . strtoupper(_('red')) . '</option>' .
-            '<option value="purple">' . strtoupper(_('purple')) . '</option>' .
-            '<option value="green">' . strtoupper(_('green')) . '</option>' .
+            $this->getColorOptionsHtml([LitColor::WHITE], [LitColor::WHITE, LitColor::RED, LitColor::PURPLE, LitColor::GREEN]) .
             '</select>' .
             '</div>';
         }
@@ -133,6 +186,84 @@ class FormControls
     }
 
     /**
+     * Localized `<option>` entries for a month select (values 1-12).
+     *
+     * @param int|null $selected The month number (1-12) to mark as selected, or null for none.
+     * @return string The `<option>` list, without the surrounding `<select>`.
+     */
+    public function getMonthOptionsHtml(?int $selected = null): string
+    {
+        $formatter = new \IntlDateFormatter($this->i18n->LOCALE, \IntlDateFormatter::FULL, \IntlDateFormatter::NONE);
+        $formatter->setPattern('MMMM');
+        $options = '';
+        for ($i = 1; $i <= 12; $i++) {
+            $month = \DateTime::createFromFormat('n j', $i . ' 15', new \DateTimeZone('UTC'));
+            if ($month === false) {
+                continue;
+            }
+            $options .= '<option value="' . $i . '"' . ( $selected === $i ? ' selected' : '' ) . '>'
+                . htmlspecialchars((string) $formatter->format($month), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+                . '</option>';
+        }
+        return $options;
+    }
+
+    /**
+     * Localized `<option>` entries for a liturgical grade select (values 0-7).
+     *
+     * @param int|null $selected The grade to mark as selected, or null for none.
+     * @return string The `<option>` list, without the surrounding `<select>`.
+     */
+    public function getGradeOptionsHtml(?int $selected = null): string
+    {
+        $options = '';
+        foreach (LitGrade::$values as $value) {
+            $options .= '<option value="' . $value . '"' . ( $selected === $value ? ' selected' : '' ) . '>'
+                . htmlspecialchars($this->LitGrade->i18n($value, false), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+                . '</option>';
+        }
+        return $options;
+    }
+
+    /**
+     * Localized `<option>` entries for a liturgical color multi-select.
+     *
+     * Labels are uppercased for parity with the diocesan calendar form rows.
+     *
+     * @param array<int, string>      $selected Color values to mark as selected.
+     * @param array<int, string>|null $colors   Colors to offer, in display order; defaults to self::COLOR_ORDER.
+     * @return string The `<option>` list, without the surrounding `<select>`.
+     */
+    public function getColorOptionsHtml(array $selected = [], ?array $colors = null): string
+    {
+        $options = '';
+        foreach ($colors ?? self::COLOR_ORDER as $color) {
+            $options .= '<option value="' . $color . '"' . ( in_array($color, $selected, true) ? ' selected' : '' ) . '>'
+                . htmlspecialchars(strtoupper(LitColor::i18n($color, $this->i18n->LOCALE)), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+                . '</option>';
+        }
+        return $options;
+    }
+
+    /**
+     * Localized `<option>` entries for a "Common (or Proper)" multi-select.
+     *
+     * @param array<int, string> $selected Common values to mark as selected.
+     * @return string The `<option>` list, without the surrounding `<select>`.
+     */
+    public function getCommonsOptionsHtml(array $selected = []): string
+    {
+        $options = '';
+        foreach (self::COMMON_ORDER as $common) {
+            $options .= '<option value="' . htmlspecialchars($common, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '"'
+                . ( in_array($common, $selected, true) ? ' selected' : '' ) . '>'
+                . htmlspecialchars($this->LitCommon->fullTranslate($common), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+                . '</option>';
+        }
+        return $options;
+    }
+
+    /**
      * HTML template for the "Common (or Proper)" multi-select form block, containing localized option entries.
      *
      * The returned string contains placeholders `{colWidth}` and `{uniqid}` that must be replaced by the caller
@@ -146,56 +277,17 @@ class FormControls
         return '<div class="form-group col-sm-{colWidth}">' .
         '<label style="display:block;" for="onTheFly{uniqid}Common">' . _('Common (or Proper)') . '</label>' .
         '<select class="form-select litEvent litEventCommon" id="onTheFly{uniqid}Common" multiple="multiple" size="1">' .
-        '<option value="Proper" selected>' . $this->LitCommon->fullTranslate('Proper') . '</option>' .
-        '<option value="Blessed Virgin Mary">' . $this->LitCommon->fullTranslate('Blessed Virgin Mary') . '</option>' .
-        //"<optgroup label=\"" . $this->LitCommon->fullTranslate("Common of Martyrs") . "\">" .
-        '<option value="Martyrs">' . $this->LitCommon->fullTranslate('Martyrs') . '</option>' .
-        '<option value="Martyrs:For One Martyr">' . $this->LitCommon->fullTranslate('Martyrs:For One Martyr') . '</option>' .
-        '<option value="Martyrs:For Several Martyrs">' . $this->LitCommon->fullTranslate('Martyrs:For Several Martyrs') . '</option>' .
-        '<option value="Martyrs:For Missionary Martyrs">' . $this->LitCommon->fullTranslate('Martyrs:For Missionary Martyrs') . '</option>' .
-        '<option value="Martyrs:For One Missionary Martyr">' . $this->LitCommon->fullTranslate('Martyrs:For One Missionary Martyr') . '</option>' .
-        '<option value="Martyrs:For Several Missionary Martyrs">' . $this->LitCommon->fullTranslate('Martyrs:For Several Missionary Martyrs') . '</option>' .
-        '<option value="Martyrs:For a Virgin Martyr">' . $this->LitCommon->fullTranslate('Martyrs:For a Virgin Martyr') . '</option>' .
-        '<option value="Martyrs:For a Holy Woman Martyr">' . $this->LitCommon->fullTranslate('Martyrs:For a Holy Woman Martyr') . '</option>' .
-        //"<optgroup label=\"" . $this->LitCommon->fullTranslate("Pastors") . "\">" .
-        '<option value="Pastors">' . $this->LitCommon->fullTranslate('Pastors') . '</option>' .
-        '<option value="Pastors:For a Pope">' . $this->LitCommon->fullTranslate('Pastors:For a Pope') . '</option>' .
-        '<option value="Pastors:For a Bishop">' . $this->LitCommon->fullTranslate('Pastors:For a Bishop') . '</option>' .
-        '<option value="Pastors:For One Pastor">' . $this->LitCommon->fullTranslate('Pastors:For One Pastor') . '</option>' .
-        '<option value="Pastors:For Several Pastors">' . $this->LitCommon->fullTranslate('Pastors:For Several Pastors') . '</option>' .
-        '<option value="Pastors:For Missionaries">' . $this->LitCommon->fullTranslate('Pastors:For Missionaries') . '</option>' .
-        '<option value="Pastors:For Founders of a Church">' . $this->LitCommon->fullTranslate('Pastors:For Founders of a Church') . '</option>' .
-        '<option value="Pastors:For Several Founders">' . $this->LitCommon->fullTranslate('Pastors:For Several Founders') . '</option>' .
-        '<option value="Pastors:For One Founder">' . $this->LitCommon->fullTranslate('Pastors:For One Founder') . '</option>' .
-        '<option value="Doctors">' . $this->LitCommon->fullTranslate('Doctors') . '</option>' .
-        //"<optgroup label=\"" . $this->LitCommon->fullTranslate("Virgins") . "\">" .
-        '<option value="Virgins">' . $this->LitCommon->fullTranslate('Virgins') . '</option>' .
-        '<option value="Virgins:For One Virgin">' . $this->LitCommon->fullTranslate('Virgins:For One Virgin') . '</option>' .
-        '<option value="Virgins:For Several Virgins">' . $this->LitCommon->fullTranslate('Virgins:For Several Virgins') . '</option>' .
-        //"<optgroup label=\"" . $this->LitCommon->fullTranslate("Holy Men and Women") . "\">" .
-        '<option value="Holy Men and Women">' . $this->LitCommon->fullTranslate('Holy Men and Women') . '</option>' .
-        '<option value="Holy Men and Women:For One Saint">' . $this->LitCommon->fullTranslate('Holy Men and Women:For One Saint') . '</option>' .
-        '<option value="Holy Men and Women:For Several Saints">' . $this->LitCommon->fullTranslate('Holy Men and Women:For Several Saints') . '</option>' .
-        '<option value="Holy Men and Women:For Religious">' . $this->LitCommon->fullTranslate('Holy Men and Women:For Religious') . '</option>' .
-        '<option value="Holy Men and Women:For an Abbot">' . $this->LitCommon->fullTranslate('Holy Men and Women:For an Abbot') . '</option>' .
-        '<option value="Holy Men and Women:For a Monk">' . $this->LitCommon->fullTranslate('Holy Men and Women:For a Monk') . '</option>' .
-        '<option value="Holy Men and Women:For a Nun">' . $this->LitCommon->fullTranslate('Holy Men and Women:For a Nun') . '</option>' .
-        '<option value="Holy Men and Women:For Educators">' . $this->LitCommon->fullTranslate('Holy Men and Women:For Educators') . '</option>' .
-        '<option value="Holy Men and Women:For Holy Women">' . $this->LitCommon->fullTranslate('Holy Men and Women:For Holy Women') . '</option>' .
-        '<option value="Holy Men and Women:For Those Who Practiced Works of Mercy">' . $this->LitCommon->fullTranslate('Holy Men and Women:For Those Who Practiced Works of Mercy') . '</option>' .
-        '<option value="Dedication of a Church">' . $this->LitCommon->fullTranslate('Dedication of a Church') . '</option>' .
+        $this->getCommonsOptionsHtml([LitCommon::PROPRIO]) .
         '</select>' .
         '</div>';
     }
 
     public function getGradeTemplate(): string
     {
-        $gradeTemplate = '<div class="form-group col-sm-{colWidth}">' .
+        $gradeTemplate  = '<div class="form-group col-sm-{colWidth}">' .
         '<label style="display:block;" for="onTheFly{uniqid}Grade">' . _('Grade') . '</label>' .
         '<select class="form-select litEvent litEventGrade" id="onTheFly{uniqid}Grade">';
-        foreach (LitGrade::$values as $value) {
-            $gradeTemplate .= "<option value=\"$value\">" . $this->LitGrade->i18n($value, false) . '</option>';
-        }
+        $gradeTemplate .= $this->getGradeOptionsHtml();
         $gradeTemplate .= '</select>';
         $gradeTemplate .= '</div>';
         return $gradeTemplate;
