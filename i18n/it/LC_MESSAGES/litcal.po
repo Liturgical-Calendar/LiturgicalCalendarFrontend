@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-27 21:21+0000\n"
-"PO-Revision-Date: 2026-08-27 20:40+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2026-08-27 21:30+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
 "Language: it\n"
@@ -2247,10 +2247,8 @@ msgid "Edit"
 msgstr "Modifica"
 
 #: includes/admin-decrees-card.php:22
-#, fuzzy
-#| msgid "Decrees of the Dicastery for Divine Worship"
 msgid "Create, edit and delete decrees of the Dicastery for Divine Worship"
-msgstr "Decreti del Dicastero per il Culto Divino"
+msgstr "Crea, modifica ed elimina decreti del Dicastero per il Culto Divino"
 
 #: includes/admin-decrees-card.php:26 includes/admin-tests-card.php:23
 #: admin-dashboard.php:80 admin-dashboard.php:98 admin-dashboard.php:116
@@ -2258,94 +2256,68 @@ msgid "Manage"
 msgstr "Gestisci"
 
 #: includes/admin-tests-card.php:19
-#, fuzzy
-#| msgid "Create and manage accuracy tests."
 msgid "Manage liturgical accuracy tests"
-msgstr "Crea e gestisci test di accuratezza."
+msgstr "Gestisci test di accuratezza liturgica"
 
 #: admin-decrees.php:55
-#, fuzzy
-#| msgid "Decrees of the Dicastery for Divine Worship"
 msgid "Create, edit and delete decrees of the Dicastery for Divine Worship."
-msgstr "Decreti del Dicastero per il Culto Divino"
+msgstr "Crea, modifica ed elimina decreti del Dicastero per il Culto Divino."
 
 #: admin-decrees.php:67 admin-decrees.php:621
-#, fuzzy
-#| msgid "Decrees"
 msgid "New Decree"
-msgstr "Decreti"
+msgstr "Nuovo Decreto"
 
 #: admin-decrees.php:72
-#, fuzzy
-#| msgid "Grant Permission"
 msgid "Manage permissions"
-msgstr "Concedi Permesso"
+msgstr "Gestisci permessi"
 
 #: admin-decrees.php:82
-#, fuzzy
-#| msgid "Read the Decree"
 msgid "Search decrees"
-msgstr "Leggi il Decreto"
+msgstr "Cerca decreti"
 
 #: admin-decrees.php:89
 msgid "Search by name, event key, protocol or description"
-msgstr ""
+msgstr "Cerca per nome, chiave evento, protocollo o descrizione"
 
 #: admin-decrees.php:97
-#, fuzzy
-#| msgid "Filter by user ID..."
 msgid "Filter by year"
-msgstr "Filtra per ID utente..."
+msgstr "Filtra per anno"
 
 #: admin-decrees.php:101
 msgid "Any year"
-msgstr ""
+msgstr "Qualsiasi anno"
 
 #: admin-decrees.php:106
-#, fuzzy
-#| msgid "Filter by object ID..."
 msgid "Filter by action"
-msgstr "Filtra per ID oggetto..."
+msgstr "Filtra per azione"
 
 #: admin-decrees.php:109
-#, fuzzy
-#| msgid "Actions"
 msgid "Any action"
-msgstr "Azioni"
+msgstr "Qualsiasi azione"
 
 #: admin-decrees.php:111 admin-decrees.php:179
-#, fuzzy
-#| msgid "Create new liturgical event"
 msgid "Create new event"
-msgstr "Crea nuovo evento liturgico"
+msgstr "Crea nuovo evento"
 
 #: admin-decrees.php:114 admin-decrees.php:182
-#, fuzzy
-#| msgid "Designate Doctor of the Church"
 msgid "Make Doctor of the Church"
-msgstr "Designa Dottore della Chiesa"
+msgstr "Fai Dottore della Chiesa"
 
 #: admin-decrees.php:117 admin-decrees.php:185
-#, fuzzy
-#| msgid "Set Property"
 msgid "Set property: name"
-msgstr "Imposta Proprietà"
+msgstr "Imposta proprietà: nome"
 
 #: admin-decrees.php:120 admin-decrees.php:188
-#, fuzzy
-#| msgid "Set Property"
 msgid "Set property: grade"
-msgstr "Imposta Proprietà"
+msgstr "Imposta proprietà: grado"
 
 #: admin-decrees.php:126
 msgid "Clear"
-msgstr ""
+msgstr "Pulisci"
 
 #: admin-decrees.php:140
-#, fuzzy
-#| msgid "Decrees"
 msgid "Decree"
-msgstr "Decreti"
+msgstr "Decreto"
 
 #: admin-decrees.php:143 admin-decrees.php:584 admin-permissions.php:229
 #: admin-permissions.php:261 admin-permissions.php:283
@@ -2357,36 +2329,28 @@ msgid "Close"
 msgstr "Chiudi"
 
 #: admin-decrees.php:175
-#, fuzzy
-#| msgid "Actions"
 msgid "Action"
-msgstr "Azioni"
+msgstr "Azione"
 
 #: admin-decrees.php:199
-#, fuzzy
-#| msgid "Decrees"
 msgid "Decree ID"
-msgstr "Decreti"
+msgstr "ID Decreto"
 
 #: admin-decrees.php:203
 msgid "generated automatically from the event key and action"
-msgstr ""
+msgstr "generato automaticamente dalla chiave evento e dall'azione"
 
 #: admin-decrees.php:216
-#, fuzzy
-#| msgid "Decree URL"
 msgid "Decree date"
-msgstr "URL del Decreto"
+msgstr "Data del decreto"
 
 #: admin-decrees.php:222
 msgid "Protocol"
-msgstr ""
+msgstr "Protocollo"
 
 #: admin-decrees.php:229
-#, fuzzy
-#| msgid "Since"
 msgid "Since year"
-msgstr "Dall'anno"
+msgstr "Dal anno"
 
 #: admin-decrees.php:238 admin-tests.php:196 admin-applications.php:240
 #: developer-dashboard.php:98
@@ -2394,20 +2358,16 @@ msgid "Description"
 msgstr "Descrizione"
 
 #: admin-decrees.php:247
-#, fuzzy
-#| msgid "Decree URL"
 msgid "Source URL"
-msgstr "URL del Decreto"
+msgstr "URL della fonte"
 
 #: admin-decrees.php:256
 msgid "Source available in multiple languages"
-msgstr ""
+msgstr "Fonte disponibile in più lingue"
 
 #: admin-decrees.php:267
-#, fuzzy
-#| msgid "Language"
 msgid "Language URL codes"
-msgstr "Lingua"
+msgstr "Codici URL lingua"
 
 #: admin-decrees.php:271
 #, php-format
@@ -2415,76 +2375,64 @@ msgid ""
 "Use %s in the URL above where the language code appears; each row maps a "
 "language to its Vatican URL code."
 msgstr ""
+"Usa %s nell'URL sopra dove appare il codice lingua; ogni riga mappa una "
+"lingua al suo codice URL del Vaticano."
 
 #: admin-decrees.php:278
 msgid "Add language code"
-msgstr ""
+msgstr "Aggiungi codice lingua"
 
 #: admin-decrees.php:282
-#, fuzzy
-#| msgid "Review"
 msgid "Preview"
-msgstr "Recensione"
+msgstr "Anteprima"
 
 #: admin-decrees.php:322
-#, fuzzy
-#| msgid "Event Details"
 msgid "Event details"
-msgstr "Dettagli dell'Evento"
+msgstr "Dettagli dell'evento"
 
 #: admin-decrees.php:328
-#, fuzzy
-#| msgid "Date"
 msgid "Date type"
-msgstr "Data"
+msgstr "Tipo di data"
 
 #: admin-decrees.php:335
 msgid "Fixed"
-msgstr ""
+msgstr "Fissa"
 
 #: admin-decrees.php:390
-#, fuzzy
-#| msgid "Save data"
 msgid "Relative date"
-msgstr "Salva dati"
+msgstr "Data relativa"
 
 #: admin-decrees.php:406
 msgid "before"
-msgstr ""
+msgstr "prima"
 
 #: admin-decrees.php:407
 msgid "after"
-msgstr ""
+msgstr "dopo"
 
 #: admin-decrees.php:418
 msgid ""
 "A day of the week relative to a liturgical event, e.g. \"Monday after "
 "Pentecost\"."
 msgstr ""
+"Un giorno della settimana relativo a un evento liturgico, ad esempio "
+"\"Lunedì dopo Pentecoste\"."
 
 #: admin-decrees.php:432 admin-decrees.php:500
-#, fuzzy
-#| msgid "weekday"
 msgid "0 — Weekday"
-msgstr "feria"
+msgstr "0 — Giorno della settimana"
 
 #: admin-decrees.php:433 admin-decrees.php:501
-#, fuzzy
-#| msgid "Commemoration"
 msgid "1 — Commemoration"
-msgstr "Commemorazione"
+msgstr "1 — Commemorazione"
 
 #: admin-decrees.php:434 admin-decrees.php:502
-#, fuzzy
-#| msgid "Optional memorial"
 msgid "2 — Optional Memorial"
-msgstr "memoria facoltativa"
+msgstr "2 — Memoria Facoltativa"
 
 #: admin-decrees.php:435 admin-decrees.php:503
-#, fuzzy
-#| msgid "Memorial"
 msgid "3 — Memorial"
-msgstr "Memoria"
+msgstr "3 — Memoria"
 
 #: admin-decrees.php:436 admin-decrees.php:504
 msgid "4 — Feast"
@@ -2598,17 +2546,15 @@ msgstr "Categoria Lezionario"
 
 #: admin-decrees.php:557
 msgid "Add readings for locale"
-msgstr ""
+msgstr "Aggiungi letture per lingua locale"
 
 #: admin-decrees.php:568 admin-tests.php:238 developer-dashboard.php:323
 msgid "Save"
 msgstr "Salva"
 
 #: admin-decrees.php:581
-#, fuzzy
-#| msgid "Read the Decree"
 msgid "Delete Decree"
-msgstr "Leggi il Decreto"
+msgstr "Elimina Decreto"
 
 #: admin-decrees.php:595 admin-decrees.php:649 admin-tests.php:292
 #: admin-tests.php:317 developer-dashboard.php:249 developer-dashboard.php:270
@@ -2616,57 +2562,47 @@ msgid "Delete"
 msgstr "Elimina"
 
 #: admin-decrees.php:611
-#, fuzzy
-#| msgid "Loading..."
 msgid "Loading…"
-msgstr "Caricamento in corso..."
+msgstr "Caricamento in corso…"
 
 #: admin-decrees.php:612
 msgid "You do not have permission to view decrees administration."
-msgstr ""
+msgstr "Non hai i permessi per visualizzare l'amministrazione dei decreti."
 
 #: admin-decrees.php:613
-#, fuzzy
-#| msgid "Calendar to retrieve from the API"
 msgid "Could not load decrees from the API."
-msgstr "Calendario da reperire dall'API"
+msgstr "Impossibile caricare decreti dall'API."
 
 #: admin-decrees.php:614
-#, fuzzy
-#| msgid "No requests found."
 msgid "No decrees found."
-msgstr "Nessuna richiesta trovata."
+msgstr "Nessun decreto trovato."
 
 #: admin-decrees.php:615
-#, fuzzy
-#| msgid "Are you sure you want to delete this item?"
 msgid ""
 "Are you sure you want to delete this decree? This action cannot be undone."
-msgstr "Sei sicuro di voler eliminare questo elemento?"
+msgstr ""
+"Sei sicuro di voler eliminare questo decreto? Questa azione non può essere "
+"annullata."
 
 #: admin-decrees.php:616
 msgid "Decree created."
-msgstr ""
+msgstr "Decreto creato."
 
 #: admin-decrees.php:617
 msgid "Decree updated."
-msgstr ""
+msgstr "Decreto aggiornato."
 
 #: admin-decrees.php:618
 msgid "Decree deleted."
-msgstr ""
+msgstr "Decreto eliminato."
 
 #: admin-decrees.php:622
-#, fuzzy
-#| msgid "Add Decree"
 msgid "Edit Decree"
-msgstr "Aggiungi Decreto"
+msgstr "Modifica Decreto"
 
 #: admin-decrees.php:623
-#, fuzzy
-#| msgid "Select calendar"
 msgid "Select locale"
-msgstr "Seleziona calendario"
+msgstr "Seleziona lingua locale"
 
 #: admin-decrees.php:624 permission-requests.php:229
 msgid "Remove"
@@ -2674,31 +2610,31 @@ msgstr "Rimuovi"
 
 #: admin-decrees.php:625
 msgid "First reading"
-msgstr ""
+msgstr "Prima lettura"
 
 #: admin-decrees.php:626
 msgid "Responsorial psalm"
-msgstr ""
+msgstr "Salmo responsoriale"
 
 #: admin-decrees.php:627
 msgid "Second reading (optional)"
-msgstr ""
+msgstr "Seconda lettura (opzionale)"
 
 #: admin-decrees.php:628
 msgid "Gospel acclamation"
-msgstr ""
+msgstr "Acclamazione al Vangelo"
 
 #: admin-decrees.php:629
 msgid "Gospel"
-msgstr ""
+msgstr "Vangelo"
 
 #: admin-decrees.php:630
 msgid "No readings defined for this locale yet"
-msgstr ""
+msgstr "Nessuna lettura definita per questa lingua locale"
 
 #: admin-decrees.php:631
 msgid "Vatican URL code (e.g. ge, sp, po)"
-msgstr ""
+msgstr "Codice URL Vaticano (es. ge, sp, po)"
 
 #: admin-decrees.php:633
 #, php-format
@@ -2706,42 +2642,38 @@ msgid ""
 "Duplicate language code \"%s\" in the source URL languages — each language "
 "may appear only once"
 msgstr ""
+"Codice lingua duplicato \"%s\" nelle lingue dell'URL sorgente — ogni lingua "
+"può apparire solo una volta"
 
 #: admin-decrees.php:634
 msgid "Please fix the following errors before saving:"
-msgstr ""
+msgstr "Per favore correggi gli errori prima di salvare:"
 
 #: admin-decrees.php:635
-#, fuzzy, php-format
-#| msgid "Since"
+#, php-format
 msgid "Since %s"
-msgstr "Dall'anno"
+msgstr "Dal %s"
 
 #: admin-decrees.php:636
 msgid "Source"
-msgstr ""
+msgstr "Fonte"
 
 #: admin-decrees.php:637
-#, fuzzy
-#| msgid "Your session has expired. Please login again."
 msgid "Your session has expired. Please log in again."
 msgstr "La tua sessione è scaduta. Effettua di nuovo il login."
 
 #: admin-decrees.php:638
-#, fuzzy
-#| msgid "Logging in..."
 msgid "Log in"
-msgstr "Accesso in corso..."
+msgstr "Accedi"
 
 #: admin-decrees.php:639 admin-tests.php:323
 msgid "You do not have permission to perform this action."
-msgstr ""
+msgstr "Non hai il permesso di eseguire questa azione."
 
 #: admin-decrees.php:640
-#, fuzzy
-#| msgid "Extend the General Roman Calendar with National or Diocesan data"
 msgid "Not in the General Roman Calendar — a new event will be created."
-msgstr "Estendi il Calendario Romano Generale con dati Nazionali o Diocesani"
+msgstr ""
+"Non presente nel Calendario Romano Generale — verrà creato un nuovo evento."
 
 #: admin-decrees.php:642
 #, php-format
@@ -2749,65 +2681,52 @@ msgid ""
 "Already in the General Roman Calendar as \"%s\" — choose a different event "
 "key."
 msgstr ""
+"Già presente nel Calendario Romano Generale come \"%s\" — scegli un'altra "
+"chiave evento."
 
 #: admin-decrees.php:643
-#, fuzzy
-#| msgid "Extend the General Roman Calendar with National or Diocesan data"
 msgid ""
 "Not in the General Roman Calendar — this decree will not match any event."
-msgstr "Estendi il Calendario Romano Generale con dati Nazionali o Diocesani"
+msgstr ""
+"Non presente nel Calendario Romano Generale — questo decreto non "
+"corrisponderà ad alcun evento."
 
 #: admin-decrees.php:645
-#, fuzzy, php-format
-#| msgid "Define Particular Calendars based on the General Roman Calendar"
+#, php-format
 msgid "Matches \"%s\" in the General Roman Calendar."
-msgstr "Definire calendari particolari basati sul Calendario Romano Generale"
+msgstr "Corrisponde a \"%s\" nel Calendario Romano Generale."
 
 #: admin-decrees.php:647
 msgid "No decrees match the current search and filters."
-msgstr ""
+msgstr "Nessun decreto corrisponde alla ricerca e ai filtri attuali."
 
 #: admin-decrees.php:650
-#, fuzzy
-#| msgid "Error"
 msgid "(error)"
-msgstr "Errore"
+msgstr "(errore)"
 
 #: admin-decrees.php:652
-#, fuzzy
-#| msgid "Higher Solemnity (7)"
 msgid "Higher Solemnity"
-msgstr "Solennità Maggiore (7)"
+msgstr "Solennità Maggiore"
 
 #: admin-decrees.php:653
-#, fuzzy
-#| msgid "Solemnity (6)"
 msgid "Solemnity"
-msgstr "Solennità (6)"
+msgstr "Solennità"
 
 #: admin-decrees.php:654
-#, fuzzy
-#| msgid "Feast of the Lord (5)"
 msgid "Feast of the Lord"
-msgstr "Festa del Signore (5)"
+msgstr "Festa del Signore"
 
 #: admin-decrees.php:655
-#, fuzzy
-#| msgid "Feasts"
 msgid "Feast"
-msgstr "Feste"
+msgstr "Festa"
 
 #: admin-decrees.php:657
-#, fuzzy
-#| msgid "Optional memorial"
 msgid "Optional Memorial"
-msgstr "memoria facoltativa"
+msgstr "Memoria Facoltativa"
 
 #: admin-decrees.php:659
-#, fuzzy
-#| msgid "weekday"
 msgid "Weekday"
-msgstr "feria"
+msgstr "Feriale"
 
 #: admin-permissions.php:36 admin-permissions.php:48
 msgid "Permissions Management"
@@ -3192,38 +3111,31 @@ msgstr "Editore del test di precisione"
 #: admin-tests.php:54
 msgid "Create, edit, and delete liturgical accuracy test definitions."
 msgstr ""
+"Crea, modifica e elimina le definizioni di test per la correttezza liturgica."
 
 #: admin-tests.php:66
-#, fuzzy
-#| msgid "Filter by user ID..."
 msgid "Filter by name"
-msgstr "Filtra per ID utente..."
+msgstr "Filtra per nome"
 
 #: admin-tests.php:72
-#, fuzzy
-#| msgid "Filter by user ID..."
 msgid "Filter by scope"
-msgstr "Filtra per ID utente..."
+msgstr "Filtra per ambito"
 
 #: admin-tests.php:75
 msgid "USA, diocese id, ..."
-msgstr ""
+msgstr "USA, id diocesi, ..."
 
 #: admin-tests.php:82
-#, fuzzy
-#| msgid "New festivity"
 msgid "New Test"
-msgstr "Nuova festività"
+msgstr "Nuovo Test"
 
 #: admin-tests.php:92
 msgid "Tests"
-msgstr ""
+msgstr "Test"
 
 #: admin-tests.php:101
-#, fuzzy
-#| msgid "Advent"
 msgid "Event"
-msgstr "Avvento"
+msgstr "Evento"
 
 #: admin-tests.php:102 admin-tests.php:132 developer-dashboard.php:166
 #: developer-dashboard.php:273
@@ -3235,176 +3147,143 @@ msgid "Type"
 msgstr "Tipo"
 
 #: admin-tests.php:104
-#, fuzzy
-#| msgid "Year"
 msgid "Years"
-msgstr "Anno"
+msgstr "Anni"
 
 #: admin-tests.php:152
-#, fuzzy
-#| msgid "New liturgical event"
 msgid "Liturgical event"
-msgstr "Nuovo evento liturgico"
+msgstr "Evento liturgico"
 
 #: admin-tests.php:162
-#, fuzzy
-#| msgid "Save data"
 msgid "Base date"
-msgstr "Salva dati"
+msgstr "Data di base"
 
 #: admin-tests.php:172
 msgid "Test type"
-msgstr ""
+msgstr "Tipo di test"
 
 #: admin-tests.php:178
 msgid "Exact date"
-msgstr ""
+msgstr "Data esatta"
 
 #: admin-tests.php:183
 msgid "Exact since year"
-msgstr ""
+msgstr "Esatto dal anno"
 
 #: admin-tests.php:188
 msgid "Exact until year"
-msgstr ""
+msgstr "Esatto fino a anno"
 
 #: admin-tests.php:204
 msgid "Year range"
-msgstr ""
+msgstr "Intervallo di anni"
 
 #: admin-tests.php:216
-#, fuzzy
-#| msgid "Request rejected."
 msgid "event expected"
-msgstr "Richiesta rifiutata."
+msgstr "evento previsto"
 
 #: admin-tests.php:217
 msgid "falls on a Sunday"
-msgstr ""
+msgstr "cade di domenica"
 
 #: admin-tests.php:218
 msgid "pivot year"
-msgstr ""
+msgstr "anno pivot"
 
 #: admin-tests.php:219
 msgid "event not expected"
-msgstr ""
+msgstr "evento non previsto"
 
 #: admin-tests.php:220
 msgid "excluded — click to restore"
-msgstr ""
+msgstr "escluso — clicca per ripristinare"
 
 #: admin-tests.php:227
-#, fuzzy
-#| msgid "Permissions"
 msgid "Per-year assertions"
-msgstr "Permessi"
+msgstr "Asserzioni per anno"
 
 #: admin-tests.php:251
 msgid "Assertion comment"
-msgstr ""
+msgstr "Commento all'asserzione"
 
 #: admin-tests.php:265
 msgid "Save comment"
-msgstr ""
+msgstr "Salva commento"
 
 #: admin-tests.php:278
-#, fuzzy
-#| msgid "Delete"
 msgid "Delete Test"
-msgstr "Elimina"
+msgstr "Elimina test"
 
 #: admin-tests.php:309
-#, fuzzy
-#| msgid "No requests found."
 msgid "No tests found."
-msgstr "Nessuna richiesta trovata."
+msgstr "Nessun test trovato."
 
 #: admin-tests.php:310
-#, fuzzy
-#| msgid "Failed to load users. Please try again later."
 msgid "Failed to load tests. Please try again later."
-msgstr "Impossibile caricare gli utenti. Riprova più tardi."
+msgstr "Caricamento test fallito. Riprova più tardi."
 
 #: admin-tests.php:311
-#, fuzzy
-#| msgid "Application created successfully."
 msgid "Test created successfully."
-msgstr "Applicazione creata correttamente."
+msgstr "Test creato con successo."
 
 #: admin-tests.php:312
-#, fuzzy
-#| msgid "Application updated successfully."
 msgid "Test updated successfully."
-msgstr "Applicazione aggiornata correttamente."
+msgstr "Test aggiornato con successo."
 
 #: admin-tests.php:313
-#, fuzzy
-#| msgid "Application deleted successfully."
 msgid "Test deleted successfully."
-msgstr "Applicazione eliminata correttamente."
+msgstr "Test eliminato con successo."
 
 #: admin-tests.php:314
-#, fuzzy
-#| msgid "Loading..."
 msgid "Saving..."
-msgstr "Caricamento in corso..."
+msgstr "Salvataggio in corso..."
 
 #: admin-tests.php:315
-#, fuzzy
-#| msgid "Refreshing..."
 msgid "Deleting..."
-msgstr "Aggiornamento in corso..."
+msgstr "Eliminazione in corso..."
 
 #: admin-tests.php:318
-#, fuzzy, php-format
-#| msgid "Are you sure you want to delete this item?"
+#, php-format
 msgid "Are you sure you want to delete the test \"%s\"?"
-msgstr "Sei sicuro di voler eliminare questo elemento?"
+msgstr "Sei sicuro di voler eliminare il test \"%s\"?"
 
 #: admin-tests.php:322
 msgid "Please fill in all required fields."
-msgstr ""
+msgstr "Compila tutti i campi obbligatori."
 
 #: admin-tests.php:324
 msgid "A test with that name already exists."
-msgstr ""
+msgstr "Un test con quel nome esiste già."
 
 #: admin-tests.php:325
 msgid "set pivot year"
-msgstr ""
+msgstr "imposta anno pivot"
 
 #: admin-tests.php:326
-#, fuzzy
-#| msgid "Toggle sidebar"
 msgid "toggle assertion"
-msgstr "Mostra/nascondi barra laterale"
+msgstr "attiva/disattiva asserzione"
 
 #: admin-tests.php:327
-#, fuzzy
-#| msgid "Remove"
 msgid "remove"
-msgstr "Rimuovi"
+msgstr "rimuovi"
 
 #: admin-tests.php:328
 #, php-format
 msgid "In the year %1$s, %2$s falls on a Sunday"
-msgstr ""
+msgstr "Nell'anno %1$s, %2$s cade di domenica"
 
 #: admin-tests.php:329
 #, php-format
 msgid "%s excluded — click to restore"
-msgstr ""
+msgstr "%s escluso — clicca per ripristinare"
 
 #: admin-tests.php:330
 msgid "Test name:"
-msgstr ""
+msgstr "Nome del test:"
 
 #: admin-tests.php:331
-#, fuzzy
-#| msgid "New liturgical event from existing"
 msgid "Select a valid liturgical event from the list."
-msgstr "Nuovo evento liturgico da evento esistente"
+msgstr "Seleziona un evento liturgico valido dall'elenco."
 
 #: permission-requests.php:49
 msgid ""
