@@ -122,8 +122,12 @@ SCRIPT;
 //some assets are only needed on certain pages
 $pageName = basename($_SERVER['SCRIPT_FILENAME'], '.php');
 
-if (in_array($pageName, [ 'index', 'extending', 'usage', 'missals-editor', 'admin-dashboard', 'examples' ])) {
+if (in_array($pageName, [ 'index', 'extending', 'usage', 'missals-editor', 'admin-dashboard', 'admin-decrees', 'examples' ])) {
     echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@2.0.0/dist/js/bootstrap-multiselect.min.js"></script>';
+}
+
+// admin-decrees uses its own Bootstrap toast, so it takes the multiselect above without toastr
+if (in_array($pageName, [ 'index', 'extending', 'usage', 'missals-editor', 'admin-dashboard', 'examples' ])) {
     echo '<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" '
         . 'integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" '
         . 'crossorigin="anonymous" referrerpolicy="no-referrer"></script>';

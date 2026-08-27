@@ -15,7 +15,7 @@
  * @module admin-decrees
  */
 
-import { DecreeAction, buildDecreePayload, validateDecreePayload, deriveDecreeId } from './DecreePayload.js';
+import { DecreeAction, buildDecreePayload, validateDecreePayload, deriveDecreeId, isFestiveGrade } from './DecreePayload.js';
 
 const config = window.AdminDecreesConfig;
 
@@ -1842,7 +1842,57 @@ export function addUrlLangRow(container, iso, code) {
 }
 
 /**
+ * Whether the currently selected grade calls for the festive lectionary shape.
+ * Reads the createNew grade select — the only action that carries readings.
+ *
+ * @param {HTMLElement} [root]  Element to search from (defaults to the document)
+ * @returns {boolean}
+ */
+function festiveShapeSelected(root) {
+    const gradeEl = (root ?? document).querySelector('[name="grade"]');
+    return isFestiveGrade(gradeEl ? gradeEl.value : undefined);
+}
+
+/**
+ * Show or hide one group's second-reading row to match the lectionary shape.
+ *
+ * Hiding also clears the field, so what is on screen is exactly what gets
+ * saved: no invisible second reading rides along in the payload, and none is
+ * silently dropped from one that is visible.
+ *
+ * @param {HTMLElement} group    A `.readings-group` element
+ * @param {boolean}     festive  True for the festive shape (with second reading)
+ */
+function applyReadingsShapeToGroup(group, festive) {
+    const row = group.querySelector('.reading-row-second');
+    if (!row) return;
+    row.classList.toggle('d-none', !festive);
+    const input = row.querySelector('[name="second_reading[]"]');
+    if (input && !festive) input.value = '';
+}
+
+/**
+ * Re-shape every readings group to match the selected grade, and update the
+ * hint under the readings legend explaining which shape is in force.
+ *
+ * @param {HTMLElement} [form]  The editor form
+ */
+function applyReadingsShape(form) {
+    const festive = festiveShapeSelected(form);
+    document.querySelectorAll('.readings-group').forEach((group) => {
+        applyReadingsShapeToGroup(group, festive);
+    });
+    const hint = document.getElementById('readingsShapeHint');
+    if (hint) {
+        hint.textContent = festive ? config.i18n.readingsShapeFestive : config.i18n.readingsShapeFerial;
+    }
+}
+
+/**
  * Build a readings group (per-locale) and append it to #readingsGroups.
+ *
+ * The group is built in whichever lectionary shape the selected grade calls
+ * for, so groups added later in the session match the ones already on screen.
  *
  * @param {HTMLElement} container  #readingsGroups
  * @param {string}      [locale]   Pre-filled locale
@@ -1877,18 +1927,22 @@ function addReadingsGroup(container, locale) {
     headerRow.appendChild(rmBtnCol);
     group.appendChild(headerRow);
 
-    // Reading fields
+    // Reading fields. The second reading belongs to the festive shape only; its
+    // row is tagged so applyReadingsShapeToGroup can show or hide it by grade.
     const readingFields = [
-        { name: 'first_reading[]',      label: config.i18n.firstReading,      required: true  },
-        { name: 'responsorial_psalm[]', label: config.i18n.responsorialPsalm, required: true  },
-        { name: 'second_reading[]',     label: config.i18n.secondReading,     required: false },
-        { name: 'gospel_acclamation[]', label: config.i18n.gospelAcclamation, required: true  },
-        { name: 'gospel[]',             label: config.i18n.gospel,            required: true  },
+        { name: 'first_reading[]',      label: config.i18n.firstReading      },
+        { name: 'responsorial_psalm[]', label: config.i18n.responsorialPsalm },
+        { name: 'second_reading[]',     label: config.i18n.secondReading     },
+        { name: 'gospel_acclamation[]', label: config.i18n.gospelAcclamation },
+        { name: 'gospel[]',             label: config.i18n.gospel            },
     ];
 
-    readingFields.forEach(({ name, label, required }) => {
+    readingFields.forEach(({ name, label }) => {
         const fieldRow = document.createElement('div');
         fieldRow.className = 'row g-2 mb-2 align-items-center';
+        if (name === 'second_reading[]') {
+            fieldRow.classList.add('reading-row-second');
+        }
 
         const labelCol = document.createElement('div');
         labelCol.className = 'col-md-4';
@@ -1903,15 +1957,14 @@ function addReadingsGroup(container, locale) {
         input.type = 'text';
         input.className = 'form-control form-control-sm';
         input.name = name;
-        if (!required) {
-            input.placeholder = `(${config.i18n.secondReading})`;
-        }
         inputCol.appendChild(input);
 
         fieldRow.appendChild(labelCol);
         fieldRow.appendChild(inputCol);
         group.appendChild(fieldRow);
     });
+
+    applyReadingsShapeToGroup(group, festiveShapeSelected(container.closest('form')));
 
     container.appendChild(group);
 }
@@ -1998,10 +2051,10 @@ export function collectFormValues(root) {
         ? Array.from(colorEl.selectedOptions).map((o) => o.value).filter(Boolean)
         : [];
 
-    // Common: free-text with comma separation
-    const commonText = val('common_text');
-    const common = commonText
-        ? commonText.split(',').map((s) => s.trim()).filter(Boolean)
+    // Common: multi-select over the same option set as the diocesan calendar form
+    const commonEl = root.querySelector('[name="common"]');
+    const common = commonEl
+        ? Array.from(commonEl.selectedOptions).map((o) => o.value).filter(Boolean)
         : [];
 
     // i18n rows
@@ -2272,6 +2325,80 @@ async function deleteDecree(decreeId, deleteAlertBox, capabilities) {
     }
 }
 
+// ---- multi-select enhancement -----------------------------------------------
+
+/**
+ * bootstrap-multiselect options shared by the two event multi-selects, matching
+ * the diocesan calendar form (extending.php?choice=diocesan).
+ */
+const MULTISELECT_OPTIONS = Object.freeze({
+    buttonWidth: '100%',
+    buttonClass: 'form-select',
+    templates: {
+        button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+    },
+    maxHeight: 200
+});
+
+/** @returns {boolean} True when jQuery and the bootstrap-multiselect plugin are both loaded. */
+const hasMultiselect = () => typeof $ === 'function' && typeof $.fn?.multiselect === 'function';
+
+/**
+ * Keep "Proper" mutually exclusive with the Commons: an event either has its own
+ * Proper or draws on one or more Commons, never both. Mirrors the diocesan
+ * calendar form's setCommonMultiselect().
+ *
+ * @param {object}  option   jQuery-wrapped option element that was toggled
+ * @param {boolean} checked  Its new state
+ */
+function onCommonMultiselectChange(option, checked) {
+    if (checked !== true) return;
+    const optionEl = option[0];
+    const selectEl = optionEl.parentElement;
+    if (optionEl.value === 'Proper') {
+        $(selectEl).multiselect('deselectAll', false).multiselect('select', 'Proper');
+    } else if (Array.from(selectEl.selectedOptions).some((o) => o.value === 'Proper')) {
+        $(selectEl).multiselect('deselect', 'Proper');
+    }
+}
+
+/**
+ * Enhance the color and common selects into bootstrap-multiselect widgets.
+ * Idempotent (guarded by a data attribute), so it can run on every modal open.
+ *
+ * No-op when the plugin is absent — e.g. in jsdom unit tests — leaving plain
+ * `<select multiple>` elements, which collectFormValues reads just the same.
+ */
+function initEventMultiselects() {
+    if (!hasMultiselect()) return;
+    const colorEl = document.getElementById('eventColor');
+    if (colorEl && !colorEl.dataset.multiselectReady) {
+        $(colorEl).multiselect(MULTISELECT_OPTIONS);
+        colorEl.dataset.multiselectReady = 'true';
+    }
+    const commonEl = document.getElementById('eventCommon');
+    if (commonEl && !commonEl.dataset.multiselectReady) {
+        $(commonEl).multiselect({
+            ...MULTISELECT_OPTIONS,
+            enableCaseInsensitiveFiltering: true,
+            onChange: onCommonMultiselectChange
+        });
+        commonEl.dataset.multiselectReady = 'true';
+    }
+}
+
+/**
+ * Re-sync the multiselect widgets with their underlying `<select>` elements
+ * after a programmatic change (form.reset(), prefill from an existing decree).
+ */
+function refreshEventMultiselects() {
+    if (!hasMultiselect()) return;
+    ['eventColor', 'eventCommon'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el && el.dataset.multiselectReady) $(el).multiselect('refresh');
+    });
+}
+
 /**
  * Reset the editor form to a clean state: clears the form, alerts, modal
  * title, base-locale option, extra i18n rows, and readings groups.
@@ -2325,6 +2452,11 @@ function resetEditorForm(form, alertBox, label, isCreate, baseLocale) {
 
     // Default to editable identity fields (create mode); edit mode swaps to static
     showDecreeIdentityFields(form);
+
+    // form.reset() restored the markup defaults on the native selects; build the
+    // widgets on first open and re-sync them with those defaults on every open.
+    initEventMultiselects();
+    refreshEventMultiselects();
 }
 
 /**
@@ -2511,7 +2643,7 @@ function prefillUrlLangMap(form, decree) {
 /**
  * Pre-fill the liturgical-event fields of the editor form (event_key value,
  * grade/grade_set, color multi-select, day/month, strtotime with JSON round-trip,
- * event_type radio, and common_text).
+ * event_type radio, and the common multi-select).
  *
  * @param {HTMLFormElement} form
  * @param {object}          ev     `decree.liturgical_event`
@@ -2552,10 +2684,17 @@ function prefillEventFields(form, ev, setVal) {
     const radioToCheck = form.querySelector(`[name="event_type"][value="${eventType}"]`);
     if (radioToCheck) radioToCheck.checked = true;
 
-    // Pre-fill common
-    if (Array.isArray(ev.common) && ev.common.length > 0) {
-        setVal('common_text', ev.common.join(', '));
+    // Pre-fill common (multi-select): mirror the stored array exactly, so a
+    // decree without a common clears the markup's default "Proper" selection.
+    const commonEl = form.querySelector('[name="common"]');
+    if (commonEl) {
+        const selectedCommons = Array.isArray(ev.common) ? ev.common : [];
+        Array.from(commonEl.options).forEach((opt) => {
+            opt.selected = selectedCommons.includes(opt.value);
+        });
     }
+
+    refreshEventMultiselects();
 }
 
 /**
@@ -2638,6 +2777,17 @@ function wireEditorActions(form, saveBtn, alertBox, baseLocale, isCreate, capabi
             if (rows) addI18nRow(rows);
         });
     }
+
+    // The lectionary shape follows the grade: ferial (no second reading) up to
+    // Feast, festive (with second reading) from Feast of the Lord up. `onchange`
+    // assignment replaces rather than stacks, so re-opening the modal is safe.
+    const gradeSelect = form.querySelector('[name="grade"]');
+    if (gradeSelect) {
+        gradeSelect.onchange = () => applyReadingsShape(form);
+    }
+    // Runs after any prefill, so it also re-shapes groups filled from a decree
+    // whose stored readings do not match its grade.
+    applyReadingsShape(form);
 
     // Add readings group button (clone to remove old listeners)
     const addReadingsBtn = document.getElementById('addReadingsGroup');

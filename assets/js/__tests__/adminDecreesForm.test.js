@@ -92,7 +92,7 @@ function buildForm({
     month    = '2',
     grade    = '2',
     colors   = ['white'],
-    commonText = 'Pastors',
+    commons  = ['Pastors'],
     baseLocale = 'en_US',
     baseName   = 'Saint Test',
     sinceYear  = '2025',
@@ -181,8 +181,17 @@ function buildForm({
     });
     form.appendChild(colorSel);
 
-    // Common text
-    form.appendChild(field('common_text', 'text', commonText));
+    // Common multi-select
+    const commonSel = document.createElement('select');
+    commonSel.name = 'common';
+    commonSel.multiple = true;
+    ['Proper', 'Pastors', 'Martyrs', 'Doctors', 'Holy Men and Women'].forEach((c) => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.selected = commons.includes(c);
+        commonSel.appendChild(opt);
+    });
+    form.appendChild(commonSel);
 
     // Base i18n row
     const baseRow = document.createElement('div');
@@ -248,10 +257,16 @@ describe('collectFormValues — createNew', () => {
         expect(v.color).toEqual(['white', 'red']);
     });
 
-    it('collects common as array split by comma', () => {
-        const form = buildForm({ commonText: 'Pastors, Martyrs' });
+    it('collects selected commons as array', () => {
+        const form = buildForm({ commons: ['Pastors', 'Martyrs'] });
         const v = collectFormValues(form);
         expect(v.common).toEqual(['Pastors', 'Martyrs']);
+    });
+
+    it('collects an empty common array when nothing is selected', () => {
+        const form = buildForm({ commons: [] });
+        const v = collectFormValues(form);
+        expect(v.common).toEqual([]);
     });
 
     it('collects base i18n locale+name from pre-added row', () => {
