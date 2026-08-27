@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-16 23:44+0000\n"
-"PO-Revision-Date: 2026-06-26 20:52+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2026-08-27 19:05+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
 "Language: hr\n"
@@ -281,17 +281,14 @@ msgstr "Odaberi kalendar"
 
 #. translators: label for dropdown to select the liturgical rite (Roman or Ambrosian)
 #: usage.php:25
-#, fuzzy
-#| msgid "Select a Role"
 msgid "Select rite"
-msgstr "Odaberi ulogu"
+msgstr "Odaberi obred"
 
 #. translators: notification message shown when the calendar list fails to load
 #: usage.php:27
-#, fuzzy
-#| msgid "Failed to load users. Please try again later."
 msgid "Could not load the calendar list. Please try again later."
-msgstr "Nije uspjelo učitavanje korisnika. Molimo pokušajte ponovo kasnije."
+msgstr ""
+"Nije uspjelo učitavanje popisa kalendara. Molimo pokušajte ponovno kasnije."
 
 #. translators: part of page title - section showing usage examples
 #: usage.php:37
@@ -840,10 +837,9 @@ msgstr "Web stranica projekta"
 
 #. translators: error shown when the liturgy page's calendar controls fail to load
 #: liturgyOfAnyDay.php:17
-#, fuzzy
-#| msgid "Failed to load users. Please try again later."
 msgid "Could not load the liturgy controls. Please try again later."
-msgstr "Nije uspjelo učitavanje korisnika. Molimo pokušajte ponovo kasnije."
+msgstr ""
+"Nije uspjelo učitavanje kontrola liturgije. Molimo pokušajte ponovno kasnije."
 
 #. translators: context = liturgical color
 #. translators: liturgical color - green
@@ -1375,10 +1371,8 @@ msgid "Diocesan"
 msgstr "Biskupijski"
 
 #: layout/header.php:299
-#, fuzzy
-#| msgid "Test Definition"
 msgid "Test Definitions"
-msgstr "Definicija testa"
+msgstr "Definicije testova"
 
 #: layout/header.php:306
 msgid "Back to Website"
@@ -2246,10 +2240,8 @@ msgstr "Sve"
 
 #: admin-permissions.php:78 admin-permissions.php:305 admin-permissions.php:406
 #: admin-permissions.php:437 permission-requests.php:243
-#, fuzzy
-#| msgid "General Roman Calendar"
 msgid "General Roman Calendar Tests"
-msgstr "Opći rimski kalendar"
+msgstr "Testovi općeg rimskog kalendara"
 
 #: admin-permissions.php:80 admin-permissions.php:307 admin-permissions.php:388
 #: permission-requests.php:238
@@ -2258,17 +2250,13 @@ msgstr "Biskupijski kalendar"
 
 #: admin-permissions.php:82 admin-permissions.php:309 admin-permissions.php:404
 #: admin-permissions.php:435 permission-requests.php:241
-#, fuzzy
-#| msgid "National Calendar"
 msgid "National Calendar Tests"
-msgstr "Nacionalni kalendar"
+msgstr "Testovi nacionalnog kalendara"
 
 #: admin-permissions.php:83 admin-permissions.php:310 admin-permissions.php:405
 #: admin-permissions.php:436 permission-requests.php:242
-#, fuzzy
-#| msgid "Diocesan Calendar"
 msgid "Diocesan Calendar Tests"
-msgstr "Biskupijski kalendar"
+msgstr "Testovi biskupijskog kalendara"
 
 #: admin-permissions.php:87 admin-permissions.php:382 admin-permissions.php:429
 msgid "Object ID"
@@ -2411,30 +2399,22 @@ msgstr "Odaberi odnos..."
 
 #: admin-permissions.php:301 admin-permissions.php:399
 #: admin-permissions.php:430 permission-requests.php:230
-#, fuzzy
-#| msgid "Calendar"
 msgid "Calendar scope"
-msgstr "Kalendar"
+msgstr "Opseg kalendara"
 
 #: admin-permissions.php:303 permission-requests.php:232
-#, fuzzy
-#| msgid "Select calendar"
 msgid "Select calendar scope..."
-msgstr "Odaberi kalendar"
+msgstr "Odaberi opseg kalendara..."
 
 #: admin-permissions.php:314 admin-permissions.php:400
 #: admin-permissions.php:431 permission-requests.php:231
-#, fuzzy
-#| msgid "Calendar"
 msgid "Calendar ID"
-msgstr "Kalendar"
+msgstr "ID kalendara"
 
 #: admin-permissions.php:317 admin-permissions.php:401
 #: admin-permissions.php:432 permission-requests.php:233
-#, fuzzy
-#| msgid "Select calendar"
 msgid "Select calendar ID..."
-msgstr "Odaberi kalendar"
+msgstr "Odaberi ID kalendara..."
 
 #: admin-permissions.php:341 admin-permissions.php:354
 msgid "Revoke Permission"
@@ -2477,16 +2457,12 @@ msgid "Are you sure you want to revoke this permission?"
 msgstr "Jesi li siguran da želiš povući ovo dopuštenje?"
 
 #: admin-permissions.php:379
-#, fuzzy
-#| msgid "Object ID"
 msgid "Subject"
-msgstr "ID objekta"
+msgstr "Predmet"
 
 #: admin-permissions.php:380
-#, fuzzy
-#| msgid "Unknown error"
 msgid "Unknown user"
-msgstr "Nepoznata pogreška"
+msgstr "Nepoznat korisnik"
 
 #: admin-permissions.php:384 admin-permissions.php:442
 #: admin-applications.php:244 temporale.php:138
@@ -2524,7 +2500,7 @@ msgstr "Odaberi ID objekta..."
 #: admin-permissions.php:403 admin-permissions.php:434
 #: permission-requests.php:235
 msgid "Could not load calendars — try reloading the page"
-msgstr ""
+msgstr "Nije uspjelo učitavanje kalendara — pokušajte ponovno učitati stranicu"
 
 #: admin-permissions.php:412
 msgid "All fields are required."
@@ -2725,15 +2701,12 @@ msgid "Please select a role."
 msgstr "Molimo, odaberi ulogu."
 
 #: permission-requests.php:214
-#, fuzzy
-#| msgid ""
-#| "Each permission row must have object type, object ID, and relation filled "
-#| "in."
 msgid ""
 "Each permission row must have a calendar scope, calendar ID, and relation "
 "filled in."
 msgstr ""
-"Svaki red dozvola mora imati popunjenu vrstu objekta, ID objekta i odnos."
+"Svaki red dopuštenja mora sadržavati opseg kalendara, ID kalendara i "
+"ispunjen odnos."
 
 #: permission-requests.php:215
 #, php-format
