@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-16 23:44+0000\n"
-"PO-Revision-Date: 2026-06-26 20:52+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2026-08-27 19:05+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
 "Language: it\n"
@@ -285,17 +285,15 @@ msgstr "Seleziona calendario"
 
 #. translators: label for dropdown to select the liturgical rite (Roman or Ambrosian)
 #: usage.php:25
-#, fuzzy
-#| msgid "Select a Role"
 msgid "Select rite"
-msgstr "Seleziona un ruolo"
+msgstr "Seleziona rito"
 
 #. translators: notification message shown when the calendar list fails to load
 #: usage.php:27
-#, fuzzy
-#| msgid "Failed to load users. Please try again later."
 msgid "Could not load the calendar list. Please try again later."
-msgstr "Impossibile caricare gli utenti. Riprova più tardi."
+msgstr ""
+"Non è stato possibile caricare l'elenco dei calendari. Per favore riprova "
+"più tardi."
 
 #. translators: part of page title - section showing usage examples
 #: usage.php:37
@@ -866,10 +864,10 @@ msgstr "Sito web del progetto"
 
 #. translators: error shown when the liturgy page's calendar controls fail to load
 #: liturgyOfAnyDay.php:17
-#, fuzzy
-#| msgid "Failed to load users. Please try again later."
 msgid "Could not load the liturgy controls. Please try again later."
-msgstr "Impossibile caricare gli utenti. Riprova più tardi."
+msgstr ""
+"Non è stato possibile caricare i controlli della liturgia. Per favore "
+"riprova più tardi."
 
 #. translators: context = liturgical color
 #. translators: liturgical color - green
@@ -1405,10 +1403,8 @@ msgid "Diocesan"
 msgstr "Diocesano"
 
 #: layout/header.php:299
-#, fuzzy
-#| msgid "Test Definition"
 msgid "Test Definitions"
-msgstr "Definizione Test"
+msgstr "Definizioni del test"
 
 #: layout/header.php:306
 msgid "Back to Website"
@@ -2279,10 +2275,8 @@ msgstr "Tutti"
 
 #: admin-permissions.php:78 admin-permissions.php:305 admin-permissions.php:406
 #: admin-permissions.php:437 permission-requests.php:243
-#, fuzzy
-#| msgid "General Roman Calendar"
 msgid "General Roman Calendar Tests"
-msgstr "Calendario Romano Generale"
+msgstr "Test del Calendario Romano Generale"
 
 #: admin-permissions.php:80 admin-permissions.php:307 admin-permissions.php:388
 #: permission-requests.php:238
@@ -2291,17 +2285,13 @@ msgstr "Calendario Diocesano"
 
 #: admin-permissions.php:82 admin-permissions.php:309 admin-permissions.php:404
 #: admin-permissions.php:435 permission-requests.php:241
-#, fuzzy
-#| msgid "National Calendar"
 msgid "National Calendar Tests"
-msgstr "Calendario Nazionale"
+msgstr "Test dei Calendari Nazionali"
 
 #: admin-permissions.php:83 admin-permissions.php:310 admin-permissions.php:405
 #: admin-permissions.php:436 permission-requests.php:242
-#, fuzzy
-#| msgid "Diocesan Calendar"
 msgid "Diocesan Calendar Tests"
-msgstr "Calendario Diocesano"
+msgstr "Test dei Calendari Diocesani"
 
 #: admin-permissions.php:87 admin-permissions.php:382 admin-permissions.php:429
 msgid "Object ID"
@@ -2444,30 +2434,22 @@ msgstr "Seleziona relazione..."
 
 #: admin-permissions.php:301 admin-permissions.php:399
 #: admin-permissions.php:430 permission-requests.php:230
-#, fuzzy
-#| msgid "Calendar"
 msgid "Calendar scope"
-msgstr "Calendario"
+msgstr "Ambito calendario"
 
 #: admin-permissions.php:303 permission-requests.php:232
-#, fuzzy
-#| msgid "Select calendar"
 msgid "Select calendar scope..."
-msgstr "Seleziona calendario"
+msgstr "Seleziona l'ambito del calendario..."
 
 #: admin-permissions.php:314 admin-permissions.php:400
 #: admin-permissions.php:431 permission-requests.php:231
-#, fuzzy
-#| msgid "Calendar"
 msgid "Calendar ID"
-msgstr "Calendario"
+msgstr "ID calendario"
 
 #: admin-permissions.php:317 admin-permissions.php:401
 #: admin-permissions.php:432 permission-requests.php:233
-#, fuzzy
-#| msgid "Select calendar"
 msgid "Select calendar ID..."
-msgstr "Seleziona calendario"
+msgstr "Seleziona l'ID del calendario..."
 
 #: admin-permissions.php:341 admin-permissions.php:354
 msgid "Revoke Permission"
@@ -2510,16 +2492,12 @@ msgid "Are you sure you want to revoke this permission?"
 msgstr "Sei sicuro di voler revocare questo permesso?"
 
 #: admin-permissions.php:379
-#, fuzzy
-#| msgid "Object ID"
 msgid "Subject"
-msgstr "ID Oggetto"
+msgstr "Oggetto"
 
 #: admin-permissions.php:380
-#, fuzzy
-#| msgid "Unknown error"
 msgid "Unknown user"
-msgstr "Errore sconosciuto"
+msgstr "Utente sconosciuto"
 
 #: admin-permissions.php:384 admin-permissions.php:442
 #: admin-applications.php:244 temporale.php:138
@@ -2558,6 +2536,7 @@ msgstr "Seleziona ID oggetto..."
 #: permission-requests.php:235
 msgid "Could not load calendars — try reloading the page"
 msgstr ""
+"Non è stato possibile caricare i calendari — prova a ricaricare la pagina"
 
 #: admin-permissions.php:412
 msgid "All fields are required."
@@ -2759,16 +2738,12 @@ msgid "Please select a role."
 msgstr "Per favore seleziona un ruolo."
 
 #: permission-requests.php:214
-#, fuzzy
-#| msgid ""
-#| "Each permission row must have object type, object ID, and relation filled "
-#| "in."
 msgid ""
 "Each permission row must have a calendar scope, calendar ID, and relation "
 "filled in."
 msgstr ""
-"Ogni riga di autorizzazione deve avere tipo di oggetto, ID oggetto e "
-"relazione compilati."
+"Ogni riga di permesso deve avere un ambito di calendario, un ID calendario e "
+"una relazione compilati."
 
 #: permission-requests.php:215
 #, php-format
@@ -3420,97 +3395,83 @@ msgstr "Feriale Tempo di Natale"
 
 #: temporale.php:96
 msgid "Feriale Tempus Quadragesimae"
-msgstr ""
+msgstr "Feriale Tempo di Quaresima"
 
 #: temporale.php:97
 msgid "Feriale Tempus Paschatis"
-msgstr ""
+msgstr "Feriale Tempo di Pasqua"
 
 #: temporale.php:98
-#, fuzzy
-#| msgid "Sanctorale"
 msgid "Sanctorum"
-msgstr "Sanctorale"
+msgstr "Santi"
 
 #: temporale.php:104
 msgid "Search"
-msgstr ""
+msgstr "Cerca"
 
 #: temporale.php:106
 msgid "Search by name or key..."
-msgstr ""
+msgstr "Cerca per nome o chiave..."
 
 #: temporale.php:118
-#, fuzzy
-#| msgid "Temporale"
 msgid "Temporale Events"
-msgstr "Temporale"
+msgstr "Eventi Temporali"
 
 #: temporale.php:123
 msgid "Export JSON"
-msgstr ""
+msgstr "Esporta JSON"
 
 #: temporale.php:132
-#, fuzzy
-#| msgid "Event key"
 msgid "Event Key"
-msgstr "Chiave dell'evento"
+msgstr "Chiave Evento"
 
 #: temporale.php:135
 msgid "Season"
-msgstr ""
+msgstr "Stagione"
 
 #: temporale.php:136
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #: temporale.php:137
 msgid "Color"
-msgstr ""
+msgstr "Colore"
 
 #: temporale.php:160
-#, fuzzy
-#| msgid "Event key"
 msgid "Event Details"
-msgstr "Chiave dell'evento"
+msgstr "Dettagli dell'Evento"
 
 #: temporale.php:167
-#, fuzzy
-#| msgid "Current localization"
 msgid "Event navigation"
-msgstr "Localizzazione attuale"
+msgstr "Navigazione Evento"
 
 #: temporale.php:168
 msgid "First"
-msgstr ""
+msgstr "Primo"
 
 #: temporale.php:180
 msgid "Last"
-msgstr ""
+msgstr "Ultimo"
 
 #: user-profile.php:23 user-profile.php:35
-#, fuzzy
-#| msgid "View Profile"
 msgid "User Profile"
-msgstr "Visualizza profilo"
+msgstr "Profilo Utente"
 
 #: user-profile.php:43
 msgid "Account Information"
-msgstr ""
+msgstr "Informazioni Account"
 
 #: user-profile.php:52
-#, fuzzy
-#| msgid "Name"
 msgid "Full Name"
-msgstr "Nome"
+msgstr "Nome Completo"
 
 #: user-profile.php:61
 msgid "Given / Family Name"
-msgstr ""
+msgstr "Nome / Cognome"
 
 #: user-profile.php:85
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: user-profile.php:90
 msgid "Email verified"
