@@ -129,7 +129,9 @@ if (!$authHelper->isAuthenticated) {
                 <table class="table table-bordered table-hover" id="temporaleTable">
                     <thead class="table-light">
                         <tr>
-                            <th><?php echo htmlspecialchars(_('Event Key'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></th>
+                            <?php // 'Event key', not 'Event Key': the same label in includes/messages.php and
+                                  // admin-decrees.php. Two capitalizations are two msgids and get translated twice. ?>
+                            <th><?php echo htmlspecialchars(_('Event key'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></th>
                             <th><?php echo htmlspecialchars(_('Name'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></th>
                             <th><?php echo htmlspecialchars(_('Grade'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></th>
                             <th><?php echo htmlspecialchars(_('Season'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></th>
