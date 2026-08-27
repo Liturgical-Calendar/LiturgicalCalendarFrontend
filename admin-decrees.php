@@ -92,6 +92,12 @@ if (!$isAdmin && !$isCalendarEditor) {
                     <!-- Alert region for validation errors -->
                     <div id="decreeEditorAlerts"></div>
 
+                    <?php // Catalog of General Roman Calendar event keys (value) + localized names (label),
+                          // filled by JS from GET /events. Shared by two fields — the decree's own
+                          // #decreeEventKey and the mobile relative-date anchor #eventStrtotimeEventKey —
+                          // so it lives at modal-body level rather than inside either one's block. ?>
+                    <datalist id="grcEventKeysDatalist"></datalist>
+
                     <form id="decreeEditorForm" novalidate>
 
                         <!-- ── Event key + action (decree_id is derived) ──── -->
@@ -101,9 +107,13 @@ if (!$isAdmin && !$isCalendarEditor) {
                                     <?php echo htmlspecialchars(_('Event key'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                 </label>
                                 <input type="text" class="form-control" id="decreeEventKey" name="event_key"
-                                    placeholder="StMotherTeresa">
+                                    list="grcEventKeysDatalist" autocomplete="off" placeholder="StMotherTeresa">
                                 <?php // On edit, event_key is immutable: shown as static text, not an editable field ?>
                                 <div class="form-control-plaintext py-0 font-monospace d-none" id="decreeEventKeyStatic"></div>
+                                <?php // Advisory catalog verdict, filled by JS (syncEventKeyHint): whether this key
+                                      // already exists in the General Roman Calendar. Never blocks submission —
+                                      // a createNew decree mints a key that is *supposed* to be absent. ?>
+                                <div class="form-text mt-1" id="decreeEventKeyHint"></div>
                             </div>
                             <div class="col-md-6">
                                 <label for="decreeAction" class="form-label">
@@ -355,8 +365,6 @@ if (!$isAdmin && !$isCalendarEditor) {
                                         'UTF-8'
                                     ); ?>
                                 </div>
-                                <?php // Catalog of GRC event keys (value) + localized names (label), filled by JS from /events ?>
-                                <datalist id="grcEventKeysDatalist"></datalist>
                             </div>
 
                             <!-- Grade + color (event details, createNew only) -->
@@ -574,6 +582,12 @@ if (!$isAdmin && !$isCalendarEditor) {
                 sessionExpired:    <?php echo json_encode(_('Your session has expired. Please log in again.'), JSON_HEX_TAG); ?>,
                 loginLink:         <?php echo json_encode(_('Log in'), JSON_HEX_TAG); ?>,
                 permissionDenied:  <?php echo json_encode(_('You do not have permission to perform this action.'), JSON_HEX_TAG); ?>,
+                eventKeyNew:       <?php echo json_encode(_('Not in the General Roman Calendar — a new event will be created.'), JSON_HEX_TAG); ?>,
+                <?php // %s is the localized name of the existing General Roman Calendar event ?>
+                eventKeyCollision: <?php echo json_encode(_('Already in the General Roman Calendar as "%s" — choose a different event key.'), JSON_HEX_TAG); ?>,
+                eventKeyMissing:   <?php echo json_encode(_('Not in the General Roman Calendar — this decree will not match any event.'), JSON_HEX_TAG); ?>,
+                <?php // %s is the localized name of the matched General Roman Calendar event ?>
+                eventKeyMatch:     <?php echo json_encode(_('Matches "%s" in the General Roman Calendar.'), JSON_HEX_TAG); ?>,
                 editAriaLabel:     <?php echo json_encode(_('Edit'), JSON_HEX_TAG); ?>,
                 deleteAriaLabel:   <?php echo json_encode(_('Delete'), JSON_HEX_TAG); ?>,
                 errorText:         <?php echo json_encode(_('(error)'), JSON_HEX_TAG); ?>,

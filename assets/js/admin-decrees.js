@@ -1259,22 +1259,40 @@ function rebuildUrlCodeDatalists() {
 let eventCatalogNames = {};
 
 /**
+ * Every event_key in the GRC event catalog, including events that carry no
+ * name of their own. Membership questions must be asked of this set, never of
+ * eventCatalogNames — that map holds only the *named* events, so a nameless
+ * catalog entry would read as absent.
+ *
+ * Empty means "not loaded" (still in flight, or the best-effort fetch failed),
+ * which is deliberately indistinguishable from "no events" and is treated as
+ * "say nothing" by describeEventKeyHint.
+ *
+ * @type {Set<string>}
+ */
+let eventCatalogKeys = new Set();
+
+/**
  * Fetch the GRC event catalog (GET /events) and (a) build the eventCatalogNames
  * map and (b) populate #grcEventKeysDatalist with one option per event
- * (value = event_key, label = "name (event_key)"), so the mobile relative-date
- * anchor field is searchable by event key or by localized name. Best-effort:
- * on failure the map/datalist are left as-is. Public read → credentials 'omit'.
+ * (value = event_key, label = "name (event_key)"), so both the decree's own
+ * event_key field and the mobile relative-date anchor field are searchable by
+ * event key or by localized name, and (c) build the eventCatalogKeys membership
+ * set. Best-effort: on failure the map/set/datalist are left as-is. Public read
+ * → credentials 'omit'.
  */
 async function loadEventCatalog() {
     try {
         const data = await fetchJson('GET', '/events', undefined, { 'Accept-Language': config.locale }, 'omit');
         const events = data && Array.isArray(data.litcal_events) ? data.litcal_events : [];
         const names = {};
+        const keys = new Set();
         const host = document.getElementById('grcEventKeysDatalist');
         const frag = host ? document.createDocumentFragment() : null;
         events.forEach((e) => {
             if (!e || typeof e.event_key !== 'string') return;
             const hasName = typeof e.name === 'string' && e.name !== '';
+            keys.add(e.event_key);
             if (hasName) names[e.event_key] = e.name;
             if (frag) {
                 const opt = document.createElement('option');
@@ -1284,10 +1302,96 @@ async function loadEventCatalog() {
             }
         });
         eventCatalogNames = names;
+        eventCatalogKeys = keys;
         if (host && frag) host.replaceChildren(frag);
     } catch {
         // best-effort: leave the catalog map and datalist as they were
     }
+}
+
+/**
+ * Decide what, if anything, to tell the editor about the event_key they typed,
+ * by testing it against the General Roman Calendar event catalog.
+ *
+ * The verdict inverts with the action, because event_key means opposite things
+ * either side of that switch: `createNew` MINTS a key (so absence from the
+ * catalog is the expected, correct case, and presence is a collision), while
+ * `makeDoctor` / `setProperty:*` TARGET an existing event (so absence means the
+ * decree will silently match nothing). Advisory only — the caller renders the
+ * text, and nothing here blocks submission.
+ *
+ * Exported for unit testing.
+ *
+ * @param {string}                 eventKey      Raw field value (trimmed here)
+ * @param {string}                 action        One of the DecreeAction values
+ * @param {Set<string>}            catalogKeys   Every event_key in the GRC catalog
+ * @param {Record<string,string>}  catalogNames  event_key → localized name (named events only)
+ * @returns {{level: 'info'|'warn', text: string}|null}  null when there is nothing to say
+ */
+export function describeEventKeyHint(eventKey, action, catalogKeys, catalogNames) {
+    const key = typeof eventKey === 'string' ? eventKey.trim() : '';
+    if (key === '') return null;
+
+    // An empty catalog means the best-effort /events fetch has not landed (or
+    // failed). "Not in the General Roman Calendar" would then be a fabricated
+    // verdict rather than an observation, so say nothing at all.
+    if (!catalogKeys || catalogKeys.size === 0) return null;
+
+    const known = catalogKeys.has(key);
+    // A catalog entry without a name still exists; fall back to its key so the
+    // %s slot never renders as "undefined".
+    const label = (catalogNames && catalogNames[key]) || key;
+    const i18n  = config.i18n;
+
+    if (action === DecreeAction.CreateNew) {
+        return known
+            ? { level: 'warn', text: i18n.eventKeyCollision.replace('%s', label) }
+            : { level: 'info', text: i18n.eventKeyNew };
+    }
+
+    if (
+        action === DecreeAction.MakeDoctor
+        || action === DecreeAction.SetPropertyName
+        || action === DecreeAction.SetPropertyGrade
+    ) {
+        return known
+            ? { level: 'info', text: i18n.eventKeyMatch.replace('%s', label) }
+            : { level: 'warn', text: i18n.eventKeyMissing };
+    }
+
+    return null;
+}
+
+/**
+ * Render describeEventKeyHint's verdict into #decreeEventKeyHint.
+ *
+ * No-op on edit mode: there event_key is immutable and shown as static text
+ * (see showDecreeIdentityStatic), so there is nothing for the editor to act on.
+ *
+ * Exported for unit testing; the catalog is a parameter with a live default so
+ * tests can inject one without reaching into module state.
+ *
+ * @param {HTMLFormElement} form
+ * @param {{keys: Set<string>, names: Record<string,string>}} [catalog]
+ */
+export function syncEventKeyHint(form, catalog) {
+    const hint = form.querySelector('#decreeEventKeyHint');
+    if (!hint) return;
+
+    if (form.dataset.mode !== 'create') {
+        hint.textContent = '';
+        hint.classList.remove('text-danger');
+        return;
+    }
+
+    const keys  = catalog ? catalog.keys  : eventCatalogKeys;
+    const names = catalog ? catalog.names : eventCatalogNames;
+    const eventKey = form.querySelector('[name="event_key"]')?.value ?? '';
+    const action   = form.querySelector('[name="action"]')?.value ?? '';
+
+    const verdict = describeEventKeyHint(eventKey, action, keys, names);
+    hint.textContent = verdict ? verdict.text : '';
+    hint.classList.toggle('text-danger', verdict?.level === 'warn');
 }
 
 /**
@@ -2328,7 +2432,10 @@ function wireEditorActions(form, saveBtn, alertBox, baseLocale, isCreate, capabi
     // replaces rather than stacks, so re-opening the modal is safe.
     const eventKeyInput = form.querySelector('[name="event_key"]');
     if (eventKeyInput) {
-        eventKeyInput.oninput = () => syncDerivedDecreeId(form);
+        eventKeyInput.oninput = () => {
+            syncDerivedDecreeId(form);
+            syncEventKeyHint(form);
+        };
     }
 
     // Wire save button (clone to remove old listeners)
@@ -2432,8 +2539,10 @@ async function openEditorModal(decree, capabilities) {
     } else {
         // Creating: event_key and action are editable fields (both feed the
         // derived decree_id); resetEditorForm already restored the field view.
-        // Initialize the derived-id hint (empty event_key → placeholder).
+        // Initialize the derived-id hint (empty event_key → placeholder) and
+        // clear any catalog hint left over from the previous editor session.
         syncDerivedDecreeId(form);
+        syncEventKeyHint(form);
 
         // Seed the GRC-live minimum: empty i18n rows and readings groups.
         prefillI18nRows(null, baseLocale, '');
@@ -2476,13 +2585,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // Wire action-change visibility toggling + derived decree_id sync
+    // Wire action-change visibility toggling + derived decree_id / event_key hint sync
     if (form) {
         const actionEl = form.querySelector('[name="action"]');
         if (actionEl) {
             actionEl.addEventListener('change', () => {
                 applyActionVisibility(actionEl.value, form);
                 syncDerivedDecreeId(form);
+                // The catalog verdict inverts with the action, so the hint
+                // must be recomputed even though event_key did not change.
+                syncEventKeyHint(form);
             });
         }
     }
