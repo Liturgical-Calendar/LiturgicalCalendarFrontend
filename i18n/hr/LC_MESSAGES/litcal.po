@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-27 21:21+0000\n"
-"PO-Revision-Date: 2026-08-27 20:48+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2026-08-27 21:30+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
 "Language: hr\n"
@@ -2212,10 +2212,8 @@ msgid "Edit"
 msgstr "Uredi"
 
 #: includes/admin-decrees-card.php:22
-#, fuzzy
-#| msgid "Decrees of the Dicastery for Divine Worship"
 msgid "Create, edit and delete decrees of the Dicastery for Divine Worship"
-msgstr "Dekreti Dikasterija za božansko bogoštovlje"
+msgstr "Izradi, uredi i izbriši dekrete Dikasterija za bogoštovlje"
 
 #: includes/admin-decrees-card.php:26 includes/admin-tests-card.php:23
 #: admin-dashboard.php:80 admin-dashboard.php:98 admin-dashboard.php:116
@@ -2223,94 +2221,68 @@ msgid "Manage"
 msgstr "Upravljanje"
 
 #: includes/admin-tests-card.php:19
-#, fuzzy
-#| msgid "Create and manage accuracy tests."
 msgid "Manage liturgical accuracy tests"
-msgstr "Kreiraj i upravljaj testovima točnosti."
+msgstr "Upravljaj testovima liturgijske preciznosti"
 
 #: admin-decrees.php:55
-#, fuzzy
-#| msgid "Decrees of the Dicastery for Divine Worship"
 msgid "Create, edit and delete decrees of the Dicastery for Divine Worship."
-msgstr "Dekreti Dikasterija za božansko bogoštovlje"
+msgstr "Izradi, uredi i izbriši dekrete Dikasterija za bogoštovlje."
 
 #: admin-decrees.php:67 admin-decrees.php:621
-#, fuzzy
-#| msgid "Decrees"
 msgid "New Decree"
-msgstr "Dekreti"
+msgstr "Novi Dekret"
 
 #: admin-decrees.php:72
-#, fuzzy
-#| msgid "Grant Permission"
 msgid "Manage permissions"
-msgstr "Dodijeli dozvolu"
+msgstr "Upravljaj dozvolama"
 
 #: admin-decrees.php:82
-#, fuzzy
-#| msgid "Read the Decree"
 msgid "Search decrees"
-msgstr "Pročitaj dekret"
+msgstr "Pretraži dekrete"
 
 #: admin-decrees.php:89
 msgid "Search by name, event key, protocol or description"
-msgstr ""
+msgstr "Pretraži prema imenu, ključu događaja, protokolu ili opisu"
 
 #: admin-decrees.php:97
-#, fuzzy
-#| msgid "Filter by user ID..."
 msgid "Filter by year"
-msgstr "Filtriraj prema korisničkom ID-u..."
+msgstr "Filtriraj prema godini"
 
 #: admin-decrees.php:101
 msgid "Any year"
-msgstr ""
+msgstr "Bilo koja godina"
 
 #: admin-decrees.php:106
-#, fuzzy
-#| msgid "Filter by object ID..."
 msgid "Filter by action"
-msgstr "Filtriraj prema ID-u objekta..."
+msgstr "Filtriraj prema akciji"
 
 #: admin-decrees.php:109
-#, fuzzy
-#| msgid "Actions"
 msgid "Any action"
-msgstr "Radnje"
+msgstr "Bilo koja akcija"
 
 #: admin-decrees.php:111 admin-decrees.php:179
-#, fuzzy
-#| msgid "Create new liturgical event"
 msgid "Create new event"
-msgstr "Kreiraj novi liturgijski događaj"
+msgstr "Kreiraj novi događaj"
 
 #: admin-decrees.php:114 admin-decrees.php:182
-#, fuzzy
-#| msgid "Designate Doctor of the Church"
 msgid "Make Doctor of the Church"
-msgstr "Imenovanje za Naučitelja Crkve"
+msgstr "Proglasiti crkvenim naučiteljem"
 
 #: admin-decrees.php:117 admin-decrees.php:185
-#, fuzzy
-#| msgid "Set Property"
 msgid "Set property: name"
-msgstr "Postavi značajku"
+msgstr "Postavi svojstvo: ime"
 
 #: admin-decrees.php:120 admin-decrees.php:188
-#, fuzzy
-#| msgid "Set Property"
 msgid "Set property: grade"
-msgstr "Postavi značajku"
+msgstr "Postavi svojstvo: stupanj"
 
 #: admin-decrees.php:126
 msgid "Clear"
-msgstr ""
+msgstr "Očisti"
 
 #: admin-decrees.php:140
-#, fuzzy
-#| msgid "Decrees"
 msgid "Decree"
-msgstr "Dekreti"
+msgstr "Dekret"
 
 #: admin-decrees.php:143 admin-decrees.php:584 admin-permissions.php:229
 #: admin-permissions.php:261 admin-permissions.php:283
@@ -2322,36 +2294,28 @@ msgid "Close"
 msgstr "Zatvori"
 
 #: admin-decrees.php:175
-#, fuzzy
-#| msgid "Actions"
 msgid "Action"
-msgstr "Radnje"
+msgstr "Akcija"
 
 #: admin-decrees.php:199
-#, fuzzy
-#| msgid "Decrees"
 msgid "Decree ID"
-msgstr "Dekreti"
+msgstr "ID dekreta"
 
 #: admin-decrees.php:203
 msgid "generated automatically from the event key and action"
-msgstr ""
+msgstr "generirano automatski iz ključa događaja i akcije"
 
 #: admin-decrees.php:216
-#, fuzzy
-#| msgid "Decree URL"
 msgid "Decree date"
-msgstr "URL dekreta"
+msgstr "Datum dekreta"
 
 #: admin-decrees.php:222
 msgid "Protocol"
-msgstr ""
+msgstr "Protokol"
 
 #: admin-decrees.php:229
-#, fuzzy
-#| msgid "Since"
 msgid "Since year"
-msgstr "Od"
+msgstr "Od godine"
 
 #: admin-decrees.php:238 admin-tests.php:196 admin-applications.php:240
 #: developer-dashboard.php:98
@@ -2359,20 +2323,16 @@ msgid "Description"
 msgstr "Opis"
 
 #: admin-decrees.php:247
-#, fuzzy
-#| msgid "Decree URL"
 msgid "Source URL"
-msgstr "URL dekreta"
+msgstr "Izvorni URL"
 
 #: admin-decrees.php:256
 msgid "Source available in multiple languages"
-msgstr ""
+msgstr "Izvor dostupan na više jezika"
 
 #: admin-decrees.php:267
-#, fuzzy
-#| msgid "Language"
 msgid "Language URL codes"
-msgstr "Jezik"
+msgstr "Kodovi jezika URL-a"
 
 #: admin-decrees.php:271
 #, php-format
@@ -2380,76 +2340,64 @@ msgid ""
 "Use %s in the URL above where the language code appears; each row maps a "
 "language to its Vatican URL code."
 msgstr ""
+"Koristite %s u gornjem URL-u gdje se pojavljuje kôd jezika; svaki redak "
+"povezuje jezik s njegovim kodeksom URL-a Vatikana."
 
 #: admin-decrees.php:278
 msgid "Add language code"
-msgstr ""
+msgstr "Dodaj kôd jezika"
 
 #: admin-decrees.php:282
-#, fuzzy
-#| msgid "Review"
 msgid "Preview"
 msgstr "Pregled"
 
 #: admin-decrees.php:322
-#, fuzzy
-#| msgid "Event Details"
 msgid "Event details"
-msgstr "Detalji Događaja"
+msgstr "Detalji događaja"
 
 #: admin-decrees.php:328
-#, fuzzy
-#| msgid "Date"
 msgid "Date type"
-msgstr "Datum"
+msgstr "Tip datuma"
 
 #: admin-decrees.php:335
 msgid "Fixed"
-msgstr ""
+msgstr "Fiksni"
 
 #: admin-decrees.php:390
-#, fuzzy
-#| msgid "Save data"
 msgid "Relative date"
-msgstr "Spremi podatke"
+msgstr "Relativni datum"
 
 #: admin-decrees.php:406
 msgid "before"
-msgstr ""
+msgstr "prije"
 
 #: admin-decrees.php:407
 msgid "after"
-msgstr ""
+msgstr "nakon"
 
 #: admin-decrees.php:418
 msgid ""
 "A day of the week relative to a liturgical event, e.g. \"Monday after "
 "Pentecost\"."
 msgstr ""
+"Dan u tjednu u odnosu na liturgijski događaj, npr. \"Ponedjeljak nakon "
+"Duhova\"."
 
 #: admin-decrees.php:432 admin-decrees.php:500
-#, fuzzy
-#| msgid "weekday"
 msgid "0 — Weekday"
-msgstr "svagdan"
+msgstr "0 — Radni dan"
 
 #: admin-decrees.php:433 admin-decrees.php:501
-#, fuzzy
-#| msgid "Commemoration"
 msgid "1 — Commemoration"
-msgstr "Spomen"
+msgstr "1 — Spomendan"
 
 #: admin-decrees.php:434 admin-decrees.php:502
-#, fuzzy
-#| msgid "Optional memorial"
 msgid "2 — Optional Memorial"
-msgstr "Neobavezni spomendan"
+msgstr "2 — Neobavezni spomendan"
 
 #: admin-decrees.php:435 admin-decrees.php:503
-#, fuzzy
-#| msgid "Memorial"
 msgid "3 — Memorial"
-msgstr "Spomendan"
+msgstr "3 — Spomendan"
 
 #: admin-decrees.php:436 admin-decrees.php:504
 msgid "4 — Feast"
@@ -2563,17 +2511,15 @@ msgstr "Kategorija lekcionara"
 
 #: admin-decrees.php:557
 msgid "Add readings for locale"
-msgstr ""
+msgstr "Dodaj čitanja za jezik"
 
 #: admin-decrees.php:568 admin-tests.php:238 developer-dashboard.php:323
 msgid "Save"
 msgstr "Spremi"
 
 #: admin-decrees.php:581
-#, fuzzy
-#| msgid "Read the Decree"
 msgid "Delete Decree"
-msgstr "Pročitaj dekret"
+msgstr "Izbriši dekret"
 
 #: admin-decrees.php:595 admin-decrees.php:649 admin-tests.php:292
 #: admin-tests.php:317 developer-dashboard.php:249 developer-dashboard.php:270
@@ -2581,55 +2527,47 @@ msgid "Delete"
 msgstr "Izbriši"
 
 #: admin-decrees.php:611
-#, fuzzy
-#| msgid "Loading..."
 msgid "Loading…"
-msgstr "Učitavam..."
+msgstr "Učitavanje…"
 
 #: admin-decrees.php:612
 msgid "You do not have permission to view decrees administration."
-msgstr ""
+msgstr "Nemate dopuštenje za pregled administracije dekreta."
 
 #: admin-decrees.php:613
 msgid "Could not load decrees from the API."
-msgstr ""
+msgstr "Nije moguće učitati dekrete iz API-ja."
 
 #: admin-decrees.php:614
-#, fuzzy
-#| msgid "No requests found."
 msgid "No decrees found."
-msgstr "Nema pronađenih zahtjeva."
+msgstr "Nisu pronađeni dekreti."
 
 #: admin-decrees.php:615
-#, fuzzy
-#| msgid "Are you sure you want to delete this item?"
 msgid ""
 "Are you sure you want to delete this decree? This action cannot be undone."
-msgstr "Jesi li siguran da želiš izbrisati ovu stavku?"
+msgstr ""
+"Jeste li sigurni da želite izbrisati ovaj dekret? Ova radnja se ne može "
+"poništiti."
 
 #: admin-decrees.php:616
 msgid "Decree created."
-msgstr ""
+msgstr "Dekret stvoren."
 
 #: admin-decrees.php:617
 msgid "Decree updated."
-msgstr ""
+msgstr "Dekret ažuriran."
 
 #: admin-decrees.php:618
 msgid "Decree deleted."
-msgstr ""
+msgstr "Dekret izbrisan."
 
 #: admin-decrees.php:622
-#, fuzzy
-#| msgid "Add Decree"
 msgid "Edit Decree"
-msgstr "Dodaj dekret"
+msgstr "Uredi dekret"
 
 #: admin-decrees.php:623
-#, fuzzy
-#| msgid "Select calendar"
 msgid "Select locale"
-msgstr "Odaberi kalendar"
+msgstr "Odaberi jezik"
 
 #: admin-decrees.php:624 permission-requests.php:229
 msgid "Remove"
@@ -2637,31 +2575,31 @@ msgstr "Ukloni"
 
 #: admin-decrees.php:625
 msgid "First reading"
-msgstr ""
+msgstr "Prvo čitanje"
 
 #: admin-decrees.php:626
 msgid "Responsorial psalm"
-msgstr ""
+msgstr "Otpjevni psalam"
 
 #: admin-decrees.php:627
 msgid "Second reading (optional)"
-msgstr ""
+msgstr "Drugo čitanje (nije obavezno)"
 
 #: admin-decrees.php:628
 msgid "Gospel acclamation"
-msgstr ""
+msgstr "Evanđeoska aklamacija"
 
 #: admin-decrees.php:629
 msgid "Gospel"
-msgstr ""
+msgstr "Evanđelje"
 
 #: admin-decrees.php:630
 msgid "No readings defined for this locale yet"
-msgstr ""
+msgstr "Još nisu definirana čitanja za ovaj jezik"
 
 #: admin-decrees.php:631
 msgid "Vatican URL code (e.g. ge, sp, po)"
-msgstr ""
+msgstr "Kod URL-a Vatikana (npr. ge, sp, po)"
 
 #: admin-decrees.php:633
 #, php-format
@@ -2669,42 +2607,37 @@ msgid ""
 "Duplicate language code \"%s\" in the source URL languages — each language "
 "may appear only once"
 msgstr ""
+"Duplicirani jezični kod \"%s\" u izvoru URL jezika — svaki jezik se može "
+"pojaviti samo jednom"
 
 #: admin-decrees.php:634
 msgid "Please fix the following errors before saving:"
-msgstr ""
+msgstr "Ispravite sljedeće pogreške prije spremanja:"
 
 #: admin-decrees.php:635
-#, fuzzy, php-format
-#| msgid "Since"
+#, php-format
 msgid "Since %s"
-msgstr "Od"
+msgstr "Od %s"
 
 #: admin-decrees.php:636
 msgid "Source"
-msgstr ""
+msgstr "Izvor"
 
 #: admin-decrees.php:637
-#, fuzzy
-#| msgid "Your session has expired. Please login again."
 msgid "Your session has expired. Please log in again."
-msgstr "Tvoja je sesija istekla. Ponovno se prijavi."
+msgstr "Vaša sesija je istekla. Molimo vas da se ponovno prijavite."
 
 #: admin-decrees.php:638
-#, fuzzy
-#| msgid "Logging in..."
 msgid "Log in"
-msgstr "Prijava u tijeku..."
+msgstr "Prijavi se"
 
 #: admin-decrees.php:639 admin-tests.php:323
 msgid "You do not have permission to perform this action."
-msgstr ""
+msgstr "Nemate dopuštenje za izvođenje ove radnje."
 
 #: admin-decrees.php:640
-#, fuzzy
-#| msgid "Extend the General Roman Calendar with National or Diocesan data"
 msgid "Not in the General Roman Calendar — a new event will be created."
-msgstr "Proširi Opći rimski kalendar s nacionalnim ili biskupijskim podacima"
+msgstr "Nije u Općem rimskom kalendaru — bit će stvoren novi događaj."
 
 #: admin-decrees.php:642
 #, php-format
@@ -2712,65 +2645,51 @@ msgid ""
 "Already in the General Roman Calendar as \"%s\" — choose a different event "
 "key."
 msgstr ""
+"Već je u Općem rimskom kalendaru kao \"%s\" — odaberite drugačiji događaj."
 
 #: admin-decrees.php:643
-#, fuzzy
-#| msgid "Extend the General Roman Calendar with National or Diocesan data"
 msgid ""
 "Not in the General Roman Calendar — this decree will not match any event."
-msgstr "Proširi Opći rimski kalendar s nacionalnim ili biskupijskim podacima"
+msgstr ""
+"Nije u Općem rimskom kalendaru — ovaj dekret neće odgovarati nijednom "
+"događaju."
 
 #: admin-decrees.php:645
-#, fuzzy, php-format
-#| msgid "Define Particular Calendars based on the General Roman Calendar"
+#, php-format
 msgid "Matches \"%s\" in the General Roman Calendar."
-msgstr "Definiraj posebne kalendare na temelju Općeg rimskog kalendara"
+msgstr "Podudara se s \"%s\" u Općem rimskom kalendaru."
 
 #: admin-decrees.php:647
 msgid "No decrees match the current search and filters."
-msgstr ""
+msgstr "Nijedan dekret ne odgovara trenutnoj pretrazi i filtrima."
 
 #: admin-decrees.php:650
-#, fuzzy
-#| msgid "Error"
 msgid "(error)"
-msgstr "Greška"
+msgstr "(pogreška)"
 
 #: admin-decrees.php:652
-#, fuzzy
-#| msgid "Higher Solemnity (7)"
 msgid "Higher Solemnity"
-msgstr "Viša svetkovina (7)"
+msgstr "Veća svetkovina"
 
 #: admin-decrees.php:653
-#, fuzzy
-#| msgid "Solemnity (6)"
 msgid "Solemnity"
-msgstr "Svetkovina (6)"
+msgstr "Svetkovina"
 
 #: admin-decrees.php:654
-#, fuzzy
-#| msgid "Feast of the Lord (5)"
 msgid "Feast of the Lord"
-msgstr "Gospodnji blagdan (5)"
+msgstr "Gospodnji blagdan"
 
 #: admin-decrees.php:655
-#, fuzzy
-#| msgid "Feasts"
 msgid "Feast"
-msgstr "Blagdani"
+msgstr "Blagdan"
 
 #: admin-decrees.php:657
-#, fuzzy
-#| msgid "Optional memorial"
 msgid "Optional Memorial"
-msgstr "Neobavezni spomendan"
+msgstr "Neobvezni spomendan"
 
 #: admin-decrees.php:659
-#, fuzzy
-#| msgid "weekday"
 msgid "Weekday"
-msgstr "svagdan"
+msgstr "Običan dan"
 
 #: admin-permissions.php:36 admin-permissions.php:48
 msgid "Permissions Management"
@@ -3155,38 +3074,31 @@ msgstr "Urednik točnostnog testa"
 
 #: admin-tests.php:54
 msgid "Create, edit, and delete liturgical accuracy test definitions."
-msgstr ""
+msgstr "Kreirajte, uredite i izbrišite definicije testova liturgijske točnosti."
 
 #: admin-tests.php:66
-#, fuzzy
-#| msgid "Filter by user ID..."
 msgid "Filter by name"
-msgstr "Filtriraj prema korisničkom ID-u..."
+msgstr "Filtriraj po imenu"
 
 #: admin-tests.php:72
-#, fuzzy
-#| msgid "Filter by user ID..."
 msgid "Filter by scope"
-msgstr "Filtriraj prema korisničkom ID-u..."
+msgstr "Filtriraj po opsegu"
 
 #: admin-tests.php:75
 msgid "USA, diocese id, ..."
-msgstr ""
+msgstr "SAD, id biskupije, ..."
 
 #: admin-tests.php:82
-#, fuzzy
 msgid "New Test"
-msgstr "Nova svetkovina"
+msgstr "Novi test"
 
 #: admin-tests.php:92
 msgid "Tests"
-msgstr ""
+msgstr "Testovi"
 
 #: admin-tests.php:101
-#, fuzzy
-#| msgid "Advent"
 msgid "Event"
-msgstr "Advent"
+msgstr "Događaj"
 
 #: admin-tests.php:102 admin-tests.php:132 developer-dashboard.php:166
 #: developer-dashboard.php:273
@@ -3198,176 +3110,143 @@ msgid "Type"
 msgstr "Tip"
 
 #: admin-tests.php:104
-#, fuzzy
-#| msgid "Year"
 msgid "Years"
-msgstr "Godina"
+msgstr "Godine"
 
 #: admin-tests.php:152
-#, fuzzy
-#| msgid "New liturgical event"
 msgid "Liturgical event"
-msgstr "Novi liturgijski događaj"
+msgstr "Liturgijski događaj"
 
 #: admin-tests.php:162
-#, fuzzy
-#| msgid "Save data"
 msgid "Base date"
-msgstr "Spremi podatke"
+msgstr "Osnovni datum"
 
 #: admin-tests.php:172
 msgid "Test type"
-msgstr ""
+msgstr "Tip testa"
 
 #: admin-tests.php:178
 msgid "Exact date"
-msgstr ""
+msgstr "Točan datum"
 
 #: admin-tests.php:183
 msgid "Exact since year"
-msgstr ""
+msgstr "Točno od godine"
 
 #: admin-tests.php:188
 msgid "Exact until year"
-msgstr ""
+msgstr "Točno do godine"
 
 #: admin-tests.php:204
 msgid "Year range"
-msgstr ""
+msgstr "Raspon godina"
 
 #: admin-tests.php:216
-#, fuzzy
-#| msgid "Request rejected."
 msgid "event expected"
-msgstr "Zahtjev odbijen."
+msgstr "očekivani događaj"
 
 #: admin-tests.php:217
 msgid "falls on a Sunday"
-msgstr ""
+msgstr "pada na nedjelju"
 
 #: admin-tests.php:218
 msgid "pivot year"
-msgstr ""
+msgstr "referentna godina"
 
 #: admin-tests.php:219
 msgid "event not expected"
-msgstr ""
+msgstr "događaj se ne očekuje"
 
 #: admin-tests.php:220
 msgid "excluded — click to restore"
-msgstr ""
+msgstr "isključeno — kliknite za vraćanje"
 
 #: admin-tests.php:227
-#, fuzzy
-#| msgid "Permissions"
 msgid "Per-year assertions"
-msgstr "Dozvole"
+msgstr "Godišnja tvrđenja"
 
 #: admin-tests.php:251
 msgid "Assertion comment"
-msgstr ""
+msgstr "Komentar na tvrdnju"
 
 #: admin-tests.php:265
 msgid "Save comment"
-msgstr ""
+msgstr "Spremi komentar"
 
 #: admin-tests.php:278
-#, fuzzy
-#| msgid "Delete"
 msgid "Delete Test"
-msgstr "Izbriši"
+msgstr "Izbriši test"
 
 #: admin-tests.php:309
-#, fuzzy
-#| msgid "No requests found."
 msgid "No tests found."
-msgstr "Nema pronađenih zahtjeva."
+msgstr "Nema pronađenih testova."
 
 #: admin-tests.php:310
-#, fuzzy
-#| msgid "Failed to load users. Please try again later."
 msgid "Failed to load tests. Please try again later."
-msgstr "Nije uspjelo učitavanje korisnika. Molimo pokušajte ponovo kasnije."
+msgstr "Učitavanje testova nije uspjelo. Molimo pokušajte kasnije."
 
 #: admin-tests.php:311
-#, fuzzy
-#| msgid "Application created successfully."
 msgid "Test created successfully."
-msgstr "Aplikacija uspješno stvorena."
+msgstr "Test je uspješno stvoren."
 
 #: admin-tests.php:312
-#, fuzzy
-#| msgid "Application updated successfully."
 msgid "Test updated successfully."
-msgstr "Aplikacija uspješno ažurirana."
+msgstr "Test ažuriran uspješno."
 
 #: admin-tests.php:313
-#, fuzzy
-#| msgid "Application deleted successfully."
 msgid "Test deleted successfully."
-msgstr "Aplikacija uspješno obrisana."
+msgstr "Test uspješno obrisan."
 
 #: admin-tests.php:314
-#, fuzzy
-#| msgid "Loading..."
 msgid "Saving..."
-msgstr "Učitavam..."
+msgstr "Spremanje..."
 
 #: admin-tests.php:315
-#, fuzzy
-#| msgid "Refreshing..."
 msgid "Deleting..."
-msgstr "Osvježavanje..."
+msgstr "Brisanje..."
 
 #: admin-tests.php:318
-#, fuzzy, php-format
-#| msgid "Are you sure you want to delete this item?"
+#, php-format
 msgid "Are you sure you want to delete the test \"%s\"?"
-msgstr "Jesi li siguran da želiš izbrisati ovu stavku?"
+msgstr "Jeste li sigurni da želite obrisati test \"%s\"?"
 
 #: admin-tests.php:322
 msgid "Please fill in all required fields."
-msgstr ""
+msgstr "Molimo ispunite sva obavezna polja."
 
 #: admin-tests.php:324
 msgid "A test with that name already exists."
-msgstr ""
+msgstr "Test s tim imenom već postoji."
 
 #: admin-tests.php:325
 msgid "set pivot year"
-msgstr ""
+msgstr "postavi prijelomnu godinu"
 
 #: admin-tests.php:326
-#, fuzzy
-#| msgid "Toggle sidebar"
 msgid "toggle assertion"
-msgstr "Prebaci bočnu traku"
+msgstr "prebaci provjeru"
 
 #: admin-tests.php:327
-#, fuzzy
-#| msgid "Remove"
 msgid "remove"
-msgstr "Ukloni"
+msgstr "ukloni"
 
 #: admin-tests.php:328
 #, php-format
 msgid "In the year %1$s, %2$s falls on a Sunday"
-msgstr ""
+msgstr "Godine %1$s, %2$s pada na nedjelju"
 
 #: admin-tests.php:329
 #, php-format
 msgid "%s excluded — click to restore"
-msgstr ""
+msgstr "%s isključeno — kliknite za vraćanje"
 
 #: admin-tests.php:330
 msgid "Test name:"
-msgstr ""
+msgstr "Naziv testa:"
 
 #: admin-tests.php:331
-#, fuzzy
-#| msgid "New liturgical event from existing"
 msgid "Select a valid liturgical event from the list."
-msgstr "Novi liturgijski događaj iz postojećeg"
+msgstr "Odaberite važeći liturgijski događaj s popisa."
 
 #: permission-requests.php:49
 msgid ""
