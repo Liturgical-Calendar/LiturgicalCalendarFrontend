@@ -53,6 +53,10 @@ vi.hoisted(() => {
             sessionExpired:    'Your session has expired. Please log in again.',
             loginLink:         'Log in',
             permissionDenied:  'You do not have permission to perform this action.',
+            eventKeyNew:       'Not in the General Roman Calendar — a new event will be created.',
+            eventKeyCollision: 'Already in the General Roman Calendar as "%s" — choose another key.',
+            eventKeyMissing:   'Not in the General Roman Calendar — this decree will not match any event.',
+            eventKeyMatch:     'Matches "%s" in the General Roman Calendar.',
         },
     };
 });
@@ -66,6 +70,8 @@ import {
     prefillI18nRows,
     prefillReadingsGroups,
     findUrlLangDuplicateErrors,
+    describeEventKeyHint,
+    syncEventKeyHint,
 } from '../admin-decrees.js';
 import { DecreeAction } from '../DecreePayload.js';
 
@@ -746,5 +752,166 @@ describe('collectFormValues — ISO key validation', () => {
         const v = collectFormValues(form);
         // 'German' dropped (not 2 letters); 'DE' lowercased to 'de'; 'it' kept
         expect(v.url_lang_map).toEqual({ de: 'ge2', it: 'it' });
+    });
+});
+
+// ---- event_key catalog hint ------------------------------------------------
+
+/**
+ * Stand-in for the GRC event catalog loaded by loadEventCatalog() from
+ * GET /events. `keys` holds every event_key (including events with no name of
+ * their own); `names` maps only the named ones to their localized name.
+ */
+const CATALOG = {
+    keys:  new Set(['StMotherTeresa', 'StJohnPaulII', 'Advent1', 'NamelessEvent']),
+    names: {
+        StMotherTeresa: 'Saint Teresa of Calcutta',
+        StJohnPaulII:   'Saint John Paul II',
+        Advent1:        'First Sunday of Advent',
+        // NamelessEvent deliberately absent: a catalog entry with no name
+    },
+};
+
+const EMPTY_CATALOG = { keys: new Set(), names: {} };
+
+/**
+ * Minimal markup for the identity row of the decree editor: the event_key
+ * input, the action select and the hint slot beneath the input.
+ *
+ * @returns {HTMLFormElement}
+ */
+function buildEventKeyForm({ eventKey = '', action = DecreeAction.CreateNew, mode = 'create' } = {}) {
+    const form = document.createElement('form');
+    form.dataset.mode = mode;
+    form.innerHTML = `
+        <input type="text" id="decreeEventKey" name="event_key" list="grcEventKeysDatalist">
+        <div class="form-text mt-1" id="decreeEventKeyHint"></div>
+        <select name="action">
+            <option value="createNew"></option>
+            <option value="makeDoctor"></option>
+            <option value="setProperty:name"></option>
+            <option value="setProperty:grade"></option>
+        </select>
+    `;
+    form.querySelector('[name="event_key"]').value = eventKey;
+    form.querySelector('[name="action"]').value = action;
+    return form;
+}
+
+describe('describeEventKeyHint — silence when there is nothing to compare against', () => {
+    it('returns null when the catalog has not loaded (or the fetch failed)', () => {
+        // loadEventCatalog is best-effort: a failed /events fetch leaves the
+        // catalog empty. Reporting "not in the General Roman Calendar" then
+        // would be a fabricated verdict, not an observation.
+        expect(describeEventKeyHint('StMotherTeresa', DecreeAction.MakeDoctor, EMPTY_CATALOG.keys, EMPTY_CATALOG.names)).toBeNull();
+        expect(describeEventKeyHint('Whatever', DecreeAction.CreateNew, EMPTY_CATALOG.keys, EMPTY_CATALOG.names)).toBeNull();
+    });
+
+    it('returns null for an empty or whitespace-only event key', () => {
+        expect(describeEventKeyHint('', DecreeAction.CreateNew, CATALOG.keys, CATALOG.names)).toBeNull();
+        expect(describeEventKeyHint('   ', DecreeAction.MakeDoctor, CATALOG.keys, CATALOG.names)).toBeNull();
+    });
+
+    it('returns null for an action it does not know', () => {
+        expect(describeEventKeyHint('StMotherTeresa', 'someFutureAction', CATALOG.keys, CATALOG.names)).toBeNull();
+    });
+});
+
+describe('describeEventKeyHint — createNew mints a key, so absence is the good case', () => {
+    it('reports a key absent from the catalog as informational', () => {
+        // Issue #493: StJohnHenryNewman is by definition not yet in the GRC.
+        const hint = describeEventKeyHint('StJohnHenryNewman', DecreeAction.CreateNew, CATALOG.keys, CATALOG.names);
+        expect(hint).not.toBeNull();
+        expect(hint.level).toBe('info');
+        expect(hint.text).toBe('Not in the General Roman Calendar — a new event will be created.');
+    });
+
+    it('warns on a key that already exists, naming the event it collides with', () => {
+        const hint = describeEventKeyHint('StMotherTeresa', DecreeAction.CreateNew, CATALOG.keys, CATALOG.names);
+        expect(hint.level).toBe('warn');
+        expect(hint.text).toBe('Already in the General Roman Calendar as "Saint Teresa of Calcutta" — choose another key.');
+    });
+
+    it('trims surrounding whitespace before testing membership', () => {
+        const hint = describeEventKeyHint('  StMotherTeresa  ', DecreeAction.CreateNew, CATALOG.keys, CATALOG.names);
+        expect(hint.level).toBe('warn');
+    });
+});
+
+describe('describeEventKeyHint — targeting actions need an existing key', () => {
+    it.each([
+        DecreeAction.MakeDoctor,
+        DecreeAction.SetPropertyName,
+        DecreeAction.SetPropertyGrade,
+    ])('warns for %s when the key is not in the catalog', (action) => {
+        const hint = describeEventKeyHint('StJohnHenryNewman', action, CATALOG.keys, CATALOG.names);
+        expect(hint.level).toBe('warn');
+        expect(hint.text).toBe('Not in the General Roman Calendar — this decree will not match any event.');
+    });
+
+    it.each([
+        DecreeAction.MakeDoctor,
+        DecreeAction.SetPropertyName,
+        DecreeAction.SetPropertyGrade,
+    ])('confirms the matched event for %s when the key is in the catalog', (action) => {
+        const hint = describeEventKeyHint('StJohnPaulII', action, CATALOG.keys, CATALOG.names);
+        expect(hint.level).toBe('info');
+        expect(hint.text).toBe('Matches "Saint John Paul II" in the General Roman Calendar.');
+    });
+
+    it('falls back to the event key itself when the catalog entry has no name', () => {
+        const hint = describeEventKeyHint('NamelessEvent', DecreeAction.MakeDoctor, CATALOG.keys, CATALOG.names);
+        expect(hint.level).toBe('info');
+        expect(hint.text).toBe('Matches "NamelessEvent" in the General Roman Calendar.');
+    });
+});
+
+describe('syncEventKeyHint — DOM shell', () => {
+    it('renders the hint text into #decreeEventKeyHint in create mode', () => {
+        const form = buildEventKeyForm({ eventKey: 'StJohnHenryNewman', action: DecreeAction.CreateNew });
+        document.body.appendChild(form);
+        syncEventKeyHint(form, CATALOG);
+        const hint = form.querySelector('#decreeEventKeyHint');
+        expect(hint.textContent).toBe('Not in the General Roman Calendar — a new event will be created.');
+        expect(hint.classList.contains('text-danger')).toBe(false);
+        form.remove();
+    });
+
+    it('marks a warning-level hint with text-danger', () => {
+        const form = buildEventKeyForm({ eventKey: 'StMotherTeresa', action: DecreeAction.CreateNew });
+        document.body.appendChild(form);
+        syncEventKeyHint(form, CATALOG);
+        expect(form.querySelector('#decreeEventKeyHint').classList.contains('text-danger')).toBe(true);
+        form.remove();
+    });
+
+    it('clears a stale hint when the key becomes non-reportable', () => {
+        const form = buildEventKeyForm({ eventKey: 'StMotherTeresa', action: DecreeAction.CreateNew });
+        document.body.appendChild(form);
+        syncEventKeyHint(form, CATALOG);
+        expect(form.querySelector('#decreeEventKeyHint').textContent).not.toBe('');
+
+        form.querySelector('[name="event_key"]').value = '';
+        syncEventKeyHint(form, CATALOG);
+        const hint = form.querySelector('#decreeEventKeyHint');
+        expect(hint.textContent).toBe('');
+        expect(hint.classList.contains('text-danger')).toBe(false);
+        form.remove();
+    });
+
+    it('stays silent in edit mode, where event_key is immutable static text', () => {
+        const form = buildEventKeyForm({ eventKey: 'StMotherTeresa', action: DecreeAction.CreateNew, mode: 'edit' });
+        document.body.appendChild(form);
+        syncEventKeyHint(form, CATALOG);
+        expect(form.querySelector('#decreeEventKeyHint').textContent).toBe('');
+        form.remove();
+    });
+
+    it('renders nothing when the catalog is empty', () => {
+        const form = buildEventKeyForm({ eventKey: 'StJohnHenryNewman', action: DecreeAction.MakeDoctor });
+        document.body.appendChild(form);
+        syncEventKeyHint(form, EMPTY_CATALOG);
+        expect(form.querySelector('#decreeEventKeyHint').textContent).toBe('');
+        form.remove();
     });
 });

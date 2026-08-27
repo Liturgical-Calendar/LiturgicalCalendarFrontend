@@ -73,6 +73,61 @@ if (!$isAdmin && !$isCalendarEditor) {
         </a>
     </div>
 
+    <?php // Search + filter bar. Server-rendered hidden: admin-decrees.js reveals it only once
+          // decrees have actually loaded, so it never sits above a spinner, an error or the
+          // no-access empty state. Purely client-side — it narrows the list already fetched. ?>
+    <div class="row g-2 mb-4 d-none" id="decreeFilters">
+        <div class="col-12 col-md-6">
+            <label for="decreeSearch" class="form-label visually-hidden">
+                <?php echo htmlspecialchars(_('Search decrees'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+            </label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input type="search" class="form-control" id="decreeSearch"
+                    autocomplete="off"
+                    placeholder="<?php echo htmlspecialchars(
+                        _('Search by name, event key, protocol or description'),
+                        ENT_QUOTES | ENT_SUBSTITUTE,
+                        'UTF-8'
+                    ); ?>">
+            </div>
+        </div>
+        <div class="col-6 col-md-2">
+            <label for="decreeYearFilter" class="form-label visually-hidden">
+                <?php echo htmlspecialchars(_('Filter by year'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+            </label>
+            <?php // Options are filled by JS from the decree dates actually present. ?>
+            <select class="form-select" id="decreeYearFilter">
+                <option value=""><?php echo htmlspecialchars(_('Any year'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+            </select>
+        </div>
+        <div class="col-6 col-md-3">
+            <label for="decreeActionFilter" class="form-label visually-hidden">
+                <?php echo htmlspecialchars(_('Filter by action'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+            </label>
+            <select class="form-select" id="decreeActionFilter">
+                <option value=""><?php echo htmlspecialchars(_('Any action'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                <option value="createNew"><?php
+                    echo htmlspecialchars(_('Create new event'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                ?></option>
+                <option value="makeDoctor"><?php
+                    echo htmlspecialchars(_('Make Doctor of the Church'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                ?></option>
+                <option value="setProperty:name"><?php
+                    echo htmlspecialchars(_('Set property: name'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                ?></option>
+                <option value="setProperty:grade"><?php
+                    echo htmlspecialchars(_('Set property: grade'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                ?></option>
+            </select>
+        </div>
+        <div class="col-12 col-md-1 d-grid">
+            <button type="button" class="btn btn-outline-secondary" id="btnClearDecreeFilters">
+                <?php echo htmlspecialchars(_('Clear'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+            </button>
+        </div>
+    </div>
+
     <!-- Decrees container -->
     <div id="decreesContainer" class="row g-3"></div>
 
@@ -92,6 +147,12 @@ if (!$isAdmin && !$isCalendarEditor) {
                     <!-- Alert region for validation errors -->
                     <div id="decreeEditorAlerts"></div>
 
+                    <?php // Catalog of General Roman Calendar event keys (value) + localized names (label),
+                          // filled by JS from GET /events. Shared by two fields — the decree's own
+                          // #decreeEventKey and the mobile relative-date anchor #eventStrtotimeEventKey —
+                          // so it lives at modal-body level rather than inside either one's block. ?>
+                    <datalist id="grcEventKeysDatalist"></datalist>
+
                     <form id="decreeEditorForm" novalidate>
 
                         <!-- ── Event key + action (decree_id is derived) ──── -->
@@ -101,9 +162,13 @@ if (!$isAdmin && !$isCalendarEditor) {
                                     <?php echo htmlspecialchars(_('Event key'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                                 </label>
                                 <input type="text" class="form-control" id="decreeEventKey" name="event_key"
-                                    placeholder="StMotherTeresa">
+                                    list="grcEventKeysDatalist" autocomplete="off" placeholder="StMotherTeresa">
                                 <?php // On edit, event_key is immutable: shown as static text, not an editable field ?>
                                 <div class="form-control-plaintext py-0 font-monospace d-none" id="decreeEventKeyStatic"></div>
+                                <?php // Advisory catalog verdict, filled by JS (syncEventKeyHint): whether this key
+                                      // already exists in the General Roman Calendar. Never blocks submission —
+                                      // a createNew decree mints a key that is *supposed* to be absent. ?>
+                                <div class="form-text mt-1" id="decreeEventKeyHint"></div>
                             </div>
                             <div class="col-md-6">
                                 <label for="decreeAction" class="form-label">
@@ -355,8 +420,6 @@ if (!$isAdmin && !$isCalendarEditor) {
                                         'UTF-8'
                                     ); ?>
                                 </div>
-                                <?php // Catalog of GRC event keys (value) + localized names (label), filled by JS from /events ?>
-                                <datalist id="grcEventKeysDatalist"></datalist>
                             </div>
 
                             <!-- Grade + color (event details, createNew only) -->
@@ -574,6 +637,14 @@ if (!$isAdmin && !$isCalendarEditor) {
                 sessionExpired:    <?php echo json_encode(_('Your session has expired. Please log in again.'), JSON_HEX_TAG); ?>,
                 loginLink:         <?php echo json_encode(_('Log in'), JSON_HEX_TAG); ?>,
                 permissionDenied:  <?php echo json_encode(_('You do not have permission to perform this action.'), JSON_HEX_TAG); ?>,
+                eventKeyNew:       <?php echo json_encode(_('Not in the General Roman Calendar — a new event will be created.'), JSON_HEX_TAG); ?>,
+                <?php // %s is the localized name of the existing General Roman Calendar event ?>
+                eventKeyCollision: <?php echo json_encode(_('Already in the General Roman Calendar as "%s" — choose a different event key.'), JSON_HEX_TAG); ?>,
+                eventKeyMissing:   <?php echo json_encode(_('Not in the General Roman Calendar — this decree will not match any event.'), JSON_HEX_TAG); ?>,
+                <?php // %s is the localized name of the matched General Roman Calendar event ?>
+                eventKeyMatch:     <?php echo json_encode(_('Matches "%s" in the General Roman Calendar.'), JSON_HEX_TAG); ?>,
+                <?php // Distinct from noDecrees: an empty list caused by the filters, not by the API ?>
+                noDecreesMatch:    <?php echo json_encode(_('No decrees match the current search and filters.'), JSON_HEX_TAG); ?>,
                 editAriaLabel:     <?php echo json_encode(_('Edit'), JSON_HEX_TAG); ?>,
                 deleteAriaLabel:   <?php echo json_encode(_('Delete'), JSON_HEX_TAG); ?>,
                 errorText:         <?php echo json_encode(_('(error)'), JSON_HEX_TAG); ?>,
