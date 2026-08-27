@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-27 21:21+0000\n"
-"PO-Revision-Date: 2026-08-27 20:44+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2026-08-27 21:30+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hu/>\n"
 "Language: hu\n"
@@ -2220,10 +2220,10 @@ msgid "Edit"
 msgstr "Szerkesztés"
 
 #: includes/admin-decrees-card.php:22
-#, fuzzy
-#| msgid "Decrees of the Dicastery for Divine Worship"
 msgid "Create, edit and delete decrees of the Dicastery for Divine Worship"
-msgstr "A Istentiszteleti Kongregáció határozatai"
+msgstr ""
+"Hozz létre, szerkessz és törölj dekrétumokat az Istentiszteleti "
+"Dikasztériumban"
 
 #: includes/admin-decrees-card.php:26 includes/admin-tests-card.php:23
 #: admin-dashboard.php:80 admin-dashboard.php:98 admin-dashboard.php:116
@@ -2231,94 +2231,70 @@ msgid "Manage"
 msgstr "Kezelés"
 
 #: includes/admin-tests-card.php:19
-#, fuzzy
-#| msgid "Create and manage accuracy tests."
 msgid "Manage liturgical accuracy tests"
-msgstr "Hozz létre és kezelj pontossági teszteket."
+msgstr "Irányítsd a liturgiai pontossági teszteket"
 
 #: admin-decrees.php:55
-#, fuzzy
-#| msgid "Decrees of the Dicastery for Divine Worship"
 msgid "Create, edit and delete decrees of the Dicastery for Divine Worship."
-msgstr "A Istentiszteleti Kongregáció határozatai"
+msgstr ""
+"Hozz létre, szerkessz és törölj dekrétumokat az Istentiszteleti "
+"Dikasztériumban."
 
 #: admin-decrees.php:67 admin-decrees.php:621
-#, fuzzy
-#| msgid "Decrees"
 msgid "New Decree"
-msgstr "Rendeletek"
+msgstr "Új dekrétum"
 
 #: admin-decrees.php:72
-#, fuzzy
-#| msgid "Grant Permission"
 msgid "Manage permissions"
-msgstr "Engedély megadása"
+msgstr "Irányítsd az engedélyeket"
 
 #: admin-decrees.php:82
-#, fuzzy
-#| msgid "Read the Decree"
 msgid "Search decrees"
-msgstr "Olvasd el a rendeletet"
+msgstr "Dekrétumok keresése"
 
 #: admin-decrees.php:89
 msgid "Search by name, event key, protocol or description"
-msgstr ""
+msgstr "Keresés név, eseménykulcs, jegyzőkönyv vagy leírás alapján"
 
 #: admin-decrees.php:97
-#, fuzzy
-#| msgid "Filter by user ID..."
 msgid "Filter by year"
-msgstr "Szűrés felhasználói azonosító alapján..."
+msgstr "Szűrés év szerint"
 
 #: admin-decrees.php:101
 msgid "Any year"
-msgstr ""
+msgstr "Bármely év"
 
 #: admin-decrees.php:106
-#, fuzzy
-#| msgid "Filter by object ID..."
 msgid "Filter by action"
-msgstr "Szűrés objektumazonosító alapján..."
+msgstr "Szűrés cselekmény szerint"
 
 #: admin-decrees.php:109
-#, fuzzy
-#| msgid "Actions"
 msgid "Any action"
-msgstr "Műveletek"
+msgstr "Bármely cselekmény"
 
 #: admin-decrees.php:111 admin-decrees.php:179
-#, fuzzy
-#| msgid "Create new liturgical event"
 msgid "Create new event"
-msgstr "Új liturgikus esemény létrehozása"
+msgstr "Hozz létre új eseményt"
 
 #: admin-decrees.php:114 admin-decrees.php:182
-#, fuzzy
-#| msgid "Designate Doctor of the Church"
 msgid "Make Doctor of the Church"
-msgstr "Egyháztanító kijelölése"
+msgstr "Tedd egyháztanítóvá"
 
 #: admin-decrees.php:117 admin-decrees.php:185
-#, fuzzy
-#| msgid "Set Property"
 msgid "Set property: name"
-msgstr "Tulajdonság beállítása"
+msgstr "Tulajdonság beállítása: név"
 
 #: admin-decrees.php:120 admin-decrees.php:188
-#, fuzzy
-#| msgid "Set Property"
 msgid "Set property: grade"
-msgstr "Tulajdonság beállítása"
+msgstr "Tulajdonság beállítása: fokozat"
 
 #: admin-decrees.php:126
 msgid "Clear"
-msgstr ""
+msgstr "Töröl"
 
 #: admin-decrees.php:140
-#, fuzzy
-#| msgid "Decrees"
 msgid "Decree"
-msgstr "Rendeletek"
+msgstr "Dekrétum"
 
 #: admin-decrees.php:143 admin-decrees.php:584 admin-permissions.php:229
 #: admin-permissions.php:261 admin-permissions.php:283
@@ -2330,36 +2306,28 @@ msgid "Close"
 msgstr "Bezárás"
 
 #: admin-decrees.php:175
-#, fuzzy
-#| msgid "Actions"
 msgid "Action"
-msgstr "Műveletek"
+msgstr "Cselekmény"
 
 #: admin-decrees.php:199
-#, fuzzy
-#| msgid "Decrees"
 msgid "Decree ID"
-msgstr "Rendeletek"
+msgstr "Dekrétumazonosító"
 
 #: admin-decrees.php:203
 msgid "generated automatically from the event key and action"
-msgstr ""
+msgstr "automatikusan generálva az eseménykulcs és a cselekmény alapján"
 
 #: admin-decrees.php:216
-#, fuzzy
-#| msgid "Decree URL"
 msgid "Decree date"
-msgstr "Rendelet URL"
+msgstr "Döntés dátuma"
 
 #: admin-decrees.php:222
 msgid "Protocol"
-msgstr ""
+msgstr "Protokoll"
 
 #: admin-decrees.php:229
-#, fuzzy
-#| msgid "Since"
 msgid "Since year"
-msgstr "Óta"
+msgstr "Évóta"
 
 #: admin-decrees.php:238 admin-tests.php:196 admin-applications.php:240
 #: developer-dashboard.php:98
@@ -2367,20 +2335,16 @@ msgid "Description"
 msgstr "Leírás"
 
 #: admin-decrees.php:247
-#, fuzzy
-#| msgid "Decree URL"
 msgid "Source URL"
-msgstr "Rendelet URL"
+msgstr "Forrás URL"
 
 #: admin-decrees.php:256
 msgid "Source available in multiple languages"
-msgstr ""
+msgstr "Elérhető több nyelven"
 
 #: admin-decrees.php:267
-#, fuzzy
-#| msgid "Language"
 msgid "Language URL codes"
-msgstr "Nyelv"
+msgstr "Nyelvi URL kódok"
 
 #: admin-decrees.php:271
 #, php-format
@@ -2388,200 +2352,155 @@ msgid ""
 "Use %s in the URL above where the language code appears; each row maps a "
 "language to its Vatican URL code."
 msgstr ""
+"Használja a %s kódot a fenti URL-ben, ahol a nyelvi kód megjelenik; minden "
+"sor egy nyelvet és a vatikáni URL kódját társítja."
 
 #: admin-decrees.php:278
 msgid "Add language code"
-msgstr ""
+msgstr "Nyelvi kód hozzáadása"
 
 #: admin-decrees.php:282
-#, fuzzy
-#| msgid "Review"
 msgid "Preview"
-msgstr "Felülvizsgálat"
+msgstr "Előnézet"
 
 #: admin-decrees.php:322
-#, fuzzy
-#| msgid "Event Details"
 msgid "Event details"
 msgstr "Esemény részletei"
 
 #: admin-decrees.php:328
-#, fuzzy
-#| msgid "Date"
 msgid "Date type"
-msgstr "Dátum"
+msgstr "Dátum típusa"
 
 #: admin-decrees.php:335
 msgid "Fixed"
-msgstr ""
+msgstr "Fix"
 
 #: admin-decrees.php:390
-#, fuzzy
-#| msgid "Save data"
 msgid "Relative date"
-msgstr "Adat mentése"
+msgstr "Relatív dátum"
 
 #: admin-decrees.php:406
 msgid "before"
-msgstr ""
+msgstr "előtt"
 
 #: admin-decrees.php:407
 msgid "after"
-msgstr ""
+msgstr "után"
 
 #: admin-decrees.php:418
 msgid ""
 "A day of the week relative to a liturgical event, e.g. \"Monday after "
 "Pentecost\"."
 msgstr ""
+"Egy hét napja a liturgikus eseményhez képest, pl. \"hétfő Pünkösd után\"."
 
 #: admin-decrees.php:432 admin-decrees.php:500
-#, fuzzy
-#| msgid "weekday"
 msgid "0 — Weekday"
-msgstr "hétköznap"
+msgstr "0 — Hétköznap"
 
 #: admin-decrees.php:433 admin-decrees.php:501
-#, fuzzy
-#| msgid "Commemoration"
 msgid "1 — Commemoration"
-msgstr "Megemlékezés"
+msgstr "1 — Megemlékezés"
 
 #: admin-decrees.php:434 admin-decrees.php:502
-#, fuzzy
-#| msgid "Optional memorial"
 msgid "2 — Optional Memorial"
-msgstr "Nem kötelező emléknap"
+msgstr "2 — Választható emléknap"
 
 #: admin-decrees.php:435 admin-decrees.php:503
-#, fuzzy
-#| msgid "Memorial"
 msgid "3 — Memorial"
-msgstr "Emléknap"
+msgstr "3 — Emléknap"
 
 #: admin-decrees.php:436 admin-decrees.php:504
 msgid "4 — Feast"
-msgstr ""
+msgstr "4 — Ünnep"
 
 #: admin-decrees.php:437 admin-decrees.php:505
-#, fuzzy
-#| msgid "Feast of the Lord (5)"
 msgid "5 — Feast of the Lord"
-msgstr "Az Úr ünnepe (5)"
+msgstr "5 — Az Úr ünnepe"
 
 #: admin-decrees.php:438 admin-decrees.php:506
-#, fuzzy
-#| msgid "Other Solemnity"
 msgid "6 — Solemnity"
-msgstr "Egyéb főünnep"
+msgstr "6 — Főünnep"
 
 #: admin-decrees.php:439 admin-decrees.php:507
-#, fuzzy
-#| msgid "Higher Solemnity (7)"
 msgid "7 — Higher Solemnity"
-msgstr "Főünnep (7)"
+msgstr "7 — Nagyobb főünnep"
 
 #: admin-decrees.php:444
-#, fuzzy
-#| msgid "Color"
 msgid "Color(s)"
-msgstr "Szín"
+msgstr "Színe(i)"
 
 #: admin-decrees.php:447
-#, fuzzy
-#| msgid "white"
 msgid "White"
-msgstr "fehér"
+msgstr "Fehér"
 
 #: admin-decrees.php:448
-#, fuzzy
-#| msgid "Read"
 msgid "Red"
-msgstr "Olvasás"
+msgstr "Piros"
 
 #: admin-decrees.php:449
-#, fuzzy
-#| msgid "green"
 msgid "Green"
-msgstr "zöld"
+msgstr "Zöld"
 
 #: admin-decrees.php:450
-#, fuzzy
-#| msgid "purple"
 msgid "Purple"
-msgstr "viola"
+msgstr "Lila"
 
 #: admin-decrees.php:451
 msgid "Rose"
-msgstr ""
+msgstr "Rózsaszín"
 
 #: admin-decrees.php:454
 msgid "Hold Ctrl/Cmd to select multiple"
-msgstr ""
+msgstr "Több kijelölése Ctrl/Cmd gombbal"
 
 #: admin-decrees.php:463 admin-decrees.php:467
-#, fuzzy
-#| msgid "Commemoration (1)"
 msgid "Common(s)"
-msgstr "Megemlékezés (1)"
+msgstr "Általános(ak)"
 
 #: admin-decrees.php:471
-#, fuzzy
-#| msgid "Pastors"
 msgid "e.g. Pastors"
-msgstr "Lelkivezetők"
+msgstr "pl. Lelkipásztorok"
 
 #: admin-decrees.php:482
 msgid "Separate multiple values with a comma"
-msgstr ""
+msgstr "Több érték vesszővel elválasztva"
 
 #: admin-decrees.php:497
-#, fuzzy
-#| msgid "Change grade"
 msgid "New grade"
-msgstr "Fokozat megváltoztatása"
+msgstr "Új fokozat"
 
 #: admin-decrees.php:515
-#, fuzzy
-#| msgid "Translations"
 msgid "Translations (i18n)"
-msgstr "Fordítások"
+msgstr "Fordítások (i18n)"
 
 #: admin-decrees.php:529
 msgid "Name in base locale"
-msgstr ""
+msgstr "Név az alapértelmezett nyelven"
 
 #: admin-decrees.php:534
-#, fuzzy
-#| msgid "This value cannot be empty."
 msgid "Base locale — cannot be removed"
-msgstr "Ez az érték nem lehet üres."
+msgstr "Alapértelmezett nyelv — nem törölhető"
 
 #: admin-decrees.php:541
-#, fuzzy
-#| msgid "Translations"
 msgid "Add translation"
-msgstr "Fordítások"
+msgstr "Új fordítás hozzáadása"
 
 #: admin-decrees.php:548 admin-decrees.php:620
-#, fuzzy
-#| msgid "Lectionary Category"
 msgid "Lectionary readings"
-msgstr "Olvasmánykategória"
+msgstr "Szentírási olvasmányok"
 
 #: admin-decrees.php:557
 msgid "Add readings for locale"
-msgstr ""
+msgstr "Olvasmányok hozzáadása a nyelvhez"
 
 #: admin-decrees.php:568 admin-tests.php:238 developer-dashboard.php:323
 msgid "Save"
 msgstr "Mentés"
 
 #: admin-decrees.php:581
-#, fuzzy
-#| msgid "Read the Decree"
 msgid "Delete Decree"
-msgstr "Olvasd el a rendeletet"
+msgstr "Határozat törlése"
 
 #: admin-decrees.php:595 admin-decrees.php:649 admin-tests.php:292
 #: admin-tests.php:317 developer-dashboard.php:249 developer-dashboard.php:270
@@ -2589,55 +2508,46 @@ msgid "Delete"
 msgstr "Törlés"
 
 #: admin-decrees.php:611
-#, fuzzy
-#| msgid "Loading..."
 msgid "Loading…"
-msgstr "Betöltés..."
+msgstr "Betöltés…"
 
 #: admin-decrees.php:612
 msgid "You do not have permission to view decrees administration."
-msgstr ""
+msgstr "Nincs jogosultságod a határozatok adminisztrációjának megtekintéséhez."
 
 #: admin-decrees.php:613
 msgid "Could not load decrees from the API."
-msgstr ""
+msgstr "Nem sikerült betölteni a határozatokat az API-ból."
 
 #: admin-decrees.php:614
-#, fuzzy
-#| msgid "No requests found."
 msgid "No decrees found."
-msgstr "Nem találhatók kérelmek."
+msgstr "Nem található határozat."
 
 #: admin-decrees.php:615
-#, fuzzy
-#| msgid "Are you sure you want to delete this item?"
 msgid ""
 "Are you sure you want to delete this decree? This action cannot be undone."
-msgstr "Biztosan törölni szeretné ezt az elemet?"
+msgstr ""
+"Biztosan törölni akarod ezt a határozatot? Ez a művelet nem vonható vissza."
 
 #: admin-decrees.php:616
 msgid "Decree created."
-msgstr ""
+msgstr "Határozat létrehozva."
 
 #: admin-decrees.php:617
 msgid "Decree updated."
-msgstr ""
+msgstr "Határozat frissítve."
 
 #: admin-decrees.php:618
 msgid "Decree deleted."
-msgstr ""
+msgstr "Határozat törölve."
 
 #: admin-decrees.php:622
-#, fuzzy
-#| msgid "Add Decree"
 msgid "Edit Decree"
-msgstr "Rendelet hozzáadása"
+msgstr "Határozat szerkesztése"
 
 #: admin-decrees.php:623
-#, fuzzy
-#| msgid "Select calendar"
 msgid "Select locale"
-msgstr "Naptár kiválasztása"
+msgstr "Nyelv kiválasztása"
 
 #: admin-decrees.php:624 permission-requests.php:229
 msgid "Remove"
@@ -2645,31 +2555,31 @@ msgstr "Eltávolítás"
 
 #: admin-decrees.php:625
 msgid "First reading"
-msgstr ""
+msgstr "Első olvasmány"
 
 #: admin-decrees.php:626
 msgid "Responsorial psalm"
-msgstr ""
+msgstr "Válaszos zsoltár"
 
 #: admin-decrees.php:627
 msgid "Second reading (optional)"
-msgstr ""
+msgstr "Második olvasmány (opcionális)"
 
 #: admin-decrees.php:628
 msgid "Gospel acclamation"
-msgstr ""
+msgstr "Alleluja"
 
 #: admin-decrees.php:629
 msgid "Gospel"
-msgstr ""
+msgstr "Evangélium"
 
 #: admin-decrees.php:630
 msgid "No readings defined for this locale yet"
-msgstr ""
+msgstr "Még nincsenek olvasmányok meghatározva ehhez a nyelvhez"
 
 #: admin-decrees.php:631
 msgid "Vatican URL code (e.g. ge, sp, po)"
-msgstr ""
+msgstr "Vatikán URL kód (pl. ge, sp, po)"
 
 #: admin-decrees.php:633
 #, php-format
@@ -2677,43 +2587,37 @@ msgid ""
 "Duplicate language code \"%s\" in the source URL languages — each language "
 "may appear only once"
 msgstr ""
+"Ismétlődő nyelvi kód \"%s\" a forrás URL nyelvek között — minden nyelv csak "
+"egyszer szerepelhet"
 
 #: admin-decrees.php:634
 msgid "Please fix the following errors before saving:"
-msgstr ""
+msgstr "Kérem, javítsa a hibákat a mentés előtt:"
 
 #: admin-decrees.php:635
-#, fuzzy, php-format
-#| msgid "Since"
+#, php-format
 msgid "Since %s"
-msgstr "Óta"
+msgstr "Mióta %s"
 
 #: admin-decrees.php:636
 msgid "Source"
-msgstr ""
+msgstr "Forrás"
 
 #: admin-decrees.php:637
-#, fuzzy
-#| msgid "Your session has expired. Please login again."
 msgid "Your session has expired. Please log in again."
 msgstr "A munkamenet lejárt. Kérjük, jelentkezzen be újra."
 
 #: admin-decrees.php:638
-#, fuzzy
-#| msgid "Logging in..."
 msgid "Log in"
-msgstr "Bejelentkezés..."
+msgstr "Bejelentkezés"
 
 #: admin-decrees.php:639 admin-tests.php:323
 msgid "You do not have permission to perform this action."
-msgstr ""
+msgstr "Nincs jogosultsága arra, hogy ezt a műveletet végrehajtsa."
 
 #: admin-decrees.php:640
-#, fuzzy
-#| msgid "Extend the General Roman Calendar with National or Diocesan data"
 msgid "Not in the General Roman Calendar — a new event will be created."
-msgstr ""
-"Az általános római naptár kiterjesztése nemzeti vagy egyházmegyei adatokkal"
+msgstr "Nincs benne az Általános Római Naptárban — új esemény jön létre."
 
 #: admin-decrees.php:642
 #, php-format
@@ -2721,66 +2625,52 @@ msgid ""
 "Already in the General Roman Calendar as \"%s\" — choose a different event "
 "key."
 msgstr ""
+"Már szerepel az Általános Római Naptárban, mint \"%s\" — válasszon másik "
+"esemény kulcsot."
 
 #: admin-decrees.php:643
-#, fuzzy
-#| msgid "Extend the General Roman Calendar with National or Diocesan data"
 msgid ""
 "Not in the General Roman Calendar — this decree will not match any event."
 msgstr ""
-"Az általános római naptár kiterjesztése nemzeti vagy egyházmegyei adatokkal"
+"Nincs benne az Általános Római Naptárban — ez a dekrétum nem fog egyezni "
+"egyetlen eseménnyel sem."
 
 #: admin-decrees.php:645
-#, fuzzy, php-format
-#| msgid "Define Particular Calendars based on the General Roman Calendar"
+#, php-format
 msgid "Matches \"%s\" in the General Roman Calendar."
-msgstr "Állíts össze partikuláris naptárakat az általános római naptár alapján"
+msgstr "Egyezik a \"%s\" nevű eseménnyel az Általános Római Naptárban."
 
 #: admin-decrees.php:647
 msgid "No decrees match the current search and filters."
-msgstr ""
+msgstr "A jelenlegi keresés és szűrők nem egyeznek egyetlen dekrétummal sem."
 
 #: admin-decrees.php:650
-#, fuzzy
-#| msgid "Error"
 msgid "(error)"
-msgstr "Hiba"
+msgstr "(hiba)"
 
 #: admin-decrees.php:652
-#, fuzzy
-#| msgid "Higher Solemnity (7)"
 msgid "Higher Solemnity"
-msgstr "Főünnep (7)"
+msgstr "Főünnep"
 
 #: admin-decrees.php:653
-#, fuzzy
-#| msgid "Solemnity (6)"
 msgid "Solemnity"
-msgstr "Ünnepélyesség (6)"
+msgstr "Ünnep"
 
 #: admin-decrees.php:654
-#, fuzzy
-#| msgid "Feast of the Lord (5)"
 msgid "Feast of the Lord"
-msgstr "Az Úr ünnepe (5)"
+msgstr "Az Úr ünnepe"
 
 #: admin-decrees.php:655
-#, fuzzy
-#| msgid "Feasts"
 msgid "Feast"
-msgstr "Ünnepek"
+msgstr "Emléknap"
 
 #: admin-decrees.php:657
-#, fuzzy
-#| msgid "Optional memorial"
 msgid "Optional Memorial"
-msgstr "Nem kötelező emléknap"
+msgstr "Fakultatív emléknap"
 
 #: admin-decrees.php:659
-#, fuzzy
-#| msgid "weekday"
 msgid "Weekday"
-msgstr "hétköznap"
+msgstr "Hétköznap"
 
 #: admin-permissions.php:36 admin-permissions.php:48
 msgid "Permissions Management"
@@ -3166,37 +3056,31 @@ msgstr "Pontossági teszt szerkesztője"
 #: admin-tests.php:54
 msgid "Create, edit, and delete liturgical accuracy test definitions."
 msgstr ""
+"Liturgikus pontossági tesztdefiníciók létrehozása, szerkesztése és törlése."
 
 #: admin-tests.php:66
-#, fuzzy
-#| msgid "Filter by user ID..."
 msgid "Filter by name"
-msgstr "Szűrés felhasználói azonosító alapján..."
+msgstr "Név szerinti szűrés"
 
 #: admin-tests.php:72
-#, fuzzy
-#| msgid "Filter by user ID..."
 msgid "Filter by scope"
-msgstr "Szűrés felhasználói azonosító alapján..."
+msgstr "Szűrés hatókör szerint"
 
 #: admin-tests.php:75
 msgid "USA, diocese id, ..."
-msgstr ""
+msgstr "USA, egyházmegye azonosító, ..."
 
 #: admin-tests.php:82
-#, fuzzy
 msgid "New Test"
-msgstr "Új ünnep"
+msgstr "Új teszt"
 
 #: admin-tests.php:92
 msgid "Tests"
-msgstr ""
+msgstr "Teszt"
 
 #: admin-tests.php:101
-#, fuzzy
-#| msgid "Advent"
 msgid "Event"
-msgstr "Advent"
+msgstr "Esemény"
 
 #: admin-tests.php:102 admin-tests.php:132 developer-dashboard.php:166
 #: developer-dashboard.php:273
@@ -3208,177 +3092,143 @@ msgid "Type"
 msgstr "Típus"
 
 #: admin-tests.php:104
-#, fuzzy
-#| msgid "Year"
 msgid "Years"
-msgstr "Év"
+msgstr "Évek"
 
 #: admin-tests.php:152
-#, fuzzy
-#| msgid "New liturgical event"
 msgid "Liturgical event"
-msgstr "Új liturgikus esemény"
+msgstr "Liturgikus esemény"
 
 #: admin-tests.php:162
-#, fuzzy
-#| msgid "Save data"
 msgid "Base date"
-msgstr "Adat mentése"
+msgstr "Alap dátum"
 
 #: admin-tests.php:172
 msgid "Test type"
-msgstr ""
+msgstr "Teszt típusa"
 
 #: admin-tests.php:178
 msgid "Exact date"
-msgstr ""
+msgstr "Pontos dátum"
 
 #: admin-tests.php:183
 msgid "Exact since year"
-msgstr ""
+msgstr "Pontos évtől"
 
 #: admin-tests.php:188
 msgid "Exact until year"
-msgstr ""
+msgstr "Pontos évig"
 
 #: admin-tests.php:204
 msgid "Year range"
-msgstr ""
+msgstr "Évtartomány"
 
 #: admin-tests.php:216
-#, fuzzy
-#| msgid "Request rejected."
 msgid "event expected"
-msgstr "Kérelem elutasítva."
+msgstr "várt esemény"
 
 #: admin-tests.php:217
 msgid "falls on a Sunday"
-msgstr ""
+msgstr "vasárnapra esik"
 
 #: admin-tests.php:218
 msgid "pivot year"
-msgstr ""
+msgstr "forduló év"
 
 #: admin-tests.php:219
 msgid "event not expected"
-msgstr ""
+msgstr "nem várt esemény"
 
 #: admin-tests.php:220
 msgid "excluded — click to restore"
-msgstr ""
+msgstr "kizárt — kattints a visszaállításhoz"
 
 #: admin-tests.php:227
-#, fuzzy
-#| msgid "Permissions"
 msgid "Per-year assertions"
-msgstr "Engedélyek"
+msgstr "Évenkénti állítások"
 
 #: admin-tests.php:251
 msgid "Assertion comment"
-msgstr ""
+msgstr "Állítás megjegyzés"
 
 #: admin-tests.php:265
 msgid "Save comment"
-msgstr ""
+msgstr "Kommentár mentése"
 
 #: admin-tests.php:278
-#, fuzzy
-#| msgid "Delete"
 msgid "Delete Test"
-msgstr "Törlés"
+msgstr "Teszt törlése"
 
 #: admin-tests.php:309
-#, fuzzy
-#| msgid "No requests found."
 msgid "No tests found."
-msgstr "Nem találhatók kérelmek."
+msgstr "Nem találhatók tesztek."
 
 #: admin-tests.php:310
-#, fuzzy
-#| msgid "Failed to load users. Please try again later."
 msgid "Failed to load tests. Please try again later."
-msgstr ""
-"Nem sikerült betölteni a felhasználókat. Kérlek, próbáld meg később újra."
+msgstr "Nem sikerült betölteni a teszteket. Kérlek, próbáld meg később újra."
 
 #: admin-tests.php:311
-#, fuzzy
-#| msgid "Application created successfully."
 msgid "Test created successfully."
-msgstr "Az alkalmazás sikeresen létrehozva."
+msgstr "A teszt sikeresen létrehozva."
 
 #: admin-tests.php:312
-#, fuzzy
-#| msgid "Application updated successfully."
 msgid "Test updated successfully."
-msgstr "Az alkalmazás sikeresen frissítve."
+msgstr "A teszt sikeresen frissítve."
 
 #: admin-tests.php:313
-#, fuzzy
-#| msgid "Application deleted successfully."
 msgid "Test deleted successfully."
-msgstr "Az alkalmazás sikeresen törölve."
+msgstr "A teszt sikeresen törölve."
 
 #: admin-tests.php:314
-#, fuzzy
-#| msgid "Loading..."
 msgid "Saving..."
-msgstr "Betöltés..."
+msgstr "Mentés..."
 
 #: admin-tests.php:315
-#, fuzzy
-#| msgid "Refreshing..."
 msgid "Deleting..."
-msgstr "Frissítés..."
+msgstr "Törlés..."
 
 #: admin-tests.php:318
-#, fuzzy, php-format
-#| msgid "Are you sure you want to delete this item?"
+#, php-format
 msgid "Are you sure you want to delete the test \"%s\"?"
-msgstr "Biztosan törölni szeretné ezt az elemet?"
+msgstr "Biztosan törölni szeretnéd a \"%s\" nevű tesztet?"
 
 #: admin-tests.php:322
 msgid "Please fill in all required fields."
-msgstr ""
+msgstr "Kérjük, töltsd ki az összes kötelező mezőt."
 
 #: admin-tests.php:324
 msgid "A test with that name already exists."
-msgstr ""
+msgstr "Már létezik ilyen nevű teszt."
 
 #: admin-tests.php:325
 msgid "set pivot year"
-msgstr ""
+msgstr "alappont év beállítása"
 
 #: admin-tests.php:326
-#, fuzzy
-#| msgid "Toggle sidebar"
 msgid "toggle assertion"
-msgstr "Oldalsáv átkapcsolása"
+msgstr "állítás átkapcsolása"
 
 #: admin-tests.php:327
-#, fuzzy
-#| msgid "Remove"
 msgid "remove"
-msgstr "Eltávolítás"
+msgstr "eltávolítás"
 
 #: admin-tests.php:328
 #, php-format
 msgid "In the year %1$s, %2$s falls on a Sunday"
-msgstr ""
+msgstr "%1$s évben %2$s vasárnapra esik"
 
 #: admin-tests.php:329
 #, php-format
 msgid "%s excluded — click to restore"
-msgstr ""
+msgstr "%s kizárva — kattints a visszaállításhoz"
 
 #: admin-tests.php:330
 msgid "Test name:"
-msgstr ""
+msgstr "Teszt neve:"
 
 #: admin-tests.php:331
-#, fuzzy
-#| msgid "New liturgical event from existing"
 msgid "Select a valid liturgical event from the list."
-msgstr "Új liturgikus esemény meglévő alapján"
+msgstr "Válassz ki egy érvényes liturgikus eseményt a listából."
 
 #: permission-requests.php:49
 msgid ""
