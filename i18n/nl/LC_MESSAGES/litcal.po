@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-16 23:44+0000\n"
-"PO-Revision-Date: 2026-06-26 20:52+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2026-08-27 19:05+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
 "Language: nl\n"
@@ -286,17 +286,13 @@ msgstr "Selecteer kalender"
 
 #. translators: label for dropdown to select the liturgical rite (Roman or Ambrosian)
 #: usage.php:25
-#, fuzzy
-#| msgid "Select a Role"
 msgid "Select rite"
-msgstr "Selecteer een rol"
+msgstr "Selecteer rite"
 
 #. translators: notification message shown when the calendar list fails to load
 #: usage.php:27
-#, fuzzy
-#| msgid "Failed to load users. Please try again later."
 msgid "Could not load the calendar list. Please try again later."
-msgstr "Laden van gebruikers mislukt. Probeer het later opnieuw."
+msgstr "Kon de kalenderlijst niet laden. Probeer het later opnieuw."
 
 #. translators: part of page title - section showing usage examples
 #: usage.php:37
@@ -861,10 +857,9 @@ msgstr "Projectwebsite"
 
 #. translators: error shown when the liturgy page's calendar controls fail to load
 #: liturgyOfAnyDay.php:17
-#, fuzzy
-#| msgid "Failed to load users. Please try again later."
 msgid "Could not load the liturgy controls. Please try again later."
-msgstr "Laden van gebruikers mislukt. Probeer het later opnieuw."
+msgstr ""
+"Kon de liturgiebedieningselementen niet laden. Probeer het later opnieuw."
 
 #. translators: context = liturgical color
 #. translators: liturgical color - green
@@ -1397,10 +1392,8 @@ msgid "Diocesan"
 msgstr "Diocesaan"
 
 #: layout/header.php:299
-#, fuzzy
-#| msgid "Test Definition"
 msgid "Test Definitions"
-msgstr "Testdefinitie"
+msgstr "Testdefinities"
 
 #: layout/header.php:306
 msgid "Back to Website"
@@ -2275,10 +2268,8 @@ msgstr "Alle"
 
 #: admin-permissions.php:78 admin-permissions.php:305 admin-permissions.php:406
 #: admin-permissions.php:437 permission-requests.php:243
-#, fuzzy
-#| msgid "General Roman Calendar"
 msgid "General Roman Calendar Tests"
-msgstr "Algemene Romeinse kalender"
+msgstr "Algemene Romeinse kalendertests"
 
 #: admin-permissions.php:80 admin-permissions.php:307 admin-permissions.php:388
 #: permission-requests.php:238
@@ -2287,17 +2278,13 @@ msgstr "Diocesane kalender"
 
 #: admin-permissions.php:82 admin-permissions.php:309 admin-permissions.php:404
 #: admin-permissions.php:435 permission-requests.php:241
-#, fuzzy
-#| msgid "National Calendar"
 msgid "National Calendar Tests"
-msgstr "Nationale kalender"
+msgstr "Nationale kalendertests"
 
 #: admin-permissions.php:83 admin-permissions.php:310 admin-permissions.php:405
 #: admin-permissions.php:436 permission-requests.php:242
-#, fuzzy
-#| msgid "Diocesan Calendar"
 msgid "Diocesan Calendar Tests"
-msgstr "Diocesane kalender"
+msgstr "Diocesane kalendertests"
 
 #: admin-permissions.php:87 admin-permissions.php:382 admin-permissions.php:429
 msgid "Object ID"
@@ -2440,30 +2427,22 @@ msgstr "Selecteer relatie..."
 
 #: admin-permissions.php:301 admin-permissions.php:399
 #: admin-permissions.php:430 permission-requests.php:230
-#, fuzzy
-#| msgid "Calendar"
 msgid "Calendar scope"
-msgstr "Kalender"
+msgstr "Kalenderscope"
 
 #: admin-permissions.php:303 permission-requests.php:232
-#, fuzzy
-#| msgid "Select calendar"
 msgid "Select calendar scope..."
-msgstr "Selecteer kalender"
+msgstr "Selecteer kalenderscope..."
 
 #: admin-permissions.php:314 admin-permissions.php:400
 #: admin-permissions.php:431 permission-requests.php:231
-#, fuzzy
-#| msgid "Calendar"
 msgid "Calendar ID"
-msgstr "Kalender"
+msgstr "Kalender-ID"
 
 #: admin-permissions.php:317 admin-permissions.php:401
 #: admin-permissions.php:432 permission-requests.php:233
-#, fuzzy
-#| msgid "Select calendar"
 msgid "Select calendar ID..."
-msgstr "Selecteer kalender"
+msgstr "Selecteer kalender-ID..."
 
 #: admin-permissions.php:341 admin-permissions.php:354
 msgid "Revoke Permission"
@@ -2506,16 +2485,12 @@ msgid "Are you sure you want to revoke this permission?"
 msgstr "Weet je zeker dat je deze toestemming wilt intrekken?"
 
 #: admin-permissions.php:379
-#, fuzzy
-#| msgid "Object ID"
 msgid "Subject"
-msgstr "Object-ID"
+msgstr "Onderwerp"
 
 #: admin-permissions.php:380
-#, fuzzy
-#| msgid "Unknown error"
 msgid "Unknown user"
-msgstr "Onbekende fout"
+msgstr "Onbekende gebruiker"
 
 #: admin-permissions.php:384 admin-permissions.php:442
 #: admin-applications.php:244 temporale.php:138
@@ -2553,7 +2528,7 @@ msgstr "Selecteer object-ID..."
 #: admin-permissions.php:403 admin-permissions.php:434
 #: permission-requests.php:235
 msgid "Could not load calendars — try reloading the page"
-msgstr ""
+msgstr "Kon kalenders niet laden — probeer de pagina opnieuw te laden"
 
 #: admin-permissions.php:412
 msgid "All fields are required."
@@ -2754,15 +2729,11 @@ msgid "Please select a role."
 msgstr "Selecteer een rol."
 
 #: permission-requests.php:214
-#, fuzzy
-#| msgid ""
-#| "Each permission row must have object type, object ID, and relation filled "
-#| "in."
 msgid ""
 "Each permission row must have a calendar scope, calendar ID, and relation "
 "filled in."
 msgstr ""
-"Elke machtigingsrij moet objecttype, object-ID en relatie ingevuld hebben."
+"Elke toestemmingsrij moet een kalenderscope, kalender-ID en relatie invullen."
 
 #: permission-requests.php:215
 #, php-format
@@ -3334,15 +3305,15 @@ msgstr "Advent"
 
 #: temporale.php:67
 msgid "Christmas"
-msgstr ""
+msgstr "Kerstmis"
 
 #: temporale.php:68
 msgid "Lent"
-msgstr ""
+msgstr "Vasten"
 
 #: temporale.php:69
 msgid "Easter Triduum"
-msgstr ""
+msgstr "Paastriduüm"
 
 #: temporale.php:70
 msgid "Easter"
@@ -3350,83 +3321,67 @@ msgstr "Pasen"
 
 #: temporale.php:71
 msgid "Ordinary Time"
-msgstr ""
+msgstr "Gewone Tijd"
 
 #: temporale.php:77
-#, fuzzy
-#| msgid "Grade"
 msgid "All Grades"
-msgstr "Graad"
+msgstr "Alle Grade"
 
 #: temporale.php:78
-#, fuzzy
-#| msgid "Other Solemnity"
 msgid "Higher Solemnity (7)"
-msgstr "Andere Hoogfeest"
+msgstr "Hogere Hoogfeest (7)"
 
 #: temporale.php:79
-#, fuzzy
-#| msgid "Solemnities"
 msgid "Solemnity (6)"
-msgstr "Hoogfeesten"
+msgstr "Hoogfeest (6)"
 
 #: temporale.php:80
 msgid "Feast of the Lord (5)"
-msgstr ""
+msgstr "Feest van de Heer (5)"
 
 #: temporale.php:81
-#, fuzzy
-#| msgid "Feasts"
 msgid "Feast (4)"
-msgstr "Feesten"
+msgstr "Feest (4)"
 
 #: temporale.php:82
-#, fuzzy
-#| msgid "Memorial"
 msgid "Memorial (3)"
-msgstr "Gedachtenis"
+msgstr "Gedachtenis (3)"
 
 #: temporale.php:83
-#, fuzzy
-#| msgid "Optional memorial"
 msgid "Optional Memorial (2)"
-msgstr "Vrije gedachtenis"
+msgstr "Vrije Gedachtenis (2)"
 
 #: temporale.php:84
-#, fuzzy
-#| msgid "Commemoration"
 msgid "Commemoration (1)"
-msgstr "Vrije gedachtenis"
+msgstr "Herdenking (1)"
 
 #: temporale.php:85
-#, fuzzy
-#| msgid "weekday"
 msgid "Weekday (0)"
-msgstr "weekdag"
+msgstr "Weekdag (0)"
 
 #: temporale.php:89
 msgid "Lectionary Category"
-msgstr ""
+msgstr "Lectionarium Categorie"
 
 #: temporale.php:91
 msgid "All Categories"
-msgstr ""
+msgstr "Alle Categorieën"
 
 #: temporale.php:92
 msgid "Dominicale et Festivum"
-msgstr ""
+msgstr "Dominicale et Festivum"
 
 #: temporale.php:93
 msgid "Feriale per Annum"
-msgstr ""
+msgstr "Feriale per Annum"
 
 #: temporale.php:94
 msgid "Feriale Tempus Adventus"
-msgstr ""
+msgstr "Feriale Tempus Adventus"
 
 #: temporale.php:95
 msgid "Feriale Tempus Nativitatis"
-msgstr ""
+msgstr "Feriale Tempus Nativitatis"
 
 #: temporale.php:96
 msgid "Feriale Tempus Quadragesimae"
