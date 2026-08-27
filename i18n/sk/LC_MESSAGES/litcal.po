@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-27 21:21+0000\n"
-"PO-Revision-Date: 2026-08-27 21:30+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2026-08-27 22:33+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
 "Language: sk\n"
@@ -1354,7 +1354,7 @@ msgstr "Sviatky svätých"
 #: layout/header.php:269 includes/admin-blocks.php:45
 #: includes/admin-decrees-card.php:20 admin-decrees.php:38 admin-decrees.php:50
 msgid "Decrees"
-msgstr "Nariadenia"
+msgstr "Dekréty"
 
 #: layout/header.php:273
 msgid "Particular Calendars"
@@ -2263,7 +2263,7 @@ msgstr "Vytvoriť novú udalosť"
 
 #: admin-decrees.php:114 admin-decrees.php:182
 msgid "Make Doctor of the Church"
-msgstr "Urobiť doktora Cirkvi"
+msgstr "Určiť Učiteľa Cirkvi"
 
 #: admin-decrees.php:117 admin-decrees.php:185
 msgid "Set property: name"
@@ -2394,15 +2394,15 @@ msgstr "2 — Ľubovoľná spomienka"
 
 #: admin-decrees.php:435 admin-decrees.php:503
 msgid "3 — Memorial"
-msgstr "3 — Pamätný deň"
+msgstr "3 — Pamiatka"
 
 #: admin-decrees.php:436 admin-decrees.php:504
 msgid "4 — Feast"
-msgstr "4 — Slávnosť"
+msgstr "4 — Sviatok"
 
 #: admin-decrees.php:437 admin-decrees.php:505
 msgid "5 — Feast of the Lord"
-msgstr "5 — Slávnosť Pána"
+msgstr "5 — Sviatok Pána"
 
 #: admin-decrees.php:438 admin-decrees.php:506
 msgid "6 — Solemnity"
@@ -2442,7 +2442,7 @@ msgstr "Podrž Ctrl/Cmd pre výber viacerých"
 
 #: admin-decrees.php:463 admin-decrees.php:467
 msgid "Common(s)"
-msgstr "Spoločný (-é)"
+msgstr "Bežné"
 
 #: admin-decrees.php:471
 msgid "e.g. Pastors"
@@ -2645,7 +2645,7 @@ msgstr "Slávnosť"
 
 #: admin-decrees.php:654
 msgid "Feast of the Lord"
-msgstr "Slávnosť Pána"
+msgstr "Sviatok Pána"
 
 #: admin-decrees.php:655
 msgid "Feast"
@@ -2937,7 +2937,7 @@ msgstr "Sanctorále — Editio Typica 2008"
 
 #: admin-permissions.php:402 permission-requests.php:253
 msgid "Decrees of the Dicastery for Divine Worship"
-msgstr "Dekréty Dikastéria pre bohoslužbu"
+msgstr "Dekréty Dikastéria pre Boží kult"
 
 #: admin-permissions.php:403
 msgid "Enter object ID..."
@@ -3064,7 +3064,7 @@ msgstr "Testy"
 
 #: admin-tests.php:101
 msgid "Event"
-msgstr "Udalość"
+msgstr "Udalosť"
 
 #: admin-tests.php:102 admin-tests.php:132 developer-dashboard.php:166
 #: developer-dashboard.php:273
