@@ -103,14 +103,23 @@ if (!$isAdmin && !$isCalendarEditor) {
         </div>
         <div class="col-6 col-md-3">
             <label for="decreeActionFilter" class="form-label visually-hidden">
-                <?php echo htmlspecialchars(_('Filter by action'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                <?php
+                    /* translators: "action" here is the decree's action type (create new event / make Doctor of the Church / set
+                       property), not a deed or legal action */
+                    echo htmlspecialchars(_('Filter by action'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                ?>
             </label>
             <select class="form-select" id="decreeActionFilter">
-                <option value=""><?php echo htmlspecialchars(_('Any action'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                                <option value=""><?php
+                    /* translators: the unfiltered choice in the decree action filter; see the note on "Filter by action" */
+                                echo htmlspecialchars(_('Any action'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                ?></option>
                 <option value="createNew"><?php
                     echo htmlspecialchars(_('Create new event'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                 ?></option>
                 <option value="makeDoctor"><?php
+                    /* translators: declares an existing saint a Doctor of the Church - the liturgical title (Latin "Doctor Ecclesiae"),
+                       never an academic doctorate, and not "manufacture" */
                     echo htmlspecialchars(_('Make Doctor of the Church'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                 ?></option>
                 <option value="setProperty:name"><?php
@@ -213,7 +222,10 @@ if (!$isAdmin && !$isCalendarEditor) {
                         <div class="row g-3 mb-3">
                             <div class="col-md-4">
                                 <label for="decreeDate" class="form-label">
-                                    <?php echo htmlspecialchars(_('Decree date'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                    <?php
+                                        /* translators: the date the decree was signed; label for a date field */
+                                        echo htmlspecialchars(_('Decree date'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                    ?>
                                 </label>
                                 <input type="date" class="form-control" id="decreeDate" name="decree_date">
                             </div>
@@ -226,7 +238,10 @@ if (!$isAdmin && !$isCalendarEditor) {
                             </div>
                             <div class="col-md-4">
                                 <label for="decreeSinceYear" class="form-label">
-                                    <?php echo htmlspecialchars(_('Since year'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                    <?php
+                                        /* translators: the year from which the decree takes effect; label for a numeric year field */
+                                        echo htmlspecialchars(_('Since year'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                    ?>
                                 </label>
                                 <input type="number" class="form-control" id="decreeSinceYear" name="since_year"
                                     min="1970" max="9999">
@@ -244,7 +259,10 @@ if (!$isAdmin && !$isCalendarEditor) {
                         <!-- ── Source URL (below description) ─────────────── -->
                         <div class="mb-3">
                             <label for="decreeUrl" class="form-label">
-                                <?php echo htmlspecialchars(_('Source URL'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                <?php
+                                    /* translators: web address of the published decree; label for a URL field */
+                                    echo htmlspecialchars(_('Source URL'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                ?>
                             </label>
                             <input type="url" class="form-control" id="decreeUrl" name="url"
                                 placeholder="https://www.vatican.va/…">
@@ -460,7 +478,11 @@ if (!$isAdmin && !$isCalendarEditor) {
                         <!-- ── common block (createNew + makeDoctor) ─────── -->
                         <fieldset class="border rounded p-3 mb-3 action-block needs-common d-none">
                             <legend class="float-none w-auto px-2 fs-6 fw-semibold">
-                                <?php echo htmlspecialchars(_('Common(s)'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                                <?php
+                                    /* translators: the liturgical Common (Commune sanctorum) a celebration is taken from - e.g. Pastors,
+                                       Martyrs, Doctors. NOT "common" meaning ordinary or generic */
+                                    echo htmlspecialchars(_('Common(s)'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                ?>
                             </legend>
                             <div class="col-md-6">
                                 <label for="eventCommon" class="form-label">
@@ -649,14 +671,54 @@ if (!$isAdmin && !$isCalendarEditor) {
                 deleteAriaLabel:   <?php echo json_encode(_('Delete'), JSON_HEX_TAG); ?>,
                 errorText:         <?php echo json_encode(_('(error)'), JSON_HEX_TAG); ?>,
                 gradeLabels: {
-                    7: <?php echo json_encode(_('Higher Solemnity'), JSON_HEX_TAG); ?>,
-                    6: <?php echo json_encode(_('Solemnity'), JSON_HEX_TAG); ?>,
-                    5: <?php echo json_encode(_('Feast of the Lord'), JSON_HEX_TAG); ?>,
-                    4: <?php echo json_encode(_('Feast'), JSON_HEX_TAG); ?>,
-                    3: <?php echo json_encode(_('Memorial'), JSON_HEX_TAG); ?>,
-                    2: <?php echo json_encode(_('Optional Memorial'), JSON_HEX_TAG); ?>,
-                    1: <?php echo json_encode(_('Commemoration'), JSON_HEX_TAG); ?>,
-                    0: <?php echo json_encode(_('Weekday'), JSON_HEX_TAG); ?>
+                                        7: <?php
+                        /* translators: liturgical grade 7 of 7. These eight labels form a strict precedence ladder; each must be rendered
+                           distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
+                           by one rank before */
+                                        echo json_encode(_('Higher Solemnity'), JSON_HEX_TAG);
+                    ?>,
+                                        6: <?php
+                        /* translators: liturgical grade 6 of 7. These eight labels form a strict precedence ladder; each must be rendered
+                           distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
+                           by one rank before */
+                                        echo json_encode(_('Solemnity'), JSON_HEX_TAG);
+                    ?>,
+                                        5: <?php
+                        /* translators: liturgical grade 5 of 7. These eight labels form a strict precedence ladder; each must be rendered
+                           distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
+                           by one rank before */
+                                        echo json_encode(_('Feast of the Lord'), JSON_HEX_TAG);
+                    ?>,
+                                        4: <?php
+                        /* translators: liturgical grade 4 of 7. These eight labels form a strict precedence ladder; each must be rendered
+                           distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
+                           by one rank before */
+                                        echo json_encode(_('Feast'), JSON_HEX_TAG);
+                    ?>,
+                                        3: <?php
+                        /* translators: liturgical grade 3 of 7. These eight labels form a strict precedence ladder; each must be rendered
+                           distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
+                           by one rank before */
+                                        echo json_encode(_('Memorial'), JSON_HEX_TAG);
+                    ?>,
+                                        2: <?php
+                        /* translators: liturgical grade 2 of 7. These eight labels form a strict precedence ladder; each must be rendered
+                           distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
+                           by one rank before */
+                                        echo json_encode(_('Optional Memorial'), JSON_HEX_TAG);
+                    ?>,
+                                        1: <?php
+                        /* translators: liturgical grade 1 of 7. These eight labels form a strict precedence ladder; each must be rendered
+                           distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
+                           by one rank before */
+                                        echo json_encode(_('Commemoration'), JSON_HEX_TAG);
+                    ?>,
+                                        0: <?php
+                        /* translators: liturgical grade 0 of 7. These eight labels form a strict precedence ladder; each must be rendered
+                           distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
+                           by one rank before */
+                                        echo json_encode(_('Weekday'), JSON_HEX_TAG);
+                    ?>
                 }
             }
         };
