@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-16 23:44+0000\n"
-"PO-Revision-Date: 2026-06-26 20:52+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2026-08-27 19:05+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pt/>\n"
 "Language: pt\n"
@@ -284,17 +284,15 @@ msgstr "Selecionar calendário"
 
 #. translators: label for dropdown to select the liturgical rite (Roman or Ambrosian)
 #: usage.php:25
-#, fuzzy
-#| msgid "Select a Role"
 msgid "Select rite"
-msgstr "Selecionar um Papel"
+msgstr "Selecione o rito"
 
 #. translators: notification message shown when the calendar list fails to load
 #: usage.php:27
-#, fuzzy
-#| msgid "Failed to load users. Please try again later."
 msgid "Could not load the calendar list. Please try again later."
-msgstr "Falha ao carregar usuários. Por favor, tente novamente mais tarde."
+msgstr ""
+"Não foi possível carregar a lista de calendários. Por favor, tente novamente "
+"mais tarde."
 
 #. translators: part of page title - section showing usage examples
 #: usage.php:37
@@ -855,10 +853,10 @@ msgstr "Site do projeto"
 
 #. translators: error shown when the liturgy page's calendar controls fail to load
 #: liturgyOfAnyDay.php:17
-#, fuzzy
-#| msgid "Failed to load users. Please try again later."
 msgid "Could not load the liturgy controls. Please try again later."
-msgstr "Falha ao carregar usuários. Por favor, tente novamente mais tarde."
+msgstr ""
+"Não foi possível carregar os controles de liturgia. Por favor, tente "
+"novamente mais tarde."
 
 #. translators: context = liturgical color
 #. translators: liturgical color - green
@@ -1394,10 +1392,8 @@ msgid "Diocesan"
 msgstr "Diocesano"
 
 #: layout/header.php:299
-#, fuzzy
-#| msgid "Test Definition"
 msgid "Test Definitions"
-msgstr "Definição de Teste"
+msgstr "Definições de Teste"
 
 #: layout/header.php:306
 msgid "Back to Website"
@@ -2265,10 +2261,8 @@ msgstr "Todos"
 
 #: admin-permissions.php:78 admin-permissions.php:305 admin-permissions.php:406
 #: admin-permissions.php:437 permission-requests.php:243
-#, fuzzy
-#| msgid "General Roman Calendar"
 msgid "General Roman Calendar Tests"
-msgstr "Calendário Romano Geral"
+msgstr "Testes do Calendário Romano Geral"
 
 #: admin-permissions.php:80 admin-permissions.php:307 admin-permissions.php:388
 #: permission-requests.php:238
@@ -2277,17 +2271,13 @@ msgstr "Calendário Diocesano"
 
 #: admin-permissions.php:82 admin-permissions.php:309 admin-permissions.php:404
 #: admin-permissions.php:435 permission-requests.php:241
-#, fuzzy
-#| msgid "National Calendar"
 msgid "National Calendar Tests"
-msgstr "Calendário Nacional"
+msgstr "Testes do Calendário Nacional"
 
 #: admin-permissions.php:83 admin-permissions.php:310 admin-permissions.php:405
 #: admin-permissions.php:436 permission-requests.php:242
-#, fuzzy
-#| msgid "Diocesan Calendar"
 msgid "Diocesan Calendar Tests"
-msgstr "Calendário Diocesano"
+msgstr "Testes do Calendário Diocesano"
 
 #: admin-permissions.php:87 admin-permissions.php:382 admin-permissions.php:429
 msgid "Object ID"
@@ -2430,30 +2420,22 @@ msgstr "Selecionar relação..."
 
 #: admin-permissions.php:301 admin-permissions.php:399
 #: admin-permissions.php:430 permission-requests.php:230
-#, fuzzy
-#| msgid "Calendar"
 msgid "Calendar scope"
-msgstr "Calendário"
+msgstr "Escopo do calendário"
 
 #: admin-permissions.php:303 permission-requests.php:232
-#, fuzzy
-#| msgid "Select calendar"
 msgid "Select calendar scope..."
-msgstr "Selecionar calendário"
+msgstr "Selecione o escopo do calendário..."
 
 #: admin-permissions.php:314 admin-permissions.php:400
 #: admin-permissions.php:431 permission-requests.php:231
-#, fuzzy
-#| msgid "Calendar"
 msgid "Calendar ID"
-msgstr "Calendário"
+msgstr "ID do calendário"
 
 #: admin-permissions.php:317 admin-permissions.php:401
 #: admin-permissions.php:432 permission-requests.php:233
-#, fuzzy
-#| msgid "Select calendar"
 msgid "Select calendar ID..."
-msgstr "Selecionar calendário"
+msgstr "Selecione o ID do calendário..."
 
 #: admin-permissions.php:341 admin-permissions.php:354
 msgid "Revoke Permission"
@@ -2496,16 +2478,12 @@ msgid "Are you sure you want to revoke this permission?"
 msgstr "Tem certeza de que deseja revogar esta permissão?"
 
 #: admin-permissions.php:379
-#, fuzzy
-#| msgid "Object ID"
 msgid "Subject"
-msgstr "ID do Objeto"
+msgstr "Assunto"
 
 #: admin-permissions.php:380
-#, fuzzy
-#| msgid "Unknown error"
 msgid "Unknown user"
-msgstr "Erro desconhecido"
+msgstr "Usuário desconhecido"
 
 #: admin-permissions.php:384 admin-permissions.php:442
 #: admin-applications.php:244 temporale.php:138
@@ -2543,7 +2521,7 @@ msgstr "Selecionar ID de objeto..."
 #: admin-permissions.php:403 admin-permissions.php:434
 #: permission-requests.php:235
 msgid "Could not load calendars — try reloading the page"
-msgstr ""
+msgstr "Não foi possível carregar os calendários — tente recarregar a página"
 
 #: admin-permissions.php:412
 msgid "All fields are required."
@@ -2746,16 +2724,12 @@ msgid "Please select a role."
 msgstr "Por favor, selecione um papel."
 
 #: permission-requests.php:214
-#, fuzzy
-#| msgid ""
-#| "Each permission row must have object type, object ID, and relation filled "
-#| "in."
 msgid ""
 "Each permission row must have a calendar scope, calendar ID, and relation "
 "filled in."
 msgstr ""
-"Cada linha de permissão deve ter tipo de objeto, ID de objeto e relação "
-"preenchidos."
+"Cada linha de permissão deve ter um escopo de calendário, ID de calendário e "
+"relação preenchidos."
 
 #: permission-requests.php:215
 #, php-format
