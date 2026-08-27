@@ -983,6 +983,145 @@ function canonicalLocale(locale) {
     return locale.toLowerCase().replace(/-/g, '_');
 }
 
+// ---- list ordering, search and filtering -----------------------------------
+
+/**
+ * Milliseconds for a decree's date, or NaN when it has none / an unparseable
+ * one. Isolated so both the sort and the year filter agree on what counts as a
+ * usable date.
+ *
+ * @param {object} decree
+ * @returns {number}
+ */
+function decreeTime(decree) {
+    const raw = decree && decree.decree_date;
+    if (typeof raw !== 'string' || raw === '') return NaN;
+    return Date.parse(raw);
+}
+
+/**
+ * Order decrees by decree_date, most recent first.
+ *
+ * Ties are broken by decree_id so the order is deterministic: three decrees
+ * share 2021-01-25 and two share 2014-05-29, and without a tiebreak their
+ * relative order would be whatever the sort happened to produce. Decrees with
+ * no usable date sort last rather than throwing.
+ *
+ * Returns a new array; the input is left alone.
+ *
+ * Exported for unit testing.
+ *
+ * @param {object[]} decrees
+ * @returns {object[]}
+ */
+export function sortDecrees(decrees) {
+    return [...decrees].sort((a, b) => {
+        const ta = decreeTime(a);
+        const tb = decreeTime(b);
+        const aBad = Number.isNaN(ta);
+        const bBad = Number.isNaN(tb);
+        if (aBad !== bBad) return aBad ? 1 : -1;      // undated sinks
+        if (!aBad && ta !== tb) return tb - ta;       // newest first
+        return String(a.decree_id ?? '').localeCompare(String(b.decree_id ?? ''));
+    });
+}
+
+/**
+ * Fold a string for comparison: lowercased and stripped of diacritics, so that
+ * "Therese" matches "Thérèse" (and the reverse) regardless of which side the
+ * accents are on.
+ *
+ * @param {unknown} value
+ * @returns {string}
+ */
+function foldForSearch(value) {
+    if (typeof value !== 'string' || value === '') return '';
+    return value.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+}
+
+/**
+ * The haystack a search query is matched against: the decree's displayed name,
+ * its event key, its protocol and its description, joined.
+ *
+ * The name is the RESOLVED one — the event's own name, else the GRC catalog
+ * name, else the decree_id — matching renderDecreeCard's title exactly. A grade
+ * change (StMaryMagdalene) carries no name of its own, so against the raw field
+ * it would be unfindable by the very name its card shows.
+ *
+ * Exported for unit testing.
+ *
+ * @param {object} decree
+ * @param {Record<string,string>} [eventNames]  event_key → localized name
+ * @returns {string}  folded, ready to match against a folded query
+ */
+export function decreeSearchText(decree, eventNames = eventCatalogNames) {
+    const event = decree.liturgical_event;
+    const key   = ( event && typeof event.event_key === 'string' ) ? event.event_key : '';
+    const catalogName = ( key && eventNames ) ? eventNames[key] : undefined;
+    const name = ( event && event.name ) ? event.name : ( catalogName || decree.decree_id );
+
+    return [name, key, decree.decree_protocol, decree.description]
+        .map(foldForSearch)
+        .filter((part) => part !== '')
+        .join(' ');
+}
+
+/**
+ * Narrow a list of decrees to those matching a free-text query and the year /
+ * action filters. All three criteria combine with AND; an empty or absent
+ * criterion matches everything. Input order is preserved, so the caller sorts
+ * once and filters as often as it likes.
+ *
+ * Exported for unit testing.
+ *
+ * @param {object[]} decrees
+ * @param {{query?: string, year?: string, action?: string}} criteria
+ * @param {Record<string,string>} [eventNames]  event_key → localized name
+ * @returns {object[]}
+ */
+export function filterDecrees(decrees, criteria, eventNames = eventCatalogNames) {
+    const query  = foldForSearch((criteria.query ?? '').trim());
+    const year   = (criteria.year ?? '').trim();
+    const action = (criteria.action ?? '').trim();
+
+    return decrees.filter((decree) => {
+        if (query !== '' && !decreeSearchText(decree, eventNames).includes(query)) return false;
+
+        if (year !== '') {
+            const time = decreeTime(decree);
+            if (Number.isNaN(time) || String(new Date(time).getUTCFullYear()) !== year) return false;
+        }
+
+        if (action !== '') {
+            const meta = decree.metadata ?? {};
+            // The API stores setProperty decrees split as {action, property};
+            // the filter speaks the editor's compound form (setProperty:grade).
+            if (reverseMapAction(meta.action, meta.property) !== action) return false;
+        }
+
+        return true;
+    });
+}
+
+/**
+ * The distinct decree_date years present in a list, most recent first, as
+ * strings ready to be <option> values. Decrees with no usable date contribute
+ * no year — they are reachable only with the year filter cleared.
+ *
+ * Exported for unit testing.
+ *
+ * @param {object[]} decrees
+ * @returns {string[]}
+ */
+export function decreeYears(decrees) {
+    const years = new Set();
+    decrees.forEach((decree) => {
+        const time = decreeTime(decree);
+        if (!Number.isNaN(time)) years.add(String(new Date(time).getUTCFullYear()));
+    });
+    return [...years].sort().reverse();
+}
+
 /**
  * Fetch and render the full list of decrees.
  *
@@ -1103,8 +1242,122 @@ async function loadDecrees(container, capabilities) {
         if (decree.decree_id) {
             decreeMap.set(decree.decree_id, decree);
         }
-        renderDecreeCard(container, decree, capabilities, allLocales);
     });
+
+    // Sort once, here: the filters re-render from this list on every keystroke
+    // and must not re-sort each time.
+    listState = { decrees: sortDecrees(decrees), capabilities, allLocales };
+    populateYearFilter(listState.decrees);
+    wireDecreeFilters(container);
+
+    const filters = document.getElementById('decreeFilters');
+    if (filters) filters.classList.remove('d-none');
+
+    applyDecreeFilters(container);
+}
+
+/**
+ * Everything applyDecreeFilters needs to re-render without refetching: the
+ * sorted decrees plus the two values renderDecreeCard takes beyond the decree
+ * itself. Replaced wholesale on each load; null before the first one.
+ *
+ * @type {{decrees: object[], capabilities: object, allLocales: string[]}|null}
+ */
+let listState = null;
+
+/**
+ * Read the current search/filter control values.
+ *
+ * @returns {{query: string, year: string, action: string}}
+ */
+function readDecreeFilters() {
+    return {
+        query:  document.getElementById('decreeSearch')?.value ?? '',
+        year:   document.getElementById('decreeYearFilter')?.value ?? '',
+        action: document.getElementById('decreeActionFilter')?.value ?? '',
+    };
+}
+
+/**
+ * Fill the year <select> with the decree years actually present, most recent
+ * first, preserving the current selection when that year still exists (a write
+ * triggers a reload, and the filters are meant to survive it).
+ *
+ * Exported for unit testing.
+ *
+ * @param {object[]} decrees  The sorted decrees
+ */
+export function populateYearFilter(decrees) {
+    const select = document.getElementById('decreeYearFilter');
+    if (!select) return;
+
+    const previous = select.value;
+    // Keep the server-rendered "Any year" option (always first), drop the rest.
+    while (select.options.length > 1) select.remove(1);
+
+    decreeYears(decrees).forEach((year) => {
+        const opt = document.createElement('option');
+        opt.value = year;
+        opt.textContent = year;
+        select.appendChild(opt);
+    });
+
+    // Only restore a year still on offer; otherwise fall back to "Any year"
+    // rather than leaving a selection that matches nothing.
+    select.value = [...select.options].some((o) => o.value === previous) ? previous : '';
+}
+
+/**
+ * Wire the search box, the two selects and the Clear button. Idempotent: the
+ * listeners are assigned rather than added, so a reload does not stack them.
+ *
+ * @param {HTMLElement} container
+ */
+function wireDecreeFilters(container) {
+    const search = document.getElementById('decreeSearch');
+    const year   = document.getElementById('decreeYearFilter');
+    const action = document.getElementById('decreeActionFilter');
+    const clear  = document.getElementById('btnClearDecreeFilters');
+
+    // No debounce: the whole list is already in memory and is a couple of dozen
+    // items, so filtering on every keystroke is cheaper than scheduling a timer.
+    if (search) search.oninput  = () => applyDecreeFilters(container);
+    if (year)   year.onchange   = () => applyDecreeFilters(container);
+    if (action) action.onchange = () => applyDecreeFilters(container);
+    if (clear) {
+        clear.onclick = () => {
+            if (search) search.value = '';
+            if (year)   year.value   = '';
+            if (action) action.value = '';
+            applyDecreeFilters(container);
+        };
+    }
+}
+
+/**
+ * Re-render the list from listState, narrowed by the current controls.
+ *
+ * @param {HTMLElement} container
+ */
+function applyDecreeFilters(container) {
+    if (!listState) return;
+
+    const { decrees, capabilities, allLocales } = listState;
+    const visible = filterDecrees(decrees, readDecreeFilters());
+
+    container.replaceChildren();
+
+    if (visible.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'col-12 text-muted text-center py-4';
+        // Deliberately not config.i18n.noDecrees: an empty list caused by the
+        // filters must not read as "the API returned nothing".
+        empty.textContent = config.i18n.noDecreesMatch;
+        container.appendChild(empty);
+        return;
+    }
+
+    visible.forEach((decree) => renderDecreeCard(container, decree, capabilities, allLocales));
 }
 
 // ---- editor modal ---------------------------------------------------------
@@ -1945,11 +2198,18 @@ function renderFetchError(alertBox, err) {
 /**
  * Reload the decrees list: clear the container and call loadDecrees again.
  *
+ * The search/filter values live in the controls themselves, so they survive a
+ * reload and are re-applied by loadDecrees — saving an edit must not silently
+ * drop you back to the unfiltered list. The bar is re-hidden for the duration
+ * so it never sits above a spinner or a load error.
+ *
  * @param {{canView: boolean, canEdit: boolean, canAdmin: boolean}} capabilities
  */
 async function reloadDecrees(capabilities) {
     const container = document.getElementById('decreesContainer');
     if (!container) return;
+    const filters = document.getElementById('decreeFilters');
+    if (filters) filters.classList.add('d-none');
     container.replaceChildren();
     await loadDecrees(container, capabilities);
 }

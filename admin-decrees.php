@@ -73,6 +73,61 @@ if (!$isAdmin && !$isCalendarEditor) {
         </a>
     </div>
 
+    <?php // Search + filter bar. Server-rendered hidden: admin-decrees.js reveals it only once
+          // decrees have actually loaded, so it never sits above a spinner, an error or the
+          // no-access empty state. Purely client-side — it narrows the list already fetched. ?>
+    <div class="row g-2 mb-4 d-none" id="decreeFilters">
+        <div class="col-12 col-md-6">
+            <label for="decreeSearch" class="form-label visually-hidden">
+                <?php echo htmlspecialchars(_('Search decrees'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+            </label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input type="search" class="form-control" id="decreeSearch"
+                    autocomplete="off"
+                    placeholder="<?php echo htmlspecialchars(
+                        _('Search by name, event key, protocol or description'),
+                        ENT_QUOTES | ENT_SUBSTITUTE,
+                        'UTF-8'
+                    ); ?>">
+            </div>
+        </div>
+        <div class="col-6 col-md-2">
+            <label for="decreeYearFilter" class="form-label visually-hidden">
+                <?php echo htmlspecialchars(_('Filter by year'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+            </label>
+            <?php // Options are filled by JS from the decree dates actually present. ?>
+            <select class="form-select" id="decreeYearFilter">
+                <option value=""><?php echo htmlspecialchars(_('Any year'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+            </select>
+        </div>
+        <div class="col-6 col-md-3">
+            <label for="decreeActionFilter" class="form-label visually-hidden">
+                <?php echo htmlspecialchars(_('Filter by action'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+            </label>
+            <select class="form-select" id="decreeActionFilter">
+                <option value=""><?php echo htmlspecialchars(_('Any action'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                <option value="createNew"><?php
+                    echo htmlspecialchars(_('Create new event'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                ?></option>
+                <option value="makeDoctor"><?php
+                    echo htmlspecialchars(_('Make Doctor of the Church'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                ?></option>
+                <option value="setProperty:name"><?php
+                    echo htmlspecialchars(_('Set property: name'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                ?></option>
+                <option value="setProperty:grade"><?php
+                    echo htmlspecialchars(_('Set property: grade'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                ?></option>
+            </select>
+        </div>
+        <div class="col-12 col-md-1 d-grid">
+            <button type="button" class="btn btn-outline-secondary" id="btnClearDecreeFilters">
+                <?php echo htmlspecialchars(_('Clear'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+            </button>
+        </div>
+    </div>
+
     <!-- Decrees container -->
     <div id="decreesContainer" class="row g-3"></div>
 
@@ -588,6 +643,8 @@ if (!$isAdmin && !$isCalendarEditor) {
                 eventKeyMissing:   <?php echo json_encode(_('Not in the General Roman Calendar — this decree will not match any event.'), JSON_HEX_TAG); ?>,
                 <?php // %s is the localized name of the matched General Roman Calendar event ?>
                 eventKeyMatch:     <?php echo json_encode(_('Matches "%s" in the General Roman Calendar.'), JSON_HEX_TAG); ?>,
+                <?php // Distinct from noDecrees: an empty list caused by the filters, not by the API ?>
+                noDecreesMatch:    <?php echo json_encode(_('No decrees match the current search and filters.'), JSON_HEX_TAG); ?>,
                 editAriaLabel:     <?php echo json_encode(_('Edit'), JSON_HEX_TAG); ?>,
                 deleteAriaLabel:   <?php echo json_encode(_('Delete'), JSON_HEX_TAG); ?>,
                 errorText:         <?php echo json_encode(_('(error)'), JSON_HEX_TAG); ?>,
