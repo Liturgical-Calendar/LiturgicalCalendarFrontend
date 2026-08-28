@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-27 23:58+0000\n"
-"PO-Revision-Date: 2026-08-27 22:33+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2026-08-28 00:16+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
 "Language: la\n"
@@ -2500,22 +2500,24 @@ msgid "Responsorial psalm"
 msgstr "Psalmus responsorius"
 
 #: admin-decrees.php:624
-#, fuzzy
-#| msgid "Lectionary readings"
 msgid "Second reading"
-msgstr "Lectiones lectionarii"
+msgstr "Lectio secunda"
 
 #: admin-decrees.php:627
 msgid ""
 "Feast and below take the ferial readings: first reading, responsorial psalm, "
 "gospel acclamation and gospel."
 msgstr ""
+"Festum et infra lectiones feriales accipiunt: primam lectionem, psalmum "
+"responsorium, acclamationem evangelii et evangelium."
 
 #: admin-decrees.php:631
 msgid ""
 "Feast of the Lord and above take the festive readings, which also require a "
 "second reading."
 msgstr ""
+"Festum Domini et supra lectiones festivas accipiunt, quae etiam lectio "
+"secunda requiritur."
 
 #: admin-decrees.php:634
 msgid "Gospel acclamation"
