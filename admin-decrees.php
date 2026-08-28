@@ -299,6 +299,24 @@ $formControls = new \LiturgicalCalendar\Frontend\FormControls($i18n);
                             <button type="button" class="btn btn-sm btn-outline-secondary mt-2" id="addUrlLangRow">
                                 <i class="fas fa-plus me-1"></i><?php echo htmlspecialchars(_('Add language code'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
                             </button>
+
+                            <?php // Escape hatch for a language whose document does not fit the URL template at all. ?>
+                            <hr class="my-3">
+                            <div class="fw-semibold small">
+                                <?php echo htmlspecialchars(_('Per-language URL overrides'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                            </div>
+                            <div class="form-text mt-0 mb-2">
+                                <?php
+                                // Single literal, not a concatenation: xgettext cannot extract a concatenated msgid.
+                                $urlOverrideHelp = _('For a language whose document does not follow the pattern above — a different path or filename, not just a different code. Give the full URL.');
+                                echo htmlspecialchars($urlOverrideHelp, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                ?>
+                            </div>
+                            <div id="urlOverrideRows"></div>
+                            <button type="button" class="btn btn-sm btn-outline-secondary mt-2" id="addUrlOverrideRow">
+                                <i class="fas fa-plus me-1"></i><?php echo htmlspecialchars(_('Add URL override'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                            </button>
+
                             <div class="mt-3">
                                 <div class="fw-semibold small text-muted">
                                     <?php echo htmlspecialchars(_('Preview'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
@@ -635,6 +653,11 @@ $formControls = new \LiturgicalCalendar\Frontend\FormControls($i18n);
                 gospel:            <?php echo json_encode(_('Gospel'), JSON_HEX_TAG); ?>,
                 noReadings:        <?php echo json_encode(_('No readings defined for this locale yet'), JSON_HEX_TAG); ?>,
                 langCodeVatican:   <?php echo json_encode(_('Vatican URL code (e.g. ge, sp, po)'), JSON_HEX_TAG); ?>,
+                overrideUrl:       <?php echo json_encode(_('Full URL for this language'), JSON_HEX_TAG); ?>,
+                <?php // Marks a preview row that comes from an override rather than the pattern ?>
+                overrideBadge:     <?php echo json_encode(_('override'), JSON_HEX_TAG); ?>,
+                <?php // %s is the duplicated ISO 639-1 language code ?>
+                duplicateOverride: <?php echo json_encode(_('Duplicate language code "%s" in the URL overrides — each language may be overridden only once'), JSON_HEX_TAG); ?>,
                 <?php // %s is the duplicated ISO 639-1 language code ?>
                 duplicateLangCode: <?php echo json_encode(_('Duplicate language code "%s" in the source URL languages — each language may appear only once'), JSON_HEX_TAG); ?>,
                 validationErrors:  <?php echo json_encode(_('Please fix the following errors before saving:'), JSON_HEX_TAG); ?>,

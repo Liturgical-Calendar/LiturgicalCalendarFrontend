@@ -329,3 +329,85 @@ describe('isFestiveGrade', () => {
         expect(isFestiveGrade('nope')).toBe(false);
     });
 });
+
+describe('per-language URL overrides (urls_langs)', () => {
+    const NEWMAN_TMPL = 'https://www.vatican.va/content/romancuria/%s/dicasteri/x/documenti/20251109-decreto-iscrizione-newman.html';
+    const NEWMAN_LA   = 'https://www.vatican.va/content/romancuria/it/dicasteri/x/documenti/20251109-annesso-decreto-iscrizione-newman-la.html';
+
+    const newmanForm = (overrides) => ({
+        ...createNewForm(),
+        url: NEWMAN_TMPL,
+        url_lang_map: { de: 'de', en: 'en', es: 'es', fr: 'fr', it: 'it', pt: 'pt' },
+        urls_langs: overrides,
+    });
+
+    it('carries urls_langs into metadata when present', () => {
+        const p = buildDecreePayload(newmanForm({ la: NEWMAN_LA }));
+        expect(p.metadata.urls_langs).toEqual({ la: NEWMAN_LA });
+    });
+
+    it('omits urls_langs when absent or empty', () => {
+        expect(buildDecreePayload(newmanForm(undefined)).metadata).not.toHaveProperty('urls_langs');
+        expect(buildDecreePayload(newmanForm({})).metadata).not.toHaveProperty('urls_langs');
+    });
+
+    it('accepts a language present only as an override, absent from url_lang_map', () => {
+        const p = buildDecreePayload(newmanForm({ la: NEWMAN_LA }));
+        expect(p.metadata.url_lang_map).not.toHaveProperty('la');
+        expect(validateDecreePayload(p, 'en', true)).toEqual([]);
+    });
+
+    it('rejects an override that is not a full URL', () => {
+        const p = buildDecreePayload(newmanForm({ la: 'la' }));
+        expect(validateDecreePayload(p, 'en', true).some((e) => e.includes('full http(s) URL'))).toBe(true);
+    });
+
+    // A scheme with no host passes a /^https?:\/\// prefix test but is refused by the
+    // API's FILTER_VALIDATE_URL, so accepting it here would swap inline feedback for an
+    // opaque save failure.
+    it.each([
+        ['a bare https scheme', 'https://'],
+        ['a bare http scheme', 'http://'],
+        ['a scheme followed by whitespace', 'https:// '],
+        ['a non-http scheme', 'ftp://example.org/x'],
+        ['a javascript: URL', 'javascript:alert(1)'],
+    ])('rejects %s as an override', (_label, value) => {
+        const p = buildDecreePayload(newmanForm({ la: value }));
+        expect(validateDecreePayload(p, 'en', true).some((e) => e.includes('full http(s) URL'))).toBe(true);
+    });
+
+    it('still accepts a complete https URL', () => {
+        const p = buildDecreePayload(newmanForm({ la: NEWMAN_LA }));
+        expect(validateDecreePayload(p, 'en', true)).toEqual([]);
+    });
+
+    it('rejects an override that is still a template', () => {
+        const p = buildDecreePayload(newmanForm({ la: NEWMAN_TMPL }));
+        expect(validateDecreePayload(p, 'en', true).some((e) => e.includes('not a template'))).toBe(true);
+    });
+
+    it('rejects an override key that is not an ISO 639-1 code', () => {
+        const p = buildDecreePayload(newmanForm({ latin: NEWMAN_LA }));
+        expect(validateDecreePayload(p, 'en', true).some((e) => e.includes('two-letter language code'))).toBe(true);
+    });
+
+    it('leaves the existing placeholder/map rules intact', () => {
+        // A code map still demands a %s placeholder, override or no override.
+        const noPlaceholder = buildDecreePayload({
+            ...newmanForm({ la: NEWMAN_LA }),
+            url: 'https://www.vatican.va/content/x.html',
+        });
+        expect(validateDecreePayload(noPlaceholder, 'en', true).some((e) => e.includes('%s'))).toBe(true);
+    });
+
+    it('allows an override with no code map and no placeholder', () => {
+        // Every language explicit: nothing to expand, so neither rule applies.
+        const p = buildDecreePayload({
+            ...createNewForm(),
+            url: 'https://www.vatican.va/content/x.html',
+            urls_langs: { la: NEWMAN_LA },
+        });
+        expect(p.metadata).not.toHaveProperty('url_lang_map');
+        expect(validateDecreePayload(p, 'en', true)).toEqual([]);
+    });
+});

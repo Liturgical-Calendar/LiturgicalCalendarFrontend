@@ -802,23 +802,54 @@ function buildExternalLink(href, text, withIcon = false) {
 }
 
 /**
- * Build the source-link footer element for a decree's metadata:
- * - No %s placeholder: a single "Source" link to the URL.
- * - %s placeholder + url_lang_map: one link per language (the urls_langs),
- *   each the URL with %s expanded to that language's Vatican code, labelled
- *   with the language's display name.
- * - %s placeholder but no map: a plain "Source" label (no dead link).
+ * Build the source-link footer element for a decree's metadata.
  *
- * @param {object} metadata  The decree metadata (url, url_lang_map)
+ * A language's URL is `urls_langs[iso]` when the decree overrides that language,
+ * otherwise the `url` template with `%s` expanded to `url_lang_map[iso]`. The two
+ * are unioned, so a language carried only by an override still gets a link — which
+ * is the whole point of an override: its document does not fit the template.
+ *
+ * Falls back to a single "Source" link when there is one plain URL, or to a dead
+ * plain label when nothing can be resolved.
+ *
+ * Exported for unit testing.
+ *
+ * @param {object} metadata  The decree metadata (url, url_lang_map, urls_langs)
  * @returns {HTMLElement}
  */
-function buildSourceLinks(metadata) {
+export function buildSourceLinks(metadata) {
     const url = metadata.url;
     const hasPlaceholder = url.includes('%s');
-    const langMap = (metadata.url_lang_map && typeof metadata.url_lang_map === 'object'
-        && Object.keys(metadata.url_lang_map).length > 0)
-        ? metadata.url_lang_map
-        : null;
+    const nonEmpty = (o) => (o && typeof o === 'object' && Object.keys(o).length > 0) ? o : null;
+    const langMap = nonEmpty(metadata.url_lang_map);
+    const overrides = nonEmpty(metadata.urls_langs);
+
+    // Per-language listing whenever at least one language resolves.
+    if (langMap || overrides) {
+        const isos = [...new Set([...Object.keys(langMap ?? {}), ...Object.keys(overrides ?? {})])];
+        const resolved = isos
+            .map((iso) => {
+                const raw = overrides?.[iso]
+                    ?? ((hasPlaceholder && langMap?.[iso]) ? url.replace(/%s/g, langMap[iso]) : null);
+                return raw === null || raw === undefined ? null : [iso, safeHttpUrl(raw)];
+            })
+            .filter((entry) => entry !== null && entry[1] !== null);
+
+        if (resolved.length > 0) {
+            const wrap = document.createElement('span');
+            wrap.className = 'd-inline-flex flex-wrap gap-2 align-items-center';
+            const label = document.createElement('span');
+            const labelIcon = document.createElement('i');
+            labelIcon.className = 'fas fa-external-link-alt me-1';
+            label.appendChild(labelIcon);
+            label.appendChild(document.createTextNode(`${config.i18n.sourceLink}:`));
+            wrap.appendChild(label);
+            resolved.forEach(([iso, safe]) => {
+                wrap.appendChild(buildExternalLink(safe, languageDisplayName(iso)));
+            });
+            return wrap;
+        }
+    }
 
     // Single real URL (no placeholder): one "Source" link.
     if (!hasPlaceholder) {
@@ -826,30 +857,9 @@ function buildSourceLinks(metadata) {
         if (safe !== null) {
             return buildExternalLink(safe, config.i18n.sourceLink, true);
         }
-        const span = document.createElement('span');
-        span.textContent = config.i18n.sourceLink;
-        return span;
     }
 
-    // Placeholder with a language map: list the per-language expanded URLs.
-    if (langMap) {
-        const wrap = document.createElement('span');
-        wrap.className = 'd-inline-flex flex-wrap gap-2 align-items-center';
-        const label = document.createElement('span');
-        const labelIcon = document.createElement('i');
-        labelIcon.className = 'fas fa-external-link-alt me-1';
-        label.appendChild(labelIcon);
-        label.appendChild(document.createTextNode(`${config.i18n.sourceLink}:`));
-        wrap.appendChild(label);
-        Object.entries(langMap).forEach(([iso, code]) => {
-            const safe = safeHttpUrl(url.replace(/%s/g, code));
-            if (safe === null) return;
-            wrap.appendChild(buildExternalLink(safe, languageDisplayName(iso)));
-        });
-        return wrap;
-    }
-
-    // Placeholder but no map: cannot expand to a real URL — plain label only.
+    // Nothing resolvable — plain label, no dead link.
     const span = document.createElement('span');
     span.textContent = config.i18n.sourceLink;
     return span;
@@ -1744,19 +1754,38 @@ function updateUrlPreview(form) {
     preview.replaceChildren();
     const urlEl = form.querySelector('[name="url"]');
     const url = urlEl ? urlEl.value.trim() : '';
-    if (!url.includes('%s')) return;
-    form.querySelectorAll('.url-lang-row').forEach((row) => {
-        const iso = row.querySelector('[name="url_lang_iso[]"]')?.value.trim();
-        const code = row.querySelector('[name="url_lang_code[]"]')?.value.trim();
-        if (!iso || !code) return;
+    const overrides = readUrlOverrideRows(form);
+
+    /** @param {string} iso @param {string} resolved @param {boolean} isOverride */
+    const addRow = (iso, resolved, isOverride) => {
         const li = document.createElement('li');
         const isoSpan = document.createElement('span');
         isoSpan.className = 'text-muted me-1';
         isoSpan.textContent = `${iso}:`;
         li.appendChild(isoSpan);
-        li.appendChild(document.createTextNode(url.replace(/%s/g, code)));
+        li.appendChild(document.createTextNode(resolved));
+        if (isOverride) {
+            const badge = document.createElement('span');
+            badge.className = 'badge text-bg-secondary ms-2';
+            badge.textContent = config.i18n.overrideBadge;
+            li.appendChild(badge);
+        }
         preview.appendChild(li);
-    });
+    };
+
+    // Template rows, skipping any language an override has taken over.
+    if (url.includes('%s')) {
+        form.querySelectorAll('.url-lang-row').forEach((row) => {
+            const iso = row.querySelector('[name="url_lang_iso[]"]')?.value.trim();
+            const code = row.querySelector('[name="url_lang_code[]"]')?.value.trim();
+            if (!iso || !code) return;
+            if (Object.prototype.hasOwnProperty.call(overrides, iso.toLowerCase())) return;
+            addRow(iso, url.replace(/%s/g, code), false);
+        });
+    }
+
+    // Overrides last, badged, so it is obvious which languages leave the pattern.
+    Object.entries(overrides).forEach(([iso, resolved]) => addRow(iso, resolved, true));
 }
 
 /**
@@ -1839,6 +1868,93 @@ export function addUrlLangRow(container, iso, code) {
     isoInput.addEventListener('input', () => { syncCodeList(); refresh(); });
     codeInput.addEventListener('input', refresh);
     rmBtn.addEventListener('click', () => { row.remove(); refresh(); });
+}
+
+/**
+ * Add a per-language URL override row (ISO 639-1 language ▸ full URL) to
+ * #urlOverrideRows and wire preview refresh + removal.
+ *
+ * An override is for a language whose document does not fit the `%s` template at
+ * all — a different path or filename, not just a different language token — so the
+ * second field takes a finished URL rather than a Vatican code.
+ *
+ * @param {HTMLElement} container  #urlOverrideRows
+ * @param {string}      [iso]      Pre-filled ISO 639-1 code
+ * @param {string}      [url]      Pre-filled full URL
+ */
+export function addUrlOverrideRow(container, iso, url) {
+    const row = document.createElement('div');
+    row.className = 'row g-2 mb-2 url-override-row align-items-center';
+
+    const isoCol = document.createElement('div');
+    isoCol.className = 'col-md-4';
+    const isoInput = document.createElement('input');
+    isoInput.type = 'text';
+    isoInput.className = 'form-control form-control-sm';
+    isoInput.name = 'url_override_iso[]';
+    isoInput.setAttribute('list', 'isoLangDatalist');
+    isoInput.setAttribute('autocomplete', 'off');
+    isoInput.placeholder = config.i18n.selectLocale;
+    if (iso) isoInput.value = iso;
+    isoCol.appendChild(isoInput);
+
+    const arrowCol = document.createElement('div');
+    arrowCol.className = 'col-auto text-muted';
+    const arrow = document.createElement('i');
+    arrow.className = 'fas fa-arrow-right';
+    arrowCol.appendChild(arrow);
+
+    const urlCol = document.createElement('div');
+    urlCol.className = 'col';
+    const urlInput = document.createElement('input');
+    urlInput.type = 'url';
+    urlInput.className = 'form-control form-control-sm';
+    urlInput.name = 'url_override_url[]';
+    urlInput.setAttribute('autocomplete', 'off');
+    urlInput.placeholder = config.i18n.overrideUrl;
+    if (url) urlInput.value = url;
+    urlCol.appendChild(urlInput);
+
+    const rmCol = document.createElement('div');
+    rmCol.className = 'col-auto';
+    const rmBtn = document.createElement('button');
+    rmBtn.type = 'button';
+    rmBtn.className = 'btn btn-sm btn-outline-danger';
+    rmBtn.title = config.i18n.removeRow;
+    const rmIcon = document.createElement('i');
+    rmIcon.className = 'fas fa-times';
+    rmBtn.appendChild(rmIcon);
+    rmCol.appendChild(rmBtn);
+
+    row.appendChild(isoCol);
+    row.appendChild(arrowCol);
+    row.appendChild(urlCol);
+    row.appendChild(rmCol);
+    container.appendChild(row);
+
+    const form = container.closest('form');
+    const refresh = () => { if (form) updateUrlPreview(form); };
+    isoInput.addEventListener('input', refresh);
+    urlInput.addEventListener('input', refresh);
+    rmBtn.addEventListener('click', () => { row.remove(); refresh(); });
+}
+
+/**
+ * Read the per-language URL override rows into an ISO ▸ URL map.
+ * Blank rows are ignored; a repeated ISO collapses (surfaced separately by
+ * findUrlOverrideDuplicateErrors).
+ *
+ * @param {HTMLElement} root  The form (or a wrapper)
+ * @returns {Record<string,string>}
+ */
+function readUrlOverrideRows(root) {
+    const overrides = {};
+    root.querySelectorAll('.url-override-row').forEach((row) => {
+        const iso = row.querySelector('[name="url_override_iso[]"]')?.value.trim().toLowerCase() ?? '';
+        const url = row.querySelector('[name="url_override_url[]"]')?.value.trim() ?? '';
+        if (iso && url) overrides[iso] = url;
+    });
+    return overrides;
 }
 
 /**
@@ -2027,6 +2143,31 @@ export function findUrlLangDuplicateErrors(root) {
     return [...dupes].map((iso) => template.replace('%s', iso));
 }
 
+/**
+ * Detect duplicate ISO codes among the per-language URL override rows.
+ * readUrlOverrideRows keys by ISO, so a repeated ISO would silently drop the
+ * earlier row's URL; surface it as a blocking validation error instead.
+ *
+ * @param {HTMLElement} root  The form (or a wrapper)
+ * @returns {string[]}  one error message per duplicated ISO code
+ */
+export function findUrlOverrideDuplicateErrors(root) {
+    const seen  = new Set();
+    const dupes = new Set();
+    root.querySelectorAll('.url-override-row').forEach((row) => {
+        const iso = row.querySelector('[name="url_override_iso[]"]')?.value.trim().toLowerCase() ?? '';
+        if (!/^[a-z]{2}$/.test(iso)) return;
+        if (seen.has(iso)) {
+            dupes.add(iso);
+        } else {
+            seen.add(iso);
+        }
+    });
+    const template = config.i18n.duplicateOverride
+        ?? 'Duplicate language code "%s" in the URL overrides — each language may be overridden only once';
+    return [...dupes].map((iso) => template.replace('%s', iso));
+}
+
 export function collectFormValues(root) {
     /** @param {string} name @returns {string} */
     const val = (name) => {
@@ -2130,6 +2271,13 @@ export function collectFormValues(root) {
         since_year:      val('since_year'),
         url:             val('url'),
         url_lang_map:    Object.keys(urlLangMap).length > 0 ? urlLangMap : undefined,
+        // Per-language full-URL overrides. Read whenever rows exist: unlike the
+        // code map these are not gated on the multilingual switch being the only
+        // mechanism, since an override is what a language uses *instead* of it.
+        urls_langs:      (() => {
+            const o = readUrlOverrideRows(root);
+            return Object.keys(o).length > 0 ? o : undefined;
+        })(),
         event_type:      (() => {
             const checked = root.querySelector('[name="event_type"]:checked');
             return checked ? checked.value : 'fixed';
@@ -2447,6 +2595,8 @@ function resetEditorForm(form, alertBox, label, isCreate, baseLocale) {
     if (urlLangBlock) urlLangBlock.classList.add('d-none');
     const urlLangRows = document.getElementById('urlLangMapRows');
     if (urlLangRows) urlLangRows.replaceChildren();
+    const urlOverrideRows = document.getElementById('urlOverrideRows');
+    if (urlOverrideRows) urlOverrideRows.replaceChildren();
     const urlLangPreview = document.getElementById('urlLangMapPreview');
     if (urlLangPreview) urlLangPreview.replaceChildren();
 
@@ -2623,18 +2773,30 @@ function prefillUrlLangMap(form, decree) {
     const langMap = (meta.url_lang_map && typeof meta.url_lang_map === 'object')
         ? meta.url_lang_map
         : null;
+    const overrides = (meta.urls_langs && typeof meta.urls_langs === 'object')
+        ? meta.urls_langs
+        : null;
     const hasPlaceholder = typeof meta.url === 'string' && meta.url.includes('%s');
-    if (!langMap && !hasPlaceholder) return;
+    // An override alone is reason enough to open the block: a decree may carry one
+    // without any template at all.
+    if (!langMap && !overrides && !hasPlaceholder) return;
 
-    const toggle = document.getElementById('decreeUrlMultilang');
-    const block  = document.getElementById('urlLangMapBlock');
-    const rows   = document.getElementById('urlLangMapRows');
+    const toggle   = document.getElementById('decreeUrlMultilang');
+    const block    = document.getElementById('urlLangMapBlock');
+    const rows     = document.getElementById('urlLangMapRows');
+    const ovrRows  = document.getElementById('urlOverrideRows');
     if (toggle) toggle.checked = true;
     if (block)  block.classList.remove('d-none');
     if (rows) {
         rows.replaceChildren();
         if (langMap) {
             Object.entries(langMap).forEach(([iso, code]) => addUrlLangRow(rows, iso, code));
+        }
+    }
+    if (ovrRows) {
+        ovrRows.replaceChildren();
+        if (overrides) {
+            Object.entries(overrides).forEach(([iso, url]) => addUrlOverrideRow(ovrRows, iso, url));
         }
     }
     updateUrlPreview(form);
@@ -2828,6 +2990,17 @@ function wireEditorActions(form, saveBtn, alertBox, baseLocale, isCreate, capabi
         });
     }
 
+    // Add per-language URL override row button (clone to remove old listeners)
+    const addUrlOverrideBtn = document.getElementById('addUrlOverrideRow');
+    if (addUrlOverrideBtn) {
+        const newBtn = addUrlOverrideBtn.cloneNode(true);
+        addUrlOverrideBtn.parentNode.replaceChild(newBtn, addUrlOverrideBtn);
+        newBtn.addEventListener('click', () => {
+            const rows = document.getElementById('urlOverrideRows');
+            if (rows) addUrlOverrideRow(rows);
+        });
+    }
+
     // Refresh the URL preview when the source URL itself changes
     const urlInput = form.querySelector('[name="url"]');
     if (urlInput) {
@@ -2863,6 +3036,7 @@ function wireEditorActions(form, saveBtn, alertBox, baseLocale, isCreate, capabi
                 // as a blocking validation error before submission.
                 const errors     = [
                     ...findUrlLangDuplicateErrors(form),
+                    ...findUrlOverrideDuplicateErrors(form),
                     ...validateDecreePayload(payload, baseLocale, isCreate),
                 ];
 

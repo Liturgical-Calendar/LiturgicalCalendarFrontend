@@ -150,13 +150,15 @@ function buildLiturgicalEvent(form, fullAction) {
  * @returns {object}
  */
 function buildMetadata(form, action, property) {
-    const hasLangMap = form.url_lang_map && Object.keys(form.url_lang_map).length > 0;
+    const hasLangMap   = form.url_lang_map && Object.keys(form.url_lang_map).length > 0;
+    const hasOverrides = form.urls_langs && Object.keys(form.urls_langs).length > 0;
     return {
         action,
         ...(property ? { property } : {}),
         since_year: Number(form.since_year),
         url: form.url,
         ...(hasLangMap ? { url_lang_map: form.url_lang_map } : {}),
+        ...(hasOverrides ? { urls_langs: form.urls_langs } : {}),
     };
 }
 
@@ -274,6 +276,56 @@ function validateUrlRules(payload, errors) {
     }
 }
 
+/**
+ * Whether a value is a complete absolute http(s) URL.
+ *
+ * A `^https?://` prefix test is not enough: it accepts `https://`, `http://` and
+ * `https:// ` — a scheme with no host. The API refuses those (`FILTER_VALIDATE_URL`
+ * returns false), so accepting them here would trade inline feedback for an opaque
+ * server-side error on save. Parsing settles it, and pinning the protocol also rules
+ * out schemes like `javascript:` that parse perfectly well.
+ *
+ * @param {string} url
+ * @returns {boolean}
+ */
+function isAbsoluteHttpUrl(url) {
+    try {
+        const { protocol } = new URL(url);
+        return protocol === 'http:' || protocol === 'https:';
+    } catch {
+        return false;
+    }
+}
+
+/**
+ * Validate the per-language URL overrides.
+ *
+ * An override replaces the `url` + `url_lang_map` template outright for the language
+ * it names, so it must be a finished absolute URL — not a template, and not a Vatican
+ * language token. A language listed here needs no entry in `url_lang_map`; that is the
+ * point of it, so no cross-check against the map is made.
+ *
+ * @param {object}   payload  Built payload
+ * @param {string[]} errors   Errors array to push into
+ */
+function validateUrlOverrideRules(payload, errors) {
+    const overrides = payload.metadata.urls_langs;
+    if (!overrides || Object.keys(overrides).length === 0) return;
+
+    Object.entries(overrides).forEach(([iso, url]) => {
+        if (!/^[a-z]{2}$/.test(iso)) {
+            errors.push(`"${iso}" is not a two-letter language code: URL overrides are keyed by ISO 639-1`);
+        }
+        if (typeof url !== 'string' || !isAbsoluteHttpUrl(url)) {
+            errors.push(`The URL override for "${iso}" must be a full http(s) URL`);
+        } else if (url.includes('%s')) {
+            // Checked against the raw string, not the parsed URL: the parser happily
+            // accepts `%s` in a path, so a template would otherwise slip through here.
+            errors.push(`The URL override for "${iso}" must be a finished URL, not a template containing "%s"`);
+        }
+    });
+}
+
 export const validateDecreePayload = (payload, baseLocale, isCreate) => {
     const errors = [];
     const { action, property } = payload.metadata;
@@ -282,6 +334,7 @@ export const validateDecreePayload = (payload, baseLocale, isCreate) => {
 
     validateI18nRules(payload, nameBearing, baseLocale, errors);
     validateUrlRules(payload, errors);
+    validateUrlOverrideRules(payload, errors);
     validateReadingsShape(payload, errors);
 
     // makeDoctor requires a non-empty common array (DTO: DecreeItemMakeDoctor requires common)
