@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-27 22:58+0000\n"
+"POT-Creation-Date: 2026-08-27 23:58+0000\n"
 "PO-Revision-Date: 2026-08-27 22:33+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -129,7 +129,7 @@ msgstr "Parametre požiadaviek dostupné na všetkých cestách %1$s"
 msgid "General Roman Calendar"
 msgstr "Všeobecný rímsky kalendár"
 
-#: index.php:74 layout/header.php:19 layout/header.php:229 admin-decrees.php:39
+#: index.php:74 layout/header.php:19 layout/header.php:229 admin-decrees.php:43
 #: admin-permissions.php:37 admin-tests.php:38 permission-requests.php:32
 #: admin-applications.php:34 admin-dashboard.php:40 admin-users.php:34
 #: developer-dashboard.php:35 temporale.php:25 user-profile.php:24
@@ -845,25 +845,25 @@ msgstr ""
 
 #. translators: context = liturgical color
 #. translators: liturgical color - green
-#: src/LitColor.php:33 src/FormControls.php:111 includes/messages.php:76
+#: src/LitColor.php:33 includes/messages.php:76
 msgid "green"
 msgstr "zelená"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - purple/violet
-#: src/LitColor.php:36 src/FormControls.php:110 includes/messages.php:78
+#: src/LitColor.php:36 includes/messages.php:78
 msgid "purple"
 msgstr "fialová"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - white
-#: src/LitColor.php:39 src/FormControls.php:108 includes/messages.php:72
+#: src/LitColor.php:39 includes/messages.php:72
 msgid "white"
 msgstr "biela"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - red
-#: src/LitColor.php:42 src/FormControls.php:109 includes/messages.php:74
+#: src/LitColor.php:42 includes/messages.php:74
 msgid "red"
 msgstr "červená"
 
@@ -1084,7 +1084,7 @@ msgstr "pracovný deň"
 #. translators: liturgical grade 1 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: src/LitGrade.php:105 admin-decrees.php:714
+#: src/LitGrade.php:105 admin-decrees.php:698
 msgid "Commemoration"
 msgstr "Spomienka"
 
@@ -1097,7 +1097,7 @@ msgstr "Ľubovoľná spomienka"
 #. translators: liturgical grade 3 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: src/LitGrade.php:111 admin-decrees.php:702
+#: src/LitGrade.php:111 admin-decrees.php:686
 msgid "Memorial"
 msgstr "Pamiatka"
 
@@ -1220,50 +1220,50 @@ msgid "Property to change"
 msgstr "Vlastnosť na zmenu"
 
 #. translators: form field label for the name of a liturgical event
-#: src/Utilities.php:301 src/FormControls.php:61 includes/messages.php:19
+#: src/Utilities.php:301 src/FormControls.php:124 includes/messages.php:19
 #: admin-tests.php:108 temporale.php:135
 msgid "Name"
 msgstr "Meno"
 
-#: src/Utilities.php:302 src/FormControls.php:194 admin-decrees.php:447
-#: admin-decrees.php:515 temporale.php:75 temporale.php:136
+#: src/Utilities.php:302 src/FormControls.php:288 admin-decrees.php:453
+#: admin-decrees.php:494 temporale.php:75 temporale.php:136
 msgid "Grade"
 msgstr "Stupeň"
 
 #. translators: form field label for the day of the month
-#: src/FormControls.php:68 includes/messages.php:21 admin-decrees.php:370
+#: src/FormControls.php:131 includes/messages.php:21 admin-decrees.php:374
 msgid "Day"
 msgstr "Deň"
 
-#: src/FormControls.php:73
+#: src/FormControls.php:136
 msgid "switch on for mobile celebration as opposed to fixed date"
 msgstr "zapnúť mobilnú oslavu namiesto pevného dátumu"
 
 #. translators: form field label for the month of the year
-#: src/FormControls.php:78 includes/messages.php:23 admin-decrees.php:377
+#: src/FormControls.php:141 includes/messages.php:23 admin-decrees.php:382
 msgid "Month"
 msgstr "Mesiac"
 
-#: src/FormControls.php:80 admin-decrees.php:360
+#: src/FormControls.php:143 admin-decrees.php:364
 msgid "Mobile"
 msgstr "Mobilné"
 
 #. translators: form field label for liturgical color selection
-#: src/FormControls.php:106 includes/messages.php:25
+#: src/FormControls.php:162 includes/messages.php:25
 msgid "Liturgical color"
 msgstr "Liturgická farba"
 
 #. translators: form field label - first year a liturgical event takes effect
-#: src/FormControls.php:118 includes/messages.php:27
+#: src/FormControls.php:171 includes/messages.php:27
 msgid "Since"
 msgstr "Od"
 
 #. translators: form field label - last year a liturgical event is observed
-#: src/FormControls.php:125 includes/messages.php:29
+#: src/FormControls.php:178 includes/messages.php:29
 msgid "Until"
 msgstr "Až do"
 
-#: src/FormControls.php:147
+#: src/FormControls.php:278 admin-decrees.php:482
 msgid "Common (or Proper)"
 msgstr "Bežné (alebo Vlastné)"
 
@@ -1280,7 +1280,7 @@ msgid "Usage"
 msgstr "Použitie"
 
 #. translators: link to translations page
-#: layout/header.php:51 includes/messages.php:197 admin-decrees.php:641
+#: layout/header.php:51 includes/messages.php:197 admin-decrees.php:616
 msgid "Translations"
 msgstr "Preklady"
 
@@ -1358,7 +1358,7 @@ msgid "Sanctorale"
 msgstr "Sviatky svätých"
 
 #: layout/header.php:269 includes/admin-blocks.php:45
-#: includes/admin-decrees-card.php:20 admin-decrees.php:38 admin-decrees.php:50
+#: includes/admin-decrees-card.php:20 admin-decrees.php:42 admin-decrees.php:54
 msgid "Decrees"
 msgstr "Dekréty"
 
@@ -1475,8 +1475,8 @@ msgid "Remember me"
 msgstr "Zapamätať si ma"
 
 #. translators: button label for canceling an action
-#: includes/login-modal.php:55 includes/messages.php:132 admin-decrees.php:587
-#: admin-decrees.php:614 admin-permissions.php:325 admin-permissions.php:351
+#: includes/login-modal.php:55 includes/messages.php:132 admin-decrees.php:562
+#: admin-decrees.php:589 admin-permissions.php:325 admin-permissions.php:351
 #: admin-tests.php:259 admin-tests.php:286 admin-tests.php:313
 #: admin-applications.php:207 admin-users.php:112 developer-dashboard.php:134
 #: developer-dashboard.php:183 developer-dashboard.php:246
@@ -1544,7 +1544,7 @@ msgid "Session Expired"
 msgstr "Relácia vypršala"
 
 #. translators: form field label for the unique identifier of a liturgical event
-#: includes/messages.php:17 admin-decrees.php:171 temporale.php:134
+#: includes/messages.php:17 admin-decrees.php:175 temporale.php:134
 msgid "Event key"
 msgstr "Kľúč udalosti"
 
@@ -2209,7 +2209,7 @@ msgstr "Diecézne kalendáre podľa liturgických kancelárií"
 msgid "View"
 msgstr "Zobraziť"
 
-#: includes/admin-blocks.php:102 admin-decrees.php:670 admin-tests.php:340
+#: includes/admin-blocks.php:102 admin-decrees.php:654 admin-tests.php:340
 #: developer-dashboard.php:269
 msgid "Edit"
 msgstr "Upraviť"
@@ -2227,72 +2227,72 @@ msgstr "Spravovať"
 msgid "Manage liturgical accuracy tests"
 msgstr "Spravovať testy liturgickej presnosti"
 
-#: admin-decrees.php:55
+#: admin-decrees.php:59
 msgid "Create, edit and delete decrees of the Dicastery for Divine Worship."
 msgstr "Vytvárať, upravovať a mazať dekréty Dikastéria pre Boží kult."
 
-#: admin-decrees.php:67 admin-decrees.php:643
+#: admin-decrees.php:71 admin-decrees.php:618
 msgid "New Decree"
 msgstr "Nový dekrét"
 
-#: admin-decrees.php:72
+#: admin-decrees.php:76
 msgid "Manage permissions"
 msgstr "Spravovať oprávnenia"
 
-#: admin-decrees.php:82
+#: admin-decrees.php:86
 msgid "Search decrees"
 msgstr "Vyhľadávať dekréty"
 
-#: admin-decrees.php:89
+#: admin-decrees.php:93
 msgid "Search by name, event key, protocol or description"
 msgstr "Vyhľadávať podľa mena, kľúča udalosti, protokolu alebo popisu"
 
-#: admin-decrees.php:97
+#: admin-decrees.php:101
 msgid "Filter by year"
 msgstr "Filtrovať podľa roku"
 
-#: admin-decrees.php:101
+#: admin-decrees.php:105
 msgid "Any year"
 msgstr "Ľubovoľný rok"
 
 #. translators: "action" here is the decree's action type (create new event / make Doctor of the Church / set
 #. property), not a deed or legal action
-#: admin-decrees.php:109
+#: admin-decrees.php:113
 msgid "Filter by action"
 msgstr "Filtrovať podľa akcie"
 
 #. translators: the unfiltered choice in the decree action filter; see the note on "Filter by action"
-#: admin-decrees.php:115
+#: admin-decrees.php:119
 msgid "Any action"
 msgstr "Ľubovoľná akcia"
 
-#: admin-decrees.php:118 admin-decrees.php:188
+#: admin-decrees.php:122 admin-decrees.php:192
 msgid "Create new event"
 msgstr "Vytvoriť novú udalosť"
 
 #. translators: declares an existing saint a Doctor of the Church - the liturgical title (Latin "Doctor Ecclesiae"),
 #. never an academic doctorate, and not "manufacture"
-#: admin-decrees.php:123 admin-decrees.php:191
+#: admin-decrees.php:127 admin-decrees.php:195
 msgid "Make Doctor of the Church"
 msgstr "Určiť Učiteľa Cirkvi"
 
-#: admin-decrees.php:126 admin-decrees.php:194
+#: admin-decrees.php:130 admin-decrees.php:198
 msgid "Set property: name"
 msgstr "Nastaviť vlastnosť: meno"
 
-#: admin-decrees.php:129 admin-decrees.php:197
+#: admin-decrees.php:133 admin-decrees.php:201
 msgid "Set property: grade"
 msgstr "Nastaviť vlastnosť: stupeň"
 
-#: admin-decrees.php:135
+#: admin-decrees.php:139
 msgid "Clear"
 msgstr "Vyčistiť"
 
-#: admin-decrees.php:149
+#: admin-decrees.php:153
 msgid "Decree"
 msgstr "Dekrét"
 
-#: admin-decrees.php:152 admin-decrees.php:606 admin-permissions.php:229
+#: admin-decrees.php:156 admin-decrees.php:581 admin-permissions.php:229
 #: admin-permissions.php:261 admin-permissions.php:283
 #: admin-permissions.php:343 admin-tests.php:131 admin-tests.php:278
 #: admin-tests.php:305 admin-applications.php:184 admin-users.php:104
@@ -2301,51 +2301,51 @@ msgstr "Dekrét"
 msgid "Close"
 msgstr "Zatvoriť"
 
-#: admin-decrees.php:184
+#: admin-decrees.php:188
 msgid "Action"
 msgstr "Akcia"
 
-#: admin-decrees.php:208
+#: admin-decrees.php:212
 msgid "Decree ID"
 msgstr "ID dekrétu"
 
-#: admin-decrees.php:212
+#: admin-decrees.php:216
 msgid "generated automatically from the event key and action"
 msgstr "generované automaticky z kľúča udalosti a akcie"
 
 #. translators: the date the decree was signed; label for a date field
-#: admin-decrees.php:227
+#: admin-decrees.php:231
 msgid "Decree date"
 msgstr "Dátum dekrétu"
 
-#: admin-decrees.php:234
+#: admin-decrees.php:238
 msgid "Protocol"
 msgstr "Protokol"
 
 #. translators: the year from which the decree takes effect; label for a numeric year field
-#: admin-decrees.php:243
+#: admin-decrees.php:247
 msgid "Since year"
 msgstr "Od roku"
 
-#: admin-decrees.php:253 admin-tests.php:204 admin-applications.php:240
+#: admin-decrees.php:257 admin-tests.php:204 admin-applications.php:240
 #: developer-dashboard.php:98
 msgid "Description"
 msgstr "Popis"
 
 #. translators: web address of the published decree; label for a URL field
-#: admin-decrees.php:264
+#: admin-decrees.php:268
 msgid "Source URL"
 msgstr "Zdrojová URL"
 
-#: admin-decrees.php:274
+#: admin-decrees.php:278
 msgid "Source available in multiple languages"
 msgstr "Zdroj je dostupný vo viacerých jazykoch"
 
-#: admin-decrees.php:285
+#: admin-decrees.php:289
 msgid "Language URL codes"
 msgstr "Jazykové kódy URL"
 
-#: admin-decrees.php:289
+#: admin-decrees.php:293
 #, php-format
 msgid ""
 "Use %s in the URL above where the language code appears; each row maps a "
@@ -2354,39 +2354,39 @@ msgstr ""
 "Použite %s v URL vyššie, kde sa objaví jazykový kód; každý riadok mapuje "
 "jazyk na jeho Vatikánsky URL kód."
 
-#: admin-decrees.php:296
+#: admin-decrees.php:300
 msgid "Add language code"
 msgstr "Pridať jazykový kód"
 
-#: admin-decrees.php:300
+#: admin-decrees.php:304
 msgid "Preview"
 msgstr "Náhľad"
 
-#: admin-decrees.php:340
+#: admin-decrees.php:344
 msgid "Event details"
 msgstr "Podrobnosti udalosti"
 
-#: admin-decrees.php:346
+#: admin-decrees.php:350
 msgid "Date type"
 msgstr "Typ dátumu"
 
-#: admin-decrees.php:353
+#: admin-decrees.php:357
 msgid "Fixed"
 msgstr "Pevný"
 
-#: admin-decrees.php:408
+#: admin-decrees.php:414
 msgid "Relative date"
 msgstr "Relatívny dátum"
 
-#: admin-decrees.php:424
+#: admin-decrees.php:430
 msgid "before"
 msgstr "pred"
 
-#: admin-decrees.php:425
+#: admin-decrees.php:431
 msgid "after"
 msgstr "po"
 
-#: admin-decrees.php:436
+#: admin-decrees.php:442
 msgid ""
 "A day of the week relative to a liturgical event, e.g. \"Monday after "
 "Pentecost\"."
@@ -2394,196 +2394,146 @@ msgstr ""
 "Deň v týždni vo vzťahu k liturgickej udalosti, napríklad \"pondelok po "
 "Turícach\"."
 
-#: admin-decrees.php:450 admin-decrees.php:522
-msgid "0 — Weekday"
-msgstr "0 — Deň v týždni"
-
-#: admin-decrees.php:451 admin-decrees.php:523
-msgid "1 — Commemoration"
-msgstr "1 — Spomienka"
-
-#: admin-decrees.php:452 admin-decrees.php:524
-msgid "2 — Optional Memorial"
-msgstr "2 — Ľubovoľná spomienka"
-
-#: admin-decrees.php:453 admin-decrees.php:525
-msgid "3 — Memorial"
-msgstr "3 — Pamiatka"
-
-#: admin-decrees.php:454 admin-decrees.php:526
-msgid "4 — Feast"
-msgstr "4 — Sviatok"
-
-#: admin-decrees.php:455 admin-decrees.php:527
-msgid "5 — Feast of the Lord"
-msgstr "5 — Sviatok Pána"
-
-#: admin-decrees.php:456 admin-decrees.php:528
-msgid "6 — Solemnity"
-msgstr "6 — Slávnosť"
-
-#: admin-decrees.php:457 admin-decrees.php:529
-msgid "7 — Higher Solemnity"
-msgstr "7 — Väčšia slávnosť"
-
-#: admin-decrees.php:462
+#: admin-decrees.php:461
 msgid "Color(s)"
 msgstr "Farba(y)"
 
-#: admin-decrees.php:465
-msgid "White"
-msgstr "Biela"
-
-#: admin-decrees.php:466
-msgid "Red"
-msgstr "Červená"
-
-#: admin-decrees.php:467
-msgid "Green"
-msgstr "Zelená"
-
-#: admin-decrees.php:468
-msgid "Purple"
-msgstr "Fialová"
-
-#: admin-decrees.php:469
-msgid "Rose"
-msgstr "Ružová"
-
-#: admin-decrees.php:472
-msgid "Hold Ctrl/Cmd to select multiple"
-msgstr "Podrž Ctrl/Cmd pre výber viacerých"
-
 #. translators: the liturgical Common (Commune sanctorum) a celebration is taken from - e.g. Pastors,
 #. Martyrs, Doctors. NOT "common" meaning ordinary or generic
-#: admin-decrees.php:484 admin-decrees.php:489
+#: admin-decrees.php:477
 msgid "Common(s)"
 msgstr "Bežné"
 
-#: admin-decrees.php:493
-msgid "e.g. Pastors"
-msgstr "napr. Pastieri"
-
-#: admin-decrees.php:504
-msgid "Separate multiple values with a comma"
-msgstr "Oddeliť viaceré hodnoty čiarkou"
-
-#: admin-decrees.php:519
+#: admin-decrees.php:498
 msgid "New grade"
 msgstr "Nový stupeň"
 
-#: admin-decrees.php:537
+#: admin-decrees.php:509
 msgid "Translations (i18n)"
 msgstr "Preklady (i18n)"
 
-#: admin-decrees.php:551
+#: admin-decrees.php:523
 msgid "Name in base locale"
 msgstr "Názov v základnom jazyku"
 
-#: admin-decrees.php:556
+#: admin-decrees.php:528
 msgid "Base locale — cannot be removed"
 msgstr "Základný jazyk — nemožno odstrániť"
 
-#: admin-decrees.php:563
+#: admin-decrees.php:535
 msgid "Add translation"
 msgstr "Pridať preklad"
 
-#: admin-decrees.php:570 admin-decrees.php:642
+#: admin-decrees.php:542 admin-decrees.php:617
 msgid "Lectionary readings"
 msgstr "Čítania lekcionára"
 
-#: admin-decrees.php:579
+#: admin-decrees.php:554
 msgid "Add readings for locale"
 msgstr "Pridať čítania pre lokalitu"
 
-#: admin-decrees.php:590 admin-tests.php:262 developer-dashboard.php:323
+#: admin-decrees.php:565 admin-tests.php:262 developer-dashboard.php:323
 msgid "Save"
 msgstr "Uložiť"
 
-#: admin-decrees.php:603
+#: admin-decrees.php:578
 msgid "Delete Decree"
 msgstr "Zmazať dekrét"
 
-#: admin-decrees.php:617 admin-decrees.php:671 admin-tests.php:316
+#: admin-decrees.php:592 admin-decrees.php:655 admin-tests.php:316
 #: admin-tests.php:341 developer-dashboard.php:249 developer-dashboard.php:270
 msgid "Delete"
 msgstr "Zmazať"
 
-#: admin-decrees.php:633
+#: admin-decrees.php:608
 msgid "Loading…"
 msgstr "Načítavam…"
 
-#: admin-decrees.php:634
+#: admin-decrees.php:609
 msgid "You do not have permission to view decrees administration."
 msgstr "Nemáte povolenie na zobrazenie správy o dekrétoch."
 
-#: admin-decrees.php:635
+#: admin-decrees.php:610
 msgid "Could not load decrees from the API."
 msgstr "Nie je možné načítať dekréty z API."
 
-#: admin-decrees.php:636
+#: admin-decrees.php:611
 msgid "No decrees found."
 msgstr "Nenašli sa žiadne dekréty."
 
-#: admin-decrees.php:637
+#: admin-decrees.php:612
 msgid ""
 "Are you sure you want to delete this decree? This action cannot be undone."
 msgstr ""
 "Ste si istý, že chcete zmazať tento dekrét? Túto akciu nemožno vrátiť späť."
 
-#: admin-decrees.php:638
+#: admin-decrees.php:613
 msgid "Decree created."
 msgstr "Dekrét vytvorený."
 
-#: admin-decrees.php:639
+#: admin-decrees.php:614
 msgid "Decree updated."
 msgstr "Dekrét aktualizovaný."
 
-#: admin-decrees.php:640
+#: admin-decrees.php:615
 msgid "Decree deleted."
 msgstr "Dekrét zmazaný."
 
-#: admin-decrees.php:644
+#: admin-decrees.php:619
 msgid "Edit Decree"
 msgstr "Upraviť dekrét"
 
-#: admin-decrees.php:645
+#: admin-decrees.php:620
 msgid "Select locale"
 msgstr "Vybrať lokalitu"
 
-#: admin-decrees.php:646 permission-requests.php:229
+#: admin-decrees.php:621 permission-requests.php:229
 msgid "Remove"
 msgstr "Odstrániť"
 
-#: admin-decrees.php:647
+#: admin-decrees.php:622
 msgid "First reading"
 msgstr "Prvé čítanie"
 
-#: admin-decrees.php:648
+#: admin-decrees.php:623
 msgid "Responsorial psalm"
 msgstr "Responzoriálny žalm"
 
-#: admin-decrees.php:649
-msgid "Second reading (optional)"
-msgstr "Druhé čítanie (nepovinné)"
+#: admin-decrees.php:624
+#, fuzzy
+#| msgid "Lectionary readings"
+msgid "Second reading"
+msgstr "Čítania lekcionára"
 
-#: admin-decrees.php:650
+#: admin-decrees.php:627
+msgid ""
+"Feast and below take the ferial readings: first reading, responsorial psalm, "
+"gospel acclamation and gospel."
+msgstr ""
+
+#: admin-decrees.php:631
+msgid ""
+"Feast of the Lord and above take the festive readings, which also require a "
+"second reading."
+msgstr ""
+
+#: admin-decrees.php:634
 msgid "Gospel acclamation"
 msgstr "Aleluja"
 
-#: admin-decrees.php:651
+#: admin-decrees.php:635
 msgid "Gospel"
 msgstr "Evanjelium"
 
-#: admin-decrees.php:652
+#: admin-decrees.php:636
 msgid "No readings defined for this locale yet"
 msgstr "Zatiaľ nie sú definované žiadne čítania pre túto lokalitu"
 
-#: admin-decrees.php:653
+#: admin-decrees.php:637
 msgid "Vatican URL code (e.g. ge, sp, po)"
 msgstr "Kód URL Vatikánu (napr. ge, sp, po)"
 
-#: admin-decrees.php:655
+#: admin-decrees.php:639
 #, php-format
 msgid ""
 "Duplicate language code \"%s\" in the source URL languages — each language "
@@ -2592,38 +2542,38 @@ msgstr ""
 "Duplicitný kód jazyka \"%s\" v zdrojových jazykoch URL — každý jazyk sa môže "
 "objaviť len raz"
 
-#: admin-decrees.php:656
+#: admin-decrees.php:640
 msgid "Please fix the following errors before saving:"
 msgstr "Prosím opravte tieto chyby pred uložením:"
 
-#: admin-decrees.php:657
+#: admin-decrees.php:641
 #, php-format
 msgid "Since %s"
 msgstr "Od %s"
 
-#: admin-decrees.php:658
+#: admin-decrees.php:642
 msgid "Source"
 msgstr "Zdroj"
 
-#: admin-decrees.php:659
+#: admin-decrees.php:643
 msgid "Your session has expired. Please log in again."
 msgstr "Vaša relácia vypršala. Prosím, prihláste sa znova."
 
-#: admin-decrees.php:660
+#: admin-decrees.php:644
 msgid "Log in"
 msgstr "Prihlásiť sa"
 
-#: admin-decrees.php:661 admin-tests.php:347
+#: admin-decrees.php:645 admin-tests.php:347
 msgid "You do not have permission to perform this action."
 msgstr "Nemáte oprávnenie vykonať túto akciu."
 
-#: admin-decrees.php:662
+#: admin-decrees.php:646
 msgid "Not in the General Roman Calendar — a new event will be created."
 msgstr ""
 "Nie je v aktuálnom Rímskom všeobecnom kalendári — bude vytvorená nová "
 "udalosť."
 
-#: admin-decrees.php:664
+#: admin-decrees.php:648
 #, php-format
 msgid ""
 "Already in the General Roman Calendar as \"%s\" — choose a different event "
@@ -2631,65 +2581,65 @@ msgid ""
 msgstr ""
 "Už je v Rímskom všeobecnom kalendári ako \"%s\" — vyberte iný kľúč udalosti."
 
-#: admin-decrees.php:665
+#: admin-decrees.php:649
 msgid ""
 "Not in the General Roman Calendar — this decree will not match any event."
 msgstr ""
 "Nie je v Rímskom všeobecnom kalendári — tento dekrét sa nebude zhodovať so "
 "žiadnou udalosťou."
 
-#: admin-decrees.php:667
+#: admin-decrees.php:651
 #, php-format
 msgid "Matches \"%s\" in the General Roman Calendar."
 msgstr "Zhoduje sa s \"%s\" v Rímskom všeobecnom kalendári."
 
-#: admin-decrees.php:669
+#: admin-decrees.php:653
 msgid "No decrees match the current search and filters."
 msgstr "Žiadne dekréty nezodpovedajú aktuálnemu vyhľadávaniu a filtrom."
 
-#: admin-decrees.php:672
+#: admin-decrees.php:656
 msgid "(error)"
 msgstr "(chyba)"
 
 #. translators: liturgical grade 7 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:678
+#: admin-decrees.php:662
 msgid "Higher Solemnity"
 msgstr "Vyššia slávnosť"
 
 #. translators: liturgical grade 6 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:684
+#: admin-decrees.php:668
 msgid "Solemnity"
 msgstr "Slávnosť"
 
 #. translators: liturgical grade 5 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:690
+#: admin-decrees.php:674
 msgid "Feast of the Lord"
 msgstr "Sviatok Pána"
 
 #. translators: liturgical grade 4 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:696
+#: admin-decrees.php:680
 msgid "Feast"
 msgstr "Sviatok"
 
 #. translators: liturgical grade 2 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:708
+#: admin-decrees.php:692
 msgid "Optional Memorial"
 msgstr "Nepovinná spomienka"
 
 #. translators: liturgical grade 0 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:720
+#: admin-decrees.php:704
 msgid "Weekday"
 msgstr "Feria"
 
@@ -4185,6 +4135,57 @@ msgstr "Relácia vyprší o 30 sekúnd"
 #: user-profile.php:407
 msgid "Session expired"
 msgstr "Relácia vypršala"
+
+#~ msgid "0 — Weekday"
+#~ msgstr "0 — Deň v týždni"
+
+#~ msgid "1 — Commemoration"
+#~ msgstr "1 — Spomienka"
+
+#~ msgid "2 — Optional Memorial"
+#~ msgstr "2 — Ľubovoľná spomienka"
+
+#~ msgid "3 — Memorial"
+#~ msgstr "3 — Pamiatka"
+
+#~ msgid "4 — Feast"
+#~ msgstr "4 — Sviatok"
+
+#~ msgid "5 — Feast of the Lord"
+#~ msgstr "5 — Sviatok Pána"
+
+#~ msgid "6 — Solemnity"
+#~ msgstr "6 — Slávnosť"
+
+#~ msgid "7 — Higher Solemnity"
+#~ msgstr "7 — Väčšia slávnosť"
+
+#~ msgid "White"
+#~ msgstr "Biela"
+
+#~ msgid "Red"
+#~ msgstr "Červená"
+
+#~ msgid "Green"
+#~ msgstr "Zelená"
+
+#~ msgid "Purple"
+#~ msgstr "Fialová"
+
+#~ msgid "Rose"
+#~ msgstr "Ružová"
+
+#~ msgid "Hold Ctrl/Cmd to select multiple"
+#~ msgstr "Podrž Ctrl/Cmd pre výber viacerých"
+
+#~ msgid "e.g. Pastors"
+#~ msgstr "napr. Pastieri"
+
+#~ msgid "Separate multiple values with a comma"
+#~ msgstr "Oddeliť viaceré hodnoty čiarkou"
+
+#~ msgid "Second reading (optional)"
+#~ msgstr "Druhé čítanie (nepovinné)"
 
 #~ msgid "Event Key"
 #~ msgstr "Kľúč udalosti"
