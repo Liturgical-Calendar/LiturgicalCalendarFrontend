@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-27 23:58+0000\n"
-"PO-Revision-Date: 2026-08-28 00:16+0000\n"
+"PO-Revision-Date: 2026-08-28 08:37+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
@@ -2312,7 +2312,7 @@ msgstr "Crea nuovo evento"
 #. never an academic doctorate, and not "manufacture"
 #: admin-decrees.php:127 admin-decrees.php:195
 msgid "Make Doctor of the Church"
-msgstr "Fai Dottore della Chiesa"
+msgstr "Designa Dottore della Chiesa"
 
 #: admin-decrees.php:130 admin-decrees.php:198
 msgid "Set property: name"
@@ -2363,7 +2363,7 @@ msgstr "Protocollo"
 #. translators: the year from which the decree takes effect; label for a numeric year field
 #: admin-decrees.php:247
 msgid "Since year"
-msgstr "Dal anno"
+msgstr "Dall'anno"
 
 #: admin-decrees.php:257 admin-tests.php:204 admin-applications.php:240
 #: developer-dashboard.php:98
@@ -2547,16 +2547,16 @@ msgid ""
 "Feast and below take the ferial readings: first reading, responsorial psalm, "
 "gospel acclamation and gospel."
 msgstr ""
-"La festa e sotto prendono le letture feriali: prima lettura, salmo "
-"responsoriale, acclamazione al vangelo e vangelo."
+"La Festa e i gradi inferiori usano le letture feriali: prima lettura, salmo "
+"responsoriale, acclamazione al Vangelo e Vangelo."
 
 #: admin-decrees.php:631
 msgid ""
 "Feast of the Lord and above take the festive readings, which also require a "
 "second reading."
 msgstr ""
-"Festa del Signore e sopra prendono le letture festive, che richiedono anche "
-"una seconda lettura."
+"La Festa del Signore e i gradi superiori usano le letture festive, che "
+"richiedono anche una seconda lettura."
 
 #: admin-decrees.php:634
 msgid "Gospel acclamation"
@@ -3128,11 +3128,11 @@ msgstr "Data esatta"
 
 #: admin-tests.php:191
 msgid "Exact since year"
-msgstr "Esatto dal anno"
+msgstr "Esatto dall'anno"
 
 #: admin-tests.php:196
 msgid "Exact until year"
-msgstr "Esatto fino a anno"
+msgstr "Esatto fino all'anno"
 
 #: admin-tests.php:212
 msgid "Year range"
