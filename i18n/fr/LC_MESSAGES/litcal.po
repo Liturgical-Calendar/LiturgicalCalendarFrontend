@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-27 23:58+0000\n"
-"PO-Revision-Date: 2026-08-28 00:16+0000\n"
+"PO-Revision-Date: 2026-08-28 08:37+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
@@ -2455,10 +2455,8 @@ msgid "Common(s)"
 msgstr "Commun(s)"
 
 #: admin-decrees.php:498
-#, fuzzy
-#| msgid "Change grade"
 msgid "New grade"
-msgstr "Changer de rang"
+msgstr "Nouveau grade"
 
 #: admin-decrees.php:509
 msgid "Translations (i18n)"
@@ -2469,10 +2467,8 @@ msgid "Name in base locale"
 msgstr "Nom dans la langue de base"
 
 #: admin-decrees.php:528
-#, fuzzy
-#| msgid "This value cannot be empty."
 msgid "Base locale — cannot be removed"
-msgstr "Cette valeur ne peut pas être vide."
+msgstr "Langue de base — ne peut pas être supprimée"
 
 #: admin-decrees.php:535
 msgid "Add translation"
@@ -2563,16 +2559,16 @@ msgid ""
 "Feast and below take the ferial readings: first reading, responsorial psalm, "
 "gospel acclamation and gospel."
 msgstr ""
-"Pour les fêtes et en dessous, prenez les lectures férielles : première "
-"lecture, psaume responsorial, acclamation de l'évangile et évangile."
+"La Fête et les grades inférieurs utilisent les lectures fériales : première "
+"lecture, psaume responsorial, acclamation de l'Évangile et Évangile."
 
 #: admin-decrees.php:631
 msgid ""
 "Feast of the Lord and above take the festive readings, which also require a "
 "second reading."
 msgstr ""
-"Fête du Seigneur et prenez les lectures festives, qui nécessitent également "
-"une deuxième lecture."
+"La Fête du Seigneur et les grades supérieurs utilisent les lectures "
+"festives, qui exigent également une deuxième lecture."
 
 #: admin-decrees.php:634
 msgid "Gospel acclamation"
