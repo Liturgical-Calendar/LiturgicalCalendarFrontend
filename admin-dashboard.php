@@ -147,6 +147,24 @@ if (!$hasCalendarRole) {
     </h4>
     <div class="row">
         <?php include('./includes/admin-tests-card.php'); ?>
+        <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card admin-block shadow h-100 border-dark">
+                <div class="card-body text-center d-flex flex-column">
+                    <div class="admin-block-icon mb-3">
+                        <i class="fas fa-language fa-3x text-dark"></i>
+                    </div>
+                    <h5 class="card-title"><?php echo htmlspecialchars(_('Supported Locales'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></h5>
+                    <p class="card-text text-muted small flex-grow-1">
+                        <?php echo htmlspecialchars(_('See which locales are officially supported, and whether a candidate has everything it needs'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                    </p>
+                    <div class="admin-block-actions mt-auto">
+                        <a href="admin-locales.php" class="btn btn-dark btn-sm">
+                            <i class="fas fa-clipboard-check me-1"></i><?php echo htmlspecialchars(_('Review'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <?php endif; ?>
 
