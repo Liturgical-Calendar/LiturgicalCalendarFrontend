@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-27 23:58+0000\n"
-"PO-Revision-Date: 2026-08-28 00:16+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2026-08-28 08:37+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hu/>\n"
 "Language: hu\n"
@@ -2252,7 +2252,7 @@ msgstr "Új dekrétum"
 
 #: admin-decrees.php:76
 msgid "Manage permissions"
-msgstr "Irányítsd az engedélyeket"
+msgstr "Engedélyek kezelése"
 
 #: admin-decrees.php:86
 msgid "Search decrees"
@@ -2318,7 +2318,7 @@ msgstr "Bezárás"
 
 #: admin-decrees.php:188
 msgid "Action"
-msgstr "Cselekmény"
+msgstr "Művelet"
 
 #: admin-decrees.php:212
 msgid "Decree ID"
@@ -2326,7 +2326,7 @@ msgstr "Dekrétumazonosító"
 
 #: admin-decrees.php:216
 msgid "generated automatically from the event key and action"
-msgstr "automatikusan generálva az eseménykulcs és a cselekmény alapján"
+msgstr "automatikusan generálva az eseménykulcs és a művelet alapján"
 
 #. translators: the date the decree was signed; label for a date field
 #: admin-decrees.php:231
@@ -2565,7 +2565,7 @@ msgstr "Kérem, javítsa a hibákat a mentés előtt:"
 #: admin-decrees.php:641
 #, php-format
 msgid "Since %s"
-msgstr "Mióta %s"
+msgstr "%s óta"
 
 #: admin-decrees.php:642
 msgid "Source"
@@ -3066,7 +3066,7 @@ msgstr "Új teszt"
 #. or examinations
 #: admin-tests.php:99
 msgid "Tests"
-msgstr "Teszt"
+msgstr "Tesztek"
 
 #: admin-tests.php:109
 msgid "Event"
@@ -3201,7 +3201,7 @@ msgstr "Már létezik ilyen nevű teszt."
 #. translators: action label for the same boundary year; use the same term as the "pivot year" legend chip
 #: admin-tests.php:351
 msgid "set pivot year"
-msgstr "alappont év beállítása"
+msgstr "forduló év beállítása"
 
 #. translators: an assertion is one expected-result check for a single year of the test
 #: admin-tests.php:355
