@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-27 23:58+0000\n"
-"PO-Revision-Date: 2026-08-27 21:30+0000\n"
+"PO-Revision-Date: 2026-08-28 00:16+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pl/>\n"
@@ -2416,52 +2416,38 @@ msgstr ""
 "po Zesłaniu Ducha Świętego\"."
 
 #: admin-decrees.php:461
-#, fuzzy
-#| msgid "Color"
 msgid "Color(s)"
-msgstr "Kolor"
+msgstr "Kolor(y)"
 
 #. translators: the liturgical Common (Commune sanctorum) a celebration is taken from - e.g. Pastors,
 #. Martyrs, Doctors. NOT "common" meaning ordinary or generic
 #: admin-decrees.php:477
-#, fuzzy
-#| msgid "Commemoration (1)"
 msgid "Common(s)"
-msgstr "Wspomnienie (1)"
+msgstr "Powszechne"
 
 #: admin-decrees.php:498
-#, fuzzy
-#| msgid "Change grade"
 msgid "New grade"
-msgstr "Zmień rangę"
+msgstr "Nowa klasa"
 
 #: admin-decrees.php:509
-#, fuzzy
-#| msgid "Translations"
 msgid "Translations (i18n)"
-msgstr "Tłumaczenia"
+msgstr "Tłumaczenia (i18n)"
 
 #: admin-decrees.php:523
 msgid "Name in base locale"
-msgstr ""
+msgstr "Nazwa w podstawowym języku"
 
 #: admin-decrees.php:528
-#, fuzzy
-#| msgid "This value cannot be empty."
 msgid "Base locale — cannot be removed"
-msgstr "Ta wartość nie może być pusta."
+msgstr "Podstawowy język – nie można usunąć"
 
 #: admin-decrees.php:535
-#, fuzzy
-#| msgid "Translations"
 msgid "Add translation"
-msgstr "Tłumaczenia"
+msgstr "Dodaj tłumaczenie"
 
 #: admin-decrees.php:542 admin-decrees.php:617
-#, fuzzy
-#| msgid "Lectionary Category"
 msgid "Lectionary readings"
-msgstr "Kategoria Lekcjonarza"
+msgstr "Czytania lekcjonarza"
 
 #: admin-decrees.php:554
 msgid "Add readings for locale"
@@ -2534,22 +2520,24 @@ msgid "Responsorial psalm"
 msgstr "Psalm responsoryjny"
 
 #: admin-decrees.php:624
-#, fuzzy
-#| msgid "Lectionary Category"
 msgid "Second reading"
-msgstr "Kategoria Lekcjonarza"
+msgstr "Drugie czytanie"
 
 #: admin-decrees.php:627
 msgid ""
 "Feast and below take the ferial readings: first reading, responsorial psalm, "
 "gospel acclamation and gospel."
 msgstr ""
+"Święto i poniżej korzystają z ferialnych czytań: pierwsze czytanie, psalm "
+"responsoryjny, aklamacja przed Ewangelią i ewangelia."
 
 #: admin-decrees.php:631
 msgid ""
 "Feast of the Lord and above take the festive readings, which also require a "
 "second reading."
 msgstr ""
+"Święto Pana i powyżej korzystają z uroczystych czytań, które wymagają "
+"również drugiego czytania."
 
 #: admin-decrees.php:634
 msgid "Gospel acclamation"
