@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-27 23:58+0000\n"
+"POT-Creation-Date: 2026-08-28 12:19+0000\n"
 "PO-Revision-Date: 2026-08-28 08:37+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
@@ -1089,7 +1089,7 @@ msgstr "hétköznap"
 #. translators: liturgical grade 1 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: src/LitGrade.php:105 admin-decrees.php:698
+#: src/LitGrade.php:105 admin-decrees.php:721
 msgid "Commemoration"
 msgstr "Megemlékezés"
 
@@ -1102,7 +1102,7 @@ msgstr "Nem kötelező emléknap"
 #. translators: liturgical grade 3 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: src/LitGrade.php:111 admin-decrees.php:686
+#: src/LitGrade.php:111 admin-decrees.php:709
 msgid "Memorial"
 msgstr "Emléknap"
 
@@ -1231,13 +1231,13 @@ msgstr "Tulajdonság megváltoztatása"
 msgid "Name"
 msgstr "Név"
 
-#: src/Utilities.php:302 src/FormControls.php:288 admin-decrees.php:453
-#: admin-decrees.php:494 temporale.php:75 temporale.php:136
+#: src/Utilities.php:302 src/FormControls.php:288 admin-decrees.php:471
+#: admin-decrees.php:512 temporale.php:75 temporale.php:136
 msgid "Grade"
 msgstr "Fokozat"
 
 #. translators: form field label for the day of the month
-#: src/FormControls.php:131 includes/messages.php:21 admin-decrees.php:374
+#: src/FormControls.php:131 includes/messages.php:21 admin-decrees.php:392
 msgid "Day"
 msgstr "Nap"
 
@@ -1246,11 +1246,11 @@ msgid "switch on for mobile celebration as opposed to fixed date"
 msgstr "Kapcsolja be mozgó liturgikus ünnepléshez (fix dátum helyett)"
 
 #. translators: form field label for the month of the year
-#: src/FormControls.php:141 includes/messages.php:23 admin-decrees.php:382
+#: src/FormControls.php:141 includes/messages.php:23 admin-decrees.php:400
 msgid "Month"
 msgstr "Hónap"
 
-#: src/FormControls.php:143 admin-decrees.php:364
+#: src/FormControls.php:143 admin-decrees.php:382
 msgid "Mobile"
 msgstr "Mozgó"
 
@@ -1269,7 +1269,7 @@ msgstr "Óta"
 msgid "Until"
 msgstr "Addig"
 
-#: src/FormControls.php:278 admin-decrees.php:482
+#: src/FormControls.php:278 admin-decrees.php:500
 msgid "Common (or Proper)"
 msgstr "Általános (vagy Sajátos)"
 
@@ -1286,7 +1286,7 @@ msgid "Usage"
 msgstr "Használat"
 
 #. translators: link to translations page
-#: layout/header.php:51 includes/messages.php:197 admin-decrees.php:616
+#: layout/header.php:51 includes/messages.php:197 admin-decrees.php:634
 msgid "Translations"
 msgstr "Fordítások"
 
@@ -1481,8 +1481,8 @@ msgid "Remember me"
 msgstr "Emlékezz rám"
 
 #. translators: button label for canceling an action
-#: includes/login-modal.php:55 includes/messages.php:132 admin-decrees.php:562
-#: admin-decrees.php:589 admin-permissions.php:325 admin-permissions.php:351
+#: includes/login-modal.php:55 includes/messages.php:132 admin-decrees.php:580
+#: admin-decrees.php:607 admin-permissions.php:325 admin-permissions.php:351
 #: admin-tests.php:259 admin-tests.php:286 admin-tests.php:313
 #: admin-applications.php:207 admin-users.php:112 developer-dashboard.php:134
 #: developer-dashboard.php:183 developer-dashboard.php:246
@@ -2220,7 +2220,7 @@ msgstr "Egyházmegyei naptárak liturgikus hivatalok szerint"
 msgid "View"
 msgstr "Megtekintés"
 
-#: includes/admin-blocks.php:102 admin-decrees.php:654 admin-tests.php:340
+#: includes/admin-blocks.php:102 admin-decrees.php:677 admin-tests.php:340
 #: developer-dashboard.php:269
 msgid "Edit"
 msgstr "Szerkesztés"
@@ -2246,7 +2246,7 @@ msgstr ""
 "Hozz létre, szerkessz és törölj az Istentiszteleti Dikasztériumhoz tartozó "
 "dekrétumokat."
 
-#: admin-decrees.php:71 admin-decrees.php:618
+#: admin-decrees.php:71 admin-decrees.php:636
 msgid "New Decree"
 msgstr "Új dekrétum"
 
@@ -2307,7 +2307,7 @@ msgstr "Töröl"
 msgid "Decree"
 msgstr "Dekrétum"
 
-#: admin-decrees.php:156 admin-decrees.php:581 admin-permissions.php:229
+#: admin-decrees.php:156 admin-decrees.php:599 admin-permissions.php:229
 #: admin-permissions.php:261 admin-permissions.php:283
 #: admin-permissions.php:343 admin-tests.php:131 admin-tests.php:278
 #: admin-tests.php:305 admin-applications.php:184 admin-users.php:104
@@ -2373,151 +2373,167 @@ msgstr ""
 msgid "Add language code"
 msgstr "Nyelvi kód hozzáadása"
 
-#: admin-decrees.php:304
+#: admin-decrees.php:306
+#, fuzzy
+#| msgid "Language URL codes"
+msgid "Per-language URL overrides"
+msgstr "Nyelvi URL kódok"
+
+#: admin-decrees.php:311
+msgid ""
+"For a language whose document does not follow the pattern above — a "
+"different path or filename, not just a different code. Give the full URL."
+msgstr ""
+
+#: admin-decrees.php:317
+msgid "Add URL override"
+msgstr ""
+
+#: admin-decrees.php:322
 msgid "Preview"
 msgstr "Előnézet"
 
-#: admin-decrees.php:344
+#: admin-decrees.php:362
 msgid "Event details"
 msgstr "Esemény részletei"
 
-#: admin-decrees.php:350
+#: admin-decrees.php:368
 msgid "Date type"
 msgstr "Dátum típusa"
 
-#: admin-decrees.php:357
+#: admin-decrees.php:375
 msgid "Fixed"
 msgstr "Fix"
 
-#: admin-decrees.php:414
+#: admin-decrees.php:432
 msgid "Relative date"
 msgstr "Relatív dátum"
 
-#: admin-decrees.php:430
+#: admin-decrees.php:448
 msgid "before"
 msgstr "előtt"
 
-#: admin-decrees.php:431
+#: admin-decrees.php:449
 msgid "after"
 msgstr "után"
 
-#: admin-decrees.php:442
+#: admin-decrees.php:460
 msgid ""
 "A day of the week relative to a liturgical event, e.g. \"Monday after "
 "Pentecost\"."
 msgstr ""
 "Egy hét napja a liturgikus eseményhez képest, pl. \"hétfő Pünkösd után\"."
 
-#: admin-decrees.php:461
+#: admin-decrees.php:479
 msgid "Color(s)"
 msgstr "Színe(i)"
 
 #. translators: the liturgical Common (Commune sanctorum) a celebration is taken from - e.g. Pastors,
 #. Martyrs, Doctors. NOT "common" meaning ordinary or generic
-#: admin-decrees.php:477
+#: admin-decrees.php:495
 msgid "Common(s)"
 msgstr "Közös(ek)"
 
-#: admin-decrees.php:498
+#: admin-decrees.php:516
 msgid "New grade"
 msgstr "Új fokozat"
 
-#: admin-decrees.php:509
+#: admin-decrees.php:527
 msgid "Translations (i18n)"
 msgstr "Fordítások (i18n)"
 
-#: admin-decrees.php:523
+#: admin-decrees.php:541
 msgid "Name in base locale"
 msgstr "Név az alapértelmezett nyelven"
 
-#: admin-decrees.php:528
+#: admin-decrees.php:546
 msgid "Base locale — cannot be removed"
 msgstr "Alapértelmezett nyelv — nem törölhető"
 
-#: admin-decrees.php:535
+#: admin-decrees.php:553
 msgid "Add translation"
 msgstr "Új fordítás hozzáadása"
 
-#: admin-decrees.php:542 admin-decrees.php:617
+#: admin-decrees.php:560 admin-decrees.php:635
 msgid "Lectionary readings"
 msgstr "Szentírási olvasmányok"
 
-#: admin-decrees.php:554
+#: admin-decrees.php:572
 msgid "Add readings for locale"
 msgstr "Olvasmányok hozzáadása a nyelvhez"
 
-#: admin-decrees.php:565 admin-tests.php:262 developer-dashboard.php:323
+#: admin-decrees.php:583 admin-tests.php:262 developer-dashboard.php:323
 msgid "Save"
 msgstr "Mentés"
 
-#: admin-decrees.php:578
+#: admin-decrees.php:596
 msgid "Delete Decree"
 msgstr "Határozat törlése"
 
-#: admin-decrees.php:592 admin-decrees.php:655 admin-tests.php:316
+#: admin-decrees.php:610 admin-decrees.php:678 admin-tests.php:316
 #: admin-tests.php:341 developer-dashboard.php:249 developer-dashboard.php:270
 msgid "Delete"
 msgstr "Törlés"
 
-#: admin-decrees.php:608
+#: admin-decrees.php:626
 msgid "Loading…"
 msgstr "Betöltés…"
 
-#: admin-decrees.php:609
+#: admin-decrees.php:627
 msgid "You do not have permission to view decrees administration."
 msgstr "Nincs jogosultságod a határozatok adminisztrációjának megtekintéséhez."
 
-#: admin-decrees.php:610
+#: admin-decrees.php:628
 msgid "Could not load decrees from the API."
 msgstr "Nem sikerült betölteni a határozatokat az API-ból."
 
-#: admin-decrees.php:611
+#: admin-decrees.php:629
 msgid "No decrees found."
 msgstr "Nem található határozat."
 
-#: admin-decrees.php:612
+#: admin-decrees.php:630
 msgid ""
 "Are you sure you want to delete this decree? This action cannot be undone."
 msgstr ""
 "Biztosan törölni akarod ezt a határozatot? Ez a művelet nem vonható vissza."
 
-#: admin-decrees.php:613
+#: admin-decrees.php:631
 msgid "Decree created."
 msgstr "Határozat létrehozva."
 
-#: admin-decrees.php:614
+#: admin-decrees.php:632
 msgid "Decree updated."
 msgstr "Határozat frissítve."
 
-#: admin-decrees.php:615
+#: admin-decrees.php:633
 msgid "Decree deleted."
 msgstr "Határozat törölve."
 
-#: admin-decrees.php:619
+#: admin-decrees.php:637
 msgid "Edit Decree"
 msgstr "Határozat szerkesztése"
 
-#: admin-decrees.php:620
+#: admin-decrees.php:638
 msgid "Select locale"
 msgstr "Nyelv kiválasztása"
 
-#: admin-decrees.php:621 permission-requests.php:229
+#: admin-decrees.php:639 permission-requests.php:229
 msgid "Remove"
 msgstr "Eltávolítás"
 
-#: admin-decrees.php:622
+#: admin-decrees.php:640
 msgid "First reading"
 msgstr "Első olvasmány"
 
-#: admin-decrees.php:623
+#: admin-decrees.php:641
 msgid "Responsorial psalm"
 msgstr "Válaszos zsoltár"
 
-#: admin-decrees.php:624
+#: admin-decrees.php:642
 msgid "Second reading"
 msgstr "Második olvasmány"
 
-#: admin-decrees.php:627
+#: admin-decrees.php:645
 msgid ""
 "Feast and below take the ferial readings: first reading, responsorial psalm, "
 "gospel acclamation and gospel."
@@ -2525,7 +2541,7 @@ msgstr ""
 "Az ünnep és alatti szinteken a köznapos olvasmányokat kell használni: első "
 "olvasmány, válaszos zsoltár, alleluja és evangélium."
 
-#: admin-decrees.php:631
+#: admin-decrees.php:649
 msgid ""
 "Feast of the Lord and above take the festive readings, which also require a "
 "second reading."
@@ -2533,23 +2549,43 @@ msgstr ""
 "Az Úr ünnepe és a fölötti szinteken az ünnepi olvasmányokat kell használni, "
 "amelyekhez második olvasmány is szükséges."
 
-#: admin-decrees.php:634
+#: admin-decrees.php:652
 msgid "Gospel acclamation"
 msgstr "Alleluja"
 
-#: admin-decrees.php:635
+#: admin-decrees.php:653
 msgid "Gospel"
 msgstr "Evangélium"
 
-#: admin-decrees.php:636
+#: admin-decrees.php:654
 msgid "No readings defined for this locale yet"
 msgstr "Még nincsenek olvasmányok meghatározva ehhez a nyelvhez"
 
-#: admin-decrees.php:637
+#: admin-decrees.php:655
 msgid "Vatican URL code (e.g. ge, sp, po)"
 msgstr "Vatikán URL kód (pl. ge, sp, po)"
 
-#: admin-decrees.php:639
+#: admin-decrees.php:656
+msgid "Full URL for this language"
+msgstr ""
+
+#: admin-decrees.php:658
+msgid "override"
+msgstr ""
+
+#: admin-decrees.php:660
+#, fuzzy, php-format
+#| msgid ""
+#| "Duplicate language code \"%s\" in the source URL languages — each "
+#| "language may appear only once"
+msgid ""
+"Duplicate language code \"%s\" in the URL overrides — each language may be "
+"overridden only once"
+msgstr ""
+"Ismétlődő nyelvi kód \"%s\" a forrás URL nyelvek között — minden nyelv csak "
+"egyszer szerepelhet"
+
+#: admin-decrees.php:662
 #, php-format
 msgid ""
 "Duplicate language code \"%s\" in the source URL languages — each language "
@@ -2558,36 +2594,36 @@ msgstr ""
 "Ismétlődő nyelvi kód \"%s\" a forrás URL nyelvek között — minden nyelv csak "
 "egyszer szerepelhet"
 
-#: admin-decrees.php:640
+#: admin-decrees.php:663
 msgid "Please fix the following errors before saving:"
 msgstr "Kérem, javítsa a hibákat a mentés előtt:"
 
-#: admin-decrees.php:641
+#: admin-decrees.php:664
 #, php-format
 msgid "Since %s"
 msgstr "%s óta"
 
-#: admin-decrees.php:642
+#: admin-decrees.php:665
 msgid "Source"
 msgstr "Forrás"
 
-#: admin-decrees.php:643
+#: admin-decrees.php:666
 msgid "Your session has expired. Please log in again."
 msgstr "A munkamenet lejárt. Kérjük, jelentkezzen be újra."
 
-#: admin-decrees.php:644
+#: admin-decrees.php:667
 msgid "Log in"
 msgstr "Bejelentkezés"
 
-#: admin-decrees.php:645 admin-tests.php:347
+#: admin-decrees.php:668 admin-tests.php:347
 msgid "You do not have permission to perform this action."
 msgstr "Nincs jogosultsága arra, hogy ezt a műveletet végrehajtsa."
 
-#: admin-decrees.php:646
+#: admin-decrees.php:669
 msgid "Not in the General Roman Calendar — a new event will be created."
 msgstr "Nincs benne az Általános Római Naptárban — új esemény jön létre."
 
-#: admin-decrees.php:648
+#: admin-decrees.php:671
 #, php-format
 msgid ""
 "Already in the General Roman Calendar as \"%s\" — choose a different event "
@@ -2596,65 +2632,65 @@ msgstr ""
 "Már szerepel az Általános Római Naptárban, mint \"%s\" — válasszon másik "
 "esemény kulcsot."
 
-#: admin-decrees.php:649
+#: admin-decrees.php:672
 msgid ""
 "Not in the General Roman Calendar — this decree will not match any event."
 msgstr ""
 "Nincs benne az Általános Római Naptárban — ez a dekrétum nem fog egyezni "
 "egyetlen eseménnyel sem."
 
-#: admin-decrees.php:651
+#: admin-decrees.php:674
 #, php-format
 msgid "Matches \"%s\" in the General Roman Calendar."
 msgstr "Egyezik a \"%s\" nevű eseménnyel az Általános Római Naptárban."
 
-#: admin-decrees.php:653
+#: admin-decrees.php:676
 msgid "No decrees match the current search and filters."
 msgstr "A jelenlegi keresés és szűrők nem egyeznek egyetlen dekrétummal sem."
 
-#: admin-decrees.php:656
+#: admin-decrees.php:679
 msgid "(error)"
 msgstr "(hiba)"
 
 #. translators: liturgical grade 7 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:662
+#: admin-decrees.php:685
 msgid "Higher Solemnity"
 msgstr "Nagyobb főünnep"
 
 #. translators: liturgical grade 6 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:668
+#: admin-decrees.php:691
 msgid "Solemnity"
 msgstr "Főünnep"
 
 #. translators: liturgical grade 5 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:674
+#: admin-decrees.php:697
 msgid "Feast of the Lord"
 msgstr "Az Úr ünnepe"
 
 #. translators: liturgical grade 4 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:680
+#: admin-decrees.php:703
 msgid "Feast"
 msgstr "Ünnep"
 
 #. translators: liturgical grade 2 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:692
+#: admin-decrees.php:715
 msgid "Optional Memorial"
 msgstr "Választható emléknap"
 
 #. translators: liturgical grade 0 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:704
+#: admin-decrees.php:727
 msgid "Weekday"
 msgstr "Hétköznap"
 
