@@ -362,6 +362,25 @@ describe('per-language URL overrides (urls_langs)', () => {
         expect(validateDecreePayload(p, 'en', true).some((e) => e.includes('full http(s) URL'))).toBe(true);
     });
 
+    // A scheme with no host passes a /^https?:\/\// prefix test but is refused by the
+    // API's FILTER_VALIDATE_URL, so accepting it here would swap inline feedback for an
+    // opaque save failure.
+    it.each([
+        ['a bare https scheme', 'https://'],
+        ['a bare http scheme', 'http://'],
+        ['a scheme followed by whitespace', 'https:// '],
+        ['a non-http scheme', 'ftp://example.org/x'],
+        ['a javascript: URL', 'javascript:alert(1)'],
+    ])('rejects %s as an override', (_label, value) => {
+        const p = buildDecreePayload(newmanForm({ la: value }));
+        expect(validateDecreePayload(p, 'en', true).some((e) => e.includes('full http(s) URL'))).toBe(true);
+    });
+
+    it('still accepts a complete https URL', () => {
+        const p = buildDecreePayload(newmanForm({ la: NEWMAN_LA }));
+        expect(validateDecreePayload(p, 'en', true)).toEqual([]);
+    });
+
     it('rejects an override that is still a template', () => {
         const p = buildDecreePayload(newmanForm({ la: NEWMAN_TMPL }));
         expect(validateDecreePayload(p, 'en', true).some((e) => e.includes('not a template'))).toBe(true);

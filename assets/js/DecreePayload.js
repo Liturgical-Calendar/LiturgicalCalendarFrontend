@@ -277,6 +277,27 @@ function validateUrlRules(payload, errors) {
 }
 
 /**
+ * Whether a value is a complete absolute http(s) URL.
+ *
+ * A `^https?://` prefix test is not enough: it accepts `https://`, `http://` and
+ * `https:// ` — a scheme with no host. The API refuses those (`FILTER_VALIDATE_URL`
+ * returns false), so accepting them here would trade inline feedback for an opaque
+ * server-side error on save. Parsing settles it, and pinning the protocol also rules
+ * out schemes like `javascript:` that parse perfectly well.
+ *
+ * @param {string} url
+ * @returns {boolean}
+ */
+function isAbsoluteHttpUrl(url) {
+    try {
+        const { protocol } = new URL(url);
+        return protocol === 'http:' || protocol === 'https:';
+    } catch {
+        return false;
+    }
+}
+
+/**
  * Validate the per-language URL overrides.
  *
  * An override replaces the `url` + `url_lang_map` template outright for the language
@@ -295,9 +316,11 @@ function validateUrlOverrideRules(payload, errors) {
         if (!/^[a-z]{2}$/.test(iso)) {
             errors.push(`"${iso}" is not a two-letter language code: URL overrides are keyed by ISO 639-1`);
         }
-        if (typeof url !== 'string' || !/^https?:\/\//.test(url)) {
+        if (typeof url !== 'string' || !isAbsoluteHttpUrl(url)) {
             errors.push(`The URL override for "${iso}" must be a full http(s) URL`);
         } else if (url.includes('%s')) {
+            // Checked against the raw string, not the parsed URL: the parser happily
+            // accepts `%s` in a path, so a template would otherwise slip through here.
             errors.push(`The URL override for "${iso}" must be a finished URL, not a template containing "%s"`);
         }
     });
