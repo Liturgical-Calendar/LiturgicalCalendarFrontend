@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-27 23:58+0000\n"
-"PO-Revision-Date: 2026-08-28 00:16+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2026-08-28 08:37+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pl/>\n"
 "Language: pl\n"
@@ -2423,11 +2423,11 @@ msgstr "Kolor(y)"
 #. Martyrs, Doctors. NOT "common" meaning ordinary or generic
 #: admin-decrees.php:477
 msgid "Common(s)"
-msgstr "Powszechne"
+msgstr "Wspólne"
 
 #: admin-decrees.php:498
 msgid "New grade"
-msgstr "Nowa klasa"
+msgstr "Nowy stopień"
 
 #: admin-decrees.php:509
 msgid "Translations (i18n)"
@@ -2536,7 +2536,7 @@ msgid ""
 "Feast of the Lord and above take the festive readings, which also require a "
 "second reading."
 msgstr ""
-"Święto Pana i powyżej korzystają z uroczystych czytań, które wymagają "
+"Święto Pańskie i powyżej korzystają z uroczystych czytań, które wymagają "
 "również drugiego czytania."
 
 #: admin-decrees.php:634
@@ -2592,7 +2592,7 @@ msgstr "Nie masz uprawnień do wykonania tej akcji."
 #: admin-decrees.php:646
 msgid "Not in the General Roman Calendar — a new event will be created."
 msgstr ""
-"Nie w Ogólnym Kalendarzu Rzymskim — zostanie utworzone nowe wydarzenie."
+"Nie w Kalendarzu Rzymskim Powszechnym — zostanie utworzone nowe wydarzenie."
 
 #: admin-decrees.php:648
 #, php-format
@@ -2600,20 +2600,20 @@ msgid ""
 "Already in the General Roman Calendar as \"%s\" — choose a different event "
 "key."
 msgstr ""
-"Już w Ogólnym Kalendarzu Rzymskim jako \"%s\" — wybierz inny klucz "
+"Już w Kalendarzu Rzymskim Powszechnym jako \"%s\" — wybierz inny klucz "
 "wydarzenia."
 
 #: admin-decrees.php:649
 msgid ""
 "Not in the General Roman Calendar — this decree will not match any event."
 msgstr ""
-"Nie w Ogólnym Kalendarzu Rzymskim — ten dekret nie będzie pasował do żadnego "
-"wydarzenia."
+"Nie w Kalendarzu Rzymskim Powszechnym — ten dekret nie będzie pasował do "
+"żadnego wydarzenia."
 
 #: admin-decrees.php:651
 #, php-format
 msgid "Matches \"%s\" in the General Roman Calendar."
-msgstr "Pasuje do \"%s\" w Ogólnym Kalendarzu Rzymskim."
+msgstr "Pasuje do \"%s\" w Kalendarzu Rzymskim Powszechnym."
 
 #: admin-decrees.php:653
 msgid "No decrees match the current search and filters."
