@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-27 23:58+0000\n"
-"PO-Revision-Date: 2026-08-28 00:16+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2026-08-28 08:37+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
 "Language: nl\n"
@@ -1105,7 +1105,7 @@ msgstr "weekdag"
 #. by one rank before
 #: src/LitGrade.php:105 admin-decrees.php:698
 msgid "Commemoration"
-msgstr "Vrije gedachtenis"
+msgstr "Herdenking"
 
 #. translators: liturgical rank. Keep Capitalized
 #: src/LitGrade.php:108
@@ -2309,7 +2309,7 @@ msgstr "Nieuw evenement aanmaken"
 #. never an academic doctorate, and not "manufacture"
 #: admin-decrees.php:127 admin-decrees.php:195
 msgid "Make Doctor of the Church"
-msgstr "Maak Doctor van de Kerk"
+msgstr "Kerkleraar aanwijzen"
 
 #: admin-decrees.php:130 admin-decrees.php:198
 msgid "Set property: name"
@@ -2544,16 +2544,16 @@ msgid ""
 "Feast and below take the ferial readings: first reading, responsorial psalm, "
 "gospel acclamation and gospel."
 msgstr ""
-"Feest en hieronder neem de feriale lezingen: eerste lezing, responsoriale "
-"psalm, evangelie-acclamatie en evangelie."
+"Feest en lagere rangen gebruiken de feriale lezingen: eerste lezing, "
+"responsoriale psalm, evangelie-acclamatie en evangelie."
 
 #: admin-decrees.php:631
 msgid ""
 "Feast of the Lord and above take the festive readings, which also require a "
 "second reading."
 msgstr ""
-"Feest van de Heer en hoger neem de feestelijke lezingen, die ook een tweede "
-"lezing vereisen."
+"Feest van de Heer en hogere rangen gebruiken de feestelijke lezingen, die "
+"ook een tweede lezing vereisen."
 
 #: admin-decrees.php:634
 msgid "Gospel acclamation"
@@ -3224,7 +3224,7 @@ msgstr "Een test met die naam bestaat al."
 #. translators: action label for the same boundary year; use the same term as the "pivot year" legend chip
 #: admin-tests.php:351
 msgid "set pivot year"
-msgstr "stel draaipuntjaar in"
+msgstr "stel referentiejaar in"
 
 #. translators: an assertion is one expected-result check for a single year of the test
 #: admin-tests.php:355
