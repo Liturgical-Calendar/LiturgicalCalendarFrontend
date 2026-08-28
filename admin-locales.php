@@ -113,7 +113,8 @@ if (!$authHelper->hasRole('admin')) {
             loading: <?php echo json_encode(_('Loading…')); ?>,
             loadFailed: <?php echo json_encode(_('Could not load locales: %s')); ?>,
             missing: <?php echo json_encode(_('Missing:')); ?>,
-            readOnly: <?php echo json_encode(_('Curation is read-only here.')); ?>
+            readOnly: <?php echo json_encode(_('Curation is read-only here.')); ?>,
+            advisory: <?php echo json_encode(_('Advisory — reported, but does not block promotion')); ?>
         };
 
         const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({
@@ -175,9 +176,14 @@ if (!$authHelper->hasRole('admin')) {
                 const report = await response.json();
                 detailModalBody.innerHTML = (report.checks || []).map((check) => `
                     <div class="d-flex align-items-start mb-3">
-                        <i class="fas ${check.passed ? 'fa-check-circle text-success' : 'fa-times-circle text-warning'} me-2 mt-1"></i>
+                        <i class="fas ${check.passed
+                            ? 'fa-check-circle text-success'
+                            : (check.advisory ? 'fa-info-circle text-secondary' : 'fa-times-circle text-warning')} me-2 mt-1"></i>
                         <div>
-                            <div><code>${escapeHtml(check.name)}</code></div>
+                            <div>
+                                <code>${escapeHtml(check.name)}</code>
+                                ${check.advisory ? `<span class="badge bg-light text-secondary border ms-1">${escapeHtml(i18n.advisory)}</span>` : ''}
+                            </div>
                             <div class="small text-muted">${escapeHtml(check.summary)}</div>
                             ${check.missing && check.missing.length
                                 ? `<div class="small mt-1">${escapeHtml(i18n.missing)} <code>${check.missing.map(escapeHtml).join('</code>, <code>')}</code></div>`
