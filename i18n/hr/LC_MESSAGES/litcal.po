@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-27 23:58+0000\n"
-"PO-Revision-Date: 2026-08-27 21:30+0000\n"
+"PO-Revision-Date: 2026-08-28 00:16+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
@@ -2398,52 +2398,38 @@ msgstr ""
 "Duhova\"."
 
 #: admin-decrees.php:461
-#, fuzzy
-#| msgid "Color"
 msgid "Color(s)"
-msgstr "Boja"
+msgstr "Boja(e)"
 
 #. translators: the liturgical Common (Commune sanctorum) a celebration is taken from - e.g. Pastors,
 #. Martyrs, Doctors. NOT "common" meaning ordinary or generic
 #: admin-decrees.php:477
-#, fuzzy
-#| msgid "Commemoration (1)"
 msgid "Common(s)"
-msgstr "Komemoracija (1)"
+msgstr "Zajednički"
 
 #: admin-decrees.php:498
-#, fuzzy
-#| msgid "Change grade"
 msgid "New grade"
-msgstr "Promijeni razinu"
+msgstr "Nova ocjena"
 
 #: admin-decrees.php:509
-#, fuzzy
-#| msgid "Translations"
 msgid "Translations (i18n)"
-msgstr "Prijevodi"
+msgstr "Prijevodi (i18n)"
 
 #: admin-decrees.php:523
 msgid "Name in base locale"
-msgstr ""
+msgstr "Ime u osnovnom jeziku"
 
 #: admin-decrees.php:528
-#, fuzzy
-#| msgid "This value cannot be empty."
 msgid "Base locale — cannot be removed"
-msgstr "Ova vrijednost ne može biti prazna."
+msgstr "Osnovni jezik — ne može se ukloniti"
 
 #: admin-decrees.php:535
-#, fuzzy
-#| msgid "Translations"
 msgid "Add translation"
-msgstr "Prijevodi"
+msgstr "Dodaj prijevod"
 
 #: admin-decrees.php:542 admin-decrees.php:617
-#, fuzzy
-#| msgid "Lectionary Category"
 msgid "Lectionary readings"
-msgstr "Kategorija lekcionara"
+msgstr "Čitanja lekcionara"
 
 #: admin-decrees.php:554
 msgid "Add readings for locale"
@@ -2518,22 +2504,24 @@ msgid "Responsorial psalm"
 msgstr "Otpjevni psalam"
 
 #: admin-decrees.php:624
-#, fuzzy
-#| msgid "Lectionary Category"
 msgid "Second reading"
-msgstr "Kategorija lekcionara"
+msgstr "Drugo čitanje"
 
 #: admin-decrees.php:627
 msgid ""
 "Feast and below take the ferial readings: first reading, responsorial psalm, "
 "gospel acclamation and gospel."
 msgstr ""
+"Blagdani i niže uzimaju ferijalna čitanja: prvo čitanje, psalam s odzivom, "
+"aklamacija Evanđelja i Evanđelje."
 
 #: admin-decrees.php:631
 msgid ""
 "Feast of the Lord and above take the festive readings, which also require a "
 "second reading."
 msgstr ""
+"Blagdani Gospodnji i viši uzimaju svečana čitanja, koja također zahtijevaju "
+"drugo čitanje."
 
 #: admin-decrees.php:634
 msgid "Gospel acclamation"
