@@ -70,6 +70,9 @@ import {
     prefillI18nRows,
     prefillReadingsGroups,
     findUrlLangDuplicateErrors,
+    findUrlOverrideDuplicateErrors,
+    addUrlOverrideRow,
+    buildSourceLinks,
     describeEventKeyHint,
     syncEventKeyHint,
 } from '../admin-decrees.js';
@@ -928,5 +931,91 @@ describe('syncEventKeyHint — DOM shell', () => {
         syncEventKeyHint(form, EMPTY_CATALOG);
         expect(form.querySelector('#decreeEventKeyHint').textContent).toBe('');
         form.remove();
+    });
+});
+
+// ---- per-language URL overrides (urls_langs) --------------------------------
+
+describe('buildSourceLinks with urls_langs', () => {
+    const TMPL = 'https://www.vatican.va/content/romancuria/%s/dicasteri/x/newman.html';
+    const LA   = 'https://www.vatican.va/content/romancuria/it/dicasteri/x/annesso-newman-la.html';
+
+    // The single-URL branch returns the <a> itself rather than a wrapper, so the
+    // element has to be considered alongside its descendants.
+    const hrefs = (metadata) => {
+        const el = buildSourceLinks(metadata);
+        const anchors = el.tagName === 'A' ? [el] : [...el.querySelectorAll('a')];
+        return anchors.map((a) => a.getAttribute('href'));
+    };
+
+    it('links a language carried only by an override', () => {
+        const links = hrefs({ url: TMPL, url_lang_map: { en: 'en', it: 'it' }, urls_langs: { la: LA } });
+        expect(links).toContain(LA);
+        expect(links).toContain('https://www.vatican.va/content/romancuria/en/dicasteri/x/newman.html');
+        expect(links).toHaveLength(3);
+    });
+
+    it('lets an override win over the template for the same language', () => {
+        const links = hrefs({ url: TMPL, url_lang_map: { it: 'it' }, urls_langs: { it: LA } });
+        expect(links).toEqual([LA]);
+    });
+
+    it('is unchanged when no override is present', () => {
+        const links = hrefs({ url: TMPL, url_lang_map: { en: 'en', it: 'it' } });
+        expect(links).toEqual([
+            'https://www.vatican.va/content/romancuria/en/dicasteri/x/newman.html',
+            'https://www.vatican.va/content/romancuria/it/dicasteri/x/newman.html',
+        ]);
+    });
+
+    it('still renders a single Source link for a plain URL', () => {
+        expect(hrefs({ url: 'https://www.vatican.va/content/x.html' }))
+            .toEqual(['https://www.vatican.va/content/x.html']);
+    });
+
+    it('renders overrides even with no template to expand', () => {
+        expect(hrefs({ url: 'https://www.vatican.va/content/x.html', urls_langs: { la: LA } })).toEqual([LA]);
+    });
+});
+
+describe('URL override rows', () => {
+    const rowsWith = (pairs) => {
+        const container = document.createElement('div');
+        const form = document.createElement('form');
+        form.appendChild(container);
+        pairs.forEach(([iso, url]) => addUrlOverrideRow(container, iso, url));
+        return form;
+    };
+
+    it('collects override rows into urls_langs', () => {
+        const form = rowsWith([['la', 'https://www.vatican.va/content/a.html']]);
+        expect(collectFormValues(form).urls_langs).toEqual({ la: 'https://www.vatican.va/content/a.html' });
+    });
+
+    it('ignores rows missing either field', () => {
+        const form = rowsWith([['la', ''], ['', 'https://www.vatican.va/content/a.html']]);
+        expect(collectFormValues(form).urls_langs).toBeUndefined();
+    });
+
+    it('lowercases the ISO key', () => {
+        const form = rowsWith([['LA', 'https://www.vatican.va/content/a.html']]);
+        expect(collectFormValues(form).urls_langs).toEqual({ la: 'https://www.vatican.va/content/a.html' });
+    });
+
+    it('flags a duplicated override language', () => {
+        const form = rowsWith([
+            ['la', 'https://www.vatican.va/content/a.html'],
+            ['la', 'https://www.vatican.va/content/b.html'],
+        ]);
+        expect(findUrlOverrideDuplicateErrors(form)).toHaveLength(1);
+        expect(findUrlOverrideDuplicateErrors(form)[0]).toContain('la');
+    });
+
+    it('accepts distinct override languages', () => {
+        const form = rowsWith([
+            ['la', 'https://www.vatican.va/content/a.html'],
+            ['pt', 'https://www.vatican.va/content/b.html'],
+        ]);
+        expect(findUrlOverrideDuplicateErrors(form)).toEqual([]);
     });
 });
