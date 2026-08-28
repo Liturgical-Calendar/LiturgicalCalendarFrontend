@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-27 23:58+0000\n"
-"PO-Revision-Date: 2026-08-28 00:16+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2026-08-28 08:37+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
 "Language: la\n"
@@ -2246,7 +2246,7 @@ msgstr "Quaere decreta"
 
 #: admin-decrees.php:93
 msgid "Search by name, event key, protocol or description"
-msgstr "Quaere per nomen, eventum clavem, protocolum vel descriptionem"
+msgstr "Quaere per nomen, clavem eventus, protocollum vel descriptionem"
 
 #: admin-decrees.php:101
 msgid "Filter by year"
@@ -2279,11 +2279,11 @@ msgstr "Fac Doctor Ecclesiae"
 
 #: admin-decrees.php:130 admin-decrees.php:198
 msgid "Set property: name"
-msgstr "Statue proprietas: nomen"
+msgstr "Statue proprietatem: nomen"
 
 #: admin-decrees.php:133 admin-decrees.php:201
 msgid "Set property: grade"
-msgstr "Statue proprietas: gradus"
+msgstr "Statue proprietatem: gradus"
 
 #: admin-decrees.php:139
 msgid "Clear"
@@ -2312,7 +2312,7 @@ msgstr "Decretum ID"
 
 #: admin-decrees.php:216
 msgid "generated automatically from the event key and action"
-msgstr "generatum automatice ex eventu clave et actu"
+msgstr "generatum automatice ex clave eventus et actione"
 
 #. translators: the date the decree was signed; label for a date field
 #: admin-decrees.php:231
@@ -2365,7 +2365,7 @@ msgstr "Praevisio"
 
 #: admin-decrees.php:344
 msgid "Event details"
-msgstr "Eventus singularia"
+msgstr "Singula eventus"
 
 #: admin-decrees.php:350
 msgid "Date type"
@@ -2403,7 +2403,7 @@ msgstr "Color(es)"
 #. Martyrs, Doctors. NOT "common" meaning ordinary or generic
 #: admin-decrees.php:477
 msgid "Common(s)"
-msgstr "Communis"
+msgstr "Commune"
 
 #: admin-decrees.php:498
 msgid "New grade"
@@ -2516,8 +2516,8 @@ msgid ""
 "Feast of the Lord and above take the festive readings, which also require a "
 "second reading."
 msgstr ""
-"Festum Domini et supra lectiones festivas accipiunt, quae etiam lectio "
-"secunda requiritur."
+"Festum Domini et supra lectiones festivas accipiunt, quae etiam lectionem "
+"secundam requirunt."
 
 #: admin-decrees.php:634
 msgid "Gospel acclamation"
@@ -2551,7 +2551,7 @@ msgstr "Quaeso emenda errores antequam serves:"
 #: admin-decrees.php:641
 #, php-format
 msgid "Since %s"
-msgstr "Ex quo %s"
+msgstr "Ab anno %s"
 
 #: admin-decrees.php:642
 msgid "Source"
@@ -2579,7 +2579,7 @@ msgid ""
 "Already in the General Roman Calendar as \"%s\" — choose a different event "
 "key."
 msgstr ""
-"Iam in Calendario Romano Generali ut \"%s\" — elige alium clavem eventus."
+"Iam in Calendario Romano Generali ut \"%s\" — elige aliam clavem eventus."
 
 #: admin-decrees.php:649
 msgid ""
@@ -3183,7 +3183,7 @@ msgstr "Experimentum cum hoc nomine iam exstat."
 #. translators: action label for the same boundary year; use the same term as the "pivot year" legend chip
 #: admin-tests.php:351
 msgid "set pivot year"
-msgstr "pone annum pivotalem"
+msgstr "pone annum cardinem"
 
 #. translators: an assertion is one expected-result check for a single year of the test
 #: admin-tests.php:355
