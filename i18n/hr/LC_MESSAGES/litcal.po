@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-27 23:58+0000\n"
-"PO-Revision-Date: 2026-08-28 08:37+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"POT-Creation-Date: 2026-08-29 00:34+0000\n"
+"PO-Revision-Date: 2026-08-29 09:37+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
 "Language: hr\n"
@@ -1083,7 +1083,7 @@ msgstr "svagdan"
 #. translators: liturgical grade 1 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: src/LitGrade.php:105 admin-decrees.php:698
+#: src/LitGrade.php:105 admin-decrees.php:721
 msgid "Commemoration"
 msgstr "Spomen"
 
@@ -1096,7 +1096,7 @@ msgstr "Neobavezni spomendan"
 #. translators: liturgical grade 3 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: src/LitGrade.php:111 admin-decrees.php:686
+#: src/LitGrade.php:111 admin-decrees.php:709
 msgid "Memorial"
 msgstr "Spomendan"
 
@@ -1222,13 +1222,13 @@ msgstr "Svojstvo za promjenu"
 msgid "Name"
 msgstr "Ime"
 
-#: src/Utilities.php:302 src/FormControls.php:288 admin-decrees.php:453
-#: admin-decrees.php:494 temporale.php:75 temporale.php:136
+#: src/Utilities.php:302 src/FormControls.php:288 admin-decrees.php:471
+#: admin-decrees.php:512 temporale.php:75 temporale.php:136
 msgid "Grade"
 msgstr "Rang"
 
 #. translators: form field label for the day of the month
-#: src/FormControls.php:131 includes/messages.php:21 admin-decrees.php:374
+#: src/FormControls.php:131 includes/messages.php:21 admin-decrees.php:392
 msgid "Day"
 msgstr "Dan"
 
@@ -1237,11 +1237,11 @@ msgid "switch on for mobile celebration as opposed to fixed date"
 msgstr "uključiti za mobilno slavlje umjesto fiksnog datuma"
 
 #. translators: form field label for the month of the year
-#: src/FormControls.php:141 includes/messages.php:23 admin-decrees.php:382
+#: src/FormControls.php:141 includes/messages.php:23 admin-decrees.php:400
 msgid "Month"
 msgstr "Mjesec"
 
-#: src/FormControls.php:143 admin-decrees.php:364
+#: src/FormControls.php:143 admin-decrees.php:382
 msgid "Mobile"
 msgstr "Mobilni"
 
@@ -1260,7 +1260,7 @@ msgstr "Od"
 msgid "Until"
 msgstr "Do"
 
-#: src/FormControls.php:278 admin-decrees.php:482
+#: src/FormControls.php:278 admin-decrees.php:500
 msgid "Common (or Proper)"
 msgstr "Zajedničko (ili vlastito)"
 
@@ -1277,7 +1277,7 @@ msgid "Usage"
 msgstr "Upotreba"
 
 #. translators: link to translations page
-#: layout/header.php:51 includes/messages.php:197 admin-decrees.php:616
+#: layout/header.php:51 includes/messages.php:197 admin-decrees.php:634
 msgid "Translations"
 msgstr "Prijevodi"
 
@@ -1472,8 +1472,8 @@ msgid "Remember me"
 msgstr "Zapamti me"
 
 #. translators: button label for canceling an action
-#: includes/login-modal.php:55 includes/messages.php:132 admin-decrees.php:562
-#: admin-decrees.php:589 admin-permissions.php:325 admin-permissions.php:351
+#: includes/login-modal.php:55 includes/messages.php:132 admin-decrees.php:580
+#: admin-decrees.php:607 admin-permissions.php:325 admin-permissions.php:351
 #: admin-tests.php:259 admin-tests.php:286 admin-tests.php:313
 #: admin-applications.php:207 admin-users.php:112 developer-dashboard.php:134
 #: developer-dashboard.php:183 developer-dashboard.php:246
@@ -2212,7 +2212,7 @@ msgstr "Biskupijski kalendari od liturgijskih ureda"
 msgid "View"
 msgstr "Pogled"
 
-#: includes/admin-blocks.php:102 admin-decrees.php:654 admin-tests.php:340
+#: includes/admin-blocks.php:102 admin-decrees.php:677 admin-tests.php:340
 #: developer-dashboard.php:269
 msgid "Edit"
 msgstr "Uredi"
@@ -2234,7 +2234,7 @@ msgstr "Upravljaj testovima liturgijske preciznosti"
 msgid "Create, edit and delete decrees of the Dicastery for Divine Worship."
 msgstr "Izradi, uredi i izbriši dekrete Dikasterija za bogoštovlje."
 
-#: admin-decrees.php:71 admin-decrees.php:618
+#: admin-decrees.php:71 admin-decrees.php:636
 msgid "New Decree"
 msgstr "Novi Dekret"
 
@@ -2295,7 +2295,7 @@ msgstr "Očisti"
 msgid "Decree"
 msgstr "Dekret"
 
-#: admin-decrees.php:156 admin-decrees.php:581 admin-permissions.php:229
+#: admin-decrees.php:156 admin-decrees.php:599 admin-permissions.php:229
 #: admin-permissions.php:261 admin-permissions.php:283
 #: admin-permissions.php:343 admin-tests.php:131 admin-tests.php:278
 #: admin-tests.php:305 admin-applications.php:184 admin-users.php:104
@@ -2361,35 +2361,51 @@ msgstr ""
 msgid "Add language code"
 msgstr "Dodaj kôd jezika"
 
-#: admin-decrees.php:304
+#: admin-decrees.php:306
+msgid "Per-language URL overrides"
+msgstr "Zamjene URL-a po jeziku"
+
+#: admin-decrees.php:311
+msgid ""
+"For a language whose document does not follow the pattern above — a "
+"different path or filename, not just a different code. Give the full URL."
+msgstr ""
+"Za jezik čiji dokument ne slijedi gore navedeni uzorak — drugačiji put ili "
+"naziv datoteke, a ne samo drugačiji kod. Daj punu URL adresu."
+
+#: admin-decrees.php:317
+msgid "Add URL override"
+msgstr "Dodaj zamjenu URL-a"
+
+#: admin-decrees.php:322
 msgid "Preview"
 msgstr "Pregled"
 
-#: admin-decrees.php:344
+#: admin-decrees.php:362
 msgid "Event details"
 msgstr "Detalji događaja"
 
-#: admin-decrees.php:350
+#: admin-decrees.php:368
 msgid "Date type"
 msgstr "Tip datuma"
 
-#: admin-decrees.php:357
+#: admin-decrees.php:375
 msgid "Fixed"
 msgstr "Fiksni"
 
-#: admin-decrees.php:414
+#: admin-decrees.php:432
 msgid "Relative date"
 msgstr "Relativni datum"
 
-#: admin-decrees.php:430
+#: admin-decrees.php:448
 msgid "before"
 msgstr "prije"
 
-#: admin-decrees.php:431
+#: admin-decrees.php:449
 msgid "after"
 msgstr "nakon"
 
-#: admin-decrees.php:442
+#: admin-decrees.php:460
 msgid ""
 "A day of the week relative to a liturgical event, e.g. \"Monday after "
 "Pentecost\"."
@@ -2397,117 +2413,117 @@ msgstr ""
 "Dan u tjednu u odnosu na liturgijski događaj, npr. \"Ponedjeljak nakon "
 "Duhova\"."
 
-#: admin-decrees.php:461
+#: admin-decrees.php:479
 msgid "Color(s)"
 msgstr "Boja(e)"
 
 #. translators: the liturgical Common (Commune sanctorum) a celebration is taken from - e.g. Pastors,
 #. Martyrs, Doctors. NOT "common" meaning ordinary or generic
-#: admin-decrees.php:477
+#: admin-decrees.php:495
 msgid "Common(s)"
 msgstr "Zajedničko"
 
-#: admin-decrees.php:498
+#: admin-decrees.php:516
 msgid "New grade"
 msgstr "Novi rang"
 
-#: admin-decrees.php:509
+#: admin-decrees.php:527
 msgid "Translations (i18n)"
 msgstr "Prijevodi (i18n)"
 
-#: admin-decrees.php:523
+#: admin-decrees.php:541
 msgid "Name in base locale"
 msgstr "Ime u osnovnom jeziku"
 
-#: admin-decrees.php:528
+#: admin-decrees.php:546
 msgid "Base locale — cannot be removed"
 msgstr "Osnovni jezik — ne može se ukloniti"
 
-#: admin-decrees.php:535
+#: admin-decrees.php:553
 msgid "Add translation"
 msgstr "Dodaj prijevod"
 
-#: admin-decrees.php:542 admin-decrees.php:617
+#: admin-decrees.php:560 admin-decrees.php:635
 msgid "Lectionary readings"
 msgstr "Čitanja lekcionara"
 
-#: admin-decrees.php:554
+#: admin-decrees.php:572
 msgid "Add readings for locale"
 msgstr "Dodaj čitanja za jezik"
 
-#: admin-decrees.php:565 admin-tests.php:262 developer-dashboard.php:323
+#: admin-decrees.php:583 admin-tests.php:262 developer-dashboard.php:323
 msgid "Save"
 msgstr "Spremi"
 
-#: admin-decrees.php:578
+#: admin-decrees.php:596
 msgid "Delete Decree"
 msgstr "Izbriši dekret"
 
-#: admin-decrees.php:592 admin-decrees.php:655 admin-tests.php:316
+#: admin-decrees.php:610 admin-decrees.php:678 admin-tests.php:316
 #: admin-tests.php:341 developer-dashboard.php:249 developer-dashboard.php:270
 msgid "Delete"
 msgstr "Izbriši"
 
-#: admin-decrees.php:608
+#: admin-decrees.php:626
 msgid "Loading…"
 msgstr "Učitavanje…"
 
-#: admin-decrees.php:609
+#: admin-decrees.php:627
 msgid "You do not have permission to view decrees administration."
 msgstr "Nemate dopuštenje za pregled administracije dekreta."
 
-#: admin-decrees.php:610
+#: admin-decrees.php:628
 msgid "Could not load decrees from the API."
 msgstr "Nije moguće učitati dekrete iz API-ja."
 
-#: admin-decrees.php:611
+#: admin-decrees.php:629
 msgid "No decrees found."
 msgstr "Nisu pronađeni dekreti."
 
-#: admin-decrees.php:612
+#: admin-decrees.php:630
 msgid ""
 "Are you sure you want to delete this decree? This action cannot be undone."
 msgstr ""
 "Jeste li sigurni da želite izbrisati ovaj dekret? Ova radnja se ne može "
 "poništiti."
 
-#: admin-decrees.php:613
+#: admin-decrees.php:631
 msgid "Decree created."
 msgstr "Dekret stvoren."
 
-#: admin-decrees.php:614
+#: admin-decrees.php:632
 msgid "Decree updated."
 msgstr "Dekret ažuriran."
 
-#: admin-decrees.php:615
+#: admin-decrees.php:633
 msgid "Decree deleted."
 msgstr "Dekret izbrisan."
 
-#: admin-decrees.php:619
+#: admin-decrees.php:637
 msgid "Edit Decree"
 msgstr "Uredi dekret"
 
-#: admin-decrees.php:620
+#: admin-decrees.php:638
 msgid "Select locale"
 msgstr "Odaberi jezik"
 
-#: admin-decrees.php:621 permission-requests.php:229
+#: admin-decrees.php:639 permission-requests.php:229
 msgid "Remove"
 msgstr "Ukloni"
 
-#: admin-decrees.php:622
+#: admin-decrees.php:640
 msgid "First reading"
 msgstr "Prvo čitanje"
 
-#: admin-decrees.php:623
+#: admin-decrees.php:641
 msgid "Responsorial psalm"
 msgstr "Otpjevni psalam"
 
-#: admin-decrees.php:624
+#: admin-decrees.php:642
 msgid "Second reading"
 msgstr "Drugo čitanje"
 
-#: admin-decrees.php:627
+#: admin-decrees.php:645
 msgid ""
 "Feast and below take the ferial readings: first reading, responsorial psalm, "
 "gospel acclamation and gospel."
@@ -2515,7 +2531,7 @@ msgstr ""
 "Blagdani i niže uzimaju ferijalna čitanja: prvo čitanje, psalam s odzivom, "
 "aklamacija Evanđelja i Evanđelje."
 
-#: admin-decrees.php:631
+#: admin-decrees.php:649
 msgid ""
 "Feast of the Lord and above take the festive readings, which also require a "
 "second reading."
@@ -2523,23 +2539,40 @@ msgstr ""
 "Blagdani Gospodnji i viši uzimaju svečana čitanja, koja također zahtijevaju "
 "drugo čitanje."
 
-#: admin-decrees.php:634
+#: admin-decrees.php:652
 msgid "Gospel acclamation"
 msgstr "Evanđeoska aklamacija"
 
-#: admin-decrees.php:635
+#: admin-decrees.php:653
 msgid "Gospel"
 msgstr "Evanđelje"
 
-#: admin-decrees.php:636
+#: admin-decrees.php:654
 msgid "No readings defined for this locale yet"
 msgstr "Još nisu definirana čitanja za ovaj jezik"
 
-#: admin-decrees.php:637
+#: admin-decrees.php:655
 msgid "Vatican URL code (e.g. ge, sp, po)"
 msgstr "Kod URL-a Vatikana (npr. ge, sp, po)"
 
-#: admin-decrees.php:639
+#: admin-decrees.php:656
+msgid "Full URL for this language"
+msgstr "Puna URL adresa za ovaj jezik"
+
+#: admin-decrees.php:658
+msgid "override"
+msgstr "zamjena"
+
+#: admin-decrees.php:660
+#, php-format
+msgid ""
+"Duplicate language code \"%s\" in the URL overrides — each language may be "
+"overridden only once"
+msgstr ""
+"Dupli kôd jezika \"%s\" u zamjenama URL-a — svaki jezik može biti zamijenjen "
+"samo jednom"
+
+#: admin-decrees.php:662
 #, php-format
 msgid ""
 "Duplicate language code \"%s\" in the source URL languages — each language "
@@ -2548,36 +2581,36 @@ msgstr ""
 "Duplicirani jezični kod \"%s\" u izvoru URL jezika — svaki jezik se može "
 "pojaviti samo jednom"
 
-#: admin-decrees.php:640
+#: admin-decrees.php:663
 msgid "Please fix the following errors before saving:"
 msgstr "Ispravite sljedeće pogreške prije spremanja:"
 
-#: admin-decrees.php:641
+#: admin-decrees.php:664
 #, php-format
 msgid "Since %s"
 msgstr "Od %s"
 
-#: admin-decrees.php:642
+#: admin-decrees.php:665
 msgid "Source"
 msgstr "Izvor"
 
-#: admin-decrees.php:643
+#: admin-decrees.php:666
 msgid "Your session has expired. Please log in again."
 msgstr "Vaša sesija je istekla. Molimo vas da se ponovno prijavite."
 
-#: admin-decrees.php:644
+#: admin-decrees.php:667
 msgid "Log in"
 msgstr "Prijavi se"
 
-#: admin-decrees.php:645 admin-tests.php:347
+#: admin-decrees.php:668 admin-tests.php:347
 msgid "You do not have permission to perform this action."
 msgstr "Nemate dopuštenje za izvođenje ove radnje."
 
-#: admin-decrees.php:646
+#: admin-decrees.php:669
 msgid "Not in the General Roman Calendar — a new event will be created."
 msgstr "Nije u Općem rimskom kalendaru — bit će stvoren novi događaj."
 
-#: admin-decrees.php:648
+#: admin-decrees.php:671
 #, php-format
 msgid ""
 "Already in the General Roman Calendar as \"%s\" — choose a different event "
@@ -2585,65 +2618,65 @@ msgid ""
 msgstr ""
 "Već je u Općem rimskom kalendaru kao \"%s\" — odaberite drugačiji događaj."
 
-#: admin-decrees.php:649
+#: admin-decrees.php:672
 msgid ""
 "Not in the General Roman Calendar — this decree will not match any event."
 msgstr ""
 "Nije u Općem rimskom kalendaru — ovaj dekret neće odgovarati nijednom "
 "događaju."
 
-#: admin-decrees.php:651
+#: admin-decrees.php:674
 #, php-format
 msgid "Matches \"%s\" in the General Roman Calendar."
 msgstr "Podudara se s \"%s\" u Općem rimskom kalendaru."
 
-#: admin-decrees.php:653
+#: admin-decrees.php:676
 msgid "No decrees match the current search and filters."
 msgstr "Nijedan dekret ne odgovara trenutnoj pretrazi i filtrima."
 
-#: admin-decrees.php:656
+#: admin-decrees.php:679
 msgid "(error)"
 msgstr "(pogreška)"
 
 #. translators: liturgical grade 7 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:662
+#: admin-decrees.php:685
 msgid "Higher Solemnity"
 msgstr "Veća svetkovina"
 
 #. translators: liturgical grade 6 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:668
+#: admin-decrees.php:691
 msgid "Solemnity"
 msgstr "Svetkovina"
 
 #. translators: liturgical grade 5 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:674
+#: admin-decrees.php:697
 msgid "Feast of the Lord"
 msgstr "Gospodnji blagdan"
 
 #. translators: liturgical grade 4 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:680
+#: admin-decrees.php:703
 msgid "Feast"
 msgstr "Blagdan"
 
 #. translators: liturgical grade 2 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:692
+#: admin-decrees.php:715
 msgid "Optional Memorial"
 msgstr "Neobvezni spomendan"
 
 #. translators: liturgical grade 0 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:704
+#: admin-decrees.php:727
 msgid "Weekday"
 msgstr "Običan dan"
 
@@ -3000,7 +3033,8 @@ msgstr "Povjerljive informacije"
 msgid "Date"
 msgstr "Datum"
 
-#: admin-permissions.php:449 admin-applications.php:245 admin-dashboard.php:171
+#: admin-permissions.php:449 admin-applications.php:245 admin-dashboard.php:135
+#: admin-dashboard.php:189
 msgid "Review"
 msgstr "Pregled"
 
@@ -3437,8 +3471,8 @@ msgstr ""
 "Upravljanje podacima liturgijskog kalendara, informacije Rimskog misala i "
 "regionalni kalendari."
 
-#: admin-dashboard.php:65 admin-dashboard.php:129 admin-dashboard.php:146
-#: admin-dashboard.php:156
+#: admin-dashboard.php:65 admin-dashboard.php:147 admin-dashboard.php:164
+#: admin-dashboard.php:174
 msgid "Administration"
 msgstr "Administracija"
 
@@ -3462,11 +3496,23 @@ msgstr "Pregled i odobrenje prijava za razvojne programere"
 msgid "Manage fine-grained resource permissions"
 msgstr "Upravljanje dozvolama za resurse s finom granulacijom"
 
-#: admin-dashboard.php:165
+#: admin-dashboard.php:129
+msgid "Supported Locales"
+msgstr "Podržani lokaliteti"
+
+#: admin-dashboard.php:131
+msgid ""
+"See which locales are officially supported, and whether a candidate has "
+"everything it needs"
+msgstr ""
+"Pogledaj koji lokaliteti su službeno podržani i ima li kandidat sve što mu "
+"treba"
+
+#: admin-dashboard.php:183
 msgid "Access Requests to Review"
 msgstr "Zahtjevi za pristup na pregled"
 
-#: admin-dashboard.php:167
+#: admin-dashboard.php:185
 msgid "Review and approve access requests for the resources you administer"
 msgstr "Pregledaj i odobri zahtjeve za pristup resursima kojima upravljaš"
 

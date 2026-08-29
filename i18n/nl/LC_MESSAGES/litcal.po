@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-27 23:58+0000\n"
-"PO-Revision-Date: 2026-08-28 08:37+0000\n"
+"POT-Creation-Date: 2026-08-29 00:34+0000\n"
+"PO-Revision-Date: 2026-08-29 09:58+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -90,10 +90,9 @@ msgid ""
 "than using the locale parameter. N.B. The Accept-Language header will have "
 "no effect when a National or Diocesan calendar is requested."
 msgstr ""
-"Het is beter om de landinstelling in te stellen met de Accept-Language "
-"header in plaats van met de locale parameter. NB: De Accept-Language header "
-"heeft geen effect wanneer een nationale of diocesane kalender wordt "
-"opgevraagd."
+"Het is beter om de taal in te stellen met de Accept-Language header in "
+"plaats van met de locale parameter. NB: De Accept-Language header heeft geen "
+"effect wanneer een nationale of diocesane kalender wordt opgevraagd."
 
 #: index.php:43
 msgid ""
@@ -1103,7 +1102,7 @@ msgstr "weekdag"
 #. translators: liturgical grade 1 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: src/LitGrade.php:105 admin-decrees.php:698
+#: src/LitGrade.php:105 admin-decrees.php:721
 msgid "Commemoration"
 msgstr "Herdenking"
 
@@ -1116,7 +1115,7 @@ msgstr "Vrije gedachtenis"
 #. translators: liturgical grade 3 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: src/LitGrade.php:111 admin-decrees.php:686
+#: src/LitGrade.php:111 admin-decrees.php:709
 msgid "Memorial"
 msgstr "Gedachtenis"
 
@@ -1243,13 +1242,13 @@ msgstr "Eigenschap wijzigen"
 msgid "Name"
 msgstr "Naam"
 
-#: src/Utilities.php:302 src/FormControls.php:288 admin-decrees.php:453
-#: admin-decrees.php:494 temporale.php:75 temporale.php:136
+#: src/Utilities.php:302 src/FormControls.php:288 admin-decrees.php:471
+#: admin-decrees.php:512 temporale.php:75 temporale.php:136
 msgid "Grade"
 msgstr "Graad"
 
 #. translators: form field label for the day of the month
-#: src/FormControls.php:131 includes/messages.php:21 admin-decrees.php:374
+#: src/FormControls.php:131 includes/messages.php:21 admin-decrees.php:392
 msgid "Day"
 msgstr "Dag"
 
@@ -1258,11 +1257,11 @@ msgid "switch on for mobile celebration as opposed to fixed date"
 msgstr "inschakelen voor mobiele viering in plaats van vaste datum"
 
 #. translators: form field label for the month of the year
-#: src/FormControls.php:141 includes/messages.php:23 admin-decrees.php:382
+#: src/FormControls.php:141 includes/messages.php:23 admin-decrees.php:400
 msgid "Month"
 msgstr "Maand"
 
-#: src/FormControls.php:143 admin-decrees.php:364
+#: src/FormControls.php:143 admin-decrees.php:382
 msgid "Mobile"
 msgstr "Mobiel"
 
@@ -1281,7 +1280,7 @@ msgstr "Vanaf"
 msgid "Until"
 msgstr "Tot"
 
-#: src/FormControls.php:278 admin-decrees.php:482
+#: src/FormControls.php:278 admin-decrees.php:500
 msgid "Common (or Proper)"
 msgstr "Gemeenschappelijke (of Eigen)"
 
@@ -1298,7 +1297,7 @@ msgid "Usage"
 msgstr "Gebruik"
 
 #. translators: link to translations page
-#: layout/header.php:51 includes/messages.php:197 admin-decrees.php:616
+#: layout/header.php:51 includes/messages.php:197 admin-decrees.php:634
 msgid "Translations"
 msgstr "Vertalingen"
 
@@ -1493,8 +1492,8 @@ msgid "Remember me"
 msgstr "Onthoud mij"
 
 #. translators: button label for canceling an action
-#: includes/login-modal.php:55 includes/messages.php:132 admin-decrees.php:562
-#: admin-decrees.php:589 admin-permissions.php:325 admin-permissions.php:351
+#: includes/login-modal.php:55 includes/messages.php:132 admin-decrees.php:580
+#: admin-decrees.php:607 admin-permissions.php:325 admin-permissions.php:351
 #: admin-tests.php:259 admin-tests.php:286 admin-tests.php:313
 #: admin-applications.php:207 admin-users.php:112 developer-dashboard.php:134
 #: developer-dashboard.php:183 developer-dashboard.php:246
@@ -1621,7 +1620,7 @@ msgstr "Ontbrekende vertalingen"
 #: includes/messages.php:63
 #, php-format
 msgid "Cannot proceed: translations missing for locale %s"
-msgstr "Kan niet doorgaan: vertalingen ontbreken voor de lokale instelling %s"
+msgstr "Kan niet doorgaan: vertalingen ontbreken voor taal %s"
 
 #. translators: detailed explanation when General Roman Calendar translations are missing.
 #. %s is the locale code. This message should mention Weblate as the translation server.
@@ -1632,9 +1631,9 @@ msgid ""
 "\"%s\". Please translate the General Roman Calendar via the Weblate "
 "translation server before creating a calendar for this locale."
 msgstr ""
-"De Algemene Romeinse Kalender is nog niet vertaald in de lokale instelling "
-"\"%s\". Vertaal de Algemene Romeinse Kalender via de Weblate vertaalserver "
-"voordat je een kalender voor deze lokale instelling maakt."
+"De Algemene Romeinse Kalender is nog niet vertaald in de taal \"%s\". "
+"Vertaal de Algemene Romeinse Kalender via de Weblate vertaalserver voordat "
+"je een kalender voor deze taal maakt."
 
 #. translators: form row title for designating a Doctor of the Church
 #: includes/messages.php:86
@@ -2240,7 +2239,7 @@ msgstr "Diocesane kalenders door liturgische diensten"
 msgid "View"
 msgstr "Bekijk"
 
-#: includes/admin-blocks.php:102 admin-decrees.php:654 admin-tests.php:340
+#: includes/admin-blocks.php:102 admin-decrees.php:677 admin-tests.php:340
 #: developer-dashboard.php:269
 msgid "Edit"
 msgstr "Bewerk"
@@ -2266,7 +2265,7 @@ msgstr ""
 "Decreten van het Dicasterie voor de Goddelijke Eredienst aanmaken, bewerken "
 "en verwijderen."
 
-#: admin-decrees.php:71 admin-decrees.php:618
+#: admin-decrees.php:71 admin-decrees.php:636
 msgid "New Decree"
 msgstr "Nieuw Decreet"
 
@@ -2327,7 +2326,7 @@ msgstr "Wissen"
 msgid "Decree"
 msgstr "Decreet"
 
-#: admin-decrees.php:156 admin-decrees.php:581 admin-permissions.php:229
+#: admin-decrees.php:156 admin-decrees.php:599 admin-permissions.php:229
 #: admin-permissions.php:261 admin-permissions.php:283
 #: admin-permissions.php:343 admin-tests.php:131 admin-tests.php:278
 #: admin-tests.php:305 admin-applications.php:184 admin-users.php:104
@@ -2393,35 +2392,52 @@ msgstr ""
 msgid "Add language code"
 msgstr "Taalcode toevoegen"
 
-#: admin-decrees.php:304
+#: admin-decrees.php:306
+msgid "Per-language URL overrides"
+msgstr "URL-overschrijvingen per taal"
+
+#: admin-decrees.php:311
+msgid ""
+"For a language whose document does not follow the pattern above — a "
+"different path or filename, not just a different code. Give the full URL."
+msgstr ""
+"Voor een taal waarvan het document niet het bovenstaande patroon volgt — een "
+"ander pad of bestandsnaam, niet alleen een andere code. Geef de volledige "
+"URL."
+
+#: admin-decrees.php:317
+msgid "Add URL override"
+msgstr "URL-override toevoegen"
+
+#: admin-decrees.php:322
 msgid "Preview"
 msgstr "Voorbeeld"
 
-#: admin-decrees.php:344
+#: admin-decrees.php:362
 msgid "Event details"
 msgstr "Evenementgegevens"
 
-#: admin-decrees.php:350
+#: admin-decrees.php:368
 msgid "Date type"
 msgstr "Datumtype"
 
-#: admin-decrees.php:357
+#: admin-decrees.php:375
 msgid "Fixed"
 msgstr "Vast"
 
-#: admin-decrees.php:414
+#: admin-decrees.php:432
 msgid "Relative date"
 msgstr "Relatieve datum"
 
-#: admin-decrees.php:430
+#: admin-decrees.php:448
 msgid "before"
 msgstr "voor"
 
-#: admin-decrees.php:431
+#: admin-decrees.php:449
 msgid "after"
 msgstr "na"
 
-#: admin-decrees.php:442
+#: admin-decrees.php:460
 msgid ""
 "A day of the week relative to a liturgical event, e.g. \"Monday after "
 "Pentecost\"."
@@ -2429,117 +2445,117 @@ msgstr ""
 "Een dag van de week in relatie tot een liturgisch evenement, bijv. \"Maandag "
 "na Pinksteren\"."
 
-#: admin-decrees.php:461
+#: admin-decrees.php:479
 msgid "Color(s)"
 msgstr "Kleur(en)"
 
 #. translators: the liturgical Common (Commune sanctorum) a celebration is taken from - e.g. Pastors,
 #. Martyrs, Doctors. NOT "common" meaning ordinary or generic
-#: admin-decrees.php:477
+#: admin-decrees.php:495
 msgid "Common(s)"
 msgstr "Gemeenschappelijk(e)"
 
-#: admin-decrees.php:498
+#: admin-decrees.php:516
 msgid "New grade"
 msgstr "Nieuwe graad"
 
-#: admin-decrees.php:509
+#: admin-decrees.php:527
 msgid "Translations (i18n)"
 msgstr "Vertalingen (i18n)"
 
-#: admin-decrees.php:523
+#: admin-decrees.php:541
 msgid "Name in base locale"
 msgstr "Naam in basistaal"
 
-#: admin-decrees.php:528
+#: admin-decrees.php:546
 msgid "Base locale — cannot be removed"
 msgstr "Basistaal — kan niet worden verwijderd"
 
-#: admin-decrees.php:535
+#: admin-decrees.php:553
 msgid "Add translation"
 msgstr "Vertaling toevoegen"
 
-#: admin-decrees.php:542 admin-decrees.php:617
+#: admin-decrees.php:560 admin-decrees.php:635
 msgid "Lectionary readings"
 msgstr "Lectionarium lezingen"
 
-#: admin-decrees.php:554
+#: admin-decrees.php:572
 msgid "Add readings for locale"
-msgstr "Lezingen toevoegen voor landinstelling"
+msgstr "Lezingen toevoegen voor taal"
 
-#: admin-decrees.php:565 admin-tests.php:262 developer-dashboard.php:323
+#: admin-decrees.php:583 admin-tests.php:262 developer-dashboard.php:323
 msgid "Save"
 msgstr "Opslaan"
 
-#: admin-decrees.php:578
+#: admin-decrees.php:596
 msgid "Delete Decree"
 msgstr "Decreet verwijderen"
 
-#: admin-decrees.php:592 admin-decrees.php:655 admin-tests.php:316
+#: admin-decrees.php:610 admin-decrees.php:678 admin-tests.php:316
 #: admin-tests.php:341 developer-dashboard.php:249 developer-dashboard.php:270
 msgid "Delete"
 msgstr "Verwijderen"
 
-#: admin-decrees.php:608
+#: admin-decrees.php:626
 msgid "Loading…"
 msgstr "Laden…"
 
-#: admin-decrees.php:609
+#: admin-decrees.php:627
 msgid "You do not have permission to view decrees administration."
 msgstr "Je hebt geen toestemming om de administratie van decreten te bekijken."
 
-#: admin-decrees.php:610
+#: admin-decrees.php:628
 msgid "Could not load decrees from the API."
 msgstr "Kon geen decreten van de API laden."
 
-#: admin-decrees.php:611
+#: admin-decrees.php:629
 msgid "No decrees found."
 msgstr "Geen decreten gevonden."
 
-#: admin-decrees.php:612
+#: admin-decrees.php:630
 msgid ""
 "Are you sure you want to delete this decree? This action cannot be undone."
 msgstr ""
 "Weet je zeker dat je dit decreet wilt verwijderen? Deze actie kan niet "
 "ongedaan worden gemaakt."
 
-#: admin-decrees.php:613
+#: admin-decrees.php:631
 msgid "Decree created."
 msgstr "Decreet aangemaakt."
 
-#: admin-decrees.php:614
+#: admin-decrees.php:632
 msgid "Decree updated."
 msgstr "Decreet bijgewerkt."
 
-#: admin-decrees.php:615
+#: admin-decrees.php:633
 msgid "Decree deleted."
 msgstr "Decreet verwijderd."
 
-#: admin-decrees.php:619
+#: admin-decrees.php:637
 msgid "Edit Decree"
 msgstr "Decreet bewerken"
 
-#: admin-decrees.php:620
+#: admin-decrees.php:638
 msgid "Select locale"
-msgstr "Selecteer landinstelling"
+msgstr "Selecteer taal"
 
-#: admin-decrees.php:621 permission-requests.php:229
+#: admin-decrees.php:639 permission-requests.php:229
 msgid "Remove"
 msgstr "Verwijderen"
 
-#: admin-decrees.php:622
+#: admin-decrees.php:640
 msgid "First reading"
 msgstr "Eerste lezing"
 
-#: admin-decrees.php:623
+#: admin-decrees.php:641
 msgid "Responsorial psalm"
 msgstr "Responsoriale psalm"
 
-#: admin-decrees.php:624
+#: admin-decrees.php:642
 msgid "Second reading"
 msgstr "Tweede lezing"
 
-#: admin-decrees.php:627
+#: admin-decrees.php:645
 msgid ""
 "Feast and below take the ferial readings: first reading, responsorial psalm, "
 "gospel acclamation and gospel."
@@ -2547,7 +2563,7 @@ msgstr ""
 "Feest en lagere rangen gebruiken de feriale lezingen: eerste lezing, "
 "responsoriale psalm, evangelie-acclamatie en evangelie."
 
-#: admin-decrees.php:631
+#: admin-decrees.php:649
 msgid ""
 "Feast of the Lord and above take the festive readings, which also require a "
 "second reading."
@@ -2555,23 +2571,40 @@ msgstr ""
 "Feest van de Heer en hogere rangen gebruiken de feestelijke lezingen, die "
 "ook een tweede lezing vereisen."
 
-#: admin-decrees.php:634
+#: admin-decrees.php:652
 msgid "Gospel acclamation"
 msgstr "Evangelievers"
 
-#: admin-decrees.php:635
+#: admin-decrees.php:653
 msgid "Gospel"
 msgstr "Evangelie"
 
-#: admin-decrees.php:636
+#: admin-decrees.php:654
 msgid "No readings defined for this locale yet"
-msgstr "Nog geen lezingen gedefinieerd voor deze landinstelling"
+msgstr "Nog geen lezingen gedefinieerd voor deze taal"
 
-#: admin-decrees.php:637
+#: admin-decrees.php:655
 msgid "Vatican URL code (e.g. ge, sp, po)"
 msgstr "Vaticaan URL-code (bijv. ge, sp, po)"
 
-#: admin-decrees.php:639
+#: admin-decrees.php:656
+msgid "Full URL for this language"
+msgstr "Volledige URL voor deze taal"
+
+#: admin-decrees.php:658
+msgid "override"
+msgstr "overschrijving"
+
+#: admin-decrees.php:660
+#, php-format
+msgid ""
+"Duplicate language code \"%s\" in the URL overrides — each language may be "
+"overridden only once"
+msgstr ""
+"Dubbele taalcode \"%s\" in de URL-overschrijvingen — elke taal kan slechts "
+"één keer worden overschreven"
+
+#: admin-decrees.php:662
 #, php-format
 msgid ""
 "Duplicate language code \"%s\" in the source URL languages — each language "
@@ -2580,38 +2613,38 @@ msgstr ""
 "Dubbele taalcode \"%s\" in de bron-URL-talen — elke taal mag slechts één "
 "keer voorkomen"
 
-#: admin-decrees.php:640
+#: admin-decrees.php:663
 msgid "Please fix the following errors before saving:"
 msgstr "Gelieve de volgende fouten op te lossen voordat u opslaat:"
 
-#: admin-decrees.php:641
+#: admin-decrees.php:664
 #, php-format
 msgid "Since %s"
 msgstr "Sinds %s"
 
-#: admin-decrees.php:642
+#: admin-decrees.php:665
 msgid "Source"
 msgstr "Bron"
 
-#: admin-decrees.php:643
+#: admin-decrees.php:666
 msgid "Your session has expired. Please log in again."
 msgstr "Uw sessie is verlopen. Log opnieuw in."
 
-#: admin-decrees.php:644
+#: admin-decrees.php:667
 msgid "Log in"
 msgstr "Inloggen"
 
-#: admin-decrees.php:645 admin-tests.php:347
+#: admin-decrees.php:668 admin-tests.php:347
 msgid "You do not have permission to perform this action."
 msgstr "U heeft geen toestemming om deze actie uit te voeren."
 
-#: admin-decrees.php:646
+#: admin-decrees.php:669
 msgid "Not in the General Roman Calendar — a new event will be created."
 msgstr ""
 "Niet in de Algemene Romeinse Kalender — er zal een nieuw evenement worden "
 "aangemaakt."
 
-#: admin-decrees.php:648
+#: admin-decrees.php:671
 #, php-format
 msgid ""
 "Already in the General Roman Calendar as \"%s\" — choose a different event "
@@ -2620,65 +2653,65 @@ msgstr ""
 "Reeds in de Algemene Romeinse Kalender als \"%s\" — kies een andere "
 "evenementen-sleutel."
 
-#: admin-decrees.php:649
+#: admin-decrees.php:672
 msgid ""
 "Not in the General Roman Calendar — this decree will not match any event."
 msgstr ""
 "Niet in de Algemene Romeinse Kalender — dit decreet zal niet overeenkomen "
 "met enig evenement."
 
-#: admin-decrees.php:651
+#: admin-decrees.php:674
 #, php-format
 msgid "Matches \"%s\" in the General Roman Calendar."
 msgstr "Komt overeen met \"%s\" in de Algemene Romeinse Kalender."
 
-#: admin-decrees.php:653
+#: admin-decrees.php:676
 msgid "No decrees match the current search and filters."
 msgstr "Geen decreten komen overeen met de huidige zoekopdracht en filters."
 
-#: admin-decrees.php:656
+#: admin-decrees.php:679
 msgid "(error)"
 msgstr "(fout)"
 
 #. translators: liturgical grade 7 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:662
+#: admin-decrees.php:685
 msgid "Higher Solemnity"
 msgstr "Hogere Plechtigheid"
 
 #. translators: liturgical grade 6 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:668
+#: admin-decrees.php:691
 msgid "Solemnity"
 msgstr "Plechtigheid"
 
 #. translators: liturgical grade 5 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:674
+#: admin-decrees.php:697
 msgid "Feast of the Lord"
 msgstr "Feest van de Heer"
 
 #. translators: liturgical grade 4 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:680
+#: admin-decrees.php:703
 msgid "Feast"
 msgstr "Feest"
 
 #. translators: liturgical grade 2 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:692
+#: admin-decrees.php:715
 msgid "Optional Memorial"
 msgstr "Optionele Gedachtenis"
 
 #. translators: liturgical grade 0 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:704
+#: admin-decrees.php:727
 msgid "Weekday"
 msgstr "Weekdag"
 
@@ -3033,7 +3066,8 @@ msgstr "Referenties"
 msgid "Date"
 msgstr "Datum"
 
-#: admin-permissions.php:449 admin-applications.php:245 admin-dashboard.php:171
+#: admin-permissions.php:449 admin-applications.php:245 admin-dashboard.php:135
+#: admin-dashboard.php:189
 msgid "Review"
 msgstr "Beoordeling"
 
@@ -3474,8 +3508,8 @@ msgstr ""
 "Liturgische kalendergegevens beheren, informatie uit het Romeins Missaal en "
 "regionale kalenders."
 
-#: admin-dashboard.php:65 admin-dashboard.php:129 admin-dashboard.php:146
-#: admin-dashboard.php:156
+#: admin-dashboard.php:65 admin-dashboard.php:147 admin-dashboard.php:164
+#: admin-dashboard.php:174
 msgid "Administration"
 msgstr "Administratie"
 
@@ -3499,11 +3533,23 @@ msgstr "Beoordeel en keur ontwikkelaaraanvragen goed"
 msgid "Manage fine-grained resource permissions"
 msgstr "Fijnmazige resourcepermissies beheren"
 
-#: admin-dashboard.php:165
+#: admin-dashboard.php:129
+msgid "Supported Locales"
+msgstr "Ondersteunde talen"
+
+#: admin-dashboard.php:131
+msgid ""
+"See which locales are officially supported, and whether a candidate has "
+"everything it needs"
+msgstr ""
+"Zie welke talen officieel worden ondersteund, en of een kandidaat alles "
+"heeft wat hij nodig heeft"
+
+#: admin-dashboard.php:183
 msgid "Access Requests to Review"
 msgstr "Te beoordelen toegangsverzoeken"
 
-#: admin-dashboard.php:167
+#: admin-dashboard.php:185
 msgid "Review and approve access requests for the resources you administer"
 msgstr ""
 "Beoordeel en keur toegangsverzoeken goed voor de bronnen die je beheert"
