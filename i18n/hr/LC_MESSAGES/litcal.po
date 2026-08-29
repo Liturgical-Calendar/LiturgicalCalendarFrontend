@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-29 00:34+0000\n"
-"PO-Revision-Date: 2026-08-28 08:37+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2026-08-29 09:37+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
 "Language: hr\n"
@@ -2362,20 +2362,20 @@ msgid "Add language code"
 msgstr "Dodaj kôd jezika"
 
 #: admin-decrees.php:306
-#, fuzzy
-#| msgid "Language URL codes"
 msgid "Per-language URL overrides"
-msgstr "Kodovi jezika URL-a"
+msgstr "Zamjene URL-a po jeziku"
 
 #: admin-decrees.php:311
 msgid ""
 "For a language whose document does not follow the pattern above — a "
 "different path or filename, not just a different code. Give the full URL."
 msgstr ""
+"Za jezik čiji dokument ne slijedi gore navedeni uzorak — drugačiji put ili "
+"naziv datoteke, a ne samo drugačiji kod. Daj punu URL adresu."
 
 #: admin-decrees.php:317
 msgid "Add URL override"
-msgstr ""
+msgstr "Dodaj zamjenu URL-a"
 
 #: admin-decrees.php:322
 msgid "Preview"
@@ -2557,23 +2557,20 @@ msgstr "Kod URL-a Vatikana (npr. ge, sp, po)"
 
 #: admin-decrees.php:656
 msgid "Full URL for this language"
-msgstr ""
+msgstr "Puna URL adresa za ovaj jezik"
 
 #: admin-decrees.php:658
 msgid "override"
-msgstr ""
+msgstr "zamjena"
 
 #: admin-decrees.php:660
-#, fuzzy, php-format
-#| msgid ""
-#| "Duplicate language code \"%s\" in the source URL languages — each "
-#| "language may appear only once"
+#, php-format
 msgid ""
 "Duplicate language code \"%s\" in the URL overrides — each language may be "
 "overridden only once"
 msgstr ""
-"Duplicirani jezični kod \"%s\" u izvoru URL jezika — svaki jezik se može "
-"pojaviti samo jednom"
+"Dupli kôd jezika \"%s\" u zamjenama URL-a — svaki jezik može biti zamijenjen "
+"samo jednom"
 
 #: admin-decrees.php:662
 #, php-format
@@ -3501,13 +3498,15 @@ msgstr "Upravljanje dozvolama za resurse s finom granulacijom"
 
 #: admin-dashboard.php:129
 msgid "Supported Locales"
-msgstr ""
+msgstr "Podržani lokaliteti"
 
 #: admin-dashboard.php:131
 msgid ""
 "See which locales are officially supported, and whether a candidate has "
 "everything it needs"
 msgstr ""
+"Pogledaj koji lokaliteti su službeno podržani i ima li kandidat sve što mu "
+"treba"
 
 #: admin-dashboard.php:183
 msgid "Access Requests to Review"
