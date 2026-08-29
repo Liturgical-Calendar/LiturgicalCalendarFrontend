@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-29 00:34+0000\n"
-"PO-Revision-Date: 2026-08-29 00:34+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2026-08-29 09:37+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pt/>\n"
 "Language: pt\n"
@@ -2383,20 +2383,20 @@ msgid "Add language code"
 msgstr "Adicionar código de idioma"
 
 #: admin-decrees.php:306
-#, fuzzy
-#| msgid "Language URL codes"
 msgid "Per-language URL overrides"
-msgstr "Códigos de URL do idioma"
+msgstr "Substituições de URL por idioma"
 
 #: admin-decrees.php:311
 msgid ""
 "For a language whose document does not follow the pattern above — a "
 "different path or filename, not just a different code. Give the full URL."
 msgstr ""
+"Para um idioma cujo documento não segue o padrão acima — um caminho ou nome "
+"de arquivo diferente, não apenas um código diferente. Forneça o URL completo."
 
 #: admin-decrees.php:317
 msgid "Add URL override"
-msgstr ""
+msgstr "Adicionar substituição de URL"
 
 #: admin-decrees.php:322
 msgid "Preview"
@@ -2578,23 +2578,20 @@ msgstr "Código URL Vaticano (ex.: ge, sp, po)"
 
 #: admin-decrees.php:656
 msgid "Full URL for this language"
-msgstr ""
+msgstr "URL completo para este idioma"
 
 #: admin-decrees.php:658
 msgid "override"
-msgstr ""
+msgstr "substituir"
 
 #: admin-decrees.php:660
-#, fuzzy, php-format
-#| msgid ""
-#| "Duplicate language code \"%s\" in the source URL languages — each "
-#| "language may appear only once"
+#, php-format
 msgid ""
 "Duplicate language code \"%s\" in the URL overrides — each language may be "
 "overridden only once"
 msgstr ""
-"Código de idioma \"%s\" duplicado nos idiomas da URL de origem — cada idioma "
-"pode aparecer apenas uma vez"
+"Código de idioma duplicado \"%s\" nas substituições de URL — cada idioma "
+"pode ser substituído apenas uma vez"
 
 #: admin-decrees.php:662
 #, php-format
@@ -3525,13 +3522,15 @@ msgstr "Gerenciar permissões granulares de recursos"
 
 #: admin-dashboard.php:129
 msgid "Supported Locales"
-msgstr ""
+msgstr "Idiomas Suportados"
 
 #: admin-dashboard.php:131
 msgid ""
 "See which locales are officially supported, and whether a candidate has "
 "everything it needs"
 msgstr ""
+"Veja quais idiomas são oficialmente suportados e se um candidato tem tudo o "
+"que precisa"
 
 #: admin-dashboard.php:183
 msgid "Access Requests to Review"
