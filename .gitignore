@@ -121,6 +121,7 @@ api/*
 !admin-permissions.php
 !admin-role-requests.php
 !admin-decrees.php
+!admin-locales.php
 !admin-tests.php
 !admin-users.php
 !developer-dashboard.php
