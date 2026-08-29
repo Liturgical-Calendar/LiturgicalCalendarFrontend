@@ -63,6 +63,50 @@ $_ENV['ACCURACY_TESTS_URL'] = $_ENV['ACCURACY_TESTS_URL'] ?? 'https://litcal-tes
 $apiPort    = !empty($_ENV['API_PORT']) ? ":{$_ENV['API_PORT']}" : '';
 $apiBaseUrl = rtrim("{$_ENV['API_PROTOCOL']}://{$_ENV['API_HOST']}{$apiPort}{$_ENV['API_BASE_PATH']}", '/');
 
+// ============================================================================
+// Transport policy for the browser-facing API URL (issue #495)
+// ============================================================================
+// Pages issue credentialed requests against $apiBaseUrl — admin-users.php,
+// admin-locales.php and user-profile.php all use `credentials: 'include'` — so a
+// deployment configured with API_PROTOCOL=http against a non-local host would put
+// session cookies on the wire in plaintext.
+//
+// The API already refuses such requests: HttpsEnforcementMiddleware guards /auth,
+// /admin, /applications and /_ops. That server-side refusal remains the control
+// that actually holds; a client cannot protect a request it is itself making, and
+// the browser has sent the cookie before any script could intervene. What was
+// missing is a DEPLOYMENT-time guard, so an operator error surfaces here rather
+// than as an opaque 4xx on someone's first admin action.
+//
+// Checked once, centrally, so every page is covered and no future page has to
+// remember. Deliberately NOT applied to $apiInternalBaseUrl below: that address is
+// container-to-container on a private network (http://litcal-api:8000), where
+// plaintext is correct and TLS would be a misconfiguration.
+$httpsEnforced = filter_var($_ENV['API_HTTPS_ENFORCEMENT'] ?? 'true', FILTER_VALIDATE_BOOLEAN);
+$apiHostLower  = strtolower(trim($_ENV['API_HOST']));
+$apiIsLoopback = in_array($apiHostLower, ['localhost', '127.0.0.1', '::1', '[::1]'], true)
+    || str_ends_with($apiHostLower, '.localhost');
+$appEnv        = $_ENV['APP_ENV'] ?? 'production';
+$appIsLocal    = in_array($appEnv, ['development', 'test'], true);
+
+if (
+    $httpsEnforced
+    && !$apiIsLoopback
+    && !$appIsLocal
+    && strtolower(trim($_ENV['API_PROTOCOL'])) !== 'https'
+) {
+    throw new RuntimeException(sprintf(
+        'Refusing to start: API_PROTOCOL is "%s" for API_HOST "%s", so credentialed requests would '
+        . 'send session cookies in plaintext. Set API_PROTOCOL=https. '
+        . 'If TLS terminates in front of this deployment (a load balancer or reverse proxy), set '
+        . 'API_HTTPS_ENFORCEMENT=false to opt out, mirroring the API\'s own HTTPS_ENFORCEMENT. '
+        . 'Loopback hosts and APP_ENV=development|test are exempt automatically; APP_ENV is "%s".',
+        $_ENV['API_PROTOCOL'],
+        $_ENV['API_HOST'],
+        $appEnv
+    ));
+}
+
 // Server-side (PHP) base API URL. The browser-facing $apiBaseUrl above uses
 // API_HOST (typically 'localhost'), which is not reachable from inside a
 // container; when API_INTERNAL_URL is set (e.g. http://litcal-api:8000 in the
