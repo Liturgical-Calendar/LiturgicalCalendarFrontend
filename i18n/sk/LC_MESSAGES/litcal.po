@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-29 00:34+0000\n"
-"PO-Revision-Date: 2026-08-29 09:58+0000\n"
+"PO-Revision-Date: 2026-08-29 10:12+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
@@ -89,7 +89,7 @@ msgid ""
 "than using the locale parameter. N.B. The Accept-Language header will have "
 "no effect when a National or Diocesan calendar is requested."
 msgstr ""
-"Je vhodnejšie nastaviť lokalitu pomocou hlavičky Accept-Language než pomocou "
+"Je vhodnejšie nastaviť jazyk pomocou hlavičky Accept-Language než pomocou "
 "parametra locale. Upozornenie: Hlavička Accept-Language nebude mať žiadny "
 "vplyv, keď sa žiada o národný alebo diecézny kalendár."
 
@@ -2444,7 +2444,7 @@ msgstr "Čítania lekcionára"
 
 #: admin-decrees.php:572
 msgid "Add readings for locale"
-msgstr "Pridať čítania pre lokalitu"
+msgstr "Pridať čítania pre jazyk"
 
 #: admin-decrees.php:583 admin-tests.php:262 developer-dashboard.php:323
 msgid "Save"
@@ -2465,7 +2465,7 @@ msgstr "Načítavam…"
 
 #: admin-decrees.php:627
 msgid "You do not have permission to view decrees administration."
-msgstr "Nemáš povolenie na zobrazenie správy o dekrétoch."
+msgstr "Nemáš povolenie na zobrazenie správy dekrétov."
 
 #: admin-decrees.php:628
 msgid "Could not load decrees from the API."
@@ -2499,7 +2499,7 @@ msgstr "Upraviť dekrét"
 
 #: admin-decrees.php:638
 msgid "Select locale"
-msgstr "Vybrať lokalitu"
+msgstr "Vybrať jazyk"
 
 #: admin-decrees.php:639 permission-requests.php:229
 msgid "Remove"
@@ -2543,7 +2543,7 @@ msgstr "Evanjelium"
 
 #: admin-decrees.php:654
 msgid "No readings defined for this locale yet"
-msgstr "Zatiaľ nie sú definované žiadne čítania pre túto lokalitu"
+msgstr "Zatiaľ nie sú definované žiadne čítania pre tento jazyk"
 
 #: admin-decrees.php:655
 msgid "Vatican URL code (e.g. ge, sp, po)"
@@ -3491,15 +3491,15 @@ msgstr "Spravovať podrobné oprávnenia na zdroje"
 
 #: admin-dashboard.php:129
 msgid "Supported Locales"
-msgstr "Podporované miestne nastavenia"
+msgstr "Podporované jazyky"
 
 #: admin-dashboard.php:131
 msgid ""
 "See which locales are officially supported, and whether a candidate has "
 "everything it needs"
 msgstr ""
-"Pozri si, ktoré miestne nastavenia sú oficiálne podporované a či kandidát má "
-"všetko, čo potrebuje"
+"Pozri si, ktoré jazyky sú oficiálne podporované a či kandidát má všetko, čo "
+"potrebuje"
 
 #: admin-dashboard.php:183
 msgid "Access Requests to Review"
