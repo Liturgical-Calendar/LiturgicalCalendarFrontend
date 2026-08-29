@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-29 00:34+0000\n"
-"PO-Revision-Date: 2026-08-29 10:12+0000\n"
+"PO-Revision-Date: 2026-08-30 14:55+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
@@ -1326,7 +1326,7 @@ msgstr "Zobraziť profil"
 #: layout/header.php:176 includes/login-modal.php:105
 #: includes/login-modal.php:670 user-profile.php:277
 msgid "Are you sure you want to logout?"
-msgstr "Naozaj sa chceš odhlásiť?"
+msgstr "Si si istý, že sa chceš odhlásiť?"
 
 #: layout/header.php:179 layout/header.php:183 includes/login-modal.php:12
 #: user-profile.php:261
@@ -1495,7 +1495,7 @@ msgstr "Problém s pripojením"
 
 #: includes/login-modal.php:314
 msgid "Please enter both username and password"
-msgstr "Zadaj prosím používateľské meno a heslo"
+msgstr "Zadaj prosím používateľské meno aj heslo"
 
 #: includes/login-modal.php:322
 msgid "Logging in..."
@@ -1507,7 +1507,7 @@ msgstr "Prihlásenie úspešné"
 
 #: includes/login-modal.php:374
 msgid "Login failed. Please check your credentials."
-msgstr "Prihlásenie zlyhalo. Skontroluj svoje prihlasovacie údaje."
+msgstr "Prihlásenie zlyhalo. Skontroluj si prihlasovacie údaje."
 
 #: includes/login-modal.php:540 includes/login-modal.php:545
 #, php-format
@@ -1531,7 +1531,7 @@ msgstr "Relácia predĺžená"
 
 #: includes/login-modal.php:636
 msgid "Failed to extend session. Please login again."
-msgstr "Nepodarilo sa predĺžiť reláciu. Prihlás sa znova."
+msgstr "Nedalo sa predĺžiť reláciu. Prihlás sa znovu."
 
 #: includes/login-modal.php:700
 msgid "Your session has expired. Please login again."
