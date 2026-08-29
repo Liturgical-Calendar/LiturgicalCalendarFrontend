@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 12:19+0000\n"
+"POT-Creation-Date: 2026-08-29 00:34+0000\n"
 "PO-Revision-Date: 2026-08-28 08:37+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
@@ -3067,7 +3067,8 @@ msgstr "Credenciales"
 msgid "Date"
 msgstr "Fecha"
 
-#: admin-permissions.php:449 admin-applications.php:245 admin-dashboard.php:171
+#: admin-permissions.php:449 admin-applications.php:245 admin-dashboard.php:135
+#: admin-dashboard.php:189
 msgid "Review"
 msgstr "Revisión"
 
@@ -3510,8 +3511,8 @@ msgstr ""
 "Gestionar datos del calendario litúrgico, información del Misal Romano y "
 "calendarios regionales."
 
-#: admin-dashboard.php:65 admin-dashboard.php:129 admin-dashboard.php:146
-#: admin-dashboard.php:156
+#: admin-dashboard.php:65 admin-dashboard.php:147 admin-dashboard.php:164
+#: admin-dashboard.php:174
 msgid "Administration"
 msgstr "Administración"
 
@@ -3535,11 +3536,21 @@ msgstr "Revisar y aprobar solicitudes de desarrolladores"
 msgid "Manage fine-grained resource permissions"
 msgstr "Gestionar permisos de recursos detallados"
 
-#: admin-dashboard.php:165
+#: admin-dashboard.php:129
+msgid "Supported Locales"
+msgstr ""
+
+#: admin-dashboard.php:131
+msgid ""
+"See which locales are officially supported, and whether a candidate has "
+"everything it needs"
+msgstr ""
+
+#: admin-dashboard.php:183
 msgid "Access Requests to Review"
 msgstr "Solicitudes de acceso por revisar"
 
-#: admin-dashboard.php:167
+#: admin-dashboard.php:185
 msgid "Review and approve access requests for the resources you administer"
 msgstr ""
 "Revisa y aprueba las solicitudes de acceso a los recursos que administras"
