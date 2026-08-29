@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-29 00:34+0000\n"
-"PO-Revision-Date: 2026-08-29 09:37+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2026-08-29 09:58+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
 "Language: sk\n"
@@ -106,8 +106,8 @@ msgid ""
 "When not specified, the API will default to the current year. Try "
 "specifically setting the year by changing the value here."
 msgstr ""
-"Ak nie je uvedené inak, API predvolene nastaví aktuálny rok. Skúste "
-"konkrétne nastaviť rok zmenou hodnoty tu."
+"Ak nie je uvedené inak, API predvolene nastaví aktuálny rok. Skús konkrétne "
+"nastaviť rok zmenou hodnoty tu."
 
 #. translators: %s = '/calendar'
 #: index.php:51
@@ -283,12 +283,12 @@ msgstr "Vyber kalendár"
 #. translators: label for dropdown to select the liturgical rite (Roman or Ambrosian)
 #: usage.php:25
 msgid "Select rite"
-msgstr "Vyberte obrad"
+msgstr "Vyber obrad"
 
 #. translators: notification message shown when the calendar list fails to load
 #: usage.php:27
 msgid "Could not load the calendar list. Please try again later."
-msgstr "Zoznam kalendárov sa nepodarilo načítať. Skúste to znova neskôr."
+msgstr "Zoznam kalendárov sa nepodarilo načítať. Skús to znova neskôr."
 
 #. translators: part of page title - section showing usage examples
 #: usage.php:37
@@ -465,7 +465,7 @@ msgstr ""
 #. translators: instruction step for Android
 #: usage.php:233
 msgid "Open the Google Calendar app."
-msgstr "Otvorte aplikáciu Google Kalendár."
+msgstr "Otvor aplikáciu Google Kalendár."
 
 #. translators: instruction step for Android - describes app Settings navigation
 #: usage.php:235
@@ -840,8 +840,7 @@ msgstr "Webová stránka projektu"
 #. translators: error shown when the liturgy page's calendar controls fail to load
 #: liturgyOfAnyDay.php:17
 msgid "Could not load the liturgy controls. Please try again later."
-msgstr ""
-"Ovládacie prvky liturgie sa nepodarilo načítať. Skúste to znova neskôr."
+msgstr "Ovládacie prvky liturgie sa nepodarilo načítať. Skús to znova neskôr."
 
 #. translators: context = liturgical color
 #. translators: liturgical color - green
@@ -1200,8 +1199,7 @@ msgid ""
 "This liturgical event does not seem to exist? Please choose from a value in "
 "the list."
 msgstr ""
-"Zdá sa, že táto liturgická udalosť neexistuje. Prosím, vyberte hodnotu zo "
-"zoznamu."
+"Zdá sa, že táto liturgická udalosť neexistuje. Vyber hodnotu zo zoznamu."
 
 #: src/Utilities.php:282
 msgid "This liturgical event does not exist, so it will be created."
@@ -1440,7 +1438,7 @@ msgstr "Tvoj prístup bol zrušený"
 
 #: layout/footer.php:101
 msgid "Request access to start using the system"
-msgstr "Požiadajte o prístup na začatie používania systému"
+msgstr "Požiadaj o prístup na začatie používania systému"
 
 #: layout/footer.php:102
 msgid "Get started"
@@ -1497,7 +1495,7 @@ msgstr "Problém s pripojením"
 
 #: includes/login-modal.php:314
 msgid "Please enter both username and password"
-msgstr "Zadajte prosím používateľské meno a heslo"
+msgstr "Zadaj prosím používateľské meno a heslo"
 
 #: includes/login-modal.php:322
 msgid "Logging in..."
@@ -1509,7 +1507,7 @@ msgstr "Prihlásenie úspešné"
 
 #: includes/login-modal.php:374
 msgid "Login failed. Please check your credentials."
-msgstr "Prihlásenie zlyhalo. Skontrolujte svoje prihlasovacie údaje."
+msgstr "Prihlásenie zlyhalo. Skontroluj svoje prihlasovacie údaje."
 
 #: includes/login-modal.php:540 includes/login-modal.php:545
 #, php-format
@@ -1533,7 +1531,7 @@ msgstr "Relácia predĺžená"
 
 #: includes/login-modal.php:636
 msgid "Failed to extend session. Please login again."
-msgstr "Nepodarilo sa predĺžiť reláciu. Prosím, prihláste sa znova."
+msgstr "Nepodarilo sa predĺžiť reláciu. Prihlás sa znova."
 
 #: includes/login-modal.php:700
 msgid "Your session has expired. Please login again."
@@ -1613,7 +1611,7 @@ msgid ""
 "\"%s\". Please translate the General Roman Calendar via the Weblate "
 "translation server before creating a calendar for this locale."
 msgstr ""
-"Všeobecný rímsky kalendár ešte nebol preložený do jazyka \"%s\". Preložte "
+"Všeobecný rímsky kalendár ešte nebol preložený do jazyka \"%s\". Prelož "
 "prosím Všeobecný rímsky kalendár prostredníctvom prekladateľského servera "
 "Weblate pred vytvorením kalendára pre tento jazyk."
 
@@ -2081,7 +2079,7 @@ msgstr "Vytvoriť novú liturgickú udalosť"
 #. translators: modal title for choosing missal
 #: includes/messages.php:310
 msgid "Choose from known Roman Missal language editions"
-msgstr "Vyberte si z dostupných jazykových vydaní Rímskeho misála"
+msgstr "Vyber si z dostupných jazykových vydaní Rímskeho misála"
 
 #. translators: modal title for deleting a diocesan calendar
 #: includes/messages.php:312
@@ -2100,9 +2098,9 @@ msgid ""
 "value in the list, or contact the curator of the API to have the Missal "
 "added to known language edition Missals."
 msgstr ""
-"Tento misál nie je známy v API liturgického kalendára. Prosím, vyberte "
-"hodnotu zo zoznamu alebo kontaktujte kurátora API, aby bol misál pridaný do "
-"známych jazykových vydaní misálov."
+"Tento misál nie je známy v API liturgického kalendára. Vyber hodnotu zo "
+"zoznamu alebo kontaktuj kurátora API, aby bol misál pridaný do známych "
+"jazykových vydaní misálov."
 
 #. translators: warning message when deleting a calendar
 #: includes/messages.php:326
@@ -2351,8 +2349,8 @@ msgid ""
 "Use %s in the URL above where the language code appears; each row maps a "
 "language to its Vatican URL code."
 msgstr ""
-"Použite %s v URL vyššie, kde sa objaví jazykový kód; každý riadok mapuje "
-"jazyk na jeho Vatikánsky URL kód."
+"Použi %s v URL vyššie, kde sa objaví jazykový kód; každý riadok mapuje jazyk "
+"na jeho Vatikánsky URL kód."
 
 #: admin-decrees.php:300
 msgid "Add language code"
@@ -2368,7 +2366,7 @@ msgid ""
 "different path or filename, not just a different code. Give the full URL."
 msgstr ""
 "Pre jazyk, ktorého dokument nenasleduje vyššie uvedený vzor — iná cesta "
-"alebo názov súboru, nie len iný kód. Uveďte celú URL."
+"alebo názov súboru, nie len iný kód. Uveď celú URL."
 
 #: admin-decrees.php:317
 msgid "Add URL override"
@@ -2467,7 +2465,7 @@ msgstr "Načítavam…"
 
 #: admin-decrees.php:627
 msgid "You do not have permission to view decrees administration."
-msgstr "Nemáte povolenie na zobrazenie správy o dekrétoch."
+msgstr "Nemáš povolenie na zobrazenie správy o dekrétoch."
 
 #: admin-decrees.php:628
 msgid "Could not load decrees from the API."
@@ -2481,7 +2479,7 @@ msgstr "Nenašli sa žiadne dekréty."
 msgid ""
 "Are you sure you want to delete this decree? This action cannot be undone."
 msgstr ""
-"Ste si istý, že chcete zmazať tento dekrét? Túto akciu nemožno vrátiť späť."
+"Si si istý, že chceš zmazať tento dekrét? Túto akciu nemožno vrátiť späť."
 
 #: admin-decrees.php:631
 msgid "Decree created."
@@ -2513,7 +2511,7 @@ msgstr "Prvé čítanie"
 
 #: admin-decrees.php:641
 msgid "Responsorial psalm"
-msgstr "Responzoriálny žalm"
+msgstr "Responzóriový žalm"
 
 #: admin-decrees.php:642
 msgid "Second reading"
@@ -2579,7 +2577,7 @@ msgstr ""
 
 #: admin-decrees.php:663
 msgid "Please fix the following errors before saving:"
-msgstr "Prosím opravte tieto chyby pred uložením:"
+msgstr "Oprav tieto chyby pred uložením:"
 
 #: admin-decrees.php:664
 #, php-format
@@ -2592,7 +2590,7 @@ msgstr "Zdroj"
 
 #: admin-decrees.php:666
 msgid "Your session has expired. Please log in again."
-msgstr "Vaša relácia vypršala. Prosím, prihláste sa znova."
+msgstr "Tvoja relácia vypršala. Prihlás sa znova."
 
 #: admin-decrees.php:667
 msgid "Log in"
@@ -2600,13 +2598,11 @@ msgstr "Prihlásiť sa"
 
 #: admin-decrees.php:668 admin-tests.php:347
 msgid "You do not have permission to perform this action."
-msgstr "Nemáte oprávnenie vykonať túto akciu."
+msgstr "Nemáš oprávnenie vykonať túto akciu."
 
 #: admin-decrees.php:669
 msgid "Not in the General Roman Calendar — a new event will be created."
-msgstr ""
-"Nie je v aktuálnom Rímskom všeobecnom kalendári — bude vytvorená nová "
-"udalosť."
+msgstr "Nie je vo Všeobecnom rímskom kalendári — bude vytvorená nová udalosť."
 
 #: admin-decrees.php:671
 #, php-format
@@ -2614,19 +2610,19 @@ msgid ""
 "Already in the General Roman Calendar as \"%s\" — choose a different event "
 "key."
 msgstr ""
-"Už je v Rímskom všeobecnom kalendári ako \"%s\" — vyberte iný kľúč udalosti."
+"Už je vo Všeobecnom rímskom kalendári ako \"%s\" — vyber iný kľúč udalosti."
 
 #: admin-decrees.php:672
 msgid ""
 "Not in the General Roman Calendar — this decree will not match any event."
 msgstr ""
-"Nie je v Rímskom všeobecnom kalendári — tento dekrét sa nebude zhodovať so "
+"Nie je vo Všeobecnom rímskom kalendári — tento dekrét sa nebude zhodovať so "
 "žiadnou udalosťou."
 
 #: admin-decrees.php:674
 #, php-format
 msgid "Matches \"%s\" in the General Roman Calendar."
-msgstr "Zhoduje sa s \"%s\" v Rímskom všeobecnom kalendári."
+msgstr "Zhoduje sa s \"%s\" vo Všeobecnom rímskom kalendári."
 
 #: admin-decrees.php:676
 msgid "No decrees match the current search and filters."
@@ -2669,14 +2665,14 @@ msgstr "Sviatok"
 #. by one rank before
 #: admin-decrees.php:715
 msgid "Optional Memorial"
-msgstr "Nepovinná spomienka"
+msgstr "Ľubovoľná spomienka"
 
 #. translators: liturgical grade 0 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
 #: admin-decrees.php:727
 msgid "Weekday"
-msgstr "Feria"
+msgstr "Féria"
 
 #: admin-permissions.php:36 admin-permissions.php:48
 msgid "Permissions Management"
@@ -2856,7 +2852,7 @@ msgstr "ID používateľa"
 
 #: admin-permissions.php:289
 msgid "Enter user ID..."
-msgstr "Zadajte ID používateľa..."
+msgstr "Zadaj ID používateľa..."
 
 #: admin-permissions.php:294 permission-requests.php:228
 msgid "Select relation..."
@@ -2891,7 +2887,7 @@ msgstr "Neboli nájdené žiadne povolenia."
 
 #: admin-permissions.php:370
 msgid "Failed to load permissions. Please try again later."
-msgstr "Nepodarilo sa načítať povolenia. Skúste to prosím neskôr znova."
+msgstr "Nepodarilo sa načítať povolenia. Skús to prosím neskôr znova."
 
 #: admin-permissions.php:371
 msgid "Permission granted successfully."
@@ -2903,11 +2899,11 @@ msgstr "Povolenie bolo úspešne odvolané."
 
 #: admin-permissions.php:373
 msgid "Failed to grant permission. Please try again."
-msgstr "Nepodarilo sa udeliť povolenie. Skúste to prosím znova."
+msgstr "Nepodarilo sa udeliť povolenie. Skús to prosím znova."
 
 #: admin-permissions.php:374
 msgid "Failed to revoke permission. Please try again."
-msgstr "Nepodarilo sa odvolať povolenie. Skúste to prosím znova."
+msgstr "Nepodarilo sa odvolať povolenie. Skús to prosím znova."
 
 #: admin-permissions.php:375
 msgid "Granting..."
@@ -2960,16 +2956,16 @@ msgstr "Dekréty Dikastéria pre Boží kult"
 
 #: admin-permissions.php:403
 msgid "Enter object ID..."
-msgstr "Zadajte ID objektu..."
+msgstr "Zadaj ID objektu..."
 
 #: admin-permissions.php:404
 msgid "Select object ID..."
-msgstr "Vyberte ID objektu..."
+msgstr "Vyber ID objektu..."
 
 #: admin-permissions.php:409 admin-permissions.php:440
 #: permission-requests.php:235
 msgid "Could not load calendars — try reloading the page"
-msgstr "Kalendáre sa nepodarilo načítať — skúste obnoviť stránku"
+msgstr "Kalendáre sa nepodarilo načítať — skús obnoviť stránku"
 
 #: admin-permissions.php:418
 msgid "All fields are required."
@@ -2985,7 +2981,7 @@ msgstr "Žiadne čakajúce žiadosti o prístup. Všetko je vybavené!"
 
 #: admin-permissions.php:424
 msgid "Failed to load access requests. Please try again later."
-msgstr "Nepodarilo sa načítať požiadavky na prístup. Skúste to znova neskôr."
+msgstr "Nepodarilo sa načítať požiadavky na prístup. Skús to znova neskôr."
 
 #: admin-permissions.php:425 admin-applications.php:232
 msgid "Processing..."
@@ -3005,7 +3001,7 @@ msgstr "Prístup úspešne odobratý."
 
 #: admin-permissions.php:429 admin-applications.php:236
 msgid "Failed to process request. Please try again."
-msgstr "Nepodarilo sa spracovať požiadavku. Skúste to znova."
+msgstr "Nepodarilo sa spracovať požiadavku. Skús to znova."
 
 #: admin-permissions.php:432 permission-requests.php:219
 msgid "Role"
@@ -3157,7 +3153,7 @@ msgstr "udalosť neočakávaná"
 #. needs translating too
 #: admin-tests.php:243
 msgid "excluded — click to restore"
-msgstr "vylúčené — kliknite pre obnovenie"
+msgstr "vylúčené — klikni pre obnovenie"
 
 #: admin-tests.php:251
 msgid "Per-year assertions"
@@ -3181,7 +3177,7 @@ msgstr "Nenašli sa žiadne testy."
 
 #: admin-tests.php:334
 msgid "Failed to load tests. Please try again later."
-msgstr "Nepodarilo sa načítať testy. Skúste to znova neskôr."
+msgstr "Nepodarilo sa načítať testy. Skús to znova neskôr."
 
 #: admin-tests.php:335
 msgid "Test created successfully."
@@ -3206,11 +3202,11 @@ msgstr "Mazanie..."
 #: admin-tests.php:342
 #, php-format
 msgid "Are you sure you want to delete the test \"%s\"?"
-msgstr "Ste si istí, že chcete vymazať test \"%s\"?"
+msgstr "Si si istý, že chceš vymazať test \"%s\"?"
 
 #: admin-tests.php:346
 msgid "Please fill in all required fields."
-msgstr "Prosím, vyplňte všetky povinné polia."
+msgstr "Vyplň všetky povinné polia."
 
 #: admin-tests.php:348
 msgid "A test with that name already exists."
@@ -3248,7 +3244,7 @@ msgstr "Názov testu:"
 
 #: admin-tests.php:367
 msgid "Select a valid liturgical event from the list."
-msgstr "Vyberte platnú liturgickú udalosť zo zoznamu."
+msgstr "Vyber platnú liturgickú udalosť zo zoznamu."
 
 #: permission-requests.php:49
 msgid ""
@@ -3274,7 +3270,7 @@ msgstr "Upraviť dáta národného a diecézneho kalendára."
 
 #: permission-requests.php:86
 msgid "Create and manage accuracy tests."
-msgstr "Vytvorte a spravujte testy presnosti."
+msgstr "Vytvor a spravuj testy presnosti."
 
 #: permission-requests.php:92
 msgid ""
@@ -3286,7 +3282,7 @@ msgstr ""
 
 #: permission-requests.php:99
 msgid "Select a Role"
-msgstr "Vyberte rolu"
+msgstr "Vyber rolu"
 
 #: permission-requests.php:136
 msgid ""
@@ -3344,7 +3340,7 @@ msgstr "Tvoja žiadosť o prístup bola úspešne odoslaná."
 
 #: permission-requests.php:208
 msgid "Failed to submit request. Please try again."
-msgstr "Zlyhalo odoslanie žiadosti. Skúste to prosím znova."
+msgstr "Zlyhalo odoslanie žiadosti. Skús to prosím znova."
 
 #: permission-requests.php:209
 msgid "Submitting..."
@@ -3360,7 +3356,7 @@ msgstr "Dôvod zamietnutia"
 
 #: permission-requests.php:213
 msgid "Please select a role."
-msgstr "Prosím, vyberte rolu."
+msgstr "Vyber rolu."
 
 #: permission-requests.php:214
 msgid ""
@@ -3412,7 +3408,7 @@ msgstr "Žiadne čakajúce aplikácie. Všetko vybavené!"
 
 #: admin-applications.php:231
 msgid "Failed to load applications. Please try again later."
-msgstr "Nepodarilo sa načítať aplikácie. Skúste to neskôr znova."
+msgstr "Nepodarilo sa načítať aplikácie. Skús to neskôr znova."
 
 #: admin-applications.php:233
 msgid "Application approved successfully."
@@ -3502,8 +3498,8 @@ msgid ""
 "See which locales are officially supported, and whether a candidate has "
 "everything it needs"
 msgstr ""
-"Pozrite si, ktoré miestne nastavenia sú oficiálne podporované a či kandidát "
-"má všetko, čo potrebuje"
+"Pozri si, ktoré miestne nastavenia sú oficiálne podporované a či kandidát má "
+"všetko, čo potrebuje"
 
 #: admin-dashboard.php:183
 msgid "Access Requests to Review"
@@ -3543,7 +3539,7 @@ msgstr "Administrátor"
 
 #: admin-users.php:187
 msgid "Failed to load users. Please try again later."
-msgstr "Nepodarilo sa načítať používateľov. Skúste to znova neskôr."
+msgstr "Nepodarilo sa načítať používateľov. Skús to znova neskôr."
 
 #: admin-users.php:203
 msgid "No users with roles found."
@@ -3587,7 +3583,7 @@ msgstr "Rola bola úspešne odobratá."
 
 #: admin-users.php:393
 msgid "Failed to revoke role. Please try again."
-msgstr "Role sa nepodarilo zrušiť. Skúste to znova."
+msgstr "Role sa nepodarilo zrušiť. Skús to znova."
 
 #: developer-dashboard.php:34 developer-dashboard.php:47 user-profile.php:257
 msgid "Developer Dashboard"
@@ -3598,7 +3594,7 @@ msgid ""
 "Register applications and manage API keys for accessing the Liturgical "
 "Calendar API."
 msgstr ""
-"Registrujte aplikácie a spravujte API kľúče na prístup k API liturgického "
+"Registruj aplikácie a spravuj API kľúče na prístup k API liturgického "
 "kalendára."
 
 #: developer-dashboard.php:58
@@ -3687,7 +3683,7 @@ msgstr "Dátum vypršania"
 
 #: developer-dashboard.php:178
 msgid "Optional. Leave empty for a key that never expires."
-msgstr "Voliteľné. Nechajte prázdne pre kľúč, ktorý nikdy nevyprší."
+msgstr "Voliteľné. Nechaj prázdne pre kľúč, ktorý nikdy nevyprší."
 
 #: developer-dashboard.php:186 developer-dashboard.php:268
 msgid "Generate Key"
@@ -3704,7 +3700,7 @@ msgstr "Dôležité:"
 #: developer-dashboard.php:206
 msgid "Copy this key now. For security reasons, it will not be shown again."
 msgstr ""
-"Skopírujte si tento kľúč teraz. Z bezpečnostných dôvodov sa nebude znovu "
+"Skopíruj si tento kľúč teraz. Z bezpečnostných dôvodov sa nebude znovu "
 "zobrazovať."
 
 #: developer-dashboard.php:209
@@ -3741,7 +3737,7 @@ msgstr "Zatiaľ si neregistroval žiadne aplikácie."
 
 #: developer-dashboard.php:264
 msgid "Create your first application to get started."
-msgstr "Vytvorte svoju prvú aplikáciu na začiatok."
+msgstr "Vytvor svoju prvú aplikáciu na začiatok."
 
 #: developer-dashboard.php:266
 msgid "API Keys"
@@ -3802,19 +3798,19 @@ msgstr ""
 
 #: developer-dashboard.php:284
 msgid "Failed to load applications. Please try again."
-msgstr "Nepodarilo sa načítať aplikácie. Skúste to znova."
+msgstr "Nepodarilo sa načítať aplikácie. Skús to znova."
 
 #: developer-dashboard.php:285
 msgid "Failed to save application. Please try again."
-msgstr "Nepodarilo sa uložiť aplikáciu. Skúste to znova."
+msgstr "Nepodarilo sa uložiť aplikáciu. Skús to znova."
 
 #: developer-dashboard.php:286
 msgid "Failed to delete. Please try again."
-msgstr "Nepodarilo sa odstrániť. Skúste to znova."
+msgstr "Nepodarilo sa odstrániť. Skús to znova."
 
 #: developer-dashboard.php:287
 msgid "Failed to generate API key. Please try again."
-msgstr "Nepodarilo sa vygenerovať API kľúč. Skúste to znova."
+msgstr "Nepodarilo sa vygenerovať API kľúč. Skús to znova."
 
 #: developer-dashboard.php:289
 msgid "Application updated successfully."
@@ -3879,7 +3875,7 @@ msgstr "API kľúče môžu byť generované iba pre schválené aplikácie."
 #: developer-dashboard.php:311
 msgid ""
 "This application has been revoked. Contact an administrator for assistance."
-msgstr "Táto aplikácia bola zrušená. Kontaktujte administrátora pre pomoc."
+msgstr "Táto aplikácia bola zrušená. Kontaktuj administrátora pre pomoc."
 
 #: developer-dashboard.php:312
 msgid "Application resubmitted for review."
@@ -3887,7 +3883,7 @@ msgstr "Aplikácia znova odoslaná na posúdenie."
 
 #: developer-dashboard.php:313
 msgid "Failed to resubmit application. Please try again."
-msgstr "Nepodarilo sa odoslať aplikáciu. Skúste to znova."
+msgstr "Nepodarilo sa odoslať aplikáciu. Skús to znova."
 
 #: developer-dashboard.php:320
 msgid ""
@@ -4117,7 +4113,7 @@ msgstr ""
 #: user-profile.php:165
 msgid "No roles assigned yet. Request a role to access additional features."
 msgstr ""
-"Zatiaľ nie sú pridelené žiadne roly. Požiadajte o rolu pre prístup k ďalším "
+"Zatiaľ nie sú pridelené žiadne roly. Požiadaj o rolu pre prístup k ďalším "
 "funkciám."
 
 #: user-profile.php:196
@@ -4146,7 +4142,7 @@ msgstr "Obnovenie relácie zlyhalo"
 
 #: user-profile.php:301 user-profile.php:325
 msgid "Failed to refresh session. Please try logging out and back in."
-msgstr "Obnovenie relácie zlyhalo. Skúste sa odhlásiť a znovu prihlásiť."
+msgstr "Obnovenie relácie zlyhalo. Skús sa odhlásiť a znovu prihlásiť."
 
 #: user-profile.php:339
 msgid "Sending..."
@@ -4166,7 +4162,7 @@ msgstr ""
 
 #: user-profile.php:373
 msgid "Failed to send verification email. Please try again."
-msgstr "Nepodarilo sa odoslať overovací e-mail. Skúste to znova."
+msgstr "Nepodarilo sa odoslať overovací e-mail. Skús to znova."
 
 #: user-profile.php:404
 msgid "Session expires in 5 minutes"
