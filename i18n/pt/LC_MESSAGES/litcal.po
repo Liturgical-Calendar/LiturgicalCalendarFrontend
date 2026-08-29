@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-29 00:34+0000\n"
-"PO-Revision-Date: 2026-08-29 09:37+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2026-08-29 09:58+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pt/>\n"
 "Language: pt\n"
@@ -2570,7 +2570,7 @@ msgstr "Evangelho"
 
 #: admin-decrees.php:654
 msgid "No readings defined for this locale yet"
-msgstr "Nenhuma leitura definida para este local ainda"
+msgstr "Nenhuma leitura definida para este idioma ainda"
 
 #: admin-decrees.php:655
 msgid "Vatican URL code (e.g. ge, sp, po)"
