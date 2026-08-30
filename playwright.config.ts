@@ -131,6 +131,34 @@ export default defineConfig({
         {
             name: 'rbac',
             testMatch: /rbac\/.*\.spec\.ts/,
+            // rbac/queue/ is the queue-mode counterpart below, and must NOT run here:
+            // these specs assume writes reach disk. Without this the testMatch above
+            // would swallow them.
+            testIgnore: /rbac\/queue\//,
+            use: { ...devices['Desktop Chrome'] },
+            dependencies: ['rbac-setup'],
+        },
+        // Queue mode — the API records /data, /decrees and /tests writes as change
+        // requests awaiting review instead of writing files (LiturgicalCalendarAPI #902,
+        // SOURCEDATA_CHANGE_REQUESTS=true).
+        //
+        // A SEPARATE project rather than a flag flipped on the existing stack, because
+        // the two modes want opposite assertions of the same request: every other
+        // project asserts a write was APPLIED, these assert it was QUEUED. Sharing one
+        // project would mean branching each assertion on an env var — which is how
+        // issue #502 happened, since a 2xx satisfies both.
+        //
+        // It lives under `rbac` because a review flow needs two identities: an editor
+        // who submits and an admin who decides. rbac-setup is the only seed that
+        // provisions distinct users, hence the same dependency as `rbac`.
+        //
+        // NOT added to any .github/workflows/e2e.yml project set: CI starts the stack
+        // in disk mode. The specs here skip themselves unless E2E_WRITE_MODE=queue, so
+        // the `all` branch (which passes no --project) stays green anyway; Q0 asserts
+        // the live API agrees before any flow spec runs.
+        {
+            name: 'rbac-queue',
+            testMatch: /rbac\/queue\/.*\.spec\.ts/,
             use: { ...devices['Desktop Chrome'] },
             dependencies: ['rbac-setup'],
         },

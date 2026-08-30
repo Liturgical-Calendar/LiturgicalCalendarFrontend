@@ -7,6 +7,7 @@ import { truncateAppTables, gitRestoreApiData, settleCleanup } from './support/c
 import { Fga } from './support/fga';
 import { ZitadelAdmin } from './support/zitadel';
 import { USERS } from './support/users';
+import { expectWriteApplied } from '../support/writeMode';
 
 /**
  * Scenario 11 — session / token resilience.
@@ -45,6 +46,10 @@ import { USERS } from './support/users';
  * proves grant/revoke reflection at the FGA-backed AUTHORIZATION surface — the
  * exact `PATCH /data/nation/IT` write that extending.js / scenario 10 exercises —
  * plus the underlying Fga.check, which is the durable backing assertion.
+ *
+ * DISK MODE ONLY, for the same reason as scenario 10: part (c)'s phase 2 asserts
+ * the write's `disposition`, since a queue-mode stack answers 2xx without writing
+ * (issue #502). Queue-mode coverage lives in the `rbac-queue` project.
  *
  * Re-runnable from a clean slate (passes twice): afterEach reverts the one IT
  * data write (gitRestoreApiData), truncates app tables, and revokes the dynamic
@@ -227,10 +232,15 @@ test('11c — grant/revoke is reflected on the next authorization decision (no s
         const cei = await actingAs(browser, 'cei-editor');
         try {
             const r = await cei.page.request.patch(`${API_BASE}/data/nation/IT`, { headers, data: body });
-            expect(
-                r.ok(),
-                `PATCH /data/nation/IT must be AUTHORIZED (2xx) immediately after the grant (no stale 403); got ${r.status()}: ${await r.text()}`,
-            ).toBe(true);
+            // Authorized AND applied. A bare `r.ok()` is satisfied by a queue-mode 200 that
+            // wrote nothing (issue #502), which would leave this phase asserting only that the
+            // request was accepted — and phases 1 and 3 already prove the 403s, so the whole
+            // scenario would reduce to "the middleware answers differently", not "the grant
+            // let the write through".
+            await expectWriteApplied(
+                r,
+                'PATCH /data/nation/IT immediately after the grant (no stale 403)',
+            );
         } finally {
             await cei.context.close();
         }
