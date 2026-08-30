@@ -631,6 +631,16 @@ $formControls = new \LiturgicalCalendar\Frontend\FormControls($i18n);
                 created:           <?php echo json_encode(_('Decree created.'), JSON_HEX_TAG); ?>,
                 updated:           <?php echo json_encode(_('Decree updated.'), JSON_HEX_TAG); ?>,
                 deleted:           <?php echo json_encode(_('Decree deleted.'), JSON_HEX_TAG); ?>,
+                <?php // A write may be recorded as a change request awaiting review instead of
+                      // being applied; the API says which in the response `disposition` field.
+                      // Shared with includes/messages.php — same msgids, one translation each. ?>
+                writeSubmitted:    <?php echo json_encode(_('Your changes were submitted for review as batch %s. Nothing has been saved yet.'), JSON_HEX_TAG); ?>,
+                writeApproved:     <?php echo json_encode(_('Your changes were approved as batch %s and are queued for publication. They are not live yet.'), JSON_HEX_TAG); ?>,
+                writeSuperseded:   <?php echo json_encode(_('Earlier pending submissions were folded into this one and no longer appear in your queue: %s'), JSON_HEX_TAG); ?>,
+                writeUnknown:      <?php echo json_encode(
+                    _('The server reported an unrecognized outcome (\'%s\') for these changes. Reload the page to check whether they were saved.'),
+                    JSON_HEX_TAG
+                ); ?>,
                 translations:      <?php echo json_encode(_('Translations'), JSON_HEX_TAG); ?>,
                 readings:          <?php echo json_encode(_('Lectionary readings'), JSON_HEX_TAG); ?>,
                 newDecree:         <?php echo json_encode(_('New Decree'), JSON_HEX_TAG); ?>,
