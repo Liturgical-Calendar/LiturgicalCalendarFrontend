@@ -2,7 +2,7 @@
   "name": "liturgical-calendar-frontend",
   "packageManager": "yarn@4.17.0",
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "scripts": {
     "lint": "eslint .",
