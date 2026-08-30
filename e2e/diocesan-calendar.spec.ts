@@ -8,7 +8,7 @@ import { test, expect, gitRestoreApiData } from './fixtures';
  * 2. Form validation works as expected
  * 3. The payload structure matches the API contract (DiocesanCalendarPayload)
  * 4. CREATE (PUT) requests return 201 and can be cleaned up with DELETE (200)
- * 5. UPDATE (PATCH) requests return 201 and changes are reverted with git restore
+ * 5. UPDATE (PATCH) requests return 200 and changes are reverted with git restore
  *
  * Diocesan calendars are the most specific level of calendar customization,
  * inheriting from national, wider region, and General Roman Calendar.
@@ -334,7 +334,7 @@ test.describe('Diocesan Calendar Form', () => {
         expect(deleteResult.body).toHaveProperty('success');
     });
 
-    test('should UPDATE (PATCH) existing diocesan calendar and verify 201 response', async ({ page, extendingPage }) => {
+    test('should UPDATE (PATCH) existing diocesan calendar and verify 200 response', async ({ page, extendingPage }) => {
         // Track if we made changes that need to be reverted
         let needsGitRestore = false;
 
@@ -484,7 +484,11 @@ test.describe('Diocesan Calendar Form', () => {
         } catch {
             responseBody = await response.text();
         }
-        needsGitRestore = responseStatus === 201;
+        // Any 2xx means the API accepted the write, so something may need restoring. Pinning this
+        // to one exact status defeats the try/finally below: a run against an API that answers a
+        // different 2xx (a deploy where API #913 has not landed yet still answers 201) writes to
+        // the source data, fails the assertion, and then restores nothing.
+        needsGitRestore = response.ok();
 
         // Wrap assertions in try/finally to ensure cleanup runs even if assertions fail
         try {
@@ -492,8 +496,9 @@ test.describe('Diocesan Calendar Form', () => {
             expect(getMethod()).toBe('PATCH');
             console.log(`HTTP method used: ${getMethod()}`);
 
-            // Verify response status is 201
-            expect(responseStatus).toBe(201);
+            // Verify response status is 200 — PATCH updates an existing calendar (API #913).
+            // PUT, which creates, still answers 201; see the CREATE test above.
+            expect(responseStatus).toBe(200);
             expect(responseBody).toHaveProperty('success');
             console.log(`UPDATE (PATCH) response: ${responseStatus} - ${JSON.stringify(responseBody)}`);
 
