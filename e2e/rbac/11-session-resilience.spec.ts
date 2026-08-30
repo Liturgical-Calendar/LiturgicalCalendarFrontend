@@ -220,7 +220,7 @@ test('11c — grant/revoke is reflected on the next authorization decision (no s
         }
     }
 
-    // ── Phase 2 — GRANT mid-session: FGA true + the very next write is AUTHORIZED (201) ─
+    // ── Phase 2 — GRANT mid-session: FGA true + the very next write is AUTHORIZED (2xx) ─
     await grantScope('cei-editor');
     expect(await fga.check(subject, 'editor', 'national_calendar:roman/IT')).toBe(true);
     {
@@ -245,7 +245,7 @@ test('11c — grant/revoke is reflected on the next authorization decision (no s
             const r = await cei.page.request.patch(`${API_BASE}/data/nation/IT`, { headers, data: body });
             expect(
                 r.status(),
-                `PATCH /data/nation/IT must be DENIED (403) immediately after the revoke (no stale 201); got ${r.status()}`,
+                `PATCH /data/nation/IT must be DENIED (403) immediately after the revoke (no stale 2xx); got ${r.status()}`,
             ).toBe(403);
         } finally {
             await cei.context.close();
