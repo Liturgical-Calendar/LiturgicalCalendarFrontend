@@ -12,6 +12,7 @@ import {
 } from '@liturgical-calendar/components-js';
 import { AssertionsBuilder, TestType, AssertType } from './AssertionsBuilder.js';
 import { ROMAN_RITE, bareCalendarId, qualifyObjectId, sameObjectId, splitObjectId } from './riteScopedObjectId.js';
+import { describeWriteOutcome } from './writeDisposition.js';
 
 /**
  * Reads the admin-tests scope picker's current selection and builds the
@@ -186,6 +187,25 @@ document.addEventListener('DOMContentLoaded', () => {
             return s.object_type === scopeObj.object_type
                 && sameObjectId(scopeObj.object_type, s.object_id, scopeObj.object_id);
         });
+    }
+
+    /**
+     * Announce the outcome of a write once its modal has closed.
+     *
+     * `window.showToast` is the shared helper layout/footer.php loads globally
+     * (assets/js/toast.js); when it is absent (no-Bootstrap environment, e.g.
+     * tests) the message is put back into the modal's own alert region rather
+     * than dropped, which is what the save and delete paths used to do with it.
+     *
+     * @param {HTMLElement} modalEl  The modal the write was made from.
+     * @param {{message: string, severity: 'success'|'info'}} outcome
+     */
+    function announceWriteOutcome(modalEl, outcome) {
+        if (typeof window.showToast === 'function') {
+            window.showToast(outcome.message, outcome.severity);
+            return;
+        }
+        showModalAlert(modalEl, outcome.severity, outcome.message);
     }
 
     function showModalAlert(modalEl, type, message) {
@@ -1012,8 +1032,17 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.textContent = i18n.saving;
         try {
             const method = state.editing ? 'PATCH' : 'PUT';
-            await fetchJson(method, testPath(rite, state.editing || payload.name), payload);
+            const data = await fetchJson(method, testPath(rite, state.editing || payload.name), payload);
+            // loadTests() re-GETs from the server, so a write that was only queued
+            // for review leaves the table unchanged — saying nothing at all left the
+            // user watching their test not appear, with no explanation.
+            const outcome = describeWriteOutcome(
+                data,
+                i18n,
+                state.editing ? i18n.updateSuccess : i18n.createSuccess
+            );
             editorModal.hide();
+            announceWriteOutcome(editorModalEl, outcome);
             await loadTests();
         } catch (err) {
             showModalAlert(editorModalEl, 'danger', saveErrorMessage(err));
@@ -1047,8 +1076,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const original = btn.textContent;
         btn.textContent = i18n.deleting;
         try {
-            await fetchJson('DELETE', testPath(deleteTargetRite, deleteTarget));
+            const data = await fetchJson('DELETE', testPath(deleteTargetRite, deleteTarget));
+            const outcome = describeWriteOutcome(data, i18n, i18n.deleteSuccess);
             deleteModal.hide();
+            announceWriteOutcome(deleteModalEl, outcome);
             await loadTests();
         } catch (err) {
             const msg = err.status === 403 ? i18n.denied403 : (err.body && err.body.message) ? err.body.message : i18n.failedToLoad;

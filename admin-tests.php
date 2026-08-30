@@ -335,6 +335,13 @@ if (!$isGlobalAdmin && !$hasTestEditor && !$isResourceAdmin) {
                 createSuccess:       <?php echo json_encode(_('Test created successfully.')); ?>,
                 updateSuccess:       <?php echo json_encode(_('Test updated successfully.')); ?>,
                 deleteSuccess:       <?php echo json_encode(_('Test deleted successfully.')); ?>,
+                <?php // A write may be recorded as a change request awaiting review instead of
+                      // being applied; the API says which in the response `disposition` field.
+                      // Shared with includes/messages.php — same msgids, one translation each. ?>
+                writeSubmitted:      <?php echo json_encode(_('Your changes were submitted for review as batch %s. Nothing has been saved yet.')); ?>,
+                writeApproved:       <?php echo json_encode(_('Your changes were approved as batch %s and are queued for publication. They are not live yet.')); ?>,
+                writeSuperseded:     <?php echo json_encode(_('Earlier pending submissions were folded into this one and no longer appear in your queue: %s')); ?>,
+                writeUnknown:        <?php echo json_encode(_('The server reported an unrecognized outcome (\'%s\') for these changes. Reload the page to check whether they were saved.')); ?>,
                 saving:              <?php echo json_encode(_('Saving...')); ?>,
                 deleting:            <?php echo json_encode(_('Deleting...')); ?>,
                 edit:                <?php echo json_encode(_('Edit')); ?>,
