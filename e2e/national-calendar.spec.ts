@@ -103,7 +103,11 @@ test.describe('National Calendar Form', () => {
             } catch {
                 responseBody = await response.text();
             }
-            needsGitRestore = responseStatus === 200;
+            // Any 2xx means the API accepted the write, so something may need restoring. Pinning this
+            // to one exact status defeats the try/finally below: a run against an API that answers a
+            // different 2xx (a deploy where API #913 has not landed yet still answers 201) writes to
+            // the source data, fails the assertion, and then restores nothing.
+            needsGitRestore = response.ok();
         } catch (e) {
             console.log('No PUT/PATCH response received:', e);
         }
