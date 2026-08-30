@@ -9,7 +9,7 @@ import { VALID_WIDER_REGIONS } from './constants';
  * 2. Form validation works as expected
  * 3. The payload structure matches the API contract (NationalCalendarPayload)
  * 4. CREATE (PUT) requests return 201 and can be cleaned up with DELETE (200)
- * 5. UPDATE (PATCH) requests return 201 and changes are reverted with git restore
+ * 5. UPDATE (PATCH) requests return 200 and changes are reverted with git restore
  */
 
 test.describe('National Calendar Form', () => {
@@ -63,7 +63,7 @@ test.describe('National Calendar Form', () => {
         expect(ascensionOptions.length).toBeGreaterThanOrEqual(2);
     });
 
-    test('should UPDATE (PATCH) existing national calendar and verify 201 response', async ({ page, extendingPage }) => {
+    test('should UPDATE (PATCH) existing national calendar and verify 200 response', async ({ page, extendingPage }) => {
         // Load an existing calendar (UPDATE scenario - should use PATCH)
         // The datalist uses ISO country codes as values (e.g., "US" not "USA")
         await extendingPage.selectCalendar('#nationalCalendarName', 'US');
@@ -103,7 +103,7 @@ test.describe('National Calendar Form', () => {
             } catch {
                 responseBody = await response.text();
             }
-            needsGitRestore = responseStatus === 201;
+            needsGitRestore = responseStatus === 200;
         } catch (e) {
             console.log('No PUT/PATCH response received:', e);
         }
@@ -114,8 +114,9 @@ test.describe('National Calendar Form', () => {
             expect(getMethod()).toBe('PATCH');
             console.log(`HTTP method used: ${getMethod()}`);
 
-            // Verify response status is 201
-            expect(responseStatus).toBe(201);
+            // Verify response status is 200 — PATCH updates an existing calendar (API #913).
+            // PUT, which creates, still answers 201; see the CREATE test below.
+            expect(responseStatus).toBe(200);
             expect(responseBody).toHaveProperty('success');
             console.log(`UPDATE (PATCH) response: ${responseStatus} - ${JSON.stringify(responseBody)}`);
 

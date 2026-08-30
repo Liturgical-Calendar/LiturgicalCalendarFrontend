@@ -9,7 +9,7 @@ import { VALID_WIDER_REGIONS } from './constants';
  * 2. Form validation works as expected
  * 3. The payload structure matches the API contract (WiderRegionPayload)
  * 4. CREATE (PUT) requests return 201 and can be cleaned up with DELETE (200)
- * 5. UPDATE (PATCH) requests return 201 and changes are reverted with git restore
+ * 5. UPDATE (PATCH) requests return 200 and changes are reverted with git restore
  *
  * Note: Wider Region calendars are NOT standalone calendars but a layer
  * above national calendars containing liturgical events shared across
@@ -64,7 +64,7 @@ test.describe('Wider Region Calendar Form', () => {
         await expect(localesSelect).toHaveAttribute('multiple', 'multiple');
     });
 
-    test('should UPDATE (PATCH) existing wider region calendar and verify 201 response', async ({ page, extendingPage }) => {
+    test('should UPDATE (PATCH) existing wider region calendar and verify 200 response', async ({ page, extendingPage }) => {
         // Track if we made changes that need to be reverted
         let needsGitRestore = false;
 
@@ -176,7 +176,7 @@ test.describe('Wider Region Calendar Form', () => {
         } catch {
             responseBody = await response.text();
         }
-        needsGitRestore = responseStatus === 201;
+        needsGitRestore = responseStatus === 200;
 
         // Wrap assertions in try/finally to ensure cleanup runs even if assertions fail
         try {
@@ -184,8 +184,9 @@ test.describe('Wider Region Calendar Form', () => {
             expect(getMethod()).toBe('PATCH');
             console.log(`HTTP method used: ${getMethod()}`);
 
-            // Verify response status is 201
-            expect(responseStatus).toBe(201);
+            // Verify response status is 200 — PATCH updates an existing calendar (API #913).
+            // PUT, which creates, still answers 201; see the CREATE test below.
+            expect(responseStatus).toBe(200);
             expect(responseBody).toHaveProperty('success');
             console.log(`UPDATE (PATCH) response: ${responseStatus} - ${JSON.stringify(responseBody)}`);
 
