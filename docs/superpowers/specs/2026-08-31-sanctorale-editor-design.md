@@ -71,6 +71,8 @@ Four properties of this layout constrain the design:
    create-a-new-key workflow needs.
 4. **Model on `admin-decrees.php`, not on a fresh design.** That page already solves this exact problem
    for the sibling resource, down to per-locale translation and readings panels.
+5. **Entries are grouped by month, one tab per month, day-ordered within.** The month is the group
+   title. See "Layout — month grouping" below for the three constraints this imposes.
 
 ## Scope and non-goals
 
@@ -115,6 +117,35 @@ apiClient.listenTo(riteSelect);
 Wiring only the first fails **silently**: the form reads `ambrosian` while every request still goes to
 `/calendar/roman/`. This is the documented trap the meta-components exist to prevent, and skipping the
 second line is the single most likely way to get this page subtly wrong.
+
+### Layout — month grouping
+
+Entries are grouped by month, with the month as each group's title, ordered by day within the group.
+The primary navigation is **one tab per month**.
+
+Tabs suit the composed view specifically: a composed sanctorale has all twelve months populated (187
+events across 12 months for the General Roman calendar, roughly 15 per tab, which is a comfortable
+page). It is only the raw delta files that are sparse, and those are never the primary view.
+
+Three constraints follow, and none of them are optional:
+
+- **Search must span every month.** Tabs hide eleven twelfths of the data from the browser's own find.
+  The page needs a search that matches across all months and switches to the tab holding the hit.
+  Without it, tabs are a downgrade on the flat table they replace.
+- **Each tab carries a count badge.** A month with three entries then reads as "3", not as a broken
+  page — which matters most in exactly the sparse cases the composed view is meant to smooth over.
+- **Grouping uses the composed effective date, never the base missal's.** A national calendar can move
+  a feast, so an event's effective month may differ from the month in the missal file that defines it.
+  In the editor this has a sharp consequence: editing a date moves the row to a **different tab**. The
+  UI must follow the row to its new tab rather than leaving the user on the tab it just left, and must
+  not silently drop it.
+
+Month names are localized with `Intl.DateTimeFormat(locale, { month: 'long', timeZone: 'UTC' })` —
+`timeZone: 'UTC'` per the project-wide rule, since omitting it is how off-by-one date bugs enter.
+`AssertionsBuilder.js:161` is the existing precedent for this call in the repo.
+
+Tab state belongs in the URL fragment alongside the event anchor, so a link can address a specific
+event and land on the right tab.
 
 ### Locale handling — probe, don't wait
 
@@ -175,6 +206,8 @@ Unit (vitest), which is where the value is concentrated:
 - the three locale states above, for both names and readings
 - the two lectionary tiers, including which tier answered
 - Ambrosian degradation
+- month grouping: day ordering within a month, and grouping by the **composed effective** date rather
+  than the defining missal's date (the moved-feast case)
 
 E2E (Playwright): rite switching actually repartitions the calendar list **and** redirects requests —
 the assertion that catches the missing `apiClient.listenTo(riteSelect)` wire, which no unit test can.
@@ -192,5 +225,8 @@ Editing the temporale; migrating `admin-decrees.php` onto shared modules extract
   stack is ambiguous for exactly the missals most likely to be edited.
 - **New page over in-place rewrite** — lets the old editor keep working, and avoids a big-bang cutover
   on a page whose write path has never worked.
+- **Month tabs over a single scrolling list** — the composed view is uniformly populated, so tabs give
+  a comfortable page size; accepted only because cross-month search and per-tab counts remove the two
+  things that would otherwise make tabs worse than the flat table.
 - **Probe locales rather than wait for #941** — the decrees page proves the pattern, and it moves the
   read-only phase from blocked to shippable.
