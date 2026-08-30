@@ -16,6 +16,7 @@
  */
 
 import { DecreeAction, buildDecreePayload, validateDecreePayload, deriveDecreeId, isFestiveGrade } from './DecreePayload.js';
+import { describeWriteOutcome } from './writeDisposition.js';
 
 const config = window.AdminDecreesConfig;
 
@@ -2303,22 +2304,26 @@ export function collectFormValues(root) {
 
 /**
  * Show a brief Bootstrap toast with the given message.
- * Falls back to a dismissible alert in #decreesContainer if the toast element
- * is absent (no-Bootstrap environment, e.g. tests).
+ *
+ * `window.showToast` is the shared helper layout/footer.php loads globally
+ * (assets/js/toast.js), NOT this module-scoped function — an ES module
+ * declaration never lands on `window`. It replaces a lookup of a `#decreeToast`
+ * element that exists in no markup, which meant every message quietly took the
+ * alert fallback below.
+ *
+ * Falls back to a dismissible alert in #decreesContainer when the global is
+ * absent (no-Bootstrap environment, e.g. tests).
  *
  * @param {string} message
+ * @param {'success'|'info'|'warning'|'danger'} [type] Severity, default success.
  */
-function showToast(message) {
-    const toastEl = document.getElementById('decreeToast');
-    if (toastEl && typeof bootstrap !== 'undefined' && bootstrap.Toast) {
-        const body = toastEl.querySelector('.toast-body');
-        if (body) body.textContent = message;
-        bootstrap.Toast.getOrCreateInstance(toastEl).show();
-    } else {
-        // Fallback: dismissible alert appended to the main container
-        const container = document.getElementById('decreesContainer');
-        if (container) showAlert(container, 'success', message);
+function showToast(message, type = 'success') {
+    if (typeof window.showToast === 'function') {
+        window.showToast(message, type);
+        return;
     }
+    const container = document.getElementById('decreesContainer');
+    if (container) showAlert(container, type, message);
 }
 
 // ---- action reverse-mapping helper ------------------------------------------
@@ -2418,7 +2423,10 @@ async function reloadDecrees(capabilities) {
 /**
  * Save a decree via PUT (create) or PATCH (update).
  *
- * On success: shows a toast, closes the modal, and reloads the list.
+ * On success: shows a toast, closes the modal, and reloads the list. The toast
+ * reports what the API actually did with the write (see writeDisposition.js) —
+ * reloadDecrees() re-GETs from the server, so a queued write leaves the visible
+ * list unchanged and a "created" toast would contradict it.
  * On failure: renders the error in the modal alert region.
  *
  * IMPORTANT: PATCH must not change liturgical_event.event_key (the API
@@ -2435,7 +2443,7 @@ async function reloadDecrees(capabilities) {
 async function saveDecree(payload, isCreate, alertBox, capabilities) {
     const method = isCreate ? 'PUT' : 'PATCH';
     try {
-        await fetchJson(method, `/decrees/${encodeURIComponent(payload.decree_id)}`, payload, {
+        const data = await fetchJson(method, `/decrees/${encodeURIComponent(payload.decree_id)}`, payload, {
             'Accept-Language': config.locale,
         });
         // Close editor modal before showing toast (Bootstrap modal may steal focus)
@@ -2443,7 +2451,12 @@ async function saveDecree(payload, isCreate, alertBox, capabilities) {
         if (modalEl && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
             bootstrap.Modal.getOrCreateInstance(modalEl).hide();
         }
-        showToast(isCreate ? config.i18n.created : config.i18n.updated);
+        const outcome = describeWriteOutcome(
+            data,
+            config.i18n,
+            isCreate ? config.i18n.created : config.i18n.updated
+        );
+        showToast(outcome.message, outcome.severity);
         await reloadDecrees(capabilities);
     } catch (err) {
         renderFetchError(alertBox, err);
@@ -2460,13 +2473,14 @@ async function saveDecree(payload, isCreate, alertBox, capabilities) {
  */
 async function deleteDecree(decreeId, deleteAlertBox, capabilities) {
     try {
-        await fetchJson('DELETE', `/decrees/${encodeURIComponent(decreeId)}`);
+        const data = await fetchJson('DELETE', `/decrees/${encodeURIComponent(decreeId)}`);
         // Close delete modal
         const deleteModalEl = document.getElementById('decreeDeleteModal');
         if (deleteModalEl && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
             bootstrap.Modal.getOrCreateInstance(deleteModalEl).hide();
         }
-        showToast(config.i18n.deleted);
+        const outcome = describeWriteOutcome(data, config.i18n, config.i18n.deleted);
+        showToast(outcome.message, outcome.severity);
         await reloadDecrees(capabilities);
     } catch (err) {
         renderFetchError(deleteAlertBox, err);

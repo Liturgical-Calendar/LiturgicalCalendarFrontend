@@ -53,6 +53,8 @@ $messages = [
     'Error'                                           => _('Error'),
     /** translators: notification title for warning messages */
     'Warning'                                         => _('Warning'),
+    /** translators: notification title when a write was queued for review instead of being saved */
+    'Pending Review'                                  => _('Pending review'),
     /** translators: notification title when translations are missing for a locale */
     'Missing Translations'                            => _('Missing Translations'),
 
@@ -64,6 +66,28 @@ $messages = [
     /** translators: detailed explanation when General Roman Calendar translations are missing.
         %s is the locale code. This message should mention Weblate as the translation server. */
     'General Roman Calendar not translated'           => _('The General Roman Calendar has not yet been translated into the locale "%s". Please translate the General Roman Calendar via the Weblate translation server before creating a calendar for this locale.'),
+
+    // =========================================================================
+    // Write outcome messages (see assets/js/writeDisposition.js)
+    // A write may be recorded as a change request awaiting review instead of being
+    // applied to disk; the API says which in the response `disposition` field.
+    // =========================================================================
+    /** translators: %s is the change request batch id. The changes were queued for review, not saved */
+    'writeSubmitted'                                  => _('Your changes were submitted for review as batch %s. Nothing has been saved yet.'),
+    /** translators: %s is the change request batch id. The changes were approved but are not published yet */
+    'writeApproved'                                   => _('Your changes were approved as batch %s and are queued for publication. They are not live yet.'),
+    /** translators: %s is a comma separated list of change request batch ids folded into the current one */
+    'writeSuperseded'                                 => _('Earlier pending submissions were folded into this one and no longer appear in your queue: %s'),
+    /** translators: %s is the unrecognized outcome value the server sent */
+    'writeUnknown'                                    => _('The server reported an unrecognized outcome (\'%s\') for these changes. Reload the page to check whether they were saved.'),
+    /** translators: %s is a calendar identifier such as "nation/US" */
+    'Calendar deleted'                                => _('Calendar \'%s\' was deleted successfully'),
+    /** translators: %s is a diocese identifier such as "rome_it" */
+    'Diocesan calendar deleted'                       => _('Diocesan Calendar \'%s\' was deleted successfully'),
+    /** translators: confirmation shown after saving a national calendar */
+    'National calendar saved'                         => _('National Calendar was created or updated successfully'),
+    /** translators: confirmation shown after saving a wider region calendar */
+    'Wider region saved'                              => _('Wider Region Calendar was created or updated successfully'),
 
     // =========================================================================
     // Liturgical colors

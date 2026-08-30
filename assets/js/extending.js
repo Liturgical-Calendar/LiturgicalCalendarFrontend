@@ -29,6 +29,10 @@ import {
     LiturgicalEvent
 } from './LiturgicalEvent.js';
 
+import {
+    describeWriteOutcome
+} from './writeDisposition.js';
+
 /**
  * @typedef {Object} RowData
  * @prop {Object} liturgical_event
@@ -98,21 +102,31 @@ const extractErrorMessage = (error, fallback = 'An error occurred') => {
 
 /**
  * Handles common delete response processing pattern.
- * Runs cleanup callback on success, shows toastr, logs JSON, handles errors.
+ * Runs cleanup callback only when the deletion was actually applied, shows toastr,
+ * logs JSON, handles errors.
+ *
+ * The body is parsed BEFORE anything is cleaned up: a `2xx` no longer means the
+ * resource is gone, only that the API accepted the request (see writeDisposition.js).
+ * In queue mode the calendar is still being served, so purging the local state that
+ * describes it would report a deletion that has not happened.
  *
  * @param {Response} response - The fetch response object
- * @param {Function} onSuccessCleanup - Callback to run cleanup code on success
- * @param {string} successMessage - Message to show on success
+ * @param {Function} onSuccessCleanup - Callback to run cleanup code once the deletion is applied
+ * @param {string} appliedMessage - Message to show when the deletion reached disk
  * @returns {Promise<void>}
  */
-const handleDeleteResponse = async (response, onSuccessCleanup, successMessage) => {
+const handleDeleteResponse = async (response, onSuccessCleanup, appliedMessage) => {
     if (response.ok) {
-        onSuccessCleanup();
-        toastr["success"](successMessage, Messages['Success']);
+        let json = null;
         try {
-            const json = await response.json();
-            console.log(json);
+            json = await response.json();
         } catch { /* empty or non-JSON body - ignore */ }
+        console.log(json);
+        const outcome = describeWriteOutcome(json, Messages, appliedMessage);
+        if (outcome.applied) {
+            onSuccessCleanup();
+        }
+        toastr[outcome.severity](outcome.message, outcome.applied ? Messages['Success'] : Messages['Pending Review']);
     } else if (response.status === 400) {
         let errorMessage = 'Bad request';
         try {
@@ -2530,7 +2544,7 @@ const deleteCalendarConfirmClicked = () => {
             document.querySelector('.regionalNationalDataForm').innerHTML = '';
             // Clear API state so auth:login handler doesn't act on deleted calendar
             API.clear();
-        }, `Calendar '${API.category}/${API.key}' was deleted successfully`
+        }, Messages['Calendar deleted'].replace('%s', `${API.category}/${API.key}`)
         )).catch(error => {
             console.error(error);
             // Show user-facing feedback for unexpected errors (404, 500, network failures, etc.)
@@ -2897,7 +2911,13 @@ const serializeRegionalNationalDataClicked = (ev) => {
             })
             .then(data => {
                 console.log('Data returned from save action:', data);
-                toastr["success"]("National Calendar was created or updated successfully", Messages['Success']);
+                // This handler serves wider regions too (see the category switch above),
+                // so the confirmation has to name the category actually being saved.
+                const appliedMessage = API.category === 'widerregion'
+                    ? Messages['Wider region saved']
+                    : Messages['National calendar saved'];
+                const outcome = describeWriteOutcome(data, Messages, appliedMessage);
+                toastr[outcome.severity](outcome.message, outcome.applied ? Messages['Success'] : Messages['Pending Review']);
             })
             .catch(error => {
                 // Handle different error response shapes (RFC 9110 Problem Details, custom API format, simple format)
@@ -3733,7 +3753,7 @@ const deleteDiocesanCalendarConfirmClicked = () => {
             resetOtherLocalizationInputs();
             // Clear API state so auth:login handler doesn't act on deleted calendar
             API.clear();
-        }, `Diocesan Calendar '${API.key}' was deleted successfully`
+        }, Messages['Diocesan calendar deleted'].replace('%s', API.key)
         )).catch(error => {
             console.error(error);
             // Show user-facing feedback for unexpected errors (404, 500, network failures, etc.)
@@ -3905,7 +3925,17 @@ const saveDiocesanCalendar_btnClicked = () => {
             })
             .then(responseData => {
             console.log('Data returned from save action:', responseData);
-            toastr["success"](responseData.success, Messages['Success']);
+            const outcome = describeWriteOutcome(responseData, Messages, responseData.success);
+            toastr[outcome.severity](outcome.message, outcome.applied ? Messages['Success'] : Messages['Pending Review']);
+
+            // Everything below this point describes a diocese that exists on the server.
+            // In queue mode nothing was created: `responseData.data` is the proposed
+            // payload, not a stored resource (API #933), so registering it here would
+            // invent a calendar, offer a Delete button for it, and make the next save a
+            // PATCH against a 404.
+            if (false === outcome.applied) {
+                return;
+            }
 
             document.querySelector('#removeExistingDiocesanDataBtn').disabled = false;
 
