@@ -3,14 +3,25 @@
  *
  * Renders the navbar notification bell.
  *
- * Two modes, decided at init() based on Auth.hasRole('admin'):
- *   - admin: polls /admin/notifications, shows pending review queue
- *           (role_request | access_request | application items).
- *           Badge = data.total (pending count).
- *   - user:  polls /auth/notifications, shows reviewed-access events
- *           (access_request_reviewed items). Badge = data.unread_count.
- *           POSTs /auth/notifications/seen when dropdown opens, to clear
- *           the unread badge.
+ * Two modes, decided at init() based on Auth.hasRole('admin') or
+ * Auth.isResourceAdmin():
+ *   - user:  polls /auth/notifications — the caller's personal inbox
+ *           (access_request_reviewed | change_request_reviewed |
+ *           change_request_published items). Badge = data.unread_count.
+ *   - admin: polls BOTH /admin/notifications (the pending review queue of
+ *           role_request | access_request | application items) AND
+ *           /auth/notifications, and MERGES them. An admin is also a user:
+ *           gaining a role does not stop their own access requests being
+ *           reviewed or their own change requests being published, and
+ *           /admin/notifications carries neither. Badge = admin pending total
+ *           + personal unread count.
+ *
+ * Both modes POST /auth/notifications/seen when the dropdown opens. That is the
+ * only seen endpoint there is — /admin/notifications has none, because its
+ * "unread" count is simply how many items are still pending review and clears
+ * itself when they are decided. So in admin mode marking seen advances the
+ * personal bookmark and the badge falls back to the admin pending total rather
+ * than to zero.
  *
  * @module Notifications
  */
@@ -20,8 +31,16 @@ const Notifications = {
     _cachedData: null,
 
     /**
-     * 'admin' | 'user' — fixed at init(). Drives endpoint, badge field,
-     * render branch, and whether to POST /seen on dropdown open.
+     * Last known count of items pending review from /admin/notifications.
+     * Kept separately because marking the personal inbox seen must not zero it —
+     * a queue of undecided access requests is not "seen away".
+     * @private
+     */
+    _adminPendingTotal: 0,
+
+    /**
+     * 'admin' | 'user' — fixed at init(). Drives which endpoints are polled and
+     * how the badge count is composed.
      * @private
      */
     _mode: null,
@@ -78,9 +97,9 @@ const Notifications = {
         if (dropdownEl) {
             dropdownEl.addEventListener('shown.bs.dropdown', () => {
                 this.fetchNotifications();
-                if (this._mode === 'user') {
-                    this.markSeen();
-                }
+                // Both modes: an admin has a personal inbox too, and its unread
+                // bookmark would otherwise never advance for them.
+                this.markSeen();
             });
         }
     },
@@ -111,10 +130,74 @@ const Notifications = {
             return;
         }
 
-        const endpoint = this._mode === 'admin'
-            ? `${BaseUrl}/admin/notifications`
-            : `${BaseUrl}/auth/notifications`;
+        try {
+            // In admin mode both feeds are polled and merged. They are fetched
+            // concurrently and settled independently: one feed being unavailable
+            // must not blank the other, since they answer different questions.
+            const [adminData, userData] = this._mode === 'admin'
+                ? await Promise.all([this._fetchAdminFeed(), this._fetchUserFeed()])
+                : [null, await this._fetchUserFeed()];
 
+            if (adminData === null && userData === null) {
+                this.showEmpty();
+                return;
+            }
+
+            this._adminPendingTotal = adminData ? ( adminData.total || 0 ) : 0;
+
+            const data = {
+                // Items still awaiting the admin's decision come first: they are
+                // the only ones the viewer can act on. The personal inbox follows.
+                items: [...( adminData?.items || [] ), ...( userData?.items || [] )],
+                unread_count: userData ? ( userData.unread_count || 0 ) : 0,
+                total: this._adminPendingTotal
+            };
+
+            this._cachedData = data;
+            this.updateUI(data);
+        } catch (error) {
+            console.error('Failed to fetch notifications:', error);
+            this.showEmpty();
+        }
+    },
+
+    /**
+     * Fetch the admin review queue. Returns null (rather than throwing) when the
+     * feed is unavailable, so a failure there degrades to "personal inbox only"
+     * instead of blanking the bell.
+     * @private
+     */
+    async _fetchAdminFeed() {
+        return this._fetchFeed(`${BaseUrl}/admin/notifications`);
+    },
+
+    /**
+     * Fetch the caller's personal inbox, augmented with the synthetic
+     * onboarding-invite entry when the server says they still need to request
+     * access. The invite is user-mode only: an admin or resource admin by
+     * definition already holds access, so it would be one wasted request per poll.
+     * @private
+     */
+    async _fetchUserFeed() {
+        const data = await this._fetchFeed(`${BaseUrl}/auth/notifications`);
+        if (data === null || this._mode !== 'user') {
+            return data;
+        }
+
+        const status = await this._fetchOnboardingStatus();
+        if (status.needs_access_request) {
+            data.items = [{ type: 'onboarding_invite' }, ...( data.items || [] )];
+            data.unread_count = ( data.unread_count || 0 ) + 1;
+        }
+        return data;
+    },
+
+    /**
+     * GET one notifications endpoint. Returns the parsed body, or null on any
+     * non-OK response or network failure (both already logged).
+     * @private
+     */
+    async _fetchFeed(endpoint) {
         try {
             const response = await fetch(endpoint, {
                 method: 'GET',
@@ -129,26 +212,14 @@ const Notifications = {
                 } catch {
                     errorText = 'Could not read error response';
                 }
-                console.error('Notifications API error:', response.status, errorText);
-                this.showEmpty();
-                return;
+                console.error('Notifications API error:', endpoint, response.status, errorText);
+                return null;
             }
 
-            const data = await response.json();
-
-            if (this._mode === 'user') {
-                const status = await this._fetchOnboardingStatus();
-                if (status.needs_access_request) {
-                    data.items = [{ type: 'onboarding_invite' }, ...(data.items || [])];
-                    data.unread_count = (data.unread_count || 0) + 1;
-                }
-            }
-
-            this._cachedData = data;
-            this.updateUI(data);
+            return await response.json();
         } catch (error) {
-            console.error('Failed to fetch notifications:', error);
-            this.showEmpty();
+            console.error('Failed to fetch notifications:', endpoint, error);
+            return null;
         }
     },
 
@@ -185,11 +256,18 @@ const Notifications = {
     },
 
     /**
-     * Mark the user's inbox as seen. User mode only; fire-and-forget — a
-     * failure is reconciled by the next poll.
+     * Mark the caller's personal inbox as seen. Fire-and-forget — a failure is
+     * reconciled by the next poll.
+     *
+     * Runs in BOTH modes. `/auth/notifications/seen` is the only seen endpoint
+     * the API has, and it is the right one in admin mode too: it advances the
+     * bookmark on the personal inbox, which an admin has like anybody else. The
+     * admin review queue has no bookmark to advance — its count is how many items
+     * are still undecided — so the badge falls back to that count rather than to
+     * zero.
      */
     async markSeen() {
-        if (this._mode !== 'user' || typeof BaseUrl === 'undefined' || !BaseUrl) {
+        if (typeof BaseUrl === 'undefined' || !BaseUrl) {
             return;
         }
         try {
@@ -206,17 +284,20 @@ const Notifications = {
                 console.warn('Notifications: mark-seen failed', response.status);
                 return;
             }
-            // Optimistically clear the badge; next poll confirms.
-            this.updateBadge(0);
+            // Optimistically clear the personal-inbox portion of the badge; the
+            // admin review queue is untouched by a seen bookmark. Next poll confirms.
+            this.updateBadge(this._mode === 'admin' ? this._adminPendingTotal : 0);
         } catch (error) {
             console.warn('Notifications: mark-seen network error', error);
         }
     },
 
     updateUI(data) {
-        const count = this._mode === 'user'
-            ? (data.unread_count || 0)
-            : (data.total || 0);
+        // In admin mode the badge is the sum of the two feeds: items awaiting the
+        // admin's decision, plus unread items in their own inbox.
+        const count = this._mode === 'admin'
+            ? ( data.total || 0 ) + ( data.unread_count || 0 )
+            : ( data.unread_count || 0 );
         this.updateBadge(count);
         this.updateList(data.items || []);
     },
@@ -271,6 +352,12 @@ const Notifications = {
         }
         if (item.type === 'access_request_reviewed') {
             return this._renderReviewedRequest(item);
+        }
+        if (item.type === 'change_request_reviewed') {
+            return this._renderChangeRequestReviewed(item);
+        }
+        if (item.type === 'change_request_published') {
+            return this._renderChangeRequestPublished(item);
         }
 
         const timeAgo = this._formatTimeAgo(item.created_at);
@@ -405,6 +492,143 @@ const Notifications = {
         `;
     },
 
+
+    /**
+     * The resource a change-request notification concerns, as a display string.
+     *
+     * `resource_id` is rite-qualified (`roman/US`) for the calendar-naming types
+     * and bare for the rest (`decrees`, `general_roman_calendar_test`,
+     * `rite_calendar_test`), so the slash must not be assumed.
+     * @private
+     */
+    _changeResourceLabel(item) {
+        const resourceId = typeof item.resource_id === 'string' ? item.resource_id : '';
+        const slash = resourceId.indexOf('/');
+        return slash === -1 ? resourceId : resourceId.slice(slash + 1);
+    },
+
+    /**
+     * Link to the batch on the submitter's own change-request page. That page
+     * scrolls to and highlights `#batch-<uuid>`.
+     * @private
+     */
+    _changeBatchUrl(item) {
+        const batchId = String(item.batch_id || '');
+        return this._sanitizeUrl(`change-requests.php#batch-${encodeURIComponent(batchId)}`);
+    },
+
+    /**
+     * A pull-request link, when the batch has a number AND the deployment names
+     * the source-data repository. Without the repository the number is shown
+     * unlinked: a wrong link is worse than none.
+     * @private
+     */
+    _pullRequestHtml(prNumber) {
+        if (typeof prNumber !== 'number') {
+            return '';
+        }
+        const label = this._getTranslation('changeRequestPullRequest', 'Pull request #%1$d')
+            .replace('%1$d', String(prNumber));
+        const repoUrl = typeof SourceDataRepoUrl !== 'undefined' ? SourceDataRepoUrl : '';
+        if (!repoUrl) {
+            return `<div class="small text-muted">${this._escapeHtml(label)}</div>`;
+        }
+        const href = this._sanitizeUrl(`${repoUrl}/pull/${prNumber}`);
+        return `<div class="small"><a href="${href}" target="_blank" rel="noopener">${this._escapeHtml(label)}</a></div>`;
+    },
+
+    /**
+     * Render a `change_request_reviewed` item — a human decided one of the
+     * caller's own change request batches.
+     *
+     * `review_status` here is the frozen `review_decision`, not the batch's
+     * current status, so `approved` here always means "a reviewer approved it".
+     * Whether it then published is reported separately, by a
+     * `change_request_published` item carrying the same `batch_id`.
+     *
+     * @param {Object} item - { type, batch_id, resource_type, resource_id,
+     *   review_status, rejected_reason, reviewed_at, unread }
+     * @returns {string} HTML string
+     * @private
+     */
+    _renderChangeRequestReviewed(item) {
+        const visuals = item.review_status === 'rejected'
+            ? {
+                icon: 'fas fa-times-circle text-danger',
+                label: this._getTranslation('changeRequestRejected', 'Your change request was rejected')
+            }
+            : {
+                icon: 'fas fa-check-circle text-success',
+                label: this._getTranslation('changeRequestApproved', 'Your change request was approved')
+            };
+
+        // reviewed_at, NOT created_at: this type has no created_at, and reading one
+        // is exactly the bug that made these items render a blank timestamp.
+        const timeAgo = this._formatTimeAgo(item.reviewed_at);
+        const reasonHtml = item.rejected_reason
+            ? `<div class="small fst-italic text-muted">${this._escapeHtml(item.rejected_reason)}</div>`
+            : '';
+        const unreadClass = item.unread ? ' bg-light fw-semibold' : '';
+
+        return `
+            <a class="dropdown-item py-2${unreadClass}" href="${this._changeBatchUrl(item)}">
+                <div class="d-flex align-items-start">
+                    <div class="flex-shrink-0">
+                        <i class="${visuals.icon} me-2"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="small fw-bold">${this._escapeHtml(visuals.label)}</div>
+                        <div class="small text-muted"><code>${this._escapeHtml(this._changeResourceLabel(item))}</code></div>
+                        ${reasonHtml}
+                        <div class="small text-muted">${timeAgo}</div>
+                    </div>
+                </div>
+            </a>
+        `;
+    },
+
+    /**
+     * Render a `change_request_published` item — one of the caller's own batches
+     * settled on GitHub. Only `merged` and `closed` ever reach the inbox; an open
+     * pull request is not news yet.
+     *
+     * @param {Object} item - { type, batch_id, resource_type, resource_id,
+     *   publication_status, pr_number, settled_at, unread }
+     * @returns {string} HTML string
+     * @private
+     */
+    _renderChangeRequestPublished(item) {
+        const visuals = item.publication_status === 'closed'
+            ? {
+                icon: 'fas fa-circle-xmark text-secondary',
+                label: this._getTranslation('changeRequestClosed', 'Your change request was closed without merging')
+            }
+            : {
+                icon: 'fas fa-code-merge text-success',
+                label: this._getTranslation('changeRequestMerged', 'Your change request was published')
+            };
+
+        // settled_at, NOT created_at — the timestamp this type is ordered and
+        // unread-flagged by.
+        const timeAgo = this._formatTimeAgo(item.settled_at);
+        const unreadClass = item.unread ? ' bg-light fw-semibold' : '';
+
+        return `
+            <a class="dropdown-item py-2${unreadClass}" href="${this._changeBatchUrl(item)}">
+                <div class="d-flex align-items-start">
+                    <div class="flex-shrink-0">
+                        <i class="${visuals.icon} me-2"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="small fw-bold">${this._escapeHtml(visuals.label)}</div>
+                        <div class="small text-muted"><code>${this._escapeHtml(this._changeResourceLabel(item))}</code></div>
+                        ${this._pullRequestHtml(item.pr_number)}
+                        <div class="small text-muted">${timeAgo}</div>
+                    </div>
+                </div>
+            </a>
+        `;
+    },
 
     /**
      * Render the synthetic onboarding-invite item shown when the user has
