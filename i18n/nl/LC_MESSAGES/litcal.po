@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-30 21:46+0000\n"
+"POT-Creation-Date: 2026-08-31 01:44+0000\n"
 "PO-Revision-Date: 2026-08-29 09:58+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
@@ -1463,6 +1463,33 @@ msgstr "Vraag toegang aan om het systeem te gebruiken"
 msgid "Get started"
 msgstr "Aan de slag"
 
+#: layout/footer.php:106
+#, fuzzy
+#| msgid "Your request was approved"
+msgid "Your change request was approved"
+msgstr "Je verzoek is goedgekeurd"
+
+#: layout/footer.php:107
+#, fuzzy
+#| msgid "Your request was rejected"
+msgid "Your change request was rejected"
+msgstr "Je verzoek is afgewezen"
+
+#: layout/footer.php:108
+#, fuzzy
+#| msgid "Your request was approved"
+msgid "Your change request was published"
+msgstr "Je verzoek is goedgekeurd"
+
+#: layout/footer.php:109
+msgid "Your change request was closed without merging"
+msgstr ""
+
+#: layout/footer.php:110
+#, php-format
+msgid "Pull request #%1$d"
+msgstr ""
+
 #: includes/login-modal.php:6
 msgid "Session Expiring"
 msgstr "Sessie verloopt"
@@ -2300,7 +2327,7 @@ msgstr "Nationale kalenders door Bisschoppenconferenties"
 msgid "Diocesan calendars by liturgical offices"
 msgstr "Diocesane kalenders door liturgische diensten"
 
-#: includes/admin-blocks.php:101
+#: includes/admin-blocks.php:101 admin-dashboard.php:221
 msgid "View"
 msgstr "Bekijk"
 
@@ -3131,8 +3158,8 @@ msgstr "Referenties"
 msgid "Date"
 msgstr "Datum"
 
-#: admin-permissions.php:449 admin-applications.php:245 admin-dashboard.php:135
-#: admin-dashboard.php:189
+#: admin-permissions.php:449 admin-applications.php:245 admin-dashboard.php:136
+#: admin-dashboard.php:190
 msgid "Review"
 msgstr "Beoordeling"
 
@@ -3573,8 +3600,8 @@ msgstr ""
 "Liturgische kalendergegevens beheren, informatie uit het Romeins Missaal en "
 "regionale kalenders."
 
-#: admin-dashboard.php:65 admin-dashboard.php:147 admin-dashboard.php:164
-#: admin-dashboard.php:174
+#: admin-dashboard.php:65 admin-dashboard.php:148 admin-dashboard.php:165
+#: admin-dashboard.php:175
 msgid "Administration"
 msgstr "Administratie"
 
@@ -3598,11 +3625,11 @@ msgstr "Beoordeel en keur ontwikkelaaraanvragen goed"
 msgid "Manage fine-grained resource permissions"
 msgstr "Fijnmazige resourcepermissies beheren"
 
-#: admin-dashboard.php:129
+#: admin-dashboard.php:130
 msgid "Supported Locales"
 msgstr "Ondersteunde talen"
 
-#: admin-dashboard.php:131
+#: admin-dashboard.php:132
 msgid ""
 "See which locales are officially supported, and whether a candidate has "
 "everything it needs"
@@ -3610,14 +3637,30 @@ msgstr ""
 "Zie welke talen officieel worden ondersteund, en of een kandidaat alles "
 "heeft wat hij nodig heeft"
 
-#: admin-dashboard.php:183
+#: admin-dashboard.php:184
 msgid "Access Requests to Review"
 msgstr "Te beoordelen toegangsverzoeken"
 
-#: admin-dashboard.php:185
+#: admin-dashboard.php:186
 msgid "Review and approve access requests for the resources you administer"
 msgstr ""
 "Beoordeel en keur toegangsverzoeken goed voor de bronnen die je beheert"
+
+#: admin-dashboard.php:202
+msgid "Your Contributions"
+msgstr ""
+
+#: admin-dashboard.php:211
+#, fuzzy
+#| msgid "Your Access Requests"
+msgid "Your Change Requests"
+msgstr "Jouw Toegangsverzoeken"
+
+#: admin-dashboard.php:215
+msgid ""
+"Track the source data changes you have proposed, read what became of them, "
+"and withdraw one that is still awaiting review"
+msgstr ""
 
 #: admin-users.php:33 admin-users.php:45
 msgid "Users Management"

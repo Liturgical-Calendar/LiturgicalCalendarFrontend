@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-30 21:46+0000\n"
+"POT-Creation-Date: 2026-08-31 01:44+0000\n"
 "PO-Revision-Date: 2026-08-29 09:37+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
@@ -1456,6 +1456,33 @@ msgstr "Poproś o dostęp, aby rozpocząć korzystanie z systemu"
 msgid "Get started"
 msgstr "Zacznij"
 
+#: layout/footer.php:106
+#, fuzzy
+#| msgid "Your request was approved"
+msgid "Your change request was approved"
+msgstr "Twoje żądanie zostało zatwierdzone"
+
+#: layout/footer.php:107
+#, fuzzy
+#| msgid "Your request was rejected"
+msgid "Your change request was rejected"
+msgstr "Twoje żądanie zostało odrzucone"
+
+#: layout/footer.php:108
+#, fuzzy
+#| msgid "Your request was approved"
+msgid "Your change request was published"
+msgstr "Twoje żądanie zostało zatwierdzone"
+
+#: layout/footer.php:109
+msgid "Your change request was closed without merging"
+msgstr ""
+
+#: layout/footer.php:110
+#, php-format
+msgid "Pull request #%1$d"
+msgstr ""
+
 #: includes/login-modal.php:6
 msgid "Session Expiring"
 msgstr "Sesja wygasa"
@@ -2291,7 +2318,7 @@ msgstr "Kalendarze narodowe według Konferencji Episkopatów"
 msgid "Diocesan calendars by liturgical offices"
 msgstr "Kalendarze diecezjalne według urzędów liturgicznych"
 
-#: includes/admin-blocks.php:101
+#: includes/admin-blocks.php:101 admin-dashboard.php:221
 msgid "View"
 msgstr "Widok"
 
@@ -3114,8 +3141,8 @@ msgstr "Poświadczenia"
 msgid "Date"
 msgstr "Data"
 
-#: admin-permissions.php:449 admin-applications.php:245 admin-dashboard.php:135
-#: admin-dashboard.php:189
+#: admin-permissions.php:449 admin-applications.php:245 admin-dashboard.php:136
+#: admin-dashboard.php:190
 msgid "Review"
 msgstr "Przegląd"
 
@@ -3552,8 +3579,8 @@ msgstr ""
 "Zarządzaj danymi kalendarza liturgicznego, informacjami o Mszałach Rzymskich "
 "i kalendarzami regionalnymi."
 
-#: admin-dashboard.php:65 admin-dashboard.php:147 admin-dashboard.php:164
-#: admin-dashboard.php:174
+#: admin-dashboard.php:65 admin-dashboard.php:148 admin-dashboard.php:165
+#: admin-dashboard.php:175
 msgid "Administration"
 msgstr "Administracja"
 
@@ -3577,11 +3604,11 @@ msgstr "Przeglądaj i zatwierdzaj aplikacje deweloperów"
 msgid "Manage fine-grained resource permissions"
 msgstr "Zarządzaj uprawnieniami do zasobów na poziomie szczegółowym"
 
-#: admin-dashboard.php:129
+#: admin-dashboard.php:130
 msgid "Supported Locales"
 msgstr "Obsługiwane lokalizacje"
 
-#: admin-dashboard.php:131
+#: admin-dashboard.php:132
 msgid ""
 "See which locales are officially supported, and whether a candidate has "
 "everything it needs"
@@ -3589,14 +3616,30 @@ msgstr ""
 "Zobacz, które lokalizacje są oficjalnie obsługiwane, i czy kandydat ma "
 "wszystko, czego potrzebuje"
 
-#: admin-dashboard.php:183
+#: admin-dashboard.php:184
 msgid "Access Requests to Review"
 msgstr "Prośby o dostęp do rozpatrzenia"
 
-#: admin-dashboard.php:185
+#: admin-dashboard.php:186
 msgid "Review and approve access requests for the resources you administer"
 msgstr ""
 "Przeglądaj i zatwierdzaj prośby o dostęp do zasobów, którymi zarządzasz"
+
+#: admin-dashboard.php:202
+msgid "Your Contributions"
+msgstr ""
+
+#: admin-dashboard.php:211
+#, fuzzy
+#| msgid "Your Access Requests"
+msgid "Your Change Requests"
+msgstr "Twoje Żądania Dostępu"
+
+#: admin-dashboard.php:215
+msgid ""
+"Track the source data changes you have proposed, read what became of them, "
+"and withdraw one that is still awaiting review"
+msgstr ""
 
 #: admin-users.php:33 admin-users.php:45
 msgid "Users Management"
