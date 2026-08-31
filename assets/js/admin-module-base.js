@@ -426,11 +426,13 @@ function createAdminModule(options) { // eslint-disable-line no-unused-vars
          * Process an item (approve/reject/revoke/…)
          * @param {string} action - Action to perform
          */
-        async processItem(action) {
-            if (!this.currentItemId) return;
-
-            const notes = document.getElementById(notesElementId)?.value.trim() ?? '';
-            const modalAlerts = document.getElementById('modalAlerts');
+        /**
+         * Disable every action button and show a spinner on the one that was clicked.
+         *
+         * @param {string} action - The action whose button was clicked.
+         * @returns {() => void} Restores the buttons and the clicked button's label.
+         */
+        _setActionButtonsBusy(action) {
             const actionButtons = Object.values(actionButtonIds)
                 .map(id => document.getElementById(id))
                 .filter(el => el !== null && el !== undefined);
@@ -444,45 +446,100 @@ function createAdminModule(options) { // eslint-disable-line no-unused-vars
                 btn.innerHTML = `<i class="fas fa-spinner fa-spin me-1"></i>${this.config.i18n.processing}`;
             }
 
-            try {
-                const body = buildActionBody.call(this, action, notes);
-                const headers = { 'Accept': 'application/json' };
-                const sendsBody = body !== null && body !== undefined;
-                if (sendsBody) {
-                    headers['Content-Type'] = 'application/json';
+            return () => {
+                actionButtons.forEach(b => { b.disabled = false; });
+                if (btn) {
+                    btn.innerHTML = originalText;
                 }
+            };
+        },
 
-                const response = await fetch(
-                    `${this.config.apiUrl}${apiEndpoint}/${encodeURIComponent(this.currentItemId)}/${action}`,
-                    {
-                        method: 'POST',
-                        headers,
-                        credentials: 'include',
-                        ...( sendsBody ? { body: JSON.stringify(body) } : {} )
-                    }
-                );
+        /**
+         * POST the action to the API and parse the body.
+         *
+         * A body is sent only when buildActionBody returns one: approve takes no body,
+         * and sending `Content-Type: application/json` with no body is what a strict
+         * `additionalProperties: false` endpoint rejects.
+         *
+         * @param {string} action
+         * @param {string} notes
+         * @returns {Promise<{response: Response, data: object}>}
+         */
+        async _sendActionRequest(action, notes) {
+            const body      = buildActionBody.call(this, action, notes);
+            const sendsBody = body !== null && body !== undefined;
+            const headers   = { 'Accept': 'application/json' };
 
-                const data = await response.json().catch(() => ({}));
+            if (sendsBody) {
+                headers['Content-Type'] = 'application/json';
+            }
+
+            const response = await fetch(
+                `${this.config.apiUrl}${apiEndpoint}/${encodeURIComponent(this.currentItemId)}/${action}`,
+                {
+                    method: 'POST',
+                    headers,
+                    credentials: 'include',
+                    ...( sendsBody ? { body: JSON.stringify(body) } : {} )
+                }
+            );
+
+            const data = await response.json().catch(() => ({}));
+            return { response, data };
+        },
+
+        /**
+         * Render a single Bootstrap alert into the modal's alert slot.
+         *
+         * @param {'success'|'warning'|'danger'} variant
+         * @param {string} icon - Font Awesome icon name, without the `fa-` prefix.
+         * @param {string} message - Plain text; escaped here.
+         */
+        _showModalAlert(variant, icon, message) {
+            const modalAlerts = document.getElementById('modalAlerts');
+            if (!modalAlerts) return;
+
+            modalAlerts.innerHTML = `
+                <div class="alert alert-${variant}">
+                    <i class="fas fa-${icon} me-2"></i>
+                    ${this.escapeHtml(message)}
+                </div>
+            `;
+        },
+
+        /**
+         * Close the review modal and refresh the list and the notification bell.
+         *
+         * @param {number} [delay=1500] - Milliseconds to leave the alert visible first.
+         */
+        _closeAndReload(delay = 1500) {
+            setTimeout(() => {
+                this.modals.review.hide();
+                this.loadItems();
+                this.refreshNotifications();
+            }, delay);
+        },
+
+        async processItem(action) {
+            if (!this.currentItemId) return;
+
+            const notes          = document.getElementById(notesElementId)?.value.trim() ?? '';
+            const restoreButtons = this._setActionButtonsBusy(action);
+
+            try {
+                const { response, data } = await this._sendActionRequest(action, notes);
 
                 // 409 means somebody else decided this item between the list load and this
                 // click. There is nothing for the reviewer to retry, so say so plainly and
                 // reload rather than rendering it as a generic failure.
                 if (response.status === 409) {
-                    const alreadyDecided = this.config.i18n.alreadyDecided
-                        || data.message || data.detail || data.error || 'This item was already decided.';
-                    if (modalAlerts) {
-                        modalAlerts.innerHTML = `
-                            <div class="alert alert-warning">
-                                <i class="fas fa-exclamation-circle me-2"></i>
-                                ${this.escapeHtml(alreadyDecided)}
-                            </div>
-                        `;
-                    }
-                    setTimeout(() => {
-                        this.modals.review.hide();
-                        this.loadItems();
-                        this.refreshNotifications();
-                    }, 1500);
+                    this._showModalAlert(
+                        'warning',
+                        'exclamation-circle',
+                        this.config.i18n.alreadyDecided
+                            || data.message || data.detail || data.error || 'This item was already decided.'
+                    );
+                    this._closeAndReload();
                     return;
                 }
 
@@ -490,38 +547,20 @@ function createAdminModule(options) { // eslint-disable-line no-unused-vars
                     throw new Error(data.message || data.detail || data.error || 'Request failed');
                 }
 
-                // Show success message
-                const successMessage = this.config.i18n[`${action}Success`];
-
-                if (modalAlerts) {
-                    modalAlerts.innerHTML = `
-                        <div class="alert alert-success">
-                            <i class="fas fa-check-circle me-2"></i>
-                            ${this.escapeHtml(data.message || successMessage)}
-                        </div>
-                    `;
-                }
-
-                // Reload after a short delay
-                setTimeout(() => {
-                    this.modals.review.hide();
-                    this.loadItems();
-                    this.refreshNotifications();
-                }, 1500);
+                this._showModalAlert(
+                    'success',
+                    'check-circle',
+                    data.message || this.config.i18n[`${action}Success`]
+                );
+                this._closeAndReload();
             } catch (error) {
                 console.error(`Error processing ${entityName}:`, error);
-                if (modalAlerts) {
-                    modalAlerts.innerHTML = `
-                        <div class="alert alert-danger">
-                            <i class="fas fa-exclamation-triangle me-2"></i>
-                            ${this.escapeHtml(error.message || this.config.i18n.failedToProcess)}
-                        </div>
-                    `;
-                }
-                actionButtons.forEach(b => { b.disabled = false; });
-                if (btn) {
-                    btn.innerHTML = originalText;
-                }
+                this._showModalAlert(
+                    'danger',
+                    'exclamation-triangle',
+                    error.message || this.config.i18n.failedToProcess
+                );
+                restoreButtons();
             }
         },
 
