@@ -1,5 +1,6 @@
 import { test, expect, gitRestoreApiData } from './fixtures';
 import { VALID_WIDER_REGIONS } from './constants';
+import { expectApplied } from './support/writeMode';
 
 /**
  * Tests for the Wider Region Calendar form on extending.php
@@ -10,6 +11,10 @@ import { VALID_WIDER_REGIONS } from './constants';
  * 3. The payload structure matches the API contract (WiderRegionPayload)
  * 4. CREATE (PUT) requests return 201 and can be cleaned up with DELETE (200)
  * 5. UPDATE (PATCH) requests return 200 and changes are reverted with git restore
+ *
+ * DISK MODE ONLY — see the header of diocesan-calendar.spec.ts. Each write asserts
+ * its `disposition` as well as its status, so a queue-mode stack cannot turn these
+ * green without anything being written (issue #502).
  *
  * Note: Wider Region calendars are NOT standalone calendars but a layer
  * above national calendars containing liturgical events shared across
@@ -192,6 +197,9 @@ test.describe('Wider Region Calendar Form', () => {
             // PUT, which creates, still answers 201; see the CREATE test below.
             expect(responseStatus).toBe(200);
             expect(responseBody).toHaveProperty('success');
+            // ...and that it LANDED. `success` is emitted in queue mode too, where the write is
+            // only a change request and gitRestoreApiData() has nothing to revert (issue #502).
+            expectApplied(responseBody, 'PATCH /data/ (wider region UPDATE)');
             console.log(`UPDATE (PATCH) response: ${responseStatus} - ${JSON.stringify(responseBody)}`);
 
             // Validate payload structure
@@ -604,6 +612,9 @@ test.describe('Wider Region Calendar Form', () => {
         // Verify CREATE response status is 201
         expect(createResponseStatus).toBe(201);
         expect(createResponseBody).toHaveProperty('success');
+        // ...and that the calendar exists rather than sitting in a review queue — otherwise the
+        // DELETE cleanup below removes nothing and is still answered 200 (issue #502).
+        expectApplied(createResponseBody, 'PUT /data/ (wider region CREATE)');
         console.log(`CREATE (PUT) response: ${createResponseStatus} - ${JSON.stringify(createResponseBody)}`);
 
         // Validate payload structure (against the ORIGINAL payload from frontend)
@@ -681,6 +692,8 @@ test.describe('Wider Region Calendar Form', () => {
         const deleteResult = await extendingPage.deleteCalendar('widerregion', createdRegionKey);
         expect(deleteResult.status).toBe(200);
         expect(deleteResult.body).toHaveProperty('success');
+        // A queued deletion answers 200 too, and leaves the calendar on disk to red the next run.
+        expectApplied(deleteResult.body, 'DELETE /data/widerregion (cleanup)');
     });
 
     test('should require wider region name', async ({ page }) => {

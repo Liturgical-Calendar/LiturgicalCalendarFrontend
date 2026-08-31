@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import { actingAs } from './support/actingAs';
 import { grantScope, revokeScope } from './support/grant';
 import { truncateAppTables, gitRestoreApiData, settleCleanup } from './support/cleanup';
+import { expectWriteApplied } from '../support/writeMode';
 import { Fga } from './support/fga';
 import { ZitadelAdmin } from './support/zitadel';
 import { USERS } from './support/users';
@@ -44,6 +45,11 @@ import { USERS } from './support/users';
  * CRITICAL cleanup: the IT PATCH persists to the API repo's jsondata/sourcedata
  * (bind-mounted). afterEach MUST call gitRestoreApiData() to revert it (plus
  * truncateAppTables + revokeScope). The spec is re-runnable from a clean slate.
+ *
+ * DISK MODE ONLY. That persistence is the assumption the whole scenario rests on,
+ * so the IT step asserts the write's `disposition`, not just its status code — a
+ * queue-mode stack answers 2xx and writes nothing (issue #502). Queue-mode coverage
+ * belongs to the `rbac-queue` project (e2e/rbac/queue/), not here.
  */
 
 // API base URL (the same origin the extending.php "Save" XHR fetches to).
@@ -107,10 +113,16 @@ test('10 — scoped data editing: cei-editor writes IT (ok) but is denied USA (4
             `${API_BASE}/data/nation/IT`,
             { headers, data: body },
         );
-        expect(
-            itResp.ok(),
-            'PATCH /data/nation/IT should succeed (2xx) for cei-editor scoped to IT; got ' + itResp.status() + ': ' + await itResp.text(),
-        ).toBe(true);
+        // Asserting the DISPOSITION, not merely a 2xx (issue #502). In queue mode the API
+        // answers 200 with `disposition: "submitted"` and writes nothing to disk, so
+        // `itResp.ok()` alone passed while proving only that the request was accepted —
+        // and the gitRestoreApiData() below had nothing to revert. There is no read-back
+        // that could substitute here: the payload is a round-trip of the stored definition,
+        // so a successful write leaves the file byte-identical.
+        await expectWriteApplied(
+            itResp,
+            'PATCH /data/nation/IT for cei-editor scoped to IT',
+        );
 
         // ── Step 2: USA edit → DENIED ────────────────────────────────────────
         // SAME user, SAME valid body, only the target scope differs. cei-editor

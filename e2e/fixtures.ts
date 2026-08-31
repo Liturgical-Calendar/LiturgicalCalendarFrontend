@@ -2,6 +2,7 @@ import { test as base, expect, Page } from '@playwright/test';
 import { execFile } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
+import { queueModeSkipsGitRestore } from './support/writeMode';
 
 /**
  * Test fixtures for LiturgicalCalendar extending.php form tests.
@@ -25,9 +26,22 @@ function runGitCommand(args: string[]): Promise<string | null> {
  * Restore and clean API sourcedata directory using git.
  * This reverts modified tracked files and removes untracked files/directories.
  * Used for cleanup after CREATE tests that modify API data.
+ *
+ * A second implementation lives in `e2e/rbac/support/cleanup.ts`. They are kept separate on
+ * purpose (issue #502 asked): that one no-ops on an absent `.git`, whereas this one THROWS,
+ * because the specs that call it create untracked calendar files and a misconfigured
+ * API_REPO_PATH would leave them behind to red every later run. The queue-mode decision is the
+ * one thing they share — see queueModeSkipsGitRestore().
+ *
  * @throws Error if path is invalid, not a git repo, or git restore/clean fails
  */
 export async function gitRestoreApiData(): Promise<void> {
+    // In queue mode the write became a change-request row, not a file: there is nothing under
+    // jsondata/sourcedata to restore, and the safety checks below would fail a run for a
+    // misconfigured API_REPO_PATH that no longer matters. Says so rather than exiting quietly,
+    // so "restored" and "never written" stay distinguishable in the log (issue #502).
+    if (queueModeSkipsGitRestore('fixtures')) return;
+
     const apiPath = process.env.API_REPO_PATH || path.resolve(__dirname, '../../LiturgicalCalendarAPI');
 
     // Safety check: verify path exists and is a git repository

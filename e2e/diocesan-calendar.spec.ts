@@ -1,4 +1,5 @@
 import { test, expect, gitRestoreApiData } from './fixtures';
+import { expectApplied } from './support/writeMode';
 
 /**
  * Tests for the Diocesan Calendar form on extending.php
@@ -12,6 +13,13 @@ import { test, expect, gitRestoreApiData } from './fixtures';
  *
  * Diocesan calendars are the most specific level of calendar customization,
  * inheriting from national, wider region, and General Roman Calendar.
+ *
+ * DISK MODE ONLY. Every write here is expected to reach the API repo's
+ * jsondata/sourcedata, which is what the git-restore cleanup and the DELETE
+ * cleanup both assume. Each write therefore asserts its `disposition` and not
+ * merely its status code: a queue-mode stack (SOURCEDATA_CHANGE_REQUESTS=true)
+ * answers the same 201/200 while recording a change request and writing nothing,
+ * which used to turn these tests green without testing anything (issue #502).
  */
 
 test.describe('Diocesan Calendar Form', () => {
@@ -312,6 +320,10 @@ test.describe('Diocesan Calendar Form', () => {
         // Verify CREATE response status is 201
         expect(createResponseStatus).toBe(201);
         expect(createResponseBody).toHaveProperty('success');
+        // ...and that the calendar was really created rather than queued for review. Without
+        // this the DELETE cleanup below would be deleting a diocese that never existed, and
+        // still be answered 200 (issue #502).
+        expectApplied(createResponseBody, 'PUT /data/ (diocesan CREATE)');
         console.log(`CREATE (PUT) response: ${createResponseStatus}`);
 
         // Validate payload structure
@@ -332,6 +344,8 @@ test.describe('Diocesan Calendar Form', () => {
         const deleteResult = await extendingPage.deleteCalendar('diocese', dioceseToCreate.key);
         expect(deleteResult.status).toBe(200);
         expect(deleteResult.body).toHaveProperty('success');
+        // A queued deletion answers 200 too, and leaves the diocese on disk to red the next run.
+        expectApplied(deleteResult.body, 'DELETE /data/diocese (cleanup)');
     });
 
     test('should UPDATE (PATCH) existing diocesan calendar and verify 200 response', async ({ page, extendingPage }) => {
@@ -492,7 +506,16 @@ test.describe('Diocesan Calendar Form', () => {
 
         // Wrap assertions in try/finally to ensure cleanup runs even if assertions fail
         try {
-            // Verify the HTTP method is PATCH (UPDATE)
+            // Verify the HTTP method is PATCH (UPDATE).
+            //
+            // DISK-MODE INVARIANT, and one that cannot serve both modes as written
+            // (issue #502). The method is PATCH because the diocese already exists on
+            // disk and the editor loaded it. Under queue mode a diocese only ever
+            // "exists" once its batch is approved and published, so the same flow can
+            // legitimately still be a PUT — which is exactly the phantom-diocese
+            // behaviour frontend #501 fixed: extending.js no longer registers a
+            // calendar from a merely-queued response. Queue mode's own method
+            // expectations belong in the rbac-queue project, not in a second branch here.
             expect(getMethod()).toBe('PATCH');
             console.log(`HTTP method used: ${getMethod()}`);
 
@@ -500,6 +523,11 @@ test.describe('Diocesan Calendar Form', () => {
             // PUT, which creates, still answers 201; see the CREATE test above.
             expect(responseStatus).toBe(200);
             expect(responseBody).toHaveProperty('success');
+            // ...and that the update actually LANDED. `success` is built unconditionally by the
+            // handler in both modes (see assets/js/writeDisposition.js), so on its own it says
+            // nothing about persistence, and the gitRestoreApiData() below would have nothing to
+            // revert (issue #502).
+            expectApplied(responseBody, 'PATCH /data/ (diocesan UPDATE)');
             console.log(`UPDATE (PATCH) response: ${responseStatus} - ${JSON.stringify(responseBody)}`);
 
             // Validate payload structure
