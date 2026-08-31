@@ -131,3 +131,46 @@ body {
     }
 
 }
+
+/* ---------------------------------------------------------------------------
+   Change request diffs (admin-changes.php, change-requests.php)
+
+   Rendered by assets/js/change-request-common.js as a <pre> of one <span> per
+   line, so the whole block scrolls horizontally inside its card rather than
+   widening the page.
+   --------------------------------------------------------------------------- */
+.change-request-diff {
+    max-height: 22rem;
+    overflow: auto;
+    font-size: 0.78rem;
+    line-height: 1.35;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    margin-bottom: 0;
+}
+
+.change-request-diff code {
+    color: inherit;
+    white-space: pre;
+}
+
+.change-request-diff span {
+    display: block;
+}
+
+.change-request-diff-add {
+    background-color: #d1e7dd;
+    color: #0a3622;
+}
+
+.change-request-diff-remove {
+    background-color: #f8d7da;
+    color: #58151c;
+}
+
+.change-request-diff-fold {
+    color: #6c757d;
+    font-style: italic;
+}
