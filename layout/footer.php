@@ -99,8 +99,26 @@ const NotificationTranslations = {
     yourRequestRejected: <?php echo json_encode(_('Your request was rejected')); ?>,
     yourRequestRevoked: <?php echo json_encode(_('Your access was revoked')); ?>,
     onboardingInvite: <?php echo json_encode(_('Request access to start using the system')); ?>,
-    onboardingInviteCta: <?php echo json_encode(_('Get started')); ?>
+    onboardingInviteCta: <?php echo json_encode(_('Get started')); ?>,
+    // Change-request notifications. A batch produces up to two of these at different
+    // times: a review decision (approved/rejected), and later a publication outcome
+    // (merged/closed). A rejected batch never publishes, so it only ever produces the first.
+    changeRequestApproved: <?php echo json_encode(_('Your change request was approved')); ?>,
+    changeRequestRejected: <?php echo json_encode(_('Your change request was rejected')); ?>,
+    changeRequestMerged: <?php echo json_encode(_('Your change request was published')); ?>,
+    changeRequestClosed: <?php echo json_encode(_('Your change request was closed without merging')); ?>,
+    changeRequestPullRequest: <?php echo json_encode(_('Pull request #%1$d')); ?>
 };
+// The GitHub repository the source-data publisher opens pull requests against, so a
+// notification carrying a pr_number can link to it. Empty unless the deployment names
+// a well-formed "owner/repo", in which case the number is rendered without a link.
+<?php
+$notificationsRepo    = trim((string) ( $_ENV['SOURCEDATA_REPOSITORY'] ?? '' ));
+$notificationsRepoUrl = preg_match('#^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$#', $notificationsRepo) === 1
+    ? 'https://github.com/' . $notificationsRepo
+    : '';
+?>
+const SourceDataRepoUrl = <?php echo json_encode($notificationsRepoUrl); ?>;
 </script>
 <?php include_once('includes/login-modal.php'); ?>
 <?php
@@ -138,15 +156,25 @@ if ('examples' !== $pageName) {
     echo $componentsJsImportMap;
 }
 
+//pages built on the shared admin module factory; their page script is a classic
+//script (not a module) because the factory is a global, not an export
+$adminModulePages = [ 'admin-applications', 'admin-changes' ];
+
 //load admin module base for admin pages that use it
-if ('admin-applications' === $pageName) {
-    echo '<script src="assets/js/admin-module-base.js"></script>';
+if (in_array($pageName, $adminModulePages, true)) {
+    echo '<script src="assets/js/admin-module-base.js?v=' . filemtime('assets/js/admin-module-base.js') . '"></script>';
+}
+
+//shared change-request rendering (batch detail diff), used by both the reviewer's
+//queue and the submitter's own history
+if (in_array($pageName, [ 'admin-changes', 'change-requests' ], true)) {
+    echo '<script src="assets/js/change-request-common.js?v=' . filemtime('assets/js/change-request-common.js') . '"></script>';
 }
 
 //include any script that has the same name as the current page
 if (file_exists("assets/js/{$pageName}.js")) {
     // Admin modules use the base factory, so they're regular scripts, not modules
-    $scriptType = 'admin-applications' === $pageName ? '' : ' type="module"';
+    $scriptType = in_array($pageName, $adminModulePages, true) ? '' : ' type="module"';
     // filemtime cache-busting: browsers cache module scripts aggressively;
     // without this, a rebuilt container can serve fresh HTML with stale JS
     $scriptVersion = filemtime("assets/js/{$pageName}.js");

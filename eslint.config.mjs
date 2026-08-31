@@ -40,12 +40,24 @@ export default defineConfig( [
         OidcEnabled: "readonly",
         Notifications: "readonly",
         NotificationTranslations: "readonly",
+        ChangeRequestCommon: "readonly",
+        SourceDataRepoUrl: "readonly",
         createAdminModule: "readonly",
         showToast: "readonly",
       }
     },
     rules: {
       'no-prototype-builtins': 'off'
+    }
+  },
+  {
+    // Vitest suites run in Node, not in the browser: they read module sources
+    // off disk with node:fs and resolve them against process.cwd().
+    files: [ "assets/js/__tests__/**/*.js" ],
+    languageOptions: {
+      globals: {
+        ...globals.node
+      }
     }
   },
 ] );
