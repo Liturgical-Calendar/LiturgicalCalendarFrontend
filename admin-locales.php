@@ -8,8 +8,13 @@
  *
  * Promotion is a governance decision about the API's published contract: it flips
  * missing data from a quiet degradation into a hard failure. So this page is
- * global-admin only, and read-only until change requests can carry the write
- * durably (API issues #904 and #902).
+ * global-admin only.
+ *
+ * Curation became writable with API #926. What a write MEANS depends on the
+ * deployment, and the API says which in `curation.mode`: `change_request` records
+ * a reviewable request, `disk` edits the file that the next deploy may overwrite,
+ * and `misconfigured` refuses. The notice renders the API's own `reason` verbatim
+ * in all three, so this page cannot drift from the server's account.
  */
 
 include_once 'includes/common.php';
@@ -94,128 +99,48 @@ if (!$authHelper->hasRole('admin')) {
 
     <?php include_once('./layout/footer.php'); ?>
 
+    <!-- Config for JavaScript (assets/js/admin-locales.js, auto-loaded by layout/footer.php) -->
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const ApiUrl = <?php echo json_encode($apiBaseUrl); ?>;
-        const tableBody = document.getElementById('localesTableBody');
-        const curationNotice = document.getElementById('curationNotice');
-        const refreshBtn = document.getElementById('refreshBtn');
-        const detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
-        const detailModalTitle = document.getElementById('detailModalTitle');
-        const detailModalBody = document.getElementById('detailModalBody');
-
-        const i18n = {
-            official: <?php echo json_encode(_('Official')); ?>,
-            candidate: <?php echo json_encode(_('Candidate')); ?>,
-            ready: <?php echo json_encode(_('Ready')); ?>,
-            notReady: <?php echo json_encode(_('Not ready')); ?>,
-            view: <?php echo json_encode(_('View checks')); ?>,
-            loading: <?php echo json_encode(_('Loading…')); ?>,
-            loadFailed: <?php echo json_encode(_('Could not load locales: %s')); ?>,
-            missing: <?php echo json_encode(_('Missing:')); ?>,
-            readOnly: <?php echo json_encode(_('Curation is read-only here.')); ?>,
-            advisory: <?php echo json_encode(_('Advisory — reported, but does not block promotion')); ?>
+        window.AdminLocalesConfig = {
+            apiUrl: <?php echo json_encode($apiBaseUrl, JSON_HEX_TAG); ?>,
+            i18n: {
+                official:         <?php echo json_encode(_('Official'), JSON_HEX_TAG); ?>,
+                candidate:        <?php echo json_encode(_('Candidate'), JSON_HEX_TAG); ?>,
+                ready:            <?php echo json_encode(_('Ready'), JSON_HEX_TAG); ?>,
+                notReady:         <?php echo json_encode(_('Not ready'), JSON_HEX_TAG); ?>,
+                view:             <?php echo json_encode(_('View checks'), JSON_HEX_TAG); ?>,
+                loading:          <?php echo json_encode(_('Loading…'), JSON_HEX_TAG); ?>,
+                working:          <?php echo json_encode(_('Working…'), JSON_HEX_TAG); ?>,
+                loadFailed:       <?php echo json_encode(_('Could not load locales: %s'), JSON_HEX_TAG); ?>,
+                missing:          <?php echo json_encode(_('Missing:'), JSON_HEX_TAG); ?>,
+                advisory:         <?php echo json_encode(_('Advisory — reported, but does not block promotion'), JSON_HEX_TAG); ?>,
+                promote:          <?php echo json_encode(_('Promote'), JSON_HEX_TAG); ?>,
+                demote:           <?php echo json_encode(_('Demote'), JSON_HEX_TAG); ?>,
+                <?php // translators: %s is a locale tag such as "fr_FR" ?>
+                promoted:         <?php echo json_encode(_('Locale %s is now officially supported.'), JSON_HEX_TAG); ?>,
+                <?php // translators: %s is a locale tag such as "fr_FR" ?>
+                demoted:          <?php echo json_encode(_('Locale %s is no longer officially supported.'), JSON_HEX_TAG); ?>,
+                <?php // translators: %s is the error reported by the API ?>
+                actionFailed:     <?php echo json_encode(_('Could not change this locale: %s'), JSON_HEX_TAG); ?>,
+                notReadyHint:     <?php echo json_encode(_('This locale is not ready to be promoted. Open “View checks” to see what is missing.'), JSON_HEX_TAG); ?>,
+                lastOfficialHint: <?php echo json_encode(_('This is the only officially supported locale, and the list may not be emptied. Promote a replacement first.'), JSON_HEX_TAG); ?>,
+                <?php // Labels for the three curation modes the API reports. The prose after
+                      // each is the API's own `reason`, rendered verbatim. ?>
+                readOnly:         <?php echo json_encode(_('Curation is unavailable.'), JSON_HEX_TAG); ?>,
+                volatile:         <?php echo json_encode(_('Changes here are not durable.'), JSON_HEX_TAG); ?>,
+                reviewed:         <?php echo json_encode(_('Changes here are reviewed.'), JSON_HEX_TAG); ?>,
+                <?php // A write may be recorded as a change request awaiting review instead of
+                      // being applied; the API says which in the response `disposition` field.
+                      // Shared with includes/messages.php — same msgids, one translation each. ?>
+                writeSubmitted:   <?php echo json_encode(_('Your changes were submitted for review as batch %s. Nothing has been saved yet.'), JSON_HEX_TAG); ?>,
+                writeApproved:    <?php echo json_encode(_('Your changes were approved as batch %s and are queued for publication. They are not live yet.'), JSON_HEX_TAG); ?>,
+                writeSuperseded:  <?php echo json_encode(_('Earlier pending submissions were folded into this one and no longer appear in your queue: %s'), JSON_HEX_TAG); ?>,
+                writeUnknown:     <?php echo json_encode(
+                    _('The server reported an unrecognized outcome (\'%s\') for these changes. Reload the page to check whether they were saved.'),
+                    JSON_HEX_TAG
+                ); ?>
+            }
         };
-
-        const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({
-            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-        })[c]);
-
-        const badge = (klass, text) => `<span class="badge bg-${klass}">${escapeHtml(text)}</span>`;
-
-        function renderRows(candidates) {
-            if (!candidates.length) {
-                tableBody.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-4">—</td></tr>';
-                return;
-            }
-            tableBody.innerHTML = candidates.map((row) => `
-                <tr>
-                    <td><code>${escapeHtml(row.locale)}</code></td>
-                    <td>${row.official ? badge('dark', i18n.official) : badge('secondary', i18n.candidate)}</td>
-                    <td>${row.ready ? badge('success', i18n.ready) : badge('warning text-dark', i18n.notReady)}</td>
-                    <td>
-                        <button type="button" class="btn btn-sm btn-outline-dark" data-locale="${escapeHtml(row.locale)}">
-                            <i class="fas fa-clipboard-check me-1"></i>${escapeHtml(i18n.view)}
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-
-            tableBody.querySelectorAll('button[data-locale]').forEach((btn) => {
-                btn.addEventListener('click', () => showDetail(btn.dataset.locale));
-            });
-        }
-
-        function renderCurationNotice(curation) {
-            if (!curation || curation.writable) {
-                curationNotice.innerHTML = '';
-                return;
-            }
-            // The API explains WHY promotion is unavailable; surfacing its reason
-            // verbatim avoids this page drifting from the server's own account.
-            curationNotice.innerHTML = `
-                <div class="alert alert-info d-flex align-items-start" role="alert">
-                    <i class="fas fa-info-circle me-2 mt-1"></i>
-                    <div><strong>${escapeHtml(i18n.readOnly)}</strong> ${escapeHtml(curation.reason || '')}</div>
-                </div>`;
-        }
-
-        async function showDetail(locale) {
-            detailModalTitle.textContent = locale;
-            detailModalBody.innerHTML = `<p class="text-muted">${escapeHtml(i18n.loading)}</p>`;
-            detailModal.show();
-
-            try {
-                const response = await fetch(`${ApiUrl}/admin/locales/${encodeURIComponent(locale)}`, {
-                    headers: { Accept: 'application/json' },
-                    credentials: 'include'
-                });
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                const report = await response.json();
-                detailModalBody.innerHTML = (report.checks || []).map((check) => `
-                    <div class="d-flex align-items-start mb-3">
-                        <i class="fas ${check.passed
-                            ? 'fa-check-circle text-success'
-                            : (check.advisory ? 'fa-info-circle text-secondary' : 'fa-times-circle text-warning')} me-2 mt-1"></i>
-                        <div>
-                            <div>
-                                <code>${escapeHtml(check.name)}</code>
-                                ${check.advisory ? `<span class="badge bg-light text-secondary border ms-1">${escapeHtml(i18n.advisory)}</span>` : ''}
-                            </div>
-                            <div class="small text-muted">${escapeHtml(check.summary)}</div>
-                            ${check.missing && check.missing.length
-                                ? `<div class="small mt-1">${escapeHtml(i18n.missing)} <code>${check.missing.map(escapeHtml).join('</code>, <code>')}</code></div>`
-                                : ''}
-                        </div>
-                    </div>`).join('');
-            } catch (error) {
-                detailModalBody.innerHTML = `<div class="alert alert-danger mb-0">${escapeHtml(error.message)}</div>`;
-            }
-        }
-
-        async function load() {
-            tableBody.innerHTML = `<tr><td colspan="4" class="text-muted text-center py-4">${escapeHtml(i18n.loading)}</td></tr>`;
-            try {
-                const response = await fetch(`${ApiUrl}/admin/locales`, {
-                    headers: { Accept: 'application/json' },
-                    credentials: 'include'
-                });
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                const payload = await response.json();
-                renderCurationNotice(payload.curation);
-                renderRows(payload.candidates || []);
-            } catch (error) {
-                tableBody.innerHTML = `<tr><td colspan="4"><div class="alert alert-danger mb-0">${escapeHtml(i18n.loadFailed.replace('%s', error.message))}</div></td></tr>`;
-            }
-        }
-
-        refreshBtn.addEventListener('click', load);
-        load();
-    });
     </script>
 </body>
 </html>
