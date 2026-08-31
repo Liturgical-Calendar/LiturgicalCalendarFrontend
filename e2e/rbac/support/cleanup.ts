@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import { USERS } from './users';
 import { ZitadelAdmin } from './zitadel';
 import { Fga } from './fga';
+import { queueModeSkipsGitRestore } from '../../support/writeMode';
 
 const exec = promisify(execFile);
 
@@ -15,7 +16,19 @@ const API_REPO = process.env.API_REPO_PATH || path.resolve(__dirname, '../../../
 export async function truncateAppTables(): Promise<void> {
     // The active docker stack is the FRONTEND compose project (this repo root), not the API repo's.
     // Run `docker compose exec` from the frontend repo root so it targets the running `db` service.
-    const sql = 'TRUNCATE access_requests, audit_log, user_notification_state RESTART IDENTITY CASCADE;';
+    //
+    // sourcedata_change_requests is in the list even though the disk-mode projects never write to
+    // it (issue #502). In queue mode EVERY /data, /decrees and /tests write becomes a row there
+    // instead of a file, and gitRestoreApiData() — which is what cleans up after a disk-mode write
+    // — cannot reach a database row. Without this the batches accumulate across runs, and a
+    // resubmission of the same resource supersedes the leftovers rather than starting clean, so a
+    // later run's assertions are made against a queue it did not build.
+    //
+    // The table is created by the API's src/Migrations (#902) and litcal-migrate runs before
+    // litcal-api is allowed to serve, so it always exists on a stack this suite can talk to; a
+    // "relation does not exist" here means the API image predates #902 and the queue-mode project
+    // cannot work anyway.
+    const sql = 'TRUNCATE access_requests, audit_log, sourcedata_change_requests, user_notification_state RESTART IDENTITY CASCADE;';
     // 30s timeout so a stalled docker process can't hang the cleanup pipeline.
     await exec('docker', ['compose', 'exec', '-T', 'db', 'psql', '-U', 'litcal', '-d', 'litcal', '-c', sql], { timeout: 30000 });
 }
@@ -43,11 +56,21 @@ export async function deleteAllSeededUsers(): Promise<void> {
  * Revert calendar source-data edits made by scenario 10 (scoped data editing). `git checkout`
  * discards unstaged modifications under jsondata/sourcedata; tolerant of nothing-to-restore.
  * (Untracked new files are not removed — scenario 10 edits existing calendar files.)
+ *
+ * Deliberately NOT consolidated with the second implementation in `e2e/fixtures.ts` (issue #502
+ * asked whether to): the two differ in their fallbacks on purpose. This one no-ops on an absent
+ * `.git`; that one throws, because a misconfigured API_REPO_PATH there means an untracked
+ * calendar file created by a CREATE test is silently left behind. What they must NOT disagree
+ * about is queue mode, which is why that single decision is shared — see queueModeSkipsGitRestore().
  */
 export async function gitRestoreApiData(): Promise<void> {
-    // No-op when the API repo isn't a local git checkout — e.g. CI, where the API runs
-    // ONLY as a container and the calendar edits live in ephemeral container state, not in
-    // a host-tracked working tree (nothing to restore, and `git -C <absent>` would error).
+    // In queue mode nothing was written to disk to restore. Say so rather than exiting 0 and
+    // looking like a successful restore (issue #502).
+    if (queueModeSkipsGitRestore('rbac/support/cleanup')) return;
+    // No-op when the API repo isn't a local git checkout — e.g. a stack whose API runs ONLY as a
+    // container, where the calendar edits live in ephemeral container state rather than in a
+    // host-tracked working tree (nothing to restore, and `git -C <absent>` would error). CI does
+    // check the API repo out (e2e.yml sets API_REPO_PATH), so this path is a local-stack concern.
     // Where it IS present (local dev with the bind-mounted source), discard the edit and let
     // a real `git checkout` failure propagate so settleCleanup surfaces a dirty tree.
     if (!fs.existsSync(path.join(API_REPO, '.git'))) return;

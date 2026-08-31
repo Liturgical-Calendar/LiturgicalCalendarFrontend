@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-30 21:46+0000\n"
+"POT-Creation-Date: 2026-08-31 01:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1299,6 +1299,27 @@ msgstr ""
 msgid "Get started"
 msgstr ""
 
+#: layout/footer.php:106
+msgid "Your change request was approved"
+msgstr ""
+
+#: layout/footer.php:107
+msgid "Your change request was rejected"
+msgstr ""
+
+#: layout/footer.php:108
+msgid "Your change request was published"
+msgstr ""
+
+#: layout/footer.php:109
+msgid "Your change request was closed without merging"
+msgstr ""
+
+#: layout/footer.php:110
+#, php-format
+msgid "Pull request #%1$d"
+msgstr ""
+
 #: includes/login-modal.php:6
 msgid "Session Expiring"
 msgstr ""
@@ -2066,7 +2087,7 @@ msgstr ""
 msgid "Diocesan calendars by liturgical offices"
 msgstr ""
 
-#: includes/admin-blocks.php:101
+#: includes/admin-blocks.php:101 admin-dashboard.php:221
 msgid "View"
 msgstr ""
 
@@ -2868,8 +2889,8 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: admin-permissions.php:449 admin-applications.php:245 admin-dashboard.php:135
-#: admin-dashboard.php:189
+#: admin-permissions.php:449 admin-applications.php:245 admin-dashboard.php:136
+#: admin-dashboard.php:190
 msgid "Review"
 msgstr ""
 
@@ -3291,8 +3312,8 @@ msgid ""
 "calendars."
 msgstr ""
 
-#: admin-dashboard.php:65 admin-dashboard.php:147 admin-dashboard.php:164
-#: admin-dashboard.php:174
+#: admin-dashboard.php:65 admin-dashboard.php:148 admin-dashboard.php:165
+#: admin-dashboard.php:175
 msgid "Administration"
 msgstr ""
 
@@ -3316,22 +3337,36 @@ msgstr ""
 msgid "Manage fine-grained resource permissions"
 msgstr ""
 
-#: admin-dashboard.php:129
+#: admin-dashboard.php:130
 msgid "Supported Locales"
 msgstr ""
 
-#: admin-dashboard.php:131
+#: admin-dashboard.php:132
 msgid ""
 "See which locales are officially supported, and whether a candidate has "
 "everything it needs"
 msgstr ""
 
-#: admin-dashboard.php:183
+#: admin-dashboard.php:184
 msgid "Access Requests to Review"
 msgstr ""
 
-#: admin-dashboard.php:185
+#: admin-dashboard.php:186
 msgid "Review and approve access requests for the resources you administer"
+msgstr ""
+
+#: admin-dashboard.php:202
+msgid "Your Contributions"
+msgstr ""
+
+#: admin-dashboard.php:211
+msgid "Your Change Requests"
+msgstr ""
+
+#: admin-dashboard.php:215
+msgid ""
+"Track the source data changes you have proposed, read what became of them, "
+"and withdraw one that is still awaiting review"
 msgstr ""
 
 #: admin-users.php:33 admin-users.php:45

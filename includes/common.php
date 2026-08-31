@@ -307,6 +307,7 @@ $adminPages = [
     'admin-applications',
     'admin-permissions',
     'admin-tests',
+    'admin-changes',
     'developer-dashboard',
 ];
 

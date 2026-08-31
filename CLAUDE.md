@@ -304,6 +304,44 @@ against the API's legacy HS256 `/auth/login`, whose tokens `auth/me.php` could n
 runs without Zitadel. That is deliberate — it keeps the login-free specs green even when Zitadel
 is unavailable.
 
+### Source-data write mode (disk vs. queue)
+
+Since LiturgicalCalendarAPI #902 a `PUT`/`PATCH`/`DELETE` against `/data/*`, `/decrees/*` or
+`/tests/*` does not necessarily reach disk. With `SOURCEDATA_CHANGE_REQUESTS=true` the API records
+the write as a change request awaiting review and answers **the same 2xx**, saying which it did in
+the response's `disposition` field (`applied` | `submitted` | `approved`).
+
+So a spec asserting `response.ok()` passes in both modes. That is issue #502: flipping the shared
+stack into queue mode turned the write specs green while nothing was written, and
+`gitRestoreApiData()` dutifully restored nothing. Every write assertion therefore goes through
+`e2e/support/writeMode.ts`, which imports `readDisposition()` from the app's own
+`assets/js/writeDisposition.js` (frontend #501) so a spec and the page it tests cannot disagree
+about what "applied" means. That import is why `e2e/tsconfig.json` sets `allowJs`.
+
+- **Disk mode** (default, and what CI runs) — `expectApplied()` / `expectWriteApplied()`. Used by
+  every project except `rbac-queue`.
+- **Queue mode** — `--project=rbac-queue` (specs in `e2e/rbac/queue/`), which skips itself unless
+  `E2E_WRITE_MODE=queue`. It sits under `rbac` because a review flow needs two identities and
+  `rbac-setup` is the only seed that provisions distinct users.
+
+Turning queue mode on takes both halves — the stack and the suite:
+
+```bash
+# .env: SOURCEDATA_CHANGE_REQUESTS=true
+docker compose up -d --force-recreate litcal-api   # compose re-reads .env on CREATE only
+E2E_WRITE_MODE=queue yarn playwright test --project=rbac-queue
+```
+
+`e2e/rbac/queue/00-queue-mode-precondition.spec.ts` checks the two agree by reading the live
+`GET /health`, because the flag alone does not settle it: the API falls back to disk writes (and
+reports itself misconfigured) when Postgres or OpenFGA is unreachable.
+
+Cleanup differs by mode, and both halves know it: `truncateAppTables()` clears
+`sourcedata_change_requests` so queued batches cannot accumulate across runs, and both
+`gitRestoreApiData()` implementations (`e2e/fixtures.ts` and `e2e/rbac/support/cleanup.ts` — kept
+separate because their absent-repo fallbacks differ on purpose) return early in queue mode with a
+log line saying nothing was written.
+
 ### Calendar Schema Differences
 
 | Calendar Type | Allowed Actions                                                                              |

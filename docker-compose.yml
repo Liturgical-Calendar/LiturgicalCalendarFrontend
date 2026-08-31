@@ -362,6 +362,22 @@ services:
       # rather than ${VAR:-999999} on purpose: the seeded .env carries the
       # production default of 10, which compose substitution would otherwise win.
       UNAUTHENTICATED_RATE_LIMIT: "999999"
+      # Source-data write mode (LiturgicalCalendarAPI #902). `false` — the default —
+      # writes /data, /decrees and /tests edits straight to disk, which is what every
+      # e2e project except `rbac-queue` asserts. Set to `true` in .env to put the stack
+      # in change-request (queue) mode for that project:
+      #
+      #   SOURCEDATA_CHANGE_REQUESTS=true  (in .env)
+      #   docker compose up -d --force-recreate litcal-api
+      #   E2E_WRITE_MODE=queue yarn playwright test --project=rbac-queue
+      #
+      # --force-recreate is not optional: compose re-reads .env on container CREATE
+      # only, so a `restart` keeps the old value while /health keeps reporting the old
+      # mode. Parameterized rather than hardcoded precisely so the mode can be flipped
+      # without editing (and accidentally committing) this file. The API ignores the
+      # flag unless Postgres and OpenFGA are both reachable — it falls back to disk and
+      # says so in GET /health, which is what e2e/rbac/queue/ asserts before running.
+      SOURCEDATA_CHANGE_REQUESTS: ${SOURCEDATA_CHANGE_REQUESTS:-false}
       API_PROTOCOL: http
       API_HOST: localhost
       API_PORT: ${API_PORT:-8000}

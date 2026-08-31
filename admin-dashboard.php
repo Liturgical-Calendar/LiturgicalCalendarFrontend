@@ -120,6 +120,7 @@ if (!$hasCalendarRole) {
             </div>
         </div>
         <?php include('./includes/admin-tests-card.php'); ?>
+        <?php include('./includes/admin-changes-card.php'); ?>
         <div class="col-12 col-md-6 col-lg-4 mb-4">
             <div class="card admin-block shadow h-100 border-dark">
                 <div class="card-body text-center d-flex flex-column">
@@ -192,8 +193,38 @@ if (!$hasCalendarRole) {
                 </div>
             </div>
         </div>
+        <?php include('./includes/admin-changes-card.php'); ?>
     </div>
     <?php endif; ?>
+
+    <hr class="my-4">
+    <h4 class="mb-3 text-black" style="--bs-text-opacity: .6;">
+        <i class="fas fa-user-edit me-2"></i><?php echo htmlspecialchars(_('Your Contributions'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+    </h4>
+    <div class="row">
+        <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card admin-block shadow h-100 border-primary">
+                <div class="card-body text-center d-flex flex-column">
+                    <div class="admin-block-icon mb-3">
+                        <i class="fas fa-user-edit fa-3x text-primary"></i>
+                    </div>
+                    <h5 class="card-title"><?php echo htmlspecialchars(_('Your Change Requests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></h5>
+                    <p class="card-text text-muted small flex-grow-1">
+                        <?php
+                        // phpcs:ignore Generic.Files.LineLength
+                        $yourChangesDesc = _('Track the source data changes you have proposed, read what became of them, and withdraw one that is still awaiting review');
+                        echo htmlspecialchars($yourChangesDesc, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                        ?>
+                    </p>
+                    <div class="admin-block-actions mt-auto">
+                        <a href="change-requests.php" class="btn btn-primary btn-sm">
+                            <i class="fas fa-list-check me-1"></i><?php echo htmlspecialchars(_('View'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <?php include_once('./layout/footer.php'); ?>
 </body>
