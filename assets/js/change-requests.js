@@ -262,9 +262,16 @@
     // Detail
     // ========================================================================
 
+    // Bumped on every openDetail() call. A reviewer clicking batch A then batch B
+    // before A's request settles would otherwise have A's diff overwrite B's, in
+    // whichever order the two responses happen to land.
+    let detailRequestSeq = 0;
+
     async function openDetail(batchId) {
         const batch = batchesById.get(batchId);
         if (!batch || !detailBody || !detailModalEl) return;
+
+        const seq = ++detailRequestSeq;
 
         detailBody.innerHTML = `
             <div class="text-center text-muted py-3">
@@ -278,9 +285,12 @@
             // ChangeRequestBatchDetail body the reviewer's route does, so the diff
             // renderer is shared verbatim.
             const detail = await ChangeRequestCommon.fetchBatchDetail(config.apiUrl, 'auth', batchId);
+            if (seq !== detailRequestSeq) return;
             detailBody.innerHTML = ChangeRequestCommon.renderBatchFiles(detail, config.i18n, config.locale);
         } catch (error) {
             console.error('Failed to load change request detail:', error);
+            // A stale failure must not replace the newer batch's content either.
+            if (seq !== detailRequestSeq) return;
             detailBody.innerHTML = `
                 <div class="alert alert-warning mb-0">
                     <i class="fas fa-exclamation-triangle me-2"></i>

@@ -95,11 +95,20 @@ const Notifications = {
 
         const dropdownEl = document.getElementById('notificationsDropdown');
         if (dropdownEl) {
-            dropdownEl.addEventListener('shown.bs.dropdown', () => {
-                this.fetchNotifications();
+            dropdownEl.addEventListener('shown.bs.dropdown', async () => {
+                // Awaited, not fired alongside markSeen(). Both settle by writing the
+                // badge — markSeen() optimistically, fetchNotifications() from the
+                // server — so unsequenced they race, and a markSeen() that wins leaves
+                // the later fetch re-rendering the pre-seen count: the badge clears and
+                // then flicks back to unread.
+                //
+                // Fetch first, mark seen after, so the items are still rendered as
+                // unread when the reviewer opens the dropdown. Marking seen first would
+                // be deterministic too, but it would show them already read.
+                await this.fetchNotifications();
                 // Both modes: an admin has a personal inbox too, and its unread
                 // bookmark would otherwise never advance for them.
-                this.markSeen();
+                await this.markSeen();
             });
         }
     },

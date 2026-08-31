@@ -160,6 +160,38 @@ describe('renderBatchFiles', () => {
         expect(html).not.toContain('change-request-diff-add');
     });
 
+    it('refuses to diff a file past the character cap even when its line count is tiny', () => {
+        // One minified JSON line, far past MAX_DIFF_CHARS. This is the case the line
+        // cap alone lets through: two lines total, megabytes of content.
+        const oneHugeLine = 'x'.repeat(ChangeRequestCommon.MAX_DIFF_CHARS + 1);
+        expect(oneHugeLine.split('\n').length).toBeLessThan(ChangeRequestCommon.MAX_DIFF_LINES);
+
+        const html = ChangeRequestCommon.renderBatchFiles({
+            batch: {},
+            content_included: true,
+            files: [file({
+                content: oneHugeLine,
+                content_bytes: oneHugeLine.length,
+                current_content: '',
+                current_content_bytes: 0
+            })]
+        }, i18n, 'en-US');
+
+        expect(html).toContain('Too large');
+        expect(html).not.toContain('change-request-diff-add');
+    });
+
+    it('still diffs a file that is under both caps', () => {
+        const html = ChangeRequestCommon.renderBatchFiles({
+            batch: {},
+            content_included: true,
+            files: [file({ content: 'a\nb', content_bytes: 3, current_content: 'a', current_content_bytes: 1 })]
+        }, i18n, 'en-US');
+
+        expect(html).not.toContain('Too large');
+        expect(html).toContain('change-request-diff-add');
+    });
+
     it('escapes file paths and contents', () => {
         const html = ChangeRequestCommon.renderBatchFiles({
             batch: {},

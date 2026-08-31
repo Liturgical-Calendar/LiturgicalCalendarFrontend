@@ -26,6 +26,16 @@ const ChangeRequestCommon = { // eslint-disable-line no-unused-vars
     MAX_DIFF_LINES: 1500,
 
     /**
+     * Total characters (before + after) above which a real diff is not attempted.
+     *
+     * The line cap alone is not a size cap: one minified JSON file is two lines
+     * and can still be megabytes, which sails past MAX_DIFF_LINES and then costs
+     * the O(n·m) LCS and a very large DOM node anyway. Source data is JSON, and
+     * minified JSON is exactly the shape that hits this.
+     */
+    MAX_DIFF_CHARS: 512000,
+
+    /**
      * HTML-escape a value for interpolation into markup.
      *
      * Quotes are escaped too, which the textContent/innerHTML idiom used elsewhere
@@ -223,7 +233,7 @@ const ChangeRequestCommon = { // eslint-disable-line no-unused-vars
         const lineCount = ( before === '' ? 0 : before.split('\n').length )
             + ( after === '' ? 0 : after.split('\n').length );
 
-        if (lineCount > this.MAX_DIFF_LINES) {
+        if (lineCount > this.MAX_DIFF_LINES || ( before.length + after.length ) > this.MAX_DIFF_CHARS) {
             const tooLarge = i18n.diffTooLarge
                 || 'This file is too large to diff in the browser (%1$s proposed, %2$s currently).';
             return `<div class="alert alert-secondary small mb-0">${this.escapeHtml(
