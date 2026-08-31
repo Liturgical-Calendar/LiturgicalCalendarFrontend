@@ -1,0 +1,455 @@
+/**
+ * Sanctorale viewer.
+ *
+ * A Roman Missal file is a DELTA, not a sanctorale: `propriumdesanctis_2008` is
+ * three rows. So this page composes the missal layers that apply to a chosen
+ * rite and calendar, badges each row with the layer that supplied it, and groups
+ * the result by month — which is what a reader means by "the sanctorale".
+ *
+ * See docs/superpowers/specs/2026-08-31-sanctorale-editor-design.md.
+ *
+ * Read-only. Editing lands separately, against
+ * `PUT|PATCH|DELETE /missals/{missal_id}/{event_key}` (API #943).
+ *
+ * @module sanctorale
+ */
+
+const config = window.SanctoraleConfig;
+
+if (!config) {
+    console.error('SanctoraleConfig not found');
+}
+
+const { apiUrl, locale, i18n } = config ?? { apiUrl: '', locale: 'en', i18n: {} };
+
+/** Missals whose region is this are the typical editions: they apply to every calendar. */
+const UNIVERSAL_REGION = 'VA';
+
+const el = (id) => document.getElementById(id);
+
+const dom = {
+    rite:        el('riteSelect'),
+    calendar:    el('calendarSelect'),
+    search:      el('sanctoraleSearch'),
+    tabs:        el('monthTabs'),
+    tableBody:   el('sanctoraleTableBody'),
+    notice:      el('sanctoraleNotice'),
+    detailModal: el('detailModal'),
+    detailTitle: el('detailModalTitle'),
+    detailBody:  el('detailModalBody')
+};
+
+const state = {
+    rite: 'roman',
+    calendar: '',
+    missals: [],
+    composed: [],
+    month: new Date().getUTCMonth() + 1,
+    search: ''
+};
+
+/** i18n payloads are per missal and never change within a session. */
+const i18nCache = new Map();
+
+const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+})[c]);
+
+/**
+ * Month names in the page's own locale.
+ *
+ * `timeZone: 'UTC'` per the project-wide rule: without it a date constructed at
+ * midnight UTC can format as the previous month west of Greenwich.
+ */
+const monthName = (m) => new Intl.DateTimeFormat(locale, { month: 'long', timeZone: 'UTC' })
+    .format(new Date(Date.UTC(2001, m - 1, 1)));
+
+async function getJson(path) {
+    const response = await fetch(`${apiUrl}${path}`, {
+        headers: { Accept: 'application/json' },
+        credentials: 'omit'
+    });
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status} for ${path}`);
+    }
+    return response.json();
+}
+
+/**
+ * The missals that apply to a calendar, oldest first.
+ *
+ * Data-driven rather than hardcoded: the typical editions carry region `VA` and
+ * apply everywhere, and a national missal applies only to its own region. Sorting
+ * by year is what makes "later wins" meaningful in compose().
+ *
+ * @param {Array<object>} missals
+ * @param {string} calendar Region code, or '' for the General Roman calendar.
+ */
+export function applicableMissals(missals, calendar) {
+    return missals
+        .filter((m) => m.region === UNIVERSAL_REGION || (calendar !== '' && m.region === calendar))
+        .sort((a, b) => (a.year_published ?? 0) - (b.year_published ?? 0));
+}
+
+/**
+ * Flatten the missal layers into one sanctorale.
+ *
+ * Keyed by `event_key`, later missal wins, and every row remembers which layer
+ * supplied it. Overrides are rare but real — US_2011 redefines StIsidore — and a
+ * reader cannot make sense of the result without being told where a row came from.
+ *
+ * @param {Array<{missal: object, rows: Array<object>}>} layers oldest first
+ */
+export function compose(layers) {
+    const byKey = new Map();
+    for (const { missal, rows } of layers) {
+        for (const row of rows) {
+            byKey.set(row.event_key, {
+                ...row,
+                _missalId: missal.missal_id,
+                _missalYear: missal.year_published,
+                _overrides: byKey.has(row.event_key) ? byKey.get(row.event_key)._missalId : null
+            });
+        }
+    }
+    return [...byKey.values()].sort((a, b) => (a.month - b.month) || (a.day - b.day));
+}
+
+/** Rows for one month, day-ordered, narrowed by the search term. */
+export function rowsFor(composed, month, search) {
+    const needle = search.trim().toLowerCase();
+    return composed.filter((r) => r.month === month && matches(r, needle));
+}
+
+function matches(row, needle) {
+    if (!needle) return true;
+    return String(row.name ?? '').toLowerCase().includes(needle)
+        || String(row.event_key ?? '').toLowerCase().includes(needle);
+}
+
+/**
+ * Which months contain a search hit, so a search can move the reader to a month
+ * that actually has one. Tabs hide eleven twelfths of the data from the browser's
+ * own find; without this the search would silently miss most of it.
+ */
+export function monthsWithHits(composed, search) {
+    const needle = search.trim().toLowerCase();
+    if (!needle) return [];
+    return [...new Set(composed.filter((r) => matches(r, needle)).map((r) => r.month))].sort((a, b) => a - b);
+}
+
+function renderTabs() {
+    const counts = new Map();
+    for (const row of state.composed) {
+        counts.set(row.month, (counts.get(row.month) ?? 0) + 1);
+    }
+    const hits = new Set(monthsWithHits(state.composed, state.search));
+
+    dom.tabs.innerHTML = Array.from({ length: 12 }, (_, i) => i + 1).map((m) => {
+        const count  = counts.get(m) ?? 0;
+        const active = m === state.month;
+        // A sparse month reads as "3", not as a broken page.
+        const badgeClass = hits.has(m) ? 'bg-primary' : 'bg-secondary';
+        return `
+            <li class="nav-item">
+                <button class="nav-link ${active ? 'active' : ''}" data-month="${m}" type="button">
+                    ${escapeHtml(monthName(m))}
+                    <span class="badge ${badgeClass} ms-1">${count}</span>
+                </button>
+            </li>`;
+    }).join('');
+
+    dom.tabs.querySelectorAll('button[data-month]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            state.month = Number(btn.dataset.month);
+            syncHash();
+            render();
+        });
+    });
+}
+
+function renderTable() {
+    const rows = rowsFor(state.composed, state.month, state.search);
+    if (!rows.length) {
+        const empty = state.search ? i18n.noSearchHits : i18n.noEntries;
+        dom.tableBody.innerHTML = `<tr><td colspan="5" class="text-muted text-center py-4">${escapeHtml(empty)}</td></tr>`;
+        return;
+    }
+    dom.tableBody.innerHTML = rows.map((row) => `
+        <tr>
+            <td class="text-nowrap">${row.day}</td>
+            <td>${escapeHtml(row.name ?? row.event_key)}</td>
+            <td><code class="small">${escapeHtml(row.event_key)}</code></td>
+            <td>
+                <span class="badge bg-light text-dark border" title="${escapeHtml(i18n.fromMissal)}">${escapeHtml(row._missalId)}</span>
+                ${row._overrides ? `<span class="badge bg-warning text-dark ms-1" title="${escapeHtml(i18n.overridesTitle)}">${escapeHtml(i18n.overrides)}</span>` : ''}
+            </td>
+            <td class="text-end">
+                <button type="button" class="btn btn-sm btn-outline-dark"
+                        data-event-key="${escapeHtml(row.event_key)}" data-missal="${escapeHtml(row._missalId)}">
+                    <i class="fas fa-magnifying-glass me-1"></i>${escapeHtml(i18n.view)}
+                </button>
+            </td>
+        </tr>`).join('');
+
+    dom.tableBody.querySelectorAll('button[data-event-key]').forEach((btn) => {
+        btn.addEventListener('click', () => showDetail(btn.dataset.eventKey, btn.dataset.missal));
+    });
+}
+
+function notice(variant, html) {
+    dom.notice.innerHTML = html
+        ? `<div class="alert alert-${variant}" role="alert">${html}</div>`
+        : '';
+}
+
+function render() {
+    renderTabs();
+    renderTable();
+}
+
+// ---------------------------------------------------------------- detail view
+
+/**
+ * One event across every layer that defines it: structure, all its names, and
+ * its readings from whichever lectionary tiers carry them.
+ */
+async function showDetail(eventKey, missalId) {
+    dom.detailTitle.textContent = eventKey;
+    dom.detailBody.innerHTML = `<p class="text-muted">${escapeHtml(i18n.loading)}</p>`;
+    bootstrap.Modal.getOrCreateInstance(dom.detailModal).show();
+
+    const row = state.composed.find((r) => r.event_key === eventKey);
+
+    // Names and readings are independent: a rite with no lectionary still has
+    // names, so one failing must not blank the other.
+    const [names, readings] = await Promise.allSettled([
+        loadI18n(missalId),
+        getJson(`/lectionary/${encodeURIComponent(state.rite)}/sanctorale/${encodeURIComponent(eventKey)}`)
+    ]);
+
+    dom.detailBody.innerHTML = [
+        renderStructure(row),
+        names.status === 'fulfilled'
+            ? renderNames(names.value, eventKey)
+            : `<div class="alert alert-warning">${escapeHtml(i18n.namesUnavailable)}</div>`,
+        readings.status === 'fulfilled'
+            ? renderReadings(readings.value)
+            : `<div class="alert alert-warning">${escapeHtml(i18n.readingsUnavailable)}</div>`
+    ].join('');
+}
+
+async function loadI18n(missalId) {
+    if (!i18nCache.has(missalId)) {
+        i18nCache.set(missalId, await getJson(`/missals/${encodeURIComponent(missalId)}/i18n`));
+    }
+    return i18nCache.get(missalId);
+}
+
+function renderStructure(row) {
+    if (!row) return '';
+    const field = (label, value) => `
+        <div class="col-6 col-md-4 mb-2">
+            <div class="small text-muted">${escapeHtml(label)}</div>
+            <div>${escapeHtml(value)}</div>
+        </div>`;
+    return `
+        <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.structure)}</h6>
+        <div class="row mb-3">
+            ${field(i18n.date, `${monthName(row.month)} ${row.day}`)}
+            ${field(i18n.grade, row.grade_display ?? row.grade)}
+            ${field(i18n.calendarField, row.calendar)}
+            ${field(i18n.color, (row.color ?? []).join(', '))}
+            ${field(i18n.common, (row.common ?? []).join(', '))}
+            ${field(i18n.fromMissal, row._missalId)}
+        </div>`;
+}
+
+/**
+ * Names per locale, using the coverage map the API precomputes.
+ *
+ * Three states, not two: `translated`, `empty` (curated as blank on purpose) and
+ * `missing` (no entry at all). Collapsing empty into missing would misreport
+ * deliberate blanks as gaps.
+ */
+function renderNames(payload, eventKey) {
+    const coverage = payload.coverage?.[eventKey] ?? { translated: [], empty: [], missing: [] };
+    const rows = (payload.locales ?? []).map((loc) => {
+        const value = payload.i18n?.[loc]?.[eventKey];
+        let stateBadge;
+        if (coverage.missing?.includes(loc)) {
+            stateBadge = `<span class="badge bg-danger">${escapeHtml(i18n.missingLabel)}</span>`;
+        } else if (coverage.empty?.includes(loc)) {
+            stateBadge = `<span class="badge bg-warning text-dark">${escapeHtml(i18n.emptyLabel)}</span>`;
+        } else {
+            stateBadge = `<span class="badge bg-success">${escapeHtml(i18n.translatedLabel)}</span>`;
+        }
+        return `
+            <tr>
+                <td class="text-nowrap"><code>${escapeHtml(loc)}</code></td>
+                <td>${escapeHtml(value ?? '')}</td>
+                <td class="text-end">${stateBadge}</td>
+            </tr>`;
+    }).join('');
+
+    return `
+        <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.names)}
+            <span class="badge bg-light text-dark border ms-1">${(payload.locales ?? []).length}</span>
+        </h6>
+        <table class="table table-sm mb-3"><tbody>${rows}</tbody></table>`;
+}
+
+/**
+ * Readings, tier by tier.
+ *
+ * `lectionary_available: false` is a first-class answer, not an error — the
+ * Ambrosian rite has no sanctorale lectionary at all — so it renders the API's
+ * own message rather than an empty table that reads as a bug.
+ */
+function renderReadings(payload) {
+    if (payload.lectionary_available === false) {
+        return `
+            <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.readings)}</h6>
+            <div class="alert alert-secondary mb-0">${escapeHtml(payload.message || i18n.noLectionary)}</div>`;
+    }
+
+    const tiers = (payload.readings ?? []).map((tier) => {
+        const entries = Object.entries(tier.entries ?? {}).map(([loc, readings]) => `
+            <tr>
+                <td class="text-nowrap align-top"><code>${escapeHtml(loc)}</code></td>
+                <td>${Object.entries(readings ?? {}).map(([k, v]) => `
+                    <div class="small"><span class="text-muted">${escapeHtml(k)}:</span> ${escapeHtml(v)}</div>`).join('')}</td>
+            </tr>`).join('');
+
+        const without = (tier.locales_without_entry ?? []);
+        const blank   = (tier.locales_with_empty_entry ?? []);
+
+        return `
+            <div class="mb-3">
+                <div class="mb-1">
+                    <span class="badge bg-dark">${escapeHtml(tier.tier)}</span>
+                    <code class="small ms-1">${escapeHtml(tier.source_id)}</code>
+                </div>
+                <table class="table table-sm mb-1"><tbody>${entries || `<tr><td class="text-muted small">${escapeHtml(i18n.noEntries)}</td></tr>`}</tbody></table>
+                ${blank.length ? `<div class="small text-muted">${escapeHtml(i18n.emptyLabel)}: <code>${blank.map(escapeHtml).join('</code>, <code>')}</code></div>` : ''}
+                ${without.length ? `<div class="small text-muted">${escapeHtml(i18n.missingLabel)}: <code>${without.map(escapeHtml).join('</code>, <code>')}</code></div>` : ''}
+            </div>`;
+    }).join('');
+
+    return `
+        <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.readings)}</h6>
+        ${tiers || `<div class="text-muted small">${escapeHtml(i18n.noEntries)}</div>`}`;
+}
+
+// -------------------------------------------------------------------- loading
+
+async function loadCatalogue() {
+    const payload = await getJson('/missals');
+    state.missals = payload.litcal_missals ?? payload ?? [];
+
+    const regions = [...new Set(state.missals.map((m) => m.region))]
+        .filter((r) => r !== UNIVERSAL_REGION)
+        .sort();
+
+    dom.calendar.innerHTML = [`<option value="">${escapeHtml(i18n.generalRoman)}</option>`]
+        .concat(regions.map((r) => `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`))
+        .join('');
+}
+
+async function loadSanctorale() {
+    // The Ambrosian sanctorale exists on disk but /missals announces only Roman
+    // missals (API #953), so say that plainly rather than render an empty table.
+    if (state.rite !== 'roman') {
+        state.composed = [];
+        notice('info', escapeHtml(i18n.riteUnavailable));
+        render();
+        return;
+    }
+    notice('', '');
+
+    const applicable = applicableMissals(state.missals, state.calendar);
+    dom.tableBody.innerHTML = `<tr><td colspan="5" class="text-muted text-center py-4">${escapeHtml(i18n.loading)}</td></tr>`;
+
+    try {
+        const layers = await Promise.all(applicable.map(async (missal) => ({
+            missal,
+            rows: await getJson(`/missals/${encodeURIComponent(missal.missal_id)}`)
+        })));
+        state.composed = compose(layers);
+        render();
+    } catch (error) {
+        state.composed = [];
+        notice('danger', escapeHtml(i18n.loadFailed.replace('%s', error.message)));
+        render();
+    }
+}
+
+function syncHash() {
+    // Addressable so a link can name a month, and so a reload keeps the reader
+    // where they were rather than snapping back to the current month.
+    const params = new URLSearchParams();
+    params.set('rite', state.rite);
+    if (state.calendar) params.set('calendar', state.calendar);
+    params.set('month', String(state.month));
+    history.replaceState(null, '', `#${params.toString()}`);
+}
+
+function readHash() {
+    const params = new URLSearchParams((location.hash || '').replace(/^#/, ''));
+    const month  = Number(params.get('month'));
+    if (params.get('rite')) state.rite = params.get('rite');
+    if (params.get('calendar')) state.calendar = params.get('calendar');
+    if (month >= 1 && month <= 12) state.month = month;
+}
+
+async function init() {
+    readHash();
+    await loadCatalogue();
+    dom.rite.value     = state.rite;
+    dom.calendar.value = state.calendar;
+
+    dom.rite.addEventListener('change', () => {
+        state.rite = dom.rite.value;
+        syncHash();
+        loadSanctorale();
+    });
+    dom.calendar.addEventListener('change', () => {
+        state.calendar = dom.calendar.value;
+        syncHash();
+        loadSanctorale();
+    });
+    dom.search.addEventListener('input', () => {
+        state.search = dom.search.value;
+        // Move to a month that actually contains a hit, otherwise the reader
+        // searches and is shown an empty month they happened to be standing on.
+        const hits = monthsWithHits(state.composed, state.search);
+        if (hits.length && !hits.includes(state.month)) {
+            state.month = hits[0];
+            syncHash();
+        }
+        render();
+    });
+
+    // A hash change is a SAME-DOCUMENT navigation: the module does not re-run, so
+    // without this a deep link followed from this very page silently does nothing
+    // — the reader clicks a link naming another rite or month and sees no change.
+    window.addEventListener('hashchange', async () => {
+        const before = `${state.rite}|${state.calendar}`;
+        readHash();
+        dom.rite.value     = state.rite;
+        dom.calendar.value = state.calendar;
+        if (`${state.rite}|${state.calendar}` !== before) {
+            await loadSanctorale();
+        } else {
+            render();
+        }
+    });
+
+    await loadSanctorale();
+}
+
+// Guarded so the module can be imported by unit tests, and so it is inert if
+// ever loaded on a page without the table it drives.
+if (dom.tableBody && dom.tabs) {
+    init();
+}

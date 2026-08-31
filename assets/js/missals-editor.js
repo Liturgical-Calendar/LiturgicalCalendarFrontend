@@ -744,11 +744,17 @@ saveDataBtn.addEventListener('click', async () => {
         });
 
         if (response.status === 405) {
-            // Method not allowed - API doesn't support write operations yet
+            // This editor PUTs the COLLECTION (`/missals/{missal_id}`, `/decrees`).
+            // Sanctorale writes exist, but they address a single entry
+            // (`PUT /missals/{missal_id}/{event_key}`, API #943), so this request
+            // is still not a route the API answers — it is one path segment short.
+            // Say that, rather than claiming writes are unimplemented.
+            const message = 'This editor cannot save: it addresses a whole Missal, and the API writes one '
+                + 'celebration at a time. Use the Sanctorale page instead.';
             if (typeof toastr !== 'undefined') {
-                toastr.warning('API write operations are not yet implemented. Changes cannot be saved.');
+                toastr.warning(message);
             } else {
-                alert('API write operations are not yet implemented. Changes cannot be saved.');
+                alert(message);
             }
             return;
         }
@@ -757,7 +763,10 @@ saveDataBtn.addEventListener('click', async () => {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data = await response.json();
+        // 204, or any empty body, is a SUCCESS. Parsing it unguarded throws, and the
+        // catch below reports a successful save as a failure — the API has already
+        // moved one DELETE from 204 to 200, so this shape is live.
+        const data = await response.json().catch(() => ({}));
         if (DEBUG) console.log(data);
         if (typeof toastr !== 'undefined') {
             toastr.success('Data saved successfully');

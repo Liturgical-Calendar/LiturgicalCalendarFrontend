@@ -3,7 +3,7 @@
 Replaces the missals editor (frontend issue #503) with a rite-aware sanctorale browser and, once the
 API catches up, an editor that treats structure, translations and lectionary readings as one subject.
 
-Status: design approved, phase 1 not yet implemented.
+Status: phases 1-3 implemented (the read-only viewer). Phase 4, editing, is not started.
 
 ## Problem
 
@@ -107,7 +107,15 @@ The obvious move is the `CalendarResourcePicker` meta-component. It does not fit
 needs a **selectable** empty option meaning "the rite-level calendar" — exactly the exception already
 documented for `assets/js/usage.js` and raised upstream as liturgy-components-js#42.
 
-So this page hand-wires `RiteSelect` + `CalendarSelect`, and must use **both** wires:
+**What shipped instead: plain selectors driven by `/missals` itself.** Two facts made the component
+route the wrong trade. `/missals` is Roman-only (#953), so a rite picker backed by the components
+library would advertise a rite that returns nothing; and the only calendars that change the composed
+output are the `region` values the catalogue already names — `VA`, `IT`, `US` — so a `CalendarSelect`
+would list about a hundred entries of which two alter anything. The **scoping decision is unchanged**:
+composition is still by rite and calendar. Only the widget is.
+
+Should #953 land and the component gain a rite that resolves, revisit this. If it is revisited, the
+wiring below is the trap to avoid:
 
 ```javascript
 calendarSelect.linkToRiteSelect(riteSelect);
@@ -115,8 +123,11 @@ apiClient.listenTo(riteSelect);
 ```
 
 Wiring only the first fails **silently**: the form reads `ambrosian` while every request still goes to
-`/calendar/roman/`. This is the documented trap the meta-components exist to prevent, and skipping the
-second line is the single most likely way to get this page subtly wrong.
+`/calendar/roman/`. This is the documented trap the meta-components exist to prevent.
+
+Note the second wire is about `ApiClient` redirection. The viewer issues its own `fetch` calls and uses
+no `ApiClient`, so even under the component route it would need the rite as a value, not as a redirect —
+which is a further reason the plain selector costs nothing here.
 
 ### Layout — month grouping
 
@@ -204,13 +215,14 @@ frontend prose; the full action set is `setProperty`, `createNew`, `createNewFro
 
 ## API contract dependencies
 
-| Issue | Route                              | Blocks      | Notes                                                |
-| ----- | ---------------------------------- | ----------- | ---------------------------------------------------- |
-| #941  | all-locales i18n for a missal      | nothing     | optimization — probing works today                   |
-| #942  | `GET` sanctorale lectionary        | **phase 3** | hard blocker; no readings are readable in any locale |
-| #943  | `PUT`/`PATCH /missals/{missal_id}` | **phase 4** | must route through the `SourceDataWriter` seam       |
-| #939  | `StIsidore` collision              | nothing     | surfaced by the UI; fix is data, not code            |
-| #940  | Ambrosian filename convention      | nothing     | enumerator must not assume `{dir}/{dir}.json`        |
+| Issue | Route                                        | State      | Notes                                                  |
+| ----- | -------------------------------------------- | ---------- | ------------------------------------------------------ |
+| #941  | `GET /missals/{id}/i18n`                     | **merged** | returns every locale plus a precomputed `coverage` map |
+| #942  | `GET /lectionary/{rite}/sanctorale`          | **merged** | rite-scoped; carries `lectionary_available`            |
+| #943  | `PUT/PATCH/DELETE /missals/{id}/{event_key}` | **merged** | phase 4 only; not used by the viewer                   |
+| #953  | `/missals` is Roman-only                     | open       | the Ambrosian sanctorale on disk is unreachable        |
+| #939  | `StIsidore` collision                        | open       | surfaced by the viewer's override badge                |
+| #940  | Ambrosian filename convention                | open       | blocks #953's enumerator                               |
 
 All three route issues are specified to mirror `DecreesHandler`, which already enforces the invariants
 this data needs — notably `DecreesHandler.php:762` rejecting `event_key` changes because they orphan
@@ -221,10 +233,10 @@ i18n and lectionary entries permanently, and `:837` garbage-collecting keys acro
 1. **Unblocked now.** Guard the unguarded `response.json()` at `missals-editor.js:760` so an empty body
    is not reported as a failed save, and stop the Save button from claiming an outcome it cannot reach.
    This is issue #503 item 3 and is worth doing regardless of everything below.
-2. **Unblocked now.** `sanctorale.php` with the composed browser: rite + calendar selection, the
+2. **Done.** `sanctorale.php` with the composed browser: rite + calendar selection, the
    composed event list with layer provenance, and the `event_key` detail view showing structure and all
    names via per-locale probing. No readings.
-3. **After #942.** The readings panel, both tiers, with the tier that answered made explicit.
+3. **Done.** The readings panel, both tiers, with the tier that answered made explicit.
 4. **After #943.** Editing: structure, names, readings; creating a key writes it into **every** locale
    file including empty ones; queued writes report `disposition` through the shared helper from #501
    rather than a second implementation.
@@ -269,5 +281,10 @@ Editing the temporale; migrating `admin-decrees.php` onto shared modules extract
 - **Month tabs over a single scrolling list** — the composed view is uniformly populated, so tabs give
   a comfortable page size; accepted only because cross-month search and per-tab counts remove the two
   things that would otherwise make tabs worse than the flat table.
+- **Plain selectors over components-js pickers** — the scoping stayed rite + calendar; only the widget
+  changed, because `/missals` is Roman-only and just two of ~100 calendars alter the composition.
+- **`/missals/{id}/i18n` replaced the per-locale probe entirely** — #941 shipped a `coverage` map
+  (`translated` / `empty` / `missing` per event), so the decrees-style probing the design planned for
+  is not needed: one request per missal returns every locale and all three states precomputed.
 - **Probe locales rather than wait for #941** — the decrees page proves the pattern, and it moves the
   read-only phase from blocked to shippable.
