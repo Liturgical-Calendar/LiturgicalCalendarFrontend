@@ -344,11 +344,11 @@ log line saying nothing was written.
 
 ### Calendar Schema Differences
 
-| Calendar Type | Allowed Actions                                                     |
-| ------------- | ------------------------------------------------------------------- |
-| National      | `setProperty`, `createNew`, `moveFeast`, `makeDoctor`, `makePatron` |
-| Wider Region  | `createNew`, `makePatron` only                                      |
-| Diocesan      | `createNew`, `makePatron` only                                      |
+| Calendar Type | Allowed Actions                                                                              |
+| ------------- | -------------------------------------------------------------------------------------------- |
+| National      | `setProperty`, `createNew`, `createNewFromExisting`, `moveEvent`, `makeDoctor`, `makePatron` |
+| Wider Region  | `createNew`, `makePatron` only                                                               |
+| Diocesan      | `createNew`, `makePatron` only                                                               |
 
 WiderRegion names must be: `Americas`, `Europe`, `Asia`, `Africa`, or `Oceania`.
 

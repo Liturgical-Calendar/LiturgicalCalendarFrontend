@@ -33,8 +33,10 @@ $adminBlocks = [
         'icon'        => 'fa-book-open',
         'color'       => 'success',
         'title'       => _('Sanctorale'),
-        'description' => _('Proprium de Sanctis - Roman Missal editions'),
-        'viewUrl'     => 'missals-editor.php',
+        'description' => _('Proprium de Sanctis - Missal editions, by rite'),
+        // View opens the composed viewer; Edit still opens the old per-Missal table,
+        // which is the only thing that can edit until the sanctorale editor lands.
+        'viewUrl'     => 'sanctorale.php',
         'editUrl'     => 'missals-editor.php',
         'permission'  => 'missals:write'
     ],

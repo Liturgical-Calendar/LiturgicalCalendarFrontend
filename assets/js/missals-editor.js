@@ -744,11 +744,19 @@ saveDataBtn.addEventListener('click', async () => {
         });
 
         if (response.status === 405) {
-            // Method not allowed - API doesn't support write operations yet
+            // This editor PUTs the COLLECTION (`/missals/{missal_id}`, `/decrees`).
+            // Sanctorale writes exist, but they address a single entry
+            // (`PUT /missals/{missal_id}/{event_key}`, API #943), so this request
+            // is still not a route the API answers — it is one path segment short.
+            // Say that, rather than claiming writes are unimplemented.
+            // Deliberately does NOT point at the Sanctorale page: that page is read-only
+            // until phase 4, so sending someone there to save would just move the dead end.
+            const message = 'This editor cannot save. It addresses a whole Missal, and the API writes one '
+                + 'celebration at a time; per-celebration editing is not built yet.';
             if (typeof toastr !== 'undefined') {
-                toastr.warning('API write operations are not yet implemented. Changes cannot be saved.');
+                toastr.warning(message);
             } else {
-                alert('API write operations are not yet implemented. Changes cannot be saved.');
+                alert(message);
             }
             return;
         }
@@ -757,7 +765,15 @@ saveDataBtn.addEventListener('click', async () => {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data = await response.json();
+        // 204, or any empty body, is a SUCCESS: parsing it unguarded throws, and the
+        // catch below would report a successful save as a failure. The API has already
+        // moved one DELETE from 204 to 200, so this shape is live.
+        //
+        // Only EMPTINESS is forgiven. A malformed non-empty body still throws, because
+        // swallowing it would announce "Data saved successfully" over a response nobody
+        // could read — which is the same class of lie this guard exists to prevent.
+        const text = await response.text();
+        const data = text.trim() === '' ? {} : JSON.parse(text);
         if (DEBUG) console.log(data);
         if (typeof toastr !== 'undefined') {
             toastr.success('Data saved successfully');
