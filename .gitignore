@@ -133,7 +133,6 @@ api/*
 !index.php
 !liturgyOfAnyDay.php
 !permission-requests.php
-!request-access.php
 !temporale.php
 !translations.php
 !usage.php
