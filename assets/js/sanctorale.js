@@ -902,7 +902,9 @@ async function saveEntry() {
  * failed delete.
  */
 async function deleteEntry() {
-    const confirmed = window.confirm(i18n.confirmDelete.replace('%s', editState.eventKey));
+    const confirmed = window.confirm(
+        i18n.confirmDelete.replace('%1$s', editState.eventKey).replace('%2$s', editState.missalId)
+    );
     if (!confirmed) return;
 
     const path = entryPath(state.rite, editState.missalId, editState.eventKey);

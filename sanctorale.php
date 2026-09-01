@@ -291,8 +291,8 @@ $litCommons = [
                       // so the API refuses to rename one: it would orphan all of them. ?>
                 eventKeyHint:       <?php echo json_encode(_('Letters and digits only. This cannot be changed later.'), JSON_HEX_TAG); ?>,
                 invalidDay:         <?php echo json_encode(_('Enter a day between 1 and 31.'), JSON_HEX_TAG); ?>,
-                <?php // translators: %s is the event key ?>
-                confirmDelete:      <?php echo json_encode(_('Delete %s from this Missal? Its name and readings go with it.'), JSON_HEX_TAG); ?>,
+                <?php // translators: %1$s is the event key, %2$s is the Missal id ?>
+                confirmDelete:      <?php echo json_encode(_('Delete %1$s from %2$s? Its name and readings go with it, and any earlier edition that already defined it takes over.'), JSON_HEX_TAG); ?>,
                 <?php // The rite-level corpus is shared by every Missal of the rite, so this
                       // edit is not confined to the edition being edited. ?>
                 readingsShared:     <?php echo json_encode(_('These readings live in the rite-wide lectionary, shared by every Missal of this rite.'), JSON_HEX_TAG); ?>,
