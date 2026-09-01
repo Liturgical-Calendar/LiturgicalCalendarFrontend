@@ -390,3 +390,173 @@ describe('schemaKeysOf', () => {
         expect(schemaKeysOf({})).toEqual([]);
     });
 });
+
+/**
+ * The two normalizations the editor applies between a stored row and the form
+ * that edits it. Both exist because the form can express fewer states than the
+ * data does, and both are invisible until a save writes something nobody asked
+ * for — which is exactly why they are pinned here rather than left to the
+ * browser pass that found them.
+ */
+describe('structureOf', () => {
+    let structureOf, diffStructure;
+
+    beforeAll(async () => {
+        global.window = global.window ?? {};
+        ({ structureOf } = await import('../sanctorale.js'));
+        ({ diffStructure } = await import('../sanctorale-payload.js'));
+    });
+
+    // A US_2011 row as the API actually serves it: no `is_dominical`, no `is_bvm`.
+    // The API writes those two only where the source data sets them.
+    const ROW = Object.freeze({
+        month: 5,
+        day: 15,
+        event_key: 'StIsidoreFarmer',
+        grade: 2,
+        grade_display: null,
+        common: ['Holy Men and Women:For One Saint'],
+        calendar: 'US',
+        color: ['white'],
+        name: 'Saint Isidore',
+        _missalId: 'US_2011'
+    });
+
+    /** The same celebration as the Structure form reads it back, unedited. */
+    const untouchedForm = (overrides = {}) => ({
+        month: 5,
+        day: 15,
+        grade: 2,
+        grade_display: null,
+        common: ['Holy Men and Women:For One Saint'],
+        color: ['white'],
+        calendar: 'US',
+        is_dominical: false,
+        is_bvm: false,
+        ...overrides
+    });
+
+    it('reads an absent flag back as false, since a checkbox has no third state', () => {
+        expect(structureOf(ROW).is_dominical).toBe(false);
+        expect(structureOf(ROW).is_bvm).toBe(false);
+    });
+
+    it('lets an untouched form diff to nothing', () => {
+        // The whole reason the normalization exists. buildPatch() reports
+        // "nothing changed" only when this map is empty.
+        expect(diffStructure(structureOf(ROW), untouchedForm())).toEqual({});
+    });
+
+    it('is load-bearing: the raw row would diff as changed on a form nobody touched', () => {
+        // diffStructure compares `original[field] ?? null` with `next[field] ?? null`,
+        // and `false` is not nullish — so an absent flag reads as null and a
+        // cleared checkbox reads as false, which are not equal. Without
+        // structureOf() every PATCH would carry both of these.
+        expect(diffStructure(ROW, untouchedForm())).toEqual({ is_dominical: false, is_bvm: false });
+    });
+
+    it('still reports a genuine true to false edit, which must never be swallowed', () => {
+        const original = structureOf({ ...ROW, is_dominical: true });
+        expect(original.is_dominical).toBe(true);
+        expect(diffStructure(original, untouchedForm())).toEqual({ is_dominical: false });
+    });
+
+    it('keeps a set is_bvm set, rather than defaulting everything to false', () => {
+        expect(structureOf({ ...ROW, is_bvm: true }).is_bvm).toBe(true);
+        expect(diffStructure(structureOf({ ...ROW, is_bvm: true }), untouchedForm()))
+            .toEqual({ is_bvm: false });
+    });
+
+    it('normalizes ONLY those two flags, so grade_display keeps all three states', () => {
+        // Flattening any of these would write null over an authored decision —
+        // the governing rule of sanctorale-payload.js.
+        expect(structureOf({ ...ROW, grade_display: null }).grade_display).toBeNull();
+        expect(structureOf({ ...ROW, grade_display: '' }).grade_display).toBe('');
+        expect(structureOf({ ...ROW, grade_display: 'National Holiday' }).grade_display)
+            .toBe('National Holiday');
+    });
+
+    it('does not invent a grade_display for a row that carries none', () => {
+        const bare = { month: 1, day: 13, grade: 2 };
+        expect(Object.prototype.hasOwnProperty.call(structureOf(bare), 'grade_display')).toBe(false);
+    });
+
+    it('accepts no row at all, which is what creating an entry passes', () => {
+        expect(structureOf(undefined)).toEqual({ is_dominical: false, is_bvm: false });
+    });
+
+    it('leaves the composed row alone: state.composed must not gain invented flags', () => {
+        const row = { month: 5, day: 15 };
+        structureOf(row);
+        expect(Object.prototype.hasOwnProperty.call(row, 'is_dominical')).toBe(false);
+    });
+});
+
+describe('orderedSelection', () => {
+    let orderedSelection;
+
+    beforeAll(async () => {
+        global.window = global.window ?? {};
+        ({ orderedSelection } = await import('../sanctorale.js'));
+    });
+
+    // The option list is the LitCommon enum, whose order puts Doctors before
+    // Pastors:For a Bishop. StHilaryPoitiers stores them the other way round.
+    const OPTIONS = ['Proper', 'Doctors', 'Pastors:For a Bishop'];
+    const STORED  = ['Pastors:For a Bishop', 'Doctors'];
+
+    /** A real multi-select in the document, since orderedSelection reads the DOM. */
+    const selectWith = (selected) => {
+        document.body.innerHTML = '';
+        const select = document.createElement('select');
+        select.id = 'entryCommon';
+        select.multiple = true;
+        for (const value of OPTIONS) {
+            const option = document.createElement('option');
+            option.value = value;
+            option.selected = selected.includes(value);
+            select.appendChild(option);
+        }
+        document.body.appendChild(select);
+        return select;
+    };
+
+    it('reports DOM order, which is why this function exists at all', () => {
+        // Pinning the browser behaviour the rest of these tests are about:
+        // selectedOptions follows the option list, never the stored array.
+        const select = selectWith(STORED);
+        expect([...select.selectedOptions].map((o) => o.value))
+            .toEqual(['Doctors', 'Pastors:For a Bishop']);
+    });
+
+    it('keeps the row\'s own order for values it already had', () => {
+        // Otherwise an untouched form diffs as changed, and a save silently
+        // rewrites the corpus's order for no reason.
+        selectWith(STORED);
+        expect(orderedSelection('entryCommon', STORED)).toEqual(STORED);
+    });
+
+    it('appends a newly picked value rather than reordering the kept ones', () => {
+        selectWith(['Proper', ...STORED]);
+        expect(orderedSelection('entryCommon', STORED))
+            .toEqual(['Pastors:For a Bishop', 'Doctors', 'Proper']);
+    });
+
+    it('drops a deselected value and leaves the rest in the stored order', () => {
+        selectWith(['Doctors']);
+        expect(orderedSelection('entryCommon', STORED)).toEqual(['Doctors']);
+    });
+
+    it('falls back to DOM order when there is no stored order to honour', () => {
+        // A new celebration has none, and neither has a row whose field was empty.
+        selectWith(STORED);
+        expect(orderedSelection('entryCommon', [])).toEqual(['Doctors', 'Pastors:For a Bishop']);
+        expect(orderedSelection('entryCommon', undefined)).toEqual(['Doctors', 'Pastors:For a Bishop']);
+    });
+
+    it('yields nothing when the control is absent, rather than throwing', () => {
+        // The read-only modal renders no form controls at all.
+        document.body.innerHTML = '';
+        expect(orderedSelection('entryCommon', STORED)).toEqual([]);
+    });
+});

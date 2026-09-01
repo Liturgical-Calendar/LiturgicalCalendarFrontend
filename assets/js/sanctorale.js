@@ -780,7 +780,7 @@ const COLORS = ['white', 'red', 'green', 'purple', 'rose', 'morello', 'black'];
  * @param {object} [row] a composed row
  * @returns {object} the row with both flags present
  */
-function structureOf(row) {
+export function structureOf(row) {
     return { ...row, is_dominical: row?.is_dominical === true, is_bvm: row?.is_bvm === true };
 }
 
@@ -797,7 +797,7 @@ function structureOf(row) {
  * @param {string[]} [previous] the stored order
  * @returns {string[]}
  */
-function orderedSelection(id, previous) {
+export function orderedSelection(id, previous) {
     const chosen = new Set([...(el(id)?.selectedOptions ?? [])].map((o) => o.value));
     const kept = (previous ?? []).filter((value) => chosen.has(value));
     // Set iteration is DOM order, which is the only order a newly picked value has.
