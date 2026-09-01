@@ -18,11 +18,20 @@
  *
  *   diocesan_calendar:ambrosian/lugano_ch   diocesan_calendar_test:ambrosian/lugano_ch
  *   national_calendar:roman/US              national_calendar_test:roman/US
- *   wider_region:roman/Europe
+ *   wider_region:roman/Europe               rite_calendar:ambrosian/temporale
  *
- * `general_roman_calendar` and `general_roman_calendar_test` keep BARE ids:
- * their ids are not calendars (they are `temporale`, `decrees` and missal
- * editions, Roman by construction), so there is no rite to qualify with.
+ * `rite_calendar` (API #955) is the tier ABOVE nations, wider regions and
+ * dioceses — the calendar belonging to a rite as a whole. It generalises
+ * `general_roman_calendar`, which modelled that tier as though only the Roman
+ * rite had one, and its ids are qualified for the same reason every other
+ * calendar-naming type's are: `temporale` is a sub-resource KIND, one per rite,
+ * not a unique id.
+ *
+ * `general_roman_calendar` and `general_roman_calendar_test` keep BARE ids.
+ * They are DEPRECATED, not renamed: the API still accepts and still emits both,
+ * and `audit_log` rows are never rewritten, so historical records carry them
+ * permanently. They stay bare until the prune milestone
+ * (`docs/ops/rite-calendar-migration-runbook.md` in the API repo).
  * `rite_calendar_test` is the exception that proves the rule — its id IS the
  * rite (`rite_calendar_test:ambrosian`), so it is bare too.
  *
@@ -71,6 +80,7 @@ export const RITE_QUALIFIED_OBJECT_TYPES = Object.freeze([
     'wider_region',
     'national_calendar_test',
     'diocesan_calendar_test',
+    'rite_calendar',
 ]);
 
 /**
@@ -80,7 +90,7 @@ export const RITE_QUALIFIED_OBJECT_TYPES = Object.freeze([
  * has no national tier and no wider regions, and the API rejects
  * `national_calendar:ambrosian/*` and `wider_region:ambrosian/*` outright
  * (`isValidObjectIdForType()`; `RegionalDataParams::validateRiteCompatibility()`).
- * Only the diocesan tier exists under more than one rite.
+ * Only the diocesan tier and the rite tier itself exist under more than one rite.
  * @type {ReadonlyArray<string>}
  */
 export const ROMAN_ONLY_OBJECT_TYPES = Object.freeze([
@@ -142,10 +152,11 @@ export function riteForObjectType(objectType, rite) {
  *
  * Idempotent: an id that already carries a known rite prefix is returned
  * unchanged, so a value round-tripped out of the API and back in is not
- * double-qualified. Types with bare ids (`general_roman_calendar`,
- * `general_roman_calendar_test`, `rite_calendar_test`, and anything unknown)
+ * double-qualified. Types with bare ids (the deprecated `general_roman_calendar`
+ * and `general_roman_calendar_test`, `rite_calendar_test`, and anything unknown)
  * pass through untouched — qualifying those would invent a rite for a resource
- * that has none.
+ * that has none, and in the deprecated pair's case would compose an id their own
+ * type does not validate.
  *
  * @param {string} objectType - An OpenFGA object type.
  * @param {string} objectId - The bare calendar id as chosen in the UI.
@@ -216,4 +227,75 @@ export function sameObjectId(objectType, a, b) {
     const left = splitObjectId(objectType, a);
     const right = splitObjectId(objectType, b);
     return left.rite === right.rite && left.id === right.id;
+}
+
+/** @type {string} The rite-level calendar object type. Mirrors `RiteCalendarObjectIds::TYPE`. */
+export const RITE_CALENDAR_TYPE = 'rite_calendar';
+
+/**
+ * @type {string} The pre-#955 object type `rite_calendar` generalises.
+ * Mirrors `RiteCalendarObjectIds::LEGACY_TYPE`. Deprecated, NOT removed.
+ */
+export const LEGACY_RITE_CALENDAR_TYPE = 'general_roman_calendar';
+
+/**
+ * The `rite_calendar` sub-resources that are not missal editions.
+ *
+ * Mirrors `RiteCalendarObjectIds::FIXED_IDS`. `temporale` exists for both rites
+ * (each has its own `propriumdetempore`); `decrees` and `supported_locales` are
+ * Roman-only, because only `rite/roman/decrees` exists and
+ * `supportedLocales.json` is itself keyed `general_roman_calendar` at its top
+ * level.
+ * @type {Readonly<Record<string, ReadonlyArray<string>>>}
+ */
+export const RITE_CALENDAR_FIXED_IDS = Object.freeze({
+    [ROMAN_RITE]: Object.freeze(['temporale', 'decrees', 'supported_locales']),
+    [AMBROSIAN_RITE]: Object.freeze(['temporale']),
+});
+
+/**
+ * Every `rite_calendar` sub-resource that is a fixed (non-missal) one, for any rite.
+ * @type {ReadonlyArray<string>}
+ */
+const ALL_FIXED_SUBRESOURCES = Object.freeze(
+    Array.from(new Set(Object.values(RITE_CALENDAR_FIXED_IDS).flat()))
+);
+
+/**
+ * The pre-#955 object that denoted the same resource as a `rite_calendar` one.
+ *
+ * The frontend needs this because the API's fallback lives in its authorization
+ * MIDDLEWARE only: `GET /admin/permissions/check` answers on the object it is
+ * literally handed, with no widening. A UI that asked only about
+ * `rite_calendar:roman/decrees` would therefore hide controls from every user
+ * whose grant has not been migrated yet, while the write those controls make
+ * would in fact have succeeded. Asking the legacy object as well is what keeps
+ * the two agreeing for the whole migration window.
+ *
+ * The pairing is deliberately ASYMMETRIC, mirroring
+ * `RiteCalendarObjectIds::legacyCounterpart()` and the two fallbacks in
+ * `OpenFgaAuthorizationMiddleware`:
+ *
+ * - a **fixed sub-resource** (`temporale`, `decrees`, `supported_locales`)
+ *   pairs ONLY for the Roman rite. Every legacy id was Roman by construction,
+ *   so there is no non-Roman legacy tuple to find, and pairing one for another
+ *   rite would re-introduce exactly the un-qualification #955 removes;
+ * - a **typical edition** pairs across EVERY rite, because missal ids are
+ *   unique across rites — `general_roman_calendar:EDITIO_TYPICA_2024` genuinely
+ *   was, and still is, the Ambrosian edition's legacy object.
+ *
+ * Anything that is not a fixed sub-resource IS a typical edition here: those are
+ * the only two kinds of id the type carries.
+ *
+ * @param {string} objectType - An OpenFGA object type.
+ * @param {string} objectId - The rite-qualified object id.
+ * @returns {{objectType: string, objectId: string}|null} The legacy object, or null.
+ */
+export function legacyRiteCalendarObject(objectType, objectId) {
+    if (objectType !== RITE_CALENDAR_TYPE) return null;
+    const parsed = parseRiteQualifiedId(objectId);
+    if (parsed === null) return null;
+    const isFixed = ALL_FIXED_SUBRESOURCES.includes(parsed.id);
+    if (isFixed && parsed.rite !== ROMAN_RITE) return null;
+    return { objectType: LEGACY_RITE_CALENDAR_TYPE, objectId: parsed.id };
 }

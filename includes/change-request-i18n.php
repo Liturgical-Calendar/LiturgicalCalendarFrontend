@@ -42,10 +42,17 @@ return [
     // rather than implying a reviewer refused something they in fact approved.
     'approvedThenClosed'  => _('Approved by a reviewer; its pull request was later closed without merging.'),
 
+    // `rite_calendar` and `rite_calendar_test` supersede the two
+    // `general_roman_calendar*` entries (API #955 / #785). The old names are kept
+    // because this map is a DISPLAY map: the API still emits them on change
+    // requests submitted before its data migration ran, and `audit_log` rows are
+    // deliberately never rewritten, so they name the old types permanently. A map
+    // that only knew the new names would render those rows blank.
     'resourceTypes'       => [
         'national_calendar'           => _('National calendar'),
         'diocesan_calendar'           => _('Diocesan calendar'),
         'wider_region'                => _('Wider region'),
+        'rite_calendar'               => _('Rite calendar'),
         'general_roman_calendar'      => _('General Roman Calendar'),
         'national_calendar_test'      => _('National calendar test'),
         'diocesan_calendar_test'      => _('Diocesan calendar test'),

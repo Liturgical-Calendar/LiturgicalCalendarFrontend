@@ -42,6 +42,11 @@ import { describeWriteOutcome } from './writeDisposition.js';
  */
 export function selectedScope() {
     const type = document.getElementById('testScopeType').value;
+    // `general_roman_calendar` here is #testScopeType's own UI token for "the
+    // rite-level calendar", NOT the deprecated OpenFGA object type of the same
+    // name: deriveScope() turns it into `rite_calendar_test:<rite>`, and API #955
+    // (which renamed the DATA type `general_roman_calendar` to `rite_calendar`)
+    // leaves the test scopes alone — they were generalised already, by #785.
     if (type === 'general_roman_calendar') return { rite: Rite.ROMAN };
     const idEl = document.getElementById('testScopeId');
     const id = idEl ? idEl.value : '';

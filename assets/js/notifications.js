@@ -505,9 +505,11 @@ const Notifications = {
     /**
      * The resource a change-request notification concerns, as a display string.
      *
-     * `resource_id` is rite-qualified (`roman/US`) for the calendar-naming types
-     * and bare for the rest (`decrees`, `general_roman_calendar_test`,
-     * `rite_calendar_test`), so the slash must not be assumed.
+     * `resource_id` is rite-qualified (`roman/US`, `roman/decrees`) for the
+     * calendar-naming types and for `rite_calendar` (API #955), and bare for the
+     * rest — `rite_calendar_test`, whose id IS the rite, and the deprecated
+     * `general_roman_calendar` / `general_roman_calendar_test`, which the API
+     * still emits — so the slash must not be assumed.
      * @private
      */
     _changeResourceLabel(item) {

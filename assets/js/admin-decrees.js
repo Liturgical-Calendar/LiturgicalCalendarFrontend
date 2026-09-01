@@ -74,10 +74,32 @@ async function fetchJson(method, path, body, extraHeaders, credentials = 'includ
 // ---- capability detection -------------------------------------------------
 
 /**
+ * The FGA object governing the whole decrees admin surface, and the legacy object
+ * it supersedes.
+ *
+ * `decrees` moved from the bare `general_roman_calendar` type onto the rite-level
+ * `rite_calendar` tier in LiturgicalCalendarAPI #955. It is a fixed sub-resource,
+ * so it exists for the Roman rite only — which is also why the legacy pairing is
+ * Roman-only, and safe.
+ * @type {ReadonlyArray<{objectType: string, objectId: string}>}
+ */
+export const DECREES_OBJECTS = Object.freeze([
+    Object.freeze({ objectType: 'rite_calendar', objectId: 'roman/decrees' }),
+    Object.freeze({ objectType: 'general_roman_calendar', objectId: 'decrees' }),
+]);
+
+/**
  * Detect the current user's capabilities for decree management.
  *
  * Global admins short-circuit to full access. Otherwise three parallel
  * FGA self-checks determine viewer / editor / admin relations.
+ *
+ * Each relation is asked about the rite-qualified object first and about the
+ * legacy one only if that denies. `GET /admin/permissions/check` answers on the
+ * object it is handed and does no widening of its own — the legacy fallback lives
+ * in the API's authorization middleware — so without the second ask, a user whose
+ * grant predates the API's tuple migration would be shown a read-only page while
+ * the API would in fact have accepted their writes.
  *
  * @returns {Promise<{canView: boolean, canEdit: boolean, canAdmin: boolean}>}
  */
@@ -90,10 +112,23 @@ export async function detectCapabilities() {
         // No sub available — cannot call self-check; deny all.
         return { canView: false, canEdit: false, canAdmin: false };
     }
-    const check = (relation) => fetchJson(
+    // URLSearchParams is what percent-encodes the `/` in `roman/decrees`; built
+    // by hand it would read as a path segment and check the wrong route.
+    const checkOne = (object, relation) => fetchJson(
         'GET',
-        `/admin/permissions/check?user=${encodeURIComponent(userSub)}&object_type=general_roman_calendar&object_id=decrees&relation=${relation}`
+        '/admin/permissions/check?' + new URLSearchParams({
+            user: userSub,
+            object_type: object.objectType,
+            object_id: object.objectId,
+            relation
+        }).toString()
     ).then((r) => r !== null && typeof r === 'object' && r.allowed === true).catch(() => false);
+    const check = async (relation) => {
+        for (const object of DECREES_OBJECTS) {
+            if (await checkOne(object, relation)) return true;
+        }
+        return false;
+    };
     const [viewer, editor, admin] = await Promise.all([
         check('viewer'),
         check('editor'),

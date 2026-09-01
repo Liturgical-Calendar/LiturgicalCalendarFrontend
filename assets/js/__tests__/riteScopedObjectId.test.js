@@ -4,6 +4,7 @@ import {
     ROMAN_RITE,
     bareCalendarId,
     isRiteQualifiedObjectType,
+    legacyRiteCalendarObject,
     parseRiteQualifiedId,
     qualifyObjectId,
     riteForObjectType,
@@ -26,12 +27,15 @@ describe('isRiteQualifiedObjectType', () => {
         'wider_region',
         'national_calendar_test',
         'diocesan_calendar_test',
+        // The tier ABOVE all of those, one per rite (API #955).
+        'rite_calendar',
     ])('%s names a calendar and is qualified', (type) => {
         expect(isRiteQualifiedObjectType(type)).toBe(true);
     });
 
     it.each([
-        // Not calendars: temporale, decrees, missal editions — Roman by construction.
+        // Deprecated, not removed: the API still accepts and still emits both,
+        // and their ids stay bare until the prune milestone.
         'general_roman_calendar',
         'general_roman_calendar_test',
         // The exception that proves the rule: its id IS the rite.
@@ -76,6 +80,31 @@ describe('qualifyObjectId', () => {
         expect(qualifyObjectId('national_calendar', 'IT', AMBROSIAN_RITE)).toBe('roman/IT');
         expect(qualifyObjectId('wider_region', 'Europe', AMBROSIAN_RITE)).toBe('roman/Europe');
         expect(qualifyObjectId('national_calendar_test', 'IT', AMBROSIAN_RITE)).toBe('roman/IT');
+    });
+
+    it('qualifies a rite calendar with the rite it is handed', () => {
+        // The eight ids the API validates for `rite_calendar`
+        // (RiteCalendarObjectIds). `decrees` and `supported_locales` are
+        // Roman-only; `temporale` exists for both rites, which is exactly why a
+        // bare id could no longer stand for "the Roman one".
+        expect(qualifyObjectId('rite_calendar', 'temporale', ROMAN_RITE)).toBe('roman/temporale');
+        expect(qualifyObjectId('rite_calendar', 'decrees', ROMAN_RITE)).toBe('roman/decrees');
+        expect(qualifyObjectId('rite_calendar', 'supported_locales', ROMAN_RITE))
+            .toBe('roman/supported_locales');
+        expect(qualifyObjectId('rite_calendar', 'EDITIO_TYPICA_2008', ROMAN_RITE))
+            .toBe('roman/EDITIO_TYPICA_2008');
+        expect(qualifyObjectId('rite_calendar', 'temporale', AMBROSIAN_RITE))
+            .toBe('ambrosian/temporale');
+        expect(qualifyObjectId('rite_calendar', 'EDITIO_TYPICA_2024', AMBROSIAN_RITE))
+            .toBe('ambrosian/EDITIO_TYPICA_2024');
+    });
+
+    it('is not pinned to roman: the rite tier exists under every rite', () => {
+        // Unlike national_calendar / wider_region, which the API rejects for the
+        // Ambrosian rite outright.
+        expect(riteForObjectType('rite_calendar', AMBROSIAN_RITE)).toBe('ambrosian');
+        expect(qualifyObjectId('rite_calendar', 'ambrosian/temporale', AMBROSIAN_RITE))
+            .toBe('ambrosian/temporale');
     });
 
     it('leaves the bare-id types untouched', () => {
@@ -185,5 +214,47 @@ describe('sameObjectId', () => {
     it('compares bare-id types verbatim', () => {
         expect(sameObjectId('general_roman_calendar', 'temporale', 'temporale')).toBe(true);
         expect(sameObjectId('general_roman_calendar', 'temporale', 'decrees')).toBe(false);
+    });
+
+    it('matches a legacy rite-calendar grant against its migrated scope', () => {
+        // A grant written as `rite_calendar:decrees` cannot exist (the API rejects
+        // a bare id for the new type), but a value read back mid-migration and
+        // labelled with it must still compare equal to the Roman scope.
+        expect(sameObjectId('rite_calendar', 'decrees', 'roman/decrees')).toBe(true);
+        expect(sameObjectId('rite_calendar', 'roman/temporale', 'ambrosian/temporale')).toBe(false);
+    });
+});
+
+describe('legacyRiteCalendarObject — the #955 pairing', () => {
+    it('pairs a Roman fixed sub-resource with its bare legacy object', () => {
+        for (const sub of ['temporale', 'decrees', 'supported_locales']) {
+            expect(legacyRiteCalendarObject('rite_calendar', `roman/${sub}`))
+                .toEqual({ objectType: 'general_roman_calendar', objectId: sub });
+        }
+    });
+
+    it('refuses to pair a NON-Roman fixed sub-resource', () => {
+        // Every legacy id was Roman by construction — the predecessor type
+        // modelled the tier as though only the Roman rite had one. Pairing
+        // `ambrosian/temporale` with the bare `temporale` would re-introduce
+        // exactly the un-qualification #955 exists to remove.
+        expect(legacyRiteCalendarObject('rite_calendar', 'ambrosian/temporale')).toBeNull();
+    });
+
+    it('pairs a typical edition across EVERY rite', () => {
+        // Missal ids are unique across rites, so the bare legacy id genuinely
+        // denoted the Ambrosian edition too.
+        expect(legacyRiteCalendarObject('rite_calendar', 'roman/EDITIO_TYPICA_2002'))
+            .toEqual({ objectType: 'general_roman_calendar', objectId: 'EDITIO_TYPICA_2002' });
+        expect(legacyRiteCalendarObject('rite_calendar', 'ambrosian/EDITIO_TYPICA_2024'))
+            .toEqual({ objectType: 'general_roman_calendar', objectId: 'EDITIO_TYPICA_2024' });
+    });
+
+    it('has no pairing for any other type, or for an unqualified id', () => {
+        expect(legacyRiteCalendarObject('national_calendar', 'roman/US')).toBeNull();
+        expect(legacyRiteCalendarObject('rite_calendar_test', 'roman')).toBeNull();
+        expect(legacyRiteCalendarObject('general_roman_calendar', 'decrees')).toBeNull();
+        expect(legacyRiteCalendarObject('rite_calendar', 'decrees')).toBeNull();
+        expect(legacyRiteCalendarObject('rite_calendar', 'mozarabic/temporale')).toBeNull();
     });
 });

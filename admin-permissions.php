@@ -74,6 +74,10 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
                     <label for="filterObjectType" class="form-label"><?php echo htmlspecialchars($objectTypeLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
                     <select class="form-select form-select-sm" id="filterObjectType">
                         <option value=""><?php echo htmlspecialchars(_('All'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                        <?php // `rite_calendar` supersedes `general_roman_calendar` (API #955). The old one stays
+                              // filterable: tuples written before the API's tuple migration still carry it, and an
+                              // admin who cannot filter for them cannot find the grants that still need migrating. ?>
+                        <option value="rite_calendar"><?php echo htmlspecialchars(_('Rite Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                         <option value="general_roman_calendar"><?php echo htmlspecialchars(_('General Roman Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                         <option value="general_roman_calendar_test"><?php echo htmlspecialchars(_('General Roman Calendar Tests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                         <option value="national_calendar"><?php echo htmlspecialchars(_('National Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
@@ -301,6 +305,11 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
                         <label for="grantObjectType" class="form-label"><?php echo htmlspecialchars(_('Calendar scope'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
                         <select class="form-select" id="grantObjectType" required>
                             <option value=""><?php echo htmlspecialchars(_('Select calendar scope...'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                            <?php // `rite_calendar` first, so a NEW grant lands on the current type; the
+                                  // deprecated `general_roman_calendar` is still offered because the API keeps
+                                  // accepting it for the whole migration window and its tuple migration is
+                                  // idempotent, so a grant made on it is picked up rather than stranded. ?>
+                            <option value="rite_calendar"><?php echo htmlspecialchars(_('Rite Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                             <option value="general_roman_calendar"><?php echo htmlspecialchars(_('General Roman Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                             <option value="general_roman_calendar_test"><?php echo htmlspecialchars(_('General Roman Calendar Tests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                             <option value="national_calendar"><?php echo htmlspecialchars(_('National Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
@@ -394,12 +403,21 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
                 diocesanCalendar: <?php echo json_encode(_('Diocesan Calendar')); ?>,
                 widerRegion: <?php echo json_encode(_('Wider Region')); ?>,
                 testDefinition: <?php echo json_encode(_('Test Definition')); ?>,
+                riteCalendar: <?php echo json_encode(_('Rite Calendar')); ?>,
+                testsRiteCalendar: <?php echo json_encode(_('Rite Calendar Tests')); ?>,
+                <?php // Retained, not renamed: the API still emits these two type names on
+                      // pre-migration tuples and permanently on audit_log rows. ?>
                 generalRomanCalendar: <?php echo json_encode(_('General Roman Calendar')); ?>,
+                <?php // Optgroup labels for the per-rite rite_calendar id list. ?>
+                romanRite: <?php echo json_encode(_('Roman Rite')); ?>,
+                ambrosianRite: <?php echo json_encode(_('Ambrosian Rite')); ?>,
                 grcTemporale: <?php echo json_encode(_('Temporale')); ?>,
                 grcSanctorale1970: <?php echo json_encode(_('Sanctorale — Editio Typica 1970')); ?>,
                 grcSanctorale2002: <?php echo json_encode(_('Sanctorale — Editio Typica 2002')); ?>,
                 grcSanctorale2008: <?php echo json_encode(_('Sanctorale — Editio Typica 2008')); ?>,
+                rcSanctorale2024: <?php echo json_encode(_('Sanctorale — Editio Typica 2024')); ?>,
                 grcDecrees: <?php echo json_encode(_('Decrees of the Dicastery for Divine Worship')); ?>,
+                rcSupportedLocales: <?php echo json_encode(_('Supported locales')); ?>,
                 enterObjectId: <?php echo json_encode(_('Enter object ID...')); ?>,
                 selectObjectId: <?php echo json_encode(_('Select object ID...')); ?>,
                 calendarScope: <?php echo json_encode(_('Calendar scope')); ?>,
