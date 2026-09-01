@@ -57,14 +57,14 @@ if (!$authHelper->isAuthenticated) {
     </p>
 
     <div class="row g-3 mb-3">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label class="form-label" for="riteSelect"><?php echo htmlspecialchars(_('Rite'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
             <select class="form-select" id="riteSelect">
                 <option value="roman"><?php echo htmlspecialchars(_('Roman'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                 <option value="ambrosian"><?php echo htmlspecialchars(_('Ambrosian'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
             </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <label class="form-label" for="calendarSelect"><?php echo htmlspecialchars(_('Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
             <select class="form-select" id="calendarSelect"></select>
         </div>
@@ -72,6 +72,11 @@ if (!$authHelper->isAuthenticated) {
             <label class="form-label" for="localeSelect"><?php echo htmlspecialchars(_('Language'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
             <select class="form-select" id="localeSelect"></select>
             <div class="form-text"><?php echo htmlspecialchars(_('Languages this calendar is published in.'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="fromSelect"><?php echo htmlspecialchars(_('From'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
+            <select class="form-select" id="fromSelect"></select>
+            <div class="form-text"><?php echo htmlspecialchars(_('Show only what one edition contributes.'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
         </div>
         <div class="col-md-3">
             <label class="form-label" for="sanctoraleSearch"><?php echo htmlspecialchars(_('Search all months'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
@@ -136,6 +141,7 @@ if (!$authHelper->isAuthenticated) {
                 color:              <?php echo json_encode(_('Colour'), JSON_HEX_TAG); ?>,
                 common:             <?php echo json_encode(_('Common'), JSON_HEX_TAG); ?>,
                 fromMissal:         <?php echo json_encode(_('From this Missal'), JSON_HEX_TAG); ?>,
+                allMissals:         <?php echo json_encode(_('All editions'), JSON_HEX_TAG); ?>,
                 overrides:          <?php echo json_encode(_('override'), JSON_HEX_TAG); ?>,
                 overridesTitle:     <?php echo json_encode(_('This Missal redefines a celebration an earlier one already had.'), JSON_HEX_TAG); ?>,
                 <?php // The three locale states are distinct on purpose: a deliberately blank

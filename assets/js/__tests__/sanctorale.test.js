@@ -7,7 +7,7 @@
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 
-let applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits, renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47;
+let applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits, renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47, filterByMissal;
 
 const VA_1970 = { missal_id: 'EDITIO_TYPICA_1970', region: 'VA', year_published: 1970 };
 const VA_2002 = { missal_id: 'EDITIO_TYPICA_2002', region: 'VA', year_published: 2002 };
@@ -22,7 +22,8 @@ beforeAll(async () => {
     global.window = global.window ?? {};
     const mod = await import('../sanctorale.js');
     ({ applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits,
-       renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47 } = mod);
+       renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47,
+       filterByMissal } = mod);
 });
 
 describe('baseRegionFor', () => {
@@ -248,5 +249,37 @@ describe('preferredLocale', () => {
 
     it('returns empty for a calendar that publishes nothing', () => {
         expect(preferredLocale([], 'en')).toBe('');
+    });
+});
+
+describe('filterByMissal', () => {
+    const composed = [
+        { event_key: 'A', month: 1, _missalId: 'EDITIO_TYPICA_1970' },
+        { event_key: 'B', month: 1, _missalId: 'EDITIO_TYPICA_2002' },
+        { event_key: 'C', month: 4, _missalId: 'EDITIO_TYPICA_2002' }
+    ];
+
+    it('narrows to one edition\'s contribution', () => {
+        expect(filterByMissal(composed, 'EDITIO_TYPICA_2002').map((r) => r.event_key)).toEqual(['B', 'C']);
+    });
+
+    it('returns everything when no edition is selected', () => {
+        expect(filterByMissal(composed, '')).toHaveLength(3);
+    });
+
+    it('counts an overridden celebration against the edition that won', () => {
+        // US_2011 redefines StIsidore, so it belongs to US_2011 in the composed set,
+        // not to the 1970 edition that first defined it.
+        const out = compose([
+            { missal: VA_1970, rows: [{ event_key: 'StIsidore', month: 4, day: 4 }] },
+            { missal: US_2011, rows: [{ event_key: 'StIsidore', month: 5, day: 15 }] }
+        ]);
+        expect(filterByMissal(out, 'US_2011')).toHaveLength(1);
+        expect(filterByMissal(out, 'EDITIO_TYPICA_1970')).toHaveLength(0);
+    });
+
+    it('leaves month grouping intact, so the tab counts follow the filter', () => {
+        const jan = filterByMissal(composed, 'EDITIO_TYPICA_2002').filter((r) => r.month === 1);
+        expect(jan).toHaveLength(1);
     });
 });

@@ -39,6 +39,7 @@ const dom = {
     rite:        el('riteSelect'),
     calendar:    el('calendarSelect'),
     locale:      el('localeSelect'),
+    from:        el('fromSelect'),
     search:      el('sanctoraleSearch'),
     tabs:        el('monthTabs'),
     tableBody:   el('sanctoraleTableBody'),
@@ -56,6 +57,8 @@ const state = {
     metadata: null,
     /** The locale the celebration names are requested in, as a BCP-47 tag. */
     nameLocale: '',
+    /** Show only celebrations contributed by this missal; '' means all. */
+    fromMissal: '',
     composed: [],
     month: new Date().getUTCMonth() + 1,
     search: ''
@@ -63,6 +66,16 @@ const state = {
 
 /** i18n payloads are per missal and never change within a session. */
 const i18nCache = new Map();
+
+/**
+ * Bumped whenever the selection changes. Loading a catalogue and composing a
+ * sanctorale are several awaits apart, so without this a slow request for an
+ * abandoned selection can still commit its results over the current one.
+ */
+let selectionSeq = 0;
+
+/** The same guard for the detail modal, which is opened per celebration. */
+let detailSeq = 0;
 
 const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
@@ -198,6 +211,18 @@ export function compose(layers) {
     return [...byKey.values()].sort((a, b) => (a.month - b.month) || (a.day - b.day));
 }
 
+/**
+ * Narrow to the celebrations a single missal contributes, or all of them.
+ *
+ * The count this yields for a missal is what it contributes to the COMPOSED
+ * sanctorale, which is not always its own row count: where a later edition
+ * overrides an earlier one, the row belongs to the later. That is the honest
+ * number for "what comes from this edition", and it is the point of the filter.
+ */
+export function filterByMissal(composed, missalId) {
+    return missalId ? composed.filter((r) => r._missalId === missalId) : composed;
+}
+
 /** Rows for one month, day-ordered, narrowed by the search term. */
 export function rowsFor(composed, month, search) {
     const needle = search.trim().toLowerCase();
@@ -221,12 +246,12 @@ export function monthsWithHits(composed, search) {
     return [...new Set(composed.filter((r) => matches(r, needle)).map((r) => r.month))].sort((a, b) => a - b);
 }
 
-function renderTabs() {
+function renderTabs(visible) {
     const counts = new Map();
-    for (const row of state.composed) {
+    for (const row of visible) {
         counts.set(row.month, (counts.get(row.month) ?? 0) + 1);
     }
-    const hits = new Set(monthsWithHits(state.composed, state.search));
+    const hits = new Set(monthsWithHits(visible, state.search));
 
     dom.tabs.innerHTML = Array.from({ length: 12 }, (_, i) => i + 1).map((m) => {
         const count  = counts.get(m) ?? 0;
@@ -251,8 +276,8 @@ function renderTabs() {
     });
 }
 
-function renderTable() {
-    const rows = rowsFor(state.composed, state.month, state.search);
+function renderTable(visible) {
+    const rows = rowsFor(visible, state.month, state.search);
     if (!rows.length) {
         const empty = state.search ? i18n.noSearchHits : i18n.noEntries;
         dom.tableBody.innerHTML = `<tr><td colspan="5" class="text-muted text-center py-4">${escapeHtml(empty)}</td></tr>`;
@@ -287,8 +312,34 @@ function notice(variant, html) {
 }
 
 function render() {
-    renderTabs();
-    renderTable();
+    const visible = filterByMissal(state.composed, state.fromMissal);
+    renderTabs(visible);
+    renderTable(visible);
+}
+
+/**
+ * Offer each contributing missal, oldest first, with how many celebrations it
+ * contributes. Selecting one is how a reader sees an edition's delta at a glance.
+ */
+function renderFromOptions() {
+    const counts = new Map();
+    for (const row of state.composed) {
+        counts.set(row._missalId, (counts.get(row._missalId) ?? 0) + 1);
+    }
+    const ordered = applicableMissals(state.missals, state.calendar, state.baseRegion)
+        .filter((m) => counts.has(m.missal_id));
+
+    dom.from.innerHTML = [
+        `<option value="">${escapeHtml(i18n.allMissals)} (${state.composed.length})</option>`
+    ].concat(ordered.map((m) =>
+        `<option value="${escapeHtml(m.missal_id)}">${escapeHtml(m.missal_id)} (${counts.get(m.missal_id)})</option>`
+    )).join('');
+
+    // A rite or calendar change can retire the selected missal entirely.
+    if (state.fromMissal && !counts.has(state.fromMissal)) {
+        state.fromMissal = '';
+    }
+    dom.from.value = state.fromMissal;
 }
 
 // ---------------------------------------------------------------- detail view
@@ -298,6 +349,8 @@ function render() {
  * its readings from whichever lectionary tiers carry them.
  */
 async function showDetail(eventKey, missalId) {
+    // Opening B while A is still loading must not let A render into B's modal.
+    const seq = ++detailSeq;
     dom.detailTitle.textContent = eventKey;
     dom.detailBody.innerHTML = `<p class="text-muted">${escapeHtml(i18n.loading)}</p>`;
     bootstrap.Modal.getOrCreateInstance(dom.detailModal).show();
@@ -310,6 +363,8 @@ async function showDetail(eventKey, missalId) {
         loadI18n(missalId),
         getJson(`/lectionary/${encodeURIComponent(state.rite)}/sanctorale/${encodeURIComponent(eventKey)}`)
     ]);
+
+    if (seq !== detailSeq) return;
 
     dom.detailBody.innerHTML = [
         renderStructure(row),
@@ -455,10 +510,11 @@ async function loadMetadata() {
     state.metadata = payload.litcal_metadata ?? payload ?? null;
 }
 
-async function loadCatalogue() {
+async function loadCatalogue(seq = selectionSeq) {
     // Rite-scoped since API #953. The unprefixed `/missals` still answers, but it
     // means `roman`, so asking for it explicitly is what makes the rite selector real.
     const payload = await getJson(`/missals/${encodeURIComponent(state.rite)}`);
+    if (seq !== selectionSeq) return;
     state.missals = payload.litcal_missals ?? payload ?? [];
     state.baseRegion = baseRegionFor(state.missals, state.rite);
 
@@ -503,12 +559,13 @@ function renderLocaleOptions() {
     dom.locale.disabled = available.length <= 1;
 }
 
-async function loadSanctorale() {
+async function loadSanctorale(seq = selectionSeq) {
     notice('', '');
 
     const applicable = applicableMissals(state.missals, state.calendar, state.baseRegion);
     if (!applicable.length) {
         state.composed = [];
+        renderFromOptions();
         notice('info', escapeHtml(i18n.noMissals));
         render();
         return;
@@ -525,9 +582,12 @@ async function loadSanctorale() {
                 state.nameLocale ? { 'Accept-Language': state.nameLocale } : {}
             )
         })));
+        if (seq !== selectionSeq) return;
         state.composed = compose(layers);
+        renderFromOptions();
         render();
     } catch (error) {
+        if (seq !== selectionSeq) return;
         state.composed = [];
         notice('danger', escapeHtml(i18n.loadFailed.replace('%s', error.message)));
         render();
@@ -541,6 +601,7 @@ function syncHash() {
     params.set('rite', state.rite);
     if (state.calendar) params.set('calendar', state.calendar);
     if (state.nameLocale) params.set('locale', state.nameLocale);
+    if (state.fromMissal) params.set('from', state.fromMissal);
     params.set('month', String(state.month));
     history.replaceState(null, '', `#${params.toString()}`);
 }
@@ -549,9 +610,45 @@ function readHash() {
     const params = new URLSearchParams((location.hash || '').replace(/^#/, ''));
     const month  = Number(params.get('month'));
     if (params.get('rite')) state.rite = params.get('rite');
-    if (params.get('calendar')) state.calendar = params.get('calendar');
-    if (params.get('locale')) state.nameLocale = params.get('locale');
+    // Assigned unconditionally, defaulting to empty. syncHash omits these when they
+    // are unset, so testing for presence would let an in-page link to the base
+    // calendar silently keep whichever nation happened to be selected before.
+    state.calendar   = params.get('calendar') ?? '';
+    state.fromMissal = params.get('from') ?? '';
+    state.nameLocale = params.get('locale') ?? '';
     if (month >= 1 && month <= 12) state.month = month;
+}
+
+/**
+ * Reload catalogue and sanctorale for the current selection.
+ *
+ * The token is taken once, here, so every await below belongs to THIS selection:
+ * a slower request for a selection the reader has already moved on from returns
+ * to a bumped token and commits nothing.
+ */
+async function reload() {
+    const seq = ++selectionSeq;
+    try {
+        await loadMetadata();
+        await loadCatalogue(seq);
+        if (seq !== selectionSeq) return;
+        renderLocaleOptions();
+        await loadSanctorale(seq);
+    } catch (error) {
+        if (seq !== selectionSeq) return;
+        notice('danger', escapeHtml(i18n.loadFailed.replace('%s', error.message)));
+    }
+}
+
+/** Recompose without refetching the catalogue: the rite has not changed. */
+async function recompose() {
+    const seq = ++selectionSeq;
+    try {
+        await loadSanctorale(seq);
+    } catch (error) {
+        if (seq !== selectionSeq) return;
+        notice('danger', escapeHtml(i18n.loadFailed.replace('%s', error.message)));
+    }
 }
 
 async function init() {
@@ -568,35 +665,37 @@ async function init() {
     }
     dom.rite.value = state.rite;
 
-    dom.rite.addEventListener('change', async () => {
+    dom.rite.addEventListener('change', () => {
         state.rite = dom.rite.value;
         syncHash();
-        try {
-            // Each rite has its own catalogue, so this is a reload, not a recompose.
-            await loadMetadata();
-            await loadCatalogue();
-            await loadSanctorale();
-        } catch (error) {
-            notice('danger', escapeHtml(i18n.loadFailed.replace('%s', error.message)));
-        }
+        // Each rite has its own catalogue, so this is a reload, not a recompose.
+        reload();
     });
     dom.calendar.addEventListener('change', () => {
         state.calendar = dom.calendar.value;
         renderLocaleOptions();
         syncHash();
-        loadSanctorale();
+        recompose();
     });
     dom.locale.addEventListener('change', () => {
         state.nameLocale = dom.locale.value;
         syncHash();
         // Names are merged server-side, so a locale change is a refetch.
-        loadSanctorale();
+        recompose();
+    });
+    dom.from.addEventListener('change', () => {
+        state.fromMissal = dom.from.value;
+        syncHash();
+        // Purely a view filter over data already composed — no request needed.
+        render();
     });
     dom.search.addEventListener('input', () => {
         state.search = dom.search.value;
         // Move to a month that actually contains a hit, otherwise the reader
         // searches and is shown an empty month they happened to be standing on.
-        const hits = monthsWithHits(state.composed, state.search);
+        // Honours the From filter, so a search inside a filtered view cannot jump
+        // to a month the filter has emptied.
+        const hits = monthsWithHits(filterByMissal(state.composed, state.fromMissal), state.search);
         if (hits.length && !hits.includes(state.month)) {
             state.month = hits[0];
             syncHash();
@@ -607,16 +706,15 @@ async function init() {
     // A hash change is a SAME-DOCUMENT navigation: the module does not re-run, so
     // without this a deep link followed from this very page silently does nothing
     // — the reader clicks a link naming another rite or month and sees no change.
-    window.addEventListener('hashchange', async () => {
-        const before = `${state.rite}|${state.calendar}`;
+    window.addEventListener('hashchange', () => {
+        const before = `${state.rite}|${state.calendar}|${state.nameLocale}`;
         readHash();
         dom.rite.value     = state.rite;
         dom.calendar.value = state.calendar;
-        if (`${state.rite}|${state.calendar}` !== before) {
-            await loadMetadata();
-            await loadCatalogue();
-            await loadSanctorale();
+        if (`${state.rite}|${state.calendar}|${state.nameLocale}` !== before) {
+            reload();
         } else {
+            dom.from.value = state.fromMissal;
             render();
         }
     });

@@ -227,7 +227,7 @@ frontend prose; the full action set is `setProperty`, `createNew`, `createNewFro
 | #941  | `GET /missals/{id}/i18n`                     | **merged** | returns every locale plus a precomputed `coverage` map |
 | #942  | `GET /lectionary/{rite}/sanctorale`          | **merged** | rite-scoped; carries `lectionary_available`            |
 | #943  | `PUT/PATCH/DELETE /missals/{id}/{event_key}` | **merged** | phase 4 only; not used by the viewer                   |
-| #953  | `/missals` is Roman-only                     | open       | the Ambrosian sanctorale on disk is unreachable        |
+| #953  | rite-aware missal paths                      | **merged** | `/missals/{rite}` resolves both catalogues             |
 | #939  | `StIsidore` collision                        | open       | surfaced by the viewer's override badge                |
 | #940  | Ambrosian filename convention                | open       | blocks #953's enumerator                               |
 
@@ -288,8 +288,17 @@ Editing the temporale; migrating `admin-decrees.php` onto shared modules extract
 - **Month tabs over a single scrolling list** — the composed view is uniformly populated, so tabs give
   a comfortable page size; accepted only because cross-month search and per-tab counts remove the two
   things that would otherwise make tabs worse than the flat table.
+- **A language picker, sourced from `/calendars` rather than from the missal** — a national calendar
+  publishes only its own locales (`US_2011` is `en_US` alone), so the offer is per calendar and the
+  select disables itself when there is nothing to choose.
+- **A "From" filter over the composed set, not a second request** — selecting an edition shows what it
+  contributes, and the month counts follow. The count is what the edition contributes to the COMPOSED
+  sanctorale, which differs from its own row count wherever a later edition overrode it; that is the
+  honest number for the question the filter asks.
 - **Plain selectors over components-js pickers** — the scoping stayed rite + calendar; only the widget
-  changed, because `/missals` is Roman-only and just two of ~100 calendars alter the composition.
+  changed, because just two of ~100 calendars alter the composition. #953 has since merged, so
+  `/missals/{rite}` resolves both the Roman and Ambrosian catalogues and the rite selector is real;
+  the argument against a `CalendarSelect` is unaffected by that, since it was never about rites.
 - **`/missals/{id}/i18n` replaced the per-locale probe entirely** — #941 shipped a `coverage` map
   (`translated` / `empty` / `missing` per event), so the decrees-style probing the design planned for
   is not needed: one request per missal returns every locale and all three states precomputed.
