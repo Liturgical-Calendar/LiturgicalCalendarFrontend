@@ -14,11 +14,12 @@
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 
-let resolveReadingsShapes, inferReadingsShape, readingFieldKeys;
+let resolveReadingsShapes, inferReadingsShape, readingFieldKeys, renderReadingsEditable;
 
 beforeAll(async () => {
     global.window = global.window ?? {};
-    ({ resolveReadingsShapes, inferReadingsShape, readingFieldKeys } = await import('../sanctorale.js'));
+    ({ resolveReadingsShapes, inferReadingsShape, readingFieldKeys, renderReadingsEditable }
+        = await import('../sanctorale.js'));
 });
 
 // The shape of CommonDef.json that matters here: a union of unions, one string
@@ -241,5 +242,78 @@ describe('readingFieldKeys', () => {
         // than nothing, and orders it so locales stay comparable line by line.
         expect(readingFieldKeys(null, { gospel: 'a', first_reading: 'b' }))
             .toEqual(['first_reading', 'gospel']);
+    });
+});
+
+/**
+ * The panel itself, which is what #525 is actually about: an entry with nothing
+ * curated has to render a FILLABLE form, not a "nothing here yet" message.
+ *
+ * Asserted through the rendered markup rather than through the key list alone,
+ * because the inputs are what `readReadingsForm()` reads back — the `data-locale`
+ * / `data-schema` / `data-field` triple is the contract between the two, and the
+ * empty `data-field` that marks a ReadingsCommons string is easy to break.
+ */
+describe('renderReadingsEditable', () => {
+    const shapes = () => resolveReadingsShapes(SCHEMA);
+    const parse = (html) => {
+        const host = document.createElement('div');
+        host.innerHTML = html;
+        return host;
+    };
+
+    it('renders fillable blanks for an entry that has no readings at all', () => {
+        // The create modal's whole situation: no entry, hence no keys. Building
+        // the form from the data renders nothing and there is no way to type a
+        // first citation, which is the bug.
+        const host = parse(renderReadingsEditable({}, ['en', 'it'], shapes()));
+        const inputs = [...host.querySelectorAll('input[data-locale]')];
+        expect(inputs).toHaveLength(8); // 4 ferial fields x 2 locales
+        expect(inputs.filter((i) => i.dataset.locale === 'en').map((i) => i.dataset.field))
+            .toEqual(['first_reading', 'responsorial_psalm', 'gospel_acclamation', 'gospel']);
+        expect(inputs.every((i) => i.value === '')).toBe(true);
+    });
+
+    it('offers every shape the schema admits, so the default can be changed', () => {
+        const host = parse(renderReadingsEditable({}, ['en'], shapes()));
+        const options = [...host.querySelectorAll('select[data-readings-shape] option')];
+        expect(options.map((o) => o.value)).toEqual(shapes().map((s) => s.id));
+        expect(options.find((o) => o.selected).value).toBe('ReadingsFerial');
+    });
+
+    it('renders one unnamed input per locale for the string Commons shape', () => {
+        // ReadingsCommons is a string, so there is no field name; readReadingsForm()
+        // keys off exactly that empty `data-field` to store the value as the whole
+        // entry rather than as one citation inside a map.
+        const withCommons = shapes();
+        const html = renderReadingsEditable({ en: 'Common of Martyrs' }, ['en'], withCommons, 'ReadingsCommons');
+        const inputs = [...parse(html).querySelectorAll('input[data-locale]')];
+        expect(inputs).toHaveLength(1);
+        expect(inputs[0].dataset.field).toBe('');
+        expect(inputs[0].value).toBe('Common of Martyrs');
+    });
+
+    it('gives a nested shape a sub-select per Mass, defaulting as the schema declares', () => {
+        const html = renderReadingsEditable({}, ['en'], shapes(), 'ReadingsMultipleSchemas');
+        const host = parse(html);
+        const slotSelects = [...host.querySelectorAll('select[data-readings-shape]')]
+            .filter((s) => s.dataset.readingsShape !== '');
+        expect(slotSelects.map((s) => s.dataset.readingsShape))
+            .toEqual(['schema_one', 'schema_two', 'schema_three']);
+        // The schema refs ReadingsFestive from each slot, so each opens festive —
+        // five fields including second_reading, not the four-field ferial default.
+        expect(slotSelects.every((s) => s.value === 'ReadingsFestive')).toBe(true);
+        const fields = [...host.querySelectorAll('input[data-schema="schema_one"]')].map((i) => i.dataset.field);
+        expect(fields).toContain('second_reading');
+    });
+
+    it('falls back to the data\'s own keys when no shapes could be resolved', () => {
+        // The schema fetch failed. The panel still shows what is stored rather
+        // than an empty box, and offers no shape select it cannot populate.
+        const host = parse(renderReadingsEditable({ en: { gospel: 'Mt 1:1' } }, ['en'], []));
+        expect(host.querySelector('select[data-readings-shape]')).toBeNull();
+        const inputs = [...host.querySelectorAll('input[data-locale]')];
+        expect(inputs.map((i) => i.dataset.field)).toEqual(['gospel']);
+        expect(inputs[0].value).toBe('Mt 1:1');
     });
 });

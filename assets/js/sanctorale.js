@@ -1944,10 +1944,12 @@ function readingInput(loc, schema, name, value, label) {
  *
  * @param {Record<string, unknown>} entries locale => that locale's readings
  * @param {string[]} locales the locales to render inputs for
+ * @param {?Array<object>} [shapes] the resolved shapes; defaults to the fetched set
+ * @param {string} [shapeId] the chosen shape; defaults to the open entry's
  * @returns {string}
  */
-function renderReadingsEditable(entries, locales) {
-    const shapes = readingsShapes ?? [];
+export function renderReadingsEditable(entries, locales, shapes = readingsShapes, shapeId = editState.readingsShape) {
+    shapes = shapes ?? [];
     if (!shapes.length) {
         // The schema never arrived. Rendering a shape select with nothing in it
         // would be worse than rendering none: fall back to the data's own keys,
@@ -1955,7 +1957,7 @@ function renderReadingsEditable(entries, locales) {
         return locales.map((loc) => renderLocaleFields(loc, entries[loc], null)).join('');
     }
 
-    const shape = shapes.find((s) => s.id === editState.readingsShape) ?? shapes[0];
+    const shape = shapes.find((s) => s.id === shapeId) ?? shapes[0];
     // Only flat and string branches for a nested shape's slots — see the note on
     // resolveReadingsShapes() for why a slot is not offered a nested shape.
     const slotChoices = shapes.filter((s) => s.kind !== 'nested');
