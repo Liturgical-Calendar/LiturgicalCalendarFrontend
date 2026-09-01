@@ -997,11 +997,10 @@ async function showDetail(eventKey, missalId, editing = false) {
     // lectionary index ride along because a 404 on the readings route is the case
     // that most needs them — there is no response to read a shape or a locale set
     // off, and that is exactly when a blank form has to be offered.
-    const [names, readings, shapes, target] = await Promise.allSettled([
+    const [names, readings, shapes] = await Promise.allSettled([
         loadI18n(missalId),
         getJson(`/lectionary/${encodeURIComponent(state.rite)}/sanctorale/${encodeURIComponent(eventKey)}`),
-        loadReadingsShapes(),
-        readingsTargetFromIndex(missalId)
+        loadReadingsShapes()
     ]);
 
     if (seq !== detailSeq) return;
@@ -1009,10 +1008,18 @@ async function showDetail(eventKey, missalId, editing = false) {
     // A shape select this page could not build its options for is worse than
     // none; renderReadingsEditable() falls back to the data's own keys.
     if (shapes.status === 'rejected') readingsShapes = null;
-    if (target.status === 'fulfilled') editState.readingsLocales = target.value.locales;
 
     recordDetailOriginals(names, readings, eventKey);
     dom.detailBody.innerHTML = renderDetailBody(row, names, readings, eventKey);
+
+    // The lectionary INDEX is deliberately NOT awaited above. It is needed only
+    // when the per-event route 404s — an entry nothing has curated yet — which is
+    // the one case with no response to read a locale set off. Fetching it on every
+    // modal open would put a request the common path never uses in front of the
+    // form, and the modal is not usable until this whole function has rendered it.
+    if (editState.editing && isNothingCuratedYet(readings)) {
+        refreshCreateReadings(seq);
+    }
 
     // The custom text only means anything in Custom mode, and is revealed with
     // the value it had rather than cleared: switching away and back must not
@@ -1159,7 +1166,9 @@ function renderDetailBody(row, names, readings, eventKey) {
         editState.editing && readings.status === 'fulfilled'
             ? renderReadingsForm(readings.value)
             : (editState.editing && isNothingCuratedYet(readings)
-                ? renderReadingsBlank(editState.readingsLocales)
+                // Filled in by refreshCreateReadings() once the lectionary index
+                // names the write target's locales — see showDetail().
+                ? '<div id="entryReadingsBlock"></div>'
                 : renderReadingsOutcome(readings))
     ].join('');
 }
@@ -1222,17 +1231,43 @@ async function refreshCreateNames() {
         ? renderNamesForm(payload, '')
         : `<div class="alert alert-warning">${escapeHtml(i18n.namesUnavailable)}</div>`;
 
-    // The readings target moves with the Missal too: an edition that owns a
-    // lectionary folder writes into it, one that does not writes into the shared
-    // rite corpus, and the two carry different locale sets. Left stale, the panel
-    // would collect citations for locales the chosen edition cannot store.
-    const readingsBlock = el('entryReadingsBlock');
-    if (!readingsBlock) return;
-    const target = await readingsTargetFromIndex(editState.missalId);
+    await refreshCreateReadings(seq);
+}
+
+/**
+ * Fill the create modal's readings block, off the modal-open critical path.
+ *
+ * Also re-run when the target Missal changes: the readings target moves with it —
+ * an edition that owns a lectionary folder writes into it, one that does not
+ * writes into the shared rite corpus, and the two carry different locale sets.
+ * Left stale, the panel would collect citations for locales the chosen edition
+ * cannot store.
+ *
+ * Guarded by `detailSeq`, like every other await here, so a curator who flips
+ * between two Missals before the first index fetch resolves sees the SECOND
+ * choice's locales rather than having the first overwrite it on arrival.
+ *
+ * @param {number} seq the caller's detailSeq token
+ */
+async function refreshCreateReadings(seq) {
+    if (!el('entryReadingsBlock')) return;
+
+    const [shapes, target] = await Promise.allSettled([
+        loadReadingsShapes(),
+        readingsTargetFromIndex(editState.missalId)
+    ]);
     if (seq !== detailSeq) return;
-    editState.readingsTier = target.tier;
-    editState.readingsLocales = target.tier === 'none' ? [] : target.locales;
-    el('entryReadingsBlock').innerHTML = renderReadingsBlank(editState.readingsLocales);
+
+    if (shapes.status === 'rejected') readingsShapes = null;
+    if (target.status === 'fulfilled') {
+        // 'none' is a rite with no lectionary corpus (Ambrosian, API #957); the
+        // handler REJECTS a create body carrying `readings` for it, so no panel.
+        editState.readingsTier = target.value.tier;
+        editState.readingsLocales = target.value.tier === 'none' ? [] : target.value.locales;
+    }
+
+    const block = el('entryReadingsBlock');
+    if (block) block.innerHTML = renderReadingsBlank(editState.readingsLocales);
 }
 
 /**
@@ -1292,21 +1327,19 @@ async function showCreate() {
     // per-event route, which is what makes a readings panel possible here at all:
     // there is no event_key yet to ask about, so the per-event route could only
     // ever answer 404. The index names the sources and their locales for the rite.
-    const [names, shapes, target] = await Promise.allSettled([
-        loadI18n(editState.missalId),
-        loadReadingsShapes(),
-        readingsTargetFromIndex(editState.missalId)
-    ]);
-    if (seq !== detailSeq) return;
-
-    const payload = names.status === 'fulfilled' ? names.value : null;
-    if (shapes.status === 'rejected') readingsShapes = null;
-    if (target.status === 'fulfilled') {
-        // 'none' is a rite with no lectionary corpus (Ambrosian, API #957); the
-        // handler REJECTS a create body carrying `readings` for it, so no panel.
-        editState.readingsTier = target.value.tier;
-        editState.readingsLocales = target.value.tier === 'none' ? [] : target.value.locales;
+    // ONLY the names fetch is awaited here. The readings panel needs two more —
+    // the schema and the lectionary index — and the index is genuinely expensive
+    // (the API walks every source folder and every locale file in the rite to
+    // build it). Awaiting all three would hold the modal shut behind the slowest,
+    // for a panel that is not even the first thing a curator fills in, so the
+    // readings block is filled in afterwards by refreshCreateReadings().
+    let payload;
+    try {
+        payload = await loadI18n(editState.missalId);
+    } catch {
+        payload = null;
     }
+    if (seq !== detailSeq) return;
 
     dom.detailBody.innerHTML = `
         <div class="row g-3 mb-3">
@@ -1326,9 +1359,10 @@ async function showCreate() {
         <div id="entryNamesBlock">${payload
             ? renderNamesForm(payload, '')
             : `<div class="alert alert-warning">${escapeHtml(i18n.namesUnavailable)}</div>`}</div>
-        <div id="entryReadingsBlock">${renderReadingsBlank(editState.readingsLocales)}</div>`;
+        <div id="entryReadingsBlock"></div>`;
 
     wireGradeDisplayToggle();
+    refreshCreateReadings(seq);
 
     el('entryTargetMissal')?.addEventListener('change', (event) => {
         editState.missalId = event.target.value;
@@ -2697,10 +2731,30 @@ async function refreshCapabilities(seq) {
     });
     if (seq !== selectionSeq) return;
     state.capabilities = capabilities;
-    dom.newEntry?.classList.toggle(
-        'd-none',
-        ![...state.capabilities.values()].some((c) => c.canCreate)
-    );
+    revealCreateButton();
+}
+
+/**
+ * Show `#newEntryBtn` only when a create is actually possible: the caller holds
+ * CREATE on some applicable Missal, AND the composed sanctorale has loaded.
+ *
+ * The second condition is not belt-and-braces. Capabilities and the sanctorale
+ * are fetched on SEPARATE async paths off one selection change, so the button
+ * could be revealed and clicked while `state.composed` was still empty — and
+ * `calendarLabelFor()` reads the calendar label off a composed row, because the
+ * API derives a Missal's calendar itself (`GENERAL ROMAN` for an editio typica,
+ * the nation code for a national edition) and does not publish it on the
+ * `/missals` index. With no row to read, the label fell back to `''` and the
+ * create `PUT` was rejected 400: "This Missal's entries belong to the `US`
+ * calendar, but the payload says ``."
+ *
+ * Latent before, and rare enough to look like flake; adding the readings panel's
+ * fetches widened the window enough for CI to catch it. Called from both paths so
+ * whichever finishes last reveals the button.
+ */
+function revealCreateButton() {
+    const canCreate = [...state.capabilities.values()].some((c) => c.canCreate);
+    dom.newEntry?.classList.toggle('d-none', !(canCreate && state.composed.length > 0));
 }
 
 /**
@@ -2753,11 +2807,15 @@ async function loadSanctorale(seq = selectionSeq) {
         })));
         if (seq !== selectionSeq) return;
         state.composed = compose(layers);
+        // The other half of the race revealCreateButton() closes: whichever of
+        // capabilities and the sanctorale resolves last reveals the button.
+        revealCreateButton();
         renderFromOptions();
         render();
     } catch (error) {
         if (seq !== selectionSeq) return;
         state.composed = [];
+        revealCreateButton();
         notice('danger', escapeHtml(i18n.loadFailed.replace('%s', error.message)));
         render();
     }
