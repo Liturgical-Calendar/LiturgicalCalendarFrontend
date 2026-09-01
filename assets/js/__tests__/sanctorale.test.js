@@ -7,7 +7,7 @@
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 
-let applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits, renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47, filterByMissal, formatGrade, gradeDisplayOf, hasNestedSchemas, schemaKeysOf, applicableTiers;
+let applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits, renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47, filterByMissal, formatGrade, gradeDisplayOf, hasNestedSchemas, schemaKeysOf, applicableTiers, monthOf;
 
 const VA_1970 = { missal_id: 'EDITIO_TYPICA_1970', region: 'VA', year_published: 1970 };
 const VA_2002 = { missal_id: 'EDITIO_TYPICA_2002', region: 'VA', year_published: 2002 };
@@ -24,7 +24,7 @@ beforeAll(async () => {
     ({ applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits,
        renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47,
        filterByMissal, formatGrade, gradeDisplayOf, hasNestedSchemas, schemaKeysOf,
-       applicableTiers } = mod);
+       applicableTiers, monthOf } = mod);
 });
 
 describe('baseRegionFor', () => {
@@ -625,5 +625,24 @@ describe('applicableTiers', () => {
         // apply here must filter down to nothing — the function does not special
         // case that; deciding what to render for an empty list is the caller's job.
         expect(applicableTiers([US_TIER, IT_TIER], ['EDITIO_TYPICA_2002'])).toEqual([]);
+    });
+});
+
+describe('monthOf', () => {
+    // What saveEntry() and deleteEntry() call after reload(), to follow a row to
+    // its new tab rather than leave the editor on the tab they started from.
+    const APRIL_ROW  = { event_key: 'StIsidore', month: 4, day: 4 };
+    const OCTOBER_ROW = { event_key: 'StGregoryGreat', month: 10, day: 3 };
+
+    it('reports the month a key currently lives on', () => {
+        expect(monthOf([APRIL_ROW, OCTOBER_ROW], 'StIsidore')).toBe(4);
+        expect(monthOf([APRIL_ROW, OCTOBER_ROW], 'StGregoryGreat')).toBe(10);
+    });
+
+    it('returns null when the key is not in the composed list at all', () => {
+        // The plain-delete case: nothing else declares the key, so there is
+        // nothing to follow to — the caller must leave the current tab alone.
+        expect(monthOf([APRIL_ROW], 'NoSuchKey')).toBeNull();
+        expect(monthOf([], 'StIsidore')).toBeNull();
     });
 });

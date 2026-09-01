@@ -912,6 +912,7 @@ async function saveEntry() {
     try {
         const data = await writeJson(editState.creating ? 'PUT' : 'PATCH', path, payload);
         const outcome = reportWrite(data, editState.creating ? i18n.created : i18n.saved);
+        const savedKey = editState.eventKey;
         bootstrap.Modal.getOrCreateInstance(dom.detailModal).hide();
         // Cleared explicitly rather than left for the `hidden.bs.modal` listener,
         // whose fade-out timing races reload() below: without this, reload()'s own
@@ -920,6 +921,15 @@ async function saveEntry() {
         state.event = '';
         if (outcome.applied) {
             await reload();
+            // Follow the row to wherever it landed, rather than leaving the editor
+            // on the tab they started from — a curator who moves a celebration to
+            // another month must see it move, not have to go find it.
+            const month = monthOf(state.composed, savedKey);
+            if (month !== null && month !== state.month) {
+                state.month = month;
+                syncHash();
+                render();
+            }
         }
     } catch (error) {
         if (!(error instanceof ApiWriteError)) throw error;
@@ -960,6 +970,7 @@ async function deleteEntry() {
     try {
         const data = await writeJson('DELETE', path);
         const outcome = reportWrite(data, i18n.deleted);
+        const deletedKey = editState.eventKey;
         bootstrap.Modal.getOrCreateInstance(dom.detailModal).hide();
         // See the identical comment in saveEntry(): clearing here, not waiting for
         // `hidden.bs.modal`, is what stops reload() from reopening this modal.
@@ -969,6 +980,16 @@ async function deleteEntry() {
                 window.showToast(i18n.readingsRetained, 'info');
             }
             await reload();
+            // A plain delete leaves nothing to follow — the row is simply gone, and
+            // staying put is correct. Deleting an OVERRIDE instead reveals an
+            // earlier edition's row, which is usually the same month/day but is
+            // not guaranteed to be — follow it if the reveal moved it.
+            const month = monthOf(state.composed, deletedKey);
+            if (month !== null && month !== state.month) {
+                state.month = month;
+                syncHash();
+                render();
+            }
         }
     } catch (error) {
         if (!(error instanceof ApiWriteError)) throw error;
@@ -1685,6 +1706,22 @@ function readHash() {
     state.nameLocale = params.get('locale') ?? '';
     state.event      = params.get('event') ?? '';
     if (month >= 1 && month <= 12) state.month = month;
+}
+
+/**
+ * The month a celebration currently lives on, or `null` when it is not in the
+ * composed list at all.
+ *
+ * Exists so a curator can be followed to where their edit landed rather than
+ * left on the tab they started from — see the `monthOf()` call after `reload()`
+ * in saveEntry() and deleteEntry().
+ *
+ * @param {Array<object>} composed
+ * @param {string} eventKey
+ * @returns {number|null}
+ */
+export function monthOf(composed, eventKey) {
+    return composed.find((r) => r.event_key === eventKey)?.month ?? null;
 }
 
 /**
