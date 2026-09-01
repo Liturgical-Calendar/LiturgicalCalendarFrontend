@@ -642,12 +642,30 @@ async function showDetail(eventKey, missalId, editing = false) {
         }
     }
 
+    if (readings.status === 'fulfilled') {
+        for (const tier of readings.value.readings ?? []) {
+            for (const [loc, entry] of Object.entries(tier.entries ?? {})) {
+                editState.original.readings[loc] = entry;
+            }
+        }
+    } else {
+        // A 404 means nothing is curated yet, which is a normal state, not a
+        // failure — but there is then no original to diff against.
+        editState.original.readings = {};
+    }
+
     dom.detailBody.innerHTML = [
         editState.editing ? renderStructureForm(row) : renderStructure(row),
         names.status === 'fulfilled'
             ? (editState.editing ? renderNamesForm(names.value, eventKey) : renderNames(names.value, eventKey))
             : `<div class="alert alert-warning">${escapeHtml(i18n.namesUnavailable)}</div>`,
-        renderReadingsOutcome(readings)
+        // Guarded on `fulfilled`: a 404 means nothing is curated for this event yet,
+        // which renderReadingsOutcome already reports as "nothing curated" rather
+        // than a failure, so that read-only fallback covers the edit path too —
+        // renderReadingsForm has no tier information to work from on a 404.
+        editState.editing && readings.status === 'fulfilled'
+            ? renderReadingsForm(readings.value)
+            : renderReadingsOutcome(readings)
     ].join('');
 
     // The custom text only means anything in Custom mode, and is revealed with
@@ -923,9 +941,92 @@ function readNamesForm() {
     return names;
 }
 
-/** Placeholder returning no readings. The Readings tab task replaces this. */
+/**
+ * Readings per locale, editable.
+ *
+ * The tier decides what this panel may do, and the three cases are genuinely
+ * different rather than degrees of the same one:
+ *
+ * - `missal` — the edition has its own lectionary folder; the write stays inside it.
+ * - `rite`   — the write lands in the rite-wide `sanctorum` corpus, which every
+ *              Missal of the rite reads. The note says so; a curator editing a
+ *              1970 reading is editing what 2002 and 2008 also see.
+ * - `none`   — the rite has no corpus at all (Ambrosian, API #957). Read-only,
+ *              and the payload omits `readings` entirely: the handler REJECTS a
+ *              body that carries it.
+ */
+function renderReadingsForm(payload) {
+    if (payload.lectionary_available === false) {
+        editState.readingsTier = 'none';
+        return `
+            <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.readings)}</h6>
+            <div class="alert alert-secondary mb-0">${escapeHtml(i18n.readingsNotWritable)}</div>`;
+    }
+
+    const tiers = payload.readings ?? [];
+    editState.readingsTier = tiers.some((t) => t.tier === 'missal') ? 'missal' : 'rite';
+
+    const panels = tiers.map((tier) => {
+        const entries = tier.entries ?? {};
+        const schemas = schemaKeysOf(entries);
+        const field = (loc, schema, name, value) => `
+            <div class="col-12 col-md-6 mb-2">
+                <label class="form-label small text-muted">${escapeHtml(name)}</label>
+                <input type="text" class="form-control form-control-sm"
+                       data-locale="${escapeHtml(loc)}" data-schema="${escapeHtml(schema ?? '')}"
+                       data-field="${escapeHtml(name)}" value="${escapeHtml(value ?? '')}">
+            </div>`;
+
+        const localeBlock = (loc, schema) => {
+            const readings = schema ? entries[loc]?.[schema] : entries[loc];
+            if (!readings || typeof readings !== 'object') return '';
+            return `
+                <div class="mb-2"><code class="small">${escapeHtml(loc)}</code>
+                    <div class="row">${Object.entries(readings)
+                        .map(([name, value]) => field(loc, schema, name, value)).join('')}</div>
+                </div>`;
+        };
+
+        const body = schemas.length
+            ? schemas.map((schema) => `
+                <div class="mb-3">
+                    <div class="fw-semibold small mb-1">${escapeHtml(i18n.schemas?.[schema] ?? schema)}</div>
+                    ${Object.keys(entries).map((loc) => localeBlock(loc, schema)).join('')}
+                </div>`).join('')
+            : Object.keys(entries).map((loc) => localeBlock(loc, null)).join('');
+
+        return `
+            <div class="mb-3">
+                <div class="mb-1"><span class="badge bg-dark">${escapeHtml(tier.tier)}</span>
+                    <code class="small ms-1">${escapeHtml(tier.source_id)}</code></div>
+                ${tier.tier === 'rite'
+                    ? `<div class="alert alert-warning py-1 px-2 small">${escapeHtml(i18n.readingsShared)}</div>` : ''}
+                ${body}
+            </div>`;
+    }).join('');
+
+    return `
+        <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.readings)}</h6>
+        <div id="entryReadings">${panels}</div>`;
+}
+
+/**
+ * The Readings panel's values, rebuilt into the nested shape the API stores.
+ * A blank input stays blank: a curated-as-blank citation is a decision.
+ */
 function readReadingsForm() {
-    return {};
+    const readings = {};
+    document.querySelectorAll('#entryReadings input[data-locale]').forEach((input) => {
+        const { locale, schema, field } = input.dataset;
+        readings[locale] = readings[locale] ?? {};
+        if (schema) {
+            readings[locale][schema] = readings[locale][schema] ?? {};
+            readings[locale][schema][field] = input.value;
+        } else {
+            readings[locale][field] = input.value;
+        }
+    });
+    return readings;
 }
 
 /**
