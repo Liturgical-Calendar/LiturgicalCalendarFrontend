@@ -15,7 +15,6 @@ parameters:
         # corresponding ignoreErrors entry below also stays unmatched.
         - admin-users.php
         - developer-dashboard.php
-        - missals-editor.php
         - admin-decrees.php
         - easter.php
         - examples.php
@@ -44,7 +43,6 @@ parameters:
                 - admin-dashboard.php
                 - admin-users.php
                 - developer-dashboard.php
-                - missals-editor.php
                 - admin-decrees.php
                 - easter.php
                 - examples.php

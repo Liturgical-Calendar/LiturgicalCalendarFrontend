@@ -78,7 +78,7 @@ export default defineConfig({
                 ...devices['Desktop Chrome'],
             },
         },
-        // The auth-requiring counterpart to `chromium-ci`: the four calendar-data
+        // The auth-requiring counterpart to `chromium-ci`: the three calendar-data
         // specs that issue #448 blocked, unblocked by auth.setup.ts's migration to
         // the Zitadel OIDC flow, plus admin-tests (issue #453).
         //
@@ -93,7 +93,7 @@ export default defineConfig({
         // unauthenticated request to index.php before any markup renders.
         {
             name: 'chromium-ci-auth',
-            testMatch: /(diocesan-calendar|national-calendar|wider-region-calendar|missals-editor|admin-tests)\.spec\.ts/,
+            testMatch: /(diocesan-calendar|national-calendar|wider-region-calendar|admin-tests)\.spec\.ts/,
             use: {
                 ...devices['Desktop Chrome'],
                 storageState: 'e2e/.auth/user.json',

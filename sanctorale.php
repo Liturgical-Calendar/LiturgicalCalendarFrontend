@@ -20,9 +20,9 @@ include_once 'includes/common.php';
 include_once 'includes/messages.php';
 
 // Require authentication - redirect to home if not logged in.
-// Same gate as temporale.php and missals-editor.php: the underlying /missals data
-// is public, but this page sits in the calendar-role section of the admin sidebar
-// alongside them, and an ungated page there would be the odd one out.
+// Same gate as temporale.php: the underlying /missals data is public, but this
+// page sits in the calendar-role section of the admin sidebar alongside it, and
+// an ungated page there would be the odd one out.
 if (!$authHelper->isAuthenticated) {
     header('Location: index.php');
     exit;

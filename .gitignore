@@ -127,7 +127,6 @@ api/*
 !admin-users.php
 !change-requests.php
 !developer-dashboard.php
-!missals-editor.php
 !sanctorale.php
 !easter.php
 !examples.php
