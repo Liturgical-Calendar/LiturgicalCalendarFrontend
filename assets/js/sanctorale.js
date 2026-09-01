@@ -788,8 +788,22 @@ async function reload() {
         if (seq !== selectionSeq) return;
         renderLocaleOptions();
         await loadSanctorale(seq);
+        if (seq !== selectionSeq) return;
+        // The URL last, once loadCatalogue and renderLocaleOptions have had their
+        // say: a nation that does not exist in the new rite is dropped, and the
+        // locale may have been re-derived. Writing the hash before that leaves it
+        // describing a selection the page is not showing.
+        syncHash();
     } catch (error) {
         if (seq !== selectionSeq) return;
+        // Clear before reporting. Otherwise a failed Ambrosian load leaves the
+        // previous rite's celebrations on screen underneath an error saying the
+        // load failed, which is a worse lie than showing nothing.
+        state.missals    = [];
+        state.baseRegion = null;
+        state.composed   = [];
+        renderFromOptions();
+        render();
         notice('danger', escapeHtml(i18n.loadFailed.replace('%s', error.message)));
     }
 }
@@ -799,8 +813,15 @@ async function recompose() {
     const seq = ++selectionSeq;
     try {
         await loadSanctorale(seq);
+        if (seq !== selectionSeq) return;
+        // renderFromOptions may have retired the selected edition; drop it from
+        // the URL rather than leaving a filter there that no longer applies.
+        syncHash();
     } catch (error) {
         if (seq !== selectionSeq) return;
+        state.composed = [];
+        renderFromOptions();
+        render();
         notice('danger', escapeHtml(i18n.loadFailed.replace('%s', error.message)));
     }
 }
@@ -875,6 +896,10 @@ async function init() {
 
     if (!catalogueFailed) {
         await loadSanctorale();
+        // A deep link can name a calendar, locale or edition that this rite does
+        // not have. Rewrite it once, so the URL matches what is actually shown and
+        // copying it out of the address bar reproduces this page.
+        syncHash();
     }
 }
 
