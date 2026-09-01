@@ -145,6 +145,18 @@ if (!$authHelper->isAuthenticated) {
                 readings:           <?php echo json_encode(_('Lectionary readings'), JSON_HEX_TAG); ?>,
                 date:               <?php echo json_encode(_('Date'), JSON_HEX_TAG); ?>,
                 grade:              <?php echo json_encode(_('Grade'), JSON_HEX_TAG); ?>,
+                <?php // Liturgical ranks, keyed by the integer the data carries. The rows give a
+                      // bare `grade` and no `grade_lcl`, so the names are translated here. ?>
+                grades: {
+                    '0': <?php echo json_encode(_('Weekday'), JSON_HEX_TAG); ?>,
+                    '1': <?php echo json_encode(_('Commemoration'), JSON_HEX_TAG); ?>,
+                    '2': <?php echo json_encode(_('Optional memorial'), JSON_HEX_TAG); ?>,
+                    '3': <?php echo json_encode(_('Memorial'), JSON_HEX_TAG); ?>,
+                    '4': <?php echo json_encode(_('Feast'), JSON_HEX_TAG); ?>,
+                    '5': <?php echo json_encode(_('Feast of the Lord'), JSON_HEX_TAG); ?>,
+                    '6': <?php echo json_encode(_('Solemnity'), JSON_HEX_TAG); ?>,
+                    '7': <?php echo json_encode(_('Higher solemnity'), JSON_HEX_TAG); ?>
+                },
                 calendarField:      <?php echo json_encode(_('Calendar'), JSON_HEX_TAG); ?>,
                 color:              <?php echo json_encode(_('Colour'), JSON_HEX_TAG); ?>,
                 common:             <?php echo json_encode(_('Common'), JSON_HEX_TAG); ?>,

@@ -7,7 +7,7 @@
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 
-let applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits, renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47, filterByMissal;
+let applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits, renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47, filterByMissal, formatGrade;
 
 const VA_1970 = { missal_id: 'EDITIO_TYPICA_1970', region: 'VA', year_published: 1970 };
 const VA_2002 = { missal_id: 'EDITIO_TYPICA_2002', region: 'VA', year_published: 2002 };
@@ -23,7 +23,7 @@ beforeAll(async () => {
     const mod = await import('../sanctorale.js');
     ({ applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits,
        renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47,
-       filterByMissal } = mod);
+       filterByMissal, formatGrade } = mod);
 });
 
 describe('baseRegionFor', () => {
@@ -281,5 +281,39 @@ describe('filterByMissal', () => {
     it('leaves month grouping intact, so the tab counts follow the filter', () => {
         const jan = filterByMissal(composed, 'EDITIO_TYPICA_2002').filter((r) => r.month === 1);
         expect(jan).toHaveLength(1);
+    });
+});
+
+describe('formatGrade', () => {
+    const strings = {
+        grades: {
+            '0': 'Weekday', '1': 'Commemoration', '2': 'Optional memorial', '3': 'Memorial',
+            '4': 'Feast', '5': 'Feast of the Lord', '6': 'Solemnity', '7': 'Higher solemnity'
+        }
+    };
+
+    it('shows the rank as "number - name", not a bare integer', () => {
+        expect(formatGrade({ grade: 3 }, strings)).toBe('3 - Memorial');
+        expect(formatGrade({ grade: 6 }, strings)).toBe('6 - Solemnity');
+    });
+
+    it('keeps grade 0 rather than treating it as absent', () => {
+        expect(formatGrade({ grade: 0 }, strings)).toBe('0 - Weekday');
+    });
+
+    it('puts a display override in front but keeps the rank', () => {
+        // US_2011 shows IndependenceDay as "National Holiday". It is still a
+        // memorial, and the override hides that without replacing it.
+        expect(formatGrade({ grade: 3, grade_display: 'National Holiday' }, strings))
+            .toBe('National Holiday (3 - Memorial)');
+    });
+
+    it('ignores a null or blank override', () => {
+        expect(formatGrade({ grade: 4, grade_display: null }, strings)).toBe('4 - Feast');
+        expect(formatGrade({ grade: 4, grade_display: '   ' }, strings)).toBe('4 - Feast');
+    });
+
+    it('falls back to the number alone for a rank it has no name for', () => {
+        expect(formatGrade({ grade: 9 }, strings)).toBe('9');
     });
 });

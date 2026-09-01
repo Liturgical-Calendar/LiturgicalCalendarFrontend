@@ -170,6 +170,34 @@ export function preferredLocale(available, pageLocale) {
     return related ?? available[0];
 }
 
+/**
+ * The liturgical rank, as "number - name".
+ *
+ * The rows carry `grade` as a bare integer and no `grade_lcl`, so the name comes
+ * from the page's own translated list rather than from the API. The number is
+ * kept alongside it because it is what the data actually holds, what the schema
+ * validates, and what a curator comparing two editions is looking at.
+ *
+ * `grade_display` is a display OVERRIDE, not a translation — US_2011 shows
+ * IndependenceDay as "National Holiday". It is shown in front, with the rank kept
+ * in parentheses, because the override hides the rank without replacing it: the
+ * celebration is still a memorial, and losing that is losing a fact.
+ *
+ * @param {{grade?: number, grade_display?: ?string}} row
+ * @param {Record<string,string>} strings
+ */
+export function formatGrade(row, strings) {
+    const grade = row?.grade;
+    const name  = strings?.grades?.[String(grade)];
+    const rank  = name ? `${grade} - ${name}` : String(grade ?? '');
+
+    const override = row?.grade_display;
+    if (typeof override === 'string' && override.trim() !== '') {
+        return rank ? `${override} (${rank})` : override;
+    }
+    return rank;
+}
+
 export function baseRegionFor(missals, rite) {
     const regions = [...new Set(missals.map((m) => m.region))];
     // A rite with a single region has no national missals to distinguish, so every
@@ -418,7 +446,7 @@ function renderStructure(row) {
         <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.structure)}</h6>
         <div class="row mb-3">
             ${field(i18n.date, `${monthName(row.month)} ${row.day}`)}
-            ${field(i18n.grade, row.grade_display ?? row.grade)}
+            ${field(i18n.grade, formatGrade(row, i18n))}
             ${field(i18n.calendarField, row.calendar)}
             ${field(i18n.color, (row.color ?? []).join(', '))}
             ${field(i18n.common, (row.common ?? []).join(', '))}
