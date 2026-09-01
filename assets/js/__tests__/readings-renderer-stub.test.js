@@ -18,14 +18,13 @@
  */
 import { describe, expect, it } from 'vitest';
 import { ReadingsRenderer as Stub } from './stubs/components-js.js';
-
-const real = await (async () => {
-    try {
-        return (await import('../../components-js/index.js')).ReadingsRenderer;
-    } catch {
-        return null;
-    }
-})();
+// Aliased by vitest.config.js to a real build when a development checkout has the
+// gitignored `assets/components-js` symlink, and to a null-exporting stand-in
+// otherwise — so this suite SKIPS in CI instead of failing to resolve. The choice
+// has to be made in the config: Vite resolves import specifiers at transform time,
+// so a dynamic import guarded by try/catch here fails the whole suite before the
+// guard can run, which is exactly how this first went wrong.
+import { ReadingsRenderer as real } from '@components-js-real';
 
 describe.skipIf(!real)('the ReadingsRenderer stub mirrors the real package', () => {
     it('has the same reading labels, in the same order', () => {
