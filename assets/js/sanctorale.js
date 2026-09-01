@@ -22,8 +22,16 @@ if (!config) {
 
 const { apiUrl, locale, i18n } = config ?? { apiUrl: '', locale: 'en', i18n: {} };
 
-/** Missals whose region is this are the typical editions: they apply to every calendar. */
-const UNIVERSAL_REGION = 'VA';
+/**
+ * The region carrying a rite's base missals — the editions that apply to every
+ * calendar in that rite, as opposed to a national missal that applies to one.
+ *
+ * Needed because the marker is not uniform: the Roman typical editions carry the
+ * Vatican's `VA`, while the Ambrosian edition carries `AMBROSIAN`, which is not a
+ * nation code at all. A rite whose catalogue has only one region needs no entry
+ * here — see baseRegionFor().
+ */
+const RITE_BASE_REGION = { roman: 'VA', ambrosian: 'AMBROSIAN' };
 
 const el = (id) => document.getElementById(id);
 
@@ -43,6 +51,7 @@ const state = {
     rite: 'roman',
     calendar: '',
     missals: [],
+    baseRegion: null,
     composed: [],
     month: new Date().getUTCMonth() + 1,
     search: ''
@@ -64,13 +73,20 @@ const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({
 const monthName = (m) => new Intl.DateTimeFormat(locale, { month: 'long', timeZone: 'UTC' })
     .format(new Date(Date.UTC(2001, m - 1, 1)));
 
+class HttpError extends Error {
+    constructor(status, path) {
+        super(`HTTP ${status} for ${path}`);
+        this.status = status;
+    }
+}
+
 async function getJson(path) {
     const response = await fetch(`${apiUrl}${path}`, {
         headers: { Accept: 'application/json' },
         credentials: 'omit'
     });
     if (!response.ok) {
-        throw new Error(`HTTP ${response.status} for ${path}`);
+        throw new HttpError(response.status, path);
     }
     return response.json();
 }
@@ -85,9 +101,20 @@ async function getJson(path) {
  * @param {Array<object>} missals
  * @param {string} calendar Region code, or '' for the General Roman calendar.
  */
-export function applicableMissals(missals, calendar) {
+export function baseRegionFor(missals, rite) {
+    const regions = [...new Set(missals.map((m) => m.region))];
+    // A rite with a single region has no national missals to distinguish, so every
+    // one of its missals is a base missal. This is what makes the Ambrosian rite
+    // work without special-casing it at the call site.
+    if (regions.length <= 1) {
+        return regions[0] ?? null;
+    }
+    return RITE_BASE_REGION[rite] ?? regions[0];
+}
+
+export function applicableMissals(missals, calendar, baseRegion) {
     return missals
-        .filter((m) => m.region === UNIVERSAL_REGION || (calendar !== '' && m.region === calendar))
+        .filter((m) => m.region === baseRegion || (calendar !== '' && m.region === calendar))
         .sort((a, b) => (a.year_published ?? 0) - (b.year_published ?? 0));
 }
 
@@ -233,17 +260,40 @@ async function showDetail(eventKey, missalId) {
         names.status === 'fulfilled'
             ? renderNames(names.value, eventKey)
             : `<div class="alert alert-warning">${escapeHtml(i18n.namesUnavailable)}</div>`,
-        readings.status === 'fulfilled'
-            ? renderReadings(readings.value)
-            : `<div class="alert alert-warning">${escapeHtml(i18n.readingsUnavailable)}</div>`
+        renderReadingsOutcome(readings)
     ].join('');
 }
 
-async function loadI18n(missalId) {
-    if (!i18nCache.has(missalId)) {
-        i18nCache.set(missalId, await getJson(`/missals/${encodeURIComponent(missalId)}/i18n`));
+/**
+ * A celebration with no curated readings answers 404, which is the SAME status a
+ * bad event key gets. Reporting that as "could not load" would tell a reader the
+ * request failed when in truth there is simply nothing there yet — so the two are
+ * separated here, and only a non-404 is treated as a failure.
+ *
+ * @param {PromiseSettledResult<object>} settled
+ */
+export function renderReadingsOutcome(settled, strings = i18n) {
+    if (settled.status === 'fulfilled') {
+        return renderReadings(settled.value, strings);
     }
-    return i18nCache.get(missalId);
+    if (settled.reason instanceof HttpError && settled.reason.status === 404) {
+        return `
+            <h6 class="text-uppercase text-muted small">${escapeHtml(strings.readings)}</h6>
+            <div class="alert alert-secondary mb-0">${escapeHtml(strings.noReadingsForEvent)}</div>`;
+    }
+    return `<div class="alert alert-warning">${escapeHtml(strings.readingsUnavailable)}</div>`;
+}
+
+export { HttpError };
+
+async function loadI18n(missalId) {
+    const cacheKey = `${state.rite}/${missalId}`;
+    if (!i18nCache.has(cacheKey)) {
+        i18nCache.set(cacheKey, await getJson(
+            `/missals/${encodeURIComponent(state.rite)}/${encodeURIComponent(missalId)}/i18n`
+        ));
+    }
+    return i18nCache.get(cacheKey);
 }
 
 function renderStructure(row) {
@@ -306,11 +356,11 @@ function renderNames(payload, eventKey) {
  * Ambrosian rite has no sanctorale lectionary at all — so it renders the API's
  * own message rather than an empty table that reads as a bug.
  */
-function renderReadings(payload) {
+function renderReadings(payload, strings = i18n) {
     if (payload.lectionary_available === false) {
         return `
-            <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.readings)}</h6>
-            <div class="alert alert-secondary mb-0">${escapeHtml(payload.message || i18n.noLectionary)}</div>`;
+            <h6 class="text-uppercase text-muted small">${escapeHtml(strings.readings)}</h6>
+            <div class="alert alert-secondary mb-0">${escapeHtml(payload.message || strings.noLectionary)}</div>`;
     }
 
     const tiers = (payload.readings ?? []).map((tier) => {
@@ -330,50 +380,57 @@ function renderReadings(payload) {
                     <span class="badge bg-dark">${escapeHtml(tier.tier)}</span>
                     <code class="small ms-1">${escapeHtml(tier.source_id)}</code>
                 </div>
-                <table class="table table-sm mb-1"><tbody>${entries || `<tr><td class="text-muted small">${escapeHtml(i18n.noEntries)}</td></tr>`}</tbody></table>
-                ${blank.length ? `<div class="small text-muted">${escapeHtml(i18n.emptyLabel)}: <code>${blank.map(escapeHtml).join('</code>, <code>')}</code></div>` : ''}
-                ${without.length ? `<div class="small text-muted">${escapeHtml(i18n.missingLabel)}: <code>${without.map(escapeHtml).join('</code>, <code>')}</code></div>` : ''}
+                <table class="table table-sm mb-1"><tbody>${entries || `<tr><td class="text-muted small">${escapeHtml(strings.noEntries)}</td></tr>`}</tbody></table>
+                ${blank.length ? `<div class="small text-muted">${escapeHtml(strings.emptyLabel)}: <code>${blank.map(escapeHtml).join('</code>, <code>')}</code></div>` : ''}
+                ${without.length ? `<div class="small text-muted">${escapeHtml(strings.missingLabel)}: <code>${without.map(escapeHtml).join('</code>, <code>')}</code></div>` : ''}
             </div>`;
     }).join('');
 
     return `
-        <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.readings)}</h6>
-        ${tiers || `<div class="text-muted small">${escapeHtml(i18n.noEntries)}</div>`}`;
+        <h6 class="text-uppercase text-muted small">${escapeHtml(strings.readings)}</h6>
+        ${tiers || `<div class="text-muted small">${escapeHtml(strings.noEntries)}</div>`}`;
 }
 
 // -------------------------------------------------------------------- loading
 
 async function loadCatalogue() {
-    const payload = await getJson('/missals');
+    // Rite-scoped since API #953. The unprefixed `/missals` still answers, but it
+    // means `roman`, so asking for it explicitly is what makes the rite selector real.
+    const payload = await getJson(`/missals/${encodeURIComponent(state.rite)}`);
     state.missals = payload.litcal_missals ?? payload ?? [];
+    state.baseRegion = baseRegionFor(state.missals, state.rite);
 
     const regions = [...new Set(state.missals.map((m) => m.region))]
-        .filter((r) => r !== UNIVERSAL_REGION)
+        .filter((r) => r !== state.baseRegion)
         .sort();
 
-    dom.calendar.innerHTML = [`<option value="">${escapeHtml(i18n.generalRoman)}</option>`]
+    const baseLabel = state.rite === 'ambrosian' ? i18n.ambrosianCalendar : i18n.generalRoman;
+    dom.calendar.innerHTML = [`<option value="">${escapeHtml(baseLabel)}</option>`]
         .concat(regions.map((r) => `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`))
         .join('');
+    // A rite change can invalidate the selected nation, so fall back to the base.
+    if (state.calendar && !regions.includes(state.calendar)) {
+        state.calendar = '';
+    }
+    dom.calendar.value = state.calendar;
 }
 
 async function loadSanctorale() {
-    // The Ambrosian sanctorale exists on disk but /missals announces only Roman
-    // missals (API #953), so say that plainly rather than render an empty table.
-    if (state.rite !== 'roman') {
+    notice('', '');
+
+    const applicable = applicableMissals(state.missals, state.calendar, state.baseRegion);
+    if (!applicable.length) {
         state.composed = [];
-        notice('info', escapeHtml(i18n.riteUnavailable));
+        notice('info', escapeHtml(i18n.noMissals));
         render();
         return;
     }
-    notice('', '');
-
-    const applicable = applicableMissals(state.missals, state.calendar);
     dom.tableBody.innerHTML = `<tr><td colspan="5" class="text-muted text-center py-4">${escapeHtml(i18n.loading)}</td></tr>`;
 
     try {
         const layers = await Promise.all(applicable.map(async (missal) => ({
             missal,
-            rows: await getJson(`/missals/${encodeURIComponent(missal.missal_id)}`)
+            rows: await getJson(`/missals/${encodeURIComponent(state.rite)}/${encodeURIComponent(missal.missal_id)}`)
         })));
         state.composed = compose(layers);
         render();
@@ -404,14 +461,27 @@ function readHash() {
 
 async function init() {
     readHash();
-    await loadCatalogue();
-    dom.rite.value     = state.rite;
-    dom.calendar.value = state.calendar;
+    // A failed catalogue must not abort init: the listeners below are what let the
+    // reader pick another rite or retry, and skipping them strands the page dead.
+    let catalogueFailed = false;
+    try {
+        await loadCatalogue();
+    } catch (error) {
+        catalogueFailed = true;
+        notice('danger', escapeHtml(i18n.loadFailed.replace('%s', error.message)));
+    }
+    dom.rite.value = state.rite;
 
-    dom.rite.addEventListener('change', () => {
+    dom.rite.addEventListener('change', async () => {
         state.rite = dom.rite.value;
         syncHash();
-        loadSanctorale();
+        try {
+            // Each rite has its own catalogue, so this is a reload, not a recompose.
+            await loadCatalogue();
+            await loadSanctorale();
+        } catch (error) {
+            notice('danger', escapeHtml(i18n.loadFailed.replace('%s', error.message)));
+        }
     });
     dom.calendar.addEventListener('change', () => {
         state.calendar = dom.calendar.value;
@@ -439,13 +509,16 @@ async function init() {
         dom.rite.value     = state.rite;
         dom.calendar.value = state.calendar;
         if (`${state.rite}|${state.calendar}` !== before) {
+            await loadCatalogue();
             await loadSanctorale();
         } else {
             render();
         }
     });
 
-    await loadSanctorale();
+    if (!catalogueFailed) {
+        await loadSanctorale();
+    }
 }
 
 // Guarded so the module can be imported by unit tests, and so it is inert if

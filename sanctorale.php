@@ -103,10 +103,6 @@ include_once 'includes/messages.php';
 
     <?php include_once('./layout/footer.php'); ?>
 
-    <?php
-    $riteUnavailable = _('The API does not yet expose a sanctorale for this rite, so nothing can be shown here. '
-        . 'The data exists; only the route is missing.');
-    ?>
     <!-- Config for JavaScript (assets/js/sanctorale.js, auto-loaded by layout/footer.php) -->
     <script>
         window.SanctoraleConfig = {
@@ -136,9 +132,13 @@ include_once 'includes/messages.php';
                 noEntries:          <?php echo json_encode(_('Nothing here.'), JSON_HEX_TAG); ?>,
                 noSearchHits:       <?php echo json_encode(_('No celebration in this month matches your search.'), JSON_HEX_TAG); ?>,
                 noLectionary:       <?php echo json_encode(_('No sanctorale lectionary is defined for this rite.'), JSON_HEX_TAG); ?>,
+                <?php // Distinct from a failed request: the API answers 404 for a celebration
+                      // whose readings simply have not been curated yet. ?>
+                noReadingsForEvent: <?php echo json_encode(_('No readings are curated for this celebration yet.'), JSON_HEX_TAG); ?>,
                 namesUnavailable:   <?php echo json_encode(_('Could not load the names for this celebration.'), JSON_HEX_TAG); ?>,
                 readingsUnavailable: <?php echo json_encode(_('Could not load the readings for this celebration.'), JSON_HEX_TAG); ?>,
-                riteUnavailable:    <?php echo json_encode($riteUnavailable, JSON_HEX_TAG); ?>,
+                ambrosianCalendar:  <?php echo json_encode(_('Ambrosian Rite'), JSON_HEX_TAG); ?>,
+                noMissals:          <?php echo json_encode(_('No Missal is published for this combination of rite and calendar.'), JSON_HEX_TAG); ?>,
                 <?php // translators: %s is the error reported by the API ?>
                 loadFailed:         <?php echo json_encode(_('Could not load the sanctorale: %s'), JSON_HEX_TAG); ?>
             }

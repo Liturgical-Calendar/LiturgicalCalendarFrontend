@@ -88,17 +88,20 @@ The page follows the existing admin-page shape: a PHP entry point for gating and
 under `assets/js/`, and shared partials under `includes/`.
 
 ```text
-sanctorale.php                       gating + markup shell
-assets/js/sanctorale.js              page controller
-assets/js/sanctorale-compose.js      layer composition, pure, unit-testable
-assets/js/sanctorale-locales.js      per-locale probe + cache (modelled on admin-decrees.js)
-includes/sanctorale-i18n.php         translatable strings
+sanctorale.php             markup shell + window.SanctoraleConfig (translatable strings)
+assets/js/sanctorale.js    the page, loaded as a module by layout/footer.php's same-name convention
 ```
 
-Composition is a **pure function** in its own module so it can be unit-tested without a DOM or a
-network: given the rite, the calendar, and the set of missal deltas, it returns the composed event list
-with each row's originating layer. That boundary is the single most valuable one here — the layering
-rules are where the subtlety lives, and they should be testable in isolation.
+**Shipped as two files, not five.** The design first split composition and locale handling into their
+own modules. Composition stayed worth isolating and did — but as _exported pure functions_
+(`baseRegionFor`, `applicableMissals`, `compose`, `rowsFor`, `monthsWithHits`) rather than a separate
+file, with the bootstrap guarded so the module imports cleanly under vitest. That buys the same
+testability without a module boundary that nothing else crosses.
+
+The other two never earned their existence. `sanctorale-locales.js` was to hold a per-locale probe that
+Issue #941 made unnecessary (see below), and `includes/sanctorale-i18n.php` would have split the translatable
+strings away from the page that declares them, which no sibling admin page does — they live in the
+`window.SanctoraleConfig` block, as `admin-decrees.php` and `admin-locales.php` do.
 
 ### Selection: the `CalendarResourcePicker` exception
 
@@ -107,15 +110,17 @@ The obvious move is the `CalendarResourcePicker` meta-component. It does not fit
 needs a **selectable** empty option meaning "the rite-level calendar" — exactly the exception already
 documented for `assets/js/usage.js` and raised upstream as liturgy-components-js#42.
 
-**What shipped instead: plain selectors driven by `/missals` itself.** Two facts made the component
-route the wrong trade. `/missals` is Roman-only (#953), so a rite picker backed by the components
-library would advertise a rite that returns nothing; and the only calendars that change the composed
-output are the `region` values the catalogue already names — `VA`, `IT`, `US` — so a `CalendarSelect`
-would list about a hundred entries of which two alter anything. The **scoping decision is unchanged**:
-composition is still by rite and calendar. Only the widget is.
+**What shipped instead: plain selectors driven by the catalogue itself.** The only calendars that
+change the composed output are the `region` values `/missals/{rite}` already names — `VA`, `IT`, `US`
+for the Roman rite — so a `CalendarSelect` would list about a hundred entries of which two alter
+anything. The **scoping decision is unchanged**: composition is still by rite and calendar. Only the
+widget is plainer.
 
-Should #953 land and the component gain a rite that resolves, revisit this. If it is revisited, the
-wiring below is the trap to avoid:
+Issue #953 has since landed, so both rites now resolve: `/missals/{rite}` is the catalogue and the Ambrosian
+edition is reachable. Its region is `AMBROSIAN` rather than a nation code, which is why the base region
+is resolved per rite (`baseRegionFor`) instead of being the constant `VA` the first draft assumed — a
+rite whose catalogue holds a single region is entirely base, which covers Ambrosian without a special
+case. Should this be revisited in favour of the components, the wiring below is the trap to avoid:
 
 ```javascript
 calendarSelect.linkToRiteSelect(riteSelect);
@@ -160,18 +165,20 @@ Month names are localized with `Intl.DateTimeFormat(locale, { month: 'long', tim
 Tab state belongs in the URL fragment alongside the event anchor, so a link can address a specific
 event and land on the right tab.
 
-### Locale handling — probe, don't wait
+### Locale handling — one request per missal
 
-`admin-decrees.js` already handles a single-locale API: `fetchEventForLocale()` issues one request per
-locale with an `Accept-Language` header, results are cached as per-locale promises that evict on
-failure, and `probeLocaleMaps()` assembles `{i18n, readings}` in parallel — used as a fallback whenever
-the API returns no aggregated maps.
+**Superseded.** This section originally specified probing one locale at a time with an `Accept-Language`
+header, the way `admin-decrees.js` does when the API returns no aggregated maps, and argued that this
+made #941 an optimisation rather than a blocker. The reasoning was sound for the API as it stood.
 
-The sanctorale reuses that pattern verbatim for **names**, which means API issue #941 (all-locales i18n)
-is an **optimization, not a blocker**: names can be assembled today by probing
-`GET /missals/{missal_id}` once per locale. Panels load lazily on first expand, as decrees does.
+Issue #941 then shipped something better: `GET /missals/{rite}/{missal_id}/i18n` returns every locale in one
+response **plus a precomputed `coverage` map**, giving `translated` / `empty` / `missing` per event key.
+So the page issues one request per missal, caches it per rite and missal, and reads all three states off
+`coverage` rather than inferring them. No probing, no fan-out, and the distinction between a
+deliberately blank translation and an absent one comes from the server instead of being guessed at.
 
-Readings cannot be probed, because no route returns them in any locale. That is the one hard blocker.
+The probe remains the right fallback pattern for any resource that has no aggregated route, which is
+what `admin-decrees.js` still faces.
 
 ## Relationship to the national calendar editor
 
@@ -286,5 +293,5 @@ Editing the temporale; migrating `admin-decrees.php` onto shared modules extract
 - **`/missals/{id}/i18n` replaced the per-locale probe entirely** — #941 shipped a `coverage` map
   (`translated` / `empty` / `missing` per event), so the decrees-style probing the design planned for
   is not needed: one request per missal returns every locale and all three states precomputed.
-- **Probe locales rather than wait for #941** — the decrees page proves the pattern, and it moves the
-  read-only phase from blocked to shippable.
+- ~~**Probe locales rather than wait for #941**~~ — **superseded.** #941 shipped an aggregated route
+  with a `coverage` map, so one request per missal replaced the fan-out entirely.
