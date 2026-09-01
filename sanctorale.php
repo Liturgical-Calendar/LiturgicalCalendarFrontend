@@ -56,32 +56,40 @@ if (!$authHelper->isAuthenticated) {
         ?>
     </p>
 
+    <?php // Two rows, and the split is meaningful rather than cosmetic: the first row
+          // chooses WHICH sanctorale is composed (each control refetches), the second
+          // NARROWS what is already composed (neither issues a request). The previous
+          // single row also totalled 13 columns, so the search box wrapped on its own. ?>
     <div class="row g-3 mb-3">
-        <div class="col-md-2">
+        <div class="col-md-3">
             <label class="form-label" for="riteSelect"><?php echo htmlspecialchars(_('Rite'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
             <select class="form-select" id="riteSelect">
                 <option value="roman"><?php echo htmlspecialchars(_('Roman'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                 <option value="ambrosian"><?php echo htmlspecialchars(_('Ambrosian'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
             </select>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-4">
             <label class="form-label" for="calendarSelect"><?php echo htmlspecialchars(_('Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
             <select class="form-select" id="calendarSelect"></select>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-5">
             <label class="form-label" for="localeSelect"><?php echo htmlspecialchars(_('Language'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
             <select class="form-select" id="localeSelect"></select>
             <div class="form-text"><?php echo htmlspecialchars(_('Languages this calendar is published in.'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
         </div>
-        <div class="col-md-3">
+    </div>
+
+    <div class="row g-3 mb-3">
+        <div class="col-md-5">
             <label class="form-label" for="fromSelect"><?php echo htmlspecialchars(_('From'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
             <select class="form-select" id="fromSelect"></select>
             <div class="form-text"><?php echo htmlspecialchars(_('Show only what one edition contributes.'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-7">
             <label class="form-label" for="sanctoraleSearch"><?php echo htmlspecialchars(_('Search all months'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
             <input type="search" class="form-control" id="sanctoraleSearch"
                    placeholder="<?php echo htmlspecialchars(_('Name or event key…'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
+            <div class="form-text"><?php echo htmlspecialchars(_('Matches across every month, and moves you to one that has a result.'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
         </div>
     </div>
 
