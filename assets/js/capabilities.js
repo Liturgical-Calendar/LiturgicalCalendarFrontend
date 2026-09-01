@@ -3,7 +3,7 @@
  *
  * A sanctorale write is authorized against the MISSAL, not against the page:
  * `OpenFgaAuthorizationMiddleware::forMissals()` maps an editio typica onto
- * `general_roman_calendar:{MISSAL_ID}` and a national edition onto
+ * `rite_calendar:{rite}/{MISSAL_ID}` and a national edition onto
  * `national_calendar:{rite}/{region}`. The composed view mixes editions by
  * construction, so a single page-level capability would either offer edits that
  * 403 or hide edits the user may in fact make.
@@ -27,7 +27,7 @@
  * @module capabilities
  */
 
-import { qualifyObjectId } from './riteScopedObjectId.js';
+import { legacyRiteCalendarObject, qualifyObjectId, RITE_CALENDAR_TYPE } from './riteScopedObjectId.js';
 
 /** `PATCH` — editing an existing entry — requires this relation. */
 export const RELATION_EDITOR = 'editor';
@@ -39,14 +39,13 @@ export const RELATION_ADMIN = 'admin';
  * The FGA object a write against this Missal is authorized on.
  *
  * A Missal in the rite's base region is one of that rite's typical editions and
- * carries a fixed id on `general_roman_calendar` — bare, like `temporale` and
- * `decrees`, because Missal ids are unique across rites. Anything else is a
- * national edition, governed by the national calendar it was approved for, whose
- * id DOES need a rite qualifier because nation codes are not unique across rites.
- * The rite-qualified composition is delegated to `qualifyObjectId()` from
+ * belongs to the rite-level calendar tier, `rite_calendar:{rite}/{MISSAL_ID}`
+ * (API #955). Anything else is a national edition, governed by the national
+ * calendar it was approved for. Both ids are rite-qualified, and both
+ * compositions are delegated to `qualifyObjectId()` from
  * `riteScopedObjectId.js`, which mirrors the API's validation rules and handles
  * the fact that `national_calendar` is a Roman-only object type (the Ambrosian
- * rite has no national tier).
+ * rite has no national tier) while `rite_calendar` is not.
  *
  * @param {{missal_id: string, region: string}} missal
  * @param {string} rite
@@ -55,7 +54,10 @@ export const RELATION_ADMIN = 'admin';
  */
 export function missalFgaObject(missal, rite, baseRegion) {
     if (missal.region === baseRegion) {
-        return { objectType: 'general_roman_calendar', objectId: missal.missal_id };
+        return {
+            objectType: RITE_CALENDAR_TYPE,
+            objectId: qualifyObjectId(RITE_CALENDAR_TYPE, missal.missal_id, rite)
+        };
     }
     return { objectType: 'national_calendar', objectId: qualifyObjectId('national_calendar', missal.region, rite) };
 }
@@ -116,12 +118,25 @@ export async function detectMissalCapabilities({
         return capabilities;
     }
 
-    const ask = async (object, relation) => {
+    const askOne = async (object, relation) => {
         try {
             return await checkAllowed(capabilityCheckPath({ userSub, ...object, relation })) === true;
         } catch {
             return false;
         }
+    };
+
+    // `GET /admin/permissions/check` answers on the object it is literally
+    // handed; the legacy widening lives in the API's authorization middleware,
+    // not here. So during the #955 migration window — after the API deploy,
+    // before its tuple migration — a user holding only
+    // `general_roman_calendar:EDITIO_TYPICA_2008` is still allowed to PATCH it,
+    // and asking only the rite-qualified object would hide the control that
+    // write is behind. `legacyRiteCalendarObject()` owns which pairing is legal.
+    const ask = async (object, relation) => {
+        if (await askOne(object, relation)) return true;
+        const legacy = legacyRiteCalendarObject(object.objectType, object.objectId);
+        return legacy === null ? false : askOne(legacy, relation);
     };
 
     const settled = await Promise.all(missals.map(async (missal) => {

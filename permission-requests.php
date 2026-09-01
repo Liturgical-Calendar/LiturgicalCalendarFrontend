@@ -240,8 +240,16 @@ if (!$authHelper->emailVerified) {
                 testDefinition: <?php echo json_encode(_('Test Definition'), $jsonFlags); ?>,
                 testsNational: <?php echo json_encode(_('National Calendar Tests'), $jsonFlags); ?>,
                 testsDiocesan: <?php echo json_encode(_('Diocesan Calendar Tests'), $jsonFlags); ?>,
+                riteCalendar: <?php echo json_encode(_('Rite Calendar'), $jsonFlags); ?>,
+                testsRiteCalendar: <?php echo json_encode(_('Rite Calendar Tests'), $jsonFlags); ?>,
+                <?php // Retained, not renamed: the API still emits these two type names on
+                      // pre-migration tuples and stored access requests, and permanently on
+                      // audit_log rows. ?>
                 testsGeneralRoman: <?php echo json_encode(_('General Roman Calendar Tests'), $jsonFlags); ?>,
                 generalRomanCalendar: <?php echo json_encode(_('General Roman Calendar'), $jsonFlags); ?>,
+                <?php // Optgroup labels for the per-rite rite_calendar id list. ?>
+                romanRite: <?php echo json_encode(_('Roman Rite'), $jsonFlags); ?>,
+                ambrosianRite: <?php echo json_encode(_('Ambrosian Rite'), $jsonFlags); ?>,
                 grcTemporale: <?php echo json_encode(_('Temporale'), $jsonFlags); ?>,
                 // phpcs:ignore Generic.Files.LineLength
                 grcSanctorale1970: <?php echo json_encode(_('Sanctorale — Editio Typica 1970'), $jsonFlags); ?>,
@@ -250,7 +258,10 @@ if (!$authHelper->emailVerified) {
                 // phpcs:ignore Generic.Files.LineLength
                 grcSanctorale2008: <?php echo json_encode(_('Sanctorale — Editio Typica 2008'), $jsonFlags); ?>,
                 // phpcs:ignore Generic.Files.LineLength
+                rcSanctorale2024: <?php echo json_encode(_('Sanctorale — Editio Typica 2024'), $jsonFlags); ?>,
+                // phpcs:ignore Generic.Files.LineLength
                 grcDecrees: <?php echo json_encode(_('Decrees of the Dicastery for Divine Worship'), $jsonFlags); ?>,
+                rcSupportedLocales: <?php echo json_encode(_('Supported locales'), $jsonFlags); ?>,
                 // Role display names
                 calendarEditor: <?php echo json_encode(_('Calendar Editor'), $jsonFlags); ?>,
                 testEditor: <?php echo json_encode(_('Accuracy Test Editor'), $jsonFlags); ?>,

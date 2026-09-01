@@ -6,7 +6,9 @@
  * The markup lives here instead of being duplicated per branch.
  *
  * Visibility is decided server-side in admin-dashboard.php via
- * AuthHelper::canViewResource('general_roman_calendar', 'decrees').
+ * AuthHelper::canViewRiteCalendarResource('roman', 'decrees') — which checks
+ * `rite_calendar:roman/decrees` and, until the API's tuple migration has run, the
+ * legacy `general_roman_calendar:decrees` it supersedes.
  */
 
 ?>

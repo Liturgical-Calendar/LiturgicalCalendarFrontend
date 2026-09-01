@@ -76,10 +76,13 @@ const ChangeRequestCommon = { // eslint-disable-line no-unused-vars
     /**
      * Split a rite-qualified resource id into its rite and bare id.
      *
-     * `resource_id` is `<rite>/<calendarId>` for the calendar-naming resource types
-     * and for the two calendar test scopes, and bare for everything else
-     * (`decrees`, `general_roman_calendar_test`, `rite_calendar_test`). Nothing
-     * downstream may assume a slash is present.
+     * `resource_id` is `<rite>/<subResource>` for the calendar-naming resource
+     * types, for the two calendar test scopes, and — since API #955 — for
+     * `rite_calendar` (`roman/decrees`, `ambrosian/EDITIO_TYPICA_2024`). It is
+     * bare for `rite_calendar_test`, whose id IS the rite, and for the deprecated
+     * `general_roman_calendar` / `general_roman_calendar_test`, which the API
+     * still emits on rows written before its data migration ran and permanently
+     * in `audit_log`. Nothing downstream may assume a slash is present.
      *
      * @param {string} resourceId
      * @returns {{rite: string|null, id: string}}
