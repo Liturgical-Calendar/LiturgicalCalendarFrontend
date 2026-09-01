@@ -143,6 +143,21 @@ if (!$authHelper->isAuthenticated) {
                 structure:          <?php echo json_encode(_('Celebration'), JSON_HEX_TAG); ?>,
                 names:              <?php echo json_encode(_('Names by locale'), JSON_HEX_TAG); ?>,
                 readings:           <?php echo json_encode(_('Lectionary readings'), JSON_HEX_TAG); ?>,
+                <?php // Some celebrations carry several sets of readings rather than one: a
+                      // Vigil and a Day Mass, or numbered schemata. Keys, order and labels
+                      // all match ReadingsRenderer in liturgy-components-js. ?>
+                schemas: {
+                    'vigil':                 <?php echo json_encode(_('Vigil Mass'), JSON_HEX_TAG); ?>,
+                    'night':                 <?php echo json_encode(_('Mass during the Night'), JSON_HEX_TAG); ?>,
+                    'dawn':                  <?php echo json_encode(_('Mass at Dawn'), JSON_HEX_TAG); ?>,
+                    'day':                   <?php echo json_encode(_('Mass during the Day'), JSON_HEX_TAG); ?>,
+                    'evening':               <?php echo json_encode(_('Evening Mass'), JSON_HEX_TAG); ?>,
+                    'schema_one':            <?php echo json_encode(_('Schema I'), JSON_HEX_TAG); ?>,
+                    'schema_two':            <?php echo json_encode(_('Schema II'), JSON_HEX_TAG); ?>,
+                    'schema_three':          <?php echo json_encode(_('Schema III'), JSON_HEX_TAG); ?>,
+                    'easter_season':         <?php echo json_encode(_('Easter Season'), JSON_HEX_TAG); ?>,
+                    'outside_easter_season': <?php echo json_encode(_('Outside Easter Season'), JSON_HEX_TAG); ?>
+                },
                 date:               <?php echo json_encode(_('Date'), JSON_HEX_TAG); ?>,
                 grade:              <?php echo json_encode(_('Grade'), JSON_HEX_TAG); ?>,
                 <?php // Shown only when the data overrides the rank label, e.g. US_2011

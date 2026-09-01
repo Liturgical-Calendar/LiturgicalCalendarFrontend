@@ -215,6 +215,54 @@ export function gradeDisplayOf(row) {
     return typeof override === 'string' ? override.trim() : null;
 }
 
+/**
+ * Whether a locale's readings are nested one level into schemas.
+ *
+ * Some celebrations offer alternative sets rather than one: AllSouls carries
+ * `schema_one`, `schema_two` and `schema_three`, each a complete set. The flat
+ * shape maps reading names to citations; the nested shape maps schema names to
+ * those maps. Same predicate, and same name, as ReadingsRenderer's in
+ * liturgy-components-js — see the note on renderReadings().
+ *
+ * @param {Record<string, unknown>} entry
+ */
+export function hasNestedSchemas(entry) {
+    const values = Object.values(entry ?? {});
+    return values.length > 0 && values.every((v) => v !== null && typeof v === 'object');
+}
+
+/**
+ * Canonical order first, then anything unexpected, so a new key still shows.
+ *
+ * Copied from ReadingsRenderer.readingOrder in liturgy-components-js so the two
+ * agree on both order and vocabulary. Nesting is not only the schema_* triple:
+ * Assumption, StsPeterPaulAp and NativityJohnBaptist nest as vigil/day, which is
+ * the shape that actually carries content today.
+ */
+const SCHEMA_ORDER = [
+    'vigil', 'night', 'dawn', 'day', 'evening',
+    'schema_one', 'schema_two', 'schema_three',
+    'easter_season', 'outside_easter_season'
+];
+
+/**
+ * The schemas present across a tier's locales, in a stable order.
+ *
+ * A union rather than the first locale's keys: a locale missing one schema must
+ * not remove that schema's tab for every other locale.
+ */
+export function schemaKeysOf(entries) {
+    const seen = new Set();
+    for (const entry of Object.values(entries ?? {})) {
+        if (hasNestedSchemas(entry)) {
+            Object.keys(entry).forEach((k) => seen.add(k));
+        }
+    }
+    const known = SCHEMA_ORDER.filter((k) => seen.has(k));
+    const extra = [...seen].filter((k) => !SCHEMA_ORDER.includes(k)).sort();
+    return [...known, ...extra];
+}
+
 export function baseRegionFor(missals, rite) {
     const regions = [...new Set(missals.map((m) => m.region))];
     // A rite with a single region has no national missals to distinguish, so every
@@ -519,6 +567,38 @@ function renderNames(payload, eventKey) {
  * Ambrosian rite has no sanctorale lectionary at all — so it renders the API's
  * own message rather than an empty table that reads as a bug.
  */
+/** One locale's readings as table rows: reading name on the left, citation right. */
+function readingRows(entries, schema, strings) {
+    return Object.entries(entries ?? {}).map(([loc, entry]) => {
+        const readings = schema ? entry?.[schema] : entry;
+        if (!readings || typeof readings !== 'object') return '';
+        return `
+            <tr>
+                <td class="text-nowrap align-top"><code>${escapeHtml(loc)}</code></td>
+                <td>${Object.entries(readings).map(([k, v]) => `
+                    <div class="small"><span class="text-muted">${escapeHtml(k)}:</span> ${escapeHtml(v)}</div>`).join('')}</td>
+            </tr>`;
+    }).join('') || `<tr><td class="text-muted small">${escapeHtml(strings.noEntries)}</td></tr>`;
+}
+
+/**
+ * Readings, tier by tier.
+ *
+ * `lectionary_available: false` is a first-class answer, not an error — the
+ * Ambrosian rite has no sanctorale lectionary at all — so it renders the API's
+ * own message rather than an empty table that reads as a bug.
+ *
+ * Where a celebration offers alternative schemas, they become TABS rather than
+ * more nesting. The table already varies by locale; stacking three schemas inside
+ * that turns six rows into eighteen and makes comparing one language against
+ * another impossible, which is the thing the locale table exists to do. Tabs keep
+ * locale as the axis you read down and schema as the one you switch between.
+ *
+ * The schema labels match ReadingsRenderer in liturgy-components-js ("Schema I",
+ * "Schema II", "Schema III") so the two agree. That renderer solves this problem
+ * already but is not exported from the package entry point, so it cannot be
+ * imported here — raised upstream; consolidate if it is exported.
+ */
 function renderReadings(payload, strings = i18n) {
     if (payload.lectionary_available === false) {
         return `
@@ -526,24 +606,46 @@ function renderReadings(payload, strings = i18n) {
             <div class="alert alert-secondary mb-0">${escapeHtml(payload.message || strings.noLectionary)}</div>`;
     }
 
-    const tiers = (payload.readings ?? []).map((tier) => {
-        const entries = Object.entries(tier.entries ?? {}).map(([loc, readings]) => `
-            <tr>
-                <td class="text-nowrap align-top"><code>${escapeHtml(loc)}</code></td>
-                <td>${Object.entries(readings ?? {}).map(([k, v]) => `
-                    <div class="small"><span class="text-muted">${escapeHtml(k)}:</span> ${escapeHtml(v)}</div>`).join('')}</td>
-            </tr>`).join('');
+    const tiers = (payload.readings ?? []).map((tier, i) => {
+        const entries = tier.entries ?? {};
+        const schemas = schemaKeysOf(entries);
+        const without = tier.locales_without_entry ?? [];
+        const blank   = tier.locales_with_empty_entry ?? [];
 
-        const without = (tier.locales_without_entry ?? []);
-        const blank   = (tier.locales_with_empty_entry ?? []);
+        const badge = `
+            <span class="badge bg-dark">${escapeHtml(tier.tier)}</span>
+            <code class="small ms-1">${escapeHtml(tier.source_id)}</code>`;
+
+        const table = (schema) => `
+            <table class="table table-sm mb-1"><tbody>${readingRows(entries, schema, strings)}</tbody></table>`;
+
+        let body;
+        if (schemas.length) {
+            const tabId = (k) => `readings-t${i}-${k.replace(/[^a-z0-9]/gi, '')}`;
+            body = `
+                <ul class="nav nav-pills nav-sm mb-2" role="tablist">
+                    ${schemas.map((k, n) => `
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link btn-sm py-1 px-2 ${n === 0 ? 'active' : ''}" type="button"
+                                    data-bs-toggle="tab" data-bs-target="#${tabId(k)}" role="tab">
+                                ${escapeHtml(strings.schemas?.[k] ?? k)}
+                            </button>
+                        </li>`).join('')}
+                </ul>
+                <div class="tab-content">
+                    ${schemas.map((k, n) => `
+                        <div class="tab-pane fade ${n === 0 ? 'show active' : ''}" id="${tabId(k)}" role="tabpanel">
+                            ${table(k)}
+                        </div>`).join('')}
+                </div>`;
+        } else {
+            body = table(null);
+        }
 
         return `
             <div class="mb-3">
-                <div class="mb-1">
-                    <span class="badge bg-dark">${escapeHtml(tier.tier)}</span>
-                    <code class="small ms-1">${escapeHtml(tier.source_id)}</code>
-                </div>
-                <table class="table table-sm mb-1"><tbody>${entries || `<tr><td class="text-muted small">${escapeHtml(strings.noEntries)}</td></tr>`}</tbody></table>
+                <div class="mb-1 d-flex align-items-center gap-2 flex-wrap">${badge}</div>
+                ${body}
                 ${blank.length ? `<div class="small text-muted">${escapeHtml(strings.emptyLabel)}: <code>${blank.map(escapeHtml).join('</code>, <code>')}</code></div>` : ''}
                 ${without.length ? `<div class="small text-muted">${escapeHtml(strings.missingLabel)}: <code>${without.map(escapeHtml).join('</code>, <code>')}</code></div>` : ''}
             </div>`;

@@ -7,7 +7,7 @@
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 
-let applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits, renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47, filterByMissal, formatGrade, gradeDisplayOf;
+let applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits, renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47, filterByMissal, formatGrade, gradeDisplayOf, hasNestedSchemas, schemaKeysOf;
 
 const VA_1970 = { missal_id: 'EDITIO_TYPICA_1970', region: 'VA', year_published: 1970 };
 const VA_2002 = { missal_id: 'EDITIO_TYPICA_2002', region: 'VA', year_published: 2002 };
@@ -23,7 +23,7 @@ beforeAll(async () => {
     const mod = await import('../sanctorale.js');
     ({ applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits,
        renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47,
-       filterByMissal, formatGrade, gradeDisplayOf } = mod);
+       filterByMissal, formatGrade, gradeDisplayOf, hasNestedSchemas, schemaKeysOf } = mod);
 });
 
 describe('baseRegionFor', () => {
@@ -340,5 +340,53 @@ describe('gradeDisplayOf', () => {
     it('trims, and a whitespace-only value is a present override', () => {
         expect(gradeDisplayOf({ grade_display: '  National Holiday  ' })).toBe('National Holiday');
         expect(gradeDisplayOf({ grade_display: '   ' })).toBe('');
+    });
+});
+
+describe('hasNestedSchemas', () => {
+    const FLAT   = { first_reading: 'Eph 4:1-7', gospel: 'Mt 23:8-12' };
+    const NESTED = { vigil: { first_reading: '1 Chr 15:3-4' }, day: { first_reading: 'Rev 11:19a' } };
+
+    it('recognises the flat shape as not nested', () => {
+        expect(hasNestedSchemas(FLAT)).toBe(false);
+    });
+
+    it('recognises alternative sets as nested', () => {
+        expect(hasNestedSchemas(NESTED)).toBe(true);
+        expect(hasNestedSchemas({ schema_one: {}, schema_two: {}, schema_three: {} })).toBe(true);
+    });
+
+    it('treats an empty entry as not nested, so it renders as a plain empty table', () => {
+        expect(hasNestedSchemas({})).toBe(false);
+        expect(hasNestedSchemas(undefined)).toBe(false);
+    });
+
+    it('does not mistake a null value for a nested object', () => {
+        expect(hasNestedSchemas({ first_reading: null })).toBe(false);
+    });
+});
+
+describe('schemaKeysOf', () => {
+    it('orders keys liturgically, not alphabetically', () => {
+        // Vigil precedes the Day Mass; alphabetical would put "day" first.
+        expect(schemaKeysOf({ en: { day: {}, vigil: {} } })).toEqual(['vigil', 'day']);
+    });
+
+    it('orders the numbered schemata one, two, three', () => {
+        expect(schemaKeysOf({ en: { schema_three: {}, schema_one: {}, schema_two: {} } }))
+            .toEqual(['schema_one', 'schema_two', 'schema_three']);
+    });
+
+    it('unions across locales, so one locale missing a schema keeps its tab', () => {
+        expect(schemaKeysOf({ en: { vigil: {}, day: {} }, la: { day: {} } })).toEqual(['vigil', 'day']);
+    });
+
+    it('keeps an unrecognised key rather than dropping it, after the known ones', () => {
+        expect(schemaKeysOf({ en: { something_new: {}, vigil: {} } })).toEqual(['vigil', 'something_new']);
+    });
+
+    it('returns nothing for flat entries, which need no tabs at all', () => {
+        expect(schemaKeysOf({ en: { first_reading: 'Eph 4:1-7' } })).toEqual([]);
+        expect(schemaKeysOf({})).toEqual([]);
     });
 });
