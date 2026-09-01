@@ -32,6 +32,11 @@
             "LiturgicalCalendar\\Frontend\\Tests\\": "tests/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "LiturgicalCalendar\\Frontend\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "John R. D'Orazio",
