@@ -68,7 +68,12 @@ if (!$authHelper->isAuthenticated) {
             <label class="form-label" for="calendarSelect"><?php echo htmlspecialchars(_('Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
             <select class="form-select" id="calendarSelect"></select>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-3">
+            <label class="form-label" for="localeSelect"><?php echo htmlspecialchars(_('Language'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
+            <select class="form-select" id="localeSelect"></select>
+            <div class="form-text"><?php echo htmlspecialchars(_('Languages this calendar is published in.'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></div>
+        </div>
+        <div class="col-md-3">
             <label class="form-label" for="sanctoraleSearch"><?php echo htmlspecialchars(_('Search all months'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
             <input type="search" class="form-control" id="sanctoraleSearch"
                    placeholder="<?php echo htmlspecialchars(_('Name or event key…'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">

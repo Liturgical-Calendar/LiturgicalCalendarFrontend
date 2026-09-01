@@ -38,6 +38,7 @@ const el = (id) => document.getElementById(id);
 const dom = {
     rite:        el('riteSelect'),
     calendar:    el('calendarSelect'),
+    locale:      el('localeSelect'),
     search:      el('sanctoraleSearch'),
     tabs:        el('monthTabs'),
     tableBody:   el('sanctoraleTableBody'),
@@ -52,6 +53,9 @@ const state = {
     calendar: '',
     missals: [],
     baseRegion: null,
+    metadata: null,
+    /** The locale the celebration names are requested in, as a BCP-47 tag. */
+    nameLocale: '',
     composed: [],
     month: new Date().getUTCMonth() + 1,
     search: ''
@@ -80,9 +84,9 @@ class HttpError extends Error {
     }
 }
 
-async function getJson(path) {
+async function getJson(path, headers = {}) {
     const response = await fetch(`${apiUrl}${path}`, {
-        headers: { Accept: 'application/json' },
+        headers: { Accept: 'application/json', ...headers },
         credentials: 'omit'
     });
     if (!response.ok) {
@@ -101,6 +105,58 @@ async function getJson(path) {
  * @param {Array<object>} missals
  * @param {string} calendar Region code, or '' for the General Roman calendar.
  */
+/**
+ * BCP-47 form. The metadata spells locales with underscores (`en_US`), which is
+ * the gettext/ICU convention; `Accept-Language` and `Intl` both want hyphens.
+ */
+export const toBcp47 = (tag) => String(tag ?? '').replace(/_/g, '-');
+
+/**
+ * The locales a calendar is actually published in, from `/calendars` metadata.
+ *
+ * Three sources, because the metadata keeps three: the General Roman calendar's
+ * own `locales`, an Ambrosian entry under `ambrosian_calendars`, and one entry
+ * per nation under `national_calendars`. A national calendar publishes only its
+ * own locales — US_2011 exists in `en_US` alone — so offering the General Roman
+ * list there would advertise translations that do not exist.
+ *
+ * @param {object} metadata `litcal_metadata`
+ * @param {string} rite
+ * @param {string} calendar Region code, or '' for the rite's base calendar.
+ * @returns {string[]} BCP-47 tags
+ */
+export function localesFor(metadata, rite, calendar) {
+    if (!metadata) return [];
+
+    if (rite === 'ambrosian') {
+        const entry = (metadata.ambrosian_calendars ?? [])
+            .find((c) => c.rite === 'ambrosian') ?? (metadata.ambrosian_calendars ?? [])[0];
+        return (entry?.locales ?? []).map(toBcp47);
+    }
+
+    if (calendar) {
+        const nation = (metadata.national_calendars ?? [])
+            .find((c) => c.calendar_id === calendar);
+        // A region with no national calendar entry still composes from the typical
+        // editions, so fall back to the General Roman list rather than to nothing.
+        if (nation) return (nation.locales ?? []).map(toBcp47);
+    }
+
+    return (metadata.locales ?? []).map(toBcp47);
+}
+
+/** The locale to preselect: the page's own if published, else the first offered. */
+export function preferredLocale(available, pageLocale) {
+    if (!available.length) return '';
+    const page = toBcp47(pageLocale).toLowerCase();
+    const exact = available.find((l) => l.toLowerCase() === page);
+    if (exact) return exact;
+    // en-US should settle for en when en-US is not published, and vice versa.
+    const base = page.split('-')[0];
+    const related = available.find((l) => l.toLowerCase().split('-')[0] === base);
+    return related ?? available[0];
+}
+
 export function baseRegionFor(missals, rite) {
     const regions = [...new Set(missals.map((m) => m.region))];
     // A rite with a single region has no national missals to distinguish, so every
@@ -393,6 +449,12 @@ function renderReadings(payload, strings = i18n) {
 
 // -------------------------------------------------------------------- loading
 
+async function loadMetadata() {
+    if (state.metadata) return;
+    const payload = await getJson('/calendars');
+    state.metadata = payload.litcal_metadata ?? payload ?? null;
+}
+
 async function loadCatalogue() {
     // Rite-scoped since API #953. The unprefixed `/missals` still answers, but it
     // means `roman`, so asking for it explicitly is what makes the rite selector real.
@@ -413,6 +475,32 @@ async function loadCatalogue() {
         state.calendar = '';
     }
     dom.calendar.value = state.calendar;
+    renderLocaleOptions();
+}
+
+/**
+ * Offer the locales this calendar publishes, and keep the current choice only if
+ * it survives the change — switching to a national calendar that publishes one
+ * locale must not leave a stale, unpublished one selected.
+ */
+function renderLocaleOptions() {
+    const available = localesFor(state.metadata, state.rite, state.calendar);
+    const display = (tag) => {
+        try {
+            return new Intl.DisplayNames([locale], { type: 'language' }).of(tag) ?? tag;
+        } catch {
+            return tag;
+        }
+    };
+
+    if (!available.includes(state.nameLocale)) {
+        state.nameLocale = preferredLocale(available, locale);
+    }
+    dom.locale.innerHTML = available
+        .map((l) => `<option value="${escapeHtml(l)}">${escapeHtml(display(l))} (${escapeHtml(l)})</option>`)
+        .join('');
+    dom.locale.value = state.nameLocale;
+    dom.locale.disabled = available.length <= 1;
 }
 
 async function loadSanctorale() {
@@ -430,7 +518,12 @@ async function loadSanctorale() {
     try {
         const layers = await Promise.all(applicable.map(async (missal) => ({
             missal,
-            rows: await getJson(`/missals/${encodeURIComponent(state.rite)}/${encodeURIComponent(missal.missal_id)}`)
+            rows: await getJson(
+                `/missals/${encodeURIComponent(state.rite)}/${encodeURIComponent(missal.missal_id)}`,
+                // The API merges the celebration name for the negotiated locale, so
+                // this header is what makes the picker do anything at all.
+                state.nameLocale ? { 'Accept-Language': state.nameLocale } : {}
+            )
         })));
         state.composed = compose(layers);
         render();
@@ -447,6 +540,7 @@ function syncHash() {
     const params = new URLSearchParams();
     params.set('rite', state.rite);
     if (state.calendar) params.set('calendar', state.calendar);
+    if (state.nameLocale) params.set('locale', state.nameLocale);
     params.set('month', String(state.month));
     history.replaceState(null, '', `#${params.toString()}`);
 }
@@ -456,6 +550,7 @@ function readHash() {
     const month  = Number(params.get('month'));
     if (params.get('rite')) state.rite = params.get('rite');
     if (params.get('calendar')) state.calendar = params.get('calendar');
+    if (params.get('locale')) state.nameLocale = params.get('locale');
     if (month >= 1 && month <= 12) state.month = month;
 }
 
@@ -465,6 +560,7 @@ async function init() {
     // reader pick another rite or retry, and skipping them strands the page dead.
     let catalogueFailed = false;
     try {
+        await loadMetadata();
         await loadCatalogue();
     } catch (error) {
         catalogueFailed = true;
@@ -477,6 +573,7 @@ async function init() {
         syncHash();
         try {
             // Each rite has its own catalogue, so this is a reload, not a recompose.
+            await loadMetadata();
             await loadCatalogue();
             await loadSanctorale();
         } catch (error) {
@@ -485,7 +582,14 @@ async function init() {
     });
     dom.calendar.addEventListener('change', () => {
         state.calendar = dom.calendar.value;
+        renderLocaleOptions();
         syncHash();
+        loadSanctorale();
+    });
+    dom.locale.addEventListener('change', () => {
+        state.nameLocale = dom.locale.value;
+        syncHash();
+        // Names are merged server-side, so a locale change is a refetch.
         loadSanctorale();
     });
     dom.search.addEventListener('input', () => {
@@ -509,6 +613,7 @@ async function init() {
         dom.rite.value     = state.rite;
         dom.calendar.value = state.calendar;
         if (`${state.rite}|${state.calendar}` !== before) {
+            await loadMetadata();
             await loadCatalogue();
             await loadSanctorale();
         } else {

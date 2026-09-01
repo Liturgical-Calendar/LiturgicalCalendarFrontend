@@ -7,7 +7,7 @@
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 
-let applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits, renderReadingsOutcome, HttpError;
+let applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits, renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47;
 
 const VA_1970 = { missal_id: 'EDITIO_TYPICA_1970', region: 'VA', year_published: 1970 };
 const VA_2002 = { missal_id: 'EDITIO_TYPICA_2002', region: 'VA', year_published: 2002 };
@@ -22,7 +22,7 @@ beforeAll(async () => {
     global.window = global.window ?? {};
     const mod = await import('../sanctorale.js');
     ({ applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits,
-       renderReadingsOutcome, HttpError } = mod);
+       renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47 } = mod);
 });
 
 describe('baseRegionFor', () => {
@@ -189,5 +189,64 @@ describe('renderReadingsOutcome', () => {
         }, strings);
         expect(out).toContain('ambrosian rite');
         expect(out).not.toContain(strings.readingsUnavailable);
+    });
+});
+
+describe('localesFor', () => {
+    const META = {
+        locales: ['en', 'fr', 'it', 'la', 'nl'],
+        ambrosian_calendars: [{ calendar_id: 'ambrosian', rite: 'ambrosian', locales: ['it', 'la'] }],
+        national_calendars: [
+            { calendar_id: 'US', locales: ['en_US'] },
+            { calendar_id: 'IT', locales: ['it_IT'] },
+            { calendar_id: 'CA', locales: ['en_CA', 'fr_CA'] }
+        ]
+    };
+
+    it('offers the General Roman locales for the base Roman calendar', () => {
+        expect(localesFor(META, 'roman', '')).toEqual(['en', 'fr', 'it', 'la', 'nl']);
+    });
+
+    it('offers only what a national calendar publishes, not the General Roman list', () => {
+        // US_2011 exists in en_US alone; offering the five General Roman locales
+        // would advertise translations that do not exist.
+        expect(localesFor(META, 'roman', 'US')).toEqual(['en-US']);
+        expect(localesFor(META, 'roman', 'CA')).toEqual(['en-CA', 'fr-CA']);
+    });
+
+    it('offers the Ambrosian locales for the Ambrosian rite, whatever the calendar', () => {
+        expect(localesFor(META, 'ambrosian', '')).toEqual(['it', 'la']);
+    });
+
+    it('falls back to the General Roman list for a region with no national entry', () => {
+        // Such a region still composes from the typical editions, so it has locales.
+        expect(localesFor(META, 'roman', 'ZZ')).toEqual(['en', 'fr', 'it', 'la', 'nl']);
+    });
+
+    it('returns an empty list rather than throwing when metadata is missing', () => {
+        expect(localesFor(null, 'roman', '')).toEqual([]);
+    });
+
+    it('normalises underscores, since Accept-Language and Intl want BCP-47', () => {
+        expect(toBcp47('en_US')).toBe('en-US');
+    });
+});
+
+describe('preferredLocale', () => {
+    it('prefers the page locale when the calendar publishes it', () => {
+        expect(preferredLocale(['en', 'fr', 'it'], 'fr')).toBe('fr');
+    });
+
+    it('settles for the same language in another region', () => {
+        expect(preferredLocale(['en-US'], 'en-GB')).toBe('en-US');
+        expect(preferredLocale(['en'], 'en_US')).toBe('en');
+    });
+
+    it('falls back to the first published locale when the page locale is absent', () => {
+        expect(preferredLocale(['it', 'la'], 'de')).toBe('it');
+    });
+
+    it('returns empty for a calendar that publishes nothing', () => {
+        expect(preferredLocale([], 'en')).toBe('');
     });
 });
