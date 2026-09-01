@@ -1368,24 +1368,63 @@ function readReadingsForm() {
 }
 
 /**
- * Names per locale, using the coverage map the API precomputes.
+ * What an `event_key` the coverage map has never heard of resolves to.
+ *
+ * Every locale is `missing`, because that is what an absent entry means. It is
+ * spelled out and passed explicitly rather than defaulted inside
+ * nameCoverageBadge(), so a caller cannot quietly pick a different one — which is
+ * exactly what had happened: the read-only renderer fell back to three EMPTY
+ * arrays, which puts a locale in no named list at all and lands it on the final
+ * `translated` branch. The result was fourteen green "translated" badges beside
+ * fourteen blank names in the read-only modal, and fourteen red "missing" badges
+ * for the same entry the moment Edit was clicked.
+ *
+ * @param {object} payload a Missal i18n response
+ * @returns {{translated: string[], empty: string[], missing: string[]}}
+ */
+function absentCoverage(payload) {
+    return { translated: [], empty: [], missing: payload.locales ?? [] };
+}
+
+/**
+ * The coverage badge for one locale, shared by BOTH Names renderers.
  *
  * Three states, not two: `translated`, `empty` (curated as blank on purpose) and
  * `missing` (no entry at all). Collapsing empty into missing would misreport
- * deliberate blanks as gaps.
+ * deliberate blanks as gaps; collapsing missing into translated — which an
+ * all-empty fallback silently does — misreports gaps as finished work.
+ *
+ * @param {object} payload a Missal i18n response
+ * @param {string} eventKey
+ * @param {string} loc a BCP-47 tag from `payload.locales`
+ * @param {{translated: string[], empty: string[], missing: string[]}} fallback
+ *        what to use when the coverage map has no entry for `eventKey`
+ * @param {object} [strings] i18n strings
+ * @returns {string} HTML
+ */
+export function nameCoverageBadge(payload, eventKey, loc, fallback, strings = i18n) {
+    const coverage = payload.coverage?.[eventKey] ?? fallback;
+    if (coverage.missing?.includes(loc)) {
+        return `<span class="badge bg-danger">${escapeHtml(strings.missingLabel)}</span>`;
+    }
+    if (coverage.empty?.includes(loc)) {
+        return `<span class="badge bg-warning text-dark">${escapeHtml(strings.emptyLabel)}</span>`;
+    }
+    return `<span class="badge bg-success">${escapeHtml(strings.translatedLabel)}</span>`;
+}
+
+/**
+ * Names per locale, using the coverage map the API precomputes.
+ *
+ * The badge is nameCoverageBadge()'s, with the same fallback the editable
+ * renderer uses: opening a celebration read-only and opening the same one for
+ * edit must not disagree about what is translated.
  */
 function renderNames(payload, eventKey) {
-    const coverage = payload.coverage?.[eventKey] ?? { translated: [], empty: [], missing: [] };
+    const fallback = absentCoverage(payload);
     const rows = (payload.locales ?? []).map((loc) => {
         const value = payload.i18n?.[loc]?.[eventKey];
-        let stateBadge;
-        if (coverage.missing?.includes(loc)) {
-            stateBadge = `<span class="badge bg-danger">${escapeHtml(i18n.missingLabel)}</span>`;
-        } else if (coverage.empty?.includes(loc)) {
-            stateBadge = `<span class="badge bg-warning text-dark">${escapeHtml(i18n.emptyLabel)}</span>`;
-        } else {
-            stateBadge = `<span class="badge bg-success">${escapeHtml(i18n.translatedLabel)}</span>`;
-        }
+        const stateBadge = nameCoverageBadge(payload, eventKey, loc, fallback);
         return `
             <tr>
                 <td class="text-nowrap"><code>${escapeHtml(loc)}</code></td>
@@ -1414,14 +1453,10 @@ function renderNames(payload, eventKey) {
  * blank with the `missing` badge rather than misreporting as translated.
  */
 function renderNamesForm(payload, eventKey) {
-    const coverage = payload.coverage?.[eventKey] ?? { translated: [], empty: [], missing: payload.locales ?? [] };
+    const fallback = absentCoverage(payload);
     const rows = (payload.locales ?? []).map((loc) => {
         const value = payload.i18n?.[loc]?.[eventKey] ?? '';
-        const badge = coverage.missing?.includes(loc)
-            ? `<span class="badge bg-danger">${escapeHtml(i18n.missingLabel)}</span>`
-            : coverage.empty?.includes(loc)
-                ? `<span class="badge bg-warning text-dark">${escapeHtml(i18n.emptyLabel)}</span>`
-                : `<span class="badge bg-success">${escapeHtml(i18n.translatedLabel)}</span>`;
+        const badge = nameCoverageBadge(payload, eventKey, loc, fallback);
         return `
             <tr>
                 <td class="text-nowrap align-middle"><code>${escapeHtml(loc)}</code></td>

@@ -7,7 +7,7 @@
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 
-let applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits, renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47, filterByMissal, formatGrade, gradeDisplayOf, hasNestedSchemas, schemaKeysOf, applicableTiers, monthOf;
+let applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits, renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47, filterByMissal, formatGrade, gradeDisplayOf, hasNestedSchemas, schemaKeysOf, applicableTiers, monthOf, nameCoverageBadge;
 
 const VA_1970 = { missal_id: 'EDITIO_TYPICA_1970', region: 'VA', year_published: 1970 };
 const VA_2002 = { missal_id: 'EDITIO_TYPICA_2002', region: 'VA', year_published: 2002 };
@@ -24,7 +24,7 @@ beforeAll(async () => {
     ({ applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits,
        renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47,
        filterByMissal, formatGrade, gradeDisplayOf, hasNestedSchemas, schemaKeysOf,
-       applicableTiers, monthOf } = mod);
+       applicableTiers, monthOf, nameCoverageBadge } = mod);
 });
 
 describe('baseRegionFor', () => {
@@ -644,5 +644,47 @@ describe('monthOf', () => {
         // nothing to follow to — the caller must leave the current tab alone.
         expect(monthOf([APRIL_ROW], 'NoSuchKey')).toBeNull();
         expect(monthOf([], 'StIsidore')).toBeNull();
+    });
+});
+
+/**
+ * The Names coverage badge, shared by the read-only and the editable renderer.
+ *
+ * They used to compute it separately and fall back differently for an event_key
+ * the coverage map has never heard of, so the SAME celebration badged fourteen
+ * green "translated" read-only and fourteen red "missing" under Edit. The
+ * read-only fallback of three empty arrays is the trap: it puts a locale in no
+ * named list, so the last branch — `translated` — catches it.
+ */
+describe('nameCoverageBadge', () => {
+    const STRINGS = { missingLabel: 'MISSING', emptyLabel: 'EMPTY', translatedLabel: 'TRANSLATED' };
+    const PAYLOAD = {
+        locales: ['en', 'it', 'la'],
+        coverage: { StIsidoreFarmer: { translated: ['en'], empty: ['it'], missing: ['la'] } }
+    };
+    const absent = (payload) => ({ translated: [], empty: [], missing: payload.locales ?? [] });
+
+    it('reads the three states off a coverage entry that exists', () => {
+        const badge = (loc) => nameCoverageBadge(PAYLOAD, 'StIsidoreFarmer', loc, absent(PAYLOAD), STRINGS);
+        expect(badge('en')).toContain('TRANSLATED');
+        expect(badge('it')).toContain('EMPTY');
+        expect(badge('la')).toContain('MISSING');
+    });
+
+    it('reports every locale missing when the key is absent from the coverage map', () => {
+        // The regression. An absent entry means nothing is known about any
+        // locale, which is `missing` — never `translated`.
+        for (const loc of PAYLOAD.locales) {
+            expect(nameCoverageBadge(PAYLOAD, 'NeverHeardOfIt', loc, absent(PAYLOAD), STRINGS))
+                .toContain('MISSING');
+        }
+    });
+
+    it('would badge an absent key as translated if handed an all-empty fallback', () => {
+        // Pinned so the shape of the bug stays visible: it is the FALLBACK that
+        // decides, which is why it is a parameter and why both renderers pass the
+        // same one.
+        expect(nameCoverageBadge(PAYLOAD, 'NeverHeardOfIt', 'en', { translated: [], empty: [], missing: [] }, STRINGS))
+            .toContain('TRANSLATED');
     });
 });
