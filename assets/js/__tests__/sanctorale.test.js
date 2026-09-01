@@ -7,7 +7,7 @@
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 
-let applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits, renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47, filterByMissal, formatGrade, gradeDisplayOf, hasNestedSchemas, schemaKeysOf;
+let applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits, renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47, filterByMissal, formatGrade, gradeDisplayOf, hasNestedSchemas, schemaKeysOf, applicableTiers;
 
 const VA_1970 = { missal_id: 'EDITIO_TYPICA_1970', region: 'VA', year_published: 1970 };
 const VA_2002 = { missal_id: 'EDITIO_TYPICA_2002', region: 'VA', year_published: 2002 };
@@ -23,7 +23,8 @@ beforeAll(async () => {
     const mod = await import('../sanctorale.js');
     ({ applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits,
        renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47,
-       filterByMissal, formatGrade, gradeDisplayOf, hasNestedSchemas, schemaKeysOf } = mod);
+       filterByMissal, formatGrade, gradeDisplayOf, hasNestedSchemas, schemaKeysOf,
+       applicableTiers } = mod);
 });
 
 describe('baseRegionFor', () => {
@@ -558,5 +559,67 @@ describe('orderedSelection', () => {
         // The read-only modal renders no form controls at all.
         document.body.innerHTML = '';
         expect(orderedSelection('entryCommon', STORED)).toEqual([]);
+    });
+});
+
+describe('applicableTiers', () => {
+    // The real case from the brief: StPeterClaver is declared by EDITIO_TYPICA_2002,
+    // US_2011 and IT_1983 alike. The lectionary route is rite-scoped, so a single
+    // response can carry all three tiers no matter which calendar is open.
+    const RITE_TIER = { tier: 'rite', source_id: 'sanctorum' };
+    const TYPICA_TIER = { tier: 'missal', source_id: 'EDITIO_TYPICA_2002' };
+    const US_TIER = { tier: 'missal', source_id: 'US_2011' };
+    const IT_TIER = { tier: 'missal', source_id: 'IT_1983' };
+    const ST_PETER_CLAVER_TIERS = [RITE_TIER, TYPICA_TIER, US_TIER, IT_TIER];
+
+    it('keeps the rite tier regardless of the applicable set, even an empty one', () => {
+        // The rite corpus applies to every calendar in the rite, so it survives
+        // even when nothing else does.
+        expect(applicableTiers([RITE_TIER], [])).toEqual([RITE_TIER]);
+        expect(applicableTiers([RITE_TIER], new Set())).toEqual([RITE_TIER]);
+    });
+
+    it('keeps a missal tier whose source_id is applicable', () => {
+        expect(applicableTiers([TYPICA_TIER], ['EDITIO_TYPICA_2002'])).toEqual([TYPICA_TIER]);
+    });
+
+    it('drops a missal tier whose source_id is not applicable — the General Roman case', () => {
+        // Viewing the General Roman Calendar, only the typica's tier and the rite
+        // corpus apply; neither national Missal's tier belongs here.
+        const applicableIds = applicableMissals(CATALOGUE, '', 'VA').map((m) => m.missal_id);
+        const out = applicableTiers(ST_PETER_CLAVER_TIERS, applicableIds);
+        expect(out).toEqual([RITE_TIER, TYPICA_TIER]);
+        expect(out).not.toContainEqual(US_TIER);
+        expect(out).not.toContainEqual(IT_TIER);
+    });
+
+    it('narrows to the US calendar\'s own missal, still excluding IT_1983', () => {
+        const applicableIds = applicableMissals(CATALOGUE, 'US', 'VA').map((m) => m.missal_id);
+        const out = applicableTiers(ST_PETER_CLAVER_TIERS, applicableIds);
+        expect(out).toEqual([RITE_TIER, TYPICA_TIER, US_TIER]);
+        expect(out).not.toContainEqual(IT_TIER);
+    });
+
+    it('never filters out the write-target tier, since an editable row\'s Missal is applicable by construction', () => {
+        // isReadingsWriteTarget() only ever selects the tier whose source_id equals
+        // editState.missalId, and editState.missalId can only be a Missal
+        // applicableMissals() already returned for the open calendar — so the
+        // applicable set passed here always contains it.
+        const writeTarget = { tier: 'missal', source_id: 'US_2011' };
+        const applicableIds = applicableMissals(CATALOGUE, 'US', 'VA').map((m) => m.missal_id);
+        expect(applicableIds).toContain('US_2011');
+        expect(applicableTiers([writeTarget], applicableIds)).toContainEqual(writeTarget);
+    });
+
+    it('returns an empty result for an empty input rather than throwing', () => {
+        expect(applicableTiers([], ['US_2011'])).toEqual([]);
+        expect(applicableTiers(undefined, ['US_2011'])).toEqual([]);
+    });
+
+    it('represents "filtered to nothing" as [], leaving the empty case to the caller', () => {
+        // A celebration whose only curated readings live in a Missal that does not
+        // apply here must filter down to nothing — the function does not special
+        // case that; deciding what to render for an empty list is the caller's job.
+        expect(applicableTiers([US_TIER, IT_TIER], ['EDITIO_TYPICA_2002'])).toEqual([]);
     });
 });

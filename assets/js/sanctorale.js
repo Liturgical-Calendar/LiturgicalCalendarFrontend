@@ -406,6 +406,29 @@ export function schemaKeysOf(entries) {
     return [...known, ...extra];
 }
 
+/**
+ * Narrow a lectionary response's tiers to the ones the selected calendar actually
+ * uses.
+ *
+ * `GET /lectionary/{rite}/sanctorale/{event_key}` is scoped by RITE, not by
+ * calendar, so its `readings` array can carry tiers from Missals the selected
+ * calendar never uses — StPeterClaver's US_2011 and IT_1983 tiers both ride along
+ * when viewing the General Roman Calendar, and IT_1983's still rides along when
+ * viewing the US calendar. The rite-level corpus (`tier.tier === 'rite'`) applies
+ * to everything in the rite and is always kept; a `missal` tier is kept only when
+ * its `source_id` is one of `applicableMissals()`'s ids. The caller owns that call
+ * — routing through the page's one existing definition of "applies here" is the
+ * point, rather than this function keeping a second, looser answer that can drift.
+ *
+ * @param {Array<object>} tiers a `/lectionary` response's `readings` array
+ * @param {Set<string>|Array<string>} applicableMissalIds ids from applicableMissals()
+ * @returns {Array<object>}
+ */
+export function applicableTiers(tiers, applicableMissalIds) {
+    const ids = applicableMissalIds instanceof Set ? applicableMissalIds : new Set(applicableMissalIds ?? []);
+    return (tiers ?? []).filter((tier) => tier.tier === 'rite' || ids.has(tier.source_id));
+}
+
 export function baseRegionFor(missals, rite) {
     const regions = [...new Set(missals.map((m) => m.region))];
     // A rite with a single region has no national missals to distinguish, so every
@@ -1187,11 +1210,25 @@ function renderReadingsForm(payload) {
             <div class="alert alert-secondary mb-0">${escapeHtml(i18n.readingsNotWritable)}</div>`;
     }
 
-    const tiers = payload.readings ?? [];
+    // The response is rite-scoped, so it can carry tiers from Missals the selected
+    // calendar does not use (see applicableTiers()) — drop them before deciding
+    // what this Missal owns or rendering anything.
+    const applicableIds = applicableMissals(state.missals, state.calendar, state.baseRegion).map((m) => m.missal_id);
+    const tiers = applicableTiers(payload.readings ?? [], applicableIds);
     // 'missal' only when THIS Missal owns a lectionary tier of its own — not merely
     // when some other Missal's tier happens to ride along in the same response.
     const ownMissalTier = tiers.find((t) => t.tier === 'missal' && t.source_id === editState.missalId);
     editState.readingsTier = ownMissalTier ? 'missal' : 'rite';
+
+    if (!tiers.length) {
+        // The write target's own Missal is always applicable by construction, so
+        // this only fires for a rite with no rite-level corpus and no applicable
+        // missal tier — reported the same as "nothing curated" (the 404 case),
+        // not as a fourth state.
+        return `
+            <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.readings)}</h6>
+            <div class="alert alert-secondary mb-0">${escapeHtml(i18n.noReadingsForEvent)}</div>`;
+    }
 
     const panels = tiers.map((tier, i) => {
         if (!isReadingsWriteTarget(tier)) {
@@ -1441,13 +1478,18 @@ function renderReadings(payload, strings = i18n) {
             <div class="alert alert-secondary mb-0">${escapeHtml(payload.message || strings.noLectionary)}</div>`;
     }
 
-    const tiers = (payload.readings ?? [])
-        .map((tier, i) => renderReadingsTier(tier, i, strings))
-        .join('');
+    // The response is rite-scoped, so it can carry tiers from Missals the selected
+    // calendar does not use (see applicableTiers()); filtering can empty the list
+    // entirely, which reads as "nothing curated" — the same message a 404 gets —
+    // not as a distinct empty-panel state.
+    const applicableIds = applicableMissals(state.missals, state.calendar, state.baseRegion).map((m) => m.missal_id);
+    const tiers = applicableTiers(payload.readings ?? [], applicableIds);
+
+    const rendered = tiers.map((tier, i) => renderReadingsTier(tier, i, strings)).join('');
 
     return `
         <h6 class="text-uppercase text-muted small">${escapeHtml(strings.readings)}</h6>
-        ${tiers || `<div class="text-muted small">${escapeHtml(strings.noEntries)}</div>`}`;
+        ${rendered || `<div class="alert alert-secondary mb-0">${escapeHtml(strings.noReadingsForEvent)}</div>`}`;
 }
 
 // -------------------------------------------------------------------- loading
