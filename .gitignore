@@ -120,14 +120,12 @@ api/*
 !admin-changes.php
 !admin-dashboard.php
 !admin-permissions.php
-!admin-role-requests.php
 !admin-decrees.php
 !admin-locales.php
 !admin-tests.php
 !admin-users.php
 !change-requests.php
 !developer-dashboard.php
-!missals-editor.php
 !sanctorale.php
 !easter.php
 !examples.php
@@ -135,7 +133,6 @@ api/*
 !index.php
 !liturgyOfAnyDay.php
 !permission-requests.php
-!request-access.php
 !temporale.php
 !translations.php
 !usage.php

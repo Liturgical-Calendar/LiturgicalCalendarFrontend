@@ -299,7 +299,6 @@ $i18n = new I18n();
 
 $adminPages = [
     'admin-dashboard',
-    'missals-editor',
     'sanctorale',
     'extending',
     'temporale',
