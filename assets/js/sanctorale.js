@@ -636,16 +636,58 @@ function renderFromOptions() {
  */
 async function showDetail(eventKey, missalId, editing = false) {
     // Opening B while A is still loading must not let A render into B's modal.
+    // Taken FIRST, before any await and before any helper below can yield, and
+    // re-checked immediately after the one await: every step that touches the
+    // modal or editState sits on one side of that check or the other.
     const seq = ++detailSeq;
+
+    openDetailShell(eventKey);
+    const row = resetEditStateForEntry(eventKey, missalId, editing);
+
+    // Names and readings are independent: a rite with no lectionary still has
+    // names, so one failing must not blank the other.
+    const [names, readings] = await Promise.allSettled([
+        loadI18n(missalId),
+        getJson(`/lectionary/${encodeURIComponent(state.rite)}/sanctorale/${encodeURIComponent(eventKey)}`)
+    ]);
+
+    if (seq !== detailSeq) return;
+
+    recordDetailOriginals(names, readings, eventKey);
+    dom.detailBody.innerHTML = renderDetailBody(row, names, readings, eventKey);
+
+    // The custom text only means anything in Custom mode, and is revealed with
+    // the value it had rather than cleared: switching away and back must not
+    // silently drop text the user has already typed.
+    wireGradeDisplayToggle();
+}
+
+/**
+ * Put the modal on screen in its loading state and address it in the URL.
+ *
+ * @param {string} eventKey
+ */
+function openDetailShell(eventKey) {
     dom.detailTitle.textContent = eventKey;
     dom.detailBody.innerHTML = `<p class="text-muted">${escapeHtml(i18n.loading)}</p>`;
     bootstrap.Modal.getOrCreateInstance(dom.detailModal).show();
-    // Written immediately, not after the awaits below: the URL should name what
-    // is opening even while it is still loading, so a copy taken mid-load is
-    // still a valid link back to this celebration.
+    // Written immediately, not after showDetail()'s await: the URL should name
+    // what is opening even while it is still loading, so a copy taken mid-load
+    // is still a valid link back to this celebration.
     state.event = eventKey;
     syncHash();
+}
 
+/**
+ * Tear down whatever the modal last held and rebuild `editState` for this entry,
+ * then set the footer to match what the user may actually do to it.
+ *
+ * @param {string} eventKey
+ * @param {string} missalId
+ * @param {boolean} editing asked for by the caller; granted by the capability
+ * @returns {object|undefined} the composed row, for the renderers
+ */
+function resetEditStateForEntry(eventKey, missalId, editing) {
     const row = state.composed.find((r) => r.event_key === eventKey);
 
     editState.eventKey = eventKey;
@@ -653,7 +695,7 @@ async function showDetail(eventKey, missalId, editing = false) {
     editState.creating = false;
     editState.calendarLabel = null;
     // Reset explicitly rather than relying on renderReadingsForm() to overwrite it:
-    // the 404 branch below renders no inputs and sets no tier, so a stale value from
+    // the 404 branch renders no inputs and sets no tier, so a stale value from
     // whatever entry was open before this one must not leak into this one's payload.
     editState.readingsTier = 'rite';
     editState.capability = capabilityFor(missalId);
@@ -669,15 +711,17 @@ async function showDetail(eventKey, missalId, editing = false) {
     dom.deleteEntry.classList.toggle('d-none', !(editState.editing && editState.capability.canDelete));
     dom.formError.textContent = '';
 
-    // Names and readings are independent: a rite with no lectionary still has
-    // names, so one failing must not blank the other.
-    const [names, readings] = await Promise.allSettled([
-        loadI18n(missalId),
-        getJson(`/lectionary/${encodeURIComponent(state.rite)}/sanctorale/${encodeURIComponent(eventKey)}`)
-    ]);
+    return row;
+}
 
-    if (seq !== detailSeq) return;
-
+/**
+ * Record what was loaded as the baseline every diff is taken against.
+ *
+ * @param {PromiseSettledResult<object>} names
+ * @param {PromiseSettledResult<object>} readings
+ * @param {string} eventKey
+ */
+function recordDetailOriginals(names, readings, eventKey) {
     if (names.status === 'fulfilled') {
         // Only locales the file actually carries an entry for. A locale that is
         // ABSENT stays absent in the original, which is what lets diffLocaleMap
@@ -703,8 +747,20 @@ async function showDetail(eventKey, missalId, editing = false) {
         // failure — but there is then no original to diff against.
         editState.original.readings = {};
     }
+}
 
-    dom.detailBody.innerHTML = [
+/**
+ * The modal body: structure, names and readings, each as a form or as a reading
+ * depending on `editState.editing`.
+ *
+ * @param {object|undefined} row
+ * @param {PromiseSettledResult<object>} names
+ * @param {PromiseSettledResult<object>} readings
+ * @param {string} eventKey
+ * @returns {string}
+ */
+function renderDetailBody(row, names, readings, eventKey) {
+    return [
         editState.editing ? renderStructureForm(row) : renderStructure(row),
         names.status === 'fulfilled'
             ? (editState.editing ? renderNamesForm(names.value, eventKey) : renderNames(names.value, eventKey))
@@ -717,11 +773,6 @@ async function showDetail(eventKey, missalId, editing = false) {
             ? renderReadingsForm(readings.value)
             : renderReadingsOutcome(readings)
     ].join('');
-
-    // The custom text only means anything in Custom mode, and is revealed with
-    // the value it had rather than cleared: switching away and back must not
-    // silently drop text the user has already typed.
-    wireGradeDisplayToggle();
 }
 
 /**
@@ -886,16 +937,10 @@ async function showCreate() {
 async function saveEntry() {
     dom.formError.textContent = '';
 
+    // Read before validation, because the event_key rule below is stated over
+    // `editState.eventKey` rather than over the input.
     if (editState.creating) {
         editState.eventKey = el('entryEventKey')?.value.trim() ?? '';
-        // The schema's own rule, not an approximation of it: see
-        // EVENT_KEY_PATTERN. A looser client rule lets `stIsidore` through to an
-        // opaque 400; a tighter one refuses `StJohnBaptist_vigil` outright, which
-        // is how a vigil entry became impossible to create.
-        if (!isValidEventKey(editState.eventKey)) {
-            dom.formError.textContent = i18n.eventKeyHint;
-            return;
-        }
     }
 
     const next = {
@@ -904,38 +949,15 @@ async function saveEntry() {
         readings: readReadingsForm()
     };
 
-    // `Number(el('entryDay')?.value)` on a cleared or missing input lands on 0
-    // or NaN depending on how it was cleared — neither is a day the API will
-    // accept, and buildCreate()/buildPatch() have no opinion on range, only on
-    // presence. Reported here, beside the input, rather than let it travel as
-    // an opaque 400.
-    if (!Number.isInteger(next.structure.day) || next.structure.day < 1 || next.structure.day > 31) {
-        dom.formError.textContent = i18n.invalidDay;
+    const invalid = validateEntryForm(next);
+    if (invalid !== null) {
+        dom.formError.textContent = invalid;
         return;
-    }
-
-    // The same problem for the two SELECTS, which differ from the day input in
-    // that they always yield something: a create form left untouched submits
-    // January and grade 0 (Weekday), both present and both wrong, so no presence
-    // check can catch them. Checked on the RAW value — `next.structure` has
-    // already coerced through Number(), where the placeholder's '' and a
-    // deliberate grade of 0 (Weekday IS a legal grade) are the same number.
-    if (editState.creating) {
-        if (el('entryMonth')?.value === '') {
-            dom.formError.textContent = i18n.chooseMonth;
-            return;
-        }
-        if (el('entryGrade')?.value === '') {
-            dom.formError.textContent = i18n.chooseGrade;
-            return;
-        }
     }
 
     let payload;
     try {
-        payload = editState.creating
-            ? buildCreate({ eventKey: editState.eventKey, next, readingsTier: editState.readingsTier })
-            : buildPatch({ original: editState.original, next, readingsTier: editState.readingsTier });
+        payload = buildEntryPayload(next);
     } catch (error) {
         if (error instanceof PayloadError) {
             dom.formError.textContent = error.message === 'nothing changed' ? i18n.noChanges : error.message;
@@ -949,39 +971,125 @@ async function saveEntry() {
         const data = await writeJson(editState.creating ? 'PUT' : 'PATCH', path, payload);
         const outcome = reportWrite(data, editState.creating ? i18n.created : i18n.saved);
         const savedKey = editState.eventKey;
-        bootstrap.Modal.getOrCreateInstance(dom.detailModal).hide();
-        // Cleared explicitly rather than left for the `hidden.bs.modal` listener,
-        // whose fade-out timing races reload() below: without this, reload()'s own
-        // openDeepLinkedEvent() can still see the just-saved key in state.event and
-        // reopen the very modal Save just closed.
-        state.event = '';
+        closeEntryModal();
         if (outcome.applied) {
-            await reload();
-            // Follow the row to wherever it landed, rather than leaving the editor
-            // on the tab they started from — a curator who moves a celebration to
-            // another month must see it move, not have to go find it.
-            const month = monthOf(state.composed, savedKey);
-            if (month !== null && month !== state.month) {
-                state.month = month;
-                syncHash();
-                render();
-            }
+            await reloadAndFollow(savedKey);
         }
     } catch (error) {
-        if (!(error instanceof ApiWriteError)) throw error;
-        if (error.status === 409) {
-            // assertKeyIdentity() composes a message naming the editions and dates
-            // that disagree. It belongs beside the day and month that caused it.
-            dom.formError.textContent = `${i18n.conflictTitle}: ${error.body?.error ?? ''}`;
-            return;
-        }
-        if (error.status === 403) {
-            // The likeliest cause is a grant changing under a long-lived page.
-            await loadCatalogue();
-            dom.formError.textContent = i18n.permissionDenied;
-            return;
-        }
-        dom.formError.textContent = i18n.saveFailed.replace('%s', error.body?.error ?? error.message);
+        await reportSaveError(error);
+    }
+}
+
+/**
+ * What is wrong with the form, in the order the user should be told about it.
+ *
+ * The order is load-bearing, not incidental: a form with two faults reports the
+ * FIRST, and reordering these silently changes which message the user sees.
+ *
+ * @param {{structure: object}} next the form as it currently reads
+ * @returns {?string} the message to show, or null when the form is submittable
+ */
+function validateEntryForm(next) {
+    // The schema's own rule, not an approximation of it: see EVENT_KEY_PATTERN.
+    // A looser client rule lets `stIsidore` through to an opaque 400; a tighter
+    // one refuses `StJohnBaptist_vigil` outright, which is how a vigil entry
+    // became impossible to create.
+    if (editState.creating && !isValidEventKey(editState.eventKey)) {
+        return i18n.eventKeyHint;
+    }
+
+    // `Number(el('entryDay')?.value)` on a cleared or missing input lands on 0
+    // or NaN depending on how it was cleared — neither is a day the API will
+    // accept, and buildCreate()/buildPatch() have no opinion on range, only on
+    // presence. Reported here, beside the input, rather than let it travel as
+    // an opaque 400.
+    if (!Number.isInteger(next.structure.day) || next.structure.day < 1 || next.structure.day > 31) {
+        return i18n.invalidDay;
+    }
+
+    // The same problem for the two SELECTS, which differ from the day input in
+    // that they always yield something: a create form left untouched submits
+    // January and grade 0 (Weekday), both present and both wrong, so no presence
+    // check can catch them. Checked on the RAW value — `next.structure` has
+    // already coerced through Number(), where the placeholder's '' and a
+    // deliberate grade of 0 (Weekday IS a legal grade) are the same number.
+    if (editState.creating) {
+        if (el('entryMonth')?.value === '') return i18n.chooseMonth;
+        if (el('entryGrade')?.value === '') return i18n.chooseGrade;
+    }
+
+    return null;
+}
+
+/**
+ * The body of the write: a whole entry when creating, a diff when editing.
+ *
+ * @param {object} next the form as it currently reads
+ * @returns {object}
+ * @throws {PayloadError} when there is nothing to send
+ */
+function buildEntryPayload(next) {
+    return editState.creating
+        ? buildCreate({ eventKey: editState.eventKey, next, readingsTier: editState.readingsTier })
+        : buildPatch({ original: editState.original, next, readingsTier: editState.readingsTier });
+}
+
+/**
+ * Report a failed write where the user can act on it.
+ *
+ * Rethrows anything that is not an API write failure: an unexpected error must
+ * surface, not be flattened into a form message.
+ *
+ * @param {unknown} error
+ */
+async function reportSaveError(error) {
+    if (!(error instanceof ApiWriteError)) throw error;
+    if (error.status === 409) {
+        // assertKeyIdentity() composes a message naming the editions and dates
+        // that disagree. It belongs beside the day and month that caused it —
+        // inline in the form, never as a toast that outlives the modal.
+        dom.formError.textContent = `${i18n.conflictTitle}: ${error.body?.error ?? ''}`;
+        return;
+    }
+    if (error.status === 403) {
+        // The likeliest cause is a grant changing under a long-lived page.
+        await loadCatalogue();
+        dom.formError.textContent = i18n.permissionDenied;
+        return;
+    }
+    dom.formError.textContent = i18n.saveFailed.replace('%s', error.body?.error ?? error.message);
+}
+
+/**
+ * Close the entry modal and stop it addressing anything.
+ *
+ * `state.event` is cleared here rather than left for the `hidden.bs.modal`
+ * listener, whose fade-out timing races the reload that follows: without this,
+ * reload()'s own openDeepLinkedEvent() can still see the just-written key in
+ * `state.event` and reopen the very modal the write just closed.
+ */
+function closeEntryModal() {
+    bootstrap.Modal.getOrCreateInstance(dom.detailModal).hide();
+    state.event = '';
+}
+
+/**
+ * Reload the sanctorale and follow the written row to wherever it landed.
+ *
+ * Following matters because a curator who moves a celebration to another month
+ * must SEE it move rather than have to go find it — and on a delete, because
+ * removing an override reveals an earlier edition's row, which is usually but
+ * not necessarily on the same date.
+ *
+ * @param {string} eventKey
+ */
+async function reloadAndFollow(eventKey) {
+    await reload();
+    const month = monthOf(state.composed, eventKey);
+    if (month !== null && month !== state.month) {
+        state.month = month;
+        syncHash();
+        render();
     }
 }
 
@@ -1007,25 +1115,14 @@ async function deleteEntry() {
         const data = await writeJson('DELETE', path);
         const outcome = reportWrite(data, i18n.deleted);
         const deletedKey = editState.eventKey;
-        bootstrap.Modal.getOrCreateInstance(dom.detailModal).hide();
-        // See the identical comment in saveEntry(): clearing here, not waiting for
-        // `hidden.bs.modal`, is what stops reload() from reopening this modal.
-        state.event = '';
+        closeEntryModal();
         if (outcome.applied) {
             if (data?.readings_retained === true && typeof window.showToast === 'function') {
                 window.showToast(i18n.readingsRetained, 'info');
             }
-            await reload();
-            // A plain delete leaves nothing to follow — the row is simply gone, and
-            // staying put is correct. Deleting an OVERRIDE instead reveals an
-            // earlier edition's row, which is usually the same month/day but is
-            // not guaranteed to be — follow it if the reveal moved it.
-            const month = monthOf(state.composed, deletedKey);
-            if (month !== null && month !== state.month) {
-                state.month = month;
-                syncHash();
-                render();
-            }
+            // A plain delete leaves nothing to follow — the row is simply gone,
+            // and reloadAndFollow() stays put for it, monthOf() finding nothing.
+            await reloadAndFollow(deletedKey);
         }
     } catch (error) {
         if (!(error instanceof ApiWriteError)) throw error;
