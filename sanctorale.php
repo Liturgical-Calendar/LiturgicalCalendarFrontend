@@ -297,6 +297,13 @@ $litCommons = [
                     'Begins with a capital, then letters and digits (StIsidoreFarmer). A trailing number (StPaul_2) or _vigil is allowed, as is a lowercase two-word prefix. Cannot be renamed.'
                 ), JSON_HEX_TAG); ?>,
                 invalidDay:         <?php echo json_encode(_('Enter a day between 1 and 31.'), JSON_HEX_TAG); ?>,
+                <?php // A <select> with no placeholder always yields a value, so an untouched
+                      // month lands on January and an untouched grade on 0 (Weekday) — both
+                      // present, both wrong, and neither catchable by a presence check. The
+                      // create form gets a disabled placeholder instead, and these two say so. ?>
+                choosePrompt:       <?php echo json_encode(_('Choose…'), JSON_HEX_TAG); ?>,
+                chooseMonth:        <?php echo json_encode(_('Choose a month.'), JSON_HEX_TAG); ?>,
+                chooseGrade:        <?php echo json_encode(_('Choose a grade.'), JSON_HEX_TAG); ?>,
                 <?php // translators: %1$s is the event key, %2$s is the Missal id ?>
                 confirmDelete:      <?php echo json_encode(_('Delete %1$s from %2$s? Its name and readings go with it, and any earlier edition that already defined it takes over.'), JSON_HEX_TAG); ?>,
                 <?php // The rite-level corpus is shared by every Missal of the rite, so this

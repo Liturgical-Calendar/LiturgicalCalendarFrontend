@@ -911,6 +911,23 @@ async function saveEntry() {
         return;
     }
 
+    // The same problem for the two SELECTS, which differ from the day input in
+    // that they always yield something: a create form left untouched submits
+    // January and grade 0 (Weekday), both present and both wrong, so no presence
+    // check can catch them. Checked on the RAW value — `next.structure` has
+    // already coerced through Number(), where the placeholder's '' and a
+    // deliberate grade of 0 (Weekday IS a legal grade) are the same number.
+    if (editState.creating) {
+        if (el('entryMonth')?.value === '') {
+            dom.formError.textContent = i18n.chooseMonth;
+            return;
+        }
+        if (el('entryGrade')?.value === '') {
+            dom.formError.textContent = i18n.chooseGrade;
+            return;
+        }
+    }
+
     let payload;
     try {
         payload = editState.creating
@@ -1128,6 +1145,17 @@ export function orderedSelection(id, previous) {
  * `grade_display` is a SELECT, not a text input, because the field has three
  * states and a text input has two. See sanctorale-payload.js.
  *
+ * `month` and `grade` get a disabled placeholder when CREATING. A `<select>` with
+ * no placeholder always yields a value, so an untouched control is
+ * indistinguishable from a deliberate one: a curator who never opens the grade
+ * dropdown writes `grade: 0` — Weekday — for a saint who is at minimum an
+ * optional memorial, and one who never opens the month dropdown files the entry
+ * under January. `CREATE_REQUIRED`'s presence check cannot fire for either, since
+ * both values are present; they are just wrong. The placeholder makes "not
+ * chosen" a state the form can hold, and saveEntry() rejects it on the create
+ * path — reading the RAW select value, because a grade of `0` is legitimate and
+ * only `''` means unchosen.
+ *
  * @param {object} [row] the entry being edited, absent when creating one
  * @returns {string} HTML
  */
@@ -1135,6 +1163,9 @@ function renderStructureForm(row) {
     const mode = gradeDisplayMode(row?.grade_display);
     const option = (value, label, selected) =>
         `<option value="${escapeHtml(value)}"${selected ? ' selected' : ''}>${escapeHtml(label)}</option>`;
+    const placeholder = row
+        ? ''
+        : `<option value="" disabled selected>${escapeHtml(i18n.choosePrompt)}</option>`;
 
     return `
         <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.structure)}</h6>
@@ -1142,7 +1173,7 @@ function renderStructureForm(row) {
             <div class="col-6 col-md-3">
                 <label class="form-label small" for="entryMonth">${escapeHtml(i18n.date)}</label>
                 <select class="form-select" id="entryMonth">
-                    ${MONTHS.map((m) => option(String(m), monthName(m), m === row?.month)).join('')}
+                    ${placeholder}${MONTHS.map((m) => option(String(m), monthName(m), m === row?.month)).join('')}
                 </select>
             </div>
             <div class="col-6 col-md-2">
@@ -1153,7 +1184,7 @@ function renderStructureForm(row) {
             <div class="col-12 col-md-3">
                 <label class="form-label small" for="entryGrade">${escapeHtml(i18n.grade)}</label>
                 <select class="form-select" id="entryGrade">
-                    ${Object.entries(i18n.grades ?? {}).map(([value, label]) =>
+                    ${placeholder}${Object.entries(i18n.grades ?? {}).map(([value, label]) =>
                         option(value, label, Number(value) === row?.grade)).join('')}
                 </select>
             </div>
