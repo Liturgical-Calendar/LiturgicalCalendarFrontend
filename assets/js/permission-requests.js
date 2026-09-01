@@ -785,36 +785,54 @@ document.addEventListener('DOMContentLoaded', async function() {
             addPermissionRow();
             const row = permissionRows.lastElementChild;
             if (!row) continue;
-            const typeSelect = row.querySelector('.perm-object-type');
-            const relSelect = row.querySelector('.perm-relation');
-            if (typeSelect) typeSelect.value = perm.object_type || '';
-            // Sync the object-id control (mounts a CalendarSelect for calendar
-            // scopes; await so the <select> exists before we set its value).
-            await syncRowObjectIdField(row, perm.object_type || '');
-            // A stored object_id is rite-qualified (`ambrosian/lugano_ch`), while
-            // the CalendarSelect's option values are bare — so split, restore the
-            // rite first, then the calendar. splitObjectId() tolerates a legacy
-            // bare id from a request stored before the API migration.
-            const { rite, id } = splitObjectId(perm.object_type || '', perm.object_id || '');
-            const riteField = row.querySelector('.perm-object-rite');
-            if (riteField && riteField.value !== rite) {
-                riteField.value = rite;
-                // linkToRiteSelect() rebuilds the calendar options from this
-                // event; without it the diocese list still holds the old rite's
-                // dioceses and the assignment below silently selects nothing.
-                riteField.dispatchEvent(new Event('change'));
-            }
-            const idField = row.querySelector('.perm-object-id');
-            if (idField) {
-                // The `rite_calendar` select's own option values are the full
-                // qualified ids (there is no rite control to restore alongside a
-                // bare one), so it is restored from the stored value verbatim.
-                idField.value = perm.object_type === RITE_CALENDAR_TYPE
-                    ? (perm.object_id || '')
-                    : id;
-            }
-            if (relSelect) relSelect.value = perm.relation || '';
+            await restorePermissionRow(row, perm);
         }
+    }
+
+    /**
+     * Restore one stored permission into one freshly added row.
+     *
+     * Split out of populateRowsFromStoredPermissions() so that function is left
+     * with the one thing it is named for — walking the stored array and warning
+     * when it is truncated — while the per-row restore, which is where all the
+     * ordering subtleties live, stands on its own.
+     *
+     * @param {HTMLElement} row a row just appended by addPermissionRow()
+     * @param {object} perm one stored permission
+     */
+    async function restorePermissionRow(row, perm) {
+        const objectType = perm.object_type || '';
+        const typeSelect = row.querySelector('.perm-object-type');
+        if (typeSelect) typeSelect.value = objectType;
+
+        // Sync the object-id control (mounts a CalendarSelect for calendar
+        // scopes; await so the <select> exists before we set its value).
+        await syncRowObjectIdField(row, objectType);
+
+        // A stored object_id is rite-qualified (`ambrosian/lugano_ch`), while
+        // the CalendarSelect's option values are bare — so split, restore the
+        // rite first, then the calendar. splitObjectId() tolerates a legacy
+        // bare id from a request stored before the API migration.
+        const { rite, id } = splitObjectId(objectType, perm.object_id || '');
+        const riteField = row.querySelector('.perm-object-rite');
+        if (riteField && riteField.value !== rite) {
+            riteField.value = rite;
+            // linkToRiteSelect() rebuilds the calendar options from this event;
+            // without it the diocese list still holds the old rite's dioceses and
+            // the assignment below silently selects nothing.
+            riteField.dispatchEvent(new Event('change'));
+        }
+
+        const idField = row.querySelector('.perm-object-id');
+        if (idField) {
+            // The `rite_calendar` select's own option values are the full
+            // qualified ids (there is no rite control to restore alongside a
+            // bare one), so it is restored from the stored value verbatim.
+            idField.value = objectType === RITE_CALENDAR_TYPE ? (perm.object_id || '') : id;
+        }
+
+        const relSelect = row.querySelector('.perm-relation');
+        if (relSelect) relSelect.value = perm.relation || '';
     }
 
     /**
