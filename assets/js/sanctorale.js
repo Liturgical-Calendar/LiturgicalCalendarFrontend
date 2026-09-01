@@ -675,8 +675,144 @@ async function showDetail(eventKey, missalId, editing = false) {
     // The custom text only means anything in Custom mode, and is revealed with
     // the value it had rather than cleared: switching away and back must not
     // silently drop text the user has already typed.
+    wireGradeDisplayToggle();
+}
+
+/**
+ * Reveal or hide the custom grade-display text input as the mode select
+ * changes. Shared by showDetail() and showCreate(), which both render
+ * renderStructureForm() into the modal.
+ */
+function wireGradeDisplayToggle() {
     el('entryGradeDisplayMode')?.addEventListener('change', (event) => {
         el('entryGradeDisplayText')?.classList.toggle('d-none', event.target.value !== 'custom');
+    });
+}
+
+/**
+ * The calendar label a Missal's rows carry.
+ *
+ * `buildRow()` refuses a payload whose `calendar` is not the Missal's own, and
+ * every applicable Missal has at least one composed row to read it off.
+ *
+ * @param {string} missalId
+ * @returns {string}
+ */
+function calendarLabelFor(missalId) {
+    return state.composed.find((r) => r._missalId === missalId)?.calendar ?? '';
+}
+
+/**
+ * Re-render the Names block for the Missal currently selected in the create
+ * dialog's target picker.
+ *
+ * Genuinely load-bearing, not cosmetic: the locale set differs per edition —
+ * US_2011 publishes `en_US` alone against the 1970 typica's fourteen. Without
+ * this, switching the picker would leave the previous Missal's locale set on
+ * screen and let a curator submit names into locales the chosen Missal does
+ * not even publish.
+ *
+ * Guarded by `detailSeq`, the same token showDetail() uses: a curator who
+ * flips between two Missals before the first `/i18n` fetch resolves must see
+ * the SECOND choice's locales, not have the first overwrite it on arrival.
+ */
+async function refreshCreateNames() {
+    const seq = ++detailSeq;
+    const container = el('entryNamesBlock');
+    if (!container) return;
+    container.innerHTML = `<p class="text-muted">${escapeHtml(i18n.loading)}</p>`;
+
+    let payload;
+    try {
+        payload = await loadI18n(editState.missalId);
+    } catch {
+        payload = null;
+    }
+    if (seq !== detailSeq) return;
+
+    const block = el('entryNamesBlock');
+    if (!block) return;
+    block.innerHTML = payload
+        ? renderNamesForm(payload, '')
+        : `<div class="alert alert-warning">${escapeHtml(i18n.namesUnavailable)}</div>`;
+}
+
+/**
+ * Open the modal to create an entry.
+ *
+ * Two controls exist here and nowhere else. The Missal picker, because adding a
+ * saint to US_2011 and adding one to the 1970 typica are different acts and the
+ * UI must make the curator say which — it lists only editions they may edit. And
+ * the event_key input, because the key is set once: the API refuses to rename
+ * one, since a rename orphans its name and readings in every locale permanently.
+ */
+async function showCreate() {
+    const editable = applicableMissals(state.missals, state.calendar, state.baseRegion)
+        .filter((m) => capabilityFor(m.missal_id).canEdit)
+        .reverse(); // newest first; applicableMissals sorts oldest-first for compose()
+
+    if (editable.length === 0) return;
+
+    const seq = ++detailSeq;
+
+    editState.eventKey = '';
+    editState.missalId = editable[0].missal_id;
+    editState.creating = true;
+    editState.editing = true;
+    editState.capability = capabilityFor(editState.missalId);
+    editState.original = { structure: {}, i18n: {}, readings: {} };
+    editState.calendarLabel = calendarLabelFor(editState.missalId);
+    editState.readingsTier = 'rite';
+
+    dom.detailTitle.textContent = i18n.newEntry;
+    dom.detailFooter.classList.remove('d-none');
+    dom.deleteEntry.classList.add('d-none');
+    dom.formError.textContent = '';
+    dom.detailBody.innerHTML = `<p class="text-muted">${escapeHtml(i18n.loading)}</p>`;
+    bootstrap.Modal.getOrCreateInstance(dom.detailModal).show();
+
+    // `loadI18n()` is the same cached loader showDetail() uses — it returns
+    // `{locales, i18n, coverage}`, exactly what renderNamesForm() consumes.
+    let payload;
+    try {
+        payload = await loadI18n(editState.missalId);
+    } catch {
+        payload = null;
+    }
+    if (seq !== detailSeq) return;
+
+    dom.detailBody.innerHTML = `
+        <div class="row g-3 mb-3">
+            <div class="col-12 col-md-6">
+                <label class="form-label small" for="entryTargetMissal">${escapeHtml(i18n.targetMissal)}</label>
+                <select class="form-select" id="entryTargetMissal">
+                    ${editable.map((m) => `<option value="${escapeHtml(m.missal_id)}">${escapeHtml(m.missal_id)}</option>`).join('')}
+                </select>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label small" for="entryEventKey">${escapeHtml(i18n.eventKeyLabel)}</label>
+                <input type="text" class="form-control" id="entryEventKey" pattern="[A-Za-z0-9]+">
+                <div class="form-text">${escapeHtml(i18n.eventKeyHint)}</div>
+            </div>
+        </div>
+        ${renderStructureForm(null)}
+        <div id="entryNamesBlock">${payload
+            ? renderNamesForm(payload, '')
+            : `<div class="alert alert-warning">${escapeHtml(i18n.namesUnavailable)}</div>`}</div>`;
+
+    wireGradeDisplayToggle();
+
+    el('entryTargetMissal')?.addEventListener('change', (event) => {
+        editState.missalId = event.target.value;
+        editState.capability = capabilityFor(editState.missalId);
+        editState.calendarLabel = calendarLabelFor(editState.missalId);
+        // The calendar readback in the Structure panel is baked into innerHTML
+        // rather than re-rendered wholesale, so it is updated directly here;
+        // the payload itself always reads editState.calendarLabel fresh at
+        // save time regardless (see readStructureForm()).
+        const calendarField = el('entryCalendarLabel');
+        if (calendarField) calendarField.textContent = editState.calendarLabel;
+        refreshCreateNames();
     });
 }
 
@@ -690,11 +826,30 @@ async function showDetail(eventKey, missalId, editing = false) {
  */
 async function saveEntry() {
     dom.formError.textContent = '';
+
+    if (editState.creating) {
+        editState.eventKey = el('entryEventKey')?.value.trim() ?? '';
+        if (!/^[A-Za-z0-9]+$/.test(editState.eventKey)) {
+            dom.formError.textContent = i18n.eventKeyHint;
+            return;
+        }
+    }
+
     const next = {
         structure: readStructureForm(),
         i18n: readNamesForm(),
         readings: readReadingsForm()
     };
+
+    // `Number(el('entryDay')?.value)` on a cleared or missing input lands on 0
+    // or NaN depending on how it was cleared — neither is a day the API will
+    // accept, and buildCreate()/buildPatch() have no opinion on range, only on
+    // presence. Reported here, beside the input, rather than let it travel as
+    // an opaque 400.
+    if (!Number.isInteger(next.structure.day) || next.structure.day < 1 || next.structure.day > 31) {
+        dom.formError.textContent = i18n.invalidDay;
+        return;
+    }
 
     let payload;
     try {
@@ -912,7 +1067,7 @@ function renderStructureForm(row) {
             </div>
             <div class="col-12">
                 <div class="small text-muted">${escapeHtml(i18n.calendarField)}</div>
-                <div><code>${escapeHtml(row?.calendar ?? editState.calendarLabel ?? '')}</code></div>
+                <div><code id="entryCalendarLabel">${escapeHtml(row?.calendar ?? editState.calendarLabel ?? '')}</code></div>
             </div>
         </div>`;
 }
@@ -1523,6 +1678,7 @@ async function init() {
         render();
     });
     dom.saveEntry?.addEventListener('click', saveEntry);
+    dom.newEntry?.addEventListener('click', showCreate);
     dom.search.addEventListener('input', () => {
         state.search = dom.search.value;
         // Move to a month that actually contains a hit, otherwise the reader
