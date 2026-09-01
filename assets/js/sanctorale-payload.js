@@ -107,3 +107,147 @@ export function diffStructure(original, next) {
     }
     return changed;
 }
+
+/**
+ * Structural equality for a locale map's values: a name (string) or a readings
+ * entry (a possibly-nested object of strings).
+ */
+function sameEntry(a, b) {
+    if (typeof a === 'string' || typeof b === 'string') return a === b;
+    if (a === null || b === null || a === undefined || b === undefined) return a === b;
+    const aKeys = Object.keys(a).sort();
+    const bKeys = Object.keys(b).sort();
+    if (aKeys.length !== bKeys.length || aKeys.some((k, i) => k !== bKeys[i])) return false;
+    return aKeys.every((k) => sameEntry(a[k], b[k]));
+}
+
+/** True for a value that says nothing: '' for a name, all-blank for a readings entry. */
+function isBlankEntry(value) {
+    if (value === '' || value === null || value === undefined) return true;
+    if (typeof value === 'object') return Object.values(value).every(isBlankEntry);
+    return false;
+}
+
+/**
+ * The locales whose value changed.
+ *
+ * Two asymmetries, both deliberate:
+ *
+ * - Clearing a value yields `''`, never omission. Omitting the locale would leave
+ *   the stored value in place, so a user who deleted a name would see it return.
+ * - A locale that was ABSENT and is still blank yields nothing. `fanOutKey()`
+ *   fills a new key into every locale file itself, and proposing fourteen
+ *   identical blanks would only lengthen the diff a reviewer reads.
+ *
+ * @param {Object<string, any>} original
+ * @param {Object<string, any>} next
+ * @returns {Object<string, any>} a partial map, possibly empty
+ */
+export function diffLocaleMap(original, next) {
+    const changed = {};
+    for (const [locale, value] of Object.entries(next ?? {})) {
+        const had = Object.prototype.hasOwnProperty.call(original ?? {}, locale);
+        if (!had && isBlankEntry(value)) continue;
+        if (had && sameEntry(original[locale], value)) continue;
+        changed[locale] = value;
+    }
+    return changed;
+}
+
+/**
+ * A minimal PATCH body.
+ *
+ * Minimal is not an optimization: `fanOutKey()` stages only files whose content
+ * actually changed, so the payload's size is exactly the size of the change
+ * request a reviewer has to read.
+ *
+ * @param {object} args
+ * @param {{structure: object, i18n: object, readings?: object}} args.original
+ * @param {{structure: object, i18n: object, readings?: object}} args.next
+ * @param {'missal'|'rite'|'none'} args.readingsTier
+ * @returns {object}
+ * @throws {PayloadError} when nothing changed
+ */
+export function buildPatch({ original, next, readingsTier }) {
+    const payload = diffStructure(original.structure, next.structure);
+
+    const names = diffLocaleMap(original.i18n, next.i18n);
+    if (Object.keys(names).length > 0) {
+        payload.i18n = names;
+    }
+
+    // A rite with no corpus has nowhere to write; the handler refuses a payload
+    // that carries `readings` for such a Missal.
+    if (readingsTier !== 'none') {
+        const readings = diffLocaleMap(original.readings, next.readings);
+        if (Object.keys(readings).length > 0) {
+            payload.readings = readings;
+        }
+    }
+
+    if (Object.keys(payload).length === 0) {
+        throw new PayloadError('nothing changed');
+    }
+    return payload;
+}
+
+/**
+ * A complete PUT body.
+ *
+ * `calendar` is carried even though no user edits it: `buildRow()` requires it
+ * and refuses a value that is not the target Missal's own, so a row can never be
+ * filed under a calendar its own Missal never applies to.
+ *
+ * `grade_display` is omitted when there is no override and carried when there is
+ * one — including when the override is `''`, which is an authored decision to
+ * show no rank rather than an unset field.
+ *
+ * @param {object} args
+ * @param {string} args.eventKey used for the message only; the URL owns the key
+ * @param {{structure: object, i18n: object, readings?: object}} args.next
+ * @param {'missal'|'rite'|'none'} args.readingsTier
+ * @returns {object}
+ * @throws {PayloadError} when a required field or the last locale is missing
+ */
+export function buildCreate({ eventKey, next, readingsTier }) {
+    const structure = next.structure ?? {};
+
+    const missing = CREATE_REQUIRED.filter((field) => {
+        const value = structure[field];
+        return value === null || value === undefined
+            || (Array.isArray(value) && value.length === 0);
+    });
+    if (missing.length > 0) {
+        throw new PayloadError(
+            `\`${eventKey}\` cannot be created without: ${missing.join(', ')}`
+        );
+    }
+
+    const payload = {};
+    for (const field of [...CREATE_REQUIRED, 'is_dominical', 'is_bvm']) {
+        if (structure[field] !== null && structure[field] !== undefined) {
+            payload[field] = structure[field];
+        }
+    }
+    if (structure.grade_display !== null && structure.grade_display !== undefined) {
+        payload.grade_display = structure.grade_display;
+    }
+
+    const names = next.i18n ?? {};
+    if (Object.keys(names).length === 0) {
+        throw new PayloadError(`\`${eventKey}\` needs a name in at least one locale`);
+    }
+    payload.i18n = names;
+
+    if (readingsTier !== 'none') {
+        const readings = next.readings ?? {};
+        const meaningful = Object.fromEntries(
+            Object.entries(readings).filter(([, entry]) => !isBlankEntry(entry))
+        );
+        if (Object.keys(meaningful).length > 0) {
+            payload.readings = meaningful;
+        }
+    }
+
+    return payload;
+}
