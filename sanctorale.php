@@ -9,8 +9,9 @@
  * apply to a chosen rite and calendar, badges each row with the layer that supplied
  * it, and groups the result by month.
  *
- * Read-only for now. The write routes exist (`PUT|PATCH|DELETE
- * /missals/{missal_id}/{event_key}`, API #943) and editing lands separately.
+ * The detail modal doubles as the editor, writing back with `PUT|PATCH|DELETE
+ * /missals/{rite}/{missal_id}/{event_key}`; the markup for it is the footer below,
+ * revealed by assets/js/sanctorale.js only for a Missal the caller may edit.
  *
  * See docs/superpowers/specs/2026-08-31-sanctorale-editor-design.md.
  */
@@ -28,9 +29,58 @@ if (!$authHelper->isAuthenticated) {
 }
 
 // Whether the create button and per-row edit/delete controls are revealed is decided
-// client-side (a later task) against the caller's FGA relations on the specific Missal
-// being edited; this flag only distinguishes the global-admin fast path from that check.
+// client-side against the caller's FGA relations on the specific Missal being edited;
+// this flag only distinguishes the global-admin fast path from that check.
 $isAdmin = $authHelper->hasRole('admin');
+
+/**
+ * The whole `LitCommon` enum from the API's CommonDef.json, in the schema's own order.
+ *
+ * Every value has to be here. The editor's Common control is a multi-select whose options
+ * ARE this list, so a value the list omits cannot render as selected — and would then be
+ * dropped from the row the next time anyone saved it. Nothing in the corpus uses the last
+ * two today; they are still valid, so they are still offered.
+ *
+ * @var string[] $litCommons
+ */
+$litCommons = [
+    'Proper',
+    'Dedication of a Church',
+    'Blessed Virgin Mary',
+    'Martyrs',
+    'Pastors',
+    'Doctors',
+    'Virgins',
+    'Holy Men and Women',
+    'Martyrs:For One Martyr',
+    'Martyrs:For Several Martyrs',
+    'Martyrs:For Missionary Martyrs',
+    'Martyrs:For One Missionary Martyr',
+    'Martyrs:For Several Missionary Martyrs',
+    'Martyrs:For a Virgin Martyr',
+    'Martyrs:For a Holy Woman Martyr',
+    'Pastors:For a Pope',
+    'Pastors:For a Bishop',
+    'Pastors:For One Pastor',
+    'Pastors:For Several Pastors',
+    'Pastors:For Founders of a Church',
+    'Pastors:For One Founder',
+    'Pastors:For Several Founders',
+    'Pastors:For Missionaries',
+    'Virgins:For One Virgin',
+    'Virgins:For Several Virgins',
+    'Holy Men and Women:For Several Saints',
+    'Holy Men and Women:For One Saint',
+    'Holy Men and Women:For an Abbot',
+    'Holy Men and Women:For a Monk',
+    'Holy Men and Women:For a Nun',
+    'Holy Men and Women:For Religious',
+    'Holy Men and Women:For Those Who Practiced Works of Mercy',
+    'Holy Men and Women:For Educators',
+    'Holy Men and Women:For Holy Women',
+    'For Giving Thanks to God for the Gift of Human Life [USA]',
+    'For the Preservation of Peace and Justice'
+];
 
 ?>
 <!doctype html>
@@ -164,6 +214,8 @@ $isAdmin = $authHelper->hasRole('admin');
             locale: <?php echo json_encode(str_replace('_', '-', $i18n->LOCALE), JSON_HEX_TAG); ?>,
             isGlobalAdmin: <?php echo json_encode($isAdmin, JSON_HEX_TAG); ?>,
             userSub:       <?php echo json_encode($authHelper->sub ?? '', JSON_HEX_TAG); ?>,
+            <?php // The whole `LitCommon` enum — see $litCommons above for why it must be whole. ?>
+            commons: <?php echo json_encode($litCommons, JSON_HEX_TAG); ?>,
             i18n: {
                 loading:            <?php echo json_encode(_('Loading…'), JSON_HEX_TAG); ?>,
                 view:               <?php echo json_encode(_('Details'), JSON_HEX_TAG); ?>,

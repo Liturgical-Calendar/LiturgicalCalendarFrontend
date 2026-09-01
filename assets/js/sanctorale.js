@@ -8,13 +8,26 @@
  *
  * See docs/superpowers/specs/2026-08-31-sanctorale-editor-design.md.
  *
- * Read-only. Editing lands separately, against
- * `PUT|PATCH|DELETE /missals/{missal_id}/{event_key}` (API #943).
+ * The same modal is also the editor: opened from a row's Edit button it renders
+ * the entry as a form and writes it back with
+ * `PUT|PATCH|DELETE /missals/{rite}/{missal_id}/{event_key}`. Which rows offer
+ * that button is decided per Missal by capabilities.js; what the API actually DID
+ * with a write is decided by writeDisposition.js, because a change request queued
+ * for review answers the SAME 2xx as a write that reached disk — so only an
+ * `applied` disposition may touch local state.
  *
  * @module sanctorale
  */
 
 import { detectMissalCapabilities } from './capabilities.js';
+import { describeWriteOutcome } from './writeDisposition.js';
+import {
+    gradeDisplayMode,
+    gradeDisplayValue,
+    buildPatch,
+    buildCreate,
+    PayloadError
+} from './sanctorale-payload.js';
 
 const config = window.SanctoraleConfig;
 
@@ -49,6 +62,10 @@ const dom = {
     detailModal: el('detailModal'),
     detailTitle: el('detailModalTitle'),
     detailBody:  el('detailModalBody'),
+    detailFooter: el('detailModalFooter'),
+    saveEntry:   el('saveEntryBtn'),
+    deleteEntry: el('deleteEntryBtn'),
+    formError:   el('entryFormError'),
     newEntry:    el('newEntryBtn')
 };
 
@@ -67,6 +84,50 @@ const state = {
     search: '',
     capabilities: new Map()
 };
+
+/**
+ * What the modal is currently editing. Separate from `state`, which is about the
+ * composed view: this is torn down and rebuilt every time the modal opens.
+ */
+const editState = {
+    eventKey: null,
+    missalId: null,
+    creating: false,
+    editing: false,
+    readingsTier: 'rite',
+    /**
+     * The calendar a NEW entry belongs to. An existing entry carries its own, so
+     * this is only ever consulted when creating one, where no row exists to read.
+     */
+    calendarLabel: null,
+    /** The entry as loaded, which every diff is taken against. */
+    original: { structure: {}, i18n: {}, readings: {} },
+    capability: { canEdit: false, canDelete: false }
+};
+
+/**
+ * Report what the API DID with a write, and say whether local state may follow.
+ *
+ * A response may carry `disposition: "submitted"` with nothing written, and the
+ * handler's `success` string is built in both modes — so echoing it would tell an
+ * editor their work was saved when it was only queued.
+ *
+ * @param {object|null} data the parsed response body
+ * @param {string} appliedMessage what to say when the write reached disk
+ * @returns {{applied: boolean, message: string, severity: string}}
+ */
+function reportWrite(data, appliedMessage) {
+    const outcome = describeWriteOutcome(data, i18n, appliedMessage);
+    // `window.showToast` is the shared helper layout/footer.php loads globally
+    // (assets/js/toast.js); an ES module declaration never lands on `window`, so
+    // its absence is a real possibility and falls back to the page notice.
+    if (typeof window.showToast === 'function') {
+        window.showToast(outcome.message, outcome.severity);
+    } else {
+        notice(outcome.severity === 'success' ? 'success' : 'info', escapeHtml(outcome.message));
+    }
+    return outcome;
+}
 
 /** i18n payloads are per missal and never change within a session. */
 const i18nCache = new Map();
@@ -530,8 +591,12 @@ function renderFromOptions() {
 /**
  * One event across every layer that defines it: structure, all its names, and
  * its readings from whichever lectionary tiers carry them.
+ *
+ * @param {string} eventKey
+ * @param {string} missalId
+ * @param {boolean} [editing] open the entry as a form rather than as a reading
  */
-async function showDetail(eventKey, missalId) {
+async function showDetail(eventKey, missalId, editing = false) {
     // Opening B while A is still loading must not let A render into B's modal.
     const seq = ++detailSeq;
     dom.detailTitle.textContent = eventKey;
@@ -539,6 +604,23 @@ async function showDetail(eventKey, missalId) {
     bootstrap.Modal.getOrCreateInstance(dom.detailModal).show();
 
     const row = state.composed.find((r) => r.event_key === eventKey);
+
+    editState.eventKey = eventKey;
+    editState.missalId = missalId;
+    editState.creating = false;
+    editState.calendarLabel = null;
+    editState.capability = capabilityFor(missalId);
+    // Asked for by the caller, granted by the capability: a stale Edit button on
+    // a row whose grant has since been revoked opens read-only rather than
+    // offering a Save the API would refuse.
+    editState.editing = editing && editState.capability.canEdit;
+    editState.original = { structure: structureOf(row), i18n: {}, readings: {} };
+
+    dom.detailFooter.classList.toggle('d-none', !editState.editing);
+    // Delete belongs to an entry that exists and is being edited; a create modal
+    // reuses this footer and must not offer to delete a row nothing has stored.
+    dom.deleteEntry.classList.toggle('d-none', !(editState.editing && editState.capability.canDelete));
+    dom.formError.textContent = '';
 
     // Names and readings are independent: a rite with no lectionary still has
     // names, so one failing must not blank the other.
@@ -550,12 +632,74 @@ async function showDetail(eventKey, missalId) {
     if (seq !== detailSeq) return;
 
     dom.detailBody.innerHTML = [
-        renderStructure(row),
+        editState.editing ? renderStructureForm(row) : renderStructure(row),
         names.status === 'fulfilled'
             ? renderNames(names.value, eventKey)
             : `<div class="alert alert-warning">${escapeHtml(i18n.namesUnavailable)}</div>`,
         renderReadingsOutcome(readings)
     ].join('');
+
+    // The custom text only means anything in Custom mode, and is revealed with
+    // the value it had rather than cleared: switching away and back must not
+    // silently drop text the user has already typed.
+    el('entryGradeDisplayMode')?.addEventListener('change', (event) => {
+        el('entryGradeDisplayText')?.classList.toggle('d-none', event.target.value !== 'custom');
+    });
+}
+
+/**
+ * Save the modal.
+ *
+ * Local state is updated ONLY when the write reached disk. In queue mode the
+ * response carries the proposed payload rather than a stored resource, so
+ * writing it into `state.composed` would show the user an entry the server may
+ * never store.
+ */
+async function saveEntry() {
+    dom.formError.textContent = '';
+    const next = {
+        structure: readStructureForm(),
+        i18n: readNamesForm(),
+        readings: readReadingsForm()
+    };
+
+    let payload;
+    try {
+        payload = editState.creating
+            ? buildCreate({ eventKey: editState.eventKey, next, readingsTier: editState.readingsTier })
+            : buildPatch({ original: editState.original, next, readingsTier: editState.readingsTier });
+    } catch (error) {
+        if (error instanceof PayloadError) {
+            dom.formError.textContent = error.message === 'nothing changed' ? i18n.noChanges : error.message;
+            return;
+        }
+        throw error;
+    }
+
+    const path = entryPath(state.rite, editState.missalId, editState.eventKey);
+    try {
+        const data = await writeJson(editState.creating ? 'PUT' : 'PATCH', path, payload);
+        const outcome = reportWrite(data, editState.creating ? i18n.created : i18n.saved);
+        bootstrap.Modal.getOrCreateInstance(dom.detailModal).hide();
+        if (outcome.applied) {
+            await reload();
+        }
+    } catch (error) {
+        if (!(error instanceof ApiWriteError)) throw error;
+        if (error.status === 409) {
+            // assertKeyIdentity() composes a message naming the editions and dates
+            // that disagree. It belongs beside the day and month that caused it.
+            dom.formError.textContent = `${i18n.conflictTitle}: ${error.body?.error ?? ''}`;
+            return;
+        }
+        if (error.status === 403) {
+            // The likeliest cause is a grant changing under a long-lived page.
+            await loadCatalogue();
+            dom.formError.textContent = i18n.permissionDenied;
+            return;
+        }
+        dom.formError.textContent = i18n.saveFailed.replace('%s', error.body?.error ?? error.message);
+    }
 }
 
 /**
@@ -614,6 +758,159 @@ function renderStructure(row) {
             ${field(i18n.common, (row.common ?? []).join(', '))}
             ${field(i18n.fromMissal, row._missalId)}
         </div>`;
+}
+
+// ------------------------------------------------------------- structure form
+
+const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+/** `LitColor` in CommonDef.json, in the schema's own order. */
+const COLORS = ['white', 'red', 'green', 'purple', 'rose', 'morello', 'black'];
+
+/**
+ * The row as the Structure form can express it.
+ *
+ * `is_dominical` and `is_bvm` are OMITTED from a row rather than written `false`
+ * — the API serializes them only where the source data sets them — but a
+ * checkbox has two states, so an absent flag reads back as `false`. Defaulting
+ * them here is what lets an untouched form diff to nothing: without it every
+ * PATCH would carry `is_dominical: false, is_bvm: false` and buildPatch() could
+ * never report "nothing changed".
+ *
+ * @param {object} [row] a composed row
+ * @returns {object} the row with both flags present
+ */
+function structureOf(row) {
+    return { ...row, is_dominical: row?.is_dominical === true, is_bvm: row?.is_bvm === true };
+}
+
+/**
+ * A multi-select's values, keeping the row's own order for what it already had.
+ *
+ * `selectedOptions` reports selections in DOM order, which is the enum's order,
+ * not the row's: `StHilaryPoitiers` stores `["Pastors:For a Bishop", "Doctors"]`
+ * while the option list has `Doctors` first. Reading that back reordered would
+ * diff as a change on a form nobody touched, and would rewrite the corpus's
+ * order for no reason — diffStructure() compares arrays element by element.
+ *
+ * @param {string} id the select's element id
+ * @param {string[]} [previous] the stored order
+ * @returns {string[]}
+ */
+function orderedSelection(id, previous) {
+    const chosen = new Set([...(el(id)?.selectedOptions ?? [])].map((o) => o.value));
+    const kept = (previous ?? []).filter((value) => chosen.has(value));
+    // Set iteration is DOM order, which is the only order a newly picked value has.
+    const added = [...chosen].filter((value) => false === kept.includes(value));
+    return [...kept, ...added];
+}
+
+/**
+ * The editable Structure panel.
+ *
+ * `calendar` is shown but not editable: the API derives it from the Missal and
+ * refuses a row whose calendar is not the Missal's own. It is still submitted on
+ * create, where `buildRow()` requires it.
+ *
+ * `grade_display` is a SELECT, not a text input, because the field has three
+ * states and a text input has two. See sanctorale-payload.js.
+ *
+ * @param {object} [row] the entry being edited, absent when creating one
+ * @returns {string} HTML
+ */
+function renderStructureForm(row) {
+    const mode = gradeDisplayMode(row?.grade_display);
+    const option = (value, label, selected) =>
+        `<option value="${escapeHtml(value)}"${selected ? ' selected' : ''}>${escapeHtml(label)}</option>`;
+
+    return `
+        <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.structure)}</h6>
+        <div class="row g-3 mb-3">
+            <div class="col-6 col-md-3">
+                <label class="form-label small" for="entryMonth">${escapeHtml(i18n.date)}</label>
+                <select class="form-select" id="entryMonth">
+                    ${MONTHS.map((m) => option(String(m), monthName(m), m === row?.month)).join('')}
+                </select>
+            </div>
+            <div class="col-6 col-md-2">
+                <label class="form-label small" for="entryDay">&nbsp;</label>
+                <input type="number" min="1" max="31" class="form-control" id="entryDay"
+                       value="${escapeHtml(row?.day ?? '')}">
+            </div>
+            <div class="col-12 col-md-3">
+                <label class="form-label small" for="entryGrade">${escapeHtml(i18n.grade)}</label>
+                <select class="form-select" id="entryGrade">
+                    ${Object.entries(i18n.grades ?? {}).map(([value, label]) =>
+                        option(value, label, Number(value) === row?.grade)).join('')}
+                </select>
+            </div>
+            <div class="col-12 col-md-4">
+                <label class="form-label small" for="entryGradeDisplayMode">${escapeHtml(i18n.displaysAs)}</label>
+                <select class="form-select" id="entryGradeDisplayMode">
+                    ${option('default', i18n.gradeDisplayDefault, mode === 'default')}
+                    ${option('none', i18n.gradeDisplayNone, mode === 'none')}
+                    ${option('custom', i18n.gradeDisplayCustom, mode === 'custom')}
+                </select>
+                <input type="text" class="form-control mt-1 ${mode === 'custom' ? '' : 'd-none'}"
+                       id="entryGradeDisplayText" value="${escapeHtml(mode === 'custom' ? row.grade_display : '')}">
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label small" for="entryCommon">${escapeHtml(i18n.common)}</label>
+                <select class="form-select" id="entryCommon" multiple size="6">
+                    ${(config.commons ?? []).map((c) =>
+                        option(c, c, (row?.common ?? []).includes(c))).join('')}
+                </select>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label small" for="entryColor">${escapeHtml(i18n.color)}</label>
+                <select class="form-select" id="entryColor" multiple size="6">
+                    ${COLORS.map((c) => option(c, c, (row?.color ?? []).includes(c))).join('')}
+                </select>
+                <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox" id="entryIsDominical"
+                           ${row?.is_dominical ? 'checked' : ''}>
+                    <label class="form-check-label small" for="entryIsDominical">is_dominical</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="entryIsBvm"
+                           ${row?.is_bvm ? 'checked' : ''}>
+                    <label class="form-check-label small" for="entryIsBvm">is_bvm</label>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="small text-muted">${escapeHtml(i18n.calendarField)}</div>
+                <div><code>${escapeHtml(row?.calendar ?? editState.calendarLabel ?? '')}</code></div>
+            </div>
+        </div>`;
+}
+
+/**
+ * The Structure panel's current values, in payload shape.
+ *
+ * @returns {object}
+ */
+function readStructureForm() {
+    return {
+        month: Number(el('entryMonth')?.value),
+        day: Number(el('entryDay')?.value),
+        grade: Number(el('entryGrade')?.value),
+        grade_display: gradeDisplayValue(el('entryGradeDisplayMode')?.value, el('entryGradeDisplayText')?.value),
+        common: orderedSelection('entryCommon', editState.original.structure.common),
+        color: orderedSelection('entryColor', editState.original.structure.color),
+        calendar: editState.original.structure.calendar ?? editState.calendarLabel ?? '',
+        is_dominical: el('entryIsDominical')?.checked === true,
+        is_bvm: el('entryIsBvm')?.checked === true
+    };
+}
+
+/** Placeholder returning no names. The Names tab task replaces this. */
+function readNamesForm() {
+    return {};
+}
+
+/** Placeholder returning no readings. The Readings tab task replaces this. */
+function readReadingsForm() {
+    return {};
 }
 
 /**
@@ -1009,6 +1306,7 @@ async function init() {
         // Purely a view filter over data already composed — no request needed.
         render();
     });
+    dom.saveEntry?.addEventListener('click', saveEntry);
     dom.search.addEventListener('input', () => {
         state.search = dom.search.value;
         // Move to a month that actually contains a hit, otherwise the reader
