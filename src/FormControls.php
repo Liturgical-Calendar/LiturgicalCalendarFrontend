@@ -31,6 +31,19 @@ class FormControls
      * `General:Specific` compound keys the API expects and groups each
      * specific common directly under its general one.
      *
+     * This list must hold **every** value of the API's `LitCommon` enum
+     * (`jsondata/schemas/CommonDef.json`). getCommonsOptionsHtml() renders one
+     * `<option>` per entry, and a browser only submits options the control
+     * actually has — so a value missing from here is silently dropped from any
+     * event that already carried it, the next time anyone saves that event.
+     * See issue #526, and CommonOrderSchemaTest which guards the two lists.
+     *
+     * The *order* deliberately differs from the schema's: the schema lists all
+     * general commons first and then all specific ones, whereas the UI nests
+     * each specific common under its general one. The two trailing entries are
+     * Masses for Various Needs and Occasions rather than commons proper, and
+     * sit last in both lists.
+     *
      * @var array<int, string>
      */
     public const COMMON_ORDER = [
@@ -67,7 +80,9 @@ class FormControls
         'Holy Men and Women:For Educators',
         'Holy Men and Women:For Holy Women',
         'Holy Men and Women:For Those Who Practiced Works of Mercy',
-        'Dedication of a Church'
+        'Dedication of a Church',
+        'For Giving Thanks to God for the Gift of Human Life [USA]',
+        'For the Preservation of Peace and Justice'
     ];
 
     /** @var array<string, bool> */
@@ -161,7 +176,7 @@ class FormControls
             $formRow .= '<div class="form-group col-sm-1">' .
             "<label for=\"{$uniqid}Color\">" . _('Liturgical color') . '</label>' .
             "<select class=\"form-select litEvent litEventColor\" id=\"{$uniqid}Color\" multiple=\"multiple\" size=\"1\">" .
-            $this->getColorOptionsHtml([LitColor::WHITE], [LitColor::WHITE, LitColor::RED, LitColor::PURPLE, LitColor::GREEN]) .
+            $this->getColorOptionsHtml([LitColor::WHITE]) .
             '</select>' .
             '</div>';
         }
