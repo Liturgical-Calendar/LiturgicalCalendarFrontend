@@ -120,7 +120,6 @@ api/*
 !admin-changes.php
 !admin-dashboard.php
 !admin-permissions.php
-!admin-role-requests.php
 !admin-decrees.php
 !admin-locales.php
 !admin-tests.php
