@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-01 02:13+0000\n"
-"PO-Revision-Date: 2026-08-29 09:37+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2026-09-01 17:22+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pl/>\n"
 "Language: pl\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.15.2\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #: index.php:5
 msgid ""
@@ -1457,22 +1457,16 @@ msgid "Get started"
 msgstr "Zacznij"
 
 #: layout/footer.php:106
-#, fuzzy
-#| msgid "Your request was approved"
 msgid "Your change request was approved"
-msgstr "Twoje żądanie zostało zatwierdzone"
+msgstr "Twoje żądanie zmiany zostało zatwierdzone"
 
 #: layout/footer.php:107
-#, fuzzy
-#| msgid "Your request was rejected"
 msgid "Your change request was rejected"
-msgstr "Twoje żądanie zostało odrzucone"
+msgstr "Twoje żądanie zmiany zostało odrzucone"
 
 #: layout/footer.php:108
-#, fuzzy
-#| msgid "Your request was approved"
 msgid "Your change request was published"
-msgstr "Twoje żądanie zostało zatwierdzone"
+msgstr "Twoje żądanie zmiany zostało opublikowane"
 
 #: layout/footer.php:109
 msgid "Your change request was closed without merging"
@@ -1633,10 +1627,8 @@ msgstr "Ostrzeżenie"
 
 #. translators: notification title when a write was queued for review instead of being saved
 #: includes/messages.php:57
-#, fuzzy
-#| msgid "Pending"
 msgid "Pending review"
-msgstr "Oczekujące"
+msgstr "Oczekuje na przegląd"
 
 #. translators: notification title when translations are missing for a locale
 #: includes/messages.php:59
@@ -1696,24 +1688,20 @@ msgstr ""
 
 #. translators: %s is a calendar identifier such as "nation/US"
 #: includes/messages.php:84
-#, fuzzy, php-format
-#| msgid "Test deleted successfully."
+#, php-format
 msgid "Calendar '%s' was deleted successfully"
-msgstr "Test usunięto pomyślnie."
+msgstr "Kalendarz „%s” został pomyślnie usunięty"
 
 #. translators: %s is a diocese identifier such as "rome_it"
 #: includes/messages.php:86
-#, fuzzy, php-format
-#| msgid "Test deleted successfully."
+#, php-format
 msgid "Diocesan Calendar '%s' was deleted successfully"
-msgstr "Test usunięto pomyślnie."
+msgstr "Kalendarz diecezjalny „%s” został pomyślnie usunięty"
 
 #. translators: confirmation shown after saving a national calendar
 #: includes/messages.php:88
-#, fuzzy
-#| msgid "Test updated successfully."
 msgid "National Calendar was created or updated successfully"
-msgstr "Test zaktualizowano pomyślnie."
+msgstr "Kalendarz krajowy został pomyślnie utworzony lub zaktualizowany"
 
 #. translators: confirmation shown after saving a wider region calendar
 #: includes/messages.php:90
@@ -2299,10 +2287,8 @@ msgid "Proprium de Tempore - temporal cycle events"
 msgstr "Proprium de Tempore - wydarzenia okresu liturgicznego"
 
 #: includes/admin-blocks.php:36
-#, fuzzy
-#| msgid "Proprium de Sanctis - Roman Missal editions"
 msgid "Proprium de Sanctis - Missal editions, by rite"
-msgstr "Proprium de Sanctis - wydania mszału rzymskiego"
+msgstr "Proprium de Sanctis - wydania mszału, według obrządku"
 
 #: includes/admin-blocks.php:48
 msgid "Congregation for Divine Worship decrees"
@@ -3632,10 +3618,8 @@ msgid "Your Contributions"
 msgstr ""
 
 #: admin-dashboard.php:211
-#, fuzzy
-#| msgid "Your Access Requests"
 msgid "Your Change Requests"
-msgstr "Twoje Żądania Dostępu"
+msgstr "Twoje Żądania Zmian"
 
 #: admin-dashboard.php:215
 msgid ""
