@@ -259,3 +259,39 @@ describe('buildCreate', () => {
             .not.toHaveProperty('event_key');
     });
 });
+
+import { isValidEventKey, EVENT_KEY_PATTERN } from '../sanctorale-payload.js';
+
+/**
+ * The `event_key` rule, pinned against the API schema rather than against a
+ * resemblance of it. The client rule used to be `[A-Za-z0-9]+`, which was wrong
+ * in BOTH directions at once: it waved through keys the API then rejected with an
+ * opaque 400, and it refused legal keys outright — no vigil entry could be
+ * created at all.
+ */
+describe('event_key validation follows the schema', () => {
+    it('is the CommonDef.json EventKey pattern, minus its anchors', () => {
+        expect(EVENT_KEY_PATTERN)
+            .toBe('([a-z]+_[a-z]+_)?[A-Z][a-zA-Z0-9]+(?:[A-Z][a-zA-Z0-9]+)*(?:_\\d+)?(?:_vigil)?');
+    });
+
+    it.each([
+        ['StIsidoreFarmer', 'the ordinary PascalCase case'],
+        ['StJohnBaptist_vigil', 'a vigil, which the old rule refused outright'],
+        ['StPaul_2', 'a numbered disambiguator, likewise refused'],
+        ['SanGiovanniBattistadeRossi_1', 'a real key from the corpus'],
+        ['mem_gen_StPaul', 'the optional lowercase two-word prefix']
+    ])('accepts %s — %s', (key) => {
+        expect(isValidEventKey(key)).toBe(true);
+    });
+
+    it.each([
+        ['stIsidore', 'lowercase initial; the old rule let it through to a 400'],
+        ['A', 'a single character; likewise let through'],
+        ['St Paul', 'a space'],
+        ['StPaul_vigil_2', 'the suffixes in the wrong order'],
+        ['', 'nothing at all']
+    ])('rejects %s — %s', (key) => {
+        expect(isValidEventKey(key)).toBe(false);
+    });
+});

@@ -288,8 +288,14 @@ $litCommons = [
                 targetMissal:       <?php echo json_encode(_('Add to Missal'), JSON_HEX_TAG); ?>,
                 eventKeyLabel:      <?php echo json_encode(_('Event key'), JSON_HEX_TAG); ?>,
                 <?php // The key ties the structure row to its name and readings in every locale,
-                      // so the API refuses to rename one: it would orphan all of them. ?>
-                eventKeyHint:       <?php echo json_encode(_('Letters and digits only. This cannot be changed later.'), JSON_HEX_TAG); ?>,
+                      // so the API refuses to rename one: it would orphan all of them.
+                      // The rule described here is the `EventKey` pattern from the API's own
+                      // CommonDef.json schema, shared with the input's `pattern=` attribute
+                      // through EVENT_KEY_PATTERN in assets/js/sanctorale-payload.js. Keep the
+                      // wording in step with that constant. ?>
+                eventKeyHint:       <?php echo json_encode(_(
+                    'Begins with a capital, then letters and digits (StIsidoreFarmer). A trailing number (StPaul_2) or _vigil is allowed, as is a lowercase two-word prefix. Cannot be renamed.'
+                ), JSON_HEX_TAG); ?>,
                 invalidDay:         <?php echo json_encode(_('Enter a day between 1 and 31.'), JSON_HEX_TAG); ?>,
                 <?php // translators: %1$s is the event key, %2$s is the Missal id ?>
                 confirmDelete:      <?php echo json_encode(_('Delete %1$s from %2$s? Its name and readings go with it, and any earlier edition that already defined it takes over.'), JSON_HEX_TAG); ?>,

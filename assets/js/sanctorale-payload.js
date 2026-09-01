@@ -19,6 +19,32 @@
 /** A payload that cannot be built, with a message meant for the user. */
 export class PayloadError extends Error {}
 
+/**
+ * The `event_key` grammar, copied verbatim from the `EventKey` definition in the
+ * API's `jsondata/schemas/CommonDef.json` — minus its anchors, so it can serve
+ * both an HTML `pattern=` attribute (which anchors implicitly) and a `RegExp`.
+ *
+ * Kept as one exported constant because a client rule that merely resembles the
+ * schema is worse than none: too permissive and the curator fills the whole form
+ * before an opaque 400 comes back; too restrictive and a legal key —
+ * `StJohnBaptist_vigil`, `StPaul_2` — cannot be entered at all.
+ *
+ * The grammar in words: an optional lowercase `word_word_` prefix, then a
+ * PascalCase run of at least two characters beginning with a capital, then an
+ * optional `_<digits>` disambiguator, then an optional `_vigil`.
+ */
+export const EVENT_KEY_PATTERN = '([a-z]+_[a-z]+_)?[A-Z][a-zA-Z0-9]+(?:[A-Z][a-zA-Z0-9]+)*(?:_\\d+)?(?:_vigil)?';
+
+/**
+ * Whether a proposed `event_key` satisfies the schema.
+ *
+ * @param {string} value
+ * @returns {boolean}
+ */
+export function isValidEventKey(value) {
+    return new RegExp(`^${EVENT_KEY_PATTERN}$`).test(value);
+}
+
 /** No override: the rank renders from `grade`. Serializes to `null`. */
 export const GRADE_DISPLAY_DEFAULT = 'default';
 

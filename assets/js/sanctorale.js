@@ -26,6 +26,8 @@ import {
     gradeDisplayValue,
     buildPatch,
     buildCreate,
+    isValidEventKey,
+    EVENT_KEY_PATTERN,
     PayloadError
 } from './sanctorale-payload.js';
 
@@ -788,6 +790,8 @@ async function refreshCreateNames() {
  * `PUT` needs `admin` where an edit needs only `editor`. And
  * the event_key input, because the key is set once: the API refuses to rename
  * one, since a rename orphans its name and readings in every locale permanently.
+ * That input is validated against the schema's `EventKey` pattern, in the HTML
+ * `pattern=` attribute and again in saveEntry(), from the one shared constant.
  */
 async function showCreate() {
     const editable = applicableMissals(state.missals, state.calendar, state.baseRegion)
@@ -843,7 +847,7 @@ async function showCreate() {
             </div>
             <div class="col-12 col-md-6">
                 <label class="form-label small" for="entryEventKey">${escapeHtml(i18n.eventKeyLabel)}</label>
-                <input type="text" class="form-control" id="entryEventKey" pattern="[A-Za-z0-9]+">
+                <input type="text" class="form-control" id="entryEventKey" pattern="${EVENT_KEY_PATTERN}">
                 <div class="form-text">${escapeHtml(i18n.eventKeyHint)}</div>
             </div>
         </div>
@@ -881,7 +885,11 @@ async function saveEntry() {
 
     if (editState.creating) {
         editState.eventKey = el('entryEventKey')?.value.trim() ?? '';
-        if (!/^[A-Za-z0-9]+$/.test(editState.eventKey)) {
+        // The schema's own rule, not an approximation of it: see
+        // EVENT_KEY_PATTERN. A looser client rule lets `stIsidore` through to an
+        // opaque 400; a tighter one refuses `StJohnBaptist_vigil` outright, which
+        // is how a vigil entry became impossible to create.
+        if (!isValidEventKey(editState.eventKey)) {
             dom.formError.textContent = i18n.eventKeyHint;
             return;
         }
