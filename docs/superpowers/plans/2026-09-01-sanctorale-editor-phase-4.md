@@ -1,5 +1,12 @@
 # Sanctorale Editor Phase 4 Implementation Plan
 
+> **Status: historical.** This is a pre-implementation plan. The work it describes shipped in PR #523.
+> Its code blocks are **sketches of what was planned**, not a record of what was built, and this document
+> is not kept in sync with the shipped code. Where a sketch below and the shipped code disagree, **the
+> code is authoritative**. For intent, read the design spec:
+> `docs/superpowers/specs/2026-09-01-sanctorale-editor-phase-4-design.md`. For actual behaviour, read the
+> source, principally `assets/js/sanctorale.js`.
+>
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or
   superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for
   tracking.
@@ -1277,7 +1284,7 @@ At the end of `loadCatalogue()`, after `state.missals` and `state.baseRegion` ar
     });
     dom.newEntry?.classList.toggle(
         'd-none',
-        ![...state.capabilities.values()].some((c) => c.canEdit)
+        ![...state.capabilities.values()].some((c) => c.canCreate)
     );
 ```
 
@@ -1874,7 +1881,7 @@ git commit -m "feat(sanctorale): edit an entry's readings, tier by tier"
  */
 function showCreate() {
     const editable = applicableMissals(state.missals, state.calendar, state.baseRegion)
-        .filter((m) => capabilityFor(m.missal_id).canEdit)
+        .filter((m) => capabilityFor(m.missal_id).canCreate)
         .reverse(); // newest first; applicableMissals sorts oldest-first for compose()
 
     if (editable.length === 0) return;
