@@ -148,6 +148,9 @@ if (!$authHelper->isAuthenticated) {
                 <?php // Shown only when the data overrides the rank label, e.g. US_2011
                       // presents Independence Day as "National Holiday". ?>
                 displaysAs:         <?php echo json_encode(_('Displays as'), JSON_HEX_TAG); ?>,
+                <?php // An override of '' is authored, not missing: it means the rank is
+                      // deliberately not displayed. AllSouls is the standing example. ?>
+                displaysAsNothing:  <?php echo json_encode(_('no rank shown'), JSON_HEX_TAG); ?>,
                 <?php // Liturgical ranks, keyed by the integer the data carries. The rows give a
                       // bare `grade` and no `grade_lcl`, so the names are translated here. ?>
                 grades: {

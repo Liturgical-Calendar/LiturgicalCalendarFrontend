@@ -191,18 +191,28 @@ export function formatGrade(row, strings) {
 }
 
 /**
- * The display override, or '' when there is none.
+ * The display override, or `null` when the celebration has none.
  *
- * US_2011 shows IndependenceDay as "National Holiday" while its rank stays a
- * memorial. The two are separate facts about the celebration, so this answers
- * only whether an override exists, and the caller shows it as its own field
- * rather than substituting it for the rank.
+ * THREE states, not two, and the difference is load-bearing:
+ *
+ * - **absent / null** — no override; show the rank.
+ * - **`''`** — an authored override meaning "show no rank at all". `AllSouls` is
+ *   the example: a Solemnity that is conventionally displayed without a rank, and
+ *   `CalendarHandler` writes `''` for it explicitly. A HIGHER_SOLEMNITY is cleared
+ *   to `''` the same way, since it carries no displayable grade of its own.
+ * - **a non-empty string** — show that instead, e.g. US_2011's "National Holiday".
+ *
+ * Collapsing the empty string into "no override" would silently discard an
+ * authored decision, and — once editing lands — write `null` back over a `''` the
+ * curator meant. The write payload types the field as `string | null` for exactly
+ * this reason.
  *
  * @param {{grade_display?: ?string}} row
+ * @returns {?string} `null` for no override, otherwise the override (possibly '')
  */
 export function gradeDisplayOf(row) {
     const override = row?.grade_display;
-    return typeof override === 'string' && override.trim() !== '' ? override.trim() : '';
+    return typeof override === 'string' ? override.trim() : null;
 }
 
 export function baseRegionFor(missals, rite) {
@@ -449,16 +459,18 @@ function renderStructure(row) {
             <div class="small text-muted">${escapeHtml(label)}</div>
             <div>${escapeHtml(value)}</div>
         </div>`;
-    // Only shown when the data actually overrides the label. On almost every
-    // celebration there is no override, and an empty field would be noise.
+    // Rendered only when the data actually carries an override — on almost every
+    // celebration there is none, and an empty field would be noise. An override of
+    // '' is still an override: it says the rank is deliberately not displayed.
     const override = gradeDisplayOf(row);
+    const overrideLabel = override === '' ? i18n.displaysAsNothing : override;
 
     return `
         <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.structure)}</h6>
         <div class="row mb-3">
             ${field(i18n.date, `${monthName(row.month)} ${row.day}`)}
             ${field(i18n.grade, formatGrade(row, i18n))}
-            ${override ? field(i18n.displaysAs, override) : ''}
+            ${override !== null ? field(i18n.displaysAs, overrideLabel) : ''}
             ${field(i18n.calendarField, row.calendar)}
             ${field(i18n.color, (row.color ?? []).join(', '))}
             ${field(i18n.common, (row.common ?? []).join(', '))}

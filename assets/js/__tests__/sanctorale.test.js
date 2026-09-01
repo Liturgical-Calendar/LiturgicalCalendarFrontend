@@ -312,20 +312,33 @@ describe('formatGrade', () => {
 });
 
 describe('gradeDisplayOf', () => {
-    it('reports an override when the data carries one', () => {
-        // US_2011 presents IndependenceDay as "National Holiday" while its rank
-        // stays a memorial. Two facts, so the UI gives them two fields.
+    it('reports a labelled override', () => {
         expect(gradeDisplayOf({ grade: 3, grade_display: 'National Holiday' })).toBe('National Holiday');
     });
 
-    it('reports nothing for null, absent or blank, so no empty field is rendered', () => {
-        expect(gradeDisplayOf({ grade: 3, grade_display: null })).toBe('');
-        expect(gradeDisplayOf({ grade: 3 })).toBe('');
-        expect(gradeDisplayOf({ grade: 3, grade_display: '   ' })).toBe('');
-        expect(gradeDisplayOf(undefined)).toBe('');
+    it('reports an EMPTY override as \'\', not as absent', () => {
+        // AllSouls is a Solemnity displayed without a rank, and CalendarHandler
+        // writes '' for it explicitly. A HIGHER_SOLEMNITY is cleared the same way.
+        // Collapsing this into "no override" discards an authored decision — and
+        // once editing lands would write null back over a '' the curator meant.
+        expect(gradeDisplayOf({ event_key: 'AllSouls', grade: 6, grade_display: '' })).toBe('');
+        expect(gradeDisplayOf({ grade: 7, grade_display: '' })).toBe('');
     });
 
-    it('trims, so stray whitespace does not reach the label', () => {
+    it('reports null when there is genuinely no override', () => {
+        expect(gradeDisplayOf({ grade: 3, grade_display: null })).toBeNull();
+        expect(gradeDisplayOf({ grade: 3 })).toBeNull();
+        expect(gradeDisplayOf(undefined)).toBeNull();
+    });
+
+    it('distinguishes the empty override from the absent one', () => {
+        // The whole point: '' and null must not compare equal.
+        expect(gradeDisplayOf({ grade_display: '' })).not.toBeNull();
+        expect(gradeDisplayOf({})).toBeNull();
+    });
+
+    it('trims, and a whitespace-only value is a present override', () => {
         expect(gradeDisplayOf({ grade_display: '  National Holiday  ' })).toBe('National Holiday');
+        expect(gradeDisplayOf({ grade_display: '   ' })).toBe('');
     });
 });
