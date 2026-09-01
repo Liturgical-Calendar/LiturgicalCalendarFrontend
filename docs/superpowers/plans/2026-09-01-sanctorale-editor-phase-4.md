@@ -54,7 +54,8 @@ moves into another (`capabilities.js`). `sanctorale.js` keeps the DOM, the loade
 - Produces: `missalFgaObject(missal, rite, baseRegion) -> {objectType: string, objectId: string}`;
   `capabilityCheckPath({userSub, objectType, objectId, relation}) -> string`;
   `detectMissalCapabilities({missals, rite, baseRegion, userSub, isGlobalAdmin, checkAllowed}) ->
-  Promise<Map<string, {canEdit: boolean, canDelete: boolean}>>`; constants `RELATION_EDITOR`, `RELATION_ADMIN`.
+  Promise<Map<string, {canEdit: boolean, canCreate: boolean, canDelete: boolean}>>` — `canEdit` is `PATCH`,
+  `canCreate` is `PUT`, `canDelete` is `DELETE`; constants `RELATION_EDITOR`, `RELATION_ADMIN`.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -119,7 +120,7 @@ describe('detectMissalCapabilities', () => {
             userSub: 'u', isGlobalAdmin: true, checkAllowed
         });
         expect(checkAllowed).not.toHaveBeenCalled();
-        expect(caps.get('US_2011')).toEqual({ canEdit: true, canDelete: true });
+        expect(caps.get('US_2011')).toEqual({ canEdit: true, canCreate: true, canDelete: true });
     });
 
     it('denies everything when there is no subject to check', async () => {
@@ -129,7 +130,7 @@ describe('detectMissalCapabilities', () => {
             userSub: '', isGlobalAdmin: false, checkAllowed
         });
         expect(checkAllowed).not.toHaveBeenCalled();
-        expect(caps.get('EDITIO_TYPICA_1970')).toEqual({ canEdit: false, canDelete: false });
+        expect(caps.get('EDITIO_TYPICA_1970')).toEqual({ canEdit: false, canCreate: false, canDelete: false });
     });
 
     it('resolves each Missal independently, so a scoped grant is scoped', async () => {
@@ -140,8 +141,8 @@ describe('detectMissalCapabilities', () => {
             missals: [VA_1970, US_2011], rite: 'roman', baseRegion: 'VA',
             userSub: 'u', isGlobalAdmin: false, checkAllowed
         });
-        expect(caps.get('US_2011')).toEqual({ canEdit: true, canDelete: false });
-        expect(caps.get('EDITIO_TYPICA_1970')).toEqual({ canEdit: false, canDelete: false });
+        expect(caps.get('US_2011')).toEqual({ canEdit: true, canCreate: false, canDelete: false });
+        expect(caps.get('EDITIO_TYPICA_1970')).toEqual({ canEdit: false, canCreate: false, canDelete: false });
     });
 
     it('treats a failing check as a denial rather than propagating', async () => {
@@ -150,7 +151,7 @@ describe('detectMissalCapabilities', () => {
             userSub: 'u', isGlobalAdmin: false,
             checkAllowed: async () => { throw new Error('network'); }
         });
-        expect(caps.get('US_2011')).toEqual({ canEdit: false, canDelete: false });
+        expect(caps.get('US_2011')).toEqual({ canEdit: false, canCreate: false, canDelete: false });
     });
 
     it('admin implies edit, so a delete-capable user is never shown a read-only row', async () => {
@@ -159,7 +160,7 @@ describe('detectMissalCapabilities', () => {
             missals: [US_2011], rite: 'roman', baseRegion: 'VA',
             userSub: 'u', isGlobalAdmin: false, checkAllowed
         });
-        expect(caps.get('US_2011')).toEqual({ canEdit: true, canDelete: true });
+        expect(caps.get('US_2011')).toEqual({ canEdit: true, canCreate: true, canDelete: true });
     });
 });
 ```
@@ -258,7 +259,8 @@ export function capabilityCheckPath({ userSub, objectType, objectId, relation })
  * @param {string} args.userSub
  * @param {boolean} args.isGlobalAdmin
  * @param {(path: string) => Promise<boolean>} args.checkAllowed
- * @returns {Promise<Map<string, {canEdit: boolean, canDelete: boolean}>>}
+ * @returns {Promise<Map<string, {canEdit: boolean, canCreate: boolean, canDelete: boolean}>>}
+ *          `canEdit` is `PATCH`, `canCreate` is `PUT`, `canDelete` is `DELETE`.
  */
 export async function detectMissalCapabilities({
     missals, rite, baseRegion, userSub, isGlobalAdmin, checkAllowed
@@ -267,14 +269,14 @@ export async function detectMissalCapabilities({
 
     if (isGlobalAdmin) {
         for (const missal of missals) {
-            capabilities.set(missal.missal_id, { canEdit: true, canDelete: true });
+            capabilities.set(missal.missal_id, { canEdit: true, canCreate: true, canDelete: true });
         }
         return capabilities;
     }
 
     if (!userSub) {
         for (const missal of missals) {
-            capabilities.set(missal.missal_id, { canEdit: false, canDelete: false });
+            capabilities.set(missal.missal_id, { canEdit: false, canCreate: false, canDelete: false });
         }
         return capabilities;
     }
@@ -294,7 +296,9 @@ export async function detectMissalCapabilities({
             ask(object, RELATION_ADMIN)
         ]);
         // Admin implies editor, mirroring the FGA model's own relation hierarchy.
-        return [missal.missal_id, { canEdit: editor || admin, canDelete: admin }];
+        // Create and delete are BOTH `admin` here — `editor` alone must not offer
+        // either, or the API answers 403 to a fully filled form.
+        return [missal.missal_id, { canEdit: editor || admin, canCreate: admin, canDelete: admin }];
     }));
 
     for (const [missalId, capability] of settled) {
@@ -1233,8 +1237,8 @@ git commit -m "feat(sanctorale): add the editor's markup, config and strings"
 **Interfaces:**
 
 - Consumes: Task 1's `detectMissalCapabilities`; Task 5's `#newEntryBtn`, `config.userSub`, `config.isGlobalAdmin`.
-- Produces: `state.capabilities` (a `Map<string, {canEdit, canDelete}>`); `capabilityFor(missalId) -> {canEdit,
-  canDelete}`; an Edit button per row carrying `data-edit-key` and `data-missal`.
+- Produces: `state.capabilities` (a `Map<string, {canEdit, canCreate, canDelete}>`); `capabilityFor(missalId) ->
+  {canEdit, canCreate, canDelete}`; an Edit button per row carrying `data-edit-key` and `data-missal`.
 
 - [ ] **Step 1: Wire detection into the catalogue load**
 
@@ -1251,7 +1255,7 @@ Add a helper beside `getJson`:
 ```javascript
 /** What the user may do to a Missal; unknown Missals are read-only. */
 function capabilityFor(missalId) {
-    return state.capabilities.get(missalId) ?? { canEdit: false, canDelete: false };
+    return state.capabilities.get(missalId) ?? { canEdit: false, canCreate: false, canDelete: false };
 }
 ```
 
@@ -1361,7 +1365,7 @@ const editState = {
     readingsTier: 'rite',
     /** The entry as loaded, which every diff is taken against. */
     original: { structure: {}, i18n: {}, readings: {} },
-    capability: { canEdit: false, canDelete: false }
+    capability: { canEdit: false, canCreate: false, canDelete: false }
 };
 
 /**
@@ -2255,5 +2259,5 @@ nowhere, which is correct.
 
 **Type consistency.** `editState` is introduced in Task 7 and read in 8–11 with the same shape throughout.
 `readingsTier` is `'missal' | 'rite' | 'none'` in the payload module, in `editState`, and in every test.
-`capabilityFor()` returns `{canEdit, canDelete}` everywhere. `writeJson(method, path, body)` and
+`capabilityFor()` returns `{canEdit, canCreate, canDelete}` everywhere. `writeJson(method, path, body)` and
 `entryPath(rite, missalId, eventKey)` keep their Task 4 signatures in Tasks 7, 10 and 11.
