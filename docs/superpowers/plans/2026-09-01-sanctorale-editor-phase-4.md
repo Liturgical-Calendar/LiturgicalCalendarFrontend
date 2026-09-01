@@ -187,10 +187,19 @@ Create `assets/js/capabilities.js`:
  * @module capabilities
  */
 
-/** `PUT` and `PATCH` require this relation (OpenFga DEFAULT_RELATION_MAP). */
+/**
+ * `PATCH` — editing an existing entry — requires this relation.
+ *
+ * The map is NOT uniform across the verbs. `OpenFgaAuthorizationMiddleware`'s
+ * DEFAULT_RELATION_MAP is `PUT => admin`, `PATCH => editor`, `DELETE => admin`,
+ * and `forMissals()` passes no override, so missals take it verbatim.
+ * (Missals do NOT carry the `/decrees` route's `['PUT' => 'editor', ...]`
+ * override from `Router.php`. Inferring from that neighbour is the trap: it
+ * makes `editor` look sufficient to CREATE, which it is not.)
+ */
 export const RELATION_EDITOR = 'editor';
 
-/** `DELETE` requires this one. */
+/** `PUT` (create) and `DELETE` both require this one. */
 export const RELATION_ADMIN = 'admin';
 
 /**
