@@ -9,8 +9,9 @@
  * apply to a chosen rite and calendar, badges each row with the layer that supplied
  * it, and groups the result by month.
  *
- * Read-only for now. The write routes exist (`PUT|PATCH|DELETE
- * /missals/{missal_id}/{event_key}`, API #943) and editing lands separately.
+ * The detail modal doubles as the editor, writing back with `PUT|PATCH|DELETE
+ * /missals/{rite}/{missal_id}/{event_key}`; the markup for it is the footer below,
+ * revealed by assets/js/sanctorale.js only for a Missal the caller may edit.
  *
  * See docs/superpowers/specs/2026-08-31-sanctorale-editor-design.md.
  */
@@ -19,13 +20,67 @@ include_once 'includes/common.php';
 include_once 'includes/messages.php';
 
 // Require authentication - redirect to home if not logged in.
-// Same gate as temporale.php and missals-editor.php: the underlying /missals data
-// is public, but this page sits in the calendar-role section of the admin sidebar
-// alongside them, and an ungated page there would be the odd one out.
+// Same gate as temporale.php: the underlying /missals data is public, but this
+// page sits in the calendar-role section of the admin sidebar alongside it, and
+// an ungated page there would be the odd one out.
 if (!$authHelper->isAuthenticated) {
     header('Location: index.php');
     exit;
 }
+
+// Whether the create button and per-row edit/delete controls are revealed is decided
+// client-side against the caller's FGA relations on the specific Missal being edited;
+// this flag only distinguishes the global-admin fast path from that check.
+$isAdmin = $authHelper->hasRole('admin');
+
+/**
+ * The whole `LitCommon` enum from the API's CommonDef.json, in the schema's own order.
+ *
+ * Every value has to be here. The editor's Common control is a multi-select whose options
+ * ARE this list, so a value the list omits cannot render as selected — and would then be
+ * dropped from the row the next time anyone saved it. Nothing in the corpus uses the last
+ * two today; they are still valid, so they are still offered.
+ *
+ * @var string[] $litCommons
+ */
+$litCommons = [
+    'Proper',
+    'Dedication of a Church',
+    'Blessed Virgin Mary',
+    'Martyrs',
+    'Pastors',
+    'Doctors',
+    'Virgins',
+    'Holy Men and Women',
+    'Martyrs:For One Martyr',
+    'Martyrs:For Several Martyrs',
+    'Martyrs:For Missionary Martyrs',
+    'Martyrs:For One Missionary Martyr',
+    'Martyrs:For Several Missionary Martyrs',
+    'Martyrs:For a Virgin Martyr',
+    'Martyrs:For a Holy Woman Martyr',
+    'Pastors:For a Pope',
+    'Pastors:For a Bishop',
+    'Pastors:For One Pastor',
+    'Pastors:For Several Pastors',
+    'Pastors:For Founders of a Church',
+    'Pastors:For One Founder',
+    'Pastors:For Several Founders',
+    'Pastors:For Missionaries',
+    'Virgins:For One Virgin',
+    'Virgins:For Several Virgins',
+    'Holy Men and Women:For Several Saints',
+    'Holy Men and Women:For One Saint',
+    'Holy Men and Women:For an Abbot',
+    'Holy Men and Women:For a Monk',
+    'Holy Men and Women:For a Nun',
+    'Holy Men and Women:For Religious',
+    'Holy Men and Women:For Those Who Practiced Works of Mercy',
+    'Holy Men and Women:For Educators',
+    'Holy Men and Women:For Holy Women',
+    'For Giving Thanks to God for the Gift of Human Life [USA]',
+    'For the Preservation of Peace and Justice'
+];
 
 ?>
 <!doctype html>
@@ -93,7 +148,18 @@ if (!$authHelper->isAuthenticated) {
         </div>
     </div>
 
-    <div id="sanctoraleNotice"></div>
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <div id="sanctoraleNotice" class="flex-grow-1"></div>
+        <?php // Hidden by default and revealed only when the user may create in at least one
+              // applicable Missal. NOT data-requires-auth: that global handler reveals on
+              // ANY authentication, and creating an entry needs an admin grant on a
+              // specific Missal — see admin-decrees.php's identical note. Creating is not
+              // the same grant as editing: create is PUT, which needs admin, while editing
+              // a row is PATCH, which needs only editor. ?>
+        <button type="button" class="btn btn-primary btn-sm d-none ms-2" id="newEntryBtn">
+            <i class="fas fa-plus me-1"></i><?php echo htmlspecialchars(_('New celebration'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+        </button>
+    </div>
 
     <ul class="nav nav-tabs mb-0" id="monthTabs"></ul>
 
@@ -124,6 +190,18 @@ if (!$authHelper->isAuthenticated) {
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?php echo htmlspecialchars(_('Close'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></button>
                 </div>
                 <div class="modal-body" id="detailModalBody"></div>
+                <div class="modal-footer d-none" id="detailModalFooter">
+                    <div id="entryFormError" class="text-danger small me-auto"></div>
+                    <button type="button" class="btn btn-outline-danger d-none" id="deleteEntryBtn">
+                        <i class="fas fa-trash me-1"></i><?php echo htmlspecialchars(_('Delete'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <?php echo htmlspecialchars(_('Cancel'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                    </button>
+                    <button type="button" class="btn btn-primary" id="saveEntryBtn">
+                        <?php echo htmlspecialchars(_('Save'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -136,6 +214,10 @@ if (!$authHelper->isAuthenticated) {
             apiUrl: <?php echo json_encode($apiBaseUrl, JSON_HEX_TAG); ?>,
             <?php // BCP-47 (en-US), not gettext/ICU (en_US): Intl.DateTimeFormat rejects underscore tags. ?>
             locale: <?php echo json_encode(str_replace('_', '-', $i18n->LOCALE), JSON_HEX_TAG); ?>,
+            isGlobalAdmin: <?php echo json_encode($isAdmin, JSON_HEX_TAG); ?>,
+            userSub:       <?php echo json_encode($authHelper->sub ?? '', JSON_HEX_TAG); ?>,
+            <?php // The whole `LitCommon` enum — see $litCommons above for why it must be whole. ?>
+            commons: <?php echo json_encode($litCommons, JSON_HEX_TAG); ?>,
             i18n: {
                 loading:            <?php echo json_encode(_('Loading…'), JSON_HEX_TAG); ?>,
                 view:               <?php echo json_encode(_('Details'), JSON_HEX_TAG); ?>,
@@ -200,8 +282,76 @@ if (!$authHelper->isAuthenticated) {
                 readingsUnavailable: <?php echo json_encode(_('Could not load the readings for this celebration.'), JSON_HEX_TAG); ?>,
                 ambrosianCalendar:  <?php echo json_encode(_('Ambrosian Rite'), JSON_HEX_TAG); ?>,
                 noMissals:          <?php echo json_encode(_('No Missal is published for this combination of rite and calendar.'), JSON_HEX_TAG); ?>,
+                edit:               <?php echo json_encode(_('Edit'), JSON_HEX_TAG); ?>,
+                save:               <?php echo json_encode(_('Save'), JSON_HEX_TAG); ?>,
+                cancel:             <?php echo json_encode(_('Cancel'), JSON_HEX_TAG); ?>,
+                deleteLabel:        <?php echo json_encode(_('Delete'), JSON_HEX_TAG); ?>,
+                newEntry:           <?php echo json_encode(_('New celebration'), JSON_HEX_TAG); ?>,
+                targetMissal:       <?php echo json_encode(_('Add to Missal'), JSON_HEX_TAG); ?>,
+                eventKeyLabel:      <?php echo json_encode(_('Event key'), JSON_HEX_TAG); ?>,
+                <?php // The key ties the structure row to its name and readings in every locale,
+                      // so the API refuses to rename one: it would orphan all of them.
+                      // The rule described here is the `EventKey` pattern from the API's own
+                      // CommonDef.json schema, shared with the input's `pattern=` attribute
+                      // through EVENT_KEY_PATTERN in assets/js/sanctorale-payload.js. Keep the
+                      // wording in step with that constant. ?>
+                eventKeyHint:       <?php echo json_encode(_(
+                    'Begins with a capital, then letters and digits (StIsidoreFarmer). A trailing number (StPaul_2) or _vigil is allowed, as is a lowercase two-word prefix. Cannot be renamed.'
+                ), JSON_HEX_TAG); ?>,
+                invalidDay:         <?php echo json_encode(_('Enter a day between 1 and 31.'), JSON_HEX_TAG); ?>,
+                <?php // A <select> with no placeholder always yields a value, so an untouched
+                      // month lands on January and an untouched grade on 0 (Weekday) — both
+                      // present, both wrong, and neither catchable by a presence check. The
+                      // create form gets a disabled placeholder instead, and these two say so. ?>
+                choosePrompt:       <?php echo json_encode(_('Choose…'), JSON_HEX_TAG); ?>,
+                chooseMonth:        <?php echo json_encode(_('Choose a month.'), JSON_HEX_TAG); ?>,
+                chooseGrade:        <?php echo json_encode(_('Choose a grade.'), JSON_HEX_TAG); ?>,
+                <?php // translators: %1$s is the event key, %2$s is the Missal id ?>
+                confirmDelete:      <?php echo json_encode(_('Delete %1$s from %2$s? Its name and readings go with it, and any earlier edition that already defined it takes over.'), JSON_HEX_TAG); ?>,
+                <?php // The rite-level corpus is shared by every Missal of the rite, so this
+                      // edit is not confined to the edition being edited. ?>
+                readingsShared:     <?php echo json_encode(_('These readings live in the rite-wide lectionary, shared by every Missal of this rite.'), JSON_HEX_TAG); ?>,
+                readingsNotWritable: <?php echo json_encode(_('This rite has no lectionary, so readings cannot be edited here.'), JSON_HEX_TAG); ?>,
+                <?php // A response can carry a tier the Missal being edited does NOT own — e.g.
+                      // another national Missal's own lectionary entry for the same event_key.
+                      // MissalsHandler::resolveSanctoraleTarget() writes to exactly one tier per
+                      // Missal, so every other tier shown here is display-only: offering an input
+                      // for it would let a curator "edit" a citation that either silently lands in
+                      // a different file (a shared locale key) or gets rejected outright (a locale
+                      // the write target does not carry). ?>
+                readingsInherited:  <?php echo json_encode(_('Inherited from a different lectionary source; edit it there, not from this Missal.'), JSON_HEX_TAG); ?>,
+                <?php // Reported after a delete when another Missal still declares the key, so
+                      // the readings deliberately survived. Silence here reads as a bug. ?>
+                readingsRetained:   <?php echo json_encode(_('The readings were kept: another Missal still declares this celebration.'), JSON_HEX_TAG); ?>,
+                gradeDisplayDefault: <?php echo json_encode(_('Default (from grade)'), JSON_HEX_TAG); ?>,
+                gradeDisplayNone:   <?php echo json_encode(_('Show no rank'), JSON_HEX_TAG); ?>,
+                gradeDisplayCustom: <?php echo json_encode(_('Custom text…'), JSON_HEX_TAG); ?>,
+                noChanges:          <?php echo json_encode(_('Nothing has changed.'), JSON_HEX_TAG); ?>,
+                saved:              <?php echo json_encode(_('Saved.'), JSON_HEX_TAG); ?>,
+                created:            <?php echo json_encode(_('Celebration created.'), JSON_HEX_TAG); ?>,
+                deleted:            <?php echo json_encode(_('Celebration deleted.'), JSON_HEX_TAG); ?>,
                 <?php // translators: %s is the error reported by the API ?>
-                loadFailed:         <?php echo json_encode(_('Could not load the sanctorale: %s'), JSON_HEX_TAG); ?>
+                saveFailed:         <?php echo json_encode(_('Could not save: %s'), JSON_HEX_TAG); ?>,
+                permissionDenied:   <?php echo json_encode(_('You do not have permission to change this Missal.'), JSON_HEX_TAG); ?>,
+                conflictTitle:      <?php echo json_encode(_('This clashes with another Missal'), JSON_HEX_TAG); ?>,
+                <?php // The four strings describeWriteOutcome() needs; each takes one %s.
+                      // A write is not necessarily applied to disk: with
+                      // SOURCEDATA_CHANGE_REQUESTS enabled it is queued for review and the
+                      // API answers the SAME 2xx. See assets/js/writeDisposition.js. ?>
+                <?php // translators: %s is the change request batch id ?>
+                writeSubmitted:     <?php echo json_encode(_('Queued for review as batch %s. Nothing has been written yet.'), JSON_HEX_TAG); ?>,
+                <?php // translators: %s is the change request batch id ?>
+                writeApproved:      <?php echo json_encode(_('Approved as batch %s, awaiting publication.'), JSON_HEX_TAG); ?>,
+                <?php // translators: %s is a comma-separated list of batch ids ?>
+                writeSuperseded:    <?php echo json_encode(_('Earlier batches folded in: %s.'), JSON_HEX_TAG); ?>,
+                <?php // translators: %s is the unrecognized disposition value ?>
+                writeUnknown:       <?php echo json_encode(_('The server reported an unrecognized outcome (%s); nothing local was changed.'), JSON_HEX_TAG); ?>,
+                <?php // translators: %s is the error reported by the API ?>
+                loadFailed:         <?php echo json_encode(_('Could not load the sanctorale: %s'), JSON_HEX_TAG); ?>,
+                <?php // translators: %s is the event_key a #event= link named
+                      // Reported rather than left silent: the link may be stale, mistyped, or
+                      // for a rite/calendar this page has since moved away from. ?>
+                eventNotFound:      <?php echo json_encode(_('%s is not in the current selection.'), JSON_HEX_TAG); ?>
             }
         };
     </script>

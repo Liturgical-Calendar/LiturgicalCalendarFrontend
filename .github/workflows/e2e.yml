@@ -25,7 +25,9 @@ name: E2E
 #   rbac — the scoped-admin-review RBAC suite (rbac-setup seeds users)
 #   chromium-ci — the chromium specs needing no login (usage, liturgyOfAnyDay)
 #   chromium-ci-auth — the calendar-data form specs (national / diocesan /
-#       wider-region / missals). The `setup` project seeds a Zitadel admin and
+#       wider-region), admin-tests, and the sanctorale editor's write path.
+#       `sanctorale-editor` replaced `missals-editor` when phase 4 retired that
+#       page. The `setup` project seeds a Zitadel admin and
 #       logs it in through the real OIDC flow; it no longer uses the API's
 #       legacy HS256 /auth/login, whose tokens auth/me.php could never accept
 #       (issue #448).

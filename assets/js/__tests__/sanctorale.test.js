@@ -7,7 +7,7 @@
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 
-let applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits, renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47, filterByMissal, formatGrade, gradeDisplayOf, hasNestedSchemas, schemaKeysOf;
+let applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits, renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47, filterByMissal, formatGrade, gradeDisplayOf, hasNestedSchemas, schemaKeysOf, applicableTiers, monthOf, nameCoverageBadge;
 
 const VA_1970 = { missal_id: 'EDITIO_TYPICA_1970', region: 'VA', year_published: 1970 };
 const VA_2002 = { missal_id: 'EDITIO_TYPICA_2002', region: 'VA', year_published: 2002 };
@@ -23,7 +23,8 @@ beforeAll(async () => {
     const mod = await import('../sanctorale.js');
     ({ applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits,
        renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47,
-       filterByMissal, formatGrade, gradeDisplayOf, hasNestedSchemas, schemaKeysOf } = mod);
+       filterByMissal, formatGrade, gradeDisplayOf, hasNestedSchemas, schemaKeysOf,
+       applicableTiers, monthOf, nameCoverageBadge } = mod);
 });
 
 describe('baseRegionFor', () => {
@@ -388,5 +389,302 @@ describe('schemaKeysOf', () => {
     it('returns nothing for flat entries, which need no tabs at all', () => {
         expect(schemaKeysOf({ en: { first_reading: 'Eph 4:1-7' } })).toEqual([]);
         expect(schemaKeysOf({})).toEqual([]);
+    });
+});
+
+/**
+ * The two normalizations the editor applies between a stored row and the form
+ * that edits it. Both exist because the form can express fewer states than the
+ * data does, and both are invisible until a save writes something nobody asked
+ * for — which is exactly why they are pinned here rather than left to the
+ * browser pass that found them.
+ */
+describe('structureOf', () => {
+    let structureOf, diffStructure;
+
+    beforeAll(async () => {
+        global.window = global.window ?? {};
+        ({ structureOf } = await import('../sanctorale.js'));
+        ({ diffStructure } = await import('../sanctorale-payload.js'));
+    });
+
+    // A US_2011 row as the API actually serves it: no `is_dominical`, no `is_bvm`.
+    // The API writes those two only where the source data sets them.
+    const ROW = Object.freeze({
+        month: 5,
+        day: 15,
+        event_key: 'StIsidoreFarmer',
+        grade: 2,
+        grade_display: null,
+        common: ['Holy Men and Women:For One Saint'],
+        calendar: 'US',
+        color: ['white'],
+        name: 'Saint Isidore',
+        _missalId: 'US_2011'
+    });
+
+    /** The same celebration as the Structure form reads it back, unedited. */
+    const untouchedForm = (overrides = {}) => ({
+        month: 5,
+        day: 15,
+        grade: 2,
+        grade_display: null,
+        common: ['Holy Men and Women:For One Saint'],
+        color: ['white'],
+        calendar: 'US',
+        is_dominical: false,
+        is_bvm: false,
+        ...overrides
+    });
+
+    it('reads an absent flag back as false, since a checkbox has no third state', () => {
+        expect(structureOf(ROW).is_dominical).toBe(false);
+        expect(structureOf(ROW).is_bvm).toBe(false);
+    });
+
+    it('lets an untouched form diff to nothing', () => {
+        // The whole reason the normalization exists. buildPatch() reports
+        // "nothing changed" only when this map is empty.
+        expect(diffStructure(structureOf(ROW), untouchedForm())).toEqual({});
+    });
+
+    it('is load-bearing: the raw row would diff as changed on a form nobody touched', () => {
+        // diffStructure compares `original[field] ?? null` with `next[field] ?? null`,
+        // and `false` is not nullish — so an absent flag reads as null and a
+        // cleared checkbox reads as false, which are not equal. Without
+        // structureOf() every PATCH would carry both of these.
+        expect(diffStructure(ROW, untouchedForm())).toEqual({ is_dominical: false, is_bvm: false });
+    });
+
+    it('still reports a genuine true to false edit, which must never be swallowed', () => {
+        const original = structureOf({ ...ROW, is_dominical: true });
+        expect(original.is_dominical).toBe(true);
+        expect(diffStructure(original, untouchedForm())).toEqual({ is_dominical: false });
+    });
+
+    it('keeps a set is_bvm set, rather than defaulting everything to false', () => {
+        expect(structureOf({ ...ROW, is_bvm: true }).is_bvm).toBe(true);
+        expect(diffStructure(structureOf({ ...ROW, is_bvm: true }), untouchedForm()))
+            .toEqual({ is_bvm: false });
+    });
+
+    it('normalizes ONLY those two flags, so grade_display keeps all three states', () => {
+        // Flattening any of these would write null over an authored decision —
+        // the governing rule of sanctorale-payload.js.
+        expect(structureOf({ ...ROW, grade_display: null }).grade_display).toBeNull();
+        expect(structureOf({ ...ROW, grade_display: '' }).grade_display).toBe('');
+        expect(structureOf({ ...ROW, grade_display: 'National Holiday' }).grade_display)
+            .toBe('National Holiday');
+    });
+
+    it('does not invent a grade_display for a row that carries none', () => {
+        const bare = { month: 1, day: 13, grade: 2 };
+        expect(Object.prototype.hasOwnProperty.call(structureOf(bare), 'grade_display')).toBe(false);
+    });
+
+    it('accepts no row at all, which is what creating an entry passes', () => {
+        expect(structureOf(undefined)).toEqual({ is_dominical: false, is_bvm: false });
+    });
+
+    it('leaves the composed row alone: state.composed must not gain invented flags', () => {
+        const row = { month: 5, day: 15 };
+        structureOf(row);
+        expect(Object.prototype.hasOwnProperty.call(row, 'is_dominical')).toBe(false);
+    });
+});
+
+describe('orderedSelection', () => {
+    let orderedSelection;
+
+    beforeAll(async () => {
+        global.window = global.window ?? {};
+        ({ orderedSelection } = await import('../sanctorale.js'));
+    });
+
+    // The option list is the LitCommon enum, whose order puts Doctors before
+    // Pastors:For a Bishop. StHilaryPoitiers stores them the other way round.
+    const OPTIONS = ['Proper', 'Doctors', 'Pastors:For a Bishop'];
+    const STORED  = ['Pastors:For a Bishop', 'Doctors'];
+
+    /** A real multi-select in the document, since orderedSelection reads the DOM. */
+    const selectWith = (selected) => {
+        document.body.innerHTML = '';
+        const select = document.createElement('select');
+        select.id = 'entryCommon';
+        select.multiple = true;
+        for (const value of OPTIONS) {
+            const option = document.createElement('option');
+            option.value = value;
+            option.selected = selected.includes(value);
+            select.appendChild(option);
+        }
+        document.body.appendChild(select);
+        return select;
+    };
+
+    it('reports DOM order, which is why this function exists at all', () => {
+        // Pinning the browser behaviour the rest of these tests are about:
+        // selectedOptions follows the option list, never the stored array.
+        const select = selectWith(STORED);
+        expect([...select.selectedOptions].map((o) => o.value))
+            .toEqual(['Doctors', 'Pastors:For a Bishop']);
+    });
+
+    it('keeps the row\'s own order for values it already had', () => {
+        // Otherwise an untouched form diffs as changed, and a save silently
+        // rewrites the corpus's order for no reason.
+        selectWith(STORED);
+        expect(orderedSelection('entryCommon', STORED)).toEqual(STORED);
+    });
+
+    it('appends a newly picked value rather than reordering the kept ones', () => {
+        selectWith(['Proper', ...STORED]);
+        expect(orderedSelection('entryCommon', STORED))
+            .toEqual(['Pastors:For a Bishop', 'Doctors', 'Proper']);
+    });
+
+    it('drops a deselected value and leaves the rest in the stored order', () => {
+        selectWith(['Doctors']);
+        expect(orderedSelection('entryCommon', STORED)).toEqual(['Doctors']);
+    });
+
+    it('falls back to DOM order when there is no stored order to honour', () => {
+        // A new celebration has none, and neither has a row whose field was empty.
+        selectWith(STORED);
+        expect(orderedSelection('entryCommon', [])).toEqual(['Doctors', 'Pastors:For a Bishop']);
+        expect(orderedSelection('entryCommon', undefined)).toEqual(['Doctors', 'Pastors:For a Bishop']);
+    });
+
+    it('yields nothing when the control is absent, rather than throwing', () => {
+        // The read-only modal renders no form controls at all.
+        document.body.innerHTML = '';
+        expect(orderedSelection('entryCommon', STORED)).toEqual([]);
+    });
+});
+
+describe('applicableTiers', () => {
+    // US_2011 and IT_1983 are StPeterClaver's real tiers, and they're what actually
+    // exercise the filter below. TYPICA_TIER is synthetic — live, EDITIO_TYPICA_2002
+    // owns no lectionary folder of its own, so its readings arrive folded into the
+    // `rite` tier rather than as a separate `missal` tier. It's still worth pinning:
+    // applicableTiers() doesn't care which Missal ids are involved, only the shape,
+    // so this fixture exercises "a missal tier for the base region" as a case in its
+    // own right rather than only what today's response happens to return.
+    const RITE_TIER = { tier: 'rite', source_id: 'sanctorum' };
+    const TYPICA_TIER = { tier: 'missal', source_id: 'EDITIO_TYPICA_2002' };
+    const US_TIER = { tier: 'missal', source_id: 'US_2011' };
+    const IT_TIER = { tier: 'missal', source_id: 'IT_1983' };
+    const ST_PETER_CLAVER_TIERS = [RITE_TIER, TYPICA_TIER, US_TIER, IT_TIER];
+
+    it('keeps the rite tier regardless of the applicable set, even an empty one', () => {
+        // The rite corpus applies to every calendar in the rite, so it survives
+        // even when nothing else does.
+        expect(applicableTiers([RITE_TIER], [])).toEqual([RITE_TIER]);
+        expect(applicableTiers([RITE_TIER], new Set())).toEqual([RITE_TIER]);
+    });
+
+    it('keeps a missal tier whose source_id is applicable', () => {
+        expect(applicableTiers([TYPICA_TIER], ['EDITIO_TYPICA_2002'])).toEqual([TYPICA_TIER]);
+    });
+
+    it('drops a missal tier whose source_id is not applicable — the General Roman case', () => {
+        // Viewing the General Roman Calendar, only the typica's tier and the rite
+        // corpus apply; neither national Missal's tier belongs here.
+        const applicableIds = applicableMissals(CATALOGUE, '', 'VA').map((m) => m.missal_id);
+        const out = applicableTiers(ST_PETER_CLAVER_TIERS, applicableIds);
+        expect(out).toEqual([RITE_TIER, TYPICA_TIER]);
+        expect(out).not.toContainEqual(US_TIER);
+        expect(out).not.toContainEqual(IT_TIER);
+    });
+
+    it('narrows to the US calendar\'s own missal, still excluding IT_1983', () => {
+        const applicableIds = applicableMissals(CATALOGUE, 'US', 'VA').map((m) => m.missal_id);
+        const out = applicableTiers(ST_PETER_CLAVER_TIERS, applicableIds);
+        expect(out).toEqual([RITE_TIER, TYPICA_TIER, US_TIER]);
+        expect(out).not.toContainEqual(IT_TIER);
+    });
+
+    it('never filters out the write-target tier, since an editable row\'s Missal is applicable by construction', () => {
+        // isReadingsWriteTarget() only ever selects the tier whose source_id equals
+        // editState.missalId, and editState.missalId can only be a Missal
+        // applicableMissals() already returned for the open calendar — so the
+        // applicable set passed here always contains it.
+        const writeTarget = { tier: 'missal', source_id: 'US_2011' };
+        const applicableIds = applicableMissals(CATALOGUE, 'US', 'VA').map((m) => m.missal_id);
+        expect(applicableIds).toContain('US_2011');
+        expect(applicableTiers([writeTarget], applicableIds)).toContainEqual(writeTarget);
+    });
+
+    it('returns an empty result for an empty input rather than throwing', () => {
+        expect(applicableTiers([], ['US_2011'])).toEqual([]);
+        expect(applicableTiers(undefined, ['US_2011'])).toEqual([]);
+    });
+
+    it('represents "filtered to nothing" as [], leaving the empty case to the caller', () => {
+        // A celebration whose only curated readings live in a Missal that does not
+        // apply here must filter down to nothing — the function does not special
+        // case that; deciding what to render for an empty list is the caller's job.
+        expect(applicableTiers([US_TIER, IT_TIER], ['EDITIO_TYPICA_2002'])).toEqual([]);
+    });
+});
+
+describe('monthOf', () => {
+    // What saveEntry() and deleteEntry() call after reload(), to follow a row to
+    // its new tab rather than leave the editor on the tab they started from.
+    const APRIL_ROW  = { event_key: 'StIsidore', month: 4, day: 4 };
+    const OCTOBER_ROW = { event_key: 'StGregoryGreat', month: 10, day: 3 };
+
+    it('reports the month a key currently lives on', () => {
+        expect(monthOf([APRIL_ROW, OCTOBER_ROW], 'StIsidore')).toBe(4);
+        expect(monthOf([APRIL_ROW, OCTOBER_ROW], 'StGregoryGreat')).toBe(10);
+    });
+
+    it('returns null when the key is not in the composed list at all', () => {
+        // The plain-delete case: nothing else declares the key, so there is
+        // nothing to follow to — the caller must leave the current tab alone.
+        expect(monthOf([APRIL_ROW], 'NoSuchKey')).toBeNull();
+        expect(monthOf([], 'StIsidore')).toBeNull();
+    });
+});
+
+/**
+ * The Names coverage badge, shared by the read-only and the editable renderer.
+ *
+ * They used to compute it separately and fall back differently for an event_key
+ * the coverage map has never heard of, so the SAME celebration badged fourteen
+ * green "translated" read-only and fourteen red "missing" under Edit. The
+ * read-only fallback of three empty arrays is the trap: it puts a locale in no
+ * named list, so the last branch — `translated` — catches it.
+ */
+describe('nameCoverageBadge', () => {
+    const STRINGS = { missingLabel: 'MISSING', emptyLabel: 'EMPTY', translatedLabel: 'TRANSLATED' };
+    const PAYLOAD = {
+        locales: ['en', 'it', 'la'],
+        coverage: { StIsidoreFarmer: { translated: ['en'], empty: ['it'], missing: ['la'] } }
+    };
+    const absent = (payload) => ({ translated: [], empty: [], missing: payload.locales ?? [] });
+
+    it('reads the three states off a coverage entry that exists', () => {
+        const badge = (loc) => nameCoverageBadge(PAYLOAD, 'StIsidoreFarmer', loc, absent(PAYLOAD), STRINGS);
+        expect(badge('en')).toContain('TRANSLATED');
+        expect(badge('it')).toContain('EMPTY');
+        expect(badge('la')).toContain('MISSING');
+    });
+
+    it('reports every locale missing when the key is absent from the coverage map', () => {
+        // The regression. An absent entry means nothing is known about any
+        // locale, which is `missing` — never `translated`.
+        for (const loc of PAYLOAD.locales) {
+            expect(nameCoverageBadge(PAYLOAD, 'NeverHeardOfIt', loc, absent(PAYLOAD), STRINGS))
+                .toContain('MISSING');
+        }
+    });
+
+    it('would badge an absent key as translated if handed an all-empty fallback', () => {
+        // Pinned so the shape of the bug stays visible: it is the FALLBACK that
+        // decides, which is why it is a parameter and why both renderers pass the
+        // same one.
+        expect(nameCoverageBadge(PAYLOAD, 'NeverHeardOfIt', 'en', { translated: [], empty: [], missing: [] }, STRINGS))
+            .toContain('TRANSLATED');
     });
 });

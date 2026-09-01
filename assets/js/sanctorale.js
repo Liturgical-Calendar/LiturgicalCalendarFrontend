@@ -8,11 +8,28 @@
  *
  * See docs/superpowers/specs/2026-08-31-sanctorale-editor-design.md.
  *
- * Read-only. Editing lands separately, against
- * `PUT|PATCH|DELETE /missals/{missal_id}/{event_key}` (API #943).
+ * The same modal is also the editor: opened from a row's Edit button it renders
+ * the entry as a form and writes it back with
+ * `PUT|PATCH|DELETE /missals/{rite}/{missal_id}/{event_key}`. Which rows offer
+ * that button is decided per Missal by capabilities.js; what the API actually DID
+ * with a write is decided by writeDisposition.js, because a change request queued
+ * for review answers the SAME 2xx as a write that reached disk — so only an
+ * `applied` disposition may touch local state.
  *
  * @module sanctorale
  */
+
+import { detectMissalCapabilities } from './capabilities.js';
+import { describeWriteOutcome } from './writeDisposition.js';
+import {
+    gradeDisplayMode,
+    gradeDisplayValue,
+    buildPatch,
+    buildCreate,
+    isValidEventKey,
+    EVENT_KEY_PATTERN,
+    PayloadError
+} from './sanctorale-payload.js';
 
 const config = window.SanctoraleConfig;
 
@@ -46,7 +63,12 @@ const dom = {
     notice:      el('sanctoraleNotice'),
     detailModal: el('detailModal'),
     detailTitle: el('detailModalTitle'),
-    detailBody:  el('detailModalBody')
+    detailBody:  el('detailModalBody'),
+    detailFooter: el('detailModalFooter'),
+    saveEntry:   el('saveEntryBtn'),
+    deleteEntry: el('deleteEntryBtn'),
+    formError:   el('entryFormError'),
+    newEntry:    el('newEntryBtn')
 };
 
 const state = {
@@ -61,8 +83,60 @@ const state = {
     fromMissal: '',
     composed: [],
     month: new Date().getUTCMonth() + 1,
-    search: ''
+    search: '',
+    capabilities: new Map(),
+    /**
+     * The event_key the detail modal is currently open on, mirrored into the
+     * hash as `event=` so a link can address one celebration and land on its
+     * month tab. Empty when no modal is open. See showDetail(), showCreate()
+     * and the `hidden.bs.modal` listener in init().
+     */
+    event: ''
 };
+
+/**
+ * What the modal is currently editing. Separate from `state`, which is about the
+ * composed view: this is torn down and rebuilt every time the modal opens.
+ */
+const editState = {
+    eventKey: null,
+    missalId: null,
+    creating: false,
+    editing: false,
+    readingsTier: 'rite',
+    /**
+     * The calendar a NEW entry belongs to. An existing entry carries its own, so
+     * this is only ever consulted when creating one, where no row exists to read.
+     */
+    calendarLabel: null,
+    /** The entry as loaded, which every diff is taken against. */
+    original: { structure: {}, i18n: {}, readings: {} },
+    capability: { canEdit: false, canCreate: false, canDelete: false }
+};
+
+/**
+ * Report what the API DID with a write, and say whether local state may follow.
+ *
+ * A response may carry `disposition: "submitted"` with nothing written, and the
+ * handler's `success` string is built in both modes — so echoing it would tell an
+ * editor their work was saved when it was only queued.
+ *
+ * @param {object|null} data the parsed response body
+ * @param {string} appliedMessage what to say when the write reached disk
+ * @returns {{applied: boolean, message: string, severity: string}}
+ */
+function reportWrite(data, appliedMessage) {
+    const outcome = describeWriteOutcome(data, i18n, appliedMessage);
+    // `window.showToast` is the shared helper layout/footer.php loads globally
+    // (assets/js/toast.js); an ES module declaration never lands on `window`, so
+    // its absence is a real possibility and falls back to the page notice.
+    if (typeof window.showToast === 'function') {
+        window.showToast(outcome.message, outcome.severity);
+    } else {
+        notice(outcome.severity === 'success' ? 'success' : 'info', escapeHtml(outcome.message));
+    }
+    return outcome;
+}
 
 /** i18n payloads are per missal and never change within a session. */
 const i18nCache = new Map();
@@ -97,15 +171,99 @@ class HttpError extends Error {
     }
 }
 
-async function getJson(path, headers = {}) {
+/**
+ * Fetch JSON from the API.
+ *
+ * `credentials` defaults to `'omit'`: the `/missals`, `/lectionary` and
+ * `/calendars` reads this drives are public and answer `Access-Control-Allow-Origin: *`,
+ * which a browser refuses to pair with credentials. `checkAllowed()` below is the
+ * one caller that passes `'include'` explicitly — `/admin/permissions/check` is an
+ * authenticated endpoint and answers 401 without a cookie.
+ *
+ * @param {string} path
+ * @param {Record<string,string>} [headers]
+ * @param {'omit'|'include'} [credentials]
+ * @returns {Promise<object>}
+ */
+async function getJson(path, headers = {}, credentials = 'omit') {
     const response = await fetch(`${apiUrl}${path}`, {
         headers: { Accept: 'application/json', ...headers },
-        credentials: 'omit'
+        credentials
     });
     if (!response.ok) {
         throw new HttpError(response.status, path);
     }
     return response.json();
+}
+
+/**
+ * What the user may do to a Missal; unknown Missals are read-only.
+ *
+ * Three capabilities, not one, because the API's relation map is not uniform:
+ * `PATCH` (edit) needs `editor` while `PUT` (create) and `DELETE` both need
+ * `admin`. See capabilities.js's module docblock.
+ */
+function capabilityFor(missalId) {
+    return state.capabilities.get(missalId) ?? { canEdit: false, canCreate: false, canDelete: false };
+}
+
+/**
+ * A failed write, carrying the API's own parsed body.
+ *
+ * The body matters: `assertKeyIdentity()` composes a 409 naming the editions and
+ * dates that disagree, and that message is more useful beside the inputs that
+ * caused it than a status code ever is.
+ */
+export class ApiWriteError extends Error {
+    constructor(status, body) {
+        super(`HTTP ${status}`);
+        this.status = status;
+        this.body = body;
+    }
+}
+
+/** The address of one sanctorale entry. Every segment is encoded on its own. */
+export function entryPath(rite, missalId, eventKey) {
+    return `/missals/${encodeURIComponent(rite)}/${encodeURIComponent(missalId)}/${encodeURIComponent(eventKey)}`;
+}
+
+/**
+ * Issue a write.
+ *
+ * Separate from getJson() and not a wrapper over it, because the two disagree on
+ * the one setting that matters: the `/missals` and `/lectionary` reads are public
+ * and answer `Access-Control-Allow-Origin: *`, which a browser refuses to pair
+ * with credentials, while the write routes echo the validated origin and set
+ * `allowCredentials`. A shared helper would have to be right about both.
+ *
+ * An unparseable body is `null`, never a throw: reading an empty 204 as a failure
+ * is the bug issue #503 filed against the old editor.
+ *
+ * @param {'PUT'|'PATCH'|'DELETE'} method
+ * @param {string} path from entryPath()
+ * @param {object} [body]
+ * @returns {Promise<object|null>}
+ * @throws {ApiWriteError}
+ */
+export async function writeJson(method, path, body) {
+    const response = await fetch(`${apiUrl}${path}`, {
+        method,
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: body === undefined ? undefined : JSON.stringify(body)
+    });
+
+    let data = null;
+    try {
+        data = await response.json();
+    } catch {
+        // Unparseable or empty (e.g. a 204) body resolves to `null` — not a failure. See #503.
+    }
+
+    if (!response.ok) {
+        throw new ApiWriteError(response.status, data);
+    }
+    return data;
 }
 
 /**
@@ -263,6 +421,29 @@ export function schemaKeysOf(entries) {
     return [...known, ...extra];
 }
 
+/**
+ * Narrow a lectionary response's tiers to the ones the selected calendar actually
+ * uses.
+ *
+ * `GET /lectionary/{rite}/sanctorale/{event_key}` is scoped by RITE, not by
+ * calendar, so its `readings` array can carry tiers from Missals the selected
+ * calendar never uses — StPeterClaver's US_2011 and IT_1983 tiers both ride along
+ * when viewing the General Roman Calendar, and IT_1983's still rides along when
+ * viewing the US calendar. The rite-level corpus (`tier.tier === 'rite'`) applies
+ * to everything in the rite and is always kept; a `missal` tier is kept only when
+ * its `source_id` is one of `applicableMissals()`'s ids. The caller owns that call
+ * — routing through the page's one existing definition of "applies here" is the
+ * point, rather than this function keeping a second, looser answer that can drift.
+ *
+ * @param {Array<object>} tiers a `/lectionary` response's `readings` array
+ * @param {Set<string>|Array<string>} applicableMissalIds ids from applicableMissals()
+ * @returns {Array<object>}
+ */
+export function applicableTiers(tiers, applicableMissalIds) {
+    const ids = applicableMissalIds instanceof Set ? applicableMissalIds : new Set(applicableMissalIds ?? []);
+    return (tiers ?? []).filter((tier) => tier.tier === 'rite' || ids.has(tier.source_id));
+}
+
 export function baseRegionFor(missals, rite) {
     const regions = [...new Set(missals.map((m) => m.region))];
     // A rite with a single region has no national missals to distinguish, so every
@@ -390,11 +571,19 @@ function renderTable(visible) {
                         data-event-key="${escapeHtml(row.event_key)}" data-missal="${escapeHtml(row._missalId)}">
                     <i class="fas fa-magnifying-glass me-1"></i>${escapeHtml(i18n.view)}
                 </button>
+                ${capabilityFor(row._missalId).canEdit ? `
+                <button type="button" class="btn btn-sm btn-outline-primary ms-1"
+                        data-edit-key="${escapeHtml(row.event_key)}" data-missal="${escapeHtml(row._missalId)}">
+                    <i class="fas fa-pen me-1"></i>${escapeHtml(i18n.edit)}
+                </button>` : ''}
             </td>
         </tr>`).join('');
 
     dom.tableBody.querySelectorAll('button[data-event-key]').forEach((btn) => {
         btn.addEventListener('click', () => showDetail(btn.dataset.eventKey, btn.dataset.missal));
+    });
+    dom.tableBody.querySelectorAll('button[data-edit-key]').forEach((btn) => {
+        btn.addEventListener('click', () => showDetail(btn.dataset.editKey, btn.dataset.missal, true));
     });
 }
 
@@ -440,15 +629,20 @@ function renderFromOptions() {
 /**
  * One event across every layer that defines it: structure, all its names, and
  * its readings from whichever lectionary tiers carry them.
+ *
+ * @param {string} eventKey
+ * @param {string} missalId
+ * @param {boolean} [editing] open the entry as a form rather than as a reading
  */
-async function showDetail(eventKey, missalId) {
+async function showDetail(eventKey, missalId, editing = false) {
     // Opening B while A is still loading must not let A render into B's modal.
+    // Taken FIRST, before any await and before any helper below can yield, and
+    // re-checked immediately after the one await: every step that touches the
+    // modal or editState sits on one side of that check or the other.
     const seq = ++detailSeq;
-    dom.detailTitle.textContent = eventKey;
-    dom.detailBody.innerHTML = `<p class="text-muted">${escapeHtml(i18n.loading)}</p>`;
-    bootstrap.Modal.getOrCreateInstance(dom.detailModal).show();
 
-    const row = state.composed.find((r) => r.event_key === eventKey);
+    openDetailShell(eventKey);
+    const row = resetEditStateForEntry(eventKey, missalId, editing);
 
     // Names and readings are independent: a rite with no lectionary still has
     // names, so one failing must not blank the other.
@@ -459,13 +653,531 @@ async function showDetail(eventKey, missalId) {
 
     if (seq !== detailSeq) return;
 
-    dom.detailBody.innerHTML = [
-        renderStructure(row),
+    recordDetailOriginals(names, readings, eventKey);
+    dom.detailBody.innerHTML = renderDetailBody(row, names, readings, eventKey);
+
+    // The custom text only means anything in Custom mode, and is revealed with
+    // the value it had rather than cleared: switching away and back must not
+    // silently drop text the user has already typed.
+    wireGradeDisplayToggle();
+}
+
+/**
+ * Put the modal on screen in its loading state and address it in the URL.
+ *
+ * @param {string} eventKey
+ */
+function openDetailShell(eventKey) {
+    dom.detailTitle.textContent = eventKey;
+    dom.detailBody.innerHTML = `<p class="text-muted">${escapeHtml(i18n.loading)}</p>`;
+    bootstrap.Modal.getOrCreateInstance(dom.detailModal).show();
+    // Written immediately, not after showDetail()'s await: the URL should name
+    // what is opening even while it is still loading, so a copy taken mid-load
+    // is still a valid link back to this celebration.
+    state.event = eventKey;
+    syncHash();
+}
+
+/**
+ * Tear down whatever the modal last held and rebuild `editState` for this entry,
+ * then set the footer to match what the user may actually do to it.
+ *
+ * @param {string} eventKey
+ * @param {string} missalId
+ * @param {boolean} editing asked for by the caller; granted by the capability
+ * @returns {object|undefined} the composed row, for the renderers
+ */
+function resetEditStateForEntry(eventKey, missalId, editing) {
+    const row = state.composed.find((r) => r.event_key === eventKey);
+
+    editState.eventKey = eventKey;
+    editState.missalId = missalId;
+    editState.creating = false;
+    editState.calendarLabel = null;
+    // Reset explicitly rather than relying on renderReadingsForm() to overwrite it:
+    // the 404 branch renders no inputs and sets no tier, so a stale value from
+    // whatever entry was open before this one must not leak into this one's payload.
+    editState.readingsTier = 'rite';
+    editState.capability = capabilityFor(missalId);
+    // Asked for by the caller, granted by the capability: a stale Edit button on
+    // a row whose grant has since been revoked opens read-only rather than
+    // offering a Save the API would refuse.
+    editState.editing = editing && editState.capability.canEdit;
+    editState.original = { structure: structureOf(row), i18n: {}, readings: {} };
+
+    dom.detailFooter.classList.toggle('d-none', !editState.editing);
+    // Delete belongs to an entry that exists and is being edited; a create modal
+    // reuses this footer and must not offer to delete a row nothing has stored.
+    dom.deleteEntry.classList.toggle('d-none', !(editState.editing && editState.capability.canDelete));
+    dom.formError.textContent = '';
+
+    return row;
+}
+
+/**
+ * Record what was loaded as the baseline every diff is taken against.
+ *
+ * @param {PromiseSettledResult<object>} names
+ * @param {PromiseSettledResult<object>} readings
+ * @param {string} eventKey
+ */
+function recordDetailOriginals(names, readings, eventKey) {
+    if (names.status === 'fulfilled') {
+        // Only locales the file actually carries an entry for. A locale that is
+        // ABSENT stays absent in the original, which is what lets diffLocaleMap
+        // tell "cleared to blank" apart from "never had one".
+        const coverage = names.value.coverage?.[eventKey] ?? {};
+        for (const loc of names.value.locales ?? []) {
+            if (coverage.missing?.includes(loc)) continue;
+            editState.original.i18n[loc] = names.value.i18n?.[loc]?.[eventKey] ?? '';
+        }
+    }
+
+    if (readings.status === 'fulfilled') {
+        // The write target's tier ONLY — the one tier the form renders inputs for.
+        // See resolveReadingsTarget(): the response is rite-scoped and routinely
+        // carries tiers this Missal's write cannot reach.
+        const { tier, target } = resolveReadingsTarget(readings.value);
+        editState.readingsTier = tier;
+        for (const [loc, entry] of Object.entries(target?.entries ?? {})) {
+            editState.original.readings[loc] = entry;
+        }
+    } else {
+        // A 404 means nothing is curated yet, which is a normal state, not a
+        // failure — but there is then no original to diff against.
+        editState.original.readings = {};
+    }
+}
+
+/**
+ * The modal body: structure, names and readings, each as a form or as a reading
+ * depending on `editState.editing`.
+ *
+ * @param {object|undefined} row
+ * @param {PromiseSettledResult<object>} names
+ * @param {PromiseSettledResult<object>} readings
+ * @param {string} eventKey
+ * @returns {string}
+ */
+function renderDetailBody(row, names, readings, eventKey) {
+    return [
+        editState.editing ? renderStructureForm(row) : renderStructure(row),
         names.status === 'fulfilled'
-            ? renderNames(names.value, eventKey)
+            ? (editState.editing ? renderNamesForm(names.value, eventKey) : renderNames(names.value, eventKey))
             : `<div class="alert alert-warning">${escapeHtml(i18n.namesUnavailable)}</div>`,
-        renderReadingsOutcome(readings)
+        // Guarded on `fulfilled`: a 404 means nothing is curated for this event yet,
+        // which renderReadingsOutcome already reports as "nothing curated" rather
+        // than a failure, so that read-only fallback covers the edit path too —
+        // renderReadingsForm has no tier information to work from on a 404.
+        editState.editing && readings.status === 'fulfilled'
+            ? renderReadingsForm(readings.value)
+            : renderReadingsOutcome(readings)
     ].join('');
+}
+
+/**
+ * Reveal or hide the custom grade-display text input as the mode select
+ * changes. Shared by showDetail() and showCreate(), which both render
+ * renderStructureForm() into the modal.
+ */
+function wireGradeDisplayToggle() {
+    el('entryGradeDisplayMode')?.addEventListener('change', (event) => {
+        el('entryGradeDisplayText')?.classList.toggle('d-none', event.target.value !== 'custom');
+    });
+}
+
+/**
+ * The calendar label a Missal's rows carry.
+ *
+ * `buildRow()` refuses a payload whose `calendar` is not the Missal's own, and
+ * every applicable Missal has at least one composed row to read it off.
+ *
+ * @param {string} missalId
+ * @returns {string}
+ */
+function calendarLabelFor(missalId) {
+    return state.composed.find((r) => r._missalId === missalId)?.calendar ?? '';
+}
+
+/**
+ * Re-render the Names block for the Missal currently selected in the create
+ * dialog's target picker.
+ *
+ * Genuinely load-bearing, not cosmetic: the locale set differs per edition —
+ * US_2011 publishes `en_US` alone against the 1970 typica's fourteen. Without
+ * this, switching the picker would leave the previous Missal's locale set on
+ * screen and let a curator submit names into locales the chosen Missal does
+ * not even publish.
+ *
+ * Guarded by `detailSeq`, the same token showDetail() uses: a curator who
+ * flips between two Missals before the first `/i18n` fetch resolves must see
+ * the SECOND choice's locales, not have the first overwrite it on arrival.
+ */
+async function refreshCreateNames() {
+    const seq = ++detailSeq;
+    const container = el('entryNamesBlock');
+    if (!container) return;
+    container.innerHTML = `<p class="text-muted">${escapeHtml(i18n.loading)}</p>`;
+
+    let payload;
+    try {
+        payload = await loadI18n(editState.missalId);
+    } catch {
+        payload = null;
+    }
+    if (seq !== detailSeq) return;
+
+    const block = el('entryNamesBlock');
+    if (!block) return;
+    block.innerHTML = payload
+        ? renderNamesForm(payload, '')
+        : `<div class="alert alert-warning">${escapeHtml(i18n.namesUnavailable)}</div>`;
+}
+
+/**
+ * Open the modal to create an entry.
+ *
+ * Two controls exist here and nowhere else. The Missal picker, because adding a
+ * saint to US_2011 and adding one to the 1970 typica are different acts and the
+ * UI must make the curator say which — it lists only editions they may CREATE in,
+ * which is a narrower set than the ones they may edit: creating is `PUT`, and
+ * `PUT` needs `admin` where an edit needs only `editor`. And
+ * the event_key input, because the key is set once: the API refuses to rename
+ * one, since a rename orphans its name and readings in every locale permanently.
+ * That input is validated against the schema's `EventKey` pattern, in the HTML
+ * `pattern=` attribute and again in saveEntry(), from the one shared constant.
+ */
+async function showCreate() {
+    const editable = applicableMissals(state.missals, state.calendar, state.baseRegion)
+        .filter((m) => capabilityFor(m.missal_id).canCreate)
+        .reverse(); // newest first; applicableMissals sorts oldest-first for compose()
+
+    if (editable.length === 0) return;
+
+    const seq = ++detailSeq;
+
+    editState.eventKey = '';
+    editState.missalId = editable[0].missal_id;
+    editState.creating = true;
+    editState.editing = true;
+    editState.capability = capabilityFor(editState.missalId);
+    editState.original = { structure: {}, i18n: {}, readings: {} };
+    editState.calendarLabel = calendarLabelFor(editState.missalId);
+    editState.readingsTier = 'rite';
+
+    // Nothing to address yet — a create dialog has no event_key until Save.
+    // Cleared explicitly rather than left over from whatever showDetail() last
+    // set: the `hidden.bs.modal` listener only fires once THIS modal closes, by
+    // which point a stale `#event=` would already have been visible in the URL.
+    if (state.event) {
+        state.event = '';
+        syncHash();
+    }
+
+    dom.detailTitle.textContent = i18n.newEntry;
+    dom.detailFooter.classList.remove('d-none');
+    dom.deleteEntry.classList.add('d-none');
+    dom.formError.textContent = '';
+    dom.detailBody.innerHTML = `<p class="text-muted">${escapeHtml(i18n.loading)}</p>`;
+    bootstrap.Modal.getOrCreateInstance(dom.detailModal).show();
+
+    // `loadI18n()` is the same cached loader showDetail() uses — it returns
+    // `{locales, i18n, coverage}`, exactly what renderNamesForm() consumes.
+    let payload;
+    try {
+        payload = await loadI18n(editState.missalId);
+    } catch {
+        payload = null;
+    }
+    if (seq !== detailSeq) return;
+
+    dom.detailBody.innerHTML = `
+        <div class="row g-3 mb-3">
+            <div class="col-12 col-md-6">
+                <label class="form-label small" for="entryTargetMissal">${escapeHtml(i18n.targetMissal)}</label>
+                <select class="form-select" id="entryTargetMissal">
+                    ${editable.map((m) => `<option value="${escapeHtml(m.missal_id)}">${escapeHtml(m.missal_id)}</option>`).join('')}
+                </select>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label small" for="entryEventKey">${escapeHtml(i18n.eventKeyLabel)}</label>
+                <input type="text" class="form-control" id="entryEventKey" pattern="${EVENT_KEY_PATTERN}">
+                <div class="form-text">${escapeHtml(i18n.eventKeyHint)}</div>
+            </div>
+        </div>
+        ${renderStructureForm(null)}
+        <div id="entryNamesBlock">${payload
+            ? renderNamesForm(payload, '')
+            : `<div class="alert alert-warning">${escapeHtml(i18n.namesUnavailable)}</div>`}</div>`;
+
+    wireGradeDisplayToggle();
+
+    el('entryTargetMissal')?.addEventListener('change', (event) => {
+        editState.missalId = event.target.value;
+        editState.capability = capabilityFor(editState.missalId);
+        editState.calendarLabel = calendarLabelFor(editState.missalId);
+        // The calendar readback in the Structure panel is baked into innerHTML
+        // rather than re-rendered wholesale, so it is updated directly here;
+        // the payload itself always reads editState.calendarLabel fresh at
+        // save time regardless (see readStructureForm()).
+        const calendarField = el('entryCalendarLabel');
+        if (calendarField) calendarField.textContent = editState.calendarLabel;
+        refreshCreateNames();
+    });
+}
+
+/**
+ * Save the modal. The `#saveEntryBtn` click handler.
+ *
+ * A thin wrapper so that the lock on the write controls covers the whole of
+ * performSave(), including its early returns — see withWriteControlsDisabled().
+ */
+async function saveEntry() {
+    await withWriteControlsDisabled(performSave);
+}
+
+/**
+ * Save the modal, assuming the write controls are already locked.
+ *
+ * Local state is updated ONLY when the write reached disk. In queue mode the
+ * response carries the proposed payload rather than a stored resource, so
+ * writing it into `state.composed` would show the user an entry the server may
+ * never store.
+ */
+async function performSave() {
+    dom.formError.textContent = '';
+
+    // Read before validation, because the event_key rule below is stated over
+    // `editState.eventKey` rather than over the input.
+    if (editState.creating) {
+        editState.eventKey = el('entryEventKey')?.value.trim() ?? '';
+    }
+
+    const next = {
+        structure: readStructureForm(),
+        i18n: readNamesForm(),
+        readings: readReadingsForm()
+    };
+
+    const invalid = validateEntryForm(next);
+    if (invalid !== null) {
+        dom.formError.textContent = invalid;
+        return;
+    }
+
+    let payload;
+    try {
+        payload = buildEntryPayload(next);
+    } catch (error) {
+        if (error instanceof PayloadError) {
+            dom.formError.textContent = error.message === 'nothing changed' ? i18n.noChanges : error.message;
+            return;
+        }
+        throw error;
+    }
+
+    const path = entryPath(state.rite, editState.missalId, editState.eventKey);
+    try {
+        const data = await writeJson(editState.creating ? 'PUT' : 'PATCH', path, payload);
+        const outcome = reportWrite(data, editState.creating ? i18n.created : i18n.saved);
+        const savedKey = editState.eventKey;
+        closeEntryModal();
+        if (outcome.applied) {
+            await reloadAndFollow(savedKey);
+        }
+    } catch (error) {
+        await reportSaveError(error);
+    }
+}
+
+/**
+ * What is wrong with the form, in the order the user should be told about it.
+ *
+ * The order is load-bearing, not incidental: a form with two faults reports the
+ * FIRST, and reordering these silently changes which message the user sees.
+ *
+ * @param {{structure: object}} next the form as it currently reads
+ * @returns {?string} the message to show, or null when the form is submittable
+ */
+function validateEntryForm(next) {
+    // The schema's own rule, not an approximation of it: see EVENT_KEY_PATTERN.
+    // A looser client rule lets `stIsidore` through to an opaque 400; a tighter
+    // one refuses `StJohnBaptist_vigil` outright, which is how a vigil entry
+    // became impossible to create.
+    if (editState.creating && !isValidEventKey(editState.eventKey)) {
+        return i18n.eventKeyHint;
+    }
+
+    // `Number(el('entryDay')?.value)` on a cleared or missing input lands on 0
+    // or NaN depending on how it was cleared — neither is a day the API will
+    // accept, and buildCreate()/buildPatch() have no opinion on range, only on
+    // presence. Reported here, beside the input, rather than let it travel as
+    // an opaque 400.
+    if (!Number.isInteger(next.structure.day) || next.structure.day < 1 || next.structure.day > 31) {
+        return i18n.invalidDay;
+    }
+
+    // The same problem for the two SELECTS, which differ from the day input in
+    // that they always yield something: a create form left untouched submits
+    // January and grade 0 (Weekday), both present and both wrong, so no presence
+    // check can catch them. Checked on the RAW value — `next.structure` has
+    // already coerced through Number(), where the placeholder's '' and a
+    // deliberate grade of 0 (Weekday IS a legal grade) are the same number.
+    if (editState.creating) {
+        if (el('entryMonth')?.value === '') return i18n.chooseMonth;
+        if (el('entryGrade')?.value === '') return i18n.chooseGrade;
+    }
+
+    return null;
+}
+
+/**
+ * The body of the write: a whole entry when creating, a diff when editing.
+ *
+ * @param {object} next the form as it currently reads
+ * @returns {object}
+ * @throws {PayloadError} when there is nothing to send
+ */
+function buildEntryPayload(next) {
+    return editState.creating
+        ? buildCreate({ eventKey: editState.eventKey, next, readingsTier: editState.readingsTier })
+        : buildPatch({ original: editState.original, next, readingsTier: editState.readingsTier });
+}
+
+/**
+ * Report a failed write where the user can act on it.
+ *
+ * Rethrows anything that is not an API write failure: an unexpected error must
+ * surface, not be flattened into a form message.
+ *
+ * @param {unknown} error
+ */
+async function reportSaveError(error) {
+    if (!(error instanceof ApiWriteError)) throw error;
+    if (error.status === 409) {
+        // assertKeyIdentity() composes a message naming the editions and dates
+        // that disagree. It belongs beside the day and month that caused it —
+        // inline in the form, never as a toast that outlives the modal.
+        dom.formError.textContent = `${i18n.conflictTitle}: ${error.body?.error ?? ''}`;
+        return;
+    }
+    if (error.status === 403) {
+        // The likeliest cause is a grant changing under a long-lived page.
+        // The refresh is best effort — it exists only to stop the page offering
+        // affordances the user no longer has. Telling the user their write was
+        // refused is not best effort; it is the whole point of this branch, so
+        // a rejected refresh must never swallow the message that follows it.
+        try {
+            await loadCatalogue();
+        } catch {
+            // Ignored: reporting the 403 below still has to happen.
+        }
+        dom.formError.textContent = i18n.permissionDenied;
+        return;
+    }
+    dom.formError.textContent = i18n.saveFailed.replace('%s', error.body?.error ?? error.message);
+}
+
+/**
+ * Close the entry modal and stop it addressing anything.
+ *
+ * `state.event` is cleared here rather than left for the `hidden.bs.modal`
+ * listener, whose fade-out timing races the reload that follows: without this,
+ * reload()'s own openDeepLinkedEvent() can still see the just-written key in
+ * `state.event` and reopen the very modal the write just closed.
+ */
+function closeEntryModal() {
+    bootstrap.Modal.getOrCreateInstance(dom.detailModal).hide();
+    state.event = '';
+}
+
+/**
+ * Reload the sanctorale and follow the written row to wherever it landed.
+ *
+ * Following matters because a curator who moves a celebration to another month
+ * must SEE it move rather than have to go find it — and on a delete, because
+ * removing an override reveals an earlier edition's row, which is usually but
+ * not necessarily on the same date.
+ *
+ * @param {string} eventKey
+ */
+async function reloadAndFollow(eventKey) {
+    await reload();
+    const month = monthOf(state.composed, eventKey);
+    if (month !== null && month !== state.month) {
+        state.month = month;
+        syncHash();
+        render();
+    }
+}
+
+/**
+ * Lock Save and Delete for the duration of one write.
+ *
+ * `reload()` can take seconds, so the window in which a second click lands on a
+ * still-open modal is real, and a doubled `PUT`/`DELETE` is not harmless. The
+ * restore is in a `finally` so that success, failure, a rethrown error and every
+ * validation early-return all re-enable the controls.
+ *
+ * @param {() => Promise<void>} work
+ */
+async function withWriteControlsDisabled(work) {
+    setWriteControlsDisabled(true);
+    try {
+        await work();
+    } finally {
+        setWriteControlsDisabled(false);
+    }
+}
+
+/** @param {boolean} disabled */
+function setWriteControlsDisabled(disabled) {
+    if (dom.saveEntry) dom.saveEntry.disabled = disabled;
+    if (dom.deleteEntry) dom.deleteEntry.disabled = disabled;
+}
+
+/**
+ * Delete the open entry.
+ *
+ * Admin-only, and confirmed by naming the Missal: deleting from the edition that
+ * WON reveals whatever it overrode, so the row does not disappear, it changes.
+ *
+ * `readings_retained` is reported when true. The rite-level corpus is shared, so
+ * a key another Missal still declares keeps its readings — and a curator who
+ * deleted an entry and found its readings intact would otherwise read that as a
+ * failed delete.
+ */
+async function deleteEntry() {
+    await withWriteControlsDisabled(performDelete);
+}
+
+/** Delete the open entry, assuming the write controls are already locked. */
+async function performDelete() {
+    const confirmed = window.confirm(
+        i18n.confirmDelete.replace('%1$s', editState.eventKey).replace('%2$s', editState.missalId)
+    );
+    if (!confirmed) return;
+
+    const path = entryPath(state.rite, editState.missalId, editState.eventKey);
+    try {
+        const data = await writeJson('DELETE', path);
+        const outcome = reportWrite(data, i18n.deleted);
+        const deletedKey = editState.eventKey;
+        closeEntryModal();
+        if (outcome.applied) {
+            if (data?.readings_retained === true && typeof window.showToast === 'function') {
+                window.showToast(i18n.readingsRetained, 'info');
+            }
+            // A plain delete leaves nothing to follow — the row is simply gone,
+            // and reloadAndFollow() stays put for it, monthOf() finding nothing.
+            await reloadAndFollow(deletedKey);
+        }
+    } catch (error) {
+        if (!(error instanceof ApiWriteError)) throw error;
+        dom.formError.textContent = error.status === 403
+            ? i18n.permissionDenied
+            : i18n.saveFailed.replace('%s', error.body?.error ?? error.message);
+    }
 }
 
 /**
@@ -526,25 +1238,405 @@ function renderStructure(row) {
         </div>`;
 }
 
+// ------------------------------------------------------------- structure form
+
+const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+/** `LitColor` in CommonDef.json, in the schema's own order. */
+const COLORS = ['white', 'red', 'green', 'purple', 'rose', 'morello', 'black'];
+
 /**
- * Names per locale, using the coverage map the API precomputes.
+ * The row as the Structure form can express it.
+ *
+ * `is_dominical` and `is_bvm` are OMITTED from a row rather than written `false`
+ * — the API serializes them only where the source data sets them — but a
+ * checkbox has two states, so an absent flag reads back as `false`. Defaulting
+ * them here is what lets an untouched form diff to nothing: without it every
+ * PATCH would carry `is_dominical: false, is_bvm: false` and buildPatch() could
+ * never report "nothing changed".
+ *
+ * @param {object} [row] a composed row
+ * @returns {object} the row with both flags present
+ */
+export function structureOf(row) {
+    return { ...row, is_dominical: row?.is_dominical === true, is_bvm: row?.is_bvm === true };
+}
+
+/**
+ * A multi-select's values, keeping the row's own order for what it already had.
+ *
+ * `selectedOptions` reports selections in DOM order, which is the enum's order,
+ * not the row's: `StHilaryPoitiers` stores `["Pastors:For a Bishop", "Doctors"]`
+ * while the option list has `Doctors` first. Reading that back reordered would
+ * diff as a change on a form nobody touched, and would rewrite the corpus's
+ * order for no reason — diffStructure() compares arrays element by element.
+ *
+ * @param {string} id the select's element id
+ * @param {string[]} [previous] the stored order
+ * @returns {string[]}
+ */
+export function orderedSelection(id, previous) {
+    const chosen = new Set([...(el(id)?.selectedOptions ?? [])].map((o) => o.value));
+    const kept = (previous ?? []).filter((value) => chosen.has(value));
+    // Set iteration is DOM order, which is the only order a newly picked value has.
+    const added = [...chosen].filter((value) => false === kept.includes(value));
+    return [...kept, ...added];
+}
+
+/**
+ * The editable Structure panel.
+ *
+ * `calendar` is shown but not editable: the API derives it from the Missal and
+ * refuses a row whose calendar is not the Missal's own. It is still submitted on
+ * create, where `buildRow()` requires it.
+ *
+ * `grade_display` is a SELECT, not a text input, because the field has three
+ * states and a text input has two. See sanctorale-payload.js.
+ *
+ * `month` and `grade` get a disabled placeholder when CREATING. A `<select>` with
+ * no placeholder always yields a value, so an untouched control is
+ * indistinguishable from a deliberate one: a curator who never opens the grade
+ * dropdown writes `grade: 0` — Weekday — for a saint who is at minimum an
+ * optional memorial, and one who never opens the month dropdown files the entry
+ * under January. `CREATE_REQUIRED`'s presence check cannot fire for either, since
+ * both values are present; they are just wrong. The placeholder makes "not
+ * chosen" a state the form can hold, and saveEntry() rejects it on the create
+ * path — reading the RAW select value, because a grade of `0` is legitimate and
+ * only `''` means unchosen.
+ *
+ * @param {object} [row] the entry being edited, absent when creating one
+ * @returns {string} HTML
+ */
+function renderStructureForm(row) {
+    const mode = gradeDisplayMode(row?.grade_display);
+    const option = (value, label, selected) =>
+        `<option value="${escapeHtml(value)}"${selected ? ' selected' : ''}>${escapeHtml(label)}</option>`;
+    const placeholder = row
+        ? ''
+        : `<option value="" disabled selected>${escapeHtml(i18n.choosePrompt)}</option>`;
+
+    return `
+        <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.structure)}</h6>
+        <div class="row g-3 mb-3">
+            <div class="col-6 col-md-3">
+                <label class="form-label small" for="entryMonth">${escapeHtml(i18n.date)}</label>
+                <select class="form-select" id="entryMonth">
+                    ${placeholder}${MONTHS.map((m) => option(String(m), monthName(m), m === row?.month)).join('')}
+                </select>
+            </div>
+            <div class="col-6 col-md-2">
+                <label class="form-label small" for="entryDay">&nbsp;</label>
+                <input type="number" min="1" max="31" class="form-control" id="entryDay"
+                       value="${escapeHtml(row?.day ?? '')}">
+            </div>
+            <div class="col-12 col-md-3">
+                <label class="form-label small" for="entryGrade">${escapeHtml(i18n.grade)}</label>
+                <select class="form-select" id="entryGrade">
+                    ${placeholder}${Object.entries(i18n.grades ?? {}).map(([value, label]) =>
+                        option(value, label, Number(value) === row?.grade)).join('')}
+                </select>
+            </div>
+            <div class="col-12 col-md-4">
+                <label class="form-label small" for="entryGradeDisplayMode">${escapeHtml(i18n.displaysAs)}</label>
+                <select class="form-select" id="entryGradeDisplayMode">
+                    ${option('default', i18n.gradeDisplayDefault, mode === 'default')}
+                    ${option('none', i18n.gradeDisplayNone, mode === 'none')}
+                    ${option('custom', i18n.gradeDisplayCustom, mode === 'custom')}
+                </select>
+                <input type="text" class="form-control mt-1 ${mode === 'custom' ? '' : 'd-none'}"
+                       id="entryGradeDisplayText" value="${escapeHtml(mode === 'custom' ? row.grade_display : '')}">
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label small" for="entryCommon">${escapeHtml(i18n.common)}</label>
+                <select class="form-select" id="entryCommon" multiple size="6">
+                    ${(config.commons ?? []).map((c) =>
+                        option(c, c, (row?.common ?? []).includes(c))).join('')}
+                </select>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label small" for="entryColor">${escapeHtml(i18n.color)}</label>
+                <select class="form-select" id="entryColor" multiple size="6">
+                    ${COLORS.map((c) => option(c, c, (row?.color ?? []).includes(c))).join('')}
+                </select>
+                <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox" id="entryIsDominical"
+                           ${row?.is_dominical ? 'checked' : ''}>
+                    <label class="form-check-label small" for="entryIsDominical">is_dominical</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="entryIsBvm"
+                           ${row?.is_bvm ? 'checked' : ''}>
+                    <label class="form-check-label small" for="entryIsBvm">is_bvm</label>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="small text-muted">${escapeHtml(i18n.calendarField)}</div>
+                <div><code id="entryCalendarLabel">${escapeHtml(row?.calendar ?? editState.calendarLabel ?? '')}</code></div>
+            </div>
+        </div>`;
+}
+
+/**
+ * The Structure panel's current values, in payload shape.
+ *
+ * @returns {object}
+ */
+function readStructureForm() {
+    return {
+        month: Number(el('entryMonth')?.value),
+        day: Number(el('entryDay')?.value),
+        grade: Number(el('entryGrade')?.value),
+        grade_display: gradeDisplayValue(el('entryGradeDisplayMode')?.value, el('entryGradeDisplayText')?.value),
+        common: orderedSelection('entryCommon', editState.original.structure.common),
+        color: orderedSelection('entryColor', editState.original.structure.color),
+        calendar: editState.original.structure.calendar ?? editState.calendarLabel ?? '',
+        is_dominical: el('entryIsDominical')?.checked === true,
+        is_bvm: el('entryIsBvm')?.checked === true
+    };
+}
+
+/** The Names panel's current values. An empty input is '', which is a value. */
+function readNamesForm() {
+    const names = {};
+    document.querySelectorAll('#entryNames input[data-locale]').forEach((input) => {
+        names[input.dataset.locale] = input.value;
+    });
+    return names;
+}
+
+/**
+ * Which lectionary tier a readings edit for the open Missal would land in.
+ *
+ * `GET /lectionary/{rite}/sanctorale/{key}` is scoped by RITE, so its `readings`
+ * array can carry tiers belonging to Missals the selected calendar does not use
+ * and to Missals other than the one being edited. Both renderers already drop
+ * those (applicableTiers(), then isReadingsWriteTarget()), and the diff must drop
+ * them too: `editState.original.readings` exists to be diffed against what the
+ * form edits, and the form edits exactly one tier.
+ *
+ * Folding EVERY tier's entries into the original was inert only by accident — no
+ * locale key happens to collide between the rite corpus (`en`, `fr`, `it`…) and
+ * the missal lectionaries (`en_US`, `es_US`, `it_IT`…), and diffLocaleMap()
+ * iterates `next`, so a surplus original key is never emitted. That is an
+ * empirical property of today's corpus, not a structural one.
+ *
+ * @param {object} payload a `/lectionary/{rite}/sanctorale/{key}` response
+ * @returns {{tiers: object[], tier: 'missal'|'rite'|'none', target: ?object}}
+ */
+function resolveReadingsTarget(payload) {
+    if (payload?.lectionary_available === false) {
+        return { tiers: [], tier: 'none', target: null };
+    }
+    const applicableIds = applicableMissals(state.missals, state.calendar, state.baseRegion).map((m) => m.missal_id);
+    const tiers = applicableTiers(payload?.readings ?? [], applicableIds);
+    // 'missal' only when THIS Missal owns a lectionary tier of its own — not merely
+    // when some other Missal's tier happens to ride along in the same response.
+    const ownMissalTier = tiers.find((t) => t.tier === 'missal' && t.source_id === editState.missalId);
+    return {
+        tiers,
+        tier: ownMissalTier ? 'missal' : 'rite',
+        target: ownMissalTier ?? tiers.find((t) => t.tier === 'rite') ?? null
+    };
+}
+
+/**
+ * Whether `tier` is the one `MissalsHandler::resolveSanctoraleTarget()` would write
+ * a readings edit to for the Missal currently open in the modal.
+ *
+ * Matching on `tier.tier` alone is not enough: `GET /lectionary/{rite}/sanctorale/{key}`
+ * is scoped by RITE, not by Missal, and a single event can be carried by several
+ * MISSAL-tier sources at once — `StPeterClaver` is a real example, present in both
+ * `US_2011`'s own lectionary and `IT_1983`'s. `resolveSanctoraleTarget()` picks the
+ * folder belonging to the Missal being edited specifically, so the client has to
+ * agree by checking `source_id` too, not just accept the first `missal` tier it sees.
+ *
+ * @param {object} tier one entry of a `/lectionary` response's `readings` array
+ * @returns {boolean}
+ */
+function isReadingsWriteTarget(tier) {
+    return editState.readingsTier === 'missal'
+        ? tier.tier === 'missal' && tier.source_id === editState.missalId
+        : tier.tier === 'rite';
+}
+
+/**
+ * Readings per locale, editable.
+ *
+ * The tier decides what this panel may do, and the three cases are genuinely
+ * different rather than degrees of the same one:
+ *
+ * - `missal` — the edition has its own lectionary folder; the write stays inside it.
+ * - `rite`   — the write lands in the rite-wide `sanctorum` corpus, which every
+ *              Missal of the rite reads. The note says so; a curator editing a
+ *              1970 reading is editing what 2002 and 2008 also see.
+ * - `none`   — the rite has no corpus at all (Ambrosian, API #957). Read-only,
+ *              and the payload omits `readings` entirely: the handler REJECTS a
+ *              body that carries it.
+ *
+ * A response can carry MORE tiers than the one being written to — see
+ * isReadingsWriteTarget(). Every tier other than the write target is rendered with
+ * the same read-only presentation renderReadings() uses for a non-editing viewer,
+ * plus a note explaining why it has no inputs here: offering an input for a citation
+ * this Missal's write cannot reach would let a curator "edit" a value that silently
+ * either overwrites a DIFFERENT source's file (same locale key) or gets rejected by
+ * `assertLocalesExist` (a locale the write target does not carry) — a field the UI
+ * offered them but the API cannot honor from here.
+ */
+function renderReadingsForm(payload) {
+    if (payload.lectionary_available === false) {
+        editState.readingsTier = 'none';
+        return `
+            <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.readings)}</h6>
+            <div class="alert alert-secondary mb-0">${escapeHtml(i18n.readingsNotWritable)}</div>`;
+    }
+
+    // The response is rite-scoped, so it can carry tiers from Missals the selected
+    // calendar does not use, and tiers this Missal's write cannot reach. One
+    // resolver decides, shared with showDetail()'s population of
+    // `editState.original.readings`, so the diff and the form cannot disagree
+    // about which tier is being edited.
+    const { tiers, tier } = resolveReadingsTarget(payload);
+    editState.readingsTier = tier;
+
+    if (!tiers.length) {
+        // The write target's own Missal is always applicable by construction, so
+        // this only fires for a rite with no rite-level corpus and no applicable
+        // missal tier — reported the same as "nothing curated" (the 404 case),
+        // not as a fourth state.
+        return `
+            <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.readings)}</h6>
+            <div class="alert alert-secondary mb-0">${escapeHtml(i18n.noReadingsForEvent)}</div>`;
+    }
+
+    const panels = tiers.map((tier, i) => {
+        if (!isReadingsWriteTarget(tier)) {
+            return `
+                <div class="mb-3">
+                    <div class="alert alert-secondary py-1 px-2 small mb-2">${escapeHtml(i18n.readingsInherited)}</div>
+                    ${renderReadingsTier(tier, i, i18n)}
+                </div>`;
+        }
+
+        const entries = tier.entries ?? {};
+        const schemas = schemaKeysOf(entries);
+        const field = (loc, schema, name, value) => `
+            <div class="col-12 col-md-6 mb-2">
+                <label class="form-label small text-muted">${escapeHtml(name)}</label>
+                <input type="text" class="form-control form-control-sm"
+                       data-locale="${escapeHtml(loc)}" data-schema="${escapeHtml(schema ?? '')}"
+                       data-field="${escapeHtml(name)}" value="${escapeHtml(value ?? '')}">
+            </div>`;
+
+        const localeBlock = (loc, schema) => {
+            const readings = schema ? entries[loc]?.[schema] : entries[loc];
+            if (!readings || typeof readings !== 'object') return '';
+            return `
+                <div class="mb-2"><code class="small">${escapeHtml(loc)}</code>
+                    <div class="row">${Object.entries(readings)
+                        .map(([name, value]) => field(loc, schema, name, value)).join('')}</div>
+                </div>`;
+        };
+
+        const body = schemas.length
+            ? schemas.map((schema) => `
+                <div class="mb-3">
+                    <div class="fw-semibold small mb-1">${escapeHtml(i18n.schemas?.[schema] ?? schema)}</div>
+                    ${Object.keys(entries).map((loc) => localeBlock(loc, schema)).join('')}
+                </div>`).join('')
+            : Object.keys(entries).map((loc) => localeBlock(loc, null)).join('');
+
+        return `
+            <div class="mb-3">
+                <div class="mb-1"><span class="badge bg-dark">${escapeHtml(tier.tier)}</span>
+                    <code class="small ms-1">${escapeHtml(tier.source_id)}</code></div>
+                ${tier.tier === 'rite'
+                    ? `<div class="alert alert-warning py-1 px-2 small">${escapeHtml(i18n.readingsShared)}</div>` : ''}
+                ${body}
+            </div>`;
+    }).join('');
+
+    return `
+        <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.readings)}</h6>
+        <div id="entryReadings">${panels}</div>`;
+}
+
+/**
+ * The Readings panel's values, rebuilt into the nested shape the API stores.
+ * A blank input stays blank: a curated-as-blank citation is a decision.
+ */
+function readReadingsForm() {
+    const readings = {};
+    document.querySelectorAll('#entryReadings input[data-locale]').forEach((input) => {
+        const { locale, schema, field } = input.dataset;
+        readings[locale] = readings[locale] ?? {};
+        if (schema) {
+            readings[locale][schema] = readings[locale][schema] ?? {};
+            readings[locale][schema][field] = input.value;
+        } else {
+            readings[locale][field] = input.value;
+        }
+    });
+    return readings;
+}
+
+/**
+ * What an `event_key` the coverage map has never heard of resolves to.
+ *
+ * Every locale is `missing`, because that is what an absent entry means. It is
+ * spelled out and passed explicitly rather than defaulted inside
+ * nameCoverageBadge(), so a caller cannot quietly pick a different one — which is
+ * exactly what had happened: the read-only renderer fell back to three EMPTY
+ * arrays, which puts a locale in no named list at all and lands it on the final
+ * `translated` branch. The result was fourteen green "translated" badges beside
+ * fourteen blank names in the read-only modal, and fourteen red "missing" badges
+ * for the same entry the moment Edit was clicked.
+ *
+ * @param {object} payload a Missal i18n response
+ * @returns {{translated: string[], empty: string[], missing: string[]}}
+ */
+function absentCoverage(payload) {
+    return { translated: [], empty: [], missing: payload.locales ?? [] };
+}
+
+/**
+ * The coverage badge for one locale, shared by BOTH Names renderers.
  *
  * Three states, not two: `translated`, `empty` (curated as blank on purpose) and
  * `missing` (no entry at all). Collapsing empty into missing would misreport
- * deliberate blanks as gaps.
+ * deliberate blanks as gaps; collapsing missing into translated — which an
+ * all-empty fallback silently does — misreports gaps as finished work.
+ *
+ * @param {object} payload a Missal i18n response
+ * @param {string} eventKey
+ * @param {string} loc a BCP-47 tag from `payload.locales`
+ * @param {{translated: string[], empty: string[], missing: string[]}} fallback
+ *        what to use when the coverage map has no entry for `eventKey`
+ * @param {object} [strings] i18n strings
+ * @returns {string} HTML
+ */
+export function nameCoverageBadge(payload, eventKey, loc, fallback, strings = i18n) {
+    const coverage = payload.coverage?.[eventKey] ?? fallback;
+    if (coverage.missing?.includes(loc)) {
+        return `<span class="badge bg-danger">${escapeHtml(strings.missingLabel)}</span>`;
+    }
+    if (coverage.empty?.includes(loc)) {
+        return `<span class="badge bg-warning text-dark">${escapeHtml(strings.emptyLabel)}</span>`;
+    }
+    return `<span class="badge bg-success">${escapeHtml(strings.translatedLabel)}</span>`;
+}
+
+/**
+ * Names per locale, using the coverage map the API precomputes.
+ *
+ * The badge is nameCoverageBadge()'s, with the same fallback the editable
+ * renderer uses: opening a celebration read-only and opening the same one for
+ * edit must not disagree about what is translated.
  */
 function renderNames(payload, eventKey) {
-    const coverage = payload.coverage?.[eventKey] ?? { translated: [], empty: [], missing: [] };
+    const fallback = absentCoverage(payload);
     const rows = (payload.locales ?? []).map((loc) => {
         const value = payload.i18n?.[loc]?.[eventKey];
-        let stateBadge;
-        if (coverage.missing?.includes(loc)) {
-            stateBadge = `<span class="badge bg-danger">${escapeHtml(i18n.missingLabel)}</span>`;
-        } else if (coverage.empty?.includes(loc)) {
-            stateBadge = `<span class="badge bg-warning text-dark">${escapeHtml(i18n.emptyLabel)}</span>`;
-        } else {
-            stateBadge = `<span class="badge bg-success">${escapeHtml(i18n.translatedLabel)}</span>`;
-        }
+        const stateBadge = nameCoverageBadge(payload, eventKey, loc, fallback);
         return `
             <tr>
                 <td class="text-nowrap"><code>${escapeHtml(loc)}</code></td>
@@ -558,6 +1650,39 @@ function renderNames(payload, eventKey) {
             <span class="badge bg-light text-dark border ms-1">${(payload.locales ?? []).length}</span>
         </h6>
         <table class="table table-sm mb-3"><tbody>${rows}</tbody></table>`;
+}
+
+/**
+ * Names per locale, editable.
+ *
+ * Every locale the Missal publishes gets an input, including the ones with no
+ * entry: `fanOutKey()` will create them, and a curator filling one in is the
+ * normal way a translation arrives. An empty input submits `""` — the corpus's
+ * own record of "exists, not translated yet" — and never null or omission.
+ *
+ * An `eventKey` the coverage map has never heard of (the create dialog, before
+ * anything is saved) is treated as missing in every locale, so every input opens
+ * blank with the `missing` badge rather than misreporting as translated.
+ */
+function renderNamesForm(payload, eventKey) {
+    const fallback = absentCoverage(payload);
+    const rows = (payload.locales ?? []).map((loc) => {
+        const value = payload.i18n?.[loc]?.[eventKey] ?? '';
+        const badge = nameCoverageBadge(payload, eventKey, loc, fallback);
+        return `
+            <tr>
+                <td class="text-nowrap align-middle"><code>${escapeHtml(loc)}</code></td>
+                <td><input type="text" class="form-control form-control-sm"
+                           data-locale="${escapeHtml(loc)}" value="${escapeHtml(value)}"></td>
+                <td class="text-end align-middle">${badge}</td>
+            </tr>`;
+    }).join('');
+
+    return `
+        <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.names)}
+            <span class="badge bg-light text-dark border ms-1">${(payload.locales ?? []).length}</span>
+        </h6>
+        <table class="table table-sm mb-3"><tbody id="entryNames">${rows}</tbody></table>`;
 }
 
 /**
@@ -582,11 +1707,14 @@ function readingRows(entries, schema, strings) {
 }
 
 /**
- * Readings, tier by tier.
+ * One lectionary tier's read-only presentation: a badge naming the tier and
+ * source, its readings as schema tabs or a plain table, and the blank/missing
+ * locale lists.
  *
- * `lectionary_available: false` is a first-class answer, not an error — the
- * Ambrosian rite has no sanctorale lectionary at all — so it renders the API's
- * own message rather than an empty table that reads as a bug.
+ * Factored out of renderReadings() so renderReadingsForm() can reuse the exact
+ * same markup for a tier it is not writing to (see isReadingsWriteTarget()) —
+ * a curator still needs to SEE that citation, just not an input pretending they
+ * can change it from here.
  *
  * Where a celebration offers alternative schemas, they become TABS rather than
  * more nesting. The table already varies by locale; stacking three schemas inside
@@ -598,6 +1726,63 @@ function readingRows(entries, schema, strings) {
  * "Schema II", "Schema III") so the two agree. That renderer solves this problem
  * already but is not exported from the package entry point, so it cannot be
  * imported here — raised upstream; consolidate if it is exported.
+ *
+ * @param {object} tier one entry of a `/lectionary` response's `readings` array
+ * @param {number} index used to build tab ids unique across every tier on the page
+ * @param {object} strings i18n strings
+ * @returns {string}
+ */
+function renderReadingsTier(tier, index, strings) {
+    const entries = tier.entries ?? {};
+    const schemas = schemaKeysOf(entries);
+    const without = tier.locales_without_entry ?? [];
+    const blank   = tier.locales_with_empty_entry ?? [];
+
+    const badge = `
+        <span class="badge bg-dark">${escapeHtml(tier.tier)}</span>
+        <code class="small ms-1">${escapeHtml(tier.source_id)}</code>`;
+
+    const table = (schema) => `
+        <table class="table table-sm mb-1"><tbody>${readingRows(entries, schema, strings)}</tbody></table>`;
+
+    let body;
+    if (schemas.length) {
+        const tabId = (k) => `readings-t${index}-${k.replace(/[^a-z0-9]/gi, '')}`;
+        body = `
+            <ul class="nav nav-pills nav-sm mb-2" role="tablist">
+                ${schemas.map((k, n) => `
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link btn-sm py-1 px-2 ${n === 0 ? 'active' : ''}" type="button"
+                                data-bs-toggle="tab" data-bs-target="#${tabId(k)}" role="tab">
+                            ${escapeHtml(strings.schemas?.[k] ?? k)}
+                        </button>
+                    </li>`).join('')}
+            </ul>
+            <div class="tab-content">
+                ${schemas.map((k, n) => `
+                    <div class="tab-pane fade ${n === 0 ? 'show active' : ''}" id="${tabId(k)}" role="tabpanel">
+                        ${table(k)}
+                    </div>`).join('')}
+            </div>`;
+    } else {
+        body = table(null);
+    }
+
+    return `
+        <div class="mb-3">
+            <div class="mb-1 d-flex align-items-center gap-2 flex-wrap">${badge}</div>
+            ${body}
+            ${blank.length ? `<div class="small text-muted">${escapeHtml(strings.emptyLabel)}: <code>${blank.map(escapeHtml).join('</code>, <code>')}</code></div>` : ''}
+            ${without.length ? `<div class="small text-muted">${escapeHtml(strings.missingLabel)}: <code>${without.map(escapeHtml).join('</code>, <code>')}</code></div>` : ''}
+        </div>`;
+}
+
+/**
+ * Readings, tier by tier, read-only.
+ *
+ * `lectionary_available: false` is a first-class answer, not an error — the
+ * Ambrosian rite has no sanctorale lectionary at all — so it renders the API's
+ * own message rather than an empty table that reads as a bug.
  */
 function renderReadings(payload, strings = i18n) {
     if (payload.lectionary_available === false) {
@@ -606,54 +1791,18 @@ function renderReadings(payload, strings = i18n) {
             <div class="alert alert-secondary mb-0">${escapeHtml(payload.message || strings.noLectionary)}</div>`;
     }
 
-    const tiers = (payload.readings ?? []).map((tier, i) => {
-        const entries = tier.entries ?? {};
-        const schemas = schemaKeysOf(entries);
-        const without = tier.locales_without_entry ?? [];
-        const blank   = tier.locales_with_empty_entry ?? [];
+    // The response is rite-scoped, so it can carry tiers from Missals the selected
+    // calendar does not use (see applicableTiers()); filtering can empty the list
+    // entirely, which reads as "nothing curated" — the same message a 404 gets —
+    // not as a distinct empty-panel state.
+    const applicableIds = applicableMissals(state.missals, state.calendar, state.baseRegion).map((m) => m.missal_id);
+    const tiers = applicableTiers(payload.readings ?? [], applicableIds);
 
-        const badge = `
-            <span class="badge bg-dark">${escapeHtml(tier.tier)}</span>
-            <code class="small ms-1">${escapeHtml(tier.source_id)}</code>`;
-
-        const table = (schema) => `
-            <table class="table table-sm mb-1"><tbody>${readingRows(entries, schema, strings)}</tbody></table>`;
-
-        let body;
-        if (schemas.length) {
-            const tabId = (k) => `readings-t${i}-${k.replace(/[^a-z0-9]/gi, '')}`;
-            body = `
-                <ul class="nav nav-pills nav-sm mb-2" role="tablist">
-                    ${schemas.map((k, n) => `
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link btn-sm py-1 px-2 ${n === 0 ? 'active' : ''}" type="button"
-                                    data-bs-toggle="tab" data-bs-target="#${tabId(k)}" role="tab">
-                                ${escapeHtml(strings.schemas?.[k] ?? k)}
-                            </button>
-                        </li>`).join('')}
-                </ul>
-                <div class="tab-content">
-                    ${schemas.map((k, n) => `
-                        <div class="tab-pane fade ${n === 0 ? 'show active' : ''}" id="${tabId(k)}" role="tabpanel">
-                            ${table(k)}
-                        </div>`).join('')}
-                </div>`;
-        } else {
-            body = table(null);
-        }
-
-        return `
-            <div class="mb-3">
-                <div class="mb-1 d-flex align-items-center gap-2 flex-wrap">${badge}</div>
-                ${body}
-                ${blank.length ? `<div class="small text-muted">${escapeHtml(strings.emptyLabel)}: <code>${blank.map(escapeHtml).join('</code>, <code>')}</code></div>` : ''}
-                ${without.length ? `<div class="small text-muted">${escapeHtml(strings.missingLabel)}: <code>${without.map(escapeHtml).join('</code>, <code>')}</code></div>` : ''}
-            </div>`;
-    }).join('');
+    const rendered = tiers.map((tier, i) => renderReadingsTier(tier, i, strings)).join('');
 
     return `
         <h6 class="text-uppercase text-muted small">${escapeHtml(strings.readings)}</h6>
-        ${tiers || `<div class="text-muted small">${escapeHtml(strings.noEntries)}</div>`}`;
+        ${rendered || `<div class="alert alert-secondary mb-0">${escapeHtml(strings.noReadingsForEvent)}</div>`}`;
 }
 
 // -------------------------------------------------------------------- loading
@@ -686,6 +1835,53 @@ async function loadCatalogue(seq = selectionSeq) {
     }
     dom.calendar.value = state.calendar;
     renderLocaleOptions();
+
+    await refreshCapabilities(seq);
+}
+
+/**
+ * Recompute per-Missal capabilities for the currently applicable set, and
+ * toggle `#newEntryBtn` accordingly — on the CREATE capability, which is
+ * `admin`, not on the edit one. A curator holding only `editor` may change
+ * existing rows and may not add new ones.
+ *
+ * The applicable set is calendar-scoped (applicableMissals() filters by
+ * `state.calendar`), so this must be called on every rite OR calendar change —
+ * not only from loadCatalogue(), which runs on a rite change alone. Selecting a
+ * national calendar brings in a Missal (e.g. `US_2011`) that a prior computation
+ * never saw, and capabilityFor() defaults an unlisted Missal to read-only, so
+ * skipping this on a calendar-only change would silently hide Edit on exactly
+ * the rows the whole feature exists to gate. Both loadCatalogue() and
+ * recompose() call this, sharing the one implementation.
+ *
+ * Guarded by the same `seq` token its callers already allocate:
+ * detectMissalCapabilities() fans out one round-trip per Missal per relation,
+ * so an abandoned selection's checks can resolve after a fresher selection's
+ * and must not overwrite `state.capabilities` — the same hazard loadSanctorale()
+ * guards against for `state.composed`.
+ *
+ * @param {number} seq
+ */
+async function refreshCapabilities(seq) {
+    // Capabilities are per Missal, so they are refreshed whenever the applicable
+    // set changes — which is on every rite or calendar change, not once per page.
+    const capabilities = await detectMissalCapabilities({
+        missals: applicableMissals(state.missals, state.calendar, state.baseRegion),
+        rite: state.rite,
+        baseRegion: state.baseRegion,
+        userSub: config?.userSub ?? '',
+        isGlobalAdmin: config?.isGlobalAdmin === true,
+        checkAllowed: async (path) => {
+            const result = await getJson(path, {}, 'include');
+            return result !== null && typeof result === 'object' && result.allowed === true;
+        }
+    });
+    if (seq !== selectionSeq) return;
+    state.capabilities = capabilities;
+    dom.newEntry?.classList.toggle(
+        'd-none',
+        ![...state.capabilities.values()].some((c) => c.canCreate)
+    );
 }
 
 /**
@@ -757,6 +1953,9 @@ function syncHash() {
     if (state.nameLocale) params.set('locale', state.nameLocale);
     if (state.fromMissal) params.set('from', state.fromMissal);
     params.set('month', String(state.month));
+    // Carries the open modal's event_key, so copying the URL out of the address
+    // bar while viewing one celebration reproduces that view, not just the tab.
+    if (state.event) params.set('event', state.event);
     history.replaceState(null, '', `#${params.toString()}`);
 }
 
@@ -770,7 +1969,50 @@ function readHash() {
     state.calendar   = params.get('calendar') ?? '';
     state.fromMissal = params.get('from') ?? '';
     state.nameLocale = params.get('locale') ?? '';
+    state.event      = params.get('event') ?? '';
     if (month >= 1 && month <= 12) state.month = month;
+}
+
+/**
+ * The month a celebration currently lives on, or `null` when it is not in the
+ * composed list at all.
+ *
+ * Exists so a curator can be followed to where their edit landed rather than
+ * left on the tab they started from — see the `monthOf()` call after `reload()`
+ * in saveEntry() and deleteEntry().
+ *
+ * @param {Array<object>} composed
+ * @param {string} eventKey
+ * @returns {number|null}
+ */
+export function monthOf(composed, eventKey) {
+    return composed.find((r) => r.event_key === eventKey)?.month ?? null;
+}
+
+/**
+ * Open the entry a deep link named (`#event=<key>`), landing on its month tab.
+ *
+ * Called once the composed sanctorale for the current rite/calendar/locale is
+ * loaded, so `state.composed` is what the link is checked against. A key absent
+ * from the CURRENT selection is reported, not silently ignored: a stale or
+ * mistyped link — or one for a rite/calendar this page has since moved away
+ * from — must say so, which is the exact failure mode `#event=` shipped
+ * without in the first place.
+ */
+function openDeepLinkedEvent() {
+    if (!state.event) return;
+    const row = state.composed.find((r) => r.event_key === state.event);
+    if (!row) {
+        notice('warning', escapeHtml(i18n.eventNotFound.replace('%s', state.event)));
+        state.event = '';
+        syncHash();
+        return;
+    }
+    if (state.month !== row.month) {
+        state.month = row.month;
+        render();
+    }
+    showDetail(row.event_key, row._missalId, false);
 }
 
 /**
@@ -794,6 +2036,10 @@ async function reload() {
         // locale may have been re-derived. Writing the hash before that leaves it
         // describing a selection the page is not showing.
         syncHash();
+        // A rite/calendar/locale change can carry a `#event=` along for the ride
+        // (or leave a stale one from before the change); either way it has to be
+        // resolved against the FRESH composed list, not the one it was read against.
+        openDeepLinkedEvent();
     } catch (error) {
         if (seq !== selectionSeq) return;
         // Clear before reporting. Otherwise a failed Ambrosian load leaves the
@@ -812,6 +2058,16 @@ async function reload() {
 async function recompose() {
     const seq = ++selectionSeq;
     try {
+        // Capabilities BEFORE loadSanctorale: loadSanctorale() ends by calling
+        // render(), which reads capabilityFor() live. Refreshing capabilities
+        // afterwards would leave freshly-eligible rows (e.g. a newly selected
+        // US_2011) rendered without their Edit button until some unrelated
+        // re-render happened to run. A calendar change (not just a rite change)
+        // can bring a new Missal into the applicable set — see
+        // refreshCapabilities()'s own doc comment for why this call is here at
+        // all, not only in loadCatalogue().
+        await refreshCapabilities(seq);
+        if (seq !== selectionSeq) return;
         await loadSanctorale(seq);
         if (seq !== selectionSeq) return;
         // renderFromOptions may have retired the selected edition; drop it from
@@ -864,6 +2120,9 @@ async function init() {
         // Purely a view filter over data already composed — no request needed.
         render();
     });
+    dom.saveEntry?.addEventListener('click', saveEntry);
+    dom.deleteEntry?.addEventListener('click', deleteEntry);
+    dom.newEntry?.addEventListener('click', showCreate);
     dom.search.addEventListener('input', () => {
         state.search = dom.search.value;
         // Move to a month that actually contains a hit, otherwise the reader
@@ -891,6 +2150,20 @@ async function init() {
         } else {
             dom.from.value = state.fromMissal;
             render();
+            // reload() resolves its own `#event=` once its fetch lands (see above);
+            // this branch fetches nothing, so it must resolve one itself, against
+            // the composed list that is already current.
+            openDeepLinkedEvent();
+        }
+    });
+
+    // Clears the hash's `event=` once the modal it named is no longer open —
+    // fired by both an explicit close and a save/delete's own `.hide()` call —
+    // so the URL never keeps pointing at a view that is no longer on screen.
+    dom.detailModal?.addEventListener('hidden.bs.modal', () => {
+        if (state.event) {
+            state.event = '';
+            syncHash();
         }
     });
 
@@ -900,6 +2173,10 @@ async function init() {
         // not have. Rewrite it once, so the URL matches what is actually shown and
         // copying it out of the address bar reproduces this page.
         syncHash();
+        // Resolved last, once the composed list and the URL both agree with what
+        // is on screen: a `#event=` deep link opens the modal and lands on the
+        // right month tab, rather than silently doing nothing — see #503 phase 4.
+        openDeepLinkedEvent();
     }
 }
 
