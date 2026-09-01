@@ -690,10 +690,13 @@ async function showDetail(eventKey, missalId, editing = false) {
     }
 
     if (readings.status === 'fulfilled') {
-        for (const tier of readings.value.readings ?? []) {
-            for (const [loc, entry] of Object.entries(tier.entries ?? {})) {
-                editState.original.readings[loc] = entry;
-            }
+        // The write target's tier ONLY — the one tier the form renders inputs for.
+        // See resolveReadingsTarget(): the response is rite-scoped and routinely
+        // carries tiers this Missal's write cannot reach.
+        const { tier, target } = resolveReadingsTarget(readings.value);
+        editState.readingsTier = tier;
+        for (const [loc, entry] of Object.entries(target?.entries ?? {})) {
+            editState.original.readings[loc] = entry;
         }
     } else {
         // A 404 means nothing is curated yet, which is a normal state, not a
@@ -1257,6 +1260,41 @@ function readNamesForm() {
 }
 
 /**
+ * Which lectionary tier a readings edit for the open Missal would land in.
+ *
+ * `GET /lectionary/{rite}/sanctorale/{key}` is scoped by RITE, so its `readings`
+ * array can carry tiers belonging to Missals the selected calendar does not use
+ * and to Missals other than the one being edited. Both renderers already drop
+ * those (applicableTiers(), then isReadingsWriteTarget()), and the diff must drop
+ * them too: `editState.original.readings` exists to be diffed against what the
+ * form edits, and the form edits exactly one tier.
+ *
+ * Folding EVERY tier's entries into the original was inert only by accident — no
+ * locale key happens to collide between the rite corpus (`en`, `fr`, `it`…) and
+ * the missal lectionaries (`en_US`, `es_US`, `it_IT`…), and diffLocaleMap()
+ * iterates `next`, so a surplus original key is never emitted. That is an
+ * empirical property of today's corpus, not a structural one.
+ *
+ * @param {object} payload a `/lectionary/{rite}/sanctorale/{key}` response
+ * @returns {{tiers: object[], tier: 'missal'|'rite'|'none', target: ?object}}
+ */
+function resolveReadingsTarget(payload) {
+    if (payload?.lectionary_available === false) {
+        return { tiers: [], tier: 'none', target: null };
+    }
+    const applicableIds = applicableMissals(state.missals, state.calendar, state.baseRegion).map((m) => m.missal_id);
+    const tiers = applicableTiers(payload?.readings ?? [], applicableIds);
+    // 'missal' only when THIS Missal owns a lectionary tier of its own — not merely
+    // when some other Missal's tier happens to ride along in the same response.
+    const ownMissalTier = tiers.find((t) => t.tier === 'missal' && t.source_id === editState.missalId);
+    return {
+        tiers,
+        tier: ownMissalTier ? 'missal' : 'rite',
+        target: ownMissalTier ?? tiers.find((t) => t.tier === 'rite') ?? null
+    };
+}
+
+/**
  * Whether `tier` is the one `MissalsHandler::resolveSanctoraleTarget()` would write
  * a readings edit to for the Missal currently open in the modal.
  *
@@ -1308,14 +1346,12 @@ function renderReadingsForm(payload) {
     }
 
     // The response is rite-scoped, so it can carry tiers from Missals the selected
-    // calendar does not use (see applicableTiers()) — drop them before deciding
-    // what this Missal owns or rendering anything.
-    const applicableIds = applicableMissals(state.missals, state.calendar, state.baseRegion).map((m) => m.missal_id);
-    const tiers = applicableTiers(payload.readings ?? [], applicableIds);
-    // 'missal' only when THIS Missal owns a lectionary tier of its own — not merely
-    // when some other Missal's tier happens to ride along in the same response.
-    const ownMissalTier = tiers.find((t) => t.tier === 'missal' && t.source_id === editState.missalId);
-    editState.readingsTier = ownMissalTier ? 'missal' : 'rite';
+    // calendar does not use, and tiers this Missal's write cannot reach. One
+    // resolver decides, shared with showDetail()'s population of
+    // `editState.original.readings`, so the diff and the form cannot disagree
+    // about which tier is being edited.
+    const { tiers, tier } = resolveReadingsTarget(payload);
+    editState.readingsTier = tier;
 
     if (!tiers.length) {
         // The write target's own Missal is always applicable by construction, so
