@@ -36,13 +36,25 @@ export class PayloadError extends Error {}
 export const EVENT_KEY_PATTERN = '([a-z]+_[a-z]+_)?[A-Z][a-zA-Z0-9]+(?:[A-Z][a-zA-Z0-9]+)*(?:_\\d+)?(?:_vigil)?';
 
 /**
+ * `EVENT_KEY_PATTERN` anchored and compiled once, rather than per call.
+ *
+ * The pattern's `[A-Z][a-zA-Z0-9]+(?:[A-Z][a-zA-Z0-9]+)*` run is redundant as a
+ * grammar — the trailing group matches nothing the leading one does not already
+ * accept — and it is left that way ON PURPOSE. `EVENT_KEY_PATTERN` is
+ * byte-identical to the `EventKey` definition in the API's
+ * `jsondata/schemas/CommonDef.json`, which is what makes drift from the schema a
+ * one-line diff to spot. Simplifying it here would buy nothing and cost that.
+ */
+const EVENT_KEY_RE = new RegExp(`^${EVENT_KEY_PATTERN}$`);
+
+/**
  * Whether a proposed `event_key` satisfies the schema.
  *
  * @param {string} value
  * @returns {boolean}
  */
 export function isValidEventKey(value) {
-    return new RegExp(`^${EVENT_KEY_PATTERN}$`).test(value);
+    return EVENT_KEY_RE.test(value);
 }
 
 /** No override: the rank renders from `grade`. Serializes to `null`. */
