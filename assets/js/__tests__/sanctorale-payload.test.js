@@ -88,6 +88,22 @@ describe('diffStructure', () => {
         expect(diffStructure(dominical, { ...dominical, is_dominical: false }))
             .toEqual({ is_dominical: false });
     });
+
+    it('normalizes an absent field to null so JSON.stringify cannot drop it', () => {
+        // `toEqual` alone would NOT catch this: it treats a key set to
+        // `undefined` as equal to an absent one. The regression is only visible
+        // once serialized, which is the form the change actually travels in — a
+        // field assigned `undefined` vanishes from the PATCH entirely, so the
+        // API is never told to clear it and the stale value survives the save.
+        const next = { ...original };
+        delete next.grade_display;
+
+        const changed = diffStructure({ ...original, grade_display: 'National Holiday' }, next);
+
+        expect(Object.keys(changed)).toEqual(['grade_display']);
+        expect(changed.grade_display).toBeNull();
+        expect(JSON.parse(JSON.stringify(changed))).toEqual({ grade_display: null });
+    });
 });
 
 import {

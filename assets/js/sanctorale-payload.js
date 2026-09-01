@@ -140,7 +140,11 @@ export function diffStructure(original, next) {
         const before = original?.[field] ?? null;
         const after = next?.[field] ?? null;
         if (!sameValue(before, after)) {
-            changed[field] = next[field];
+            // `after`, not `next[field]`: an absent field normalizes to `null`
+            // above, and assigning the raw `undefined` back would set a key that
+            // `JSON.stringify` DROPS — silently omitting a genuine change from
+            // the PATCH instead of clearing the property.
+            changed[field] = after;
         }
     }
     return changed;
