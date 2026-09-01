@@ -631,10 +631,21 @@ async function showDetail(eventKey, missalId, editing = false) {
 
     if (seq !== detailSeq) return;
 
+    if (names.status === 'fulfilled') {
+        // Only locales the file actually carries an entry for. A locale that is
+        // ABSENT stays absent in the original, which is what lets diffLocaleMap
+        // tell "cleared to blank" apart from "never had one".
+        const coverage = names.value.coverage?.[eventKey] ?? {};
+        for (const loc of names.value.locales ?? []) {
+            if (coverage.missing?.includes(loc)) continue;
+            editState.original.i18n[loc] = names.value.i18n?.[loc]?.[eventKey] ?? '';
+        }
+    }
+
     dom.detailBody.innerHTML = [
         editState.editing ? renderStructureForm(row) : renderStructure(row),
         names.status === 'fulfilled'
-            ? renderNames(names.value, eventKey)
+            ? (editState.editing ? renderNamesForm(names.value, eventKey) : renderNames(names.value, eventKey))
             : `<div class="alert alert-warning">${escapeHtml(i18n.namesUnavailable)}</div>`,
         renderReadingsOutcome(readings)
     ].join('');
@@ -903,9 +914,13 @@ function readStructureForm() {
     };
 }
 
-/** Placeholder returning no names. The Names tab task replaces this. */
+/** The Names panel's current values. An empty input is '', which is a value. */
 function readNamesForm() {
-    return {};
+    const names = {};
+    document.querySelectorAll('#entryNames input[data-locale]').forEach((input) => {
+        names[input.dataset.locale] = input.value;
+    });
+    return names;
 }
 
 /** Placeholder returning no readings. The Readings tab task replaces this. */
@@ -945,6 +960,43 @@ function renderNames(payload, eventKey) {
             <span class="badge bg-light text-dark border ms-1">${(payload.locales ?? []).length}</span>
         </h6>
         <table class="table table-sm mb-3"><tbody>${rows}</tbody></table>`;
+}
+
+/**
+ * Names per locale, editable.
+ *
+ * Every locale the Missal publishes gets an input, including the ones with no
+ * entry: `fanOutKey()` will create them, and a curator filling one in is the
+ * normal way a translation arrives. An empty input submits `""` — the corpus's
+ * own record of "exists, not translated yet" — and never null or omission.
+ *
+ * An `eventKey` the coverage map has never heard of (the create dialog, before
+ * anything is saved) is treated as missing in every locale, so every input opens
+ * blank with the `missing` badge rather than misreporting as translated.
+ */
+function renderNamesForm(payload, eventKey) {
+    const coverage = payload.coverage?.[eventKey] ?? { translated: [], empty: [], missing: payload.locales ?? [] };
+    const rows = (payload.locales ?? []).map((loc) => {
+        const value = payload.i18n?.[loc]?.[eventKey] ?? '';
+        const badge = coverage.missing?.includes(loc)
+            ? `<span class="badge bg-danger">${escapeHtml(i18n.missingLabel)}</span>`
+            : coverage.empty?.includes(loc)
+                ? `<span class="badge bg-warning text-dark">${escapeHtml(i18n.emptyLabel)}</span>`
+                : `<span class="badge bg-success">${escapeHtml(i18n.translatedLabel)}</span>`;
+        return `
+            <tr>
+                <td class="text-nowrap align-middle"><code>${escapeHtml(loc)}</code></td>
+                <td><input type="text" class="form-control form-control-sm"
+                           data-locale="${escapeHtml(loc)}" value="${escapeHtml(value)}"></td>
+                <td class="text-end align-middle">${badge}</td>
+            </tr>`;
+    }).join('');
+
+    return `
+        <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.names)}
+            <span class="badge bg-light text-dark border ms-1">${(payload.locales ?? []).length}</span>
+        </h6>
+        <table class="table table-sm mb-3"><tbody id="entryNames">${rows}</tbody></table>`;
 }
 
 /**
