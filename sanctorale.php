@@ -150,10 +150,12 @@ $litCommons = [
 
     <div class="d-flex justify-content-between align-items-center mb-2">
         <div id="sanctoraleNotice" class="flex-grow-1"></div>
-        <?php // Hidden by default and revealed only when the user may edit at least one
+        <?php // Hidden by default and revealed only when the user may create in at least one
               // applicable Missal. NOT data-requires-auth: that global handler reveals on
-              // ANY authentication, and creating an entry needs an editor grant on a
-              // specific Missal — see admin-decrees.php's identical note. ?>
+              // ANY authentication, and creating an entry needs an admin grant on a
+              // specific Missal — see admin-decrees.php's identical note. Creating is not
+              // the same grant as editing: create is PUT, which needs admin, while editing
+              // a row is PATCH, which needs only editor. ?>
         <button type="button" class="btn btn-primary btn-sm d-none ms-2" id="newEntryBtn">
             <i class="fas fa-plus me-1"></i><?php echo htmlspecialchars(_('New celebration'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
         </button>
