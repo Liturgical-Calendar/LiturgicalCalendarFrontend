@@ -56,7 +56,7 @@ describe('detectMissalCapabilities', () => {
             userSub: 'u', isGlobalAdmin: true, checkAllowed
         });
         expect(checkAllowed).not.toHaveBeenCalled();
-        expect(caps.get('US_2011')).toEqual({ canEdit: true, canDelete: true });
+        expect(caps.get('US_2011')).toEqual({ canEdit: true, canCreate: true, canDelete: true });
     });
 
     it('denies everything when there is no subject to check', async () => {
@@ -66,7 +66,7 @@ describe('detectMissalCapabilities', () => {
             userSub: '', isGlobalAdmin: false, checkAllowed
         });
         expect(checkAllowed).not.toHaveBeenCalled();
-        expect(caps.get('EDITIO_TYPICA_1970')).toEqual({ canEdit: false, canDelete: false });
+        expect(caps.get('EDITIO_TYPICA_1970')).toEqual({ canEdit: false, canCreate: false, canDelete: false });
     });
 
     it('resolves each Missal independently, so a scoped grant is scoped', async () => {
@@ -77,8 +77,21 @@ describe('detectMissalCapabilities', () => {
             missals: [VA_1970, US_2011], rite: 'roman', baseRegion: 'VA',
             userSub: 'u', isGlobalAdmin: false, checkAllowed
         });
-        expect(caps.get('US_2011')).toEqual({ canEdit: true, canDelete: false });
-        expect(caps.get('EDITIO_TYPICA_1970')).toEqual({ canEdit: false, canDelete: false });
+        expect(caps.get('US_2011')).toEqual({ canEdit: true, canCreate: false, canDelete: false });
+        expect(caps.get('EDITIO_TYPICA_1970')).toEqual({ canEdit: false, canCreate: false, canDelete: false });
+    });
+
+    it('withholds create from a plain editor, because PUT wants admin', async () => {
+        // The regression this shape exists to prevent. `forMissals()` passes no
+        // relation-map override, so missals take DEFAULT_RELATION_MAP verbatim:
+        // PUT => admin. Gating create on `editor` (as the /decrees route's own
+        // override would) hands a curator the whole form and then a 403.
+        const checkAllowed = async (path) => path.includes(`relation=${RELATION_EDITOR}`);
+        const caps = await detectMissalCapabilities({
+            missals: [US_2011], rite: 'roman', baseRegion: 'VA',
+            userSub: 'u', isGlobalAdmin: false, checkAllowed
+        });
+        expect(caps.get('US_2011')).toEqual({ canEdit: true, canCreate: false, canDelete: false });
     });
 
     it('treats a failing check as a denial rather than propagating', async () => {
@@ -87,15 +100,16 @@ describe('detectMissalCapabilities', () => {
             userSub: 'u', isGlobalAdmin: false,
             checkAllowed: async () => { throw new Error('network'); }
         });
-        expect(caps.get('US_2011')).toEqual({ canEdit: false, canDelete: false });
+        expect(caps.get('US_2011')).toEqual({ canEdit: false, canCreate: false, canDelete: false });
     });
 
     it('admin implies edit, so a delete-capable user is never shown a read-only row', async () => {
+        // Admin also carries create: PUT and DELETE share the `admin` relation.
         const checkAllowed = async (path) => path.includes(`relation=${RELATION_ADMIN}`);
         const caps = await detectMissalCapabilities({
             missals: [US_2011], rite: 'roman', baseRegion: 'VA',
             userSub: 'u', isGlobalAdmin: false, checkAllowed
         });
-        expect(caps.get('US_2011')).toEqual({ canEdit: true, canDelete: true });
+        expect(caps.get('US_2011')).toEqual({ canEdit: true, canCreate: true, canDelete: true });
     });
 });

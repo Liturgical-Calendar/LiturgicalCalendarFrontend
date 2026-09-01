@@ -27,6 +27,16 @@ import { USERS } from './support/users';
  * SCOPED, non-global-admin identity, which only the `rbac` project's seeded
  * users provide.
  *
+ * The relations are NOT uniform across the verbs, and this spec pins that too.
+ * `OpenFgaAuthorizationMiddleware::forMissals()` passes no relation-map override,
+ * so missals take `DEFAULT_RELATION_MAP` verbatim: `PATCH` => `editor`, but
+ * `PUT` (create) and `DELETE` => `admin`. A holder of exactly
+ * `editor@national_calendar:roman/US` must therefore see the row's Edit button
+ * AND NOT `#newEntryBtn`, AND NOT `#deleteEntryBtn` once the editor modal is
+ * open. Those two negative assertions are the ones whose absence let a
+ * create-gated-on-`editor` bug ship green — without them the spec passes whether
+ * create is gated on `editor` or on `admin`.
+ *
  * No seeded `calendar_editor` carries a plain `editor@national_calendar:roman/US`
  * tuple as part of the regular seed (`usccb-admin` carries `admin@national_calendar:roman/US`,
  * which also satisfies `canEdit` via `detectMissalCapabilities()`'s "admin implies
@@ -103,6 +113,31 @@ test.describe('sanctorale editor gating', () => {
             await expect(typicaRow).toBeVisible();
             await expect(typicaRow).toContainText('EDITIO_TYPICA_1970');
             await expect(typicaRow.locator('button[data-edit-key]')).toHaveCount(0);
+        } finally {
+            await session.context.close();
+        }
+    });
+
+    test('a scoped editor is offered neither create nor delete, because both are admin', async ({ browser }) => {
+        const session = await actingAs(browser, GRANT_USER_KEY);
+        try {
+            await session.page.goto('/sanctorale.php#rite=roman&calendar=US&month=5');
+
+            const usRow = session.page.locator('#sanctoraleTableBody tr', { hasText: 'StIsidoreFarmer' });
+            await expect(usRow.locator('button[data-edit-key]')).toBeVisible();
+
+            // `#newEntryBtn` is server-rendered `d-none` and revealed only by
+            // refreshCapabilities() finding a CREATE capability. Awaiting the Edit
+            // button above means capabilities have already resolved, so a still
+            // hidden button here is a decision, not a race.
+            await expect(session.page.locator('#newEntryBtn')).toBeHidden();
+
+            // Delete is `admin` too. Open the editor on the one row this identity
+            // may edit and confirm the footer offers Save without Delete.
+            await usRow.locator('button[data-edit-key]').click();
+            await expect(session.page.locator('#detailModalFooter')).toBeVisible();
+            await expect(session.page.locator('#saveEntryBtn')).toBeVisible();
+            await expect(session.page.locator('#deleteEntryBtn')).toBeHidden();
         } finally {
             await session.context.close();
         }

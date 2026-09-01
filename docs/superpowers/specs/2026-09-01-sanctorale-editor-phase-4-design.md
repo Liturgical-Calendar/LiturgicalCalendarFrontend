@@ -84,18 +84,33 @@ against the page:
 | National edition                  | `national_calendar:{rite}/{region}`    |
 
 The separator is `/` (`RiteScopedObjectId::SEPARATOR`), so the object id needs encoding in the check
-query. Relations follow `DEFAULT_RELATION_MAP`: `PUT` and `PATCH` require `editor`, `DELETE`
-requires `admin`.
+query. Relations follow `OpenFgaAuthorizationMiddleware::DEFAULT_RELATION_MAP` verbatim, because
+`forMissals()` passes **no** relation-map override:
+
+| Verb     | Relation | Act on this page   |
+| -------- | -------- | ------------------ |
+| `PUT`    | `admin`  | create a new entry |
+| `PATCH`  | `editor` | edit an entry      |
+| `DELETE` | `admin`  | remove an entry    |
+
+Missals do **not** carry the `/decrees` override. `Router.php` gives the decrees route
+`['PUT' => 'editor', …]`; the missals route gives nothing, so `PUT` on a Missal needs `admin`.
+Reading decrees' behaviour across is the specific mistake this table exists to prevent: gating
+create on `editor` lets a curator open the form, fill it, and collect a 403 on Save.
 
 `applicableMissals()` already yields the editions in scope, so the page checks `editor` and `admin`
-for each, in parallel, memoized per rite + calendar, with `isGlobalAdmin` short-circuiting. Then:
+for each, in parallel, memoized per rite + calendar, with `isGlobalAdmin` short-circuiting, and
+reports `{canEdit, canCreate, canDelete}` per Missal rather than one overloaded flag. Then:
 
-- a row shows **edit** when the user is editor on `row._missalId`, and **delete** when admin on it;
-- **create** is offered when the user is editor on at least one applicable edition, and the Missal
-  picker lists only those.
+- a row shows **edit** when the user is editor (or admin) on `row._missalId`, and **delete** when
+  admin on it;
+- **create** — `#newEntryBtn` and the Missal target picker — is offered when the user is **admin** on
+  at least one applicable edition, and the picker lists only those.
 
-The consequence is intended and visible: a curator granted `national_calendar:roman/US` sees edit
-controls on the `US_2011` rows and none on the 1970 rows beside them, in the same table.
+The consequence is intended and visible: a curator granted `admin@national_calendar:roman/US` sees
+edit controls on the `US_2011` rows and none on the 1970 rows beside them, in the same table; a
+curator granted only `editor@national_calendar:roman/US` sees those same Edit buttons but no New
+celebration button and no Delete.
 
 ## The modal
 
@@ -156,7 +171,8 @@ file for a reviewer to read instead of fourteen identical ones.
 ## Create and delete
 
 **Create** opens the modal empty with two extra controls: the Missal picker (applicable editions,
-newest first, restricted to those the user may edit) and an `event_key` input validated against the
+newest first, restricted to those the user is **admin** on, since create is `PUT`) and an
+`event_key` input validated against the
 schema's `EventKey` pattern. Both disappear once the entry exists. `PUT` requires the full structure
 set and at least one locale in `i18n`.
 

@@ -109,7 +109,7 @@ const editState = {
     calendarLabel: null,
     /** The entry as loaded, which every diff is taken against. */
     original: { structure: {}, i18n: {}, readings: {} },
-    capability: { canEdit: false, canDelete: false }
+    capability: { canEdit: false, canCreate: false, canDelete: false }
 };
 
 /**
@@ -194,9 +194,15 @@ async function getJson(path, headers = {}, credentials = 'omit') {
     return response.json();
 }
 
-/** What the user may do to a Missal; unknown Missals are read-only. */
+/**
+ * What the user may do to a Missal; unknown Missals are read-only.
+ *
+ * Three capabilities, not one, because the API's relation map is not uniform:
+ * `PATCH` (edit) needs `editor` while `PUT` (create) and `DELETE` both need
+ * `admin`. See capabilities.js's module docblock.
+ */
 function capabilityFor(missalId) {
-    return state.capabilities.get(missalId) ?? { canEdit: false, canDelete: false };
+    return state.capabilities.get(missalId) ?? { canEdit: false, canCreate: false, canDelete: false };
 }
 
 /**
@@ -777,13 +783,15 @@ async function refreshCreateNames() {
  *
  * Two controls exist here and nowhere else. The Missal picker, because adding a
  * saint to US_2011 and adding one to the 1970 typica are different acts and the
- * UI must make the curator say which — it lists only editions they may edit. And
+ * UI must make the curator say which — it lists only editions they may CREATE in,
+ * which is a narrower set than the ones they may edit: creating is `PUT`, and
+ * `PUT` needs `admin` where an edit needs only `editor`. And
  * the event_key input, because the key is set once: the API refuses to rename
  * one, since a rename orphans its name and readings in every locale permanently.
  */
 async function showCreate() {
     const editable = applicableMissals(state.missals, state.calendar, state.baseRegion)
-        .filter((m) => capabilityFor(m.missal_id).canEdit)
+        .filter((m) => capabilityFor(m.missal_id).canCreate)
         .reverse(); // newest first; applicableMissals sorts oldest-first for compose()
 
     if (editable.length === 0) return;
@@ -1578,7 +1586,9 @@ async function loadCatalogue(seq = selectionSeq) {
 
 /**
  * Recompute per-Missal capabilities for the currently applicable set, and
- * toggle `#newEntryBtn` accordingly.
+ * toggle `#newEntryBtn` accordingly — on the CREATE capability, which is
+ * `admin`, not on the edit one. A curator holding only `editor` may change
+ * existing rows and may not add new ones.
  *
  * The applicable set is calendar-scoped (applicableMissals() filters by
  * `state.calendar`), so this must be called on every rite OR calendar change —
@@ -1615,7 +1625,7 @@ async function refreshCapabilities(seq) {
     state.capabilities = capabilities;
     dom.newEntry?.classList.toggle(
         'd-none',
-        ![...state.capabilities.values()].some((c) => c.canEdit)
+        ![...state.capabilities.values()].some((c) => c.canCreate)
     );
 }
 

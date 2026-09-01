@@ -5,18 +5,34 @@
  * `OpenFgaAuthorizationMiddleware::forMissals()` maps an editio typica onto
  * `general_roman_calendar:{MISSAL_ID}` and a national edition onto
  * `national_calendar:{rite}/{region}`. The composed view mixes editions by
- * construction, so a single page-level `canEdit` would either offer edits that
+ * construction, so a single page-level capability would either offer edits that
  * 403 or hide edits the user may in fact make.
+ *
+ * The relations are NOT uniform across the verbs, and the difference is the whole
+ * reason this module reports three capabilities rather than one. Missals get
+ * `OpenFgaAuthorizationMiddleware::DEFAULT_RELATION_MAP` verbatim, because
+ * `forMissals()` passes no override:
+ *
+ * | Verb     | Relation | What it does here |
+ * | -------- | -------- | ----------------- |
+ * | `PUT`    | `admin`  | create an entry   |
+ * | `PATCH`  | `editor` | edit an entry     |
+ * | `DELETE` | `admin`  | remove an entry   |
+ *
+ * So `editor` is enough to EDIT and never enough to CREATE. The `/decrees` route
+ * DOES pass an override (`['PUT' => 'editor', …]`) in `Router.php`; missals do
+ * not, so decrees' behaviour must not be copied here — a create gated on `editor`
+ * lets a curator fill the whole form and collect a 403 on Save.
  *
  * @module capabilities
  */
 
 import { qualifyObjectId } from './riteScopedObjectId.js';
 
-/** `PUT` and `PATCH` require this relation (OpenFga DEFAULT_RELATION_MAP). */
+/** `PATCH` — editing an existing entry — requires this relation. */
 export const RELATION_EDITOR = 'editor';
 
-/** `DELETE` requires this one. */
+/** `PUT` (create) and `DELETE` both require this one. See the module docblock. */
 export const RELATION_ADMIN = 'admin';
 
 /**
@@ -78,7 +94,8 @@ export function capabilityCheckPath({ userSub, objectType, objectId, relation })
  * @param {string} args.userSub
  * @param {boolean} args.isGlobalAdmin
  * @param {(path: string) => Promise<boolean>} args.checkAllowed
- * @returns {Promise<Map<string, {canEdit: boolean, canDelete: boolean}>>}
+ * @returns {Promise<Map<string, {canEdit: boolean, canCreate: boolean, canDelete: boolean}>>}
+ *          `canEdit` is `PATCH`, `canCreate` is `PUT`, `canDelete` is `DELETE`.
  */
 export async function detectMissalCapabilities({
     missals, rite, baseRegion, userSub, isGlobalAdmin, checkAllowed
@@ -87,14 +104,14 @@ export async function detectMissalCapabilities({
 
     if (isGlobalAdmin) {
         for (const missal of missals) {
-            capabilities.set(missal.missal_id, { canEdit: true, canDelete: true });
+            capabilities.set(missal.missal_id, { canEdit: true, canCreate: true, canDelete: true });
         }
         return capabilities;
     }
 
     if (!userSub) {
         for (const missal of missals) {
-            capabilities.set(missal.missal_id, { canEdit: false, canDelete: false });
+            capabilities.set(missal.missal_id, { canEdit: false, canCreate: false, canDelete: false });
         }
         return capabilities;
     }
@@ -114,7 +131,9 @@ export async function detectMissalCapabilities({
             ask(object, RELATION_ADMIN)
         ]);
         // Admin implies editor, mirroring the FGA model's own relation hierarchy.
-        return [missal.missal_id, { canEdit: editor || admin, canDelete: admin }];
+        // Create and delete are BOTH `admin` here — `editor` alone must not offer
+        // either, or the API answers 403 to a fully filled form.
+        return [missal.missal_id, { canEdit: editor || admin, canCreate: admin, canDelete: admin }];
     }));
 
     for (const [missalId, capability] of settled) {

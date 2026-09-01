@@ -29,7 +29,10 @@ moves into another (`capabilities.js`). `sanctorale.js` keeps the DOM, the loade
 - **`event_key` is immutable.** No rename affordance anywhere.
 - **PUT requires `month`, `day`, `grade`, `common`, `calendar`, `color`.** `calendar` is not editable but IS
   submitted, and must equal the Missal's own calendar label or the handler refuses the row.
-- **FGA relations:** `PUT`/`PATCH` need `editor`; `DELETE` needs `admin`.
+- **FGA relations:** `PATCH` needs `editor`; `PUT` (create) and `DELETE` both need `admin`. Missals
+  take `OpenFgaAuthorizationMiddleware::DEFAULT_RELATION_MAP` verbatim — `forMissals()` passes no
+  override, so the `['PUT' => 'editor', …]` override the `/decrees` route carries in `Router.php`
+  does **not** apply here. Create affordances gate on `admin`, not on `editor`.
 - **`sanctorale` is in neither the toastr nor the bootstrap-multiselect page list** in `layout/head.php` and
   `layout/footer.php`. Use the global `window.showToast` from `assets/js/toast.js` and plain `<select
   multiple>`. Do not add the page to those lists.
