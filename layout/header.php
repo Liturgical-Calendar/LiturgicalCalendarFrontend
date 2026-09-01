@@ -260,7 +260,9 @@ asort($langsAssoc);
                                 <i class="sb-nav-link-icon fas fa-fw fa-calendar-alt text-primary"></i>
                                 <span><?php echo _('Temporale'); ?></span>
                             </a>
-                            <a class="nav-link<?php echo $currentPage === 'missals-editor' ? ' active' : ''; ?>" href="missals-editor.php">
+                            <?php // Both spellings mark this entry active: the old per-Missal editor is
+                                  // still reachable from the dashboard card's Edit button. ?>
+                            <a class="nav-link<?php echo in_array($currentPage, ['sanctorale', 'missals-editor'], true) ? ' active' : ''; ?>" href="sanctorale.php">
                                 <i class="sb-nav-link-icon fas fa-fw fa-book-open text-success"></i>
                                 <span><?php echo _('Sanctorale'); ?></span>
                             </a>
