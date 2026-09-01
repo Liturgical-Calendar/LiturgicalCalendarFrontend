@@ -11,6 +11,8 @@
  * @module capabilities
  */
 
+import { qualifyObjectId } from './riteScopedObjectId.js';
+
 /** `PUT` and `PATCH` require this relation (OpenFga DEFAULT_RELATION_MAP). */
 export const RELATION_EDITOR = 'editor';
 
@@ -25,6 +27,10 @@ export const RELATION_ADMIN = 'admin';
  * `decrees`, because Missal ids are unique across rites. Anything else is a
  * national edition, governed by the national calendar it was approved for, whose
  * id DOES need a rite qualifier because nation codes are not unique across rites.
+ * The rite-qualified composition is delegated to `qualifyObjectId()` from
+ * `riteScopedObjectId.js`, which mirrors the API's validation rules and handles
+ * the fact that `national_calendar` is a Roman-only object type (the Ambrosian
+ * rite has no national tier).
  *
  * @param {{missal_id: string, region: string}} missal
  * @param {string} rite
@@ -35,8 +41,7 @@ export function missalFgaObject(missal, rite, baseRegion) {
     if (missal.region === baseRegion) {
         return { objectType: 'general_roman_calendar', objectId: missal.missal_id };
     }
-    // RiteScopedObjectId::SEPARATOR is a literal '/'.
-    return { objectType: 'national_calendar', objectId: `${rite}/${missal.region}` };
+    return { objectType: 'national_calendar', objectId: qualifyObjectId('national_calendar', missal.region, rite) };
 }
 
 /**
