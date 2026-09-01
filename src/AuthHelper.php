@@ -24,6 +24,17 @@ use UnexpectedValueException;
  */
 class AuthHelper
 {
+    /**
+     * The `rite_calendar` sub-resources that are not missal editions.
+     *
+     * Mirrors `RiteCalendarObjectIds::FIXED_IDS`, flattened: membership is all
+     * {@see canViewRiteCalendarResource()} needs, because the per-rite split
+     * ("`decrees` is Roman-only") is enforced by the API, not decided here.
+     *
+     * @var list<string>
+     */
+    private const RITE_CALENDAR_FIXED_SUBRESOURCES = ['temporale', 'decrees', 'supported_locales'];
+
     private const ACCESS_TOKEN_COOKIE  = 'litcal_access_token';
     private const ID_TOKEN_COOKIE      = 'litcal_id_token';
     private const SUPPORTED_ALGORITHMS = ['HS256', 'HS384', 'HS512'];
@@ -375,6 +386,42 @@ class AuthHelper
             return true;
         }
         return in_array($objectId, $this->dashboardScopes()['viewer_scopes'][$objectType] ?? [], true);
+    }
+
+    /**
+     * Whether the caller can view (viewer-or-above) a rite-level calendar
+     * sub-resource — `rite_calendar:{rite}/{subResource}`, the tier above
+     * nations, wider regions and dioceses (LiturgicalCalendarAPI #955).
+     *
+     * The legacy `general_roman_calendar:{subResource}` object is consulted as
+     * well, because `/auth/dashboard-scopes` reports both types verbatim and does
+     * no widening of its own: a grant made before the API's tuple migration ran
+     * still authorizes the write (the API's authorization middleware falls back),
+     * so a card gated only on the new object would be hidden from a user who can
+     * in fact use it.
+     *
+     * The fallback is ASYMMETRIC, exactly as the middleware's is:
+     *
+     * - a fixed sub-resource (`temporale`, `decrees`, `supported_locales`) is a
+     *   sub-resource KIND, one per rite, and every legacy id was Roman by
+     *   construction — so it pairs for the Roman rite ONLY. Pairing an Ambrosian
+     *   one with a bare legacy id would re-introduce the un-qualification #955
+     *   exists to remove;
+     * - anything else is a typical edition, whose ids are unique across rites, so
+     *   it pairs unconditionally: `general_roman_calendar:EDITIO_TYPICA_2024`
+     *   genuinely denoted the Ambrosian edition.
+     */
+    public function canViewRiteCalendarResource(string $rite, string $subResource): bool
+    {
+        if ($this->canViewResource('rite_calendar', $rite . '/' . $subResource)) {
+            return true;
+        }
+
+        if (in_array($subResource, self::RITE_CALENDAR_FIXED_SUBRESOURCES, true) && $rite !== 'roman') {
+            return false;
+        }
+
+        return $this->canViewResource('general_roman_calendar', $subResource);
     }
 
     /**

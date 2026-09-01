@@ -22,10 +22,12 @@ $adminBlocks = [
         'editUrl'     => 'temporale.php?edit=1',
         'permission'  => 'temporale:write',
         // Relation-aware gating (#399): non-admins need the calendar_editor role AND
-        // viewer-or-above on general_roman_calendar:temporale.
+        // viewer-or-above on rite_calendar:roman/temporale — or, until the API's
+        // tuple migration has run, on its legacy general_roman_calendar:temporale
+        // counterpart, which canViewRiteCalendarResource() also consults.
         'visible'     => $isAdmin || (
             $authHelper->hasRole('calendar_editor')
-            && $authHelper->canViewResource('general_roman_calendar', 'temporale')
+            && $authHelper->canViewRiteCalendarResource('roman', 'temporale')
         )
     ],
     [
@@ -51,7 +53,7 @@ $adminBlocks = [
         'permission'  => 'decrees:write',
         'visible'     => $isAdmin || (
             $authHelper->hasRole('calendar_editor')
-            && $authHelper->canViewResource('general_roman_calendar', 'decrees')
+            && $authHelper->canViewRiteCalendarResource('roman', 'decrees')
         )
     ],
     [

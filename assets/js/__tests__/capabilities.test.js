@@ -16,9 +16,9 @@ const US_2011 = { missal_id: 'US_2011', region: 'US', year_published: 2011 };
 const AMBR = { missal_id: 'EDITIO_TYPICA_2024', region: 'AMBROSIAN', year_published: 2024 };
 
 describe('missalFgaObject', () => {
-    it('maps an editio typica onto general_roman_calendar, by missal id', () => {
+    it('maps an editio typica onto rite_calendar, rite-qualified by missal id', () => {
         expect(missalFgaObject(VA_1970, 'roman', 'VA'))
-            .toEqual({ objectType: 'general_roman_calendar', objectId: 'EDITIO_TYPICA_1970' });
+            .toEqual({ objectType: 'rite_calendar', objectId: 'roman/EDITIO_TYPICA_1970' });
     });
 
     it('maps a national edition onto its rite-qualified national calendar', () => {
@@ -26,11 +26,13 @@ describe('missalFgaObject', () => {
             .toEqual({ objectType: 'national_calendar', objectId: 'roman/US' });
     });
 
-    it('treats a single-region rite as entirely base', () => {
-        // The Ambrosian edition IS the base of its rite, so it is a GRC object even
-        // though AMBROSIAN is not a nation code.
+    it('treats a single-region rite as entirely base, under its OWN rite', () => {
+        // The Ambrosian edition IS the base of its rite, so it is a rite_calendar
+        // object even though AMBROSIAN is not a nation code — and the qualifier is
+        // `ambrosian`, which is precisely what `general_roman_calendar` could not
+        // express (API #955).
         expect(missalFgaObject(AMBR, 'ambrosian', 'AMBROSIAN'))
-            .toEqual({ objectType: 'general_roman_calendar', objectId: 'EDITIO_TYPICA_2024' });
+            .toEqual({ objectType: 'rite_calendar', objectId: 'ambrosian/EDITIO_TYPICA_2024' });
     });
 });
 
@@ -111,5 +113,64 @@ describe('detectMissalCapabilities', () => {
             userSub: 'u', isGlobalAdmin: false, checkAllowed
         });
         expect(caps.get('US_2011')).toEqual({ canEdit: true, canCreate: true, canDelete: true });
+    });
+
+    // ---- the #955 migration window ------------------------------------------
+    //
+    // The API stays additive: a tuple written before its migration ran still
+    // names `general_roman_calendar`, and `forMissals()` still honours it. But
+    // `GET /admin/permissions/check` answers on the object it is handed and does
+    // NOT widen, so the UI has to ask both — otherwise it hides a control whose
+    // write the API would have accepted.
+
+    it('honours a legacy general_roman_calendar grant on a typical edition', async () => {
+        const seen = [];
+        const checkAllowed = async (path) => {
+            seen.push(path);
+            return path.includes('object_type=general_roman_calendar')
+                && path.includes('object_id=EDITIO_TYPICA_1970');
+        };
+        const caps = await detectMissalCapabilities({
+            missals: [VA_1970], rite: 'roman', baseRegion: 'VA',
+            userSub: 'u', isGlobalAdmin: false, checkAllowed
+        });
+        expect(caps.get('EDITIO_TYPICA_1970')).toEqual({ canEdit: true, canCreate: true, canDelete: true });
+        // The rite-qualified object is still asked FIRST; the legacy one is a fallback.
+        expect(seen[0]).toContain('object_type=rite_calendar');
+    });
+
+    it('honours a legacy grant on the AMBROSIAN typical edition, whose legacy id was bare', async () => {
+        // Missal ids are unique across rites, so `general_roman_calendar:EDITIO_TYPICA_2024`
+        // genuinely denoted the Ambrosian edition. The pairing is therefore
+        // unconditional across rites — unlike the fixed sub-resources'.
+        const checkAllowed = async (path) =>
+            path.includes('object_type=general_roman_calendar')
+            && path.includes('object_id=EDITIO_TYPICA_2024');
+        const caps = await detectMissalCapabilities({
+            missals: [AMBR], rite: 'ambrosian', baseRegion: 'AMBROSIAN',
+            userSub: 'u', isGlobalAdmin: false, checkAllowed
+        });
+        expect(caps.get('EDITIO_TYPICA_2024')).toEqual({ canEdit: true, canCreate: true, canDelete: true });
+    });
+
+    it('does not ask a legacy object for a national edition, which never had one', async () => {
+        const seen = [];
+        await detectMissalCapabilities({
+            missals: [US_2011], rite: 'roman', baseRegion: 'VA',
+            userSub: 'u', isGlobalAdmin: false,
+            checkAllowed: async (path) => { seen.push(path); return false; }
+        });
+        expect(seen.every((p) => p.includes('object_type=national_calendar'))).toBe(true);
+    });
+
+    it('asks the legacy object only once the qualified one has denied', async () => {
+        const seen = [];
+        await detectMissalCapabilities({
+            missals: [VA_1970], rite: 'roman', baseRegion: 'VA',
+            userSub: 'u', isGlobalAdmin: false,
+            // Allowed on the new object: the legacy fallback must not be reached.
+            checkAllowed: async (path) => { seen.push(path); return true; }
+        });
+        expect(seen.every((p) => p.includes('object_type=rite_calendar'))).toBe(true);
     });
 });

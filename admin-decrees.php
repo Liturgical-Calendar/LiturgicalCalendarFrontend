@@ -70,8 +70,9 @@ $formControls = new \LiturgicalCalendar\Frontend\FormControls($i18n);
         <button type="button" class="btn btn-primary d-none" id="btnCreateDecree">
             <i class="fas fa-plus me-1"></i><?php echo htmlspecialchars(_('New Decree'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
         </button>
-        <?php // Permissions are resource-level (general_roman_calendar:decrees governs all decrees), hence one page-level link ?>
-        <a href="admin-permissions.php?object_type=general_roman_calendar&amp;object_id=decrees"
+        <?php // Permissions are resource-level (rite_calendar:roman/decrees governs all decrees), hence one
+              // page-level link. The `/` is percent-encoded so it stays a query value, not a path segment. ?>
+        <a href="admin-permissions.php?object_type=rite_calendar&amp;object_id=roman%2Fdecrees"
            class="btn btn-outline-secondary d-none" id="lnkManagePermissions">
             <i class="fas fa-user-shield me-1"></i><?php echo htmlspecialchars(_('Manage permissions'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
         </a>

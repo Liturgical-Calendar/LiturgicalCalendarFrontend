@@ -28,7 +28,13 @@ const i18n = {
     contentSuppressed: 'Contents not requested. Proposed: %1$s; on disk: %2$s.',
     fileWillBeDeleted: 'Will be removed (%1$s currently on disk).',
     operations: { create: 'Added', update: 'Changed', delete: 'Removed' },
-    resourceTypes: { national_calendar: 'National calendar', general_roman_calendar: 'General Roman Calendar' }
+    // Mirrors includes/change-request-i18n.php: `rite_calendar` is ADDED beside
+    // the type it supersedes, never in place of it.
+    resourceTypes: {
+        national_calendar: 'National calendar',
+        rite_calendar: 'Rite calendar',
+        general_roman_calendar: 'General Roman Calendar'
+    }
 };
 
 const file = (overrides = {}) => ({
@@ -227,6 +233,16 @@ describe('renderResource', () => {
         expect(html).toContain('National calendar');
     });
 
+    it('splits a rite_calendar id, which carries its rite since API #955', () => {
+        const html = ChangeRequestCommon.renderResource(
+            { resource_type: 'rite_calendar', resource_id: 'ambrosian/EDITIO_TYPICA_2024' },
+            i18n
+        );
+        expect(html).toContain('ambrosian');
+        expect(html).toContain('<code>EDITIO_TYPICA_2024</code>');
+        expect(html).toContain('Rite calendar');
+    });
+
     it('omits the rite badge for a bare id', () => {
         const html = ChangeRequestCommon.renderResource(
             { resource_type: 'general_roman_calendar', resource_id: 'decrees' },
@@ -234,5 +250,18 @@ describe('renderResource', () => {
         );
         expect(html).toContain('<code>decrees</code>');
         expect(html).not.toContain('badge bg-light text-dark border me-1');
+    });
+
+    it('STILL labels a legacy general_roman_calendar row after #955', () => {
+        // The failure mode #955 makes easy: `rite_calendar` supersedes this type,
+        // but the API never rewrites `audit_log` and keeps emitting the old name
+        // on every row written before its data migration ran. A resourceTypes map
+        // that only knew the new name would fall through to the raw type id here.
+        const html = ChangeRequestCommon.renderResource(
+            { resource_type: 'general_roman_calendar', resource_id: 'temporale' },
+            i18n
+        );
+        expect(html).toContain('General Roman Calendar');
+        expect(html).not.toContain('>general_roman_calendar<');
     });
 });

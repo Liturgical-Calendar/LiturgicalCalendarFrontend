@@ -142,7 +142,9 @@ if (!$hasCalendarRole) {
     </div>
     <?php endif; ?>
 
-    <?php if (!$isAdmin && $authHelper->hasRole('calendar_editor') && $authHelper->canViewResource('general_roman_calendar', 'decrees')) : ?>
+    <?php // canViewRiteCalendarResource() checks rite_calendar:roman/decrees and, for the
+          // migration window, its legacy general_roman_calendar:decrees counterpart. ?>
+    <?php if (!$isAdmin && $authHelper->hasRole('calendar_editor') && $authHelper->canViewRiteCalendarResource('roman', 'decrees')) : ?>
     <hr class="my-4">
     <h4 class="mb-3 text-black" style="--bs-text-opacity: .6;">
         <i class="fas fa-user-shield me-2"></i><?php echo htmlspecialchars(_('Administration'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>

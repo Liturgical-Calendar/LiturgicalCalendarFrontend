@@ -11,7 +11,13 @@ import {
     CalendarSelectFilter,
     RiteSelect,
 } from '@liturgical-calendar/components-js';
-import { qualifyObjectId, splitObjectId } from './riteScopedObjectId.js';
+import {
+    AMBROSIAN_RITE,
+    qualifyObjectId,
+    RITE_CALENDAR_TYPE,
+    ROMAN_RITE,
+    splitObjectId,
+} from './riteScopedObjectId.js';
 
 // Initialize the API client once; CalendarSelect requires this to have resolved.
 // Since components-js 2.0.0 init() rejects on failure rather than resolving to
@@ -65,13 +71,20 @@ document.addEventListener('DOMContentLoaded', async function() {
     };
 
     // Object type ("Calendar scope") display names
+    // `rite_calendar` and `rite_calendar_test` supersede the two
+    // `general_roman_calendar*` entries (API #955 / #785), which stay listed
+    // because the API still emits them: pre-migration grants, stored access
+    // requests and `audit_log` rows all keep the old names, permanently in the
+    // audit log's case. A map without them renders those rows as a raw type id.
     const objectTypeNames = {
         'national_calendar': config.i18n.nationalCalendar,
         'diocesan_calendar': config.i18n.diocesanCalendar,
         'wider_region': config.i18n.widerRegion,
+        'rite_calendar': config.i18n.riteCalendar,
         'general_roman_calendar': config.i18n.generalRomanCalendar,
         'national_calendar_test': config.i18n.testsNational,
         'diocesan_calendar_test': config.i18n.testsDiocesan,
+        'rite_calendar_test': config.i18n.testsRiteCalendar,
         'general_roman_calendar_test': config.i18n.testsGeneralRoman
     };
 
@@ -97,7 +110,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         'revoked': { class: 'bg-secondary', icon: 'fas fa-ban', text: config.i18n.statusRevoked }
     };
 
-    // Fixed object-id choices for the General Roman Calendar type.
+    // Fixed object-id choices for the deprecated General Roman Calendar type.
     // The five enumerated General Roman Calendar sub-resource ids.
     // Keep in sync with the API constant AccessRequestRepository::GRC_OBJECT_IDS
     // and the identical copy in assets/js/admin-permissions.js.
@@ -109,6 +122,40 @@ document.addEventListener('DOMContentLoaded', async function() {
         { id: 'decrees',            label: config.i18n.grcDecrees }
     ];
 
+    // The eight object ids valid for the `rite_calendar` type, per rite, in the
+    // API's own order. Keep in sync with the service RiteCalendarObjectIds and
+    // the identical copy in assets/js/admin-permissions.js.
+    //
+    // This is a per-rite SET, not the single fixed id `general_roman_calendar_test`
+    // has: the ids are the rite's temporale, its typical editions that actually
+    // carry sanctorale data, and — for the Roman rite alone — `decrees` and
+    // `supported_locales`. Roman EDITIO_TYPICA_1971/1975 and Ambrosian
+    // EDITIO_TYPICA_1976 are typical editions with no sanctorale file, which the
+    // API deliberately excludes: a grant over one would authorize editing a
+    // resource with nothing in it.
+    const RITE_CALENDAR_OBJECT_IDS = [
+        {
+            rite:  ROMAN_RITE,
+            label: config.i18n.romanRite,
+            ids:   [
+                { id: 'temporale',          label: config.i18n.grcTemporale },
+                { id: 'decrees',            label: config.i18n.grcDecrees },
+                { id: 'supported_locales',  label: config.i18n.rcSupportedLocales },
+                { id: 'EDITIO_TYPICA_1970', label: config.i18n.grcSanctorale1970 },
+                { id: 'EDITIO_TYPICA_2002', label: config.i18n.grcSanctorale2002 },
+                { id: 'EDITIO_TYPICA_2008', label: config.i18n.grcSanctorale2008 }
+            ]
+        },
+        {
+            rite:  AMBROSIAN_RITE,
+            label: config.i18n.ambrosianRite,
+            ids:   [
+                { id: 'temporale',          label: config.i18n.grcTemporale },
+                { id: 'EDITIO_TYPICA_2024', label: config.i18n.rcSanctorale2024 }
+            ]
+        }
+    ];
+
     // The five wider-region names (object_id for the wider_region scope).
     // Keep in sync with the API; these are not localized (proper nouns).
     const WIDER_REGIONS = ['Americas', 'Europe', 'Asia', 'Africa', 'Oceania'];
@@ -116,9 +163,15 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Object types allowed per role (mirror AccessRequestRepository::ROLE_OBJECT_TYPES)
     // Membership mirrors AccessRequestRepository::ROLE_OBJECT_TYPES (the API
     // validates the SET, not the order). Display order is deliberate: the
-    // General Roman Calendar scope(s) come first.
+    // rite-level calendar scope(s) come first, and `rite_calendar` precedes the
+    // `general_roman_calendar` it supersedes so a new request lands on the
+    // current type. The deprecated one is still OFFERED rather than dropped:
+    // the API accepts it for the whole migration window, and a grant made on it
+    // is picked up by the tuple migration, so removing it would only strand
+    // anyone mid-flow (see the API's rite-calendar-migration-runbook, Step 6).
     const roleObjectTypes = {
         'calendar_editor': [
+            'rite_calendar',
             'general_roman_calendar',
             'national_calendar',
             'diocesan_calendar',
@@ -130,6 +183,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             'diocesan_calendar_test'
         ],
         'developer': [
+            'rite_calendar',
             'general_roman_calendar',
             'general_roman_calendar_test',
             'national_calendar',
@@ -182,8 +236,39 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     /**
+     * Append the `rite_calendar` ids, one <optgroup> per rite.
+     *
+     * A branch of its own rather than a reuse of the GRC-test one: that type has
+     * a single fixed id which can simply be auto-selected, whereas
+     * `rite_calendar` has a per-rite SET, and which ids exist differs by rite
+     * (`decrees` and `supported_locales` are Roman-only; the typical editions
+     * are each their own rite's). Grouping by rite is what makes the two
+     * `temporale` entries distinguishable.
+     *
+     * Option values are the FULL rite-qualified ids the API validates. Composing
+     * them here rather than at submit time is what lets a row with no rite
+     * control still send a correct id — `qualifyObjectId()` is idempotent, so
+     * the submit path passes them through unchanged.
+     *
+     * @param {HTMLSelectElement} select - The select to append the groups to
+     */
+    function appendRiteCalendarOptions(select) {
+        for (const group of RITE_CALENDAR_OBJECT_IDS) {
+            const optgroup = document.createElement('optgroup');
+            optgroup.label = group.label || group.rite;
+            for (const entry of group.ids) {
+                const o = document.createElement('option');
+                o.value = qualifyObjectId(RITE_CALENDAR_TYPE, entry.id, group.rite);
+                o.textContent = entry.label;
+                optgroup.appendChild(o);
+            }
+            select.appendChild(optgroup);
+        }
+    }
+
+    /**
      * Build a native <select class="form-select form-select-sm perm-object-id">
-     * for the three non-calendar scopes (wider_region / GRC / GRC test).
+     * for the non-calendar scopes (wider_region / rite calendar / GRC / GRC test).
      * @param {string} objectType - The currently selected object type
      * @returns {HTMLSelectElement} The built select element
      */
@@ -198,6 +283,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         placeholder.disabled = true;
         placeholder.selected = true;
         select.appendChild(placeholder);
+
+        if (objectType === RITE_CALENDAR_TYPE) {
+            appendRiteCalendarOptions(select);
+            return select;
+        }
 
         let entries = [];
         if (objectType === 'wider_region') {
@@ -715,7 +805,14 @@ document.addEventListener('DOMContentLoaded', async function() {
                 riteField.dispatchEvent(new Event('change'));
             }
             const idField = row.querySelector('.perm-object-id');
-            if (idField) idField.value = id;
+            if (idField) {
+                // The `rite_calendar` select's own option values are the full
+                // qualified ids (there is no rite control to restore alongside a
+                // bare one), so it is restored from the stored value verbatim.
+                idField.value = perm.object_type === RITE_CALENDAR_TYPE
+                    ? (perm.object_id || '')
+                    : id;
+            }
             if (relSelect) relSelect.value = perm.relation || '';
         }
     }

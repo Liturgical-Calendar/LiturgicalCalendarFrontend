@@ -158,6 +158,9 @@ describe('change-request notification renderers', () => {
     });
 
     it('handles a bare (non rite-qualified) resource id', () => {
+        // Still reachable after API #955: `general_roman_calendar` is deprecated,
+        // not removed, and the API keeps emitting it — permanently for audit_log
+        // rows, which are deliberately never rewritten.
         const Notifications = loadNotifications();
         const html = Notifications._renderNotificationItem(publishedItem({
             resource_type: 'general_roman_calendar',
@@ -165,6 +168,17 @@ describe('change-request notification renderers', () => {
         }));
 
         expect(html).toContain('decrees');
+    });
+
+    it('strips the rite from a rite_calendar resource id', () => {
+        const Notifications = loadNotifications();
+        const html = Notifications._renderNotificationItem(publishedItem({
+            resource_type: 'rite_calendar',
+            resource_id: 'roman/decrees'
+        }));
+
+        expect(html).toContain('decrees');
+        expect(html).not.toContain('roman/decrees');
     });
 });
 
