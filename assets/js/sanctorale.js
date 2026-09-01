@@ -891,6 +891,40 @@ async function saveEntry() {
 }
 
 /**
+ * Delete the open entry.
+ *
+ * Admin-only, and confirmed by naming the Missal: deleting from the edition that
+ * WON reveals whatever it overrode, so the row does not disappear, it changes.
+ *
+ * `readings_retained` is reported when true. The rite-level corpus is shared, so
+ * a key another Missal still declares keeps its readings — and a curator who
+ * deleted an entry and found its readings intact would otherwise read that as a
+ * failed delete.
+ */
+async function deleteEntry() {
+    const confirmed = window.confirm(i18n.confirmDelete.replace('%s', editState.eventKey));
+    if (!confirmed) return;
+
+    const path = entryPath(state.rite, editState.missalId, editState.eventKey);
+    try {
+        const data = await writeJson('DELETE', path);
+        const outcome = reportWrite(data, i18n.deleted);
+        bootstrap.Modal.getOrCreateInstance(dom.detailModal).hide();
+        if (outcome.applied) {
+            if (data?.readings_retained === true && typeof window.showToast === 'function') {
+                window.showToast(i18n.readingsRetained, 'info');
+            }
+            await reload();
+        }
+    } catch (error) {
+        if (!(error instanceof ApiWriteError)) throw error;
+        dom.formError.textContent = error.status === 403
+            ? i18n.permissionDenied
+            : i18n.saveFailed.replace('%s', error.body?.error ?? error.message);
+    }
+}
+
+/**
  * A celebration with no curated readings answers 404, which is the SAME status a
  * bad event key gets. Reporting that as "could not load" would tell a reader the
  * request failed when in truth there is simply nothing there yet — so the two are
@@ -1678,6 +1712,7 @@ async function init() {
         render();
     });
     dom.saveEntry?.addEventListener('click', saveEntry);
+    dom.deleteEntry?.addEventListener('click', deleteEntry);
     dom.newEntry?.addEventListener('click', showCreate);
     dom.search.addEventListener('input', () => {
         state.search = dom.search.value;
