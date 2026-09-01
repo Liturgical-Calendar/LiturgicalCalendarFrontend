@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 17:22+0000\n"
+"POT-Creation-Date: 2026-09-01 22:26+0000\n"
 "PO-Revision-Date: 2026-08-29 09:37+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
@@ -903,205 +903,215 @@ msgstr "rosso"
 msgid "rose"
 msgstr "rosa"
 
-#: src/LitCommon.php:58
+#: src/LitCommon.php:86
 msgid "Proper"
 msgstr "Proprio"
 
 #. translators: context = from the Common of nn
-#: src/LitCommon.php:60
+#: src/LitCommon.php:88
 msgid "Dedication of a Church"
 msgstr "Dedicazione di una Chiesa"
 
 #. translators: context = from the Common of nn
-#: src/LitCommon.php:62
+#: src/LitCommon.php:90
 msgid "Blessed Virgin Mary"
 msgstr "Beata Vergine Maria"
 
 #. translators: context = from the Common of nn
-#: src/LitCommon.php:64
+#: src/LitCommon.php:92
 msgid "Martyrs"
 msgstr "Martiri"
 
 #. translators: context = from the Common of nn
-#: src/LitCommon.php:66
+#: src/LitCommon.php:94
 msgid "Pastors"
 msgstr "Pastori"
 
 #. translators: context = from the Common of nn
-#: src/LitCommon.php:68
+#: src/LitCommon.php:96
 msgid "Doctors"
 msgstr "Dottori della Chiesa"
 
 #. translators: context = from the Common of nn
-#: src/LitCommon.php:70
+#: src/LitCommon.php:98
 msgid "Virgins"
 msgstr "Vergini"
 
 #. translators: context = from the Common of nn
-#: src/LitCommon.php:72
+#: src/LitCommon.php:100
 msgid "Holy Men and Women"
 msgstr "Santi e delle Sante"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:75
+#: src/LitCommon.php:103
 msgid "For One Martyr"
 msgstr "Per un martire"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:77
+#: src/LitCommon.php:105
 msgid "For Several Martyrs"
 msgstr "Per più martiri"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:79
+#: src/LitCommon.php:107
 msgid "For Missionary Martyrs"
 msgstr "Per i martiri missionari"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:81
+#: src/LitCommon.php:109
 msgid "For One Missionary Martyr"
 msgstr "Per un martire missionario"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:83
+#: src/LitCommon.php:111
 msgid "For Several Missionary Martyrs"
 msgstr "Per più martiri missionari"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:85
+#: src/LitCommon.php:113
 msgid "For a Virgin Martyr"
 msgstr "Per una vergine martire"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:87
+#: src/LitCommon.php:115
 msgid "For a Holy Woman Martyr"
 msgstr "Per una santa martire"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:89
+#: src/LitCommon.php:117
 msgid "For a Pope"
 msgstr "Per un papa"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:91
+#: src/LitCommon.php:119
 msgid "For a Bishop"
 msgstr "Per un vescovo"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:93
+#: src/LitCommon.php:121
 msgid "For One Pastor"
 msgstr "Per un pastore"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:95
+#: src/LitCommon.php:123
 msgid "For Several Pastors"
 msgstr "Per più pastori"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:97
+#: src/LitCommon.php:125
 msgid "For Founders of a Church"
 msgstr "Per i fondatori delle chiese"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:99
+#: src/LitCommon.php:127
 msgid "For One Founder"
 msgstr "Per un fondatore"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:101
+#: src/LitCommon.php:129
 msgid "For Several Founders"
 msgstr "Per più fondatori"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:103
+#: src/LitCommon.php:131
 msgid "For Missionaries"
 msgstr "Per i missionari"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:105
+#: src/LitCommon.php:133
 msgid "For One Virgin"
 msgstr "Per una vergine"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:107
+#: src/LitCommon.php:135
 msgid "For Several Virgins"
 msgstr "Per più vergini"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:109
+#: src/LitCommon.php:137
 msgid "For Several Saints"
 msgstr "Per più santi"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:111
+#: src/LitCommon.php:139
 msgid "For One Saint"
 msgstr "Per un santo"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:113
+#: src/LitCommon.php:141
 msgid "For an Abbot"
 msgstr "Per un abate"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:115
+#: src/LitCommon.php:143
 msgid "For a Monk"
 msgstr "Per un monaco"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:117
+#: src/LitCommon.php:145
 msgid "For a Nun"
 msgstr "Per una monaca"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:119
+#: src/LitCommon.php:147
 msgid "For Religious"
 msgstr "Per i religiosi"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:121
+#: src/LitCommon.php:149
 msgid "For Those Who Practiced Works of Mercy"
 msgstr "Per gli operatori di misericordia"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:123
+#: src/LitCommon.php:151
 msgid "For Educators"
 msgstr "Per gli educatori"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:125
+#: src/LitCommon.php:153
 msgid "For Holy Women"
 msgstr "Per le sante"
 
+#. translators: context = Masses and Prayers for Various Needs and Occasions
+#: src/LitCommon.php:156
+msgid "For Giving Thanks to God for the Gift of Human Life [USA]"
+msgstr ""
+
+#. translators: context = Masses and Prayers for Various Needs and Occasions
+#: src/LitCommon.php:158
+msgid "For the Preservation of Peace and Justice"
+msgstr ""
+
 #. translators: (singular feminine) glue between "From the Common" and the actual common. Latin: leave empty!
-#: src/LitCommon.php:173 src/LitCommon.php:185
+#: src/LitCommon.php:210 src/LitCommon.php:222
 msgctxt "(SING_FEMM)"
 msgid "of the"
 msgstr "della"
 
 #. translators: (plural feminine) glue between "From the Common" and the actual common. Latin: leave empty!
-#: src/LitCommon.php:176
+#: src/LitCommon.php:213
 msgctxt "(PLUR_FEMM)"
 msgid "of"
 msgstr "delle"
 
 #. translators: (plural masculine) glue between "From the Common" and the actual common. Latin: leave empty!
-#: src/LitCommon.php:182
+#: src/LitCommon.php:219
 msgctxt "(PLUR_MASC)"
 msgid "of"
 msgstr "dei"
 
 #. translators: (singular masculine) glue between "From the Common" and the actual common. Latin: leave empty!
-#: src/LitCommon.php:188
+#: src/LitCommon.php:225
 msgctxt "(SING_MASC)"
 msgid "of the"
 msgstr "del"
 
-#: src/LitCommon.php:278
+#: src/LitCommon.php:322
 msgid "From the Common"
 msgstr "Dal Comune"
 
 #. translators: when there are multiple possible commons, this will be the glue "or from the common of..."
-#: src/LitCommon.php:282
+#: src/LitCommon.php:326
 msgid "or"
 msgstr "oppure"
 
@@ -1252,51 +1262,51 @@ msgid "Property to change"
 msgstr "Proprietà da modificare"
 
 #. translators: form field label for the name of a liturgical event
-#: src/Utilities.php:301 src/FormControls.php:124 includes/messages.php:19
+#: src/Utilities.php:301 src/FormControls.php:139 includes/messages.php:19
 #: admin-tests.php:108 temporale.php:135
 msgid "Name"
 msgstr "Nome"
 
-#: src/Utilities.php:302 src/FormControls.php:288 admin-decrees.php:471
+#: src/Utilities.php:302 src/FormControls.php:303 admin-decrees.php:471
 #: admin-decrees.php:512 temporale.php:75 temporale.php:136 sanctorale.php:244
 msgid "Grade"
 msgstr "Grado"
 
 #. translators: form field label for the day of the month
-#: src/FormControls.php:131 includes/messages.php:21 admin-decrees.php:392
+#: src/FormControls.php:146 includes/messages.php:21 admin-decrees.php:392
 #: sanctorale.php:172
 msgid "Day"
 msgstr "Giorno"
 
-#: src/FormControls.php:136
+#: src/FormControls.php:151
 msgid "switch on for mobile celebration as opposed to fixed date"
 msgstr "attiva per celebrazione mobile anziché a data fissa"
 
 #. translators: form field label for the month of the year
-#: src/FormControls.php:141 includes/messages.php:23 admin-decrees.php:400
+#: src/FormControls.php:156 includes/messages.php:23 admin-decrees.php:400
 msgid "Month"
 msgstr "Mese"
 
-#: src/FormControls.php:143 admin-decrees.php:382
+#: src/FormControls.php:158 admin-decrees.php:382
 msgid "Mobile"
 msgstr "Mobile"
 
 #. translators: form field label for liturgical color selection
-#: src/FormControls.php:162 includes/messages.php:25
+#: src/FormControls.php:177 includes/messages.php:25
 msgid "Liturgical color"
 msgstr "Colore Liturgico"
 
 #. translators: form field label - first year a liturgical event takes effect
-#: src/FormControls.php:171 includes/messages.php:27
+#: src/FormControls.php:186 includes/messages.php:27
 msgid "Since"
 msgstr "Dall'anno"
 
 #. translators: form field label - last year a liturgical event is observed
-#: src/FormControls.php:178 includes/messages.php:29
+#: src/FormControls.php:193 includes/messages.php:29
 msgid "Until"
 msgstr "All'anno"
 
-#: src/FormControls.php:278 admin-decrees.php:500
+#: src/FormControls.php:293 admin-decrees.php:500
 msgid "Common (or Proper)"
 msgstr "Comune (o Proprio)"
 
