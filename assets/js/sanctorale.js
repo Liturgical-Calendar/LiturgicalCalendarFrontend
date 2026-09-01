@@ -82,7 +82,14 @@ const state = {
     composed: [],
     month: new Date().getUTCMonth() + 1,
     search: '',
-    capabilities: new Map()
+    capabilities: new Map(),
+    /**
+     * The event_key the detail modal is currently open on, mirrored into the
+     * hash as `event=` so a link can address one celebration and land on its
+     * month tab. Empty when no modal is open. See showDetail(), showCreate()
+     * and the `hidden.bs.modal` listener in init().
+     */
+    event: ''
 };
 
 /**
@@ -625,6 +632,11 @@ async function showDetail(eventKey, missalId, editing = false) {
     dom.detailTitle.textContent = eventKey;
     dom.detailBody.innerHTML = `<p class="text-muted">${escapeHtml(i18n.loading)}</p>`;
     bootstrap.Modal.getOrCreateInstance(dom.detailModal).show();
+    // Written immediately, not after the awaits below: the URL should name what
+    // is opening even while it is still loading, so a copy taken mid-load is
+    // still a valid link back to this celebration.
+    state.event = eventKey;
+    syncHash();
 
     const row = state.composed.find((r) => r.event_key === eventKey);
 
@@ -787,6 +799,15 @@ async function showCreate() {
     editState.calendarLabel = calendarLabelFor(editState.missalId);
     editState.readingsTier = 'rite';
 
+    // Nothing to address yet — a create dialog has no event_key until Save.
+    // Cleared explicitly rather than left over from whatever showDetail() last
+    // set: the `hidden.bs.modal` listener only fires once THIS modal closes, by
+    // which point a stale `#event=` would already have been visible in the URL.
+    if (state.event) {
+        state.event = '';
+        syncHash();
+    }
+
     dom.detailTitle.textContent = i18n.newEntry;
     dom.detailFooter.classList.remove('d-none');
     dom.deleteEntry.classList.add('d-none');
@@ -892,6 +913,11 @@ async function saveEntry() {
         const data = await writeJson(editState.creating ? 'PUT' : 'PATCH', path, payload);
         const outcome = reportWrite(data, editState.creating ? i18n.created : i18n.saved);
         bootstrap.Modal.getOrCreateInstance(dom.detailModal).hide();
+        // Cleared explicitly rather than left for the `hidden.bs.modal` listener,
+        // whose fade-out timing races reload() below: without this, reload()'s own
+        // openDeepLinkedEvent() can still see the just-saved key in state.event and
+        // reopen the very modal Save just closed.
+        state.event = '';
         if (outcome.applied) {
             await reload();
         }
@@ -935,6 +961,9 @@ async function deleteEntry() {
         const data = await writeJson('DELETE', path);
         const outcome = reportWrite(data, i18n.deleted);
         bootstrap.Modal.getOrCreateInstance(dom.detailModal).hide();
+        // See the identical comment in saveEntry(): clearing here, not waiting for
+        // `hidden.bs.modal`, is what stops reload() from reopening this modal.
+        state.event = '';
         if (outcome.applied) {
             if (data?.readings_retained === true && typeof window.showToast === 'function') {
                 window.showToast(i18n.readingsRetained, 'info');
@@ -1638,6 +1667,9 @@ function syncHash() {
     if (state.nameLocale) params.set('locale', state.nameLocale);
     if (state.fromMissal) params.set('from', state.fromMissal);
     params.set('month', String(state.month));
+    // Carries the open modal's event_key, so copying the URL out of the address
+    // bar while viewing one celebration reproduces that view, not just the tab.
+    if (state.event) params.set('event', state.event);
     history.replaceState(null, '', `#${params.toString()}`);
 }
 
@@ -1651,7 +1683,34 @@ function readHash() {
     state.calendar   = params.get('calendar') ?? '';
     state.fromMissal = params.get('from') ?? '';
     state.nameLocale = params.get('locale') ?? '';
+    state.event      = params.get('event') ?? '';
     if (month >= 1 && month <= 12) state.month = month;
+}
+
+/**
+ * Open the entry a deep link named (`#event=<key>`), landing on its month tab.
+ *
+ * Called once the composed sanctorale for the current rite/calendar/locale is
+ * loaded, so `state.composed` is what the link is checked against. A key absent
+ * from the CURRENT selection is reported, not silently ignored: a stale or
+ * mistyped link — or one for a rite/calendar this page has since moved away
+ * from — must say so, which is the exact failure mode `#event=` shipped
+ * without in the first place.
+ */
+function openDeepLinkedEvent() {
+    if (!state.event) return;
+    const row = state.composed.find((r) => r.event_key === state.event);
+    if (!row) {
+        notice('warning', escapeHtml(i18n.eventNotFound.replace('%s', state.event)));
+        state.event = '';
+        syncHash();
+        return;
+    }
+    if (state.month !== row.month) {
+        state.month = row.month;
+        render();
+    }
+    showDetail(row.event_key, row._missalId, false);
 }
 
 /**
@@ -1675,6 +1734,10 @@ async function reload() {
         // locale may have been re-derived. Writing the hash before that leaves it
         // describing a selection the page is not showing.
         syncHash();
+        // A rite/calendar/locale change can carry a `#event=` along for the ride
+        // (or leave a stale one from before the change); either way it has to be
+        // resolved against the FRESH composed list, not the one it was read against.
+        openDeepLinkedEvent();
     } catch (error) {
         if (seq !== selectionSeq) return;
         // Clear before reporting. Otherwise a failed Ambrosian load leaves the
@@ -1785,6 +1848,20 @@ async function init() {
         } else {
             dom.from.value = state.fromMissal;
             render();
+            // reload() resolves its own `#event=` once its fetch lands (see above);
+            // this branch fetches nothing, so it must resolve one itself, against
+            // the composed list that is already current.
+            openDeepLinkedEvent();
+        }
+    });
+
+    // Clears the hash's `event=` once the modal it named is no longer open —
+    // fired by both an explicit close and a save/delete's own `.hide()` call —
+    // so the URL never keeps pointing at a view that is no longer on screen.
+    dom.detailModal?.addEventListener('hidden.bs.modal', () => {
+        if (state.event) {
+            state.event = '';
+            syncHash();
         }
     });
 
@@ -1794,6 +1871,10 @@ async function init() {
         // not have. Rewrite it once, so the URL matches what is actually shown and
         // copying it out of the address bar reproduces this page.
         syncHash();
+        // Resolved last, once the composed list and the URL both agree with what
+        // is on screen: a `#event=` deep link opens the modal and lands on the
+        // right month tab, rather than silently doing nothing — see #503 phase 4.
+        openDeepLinkedEvent();
     }
 }
 

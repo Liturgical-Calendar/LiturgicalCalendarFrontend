@@ -332,7 +332,11 @@ $litCommons = [
                 <?php // translators: %s is the unrecognized disposition value ?>
                 writeUnknown:       <?php echo json_encode(_('The server reported an unrecognized outcome (%s); nothing local was changed.'), JSON_HEX_TAG); ?>,
                 <?php // translators: %s is the error reported by the API ?>
-                loadFailed:         <?php echo json_encode(_('Could not load the sanctorale: %s'), JSON_HEX_TAG); ?>
+                loadFailed:         <?php echo json_encode(_('Could not load the sanctorale: %s'), JSON_HEX_TAG); ?>,
+                <?php // translators: %s is the event_key a #event= link named
+                      // Reported rather than left silent: the link may be stale, mistyped, or
+                      // for a rite/calendar this page has since moved away from. ?>
+                eventNotFound:      <?php echo json_encode(_('%s is not in the current selection.'), JSON_HEX_TAG); ?>
             }
         };
     </script>
