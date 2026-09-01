@@ -109,6 +109,65 @@ async function getJson(path, headers = {}) {
 }
 
 /**
+ * A failed write, carrying the API's own parsed body.
+ *
+ * The body matters: `assertKeyIdentity()` composes a 409 naming the editions and
+ * dates that disagree, and that message is more useful beside the inputs that
+ * caused it than a status code ever is.
+ */
+export class ApiWriteError extends Error {
+    constructor(status, body) {
+        super(`HTTP ${status}`);
+        this.status = status;
+        this.body = body;
+    }
+}
+
+/** The address of one sanctorale entry. Every segment is encoded on its own. */
+export function entryPath(rite, missalId, eventKey) {
+    return `/missals/${encodeURIComponent(rite)}/${encodeURIComponent(missalId)}/${encodeURIComponent(eventKey)}`;
+}
+
+/**
+ * Issue a write.
+ *
+ * Separate from getJson() and not a wrapper over it, because the two disagree on
+ * the one setting that matters: the `/missals` and `/lectionary` reads are public
+ * and answer `Access-Control-Allow-Origin: *`, which a browser refuses to pair
+ * with credentials, while the write routes echo the validated origin and set
+ * `allowCredentials`. A shared helper would have to be right about both.
+ *
+ * An unparseable body is `null`, never a throw: reading an empty 204 as a failure
+ * is the bug issue #503 filed against the old editor.
+ *
+ * @param {'PUT'|'PATCH'|'DELETE'} method
+ * @param {string} path from entryPath()
+ * @param {object} [body]
+ * @returns {Promise<object|null>}
+ * @throws {ApiWriteError}
+ */
+export async function writeJson(method, path, body) {
+    const response = await fetch(`${apiUrl}${path}`, {
+        method,
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: body === undefined ? undefined : JSON.stringify(body)
+    });
+
+    let data = null;
+    try {
+        data = await response.json();
+    } catch {
+        data = null;
+    }
+
+    if (!response.ok) {
+        throw new ApiWriteError(response.status, data);
+    }
+    return data;
+}
+
+/**
  * The missals that apply to a calendar, oldest first.
  *
  * Data-driven rather than hardcoded: the typical editions carry region `VA` and
