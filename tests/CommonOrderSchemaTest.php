@@ -24,6 +24,9 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(LitCommon::class)]
 final class CommonOrderSchemaTest extends TestCase
 {
+    use ApiSchemaTrait;
+
+
     /**
      * A verbatim copy of `definitions.LitCommon.items.enum` from the API's
      * `jsondata/schemas/CommonDef.json`, in the schema's own order.
@@ -180,55 +183,14 @@ final class CommonOrderSchemaTest extends TestCase
         $schemaPath = self::locateCommonDef();
 
         if (null === $schemaPath) {
-            $this->markTestSkipped(
-                'LiturgicalCalendarAPI/jsondata/schemas/CommonDef.json was not found. '
-                    . 'Set LITCAL_API_PATH to the API checkout to run this reconciliation.'
-            );
+            $this->markTestSkipped(self::schemaUnavailableMessage());
         }
-
-        $raw = file_get_contents($schemaPath);
-        $this->assertIsString($raw, "Could not read {$schemaPath}");
-
-        /** @var array{definitions: array{LitCommon: array{items: array{enum: array<int, string>}}}} $schema */
-        $schema = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame(
             self::SCHEMA_LIT_COMMON,
-            $schema['definitions']['LitCommon']['items']['enum'],
+            self::schemaEnum($schemaPath, 'LitCommon'),
             "The copy of the LitCommon enum in this test no longer matches {$schemaPath}. "
                 . 'Update SCHEMA_LIT_COMMON *and* FormControls::COMMON_ORDER together.'
         );
-    }
-
-    /**
-     * Finds the API's CommonDef.json without assuming a fixed layout: honours
-     * LITCAL_API_PATH, then walks up from this repository looking for a sibling
-     * LiturgicalCalendarAPI checkout (which also covers git worktrees nested a few
-     * levels below the repository root) and the E2E workflow's `api-repo` path.
-     */
-    private static function locateCommonDef(): ?string
-    {
-        $suffix = '/jsondata/schemas/CommonDef.json';
-
-        $configured = getenv('LITCAL_API_PATH');
-        if (is_string($configured) && $configured !== '') {
-            $candidate = rtrim($configured, '/') . $suffix;
-            if (is_file($candidate)) {
-                return $candidate;
-            }
-        }
-
-        $dir = dirname(__DIR__);
-        for ($i = 0; $i < 6 && $dir !== '' && $dir !== '/'; $i++) {
-            foreach (['/LiturgicalCalendarAPI', '/api-repo'] as $repoDir) {
-                $candidate = $dir . $repoDir . $suffix;
-                if (is_file($candidate)) {
-                    return $candidate;
-                }
-            }
-            $dir = dirname($dir);
-        }
-
-        return null;
     }
 }

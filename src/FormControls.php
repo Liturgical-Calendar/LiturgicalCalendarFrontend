@@ -176,7 +176,7 @@ class FormControls
             $formRow .= '<div class="form-group col-sm-1">' .
             "<label for=\"{$uniqid}Color\">" . _('Liturgical color') . '</label>' .
             "<select class=\"form-select litEvent litEventColor\" id=\"{$uniqid}Color\" multiple=\"multiple\" size=\"1\">" .
-            $this->getColorOptionsHtml([LitColor::WHITE], [LitColor::WHITE, LitColor::RED, LitColor::PURPLE, LitColor::GREEN]) .
+            $this->getColorOptionsHtml([LitColor::WHITE]) .
             '</select>' .
             '</div>';
         }
