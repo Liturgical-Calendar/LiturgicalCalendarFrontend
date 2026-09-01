@@ -927,14 +927,24 @@ async function showCreate() {
 }
 
 /**
- * Save the modal.
+ * Save the modal. The `#saveEntryBtn` click handler.
+ *
+ * A thin wrapper so that the lock on the write controls covers the whole of
+ * performSave(), including its early returns — see withWriteControlsDisabled().
+ */
+async function saveEntry() {
+    await withWriteControlsDisabled(performSave);
+}
+
+/**
+ * Save the modal, assuming the write controls are already locked.
  *
  * Local state is updated ONLY when the write reached disk. In queue mode the
  * response carries the proposed payload rather than a stored resource, so
  * writing it into `state.composed` would show the user an entry the server may
  * never store.
  */
-async function saveEntry() {
+async function performSave() {
     dom.formError.textContent = '';
 
     // Read before validation, because the event_key rule below is stated over
@@ -1094,6 +1104,31 @@ async function reloadAndFollow(eventKey) {
 }
 
 /**
+ * Lock Save and Delete for the duration of one write.
+ *
+ * `reload()` can take seconds, so the window in which a second click lands on a
+ * still-open modal is real, and a doubled `PUT`/`DELETE` is not harmless. The
+ * restore is in a `finally` so that success, failure, a rethrown error and every
+ * validation early-return all re-enable the controls.
+ *
+ * @param {() => Promise<void>} work
+ */
+async function withWriteControlsDisabled(work) {
+    setWriteControlsDisabled(true);
+    try {
+        await work();
+    } finally {
+        setWriteControlsDisabled(false);
+    }
+}
+
+/** @param {boolean} disabled */
+function setWriteControlsDisabled(disabled) {
+    if (dom.saveEntry) dom.saveEntry.disabled = disabled;
+    if (dom.deleteEntry) dom.deleteEntry.disabled = disabled;
+}
+
+/**
  * Delete the open entry.
  *
  * Admin-only, and confirmed by naming the Missal: deleting from the edition that
@@ -1105,6 +1140,11 @@ async function reloadAndFollow(eventKey) {
  * failed delete.
  */
 async function deleteEntry() {
+    await withWriteControlsDisabled(performDelete);
+}
+
+/** Delete the open entry, assuming the write controls are already locked. */
+async function performDelete() {
     const confirmed = window.confirm(
         i18n.confirmDelete.replace('%1$s', editState.eventKey).replace('%2$s', editState.missalId)
     );
