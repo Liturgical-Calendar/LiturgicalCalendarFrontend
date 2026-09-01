@@ -10,12 +10,15 @@
 !composer.lock
 !about.php
 !admin-applications.php
+!admin-changes.php
 !admin-dashboard.php
-!admin-permissions.php
 !admin-decrees.php
-!admin-tests.php
+!admin-locales.php
+!admin-permissions.php
 !admin-role-requests.php
+!admin-tests.php
 !admin-users.php
+!change-requests.php
 !developer-dashboard.php
 !easter.php
 !examples.php
