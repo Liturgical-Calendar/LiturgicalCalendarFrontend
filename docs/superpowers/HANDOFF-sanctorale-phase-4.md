@@ -1,5 +1,15 @@
 # Sanctorale editor — handoff for phase 4 (editing)
 
+> **Status: superseded — this is a PRE-IMPLEMENTATION handoff, kept as a historical record.**
+>
+> Phase 4 shipped in PR #523. `missals-editor.php` is retired, and BOTH the admin dashboard card's
+> **View** and **Edit** buttons now route to `sanctorale.php` (`includes/admin-blocks.php`).
+>
+> Everything below records what was known _before_ phase 4 was built, including its open questions.
+> Read any statement describing the current state — the file table, the retirement question, the
+> dashboard card's Edit target — as a description of the pre-phase-4 world, not of the code today.
+> It is deliberately NOT rewritten: what the implementer did not yet know is the point of the document.
+
 Phases 1–3 shipped in PR #512 (merged 2026-09-01). Issue #503 stays **open** for this phase.
 
 Design: `docs/superpowers/specs/2026-08-31-sanctorale-editor-design.md`. Read it first — this document
