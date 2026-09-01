@@ -563,9 +563,13 @@ describe('orderedSelection', () => {
 });
 
 describe('applicableTiers', () => {
-    // The real case from the brief: StPeterClaver is declared by EDITIO_TYPICA_2002,
-    // US_2011 and IT_1983 alike. The lectionary route is rite-scoped, so a single
-    // response can carry all three tiers no matter which calendar is open.
+    // US_2011 and IT_1983 are StPeterClaver's real tiers, and they're what actually
+    // exercise the filter below. TYPICA_TIER is synthetic — live, EDITIO_TYPICA_2002
+    // owns no lectionary folder of its own, so its readings arrive folded into the
+    // `rite` tier rather than as a separate `missal` tier. It's still worth pinning:
+    // applicableTiers() doesn't care which Missal ids are involved, only the shape,
+    // so this fixture exercises "a missal tier for the base region" as a case in its
+    // own right rather than only what today's response happens to return.
     const RITE_TIER = { tier: 'rite', source_id: 'sanctorum' };
     const TYPICA_TIER = { tier: 'missal', source_id: 'EDITIO_TYPICA_2002' };
     const US_TIER = { tier: 'missal', source_id: 'US_2011' };
