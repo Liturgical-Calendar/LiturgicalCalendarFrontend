@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-01 02:13+0000\n"
+"POT-Creation-Date: 2026-09-01 17:22+0000\n"
 "PO-Revision-Date: 2026-08-30 14:55+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -123,16 +123,19 @@ msgstr "Parametre požiadaviek dostupné na všetkých cestách %1$s"
 
 #. translators: part of page title - refers to the Catholic liturgical calendar
 #: index.php:65 usage.php:35 examples.php:106 liturgyOfAnyDay.php:23
-#: layout/header.php:257 admin-permissions.php:77 admin-permissions.php:304
-#: admin-permissions.php:397 admin-tests.php:144 admin-tests.php:350
-#: permission-requests.php:244
+#: layout/header.php:257 includes/change-request-i18n.php:49
+#: admin-permissions.php:77 admin-permissions.php:304 admin-permissions.php:397
+#: admin-tests.php:144 admin-tests.php:350 permission-requests.php:244
+#: sanctorale.php:224
 msgid "General Roman Calendar"
 msgstr "Všeobecný rímsky kalendár"
 
 #: index.php:74 layout/header.php:19 layout/header.php:229 admin-decrees.php:43
 #: admin-permissions.php:37 admin-tests.php:38 permission-requests.php:32
 #: admin-applications.php:34 admin-dashboard.php:40 admin-users.php:34
-#: developer-dashboard.php:35 temporale.php:25 user-profile.php:24
+#: admin-locales.php:39 admin-changes.php:46 change-requests.php:38
+#: developer-dashboard.php:35 temporale.php:25 sanctorale.php:91
+#: user-profile.php:24
 msgid "Catholic Liturgical Calendar"
 msgstr "Katolícky liturgický kalendár"
 
@@ -301,7 +304,7 @@ msgid "Example usage of the API"
 msgstr "Príklad použitia API"
 
 #. translators: accordion section header - examples of web-based calendar displays
-#: usage.php:57 layout/header.php:331
+#: usage.php:57 layout/header.php:329
 msgid "Web calendar"
 msgstr "Webový kalendár"
 
@@ -334,7 +337,7 @@ msgid "View JavaScript Example"
 msgstr "Zobraziť príklad JavaScriptu"
 
 #. translators: card header for FullCalendar example
-#: usage.php:103
+#: usage.php:103 sanctorale.php:127 sanctorale.php:263
 msgid "Calendar"
 msgstr "Kalendár"
 
@@ -358,7 +361,7 @@ msgid "View FullCalendar (messages first)"
 msgstr "Zobraziť celý kalendár (najprv správy)"
 
 #. translators: accordion section header - subscribing to the calendar via iCal/ICS URL
-#: usage.php:131 layout/header.php:335
+#: usage.php:131 layout/header.php:333
 msgid "Calendar subscription"
 msgstr "Predplatenie kalendára"
 
@@ -547,7 +550,7 @@ msgstr ""
 "viac \"skrášlené\"."
 
 #. translators: accordion section header - Easter date calculation tool
-#: usage.php:291 layout/header.php:339
+#: usage.php:291 layout/header.php:337
 msgid "Dates of Easter"
 msgstr "Dátumy Veľkej noci"
 
@@ -567,7 +570,7 @@ msgid "Calculate the Dates of Easter"
 msgstr "Vypočítaj dátumy Veľkej noci"
 
 #. translators: accordion section header - daily liturgy information and apps
-#: usage.php:327 layout/header.php:343
+#: usage.php:327 layout/header.php:341
 msgid "Liturgy of the Day"
 msgstr "Liturgia dňa"
 
@@ -1083,12 +1086,12 @@ msgstr "pracovný deň"
 #. translators: liturgical grade 1 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: src/LitGrade.php:105 admin-decrees.php:731
+#: src/LitGrade.php:105 admin-decrees.php:731 sanctorale.php:255
 msgid "Commemoration"
 msgstr "Spomienka"
 
 #. translators: liturgical rank. Keep Capitalized
-#: src/LitGrade.php:108
+#: src/LitGrade.php:108 sanctorale.php:256
 msgid "Optional memorial"
 msgstr "Ľubovoľná spomienka"
 
@@ -1096,7 +1099,7 @@ msgstr "Ľubovoľná spomienka"
 #. translators: liturgical grade 3 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: src/LitGrade.php:111 admin-decrees.php:719
+#: src/LitGrade.php:111 admin-decrees.php:719 sanctorale.php:257
 msgid "Memorial"
 msgstr "Pamiatka"
 
@@ -1224,12 +1227,13 @@ msgid "Name"
 msgstr "Meno"
 
 #: src/Utilities.php:302 src/FormControls.php:288 admin-decrees.php:471
-#: admin-decrees.php:512 temporale.php:75 temporale.php:136
+#: admin-decrees.php:512 temporale.php:75 temporale.php:136 sanctorale.php:244
 msgid "Grade"
 msgstr "Stupeň"
 
 #. translators: form field label for the day of the month
 #: src/FormControls.php:131 includes/messages.php:21 admin-decrees.php:392
+#: sanctorale.php:172
 msgid "Day"
 msgstr "Deň"
 
@@ -1286,7 +1290,7 @@ msgstr "Preklady"
 msgid "About us"
 msgstr "O nás"
 
-#: layout/header.php:71 layout/header.php:297
+#: layout/header.php:71 layout/header.php:295
 msgid "Accuracy Tests"
 msgstr "Testy presnosti"
 
@@ -1298,15 +1302,18 @@ msgstr "Pozri si projektové repozitáre na GitHube"
 msgid "Notifications"
 msgstr "Oznámenia"
 
-#: layout/header.php:140 admin-permissions.php:134 admin-permissions.php:193
+#: layout/header.php:140 includes/change-request-i18n.php:19
+#: admin-permissions.php:134 admin-permissions.php:193
 #: admin-permissions.php:200 admin-permissions.php:207
 #: admin-permissions.php:214 admin-permissions.php:368
 #: admin-permissions.php:421 admin-tests.php:332 permission-requests.php:64
 #: permission-requests.php:204 admin-applications.php:136
 #: admin-applications.php:145 admin-applications.php:154
 #: admin-applications.php:163 admin-applications.php:228 admin-users.php:70
-#: admin-users.php:85 admin-users.php:151 developer-dashboard.php:68
-#: temporale.php:59 temporale.php:147
+#: admin-users.php:85 admin-users.php:151 admin-changes.php:156
+#: admin-changes.php:165 admin-changes.php:174 admin-changes.php:183
+#: change-requests.php:75 developer-dashboard.php:68 temporale.php:59
+#: temporale.php:147
 msgid "Loading..."
 msgstr "Načítava sa..."
 
@@ -1351,52 +1358,53 @@ msgstr "Panel"
 msgid "Temporale"
 msgstr "Časové obdobie"
 
-#: layout/header.php:267 includes/admin-blocks.php:35
+#: layout/header.php:265 includes/admin-blocks.php:35 sanctorale.php:90
+#: sanctorale.php:102
 msgid "Sanctorale"
 msgstr "Sviatky svätých"
 
-#: layout/header.php:271 includes/admin-blocks.php:47
+#: layout/header.php:269 includes/admin-blocks.php:47
 #: includes/admin-decrees-card.php:20 admin-decrees.php:42 admin-decrees.php:54
 msgid "Decrees"
 msgstr "Dekréty"
 
-#: layout/header.php:275
+#: layout/header.php:273
 msgid "Particular Calendars"
 msgstr "Partikulárne kalendáre"
 
 #. translators: label for wider region calendar name field
-#: layout/header.php:283 includes/messages.php:230 includes/admin-blocks.php:61
+#: layout/header.php:281 includes/messages.php:230 includes/admin-blocks.php:61
 #: admin-permissions.php:81 admin-permissions.php:308 admin-permissions.php:395
 #: permission-requests.php:239
 msgid "Wider Region"
 msgstr "Širší región"
 
-#: layout/header.php:287 includes/admin-blocks.php:71
+#: layout/header.php:285 includes/admin-blocks.php:71
 msgid "National"
 msgstr "Národné"
 
-#: layout/header.php:291 includes/admin-blocks.php:81
+#: layout/header.php:289 includes/admin-blocks.php:81
 msgid "Diocesan"
 msgstr "Diecézne"
 
-#: layout/header.php:301 includes/admin-tests-card.php:17 admin-tests.php:37
+#: layout/header.php:299 includes/admin-tests-card.php:17 admin-tests.php:37
 #: admin-tests.php:49
 msgid "Test Definitions"
 msgstr "Definície testov"
 
-#: layout/header.php:308
+#: layout/header.php:306
 msgid "Back to Website"
 msgstr "Späť na webovú stránku"
 
-#: layout/header.php:315
+#: layout/header.php:313
 msgid "Home"
 msgstr "Domov"
 
-#: layout/header.php:323
+#: layout/header.php:321
 msgid "Documentation"
 msgstr "Dokumentácia"
 
-#: layout/header.php:327
+#: layout/header.php:325
 msgid "Examples of Usage"
 msgstr "Príklady použitia"
 
@@ -1503,8 +1511,9 @@ msgstr "Zapamätať si ma"
 #: includes/login-modal.php:55 includes/messages.php:156 admin-decrees.php:580
 #: admin-decrees.php:607 admin-permissions.php:325 admin-permissions.php:351
 #: admin-tests.php:259 admin-tests.php:286 admin-tests.php:313
-#: admin-applications.php:207 admin-users.php:112 developer-dashboard.php:134
-#: developer-dashboard.php:183 developer-dashboard.php:246
+#: admin-applications.php:207 admin-users.php:112 admin-changes.php:233
+#: developer-dashboard.php:134 developer-dashboard.php:183
+#: developer-dashboard.php:246 sanctorale.php:199 sanctorale.php:287
 msgid "Cancel"
 msgstr "Zrušiť"
 
@@ -1570,6 +1579,7 @@ msgstr "Relácia vypršala"
 
 #. translators: form field label for the unique identifier of a liturgical event
 #: includes/messages.php:17 admin-decrees.php:175 temporale.php:134
+#: sanctorale.php:174 sanctorale.php:291
 msgid "Event key"
 msgstr "Kľúč udalosti"
 
@@ -1651,6 +1661,7 @@ msgstr ""
 
 #. translators: %s is the change request batch id. The changes were queued for review, not saved
 #: includes/messages.php:76 admin-decrees.php:637 admin-tests.php:341
+#: admin-locales.php:135
 #, php-format
 msgid ""
 "Your changes were submitted for review as batch %s. Nothing has been saved "
@@ -1659,6 +1670,7 @@ msgstr ""
 
 #. translators: %s is the change request batch id. The changes were approved but are not published yet
 #: includes/messages.php:78 admin-decrees.php:638 admin-tests.php:342
+#: admin-locales.php:136
 #, php-format
 msgid ""
 "Your changes were approved as batch %s and are queued for publication. They "
@@ -1667,6 +1679,7 @@ msgstr ""
 
 #. translators: %s is a comma separated list of change request batch ids folded into the current one
 #: includes/messages.php:80 admin-decrees.php:639 admin-tests.php:343
+#: admin-locales.php:137
 #, php-format
 msgid ""
 "Earlier pending submissions were folded into this one and no longer appear "
@@ -1675,6 +1688,7 @@ msgstr ""
 
 #. translators: %s is the unrecognized outcome value the server sent
 #: includes/messages.php:82 admin-decrees.php:641 admin-tests.php:344
+#: admin-locales.php:139
 #, php-format
 msgid ""
 "The server reported an unrecognized outcome ('%s') for these changes. Reload "
@@ -2297,12 +2311,13 @@ msgstr "Národné kalendáre podľa biskupských konferencií"
 msgid "Diocesan calendars by liturgical offices"
 msgstr "Diecézne kalendáre podľa liturgických kancelárií"
 
-#: includes/admin-blocks.php:103 admin-dashboard.php:221
+#: includes/admin-blocks.php:103 includes/change-request-i18n.php:21
+#: admin-dashboard.php:221
 msgid "View"
 msgstr "Zobraziť"
 
 #: includes/admin-blocks.php:104 admin-decrees.php:687 admin-tests.php:347
-#: developer-dashboard.php:269
+#: developer-dashboard.php:269 sanctorale.php:285
 msgid "Edit"
 msgstr "Upraviť"
 
@@ -2318,6 +2333,228 @@ msgstr "Spravovať"
 #: includes/admin-tests-card.php:19
 msgid "Manage liturgical accuracy tests"
 msgstr "Spravovať testy liturgickej presnosti"
+
+#: includes/change-request-i18n.php:20 admin-decrees.php:156
+#: admin-decrees.php:599 admin-permissions.php:229 admin-permissions.php:261
+#: admin-permissions.php:283 admin-permissions.php:343 admin-tests.php:131
+#: admin-tests.php:278 admin-tests.php:305 admin-applications.php:184
+#: admin-users.php:104 admin-locales.php:93 admin-changes.php:210
+#: change-requests.php:97 change-requests.php:104 developer-dashboard.php:84
+#: developer-dashboard.php:154 developer-dashboard.php:239 temporale.php:163
+#: temporale.php:186 sanctorale.php:190
+msgid "Close"
+msgstr "Zatvoriť"
+
+#: includes/change-request-i18n.php:22 admin-permissions.php:390
+#: admin-permissions.php:448 admin-tests.php:113 admin-applications.php:244
+#: temporale.php:140
+msgid "Actions"
+msgstr "Akcie"
+
+#: includes/change-request-i18n.php:23 admin-permissions.php:452
+#: permission-requests.php:221 admin-applications.php:243 admin-locales.php:77
+msgid "Status"
+msgstr "Stav"
+
+#: includes/change-request-i18n.php:24 admin-permissions.php:386
+msgid "Unknown user"
+msgstr "Neznámy užívateľ"
+
+#: includes/change-request-i18n.php:27
+#, fuzzy
+#| msgid "Source"
+msgid "Resource"
+msgstr "Zdroj"
+
+#: includes/change-request-i18n.php:28
+msgid "Files"
+msgstr ""
+
+#: includes/change-request-i18n.php:29 includes/change-request-i18n.php:35
+#: permission-requests.php:224 admin-changes.php:77 admin-changes.php:121
+msgid "Submitted"
+msgstr "Odoslané"
+
+#: includes/change-request-i18n.php:30
+#, fuzzy
+#| msgid "Application"
+msgid "Publication"
+msgstr "Aplikácia"
+
+#: includes/change-request-i18n.php:31
+#, fuzzy
+#| msgid "View all requests"
+msgid "Pull request"
+msgstr "Zobraziť všetky žiadosti"
+
+#: includes/change-request-i18n.php:32 change-requests.php:93
+#, fuzzy
+#| msgid "Property to change"
+msgid "Proposed changes"
+msgstr "Vlastnosť na zmenu"
+
+#: includes/change-request-i18n.php:36 admin-permissions.php:167
+#: admin-permissions.php:460 permission-requests.php:264
+#: admin-applications.php:68 admin-applications.php:108
+#: admin-applications.php:251 admin-changes.php:88 admin-changes.php:128
+#: developer-dashboard.php:304
+msgid "Approved"
+msgstr "Schválené"
+
+#: includes/change-request-i18n.php:37 admin-permissions.php:174
+#: admin-permissions.php:461 permission-requests.php:265
+#: admin-applications.php:79 admin-applications.php:114
+#: admin-applications.php:252 admin-changes.php:99 admin-changes.php:134
+#: developer-dashboard.php:305
+msgid "Rejected"
+msgstr "Zamietnuté"
+
+#: includes/change-request-i18n.php:38 admin-changes.php:110
+#: admin-changes.php:140
+msgid "Withdrawn"
+msgstr ""
+
+#: includes/change-request-i18n.php:43
+msgid ""
+"Approved by a reviewer; its pull request was later closed without merging."
+msgstr ""
+
+#: includes/change-request-i18n.php:46
+#, fuzzy
+#| msgid "National Calendar"
+msgid "National calendar"
+msgstr "Národný kalendár"
+
+#: includes/change-request-i18n.php:47
+#, fuzzy
+#| msgid "Diocesan Calendar"
+msgid "Diocesan calendar"
+msgstr "Diecézny kalendár"
+
+#: includes/change-request-i18n.php:48
+#, fuzzy
+#| msgid "Wider Region"
+msgid "Wider region"
+msgstr "Širší región"
+
+#: includes/change-request-i18n.php:50
+#, fuzzy
+#| msgid "National Calendar Tests"
+msgid "National calendar test"
+msgstr "Testy národného kalendára"
+
+#: includes/change-request-i18n.php:51
+#, fuzzy
+#| msgid "Diocesan Calendar Tests"
+msgid "Diocesan calendar test"
+msgstr "Testy diecézneho kalendára"
+
+#: includes/change-request-i18n.php:52
+#, fuzzy
+#| msgid "General Roman Calendar Tests"
+msgid "General Roman Calendar test"
+msgstr "Testy všeobecného rímskeho kalendára"
+
+#: includes/change-request-i18n.php:53
+#, fuzzy
+#| msgid "Diocesan Calendar Tests"
+msgid "Rite calendar test"
+msgstr "Testy diecézneho kalendára"
+
+#: includes/change-request-i18n.php:57
+msgid "Added"
+msgstr ""
+
+#: includes/change-request-i18n.php:58
+#, fuzzy
+#| msgid "Change grade"
+msgid "Changed"
+msgstr "Zmeniť stupeň"
+
+#: includes/change-request-i18n.php:59
+#, fuzzy
+#| msgid "Remove"
+msgid "Removed"
+msgstr "Odstrániť"
+
+#: includes/change-request-i18n.php:63
+msgid "Not published"
+msgstr ""
+
+#: includes/change-request-i18n.php:64
+#, fuzzy
+#| msgid "Review Application"
+msgid "Queued for publication"
+msgstr "Prehodnotiť aplikáciu"
+
+#: includes/change-request-i18n.php:65
+#, fuzzy
+#| msgid "No requests found."
+msgid "Pull request open"
+msgstr "Nenájdené žiadne požiadavky."
+
+#: includes/change-request-i18n.php:66
+msgid "Merged"
+msgstr ""
+
+#: includes/change-request-i18n.php:67
+msgid "Closed without merging"
+msgstr ""
+
+#: includes/change-request-i18n.php:71
+#, fuzzy
+#| msgid "Could not load your existing requests."
+msgid "Could not load what this change request proposes."
+msgstr "Nepodarilo sa načítať tvoje existujúce žiadosti."
+
+#: includes/change-request-i18n.php:72
+msgid "This change request proposes no files."
+msgstr ""
+
+#: includes/change-request-i18n.php:73
+msgid "No content change."
+msgstr ""
+
+#: includes/change-request-i18n.php:74
+#, php-format
+msgid ""
+"This file is too large to compare in the browser (%1$s proposed, %2$s "
+"currently on disk)."
+msgstr ""
+
+#: includes/change-request-i18n.php:75
+#, php-format
+msgid "@@ %1$d unchanged line(s) hidden @@"
+msgstr ""
+
+#: includes/change-request-i18n.php:76
+#, php-format
+msgid ""
+"File contents were not requested. Proposed: %1$s; currently on disk: %2$s."
+msgstr ""
+
+#: includes/change-request-i18n.php:77
+#, php-format
+msgid "This file will be removed (%1$s currently on disk)."
+msgstr ""
+
+#: includes/admin-changes-card.php:23
+#, fuzzy
+#| msgid "Access Requests to Review"
+msgid "Change Requests to Review"
+msgstr "Žiadosti o prístup na posúdenie"
+
+#: includes/admin-changes-card.php:27
+msgid ""
+"Read and decide the source data changes proposed for the calendars you "
+"administer"
+msgstr ""
+
+#: includes/admin-changes-card.php:33 admin-permissions.php:449
+#: admin-applications.php:245 admin-dashboard.php:136 admin-dashboard.php:190
+#: admin-changes.php:253
+msgid "Review"
+msgstr "Kontrola"
 
 #: admin-decrees.php:59
 msgid "Create, edit and delete decrees of the Dicastery for Divine Worship."
@@ -2383,15 +2620,6 @@ msgstr "Vyčistiť"
 #: admin-decrees.php:153
 msgid "Decree"
 msgstr "Dekrét"
-
-#: admin-decrees.php:156 admin-decrees.php:599 admin-permissions.php:229
-#: admin-permissions.php:261 admin-permissions.php:283
-#: admin-permissions.php:343 admin-tests.php:131 admin-tests.php:278
-#: admin-tests.php:305 admin-applications.php:184 admin-users.php:104
-#: developer-dashboard.php:84 developer-dashboard.php:154
-#: developer-dashboard.php:239 temporale.php:163 temporale.php:186
-msgid "Close"
-msgstr "Zatvoriť"
 
 #: admin-decrees.php:188
 msgid "Action"
@@ -2532,7 +2760,7 @@ msgstr "Základný jazyk — nemožno odstrániť"
 msgid "Add translation"
 msgstr "Pridať preklad"
 
-#: admin-decrees.php:560 admin-decrees.php:645
+#: admin-decrees.php:560 admin-decrees.php:645 sanctorale.php:227
 msgid "Lectionary readings"
 msgstr "Čítania lekcionára"
 
@@ -2541,6 +2769,7 @@ msgid "Add readings for locale"
 msgstr "Pridať čítania pre jazyk"
 
 #: admin-decrees.php:583 admin-tests.php:262 developer-dashboard.php:323
+#: sanctorale.php:202 sanctorale.php:286
 msgid "Save"
 msgstr "Uložiť"
 
@@ -2550,10 +2779,11 @@ msgstr "Zmazať dekrét"
 
 #: admin-decrees.php:610 admin-decrees.php:688 admin-tests.php:316
 #: admin-tests.php:348 developer-dashboard.php:249 developer-dashboard.php:270
+#: sanctorale.php:196 sanctorale.php:288
 msgid "Delete"
 msgstr "Zmazať"
 
-#: admin-decrees.php:626
+#: admin-decrees.php:626 admin-locales.php:112 sanctorale.php:222
 msgid "Loading…"
 msgstr "Načítavam…"
 
@@ -2647,7 +2877,7 @@ msgstr "Kód URL Vatikánu (napr. ge, sp, po)"
 msgid "Full URL for this language"
 msgstr "Celá URL pre tento jazyk"
 
-#: admin-decrees.php:668
+#: admin-decrees.php:668 sanctorale.php:268
 msgid "override"
 msgstr "prekrytie"
 
@@ -2736,21 +2966,21 @@ msgstr "Vyššia slávnosť"
 #. translators: liturgical grade 6 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:701
+#: admin-decrees.php:701 sanctorale.php:260
 msgid "Solemnity"
 msgstr "Slávnosť"
 
 #. translators: liturgical grade 5 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:707
+#: admin-decrees.php:707 sanctorale.php:259
 msgid "Feast of the Lord"
 msgstr "Sviatok Pána"
 
 #. translators: liturgical grade 4 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:713
+#: admin-decrees.php:713 sanctorale.php:258
 msgid "Feast"
 msgstr "Sviatok"
 
@@ -2764,7 +2994,7 @@ msgstr "Ľubovoľná spomienka"
 #. translators: liturgical grade 0 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:737
+#: admin-decrees.php:737 sanctorale.php:254
 msgid "Weekday"
 msgstr "Féria"
 
@@ -2864,7 +3094,8 @@ msgid "Grant Permission"
 msgstr "Udeľ povolenie"
 
 #: admin-permissions.php:120 admin-permissions.php:149 admin-tests.php:79
-#: admin-applications.php:125 admin-users.php:56
+#: admin-applications.php:125 admin-users.php:56 admin-locales.php:68
+#: admin-changes.php:145 change-requests.php:70
 msgid "Refresh"
 msgstr "Obnoviť"
 
@@ -2884,20 +3115,6 @@ msgstr "Žiadosti o prístup"
 msgid "Pending"
 msgstr "Čakajúce"
 
-#: admin-permissions.php:167 admin-permissions.php:460
-#: permission-requests.php:264 admin-applications.php:68
-#: admin-applications.php:108 admin-applications.php:251
-#: developer-dashboard.php:304
-msgid "Approved"
-msgstr "Schválené"
-
-#: admin-permissions.php:174 admin-permissions.php:461
-#: permission-requests.php:265 admin-applications.php:79
-#: admin-applications.php:114 admin-applications.php:252
-#: developer-dashboard.php:305
-msgid "Rejected"
-msgstr "Zamietnuté"
-
 #: admin-permissions.php:181 admin-permissions.php:462
 #: permission-requests.php:266 admin-applications.php:90
 #: admin-applications.php:120 admin-applications.php:253
@@ -2914,7 +3131,7 @@ msgid "Notes"
 msgstr "Poznámky"
 
 #: admin-permissions.php:239 permission-requests.php:152
-#: admin-applications.php:194
+#: admin-applications.php:194 admin-changes.php:220
 msgid "optional"
 msgstr "voliteľné"
 
@@ -2922,11 +3139,11 @@ msgstr "voliteľné"
 msgid "Add notes about your decision..."
 msgstr "Pridať poznámky k vášmu rozhodnutiu..."
 
-#: admin-permissions.php:252 admin-applications.php:216
+#: admin-permissions.php:252 admin-applications.php:216 admin-changes.php:239
 msgid "Approve"
 msgstr "Schváliť"
 
-#: admin-permissions.php:255 admin-applications.php:210
+#: admin-permissions.php:255 admin-applications.php:210 admin-changes.php:236
 msgid "Reject"
 msgstr "Odmietnuť"
 
@@ -2936,6 +3153,7 @@ msgid "Revoke"
 msgstr "Zrušiť"
 
 #: admin-permissions.php:270 admin-applications.php:172 admin-users.php:92
+#: admin-changes.php:192 change-requests.php:82
 msgid "Back to Dashboard"
 msgstr "Späť na informačný panel"
 
@@ -3019,15 +3237,6 @@ msgstr "Si si istý, že chceš odvolať toto povolenie?"
 msgid "Subject"
 msgstr "Subjekt"
 
-#: admin-permissions.php:386
-msgid "Unknown user"
-msgstr "Neznámy užívateľ"
-
-#: admin-permissions.php:390 admin-permissions.php:448 admin-tests.php:113
-#: admin-applications.php:244 temporale.php:140
-msgid "Actions"
-msgstr "Akcie"
-
 #: admin-permissions.php:396 admin-tests.php:128 permission-requests.php:240
 msgid "Test Definition"
 msgstr "Test definície"
@@ -3077,7 +3286,8 @@ msgstr "Žiadne čakajúce žiadosti o prístup. Všetko je vybavené!"
 msgid "Failed to load access requests. Please try again later."
 msgstr "Nepodarilo sa načítať požiadavky na prístup. Skús to znova neskôr."
 
-#: admin-permissions.php:425 admin-applications.php:232
+#: admin-permissions.php:425 admin-applications.php:232 admin-changes.php:259
+#: change-requests.php:118
 msgid "Processing..."
 msgstr "Spracovanie..."
 
@@ -3115,14 +3325,9 @@ msgstr "Odôvodnenie"
 msgid "Credentials"
 msgstr "Prihlasovacie údaje"
 
-#: admin-permissions.php:447
+#: admin-permissions.php:447 sanctorale.php:243
 msgid "Date"
 msgstr "Dátum"
-
-#: admin-permissions.php:449 admin-applications.php:245 admin-dashboard.php:136
-#: admin-dashboard.php:190
-msgid "Review"
-msgstr "Kontrola"
 
 #: admin-permissions.php:450 admin-applications.php:247
 msgid "Reviewed At"
@@ -3132,11 +3337,6 @@ msgstr "Skontrolované dňa"
 #: admin-applications.php:248
 msgid "Review Notes"
 msgstr "Poznámky ku kontrole"
-
-#: admin-permissions.php:452 permission-requests.php:221
-#: admin-applications.php:243
-msgid "Status"
-msgstr "Stav"
 
 #: admin-permissions.php:455 permission-requests.php:80
 #: permission-requests.php:255 admin-users.php:145
@@ -3476,10 +3676,6 @@ msgstr ""
 msgid "Unknown error"
 msgstr "Neznáma chyba"
 
-#: permission-requests.php:224
-msgid "Submitted"
-msgstr "Odoslané"
-
 #: permission-requests.php:225
 msgid "Reviewed"
 msgstr "Recenzované"
@@ -3583,7 +3779,7 @@ msgstr "Preskúmanie a schválenie žiadostí vývojárov"
 msgid "Manage fine-grained resource permissions"
 msgstr "Spravovať podrobné oprávnenia na zdroje"
 
-#: admin-dashboard.php:130
+#: admin-dashboard.php:130 admin-locales.php:38 admin-locales.php:50
 msgid "Supported Locales"
 msgstr "Podporované jazyky"
 
@@ -3607,7 +3803,8 @@ msgstr "Posúď a schváľ žiadosti o prístup k zdrojom, ktoré spravuješ"
 msgid "Your Contributions"
 msgstr ""
 
-#: admin-dashboard.php:211
+#: admin-dashboard.php:211 admin-changes.php:195 change-requests.php:37
+#: change-requests.php:50 change-requests.php:66
 #, fuzzy
 #| msgid "Your Access Requests"
 msgid "Your Change Requests"
@@ -3694,6 +3891,275 @@ msgstr "Rola bola úspešne odobratá."
 #: admin-users.php:393
 msgid "Failed to revoke role. Please try again."
 msgstr "Role sa nepodarilo zrušiť. Skús to znova."
+
+#: admin-locales.php:55
+msgid ""
+"An officially supported locale promises complete data. Missing data for one "
+"is treated as an error, while a locale outside the list degrades quietly. "
+"Promoting a locale therefore tightens enforcement, and may only be done once "
+"every check below passes."
+msgstr ""
+
+#: admin-locales.php:66
+#, fuzzy
+#| msgid "Name in base locale"
+msgid "Candidate locales"
+msgstr "Názov v základnom jazyku"
+
+#: admin-locales.php:76
+#, fuzzy
+#| msgid "Locales"
+msgid "Locale"
+msgstr "Jazyky"
+
+#: admin-locales.php:78
+#, fuzzy
+#| msgid "Read"
+msgid "Readiness"
+msgstr "Čítať"
+
+#: admin-locales.php:79 sanctorale.php:176 sanctorale.php:223
+#, fuzzy
+#| msgid "Event Details"
+msgid "Details"
+msgstr "Podrobnosti o udalosti"
+
+#: admin-locales.php:107
+msgid "Official"
+msgstr ""
+
+#: admin-locales.php:108
+msgid "Candidate"
+msgstr ""
+
+#: admin-locales.php:109
+#, fuzzy
+#| msgid "Read"
+msgid "Ready"
+msgstr "Čítať"
+
+#: admin-locales.php:110
+#, fuzzy
+#| msgid "Not Verified"
+msgid "Not ready"
+msgstr "Neoverené"
+
+#: admin-locales.php:111
+#, fuzzy
+#| msgid "View Keys"
+msgid "View checks"
+msgstr "Zobraziť kľúče"
+
+#: admin-locales.php:113
+#, fuzzy
+#| msgid "Loading…"
+msgid "Working…"
+msgstr "Načítavam…"
+
+#: admin-locales.php:114
+#, fuzzy, php-format
+#| msgid "Could not load notifications"
+msgid "Could not load locales: %s"
+msgstr "Nepodarilo sa načítať notifikácie"
+
+#: admin-locales.php:115
+msgid "Missing:"
+msgstr ""
+
+#: admin-locales.php:116
+msgid "Advisory — reported, but does not block promotion"
+msgstr ""
+
+#: admin-locales.php:117
+msgid "Promote"
+msgstr ""
+
+#: admin-locales.php:118
+msgid "Demote"
+msgstr ""
+
+#. translators: %s is a locale tag such as "fr_FR"
+#: admin-locales.php:120
+#, php-format
+msgid "Locale %s is now officially supported."
+msgstr ""
+
+#. translators: %s is a locale tag such as "fr_FR"
+#: admin-locales.php:122
+#, php-format
+msgid "Locale %s is no longer officially supported."
+msgstr ""
+
+#. translators: %s is the error reported by the API
+#: admin-locales.php:124
+#, php-format
+msgid "Could not change this locale: %s"
+msgstr ""
+
+#: admin-locales.php:125
+msgid ""
+"This locale is not ready to be promoted. Open “View checks” to see what is "
+"missing."
+msgstr ""
+
+#: admin-locales.php:126
+msgid ""
+"This is the only officially supported locale, and the list may not be "
+"emptied. Promote a replacement first."
+msgstr ""
+
+#: admin-locales.php:129
+msgid "Curation is unavailable."
+msgstr ""
+
+#: admin-locales.php:130
+#, fuzzy
+#| msgid "Change name or grade"
+msgid "Changes here are not durable."
+msgstr "Zmeniť meno alebo stupeň"
+
+#: admin-locales.php:131
+msgid "Changes here are reviewed."
+msgstr ""
+
+#: admin-changes.php:45 admin-changes.php:58
+#, fuzzy
+#| msgid "Access Requests to Review"
+msgid "Change Request Review"
+msgstr "Žiadosti o prístup na posúdenie"
+
+#: admin-changes.php:64
+msgid ""
+"Review the source data changes proposed for the calendars you administer. "
+"Approving a change request is the only human gate before it is published, so "
+"read what it proposes before deciding."
+msgstr ""
+
+#: admin-changes.php:206
+#, fuzzy
+#| msgid "Review Role Request"
+msgid "Review Change Request"
+msgstr "Preskúmať požiadavku na úlohu"
+
+#: admin-changes.php:219
+#, fuzzy
+#| msgid "Session Information"
+msgid "Reason for rejection"
+msgstr "Informácie o relácii"
+
+#: admin-changes.php:225
+msgid "The submitter will be shown this reason."
+msgstr ""
+
+#: admin-changes.php:251
+#, fuzzy
+#| msgid "Submitted"
+msgid "Submitted by"
+msgstr "Odoslané"
+
+#: admin-changes.php:252
+msgid "Outcome"
+msgstr ""
+
+#: admin-changes.php:254
+#, fuzzy
+#| msgid "Revoke Permission"
+msgid "Reviewer decision"
+msgstr "Odvolať povolenie"
+
+#: admin-changes.php:255
+#, fuzzy
+#| msgid "Season"
+msgid "Reason"
+msgstr "Obdobie"
+
+#: admin-changes.php:256
+#, fuzzy
+#| msgid "No pending role requests. All caught up!"
+msgid "No change requests are waiting for review. All caught up!"
+msgstr "Žiadne čakajúce požiadavky na úlohy. Všetko je vybavené!"
+
+#: admin-changes.php:257
+#, fuzzy
+#| msgid "No requests found."
+msgid "No change requests found."
+msgstr "Nenájdené žiadne požiadavky."
+
+#: admin-changes.php:258
+#, fuzzy
+#| msgid "Failed to load access requests. Please try again later."
+msgid "Failed to load change requests. Please try again later."
+msgstr "Nepodarilo sa načítať požiadavky na prístup. Skús to znova neskôr."
+
+#: admin-changes.php:260
+#, fuzzy
+#| msgid "Your request was approved"
+msgid "Change request approved."
+msgstr "Tvoja žiadosť bola schválená"
+
+#: admin-changes.php:261
+#, fuzzy
+#| msgid "Access request rejected."
+msgid "Change request rejected."
+msgstr "Požiadavka na prístup zamietnutá."
+
+#: admin-changes.php:262
+#, fuzzy
+#| msgid "Failed to process request. Please try again."
+msgid "Failed to process this change request. Please try again."
+msgstr "Nepodarilo sa spracovať požiadavku. Skús to znova."
+
+#: admin-changes.php:263
+msgid ""
+"This change request was already decided by someone else. Reloading the list."
+msgstr ""
+
+#: change-requests.php:56
+msgid ""
+"Calendar edits you are not yourself an administrator of are recorded as "
+"change requests and reviewed before they are published. This is every change "
+"request you have submitted, and what became of it."
+msgstr ""
+
+#: change-requests.php:116
+#, fuzzy
+#| msgid "You have not made any access requests yet."
+msgid "You have not submitted any change requests yet."
+msgstr "Zatiaľ si neurobil žiadne žiadosti o prístup."
+
+#: change-requests.php:117
+#, fuzzy
+#| msgid "Failed to load role requests. Please try again later."
+msgid "Failed to load your change requests. Please try again later."
+msgstr "Zlyhalo načítanie požiadaviek na úlohy. Skús to prosím neskôr."
+
+#: change-requests.php:119
+msgid "Withdraw"
+msgstr ""
+
+#: change-requests.php:120
+msgid ""
+"Withdraw this change request? The files it proposes will no longer be "
+"reviewed."
+msgstr ""
+
+#: change-requests.php:121
+#, fuzzy
+#| msgid "Your request was approved"
+msgid "Change request withdrawn."
+msgstr "Tvoja žiadosť bola schválená"
+
+#: change-requests.php:122
+#, fuzzy
+#| msgid "Failed to process request. Please try again."
+msgid "Failed to withdraw this change request. Please try again."
+msgstr "Nepodarilo sa spracovať požiadavku. Skús to znova."
+
+#: change-requests.php:125
+msgid ""
+"This change request can no longer be withdrawn — it may already have been "
+"reviewed."
+msgstr ""
 
 #: developer-dashboard.php:34 developer-dashboard.php:47 user-profile.php:257
 msgid "Developer Dashboard"
@@ -4012,7 +4478,7 @@ msgstr ""
 "Vianoc, Pôstneho obdobia, Veľkonočného trojdnia, Veľkej noci a Cezročného "
 "obdobia."
 
-#: temporale.php:57
+#: temporale.php:57 sanctorale.php:131
 msgid "Language"
 msgstr "Jazyk"
 
@@ -4159,6 +4625,355 @@ msgstr "Prvá"
 #: temporale.php:182
 msgid "Last"
 msgstr "Posledná"
+
+#: sanctorale.php:107
+msgid ""
+"Each Roman Missal contributes only what it adds: the 2008 edition defines "
+"three celebrations, not a whole sanctorale. This page composes the editions "
+"that apply to the calendar you choose, and shows which one each celebration "
+"comes from."
+msgstr ""
+
+#: sanctorale.php:120
+msgid "Rite"
+msgstr ""
+
+#: sanctorale.php:122
+msgid "Roman"
+msgstr ""
+
+#: sanctorale.php:123
+msgid "Ambrosian"
+msgstr ""
+
+#: sanctorale.php:133
+msgid "Languages this calendar is published in."
+msgstr ""
+
+#: sanctorale.php:139 sanctorale.php:175
+msgid "From"
+msgstr ""
+
+#: sanctorale.php:141
+msgid "Show only what one edition contributes."
+msgstr ""
+
+#: sanctorale.php:144
+msgid "Search all months"
+msgstr ""
+
+#: sanctorale.php:146
+msgid "Name or event key…"
+msgstr ""
+
+#: sanctorale.php:147
+msgid "Matches across every month, and moves you to one that has a result."
+msgstr ""
+
+#: sanctorale.php:160 sanctorale.php:289
+#, fuzzy
+#| msgid "New Application"
+msgid "New celebration"
+msgstr "Nová aplikácia"
+
+#: sanctorale.php:173 sanctorale.php:225
+#, fuzzy
+#| msgid "Relation"
+msgid "Celebration"
+msgstr "Vzťah"
+
+#: sanctorale.php:226
+#, fuzzy
+#| msgid "Name in base locale"
+msgid "Names by locale"
+msgstr "Názov v základnom jazyku"
+
+#: sanctorale.php:232
+msgid "Vigil Mass"
+msgstr ""
+
+#: sanctorale.php:233
+msgid "Mass during the Night"
+msgstr ""
+
+#: sanctorale.php:234
+msgid "Mass at Dawn"
+msgstr ""
+
+#: sanctorale.php:235
+msgid "Mass during the Day"
+msgstr ""
+
+#: sanctorale.php:236
+msgid "Evening Mass"
+msgstr ""
+
+#: sanctorale.php:237
+msgid "Schema I"
+msgstr ""
+
+#: sanctorale.php:238
+msgid "Schema II"
+msgstr ""
+
+#: sanctorale.php:239
+msgid "Schema III"
+msgstr ""
+
+#: sanctorale.php:240
+#, fuzzy
+#| msgid "Easter"
+msgid "Easter Season"
+msgstr "Veľká noc"
+
+#: sanctorale.php:241
+msgid "Outside Easter Season"
+msgstr ""
+
+#: sanctorale.php:247
+msgid "Displays as"
+msgstr ""
+
+#: sanctorale.php:250
+msgid "no rank shown"
+msgstr ""
+
+#: sanctorale.php:261
+#, fuzzy
+#| msgid "Higher Solemnity"
+msgid "Higher solemnity"
+msgstr "Vyššia slávnosť"
+
+#: sanctorale.php:264
+#, fuzzy
+#| msgid "Color"
+msgid "Colour"
+msgstr "Farba"
+
+#: sanctorale.php:265
+#, fuzzy
+#| msgid "Common(s)"
+msgid "Common"
+msgstr "Spoločné"
+
+#: sanctorale.php:266
+msgid "From this Missal"
+msgstr ""
+
+#: sanctorale.php:267
+#, fuzzy
+#| msgid "All Seasons"
+msgid "All editions"
+msgstr "Všetky obdobia"
+
+#: sanctorale.php:269
+msgid "This Missal redefines a celebration an earlier one already had."
+msgstr ""
+
+#: sanctorale.php:272
+#, fuzzy
+#| msgid "Add translation"
+msgid "translated"
+msgstr "Pridať preklad"
+
+#: sanctorale.php:273
+msgid "blank"
+msgstr ""
+
+#: sanctorale.php:274
+#, fuzzy
+#| msgid "Permissions"
+msgid "missing"
+msgstr "Povolenia"
+
+#: sanctorale.php:275
+msgid "Nothing here."
+msgstr ""
+
+#: sanctorale.php:276
+msgid "No celebration in this month matches your search."
+msgstr ""
+
+#: sanctorale.php:277
+#, fuzzy
+#| msgid "No readings defined for this locale yet"
+msgid "No sanctorale lectionary is defined for this rite."
+msgstr "Zatiaľ nie sú definované žiadne čítania pre tento jazyk"
+
+#: sanctorale.php:280
+#, fuzzy
+#| msgid "No readings defined for this locale yet"
+msgid "No readings are curated for this celebration yet."
+msgstr "Zatiaľ nie sú definované žiadne čítania pre tento jazyk"
+
+#: sanctorale.php:281
+#, fuzzy
+#| msgid "Could not load notifications"
+msgid "Could not load the names for this celebration."
+msgstr "Nepodarilo sa načítať notifikácie"
+
+#: sanctorale.php:282
+#, fuzzy
+#| msgid "Could not load notifications"
+msgid "Could not load the readings for this celebration."
+msgstr "Nepodarilo sa načítať notifikácie"
+
+#: sanctorale.php:283
+msgid "Ambrosian Rite"
+msgstr ""
+
+#: sanctorale.php:284
+msgid "No Missal is published for this combination of rite and calendar."
+msgstr ""
+
+#: sanctorale.php:290
+#, fuzzy
+#| msgid "Add Missal"
+msgid "Add to Missal"
+msgstr "Pridať Misál"
+
+#: sanctorale.php:299
+msgid ""
+"Begins with a capital, then letters and digits (StIsidoreFarmer). A trailing "
+"number (StPaul_2) or _vigil is allowed, as is a lowercase two-word prefix. "
+"Cannot be renamed."
+msgstr ""
+
+#: sanctorale.php:301
+msgid "Enter a day between 1 and 31."
+msgstr ""
+
+#: sanctorale.php:306
+msgid "Choose…"
+msgstr ""
+
+#: sanctorale.php:307
+msgid "Choose a month."
+msgstr ""
+
+#: sanctorale.php:308
+#, fuzzy
+#| msgid "Change grade"
+msgid "Choose a grade."
+msgstr "Zmeniť stupeň"
+
+#. translators: %1$s is the event key, %2$s is the Missal id
+#: sanctorale.php:310
+#, php-format
+msgid ""
+"Delete %1$s from %2$s? Its name and readings go with it, and any earlier "
+"edition that already defined it takes over."
+msgstr ""
+
+#: sanctorale.php:313
+msgid ""
+"These readings live in the rite-wide lectionary, shared by every Missal of "
+"this rite."
+msgstr ""
+
+#: sanctorale.php:314
+msgid "This rite has no lectionary, so readings cannot be edited here."
+msgstr ""
+
+#: sanctorale.php:322
+msgid ""
+"Inherited from a different lectionary source; edit it there, not from this "
+"Missal."
+msgstr ""
+
+#: sanctorale.php:325
+msgid "The readings were kept: another Missal still declares this celebration."
+msgstr ""
+
+#: sanctorale.php:326
+msgid "Default (from grade)"
+msgstr ""
+
+#: sanctorale.php:327
+msgid "Show no rank"
+msgstr ""
+
+#: sanctorale.php:328
+msgid "Custom text…"
+msgstr ""
+
+#: sanctorale.php:329
+msgid "Nothing has changed."
+msgstr ""
+
+#: sanctorale.php:330
+#, fuzzy
+#| msgid "Save"
+msgid "Saved."
+msgstr "Uložiť"
+
+#: sanctorale.php:331
+#, fuzzy
+#| msgid "Application rejected."
+msgid "Celebration created."
+msgstr "Aplikácia zamietnutá."
+
+#: sanctorale.php:332
+#, fuzzy
+#| msgid "Application rejected."
+msgid "Celebration deleted."
+msgstr "Aplikácia zamietnutá."
+
+#. translators: %s is the error reported by the API
+#: sanctorale.php:334
+#, php-format
+msgid "Could not save: %s"
+msgstr ""
+
+#: sanctorale.php:335
+#, fuzzy
+#| msgid "You do not have permission to perform this action."
+msgid "You do not have permission to change this Missal."
+msgstr "Nemáš oprávnenie vykonať túto akciu."
+
+#: sanctorale.php:336
+msgid "This clashes with another Missal"
+msgstr ""
+
+#. translators: %s is the change request batch id
+#: sanctorale.php:342
+#, php-format
+msgid "Queued for review as batch %s. Nothing has been written yet."
+msgstr ""
+
+#. translators: %s is the change request batch id
+#: sanctorale.php:344
+#, php-format
+msgid "Approved as batch %s, awaiting publication."
+msgstr ""
+
+#. translators: %s is a comma-separated list of batch ids
+#: sanctorale.php:346
+#, php-format
+msgid "Earlier batches folded in: %s."
+msgstr ""
+
+#. translators: %s is the unrecognized disposition value
+#: sanctorale.php:348
+#, php-format
+msgid ""
+"The server reported an unrecognized outcome (%s); nothing local was changed."
+msgstr ""
+
+#. translators: %s is the error reported by the API
+#: sanctorale.php:350
+#, fuzzy, php-format
+#| msgid "Could not load notifications"
+msgid "Could not load the sanctorale: %s"
+msgstr "Nepodarilo sa načítať notifikácie"
+
+#. translators: %s is the event_key a #event= link named
+#. Reported rather than left silent: the link may be stale, mistyped, or
+#. for a rite/calendar this page has since moved away from.
+#: sanctorale.php:354
+#, php-format
+msgid "%s is not in the current selection."
+msgstr ""
 
 #: user-profile.php:23 user-profile.php:35
 msgid "User Profile"
@@ -4358,15 +5173,6 @@ msgstr "Relácia vypršala"
 
 #~ msgid "Role Requests Management"
 #~ msgstr "Správa požiadaviek na úlohy"
-
-#~ msgid "Review Role Request"
-#~ msgstr "Preskúmať požiadavku na úlohu"
-
-#~ msgid "No pending role requests. All caught up!"
-#~ msgstr "Žiadne čakajúce požiadavky na úlohy. Všetko je vybavené!"
-
-#~ msgid "Failed to load role requests. Please try again later."
-#~ msgstr "Zlyhalo načítanie požiadaviek na úlohy. Skús to prosím neskôr."
 
 #~ msgid "Request approved successfully."
 #~ msgstr "Požiadavka bola úspešne schválená."
