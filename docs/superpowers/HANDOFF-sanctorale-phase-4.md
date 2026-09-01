@@ -12,7 +12,7 @@ while phases 1–3 were built.
 | ---------------------------------------- | ----: | ---------------------------------------------------------------------------------- |
 | `sanctorale.php`                         |   209 | Markup shell, auth gate, and `window.SanctoraleConfig` (every translatable string) |
 | `assets/js/sanctorale.js`                |   910 | The page, auto-loaded as a module by `layout/footer.php`                           |
-| `assets/js/__tests__/sanctorale.test.js` |   392 | 55 tests over the exported pure functions                                          |
+| `assets/js/__tests__/sanctorale.test.js` |   392 | 53 tests over the exported pure functions                                          |
 
 A read-only viewer: rite + calendar + language selection, the composed sanctorale grouped into month
 tabs with counts, cross-month search, a "From" filter over contributing editions, and a detail modal
