@@ -80,7 +80,16 @@ export default defineConfig({
         },
         // The auth-requiring counterpart to `chromium-ci`: the three calendar-data
         // specs that issue #448 blocked, unblocked by auth.setup.ts's migration to
-        // the Zitadel OIDC flow, plus admin-tests (issue #453).
+        // the Zitadel OIDC flow, plus admin-tests (issue #453) and the sanctorale
+        // editor's write path.
+        //
+        // `sanctorale-editor` replaces the `missals-editor` entry that stood here
+        // until phase 4 retired that page. It is not optional bookkeeping: the PR
+        // trigger in .github/workflows/e2e.yml runs `rbac` + `chromium-ci` +
+        // `chromium-ci-auth` and nothing else, so a write-path spec listed in no
+        // CI project runs on no pull request. The rbac gating spec
+        // (`e2e/rbac/16-sanctorale-editor-gating.spec.ts`) is a different file and
+        // is picked up by `rbac`, not by the regex here.
         //
         // Kept as a SEPARATE project rather than merged into `chromium-ci`, because
         // half of that project's value is declaring no storageState: a Zitadel
@@ -93,7 +102,7 @@ export default defineConfig({
         // unauthenticated request to index.php before any markup renders.
         {
             name: 'chromium-ci-auth',
-            testMatch: /(diocesan-calendar|national-calendar|wider-region-calendar|admin-tests)\.spec\.ts/,
+            testMatch: /(diocesan-calendar|national-calendar|wider-region-calendar|admin-tests|sanctorale-editor)\.spec\.ts/,
             use: {
                 ...devices['Desktop Chrome'],
                 storageState: 'e2e/.auth/user.json',
