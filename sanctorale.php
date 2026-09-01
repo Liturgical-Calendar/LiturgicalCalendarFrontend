@@ -27,6 +27,11 @@ if (!$authHelper->isAuthenticated) {
     exit;
 }
 
+// Whether the create button and per-row edit/delete controls are revealed is decided
+// client-side (a later task) against the caller's FGA relations on the specific Missal
+// being edited; this flag only distinguishes the global-admin fast path from that check.
+$isAdmin = $authHelper->hasRole('admin');
+
 ?>
 <!doctype html>
 <html lang="<?php echo htmlspecialchars($i18n->LOCALE, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>">
@@ -93,7 +98,16 @@ if (!$authHelper->isAuthenticated) {
         </div>
     </div>
 
-    <div id="sanctoraleNotice"></div>
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <div id="sanctoraleNotice" class="flex-grow-1"></div>
+        <?php // Hidden by default and revealed only when the user may edit at least one
+              // applicable Missal. NOT data-requires-auth: that global handler reveals on
+              // ANY authentication, and creating an entry needs an editor grant on a
+              // specific Missal — see admin-decrees.php's identical note. ?>
+        <button type="button" class="btn btn-primary btn-sm d-none ms-2" id="newEntryBtn">
+            <i class="fas fa-plus me-1"></i><?php echo htmlspecialchars(_('New celebration'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+        </button>
+    </div>
 
     <ul class="nav nav-tabs mb-0" id="monthTabs"></ul>
 
@@ -124,6 +138,18 @@ if (!$authHelper->isAuthenticated) {
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="<?php echo htmlspecialchars(_('Close'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>"></button>
                 </div>
                 <div class="modal-body" id="detailModalBody"></div>
+                <div class="modal-footer d-none" id="detailModalFooter">
+                    <div id="entryFormError" class="text-danger small me-auto"></div>
+                    <button type="button" class="btn btn-outline-danger d-none" id="deleteEntryBtn">
+                        <i class="fas fa-trash me-1"></i><?php echo htmlspecialchars(_('Delete'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <?php echo htmlspecialchars(_('Cancel'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                    </button>
+                    <button type="button" class="btn btn-primary" id="saveEntryBtn">
+                        <?php echo htmlspecialchars(_('Save'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -136,6 +162,8 @@ if (!$authHelper->isAuthenticated) {
             apiUrl: <?php echo json_encode($apiBaseUrl, JSON_HEX_TAG); ?>,
             <?php // BCP-47 (en-US), not gettext/ICU (en_US): Intl.DateTimeFormat rejects underscore tags. ?>
             locale: <?php echo json_encode(str_replace('_', '-', $i18n->LOCALE), JSON_HEX_TAG); ?>,
+            isGlobalAdmin: <?php echo json_encode($isAdmin, JSON_HEX_TAG); ?>,
+            userSub:       <?php echo json_encode($authHelper->sub ?? '', JSON_HEX_TAG); ?>,
             i18n: {
                 loading:            <?php echo json_encode(_('Loading…'), JSON_HEX_TAG); ?>,
                 view:               <?php echo json_encode(_('Details'), JSON_HEX_TAG); ?>,
@@ -200,6 +228,48 @@ if (!$authHelper->isAuthenticated) {
                 readingsUnavailable: <?php echo json_encode(_('Could not load the readings for this celebration.'), JSON_HEX_TAG); ?>,
                 ambrosianCalendar:  <?php echo json_encode(_('Ambrosian Rite'), JSON_HEX_TAG); ?>,
                 noMissals:          <?php echo json_encode(_('No Missal is published for this combination of rite and calendar.'), JSON_HEX_TAG); ?>,
+                edit:               <?php echo json_encode(_('Edit'), JSON_HEX_TAG); ?>,
+                save:               <?php echo json_encode(_('Save'), JSON_HEX_TAG); ?>,
+                cancel:             <?php echo json_encode(_('Cancel'), JSON_HEX_TAG); ?>,
+                deleteLabel:        <?php echo json_encode(_('Delete'), JSON_HEX_TAG); ?>,
+                newEntry:           <?php echo json_encode(_('New celebration'), JSON_HEX_TAG); ?>,
+                targetMissal:       <?php echo json_encode(_('Add to Missal'), JSON_HEX_TAG); ?>,
+                eventKeyLabel:      <?php echo json_encode(_('Event key'), JSON_HEX_TAG); ?>,
+                <?php // The key ties the structure row to its name and readings in every locale,
+                      // so the API refuses to rename one: it would orphan all of them. ?>
+                eventKeyHint:       <?php echo json_encode(_('Letters and digits only. This cannot be changed later.'), JSON_HEX_TAG); ?>,
+                <?php // translators: %s is the event key ?>
+                confirmDelete:      <?php echo json_encode(_('Delete %s from this Missal? Its name and readings go with it.'), JSON_HEX_TAG); ?>,
+                <?php // The rite-level corpus is shared by every Missal of the rite, so this
+                      // edit is not confined to the edition being edited. ?>
+                readingsShared:     <?php echo json_encode(_('These readings live in the rite-wide lectionary, shared by every Missal of this rite.'), JSON_HEX_TAG); ?>,
+                readingsNotWritable: <?php echo json_encode(_('This rite has no lectionary, so readings cannot be edited here.'), JSON_HEX_TAG); ?>,
+                <?php // Reported after a delete when another Missal still declares the key, so
+                      // the readings deliberately survived. Silence here reads as a bug. ?>
+                readingsRetained:   <?php echo json_encode(_('The readings were kept: another Missal still declares this celebration.'), JSON_HEX_TAG); ?>,
+                gradeDisplayDefault: <?php echo json_encode(_('Default (from grade)'), JSON_HEX_TAG); ?>,
+                gradeDisplayNone:   <?php echo json_encode(_('Show no rank'), JSON_HEX_TAG); ?>,
+                gradeDisplayCustom: <?php echo json_encode(_('Custom text…'), JSON_HEX_TAG); ?>,
+                noChanges:          <?php echo json_encode(_('Nothing has changed.'), JSON_HEX_TAG); ?>,
+                saved:              <?php echo json_encode(_('Saved.'), JSON_HEX_TAG); ?>,
+                created:            <?php echo json_encode(_('Celebration created.'), JSON_HEX_TAG); ?>,
+                deleted:            <?php echo json_encode(_('Celebration deleted.'), JSON_HEX_TAG); ?>,
+                <?php // translators: %s is the error reported by the API ?>
+                saveFailed:         <?php echo json_encode(_('Could not save: %s'), JSON_HEX_TAG); ?>,
+                permissionDenied:   <?php echo json_encode(_('You do not have permission to change this Missal.'), JSON_HEX_TAG); ?>,
+                conflictTitle:      <?php echo json_encode(_('This clashes with another Missal'), JSON_HEX_TAG); ?>,
+                <?php // The four strings describeWriteOutcome() needs; each takes one %s.
+                      // A write is not necessarily applied to disk: with
+                      // SOURCEDATA_CHANGE_REQUESTS enabled it is queued for review and the
+                      // API answers the SAME 2xx. See assets/js/writeDisposition.js. ?>
+                <?php // translators: %s is the change request batch id ?>
+                writeSubmitted:     <?php echo json_encode(_('Queued for review as batch %s. Nothing has been written yet.'), JSON_HEX_TAG); ?>,
+                <?php // translators: %s is the change request batch id ?>
+                writeApproved:      <?php echo json_encode(_('Approved as batch %s, awaiting publication.'), JSON_HEX_TAG); ?>,
+                <?php // translators: %s is a comma-separated list of batch ids ?>
+                writeSuperseded:    <?php echo json_encode(_('Earlier batches folded in: %s.'), JSON_HEX_TAG); ?>,
+                <?php // translators: %s is the unrecognized disposition value ?>
+                writeUnknown:       <?php echo json_encode(_('The server reported an unrecognized outcome (%s); nothing local was changed.'), JSON_HEX_TAG); ?>,
                 <?php // translators: %s is the error reported by the API ?>
                 loadFailed:         <?php echo json_encode(_('Could not load the sanctorale: %s'), JSON_HEX_TAG); ?>
             }
