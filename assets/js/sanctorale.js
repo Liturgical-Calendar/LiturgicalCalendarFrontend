@@ -178,24 +178,31 @@ export function preferredLocale(available, pageLocale) {
  * kept alongside it because it is what the data actually holds, what the schema
  * validates, and what a curator comparing two editions is looking at.
  *
- * `grade_display` is a display OVERRIDE, not a translation — US_2011 shows
- * IndependenceDay as "National Holiday". It is shown in front, with the rank kept
- * in parentheses, because the override hides the rank without replacing it: the
- * celebration is still a memorial, and losing that is losing a fact.
+ * `grade_display` is deliberately NOT folded in here — it is a display override,
+ * a different fact, and it gets its own field. See gradeDisplayOf().
  *
- * @param {{grade?: number, grade_display?: ?string}} row
+ * @param {{grade?: number}} row
  * @param {Record<string,string>} strings
  */
 export function formatGrade(row, strings) {
     const grade = row?.grade;
     const name  = strings?.grades?.[String(grade)];
-    const rank  = name ? `${grade} - ${name}` : String(grade ?? '');
+    return name ? `${grade} - ${name}` : String(grade ?? '');
+}
 
+/**
+ * The display override, or '' when there is none.
+ *
+ * US_2011 shows IndependenceDay as "National Holiday" while its rank stays a
+ * memorial. The two are separate facts about the celebration, so this answers
+ * only whether an override exists, and the caller shows it as its own field
+ * rather than substituting it for the rank.
+ *
+ * @param {{grade_display?: ?string}} row
+ */
+export function gradeDisplayOf(row) {
     const override = row?.grade_display;
-    if (typeof override === 'string' && override.trim() !== '') {
-        return rank ? `${override} (${rank})` : override;
-    }
-    return rank;
+    return typeof override === 'string' && override.trim() !== '' ? override.trim() : '';
 }
 
 export function baseRegionFor(missals, rite) {
@@ -442,11 +449,16 @@ function renderStructure(row) {
             <div class="small text-muted">${escapeHtml(label)}</div>
             <div>${escapeHtml(value)}</div>
         </div>`;
+    // Only shown when the data actually overrides the label. On almost every
+    // celebration there is no override, and an empty field would be noise.
+    const override = gradeDisplayOf(row);
+
     return `
         <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.structure)}</h6>
         <div class="row mb-3">
             ${field(i18n.date, `${monthName(row.month)} ${row.day}`)}
             ${field(i18n.grade, formatGrade(row, i18n))}
+            ${override ? field(i18n.displaysAs, override) : ''}
             ${field(i18n.calendarField, row.calendar)}
             ${field(i18n.color, (row.color ?? []).join(', '))}
             ${field(i18n.common, (row.common ?? []).join(', '))}

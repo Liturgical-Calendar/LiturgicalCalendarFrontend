@@ -7,7 +7,7 @@
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 
-let applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits, renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47, filterByMissal, formatGrade;
+let applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits, renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47, filterByMissal, formatGrade, gradeDisplayOf;
 
 const VA_1970 = { missal_id: 'EDITIO_TYPICA_1970', region: 'VA', year_published: 1970 };
 const VA_2002 = { missal_id: 'EDITIO_TYPICA_2002', region: 'VA', year_published: 2002 };
@@ -23,7 +23,7 @@ beforeAll(async () => {
     const mod = await import('../sanctorale.js');
     ({ applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits,
        renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47,
-       filterByMissal, formatGrade } = mod);
+       filterByMissal, formatGrade, gradeDisplayOf } = mod);
 });
 
 describe('baseRegionFor', () => {
@@ -301,19 +301,31 @@ describe('formatGrade', () => {
         expect(formatGrade({ grade: 0 }, strings)).toBe('0 - Weekday');
     });
 
-    it('puts a display override in front but keeps the rank', () => {
-        // US_2011 shows IndependenceDay as "National Holiday". It is still a
-        // memorial, and the override hides that without replacing it.
+    it('reports the rank only, leaving any override to its own field', () => {
         expect(formatGrade({ grade: 3, grade_display: 'National Holiday' }, strings))
-            .toBe('National Holiday (3 - Memorial)');
-    });
-
-    it('ignores a null or blank override', () => {
-        expect(formatGrade({ grade: 4, grade_display: null }, strings)).toBe('4 - Feast');
-        expect(formatGrade({ grade: 4, grade_display: '   ' }, strings)).toBe('4 - Feast');
+            .toBe('3 - Memorial');
     });
 
     it('falls back to the number alone for a rank it has no name for', () => {
         expect(formatGrade({ grade: 9 }, strings)).toBe('9');
+    });
+});
+
+describe('gradeDisplayOf', () => {
+    it('reports an override when the data carries one', () => {
+        // US_2011 presents IndependenceDay as "National Holiday" while its rank
+        // stays a memorial. Two facts, so the UI gives them two fields.
+        expect(gradeDisplayOf({ grade: 3, grade_display: 'National Holiday' })).toBe('National Holiday');
+    });
+
+    it('reports nothing for null, absent or blank, so no empty field is rendered', () => {
+        expect(gradeDisplayOf({ grade: 3, grade_display: null })).toBe('');
+        expect(gradeDisplayOf({ grade: 3 })).toBe('');
+        expect(gradeDisplayOf({ grade: 3, grade_display: '   ' })).toBe('');
+        expect(gradeDisplayOf(undefined)).toBe('');
+    });
+
+    it('trims, so stray whitespace does not reach the label', () => {
+        expect(gradeDisplayOf({ grade_display: '  National Holiday  ' })).toBe('National Holiday');
     });
 });

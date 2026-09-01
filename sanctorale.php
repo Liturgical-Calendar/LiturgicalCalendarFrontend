@@ -145,6 +145,9 @@ if (!$authHelper->isAuthenticated) {
                 readings:           <?php echo json_encode(_('Lectionary readings'), JSON_HEX_TAG); ?>,
                 date:               <?php echo json_encode(_('Date'), JSON_HEX_TAG); ?>,
                 grade:              <?php echo json_encode(_('Grade'), JSON_HEX_TAG); ?>,
+                <?php // Shown only when the data overrides the rank label, e.g. US_2011
+                      // presents Independence Day as "National Holiday". ?>
+                displaysAs:         <?php echo json_encode(_('Displays as'), JSON_HEX_TAG); ?>,
                 <?php // Liturgical ranks, keyed by the integer the data carries. The rows give a
                       // bare `grade` and no `grade_lcl`, so the names are translated here. ?>
                 grades: {
