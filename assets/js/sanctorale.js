@@ -1063,7 +1063,15 @@ async function reportSaveError(error) {
     }
     if (error.status === 403) {
         // The likeliest cause is a grant changing under a long-lived page.
-        await loadCatalogue();
+        // The refresh is best effort — it exists only to stop the page offering
+        // affordances the user no longer has. Telling the user their write was
+        // refused is not best effort; it is the whole point of this branch, so
+        // a rejected refresh must never swallow the message that follows it.
+        try {
+            await loadCatalogue();
+        } catch {
+            // Ignored: reporting the 403 below still has to happen.
+        }
         dom.formError.textContent = i18n.permissionDenied;
         return;
     }
