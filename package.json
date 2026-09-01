@@ -27,7 +27,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.62.1",
-    "@types/node": "^26.2.0",
+    "@types/node": "^26.3.0",
     "dotenv": "^17.4.2",
     "eslint": "^10.9.1",
     "globals": "^17.11.0",
@@ -35,7 +35,7 @@
     "markdownlint-cli2": "^0.23.2",
     "prettier": "^3.9.6",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.11"
   },
   "resolutions": {
     "markdown-it": "^14.2.0"
