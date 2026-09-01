@@ -14,6 +14,8 @@
  * @module sanctorale
  */
 
+import { detectMissalCapabilities } from './capabilities.js';
+
 const config = window.SanctoraleConfig;
 
 if (!config) {
@@ -46,7 +48,8 @@ const dom = {
     notice:      el('sanctoraleNotice'),
     detailModal: el('detailModal'),
     detailTitle: el('detailModalTitle'),
-    detailBody:  el('detailModalBody')
+    detailBody:  el('detailModalBody'),
+    newEntry:    el('newEntryBtn')
 };
 
 const state = {
@@ -61,7 +64,8 @@ const state = {
     fromMissal: '',
     composed: [],
     month: new Date().getUTCMonth() + 1,
-    search: ''
+    search: '',
+    capabilities: new Map()
 };
 
 /** i18n payloads are per missal and never change within a session. */
@@ -97,15 +101,34 @@ class HttpError extends Error {
     }
 }
 
-async function getJson(path, headers = {}) {
+/**
+ * Fetch JSON from the API.
+ *
+ * `credentials` defaults to `'omit'`: the `/missals`, `/lectionary` and
+ * `/calendars` reads this drives are public and answer `Access-Control-Allow-Origin: *`,
+ * which a browser refuses to pair with credentials. `checkAllowed()` below is the
+ * one caller that passes `'include'` explicitly — `/admin/permissions/check` is an
+ * authenticated endpoint and answers 401 without a cookie.
+ *
+ * @param {string} path
+ * @param {Record<string,string>} [headers]
+ * @param {'omit'|'include'} [credentials]
+ * @returns {Promise<object>}
+ */
+async function getJson(path, headers = {}, credentials = 'omit') {
     const response = await fetch(`${apiUrl}${path}`, {
         headers: { Accept: 'application/json', ...headers },
-        credentials: 'omit'
+        credentials
     });
     if (!response.ok) {
         throw new HttpError(response.status, path);
     }
     return response.json();
+}
+
+/** What the user may do to a Missal; unknown Missals are read-only. */
+function capabilityFor(missalId) {
+    return state.capabilities.get(missalId) ?? { canEdit: false, canDelete: false };
 }
 
 /**
@@ -449,11 +472,19 @@ function renderTable(visible) {
                         data-event-key="${escapeHtml(row.event_key)}" data-missal="${escapeHtml(row._missalId)}">
                     <i class="fas fa-magnifying-glass me-1"></i>${escapeHtml(i18n.view)}
                 </button>
+                ${capabilityFor(row._missalId).canEdit ? `
+                <button type="button" class="btn btn-sm btn-outline-primary ms-1"
+                        data-edit-key="${escapeHtml(row.event_key)}" data-missal="${escapeHtml(row._missalId)}">
+                    <i class="fas fa-pen me-1"></i>${escapeHtml(i18n.edit)}
+                </button>` : ''}
             </td>
         </tr>`).join('');
 
     dom.tableBody.querySelectorAll('button[data-event-key]').forEach((btn) => {
         btn.addEventListener('click', () => showDetail(btn.dataset.eventKey, btn.dataset.missal));
+    });
+    dom.tableBody.querySelectorAll('button[data-edit-key]').forEach((btn) => {
+        btn.addEventListener('click', () => showDetail(btn.dataset.editKey, btn.dataset.missal, true));
     });
 }
 
@@ -745,6 +776,24 @@ async function loadCatalogue(seq = selectionSeq) {
     }
     dom.calendar.value = state.calendar;
     renderLocaleOptions();
+
+    // Capabilities are per Missal, so they are refreshed whenever the applicable
+    // set changes — which is on every rite or calendar change, not once per page.
+    state.capabilities = await detectMissalCapabilities({
+        missals: applicableMissals(state.missals, state.calendar, state.baseRegion),
+        rite: state.rite,
+        baseRegion: state.baseRegion,
+        userSub: config?.userSub ?? '',
+        isGlobalAdmin: config?.isGlobalAdmin === true,
+        checkAllowed: async (path) => {
+            const result = await getJson(path, {}, 'include');
+            return result !== null && typeof result === 'object' && result.allowed === true;
+        }
+    });
+    dom.newEntry?.classList.toggle(
+        'd-none',
+        ![...state.capabilities.values()].some((c) => c.canEdit)
+    );
 }
 
 /**
