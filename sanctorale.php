@@ -296,6 +296,14 @@ $litCommons = [
                       // edit is not confined to the edition being edited. ?>
                 readingsShared:     <?php echo json_encode(_('These readings live in the rite-wide lectionary, shared by every Missal of this rite.'), JSON_HEX_TAG); ?>,
                 readingsNotWritable: <?php echo json_encode(_('This rite has no lectionary, so readings cannot be edited here.'), JSON_HEX_TAG); ?>,
+                <?php // A response can carry a tier the Missal being edited does NOT own — e.g.
+                      // another national Missal's own lectionary entry for the same event_key.
+                      // MissalsHandler::resolveSanctoraleTarget() writes to exactly one tier per
+                      // Missal, so every other tier shown here is display-only: offering an input
+                      // for it would let a curator "edit" a citation that either silently lands in
+                      // a different file (a shared locale key) or gets rejected outright (a locale
+                      // the write target does not carry). ?>
+                readingsInherited:  <?php echo json_encode(_('Inherited from a different lectionary source; edit it there, not from this Missal.'), JSON_HEX_TAG); ?>,
                 <?php // Reported after a delete when another Missal still declares the key, so
                       // the readings deliberately survived. Silence here reads as a bug. ?>
                 readingsRetained:   <?php echo json_encode(_('The readings were kept: another Missal still declares this celebration.'), JSON_HEX_TAG); ?>,

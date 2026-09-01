@@ -609,6 +609,10 @@ async function showDetail(eventKey, missalId, editing = false) {
     editState.missalId = missalId;
     editState.creating = false;
     editState.calendarLabel = null;
+    // Reset explicitly rather than relying on renderReadingsForm() to overwrite it:
+    // the 404 branch below renders no inputs and sets no tier, so a stale value from
+    // whatever entry was open before this one must not leak into this one's payload.
+    editState.readingsTier = 'rite';
     editState.capability = capabilityFor(missalId);
     // Asked for by the caller, granted by the capability: a stale Edit button on
     // a row whose grant has since been revoked opens read-only rather than
@@ -942,6 +946,26 @@ function readNamesForm() {
 }
 
 /**
+ * Whether `tier` is the one `MissalsHandler::resolveSanctoraleTarget()` would write
+ * a readings edit to for the Missal currently open in the modal.
+ *
+ * Matching on `tier.tier` alone is not enough: `GET /lectionary/{rite}/sanctorale/{key}`
+ * is scoped by RITE, not by Missal, and a single event can be carried by several
+ * MISSAL-tier sources at once — `StPeterClaver` is a real example, present in both
+ * `US_2011`'s own lectionary and `IT_1983`'s. `resolveSanctoraleTarget()` picks the
+ * folder belonging to the Missal being edited specifically, so the client has to
+ * agree by checking `source_id` too, not just accept the first `missal` tier it sees.
+ *
+ * @param {object} tier one entry of a `/lectionary` response's `readings` array
+ * @returns {boolean}
+ */
+function isReadingsWriteTarget(tier) {
+    return editState.readingsTier === 'missal'
+        ? tier.tier === 'missal' && tier.source_id === editState.missalId
+        : tier.tier === 'rite';
+}
+
+/**
  * Readings per locale, editable.
  *
  * The tier decides what this panel may do, and the three cases are genuinely
@@ -954,6 +978,15 @@ function readNamesForm() {
  * - `none`   — the rite has no corpus at all (Ambrosian, API #957). Read-only,
  *              and the payload omits `readings` entirely: the handler REJECTS a
  *              body that carries it.
+ *
+ * A response can carry MORE tiers than the one being written to — see
+ * isReadingsWriteTarget(). Every tier other than the write target is rendered with
+ * the same read-only presentation renderReadings() uses for a non-editing viewer,
+ * plus a note explaining why it has no inputs here: offering an input for a citation
+ * this Missal's write cannot reach would let a curator "edit" a value that silently
+ * either overwrites a DIFFERENT source's file (same locale key) or gets rejected by
+ * `assertLocalesExist` (a locale the write target does not carry) — a field the UI
+ * offered them but the API cannot honor from here.
  */
 function renderReadingsForm(payload) {
     if (payload.lectionary_available === false) {
@@ -964,9 +997,20 @@ function renderReadingsForm(payload) {
     }
 
     const tiers = payload.readings ?? [];
-    editState.readingsTier = tiers.some((t) => t.tier === 'missal') ? 'missal' : 'rite';
+    // 'missal' only when THIS Missal owns a lectionary tier of its own — not merely
+    // when some other Missal's tier happens to ride along in the same response.
+    const ownMissalTier = tiers.find((t) => t.tier === 'missal' && t.source_id === editState.missalId);
+    editState.readingsTier = ownMissalTier ? 'missal' : 'rite';
 
-    const panels = tiers.map((tier) => {
+    const panels = tiers.map((tier, i) => {
+        if (!isReadingsWriteTarget(tier)) {
+            return `
+                <div class="mb-3">
+                    <div class="alert alert-secondary py-1 px-2 small mb-2">${escapeHtml(i18n.readingsInherited)}</div>
+                    ${renderReadingsTier(tier, i, i18n)}
+                </div>`;
+        }
+
         const entries = tier.entries ?? {};
         const schemas = schemaKeysOf(entries);
         const field = (loc, schema, name, value) => `
@@ -1122,11 +1166,14 @@ function readingRows(entries, schema, strings) {
 }
 
 /**
- * Readings, tier by tier.
+ * One lectionary tier's read-only presentation: a badge naming the tier and
+ * source, its readings as schema tabs or a plain table, and the blank/missing
+ * locale lists.
  *
- * `lectionary_available: false` is a first-class answer, not an error — the
- * Ambrosian rite has no sanctorale lectionary at all — so it renders the API's
- * own message rather than an empty table that reads as a bug.
+ * Factored out of renderReadings() so renderReadingsForm() can reuse the exact
+ * same markup for a tier it is not writing to (see isReadingsWriteTarget()) —
+ * a curator still needs to SEE that citation, just not an input pretending they
+ * can change it from here.
  *
  * Where a celebration offers alternative schemas, they become TABS rather than
  * more nesting. The table already varies by locale; stacking three schemas inside
@@ -1138,6 +1185,63 @@ function readingRows(entries, schema, strings) {
  * "Schema II", "Schema III") so the two agree. That renderer solves this problem
  * already but is not exported from the package entry point, so it cannot be
  * imported here — raised upstream; consolidate if it is exported.
+ *
+ * @param {object} tier one entry of a `/lectionary` response's `readings` array
+ * @param {number} index used to build tab ids unique across every tier on the page
+ * @param {object} strings i18n strings
+ * @returns {string}
+ */
+function renderReadingsTier(tier, index, strings) {
+    const entries = tier.entries ?? {};
+    const schemas = schemaKeysOf(entries);
+    const without = tier.locales_without_entry ?? [];
+    const blank   = tier.locales_with_empty_entry ?? [];
+
+    const badge = `
+        <span class="badge bg-dark">${escapeHtml(tier.tier)}</span>
+        <code class="small ms-1">${escapeHtml(tier.source_id)}</code>`;
+
+    const table = (schema) => `
+        <table class="table table-sm mb-1"><tbody>${readingRows(entries, schema, strings)}</tbody></table>`;
+
+    let body;
+    if (schemas.length) {
+        const tabId = (k) => `readings-t${index}-${k.replace(/[^a-z0-9]/gi, '')}`;
+        body = `
+            <ul class="nav nav-pills nav-sm mb-2" role="tablist">
+                ${schemas.map((k, n) => `
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link btn-sm py-1 px-2 ${n === 0 ? 'active' : ''}" type="button"
+                                data-bs-toggle="tab" data-bs-target="#${tabId(k)}" role="tab">
+                            ${escapeHtml(strings.schemas?.[k] ?? k)}
+                        </button>
+                    </li>`).join('')}
+            </ul>
+            <div class="tab-content">
+                ${schemas.map((k, n) => `
+                    <div class="tab-pane fade ${n === 0 ? 'show active' : ''}" id="${tabId(k)}" role="tabpanel">
+                        ${table(k)}
+                    </div>`).join('')}
+            </div>`;
+    } else {
+        body = table(null);
+    }
+
+    return `
+        <div class="mb-3">
+            <div class="mb-1 d-flex align-items-center gap-2 flex-wrap">${badge}</div>
+            ${body}
+            ${blank.length ? `<div class="small text-muted">${escapeHtml(strings.emptyLabel)}: <code>${blank.map(escapeHtml).join('</code>, <code>')}</code></div>` : ''}
+            ${without.length ? `<div class="small text-muted">${escapeHtml(strings.missingLabel)}: <code>${without.map(escapeHtml).join('</code>, <code>')}</code></div>` : ''}
+        </div>`;
+}
+
+/**
+ * Readings, tier by tier, read-only.
+ *
+ * `lectionary_available: false` is a first-class answer, not an error — the
+ * Ambrosian rite has no sanctorale lectionary at all — so it renders the API's
+ * own message rather than an empty table that reads as a bug.
  */
 function renderReadings(payload, strings = i18n) {
     if (payload.lectionary_available === false) {
@@ -1146,50 +1250,9 @@ function renderReadings(payload, strings = i18n) {
             <div class="alert alert-secondary mb-0">${escapeHtml(payload.message || strings.noLectionary)}</div>`;
     }
 
-    const tiers = (payload.readings ?? []).map((tier, i) => {
-        const entries = tier.entries ?? {};
-        const schemas = schemaKeysOf(entries);
-        const without = tier.locales_without_entry ?? [];
-        const blank   = tier.locales_with_empty_entry ?? [];
-
-        const badge = `
-            <span class="badge bg-dark">${escapeHtml(tier.tier)}</span>
-            <code class="small ms-1">${escapeHtml(tier.source_id)}</code>`;
-
-        const table = (schema) => `
-            <table class="table table-sm mb-1"><tbody>${readingRows(entries, schema, strings)}</tbody></table>`;
-
-        let body;
-        if (schemas.length) {
-            const tabId = (k) => `readings-t${i}-${k.replace(/[^a-z0-9]/gi, '')}`;
-            body = `
-                <ul class="nav nav-pills nav-sm mb-2" role="tablist">
-                    ${schemas.map((k, n) => `
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link btn-sm py-1 px-2 ${n === 0 ? 'active' : ''}" type="button"
-                                    data-bs-toggle="tab" data-bs-target="#${tabId(k)}" role="tab">
-                                ${escapeHtml(strings.schemas?.[k] ?? k)}
-                            </button>
-                        </li>`).join('')}
-                </ul>
-                <div class="tab-content">
-                    ${schemas.map((k, n) => `
-                        <div class="tab-pane fade ${n === 0 ? 'show active' : ''}" id="${tabId(k)}" role="tabpanel">
-                            ${table(k)}
-                        </div>`).join('')}
-                </div>`;
-        } else {
-            body = table(null);
-        }
-
-        return `
-            <div class="mb-3">
-                <div class="mb-1 d-flex align-items-center gap-2 flex-wrap">${badge}</div>
-                ${body}
-                ${blank.length ? `<div class="small text-muted">${escapeHtml(strings.emptyLabel)}: <code>${blank.map(escapeHtml).join('</code>, <code>')}</code></div>` : ''}
-                ${without.length ? `<div class="small text-muted">${escapeHtml(strings.missingLabel)}: <code>${without.map(escapeHtml).join('</code>, <code>')}</code></div>` : ''}
-            </div>`;
-    }).join('');
+    const tiers = (payload.readings ?? [])
+        .map((tier, i) => renderReadingsTier(tier, i, strings))
+        .join('');
 
     return `
         <h6 class="text-uppercase text-muted small">${escapeHtml(strings.readings)}</h6>
