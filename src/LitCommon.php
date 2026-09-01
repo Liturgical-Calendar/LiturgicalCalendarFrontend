@@ -47,6 +47,34 @@ class LitCommon
     public const PRO_EDUCATORIBUS                            = 'For Educators';
     public const PRO_SANCTIS_MULIERIBUS                      = 'For Holy Women';
 
+    /**
+     * Masses for Various Needs and Occasions.
+     *
+     * These are not commons, but the API's `LitCommon` enum
+     * (`jsondata/schemas/CommonDef.json`) admits them as values of an event's
+     * `common` property, and real source data uses them — the US national
+     * calendar's `PrayerUnborn` carries both. They therefore have to be
+     * translatable and offered by the editor's Common control just like the
+     * commons proper. See issue #526.
+     *
+     * Upstream these are `LitMassVariousNeeds` cases:
+     * `GIVING_THANKS_TO_GOD_FOR_THE_GIFT_OF_HUMAN_LIFE_USA` and
+     * `PRO_PACE_ET_IUSTITIA_SERVANDA`.
+     */
+    public const PRO_DONO_VITAE_HUMANAE_USA = 'For Giving Thanks to God for the Gift of Human Life [USA]';
+    public const PRO_PACE_ET_IUSTITIA       = 'For the Preservation of Peace and Justice';
+
+    /**
+     * The subset of valid `common` values that are Masses for Various Needs and
+     * Occasions rather than commons, and so take no "From the Common of…" glue.
+     *
+     * @var array<int, string>
+     */
+    public const VARIOUS_NEEDS = [
+        self::PRO_DONO_VITAE_HUMANAE_USA,
+        self::PRO_PACE_ET_IUSTITIA
+    ];
+
     private string $locale;
     /** @var array<string, string> */
     private array $translate;
@@ -122,7 +150,12 @@ class LitCommon
             /**translators: context = from the Common of nn: nn */
             self::PRO_EDUCATORIBUS                            => _('For Educators'),
             /**translators: context = from the Common of nn: nn */
-            self::PRO_SANCTIS_MULIERIBUS                      => _('For Holy Women')
+            self::PRO_SANCTIS_MULIERIBUS                      => _('For Holy Women'),
+
+            /**translators: context = Masses and Prayers for Various Needs and Occasions */
+            self::PRO_DONO_VITAE_HUMANAE_USA                  => _('For Giving Thanks to God for the Gift of Human Life [USA]'),
+            /**translators: context = Masses and Prayers for Various Needs and Occasions */
+            self::PRO_PACE_ET_IUSTITIA                        => _('For the Preservation of Peace and Justice')
         ];
     }
 
@@ -162,7 +195,11 @@ class LitCommon
         self::PRO_RELIGIOSIS                              => 'Pro religiosis',
         self::PRO_IIS_QUI_OPERA_MISERICORDIAE_EXERCUERUNT => 'Pro iis qui opera misericordiae exercuerunt',
         self::PRO_EDUCATORIBUS                            => 'Pro educatoribus',
-        self::PRO_SANCTIS_MULIERIBUS                      => 'Pro sanctis mulieribus'
+        self::PRO_SANCTIS_MULIERIBUS                      => 'Pro sanctis mulieribus',
+        // No Latin typical edition exists for this US proper, so the API's
+        // LitMassVariousNeeds::LATIN also leaves it in English.
+        self::PRO_DONO_VITAE_HUMANAE_USA                  => 'For Giving Thanks to God for the Gift of Human Life [USA]',
+        self::PRO_PACE_ET_IUSTITIA                        => 'Pro pace et iustitia servanda'
     ];
 
     public static function POSSESSIVE(string $value): string
@@ -224,7 +261,9 @@ class LitCommon
         'For Religious',
         'For Those Who Practiced Works of Mercy',
         'For Educators',
-        'For Holy Women'
+        'For Holy Women',
+        'For Giving Thanks to God for the Gift of Human Life [USA]',
+        'For the Preservation of Peace and Justice'
     ];
 
     public static function isValid(string $value): bool
@@ -269,6 +308,11 @@ class LitCommon
             } else {
                 $commons = explode(',', $common);
                 $commons = array_map(function ($txt) {
+                    if (in_array($txt, self::VARIOUS_NEEDS, true)) {
+                        // A Mass for Various Needs and Occasions, not a common:
+                        // it takes no "From the Common of…" glue.
+                        return $this->i18n($txt);
+                    }
                     if (strpos($txt, ':') !== false) {
                         [$commonGeneral, $commonSpecific] = explode(':', $txt);
                     } else {
