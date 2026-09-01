@@ -1110,34 +1110,55 @@ function recordDetailOriginals(names, readings, eventKey) {
         // carries tiers this Missal's write cannot reach.
         const { tier, target } = resolveReadingsTarget(readings.value);
         editState.readingsTier = tier;
-        for (const [loc, entry] of Object.entries(target?.entries ?? {})) {
+        const entries = target?.entries ?? {};
+        for (const [loc, entry] of Object.entries(entries)) {
             editState.original.readings[loc] = entry;
         }
 
-        // The shape the stored entry already follows, so the form opens describing
-        // the data rather than imposing the default on it. Read off any one locale
-        // — they share a structure, which is the same premise `editState.readingsShape`
-        // rests on — and left at the default when nothing matches, in which case
-        // renderLocaleFields() still renders the entry's own keys.
-        const sample = Object.values(target?.entries ?? {})[0];
-        const inferred = inferReadingsShape(sample, readingsShapes ?? []);
-        editState.readingsShape = inferred ?? DEFAULT_READINGS_SHAPE;
-        editState.readingsSlotShapes = {};
-        if (inferred && sample && typeof sample === 'object') {
-            const shape = (readingsShapes ?? []).find((s) => s.id === inferred);
-            if (shape?.kind === 'nested') {
-                for (const slot of shape.keys) {
-                    editState.readingsSlotShapes[slot] =
-                        inferReadingsShape(sample[slot], readingsShapes ?? [])
-                        ?? shape.slotShapes?.[slot]
-                        ?? DEFAULT_READINGS_SHAPE;
-                }
-            }
-        }
+        recordReadingsShape(Object.values(entries)[0]);
     } else {
         // A 404 means nothing is curated yet, which is a normal state, not a
         // failure — but there is then no original to diff against.
         editState.original.readings = {};
+    }
+}
+
+/**
+ * Open the readings panel describing the data, rather than imposing the default
+ * shape on it.
+ *
+ * Read off ANY ONE locale: they share a structure, which is the same premise
+ * `editState.readingsShape` itself rests on — only the citations differ between
+ * languages. Left at the default when nothing matches, in which case
+ * renderLocaleFields() still renders the entry's own keys, so an unrecognised
+ * shape is displayed rather than dropped.
+ *
+ * Split out of recordDetailOriginals() rather than inlined: that function is
+ * already the page's most branch-dense (CodeFactor flags it), and folding a
+ * nested loop with three fallback levels into it doubled its cyclomatic
+ * complexity, from 15 to 30.
+ *
+ * @param {unknown} sample one locale's stored readings, or undefined
+ */
+function recordReadingsShape(sample) {
+    const shapes = readingsShapes ?? [];
+    const inferred = inferReadingsShape(sample, shapes);
+
+    editState.readingsShape = inferred ?? DEFAULT_READINGS_SHAPE;
+    editState.readingsSlotShapes = {};
+
+    const shape = inferred ? shapes.find((s) => s.id === inferred) : null;
+    if (shape?.kind !== 'nested' || !sample || typeof sample !== 'object') return;
+
+    // A nested shape's slots each carry a shape of their own, so a stored entry
+    // has to be read one level down too — falling back to the shape the SCHEMA
+    // declares for that slot before the page-wide default.
+    const slotShapeFor = (slot) => inferReadingsShape(sample[slot], shapes)
+        ?? shape.slotShapes?.[slot]
+        ?? DEFAULT_READINGS_SHAPE;
+
+    for (const slot of shape.keys) {
+        editState.readingsSlotShapes[slot] = slotShapeFor(slot);
     }
 }
 
