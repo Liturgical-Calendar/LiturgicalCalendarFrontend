@@ -181,7 +181,7 @@ export async function writeJson(method, path, body) {
     try {
         data = await response.json();
     } catch {
-        data = null;
+        // Unparseable or empty (e.g. a 204) body resolves to `null` — not a failure. See #503.
     }
 
     if (!response.ok) {
@@ -777,9 +777,34 @@ async function loadCatalogue(seq = selectionSeq) {
     dom.calendar.value = state.calendar;
     renderLocaleOptions();
 
+    await refreshCapabilities(seq);
+}
+
+/**
+ * Recompute per-Missal capabilities for the currently applicable set, and
+ * toggle `#newEntryBtn` accordingly.
+ *
+ * The applicable set is calendar-scoped (applicableMissals() filters by
+ * `state.calendar`), so this must be called on every rite OR calendar change —
+ * not only from loadCatalogue(), which runs on a rite change alone. Selecting a
+ * national calendar brings in a Missal (e.g. `US_2011`) that a prior computation
+ * never saw, and capabilityFor() defaults an unlisted Missal to read-only, so
+ * skipping this on a calendar-only change would silently hide Edit on exactly
+ * the rows the whole feature exists to gate. Both loadCatalogue() and
+ * recompose() call this, sharing the one implementation.
+ *
+ * Guarded by the same `seq` token its callers already allocate:
+ * detectMissalCapabilities() fans out one round-trip per Missal per relation,
+ * so an abandoned selection's checks can resolve after a fresher selection's
+ * and must not overwrite `state.capabilities` — the same hazard loadSanctorale()
+ * guards against for `state.composed`.
+ *
+ * @param {number} seq
+ */
+async function refreshCapabilities(seq) {
     // Capabilities are per Missal, so they are refreshed whenever the applicable
     // set changes — which is on every rite or calendar change, not once per page.
-    state.capabilities = await detectMissalCapabilities({
+    const capabilities = await detectMissalCapabilities({
         missals: applicableMissals(state.missals, state.calendar, state.baseRegion),
         rite: state.rite,
         baseRegion: state.baseRegion,
@@ -790,6 +815,8 @@ async function loadCatalogue(seq = selectionSeq) {
             return result !== null && typeof result === 'object' && result.allowed === true;
         }
     });
+    if (seq !== selectionSeq) return;
+    state.capabilities = capabilities;
     dom.newEntry?.classList.toggle(
         'd-none',
         ![...state.capabilities.values()].some((c) => c.canEdit)
@@ -920,6 +947,16 @@ async function reload() {
 async function recompose() {
     const seq = ++selectionSeq;
     try {
+        // Capabilities BEFORE loadSanctorale: loadSanctorale() ends by calling
+        // render(), which reads capabilityFor() live. Refreshing capabilities
+        // afterwards would leave freshly-eligible rows (e.g. a newly selected
+        // US_2011) rendered without their Edit button until some unrelated
+        // re-render happened to run. A calendar change (not just a rite change)
+        // can bring a new Missal into the applicable set — see
+        // refreshCapabilities()'s own doc comment for why this call is here at
+        // all, not only in loadCatalogue().
+        await refreshCapabilities(seq);
+        if (seq !== selectionSeq) return;
         await loadSanctorale(seq);
         if (seq !== selectionSeq) return;
         // renderFromOptions may have retired the selected edition; drop it from
