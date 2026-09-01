@@ -58,3 +58,77 @@ export const Rite = Object.freeze({
     ROMAN: 'roman',
     AMBROSIAN: 'ambrosian',
 });
+
+/**
+ * Like `Rite` above, this one carries REAL values rather than inert stand-ins.
+ *
+ * sanctorale.js reads `massLabels`' keys as its schema render order and
+ * `readingOrder` as the field order of a readings form, so an empty stand-in
+ * would not merely fail to exercise the code — it would let the ordering tests
+ * pass against nothing. Mirrors liturgy-components-js/src/ReadingsRenderer, and
+ * `readings-renderer-stub.test.js` asserts the mirror against the real package
+ * whenever a build of it is present, so this copy cannot drift unnoticed.
+ */
+export class ReadingsRenderer {
+    static readingLabels = Object.freeze({
+        first_reading: 'First Reading',
+        responsorial_psalm: 'Responsorial Psalm',
+        second_reading: 'Second Reading',
+        gospel_acclamation: 'Gospel Acclamation',
+        gospel: 'Gospel',
+        palm_gospel: 'Gospel at the Procession',
+        epistle: 'Epistle',
+        responsorial_psalm_2: 'Responsorial Psalm',
+        third_reading: 'Third Reading',
+        responsorial_psalm_3: 'Responsorial Psalm',
+        fourth_reading: 'Fourth Reading',
+        responsorial_psalm_4: 'Responsorial Psalm',
+        fifth_reading: 'Fifth Reading',
+        responsorial_psalm_5: 'Responsorial Psalm',
+        sixth_reading: 'Sixth Reading',
+        responsorial_psalm_6: 'Responsorial Psalm',
+        seventh_reading: 'Seventh Reading',
+        responsorial_psalm_7: 'Responsorial Psalm',
+        responsorial_psalm_epistle: 'Responsorial Psalm',
+    });
+
+    static massLabels = Object.freeze({
+        vigil: 'Vigil Mass',
+        night: 'Mass during the Night',
+        dawn: 'Mass at Dawn',
+        day: 'Mass during the Day',
+        evening: 'Evening Mass',
+        schema_one: 'Schema I',
+        schema_two: 'Schema II',
+        schema_three: 'Schema III',
+        easter_season: 'Easter Season',
+        outside_easter_season: 'Outside Easter Season',
+    });
+
+    static readingOrder = Object.freeze([
+        'palm_gospel',
+        'first_reading',
+        'responsorial_psalm',
+        'second_reading',
+        'responsorial_psalm_2',
+        'third_reading',
+        'responsorial_psalm_3',
+        'fourth_reading',
+        'responsorial_psalm_4',
+        'fifth_reading',
+        'responsorial_psalm_5',
+        'sixth_reading',
+        'responsorial_psalm_6',
+        'seventh_reading',
+        'responsorial_psalm_7',
+        'epistle',
+        'responsorial_psalm_epistle',
+        'gospel_acclamation',
+        'gospel',
+    ]);
+
+    static hasNestedSchemas(readings) {
+        const values = Object.values(readings ?? {});
+        return values.length > 0 && values.every((v) => v !== null && typeof v === 'object');
+    }
+}
