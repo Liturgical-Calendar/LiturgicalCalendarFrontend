@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-31 01:44+0000\n"
+"POT-Creation-Date: 2026-09-01 02:13+0000\n"
 "PO-Revision-Date: 2026-08-30 14:54+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
@@ -308,7 +308,7 @@ msgid "Example usage of the API"
 msgstr "Exemple d'utilisation de l'API"
 
 #. translators: accordion section header - examples of web-based calendar displays
-#: usage.php:57 layout/header.php:329
+#: usage.php:57 layout/header.php:331
 msgid "Web calendar"
 msgstr "Calendrier HTML"
 
@@ -365,7 +365,7 @@ msgid "View FullCalendar (messages first)"
 msgstr "Voir l'exemple FullCalendar (messages ci-dessus)"
 
 #. translators: accordion section header - subscribing to the calendar via iCal/ICS URL
-#: usage.php:131 layout/header.php:333
+#: usage.php:131 layout/header.php:335
 msgid "Calendar subscription"
 msgstr "Abonnement au calendrier"
 
@@ -563,7 +563,7 @@ msgstr ""
 "générées à partir de l'URL d'abonnement sont plus « embellies » pour Outlook."
 
 #. translators: accordion section header - Easter date calculation tool
-#: usage.php:291 layout/header.php:337
+#: usage.php:291 layout/header.php:339
 msgid "Dates of Easter"
 msgstr "Dates de Pâques"
 
@@ -583,7 +583,7 @@ msgid "Calculate the Dates of Easter"
 msgstr "Calcule les dates de Pâques"
 
 #. translators: accordion section header - daily liturgy information and apps
-#: usage.php:327 layout/header.php:341
+#: usage.php:327 layout/header.php:343
 msgid "Liturgy of the Day"
 msgstr "Liturgie du jour"
 
@@ -1320,7 +1320,7 @@ msgstr "Traductions"
 msgid "About us"
 msgstr "À propos de nous"
 
-#: layout/header.php:71 layout/header.php:295
+#: layout/header.php:71 layout/header.php:297
 msgid "Accuracy Tests"
 msgstr "Tests de précision"
 
@@ -1385,52 +1385,52 @@ msgstr "Tableau de bord"
 msgid "Temporale"
 msgstr "Temporal"
 
-#: layout/header.php:265 includes/admin-blocks.php:35
+#: layout/header.php:267 includes/admin-blocks.php:35
 msgid "Sanctorale"
 msgstr "Sanctoral"
 
-#: layout/header.php:269 includes/admin-blocks.php:45
+#: layout/header.php:271 includes/admin-blocks.php:47
 #: includes/admin-decrees-card.php:20 admin-decrees.php:42 admin-decrees.php:54
 msgid "Decrees"
 msgstr "Décrets"
 
-#: layout/header.php:273
+#: layout/header.php:275
 msgid "Particular Calendars"
 msgstr "Calendriers particuliers"
 
 #. translators: label for wider region calendar name field
-#: layout/header.php:281 includes/messages.php:230 includes/admin-blocks.php:59
+#: layout/header.php:283 includes/messages.php:230 includes/admin-blocks.php:61
 #: admin-permissions.php:81 admin-permissions.php:308 admin-permissions.php:395
 #: permission-requests.php:239
 msgid "Wider Region"
 msgstr "Région élargie"
 
-#: layout/header.php:285 includes/admin-blocks.php:69
+#: layout/header.php:287 includes/admin-blocks.php:71
 msgid "National"
 msgstr "National"
 
-#: layout/header.php:289 includes/admin-blocks.php:79
+#: layout/header.php:291 includes/admin-blocks.php:81
 msgid "Diocesan"
 msgstr "Diocésain"
 
-#: layout/header.php:299 includes/admin-tests-card.php:17 admin-tests.php:37
+#: layout/header.php:301 includes/admin-tests-card.php:17 admin-tests.php:37
 #: admin-tests.php:49
 msgid "Test Definitions"
 msgstr "Définitions de test"
 
-#: layout/header.php:306
+#: layout/header.php:308
 msgid "Back to Website"
 msgstr "Retour au site"
 
-#: layout/header.php:313
+#: layout/header.php:315
 msgid "Home"
 msgstr "Accueil"
 
-#: layout/header.php:321
+#: layout/header.php:323
 msgid "Documentation"
 msgstr "Documentation"
 
-#: layout/header.php:325
+#: layout/header.php:327
 msgid "Examples of Usage"
 msgstr "Exemples d'utilisation"
 
@@ -2326,30 +2326,32 @@ msgid "Proprium de Tempore - temporal cycle events"
 msgstr "Proprium de Tempore - événements du cycle temporal"
 
 #: includes/admin-blocks.php:36
-msgid "Proprium de Sanctis - Roman Missal editions"
+#, fuzzy
+#| msgid "Proprium de Sanctis - Roman Missal editions"
+msgid "Proprium de Sanctis - Missal editions, by rite"
 msgstr "Proprium de Sanctis - éditions du Missel romain"
 
-#: includes/admin-blocks.php:46
+#: includes/admin-blocks.php:48
 msgid "Congregation for Divine Worship decrees"
 msgstr "Décrets de la Congrégation pour le culte divin"
 
-#: includes/admin-blocks.php:60
+#: includes/admin-blocks.php:62
 msgid "Shared events for geographical regions"
 msgstr "Événements partagés par régions géographiques"
 
-#: includes/admin-blocks.php:70
+#: includes/admin-blocks.php:72
 msgid "National calendars by Bishops Conferences"
 msgstr "Calendriers nationaux par Conférences épiscopales"
 
-#: includes/admin-blocks.php:80
+#: includes/admin-blocks.php:82
 msgid "Diocesan calendars by liturgical offices"
 msgstr "Calendriers diocésains par bureaux liturgiques"
 
-#: includes/admin-blocks.php:101 admin-dashboard.php:221
+#: includes/admin-blocks.php:103 admin-dashboard.php:221
 msgid "View"
 msgstr "Voir"
 
-#: includes/admin-blocks.php:102 admin-decrees.php:687 admin-tests.php:347
+#: includes/admin-blocks.php:104 admin-decrees.php:687 admin-tests.php:347
 #: developer-dashboard.php:269
 msgid "Edit"
 msgstr "Modifier"
