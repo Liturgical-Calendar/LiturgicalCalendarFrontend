@@ -50,11 +50,22 @@ const getMonthMaxDay = (month) => month === Month.FEBRUARY ? 28 : (MonthsOfThirt
 const DaysOfTheWeek = Object.freeze(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
 
 /**
- * The four liturgical colors used in the Roman Rite.
+ * The liturgical colors licit in the Roman Rite, in display order.
+ *
+ * Must hold every value of `RomanLitColor` in the API's CommonDef.json. This is
+ * the only source of `<option>` values for every color multi-select this module
+ * builds, and a browser submits only options the control actually has — so a
+ * color missing from here is silently dropped from any event that already
+ * carried it, the next time anyone saves that event (the issue #526 failure
+ * mode; `rose` used to be missing).
+ *
+ * The Ambrosian palette (`morello`, `black`) is deliberately NOT here: those are
+ * illicit in the Roman rite, so offering them unconditionally would be wrong.
+ * Editing Ambrosian calendars needs a rite-aware palette instead.
  * @readonly
- * @type {readonly ['white', 'red', 'purple', 'green']}
+ * @type {readonly ['white', 'red', 'purple', 'green', 'rose']}
  */
-const LITURGICAL_COLORS = Object.freeze(['white', 'red', 'purple', 'green']);
+const LITURGICAL_COLORS = Object.freeze(['white', 'red', 'purple', 'green', 'rose']);
 
 /**
  * A mapping of liturgical event ranks to numerical values for sorting purposes.
