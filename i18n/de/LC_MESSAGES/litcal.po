@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-02 12:47+0000\n"
 "PO-Revision-Date: 2026-09-03 00:52+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
 "Language: de\n"
@@ -4136,10 +4136,8 @@ msgid "Reviewer decision"
 msgstr "Berechtigung widerrufen"
 
 #: admin-changes.php:255
-#, fuzzy
-#| msgid "Season"
 msgid "Reason"
-msgstr "Saison"
+msgstr "Grund"
 
 #: admin-changes.php:256
 #, fuzzy
@@ -4559,11 +4557,11 @@ msgstr "Sprache"
 
 #: temporale.php:63
 msgid "Liturgical Season"
-msgstr "Liturgische Jahreszeit"
+msgstr "Liturgische Zeit"
 
 #: temporale.php:65
 msgid "All Seasons"
-msgstr "Alle Jahreszeiten"
+msgstr "Alle Zeiten"
 
 #: temporale.php:66
 msgid "Advent"
@@ -4679,7 +4677,7 @@ msgstr "JSON exportieren"
 
 #: temporale.php:137
 msgid "Season"
-msgstr "Saison"
+msgstr "Zeit"
 
 #: temporale.php:139
 msgid "Color"
