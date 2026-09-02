@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-02 12:47+0000\n"
-"PO-Revision-Date: 2026-08-30 14:54+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2026-09-03 00:52+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
 "Language: fr\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.15.2\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #: index.php:5
 msgid ""
@@ -1078,12 +1078,12 @@ msgstr "Pour les saintes femmes"
 #. translators: context = Masses and Prayers for Various Needs and Occasions
 #: src/LitCommon.php:156
 msgid "For Giving Thanks to God for the Gift of Human Life [USA]"
-msgstr ""
+msgstr "Pour rendre grâce à Dieu pour le don de la vie humaine [USA]"
 
 #. translators: context = Masses and Prayers for Various Needs and Occasions
 #: src/LitCommon.php:158
 msgid "For the Preservation of Peace and Justice"
-msgstr ""
+msgstr "Pour la préservation de la paix et de la justice"
 
 #. translators: (singular feminine) glue between "From the Common" and the actual common. Latin: leave empty!
 #: src/LitCommon.php:210 src/LitCommon.php:222
@@ -1497,31 +1497,25 @@ msgid "Get started"
 msgstr "Commencer"
 
 #: layout/footer.php:106
-#, fuzzy
-#| msgid "Your request was approved"
 msgid "Your change request was approved"
-msgstr "Ta demande a été approuvée"
+msgstr "Votre changement de demande a été approuvé"
 
 #: layout/footer.php:107
-#, fuzzy
-#| msgid "Your request was rejected"
 msgid "Your change request was rejected"
-msgstr "Ta demande a été rejetée"
+msgstr "Votre demande de modification a été rejetée"
 
 #: layout/footer.php:108
-#, fuzzy
-#| msgid "Your request was approved"
 msgid "Your change request was published"
-msgstr "Ta demande a été approuvée"
+msgstr "Votre demande de modification a été publiée"
 
 #: layout/footer.php:109
 msgid "Your change request was closed without merging"
-msgstr ""
+msgstr "Votre demande de modification a été clôturée sans fusion"
 
 #: layout/footer.php:110
 #, php-format
 msgid "Pull request #%1$d"
-msgstr ""
+msgstr "Pull request #%1$d"
 
 #: includes/login-modal.php:6
 msgid "Session Expiring"
@@ -1675,10 +1669,8 @@ msgstr "Avertissement"
 
 #. translators: notification title when a write was queued for review instead of being saved
 #: includes/messages.php:57
-#, fuzzy
-#| msgid "Pending"
 msgid "Pending review"
-msgstr "En attente"
+msgstr "Pending review"
 
 #. translators: notification title when translations are missing for a locale
 #: includes/messages.php:59
@@ -1712,6 +1704,8 @@ msgid ""
 "Your changes were submitted for review as batch %s. Nothing has been saved "
 "yet."
 msgstr ""
+"Vos modifications ont été soumises à l'examen par lot %s. Rien n'a encore "
+"été enregistré."
 
 #. translators: %s is the change request batch id. The changes were approved but are not published yet
 #: includes/messages.php:78 admin-decrees.php:639 admin-tests.php:342
@@ -1721,6 +1715,8 @@ msgid ""
 "Your changes were approved as batch %s and are queued for publication. They "
 "are not live yet."
 msgstr ""
+"Vos modifications ont été approuvées par lot %s et sont en attente de "
+"publication. Elles ne sont pas encore en ligne."
 
 #. translators: %s is a comma separated list of change request batch ids folded into the current one
 #: includes/messages.php:80 admin-decrees.php:640 admin-tests.php:343
@@ -1730,6 +1726,8 @@ msgid ""
 "Earlier pending submissions were folded into this one and no longer appear "
 "in your queue: %s"
 msgstr ""
+"Les soumissions en attente antérieures ont été regroupées dans celle-ci et "
+"n'apparaissent plus dans votre file d'attente : %s"
 
 #. translators: %s is the unrecognized outcome value the server sent
 #: includes/messages.php:82 admin-decrees.php:642 admin-tests.php:344
@@ -1739,32 +1737,30 @@ msgid ""
 "The server reported an unrecognized outcome ('%s') for these changes. Reload "
 "the page to check whether they were saved."
 msgstr ""
+"Le serveur a signalé un résultat non reconnu ('%s') pour ces modifications. "
+"Rechargez la page pour vérifier si elles ont été enregistrées."
 
 #. translators: %s is a calendar identifier such as "nation/US"
 #: includes/messages.php:84
-#, fuzzy, php-format
-#| msgid "Test deleted successfully."
+#, php-format
 msgid "Calendar '%s' was deleted successfully"
-msgstr "Test supprimé avec succès."
+msgstr "Calendrier '%s' a été supprimé avec succès"
 
 #. translators: %s is a diocese identifier such as "rome_it"
 #: includes/messages.php:86
-#, fuzzy, php-format
-#| msgid "Test deleted successfully."
+#, php-format
 msgid "Diocesan Calendar '%s' was deleted successfully"
-msgstr "Test supprimé avec succès."
+msgstr "Calendrier diocésain '%s' a été supprimé avec succès"
 
 #. translators: confirmation shown after saving a national calendar
 #: includes/messages.php:88
-#, fuzzy
-#| msgid "Test updated successfully."
 msgid "National Calendar was created or updated successfully"
-msgstr "Test mis à jour avec succès."
+msgstr "Le calendrier national a été créé ou mis à jour avec succès"
 
 #. translators: confirmation shown after saving a wider region calendar
 #: includes/messages.php:90
 msgid "Wider Region Calendar was created or updated successfully"
-msgstr ""
+msgstr "Le calendrier de la région élargie a été créé ou mis à jour avec succès"
 
 #. translators: form row title for designating a Doctor of the Church
 #: includes/messages.php:110
@@ -2350,10 +2346,8 @@ msgid "Proprium de Tempore - temporal cycle events"
 msgstr "Proprium de Tempore - événements du cycle temporal"
 
 #: includes/admin-blocks.php:38
-#, fuzzy
-#| msgid "Proprium de Sanctis - Roman Missal editions"
 msgid "Proprium de Sanctis - Missal editions, by rite"
-msgstr "Proprium de Sanctis - éditions du Missel romain"
+msgstr "Proprium de Sanctis - éditions du Missel, selon le rite"
 
 #: includes/admin-blocks.php:50
 msgid "Congregation for Divine Worship decrees"
@@ -2422,14 +2416,12 @@ msgid "Unknown user"
 msgstr "Utilisateur inconnu"
 
 #: includes/change-request-i18n.php:27
-#, fuzzy
-#| msgid "Source"
 msgid "Resource"
-msgstr "Source"
+msgstr "Ressource"
 
 #: includes/change-request-i18n.php:28
 msgid "Files"
-msgstr ""
+msgstr "Fichiers"
 
 #: includes/change-request-i18n.php:29 includes/change-request-i18n.php:35
 #: permission-requests.php:224 admin-changes.php:77 admin-changes.php:121
@@ -2437,22 +2429,16 @@ msgid "Submitted"
 msgstr "Soumis"
 
 #: includes/change-request-i18n.php:30
-#, fuzzy
-#| msgid "Application"
 msgid "Publication"
-msgstr "Application"
+msgstr "Publication"
 
 #: includes/change-request-i18n.php:31
-#, fuzzy
-#| msgid "View all requests"
 msgid "Pull request"
-msgstr "Voir toutes les demandes"
+msgstr "Demande de fusion"
 
 #: includes/change-request-i18n.php:32 change-requests.php:93
-#, fuzzy
-#| msgid "Property to change"
 msgid "Proposed changes"
-msgstr "Propriété à modifier"
+msgstr "Modifications proposées"
 
 #: includes/change-request-i18n.php:36 admin-permissions.php:171
 #: admin-permissions.php:478 permission-requests.php:275
@@ -2473,114 +2459,90 @@ msgstr "Rejeté"
 #: includes/change-request-i18n.php:38 admin-changes.php:110
 #: admin-changes.php:140
 msgid "Withdrawn"
-msgstr ""
+msgstr "Retiré"
 
 #: includes/change-request-i18n.php:43
 msgid ""
 "Approved by a reviewer; its pull request was later closed without merging."
 msgstr ""
+"Approuvée par un réviseur; sa demande de fusion a ensuite été fermée sans "
+"fusionner."
 
 #: includes/change-request-i18n.php:52
-#, fuzzy
-#| msgid "National Calendar"
 msgid "National calendar"
 msgstr "Calendrier national"
 
 #: includes/change-request-i18n.php:53
-#, fuzzy
-#| msgid "Diocesan Calendar"
 msgid "Diocesan calendar"
 msgstr "Calendrier diocésain"
 
 #: includes/change-request-i18n.php:54
-#, fuzzy
-#| msgid "Wider Region"
 msgid "Wider region"
-msgstr "Région élargie"
+msgstr "Région plus large"
 
 #: includes/change-request-i18n.php:55
-#, fuzzy
-#| msgid "Diocesan Calendar Tests"
 msgid "Rite calendar"
-msgstr "Tests du calendrier diocésain"
+msgstr "Calendrier du rite"
 
 #: includes/change-request-i18n.php:57
-#, fuzzy
-#| msgid "National Calendar Tests"
 msgid "National calendar test"
-msgstr "Tests du calendrier national"
+msgstr "Test du calendrier national"
 
 #: includes/change-request-i18n.php:58
-#, fuzzy
-#| msgid "Diocesan Calendar Tests"
 msgid "Diocesan calendar test"
-msgstr "Tests du calendrier diocésain"
+msgstr "Test du calendrier diocésain"
 
 #: includes/change-request-i18n.php:59
-#, fuzzy
-#| msgid "General Roman Calendar Tests"
 msgid "General Roman Calendar test"
-msgstr "Tests du calendrier général romain"
+msgstr "Test du calendrier romain général"
 
 #: includes/change-request-i18n.php:60
-#, fuzzy
-#| msgid "Diocesan Calendar Tests"
 msgid "Rite calendar test"
-msgstr "Tests du calendrier diocésain"
+msgstr "Test du calendrier du rite"
 
 #: includes/change-request-i18n.php:64
 msgid "Added"
-msgstr ""
+msgstr "Ajouté"
 
 #: includes/change-request-i18n.php:65
-#, fuzzy
-#| msgid "Change grade"
 msgid "Changed"
-msgstr "Changer de rang"
+msgstr "Modifié"
 
 #: includes/change-request-i18n.php:66
-#, fuzzy
-#| msgid "Remove"
 msgid "Removed"
-msgstr "Supprimer"
+msgstr "Supprimé"
 
 #: includes/change-request-i18n.php:70
 msgid "Not published"
-msgstr ""
+msgstr "Non publié"
 
 #: includes/change-request-i18n.php:71
-#, fuzzy
-#| msgid "Review Application"
 msgid "Queued for publication"
-msgstr "Réviser l'application"
+msgstr "En attente de publication"
 
 #: includes/change-request-i18n.php:72
-#, fuzzy
-#| msgid "No requests found."
 msgid "Pull request open"
-msgstr "Aucune demande trouvée."
+msgstr "Demande de fusion ouverte"
 
 #: includes/change-request-i18n.php:73
 msgid "Merged"
-msgstr ""
+msgstr "Fusionné"
 
 #: includes/change-request-i18n.php:74
 msgid "Closed without merging"
-msgstr ""
+msgstr "Fermé sans fusion"
 
 #: includes/change-request-i18n.php:78
-#, fuzzy
-#| msgid "Could not load your existing requests."
 msgid "Could not load what this change request proposes."
-msgstr "Impossible de charger tes demandes existantes."
+msgstr "Impossible de charger ce que propose cette demande de modification."
 
 #: includes/change-request-i18n.php:79
 msgid "This change request proposes no files."
-msgstr ""
+msgstr "Cette demande de modification ne propose aucun fichier."
 
 #: includes/change-request-i18n.php:80
 msgid "No content change."
-msgstr ""
+msgstr "Aucun changement de contenu."
 
 #: includes/change-request-i18n.php:81
 #, php-format
@@ -2588,34 +2550,38 @@ msgid ""
 "This file is too large to compare in the browser (%1$s proposed, %2$s "
 "currently on disk)."
 msgstr ""
+"Ce fichier est trop volumineux pour être comparé dans le navigateur (%1$s "
+"proposé, %2$s actuellement sur le disque)."
 
 #: includes/change-request-i18n.php:82
 #, php-format
 msgid "@@ %1$d unchanged line(s) hidden @@"
-msgstr ""
+msgstr "@@ %1$d lignes inchangées masquées @@"
 
 #: includes/change-request-i18n.php:83
 #, php-format
 msgid ""
 "File contents were not requested. Proposed: %1$s; currently on disk: %2$s."
 msgstr ""
+"Le contenu du fichier n'a pas été demandé. Proposé : %1$s ; actuellement sur "
+"le disque : %2$s."
 
 #: includes/change-request-i18n.php:84
 #, php-format
 msgid "This file will be removed (%1$s currently on disk)."
-msgstr ""
+msgstr "Ce fichier sera supprimé (%1$s actuellement sur le disque)."
 
 #: includes/admin-changes-card.php:23
-#, fuzzy
-#| msgid "Access Requests to Review"
 msgid "Change Requests to Review"
-msgstr "Demandes d'accès à examiner"
+msgstr "Demandes de modification à examiner"
 
 #: includes/admin-changes-card.php:27
 msgid ""
 "Read and decide the source data changes proposed for the calendars you "
 "administer"
 msgstr ""
+"Lisez et décidez des modifications de données sources proposées pour les "
+"calendriers que vous administrez"
 
 #: includes/admin-changes-card.php:33 admin-permissions.php:467
 #: admin-applications.php:245 admin-dashboard.php:136 admin-dashboard.php:192
@@ -3105,10 +3071,8 @@ msgstr "Tous"
 
 #: admin-permissions.php:80 admin-permissions.php:312 admin-permissions.php:406
 #: permission-requests.php:243
-#, fuzzy
-#| msgid "Diocesan Calendar Tests"
 msgid "Rite Calendar"
-msgstr "Tests du calendrier diocésain"
+msgstr "Calendrier du rite"
 
 #: admin-permissions.php:82 admin-permissions.php:314 admin-permissions.php:430
 #: admin-permissions.php:461 permission-requests.php:248
@@ -3321,18 +3285,16 @@ msgid "Test Definition"
 msgstr "Définition du test"
 
 #: admin-permissions.php:407 permission-requests.php:244
-#, fuzzy
-#| msgid "Diocesan Calendar Tests"
 msgid "Rite Calendar Tests"
-msgstr "Tests du calendrier diocésain"
+msgstr "Tests du calendrier du rite"
 
 #: admin-permissions.php:412 permission-requests.php:251
 msgid "Roman Rite"
-msgstr ""
+msgstr "Rite romain"
 
 #: admin-permissions.php:413 permission-requests.php:252 sanctorale.php:345
 msgid "Ambrosian Rite"
-msgstr ""
+msgstr "Rite ambrosien"
 
 #: admin-permissions.php:415 permission-requests.php:255
 msgid "Sanctorale — Editio Typica 1970"
@@ -3347,20 +3309,16 @@ msgid "Sanctorale — Editio Typica 2008"
 msgstr "Sanctorale — Editio Typica 2008"
 
 #: admin-permissions.php:418 permission-requests.php:261
-#, fuzzy
-#| msgid "Sanctorale — Editio Typica 2002"
 msgid "Sanctorale — Editio Typica 2024"
-msgstr "Sanctorale — Editio Typica 2002"
+msgstr "Sanctorale — Édition Typica 2024"
 
 #: admin-permissions.php:419 permission-requests.php:263
 msgid "Decrees of the Dicastery for Divine Worship"
 msgstr "Décrets du Dicastère pour le Culte Divin"
 
 #: admin-permissions.php:420 permission-requests.php:264
-#, fuzzy
-#| msgid "Supported Locales"
 msgid "Supported locales"
-msgstr "Localisations prises en charge"
+msgstr "Locales prises en charge"
 
 #: admin-permissions.php:421
 msgid "Enter object ID..."
@@ -3911,20 +3869,21 @@ msgstr ""
 
 #: admin-dashboard.php:204
 msgid "Your Contributions"
-msgstr ""
+msgstr "Vos contributions"
 
 #: admin-dashboard.php:213 admin-changes.php:195 change-requests.php:37
 #: change-requests.php:50 change-requests.php:66
-#, fuzzy
-#| msgid "Your Access Requests"
 msgid "Your Change Requests"
-msgstr "Tes demandes d'accès"
+msgstr "Vos demandes de modification"
 
 #: admin-dashboard.php:217
 msgid ""
 "Track the source data changes you have proposed, read what became of them, "
 "and withdraw one that is still awaiting review"
 msgstr ""
+"Suivez les modifications des données sources que vous avez proposées, voyez "
+"ce qui leur est arrivé, et retirez-en une qui est encore en attente de "
+"révision"
 
 #: admin-users.php:33 admin-users.php:45
 msgid "Users Management"
@@ -4009,134 +3968,122 @@ msgid ""
 "Promoting a locale therefore tightens enforcement, and may only be done once "
 "every check below passes."
 msgstr ""
+"Une locale officiellement prise en charge garantit des données complètes. "
+"L'absence de données pour l'une d'elles est traitée comme une erreur, tandis "
+"qu'une locale en dehors de la liste se dégrade silencieusement. Promouvoir "
+"une locale resserre donc l'application des règles et ne peut être fait "
+"qu'une fois que la vérification ci-dessous est passée."
 
 #: admin-locales.php:66
-#, fuzzy
-#| msgid "Name in base locale"
 msgid "Candidate locales"
-msgstr "Nom dans la langue de base"
+msgstr "Locales candidates"
 
 #: admin-locales.php:76
-#, fuzzy
-#| msgid "Locales"
 msgid "Locale"
-msgstr "Langues"
+msgstr "Locale"
 
 #: admin-locales.php:78
-#, fuzzy
-#| msgid "Read"
 msgid "Readiness"
-msgstr "Lire"
+msgstr "État"
 
 #: admin-locales.php:79 sanctorale.php:176 sanctorale.php:223
-#, fuzzy
-#| msgid "Event Details"
 msgid "Details"
-msgstr "Détails de l'événement"
+msgstr "Détails"
 
 #: admin-locales.php:107
 msgid "Official"
-msgstr ""
+msgstr "Officiel"
 
 #: admin-locales.php:108
 msgid "Candidate"
-msgstr ""
+msgstr "Candidat"
 
 #: admin-locales.php:109
-#, fuzzy
-#| msgid "Read"
 msgid "Ready"
-msgstr "Lire"
+msgstr "Prêt"
 
 #: admin-locales.php:110
-#, fuzzy
-#| msgid "Not Verified"
 msgid "Not ready"
-msgstr "Non vérifié"
+msgstr "Pas prêt"
 
 #: admin-locales.php:111
-#, fuzzy
-#| msgid "View Keys"
 msgid "View checks"
-msgstr "Voir les clés"
+msgstr "Voir les vérifications"
 
 #: admin-locales.php:113
-#, fuzzy
-#| msgid "Loading…"
 msgid "Working…"
-msgstr "Chargement…"
+msgstr "En cours…"
 
 #: admin-locales.php:114
-#, fuzzy, php-format
-#| msgid "Could not load notifications"
+#, php-format
 msgid "Could not load locales: %s"
-msgstr "Impossible de charger les notifications"
+msgstr "Impossible de charger les locales : %s"
 
 #: admin-locales.php:115
 msgid "Missing:"
-msgstr ""
+msgstr "Manquant :"
 
 #: admin-locales.php:116
 msgid "Advisory — reported, but does not block promotion"
-msgstr ""
+msgstr "Avertissement — signalé, mais ne bloque pas la promotion"
 
 #: admin-locales.php:117
 msgid "Promote"
-msgstr ""
+msgstr "Promouvoir"
 
 #: admin-locales.php:118
 msgid "Demote"
-msgstr ""
+msgstr "Rétrograder"
 
 #. translators: %s is a locale tag such as "fr_FR"
 #: admin-locales.php:120
 #, php-format
 msgid "Locale %s is now officially supported."
-msgstr ""
+msgstr "La locale %s est désormais officiellement prise en charge."
 
 #. translators: %s is a locale tag such as "fr_FR"
 #: admin-locales.php:122
 #, php-format
 msgid "Locale %s is no longer officially supported."
-msgstr ""
+msgstr "La locale %s n'est plus officiellement prise en charge."
 
 #. translators: %s is the error reported by the API
 #: admin-locales.php:124
 #, php-format
 msgid "Could not change this locale: %s"
-msgstr ""
+msgstr "Impossible de changer cette locale : %s"
 
 #: admin-locales.php:125
 msgid ""
 "This locale is not ready to be promoted. Open “View checks” to see what is "
 "missing."
 msgstr ""
+"Cette locale n'est pas prête à être promue. Ouvrez « Voir les vérifications "
+"» pour voir ce qui manque."
 
 #: admin-locales.php:126
 msgid ""
 "This is the only officially supported locale, and the list may not be "
 "emptied. Promote a replacement first."
 msgstr ""
+"Ceci est la seule locale officiellement prise en charge, et la liste ne peut "
+"pas être vidée. Promouvez d'abord un remplacement."
 
 #: admin-locales.php:129
 msgid "Curation is unavailable."
-msgstr ""
+msgstr "La curation est indisponible."
 
 #: admin-locales.php:130
-#, fuzzy
-#| msgid "Change name or grade"
 msgid "Changes here are not durable."
-msgstr "Changer le nom ou le grade"
+msgstr "Les modifications ici ne sont pas durables."
 
 #: admin-locales.php:131
 msgid "Changes here are reviewed."
-msgstr ""
+msgstr "Les modifications ici sont examinées."
 
 #: admin-changes.php:45 admin-changes.php:58
-#, fuzzy
-#| msgid "Access Requests to Review"
 msgid "Change Request Review"
-msgstr "Demandes d'accès à examiner"
+msgstr "Révision de la demande de modification."
 
 #: admin-changes.php:64
 msgid ""
@@ -4144,32 +4091,30 @@ msgid ""
 "Approving a change request is the only human gate before it is published, so "
 "read what it proposes before deciding."
 msgstr ""
+"Passez en revue les modifications des données sources proposées pour les "
+"calendriers que vous administrez. L'approbation d'une demande de "
+"modification est la seule barrière humaine avant sa publication, alors lisez "
+"ce qu'elle propose avant de décider."
 
 #: admin-changes.php:206
-#, fuzzy
-#| msgid "Review Role Request"
 msgid "Review Change Request"
-msgstr "Revoir la demande de rôle"
+msgstr "Réviser la demande de modification."
 
 #: admin-changes.php:219
-#, fuzzy
-#| msgid "Session Information"
 msgid "Reason for rejection"
-msgstr "Informations de session"
+msgstr "Motif du rejet"
 
 #: admin-changes.php:225
 msgid "The submitter will be shown this reason."
-msgstr ""
+msgstr "Le soumetteur verra cette raison."
 
 #: admin-changes.php:251
-#, fuzzy
-#| msgid "Submitted"
 msgid "Submitted by"
-msgstr "Soumis"
+msgstr "Soumis par"
 
 #: admin-changes.php:252
 msgid "Outcome"
-msgstr ""
+msgstr "Résultat"
 
 #: admin-changes.php:254
 #, fuzzy
@@ -4756,338 +4701,281 @@ msgstr ""
 
 #: sanctorale.php:123
 msgid "Ambrosian"
-msgstr ""
+msgstr "ambrosien"
 
 #: sanctorale.php:133
 msgid "Languages this calendar is published in."
-msgstr ""
+msgstr "Langues dans lesquelles ce calendrier est publié."
 
 #: sanctorale.php:139 sanctorale.php:175
 msgid "From"
-msgstr ""
+msgstr "De"
 
 #: sanctorale.php:141
 msgid "Show only what one edition contributes."
-msgstr ""
+msgstr "Afficher uniquement ce que contribue une édition."
 
 #: sanctorale.php:144
 msgid "Search all months"
-msgstr ""
+msgstr "Rechercher dans tous les mois."
 
 #: sanctorale.php:146
 msgid "Name or event key…"
-msgstr ""
+msgstr "Nom ou clé d'événement…"
 
 #: sanctorale.php:147
 msgid "Matches across every month, and moves you to one that has a result."
-msgstr ""
+msgstr "Correspond à tous les mois, et vous amène à celui qui a un résultat."
 
 #: sanctorale.php:160 sanctorale.php:351
-#, fuzzy
-#| msgid "New Application"
 msgid "New celebration"
-msgstr "Nouvelle application"
+msgstr "Nouvelle célébration"
 
 #: sanctorale.php:173 sanctorale.php:225
-#, fuzzy
-#| msgid "Relation"
 msgid "Celebration"
-msgstr "Relation"
+msgstr "Célébration"
 
 #: sanctorale.php:226
-#, fuzzy
-#| msgid "Name in base locale"
 msgid "Names by locale"
-msgstr "Nom dans la langue de base"
+msgstr "Noms par locale."
 
 #: sanctorale.php:228
 msgid "Readings structure"
-msgstr ""
+msgstr "Structure des lectures"
 
 #: sanctorale.php:230
-#, fuzzy
-#| msgid "No readings defined for this locale yet"
 msgid ""
 "No readings are curated for this celebration yet. Fill in what you know; "
 "blank citations are not saved."
-msgstr "Aucune lecture définie pour cette langue pour le moment"
+msgstr ""
+"Aucune lecture n'est encore sélectionnée pour cette célébration. Remplissez "
+"ce que vous savez ; les citations vides ne sont pas enregistrées."
 
 #: sanctorale.php:238
-#, fuzzy
-#| msgid "Lectionary readings"
 msgid "Ferial Readings"
-msgstr "Lectures du lectionnaire"
+msgstr "Lectures feriales"
 
 #: sanctorale.php:239
-#, fuzzy
-#| msgid "First reading"
 msgid "Festive Readings"
-msgstr "Première lecture"
+msgstr "Lectures festives"
 
 #: sanctorale.php:240
 msgid "Palm Sunday Readings"
-msgstr ""
+msgstr "Lectures du Dimanche des Rameaux"
 
 #: sanctorale.php:241
 msgid "Easter Vigil Readings"
-msgstr ""
+msgstr "Lectures de la Veillée pascale"
 
 #: sanctorale.php:242
-#, fuzzy
-#| msgid "Christmas"
 msgid "Christmas Readings"
-msgstr "Noël"
+msgstr "Lectures de Noël"
 
 #: sanctorale.php:243
 msgid "Readings with Evening Mass"
-msgstr ""
+msgstr "Lectures avec la messe du soir"
 
 #: sanctorale.php:244
 msgid "Readings with Multiple Schemas"
-msgstr ""
+msgstr "Lectures avec plusieurs schémas"
 
 #: sanctorale.php:245
-#, fuzzy
-#| msgid "Reason (in favor of liturgical event)"
 msgid "Readings from liturgical Commons"
-msgstr "Raison (en faveur de l'événement liturgique)"
+msgstr "Lectures des Communs liturgiques"
 
 #: sanctorale.php:246
-#, fuzzy
-#| msgid "Second reading"
 msgid "Seasonal Readings"
-msgstr "Deuxième lecture"
+msgstr "Lectures saisonnières"
 
 #: sanctorale.php:247
 msgid "Readings with a Vigil Mass"
-msgstr ""
+msgstr "Lectures avec une messe de veille"
 
 #: sanctorale.php:248
 msgid "Christmas Readings with a Vigil Mass"
-msgstr ""
+msgstr "Lectures de Noël avec une messe de veille"
 
 #: sanctorale.php:256
 msgid "Gospel at the Procession"
-msgstr ""
+msgstr "Évangile lors de la procession"
 
 #: sanctorale.php:257
-#, fuzzy
-#| msgid "First reading"
 msgid "First Reading"
-msgstr "Première lecture"
+msgstr "Première Lecture"
 
 #: sanctorale.php:258 sanctorale.php:260 sanctorale.php:262 sanctorale.php:264
 #: sanctorale.php:266 sanctorale.php:268 sanctorale.php:270 sanctorale.php:272
-#, fuzzy
-#| msgid "Responsorial psalm"
 msgid "Responsorial Psalm"
 msgstr "Psaume responsorial"
 
 #: sanctorale.php:259
-#, fuzzy
-#| msgid "Second reading"
 msgid "Second Reading"
-msgstr "Deuxième lecture"
+msgstr "Deuxième Lecture"
 
 #: sanctorale.php:261
-#, fuzzy
-#| msgid "First reading"
 msgid "Third Reading"
-msgstr "Première lecture"
+msgstr "Troisième Lecture"
 
 #: sanctorale.php:263
-#, fuzzy
-#| msgid "First reading"
 msgid "Fourth Reading"
-msgstr "Première lecture"
+msgstr "Quatrième Lecture"
 
 #: sanctorale.php:265
-#, fuzzy
-#| msgid "First reading"
 msgid "Fifth Reading"
-msgstr "Première lecture"
+msgstr "Cinquième Lecture"
 
 #: sanctorale.php:267
-#, fuzzy
-#| msgid "First reading"
 msgid "Sixth Reading"
-msgstr "Première lecture"
+msgstr "Sixième Lecture"
 
 #: sanctorale.php:269
-#, fuzzy
-#| msgid "Second reading"
 msgid "Seventh Reading"
-msgstr "Deuxième lecture"
+msgstr "Septième Lecture"
 
 #: sanctorale.php:271
 msgid "Epistle"
-msgstr ""
+msgstr "Épître"
 
 #: sanctorale.php:273
-#, fuzzy
-#| msgid "Gospel acclamation"
 msgid "Gospel Acclamation"
 msgstr "Acclamation de l'Évangile"
 
 #: sanctorale.php:281
 msgid "Vigil Mass"
-msgstr ""
+msgstr "Messe de vigile"
 
 #: sanctorale.php:282
 msgid "Mass during the Night"
-msgstr ""
+msgstr "Messe durant la nuit"
 
 #: sanctorale.php:283
 msgid "Mass at Dawn"
-msgstr ""
+msgstr "Messe à l'aube"
 
 #: sanctorale.php:284
 msgid "Mass during the Day"
-msgstr ""
+msgstr "Messe du jour"
 
 #: sanctorale.php:285
 msgid "Evening Mass"
-msgstr ""
+msgstr "Messe du soir"
 
 #: sanctorale.php:286
 msgid "Schema I"
-msgstr ""
+msgstr "Schéma I"
 
 #: sanctorale.php:287
 msgid "Schema II"
-msgstr ""
+msgstr "Schéma II"
 
 #: sanctorale.php:288
 msgid "Schema III"
-msgstr ""
+msgstr "Schéma III"
 
 #: sanctorale.php:289
-#, fuzzy
-#| msgid "Easter"
 msgid "Easter Season"
-msgstr "Pâques"
+msgstr "Temps pascal"
 
 #: sanctorale.php:290
 msgid "Outside Easter Season"
-msgstr ""
+msgstr "En dehors du temps pascal"
 
 #: sanctorale.php:296
 msgid "Displays as"
-msgstr ""
+msgstr "Affiche comme"
 
 #: sanctorale.php:299
 msgid "no rank shown"
-msgstr ""
+msgstr "aucun rang affiché"
 
 #: sanctorale.php:310
-#, fuzzy
-#| msgid "Higher Solemnity"
 msgid "Higher solemnity"
-msgstr "Solemnité plus élevée"
+msgstr "Solennité supérieure"
 
 #: sanctorale.php:313
-#, fuzzy
-#| msgid "Color"
 msgid "Colour"
 msgstr "Couleur"
 
 #: sanctorale.php:314
-#, fuzzy
-#| msgid "Common(s)"
 msgid "Common"
-msgstr "Commun(s)"
+msgstr "Commun"
 
 #: sanctorale.php:315
 msgid "From this Missal"
-msgstr ""
+msgstr "À partir de ce Missel"
 
 #: sanctorale.php:316
-#, fuzzy
-#| msgid "All Seasons"
 msgid "All editions"
-msgstr "Toutes les saisons"
+msgstr "Toutes les éditions"
 
 #: sanctorale.php:318
 msgid "This Missal redefines a celebration an earlier one already had."
-msgstr ""
+msgstr "Ce missel redéfinit une célébration qu'un missel antérieur avait déjà."
 
 #: sanctorale.php:323
 msgid "Redeclared by"
-msgstr ""
+msgstr "Rédéclaré par"
 
 #: sanctorale.php:325
 msgid ""
 "Takes the celebration universal at the same rank; the earlier particular "
 "entry is now redundant."
 msgstr ""
+"Prend la célébration universelle au même rang; l'entrée particulière "
+"antérieure est désormais redondante."
 
 #: sanctorale.php:328
 msgid "Redeclares the celebration without changing anything."
-msgstr ""
+msgstr "Réaffirme la célébration sans rien changer."
 
 #: sanctorale.php:331
-#, fuzzy
-#| msgid "override"
 msgid "no override"
-msgstr "remplacement"
+msgstr "Aucun remplacement"
 
 #: sanctorale.php:334
-#, fuzzy
-#| msgid "Add translation"
 msgid "translated"
-msgstr "Ajouter la traduction"
+msgstr "traduit"
 
 #: sanctorale.php:335
 msgid "blank"
-msgstr ""
+msgstr "vidé"
 
 #: sanctorale.php:336
-#, fuzzy
-#| msgid "Permissions"
 msgid "missing"
-msgstr "Autorisations"
+msgstr "manquant"
 
 #: sanctorale.php:337
 msgid "Nothing here."
-msgstr ""
+msgstr "Rien ici."
 
 #: sanctorale.php:338
 msgid "No celebration in this month matches your search."
-msgstr ""
+msgstr "Aucune célébration dans ce mois ne correspond à votre recherche."
 
 #: sanctorale.php:339
-#, fuzzy
-#| msgid "No readings defined for this locale yet"
 msgid "No sanctorale lectionary is defined for this rite."
-msgstr "Aucune lecture définie pour cette langue pour le moment"
+msgstr "Aucun lectionnaire sanctoral n'est défini pour ce rite."
 
 #: sanctorale.php:342
-#, fuzzy
-#| msgid "No readings defined for this locale yet"
 msgid "No readings are curated for this celebration yet."
-msgstr "Aucune lecture définie pour cette langue pour le moment"
+msgstr "Aucune lecture n'est encore proposée pour cette célébration."
 
 #: sanctorale.php:343
-#, fuzzy
-#| msgid "Could not load notifications"
 msgid "Could not load the names for this celebration."
-msgstr "Impossible de charger les notifications"
+msgstr "Impossible de charger les noms de cette célébration."
 
 #: sanctorale.php:344
-#, fuzzy
-#| msgid "Could not load notifications"
 msgid "Could not load the readings for this celebration."
-msgstr "Impossible de charger les notifications"
+msgstr "Impossible de charger les lectures pour cette célébration."
 
 #: sanctorale.php:346
 msgid "No Missal is published for this combination of rite and calendar."
 msgstr ""
+"Aucun Missel n'est publié pour cette combinaison de rite et de calendrier."
 
 #: sanctorale.php:352
-#, fuzzy
-#| msgid "Add Missal"
 msgid "Add to Missal"
-msgstr "Ajouter un missel"
+msgstr "Ajouter au Missel"
 
 #: sanctorale.php:361
 msgid ""
@@ -5095,24 +4983,25 @@ msgid ""
 "number (StPaul_2) or _vigil is allowed, as is a lowercase two-word prefix. "
 "Cannot be renamed."
 msgstr ""
+"Commence par une majuscule, puis des lettres et des chiffres "
+"(StIsidoreFarmer). Un chiffre final (StPaul_2) ou _vigil est autorisé, tout "
+"comme un préfixe en deux mots en minuscules. Ne peut pas être renommé."
 
 #: sanctorale.php:363
 msgid "Enter a day between 1 and 31."
-msgstr ""
+msgstr "Saisissez un jour entre 1 et 31."
 
 #: sanctorale.php:368
 msgid "Choose…"
-msgstr ""
+msgstr "Choisir…"
 
 #: sanctorale.php:369
 msgid "Choose a month."
-msgstr ""
+msgstr "Choisissez un mois."
 
 #: sanctorale.php:370
-#, fuzzy
-#| msgid "Change grade"
 msgid "Choose a grade."
-msgstr "Changer de rang"
+msgstr "Choisissez un niveau."
 
 #. translators: %1$s is the event key, %2$s is the Missal id
 #: sanctorale.php:372
@@ -5121,94 +5010,98 @@ msgid ""
 "Delete %1$s from %2$s? Its name and readings go with it, and any earlier "
 "edition that already defined it takes over."
 msgstr ""
+"Supprimer %1$s de %2$s? Son nom et ses lectures l'accompagnent, et toute "
+"édition antérieure qui l'a déjà définie prend le relais."
 
 #: sanctorale.php:375
 msgid ""
 "These readings live in the rite-wide lectionary, shared by every Missal of "
 "this rite."
 msgstr ""
+"Ces lectures se trouvent dans le lectionnaire du rite, partagé par tous les "
+"Missels de ce rite."
 
 #: sanctorale.php:376
 msgid "This rite has no lectionary, so readings cannot be edited here."
 msgstr ""
+"Ce rite n'a pas de lectionnaire, donc les lectures ne peuvent pas être "
+"modifiées ici."
 
 #: sanctorale.php:384
 msgid ""
 "Inherited from a different lectionary source; edit it there, not from this "
 "Missal."
 msgstr ""
+"Hérité d'une autre source de lectionnaire ; édite-la là-bas, pas à partir de "
+"ce Missel."
 
 #: sanctorale.php:387
 msgid "The readings were kept: another Missal still declares this celebration."
 msgstr ""
+"Les lectures ont été conservées : un autre Missel déclare toujours cette "
+"célébration."
 
 #: sanctorale.php:388
 msgid "Default (from grade)"
-msgstr ""
+msgstr "Par défaut (à partir du grade)"
 
 #: sanctorale.php:389
 msgid "Show no rank"
-msgstr ""
+msgstr "Afficher aucun rang"
 
 #: sanctorale.php:390
 msgid "Custom text…"
-msgstr ""
+msgstr "Texte personnalisé…"
 
 #: sanctorale.php:391
 msgid "Nothing has changed."
-msgstr ""
+msgstr "Rien n'a changé."
 
 #: sanctorale.php:392
-#, fuzzy
-#| msgid "Save"
 msgid "Saved."
-msgstr "Enregistrer"
+msgstr "Enregistré."
 
 #: sanctorale.php:393
-#, fuzzy
-#| msgid "Application rejected."
 msgid "Celebration created."
-msgstr "Application rejetée."
+msgstr "Célébration créée."
 
 #: sanctorale.php:394
-#, fuzzy
-#| msgid "Application rejected."
 msgid "Celebration deleted."
-msgstr "Application rejetée."
+msgstr "Célébration supprimée."
 
 #. translators: %s is the error reported by the API
 #: sanctorale.php:396
 #, php-format
 msgid "Could not save: %s"
-msgstr ""
+msgstr "Impossible d'enregistrer : %s"
 
 #: sanctorale.php:397
-#, fuzzy
-#| msgid "You do not have permission to perform this action."
 msgid "You do not have permission to change this Missal."
-msgstr "Vous n'avez pas la permission d'effectuer cette action."
+msgstr "Vous n'avez pas la permission de modifier ce Missel."
 
 #: sanctorale.php:398
 msgid "This clashes with another Missal"
-msgstr ""
+msgstr "Cela entre en conflit avec un autre Missel."
 
 #. translators: %s is the change request batch id
 #: sanctorale.php:404
 #, php-format
 msgid "Queued for review as batch %s. Nothing has been written yet."
 msgstr ""
+"Mis en file d'attente pour révision en tant que lot %s. Rien n'a encore été "
+"écrit."
 
 #. translators: %s is the change request batch id
 #: sanctorale.php:406
 #, php-format
 msgid "Approved as batch %s, awaiting publication."
-msgstr ""
+msgstr "Approuvé en tant que lot %s, en attente de publication."
 
 #. translators: %s is a comma-separated list of batch ids
 #: sanctorale.php:408
 #, php-format
 msgid "Earlier batches folded in: %s."
-msgstr ""
+msgstr "Les lots antérieurs ont été intégrés : %s."
 
 #. translators: %s is the unrecognized disposition value
 #: sanctorale.php:410
@@ -5216,13 +5109,14 @@ msgstr ""
 msgid ""
 "The server reported an unrecognized outcome (%s); nothing local was changed."
 msgstr ""
+"Le serveur a signalé un résultat non reconnu (%s); aucune modification "
+"locale n'a été apportée."
 
 #. translators: %s is the error reported by the API
 #: sanctorale.php:412
-#, fuzzy, php-format
-#| msgid "Could not load notifications"
+#, php-format
 msgid "Could not load the sanctorale: %s"
-msgstr "Impossible de charger les notifications"
+msgstr "Impossible de charger le sanctorale : %s"
 
 #. translators: %s is the event_key a #event= link named
 #. Reported rather than left silent: the link may be stale, mistyped, or
@@ -5230,7 +5124,7 @@ msgstr "Impossible de charger les notifications"
 #: sanctorale.php:416
 #, php-format
 msgid "%s is not in the current selection."
-msgstr ""
+msgstr "%s n'est pas dans la sélection actuelle."
 
 #: user-profile.php:23 user-profile.php:35
 msgid "User Profile"
