@@ -696,21 +696,141 @@ export function applicableMissals(missals, calendar, baseRegion) {
  * supplied it. Overrides are rare but real — US_2011 redefines StIsidore — and a
  * reader cannot make sense of the result without being told where a row came from.
  *
+ * Every row also keeps `_declaredBy`: the WHOLE chain of layers that declared its
+ * key, oldest first, each with the row that layer supplied. Keeping only the
+ * winner and the id of the loser — which is all `_overrides` records, and only
+ * for the immediately preceding layer — was enough to say THAT something was
+ * overridden but never WHAT changed, because the superseded row was thrown away.
+ * That is frontend #524, and it is why the chain is retained here rather than
+ * recomputed later: this is the one place that sees every layer in order.
+ *
+ * The rows in the chain are the layers' own, unannotated. The composed row is the
+ * last chain entry's row plus the `_` fields, so `_declaredBy` carries no copy of
+ * itself and the structure stays finite.
+ *
+ * `_overrides` is unchanged and still names only the immediately preceding layer:
+ * the row badge means "this Missal redefines something an earlier one had", which
+ * is exactly a one-step fact.
+ *
  * @param {Array<{missal: object, rows: Array<object>}>} layers oldest first
  */
 export function compose(layers) {
     const byKey = new Map();
     for (const { missal, rows } of layers) {
         for (const row of rows) {
+            const previous = byKey.get(row.event_key);
+            const declaration = {
+                missalId: missal.missal_id,
+                missalYear: missal.year_published,
+                missalRegion: missal.region,
+                row
+            };
             byKey.set(row.event_key, {
                 ...row,
                 _missalId: missal.missal_id,
                 _missalYear: missal.year_published,
-                _overrides: byKey.has(row.event_key) ? byKey.get(row.event_key)._missalId : null
+                _overrides: previous ? previous._missalId : null,
+                _declaredBy: [...(previous?._declaredBy ?? []), declaration]
             });
         }
     }
     return [...byKey.values()].sort((a, b) => (a.month - b.month) || (a.day - b.day));
+}
+
+/**
+ * The fields a redeclaration can meaningfully change.
+ *
+ * The structure row only: names and readings live in their own sidecar files and
+ * are edited in their own panels, so a difference in them is not something one
+ * Missal did TO another's declaration. `grade_display` is included because an
+ * edition that only relabels the rank — US_2011 presenting Independence Day as
+ * "National Holiday" — has changed something a reader can see.
+ */
+const REDECLARATION_FIELDS = ['date', 'grade', 'grade_display', 'color', 'common'];
+
+/** One declaration's value for a comparable field, normalised for comparison. */
+function redeclarationValue(row, field) {
+    switch (field) {
+        case 'date':
+            return `${row?.month}-${row?.day}`;
+        case 'color':
+        case 'common':
+            // Order is meaningful in the corpus and diffStructure() compares
+            // element by element, so a reordering IS a change, not a false one.
+            return (row?.[field] ?? []).join('|');
+        case 'grade_display':
+            // An override of '' is authored: it says the rank is deliberately not
+            // displayed. Absent means no override at all. The two differ.
+            return gradeDisplayOf(row);
+        default:
+            return row?.[field] ?? null;
+    }
+}
+
+/**
+ * What one declaration did to the one before it.
+ *
+ * Three outcomes, and the whole point of #524 is that they are genuinely
+ * different things the page used to present identically:
+ *
+ * - `property`  — a later edition changed something. `US_2011` exists to raise
+ *                 `StPeterClaver` from optional memorial to memorial and does
+ *                 nothing else; a curator cannot see that today without opening
+ *                 three files.
+ * - `universal` — a celebration a PARTICULAR calendar had declared was taken up
+ *                 by an editio typica at the same rank, leaving the particular
+ *                 entry redundant. `IT_1983` declared `StPeterClaver` because he
+ *                 was not in the 1970 General Roman Calendar; the 2002 typica
+ *                 then took him universal. Nothing changed, but the reason
+ *                 nothing changed is a fact about the calendar, not a null result.
+ * - `none`      — the later declaration changes nothing and is not a promotion.
+ *
+ * `universal` is decided by REGION rather than by a missal-id pattern: an edition
+ * whose region is the rite's base region is a typical edition, which is the same
+ * test `applicableMissals()` already applies. Passing the base region in keeps
+ * this function pure and keeps the one definition of "typical" at the call site.
+ *
+ * @param {object} previous the earlier declaration
+ * @param {object} next the later one
+ * @param {?string} baseRegion the rite's base region, from baseRegionFor()
+ * @returns {{kind: 'property'|'universal'|'none', changes: Array<{field: string, from: *, to: *}>}}
+ */
+export function describeRedeclaration(previous, next, baseRegion = null) {
+    const changes = [];
+    for (const field of REDECLARATION_FIELDS) {
+        const from = redeclarationValue(previous?.row, field);
+        const to = redeclarationValue(next?.row, field);
+        if (from !== to) {
+            changes.push({ field, from, to });
+        }
+    }
+
+    if (changes.length > 0) {
+        return { kind: 'property', changes };
+    }
+    const promoted = baseRegion !== null
+        && previous?.missalRegion !== baseRegion
+        && next?.missalRegion === baseRegion;
+    return { kind: promoted ? 'universal' : 'none', changes };
+}
+
+/**
+ * A row's redeclarations, oldest first, each described.
+ *
+ * Empty for the overwhelming majority of celebrations, which one layer declares
+ * and no other touches — so a caller can render nothing at all rather than an
+ * empty panel saying so.
+ *
+ * @param {object} row a composed row
+ * @param {?string} baseRegion
+ * @returns {Array<{previous: object, next: object, kind: string, changes: Array<object>}>}
+ */
+export function redeclarationSteps(row, baseRegion = null) {
+    const chain = row?._declaredBy ?? [];
+    return chain.slice(1).map((next, i) => {
+        const previous = chain[i];
+        return { previous, next, ...describeRedeclaration(previous, next, baseRegion) };
+    });
 }
 
 /**
@@ -1661,7 +1781,101 @@ function renderStructure(row) {
             ${field(i18n.color, (row.color ?? []).join(', '))}
             ${field(i18n.common, (row.common ?? []).join(', '))}
             ${field(i18n.fromMissal, row._missalId)}
-        </div>`;
+        </div>
+        ${renderRedeclarations(row)}`;
+}
+
+/**
+ * How a redeclared field's value reads to a curator.
+ *
+ * `formatGrade()` rather than the bare integer: "2" and "3" are what the data
+ * says, but "Optional memorial" and "Memorial" are what the change MEANS, and a
+ * panel that exists to make a relationship legible must not make the reader
+ * translate rank numbers.
+ */
+function redeclarationFieldValue(declaration, field, side) {
+    const row = declaration?.row;
+    switch (field) {
+        case 'date':
+            return `${monthName(row?.month)} ${row?.day}`;
+        case 'grade':
+            return formatGrade(row, i18n);
+        case 'grade_display': {
+            const value = side;
+            if (value === null) return i18n.displaysAsNothingSet;
+            return value === '' ? i18n.displaysAsNothing : value;
+        }
+        default:
+            // color and common are joined lists; an empty one reads as a dash
+            // rather than as blank, so the two columns stay aligned.
+            return side === '' ? '—' : String(side).split('|').join(', ');
+    }
+}
+
+const REDECLARATION_FIELD_LABEL = {
+    date: 'date',
+    grade: 'grade',
+    grade_display: 'displaysAs',
+    color: 'color',
+    common: 'common'
+};
+
+/**
+ * The redeclaration panel: who substituted whom, in order, and what it changed.
+ *
+ * frontend #524. The page used to badge a row "override" and name the losing
+ * Missal, which says THAT one declaration replaced another but nothing about what
+ * changed or why — so "US_2011 raised the rank from optional to obligatory
+ * memorial" and "the 2002 typica took an Italian particular memorial universal,
+ * changing nothing" rendered identically, though they are different acts.
+ *
+ * Only the Missals that apply to the selected calendar appear, because the chain
+ * is built by compose() from applicableMissals()' layers — the same narrowing
+ * PR #523 gave the readings tiers. So `IT_1983` shows on the Italian calendar and
+ * not on the US one, which is the honest answer to "who declares this here".
+ *
+ * Rendered only when there IS a chain: one declaration is the overwhelmingly
+ * common case and an empty panel saying "declared once" would be noise on every
+ * celebration.
+ */
+function renderRedeclarations(row) {
+    const steps = redeclarationSteps(row, state.baseRegion);
+    if (!steps.length) return '';
+
+    const line = (step) => {
+        const heading = `
+            <code class="small">${escapeHtml(step.previous.missalId)}</code>
+            <i class="fas fa-arrow-right mx-1 text-muted small"></i>
+            <code class="small">${escapeHtml(step.next.missalId)}</code>`;
+
+        if (step.kind === 'universal') {
+            return `
+                <li class="mb-2">${heading}
+                    <div class="small text-muted">${escapeHtml(i18n.redeclarationUniversal)}</div>
+                </li>`;
+        }
+        if (step.kind === 'none') {
+            return `
+                <li class="mb-2">${heading}
+                    <div class="small text-muted">${escapeHtml(i18n.redeclarationNoChange)}</div>
+                </li>`;
+        }
+        return `
+            <li class="mb-2">${heading}
+                <ul class="list-unstyled ms-3 mb-0">${step.changes.map((change) => `
+                    <li class="small">
+                        <span class="text-muted">${escapeHtml(i18n[REDECLARATION_FIELD_LABEL[change.field]] ?? change.field)}:</span>
+                        ${escapeHtml(redeclarationFieldValue(step.previous, change.field, change.from))}
+                        <i class="fas fa-arrow-right mx-1 text-muted"></i>
+                        <strong>${escapeHtml(redeclarationFieldValue(step.next, change.field, change.to))}</strong>
+                    </li>`).join('')}
+                </ul>
+            </li>`;
+    };
+
+    return `
+        <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.redeclarations)}</h6>
+        <ul class="list-unstyled mb-3">${steps.map(line).join('')}</ul>`;
 }
 
 // ------------------------------------------------------------- structure form

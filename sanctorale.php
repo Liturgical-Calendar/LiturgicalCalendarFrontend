@@ -316,6 +316,19 @@ $litCommons = [
                 allMissals:         <?php echo json_encode(_('All editions'), JSON_HEX_TAG); ?>,
                 overrides:          <?php echo json_encode(_('override'), JSON_HEX_TAG); ?>,
                 overridesTitle:     <?php echo json_encode(_('This Missal redefines a celebration an earlier one already had.'), JSON_HEX_TAG); ?>,
+                <?php // The redeclaration panel. Naming the relationship, not just the
+                      // fact of it: a later edition that CHANGES a property and one that
+                      // merely takes a particular celebration universal are different
+                      // acts, and the page used to present them identically. ?>
+                redeclarations:     <?php echo json_encode(_('Redeclared by'), JSON_HEX_TAG); ?>,
+                redeclarationUniversal: <?php echo json_encode(
+                    _('Takes the celebration universal at the same rank; the earlier particular entry is now redundant.'),
+                    JSON_HEX_TAG
+                ); ?>,
+                redeclarationNoChange: <?php echo json_encode(_('Redeclares the celebration without changing anything.'), JSON_HEX_TAG); ?>,
+                <?php // Distinct from `displaysAsNothing`: that means an override of '',
+                      // which deliberately shows no rank. This means no override at all. ?>
+                displaysAsNothingSet: <?php echo json_encode(_('no override'), JSON_HEX_TAG); ?>,
                 <?php // The three locale states are distinct on purpose: a deliberately blank
                       // entry and a missing one are different facts about the data. ?>
                 translatedLabel:    <?php echo json_encode(_('translated'), JSON_HEX_TAG); ?>,
