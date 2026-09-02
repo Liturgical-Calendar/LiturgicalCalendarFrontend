@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-02 12:47+0000\n"
 "PO-Revision-Date: 2026-09-03 00:52+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pt/>\n"
 "Language: pt\n"
@@ -4089,10 +4089,8 @@ msgid "Reviewer decision"
 msgstr "Revogar Permissão"
 
 #: admin-changes.php:255
-#, fuzzy
-#| msgid "Season"
 msgid "Reason"
-msgstr "Temporada"
+msgstr "Motivo"
 
 #: admin-changes.php:256
 #, fuzzy
@@ -4509,11 +4507,11 @@ msgstr "Idioma"
 
 #: temporale.php:63
 msgid "Liturgical Season"
-msgstr "Estação Litúrgica"
+msgstr "Tempo Litúrgico"
 
 #: temporale.php:65
 msgid "All Seasons"
-msgstr "Todas as Estações"
+msgstr "Todos os Tempos"
 
 #: temporale.php:66
 msgid "Advent"
@@ -4629,7 +4627,7 @@ msgstr "Exportar JSON"
 
 #: temporale.php:137
 msgid "Season"
-msgstr "Temporada"
+msgstr "Tempo"
 
 #: temporale.php:139
 msgid "Color"
@@ -4880,10 +4878,8 @@ msgid "From this Missal"
 msgstr ""
 
 #: sanctorale.php:316
-#, fuzzy
-#| msgid "All Seasons"
 msgid "All editions"
-msgstr "Todas as Estações"
+msgstr "Todas as edições"
 
 #: sanctorale.php:318
 msgid "This Missal redefines a celebration an earlier one already had."
