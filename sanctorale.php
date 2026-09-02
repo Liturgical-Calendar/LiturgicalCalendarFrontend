@@ -225,9 +225,58 @@ $litCommons = [
                 structure:          <?php echo json_encode(_('Celebration'), JSON_HEX_TAG); ?>,
                 names:              <?php echo json_encode(_('Names by locale'), JSON_HEX_TAG); ?>,
                 readings:           <?php echo json_encode(_('Lectionary readings'), JSON_HEX_TAG); ?>,
+                readingsShape:      <?php echo json_encode(_('Readings structure'), JSON_HEX_TAG); ?>,
+                readingsFromCommon: <?php echo json_encode(_('From the Common'), JSON_HEX_TAG); ?>,
+                readingsNoneYet:    <?php echo json_encode(_('No readings are curated for this celebration yet. Fill in what you know; blank citations are not saved.'), JSON_HEX_TAG); ?>,
+                <?php // The readings shapes `SourceReadings` admits, keyed by their
+                      // definition name in the API's CommonDef.json. The page RESOLVES the
+                      // shapes themselves from the schema at runtime rather than listing
+                      // them — these are only the translations of their titles, and a
+                      // shape with no entry here falls back to the schema's own English
+                      // title, so adding one upstream does not break this page. ?>
+                readings_shapes: {
+                    'ReadingsFerial':             <?php echo json_encode(_('Ferial Readings'), JSON_HEX_TAG); ?>,
+                    'ReadingsFestive':            <?php echo json_encode(_('Festive Readings'), JSON_HEX_TAG); ?>,
+                    'ReadingsPalmSunday':         <?php echo json_encode(_('Palm Sunday Readings'), JSON_HEX_TAG); ?>,
+                    'ReadingsEasterVigil':        <?php echo json_encode(_('Easter Vigil Readings'), JSON_HEX_TAG); ?>,
+                    'ReadingsChristmas':          <?php echo json_encode(_('Christmas Readings'), JSON_HEX_TAG); ?>,
+                    'ReadingsWithEvening':        <?php echo json_encode(_('Readings with Evening Mass'), JSON_HEX_TAG); ?>,
+                    'ReadingsMultipleSchemas':    <?php echo json_encode(_('Readings with Multiple Schemas'), JSON_HEX_TAG); ?>,
+                    'ReadingsCommons':            <?php echo json_encode(_('Readings from liturgical Commons'), JSON_HEX_TAG); ?>,
+                    'ReadingsSeasonal':           <?php echo json_encode(_('Seasonal Readings'), JSON_HEX_TAG); ?>,
+                    'ReadingsWithVigil':          <?php echo json_encode(_('Readings with a Vigil Mass'), JSON_HEX_TAG); ?>,
+                    'ReadingsChristmasWithVigil': <?php echo json_encode(_('Christmas Readings with a Vigil Mass'), JSON_HEX_TAG); ?>
+                },
+                <?php // Reading names, keyed as ReadingsRenderer.readingLabels keys them. The
+                      // ORDER and the VOCABULARY are read from the renderer itself (exported
+                      // in liturgy-components-js 2.10.0, issue #97); only the translations
+                      // live here, and a key with no entry falls back to the renderer's
+                      // English rather than showing the bare key. ?>
+                readings_labels: {
+                    'palm_gospel':               <?php echo json_encode(_('Gospel at the Procession'), JSON_HEX_TAG); ?>,
+                    'first_reading':             <?php echo json_encode(_('First Reading'), JSON_HEX_TAG); ?>,
+                    'responsorial_psalm':        <?php echo json_encode(_('Responsorial Psalm'), JSON_HEX_TAG); ?>,
+                    'second_reading':            <?php echo json_encode(_('Second Reading'), JSON_HEX_TAG); ?>,
+                    'responsorial_psalm_2':      <?php echo json_encode(_('Responsorial Psalm'), JSON_HEX_TAG); ?>,
+                    'third_reading':             <?php echo json_encode(_('Third Reading'), JSON_HEX_TAG); ?>,
+                    'responsorial_psalm_3':      <?php echo json_encode(_('Responsorial Psalm'), JSON_HEX_TAG); ?>,
+                    'fourth_reading':            <?php echo json_encode(_('Fourth Reading'), JSON_HEX_TAG); ?>,
+                    'responsorial_psalm_4':      <?php echo json_encode(_('Responsorial Psalm'), JSON_HEX_TAG); ?>,
+                    'fifth_reading':             <?php echo json_encode(_('Fifth Reading'), JSON_HEX_TAG); ?>,
+                    'responsorial_psalm_5':      <?php echo json_encode(_('Responsorial Psalm'), JSON_HEX_TAG); ?>,
+                    'sixth_reading':             <?php echo json_encode(_('Sixth Reading'), JSON_HEX_TAG); ?>,
+                    'responsorial_psalm_6':      <?php echo json_encode(_('Responsorial Psalm'), JSON_HEX_TAG); ?>,
+                    'seventh_reading':           <?php echo json_encode(_('Seventh Reading'), JSON_HEX_TAG); ?>,
+                    'responsorial_psalm_7':      <?php echo json_encode(_('Responsorial Psalm'), JSON_HEX_TAG); ?>,
+                    'epistle':                   <?php echo json_encode(_('Epistle'), JSON_HEX_TAG); ?>,
+                    'responsorial_psalm_epistle': <?php echo json_encode(_('Responsorial Psalm'), JSON_HEX_TAG); ?>,
+                    'gospel_acclamation':        <?php echo json_encode(_('Gospel Acclamation'), JSON_HEX_TAG); ?>,
+                    'gospel':                    <?php echo json_encode(_('Gospel'), JSON_HEX_TAG); ?>
+                },
                 <?php // Some celebrations carry several sets of readings rather than one: a
-                      // Vigil and a Day Mass, or numbered schemata. Keys, order and labels
-                      // all match ReadingsRenderer in liturgy-components-js. ?>
+                      // Vigil and a Day Mass, or numbered schemata. The keys and their order
+                      // are read from ReadingsRenderer.massLabels in liturgy-components-js;
+                      // these are the translations of its labels. ?>
                 schemas: {
                     'vigil':                 <?php echo json_encode(_('Vigil Mass'), JSON_HEX_TAG); ?>,
                     'night':                 <?php echo json_encode(_('Mass during the Night'), JSON_HEX_TAG); ?>,

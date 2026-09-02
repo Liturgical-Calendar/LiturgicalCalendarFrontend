@@ -19,6 +19,7 @@
  * @module sanctorale
  */
 
+import { ReadingsRenderer } from '@liturgical-calendar/components-js';
 import { detectMissalCapabilities } from './capabilities.js';
 import { describeWriteOutcome } from './writeDisposition.js';
 import {
@@ -95,6 +96,20 @@ const state = {
 };
 
 /**
+ * The shape a blank readings entry starts out as.
+ *
+ * `ReadingsFerial`'s four keys are exactly `MissalsHandler::emptyReadings()` —
+ * the placeholder the API itself fans out into every readings locale file on the
+ * first write to an entry, and what the corpus already stores for an uncurated
+ * one (all fourteen US_2011 entries carry exactly this in both of their
+ * lectionary files). Defaulting to it means the form proposes the shape the API
+ * would have written anyway; a curator whose celebration needs another one picks
+ * it from the shape select, which is built from the schema rather than from a
+ * list here — see `loadReadingsShapes()`.
+ */
+const DEFAULT_READINGS_SHAPE = 'ReadingsFerial';
+
+/**
  * What the modal is currently editing. Separate from `state`, which is about the
  * composed view: this is torn down and rebuilt every time the modal opens.
  */
@@ -104,6 +119,20 @@ const editState = {
     creating: false,
     editing: false,
     readingsTier: 'rite',
+    /**
+     * The readings shape the write target's panel is currently offering, and the
+     * shape chosen for each slot of it when that shape is a nested one.
+     *
+     * One shape for the whole tier rather than one per locale: a celebration has
+     * the same readings structure in every language it is curated in — only the
+     * citations differ — so a per-locale shape would let a curator author a file
+     * set the corpus has no example of and `SourceReadings` would then reject
+     * unevenly, locale by locale.
+     */
+    readingsShape: DEFAULT_READINGS_SHAPE,
+    readingsSlotShapes: {},
+    /** The locales the readings write target carries, for rendering blanks. */
+    readingsLocales: [],
     /**
      * The calendar a NEW entry belongs to. An existing entry carries its own, so
      * this is only ever consulted when creating one, where no row exists to read.
@@ -379,29 +408,228 @@ export function gradeDisplayOf(row) {
  * Some celebrations offer alternative sets rather than one: AllSouls carries
  * `schema_one`, `schema_two` and `schema_three`, each a complete set. The flat
  * shape maps reading names to citations; the nested shape maps schema names to
- * those maps. Same predicate, and same name, as ReadingsRenderer's in
- * liturgy-components-js — see the note on renderReadings().
+ * those maps.
+ *
+ * Delegates to `ReadingsRenderer.hasNestedSchemas`, the static form the library
+ * added in 2.10.0 precisely so a consumer rendering readings its own way can
+ * reach the predicate without constructing a renderer whose markup it does not
+ * want. Re-exported under this page's own name because the modules and tests
+ * here already address it that way — the implementation is the library's.
  *
  * @param {Record<string, unknown>} entry
  */
 export function hasNestedSchemas(entry) {
-    const values = Object.values(entry ?? {});
-    return values.length > 0 && values.every((v) => v !== null && typeof v === 'object');
+    return ReadingsRenderer.hasNestedSchemas(entry ?? {});
 }
 
 /**
  * Canonical order first, then anything unexpected, so a new key still shows.
  *
- * Copied from ReadingsRenderer.readingOrder in liturgy-components-js so the two
- * agree on both order and vocabulary. Nesting is not only the schema_* triple:
- * Assumption, StsPeterPaulAp and NativityJohnBaptist nest as vigil/day, which is
- * the shape that actually carries content today.
+ * Read from `ReadingsRenderer.massLabels` rather than restated here. This page
+ * used to carry a hand-copied list because the renderer was not exported from
+ * the package entry point; liturgy-components-js#97 exported it in 2.10.0, and
+ * the library derives its own nested-schema keys from these same labels — so
+ * reading the labels' keys is reading the whole schema vocabulary, render order
+ * included, from the one place that defines it.
+ *
+ * Nesting is not only the schema_* triple: Assumption, StsPeterPaulAp and
+ * NativityJohnBaptist nest as vigil/day, which is the shape that actually
+ * carries content today.
  */
-const SCHEMA_ORDER = [
-    'vigil', 'night', 'dawn', 'day', 'evening',
-    'schema_one', 'schema_two', 'schema_three',
-    'easter_season', 'outside_easter_season'
-];
+const SCHEMA_ORDER = Object.keys(ReadingsRenderer.massLabels);
+
+/**
+ * Canonical order and vocabulary for the readings WITHIN one schema.
+ *
+ * `readingOrder` interleaves each responsorial psalm directly after the reading
+ * it answers, which is what makes a form built from it readable: the eight keys
+ * that all label as "Responsorial Psalm" are never adjacent.
+ */
+const READING_ORDER = [...ReadingsRenderer.readingOrder];
+
+
+/**
+ * The readings shapes `CommonDef.json` defines, resolved from the schema at
+ * runtime and cached for the page's lifetime.
+ *
+ * Hand-copying these is the bug class this page has been paying down (frontend
+ * #526 is the same mistake made against `LitCommon`), and a copy would be wrong
+ * in a way that is easy to miss: the union to offer is **`SourceReadings`**, not
+ * `Readings`. The schema says why in its own description — `Readings` describes
+ * OUTPUT, where a vigil Mass is a liturgical event in its own right with its own
+ * `event_key`, so it does not admit `ReadingsWithVigil` or
+ * `ReadingsChristmasWithVigil`. This editor writes SOURCE data, which does.
+ *
+ * @type {?Array<{id: string, title: string, kind: 'flat'|'nested'|'string', keys: string[]}>}
+ */
+let readingsShapes = null;
+
+/**
+ * A reading key's label, translated where the page has a translation and falling
+ * back to the library's English.
+ *
+ * The fallback matters for forwards compatibility rather than for today: a key
+ * the API adds after this page was last translated still renders with a real
+ * label instead of `responsorial_psalm_7`.
+ *
+ * @param {string} key
+ * @param {object} strings
+ * @returns {string}
+ */
+function readingLabel(key, strings = i18n) {
+    return strings.readings_labels?.[key] ?? ReadingsRenderer.readingLabels[key] ?? key;
+}
+
+/**
+ * A reading map's keys in canonical order, with anything unrecognised kept at the
+ * end so a key this page has never heard of is still shown rather than dropped.
+ *
+ * @param {Record<string, unknown>} readings
+ * @returns {string[]}
+ */
+function readingKeysOf(readings) {
+    const present = Object.keys(readings ?? {});
+    const known = READING_ORDER.filter((k) => present.includes(k));
+    const extra = present.filter((k) => !READING_ORDER.includes(k));
+    return [...known, ...extra];
+}
+
+/**
+ * Flatten a `oneOf` union of `$ref`s into the leaf definitions it admits.
+ *
+ * `SourceReadings` is a union of unions — its first branch is `Readings`, itself
+ * a nine-branch union — so one pass would yield `Readings` as a "shape", which is
+ * not one. `seen` guards a self-referential schema rather than any shape that
+ * exists today.
+ *
+ * @param {string} name a definition name
+ * @param {Record<string, object>} defs the schema's `definitions` map
+ * @param {Set<string>} [seen]
+ * @returns {string[]} leaf definition names, in schema order
+ */
+function unionLeaves(name, defs, seen = new Set()) {
+    if (seen.has(name) || !defs[name]) return [];
+    seen.add(name);
+    const branches = defs[name].oneOf ?? defs[name].anyOf;
+    if (!Array.isArray(branches)) return [name];
+    return branches.flatMap((branch) => {
+        const ref = typeof branch.$ref === 'string' ? branch.$ref.replace('#/definitions/', '') : null;
+        return ref ? unionLeaves(ref, defs, seen) : [];
+    });
+}
+
+/**
+ * The readings shapes a curator may choose between, derived from the schema.
+ *
+ * Three kinds, and they are genuinely different rather than degrees of one:
+ *
+ * - `flat`   — reading key to citation. `ReadingsFerial` (the four-key default),
+ *              `ReadingsFestive`, `ReadingsPalmSunday`, `ReadingsEasterVigil`.
+ * - `nested` — Mass name to a whole set of readings: `ReadingsWithVigil`,
+ *              `ReadingsChristmas`, `ReadingsMultipleSchemas` and the rest. Each
+ *              slot carries a shape of its own.
+ * - `string` — `ReadingsCommons`, which is a plain string naming the Common the
+ *              readings are taken from, NOT an object. Memorials without a proper
+ *              lectionary use it, so on a sanctorale it is a common answer rather
+ *              than an exotic one, and a form that assumed every shape was an
+ *              object would have no way to express it.
+ *
+ * A slot of a nested shape refs `Readings`, so in principle it could nest again;
+ * only flat and string branches are offered there. The one combination that would
+ * need in practice — a vigil alongside Christmas' three Masses — the schema gives
+ * its own top-level shape, `ReadingsChristmasWithVigil`, which is exactly why that
+ * definition exists.
+ *
+ * @param {object} schema a parsed `CommonDef.json`
+ * @returns {Array<{id: string, title: string, kind: 'flat'|'nested'|'string', keys: string[]}>}
+ */
+export function resolveReadingsShapes(schema) {
+    const defs = schema?.definitions ?? {};
+
+    /** A property's declared target: a `$ref`'d definition name, or null. */
+    const refName = (prop) =>
+        typeof prop?.$ref === 'string' ? prop.$ref.replace('#/definitions/', '') : null;
+
+    return unionLeaves('SourceReadings', defs).map((id) => {
+        const def = defs[id] ?? {};
+        const props = def.properties ?? {};
+        const keys = Object.keys(props);
+
+        // A slot of a NESTED shape holds a whole set of readings; a field of a flat
+        // one holds one citation string. The test is therefore what the property
+        // RESOLVES to — a definition with properties or branches of its own — and
+        // not whether it refs the `Readings` union: the schema mostly refs a
+        // CONCRETE shape instead (`ReadingsChristmas`'s three Masses are each a
+        // `ReadingsFestive`), so a union-only test reads those four shapes as flat
+        // and renders `night`/`dawn`/`day` as three text inputs.
+        //
+        // Testing the resolved target also keeps this from depending on the slot
+        // NAMES, which would silently reclassify a shape the API adds later.
+        const slotShapes = {};
+        for (const key of keys) {
+            const target = defs[refName(props[key]) ?? ''] ?? null;
+            const isSet = target !== null
+                && (target.properties !== undefined || Array.isArray(target.oneOf) || Array.isArray(target.anyOf));
+            if (isSet) {
+                // A slot refing a concrete shape declares its default; one refing a
+                // union declares only that a choice is open, hence null.
+                slotShapes[key] = Array.isArray(target.oneOf) || Array.isArray(target.anyOf)
+                    ? null
+                    : refName(props[key]);
+            }
+        }
+        const nested = Object.keys(slotShapes).length > 0;
+
+        return {
+            id,
+            title: def.title ?? id,
+            kind: def.type === 'string' ? 'string' : (nested ? 'nested' : 'flat'),
+            keys,
+            /**
+             * For a nested shape, the shape the schema declares for each slot —
+             * `null` where the slot refs a union and the choice is genuinely open.
+             * Empty for a flat or string shape.
+             */
+            slotShapes
+        };
+    });
+}
+
+/**
+ * Which of the resolved shapes an existing readings entry already follows.
+ *
+ * An exact key-set match, so a partially filled entry does not masquerade as a
+ * smaller shape: `ReadingsFestive` minus its `second_reading` is not
+ * `ReadingsFerial`, it is a festive entry with a gap, and re-rendering it as
+ * ferial would drop the gap out of the form and then out of the file. Falling
+ * back to `null` leaves the entry's own keys rendered as they are.
+ *
+ * @param {unknown} entry one locale's readings
+ * @param {Array<{id: string, kind: string, keys: string[]}>} shapes
+ * @returns {?string} a shape id
+ */
+export function inferReadingsShape(entry, shapes) {
+    if (typeof entry === 'string') {
+        return shapes.find((s) => s.kind === 'string')?.id ?? null;
+    }
+    if (!entry || typeof entry !== 'object') return null;
+    const present = Object.keys(entry).sort().join('|');
+    return shapes.find((s) => s.kind !== 'string' && [...s.keys].sort().join('|') === present)?.id ?? null;
+}
+
+/**
+ * `CommonDef.json`, fetched from the API and cached for the page's lifetime.
+ *
+ * A schema fetch rather than a copy in this file: the copy is the failure this
+ * page keeps being bitten by, and a shape list that drifts from the schema would
+ * offer a curator a shape the API then rejects — or, worse, silently omit one the
+ * corpus already uses. Public endpoint, so `credentials: 'omit'` (see CLAUDE.md).
+ */
+async function loadReadingsShapes() {
+    if (readingsShapes) return readingsShapes;
+    readingsShapes = resolveReadingsShapes(await getJson('/schemas/CommonDef.json'));
+    return readingsShapes;
+}
 
 /**
  * The schemas present across a tier's locales, in a stable order.
@@ -645,16 +873,33 @@ async function showDetail(eventKey, missalId, editing = false) {
     const row = resetEditStateForEntry(eventKey, missalId, editing);
 
     // Names and readings are independent: a rite with no lectionary still has
-    // names, so one failing must not blank the other.
-    const [names, readings] = await Promise.allSettled([
+    // names, so one failing must not blank the other. The schema and the
+    // lectionary index ride along because a 404 on the readings route is the case
+    // that most needs them — there is no response to read a shape or a locale set
+    // off, and that is exactly when a blank form has to be offered.
+    const [names, readings, shapes] = await Promise.allSettled([
         loadI18n(missalId),
-        getJson(`/lectionary/${encodeURIComponent(state.rite)}/sanctorale/${encodeURIComponent(eventKey)}`)
+        getJson(`/lectionary/${encodeURIComponent(state.rite)}/sanctorale/${encodeURIComponent(eventKey)}`),
+        loadReadingsShapes()
     ]);
 
     if (seq !== detailSeq) return;
 
+    // A shape select this page could not build its options for is worse than
+    // none; renderReadingsEditable() falls back to the data's own keys.
+    if (shapes.status === 'rejected') readingsShapes = null;
+
     recordDetailOriginals(names, readings, eventKey);
     dom.detailBody.innerHTML = renderDetailBody(row, names, readings, eventKey);
+
+    // The lectionary INDEX is deliberately NOT awaited above. It is needed only
+    // when the per-event route 404s — an entry nothing has curated yet — which is
+    // the one case with no response to read a locale set off. Fetching it on every
+    // modal open would put a request the common path never uses in front of the
+    // form, and the modal is not usable until this whole function has rendered it.
+    if (editState.editing && isNothingCuratedYet(readings)) {
+        refreshCreateReadings(seq);
+    }
 
     // The custom text only means anything in Custom mode, and is revealed with
     // the value it had rather than cleared: switching away and back must not
@@ -698,6 +943,12 @@ function resetEditStateForEntry(eventKey, missalId, editing) {
     // the 404 branch renders no inputs and sets no tier, so a stale value from
     // whatever entry was open before this one must not leak into this one's payload.
     editState.readingsTier = 'rite';
+    // Reset for the same reason `readingsTier` is: the 404 branch infers no shape,
+    // so a stale one from whatever entry was open before must not decide which
+    // fields this entry's blank form offers.
+    editState.readingsShape = DEFAULT_READINGS_SHAPE;
+    editState.readingsSlotShapes = {};
+    editState.readingsLocales = [];
     editState.capability = capabilityFor(missalId);
     // Asked for by the caller, granted by the capability: a stale Edit button on
     // a row whose grant has since been revoked opens read-only rather than
@@ -739,13 +990,55 @@ function recordDetailOriginals(names, readings, eventKey) {
         // carries tiers this Missal's write cannot reach.
         const { tier, target } = resolveReadingsTarget(readings.value);
         editState.readingsTier = tier;
-        for (const [loc, entry] of Object.entries(target?.entries ?? {})) {
+        const entries = target?.entries ?? {};
+        for (const [loc, entry] of Object.entries(entries)) {
             editState.original.readings[loc] = entry;
         }
+
+        recordReadingsShape(Object.values(entries)[0]);
     } else {
         // A 404 means nothing is curated yet, which is a normal state, not a
         // failure — but there is then no original to diff against.
         editState.original.readings = {};
+    }
+}
+
+/**
+ * Open the readings panel describing the data, rather than imposing the default
+ * shape on it.
+ *
+ * Read off ANY ONE locale: they share a structure, which is the same premise
+ * `editState.readingsShape` itself rests on — only the citations differ between
+ * languages. Left at the default when nothing matches, in which case
+ * renderLocaleFields() still renders the entry's own keys, so an unrecognised
+ * shape is displayed rather than dropped.
+ *
+ * Split out of recordDetailOriginals() rather than inlined: that function is
+ * already the page's most branch-dense (CodeFactor flags it), and folding a
+ * nested loop with three fallback levels into it doubled its cyclomatic
+ * complexity, from 15 to 30.
+ *
+ * @param {unknown} sample one locale's stored readings, or undefined
+ */
+function recordReadingsShape(sample) {
+    const shapes = readingsShapes ?? [];
+    const inferred = inferReadingsShape(sample, shapes);
+
+    editState.readingsShape = inferred ?? DEFAULT_READINGS_SHAPE;
+    editState.readingsSlotShapes = {};
+
+    const shape = inferred ? shapes.find((s) => s.id === inferred) : null;
+    if (shape?.kind !== 'nested' || !sample || typeof sample !== 'object') return;
+
+    // A nested shape's slots each carry a shape of their own, so a stored entry
+    // has to be read one level down too — falling back to the shape the SCHEMA
+    // declares for that slot before the page-wide default.
+    const slotShapeFor = (slot) => inferReadingsShape(sample[slot], shapes)
+        ?? shape.slotShapes?.[slot]
+        ?? DEFAULT_READINGS_SHAPE;
+
+    for (const slot of shape.keys) {
+        editState.readingsSlotShapes[slot] = slotShapeFor(slot);
     }
 }
 
@@ -765,13 +1058,19 @@ function renderDetailBody(row, names, readings, eventKey) {
         names.status === 'fulfilled'
             ? (editState.editing ? renderNamesForm(names.value, eventKey) : renderNames(names.value, eventKey))
             : `<div class="alert alert-warning">${escapeHtml(i18n.namesUnavailable)}</div>`,
-        // Guarded on `fulfilled`: a 404 means nothing is curated for this event yet,
-        // which renderReadingsOutcome already reports as "nothing curated" rather
-        // than a failure, so that read-only fallback covers the edit path too —
-        // renderReadingsForm has no tier information to work from on a 404.
+        // A 404 means nothing is curated for this event yet — a normal state, not a
+        // failure. An editor gets a blank form for it rather than the read-only
+        // "nothing curated" message: the tier and locales come from the lectionary
+        // INDEX, which needs no event_key and so still answers when the per-event
+        // route does not. That is the second half of frontend #525. Any other
+        // rejection is a real failure and still reads as one.
         editState.editing && readings.status === 'fulfilled'
             ? renderReadingsForm(readings.value)
-            : renderReadingsOutcome(readings)
+            : (editState.editing && isNothingCuratedYet(readings)
+                // Filled in by refreshCreateReadings() once the lectionary index
+                // names the write target's locales — see showDetail().
+                ? '<div id="entryReadingsBlock"></div>'
+                : renderReadingsOutcome(readings))
     ].join('');
 }
 
@@ -832,6 +1131,44 @@ async function refreshCreateNames() {
     block.innerHTML = payload
         ? renderNamesForm(payload, '')
         : `<div class="alert alert-warning">${escapeHtml(i18n.namesUnavailable)}</div>`;
+
+    await refreshCreateReadings(seq);
+}
+
+/**
+ * Fill the create modal's readings block, off the modal-open critical path.
+ *
+ * Also re-run when the target Missal changes: the readings target moves with it —
+ * an edition that owns a lectionary folder writes into it, one that does not
+ * writes into the shared rite corpus, and the two carry different locale sets.
+ * Left stale, the panel would collect citations for locales the chosen edition
+ * cannot store.
+ *
+ * Guarded by `detailSeq`, like every other await here, so a curator who flips
+ * between two Missals before the first index fetch resolves sees the SECOND
+ * choice's locales rather than having the first overwrite it on arrival.
+ *
+ * @param {number} seq the caller's detailSeq token
+ */
+async function refreshCreateReadings(seq) {
+    if (!el('entryReadingsBlock')) return;
+
+    const [shapes, target] = await Promise.allSettled([
+        loadReadingsShapes(),
+        readingsTargetFromIndex(editState.missalId)
+    ]);
+    if (seq !== detailSeq) return;
+
+    if (shapes.status === 'rejected') readingsShapes = null;
+    if (target.status === 'fulfilled') {
+        // 'none' is a rite with no lectionary corpus (Ambrosian, API #957); the
+        // handler REJECTS a create body carrying `readings` for it, so no panel.
+        editState.readingsTier = target.value.tier;
+        editState.readingsLocales = target.value.tier === 'none' ? [] : target.value.locales;
+    }
+
+    const block = el('entryReadingsBlock');
+    if (block) block.innerHTML = renderReadingsBlank(editState.readingsLocales);
 }
 
 /**
@@ -864,6 +1201,9 @@ async function showCreate() {
     editState.original = { structure: {}, i18n: {}, readings: {} };
     editState.calendarLabel = calendarLabelFor(editState.missalId);
     editState.readingsTier = 'rite';
+    editState.readingsShape = DEFAULT_READINGS_SHAPE;
+    editState.readingsSlotShapes = {};
+    editState.readingsLocales = [];
 
     // Nothing to address yet — a create dialog has no event_key until Save.
     // Cleared explicitly rather than left over from whatever showDetail() last
@@ -883,6 +1223,17 @@ async function showCreate() {
 
     // `loadI18n()` is the same cached loader showDetail() uses — it returns
     // `{locales, i18n, coverage}`, exactly what renderNamesForm() consumes.
+    //
+    // The readings target comes from the lectionary INDEX rather than the
+    // per-event route, which is what makes a readings panel possible here at all:
+    // there is no event_key yet to ask about, so the per-event route could only
+    // ever answer 404. The index names the sources and their locales for the rite.
+    // ONLY the names fetch is awaited here. The readings panel needs two more —
+    // the schema and the lectionary index — and the index is genuinely expensive
+    // (the API walks every source folder and every locale file in the rite to
+    // build it). Awaiting all three would hold the modal shut behind the slowest,
+    // for a panel that is not even the first thing a curator fills in, so the
+    // readings block is filled in afterwards by refreshCreateReadings().
     let payload;
     try {
         payload = await loadI18n(editState.missalId);
@@ -908,9 +1259,11 @@ async function showCreate() {
         ${renderStructureForm(null)}
         <div id="entryNamesBlock">${payload
             ? renderNamesForm(payload, '')
-            : `<div class="alert alert-warning">${escapeHtml(i18n.namesUnavailable)}</div>`}</div>`;
+            : `<div class="alert alert-warning">${escapeHtml(i18n.namesUnavailable)}</div>`}</div>
+        <div id="entryReadingsBlock"></div>`;
 
     wireGradeDisplayToggle();
+    refreshCreateReadings(seq);
 
     el('entryTargetMissal')?.addEventListener('change', (event) => {
         editState.missalId = event.target.value;
@@ -1188,11 +1541,29 @@ async function performDelete() {
  *
  * @param {PromiseSettledResult<object>} settled
  */
+/**
+ * Whether a settled readings request means "nothing curated yet" rather than a
+ * failure.
+ *
+ * The same 404 a bad event key gets, which is why this is stated once and shared:
+ * `renderReadingsOutcome()` uses it to choose its message and `renderDetailBody()`
+ * uses it to choose between a blank form and that message, and the two must not
+ * come to different conclusions about the same response.
+ *
+ * @param {PromiseSettledResult<object>} settled
+ * @returns {boolean}
+ */
+export function isNothingCuratedYet(settled) {
+    return settled.status === 'rejected'
+        && settled.reason instanceof HttpError
+        && settled.reason.status === 404;
+}
+
 export function renderReadingsOutcome(settled, strings = i18n) {
     if (settled.status === 'fulfilled') {
         return renderReadings(settled.value, strings);
     }
-    if (settled.reason instanceof HttpError && settled.reason.status === 404) {
+    if (isNothingCuratedYet(settled)) {
         return `
             <h6 class="text-uppercase text-muted small">${escapeHtml(strings.readings)}</h6>
             <div class="alert alert-secondary mb-0">${escapeHtml(strings.noReadingsForEvent)}</div>`;
@@ -1210,6 +1581,61 @@ async function loadI18n(missalId) {
         ));
     }
     return i18nCache.get(cacheKey);
+}
+
+/**
+ * `GET /lectionary/{rite}/sanctorale` — the section index, cached per rite.
+ *
+ * The per-event route cannot answer this: an entry that does not exist yet has no
+ * readings and gets a 404, which is precisely the state a create dialog is in. The
+ * index is scoped to the rite rather than the event, so it names every source and
+ * the locales each carries without needing an `event_key` at all.
+ */
+const lectionaryIndexCache = new Map();
+
+async function loadLectionaryIndex() {
+    if (!lectionaryIndexCache.has(state.rite)) {
+        lectionaryIndexCache.set(
+            state.rite,
+            await getJson(`/lectionary/${encodeURIComponent(state.rite)}/sanctorale`)
+        );
+    }
+    return lectionaryIndexCache.get(state.rite);
+}
+
+/**
+ * Which tier a readings write for `missalId` would land in, and the locales that
+ * tier carries — the index's answer to the question `resolveReadingsTarget()`
+ * answers from a per-event response.
+ *
+ * The two must agree, and they agree because they apply the same rule: a `missal`
+ * tier only when THIS Missal owns a lectionary folder of its own, otherwise the
+ * rite-level corpus. `'none'` for a rite with no corpus at all (Ambrosian, API
+ * #957), where a readings panel must not be offered.
+ *
+ * @param {string} missalId
+ * @returns {Promise<{tier: 'missal'|'rite'|'none', locales: string[]}>}
+ */
+async function readingsTargetFromIndex(missalId) {
+    let index;
+    try {
+        index = await loadLectionaryIndex();
+    } catch {
+        // A create dialog is still perfectly usable without a readings panel —
+        // structure and names are what `buildCreate()` actually requires — so an
+        // unreachable index degrades to "no readings offered" rather than failing
+        // the whole modal.
+        return { tier: 'none', locales: [] };
+    }
+    if (index?.lectionary_available === false) {
+        return { tier: 'none', locales: [] };
+    }
+    const sources = index?.sources ?? [];
+    const own = sources.find((s) => s.tier === 'missal' && s.source_id === missalId);
+    const target = own ?? sources.find((s) => s.tier === 'rite') ?? null;
+    return target
+        ? { tier: own ? 'missal' : 'rite', locales: target.locales ?? [] }
+        : { tier: 'none', locales: [] };
 }
 
 function renderStructure(row) {
@@ -1482,6 +1908,234 @@ function isReadingsWriteTarget(tier) {
  * `assertLocalesExist` (a locale the write target does not carry) — a field the UI
  * offered them but the API cannot honor from here.
  */
+/**
+ * A readings shape's label, translated where the page has one.
+ *
+ * Falls back to the schema's own `title`, which is English but is at least a
+ * sentence a curator can read — a shape the API adds after this page was last
+ * translated shows as "Readings with Evening Mass", not `ReadingsWithEvening`.
+ */
+function shapeTitle(shape, strings = i18n) {
+    return strings.readings_shapes?.[shape.id] ?? shape.title;
+}
+
+/**
+ * One `<select>` of readings shapes.
+ *
+ * @param {string} id the element id, also what the change handler re-renders from
+ * @param {string} selected the chosen shape's id
+ * @param {Array<object>} choices the shapes to offer
+ * @param {?string} slot the nested slot this select belongs to, or null for the tier
+ */
+function renderShapeSelect(id, selected, choices, slot = null) {
+    return `
+        <div class="mb-2">
+            <label class="form-label small text-muted" for="${escapeHtml(id)}">${escapeHtml(i18n.readingsShape)}</label>
+            <select class="form-select form-select-sm" id="${escapeHtml(id)}"
+                    data-readings-shape="${escapeHtml(slot ?? '')}">
+                ${choices.map((s) => `
+                    <option value="${escapeHtml(s.id)}"${s.id === selected ? ' selected' : ''}>${escapeHtml(shapeTitle(s))}</option>`).join('')}
+            </select>
+        </div>`;
+}
+
+/**
+ * Which citation fields one locale's inputs should be, for a chosen shape.
+ *
+ * The SHAPE's keys, not the data's — which is the whole of frontend #525. An
+ * entry with no readings has no keys, so a form built from the data renders no
+ * inputs and a curator can never enter the first citation; built from the shape
+ * it renders a fillable blank. `buildCreate()` and `buildPatch()` drop blank
+ * entries, so offering a field costs nothing if it goes unused.
+ *
+ * The shape's keys are union'd with whatever the data actually carries, so a
+ * value outside the chosen shape stays visible and editable rather than being
+ * quietly dropped on the next save — but only STRING-valued extras. Switching a
+ * nested shape to a flat one re-renders with the previous values still in hand,
+ * and those are keyed by Mass name (`vigil`, `day`) with whole readings maps
+ * under them; admitting those would offer a text input for an object.
+ *
+ * A null shape means "whatever the data has", the pre-shape behaviour, kept for
+ * when the schema could not be fetched.
+ *
+ * @param {?{keys: string[]}} shape
+ * @param {Record<string, unknown>} values
+ * @returns {string[]}
+ */
+export function readingFieldKeys(shape, values) {
+    const present = values ?? {};
+    if (!shape) return readingKeysOf(present);
+    return [
+        ...shape.keys,
+        ...Object.keys(present).filter((k) => !shape.keys.includes(k) && typeof present[k] === 'string')
+    ];
+}
+
+/** One citation input. `data-field=""` marks the whole-entry string of ReadingsCommons. */
+function readingInput(loc, schema, name, value, label) {
+    return `
+        <div class="col-12 col-md-6 mb-2">
+            <label class="form-label small text-muted">${escapeHtml(label)}</label>
+            <input type="text" class="form-control form-control-sm"
+                   data-locale="${escapeHtml(loc)}" data-schema="${escapeHtml(schema ?? '')}"
+                   data-field="${escapeHtml(name ?? '')}" value="${escapeHtml(value ?? '')}">
+        </div>`;
+}
+
+/**
+ * The write target's editable readings: a shape select, then that shape's fields
+ * for every locale the target carries.
+ *
+ * One renderer for three situations that used to be two-and-a-gap — an entry with
+ * curated readings, an entry with none (the API's 404, or its all-empty
+ * placeholder), and an entry that does not exist yet because the create modal is
+ * open. They differ only in what `entries` holds and where `locales` came from;
+ * the fields are the SHAPE's, not the data's, which is what lets a blank entry
+ * render a fillable form at all. That gap is frontend #525.
+ *
+ * `locales` is passed rather than read off `entries` because a create dialog's
+ * entries are empty by definition — the locale set comes from the lectionary
+ * index instead (see `readingsTargetFromIndex()`).
+ *
+ * @param {Record<string, unknown>} entries locale => that locale's readings
+ * @param {string[]} locales the locales to render inputs for
+ * @param {?Array<object>} [shapes] the resolved shapes; defaults to the fetched set
+ * @param {string} [shapeId] the chosen shape; defaults to the open entry's
+ * @returns {string}
+ */
+export function renderReadingsEditable(entries, locales, shapes = readingsShapes, shapeId = editState.readingsShape) {
+    shapes = shapes ?? [];
+    if (!shapes.length) {
+        // The schema never arrived. Rendering a shape select with nothing in it
+        // would be worse than rendering none: fall back to the data's own keys,
+        // which is exactly what this panel did before it learned about shapes.
+        return locales.map((loc) => renderLocaleFields(loc, entries[loc], null)).join('');
+    }
+
+    const shape = shapes.find((s) => s.id === shapeId) ?? shapes[0];
+    // Only flat and string branches for a nested shape's slots — see the note on
+    // resolveReadingsShapes() for why a slot is not offered a nested shape.
+    const slotChoices = shapes.filter((s) => s.kind !== 'nested');
+
+    let body;
+    if (shape.kind === 'nested') {
+        body = shape.keys.map((slot) => {
+            // The curator's pick, else the shape the SCHEMA declares for this slot
+            // — Christmas' three Masses are each festive, Seasonal's two are
+            // ferial — and only then the page-wide default. Starting every slot at
+            // ferial would drop `second_reading` off a Christmas Mass that the
+            // schema says has one.
+            const slotShapeId = editState.readingsSlotShapes[slot]
+                ?? shape.slotShapes?.[slot]
+                ?? DEFAULT_READINGS_SHAPE;
+            const slotShape = slotChoices.find((s) => s.id === slotShapeId) ?? slotChoices[0];
+            return `
+                <div class="mb-3 ps-2 border-start">
+                    <div class="fw-semibold small mb-1">${escapeHtml(i18n.schemas?.[slot] ?? slot)}</div>
+                    ${renderShapeSelect(`readingsShape-${slot}`, slotShape?.id, slotChoices, slot)}
+                    ${locales.map((loc) => renderLocaleFields(loc, entries[loc]?.[slot], slotShape, slot)).join('')}
+                </div>`;
+        }).join('');
+    } else {
+        body = locales.map((loc) => renderLocaleFields(loc, entries[loc], shape)).join('');
+    }
+
+    return `
+        ${renderShapeSelect('readingsShape', shape.id, shapes)}
+        ${body}`;
+}
+
+/**
+ * Re-render the editable readings panel when the curator picks another shape.
+ *
+ * Delegated from the modal body, which outlives every re-render, so the handler
+ * is attached exactly once at start-up rather than re-bound each time the panel
+ * is rebuilt — a per-render binding is how a shape change ends up applied twice.
+ *
+ * Current inputs are read back first and passed in as the entries, so citations
+ * already typed survive a shape change: going ferial to festive keeps all four and
+ * adds an empty `second_reading`, and going back keeps the four and drops the one
+ * the shape no longer has.
+ */
+function wireReadingsShapeSelect() {
+    dom.detailBody?.addEventListener('change', (event) => {
+        const select = event.target.closest?.('select[data-readings-shape]');
+        if (!select) return;
+
+        const current = readReadingsForm();
+        const slot = select.dataset.readingsShape;
+        if (slot) {
+            editState.readingsSlotShapes[slot] = select.value;
+        } else {
+            editState.readingsShape = select.value;
+            // A new top-level shape has new slots; carrying the old shape's slot
+            // choices over would apply `vigil`'s pick to whatever the new shape
+            // happens to name first.
+            editState.readingsSlotShapes = {};
+        }
+
+        const host = el('entryReadingsEditable');
+        if (host) {
+            host.innerHTML = renderReadingsEditable(current, editState.readingsLocales);
+        }
+    });
+}
+
+/**
+ * The readings panel for an entry the write target carries nothing for yet.
+ *
+ * Reached two ways, and they are the same situation seen from different sides:
+ * the create modal, where the entry does not exist at all, and an existing entry
+ * whose lectionary route answers 404 because no source carries its key. Both get
+ * a fillable form rather than "nothing is curated yet" — which is frontend #525.
+ *
+ * @param {string[]} locales
+ * @returns {string}
+ */
+function renderReadingsBlank(locales) {
+    if (!locales.length) return '';
+    return `
+        <h6 class="text-uppercase text-muted small">${escapeHtml(i18n.readings)}</h6>
+        <div id="entryReadings">
+            <div class="alert alert-secondary py-1 px-2 small">${escapeHtml(i18n.readingsNoneYet)}</div>
+            <div id="entryReadingsEditable">${renderReadingsEditable({}, locales)}</div>
+        </div>`;
+}
+
+/**
+ * One locale's inputs for a given shape.
+ *
+ * A `null` shape means "render whatever keys the data has", the pre-shape
+ * behaviour, kept for the case where the schema could not be fetched.
+ *
+ * @param {string} loc
+ * @param {unknown} readings this locale's readings for this slot
+ * @param {?object} shape
+ * @param {?string} slot
+ */
+function renderLocaleFields(loc, readings, shape, slot = null) {
+    if (shape?.kind === 'string') {
+        // ReadingsCommons: the whole entry is one string naming the Common the
+        // readings come from, so there is one input and it carries no field name.
+        return `
+            <div class="mb-2"><code class="small">${escapeHtml(loc)}</code>
+                <div class="row">${readingInput(
+                    loc, slot, '', typeof readings === 'string' ? readings : '', i18n.readingsFromCommon
+                )}</div>
+            </div>`;
+    }
+
+    const values = readings && typeof readings === 'object' ? readings : {};
+    const keys = readingFieldKeys(shape, values);
+    if (!keys.length) return '';
+
+    return `
+        <div class="mb-2"><code class="small">${escapeHtml(loc)}</code>
+            <div class="row">${keys
+                .map((name) => readingInput(loc, slot, name, values[name], readingLabel(name))).join('')}</div>
+        </div>`;
+}
+
 function renderReadingsForm(payload) {
     if (payload.lectionary_available === false) {
         editState.readingsTier = 'none';
@@ -1517,33 +2171,10 @@ function renderReadingsForm(payload) {
                 </div>`;
         }
 
+        // The locales this tier carries, remembered so a shape change can re-render
+        // the panel without the response in hand.
         const entries = tier.entries ?? {};
-        const schemas = schemaKeysOf(entries);
-        const field = (loc, schema, name, value) => `
-            <div class="col-12 col-md-6 mb-2">
-                <label class="form-label small text-muted">${escapeHtml(name)}</label>
-                <input type="text" class="form-control form-control-sm"
-                       data-locale="${escapeHtml(loc)}" data-schema="${escapeHtml(schema ?? '')}"
-                       data-field="${escapeHtml(name)}" value="${escapeHtml(value ?? '')}">
-            </div>`;
-
-        const localeBlock = (loc, schema) => {
-            const readings = schema ? entries[loc]?.[schema] : entries[loc];
-            if (!readings || typeof readings !== 'object') return '';
-            return `
-                <div class="mb-2"><code class="small">${escapeHtml(loc)}</code>
-                    <div class="row">${Object.entries(readings)
-                        .map(([name, value]) => field(loc, schema, name, value)).join('')}</div>
-                </div>`;
-        };
-
-        const body = schemas.length
-            ? schemas.map((schema) => `
-                <div class="mb-3">
-                    <div class="fw-semibold small mb-1">${escapeHtml(i18n.schemas?.[schema] ?? schema)}</div>
-                    ${Object.keys(entries).map((loc) => localeBlock(loc, schema)).join('')}
-                </div>`).join('')
-            : Object.keys(entries).map((loc) => localeBlock(loc, null)).join('');
+        editState.readingsLocales = Object.keys(entries);
 
         return `
             <div class="mb-3">
@@ -1551,7 +2182,7 @@ function renderReadingsForm(payload) {
                     <code class="small ms-1">${escapeHtml(tier.source_id)}</code></div>
                 ${tier.tier === 'rite'
                     ? `<div class="alert alert-warning py-1 px-2 small">${escapeHtml(i18n.readingsShared)}</div>` : ''}
-                ${body}
+                <div id="entryReadingsEditable">${renderReadingsEditable(entries, editState.readingsLocales)}</div>
             </div>`;
     }).join('');
 
@@ -1568,6 +2199,18 @@ function readReadingsForm() {
     const readings = {};
     document.querySelectorAll('#entryReadings input[data-locale]').forEach((input) => {
         const { locale, schema, field } = input.dataset;
+        // An empty `data-field` is ReadingsCommons: the value IS the entry (or the
+        // whole of one slot of a nested shape), a string naming the Common the
+        // readings are taken from, rather than one citation within a map.
+        if (!field) {
+            if (schema) {
+                readings[locale] = readings[locale] ?? {};
+                readings[locale][schema] = input.value;
+            } else {
+                readings[locale] = input.value;
+            }
+            return;
+        }
         readings[locale] = readings[locale] ?? {};
         if (schema) {
             readings[locale][schema] = readings[locale][schema] ?? {};
@@ -1692,16 +2335,33 @@ function renderNamesForm(payload, eventKey) {
  * Ambrosian rite has no sanctorale lectionary at all — so it renders the API's
  * own message rather than an empty table that reads as a bug.
  */
-/** One locale's readings as table rows: reading name on the left, citation right. */
+/**
+ * One locale's readings as table rows: reading name on the left, citation right.
+ *
+ * Rows are ordered by `readingKeysOf()` rather than by the object's own key order,
+ * so every locale of a celebration reads down in the same sequence and can be
+ * compared line against line — which is what the locale table exists to do.
+ *
+ * A `ReadingsCommons` entry is a STRING, not a map: the readings are taken from a
+ * Common of Saints, and the value names which. It is rendered as that one line.
+ * Requiring an object here used to drop such an entry silently — it failed the
+ * `typeof` guard and returned an empty row — so a memorial taking its readings
+ * from a Common displayed as though nothing were curated for it.
+ */
 function readingRows(entries, schema, strings) {
     return Object.entries(entries ?? {}).map(([loc, entry]) => {
         const readings = schema ? entry?.[schema] : entry;
-        if (!readings || typeof readings !== 'object') return '';
+        const cell = typeof readings === 'string'
+            ? `<div class="small"><span class="text-muted">${escapeHtml(strings.readingsFromCommon)}:</span> ${escapeHtml(readings)}</div>`
+            : (readings && typeof readings === 'object'
+                ? readingKeysOf(readings).map((k) => `
+                    <div class="small"><span class="text-muted">${escapeHtml(readingLabel(k, strings))}:</span> ${escapeHtml(readings[k])}</div>`).join('')
+                : null);
+        if (cell === null) return '';
         return `
             <tr>
                 <td class="text-nowrap align-top"><code>${escapeHtml(loc)}</code></td>
-                <td>${Object.entries(readings).map(([k, v]) => `
-                    <div class="small"><span class="text-muted">${escapeHtml(k)}:</span> ${escapeHtml(v)}</div>`).join('')}</td>
+                <td>${cell}</td>
             </tr>`;
     }).join('') || `<tr><td class="text-muted small">${escapeHtml(strings.noEntries)}</td></tr>`;
 }
@@ -1878,10 +2538,30 @@ async function refreshCapabilities(seq) {
     });
     if (seq !== selectionSeq) return;
     state.capabilities = capabilities;
-    dom.newEntry?.classList.toggle(
-        'd-none',
-        ![...state.capabilities.values()].some((c) => c.canCreate)
-    );
+    revealCreateButton();
+}
+
+/**
+ * Show `#newEntryBtn` only when a create is actually possible: the caller holds
+ * CREATE on some applicable Missal, AND the composed sanctorale has loaded.
+ *
+ * The second condition is not belt-and-braces. Capabilities and the sanctorale
+ * are fetched on SEPARATE async paths off one selection change, so the button
+ * could be revealed and clicked while `state.composed` was still empty — and
+ * `calendarLabelFor()` reads the calendar label off a composed row, because the
+ * API derives a Missal's calendar itself (`GENERAL ROMAN` for an editio typica,
+ * the nation code for a national edition) and does not publish it on the
+ * `/missals` index. With no row to read, the label fell back to `''` and the
+ * create `PUT` was rejected 400: "This Missal's entries belong to the `US`
+ * calendar, but the payload says ``."
+ *
+ * Latent before, and rare enough to look like flake; adding the readings panel's
+ * fetches widened the window enough for CI to catch it. Called from both paths so
+ * whichever finishes last reveals the button.
+ */
+function revealCreateButton() {
+    const canCreate = [...state.capabilities.values()].some((c) => c.canCreate);
+    dom.newEntry?.classList.toggle('d-none', !(canCreate && state.composed.length > 0));
 }
 
 /**
@@ -1934,11 +2614,15 @@ async function loadSanctorale(seq = selectionSeq) {
         })));
         if (seq !== selectionSeq) return;
         state.composed = compose(layers);
+        // The other half of the race revealCreateButton() closes: whichever of
+        // capabilities and the sanctorale resolves last reveals the button.
+        revealCreateButton();
         renderFromOptions();
         render();
     } catch (error) {
         if (seq !== selectionSeq) return;
         state.composed = [];
+        revealCreateButton();
         notice('danger', escapeHtml(i18n.loadFailed.replace('%s', error.message)));
         render();
     }
@@ -2123,6 +2807,9 @@ async function init() {
     dom.saveEntry?.addEventListener('click', saveEntry);
     dom.deleteEntry?.addEventListener('click', deleteEntry);
     dom.newEntry?.addEventListener('click', showCreate);
+    // Delegated once from the modal body, which every readings re-render happens
+    // inside of — see wireReadingsShapeSelect().
+    wireReadingsShapeSelect();
     dom.search.addEventListener('input', () => {
         state.search = dom.search.value;
         // Move to a month that actually contains a hit, otherwise the reader
