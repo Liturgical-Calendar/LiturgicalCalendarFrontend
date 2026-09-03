@@ -14,11 +14,11 @@
  */
 import { describe, it, expect, beforeAll } from 'vitest';
 
-let resolveReadingsShapes, inferReadingsShape, readingFieldKeys, renderReadingsEditable;
+let resolveReadingsShapes, inferReadingsShape, readingFieldKeys, renderReadingsEditable, readingsTierLocales;
 
 beforeAll(async () => {
     global.window = global.window ?? {};
-    ({ resolveReadingsShapes, inferReadingsShape, readingFieldKeys, renderReadingsEditable }
+    ({ resolveReadingsShapes, inferReadingsShape, readingFieldKeys, renderReadingsEditable, readingsTierLocales }
         = await import('../sanctorale.js'));
 });
 
@@ -315,5 +315,52 @@ describe('renderReadingsEditable', () => {
         const inputs = [...host.querySelectorAll('input[data-locale]')];
         expect(inputs.map((i) => i.dataset.field)).toEqual(['gospel']);
         expect(inputs[0].value).toBe('Mt 1:1');
+    });
+});
+
+/**
+ * frontend #537: the locale set the editable form is built from.
+ *
+ * `renderReadingsForm()` used to derive it from `Object.keys(tier.entries)`, so a
+ * locale the tier carries but has no entry for got no input at all and its first
+ * citation could not be typed — the same gap #525 closed, surviving in the one
+ * branch #525 did not rewrite. The create path never had it: it reads
+ * `sources[].locales` off the lectionary index.
+ *
+ * `StsIoannemBrebeuf`'s real shape is the case pinned here — one locale curated,
+ * five not — because it makes the drop obvious in a way one missing locale does not.
+ */
+describe('readingsTierLocales', () => {
+    const TIER = {
+        tier: 'rite',
+        source_id: 'roman',
+        locales: ['en', 'fr', 'hr', 'it', 'la', 'nl'],
+        locales_with_entry: ['hr'],
+        locales_without_entry: ['en', 'fr', 'it', 'la', 'nl'],
+        entries: { hr: { gospel: 'Mt 5,1-12' } }
+    };
+
+    it('takes the tier\'s declared locales, not just the ones with an entry', () => {
+        expect(readingsTierLocales(TIER)).toEqual(['en', 'fr', 'hr', 'it', 'la', 'nl']);
+    });
+
+    it('falls back to the union of entries and locales_without_entry', () => {
+        // A response that predates `locales`: a locale is in one list or the other,
+        // and the two together are the same set.
+        const { locales, ...withoutDeclared } = TIER;
+        expect(readingsTierLocales(withoutDeclared)).toEqual(locales);
+    });
+
+    it('renders a fillable input for a locale that has no entry yet', () => {
+        const shapes = resolveReadingsShapes(SCHEMA);
+        const host = document.createElement('div');
+        host.innerHTML = renderReadingsEditable(TIER.entries, readingsTierLocales(TIER), shapes);
+        const inputs = [...host.querySelectorAll('input[data-locale]')];
+        expect([...new Set(inputs.map((i) => i.dataset.locale))])
+            .toEqual(['en', 'fr', 'hr', 'it', 'la', 'nl']);
+        // Absent stays absent until typed into: diffLocaleMap() tells "never had
+        // one" from "cleared to blank", and that distinction is what lets the API
+        // add a first citation rather than write an empty one.
+        expect(inputs.filter((i) => i.dataset.locale === 'en').every((i) => i.value === '')).toBe(true);
     });
 });
