@@ -2350,6 +2350,43 @@ function renderLocaleFields(loc, readings, shape, slot = null) {
         </div>`;
 }
 
+/**
+ * Every locale a lectionary tier carries, whether or not it holds an entry yet.
+ *
+ * `tier.locales` is the source's own declared locale set — the basenames of the
+ * JSON files in its folder — and is the SAME field the lectionary index publishes
+ * as `sources[].locales`, which `readingsTargetFromIndex()` reads for the create
+ * path. Taking it here leaves one definition of "the locales this write target
+ * carries" rather than a second one that happens to agree.
+ *
+ * Derived from `Object.keys(entries)` instead, as this did, the form dropped every
+ * locale in `locales_without_entry` and left a curator no input to type that
+ * locale's FIRST citation — the same gap frontend #525 closed, surviving in the one
+ * branch it did not rewrite. That is frontend #537.
+ *
+ * The union is the fallback for a response predating the field: a declared locale
+ * is either in `entries` or in `locales_without_entry`, so the two together are
+ * the same set. Sorted, because the API sorts what it declares and the input order
+ * should not depend on which branch answered.
+ *
+ * An EMPTY `locales` takes that fallback too, deliberately. The API cannot emit
+ * one — `sanctoraleSources()` skips a folder with no locale files, and a tier is
+ * only emitted once some locale has an entry — so the two branches differ only for
+ * a malformed payload declaring no locales while carrying entries. Honouring `[]`
+ * there would render no inputs at all for readings that demonstrably exist, which
+ * is the failure this function was written to end.
+ *
+ * @param {object} tier one entry of a `/lectionary` response's `readings` array
+ * @returns {string[]}
+ */
+export function readingsTierLocales(tier) {
+    if (Array.isArray(tier?.locales) && tier.locales.length > 0) return [...tier.locales];
+    return [...new Set([
+        ...Object.keys(tier?.entries ?? {}),
+        ...(tier?.locales_without_entry ?? [])
+    ])].sort();
+}
+
 function renderReadingsForm(payload) {
     if (payload.lectionary_available === false) {
         editState.readingsTier = 'none';
@@ -2388,7 +2425,7 @@ function renderReadingsForm(payload) {
         // The locales this tier carries, remembered so a shape change can re-render
         // the panel without the response in hand.
         const entries = tier.entries ?? {};
-        editState.readingsLocales = Object.keys(entries);
+        editState.readingsLocales = readingsTierLocales(tier);
 
         return `
             <div class="mb-3">
