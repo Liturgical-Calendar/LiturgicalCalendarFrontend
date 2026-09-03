@@ -6,8 +6,17 @@ export type RbacRelation = 'admin' | 'editor';
  * resource types) — the API composes and validates exactly this form, so a
  * tuple seeded on a bare id authorizes nothing.
  *
- * `general_roman_calendar` ids stay BARE: `temporale`, `decrees` and the missal
- * editions are not calendars, and are Roman by construction.
+ * The rite-level tier is `rite_calendar`, and ITS ids are rite-qualified too:
+ * `roman/temporale`, `roman/decrees`, `roman/EDITIO_TYPICA_2002`. They were bare
+ * under the retired `general_roman_calendar` type, on the reasoning that
+ * temporale and the missal editions are not calendars and are Roman by
+ * construction — but #955 generalised the tier to every rite, so the rite is no
+ * longer implied and the id has to carry it.
+ *
+ * `general_roman_calendar` is GONE from the model, not merely deprecated
+ * (CatholicOS/cdcf-infra#44, at the #955 prune milestone). A tuple seeded on it
+ * is rejected by OpenFGA itself — `type 'general_roman_calendar' not found` —
+ * before any API code runs, so there is no fallback that can rescue it.
  *
  * Every calendar in these fixtures is Roman (IT, US, Europe, and the diocese of
  * Rome). The four Ambrosian dioceses — lugano_ch, milano_it, bergam_it,
@@ -37,8 +46,8 @@ export const USERS: Record<string, RbacUser> = {
     'usccb-editor': mk('usccb-editor', 'calendar_editor', { relation: 'editor', objectType: 'national_calendar', objectId: `${ROMAN}/US` }),
     'rome-admin': mk('rome-admin', 'calendar_editor', { relation: 'admin', objectType: 'diocesan_calendar', objectId: `${ROMAN}/romamo_it` }),
     'rome-editor': mk('rome-editor', 'calendar_editor', { relation: 'editor', objectType: 'diocesan_calendar', objectId: `${ROMAN}/romamo_it` }),
-    'grc-admin': mk('grc-admin', 'calendar_editor', { relation: 'admin', objectType: 'general_roman_calendar', objectId: 'temporale' }),
-    'grc-editor': mk('grc-editor', 'calendar_editor', { relation: 'editor', objectType: 'general_roman_calendar', objectId: 'temporale' }),
+    'grc-admin': mk('grc-admin', 'calendar_editor', { relation: 'admin', objectType: 'rite_calendar', objectId: `${ROMAN}/temporale` }),
+    'grc-editor': mk('grc-editor', 'calendar_editor', { relation: 'editor', objectType: 'rite_calendar', objectId: `${ROMAN}/temporale` }),
     'europe-admin': mk('europe-admin', 'calendar_editor', { relation: 'admin', objectType: 'wider_region', objectId: `${ROMAN}/Europe` }),
     'europe-editor': mk('europe-editor', 'calendar_editor', { relation: 'editor', objectType: 'wider_region', objectId: `${ROMAN}/Europe` }),
     'tests-editor': mk('tests-editor', 'test_editor', { relation: 'editor', objectType: 'national_calendar_test', objectId: `${ROMAN}/IT` }),

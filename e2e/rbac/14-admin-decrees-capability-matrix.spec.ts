@@ -37,8 +37,15 @@ import { Fga } from './support/fga';
 import { ZitadelAdmin } from './support/zitadel';
 import { USERS } from './support/users';
 
-/** The single FGA object that governs the entire decrees admin surface. */
-const DECREES_OBJECT = 'general_roman_calendar:decrees';
+/**
+ * The single FGA object that governs the entire decrees admin surface.
+ *
+ * Rite-qualified since #955 generalised the rite-level tier: the retired
+ * `general_roman_calendar` type was dropped from the model outright at the prune
+ * milestone (CatholicOS/cdcf-infra#44), so a tuple naming it is rejected by
+ * OpenFGA before any API code runs.
+ */
+const DECREES_OBJECT = 'rite_calendar:roman/decrees';
 
 /**
  * Seeded calendar_editor users repurposed as decrees viewer/editor/admin by a runtime tuple.

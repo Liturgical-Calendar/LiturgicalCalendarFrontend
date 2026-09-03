@@ -74,10 +74,12 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
                     <label for="filterObjectType" class="form-label"><?php echo htmlspecialchars($objectTypeLabel, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
                     <select class="form-select form-select-sm" id="filterObjectType">
                         <option value=""><?php echo htmlspecialchars(_('All'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                        <?php // `rite_calendar` supersedes `general_roman_calendar` (API #955). The old one stays
-                              // filterable: tuples written before the API's tuple migration still carry it, and an
-                              // admin who cannot filter for them cannot find the grants that still need migrating. ?>
+                        <?php // `rite_calendar` / `rite_calendar_test` supersede the two `general_roman_calendar*`
+                              // types, which were dropped from the FGA model at the #955 prune milestone. They stay
+                              // FILTERABLE even so: filtering finds, it does not create, and stored access requests
+                              // still carry the old names. An admin who cannot filter for them cannot find them. ?>
                         <option value="rite_calendar"><?php echo htmlspecialchars(_('Rite Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                        <option value="rite_calendar_test"><?php echo htmlspecialchars(_('Rite Calendar Tests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                         <option value="general_roman_calendar"><?php echo htmlspecialchars(_('General Roman Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                         <option value="general_roman_calendar_test"><?php echo htmlspecialchars(_('General Roman Calendar Tests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                         <option value="national_calendar"><?php echo htmlspecialchars(_('National Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
@@ -305,13 +307,14 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
                         <label for="grantObjectType" class="form-label"><?php echo htmlspecialchars(_('Calendar scope'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></label>
                         <select class="form-select" id="grantObjectType" required>
                             <option value=""><?php echo htmlspecialchars(_('Select calendar scope...'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                            <?php // `rite_calendar` first, so a NEW grant lands on the current type; the
-                                  // deprecated `general_roman_calendar` is still offered because the API keeps
-                                  // accepting it for the whole migration window and its tuple migration is
-                                  // idempotent, so a grant made on it is picked up rather than stranded. ?>
+                            <?php // The rite-level scopes first. Unlike the FILTER above, the retired
+                                  // `general_roman_calendar*` types are NOT offered here: those types no longer
+                                  // exist in the FGA model (#955 prune milestone), so a grant made on one is
+                                  // rejected by OpenFGA itself — `type 'general_roman_calendar' not found` —
+                                  // before any API code runs. Offering a scope that cannot be granted only
+                                  // hands the admin an opaque write failure. ?>
                             <option value="rite_calendar"><?php echo htmlspecialchars(_('Rite Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                            <option value="general_roman_calendar"><?php echo htmlspecialchars(_('General Roman Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
-                            <option value="general_roman_calendar_test"><?php echo htmlspecialchars(_('General Roman Calendar Tests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
+                            <option value="rite_calendar_test"><?php echo htmlspecialchars(_('Rite Calendar Tests'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                             <option value="national_calendar"><?php echo htmlspecialchars(_('National Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                             <option value="diocesan_calendar"><?php echo htmlspecialchars(_('Diocesan Calendar'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>
                             <option value="wider_region"><?php echo htmlspecialchars(_('Wider Region'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?></option>

@@ -159,8 +159,10 @@ if (!$hasCalendarRole) {
     && $authHelper->hasRole('test_editor')
     // `rite_calendar_test` generalises `general_roman_calendar_test` (API #785): its id is the
     // rite itself, so `rite_calendar_test:ambrosian` is a scope only it can express. The older
-    // type stays listed because pre-migration grants still carry it.
-    && $authHelper->canViewAnyResourceOfType('national_calendar_test', 'diocesan_calendar_test', 'rite_calendar_test', 'general_roman_calendar_test')
+    // type is no longer asked about: it was removed from the FGA model at the #955 prune
+    // milestone (CatholicOS/cdcf-infra#44), so `/auth/dashboard-scopes` cannot report a scope
+    // under it and the extra name could only ever match nothing.
+    && $authHelper->canViewAnyResourceOfType('national_calendar_test', 'diocesan_calendar_test', 'rite_calendar_test')
 ) : ?>
     <hr class="my-4">
     <h4 class="mb-3 text-black" style="--bs-text-opacity: .6;">

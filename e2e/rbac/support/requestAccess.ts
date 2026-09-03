@@ -28,12 +28,13 @@ import { expect, type Page } from '@playwright/test';
 export interface AccessRequestOptions {
     requestedRole: string; // e.g. 'calendar_editor'
     permission: {
-        // Mirrors AccessRequestRepository::VALID_OBJECT_TYPES. `rite_calendar`
-        // supersedes `general_roman_calendar` (API #955), which stays listed
-        // because the API — and this form — still accept it for the whole
-        // migration window. NOTE: `rite_calendar` option VALUES are the full
-        // rite-qualified ids (`roman/decrees`), not bare sub-resource names.
-        objectType: 'national_calendar' | 'diocesan_calendar' | 'wider_region' | 'rite_calendar' | 'general_roman_calendar' | 'national_calendar_test' | 'diocesan_calendar_test' | 'general_roman_calendar_test';
+        // Mirrors AccessRequestRepository::VALID_OBJECT_TYPES, which dropped both
+        // `general_roman_calendar` spellings at the #955 prune milestone
+        // (API#970) — `rite_calendar` and `rite_calendar_test` supersede them,
+        // and the retired types no longer exist in the model at all.
+        // NOTE: `rite_calendar` option VALUES are the full rite-qualified ids
+        // (`roman/decrees`), not bare sub-resource names.
+        objectType: 'national_calendar' | 'diocesan_calendar' | 'wider_region' | 'rite_calendar' | 'national_calendar_test' | 'diocesan_calendar_test' | 'rite_calendar_test';
         objectId: string;
         relation: 'viewer' | 'editor' | 'admin';
     };
