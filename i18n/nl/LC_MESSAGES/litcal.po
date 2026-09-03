@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-03 00:52+0000\n"
-"PO-Revision-Date: 2026-09-03 00:52+0000\n"
+"PO-Revision-Date: 2026-09-03 01:31+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -1065,12 +1065,12 @@ msgstr "Voor heilige vrouwen"
 #. translators: context = Masses and Prayers for Various Needs and Occasions
 #: src/LitCommon.php:156
 msgid "For Giving Thanks to God for the Gift of Human Life [USA]"
-msgstr ""
+msgstr "Om God te danken voor het geschenk van het menselijk leven [USA]"
 
 #. translators: context = Masses and Prayers for Various Needs and Occasions
 #: src/LitCommon.php:158
 msgid "For the Preservation of Peace and Justice"
-msgstr ""
+msgstr "Voor de handhaving van vrede en gerechtigheid"
 
 #. translators: (singular feminine) glue between "From the Common" and the actual common. Latin: leave empty!
 #: src/LitCommon.php:210 src/LitCommon.php:222
@@ -2463,10 +2463,8 @@ msgid "Wider region"
 msgstr "Breder gebied"
 
 #: includes/change-request-i18n.php:55
-#, fuzzy
-#| msgid "Diocesan Calendar Tests"
 msgid "Rite calendar"
-msgstr "Diocesane kalendertests"
+msgstr "Ritenkalender"
 
 #: includes/change-request-i18n.php:57
 msgid "National calendar test"
@@ -3057,17 +3055,13 @@ msgstr "Alle"
 
 #: admin-permissions.php:81 admin-permissions.php:316 admin-permissions.php:409
 #: permission-requests.php:243
-#, fuzzy
-#| msgid "Diocesan Calendar Tests"
 msgid "Rite Calendar"
-msgstr "Diocesane kalendertests"
+msgstr "Ritenkalender"
 
 #: admin-permissions.php:82 admin-permissions.php:317 admin-permissions.php:410
 #: permission-requests.php:244
-#, fuzzy
-#| msgid "Diocesan Calendar Tests"
 msgid "Rite Calendar Tests"
-msgstr "Diocesane kalendertests"
+msgstr "Ritenkalendertests"
 
 #: admin-permissions.php:84 admin-permissions.php:433 admin-permissions.php:464
 #: permission-requests.php:248
@@ -3281,7 +3275,7 @@ msgstr "Testdefinitie"
 
 #: admin-permissions.php:415 permission-requests.php:251
 msgid "Roman Rite"
-msgstr ""
+msgstr "Romeins Ritus"
 
 #: admin-permissions.php:416 permission-requests.php:252 sanctorale.php:345
 msgid "Ambrosian Rite"
@@ -3300,20 +3294,16 @@ msgid "Sanctorale — Editio Typica 2008"
 msgstr "Sanctorale — Editio Typica 2008"
 
 #: admin-permissions.php:421 permission-requests.php:261
-#, fuzzy
-#| msgid "Sanctorale — Editio Typica 2002"
 msgid "Sanctorale — Editio Typica 2024"
-msgstr "Sanctorale — Editio Typica 2002"
+msgstr "Sanctorale — Editio Typica 2024"
 
 #: admin-permissions.php:422 permission-requests.php:263
 msgid "Decrees of the Dicastery for Divine Worship"
 msgstr "Decreten van het Dicasterie voor de Goddelijke Eredienst"
 
 #: admin-permissions.php:423 permission-requests.php:264
-#, fuzzy
-#| msgid "Supported Locales"
 msgid "Supported locales"
-msgstr "Ondersteunde talen"
+msgstr "Ondersteunde locales"
 
 #: admin-permissions.php:424
 msgid "Enter object ID..."
@@ -4113,57 +4103,44 @@ msgid "Outcome"
 msgstr ""
 
 #: admin-changes.php:254
-#, fuzzy
-#| msgid "Revoke Permission"
 msgid "Reviewer decision"
-msgstr "Toestemming intrekken"
+msgstr "Beoordelingsbesluit"
 
 #: admin-changes.php:255
-#, fuzzy
-#| msgid "Season"
 msgid "Reason"
-msgstr "Seizoen"
+msgstr "Reden"
 
 #: admin-changes.php:256
-#, fuzzy
-#| msgid "No pending role requests. All caught up!"
 msgid "No change requests are waiting for review. All caught up!"
-msgstr "Geen openstaande rolverzoeken. Helemaal bij!"
+msgstr "Er wachten geen wijzigingsverzoeken op beoordeling. Alles bijgewerkt!"
 
 #: admin-changes.php:257
-#, fuzzy
-#| msgid "No requests found."
 msgid "No change requests found."
-msgstr "Geen verzoeken gevonden."
+msgstr "Geen wijzigingsverzoeken gevonden."
 
 #: admin-changes.php:258
-#, fuzzy
-#| msgid "Failed to load access requests. Please try again later."
 msgid "Failed to load change requests. Please try again later."
-msgstr "Kon de toegangsverzoeken niet laden. Probeer het later opnieuw."
+msgstr "Laden van wijzigingsverzoeken mislukt. Probeer het later opnieuw."
 
 #: admin-changes.php:260
-#, fuzzy
-#| msgid "Your request was approved"
 msgid "Change request approved."
-msgstr "Je verzoek is goedgekeurd"
+msgstr "Wijzigingsverzoek goedgekeurd."
 
 #: admin-changes.php:261
-#, fuzzy
-#| msgid "Access request rejected."
 msgid "Change request rejected."
-msgstr "Toegangsverzoek afgewezen."
+msgstr "Wijzigingsverzoek afgewezen."
 
 #: admin-changes.php:262
-#, fuzzy
-#| msgid "Failed to process request. Please try again."
 msgid "Failed to process this change request. Please try again."
-msgstr "Kon verzoek niet verwerken. Probeer het opnieuw."
+msgstr ""
+"Het verwerken van dit wijzigingsverzoek is mislukt. Probeer het opnieuw."
 
 #: admin-changes.php:263
 msgid ""
 "This change request was already decided by someone else. Reloading the list."
 msgstr ""
+"Dit wijzigingsverzoek is al door iemand anders beslist. Lijst wordt opnieuw "
+"geladen."
 
 #: change-requests.php:56
 msgid ""
@@ -4171,46 +4148,47 @@ msgid ""
 "change requests and reviewed before they are published. This is every change "
 "request you have submitted, and what became of it."
 msgstr ""
+"Kalenderwijzigingen waarbij je zelf geen administrator bent, worden "
+"vastgelegd als wijzigingsverzoeken en vóór publicatie beoordeeld. Dit is elk "
+"wijzigingsverzoek dat je hebt ingediend, en wat er mee is gebeurd."
 
 #: change-requests.php:116
-#, fuzzy
-#| msgid "You have not made any access requests yet."
 msgid "You have not submitted any change requests yet."
-msgstr "Je hebt nog geen toegang aangevraagd."
+msgstr "Je hebt nog geen wijzigingsverzoeken ingediend."
 
 #: change-requests.php:117
-#, fuzzy
-#| msgid "Failed to load role requests. Please try again later."
 msgid "Failed to load your change requests. Please try again later."
-msgstr "Laden van rolverzoeken mislukt. Probeer het later opnieuw."
+msgstr ""
+"Het laden van je wijzigingsverzoeken is mislukt. Probeer het later opnieuw."
 
 #: change-requests.php:119
 msgid "Withdraw"
-msgstr ""
+msgstr "Intrekken"
 
 #: change-requests.php:120
 msgid ""
 "Withdraw this change request? The files it proposes will no longer be "
 "reviewed."
 msgstr ""
+"Dit wijzigingsverzoek intrekken? De bestanden die het voorstelt, zullen niet "
+"langer worden beoordeeld."
 
 #: change-requests.php:121
-#, fuzzy
-#| msgid "Your request was approved"
 msgid "Change request withdrawn."
-msgstr "Je verzoek is goedgekeurd"
+msgstr "Wijzigingsverzoek ingetrokken."
 
 #: change-requests.php:122
-#, fuzzy
-#| msgid "Failed to process request. Please try again."
 msgid "Failed to withdraw this change request. Please try again."
-msgstr "Kon verzoek niet verwerken. Probeer het opnieuw."
+msgstr ""
+"Het intrekken van dit wijzigingsverzoek is mislukt. Probeer het opnieuw."
 
 #: change-requests.php:125
 msgid ""
 "This change request can no longer be withdrawn — it may already have been "
 "reviewed."
 msgstr ""
+"Dit wijzigingsverzoek kan niet langer worden ingetrokken — het is mogelijk "
+"al beoordeeld."
 
 #: developer-dashboard.php:34 developer-dashboard.php:47 user-profile.php:257
 msgid "Developer Dashboard"
@@ -4686,14 +4664,18 @@ msgid ""
 "that apply to the calendar you choose, and shows which one each celebration "
 "comes from."
 msgstr ""
+"Elk Romeins Missaal levert slechts wat het toevoegt: de editie van 2008 "
+"definieert drie vieringen, niet een heel sanctorale. Deze pagina stelt de "
+"edities samen die van toepassing zijn op de kalender die je kiest, en laat "
+"zien uit welke editie elke viering afkomstig is."
 
 #: sanctorale.php:120
 msgid "Rite"
-msgstr ""
+msgstr "Ritus"
 
 #: sanctorale.php:122
 msgid "Roman"
-msgstr ""
+msgstr "Romeins"
 
 #: sanctorale.php:123
 msgid "Ambrosian"
@@ -4739,35 +4721,31 @@ msgstr "Namen per locale"
 
 #: sanctorale.php:228
 msgid "Readings structure"
-msgstr ""
+msgstr "Lezingenstructuur"
 
 #: sanctorale.php:230
-#, fuzzy
-#| msgid "No readings defined for this locale yet"
 msgid ""
 "No readings are curated for this celebration yet. Fill in what you know; "
 "blank citations are not saved."
-msgstr "Nog geen lezingen gedefinieerd voor deze taal"
+msgstr ""
+"Er zijn nog geen lezingen geselecteerd voor deze viering. Vul in wat je "
+"weet; lege verwijzingen worden niet opgeslagen."
 
 #: sanctorale.php:238
-#, fuzzy
-#| msgid "Lectionary readings"
 msgid "Ferial Readings"
-msgstr "Lectionarium lezingen"
+msgstr "Feria-lezingen"
 
 #: sanctorale.php:239
-#, fuzzy
-#| msgid "First reading"
 msgid "Festive Readings"
-msgstr "Eerste lezing"
+msgstr "Feestlezingen"
 
 #: sanctorale.php:240
 msgid "Palm Sunday Readings"
-msgstr ""
+msgstr "Palmpasenlezingen"
 
 #: sanctorale.php:241
 msgid "Easter Vigil Readings"
-msgstr ""
+msgstr "Paaswakelezingen"
 
 #: sanctorale.php:242
 msgid "Christmas Readings"
@@ -5090,18 +5068,19 @@ msgstr "Dit botst met een ander Missaal."
 #, php-format
 msgid "Queued for review as batch %s. Nothing has been written yet."
 msgstr ""
+"In de wachtrij voor beoordeling als batch %s. Er is nog niets geschreven."
 
 #. translators: %s is the change request batch id
 #: sanctorale.php:406
 #, php-format
 msgid "Approved as batch %s, awaiting publication."
-msgstr ""
+msgstr "Goedgekeurd als batch %s, in afwachting van publicatie."
 
 #. translators: %s is a comma-separated list of batch ids
 #: sanctorale.php:408
 #, php-format
 msgid "Earlier batches folded in: %s."
-msgstr ""
+msgstr "Eerdere batches ingevoegd: %s."
 
 #. translators: %s is the unrecognized disposition value
 #: sanctorale.php:410
@@ -5109,13 +5088,14 @@ msgstr ""
 msgid ""
 "The server reported an unrecognized outcome (%s); nothing local was changed."
 msgstr ""
+"De server meldde een niet-herkend resultaat (%s); lokaal is er niets "
+"gewijzigd."
 
 #. translators: %s is the error reported by the API
 #: sanctorale.php:412
-#, fuzzy, php-format
-#| msgid "Could not load notifications"
+#, php-format
 msgid "Could not load the sanctorale: %s"
-msgstr "Kon meldingen niet laden"
+msgstr "Kon het sanctorale niet laden: %s"
 
 #. translators: %s is the event_key a #event= link named
 #. Reported rather than left silent: the link may be stale, mistyped, or
@@ -5123,7 +5103,7 @@ msgstr "Kon meldingen niet laden"
 #: sanctorale.php:416
 #, php-format
 msgid "%s is not in the current selection."
-msgstr ""
+msgstr "%s staat niet in de huidige selectie."
 
 #: user-profile.php:23 user-profile.php:35
 msgid "User Profile"
