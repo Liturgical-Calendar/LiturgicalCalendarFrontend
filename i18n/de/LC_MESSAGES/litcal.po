@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-03 00:52+0000\n"
-"PO-Revision-Date: 2026-09-03 00:52+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2026-09-03 01:04+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
 "Language: de\n"
@@ -1492,31 +1492,25 @@ msgid "Get started"
 msgstr "Loslegen"
 
 #: layout/footer.php:106
-#, fuzzy
-#| msgid "Your request was approved"
 msgid "Your change request was approved"
-msgstr "Deine Anfrage wurde genehmigt"
+msgstr "Deine Änderungsanfrage wurde genehmigt"
 
 #: layout/footer.php:107
-#, fuzzy
-#| msgid "Your request was rejected"
 msgid "Your change request was rejected"
-msgstr "Deine Anfrage wurde abgelehnt"
+msgstr "Deine Änderungsanfrage wurde abgelehnt"
 
 #: layout/footer.php:108
-#, fuzzy
-#| msgid "Your request was approved"
 msgid "Your change request was published"
-msgstr "Deine Anfrage wurde genehmigt"
+msgstr "Deine Änderungsanfrage wurde veröffentlicht"
 
 #: layout/footer.php:109
 msgid "Your change request was closed without merging"
-msgstr ""
+msgstr "Deine Änderungsanfrage wurde geschlossen, ohne Zusammenführung"
 
 #: layout/footer.php:110
 #, php-format
 msgid "Pull request #%1$d"
-msgstr ""
+msgstr "Pull-Anfrage #%1$d"
 
 #: includes/login-modal.php:6
 msgid "Session Expiring"
@@ -1670,10 +1664,8 @@ msgstr "Warnung"
 
 #. translators: notification title when a write was queued for review instead of being saved
 #: includes/messages.php:57
-#, fuzzy
-#| msgid "Pending"
 msgid "Pending review"
-msgstr "Ausstehend"
+msgstr "Ausstehende Prüfung"
 
 #. translators: notification title when translations are missing for a locale
 #: includes/messages.php:59
@@ -1708,6 +1700,8 @@ msgid ""
 "Your changes were submitted for review as batch %s. Nothing has been saved "
 "yet."
 msgstr ""
+"Deine Änderungen wurden zur Prüfung als Stapel eingereicht %s. Nichts wurde "
+"bisher gespeichert."
 
 #. translators: %s is the change request batch id. The changes were approved but are not published yet
 #: includes/messages.php:78 admin-decrees.php:639 admin-tests.php:342
@@ -1717,6 +1711,8 @@ msgid ""
 "Your changes were approved as batch %s and are queued for publication. They "
 "are not live yet."
 msgstr ""
+"Deine Änderungen wurden als Stapel genehmigt %s und stehen zur "
+"Veröffentlichung an. Sie sind noch nicht live."
 
 #. translators: %s is a comma separated list of change request batch ids folded into the current one
 #: includes/messages.php:80 admin-decrees.php:640 admin-tests.php:343
@@ -1726,6 +1722,8 @@ msgid ""
 "Earlier pending submissions were folded into this one and no longer appear "
 "in your queue: %s"
 msgstr ""
+"Frühere ausstehende Einreichungen wurden in diese übernommen und erscheinen "
+"nicht mehr in deiner Warteschlange: %s"
 
 #. translators: %s is the unrecognized outcome value the server sent
 #: includes/messages.php:82 admin-decrees.php:642 admin-tests.php:344
@@ -1735,32 +1733,31 @@ msgid ""
 "The server reported an unrecognized outcome ('%s') for these changes. Reload "
 "the page to check whether they were saved."
 msgstr ""
+"Der Server meldete ein unbekanntes Ergebnis ('%s) für diese Änderungen. Lade "
+"die Seite neu, um zu prüfen, ob sie gespeichert wurden."
 
 #. translators: %s is a calendar identifier such as "nation/US"
 #: includes/messages.php:84
-#, fuzzy, php-format
-#| msgid "Test deleted successfully."
+#, php-format
 msgid "Calendar '%s' was deleted successfully"
-msgstr "Test erfolgreich gelöscht."
+msgstr "Kalender '%s' wurde erfolgreich gelöscht"
 
 #. translators: %s is a diocese identifier such as "rome_it"
 #: includes/messages.php:86
-#, fuzzy, php-format
-#| msgid "Test deleted successfully."
+#, php-format
 msgid "Diocesan Calendar '%s' was deleted successfully"
-msgstr "Test erfolgreich gelöscht."
+msgstr "Diözesaner Kalender '%s' wurde erfolgreich gelöscht"
 
 #. translators: confirmation shown after saving a national calendar
 #: includes/messages.php:88
-#, fuzzy
-#| msgid "Test updated successfully."
 msgid "National Calendar was created or updated successfully"
-msgstr "Test erfolgreich aktualisiert."
+msgstr "Nationalkalender wurde erfolgreich erstellt oder aktualisiert"
 
 #. translators: confirmation shown after saving a wider region calendar
 #: includes/messages.php:90
 msgid "Wider Region Calendar was created or updated successfully"
 msgstr ""
+"Kalender der größeren Region wurde erfolgreich erstellt oder aktualisiert"
 
 #. translators: form row title for designating a Doctor of the Church
 #: includes/messages.php:110
@@ -2345,10 +2342,8 @@ msgid "Proprium de Tempore - temporal cycle events"
 msgstr "Proprium de Tempore - Ereignisse des Zeitenkreises"
 
 #: includes/admin-blocks.php:38
-#, fuzzy
-#| msgid "Proprium de Sanctis - Roman Missal editions"
 msgid "Proprium de Sanctis - Missal editions, by rite"
-msgstr "Proprium de Sanctis - Ausgaben des Römischen Messbuchs"
+msgstr "Proprium de Sanctis - Missale-Ausgaben, nach Ritus"
 
 #: includes/admin-blocks.php:50
 msgid "Congregation for Divine Worship decrees"
@@ -2418,14 +2413,12 @@ msgid "Unknown user"
 msgstr "Unbekannter Benutzer"
 
 #: includes/change-request-i18n.php:27
-#, fuzzy
-#| msgid "Source"
 msgid "Resource"
-msgstr "Quelle"
+msgstr "Ressource"
 
 #: includes/change-request-i18n.php:28
 msgid "Files"
-msgstr ""
+msgstr "Dateien"
 
 #: includes/change-request-i18n.php:29 includes/change-request-i18n.php:35
 #: permission-requests.php:224 admin-changes.php:77 admin-changes.php:121
@@ -3879,20 +3872,21 @@ msgstr ""
 
 #: admin-dashboard.php:206
 msgid "Your Contributions"
-msgstr ""
+msgstr "Deine Beiträge"
 
 #: admin-dashboard.php:215 admin-changes.php:195 change-requests.php:37
 #: change-requests.php:50 change-requests.php:66
-#, fuzzy
-#| msgid "Your Access Requests"
 msgid "Your Change Requests"
-msgstr "Deine Zugriffsanfragen"
+msgstr "Deine Änderungsanträge"
 
 #: admin-dashboard.php:219
 msgid ""
 "Track the source data changes you have proposed, read what became of them, "
 "and withdraw one that is still awaiting review"
 msgstr ""
+"Verfolge die von dir vorgeschlagenen Änderungen an den Quelldaten, lies "
+"nach, was daraus geworden ist, und ziehe eine zurück, die noch auf Prüfung "
+"wartet."
 
 #: admin-users.php:33 admin-users.php:45
 msgid "Users Management"
@@ -4130,56 +4124,46 @@ msgid "Outcome"
 msgstr ""
 
 #: admin-changes.php:254
-#, fuzzy
-#| msgid "Revoke Permission"
 msgid "Reviewer decision"
-msgstr "Berechtigung widerrufen"
+msgstr "Entscheidung des Prüfers"
 
 #: admin-changes.php:255
 msgid "Reason"
 msgstr "Grund"
 
 #: admin-changes.php:256
-#, fuzzy
-#| msgid "No pending role requests. All caught up!"
 msgid "No change requests are waiting for review. All caught up!"
-msgstr "Keine ausstehenden Rollenanforderungen. Alles erledigt!"
+msgstr "Es warten keine Änderungsanträge auf Prüfung. Alles erledigt!"
 
 #: admin-changes.php:257
-#, fuzzy
-#| msgid "No requests found."
 msgid "No change requests found."
-msgstr "Keine Anfragen gefunden."
+msgstr "Keine Änderungsanträge gefunden."
 
 #: admin-changes.php:258
-#, fuzzy
-#| msgid "Failed to load access requests. Please try again later."
 msgid "Failed to load change requests. Please try again later."
 msgstr ""
-"Fehler beim Laden der Zugriffsanfragen. Bitte versuche es später noch einmal."
+"Fehler beim Laden der Änderungsanträge. Bitte versuchen Sie es später erneut."
 
 #: admin-changes.php:260
-#, fuzzy
-#| msgid "Your request was approved"
 msgid "Change request approved."
-msgstr "Deine Anfrage wurde genehmigt"
+msgstr "Änderungsantrag genehmigt."
 
 #: admin-changes.php:261
-#, fuzzy
-#| msgid "Access request rejected."
 msgid "Change request rejected."
-msgstr "Zugriffsanfrage abgelehnt."
+msgstr "Änderungsantrag abgelehnt."
 
 #: admin-changes.php:262
-#, fuzzy
-#| msgid "Failed to process request. Please try again."
 msgid "Failed to process this change request. Please try again."
-msgstr "Fehler bei der Bearbeitung der Anfrage. Bitte versuche es erneut."
+msgstr ""
+"Fehler beim Verarbeiten dieses Änderungsantrags. Bitte versuchen Sie es "
+"erneut."
 
 #: admin-changes.php:263
 msgid ""
 "This change request was already decided by someone else. Reloading the list."
 msgstr ""
+"Dieser Änderungsantrag wurde bereits von jemand anderem entschieden. Die "
+"Liste wird neu geladen."
 
 #: change-requests.php:56
 msgid ""
@@ -4187,48 +4171,50 @@ msgid ""
 "change requests and reviewed before they are published. This is every change "
 "request you have submitted, and what became of it."
 msgstr ""
+"Kalenderbearbeitungen, bei denen Sie nicht selbst Administrator sind, werden "
+"als Änderungsanträge erfasst und vor der Veröffentlichung geprüft. Dies ist "
+"jeder Änderungsantrag, den Sie eingereicht haben, und was daraus geworden "
+"ist."
 
 #: change-requests.php:116
-#, fuzzy
-#| msgid "You have not made any access requests yet."
 msgid "You have not submitted any change requests yet."
-msgstr "Du hast noch keine Zugriffsanfragen gestellt."
+msgstr "Sie haben noch keinen Änderungsantrag eingereicht."
 
 #: change-requests.php:117
-#, fuzzy
-#| msgid "Failed to load role requests. Please try again later."
 msgid "Failed to load your change requests. Please try again later."
 msgstr ""
-"Fehler beim Laden der Rollenanforderungen. Bitte versuchen Sie es später "
-"noch einmal."
+"Fehler beim Laden Ihrer Änderungsanträge. Bitte versuchen Sie es später "
+"erneut."
 
 #: change-requests.php:119
 msgid "Withdraw"
-msgstr ""
+msgstr "Zurückziehen"
 
 #: change-requests.php:120
 msgid ""
 "Withdraw this change request? The files it proposes will no longer be "
 "reviewed."
 msgstr ""
+"Diesen Änderungsantrag zurückziehen? Die von ihm vorgeschlagenen Dateien "
+"werden dann nicht mehr geprüft."
 
 #: change-requests.php:121
-#, fuzzy
-#| msgid "Your request was approved"
 msgid "Change request withdrawn."
-msgstr "Deine Anfrage wurde genehmigt"
+msgstr "Änderungsantrag zurückgezogen."
 
 #: change-requests.php:122
-#, fuzzy
-#| msgid "Failed to process request. Please try again."
 msgid "Failed to withdraw this change request. Please try again."
-msgstr "Fehler bei der Bearbeitung der Anfrage. Bitte versuche es erneut."
+msgstr ""
+"Fehler beim Zurückziehen dieses Änderungsantrags. Bitte versuchen Sie es "
+"erneut."
 
 #: change-requests.php:125
 msgid ""
 "This change request can no longer be withdrawn — it may already have been "
 "reviewed."
 msgstr ""
+"Dieser Änderungsantrag kann nicht mehr zurückgezogen werden — er wurde "
+"möglicherweise bereits geprüft."
 
 #: developer-dashboard.php:34 developer-dashboard.php:47 user-profile.php:257
 msgid "Developer Dashboard"
@@ -4706,14 +4692,18 @@ msgid ""
 "that apply to the calendar you choose, and shows which one each celebration "
 "comes from."
 msgstr ""
+"Jedes Römische Messbuch trägt nur das bei, was es ergänzt: Die Ausgabe von "
+"2008 definiert drei Feierlichkeiten, nicht das gesamte Sanctorale. Diese "
+"Seite fasst die Editionen zusammen, die zum von Ihnen gewählten Kalender "
+"passen, und zeigt, aus welcher Ausgabe jede Feier stammt."
 
 #: sanctorale.php:120
 msgid "Rite"
-msgstr ""
+msgstr "Ritus"
 
 #: sanctorale.php:122
 msgid "Roman"
-msgstr ""
+msgstr "Römisch"
 
 #: sanctorale.php:123
 msgid "Ambrosian"
@@ -5002,24 +4992,26 @@ msgid ""
 "number (StPaul_2) or _vigil is allowed, as is a lowercase two-word prefix. "
 "Cannot be renamed."
 msgstr ""
+"Beginnt mit einem Großbuchstaben, gefolgt von Buchstaben und Ziffern "
+"(StIsidoreFarmer). Eine nachgestellte Zahl (StPaul_2) oder _vigil ist "
+"erlaubt, ebenso ein Kleinbuchstaben-Prefix aus zwei Wörtern. Umbenennen ist "
+"nicht erlaubt."
 
 #: sanctorale.php:363
 msgid "Enter a day between 1 and 31."
-msgstr ""
+msgstr "Gib einen Tag zwischen 1 und 31 ein."
 
 #: sanctorale.php:368
 msgid "Choose…"
-msgstr ""
+msgstr "Auswählen…"
 
 #: sanctorale.php:369
 msgid "Choose a month."
-msgstr ""
+msgstr "Wähle einen Monat."
 
 #: sanctorale.php:370
-#, fuzzy
-#| msgid "Change grade"
 msgid "Choose a grade."
-msgstr "Rang ändern"
+msgstr "Wähle eine Stufe."
 
 #. translators: %1$s is the event key, %2$s is the Missal id
 #: sanctorale.php:372
@@ -5028,76 +5020,78 @@ msgid ""
 "Delete %1$s from %2$s? Its name and readings go with it, and any earlier "
 "edition that already defined it takes over."
 msgstr ""
+"Lösche %1$s von %2$s? Sein Name und seine Lesungen gehen damit einher, und "
+"jede frühere Ausgabe, die ihn bereits definiert hat, übernimmt."
 
 #: sanctorale.php:375
 msgid ""
 "These readings live in the rite-wide lectionary, shared by every Missal of "
 "this rite."
 msgstr ""
+"Diese Lesungen befinden sich im ritenweiten Lectionar, das von jedem Missale "
+"dieses Ritus jointly genutzt wird."
 
 #: sanctorale.php:376
 msgid "This rite has no lectionary, so readings cannot be edited here."
 msgstr ""
+"Dieses Ritus hat kein Lectionar, daher können die Lesungen hier nicht "
+"bearbeitet werden."
 
 #: sanctorale.php:384
 msgid ""
 "Inherited from a different lectionary source; edit it there, not from this "
 "Missal."
 msgstr ""
+"Aus einer anderen Lectionarquelle übernommen; bearbeite es dort, nicht von "
+"diesem Missale."
 
 #: sanctorale.php:387
 msgid "The readings were kept: another Missal still declares this celebration."
 msgstr ""
+"Die Lesungen wurden beibehalten: Ein anderes Missale erklärt diese Feier "
+"weiterhin."
 
 #: sanctorale.php:388
 msgid "Default (from grade)"
-msgstr ""
+msgstr "Standard (von der Stufe)"
 
 #: sanctorale.php:389
 msgid "Show no rank"
-msgstr ""
+msgstr "Keinen Rang anzeigen."
 
 #: sanctorale.php:390
 msgid "Custom text…"
-msgstr ""
+msgstr "Benutzerdefinierter Text…"
 
 #: sanctorale.php:391
 msgid "Nothing has changed."
-msgstr ""
+msgstr "Nichts hat sich geändert."
 
 #: sanctorale.php:392
-#, fuzzy
-#| msgid "Save"
 msgid "Saved."
-msgstr "Speichern"
+msgstr "Gespeichert."
 
 #: sanctorale.php:393
-#, fuzzy
-#| msgid "Application rejected."
 msgid "Celebration created."
-msgstr "Anwendung abgelehnt."
+msgstr "Feier erstellt."
 
 #: sanctorale.php:394
-#, fuzzy
-#| msgid "Application rejected."
 msgid "Celebration deleted."
-msgstr "Anwendung abgelehnt."
+msgstr "Feier gelöscht."
 
 #. translators: %s is the error reported by the API
 #: sanctorale.php:396
 #, php-format
 msgid "Could not save: %s"
-msgstr ""
+msgstr "Konnte nicht speichern: %s"
 
 #: sanctorale.php:397
-#, fuzzy
-#| msgid "You do not have permission to perform this action."
 msgid "You do not have permission to change this Missal."
-msgstr "Sie haben nicht die Berechtigung, diese Aktion auszuführen."
+msgstr "Du hast keine Berechtigung, dieses Missale zu ändern."
 
 #: sanctorale.php:398
 msgid "This clashes with another Missal"
-msgstr ""
+msgstr "Dieses Missale steht im Konflikt mit einem anderen Missale."
 
 #. translators: %s is the change request batch id
 #: sanctorale.php:404
