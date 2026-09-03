@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-03 00:52+0000\n"
-"PO-Revision-Date: 2026-09-03 00:52+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2026-09-03 01:31+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pt/>\n"
 "Language: pt\n"
@@ -3264,7 +3264,7 @@ msgstr "Rito Romano"
 
 #: admin-permissions.php:416 permission-requests.php:252 sanctorale.php:345
 msgid "Ambrosian Rite"
-msgstr ""
+msgstr "Rito Ambrosiano"
 
 #: admin-permissions.php:418 permission-requests.php:255
 msgid "Sanctorale — Editio Typica 1970"
@@ -4083,57 +4083,46 @@ msgid "Outcome"
 msgstr "Resultado"
 
 #: admin-changes.php:254
-#, fuzzy
-#| msgid "Revoke Permission"
 msgid "Reviewer decision"
-msgstr "Revogar Permissão"
+msgstr "Decisão do revisor"
 
 #: admin-changes.php:255
 msgid "Reason"
 msgstr "Motivo"
 
 #: admin-changes.php:256
-#, fuzzy
-#| msgid "No pending role requests. All caught up!"
 msgid "No change requests are waiting for review. All caught up!"
-msgstr "Nenhuma solicitação de papel pendente. Tudo em dia!"
+msgstr "Nenhum pedido de alteração aguardando revisão. Tudo em dia!"
 
 #: admin-changes.php:257
-#, fuzzy
-#| msgid "No requests found."
 msgid "No change requests found."
-msgstr "Nenhuma solicitação encontrada."
+msgstr "Nenhum pedido de alteração encontrado."
 
 #: admin-changes.php:258
-#, fuzzy
-#| msgid "Failed to load access requests. Please try again later."
 msgid "Failed to load change requests. Please try again later."
 msgstr ""
-"Falha ao carregar solicitações de acesso. Por favor, tente novamente mais "
+"Falhou ao carregar os pedidos de alteração. Por favor, tente novamente mais "
 "tarde."
 
 #: admin-changes.php:260
-#, fuzzy
-#| msgid "Your request was approved"
 msgid "Change request approved."
-msgstr "Seu pedido foi aprovado"
+msgstr "Pedido de alteração aprovado."
 
 #: admin-changes.php:261
-#, fuzzy
-#| msgid "Access request rejected."
 msgid "Change request rejected."
-msgstr "Solicitação de acesso rejeitada."
+msgstr "Pedido de alteração rejeitado."
 
 #: admin-changes.php:262
-#, fuzzy
-#| msgid "Failed to process request. Please try again."
 msgid "Failed to process this change request. Please try again."
-msgstr "Falha ao processar a solicitação. Por favor, tente novamente."
+msgstr ""
+"Falha ao processar este pedido de alteração. Por favor, tente novamente."
 
 #: admin-changes.php:263
 msgid ""
 "This change request was already decided by someone else. Reloading the list."
 msgstr ""
+"Este pedido de alteração já foi decidido por outra pessoa. Recarregando a "
+"lista."
 
 #: change-requests.php:56
 msgid ""
@@ -4141,48 +4130,47 @@ msgid ""
 "change requests and reviewed before they are published. This is every change "
 "request you have submitted, and what became of it."
 msgstr ""
+"Edições do calendário das quais você não é administrador são registradas "
+"como pedidos de alteração e revisadas antes de serem publicadas. Este é todo "
+"pedido de alteração que você enviou, e o que aconteceu com ele."
 
 #: change-requests.php:116
-#, fuzzy
-#| msgid "You have not made any access requests yet."
 msgid "You have not submitted any change requests yet."
-msgstr "Você ainda não fez nenhuma solicitação de acesso."
+msgstr "Você ainda não enviou nenhum pedido de alteração."
 
 #: change-requests.php:117
-#, fuzzy
-#| msgid "Failed to load role requests. Please try again later."
 msgid "Failed to load your change requests. Please try again later."
 msgstr ""
-"Falha ao carregar solicitações de papéis. Por favor, tente novamente mais "
-"tarde."
+"Falhou ao carregar seus pedidos de alteração. Por favor, tente novamente "
+"mais tarde."
 
 #: change-requests.php:119
 msgid "Withdraw"
-msgstr ""
+msgstr "Retirar"
 
 #: change-requests.php:120
 msgid ""
 "Withdraw this change request? The files it proposes will no longer be "
 "reviewed."
 msgstr ""
+"Retirar este pedido de alteração? Os arquivos que ele propõe não serão mais "
+"revisados."
 
 #: change-requests.php:121
-#, fuzzy
-#| msgid "Your request was approved"
 msgid "Change request withdrawn."
-msgstr "Seu pedido foi aprovado"
+msgstr "Pedido de alteração retirado."
 
 #: change-requests.php:122
-#, fuzzy
-#| msgid "Failed to process request. Please try again."
 msgid "Failed to withdraw this change request. Please try again."
-msgstr "Falha ao processar a solicitação. Por favor, tente novamente."
+msgstr "Falha ao retirar este pedido de alteração. Por favor, tente novamente."
 
 #: change-requests.php:125
 msgid ""
 "This change request can no longer be withdrawn — it may already have been "
 "reviewed."
 msgstr ""
+"Este pedido de alteração não pode mais ser retirado — pode já ter sido "
+"revisado."
 
 #: developer-dashboard.php:34 developer-dashboard.php:47 user-profile.php:257
 msgid "Developer Dashboard"
@@ -4656,14 +4644,18 @@ msgid ""
 "that apply to the calendar you choose, and shows which one each celebration "
 "comes from."
 msgstr ""
+"Cada Missal Romano contribui apenas com o que acrescenta: a edição de 2008 "
+"define três celebrações, não um sanctorale. Esta página compõe as edições "
+"que se aplicam ao calendário que você escolher, e mostra de qual edição cada "
+"celebração vem."
 
 #: sanctorale.php:120
 msgid "Rite"
-msgstr ""
+msgstr "Rito"
 
 #: sanctorale.php:122
 msgid "Roman"
-msgstr ""
+msgstr "Romano"
 
 #: sanctorale.php:123
 msgid "Ambrosian"
@@ -4849,33 +4841,27 @@ msgstr "Fora do Tempo Pascal"
 
 #: sanctorale.php:296
 msgid "Displays as"
-msgstr ""
+msgstr "Exibe como"
 
 #: sanctorale.php:299
 msgid "no rank shown"
-msgstr ""
+msgstr "sem grau mostrado"
 
 #: sanctorale.php:310
-#, fuzzy
-#| msgid "Higher Solemnity"
 msgid "Higher solemnity"
-msgstr "Solenidade Maior"
+msgstr "Solenidade maior"
 
 #: sanctorale.php:313
-#, fuzzy
-#| msgid "Color"
 msgid "Colour"
 msgstr "Cor"
 
 #: sanctorale.php:314
-#, fuzzy
-#| msgid "Common(s)"
 msgid "Common"
-msgstr "Comuns"
+msgstr "Comum"
 
 #: sanctorale.php:315
 msgid "From this Missal"
-msgstr ""
+msgstr "Deste Missal"
 
 #: sanctorale.php:316
 msgid "All editions"
@@ -4883,7 +4869,7 @@ msgstr "Todas as edições"
 
 #: sanctorale.php:318
 msgid "This Missal redefines a celebration an earlier one already had."
-msgstr ""
+msgstr "Este Missal redefine uma celebração que já existia anteriormente."
 
 #: sanctorale.php:323
 msgid "Redeclared by"
@@ -4906,62 +4892,48 @@ msgid "no override"
 msgstr "sem sobrescrita"
 
 #: sanctorale.php:334
-#, fuzzy
-#| msgid "Add translation"
 msgid "translated"
-msgstr "Adicionar tradução"
+msgstr "traduzido"
 
 #: sanctorale.php:335
 msgid "blank"
-msgstr ""
+msgstr "em branco"
 
 #: sanctorale.php:336
-#, fuzzy
-#| msgid "Permissions"
 msgid "missing"
-msgstr "Permissões"
+msgstr "faltando"
 
 #: sanctorale.php:337
 msgid "Nothing here."
-msgstr ""
+msgstr "Nada aqui."
 
 #: sanctorale.php:338
 msgid "No celebration in this month matches your search."
-msgstr ""
+msgstr "Nenhuma celebração neste mês corresponde à sua pesquisa."
 
 #: sanctorale.php:339
-#, fuzzy
-#| msgid "No readings defined for this locale yet"
 msgid "No sanctorale lectionary is defined for this rite."
-msgstr "Nenhuma leitura definida para este idioma ainda"
+msgstr "Não há leccionário do sanctorale definido para este rito."
 
 #: sanctorale.php:342
-#, fuzzy
-#| msgid "No readings defined for this locale yet"
 msgid "No readings are curated for this celebration yet."
-msgstr "Nenhuma leitura definida para este idioma ainda"
+msgstr "Ainda não há leituras selecionadas para esta celebração."
 
 #: sanctorale.php:343
-#, fuzzy
-#| msgid "Could not load notifications"
 msgid "Could not load the names for this celebration."
-msgstr "Não foi possível carregar notificações"
+msgstr "Não foi possível carregar os nomes desta celebração."
 
 #: sanctorale.php:344
-#, fuzzy
-#| msgid "Could not load notifications"
 msgid "Could not load the readings for this celebration."
-msgstr "Não foi possível carregar notificações"
+msgstr "Não foi possível carregar as leituras desta celebração."
 
 #: sanctorale.php:346
 msgid "No Missal is published for this combination of rite and calendar."
-msgstr ""
+msgstr "Não há Missal publicado para esta combinação de rito e calendário."
 
 #: sanctorale.php:352
-#, fuzzy
-#| msgid "Add Missal"
 msgid "Add to Missal"
-msgstr "Adicionar Missal"
+msgstr "Adicionar ao Missal"
 
 #: sanctorale.php:361
 msgid ""
