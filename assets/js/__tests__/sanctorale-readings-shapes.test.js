@@ -351,6 +351,15 @@ describe('readingsTierLocales', () => {
         expect(readingsTierLocales(withoutDeclared)).toEqual(locales);
     });
 
+    it('prefers what it can see over a declared-empty locale set', () => {
+        // Unreachable from the API — `sanctoraleSources()` skips a folder with no
+        // locale files, and a tier is only emitted once some locale has an entry —
+        // so this is the malformed-payload case, and it is the one place the two
+        // branches disagree. Honouring `[]` would render no inputs for readings
+        // that demonstrably exist, which is the failure #537 is about.
+        expect(readingsTierLocales({ ...TIER, locales: [] })).toEqual(['en', 'fr', 'hr', 'it', 'la', 'nl']);
+    });
+
     it('renders a fillable input for a locale that has no entry yet', () => {
         const shapes = resolveReadingsShapes(SCHEMA);
         const host = document.createElement('div');
