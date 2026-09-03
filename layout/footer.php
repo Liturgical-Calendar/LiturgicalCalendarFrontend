@@ -125,7 +125,7 @@ const SourceDataRepoUrl = <?php echo json_encode($notificationsRepoUrl); ?>;
 $isDevelopment   = ( $_ENV['APP_ENV'] ?? 'production' ) === 'development';
 $componentsJsUrl = $isDevelopment
     ? './assets/components-js/index.js'
-    : 'https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@2.10.0/+esm';
+    : 'https://cdn.jsdelivr.net/npm/@liturgical-calendar/components-js@2.11.0/+esm';
 
 $componentsJsImportMap = <<<SCRIPT
 <script type="importmap">
