@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-03 00:52+0000\n"
-"PO-Revision-Date: 2026-09-03 00:52+0000\n"
+"PO-Revision-Date: 2026-09-03 01:31+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pl/>\n"
@@ -3264,7 +3264,7 @@ msgstr "Rzymski ryt"
 
 #: admin-permissions.php:416 permission-requests.php:252 sanctorale.php:345
 msgid "Ambrosian Rite"
-msgstr ""
+msgstr "Ryt Ambrozjański"
 
 #: admin-permissions.php:418 permission-requests.php:255
 msgid "Sanctorale — Editio Typica 1970"
@@ -4893,55 +4893,43 @@ msgstr "przetłumaczone"
 
 #: sanctorale.php:335
 msgid "blank"
-msgstr ""
+msgstr "pusty"
 
 #: sanctorale.php:336
-#, fuzzy
-#| msgid "Permissions"
 msgid "missing"
-msgstr "Uprawnienia"
+msgstr "brak"
 
 #: sanctorale.php:337
 msgid "Nothing here."
-msgstr ""
+msgstr "Nic tu nie ma."
 
 #: sanctorale.php:338
 msgid "No celebration in this month matches your search."
-msgstr ""
+msgstr "Żadne święto w tym miesiącu nie pasuje do Twojego wyszukiwania."
 
 #: sanctorale.php:339
-#, fuzzy
-#| msgid "No readings defined for this locale yet"
 msgid "No sanctorale lectionary is defined for this rite."
-msgstr "Brak zdefiniowanych czytań dla tej lokalizacji"
+msgstr "Nie zdefiniowano lekcjonarza sanctorale dla tego rytu."
 
 #: sanctorale.php:342
-#, fuzzy
-#| msgid "No readings defined for this locale yet"
 msgid "No readings are curated for this celebration yet."
-msgstr "Brak zdefiniowanych czytań dla tej lokalizacji"
+msgstr "Na razie nie dobrano czytań do tej celebracji."
 
 #: sanctorale.php:343
-#, fuzzy
-#| msgid "Could not load notifications"
 msgid "Could not load the names for this celebration."
-msgstr "Nie można załadować powiadomień"
+msgstr "Nie udało się załadować nazw tej celebracji."
 
 #: sanctorale.php:344
-#, fuzzy
-#| msgid "Could not load notifications"
 msgid "Could not load the readings for this celebration."
-msgstr "Nie można załadować powiadomień"
+msgstr "Nie udało się załadować czytań tej celebracji."
 
 #: sanctorale.php:346
 msgid "No Missal is published for this combination of rite and calendar."
-msgstr ""
+msgstr "Nie ma Mszału wydanego dla tej kombinacji rytów i kalendarza."
 
 #: sanctorale.php:352
-#, fuzzy
-#| msgid "Add Missal"
 msgid "Add to Missal"
-msgstr "Dodaj mszał"
+msgstr "Dodaj do Mszału."
 
 #: sanctorale.php:361
 msgid ""
@@ -4949,24 +4937,25 @@ msgid ""
 "number (StPaul_2) or _vigil is allowed, as is a lowercase two-word prefix. "
 "Cannot be renamed."
 msgstr ""
+"Zaczyna się od wielkiej litery, a potem od liter i cyfr (StIsidoreFarmer). "
+"Dozwolony jest końcowy numer (StPaul_2) lub _vigil, podobnie jak prefiks "
+"dwuwyrazowy zaczynający się od małej litery. Nie może być zmieniany."
 
 #: sanctorale.php:363
 msgid "Enter a day between 1 and 31."
-msgstr ""
+msgstr "Wprowadź dzień od 1 do 31."
 
 #: sanctorale.php:368
 msgid "Choose…"
-msgstr ""
+msgstr "Wybierz…"
 
 #: sanctorale.php:369
 msgid "Choose a month."
-msgstr ""
+msgstr "Wybierz miesiąc."
 
 #: sanctorale.php:370
-#, fuzzy
-#| msgid "Change grade"
 msgid "Choose a grade."
-msgstr "Zmień rangę"
+msgstr "Wybierz stopień."
 
 #. translators: %1$s is the event key, %2$s is the Missal id
 #: sanctorale.php:372
@@ -4975,22 +4964,27 @@ msgid ""
 "Delete %1$s from %2$s? Its name and readings go with it, and any earlier "
 "edition that already defined it takes over."
 msgstr ""
+"Usuń %1$s z %2$s? Jej nazwa i lektury idą z nim, a każda wcześniejsza "
+"edycja, która już ją zdefiniowała, przejmuje."
 
 #: sanctorale.php:375
 msgid ""
 "These readings live in the rite-wide lectionary, shared by every Missal of "
 "this rite."
 msgstr ""
+"Te czytania znajdują się w lekcjonarzu sanctorale całego rytuału, wspólnym "
+"dla każdego Mszału tego rytuału."
 
 #: sanctorale.php:376
 msgid "This rite has no lectionary, so readings cannot be edited here."
-msgstr ""
+msgstr "Ten ryt nie ma lekcjonarza, więc czytania nie mogą być edytowane tutaj."
 
 #: sanctorale.php:384
 msgid ""
 "Inherited from a different lectionary source; edit it there, not from this "
 "Missal."
 msgstr ""
+"Dziedziczony z innego źródła lekcjonarza; edytuj to tam, a nie z tego Mszału."
 
 #: sanctorale.php:387
 msgid "The readings were kept: another Missal still declares this celebration."
