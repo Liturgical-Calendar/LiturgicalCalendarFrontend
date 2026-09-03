@@ -27,7 +27,7 @@
  * @module capabilities
  */
 
-import { legacyRiteCalendarObject, qualifyObjectId, RITE_CALENDAR_TYPE } from './riteScopedObjectId.js';
+import { qualifyObjectId, RITE_CALENDAR_TYPE } from './riteScopedObjectId.js';
 
 /** `PATCH` — editing an existing entry — requires this relation. */
 export const RELATION_EDITOR = 'editor';
@@ -126,18 +126,14 @@ export async function detectMissalCapabilities({
         }
     };
 
-    // `GET /admin/permissions/check` answers on the object it is literally
-    // handed; the legacy widening lives in the API's authorization middleware,
-    // not here. So during the #955 migration window — after the API deploy,
-    // before its tuple migration — a user holding only
-    // `general_roman_calendar:EDITIO_TYPICA_2008` is still allowed to PATCH it,
-    // and asking only the rite-qualified object would hide the control that
-    // write is behind. `legacyRiteCalendarObject()` owns which pairing is legal.
-    const ask = async (object, relation) => {
-        if (await askOne(object, relation)) return true;
-        const legacy = legacyRiteCalendarObject(object.objectType, object.objectId);
-        return legacy === null ? false : askOne(legacy, relation);
-    };
+    // Asked on the rite-qualified object alone. This carried a
+    // `general_roman_calendar` fallback through the #955 migration window, for a
+    // user whose grant predated the API's tuple migration — that window is closed:
+    // the legacy tuples were migrated and deleted, the API's middleware dropped
+    // its own fallback (LiturgicalCalendarAPI#970), and the type itself was
+    // removed from the FGA model (CatholicOS/cdcf-infra#44). A legacy ask can now
+    // only ever be a second round-trip to a guaranteed negative.
+    const ask = askOne;
 
     const settled = await Promise.all(missals.map(async (missal) => {
         const object = missalFgaObject(missal, rite, baseRegion);

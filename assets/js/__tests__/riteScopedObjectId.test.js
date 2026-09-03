@@ -4,7 +4,6 @@ import {
     ROMAN_RITE,
     bareCalendarId,
     isRiteQualifiedObjectType,
-    legacyRiteCalendarObject,
     parseRiteQualifiedId,
     qualifyObjectId,
     riteForObjectType,
@@ -225,36 +224,3 @@ describe('sameObjectId', () => {
     });
 });
 
-describe('legacyRiteCalendarObject — the #955 pairing', () => {
-    it('pairs a Roman fixed sub-resource with its bare legacy object', () => {
-        for (const sub of ['temporale', 'decrees', 'supported_locales']) {
-            expect(legacyRiteCalendarObject('rite_calendar', `roman/${sub}`))
-                .toEqual({ objectType: 'general_roman_calendar', objectId: sub });
-        }
-    });
-
-    it('refuses to pair a NON-Roman fixed sub-resource', () => {
-        // Every legacy id was Roman by construction — the predecessor type
-        // modelled the tier as though only the Roman rite had one. Pairing
-        // `ambrosian/temporale` with the bare `temporale` would re-introduce
-        // exactly the un-qualification #955 exists to remove.
-        expect(legacyRiteCalendarObject('rite_calendar', 'ambrosian/temporale')).toBeNull();
-    });
-
-    it('pairs a typical edition across EVERY rite', () => {
-        // Missal ids are unique across rites, so the bare legacy id genuinely
-        // denoted the Ambrosian edition too.
-        expect(legacyRiteCalendarObject('rite_calendar', 'roman/EDITIO_TYPICA_2002'))
-            .toEqual({ objectType: 'general_roman_calendar', objectId: 'EDITIO_TYPICA_2002' });
-        expect(legacyRiteCalendarObject('rite_calendar', 'ambrosian/EDITIO_TYPICA_2024'))
-            .toEqual({ objectType: 'general_roman_calendar', objectId: 'EDITIO_TYPICA_2024' });
-    });
-
-    it('has no pairing for any other type, or for an unqualified id', () => {
-        expect(legacyRiteCalendarObject('national_calendar', 'roman/US')).toBeNull();
-        expect(legacyRiteCalendarObject('rite_calendar_test', 'roman')).toBeNull();
-        expect(legacyRiteCalendarObject('general_roman_calendar', 'decrees')).toBeNull();
-        expect(legacyRiteCalendarObject('rite_calendar', 'decrees')).toBeNull();
-        expect(legacyRiteCalendarObject('rite_calendar', 'mozarabic/temporale')).toBeNull();
-    });
-});

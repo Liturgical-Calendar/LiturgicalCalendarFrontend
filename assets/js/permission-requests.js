@@ -72,10 +72,12 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // Object type ("Calendar scope") display names
     // `rite_calendar` and `rite_calendar_test` supersede the two
-    // `general_roman_calendar*` entries (API #955 / #785), which stay listed
-    // because the API still emits them: pre-migration grants, stored access
-    // requests and `audit_log` rows all keep the old names, permanently in the
-    // audit log's case. A map without them renders those rows as a raw type id.
+    // `general_roman_calendar*` entries. Those types were dropped from the FGA
+    // model outright at the #955 prune milestone, so nothing NEW can be created
+    // on them — but they stay listed here, because rendering is not creating:
+    // stored access requests and `audit_log` rows keep the old names, and the
+    // audit log is never rewritten, so they keep them permanently. A map without
+    // them renders those historical rows as a raw type id.
     const objectTypeNames = {
         'national_calendar': config.i18n.nationalCalendar,
         'diocesan_calendar': config.i18n.diocesanCalendar,
@@ -110,26 +112,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         'revoked': { class: 'bg-secondary', icon: 'fas fa-ban', text: config.i18n.statusRevoked }
     };
 
-    // Fixed object-id choices for the deprecated General Roman Calendar type.
-    // The five enumerated General Roman Calendar sub-resource ids.
-    // Keep in sync with the API constant AccessRequestRepository::GRC_OBJECT_IDS
-    // and the identical copy in assets/js/admin-permissions.js.
-    const GRC_OBJECT_IDS = [
-        { id: 'temporale',          label: config.i18n.grcTemporale },
-        { id: 'EDITIO_TYPICA_1970', label: config.i18n.grcSanctorale1970 },
-        { id: 'EDITIO_TYPICA_2002', label: config.i18n.grcSanctorale2002 },
-        { id: 'EDITIO_TYPICA_2008', label: config.i18n.grcSanctorale2008 },
-        { id: 'decrees',            label: config.i18n.grcDecrees }
-    ];
-
     // The eight object ids valid for the `rite_calendar` type, per rite, in the
     // API's own order. Keep in sync with the service RiteCalendarObjectIds and
     // the identical copy in assets/js/admin-permissions.js.
     //
-    // This is a per-rite SET, not the single fixed id `general_roman_calendar_test`
-    // has: the ids are the rite's temporale, its typical editions that actually
-    // carry sanctorale data, and — for the Roman rite alone — `decrees` and
-    // `supported_locales`. Roman EDITIO_TYPICA_1971/1975 and Ambrosian
+    // A per-rite SET: the ids are the rite's temporale, its typical editions that
+    // actually carry sanctorale data, and — for the Roman rite alone — `decrees`
+    // and `supported_locales`. (The TEST tier is different again: `rite_calendar_test`
+    // ids are the bare rite, since there its id IS the rite.) Roman EDITIO_TYPICA_1971/1975 and Ambrosian
     // EDITIO_TYPICA_1976 are typical editions with no sanctorale file, which the
     // API deliberately excludes: a grant over one would authorize editing a
     // resource with nothing in it.
@@ -160,32 +150,32 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Keep in sync with the API; these are not localized (proper nouns).
     const WIDER_REGIONS = ['Americas', 'Europe', 'Asia', 'Africa', 'Oceania'];
 
-    // Object types allowed per role (mirror AccessRequestRepository::ROLE_OBJECT_TYPES)
-    // Membership mirrors AccessRequestRepository::ROLE_OBJECT_TYPES (the API
-    // validates the SET, not the order). Display order is deliberate: the
-    // rite-level calendar scope(s) come first, and `rite_calendar` precedes the
-    // `general_roman_calendar` it supersedes so a new request lands on the
-    // current type. The deprecated one is still OFFERED rather than dropped:
-    // the API accepts it for the whole migration window, and a grant made on it
-    // is picked up by the tuple migration, so removing it would only strand
-    // anyone mid-flow (see the API's rite-calendar-migration-runbook, Step 6).
+    // Object types allowed per role, mirroring AccessRequestRepository::ROLE_OBJECT_TYPES
+    // (the API validates the SET, not the order; display order puts the
+    // rite-level scope first).
+    //
+    // Both `general_roman_calendar` spellings are GONE at the #955 prune
+    // milestone. They were offered through the migration window because a grant
+    // made on them was still picked up by the tuple migration — but the types no
+    // longer exist in the OpenFGA model at all (CatholicOS/cdcf-infra#44), so
+    // offering one now hands the user a write rejected by OpenFGA itself:
+    // `type 'general_roman_calendar' not found`. `rite_calendar` and
+    // `rite_calendar_test` are their successors.
     const roleObjectTypes = {
         'calendar_editor': [
             'rite_calendar',
-            'general_roman_calendar',
             'national_calendar',
             'diocesan_calendar',
             'wider_region'
         ],
         'test_editor': [
-            'general_roman_calendar_test',
+            'rite_calendar_test',
             'national_calendar_test',
             'diocesan_calendar_test'
         ],
         'developer': [
             'rite_calendar',
-            'general_roman_calendar',
-            'general_roman_calendar_test',
+            'rite_calendar_test',
             'national_calendar',
             'diocesan_calendar',
             'wider_region',
@@ -292,22 +282,19 @@ document.addEventListener('DOMContentLoaded', async function() {
         let entries = [];
         if (objectType === 'wider_region') {
             entries = WIDER_REGIONS.map(function(name) { return { value: name, label: name }; });
-        } else if (objectType === 'general_roman_calendar') {
-            entries = GRC_OBJECT_IDS.map(function(o) { return { value: o.id, label: o.label }; });
-        } else if (objectType === 'general_roman_calendar_test') {
-            entries = [
-                { value: 'general_roman_calendar', label: config.i18n.testsGeneralRoman }
-            ];
+        } else if (objectType === 'rite_calendar_test') {
+            // The test tier's id IS the rite, bare — `roman`, `ambrosian` — which
+            // is why it is not rite-QUALIFIED like the data types. Mirrors
+            // AccessRequestRepository, which validates it against Rite::cases().
+            entries = RITE_CALENDAR_OBJECT_IDS.map(function(g) {
+                return { value: g.rite, label: g.label };
+            });
         }
         for (const e of entries) {
             const o = document.createElement('option');
             o.value = e.value;
             o.textContent = e.label;
             select.appendChild(o);
-        }
-        // Auto-select the single fixed GRC-test id.
-        if (objectType === 'general_roman_calendar_test') {
-            select.value = 'general_roman_calendar';
         }
         return select;
     }

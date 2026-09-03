@@ -27,11 +27,13 @@
  * calendar-naming type's are: `temporale` is a sub-resource KIND, one per rite,
  * not a unique id.
  *
- * `general_roman_calendar` and `general_roman_calendar_test` keep BARE ids.
- * They are DEPRECATED, not renamed: the API still accepts and still emits both,
- * and `audit_log` rows are never rewritten, so historical records carry them
- * permanently. They stay bare until the prune milestone
- * (`docs/ops/rite-calendar-migration-runbook.md` in the API repo).
+ * `general_roman_calendar` and `general_roman_calendar_test` are RETIRED. The
+ * prune milestone removed both from the FGA model outright
+ * (CatholicOS/cdcf-infra#44), so nothing can be granted, checked or written on
+ * them any more — this module composes no id for either. They survive only as
+ * DISPLAY labels, because stored access requests and `audit_log` rows keep the
+ * old names, permanently in the audit log's case; the ids on those historical
+ * rows are bare, and are rendered as stored rather than qualified.
  * `rite_calendar_test` is the exception that proves the rule — its id IS the
  * rite (`rite_calendar_test:ambrosian`), so it is bare too.
  *
@@ -152,11 +154,11 @@ export function riteForObjectType(objectType, rite) {
  *
  * Idempotent: an id that already carries a known rite prefix is returned
  * unchanged, so a value round-tripped out of the API and back in is not
- * double-qualified. Types with bare ids (the deprecated `general_roman_calendar`
- * and `general_roman_calendar_test`, `rite_calendar_test`, and anything unknown)
- * pass through untouched — qualifying those would invent a rite for a resource
- * that has none, and in the deprecated pair's case would compose an id their own
- * type does not validate.
+ * double-qualified. Types with bare ids (`rite_calendar_test`, whose id IS the
+ * rite; the retired `general_roman_calendar` pair, which can still arrive on a
+ * historical row; and anything unknown) pass through untouched — qualifying
+ * those would invent a rite for a resource that has none, and would rewrite a
+ * stored historical id into one its own type never validated.
  *
  * @param {string} objectType - An OpenFGA object type.
  * @param {string} objectId - The bare calendar id as chosen in the UI.
@@ -233,12 +235,6 @@ export function sameObjectId(objectType, a, b) {
 export const RITE_CALENDAR_TYPE = 'rite_calendar';
 
 /**
- * @type {string} The pre-#955 object type `rite_calendar` generalises.
- * Mirrors `RiteCalendarObjectIds::LEGACY_TYPE`. Deprecated, NOT removed.
- */
-export const LEGACY_RITE_CALENDAR_TYPE = 'general_roman_calendar';
-
-/**
  * The `rite_calendar` sub-resources that are not missal editions.
  *
  * Mirrors `RiteCalendarObjectIds::FIXED_IDS`. `temporale` exists for both rites
@@ -253,49 +249,16 @@ export const RITE_CALENDAR_FIXED_IDS = Object.freeze({
     [AMBROSIAN_RITE]: Object.freeze(['temporale']),
 });
 
-/**
- * Every `rite_calendar` sub-resource that is a fixed (non-missal) one, for any rite.
- * @type {ReadonlyArray<string>}
+/*
+ * `legacyRiteCalendarObject()` and `LEGACY_RITE_CALENDAR_TYPE` lived here, giving
+ * the pre-#955 object that denoted the same resource as a `rite_calendar` one.
+ * Both are gone at the prune milestone, mirroring the API dropping
+ * `RiteCalendarObjectIds::legacyCounterpart()` (LiturgicalCalendarAPI#970): the
+ * `general_roman_calendar` type was removed from the FGA model outright
+ * (CatholicOS/cdcf-infra#44), so the pairing has nothing left to point at.
+ *
+ * Note this is NOT a licence to drop the type from DISPLAY maps. Stored access
+ * requests and `audit_log` rows keep the old names, permanently in the audit
+ * log's case — see the objectTypeNames maps in admin-permissions.js and
+ * permission-requests.js, which deliberately still carry both spellings.
  */
-const ALL_FIXED_SUBRESOURCES = Object.freeze(
-    Array.from(new Set(Object.values(RITE_CALENDAR_FIXED_IDS).flat()))
-);
-
-/**
- * The pre-#955 object that denoted the same resource as a `rite_calendar` one.
- *
- * The frontend needs this because the API's fallback lives in its authorization
- * MIDDLEWARE only: `GET /admin/permissions/check` answers on the object it is
- * literally handed, with no widening. A UI that asked only about
- * `rite_calendar:roman/decrees` would therefore hide controls from every user
- * whose grant has not been migrated yet, while the write those controls make
- * would in fact have succeeded. Asking the legacy object as well is what keeps
- * the two agreeing for the whole migration window.
- *
- * The pairing is deliberately ASYMMETRIC, mirroring
- * `RiteCalendarObjectIds::legacyCounterpart()` and the two fallbacks in
- * `OpenFgaAuthorizationMiddleware`:
- *
- * - a **fixed sub-resource** (`temporale`, `decrees`, `supported_locales`)
- *   pairs ONLY for the Roman rite. Every legacy id was Roman by construction,
- *   so there is no non-Roman legacy tuple to find, and pairing one for another
- *   rite would re-introduce exactly the un-qualification #955 removes;
- * - a **typical edition** pairs across EVERY rite, because missal ids are
- *   unique across rites — `general_roman_calendar:EDITIO_TYPICA_2024` genuinely
- *   was, and still is, the Ambrosian edition's legacy object.
- *
- * Anything that is not a fixed sub-resource IS a typical edition here: those are
- * the only two kinds of id the type carries.
- *
- * @param {string} objectType - An OpenFGA object type.
- * @param {string} objectId - The rite-qualified object id.
- * @returns {{objectType: string, objectId: string}|null} The legacy object, or null.
- */
-export function legacyRiteCalendarObject(objectType, objectId) {
-    if (objectType !== RITE_CALENDAR_TYPE) return null;
-    const parsed = parseRiteQualifiedId(objectId);
-    if (parsed === null) return null;
-    const isFixed = ALL_FIXED_SUBRESOURCES.includes(parsed.id);
-    if (isFixed && parsed.rite !== ROMAN_RITE) return null;
-    return { objectType: LEGACY_RITE_CALENDAR_TYPE, objectId: parsed.id };
-}
