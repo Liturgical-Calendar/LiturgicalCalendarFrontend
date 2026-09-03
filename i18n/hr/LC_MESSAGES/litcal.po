@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-03 00:52+0000\n"
-"PO-Revision-Date: 2026-09-03 00:52+0000\n"
+"PO-Revision-Date: 2026-09-03 01:04+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
@@ -1046,12 +1046,12 @@ msgstr "Za svete žene"
 #. translators: context = Masses and Prayers for Various Needs and Occasions
 #: src/LitCommon.php:156
 msgid "For Giving Thanks to God for the Gift of Human Life [USA]"
-msgstr ""
+msgstr "Zahvalivanje Bogu na daru ljudskog života [USA]"
 
 #. translators: context = Masses and Prayers for Various Needs and Occasions
 #: src/LitCommon.php:158
 msgid "For the Preservation of Peace and Justice"
-msgstr ""
+msgstr "Za očuvanje mira i pravde"
 
 #. translators: (singular feminine) glue between "From the Common" and the actual common. Latin: leave empty!
 #: src/LitCommon.php:210 src/LitCommon.php:222
@@ -2433,10 +2433,8 @@ msgid "Wider region"
 msgstr "Šire područje"
 
 #: includes/change-request-i18n.php:55
-#, fuzzy
-#| msgid "Diocesan Calendar Tests"
 msgid "Rite calendar"
-msgstr "Testovi biskupijskog kalendara"
+msgstr "Kalendar obreda"
 
 #: includes/change-request-i18n.php:57
 msgid "National calendar test"
@@ -2487,18 +2485,16 @@ msgid "Closed without merging"
 msgstr "Zatvoren bez spajanja."
 
 #: includes/change-request-i18n.php:78
-#, fuzzy
-#| msgid "Could not load your existing requests."
 msgid "Could not load what this change request proposes."
-msgstr "Nije moguće učitati tvoje postojeće zahtjeve."
+msgstr "Nije se mogao učitati ono što predlaže ovaj zahtjev za promjenu."
 
 #: includes/change-request-i18n.php:79
 msgid "This change request proposes no files."
-msgstr ""
+msgstr "Ovaj zahtjev za promjenu ne predlaže nikakve datoteke."
 
 #: includes/change-request-i18n.php:80
 msgid "No content change."
-msgstr ""
+msgstr "Nema promjene sadržaja."
 
 #: includes/change-request-i18n.php:81
 #, php-format
@@ -2506,34 +2502,37 @@ msgid ""
 "This file is too large to compare in the browser (%1$s proposed, %2$s "
 "currently on disk)."
 msgstr ""
+"Ova datoteka je prevelika za usporedbu u pregledniku (%1$s predloženo, %2$s "
+"trenutačno na disku)."
 
 #: includes/change-request-i18n.php:82
 #, php-format
 msgid "@@ %1$d unchanged line(s) hidden @@"
-msgstr ""
+msgstr "@@ %1$d nepromijenjene linije skrivene @@"
 
 #: includes/change-request-i18n.php:83
 #, php-format
 msgid ""
 "File contents were not requested. Proposed: %1$s; currently on disk: %2$s."
 msgstr ""
+"Sadržaji datoteke nisu zatraženi. Predloženo: %1$s; trenutno na disku: %2$s."
 
 #: includes/change-request-i18n.php:84
 #, php-format
 msgid "This file will be removed (%1$s currently on disk)."
-msgstr ""
+msgstr "Ova datoteka bit će izbrisana (%1$s trenutačno na disku)."
 
 #: includes/admin-changes-card.php:23
-#, fuzzy
-#| msgid "Access Requests to Review"
 msgid "Change Requests to Review"
-msgstr "Zahtjevi za pristup na pregled"
+msgstr "Zahtjevi za promjene za pregled"
 
 #: includes/admin-changes-card.php:27
 msgid ""
 "Read and decide the source data changes proposed for the calendars you "
 "administer"
 msgstr ""
+"Pročitajte i odlučite o predloženim promjenama podataka izvora za kalendare "
+"koje upravljate"
 
 #: includes/admin-changes-card.php:33 admin-permissions.php:470
 #: admin-applications.php:245 admin-dashboard.php:136 admin-dashboard.php:194
@@ -3019,17 +3018,13 @@ msgstr "Sve"
 
 #: admin-permissions.php:81 admin-permissions.php:316 admin-permissions.php:409
 #: permission-requests.php:243
-#, fuzzy
-#| msgid "Diocesan Calendar Tests"
 msgid "Rite Calendar"
-msgstr "Testovi biskupijskog kalendara"
+msgstr "Kalendar obreda"
 
 #: admin-permissions.php:82 admin-permissions.php:317 admin-permissions.php:410
 #: permission-requests.php:244
-#, fuzzy
-#| msgid "Diocesan Calendar Tests"
 msgid "Rite Calendar Tests"
-msgstr "Testovi biskupijskog kalendara"
+msgstr "Testovi kalendara obreda"
 
 #: admin-permissions.php:84 admin-permissions.php:433 admin-permissions.php:464
 #: permission-requests.php:248
@@ -3243,7 +3238,7 @@ msgstr "Definicija testa"
 
 #: admin-permissions.php:415 permission-requests.php:251
 msgid "Roman Rite"
-msgstr ""
+msgstr "Rimski obred"
 
 #: admin-permissions.php:416 permission-requests.php:252 sanctorale.php:345
 msgid "Ambrosian Rite"
@@ -3262,20 +3257,16 @@ msgid "Sanctorale — Editio Typica 2008"
 msgstr "Sanctorale — Editio Typica 2008"
 
 #: admin-permissions.php:421 permission-requests.php:261
-#, fuzzy
-#| msgid "Sanctorale — Editio Typica 2002"
 msgid "Sanctorale — Editio Typica 2024"
-msgstr "Sanctorale — Editio Typica 2002"
+msgstr "Sanctorale — Editio Typica 2024"
 
 #: admin-permissions.php:422 permission-requests.php:263
 msgid "Decrees of the Dicastery for Divine Worship"
 msgstr "Dekreti Dikasterija za božansko bogoštovlje"
 
 #: admin-permissions.php:423 permission-requests.php:264
-#, fuzzy
-#| msgid "Supported Locales"
 msgid "Supported locales"
-msgstr "Podržani lokaliteti"
+msgstr "Podržane lokalne postavke"
 
 #: admin-permissions.php:424
 msgid "Enter object ID..."
@@ -3920,62 +3911,50 @@ msgid ""
 "Promoting a locale therefore tightens enforcement, and may only be done once "
 "every check below passes."
 msgstr ""
+"Službeno podržana lokalizacija obećava potpune podatke. Nedostajući podaci "
+"za jednu lokalizaciju smatraju se greškom, dok lokalizacija izvan popisa "
+"degradira tiho. Promicanje lokalizacije stoga pojačava provođenje pravila i "
+"može se obaviti samo jednom nakon što prođu sve provjere u nastavku."
 
 #: admin-locales.php:66
-#, fuzzy
-#| msgid "Name in base locale"
 msgid "Candidate locales"
-msgstr "Ime u osnovnom jeziku"
+msgstr "Kandidatske lokalizacije"
 
 #: admin-locales.php:76
-#, fuzzy
-#| msgid "Locales"
 msgid "Locale"
-msgstr "Jezici"
+msgstr "Lokalizacija"
 
 #: admin-locales.php:78
-#, fuzzy
-#| msgid "Read"
 msgid "Readiness"
-msgstr "Pročitaj"
+msgstr "Spremnost"
 
 #: admin-locales.php:79 sanctorale.php:176 sanctorale.php:223
-#, fuzzy
-#| msgid "Event Details"
 msgid "Details"
-msgstr "Detalji Događaja"
+msgstr "Detalji"
 
 #: admin-locales.php:107
 msgid "Official"
-msgstr ""
+msgstr "Službeno"
 
 #: admin-locales.php:108
 msgid "Candidate"
-msgstr ""
+msgstr "Kandidat"
 
 #: admin-locales.php:109
-#, fuzzy
-#| msgid "Read"
 msgid "Ready"
-msgstr "Pročitaj"
+msgstr "Spremno"
 
 #: admin-locales.php:110
-#, fuzzy
-#| msgid "Not Verified"
 msgid "Not ready"
-msgstr "Nije verificiran"
+msgstr "Nije spremno"
 
 #: admin-locales.php:111
-#, fuzzy
-#| msgid "View Keys"
 msgid "View checks"
-msgstr "Pregledaj ključeve"
+msgstr "Pregled provjera"
 
 #: admin-locales.php:113
-#, fuzzy
-#| msgid "Loading…"
 msgid "Working…"
-msgstr "Učitavanje…"
+msgstr "U tijeku…"
 
 #: admin-locales.php:114
 #, php-format
@@ -4686,35 +4665,31 @@ msgstr "Imena po lokalizaciji."
 
 #: sanctorale.php:228
 msgid "Readings structure"
-msgstr ""
+msgstr "Struktura čitanja"
 
 #: sanctorale.php:230
-#, fuzzy
-#| msgid "No readings defined for this locale yet"
 msgid ""
 "No readings are curated for this celebration yet. Fill in what you know; "
 "blank citations are not saved."
-msgstr "Još nisu definirana čitanja za ovaj jezik"
+msgstr ""
+"Za ovu proslavu još nema čitanja. Unesite ono što znate; prazne citacije se "
+"ne spremaju."
 
 #: sanctorale.php:238
-#, fuzzy
-#| msgid "Lectionary readings"
 msgid "Ferial Readings"
-msgstr "Čitanja lekcionara"
+msgstr "Ferialna čitanja"
 
 #: sanctorale.php:239
-#, fuzzy
-#| msgid "First reading"
 msgid "Festive Readings"
-msgstr "Prvo čitanje"
+msgstr "Svečana čitanja"
 
 #: sanctorale.php:240
 msgid "Palm Sunday Readings"
-msgstr ""
+msgstr "Čitanja na Cvjetnicu"
 
 #: sanctorale.php:241
 msgid "Easter Vigil Readings"
-msgstr ""
+msgstr "Čitanja Uskrsnog bdijenja"
 
 #: sanctorale.php:242
 msgid "Christmas Readings"
@@ -5030,19 +5005,19 @@ msgstr "Ovo se preklapa s drugim misalom"
 #: sanctorale.php:404
 #, php-format
 msgid "Queued for review as batch %s. Nothing has been written yet."
-msgstr ""
+msgstr "Na čekanju za pregled kao skup %s. Još ništa nije napisano."
 
 #. translators: %s is the change request batch id
 #: sanctorale.php:406
 #, php-format
 msgid "Approved as batch %s, awaiting publication."
-msgstr ""
+msgstr "Odobreno kao skup %s, na objavu čeka."
 
 #. translators: %s is a comma-separated list of batch ids
 #: sanctorale.php:408
 #, php-format
 msgid "Earlier batches folded in: %s."
-msgstr ""
+msgstr "Raniji skupovi uključeni: %s."
 
 #. translators: %s is the unrecognized disposition value
 #: sanctorale.php:410
@@ -5050,13 +5025,14 @@ msgstr ""
 msgid ""
 "The server reported an unrecognized outcome (%s); nothing local was changed."
 msgstr ""
+"Poslužitelj je prijavio neprepoznat ishod (%s); ništa lokalno nije "
+"promijenjeno."
 
 #. translators: %s is the error reported by the API
 #: sanctorale.php:412
-#, fuzzy, php-format
-#| msgid "Could not load notifications"
+#, php-format
 msgid "Could not load the sanctorale: %s"
-msgstr "Nije moguće učitati obavijesti"
+msgstr "Nije se moglo učitati sanctorale: %s"
 
 #. translators: %s is the event_key a #event= link named
 #. Reported rather than left silent: the link may be stale, mistyped, or
@@ -5064,7 +5040,7 @@ msgstr "Nije moguće učitati obavijesti"
 #: sanctorale.php:416
 #, php-format
 msgid "%s is not in the current selection."
-msgstr ""
+msgstr "%s nije u trenutnom odabiru."
 
 #: user-profile.php:23 user-profile.php:35
 msgid "User Profile"
