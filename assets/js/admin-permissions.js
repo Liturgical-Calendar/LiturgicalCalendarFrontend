@@ -62,18 +62,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const grantModalAlerts = document.getElementById('grantModalAlerts');
     const confirmGrantBtn = document.getElementById('confirmGrantBtn');
 
-    // Fixed object-id choices for the deprecated General Roman Calendar type.
-    // The five enumerated General Roman Calendar sub-resource ids.
-    // Keep in sync with the API constant AccessRequestRepository::GRC_OBJECT_IDS
-    // and the identical copy in assets/js/permission-requests.js.
-    const GRC_OBJECT_IDS = [
-        { id: 'temporale',          label: config.i18n.grcTemporale },
-        { id: 'EDITIO_TYPICA_1970', label: config.i18n.grcSanctorale1970 },
-        { id: 'EDITIO_TYPICA_2002', label: config.i18n.grcSanctorale2002 },
-        { id: 'EDITIO_TYPICA_2008', label: config.i18n.grcSanctorale2008 },
-        { id: 'decrees',            label: config.i18n.grcDecrees }
-    ];
-
     // The eight object ids valid for the `rite_calendar` type, per rite, in the
     // API's own order. Keep in sync with the service RiteCalendarObjectIds and
     // the identical copy in assets/js/permission-requests.js. `decrees` and
@@ -151,22 +139,19 @@ document.addEventListener('DOMContentLoaded', function() {
         let entries = [];
         if (objectType === 'wider_region') {
             entries = WIDER_REGIONS.map(function(name) { return { value: name, label: name }; });
-        } else if (objectType === 'general_roman_calendar') {
-            entries = GRC_OBJECT_IDS.map(function(o) { return { value: o.id, label: o.label }; });
-        } else if (objectType === 'general_roman_calendar_test') {
-            entries = [
-                { value: 'general_roman_calendar', label: config.i18n.testsGeneralRoman }
-            ];
+        } else if (objectType === 'rite_calendar_test') {
+            // The test tier's id IS the rite, bare — `roman`, `ambrosian` — not
+            // rite-qualified like the data types. Mirrors AccessRequestRepository,
+            // which validates it against Rite::cases().
+            entries = RITE_CALENDAR_OBJECT_IDS.map(function(g) {
+                return { value: g.rite, label: g.label };
+            });
         }
         for (const e of entries) {
             const o = document.createElement('option');
             o.value = e.value;
             o.textContent = e.label;
             select.appendChild(o);
-        }
-        // Auto-select the single fixed GRC-test id.
-        if (objectType === 'general_roman_calendar_test') {
-            select.value = 'general_roman_calendar';
         }
         return select;
     }
@@ -281,11 +266,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Object type display names.
     //
-    // The two `general_roman_calendar*` entries are DEPRECATED but retained:
-    // `rite_calendar` / `rite_calendar_test` supersede them (API #955 / #785),
-    // yet the API still emits the old names on every tuple written before its
-    // migration ran, and permanently on `audit_log` rows, which are never
-    // rewritten. Dropping them here would render live tuples as a raw type id.
+    // The two `general_roman_calendar*` entries are RETIRED but retained here:
+    // `rite_calendar` / `rite_calendar_test` supersede them, and both old types
+    // were dropped from the FGA model outright at the #955 prune milestone — so
+    // nothing new can be created on them. Rendering is not creating, though:
+    // stored access requests and `audit_log` rows keep the old names, and the
+    // audit log is never rewritten, so it keeps them permanently. Dropping them
+    // here would render those historical rows as a raw type id.
     const objectTypeNames = {
         'national_calendar': config.i18n.nationalCalendar,
         'diocesan_calendar': config.i18n.diocesanCalendar,

@@ -183,57 +183,35 @@ final class AuthHelperDashboardScopesTest extends TestCase
         }
     }
 
-    public function testALegacyBareScopeStillGrantsTheRomanRiteCalendarView(): void
+    public function testALegacyBareScopeNoLongerGrantsTheRiteCalendarView(): void
     {
-        // The migration window: the API is deployed, its tuple migration has not
-        // run, so the only tuple this user holds is the legacy one — and the API
-        // still authorizes their write off it. A gate that only knew
-        // `rite_calendar` would hide a card they can in fact use.
+        // These three cases pinned the migration-window fallback, when a user
+        // holding only a legacy tuple was still authorized and a gate knowing
+        // only `rite_calendar` would have hidden a card they could use.
+        //
+        // The window is closed. The legacy tuples were migrated and deleted, the
+        // API's middleware dropped its own widening (LiturgicalCalendarAPI#970),
+        // and the `general_roman_calendar` type was removed from the FGA model
+        // outright (CatholicOS/cdcf-infra#44) — so `/auth/dashboard-scopes` can
+        // no longer report a viewer scope under it at all.
+        //
+        // Asserted as an ABSENCE rather than deleted: a fallback creeping back
+        // would restore an authorization path the model no longer has, and would
+        // show cards whose writes the API now refuses.
         AuthHelper::reset();
         try {
             $auth = $this->authWithViewerScopes([
                 'rite_calendar'          => [],
-                'general_roman_calendar' => ['temporale', 'decrees'],
+                'general_roman_calendar' => ['temporale', 'decrees', 'EDITIO_TYPICA_2024'],
             ]);
 
-            self::assertTrue($auth->canViewRiteCalendarResource('roman', 'temporale'));
-            self::assertTrue($auth->canViewRiteCalendarResource('roman', 'decrees'));
-        } finally {
-            AuthHelper::reset();
-        }
-    }
-
-    public function testALegacyBareFixedSubResourceDoesNotReachAnotherRite(): void
-    {
-        // Every legacy id was Roman by construction, so pairing `temporale` with
-        // the Ambrosian object would re-introduce exactly the un-qualification
-        // #955 exists to remove.
-        AuthHelper::reset();
-        try {
-            $auth = $this->authWithViewerScopes([
-                'rite_calendar'          => [],
-                'general_roman_calendar' => ['temporale'],
-            ]);
-
+            self::assertFalse($auth->canViewRiteCalendarResource('roman', 'temporale'));
+            self::assertFalse($auth->canViewRiteCalendarResource('roman', 'decrees'));
+            // The cross-rite half of the old asymmetry: missal ids are unique
+            // across rites, so this id once denoted the Ambrosian edition.
+            self::assertFalse($auth->canViewRiteCalendarResource('ambrosian', 'EDITIO_TYPICA_2024'));
+            // And the Roman-only half, which was already false before the prune.
             self::assertFalse($auth->canViewRiteCalendarResource('ambrosian', 'temporale'));
-        } finally {
-            AuthHelper::reset();
-        }
-    }
-
-    public function testALegacyTypicalEditionPairsAcrossRites(): void
-    {
-        // The other half of the asymmetry: missal ids are unique across rites, so
-        // `general_roman_calendar:EDITIO_TYPICA_2024` genuinely denoted the
-        // Ambrosian typical edition and must keep authorizing it.
-        AuthHelper::reset();
-        try {
-            $auth = $this->authWithViewerScopes([
-                'rite_calendar'          => [],
-                'general_roman_calendar' => ['EDITIO_TYPICA_2024'],
-            ]);
-
-            self::assertTrue($auth->canViewRiteCalendarResource('ambrosian', 'EDITIO_TYPICA_2024'));
         } finally {
             AuthHelper::reset();
         }

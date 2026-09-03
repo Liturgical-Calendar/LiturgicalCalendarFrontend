@@ -74,18 +74,21 @@ async function fetchJson(method, path, body, extraHeaders, credentials = 'includ
 // ---- capability detection -------------------------------------------------
 
 /**
- * The FGA object governing the whole decrees admin surface, and the legacy object
- * it supersedes.
+ * The FGA object governing the whole decrees admin surface.
  *
  * `decrees` moved from the bare `general_roman_calendar` type onto the rite-level
  * `rite_calendar` tier in LiturgicalCalendarAPI #955. It is a fixed sub-resource,
- * so it exists for the Roman rite only — which is also why the legacy pairing is
- * Roman-only, and safe.
+ * so it exists for the Roman rite only.
+ *
+ * The legacy object it superseded was asked alongside this one through the
+ * migration window; that window closed at the prune milestone, when the type was
+ * removed from the FGA model (CatholicOS/cdcf-infra#44) and the API dropped its
+ * own fallback (LiturgicalCalendarAPI#970). Still an ARRAY rather than a bare
+ * object, so `check()` keeps its shape and a future second object costs nothing.
  * @type {ReadonlyArray<{objectType: string, objectId: string}>}
  */
 export const DECREES_OBJECTS = Object.freeze([
     Object.freeze({ objectType: 'rite_calendar', objectId: 'roman/decrees' }),
-    Object.freeze({ objectType: 'general_roman_calendar', objectId: 'decrees' }),
 ]);
 
 /**
@@ -94,12 +97,10 @@ export const DECREES_OBJECTS = Object.freeze([
  * Global admins short-circuit to full access. Otherwise three parallel
  * FGA self-checks determine viewer / editor / admin relations.
  *
- * Each relation is asked about the rite-qualified object first and about the
- * legacy one only if that denies. `GET /admin/permissions/check` answers on the
- * object it is handed and does no widening of its own — the legacy fallback lives
- * in the API's authorization middleware — so without the second ask, a user whose
- * grant predates the API's tuple migration would be shown a read-only page while
- * the API would in fact have accepted their writes.
+ * Each relation is asked about every object in DECREES_OBJECTS, which is now the
+ * rite-qualified one alone. `GET /admin/permissions/check` answers on the object
+ * it is handed and does no widening of its own, so this list is exactly the set
+ * of objects that can authorize the page.
  *
  * @returns {Promise<{canView: boolean, canEdit: boolean, canAdmin: boolean}>}
  */

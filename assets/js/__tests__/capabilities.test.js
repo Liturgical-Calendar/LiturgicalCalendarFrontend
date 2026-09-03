@@ -115,42 +115,58 @@ describe('detectMissalCapabilities', () => {
         expect(caps.get('US_2011')).toEqual({ canEdit: true, canCreate: true, canDelete: true });
     });
 
-    // ---- the #955 migration window ------------------------------------------
+    // ---- after the #955 prune milestone --------------------------------------
     //
-    // The API stays additive: a tuple written before its migration ran still
-    // names `general_roman_calendar`, and `forMissals()` still honours it. But
-    // `GET /admin/permissions/check` answers on the object it is handed and does
-    // NOT widen, so the UI has to ask both — otherwise it hides a control whose
-    // write the API would have accepted.
+    // The legacy `general_roman_calendar` fallback these tests used to pin is
+    // GONE, on both sides. The API's authorization middleware dropped its own
+    // widening (LiturgicalCalendarAPI#970) and the type was removed from the FGA
+    // model outright (CatholicOS/cdcf-infra#44), so a legacy ask can now only be
+    // a second round-trip to a guaranteed negative — and a legacy TUPLE cannot
+    // even be written, which is what broke the rbac e2e seed.
+    //
+    // These assert the absence, rather than merely deleting the old cases: a
+    // fallback silently reappearing would put back an authorization path the
+    // model no longer has.
 
-    it('honours a legacy general_roman_calendar grant on a typical edition', async () => {
-        const seen = [];
-        const checkAllowed = async (path) => {
-            seen.push(path);
-            return path.includes('object_type=general_roman_calendar')
-                && path.includes('object_id=EDITIO_TYPICA_1970');
-        };
+    it('does NOT honour a legacy general_roman_calendar grant on a typical edition', async () => {
+        // The exact case that used to pass. The type is gone; nothing resolves
+        // against it, so a UI that still believed it would show controls whose
+        // writes the API now refuses.
+        const checkAllowed = async (path) =>
+            path.includes('object_type=general_roman_calendar')
+            && path.includes('object_id=EDITIO_TYPICA_1970');
         const caps = await detectMissalCapabilities({
             missals: [VA_1970], rite: 'roman', baseRegion: 'VA',
             userSub: 'u', isGlobalAdmin: false, checkAllowed
         });
-        expect(caps.get('EDITIO_TYPICA_1970')).toEqual({ canEdit: true, canCreate: true, canDelete: true });
-        // The rite-qualified object is still asked FIRST; the legacy one is a fallback.
-        expect(seen[0]).toContain('object_type=rite_calendar');
+        expect(caps.get('EDITIO_TYPICA_1970')).toEqual({ canEdit: false, canCreate: false, canDelete: false });
     });
 
-    it('honours a legacy grant on the AMBROSIAN typical edition, whose legacy id was bare', async () => {
-        // Missal ids are unique across rites, so `general_roman_calendar:EDITIO_TYPICA_2024`
-        // genuinely denoted the Ambrosian edition. The pairing is therefore
-        // unconditional across rites — unlike the fixed sub-resources'.
-        const checkAllowed = async (path) =>
-            path.includes('object_type=general_roman_calendar')
-            && path.includes('object_id=EDITIO_TYPICA_2024');
-        const caps = await detectMissalCapabilities({
-            missals: [AMBR], rite: 'ambrosian', baseRegion: 'AMBROSIAN',
-            userSub: 'u', isGlobalAdmin: false, checkAllowed
+    it('asks ONLY the rite-qualified object for a typical edition', async () => {
+        // Denying everything is what makes this bite: under the old fallback a
+        // denial triggered the second ask, so `seen` carried a legacy path.
+        const seen = [];
+        await detectMissalCapabilities({
+            missals: [VA_1970], rite: 'roman', baseRegion: 'VA',
+            userSub: 'u', isGlobalAdmin: false,
+            checkAllowed: async (path) => { seen.push(path); return false; }
         });
-        expect(caps.get('EDITIO_TYPICA_2024')).toEqual({ canEdit: true, canCreate: true, canDelete: true });
+        expect(seen.length).toBeGreaterThan(0);
+        expect(seen.every((p) => p.includes('object_type=rite_calendar'))).toBe(true);
+        expect(seen.some((p) => p.includes('general_roman_calendar'))).toBe(false);
+    });
+
+    it('asks ONLY the rite-qualified object for the Ambrosian typical edition', async () => {
+        // The cross-rite half of the old asymmetry: missal ids are unique across
+        // rites, so `general_roman_calendar:EDITIO_TYPICA_2024` once denoted the
+        // Ambrosian edition. It denotes nothing now.
+        const seen = [];
+        await detectMissalCapabilities({
+            missals: [AMBR], rite: 'ambrosian', baseRegion: 'AMBROSIAN',
+            userSub: 'u', isGlobalAdmin: false,
+            checkAllowed: async (path) => { seen.push(path); return false; }
+        });
+        expect(seen.some((p) => p.includes('general_roman_calendar'))).toBe(false);
     });
 
     it('does not ask a legacy object for a national edition, which never had one', async () => {
@@ -161,16 +177,5 @@ describe('detectMissalCapabilities', () => {
             checkAllowed: async (path) => { seen.push(path); return false; }
         });
         expect(seen.every((p) => p.includes('object_type=national_calendar'))).toBe(true);
-    });
-
-    it('asks the legacy object only once the qualified one has denied', async () => {
-        const seen = [];
-        await detectMissalCapabilities({
-            missals: [VA_1970], rite: 'roman', baseRegion: 'VA',
-            userSub: 'u', isGlobalAdmin: false,
-            // Allowed on the new object: the legacy fallback must not be reached.
-            checkAllowed: async (path) => { seen.push(path); return true; }
-        });
-        expect(seen.every((p) => p.includes('object_type=rite_calendar'))).toBe(true);
     });
 });
